@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="title desc">
+  <title id="title">Agentdoor</title>
+  <desc id="desc">A geometric letter and doorway mark.</desc>
+  <rect width="32" height="32" rx="7" fill="#20211F"/>
+  <path d="M9 8h14v5H14v3h7v5h-7v5H9z" fill="#FFFFFF"/>
+</svg>

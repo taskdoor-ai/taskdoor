@@ -1,0 +1,13 @@
+{
+  "microFontDeclarations": 841,
+  "rawFontSizeDeclarations": 996,
+  "rawSpacingDeclarations": 1936,
+  "rawRadiusDeclarations": 433,
+  "arbitraryTailwindPixels": 9,
+  "hardcodedColorsInSource": 516,
+  "nativeSelectElements": 4,
+  "nativeDialogElements": 2,
+  "pagePrimitiveStyleOverrides": 491,
+  "duplicateUiExports": 5,
+  "globalStylesLines": 7765
+}

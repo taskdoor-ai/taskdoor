@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
+  <title id="title">Agentdoor Double Door</title><desc id="desc">Two people or agents meet at a shared doorway.</desc>
+  <path d="M18 82V24h64v58" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M50 24v58" stroke="currentColor" stroke-width="6"/>
+  <path d="m50 82-24-8V35l24-11Zm0 0 24-8V35L50 24Z" fill="#1268D6" fill-opacity=".9"/>
+  <circle cx="43" cy="55" r="2" fill="white"/><circle cx="57" cy="55" r="2" fill="white"/>
+</svg>

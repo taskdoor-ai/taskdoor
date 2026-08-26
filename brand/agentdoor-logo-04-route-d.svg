@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
+  <title id="title">Agentdoor Door D</title><desc id="desc">A door and the initial D combined into one compact monogram.</desc>
+  <path d="M22 18h25c23 0 36 13 36 32S70 82 47 82H22Z" fill="currentColor"/>
+  <path d="M36 31h12c13 0 21 7 21 19s-8 19-21 19H36Z" fill="white"/>
+  <path d="M36 31v38l17-6V37Z" fill="#1268D6"/>
+  <circle cx="48" cy="51" r="2" fill="white"/>
+</svg>

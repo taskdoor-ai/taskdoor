@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
+  <title id="title">Agentdoor Threshold</title><desc id="desc">A doorway reduced to frame, threshold, and destination.</desc>
+  <path d="M22 82V24h56v58" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M31 82h38M50 72V41" fill="none" stroke="#1268D6" stroke-width="8" stroke-linecap="round"/>
+  <path d="m40 51 10-10 10 10" fill="none" stroke="#1268D6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

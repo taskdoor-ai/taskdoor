@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" role="img" aria-labelledby="title desc">
+  <title id="title">Agentdoor</title>
+  <desc id="desc">A narrow open-bottom doorway shown with subtle perspective.</desc>
+  <path d="M7 36V5h19v31" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" transform="skewY(-3)"/>
+</svg>

@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agentdoor · 任务视图方案画廊</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17191d;
+      --ink-2: #4f5661;
+      --ink-3: #7e858f;
+      --line: #dedbd5;
+      --line-strong: #c7c3bc;
+      --canvas: #f5f6f7;
+      --paper: #ffffff;
+      --paper-2: #fafafa;
+      --blue: #146ce8;
+      --blue-soft: #eaf3ff;
+      --green: #24866f;
+      --green-soft: #eaf6f2;
+      --amber: #a86b15;
+      --amber-soft: #fff5df;
+      --violet: #6954c6;
+      --violet-soft: #f0edff;
+      --rose: #c35d6b;
+      --rose-soft: #fff0f2;
+      --shadow: 0 18px 45px rgba(24, 28, 34, 0.07);
+      --radius: 18px;
+      font-family: "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); }
+    button { font: inherit; }
+    button:focus-visible { outline: 3px solid color-mix(in srgb, var(--blue) 28%, transparent); outline-offset: 3px; }
+
+    .page-shell { min-height: 100vh; }
+    .hero { display: grid; min-height: 236px; grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr); gap: 48px; align-items: end; padding: 46px max(48px, calc((100vw - 1480px) / 2)) 38px; border-bottom: 1px solid var(--line); background: var(--paper); }
+    .eyebrow { display: flex; align-items: center; gap: 9px; margin: 0 0 18px; color: var(--blue); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .eyebrow::before { width: 28px; height: 2px; background: currentColor; content: ""; }
+    h1 { max-width: 880px; margin: 0; font-family: "Arial Narrow", "Avenir Next Condensed", "PingFang SC", sans-serif; font-size: clamp(42px, 5vw, 76px); font-stretch: condensed; line-height: .98; letter-spacing: -.06em; }
+    .hero-copy { max-width: 570px; margin: 0 0 5px; color: var(--ink-2); font-size: 16px; line-height: 1.8; }
+    .hero-copy strong { color: var(--ink); }
+
+    .recommendation { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 16px; background: var(--paper-2); }
+    .recommendation > div { min-height: 84px; padding: 18px; }
+    .recommendation > div + div { border-left: 1px solid var(--line); }
+    .recommendation small { display: block; margin-bottom: 7px; color: var(--ink-3); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
+    .recommendation strong { font-size: 14px; }
+
+    .gallery { display: grid; max-width: 1480px; grid-template-columns: 250px minmax(0, 1fr); gap: 28px; margin: 0 auto; padding: 34px 48px 64px; }
+    .view-route { position: sticky; top: 22px; align-self: start; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); }
+    .route-head { padding: 22px 20px 18px; border-bottom: 1px solid var(--line); }
+    .route-head small { color: var(--ink-3); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
+    .route-head strong { display: block; margin-top: 4px; font-size: 16px; }
+    .route-list { position: relative; display: grid; padding: 12px; }
+    .route-list::before { position: absolute; top: 31px; bottom: 31px; left: 31px; width: 1px; background: var(--line); content: ""; }
+    .view-button { position: relative; display: grid; width: 100%; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; align-items: center; padding: 12px 10px; border: 0; border-radius: 11px; background: transparent; color: var(--ink-2); cursor: pointer; text-align: left; }
+    .view-button:hover { background: var(--paper-2); color: var(--ink); }
+    .view-button[aria-pressed="true"] { background: var(--blue-soft); color: #0f4f9e; }
+    .view-dot { position: relative; z-index: 1; display: grid; width: 20px; height: 20px; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; background: var(--paper); color: var(--ink-3); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 8px; }
+    .view-button[aria-pressed="true"] .view-dot { border-color: var(--blue); background: var(--blue); color: white; box-shadow: 0 0 0 4px var(--blue-soft); }
+    .view-button strong { display: block; font-size: 13px; }
+    .view-button small { display: block; margin-top: 2px; color: var(--ink-3); font-size: 10px; }
+    .route-note { margin: 0; padding: 17px 20px 19px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 11px; line-height: 1.65; }
+
+    .stage { min-width: 0; }
+    .view-panel { display: none; animation: panel-in 260ms ease both; }
+    .view-panel.active { display: block; }
+    .panel-intro { display: flex; gap: 28px; align-items: end; justify-content: space-between; margin-bottom: 18px; }
+    .panel-intro > div:first-child { max-width: 730px; }
+    .panel-kicker { margin: 0 0 8px; color: var(--blue); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 700; }
+    .panel-intro h2 { margin: 0; font-family: "Arial Narrow", "Avenir Next Condensed", "PingFang SC", sans-serif; font-size: clamp(32px, 4vw, 52px); line-height: 1.05; letter-spacing: -.045em; }
+    .panel-intro p { margin: 10px 0 0; color: var(--ink-2); font-size: 14px; line-height: 1.75; }
+    .fit-card { min-width: 220px; padding: 14px 16px; border-left: 3px solid var(--blue); background: var(--paper); }
+    .fit-card small { display: block; margin-bottom: 4px; color: var(--ink-3); font-size: 10px; }
+    .fit-card strong { font-size: 12px; }
+
+    .preview { overflow: hidden; min-height: 610px; border: 1px solid var(--line); border-radius: 22px; background: var(--paper); box-shadow: var(--shadow); }
+    .preview-toolbar { display: flex; min-height: 76px; align-items: center; justify-content: space-between; gap: 20px; padding: 0 24px; border-bottom: 1px solid var(--line); }
+    .preview-toolbar > div { display: flex; align-items: center; gap: 12px; }
+    .preview-toolbar h3 { margin: 0; font-size: 16px; }
+    .preview-toolbar small { color: var(--ink-3); font-size: 10px; }
+    .view-meta { display: inline-flex; align-items: center; padding: 7px 10px; border-radius: 9px; background: var(--paper-2); color: var(--ink-2); font-size: 10px; font-weight: 650; }
+    .avatar { display: grid; width: 32px; height: 32px; place-items: center; border: 2px solid white; border-radius: 50%; background: var(--ink); color: white; font-size: 10px; font-weight: 750; }
+    .avatar.blue { background: var(--blue); }
+    .avatar.green { background: var(--green); }
+    .avatar.amber { background: var(--amber); }
+    .avatar.violet { background: var(--violet); }
+    .avatar-group { display: flex; }
+    .avatar-group .avatar + .avatar { margin-left: -8px; }
+    .status { display: inline-flex; align-items: center; gap: 5px; width: fit-content; padding: 6px 9px; border-radius: 9px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .status::before { width: 7px; height: 7px; border: 2px solid currentColor; border-radius: 50%; content: ""; }
+    .status.progress { background: var(--blue-soft); color: var(--blue); }
+    .status.review { background: var(--amber-soft); color: var(--amber); }
+    .status.done { background: var(--green-soft); color: var(--green); }
+    .status.pending { background: #f1f2f3; color: #747b84; }
+
+    /* List */
+    .task-table { width: 100%; border-collapse: collapse; }
+    .task-table th { padding: 15px 22px; border-bottom: 1px solid var(--line); color: var(--ink-3); font-size: 10px; font-weight: 650; text-align: left; }
+    .task-table td { padding: 19px 22px; border-bottom: 1px solid var(--line); color: var(--ink-2); font-size: 12px; }
+    .task-table tr:last-child td { border-bottom: 0; }
+    .task-table tbody tr:hover { background: var(--paper-2); }
+    .task-name { min-width: 280px; }
+    .task-name code { display: block; margin-bottom: 5px; color: var(--ink-3); font-size: 9px; }
+    .task-name strong { color: var(--ink); font-size: 13px; }
+
+    /* Board */
+    .board { display: grid; min-height: 534px; grid-template-columns: repeat(4, minmax(190px, 1fr)); gap: 12px; padding: 16px; background: var(--paper-2); }
+    .board-column { padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255,255,255,.6); }
+    .column-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 13px; }
+    .column-head strong { font-size: 12px; }
+    .column-head span { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 50%; background: var(--paper); color: var(--ink-3); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; }
+    .board-card { margin-bottom: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); box-shadow: 0 5px 15px rgba(26,30,36,.05); }
+    .board-card code { color: var(--ink-3); font-size: 8px; }
+    .board-card strong { display: block; margin: 9px 0 17px; font-size: 12px; line-height: 1.45; }
+    .card-foot { display: flex; align-items: center; justify-content: space-between; color: var(--ink-3); font-size: 9px; }
+
+    /* Timeline */
+    .timeline-wrap { overflow-x: auto; padding: 18px 22px 26px; }
+    .timeline { min-width: 900px; }
+    .timeline-dates { display: grid; grid-template-columns: 150px repeat(10, 1fr); border-bottom: 1px solid var(--line); }
+    .timeline-dates span { padding: 10px 5px; color: var(--ink-3); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 8px; text-align: center; }
+    .timeline-dates span:first-child { text-align: left; }
+    .timeline-row { display: grid; min-height: 78px; grid-template-columns: 150px repeat(10, 1fr); align-items: center; border-bottom: 1px solid var(--line); background-image: linear-gradient(to right, transparent 150px, var(--line) 151px, transparent 152px); }
+    .timeline-label { grid-column: 1; padding-right: 18px; }
+    .timeline-label strong { display: block; font-size: 11px; }
+    .timeline-label small { display: block; margin-top: 5px; color: var(--ink-3); font-size: 8px; }
+    .time-bar { align-self: center; height: 32px; padding: 8px 11px; border-radius: 8px; color: white; font-size: 9px; font-weight: 700; box-shadow: 0 6px 15px rgba(20,108,232,.16); }
+    .time-bar.blue { background: var(--blue); }
+    .time-bar.green { background: var(--green); }
+    .time-bar.amber { background: var(--amber); }
+    .time-bar.violet { background: var(--violet); }
+    .today-line { position: relative; }
+    .today-line::after { position: absolute; z-index: 0; top: -33px; bottom: -33px; left: 50%; width: 1px; background: var(--rose); content: ""; }
+
+    /* Calendar */
+    .calendar { display: grid; grid-template-columns: repeat(7, 1fr); padding: 16px; background: var(--paper-2); }
+    .cal-weekday { padding: 10px; color: var(--ink-3); font-size: 9px; font-weight: 700; text-align: center; }
+    .cal-day { min-height: 112px; padding: 10px; border-top: 1px solid var(--line); border-left: 1px solid var(--line); background: var(--paper); }
+    .cal-day:nth-child(7n + 7) { border-right: 1px solid var(--line); }
+    .cal-day.muted { background: #fafafa; color: #b3b6bb; }
+    .cal-day.today { background: color-mix(in srgb, var(--blue-soft) 58%, white); }
+    .day-num { display: grid; width: 22px; height: 22px; place-items: center; border-radius: 50%; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; }
+    .today .day-num { background: var(--blue); color: white; }
+    .cal-task { margin-top: 8px; padding: 6px 7px; border-left: 3px solid var(--blue); border-radius: 4px 7px 7px 4px; background: var(--blue-soft); color: #144c90; font-size: 8px; font-weight: 700; line-height: 1.4; }
+    .cal-task.green { border-color: var(--green); background: var(--green-soft); color: #196a57; }
+    .cal-task.amber { border-color: var(--amber); background: var(--amber-soft); color: #80510f; }
+
+    /* Workload */
+    .workload { padding: 18px 24px 28px; }
+    .capacity-summary { display: grid; grid-template-columns: repeat(4, 1fr); margin-bottom: 18px; border: 1px solid var(--line); border-radius: 13px; }
+    .capacity-summary > div { padding: 15px; }
+    .capacity-summary > div + div { border-left: 1px solid var(--line); }
+    .capacity-summary small { color: var(--ink-3); font-size: 9px; }
+    .capacity-summary strong { display: block; margin-top: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 20px; }
+    .load-row { display: grid; grid-template-columns: 170px minmax(280px, 1fr) 85px; gap: 20px; align-items: center; min-height: 76px; border-bottom: 1px solid var(--line); }
+    .person { display: flex; align-items: center; gap: 10px; }
+    .person strong { display: block; font-size: 11px; }
+    .person small { display: block; margin-top: 3px; color: var(--ink-3); font-size: 8px; }
+    .load-track { position: relative; display: flex; height: 18px; overflow: hidden; border-radius: 6px; background: #eef0f2; }
+    .load-track::after { position: absolute; top: -4px; bottom: -4px; left: 80%; width: 1px; background: var(--ink-3); content: ""; }
+    .load-piece { height: 100%; }
+    .load-piece.blue { background: var(--blue); }
+    .load-piece.green { background: var(--green); }
+    .load-piece.amber { background: var(--amber); }
+    .load-piece.violet { background: var(--violet); }
+    .load-value { color: var(--ink-2); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; text-align: right; }
+    .load-value.over { color: var(--rose); font-weight: 750; }
+
+    /* Matrix */
+    .matrix-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 22px; padding: 20px 24px 28px; }
+    .matrix { position: relative; display: grid; min-height: 470px; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); border: 1px solid var(--line); background: var(--paper-2); }
+    .quadrant { position: relative; padding: 42px 18px 18px; }
+    .quadrant:nth-child(1), .quadrant:nth-child(2) { border-bottom: 1px solid var(--line); }
+    .quadrant:nth-child(1), .quadrant:nth-child(3) { border-right: 1px solid var(--line); }
+    .quadrant-label { position: absolute; top: 13px; left: 14px; color: var(--ink-3); font-size: 9px; font-weight: 700; }
+    .matrix-task { display: inline-block; max-width: 190px; margin: 4px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--ink-2); font-size: 9px; font-weight: 650; box-shadow: 0 4px 12px rgba(28,32,38,.06); }
+    .matrix-task.hot { border-color: color-mix(in srgb, var(--rose) 45%, var(--line)); background: var(--rose-soft); color: #843b47; }
+    .axis-y, .axis-x { position: absolute; color: var(--ink-3); font-size: 8px; letter-spacing: .08em; }
+    .axis-y { top: 50%; left: -40px; transform: rotate(-90deg); }
+    .axis-x { right: 5px; bottom: -21px; }
+    .matrix-aside { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper-2); }
+    .matrix-aside strong { display: block; font-size: 12px; }
+    .matrix-aside p { margin: 8px 0 18px; color: var(--ink-3); font-size: 10px; line-height: 1.6; }
+    .matrix-aside ol { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: priority; }
+    .matrix-aside li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; align-items: center; color: var(--ink-2); font-size: 9px; }
+    .matrix-aside li::before { display: grid; width: 22px; height: 22px; place-items: center; border-radius: 50%; background: var(--ink); color: white; content: counter(priority); counter-increment: priority; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 8px; }
+
+    .decision-strip { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 20px; overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); }
+    .decision-strip article { min-height: 118px; padding: 20px; }
+    .decision-strip article + article { border-left: 1px solid var(--line); }
+    .decision-strip small { color: var(--ink-3); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; }
+    .decision-strip strong { display: block; margin: 8px 0 6px; font-size: 13px; }
+    .decision-strip p { margin: 0; color: var(--ink-2); font-size: 10px; line-height: 1.6; }
+
+    @keyframes panel-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { .view-panel, .view-route { animation: none; } }
+    @media (max-width: 1040px) {
+      .hero { grid-template-columns: 1fr; }
+      .gallery { grid-template-columns: 1fr; padding-inline: 24px; }
+      .view-route { position: static; }
+      .route-list { grid-template-columns: repeat(3, 1fr); }
+      .route-list::before { display: none; }
+      .board { grid-template-columns: repeat(2, 1fr); }
+      .matrix-wrap { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .hero { padding: 32px 20px; }
+      .recommendation, .decision-strip { grid-template-columns: 1fr; }
+      .recommendation > div + div, .decision-strip article + article { border-top: 1px solid var(--line); border-left: 0; }
+      .gallery { padding: 20px 14px 44px; }
+      .route-list { grid-template-columns: repeat(2, 1fr); }
+      .panel-intro { display: block; }
+      .fit-card { margin-top: 14px; }
+      .preview { min-height: 520px; }
+      .board { grid-template-columns: 1fr; }
+      .task-table th:nth-child(3), .task-table td:nth-child(3), .task-table th:nth-child(4), .task-table td:nth-child(4) { display: none; }
+      .calendar { overflow-x: auto; min-width: 650px; }
+      .capacity-summary { grid-template-columns: repeat(2, 1fr); }
+      .load-row { grid-template-columns: 130px minmax(180px, 1fr) 60px; }
+      .matrix { min-height: 560px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Task view study / 任务视图方案</p>
+        <h1>同一批任务，<br />六种观察方式</h1>
+      </div>
+      <div>
+        <p class="hero-copy"><strong>任务视图不是不同的数据。</strong>它们是同一任务集合的不同组织方式：有人要找记录，有人要推动流转，有人要判断排期、容量或优先级。</p>
+        <div class="recommendation">
+          <div><small>系统默认</small><strong>任务列表</strong></div>
+          <div><small>团队常用</small><strong>看板 / 时间线</strong></div>
+          <div><small>个人与管理</small><strong>矩阵 / 负载</strong></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="gallery">
+      <aside class="view-route" aria-label="任务视图示例导航">
+        <div class="route-head"><small>视图路由</small><strong>你现在想判断什么？</strong></div>
+        <div class="route-list">
+          <button class="view-button" data-view="list" aria-pressed="true"><span class="view-dot">01</span><span><strong>任务列表</strong><small>查找与批量浏览</small></span></button>
+          <button class="view-button" data-view="board" aria-pressed="false"><span class="view-dot">02</span><span><strong>状态看板</strong><small>推动流程流转</small></span></button>
+          <button class="view-button" data-view="timeline" aria-pressed="false"><span class="view-dot">03</span><span><strong>任务时间线</strong><small>判断依赖与周期</small></span></button>
+          <button class="view-button" data-view="calendar" aria-pressed="false"><span class="view-dot">04</span><span><strong>截止日历</strong><small>安排日期与节奏</small></span></button>
+          <button class="view-button" data-view="workload" aria-pressed="false"><span class="view-dot">05</span><span><strong>负责人负载</strong><small>判断容量与分工</small></span></button>
+          <button class="view-button" data-view="matrix" aria-pressed="false"><span class="view-dot">06</span><span><strong>优先级矩阵</strong><small>决定先做什么</small></span></button>
+        </div>
+        <p class="route-note">建议只把“任务列表”设为系统默认。其余视图可以作为可保存、可共享的自定义视图模板。</p>
+      </aside>
+
+      <div class="stage">
+        <section class="view-panel active" data-panel="list">
+          <div class="panel-intro"><div><p class="panel-kicker">DEFAULT · 高密度基线</p><h2>任务列表</h2><p>最适合检索、比较字段和打开详情。它不强调流程，而是稳定地回答“有哪些任务、现在是什么状态”。</p></div><div class="fit-card"><small>最适合</small><strong>默认入口、全量查询、批量操作</strong></div></div>
+          <div class="preview">
+            <header class="preview-toolbar"><div><h3>全部协作任务</h3><span class="view-meta">默认 · 6 个任务</span></div><div class="avatar-group"><span class="avatar">周</span><span class="avatar blue">陈</span><span class="avatar green">林</span></div></header>
+            <table class="task-table">
+              <thead><tr><th>任务</th><th>状态</th><th>当前阶段</th><th>阶段负责人</th><th>截止时间</th></tr></thead>
+              <tbody>
+                <tr><td class="task-name"><code>CT-2084</code><strong>POS 优惠券重复核销修复</strong></td><td><span class="status progress">进行中</span></td><td>评审并完成修复</td><td>陈默</td><td>8 月 21 日</td></tr>
+                <tr><td class="task-name"><code>CT-2079</code><strong>门店库存同步异常</strong></td><td><span class="status progress">进行中</span></td><td>补偿机制实现</td><td>高远</td><td>8 月 22 日</td></tr>
+                <tr><td class="task-name"><code>TASK-MEMBER</code><strong>会员等级权益结算规则升级</strong></td><td><span class="status review">待审核</span></td><td>统一结算方案</td><td>梁川</td><td>8 月 23 日</td></tr>
+                <tr><td class="task-name"><code>TASK-INVOICE</code><strong>电子发票抬头校验异常治理</strong></td><td><span class="status progress">进行中</span></td><td>灰度验证</td><td>林洁</td><td>8 月 20 日</td></tr>
+                <tr><td class="task-name"><code>CT-2066</code><strong>历史交易审计字段补齐</strong></td><td><span class="status pending">待接受</span></td><td>确认数据范围</td><td>未分配</td><td>8 月 26 日</td></tr>
+                <tr><td class="task-name"><code>CT-2048</code><strong>退款规则历史口径归档</strong></td><td><span class="status done">已完成</span></td><td>确认结果并关闭</td><td>周岚</td><td>8 月 18 日</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="view-panel" data-panel="board">
+          <div class="panel-intro"><div><p class="panel-kicker">FLOW · 团队推进</p><h2>状态看板</h2><p>把任务按生命周期分列，快速发现拥堵、等待和即将交付的工作。适合例会和日常推进。</p></div><div class="fit-card"><small>最适合</small><strong>流程推进、站会、跨角色交接</strong></div></div>
+          <div class="preview">
+            <header class="preview-toolbar"><div><h3>本周任务流</h3><span class="view-meta">按任务状态分组</span></div><small>拖动卡片不等于完成阶段，仍需遵守阶段确认规则</small></header>
+            <div class="board">
+              <div class="board-column"><div class="column-head"><strong>待接受</strong><span>1</span></div><article class="board-card"><code>CT-2066</code><strong>历史交易审计字段补齐</strong><div class="card-foot"><span>未分配</span><span>8/26</span></div></article></div>
+              <div class="board-column"><div class="column-head"><strong>进行中</strong><span>3</span></div><article class="board-card"><code>CT-2084</code><strong>POS 优惠券重复核销修复</strong><div class="card-foot"><span>陈默</span><span>8/21</span></div></article><article class="board-card"><code>CT-2079</code><strong>门店库存同步异常</strong><div class="card-foot"><span>高远</span><span>8/22</span></div></article><article class="board-card"><code>TASK-INVOICE</code><strong>电子发票校验异常治理</strong><div class="card-foot"><span>林洁</span><span>8/20</span></div></article></div>
+              <div class="board-column"><div class="column-head"><strong>待审核</strong><span>1</span></div><article class="board-card"><code>TASK-MEMBER</code><strong>会员等级权益结算规则升级</strong><div class="card-foot"><span>梁川</span><span>8/23</span></div></article></div>
+              <div class="board-column"><div class="column-head"><strong>已完成</strong><span>1</span></div><article class="board-card"><code>CT-2048</code><strong>退款规则历史口径归档</strong><div class="card-foot"><span>周岚</span><span>8/18</span></div></article></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view-panel" data-panel="timeline">
+          <div class="panel-intro"><div><p class="panel-kicker">SEQUENCE · 计划与依赖</p><h2>任务时间线</h2><p>同时观察起止日期、任务重叠和交付节奏。比日历更适合跨天工作和存在先后依赖的任务。</p></div><div class="fit-card"><small>最适合</small><strong>项目计划、依赖管理、灰度窗口</strong></div></div>
+          <div class="preview">
+            <header class="preview-toolbar"><div><h3>8 月交付时间线</h3><span class="view-meta">10 个工作日</span></div><small>红线代表今天 · 8 月 21 日</small></header>
+            <div class="timeline-wrap"><div class="timeline">
+              <div class="timeline-dates"><span>任务</span><span>18 一</span><span>19 二</span><span>20 三</span><span class="today-line">21 四</span><span>22 五</span><span>25 一</span><span>26 二</span><span>27 三</span><span>28 四</span><span>29 五</span></div>
+              <div class="timeline-row"><div class="timeline-label"><strong>优惠券核销修复</strong><small>陈默 · 评审 → 修复</small></div><div class="time-bar blue" style="grid-column: 2 / 6;">修复与灰度准备</div></div>
+              <div class="timeline-row"><div class="timeline-label"><strong>库存同步异常</strong><small>高远 · 补偿机制</small></div><div class="time-bar green" style="grid-column: 3 / 7;">实现与回归</div></div>
+              <div class="timeline-row"><div class="timeline-label"><strong>发票异常治理</strong><small>林洁 · 灰度验证</small></div><div class="time-bar amber" style="grid-column: 2 / 5;">12 家门店灰度</div></div>
+              <div class="timeline-row"><div class="timeline-label"><strong>会员规则升级</strong><small>梁川 · 待审核</small></div><div class="time-bar violet" style="grid-column: 4 / 8;">评审与历史回算</div></div>
+              <div class="timeline-row"><div class="timeline-label"><strong>审计字段补齐</strong><small>未分配 · 数据范围</small></div><div class="time-bar blue" style="grid-column: 7 / 11; opacity:.62;">待排期</div></div>
+            </div></div>
+          </div>
+        </section>
+
+        <section class="view-panel" data-panel="calendar">
+          <div class="panel-intro"><div><p class="panel-kicker">DATE · 截止与节奏</p><h2>截止日历</h2><p>突出任务落在哪一天，适合安排评审、发布和灰度窗口；不适合表达跨任务依赖。</p></div><div class="fit-card"><small>最适合</small><strong>截止管理、发布日、周期性任务</strong></div></div>
+          <div class="preview">
+            <header class="preview-toolbar"><div><h3>2026 年 8 月</h3><span class="view-meta">按截止时间</span></div><small>本周 4 个关键截止</small></header>
+            <div style="overflow-x:auto"><div class="calendar">
+              <div class="cal-weekday">周一</div><div class="cal-weekday">周二</div><div class="cal-weekday">周三</div><div class="cal-weekday">周四</div><div class="cal-weekday">周五</div><div class="cal-weekday">周六</div><div class="cal-weekday">周日</div>
+              <div class="cal-day"><span class="day-num">17</span></div><div class="cal-day"><span class="day-num">18</span><div class="cal-task green">退款口径归档完成</div></div><div class="cal-day"><span class="day-num">19</span></div><div class="cal-day"><span class="day-num">20</span><div class="cal-task amber">发票灰度结果</div></div><div class="cal-day today"><span class="day-num">21</span><div class="cal-task">优惠券修复评审</div><div class="cal-task green">门店灰度准备</div></div><div class="cal-day"><span class="day-num">22</span><div class="cal-task">库存补偿回归</div></div><div class="cal-day"><span class="day-num">23</span><div class="cal-task amber">会员规则审核</div></div>
+              <div class="cal-day"><span class="day-num">24</span></div><div class="cal-day"><span class="day-num">25</span></div><div class="cal-day"><span class="day-num">26</span><div class="cal-task">审计字段范围确认</div></div><div class="cal-day"><span class="day-num">27</span></div><div class="cal-day"><span class="day-num">28</span><div class="cal-task green">周度灰度复盘</div></div><div class="cal-day"><span class="day-num">29</span></div><div class="cal-day"><span class="day-num">30</span></div>
+              <div class="cal-day"><span class="day-num">31</span></div><div class="cal-day muted"><span class="day-num">1</span></div><div class="cal-day muted"><span class="day-num">2</span></div><div class="cal-day muted"><span class="day-num">3</span></div><div class="cal-day muted"><span class="day-num">4</span></div><div class="cal-day muted"><span class="day-num">5</span></div><div class="cal-day muted"><span class="day-num">6</span></div>
+            </div></div>
+          </div>
+        </section>
+
+        <section class="view-panel" data-panel="workload">
+          <div class="panel-intro"><div><p class="panel-kicker">CAPACITY · 管理与分工</p><h2>负责人负载</h2><p>按阶段负责人聚合任务和预计工时，帮助 Owner 判断谁已过载、谁还能接手，不替代人员绩效判断。</p></div><div class="fit-card"><small>最适合</small><strong>团队容量、重新分配、资源冲突</strong></div></div>
+          <div class="preview">
+            <header class="preview-toolbar"><div><h3>本周团队容量</h3><span class="view-meta">按当前阶段负责人</span></div><small>容量参考线 80%</small></header>
+            <div class="workload">
+              <div class="capacity-summary"><div><small>可用容量</small><strong>120h</strong></div><div><small>已分配</small><strong>86h</strong></div><div><small>待接受</small><strong>14h</strong></div><div><small>过载成员</small><strong>1</strong></div></div>
+              <div class="load-row"><div class="person"><span class="avatar">周</span><span><strong>周岚</strong><small>Owner / 业务决策</small></span></div><div class="load-track"><span class="load-piece blue" style="width:34%"></span><span class="load-piece violet" style="width:18%"></span></div><span class="load-value">21 / 40h</span></div>
+              <div class="load-row"><div class="person"><span class="avatar blue">陈</span><span><strong>陈默</strong><small>工程协作者</small></span></div><div class="load-track"><span class="load-piece blue" style="width:56%"></span><span class="load-piece amber" style="width:32%"></span></div><span class="load-value over">35 / 40h</span></div>
+              <div class="load-row"><div class="person"><span class="avatar green">林</span><span><strong>林洁</strong><small>运营验证</small></span></div><div class="load-track"><span class="load-piece green" style="width:48%"></span><span class="load-piece blue" style="width:17%"></span></div><span class="load-value">26 / 40h</span></div>
+              <div class="load-row"><div class="person"><span class="avatar violet">梁</span><span><strong>梁川</strong><small>财务规则</small></span></div><div class="load-track"><span class="load-piece violet" style="width:37%"></span><span class="load-piece green" style="width:12%"></span></div><span class="load-value">19 / 40h</span></div>
+              <div class="load-row"><div class="person"><span class="avatar amber">高</span><span><strong>高远</strong><small>后端工程</small></span></div><div class="load-track"><span class="load-piece amber" style="width:46%"></span><span class="load-piece blue" style="width:23%"></span></div><span class="load-value">28 / 40h</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view-panel" data-panel="matrix">
+          <div class="panel-intro"><div><p class="panel-kicker">FOCUS · 个人判断</p><h2>优先级矩阵</h2><p>把任务放进“重要 × 紧急”的二维空间，适合个人注意力管理。矩阵位置应是视图配置，不改写任务状态。</p></div><div class="fit-card"><small>最适合</small><strong>个人今日计划、优先级复盘</strong></div></div>
+          <div class="preview">
+            <header class="preview-toolbar"><div><h3>周岚的注意力地图</h3><span class="view-meta">仅自己可见</span></div><small>矩阵位置由个人维护</small></header>
+            <div class="matrix-wrap">
+              <div class="matrix">
+                <span class="axis-y">重要程度 ↑</span><span class="axis-x">紧急程度 →</span>
+                <div class="quadrant"><span class="quadrant-label">重要 · 不紧急 / 安排</span><span class="matrix-task">会员结算规则长期方案</span><span class="matrix-task">审计字段历史治理</span></div>
+                <div class="quadrant"><span class="quadrant-label">重要 · 紧急 / 立即处理</span><span class="matrix-task hot">确认退款与撤单边界</span><span class="matrix-task hot">优惠券修复评审</span></div>
+                <div class="quadrant"><span class="quadrant-label">不重要 · 不紧急 / 稍后</span><span class="matrix-task">历史项目归档命名</span></div>
+                <div class="quadrant"><span class="quadrant-label">不重要 · 紧急 / 委派</span><span class="matrix-task">汇总门店灰度数据</span><span class="matrix-task">补齐回归样本标签</span></div>
+              </div>
+              <aside class="matrix-aside"><strong>今天先完成</strong><p>从矩阵中提取的个人顺序，不影响其他协作者看到的任务状态。</p><ol><li>确认退款与撤单边界</li><li>完成优惠券修复评审</li><li>安排会员规则方案时间</li></ol></aside>
+            </div>
+          </div>
+        </section>
+
+        <div class="decision-strip">
+          <article><small>产品默认</small><strong>只保留任务列表</strong><p>它稳定、可检索，也不会强迫所有团队接受同一种工作方式。</p></article>
+          <article><small>系统模板</small><strong>提供看板、时间线、日历</strong><p>用户从模板创建为自己的自定义视图，再设置可见范围。</p></article>
+          <article><small>AI 自定义</small><strong>生成负载或矩阵等场景视图</strong><p>AI 负责组合筛选、分组、字段和布局，不产生新的任务副本。</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const buttons = [...document.querySelectorAll('.view-button')];
+    const panels = [...document.querySelectorAll('.view-panel')];
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.view;
+        buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+        panels.forEach((panel) => panel.classList.toggle('active', panel.dataset.panel === target));
+        if (window.innerWidth < 1040) document.querySelector('.stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>

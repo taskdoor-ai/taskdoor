@@ -1,0 +1,254 @@
+:root {
+  color-scheme: light;
+
+  /* Foundation */
+  --ad-canvas: #ffffff;
+  --ad-surface: #ffffff;
+  --ad-surface-subtle: #f3f3f2;
+  --ad-surface-quiet: #fafafa;
+  --ad-sidebar: #f7f7f6;
+  --ad-ink: #17191c;
+  --ad-ink-secondary: #565a60;
+  --ad-ink-tertiary: #7a7e84;
+  --ad-border: #dcd8d1;
+  --ad-border-soft: #ebe8e3;
+  --ad-border-strong: #bbb6ae;
+
+  /* Route and actions */
+  --ad-route: #1268d6;
+  --ad-route-hover: #0d57b5;
+  --ad-route-active: #0a438e;
+  --ad-route-soft: #e7f1fd;
+  --ad-route-ink: #0a438e;
+  --ad-focus: #1268d6;
+  --ad-danger: #b43a35;
+  --ad-danger-soft: #fce9e7;
+
+  /* Enterprise tag palette */
+  --ad-tag-gray-bg: #f4f4f5;
+  --ad-tag-gray-ink: #66666f;
+  --ad-tag-gray-border: #e4e4e7;
+  --ad-tag-blue-bg: #eaf6ff;
+  --ad-tag-blue-ink: #0869bc;
+  --ad-tag-blue-border: #cfeaff;
+  --ad-tag-cyan-bg: #ecfeff;
+  --ad-tag-cyan-ink: #087985;
+  --ad-tag-cyan-border: #c9f2f5;
+  --ad-tag-teal-bg: #f0fdfa;
+  --ad-tag-teal-ink: #177665;
+  --ad-tag-teal-border: #ccefe7;
+  --ad-tag-green-bg: #ecfdf3;
+  --ad-tag-green-ink: #287b42;
+  --ad-tag-green-border: #d0f2dc;
+  --ad-tag-amber-bg: #fffbeb;
+  --ad-tag-amber-ink: #936200;
+  --ad-tag-amber-border: #faedbd;
+  --ad-tag-orange-bg: #fff7ed;
+  --ad-tag-orange-ink: #a75d22;
+  --ad-tag-orange-border: #f7dfcc;
+  --ad-tag-red-bg: #fff1f2;
+  --ad-tag-red-ink: #a7473e;
+  --ad-tag-red-border: #f5d7d8;
+  --ad-tag-purple-bg: #f5f3ff;
+  --ad-tag-purple-ink: #6c3cf0;
+  --ad-tag-purple-border: #e6defe;
+  --ad-tag-pink-bg: #fdf2f8;
+  --ad-tag-pink-ink: #a33f6e;
+  --ad-tag-pink-border: #f4d9e7;
+
+  /* Selection controls */
+  --ad-checkbox-size: 18px;
+  --ad-checkbox-radius: 5px;
+  --ad-checkbox-border: var(--ad-border-strong);
+  --ad-checkbox-fill: var(--ad-route);
+  --ad-checkbox-fill-hover: var(--ad-route-hover);
+  --ad-checkbox-check: #ffffff;
+
+  /* Prompt box */
+  --ad-prompt-surface: #ffffff;
+  --ad-prompt-surface-raised: #f6f6f5;
+  --ad-prompt-border: #d7d4ce;
+  --ad-prompt-border-strong: #aaa69f;
+  --ad-prompt-ink: #17191c;
+  --ad-prompt-muted: #777b82;
+  --ad-prompt-action: #17191c;
+  --ad-prompt-action-ink: #ffffff;
+  --ad-prompt-shadow: 0 7px 20px rgb(23 25 28 / 8%);
+
+  /* Evidence semantics */
+  --ad-fact: #24735a;
+  --ad-fact-soft: #e5f3ed;
+  --ad-inference: #8a5a13;
+  --ad-inference-soft: #fff1cf;
+  --ad-conflict: #b43a35;
+  --ad-conflict-soft: #fce9e7;
+  --ad-unknown: #62666d;
+  --ad-unknown-soft: #ecedef;
+
+  /* Type */
+  --ad-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --ad-font-serif: "Noto Serif SC", "Source Serif 4", "Songti SC", ui-serif, serif;
+  --ad-font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, ui-monospace, monospace;
+  --ad-text-display: 40px;
+  --ad-text-title-1: 28px;
+  --ad-text-title-2: 22px;
+  --ad-text-title-3: 18px;
+  --ad-text-body: 15px;
+  --ad-text-body-sm: 14px;
+  --ad-text-label: 13px;
+  --ad-text-caption: 12px;
+
+  /* Control sizing */
+  --ad-control-height-xs: 28px;
+  --ad-control-height-sm: 32px;
+  --ad-control-height-md: 36px;
+  --ad-control-height-lg: 40px;
+  --ad-control-touch-min: 44px;
+  --ad-control-icon-sm: 16px;
+  --ad-control-icon-md: 20px;
+  --ad-select-compact-min: 112px;
+
+  /* Space */
+  --ad-space-1: 4px;
+  --ad-space-2: 8px;
+  --ad-space-3: 12px;
+  --ad-space-4: 16px;
+  --ad-space-5: 20px;
+  --ad-space-6: 24px;
+  --ad-space-8: 32px;
+  --ad-space-10: 40px;
+  --ad-space-12: 48px;
+  --ad-space-16: 64px;
+
+  /* Shape and layout */
+  --ad-radius-tag: 6px;
+  --ad-radius-control: 8px;
+  --ad-radius-card: 12px;
+  --ad-radius-pill: 999px;
+  --ad-sidebar-width: 232px;
+  --ad-sidebar-collapsed-width: 64px;
+  --ad-decision-rail-width: 320px;
+  --ad-content-max: 1440px;
+  --ad-reading-max: 720px;
+
+  /* Tag management pattern */
+  --ad-tag-dialog-max: 600px;
+  --ad-tag-group-dialog-max: 460px;
+  --ad-tag-preview-width: 168px;
+  --ad-tag-preview-copy-max: 120px;
+  --ad-tag-preview-mobile-min: 112px;
+
+  /* Motion and elevation */
+  --ad-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ad-duration-fast: 120ms;
+  --ad-duration: 160ms;
+  --ad-duration-route: 240ms;
+  --ad-shadow-float: 0 8px 24px rgb(23 25 28 / 10%);
+  --ad-shadow-dialog: 0 24px 72px rgb(23 25 28 / 14%);
+  --ad-shadow-control-selected: 0 1px 3px rgb(23 25 28 / 12%);
+  --ad-shadow-card-hover: 0 12px 30px rgb(23 25 28 / 7%);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --ad-canvas: #141414;
+  --ad-surface: #1b1b1b;
+  --ad-surface-subtle: #262626;
+  --ad-surface-quiet: #1f1f1f;
+  --ad-sidebar: #181818;
+  --ad-ink: #f1f1ef;
+  --ad-ink-secondary: #b6b6b2;
+  --ad-ink-tertiary: #858581;
+  --ad-border: #30302f;
+  --ad-border-soft: #292928;
+  --ad-border-strong: #484846;
+  --ad-route: #5b9cf1;
+  --ad-route-hover: #78acf2;
+  --ad-route-active: #a8cbfa;
+  --ad-route-soft: #172d47;
+  --ad-route-ink: #9bc4fa;
+  --ad-focus: #78acf2;
+  --ad-danger: #e37f78;
+  --ad-danger-soft: #3a211f;
+  --ad-tag-gray-bg: #303235;
+  --ad-tag-gray-ink: #d2d5d8;
+  --ad-tag-gray-border: #45484c;
+  --ad-tag-blue-bg: #172d47;
+  --ad-tag-blue-ink: #9bc4fa;
+  --ad-tag-blue-border: #294d77;
+  --ad-tag-cyan-bg: #15343a;
+  --ad-tag-cyan-ink: #91dce7;
+  --ad-tag-cyan-border: #29545c;
+  --ad-tag-teal-bg: #19352f;
+  --ad-tag-teal-ink: #8fd8c3;
+  --ad-tag-teal-border: #2d574c;
+  --ad-tag-green-bg: #19352b;
+  --ad-tag-green-ink: #8bd0b4;
+  --ad-tag-green-border: #2d5648;
+  --ad-tag-amber-bg: #3a2d17;
+  --ad-tag-amber-ink: #e8bf73;
+  --ad-tag-amber-border: #5d4824;
+  --ad-tag-orange-bg: #3b281b;
+  --ad-tag-orange-ink: #efb17e;
+  --ad-tag-orange-border: #60412a;
+  --ad-tag-red-bg: #3a211f;
+  --ad-tag-red-ink: #eca09a;
+  --ad-tag-red-border: #5d3430;
+  --ad-tag-purple-bg: #2e2540;
+  --ad-tag-purple-ink: #c8acf0;
+  --ad-tag-purple-border: #493c62;
+  --ad-tag-pink-bg: #3a2330;
+  --ad-tag-pink-ink: #e5a4c3;
+  --ad-tag-pink-border: #5c384b;
+  --ad-prompt-surface: #1b1d21;
+  --ad-prompt-surface-raised: #24272c;
+  --ad-prompt-border: #383b42;
+  --ad-prompt-border-strong: #555a63;
+  --ad-prompt-ink: #f2f3f5;
+  --ad-prompt-muted: #9b9fa7;
+  --ad-prompt-action: #f0f1f3;
+  --ad-prompt-action-ink: #191b1f;
+  --ad-prompt-shadow: 0 9px 24px rgb(0 0 0 / 24%);
+  --ad-fact: #6fbe9f;
+  --ad-fact-soft: #19352b;
+  --ad-inference: #e0ae59;
+  --ad-inference-soft: #3a2d17;
+  --ad-conflict: #e37f78;
+  --ad-conflict-soft: #3a211f;
+  --ad-unknown: #aaa9a5;
+  --ad-unknown-soft: #2d2d2c;
+  --ad-shadow-float: 0 8px 24px rgb(0 0 0 / 32%);
+  --ad-shadow-dialog: 0 24px 72px rgb(0 0 0 / 44%);
+  --ad-shadow-control-selected: 0 1px 3px rgb(0 0 0 / 28%);
+  --ad-shadow-card-hover: 0 12px 30px rgb(0 0 0 / 20%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--ad-canvas);
+  color: var(--ad-ink);
+  font-family: var(--ad-font-sans);
+  font-size: var(--ad-text-body);
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ad-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
