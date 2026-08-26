@@ -14,7 +14,7 @@
 
 > Follow-up `DS-V2-01`：把折叠的旧 Work Request、固定阶段、看板、自定义视图与固定导航全文迁入独立历史文档。Work Owner：设计系统维护者；触发条件：移除“待按 V2 重构”状态，或开始实现新的 Task / 导航 UI 前；验证：现行设计系统正文不再命中 `remain fixed`、`only system-default` 等旧强制句，历史链接仍可访问。
 
-> Version 0.30 · 2026-08-26  
+> Version 0.32 · 2026-08-26
 > Visual direction: **Routing Surface / 路由界面**
 
 ## 1. Design thesis
@@ -387,7 +387,7 @@ A classification tag is identity metadata, not lifecycle status. Every surface t
 - Reordering must have a keyboard-complete path. Until the shared system includes an accessible drag-and-drop primitive with announcements and touch handling, expose explicit up/down controls with position numbers; do not ship pointer-only dragging or a decorative grip that does nothing.
 - Creating a tag from inside a group inherits that group and omits the redundant group selector. Editing may expose the shared group Select so an existing tag can be moved.
 - Palette values must be consumed through `--ad-tag-{name}-{bg|ink|border}` tokens. Management, task detail, lists, filters, and previews must render the same `TagBadge` component rather than copying its color classes.
-- Tag selection exposes a two-level information hierarchy inside one panel: **tag-group heading → immediately visible tags**. This is grouped navigation, not a hover submenu or cascader; users select a tag in one click and never have to open a second floating panel. Multi-select and searchable surfaces use the shared shadcn Combobox composition with grouped collections and chips; small single-select filters may use the shared Select with `SelectGroup` and `SelectLabel`.
+- Tag selection uses the shared `TagPicker` Cascader: **the first column is tag-group navigation; selecting a group reveals its tags in the second column of the same compact floating layer**. Groups are not selectable; leaf tags use multi-select checkboxes and canonical `TagBadge` rendering. The popup has no custom title, instructions, counters, footer, or Done action; selection applies immediately and the user closes it by clicking outside, pressing Escape, or toggling the trigger. Behavior comes from `@rc-component/cascader`, while size, surface, spacing, focus, and elevation come from Agentdoor tokens. Do not rebuild cascade state or keyboard behavior per page.
 - Tag-management-only dimensions and elevation belong to shared pattern tokens (`--ad-tag-*`, `--ad-shadow-*`); page CSS must not introduce one-off modal widths, preview sizes, or selected-control shadows.
 
 <details>

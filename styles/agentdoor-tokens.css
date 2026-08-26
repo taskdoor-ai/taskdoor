@@ -137,6 +137,9 @@
   --ad-tag-preview-width: 168px;
   --ad-tag-preview-copy-max: 120px;
   --ad-tag-preview-mobile-min: 112px;
+  --ad-tag-picker-group-width: 144px;
+  --ad-tag-picker-label-width: 220px;
+  --ad-tag-picker-menu-max: 240px;
 
   /* Motion and elevation */
   --ad-ease: cubic-bezier(0.2, 0.8, 0.2, 1);

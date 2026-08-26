@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { taskDetailMocks, type TaskDetailId, type TaskFileNode } from "../data/taskDetailMocks";
 import { findTagByName, type TagGroup } from "../data/tagGroups";
 import { TagBadge } from "./TagBadge";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
+import { TagPicker } from "./TagPicker";
 import { MemberSelector, type Member } from "./MemberSelector";
 import { PersonAvatar } from "./PersonAvatar";
 import { TaskDateRangePicker } from "./TaskDateRangePicker";
@@ -46,7 +46,6 @@ export function TaskDetail({ currentUser = "周岚", members, onOwnerChange, onP
   const [todos, setTodos] = useState(task.todos);
   const [activities, setActivities] = useState(task.activities);
   const [message, setMessage] = useState("");
-  const [tagPickerValue, setTagPickerValue] = useState("");
   const folders = task.files.filter((node) => node.kind === "folder");
   const firstFile = task.files.find((node) => node.kind === "file");
   const [selectedFileId, setSelectedFileId] = useState(firstFile?.id ?? "");
@@ -68,7 +67,7 @@ export function TaskDetail({ currentUser = "周岚", members, onOwnerChange, onP
       <div className="task-detail-kicker">{pathLabels?.length ? <nav aria-label="任务路径" className="task-detail-path">{pathLabels.map((label, index) => <span key={`${label}-${index}`}>{index > 0 && <ChevronRight size={12} />}<em>{label}</em></span>)}</nav> : null}</div>
       <div className="task-detail-title-row"><span aria-hidden="true" className="task-card-status-icon task-detail-task-icon"><ListTodo /></span><h1>{task.title}</h1></div>
       <p className="task-detail-goal">{task.goal}</p>
-      <div className="task-detail-tags"><Tag size={14} /><span className="task-detail-tag-label">标签</span>{tags.map((name) => { const definition = findTagByName(tagGroups, name); return definition ? <TagBadge key={definition.id} onRemove={() => onTagsChange?.(tags.filter((item) => item !== name))} size="sm" tag={definition} /> : null; })}<Select onValueChange={(value) => { const name = value as string; if (name && !tags.includes(name)) onTagsChange?.([...tags, name]); setTagPickerValue(""); }} value={tagPickerValue || null}><SelectTrigger aria-label="添加标签" className="task-tag-select" size="sm"><SelectValue placeholder="添加标签" /></SelectTrigger><SelectContent align="start">{tagGroups.map((group) => <SelectGroup key={group.id}><SelectLabel>{group.name}</SelectLabel>{group.tags.filter((item) => !tags.includes(item.name)).map((item) => <SelectItem key={item.id} value={item.name}>{item.name}</SelectItem>)}</SelectGroup>)}</SelectContent></Select></div>
+      <div className="task-detail-tags"><Tag size={14} /><span className="task-detail-tag-label">标签</span>{tags.map((name) => { const definition = findTagByName(tagGroups, name); return definition ? <TagBadge key={definition.id} onRemove={() => onTagsChange?.(tags.filter((item) => item !== name))} size="sm" tag={definition} /> : null; })}<TagPicker groups={tagGroups} onChange={(names) => onTagsChange?.(names)} selected={tags} /></div>
       <div className="task-overview-meta"><div className="task-overview-people"><div className="task-overview-role-selectors"><div className="task-overview-person-group"><small>拥有者</small><MemberSelector hideHeader label="拥有者" max={1} members={members} onChange={changeOwner} selected={currentOwner} /></div><div className="task-overview-person-group"><small>参与者</small><MemberSelector hideHeader label="参与者" max={3} members={participantMembers} onChange={changeParticipants} selected={currentParticipants} /></div></div></div><div className="task-overview-state"><TaskStatusBadge editable onChange={onTaskStatusChange} value={task.status} /></div><TaskDateRangePicker initialEnd="2026-08-28" initialStart="2026-08-18" key={taskId} /></div>
     </header>
 
