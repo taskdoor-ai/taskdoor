@@ -1,5 +1,5 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import { Check, Clipboard, FileSearch, ListTodo, PanelsTopLeft, Plus, Send, Trash2, UserRoundCheck, UsersRound } from "lucide-react";
+import { Check, Clipboard, FileSearch, ListTodo, PanelsTopLeft, Plus, Send, Trash2, UsersRound } from "lucide-react";
 import { useState } from "react";
 import { BrandMark } from "./BrandMark";
 import { CodeBlock, CodeBlockCode, CodeBlockGroup } from "./ui/code-block";
@@ -13,11 +13,9 @@ const agentIcons: Record<(typeof agents)[number], string> = agentIconUrls;
 const scenarios = [
   { icon: PanelsTopLeft, title: "定制我的个人工作台", description: "按自己的工作方式调整模块、排序和信息组合；配置仅对自己可见，不影响其他成员。", command: "agentdoor workbench customize --mine", tone: "violet" },
   { icon: ListTodo, title: "获取我的任务", description: "开始工作前，查看当前由我负责或需要参与的任务。", command: "agentdoor task list --mine", tone: "blue" },
-  { icon: Check, title: "获取我的待办", description: "确认今天需要处理的具体行动、优先级与截止时间。", command: "agentdoor todo list --mine", tone: "mint" },
   { icon: FileSearch, title: "搜索团队资料库", description: "本地 Agent 缺少业务规则、项目文档或历史案例时。", command: "agentdoor resource search \"<query>\"", tone: "violet" },
   { icon: Plus, title: "创建团队任务", description: "本地工作发现需要团队跟进的问题或新的行动项时。", command: "agentdoor task create", tone: "blue" },
   { icon: Trash2, title: "删除团队任务", description: "任务误建或确认不再需要时使用；需要权限并二次确认。", command: "agentdoor task delete <task-id>", tone: "amber" },
-  { icon: UserRoundCheck, title: "完成我的待办", description: "完成一项具体行动，并将完成状态同步回团队。", command: "agentdoor todo complete <todo-id>", tone: "violet" },
   { icon: Send, title: "提交本地工作成果", description: "本地分析、代码或文档完成，准备交付给团队时。", command: "agentdoor result submit <path>", tone: "mint" },
   { icon: UsersRound, title: "查看身份与工作空间", description: "确认 CLI 当前登录身份以及正在连接的团队空间。", command: "agentdoor status", tone: "blue" },
 ] as const;
@@ -77,7 +75,7 @@ export function AiConnectionPage() {
     </section>
 
     <section className="connect-v2-scenes">
-      <header><p>Local operations</p><h2>本地 Agent 可以做什么？</h2><span>在权限范围内操作任务、待办与资料库，并将本地成果带回团队。</span></header>
+      <header><p>Local operations</p><h2>本地 Agent 可以做什么？</h2><span>在权限范围内操作任务与资料库，并将本地成果带回团队。</span></header>
       <div className="connect-v2-bento">
         {scenarios.map(({ icon: Icon, title, description, command: scenarioCommand, tone }) => <GlowCard className={tone} key={title} size="md">
           <div className="connect-v2-card-inner">

@@ -2,6 +2,7 @@
 
 > 状态：人与人交接必须清晰、可接续，并与 Agent 协作遵循同一底层原则，已由产品负责人确认；具体对象、状态机和交互是待确认设计默认。  
 > 核心判断：Handoff 不是“发一包文件”，而是双方对工作状态、责任边界和下一步形成共同理解，并记录接收者明确选择后完成的工作接续协议。“明确选择”不等于组织权力关系中的自由同意，因此还需要权力敏感保护。
+> D-139 当前边界：Task 是唯一行动对象，`todo-assignment` Profile 及所有 Todo 界面 / Schema 投影已被取代；Handoff 当前只讨论 Context、Responsibility、Result Return 与 Owner Transfer 四类 Profile。Task 创建与详情不录入或展示逐项 Responsibility 分配和验收标准；Responsibility 仅作为独立、可审计的已有责任接续协议保留，不恢复“责任分布”面板。
 
 ### 阅读效力地图
 
@@ -9,7 +10,7 @@
 | --- | --- |
 | D-13 已确认原则 | 工作必须可接续；发送不等于接收；每层 Task 单 Owner；接收者有真实选择；结果与证据要回到整合者 |
 | 保守保护基线 | 不伪造 Consent、不扩大权限、不从静默推断工作、不泄露私密拒绝原因、原责任在有效变化前继续存在；待产品细节确认期间不能开放更宽松旁路 |
-| Q-11–Q-19 Proposal | Handoff 的产品位置、五类 Profile、状态机、复述强度、临时接管、一对一 recipient、Result Return 边界；精确 Schema 和界面均不得冒充已确认 |
+| Q-11–Q-19 Proposal | Handoff 的产品位置、四类 Profile、状态机、复述强度、临时接管、一对一 recipient、Result Return 边界；精确 Schema 和界面均不得冒充已确认 |
 
 本文中的 `must / 必须` 若用于 Q-11–Q-19 展开，只表示“采用该 Proposal 后为保持其安全性必须同时成立”，不表示产品负责人已经选择了该 Proposal。正式界面优先使用“工作交接、共享接续上下文、交回结果、移交这项责任、移交任务负责人”等作用语言，Profile 英文名属于领域 / 代码术语。
 
@@ -51,7 +52,7 @@
 | Agent 协作表现 | 人际协作中的产品表达 |
 | --- | --- |
 | 子 Agent 有清楚名字和角色 | 显示协作者、关系类型和约定结果 |
-| 每个 Agent 收到有界任务 | 明确范围、非目标、验收和权限 |
+| 每个 Agent 收到有界任务 | 明确范围、非目标、结果依据和权限 |
 | 可以并行工作 | 独立结果正式创建为不同子 Task，Owner 各自唯一 |
 | 运行中 / 已完成可见 | 只显示明确承诺和工作事件，不监控在线状态 |
 | 结果回到总 Agent | 使用 Result Return 回传结果、证据与剩余风险 |
@@ -63,7 +64,7 @@
 - 已明确接受的协作关系。
 - 当前等待的对象或依赖；只在直接协作者确实需要协调时显示具名下一响应者。
 - 按需可见的最近工作证据；不进入组织级人员概览。
-- 是否等待权限、澄清、交付或验收。
+- 是否等待权限、澄清、交付或父 Owner 核对。
 
 系统不能根据在线、正在输入、静默时长或日历细节推断“他是否在工作”。
 
@@ -76,8 +77,8 @@
 | 求助 / 咨询 | 获得资料、判断、线索或短时评审 | Owner 不变；可不形成长期责任 | 协作邀请或团队求助 |
 | 新工作委托 | 请对方完成一个尚未开始的独立结果 | 父 Task Owner 不变；新子 Task 有独立 Owner | Proposal → 接受 → 子 Task |
 | 知识交接 | 让对方理解已有工作，以便继续参与 | 默认不改变责任 | `context-only Handoff` |
-| 已有工作接续 | 把做到一半的 Todo 或持续责任交给他 | Todo assignee 或 Responsibility 原子变化 | `todo / responsibility Handoff` |
-| 结果交回 | 协作者把产出交回给发起人整合、验收 | 子 Task 可进入 Review；父 Owner 不变 | `result-return Handoff` |
+| 已有工作接续 | 把持续责任或整个 Task 交给他 | Responsibility 或 Task Owner 原子变化 | `responsibility / owner-transfer Handoff` |
+| 结果交回 | 协作者把产出交回给发起人核对、整合 | 子 Task 可进入 Review；父 Owner 不变 | `result-return Handoff` |
 | 整个 Task 接管 | 把结果责任和持续跟进责任交出去 | Task Owner 原子替换 | `owner-transfer Handoff` |
 | 请有权人批准 | 请求一个授权决定 | 不转移授权 | Decision / Authorization Request |
 
@@ -90,8 +91,8 @@
 
 ```text
 只是找线索 / 判断 / 短评审？ → 求助或协作邀请
-尚未开始、可独立验收的新结果？ → Proposal / 邀请 → 正式创建子 Task
-已有上下文、Todo、责任或 Task 需要别人接续？ → Handoff
+尚未开始、可独立推进并回传的新结果？ → Proposal / 邀请 → 正式创建子 Task
+已有上下文、持续责任或 Task 需要别人接续？ → Handoff
 子 Task 完成并交给直接父 Task Owner？ → result-return Handoff
 需要有权人批准？ → Decision / Authorization Request
 ```
@@ -159,18 +160,18 @@
 直接父 Task Owner 明确有界结果
   → 若是新独立结果：邀请 → 正式创建子 Task + Task Brief
   → 若是已有工作接续：Handoff Offer → 复述 / 协商 → 激活
-  → 关联 Task / Todo / Responsibility 执行
+  → 关联 Task / Responsibility 执行
   → 子 Task Owner 发起 result-return Handoff
-  → 直接父 Task Owner 验收或要求补充
+  → 直接父 Task Owner 核对接收或要求补充
   → 子 Task 完成；结果随后由父 Owner 整合进父 Task
 ```
 
-建议默认（Q-19）：Result Return 首版只用于“子 Task → 直接父 Task”。Todo 通过完成证据关闭；Advisor / Reviewer 的短回复沉淀为 Activity、Decision 或 File，并履行 Responsibility。若一项回复需要独立验收、持续上下文或继续拆解，它一开始就应该是子 Task。确认前只按此进行 Demo / 模型验证，不据此开放正式写入。
+建议默认（Q-19）：Result Return 首版只用于“子 Task → 直接父 Task”。Advisor / Reviewer 的短回复沉淀为 Activity、Decision 或 File；若一项回复需要独立 Owner、持续上下文或继续拆解，它一开始就应该是子 Task。确认前只按此进行 Demo / 模型验证，不据此开放正式写入。
 
 这里有两个不同状态：
 
 - Handoff 状态：协议是否被理解、接受和激活。
-- Work 状态：关联 Task / Todo 是否正在执行、等待、Review 或完成。
+- Work 状态：关联 Task 是否正在执行、等待、Review 或完成。
 
 两者不能塞进一个大状态机。“协作中”是关联工作的状态，不代表交接协议仍未完成。
 
@@ -190,7 +191,7 @@ Handoff 包不复制完整聊天和文件树，而是从 Task、File、Decision�
 - 范围与明确非目标。
 - 已完成什么、剩余什么。
 - 接手后的第一个动作。
-- 验收标准。
+- 结果与核对依据；它属于 Handoff Revision，不写入 Task 的验收标准字段。
 - 当前 Owner、协作者、下一项依赖；仅在直接协作者需要协调时显示具名下一响应者。
 - 预计投入区间、必要的重叠支持和升级路径。
 
@@ -236,9 +237,9 @@ accepted
 
 当 Handoff source 本人检查当前 Revision 后点击“发出”，系统在同一命令中写入 `offered` 与该 Revision 的 source Consent，不要求发起者再点一次接受；Agent 只能起草，仍须 source 明确发出。若由第三方代拟但 source 尚未确认，则只能保存草稿或发起待 source 确认，不能伪造其 Consent。Steward 应急接管是唯一受控的 source Consent 例外，按后文规则记录。任何后续实质修改都会生成新 Revision，并使这次 source Consent 与其他旧 Consent 一并失效。
 
-前台不单独显示含糊的“已接受”：分别写成“邀请已接受”“工作交接已同意，待生效”“结果已验收”和“关联工作进入待验收”，避免用户把四个不同对象的状态混为一谈。
+前台不单独显示含糊的“已接受”：分别写成“邀请已接受”“工作交接已同意，待生效”“结果已接收”和“关联工作待父 Owner 核对”，避免用户把四个不同对象的状态混为一谈。
 
-任何范围、责任效果、关键 FileVersion 或验收标准变化，都生成新的不可变 Revision；旧 Consent 自动失效。
+任何范围、责任效果、关键 FileVersion 或结果依据变化，都生成新的不可变 Revision；旧 Consent 自动失效。结果依据属于 Handoff Revision，不投影为 Task 详情的验收标准。
 
 “有条件接受”是 `clarification-requested` 的用户界面动作，不写入 Consent，也不新增正式状态。条件补齐后，如果可见上下文或协议内容变化，则生成新 Revision，再由必要人员明确接受。
 
@@ -253,7 +254,6 @@ accepted
 ```ts
 type HandoffKind =
   | "context-only"
-  | "todo-assignment"
   | "responsibility-transfer"
   | "result-return"
   | "owner-transfer";
@@ -278,7 +278,6 @@ type Handoff = {
   toPrincipalId: string;
   scopeRef:
     | { kind: "task"; id: string }
-    | { kind: "todo"; id: string }
     | { kind: "responsibility"; id: string };
 
   currentRevision: number;
@@ -303,7 +302,7 @@ type HandoffRevision = {
   completedSummary: string;
   remainingWork: string;
   nextAction: string;
-  acceptanceCriteria: string[];
+  resultEvidence: string[];
 
   factRefs: string[];
   decisionRefs: string[];
@@ -369,7 +368,6 @@ type HandoffPreflightGap = {
 
 type HandoffEffect =
   | { kind: "none" }
-  | { kind: "todo-assignee"; todoId: string; fromMemberId: string; toMemberId: string }
   | { kind: "responsibility"; fromResponsibilityId: string; successorResponsibilityId: string; fromMemberId: string; toMemberId: string; validUntil?: string }
   | { kind: "task-owner"; taskId: string; fromMemberId: string; toMemberId: string }
   | { kind: "return-result"; childTaskId: string; directParentTaskId: string };
@@ -401,18 +399,16 @@ type HandoffConsentWithdrawal = {
 - 新建一个由同事拥有的子 Task，使用 Proposal / 邀请；已有工作发生接续时才使用 Handoff。
 - Context Handoff 和 Result Return 可以不改变责任。
 - 建议默认（Q-18）首版 recipient 只解析为一位具名主体；岗位、值班队列或广播先用于发现 / 解析接收者，知会人不等于责任接收人。确认前不开放队列级责任变化；队列级 Handoff 是否需要独立模型留待真实轮班场景验证。
-- Todo 变复杂时先 Todo → Task，再进行 Owner Transfer。
 - Owner Transfer 不再维护第二套握手协议，而是 `kind=owner-transfer` 的严格 Handoff Profile。
 - Agent 可以起草 Handoff，不能替任何人 Consent。在 Q-05 当前建议默认下，Agent 也不能成为人类 Task Owner；若 Owner 资格决策改变，需重新审查责任和授权模型。
 
-Handoff 两端保存 Principal ID，责任 Effect 使用现有领域对象的 Member ID。Gateway 必须通过同 tenant 的唯一 `Principal.memberId` 映射生成 Effect，禁止直接比较两个 ID 域或由客户端提交映射。正常的 Todo、Responsibility、Result Return 与 Owner Transfer 要求 source / recipient 中承担责任或 Consent 的主体为 active member；Steward 应急接管可把 suspended / revoked 的原 Owner 映射为 effect.from 和审计来源，但绝不生成其 Consent，active Steward 必须亲自成为 recipient。`context-only` 不产生 Member Effect，可在策略允许时面向具名 active external Principal；它仍不让 external 获得 Task Owner 或内部 Responsibility 身份。
+Handoff 两端保存 Principal ID，责任 Effect 使用现有领域对象的 Member ID。Gateway 必须通过同 tenant 的唯一 `Principal.memberId` 映射生成 Effect，禁止直接比较两个 ID 域或由客户端提交映射。正常的 Responsibility、Result Return 与 Owner Transfer 要求 source / recipient 中承担责任或 Consent 的主体为 active member；Steward 应急接管可把 suspended / revoked 的原 Owner 映射为 effect.from 和审计来源，但绝不生成其 Consent，active Steward 必须亲自成为 recipient。`context-only` 不产生 Member Effect，可在策略允许时面向具名 active external Principal；它仍不让 external 获得 Task Owner 或内部 Responsibility 身份。
 
 `kind`、`taskId`、`scopeRef`、source / recipient、`requestedEffect` 与必要 Consent 不能由客户端任意组合。Command Gateway 必须按 Profile 做穷举校验：
 
 | Profile | scope / task 约束 | 唯一允许的 Effect | 主体一致性 |
 | --- | --- | --- | --- |
 | Context | scope 属于 `taskId` | `none` | Consent 只能来自 source / recipient |
-| Todo | Todo 必须属于 `taskId` | 同 Todo 的 `todo-assignee` | effect.from / to 必须分别等于 source / recipient 映射出的 memberId，source 是当前 assignee |
 | Responsibility | from Responsibility 必须属于 `taskId` | supersede 原记录并创建指定 successor 的转移 | effect.from / to 必须分别等于 source / recipient 映射出的 memberId，source 是当前 active holder；旧 memberId 不原地改写 |
 | Result Return | `taskId` 与 scope 都是 child Task；其父级必须是 effect.directParentTaskId | `return-result` | source 是 child Owner，recipient 是直接父 Task Owner |
 | Owner Transfer | scope Task 必须等于 `taskId` | 同 Task 的 `task-owner` | effect.from / to 必须分别等于 source / recipient 映射出的 memberId，且 source 是当前 Owner |
@@ -426,21 +422,20 @@ Handoff 两端保存 Principal ID，责任 Effect 使用现有领域对象的 Me
 1. 必要角色接受同一 Revision 和 digest。
 2. 接收者完成下一步所需的最低权限已经就绪。
 3. 关键文件、版本和 Decision 仍可访问，没有未确认漂移。
-4. 被交接的 Task、Todo 或 Responsibility 状态仍与 Revision 一致。
+4. 被交接的 Task 或 Responsibility 状态仍与 Revision 一致。
 5. 双方表达、共同 Revision 与引用证据之间不存在未解决冲突。
 6. 责任变化与 ChangeSet 在同一事务写入。
 7. 事务内使用 `targetStateDigest` 做 CAS（或等价行锁 / 串行化隔离），并基于当前 AuthorizationGrant 与 PolicyVersion 重新计算 PolicyDecision；检查与写入之间不能留竞态窗口。
 
-Handoff 激活的 ChangeSet 对被改 Task / Todo / Responsibility 必须记录 before / after digest，不能把并发安全建立在可选字段上。
+Handoff 激活的 ChangeSet 对被改 Task / Responsibility 必须记录 before / after digest，不能把并发安全建立在可选字段上。
 
 建议默认的必要同意人：
 
 | Profile | 必要 Consent | 说明 |
 | --- | --- | --- |
 | Context | 发出者、接收者 | 只证明上下文被接收，不产生责任 |
-| Todo | 当前 assignee、拟接收人 | 若组织策略要求，Task Owner 还需授权该变化 |
 | Responsibility | 当前责任人、拟接收人、Task Owner | Task Owner 只确认任务内责任边界，不替接收者接受 |
-| Result Return | 交付方、接收整合的父 Task Owner | `offered=已交付`、子 Task `Review=待验收`；父 Owner Consent 后待激活，激活后子 Task 才完成；采用到父 Task 是后续整合事件 |
+| Result Return | 交付方、接收整合的父 Task Owner | `offered=已交付`、子 Task `Review=待父 Owner 核对`；父 Owner Consent 后待激活，激活后子 Task 才完成；采用到父 Task 是后续整合事件 |
 | Owner Transfer | 当前 Owner、拟接任 Owner | 当前 Owner 不可用时，只有具备明确接管授权的 Steward 可作为 recipient 接任临时 Owner，并以 authorized-steward 记录 source 例外与理由 |
 
 即使必要人员已经 Consent，实际动作仍须通过 AuthorizationGrant / PolicyDecision；“同意做”与“有权改对象”是两项不同判断。
@@ -457,10 +452,10 @@ Handoff 激活的 ChangeSet 对被改 Task / Todo / Responsibility 必须记录 
 
 对于 Result Return：
 
-- source 发出 `offered` 时代表“已交付”，子 Task 以同一受权命令和 ChangeSet 从当前非终态进入 Review，但不等于验收；若 Handoff 随后取消、拒绝或到期，则以补偿 ChangeSet 回到发送前状态，除非 Task 已有独立的新变更，此时要求 Owner 明确处理冲突。
-- 直接父 Task Owner 可以要求补充；补充形成新 Revision，也可以把剩余工作转为新 Task / Todo。
-- 直接父 Task Owner 对满足验收条件的 Revision Consent 后进入 `accepted`；激活事务才把子 Task从 Review 变为 Completed。
-- “把结果采用到父 Task 的方案、Decision 或 File”是父 Task 内后续整合事件，不与 Result Return 激活合并。结果已验收也不代表父 Task 已完成。
+- source 发出 `offered` 时代表“已交付”，子 Task 以同一受权命令和 ChangeSet 从当前非终态进入 Review，但不等于父 Owner 已接收；若 Handoff 随后取消、拒绝或到期，则以补偿 ChangeSet 回到发送前状态，除非 Task 已有独立的新变更，此时要求 Owner 明确处理冲突。
+- 直接父 Task Owner 可以要求补充；补充形成新 Revision，也可以把剩余工作转为新 Task。
+- 直接父 Task Owner 核对结果与 Revision 中的结果依据并 Consent 后进入 `accepted`；激活事务才把子 Task 从 Review 变为 Completed。
+- “把结果采用到父 Task 的方案、Decision 或 File”是父 Task 内后续整合事件，不与 Result Return 激活合并。结果已接收也不代表父 Task 已完成。
 
 ## 十、文件、版本与权限
 
@@ -492,13 +487,13 @@ Handoff 激活的 ChangeSet 对被改 Task / Todo / Responsibility 必须记录 
 
 ### Task 详情
 
-建议首版不新增“交接”一级导航。Task 详情增加“协作”区域，包含邀请、工作交接和结果交回。
+当前不新增“交接”一级导航，也不在 Task 详情增加“责任分布”“验收标准”或独立 Handoff 页签。邀请、工作交接和结果交回通过对应 Activity、通知及来源对象进入独立 Handoff 详情；Task 详情仍只保留概览、关联任务、文件与活动。
 
-协作概览借鉴截图的状态感，但以工作为中心：
+Activity 中的 Handoff 投影以工作为中心：
 
 ```text
 协作关系
-4 条工作分支 · 1 待你响应 · 1 待验收
+4 条工作分支 · 1 待你响应 · 1 待父 Owner 核对
 
 程夏  子任务负责人  已准备交回  最近证据：洞察摘要 v3
 唐梨  评审人        等待证据    当前依赖：品牌规则证据
@@ -523,24 +518,26 @@ Handoff 激活的 ChangeSet 对被改 Task / Todo / Responsibility 必须记录 
 不包含：扩大灰度范围、修改 POS、批准预算
 ```
 
-下面依次展示目标与验收、当前状态、事实/决定/未知、文件版本与权限、接收者复述、协议 diff 和审计。
+下面依次展示目标与结果依据、当前状态、事实 / 决定 / 未知、文件版本与权限、接收者复述、协议 diff 和审计。这里的结果依据属于 Handoff Revision，不写入 Task 的验收标准。
 
-### 我的工作
+### 通知与来源对象
 
-首页增加三个聚合入口：
+全局通知可聚合三类 Handoff 状态：
 
 - 待我接收。
 - 等待对方确认。
-- 待我验收 / 整合。
+- 待我核对 / 整合。
 
-邀请接受前不是 Todo；接受后只按第三节决策树物化“新参与”：可创建新 Task、Todo 或 Responsibility。替换已有 Task Owner、Todo assignee 或 active Responsibility holder 属于已有工作接续，必须走对应 Handoff Profile，普通邀请不能更新这些字段。
+邀请接受后只按第三节决策树物化“新参与”：可成为 Participant，或经 Proposal 创建新 Task。替换已有 Task Owner 或 active Responsibility holder 属于已有工作接续，必须走对应 Handoff Profile；普通邀请不能更新这些字段。Task 创建与详情不提供逐项 Responsibility 分配入口。
+
+D-84、D-89 已确认全局通知入口独立于首页：成员在任何模块都可从左侧打开通知 Sheet，直接查看最小充分交接上下文；协作邀请与责任转交的快捷动作只保留接受和拒绝。拒绝不强制填写原因；发起者只收到继续规划所需的结果状态，私密说明、响应耗时和历史模式不进入 Activity、画像或管理者下钻。完整协商仍回到来源对象，该入口不改变本节仍待确认的 Handoff Profile、Consent 和激活模型。
 
 ### 状态可见但不监控
 
 可以显示：
 
 - 待接收、澄清中、有条件接受、待生效、已生效。
-- 关联工作正常推进、等待补充、待交回、待验收。
+- 关联工作正常推进、等待补充、待交回、待父 Owner 核对。
 - 当前等待的对象或依赖；只有直接协作者确实需要协调时，才按权限显示具名下一响应者。
 - 最新可验证证据按需展示，成员可以纠正其可见范围和状态说明。
 
@@ -581,7 +578,7 @@ Handoff 激活的 ChangeSet 对被改 Task / Todo / Responsibility 必须记录 
 - 只根据 Task、File、Decision 和 ChangeSet 的显式事件形成摘要。
 - 识别范围漂移、版本变化、权限失效、反复交回和无人整合。
 - 起草 Result Return：结果、证据、决定、剩余风险和建议下一步。
-- 交接完成后只生成候选责任证据；实际交付被验收后才形成经验信号。
+- 交接完成后只生成候选责任证据；实际交付被父 Owner 接收后才形成经验信号。
 
 AI 不得：
 
@@ -597,7 +594,7 @@ AI 不得：
 
 | 风险 | 典型场景 | 最低协议 |
 | --- | --- | --- |
-| 低 | 分享项目背景、低风险 Todo 接续 | 异步最小包、接收确认 |
+| 低 | 分享项目背景、低风险 Context 接续 | 异步最小包、接收确认 |
 | 中 | 跨职能工作包、责任移交、外部协作者 | 接收者复述、权限与版本检查、范围确认 |
 | 高 | 生产事故、出货决定、敏感权限、Owner Transfer | 直接双向沟通（可同步或结构化异步）、同 Revision Consent、明确生效时刻、必要重叠支持 |
 
@@ -622,7 +619,7 @@ AI 不得：
 - 激活前发现关键文件或权限缺失的比例。
 - 接手后因上下文缺失重新打开或交回的比例。
 - 从提出到双方形成明确范围的时间。
-- Result Return 首次验收通过率。
+- Result Return 首次被父 Owner 接收的比例。
 - 是否出现 Owner / Responsibility 空窗或重叠。
 - 文件变化后受影响 Handoff 被识别的比例。
 - 用户是否能准确回答“我负责什么、不负责什么、第一步是什么”。
@@ -635,12 +632,12 @@ AI 不得：
 - 不做个人响应速度、接受率、拒绝次数和工作量排行榜。
 - “没有新事件”只表示系统不知道，不表示没有工作。
 - 私密拒绝原因不进入团队画像。
-- 拒绝、澄清、验收与响应类事件禁止个人导出和下钻。建议默认的生产聚合硬下限是同一 90 天窗口内至少 10 位不同成员且 20 个事件；同时实施互补抑制、禁止任意交叉筛选 / 差分查询，任何筛选后的单元格都必须重新满足阈值。五行业 Demo 的 6–9 人团队因此一律不展示这些人员行为指标。阈值只降低风险，不声称实现匿名；正式上线前仍需隐私评审。
+- 拒绝、澄清、结果接收与响应类事件禁止个人导出和下钻。建议默认的生产聚合硬下限是同一 90 天窗口内至少 10 位不同成员且 20 个事件；同时实施互补抑制、禁止任意交叉筛选 / 差分查询，任何筛选后的单元格都必须重新满足阈值。五行业 Demo 的 6–9 人团队因此一律不展示这些人员行为指标。阈值只降低风险，不声称实现匿名；正式上线前仍需隐私评审。
 - 指标设用途与保留期限，默认只用于产品安全和流程改进，不直接用于绩效。
 - 经明确同意开展的可用性研究数据必须进入与生产责任画像、推荐和绩效链路隔离的数据域；研究参与者可撤回，结果只按合格群体汇总。
-- Handoff 数量不能等同于贡献；验收证据和真实责任才可以成为候选画像证据。
+- Handoff 数量不能等同于贡献；可复核的结果证据和真实责任才可以成为候选画像证据。
 
-## 十五、跨行业首轮验收
+## 十五、跨行业首轮验证
 
 ### 支付事故：结果交回
 
@@ -659,7 +656,7 @@ AI 不得：
 
 ### 影视制作：外部交回
 
-调色供应商返回锁片结果，只能引用授权的代理文件和交付版。内部后期 Owner 验收后接入主 Task；供应商不能看到合同、演员或其他供应商目录。
+调色供应商返回锁片结果，只能引用授权的代理文件和交付版。内部后期 Owner 核对接收后接入主 Task；供应商不能看到合同、演员或其他供应商目录。
 
 ### 制造质量：高风险临时接管
 
@@ -686,11 +683,11 @@ AI 不得：
 ## 十七、待确认设计
 
 1. Q-11：Handoff 是否作为 Task 下可独立审计的支撑实体，但不进入一级导航。
-2. Q-12：是否采用 Context、Todo、Responsibility、Result Return、Owner Transfer 五种 Profile。
+2. Q-12：是否采用 Context、Responsibility、Result Return、Owner Transfer 四种 Profile；原 `todo-assignment` Profile 已由 D-139 取代，不再进入当前方案。
 3. Q-14：中高风险 Handoff 是否强制接收者复述；低风险是否允许简化确认。
 4. Q-13：`accepted` 与 `activated` 是否分开，确保“愿意接”不等于责任已经生效。
 5. Q-15：临时接管到期是否只提醒发起方向相反的新 Owner / Responsibility Transfer，禁止自动切回。
-6. Q-16：Task 详情是否统一使用“协作”区域容纳邀请、Handoff 和结果交回。
+6. Q-16：Handoff 是否通过 Activity、通知与来源对象进入独立详情，同时保持 Task 详情无逐项 Responsibility 与验收标准面板。
 7. Q-17：是否采用权力敏感保护的建议默认：重新排优先级 / 无冲突协调 / 保密安全渠道；同 scope 的人工和自动重复发起共同受保护；拒绝类数据不下钻，生产聚合至少 90 天内 10 人 / 20 事件并做抑制，Demo 小团队不展示，研究数据与生产画像隔离。确认前按这一保守基线设计，不开放更宽松旁路。
 8. Q-18：首版是否只支持具名一对一 recipient；岗位 / 值班队列先解析到明确成员后再交接。
 9. Q-19：Result Return 是否首版仅支持子 Task 逐级交回直接父 Task，其余短回复使用 Activity / Decision / File。

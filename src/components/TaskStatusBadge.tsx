@@ -26,7 +26,7 @@ export const taskStatusDefinition: Record<TaskStatus, StatusDefinition> = {
   "进行中": { description: "协作者正在推进任务", icon: CircleDashed, tone: "progress" },
   "待审核": { description: "成果已提交，等待确认", icon: ScanSearch, tone: "review" },
   "已阻塞": { description: "存在阻塞，需要先处理", icon: TriangleAlert, tone: "warning" },
-  "已完成": { description: "目标与验收标准已达成", icon: CircleCheck, tone: "success" },
+  "已完成": { description: "任务目标已达成，结果已确认", icon: CircleCheck, tone: "success" },
   "已取消": { description: "任务已停止推进", icon: CircleX, tone: "failed" },
 };
 

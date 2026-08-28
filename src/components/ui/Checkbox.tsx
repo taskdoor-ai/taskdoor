@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
 import { forwardRef, type InputHTMLAttributes } from "react";
 
-type CheckboxSize = "sm" | "md";
+type CheckboxSize = "sm" | "md" | "touch";
 
 type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "type"> & {
   size?: CheckboxSize;

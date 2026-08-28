@@ -1,6 +1,6 @@
 # 信息架构与领域模型
 
-> 状态：任务/待办保留、任务多层级、正式任务单 Owner、任务文件层级、团队文件夹与人际 Handoff 必须清晰已经确认；主体、权限、Handoff Profile、状态机与发布协议是编码前建议，需在决策台账确认。
+> 状态：Task 是唯一行动对象、Task 多层级、正式 Task 单 Owner、Task 内文件与人际 Handoff 必须清晰已经确认；主体、权限、Handoff Profile、状态机与发布协议是编码前建议，需在决策台账确认。
 
 ## 一、模块结构
 
@@ -9,28 +9,31 @@ AgentDoor
 ├── 首页 / 我的工作
 ├── 任务
 │   ├── 全部任务
-│   ├── 任务树
-│   └── 任务详情：概览 / 子任务 / 待办 / 文件 / 协作 / 动态 / 决定 / 变更
-├── 我的待办
-├── 团队文件
-│   ├── 文件夹树
-│   ├── 文件列表与预览
-│   ├── 版本与权限
-│   └── 被哪些任务引用
+│   ├── 任务列表：搜索 / 状态 / 负责人 / 扁平标签
+│   ├── 标签管理（无标签组，任务列表标题区入口）
+│   └── 任务详情：概览 / [关联任务] / 文件 / 活动
 ├── 团队动态
 │   ├── 求助与广播
 │   ├── 经验与机会
 │   └── 我的关注与响应
-├── 团队成员
-│   ├── 正式职责
-│   ├── 实际责任画像
-│   ├── 当前承诺
-│   └── 协作证据
+├── 设置
+│   └── 设置 Dialog（从头像组件打开）
+│       ├── 个人设置
+│       │   └── 个人信息（跨团队）
+│       └── 团队设置
+│           ├── 团队信息（按团队切换）
+│           ├── 成员（当前只读投影）
+│           └── 我的责任（责任正文与 AI 建议）
+│               ├── 团队资料摘要
+│               ├── 团队责任说明（本人 / 团队管理员共同维护）
+│               └── AI 审阅建议（建议写入文本、具体依据、采纳 / 忽略）
 ├── 连接 AI
 └── 设置与治理
 ```
 
-任务、待办和文件是日常工作对象；成员、动态、决定、变更、授权和证据是支撑协作闭环的领域对象。产品“极简”指不再增加项目、计划、里程碑等平行容器，不代表用一个万能表承载所有语义。
+Task 是当前产品唯一行动对象；File、成员、动态、决定、变更、授权和证据是支撑协作闭环的领域对象。产品“极简”不把 File、Handoff、权限或审计压成 Task 字段，但不再为 Todo、Task Folder 或独立团队文件建立当前产品入口。
+
+D-84 增加全局通知入口，但不把 Notification 升格为新的业务真相或一级模块。通知中心是由 Proposal、Task、Responsibility、Handoff、Decision、Insight 与 Result Return 派生的收件投影；`read / unread` 只属于送达展示，接受、拒绝、范围反提、激活、验收和失效仍写回各自原对象。生产实现必须以 `recipient + source object + revision digest` 去重，并在权限过滤后生成摘要；来源撤权或失效时不得继续展示缓存正文。
 
 ## 二、协作主体与可信写入边界
 
@@ -79,7 +82,7 @@ UI / Agent / Connector
 
 当前基于前端 Mock 与 `localStorage` 的 Demo 只能验证交互和领域语义，不能声称已经实现 ACL、安全授权或不可篡改审计。
 
-## 三、任务与待办
+## 三、Task
 
 ### Proposal 不是正式任务
 
@@ -104,7 +107,34 @@ type TaskProposal = {
 };
 ```
 
-一张 Owner 候选 Proposal 只绑定一位 recipient 和一个有界 scope。任何目标、范围、Owner 或验收变化都生成新 revision；接受只对同一 digest 有效。正式创建以 Proposal ID + accepted revision 作为幂等键，最多产生一个 `materializedTaskId`。多人并行使用不同 Proposal；同一 Owner 位置不知道找谁时先广播，不并发发送多张可自动生效的邀请。
+一张 Owner 候选 Proposal 只绑定一位 recipient 和一个有界 scope。任何目标、范围或 Owner 变化都生成新 revision；接受只对同一 digest 有效。正式创建以 Proposal ID + accepted revision 作为幂等键，最多产生一个 `materializedTaskId`。多人并行使用不同 Proposal；同一 Owner 位置不知道找谁时先广播，不并发发送多张可自动生效的邀请。
+
+复杂事务的创建 Proposal 可以额外包含一层显式结构草稿：
+
+```ts
+type TaskChildDraft = {
+  id: string;
+  title: string;
+  goal: string;
+  proposedOwnerId: string;
+  participantIds: string[];
+  fileCandidateIds: string[];
+  contextIds: string[];
+};
+
+type TaskStructureProposal = {
+  mode: "single" | "decomposed";
+  children: TaskChildDraft[];
+};
+```
+
+- `single` 只物化父 Task；`decomposed` 在同一次确认中物化父 Task 与一层子 Task，并把子 Task 的 `parentTaskId` 指向父 Task。
+- 拟由当前用户处理的子 Task 可直接写入该 Owner；拟由同事处理时，在真实接受协议接入前，正式 `ownerId` 仍沿用父 Task Owner，同时保留 `proposedOwnerId` 与 `pending-acceptance`，不能伪装为已经完成转移。
+- 父子 Task 使用同一 Task Schema，只额外维护 `parentTaskId` 层级关系；创建投影可以用父 Task 的周期初始化子 Task，但不产生平行的 Child 类型或目录归属。
+- 创建者与 Owner 分离：`creatorId` 是不可被普通 Owner 变更覆盖的发起事实，`ownerId` 是当前结果责任关系。创建者可以把父 Task 或任一子 Task 分配给自己或同事；参与关系仍独立保存。
+- 父子 Task 分别维护成员、文件候选和引用。每个子 Task 草稿独立保存 `participantIds`、`fileCandidateIds` 与 `contextIds`；负责人不能同时重复为 Participant。分析找到的场景来源不直接等于候选；候选不直接等于已确认引用。父 Task 的 Participant、File Reference、文件候选或 PolicyDecision 不自动复制到子 Task，子 Task 关系也不反向写入父 Task。
+- 父 Task 和每个子 Task 可以分别维护底层协作缺口，用于解释“尚缺什么”；当前创建界面不录入逐项 Responsibility，不把缺口自动变成 Participant、责任或子 Task。
+- 创建结构只物化 Task。只有具有独立结果和推进边界的工作才进入 `children`。
 
 ### 正式任务
 
@@ -121,8 +151,6 @@ type Task = {
   id: string;
   teamId: string;
   parentTaskId?: string;
-  folderId?: string;
-  sourceTodoId?: string;
 
   title: string;
   goal?: string;
@@ -136,10 +164,52 @@ type Task = {
 };
 ```
 
+### Task 下的协作缺口
+
+协作缺口只保存“完成目标仍缺什么”的判断依据，用于 AI 建议和后续邀请准备。当前创建与详情不提供逐项 Responsibility 分配；缺口本身不是 Task、Participant、Owner 或 active Responsibility，外部成员接受前也不产生责任或权限。
+
+```ts
+type TaskCollaborationGap = {
+  id: string;
+  taskId: string;
+  kind: "judgment" | "evidence" | "permission" | "independent-result";
+  title: string;
+  detail: string;
+  evidence: string;
+  impact: string;
+  state: "unassigned" | "invitation-draft" | "resolved" | "converted-to-subtask";
+  suggestedMemberId?: string;
+  invitationDraftId?: string;
+  childTaskId?: string;
+  subtaskAssessment: {
+    eligible: boolean;
+    reasons: string[];
+    suggestedTitle?: string;
+    suggestedGoal?: string;
+  };
+};
+```
+
+- `unassigned` 可以保留候选建议，但没有 assignee、邀请、参与者或责任效果。
+- `invitation-draft` 必须绑定 `gapId + recipientId`；同一人补多个缺口时仍是多份范围独立的草稿，发送和接受继续服从既有协议。
+- 只有 `independent-result` 且独立结果、推进和接续条件成立时，AI 才能建议转子 Task。
+- 用户确认转换后建立 `childTaskId` 和正式 `parentTaskId`；外部候选尚未接受邀请时，新子 Task 先沿用父 Task Owner。
+
+Task 列表是一个不分组的平面工作区：
+
+- 一级“任务”入口直接进入唯一 Task List，不渲染 Folder 侧栏、目录树、目录面包屑、目录计数或恢复目录按钮。
+- 应用左侧窄轨顶部展示当前 Team Logo，并以共享单选菜单作为 Team 切换入口；移动端顶部栏同时展示当前 Team 名称。当前前端 Mock 只切换 Team 标识与选中状态，不得暗示任务、文件、通知、责任或 ACL 已完成真实的跨 Team 过滤与持久化。
+- Task 父子关系统一在紧随“概览”的条件式“关联任务”页签呈现；完全没有父子关系时不渲染。Task List 不按 `parentTaskId` 缩进，避免把层级关系伪装成列表分组。
+- 标签是 Task 唯一分类能力。标签是无组扁平集合，“标签管理”入口放在 Task List 标题区；筛选和所有展示都直接读取标签，不渲染标签组、级联导航或组标题。
+- List 工具栏提供任务名称搜索、状态、负责人和标签筛选；结果直接使用稳定列头“任务 / 状态 / 标签 / 负责人 / 截止时间”。标签复用规范 TagBadge，超出列容量时显示收敛数量。底部按每页 10 条分页，筛选变化后回到第 1 页；空结果不展示分页。窄屏隐藏列头并把同一字段堆叠。
+- 新建 Task 不选择目录，Task Schema 不写入 `folderId`。父子关系只使用 `parentTaskId`。
+
 不变量：
 
 - 正式 Task 从创建到归档始终恰好有一位有效人类 Owner，数据库与 Command Gateway 同时约束，不能出现 0 位或 2 位。
+- Task 同时保留一个创建者事实；创建者与 Owner 可以相同，也可以不同。Owner 转移不改写创建者，创建者身份也不赋予 Owner 权限。
 - 当前用户创建时默认自己是 Owner；若创建前选择同事，仍保持 Proposal，直到对方接受。
+- 单 Task Proposal 直接呈现标准任务表单，不创建只有一个“父任务”的结构投影；只有 Proposal 初始已经包含至少一个子 Task 时，才把父 Task 与一层子 Task 纵向排列。创建确认页不显示父 / 子数量统计或“添加子任务”入口，复杂结构也只编辑、展开、收起或删除 Proposal 已有子 Task，不在此阶段继续追加。每一项都呈现同一套编辑组合，顺序为“任务信息、上级任务、[文件]”；方括号表示文件区只在该 Task 的 `fileCandidateIds ∪ contextIds` 能解析出至少一个当前可见来源时出现，二者都为空时整个区不渲染。候选存在不要求选择，正式创建仍只写 `contextIds`。主 Task 的 Owner / Participant 只在右侧摘要核对，底层关系和正式创建投影继续存在；当前创建投影不录入逐项 Responsibility 或验收标准。创建者继续保留为创建事实但不在每个任务块重复展示。父 / 子只通过层级标签、圆形浅绿数字序号和 `parentTaskId` 区分；序号不承载状态语义。每项可独立展开或收起，不使用 Dialog、页签或第二套编辑状态。
 - 父任务和每个子任务分别维护 Owner；子任务 Owner 不自动获得父任务所有文件权限。
 - 删除父任务不能静默删除子任务；移动任务不能形成循环。
 - 父任务状态不覆盖子任务状态。系统计算汇总并建议变化，不替 Owner 静默推进。
@@ -151,7 +221,7 @@ type Task = {
 - `active`：当前有人持续推进。
 - `waiting`：明确等待外部输入、决定或权限。
 - `review`：结果已形成，等待有权人验证。
-- `completed`：验收证据已确认。
+- `completed`：Task Owner 已明确确认结果完成。
 - `cancelled`：不再追求目标，保留历史。
 - `archived`：从活跃视图收起，不改变原完成事实。
 
@@ -167,58 +237,24 @@ type Task = {
 - 成员停用前，系统先要求处理其活跃 Task。当前 Owner 确实不可用时，具备显式接管授权的 Steward 作为 recipient 接任临时 Owner：`authorized-steward Consent` 是正常 source Consent 的受控例外，同时记录原 Owner、代发人、授权依据和原因；不得伪造原 Owner Consent，也不得借例外直接指定任意第三人。
 - 在 Q-05 当前建议默认下，Agent 不能接受 Owner 转移，也不能代表目标成员接受。
 
-### 待办
+任务详情的“活动”是当前 Task 的统一协作时间线：成员主动发布的信息、AI 生成的可解释建议、具有协作意义的操作与 Commit 都以具体动作类型进入同一投影，例如动态、AI 建议、状态变更、周期变更、参与者加入和代码提交；其中“动态”是成员主动发布内容的动作标签，回复单独标为“回复”，不替代“活动”模块名称。活动不增加事件分组或来源分类。每种动作使用稳定的 Token 色标签和文字共同标识，颜色只表达动作类型；“AI 建议”额外使用 Sparkles 图标与推断语义色。Commit、Activity、Insight 与 ChangeSet 仍是边界不同的原对象；时间线只按权限引用和呈现，不复制来源、不把普通浏览行为写成活动，也不以统一界面取消审计层的不可变要求。成员可按当前 Task 实际存在的具体类型筛选；Commit 事件保留提交说明、作者、时间和关联文件明细，关注引用定位到该原事件。
 
-```ts
-type Todo = {
-  id: string;
-  taskId: string;
-  title: string;
-  assigneeId?: string;
-  status: "open" | "doing" | "done" | "cancelled" | "converted";
-  commitmentAt?: string;
-  fileRefIds: string[];
-  sourceActivityId?: string;
-  convertedTaskId?: string;
-  createdByPrincipalId: string;
-};
-```
+D-102 的 Task 顶部人员投影只读取负责人、参与者与对应邀请状态，不新增第二份 Member 或 Owner 真相。字段对用户统一显示为“负责人 / 参与者”；两类人员复用同一头像＋姓名组件。`accepted` 显示事实绿色实心对勾，`pending` 显示中性空心待勾选；拒绝后人员不再出现在当前列表，但拒绝事件按原协议保留。前端更换入口可以准备待接受候选，正式 `ownerId` 仍只能按 owner-transfer Handoff 激活事务修改。
 
-Todo 创建时可以保持未分配；从无 assignee 变为有人承担，先得到对方对有界工作的接受。替换已有 `assigneeId` 必须通过 `todo-assignment Handoff`，不能直接改字段绕过接续协议。
-
-Todo 可以引用完成这一步所需的支持文件，但不拥有独立讨论空间、独立文件目录、子工作或结果责任；出现这些需求时，应升级为 Task。
-
-| 问题 | 是 | 否 |
-| --- | --- | --- |
-| 是否需要单独承担结果责任？ | Task | 继续判断 |
-| 是否需要独立上下文、讨论或文件空间？ | Task | 继续判断 |
-| 是否可能继续拆解？ | Task | 继续判断 |
-| 是否只是明确、可立即执行的一步？ | Todo | 保留在描述或建议中 |
-
-Todo → Task 必须通过一次原子转换：
-
-1. 生成带 `sourceTodoId` 的 Task Proposal。
-2. 默认建议当前 Task Owner 或发起人，不能把 Todo assignee 静默变成 Owner。
-3. 确认 Owner 后创建新 Task。
-4. 原 Todo 标记为 `converted` 并写入 `convertedTaskId`，不与新 Task 双活。
-5. 支持文件引用和来源 Activity 保留血缘。
-
-团队动态只有先选择已有 `targetTaskId` 后才能转为 Todo；否则先创建 Task。生成的 Todo 保存 `sourceActivityId`。
+D-139 取消 Todo 的独立入口和 Task 详情投影，当前原型不再创建或操作 Todo；Task 是唯一行动对象。创建与详情也不再录入或展示逐项 Responsibility 分配和验收标准。底层唯一 Task Owner、参与者、状态、活动、File、父子 Task、Handoff 与权限安全语义不因此改变。
 
 ### 任务详情
 
-- 概览：目标、Owner、当前状态、主要风险。
-- 子任务：递归任务树，只在需要时展开。
-- 待办：当前层级的原子行动。
-- 文件：有层级的任务文件投影视图。
-- 协作：邀请、已接受的工作关系、Handoff、结果交回与待验收。
-- 动态：讨论、@、AI 建议和系统事件。
-- 决定：结论、选项、依据、确认人与状态。
-- 变更：任务字段、Owner、责任、文件版本和 AI 写入记录。
+- 概览：目标、Owner、参与者、当前状态、主要风险与 AI 建议，不再内嵌父子 Task 列表。
+- 关联任务：紧随概览的条件页签；至少有一个直属关系时才显示并展示总数，页内以“任务名称 / 类型 / 状态 / 负责人”四列统一呈现，类型逐行区分上级与下级，点击整行进入对应 Task，不在详情一次展开整棵树。
+- 文件：展示当前 Task 有权可见的文件与引用，不按协作人员切换；文件层级、引用、FileVersion 与 ACL 仍读取同一真相。
+- 活动：讨论、@、AI 建议、系统事件和 Commit 的统一时间线。
 
-## 四、文件与文件夹
+## 四、Task 文件与文件真相
 
-团队文件和任务文件使用同一套 File / FileVersion 真相，但可以处于不同作用域，并在任务中拥有不同组织视图。
+Task 文件和团队作用域 File 使用同一套 File / FileVersion 真相，可以处于不同作用域，并在 Task 内拥有组织视图。
+
+当前产品表面不提供一级“文件”入口、团队文件夹侧栏或独立团队文件 List。File 只从 Task 详情“文件”页进入：直接展示当前 Task 中按 ACL 有权可见的文件与引用，不按协作人员切换，也不复制内容或权限事实。TeamFileFolder 与 team scope 仍可作为底层发布和复用语义存在，但本轮不建立其独立浏览或管理界面。
 
 ```ts
 type TeamFileFolder = {
@@ -285,7 +321,7 @@ type TaskFilePlacement = {
 
 规则：
 
-- TeamFileFolder 是团队规范目录；TaskFileFolder 只是任务内组织层，不改变 File 的真实身份或权限。
+- TeamFileFolder 是团队作用域 File 的底层规范目录，不是当前产品入口；TaskFileFolder 只是任务内组织层，不改变 File 的真实身份或权限。
 - 任务引用团队文件时新增 TaskFilePlacement，始终使用同一个 File ID。
 - `pin-version` 必须带 `versionId`；`follow-latest` 读取当前版本并在变化时提示影响。
 - FileVersion 是 append-only 内容快照；`contentRef`、`contentDigest`、`fileId` 与策略版本不得原地修改。新内容必须创建新 FileVersion。
@@ -300,6 +336,10 @@ type TaskFilePlacement = {
 ## 五、成员、参与者与责任
 
 Task Owner 负责确保当前任务被持续跟进。Participant 只表示可以参与，不足以表达具体责任；Responsibility 说明协作预期，也不产生权限。
+
+设置 Dialog 是当前成员查看本人信息和团队投影的统一入口，不是第二套 Member、Team 或 Responsibility 真相：头像菜单只提供普通“设置”入口，不展示个人信息卡，展开时也不增加蓝色装饰外框；Dialog 身份区只保留头像与姓名。左侧按“个人设置 / 团队设置”分组：个人设置为“个人信息”，团队设置拆为“团队信息 / 成员 / 我的责任”。Team 上下文由应用级 TeamSwitcher 控制。团队信息以“通用”设置展示当前 Team Logo，允许显式保存现有 Team 名称，并在二次确认后离开或删除本机 Team 投影；至少保留一个 Team。成员以“用户 / 角色”两列展示本机 membership，角色表头与角色 Select 共用右侧固定列，支持邀请链接复制与重新生成、邮箱邀请和管理员 / 成员角色切换；在职管理员至少保留一位。我的责任承接该 Team 的纯文本责任说明和独立观察建议。上述成员和危险操作只构成本机可持久化的功能原型，不表示真实邮件、生产 Team membership、服务端 ACL、审计或组织删除已经接入；工作角色也不改变个人工作身份、Owner、Task Responsibility 或 AuthorizationGrant。阅读态把责任正文投影为同权重陈述列表；编辑态让每条责任独立增删改，保存时仍序列化回同一份纯文本，不要求成员手工输入空行。
+
+团队责任说明由本人和该 Team 的管理员编辑，每次写入保留 actor、revision 和更新时间；该编辑权不允许改变 Owner、Task Responsibility、AuthorizationGrant 或历史证据。AI 自动更新只允许写观察建议，并保留证据引用、Coverage、规则版本和 actor / on-behalf-of。待处理建议只显示“采纳 / 忽略”：采纳原子地追加正文并把建议标记为 accepted，忽略标记为 hidden；两者都从待处理队列消失但保留记录。AI 不得自行触发采纳。
 
 ```ts
 type TaskResponsibility = {
@@ -326,14 +366,14 @@ type TaskResponsibility = {
 
 ## 六、Handoff
 
-Handoff 是 Task 下的工作接续协议；它记录双方对同一版本的理解与同意，并在激活时对 Todo、Responsibility 或 Task Owner 产生可审计效果。[11-human-handoff.md](./11-human-handoff.md) 是 Handoff、Revision、Effect、Consent 与 Profile 映射的唯一规范 Schema；这里仅定义信息架构使用的索引投影，不能作为第二套领域模型。
+Handoff 是 Task 下的工作接续协议；它记录双方对同一版本的理解与同意，并在激活时对 Responsibility 或 Task Owner 产生可审计效果。[11-human-handoff.md](./11-human-handoff.md) 是 Handoff、Revision、Effect、Consent 与 Profile 映射的唯一规范 Schema；这里仅定义信息架构使用的索引投影，不能作为第二套领域模型。
 
 ```ts
 type HandoffIndexProjection = {
   id: string;
   teamId: string;
   taskId: string;
-  kind: "context-only" | "todo-assignment" | "responsibility-transfer" | "result-return" | "owner-transfer";
+  kind: "context-only" | "responsibility-transfer" | "result-return" | "owner-transfer";
   fromPrincipalId: string;
   toPrincipalId: string;
   scopeRef: string;
@@ -353,7 +393,7 @@ type HandoffIndexProjection = {
 - Profile 必须穷举约束 kind、scope、Task、source / recipient、Effect 与必要 Consent，服务端生成 Effect，不能让客户端自由拼接对象 ID。
 - 协议内容变化生成新 Revision，旧 Consent 失效；Agent 可以起草，但不能替人 Consent。
 - Handoff 不授予权限。接收者可见内容由 PolicyDecision 单独决定。
-- 激活事务必须对 Task / Todo / Responsibility 当前版本执行 CAS 或串行化锁，在事务内重算当前授权与 Policy 版本；Handoff 状态、业务效果和带强制 before / after digest 的 ChangeSet 同时提交。
+- 激活事务必须对 Task / Responsibility 当前版本执行 CAS 或串行化锁，在事务内重算当前授权与 Policy 版本；Handoff 状态、业务效果和带强制 before / after digest 的 ChangeSet 同时提交。
 - 临时接管到期只提醒发起一个关联原 Handoff 的反向 owner / responsibility transfer，不自动切回，也不使用 `result-return`。
 
 ## 七、Activity、Decision 与 ChangeSet
@@ -372,7 +412,7 @@ type Activity = {
 };
 ```
 
-Activity 供人阅读和参与，包括评论、求助、广播、回应和 AI 洞察。删除或隐藏展示不能删除对应的审计变更。
+Activity 供人阅读和参与，包括评论、求助、广播、回应和“AI 建议”。删除或隐藏展示不能删除对应的审计变更。
 
 ### Decision
 
@@ -442,7 +482,7 @@ type ChangeSet = {
 - `risk-signal`：多个任务出现共同风险。
 - `opportunity`：可以跨团队共同推进的机会。
 
-动态可以转成 Task 或关联已有 Task，必须由用户确认。转 Todo 时必须指定已有 Task，避免产生没有任务归属的待办。
+动态可以转成 Task 或关联已有 Task，必须由用户确认；当前产品不再从动态创建 Todo。
 
 ## 九、授权与策略判定
 
@@ -496,6 +536,6 @@ type PolicyDecision = {
 
 ## 十、状态、时间与派生信息
 
-日期与时间不是所有 Task 的强制字段。保留可选时间承诺与预计投入区间，只在协作比较时辅助判断；自然语言或历史估计必须显示来源、区间和不确定性。
+正式 Task 的 `plannedStartOn + plannedEndOn` 是可选的轻量计划周期：两者要么同时为空，要么同时存在且结束日期不得早于开始日期。AI 可以从自然语言或历史建议周期，但必须显示来源和不确定性，并允许成员修改或清空；读取、保存与重新进入不得把清空状态自动补成默认日期。首版不因此恢复计划工时、里程碑、基线、日历排程等完整项目管理字段。
 
-Task 汇总状态、成员当前承诺、责任画像和 AI 洞察都是派生信息，不能覆盖原始证据。阶段迁移由证据触发建议，人类或获明确授权的低风险规则确认写入。
+Task 汇总状态、成员当前承诺、责任画像和“AI 建议”都是派生信息，不能覆盖原始证据。阶段迁移由证据触发建议，人类或获明确授权的低风险规则确认写入。

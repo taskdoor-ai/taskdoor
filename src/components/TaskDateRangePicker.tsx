@@ -1,8 +1,8 @@
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo, useState } from "react";
 
-type DateRange = { end: string; start: string };
-type TaskDateRangePickerProps = { initialEnd: string; initialStart: string };
+export type TaskDateRange = { end: string; start: string };
+type TaskDateRangePickerProps = { initialEnd?: string; initialStart?: string; onChange?: (range: TaskDateRange | null) => void };
 
 const toValue = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 const fromValue = (value: string) => new Date(`${value}T00:00:00`);
@@ -20,12 +20,13 @@ function SegmentedDate({ value }: { value: string }) {
 }
 
 // UI anatomy follows jolbol1's 21st.dev Date Range Picker: segmented fields + RangeCalendar popover.
-export function TaskDateRangePicker({ initialEnd, initialStart }: TaskDateRangePickerProps) {
-  const [range, setRange] = useState<DateRange>({ end: initialEnd, start: initialStart });
-  const [draft, setDraft] = useState<DateRange>(range);
+export function TaskDateRangePicker({ initialEnd = "", initialStart = "", onChange }: TaskDateRangePickerProps) {
+  const initialRange = initialStart && initialEnd ? { end: initialEnd, start: initialStart } : { end: "", start: "" };
+  const [range, setRange] = useState<TaskDateRange>(initialRange);
+  const [draft, setDraft] = useState<TaskDateRange>(initialRange);
   const [selectingEnd, setSelectingEnd] = useState(false);
   const [open, setOpen] = useState(false);
-  const [visibleMonth, setVisibleMonth] = useState(() => { const date = fromValue(initialStart); return new Date(date.getFullYear(), date.getMonth(), 1); });
+  const [visibleMonth, setVisibleMonth] = useState(() => { const date = initialStart ? fromValue(initialStart) : new Date(); return new Date(date.getFullYear(), date.getMonth(), 1); });
   const days = useMemo(() => calendarDays(visibleMonth), [visibleMonth]);
 
   const chooseDate = (date: Date) => {
@@ -35,8 +36,8 @@ export function TaskDateRangePicker({ initialEnd, initialStart }: TaskDateRangeP
   };
 
   return <div className="task-date-range-picker">
-    <button aria-expanded={open} aria-haspopup="dialog" className="task-date-range-trigger" onClick={() => { setDraft(range); setSelectingEnd(false); setVisibleMonth(new Date(fromValue(range.start).getFullYear(), fromValue(range.start).getMonth(), 1)); setOpen((value) => !value); }} type="button">
-      <span className="task-date-field-group"><SegmentedDate value={range.start} /><i>—</i><SegmentedDate value={range.end} /><CalendarIcon size={13} /></span>
+    <button aria-expanded={open} aria-haspopup="dialog" className="task-date-range-trigger" onClick={() => { setDraft(range); setSelectingEnd(false); const date = range.start ? fromValue(range.start) : new Date(); setVisibleMonth(new Date(date.getFullYear(), date.getMonth(), 1)); setOpen((value) => !value); }} type="button">
+      <span className={`task-date-field-group ${range.start ? "" : "empty"}`}>{range.start ? <><SegmentedDate value={range.start} /><i>—</i><SegmentedDate value={range.end} /></> : <strong>添加周期</strong>}<CalendarIcon size={13} /></span>
     </button>
     {open && <div aria-label="选择任务周期" className="task-date-range-popover" role="dialog">
       <div className="task-range-calendar-heading">
@@ -46,9 +47,9 @@ export function TaskDateRangePicker({ initialEnd, initialStart }: TaskDateRangeP
       </div>
       <div className="task-range-calendar-grid">
         {["日", "一", "二", "三", "四", "五", "六"].map((day) => <span className="task-range-weekday" key={day}>{day}</span>)}
-        {days.map((date) => { const value = toValue(date); const outside = date.getMonth() !== visibleMonth.getMonth(); const inRange = value >= draft.start && value <= draft.end; const edge = value === draft.start || value === draft.end; return <button aria-label={value} aria-pressed={inRange} className={`${outside ? "outside" : ""} ${inRange ? "in-range" : ""} ${edge ? "range-edge" : ""}`} key={value} onClick={() => chooseDate(date)} type="button"><span>{date.getDate()}</span></button>; })}
+        {days.map((date) => { const value = toValue(date); const outside = date.getMonth() !== visibleMonth.getMonth(); const inRange = Boolean(draft.start && value >= draft.start && value <= draft.end); const edge = value === draft.start || value === draft.end; return <button aria-label={value} aria-pressed={inRange} className={`${outside ? "outside" : ""} ${inRange ? "in-range" : ""} ${edge ? "range-edge" : ""}`} key={value} onClick={() => chooseDate(date)} type="button"><span>{date.getDate()}</span></button>; })}
       </div>
-      <div className="task-range-calendar-footer"><span>{selectingEnd ? "请选择截止日期" : "已选择任务周期"}</span><div><button onClick={() => setOpen(false)} type="button">取消</button><button onClick={() => { setRange(draft); setOpen(false); }} type="button">应用</button></div></div>
+      <div className="task-range-calendar-footer"><button className="task-range-clear" disabled={!range.start} onClick={() => { const emptyRange = { end: "", start: "" }; setRange(emptyRange); setDraft(emptyRange); setSelectingEnd(false); setOpen(false); onChange?.(null); }} type="button">清空</button><span>{selectingEnd ? "请选择截止日期" : draft.start ? "已选择任务周期" : "周期为可选项"}</span><div><button onClick={() => setOpen(false)} type="button">取消</button><button disabled={!draft.start || selectingEnd} onClick={() => { setRange(draft); setOpen(false); onChange?.(draft); }} type="button">应用</button></div></div>
     </div>}
   </div>;
 }

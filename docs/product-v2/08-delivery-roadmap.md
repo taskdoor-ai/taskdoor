@@ -1,14 +1,14 @@
-# 产品改造路线与 Technical Assessment
+# 产品改造路线与长期评估
 
-> Technical Assessment 状态：`pre-decision`。本文把“当前代码事实”“目标设计”“待确认决定”分开；当前仅完成产品与技术分析，没有达到 `implementation-ready`，也没有在本轮继续修改功能代码。
+> 本文是路线级 `pre-decision` 长期评估，把“当前代码事实”“目标设计”“待确认决定”分开；它不要求每个日常任务再创建一份 Technical Assessment，也不自动授权任何候选路线。
 > 所有路线项按 [项目工作宪章](./00-project-operating-charter.md) 的 C0–C3、DoR / DoD、Review 与 Handoff 规则执行。
 
-> **清单效力：**本文中的 `- [ ]` 是候选路线，不是批准记录，也不是已经达到 `implementation-ready` 的 Technical Assessment。任何依赖 Q 项的清单在对应决定确认前都保持 blocked；不得仅凭它位于 P0 或使用“必须”语气就进入编码。确认状态只看 [决策台账](./09-decision-register.md)。
+> **清单效力：**本文中的 `- [ ]` 是候选路线，不是批准记录。任何依赖 Q 项的清单在对应决定确认前都保持 blocked；不得仅凭它位于 P0 或使用“必须”语气就进入编码。确认状态只看 [决策台账](./09-decision-register.md)，具体实现准备按风险在对话或一份 Work Note 中闭合。
 
 | 路线段 | 当前决定门槛 |
 | --- | --- |
 | P0-0 / P0-1 | 受 Q-05 的 Principal / Owner 边界影响；可继续只读架构评估，正式实现仍需 Git baseline 或宪章规定的等效机制，以及具体授权 / 存储 TA |
-| P0-2 | 受 Q-02、Q-03、Q-05、Q-09 影响 |
+| P0-2 | 受 Q-03、Q-05、Q-09 影响；Todo 入口与当前原型操作已由 D-139 取消，不再等待 Q-02 |
 | P0-3 | 受 Q-04 与具体权限策略影响 |
 | P0-4 | 受 Q-06、Q-07、Q-17 影响 |
 | P0-5 | 受 Q-05、Q-10–Q-19 影响 |
@@ -18,20 +18,21 @@
 
 | 能力 | 当前代码事实 | 结论 |
 | --- | --- | --- |
-| Task 与 Todo | `workspaceNodes.ts`、`demoTodos.ts`、`taskDetailMocks.ts` 存在多套重复 Mock 类型 | 界面上并存，但还不是统一领域模型 |
+| Task Mock | `workspaceNodes.ts` 与 `taskDetailMocks.ts` 分别提供列表和详情演示数据；Todo Mock 已删除 | D-139 已落地到当前原型表面；生产前仍需统一 Task Store、查询与持久化 |
 | 单一 Task Owner | 工作区节点使用单值 `ownerId`；创建与部分 Props 仍使用数组且可为空 | 原则局部落地，正式 Task 不变量未全链路成立 |
-| 多层级 Task | 通用 `parentId` 能表达层级；导航只递归 Folder，详情“子任务”仍是平面 Mock | 数据表达已出现，端到端递归未跑通 |
+| 多层级 Task | `parentTaskId` 能表达父子关系；任务列表按 D-139 收敛为不分目录的平面列表，详情以条件式“关联任务”页签投影直属上级 / 下级并逐级进入 | 单一主工作区与直属关系 UI 已落地；统一领域模型、生产查询、持久化与循环保护仍未跑通 |
 | 任务内文件夹 | `TaskDetail.tsx` 已有静态递归 Mock UI 和预览 | 用户已完成的展示基础应保留，下一步是接统一 File 真相 |
-| 团队文件 | 有零散 FileNode 和不可达预览页 | 尚未形成一级团队模块 |
+| Task 文件与遗留团队文件页 | Task 详情已有静态递归文件 Mock；代码中仍可能保留一级“文件”入口和团队文件 List | D-139 要求独立团队文件模块退出当前表面，Task 文件页直接展示当前 Task 有权可见内容且不按人切换；统一 File 真相、真实权限、持久化、审计、版本和发布协议仍未接入 |
 | 渐进创建 | `App.tsx` 仍按关键词切换固定提案 | 未跟随需求逐步判断 |
 | 真正创建新 Task | 创建会覆盖固定本地对象 | 未写入统一 Store |
 | 候选人比较 | 候选与责任硬编码 | 尚无缺口判断、硬过滤和可解释路由 |
-| 动态责任画像 | 静态成员描述 | 尚无 Evidence、Coverage、时效和纠正 |
+| 动态责任画像 | 已新增个人中心“责任”、团队切换、本人 / 团队管理员共同维护的一份团队责任说明，以及仅供本人采纳 / 忽略的带依据 AI 建议；Coverage 仍保留在数据与推断约束中，不在个人中心单独汇总展示 | 仍是 localStorage 交互实现；尚无真实证据 ingest、团队管理员 PolicyDecision 与不可篡改修订记录 |
 | 团队动态 | 只有任务内临时 Activity | 尚无任务外广播与收敛 |
-| 人际 Handoff | `TaskOverviewCard.tsx` 只有静态“AI 已准备可接续成果”；Owner 可直接改，Todo 中的 `handoff` 只是文案 | 尚无发出者 / 接收者、范围、协议版本、接收确认、权限预检与结果回传闭环 |
+| 人际 Handoff | `TaskOverviewCard.tsx` 只有静态“AI 已准备可接续成果”；Owner 仍可直接改 | 尚无发出者 / 接收者、范围、协议版本、接收确认、权限预检与结果回传闭环 |
 | 权限与 Agent 委托 | 只有界面文案 | 没有可执行 ACL、PolicyDecision 或撤权机制 |
 | ChangeSet | 详情中的 Commit 为静态 Mock | 不是可信、append-only 的变更审计 |
-| Git / Review baseline | `master` 当前没有可解析的 HEAD，项目文件均未跟踪 | 无法可靠区分单次任务 diff 或回滚；Git 初始 baseline 或宪章规定的等效机制必须由人类明确批准，Agent 不自行提交 |
+| Task 活动 | Mock 已覆盖动态、回复、AI 建议、状态变更、周期变更、参与者加入与静态代码提交，并以具体动作筛选；“AI 建议”具有特殊标识，Commit 关注引用可定位原事件 | 操作事件仍是静态演示，真实排序、权限过滤、生产 Activity / Insight / ChangeSet 数据链仍未接入 |
+| Git / Review baseline | `master` 已有 `d3f0d69` 初始 baseline；当前工作位于 `codex/task-creation-v2` 且工作区含并行未提交改动 | 可以核对 baseline 与当前差异，但必须保留并行改动、按文件审查且不得冒充独立干净分支 |
 
 因此，“已经有的层级 UI”无需推倒重做；改造重点是让它们共享同一领域真相，并建立可以约束 AI 与人的可信写入边界。
 
@@ -40,12 +41,12 @@
 ```text
 P0-0 身份、授权与可信存储
   → P0-1 Command Gateway + ChangeSet
-  → P0-2 Task / Todo / Proposal 不变量
+  → P0-2 Task / Proposal 不变量
   → P0-3 不可变 FileVersion / PermissionPolicyVersion / Placement
   → P0-4 Responsibility 核心、责任证据与覆盖范围
   → P0-5 Handoff Revision / Consent / 原子激活
   → P1 渐进创建、找人、邀请与广播
-  → P2 全平台 AI 洞察
+  → P2 全平台 AI 建议
 ```
 
 不能先让 AI 写正式对象，再补审计；也不能先做人员推荐，再补证据覆盖与权限过滤。
@@ -82,30 +83,30 @@ P0-0 身份、授权与可信存储
 
 - 重复提交同一 idempotency key 只产生一次业务变更。
 - 原始审计不可由普通成员或 Agent 修改。
-- Handoff 激活、Owner 转移、Todo 升级、文件发布均可从 ChangeSet 还原因果链。
+- Handoff 激活、Owner 转移和文件发布均可从 ChangeSet 还原因果链。
 - 对不可逆动作，界面在确认前明确显示外部影响。
 
-## 五、P0-2：统一 Task 与 Todo（Q-02 / Q-03 / Q-05 / Q-09 未决部分 blocked）
+## 五、P0-2：统一 Task 与 Proposal（Q-03 / Q-05 / Q-09 未决部分 blocked）
 
 - [ ] 正式 `Task.ownerId` 全链路为单值，数据库和命令层同时保证永不为 0/2。
 - [ ] Proposal 与正式 Task 分开；Proposal 可无 Owner，正式创建默认当前用户。
 - [ ] Proposal 建立 revision / digest / recipient / status / expiresAt / materializedTaskId，并以 accepted revision 幂等地最多创建一个 Task。
 - [ ] 支持 `parentTaskId` 递归查询、循环保护、移动与删除规则。
-- [ ] 侧边任务树真正递归 Task；详情把子 Task 与 Todo 分成两个模块。
+- [ ] 接入统一 Task 查询与持久化，使详情“关联任务”读取真实直属上级 / 下级并逐级进入；任务模块保持不分目录的平面列表，也不在详情一次展开整棵 Task 树。
 - [ ] 定义最小 TaskStatus 和父子汇总，不靠手动看板拖拽。
-- [ ] Todo → Task 保留 `sourceTodoId / convertedTaskId`，原 Todo 进入 `converted` 终态。
+- [ ] 移除当前产品中的 Todo 入口、详情投影、创建与操作路径；遗留 Todo Mock 不再作为生产迁移前提。
 - [ ] 新 Task 真实写入统一 Store，不再覆盖固定 `coupon-fix`。
 
 验收：
 
-创建根 Task → 创建两层子 Task → 子层使用不同 Owner → 添加 Todo → 将 Todo 原子升级为 Task → 刷新后责任与血缘仍一致。同一 Proposal 重放不会创建第二个 Task，旧 Revision 的接受不能创建新版 Task。
+创建根 Task → 创建两层子 Task → 子层使用不同 Owner → 刷新后层级、Owner 与状态仍一致。同一 Proposal 重放不会创建第二个 Task，旧 Revision 的接受不能创建新版 Task。
 
-## 六、P0-3：统一团队与任务文件（Q-04 未决部分 blocked）
+## 六、P0-3：统一 Task 文件真相（Q-04 未决部分 blocked）
 
 - [ ] 定义 TeamFileFolder、TaskFileFolder、File、FileVersion、TaskFilePlacement。
 - [ ] 将 Workspace FileNode、TaskFileNode、EnterpriseSource / ResourceDocument 迁入统一数据源。
 - [ ] 保留现有任务内递归文件 UI，改接 TaskFilePlacement。
-- [ ] 新增一级“团队文件”入口、文件夹树、列表、详情、版本与引用关系。
+- [ ] 当前产品只从 Task 详情进入文件页，不新增或恢复一级“团队文件”入口；文件页不按协作人员切换。
 - [ ] 支持 `follow-latest` 与 `pin-version`。
 - [ ] FileVersion 内容、digest 和 PermissionPolicyVersion append-only；current / pinned / resolved version 必须属于同 File、同 tenant。
 - [ ] 任务自产 File 以 task scope 存在；发布到团队默认同 ID 原子提升。
@@ -120,8 +121,8 @@ P0-0 身份、授权与可信存储
 
 - [ ] 从 `App.tsx` 移出成员 Mock。
 - [ ] 建立有独立 ID 和生命周期的 TaskResponsibility；已有责任换人时 supersede 旧记录并创建 successor，不原地改 memberId。
-- [ ] 替换已有 Todo assignee 和 active Responsibility holder 禁止直接字段旁路，必须由 Handoff 激活。
-- [ ] 建立正式职责、本人声明、Task 责任、观察责任、Evidence 与 EvidenceCoverage。
+- [ ] active Responsibility holder 的替换禁止直接字段旁路，必须由 Handoff 激活；当前 Task 创建与详情不提供逐项 Responsibility 分配界面。
+- [ ] 建立团队责任说明、Task 责任、观察建议、Evidence 与 EvidenceCoverage，并实现本人 / 团队管理员写入的服务端 PolicyDecision 与修订记录。
 - [ ] 明确平台未覆盖会议、邮件、线下或外部系统时的措辞降级。
 - [ ] 建立成员主动发布、逐项授权、可撤回且会过期的粗粒度协作窗口；原始任务数、审核队列和个人交付时长不向推荐发起人暴露，不采集伪精确空闲率。
 - [ ] 成员可以纠正、隐藏或拒绝观察责任。
@@ -137,9 +138,9 @@ P0-0 身份、授权与可信存储
 - [ ] 区分邀请、Handoff 与关联 Work 状态；新工作使用 Proposal / 邀请，已有工作接续才使用 Handoff。
 - [ ] Profile 穷举绑定 kind、scope、Task、source / recipient、Effect 与必要 Consent；Effect 由服务端生成，拒绝客户端自由拼接对象 ID。
 - [ ] `accepted` 由 currentRevision 的有效 Consent 派生；Revision、撤回或到期变化后立即重新派生，不能留下失真状态。
-- [ ] 激活前检查接收者权限、不可变 FileVersion / PolicyVersion、当前 Task / Todo / Responsibility 状态。
+- [ ] 激活前检查接收者权限、不可变 FileVersion / PolicyVersion、当前 Task / Responsibility 状态。
 - [ ] 使用 CAS / 行锁 / 串行化隔离，在事务内重算 PolicyDecision；Handoff、责任效果和带 before / after digest 的 ChangeSet 同时写入。
-- [ ] 支持 context-only、todo-assignment、responsibility-transfer、result-return 与 owner-transfer 五个候选 Profile；Result Return 首版只支持子 Task → 直接父 Task。
+- [ ] 支持 context-only、responsibility-transfer、result-return 与 owner-transfer 四个候选 Profile；Result Return 首版只支持子 Task → 直接父 Task。
 - [ ] 临时接管以关联的反向 owner / responsibility transfer 返回，不使用 result-return，也不自动切回。
 - [ ] 正常 Owner Transfer 需要当前 Owner 与目标成员；当前 Owner 不可用时，仅允许有明确接管授权的 Steward 作为 recipient 成为临时 Owner，并记录 source Consent 例外、理由和审计，不能直接指定第三人。
 - [ ] 既有 `Task.ownerId` 只能由 `owner-transfer` Handoff 激活事务修改；普通 ChangeSet、旧 API、旧 UI 命令与数据库更新路径全部拒绝。正式 Task 首次由已接受 Proposal 物化是唯一例外，Steward 仍走同一 Handoff Profile。P0-5 上线前先禁用当前直接改 Owner 的入口。
@@ -161,6 +162,10 @@ P0-0 身份、授权与可信存储
 - [ ] AI 默认只起草，用户明确点击后才创建正式 Task。
 
 ### 协作梯度与邀请
+
+- [ ] 后续候选：若重新引入协作建议，先以不写入正式 Task 的 Proposal 展示，并重新确认产品合同。
+- [x] Demo：复杂 Proposal 可以创建父 / 子 Task，并保留明确的 `parentTaskId`；创建面不保存逐项协作缺口、Responsibility 或验收标准。
+- [ ] 生产：接入真实邀请发送 / 接受、Command Gateway、权限校验、ChangeSet 与跨设备持久化；Demo 的 `localStorage` 不代表这些能力已完成。
 
 - [ ] 支持资料线索、答疑、短评审、批准、共同执行、承接子 Task 等梯度。
 - [ ] 优先建议最小充分协作，不直接让专家接管。
@@ -190,12 +195,12 @@ P0-0 身份、授权与可信存储
 - [ ] AI 起草结构化求助与脱敏预览，用户确认范围后发布。
 - [ ] 支持参与、提供线索、推荐他人、需要权限和私密回复。
 - [ ] 响应不自动加入 Task、不自动授权、不自动生成责任。
-- [ ] Activity 可关联或创建 Task；转 Todo 必须先选择已有 Task。
+- [ ] Activity 可关联或创建 Task，不再生成 Todo。
 - [ ] 形成有效回答、未决问题和帮助来源的收敛摘要。
 
-## 十一、P2：全平台 AI 洞察
+## 十一、P2：全平台 AI 建议
 
-第一组：信息缺口、文件版本错配、权限缺口、决定未记录、相似 Task、单点阻塞、Todo 升级，以及 Handoff 最小包 / 接收者预览 / 权限版本预检。
+第一组：信息缺口、文件版本错配、权限缺口、决定未记录、相似 Task、单点阻塞，以及 Handoff 最小包 / 接收者预览 / 权限版本预检。
 
 第二组：责任画像更新、专业知识 / 授权的结构性单点、实际责任漂移、团队级任务投入区间、跨 Task 依赖。
 
@@ -208,14 +213,14 @@ P0-0 身份、授权与可信存储
 1. 支付团队：权限、事故、代码、决定、部分接管与 Result Return。
 2. 品牌营销团队：需求探索、创意分歧、假设争议和贡献归属。
 3. 影视团队：深层 Task、大文件、固定版本、外部反提范围与限权交回。
-4. 零售团队：Task/Todo 边界、高频执行和上下级安全改范围。
+4. 零售团队：高频 Task 执行和上下级安全改范围。
 5. 制造团队：假设、供应商、职责隔离、高风险临时接管与反向转移。
 
 共用领域模型和组件，只替换团队、证据、权限策略与冲突。完整验收见 [07-demo-validation-scenarios.md](./07-demo-validation-scenarios.md)。
 
 ## 十三、测试与放行门槛
 
-本节的 `100%`、`0 次` 和人性体验描述目前是**目标断言**，不是已经可复现的测试证据。每个路线项进入 `implementation-ready` 前，Technical Assessment 必须把相关断言转换为 Evidence Spec：测试层级、命令、环境 / 版本、fixture 或样本生成器、预期 oracle、并发 / 攻击模型、人工研究协议与样本、证据保存位置。缺少其中任一关键项时只能标为“尚未验证”，不能用一次 Demo 跑通替代。
+本节的 `100%`、`0 次` 和人性体验描述目前是**路线级目标断言**，不是已经可复现的测试证据。局部可逆实现只验证受影响行为，不为未触达目标建立完整 Evidence Spec。进入真实权限、人员数据、Owner / Handoff、持久化或发布实现时，才把相关断言转换为与风险匹配的证据：所需测试层级、环境 / 版本、fixture 或样本、预期 oracle，以及实际触发的并发 / 攻击模型或人工研究。不能用一次 Demo 跑通替代安全证据，也不要求无关全量回归或设计债务基线。
 
 ### 不变量与安全门槛
 
@@ -245,20 +250,19 @@ P0-0 身份、授权与可信存储
 ## 十四、编码前请产品负责人确认
 
 1. Q-01：团队动态是否首版作为一级导航，以及默认可见范围。
-2. Q-02：Todo 是否允许没有 assignee。
-3. Q-03：Proposal 可以无 Owner、正式 Task 必须有 Owner，这一边界是否接受。
-4. Q-04：任务自产 File 是否采用“task scope → 同 ID 发布到 team scope”。
-5. Q-05：是否接受统一 Principal，以及首版 Agent / 外部协作者不能成为 Task Owner。
-6. Q-06：是否接受候选比较只展示本人发布、可撤回且会过期的粗粒度协作窗口，不读取或展示原始日历、精确任务数、审核队列与个人历史速度。
-7. Q-07：观察责任何时团队可见，是否要求成员逐条确认。
-8. Q-08：首版 AI 是否严格停在 L3；若开放 L4，具体允许哪些低风险内部动作。
-9. Q-09：最小 TaskStatus 是否采用 active / waiting / review / completed / cancelled / archived。
-10. Q-10：Task Owner 不可用时，是否采用受控 Steward 临时接管。
-11. Q-11：Handoff 是否作为 Task 下的支撑实体而不进入一级导航。
-12. Q-12 / Q-13：是否采用五个 Handoff Profile，以及 `accepted` / `activated` 分离。
-13. Q-14：中高风险交接是否强制接收者复述；低风险上下文交接是否允许简化确认。
-14. Q-15：临时接管到期是否只提醒发起关联的反向 Owner / Responsibility Transfer，禁止自动切回。
-15. Q-16：Task 详情是否用统一“协作”入口容纳邀请、Handoff、Result Return 与待验收。
-16. Q-17：是否采用权力敏感保护和协作数据治理红线。
-17. Q-18：首版 Handoff 是否只支持具名一对一 recipient。
-18. Q-19：Result Return 是否只支持子 Task 逐级交回直接父 Task。
+2. Q-03：Proposal 可以无 Owner、正式 Task 必须有 Owner，这一边界是否接受。
+3. Q-04：任务自产 File 是否采用“task scope → 同 ID 发布到 team scope”。
+4. Q-05：是否接受统一 Principal，以及首版 Agent / 外部协作者不能成为 Task Owner。
+5. Q-06：是否接受候选比较只展示本人发布、可撤回且会过期的粗粒度协作窗口，不读取或展示原始日历、精确任务数、审核队列与个人历史速度。
+6. Q-07：观察责任何时团队可见，是否要求成员逐条确认。
+7. Q-08：首版 AI 是否严格停在 L3；若开放 L4，具体允许哪些低风险内部动作。
+8. Q-09：最小 TaskStatus 是否采用 active / waiting / review / completed / cancelled / archived。
+9. Q-10：Task Owner 不可用时，是否采用受控 Steward 临时接管。
+10. Q-11：Handoff 是否作为 Task 下的支撑实体而不进入一级导航。
+11. Q-12 / Q-13：是否采用四个 Handoff Profile，以及 `accepted` / `activated` 分离。
+12. Q-14：中高风险交接是否强制接收者复述；低风险上下文交接是否允许简化确认。
+13. Q-15：临时接管到期是否只提醒发起关联的反向 Owner / Responsibility Transfer，禁止自动切回。
+14. Q-16：Task 详情是否用统一“协作”入口容纳邀请、Handoff、Result Return 与待验收。
+15. Q-17：是否采用权力敏感保护和协作数据治理红线。
+16. Q-18：首版 Handoff 是否只支持具名一对一 recipient。
+17. Q-19：Result Return 是否只支持子 Task 逐级交回直接父 Task。

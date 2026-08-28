@@ -71,7 +71,7 @@ const coordinationSteps = [
   { description: "将任务包带到客户端", icon: Link2, label: "打开本地 AI" },
   { description: "分析、修改并形成成果", icon: Bot, label: "在本地完成工作" },
   { description: "选择要带回的内容", icon: Upload, label: "选择并确认成果" },
-  { description: "写入任务、文件、待办或动态", icon: RotateCcw, label: "同步回协作任务" },
+  { description: "写入任务、文件或活动", icon: RotateCcw, label: "同步回协作任务" },
 ] satisfies StepItem[];
 
 function buildContextPrompt(request: AiConnectionRequest) {

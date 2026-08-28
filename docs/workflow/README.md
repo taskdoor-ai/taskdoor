@@ -1,269 +1,104 @@
-# AgentDoor 工作产物模板
+# AgentDoor 精简工作记录
 
-> 使用原则：模板服务于判断和接续，不服务于仪式。C0 / C1 默认在任务回复中使用精简版；只有跨多人、跨多轮或 C2 / C3 工作才需要保存独立文件。长期产品决定必须回到 `docs/product-v2/09-decision-register.md`，不能让模板成为第二份事实源。
+> 原则：记录服务于决定、风险和接续，不服务于证明“走过流程”。清晰的用户请求可以直接提供目标、范围和验收；默认在任务回复中闭环，不创建文件。
 
-## 一、选择哪种产物
+## 一、什么时候需要记录
 
-| 场景 | 使用产物 |
+| 场景 | 默认产物 |
 | --- | --- |
-| 只读回答、审查、诊断 | 结论 + 依据 + 未知 |
-| 小修、小型文案或测试 | Task Brief 精简版 + 自审 / 验证 + 交付摘要 |
-| 产品语义、交互或领域对象变化 | Decision Brief + Technical Assessment + Review + 交付摘要；需要接续时正式 Handoff |
-| 权限、人员数据、Task Owner / Handoff、迁移或不可逆动作 | 完整产物 + 安全 / 隐私 Review + Deviation / 回滚（如适用） |
+| 只读回答、审查、诊断 | 结论 + 关键依据 + 实质未知 |
+| 局部、可逆、不改产品合同的修改 | 实现 + 针对性验证 + 简短结果 |
+| 持久产品 / 治理合同变化 | 更新决策台账；只有取舍需要跨会话保留时再写一份合并记录 |
+| 跨多人 / 跨会话、C3、高恢复成本 | 一份合并工作记录 + 必要独立 Review |
+| 真实责任或既有工作接续 | 按 Handoff 规范，不用普通交付摘要替代 Consent |
 
-文件命名建议：
+以下情况默认**不创建** `docs/workflow/records/` 文件：C0 / C1、连续 UI 微调、单人可完成的本地 C2 实现、每轮反馈、构建日志、无问题 Review、仅为说明“已读”或“已检查”。已有历史记录只用于追溯，不继续追加同主题的 Review、Technical Assessment 或 Continuation 文件。
+
+## 二、默认内联闭环
+
+用户请求已经清楚时，不重复复述完整 Brief。执行者内部只需确认三件事：
 
 ```text
-docs/workflow/records/YYYY-MM-DD-<topic>-decision.md
-docs/workflow/records/YYYY-MM-DD-<topic>-technical-assessment.md
-docs/workflow/records/YYYY-MM-DD-<topic>-review.md
-docs/workflow/records/YYYY-MM-DD-<topic>-continuation.md
+目标：本次要得到什么结果
+边界：不改变什么合同或高风险边界
+证据：哪项最小检查能证明结果
 ```
 
-临时工具日志、完整终端输出和逐步思考不进入长期记录；只保留结论、证据、决定和可复现命令。
-
-## 二、Task Brief
-
-### C1 精简版
+最终回复默认只写：
 
 ```md
-## Task Brief
-- 目标：
-- 范围 / 非目标：
-- 完成证据：
-- 变更级别：C1
-- Work Owner / 交付负责人：
-```
-
-### C2 / C3 完整版
-
-```md
-# <工作名称> Task Brief
-
-## 原始需求与来源
-- 原始表述：
-- 请求人 / 决定人：
-- 关联 D / Q：
-
-## 目标
-- 用户 / 业务结果：
-- 为什么现在做：
-
-## 范围
-- 包含：
-- 非目标：
-- 受影响对象与用户：
-
-## 当前事实
-- 代码 / 数据证据：
-- 已确认决定：
-- 假设与未知：
-
-## 变更治理
-- 级别：C2 / C3
-- Work Owner / 交付负责人：
-- 协作者：
-- Review 视角 / Reviewer：
-- Agent 被授权：
-- Agent 不得：
-
-## 完成证据
-- 正常场景：
-- 失败 / 拒绝场景：
-- 权限 / 数据场景：
-```
-
-## 三、Decision Brief
-
-```md
-# <决定主题> Decision Brief
-
-> 状态：draft / proposed / confirmed / rejected / superseded
-> Revision：
-> 产品负责人：
-
-## 要解决的结果
-
-## 当前事实
-- 事实：
-- 推断：
-- 未知：
-
-## 范围与非目标
-
-## 选项与取舍
-| 选项 | 用户价值 | 人性影响 | 架构 / 权限 | 成本与可逆性 |
-| --- | --- | --- | --- | --- |
-
-## 建议默认及理由
-
-## 需要明确确认
-1.
-
-## 验收例子
-
-## 决定结果
-- 决定：
-- 决定人 / 日期：
-- supersedes：
-- 受影响文档：
-- 重新审视触发条件：
-```
-
-确认后，把结论写入决策台账；本文件保留取舍和上下文，不重复维护决定状态。
-
-## 四、Technical Assessment
-
-```md
-# <工作名称> Technical Assessment
-
-> 状态：pre-decision / implementation-ready
-> 绑定 Decision Revision：
-
-## 结论
-- 可行性：
-- 建议最小改动：
-- 阻断决定：
-
-`pre-decision` 只回答可行性、选项、影响和未知；方向确认后再更新为 `implementation-ready`，补齐实施范围、迁移、验证和恢复。前者不能作为进入代码的 DoR 证据。
-
-## 当前实现事实
-| 事实 | 证据路径 / 命令 | 与目标差距 |
-| --- | --- | --- |
-
-## 领域与不变量
-- 对象 / 状态：
-- 必须保持：
-- 禁止旁路：
-
-## 影响范围
-- 文件 / 模块：
-- API / Store / Schema：
-- 共享组件 / Token：
-- 兼容与迁移：
-
-## 权限、隐私与审计
-- Actor / on-behalf-of：
-- PolicyDecision：
-- 数据最小化：
-- 负面测试：
-
-## 实施顺序
-1.
-
-## 验证计划
-- 自动检查：
-- 正常 / 空 / 错误 / 冲突：
-- 并发 / 幂等 / 撤权：
-- 桌面 / 移动 / 键盘 / 焦点：
-
-## 风险与恢复
-- 风险：
-- 回滚 / 补偿：
-- 尚未验证：
-```
-
-## 五、Review Report
-
-```md
-# <工作名称> Review
-
-> Work Owner / 汇总人：
-> Reviewer 与覆盖视角：
-> 结论：approved / approved-with-follow-up / changes-required / blocked-pending-decision
-
-## 需求符合度
-- 是否实现原始结果：
-- 是否越过范围 / 非目标：
-- 是否混淆已确认与待确认：
-
-## 标准符合度
-- 产品不变量：
-- 架构 / 权限 / 数据：
-- 人性与反监控：
-- UI / 无障碍 / 复用：
-- 测试与证据：
-
-## 问题
-| 级别 | 问题 | 证据 | 必要修复 |
-| --- | --- | --- | --- |
-| Blocker / Must fix / Follow-up | | | |
-
-## Follow-up（仅 approved-with-follow-up）
-| 后续项 | Work Owner | 期限或触发条件 | 验证方式 |
-| --- | --- | --- | --- |
-| | | | |
-
-## 复审结果
-```
-
-C2 / C3 的作者不能是唯一 Reviewer。C3 必须列出所有触发视角及其具名结论，Work Owner 汇总为一个更保守的最终结论。Reviewer 不能替产品负责人确认 Q 项，也不能借审查扩大需求。
-
-强制映射：未决决定类 Blocker → `blocked-pending-decision`；任一未修 Must fix → `changes-required`；存在任何未关闭 Follow-up → `approved-with-follow-up`；只有没有未结问题时才使用 `approved`。
-
-## 六、交付摘要 / Continuation Note
-
-```md
-# <工作名称> 交付摘要
-
-## 30 秒摘要
 - 结果：
-- 当前状态：
-- 下一位接收者 / Work Owner：
-- 第一动作：
-
-## 已完成
-
-## 明确未完成 / 非目标
-
-## 决定与理由
-- 采用：
-- 否决：
-- 假设 / 未知：
-
-## 改动与证据
-- 文件 / 对象 / 固定版本：
-- 验证命令与结果：
-- 截图 / 场景：
-
-## 风险与恢复
-- 已知风险：
-- 回滚 / 补偿：
-- 权限 / 数据注意：
-
-## 接收信息（需要继续协作时）
-- 接收者理解的目标：
-- 范围 / 非目标：
-- 第一动作：
-- 仍缺内容：
+- 验证：
+- 剩余问题 / 风险：（没有则省略）
 ```
 
-普通代码 / 文档 / 设计交付至少使用上面的摘要结构；它只是可接续记录，不代表接收者 Consent、工作接受或责任变化。
+不要列与任务无关的 `N/A`、完整终端输出、逐步思考、已读文件清单或没有接收者的“下一步”。
 
-需要转移既有上下文、Todo、Responsibility、Task Owner，或执行子 Task Result Return 时，才创建产品语义的正式 Handoff，并遵守 [人与人 Handoff 规范](../product-v2/11-human-handoff.md)。发送交付摘要不等于正式 Handoff 已接受或生效。
+## 三、持久决定
 
-## 七、Deviation Record
+只有会约束后续工作的产品 / 治理合同才进入 `docs/product-v2/09-decision-register.md`。局部布局、文案、间距、Mock、可逆实现选择和已经被现有决定覆盖的反馈，不逐条创建 D / G 编号。
+
+需要确认时，在对话中一次写清：
+
+```text
+要解决的结果：
+当前事实与实质未知：
+建议方案及主要取舍：
+会改变 / 不会改变：
+需要确认的一项决定：
+完成证据：
+```
+
+用户对该具体方案明确同意后即可实施；不为同一决定再要求一次同义确认。方向或风险实质变化时才重新确认。
+
+## 四、合并工作记录（按需）
+
+仅在跨多人 / 跨会话、C3、难恢复或需要长期保留复杂取舍时创建：
+
+```text
+docs/workflow/records/YYYY-MM-DD-<topic>-work-note.md
+```
 
 ```md
-# <偏离主题> Deviation Record
+# <主题> Work Note
 
-> 状态：proposed / active / expired / closed
+## 决定
+- 目标 / 范围 / 非目标：
+- 已确认 Revision / 确认人：
+- 关键取舍与未知：
 
-- 编号：DEV-YYYY-NNN
-- 被偏离规则：
-- 原因：
-- 已尝试替代：
-- 精确作用范围：
-- 风险与受影响对象：
-- 补偿控制：
-- 恢复方式：
-- 批准人：
-- 生效 / 失效条件：
-- 复查触发点：
-- 清理 Work Owner：
-- 关联 Task / Decision / ChangeSet：
-- 登记索引行：
-- 验证与关闭证据：
+## 实施
+- 当前事实与证据：
+- 触达对象 / 文件：
+- 权限、数据、迁移与恢复（适用时）：
+
+## 验证与 Review
+- 实际运行的检查及结果：
+- 针对性场景：
+- Reviewer / 结论（需要时）：
+
+## 剩余项
+- 风险 / 未完成：
+- 接收者与第一动作（确需接续时）：
 ```
 
-Deviation 文件放在 `docs/workflow/deviations/`，并登记到该目录的 `README.md`。批准权和不可豁免集合只以 [项目工作宪章第十五节](../product-v2/00-project-operating-charter.md) 为准；本模板不复制一份可能变旧的缩略清单。Agent 可以起草，不能批准自己的偏离。
+同一工作只维护这一份记录；不要再拆出 Decision Brief、Technical Assessment、Review 和 Continuation 四份平行文件。长期决定仍回到决策台账，Work Note 不成为第二事实源。
+
+## 五、Review 与验证
+
+- C1：作者检查受影响行为和明显回归点。
+- C2：产品方向需确认；只有跨模块不变量、共享基础、难恢复选择或实质不确定性时增加一位针对性 Reviewer。
+- C3：只做一次非作者放行 Review，并覆盖实际触发的产品、架构、安全 / 隐私或人性风险；修复后由同一 Reviewer 复核，不再层层增加 Reviewer。
+- Review 只报告能改变接收结论的问题；没有问题时一句结论即可，不创建空报告。
+- 测试按风险选择最小充分集合。默认不跑全量回归，不把设计债务基线当作普通 UI 验收。
+- 每项检查要说明它证明哪条可观察验收；先复现目标场景，再核对结果。构建、截图和静态检查各自只证明有限事实，不能互相替代。
+- 连续反馈在任务边界统一验证一次；失败时先定位相关原因，再决定是否扩大检查范围。
+- `npm run verify` 证明前端生产构建；`npm run verify:design` 才包含设计债务基线。MCP 被触达时使用 `npm run build:mcp`。
+
+统一 Review 结论仍使用：`approved`、`approved-with-follow-up`、`changes-required`、`blocked-pending-decision`。Blocker、Must fix 和 Follow-up 的含义及放行映射以项目宪章为准。
+
+## 六、Handoff 与 Deviation
+
+普通代码、文档或设计结果不产生 Consent，也不自动改变责任。只有转移既有上下文、Todo、Responsibility、Task Owner，或执行子 Task Result Return 时，才按 [人与人 Handoff 规范](../product-v2/11-human-handoff.md) 建立正式 Handoff。
+
+偏离安全、权限、发布或不可逆动作规则时仍需 Deviation。记录至少包含：被偏离规则、精确范围、原因、风险、补偿控制、恢复方式、批准人、生效 / 失效条件和复查触发点。Agent 可以起草，不能批准自己的偏离；批准权和不可豁免集合以项目宪章第十五节为准。

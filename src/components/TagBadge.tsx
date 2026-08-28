@@ -19,7 +19,7 @@ export function getTagIcon(name: TagIconName) { return tagIconOptions.find((item
 
 // Source-adapted from the icon + label anatomy of:
 // https://21st.dev/@arihantcodes_1f7b8c4d/components/status-badge
-export function TagBadge({ onRemove, size = "md", tag }: { onRemove?: () => void; size?: "sm" | "md"; tag: TagDefinition }) {
+export function TagBadge({ onRemove, size = "md", tag }: { onRemove?: () => void; size?: "xs" | "sm" | "md"; tag: TagDefinition }) {
   const Icon = getTagIcon(tag.icon);
   return <span className="ad-tag-badge" data-color={tag.color} data-size={size}><Icon aria-hidden="true" /><span>{tag.name}</span>{onRemove && <button className="ad-tag-badge-remove" aria-label={`移除标签 ${tag.name}`} onClick={onRemove} type="button"><X /></button>}</span>;
 }
