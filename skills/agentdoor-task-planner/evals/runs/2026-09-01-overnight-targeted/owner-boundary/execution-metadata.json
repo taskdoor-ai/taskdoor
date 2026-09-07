@@ -1,0 +1,17 @@
+{
+  "artifactType": "offline_synthetic_targeted_retest",
+  "runKind": "post_fix_owner_boundary_edge12",
+  "createdOn": "2026-09-01",
+  "scenarioCount": 1,
+  "firstOutputsModified": false,
+  "expectationsHiddenFromExecutor": "orchestrator prompt and executor self-report",
+  "plannerModelConfiguration": {
+    "modelSnapshot": "not_exposed",
+    "temperature": "not_exposed",
+    "seed": "not_exposed"
+  },
+  "productionServicesAccessed": false,
+  "productionWrites": false,
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

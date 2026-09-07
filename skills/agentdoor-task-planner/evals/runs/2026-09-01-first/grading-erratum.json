@@ -1,0 +1,45 @@
+{
+  "reviewer": "independent Codex agent",
+  "scenarioId": "SAAS-03",
+  "verdict": "grading_constraint_overlocks_existing_task",
+  "finding": "expectations.mustPreserveTaskIds中的saas03-train把‘保留并复用培训任务本身’误实现为‘该任务任何字段都不得update’。原始用户要求重新安排剩余交付，只要求保留已确认负责人和UAT完成标准、不重复已交付成果；培训任务为open，排期和依赖均未被confirmedFields锁定。因此有真实新增字段影响依据时，应允许在原saas03-train ID、parentId及正式Owner不变的前提下提出必要排期/依赖差异；允许候选更新不等于授权直接写入，也不等于可无依据延期。",
+  "evidence": [
+    {
+      "ref": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/SAAS-03.json#/message",
+      "quote": "请读当前试点任务、子任务和今天的讨论，重新安排剩余交付。昨天确认的负责人和UAT完成标准先保留，客户已经交付的东西不用再做一遍。"
+    },
+    {
+      "ref": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/SAAS-03.json#/confirmedFields",
+      "description": "仅两项：saas03-uat.ownerId=saas-m4，以及saas03-uat.acceptanceCriteria=通过已确认的12条核心流程用例并记录遗留问题；没有培训日期或依赖的确认锁。"
+    },
+    {
+      "ref": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/SAAS-03.json#/context/tasks/4",
+      "description": "saas03-train为当前根saas03-root下的open任务，Owner为saas-m5，dueOn=2026-09-10；不是已完成或取消记录。"
+    },
+    {
+      "ref": "/tmp/agentdoor-planner-skill-eval-20260901/protocol-snapshot.json#/references~1context-and-replanning.md/content",
+      "quote": "局部改：新的已确认边界只影响某项标准、期限或依赖。保留原 ID，列字段差异及其来源；其他任务、人工确认、原始估算基线和历史不变。"
+    },
+    {
+      "ref": "/tmp/agentdoor-planner-skill-eval-20260901/protocol-snapshot.json#/references~1planning-v0.2.md/content",
+      "quote": "preservedTaskIds 列出本次快照中未被 update 的所有 Task，含已完成、取消和已存在进行中项；客户端正常引用这些对象，不把它们再创建一份。更新中的未列字段也必须保持原值。"
+    },
+    {
+      "ref": "/tmp/agentdoor-planner-skill-eval-20260901/expectations-snapshot.json#/expectations/2/mustPreserveTaskIds",
+      "description": "该数组包含saas03-scope、saas03-map、saas03-train；但同一case的mustNotUpdateTaskIds只有已完成的saas03-scope、saas03-map，形成过强的间接锁。"
+    },
+    {
+      "ref": "/Users/yxzuji/Documents/ChatGPT/agentdoor2/skills/agentdoor-task-planner/scripts/evaluate.py:106",
+      "description": "评分器要求mustPreserveTaskIds是输出preservedTaskIds的子集；validate_plan.py:192又要求preservedTaskIds精确等于快照任务减去updated集合，故正常update培训任务也会被评分为未保留。"
+    }
+  ],
+  "minimalCorrection": {
+    "target": "/expectations/2/mustPreserveTaskIds",
+    "before": ["saas03-scope", "saas03-map", "saas03-train"],
+    "after": ["saas03-scope", "saas03-map"],
+    "manualCheckAddition": "复用原saas03-train，不重建、换Owner或偷换归属；如新增字段核对确实影响培训，允许只提出有来源支持的必要排期/依赖差异。尚未确认的影响不能被忽略或当成已批准变更。",
+    "retain": "保留现有mustNotCreateTitles、已完成任务mustNotUpdateTaskIds、通用正式Owner与confirmedFields保护、版本/父子归属/依赖图校验；不整体放宽mustPreserveTaskIds语义。"
+  },
+  "effectOnFirstRun": "此勘误不能把SAAS-03首次输出改判为满足。首次输出本来没有更新培训任务，已通过该过强约束；它的独立语义失败仍是自己要求补充结论供9月9日UAT和9月10日培训使用，却给新增核对9月12日上界且未协调依赖/影响，仍ready_for_confirmation。勘误只防止未来正确的局部修正被评分器错误拒绝。",
+  "changesApplied": false
+}

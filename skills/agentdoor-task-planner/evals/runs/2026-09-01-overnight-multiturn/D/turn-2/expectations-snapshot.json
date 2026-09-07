@@ -1,0 +1,28 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-D2",
+      "allowedIntents": [
+        "replan",
+        "refine"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "maxCreates": 0,
+      "allowedUpdateTaskIds": [
+        "content03-format"
+      ],
+      "requiredUpdateTaskIds": [
+        "content03-format"
+      ],
+      "manualChecks": [
+        "采用最新对象版本及人工确认的文案标准，不应用旧回复；只更新公众号适配。"
+      ],
+      "requiredEvidenceRefs": [
+        "chain-d-human-edit"
+      ]
+    }
+  ]
+}

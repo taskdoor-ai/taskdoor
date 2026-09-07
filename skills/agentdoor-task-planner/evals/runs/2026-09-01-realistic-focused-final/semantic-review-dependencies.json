@@ -1,0 +1,374 @@
+{
+  "cases": [
+    {
+      "caseId": "REAL-B-NPI-01",
+      "verdict": "fails",
+      "summary": "首次输出正确复用了四个既有消费者并保护已完成基线，但遗漏了DVT对来料COC核对结果的直接依赖。DVT最终依赖应为b-npi-design、b-npi-pcn和b-npi-incoming；输出只有前两项，因此不满足冻结协议和期望中的真实跨分支消费关系。",
+      "findings": [
+        {
+          "id": "NPI-MATRIX",
+          "severity": "info",
+          "category": "frozen_consumer_matrix",
+          "matrix": [
+            {
+              "consumerTaskId": "b-npi-incoming",
+              "classification": "direct",
+              "directProducers": [
+                "b-npi-bom",
+                "b-npi-pcn"
+              ],
+              "sourceOnly": [
+                "b-npi-eco-v3",
+                "b-npi-coc-v1"
+              ],
+              "transitive": [],
+              "reviewedOutputs": [],
+              "evidenceRefs": [
+                "req-real-b-npi-01",
+                "b-npi-incoming",
+                "b-npi-incoming-v2",
+                "b-npi-pcn-v3",
+                "b-npi-coc-v1"
+              ],
+              "basis": "来料核对保留BOM基线并消费已完成PCN适用性结论；ECO v3和当前COC占位记录提供权威原始事实与未收到状态。"
+            },
+            {
+              "consumerTaskId": "b-npi-wi",
+              "classification": "direct",
+              "directProducers": [
+                "b-npi-bom",
+                "b-npi-incoming"
+              ],
+              "sourceOnly": [
+                "b-npi-eco-v3"
+              ],
+              "transitive": [
+                "b-npi-pcn"
+              ],
+              "reviewedOutputs": [],
+              "evidenceRefs": [
+                "b-npi-wi",
+                "b-npi-wi-v4",
+                "b-npi-d5",
+                "b-npi-eco-v3"
+              ],
+              "basis": "作业指导正文明确须消费来料核对结果与ECO v3，并保留现有BOM前置；PCN结论通过来料核对传递。"
+            },
+            {
+              "consumerTaskId": "b-npi-dvt",
+              "classification": "direct",
+              "directProducers": [
+                "b-npi-design",
+                "b-npi-pcn",
+                "b-npi-incoming"
+              ],
+              "sourceOnly": [
+                "b-npi-eco-v3",
+                "b-npi-coc-v1"
+              ],
+              "transitive": [
+                "b-npi-bom"
+              ],
+              "reviewedOutputs": [],
+              "evidenceRefs": [
+                "req-real-b-npi-01",
+                "b-npi-dvt",
+                "b-npi-eco-v3",
+                "b-npi-pcn-v3",
+                "b-npi-incoming",
+                "b-npi-coc-v1",
+                "b-npi-d6"
+              ],
+              "basis": "DVT独立消费PCN适用性和结构基线，同时需要由来料任务形成的实际批次COC核对结果；当前COC记录只有外部承诺，不能替代团队核对产出。"
+            },
+            {
+              "consumerTaskId": "b-npi-gate",
+              "classification": "reviewer",
+              "directProducers": [
+                "b-npi-incoming",
+                "b-npi-wi",
+                "b-npi-dvt"
+              ],
+              "sourceOnly": [
+                "b-npi-eco-v3",
+                "b-npi-coc-v1"
+              ],
+              "transitive": [
+                "b-npi-bom",
+                "b-npi-pcn",
+                "b-npi-design"
+              ],
+              "reviewedOutputs": [
+                "b-npi-incoming",
+                "b-npi-wi",
+                "b-npi-dvt"
+              ],
+              "evidenceRefs": [
+                "b-npi-gate",
+                "b-npi-eco-v3",
+                "b-npi-coc-v1",
+                "b-npi-d7"
+              ],
+              "basis": "最终门禁直接审核来料、作业与DVT三个最近产出，上游BOM、PCN和结构基线通过这些消费者传递。"
+            }
+          ]
+        },
+        {
+          "id": "NPI-DVT-MISSING-INCOMING",
+          "severity": "error",
+          "category": "missing_direct_dependency",
+          "consumerTaskId": "b-npi-dvt",
+          "expectedDependsOnTaskIds": [
+            "b-npi-design",
+            "b-npi-pcn",
+            "b-npi-incoming"
+          ],
+          "actualDependsOnTaskIds": [
+            "b-npi-design",
+            "b-npi-pcn"
+          ],
+          "evidenceRefs": [
+            "req-real-b-npi-01",
+            "b-npi-eco-v3",
+            "b-npi-pcn-v3",
+            "b-npi-incoming",
+            "b-npi-coc-v1",
+            "b-npi-d6"
+          ],
+          "assessment": "输出把已完成PCN任务当成DVT所需批次状态的充分生产者，但PCN只形成适用性结论；实际COC尚未收到，收到后的批次关联与核对由b-npi-incoming形成。输出自己的DVT完成标准又要求关联首批COC状态，却没有接入该最近生产任务，违反final = old ∪ direct producers规则。"
+        },
+        {
+          "id": "NPI-OTHER-BOUNDARIES",
+          "severity": "info",
+          "category": "satisfied_boundaries",
+          "evidenceRefs": [
+            "b-npi-bom",
+            "b-npi-design",
+            "b-npi-pcn",
+            "b-npi-d4",
+            "b-npi-d7",
+            "b-npi-coc-v1"
+          ],
+          "assessment": "其余三项依赖差分正确；输出没有create，未更新BOM、图纸或PCN完成记录，并明确9月7日仅是COC承诺及9月10日硬门禁风险。"
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "status": "primary_cause",
+          "reason": "planner遗漏了b-npi-incoming到b-npi-dvt的直接边，并以b-npi-pcn替代了实际来料COC核对产出。"
+        },
+        "fixture": {
+          "status": "not_responsible",
+          "reason": "输入已通过用户原文、ECO v3、PCN v3、来料任务边界和COC未到状态共同说明批次COC先在来料记录中关联核对，证据足以冻结该直接消费者关系。"
+        },
+        "frozenGraderOracle": {
+          "status": "not_responsible",
+          "reason": "冻结期望要求DVT保留b-npi-design、加入b-npi-pcn和b-npi-incoming，符合协议关于团队核对结果必须依赖最近生产任务的规则。"
+        }
+      }
+    },
+    {
+      "caseId": "REAL-B-PROC-01",
+      "verdict": "satisfies",
+      "summary": "首次输出与输入冻结矩阵、协议及冻结期望一致：五个现有消费者均改用登记册v3，MSA、税务和银行把v3作为source_only权威事实并保留原依赖，最终门禁补入所有人核对的直接审核前置；没有重做制裁、NDA、样品试用或另建快速准入。",
+      "findings": [
+        {
+          "id": "PROC-MATRIX",
+          "severity": "info",
+          "category": "frozen_consumer_matrix",
+          "matrix": [
+            {
+              "consumerTaskId": "b-proc-owner-review",
+              "classification": "direct",
+              "directProducers": [
+                "b-proc-sanctions"
+              ],
+              "sourceOnly": [
+                "b-proc-reg-v3"
+              ],
+              "transitive": [],
+              "reviewedOutputs": [],
+              "evidenceRefs": [
+                "b-proc-owner-review",
+                "b-proc-reg-v3",
+                "b-proc-sanctions-v2",
+                "b-proc-d1",
+                "b-proc-d2"
+              ],
+              "basis": "所有人核对直接读取登记册v3地址事实，并消费已完成制裁筛查形成的覆盖结论。"
+            },
+            {
+              "consumerTaskId": "b-proc-msa",
+              "classification": "source_only",
+              "directProducers": [
+                "b-proc-nda",
+                "b-proc-sanctions"
+              ],
+              "sourceOnly": [
+                "b-proc-reg-v3",
+                "b-proc-msa-v6"
+              ],
+              "transitive": [],
+              "reviewedOutputs": [],
+              "evidenceRefs": [
+                "b-proc-msa",
+                "b-proc-reg-v3",
+                "b-proc-msa-v6",
+                "b-proc-nda-v3",
+                "b-proc-d3"
+              ],
+              "basis": "MSA可直接从已验证登记册取得通知地址原始事实，无需串到所有人核对；原NDA和制裁前置继续有效。"
+            },
+            {
+              "consumerTaskId": "b-proc-tax",
+              "classification": "source_only",
+              "directProducers": [
+                "b-proc-sanctions"
+              ],
+              "sourceOnly": [
+                "b-proc-reg-v3",
+                "b-proc-tax-v4"
+              ],
+              "transitive": [],
+              "reviewedOutputs": [],
+              "evidenceRefs": [
+                "b-proc-tax",
+                "b-proc-reg-v3",
+                "b-proc-tax-v4",
+                "b-proc-d9",
+                "b-proc-d10"
+              ],
+              "basis": "税务任务独立核对登记册v3注册地址和不变税号，保留原制裁前置，不依赖所有人核对。"
+            },
+            {
+              "consumerTaskId": "b-proc-bank",
+              "classification": "source_only",
+              "directProducers": [
+                "b-proc-tax"
+              ],
+              "sourceOnly": [
+                "b-proc-reg-v3",
+                "b-proc-bank-v1"
+              ],
+              "transitive": [
+                "b-proc-sanctions"
+              ],
+              "reviewedOutputs": [],
+              "evidenceRefs": [
+                "b-proc-bank",
+                "b-proc-reg-v3",
+                "b-proc-bank-v1",
+                "b-proc-d6",
+                "b-proc-h5"
+              ],
+              "basis": "银行验证直接读取v3地址和到达后的银行函，消费税务核对结果；当前银行函只有外部承诺，任务须保持阻塞。"
+            },
+            {
+              "consumerTaskId": "b-proc-gate",
+              "classification": "reviewer",
+              "directProducers": [
+                "b-proc-owner-review",
+                "b-proc-security",
+                "b-proc-msa",
+                "b-proc-tax",
+                "b-proc-bank",
+                "b-proc-quality"
+              ],
+              "sourceOnly": [
+                "b-proc-reg-v3",
+                "b-proc-bank-v1"
+              ],
+              "transitive": [
+                "b-proc-sanctions",
+                "b-proc-nda"
+              ],
+              "reviewedOutputs": [
+                "b-proc-owner-review",
+                "b-proc-security",
+                "b-proc-msa",
+                "b-proc-tax",
+                "b-proc-bank",
+                "b-proc-quality"
+              ],
+              "evidenceRefs": [
+                "b-proc-gate",
+                "b-proc-reg-v3",
+                "b-proc-owner-review",
+                "b-proc-bank-v1",
+                "b-proc-d5",
+                "b-proc-d7"
+              ],
+              "basis": "最终门禁直接审核六项最近产出；完成的制裁和NDA通过消费者传递，不新增冗余直连。"
+            }
+          ]
+        },
+        {
+          "id": "PROC-DEPENDENCIES-MATCH",
+          "severity": "info",
+          "category": "exact_dependency_match",
+          "expectedAndActual": {
+            "b-proc-owner-review": [
+              "b-proc-sanctions"
+            ],
+            "b-proc-msa": [
+              "b-proc-nda",
+              "b-proc-sanctions"
+            ],
+            "b-proc-tax": [
+              "b-proc-sanctions"
+            ],
+            "b-proc-bank": [
+              "b-proc-tax"
+            ],
+            "b-proc-gate": [
+              "b-proc-security",
+              "b-proc-msa",
+              "b-proc-tax",
+              "b-proc-bank",
+              "b-proc-quality",
+              "b-proc-owner-review"
+            ]
+          },
+          "evidenceRefs": [
+            "b-proc-reg-v3",
+            "b-proc-owner-review",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-gate"
+          ],
+          "assessment": "输出只给门禁新增所有人核对边，其余四个消费者保留原依赖；这与source_only和最近生产者边界一致。"
+        },
+        {
+          "id": "PROC-PROTECTED-AND-RISK",
+          "severity": "info",
+          "category": "satisfied_boundaries",
+          "evidenceRefs": [
+            "b-proc-sanctions-v2",
+            "b-proc-nda-v3",
+            "b-proc-quality-v2",
+            "b-proc-bank-v1",
+            "b-proc-d6",
+            "b-proc-d7",
+            "b-proc-h6"
+          ],
+          "assessment": "输出保护制裁、NDA和样品试用完成记录，拒绝快速准入和重签；明确银行函尚未上传，保留9月10日门禁与9月12日首单风险。"
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "status": "no_fault",
+          "reason": "planner正确区分登记册v3原始事实与所有人核对增值结论，并按最小差异补齐门禁依赖。"
+        },
+        "fixture": {
+          "status": "no_fault",
+          "reason": "输入对五个消费者、未变化身份字段、完成记录保护、银行函外部承诺和硬期限提供了充分且一致的证据。"
+        },
+        "frozenGraderOracle": {
+          "status": "no_fault",
+          "reason": "冻结期望的exactDependencies和manualChecks与协议的source_only、direct reviewer及依赖集合差分规则一致。"
+        }
+      }
+    }
+  ]
+}

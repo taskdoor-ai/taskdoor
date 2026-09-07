@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-c3",
+  "baseSnapshotId": "snapshot-multi-c3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "sim:C:1": 1
+  },
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议保留 SKU-CUP-A 的现有任务原样推进，并为不同业务对象 SKU-CUP-B 新建一个单任务候选，由颜北在 2026-09-03 前交付清稿和三处差异清单。",
+  "reasoningSummary": [
+    {
+      "text": "现有任务面向 SKU-CUP-A 的五处错字，本轮明确面向 SKU-CUP-B 的三处错字，业务对象和校对范围均不同。",
+      "evidenceRefs": [
+        "req-multi-c3",
+        "chain-c-sku-b",
+        "sim:C:1"
+      ]
+    },
+    {
+      "text": "SKU-CUP-B 的清稿与三处差异清单共同构成一份校对交付，校对步骤无需拆成子任务。",
+      "evidenceRefs": [
+        "req-multi-c3",
+        "chain-c-sku-b"
+      ]
+    },
+    {
+      "text": "用户明确指定颜北，且其职责包含详情页内容及按已确认信息修正错字。",
+      "evidenceRefs": [
+        "req-multi-c3",
+        "ecom-m2-role"
+      ]
+    },
+    {
+      "text": "本轮明确要求 2026-09-03 交稿，并明确图片、价格和卖点不得改变。",
+      "evidenceRefs": [
+        "req-multi-c3",
+        "chain-c-sku-b"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:multi-c-cup-b-proofreading",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "create:multi-c-cup-b-proofreading",
+        "action": "create",
+        "targetId": "new:multi-c-cup-b-proofreading",
+        "parentId": null,
+        "fields": {
+          "title": "校对保温杯 SKU-CUP-B 详情页三处错别字",
+          "goal": {
+            "text": "在不改变 SKU-CUP-B 详情页图片、价格或卖点的前提下，交付修正三处指定错别字后的清稿和三处差异清单。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-multi-c3",
+              "chain-c-sku-b"
+            ]
+          },
+          "acceptanceCriteria": [
+            "交付一份可审阅的 SKU-CUP-B 详情页清稿，执行时取得的三处指定错字均已逐项修正。",
+            "交付一份共三项的差异清单，每项列出原文字样、修改后文字及其在详情页中的位置，能够与清稿核对。",
+            "版本差异仅包含三处指定文字修正；图片、价格、卖点及其他未指定内容均未改变。"
+          ],
+          "tips": [
+            "开始编辑前定位并固定本轮三处错字清单及详情页源版本；这些素材位置可在任务执行中补齐，不扩大任务身份。",
+            "提交前用版本差异逐项核对三处修改，并检查图片、价格、卖点和其他未指定内容保持不变。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m2",
+            "basis": "explicit",
+            "reason": "用户明确指定颜北，且该校对结果符合其商品内容设计职责边界。",
+            "evidenceRefs": [
+              "req-multi-c3",
+              "ecom-m2-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-03",
+            "basis": "explicit",
+            "assumptions": [
+              "用户给出了明确交付日期，但未指定开始日期。"
+            ],
+            "evidenceRefs": [
+              "req-multi-c3",
+              "chain-c-sku-b"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "快照未提供 SKU-CUP-B 同范围历史投入、三处文字的具体位置或颜北的完整可用容量，无法可靠估算人时。"
+            ],
+            "evidenceRefs": [
+              "req-multi-c3",
+              "ecom-m2-work"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "SKU-CUP-B 是与既有 SKU-CUP-A 不同的业务对象，需要独立交付一份三处错字校对结果。",
+        "evidenceRefs": [
+          "req-multi-c3",
+          "chain-c-sku-b",
+          "sim:C:1"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "sim:C:1"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "sim:C:1",
+        "relationship": "different_instance",
+        "reason": "sim:C:1 校对 SKU-CUP-A 的五处错字，本轮候选校对 SKU-CUP-B 的三处错字；两者业务对象、错字集合和交付日期均明确不同。",
+        "evidenceRefs": [
+          "req-multi-c3",
+          "chain-c-sku-b",
+          "sim:C:1"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "输入未附 SKU-CUP-B 三处错字的具体文字和位置；执行者需在开始编辑前取得并固定清单与源版本，但该素材缺口不改变任务对象或交付边界。",
+    "颜北没有当前完整可用时间记录；候选负责人和期限可供审阅，正式接受与排期仍须由现行流程确认。",
+    "预计投入缺少同范围历史和容量依据，因此保留为未知。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:multi-c-cup-b-proofreading",
+      "label": "审阅 SKU-CUP-B 校对候选"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,196 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "request-real-c-02",
+  "baseSnapshotId": "real-c-02-snapshot",
+  "baseRevision": 17,
+  "baseTaskVersions": {
+    "fc-root": 9,
+    "fc-ledgers": 6,
+    "fc-cash": 5,
+    "fc-bank-recon": 8,
+    "fc-transfer-clear": 2,
+    "fc-ap": 6,
+    "fc-payroll": 5,
+    "fc-report": 3,
+    "fc-fx": 3,
+    "fc-statements": 2,
+    "fc-variance": 1,
+    "fc-controls": 4,
+    "fc-journal-approval": 4,
+    "fc-audit-evidence": 2,
+    "fc-board-pack": 1
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议继续用现有收款异常任务承接带章回单和期间归属结论，让外币重估在保留已完成银行对账前置的同时新增该异常结论，并让调整日记账复核直接等待外币重估；现有报表、证据索引和董事会包通过既有链路继续消费结果。",
+  "reasoningSummary": [
+    {
+      "text": "银行更正通知写明实际入账日为2026-09-01，但应收台账仍列在8月，带章回单预计2026-09-03 15:00才到；正式回单到达前，现有异常任务不能视为完成。",
+      "evidenceRefs": [
+        "fc-transfer-clear",
+        "fc-file-bank-advice-v2",
+        "fc-file-bank-wait-v1",
+        "fc-d1",
+        "fc-d9"
+      ]
+    },
+    {
+      "text": "外币重估的现有标准直接需要确认后的现金归属期，因此应新增实际生产该结论的异常任务；已封存银行对账仍提供其原有现金对账结果，没有来源宣布该前置失效。",
+      "evidenceRefs": [
+        "fc-fx",
+        "fc-transfer-clear",
+        "fc-bank-recon",
+        "fc-file-bank-recon-v8",
+        "fc-d2"
+      ]
+    },
+    {
+      "text": "调整日记账复核直接审核外币重估形成的调整分录，应依赖外币重估；主报表已直接依赖外币重估，证据索引和董事会包已有有效下游链路，无需冗余直连异常任务。",
+      "evidenceRefs": [
+        "fc-fx",
+        "fc-journal-approval",
+        "fc-statements",
+        "fc-audit-evidence",
+        "fc-board-pack",
+        "fc-file-journal-pack-v4"
+      ]
+    },
+    {
+      "text": "9月5日18:00硬关闭保持不变，但回单等待不能折算为EWD或按期保证；薪资分支只可引用封存状态和已批准合计，本轮不读取、复制或猜测行项目。",
+      "evidenceRefs": [
+        "fc-hard-close",
+        "fc-d7",
+        "fc-privacy-boundary",
+        "fc-file-payroll-register-v5",
+        "fc-d8"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "fc-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change-fc-transfer-clear-criteria",
+        "action": "update",
+        "targetId": "fc-transfer-clear",
+        "parentId": "fc-cash",
+        "fields": {
+          "acceptanceCriteria": [
+            "取得可追溯的银行带章更正回单，并据其确认该笔跨币种收款实际入账日为2026-09-01及归属9月；回单未到或与通知不一致时保持待决",
+            "保留已封存的8月银行对账结果不变，并向外币重估交接入账日、期间归属和正式回单版本"
+          ]
+        },
+        "reason": "银行通知已经给出更正日期，但带章回单仍是完成异常核对和形成可交接归属结论的必要证据。",
+        "evidenceRefs": [
+          "fc-transfer-clear",
+          "fc-file-bank-advice-v2",
+          "fc-file-bank-wait-v1",
+          "fc-d2",
+          "fc-d9"
+        ]
+      },
+      {
+        "id": "change-fc-fx-dependencies",
+        "action": "update",
+        "targetId": "fc-fx",
+        "parentId": "fc-report",
+        "fields": {
+          "dependsOnTaskIds": [
+            "fc-bank-recon",
+            "fc-transfer-clear"
+          ]
+        },
+        "reason": "外币重估直接需要异常任务形成的正式期间归属结论；原银行对账仍提供已封存的对账结果，故保留旧前置并新增异常任务。",
+        "evidenceRefs": [
+          "fc-request",
+          "fc-fx",
+          "fc-transfer-clear",
+          "fc-bank-recon",
+          "fc-file-bank-recon-v8",
+          "fc-d2"
+        ]
+      },
+      {
+        "id": "change-fc-journal-approval-dependency",
+        "action": "update",
+        "targetId": "fc-journal-approval",
+        "parentId": "fc-controls",
+        "fields": {
+          "dependsOnTaskIds": [
+            "fc-fx"
+          ]
+        },
+        "reason": "该任务直接复核包含外币重估调整的日记账，应等待最近的调整产出fc-fx，而不能以更上游银行通知或回单代替被审核结果。",
+        "evidenceRefs": [
+          "fc-journal-approval",
+          "fc-fx",
+          "fc-file-journal-pack-v4"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "fc-root",
+      "fc-ledgers",
+      "fc-cash",
+      "fc-bank-recon",
+      "fc-ap",
+      "fc-payroll",
+      "fc-report",
+      "fc-statements",
+      "fc-variance",
+      "fc-controls",
+      "fc-audit-evidence",
+      "fc-board-pack"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "real-c-finance-team"
+    ],
+    "assessments": [
+      {
+        "taskId": "fc-transfer-clear",
+        "relationship": "same_outcome",
+        "reason": "同一银行事件、同一关账期间和同一带章回单及归属结论已由现有异常任务承接，本轮只局部更新该任务。",
+        "evidenceRefs": [
+          "fc-transfer-clear",
+          "fc-h4",
+          "fc-request"
+        ]
+      },
+      {
+        "taskId": "fc-bank-recon",
+        "relationship": "overlap",
+        "reason": "它与异常涉及同一现金对象，但已按当时资料完成并封存；后续更正属于现有异常任务的新处理边界，不能覆盖或重开历史结果。",
+        "evidenceRefs": [
+          "fc-bank-recon",
+          "fc-file-bank-recon-v8",
+          "fc-h3",
+          "fc-d2"
+        ]
+      }
+    ],
+    "coverageNote": "已覆盖当前授权团队2026年8月关账树及近三期异常索引；未访问其他团队或受限薪资正文。"
+  },
+  "questions": [],
+  "warnings": [
+    "带章回单预计2026-09-03 15:00到达，该等待是历时而非EWD，不能据此保证9月5日18:00按期关闭。",
+    "薪资行项目未授权进入规划输出；本候选只保留既有薪资任务及其已批准汇总链路。",
+    "候选不执行入账、分录、银行联系、审计联系或任何任务写入。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "fc-root",
+      "label": "审阅收款异常、外币重估和日记账复核的三项差异"
+    },
+    {
+      "action": "open_task",
+      "taskId": "fc-transfer-clear",
+      "label": "查看现有跨币种收款异常任务"
+    }
+  ],
+  "externalEffects": "none"
+}

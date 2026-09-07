@@ -1,0 +1,32 @@
+.creation-edit { display: block; box-sizing: border-box; width: 100%; min-height: 0; padding: 2px var(--ad-space-1); margin: 0; border: 1px solid transparent; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink); font-family: inherit; font-size: var(--ad-text-body-sm); line-height: 1.65; resize: none; overflow: hidden; transition: background .15s, border-color .15s; }
+.creation-edit:hover:not(:disabled) { background: color-mix(in srgb, var(--ad-surface-subtle) 65%, transparent); }
+.creation-edit:focus-visible { background: var(--ad-surface); border-color: var(--ad-focus); outline: 3px solid color-mix(in srgb, var(--ad-focus) 12%, transparent); outline-offset: 1px; }
+.creation-edit::placeholder { color: var(--ad-ink-tertiary); font-weight: 400; }
+.task-detail-fields { min-width: 0; }
+.task-detail-fields-embedded { --task-detail-label-width: 68px; display: grid; gap: var(--ad-space-4); }
+.task-detail-fields-body { display: grid; min-width: 0; gap: var(--ad-space-4); }
+.task-detail-field-row, .task-detail-fields-embedded .task-detail-completion { display: grid; grid-template-columns: var(--task-detail-label-width) minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); min-width: 0; }
+.task-detail-fields-embedded .task-detail-field-label { padding-top: var(--ad-space-1); }
+.task-detail-name-control { display: flex; min-width: 0; align-items: flex-start; gap: var(--ad-space-3); }
+.task-detail-name-control > textarea { flex: 1; min-width: 0; }
+.task-detail-name-control > button { flex-shrink: 0; }
+.task-detail-inline-name[data-slot="textarea"] { padding-block: var(--ad-space-1); font-weight: 600; line-height: 1.7; }
+.task-detail-extra-fields { display: grid; min-width: 0; gap: var(--ad-space-2); }
+.task-execution-tips-field { display: grid; grid-template-columns: 68px minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); min-width: 0; }
+.task-execution-tips-field > .task-detail-field-label { padding-top: 3px; }
+.task-execution-tips-input[data-slot="textarea"] { min-width: 0; color: var(--ad-ink-secondary); overflow-wrap: anywhere; }
+@media (max-width: 760px) {
+  .task-execution-tips-field { grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-1); }
+  .task-execution-tips-field > .task-detail-field-label { padding-top: 0; }
+}
+@media (max-width: 720px) {
+  .task-detail-field-row, .task-detail-fields-embedded .task-detail-completion { grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-1); }
+  .task-detail-fields-embedded .task-detail-field-label { padding-top: 0; }
+  .task-detail-name-field { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .task-detail-name-control { display: contents; }
+  .task-detail-name-control > textarea { grid-column: 1 / -1; grid-row: 2; }
+  .task-detail-name-control > button { grid-column: 2; grid-row: 1; justify-self: end; }
+}
+@media (pointer: coarse) {
+  .task-detail-fields .creation-edit:not(.task-detail-title-input) { font-size: max(16px, var(--ad-text-body)); }
+}

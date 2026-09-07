@@ -1,0 +1,9 @@
+{
+  "notice": "Resolve temporary paths against this archive.",
+  "prefixMappings": [
+    {
+      "original": "/tmp/agentdoor-planner-realistic-targeted-final-20260901-v4/",
+      "archivedRelative": "./"
+    }
+  ]
+}

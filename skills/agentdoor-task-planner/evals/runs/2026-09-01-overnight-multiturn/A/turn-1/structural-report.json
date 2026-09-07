@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-08-31T20:35:54.600698+00:00",
+  "total": 1,
+  "structurallyValid": 1,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "22cc4f9f868d9ce4b694e539faa032b3f97b99d94737da5363a91434a6aafcfe",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-A1",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议新建一个蓝屿客户稿件A的短稿校对任务，仅检查错字与引用格式，于2026年9月2日交付清稿和修改清单；建议程简负责。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "1661082f3e851cd293075710b65d71007a1c43a912b720f00c7c39abe289cf08",
+      "manualChecks": [
+        "保持单任务；校对范围不扩展；无真实写入。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "agentdoor.semantic-review.v1",
+  "reviewedAt": "2026-09-01T03:01:21Z",
+  "reviewer": {
+    "kind": "independent_codex_agent",
+    "generatedReviewedOutput": false,
+    "humanReviewer": false
+  },
+  "scope": {
+    "runDirectory": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901",
+    "scenarioIds": [
+      "EDGE-12"
+    ],
+    "frozenArtifactsReviewed": [
+      "inputs/EDGE-12.json",
+      "outputs/EDGE-12.json",
+      "expectations-snapshot.json",
+      "protocol-snapshot.json",
+      "manifest.json",
+      "structural-report.json"
+    ]
+  },
+  "results": [
+    {
+      "scenarioId": "EDGE-12",
+      "status": "passed",
+      "checks": [
+        {
+          "check": "single_minimal_terminology_task",
+          "status": "passed",
+          "finding": "候选只有一个根级 create 变更，complexity 为 simple；翻译、复核和交付没有被拆成占位子任务。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/complexity"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/parentId"
+            }
+          ]
+        },
+        {
+          "check": "owner_unassigned_without_false_qualification",
+          "status": "passed",
+          "finding": "整项负责人明确保持 memberId=null、basis=unassigned，理由直接绑定授权成员缺少覆盖整项结果的日语能力证据，没有把创建者、项目经理、文案或编辑岗位推成负责人。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation/memberId"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation/basis"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation/reason"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/inputs/EDGE-12.json",
+              "pointer": "/context/sourceRefs/1/text"
+            }
+          ]
+        },
+        {
+          "check": "tang_yu_version_delivery_only",
+          "status": "passed",
+          "finding": "唐钰是唯一已建议的参与者，其贡献限定为清单、来源版本、复核状态、修改记录和最终版本交付；输出同时明确排除译法产出、语言复核与发布批准。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/participantRecommendations/0/memberId"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/participantRecommendations/0/contribution"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/tips/2"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/inputs/EDGE-12.json",
+              "pointer": "/members/5/responsibilities"
+            }
+          ]
+        },
+        {
+          "check": "no_invented_japanese_capability_or_hidden_member",
+          "status": "passed",
+          "finding": "输出没有给任何授权成员补造日语翻译或专业复核能力，也没有生成不可见外部成员 ID；语言贡献者保持为待补齐的责任缺口。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/reasoningSummary/1"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/participantRecommendations"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/warnings/0"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/inputs/EDGE-12.json",
+              "pointer": "/context/sourceRefs/1"
+            }
+          ]
+        },
+        {
+          "check": "translation_and_review_stay_inside_one_delivery",
+          "status": "passed",
+          "finding": "翻译、日语能力复核和版本交付被表达为同一任务内的协作步骤与验收条件；没有为未选定角色建立空壳任务。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria/1"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/tips/0"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes"
+            }
+          ]
+        },
+        {
+          "check": "ready_means_reviewable_not_directly_submittable",
+          "status": "passed",
+          "finding": "ready_for_confirmation 仅配套 review_proposal；输出明确要求正式创建或执行前补齐并接受责任角色，且 externalEffects=none，没有声称已指派、已邀请或可直接提交。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/disposition"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/warnings/0"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/nextActions/0/action"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/outputs/EDGE-12.json",
+              "pointer": "/externalEffects"
+            }
+          ]
+        },
+        {
+          "check": "frozen_structure_and_protocol_match",
+          "status": "passed",
+          "finding": "离线结构报告认定本例结构有效，且 Skill、契约、Schema 与冻结清单匹配；这仅证明离线快照一致性。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/structural-report.json",
+              "pointer": "/results/0/status"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/structural-report.json",
+              "pointer": "/versionChecks"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901/manifest.json",
+              "pointer": "/cases/0/inputSha256"
+            }
+          ]
+        }
+      ],
+      "failedChecks": [],
+      "unknownChecks": [],
+      "reviewerConclusion": "在冻结合成输入和协议范围内，EDGE-12 满足本次全部语义检查：维持单一术语表任务，负责人未分配，唐钰仅承担版本交付贡献，未虚构日语能力，并清楚保留正式提交前的责任补齐与接受边界。"
+    }
+  ],
+  "limitations": [
+    "本评审由非人类 Codex agent 完成，不是日语专家、行业用户或独立人类评审。",
+    "这是冻结合成数据上的离线语义复核；没有连接生产 ACL、成员目录、模型服务、任务提交、幂等、指派、接受或通知流程。",
+    "本结论不验证未来实际译文的语言质量，也不证明正式 Owner、译者或日语复核者已经存在、接受或可按期投入。"
+  ],
+  "productionValidation": "not_run"
+}

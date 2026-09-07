@@ -1,0 +1,23 @@
+{
+  "kind": "targeted_post_fix_semantic_review",
+  "cases": [
+    {
+      "caseId": "CONTENT-01",
+      "status": "passed",
+      "summary": "轻量校对保持一个可验收结果，普通步骤写在 tips；编辑职责匹配，发起人未被自动设为 Owner，1.5 人时明确为带假设的模型候选而非字数公式或实际投入。",
+      "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+    },
+    {
+      "caseId": "RENO-01",
+      "status": "passed",
+      "summary": "一个协调根下保留三项可独立核对的结果：问题清单复核、资料目录、移交记录与未完事项说明；依赖只表达消费关系，未把三项合并，且明确 not_requested 不等于没有历史。",
+      "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+    }
+  ],
+  "total": 2,
+  "passed": 2,
+  "failed": 0,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

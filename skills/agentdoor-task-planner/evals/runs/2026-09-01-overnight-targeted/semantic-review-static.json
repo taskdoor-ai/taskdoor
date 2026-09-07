@@ -1,0 +1,905 @@
+{
+  "schemaVersion": "agentdoor-static-semantic-review.v1",
+  "reviewId": "targeted-static-review-20260901",
+  "createdAt": "2026-09-01T10:57:38+08:00",
+  "reviewType": "independent_non_human_semantic_review",
+  "overallStatus": "failed",
+  "scope": {
+    "caseIds": [
+      "EDGE-07",
+      "EDGE-12",
+      "CONTENT-01",
+      "RENO-01",
+      "COMPLEX-02",
+      "COMPLEX-03"
+    ],
+    "standard": "逐例按各 run 冻结 expectations、Skill、v0.2 契约、Schema 与上下文规则进行离线语义评审；结构报告只作为结构佐证，不替代语义判断。",
+    "reviewedArtifactKinds": [
+      "input",
+      "output",
+      "expectations",
+      "protocol",
+      "manifest",
+      "structural_report"
+    ],
+    "mutationBoundary": "只创建本评审 JSON；未修改三个 run 的输入、输出、期望、协议、manifest、结构报告或项目文件。"
+  },
+  "runs": [
+    {
+      "run": "targeted-edge",
+      "root": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901",
+      "caseIds": [
+        "EDGE-07",
+        "EDGE-12"
+      ],
+      "protocolEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/protocol-snapshot.json",
+          "pointer": "/SKILL.md/sha256",
+          "valueSummary": "冻结 Skill 内容哈希"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/protocol-snapshot.json",
+          "pointer": "/references~1planning-v0.2.md/sha256",
+          "valueSummary": "冻结 v0.2 契约哈希"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/protocol-snapshot.json",
+          "pointer": "/references~1planning-v0.2.schema.json/sha256",
+          "valueSummary": "冻结 v0.2 Schema 哈希"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/protocol-snapshot.json",
+          "pointer": "/references~1context-and-replanning.md/sha256",
+          "valueSummary": "冻结上下文与重规划规则哈希"
+        }
+      ],
+      "boundaryEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/manifest.json",
+          "pointer": "/notice",
+          "valueSummary": "合成离线评测；未调用模型 API、生产 ACL 或任务写入"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/structural-report.json",
+          "pointer": "/productionValidation",
+          "valueSummary": "not_run"
+        }
+      ]
+    },
+    {
+      "run": "targeted-core",
+      "root": "/tmp/agentdoor-planner-overnight-targeted-core-20260901",
+      "caseIds": [
+        "CONTENT-01",
+        "RENO-01"
+      ],
+      "protocolEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/protocol-snapshot.json",
+          "pointer": "/SKILL.md/sha256",
+          "valueSummary": "冻结 Skill 内容哈希"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/protocol-snapshot.json",
+          "pointer": "/references~1planning-v0.2.md/sha256",
+          "valueSummary": "冻结 v0.2 契约哈希"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/protocol-snapshot.json",
+          "pointer": "/references~1planning-v0.2.schema.json/sha256",
+          "valueSummary": "冻结 v0.2 Schema 哈希"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/protocol-snapshot.json",
+          "pointer": "/references~1context-and-replanning.md/sha256",
+          "valueSummary": "冻结上下文与重规划规则哈希"
+        }
+      ],
+      "boundaryEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/manifest.json",
+          "pointer": "/notice",
+          "valueSummary": "合成离线评测；未调用模型 API、生产 ACL 或任务写入"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/structural-report.json",
+          "pointer": "/productionValidation",
+          "valueSummary": "not_run"
+        }
+      ]
+    },
+    {
+      "run": "targeted-complex",
+      "root": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901",
+      "caseIds": [
+        "COMPLEX-02",
+        "COMPLEX-03"
+      ],
+      "protocolEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/protocol-snapshot.json",
+          "pointer": "/SKILL.md/sha256",
+          "valueSummary": "冻结 Skill 内容哈希"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/protocol-snapshot.json",
+          "pointer": "/references~1planning-v0.2.md/sha256",
+          "valueSummary": "冻结 v0.2 契约哈希"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/protocol-snapshot.json",
+          "pointer": "/references~1planning-v0.2.schema.json/sha256",
+          "valueSummary": "冻结 v0.2 Schema 哈希"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/protocol-snapshot.json",
+          "pointer": "/references~1context-and-replanning.md/sha256",
+          "valueSummary": "冻结上下文与重规划规则哈希"
+        }
+      ],
+      "boundaryEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/manifest.json",
+          "pointer": "/notice",
+          "valueSummary": "合成离线评测；未调用模型 API、生产 ACL 或任务写入"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/structural-report.json",
+          "pointer": "/productionValidation",
+          "valueSummary": "not_run"
+        }
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "caseId": "EDGE-07",
+      "run": "targeted-edge",
+      "status": "passed",
+      "structuralStatus": "structurally_valid",
+      "summary": "部分重叠被保留为 overlap，只在原首发资料包下新增一页开箱说明；已完成 FAQ 与既定培训保持不变，培训没有被错误接到 9 月 7 日的新说明。",
+      "frozenStandardEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/6/scenarioId",
+          "valueSummary": "EDGE-07"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/6/manualChecks",
+          "valueSummary": "只补明确缺口、沿用根、保留 FAQ/培训及真实 overlap"
+        }
+      ],
+      "checks": [
+        {
+          "check": "partial_overlap_only_adds_gap",
+          "status": "passed",
+          "finding": "输入明确现有 FAQ/培训不重做；输出只有根标准的必要更新和一个开箱说明叶项。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/inputs/EDGE-07.json",
+              "pointer": "/message",
+              "valueSummary": "继续使用现有 FAQ/培训，只补一页开箱说明"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/inputs/EDGE-07.json",
+              "pointer": "/context/sourceRefs/3/text",
+              "valueSummary": "确认新增缺口、日期和培训不消费新说明"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-07.json",
+              "pointer": "/proposal/changes",
+              "valueSummary": "两项差异：更新原根标准、创建一页开箱说明"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-07.json",
+              "pointer": "/proposal/changes/1/parentId",
+              "valueSummary": "edge07-root"
+            }
+          ]
+        },
+        {
+          "check": "existing_results_and_dependency_boundary_preserved",
+          "status": "passed",
+          "finding": "FAQ 和培训 ID 被保留；新说明没有依赖，培训原有依赖和 9 月 5 日边界未被改写。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/inputs/EDGE-07.json",
+              "pointer": "/context/tasks/1/status",
+              "valueSummary": "FAQ 已完成"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/inputs/EDGE-07.json",
+              "pointer": "/context/tasks/2/dueOn",
+              "valueSummary": "培训到期日为 2026-09-05"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/inputs/EDGE-07.json",
+              "pointer": "/context/tasks/2/dependsOnTaskIds",
+              "valueSummary": "培训只依赖 FAQ"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-07.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "valueSummary": "保留 edge07-faq 与 edge07-training"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-07.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "valueSummary": "新说明依赖为空"
+            }
+          ]
+        },
+        {
+          "check": "duplicate_relationship_remains_truthful",
+          "status": "passed",
+          "finding": "两个匹配均保持 overlap，并用 propose_uncovered_scope 把同一缺口绑定到新增操作，没有改称不同实例。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-07.json",
+              "pointer": "/duplicateCheck/assessments/0/relationship",
+              "valueSummary": "overlap"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-07.json",
+              "pointer": "/duplicateCheck/assessments/0/resolution",
+              "valueSummary": "propose_uncovered_scope，绑定 chg-edge07-unboxing"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-07.json",
+              "pointer": "/duplicateCheck/assessments/1/relationship",
+              "valueSummary": "overlap"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-07.json",
+              "pointer": "/duplicateCheck/assessments/1/resolution",
+              "valueSummary": "保留已完成 FAQ，只补独立说明"
+            }
+          ]
+        }
+      ],
+      "defects": [],
+      "structuralEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/structural-report.json",
+          "pointer": "/results/0/status",
+          "valueSummary": "structurally_valid"
+        }
+      ]
+    },
+    {
+      "caseId": "EDGE-12",
+      "run": "targeted-edge",
+      "status": "failed",
+      "structuralStatus": "structurally_valid",
+      "summary": "术语表粒度正确且未虚构日语能力，但把“只负责交付版本”的唐钰放进整个 Task 的 ownerRecommendation；冻结标准要求该职责只能作为交付版本贡献候选，日语翻译/复核仍未配备。",
+      "frozenStandardEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/11/scenarioId",
+          "valueSummary": "EDGE-12"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/11/manualChecks/2",
+          "valueSummary": "唐钰只可作为交付版本的必要贡献候选"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/protocol-snapshot.json",
+          "pointer": "/references~1context-and-replanning.md/content",
+          "valueSummary": "每个 Task 只建议一个结果负责人；内容、审核、交付等必要贡献对应最小参与集合"
+        }
+      ],
+      "checks": [
+        {
+          "check": "one_glossary_result",
+          "status": "passed",
+          "finding": "保持一个 30 条中日对照表结果，没有把翻译、复核拆成占位子任务。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/inputs/EDGE-12.json",
+              "pointer": "/message",
+              "valueSummary": "请求一份 30 条中日对照表，可留空未选人员"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/complexity",
+              "valueSummary": "simple"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes",
+              "valueSummary": "仅一个创建项"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/title",
+              "valueSummary": "交付30条品牌术语中日对照表"
+            }
+          ]
+        },
+        {
+          "check": "no_invented_japanese_skill",
+          "status": "passed",
+          "finding": "没有把文案或编辑岗位推断成日语能力，也没有生成不可见外部成员。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/inputs/EDGE-12.json",
+              "pointer": "/context/sourceRefs/1/text",
+              "valueSummary": "授权成员均无日语翻译或专业复核证据"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/participantRecommendations",
+              "valueSummary": "空数组"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+              "pointer": "/warnings/0",
+              "valueSummary": "明确日语翻译和专业复核贡献者未确认"
+            }
+          ]
+        },
+        {
+          "check": "delivery_version_role_not_promoted_to_result_owner",
+          "status": "failed",
+          "finding": "ownerRecommendation 表示该 Task 的候选结果负责人；输出将 content-m6 设为 explicit owner，participantRecommendations 却为空。reason 中写“只负责交付版本”不能改变字段语义，因此仍把局部交付贡献提升成了整个术语表的结果责任。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/inputs/EDGE-12.json",
+              "pointer": "/message",
+              "valueSummary": "唐钰只负责交付版本"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "valueSummary": "memberId=content-m6，basis=explicit"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/participantRecommendations",
+              "valueSummary": "没有把唐钰列为交付版本贡献候选"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/expectations-snapshot.json",
+              "pointer": "/expectations/11/manualChecks/2",
+              "valueSummary": "冻结标准限制唐钰为交付版本的必要贡献候选"
+            }
+          ]
+        },
+        {
+          "check": "ready_is_preview_only",
+          "status": "passed",
+          "finding": "未知期限、人时和日语贡献者没有造成整轮阻塞，且 warning 明确 ready 草稿不等于可正式提交。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+              "pointer": "/disposition",
+              "valueSummary": "ready_for_confirmation"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+              "pointer": "/warnings/1",
+              "valueSummary": "可审阅候选不表示具备正式提交所需责任接受"
+            }
+          ]
+        }
+      ],
+      "defects": [
+        {
+          "code": "ROLE_SCOPE_PROMOTED_TO_OWNER",
+          "severity": "semantic_failure",
+          "message": "应保持任务候选 Owner 未分配，并把唐钰仅作为交付版本贡献候选；当前 ownerRecommendation 过度扩大了其责任范围。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "valueSummary": "错误责任位置"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/expectations-snapshot.json",
+              "pointer": "/expectations/11/manualChecks/2",
+              "valueSummary": "冻结角色边界"
+            }
+          ]
+        }
+      ],
+      "structuralEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/structural-report.json",
+          "pointer": "/results/1/status",
+          "valueSummary": "structurally_valid；结构有效不消除语义失败"
+        }
+      ]
+    },
+    {
+      "caseId": "CONTENT-01",
+      "run": "targeted-core",
+      "status": "passed",
+      "structuralStatus": "structurally_valid",
+      "summary": "轻量校对保持一个可验收结果，普通步骤写在 tips；编辑职责匹配，发起人未被自动设为 Owner，1.5 人时明确为带假设的模型候选而非字数公式或实际投入。",
+      "frozenStandardEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/16/scenarioId",
+          "valueSummary": "CONTENT-01"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/16/manualChecks",
+          "valueSummary": "单任务、职责匹配、600 字不作默认工时公式"
+        }
+      ],
+      "checks": [
+        {
+          "check": "light_work_stays_one_task",
+          "status": "passed",
+          "finding": "输出为 simple 且只有一个根创建项，未生成策划、写作、设计固定阶段。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/inputs/CONTENT-01.json",
+              "pointer": "/message",
+              "valueSummary": "只检查错字与引用格式，不重新策划或出图"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/CONTENT-01.json",
+              "pointer": "/proposal/complexity",
+              "valueSummary": "simple"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/CONTENT-01.json",
+              "pointer": "/proposal/changes",
+              "valueSummary": "仅一个创建项"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/CONTENT-01.json",
+              "pointer": "/proposal/changes/0/parentId",
+              "valueSummary": "null"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/CONTENT-01.json",
+              "pointer": "/proposal/changes/0/fields/tips",
+              "valueSummary": "普通校对步骤留在任务内"
+            }
+          ]
+        },
+        {
+          "check": "owner_matches_role_not_creator",
+          "status": "passed",
+          "finding": "候选负责人为职责直接覆盖校对的 content-m5，没有把项目经理/发起人自动设为执行者。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/CONTENT-01.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation/memberId",
+              "valueSummary": "content-m5"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/CONTENT-01.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation/evidenceRefs",
+              "valueSummary": "引用 content-m5-role 与 brief"
+            }
+          ]
+        },
+        {
+          "check": "estimate_not_claimed_as_formula_or_actual",
+          "status": "passed",
+          "finding": "模型估算列出范围假设，并通过 warning 明确不是实际投入或容量；冻结标准允许缺估为 null，但不要求必须为 null。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/CONTENT-01.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "valueSummary": "basis=model，含范围假设"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/CONTENT-01.json",
+              "pointer": "/warnings/0",
+              "valueSummary": "不是实际投入或剩余容量"
+            }
+          ]
+        }
+      ],
+      "defects": [],
+      "structuralEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/structural-report.json",
+          "pointer": "/results/0/status",
+          "valueSummary": "structurally_valid"
+        }
+      ]
+    },
+    {
+      "caseId": "RENO-01",
+      "run": "targeted-core",
+      "status": "passed",
+      "structuralStatus": "structurally_valid",
+      "summary": "一个协调根下保留三项可独立核对的结果：问题清单复核、资料目录、移交记录与未完事项说明；依赖只表达消费关系，未把三项合并，且明确 not_requested 不等于没有历史。",
+      "frozenStandardEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/20/scenarioId",
+          "valueSummary": "RENO-01"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/20/manualChecks",
+          "valueSummary": "三类独立结果、接受边界分开、未读历史不等于无历史"
+        }
+      ],
+      "checks": [
+        {
+          "check": "three_independent_results_preserved",
+          "status": "passed",
+          "finding": "除协调根外有三个独立叶结果，分别有独立标题、标准和候选负责人。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/inputs/RENO-01.json",
+              "pointer": "/message",
+              "valueSummary": "范围包含问题清单复核、资料目录、移交记录与未完事项说明"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/RENO-01.json",
+              "pointer": "/proposal/changes/1",
+              "valueSummary": "问题清单复核"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/RENO-01.json",
+              "pointer": "/proposal/changes/2",
+              "valueSummary": "图纸与设备资料目录"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/RENO-01.json",
+              "pointer": "/proposal/changes/3",
+              "valueSummary": "移交记录与未完事项说明"
+            }
+          ]
+        },
+        {
+          "check": "consumer_dependency_does_not_collapse_results",
+          "status": "passed",
+          "finding": "最终移交记录消费前两项成果，但前两项仍保留为独立结果，没有因依赖而合并。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/RENO-01.json",
+              "pointer": "/proposal/changes/3/fields/dependsOnTaskIds",
+              "valueSummary": "依赖问题复核与资料目录两个新结果"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/RENO-01.json",
+              "pointer": "/proposal/changes/1/fields/acceptanceCriteria",
+              "valueSummary": "区分报告修补、确认关闭及施工技术边界"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/RENO-01.json",
+              "pointer": "/proposal/changes/2/fields/acceptanceCriteria",
+              "valueSummary": "资料完整与缺失项边界"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/RENO-01.json",
+              "pointer": "/proposal/changes/3/fields/acceptanceCriteria",
+              "valueSummary": "有权方签收与未完事项边界"
+            }
+          ]
+        },
+        {
+          "check": "unread_history_not_recast_as_no_history",
+          "status": "passed",
+          "finding": "输入历史覆盖为 not_requested；输出逐字说明这不表示团队没有同类历史，并保持根估算未知。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/inputs/RENO-01.json",
+              "pointer": "/context/coverage/history",
+              "valueSummary": "not_requested"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/RENO-01.json",
+              "pointer": "/warnings/0",
+              "valueSummary": "这不表示团队没有同类历史"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/outputs/RENO-01.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "valueSummary": "basis=unknown，未汇总子项人时"
+            }
+          ]
+        }
+      ],
+      "defects": [],
+      "structuralEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/structural-report.json",
+          "pointer": "/results/1/status",
+          "valueSummary": "structurally_valid"
+        }
+      ]
+    },
+    {
+      "caseId": "COMPLEX-02",
+      "run": "targeted-complex",
+      "status": "passed",
+      "structuralStatus": "structurally_valid",
+      "summary": "只新增一份可独立核对的标签与资料编号对照表，挂在现有样料资料分支；评审目录保留原 ID 并显式消费新表，三层结构、已完成结果及既有叶估算基线均保留。",
+      "frozenStandardEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/1/scenarioId",
+          "valueSummary": "COMPLEX-02"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/1/manualChecks",
+          "valueSummary": "独立编号表、目录消费者依赖、层级与估算边界"
+        }
+      ],
+      "checks": [
+        {
+          "check": "independent_map_result_kept_in_existing_branch",
+          "status": "passed",
+          "finding": "新增表有独立核对价值，parentId 为 complex02-incoming，没有扩展量产范围或复制整棵树。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-02.json",
+              "pointer": "/message",
+              "valueSummary": "新增对照表并放入现有样料资料分支"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-02.json",
+              "pointer": "/context/sourceRefs/11/text",
+              "valueSummary": "12 项标签、图纸 D2、BOM B2 和未匹配项的独立交付边界"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/0/parentId",
+              "valueSummary": "complex02-incoming"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-02.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "valueSummary": "保留现有根、分支、完成项和其他叶项"
+            }
+          ]
+        },
+        {
+          "check": "review_index_consumes_new_map",
+          "status": "passed",
+          "finding": "现有 complex02-index 原地更新，保留两个既有依赖并增加新表依赖。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-02.json",
+              "pointer": "/context/sourceRefs/11/text",
+              "valueSummary": "评审目录必须引用新增表"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/1/targetId",
+              "valueSummary": "complex02-index"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "valueSummary": "instructions、checksheet 和新增 map 三个依赖"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/1/fields/acceptanceCriteria",
+              "valueSummary": "目录结构化接入新表"
+            }
+          ]
+        },
+        {
+          "check": "estimate_and_handoff_boundaries_preserved",
+          "status": "passed",
+          "finding": "新叶估算引用同工具、同 12 项历史并排除 48 小时等待；父层和既有叶项没有被重估，新表/目录日期来自回执。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-02.json",
+              "pointer": "/context/history/0/summary",
+              "valueSummary": "同工具同 12 项为 1.5 小时，48 小时等待不是 effort"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-02.json",
+              "pointer": "/context/sourceRefs/12/text",
+              "valueSummary": "父层无 EWD，既有叶估算为基线"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-02.json",
+              "pointer": "/context/sourceRefs/13/text",
+              "valueSummary": "9 月 5 日新表、9 月 7 日目录的交接边界"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "valueSummary": "1.5h history，明确排除等待回执"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/0/fields/dependsOnTaskIds",
+              "valueSummary": "只依赖 batch-map"
+            }
+          ]
+        }
+      ],
+      "defects": [],
+      "structuralEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/structural-report.json",
+          "pointer": "/results/0/status",
+          "valueSummary": "structurally_valid"
+        }
+      ]
+    },
+    {
+      "caseId": "COMPLEX-03",
+      "run": "targeted-complex",
+      "status": "passed",
+      "structuralStatus": "structurally_valid",
+      "summary": "新增包装说明 v2 作为独立结果，并把页面、客服 FAQ、发货答复三个现有消费者全部显式接入；checkout 既有消费者依赖继续保留，图片、库存、广告及基线未重做。",
+      "frozenStandardEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/2/scenarioId",
+          "valueSummary": "COMPLEX-03"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/2/manualChecks",
+          "valueSummary": "独立说明、三个消费者、checkout 传递依赖和日期边界"
+        }
+      ],
+      "checks": [
+        {
+          "check": "only_new_packaging_note_added",
+          "status": "passed",
+          "finding": "只创建本批包装说明 v2；页面、FAQ、发货答复均原地更新，图片、库存和广告保持原记录。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-03.json",
+              "pointer": "/message",
+              "valueSummary": "只重排受影响剩余交付，沿用图片、库存和页面任务"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-03.json",
+              "pointer": "/context/sourceRefs/11/text",
+              "valueSummary": "包装 v2 变化，库存、价格、渠道和图片不变"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-03.json",
+              "pointer": "/proposal/changes/0",
+              "valueSummary": "创建 packaging-note-v2"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-03.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "valueSummary": "保留图片、广告、库存、checkout 等原任务"
+            }
+          ]
+        },
+        {
+          "check": "all_three_consumers_depend_on_new_result",
+          "status": "passed",
+          "finding": "页面、客服 FAQ、发货答复各自显式增加新说明依赖；页面原图片依赖和发货原库存依赖也继续保留。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-03.json",
+              "pointer": "/context/sourceRefs/12/text",
+              "valueSummary": "三个消费者均需要 packaging note，ads 不需要"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-03.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "valueSummary": "page: images + packaging note"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-03.json",
+              "pointer": "/proposal/changes/2/fields/dependsOnTaskIds",
+              "valueSummary": "faq: packaging note"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-03.json",
+              "pointer": "/proposal/changes/3/fields/dependsOnTaskIds",
+              "valueSummary": "dispatch: inventory + packaging note"
+            }
+          ]
+        },
+        {
+          "check": "checkout_transitive_inputs_and_dates_preserved",
+          "status": "passed",
+          "finding": "checkout 已依赖三个消费者，因此保持原任务即可；输出未增加冗余新检查，并核对 9 月 2/3/4/5 日交接边界。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-03.json",
+              "pointer": "/context/tasks/10/dependsOnTaskIds",
+              "valueSummary": "checkout 已依赖 page、faq、dispatch"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/inputs/COMPLEX-03.json",
+              "pointer": "/context/sourceRefs/13/text",
+              "valueSummary": "9 月 2 日说明、9 月 3 日消费者、9 月 4 日核对、9 月 5 日根边界"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-03.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "valueSummary": "complex03-checkout 被保留"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/outputs/COMPLEX-03.json",
+              "pointer": "/reasoningSummary/2",
+              "valueSummary": "明确核对 9 月 2/3/4/5 日衔接"
+            }
+          ]
+        }
+      ],
+      "defects": [],
+      "structuralEvidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/structural-report.json",
+          "pointer": "/results/1/status",
+          "valueSummary": "structurally_valid"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total": 6,
+    "passed": 5,
+    "failed": 1,
+    "unknown": 0
+  },
+  "failureReasons": [
+    {
+      "caseId": "EDGE-12",
+      "code": "ROLE_SCOPE_PROMOTED_TO_OWNER",
+      "message": "唐钰的交付版本贡献被放入整个术语表 Task 的 ownerRecommendation，违反冻结角色边界。",
+      "evidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/outputs/EDGE-12.json",
+          "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+          "valueSummary": "content-m6 被设为 explicit owner"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/11/manualChecks/2",
+          "valueSummary": "唐钰仅可作为交付版本贡献候选"
+        }
+      ]
+    }
+  ],
+  "nonHumanNonProductionBoundary": {
+    "humanReviewed": false,
+    "reviewerType": "model_semantic_reviewer",
+    "productionValidation": "not_run",
+    "statement": "这是对冻结合成夹具的非人类、非生产离线语义评审。passed/failed 只表示与冻结标准的一致性，不构成人工验收、生产 ACL 验证、真实创建/更新/指派/通知或正式提交授权。",
+    "evidence": [
+      {
+        "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/manifest.json",
+        "pointer": "/notice",
+        "valueSummary": "Synthetic, offline Skill evaluation；无生产写入"
+      },
+      {
+        "file": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901/structural-report.json",
+        "pointer": "/productionValidation",
+        "valueSummary": "not_run"
+      },
+      {
+        "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/manifest.json",
+        "pointer": "/notice",
+        "valueSummary": "Synthetic, offline Skill evaluation；无生产写入"
+      },
+      {
+        "file": "/tmp/agentdoor-planner-overnight-targeted-core-20260901/structural-report.json",
+        "pointer": "/productionValidation",
+        "valueSummary": "not_run"
+      },
+      {
+        "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/manifest.json",
+        "pointer": "/notice",
+        "valueSummary": "Synthetic, offline Skill evaluation；无生产写入"
+      },
+      {
+        "file": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901/structural-report.json",
+        "pointer": "/productionValidation",
+        "valueSummary": "not_run"
+      }
+    ]
+  }
+}

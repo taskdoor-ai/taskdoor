@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-09-01T02:51:23.539075+00:00",
+  "total": 1,
+  "structurallyValid": 1,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "3be46af915a42e6ca960de39d94b603e058db2619059f9fa4977947a88ca2f7a",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-C3",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议保留 SKU-CUP-A 的现有任务原样推进，并为不同业务对象 SKU-CUP-B 新建一个单任务候选，由颜北在 2026-09-03 前交付清稿和三处差异清单。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "d7848d6a5c6d5a3932fd580359e7e946e0ffe2b6e984d26d9fd2b7120f0297a7",
+      "manualChecks": [
+        "不同SKU与新交付清单是独立结果；旧SKU任务原样保留；不因共享负责人或标题相似误合并。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

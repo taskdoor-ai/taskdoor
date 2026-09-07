@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-d3",
+  "baseSnapshotId": "snapshot-multi-d3",
+  "baseRevision": 3,
+  "baseTaskVersions": {},
+  "intent": "query",
+  "disposition": "route_required",
+  "summary": "当前不能继续调整团队任务：本轮团队权限已撤回，页面未获得任何任务、成员、讨论或历史上下文；权限恢复后需重新读取授权快照，再生成新的可审阅提案。",
+  "reasoningSummary": [
+    {
+      "text": "可见权限状态回执明确表示本轮团队权限已撤回，且未返回原任务、成员或讨论。",
+      "evidenceRefs": [
+        "chain-d-access"
+      ]
+    },
+    {
+      "text": "用户询问权限撤回后能否继续调整；在没有授权上下文时不能读取对象版本或提出候选变更。",
+      "evidenceRefs": [
+        "req-multi-d3",
+        "chain-d-access"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "unavailable",
+    "scopeTeamIds": [],
+    "assessments": [],
+    "coverageNote": "合成权限撤回，未读取任何团队任务或成员。"
+  },
+  "questions": [],
+  "warnings": [
+    "本轮任务、子任务、讨论和历史覆盖均为unavailable，不能据此前页面内容生成、恢复或提交修改。",
+    "权限恢复后仍需重新读取当前对象版本，旧快照或旧候选不能直接恢复。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": null,
+      "label": "权限恢复后重新读取授权团队上下文"
+    }
+  ],
+  "externalEffects": "none"
+}

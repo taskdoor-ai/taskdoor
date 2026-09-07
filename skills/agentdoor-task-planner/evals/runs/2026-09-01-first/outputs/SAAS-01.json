@@ -1,0 +1,390 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-saas-01",
+  "baseSnapshotId": "snapshot-saas-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议建立仅限南桔沙箱的试点交付候选，分为登录与请假流程、200条数据演练、UAT及培训交接四项成果，目标期限保留9月18日。",
+  "reasoningSummary": [
+    {
+      "text": "本次明确要求30位用户走通请假审批，交付包含沙箱单点登录、200条数据演练、UAT和培训交接。",
+      "evidenceRefs": [
+        "req-saas-01",
+        "saas01-brief"
+      ]
+    },
+    {
+      "text": "生产访问尚未批准，首轮只做沙箱；没有可复用项目实绩，不能把演练或试点完成作为生产授权。",
+      "evidenceRefs": [
+        "saas01-brief",
+        "req-saas-01"
+      ]
+    },
+    {
+      "text": "职责分别覆盖交付协调、沙箱配置、数据核对、UAT和培训，可按成果推荐单一负责人。",
+      "evidenceRefs": [
+        "saas-m1",
+        "saas-m2",
+        "saas-m3",
+        "saas-m4",
+        "saas-m5"
+      ]
+    },
+    {
+      "text": "袁序只明确9月2日10至12时集成核对窗口，钟宁只明确9月5日下午UAT协作窗口，不能据此推断整段工期容量。",
+      "evidenceRefs": [
+        "saas-m2",
+        "saas-m4"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:saas01-pilot",
+    "complexity": "complex",
+    "preservedTaskIds": [],
+    "changes": [
+      {
+        "id": "change:new:saas01-pilot",
+        "action": "create",
+        "targetId": "new:saas01-pilot",
+        "parentId": null,
+        "fields": {
+          "title": "南桔实验室30人请假审批沙箱试点交付",
+          "goal": {
+            "text": "在2026年9月18日前，让南桔实验室30位试点用户能够在沙箱中走通请假审批，并具备使用交接材料。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-saas-01",
+              "saas01-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "可从沙箱登录与流程验证记录核对30位试点用户具备登录和使用已确认请假审批流程的条件。",
+            "交付200条部门及人员基础数据迁移演练核对表、UAT结果、培训材料和交接问题清单，记录版本、差异及处理结论。",
+            "所有配置、迁移演练和验证仅限本轮试点沙箱；不执行生产迁移，不把内部交付记录当作客户签收。"
+          ],
+          "tips": [
+            "由客户需求对接人员定位已确认的30人名单与请假审批业务口径；未知项先核对，不扩大业务范围。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "saas-m1",
+            "basis": "recommended",
+            "reason": "顾澄负责交付范围及客户验收协调，适合对整体试点结果负责；技术就绪和客户签收由相应主体确认。",
+            "evidenceRefs": [
+              "saas-m1",
+              "req-saas-01"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "saas-m6",
+              "contribution": "提供客户试点名单、请假审批口径及确认来源。",
+              "evidenceRefs": [
+                "saas-m6",
+                "saas01-brief"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-18",
+            "basis": "explicit",
+            "assumptions": [
+              "开始日期和完整可用窗口尚未确认，期限不代表已承诺排期。"
+            ],
+            "evidenceRefs": [
+              "req-saas-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "父任务由子成果汇总，不另行估算一遍总人时。"
+            ],
+            "evidenceRefs": [
+              "req-saas-01"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "把用户所需试点结果作为唯一主任务，保持沙箱和生产的授权边界。",
+        "evidenceRefs": [
+          "req-saas-01",
+          "saas01-brief"
+        ]
+      },
+      {
+        "id": "change:new:saas01-sandbox",
+        "action": "create",
+        "targetId": "new:saas01-sandbox",
+        "parentId": "new:saas01-pilot",
+        "fields": {
+          "title": "交付30人可用的沙箱单点登录与请假审批流程",
+          "acceptanceCriteria": [
+            "在本轮沙箱配置单点登录和已确认的请假审批流程，保留配置版本及验证记录。",
+            "按客户确认名单核对30位试点用户的访问权限，记录登录、提交和审批路径的成功或失败情况及待处理问题。",
+            "不申请代批生产访问，不改变生产配置。"
+          ],
+          "tips": [
+            "可先利用袁序9月2日10至12时的已知窗口核对集成条件；该窗口不等于完整实施工期。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "saas-m2",
+            "basis": "recommended",
+            "reason": "袁序职责覆盖沙箱集成与单点登录，负责可供试点验证的技术环境。",
+            "evidenceRefs": [
+              "saas-m2"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "saas-m6",
+              "contribution": "提供并核对客户已确认的用户范围与请假审批口径。",
+              "evidenceRefs": [
+                "saas-m6",
+                "saas01-brief"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-18",
+            "basis": "recommended",
+            "assumptions": [
+              "建议以主任务9月18日为最迟边界；必须为后续UAT和交接留出时间，具体里程碑待可用窗口和配置条件明确。"
+            ],
+            "evidenceRefs": [
+              "req-saas-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "单点登录协议、沙箱接入条件和流程配置复杂度尚不完整，暂不估人时。"
+            ],
+            "evidenceRefs": [
+              "saas01-brief",
+              "saas-m2"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "UAT需要可登录且可执行请假流程的沙箱；配置本身是可独立核对的结果。",
+        "evidenceRefs": [
+          "req-saas-01",
+          "saas01-brief"
+        ]
+      },
+      {
+        "id": "change:new:saas01-data",
+        "action": "create",
+        "targetId": "new:saas01-data",
+        "parentId": "new:saas01-pilot",
+        "fields": {
+          "title": "完成200条部门及人员基础数据的沙箱迁移演练核对",
+          "acceptanceCriteria": [
+            "记录本轮200条部门及人员基础数据的来源版本、字段映射和演练批次，提供可追溯核对表。",
+            "按约定口径核对记录数量、部门人员关联及关键字段，逐项记录差异和处理结论；保留不能确认的项，不虚报通过。",
+            "演练范围仅为沙箱基础数据，不执行生产导入。"
+          ],
+          "tips": [
+            "先核对客户批准的保留范围和字段口径，自动运行或等待不计为人类投入。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "saas-m3",
+            "basis": "recommended",
+            "reason": "沈言负责字段映射、迁移演练及约定口径的数据核对。",
+            "evidenceRefs": [
+              "saas-m3"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "saas-m6",
+              "contribution": "定位客户基础数据范围和字段口径的确认记录。",
+              "evidenceRefs": [
+                "saas-m6",
+                "saas01-brief"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-18",
+            "basis": "recommended",
+            "assumptions": [
+              "建议不晚于主任务期限并为UAT留出时间；材料就绪及迁移工程师可用时间未知。"
+            ],
+            "evidenceRefs": [
+              "req-saas-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "200条仅是数量依据；源文件质量、字段数量、工具方式和异常复杂度未知，不能套用历史工时。"
+            ],
+            "evidenceRefs": [
+              "req-saas-01",
+              "saas01-brief"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "迁移核对表是本轮明确交付，登录配置与字段准备可并行，不人为串联。",
+        "evidenceRefs": [
+          "req-saas-01",
+          "saas01-brief"
+        ]
+      },
+      {
+        "id": "change:new:saas01-uat",
+        "action": "create",
+        "targetId": "new:saas01-uat",
+        "parentId": "new:saas01-pilot",
+        "fields": {
+          "title": "完成30人请假审批试点UAT结果核对",
+          "acceptanceCriteria": [
+            "使用本轮已准备的沙箱和演练数据，对客户已确认的请假审批流程执行UAT，保留环境、数据及用例版本和逐项结果。",
+            "核对30位试点用户使用条件，留存登录与请假审批关键路径结果、缺陷复核记录和遗留问题清单。",
+            "形成可供客户核对的UAT结论及确认记录；内部报告不代替客户业务验收，不触发上线。"
+          ],
+          "tips": [
+            "9月5日下午只是已知协作窗口，只有前置成果就绪时才能用于执行验证；否则用于用例核对并另行协调窗口。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "saas-m4",
+            "basis": "recommended",
+            "reason": "钟宁负责UAT用例、缺陷复核和版本结果记录。",
+            "evidenceRefs": [
+              "saas-m4"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "saas-m2",
+              "contribution": "说明沙箱配置版本并协助定位登录与流程技术问题。",
+              "evidenceRefs": [
+                "saas-m2"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-18",
+            "basis": "recommended",
+            "assumptions": [
+              "在沙箱和迁移核对成果可用后执行，须为培训最终交接留出时间；不把9月5日窗口当作验证必定完成的日期。"
+            ],
+            "evidenceRefs": [
+              "req-saas-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "客户确认用例数量、验证轮数与缺陷规模未知，暂不估人时。"
+            ],
+            "evidenceRefs": [
+              "req-saas-01",
+              "saas-m4"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:saas01-sandbox",
+            "new:saas01-data"
+          ]
+        },
+        "reason": "UAT的真实前置是可执行的试点环境和可核对的演练数据。",
+        "evidenceRefs": [
+          "req-saas-01",
+          "saas01-brief"
+        ]
+      },
+      {
+        "id": "change:new:saas01-training",
+        "action": "create",
+        "targetId": "new:saas01-training",
+        "parentId": "new:saas01-pilot",
+        "fields": {
+          "title": "交付请假审批试点培训材料及使用交接记录",
+          "acceptanceCriteria": [
+            "交付与本轮验证版本一致的登录、请假提交及审批培训材料，注明适用沙箱和试点范围。",
+            "留存培训交接记录、使用问题和遗留事项清单，能够追溯每项问题的后续处理安排。",
+            "交接内容对应UAT结论，不把培训完成视作客户技术验收或生产上线授权。"
+          ],
+          "tips": [
+            "培训材料草稿可并行准备，最终材料与交接内容以UAT结果核对。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "saas-m5",
+            "basis": "recommended",
+            "reason": "许棠负责培训材料、反馈及使用交接，不承担技术迁移验证。",
+            "evidenceRefs": [
+              "saas-m5"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-18",
+            "basis": "explicit",
+            "assumptions": [
+              "开始日期和完整可用窗口尚未确认，期限不代表已承诺排期。"
+            ],
+            "evidenceRefs": [
+              "req-saas-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "培训形式、材料现状和场次数未提供，暂无可用实绩，暂不估人时。"
+            ],
+            "evidenceRefs": [
+              "req-saas-01",
+              "saas01-brief"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:saas01-uat"
+          ]
+        },
+        "reason": "培训交接是明确的独立交付，最终内容需反映已验证版本和遗留问题。",
+        "evidenceRefs": [
+          "req-saas-01",
+          "saas01-brief"
+        ]
+      }
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "候选负责人和参与者尚未接受；提交前需独立校验责任。",
+    "9月18日为硬交付边界，现有窗口不足以证明工期可行；需要结合客户材料、技术条件和成员确认排期，不能把人时除人数换成承诺日期。",
+    "没有历史实绩及完整工具、流程配置和字段复杂度信息，EWD暂留空；客户等待和无人值守运行时间不计入人类投入。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:saas01-pilot",
+      "label": "审阅沙箱试点交付候选"
+    }
+  ],
+  "externalEffects": "none"
+}

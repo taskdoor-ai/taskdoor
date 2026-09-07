@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-content-04",
+  "baseSnapshotId": "snapshot-content-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "content04-root": 4,
+    "content04-cut": 4,
+    "content04-deliver": 2
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "先补齐v4批准相关讨论并处理9月2日期限与9月3日评审窗口的冲突，再沿用原任务安排收尾；“看过v4”和旧v3批准都不能替代当前版本批准。",
+  "reasoningSummary": [
+    {
+      "text": "短片v4任务正式状态仍为进行中，最终交付任务仍未开始；内容审阅者明确不负责客户最终批准。",
+      "evidenceRefs": [
+        "content04-cut",
+        "content04-deliver",
+        "content04-d1"
+      ]
+    },
+    {
+      "text": "现有批准记录仅适用于v3，不授权改过片尾的v4；交付同事报告尚未收到有权确认人的答复。",
+      "evidenceRefs": [
+        "content04-approval-v3",
+        "content04-d2"
+      ]
+    },
+    {
+      "text": "本轮硬期限为9月2日，但客户已提供的评审窗口是9月3日上午；不能据此承诺9月2日前取得v4批准。",
+      "evidenceRefs": [
+        "req-content-04",
+        "content04-root",
+        "content04-client-window"
+      ]
+    },
+    {
+      "text": "相关讨论仅部分读取、历史不可用；先交v4后补批准只是尚未确认的提议，当前无法完成有依据的剩余计划。",
+      "evidenceRefs": [
+        "req-content-04",
+        "content04-d3"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [
+    {
+      "field": "schedule",
+      "question": "在9月2日硬期限不变、客户目前仅确认9月3日上午评审的情况下，是否协调提前取得v4批准，或申请调整交付日期？确认前仍保留9月2日期限与当前版本批准标准。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "不得把内容审阅意见记为客户批准，也不得把v3批准沿用到变更后的v4。",
+    "原项目、短片及最终交付任务的ID、正式状态、Owner、期限和依赖均不变；不重复创建收尾任务。",
+    "讨论部分读取和历史不可用不等于没有后续批准；需补读后核对版本、批准人权限与当前交付范围。",
+    "等待客户评审不计入人类EWD；现有信息不足以给出剩余投入估算。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": "content04-root",
+      "label": "补读与v4批准相关的完整讨论及必要批准历史"
+    },
+    {
+      "action": "ask_user",
+      "taskId": "content04-root",
+      "label": "确认批准窗口与硬期限的处理方式"
+    },
+    {
+      "action": "open_task",
+      "taskId": "content04-deliver",
+      "label": "查看原最终交付任务及当前版本批准要求"
+    }
+  ],
+  "externalEffects": "none"
+}

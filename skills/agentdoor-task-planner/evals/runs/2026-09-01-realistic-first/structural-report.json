@@ -1,0 +1,280 @@
+{
+  "checkedAt": "2026-09-01T03:39:17.105963+00:00",
+  "total": 12,
+  "structurallyValid": 4,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "d37c84b5d350ba18c41d4cdcef53fefa8610ef7983e3219b46e0a06d4503acbd",
+  "expectationsSha256": "de10fe62a7fc5bc44830cff651da281761dab3f2a11e9aa0672fcf97e04497dc",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "REAL-A-REL-01",
+      "industry": "software_release",
+      "errors": [
+        "Missing a required source reference"
+      ],
+      "semanticReview": "not_reviewed",
+      "summary": "建议复用现有rc3公证回执v2任务，只把它补为安全闸门和商店提交的必要前置；不新建回执任务，也不改9月12日窗口、两小时灰度或已确认标准。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 2,
+      "outputSha256": "01a31105dbc623120b8557a99522f316dcd01b172d29930da8d80eed2b1eea05",
+      "manualChecks": [
+        "只更新安全闸门与商店提交的依赖，复用现有公证回执任务；不得复制回执、灰度或商店提交。",
+        "未签署草稿和CLI成功报告不能被描述为公证完成或安全放行；正式状态保持。",
+        "保留9月12日硬窗口、两小时灰度、正式Owner和确认字段；不以赶日期为由删闸门。",
+        "父子归属不变；最终批准已有传递关系，无需冗余改写或把整棵树串行化。"
+      ],
+      "status": "failed"
+    },
+    {
+      "id": "REAL-A-SAAS-01",
+      "industry": "saas_delivery",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "不建议再创建“15名管理员培训验收”；同一客户、tenant、两批15人和9月10日截止已由现有在办任务完整覆盖，应直接进入该任务继续完成B批。",
+      "intent": "create",
+      "disposition": "route_required",
+      "changes": 0,
+      "outputSha256": "578e3ed65ff40c88572d7aa704ebe6d8d665672dbab51ec0bcdd86b49bd332c7",
+      "manualChecks": [
+        "识别同一客户、tenant、15人、两批、截止日和证据边界的完整重复，路由到syn-saas-admin-training，不靠改标题绕过。",
+        "第一批签到只证明部分进展，不能将正式in_progress改成completed，也不能生成第二份任务。",
+        "讲义是部分重叠输入，不等于培训交付；两批日程不构成独立交付边界。",
+        "proposal应为空，外部影响为none；不更新确认字段、Owner、日期或交接依赖。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "REAL-A-ECOM-01",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议复用现有四渠道联检、仓内异常卡和承运降级记录，只把这三项补为开售闸门前置；不新建总异常卡，也不改20:00开售、SKU、价格或已确认标准。",
+      "intent": "next_batch",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "ec1c591e892d99f0cadd197bb87f33fd632ca04b252efab5a15304daf5560e47",
+      "manualChecks": [
+        "下一批三个结果已存在；复用联检、仓内异常卡和承运降级记录，只修正开售闸门消费者依赖。",
+        "仓内与承运两份部分结果共同覆盖异常范围，不得为了“完整”新建总卡或合并正式责任边界。",
+        "保留已完成页面、合规、预测、规则和演练记录，不覆盖状态、Owner、EWD或历史。",
+        "保持9月6日20:00、SKU与价格确认边界；不从排期或任务数量推断必定准时。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "REAL-A-CS-01",
+      "industry": "customer_support_incident",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "当前不能对外说“事故已解决”；正式状态仍为in_progress，只能维持“已缓解、持续观察”，待120分钟稳定、队列清空、无新增P1并形成全量恢复批准记录后再复核。",
+      "intent": "query",
+      "disposition": "route_required",
+      "changes": 0,
+      "outputSha256": "6ff5a8a70f223b212c5bb150ac9d5d9eee17c829f21ab23736873bcacd567306",
+      "manualChecks": [
+        "明确当前不能对外称“已解决”：只有45分钟稳定、队列仍37条且有4个新增P1，未满足120分钟、清零与无新增P1门槛。",
+        "区分SRE缓解报告、撤回话术、正式任务状态与事故指挥决定；不把最新发言自动提升为正式状态。",
+        "只回答查询并给下一步核对对象，不创建、更新、指派、发送或发布；proposal必须为空。",
+        "数据影响只能表述为当前覆盖内尚未发现外泄迹象，不能推断确认无影响。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "REAL-B-NPI-01",
+      "industry": "manufacturing_npi",
+      "errors": [
+        "task b-npi-incoming: dueOn exceeds ancestor b-npi-supplier-ready",
+        "Missing required handoff dependencies for b-npi-dvt",
+        "Missing a required equivalent-evidence group"
+      ],
+      "semanticReview": "not_reviewed",
+      "summary": "建议保留X7 EVT2现有任务树，只局部更新来料核对、试制作业指导、DVT矩阵和试制门禁四项；BOM v5、RC图纸及已完成PCN继续复用。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 4,
+      "outputSha256": "bda423b30f12df0a9ca1df89d84f1c5d796651eaf4ff66aeb195647fae4bc7a6",
+      "manualChecks": [
+        "仅四个既有消费者出现update，proposal复杂度为complex；没有create、重开或复制“变更任务”。",
+        "来料核对新增PCN前置，作业指导消费来料结果，DVT消费PCN，门禁同时消费来料、作业和DVT；父子归属没有被机械当依赖。",
+        "BOM v5、RC图纸、完成PCN及其历史版本保持原ID、状态、Owner、标准和完成记录；ECO v2作为superseded历史保留。",
+        "四个update实际修改受影响的完成标准、schedule或dependsOnTaskIds；不能只在tips或summary口头提到交接。",
+        "9月7日COC是外部承诺而非完成事实；9月10日硬门禁保留，方案用风险或条件表达，不保证试制必然按时。",
+        "confirmedFields未解锁且不变，duplicateCheck逐项回显四个现有匹配。"
+      ],
+      "status": "failed"
+    },
+    {
+      "id": "REAL-B-LOG-01",
+      "industry": "logistics_cutover",
+      "errors": [
+        "Missing a required equivalent-evidence group"
+      ],
+      "semanticReview": "not_reviewed",
+      "summary": "暂不生成东沄华东仓全树差异；需先续读剩余14项任务及未加载讨论和历史，再完整识别映射v4消费者、跨分支依赖与9月19日窗口。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 0,
+      "outputSha256": "2f3c5658540c8535b6eff791bd13fcb753050295cf64afe3d86a7919593cb330",
+      "manualChecks": [
+        "识别当前仅13/27项，tasks、subtasks、discussions、history与查重均不完整；proposal应为null，不能把可见局部包装成全树方案。",
+        "nextActions包含retry_context并指向已授权任务和讨论游标；不让用户手抄、不声称已经执行分页。",
+        "baseTaskVersions仍完整回显本页13项，已完成账号和回退演练被保护；没有对任何可见任务update或create。",
+        "不猜测其余14项的标题、Owner、状态、依赖或消费者，不泄露关务凭据；ACL verified不等于未加载页已可见。",
+        "duplicateCheck保持partial及原有两个matches，不能声称已排除重复。",
+        "保留9月19日窗口和9月16日审批预计值的事实边界，未读上下文前不承诺完整日期可行性。"
+      ],
+      "status": "failed"
+    },
+    {
+      "id": "REAL-B-RETAIL-01",
+      "industry": "retail_store_opening",
+      "errors": [
+        "change chg-b-ret-fixture-v3 (b-ret-fixture): unchanged fields dependsOnTaskIds must be omitted; use no_change when nothing differs",
+        "change chg-b-ret-stock-v3 (b-ret-stock): unchanged fields dependsOnTaskIds must be omitted; use no_change when nothing differs"
+      ],
+      "semanticReview": "not_reviewed",
+      "summary": "建议只重排货架安装、首批入库、现场陈列和软开门禁四个消费者，保持9月23日软开和10月1日开业硬期限；物业交付、招牌、平面图、POS与培训均保留原任务。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 4,
+      "outputSha256": "8a413af359255a8e837bb0d0451e905a4d2e14a77ad2941b605466d0478d7392",
+      "manualChecks": [
+        "只更新货架、入库、现场陈列和软开门禁四个现有消费者；没有创建夜间搬运或复制门禁任务。",
+        "货架schedule不早于9月13日有权窗口；入库和陈列日期按真实前置衔接，软开仍保留9月23日硬边界并暴露消防结果未知。",
+        "陈列新增货架安装前置，软开新增入库与陈列消费者；POS和培训保持原任务与日期，不整体顺延。",
+        "已完成物业交付、招牌和平面图的ID、状态、Owner、标准与历史不变；物业v2保留为superseded文件。",
+        "不采用未接受的夜间搬运提议，也不把消防预约解释为通过；外部机构结果保持未知。",
+        "confirmedFields保持锁定，duplicateCheck逐项回显四个现有任务，更新字段有文件和讨论证据。"
+      ],
+      "status": "failed"
+    },
+    {
+      "id": "REAL-B-PROC-01",
+      "industry": "procurement_vendor_onboarding",
+      "errors": [
+        "change chg-b-proc-bank-v3 (b-proc-bank): unchanged fields dependsOnTaskIds must be omitted; use no_change when nothing differs",
+        "Missing required handoff dependencies for b-proc-bank"
+      ],
+      "semanticReview": "not_reviewed",
+      "summary": "建议继续使用澄壤现有准入树，只更新所有人核对、MSA、税务、银行验证和采购门禁五项；制裁筛查、NDA和样品试用的完成记录全部复用。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 5,
+      "outputSha256": "3945256c1d39e936616a47e542400019d74bc9175f76c9b8882e11ca88175110",
+      "manualChecks": [
+        "只更新所有人核对、MSA、税务、银行验证和采购门禁五个既有消费者；没有“快速准入”或重复文件任务。",
+        "MSA与税务消费所有人核对，银行消费税务与所有人核对，门禁保留安全、合同、税务、银行和质量前置；不把父分支机械串行。",
+        "完成的制裁筛查、NDA和样品试用保持原ID、状态、Owner、标准及历史；登记册v2保留为superseded，不被删除或改称错误完成。",
+        "五个update实际改用登记册v3的地址来源，并按需更新完成标准、schedule或依赖；不能只在summary中说“同步所有消费者”。",
+        "银行函9月7日仅为外部承诺，9月10日门禁和9月12日首单硬期限需保留风险，不得编造账号或双人核验完成。",
+        "confirmedFields保持锁定，duplicateCheck逐项回显五个现有匹配；撤回的重签NDA和未接受的快速准入提议不进入候选。"
+      ],
+      "status": "failed"
+    },
+    {
+      "id": "REAL-C-01",
+      "industry": "content_campaign",
+      "errors": [
+        "task cc-claim-v2: dueOn exceeds ancestor cc-brief",
+        "task cc-claim-v2: dueOn exceeds ancestor cc-strategy",
+        "Required existing work not preserved",
+        "Updated a protected case task",
+        "maxUpdates: exceeded the case's allowed changes",
+        "Updated outside the case's requested scope"
+      ],
+      "semanticReview": "not_reviewed",
+      "summary": "建议复用现有主张v2、页面、邮件、投放、CRM和上线核对任务，只把获批v2写入替换清单并调整其直接消费者的标准与依赖；已完成的策略、v1归档和主视觉保持不变，也不执行发布或通知。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 6,
+      "outputSha256": "71292da007c85f5cad815a1860299e03a181adc70c6a8daa8db865eea868fa0d",
+      "manualChecks": [
+        "只复用并补全现有cc-claim-v2，再把页面和邮件的必要前置从历史v1换为v2；渠道与上线任务通过现有跨分支依赖消费结果，不为展示动作重复更新。",
+        "保留已完成策略、简报、v1历史与主视觉，不改cc-root已确认goal/dueOn，也不改cc-claim-v2已确认ownerId；更新字段应局限于验收、来源、依赖或确有依据的日期。",
+        "客户回执与合规矩阵分别证明品牌选择和允许用语；成员试填、媒体表旧引用、草稿建议及其撤回都不能代替批准。",
+        "不因v2措辞变化重开无影响主视觉，也不把页面、邮件、投放、CRM和上线核对串成一条不必要的全串行链。",
+        "明确9月15日10:00是硬窗口而非模型保证；若建议EWD，等待批准与自然日不计入人类投入，缺依据可保持未知。",
+        "输出是候选差异，不能发布、通知客户、改预算或把推荐Owner写成已接受。"
+      ],
+      "status": "failed"
+    },
+    {
+      "id": "REAL-C-02",
+      "industry": "finance_close",
+      "errors": [
+        "task fc-variance: dueOn exceeds ancestor fc-statements",
+        "Required existing work not preserved",
+        "Updated a protected case task",
+        "maxUpdates: exceeded the case's allowed changes",
+        "Updated outside the case's requested scope",
+        "Missing required handoff dependencies for fc-fx"
+      ],
+      "semanticReview": "not_reviewed",
+      "summary": "建议复用现有收款异常任务，以带章回单作为外币重估、报表、调整日记账和证据索引的输入；已完成银行对账与薪资汇总保持封存，不新建关账任务，也不执行入账。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 5,
+      "outputSha256": "b85ee4ce07065bec4c595b4f31dc578bfd2234994084d09e994fd76313e28750",
+      "manualChecks": [
+        "复用fc-transfer-clear承接后到事实，只更新它与直接消费者fc-fx；不重开fc-bank-recon，不为报表、审计索引和董事会包制造冗余更新。",
+        "外币重估必须同时保留已完成对账基线并新增异常核对前置；报表、审计证据与董事会包的既有跨分支依赖继续有效。",
+        "银行口头/成员报告、应收台账与正式回单状态分开；正式回单前异常任务不能完成，也不能自行裁定8月或9月归属。",
+        "保护fc-root的已确认goal/dueOn、fc-bank-recon完成记录和fc-journal-approval正式Owner；候选不得执行分录或把推荐写成接受。",
+        "银行等待约51小时是自然历时，不计入EWD；9月5日18:00是硬截止与风险来源，不能据此保证按期。",
+        "不得输出、猜测或要求展开受限薪资行项目；审计问询不是审计接受，证据准备完成也不是外部验收。"
+      ],
+      "status": "failed"
+    },
+    {
+      "id": "REAL-C-03",
+      "industry": "hiring_onboarding",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议保留现有日期修订、账号、设备、薪资和入职日核对任务，只把它们同步到已确认的2026-09-16及其直接前置；生产数据权限继续沿用原背景状态、培训、岗位范围和安全审批门槛。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 5,
+      "outputSha256": "73d2555b60d204d2a302818f7c918928b2baa24bc95eaf5483ad4254b3eb3c3b",
+      "manualChecks": [
+        "复用日期修订、账号、设备、薪资和入职日核对原任务，更新到有依据的新日期；不复制、取消或重开同结果任务。",
+        "保留hr-root已确认goal/dueOn、录用接受完成记录和生产权限已确认Owner/验收标准；日期修订不覆盖旧录用历史。",
+        "生产数据权限继续依赖背景最终状态、培训完成和岗位范围，并由安全负责人审批；它不是入职日必需完成项，也不能因日期变更自动放行。",
+        "候选人与经理确认可支持日期，成员IT报告和配送单可支持各自排期；草稿首周计划、服务商ETA和报名状态都不能冒充完成或批准。",
+        "背景服务等待到9月4日17:00是历时而非EWD；9月16日是确认日期，不构成所有工作按期保证。",
+        "不得输出或推断背景发现、证件、银行、地址和联系方式；候选人自我确认不授权Owner变更、系统写入或安全批准。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "REAL-C-04",
+      "industry": "renovation_handover",
+      "errors": [
+        "change chg-rn-cert-wait (rn-electric-cert): unchanged fields dependsOnTaskIds must be omitted; use no_change when nothing differs",
+        "Missing a required source reference"
+      ],
+      "semanticReview": "not_reviewed",
+      "summary": "建议复用现有RCD复测、第三方证书和业主复验任务：把正式复测安排到9月18日09:30至11:00，使证书等待正式记录，并让业主复验等待证书与木作结果；钥匙交付仍固定为9月20日14:00，不执行联系、验收或交付。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 3,
+      "outputSha256": "9b0e558147cf1f4da4757ffbfce3123d36e0a8ff97f252db34e2006be909a89a",
+      "manualChecks": [
+        "复用现有正式复测、第三方证书和业主复验任务，仅更新三项；不复制缺陷、手册、表计、钥匙或已完成给排水工作。",
+        "正式复测使用物业90分钟窗口，证书依赖正式复测，业主复验依赖第三方证书与柜门整改；钥匙交付继续通过手册、复验和表计形成跨分支门槛。",
+        "成员预检草稿、现场日报和第三方受理回执均不能标志专业工作完成；冲突须保留并以正式状态与签发证据核对。",
+        "保护rn-root已确认goal/dueOn、给排水完成记录和rn-key-handover已确认Owner/验收标准；不改业主交付日期。",
+        "9月18日停电窗口与9月19日证书ETA都是真实等待且不计EWD；9月20日14:00只是硬交付窗口，必须说明证书迟到风险而不能保证按期。",
+        "不得输出室内原图、住户人像、地址或联系方式；物业窗口批准不等于质量验收，业主确认也不等于专业证书签发。"
+      ],
+      "status": "failed"
+    }
+  ]
+}

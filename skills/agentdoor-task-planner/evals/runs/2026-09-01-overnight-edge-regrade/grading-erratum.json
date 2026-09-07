@@ -1,0 +1,91 @@
+{
+  "kind": "grading_erratum",
+  "originalExpectationsSha256": "7fa3c00f99ca86bcc81980495eb3f6b68b37189ccd10ee1ebddcfb0250fab46a",
+  "revisedExpectationsSha256": "beb5da00822d9aaef89845a4e39b7133fc501a6abd1c0bfe5b03379e2a40f0f3",
+  "originalMachineResult": "12/16 (four exact evidence-ID assertion mismatches; core schema/protocol 16/16)",
+  "changes": [
+    {
+      "caseId": "EDGE-02",
+      "oldRequiredRef": "edge02-index-record",
+      "explicitEquivalentRefs": [
+        "edge02-index-record",
+        "edge02-index"
+      ],
+      "reason": "同一输入快照的正式任务实体含相同版本、状态、Owner；record仅重复这些字段。协议允许直接引用Task ID。新增边界/确认/提交回执等非等价来源仍必需。",
+      "evidence": [
+        {
+          "file": "inputs/EDGE-02.json",
+          "pointer": "/context/tasks/1"
+        },
+        {
+          "file": "inputs/EDGE-02.json",
+          "pointer": "/context/sourceRefs/1"
+        }
+      ],
+      "originalOutputSha256": "82a05a31ad7897c5aeeffa91173f2b3d4c23d6904cb653aa6be823775572f640"
+    },
+    {
+      "caseId": "EDGE-07",
+      "oldRequiredRef": "edge07-faq-record",
+      "explicitEquivalentRefs": [
+        "edge07-faq-record",
+        "edge07-faq"
+      ],
+      "reason": "同一输入快照的正式任务实体含相同版本、状态、Owner；record仅重复这些字段。协议允许直接引用Task ID。新增边界/确认/提交回执等非等价来源仍必需。",
+      "evidence": [
+        {
+          "file": "inputs/EDGE-07.json",
+          "pointer": "/context/tasks/1"
+        },
+        {
+          "file": "inputs/EDGE-07.json",
+          "pointer": "/context/sourceRefs/1"
+        }
+      ],
+      "originalOutputSha256": "74473006ea31083269a02452fa20019eef19a83f96896225056ce0a8a62ca57c"
+    },
+    {
+      "caseId": "EDGE-09",
+      "oldRequiredRef": "edge09-proof-record",
+      "explicitEquivalentRefs": [
+        "edge09-proof-record",
+        "edge09-proof"
+      ],
+      "reason": "同一输入快照的正式任务实体含相同版本、状态、Owner；record仅重复这些字段。协议允许直接引用Task ID。新增边界/确认/提交回执等非等价来源仍必需。",
+      "evidence": [
+        {
+          "file": "inputs/EDGE-09.json",
+          "pointer": "/context/tasks/0"
+        },
+        {
+          "file": "inputs/EDGE-09.json",
+          "pointer": "/context/sourceRefs/0"
+        }
+      ],
+      "originalOutputSha256": "1b3a8dc0928e3d0d84e95e787408cf14c9577b30b0e73105a1000ede6e0c5ff9"
+    },
+    {
+      "caseId": "EDGE-10",
+      "oldRequiredRef": "edge10-cancelled-record",
+      "explicitEquivalentRefs": [
+        "edge10-cancelled-record",
+        "edge10-cancelled"
+      ],
+      "reason": "同一输入快照的正式任务实体含相同版本、状态、Owner；record仅重复这些字段。协议允许直接引用Task ID。新增边界/确认/提交回执等非等价来源仍必需。",
+      "evidence": [
+        {
+          "file": "inputs/EDGE-10.json",
+          "pointer": "/context/tasks/0"
+        },
+        {
+          "file": "inputs/EDGE-10.json",
+          "pointer": "/context/sourceRefs/0"
+        }
+      ],
+      "originalOutputSha256": "188d2b6b63ef25870780abed8a899a8037da94b414a0bd2cdbeb873975f28fd1"
+    }
+  ],
+  "unchanged": "输入、Skill、Schema及首次答案完全不变；原机器报告和原期望保持，替代证据不自动递归扩张。",
+  "newRun": "/tmp/agentdoor-planner-overnight-edge-regrade-20260901",
+  "newModelAttempts": 0
+}

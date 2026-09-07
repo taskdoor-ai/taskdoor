@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "tsx --test server/*.test.ts",
+    "test:lab": "node --import tsx --test server/testLabStore.test.ts server/testLabRunner.test.ts server/testLabHttp.test.ts server/testLabValidation.test.ts server/testLabUi.test.ts",
     "build": "tsc -b && vite build",
     "design:check": "node scripts/design-check.mjs",
-    "verify": "npm run build",
-    "verify:design": "npm run design:check && npm run build",
     "build:mcp": "vite build --config mcp/vite.config.ts && tsc -p mcp/tsconfig.json",
     "mcp": "node dist-mcp/server.js --stdio",
     "mcp:http": "node dist-mcp/server.js --http",
@@ -27,10 +27,12 @@
     "@tailwindcss/vite": "^4.3.3",
     "@tigerabrodioss/fude": "^0.1.4",
     "@vitejs/plugin-react": "latest",
+    "ajv": "^8.20.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "express": "^5.2.1",
     "lucide-react": "latest",
+    "motion": "^13.1.1",
     "react": "latest",
     "react-dom": "latest",
     "shadcn": "^4.18.0",
@@ -46,6 +48,7 @@
     "@types/node": "^26.2.0",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "tsx": "^4.23.12",
     "vite-plugin-singlefile": "^2.3.3"
   }
 }

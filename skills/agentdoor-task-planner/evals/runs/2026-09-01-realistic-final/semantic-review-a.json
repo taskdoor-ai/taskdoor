@@ -1,0 +1,310 @@
+{
+  "runId": "agentdoor-planner-realistic-final-20260901-v2",
+  "reviewer": "/root/realistic_final_b",
+  "scopeResolution": {
+    "protocolSource": "/tmp/agentdoor-planner-realistic-final-20260901-v2/protocol-snapshot.json",
+    "protocolNote": "运行目录不存在请求中所称的 protocol.md；审查使用本轮 protocol-snapshot.json 与当前 Skill/refs。",
+    "requestedCaseAliases": [
+      {
+        "requested": "REAL-A-SUPPORT-01",
+        "reviewed": "REAL-A-CS-01",
+        "reason": "运行目录与 realistic-expectations.json 中的 A 组支持场景 ID 为 REAL-A-CS-01。"
+      },
+      {
+        "requested": "REAL-A-RETAIL-01",
+        "reviewed": "REAL-A-REL-01",
+        "reason": "运行目录没有 REAL-A-RETAIL-01；A 组第四个现有输出和 rubric 条目为 REAL-A-REL-01（发布场景）。未混入 REAL-B-RETAIL-01。"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "scenarioId": "REAL-A-SAAS-01",
+      "verdict": "pass",
+      "plannerIssue": [],
+      "fixtureIssue": [],
+      "graderIssue": [],
+      "evidence": [
+        {
+          "check": "去重与路由",
+          "inputIds": [
+            "syn-saas-admin-training",
+            "syn-saas-file-01",
+            "syn-saas-file-02",
+            "syn-saas-d03",
+            "syn-saas-d08"
+          ],
+          "outputFields": [
+            "intent=create",
+            "disposition=route_required",
+            "proposal=null",
+            "duplicateCheck.assessments[syn-saas-admin-training].relationship=same_outcome"
+          ],
+          "finding": "同一客户、tenant、15 人、A/B 两批、9 月 10 日截止与证据边界已被现有任务完整覆盖，输出正确拒绝重复创建并路由到原任务。"
+        },
+        {
+          "check": "部分进展不冒充完成",
+          "inputIds": [
+            "syn-saas-admin-training",
+            "syn-saas-file-04",
+            "syn-saas-d05"
+          ],
+          "outputFields": [
+            "reasoningSummary[2]",
+            "warnings[0]"
+          ],
+          "finding": "输出明确 A 批仅是部分证据、B 批未开始且正式状态仍为 in_progress，没有把第一批完成升级为整体验收。"
+        },
+        {
+          "check": "材料与交付边界",
+          "inputIds": [
+            "syn-saas-handbook",
+            "syn-saas-file-03",
+            "syn-saas-file-06"
+          ],
+          "outputFields": [
+            "duplicateCheck.assessments[syn-saas-handbook].relationship=overlap",
+            "reasoningSummary[3]"
+          ],
+          "finding": "讲义被识别为培训输入而非完整培训交付；交接的既有 UAT 与完整培训依赖保持不变。"
+        },
+        {
+          "check": "越权与责任字段",
+          "inputIds": [
+            "syn-saas-admin-training"
+          ],
+          "outputFields": [
+            "proposal=null",
+            "externalEffects=none",
+            "nextActions[0].action=open_task"
+          ],
+          "finding": "没有创建、更新、指派、修改 Owner、日期、确认字段或交接依赖；只提供打开现有任务的受控动作。"
+        }
+      ],
+      "rationale": "规划结果满足 v0.2 的完整重复处理：保留原任务与正式状态，区分部分证据和完整验收，不靠改标题或拆批绕过查重。Rubric 的允许意图、处置、零创建/零更新、必需证据与手工检查均与输入事实一致，未发现规划器、夹具或评分规则错误。"
+    },
+    {
+      "scenarioId": "REAL-A-ECOM-01",
+      "verdict": "pass",
+      "plannerIssue": [],
+      "fixtureIssue": [],
+      "graderIssue": [],
+      "evidence": [
+        {
+          "check": "复用三个既有结果",
+          "inputIds": [
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback",
+            "syn-ecom-d03",
+            "syn-ecom-d04",
+            "syn-ecom-d05"
+          ],
+          "outputFields": [
+            "proposal.changes.length=1",
+            "proposal.changes[0].targetId=syn-ecom-launch-gate",
+            "duplicateCheck.assessments"
+          ],
+          "finding": "输出没有新建联检、仓内卡、承运降级或总异常卡；同结果与两项部分范围均定位到原任务。"
+        },
+        {
+          "check": "依赖方向与集合差分",
+          "inputIds": [
+            "syn-ecom-launch-gate",
+            "syn-ecom-file-06",
+            "syn-ecom-d06"
+          ],
+          "outputFields": [
+            "proposal.changes[0].fields.dependsOnTaskIds"
+          ],
+          "finding": "开售闸门作为消费者依赖 dry-run、warehouse-slot、channel-check、exception-card、carrier-fallback；旧的演练和仓位前置被保留，三个直接生产者被加入，方向与集合差分正确。"
+        },
+        {
+          "check": "状态冲突证据",
+          "inputIds": [
+            "syn-ecom-file-06",
+            "syn-ecom-d06",
+            "syn-ecom-launch-gate"
+          ],
+          "outputFields": [
+            "reasoningSummary[1]",
+            "warnings[0]"
+          ],
+          "finding": "输出同时引用清单正文与依赖字段冲突，并明确补依赖不表示三个开放任务已经完成。"
+        },
+        {
+          "check": "保护完成项与确认边界",
+          "inputIds": [
+            "syn-ecom-page",
+            "syn-ecom-compliance",
+            "syn-ecom-forecast",
+            "syn-ecom-label-rule",
+            "syn-ecom-dry-run",
+            "syn-ecom-d08",
+            "syn-ecom-file-01"
+          ],
+          "outputFields": [
+            "proposal.preservedTaskIds",
+            "proposal.changes[0].fields",
+            "externalEffects=none"
+          ],
+          "finding": "仅更新闸门依赖，没有覆盖已完成状态、Owner、EWD、SKU、价格、20:00 窗口或已确认完成标准。"
+        }
+      ],
+      "rationale": "这是准确的 next_batch 局部重规划：三个下一批结果已存在，只修复最终闸门的直接消费关系，并保留有效旧边与正式责任边界。Rubric 的唯一允许更新、完整依赖集合和证据要求均与输入吻合，未发现三类问题。"
+    },
+    {
+      "scenarioId": "REAL-A-REL-01",
+      "requestedAlias": "REAL-A-RETAIL-01",
+      "verdict": "pass",
+      "plannerIssue": [],
+      "fixtureIssue": [],
+      "graderIssue": [],
+      "evidence": [
+        {
+          "check": "公证回执去重",
+          "inputIds": [
+            "syn-rel-notary-v2",
+            "syn-rel-file-02",
+            "syn-rel-d02",
+            "syn-rel-d03"
+          ],
+          "outputFields": [
+            "duplicateCheck.assessments[syn-rel-notary-v2].relationship=same_outcome",
+            "proposal.changes.length=2"
+          ],
+          "finding": "现有 rc3 回执任务完整覆盖 v2 生成与哈希核对；输出未复制回执任务。"
+        },
+        {
+          "check": "依赖方向与旧边保留",
+          "inputIds": [
+            "syn-rel-security-gate",
+            "syn-rel-store-submit",
+            "syn-rel-file-04",
+            "syn-rel-file-05",
+            "syn-rel-d08"
+          ],
+          "outputFields": [
+            "proposal.changes[syn-rel-security-gate].fields.dependsOnTaskIds=[syn-rel-regression,syn-rel-notary-v2]",
+            "proposal.changes[syn-rel-store-submit].fields.dependsOnTaskIds=[syn-rel-release-notes,syn-rel-notary-v2]"
+          ],
+          "finding": "两个真正消费者均指向公证回执生产任务，且分别保留原回归与发行说明前置；未把父子层级或时间相邻误作依赖。"
+        },
+        {
+          "check": "未签署草稿与正式状态边界",
+          "inputIds": [
+            "syn-rel-file-03",
+            "syn-rel-d06",
+            "syn-rel-notary-v2",
+            "syn-rel-security-gate"
+          ],
+          "outputFields": [
+            "reasoningSummary[3]",
+            "warnings[0]"
+          ],
+          "finding": "输出同时引用未签署草稿和 CLI 成功报告，明确依赖补齐不等于公证完成、安全放行或商店提交完成。"
+        },
+        {
+          "check": "传递消费者与保护字段",
+          "inputIds": [
+            "syn-rel-final-approval",
+            "syn-rel-canary",
+            "syn-rel-file-01"
+          ],
+          "outputFields": [
+            "proposal.preservedTaskIds",
+            "proposal.changes[*].fields"
+          ],
+          "finding": "最终批准已通过安全闸门和商店提交传递消费回执，因此正确保持不变；9 月 12 日、两小时灰度、Owner 和确认字段均未修改。"
+        }
+      ],
+      "rationale": "输出严格限定为两个消费者的依赖更新，既不重复未完成的公证工作，也不冗余改写传递下游或已完成记录。Rubric 的允许更新、依赖集合、证据和保护对象与输入一致；请求别名与运行场景 ID 不一致是审查调用的命名差异，不构成本案夹具或评分语义错误。"
+    },
+    {
+      "scenarioId": "REAL-A-CS-01",
+      "requestedAlias": "REAL-A-SUPPORT-01",
+      "verdict": "pass",
+      "plannerIssue": [],
+      "fixtureIssue": [],
+      "graderIssue": [],
+      "evidence": [
+        {
+          "check": "只读查询路由",
+          "inputIds": [
+            "syn-cs-root"
+          ],
+          "outputFields": [
+            "intent=query",
+            "disposition=route_required",
+            "proposal=null",
+            "externalEffects=none"
+          ],
+          "finding": "输出只回答状态查询，没有创建、更新、指派、发送或发布任何内容。"
+        },
+        {
+          "check": "恢复门槛与当前事实",
+          "inputIds": [
+            "syn-cs-file-02",
+            "syn-cs-file-03",
+            "syn-cs-file-04",
+            "syn-cs-d05",
+            "syn-cs-d06",
+            "syn-cs-d08"
+          ],
+          "outputFields": [
+            "summary",
+            "reasoningSummary[0]",
+            "reasoningSummary[1]",
+            "reasoningSummary[2]"
+          ],
+          "finding": "输出正确结论为不能对外称已解决：仅稳定 45 分钟、队列仍有 37 条、切流后新增 4 个 P1，均未满足 120 分钟、清零和无新增 P1 门槛。"
+        },
+        {
+          "check": "冲突与权威边界",
+          "inputIds": [
+            "syn-cs-d02",
+            "syn-cs-d03",
+            "syn-cs-d06",
+            "syn-cs-root",
+            "syn-cs-h06"
+          ],
+          "outputFields": [
+            "reasoningSummary[0]",
+            "reasoningSummary[2]"
+          ],
+          "finding": "输出没有把 SRE 缓解或撤回话术提升为正式完成，同时引用提议、反证、事故指挥决定和正式 in_progress 状态。"
+        },
+        {
+          "check": "数据影响措辞与下一步",
+          "inputIds": [
+            "syn-cs-file-06",
+            "syn-cs-d07",
+            "syn-cs-verify",
+            "syn-cs-case-replies",
+            "syn-cs-allclear"
+          ],
+          "outputFields": [
+            "reasoningSummary[3]",
+            "warnings[1]",
+            "nextActions"
+          ],
+          "finding": "数据影响仅表述为当前覆盖内尚未发现外泄迹象；下一步只打开 120 分钟验证、P1 案例和全量恢复批准记录进行核对。"
+        }
+      ],
+      "rationale": "查询结论、来源权威顺序、冲突证据、数据影响限定和只读外部边界均正确。Rubric 的 query/route_required、零变更、必需证据组和人工检查与输入一致，未发现规划器、夹具或评分规则错误。"
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "pass": 4,
+    "fail": 0,
+    "plannerIssueCount": 0,
+    "fixtureIssueCount": 0,
+    "graderIssueCount": 0,
+    "conclusion": "四个实际 A 组输出均通过独立语义交叉审查。去重、来源证据、责任字段、依赖方向、完成项保护和权限边界均符合当前 Skill v0.2；未发现会改变判定的夹具或 grader 错误。",
+    "runArtifactNotes": [
+      "请求中的 protocol.md 在运行目录不存在；实际冻结协议文件为 protocol-snapshot.json。",
+      "请求中的 REAL-A-SUPPORT-01 与 REAL-A-RETAIL-01 不存在于本轮运行和 rubric；本次分别审查实际 A 组的 REAL-A-CS-01 与 REAL-A-REL-01，并明确未混入 B 组案例。"
+    ]
+  }
+}

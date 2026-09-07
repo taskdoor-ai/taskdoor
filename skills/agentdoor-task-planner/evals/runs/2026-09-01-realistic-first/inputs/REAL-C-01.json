@@ -1,0 +1,1156 @@
+{
+  "requestId": "request-real-c-01",
+  "message": "客户刚书面确认主张v2。请按现有树重排：让页面、邮件、投放和上线核对都消费v2，不重做已完成的策略、v1归档和主视觉，也不要重复建已有的渠道任务。9月15日10:00上线不变；只给我可审阅的最小差异，不执行发布或通知。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "cc-m1",
+  "teamId": "real-c-content-team",
+  "authorizedTeamIds": [
+    "real-c-content-team"
+  ],
+  "revision": 12,
+  "currentTaskId": "cc-root",
+  "context": {
+    "snapshotId": "real-c-01-snapshot",
+    "asOf": "2026-09-01T12:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "real-c-content-team"
+      ],
+      "verificationRef": "real-c-01-snapshot-acl",
+      "note": "只证明本合成团队快照可读；文件内的成员级限制仍须逐项遵守。"
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete",
+      "files": "complete"
+    },
+    "tasks": [
+      {
+        "id": "cc-root",
+        "title": "澄湾会员季9月联合内容战役",
+        "status": "in_progress",
+        "version": 8,
+        "updatedAt": "2026-09-01T10:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "页面、邮件和付费渠道使用同一份有权确认的现行主张",
+          "2026-09-15 10:00上线前完成逐渠道版本核对，不未经授权发布"
+        ],
+        "ownerId": "cc-m1",
+        "sourceRefs": [
+          "cc-file-brief-v3",
+          "cc-file-runbook-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-15",
+        "goal": "让会员季各触点在固定上线窗口使用一致且可追溯的获批主张"
+      },
+      {
+        "id": "cc-strategy",
+        "title": "锁定会员季策略范围",
+        "status": "completed",
+        "version": 4,
+        "updatedAt": "2026-08-28T17:10:00+08:00",
+        "parentId": "cc-root",
+        "acceptanceCriteria": [
+          "受众、主行动和禁止新增承诺已由客户确认"
+        ],
+        "ownerId": "cc-m2",
+        "sourceRefs": [
+          "cc-file-brief-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-28",
+        "deliveryEvidence": [
+          {
+            "type": "approved_file",
+            "sourceRef": "cc-file-brief-v3"
+          }
+        ]
+      },
+      {
+        "id": "cc-brief",
+        "title": "归档会员季内容简报v3",
+        "status": "completed",
+        "version": 3,
+        "updatedAt": "2026-08-28T17:15:00+08:00",
+        "parentId": "cc-strategy",
+        "acceptanceCriteria": [
+          "简报v3 checksum与客户回执可定位"
+        ],
+        "ownerId": "cc-m2",
+        "sourceRefs": [
+          "cc-file-brief-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-28",
+        "deliveryEvidence": [
+          {
+            "type": "file_checksum",
+            "sourceRef": "cc-file-brief-v3"
+          }
+        ]
+      },
+      {
+        "id": "cc-claim-v1",
+        "title": "留存首轮主张口径v1",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2026-08-29T16:00:00+08:00",
+        "parentId": "cc-brief",
+        "acceptanceCriteria": [
+          "旧口径、适用期与被替代条件均有记录；后续修订不得覆盖此记录"
+        ],
+        "ownerId": "cc-m6",
+        "sourceRefs": [
+          "cc-file-brief-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-29",
+        "deliveryEvidence": [
+          {
+            "type": "version_archive",
+            "sourceRef": "cc-file-brief-v3"
+          }
+        ]
+      },
+      {
+        "id": "cc-claim-v2",
+        "title": "形成主张v2渠道替换清单",
+        "status": "open",
+        "version": 1,
+        "updatedAt": "2026-09-01T10:25:00+08:00",
+        "parentId": "cc-brief",
+        "acceptanceCriteria": [
+          "列出需要替换的渠道与文件位置，等待有权回执后补精确措辞"
+        ],
+        "ownerId": "cc-m2",
+        "sourceRefs": [
+          "cc-file-claim-approval-v2"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-02"
+      },
+      {
+        "id": "cc-production",
+        "title": "完成战役内容制作",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:50:00+08:00",
+        "parentId": "cc-root",
+        "acceptanceCriteria": [
+          "页面、邮件和视觉交付物均引用现行简报与主张"
+        ],
+        "ownerId": "cc-m3",
+        "sourceRefs": [
+          "cc-file-brief-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-09"
+      },
+      {
+        "id": "cc-copy",
+        "title": "完成转化文案包",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T11:10:00+08:00",
+        "parentId": "cc-production",
+        "acceptanceCriteria": [
+          "页面和邮件文案均可逐项回溯到获批主张"
+        ],
+        "ownerId": "cc-m3",
+        "sourceRefs": [
+          "cc-file-landing-wire-v5",
+          "cc-file-email-flow-v2"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-06"
+      },
+      {
+        "id": "cc-landing-copy",
+        "title": "完成落地页文案",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T11:05:00+08:00",
+        "parentId": "cc-copy",
+        "acceptanceCriteria": [
+          "五个版块使用同一现行主张并保留限制语",
+          "草稿与获批状态明确区分"
+        ],
+        "ownerId": "cc-m3",
+        "sourceRefs": [
+          "cc-file-landing-wire-v5",
+          "cc-file-claim-approval-v2"
+        ],
+        "dependsOnTaskIds": [
+          "cc-claim-v1"
+        ],
+        "dueOn": "2026-09-04"
+      },
+      {
+        "id": "cc-email-copy",
+        "title": "完成三封会员邮件文案",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:35:00+08:00",
+        "parentId": "cc-copy",
+        "acceptanceCriteria": [
+          "三封邮件的主题、首屏和CTA均使用现行主张"
+        ],
+        "ownerId": "cc-m3",
+        "sourceRefs": [
+          "cc-file-email-flow-v2",
+          "cc-file-claim-approval-v2"
+        ],
+        "dependsOnTaskIds": [
+          "cc-claim-v1"
+        ],
+        "dueOn": "2026-09-05"
+      },
+      {
+        "id": "cc-visual",
+        "title": "完成视觉资产",
+        "status": "in_progress",
+        "version": 3,
+        "updatedAt": "2026-08-31T16:40:00+08:00",
+        "parentId": "cc-production",
+        "acceptanceCriteria": [
+          "主视觉与渠道适配资产符合已批简报"
+        ],
+        "ownerId": "cc-m4",
+        "sourceRefs": [
+          "cc-file-brief-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-06"
+      },
+      {
+        "id": "cc-keyvisual",
+        "title": "交付会员季主视觉",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2026-08-31T16:40:00+08:00",
+        "parentId": "cc-visual",
+        "acceptanceCriteria": [
+          "主视觉版式与无文字安全区已批准；文案替换不要求重做图形资产"
+        ],
+        "ownerId": "cc-m4",
+        "sourceRefs": [
+          "cc-file-brief-v3"
+        ],
+        "dependsOnTaskIds": [
+          "cc-brief"
+        ],
+        "dueOn": "2026-08-31",
+        "deliveryEvidence": [
+          {
+            "type": "review_record",
+            "sourceRef": "cc-file-brief-v3"
+          }
+        ]
+      },
+      {
+        "id": "cc-channel",
+        "title": "完成渠道装配",
+        "status": "in_progress",
+        "version": 2,
+        "updatedAt": "2026-09-01T09:20:00+08:00",
+        "parentId": "cc-root",
+        "acceptanceCriteria": [
+          "渠道配置只引用批准的现行内容版本"
+        ],
+        "ownerId": "cc-m5",
+        "sourceRefs": [
+          "cc-file-media-sheet-v7"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-12"
+      },
+      {
+        "id": "cc-paid",
+        "title": "完成付费渠道上刊配置",
+        "status": "blocked",
+        "version": 4,
+        "updatedAt": "2026-09-01T11:30:00+08:00",
+        "parentId": "cc-channel",
+        "acceptanceCriteria": [
+          "上刊表、广告预览和追踪参数引用已核文案"
+        ],
+        "ownerId": "cc-m5",
+        "sourceRefs": [
+          "cc-file-media-sheet-v7",
+          "cc-file-legal-matrix-v4"
+        ],
+        "dependsOnTaskIds": [
+          "cc-landing-copy",
+          "cc-keyvisual"
+        ],
+        "dueOn": "2026-09-10"
+      },
+      {
+        "id": "cc-crm",
+        "title": "完成CRM发送配置",
+        "status": "in_progress",
+        "version": 3,
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "parentId": "cc-channel",
+        "acceptanceCriteria": [
+          "三封邮件的发送版本、名单规则和退订检查可定位"
+        ],
+        "ownerId": "cc-m5",
+        "sourceRefs": [
+          "cc-file-email-flow-v2",
+          "cc-file-legal-matrix-v4"
+        ],
+        "dependsOnTaskIds": [
+          "cc-email-copy"
+        ],
+        "dueOn": "2026-09-10"
+      },
+      {
+        "id": "cc-qa",
+        "title": "完成上线质量核对",
+        "status": "open",
+        "version": 1,
+        "updatedAt": "2026-08-31T18:00:00+08:00",
+        "parentId": "cc-root",
+        "acceptanceCriteria": [
+          "逐渠道记录版本、批准依据、预览与回退条件"
+        ],
+        "ownerId": "cc-m7",
+        "sourceRefs": [
+          "cc-file-runbook-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-15"
+      },
+      {
+        "id": "cc-launch-check",
+        "title": "执行上线前联合核对",
+        "status": "open",
+        "version": 2,
+        "updatedAt": "2026-09-01T11:20:00+08:00",
+        "parentId": "cc-qa",
+        "acceptanceCriteria": [
+          "页面、邮件、付费渠道和主视觉的现行版本逐项一致",
+          "任何批准缺口在2026-09-15 10:00前明确阻断"
+        ],
+        "ownerId": "cc-m7",
+        "sourceRefs": [
+          "cc-file-runbook-v3"
+        ],
+        "dependsOnTaskIds": [
+          "cc-paid",
+          "cc-crm",
+          "cc-keyvisual"
+        ],
+        "dueOn": "2026-09-15"
+      }
+    ],
+    "files": [
+      {
+        "id": "cc-file-brief-v3",
+        "name": "澄湾会员季内容简报",
+        "fileName": "澄湾会员季内容简报",
+        "mediaType": "application/pdf",
+        "mimeType": "application/pdf",
+        "version": 3,
+        "versionLabel": "v3",
+        "status": "approved",
+        "checksum": "fdec539d5902fcadb527b678020695a4f309c5e183cc92e3b685c3de7a80587f",
+        "linkedTaskIds": [
+          "cc-brief",
+          "cc-keyvisual"
+        ],
+        "updatedAt": "2026-08-27T18:20:00+08:00",
+        "source": "synthetic_file_store",
+        "classification": "client_confidential",
+        "access": {
+          "scope": "authorized_team",
+          "allowedTeamIds": [],
+          "allowedMemberIds": [],
+          "note": "调用方仍须在生产服务重新校验 ACL；本合成快照不产生授权。"
+        },
+        "synthetic": true,
+        "summary": "客户已批准的对象、范围和禁用承诺；不含任何真实客户资料。"
+      },
+      {
+        "id": "cc-file-claim-approval-v2",
+        "name": "主卖点措辞客户回执",
+        "fileName": "主卖点措辞客户回执",
+        "mediaType": "application/pdf",
+        "mimeType": "application/pdf",
+        "version": 2,
+        "versionLabel": "v2",
+        "status": "approved",
+        "checksum": "b9a82fb168cee113ae12a027a67069e13d60eb1b910fe71cf3b45f377bee1da4",
+        "linkedTaskIds": [
+          "cc-claim-v2",
+          "cc-landing-copy",
+          "cc-email-copy"
+        ],
+        "updatedAt": "2026-09-01T10:18:00+08:00",
+        "source": "synthetic_file_store",
+        "classification": "client_confidential",
+        "access": {
+          "scope": "authorized_team",
+          "allowedTeamIds": [],
+          "allowedMemberIds": [],
+          "note": "调用方仍须在生产服务重新校验 ACL；本合成快照不产生授权。"
+        },
+        "synthetic": true,
+        "summary": "有权客户审批人确认将首屏主张改为“首月权益体验”，旧“首月免费”不得继续使用。"
+      },
+      {
+        "id": "cc-file-legal-matrix-v4",
+        "name": "渠道措辞合规矩阵",
+        "fileName": "渠道措辞合规矩阵",
+        "mediaType": "application/pdf",
+        "mimeType": "application/pdf",
+        "version": 4,
+        "versionLabel": "v4",
+        "status": "approved",
+        "checksum": "cc420f1390b7bd6fc1eca31e83c45e8009a1f70925b86d151c292551826368fb",
+        "linkedTaskIds": [
+          "cc-claim-v2",
+          "cc-paid",
+          "cc-crm"
+        ],
+        "updatedAt": "2026-09-01T10:42:00+08:00",
+        "source": "synthetic_file_store",
+        "classification": "internal",
+        "access": {
+          "scope": "authorized_team",
+          "allowedTeamIds": [],
+          "allowedMemberIds": [],
+          "note": "调用方仍须在生产服务重新校验 ACL；本合成快照不产生授权。"
+        },
+        "synthetic": true,
+        "summary": "列出页面、邮件、付费渠道允许用语和必须保留的限制语。"
+      },
+      {
+        "id": "cc-file-landing-wire-v5",
+        "name": "落地页线框与文案位",
+        "fileName": "落地页线框与文案位",
+        "mediaType": "application/vnd.synthetic.design",
+        "mimeType": "application/vnd.synthetic.design",
+        "version": 5,
+        "versionLabel": "v5",
+        "status": "in_review",
+        "checksum": "b6ab58291a9bf63d609ec78385743997aab4391de68f31eca39028ddf50dda91",
+        "linkedTaskIds": [
+          "cc-landing-copy"
+        ],
+        "updatedAt": "2026-09-01T11:05:00+08:00",
+        "source": "synthetic_file_store",
+        "classification": "client_confidential",
+        "access": {
+          "scope": "authorized_team",
+          "allowedTeamIds": [],
+          "allowedMemberIds": [],
+          "note": "调用方仍须在生产服务重新校验 ACL；本合成快照不产生授权。"
+        },
+        "synthetic": true,
+        "summary": "首屏已出现未正式交接的v2草稿，其他区块仍引用v1。"
+      },
+      {
+        "id": "cc-file-email-flow-v2",
+        "name": "会员季邮件旅程",
+        "fileName": "会员季邮件旅程",
+        "mediaType": "application/pdf",
+        "mimeType": "application/pdf",
+        "version": 2,
+        "versionLabel": "v2",
+        "status": "draft",
+        "checksum": "7c1fdaff6e5103a5d62d8fad7ee4d809857d36a029332739779e6a709ca631a4",
+        "linkedTaskIds": [
+          "cc-email-copy",
+          "cc-crm"
+        ],
+        "updatedAt": "2026-09-01T09:35:00+08:00",
+        "source": "synthetic_file_store",
+        "classification": "client_confidential",
+        "access": {
+          "scope": "authorized_team",
+          "allowedTeamIds": [],
+          "allowedMemberIds": [],
+          "note": "调用方仍须在生产服务重新校验 ACL；本合成快照不产生授权。"
+        },
+        "synthetic": true,
+        "summary": "三封邮件的主题与正文草稿，当前仍混有v1措辞。"
+      },
+      {
+        "id": "cc-file-media-sheet-v7",
+        "name": "付费渠道上刊表",
+        "fileName": "付费渠道上刊表",
+        "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 7,
+        "versionLabel": "v7",
+        "status": "approved",
+        "checksum": "924c8ca09f40c77462c1a98b75097e3fe378aeae8fd61c82f3fbb4ca6f0625bc",
+        "linkedTaskIds": [
+          "cc-paid"
+        ],
+        "updatedAt": "2026-08-31T17:00:00+08:00",
+        "source": "synthetic_file_store",
+        "classification": "restricted",
+        "access": {
+          "scope": "restricted_members",
+          "allowedTeamIds": [],
+          "allowedMemberIds": [
+            "cc-m1",
+            "cc-m5",
+            "cc-m7"
+          ],
+          "note": "调用方仍须在生产服务重新校验 ACL；本合成快照不产生授权。"
+        },
+        "synthetic": true,
+        "summary": "已锁定版位和追踪参数，文案列仍指向旧主张文件。"
+      },
+      {
+        "id": "cc-file-runbook-v3",
+        "name": "9月15日上线核对手册",
+        "fileName": "9月15日上线核对手册",
+        "mediaType": "application/pdf",
+        "mimeType": "application/pdf",
+        "version": 3,
+        "versionLabel": "v3",
+        "status": "in_review",
+        "checksum": "fec39d63fdfb8aff343932e8fb2c32cd15602df82cf7ad578b3865bb45f9809e",
+        "linkedTaskIds": [
+          "cc-launch-check"
+        ],
+        "updatedAt": "2026-09-01T11:20:00+08:00",
+        "source": "synthetic_file_store",
+        "classification": "internal",
+        "access": {
+          "scope": "authorized_team",
+          "allowedTeamIds": [],
+          "allowedMemberIds": [],
+          "note": "调用方仍须在生产服务重新校验 ACL；本合成快照不产生授权。"
+        },
+        "synthetic": true,
+        "summary": "上线核对步骤和回退条件；上线时间固定为2026-09-15 10:00。"
+      }
+    ],
+    "discussions": [
+      {
+        "id": "cc-d1",
+        "taskId": "cc-claim-v2",
+        "authorId": "cc-ext-client-approver",
+        "createdAt": "2026-09-01T10:15:00+08:00",
+        "kind": "decision",
+        "text": "我作为本项目约定的客户审批人确认：本轮使用“首月权益体验”，停止使用“首月免费”；上线时间不变。正式回执见cc-file-claim-approval-v2。",
+        "threadId": "cc-thread-claim",
+        "replyToId": null,
+        "authority": "authorized_client_approver",
+        "state": "confirmed",
+        "source": "synthetic_task_discussion"
+      },
+      {
+        "id": "cc-d2",
+        "taskId": "cc-claim-v2",
+        "authorId": "cc-m6",
+        "createdAt": "2026-09-01T10:40:00+08:00",
+        "kind": "decision",
+        "text": "已按客户回执完成合规复核；页面和邮件须保留矩阵中的限制语，付费短文案不得自行缩写。",
+        "threadId": "cc-thread-claim",
+        "replyToId": "cc-d1",
+        "authority": "authorized_compliance_reviewer",
+        "state": "confirmed",
+        "source": "synthetic_task_discussion"
+      },
+      {
+        "id": "cc-d3",
+        "taskId": "cc-landing-copy",
+        "authorId": "cc-m3",
+        "createdAt": "2026-09-01T11:06:00+08:00",
+        "kind": "report",
+        "text": "成员报告：线框首屏已试填v2，但其余四区仍为v1；这只是草稿，不代表任务或客户验收完成。",
+        "threadId": "cc-thread-landing",
+        "replyToId": null,
+        "authority": "member_report",
+        "state": "reported",
+        "source": "synthetic_task_discussion"
+      },
+      {
+        "id": "cc-d4",
+        "taskId": "cc-landing-copy",
+        "authorId": "cc-m7",
+        "createdAt": "2026-09-01T11:12:00+08:00",
+        "kind": "report",
+        "text": "版本核对发现文件草稿与任务依赖仍指向v1，二者冲突；应以正式依赖和获批文件修正，不能从草稿反推已交接。",
+        "threadId": "cc-thread-landing",
+        "replyToId": "cc-d3",
+        "authority": "member_report",
+        "state": "conflicting",
+        "source": "synthetic_task_discussion"
+      },
+      {
+        "id": "cc-d5",
+        "taskId": "cc-claim-v2",
+        "authorId": "cc-m2",
+        "createdAt": "2026-09-01T10:28:00+08:00",
+        "kind": "proposal",
+        "text": "草稿建议：直接把已完成的v1任务改名为v2，省去版本记录。",
+        "threadId": "cc-thread-version",
+        "replyToId": null,
+        "authority": "member_proposal",
+        "state": "draft",
+        "source": "synthetic_task_discussion"
+      },
+      {
+        "id": "cc-d6",
+        "taskId": "cc-claim-v2",
+        "authorId": "cc-m2",
+        "createdAt": "2026-09-01T10:34:00+08:00",
+        "kind": "proposal",
+        "text": "撤回上一条建议。旧v1是已完成历史，v2应继续使用现有cc-claim-v2任务承接。",
+        "threadId": "cc-thread-version",
+        "replyToId": "cc-d5",
+        "authority": "member_proposal",
+        "state": "withdrawn",
+        "source": "synthetic_task_discussion"
+      },
+      {
+        "id": "cc-d7",
+        "taskId": "cc-root",
+        "authorId": "cc-ext-client-approver",
+        "createdAt": "2026-09-01T10:17:00+08:00",
+        "kind": "decision",
+        "text": "客户确认2026-09-15 10:00上线窗口不变；如未完成逐渠道批准核对，不授权提前发布。",
+        "threadId": "cc-thread-launch",
+        "replyToId": null,
+        "authority": "authorized_client_approver",
+        "state": "confirmed",
+        "source": "synthetic_task_discussion"
+      },
+      {
+        "id": "cc-d8",
+        "taskId": "cc-email-copy",
+        "authorId": "cc-m3",
+        "createdAt": "2026-09-01T09:38:00+08:00",
+        "kind": "report",
+        "text": "成员报告：三封邮件结构完成，旧主张仍出现在两处CTA，待收到替换清单后统一修订。",
+        "threadId": "cc-thread-email",
+        "replyToId": null,
+        "authority": "member_report",
+        "state": "reported",
+        "source": "synthetic_task_discussion"
+      },
+      {
+        "id": "cc-d9",
+        "taskId": "cc-paid",
+        "authorId": "cc-m5",
+        "createdAt": "2026-09-01T11:31:00+08:00",
+        "kind": "question",
+        "text": "上刊表已锁版位但文案列仍引用v1。是否只等落地页成稿即可，不需要重复创建一份投放任务？",
+        "threadId": "cc-thread-paid",
+        "replyToId": null,
+        "authority": "member_question",
+        "state": "open",
+        "source": "synthetic_task_discussion",
+        "relatedDiscussionIds": [
+          "cc-d2"
+        ]
+      }
+    ],
+    "history": [
+      {
+        "id": "cc-h1",
+        "taskId": "cc-brief",
+        "occurredAt": "2026-08-28T17:15:00+08:00",
+        "type": "completed",
+        "summary": "内容简报v3归档并记录checksum。",
+        "version": 3,
+        "source": "synthetic_task_history"
+      },
+      {
+        "id": "cc-h2",
+        "taskId": "cc-claim-v1",
+        "occurredAt": "2026-08-29T16:00:00+08:00",
+        "type": "completed",
+        "summary": "首轮主张v1完成并锁定为历史版本。",
+        "version": 5,
+        "source": "synthetic_task_history"
+      },
+      {
+        "id": "cc-h3",
+        "taskId": "cc-keyvisual",
+        "occurredAt": "2026-08-31T16:40:00+08:00",
+        "type": "completed",
+        "summary": "主视觉图形资产批准；后续纯文案替换不自动重开该任务。",
+        "version": 5,
+        "source": "synthetic_task_history"
+      },
+      {
+        "id": "cc-h4",
+        "taskId": "cc-claim-v2",
+        "occurredAt": "2026-09-01T10:25:00+08:00",
+        "type": "created",
+        "summary": "收到客户将发新口径的预告后创建v2替换清单任务，尚未写入精确措辞。",
+        "version": 1,
+        "source": "synthetic_task_history"
+      },
+      {
+        "id": "cc-h5",
+        "taskId": "cc-landing-copy",
+        "occurredAt": "2026-09-01T11:05:00+08:00",
+        "type": "file_version_added",
+        "summary": "线框更新为v5；文件草稿不改变正式任务状态。",
+        "version": 6,
+        "source": "synthetic_task_history"
+      },
+      {
+        "id": "cc-h6",
+        "taskId": "cc-paid",
+        "occurredAt": "2026-09-01T11:30:00+08:00",
+        "type": "blocked",
+        "summary": "发现上刊表仍引用v1，等待现行文案交接。",
+        "version": 4,
+        "source": "synthetic_task_history"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "real-c-01-snapshot-acl",
+        "title": "授权范围回执（合成）",
+        "text": "只读授权覆盖团队 real-c-content-team 的本次任务快照；不授权写入、外发、邀请或打开受限正文。",
+        "updatedAt": "2026-09-01T12:00:00+08:00",
+        "source": "synthetic_acl_receipt"
+      },
+      {
+        "id": "cc-file-brief-v3",
+        "title": "澄湾会员季内容简报（合成文件库摘要）",
+        "text": "synthetic_file_store：澄湾会员季内容简报，v3，状态approved，checksum=fdec539d5902fcadb527b678020695a4f309c5e183cc92e3b685c3de7a80587f；关联任务cc-brief,cc-keyvisual。客户已批准的对象、范围和禁用承诺；不含任何真实客户资料。",
+        "updatedAt": "2026-08-27T18:20:00+08:00",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "cc-file-claim-approval-v2",
+        "title": "主卖点措辞客户回执（合成文件库摘要）",
+        "text": "synthetic_file_store：主卖点措辞客户回执，v2，状态approved，checksum=b9a82fb168cee113ae12a027a67069e13d60eb1b910fe71cf3b45f377bee1da4；关联任务cc-claim-v2,cc-landing-copy,cc-email-copy。有权客户审批人确认将首屏主张改为“首月权益体验”，旧“首月免费”不得继续使用。",
+        "updatedAt": "2026-09-01T10:18:00+08:00",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "cc-file-legal-matrix-v4",
+        "title": "渠道措辞合规矩阵（合成文件库摘要）",
+        "text": "synthetic_file_store：渠道措辞合规矩阵，v4，状态approved，checksum=cc420f1390b7bd6fc1eca31e83c45e8009a1f70925b86d151c292551826368fb；关联任务cc-claim-v2,cc-paid,cc-crm。列出页面、邮件、付费渠道允许用语和必须保留的限制语。",
+        "updatedAt": "2026-09-01T10:42:00+08:00",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "cc-file-landing-wire-v5",
+        "title": "落地页线框与文案位（合成文件库摘要）",
+        "text": "synthetic_file_store：落地页线框与文案位，v5，状态in_review，checksum=b6ab58291a9bf63d609ec78385743997aab4391de68f31eca39028ddf50dda91；关联任务cc-landing-copy。首屏已出现未正式交接的v2草稿，其他区块仍引用v1。",
+        "updatedAt": "2026-09-01T11:05:00+08:00",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "cc-file-email-flow-v2",
+        "title": "会员季邮件旅程（合成文件库摘要）",
+        "text": "synthetic_file_store：会员季邮件旅程，v2，状态draft，checksum=7c1fdaff6e5103a5d62d8fad7ee4d809857d36a029332739779e6a709ca631a4；关联任务cc-email-copy,cc-crm。三封邮件的主题与正文草稿，当前仍混有v1措辞。",
+        "updatedAt": "2026-09-01T09:35:00+08:00",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "cc-file-media-sheet-v7",
+        "title": "付费渠道上刊表（合成文件库摘要）",
+        "text": "synthetic_file_store：付费渠道上刊表，v7，状态approved，checksum=924c8ca09f40c77462c1a98b75097e3fe378aeae8fd61c82f3fbb4ca6f0625bc；关联任务cc-paid。已锁定版位和追踪参数，文案列仍指向旧主张文件。",
+        "updatedAt": "2026-08-31T17:00:00+08:00",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "cc-file-runbook-v3",
+        "title": "9月15日上线核对手册（合成文件库摘要）",
+        "text": "synthetic_file_store：9月15日上线核对手册，v3，状态in_review，checksum=fec39d63fdfb8aff343932e8fb2c32cd15602df82cf7ad578b3865bb45f9809e；关联任务cc-launch-check。上线核对步骤和回退条件；上线时间固定为2026-09-15 10:00。",
+        "updatedAt": "2026-09-01T11:20:00+08:00",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "cc-request",
+        "title": "本轮重规划请求（合成）",
+        "text": "把页面、邮件、投放和上线核对接到获批主张v2，不重做已完成策略与主视觉；2026-09-15 10:00上线不变。",
+        "updatedAt": "2026-09-01T11:45:00+08:00",
+        "source": "synthetic_user_request"
+      },
+      {
+        "id": "cc-hard-launch",
+        "title": "固定上线窗口记录（合成）",
+        "text": "2026-09-15 10:00为客户确认的硬上线窗口；未完成批准核对时不得发布，不能从EWD或成员数量保证按期。",
+        "updatedAt": "2026-09-01T10:17:00+08:00",
+        "source": "synthetic_client_schedule"
+      },
+      {
+        "id": "cc-external-role",
+        "title": "客户审批人权限摘要（合成）",
+        "text": "cc-ext-client-approver仅对本战役品牌口径与上线窗口有权确认；不具备团队任务写入、Owner变更或合规代签权限。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_authority_registry"
+      }
+    ],
+    "stakeholders": [
+      {
+        "id": "cc-ext-client-approver",
+        "name": "客户品牌审批人（合成）",
+        "role": "客户审批人",
+        "relationship": "client_approver",
+        "assignable": false,
+        "source": "synthetic_external_directory"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "real-c-content-team"
+    ],
+    "matches": [
+      {
+        "taskId": "cc-claim-v2",
+        "title": "形成主张v2渠道替换清单",
+        "reason": "当前周期、客户、版本与交付结果完全一致，应复用。",
+        "matchType": "same_outcome"
+      },
+      {
+        "taskId": "cc-claim-v1",
+        "title": "留存首轮主张口径v1",
+        "reason": "业务对象相同但版本与适用期不同；是历史覆盖，不得覆盖或重开。",
+        "matchType": "overlap"
+      }
+    ],
+    "coverageNote": "已在当前授权团队检索同客户、同战役、同周期与主张版本；覆盖完整。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "cc-root",
+      "field": "goal",
+      "value": "让会员季各触点在固定上线窗口使用一致且可追溯的获批主张"
+    },
+    {
+      "taskId": "cc-root",
+      "field": "dueOn",
+      "value": "2026-09-15"
+    },
+    {
+      "taskId": "cc-claim-v1",
+      "field": "status",
+      "value": "completed"
+    },
+    {
+      "taskId": "cc-claim-v2",
+      "field": "ownerId",
+      "value": "cc-m2"
+    }
+  ],
+  "constraints": {
+    "externalActions": "none",
+    "scope": "只提出主张v2及其直接消费者的必要差异；不发布、不通知客户、不改媒体预算。",
+    "hardDueOn": "2026-09-15",
+    "hardDeadlineText": "2026-09-15 10:00 Asia/Shanghai 固定上线；不代表系统可自动保证工期。",
+    "privacyBoundary": "文件均为合成资料；客户机密只可在当前授权团队内引用，受限上刊表不得向无关成员展开。"
+  },
+  "dataClassification": "synthetic",
+  "members": [
+    {
+      "id": "cc-m1",
+      "name": "季遥",
+      "role": "整合战役负责人",
+      "responsibilities": [
+        "维护战役结果边界与跨渠道交接",
+        "汇总客户确认并组织上线核对"
+      ],
+      "boundaries": [
+        "不代客户批准对外主张",
+        "不以协调身份覆盖渠道执行 Owner"
+      ],
+      "evidence": [
+        {
+          "id": "cc-m1-role",
+          "title": "季遥职责说明（合成）",
+          "text": "职责：维护战役结果边界与跨渠道交接；汇总客户确认并组织上线核对。边界：不代客户批准对外主张；不以协调身份覆盖渠道执行 Owner。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "cc-m1-work",
+          "title": "季遥当前工作自报（合成）",
+          "text": "协调9月会员季战役的跨渠道变更",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调9月会员季战役的跨渠道变更",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "cc-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未读取完整日历；职责、在办工作和消息频率都不代表剩余容量。"
+      }
+    },
+    {
+      "id": "cc-m2",
+      "name": "梁朔",
+      "role": "内容策略",
+      "responsibilities": [
+        "维护内容简报与主张结构",
+        "解释版本变更对内容架构的影响"
+      ],
+      "boundaries": [
+        "不批准法律口径",
+        "不负责媒体账户操作"
+      ],
+      "evidence": [
+        {
+          "id": "cc-m2-role",
+          "title": "梁朔职责说明（合成）",
+          "text": "职责：维护内容简报与主张结构；解释版本变更对内容架构的影响。边界：不批准法律口径；不负责媒体账户操作。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "cc-m2-work",
+          "title": "梁朔当前工作自报（合成）",
+          "text": "核对会员季主张v2对既有简报的影响",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对会员季主张v2对既有简报的影响",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "cc-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未读取完整日历；职责、在办工作和消息频率都不代表剩余容量。"
+      }
+    },
+    {
+      "id": "cc-m3",
+      "name": "文澄",
+      "role": "文案负责人",
+      "responsibilities": [
+        "负责页面与邮件文案结果",
+        "维护逐渠道措辞一致性"
+      ],
+      "boundaries": [
+        "不把草稿当客户确认",
+        "不修改已归档旧版本"
+      ],
+      "evidence": [
+        {
+          "id": "cc-m3-role",
+          "title": "文澄职责说明（合成）",
+          "text": "职责：负责页面与邮件文案结果；维护逐渠道措辞一致性。边界：不把草稿当客户确认；不修改已归档旧版本。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "cc-m3-work",
+          "title": "文澄当前工作自报（合成）",
+          "text": "修订页面首屏与首封邮件草稿",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "修订页面首屏与首封邮件草稿",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "cc-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未读取完整日历；职责、在办工作和消息频率都不代表剩余容量。"
+      }
+    },
+    {
+      "id": "cc-m4",
+      "name": "陆苒",
+      "role": "视觉负责人",
+      "responsibilities": [
+        "维护主视觉与渠道适配资产",
+        "核对文案变化是否触发版式调整"
+      ],
+      "boundaries": [
+        "不重开无影响的已批准主视觉",
+        "不做投放批准"
+      ],
+      "evidence": [
+        {
+          "id": "cc-m4-role",
+          "title": "陆苒职责说明（合成）",
+          "text": "职责：维护主视觉与渠道适配资产；核对文案变化是否触发版式调整。边界：不重开无影响的已批准主视觉；不做投放批准。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "cc-m4-work",
+          "title": "陆苒当前工作自报（合成）",
+          "text": "检查新措辞长度是否影响主视觉版式",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "检查新措辞长度是否影响主视觉版式",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "cc-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未读取完整日历；职责、在办工作和消息频率都不代表剩余容量。"
+      }
+    },
+    {
+      "id": "cc-m5",
+      "name": "邵凡",
+      "role": "渠道运营",
+      "responsibilities": [
+        "负责CRM与付费渠道配置结果",
+        "维护投放和发送前置清单"
+      ],
+      "boundaries": [
+        "不自行改写获批文案",
+        "不在审批缺失时发布"
+      ],
+      "evidence": [
+        {
+          "id": "cc-m5-role",
+          "title": "邵凡职责说明（合成）",
+          "text": "职责：负责CRM与付费渠道配置结果；维护投放和发送前置清单。边界：不自行改写获批文案；不在审批缺失时发布。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "cc-m5-work",
+          "title": "邵凡当前工作自报（合成）",
+          "text": "等待页面与邮件的现行口径后更新渠道配置",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "等待页面与邮件的现行口径后更新渠道配置",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "cc-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未读取完整日历；职责、在办工作和消息频率都不代表剩余容量。"
+      }
+    },
+    {
+      "id": "cc-m6",
+      "name": "许谨",
+      "role": "合规复核",
+      "responsibilities": [
+        "核对对外主张与限制语",
+        "记录允许使用的精确措辞"
+      ],
+      "boundaries": [
+        "不代表客户确认品牌选择",
+        "不负责页面制作"
+      ],
+      "evidence": [
+        {
+          "id": "cc-m6-role",
+          "title": "许谨职责说明（合成）",
+          "text": "职责：核对对外主张与限制语；记录允许使用的精确措辞。边界：不代表客户确认品牌选择；不负责页面制作。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "cc-m6-work",
+          "title": "许谨当前工作自报（合成）",
+          "text": "已完成主张v2合规复核，保留精确措辞",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "已完成主张v2合规复核，保留精确措辞",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "cc-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未读取完整日历；职责、在办工作和消息频率都不代表剩余容量。"
+      }
+    },
+    {
+      "id": "cc-m7",
+      "name": "白荻",
+      "role": "交付与版本管理",
+      "responsibilities": [
+        "维护文件版本、checksum与批准链",
+        "核对上线包只引用现行版本"
+      ],
+      "boundaries": [
+        "不把成员报告提升为批准",
+        "不未经授权向外部发送文件"
+      ],
+      "evidence": [
+        {
+          "id": "cc-m7-role",
+          "title": "白荻职责说明（合成）",
+          "text": "职责：维护文件版本、checksum与批准链；核对上线包只引用现行版本。边界：不把成员报告提升为批准；不未经授权向外部发送文件。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "cc-m7-work",
+          "title": "白荻当前工作自报（合成）",
+          "text": "核对v2回执与渠道引用关系",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对v2回执与渠道引用关系",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "cc-m7-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未读取完整日历；职责、在办工作和消息频率都不代表剩余容量。"
+      }
+    }
+  ]
+}

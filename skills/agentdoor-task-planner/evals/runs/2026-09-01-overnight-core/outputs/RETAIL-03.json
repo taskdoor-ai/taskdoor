@@ -1,0 +1,223 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-retail-03",
+  "baseSnapshotId": "snapshot-retail-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "retail03-root": 4,
+    "retail03-guide": 2,
+    "retail03-pilot": 3,
+    "retail03-delivery": 2
+  },
+  "intent": "next_batch",
+  "disposition": "needs_clarification",
+  "summary": "建议在现有两店推广根任务下补充02店窄货架适配图和02店现场落地结果，直接复用已确认指引、01店试点与在办物料任务；适配是否改变补货清单尚未明确，需先确认依赖影响。",
+  "reasoningSummary": [
+    {
+      "text": "两店推广根任务仍在进行；总部指引v2和01店试点已完成，应保留并作为已有产出复用。",
+      "evidenceRefs": [
+        "retail03-root",
+        "retail03-guide",
+        "retail03-pilot",
+        "retail03-h1"
+      ]
+    },
+    {
+      "text": "已确认边界是保留通用指引v2，只对02店半宽入口货架做局部适配，01店结果不受影响。",
+      "evidenceRefs": [
+        "retail03-scope",
+        "retail03-d1",
+        "retail03-d3"
+      ]
+    },
+    {
+      "text": "02店物料仍由retail03-delivery版本2在办任务跟进，不应再建一份到料任务。",
+      "evidenceRefs": [
+        "retail03-delivery",
+        "retail03-d1",
+        "retail03-scope"
+      ]
+    },
+    {
+      "text": "是否由01店店长支援02店只是未接受提议，且其公开窗口只承诺01店现场核对；02店落地候选应依据02店店长职责。",
+      "evidenceRefs": [
+        "retail03-d2",
+        "retail-m2-role",
+        "retail-m2-window",
+        "retail-m3-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "retail03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "retail03-create-adaptation",
+        "action": "create",
+        "targetId": "new:retail03-adaptation",
+        "parentId": "retail03-root",
+        "fields": {
+          "title": "形成02店窄货架局部陈列适配图",
+          "acceptanceCriteria": [
+            "基于已确认总部指引v2和02店入口货架实际尺寸形成局部适配图，标明门店、货架尺寸、适用指引版本及仅限02店的变更范围。",
+            "记录通用指引保持不变的部分、局部调整点和确认依据；不覆盖v2确认记录，也不影响01店完成结果。",
+            "明确适配对现有02店补货清单、数量或物料规格是否有影响，并提供可用于配送和现场落地判断的结论。"
+          ],
+          "tips": [
+            "只修改02店局部适配交付，不重发通用v2；将物料影响明确写入结果，供依赖调整决策使用。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m4",
+            "basis": "recommended",
+            "reason": "陈列设计职责包括维护指引版本和评审门店适配图，适合负责02店局部适配结果。",
+            "evidenceRefs": [
+              "retail-m4-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "retail-m3",
+              "contribution": "提供并核对02店窄货架实际尺寸、陈列位置和时段约束。",
+              "evidenceRefs": [
+                "retail-m3-role",
+                "retail03-d1"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供适配评审完成时间和完整可用性；现有根任务截止日不机械复制为适配图承诺。"
+            ],
+            "evidenceRefs": [
+              "retail03-scope",
+              "retail03-guide",
+              "retail-m4-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有02店窄货架适配和现场落地的同范围实际投入、工具方式或工作量明细，EWD暂未知。"
+            ],
+            "evidenceRefs": [
+              "retail03-scope",
+              "retail03-guide",
+              "retail-m4-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "retail03-guide"
+          ]
+        },
+        "reason": "已确认存在02店局部适配缺口，可作为独立可核对的新结果。",
+        "evidenceRefs": [
+          "retail03-scope",
+          "retail03-d1",
+          "retail03-guide"
+        ]
+      },
+      {
+        "id": "retail03-create-store-02",
+        "action": "create",
+        "targetId": "new:retail03-store-02",
+        "parentId": "retail03-root",
+        "fields": {
+          "title": "完成02店换季陈列并回传现场记录",
+          "acceptanceCriteria": [
+            "02店使用已确认指引v2、经确认的窄货架适配图及实际到店物料完成本店陈列，记录门店、区域、完成时间和使用版本。",
+            "现场回传可核对窄货架适配效果、实际物料使用和未解决偏差；设计图或配送回执均不能单独视为现场完成。",
+            "02店店长复核本店交付记录；不把01店试点完成或未接受的跨店支援提议当作02店已落实。"
+          ],
+          "tips": [
+            "由02店按现行流程安排现场人员和时段；本候选不替店长排班。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m3",
+            "basis": "recommended",
+            "reason": "02店店长职责包括安排02店落实并汇总本店货架与时段约束。",
+            "evidenceRefs": [
+              "retail-m3-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-10",
+            "basis": "explicit",
+            "assumptions": [
+              "沿用现有根任务9月10日截止边界；适配图、物料回执和门店排班的实际完成时间尚未确认。"
+            ],
+            "evidenceRefs": [
+              "req-retail-03",
+              "retail03-root",
+              "retail-m3-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有02店窄货架适配和现场落地的同范围实际投入、工具方式或工作量明细，EWD暂未知。"
+            ],
+            "evidenceRefs": [
+              "req-retail-03",
+              "retail03-root",
+              "retail-m3-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:retail03-adaptation",
+            "retail03-delivery"
+          ]
+        },
+        "reason": "02店现场结果尚未存在，需复用适配图和现有配送交付后独立回传。",
+        "evidenceRefs": [
+          "req-retail-03",
+          "retail03-root",
+          "retail03-scope",
+          "retail03-delivery"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "retail03-root",
+      "retail03-guide",
+      "retail03-pilot",
+      "retail03-delivery"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-retail"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [
+    {
+      "field": "deliveryDependency",
+      "question": "02店窄货架适配会不会改变retail03-delivery正在跟进的物料品项、规格或数量？如果会，需让该配送任务先使用适配结论并核对日期；如果不会，请确认现有补货清单可直接沿用。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "保留现有根、已完成指引、01店试点和在办02店物料任务；不重做v2、不复制01店任务、不另建配送任务。",
+    "窄货架适配是否改变02店补货品项或数量尚无证据；确认前不能更新现有配送依赖或宣称物料计划不受影响。",
+    "9月10日是现有根任务期限；适配评审时间、配送完成时间和02店排班未提供，当前不能保证候选链按期完成。",
+    "负责人和参与贡献只是候选；不默认01店店长跨店支援，也不从在办事项推断任何成员有余量。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": "retail03-delivery",
+      "label": "确认02店局部适配对现有补货任务的影响"
+    }
+  ],
+  "externalEffects": "none"
+}

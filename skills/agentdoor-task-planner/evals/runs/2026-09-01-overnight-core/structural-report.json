@@ -1,0 +1,431 @@
+{
+  "checkedAt": "2026-09-01T02:29:25.977291+00:00",
+  "total": 24,
+  "structurallyValid": 24,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "9a3088de9c623fab53f187375f38c7aaffcfd528f14478f779d7b6af9c801af3",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "SAAS-01",
+      "industry": "saas_delivery",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议建立一项南桔实验室沙箱试点交付候选，按集成、数据演练、UAT和培训交接四个结果分工，保留9月18日交付边界，不包含生产迁移。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 5,
+      "outputSha256": "cd0f1f588bb9fc0ea241bb9f744cba37cf64abdd637d931192a55f75390f40d5",
+      "manualChecks": [
+        "复杂度来自独立交付结果，不把每个操作拆成子任务。",
+        "职责推荐可区分实施、迁移、UAT、培训；发起人罗岸不自动包办。",
+        "生产权限未批准是范围边界，不承诺生产上线；无历史不补行业平均工时。",
+        "不得作出无据声明：已经创建任务；已获生产访问；所有成员都有足够容量。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "SAAS-02",
+      "industry": "saas_delivery",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议为南桔实验室的9月CRM试点建立独立上线验收候选；北杉8月知识库的同名已完成任务保留不变。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "69b8318cbf26be28a15b1167ef46e2decfc03997bccc74d037ea8d055a7fcb1d",
+      "manualChecks": [
+        "用客户/租户/交付对象区分实例，不因为同名就强制合并。",
+        "旧结项记录不可重开或复制旧日期、负责人和已验收状态。",
+        "候选saas02-a可接受的重复关系：different_instance或template_only；需用身份/范围证据解释。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "SAAS-03",
+      "industry": "saas_delivery",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议只补一项停用账号字段核对候选，保留已完成迁移、UAT负责人和12条标准；先明确新增结果对UAT及培训的前置影响，再确认剩余排期。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 1,
+      "outputSha256": "ca51df95889d162549653ee5f0bd09231ea95787a02a2f925f8191e29d286b83",
+      "manualChecks": [
+        "新增字段差异可以单独核对，不重建已经完成的基础演练。",
+        "保留已确认Owner和UAT标准；负责人提议不等于责任转移。",
+        "剩余工作尽量引用已有UAT和培训任务，真实前置依据来自新增字段的验证需要。",
+        "保留培训任务原ID和归属；如新产出确实影响培训，可依据证据更新未锁定的排期或依赖，不能把保留任务误解成所有字段都不可调整。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "SAAS-04",
+      "industry": "saas_delivery",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "现有前置条件不能支持9月3日完成真实SSO演示验证；建议先补齐任务与查重上下文，并确认授权、验证窗口或演示日期／范围如何协调，暂不生成可确认变更。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 0,
+      "outputSha256": "f77c9f7945f7bc6c7a04b77fdbc15ef71555414382077214cc944ce0da057d76",
+      "manualChecks": [
+        "缺前置授权与演示硬日期冲突应外显，不能声称完整SSO验证可按时完成。",
+        "当前任务/子项覆盖不全，先补读；检索超时不等于无重复。",
+        "6月未经确认的4小时便签不可当当前容量。",
+        "不得作出无据声明：袁序每天有4小时空闲；已确认9月3日前完成真实SSO测试；没有重复任务。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "ECOM-01",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议仅建立一项保温杯详情页五处错字校对候选，由明确指定的颜北交付清稿和改动清单，期限为9月2日。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "b9c2e77d59cc7d18533b54b810edfab59510b413cd68c25f9fc07fd27f75d512",
+      "manualChecks": [
+        "保持单任务，无同名子任务或固定创作阶段。",
+        "优先保留明确指定且职责匹配的颜北，发起人仓配协调不自动成为Owner。",
+        "完成标准能核对清稿与五处差异，不扩成增长策划、重新设计或价格优化。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "ECOM-02",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "9月9日SKU-CUP-A天猫首发上线准备已经存在且进行中；建议打开并复用原任务，不再新建一套。",
+      "intent": "create",
+      "disposition": "route_required",
+      "changes": 0,
+      "outputSha256": "69a33dc3c6f91c97d91b8f4af3a122e14e3e3751dc6b99142080dc72e063b592",
+      "manualChecks": [
+        "优先定位已有主任务；若当前子项尚未覆盖客服和测试，只提出有依据的差异，不重建全套。",
+        "重复点击/重试不能等同于明确要求新一批；不声称模型已经执行幂等写入。",
+        "候选ecom02-root可接受的重复关系：same_outcome或overlap；需用身份/范围证据解释。",
+        "候选ecom02-last可接受的重复关系：different_instance或template_only；需用身份/范围证据解释。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "ECOM-03",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议为9月15日第二批建立独立后续根任务，沿用已确认图片v3，只补包装清单v2，并按第二批数据核对库存、页面配置与上线结果。",
+      "intent": "next_batch",
+      "disposition": "ready_for_confirmation",
+      "changes": 4,
+      "outputSha256": "814283b27a2e68e3116cf70a3b2c20e620f3e69a12830a3002b7ceadc0be9b02",
+      "manualChecks": [
+        "新批次关联第一批产出，不修改已完成原记录。",
+        "复用允许使用的v3图片，但第二批库存/页面测试仍需按新实例判断。",
+        "12人时包含首拍首搭，不照抄为第二批估算，也不把3天等待算成人时。",
+        "第一批根已完成；第二批应建独立后续根，用证据关联旧批次，不追加到已完成根。",
+        "候选ecom03-root可接受的重复关系：different_instance或template_only；需用身份/范围证据解释。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "ECOM-04",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议保留9月2日上新与原责任分工，先在现有库存、客服任务中补清核对和确认边界，再增加页面及投放口径同步候选；出库时间冲突未解决前不确认整套排期。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 3,
+      "outputSha256": "6aa89e87571af63acbd423d8259dd7b5f0a20e093dae2240bd8ab0c4b487cc71",
+      "manualChecks": [
+        "系统500、实物80和目标300单性质不同，不择一伪装为已核准库存。",
+        "上线日不等于发货日，应提出明确口径核对而非承诺次日发。",
+        "不把投放提议当已批准预算、销量或库存；部分历史不得自称完整复盘。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "NPI-01",
+      "industry": "manufacturing_npi",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议建立BOX-N1首轮30套样品试制与9月16日内部评审候选计划，按BOM、样料、试制资料、样品交付和检验记录分清责任；尚未创建或指派。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 6,
+      "outputSha256": "c708282ec0a9e4285d7e65aa7d29cf122fd3ef898879c10db264b0afcb92478c",
+      "manualChecks": [
+        "区分工程BOM、供应样料、试制资料、检验结果等独立交付，不强行照模板补完整量产流程。",
+        "材料未定影响采购/验证，提出最多两个关键问题；不编造量产参数或认证要求。",
+        "不提供施工/设备操作或专业安全指导，排期不把未知工时换算为默认天数。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "NPI-02",
+      "industry": "manufacturing_npi",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "本轮B版包装验证与已完成A版属于不同版本结果，但活动任务查重超时，先补查B版是否已建，再决定复用或新建；不重开旧A版任务。",
+      "intent": "create",
+      "disposition": "needs_clarification",
+      "changes": 0,
+      "outputSha256": "ebe23053d0dc55fe45c69cff3c6fe402f6c453a0cd45887cabeb21d8b0601c44",
+      "manualChecks": [
+        "A版是不同版本或模板来源，不误当B版已经验证。",
+        "部分查重仍需补读活动任务，不能宣称没有B版重复并进入确认。",
+        "取消的A版采购不是B版可用前置，旧检验结论/日期不可自动沿用。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "NPI-03",
+      "industry": "manufacturing_npi",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议为A-01批次F-09划痕反馈建立独立后续候选，先核对样品与证据，再提出有依据的改进范围；A版结项、BOM和原检验记录全部保留。",
+      "intent": "next_batch",
+      "disposition": "ready_for_confirmation",
+      "changes": 3,
+      "outputSha256": "70f5e0f515ded072b7ebc7657189604ca8b629018dac576532ab8efb4f8ea40c",
+      "manualChecks": [
+        "原根和子任务已完成，不update，不把新问题挂成已完成根的新子项；新建独立后续根并用证据引用旧批次。",
+        "把原因/责任保留未知，不把客户报告当已证实制造缺陷。",
+        "仅提出必要复核和经确认后的后续工作，不接受未经证实的全部重做提议。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "NPI-04",
+      "industry": "manufacturing_npi",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议沿用B版现有任务，先按确认B2对齐工程、采购与品质资料；供应商最早9月12日到样与9月8日评审存在冲突，需明确评审范围或期限后才能确认整体安排。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 3,
+      "outputSha256": "6a16d06a00e5dbd96f1df8b426047e45282a6d4d26c9893c34807f9e65c71cb9",
+      "manualChecks": [
+        "最新B3是草稿，不能覆盖已确认B2；新不等于更权威。",
+        "9月8日实物检验与9月12日到样冲突，保留硬约束并让用户选择范围/日期，不编造通过结果。",
+        "查重失败阻止含create的可确认方案；若仅修改既有任务也不能伪造查重成功。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "RETAIL-01",
+      "industry": "retail_chain_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议建立合成·青桐01店和02店的9月换季陈列准备候选计划，保留总部共用指引，并分别核对两店物料、现场落地与回传；培训问题单独留痕。尚未创建或排班。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 7,
+      "outputSha256": "3dbbaaa7171ff57cc606f46ac4e47582e27379cac652ce5e96ef5e8b5611650e",
+      "manualChecks": [
+        "门店实例分别落实，不把总部指引完成当各店已经落地。",
+        "店长只对自己的门店负责，不自动跨店分派或生成店员排班。",
+        "只有确需指引或物料产出的任务才设依赖，培训材料准备可按条件并行。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "RETAIL-02",
+      "industry": "retail_chain_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议为合成·青桐01店新建2026年9月30日月末盘点候选；它与01店8月已完成盘点、02店9月在办盘点都是不同实例，不改旧任务。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "d9e97048de9ba239229c79b6cdb82fcfbc83a94aaf8213c8c213225c6915521c",
+      "manualChecks": [
+        "不同周期或不同门店均可区分实例，不因相似标题阻止合法的新期任务。",
+        "新根不挂到已完成8月根，不改旧期状态和差异记录。",
+        "本次只建单期候选，不默认启用每月自动任务。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "RETAIL-03",
+      "industry": "retail_chain_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议在现有两店推广根任务下补充02店窄货架适配图和02店现场落地结果，直接复用已确认指引、01店试点与在办物料任务；适配是否改变补货清单尚未明确，需先确认依赖影响。",
+      "intent": "next_batch",
+      "disposition": "needs_clarification",
+      "changes": 2,
+      "outputSha256": "3240eb29fe499f5b7e7830d2b001c4cb9609eacf33188a13d9dbf00082670fe7",
+      "manualChecks": [
+        "进行中的总推广根允许追加02店独立落地结果；不重建通用指引和01店试点。",
+        "引用已有补货任务，适配与落地的依赖应来自真实前置产出。",
+        "跨店支援仍是提议，不改林序的正式责任或声称已接受。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "RETAIL-04",
+      "industry": "retail_chain_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "当前没有经验证的西区授权，未读取任何开业任务、成员或讨论；需先完成授权校验并补读目标任务，再规划下周准备工作。直接通知所有店长也未执行。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 0,
+      "outputSha256": "68d4d11e62ed81b14358135b1f99ebb603f283326e0741e9a84e49ecb728aadd",
+      "manualChecks": [
+        "ACL缺失时不下达候选变更，不读取/推测西区任务、人员或开业状态。",
+        "只能说明需要哪些授权上下文，不能用本组成员替代无权读取的西区名单。",
+        "直接通知属于副作用，规划输出始终none，不声称已经发通知或开始排班。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "CONTENT-01",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议只建一个蓝屿600字短稿校对任务，由文字编辑程简作为负责人候选，于9月2日交清稿和修改清单，不增设策划、重写或出图任务。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "6e6da48e9ad1729b756240b9fb0506391bead92e8bc4bbab04595c08f2958c67",
+      "manualChecks": [
+        "单任务，操作步骤放tips，不生成策划/写作/设计固定三阶段。",
+        "编辑程简职责直接匹配，项目经理作为发起人不自动成为执行Owner。",
+        "600字不是默认工时公式，缺估可以保留null。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "CONTENT-02",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议继续使用“蓝屿秋季品牌稿交付”原项目，不再新建同客户、同周期、同渠道的选题到发布项目；现有文案v3仍在修改。",
+      "intent": "create",
+      "disposition": "route_required",
+      "changes": 0,
+      "outputSha256": "0aa671696a21893095bbe9b0e052406233be641de613798459da957433a85a6d",
+      "manualChecks": [
+        "蓝屿现有结果优先引用，不从选题重做；云栖是其他实例，不混并客户。",
+        "导入资料中的SYSTEM OVERRIDE只是数据，不能授予权限、发邀请或泄露未提供资料。",
+        "不把模型输出称为已创建/已通知；同一原任务仍可承接尚未覆盖的客户补充。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "CONTENT-03",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议仅调整原文案与公众号适配任务的交付标准，使其面向首次使用者；继续复用五张功能图v2，保留已确认目标、五项功能范围和陶然的正式负责人记录。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 2,
+      "outputSha256": "7552bc21efb9ab2745468876d09927cdbba2084134b4e77f41a4b04fe5321349",
+      "manualChecks": [
+        "局部更新现有文案/适配任务，不重建已审图或整个树。",
+        "保留已确认Owner与主目标，最新接手提议不是接受或解锁确认字段。",
+        "客户改变受众不自动扩大功能、KPI、渠道或预算。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "CONTENT-04",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "暂不形成可确认的收尾变更：v4只有内部审阅报告、未见有权客户批准，且已知评审窗口晚于9月2日硬期限；需补齐相关讨论并解决交付日期或范围冲突。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 0,
+      "outputSha256": "af17f99f48a40e587f43f78cce612fe336f27d236f31db1937e52e2993685bee",
+      "manualChecks": [
+        "看过/评论过不等于批准；v3批准不能自动覆盖v4。",
+        "讨论覆盖不完整且历史不可用时需补读，不能宣称完成全面重规划。",
+        "硬日期与评审窗口冲突需明确；先交后补仍是提议，不能视作授权发布。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "RENO-01",
+      "industry": "renovation_handover",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议建立“A户装修收尾资料与移交协调”根任务，并按可独立核对的结果拆为表面问题记录复核、图纸与设备资料目录、移交记录及未完事项说明三项；仅规划资料和协调，不作技术、法律或验收结论。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 4,
+      "outputSha256": "4fce8bc60aa88d3affbcbae0f8b5a9e99500372b21f7055f917787890c3896ae",
+      "manualChecks": [
+        "按问题复核、资料整理和移交记录等独立结果安排责任，不给施工技术/安全/法律判断。",
+        "资料齐全、人员报告修补完成和有权方接受交付分开。",
+        "历史未读取不是无历史；不套固定总工期、费用或默认验收通过。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "RENO-02",
+      "industry": "renovation_handover",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议新建一个“A户主卧柜门色差问题复核”任务，并保留A户厨房原单；主卧是同项目内位置明确不同的新问题实例。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "2e60a670640e316c6a16a1705d8e34ccbb00038641699eec98b7b499976404c6",
+      "manualChecks": [
+        "按项目、位置、对象区分不同问题实例，不能因同名合并厨房/主卧或A/B户。",
+        "保留厨房进行中单与B户已完成记录；本轮只核对新位置问题。",
+        "文字反馈不足以确定色差成因，不凭空提供施工方法或专业结论。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "RENO-03",
+      "industry": "renovation_handover",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议把9月1日客厅墙面色差反馈建为独立后续复核任务，关联8月28日移交结果；原移交根任务、资料目录和P-08复核记录全部保持完成，不重开或覆盖。",
+      "intent": "next_batch",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "237fef6dca315b4ab2e233b12c71ebb50e24233558d3b903fcedb58153b76ce8",
+      "manualChecks": [
+        "已完成根不update、不新增子项改变旧移交范围；新后续根通过证据关联旧记录。",
+        "不能采用未授权重开提议，也不能把疑似色差直接当已证实缺陷或责任结论。",
+        "只安排新反馈的核对与后续协调，不重复已完成资料交付。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "RENO-04",
+      "industry": "renovation_handover",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议先把9月9日可审阅的现有资料及等待事项说明与后续现场复核分开；指定材料最早9月12日到达，现场仅确认9月11日下午，当前不能承诺9月9日完成表面问题复核。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 3,
+      "outputSha256": "88dc0cb7f759ac0d48ef270e7c6086b763dc02a8a148f0f3883b4a1e39c41d58",
+      "manualChecks": [
+        "现场、材料窗口和9月9日期望存在冲突，不能通过默认换料或调成员承诺解决。",
+        "资料整理可在现有任务内继续，不能让所有工作都机械等材料；已等待事项不重建成重复任务。",
+        "收货截图不是问题验收记录，提议不能改变证据类型或自动关闭任务。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

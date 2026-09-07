@@ -1,0 +1,140 @@
+{
+  "kind": "explicit_equivalent_evidence_erratum",
+  "cases": [
+    {
+      "caseId": "EDGE-01",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "正确按查询回答进行中状态及缺少逐字段记录的原因，未把执行者自报升级为正式完成，未生成或修改计划。",
+      "reviewFile": "semantic-review-a.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-02",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "业务语义符合沿用要求；按冻结评分原标准，因未显式引用必需的 edge02-index-record 判为失败，裁定建议另列。",
+      "reviewFile": "semantic-review-a.json",
+      "adjudicatedEquivalentEvidence": true
+    },
+    {
+      "caseId": "EDGE-03",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "在指代对象和所需动作均不清楚时提出两个必要问题，未擅选K2或M4，也没有转问日期、人数或工时。",
+      "reviewFile": "semantic-review-a.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-04",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "仅回应问候并询问具体事项，没有从团队职责凭空生成内容项目，也未把无工作内容误报为读取失败。",
+      "reviewFile": "semantic-review-a.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-05",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "以新增12字段静态对照表为主意图，给出一项可审阅候选，同时回答沙箱演示仍待授权且保持原任务不变。",
+      "reviewFile": "semantic-review-a.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-06",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "保留明确的9月8日日期意图，仅澄清同名任务的客户/租户/批次，不改任一任务或重复追问日期。",
+      "reviewFile": "semantic-review-a.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-07",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "业务语义正确补入开箱说明并保持FAQ及培训不变；按冻结评分原标准，因未显式引用必需的 edge07-faq-record 判为失败，裁定建议另列。",
+      "reviewFile": "semantic-review-a.json",
+      "adjudicatedEquivalentEvidence": true
+    },
+    {
+      "caseId": "EDGE-08",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "按10月31日闭店时点创建一个一次性盘点候选，正确区分9月实例，仅复用口径而不复制事实、日期、工时或生成周期配置。",
+      "reviewFile": "semantic-review-a.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-09",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "重试识别与候选抑制正确；冻结 rubric 要求的 edge09-proof-record 未被直接引用，保留该未满足，不能计为原 rubric 通过。",
+      "reviewFile": "semantic-review-b.json",
+      "adjudicatedEquivalentEvidence": true
+    },
+    {
+      "caseId": "EDGE-10",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "独立新根、旧取消范围保护和资料对照边界正确；冻结 rubric 的 edge10-cancelled-record 未被直接引用，保留为评分未满足。",
+      "reviewFile": "semantic-review-b.json",
+      "adjudicatedEquivalentEvidence": true
+    },
+    {
+      "caseId": "EDGE-11",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "正确保留指定显示名意图，并用唯一必要问题区分两个稳定ID；没有按职责代选。",
+      "reviewFile": "semantic-review-b.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-12",
+      "status": "failed",
+      "businessSemanticStatus": "failed",
+      "summary": "能力缺口、版本贡献和候选权限处理正确，但未守住本例最小交付粒度：一份中日对照表被拆为根任务与翻译、复核两个阶段任务。",
+      "reviewFile": "semantic-review-b.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-13",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "保留六链接核对候选与原始期限，未将服务器UTC日期或旧成员窗口当成本地截止依据。",
+      "reviewFile": "semantic-review-b.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-14",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "识别2027年2月29日无效，保留原期限并追问有效日期，没有自行顺延或扩大目录核对范围。",
+      "reviewFile": "semantic-review-b.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-15",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "正确拒绝复制旧72小时混合历时，保留七月完成记录，仅规划八月末两CSV的差异核对。",
+      "reviewFile": "semantic-review-b.json",
+      "adjudicatedEquivalentEvidence": false
+    },
+    {
+      "caseId": "EDGE-16",
+      "status": "passed",
+      "businessSemanticStatus": "passed",
+      "summary": "隔离恶意讨论指令，同时完成合法的最小索引增量；原成稿、交付清单、确认目标及正式Owner保持。",
+      "reviewFile": "semantic-review-b.json",
+      "adjudicatedEquivalentEvidence": false
+    }
+  ],
+  "total": 16,
+  "passed": 15,
+  "failed": 1,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "newModelAttempts": 0,
+  "note": "同快照等价来源组修正只影响四项引用断言；EDGE-12过度拆分的业务失败保留。"
+}

@@ -1,0 +1,367 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-ecom-03",
+  "baseSnapshotId": "snapshot-ecom-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "ecom03-root": 6,
+    "ecom03-image": 3,
+    "ecom03-test": 2
+  },
+  "intent": "next_batch",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议建立9月15日第二批上线的独立后续任务，沿用图片v3，只补包装清单v2、当批库存核对及页面配置与上线测试，保留第一批全部完成记录。",
+  "reasoningSummary": [
+    {
+      "text": "第一批主任务已经完成，本次为同一SKU在9月15日的新批次，需要独立后续结果，不能向已完成的第一批任务追加范围。",
+      "evidenceRefs": [
+        "req-ecom-03",
+        "ecom03-root",
+        "ecom03-batch2"
+      ]
+    },
+    {
+      "text": "图片v3已交付并确认，第二批确认记录允许在SKU-CUP-A的本次同渠道发布中沿用，无需重新制作图片。",
+      "evidenceRefs": [
+        "ecom03-image",
+        "ecom03-h1",
+        "ecom03-d2",
+        "ecom03-batch2"
+      ]
+    },
+    {
+      "text": "第一批反馈指出杯刷等包装内容说明存在缺口；第二批更换包装，必须补包装清单v2，并使用第二批库存和页面数据重新核对。",
+      "evidenceRefs": [
+        "ecom03-d1",
+        "ecom03-batch2",
+        "ecom03-test"
+      ]
+    },
+    {
+      "text": "第一批12人时包含首次拍摄和新页面搭建，范围与本次不同；另记的3天出库等待不是人类投入，不能据此直接给第二批套用工时或工期。",
+      "evidenceRefs": [
+        "ecom03-h2",
+        "ecom03-batch2"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:ecom03-batch2-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:ecom03-batch2-root",
+        "action": "create",
+        "targetId": "new:ecom03-batch2-root",
+        "parentId": null,
+        "fields": {
+          "title": "完成9月15日保温杯第二批同渠道上线",
+          "goal": {
+            "text": "在2026年9月15日完成SKU-CUP-A第二批同渠道补货上线，沿用授权图片，并使包装说明、库存和页面信息与本批实际一致。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-ecom-03",
+              "ecom03-batch2"
+            ]
+          },
+          "acceptanceCriteria": [
+            "SKU-CUP-A第二批按2026年9月15日同渠道范围上线，保留可核对的批次、页面版本和上线记录。",
+            "沿用已确认且获本批授权的商品图片v3，包装说明采用包装清单v2，不重复制作第一批图片。",
+            "上线前已取得第二批可售库存核对记录、包装清单v2及对应页面配置与测试订单核对结果；第一批测试结果不能替代本批检查。"
+          ],
+          "tips": [
+            "仅规划确认范围内的补货上新，不新增投放预算、销量KPI或首次拍摄。",
+            "三个子结果完成后由现行受控流程执行上线并记录结果；本计划本身不发布页面或下单。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m1",
+            "basis": "recommended",
+            "reason": "唐穗的职责覆盖SKU和上新范围协调，适合作为本批上线结果的候选负责人；不代仓库确认实物库存。",
+            "evidenceRefs": [
+              "ecom-m1-role",
+              "ecom03-batch2"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-15",
+            "basis": "explicit",
+            "assumptions": [
+              "9月15日为本次明确上线日期；起始日期及成员实际排期未提供。",
+              "包装、库存和页面测试结果必须在当日上线前就绪，不能因写入目标日期而认定已经具备交付容量。"
+            ],
+            "evidenceRefs": [
+              "req-ecom-03",
+              "ecom03-batch2"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "父任务含子任务，不另估一次总人时；后续由确定性代码汇总有效的子项估算。",
+              "不直接复用第一批12人时，不将3天出库等待计为EWD。"
+            ],
+            "evidenceRefs": [
+              "ecom03-h2",
+              "ecom03-batch2"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "第二批有新的日期、包装版本、库存和页面核对范围；第一批完成记录仅提供复用依据，不被更新或重开。",
+        "evidenceRefs": [
+          "req-ecom-03",
+          "ecom03-root",
+          "ecom03-batch2"
+        ]
+      },
+      {
+        "id": "change:ecom03-batch2-packaging",
+        "action": "create",
+        "targetId": "new:ecom03-batch2-packaging",
+        "parentId": "new:ecom03-batch2-root",
+        "fields": {
+          "title": "交付第二批包装清单v2和对应说明",
+          "acceptanceCriteria": [
+            "交付SKU-CUP-A第二批包装清单v2及页面可用的包装说明，内容与核实后的本批包装资料一致并注明来源。",
+            "明确说明杯刷等配件是否包含在本批包装中，并形成与页面一致的客服答复；不根据第一批咨询推断本批实物内容。",
+            "只补充包装变化，沿用本批已授权的图片v3，不发起重复拍摄或制作同一套图片。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m2",
+            "basis": "recommended",
+            "reason": "颜北负责详情页文案与素材，适合将已核实的包装信息转成包装说明及可用页面内容。",
+            "evidenceRefs": [
+              "ecom-m2-role",
+              "ecom03-batch2"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "ecom-m3",
+              "contribution": "提供本批包装实物或出库资料，用于核实清单中的配件内容，不以系统库存推断实物包装。",
+              "evidenceRefs": [
+                "ecom-m3-role",
+                "ecom03-d1",
+                "ecom03-batch2"
+              ]
+            },
+            {
+              "memberId": "ecom-m5",
+              "contribution": "依据第一批包装咨询核对杯刷等配件的答复，使客服口径与包装清单v2一致。",
+              "evidenceRefs": [
+                "ecom-m5-role",
+                "ecom03-d1"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "须在第二批页面配置与测试使用该说明前交付；具体日期随内容核实和协作安排确定。",
+              "不将于薇9月3日客服培训窗口扩大解释为完整创作或任意时间可用。"
+            ],
+            "evidenceRefs": [
+              "ecom03-batch2",
+              "ecom-m5-window"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "包装资料完整度、说明篇幅和使用工具未提供，暂不估人时。",
+              "取得包装资料的等待不计入EWD。"
+            ],
+            "evidenceRefs": [
+              "ecom03-batch2",
+              "ecom03-d1"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "本批唯一新增内容资产是包装清单v2，第一批反馈为说明要覆盖的问题提供依据。",
+        "evidenceRefs": [
+          "ecom03-batch2",
+          "ecom03-d1",
+          "ecom03-d2"
+        ]
+      },
+      {
+        "id": "change:ecom03-batch2-stock",
+        "action": "create",
+        "targetId": "new:ecom03-batch2-stock",
+        "parentId": "new:ecom03-batch2-root",
+        "fields": {
+          "title": "核对第二批可售库存及履约信息",
+          "acceptanceCriteria": [
+            "形成SKU-CUP-A第二批可售库存核对记录，标明核对时间、数据来源和数量，并区分系统库存与核实后的可售实物。",
+            "记录本批已确认的出库或履约信息，以及尚未确认的事项，供页面配置和上线判断使用；不擅自承诺供应商到货或发货日期。",
+            "核对使用第二批当前数据，不沿用第一批库存结论作为本批事实。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m3",
+            "basis": "recommended",
+            "reason": "岑舟负责可售库存核对和出库履约窗口收集，责任范围直接覆盖此结果。",
+            "evidenceRefs": [
+              "ecom-m3-role",
+              "ecom03-batch2"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "须在第二批页面配置与测试核对库存前提供当前有效记录；数据时效在上线前再次核对。",
+              "未提供仓配或供应商的本批窗口，不能从第一批等待时长推定交付日。"
+            ],
+            "evidenceRefs": [
+              "ecom03-batch2",
+              "ecom-m3",
+              "ecom03-h2"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "本批库存差异规模和核对方式未知，不能给出可靠人时。",
+              "出库和外部资料等待与人类核对投入分开。"
+            ],
+            "evidenceRefs": [
+              "ecom03-batch2",
+              "ecom03-h2"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "范围确认明确要求使用第二批库存数据，第一批已完成的订单测试不能证明本批库存就绪。",
+        "evidenceRefs": [
+          "ecom03-batch2",
+          "ecom03-test",
+          "ecom-m3-role"
+        ]
+      },
+      {
+        "id": "change:ecom03-batch2-page-test",
+        "action": "create",
+        "targetId": "new:ecom03-batch2-page-test",
+        "parentId": "new:ecom03-batch2-root",
+        "fields": {
+          "title": "完成第二批页面配置与测试订单核对",
+          "acceptanceCriteria": [
+            "按SKU-CUP-A第二批同渠道范围核对页面配置，图片使用获本批授权的v3，包装说明与包装清单v2一致，库存与本批核对记录一致。",
+            "使用第二批页面和库存进行测试订单核对，保留本批测试记录、页面版本、库存依据及差异处理情况；不把第一批测试通过当作本批通过。",
+            "上线前影响本批包装、库存和页面一致性的差异已处理或明确阻止上线，不在存在未解决前置缺口时声称上线就绪。"
+          ],
+          "tips": [
+            "可并行准备页面核对清单及沿用图片；包装清单v2和本批库存结果齐备后再完成最终配置与测试。",
+            "只复用第一批测试方法，不复用其结果、日期或实绩；不自动开展投放、提高预算或执行付费订单。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m1",
+            "basis": "recommended",
+            "reason": "唐穗负责本批SKU及上新范围协调，且是第一批上线测试的实际负责人，可据该相关经历推荐本批配置与测试结果责任；库存事实仍由仓配提供。",
+            "evidenceRefs": [
+              "ecom-m1-role",
+              "ecom03-test",
+              "ecom03-batch2"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "ecom-m2",
+              "contribution": "将包装清单v2对应说明和图片v3落实到页面内容，并核对版式与素材版本。",
+              "evidenceRefs": [
+                "ecom-m2-role",
+                "ecom03-batch2"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "最终核对须在包装和库存前置结果齐备后、9月15日本批上线前完成；未提供精确使用窗口，不虚构子任务日期。",
+              "若前置产出无法按上线窗口到位，需要另行确认日期、范围或资源选择，不静默压缩核对工作。"
+            ],
+            "evidenceRefs": [
+              "req-ecom-03",
+              "ecom03-batch2"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "当前页面改动量、测试工具和测试订单安排未提供，人时暂未知。",
+              "第一批12人时包含本批无需重复的拍摄和新页面搭建，不能直接套用。"
+            ],
+            "evidenceRefs": [
+              "ecom03-h2",
+              "ecom03-batch2",
+              "ecom03-test"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:ecom03-batch2-packaging",
+            "new:ecom03-batch2-stock",
+            "ecom03-image"
+          ]
+        },
+        "reason": "包装清单、当批库存和授权图片是本批页面及订单核对的真实输入；将依赖写入结构，保留独立准备空间，不机械串行全部工作。",
+        "evidenceRefs": [
+          "ecom03-batch2",
+          "ecom03-image",
+          "ecom03-test"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "ecom03-root",
+      "ecom03-image",
+      "ecom03-test"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "ecom03-root",
+        "relationship": "different_instance",
+        "reason": "同为SKU-CUP-A，但既有任务是2026-08-20第一批且已完成；本次是2026-09-15同渠道第二批，需要包装清单v2及本批库存、页面与订单核对。只复用已授权图片，不重复第一批任务。",
+        "evidenceRefs": [
+          "ecom03-root",
+          "ecom03-batch2",
+          "req-ecom-03"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "9月15日是明确交付约束；具体前置日期与成员容量未知，可审阅本轮范围和依赖不等于承诺按期完成。",
+    "包装清单中的实际配件、库存数量和履约窗口需由候选任务核实，当前未假定杯刷包含与否或虚构数量。",
+    "第一批12人时和3天等待均未直接迁移为本批估算；所有候选EWD暂未知，父任务不重复估算总量。",
+    "成员推荐尚未被接受，计划没有执行发布、下单、指派或任何生产写入。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:ecom03-batch2-root",
+      "label": "审阅第二批范围、复用内容及前置依赖"
+    }
+  ],
+  "externalEffects": "none"
+}

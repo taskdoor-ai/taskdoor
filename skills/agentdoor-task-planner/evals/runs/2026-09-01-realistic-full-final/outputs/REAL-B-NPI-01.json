@@ -1,0 +1,224 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-real-b-npi-01",
+  "baseSnapshotId": "snapshot-real-b-npi-01-v4",
+  "baseRevision": 4,
+  "baseTaskVersions": {
+    "b-npi-root": 12,
+    "b-npi-eng": 6,
+    "b-npi-supplier": 7,
+    "b-npi-validation": 8,
+    "b-npi-change-pack": 5,
+    "b-npi-design": 7,
+    "b-npi-bom": 9,
+    "b-npi-supplier-ready": 4,
+    "b-npi-pcn": 6,
+    "b-npi-incoming": 4,
+    "b-npi-build-ready": 5,
+    "b-npi-wi": 5,
+    "b-npi-dvt": 3,
+    "b-npi-gate": 4
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只更新来料核对、试制作业指导、DVT矩阵和试制门禁四项：写明ECO-042 v3的固化窗口与批次COC边界，补齐它们实际消费的跨分支结果；BOM v5、RC图纸、已完成PCN及现有日期保持不变。",
+  "reasoningSummary": [
+    {
+      "text": "ECO-042 v3明确只影响来料核对、试制作业指导、DVT矩阵和EVT2门禁包，并明确不改变已发布BOM和结构图。",
+      "evidenceRefs": [
+        "b-npi-eco-v3",
+        "b-npi-d1"
+      ]
+    },
+    {
+      "text": "BOM v5、RC结构图和PCN v3已有正式完成记录，本轮继续作为输入，不重开或复制变更任务。",
+      "evidenceRefs": [
+        "b-npi-bom",
+        "b-npi-design",
+        "b-npi-pcn",
+        "b-npi-d4"
+      ]
+    },
+    {
+      "text": "来料核对直接消费已完成PCN的EVT2适用性结论；作业指导明确等待来料核对，DVT需把首批批次证据与固化窗口映射到样本，门禁则直接汇总三项结果。",
+      "evidenceRefs": [
+        "b-npi-pcn-v3",
+        "b-npi-wi-v4",
+        "b-npi-d5",
+        "b-npi-gate"
+      ]
+    },
+    {
+      "text": "9月7日只是供应商上传承诺，当前COC尚未收到；现有9月8日来料、9月9日作业与DVT、9月10日门禁节点可形成衔接，但承诺落空会直接威胁硬门禁。",
+      "evidenceRefs": [
+        "b-npi-coc-v1",
+        "b-npi-d7",
+        "b-npi-d9"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "b-npi-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-b-npi-incoming-v3",
+        "action": "update",
+        "targetId": "b-npi-incoming",
+        "parentId": "b-npi-supplier-ready",
+        "fields": {
+          "acceptanceCriteria": [
+            "按ECO-042 v3、BOM v5和已完成PCN-118 v3核对首批来料，记录批次COC实际收到或缺失状态及适用固化窗口；供应商9月7日上传承诺不作为实收证据"
+          ],
+          "dependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-pcn"
+          ]
+        },
+        "reason": "原清单仍引用ECO v2且缺少固化窗口字段；已完成PCN任务形成EVT2批次适用性结论，应作为来料核对的直接生产前置。",
+        "evidenceRefs": [
+          "b-npi-incoming-v2",
+          "b-npi-eco-v3",
+          "b-npi-pcn",
+          "b-npi-d2",
+          "b-npi-d9"
+        ]
+      },
+      {
+        "id": "chg-b-npi-wi-v3",
+        "action": "update",
+        "targetId": "b-npi-wi",
+        "parentId": "b-npi-build-ready",
+        "fields": {
+          "acceptanceCriteria": [
+            "引用BOM v5与ECO-042 v3，把来料核对确认的批次COC状态和胶材固化窗口写入可核对的试制作业步骤"
+          ],
+          "dependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-incoming"
+          ]
+        },
+        "reason": "作业指导v4仍使用旧固化窗口，且输入明确要求它消费来料核对结果；保留原BOM前置并新增最近的来料结果生产任务。",
+        "evidenceRefs": [
+          "b-npi-wi-v4",
+          "b-npi-d5",
+          "b-npi-eco-v3"
+        ]
+      },
+      {
+        "id": "chg-b-npi-dvt-v3",
+        "action": "update",
+        "targetId": "b-npi-dvt",
+        "parentId": "b-npi-validation",
+        "fields": {
+          "acceptanceCriteria": [
+            "基于ECO-042 v3及来料核对确认的首批COC，把胶材固化窗口映射到验证项目、样本与未覆盖项；结构验证基线保持不变"
+          ],
+          "dependsOnTaskIds": [
+            "b-npi-design",
+            "b-npi-incoming"
+          ]
+        },
+        "reason": "DVT是v3点名的直接消费者，需使用首批来料形成的批次证据，同时保留仍有效的RC结构基线前置。",
+        "evidenceRefs": [
+          "b-npi-eco-v3",
+          "b-npi-pcn-v3",
+          "b-npi-coc-v1",
+          "b-npi-d6"
+        ]
+      },
+      {
+        "id": "chg-b-npi-gate-v3",
+        "action": "update",
+        "targetId": "b-npi-gate",
+        "parentId": "b-npi-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "在2026-09-10试制前链接按ECO-042 v3形成的来料、作业指导和DVT记录，明确批次COC的实际收到与核对状态；未收到或未核对时保留门禁阻塞"
+          ],
+          "dependsOnTaskIds": [
+            "b-npi-wi",
+            "b-npi-dvt",
+            "b-npi-incoming"
+          ]
+        },
+        "reason": "门禁现有标准直接汇总来料、作业和DVT结果，但依赖中缺少来料核对这一直接生产任务；COC承诺不能替代实际结果。",
+        "evidenceRefs": [
+          "b-npi-gate",
+          "b-npi-coc-v1",
+          "b-npi-d7",
+          "b-npi-d9"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "b-npi-root",
+      "b-npi-eng",
+      "b-npi-supplier",
+      "b-npi-validation",
+      "b-npi-change-pack",
+      "b-npi-design",
+      "b-npi-bom",
+      "b-npi-supplier-ready",
+      "b-npi-pcn",
+      "b-npi-build-ready"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-b-npi"
+    ],
+    "assessments": [
+      {
+        "taskId": "b-npi-incoming",
+        "relationship": "same_outcome",
+        "reason": "现有任务已覆盖X7首批来料核对与批次证据，本轮应原位更新。",
+        "evidenceRefs": [
+          "b-npi-incoming",
+          "req-real-b-npi-01"
+        ]
+      },
+      {
+        "taskId": "b-npi-wi",
+        "relationship": "same_outcome",
+        "reason": "现有任务已覆盖X7 EVT2试制作业指导，本轮只修订其现行版本。",
+        "evidenceRefs": [
+          "b-npi-wi",
+          "req-real-b-npi-01"
+        ]
+      },
+      {
+        "taskId": "b-npi-dvt",
+        "relationship": "same_outcome",
+        "reason": "现有DVT矩阵任务正是本轮验证消费者，无需复制。",
+        "evidenceRefs": [
+          "b-npi-dvt",
+          "req-real-b-npi-01"
+        ]
+      },
+      {
+        "taskId": "b-npi-gate",
+        "relationship": "same_outcome",
+        "reason": "现有门禁包任务覆盖同一EVT2试制聚合结果，本轮原位补齐依赖。",
+        "evidenceRefs": [
+          "b-npi-gate",
+          "req-real-b-npi-01"
+        ]
+      }
+    ],
+    "coverageNote": "合成查重已覆盖授权团队活动与归档索引；四个同结果候选均指向当前可见任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "首批胶材COC目前只有2026-09-07 12:00前上传的外部承诺；若未按时到达，9月8日来料核对及其后的作业、DVT和9月10日门禁都会受威胁，且门禁必须保持阻塞。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "b-npi-root",
+      "label": "审阅四个既有消费者的最小差异"
+    }
+  ],
+  "externalEffects": "none"
+}

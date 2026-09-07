@@ -1,0 +1,22 @@
+{
+  "artifactType": "offline_synthetic_targeted_retests",
+  "createdOn": "2026-09-01",
+  "phase1OutputCount": 9,
+  "phase2OutputCount": 1,
+  "firstOutputsModified": false,
+  "skillChangesTested": [
+    "one deliverable remains one task despite translation/review stages",
+    "execution-level details do not become create-time blockers",
+    "not-requested history is not absent history",
+    "duplicate assessments mirror input and complexity describes the effective tree",
+    "partial contribution cannot become whole-result Owner"
+  ],
+  "plannerModelConfiguration": {
+    "modelSnapshot": "not_exposed",
+    "temperature": "not_exposed",
+    "seed": "not_exposed"
+  },
+  "humanIndustryReview": false,
+  "productionValidation": false,
+  "productionWrites": false
+}

@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,20 +20,22 @@ type TeamSwitcherProps = {
   compact?: boolean;
   onTeamChange: (teamId: string) => void;
   teams: SwitchableTeam[];
+  variant?: "default" | "topbar";
 };
 
-export function TeamSwitcher({ activeTeamId, compact = false, onTeamChange, teams }: TeamSwitcherProps) {
+export function TeamSwitcher({ activeTeamId, compact = false, onTeamChange, teams, variant = "default" }: TeamSwitcherProps) {
   const activeTeam = teams.find((team) => team.id === activeTeamId) ?? teams[0];
   if (!activeTeam) return null;
 
   return <DropdownMenu>
     <DropdownMenuTrigger
       aria-label={`切换团队，当前为${activeTeam.name}`}
-      className={`team-switcher-trigger ${compact ? "compact" : ""}`}
-      title={compact ? activeTeam.name : undefined}
+      className={`team-switcher-trigger ${compact ? "compact" : ""} ${variant === "topbar" ? "team-switcher-trigger-topbar" : ""}`}
+      title={compact || variant === "topbar" ? activeTeam.name : undefined}
     >
-      <TeamLogo name={activeTeam.name} teamId={activeTeam.id} />
-      {!compact && <span className="team-switcher-trigger-copy"><strong>{activeTeam.name}</strong><small>当前团队</small></span>}
+      <TeamLogo name={activeTeam.name} size={variant === "topbar" ? "md" : "lg"} teamId={activeTeam.id} />
+      {!compact && <span className="team-switcher-trigger-copy"><strong>{activeTeam.name}</strong>{variant !== "topbar" && <small>当前团队</small>}</span>}
+      {variant === "topbar" && <ChevronDown aria-hidden="true" className="team-switcher-chevron" />}
     </DropdownMenuTrigger>
     <DropdownMenuContent align="start" className="team-switcher-menu" side={compact ? "right" : "bottom"} sideOffset={8}>
       <div className="team-switcher-current">
@@ -48,7 +50,6 @@ export function TeamSwitcher({ activeTeamId, compact = false, onTeamChange, team
           {team.id === activeTeam.id && <Check aria-hidden="true" className="team-switcher-option-check" />}
         </DropdownMenuRadioItem>)}
       </DropdownMenuRadioGroup>
-      <p className="team-switcher-note">当前为界面演示；切换不会改变权限或数据范围。</p>
     </DropdownMenuContent>
   </DropdownMenu>;
 }

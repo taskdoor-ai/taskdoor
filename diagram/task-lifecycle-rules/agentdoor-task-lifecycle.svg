@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2240 1260" role="img" aria-labelledby="diagram-title diagram-description">
+<title id="diagram-title">AgentDoor 任务生命周期与对应规则</title>
+<desc id="diagram-description">上方七个节点从左到右为明确需求与查重、拆分任务、匹配人员、估算投入、确认创建、任务状态分析、验收与完成。下方七列与各节点一一对应。第六步包含任务状态、下一步建议和进度。底部区分任务维度的 AI 诊断和燃起图、个人维度的任务优先级。</desc>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#21304a" stroke-width="0.65" opacity="0.42"/></pattern>
+  <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#101e34"/><stop offset="1" stop-color="#0c1425"/></linearGradient>
+  <linearGradient id="create-fill" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#143648"/><stop offset="1" stop-color="#112538"/></linearGradient>
+  <linearGradient id="manage-fill" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#143a35"/><stop offset="1" stop-color="#122b2d"/></linearGradient>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1L6 4L1 7" fill="none" stroke="#8ca1bc" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<style>
+  text { font-family: 'PingFang SC','Noto Sans SC','Heiti SC','Microsoft YaHei',sans-serif; font-weight:400; fill:#d5e1f1; }
+  .title {font-size:46px;font-weight:600;fill:#f4f8ff;letter-spacing:1px}
+  .eyebrow {font-size:18px;font-weight:500;letter-spacing:2px;fill:#77dcea}
+  .subtitle {font-size:23px;fill:#9eafc8}
+  .phase {font-size:20px;font-weight:500}
+  .step-number {font-size:18px;font-weight:600;letter-spacing:2px}
+  .step-name {font-size:27px;font-weight:600;fill:#f4f8ff}
+  .rule-title {font-size:22px;font-weight:600;fill:#eef5ff}
+  .rule-body {font-size:20px;fill:#c3d0e3}
+  .rule-key {font-size:20px;font-weight:500;fill:#edf4fc}
+  .rule-foot {font-size:17px;fill:#93a8c4}
+  .band-title {font-size:26px;font-weight:600;fill:#eef5ff}
+  .support-title {font-size:24px;font-weight:600;fill:#eef5ff}
+  .support-body {font-size:22px;fill:#c9d7ea}
+  .support-trigger {font-size:19px;fill:#9aafc8}
+</style>
+<rect width="2240" height="1260" fill="url(#background)"/>
+<rect width="2240" height="1260" fill="url(#grid)"/>
+
+<text x="74" y="59" class="eyebrow">AGENTDOOR  /  产品规则总图</text>
+<text x="74" y="123" class="title">一条任务主线，每一步都有对应规则</text>
+<text x="74" y="169" class="subtitle">上方看流程，下方看规则；创建步骤与持续管理分开表达。</text>
+<text x="2144" y="61" class="rule-foot" text-anchor="end">依据当前 PRD · 规则设计稿</text>
+<text x="74" y="220" class="phase" style="fill:#6cd6e7">创建任务 Skill · 01—04</text>
+<path d="M74 239L1244 239" fill="none" stroke="#295463" stroke-width="2"/>
+<text x="1274" y="220" class="phase" style="fill:#f1c66e">用户确认 · 05</text>
+<path d="M1274 239L1544 239" fill="none" stroke="#685636" stroke-width="2"/>
+<text x="1574" y="220" class="phase" style="fill:#78d8b6">任务管理 · 06—07</text>
+<path d="M1574 239L2144 239" fill="none" stroke="#2d594e" stroke-width="2"/>
+<path d="M351 316L366 316" fill="none" stroke="#8ca1bc" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M651 316L666 316" fill="none" stroke="#8ca1bc" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M951 316L966 316" fill="none" stroke="#8ca1bc" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M1251 316L1266 316" fill="none" stroke="#8ca1bc" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M1551 316L1566 316" fill="none" stroke="#8ca1bc" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M1851 316L1866 316" fill="none" stroke="#8ca1bc" stroke-width="2.2" marker-end="url(#arrow)"/>
+<path d="M209 369L209 414" fill="none" stroke="#49617e" stroke-width="1.5" stroke-dasharray="4 6"/>
+<circle cx="209" cy="413" r="3" fill="#7891b1"/>
+<path d="M509 369L509 414" fill="none" stroke="#49617e" stroke-width="1.5" stroke-dasharray="4 6"/>
+<circle cx="509" cy="413" r="3" fill="#7891b1"/>
+<path d="M809 369L809 414" fill="none" stroke="#49617e" stroke-width="1.5" stroke-dasharray="4 6"/>
+<circle cx="809" cy="413" r="3" fill="#7891b1"/>
+<path d="M1109 369L1109 414" fill="none" stroke="#49617e" stroke-width="1.5" stroke-dasharray="4 6"/>
+<circle cx="1109" cy="413" r="3" fill="#7891b1"/>
+<path d="M1409 369L1409 414" fill="none" stroke="#49617e" stroke-width="1.5" stroke-dasharray="4 6"/>
+<circle cx="1409" cy="413" r="3" fill="#7891b1"/>
+<path d="M1709 369L1709 414" fill="none" stroke="#49617e" stroke-width="1.5" stroke-dasharray="4 6"/>
+<circle cx="1709" cy="413" r="3" fill="#7891b1"/>
+<path d="M2009 369L2009 414" fill="none" stroke="#49617e" stroke-width="1.5" stroke-dasharray="4 6"/>
+<circle cx="2009" cy="413" r="3" fill="#7891b1"/>
+<rect x="74" y="270" width="270" height="92" rx="12" fill="#0f172a"/>
+<rect x="74" y="270" width="270" height="92" rx="12" fill="url(#create-fill)" stroke="#346273" stroke-width="1.3"/>
+<text x="94" y="300" class="step-number" style="fill:#77dcea">01</text>
+<text x="94" y="340" class="step-name">明确需求与查重</text>
+<rect x="74" y="424" width="270" height="392" rx="12" fill="#121f33" stroke="#273950" stroke-width="1.3"/>
+<rect x="94" y="446" width="4" height="24" rx="2" fill="#77dcea"/>
+<text x="109" y="465" class="rule-title">范围与重复</text>
+<path d="M94 487L324 487" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="94" y="522" class="rule-key">目标、交付物、数量</text>
+<text x="94" y="554" class="rule-body">先写清完成标准</text>
+<text x="94" y="586" class="rule-body">缺关键信息才补问</text>
+<text x="94" y="638" class="rule-key">比较对象、交付、周期</text>
+<text x="94" y="670" class="rule-body">再看结果范围是否重合</text>
+<text x="94" y="702" class="rule-body" style="fill:#77dcea">已覆盖 → 建议复用</text>
+<path d="M94 769L324 769" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="94" y="797" class="rule-foot">保存：需求与结果范围</text>
+<rect x="374" y="270" width="270" height="92" rx="12" fill="#0f172a"/>
+<rect x="374" y="270" width="270" height="92" rx="12" fill="url(#create-fill)" stroke="#346273" stroke-width="1.3"/>
+<text x="394" y="300" class="step-number" style="fill:#77dcea">02</text>
+<text x="394" y="340" class="step-name">拆分任务</text>
+<rect x="374" y="424" width="270" height="392" rx="12" fill="#121f33" stroke="#273950" stroke-width="1.3"/>
+<rect x="394" y="446" width="4" height="24" rx="2" fill="#77dcea"/>
+<text x="409" y="465" class="rule-title">拆分与依赖</text>
+<path d="M394 487L624 487" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="394" y="522" class="rule-key">能独立交付、独立验收</text>
+<text x="394" y="554" class="rule-body">且需要分工、交接</text>
+<text x="394" y="586" class="rule-body">或并行推进 → 才拆</text>
+<text x="394" y="638" class="rule-key">普通步骤留在任务内</text>
+<text x="394" y="670" class="rule-body">只拆可核对的结果</text>
+<text x="394" y="702" class="rule-body" style="fill:#77dcea">父子归属 ≠ 前置依赖</text>
+<path d="M394 769L624 769" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="394" y="797" class="rule-foot">保存：结果、标准与关系</text>
+<rect x="674" y="270" width="270" height="92" rx="12" fill="#0f172a"/>
+<rect x="674" y="270" width="270" height="92" rx="12" fill="url(#create-fill)" stroke="#346273" stroke-width="1.3"/>
+<text x="694" y="300" class="step-number" style="fill:#77dcea">03</text>
+<text x="694" y="340" class="step-name">匹配人员</text>
+<rect x="674" y="424" width="270" height="392" rx="12" fill="#121f33" stroke="#273950" stroke-width="1.3"/>
+<rect x="694" y="446" width="4" height="24" rx="2" fill="#77dcea"/>
+<text x="709" y="465" class="rule-title">责任与经验</text>
+<path d="M694 487L924 487" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="694" y="522" class="rule-key">资格 → 责任 → 经验</text>
+<text x="694" y="554" class="rule-body">再看明确的协作窗口</text>
+<text x="694" y="586" class="rule-body">每项判断保留来源</text>
+<text x="694" y="638" class="rule-key">只贡献一环 → 参与者</text>
+<text x="694" y="670" class="rule-body">依据不足 → 待核对</text>
+<text x="694" y="702" class="rule-body" style="fill:#77dcea">无人匹配 → 可未分配</text>
+<path d="M694 769L924 769" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="694" y="797" class="rule-foot">保存：人选、理由与依据</text>
+<rect x="974" y="270" width="270" height="92" rx="12" fill="#0f172a"/>
+<rect x="974" y="270" width="270" height="92" rx="12" fill="url(#create-fill)" stroke="#346273" stroke-width="1.3"/>
+<text x="994" y="300" class="step-number" style="fill:#77dcea">04</text>
+<text x="994" y="340" class="step-name">估算投入</text>
+<rect x="974" y="424" width="270" height="392" rx="12" fill="#121f33" stroke="#273950" stroke-width="1.3"/>
+<rect x="994" y="446" width="4" height="24" rx="2" fill="#77dcea"/>
+<text x="1009" y="465" class="rule-title">工作量计算</text>
+<path d="M994 487L1224 487" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="994" y="522" class="rule-key">选择适用的分钟参数</text>
+<text x="994" y="554" class="rule-body">分项＝数量 × 单价</text>
+<text x="994" y="586" class="rule-body">× 人数 × 轮次</text>
+<text x="994" y="638" class="rule-key">人天＝总分钟 ÷ 480</text>
+<text x="994" y="670" class="rule-body">只加最末级任务的投入</text>
+<text x="994" y="702" class="rule-body" style="fill:#77dcea">缺规则或数量 → 待估</text>
+<path d="M994 769L1224 769" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="994" y="797" class="rule-foot">分钟参数为初始产品设定</text>
+<rect x="1274" y="270" width="270" height="92" rx="12" fill="#0f172a"/>
+<rect x="1274" y="270" width="270" height="92" rx="12" fill="#302c29" stroke="#706043" stroke-width="1.3"/>
+<text x="1294" y="300" class="step-number" style="fill:#f1c66e">05</text>
+<text x="1294" y="340" class="step-name">确认创建</text>
+<rect x="1274" y="424" width="270" height="392" rx="12" fill="#121f33" stroke="#273950" stroke-width="1.3"/>
+<rect x="1294" y="446" width="4" height="24" rx="2" fill="#f1c66e"/>
+<text x="1309" y="465" class="rule-title">校验与保存</text>
+<path d="M1294 487L1524 487" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="1294" y="522" class="rule-key">用户核对并确认方案</text>
+<text x="1294" y="554" class="rule-body">校验人员、范围与依赖</text>
+<text x="1294" y="586" class="rule-body">确认适用的估算假设</text>
+<text x="1294" y="638" class="rule-key">任务与估算一起保存</text>
+<text x="1294" y="670" class="rule-body">同一提交只创建一次</text>
+<text x="1294" y="702" class="rule-body" style="fill:#f1c66e">他人接受后责任才成立</text>
+<path d="M1294 769L1524 769" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="1294" y="797" class="rule-foot">保存：确认内容与版本</text>
+<rect x="1574" y="270" width="270" height="92" rx="12" fill="#0f172a"/>
+<rect x="1574" y="270" width="270" height="92" rx="12" fill="url(#manage-fill)" stroke="#3c7162" stroke-width="1.3"/>
+<text x="1594" y="300" class="step-number" style="fill:#78d8b6">06</text>
+<text x="1594" y="340" class="step-name">任务状态分析</text>
+<rect x="1574" y="424" width="270" height="392" rx="12" fill="#121f33" stroke="#273950" stroke-width="1.3"/>
+<rect x="1594" y="446" width="4" height="24" rx="2" fill="#78d8b6"/>
+<text x="1609" y="465" class="rule-title">状态、建议与进度</text>
+<path d="M1594 487L1824 487" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="1594" y="522" class="rule-key">状态：当前做到哪里</text>
+<text x="1594" y="554" class="rule-body">依据任务、交付和讨论</text>
+<text x="1594" y="586" class="rule-key">建议：下一步做什么</text>
+<text x="1594" y="618" class="rule-body">结合完成标准与诊断</text>
+<text x="1594" y="670" class="rule-key">进度：复用统一计算</text>
+<text x="1594" y="702" class="rule-body">AI 候选与正式值分开</text>
+<text x="1594" y="734" class="rule-body" style="fill:#78d8b6">证据不足 → 待核对</text>
+<path d="M1594 769L1824 769" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="1594" y="797" class="rule-foot">状态、建议与进度同源</text>
+<rect x="1874" y="270" width="270" height="92" rx="12" fill="#0f172a"/>
+<rect x="1874" y="270" width="270" height="92" rx="12" fill="url(#manage-fill)" stroke="#3c7162" stroke-width="1.3"/>
+<text x="1894" y="300" class="step-number" style="fill:#78d8b6">07</text>
+<text x="1894" y="340" class="step-name">验收与完成</text>
+<rect x="1874" y="424" width="270" height="392" rx="12" fill="#121f33" stroke="#273950" stroke-width="1.3"/>
+<rect x="1894" y="446" width="4" height="24" rx="2" fill="#78d8b6"/>
+<text x="1909" y="465" class="rule-title">验收与正式进度</text>
+<path d="M1894 487L2124 487" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="1894" y="522" class="rule-key">由有权限的人正式验收</text>
+<text x="1894" y="554" class="rule-body">核对适用范围和版本</text>
+<text x="1894" y="586" class="rule-body">保留验收及撤销记录</text>
+<text x="1894" y="638" class="rule-key">正式＝已验收末级投入</text>
+<text x="1894" y="670" class="rule-key">÷ 全部末级任务投入</text>
+<text x="1894" y="702" class="rule-body" style="fill:#78d8b6">父任务不自动关闭</text>
+<path d="M1894 769L2124 769" fill="none" stroke="#293d57" stroke-width="1"/>
+<text x="1894" y="797" class="rule-foot">缺有效读取条件 → 未知</text>
+<text x="74" y="885" class="band-title">任务管理期间持续运行</text>
+<text x="399" y="885" class="subtitle">随任务变化更新，以下不是额外的创建步骤</text>
+<path d="M74 907L2144 907" fill="none" stroke="#30465f" stroke-width="1.5"/>
+<rect x="74" y="931" width="670" height="208" rx="12" fill="#122333" stroke="#2c455a" stroke-width="1.3"/>
+<circle cx="99" cy="963" r="4" fill="#78d8b6"/>
+<text x="115" y="972" class="support-title">任务维度 · AI 诊断</text>
+<text x="97" y="1008" class="support-trigger">读取：当前任务、后代、依赖与有效要求</text>
+<text x="97" y="1046" class="support-body">执行所需前置未满足，或正式要求互相矛盾，</text>
+<text x="97" y="1078" class="support-body">给出受影响任务、成立依据和处理建议。</text>
+<text x="97" y="1115" class="support-trigger" style="fill:#8bd6c0">更新：相关事实、文件版本或权限变化</text>
+<rect x="774" y="931" width="670" height="208" rx="12" fill="#122333" stroke="#2c455a" stroke-width="1.3"/>
+<circle cx="799" cy="963" r="4" fill="#78d8b6"/>
+<text x="815" y="972" class="support-title">个人维度 · 任务优先级</text>
+<text x="797" y="1008" class="support-trigger">读取：本人正式负责且未结束的任务</text>
+<text x="797" y="1046" class="support-body">按期限、阻塞、冲突和待审核等固定规则排序，</text>
+<text x="797" y="1078" class="support-body">在“我的工作”展示任务顺位与优先原因。</text>
+<text x="797" y="1115" class="support-trigger" style="fill:#8bd6c0">更新：相关任务事实变化，或实际跨日</text>
+<rect x="1474" y="931" width="670" height="208" rx="12" fill="#122333" stroke="#2c455a" stroke-width="1.3"/>
+<circle cx="1499" cy="963" r="4" fill="#78d8b6"/>
+<text x="1515" y="972" class="support-title">任务维度 · 燃起图</text>
+<text x="1497" y="1008" class="support-trigger">两条线：范围人天 / 已验收人天</text>
+<text x="1497" y="1046" class="support-body">记录事件发生时的范围与有效验收工作量，</text>
+<text x="1497" y="1078" class="support-body">保留当时数值，不用今天的估算重写历史。</text>
+<text x="1497" y="1115" class="support-trigger" style="fill:#8bd6c0">更新：范围、已采用估算或正式验收变化</text>
+<text x="74" y="1193" class="rule-key" style="fill:#77dcea">更新原则</text>
+<text x="199" y="1193" class="rule-body">范围或工作假设变化 → 重估投入   ｜   任务与交付变化 → 更新状态分析   ｜   正式验收 → 更新进度与趋势</text>
+<text x="74" y="1230" class="rule-foot">状态变化、发言次数和等待时间不能直接推算人工投入；初始分钟参数尚未经实际工时验证。</text>
+</svg>

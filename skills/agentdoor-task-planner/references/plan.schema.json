@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentDoor Task Plan v0.1 (proposal)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "requestId", "intent", "disposition", "summary", "reasoningSummary", "plan", "duplicateCheck", "questions", "warnings", "externalEffects"],
+  "properties": {
+    "schemaVersion": {"const": "agentdoor.task-plan.v0.1"},
+    "requestId": {"type": "string", "minLength": 1},
+    "intent": {"enum": ["create", "update", "query", "unclear"]},
+    "disposition": {"enum": ["ready_for_confirmation", "needs_clarification", "route_required"]},
+    "summary": {"type": "string", "minLength": 1},
+    "reasoningSummary": {"type": "array", "maxItems": 4, "items": {"type": "string", "minLength": 1}},
+    "plan": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/plan"}]},
+    "duplicateCheck": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "scopeTeamIds", "matches", "coverageNote"],
+      "properties": {
+        "status": {"enum": ["not_checked", "completed", "partial", "unavailable"]},
+        "scopeTeamIds": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "matches": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["taskId", "title", "reason"],
+          "properties": {"taskId": {"type": "string", "minLength": 1}, "title": {"type": "string", "minLength": 1}, "reason": {"type": "string", "minLength": 1}}
+        }},
+        "coverageNote": {"type": "string", "minLength": 1}
+      }
+    },
+    "questions": {"type": "array", "maxItems": 2, "items": {
+      "type": "object", "additionalProperties": false, "required": ["field", "question", "blocking"],
+      "properties": {"field": {"type": "string", "minLength": 1}, "question": {"type": "string", "minLength": 1}, "blocking": {"type": "boolean"}}
+    }},
+    "warnings": {"$ref": "#/$defs/strings"},
+    "externalEffects": {"const": "none"}
+  },
+  "$defs": {
+    "strings": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "date": {"anyOf": [{"type": "null"}, {"type": "string", "format": "date"}]},
+    "plan": {
+      "type": "object", "additionalProperties": false, "required": ["complexity", "goal", "mainTask", "subtasks"],
+      "properties": {
+        "complexity": {"enum": ["simple", "complex", "undetermined"]},
+        "goal": {
+          "type": "object", "additionalProperties": false, "required": ["text", "basis", "evidence"],
+          "properties": {"text": {"type": "string", "minLength": 1}, "basis": {"enum": ["explicit", "inferred", "confirmed"]}, "evidence": {"$ref": "#/$defs/strings"}}
+        },
+        "mainTask": {"$ref": "#/$defs/task"},
+        "subtasks": {"type": "array", "items": {"$ref": "#/$defs/task"}}
+      }
+    },
+    "task": {
+      "type": "object", "additionalProperties": false,
+      "required": ["clientId", "title", "acceptanceCriteria", "tips", "ownerRecommendation", "schedule", "estimate", "dependsOnClientIds"],
+      "properties": {
+        "clientId": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "acceptanceCriteria": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "tips": {"$ref": "#/$defs/strings"},
+        "ownerRecommendation": {
+          "type": "object", "additionalProperties": false, "required": ["memberId", "basis", "reason"],
+          "properties": {
+            "memberId": {"anyOf": [{"type": "null"}, {"type": "string", "minLength": 1}]},
+            "basis": {"enum": ["explicit", "recommended", "unassigned"]},
+            "reason": {"type": "string", "minLength": 1}
+          }
+        },
+        "schedule": {
+          "type": "object", "additionalProperties": false, "required": ["startOn", "dueOn", "originalText", "basis", "assumptions"],
+          "properties": {
+            "startOn": {"$ref": "#/$defs/date"}, "dueOn": {"$ref": "#/$defs/date"},
+            "originalText": {"type": "string"}, "basis": {"enum": ["explicit", "recommended", "unknown"]},
+            "assumptions": {"$ref": "#/$defs/strings"}
+          }
+        },
+        "estimate": {
+          "type": "object", "additionalProperties": false, "required": ["ewdHours", "basis", "reason", "confirmed"],
+          "properties": {
+            "ewdHours": {"type": ["number", "null"], "minimum": 0},
+            "basis": {"enum": ["user", "model", "unknown"]}, "reason": {"type": "string", "minLength": 1}, "confirmed": {"type": "boolean"}
+          }
+        },
+        "dependsOnClientIds": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

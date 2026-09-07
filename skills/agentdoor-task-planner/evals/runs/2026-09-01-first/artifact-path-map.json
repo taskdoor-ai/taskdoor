@@ -1,0 +1,14 @@
+{
+  "notice": "Resolve original evidence paths against this archived run; original reviews are preserved byte-for-byte.",
+  "prefixMappings": [
+    {
+      "original": "/tmp/agentdoor-planner-skill-eval-20260901/",
+      "archivedRelative": "./"
+    }
+  ],
+  "exactMappings": {
+    "/Users/yxzuji/Documents/ChatGPT/agentdoor2/skills/agentdoor-task-planner/evals/industry-expectations.json": "expectations-snapshot.json",
+    "/Users/yxzuji/Documents/ChatGPT/agentdoor2/skills/agentdoor-task-planner/scripts/evaluate.py": "validator-snapshot/evaluate.py",
+    "/Users/yxzuji/Documents/ChatGPT/agentdoor2/skills/agentdoor-task-planner/scripts/validate_plan.py": "validator-snapshot/validate_plan.py"
+  }
+}

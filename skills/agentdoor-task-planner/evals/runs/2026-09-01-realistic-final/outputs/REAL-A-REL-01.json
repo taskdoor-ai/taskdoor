@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "syn-req-rel-a-01",
+  "baseSnapshotId": "syn-snapshot-rel-a-11",
+  "baseRevision": 11,
+  "baseTaskVersions": {
+    "syn-rel-root": 10,
+    "syn-rel-build": 6,
+    "syn-rel-assurance": 5,
+    "syn-rel-distribution": 5,
+    "syn-rel-desktop": 8,
+    "syn-rel-notary-v2": 2,
+    "syn-rel-backend": 5,
+    "syn-rel-qa": 4,
+    "syn-rel-regression": 7,
+    "syn-rel-security-gate": 4,
+    "syn-rel-canary": 3,
+    "syn-rel-release-notes": 4,
+    "syn-rel-store-submit": 3,
+    "syn-rel-final-approval": 3
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "复用现有rc3公证回执v2任务，只为安全闸门和商店提交补上对该回执的直接依赖；发布日期、两小时灰度及其他任务保持不变。",
+  "reasoningSummary": [
+    {
+      "text": "现有回执任务已完整覆盖同一rc3构建的v2回执与哈希校验，确认决定也明确不再创建同结果任务。",
+      "evidenceRefs": [
+        "syn-req-rel-a-01",
+        "syn-rel-notary-v2",
+        "syn-rel-file-02",
+        "syn-rel-d03"
+      ]
+    },
+    {
+      "text": "安全闸门直接读取已签署回执v2；其原依赖只有发布回归，因此应保留原依赖并加入回执任务。",
+      "evidenceRefs": [
+        "syn-rel-security-gate",
+        "syn-rel-file-04",
+        "syn-rel-d08"
+      ]
+    },
+    {
+      "text": "商店提交直接需要发行说明和公证回执v2；其原依赖只有发行说明，因此应保留该边并加入回执任务。",
+      "evidenceRefs": [
+        "syn-rel-store-submit",
+        "syn-rel-file-05",
+        "syn-rel-d07",
+        "syn-rel-d08"
+      ]
+    },
+    {
+      "text": "未签署草稿和CLI成功回报不能证明公证或安全闸门通过；本轮也须保留9月12日窗口与两小时灰度。",
+      "evidenceRefs": [
+        "syn-rel-file-03",
+        "syn-rel-d06",
+        "syn-rel-file-01",
+        "syn-rel-d08"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "syn-rel-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg:syn-req-rel-a-01:security-gate-dependency",
+        "action": "update",
+        "targetId": "syn-rel-security-gate",
+        "parentId": "syn-rel-assurance",
+        "fields": {
+          "dependsOnTaskIds": [
+            "syn-rel-regression",
+            "syn-rel-notary-v2"
+          ]
+        },
+        "reason": "安全闸门的验收材料直接包含已签署公证回执v2，需在保留原回归前置的基础上加入其生产任务。",
+        "evidenceRefs": [
+          "syn-rel-security-gate",
+          "syn-rel-notary-v2",
+          "syn-rel-file-04",
+          "syn-rel-d08"
+        ]
+      },
+      {
+        "id": "chg:syn-req-rel-a-01:store-submit-dependency",
+        "action": "update",
+        "targetId": "syn-rel-store-submit",
+        "parentId": "syn-rel-distribution",
+        "fields": {
+          "dependsOnTaskIds": [
+            "syn-rel-release-notes",
+            "syn-rel-notary-v2"
+          ]
+        },
+        "reason": "商店提交检查表直接要求发行说明和公证回执v2，需在保留发行说明前置的基础上加入回执任务。",
+        "evidenceRefs": [
+          "syn-rel-store-submit",
+          "syn-rel-notary-v2",
+          "syn-rel-file-05",
+          "syn-rel-d08"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "syn-rel-root",
+      "syn-rel-build",
+      "syn-rel-assurance",
+      "syn-rel-distribution",
+      "syn-rel-desktop",
+      "syn-rel-notary-v2",
+      "syn-rel-backend",
+      "syn-rel-qa",
+      "syn-rel-regression",
+      "syn-rel-canary",
+      "syn-rel-release-notes",
+      "syn-rel-final-approval"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-release-a"
+    ],
+    "assessments": [
+      {
+        "taskId": "syn-rel-notary-v2",
+        "relationship": "same_outcome",
+        "reason": "同一产品、rc3构建、v2回执和验收标准均已由现有任务覆盖，应复用而不新建。",
+        "evidenceRefs": [
+          "syn-rel-notary-v2",
+          "syn-rel-file-02",
+          "syn-rel-d03"
+        ]
+      },
+      {
+        "taskId": "syn-rel-security-gate",
+        "relationship": "overlap",
+        "reason": "该任务会消费回执证据，但其完整结果还包含签名、SBOM和回归后的安全结论。",
+        "evidenceRefs": [
+          "syn-rel-security-gate",
+          "syn-rel-file-04"
+        ]
+      }
+    ],
+    "coverageNote": "纯合成查重已覆盖授权团队的活动、归档与当前任务；未查询其他团队。"
+  },
+  "questions": [],
+  "warnings": [
+    "公证回执v2当前仍是未签署草稿；依赖修正不代表公证、安全闸门或商店提交已经完成。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "syn-rel-root",
+      "label": "审阅两项消费者依赖差异"
+    }
+  ],
+  "externalEffects": "none"
+}

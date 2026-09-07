@@ -1,0 +1,54 @@
+{
+  "kind": "independent_cross_group_semantic_review",
+  "total": 7,
+  "satisfies": 2,
+  "fails": 5,
+  "uncertain": 0,
+  "semanticPassRate": 0.2857142857142857,
+  "humanIndustryReview": false,
+  "reviewMethod": "Three independent reviewers assessed groups they did not generate against frozen input, output and rubric; no production data or human industry-user adjudication.",
+  "results": [
+    {
+      "id": "REAL-B-NPI-01",
+      "verdict": "fails",
+      "summary": "DVT把首批来料核对写成新直接消费者并以此替代已完成PCN生产任务；候选文字反向制造依赖。",
+      "reviewFile": "semantic-review-dependencies.json"
+    },
+    {
+      "id": "REAL-B-PROC-01",
+      "verdict": "fails",
+      "summary": "采购门禁额外直连所有人核对，尽管MSA、税务和银行三个直接消费者已经把该结果传入门禁。",
+      "reviewFile": "semantic-review-dependencies.json"
+    },
+    {
+      "id": "REAL-C-02",
+      "verdict": "fails",
+      "summary": "日记账复核冗余直连异常任务，审计索引又基于未接受的外部问询增加直连；必要差异应只有外币重估与日记账复核。",
+      "reviewFile": "semantic-review-replan.json"
+    },
+    {
+      "id": "REAL-C-03",
+      "verdict": "fails",
+      "summary": "批准日期文件可直接支持四项排期，开放的归档同步任务不应成为新前置；输出还给入职核对增加冗余直连。",
+      "reviewFile": "semantic-review-replan.json"
+    },
+    {
+      "id": "REAL-C-01",
+      "verdict": "fails",
+      "summary": "上线核对已通过页面、邮件和投放链路传递消费v2，输出仍新增对主张任务的冗余直连。",
+      "reviewFile": "semantic-review-controls.json"
+    },
+    {
+      "id": "REAL-C-04",
+      "verdict": "satisfies",
+      "summary": "三项排期与依赖更新保持旧有效边并补证书前置，显式保留日报与正式状态冲突。",
+      "reviewFile": "semantic-review-controls.json"
+    },
+    {
+      "id": "REAL-A-ECOM-01",
+      "verdict": "satisfies",
+      "summary": "只给现有开售闸门补三个直接产出，完成项、正式责任与硬窗口保持不变。",
+      "reviewFile": "semantic-review-controls.json"
+    }
+  ]
+}

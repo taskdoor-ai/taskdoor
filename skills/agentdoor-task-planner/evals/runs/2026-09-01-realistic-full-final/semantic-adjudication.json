@@ -1,0 +1,25 @@
+{
+  "runId": "2026-09-01-realistic-full-final",
+  "policy": "Preserve the original semantic-review-c.json and first output. Resolve reviewer disagreement in a separate artifact.",
+  "caseId": "REAL-C-04",
+  "initialReviewVerdict": "satisfies",
+  "adjudicatedVerdict": "fails",
+  "basis": {
+    "existingAcceptanceCriteria": "业主按缺陷清单复验电气与木作结果，未取得专业证书的项目保持待确认",
+    "existingDependencies": [
+      "rn-electric-retest",
+      "rn-cabinet"
+    ],
+    "requestEvidence": "rn-request explicitly requires both certificate and owner reinspection to consume the formal retest result",
+    "correctFinalDependencies": [
+      "rn-electric-retest",
+      "rn-cabinet",
+      "rn-electric-cert"
+    ],
+    "firstOutputDependencies": [
+      "rn-electric-cert",
+      "rn-cabinet"
+    ]
+  },
+  "conclusion": "The certificate is an additional professional signoff, not a replacement for the owner reinspection direct use of the formal field retest. See semantic-review-c-supplement.json."
+}

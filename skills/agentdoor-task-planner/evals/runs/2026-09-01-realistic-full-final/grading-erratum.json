@@ -1,0 +1,27 @@
+{
+  "runId": "2026-09-01-realistic-full-final",
+  "policy": "First outputs, frozen expectations, original machine report and all original review files remain unchanged.",
+  "correctionsAfterRun": [
+    {
+      "scenarioId": "REAL-C-04",
+      "kind": "oracle_exact_dependency_correction",
+      "before": "Frozen rubric required certificate and cabinet as a subset but did not require retention of the existing formal-retest edge.",
+      "after": "Current rubric requires the exact owner-reinspection set: electric-retest + cabinet + electric-cert.",
+      "effectOnVerdict": "The identical output changes from frozen machine pass to current-rubric fail."
+    },
+    {
+      "scenarioId": "REAL-C-04",
+      "kind": "semantic_adjudication",
+      "before": "The first broad C-group review marked the case satisfies.",
+      "after": "A preserved supplemental review against rn-reinspection, rn-request and the first output found that the certificate cannot replace direct consumption of the formal retest.",
+      "effectOnVerdict": "Final independent semantic total is 7/12, not 8/12."
+    },
+    {
+      "scenarioId": "all",
+      "kind": "same_output_regrade",
+      "before": "Frozen machine result was 8/12.",
+      "after": "Identical output bytes score 7/12 under the corrected current rubric.",
+      "effectOnVerdict": "No output was regenerated or edited."
+    }
+  ]
+}

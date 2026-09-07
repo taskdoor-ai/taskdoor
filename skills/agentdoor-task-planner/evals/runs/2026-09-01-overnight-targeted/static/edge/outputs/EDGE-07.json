@@ -1,0 +1,184 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-07",
+  "baseSnapshotId": "snapshot-edge-07-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "edge07-root": 4,
+    "edge07-faq": 3,
+    "edge07-training": 2
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "保留已完成的FAQ和既定培训，仅在原资料包下补充一页开箱说明，并把该新增结果写入资料包标准；培训不依赖这份新说明。",
+  "reasoningSummary": [
+    {
+      "text": "客户确认的新增边界只有一页开箱说明，现有FAQ与培训保持原范围。",
+      "evidenceRefs": [
+        "req-edge-07",
+        "edge07-gap-confirm"
+      ]
+    },
+    {
+      "text": "FAQ已经完成，培训已有独立的FAQ前置，不应重建或改成等待开箱说明。",
+      "evidenceRefs": [
+        "edge07-faq",
+        "edge07-training",
+        "edge07-gap-confirm"
+      ]
+    },
+    {
+      "text": "开箱说明是一份可独立交付并纳入现有资料包的新结果，适合只新增一个叶任务。",
+      "evidenceRefs": [
+        "edge07-root",
+        "edge07-gap-confirm"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "edge07-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-edge07-root-criteria",
+        "action": "update",
+        "targetId": "edge07-root",
+        "parentId": null,
+        "fields": {
+          "acceptanceCriteria": [
+            "交付客服FAQ v2并完成基于该FAQ的培训记录。",
+            "交付逐项对应包装内容清单PK-CUP-A-v1的一页开箱说明，并在2026-09-07前纳入CUP-A首发客服资料包；现有FAQ与培训范围不变。"
+          ]
+        },
+        "reason": "将客户已经确认的新增交付纳入原资料包标准，同时保留原有FAQ与培训边界。",
+        "evidenceRefs": [
+          "edge07-root",
+          "edge07-gap-confirm",
+          "req-edge-07"
+        ]
+      },
+      {
+        "id": "chg-edge07-unboxing",
+        "action": "create",
+        "targetId": "new:edge07-unboxing-guide",
+        "parentId": "edge07-root",
+        "fields": {
+          "title": "交付CUP-A首发一页开箱说明",
+          "acceptanceCriteria": [
+            "形成一页开箱说明，内容逐项对应已确认的包装内容清单PK-CUP-A-v1。",
+            "说明页保留清单版本引用并纳入CUP-A首发客服资料包，不改写既有FAQ或培训材料。"
+          ],
+          "tips": [
+            "在同一页面内完成内容整理与版式核对，不因普通复核步骤再拆子任务。",
+            "交付时核对资料包索引已指向该说明页的当前版本。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m2",
+            "basis": "recommended",
+            "reason": "该结果是一页对客说明，颜北的职责覆盖文案与视觉版式；这只是候选责任建议。",
+            "evidenceRefs": [
+              "ecom-m2-role",
+              "edge07-gap-confirm"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-07",
+            "basis": "explicit",
+            "assumptions": [
+              "客户只确认了交付边界日，未提供开始日或成员持续可用性。"
+            ],
+            "evidenceRefs": [
+              "edge07-gap-confirm"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供同范围、同工具的可比投入记录；不把自然日或资料页数换算成人时。"
+            ],
+            "evidenceRefs": [
+              "edge07-gap-confirm"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "新增说明具有独立交付边界，而既有FAQ与培训均无需返工。",
+        "evidenceRefs": [
+          "req-edge-07",
+          "edge07-gap-confirm",
+          "edge07-root"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "edge07-faq",
+      "edge07-training"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "edge07-root",
+        "relationship": "overlap",
+        "reason": "现有资料包覆盖FAQ与培训，但未覆盖已经确认的一页开箱说明。",
+        "evidenceRefs": [
+          "edge07-root",
+          "edge07-gap-confirm"
+        ],
+        "resolution": {
+          "kind": "propose_uncovered_scope",
+          "newScope": "只新增逐项对应PK-CUP-A-v1的一页开箱说明，并纳入原资料包。",
+          "changeIds": [
+            "chg-edge07-unboxing"
+          ],
+          "evidenceRefs": [
+            "edge07-root",
+            "edge07-gap-confirm",
+            "req-edge-07"
+          ]
+        }
+      },
+      {
+        "taskId": "edge07-faq",
+        "relationship": "overlap",
+        "reason": "FAQ覆盖了原资料中的问答部分且已经完成，剩余独立缺口是一页开箱说明。",
+        "evidenceRefs": [
+          "edge07-faq",
+          "edge07-gap-confirm"
+        ],
+        "resolution": {
+          "kind": "propose_uncovered_scope",
+          "newScope": "保留FAQ完成结果，只新增不改变FAQ口径的一页开箱说明。",
+          "changeIds": [
+            "chg-edge07-unboxing"
+          ],
+          "evidenceRefs": [
+            "edge07-faq",
+            "edge07-gap-confirm",
+            "req-edge-07"
+          ]
+        }
+      }
+    ],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；返回的候选均在本次可见快照内。"
+  },
+  "questions": [],
+  "warnings": [
+    "颜北的负责人建议尚未形成正式接受；成员持续可用性和本项EWD仍未知。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "edge07-root",
+      "label": "审阅只补开箱说明的局部差异"
+    }
+  ],
+  "externalEffects": "none"
+}

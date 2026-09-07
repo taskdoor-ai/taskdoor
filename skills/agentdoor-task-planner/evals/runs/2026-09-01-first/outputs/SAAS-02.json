@@ -1,0 +1,162 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-saas-02",
+  "baseSnapshotId": "snapshot-saas-02-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "saas02-a": 3,
+    "saas02-b": 2
+  },
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议新建一项南桔CRM试点上线验收候选；北杉同名任务属于不同客户、租户、系统和周期，保留原完成记录。",
+  "reasoningSummary": [
+    {
+      "text": "本轮为tenant-nanju在2026年9月的CRM试点验收，检查客户资料查询与审批记录；同名旧项是tenant-beishan在8月的知识库验收。",
+      "evidenceRefs": [
+        "req-saas-02",
+        "saas02-a",
+        "saas02-b",
+        "saas02-brief"
+      ]
+    },
+    {
+      "text": "南桔CRM范围接收已完成，可引用现有成果，无须再创建需求接收。",
+      "evidenceRefs": [
+        "saas02-b"
+      ]
+    },
+    {
+      "text": "客户期望9月12日前审阅验收记录，但未给出完整实施窗口和投入实绩。",
+      "evidenceRefs": [
+        "saas02-brief",
+        "saas-m4"
+      ]
+    },
+    {
+      "text": "钟宁负责验证与结果记录，顾澄负责协调客户验收；双方都不代客户签收。",
+      "evidenceRefs": [
+        "saas-m4",
+        "saas-m1"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:saas02-nanju-acceptance",
+    "complexity": "simple",
+    "preservedTaskIds": [
+      "saas02-a",
+      "saas02-b"
+    ],
+    "changes": [
+      {
+        "id": "change:new:saas02-nanju-acceptance",
+        "action": "create",
+        "targetId": "new:saas02-nanju-acceptance",
+        "parentId": null,
+        "fields": {
+          "title": "南桔实验室CRM试点上线验收",
+          "goal": {
+            "text": "为南桔实验室CRM试点形成可供客户审阅的验收结果，核对客户资料查询和审批记录是否符合已确认范围。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-saas-02",
+              "saas02-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "验收记录明确客户为合成·南桔实验室、租户tenant-nanju、对象为本期CRM试点，并关联已完成的范围接收记录。",
+            "按确认范围核对客户资料查询和审批记录，保留测试版本、检查结果、异常及处理结论；不引用北杉知识库结果充当本轮证据。",
+            "形成客户可审阅的验收记录，留存审阅反馈与待处理问题；客户是否接受由客户确认，不由内部人员代签。"
+          ],
+          "tips": [
+            "需求接收引用saas02-b；流程检查、结果整理及提交审阅作为本任务操作步骤，不再拆同义子任务。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "saas-m4",
+            "basis": "recommended",
+            "reason": "钟宁负责用例验证、缺陷复核和版本结果记录，适合承担验收记录这一结果。",
+            "evidenceRefs": [
+              "saas-m4",
+              "saas02-brief"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "saas-m1",
+              "contribution": "协调客户审阅验收记录及范围变更，不代客户签收。",
+              "evidenceRefs": [
+                "saas-m1"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-12",
+            "basis": "explicit",
+            "assumptions": [
+              "客户期望9月12日前审阅；具体检查窗口及客户审阅安排尚未确认。"
+            ],
+            "evidenceRefs": [
+              "saas02-brief"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "旧知识库验收范围不同且没有工时，不能套用；本轮用例量、工具方式和复核轮数未知。"
+            ],
+            "evidenceRefs": [
+              "saas02-brief",
+              "saas02-h1"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "saas02-b"
+          ]
+        },
+        "reason": "本轮有独立客户及业务系统身份，一个验收成果即可承载检查和审阅步骤。",
+        "evidenceRefs": [
+          "req-saas-02",
+          "saas02-brief",
+          "saas02-b"
+        ]
+      }
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [
+      {
+        "taskId": "saas02-a",
+        "relationship": "different_instance",
+        "reason": "saas02-a对应北杉tenant-beishan、2026年8月知识库试点；本轮为南桔tenant-nanju、2026年9月CRM试点，业务对象和验收结果均不同。",
+        "evidenceRefs": [
+          "saas02-a",
+          "saas02-b",
+          "saas02-brief",
+          "req-saas-02"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "9月12日保留为客户期望审阅日期，不据此保证工期。",
+    "候选责任未被接受，成员完整可用时间与验收工具、用例规模不明；EWD暂留空。",
+    "本提案只规划验收记录及客户审阅，不执行生产上线或代替客户验收。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:saas02-nanju-acceptance",
+      "label": "审阅南桔CRM验收候选"
+    }
+  ],
+  "externalEffects": "none"
+}

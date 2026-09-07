@@ -1,0 +1,20 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-B1",
+      "allowedIntents": [
+        "replan",
+        "next_batch"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation",
+        "needs_clarification"
+      ],
+      "maxCreates": 1,
+      "manualChecks": [
+        "已完成范围及映射不重做；新增字段与UAT/培训的使用关系需落实或明确阻塞，保留确认字段。"
+      ]
+    }
+  ]
+}

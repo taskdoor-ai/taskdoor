@@ -1,0 +1,46 @@
+{
+  "date": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "kind": "high_fidelity_synthetic_focused_dependency_regression",
+  "dataClassification": "synthetic",
+  "execution": "Current-session fresh-context Codex agents; not an application model API",
+  "exactModelSnapshot": "not_provided",
+  "temperature": "not_provided",
+  "seed": "not_provided",
+  "executorGroups": {
+    "final_planner_dependencies": [
+      "REAL-B-NPI-01",
+      "REAL-B-PROC-01"
+    ],
+    "final_planner_replan": [
+      "REAL-C-02",
+      "REAL-C-03"
+    ],
+    "final_planner_controls": [
+      "REAL-C-01",
+      "REAL-C-04",
+      "REAL-A-ECOM-01"
+    ]
+  },
+  "reviewGroups": {
+    "final_planner_controls": [
+      "REAL-B-NPI-01",
+      "REAL-B-PROC-01"
+    ],
+    "final_planner_dependencies": [
+      "REAL-C-02",
+      "REAL-C-03"
+    ],
+    "final_planner_replan": [
+      "REAL-C-01",
+      "REAL-C-04",
+      "REAL-A-ECOM-01"
+    ]
+  },
+  "blinding": "Executors received the frozen Skill/protocol and assigned inputs only. They did not read expectations, prior outputs or production services.",
+  "attemptPolicy": "First official output files retained with no semantic repair.",
+  "review": "Cross-review used different agents; outputs were not edited.",
+  "productionAccess": false,
+  "productionWrites": false,
+  "archiveNote": "Hard-case challenge set after source_only, immediate-review and input-impact-matrix hardening. Machine and independent semantic results both equal 3/7."
+}

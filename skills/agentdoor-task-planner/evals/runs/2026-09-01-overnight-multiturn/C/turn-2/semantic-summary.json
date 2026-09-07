@@ -1,0 +1,18 @@
+{
+  "kind": "independent_multiturn_semantic_review",
+  "cases": [
+    {
+      "caseId": "MULTI-C2",
+      "status": "passed",
+      "summary": "输出通过合成回执和当前快照定位首轮保存记录sim:C:1，将重试判为same_outcome，返回原记录入口且不创建、不更新；同时明确本地合成回执不证明生产创建、幂等或正式指派。",
+      "reviewFile": "semantic-review-c.json",
+      "episodeId": "C"
+    }
+  ],
+  "total": 1,
+  "passed": 1,
+  "failed": 0,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

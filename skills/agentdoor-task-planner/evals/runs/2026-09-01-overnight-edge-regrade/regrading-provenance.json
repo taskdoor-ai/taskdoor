@@ -1,0 +1,7 @@
+{
+  "kind": "same_first_outputs_regraded",
+  "originalRun": "/tmp/agentdoor-planner-overnight-edge-20260901",
+  "newModelAttempts": 0,
+  "inputAndOutputBytesUnchanged": true,
+  "erratumFile": "/tmp/agentdoor-planner-overnight-edge-20260901/grading-erratum.json"
+}

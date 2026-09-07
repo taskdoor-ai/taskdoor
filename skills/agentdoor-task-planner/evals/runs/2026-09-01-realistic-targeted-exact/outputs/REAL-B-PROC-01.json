@@ -1,0 +1,279 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-real-b-proc-01",
+  "baseSnapshotId": "snapshot-real-b-proc-01-v4",
+  "baseRevision": 4,
+  "baseTaskVersions": {
+    "b-proc-root": 14,
+    "b-proc-risk": 7,
+    "b-proc-contract": 6,
+    "b-proc-enable": 8,
+    "b-proc-risk-pack": 5,
+    "b-proc-sanctions": 8,
+    "b-proc-owner-review": 4,
+    "b-proc-security": 3,
+    "b-proc-contract-pack": 5,
+    "b-proc-nda": 7,
+    "b-proc-msa": 6,
+    "b-proc-fin-pack": 5,
+    "b-proc-tax": 4,
+    "b-proc-bank": 3,
+    "b-proc-quality": 6,
+    "b-proc-gate": 5
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议继续使用澄壤现有准入树，仅更新所有人核对、MSA、税务、银行验证和采购门禁五个消费者的验收边界与直接依赖；制裁筛查、NDA和样品试用保持完成，现有9月4日至9月12日期衔接保留。",
+  "reasoningSummary": [
+    {
+      "text": "登记册v3仅补全注册地址楼层，法律实体号、税号和三名受益所有人均未变化，影响范围限定为五个仍消费旧地址或需汇总现行结论的任务。",
+      "evidenceRefs": [
+        "req-real-b-proc-01",
+        "b-proc-reg-v3",
+        "b-proc-d1",
+        "b-proc-d5"
+      ]
+    },
+    {
+      "text": "制裁证书仍覆盖同一实体与人员，已签NDA按实体号识别且不含通知地址，样品试用也不受地址变化影响，因此三项完成记录均不重开。",
+      "evidenceRefs": [
+        "b-proc-sanctions-v2",
+        "b-proc-nda-v3",
+        "b-proc-quality-v2",
+        "b-proc-h1",
+        "b-proc-h2",
+        "b-proc-h3"
+      ]
+    },
+    {
+      "text": "所有人核对、MSA与税务现有资料仍使用v2地址；以所有人核对产出的v3实体与地址结论作为跨分支直接输入，并保留每项仍有效的旧依赖。",
+      "evidenceRefs": [
+        "b-proc-d2",
+        "b-proc-msa-v6",
+        "b-proc-tax-v4",
+        "b-proc-d10",
+        "b-proc-owner-review"
+      ]
+    },
+    {
+      "text": "银行函只有9月7日外部承诺且银行验证仍正式阻塞；现有所有人核对9月4日、MSA 9月6日、税务9月5日、银行9月8日、门禁9月10日和首单9月12日的期限可衔接，但外部回传延迟会威胁硬边界。",
+      "evidenceRefs": [
+        "b-proc-bank-v1",
+        "b-proc-d6",
+        "b-proc-d7",
+        "b-proc-h5",
+        "b-proc-h6"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "b-proc-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-b-proc-owner-review-v3",
+        "action": "update",
+        "targetId": "b-proc-owner-review",
+        "parentId": "b-proc-risk-pack",
+        "fields": {
+          "acceptanceCriteria": [
+            "以受益所有人登记册v3核对法律实体号、注册地址和三名受益所有人，记录相对v2仅补全楼层的差异，并核对已完成制裁证书仍覆盖同一实体与人员。"
+          ]
+        },
+        "reason": "原任务仍引用v2登记册，需要在原核对任务中形成v3差异结论；制裁筛查完成记录继续作为直接输入。",
+        "evidenceRefs": [
+          "req-real-b-proc-01",
+          "b-proc-owner-review",
+          "b-proc-reg-v2",
+          "b-proc-reg-v3",
+          "b-proc-sanctions",
+          "b-proc-d2"
+        ]
+      },
+      {
+        "id": "chg-b-proc-msa-v3",
+        "action": "update",
+        "targetId": "b-proc-msa",
+        "parentId": "b-proc-contract-pack",
+        "fields": {
+          "acceptanceCriteria": [
+            "以登记册v3及所有人核对结论核对合同主体和通知地址，保留既有商业条款与已签NDA，并记录MSA v6封面由v2地址更新后的差异和未决项。"
+          ],
+          "dependsOnTaskIds": [
+            "b-proc-nda",
+            "b-proc-sanctions",
+            "b-proc-owner-review"
+          ]
+        },
+        "reason": "MSA封面仍使用v2地址，需消费所有人核对产出的现行实体与地址结论；原NDA和制裁依赖仍有效。",
+        "evidenceRefs": [
+          "req-real-b-proc-01",
+          "b-proc-msa",
+          "b-proc-msa-v6",
+          "b-proc-reg-v3",
+          "b-proc-owner-review",
+          "b-proc-nda",
+          "b-proc-sanctions"
+        ]
+      },
+      {
+        "id": "chg-b-proc-tax-v3",
+        "action": "update",
+        "targetId": "b-proc-tax",
+        "parentId": "b-proc-fin-pack",
+        "fields": {
+          "acceptanceCriteria": [
+            "以登记册v3及所有人核对结论核对税号、注册地址和发票字段，保留税号不变结论并记录由v2地址更新产生的差异。"
+          ],
+          "dependsOnTaskIds": [
+            "b-proc-sanctions",
+            "b-proc-owner-review"
+          ]
+        },
+        "reason": "税务资料仍使用v2地址，需直接消费v3核对结论；原制裁依赖没有失效证据，必须保留。",
+        "evidenceRefs": [
+          "req-real-b-proc-01",
+          "b-proc-tax",
+          "b-proc-tax-v4",
+          "b-proc-reg-v3",
+          "b-proc-owner-review",
+          "b-proc-sanctions",
+          "b-proc-d10"
+        ]
+      },
+      {
+        "id": "chg-b-proc-bank-v3",
+        "action": "update",
+        "targetId": "b-proc-bank",
+        "parentId": "b-proc-fin-pack",
+        "fields": {
+          "acceptanceCriteria": [
+            "在实际收到银行函后，以登记册v3、所有人核对结论和税务核对结果完成账号、主体及注册地址的双人核验并保留差异；2026-09-07上传承诺不得作为已上传或已核验。"
+          ],
+          "dependsOnTaskIds": [
+            "b-proc-tax",
+            "b-proc-owner-review"
+          ]
+        },
+        "reason": "银行验证直接读取现行实体地址和税务结果，且外部承诺不能替代银行函正文或双人核验。",
+        "evidenceRefs": [
+          "req-real-b-proc-01",
+          "b-proc-bank",
+          "b-proc-bank-v1",
+          "b-proc-reg-v3",
+          "b-proc-owner-review",
+          "b-proc-tax",
+          "b-proc-d6"
+        ]
+      },
+      {
+        "id": "chg-b-proc-gate-v3",
+        "action": "update",
+        "targetId": "b-proc-gate",
+        "parentId": "b-proc-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "在2026-09-10门禁审阅时链接登记册v3的所有人核对、安全、MSA、税务、银行和质量结果，保留同一实体与人员的复用边界，作为2026-09-12首单释放前置；银行函未实际收到并完成双人核验时不得声明可释放。"
+          ],
+          "dependsOnTaskIds": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality",
+            "b-proc-owner-review"
+          ]
+        },
+        "reason": "门禁直接汇总所有人核对结论但现有依赖缺少其生产任务；其余安全、合同、税务、银行和质量依赖仍有效。",
+        "evidenceRefs": [
+          "req-real-b-proc-01",
+          "b-proc-gate",
+          "b-proc-reg-v3",
+          "b-proc-owner-review",
+          "b-proc-d7",
+          "b-proc-bank-v1"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "b-proc-root",
+      "b-proc-risk",
+      "b-proc-contract",
+      "b-proc-enable",
+      "b-proc-risk-pack",
+      "b-proc-sanctions",
+      "b-proc-security",
+      "b-proc-contract-pack",
+      "b-proc-nda",
+      "b-proc-fin-pack",
+      "b-proc-quality"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-b-proc"
+    ],
+    "assessments": [
+      {
+        "taskId": "b-proc-owner-review",
+        "relationship": "same_outcome",
+        "reason": "同一法律实体的登记册差异核对已由该任务承载，本轮复用并更新v3边界。",
+        "evidenceRefs": [
+          "req-real-b-proc-01",
+          "b-proc-owner-review"
+        ]
+      },
+      {
+        "taskId": "b-proc-msa",
+        "relationship": "same_outcome",
+        "reason": "同一澄壤准入MSA结果已有任务，本轮只更新通知地址来源和依赖。",
+        "evidenceRefs": [
+          "req-real-b-proc-01",
+          "b-proc-msa"
+        ]
+      },
+      {
+        "taskId": "b-proc-tax",
+        "relationship": "same_outcome",
+        "reason": "同一澄壤税务核对结果已有任务，本轮只更新注册地址来源。",
+        "evidenceRefs": [
+          "req-real-b-proc-01",
+          "b-proc-tax"
+        ]
+      },
+      {
+        "taskId": "b-proc-bank",
+        "relationship": "same_outcome",
+        "reason": "同一澄壤银行验证结果已有任务，本轮保留阻塞并补现行地址输入。",
+        "evidenceRefs": [
+          "req-real-b-proc-01",
+          "b-proc-bank"
+        ]
+      },
+      {
+        "taskId": "b-proc-gate",
+        "relationship": "same_outcome",
+        "reason": "同一澄壤采购释放门禁已有任务，本轮只更新其直接消费关系和风险边界。",
+        "evidenceRefs": [
+          "req-real-b-proc-01",
+          "b-proc-gate"
+        ]
+      }
+    ],
+    "coverageNote": "合成查重已覆盖授权团队现行与归档索引；同一法律实体已有完整准入树。"
+  },
+  "questions": [],
+  "warnings": [
+    "银行函仅有2026-09-07外部上传承诺；若正文迟到、字段不一致或双人核验未完成，将威胁9月8日银行任务、9月10日门禁和9月12日首单释放，不能提前解除阻塞。",
+    "安全问卷任务仍为blocked，9月5日补充件只是预计回传；它仍是门禁的既有前置，本轮地址变更不授权绕过该风险。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "b-proc-root",
+      "label": "审阅五个现有消费者的最小差异"
+    }
+  ],
+  "externalEffects": "none"
+}

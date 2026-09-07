@@ -1,0 +1,507 @@
+{
+  "algorithm": "sha256",
+  "fileCount": 100,
+  "totalBytes": 1265488,
+  "files": [
+    {
+      "path": "A/turn-1/expectations-snapshot.json",
+      "bytes": 489,
+      "sha256": "22cc4f9f868d9ce4b694e539faa032b3f97b99d94737da5363a91434a6aafcfe"
+    },
+    {
+      "path": "A/turn-1/inputs/MULTI-A1.json",
+      "bytes": 11593,
+      "sha256": "1b33c1fbad04a8731672c3302f41ec41e191028a3d63c5f55d3f5f6b4d51b20b"
+    },
+    {
+      "path": "A/turn-1/manifest.json",
+      "bytes": 1018,
+      "sha256": "ace8c3807f776b01c1965be79808606d01a9693f87f9d4c2e8ebb892c249edca"
+    },
+    {
+      "path": "A/turn-1/outputs/MULTI-A1.json",
+      "bytes": 5311,
+      "sha256": "1661082f3e851cd293075710b65d71007a1c43a912b720f00c7c39abe289cf08"
+    },
+    {
+      "path": "A/turn-1/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "A/turn-1/semantic-summary.json",
+      "bytes": 402,
+      "sha256": "405d4fac0eb42952fa7ce4a228132e37fe7874e67fb34beec1e9c68daf80d446"
+    },
+    {
+      "path": "A/turn-1/structural-report.json",
+      "bytes": 1126,
+      "sha256": "0115bb303d9efd04f5d0e7d30a3d67f7ae500da85dd2fb55b92008c6c774148b"
+    },
+    {
+      "path": "A/turn-2/expectations-snapshot.json",
+      "bytes": 650,
+      "sha256": "34239ace751a70848b0fd48b4dc60d2902d9a39447f2d0d091e143339ecba1a0"
+    },
+    {
+      "path": "A/turn-2/inputs/MULTI-A2.json",
+      "bytes": 17066,
+      "sha256": "66e22ac7ed9f8842c66ebba3fbce4f97e2095801036b410d5566e8f2114dbebc"
+    },
+    {
+      "path": "A/turn-2/manifest.json",
+      "bytes": 1335,
+      "sha256": "232f0e3e5a01a0ef11858fe015e538e02b2e4a83d8f185a9b69c7c25ba89804c"
+    },
+    {
+      "path": "A/turn-2/outputs/MULTI-A2.json",
+      "bytes": 3069,
+      "sha256": "e1c48daff3b9870e7439222afac3293c345f86105cb7ec5d09b1166fd7e79a74"
+    },
+    {
+      "path": "A/turn-2/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "A/turn-2/semantic-summary.json",
+      "bytes": 402,
+      "sha256": "3d924ae8087e1a56bbeaebbd9479ed980455f0a48b5bc1f0325303061deb7011"
+    },
+    {
+      "path": "A/turn-2/structural-report.json",
+      "bytes": 1212,
+      "sha256": "c6c750d7f8d226b1f2112986e37f0ba82b686533562370d32a478323af48257d"
+    },
+    {
+      "path": "A/turn-3/expectations-snapshot.json",
+      "bytes": 551,
+      "sha256": "4af3c7e819108e85d85e3b57899f02d652968d0ed5fe2a8aea399d523e159d17"
+    },
+    {
+      "path": "A/turn-3/inputs/MULTI-A3.json",
+      "bytes": 17436,
+      "sha256": "fa7beba2f267183c895429cacb327a9cbe6a2c9459cdefe74aa892001bad0660"
+    },
+    {
+      "path": "A/turn-3/manifest.json",
+      "bytes": 1335,
+      "sha256": "f051a0e8250950abb78d181e04af8544ccfaff04970fa3e4b2867d6befee5d77"
+    },
+    {
+      "path": "A/turn-3/outputs/MULTI-A3.json",
+      "bytes": 1457,
+      "sha256": "7058b9304333c3c9251f3b9e858e6900ac542f8c6501e23b393b282acbbd6c47"
+    },
+    {
+      "path": "A/turn-3/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "A/turn-3/semantic-summary.json",
+      "bytes": 402,
+      "sha256": "86e8e7dd1d54e0252fae0efacd940461e58d74d1ab53cd3566e59a68d8404e50"
+    },
+    {
+      "path": "A/turn-3/structural-report.json",
+      "bytes": 1132,
+      "sha256": "ecd6625688f239ae2bdae1134bceecd824401f50c67cecc62aab309aafc8b5b4"
+    },
+    {
+      "path": "B/turn-1/attempts/attempt-1/MULTI-B1.json",
+      "bytes": 6927,
+      "sha256": "14c726d648e86861a8afda61be4471bf76bd6c95bcaa3508b2cbcdd0ac4dff62"
+    },
+    {
+      "path": "B/turn-1/attempts/attempt-1/structural-report.json",
+      "bytes": 1464,
+      "sha256": "6abfc858f330001bb86b0b8158fd917bc85eafdec16941b4319be5868fc3b33b"
+    },
+    {
+      "path": "B/turn-1/expectations-snapshot.json",
+      "bytes": 606,
+      "sha256": "f09b29db4fea69c761d27e4df8cd589de29dc5f183148dd26ef6dfda0fdc7084"
+    },
+    {
+      "path": "B/turn-1/inputs/MULTI-B1.json",
+      "bytes": 17491,
+      "sha256": "b266401be55463eace00b29a27c4fdd9e5f7d4b3369d5647055fef95342b5943"
+    },
+    {
+      "path": "B/turn-1/manifest.json",
+      "bytes": 1017,
+      "sha256": "41db6e8820ac7a3409968af6fe59467ba49087f83e5781487a05c39f455e2152"
+    },
+    {
+      "path": "B/turn-1/outputs/MULTI-B1.json",
+      "bytes": 5931,
+      "sha256": "b89f6bbf7772a4625000d9cae50665a0642d30e83271667c557f5009ab416fe6"
+    },
+    {
+      "path": "B/turn-1/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "B/turn-1/semantic-summary.json",
+      "bytes": 402,
+      "sha256": "09cb5f82190168707b78113f83a8169997fd7e06451ede428aff80c0465cc55b"
+    },
+    {
+      "path": "B/turn-1/structural-report.json",
+      "bytes": 1298,
+      "sha256": "b59d8ee68c78b0de9ecd45f2d461bd6bab30d4de426c4950b68789d8ed4196ba"
+    },
+    {
+      "path": "B/turn-2/expectations-snapshot.json",
+      "bytes": 1164,
+      "sha256": "8b2ec676b99dc82bc7c1d598bf873a8d28e5d0e7bc223cecee163f963f2140c8"
+    },
+    {
+      "path": "B/turn-2/harness-snapshot.json",
+      "bytes": 66359,
+      "sha256": "8639bb419c04b8a8dc3d7b2f50e94a5e55467652fd9091ee6c02119185d3c757"
+    },
+    {
+      "path": "B/turn-2/inputs/MULTI-B2.json",
+      "bytes": 21271,
+      "sha256": "6295c797836fda422a732933f85e8a96338f5fa1e0dfd008e16ddfa556db280d"
+    },
+    {
+      "path": "B/turn-2/manifest.json",
+      "bytes": 1634,
+      "sha256": "19e9f454e3105d90ebec852f8131f46b8792844677cbc6af26a6752686789e15"
+    },
+    {
+      "path": "B/turn-2/outputs/MULTI-B2.json",
+      "bytes": 5224,
+      "sha256": "168c9216ad1b6e36d83364f6144a9eb8c2d3c04233ed76fd42bbd67f6fa0d597"
+    },
+    {
+      "path": "B/turn-2/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "B/turn-2/semantic-summary.json",
+      "bytes": 402,
+      "sha256": "829f9476f4a5b9796ab183a536f0d65edeed143c83682e84fac6d4686131fbf3"
+    },
+    {
+      "path": "B/turn-2/structural-report.json",
+      "bytes": 1413,
+      "sha256": "712f20e6a6d9452eeb7569d17125a785d9059f2e6af9c3ad1952ba6391327b93"
+    },
+    {
+      "path": "B/turn-3/expectations-snapshot.json",
+      "bytes": 760,
+      "sha256": "069ab3a80fb984fa0766cd03937e3a1295d997ff7cd49b2e1ffd5c7102b757d7"
+    },
+    {
+      "path": "B/turn-3/harness-snapshot.json",
+      "bytes": 66359,
+      "sha256": "8639bb419c04b8a8dc3d7b2f50e94a5e55467652fd9091ee6c02119185d3c757"
+    },
+    {
+      "path": "B/turn-3/inputs/MULTI-B3.json",
+      "bytes": 23739,
+      "sha256": "d76aba1eecf741c42a40d487ecf782abb856f99e3ab904a075d781d462c9ca24"
+    },
+    {
+      "path": "B/turn-3/manifest.json",
+      "bytes": 1707,
+      "sha256": "ab29a782e364e992bbf987ae4555d5db9a6e80033ed64b780a6da85c7f0cedb0"
+    },
+    {
+      "path": "B/turn-3/outputs/MULTI-B3.json",
+      "bytes": 2261,
+      "sha256": "033e5be9f69b2c238068cf20056eac34f6d32890ea1d9d4aaeb1cecc608ba618"
+    },
+    {
+      "path": "B/turn-3/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "B/turn-3/semantic-summary.json",
+      "bytes": 402,
+      "sha256": "a1cd9dd813463a595177cd7092495792acf64a4ca1441a3e8b47c336d83d0107"
+    },
+    {
+      "path": "B/turn-3/structural-report.json",
+      "bytes": 1219,
+      "sha256": "806deac5537aa23d95a20139503dbb6a126867b3021311307aafd67660cc4b7a"
+    },
+    {
+      "path": "C/turn-1/expectations-snapshot.json",
+      "bytes": 508,
+      "sha256": "7d08464bb4ef04c80ed629328ba27ab0a5b0fd72670ca782f50cff5ec2f34aca"
+    },
+    {
+      "path": "C/turn-1/inputs/MULTI-C1.json",
+      "bytes": 11573,
+      "sha256": "450589649bb5503afc197890d6c46bd1661656e1d2bd1555bc3f51017e425ea9"
+    },
+    {
+      "path": "C/turn-1/manifest.json",
+      "bytes": 1024,
+      "sha256": "ba4dafbf053200ec66572ba19c07947b08eedce89a0846e652622f3ee38fedd9"
+    },
+    {
+      "path": "C/turn-1/outputs/MULTI-C1.json",
+      "bytes": 5470,
+      "sha256": "389e1bfaf6cfa5c3f7b3031716df7370b450e1c6c73d96a02a883799bd875f59"
+    },
+    {
+      "path": "C/turn-1/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "C/turn-1/semantic-summary.json",
+      "bytes": 577,
+      "sha256": "759c012f58bc8ef22201c34523abda24d0e4c98262623af41bcc1815f331162e"
+    },
+    {
+      "path": "C/turn-1/structural-report.json",
+      "bytes": 1216,
+      "sha256": "6faab3b0b3ba07e97e1eac4ed89b0589487aa4500456b4546b919452acf025d0"
+    },
+    {
+      "path": "C/turn-2/expectations-snapshot.json",
+      "bytes": 688,
+      "sha256": "ae3f0610fd5c957e105df98a993f79838fc19da2a90b0a1dd0b91b05c56cc483"
+    },
+    {
+      "path": "C/turn-2/harness-snapshot.json",
+      "bytes": 66359,
+      "sha256": "8639bb419c04b8a8dc3d7b2f50e94a5e55467652fd9091ee6c02119185d3c757"
+    },
+    {
+      "path": "C/turn-2/inputs/MULTI-C2.json",
+      "bytes": 16000,
+      "sha256": "63872583c4ada9509b7d8a9ddea8b5dd75dfad1ff0762ae346628bfc5496feb2"
+    },
+    {
+      "path": "C/turn-2/manifest.json",
+      "bytes": 1652,
+      "sha256": "4dc358ce67e5e36276b1af402a4e449a0d65b46a4a54ee5f3f7fb9e1e6812880"
+    },
+    {
+      "path": "C/turn-2/outputs/MULTI-C2.json",
+      "bytes": 3168,
+      "sha256": "a336bca5e1335b1ce099d94e7db9fe0c2713c0cd00807097ed071e796f6c7cca"
+    },
+    {
+      "path": "C/turn-2/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "C/turn-2/semantic-summary.json",
+      "bytes": 582,
+      "sha256": "cf9b36ab5e5af85c6498b9cccc78e71474e7bb197cbd7bf8ef2ab26e68d828c3"
+    },
+    {
+      "path": "C/turn-2/structural-report.json",
+      "bytes": 1333,
+      "sha256": "6f765a29808ac2fdd7616a61ff6be64ffc1610063916b7ad46efad06b9c0754c"
+    },
+    {
+      "path": "C/turn-3/expectations-snapshot.json",
+      "bytes": 631,
+      "sha256": "3be46af915a42e6ca960de39d94b603e058db2619059f9fa4977947a88ca2f7a"
+    },
+    {
+      "path": "C/turn-3/harness-snapshot.json",
+      "bytes": 66359,
+      "sha256": "8639bb419c04b8a8dc3d7b2f50e94a5e55467652fd9091ee6c02119185d3c757"
+    },
+    {
+      "path": "C/turn-3/inputs/MULTI-C3.json",
+      "bytes": 16789,
+      "sha256": "a34dff0a335dcb24eb954cbbb2236f57a6ff2ac1c1ba4ab31ecc903e26800a84"
+    },
+    {
+      "path": "C/turn-3/manifest.json",
+      "bytes": 1704,
+      "sha256": "1c5189c993a331046de97eb0d0f4c6025513e479860bc136068a553567b007b8"
+    },
+    {
+      "path": "C/turn-3/outputs/MULTI-C3.json",
+      "bytes": 6859,
+      "sha256": "faace9016190f77e9d6c89ee72eef326580845eb25a1f5c60af0d0c64b9a8ab7"
+    },
+    {
+      "path": "C/turn-3/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "C/turn-3/semantic-summary.json",
+      "bytes": 620,
+      "sha256": "aad1b945b8ccc45d7e4dec901fd5a2a6c8507e2bbe4fe06d72fe8a6102ca15e9"
+    },
+    {
+      "path": "C/turn-3/structural-report.json",
+      "bytes": 1309,
+      "sha256": "f0c6af4b9deb892228443093671f8f907dac9406b70fbf46fffeb4de27be7a58"
+    },
+    {
+      "path": "D/turn-1/expectations-snapshot.json",
+      "bytes": 498,
+      "sha256": "6b716d5b335734a19ff50573ea7487efc8f6a103821432c8a3633a8a4a454f58"
+    },
+    {
+      "path": "D/turn-1/inputs/MULTI-D1.json",
+      "bytes": 17609,
+      "sha256": "777653a4882d1214c3b95b7f07dbd4602c2faed11cf252dacc1e228052ebcac1"
+    },
+    {
+      "path": "D/turn-1/manifest.json",
+      "bytes": 1018,
+      "sha256": "a4c597c5107edb0e5fdcb47a2ab219f407cda146adf34e8205aeb3b15a91f659"
+    },
+    {
+      "path": "D/turn-1/outputs/MULTI-D1.json",
+      "bytes": 4784,
+      "sha256": "4a5178517d7dc111390a7c2926c0932a23acba6953bda14580630f4d47343649"
+    },
+    {
+      "path": "D/turn-1/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "D/turn-1/semantic-summary.json",
+      "bytes": 402,
+      "sha256": "ab10e8178c20b94065e04cd292164546c7e5bdf2a354bb92fafe22e44ddd43a7"
+    },
+    {
+      "path": "D/turn-1/structural-report.json",
+      "bytes": 1244,
+      "sha256": "aa32f32e0d445f3e3f4da995f41f4ed1cf6b85d10e644352995639eec2cdcc89"
+    },
+    {
+      "path": "D/turn-2/attempts/attempt-1/MULTI-D2.json",
+      "bytes": 3940,
+      "sha256": "b53c9d978ed833a54b30849c31a44152e53b93c5ed21420ea67a5bc0f2046305"
+    },
+    {
+      "path": "D/turn-2/attempts/attempt-1/structural-report.json",
+      "bytes": 1310,
+      "sha256": "d22edae2d87be5b6f58f6c5d0088a521ddaa5b5b4beaf5a39c8053af5d1e61d2"
+    },
+    {
+      "path": "D/turn-2/expectations-snapshot.json",
+      "bytes": 759,
+      "sha256": "2829a482780bae35fe5ccf2398803f2955ff3e9087d644509f1a683bbcb0ed3d"
+    },
+    {
+      "path": "D/turn-2/harness-snapshot.json",
+      "bytes": 66359,
+      "sha256": "8639bb419c04b8a8dc3d7b2f50e94a5e55467652fd9091ee6c02119185d3c757"
+    },
+    {
+      "path": "D/turn-2/inputs/MULTI-D2.json",
+      "bytes": 23919,
+      "sha256": "ab3595f43effcba1abf1b7e10b8069d63eeb023ae188f63130c01006cd16697a"
+    },
+    {
+      "path": "D/turn-2/manifest.json",
+      "bytes": 1637,
+      "sha256": "43c2dc2deeb57ece1baae8e76aa7387b588f9d3b945597ac0d0b154182204418"
+    },
+    {
+      "path": "D/turn-2/outputs/MULTI-D2.json",
+      "bytes": 3941,
+      "sha256": "6ef69a34c4433cf490741347a52d66a14cfc2dfa1cc3442ad8f1ca9db896292f"
+    },
+    {
+      "path": "D/turn-2/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "D/turn-2/semantic-summary.json",
+      "bytes": 402,
+      "sha256": "9d09ce992c40e899d2c8b1667eba0e28c0e0a4d963ca357fa3b4c76e202e18db"
+    },
+    {
+      "path": "D/turn-2/structural-report.json",
+      "bytes": 1236,
+      "sha256": "7bc94079bec8f63b81ad3f560de7069a14d99ab52f00f363299d039ffe65bb18"
+    },
+    {
+      "path": "D/turn-3/expectations-snapshot.json",
+      "bytes": 1038,
+      "sha256": "7ccf5877820338932ba0a9f92362b6069318a684e33507dd73aa8af43dc5d372"
+    },
+    {
+      "path": "D/turn-3/harness-snapshot.json",
+      "bytes": 66359,
+      "sha256": "8639bb419c04b8a8dc3d7b2f50e94a5e55467652fd9091ee6c02119185d3c757"
+    },
+    {
+      "path": "D/turn-3/inputs/MULTI-D3.json",
+      "bytes": 1255,
+      "sha256": "c6390179531cae1a01c0e062e505dc23240c6cf3e20e7f51c11305f0e46710b8"
+    },
+    {
+      "path": "D/turn-3/manifest.json",
+      "bytes": 1698,
+      "sha256": "dc10a1092e7d225b688cb9ea90474d49c36ed10d3ccf358d5d582687c92f4c30"
+    },
+    {
+      "path": "D/turn-3/outputs/MULTI-D3.json",
+      "bytes": 1585,
+      "sha256": "7513ec0e4468e1b3157c3c0976300b032e42c700ff5214d6c0a716553017fda9"
+    },
+    {
+      "path": "D/turn-3/protocol-snapshot.json",
+      "bytes": 40464,
+      "sha256": "72329f5a16020b1933edd1a211c5da2148fea6eb50cddf63ad702564e3c49594"
+    },
+    {
+      "path": "D/turn-3/semantic-summary.json",
+      "bytes": 402,
+      "sha256": "fe0f9bab65403319013cedbf069710691e6680166b4d1e5f803fe4a587b9a643"
+    },
+    {
+      "path": "D/turn-3/structural-report.json",
+      "bytes": 1290,
+      "sha256": "ed4f17ac6534578636022686e0d4d4333731dd5fb6b64c6139ba0733f3c8a484"
+    },
+    {
+      "path": "artifact-path-map.json",
+      "bytes": 269,
+      "sha256": "b1f7f146e52e3ddb7cf69bd125d16eb7dd53444debe600ce4e3cefa83d85a04e"
+    },
+    {
+      "path": "execution-metadata.json",
+      "bytes": 1674,
+      "sha256": "8ae6c68e4ec388d62706210469c6eb08e1936f69be223eb20ee33849406cd284"
+    },
+    {
+      "path": "first-attempt-summary.json",
+      "bytes": 2054,
+      "sha256": "2d85c146427edd5d1d155f058eda8fd153b1b6cf9864a25d27265799f7bddf77"
+    },
+    {
+      "path": "semantic-review-abd.json",
+      "bytes": 46038,
+      "sha256": "215bdca9dc7b114b1a2a716486397a8d520151ae6759995541b91492aea34379"
+    },
+    {
+      "path": "semantic-review-c.json",
+      "bytes": 24353,
+      "sha256": "a24cd9e22ee2fa72613fe8abc3a0a0d29d73138b4f4b9edc8a897aa6a6b7a5f3"
+    },
+    {
+      "path": "semantic-summary.json",
+      "bytes": 3390,
+      "sha256": "325535d4495c53becc17810e8eb2ce69376806a99e14a806a56cbd97f0c9be5b"
+    }
+  ]
+}

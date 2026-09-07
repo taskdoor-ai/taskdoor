@@ -1,10 +1,44 @@
 import { Check, Clipboard, TerminalSquare, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const connectCommand = "agentdoor connect";
 
-export function CliConnectionDialog({ onClose, onConnected }: { onClose: () => void; onConnected?: () => void }) {
+export function CliConnectionDialog({ onClose, onConnected, returnFocus }: { onClose: () => void; onConnected?: () => void; returnFocus?: HTMLElement | null }) {
   const [copied, setCopied] = useState(false);
+  const closeButton = useRef<HTMLButtonElement>(null);
+  const dialog = useRef<HTMLElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = [...(dialog.current?.querySelectorAll<HTMLElement>("button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])") ?? [])]
+        .filter((element) => element.getAttribute("aria-hidden") !== "true");
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (!first || !last) {
+        event.preventDefault();
+        closeButton.current?.focus({ preventScroll: true });
+      } else if (event.shiftKey && (document.activeElement === first || !dialog.current?.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus({ preventScroll: true });
+      } else if (!event.shiftKey && (document.activeElement === last || !dialog.current?.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus({ preventScroll: true });
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    closeButton.current?.focus({ preventScroll: true });
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
+    };
+  }, [returnFocus]);
   const copyCommand = async () => {
     await navigator.clipboard.writeText(connectCommand);
     setCopied(true);
@@ -12,12 +46,12 @@ export function CliConnectionDialog({ onClose, onConnected }: { onClose: () => v
   };
 
   return <div className="cli-connect-layer" role="presentation">
-    <button aria-label="关闭连接 AI 弹窗" className="cli-connect-backdrop" onClick={onClose} type="button" />
-    <section aria-labelledby="cli-connect-title" aria-modal="true" className="cli-connect-dialog" role="dialog">
+    <div aria-hidden="true" className="cli-connect-backdrop" onClick={onClose} />
+    <section aria-labelledby="cli-connect-title" aria-modal="true" className="cli-connect-dialog" ref={dialog} role="dialog">
       <header>
         <span><TerminalSquare size={21} /></span>
         <div><h2 id="cli-connect-title">通过 CLI 连接 AI</h2><p>让你的本地 Agent 通过 Agentdoor CLI 与 Agentdoor 协作。</p></div>
-        <button aria-label="关闭" onClick={onClose} type="button"><X size={18} /></button>
+        <button aria-label="关闭" onClick={onClose} ref={closeButton} type="button"><X size={18} /></button>
       </header>
       <div className="cli-connect-body">
         <div className="cli-connect-note"><strong>此入口不携带工作上下文</strong><p>连接完成后，由你在本地 Agent 中主动查询任务、读取权限范围内的信息，并选择要提交的成果。</p></div>

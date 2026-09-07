@@ -1,0 +1,1027 @@
+{
+  "requestId": "syn-req-ecom-a-01",
+  "message": "基于“月湾礼盒9月6日开售就绪”接着排下一批：四渠道上架联检、首波异常处理卡都要进开售闸门。已有同范围任务就直接复用，仓内和承运可以分开，不要新建总卡；20:00开售、SKU和价格都不改。",
+  "currentDate": "2026-09-05",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "syn-ecom-m1",
+  "teamId": "syn-team-ecom-a",
+  "authorizedTeamIds": [
+    "syn-team-ecom-a"
+  ],
+  "revision": 15,
+  "currentTaskId": "syn-ecom-root",
+  "synthetic": true,
+  "context": {
+    "snapshotId": "syn-snapshot-ecom-a-15",
+    "asOf": "2026-09-05T12:05:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "syn-team-ecom-a"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete",
+      "files": "complete"
+    },
+    "tasks": [
+      {
+        "id": "syn-ecom-root",
+        "title": "交付月湾礼盒9月6日开售就绪",
+        "status": "in_progress",
+        "version": 14,
+        "updatedAt": "2026-09-05T12:00:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "四渠道商品、首波库存与异常路径均通过开售闸门"
+        ],
+        "ownerId": "syn-ecom-m1",
+        "sourceRefs": [
+          "syn-ecom-file-01",
+          "syn-ecom-file-06"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": [],
+        "goal": "在不改SKU和价格的边界下支持四渠道首波500单开售",
+        "identity": {
+          "campaign": "合成·月湾礼盒",
+          "window": "2026-09-06T20:00:00+08:00",
+          "wave": "first-500"
+        }
+      },
+      {
+        "id": "syn-ecom-product",
+        "title": "形成四渠道商品准备",
+        "status": "in_progress",
+        "version": 7,
+        "updatedAt": "2026-09-05T09:15:00+08:00",
+        "parentId": "syn-ecom-root",
+        "acceptanceCriteria": [
+          "页面、合规文案和渠道联检分别有记录"
+        ],
+        "ownerId": "syn-ecom-m2",
+        "sourceRefs": [
+          "syn-ecom-file-02"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-ecom-supply",
+        "title": "形成首波供给准备",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-05T09:30:00+08:00",
+        "parentId": "syn-ecom-root",
+        "acceptanceCriteria": [
+          "500单分配、仓位和包材规则可复核"
+        ],
+        "ownerId": "syn-ecom-m3",
+        "sourceRefs": [
+          "syn-ecom-file-03"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-ecom-launch",
+        "title": "形成首波开售与异常准备",
+        "status": "in_progress",
+        "version": 8,
+        "updatedAt": "2026-09-05T11:40:00+08:00",
+        "parentId": "syn-ecom-root",
+        "acceptanceCriteria": [
+          "演练、异常路径和开售闸门证据齐备"
+        ],
+        "ownerId": "syn-ecom-m1",
+        "sourceRefs": [
+          "syn-ecom-file-04",
+          "syn-ecom-file-05",
+          "syn-ecom-file-06"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-ecom-listing-package",
+        "title": "形成四渠道上架包",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-05T09:15:00+08:00",
+        "parentId": "syn-ecom-product",
+        "acceptanceCriteria": [
+          "四渠道字段与批准范围一致"
+        ],
+        "ownerId": "syn-ecom-m2",
+        "sourceRefs": [
+          "syn-ecom-file-02"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-ecom-page",
+        "title": "定稿月湾礼盒商品页",
+        "status": "completed",
+        "version": 8,
+        "updatedAt": "2026-09-04T17:00:00+08:00",
+        "parentId": "syn-ecom-listing-package",
+        "acceptanceCriteria": [
+          "商品信息、价格与批准版本一致"
+        ],
+        "ownerId": "syn-ecom-m2",
+        "sourceRefs": [
+          "syn-ecom-file-01",
+          "syn-ecom-file-02"
+        ],
+        "dueOn": "2026-09-04",
+        "dependsOnTaskIds": [],
+        "deliveryEvidence": [
+          {
+            "sourceRef": "syn-ecom-file-02",
+            "summary": "页面字段已定稿。"
+          }
+        ]
+      },
+      {
+        "id": "syn-ecom-compliance",
+        "title": "确认四渠道合规文案",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2026-09-04T17:30:00+08:00",
+        "parentId": "syn-ecom-listing-package",
+        "acceptanceCriteria": [
+          "禁限词与标签文本通过合成复核"
+        ],
+        "ownerId": "syn-ecom-m2",
+        "sourceRefs": [
+          "syn-ecom-file-02"
+        ],
+        "dueOn": "2026-09-04",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-ecom-channel-check",
+        "title": "形成四渠道上架联检记录",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-05T09:15:00+08:00",
+        "parentId": "syn-ecom-listing-package",
+        "acceptanceCriteria": [
+          "48个字段导入结果和差异处置可复核"
+        ],
+        "ownerId": "syn-ecom-m2",
+        "sourceRefs": [
+          "syn-ecom-file-02",
+          "syn-ecom-file-03"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": [
+          "syn-ecom-page",
+          "syn-ecom-compliance",
+          "syn-ecom-forecast"
+        ]
+      },
+      {
+        "id": "syn-ecom-forecast",
+        "title": "确认首波500单分配",
+        "status": "completed",
+        "version": 6,
+        "updatedAt": "2026-09-05T09:30:00+08:00",
+        "parentId": "syn-ecom-supply",
+        "acceptanceCriteria": [
+          "四渠道分配合计500且保留版本"
+        ],
+        "ownerId": "syn-ecom-m3",
+        "sourceRefs": [
+          "syn-ecom-file-03"
+        ],
+        "dueOn": "2026-09-05",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-ecom-warehouse-slot",
+        "title": "锁定首波仓位与波次",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-05T10:00:00+08:00",
+        "parentId": "syn-ecom-supply",
+        "acceptanceCriteria": [
+          "仓位、波次和操作窗口已记录"
+        ],
+        "ownerId": "syn-ecom-m4",
+        "sourceRefs": [
+          "syn-ecom-file-03",
+          "syn-ecom-file-04"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": [
+          "syn-ecom-forecast"
+        ]
+      },
+      {
+        "id": "syn-ecom-label-rule",
+        "title": "确认首波包材与面单规则",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2026-09-05T08:50:00+08:00",
+        "parentId": "syn-ecom-supply",
+        "acceptanceCriteria": [
+          "包材和面单规则覆盖首波SKU"
+        ],
+        "ownerId": "syn-ecom-m4",
+        "sourceRefs": [
+          "syn-ecom-file-04"
+        ],
+        "dueOn": "2026-09-05",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-ecom-exception-card",
+        "title": "形成首波仓内异常处理卡",
+        "status": "open",
+        "version": 4,
+        "updatedAt": "2026-09-05T10:05:00+08:00",
+        "parentId": "syn-ecom-launch",
+        "acceptanceCriteria": [
+          "缺货、错拣和面单失败均有升级路径"
+        ],
+        "ownerId": "syn-ecom-m4",
+        "sourceRefs": [
+          "syn-ecom-file-04"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": [
+          "syn-ecom-label-rule",
+          "syn-ecom-dry-run"
+        ]
+      },
+      {
+        "id": "syn-ecom-carrier-fallback",
+        "title": "形成承运接口降级记录",
+        "status": "open",
+        "version": 4,
+        "updatedAt": "2026-09-05T10:20:00+08:00",
+        "parentId": "syn-ecom-launch",
+        "acceptanceCriteria": [
+          "超时切换、恢复和客服通知步骤可核对"
+        ],
+        "ownerId": "syn-ecom-m5",
+        "sourceRefs": [
+          "syn-ecom-file-05"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": [
+          "syn-ecom-forecast"
+        ]
+      },
+      {
+        "id": "syn-ecom-dry-run",
+        "title": "完成首波订单链路演练",
+        "status": "completed",
+        "version": 7,
+        "updatedAt": "2026-09-05T10:40:00+08:00",
+        "parentId": "syn-ecom-launch",
+        "acceptanceCriteria": [
+          "合成订单从下单到面单生成走通并留证"
+        ],
+        "ownerId": "syn-ecom-m7",
+        "sourceRefs": [
+          "syn-ecom-file-03",
+          "syn-ecom-file-04"
+        ],
+        "dueOn": "2026-09-05",
+        "dependsOnTaskIds": [
+          "syn-ecom-page",
+          "syn-ecom-forecast",
+          "syn-ecom-label-rule"
+        ]
+      },
+      {
+        "id": "syn-ecom-launch-gate",
+        "title": "形成9月6日开售闸门结论",
+        "status": "open",
+        "version": 6,
+        "updatedAt": "2026-09-05T11:40:00+08:00",
+        "parentId": "syn-ecom-launch",
+        "acceptanceCriteria": [
+          "渠道、仓配、承运和异常准备齐备后记录开售或停止"
+        ],
+        "ownerId": "syn-ecom-m1",
+        "sourceRefs": [
+          "syn-ecom-file-01",
+          "syn-ecom-file-06"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": [
+          "syn-ecom-dry-run",
+          "syn-ecom-warehouse-slot"
+        ]
+      }
+    ],
+    "discussions": [
+      {
+        "id": "syn-ecom-d01",
+        "taskId": "syn-ecom-root",
+        "authorId": "syn-ecom-m1",
+        "createdAt": "2026-09-05T08:30:00+08:00",
+        "threadId": "syn-ecom-thread-next",
+        "replyToId": null,
+        "kind": "proposal",
+        "state": "active",
+        "text": "页面和库存基线已好，下一批请补四渠道联检与首波异常处理。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-ecom-d02",
+        "taskId": "syn-ecom-channel-check",
+        "authorId": "syn-ecom-m2",
+        "createdAt": "2026-09-05T08:45:00+08:00",
+        "threadId": "syn-ecom-thread-next",
+        "replyToId": "syn-ecom-d01",
+        "kind": "report",
+        "state": "active",
+        "text": "四渠道联检任务已存在，范围就是本次48字段和首波500单。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-ecom-d03",
+        "taskId": "syn-ecom-exception-card",
+        "authorId": "syn-ecom-m4",
+        "createdAt": "2026-09-05T09:00:00+08:00",
+        "threadId": "syn-ecom-thread-next",
+        "replyToId": "syn-ecom-d01",
+        "kind": "report",
+        "state": "active",
+        "text": "仓内异常卡已存在；承运接口部分由syn-ecom-carrier-fallback独立覆盖。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-ecom-d04",
+        "taskId": "syn-ecom-root",
+        "authorId": "syn-ecom-m1",
+        "createdAt": "2026-09-05T09:12:00+08:00",
+        "threadId": "syn-ecom-thread-next",
+        "replyToId": "syn-ecom-d03",
+        "kind": "decision",
+        "state": "confirmed",
+        "text": "确认复用三个现有结果，不新建；只补开售闸门的实际前置关系。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-ecom-d05",
+        "taskId": "syn-ecom-root",
+        "authorId": "syn-ecom-m1",
+        "createdAt": "2026-09-05T09:20:00+08:00",
+        "threadId": "syn-ecom-thread-next",
+        "replyToId": "syn-ecom-d04",
+        "kind": "proposal",
+        "state": "withdrawn",
+        "text": "撤回“新建一张总异常卡”的想法，仓内和承运边界保持分开。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-ecom-d06",
+        "taskId": "syn-ecom-launch-gate",
+        "authorId": "syn-ecom-m7",
+        "createdAt": "2026-09-05T11:00:00+08:00",
+        "threadId": "syn-ecom-thread-gate",
+        "replyToId": null,
+        "kind": "report",
+        "state": "conflicting_report",
+        "text": "清单正文列了三项，但任务依赖仍只有演练和仓位；这是数据冲突，不代表三项已经完成。",
+        "source": "synthetic_discussion_store",
+        "conflictWithId": "syn-ecom-file-06"
+      },
+      {
+        "id": "syn-ecom-d07",
+        "taskId": "syn-ecom-channel-check",
+        "authorId": "syn-ecom-m2",
+        "createdAt": "2026-09-05T11:10:00+08:00",
+        "threadId": "syn-ecom-thread-scope",
+        "replyToId": null,
+        "kind": "question",
+        "state": "active",
+        "text": "需要把未批准的新SKU也纳入联检吗？",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-ecom-d08",
+        "taskId": "syn-ecom-root",
+        "authorId": "syn-ecom-m1",
+        "createdAt": "2026-09-05T11:25:00+08:00",
+        "threadId": "syn-ecom-thread-scope",
+        "replyToId": "syn-ecom-d07",
+        "kind": "decision",
+        "state": "confirmed",
+        "text": "不增加SKU、不改价格；9月6日20:00硬窗口和已确认闸门标准保持。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "syn-ecom-h01",
+        "taskId": "syn-ecom-page",
+        "occurredAt": "2026-09-04T17:00:00+08:00",
+        "type": "task_completed",
+        "summary": "商品页以版本8定稿。",
+        "version": 8,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-ecom-h02",
+        "taskId": "syn-ecom-compliance",
+        "occurredAt": "2026-09-04T17:30:00+08:00",
+        "type": "task_completed",
+        "summary": "四渠道合规文案以版本5完成。",
+        "version": 5,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-ecom-h03",
+        "taskId": "syn-ecom-label-rule",
+        "occurredAt": "2026-09-05T08:50:00+08:00",
+        "type": "task_completed",
+        "summary": "包材与面单规则以版本5完成。",
+        "version": 5,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-ecom-h04",
+        "taskId": "syn-ecom-forecast",
+        "occurredAt": "2026-09-05T09:30:00+08:00",
+        "type": "task_completed",
+        "summary": "首波500单分配以版本6完成。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-ecom-h05",
+        "taskId": "syn-ecom-dry-run",
+        "occurredAt": "2026-09-05T10:40:00+08:00",
+        "type": "task_completed",
+        "summary": "订单链路演练以版本7完成。",
+        "version": 7,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-ecom-h06",
+        "taskId": "syn-ecom-launch-gate",
+        "occurredAt": "2026-09-05T11:40:00+08:00",
+        "type": "file_linked",
+        "summary": "闸门清单v7加入，任务升至版本6；依赖字段尚未同步。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "files": [
+      {
+        "id": "syn-ecom-file-01",
+        "fileName": "moonbay-0906-launch-charter.pdf",
+        "mimeType": "application/pdf",
+        "version": 3,
+        "checksum": "8b14f70c3a1b7107cff25c00b6179c83e5c39c4c040e094339b3f285d1f5b3b7",
+        "status": "approved",
+        "updatedAt": "2026-09-04T18:00:00+08:00",
+        "linkedTaskIds": [
+          "syn-ecom-root",
+          "syn-ecom-launch-gate"
+        ],
+        "summary": "合成·月湾礼盒在四个纯合成渠道于2026-09-06 20:00开售；不得增加SKU或改价，闸门必须保留渠道联检、仓配和承运降级证据。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-ecom-file-02",
+        "fileName": "four-channel-listing-matrix-v6.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 6,
+        "checksum": "1259f686bdecff349313b4ad3303539525bfaeb14a768855a19bf1654ce3763e",
+        "status": "current",
+        "updatedAt": "2026-09-05T09:15:00+08:00",
+        "linkedTaskIds": [
+          "syn-ecom-page",
+          "syn-ecom-compliance",
+          "syn-ecom-channel-check"
+        ],
+        "summary": "四渠道共48个字段，页面和合规文案已定稿；现有syn-ecom-channel-check负责实际导入联检。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-ecom-file-03",
+        "fileName": "first-wave-allocation-v4.csv",
+        "mimeType": "text/csv",
+        "version": 4,
+        "checksum": "9ffa7d6257ae326e5ef06cbcb838c92eb0677a5d9590a00f4c715972df5314e5",
+        "status": "approved",
+        "updatedAt": "2026-09-05T09:30:00+08:00",
+        "linkedTaskIds": [
+          "syn-ecom-forecast",
+          "syn-ecom-warehouse-slot",
+          "syn-ecom-channel-check"
+        ],
+        "summary": "首波500单按四渠道分配，渠道联检需核对可售量字段；预测不等于仓库容量承诺。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-ecom-file-04",
+        "fileName": "warehouse-exception-card-v2.pdf",
+        "mimeType": "application/pdf",
+        "version": 2,
+        "checksum": "7ffb1b36dfc6d93b0f430ec945c9b8a54cd14e3abdaa7f11fc951307f943afda",
+        "status": "current",
+        "updatedAt": "2026-09-05T10:05:00+08:00",
+        "linkedTaskIds": [
+          "syn-ecom-exception-card",
+          "syn-ecom-launch-gate"
+        ],
+        "summary": "覆盖缺货、错拣和面单失败的仓内升级路径；不覆盖承运商接口降级。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-ecom-file-05",
+        "fileName": "carrier-fallback-sop-v3.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": 3,
+        "checksum": "b76a2b6006e44a9487806b2c79c1e3e6e5beaeffc06e470fdb4fd369403a849a",
+        "status": "current",
+        "updatedAt": "2026-09-05T10:20:00+08:00",
+        "linkedTaskIds": [
+          "syn-ecom-carrier-fallback",
+          "syn-ecom-launch-gate"
+        ],
+        "summary": "覆盖主承运接口超时后的路由切换和客服通知；与仓内异常卡共同覆盖首波异常处理。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-ecom-file-06",
+        "fileName": "launch-gate-checklist-v7.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 7,
+        "checksum": "f497e37bf48b6a58e00f5a42311707bdfb502262870dedac32035db25e522375",
+        "status": "current",
+        "updatedAt": "2026-09-05T11:40:00+08:00",
+        "linkedTaskIds": [
+          "syn-ecom-channel-check",
+          "syn-ecom-exception-card",
+          "syn-ecom-carrier-fallback",
+          "syn-ecom-launch-gate"
+        ],
+        "summary": "清单正文要求渠道联检、仓内异常卡和承运降级SOP，但任务依赖字段仍只有演练和仓位，形成结构化缺口。",
+        "source": "synthetic_file_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "syn-ecom-file-01",
+        "title": "开售范围与窗口（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。合成·月湾礼盒在四个纯合成渠道于2026-09-06 20:00开售；不得增加SKU或改价，闸门必须保留渠道联检、仓配和承运降级证据。",
+        "updatedAt": "2026-09-04T18:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "moonbay-0906-launch-charter.pdf",
+        "mimeType": "application/pdf",
+        "version": 3,
+        "checksum": "8b14f70c3a1b7107cff25c00b6179c83e5c39c4c040e094339b3f285d1f5b3b7",
+        "status": "approved",
+        "linkedTaskIds": [
+          "syn-ecom-root",
+          "syn-ecom-launch-gate"
+        ]
+      },
+      {
+        "id": "syn-ecom-file-02",
+        "title": "四渠道字段矩阵（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。四渠道共48个字段，页面和合规文案已定稿；现有syn-ecom-channel-check负责实际导入联检。",
+        "updatedAt": "2026-09-05T09:15:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "four-channel-listing-matrix-v6.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 6,
+        "checksum": "1259f686bdecff349313b4ad3303539525bfaeb14a768855a19bf1654ce3763e",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-ecom-page",
+          "syn-ecom-compliance",
+          "syn-ecom-channel-check"
+        ]
+      },
+      {
+        "id": "syn-ecom-file-03",
+        "title": "首波库存分配（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。首波500单按四渠道分配，渠道联检需核对可售量字段；预测不等于仓库容量承诺。",
+        "updatedAt": "2026-09-05T09:30:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "first-wave-allocation-v4.csv",
+        "mimeType": "text/csv",
+        "version": 4,
+        "checksum": "9ffa7d6257ae326e5ef06cbcb838c92eb0677a5d9590a00f4c715972df5314e5",
+        "status": "approved",
+        "linkedTaskIds": [
+          "syn-ecom-forecast",
+          "syn-ecom-warehouse-slot",
+          "syn-ecom-channel-check"
+        ]
+      },
+      {
+        "id": "syn-ecom-file-04",
+        "title": "仓内异常处理卡（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。覆盖缺货、错拣和面单失败的仓内升级路径；不覆盖承运商接口降级。",
+        "updatedAt": "2026-09-05T10:05:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "warehouse-exception-card-v2.pdf",
+        "mimeType": "application/pdf",
+        "version": 2,
+        "checksum": "7ffb1b36dfc6d93b0f430ec945c9b8a54cd14e3abdaa7f11fc951307f943afda",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-ecom-exception-card",
+          "syn-ecom-launch-gate"
+        ]
+      },
+      {
+        "id": "syn-ecom-file-05",
+        "title": "承运降级SOP（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。覆盖主承运接口超时后的路由切换和客服通知；与仓内异常卡共同覆盖首波异常处理。",
+        "updatedAt": "2026-09-05T10:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "carrier-fallback-sop-v3.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": 3,
+        "checksum": "b76a2b6006e44a9487806b2c79c1e3e6e5beaeffc06e470fdb4fd369403a849a",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-ecom-carrier-fallback",
+          "syn-ecom-launch-gate"
+        ]
+      },
+      {
+        "id": "syn-ecom-file-06",
+        "title": "开售闸门清单（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。清单正文要求渠道联检、仓内异常卡和承运降级SOP，但任务依赖字段仍只有演练和仓位，形成结构化缺口。",
+        "updatedAt": "2026-09-05T11:40:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "launch-gate-checklist-v7.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 7,
+        "checksum": "f497e37bf48b6a58e00f5a42311707bdfb502262870dedac32035db25e522375",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-ecom-channel-check",
+          "syn-ecom-exception-card",
+          "syn-ecom-carrier-fallback",
+          "syn-ecom-launch-gate"
+        ]
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-ecom-a"
+    ],
+    "matches": [
+      {
+        "taskId": "syn-ecom-channel-check",
+        "title": "形成四渠道上架联检记录",
+        "reason": "同一活动、四渠道、48字段、首波500单，完整覆盖联检结果。",
+        "coverage": "full"
+      },
+      {
+        "taskId": "syn-ecom-exception-card",
+        "title": "形成首波仓内异常处理卡",
+        "reason": "覆盖异常处理的仓内部分，但不覆盖承运接口降级。",
+        "coverage": "partial"
+      },
+      {
+        "taskId": "syn-ecom-carrier-fallback",
+        "title": "形成承运接口降级记录",
+        "reason": "覆盖异常处理的承运部分，但不覆盖仓内缺货、错拣和面单失败。",
+        "coverage": "partial"
+      }
+    ],
+    "coverageNote": "纯合成查重已覆盖授权团队当前与归档任务；三个候选共同覆盖请求，无需新建总卡。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "syn-ecom-root",
+      "field": "dueOn",
+      "value": "2026-09-06"
+    },
+    {
+      "taskId": "syn-ecom-launch-gate",
+      "field": "acceptanceCriteria",
+      "value": [
+        "渠道、仓配、承运和异常准备齐备后记录开售或停止"
+      ]
+    }
+  ],
+  "constraints": {
+    "hardLaunchAt": "2026-09-06T20:00:00+08:00",
+    "mustNotChange": [
+      "SKU范围",
+      "价格",
+      "已完成任务",
+      "确认字段"
+    ],
+    "scope": "只在当前目标树内复用结果并修正开售闸门依赖，不执行开售或通知"
+  },
+  "dataClassification": "synthetic",
+  "members": [
+    {
+      "id": "syn-ecom-m1",
+      "name": "合成成员·黎川",
+      "role": "大促运营负责人",
+      "responsibilities": [
+        "维护开售范围与硬窗口",
+        "协调渠道和履约闸门"
+      ],
+      "boundaries": [
+        "不凭讨论改价格",
+        "不重复创建已有准备项"
+      ],
+      "evidence": [
+        {
+          "id": "syn-ecom-m1-role",
+          "title": "大促运营负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护开售范围与硬窗口；协调渠道和履约闸门。边界：不凭讨论改价格；不重复创建已有准备项。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-ecom-m1-window",
+          "title": "大促运营负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T11:00:00+08:00 至 2026-09-05T13:00:00+08:00，仅表示可参与“开售闸门核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T11:00:00+08:00",
+            "endAt": "2026-09-05T13:00:00+08:00",
+            "purpose": "开售闸门核对",
+            "sourceRef": "syn-ecom-m1-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-ecom-m2",
+      "name": "合成成员·陈页",
+      "role": "商品内容经理",
+      "responsibilities": [
+        "维护商品页与渠道字段",
+        "形成上架联检记录"
+      ],
+      "boundaries": [
+        "不决定可售库存",
+        "不修改未批准促销价格"
+      ],
+      "evidence": [
+        {
+          "id": "syn-ecom-m2-role",
+          "title": "商品内容经理职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护商品页与渠道字段；形成上架联检记录。边界：不决定可售库存；不修改未批准促销价格。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-ecom-m2-window",
+          "title": "商品内容经理公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T13:00:00+08:00 至 2026-09-05T15:00:00+08:00，仅表示可参与“四渠道字段联检”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T13:00:00+08:00",
+            "endAt": "2026-09-05T15:00:00+08:00",
+            "purpose": "四渠道字段联检",
+            "sourceRef": "syn-ecom-m2-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-ecom-m3",
+      "name": "合成成员·郁衡",
+      "role": "需求计划师",
+      "responsibilities": [
+        "形成需求预测",
+        "维护渠道分配基线"
+      ],
+      "boundaries": [
+        "不承诺仓库实际产能",
+        "不把预测当销售保证"
+      ],
+      "evidence": [
+        {
+          "id": "syn-ecom-m3-role",
+          "title": "需求计划师职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：形成需求预测；维护渠道分配基线。边界：不承诺仓库实际产能；不把预测当销售保证。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-ecom-m3-window",
+          "title": "需求计划师公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T15:00:00+08:00 至 2026-09-05T17:00:00+08:00，仅表示可参与“库存分配核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T15:00:00+08:00",
+            "endAt": "2026-09-05T17:00:00+08:00",
+            "purpose": "库存分配核对",
+            "sourceRef": "syn-ecom-m3-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-ecom-m4",
+      "name": "合成成员·周仓",
+      "role": "仓配运营",
+      "responsibilities": [
+        "安排波次与包材规则",
+        "维护仓内异常处理卡"
+      ],
+      "boundaries": [
+        "不修改商品页面",
+        "不代承运商确认路由"
+      ],
+      "evidence": [
+        {
+          "id": "syn-ecom-m4-role",
+          "title": "仓配运营职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：安排波次与包材规则；维护仓内异常处理卡。边界：不修改商品页面；不代承运商确认路由。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-ecom-m4-window",
+          "title": "仓配运营公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T09:00:00+08:00 至 2026-09-05T11:00:00+08:00，仅表示可参与“仓内波次演练”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T09:00:00+08:00",
+            "endAt": "2026-09-05T11:00:00+08:00",
+            "purpose": "仓内波次演练",
+            "sourceRef": "syn-ecom-m4-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-ecom-m5",
+      "name": "合成成员·韩路",
+      "role": "承运商集成负责人",
+      "responsibilities": [
+        "维护承运路由",
+        "形成降级与切换记录"
+      ],
+      "boundaries": [
+        "不批准仓内操作",
+        "不承诺未验证时效"
+      ],
+      "evidence": [
+        {
+          "id": "syn-ecom-m5-role",
+          "title": "承运商集成负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护承运路由；形成降级与切换记录。边界：不批准仓内操作；不承诺未验证时效。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-ecom-m5-window",
+          "title": "承运商集成负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T11:00:00+08:00 至 2026-09-05T13:00:00+08:00，仅表示可参与“承运降级联检”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T11:00:00+08:00",
+            "endAt": "2026-09-05T13:00:00+08:00",
+            "purpose": "承运降级联检",
+            "sourceRef": "syn-ecom-m5-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-ecom-m6",
+      "name": "合成成员·苏答",
+      "role": "客服运营负责人",
+      "responsibilities": [
+        "维护首波答复口径",
+        "确认异常升级路径"
+      ],
+      "boundaries": [
+        "不修改订单状态",
+        "不宣布未确认补偿政策"
+      ],
+      "evidence": [
+        {
+          "id": "syn-ecom-m6-role",
+          "title": "客服运营负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护首波答复口径；确认异常升级路径。边界：不修改订单状态；不宣布未确认补偿政策。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-ecom-m6-window",
+          "title": "客服运营负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T13:00:00+08:00 至 2026-09-05T15:00:00+08:00，仅表示可参与“异常答复核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T13:00:00+08:00",
+            "endAt": "2026-09-05T15:00:00+08:00",
+            "purpose": "异常答复核对",
+            "sourceRef": "syn-ecom-m6-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-ecom-m7",
+      "name": "合成成员·余数",
+      "role": "运营数据分析师",
+      "responsibilities": [
+        "维护监控口径",
+        "核对开售数据快照"
+      ],
+      "boundaries": [
+        "不替业务批准开售",
+        "不从不完整数据推断容量"
+      ],
+      "evidence": [
+        {
+          "id": "syn-ecom-m7-role",
+          "title": "运营数据分析师职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护监控口径；核对开售数据快照。边界：不替业务批准开售；不从不完整数据推断容量。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-ecom-m7-window",
+          "title": "运营数据分析师公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T15:00:00+08:00 至 2026-09-05T17:00:00+08:00，仅表示可参与“开售指标核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T15:00:00+08:00",
+            "endAt": "2026-09-05T17:00:00+08:00",
+            "purpose": "开售指标核对",
+            "sourceRef": "syn-ecom-m7-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    }
+  ]
+}

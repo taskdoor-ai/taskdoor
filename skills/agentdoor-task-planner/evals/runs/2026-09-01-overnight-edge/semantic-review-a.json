@@ -1,0 +1,654 @@
+{
+  "reviewer": {
+    "kind": "independent_codex_agent",
+    "taskName": "overnight_review_edge_a",
+    "humanIndustryReview": false
+  },
+  "executionBoundaries": {
+    "runRoot": "/tmp/agentdoor-planner-overnight-edge-20260901",
+    "reviewMode": "仅对冻结输入、输出与期望作离线独立语义评审；没有执行规划或重写答案。",
+    "readScope": [
+      "protocol-snapshot.json（冻结Skill、v0.2契约、Schema、上下文规则）",
+      "expectations-snapshot.json（全局声明及EDGE-01至EDGE-08期望）",
+      "inputs/EDGE-01.json",
+      "outputs/EDGE-01.json",
+      "inputs/EDGE-02.json",
+      "outputs/EDGE-02.json",
+      "inputs/EDGE-03.json",
+      "outputs/EDGE-03.json",
+      "inputs/EDGE-04.json",
+      "outputs/EDGE-04.json",
+      "inputs/EDGE-05.json",
+      "outputs/EDGE-05.json",
+      "inputs/EDGE-06.json",
+      "outputs/EDGE-06.json",
+      "inputs/EDGE-07.json",
+      "outputs/EDGE-07.json",
+      "inputs/EDGE-08.json",
+      "outputs/EDGE-08.json"
+    ],
+    "writes": [
+      "semantic-review-a.json"
+    ],
+    "inputOutputProtocolOrExpectationModified": false,
+    "plannerModelCalled": false,
+    "visibleChecks": [
+      "逐例核对请求意图、最小范围、提议/正式事实、重复关系、必要澄清、人员贡献、期限与依赖。",
+      "核对8例所有evidenceRefs中冻结期望必需来源是否显式出现；回显任务版本是否匹配。",
+      "核对本评审每条证据的JSON Pointer均实际存在。"
+    ],
+    "unobserved": [
+      "未读取执行器、原始模型会话、工具轨迹或其他评分文件；不能证明被测模型是否看过期望。",
+      "输出均声明externalEffects=none，但仅凭JSON不能独立证明实际运行中没有外部副作用、生产ACL或提交写回。",
+      "未进行人类行业专家复核、真实用户闭环、并发幂等、版本化提交或生产可靠性测试。"
+    ],
+    "statusPolicy": "passed/failed按冻结期望原标准报告，不因业务判断可接受而放宽显式必需来源规则；纯来源ID不符与实质业务错误分别列明。"
+  },
+  "cases": [
+    {
+      "caseId": "EDGE-01",
+      "status": "passed",
+      "summary": "正确按查询回答进行中状态及缺少逐字段记录的原因，未把执行者自报升级为正式完成，未生成或修改计划。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "查询与执行边界正确：用户明确禁止建任务或改计划，输出 query/route_required、proposal=null，并提供原任务入口。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-01.json",
+              "pointer": "/message",
+              "note": "只问进展及未完成原因，明确不建任务、不改计划。"
+            },
+            {
+              "file": "outputs/EDGE-01.json",
+              "pointer": "/proposal",
+              "note": "没有任何候选变更。"
+            },
+            {
+              "file": "outputs/EDGE-01.json",
+              "pointer": "/nextActions/0",
+              "note": "只建议打开原任务 edge01-check。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "正确区分执行者报告和正式状态；缺少逐字段核对表是可见交付证据缺口，没有推断停工、低效或容量。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-01.json",
+              "pointer": "/context/tasks/0",
+              "note": "版本4正式状态为 in_progress，完成标准要求12个字段逐项核对记录。"
+            },
+            {
+              "file": "inputs/EDGE-01.json",
+              "pointer": "/context/discussions/0",
+              "note": "report明确记录未附、正式结果待核对。"
+            },
+            {
+              "file": "inputs/EDGE-01.json",
+              "pointer": "/context/sourceRefs/1",
+              "note": "完整附件索引无本轮核对表或接受记录。"
+            },
+            {
+              "file": "outputs/EDGE-01.json",
+              "pointer": "/reasoningSummary",
+              "note": "引用正式记录、报告和附件索引并保留不同证据层次。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "EDGE-02",
+      "status": "failed",
+      "summary": "业务语义符合沿用要求；按冻结评分原标准，因未显式引用必需的 edge02-index-record 判为失败，裁定建议另列。",
+      "findings": [
+        {
+          "severity": "error",
+          "text": "冻结评分要求显式包含 edge02-index-record，但输出所有 evidenceRefs 均未出现该ID；输出使用 edge02-index 与 edge02-confirmed-scope 支持判断。此项是原评分的来源覆盖不符，未发现与之对应的业务事实或范围错误。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-02.json",
+              "pointer": "/context/sourceRefs/1",
+              "note": "期望要求的 edge02-index-record 是同快照任务版本3的正式记录。"
+            },
+            {
+              "file": "inputs/EDGE-02.json",
+              "pointer": "/context/tasks/1/sourceRefs",
+              "note": "有效任务实体 edge02-index 直接链接该记录。"
+            },
+            {
+              "file": "outputs/EDGE-02.json",
+              "pointer": "/reasoningSummary/1/evidenceRefs",
+              "note": "引用 edge02-index 与已确认范围，未显式引用指定记录ID。"
+            },
+            {
+              "file": "outputs/EDGE-02.json",
+              "pointer": "/duplicateCheck/assessments/1",
+              "note": "查重理由同样引用有效任务实体与已确认范围。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "现有进行中任务已完整覆盖目录v3和缺失清单；输出 no_change、proposal=null，不重复拆分，不改已确认目标、Owner或完成记录，也未把资料整理扩展为施工验收。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-02.json",
+              "pointer": "/message",
+              "note": "若现有已包含则沿用，禁止重新拆分。"
+            },
+            {
+              "file": "inputs/EDGE-02.json",
+              "pointer": "/context/sourceRefs/3",
+              "note": "确认两项结果已全部被现有任务覆盖，排除现场检查、缺失文件制作与工程验收。"
+            },
+            {
+              "file": "outputs/EDGE-02.json",
+              "pointer": "/disposition",
+              "note": "返回 no_change。"
+            },
+            {
+              "file": "outputs/EDGE-02.json",
+              "pointer": "/proposal",
+              "note": "无候选变更。"
+            },
+            {
+              "file": "outputs/EDGE-02.json",
+              "pointer": "/reasoningSummary/2",
+              "note": "明确不增加范围外工作。"
+            }
+          ]
+        }
+      ],
+      "businessSemanticStatus": "passed",
+      "gradingIssue": {
+        "kind": "over_strict_fixed_evidence_id",
+        "originalExpectationSatisfied": false,
+        "requiredEvidenceRef": "edge02-index-record",
+        "citedAlternativeTaskRef": "edge02-index",
+        "summary": "固定证据ID要求过强：同快照任务实体本身包含相同版本、正式状态、正式Owner及对应来源链接；协议明确允许Task ID作证据。本例没有业务遗漏。原failed状态保留。",
+        "evidence": [
+          {
+            "file": "inputs/EDGE-02.json",
+            "pointer": "/context/tasks/1",
+            "note": "任务实体本身包含与record相同的正式字段和来源链接。"
+          },
+          {
+            "file": "inputs/EDGE-02.json",
+            "pointer": "/context/sourceRefs/1",
+            "note": "指定record仅重复该任务同一版本、状态与正式Owner。"
+          },
+          {
+            "file": "outputs/EDGE-02.json",
+            "pointer": "/reasoningSummary/1/evidenceRefs",
+            "note": "实际引用了对应Task ID，未显式引用固定record ID。"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "EDGE-03",
+      "status": "passed",
+      "summary": "在指代对象和所需动作均不清楚时提出两个必要问题，未擅选K2或M4，也没有转问日期、人数或工时。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "澄清是必要的而非过度阻塞：团队入口没有目标ID、附件或上文，两项候选对象和结果不同；输出只询问对象与目标动作，proposal=null。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-03.json",
+              "pointer": "/message",
+              "note": "原文只有“那个版本再处理一下吧”。"
+            },
+            {
+              "file": "inputs/EDGE-03.json",
+              "pointer": "/context/sourceRefs/2",
+              "note": "入口记录确认无消解指代的上下文。"
+            },
+            {
+              "file": "inputs/EDGE-03.json",
+              "pointer": "/context/tasks",
+              "note": "候选分别为K2图纸B3和M4样机A2，不能按标题或角色代选。"
+            },
+            {
+              "file": "outputs/EDGE-03.json",
+              "pointer": "/questions",
+              "note": "恰好两个阻塞问题：目标对象及希望如何处理。"
+            },
+            {
+              "file": "outputs/EDGE-03.json",
+              "pointer": "/proposal",
+              "note": "没有对任一任务生成变更。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "查重关系保留 possible，正式任务版本完整回显，未把两个候选误当同一任务。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-03.json",
+              "pointer": "/duplicateSearch/matches",
+              "note": "两个对象均为无法明确指代的可见候选。"
+            },
+            {
+              "file": "outputs/EDGE-03.json",
+              "pointer": "/duplicateCheck/assessments",
+              "note": "逐项说明身份和动作未知。"
+            },
+            {
+              "file": "outputs/EDGE-03.json",
+              "pointer": "/baseTaskVersions",
+              "note": "原版本2和3均保留。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "EDGE-04",
+      "status": "passed",
+      "summary": "仅回应问候并询问具体事项，没有从团队职责凭空生成内容项目，也未把无工作内容误报为读取失败。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "没有将问候强行解释成创建意图；输出简单询问是否有具体事项，未索要负责人、日期、预算或工时表单。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-04.json",
+              "pointer": "/message",
+              "note": "用户只发送早上好及表情。"
+            },
+            {
+              "file": "inputs/EDGE-04.json",
+              "pointer": "/context/sourceRefs/0",
+              "note": "没有附件、草稿、目标任务或待处理业务内容。"
+            },
+            {
+              "file": "outputs/EDGE-04.json",
+              "pointer": "/summary",
+              "note": "简短回应并说明不据问候创建或修改。"
+            },
+            {
+              "file": "outputs/EDGE-04.json",
+              "pointer": "/questions",
+              "note": "仅一个具体事项问题。"
+            },
+            {
+              "file": "outputs/EDGE-04.json",
+              "pointer": "/proposal",
+              "note": "没有计划候选。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "正确保留 completed 查重状态；业务目标缺失没有被误当成上下文读取失败。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-04.json",
+              "pointer": "/duplicateSearch",
+              "note": "查重完整、无匹配。"
+            },
+            {
+              "file": "outputs/EDGE-04.json",
+              "pointer": "/duplicateCheck",
+              "note": "状态与范围如实回显。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "EDGE-05",
+      "status": "passed",
+      "summary": "以新增12字段静态对照表为主意图，给出一项可审阅候选，同时回答沙箱演示仍待授权且保持原任务不变。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "完整处理主请求和附带查询：只新建字段表候选，保留演示任务；静态资料与演示明确独立，因此没有新增错误依赖或再问是否需要创建。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-05.json",
+              "pointer": "/message",
+              "note": "主请求是字段表候选，顺便查询演示，禁止改演示任务。"
+            },
+            {
+              "file": "inputs/EDGE-05.json",
+              "pointer": "/context/sourceRefs/1",
+              "note": "演示因访问授权未确认而blocked，但不影响静态资料读取。"
+            },
+            {
+              "file": "inputs/EDGE-05.json",
+              "pointer": "/context/sourceRefs/2",
+              "note": "字段表不是演示前置，也不需要演示结果。"
+            },
+            {
+              "file": "outputs/EDGE-05.json",
+              "pointer": "/summary",
+              "note": "同时给出新候选和演示当前阻塞原因。"
+            },
+            {
+              "file": "outputs/EDGE-05.json",
+              "pointer": "/proposal/changes",
+              "note": "仅一个独立根任务create。"
+            },
+            {
+              "file": "outputs/EDGE-05.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "原演示任务保持。"
+            },
+            {
+              "file": "outputs/EDGE-05.json",
+              "pointer": "/proposal/changes/0/fields/dependsOnTaskIds",
+              "note": "依赖为空，未强加授权或演示依赖。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "范围、责任与未知处理合理：字段限定12项并要求对应版本、单列冲突；沈言的字段映射职责支持推荐；不为凑参与者加人，日期与EWD未知不阻塞审阅。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-05.json",
+              "pointer": "/context/sourceRefs/2",
+              "note": "明确12字段、FIELD-QW-v4、冲突单列及不执行API。"
+            },
+            {
+              "file": "inputs/EDGE-05.json",
+              "pointer": "/members/2/responsibilities",
+              "note": "沈言负责字段映射和按约定口径核对迁移数据。"
+            },
+            {
+              "file": "outputs/EDGE-05.json",
+              "pointer": "/proposal/changes/0/fields",
+              "note": "标准覆盖范围，Owner为推荐而非接受，参与者为空，日期和EWD为null。"
+            },
+            {
+              "file": "outputs/EDGE-05.json",
+              "pointer": "/questions",
+              "note": "未重复索要已有信息。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "EDGE-06",
+      "status": "passed",
+      "summary": "保留明确的9月8日日期意图，仅澄清同名任务的客户/租户/批次，不改任一任务或重复追问日期。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "同名不等于同一业务对象：两个任务对应不同客户、租户和批次，入口无选中ID；输出在确定对象前保持proposal=null，没有默认第一项、合并或同时修改。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-06.json",
+              "pointer": "/context/tasks",
+              "note": "栖湾QW-CRM一批与南原NY-SERVICE二批分别有不同日期。"
+            },
+            {
+              "file": "inputs/EDGE-06.json",
+              "pointer": "/context/sourceRefs/2",
+              "note": "入口没有选中Task ID或其他身份上下文。"
+            },
+            {
+              "file": "outputs/EDGE-06.json",
+              "pointer": "/questions/0",
+              "note": "一个问题列出可区分的客户、租户、批次和当前日期。"
+            },
+            {
+              "file": "outputs/EDGE-06.json",
+              "pointer": "/proposal",
+              "note": "未生成变更。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "没有丢失已知日期，也没有因对象歧义追加无关问题。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-06.json",
+              "pointer": "/message",
+              "note": "只改为2026年9月8日，其他不动。"
+            },
+            {
+              "file": "outputs/EDGE-06.json",
+              "pointer": "/summary",
+              "note": "明确保留9月8日及其他不变的意图。"
+            },
+            {
+              "file": "outputs/EDGE-06.json",
+              "pointer": "/questions",
+              "note": "仅问应调整哪项，不要求重新提供日期。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "EDGE-07",
+      "status": "failed",
+      "summary": "业务语义正确补入开箱说明并保持FAQ及培训不变；按冻结评分原标准，因未显式引用必需的 edge07-faq-record 判为失败，裁定建议另列。",
+      "findings": [
+        {
+          "severity": "error",
+          "text": "冻结评分要求显式包含 edge07-faq-record，但输出所有 evidenceRefs 均未出现该ID；输出使用 edge07-faq 及 edge07-gap-confirm 支持正式完成与新增边界判断。此项是来源覆盖不符，未发现对应的业务语义错误。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-07.json",
+              "pointer": "/context/sourceRefs/1",
+              "note": "期望指定的FAQ正式完成记录为版本3。"
+            },
+            {
+              "file": "inputs/EDGE-07.json",
+              "pointer": "/context/tasks/1",
+              "note": "有效FAQ实体本身包含completed状态、版本3及该来源链接。"
+            },
+            {
+              "file": "outputs/EDGE-07.json",
+              "pointer": "/reasoningSummary/1",
+              "note": "依据有效FAQ实体说明正式完成，但未显式引用记录ID。"
+            },
+            {
+              "file": "outputs/EDGE-07.json",
+              "pointer": "/duplicateCheck/assessments/1",
+              "note": "以真实overlap及resolution保留旧FAQ、只补新增范围。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "新增范围没有因查重被丢弃或换标签规避：沿用edge07-root，只补一页开箱说明并局部更新未锁定根标准；overlap resolution正确绑定实际create的change ID。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-07.json",
+              "pointer": "/message",
+              "note": "客户追加同包一页说明，只补缺口、原FAQ和培训不重做。"
+            },
+            {
+              "file": "inputs/EDGE-07.json",
+              "pointer": "/context/sourceRefs/3",
+              "note": "新说明尚无任务或稿件，根标准未锁定，Owner和根目的保持。"
+            },
+            {
+              "file": "outputs/EDGE-07.json",
+              "pointer": "/proposal",
+              "note": "只更新根标准并新增一个直属说明任务；已完成FAQ和培训均保留。"
+            },
+            {
+              "file": "outputs/EDGE-07.json",
+              "pointer": "/duplicateCheck/assessments",
+              "note": "两个overlap均将独立新增范围绑定change-edge07-create-unboxing。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "时间与人员贡献有据可查：9月7日说明早于根9月8日，培训只依赖FAQ且9月5日不动；内容设计负责制作、客服负责人核对引用口径属于必要协作，没有把培训窗口当制作容量。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-07.json",
+              "pointer": "/context/tasks/2",
+              "note": "原培训日期9月5日，仅依赖FAQ。"
+            },
+            {
+              "file": "inputs/EDGE-07.json",
+              "pointer": "/context/sourceRefs/3",
+              "note": "书面确认培训不使用新增说明、不受其交付影响。"
+            },
+            {
+              "file": "inputs/EDGE-07.json",
+              "pointer": "/members/1/responsibilities",
+              "note": "颜北负责商品文案和视觉素材。"
+            },
+            {
+              "file": "inputs/EDGE-07.json",
+              "pointer": "/members/4/responsibilities",
+              "note": "于薇负责客服问答与承诺口径。"
+            },
+            {
+              "file": "outputs/EDGE-07.json",
+              "pointer": "/proposal/changes/1/fields",
+              "note": "责任建议、参与贡献、9月7日日期与空依赖均与输入相符。"
+            },
+            {
+              "file": "outputs/EDGE-07.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "培训和已完成FAQ均不更新。"
+            }
+          ]
+        }
+      ],
+      "businessSemanticStatus": "passed",
+      "gradingIssue": {
+        "kind": "over_strict_fixed_evidence_id",
+        "originalExpectationSatisfied": false,
+        "requiredEvidenceRef": "edge07-faq-record",
+        "citedAlternativeTaskRef": "edge07-faq",
+        "summary": "固定证据ID要求过强：同快照任务实体本身包含相同版本、正式状态、正式Owner及对应来源链接；协议明确允许Task ID作证据。本例没有业务遗漏。原failed状态保留。",
+        "evidence": [
+          {
+            "file": "inputs/EDGE-07.json",
+            "pointer": "/context/tasks/1",
+            "note": "任务实体本身包含与record相同的正式字段和来源链接。"
+          },
+          {
+            "file": "inputs/EDGE-07.json",
+            "pointer": "/context/sourceRefs/1",
+            "note": "指定record仅重复该任务同一版本、状态与正式Owner。"
+          },
+          {
+            "file": "outputs/EDGE-07.json",
+            "pointer": "/reasoningSummary/1/evidenceRefs",
+            "note": "实际引用了对应Task ID，未显式引用固定record ID。"
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "EDGE-08",
+      "status": "passed",
+      "summary": "按10月31日闭店时点创建一个一次性盘点候选，正确区分9月实例，仅复用口径而不复制事实、日期、工时或生成周期配置。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "不同月份被正确判为different_instance：10月本期库存需重新核对，9月任务继续保留；没有把前一月未完成当作阻塞，也未建立虚假月间依赖。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-08.json",
+              "pointer": "/message",
+              "note": "只要10月这一单，9月继续且不合并，不设置自动重复或自动指派。"
+            },
+            {
+              "file": "inputs/EDGE-08.json",
+              "pointer": "/context/sourceRefs/1",
+              "note": "10月31日闭店时点、本期数据、新的一次性候选。"
+            },
+            {
+              "file": "outputs/EDGE-08.json",
+              "pointer": "/duplicateCheck/assessments/0",
+              "note": "按9月30日与10月31日业务时点区分实例。"
+            },
+            {
+              "file": "outputs/EDGE-08.json",
+              "pointer": "/proposal/changes",
+              "note": "恰好一个10月create，无9月update。"
+            },
+            {
+              "file": "outputs/EDGE-08.json",
+              "pointer": "/proposal/changes/0/fields/dependsOnTaskIds",
+              "note": "空依赖，旧月只作为口径参考。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "日期和职责的处理没有越界：保留明确10月31日边界，开始日/EWD未知；根据01店店长职责推荐而非复制旧Owner或承诺排班，未设置循环、通知或未来批次。",
+          "evidence": [
+            {
+              "file": "inputs/EDGE-08.json",
+              "pointer": "/constraints",
+              "note": "硬日期10月31日、仅本次、recurrenceRequested=false。"
+            },
+            {
+              "file": "inputs/EDGE-08.json",
+              "pointer": "/members/1",
+              "note": "01店店长职责覆盖落实与本店记录复核，公开窗口只在9月4日。"
+            },
+            {
+              "file": "outputs/EDGE-08.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "note": "按职责推荐且说明非自动继承和排班。"
+            },
+            {
+              "file": "outputs/EDGE-08.json",
+              "pointer": "/proposal/changes/0/fields/schedule",
+              "note": "保留明确截止日期，开始时间null，不从9月窗口推出10月容量。"
+            },
+            {
+              "file": "outputs/EDGE-08.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "note": "EWD null，未复用旧月事实或把等待计入投入。"
+            },
+            {
+              "file": "outputs/EDGE-08.json",
+              "pointer": "/externalEffects",
+              "note": "仅声明none，无执行内容。"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "passed": 6,
+    "failed": 2,
+    "unknown": 0,
+    "substantiveSemanticFailures": 0,
+    "strictEvidenceOnlyFailures": [
+      "EDGE-02",
+      "EDGE-07"
+    ]
+  },
+  "adjudicationRecommendations": [
+    {
+      "caseId": "EDGE-02",
+      "originalStatus": "failed",
+      "proposedSemanticStatus": "passed",
+      "recommendation": "保留本次原始failed结果；如评估目标是业务语义，可另外接受同一冻结快照中edge02-index任务实体与edge02-index-record为等价事实证据。不要回写现有期望或答案。",
+      "rationale": "协议允许Task ID作evidenceRefs；输出正确引用包含完成标准及版本的edge02-index和明确完整覆盖的edge02-confirmed-scope，没有事实缺失。"
+    },
+    {
+      "caseId": "EDGE-07",
+      "originalStatus": "failed",
+      "proposedSemanticStatus": "passed",
+      "recommendation": "保留本次原始failed结果；建议后续评分将同快照edge07-faq实体与edge07-faq-record视为可替代证据，继续独立检查新增范围、旧记录保护及依赖语义。",
+      "rationale": "协议允许Task ID作evidenceRefs；FAQ实体已包含正式completed状态、版本3与sourceRefs链接，输出未由讨论推断完成，并正确使用已确认新增边界。"
+    }
+  ],
+  "conclusion": "冻结原标准为6通过、2失败、0未知；2失败均为指定来源ID未显式引用。本次8例未发现实质业务语义错误，仅能说明所见合成工件的表现，不能宣称生产可靠性。"
+}

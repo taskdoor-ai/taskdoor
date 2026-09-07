@@ -1,0 +1,107 @@
+{
+  "purpose": "EWD、任务投入与个人安排的合成案例，不是运行时Schema或生产记录",
+  "version": "0.2",
+  "synthetic": true,
+  "productTestsExecuted": false,
+  "humanUnit": "hour",
+  "timezone": "Asia/Shanghai",
+  "cases": [
+    {
+      "id": "JA-01",
+      "leaves": [
+        {"id": "deliverable", "ewd": 10, "accepted": true, "actualByPerson": {"甲": 2, "乙": 9}, "remainingByPerson": {"甲": 0, "乙": 0}},
+        {"id": "handoff", "ewd": 2, "accepted": false, "actualByPerson": {"甲": 1}, "remainingByPerson": {"甲": 1}}
+      ],
+      "expected": {"E": 12, "A": 12, "R": 1, "F": 13, "C": 10, "progressFraction": [10, 12], "remainingFor甲": 1}
+    },
+    {
+      "id": "JA-02",
+      "initialBaseline": 10,
+      "leavesBefore": [
+        {"id": "work-a", "ewd": 4, "accepted": true, "actual": 5, "remaining": 0},
+        {"id": "work-b", "ewd": 6, "accepted": false, "actual": 2, "remaining": 4}
+      ],
+      "cancel": {"taskId": "work-b", "remainingObligationsExplicitlyReleased": true, "historicalActualRetained": true},
+      "expectedBefore": {"E": 10, "C": 4, "A": 7, "R": 4, "F": 11},
+      "expectedAfter": {"E": 4, "C": 4, "A": 7, "R": 0, "F": 7, "progressFraction": [4, 4]}
+    },
+    {
+      "id": "JA-03",
+      "continuesFrom": "JA-02",
+      "reopen": {"taskId": "work-a", "newRemaining": 3, "newActualRecorded": 0},
+      "expected": {"E": 4, "C": 0, "A": 7, "R": 3, "F": 10, "initialBaseline": 10},
+      "prohibitedConclusion": "范围已经变化，F等于初始基线不能证明原估算准确"
+    },
+    {
+      "id": "JA-04",
+      "capacityThroughDeadline": 3,
+      "deadline": "2026-09-01T17:00:00+08:00",
+      "commitments": [
+        {"id": "a", "remainingForSelf": 2},
+        {"id": "b", "remainingForSelf": 2}
+      ],
+      "coverage": "complete",
+      "expected": {"demand": 4, "capacity": 3, "shortfall": 1, "decision": "承诺冲突，需人选择范围/日期/资源调整"}
+    },
+    {
+      "id": "JA-05",
+      "availableWindows": [
+        ["2026-09-01T09:00:00+08:00", "2026-09-01T10:00:00+08:00"],
+        ["2026-09-01T14:00:00+08:00", "2026-09-01T15:00:00+08:00"]
+      ],
+      "releaseAt": "2026-09-01T14:00:00+08:00",
+      "deadline": "2026-09-01T15:00:00+08:00",
+      "remaining": 2,
+      "expected": {"rawCapacity": 2, "usableCapacityAfterRelease": 1, "shortfall": 1, "feasible": false}
+    },
+    {
+      "id": "JA-06",
+      "knownRemainingForSelf": 0.5,
+      "anotherCommittedTaskRemaining": null,
+      "manualFirstTask": "another-committed-task",
+      "expected": {"completePersonalDemand": null, "loadRatio": null, "preserveManualOrder": true}
+    },
+    {
+      "id": "JA-07",
+      "workWindowHours": 4,
+      "nonTaskFixedHours": 0,
+      "taskReservationHours": 2,
+      "sameTaskRemaining": 2,
+      "expected": {"capacity": 4, "demand": 2, "unusedCapacity": 2, "loadRatio": 0.5}
+    },
+    {
+      "id": "JA-08",
+      "currency": "CNY",
+      "assumptionsOnly": true,
+      "periodFixedFee": 100,
+      "taskAllocationFraction": 0.2,
+      "includedQuotaMustNotBeChargedAgain": true,
+      "separateExcessFee": 5,
+      "recordedHumanHours": 4,
+      "hypotheticalReferenceRatePerHour": 50,
+      "expected": {"directExpense": 25, "humanReferenceValue": 200, "combinedReferenceValue": 225, "isCashPaid": false},
+      "withoutRatePermission": {"combinedReferenceValue": null, "humanReferenceValue": null}
+    },
+    {
+      "id": "JA-10",
+      "leaves": [
+        {"ewd": 9, "accepted": true},
+        {"ewd": 1, "accepted": false, "prerequisiteAvailable": false}
+      ],
+      "expected": {"E": 10, "C": 9, "progressFraction": [9, 10], "mayDeclareOnTimeOrCloseParent": false}
+    },
+    {
+      "id": "JA-11",
+      "methodExampleOnly": true,
+      "sameBaselineAndCoverage": true,
+      "unit": "hypothetical_same_currency_cost_unit",
+      "input": {"BAC": 10000, "PV": 5000, "EV": 4000, "AC": 6000, "independentlyEstimatedETC": 7000},
+      "expected": {"CPIFraction": [2, 3], "SPI": 0.8, "CV": -2000, "SV": -1000, "bottomUpEAC": 13000, "VAC": -3000},
+      "prohibitedConclusions": ["延期20%的自然工期", "当前产品已实现EVM", "未来必然保持当前CPI"]
+    }
+  ],
+  "nonNumericAcceptanceCases": [
+    {"id": "JA-09", "expectation": "重挂不静默改历史投入归属，父子及多Task分配按唯一来源去重，明确调整留痕"},
+    {"id": "JA-12", "expectation": "缺信息不造完整预测；版本变化使旧建议过期；撤权立即使受限缓存、导出和旧回执不可用"}
+  ]
+}

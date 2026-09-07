@@ -1,0 +1,439 @@
+{
+  "requestId": "req-reno-03",
+  "message": "A户上周已经移交，业主今天新增了一条客厅墙面色差反馈。请根据原任务、移交记录和讨论安排后续复核，原移交记录不要覆盖。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "renovation-m6",
+  "teamId": "team-renovation",
+  "authorizedTeamIds": [
+    "team-renovation"
+  ],
+  "revision": 1,
+  "context": {
+    "snapshotId": "snapshot-reno-03-v1",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-renovation"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "reno03-root",
+        "title": "A户装修收尾移交",
+        "status": "completed",
+        "version": 6,
+        "updatedAt": "2026-08-28T16:00:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "按当时确认范围提交资料并保留移交记录"
+        ],
+        "ownerId": "renovation-m1",
+        "sourceRefs": [
+          "reno03-root-record"
+        ],
+        "identity": {
+          "project": "合成·澄居A户",
+          "handoverBatch": "handover-20260828"
+        }
+      },
+      {
+        "id": "reno03-docs",
+        "title": "交付A户资料目录v2",
+        "status": "completed",
+        "version": 2,
+        "updatedAt": "2026-08-27T16:00:00+08:00",
+        "parentId": "reno03-root",
+        "acceptanceCriteria": [
+          "目录v2与已提交资料对应"
+        ],
+        "ownerId": "renovation-m6",
+        "sourceRefs": [
+          "reno03-docs-record"
+        ]
+      },
+      {
+        "id": "reno03-old",
+        "title": "复核A户原表面问题清单",
+        "status": "completed",
+        "version": 4,
+        "updatedAt": "2026-08-28T13:00:00+08:00",
+        "parentId": "reno03-root",
+        "acceptanceCriteria": [
+          "核对原问题清单P-08并留复核记录"
+        ],
+        "ownerId": "renovation-m5",
+        "sourceRefs": [
+          "reno03-old-record"
+        ]
+      }
+    ],
+    "discussions": [
+      {
+        "id": "reno03-d1",
+        "taskId": "reno03-root",
+        "authorId": "renovation-m1",
+        "createdAt": "2026-09-01T10:30:00+08:00",
+        "kind": "report",
+        "text": "业主今天报告客厅墙面白天有色差，反馈编号A-NEW-09；还没现场复核，原P-08没有这一位置记录。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "reno03-d2",
+        "taskId": "reno03-old",
+        "authorId": "renovation-m4",
+        "createdAt": "2026-09-01T10:30:00+08:00",
+        "kind": "proposal",
+        "text": "是否把原单改回未完成方便跟进？目前没人授权重开。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "reno03-d3",
+        "taskId": "reno03-root",
+        "authorId": "renovation-m5",
+        "createdAt": "2026-09-01T10:30:00+08:00",
+        "kind": "question",
+        "text": "需要先核对反馈位置和原确认饰面版本，再约现场查看；现在无法判断成因。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "reno03-h1",
+        "taskId": "reno03-root",
+        "occurredAt": "2026-08-28T16:00:00+08:00",
+        "type": "task_completed",
+        "summary": "8月28日按当时范围完成资料与移交记录，版本6。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "reno03-root-record",
+        "title": "A户装修收尾移交当前记录",
+        "text": "合成任务库快照：reno03-root，版本6，状态completed；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-08-28T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "reno03-docs-record",
+        "title": "交付A户资料目录v2当前记录",
+        "text": "合成任务库快照：reno03-docs，版本2，状态completed；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-08-27T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "reno03-old-record",
+        "title": "复核A户原表面问题清单当前记录",
+        "text": "合成任务库快照：reno03-old，版本4，状态completed；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-08-28T13:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "reno03-handover",
+        "title": "8月28日移交记录（合成）",
+        "text": "A户移交批次handover-20260828，范围包括目录v2和问题清单P-08；该历史记录不包含9月1日新增反馈。",
+        "updatedAt": "2026-08-28T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "reno03-feedback",
+        "title": "新增反馈A-NEW-09（合成）",
+        "text": "2026-09-01业主文字反馈：客厅墙面自然光下疑似色差。当前没有现场复核记录或责任判断。",
+        "updatedAt": "2026-09-01T09:00:00+08:00",
+        "source": "synthetic_business_record"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-renovation"
+    ],
+    "matches": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "currentTaskId": "reno03-root",
+  "members": [
+    {
+      "id": "renovation-m1",
+      "name": "赵屿",
+      "role": "项目交付协调",
+      "responsibilities": [
+        "组织收尾问题与移交计划",
+        "协调业主和各责任方"
+      ],
+      "boundaries": [
+        "不代有权人员验收签字",
+        "不提供施工安全或法律结论"
+      ],
+      "evidence": [
+        {
+          "id": "renovation-m1-role",
+          "title": "赵屿职责说明（合成）",
+          "text": "职责：组织收尾问题与移交计划；协调业主和各责任方。边界：不代有权人员验收签字；不提供施工安全或法律结论。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "renovation-m1-work",
+          "title": "赵屿当前工作自报（合成）",
+          "text": "整理A户资料与未完问题",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理A户资料与未完问题",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "renovation-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "renovation-m2",
+      "name": "汪晴",
+      "role": "设计资料协调",
+      "responsibilities": [
+        "核对已确认的饰面与图纸版本",
+        "定位客户设计变更记录"
+      ],
+      "boundaries": [
+        "不在夹具中判断结构或专业施工安全",
+        "不自动批准替代材料"
+      ],
+      "evidence": [
+        {
+          "id": "renovation-m2-role",
+          "title": "汪晴职责说明（合成）",
+          "text": "职责：核对已确认的饰面与图纸版本；定位客户设计变更记录。边界：不在夹具中判断结构或专业施工安全；不自动批准替代材料。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "renovation-m2-work",
+          "title": "汪晴当前工作自报（合成）",
+          "text": "核对A户收尾版本说明",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对A户收尾版本说明",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "renovation-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "renovation-m3",
+      "name": "孟尧",
+      "role": "材料采购协调",
+      "responsibilities": [
+        "核对指定材料和交货记录",
+        "追踪供应商回复"
+      ],
+      "boundaries": [
+        "不把收货当工程验收",
+        "不擅自变更材料"
+      ],
+      "evidence": [
+        {
+          "id": "renovation-m3-role",
+          "title": "孟尧职责说明（合成）",
+          "text": "职责：核对指定材料和交货记录；追踪供应商回复。边界：不把收货当工程验收；不擅自变更材料。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "renovation-m3-work",
+          "title": "孟尧当前工作自报（合成）",
+          "text": "跟进收尾材料补送",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "跟进收尾材料补送",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "renovation-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "renovation-m4",
+      "name": "陆行",
+      "role": "现场协调",
+      "responsibilities": [
+        "收集现场开放窗口",
+        "安排责任方查看问题"
+      ],
+      "boundaries": [
+        "不提供设备或施工操作指导",
+        "不替物业承诺开放时间"
+      ],
+      "evidence": [
+        {
+          "id": "renovation-m4-role",
+          "title": "陆行职责说明（合成）",
+          "text": "职责：收集现场开放窗口；安排责任方查看问题。边界：不提供设备或施工操作指导；不替物业承诺开放时间。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "renovation-m4-work",
+          "title": "陆行当前工作自报（合成）",
+          "text": "协调A户现场问题查看",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "renovation-m4-window",
+          "title": "陆行公开协作窗口（合成）",
+          "text": "2026-09-08T14:00:00+08:00至2026-09-08T16:00:00+08:00。可参与资料核对；现场是否开放以独立回执为准。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调A户现场问题查看",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "renovation-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-08T14:00:00+08:00",
+        "endAt": "2026-09-08T16:00:00+08:00",
+        "sourceRef": "renovation-m4-window",
+        "note": "可参与资料核对；现场是否开放以独立回执为准。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "renovation-m5",
+      "name": "何沐",
+      "role": "交付问题复核",
+      "responsibilities": [
+        "核对问题清单与复核记录",
+        "区分报告修复和已确认关闭"
+      ],
+      "boundaries": [
+        "不代业主签收",
+        "不输出专业技术安全结论"
+      ],
+      "evidence": [
+        {
+          "id": "renovation-m5-role",
+          "title": "何沐职责说明（合成）",
+          "text": "职责：核对问题清单与复核记录；区分报告修复和已确认关闭。边界：不代业主签收；不输出专业技术安全结论。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "renovation-m5-work",
+          "title": "何沐当前工作自报（合成）",
+          "text": "核对表面问题记录",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "renovation-m5-window",
+          "title": "何沐公开协作窗口（合成）",
+          "text": "2026-09-10T09:00:00+08:00至2026-09-10T11:00:00+08:00。仅为问题复核协调窗口，非验收授权。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对表面问题记录",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "renovation-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-10T09:00:00+08:00",
+        "endAt": "2026-09-10T11:00:00+08:00",
+        "sourceRef": "renovation-m5-window",
+        "note": "仅为问题复核协调窗口，非验收授权。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "renovation-m6",
+      "name": "林庭",
+      "role": "移交资料管理",
+      "responsibilities": [
+        "整理图纸目录与设备资料引用",
+        "记录移交清单和缺失项"
+      ],
+      "boundaries": [
+        "不将文件齐全当工程合格",
+        "不自行关闭未完问题"
+      ],
+      "evidence": [
+        {
+          "id": "renovation-m6-role",
+          "title": "林庭职责说明（合成）",
+          "text": "职责：整理图纸目录与设备资料引用；记录移交清单和缺失项。边界：不将文件齐全当工程合格；不自行关闭未完问题。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "renovation-m6-work",
+          "title": "林庭当前工作自报（合成）",
+          "text": "核对资料目录和回执",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对资料目录和回执",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "renovation-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1005 @@
+{
+  "requestId": "syn-req-rel-a-01",
+  "message": "请重排“星渡桌面4.8发布就绪”：商店新增公证回执v2要求，但列表里已经有rc3回执任务，直接复用，不要再建。只把它接到真正需要的安全闸门和商店提交；9月12日、两小时灰度和已确认标准都不动。",
+  "currentDate": "2026-09-04",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "syn-rel-m1",
+  "teamId": "syn-team-release-a",
+  "authorizedTeamIds": [
+    "syn-team-release-a"
+  ],
+  "revision": 11,
+  "currentTaskId": "syn-rel-root",
+  "synthetic": true,
+  "context": {
+    "snapshotId": "syn-snapshot-rel-a-11",
+    "asOf": "2026-09-04T12:15:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "syn-team-release-a"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete",
+      "files": "complete"
+    },
+    "tasks": [
+      {
+        "id": "syn-rel-root",
+        "title": "交付星渡桌面4.8发布就绪",
+        "status": "in_progress",
+        "version": 10,
+        "updatedAt": "2026-09-04T12:10:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "安全、质量、商店和灰度闸门均有可追溯证据",
+          "2026-09-12发布窗口保持，范围变化须重新确认"
+        ],
+        "ownerId": "syn-rel-m1",
+        "sourceRefs": [
+          "syn-rel-file-01",
+          "syn-rel-file-04"
+        ],
+        "dueOn": "2026-09-12",
+        "dependsOnTaskIds": [],
+        "goal": "让4.8在保留既定安全与灰度边界下可发布",
+        "identity": {
+          "product": "合成·星渡桌面",
+          "version": "4.8.0",
+          "releaseWindow": "2026-09-12"
+        }
+      },
+      {
+        "id": "syn-rel-build",
+        "title": "形成4.8可发布构建",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-04T10:30:00+08:00",
+        "parentId": "syn-rel-root",
+        "acceptanceCriteria": [
+          "rc3桌面与后端构建可追溯且兼容"
+        ],
+        "ownerId": "syn-rel-m2",
+        "sourceRefs": [
+          "syn-rel-file-02",
+          "syn-rel-file-03"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-rel-assurance",
+        "title": "完成4.8质量与安全证明",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-04T11:40:00+08:00",
+        "parentId": "syn-rel-root",
+        "acceptanceCriteria": [
+          "回归、安全和灰度结果分别留证"
+        ],
+        "ownerId": "syn-rel-m4",
+        "sourceRefs": [
+          "syn-rel-file-04",
+          "syn-rel-file-06"
+        ],
+        "dueOn": "2026-09-10",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-rel-distribution",
+        "title": "形成4.8商店发布包",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-04T11:55:00+08:00",
+        "parentId": "syn-rel-root",
+        "acceptanceCriteria": [
+          "商店包、发行说明和最终批准一致"
+        ],
+        "ownerId": "syn-rel-m6",
+        "sourceRefs": [
+          "syn-rel-file-05"
+        ],
+        "dueOn": "2026-09-11",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-rel-desktop",
+        "title": "产出桌面端4.8.0-rc3",
+        "status": "in_progress",
+        "version": 8,
+        "updatedAt": "2026-09-04T10:20:00+08:00",
+        "parentId": "syn-rel-build",
+        "acceptanceCriteria": [
+          "rc3安装包哈希与构建日志一致"
+        ],
+        "ownerId": "syn-rel-m2",
+        "sourceRefs": [
+          "syn-rel-file-02",
+          "syn-rel-file-03"
+        ],
+        "dueOn": "2026-09-05",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-rel-notary-v2",
+        "title": "取得rc3公证回执v2",
+        "status": "open",
+        "version": 2,
+        "updatedAt": "2026-09-04T10:25:00+08:00",
+        "parentId": "syn-rel-desktop",
+        "acceptanceCriteria": [
+          "回执签署字段完整",
+          "回执哈希与rc3一致"
+        ],
+        "ownerId": "syn-rel-m2",
+        "sourceRefs": [
+          "syn-rel-file-02",
+          "syn-rel-file-03"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-rel-backend",
+        "title": "交付4.8兼容后端",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2026-09-03T15:30:00+08:00",
+        "parentId": "syn-rel-build",
+        "acceptanceCriteria": [
+          "兼容接口通过合成回归并留有回退说明"
+        ],
+        "ownerId": "syn-rel-m3",
+        "sourceRefs": [
+          "syn-rel-file-04"
+        ],
+        "dueOn": "2026-09-03",
+        "dependsOnTaskIds": [],
+        "deliveryEvidence": [
+          {
+            "sourceRef": "syn-rel-file-04",
+            "summary": "兼容后端证据已归档；不代表桌面公证完成。"
+          }
+        ]
+      },
+      {
+        "id": "syn-rel-qa",
+        "title": "维护4.8测试基线",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-04T09:50:00+08:00",
+        "parentId": "syn-rel-assurance",
+        "acceptanceCriteria": [
+          "测试范围与rc3构建对应"
+        ],
+        "ownerId": "syn-rel-m4",
+        "sourceRefs": [
+          "syn-rel-file-04"
+        ],
+        "dueOn": "2026-09-07",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-rel-regression",
+        "title": "完成rc3发布回归",
+        "status": "completed",
+        "version": 7,
+        "updatedAt": "2026-09-04T09:45:00+08:00",
+        "parentId": "syn-rel-assurance",
+        "acceptanceCriteria": [
+          "关键路径回归通过并保留失败项处置"
+        ],
+        "ownerId": "syn-rel-m4",
+        "sourceRefs": [
+          "syn-rel-file-04"
+        ],
+        "dueOn": "2026-09-04",
+        "dependsOnTaskIds": [
+          "syn-rel-desktop",
+          "syn-rel-backend"
+        ],
+        "deliveryEvidence": [
+          {
+            "sourceRef": "syn-rel-file-04",
+            "summary": "回归结论版本5已记录。"
+          }
+        ]
+      },
+      {
+        "id": "syn-rel-security-gate",
+        "title": "形成4.8安全闸门结论",
+        "status": "open",
+        "version": 4,
+        "updatedAt": "2026-09-04T11:40:00+08:00",
+        "parentId": "syn-rel-assurance",
+        "acceptanceCriteria": [
+          "验证签名、SBOM与回归证据后记录结论"
+        ],
+        "ownerId": "syn-rel-m5",
+        "sourceRefs": [
+          "syn-rel-file-02",
+          "syn-rel-file-04"
+        ],
+        "dueOn": "2026-09-08",
+        "dependsOnTaskIds": [
+          "syn-rel-regression"
+        ]
+      },
+      {
+        "id": "syn-rel-canary",
+        "title": "完成4.8两小时灰度观察",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-03T17:20:00+08:00",
+        "parentId": "syn-rel-assurance",
+        "acceptanceCriteria": [
+          "按批准模板完成两小时观察并记录回退判断"
+        ],
+        "ownerId": "syn-rel-m4",
+        "sourceRefs": [
+          "syn-rel-file-01",
+          "syn-rel-file-06"
+        ],
+        "dueOn": "2026-09-10",
+        "dependsOnTaskIds": [
+          "syn-rel-regression",
+          "syn-rel-backend"
+        ]
+      },
+      {
+        "id": "syn-rel-release-notes",
+        "title": "定稿4.8发行说明",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-04T09:30:00+08:00",
+        "parentId": "syn-rel-distribution",
+        "acceptanceCriteria": [
+          "变更、已知限制和回退入口完整"
+        ],
+        "ownerId": "syn-rel-m7",
+        "sourceRefs": [
+          "syn-rel-file-05"
+        ],
+        "dueOn": "2026-09-07",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-rel-store-submit",
+        "title": "提交4.8商店发布包",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-04T11:55:00+08:00",
+        "parentId": "syn-rel-distribution",
+        "acceptanceCriteria": [
+          "商店接收发行说明、安装包与公证回执"
+        ],
+        "ownerId": "syn-rel-m6",
+        "sourceRefs": [
+          "syn-rel-file-02",
+          "syn-rel-file-05"
+        ],
+        "dueOn": "2026-09-09",
+        "dependsOnTaskIds": [
+          "syn-rel-release-notes"
+        ]
+      },
+      {
+        "id": "syn-rel-final-approval",
+        "title": "形成4.8最终发布批准记录",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-03T17:20:00+08:00",
+        "parentId": "syn-rel-distribution",
+        "acceptanceCriteria": [
+          "安全、灰度、商店三个闸门均完成后记录批准或拒绝"
+        ],
+        "ownerId": "syn-rel-m1",
+        "sourceRefs": [
+          "syn-rel-file-01",
+          "syn-rel-file-06"
+        ],
+        "dueOn": "2026-09-11",
+        "dependsOnTaskIds": [
+          "syn-rel-security-gate",
+          "syn-rel-canary",
+          "syn-rel-store-submit"
+        ]
+      }
+    ],
+    "discussions": [
+      {
+        "id": "syn-rel-d01",
+        "taskId": "syn-rel-notary-v2",
+        "authorId": "syn-rel-m6",
+        "createdAt": "2026-09-04T09:15:00+08:00",
+        "threadId": "syn-rel-thread-signing",
+        "replyToId": null,
+        "kind": "proposal",
+        "state": "active",
+        "text": "商店新增v2要求，建议再建一个“生成公证回执”任务。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-rel-d02",
+        "taskId": "syn-rel-notary-v2",
+        "authorId": "syn-rel-m2",
+        "createdAt": "2026-09-04T09:28:00+08:00",
+        "threadId": "syn-rel-thread-signing",
+        "replyToId": "syn-rel-d01",
+        "kind": "report",
+        "state": "active",
+        "text": "现有syn-rel-notary-v2已覆盖rc3回执生成与哈希校验，草稿文件已上传但尚未签署。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-rel-d03",
+        "taskId": "syn-rel-notary-v2",
+        "authorId": "syn-rel-m1",
+        "createdAt": "2026-09-04T09:40:00+08:00",
+        "threadId": "syn-rel-thread-signing",
+        "replyToId": "syn-rel-d02",
+        "kind": "decision",
+        "state": "confirmed",
+        "text": "确认复用现有回执任务，不创建同结果任务；本轮只修正实际消费者依赖。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-rel-d04",
+        "taskId": "syn-rel-canary",
+        "authorId": "syn-rel-m6",
+        "createdAt": "2026-09-04T09:50:00+08:00",
+        "threadId": "syn-rel-thread-window",
+        "replyToId": null,
+        "kind": "proposal",
+        "state": "active",
+        "text": "为赶商店窗口，提议删除两小时灰度。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-rel-d05",
+        "taskId": "syn-rel-canary",
+        "authorId": "syn-rel-m6",
+        "createdAt": "2026-09-04T10:05:00+08:00",
+        "threadId": "syn-rel-thread-window",
+        "replyToId": "syn-rel-d04",
+        "kind": "proposal",
+        "state": "withdrawn",
+        "text": "撤回删除灰度的提议；委员会文件明确要求保留观察窗口。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-rel-d06",
+        "taskId": "syn-rel-security-gate",
+        "authorId": "syn-rel-m5",
+        "createdAt": "2026-09-04T10:35:00+08:00",
+        "threadId": "syn-rel-thread-signing",
+        "replyToId": "syn-rel-d02",
+        "kind": "report",
+        "state": "conflicting_report",
+        "text": "CLI校验返回成功，但上传的是未签署草稿，因此我不报告安全闸门通过。",
+        "source": "synthetic_discussion_store",
+        "conflictWithId": "syn-rel-file-03"
+      },
+      {
+        "id": "syn-rel-d07",
+        "taskId": "syn-rel-store-submit",
+        "authorId": "syn-rel-m6",
+        "createdAt": "2026-09-04T11:20:00+08:00",
+        "threadId": "syn-rel-thread-signing",
+        "replyToId": "syn-rel-d03",
+        "kind": "question",
+        "state": "active",
+        "text": "提交检查表要求回执v2，为什么任务依赖仍只有发行说明？",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-rel-d08",
+        "taskId": "syn-rel-root",
+        "authorId": "syn-rel-m1",
+        "createdAt": "2026-09-04T12:00:00+08:00",
+        "threadId": "syn-rel-thread-signing",
+        "replyToId": "syn-rel-d07",
+        "kind": "decision",
+        "state": "confirmed",
+        "text": "确认把现有回执任务接到安全闸门和商店提交；9月12日与灰度标准不变。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "syn-rel-h01",
+        "taskId": "syn-rel-backend",
+        "occurredAt": "2026-09-03T15:30:00+08:00",
+        "type": "task_completed",
+        "summary": "兼容后端以版本5完成，范围不含桌面公证。",
+        "version": 5,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-rel-h02",
+        "taskId": "syn-rel-regression",
+        "occurredAt": "2026-09-04T09:45:00+08:00",
+        "type": "task_completed",
+        "summary": "rc3回归以版本7完成；仅是质量证据。",
+        "version": 7,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-rel-h03",
+        "taskId": "syn-rel-notary-v2",
+        "occurredAt": "2026-09-04T09:20:00+08:00",
+        "type": "task_created",
+        "summary": "根据商店v2要求创建回执任务。",
+        "version": 1,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-rel-h04",
+        "taskId": "syn-rel-notary-v2",
+        "occurredAt": "2026-09-04T10:25:00+08:00",
+        "type": "file_linked",
+        "summary": "未签署回执草稿加入任务，任务升至版本2。",
+        "version": 2,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-rel-h05",
+        "taskId": "syn-rel-security-gate",
+        "occurredAt": "2026-09-04T11:40:00+08:00",
+        "type": "acceptance_criteria_updated",
+        "summary": "安全矩阵补充已签署回执要求，任务版本4；依赖字段尚未同步。",
+        "version": 4,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-rel-h06",
+        "taskId": "syn-rel-store-submit",
+        "occurredAt": "2026-09-04T11:55:00+08:00",
+        "type": "file_linked",
+        "summary": "商店检查表v4加入任务，任务版本3；依赖字段仍仅有发行说明。",
+        "version": 3,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "files": [
+      {
+        "id": "syn-rel-file-01",
+        "fileName": "starpath-4.8-release-board-decision.pdf",
+        "mimeType": "application/pdf",
+        "version": 3,
+        "checksum": "d04428921bbd9ed1cbb30fbae31118a011dbb9f77ea0d8685c8da02bdec3ac2c",
+        "status": "approved",
+        "updatedAt": "2026-09-03T17:20:00+08:00",
+        "linkedTaskIds": [
+          "syn-rel-root",
+          "syn-rel-canary",
+          "syn-rel-final-approval"
+        ],
+        "summary": "委员会确认4.8目标窗口为2026-09-12，保留2小时灰度观察；任何删减灰度的提议均需重新批准。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-rel-file-02",
+        "fileName": "notarization-receipt-v2-request.md",
+        "mimeType": "text/markdown",
+        "version": 2,
+        "checksum": "085ace366e75d4bd1d4acf8749c8bcbcd50d055c32e2cb6f192a519585363c40",
+        "status": "current",
+        "updatedAt": "2026-09-04T09:10:00+08:00",
+        "linkedTaskIds": [
+          "syn-rel-notary-v2",
+          "syn-rel-security-gate",
+          "syn-rel-store-submit"
+        ],
+        "summary": "商店要求Build 4.8.0-rc3使用新的公证回执v2；现有任务syn-rel-notary-v2已覆盖生成与校验，不应另建同结果任务。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-rel-file-03",
+        "fileName": "notarization-receipt-v2-draft.json",
+        "mimeType": "application/json",
+        "version": 1,
+        "checksum": "2d1aec22791b819af9bcbf9908be731920d5f6cdff79c8182e88ba5f5a440043",
+        "status": "draft_unsigned",
+        "updatedAt": "2026-09-04T10:25:00+08:00",
+        "linkedTaskIds": [
+          "syn-rel-notary-v2"
+        ],
+        "summary": "草稿含rc3哈希但签署字段为空；只能证明材料已生成，不能证明公证或安全闸门通过。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-rel-file-04",
+        "fileName": "release-4.8-security-gate.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 5,
+        "checksum": "8b9f35bcf9907af8f1432628bfe0d228856e0ec6ff7154fab9b6d80e5750c14b",
+        "status": "current",
+        "updatedAt": "2026-09-04T11:40:00+08:00",
+        "linkedTaskIds": [
+          "syn-rel-regression",
+          "syn-rel-security-gate"
+        ],
+        "summary": "安全闸门要求回归报告和已签署公证回执v2；当前依赖字段仅列回归报告，记录与任务图存在缺口。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-rel-file-05",
+        "fileName": "store-submission-checklist-v4.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 4,
+        "checksum": "1feb7264fed362cc6556b05053bcf2ef89af291c7a4a828408ed272dcbb5a540",
+        "status": "current",
+        "updatedAt": "2026-09-04T11:55:00+08:00",
+        "linkedTaskIds": [
+          "syn-rel-release-notes",
+          "syn-rel-store-submit"
+        ],
+        "summary": "提交包需要发行说明与公证回执v2；当前任务依赖只列发行说明，回执尚未结构化接入。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-rel-file-06",
+        "fileName": "canary-observation-template.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": 2,
+        "checksum": "a32aeab8b8ed37f1d8fa0df0c8de4f5a1130a65145df1772151c8dea392feecc",
+        "status": "approved_template",
+        "updatedAt": "2026-09-03T16:00:00+08:00",
+        "linkedTaskIds": [
+          "syn-rel-canary",
+          "syn-rel-final-approval"
+        ],
+        "summary": "固定记录启动成功率、崩溃率与回退触发；模板不能替代实际灰度报告，也不能被日期压力删除。",
+        "source": "synthetic_file_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "syn-rel-file-01",
+        "title": "4.8发布委员会决定（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。委员会确认4.8目标窗口为2026-09-12，保留2小时灰度观察；任何删减灰度的提议均需重新批准。",
+        "updatedAt": "2026-09-03T17:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "starpath-4.8-release-board-decision.pdf",
+        "mimeType": "application/pdf",
+        "version": 3,
+        "checksum": "d04428921bbd9ed1cbb30fbae31118a011dbb9f77ea0d8685c8da02bdec3ac2c",
+        "status": "approved",
+        "linkedTaskIds": [
+          "syn-rel-root",
+          "syn-rel-canary",
+          "syn-rel-final-approval"
+        ]
+      },
+      {
+        "id": "syn-rel-file-02",
+        "title": "公证回执v2需求说明（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。商店要求Build 4.8.0-rc3使用新的公证回执v2；现有任务syn-rel-notary-v2已覆盖生成与校验，不应另建同结果任务。",
+        "updatedAt": "2026-09-04T09:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "notarization-receipt-v2-request.md",
+        "mimeType": "text/markdown",
+        "version": 2,
+        "checksum": "085ace366e75d4bd1d4acf8749c8bcbcd50d055c32e2cb6f192a519585363c40",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-rel-notary-v2",
+          "syn-rel-security-gate",
+          "syn-rel-store-submit"
+        ]
+      },
+      {
+        "id": "syn-rel-file-03",
+        "title": "公证回执v2草稿（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。草稿含rc3哈希但签署字段为空；只能证明材料已生成，不能证明公证或安全闸门通过。",
+        "updatedAt": "2026-09-04T10:25:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "notarization-receipt-v2-draft.json",
+        "mimeType": "application/json",
+        "version": 1,
+        "checksum": "2d1aec22791b819af9bcbf9908be731920d5f6cdff79c8182e88ba5f5a440043",
+        "status": "draft_unsigned",
+        "linkedTaskIds": [
+          "syn-rel-notary-v2"
+        ]
+      },
+      {
+        "id": "syn-rel-file-04",
+        "title": "安全闸门矩阵（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。安全闸门要求回归报告和已签署公证回执v2；当前依赖字段仅列回归报告，记录与任务图存在缺口。",
+        "updatedAt": "2026-09-04T11:40:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "release-4.8-security-gate.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 5,
+        "checksum": "8b9f35bcf9907af8f1432628bfe0d228856e0ec6ff7154fab9b6d80e5750c14b",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-rel-regression",
+          "syn-rel-security-gate"
+        ]
+      },
+      {
+        "id": "syn-rel-file-05",
+        "title": "商店提交检查表（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。提交包需要发行说明与公证回执v2；当前任务依赖只列发行说明，回执尚未结构化接入。",
+        "updatedAt": "2026-09-04T11:55:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "store-submission-checklist-v4.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 4,
+        "checksum": "1feb7264fed362cc6556b05053bcf2ef89af291c7a4a828408ed272dcbb5a540",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-rel-release-notes",
+          "syn-rel-store-submit"
+        ]
+      },
+      {
+        "id": "syn-rel-file-06",
+        "title": "灰度观察模板（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。固定记录启动成功率、崩溃率与回退触发；模板不能替代实际灰度报告，也不能被日期压力删除。",
+        "updatedAt": "2026-09-03T16:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "canary-observation-template.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": 2,
+        "checksum": "a32aeab8b8ed37f1d8fa0df0c8de4f5a1130a65145df1772151c8dea392feecc",
+        "status": "approved_template",
+        "linkedTaskIds": [
+          "syn-rel-canary",
+          "syn-rel-final-approval"
+        ]
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-release-a"
+    ],
+    "matches": [
+      {
+        "taskId": "syn-rel-notary-v2",
+        "title": "取得rc3公证回执v2",
+        "reason": "同一产品、rc3构建、v2回执和验收标准，完整覆盖新增要求。",
+        "coverage": "full"
+      },
+      {
+        "taskId": "syn-rel-security-gate",
+        "title": "形成4.8安全闸门结论",
+        "reason": "会消费签名与回执证据，但还包含SBOM和回归，只有部分范围重合。",
+        "coverage": "partial"
+      }
+    ],
+    "coverageNote": "纯合成查重已覆盖授权团队的活动、归档与当前任务；未查询其他团队。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "syn-rel-root",
+      "field": "dueOn",
+      "value": "2026-09-12"
+    },
+    {
+      "taskId": "syn-rel-canary",
+      "field": "acceptanceCriteria",
+      "value": [
+        "按批准模板完成两小时观察并记录回退判断"
+      ]
+    }
+  ],
+  "constraints": {
+    "hardDueOn": "2026-09-12",
+    "mustKeepTaskIds": [
+      "syn-rel-notary-v2",
+      "syn-rel-canary"
+    ],
+    "mustNotChangeFields": [
+      "syn-rel-root.dueOn",
+      "syn-rel-canary.acceptanceCriteria"
+    ],
+    "scope": "只修正现有目标树内的消费者依赖，不执行创建、指派、状态更新或商店提交"
+  },
+  "dataClassification": "synthetic",
+  "members": [
+    {
+      "id": "syn-rel-m1",
+      "name": "合成成员·许序",
+      "role": "发布经理",
+      "responsibilities": [
+        "维护发布范围与闸门",
+        "协调版本审批和回退边界"
+      ],
+      "boundaries": [
+        "不替安全负责人签署",
+        "不以日期压力删除已确认闸门"
+      ],
+      "evidence": [
+        {
+          "id": "syn-rel-m1-role",
+          "title": "发布经理职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护发布范围与闸门；协调版本审批和回退边界。边界：不替安全负责人签署；不以日期压力删除已确认闸门。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-04T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-rel-m1-window",
+          "title": "发布经理公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-04T11:00:00+08:00 至 2026-09-04T13:00:00+08:00，仅表示可参与“发布闸门核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-04T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-04T11:00:00+08:00",
+            "endAt": "2026-09-04T13:00:00+08:00",
+            "purpose": "发布闸门核对",
+            "sourceRef": "syn-rel-m1-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-04T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-rel-m2",
+      "name": "合成成员·白舟",
+      "role": "桌面端工程师",
+      "responsibilities": [
+        "产出桌面安装包",
+        "修复桌面端发布阻断"
+      ],
+      "boundaries": [
+        "不批准商店上架",
+        "不替安全团队判定签名合规"
+      ],
+      "evidence": [
+        {
+          "id": "syn-rel-m2-role",
+          "title": "桌面端工程师职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：产出桌面安装包；修复桌面端发布阻断。边界：不批准商店上架；不替安全团队判定签名合规。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-04T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-rel-m2-window",
+          "title": "桌面端工程师公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-04T13:00:00+08:00 至 2026-09-04T15:00:00+08:00，仅表示可参与“安装包与公证记录核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-04T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-04T13:00:00+08:00",
+            "endAt": "2026-09-04T15:00:00+08:00",
+            "purpose": "安装包与公证记录核对",
+            "sourceRef": "syn-rel-m2-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-04T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-rel-m3",
+      "name": "合成成员·陆岚",
+      "role": "后端工程师",
+      "responsibilities": [
+        "交付兼容后端版本",
+        "提供回退兼容说明"
+      ],
+      "boundaries": [
+        "不负责桌面公证",
+        "不决定客户端灰度比例"
+      ],
+      "evidence": [
+        {
+          "id": "syn-rel-m3-role",
+          "title": "后端工程师职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：交付兼容后端版本；提供回退兼容说明。边界：不负责桌面公证；不决定客户端灰度比例。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-04T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-rel-m3-window",
+          "title": "后端工程师公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-04T15:00:00+08:00 至 2026-09-04T17:00:00+08:00，仅表示可参与“兼容性复核”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-04T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-04T15:00:00+08:00",
+            "endAt": "2026-09-04T17:00:00+08:00",
+            "purpose": "兼容性复核",
+            "sourceRef": "syn-rel-m3-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-04T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-rel-m4",
+      "name": "合成成员·宋遥",
+      "role": "质量负责人",
+      "responsibilities": [
+        "维护回归证据",
+        "组织灰度验证"
+      ],
+      "boundaries": [
+        "不把测试报告等同业务批准",
+        "不自行缩短已确认观察窗口"
+      ],
+      "evidence": [
+        {
+          "id": "syn-rel-m4-role",
+          "title": "质量负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护回归证据；组织灰度验证。边界：不把测试报告等同业务批准；不自行缩短已确认观察窗口。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-04T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-rel-m4-window",
+          "title": "质量负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-04T09:00:00+08:00 至 2026-09-04T11:00:00+08:00，仅表示可参与“回归与灰度复核”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-04T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-04T09:00:00+08:00",
+            "endAt": "2026-09-04T11:00:00+08:00",
+            "purpose": "回归与灰度复核",
+            "sourceRef": "syn-rel-m4-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-04T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-rel-m5",
+      "name": "合成成员·唐澈",
+      "role": "产品安全工程师",
+      "responsibilities": [
+        "核对签名与SBOM",
+        "形成安全闸门结论"
+      ],
+      "boundaries": [
+        "不生成商店运营文案",
+        "不以未签署草稿放行"
+      ],
+      "evidence": [
+        {
+          "id": "syn-rel-m5-role",
+          "title": "产品安全工程师职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：核对签名与SBOM；形成安全闸门结论。边界：不生成商店运营文案；不以未签署草稿放行。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-04T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-rel-m5-window",
+          "title": "产品安全工程师公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-04T11:00:00+08:00 至 2026-09-04T13:00:00+08:00，仅表示可参与“签名与SBOM核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-04T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-04T11:00:00+08:00",
+            "endAt": "2026-09-04T13:00:00+08:00",
+            "purpose": "签名与SBOM核对",
+            "sourceRef": "syn-rel-m5-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-04T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-rel-m6",
+      "name": "合成成员·简拓",
+      "role": "发布运维工程师",
+      "responsibilities": [
+        "执行商店提交流程",
+        "维护发布与回退清单"
+      ],
+      "boundaries": [
+        "不修改产品验收范围",
+        "不绕过公证或安全闸门"
+      ],
+      "evidence": [
+        {
+          "id": "syn-rel-m6-role",
+          "title": "发布运维工程师职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：执行商店提交流程；维护发布与回退清单。边界：不修改产品验收范围；不绕过公证或安全闸门。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-04T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-rel-m6-window",
+          "title": "发布运维工程师公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-04T13:00:00+08:00 至 2026-09-04T15:00:00+08:00，仅表示可参与“商店提交流程联检”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-04T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-04T13:00:00+08:00",
+            "endAt": "2026-09-04T15:00:00+08:00",
+            "purpose": "商店提交流程联检",
+            "sourceRef": "syn-rel-m6-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-04T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-rel-m7",
+      "name": "合成成员·季宁",
+      "role": "发布沟通负责人",
+      "responsibilities": [
+        "维护发行说明",
+        "准备用户沟通材料"
+      ],
+      "boundaries": [
+        "不宣布尚未批准的发布日期",
+        "不替工程团队确认技术就绪"
+      ],
+      "evidence": [
+        {
+          "id": "syn-rel-m7-role",
+          "title": "发布沟通负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护发行说明；准备用户沟通材料。边界：不宣布尚未批准的发布日期；不替工程团队确认技术就绪。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-04T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-rel-m7-window",
+          "title": "发布沟通负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-04T15:00:00+08:00 至 2026-09-04T17:00:00+08:00，仅表示可参与“发行说明校对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-04T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-04T15:00:00+08:00",
+            "endAt": "2026-09-04T17:00:00+08:00",
+            "purpose": "发行说明校对",
+            "sourceRef": "syn-rel-m7-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-04T08:30:00+08:00"
+      }
+    }
+  ]
+}

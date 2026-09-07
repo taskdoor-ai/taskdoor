@@ -1,0 +1,122 @@
+{
+  "runId": "2026-09-01-realistic-final",
+  "dataClassification": "high_fidelity_synthetic",
+  "total": 12,
+  "structuralPass": 9,
+  "semanticPass": 8,
+  "semanticFail": 4,
+  "cases": [
+    {
+      "scenarioId": "REAL-A-REL-01",
+      "verdict": "pass",
+      "plannerIssue": false,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "输出严格限定为两个消费者的依赖更新，既不重复未完成的公证工作，也不冗余改写传递下游或已完成记录。Rubric 的允许更新、依赖集合、证据和保护对象与输入一致；请求别名与运行场景 ID 不一致是审查调用的命名差异，不构成本案夹具或评分语义错误。"
+    },
+    {
+      "scenarioId": "REAL-A-SAAS-01",
+      "verdict": "pass",
+      "plannerIssue": false,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "规划结果满足 v0.2 的完整重复处理：保留原任务与正式状态，区分部分证据和完整验收，不靠改标题或拆批绕过查重。Rubric 的允许意图、处置、零创建/零更新、必需证据与手工检查均与输入事实一致，未发现规划器、夹具或评分规则错误。"
+    },
+    {
+      "scenarioId": "REAL-A-ECOM-01",
+      "verdict": "pass",
+      "plannerIssue": false,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "这是准确的 next_batch 局部重规划：三个下一批结果已存在，只修复最终闸门的直接消费关系，并保留有效旧边与正式责任边界。Rubric 的唯一允许更新、完整依赖集合和证据要求均与输入吻合，未发现三类问题。"
+    },
+    {
+      "scenarioId": "REAL-A-CS-01",
+      "verdict": "pass",
+      "plannerIssue": false,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "查询结论、来源权威顺序、冲突证据、数据影响限定和只读外部边界均正确。Rubric 的 query/route_required、零变更、必需证据组和人工检查与输入一致，未发现规划器、夹具或评分规则错误。"
+    },
+    {
+      "scenarioId": "REAL-B-NPI-01",
+      "verdict": "fail",
+      "plannerIssue": true,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "The plan is structurally coherent elsewhere, but DVT's final dependency set has the wrong producer. Because the missing PCN edge affects provenance and execution ordering for a required consumer, this is a planner failure rather than a fixture or rubric defect."
+    },
+    {
+      "scenarioId": "REAL-B-LOG-01",
+      "verdict": "pass",
+      "plannerIssue": false,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "The output matches the required incomplete-context behavior: it preserves all visible tasks, proposes no changes, keeps duplicate coverage partial, identifies the exact authorized cursors, and avoids leaking or inventing hidden task and credential data."
+    },
+    {
+      "scenarioId": "REAL-B-RETAIL-01",
+      "verdict": "pass",
+      "plannerIssue": false,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "The output applies only the four requested updates, preserves completed and unaffected work, uses the correct direct dependency sets, and treats the schedule as a reviewable recommendation with explicit fire and capacity risks."
+    },
+    {
+      "scenarioId": "REAL-B-PROC-01",
+      "verdict": "fail",
+      "plannerIssue": true,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "The address update is correctly propagated to owner review, MSA, tax and bank, but the final gate should retain its five direct producers. Adding owner review creates a redundant edge in a graph that already carries the result transitively, so the proposal is not the required minimal difference."
+    },
+    {
+      "scenarioId": "REAL-C-01",
+      "verdict": "pass",
+      "plannerIssue": false,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "规划复用现有v2任务，并只修改v2本身及三个直接消费者。CRM和上线核对通过既有跨分支依赖间接消费，没有为展示影响制造冗余更新；已完成策略、v1和主视觉均保留。"
+    },
+    {
+      "scenarioId": "REAL-C-02",
+      "verdict": "fail",
+      "plannerIssue": true,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "外币重估应保留已完成银行对账并新增fc-transfer-clear前置，日记账复核再消费fc-fx。报表、审计索引和董事会包已有有效传递链，应保持不变。输出虽然正确保留了报表与董事会包，却仍扩散更新到异常任务本身和审计索引，因此不满足最小差异。"
+    },
+    {
+      "scenarioId": "REAL-C-03",
+      "verdict": "fail",
+      "plannerIssue": true,
+      "fixtureIssue": true,
+      "graderIssue": true,
+      "rationale": "账号、设备、薪资和入职日核对的日期调整方向正确，生产权限门槛也被保留；失败来自额外改写日期修订任务、添加不必要依赖及关键正式来源缺失。与此同时，rubric把hr-date-amend称为已完成与实际夹具不符，必须把规划器的最小差异错误和夹具/评分诊断错误分开。"
+    },
+    {
+      "scenarioId": "REAL-C-04",
+      "verdict": "pass",
+      "plannerIssue": false,
+      "fixtureIssue": false,
+      "graderIssue": false,
+      "rationale": "输出满足三项最小更新，并显式处理report-vs-formal-state冲突。业主复验新增证书依赖并保留原正式复测与柜门前置；由于输出的复验标准仍直接核对正式复测记录，且没有来源宣布旧边失效，保留rn-electric-retest不构成冗余删除错误。"
+    }
+  ],
+  "reviewMethod": {
+    "type": "independent_cross_group_review",
+    "mapping": {
+      "semantic-review-a.json": "B-group planner reviewed A outputs",
+      "semantic-review-b.json": "C-group planner reviewed B outputs",
+      "semantic-review-c.json": "A-group planner reviewed C outputs"
+    },
+    "humanIndustryUserReview": false
+  },
+  "knownFindings": [
+    "REAL-B-NPI-01 cites the PCN v3 file but omits the completed producer task from the DVT dependency set.",
+    "REAL-B-PROC-01 adds a redundant gate-to-owner-review edge even though the result already flows through the direct MSA, tax and bank consumers; the subset-only machine check did not catch this.",
+    "REAL-C-02 updates an already adequate exception producer and a transitive audit index.",
+    "REAL-C-03 updates an already adequate date-amend task, adds redundant direct edges and omits required access/privacy evidence."
+  ],
+  "conclusion": "8/12 pass independent semantic review. The run remains immutable evidence and is not a production-readiness claim."
+}

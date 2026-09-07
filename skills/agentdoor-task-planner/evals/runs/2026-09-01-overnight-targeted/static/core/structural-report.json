@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-09-01T02:50:33.610132+00:00",
+  "total": 2,
+  "structurallyValid": 2,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "9a3088de9c623fab53f187375f38c7aaffcfd528f14478f779d7b6af9c801af3",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "CONTENT-01",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议创建一个短稿校对任务，由文字编辑程简候选负责，9月2日交付清稿和修改清单；不拆策划、写作或视觉子任务。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "8d5af84088eb82db92b1c8443036480a8417e57a63385e3f5d2ba2df966ccbee",
+      "manualChecks": [
+        "单任务，操作步骤放tips，不生成策划/写作/设计固定三阶段。",
+        "编辑程简职责直接匹配，项目经理作为发起人不自动成为执行Owner。",
+        "600字不是默认工时公式，缺估可以保留null。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "RENO-01",
+      "industry": "renovation_handover",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议创建一个澄居A户移交协调根任务，并按三项可独立核对的结果拆出问题清单复核、资料目录、移交记录与未完事项说明；范围保持为资料和协调。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 4,
+      "outputSha256": "85752d30b7aad309135ab330f66cf1cb55cd0fbc5d3d6691ce9719157cc508a3",
+      "manualChecks": [
+        "按问题复核、资料整理和移交记录等独立结果安排责任，不给施工技术/安全/法律判断。",
+        "资料齐全、人员报告修补完成和有权方接受交付分开。",
+        "历史未读取不是无历史；不套固定总工期、费用或默认验收通过。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "notice": "Resolve original review paths against this archived run. Outputs and reports are preserved byte-for-byte.",
+  "prefixMappings": [
+    {
+      "original": "/tmp/agentdoor-planner-realistic-final-20260901-v2/",
+      "archivedRelative": "./"
+    }
+  ],
+  "exactMappings": {
+    "/Users/yxzuji/Documents/ChatGPT/agentdoor2/skills/agentdoor-task-planner/evals/realistic-expectations.json": "Use expectations-snapshot.json for this frozen run; the current corpus was later hardened.",
+    "/Users/yxzuji/Documents/ChatGPT/agentdoor2/skills/agentdoor-task-planner/scripts/evaluate.py": "validator-snapshot/evaluate.py",
+    "/Users/yxzuji/Documents/ChatGPT/agentdoor2/skills/agentdoor-task-planner/scripts/validate_plan.py": "validator-snapshot/validate_plan.py"
+  }
+}

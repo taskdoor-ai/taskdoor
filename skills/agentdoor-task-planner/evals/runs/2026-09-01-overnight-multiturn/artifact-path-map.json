@@ -1,0 +1,10 @@
+{
+  "archivedRun": "2026-09-01-overnight-multiturn",
+  "pathMappings": [
+    {
+      "from": "/tmp/agentdoor-planner-overnight-multi-20260901",
+      "to": "."
+    }
+  ],
+  "note": "Apply this prefix mapping before resolving semantic-review files and JSON Pointers."
+}

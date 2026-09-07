@@ -1,0 +1,168 @@
+{
+  "checkedAt": "2026-08-31T20:26:46.573497+00:00",
+  "total": 8,
+  "structurallyValid": 8,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "7aa7f8d5d2d2011ac12ad4660ae8a4f05a6c447097498ce26f845f4497f66b6c",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "COMPLEX-01",
+      "industry": "saas_delivery",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议仅补齐UAT、培训演示、最终交接清单的真实前置关系；保留数据与培训提纲并行，所有任务身份、负责人、日期及已完成结果不变。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 3,
+      "outputSha256": "5a3030979bea43ac472e997264cb8ccc63691fcf95a29eef711be3c2ceafae45",
+      "manualChecks": [
+        "形成只涉及必要依赖差异的可审阅方案，不要求用户重述已完整读取的交接关系；本轮没有新增交付的必要。",
+        "UAT与培训演示均能追溯到样本v2和现行沙箱配置两个必要输入；最终交接同时依赖UAT和培训演示。可用直接或等价可解释路径，不靠tips代替依赖字段。",
+        "培训提纲可独立准备，培训演示不必等UAT结束；不把父子归属或页面顺序变成依赖，不串行整树。",
+        "检查9月4日样本、9月5日UAT、9月7日演示和9月8日交接的使用顺序；保留现有边界，不从EWD或不完整可用日历保证工期。",
+        "更新继续使用uat、session、handover的原ID与归属；已完成映射、沙箱及锁定UAT标准不变。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "COMPLEX-02",
+      "industry": "manufacturing_npi",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议在原样料资料分支新增一份S-09标签与资料编号对照表，并让现有评审目录依赖它；保留三层结构、原叶任务估算及全部既有完成记录。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 2,
+      "outputSha256": "ab0499eb4c907b8e84ed1a15c01ca0f0165bf6f0cd61e6c00793a2f572fe8b24",
+      "manualChecks": [
+        "只新增一份有独立核对价值的编号对照表，保留现有根和三层结构，挂在进行中的样料资料分支；不展开未请求的制造或量产工作。",
+        "新表依据批次对应表和已确认图纸/BOM引用；目录index仍使用原ID，结构化接入新表；说明哪些准备可并行，不给全部分支加串行边。",
+        "父层仅为归集结果，不另估一遍叶项总投入。现有叶任务估算是基线，禁止改写成实际或剩余投入，也不清零。",
+        "若给新叶任务估算，解释12条编号、同工具及可比历史的适用边界；等待回执48小时不计入EWD，保留null并说明依据不足也可接受。",
+        "原BOM和图纸目录已完成，直接引用；新表9月5日与目录9月7日的关系来自回执，不由人数除工时推导。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "COMPLEX-03",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议在原商品资料分支新增包装说明v2，并补齐页面、客服问答、发货答复对它的依赖；沿用主图、库存、页面任务及已有联动核对，不调整价格、投放或正式负责人。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 4,
+      "outputSha256": "689334eecff0e51c33ff2675625edf3badba8a88648b167dcb1870d07f5e7f77",
+      "manualChecks": [
+        "只新增本批包装说明v2，不重拍图片、不重核未变化库存、不重建正在做的页面、客服与发货答复。",
+        "页面page、客服faq、发货答复dispatch三个现有消费者各自接到新增结果，按需更新标准或依赖；不能只更新其中一个或只在tips交接。",
+        "保留checkout已经包含的三个消费者前置，它已具有传递输入关系；不为了多改一项添加冗余新检查或移动无影响广告素材。",
+        "区分页面已有四个版块初稿、客服非包装问答进展与正式任务完成；不覆盖已完成资产、现有Owner或原EWD基线。",
+        "确认9月2日说明、9月3日三个使用方、9月4日联动核对的现有边界能衔接，未改日期也需说明检查依据；不增加价格、渠道、预算或对外发货承诺。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "COMPLEX-04",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议只新增回执差异核对表并接入现有批准收集任务；忠实并列A/B冲突及审阅意见，不替客户选v4或v5，不变更最终标准、交期或版本任务。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 2,
+      "outputSha256": "48878e6360f865a51fd1d40c18ea3607d63139eeaebd00152b3d5fcad4c9bb30",
+      "manualChecks": [
+        "可审阅的只是回执差异表及对approval的使用关系；这一局部交付事实完整，不因尚未选最终版本就把整个整理动作阻塞。",
+        "新表并列两份回执、同一签署时间、入库差异与缺失的取代关系，保持最终批准结论未知；不能以B更新、措辞更强或作者报告替代有权确认。",
+        "保留approval原验收要求及Owner，仅补实际需要的依赖；package已经依赖approval，应保持原任务与最终批准门槛。",
+        "v5已被策划审阅不等于客户已接受，不将任何in_progress/open任务标完成，不把v4文件留存的完成记录当最终交付批准。",
+        "表可于9月2日按已确认范围整理，但不声称最终9月6日交付已无风险；不联系客户、不替客户挑选版本或自行解锁确认字段。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "COMPLEX-05",
+      "industry": "retail_chain_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议先续读青桐目标树余下22项及总部培训、两店学习反馈相关讨论与历史，再重排整棵树；当前9项快照不足以形成完整候选，本轮不新增或修改任务，也不通知店长。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 0,
+      "outputSha256": "34c9a28f6a0e60d56d1561dffead9c7e2e89d519d25f158ccff34550d6e35bb3",
+      "manualChecks": [
+        "明确只读9/31项及部分主题，不能编造其余22项、整树总量、完成情况或完整计划；baseTaskVersions只回显实际可见9项。",
+        "请求按已授权游标补读各分支后代以及未读讨论/历史，保持tasks、subtasks、discussions、history与查重的真实partial状态；不把补读任务转嫁为用户手抄。",
+        "根和直属分支已见仍不等于后代完整，当前请求是整树重规划，不能缩写为可确认的全局方案；无依据不更改当前可见任务。",
+        "可说明已完成指引与原进行中任务继续被保留；不要为未知工作补全门店、角色、排班或通知动作。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "COMPLEX-06",
+      "industry": "renovation_handover",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议沿用本组资料目录和收件影像原任务继续整理；问题查看及移交排期暂不能确认，需先取得外部前置的受控可见摘要与有效现场、复核窗口，保留现有依赖和全部任务不变。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 0,
+      "outputSha256": "8721c3efcd4ed5838a346d72cc7cd4123fcb1e17e0c24b23ad029f1edbe5bd51",
+      "manualChecks": [
+        "识别本组任务覆盖完整但外部必要前置仅引用可见，不能用本组ACL verified推出外部对象已授权或已完成。",
+        "不创建占位外部Task、不补造标题、Owner、版本、状态、交期或证据；输出版本映射只含九个可见本组任务。",
+        "提出经有权方提供必要摘要或受控重读的下一步，限定需要证明的前置条件与可用时间，不声称已执行读取或诱导绕权限。",
+        "未确认外部前置时不能承诺现场问题查看与最终移交按期；现有资料目录与收件影像可继续，不能机械阻塞所有本组工作或重建它们。",
+        "保持输入中的外部引用缺口可诊断，不为让图校验通过而静默删掉外部依赖；收件影像不升级为问题验收。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "COMPLEX-07",
+      "industry": "manufacturing_npi",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "当前目标树存在变更矩阵与检查记录互相依赖，以及样品索引依赖已取消A版资料两个问题；建议先确认交付边界和有效替代来源，再给重排候选，独立文件命名目录可沿用原任务继续。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 0,
+      "outputSha256": "6dc405517fa24cc18304430e90595d10c964875e2262ac608d3af52466b08e09",
+      "manualChecks": [
+        "指出现有matrix与checklist互相依赖构成环，以及sample-index依赖已取消old-a，是两类独立问题；不能只报告其中一类后给可行排期。",
+        "在没有交付拆分或纠错确认时，不静默删边、不把循环伪装成普通串行、不重建同名树；提出需澄清编号模板/填好结果边界的关键问题。",
+        "不重开取消任务，不将完成的C版范围基线假装成供应资料替代品；要求有依据的供应资料承接对象。",
+        "最多两个关键问题，保持原图问题与版本可追溯；待决关系解决前不标ready，不保证9月8日前完成。",
+        "归档命名目录独立可继续，保留其原ID；本例故意包含不合法输入图，不允许改夹具或放宽校验掩盖输入异常。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "COMPLEX-08",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "不能依据旧12人时平均分工并保证9月3日12:00交付：两条引用答复最早14:00、原编辑只确认16:00复核窗口，均晚于硬截止；本轮保留已确认Owner、截止时间和最终引用核对要求，不输出虚假可行排期。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 0,
+      "outputSha256": "1f309c90e8cdac9935307242b55f0cf0f59da03098d6201f9d3ffaacf2f63a95",
+      "manualChecks": [
+        "指出9月3日12时交付与受访方最早14时答复及编辑16至17时窗口冲突；日期字段同为9月3日不能掩盖日内先后。",
+        "不得把旧12人时除以三人得到保证，也不把原叶项估算当剩余投入；等待答复是历时，不计入人类投入。",
+        "使用本案例显式members快照：作者只确认1小时交接核对，编辑旧9月2日窗口已撤回，策划窗口过期。未提供的可用时间保持未知。",
+        "三人均可改字不代表可以互换结果责任；Creator或项目经理不自动包办，不以帮忙提议替代接受，不改已确认成稿与复核Owner。",
+        "保留已确认截止与引用核对要求，清楚列出需用户选择或经授权调整的影响，最多两个阻塞问题；在没有确认新范围/日期/可用性前不承诺按期。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

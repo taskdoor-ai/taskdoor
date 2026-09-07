@@ -1,0 +1,233 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-ecom-04",
+  "baseSnapshotId": "snapshot-ecom-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "ecom04-root": 3,
+    "ecom04-stock": 2,
+    "ecom04-cs": 1
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "建议保留9月2日上新与原责任分工，先在现有库存、客服任务中补清核对和确认边界，再增加页面及投放口径同步候选；出库时间冲突未解决前不确认整套排期。",
+  "reasoningSummary": [
+    {
+      "text": "12点ERP显示500但包含待复核退货；17点80件只是可售清点报告且差异未关单，正式库存任务仍blocked，不能直接采用任一数字作已确认货量。",
+      "evidenceRefs": [
+        "ecom04-erp",
+        "ecom04-d1",
+        "ecom04-stock"
+      ]
+    },
+    {
+      "text": "投放300单是一条未获货量确认的目标提议，不是销量、库存事实或已批准的投放范围。",
+      "evidenceRefs": [
+        "ecom04-d2",
+        "ecom-m4-role"
+      ]
+    },
+    {
+      "text": "仓库当前确认的集中出库窗口最早9月4日，详情页仍写下单次日发；与9月2日上新后的承诺存在冲突，需要协调选择。",
+      "evidenceRefs": [
+        "ecom04-warehouse",
+        "ecom04-d3",
+        "ecom04-root"
+      ]
+    },
+    {
+      "text": "库存由岑舟负责、客服由于薇负责且已有库存依赖；唐穗协调上新口径，颜北与梁宁分别承担页面和渠道素材贡献，不改变现有正式Owner。",
+      "evidenceRefs": [
+        "ecom04-stock",
+        "ecom04-cs",
+        "ecom-m1-role",
+        "ecom-m2-role",
+        "ecom-m4-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "ecom04-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "ecom04-update-stock-boundary",
+        "action": "update",
+        "targetId": "ecom04-stock",
+        "parentId": "ecom04-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "系统数和实物可售数差异经核对并留记录。",
+            "区分SKU-BAG-B的可售状态、待复核退货与系统总数，记录核对截至时间、数量依据、差异及其确认结果；不能直接把500系统数或80件报告当作已承诺货量。"
+          ],
+          "tips": [
+            "由原Owner岑舟协调仓配差异核对；保留中午ERP与17点清点报告各自时间和口径。",
+            "另定位最早9月4日出库窗口及是否存在例外的可核验回执，供发货口径确认使用，不把等待算成人时。"
+          ]
+        },
+        "reason": "在现有库存核对结果内补明确口径与证据要求，不新建重复库存任务或更改blocked状态。",
+        "evidenceRefs": [
+          "ecom04-stock",
+          "ecom04-d1",
+          "ecom04-erp",
+          "ecom04-warehouse"
+        ]
+      },
+      {
+        "id": "ecom04-update-cs-boundary",
+        "action": "update",
+        "targetId": "ecom04-cs",
+        "parentId": "ecom04-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "客服使用已确认发货口径。",
+            "以可核验仓库履约回复和已确认库存边界为输入，记录本次上新对外发货口径、确认依据与版本；不得自行承诺次日发或把最早9月4日等同于已批准对客话术。",
+            "形成供详情页与投放素材同步使用的发货答复，保留未确认事项；在出库例外或上新调整选择未明确前不声称口径已对齐。"
+          ],
+          "participantRecommendations": [
+            {
+              "memberId": "ecom-m1",
+              "contribution": "协调上新日期、售卖范围与对外发货口径的冲突选择，不替仓库确认实物库存。",
+              "evidenceRefs": [
+                "ecom-m1-role",
+                "ecom04-warehouse"
+              ]
+            },
+            {
+              "memberId": "ecom-m3",
+              "contribution": "提供库存差异核对结果、履约窗口和例外回执依据，支持客服口径确认。",
+              "evidenceRefs": [
+                "ecom-m3-role",
+                "ecom04-warehouse"
+              ]
+            }
+          ],
+          "tips": [
+            "继续复用现有对ecom04-stock的依赖，不提前把未确认库存或300单投放目标写进客服承诺。",
+            "于薇仍为正式Owner；9月3日9至11点只明确可用于客服培训，不证明9月2日前可完成口径工作，也不证明其他时间不可用。"
+          ]
+        },
+        "reason": "保留现有客服任务及库存依赖，补齐仓配事实、运营协调与可对外使用的话术确认边界。",
+        "evidenceRefs": [
+          "ecom04-cs",
+          "ecom04-d3",
+          "ecom04-warehouse",
+          "ecom-m5-role"
+        ]
+      },
+      {
+        "id": "ecom04-create-page-channel-shipping",
+        "action": "create",
+        "targetId": "new:ecom04-page-channel-shipping",
+        "parentId": "ecom04-root",
+        "fields": {
+          "title": "同步收纳袋详情页与投放发货口径",
+          "acceptanceCriteria": [
+            "使用现有客服任务输出的已确认发货口径、版本及适用上新范围，逐项核对SKU-BAG-B详情页和本次渠道素材。",
+            "修正与经确认履约安排不符的次日发等表述，使详情页、客服答复与投放素材一致，并交付变更前后对照和待发布版本。",
+            "不把未批准的300单目标当作售卖数量，不自行提高预算、发布投放或修改售价；任何上线或投放动作由独立受控流程执行。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m2",
+            "basis": "recommended",
+            "reason": "商品内容职责负责详情页文案和按已确认信息修正内容，建议承担页面口径同步结果。",
+            "evidenceRefs": [
+              "ecom-m2-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "ecom-m4",
+              "contribution": "核对并同步已批准的渠道素材和落地页表述，不自行提高预算或采用未确认300单目标。",
+              "evidenceRefs": [
+                "ecom-m4-role",
+                "ecom04-d2"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "recommended",
+            "assumptions": [
+              "为满足原9月2日上新，建议在上新前完成待发布页面与素材核对；前置口径及执行窗口未明确，因此本候选仍阻塞，不承诺届时完成。"
+            ],
+            "evidenceRefs": [
+              "req-ecom-04",
+              "ecom04-root",
+              "ecom04-warehouse"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "页面和渠道修改量、确认后的版本及可用窗口尚不清楚，人时留空，不计等待仓配或口径确认。"
+            ],
+            "evidenceRefs": [
+              "req-ecom-04",
+              "ecom04-d3"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "ecom04-cs"
+          ],
+          "tips": [
+            "可先定位冲突文字并准备对照表；最终改稿必须等待原客服任务的已确认口径。",
+            "梁宁公开的是9月2日14至16点页面联调窗口；上新具体时刻未提供，不能保证该窗口早于上线。"
+          ]
+        },
+        "reason": "现有任务负责库存和客服，但详情页与投放素材仍需独立同步经确认口径，明确依赖现有客服结果。",
+        "evidenceRefs": [
+          "req-ecom-04",
+          "ecom04-d3",
+          "ecom04-d2",
+          "ecom04-cs"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "ecom04-root"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [
+    {
+      "field": "constraints.launchOn_and_shipping",
+      "question": "请确认9月2日上新与最早9月4日出库冲突的处理方向：由唐穗协调仓配核对后修订本次售卖与发货承诺，还是取得可核验的更早出库例外或调整上新日期？本轮保留原日期，不代选，也不把300单提议作为承诺。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "原根9月2日期限、所有既有Owner与状态保持不变；出货和售卖口径未确认前，本候选不能进入确认。",
+    "库存80件是较晚的清点报告，500是含待复核退货的较早系统快照，两者尚未完成口径对齐；不新增销量或转化KPI。",
+    "history覆盖为partial，只使用可见库存片段，不补造历史、容量或EWD；任务、子任务与相关讨论完整。",
+    "成员公开窗口不等于全天容量；于薇的9月3日培训窗口不能直接支持9月2日前培训承诺，梁宁9月2日下午窗口与上新时刻仍需核对。",
+    "只提出候选差异，不执行生产发布、广告投放、库存修改、指派或客户承诺。"
+  ],
+  "nextActions": [
+    {
+      "action": "open_task",
+      "taskId": "ecom04-stock",
+      "label": "在原库存任务核对可售数与履约依据"
+    },
+    {
+      "action": "ask_user",
+      "taskId": "ecom04-root",
+      "label": "确认上新日期、售卖范围和发货冲突的处理方向"
+    },
+    {
+      "action": "open_task",
+      "taskId": "ecom04-cs",
+      "label": "复用原客服任务完成可对外使用口径确认"
+    }
+  ],
+  "externalEffects": "none"
+}

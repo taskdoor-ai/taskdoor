@@ -1,0 +1,18 @@
+{
+  "kind": "independent_multiturn_semantic_review",
+  "cases": [
+    {
+      "caseId": "MULTI-C1",
+      "status": "passed",
+      "summary": "候选保持为一个轻量根任务，准确限定SKU-CUP-A、五处错字、清稿与改动清单、颜北和9月2日；没有增加子任务、参与者、默认工时或越界修改，也没有不必要的阻塞问题。",
+      "reviewFile": "semantic-review-c.json",
+      "episodeId": "C"
+    }
+  ],
+  "total": 1,
+  "passed": 1,
+  "failed": 0,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

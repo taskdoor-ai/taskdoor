@@ -19,6 +19,38 @@
 
 ## 1. Design thesis
 
+### 2026-08-31 上下文 AI 调整浮层（D-151）
+
+`TaskAiAdjustmentPopover` 替代 D-149 的居中弹窗形式，沿用已有 Base UI / 21st 适配 Popover、Button 与 Textarea；不新增依赖。浮层贴近实际入口，采用白色表面、轻阴影、范围与任务名称一行、直接输入和蓝色圆形预览箭头，不遮暗页面。差异预览原位展开，明确确认后才应用；取消丢弃当前 AI 草稿，收起只隐藏。
+
+外部点击不抢回焦点；Esc、收起、取消、应用及首尾 Tab 退出返回仍有效的入口。创建子任务展开区使用稳定的最右侧展开按钮定位；详情子任务菜单关闭后使用原更多按钮，避免锚定已卸载内容。页面持有分范围 AI 草稿，切换模块或示例再返回可以继续；刷新及离开页面不持久化输入。沿用候选签名、保存失败保留和手工编辑冲突保护。
+
+桌面宽度 460px，视口边缘自动翻转／移位；窄屏保留 8px 安全边距，内部滚动，预览底部动作不随正文卷走。移动操作区至少 44px，键盘焦点可见，减弱动效偏好下禁用动画。该变化不恢复聊天式创建，不接入真实模型或新增确认业务对象。
+
+### 子任务完成标准展开编辑（D-150，2026-09-01 局部修订）
+
+创建方案按用户后续反馈使用 `TaskCreationSubtaskEditor`：每个子任务是独立卡片，默认收起，最右侧“展开／收起”是唯一展开入口，取消三点菜单及列表外围大框；收起显示名称、单行首条标准、条数和只读的负责人头像／姓名，不提供摘要快捷编辑。负责人和展开控件同排居中，桌面展开按钮使用 32px 紧凑高度，窄屏及触屏保留 44px 触达区域。展开复用主任务 heading 布局编辑名称、多条完成标准、负责人、参与人、截止时间、标签、前置依赖与执行建议；目标仍在数据层继承主任务，不在每项内重复展示。完成标准复用创建页的单行自适应输入，随内容和可用宽度增高，不再嵌套标准展开。手动修改直接同步当前候选方案，不再提供整项保存／取消，收起保留输入，失效依赖可单独移除；“AI 帮你改”仍需预览和明确应用，EWD 估算继续独立确认或取消。有非空执行建议才显示折叠入口，不删除字段或已有建议。详情子任务列表仍使用 `TaskCriteriaEditor` 逐条编辑完成标准并显式保存／取消，名称保留单独的详情入口。两者复用既有 21st 适配 Accordion、Button 和输入控件。
+
+每条标准使用独立文本框，正文中的分号或换行不隐式拆条；创建方案允许未完成字段暂存，但最终确认须通过名称、目标和完成标准等必要校验，每项至少有一条非空标准，空白条目明确反馈位置。同步方案不提前创建；AI 候选过期须重新预览，版本冲突保留人工输入，EWD 编辑中的独立确认不因收起而丢失。已有详情继续保护未保存标准，保存或取消后返回展开按钮。窄屏换行并保持 44px 操作区，减弱动效偏好下取消折叠动画。编辑的是任务定义，不显示验收复选框，也不把人工变更记录为 AI 生成。
+
+### 2026-08-31 模块内 AI 调整（D-149）
+
+> 下述居中弹窗与 544px 宽度属于历史呈现，已由 D-151 的上下文浮层替代；字段范围、差异预览及写入边界继续有效。
+
+创建候选与已有详情复用同一弹窗，在任务信息、子任务模块和单项菜单进入，不再把局部修改放到整页底部。范围标识与真实任务名称常驻，采用“输入 → 具体差异 → 明确应用”，不使用聊天气泡。字段差异以灰色修改前、蓝色修改后加文字标签表达；新增子任务聚合为一个定义预览，不重复展示六组空白前值。保留手工编辑和初始 AI 创建流程。
+
+复用项目已有 Base UI Dialog、Button / ai 变体，以及既有 21st 适配的人员、日期与 Accordion；沿用语义 Token，不新增组件依赖。桌面使用共享 544px 弹窗宽度，窄屏留边、内部滚动、底部动作可达；焦点进入输入框，预览后落到差异区，取消或保存返回入口，单项菜单不触发行导航。详情保留正式负责人，另行标明待接受提议。界面显式标记 Mock；过期、无变化、失败与未支持分别反馈，不能冒充模型推理或生产写入。
+
+### 2026-08-31 单任务工作区（D-146）
+
+移除当前常驻侧栏与移动端导航抽屉。顶栏以一条轻分隔线组织“团队切换｜通知、头像”，不添加模块标签、第二个任务按钮、首页、主题快捷按钮或未来占位。头像菜单依次放置主题切换、普通设置和危险动作退出登录；主题固定在“设置”上方，浅色／深色状态分别提供“切换到深色／浅色”的完整可访问名称，并继续复用现有主题状态与本机持久化。当前本地原型不以退出入口清空任务数据或冒充真实会话撤销。搜索、筛选、新建和标签管理保持在列表上下文，详情与标签管理依靠可操作面包屑返回。桌面／移动复用同一套入口，保持 44px 点击区、长团队名省略与完整可访问名称；复用 TeamLogo、DropdownMenu、PersonAvatar 和 Sheet，不新造浮层交互。
+
+### 2026-08-31 创建页视觉增量（D-143 / D-147）
+
+创建与各模块 AI 调整统一使用输入区域内的 `TaskAiWorking` 轻量工作条：当前动作、一句与当前范围相关的说明、停止。复用已有 21st 适配活动指示器和 Button，不再展示四阶段清单、巨型加载卡片或常驻的首次规划报告；生成结束直接呈现任务方案，局部调整则呈现具体差异，等待人工确认。一般只切换“理解需求／整理结果”两条短反馈，补问及不支持的需求仅检查必要条件；当前仍为父页／浮层明确标注的本地 Mock，短演示不冒充实际调用、查重或思维链。停止、收起、换范围和卸载作废旧运行并保留输入，旧结果不得覆盖新范围；应用仍检查版本与权限，不增加演示等待。窄屏保留 44px 停止入口，减弱动效偏好下不跳动。
+
+按 D-147，点击新建进入任务页内的紧凑需求工作区，保留 AI 理解、最多两项关键补问、已有任务关系判断和人工确认；不提供默认空白任务表，不恢复聊天气泡、弹窗或巨型居中入口。真实阶段用轻量步骤标识，补问和关系选择在同一页面呈现；生成后头部复用任务详情的 `task-detail-hero-card`、标题、目标、完成标准和紧凑属性栏样式，只有一份可编辑方案。子任务使用清单、彩色任务图标与前置依赖提示；自然语言调整先展示具体字段差异，再应用到当前方案。已有 21st 适配的 PersonPicker / MemberSelector、TaskDueDatePicker、Accordion 继续使用，保留蓝色主动作与必要过渡，不另造双栏简报。五个 Mock 场景在需求阶段以可识别的业务卡片呈现，生成后收在“使用示例”，切换可返回原草稿；能力限制显式标注。阶段切换正确移动焦点，窄屏重排；减弱动效偏好下关闭过渡，必要字段和已设依赖不依赖 hover 才可见。
+
 AgentDoor is the shared context and continuation layer between people and their personal AIs. Its interface should feel like a carefully prepared working brief: clear, readable, source-backed, and ready for a human decision.
 
 The system uses white surfaces, clear typography, and blue for primary actions. The default light theme uses a white canvas; gray distinguishes navigation and grouped regions. Color communicates evidence type, uncertainty, confirmation, risk, and acceptance.
@@ -126,6 +158,8 @@ All reusable visual decisions must enter the system through the appropriate laye
 3. **Component tokens:** shared decisions for Button, Input, Select, Dialog, Badge, Card, Table, Navigation, and other canonical components.
 4. **Pattern tokens:** page-shell width, header spacing, toolbar rhythm, list density, detail layout, and responsive transitions shared across multiple surfaces.
 
+Compact selection follows one shared visual contract: pagination, view switches, filter chips, and similar reversible choices use `--ad-control-selected-bg` with `--ad-control-selected-ink`, never the black primary-action fill. The primary rail uses the same quiet selected surface with `--ad-navigation-selected-ink` for its active icon; route-blue communicates the current destination, while the Connect AI entry keeps its existing route treatment. Black fill is reserved for explicit primary actions, not persistent selection state.
+
 Pages consume semantic, component, and pattern tokens. They must not introduce hard-coded visual values when an existing token expresses the same decision. If no suitable token exists, propose and document a reusable token instead of hiding the decision inside a page selector.
 
 External components never bring their own scale into AgentDoor. Their raw `px`, `rem`, Tailwind arbitrary values, radii, and control heights must be translated to the nearest existing AgentDoor Token before adoption. If that translation makes the component fail, reject or recompose the component; do not create a parallel scale to preserve its screenshot exactly.
@@ -141,6 +175,8 @@ Before creating any UI, follow this order:
 5. Page-local implementation is allowed only for truly unique composition, never for a duplicated control or interaction.
 
 Copying markup or CSS from another page does not count as reuse. Shared behavior, accessibility, variants, states, and styling must live in one canonical component API.
+
+Date semantics must map to canonical shared components. A single due date uses `TaskDueDatePicker`; a task period uses `TaskDateRangePicker`. Each component owns its label, trigger anatomy, control height, typography, border, radius, focus state, calendar surface, Portal positioning, and responsive behavior. Pages may control placement and available width, but must not restyle these internals or duplicate the label. Date ranges may not be substituted with page-local paired inputs.
 
 #### Continuous contribution loop
 
@@ -168,9 +204,9 @@ A change cannot be considered complete when any of the following is true:
 
 #### Automated enforcement
 
-- `npm run verify` runs the TypeScript production build and is the normal code-boundary check; continuous micro-feedback should not rerun it after every small edit.
+- `npm run build` runs the TypeScript production build and is the normal code-boundary check; continuous micro-feedback should not rerun it after every small edit.
 - `npm run design:check` measures registered design debt. It is a targeted diagnostic for global Token, shared foundation, global stylesheet, design-check changes, and release-level validation—not a routine UI regression gate.
-- `npm run verify:design` combines the design check and production build when that wider gate is triggered.
+- When both checks are justified, run `npm run design:check` and `npm run build` explicitly so the evidence remains separate.
 - Forbidden implementation copy such as “Default List” remains unacceptable. The checked-in baseline is a diagnostic debt ceiling when the design check is intentionally run; raising it still requires explicit human design approval and a written reason.
 
 ## 3. Color system
@@ -215,7 +251,7 @@ These colors support labels and left-edge markers; they do not fill large decora
 
 - Only one filled chromatic button appears in a decision area.
 - Status is always expressed by label, icon, and color together.
-- Avoid gradients, glass effects, saturated dashboard charts, and colored card mosaics.
+- Task card backgrounds may use a subtle gradient from the existing task tone into the surface color; task icons and their backgrounds stay solid. Avoid glass effects, saturated dashboard charts, and decorative multicolor card mosaics.
 - Yellow means an inference or attention item, never general decoration.
 - Red means conflict, rejection, destructive action, or true blocking state.
 
@@ -265,7 +301,7 @@ Typography is selected by semantic role, not by visual nudging. Page CSS must co
 - Reading column: 720px maximum.
 - Existing 64px navigation rail and 240px contextual directory are implementation measurements, not a canonical information architecture. Reuse their tokens only when the current product-v2 navigation decision calls for those surfaces.
 - A product action must preserve the user's prepared context and make the created object reachable; which destination or directory changes is decided by product-v2, not by this spacing section.
-- Main desktop grid: `minmax(0, 1fr) 320px`; stack below 960px.
+- Current Task workspace desktop grid (D-148): `320px minmax(0, 1fr)`, with a compact task index on the left and the selected detail on the right. At narrow widths use list → detail navigation, not shrunken columns; the current prototype switches at 900px. Detail components respond to their container width.
 
 ### Radius
 
@@ -399,21 +435,16 @@ All searchable, predefined human selection uses the shared `PersonPicker` backed
 - 桌面窄轨和移动顶部复用同一组件 API；菜单行为、焦点恢复、Escape、方向键和 typeahead 由共享 DropdownMenu 负责。
 - 宽度、Logo 尺寸、间距、圆角和触控目标使用 `--ad-team-switcher-*`、`--ad-control-*`、`--ad-space-*` 与 `--ad-radius-*` Token，页面不得局部重画。
 
-### Task structure editor
+### Task intent input shell
 
-单 Task 创建直接呈现标准任务表单，不显示结构列表、圆形编号或“父任务”标签。只有初始 Proposal 已经包含子 Task 时，复杂事务创建才把父 Task 与一层子 Task 纵向平铺为连续“任务”列表；列表头不显示父 / 子数量统计或“添加子任务”动作。不使用 Dialog、页签、树状拖拽器或看板。复杂列表中的每个任务块都呈现完整 Task 编辑组合；子 Task 只多一条 `parentTaskId` 层级关系，不使用字段更少或样式不同的精简编辑器。
+D-140 removes the React Task-creation surface. The Task List may retain one quiet intent input before the result List, but it is an editable shell rather than a form or command.
 
-- 快速测试入口必须同时展示业务示例名和任务形态，例如“POS 故障 / 复杂拆分 · 3 个子任务”；不能要求用户点入后才知道是否会拆分。
-- 列表项标题同时显示圆形浅绿数字序号、“父任务 / 子任务”和任务名称；序号复用 Tag palette 与标准尺寸 Token，只表达阅读顺序，不表达状态、阶段或优先级。不得用蓝色大卡片或横向滚动制造切换层。
-- 每个任务块可以独立展开或收起；默认展开，折叠只降低长页面审阅负担，不改变草稿数据、任务层级或当前编辑对象。折叠按钮必须使用共享 Button，提供 `aria-expanded` / `aria-controls`，并以清晰的展开 / 收起名称暴露给辅助技术。
-- 单 Task 及复杂列表中的父 / 子 Task 按“任务信息 → 上级任务 → [文件]”组织，并复用共享 Input、Textarea、Button、TaskSourceSelector 与 TaskInformationEditor。方括号表示文件区按当前 Task 独立出现：有可解析候选或已有选择时展示；两者都没有时标题、说明、计数、空状态和添加入口全部不渲染。候选存在不把文件变成必填，父 / 子候选与选择不继承。创建表单不渲染逐项 Responsibility、验收标准、负责人或其他协作人员编辑组合；右侧摘要只读人员继续复用 PersonAvatar。页面不得以折叠、隐藏或换容器的方式重新加入这些已删除区域，也不得重新实现文件选择、按钮尺寸或输入框焦点样式。
-- 每个 Task 块的“协作缺口”读取并编辑该 Task 自己的数据；只有确实没有额外判断、证据或独立结果缺口时才显示空状态。不得因为 Task 是子 Task 就固定传空数据，也不得把父 Task 的缺口复制给全部子 Task。
-- 创建文件候选行继续由整行 `button[aria-pressed]` 承担选择语义，非交互 CheckboxIndicator 放在文件图标之前；不得在整行 Button 内嵌套第二个 Checkbox。控件保留可见焦点、文本可访问名称和触摸目标。
-- 同事负责人旁显示“待接受”语义和父 Owner 兜底说明；不使用已分配、已通知或责任已转移的视觉语言。
-- 协作人员与资料按子 Task 显式选择；负责人从协作人员中去重。父子 Task 不自动继承成员或引用，引用选择必须继续说明“只建立引用、不改变原权限”。
-- 新增和删除属于结构编辑动作，使用 quiet / secondary 控件；创建父子 Task 的最终确认仍由页面唯一 Primary action 完成。
-- 桌面端按任务块连续呈现全部父 / 子 Task，任务之间使用一个清晰的块级间距，不再嵌套额外容器；窄屏保持同一信息顺序，并把负责人更换动作放到人员身份下方。不得用固定高度制造空白或压缩正文密度。
-- 创建页右侧摘要卡以主 Task 为唯一投影：标题直接承担名称，不增加“创建确认”眉题；负责人和主 Task 协作人员使用共享 `PersonAvatar` 加姓名的只读人员单元；属性区只保留周期和可选子任务数量。不得加入目录 / 分组选择，也不得用统计格重复创建者、资料、上级关系、泛化任务总数或协作缺口，不得把子 Task 人员汇总为主 Task 协作人员。
+- Use the shared `InputBar` text surface with a visible label, plain-language placeholder and restrained route-colored edge. It belongs inside the Task List page, not on a separate creation page.
+- The shell accepts text and multiline Enter input only. It has no attachment control, send button, quick-test prompt, analysis state, Proposal preview, confirmation card, success receipt or hidden auto-submit.
+- Copy must state that the text remains in the input and does not create a Task. Do not clear it on Enter, simulate progress, append a Task row, write creation storage keys or imply that an Agent has started work.
+- The page header contains “任务” and the secondary “标签管理” action only. There is no primary “新建任务” action while the shell has no confirmed submit behavior.
+- The shell uses existing color, typography, spacing, focus and radius Tokens. On narrow screens, place the explanation above the input; preserve the same text semantics and a visible focus ring.
+- Restoring Task creation, persistence, file selection, people selection, parent / child planning or AI Proposal behavior requires a new confirmed product contract; none may be hidden inside the retained shell.
 
 ### Classification tag
 
@@ -522,6 +553,8 @@ Facts, inferences, conflicts, and unknowns are separate rows or sections. A para
 
 ### Task AI suggestion work brief
 
+> 历史方案参考：D-142 已移除当前详情的概览和默认 AI 建议区。下述建议内容与动作边界供未来独立诊断方案复用，不构成本轮恢复入口的依据；旧通知只按需展开其来源记录。
+
 Task 概览的“AI 建议”使用一个安静的连续 List，而不是一组彼此漂浮的等权卡片。List 顶部先给出任务态势摘要与待处理数量；每一行按“语义标记 / 结论与事实 / 影响、边界与动作”组织。事实使用紧凑标签值，不用长段 AI 解释；影响与能力边界必须在动作之前可见。
 
 只有至少一条建议由当前可见事实触发时才渲染整个“AI 建议”区；零建议时不显示标题、态势摘要或空状态卡，后续概览模块直接上移。若建议存在但已被当前成员全部标记“已知晓”，只保留紧凑标题与重新显示入口，不渲染空工作简报。
@@ -550,33 +583,38 @@ Never show a universal “match score”. If ranking is useful, use ordinal lang
 
 `TaskAppearancePicker` separates appearance into a pure icon grid and a pure background-swatch grid. It does not show visible category names or card-like “icon + label” / “swatch + label” combinations; accessible names and hover hints still identify every option. Only the final `TaskIcon` preview combines the two selected inputs.
 
-The Task list is one flat workspace with no Folder rail, directory tree, grouping pane, directory breadcrumb, restore-directory control, or separate “我的待办” destination. The page header owns “任务”, “标签管理” and “新建任务”; the List toolbar owns one shared-Input name search plus status / owner / flat-tag filters. Results use the stable order “任务 / 状态 / 标签 / 负责人 / 截止时间”. “标签管理” uses the shared outline Button immediately before the primary “新建任务” Button and opens the one flat tag-management surface. A Task icon has two independent inputs: one bare icon from the canonical task-icon set and one background from the canonical tag-palette tones; only the final preview combines them. The shared `TaskIcon` renders the result consistently in list and detail contexts. Appearance is decorative and never implies status, priority, ownership, permission or tag membership. Tags reuse the canonical compact `TagBadge` and collapse excess labels into a count. Paginate at 10 rows, reset to page 1 when filters change, and hide pagination for empty results. On narrow screens the action group may wrap, column headers hide, and the same row fields stack without horizontal overflow; all controls retain shared touch targets.
+The Task list is one flat workspace with no Folder rail, directory tree, grouping pane, directory breadcrumb, restore-directory control, or separate “我的待办” destination. The page header owns “任务”, the secondary “标签管理” action, and one primary “新建任务” action. “新建任务” starts a fresh Agent conversation and never opens a second page-local creation form. One non-submitting Task intent input shell sits between the header and List container. The List toolbar owns one shared-Input name search plus status / owner / flat-tag filters. Results are tone-aware decision cards rather than a dense table: the shared Task icon and title establish identity, status sits beside the title, the goal remains one quiet supporting line, and “负责人 / 标签 / 到期时间” form one compact metadata row below. Do not repeat column headings above the cards or use “截止时间” for this field. A Task icon has two independent inputs: one bare icon from the canonical task-icon set and one background from the canonical tag-palette tones; only the final preview combines them. The shared `TaskIcon` renders the result consistently in list and detail contexts. Appearance is decorative and never implies status, priority, ownership, permission or tag membership. Tags reuse the canonical compact `TagBadge` and collapse excess labels into a count. Paginate at 10 rows, reset to page 1 when filters change, and hide pagination for empty results. On narrow screens the action group may wrap, the intent explanation stacks above its input, and the same card fields stack without horizontal overflow; all controls retain shared touch targets.
 
-D-135 placement remains: parent / child relations belong to the conditional **“关联任务”** tab immediately after Overview. D-139 removes Folder breadcrumbs entirely; the current Task breadcrumb never carries directory classification.
+D-142 supersedes the old Overview-dependent placement: the current detail tabs are **讨论 / 子任务 / 文件 / 活动**. Keep the compact Task heading and the current parent-task breadcrumb; do not restore a separate Overview workbench.
 
 Task period is optional. The shared Task date-range picker renders a quiet “添加周期” trigger when both values are empty, permits clearing the whole range from the popover, and never silently restores dates after a clear. A non-empty range must contain both start and end, with end on or after start. Use the same calendar, focus and Token treatment for empty and populated states; do not add a required marker, a fake placeholder date, or a second date-control style.
 
 D-139 removes the global Todo entry, Task-detail Todo projection, Todo-to-Task conversion, Task-detail responsibility distribution and Task acceptance-criteria surface. The current prototype must not create or operate Todo and must not hide these removed controls in an alternate container. Unique Task Owner, participants, status, Activity, File, parent / child relations, Handoff and permission semantics continue to use their existing shared components and safety boundaries.
 
-The Task-detail “活动” tab is one semantic event list, not separate social and change feeds. Every row carries one concrete, text-labelled action marker such as “动态”, “状态变更”, “周期变更”, “参与者加入”, or “代码提交”; “动态” is only the marker for a member-authored top-level post, while a reply remains “回复” and the module itself remains “活动”. Do not add an event group or execution-source badge. Give each action a stable token-based marker color to support scanning: blue for member posts, green for status changes, purple for schedule changes, teal for participant changes, and orange for code commits. AI suggestions use their inference semantic color plus a small Sparkles icon and explicit “AI 建议” text. Color always reinforces the written action and never replaces it. Keep each top-level event visually independent without drawing a connector between avatars; reply indentation may still express the local parent-child relationship. Keep the composer above the list and use the shared compact Select to show only concrete types present in the current Task. A Commit row preserves its author, time, message and linked-file controls, while its original Commit identity remains addressable for source references. Do not add a parallel “提交记录” tab, duplicate the same event, imply that every Activity is a Commit, or record low-value browsing actions. Use `ol/li`, stable focus targets and token-based spacing; on mobile stack metadata without hiding provenance.
+D-142 separates Task-detail **讨论** from **活动** and removes the Overview tab. Discussion is the default high-frequency surface: show human-authored posts, replies, mentions and original-file references with shared person components and the shared composer. Do not insert automatic AI suggestions or change events into the conversation. Activity is a read-only change timeline: compact neutral action markers, a subtle vertical connector, actor, concrete action and time; display before → after only when recorded values exist. Never infer an old value from the current Task. Use a single quiet type filter rather than colourful social cards. Commits retain their original identity, author, message and linked files, presented as file submissions in the current business-task prototype. Preserve every human reply, including replies to historical AI or system records, with its source context in Discussion. Keep stable focus targets, keyboard Tab navigation, wrapping metadata and touch-sized controls. Real timestamps and legacy display-time records must be distinguishable; never invent dates for legacy data. Browser-local records are a prototype, not immutable server audit.
 
-Task parent / child navigation uses one conditional Task-detail tab named **“关联任务”**, placed immediately after **“概览”**. Show the tab only when at least one direct parent or child exists, and use its count badge for the combined direct-relation total. Inside it, use one semantic List with the desktop columns **“任务名称 / 类型 / 状态 / 负责人”**; each row names its relation direction as **“上级任务”** or **“下级任务”** in the type column. The task-name cell contains only the shared `TaskIcon` and Task title; do not append the goal, deadline or other metadata. Status and owner reuse `TaskStatusBadge` and `PersonAvatar`. Each row is one labelled Task-navigation action with a visible focus ring and does not edit the relation or any Task fact. The tab joins the existing Task-detail tablist, supports Left / Right and Home / End keyboard movement, and keeps a visible selected state and focus ring. On narrow screens hide the horizontal column header and preserve the same four fields with inline labels, without page-level horizontal overflow; all relation rows retain at least the shared touch minimum. Show only direct relations and navigate one level at a time; do not render a second tree, repeat the current Task, place the parent in a directory breadcrumb, or imply inheritance of owner, status, members, files or permissions.
+Task parent / child navigation keeps the existing direct-child list in **子任务**, immediately after **讨论**. The parent remains in the task-ownership breadcrumb, not a Folder classification. Show only direct relations and navigate one level at a time. Preserve shared Task status/person components, visible keyboard focus, Left / Right and Home / End Tab navigation, responsive wrapping and touch targets. Do not reintroduce the removed Overview or a duplicate relationship tree, and do not imply inheritance of owner, status, members, files or permissions.
 
-The Task List page has a page header outside the List container. It uses the single title “任务” and one scope sentence, with no eyebrow, directory breadcrumb, selected-group title or module sidebar. “标签管理” and “新建任务” sit at the right of this header. The List container begins with one shared-Input name search on the left and status / owner / flat-tag filters on the right, then contains column headers, Task rows and pagination. Search icons use the shared Input `leadingIcon` slot and sit inside the same border and focus surface as the entered text; do not place a detached icon beside the control. Search, status, owner and tag use one shared task-matching predicate. Use `--ad-search-field-width` on desktop and full width on narrow screens.
+The Task List page has a page header outside the List container. It uses the single title “任务” and one scope sentence, with no eyebrow, directory breadcrumb, selected-group title or module sidebar. “标签管理” and the primary “新建任务” action sit at the right of this header; creating starts a fresh Agent conversation. The non-submitting intent shell follows the header; the List container then begins with one shared-Input name search on the left and status / owner / flat-tag filters on the right, followed by the result count, Task decision cards and pagination. Search icons use the shared Input `leadingIcon` slot and sit inside the same border and focus surface as the entered text; do not place a detached icon beside the control. Search, status, owner and tag use one shared task-matching predicate. Use `--ad-search-field-width` on desktop and full width on narrow screens.
 
 ### Personal center and responsibility document
 
-成员设置使用一个设置式大型 Dialog。头像菜单不展示姓名、头像和身份组成的信息卡，只使用与其他菜单动作一致的 **设置** 入口；头像在菜单展开时不增加蓝色装饰外框，键盘焦点仍必须可见。Dialog 左侧身份区只展示头像与姓名，不在姓名下重复职位。导航按 **个人设置 / 团队设置** 分组：个人设置为 **个人信息**；团队设置依次为 **团队信息 / 成员 / 我的责任**。Team 上下文由应用级 TeamSwitcher 统一控制，设置页不重复第二个 Team Select。团队信息使用“通用”结构，按团队标志、团队名称 Input、显式保存以及“离开团队 / 删除团队”危险区纵向排列；团队名称 Input 使用标准正文字号和正常字重，不继承字段标签的强调字重。不可逆动作必须使用 AlertDialog，且至少保留一个可切换 Team。成员使用 **用户 / 角色** 两列结构，复用 PersonAvatar 与共享 Select；角色表头与每行 Select 使用相同列宽和左边界，并整体靠右。成员页提供邀请链接复制 / 重新生成、邮箱邀请和角色修改；最后一名在职管理员不可被降级。我的责任承接同一 Team 的责任正文、编辑、AI 建议与证据。当前这些成员管理动作只写入本机原型，界面必须明确不发送真实邮件、不改变生产组织权限。窄屏将四个入口收敛为可横向滚动的单行导航，团队信息动作变为全宽，成员角色折叠到用户信息下方，保持相同语义、焦点顺序和可见选中态。
+成员设置使用一个设置式大型 Dialog。头像菜单不展示姓名、头像和身份组成的信息卡，首项提供主题切换，其下是与其他菜单动作一致的 **设置**，最后提供危险动作 **退出登录**；顶栏不再重复主题入口。主题项按当前状态显示“切换到深色／浅色”，使用对应图标与完整可访问名称，点击后复用现有主题状态和本机持久化。当前没有真实认证会话时，退出入口不得清除本机任务数据或显示伪成功。头像在菜单展开时不增加蓝色装饰外框，键盘焦点仍必须可见。Dialog 左侧身份区只展示头像与姓名，不在姓名下重复职位。导航按 **个人设置 / 团队设置** 分组：个人设置依次为 **个人信息 / 我的责任**；团队设置为 **团队信息 / 成员**。该导航位置不改变数据归属，“我的责任”仍是 Team-bound 文档。应用级 TeamSwitcher 与责任页标题区右侧的紧凑 Team Select 共享同一当前 Team 状态；设置内切换经过未保存责任草稿保护，不建立第二份团队上下文。团队信息使用“通用”结构，按团队标志、团队名称 Input、显式保存以及“离开团队 / 删除团队”危险区纵向排列；团队名称 Input 使用标准正文字号和正常字重，不继承字段标签的强调字重。不可逆动作必须使用 AlertDialog，且至少保留一个可切换 Team。成员使用 **用户 / 角色** 两列结构，复用 PersonAvatar 与共享 Select；角色表头与每行 Select 使用相同列宽和左边界，并整体靠右。成员页提供邀请链接复制 / 重新生成、邮箱邀请和角色修改；最后一名在职管理员不可被降级。我的责任承接所选 Team 的责任正文、就地新增／更新提议与证据，不设独立 AI 建议区。当前这些成员管理动作只写入本机原型，界面必须明确不发送真实邮件、不改变生产组织权限。窄屏将四个入口收敛为可横向滚动的单行导航，责任标题与操作允许换行且不得横向溢出，团队信息动作变为全宽，成员角色折叠到用户信息下方，保持相同语义、焦点顺序和可见选中态。
 
-The responsibility surface presents one Team-bound responsibility document and a separate AI review queue:
+The responsibility surface presents one Team-bound responsibility document as a single, unboxed statement list using the available content width rather than the narrower reading-column cap. A compact Team Select sits at the right of the title area and switches the same application-level Team state; it is not a separate “当前团队” side area. The surface has no separate “AI 建议” heading, count, document card, blue decoration rail, right rail or review card:
 
 ```text
-团队责任说明 ｜ AI 建议
+○ 当前责任                                      [✦ AI 建议]
+  展开后：建议替换文本  查看依据  忽略  更新
+○ 当前责任
+◌ 候选责任文本                  查看依据  [+]
 ```
 
-The document is continuous plain text, not a grid of responsibility cards. The member and Team administrator may edit it; every save shows the latest editor and time, while production records the revision. AI suggestions are visually secondary and separated by quiet dividers rather than cards. They expose the exact proposed text, specific evidence and freshness, but never silently update the document. On this personal-center surface, the only decisions are accept and ignore; the stored suggestion, evidence, Coverage and decision history remain available for audit after either action. Do not add a Coverage summary disclosure or a separate aggregate side card to the personal-center suggestion queue.
+The document remains continuous plain text, not a grid of responsibility cards. The member and Team administrator may edit it; every save shows the latest editor and time, while production records the revision. Existing responsibilities keep equal visual weight, one statement per row and a light separator. Only a row with a pending update gets the shared light-blue AI Button: a Sparkles icon plus visible “AI 建议” text. Its accessible name changes between “查看 AI 建议” and “收起 AI 建议” with the disclosure state; `aria-expanded` and `aria-controls` connect it to the read-only replacement statement, evidence disclosure, quiet “忽略” action and explicit “更新” Button directly under that row. The entry identifies an AI-authored proposal; it must not imply regeneration, automatic writing or that an update has already happened.
 
-The two surfaces use shared Select, Button, Dialog, Input, Textarea and Avatar APIs; personal information must not be recreated as an embedded right rail or page card. A Team responsibility remains one plain-text document: reading mode splits it into an unboxed statement list with identical markers and equal visual weight; edit mode uses one compact Textarea per statement, with explicit add and remove actions, then serializes the rows back to the same document. Do not require members to create the structure by typing blank lines, and do not substitute an instructional banner for the row structure. Statement order must not invent responsibility priority, source, or formality, and this simple list must not be described as the Routing Thread. The selected Team appears once in the title-area Select; do not repeat a Team identity strip above the document. Each active AI suggestion shows the exact proposed paragraph and only two decisions: quiet “忽略” and primary “采纳”. A human acceptance atomically adds the paragraph to the left document and removes the suggestion from the active queue; ignore also removes it. Do not show correct, dispute, restore, accepted cards, or an intermediate adoption draft. Disable acceptance while the document has an open manual edit so one action cannot overwrite the other. Mobile stacks the Team selector, document and suggestion queue; dialog and edit actions retain the 44px touch target. A local-only prototype may state its capability boundary once as a quiet footer note, never as a top banner or side card. Do not introduce social-profile metrics, follower counts, activity charts, online status or decorative profile cards.
+An add proposal is one read-only candidate row after the existing statements. It reuses their type size, line height and alignment, while a dashed marker, subtle inference surface and trailing plus distinguish it without relying on color alone. The trailing plus is the only write action; it is a Button with accessible name “添加责任” and applies the visible candidate text in one click. Evidence remains available from the same row, and the quiet ignore disposition remains available without competing with the plus. Proposal text is not editable in this compact projection; a member who needs different wording uses the document's separate edit mode. Proposal title, pending badge, explanatory copy, updated time, AI actor, rule version and ChangeSet remain stored but are not otherwise projected on this surface.
+
+The surface uses shared Button, Select, Dialog, Textarea and Avatar APIs; personal information and Team context must not be recreated as an embedded right rail or page card. The title Select uses the existing active Team source of truth and routes a switch through the same unsaved-draft protection as leaving the responsibility editor. Reading mode splits the plain-text document into an unboxed full-width statement list; edit mode uses one compact Textarea per statement, with explicit add and remove actions, then serializes rows back to the same document. Do not require members to type blank lines. A human click atomically writes the visible proposal text, advances the document revision, records the action and removes the proposal from the active state. Update proposals carry their base revision, target paragraph position and expected original text. If only the revision changed while the expected text remains at the same position, the client may safely rebase before applying; a changed target blocks the update and must never fall back to append. Ignore removes only the proposal. Manual document editing and proposal application are mutually exclusive. Evidence, Coverage and decision history remain available for audit after either action, but there is no aggregate Coverage card on this surface. On mobile, title actions may wrap, the expanded update content stacks below its target, the “AI 建议” disclosure and icon-only add action both retain a 44px touch target, and the list must not create horizontal scrolling. A local-only prototype may state its capability boundary once as a quiet footer note, never as a top banner or side card. Do not introduce social-profile metrics, follower counts, activity charts, online status or decorative profile cards.
 
 Textarea uses the shared `default` variant for short descriptions, `document` for sustained plain-text editing, and `responsibility` for one auto-growing responsibility row. Input and Textarea focus use one visible route-colored border, not a stacked border + ring + outline. Pages must not override native textarea height, padding or font size locally.
 
@@ -598,17 +636,23 @@ Membership, access, context publication, and acceptance share a visual skeleton 
 
 ### Global notifications
 
-全局通知是左侧一级导航底部工具区的 utility，固定在主题与头像之前，但不使用一级模块选中态。桌面端复用共享 `Sheet`，从一级导航右边缘向右展开并保持导航可见；面板依靠边框与右侧阴影建立层级，不明显压暗原页面，点击面板外仍可关闭。移动端面板占满视口；打开后焦点进入标题，Escape 或关闭按钮返回原触发器。铃铛计数表示未读通知。未读角标使用由 danger 与 surface 混合得到的柔和红色、白字和 sidebar 色分隔边，紧贴铃铛右上角；零值隐藏，超过 99 显示 `99+`，完整数量写入触发器的可访问名称，不使用跳动或脉冲动画。
+按 D-146／D-181／D-183，全局通知是轻量顶栏右侧的 utility，位于头像之前，不使用一级模块选中态；D-183 已移除它左侧的独立主题按钮，主题改为头像菜单首项。桌面端复用共享 `Sheet`，从视口右侧展开，不保留旧侧栏偏移；面板依靠左边框与左向阴影建立层级，不明显压暗原页面，点击面板外可关闭。移动端面板占满视口；打开后焦点进入带标题描述的面板，Escape 或关闭按钮返回原铃铛。铃铛计数表示未读通知。未读角标使用由 danger 与 surface 混合得到的柔和红色、白字和 surface 色分隔边，紧贴铃铛右上角；零值隐藏，超过 99 显示 `99+`，完整数量写入触发器的可访问名称，不使用跳动或脉冲动画。旧左侧 Sheet 仅保留组件兼容，不构成恢复侧栏的理由；D-86 / D-88 / D-89 的通知语义不变。
 
 通知列表只使用“全部 / 未读 / 已读”筛选，入口放在标题栏右侧的紧凑菜单中；选中项使用勾选和文字共同表达，不依赖颜色。铃铛数量表示未读，不表示待处理。列表只显示足以判断下一步的类型、动作摘要、来源与时间。协作邀请与责任转交详情在同一 Sheet 内展示“为什么现在提醒 / 范围与上下文 / 处理后的边界”，操作区只保留接受和拒绝；拒绝原因可选且私密，不使用羞耻或报警式视觉。Task 的“AI 建议”详情只作概览并跳回来源 Task。“AI 建议”使用推断语义色与来源图标，普通协作请求使用 route 语义，状态始终保留文字。
 
-Task 的“AI 建议”通知详情是信息概览，不是处理面：第三段标题使用“信息边界”，主动作固定为“前往任务查看”，跳转后定位 Task 概览的“AI 建议”区。通知内不得出现“处理缺口”、AI 稍后处理、事实反馈或模拟处理结果；这些动作留在来源 Task。协作邀请与 Handoff 仍可按其协议在通知内回应。
+Task 的“AI 建议”通知详情是信息概览，不是处理面：第三段标题使用“信息边界”，主动作固定为“前往任务查看”。D-142 下跳转只按需展开来源记录，不恢复概览；具体来源 ID 失效时明确提示，不能用另一条建议顶替。通知内不得出现“处理缺口”、AI 稍后处理、事实反馈或模拟处理结果，本轮也不新增诊断处理面。协作邀请与 Handoff 仍可按其协议在通知内回应。
 
 通知是原对象投影，不复制正文或权限。已读不能移出待处理；回应后的生效、失败、等待确认和失效必须明确区分。移动端列表行和所有回应控件保持 44px 触控目标；不使用摇铃、循环动画或未读焦虑动效。
 
 ### Task list and Task files
 
-The Task module has one canonical flat list and no Folder sidebar, grouping pane, list / directory switch, directory count, or directory restoration action. Entering from the primary Task rail opens “全部任务” directly; the primary rail remains the only persistent left navigation on desktop, and the mobile drawer does not add a Task directory tree. The list never indents by `parentTaskId`; parent / child navigation stays in the conditional relation tab.
+The Task module has one canonical flat task set and no Folder sidebar, list / directory switch, directory count, or directory restoration action. Under D-146 / D-148, the app opens a compact left task list alongside the selected detail on desktop, below one lightweight workspace topbar; there is no persistent module rail or mobile navigation drawer. Task creation, filtering and tag management stay in the list context. The list never indents by `parentTaskId`; parent navigation stays in the Task breadcrumb and direct children stay in the Subtasks tab.
+
+The left list is an object index, not a set of scaled-down detail cards: each row shows only the task name and selection state, with no task icon, status, date or other metadata. Other task information remains in the existing right detail. Task selection changes only the right pane; keep query, filters, selected tag and list scroll mounted, including when temporarily visiting creation or tag management. No task is preselected; an unselected right pane has one quiet instruction, not a dashboard. On narrow screens show one pane at a time and return to the same list context. The existing board uses the same filtered task set and remains a view, not a new module.
+
+“按标签查看” is one compact selection control whose menu shows only tag names and selection state, with tag management inside the menu, not a multi-row tag grid. It uses the existing flat multi-tag definitions, not a TagGroup or Folder domain. Per-tag counts are currently hidden; retain their projection and use the same scope if counts are shown in future: derive each tag count from the common query / owner / status scope before applying the selected tag. Multi-tag counts overlap and must not be summed as a total. Preserve the selected tag on rename, fall back to all tags on deletion, and keep unrelated filters. Unknown data or front-end team switching must never imply permission enforcement.
+
+Task detail keeps its existing card language. Its hero is one tone-aware summary card containing the shared `TaskIcon`, task title and goal, followed by the existing “负责人 / 参与人 / 状态 / 截止时间” fields. Compact owner and participant controls show avatars without repeating names underneath. Reuse `MemberSelector`, `TaskStatusBadge` and the current shared `TaskDueDatePicker`; page-local avatar, status or date controls are not allowed. D-142 uses one compact underline tablist: Discussion, Subtasks, Files and Activity. Discussion is the implementation's default entry; there is no Overview panel or duplicate progress / AI workbench. The task tone may organize identity but never replace written status.
 
 There is no independent Team File module in the current product surface. Task detail owns the File entry and renders the current Task's ACL-visible File / reference set directly, without a people selector or per-person switching. A Task may still present its internal file hierarchy, current version, visibility summary and source path using the shared File components; these projections never duplicate File, FileVersion, TaskFilePlacement or ACL truth. Front-end Mock visibility editing must state that saving affects only the current session and does not perform ACL evaluation, authorization, revocation, persistence, or audit.
 
@@ -692,7 +736,12 @@ No custom view record is created, no success state is shown, and no generated qu
 
 ### Context package
 
-A Personal Agent Work Package is the reviewed payload sent from any product object to a user's local AI tool. It is not a fixed task template and it is not a chat transcript. Every connection entry must provide the same four slots:
+A Personal Agent Work Package is the reviewed payload sent from a product object to a user's local AI tool. D-155／D-157 的当前连接只带上下文：当前任务或讨论原文与必要关联信息在同一个“带入的信息”区按行展示，不另套原文卡，不展示或默认导出工作要求与期望成果；具体要求由用户在工具中提出。
+
+<details>
+<summary>历史四槽方案（保留参考，不作为当前讨论连接的展示或导出合同）</summary>
+
+The earlier package design used four slots:
 
 1. **Current work object / 当前处理内容** — the exact object from which the user invoked the Agent, such as an activity, reply, selected document passage, file, todo, Responsibility, decision, or whole task.
 2. **Related context / 一并带入的信息** — the minimum authorized information directly related to that object: parent task, current Responsibility or processing point, people, source references, prior decisions, or related files.
@@ -722,13 +771,19 @@ The package is assembled by the connection entry, not inferred from presentation
 | File / change | File or revision reference | Task goal, rules, prior revision | Review, modify, test, or compare | Revised file, patch, review result, or test evidence |
 | Current responsibility | Accepted Responsibility | Goal, sources, intended recipient | Continue the accepted responsibility | Reviewable conclusion and work product |
 
+</details>
+
 Task Activity 和 Reply 的紧凑连接入口使用统一的浅蓝方形 Sparkles 图标按钮；页面级明确动作可以保留文字标签。Task 详情不再提供逐项 Responsibility 分配或按人员切换的连接入口。
+
+D-155 在讨论区只保留整条 Discussion 右侧和回复编辑区 @ 右侧两处连接，移除回复操作旁及已发布子回复的重复入口；D-157 另将已有任务头部的“AI 调整”替换为仅显示 Sparkles 图标的“连接 AI”入口，保留悬浮提示和无障碍标签。任务头部只核对上下文和选择工具，不再打开字段调整浮层；创建与子任务调整不受此次替换影响。三处共用四种工具及真实 Logo，“带入的信息”统一展示当前对象、必要任务背景、相关讨论或当前草稿与来源；不展示“希望 AI 完成／期望成果”，不把被删掉的要求偷偷导出。整任务入口读取实际字段和已提供的关联摘要，不导出示例标准、旧摘要或完整文件；待接受人员和未核验文件快照需明确标记。原文和草稿保持可读，长内容内部滚动；打开、关闭不改任务、不发布或清空回复。普通鼠标点击不描边整个讨论串；键盘焦点范围限于原消息或操作控件，来源跳转短暂浅底提示原消息。全局连接和自动变更 Activity 入口仍不恢复，工具列表不冒充安装检测，尝试唤起不冒充连接成功。
+
+D-172 在“我的工作”头部增加带文字的共享浅蓝“连接 AI”按钮；其单独 CLI 弹层要求已由 D-177 局部替代，无工作上下文限制已由 D-178 局部替代。该按钮直接复用任务／讨论已使用的 `AiConnectionDialog` 及其 ChatGPT、Claude Code、CodeBuddy、Cursor 四产品选择；“带入的信息”取 `personalWorkbenchModel.ownedTasks` 的完整正式负责任务列表，每项仅含 Task ID、名称与真实状态，不带当前情况、责任类型、期限、时效、actions／priorities、讨论、文件或详情，空列表只标 `meta=0`。顶栏、一级导航与全局连接页仍隐藏。产品选择、复制或尝试唤起不得写成设备检测、握手成功、Agent 接单或自动回写；复用共享模态的遮罩、Esc／关闭与焦点管理，关闭后焦点返回触发按钮。页面级带文字动作使用共享 Button `variant="ai"` 与 `size="sm"`，窄屏保持触摸目标。
 
 紧凑连接入口使用共享 Button `variant="ai"` 与 `size="icon-sm"`；页面不得通过局部 CSS 重画其背景、颜色、圆角或控件尺寸。
 
 Task 详情中承载成组信息的“AI 建议”使用 `--ad-radius-card`；不得引用未进入 Token 标尺的页面级圆角。
 
-The package preview uses the same four labels across all entries. Only their values change. This keeps the mental model stable while preserving the meaning of the object that initiated the connection.
+The current preview uses one information section across all three entries, preserves source identity and raw text, and keeps contextual material separate from executable instructions in the exported package.
 
 ## 7. Motion
 

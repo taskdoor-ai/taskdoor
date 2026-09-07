@@ -1,0 +1,135 @@
+{
+  "caseId": "REAL-C-04",
+  "reviewType": "targeted_dependency_semantic_review",
+  "reviewScope": {
+    "sourcesRead": [
+      "inputs/REAL-C-04.json",
+      "outputs/REAL-C-04.json"
+    ],
+    "expectationUsedAsSemanticAuthority": false,
+    "originalFilesModified": false
+  },
+  "verdict": "fails",
+  "summary": "首次输出错误地用第三方电气证书替换了业主复验对正式电气复测结果的直接依赖。第三方证书是基于正式复测记录形成的专业证明，满足的是业主复验中‘专业证书可见、否则待确认’的附加边界；它不等同于业主按缺陷清单直接复验的电气结果。正确的最小依赖变化是保留 rn-electric-retest 与 rn-cabinet，并新增 rn-electric-cert。",
+  "conclusion": {
+    "thirdPartyCertificateReplacesOwnerDirectConsumptionOfFormalRetest": false,
+    "requiredAction": "keep_existing_retest_edge_and_add_certificate_edge",
+    "oldDependencies": [
+      "rn-electric-retest",
+      "rn-cabinet"
+    ],
+    "firstOutputFinalDependencies": [
+      "rn-electric-cert",
+      "rn-cabinet"
+    ],
+    "semanticallyCorrectFinalDependencies": [
+      "rn-electric-retest",
+      "rn-electric-cert",
+      "rn-cabinet"
+    ],
+    "obsoleteProducerEvidenceFound": false
+  },
+  "consumerAnalysis": [
+    {
+      "consumerTaskId": "rn-electric-cert",
+      "producerTaskId": "rn-electric-retest",
+      "consumption": "第三方读取正式复测记录并据此签发可验证电气证书。",
+      "relationship": "direct",
+      "evidenceIds": [
+        "rn-electric-cert",
+        "rn-electric-retest",
+        "rn-request",
+        "rn-file-cert-request-v2",
+        "rn-d6"
+      ]
+    },
+    {
+      "consumerTaskId": "rn-reinspection",
+      "producerTaskId": "rn-electric-retest",
+      "consumption": "业主按缺陷清单直接复验正式电气复测结果。",
+      "relationship": "direct",
+      "evidenceIds": [
+        "rn-reinspection",
+        "rn-electric-retest",
+        "rn-request",
+        "rn-file-snag-v5",
+        "rn-d2",
+        "rn-d4"
+      ]
+    },
+    {
+      "consumerTaskId": "rn-reinspection",
+      "producerTaskId": "rn-electric-cert",
+      "consumption": "业主复验还需看到专业证书，未取得证书的项目保持待确认。",
+      "relationship": "direct_additional",
+      "evidenceIds": [
+        "rn-reinspection",
+        "rn-electric-cert",
+        "rn-request",
+        "rn-d9"
+      ]
+    },
+    {
+      "consumerTaskId": "rn-reinspection",
+      "producerTaskId": "rn-cabinet",
+      "consumption": "业主按缺陷清单复验木作结果。",
+      "relationship": "direct_existing",
+      "evidenceIds": [
+        "rn-reinspection",
+        "rn-cabinet",
+        "rn-file-snag-v5"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "findingId": "C04-SUP-01",
+      "status": "failure",
+      "statement": "rn-reinspection 的旧完成标准同时读取电气结果、木作结果和专业证书状态；正式复测结果与证书是不同产出，不能用后一产出替代前一产出。",
+      "evidenceIds": [
+        "rn-reinspection",
+        "rn-electric-retest",
+        "rn-electric-cert",
+        "rn-cabinet"
+      ]
+    },
+    {
+      "findingId": "C04-SUP-02",
+      "status": "failure",
+      "statement": "rn-request 明确把证书任务和业主复验任务并列为正式复测结果的消费者，因此 rn-electric-retest 应分别直接连接 rn-electric-cert 与 rn-reinspection。",
+      "evidenceIds": [
+        "rn-request",
+        "rn-electric-retest",
+        "rn-electric-cert",
+        "rn-reinspection"
+      ]
+    },
+    {
+      "findingId": "C04-SUP-03",
+      "status": "failure",
+      "statement": "首次输出把 rn-electric-retest 解释为可经 rn-electric-cert 传递给业主复验，遗漏了业主对正式复测结果的直接消费，也没有任何输入证据声明旧生产者已过时。",
+      "evidenceIds": [
+        "rn-reinspection",
+        "rn-request",
+        "rn-file-electric-field-v3",
+        "rn-file-cert-request-v2"
+      ]
+    },
+    {
+      "findingId": "C04-SUP-04",
+      "status": "satisfied",
+      "statement": "首次输出正确识别了专业证书必须成为业主复验的新增直接前置，但错误地同时删除了正式复测前置。",
+      "evidenceIds": [
+        "rn-reinspection",
+        "rn-electric-cert",
+        "rn-d9"
+      ]
+    }
+  ],
+  "attribution": {
+    "primary": "planner",
+    "planner": "首次输出实施了替换而非并集式最小变化，错误删除仍被完成标准和 rn-request 直接消费的 rn-electric-retest 边。",
+    "fixture": "输入对正式复测记录、第三方证书和业主复验三者的产出与消费关系有足够区分，不构成语义缺口。",
+    "graderOracle": "本复核未以冻结 expectation 或 grader oracle 作为语义依据。"
+  }
+}

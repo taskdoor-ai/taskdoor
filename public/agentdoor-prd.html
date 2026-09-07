@@ -1,0 +1,2777 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="AgentDoor 从团队责任、任务创建到任务详情的产品需求文档。">
+  <title>AgentDoor 产品 PRD</title>
+  <style>
+    :root {
+      --canvas: #f7f7f6;
+      --surface: #ffffff;
+      --surface-quiet: #fafafa;
+      --surface-blue: #edf5ff;
+      --ink: #17191c;
+      --ink-2: #535860;
+      --ink-3: #777d85;
+      --line: #dfddd8;
+      --line-soft: #eceae6;
+      --route: #1268d6;
+      --route-hover: #0d57b5;
+      --route-ink: #0a438e;
+      --fact: #24735a;
+      --fact-soft: #e8f4ef;
+      --warn: #8a5a13;
+      --warn-soft: #fff5dd;
+      --danger: #b43a35;
+      --danger-soft: #fcebea;
+      --purple: #6c3cf0;
+      --purple-soft: #f3f0ff;
+      --font: "Geist Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, ui-monospace, monospace;
+      --sidebar: 264px;
+      --content: 1040px;
+      --radius: 12px;
+      --shadow: 0 10px 36px rgb(23 25 28 / 7%);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button, a, summary { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; }
+    button { color: inherit; }
+    :focus-visible { outline: 2px solid var(--route); outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: 12px;
+      z-index: 100;
+      transform: translateY(-160%);
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: white;
+      text-decoration: none;
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgb(255 255 255 / 94%);
+      backdrop-filter: blur(18px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 212px;
+      font-size: 17px;
+      font-weight: 680;
+      letter-spacing: -.45px;
+      white-space: nowrap;
+    }
+    .door-mark { width: 24px; height: 28px; color: var(--route); flex: none; }
+    .document-name {
+      color: var(--ink-2);
+      font-size: 13px;
+      padding-left: 18px;
+      border-left: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+    .search {
+      width: min(340px, 31vw);
+      height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface-quiet);
+    }
+    .search:focus-within { border-color: #a7c7ef; box-shadow: 0 0 0 3px #e8f2ff; }
+    .search svg { width: 16px; height: 16px; color: var(--ink-3); flex: none; }
+    .search input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      color: var(--ink);
+      background: transparent;
+      font-size: 13px;
+    }
+    .search input::placeholder { color: #8b9097; }
+    .search kbd {
+      border: 1px solid var(--line);
+      border-bottom-color: #c9c6c0;
+      border-radius: 4px;
+      padding: 0 5px;
+      color: var(--ink-3);
+      background: white;
+      font: 10px/18px var(--mono);
+    }
+    .icon-button, .text-button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: white;
+      cursor: pointer;
+    }
+    .icon-button { width: 38px; padding: 0; }
+    .text-button { padding: 0 12px; font-size: 12px; }
+    .icon-button:hover, .text-button:hover { border-color: #b8cce5; color: var(--route); }
+    .icon-button svg, .text-button svg { width: 16px; height: 16px; }
+    #menu-toggle { display: none; }
+
+    .shell { display: grid; grid-template-columns: var(--sidebar) minmax(0, 1fr); min-height: calc(100vh - 64px); }
+    .sidebar {
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      overflow: auto;
+      padding: 28px 18px 24px;
+      border-right: 1px solid var(--line);
+      background: #f3f3f1;
+      scrollbar-width: thin;
+    }
+    .sidebar-label {
+      margin: 0 10px 9px;
+      color: var(--ink-3);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .toc { display: grid; gap: 3px; }
+    .toc a {
+      position: relative;
+      min-height: 42px;
+      display: grid;
+      grid-template-columns: 25px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.45;
+      text-decoration: none;
+    }
+    .toc a::before {
+      content: "";
+      position: absolute;
+      left: -18px;
+      top: 8px;
+      bottom: 8px;
+      width: 3px;
+      border-radius: 3px;
+      background: transparent;
+    }
+    .toc a:hover { background: #e9e9e6; color: var(--ink); }
+    .toc a.active { color: var(--route-ink); background: var(--surface-blue); font-weight: 600; }
+    .toc a.active::before { background: var(--route); }
+    .toc-number {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #d5d2cc;
+      border-radius: 50%;
+      color: var(--ink-3);
+      background: #fafaf9;
+      font: 10px var(--mono);
+    }
+    .toc a.active .toc-number { border-color: #a8c8ef; color: var(--route); background: white; }
+    .sidebar-tools {
+      display: grid;
+      gap: 7px;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .sidebar-tools button { justify-content: flex-start; width: 100%; border-color: transparent; background: transparent; }
+    .sidebar-tools button:hover { background: #e9e9e6; border-color: transparent; }
+    .sidebar-meta {
+      margin: 22px 10px 0;
+      color: var(--ink-3);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    main { min-width: 0; background: var(--surface); }
+    .content { width: min(100%, var(--content)); margin: 0 auto; padding: 52px 56px 96px; }
+    .hero {
+      padding: 0 0 42px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow { margin: 0 0 13px; color: var(--route); font: 600 11px/1.5 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 780px; margin-bottom: 15px; font-size: clamp(34px, 5vw, 54px); line-height: 1.12; letter-spacing: -2.2px; font-weight: 660; }
+    .lead { max-width: 740px; margin: 0; color: var(--ink-2); font-size: 17px; line-height: 1.85; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border: 1px solid var(--line-soft);
+      border-radius: 6px;
+      color: var(--ink-2);
+      background: var(--surface-quiet);
+      font-size: 11px;
+    }
+    .meta-chip strong { color: var(--ink); font-weight: 600; }
+
+    .flow-rail {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(112px, 1fr));
+      gap: 0;
+      margin-top: 34px;
+      padding: 24px 18px 20px;
+      border: 1px solid #cfe0f5;
+      border-radius: var(--radius);
+      background: var(--surface-blue);
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #9fb5d1 transparent;
+    }
+    .flow-rail::-webkit-scrollbar, .table-wrap::-webkit-scrollbar { height: 4px; }
+    .flow-rail::-webkit-scrollbar-track, .table-wrap::-webkit-scrollbar-track { background: transparent; }
+    .flow-rail::-webkit-scrollbar-thumb, .table-wrap::-webkit-scrollbar-thumb { border-radius: 4px; background: #9fb5d1; }
+    .flow-rail::before {
+      content: "";
+      position: absolute;
+      top: 38px;
+      left: 46px;
+      right: 46px;
+      height: 2px;
+      background: #a9c9ef;
+    }
+    .flow-step { position: relative; min-width: 112px; text-align: center; }
+    .flow-dot {
+      position: relative;
+      z-index: 1;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 12px;
+      border: 2px solid #9bbfe9;
+      border-radius: 50%;
+      color: var(--route-ink);
+      background: white;
+      font: 600 10px var(--mono);
+    }
+    .flow-step:first-child .flow-dot, .flow-step:last-child .flow-dot { border-color: var(--route); background: var(--route); color: white; }
+    .flow-step strong { display: block; font-size: 12px; font-weight: 650; }
+    .flow-step span { display: block; margin-top: 3px; color: var(--ink-3); font-size: 10px; }
+
+    .prd-section { padding: 58px 0 52px; border-bottom: 1px solid var(--line); }
+    .prd-section:last-of-type { border-bottom: 0; }
+    .section-heading { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 17px; align-items: start; margin-bottom: 30px; }
+    .section-number {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #b8cdea;
+      border-radius: 50%;
+      color: var(--route);
+      background: var(--surface-blue);
+      font: 600 12px var(--mono);
+    }
+    h2 { margin: -2px 0 5px; font-size: 29px; line-height: 1.3; letter-spacing: -.9px; font-weight: 650; }
+    .section-summary { margin: 0; color: var(--ink-2); font-size: 14px; }
+    .copy-link {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 7px;
+      color: var(--ink-3);
+      background: transparent;
+      cursor: pointer;
+    }
+    .copy-link:hover { color: var(--route); background: var(--surface-blue); }
+    .copy-link svg { width: 16px; height: 16px; }
+
+    h3 { margin: 32px 0 13px; font-size: 17px; line-height: 1.5; letter-spacing: -.25px; font-weight: 650; }
+    .subhead { display: flex; align-items: center; gap: 8px; }
+    .subhead::before { content: ""; width: 3px; height: 17px; border-radius: 2px; background: var(--route); }
+    p { color: var(--ink-2); }
+    ul, ol { margin: 10px 0 0; padding-left: 21px; }
+    li { padding-left: 3px; }
+    li + li { margin-top: 6px; }
+    strong { font-weight: 650; color: var(--ink); }
+    code { padding: 2px 5px; border-radius: 4px; color: var(--route-ink); background: var(--surface-blue); font: 12px var(--mono); }
+    .technical-content { font-size: 14px; }
+    .technical-content h3 { margin-top: 42px; padding-top: 8px; }
+    .technical-content h4 { margin: 24px 0 12px; font-size: 15px; }
+    .technical-content code { overflow-wrap: anywhere; }
+    .technical-content pre { overflow-x: auto; padding: 20px; border: 1px solid var(--line-soft); border-radius: 10px; background: var(--surface-quiet); white-space: pre-wrap; overflow-wrap: anywhere; }
+    .technical-content pre code { padding: 0; background: transparent; font-size: 12px; line-height: 1.8; }
+    .technical-content .table-wrap { margin: 18px 0 24px; }
+    .technical-content td:first-child { width: 30%; }
+    .technical-content td { overflow-wrap: anywhere; }
+    .technical-content .step-rules table { table-layout: fixed; }
+    .technical-content .step-rules th:nth-child(1), .technical-content .step-rules td:nth-child(1) { width: 18%; }
+    .technical-content .step-rules th:nth-child(2), .technical-content .step-rules td:nth-child(2) { width: 27%; }
+    .technical-content .step-rules th:nth-child(3), .technical-content .step-rules td:nth-child(3) { width: 55%; }
+    .technical-content .priority-score-table table { table-layout: auto; }
+    .technical-content .priority-score-table th, .technical-content .priority-score-table td { white-space: normal; overflow-wrap: anywhere; }
+    .technical-content .priority-score-table td:first-child { width: auto; }
+    .technical-content .ewd-baselines table { table-layout: fixed; }
+    .technical-content .ewd-baselines th:nth-child(1), .technical-content .ewd-baselines td:nth-child(1) { width: 17%; }
+    .technical-content .ewd-baselines th:nth-child(2), .technical-content .ewd-baselines td:nth-child(2) { width: 21%; }
+    .technical-content .ewd-baselines th:nth-child(3), .technical-content .ewd-baselines td:nth-child(3) { width: 12%; white-space: nowrap; }
+    .technical-content .ewd-baselines th:nth-child(4), .technical-content .ewd-baselines td:nth-child(4) { width: 50%; }
+    .technical-content .ewd-estimate-table table { min-width: 980px; table-layout: auto; }
+    .technical-content .ewd-estimate-table th:nth-child(n+3):nth-child(-n+6),
+    .technical-content .ewd-estimate-table td:nth-child(n+3):nth-child(-n+6) { min-width: 68px; white-space: nowrap; overflow-wrap: normal; word-break: normal; }
+    .technical-content .skill-overview-table table { table-layout: fixed; min-width: 800px; }
+    .technical-content .skill-overview-table th:nth-child(1), .technical-content .skill-overview-table td:nth-child(1) { width: 21%; }
+    .technical-content .skill-overview-table th:nth-child(2), .technical-content .skill-overview-table td:nth-child(2) { width: 16%; }
+    .technical-content .skill-overview-table th:nth-child(3), .technical-content .skill-overview-table td:nth-child(3) { width: 45%; }
+    .technical-content .skill-overview-table th:nth-child(4), .technical-content .skill-overview-table td:nth-child(4) { width: 18%; }
+    .technical-content .skill-overview-table td:nth-child(3) { line-height: 1.9; }
+    .technical-content article { scroll-margin-top: 90px; }
+    .technical-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0; }
+    .technical-nav a { padding: 5px 10px; background: var(--surface-blue); color: var(--route-ink); border-radius: 6px; text-decoration: none; font-size: 12px; }
+    .technical-nav a:hover { background: #dcecff; }
+    .toc a.toc-sub { min-height: 30px; padding-left: 44px; display: block; font-size: 12px; }
+
+    .two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+    .three-column { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .three-column > div { padding: 20px; background: white; }
+    .three-column > div + div { border-left: 1px solid var(--line); }
+    .three-column h3 { margin-top: 0; }
+    .three-column p { margin-bottom: 0; font-size: 13px; }
+    .quiet-block {
+      padding: 20px 22px;
+      border-left: 3px solid #b9cce3;
+      background: var(--surface-quiet);
+    }
+    .quiet-block > :first-child { margin-top: 0; }
+    .quiet-block > :last-child { margin-bottom: 0; }
+    .blue-block { border-left-color: var(--route); background: var(--surface-blue); }
+    .warning-block { border-left-color: #d2a64a; background: var(--warn-soft); }
+    .danger-block { border-left-color: var(--danger); background: var(--danger-soft); }
+
+    .steps { margin: 0; padding: 0; list-style: none; counter-reset: step; border-top: 1px solid var(--line); }
+    .steps li {
+      counter-increment: step;
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      margin: 0;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .steps li::before {
+      content: counter(step, decimal-leading-zero);
+      color: var(--route);
+      font: 600 11px/1.8 var(--mono);
+    }
+    .steps span { color: var(--ink-2); }
+    .steps strong { display: block; margin-bottom: 2px; }
+
+    .decision-track {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      margin: 22px 0;
+      padding: 18px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-quiet);
+    }
+    .decision-node { position: relative; text-align: center; font-size: 12px; font-weight: 650; }
+    .decision-node:not(:last-child)::after { content: "→"; position: absolute; right: -6px; color: #9ca2aa; font-weight: 400; }
+    .decision-node small { display: block; margin-top: 3px; color: var(--ink-3); font-size: 10px; font-weight: 400; }
+    .decision-node:last-child { color: var(--fact); }
+
+    .analysis-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .analysis-item { display: grid; grid-template-columns: 34px 1fr; gap: 11px; padding: 14px 15px; border: 1px solid var(--line-soft); border-radius: 9px; }
+    .analysis-icon { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 7px; color: var(--route-ink); background: var(--surface-blue); font: 600 10px var(--mono); }
+    .analysis-item strong { display: block; font-size: 13px; }
+    .analysis-item span { display: block; margin-top: 2px; color: var(--ink-3); font-size: 11px; line-height: 1.6; }
+
+    .scenario-ledger { margin: 18px 0 26px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: white; }
+    .scenario-entry { display: grid; grid-template-columns: 44px 168px minmax(0, 1fr); gap: 16px; align-items: start; padding: 19px 20px; }
+    .scenario-entry + .scenario-entry { border-top: 1px solid var(--line-soft); }
+    .scenario-entry[data-featured="true"] { background: linear-gradient(90deg, var(--surface-blue), white 62%); }
+    .scenario-index { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid #b9d2ef; border-radius: 9px; color: var(--route-ink); background: white; font: 600 10px var(--mono); }
+    .scenario-name strong { display: block; font-size: 14px; line-height: 1.45; }
+    .scenario-name span { display: block; margin-top: 5px; color: var(--ink-3); font-size: 11px; line-height: 1.5; }
+    .scenario-copy { display: grid; gap: 8px; }
+    .scenario-copy p { margin: 0; color: var(--ink-2); font-size: 13px; line-height: 1.7; }
+    .scenario-copy strong { color: var(--ink); }
+    .scenario-result { display: flex; flex-wrap: wrap; gap: 6px; }
+    .scenario-result span { padding: 3px 8px; border-radius: 999px; color: var(--route-ink); background: #edf5ff; font-size: 10px; font-weight: 600; line-height: 1.5; }
+
+    .rule-group { margin-top: 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .rule-group + .rule-group { margin-top: -1px; }
+    .rule-group > summary {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      list-style: none;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 620;
+    }
+    .rule-group > summary::-webkit-details-marker { display: none; }
+    .rule-group > summary::before { content: "+"; width: 18px; color: var(--route); font: 17px var(--mono); }
+    .rule-group[open] > summary::before { content: "−"; }
+    .rule-group > div:not(.table-wrap) { padding: 0 0 18px 27px; color: var(--ink-2); }
+    .rule-group ul { margin-top: 0; }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    table { width: 100%; border-collapse: collapse; min-width: 640px; font-size: 13px; }
+    th, td { padding: 13px 15px; border-bottom: 1px solid var(--line-soft); text-align: left; vertical-align: top; }
+    th { color: var(--ink-3); background: var(--surface-quiet); font-size: 11px; font-weight: 650; letter-spacing: .03em; }
+    tbody tr:last-child td { border-bottom: 0; }
+    td:first-child { color: var(--ink); font-weight: 600; }
+    .state { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .state::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #a3a8ae; }
+    .state.fact::before { background: var(--fact); }
+    .state.warn::before { background: #c18a29; }
+    .state.danger::before { background: var(--danger); }
+
+    .skill-contract { margin-top: 20px; border: 1px solid #cfe0f5; border-radius: var(--radius); overflow: hidden; }
+    .skill-head { display: flex; justify-content: space-between; gap: 18px; padding: 16px 18px; background: var(--surface-blue); }
+    .skill-name { font: 600 13px var(--mono); color: var(--route-ink); }
+    .skill-status { color: var(--ink-3); font-size: 11px; white-space: nowrap; }
+    .skill-body { display: grid; grid-template-columns: 1fr 1fr; }
+    .skill-body > div { padding: 18px; }
+    .skill-body > div + div { border-left: 1px solid var(--line); }
+    .skill-body h3 { margin: 0 0 9px; font-size: 13px; }
+    .skill-body ul { margin: 0; font-size: 12px; color: var(--ink-2); }
+
+    .formula {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 18px;
+      margin: 20px 0;
+      padding: 22px;
+      border: 1px solid #bdd4f1;
+      border-radius: var(--radius);
+      background: var(--surface-blue);
+      text-align: center;
+    }
+    .formula strong { display: block; font-size: 14px; }
+    .formula span { display: block; color: var(--ink-3); font-size: 11px; }
+    .formula-mark { color: var(--route); font: 600 22px var(--mono); }
+
+    .index-preview {
+      width: min(100%, 390px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f7f7f5;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .index-tools { display: flex; align-items: center; gap: 8px; padding: 14px; border-bottom: 1px solid var(--line); background: white; }
+    .index-search { flex: 1; padding: 7px 9px; border: 1px solid var(--line); border-radius: 7px; color: var(--ink-3); font-size: 11px; }
+    .index-action { width: 29px; height: 29px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 7px; color: var(--route); background: white; }
+    .index-work { margin: 12px; padding: 9px 11px; border-radius: 7px; color: var(--route-ink); background: var(--surface-blue); font-size: 12px; font-weight: 650; }
+    .index-group { padding: 7px 12px 13px; }
+    .index-group > strong { display: block; margin-bottom: 6px; color: var(--ink-3); font-size: 10px; }
+    .index-task { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 9px; border-radius: 6px; color: var(--ink-2); font-size: 11px; }
+    .index-task.selected { color: var(--route-ink); background: white; box-shadow: 0 1px 4px rgb(23 25 28 / 7%); }
+    .index-more { color: var(--ink-3); font-weight: 700; letter-spacing: 1px; }
+
+    .priority-example { border-top: 1px solid var(--line); }
+    .priority-row { display: grid; grid-template-columns: 42px minmax(0, .9fr) minmax(0, 1.2fr); gap: 20px; padding: 17px 0; border-bottom: 1px solid var(--line-soft); }
+    .priority-rank { color: var(--route); font: 600 12px/1.8 var(--mono); }
+    .priority-task { font-weight: 650; }
+    .priority-reason { color: var(--ink-2); font-size: 13px; }
+    .priority-reason strong { color: var(--danger); }
+
+    .task-header-demo { padding: 20px 22px; border: 1px solid var(--line); border-radius: var(--radius); background: white; box-shadow: var(--shadow); }
+    .demo-title { font-size: 19px; font-weight: 660; letter-spacing: -.35px; }
+    .demo-goal { margin-top: 7px; font-size: 13px; }
+    .demo-fields { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 15px; }
+    .demo-field { padding: 4px 8px; border: 1px solid var(--line-soft); border-radius: 5px; color: var(--ink-2); background: var(--surface-quiet); font-size: 10px; }
+    .tab-strip { display: flex; gap: 24px; margin: 26px 0 18px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+    .tab-strip [role="tab"] { position: relative; padding: 8px 0 10px; border: 0; background: transparent; color: var(--ink-2); font-size: 12px; white-space: nowrap; cursor: pointer; }
+    .tab-strip [role="tab"][aria-selected="true"] { color: var(--route); font-weight: 650; }
+    .tab-strip [role="tab"][aria-selected="true"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--route); }
+    .tab-strip [role="tab"]:focus-visible { outline-offset: -2px; }
+    .task-tab-panel + .task-tab-panel { margin-top: 16px; }
+    .tab-spec { padding: 16px 17px; border-top: 2px solid var(--line); background: var(--surface-quiet); }
+    .tab-spec[data-tone="blue"] { border-top-color: var(--route); background: var(--surface-blue); }
+    .tab-spec[data-tone="purple"] { border-top-color: var(--purple); background: var(--purple-soft); }
+    .tab-spec h3 { margin: 0 0 6px; font-size: 13px; }
+    .tab-spec p { margin: 0; font-size: 12px; }
+
+    .no-results { padding: 80px 20px; text-align: center; }
+    .no-results strong { display: block; margin-bottom: 6px; font-size: 18px; }
+    .no-results p { margin: 0; }
+    .search-status { position: fixed; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    mark { padding: 0 1px; color: inherit; background: #ffe69a; }
+    .copy-toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 80;
+      padding: 9px 13px;
+      border-radius: 8px;
+      color: white;
+      background: var(--ink);
+      box-shadow: var(--shadow);
+      font-size: 12px;
+    }
+
+    @media (max-width: 1040px) {
+      :root { --sidebar: 232px; }
+      .content { padding-inline: 36px; }
+      .document-name { display: none; }
+      .three-column { grid-template-columns: 1fr; }
+      .three-column > div + div { border-left: 0; border-top: 1px solid var(--line); }
+    }
+
+    @media (max-width: 760px) {
+      html, body { max-width: 100%; overflow-x: hidden; }
+      html { scroll-padding-top: 72px; }
+      .topbar { height: 58px; padding: 0 14px; gap: 10px; }
+      .brand { min-width: auto; font-size: 15px; }
+      .door-mark { width: 21px; height: 24px; }
+      .search { position: absolute; left: 14px; right: 14px; top: 65px; width: auto; box-shadow: var(--shadow); }
+      .search kbd { display: none; }
+      #menu-toggle { display: inline-flex; }
+      #print-prd { display: none; }
+      .shell { display: block; min-height: calc(100vh - 58px); }
+      .sidebar {
+        position: fixed;
+        top: 58px;
+        left: 0;
+        bottom: 0;
+        z-index: 35;
+        width: min(310px, 88vw);
+        height: auto;
+        transform: translateX(-105%);
+        transition: transform 180ms ease;
+        box-shadow: 12px 0 34px rgb(23 25 28 / 15%);
+      }
+      body.menu-open .sidebar { transform: translateX(0); }
+      body.menu-open::after { content: ""; position: fixed; inset: 58px 0 0; z-index: 30; background: rgb(23 25 28 / 28%); }
+      main, .content, .hero, .prd-section { min-width: 0; max-width: 100%; }
+      .content { width: 100%; max-width: 100%; padding: 76px 20px 70px; }
+      h1 { max-width: 100%; overflow-wrap: anywhere; font-size: 36px; letter-spacing: -1.4px; }
+      .lead { font-size: 15px; }
+      .flow-rail { max-width: 100%; margin-inline: -4px; grid-template-columns: repeat(7, 112px); }
+      .table-wrap { max-width: 100%; }
+      .section-heading { grid-template-columns: 40px minmax(0, 1fr) 32px; gap: 12px; }
+      .section-number { width: 36px; height: 36px; }
+      h2 { font-size: 24px; }
+      .two-column, .analysis-grid, .skill-body, .tab-specs { grid-template-columns: 1fr; }
+      .scenario-entry { grid-template-columns: 40px minmax(0, 1fr); gap: 10px 12px; padding: 17px 16px; }
+      .scenario-copy { grid-column: 2; }
+      .skill-body > div + div { border-left: 0; border-top: 1px solid var(--line); }
+      .decision-track { grid-template-columns: 1fr; gap: 11px; }
+      .decision-node:not(:last-child)::after { content: "↓"; position: static; display: block; margin-top: 8px; }
+      .formula { grid-template-columns: 1fr; gap: 8px; }
+      .formula-mark { transform: rotate(90deg); }
+      .priority-row { grid-template-columns: 32px 1fr; gap: 8px 12px; }
+      .priority-reason { grid-column: 2; }
+      .copy-toast { right: 14px; bottom: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+
+    @media print {
+      @page { margin: 16mm 14mm; }
+      body { background: white; color: black; font-size: 11pt; }
+      .topbar, .sidebar, .copy-link, .copy-toast, .no-results { display: none !important; }
+      .shell { display: block; }
+      main { background: white; }
+      .content { width: auto; max-width: none; padding: 0; }
+      .hero { padding-top: 0; }
+      .prd-section { break-inside: auto; padding-block: 28px; }
+      .rule-group > div { display: block !important; }
+      .task-tab-panel[hidden] { display: block !important; }
+      .tab-strip { display: none; }
+      .flow-rail, .skill-contract, .task-header-demo { break-inside: avoid; box-shadow: none; }
+      .table-wrap { overflow: visible; border-radius: 0; }
+      table { min-width: 0; font-size: 9pt; }
+      .technical-content .skill-overview-table table { min-width: 0; }
+      thead { display: table-header-group; }
+      tr { break-inside: avoid; }
+      h2, h3, h4, summary { break-after: avoid; }
+      .technical-nav { display: none; }
+      a { text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到正文</a>
+
+  <header class="topbar">
+    <div class="brand" aria-label="AgentDoor">
+      <svg class="door-mark" viewBox="0 0 24 28" aria-hidden="true">
+        <path d="M4 25V3.5L18.5 1v24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M9 25V6l9.5-1.5M2 25h20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="15.1" cy="14" r="1" fill="currentColor"/>
+      </svg>
+      <span>AgentDoor</span>
+    </div>
+    <span class="document-name">产品 PRD · 文字与规则版</span>
+    <div class="toolbar">
+      <label class="search" for="prd-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="prd-search" type="search" autocomplete="off" placeholder="搜索模块、规则或 Skill">
+        <kbd>⌘K</kbd>
+      </label>
+      <button class="icon-button" id="print-prd" type="button" aria-label="打印或导出 PDF" title="打印或导出 PDF">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>
+      </button>
+      <button class="icon-button" id="menu-toggle" type="button" aria-label="打开目录" aria-expanded="false" aria-controls="prd-sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar" id="prd-sidebar" aria-label="PRD 目录">
+      <p class="sidebar-label">Modules</p>
+      <nav class="toc">
+        <a href="#flow" class="active"><span class="toc-number">01</span><span>产品流程</span></a>
+        <a href="#team"><span class="toc-number">02</span><span>团队与个人责任</span></a>
+        <a href="#create"><span class="toc-number">03</span><span>创建任务</span></a>
+        <a href="#task-list"><span class="toc-number">04</span><span>左侧任务列表</span></a>
+        <a href="#my-work"><span class="toc-number">05</span><span>我的工作</span></a>
+        <a href="#task-detail"><span class="toc-number">06</span><span>任务详情</span></a>
+        <a href="#skill-design"><span class="toc-number">07</span><span>Skill 与判断规则</span></a>
+        <a class="toc-sub" href="#skill-create">创建任务（含拆分与匹配）</a>
+        <a class="toc-sub" href="#skill-status">任务状态分析</a>
+        <a class="toc-sub" href="#skill-diagnosis">任务诊断</a>
+        <a class="toc-sub" href="#skill-priority">我的工作推荐</a>
+        <a class="toc-sub" href="#ewd-progress">EWD 工时评估＋进度</a>
+        <a class="toc-sub" href="#skill-responsibility">人员责任分析</a>
+        <a href="#mcp-design"><span class="toc-number">08</span><span>MCP 工具与参数</span></a>
+      </nav>
+      <div class="sidebar-tools">
+        <button class="text-button" id="expand-all" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+          <span>展开全部规则</span>
+        </button>
+      </div>
+      <p class="sidebar-meta">版本 1.1<br>2026-09-03<br>产品流程 · Skill 判断 · MCP 契约</p>
+    </aside>
+
+    <main id="main-content">
+      <div class="content">
+        <section class="hero prd-section" id="flow" data-title="产品流程">
+          <p class="eyebrow">Product requirements · v1.1</p>
+          <h1>从团队责任到任务协作的完整流程</h1>
+          <p class="lead">只描述用户如何使用、AI 如何分析、系统写入什么，以及研发必须遵守的边界。</p>
+          <div class="hero-meta" aria-label="文档信息">
+            <span class="meta-chip"><strong>对象</strong> Task</span>
+            <span class="meta-chip"><strong>范围</strong> 6 个产品模块 + Skill / MCP</span>
+            <span class="meta-chip"><strong>状态</strong> 研发对接稿</span>
+          </div>
+          <div class="flow-rail" aria-label="产品流程">
+            <div class="flow-step"><div class="flow-dot">01</div><strong>加入团队</strong><span>成员与邀请</span></div>
+            <div class="flow-step"><div class="flow-dot">02</div><strong>明确责任</strong><span>本人确认</span></div>
+            <div class="flow-step"><div class="flow-dot">03</div><strong>创建任务</strong><span>AI 形成草稿</span></div>
+            <div class="flow-step"><div class="flow-dot">04</div><strong>确认方案</strong><span>人员与投入</span></div>
+            <div class="flow-step"><div class="flow-dot">05</div><strong>进入索引</strong><span>标签归组</span></div>
+            <div class="flow-step"><div class="flow-dot">06</div><strong>安排工作</strong><span>个人优先顺序</span></div>
+            <div class="flow-step"><div class="flow-dot">07</div><strong>持续协作</strong><span>详情与证据</span></div>
+          </div>
+          <details class="rule-group" open>
+            <summary>全流程唯一对象</summary>
+            <div>
+              <p><strong>AgentDoor 中只有一种行动对象：Task。</strong>子任务也是 Task。标签、文件夹、讨论和活动只能帮助组织或说明 Task，不能代替 Task、父子关系或前置依赖。</p>
+            </div>
+          </details>
+        </section>
+
+        <div id="search-status" class="search-status" aria-live="polite"></div>
+        <div id="no-results" class="no-results" hidden>
+          <strong>没有匹配的模块</strong>
+          <p>换一个任务名称、规则或 Skill 关键词。</p>
+        </div>
+
+        <section class="prd-section" id="team" data-title="团队成员、邀请与个人责任">
+          <header class="section-heading">
+            <span class="section-number">02</span>
+            <div><h2>团队成员、邀请与个人责任</h2><p class="section-summary">先明确谁在团队里，以及每个人通常负责什么，再让 AI 推荐任务协作人选。</p></div>
+            <button class="copy-link" type="button" data-copy-section="team" aria-label="复制本节链接" title="复制本节链接"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/></svg></button>
+          </header>
+
+          <div class="two-column">
+            <div>
+              <h3 class="subhead">成员管理</h3>
+              <ul>
+                <li>查看当前团队成员和每个人的责任说明。</li>
+                <li>通过邀请链接或邮箱邀请成员。</li>
+                <li>管理管理员和普通成员角色。</li>
+                <li>团队至少保留一名在职管理员。</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="subhead">邀请的写入边界</h3>
+              <ul>
+                <li>负责人、协作人使用通用人员弹层，保留“暂不分配”和“立即邀请”。</li>
+                <li>加入团队不自动写入 Owner 或 Participant。</li>
+                <li>加入团队后，仍需接受具体的任务责任提议。</li>
+                <li>邀请失败时保留输入，不新增成员记录。</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 class="subhead">责任建议如何进入正式责任</h3>
+          <div class="decision-track" aria-label="责任建议状态">
+            <div class="decision-node">AI 建议<small>只读候选</small></div>
+            <div class="decision-node">用户查看<small>文本与依据</small></div>
+            <div class="decision-node">版本校验<small>目标未变化</small></div>
+            <div class="decision-node">用户确认<small>更新或添加</small></div>
+            <div class="decision-node">正式责任<small>记录版本</small></div>
+          </div>
+
+          <h3 class="subhead">人员责任分析 Skill</h3>
+          <p>持续跟进当前用户负责或参与的任务，根据实际承担的工作及用户确认、纠正，让责任说明越来越准确，为成员推荐提供依据。不做能力、效率或绩效评分；完整规则见 <a href="#skill-responsibility">7.9 人员责任分析 Skill</a>。</p>
+          <div class="skill-contract">
+            <div class="skill-head"><span class="skill-name">agentdoor-responsibility-advisor</span><span class="skill-status">Skill 已设计 · 服务待接入</span></div>
+            <div class="skill-body">
+              <div>
+                <h3>输入</h3>
+                <ul>
+                  <li>当前团队、成员和可信身份。</li>
+                  <li>当前责任文本、目标条目和版本。</li>
+                  <li>当前用户负责或参与且有权查看的任务、实际贡献、交付和相关讨论／活动记录。</li>
+                  <li>证据来源、时间和覆盖范围。</li>
+                  <li>用户对历史责任建议的确认、修改、忽略及纠正。</li>
+                </ul>
+              </div>
+              <div>
+                <h3>输出</h3>
+                <ul>
+                  <li>新增、更新、废弃或不调整。</li>
+                  <li>候选文本和对应原责任。</li>
+                  <li>可核对依据、数据时间和信息缺口。</li>
+                  <li>组织用户确认后的责任更新；业务服务核验并返回真实回执。</li>
+                  <li>写入能力未接通时只返回建议，不声称已更新。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <details class="rule-group">
+            <summary>AI 责任建议规则</summary>
+            <div>
+              <ul>
+                <li>更新建议默认收起，用户点击“更新”后才替换原责任。</li>
+                <li>新增建议显示为候选行，用户点击加号后才写入。</li>
+                <li>目标责任已变化时，旧建议停止写入并要求重新核对。</li>
+                <li>责任建议不能修改 Task Owner、参与人、邀请和权限。</li>
+                <li>消息量、在线时长、任务数量和一次临时协助不能单独形成责任。</li>
+              </ul>
+            </div>
+          </details>
+        </section>
+
+        <section class="prd-section" id="create" data-title="创建任务">
+          <header class="section-heading">
+            <span class="section-number">03</span>
+            <div><h2>创建任务</h2><p class="section-summary">AI 把自然语言需求整理成可编辑方案，用户最终确认前不写入正式 Task。</p></div>
+            <button class="copy-link" type="button" data-copy-section="create" aria-label="复制本节链接" title="复制本节链接"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/></svg></button>
+          </header>
+
+          <div class="two-column">
+            <div>
+              <h3 class="subhead">用户流程</h3>
+              <ol class="steps">
+                <li><span><strong>输入工作意图</strong>保留用户原始文本。</span></li>
+                <li><span><strong>补充关键信息</strong>每轮只问一个会改变目标或交付的问题，信息够用后立即停止。</span></li>
+                <li><span><strong>生成任务方案</strong>形成主 Task 和必要的子 Task。</span></li>
+                <li><span><strong>审阅并调整</strong>用户直接修改，或让 AI 预览差异后应用。</span></li>
+                <li><span><strong>最终确认</strong>校验通过后正式创建。</span></li>
+              </ol>
+            </div>
+            <div>
+              <h3 class="subhead">AI 分析内容</h3>
+              <div class="analysis-grid">
+                <div class="analysis-item"><span class="analysis-icon">01</span><div><strong>意图</strong><span>创建、调整、续规划、查询或不明确</span></div></div>
+                <div class="analysis-item"><span class="analysis-icon">02</span><div><strong>目标</strong><span>要改变的结果和完成边界</span></div></div>
+                <div class="analysis-item"><span class="analysis-icon">03</span><div><strong>已有工作</strong><span>相似任务、父任务和可复用结果</span></div></div>
+                <div class="analysis-item"><span class="analysis-icon">04</span><div><strong>结构</strong><span>简单任务或独立子结果</span></div></div>
+                <div class="analysis-item"><span class="analysis-icon">05</span><div><strong>关系</strong><span>父子、前置依赖和日期可行性</span></div></div>
+                <div class="analysis-item"><span class="analysis-icon">06</span><div><strong>责任</strong><span>Owner、参与人和未覆盖缺口</span></div></div>
+                <div class="analysis-item"><span class="analysis-icon">07</span><div><strong>投入</strong><span>EWD 估算或明确未知</span></div></div>
+                <div class="analysis-item"><span class="analysis-icon">08</span><div><strong>校验</strong><span>人员、日期、依赖、范围和版本</span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="subhead">五类创建场景</h3>
+          <p>创建入口不要求用户先选择任务类型。AI 根据输入、当前入口和有权查看的团队任务判断场景；如果判断会改变创建结果，先让用户确认。</p>
+          <div class="scenario-ledger" aria-label="五类任务创建场景">
+            <article class="scenario-entry">
+              <span class="scenario-index">01</span>
+              <div class="scenario-name"><strong>单任务</strong><span>Mock：整理下周例会纪要</span></div>
+              <div class="scenario-copy">
+                <p><strong>判断：</strong>目标和交付物集中，不需要独立负责人、独立验收或并行推进。</p>
+                <p><strong>处理：</strong>直接生成一个 Task 草稿，不为了展示 AI 能力拆步骤。用户核对名称、目标、完成标准、责任和投入后确认。</p>
+                <div class="scenario-result"><span>1 个 Task</span><span>0 个子任务</span><span>无依赖</span></div>
+              </div>
+            </article>
+            <article class="scenario-entry">
+              <span class="scenario-index">02</span>
+              <div class="scenario-name"><strong>复杂任务</strong><span>Mock：防晒衣达人带货项目</span></div>
+              <div class="scenario-copy">
+                <p><strong>判断：</strong>包含多个可独立负责或验收的结果，存在多人协作、并行工作或明确前置关系。</p>
+                <p><strong>处理：</strong>生成一个主 Task 和必要的子 Task，逐项给出 Owner 候选、完成标准、EWD 和依赖。当前 Mock 为一个主任务加七个子任务，共八个 Task；用户可修改或删除不合理拆分。</p>
+                <div class="scenario-result"><span>1 个主 Task</span><span>7 个子 Task</span><span>依赖单独确认</span></div>
+              </div>
+            </article>
+            <article class="scenario-entry">
+              <span class="scenario-index">03</span>
+              <div class="scenario-name"><strong>需求不明确</strong><span>Mock：帮我策划一个活动</span></div>
+              <div class="scenario-copy">
+                <p><strong>判断：</strong>缺少目标、时间或最终交付物，现有信息会导向不同任务方案。</p>
+                <p><strong>处理：</strong>按“目标 → 时间 → 交付物”逐轮澄清，每轮提供选择和自由输入；时间确实不确定时允许留空。信息齐全后才生成草稿，不用假设补全。</p>
+                <div class="scenario-result"><span>逐轮澄清</span><span>原回答保留</span><span>未知可留空</span></div>
+              </div>
+            </article>
+            <article class="scenario-entry" data-featured="true">
+              <span class="scenario-index">04</span>
+              <div class="scenario-name"><strong>相似任务</strong><span>重点：成员交叉重复</span></div>
+              <div class="scenario-copy">
+                <p><strong>常见问题：</strong>同一团队成员因沟通不及时各自建立了相同任务。页面只提示“可能重复”，不能把沟通原因当作已经确认的事实。</p>
+                <p><strong>判断：</strong>比较目标、交付物、业务对象和时间范围；标题相同只能作为线索。不同创建人或 Owner 的任务如果工作范围高度重合，也必须进入候选。</p>
+                <p><strong>处理：</strong>暂停创建，先展示已有任务的名称、目标、状态、Owner、期限和相似原因。用户可选：查看已有任务，或仍然创建；系统不能自动合并、关闭或关联任务。</p>
+                <div class="scenario-result"><span>创建前检索</span><span>跨成员检查</span><span>用户决定</span></div>
+              </div>
+            </article>
+            <article class="scenario-entry">
+              <span class="scenario-index">05</span>
+              <div class="scenario-name"><strong>已有任务下创建子任务</strong><span>Mock：媒体邀请名单</span></div>
+              <div class="scenario-copy">
+                <p><strong>两个入口：</strong>从全局创建时，AI 发现当前工作属于已有任务；从任务详情的子任务页签创建时，父任务直接预设且不可被 AI 替换。</p>
+                <p><strong>处理：</strong>全局入口展示潜在父任务，用户选择“创建为子任务”或“仍然独立创建”；详情入口只新增一个子 Task，不重复创建主任务。两种入口都要检查同级子任务是否已经覆盖相同结果。</p>
+                <div class="scenario-result"><span>父任务预设</span><span>只新增子 Task</span><span>检查同级重复</span></div>
+              </div>
+            </article>
+          </div>
+
+          <details class="rule-group" open>
+            <summary>相似任务与成员交叉重复规则</summary>
+            <div>
+              <ul>
+                <li><strong>检索范围：</strong>只检索当前用户有权发现的本团队进行中、待开始和近期完成任务；无权限任务不能泄露名称或数量。</li>
+                <li><strong>判断依据：</strong>优先比较目标、可验收交付物和业务对象，再结合有效时间范围、标签及父任务；标题或关键词相同不能单独判重。</li>
+                <li><strong>跨成员情况：</strong>创建人、Owner 或参与人不同不代表任务不同。只要结果范围高度重合，就展示为可能重复，并明确两项任务重合在哪里。</li>
+                <li><strong>用户动作：</strong>查看已有任务不产生新 Task；仍然创建只生成独立草稿，不自动建立父子或依赖关系。</li>
+                <li><strong>数据变化：</strong>用户选择前再次按稳定 Task ID 校验候选。候选已删除或无权访问时，保留当前输入并重新检索。</li>
+                <li><strong>Mock 边界：</strong>当前演示使用稳定候选数据；生产环境需要真实权限过滤和语义检索，不能把 Mock 命中率当作生产能力。</li>
+              </ul>
+            </div>
+          </details>
+
+          <div class="skill-contract">
+            <div class="skill-head"><span class="skill-name">agentdoor-task-planner</span><span class="skill-status">已有离线契约 · 生产接入中</span></div>
+            <div class="skill-body">
+              <div>
+                <h3>负责</h3>
+                <ul>
+                  <li>理解意图并提出必要问题。</li>
+                  <li>核对有权可见的现有任务和资料。</li>
+                  <li>生成主任务、子任务和关系候选。</li>
+                  <li>建议人员、标签、依赖和预计投入。</li>
+                  <li>输出字段差异、依据和阻塞问题。</li>
+                </ul>
+              </div>
+              <div>
+                <h3>不负责</h3>
+                <ul>
+                  <li>创建正式 Task 或修改现有正式 Task。</li>
+                  <li>指派、邀请或替他人接受责任。</li>
+                  <li>把检索失败解释成没有重复任务。</li>
+                  <li>执行、验收或关闭任务。</li>
+                  <li>把 Mock 模板冒充真实团队历史。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="subhead">Task 字段</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>页面含义</th><th>创建规则</th></tr></thead>
+              <tbody>
+                <tr><td>名称</td><td>快速识别任务</td><td>不能直接复制目标全文</td></tr>
+                <tr><td>目标</td><td>描述希望达到的结果</td><td>与完成标准共同定义范围</td></tr>
+                <tr><td>完成标准</td><td>判断结果是否成立</td><td>不能用演示标准回填真实任务</td></tr>
+                <tr><td>Owner</td><td>对结果负责的人</td><td>最多一位，可以未分配</td></tr>
+                <tr><td>参与人</td><td>贡献必要内容的人</td><td>不产生 Owner 或权限</td></tr>
+                <tr><td>父任务</td><td>当前 Task 属于哪个结果范围</td><td>父子不自动形成依赖</td></tr>
+                <tr><td>前置依赖</td><td>必须先完成的 Task</td><td>稳定 ID，不可自指、悬空或循环</td></tr>
+                <tr><td>时间</td><td>计划开始、结束或截止</td><td>日期成对、顺序有效</td></tr>
+                <tr><td>标签</td><td>帮助索引和筛选</td><td>可选，不表达层级和状态</td></tr>
+                <tr><td>EWD</td><td>预计人类投入</td><td>绑定范围、工作方式、依据和版本</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>预计投入只用任务名称、目标和完成标准生成可核对的 WBS，再按八个投入维度形成三点估算；没有历史也能使用。初始结果属于平台 AI 专家估算；后续根据团队历史任务与实际投入反馈校准该团队的 EWD 评估规则，不从提交间隔推算人工投入。完整规则见 <a href="#ewd-progress">7.7 EWD 工时评估＋进度</a>。</p>
+
+          <h3 class="subhead">子任务拆分</h3>
+          <div class="two-column">
+            <div class="quiet-block blue-block">
+              <strong>可以拆</strong>
+              <ul>
+                <li>结果能独立交付，并且能独立验收。</li>
+                <li>还需满足独立负责、单独交接或并行推进之一。</li>
+                <li>详细步骤见 <a href="#skill-create">创建任务规则</a>；单纯复用资料不构成拆分理由。</li>
+              </ul>
+            </div>
+            <div class="quiet-block">
+              <strong>不要拆</strong>
+              <ul>
+                <li>普通操作步骤。</li>
+                <li>同一交付中的分析、执行和复核。</li>
+                <li>一次咨询、权限确认或资料补充。</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 class="subhead">人员匹配与责任成立</h3>
+          <ol class="steps">
+            <li><span><strong>权限硬过滤</strong>成员能否被发现、能否接收当前需求、是否具备动作授权。</span></li>
+            <li><span><strong>责任覆盖</strong>正式责任是否覆盖整个结果，而不是只覆盖一个环节。</span></li>
+            <li><span><strong>上下文匹配</strong>是否有相关 Task、文件、业务对象或相似结果经验。</span></li>
+            <li><span><strong>协作可行性</strong>只读取本人主动公开、仍有效的粗粒度协作窗口。</span></li>
+            <li><span><strong>用户决定</strong>比较候选差异，选择本人、其他成员、邀请或暂不分配。</span></li>
+          </ol>
+          <div class="decision-track" aria-label="任务责任状态">
+            <div class="decision-node">推荐<small>AI 候选</small></div>
+            <div class="decision-node">选择<small>进入草稿</small></div>
+            <div class="decision-node">邀请<small>加入团队</small></div>
+            <div class="decision-node">待接受<small>Owner 提议</small></div>
+            <div class="decision-node">正式责任<small>最多一位</small></div>
+          </div>
+          <p class="quiet-block warning-block">没有合适人选时允许未分配。不能通过任务数量、在线状态、回复速度、私人日历、姓名或管理者身份强行选择 Owner。</p>
+
+          <h3 class="subhead">EWD 与金额成本</h3>
+          <p><strong>对任务的价值：</strong>预计投入人天表示完成任务预计需要的总人工工作量，帮助团队看清任务规模、投入主要花在哪里，并按工作量衡量完成进度。</p>
+          <p><strong>预计投入统一使用人天，1 人天＝8 人时＝480 分钟。</strong>例如原 40 小时的总人工投入显示为 5 人天，不表示 5 个自然日完工。内部按分钟汇总和计算完成度，展示最多两位小数；非零微量投入显示“&lt;0.01 人天”，未知不补零。区间下界向下、上界向上取两位小数。</p>
+          <p>创建页在预计总投入下展开数字列表，按预计工时从高到低展示“任务名称 · 预计 1.25 人天 · 占总投入 25%”；不再展示条形或饼图，避免将投入占比误读为完成度。</p>
+          <div class="formula" aria-label="EWD 口径">
+            <div><strong>人工准备、操作、沟通、审阅、修改、验收</strong><span>纳入预计人类投入</span></div>
+            <div class="formula-mark">−</div>
+            <div><strong>等待、排队、无人值守 AI 运行、自然工期</strong><span>不纳入预计人类投入</span></div>
+          </div>
+          <ul>
+            <li><strong>未知不是 0：</strong>部分子任务未知时，只显示已估部分，不计算完整总量和占比。</li>
+            <li><strong>范围变化需重估：</strong>目标、完成标准或人/AI 工作方式变化后，旧估算失效。</li>
+            <li><strong>父任务不重复计量：</strong>父 Task 只汇总叶子 Task 的有效 EWD。</li>
+            <li><strong>金额成本暂不计算：</strong>费率、外部费用、币种和可见权限确认后，再建立公式。</li>
+          </ul>
+
+          <details class="rule-group">
+            <summary>创建确认校验</summary>
+            <div>
+              <ul>
+                <li>名称和完成标准有效；人员属于当前团队，或保持未分配。</li>
+                <li>正式 Owner 不重复出现在参与人中。</li>
+                <li>日期合法；结束不早于开始；子任务时间不与父任务明显冲突。</li>
+                <li>依赖不自指、不悬空、不重复、不形成循环。</li>
+                <li>EWD 仍对应当前目标、完成标准和工作方式。</li>
+                <li>最终确认前不产生正式 Task；失败时保留用户原文和草稿。</li>
+              </ul>
+            </div>
+          </details>
+        </section>
+
+        <section class="prd-section" id="task-list" data-title="左侧任务列表">
+          <header class="section-heading">
+            <span class="section-number">04</span>
+            <div><h2>左侧任务列表</h2><p class="section-summary">帮助本人按熟悉的标签找到任务，不承担完整任务分析。</p></div>
+            <button class="copy-link" type="button" data-copy-section="task-list" aria-label="复制本节链接" title="复制本节链接"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/></svg></button>
+          </header>
+
+          <div class="two-column">
+            <div class="index-preview" aria-label="左侧任务索引示意">
+              <div class="index-tools"><span class="index-search">搜索任务</span><span class="index-action">≡</span><span class="index-action">＋</span></div>
+              <div class="index-work">我的工作</div>
+              <div class="index-group"><strong>增长活动</strong><div class="index-task selected"><span>新品达人带货项目</span><span class="index-more">···</span></div><div class="index-task">九月内容排期</div></div>
+              <div class="index-group"><strong>未打标签</strong><div class="index-task">整理供应商合同</div></div>
+              <div class="index-group"><strong>待确认负责人</strong><div class="index-task">品牌手册版本核对</div></div>
+            </div>
+            <div>
+              <h3 class="subhead">归组规则</h3>
+              <ul>
+                <li>默认使用任务的第一个非空标签作为展示分组。</li>
+                <li>无标签任务进入“未打标签”。</li>
+                <li>一个 Task 在列表中只出现一次。</li>
+                <li>标签筛选时，按首个命中的已选标签临时归组。</li>
+                <li>清除筛选后，恢复默认分组和用户折叠状态。</li>
+              </ul>
+              <h3 class="subhead">本人范围</h3>
+              <ul>
+                <li>使用稳定成员 ID 和正式 <code>ownerId</code> 判断。</li>
+                <li>创建者、参与人和待接受人都不能代替正式 Owner。</li>
+                <li>本人创建但未分配的 Task 进入“待确认负责人”。</li>
+                <li>搜索、状态和标签只过滤左侧，不改变“我的工作”范围。</li>
+              </ul>
+              <h3 class="subhead">删除任务</h3>
+              <ul>
+                <li>任务行悬浮时在右侧显示三点“更多操作”，下拉层仅提供“删除任务”。</li>
+                <li>点击任务名称仍进入详情；点击三点或菜单不能触发任务切换。</li>
+                <li>确认层同时展示将被删除的下级任务数量、受影响的前置依赖数量，并明确这是永久删除。</li>
+                <li>确认时重新核对任务树与依赖；范围变化后阻止删除，要求用户按最新影响重新确认。</li>
+                <li>只有本地多键保存成功，任务才从任务列表移除；失败时任务和关联记录保持原样。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="prd-section" id="my-work" data-title="我的工作">
+          <header class="section-heading">
+            <span class="section-number">05</span>
+            <div><h2>我的工作</h2><p class="section-summary">回答本人现在应该先关注什么；它是 Task 的排序投影，不是第二套待办。</p></div>
+            <button class="copy-link" type="button" data-copy-section="my-work" aria-label="复制本节链接" title="复制本节链接"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/></svg></button>
+          </header>
+
+          <h3 class="subhead">任务行只显示三项</h3>
+          <div class="priority-example" aria-label="我的工作任务行示例">
+            <div class="priority-row"><span class="priority-rank">01</span><span class="priority-task">确认达人名单与合作边界</span><span class="priority-reason"><strong>今天到期</strong>，且两项合作条件仍待核对。</span></div>
+            <div class="priority-row"><span class="priority-rank">02</span><span class="priority-task">完成直播素材终审</span><span class="priority-reason">前置素材已提交，当前等待本人审核。</span></div>
+            <div class="priority-row"><span class="priority-rank">03</span><span class="priority-task">核对库存同步结果</span><span class="priority-reason">部分前置资料不可用，需要先确认依赖是否满足。</span></div>
+          </div>
+          <p class="quiet-block">每条只显示顺位、任务名称和一句优先原因。任务名称进入原详情；页面不展示内部评分、复杂权重、完整依据列表或其他任务的深层链接。</p>
+
+          <h3 class="subhead">分析范围</h3>
+          <p>本人负责/参与的，<strong>只有待开始、进行中、已阻塞这三种状态的任务参与排序。</strong></p>
+
+          <h3 class="subhead">推荐逻辑</h3>
+          <p><strong>推荐权重＝重要度 × 60%＋紧急度 × 40%。</strong>两维均为 0～100 分；比例是待验证的初始建议参数。程序按固定规则计算，AI 基于同一事实解释；完整分档、算例和同分规则见 <a href="#skill-priority">7.6 我的工作推荐 Skill</a>。本次仅更新规则文档，当前应用尚未接入新算法。</p>
+          <ol class="steps">
+            <li><span><strong>重要度</strong>由目标影响（0～50）、已确认协作影响（0～30）及标签参考（0 或 20）相加；任务没有独立的优先级字段。</span></li>
+            <li><span><strong>紧急度</strong>取期限压力、当前损失或执行风险、待本人处理事项中的最高分，不重复叠加。时间只是其中一项。</span></li>
+            <li><span><strong>有效证据</strong>每项分值都需有当前依据；参考性前置未完成不直接加分，资料缺失或过期不额外加分。</span></li>
+            <li><span><strong>稳定排序</strong>推荐权重降序，同分依次比较重要度、紧急度、有效截止时间及稳定 Task ID，不因页面重绘随机变化。</span></li>
+          </ol>
+
+          <div class="two-column">
+            <div class="quiet-block blue-block"><strong>可以说明</strong><p>“今天到期，交付仍待核对。”<br>“前置未完成，应先确认可推进范围。”</p></div>
+            <div class="quiet-block warning-block"><strong>不能推断</strong><p>忙闲率、完成概率、个人效率、精确排程，以及无证据的“任务正常”。</p></div>
+          </div>
+
+          <details class="rule-group">
+            <summary>页面顶部“AI 分析规则”</summary>
+            <div>
+              <ul>
+                <li>默认收起，说明三状态白名单、重要度与紧急度的权重和计算规则，以及 AI 不会自动修改任务。</li>
+                <li>没有截止时间是合法状态，不等于低优先级。</li>
+                <li>信息不足会影响顺位时，原因明确写“待核对”。</li>
+                <li>只有分析输入真实变化时更新时间；打开页面不制造新时间。</li>
+              </ul>
+            </div>
+          </details>
+        </section>
+
+        <section class="prd-section" id="task-detail" data-title="任务详情">
+          <header class="section-heading">
+            <span class="section-number">06</span>
+            <div><h2>任务详情</h2><p class="section-summary">打开 Task 后先理解定义和当前情况，再进入讨论、诊断、子任务、文件和活动。</p></div>
+            <button class="copy-link" type="button" data-copy-section="task-detail" aria-label="复制本节链接" title="复制本节链接"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/></svg></button>
+          </header>
+
+          <div class="task-header-demo">
+            <div class="demo-title">新品防晒衣达人带货项目</div>
+            <p class="demo-goal">在九月首场直播前完成达人合作、内容、商品、投流和合规准备。</p>
+            <div class="demo-fields"><span class="demo-field">Owner · 周岚</span><span class="demo-field">状态 · 进行中</span><span class="demo-field">截止 · 9 月 18 日</span><span class="demo-field">参与人 · 6</span><span class="demo-field">标签 · 增长活动</span></div>
+          </div>
+
+          <h3 class="subhead">头部下面的三项判断</h3>
+          <div class="three-column">
+            <div><h3>当前情况</h3><p>当前摘要、已完成事实、差距、风险和近期变化。没有足够记录时显示未知。</p></div>
+            <div><h3>下一步建议</h3><p>基于当前证据提出候选行动，不自动修改状态、人员、时间或子任务。</p></div>
+            <div><h3>进度</h3><p>以 EWD 衡量工作量和完成度；燃起图跟踪新增与已完成工作量，比较总工作量和已完成工作量的差距，判断任务是否在收敛。</p></div>
+          </div>
+
+          <h3 class="subhead">完成进度口径</h3>
+          <p>任务先形成任务 EWD 拆分明细；AI 对照每个 EWD 明细项的完成标准与当前文件内容判断单项进度，再按 EWD 加权汇总任务完成度。说明中展示文件版本、内容出处及判断来源，上传动作本身不算完成。当前原型尚未接入这套流程。规则见 <a href="#ewd-progress">7.7 EWD 工时评估＋进度</a>。</p>
+          <p>完成百分比同一行右侧显示“预计投入 8.75 人天”，无需展开即可查看。主任务汇总当前有效叶子估算，独立任务显示自身工时，不重复累计父级、不沿用旧快照总量。缺估时显示“已估部分 2.5 人天”，无估算显示“预计投入 待估算”，过期／异常分别显示“需重估／待核对”。预计工时不代表实际耗时，下方子任务明细不变。</p>
+          <p>任务总 EWD 为各 EWD 明细项之和；AI 不套固定比例档位，直接判断每项 0–100% 的进度。全部明细项均可判断时，按 EWD 加权汇总任务完成度；存在待确认项时只展示已确认完成、总 EWD 和待确认 EWD，不输出精确百分比。</p>
+          <ul>
+            <li>不按已完成 Task 数量计算，也不根据 TaskStatus 推导。</li>
+            <li>当前任务 EWD 拆分明细与估算完整、总量大于 0，且全部明细项均可判断但没有有效完成内容时可显示 0%；存在待确认项、读取失败或结果过期时显示待核对。</li>
+            <li>没有有效历史不伪造趋势，单个快照只展示一个点。</li>
+            <li>父 Task 只汇总叶子 Task，不重复计算中间层。</li>
+            <li>100% 不自动关闭父 Task；状态与账本冲突时显示“待核对”。</li>
+          </ul>
+
+          <h3 class="subhead">子任务投入与进度</h3>
+          <ul>
+            <li>有子任务时，在整体进度条下用一行“子任务投入与进度 · 展开”替代“已验收 / 范围”图例，默认收起，不重复百分比旁已显示的总工时。</li>
+            <li>展开后按预计工时从高到低排列；第一行任务名称为黑色加粗，可点击进入对应详情。第二行左侧“预计 1.25 人天 · 占总投入 25%”，右侧“已完成 60%”。</li>
+            <li>下方进度条只表示该子任务自身完成度：根据该子任务的 WBS、对应标准和文件内容按 EWD 加权计算，不与投入占比混用。预计工时不代表实际耗时。</li>
+            <li>文件无法读取或核对结果缺失时显示“进度待核对”和灰色空进度条，不补 0%；有效核对结果为 0 时显示 0%。过期估算、无效 WBS EWD 或零分母同样提示待核对。不根据 TaskStatus 推断百分比。</li>
+            <li>部分任务缺估时百分比旁显示“已估部分 2.5 人天”，明细保留未知项，不计算总体占比；已有有效数据的单项仍可展示自身完成度。</li>
+            <li>仅一个子任务也支持展开，无子任务则不显示入口。多层任务只统计叶子，不重复计量；窄屏明细允许换行，展开和任务名称支持键盘操作。</li>
+            <li>金额成本尚无正式数据模型，当前不进入完成进度，保留为后续待确认项。</li>
+          </ul>
+          <p class="quiet-block blue-block"><strong>图表分工：</strong>完成进度负责当前快照和可展开的子任务工作量；燃起图只表达时间趋势，不与子任务分布合并。</p>
+
+          <h3 class="subhead">任务页签</h3>
+          <p class="quiet-block blue-block"><strong>固定顺序：</strong>讨论 ｜ 诊断 ｜ 子任务 ｜ 文件 ｜ 活动。默认进入讨论；当前情况位于页签之前，不增加“概览”页签。</p>
+          <div class="tab-strip" role="tablist" aria-label="任务详情页签">
+            <button type="button" role="tab" id="prd-tab-discussion" aria-controls="prd-panel-discussion" aria-selected="true" tabindex="0">讨论</button>
+            <button type="button" role="tab" id="prd-tab-diagnosis" aria-controls="prd-panel-diagnosis" aria-selected="false" tabindex="-1">诊断</button>
+            <button type="button" role="tab" id="prd-tab-subtasks" aria-controls="prd-panel-subtasks" aria-selected="false" tabindex="-1">子任务</button>
+            <button type="button" role="tab" id="prd-tab-files" aria-controls="prd-panel-files" aria-selected="false" tabindex="-1">文件</button>
+            <button type="button" role="tab" id="prd-tab-activity" aria-controls="prd-panel-activity" aria-selected="false" tabindex="-1">活动</button>
+          </div>
+          <div class="tab-specs">
+            <div class="task-tab-panel" role="tabpanel" id="prd-panel-discussion" aria-labelledby="prd-tab-discussion" tabindex="0">
+              <div class="tab-spec" data-tone="blue"><h3>讨论</h3><p>人的消息、回复、@ 和文件引用。系统变更、诊断和自动 AI 建议不计入讨论数量。</p></div>
+              <details class="rule-group" open>
+            <summary>讨论规则</summary>
+            <div>
+              <ul>
+                <li>只承载成员发布的消息、回复、@ 和文件原文引用。</li>
+                <li>从讨论连接 AI 时，只带入当前讨论及必要上文。</li>
+                <li>AI 产出要成为团队事实，必须通过明确动作写入字段、文件或讨论。</li>
+                <li>无权文件不能通过讨论引用泄露标题或正文。</li>
+              </ul>
+            </div>
+          </details>
+            </div>
+            <div class="task-tab-panel" role="tabpanel" id="prd-panel-diagnosis" aria-labelledby="prd-tab-diagnosis" tabindex="0" hidden>
+              <div class="tab-spec"><h3>诊断</h3><p>只读检查执行阻塞和决策冲突。结论必须有正式依赖或冲突两侧依据。</p></div>
+              <details class="rule-group" open>
+            <summary>诊断规则</summary>
+            <div>
+              <ul>
+                <li>执行阻塞：任务处于进行中或已阻塞，有正式依赖，且当前阶段需要的前置交付尚未满足；未开始任务正常等待前置不直接判当前阻塞。详细条件见 <a href="#skill-diagnosis">任务诊断规则</a>。</li>
+                <li>决策冲突：根据任务已有文件内容和任务信息，检查同一事项是否存在相互矛盾或不能同时满足的地方，并指出内容和出处。</li>
+                <li>诊断范围包含当前 Task 和全部可见后代 Task。</li>
+                <li>每条展示结论、影响、建议和默认收起的依据。</li>
+                <li>不可见或缺失依赖只表示覆盖不完整，不能推断阻塞或健康。</li>
+                <li>诊断页不提供改期、改依赖、一键修复、忽略或完成任务。</li>
+              </ul>
+            </div>
+          </details>
+            </div>
+            <div class="task-tab-panel" role="tabpanel" id="prd-panel-subtasks" aria-labelledby="prd-tab-subtasks" tabindex="0" hidden>
+              <div class="tab-spec"><h3>子任务</h3><p>每项只显示图标、名称、正式 Owner 或待接受人。点击名称进入完整详情。</p></div>
+              <details class="rule-group" open>
+            <summary>子任务规则</summary>
+            <div>
+              <ul>
+                <li>手工新增至少需要名称和一条非空完成标准。</li>
+                <li>不自动继承 Owner、参与人、文件或权限。</li>
+                <li>新增或删除后，同步父 Task 的直属子任务数量。</li>
+                <li>删除有下级的子 Task 前必须说明影响范围。</li>
+                <li>子 Task 全部完成不自动关闭父 Task。</li>
+              </ul>
+            </div>
+          </details>
+            </div>
+            <div class="task-tab-panel" role="tabpanel" id="prd-panel-files" aria-labelledby="prd-tab-files" tabindex="0" hidden>
+              <div class="tab-spec" data-tone="purple"><h3>文件</h3><p>管理有权可见的 File 和 FileVersion。引用不复制内容，文件夹不改变权限。</p></div>
+              <details class="rule-group" open>
+              <summary>文件规则</summary>
+              <div><ul>
+                <li>引用已有文件复用同一 File ID，不复制内容、不扩大权限。</li>
+                <li>固定版本和跟随最新版本必须区分；文件不可用时明确说明原因。</li>
+              </ul></div>
+            </details>
+            </div>
+            <div class="task-tab-panel" role="tabpanel" id="prd-panel-activity" aria-labelledby="prd-tab-activity" tabindex="0" hidden>
+              <div class="tab-spec"><h3>活动</h3><p>只读记录任务信息、讨论和文件三类已保存变化，不记录草稿或 AI 推测。</p></div>
+              <details class="rule-group" open>
+              <summary>活动规则</summary>
+              <div><ul>
+                <li>活动类型固定为任务信息、讨论、文件；具体动作保留原语义。</li>
+                <li>只有保存成功且存在真实差异时生成活动；活动只读。</li>
+                <li>未保存草稿、AI 建议和诊断结论不进入活动。</li>
+              </ul></div>
+            </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- PRD-TECHNICAL:START -->
+<section class="prd-section technical-content" id="skill-design" data-title="Skill 与判断规则">
+  <header class="section-heading"><span class="section-number">07</span><div><h2>Skill 与判断规则</h2><p class="section-summary">分别说明人员责任分析、创建任务、任务状态分析、任务诊断、我的工作推荐及 EWD 工时评估与进度。</p></div></header>
+  <nav class="technical-nav" aria-label="Skill 快速定位"><a href="#skill-responsibility">人员责任分析</a><a href="#skill-create">创建任务</a><a href="#skill-status">状态分析</a><a href="#skill-diagnosis">任务诊断</a><a href="#skill-priority">我的工作推荐</a><a href="#ewd-progress">EWD 工时评估＋进度</a></nav>
+  <h3>7.1 各自负责什么</h3>
+<p>本章按业务流程组织，不把每个判断步骤都建成一个 Skill。创建任务是完整 Skill，澄清、查重、拆分、人员匹配、依赖与时间安排是它的内部步骤。EWD 工时评估与进度作为独立规则模块：创建任务调用预计投入，任务状态分析引用完成度和燃起图。</p>
+<p>人员责任分析是独立 Skill，负责持续校准当前用户的责任说明；创建任务中的成员推荐读取用户已确认的责任，不把责任分析重复做成创建时的必跑步骤。</p>
+<div class="table-wrap skill-overview-table"><table>
+<thead>
+<tr>
+<th>所属流程</th>
+<th>回答的问题</th>
+<th>返回什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>人员责任分析</td>
+<td>我实际承担哪些工作，现有责任说明需要怎样校准？</td>
+<td>有来源的责任新增、更新、废弃或不调整建议；组织用户确认后的更新并解释回执</td>
+</tr>
+<tr>
+<td>创建与人员匹配</td>
+<td>要拆成哪些交付，谁适合负责？</td>
+<td>任务草稿、人员建议、依赖与预计投入</td>
+</tr>
+<tr>
+<td>状态分析</td>
+<td>当前情况怎样，下一步做什么，进度如何？</td>
+<td>当前情况、下一步建议、进度（完成度与燃起图）</td>
+</tr>
+<tr>
+<td>任务诊断</td>
+<td>哪项工作受阻，哪些要求互相矛盾？</td>
+<td>问题、受影响任务、双方依据、处理建议</td>
+</tr>
+<tr>
+<td>我的工作推荐</td>
+<td>我负责或参与的任务先处理哪个？</td>
+<td>固定规则计算的顺位和一句原因</td>
+</tr>
+<tr>
+<td>EWD 工时评估＋进度</td>
+<td>预计投入多少，完成多少，是否在收敛？</td>
+<td>EWD、完成度与燃起图；供创建任务和状态分析引用</td>
+</tr>
+</tbody></table></div>
+<p><strong>模块划分：</strong> 第 7.7 节集中维护工时评估维度、三点估算、完成度和燃起图；创建任务与状态分析保留调用说明。任务状态分析仍按当前情况、下一步建议、进度组织。</p>
+<p><strong>当前实现：</strong> 六类能力均有项目内 Skill 入口、判断规则和离线接入设计；创建规划保留 <code>agentdoor-task-planner</code> v0.2 契约，其余五类明确各自输入输出。入口与调用关系记录在 <code>skills/registry.json</code>，该清单不是运行时注册。前端已有责任建议查看与确认、本地工时、进度、诊断和排序逻辑；本轮更新 Skill 文件与 PRD，未修改应用运行代码，也未接通后台持续分析或责任写回服务。</p>
+<p><strong>文件对应：</strong> 人员责任分析 <code>agentdoor-responsibility-advisor</code>；创建任务 <code>agentdoor-task-planner</code>；状态分析 <code>agentdoor-task-status-analyzer</code>；诊断 <code>agentdoor-task-diagnostician</code>；我的工作 <code>agentdoor-personal-priority</code>；工时与进度 <code>agentdoor-ewd-progress</code>。各入口在 <code>skills/对应名称/SKILL.md</code>。产品规则从本章同步为各 Skill 的规则快照，避免两处独立修改。详细接入设计见 <code>docs/product-v2/14-agentdoor-skill-suite.md</code>。</p>
+<h3>7.2 判断前需要的数据</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>保存对象</th>
+<th>必须保存的内容</th>
+<th>用在哪里</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>任务与完成标准</td>
+<td>任务 ID、目标、交付物、数量、每条标准的 ID、状态、日期、负责人、父子关系、正式依赖、版本</td>
+<td>拆分、工时、诊断、推荐</td>
+</tr>
+<tr>
+<td>成员责任与声明</td>
+<td>团队与成员 ID、正式责任、本人技能说明、明确公开的协作窗口、来源与更新时间</td>
+<td>人员匹配、估算工作条件</td>
+</tr>
+<tr>
+<td>历史贡献</td>
+<td>成员、任务、具体贡献、交付版本、依据；区分本人说明与已核实贡献</td>
+<td>判断相关经验</td>
+</tr>
+<tr>
+<td>责任分析与反馈</td>
+<td>当前用户及团队、责任文本与版本、任务／交付来源及版本、实际承担内容、候选操作、原责任、覆盖范围、用户确认与纠正、失效状态</td>
+<td>持续校准责任；已确认责任供成员推荐使用</td>
+</tr>
+<tr>
+<td>文件与提交</td>
+<td>文件 ID、版本、可读取正文、提交人、提交时间、关联任务和标准</td>
+<td>核对结果、诊断；不是初始 EWD 的必需输入</td>
+</tr>
+<tr>
+<td>估算依据</td>
+<td>名称、目标、完成标准及版本；EWD 明细 ID、明细项、对应标准、八维检查结果、三点估算、预计 EWD、依据与缺口；采用的平台或团队规则版本、团队 ID、来源历史任务及调整原因</td>
+<td>计算任务总 EWD，作为单项进度和燃起图权重</td>
+</tr>
+<tr>
+<td>实际投入反馈（新增）</td>
+<td>实际分钟或区间、填报人与覆盖人员、对应工作和范围、收集方式、范围变化、训练使用许可</td>
+<td>校准 EWD；部分反馈不能当作整项实耗</td>
+</tr>
+<tr>
+<td>结果核对</td>
+<td>EWD 明细 ID、文件版本与内容出处、单项进度、判断理由、确认来源、核对时间及有效性</td>
+<td>计算每项已完成 EWD、任务完成度与缺口</td>
+</tr>
+<tr>
+<td>正式验收</td>
+<td>验收对象、操作者、结论、时间、适用范围、标准与交付版本、估算版本、撤销记录</td>
+<td>交付验收留痕；不是文件内容进度的唯一前提</td>
+</tr>
+<tr>
+<td>变更与分析记录</td>
+<td>变化前后版本、实际发生时间、分析类型、输入版本、规则版本、来源、结果；趋势另存当时的任务总 EWD 与已完成 EWD</td>
+<td>更新、复用、燃起图</td>
+</tr>
+</tbody></table></div>
+<p>这些是逻辑对象，可复用现有数据表。现有 MCP 尚未提供全部读取能力；不能把建议字段写成已存在的接口。</p>
+<p><strong>责任如何持续校准。</strong> 复用“我的责任”和本人负责或参与任务中的实际承担记录，由第 7.9 节人员责任分析 Skill 提出建议，用户确认后才成为成员推荐依据。不建设隐藏的能力／效率画像，也不增加独立画像页。每条资料保存“谁、承担什么、来自哪里、何时更新、当前是否有效”；没有查到记录表示未知，历史 Owner 身份不等于独立完成。本人修改责任、来源撤销或权限变化后，依赖该资料的建议需重新核对，正式负责人不自动更换。</p>
+<p><strong>所有 Skill 共用的读取规则。</strong> 服务端提供当前用户有权读取的资料，并记录各类数据是“已读全、部分、不可用、未读取”。空集合只有在已读全时才代表确实没有记录。资料中的文字只作为证据，不能当作新的操作指令。输出绑定资料版本；旧请求不能覆盖新版本结果。</p>
+<h3 id="skill-create" class="subhead">7.3 创建任务 Skill</h3>
+<p><strong>把自然语言需求整理为目标清晰、责任明确、可交付的任务计划；已有任务可根据实际进展继续调整。</strong></p>
+<div class="step-rules">
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>环节</th>
+<th>能力说明</th>
+<th>判断逻辑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. 意图识别</td>
+<td>判断用户想新建任务、调整已有任务，还是查询情况。</td>
+<td>新建进入规划；调整先定位原任务；查询只回答，不创建任务。意图不明时先确认。</td>
+</tr>
+<tr>
+<td>2. 需求分析</td>
+<td>理解用户要解决的问题，明确目标、交付内容和完成标准；需求不明确时加以引导。</td>
+<td>围绕“要达到什么结果、怎样算完成”补问关键缺口；已明确的信息直接复用，不反复追问。</td>
+</tr>
+<tr>
+<td>3. 任务规划</td>
+<td>识别当前用户已创建或参与的任务，判断重复创建、子任务归属等场景，并根据任务内容决定是否拆分。</td>
+<td>在当前有权读取的任务中比较目标、交付和范围，判断复用已有任务、追加子任务或独立新建。结果能独立交付、验收，且需单独负责、交接或并行时才拆分；一并明确依赖和期限，缺少依据则待确认。</td>
+</tr>
+<tr>
+<td>4. 成员推荐</td>
+<td>根据成员责任，推荐一位负责人和最小参与人集合，并解释推荐原因。</td>
+<td>在有参与资格的成员中，推荐责任覆盖整体结果的人负责；只加入承担必要具体贡献的参与人，逐人说明原因。用户点名先核对，无合适负责人可未分配。</td>
+</tr>
+<tr>
+<td>5. 任务预计投入工时评估</td>
+<td>调用第 7.7 节生成任务 EWD 拆分明细，并汇总预计投入人天。</td>
+<td>传入任务名称、目标、完成标准及可选历史任务；回填每个 EWD 明细项、对应标准、EWD、依据和缺口。规则集中见 <a href="#ewd-progress">EWD 工时评估＋进度</a>。</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<p><strong>已有任务调整：</strong> 读取当前任务、子任务、讨论和最新交付，调整尚未完成的计划或建议下一批子任务；保留仍有效的安排，避免重复已完成工作。</p>
+<p><strong>确认规则：</strong> 创建与调整都先生成可编辑草稿，用户确认后再保存；推荐他人负责时，对方接受后才成为正式负责人。</p>
+<p><strong>成员责任来源：</strong> 初期使用用户填写的责任；后续由人员责任分析 Skill 跟进任务并提出校准建议，用户确认后更新。成员推荐使用当前有效责任版本，并说明匹配依据。</p>
+<p><strong>与状态分析的关系：</strong> 本 Skill 负责创建和调整计划；当前情况、下一步建议、进度由 7.4 任务状态分析负责。预计投入与进度规则统一见 7.7，页面展示说明见 3.8 与 6.3。</p>
+<p><strong>Skill：</strong> <code>agentdoor-task-planner</code>。</p>
+<p><strong>草稿展示与换人：</strong> 主任务、子任务均按完成标准、执行建议、前置依赖的顺序组织可编辑内容；前置依赖只作参考，不自动阻止任务执行或改变状态。卡片底部的匹配依据分别说明负责人覆盖的结果和参与人的具体贡献；人员选择或正式责任版本改变时重新核对，用户指定的人选不等于高度匹配，缺口如实提示。</p>
+<h3 id="skill-status" class="subhead">7.4 任务状态分析 Skill</h3>
+<p><strong>任务状态分析分为三部分：当前情况、下一步建议、进度。进度包含完成度和燃起图。</strong></p>
+<div class="step-rules">
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>部分</th>
+<th>回答什么</th>
+<th>判断逻辑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. 当前情况</td>
+<td>现在做到哪，发生了什么？</td>
+<td>结合任务信息、讨论与交付记录，概括当前结果、缺口和近期变化；信息不足标待确认。</td>
+</tr>
+<tr>
+<td>2. 下一步建议</td>
+<td>接下来应该做什么？</td>
+<td>根据当前缺口与诊断，有冲突先核对，有阻塞先解除，否则补齐尚未满足的结果。</td>
+</tr>
+<tr>
+<td>3. 进度</td>
+<td>当前完成多少，任务是否趋于完成？</td>
+<td>引用 <a href="#ewd-progress">7.7 EWD 工时评估＋进度</a> 的完成度与燃起图，解释当前进展和是否收敛；不另行生成一套数值。</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<p>相关交付、标准、反馈或验收发生变化时，重新核对受影响的结果。单纯经过时间或增加提交次数，不代表任务更接近完成。</p>
+<p><strong>接入设计：</strong> <code>agentdoor-task-status-analyzer</code> 组织这三部分；任务诊断复用 7.5，进度引用 7.7 的文件内容核对结果，不自动修改任务状态。</p>
+<h3 id="skill-diagnosis" class="subhead">7.5 任务诊断 Skill</h3>
+<p><strong>任务诊断只分两类：执行阻塞、决策冲突。</strong></p>
+<div class="step-rules">
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>判断什么</th>
+<th>判断逻辑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>执行阻塞</td>
+<td>当前任务为什么无法继续？</td>
+<td>检查正式前置依赖与交付情况。任务已在执行，当前必须使用的前置交付尚未满足，导致无法继续，才判为阻塞。</td>
+</tr>
+<tr>
+<td>决策冲突</td>
+<td>任务里的文件内容与任务信息是否存在矛盾？</td>
+<td>核对已有文件内容，以及目标、完成标准、时间等任务信息，找出同一事项上相互矛盾或不能同时满足的地方；指出冲突双方的具体内容和出处。</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<p><strong>例子一：执行阻塞。</strong> 宣传海报正在设计，但依赖的活动文案还未交付，缺少标题和优惠信息，无法继续定稿。建议先推动文案交付。</p>
+<p><strong>例子二：决策冲突。</strong> 任务要求“活动预算不超过 10 万元”，但当前方案文件中的预算是 12 万元。建议确认是调整方案预算，还是修改任务中的预算要求。</p>
+<p><strong>Skill：</strong> <code>agentdoor-task-diagnostician</code>。</p>
+<h3 id="skill-priority" class="subhead">7.6 我的工作推荐 Skill</h3>
+<p><strong>作用：在本人负责或参与的任务中，综合重要度和紧急度，推荐现在应先处理哪一个，并说明原因。</strong> 推荐权重是排序分数，不代表人员能力、完成概率或绩效；页面只显示顺位、任务名称和一句原因，完整计算规则放在“AI 分析规则”中。</p>
+<h4>1. 哪些任务参与排序</h4>
+<p>本人负责/参与的，<strong>只有待开始、进行中、已阻塞这三种状态的任务参与排序。</strong></p>
+<h4>2. 排序权重：重要度 60%，紧急度 40%</h4>
+<p><strong>推荐权重 W＝重要度 I × 60%＋紧急度 U × 40%。</strong></p>
+<p>重要度和紧急度均在 0～100 分之间，推荐权重也在 0～100 分之间。“权重”指这个最终综合分，不是第三个独立评分项。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>回答的问题</th>
+<th>计算方式</th>
+<th>在最终排序中的占比</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>重要度 I</td>
+<td>这件事对目标、交付和其他工作有多大影响？</td>
+<td>I＝目标影响 B＋协作影响 C＋标签参考 P，最高 100</td>
+<td>60%</td>
+</tr>
+<tr>
+<td>紧急度 U</td>
+<td>如果现在不处理，会多快错过期限、持续损失或让别人等待？</td>
+<td>U＝max(D, H, Q)，取期限压力、当前风险、待本人处理三者最高分</td>
+<td>40%</td>
+</tr>
+</tbody></table></div>
+<p><strong>60%／40% 及以下档位都是初始建议参数，待产品验证，不是已验证的最优权重。</strong> 重要度略高，是为了让关键交付、实际损失和影响他人的任务有机会超过低影响的例行逾期任务；时间不能独占排序。参数统一配置并记录规则版本，AI 不能每次自由调整分数。</p>
+<h4>3. 重要度怎样计算</h4>
+<p><strong>I＝B＋C＋P。每个分项只取符合条件的最高一档，分项之间相加。</strong></p>
+<p><strong>目标影响 B（0～50 分）：</strong> 依据当前目标、完成标准、已确认的业务要求和目标关联判断，不以任务标题长短、金额大小或 AI 写出的“重要”二字判断。</p>
+<div class="priority-score-table">
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>分值</th>
+<th>成立条件</th>
+<th>必须能指出的依据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>50</td>
+<td>已明确关联当前核心业务目标、关键外部承诺或必须满足的合规要求，交付失败将直接影响该目标或承诺</td>
+<td>已确认的目标／要求、这项任务的具体交付，以及两者的直接关系</td>
+</tr>
+<tr>
+<td>35</td>
+<td>支撑明确的团队阶段目标或对外交付，但未被确认为核心目标或关键承诺</td>
+<td>当前团队目标或交付要求，与任务完成标准的对应关系</td>
+</tr>
+<tr>
+<td>20</td>
+<td>有明确必要性的例行维护、内部支持或基础交付</td>
+<td>已记录的需求与完成标准；不因“例行”判断其没有价值</td>
+</tr>
+<tr>
+<td>10</td>
+<td>已明确为可选优化，当前没有硬性交付要求</td>
+<td>用户确认的可选范围，不能仅凭没有截止时间推断</td>
+</tr>
+<tr>
+<td>0（待核对）</td>
+<td>目标、交付用途或关联信息不足，无法归档</td>
+<td>标明缺什么依据；0 是暂不计分，不表示已确认没有价值</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<p><strong>协作影响 C（0～30 分）：</strong> 判断“这项任务的结果会影响谁”，不是“这项任务在等谁”。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>分值</th>
+<th>成立条件</th>
+<th>计数与边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>30</td>
+<td>已确认该交付是至少 2 项活跃下游任务的必需输入，或是一项已确认关键里程碑的必要条件</td>
+<td>下游必须是待开始、进行中或已阻塞；按 Task ID 去重，每项关系有明确所需交付，不累计传递链</td>
+</tr>
+<tr>
+<td>15</td>
+<td>已确认该交付是 1 项活跃下游任务的必需输入，但不满足上档</td>
+<td>只取 15，不按前置数、参与人数或评论数累加</td>
+</tr>
+<tr>
+<td>0</td>
+<td>没有上述影响证据，或只存在参考性关联</td>
+<td>已知没有影响与资料未知分开记录；未知不能说“没有下游影响”</td>
+</tr>
+</tbody></table></div>
+<p>父子归属不等于依赖，用户可编辑的前置依赖也只是参考。仅有关系边、上游还未完成，不能证明当前任务阻塞了别人；只有当前交付要求或有效协作记录明确证实“需要这个结果”，才能计入 C。</p>
+<p><strong>标签参考 P（0 或 20 分）：</strong> 任务没有独立的优先级字段，AI 可参考当前任务已有标签的名称和已知含义，辅助判断重要度。明确表示重要性的标签，如“高优先级”“重点任务”，取 20；普通业务分类标签、没有相关标签或含义不明确时取 0。多个符合条件的标签不叠加，最高 20 分；没有标签不等于任务不重要，仍正常计算 B 和 C。</p>
+<p>只参考当前用户有权使用且实际关联到当前任务的标签，不借用其他人的私有标签，不按颜色、图标、标签数量或上级任务标签推断。含义不明或互相冲突时标待核对，不由 AI 猜测加分；仅写“紧急”的标签也不能代替 D、H、Q 所需的事实。记录命中的标签 ID、名称和判断依据；标签只作辅助参考，不能替代 B、C 的事实依据，不自动新增或修改标签，也不新增优先级设置。</p>
+<p>例如：支撑团队阶段目标 B＝35，影响两项已确认下游交付 C＝30，任务已有“高优先级”标签，参考该标签取 P＝20，则重要度 I＝85。移除该标签后，P＝0，I 变为 65；任务状态不变，B、C 仍按原事实计算。</p>
+<h4>4. 紧急度怎样计算：时间只是其中一项</h4>
+<p><strong>U＝max(D, H, Q)。三类信号各自取最高档，再取三者最高值，不相加。</strong> 同一问题可能同时造成逾期、损失与等待，取最高值可避免重复放大；其他命中仍保留为解释依据。</p>
+<p><strong>期限压力 D（0～100 分）：</strong> 按团队时区计算，日期差 d＝截止日期与当前日期相差的日历天数。仅有日期时，以当地当天结束作为截止；明确时刻超过后才算逾期。先判断逾期，再选今天或未来档位。</p>
+<div class="priority-score-table">
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>条件</th>
+<th>D 分值</th>
+<th>判断规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>已逾期</td>
+<td>100</td>
+<td>早于今天的截止日期，或已超过明确截止时刻</td>
+</tr>
+<tr>
+<td>今天到期</td>
+<td>90</td>
+<td>d＝0，尚未超过明确截止时刻</td>
+</tr>
+<tr>
+<td>未来 1～2 天到期</td>
+<td>75</td>
+<td>d＝1 或 2</td>
+</tr>
+<tr>
+<td>未来 3～7 天到期</td>
+<td>60</td>
+<td>3≤d≤7</td>
+</tr>
+<tr>
+<td>未来 8～14 天到期</td>
+<td>30</td>
+<td>8≤d≤14</td>
+</tr>
+<tr>
+<td>14 天以后到期</td>
+<td>10</td>
+<td>d＞14</td>
+</tr>
+<tr>
+<td>明确无截止时间</td>
+<td>0</td>
+<td>没有时间信号，仍正常计算 I、H 和 Q</td>
+</tr>
+<tr>
+<td>日期缺失、过期或无法识别</td>
+<td>0（待核对）</td>
+<td>不猜年份、不补日期、不判逾期；推荐注明日期依据不完整</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<p>逾期天数不继续叠加分数。日期信息未知与用户明确不设截止时间是两回事；两者都不凭空增加 D，但解释必须区分。</p>
+<p><strong>当前损失或执行风险 H（0～100 分）：</strong> 除截止时间外，判断“拖延处理正在造成什么影响”。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>H 分值</th>
+<th>成立条件</th>
+<th>依据要求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>100</td>
+<td>当前已有持续的关键服务中断、客户／交易损失或明确的合规、安全风险，且有需本人立即处理或协调的行动</td>
+<td>当前有效事件、影响范围、未解除事实和本人行动；仅标题写“紧急”不成立</td>
+</tr>
+<tr>
+<td>80</td>
+<td>已证实执行阻塞或决策冲突正在持续造成停工、返工或扩大交付影响，需本人处理或协调</td>
+<td>当前受影响的工作、阻塞／冲突内容及可采取行动，不只看状态名</td>
+</tr>
+<tr>
+<td>60</td>
+<td>有当前有效的决策冲突，继续按不一致要求推进会导致错误交付，但尚未证实持续损失</td>
+<td>冲突两侧的具体内容和出处；失效的旧诊断不能使用</td>
+</tr>
+<tr>
+<td>0</td>
+<td>未证实以上风险，或没有当前需本人处理的行动</td>
+<td>仅标“已阻塞”、很久没更新或前置尚未完成，均不自动给风险分；原因未知标待核对</td>
+</tr>
+</tbody></table></div>
+<p><strong>待本人处理 Q（0～80 分）：</strong> 判断是否已有明确等待，而不是仅从任务状态猜测。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Q 分值</th>
+<th>成立条件</th>
+<th>依据要求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>80</td>
+<td>活跃下游工作已明确停等本人必须提供的结果、决定或确认，且本人现在有可执行的处理行动</td>
+<td>当前等待方、所需内容、尚未回应／交付的记录；不是未来可能依赖</td>
+</tr>
+<tr>
+<td>60</td>
+<td>有指向本人的有效交付核对或决定请求，材料已提供且事项尚未处理，但未证实下游停工</td>
+<td>请求、交付或反馈与本人责任的对应关系</td>
+</tr>
+<tr>
+<td>0</td>
+<td>没有上述当前等待</td>
+<td>仅上传文件、没有验收记录、只有参与身份，均不构成等待；仅有参考性前置未完成不加分</td>
+</tr>
+</tbody></table></div>
+<p>例如：没有截止时间 D＝0，但本人需要立即协调处理持续的关键服务中断 H＝100，下游也在等待 Q＝80，则 U＝max(0, 100, 80)＝100。紧急度并不依赖是否填了时间。</p>
+<h4>5. 证据、缺失数据和去重</h4>
+<ul>
+<li>每次命中必须保存事实内容、来源 ID／版本、适用任务和有效性。AI 可以从可访问记录中识别候选事实并解释，但分档必须符合上述条件；没有证据不能靠模型语气打高分。</li>
+<li>不因资料缺失或过期加分；失效证据不再参与计算，未知分项暂取 0，不把剩余维度重新放大到 100。推荐注明“依据不完整，需核对”，不能写“低价值、没有风险”。资料恢复后重新计算。</li>
+<li>同一维度中，同一事件、相同任务或重复文件只计一次；B、C、P 反映不同影响，允许相加；D、H、Q 反映当前处理压力，只取最高值。不要再额外叠加“阻塞＋20、资料过期＋25”等旧规则。</li>
+<li>一个事实可同时支持重要度和紧急度，但必须分别解释：例如“会影响两个交付”支持 C，“两项工作现在已停等本人”才支持 Q。只证明前者，不能顺便计入后者。</li>
+<li>不以 EWD 大小、提交次数、聊天活跃度、任务历时或人员历史速度加分；没有真实剩余工作量和可投入时间时，不计算忙闲率、完成概率或精确排程。</li>
+<li>父任务与子任务可分别参与，但各自使用本任务的责任和行动。父任务不直接复制子任务的分数，也不因后代数量多而层层累加；父任务理由写统筹行动，避免重复推荐同一执行动作。</li>
+</ul>
+<h4>6. 如何排序和解释</h4>
+<ol>
+<li>先检查状态白名单及本人负责或参与的关系，再按 Task ID 去重。</li>
+<li>按当前有效事实分别取 B、C、P、D、H、Q。</li>
+<li>计算 I＝B＋C＋P；U＝max(D, H, Q)；W＝0.6×I＋0.4×U。</li>
+<li>按 W 从高到低；同分时先比较重要度 I，再比较紧急度 U，均从高到低；仍同分时，按可比较的截止时间从早到晚，无可比较截止时间排后；最后按稳定任务 ID 排序。</li>
+<li>排序使用未舍入的结果，展示或调试时最多保留一位小数。不能用传入数组顺序、随机数或重新生成的 AI 文案打破平局。</li>
+<li>一句优先原因说明最有贡献的重要度依据和当前紧急信号，再指出现在可做的事。无紧急信号时如实说明按目标或协作影响优先，不虚构截止压力。</li>
+</ol>
+<p>有强依赖影响的任务可以比例行逾期任务靠前；已阻塞不必然第一，也不能被整体排除。<strong>重要但不紧急的任务仍有排序权重，紧急但影响较小的任务也保留时间压力，两者通过固定比例综合，而不是先把所有逾期任务排完。</strong></p>
+<h4>7. 完整算例</h4>
+<p>假设当前为团队时区 2026 年 9 月 3 日 10:00，以下任务均为本人负责或参与，状态在白名单内；相关事实已确认、资料完整。B／C／P 与 D／H／Q 的顺序固定如下，可逐项复算。</p>
+<div class="priority-score-table">
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>顺位与任务情境</th>
+<th>重要度 I：B＋C＋P</th>
+<th>紧急度 U：max(D, H, Q)</th>
+<th>推荐权重 W</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. 关键服务故障：无截止；关联核心承诺、影响多项交付、有“高优先级”标签；损失持续且下游停等本人</td>
+<td>50＋30＋20＝100</td>
+<td>max(0, 100, 80)＝100</td>
+<td><strong>100</strong></td>
+</tr>
+<tr>
+<td>2. 阶段交付：9 月 10 日到期；支撑团队目标、影响两项下游、有“高优先级”标签；下游当前已停等本人</td>
+<td>35＋30＋20＝85</td>
+<td>max(60, 0, 80)＝80</td>
+<td><strong>83</strong></td>
+</tr>
+<tr>
+<td>3. 方案核对：无截止；支撑团队目标、影响一项下游、有“重点任务”标签；已有材料待本人核对，未停工</td>
+<td>35＋15＋20＝70</td>
+<td>max(0, 0, 60)＝60</td>
+<td><strong>66</strong></td>
+</tr>
+<tr>
+<td>4. 关键里程碑准备：无截止；关联核心目标、是里程碑必要条件、有“重点任务”标签；暂无当前损失或等待</td>
+<td>50＋30＋20＝100</td>
+<td>max(0, 0, 0)＝0</td>
+<td><strong>60</strong></td>
+</tr>
+<tr>
+<td>5. 团队常规交付：今天到期；支撑团队目标，仅影响本项交付，只有业务分类标签；暂无其他问题</td>
+<td>35＋0＋0＝35</td>
+<td>max(90, 0, 0)＝90</td>
+<td><strong>57</strong></td>
+</tr>
+<tr>
+<td>6. 例行内部整理：昨天逾期；有明确内部支持用途，无已证实下游影响，没有相关标签；暂无其他问题</td>
+<td>20＋0＋0＝20</td>
+<td>max(100, 0, 0)＝100</td>
+<td><strong>52</strong></td>
+</tr>
+</tbody></table></div>
+</div>
+
+<p>第二项：W＝85×60%＋80×40%＝51＋32＝83。第三项：W＝70×60%＋60×40%＝66。没有日期的关键工作能够排在例行逾期工作前面，是重要度和非时间紧急信号共同作用的结果，不是遗漏了期限。</p>
+<p>第一项的一句原因可写：“关键服务中断正在影响多项交付，需先协调恢复并回应等待方。”不能写成“未设置期限，所以不紧急”。</p>
+<p>同分例子：任务 X 的 I＝80、U＝30，任务 Y 的 I＝60、U＝60，W 都为 60；按重要度，X 在前。若两项 I、U、截止均相同，则只按稳定任务 ID 决定顺序。</p>
+<h4>8. 何时更新、保存什么、实现边界</h4>
+<p>负责人、参与人、状态、目标／完成标准、已确认的下游影响、标签的关联、名称或含义变化，以及截止时间、当前损失、阻塞／冲突、待本人处理事项、来源版本变化时重新计算。日期跨日、明确截止时刻经过或进入新的期限档位时，也更新 D。单纯刷新或页面重绘不改变分值和分析时间。</p>
+<p>内部保存：规则版本、当前判断时刻与团队时区、输入摘要、入选／排除原因、B／C／P／D／H／Q、I／U／W、命中事实与来源版本、未知项、最终顺位和一句优先原因。相同输入、相同有效时刻及相同规则版本，应得到相同排序；变更参数需升级版本并重算，不静默改历史结论。</p>
+<p><strong>规则版本：<code>PERSONAL-PRIORITY-2026-09-03-v4</code>。Skill：<code>agentdoor-personal-priority</code>。本节为 PRD 设计，本次未修改应用排序代码。</strong> 当前原型仍用时间分＋问题分＋补充分，仍存在旧审核状态和同分逻辑；重要度事实识别、标签参考、本人负责或参与的推荐范围、上述状态白名单及新权重公式需后续接入，不能把文档更新表述为算法已上线。</p>
+<h3 id="ewd-progress" class="subhead">7.7 EWD 工时评估＋进度</h3>
+<p><strong>先形成任务 EWD 拆分明细，每个明细项分别估算 EWD；AI 再逐项核对文件中的完成内容，最后按 EWD 权重计算任务完成度。</strong> EWD 明细项是计算与核对单位，不会自动创建成子任务。</p>
+<p><strong>Skill：</strong> <code>agentdoor-ewd-progress</code>，按需执行 estimate（生成 EWD 拆分明细与预计投入）、progress（单项与总体完成度）、trend（燃起图）模式；创建任务时不运行执行阶段的文件核对。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>部分</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EWD 工时评估</td>
+<td>任务 EWD 拆分明细：明细项、对应完成标准、预计 EWD、估算依据</td>
+</tr>
+<tr>
+<td>完成度</td>
+<td>每个 EWD 明细项的完成比例、文件依据、已完成 EWD，以及任务总完成度</td>
+</tr>
+<tr>
+<td>燃起图</td>
+<td>每个历史时点的任务总 EWD 与已完成 EWD</td>
+</tr>
+</tbody></table></div>
+<p><a id="ewd-platform-rule"></a></p>
+<h4>一、估算 EWD</h4>
+<p><strong>EWD 明细项：</strong> 为满足任务完成标准，成员必须亲自投入时间的一项具体工作，例如整理资料、操作 AI、分析、制作、修改、沟通、审核或验收。每项同时写明可核对的完成结果；等待审批、排队和 AI 无人值守运行不列入明细。</p>
+<ol>
+<li>AI 根据任务名称、目标和完成标准生成任务 EWD 拆分明细。每个 EWD 明细项是一项具体人工工作，同时对应一项可核对的完成结果；同级不重叠，并覆盖当前已确认任务范围的 100%。</li>
+<li>AI 用八个投入维度检查任务，从已写明的信息中识别需要列入的 EWD 明细项、数量、条件与风险；同一项工作只列一次。</li>
+<li>AI 为每个 EWD 明细项给出乐观值 O、最可能值 M 和保守值 P，程序按 <code>EWD＝(O＋4M＋P)÷6</code> 计算该项 EWD。</li>
+<li>任务总 EWD＝所有 EWD 明细项之和；共享工作只列一次，父任务只汇总叶子任务。</li>
+<li>初期使用平台维度与 AI 专家估算；后续根据团队历史任务的 EWD 拆分明细、完成标准和实际投入反馈校准估算。历史数据不足时继续使用平台规则。</li>
+<li>用户确认后保存 EWD 拆分明细、总 EWD 和规则版本作为本次估算基线；新增、删除或重估明细项时生成新版本，不回写旧基线和历史快照。</li>
+</ol>
+<h4>平台初始 EWD 检查维度</h4>
+<p>八个维度是 AI 补全 EWD 明细项的检查清单，不打分，也不直接换算人天。每个维度必须回答“是否需要新增或调整明细、工作是什么、数量或次数、依据是什么”；同一项工作受多个维度影响时只保留一条明细，避免重复计时。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>AI 检查什么</th>
+<th>如何进入估算</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>交付规模</td>
+<td>结果数量、覆盖范围和适配版本</td>
+<td>确定要制作、适配和交付几份结果</td>
+</tr>
+<tr>
+<td>实现难度</td>
+<td>完成结果所需的方法与专业判断</td>
+<td>识别分析、设计、制作或开发动作</td>
+</tr>
+<tr>
+<td>信息不确定性</td>
+<td>需求、方法和结果是否明确</td>
+<td>已识别风险进入 O／P 差异；关键条件未知则待估算</td>
+</tr>
+<tr>
+<td>资料准备</td>
+<td>输入资料是否可以直接使用</td>
+<td>识别收集、整理、清洗、授权等准备动作</td>
+</tr>
+<tr>
+<td>协作依赖</td>
+<td>人工协调和外部输入有多少</td>
+<td>识别沟通、等待前的人工跟进和交接动作；纯等待不计</td>
+</tr>
+<tr>
+<td>修改迭代</td>
+<td>已明确需要多少轮调整</td>
+<td>按已明确轮次和受影响内容识别修改动作</td>
+</tr>
+<tr>
+<td>核验验收</td>
+<td>检查与验收要求有多重</td>
+<td>识别自检、审核、复核和验收动作及人数</td>
+</tr>
+<tr>
+<td>工具环境</td>
+<td>工具、权限和环境准备工作</td>
+<td>识别配置、接入、联调等 EWD 明细项；无人值守运行不计</td>
+</tr>
+</tbody></table></div>
+<p>AI 可以返回 <code>additionalFactor</code>，说明八个维度未覆盖的因素，并给出由此新增或调整的 EWD 明细项与三点估算。重复出现且有历史数据支持的因素，经团队规则评审后才能升级为团队扩展维度并记录版本。</p>
+<h4>三点估算规则</h4>
+<p><strong>参考依据：</strong> <a href="https://www.pmi.org/learning/library/leveraging-new-practice-standard-project-estimating-6222">PMI 的项目估算实践</a>使用三点估算表达不确定性，并介绍常用的 PERT 加权平均公式 <code>(O＋4M＋P)÷6</code>。AgentDoor 将该方法用于每个 EWD 明细项；这些明细项在估算方法上对应 WBS 工作包。八个检查维度是平台规则，不是 PMI 规定的评分标准。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>名称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>O</td>
+<td>乐观投入</td>
+<td>已确认的资料、工具和协作条件都顺利，没有额外返工时需要的人工时间</td>
+</tr>
+<tr>
+<td>M</td>
+<td>最可能投入</td>
+<td>按当前已知条件正常完成时，最可能需要的人工时间</td>
+</tr>
+<tr>
+<td>P</td>
+<td>保守投入</td>
+<td>已识别的不确定因素发生，但交付范围没有增加时需要的人工时间</td>
+</tr>
+</tbody></table></div>
+<p><strong>规则：</strong> AI 只依据任务已写明的工作和风险，为每个 EWD 明细项估算 O、M、P，满足 <code>0≤O≤M≤P</code>；同一项工作只计算一次。程序计算 <strong>单项 EWD＝(O＋4M＋P)÷6</strong>，任务 EWD 为全部明细项 EWD 之和。关键条件不足、足以改变估算区间时标“待估算”。用户可以修改三点数值并补充依据；团队历史数据用于校准后续估算。</p>
+<p><strong>数值来源：</strong> 首版由 AI 根据任务名称、目标、完成标准、八个检查维度和已识别风险估算 O、M、P，单位统一为人天。它们不是固定分档，也不是 AI 随意打分；每个数值必须有对应工作和判断依据。用户可修正数值，后续再用团队历史任务的实际投入反馈校准。</p>
+<p><strong>例子：制作一份方案。</strong> 已知工作包括准备资料、操作 AI、人工修改和两人审核；任务同时明确存在“资料可能需要补充、审核后可能再修改一轮”的风险。</p>
+<div class="table-wrap ewd-estimate-table"><table>
+<thead>
+<tr>
+<th>EWD 明细项</th>
+<th>对应检查维度</th>
+<th align="right">O</th>
+<th align="right">M</th>
+<th align="right">P</th>
+<th align="right">单项 EWD（人天）</th>
+<th>判断依据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>准备资料</td>
+<td>资料准备、信息不确定性</td>
+<td align="right">0.05</td>
+<td align="right">0.10</td>
+<td align="right">0.15</td>
+<td align="right">0.10</td>
+<td>现有资料基本可用，但已明确可能需要补充</td>
+</tr>
+<tr>
+<td>操作 AI</td>
+<td>实现难度、工具环境</td>
+<td align="right">0.05</td>
+<td align="right">0.10</td>
+<td align="right">0.15</td>
+<td align="right">0.10</td>
+<td>使用现有工具生成一份方案初稿；保守情况包含一次提示调整</td>
+</tr>
+<tr>
+<td>人工修改</td>
+<td>实现难度、修改迭代</td>
+<td align="right">0.10</td>
+<td align="right">0.25</td>
+<td align="right">0.60</td>
+<td align="right">0.28</td>
+<td>正常修改一轮；保守情况包含已识别的第二轮修改</td>
+</tr>
+<tr>
+<td>两人审核</td>
+<td>协作依赖、核验验收</td>
+<td align="right">0.10</td>
+<td align="right">0.20</td>
+<td align="right">0.30</td>
+<td align="right">0.20</td>
+<td>两人分别审核；保守情况包含问题复核</td>
+</tr>
+<tr>
+<td>任务合计</td>
+<td>交付规模为一份方案</td>
+<td align="right"><strong>0.30</strong></td>
+<td align="right"><strong>0.65</strong></td>
+<td align="right"><strong>1.20</strong></td>
+<td align="right"><strong>0.68</strong></td>
+<td>同一项工作虽对应多个维度，只计算一次</td>
+</tr>
+</tbody></table></div>
+<p>计算结果：<code>(0.30＋4×0.65＋1.20)÷6≈0.68</code>，<strong>该任务 EWD≈0.68 人天</strong>。</p>
+<p>本规则同时采用面向交付的 WBS、范围 100% 覆盖、工作包逐项估算、估算依据和版本基线。“已完成 EWD”可类比挣值 EV；当前未记录按时间分配的计划值 PV 和实际投入 AC，因此燃起图只表示范围与完成工作量趋势，不作为完整的挣值管理 EVM。</p>
+<p><a id="ewd-completion"></a></p>
+<h4>二、逐项判断进度</h4>
+<p>AI 根据每个 EWD 明细项及任务已提供的内容判断该项完成进度，再按各项 EWD 汇总任务完成度；无法判断的明细项标记“待确认”。</p>
+<p><strong>例子：AI 根据活动方案的完成标准生成 3 个 EWD 明细项，总 EWD 为 1.50 人天。</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>EWD 明细项</th>
+<th align="right">EWD</th>
+<th>AI 判断进度</th>
+<th align="right">已完成 EWD</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>明确目标、预算和约束</td>
+<td align="right">0.25</td>
+<td>100%：目标、预算和限制条件完整</td>
+<td align="right">0.25</td>
+</tr>
+<tr>
+<td>形成完整活动方案</td>
+<td align="right">1.00</td>
+<td>80%：主体流程和分工已完成，风险预案仍缺</td>
+<td align="right">0.80</td>
+</tr>
+<tr>
+<td>核对并交付</td>
+<td align="right">0.25</td>
+<td>40%：已完成格式检查，内容核对尚未完成</td>
+<td align="right">0.10</td>
+</tr>
+<tr>
+<td>合计</td>
+<td align="right"><strong>1.50</strong></td>
+<td></td>
+<td align="right"><strong>1.15</strong></td>
+</tr>
+</tbody></table></div>
+<p><strong>任务完成度＝1.15 ÷ 1.50≈76.7%。</strong></p>
+<p><a id="ewd-burnup"></a></p>
+<h4>三、燃起图</h4>
+<p>每次 EWD 拆分范围、估算值或单项进度变化时保存快照。燃起图显示两条线：<strong>任务总 EWD＝当时所有 EWD 明细项之和；已完成 EWD＝当时已有数字进度的各明细项「EWD × 单项进度」之和。</strong> 存在待确认项时标明待确认 EWD，不把它解释为 0% 完成。两条线差距持续缩小表示任务趋于收敛，扩大表示新增工作超过已完成工作。</p>
+<p>新增、删除或重估 EWD 明细项时标明范围变化；文件内容变化只更新受影响项。没有历史快照不补画趋势，同一文件反复上传不重复累计。</p>
+<p><a id="ewd-learning"></a></p>
+<p><strong>保留依据：</strong> EWD 明细 ID、明细项、对应完成标准、八维检查结果、补充因素、各明细项的 O／M／P、EWD 与团队规则版本；文件版本、内容引用、单项进度、判断来源；每次任务总 EWD 与已完成 EWD 快照。团队历史数据用于更新团队 EWD 评估规则，当前文件内容用于判断当前进度。本节为待接入设计，未修改应用运行代码。</p>
+<h3 id="skill-updates" class="subhead">7.8 谁调用规则，什么时候更新</h3>
+<h4>创建任务的完整流程</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>流程步骤</th>
+<th>归属</th>
+<th>产物</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>识别意图、明确目标和关键补问</td>
+<td>创建任务 Skill 内部</td>
+<td>有范围的需求</td>
+</tr>
+<tr>
+<td>查重、拆分结果、判断父子与依赖</td>
+<td>创建任务 Skill 内部，代码校验关系</td>
+<td>任务草稿</td>
+</tr>
+<tr>
+<td>匹配责任、安排必要协作与日期、建议已有标签</td>
+<td>创建任务 Skill 内部</td>
+<td>人员与时间建议</td>
+</tr>
+<tr>
+<td>估算预计投入</td>
+<td>创建任务调用 7.7 EWD 工时评估模块</td>
+<td>EWD、依据、假设与缺口</td>
+</tr>
+<tr>
+<td>校验草稿、展示差异、用户确认</td>
+<td>业务服务</td>
+<td>确认后的提交</td>
+</tr>
+<tr>
+<td>保存任务、估算和变更记录</td>
+<td>业务服务统一事务</td>
+<td>正式任务；选他人时负责人仍待接受</td>
+</tr>
+</tbody></table></div>
+<p>拆分、人员匹配不各开一个 Skill；规则表也不各开一个 Agent。创建时只调用需要的估算部分；执行中的结果核对和验收不是创建流程的必跑步骤。</p>
+<h4>保存之后的更新表</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>保存的变化</th>
+<th>更新什么</th>
+<th>保留什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>目标、交付数量或标准改变</td>
+<td>检查受影响范围；相关估算依据和核对结论需复核；检查诊断和推荐</td>
+<td>未受影响的结果与原始证据</td>
+</tr>
+<tr>
+<td>子任务新增、移除、移动</td>
+<td>更新新旧父级范围与汇总，相关诊断、进度和趋势；新增叶子按规则估算</td>
+<td>已有历史点</td>
+</tr>
+<tr>
+<td>本人责任、相关经验或公开窗口改变</td>
+<td>刷新依赖这些资料的人员建议；实际工作假设改变才重估</td>
+<td>正式 Owner 不自动更换</td>
+</tr>
+<tr>
+<td>本人任务分工、实际贡献或责任建议反馈改变</td>
+<td>调用人员责任分析，更新受影响的责任候选；用户确认后再刷新人员匹配依据</td>
+<td>正式责任与原始来源，旧建议不覆盖新版本</td>
+</tr>
+<tr>
+<td>正式 Owner 改变</td>
+<td>更新新旧负责人的“我的工作”，核对相关工作假设</td>
+<td>人名变化本身不改变工时</td>
+</tr>
+<tr>
+<td>文件新版本、相关反馈或明确贡献记录</td>
+<td>核对关联标准，更新已完成 EWD、完成度、燃起图、内容诊断与摘要；内容改变估算假设时才重估总量</td>
+<td>仍适用的 EWD 和历史快照</td>
+</tr>
+<tr>
+<td>TaskStatus 改变</td>
+<td>更新状态说明、关系诊断、个人推荐</td>
+<td>EWD 与正式验收不随之修改</td>
+</tr>
+<tr>
+<td>截止日期或正式依赖改变</td>
+<td>检查日期、依赖诊断，更新推荐和摘要</td>
+<td>仅日期变化不改 EWD；依赖改变实际交付工作时再重估</td>
+</tr>
+<tr>
+<td>内容核对或确认结果改变、撤销或失效</td>
+<td>更新已完成 EWD、完成度、父级汇总和燃起图；读取失败时标待核对，不补 0</td>
+<td>原始估算、历史点</td>
+</tr>
+<tr>
+<td>实际跨日</td>
+<td>按团队时区重新计算到期与个人排序</td>
+<td>工时、验收、交付核对结果</td>
+</tr>
+<tr>
+<td>权限改变</td>
+<td>清除当前用户不再有权读取的内容与分析缓存，重新核对覆盖</td>
+<td>服务端受控历史保留，但不继续展示给无权用户</td>
+</tr>
+</tbody></table></div>
+<p><strong>运行方式：</strong> 正式修改和变更记录一起保存；后台根据上表找受影响任务、祖先、后续依赖任务及相关负责人。代码能算的先算，需要理解文字的再调用对应 Skill。每次结果保存任务版本、证据版本、规则版本和读取范围；发布前重新核对，旧请求丢弃。</p>
+<p>同一输入已有有效结果就复用。切页签、展开明细、尚未保存的输入不重算。失败保留有权限的旧结果并标“已过期”，用户可重试；刷新不伪造新的数据截至时间。同一页面的诊断、进度和摘要必须明确各自版本；不能将旧摘要包装成已解释新进度。</p>
+<p><strong>规则维护：</strong> 新规则发布要有编号、适用条件、参数来源、例子和版本。新版本使相关分析需复核，不自动改已采用估算或历史曲线。参数调整、模型理解错误和算术错误分别记录；当前未采集实际投入，不开展个人效率排名或声称估算已完成校准。</p>
+<h3 id="skill-responsibility" class="subhead">7.9 人员责任分析 Skill</h3>
+<p><strong>目标：持续跟进当前用户负责或参与的任务，识别本人实际承担的工作，结合用户确认和纠正，让责任说明越来越准确，为后续成员推荐提供更可靠的依据。</strong> 判断“通常负责什么、责任边界在哪里”，不做能力、效率或绩效评分。</p>
+<p><strong>Skill：<code>agentdoor-responsibility-advisor</code>。</strong> 将第 2.5 节已有责任建议明确为独立的人员责任分析 Skill，复用“我的责任”的建议、依据和确认入口，不另建用户画像。</p>
+<h4>1. 分析范围与输入</h4>
+<ul>
+<li>仅分析当前用户在当前团队中负责或参与、且当前有权读取的任务；不同团队的责任与证据分开保存。</li>
+<li>输入责任文本与版本、任务目标与完成标准、本人分工、实际交付／贡献、相关讨论与确认、任务／交付来源及版本，以及历史建议和用户反馈。</li>
+<li>已完成任务仍可作为历史依据；待开始任务只说明当前分工，不能当作已经执行。已取消任务只保留可证实的实际承担事实，不推断交付完成。本分析不套用“我的工作”的三状态排序范围。</li>
+<li>输入注明数据覆盖、时间与权限；参与名单不等于实际承担，任务完成也不等于所有成果都由负责人独立完成。</li>
+</ul>
+<h4>2. 分析步骤</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>判断什么</th>
+<th>产物</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>识别实际承担</td>
+<td>本人在任务中具体负责什么结果、提供什么贡献，哪些记录可以证明？</td>
+<td>带来源的承担事实；不能归属的内容标待核对</td>
+</tr>
+<tr>
+<td>归纳责任范围</td>
+<td>哪些是持续出现的工作，哪些只是一次临时协助或阶段性安排？</td>
+<td>有范围、时效和依据的责任候选，不直接写“擅长”或“效率高”</td>
+</tr>
+<tr>
+<td>对照现有责任</td>
+<td>已有描述是否覆盖实际工作，有没有缺失、过宽、重复或已确认的职责变化？</td>
+<td>新增、更新、废弃或不调整，并指出对应原责任</td>
+</tr>
+<tr>
+<td>用户核对</td>
+<td>建议是否准确，责任边界需要怎样修改？</td>
+<td>用户确认后才写入；保留修改、忽略与纠正记录</td>
+</tr>
+<tr>
+<td>反馈校准</td>
+<td>新任务事实和用户纠正改变了哪些判断？</td>
+<td>更新后续建议的依据与范围，确认后的责任版本供成员推荐使用</td>
+</tr>
+</tbody></table></div>
+<p>一次临时协助不直接推成长期责任；多个独立任务的同类承担或明确的长期分工确认，可支持归纳。任务数量、在线时长和提交间隔不能代替实际承担证据；同一成果的多版本、父子引用不重复计数。没有近期任务或来源失效不代表职责消失；废弃建议需有明确职责调整依据。</p>
+<h4>3. 输出与用户决定</h4>
+<p>每条建议包含操作、责任文本、原责任与基准版本、改变原因、任务与交付来源、数据时间、团队与范围、未确认事项。已有责任准确时输出“不调整”；证据不足保留原文并说明缺口。</p>
+<p>复用“我的责任”：用户可查看依据、采纳、修改或忽略；旧建议不能覆盖新版本。未经确认的建议不进入正式责任匹配。Skill 不自动修改 Task Owner、参与人或权限；确认责任建议不等于接受具体任务。</p>
+<p><strong>更新流程：</strong> Skill 支持分析建议、准备更新、执行已确认更新三种模式。用户确认后才写入；确认绑定最终操作、责任文本、用户与团队、原责任及基准版本。业务服务独立校验权限、当前版本和幂等并返回回执；Skill 根据回执说明更新结果，不把候选的“可确认”当作写入授权。用户修改文本后须确认最终版本；旧建议或版本冲突时重新核对，不能覆盖新责任。写入接口未接通或回执未知时保留建议，明确待接入或待核实，不声称已更新。</p>
+<h4>4. 何时分析，如何越来越准</h4>
+<ul>
+<li>本人任务分工、相关交付／贡献、确认记录或用户责任发生实际变化时，只重算受影响的责任候选；本人可主动触发重新分析。打开页面不制造新证据或新分析时间。</li>
+<li>用户纠正需与被纠正建议及来源版本关联，例如“只是这次临时帮忙”“负责脚本，不负责投流”；后续判断复用该边界，新证据与之冲突时提出待核对，不静默覆盖用户说明。</li>
+<li>忽略不等于否定，也不代表该用户拒绝承担工作；同一来源版本的已忽略建议不反复推送，实质证据变化后才重新判断。</li>
+<li>来源撤销、权限变化、任务贡献被更正后，相关候选失效并复核；读取失败不等于没有责任。正式责任仍由用户决定是否调整，失效证据不得继续对外展示或用作新增推荐理由。</li>
+<li>每次保留输入、来源版本、规则版本、建议与用户处理结果。同样输入和反馈复用有效结果；这里的持续校准是更新事实、责任边界与建议，不是重复刷新或默认开展模型训练。</li>
+</ul>
+<p><strong>例子：</strong> 用户原责任是“内容制作”，近期多次实际承担达人短视频脚本交付，可建议细化为“负责达人短视频脚本策划与交付”，附任务依据。用户纠正直播协助仅为临时安排后，不再凭同一记录归纳为长期责任。</p>
+<p><strong>验证目标：</strong> 看责任遗漏、错误归属和重复错误是否减少，成员推荐能否更准确地解释匹配原因；不以建议数量或文字长度代表准确，不对成员排名。</p>
+<p><strong>实现边界：</strong> 已设计项目内 Skill 文件，并同步更新 PRD、HTML 与 PDF。现有责任建议界面可复用；任务变更触发、贡献归属分析、反馈回读、受控责任写入与生产数据接入仍待实现，尚未启动后台持续分析。</p>
+
+</section>
+
+<section class="prd-section technical-content" id="mcp-design" data-title="MCP：工具与参数设计">
+  <header class="section-heading"><span class="section-number">08</span><div><h2>MCP：工具与参数设计</h2><p class="section-summary">38 个候选工具的参数、回包与写入边界；与当前两个演示工具明确分开。</p></div></header>
+  
+  <h3>8.1 用来解决什么</h3>
+<p>让个人 AI、MCP App 和普通页面操作同一份任务事实。REST 与 MCP 共用身份、权限、版本、幂等和事务服务，不能让 MCP 再存一套正式任务。</p>
+<pre><code class="language-text">页面 / 个人 AI → MCP 适配器或 REST → 同一领域服务 → 业务数据 / 变更回执
+</code></pre>
+<p>下面合并原《任务 REST API 与 MCP 工具契约》v0.1 的 <strong>38 个候选工具</strong>，并补齐阅读所需的参数类型和条件。它们仍是 Proposal；本次补充的必填性、枚举和字段白名单是待评审建议，不是现网 Schema。当前运行代码只有第 8.10 节的两个演示工具。</p>
+<h3>8.2 通用参数与回包</h3>
+<p>下表工具均使用完整 <code>agentdoor_</code> 名称。表中未标 <code>?</code> 的参数必填；<code>?</code> 表示可选。ID 均为非空 string；ID[] 为去重字符串数组；version 为正整数；null 是明确清空，不等于省略。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>记号 / 参数</th>
+<th>类型、默认值与校验</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>W</code></td>
+<td>所有写工具共同带 <code>idempotency_key:string</code>；同一次业务操作及同一载荷重试用同一键</td>
+</tr>
+<tr>
+<td><code>V</code></td>
+<td>修改已有对象带 <code>expected_version:integer&gt;=1</code>；从最近读取返回的 version 获取，不由模型猜</td>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>列表带 <code>cursor?:string, limit?:integer&gt;=1</code>；默认 50，服务端限制最大值并回显；游标不跨查询条件复用</td>
+</tr>
+<tr>
+<td>日期</td>
+<td><code>YYYY-MM-DD</code>，日历日期校验；时间戳使用含时区的 ISO 8601，服务端记录 UTC</td>
+</tr>
+<tr>
+<td>未列字段</td>
+<td>拒绝额外字段；不接受任意 JSON Pointer、SQL、任意本地路径或模型自报权限</td>
+</tr>
+<tr>
+<td>身份</td>
+<td>team scope、真实 Principal、代表的成员和委托来自认证上下文；可选过滤参数不能扩权</td>
+</tr>
+</tbody></table></div>
+<p><strong>MCP → REST 映射</strong>：<code>expected_version</code> 由适配器转换为 <code>If-Match</code>，<code>idempotency_key</code> 对应 <code>Idempotency-Key</code>；snake_case 工具参数转换为服务端 camelCase 字段。只在适配层映射，不能存两份不同字段。列表 <code>list_*</code> 对应 GET 集合，<code>get_*</code> 对应 GET 单资源，其余映射见各表。</p>
+<p>成功返回 <code>content</code>（给人一两句话）和 <code>structuredContent:{data,receipt}</code>；错误为 <code>isError:true</code> 与 <code>structuredContent.problem:{code,message,retryable,recoveryAction}</code>。调用方解析结构化字段，不解析自然语言当作事实。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>回执字段</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>schemaVersion / operationId</code></td>
+<td>写回执版本 <code>agentdoor.write-receipt.v0.1</code> 与操作标识；外层 meta 带 requestId、asOf</td>
+</tr>
+<tr>
+<td><code>outcome</code></td>
+<td><code>succeeded / no_change / accepted_async / needs_confirmation</code></td>
+</tr>
+<tr>
+<td><code>effect</code></td>
+<td><code>none / proposed / applied</code>；只有 applied 才表示正式数据生效</td>
+</tr>
+<tr>
+<td><code>replayed / atomic</code></td>
+<td>是否幂等重放、是否整批原子成功</td>
+</tr>
+<tr>
+<td><code>affectedResources[]</code></td>
+<td>对象类型、ID、动作、beforeVersion、afterVersion；新建前版本为 null</td>
+</tr>
+<tr>
+<td><code>changeSetId / changeDigest / generatedActivityIds / committedAt</code></td>
+<td>可追踪变更与实际提交时间；未应用不得伪造业务提交时间，Proposal 需细化各 outcome 的字段必填条件</td>
+</tr>
+</tbody></table></div>
+<p>默认 compact 返回 ID、状态、版本、关键差异和回执；长讨论、证据、文件正文分页获取。版本冲突或确认预览使用 standard。原契约的 detailRef / full 回传仍需补充具体资源读取地址，不能把一个不可读取的引用当作完整实现。</p>
+<h3>8.3 Task 与子任务：9 个工具</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>工具 / 操作</th>
+<th>参数与返回重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>agentdoor_list_tasks</code> · GET /tasks</td>
+<td><code>filters?:TaskFilters, P</code> → 可见 Task 列表、nextCursor、asOf</td>
+</tr>
+<tr>
+<td><code>agentdoor_get_task</code> · GET /tasks/{id}</td>
+<td><code>task_id:ID</code> → 当前 Task、version；不可发现对象不透露其存在</td>
+</tr>
+<tr>
+<td><code>agentdoor_create_task</code> · POST /tasks</td>
+<td><code>TaskCreateFields, W</code> → 正式 Task 与写回执；不是模型准备草稿步骤</td>
+</tr>
+<tr>
+<td><code>agentdoor_update_task</code> · PATCH /tasks/{id}</td>
+<td><code>task_id:ID, V, updates:TaskUpdate[], W</code> → 更新后的对象或 no_change</td>
+</tr>
+<tr>
+<td><code>agentdoor_get_task_deletion_impact</code> · GET /tasks/{id}/deletion-impact</td>
+<td><code>task_id:ID</code> → 当前 taskVersion、可公开影响、impactDigest、requiresExplicitCascade</td>
+</tr>
+<tr>
+<td><code>agentdoor_delete_task</code> · DELETE /tasks/{id}</td>
+<td><code>task_id:ID, V, impact_digest:string, cascade?:none或descendants, W</code> → 逻辑删除回执；默认 none，有后代必须明确确认</td>
+</tr>
+<tr>
+<td><code>agentdoor_change_task_status</code> · POST /tasks/{id}/status-transitions</td>
+<td><code>task_id:ID, V, to_status:TaskStatus, reason:string, evidence_refs:ID[], W</code> → 状态转换回执；证据必需性按转换规则校验</td>
+</tr>
+<tr>
+<td><code>agentdoor_list_subtasks</code> · GET /tasks/{id}/subtasks</td>
+<td><code>parent_task_id:ID, P</code> → 仅直属、可见子 Task；继续按子 ID 获取下一层</td>
+</tr>
+<tr>
+<td><code>agentdoor_create_subtask</code> · POST /tasks/{id}/subtasks</td>
+<td><code>parent_task_id:ID, TaskCreateFields, W</code> → 普通 Task，parentTaskId 由服务端绑定，不重复接收父级字段</td>
+</tr>
+</tbody></table></div>
+<p><code>TaskFilters</code>：<code>team_id?:ID, status?:TaskStatus, owner_id?:ID, parent_task_id?:ID或null, label?:string, query?:string, updated_after?:ISO时间</code>。建议 parent_task_id 省略=不限制，null=根任务，ID=直属子任务；前端标签或状态查询不等于完整查重。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>TaskCreateFields 字段</th>
+<th>类型与默认 / 规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>非空 string；正式接口统一用 name；planner 的 title 在适配层转换</td>
+</tr>
+<tr>
+<td><code>goal</code></td>
+<td>非空 string；子任务沿用已读取的主目标，不借子任务创建修改主目标</td>
+</tr>
+<tr>
+<td><code>completion_criteria</code></td>
+<td>string[]，至少一项非空完成标准；对应 REST completionCriteria</td>
+</tr>
+<tr>
+<td><code>owner_id?</code></td>
+<td>ID 或 null，默认 null；选他人时产生责任提议，不伪造其接受；已有 Owner 变更不走普通更新</td>
+</tr>
+<tr>
+<td><code>participant_ids?</code></td>
+<td>ID[]，默认 []；同团队有效成员、不重复 Owner；正式参与成立仍受现行接受规则控制</td>
+</tr>
+<tr>
+<td><code>planned_start_on? / planned_end_on?</code></td>
+<td>日期或 null，默认 null，不默认今天或 7 天后；校验前置和父级范围</td>
+</tr>
+<tr>
+<td><code>depends_on_task_ids?</code></td>
+<td>ID[]，默认 []；禁止自指、循环和无效引用，父子关系不自动生成依赖</td>
+</tr>
+<tr>
+<td><code>labels?</code></td>
+<td>string[]，默认 []；本 v0.1 原契约尚未确定标签字符串是稳定 ID 还是名称，接入标签模块前统一</td>
+</tr>
+</tbody></table></div>
+<p><code>TaskUpdate</code> 为 <code>{field,value}</code>，数组至少一项；白名单及 value 类型：<code>name:string</code>、<code>goal:string</code>、<code>completionCriteria:string[]</code>、<code>participantIds:ID[]</code>、<code>dependsOnTaskIds:ID[]</code>、<code>plannedStartOn:date|null</code>、<code>plannedEndOn:date|null</code>、<code>labels:string[]</code>。这里 field 枚举沿用原文 camelCase；MCP 外层仍为 snake_case。数组整体替换，靠版本防止覆盖他人修改。</p>
+<p><code>TaskStatus</code> 使用 <code>open / in_progress / blocked / completed / cancelled</code>，分别对应待开始、进行中、已阻塞、已完成、已取消。不新增审核状态；交付核对是处理事项，不替代任务状态。状态转换图、正式验收、Owner Transfer 均未在本次补成可用接口。</p>
+<p><strong>删除边界</strong>：影响包括可见后代、依赖方、文件引用及草稿；确认绑定 impactDigest。影响变化报 <code>DELETION_IMPACT_CHANGED</code> 并重做预览；不可见影响由服务端判定能否操作，不透露隐藏名称、ID 或数量。逻辑删 Task 不删共享 File、正式 Commit 或审计事实。</p>
+<h3>8.4 讨论：6 个工具</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>工具 / 操作</th>
+<th>参数与返回重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>agentdoor_list_task_discussions</code> · GET /tasks/{id}/discussion-messages</td>
+<td><code>task_id:ID, P</code> → 消息与回复、游标</td>
+</tr>
+<tr>
+<td><code>agentdoor_get_discussion</code> · GET /discussion-messages/{id}</td>
+<td><code>message_id:ID</code> → 单消息及 version</td>
+</tr>
+<tr>
+<td><code>agentdoor_create_discussion</code> · POST /tasks/{id}/discussion-messages</td>
+<td><code>task_id:ID, body:string, attachments?:Attachment[], mentions?:ID[], W</code> → 根消息，parentMessageId=null</td>
+</tr>
+<tr>
+<td><code>agentdoor_reply_discussion</code> · 同上</td>
+<td><code>task_id:ID, parent_message_id:ID, body:string, attachments?:Attachment[], mentions?:ID[], W</code> → 回复；父消息须属同 Task</td>
+</tr>
+<tr>
+<td><code>agentdoor_update_discussion</code> · PATCH /discussion-messages/{id}</td>
+<td><code>message_id:ID, V, updates:DiscussionUpdate[], W</code> → 修改后的消息；普通成员只可编辑自己的消息</td>
+</tr>
+<tr>
+<td><code>agentdoor_delete_discussion</code> · DELETE /discussion-messages/{id}</td>
+<td><code>message_id:ID, V, W</code> → tombstone；保留已有回复，不伪造整串消失</td>
+</tr>
+</tbody></table></div>
+<p><code>body</code> 非空；<code>attachments</code> 默认 []，每项 <code>{file_id:ID,file_version_id:ID}</code>，必须有权读取指定版本；<code>mentions</code> 默认 []，ID 指 Principal，对应 <code>mentionedPrincipalIds</code>，不能拿成员名称替代。</p>
+<p><code>DiscussionUpdate</code> 为 <code>{field,value}</code>；仅 <code>body:string</code>、<code>attachmentRefs:Array&lt;{fileId,fileVersionId}&gt;</code>、<code>mentionedPrincipalIds:ID[]</code>。这些 field / value 沿用正式字段结构，禁止修改作者、taskId、创建时间。通知失败不回滚已保存回复；发讨论不是写一条 Activity。</p>
+<h3>8.5 文件与引用：13 个工具</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>工具 / 操作</th>
+<th>参数与返回重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>agentdoor_list_task_files</code> · GET /tasks/{id}/file-placements</td>
+<td><code>task_id:ID, P</code> → TaskFilePlacement 与可读文件摘要</td>
+</tr>
+<tr>
+<td><code>agentdoor_get_file</code> · GET /files/{id}</td>
+<td><code>file_id:ID</code> → 文件身份、元数据、version，不自动读取正文</td>
+</tr>
+<tr>
+<td><code>agentdoor_get_file_version</code> · GET /file-versions/{id}</td>
+<td><code>file_version_id:ID</code> → 不可变版本元数据、扫描与可用状态</td>
+</tr>
+<tr>
+<td><code>agentdoor_read_file_version_content</code> · GET /file-versions/{id}/content</td>
+<td><code>file_version_id:ID, purpose:string, cursor?:string, limit?:integer</code> → 受控正文片段、版本与 nextCursor；limit 单位及上限由内容接口公布，不能误用列表条数</td>
+</tr>
+<tr>
+<td><code>agentdoor_prepare_file_upload</code> · POST /file-upload-sessions</td>
+<td><code>target:UploadTarget, file_name:string, mime_type:string, size_bytes:integer&gt;=0, content_digest:string, W</code> → uploadId、expiresAt、maxBytes、allowedMimeTypes</td>
+</tr>
+<tr>
+<td><code>agentdoor_get_file_upload_status</code> · GET /file-upload-sessions/{id}</td>
+<td><code>upload_id:ID</code> → 当前会话和处理状态，不能把已传输字节当作文件可用</td>
+</tr>
+<tr>
+<td><code>agentdoor_complete_file_upload</code> · POST /file-upload-sessions/{id}/completions</td>
+<td><code>upload_id:ID, W</code> → File、FileVersion、Placement 或异步回执；已有文件的基准版本在会话中绑定</td>
+</tr>
+<tr>
+<td><code>agentdoor_attach_file_to_task</code> · POST /tasks/{id}/file-placements</td>
+<td><code>task_id:ID, file_id:ID, folder_id?:ID或null, version_mode:pin_version或follow_latest, version_id?:ID或null, W</code> → 同一个 File 的新引用，不复制内容</td>
+</tr>
+<tr>
+<td><code>agentdoor_update_task_file_placement</code> · PATCH /task-file-placements/{id}</td>
+<td><code>placement_id:ID, V, updates:PlacementUpdate[], W</code> → 位置 / 版本策略变化，不改文件内容</td>
+</tr>
+<tr>
+<td><code>agentdoor_remove_file_from_task</code> · DELETE /task-file-placements/{id}</td>
+<td><code>placement_id:ID, V, W</code> → 仅移除本任务引用，其他任务仍可用</td>
+</tr>
+<tr>
+<td><code>agentdoor_update_file_metadata</code> · PATCH /files/{id}</td>
+<td><code>file_id:ID, V, updates:FileMetadataUpdate[], W</code> → 受限元数据变化，不覆盖 FileVersion</td>
+</tr>
+<tr>
+<td><code>agentdoor_get_file_deletion_impact</code> · GET /files/{id}/deletion-impact</td>
+<td><code>file_id:ID</code> → 可公开引用影响、文件版本、impactDigest</td>
+</tr>
+<tr>
+<td><code>agentdoor_delete_file</code> · DELETE /files/{id}</td>
+<td><code>file_id:ID, V, impact_digest:string, W</code> → 受控逻辑删除；不能绕过所有引用方影响检查</td>
+</tr>
+</tbody></table></div>
+<h4>文件参数展开</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>结构</th>
+<th>具体字段与条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>UploadTarget</code> 新文件</td>
+<td>`{kind:new_file,task_id:ID,folder_id?:ID</td>
+</tr>
+<tr>
+<td><code>UploadTarget</code> 新版本</td>
+<td><code>{kind:new_file_version,file_id:ID,expected_file_version_ordinal:integer&gt;=1}</code>；准备和完成阶段都校验当前基准，避免覆盖新版本</td>
+</tr>
+<tr>
+<td><code>content_digest</code></td>
+<td><code>sha256:&lt;内容摘要&gt;</code>；服务端对实际上传字节再算，不能信客户端声明；本页示例不是真实摘要</td>
+</tr>
+<tr>
+<td><code>version_mode / version_id</code></td>
+<td>pin_version 必须有 version_id 且版本属于该 File；follow_latest 时 version_id 省略或 null，不携带过期固定版本</td>
+</tr>
+<tr>
+<td><code>PlacementUpdate</code></td>
+<td><code>{field,value}</code>；仅 `folderId:ID</td>
+</tr>
+<tr>
+<td><code>FileMetadataUpdate</code></td>
+<td>本次建议先仅开放 <code>{field:name,value:string}</code>；原契约未列具体白名单，maintainer / visibility 等先不开放，不能借元数据更新改权限</td>
+</tr>
+</tbody></table></div>
+<p>读取 File 正文必须再次校验 Agent 委托、用途和内容权限；Task 可见不代表 File 可读。上传令牌与地址只给受信 App，不放模型可见的 content / structuredContent；模型不能指定本地绝对路径让服务读取。文件版本 availability 为 <code>processing / available / quarantined / failed</code>，只有 available 可显示可用；内容更新必须新建 FileVersion。</p>
+<h3>8.6 交付提交：8 个工具</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>工具 / 操作</th>
+<th>参数与返回重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>agentdoor_list_task_commit_drafts</code> · GET /tasks/{id}/commit-drafts</td>
+<td><code>task_id:ID, P</code> → 有权可见的提交草稿</td>
+</tr>
+<tr>
+<td><code>agentdoor_get_task_commit_draft</code> · GET /task-commit-drafts/{id}</td>
+<td><code>draft_id:ID</code> → 草稿、version、basedOnTaskVersion</td>
+</tr>
+<tr>
+<td><code>agentdoor_create_task_commit_draft</code> · POST /tasks/{id}/commit-drafts</td>
+<td><code>task_id:ID, message:string, result_summary:string, file_version_refs:ID[], evidence_refs:ID[], W</code> → 草稿；服务端记录读取的 Task 基准版本</td>
+</tr>
+<tr>
+<td><code>agentdoor_update_task_commit_draft</code> · PATCH /task-commit-drafts/{id}</td>
+<td><code>draft_id:ID, V, updates:CommitDraftUpdate[], W</code> → 仅 status=draft 可改</td>
+</tr>
+<tr>
+<td><code>agentdoor_delete_task_commit_draft</code> · DELETE /task-commit-drafts/{id}</td>
+<td><code>draft_id:ID, V, W</code> → 仅未正式提交的草稿可删</td>
+</tr>
+<tr>
+<td><code>agentdoor_submit_task_commit</code> · POST /tasks/{id}/commits</td>
+<td><code>task_id:ID, expected_task_version:integer, draft_id:ID, expected_draft_version:integer, supersedes_commit_id?:ID或null, W</code> → 正式不可变 Commit、写回执</td>
+</tr>
+<tr>
+<td><code>agentdoor_list_task_commits</code> · GET /tasks/{id}/commits</td>
+<td><code>task_id:ID, P</code> → 正式提交历史</td>
+</tr>
+<tr>
+<td><code>agentdoor_get_task_commit</code> · GET /task-commits/{id}</td>
+<td><code>commit_id:ID</code> → 指定正式提交及固定证据版本</td>
+</tr>
+</tbody></table></div>
+<p><code>message / result_summary</code> 为非空 string；两个 refs 数组显式传入，可为空但不能伪造引用。<code>CommitDraftUpdate</code> 建议白名单为 <code>message:string</code>、<code>resultSummary:string</code>、<code>fileVersionRefs:ID[]</code>、<code>evidenceRefs:ID[]</code>；禁止修改 taskId、作者、基准版本和 consumed 状态。</p>
+<p>正式提交同时校验 Task、草稿、文件版本与证据权限，版本一致后在同一事务创建 Commit、消费草稿并记录事件。<code>supersedes_commit_id</code> 仅指同任务需要更正的旧 Commit；更正产生新的 Commit，不覆盖旧记录。<strong>提交成功不等于完成或验收</strong>，不自动调用状态转换。</p>
+<h3>8.7 活动：2 个工具</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>工具 / 操作</th>
+<th>参数与返回重点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>agentdoor_list_task_activities</code> · GET /tasks/{id}/activities</td>
+<td><code>task_id:ID, P</code> → 按服务端 sequence / 时间读取已发生变化</td>
+</tr>
+<tr>
+<td><code>agentdoor_get_activity</code> · GET /activities/{id}</td>
+<td><code>activity_id:ID</code> → actor、representedMemberId、changeSetId、对象引用与 committedAt</td>
+</tr>
+</tbody></table></div>
+<p>Activity 没有 create / update / delete 工具；由正式变更事件生成。投影延迟不表示业务没成功，回包需标记投影更新中；无变化返回 no_change，不造活动记录。</p>
+<h3>8.8 安全、失败与重试</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>服务端结果 / 客户端动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>超时或重复点击</td>
+<td>用原幂等键和原载荷重试，返回同一 ID 和 replayed=true；不同载荷复用键返回 409</td>
+</tr>
+<tr>
+<td>并发更新</td>
+<td>版本不一致返回 412 VERSION_MISMATCH，保留用户草稿、读取新版本、重新确认；不自动覆盖</td>
+</tr>
+<tr>
+<td>删除影响变化</td>
+<td>409 DELETION_IMPACT_CHANGED；重新预览和确认，旧摘要失效</td>
+</tr>
+<tr>
+<td>无权限</td>
+<td>已知且可暴露存在的对象可报 403；不可发现对象统一 404；重放旧回执也要重新鉴权</td>
+</tr>
+<tr>
+<td>验证不通过</td>
+<td>400 结构错误，422 领域约束错误，428 缺版本前置条件；指出允许公开的字段问题，不写半份数据</td>
+</tr>
+<tr>
+<td>文件仍扫描</td>
+<td>accepted_async，不当错误也不当可用；通过 upload status 查询后续状态</td>
+</tr>
+<tr>
+<td>多任务计划</td>
+<td>主任务与子任务创建需受控原子命令；当前 38 个工具没有整棵计划提交工具，不能逐项调用后宣称原子成功</td>
+</tr>
+</tbody></table></div>
+<p>annotations 只帮助调用方识别 readOnly / destructive / idempotent，不提供权限。删除、正式提交、状态变化的授权必须绑定实际对象和影响；不得把模型“用户已同意”的文字当作确认凭证。</p>
+<h3>8.9 Skill 与 MCP 如何对接</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>能力</th>
+<th>可复用工具</th>
+<th>尚缺的数据能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>人员责任分析</td>
+<td>list_tasks、get_task、讨论／文件／Commit／Activity 查询</td>
+<td>本人负责或参与的任务范围、责任文本与版本、贡献归属、用户确认与纠正记录、增量触发、建议生成、确认绑定与受控责任写回；不增加隐性能力／效率评分</td>
+</tr>
+<tr>
+<td>创建与人员匹配</td>
+<td>list_tasks、get_task、list_subtasks、list_task_discussions、read_file_version_content</td>
+<td>授权成员与正式责任读取、语义查重服务、计划确认绑定和原子提交；现有工具不能仅靠名字搜索完成全部判断</td>
+</tr>
+<tr>
+<td>状态分析</td>
+<td>get_task、list_subtasks、讨论 / 文件 / Commit / Activity 查询</td>
+<td>引用工时评估与进度模块的结果；当前情况与建议需绑定同一范围和版本</td>
+</tr>
+<tr>
+<td>EWD 工时评估＋进度</td>
+<td>get_task、list_subtasks、文件版本与内容读取；历史任务可选</td>
+<td>EWD 拆分明细生成与估算、文件内容核对、单项进度及快照服务；上传或 Commit 本身不计完成</td>
+</tr>
+<tr>
+<td>任务诊断</td>
+<td>Task 与后代 / 前置查询、讨论 / 文件版本</td>
+<td>任务信息与文件的当前内容、来源版本、可见范围完整性声明；须递归读取可见后代而非只查一层</td>
+</tr>
+<tr>
+<td>个人优先级</td>
+<td>list_tasks／Task 读取、上述状态与诊断结果</td>
+<td>本人负责或参与的任务范围筛选、当前用户身份注入、同快照聚合与过期策略；左侧筛选结果不能当作个人全集</td>
+</tr>
+</tbody></table></div>
+<p>表中工具名为去掉 <code>agentdoor_</code> 前缀的简称。缺项属于后续接口设计，不伪装为已有 MCP。最先对接的是受控读取与统一回执，再接单任务写入、文件和正式提交；验收与责任转移规则确认后再增加相应命令。</p>
+<h3>8.10 当前仅有的两个演示工具</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>工具</th>
+<th>代码中的实际参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>agentdoor_prepare_task</code></td>
+<td>必填 <code>request:string(3..4000)</code>、<code>title:string(2..120)</code>、<code>goal:string(3..600)</code>、<code>owner:string(1..80)</code>；可选 <code>participants:string[](最多20，默认[])</code>、<code>start_date:YYYY-MM-DD</code>、<code>due_date:YYYY-MM-DD</code>、<code>sources:Array&lt;{id,title,summary?}&gt;(最多12，默认[])</code></td>
+</tr>
+<tr>
+<td><code>agentdoor_create_task</code></td>
+<td>必填 <code>draft_id:UUID</code>；可选 <code>title:string(2..120)</code>、<code>goal:string(3..600)</code>；仅对 App 暴露，供用户点击确认调用</td>
+</tr>
+</tbody></table></div>
+<p>演示草稿放进程内 Map，确认结果写本地 <code>data/mcp-tasks.json</code>；没有生产 ACL、统一回执或跨重启草稿保证。prepare 默认今天开始、7 天后截止，owner 是名字字符串，这些旧行为<strong>不沿用为正式产品规则</strong>。</p>
+<p>尤其注意：候选生产契约与演示代码都叫 <code>agentdoor_create_task</code>，输入却不同。切换时须按服务端版本隔离或发布新版本并迁移客户端，不能把生产 Task 字段直接传给现有 draft_id 接口。现有 prepare 不是完整 planner Skill 服务。</p>
+<h3>8.11 调用示例：预览后更新任务</h3>
+<p>以下为候选协议示例，不是本次真实调用；身份、权限和确认由受信协调层完成。</p>
+<pre><code class="language-json">{
+  &quot;tool&quot;: &quot;agentdoor_update_task&quot;,
+  &quot;arguments&quot;: {
+    &quot;task_id&quot;: &quot;task-example&quot;,
+    &quot;expected_version&quot;: 7,
+    &quot;updates&quot;: [
+      { &quot;field&quot;: &quot;goal&quot;, &quot;value&quot;: &quot;完成已评审的发布会媒体邀请名单&quot; }
+    ],
+    &quot;idempotency_key&quot;: &quot;goal-change-example-001&quot;
+  }
+}
+</code></pre>
+<p>成功应返回 applied、该 Task 的 7→8 版本变化及 operationId；同键同载荷重试返回同一业务结果。若期间他人已更新至 v8，则报版本冲突，不自行将 expected_version 改为 8 后强行重放。</p>
+<h3>8.12 本节依据与待对齐项</h3>
+<p>依据：任务规划 Skill v0.2 及输入输出契约；任务诊断页设计；<code>taskSituation / taskProgressAssessment / taskBurnUp / taskMemberRecommendations / personalWorkbench</code> 当前代码；原 MCP v0.1 文档及 <code>mcp/server.ts</code>。原始资料路径保留在仓库，本 PDF 已包含阅读所需的规则与参数，不要求读者另开原文。</p>
+<p>接入前集中对齐：上述五种正式状态的转换规则；验收权限与 EWD 版本；成员与责任查询；标签 ID；多任务确认提交命令；文件删除恢复策略；字段长度 / 分页上限；MCP 契约版本切换。本次不实现这些后端能力，也不改动 Mock 任务数据。</p>
+
+</section>
+<!-- PRD-TECHNICAL:END -->
+      </div>
+    </main>
+  </div>
+
+  <div class="copy-toast" id="copy-toast" role="status" hidden>链接已复制</div>
+
+  <script>
+    (() => {
+      const body = document.body;
+      const search = document.getElementById("prd-search");
+      const searchStatus = document.getElementById("search-status");
+      const noResults = document.getElementById("no-results");
+      const sections = [...document.querySelectorAll(".prd-section")];
+      const navLinks = [...document.querySelectorAll(".toc a")];
+      const menuToggle = document.getElementById("menu-toggle");
+      const expandAll = document.getElementById("expand-all");
+      const details = [...document.querySelectorAll("details.rule-group")];
+      const copyToast = document.getElementById("copy-toast");
+      const taskTabs = [...document.querySelectorAll('.tab-strip [role="tab"]')];
+      const taskPanels = [...document.querySelectorAll(".task-tab-panel")];
+      let activeTaskTab = taskTabs[0];
+      let allExpanded = false;
+      let toastTimer;
+
+      const normalize = (value) => value.toLocaleLowerCase("zh-CN").trim();
+      const closeMenu = () => {
+        body.classList.remove("menu-open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "打开目录");
+      };
+
+      const syncTaskTabs = () => {
+        const searching = Boolean(normalize(search.value));
+        taskTabs.forEach((tab) => {
+          const selected = tab === activeTaskTab;
+          tab.setAttribute("aria-selected", String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+        });
+        taskPanels.forEach((panel) => {
+          panel.hidden = !searching && panel.id !== activeTaskTab.getAttribute("aria-controls");
+        });
+      };
+
+      const runSearch = () => {
+        const query = normalize(search.value);
+        syncTaskTabs();
+        let matches = 0;
+        sections.forEach((section) => {
+          const matched = !query || normalize(section.textContent).includes(query);
+          section.hidden = !matched;
+          if (matched) matches += 1;
+        });
+        noResults.hidden = matches > 0;
+        searchStatus.textContent = query ? `找到 ${matches} 个匹配模块` : "已显示全部模块";
+        navLinks.forEach((link) => {
+          const target = document.querySelector(link.getAttribute("href"));
+          link.hidden = Boolean(target && (target.hidden || target.closest(".prd-section")?.hidden));
+        });
+      };
+
+      const selectTaskTab = (tab) => {
+        activeTaskTab = tab;
+        // Returning to a specific tab leaves the all-content search view.
+        if (search.value) {
+          search.value = "";
+          runSearch();
+        } else syncTaskTabs();
+      };
+      taskTabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => selectTaskTab(tab));
+        tab.addEventListener("keydown", (event) => {
+          let nextIndex;
+          if (event.key === "ArrowRight") nextIndex = (index + 1) % taskTabs.length;
+          else if (event.key === "ArrowLeft") nextIndex = (index + taskTabs.length - 1) % taskTabs.length;
+          else if (event.key === "Home") nextIndex = 0;
+          else if (event.key === "End") nextIndex = taskTabs.length - 1;
+          else return;
+          event.preventDefault();
+          selectTaskTab(taskTabs[nextIndex]);
+          taskTabs[nextIndex].focus();
+        });
+      });
+
+      search.addEventListener("input", runSearch);
+      document.addEventListener("keydown", (event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+          event.preventDefault();
+          search.focus();
+        }
+        if (event.key === "Escape") {
+          if (search.value) {
+            search.value = "";
+            runSearch();
+            search.focus();
+          }
+          closeMenu();
+        }
+      });
+
+      menuToggle.addEventListener("click", () => {
+        const open = !body.classList.contains("menu-open");
+        body.classList.toggle("menu-open", open);
+        menuToggle.setAttribute("aria-expanded", String(open));
+        menuToggle.setAttribute("aria-label", open ? "关闭目录" : "打开目录");
+      });
+      navLinks.forEach((link) => link.addEventListener("click", closeMenu));
+
+      expandAll.addEventListener("click", () => {
+        allExpanded = !allExpanded;
+        details.forEach((detail) => { detail.open = allExpanded; });
+        expandAll.querySelector("span").textContent = allExpanded ? "收起全部规则" : "展开全部规则";
+        expandAll.setAttribute("aria-pressed", String(allExpanded));
+      });
+
+      document.getElementById("print-prd").addEventListener("click", () => window.print());
+
+      let printState;
+      window.addEventListener("beforeprint", () => {
+        printState = { hidden: sections.map(section => section.hidden), open: details.map(detail => detail.open) };
+        sections.forEach(section => { section.hidden = false; });
+        details.forEach(detail => { detail.open = true; });
+      });
+      window.addEventListener("afterprint", () => {
+        if (!printState) return;
+        sections.forEach((section, index) => { section.hidden = printState.hidden[index]; });
+        details.forEach((detail, index) => { detail.open = printState.open[index]; });
+        printState = undefined;
+      });
+
+      document.querySelectorAll("[data-copy-section]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const id = button.getAttribute("data-copy-section");
+          const url = `${location.href.split("#")[0]}#${id}`;
+          try {
+            await navigator.clipboard.writeText(url);
+            copyToast.textContent = "本节链接已复制";
+          } catch {
+            location.hash = id;
+            copyToast.textContent = "已定位本节，可复制地址栏链接";
+          }
+          copyToast.hidden = false;
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => { copyToast.hidden = true; }, 1800);
+        });
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        navLinks.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === `#${visible.target.id}`));
+      }, { rootMargin: "-18% 0px -68% 0px", threshold: [0, .15, .4] });
+      sections.forEach((section) => observer.observe(section));
+
+      window.addEventListener("click", (event) => {
+        if (body.classList.contains("menu-open") && event.target === body) closeMenu();
+      });
+    })();
+  </script>
+</body>
+</html>

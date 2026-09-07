@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-09-01T02:38:39.132426+00:00",
+  "total": 1,
+  "structurallyValid": 1,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "6b716d5b335734a19ff50573ea7487efc8f6a103821432c8a3633a8a4a454f58",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-D1",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议只调整现有文案和公众号适配的完成标准：文案改为面向首次使用者，公众号组合版使用更新后的文字稿和已确认的五张功能图v2；五项功能、品牌口径、视觉完成记录、负责人和现有依赖均保持不变。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 2,
+      "outputSha256": "4a5178517d7dc111390a7c2926c0932a23acba6953bda14580630f4d47343649",
+      "manualChecks": [
+        "受众改动只影响必要标准，保留已完成范围与图片。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

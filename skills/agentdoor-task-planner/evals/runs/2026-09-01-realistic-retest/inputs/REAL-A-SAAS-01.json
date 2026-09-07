@@ -1,0 +1,926 @@
+{
+  "requestId": "syn-req-saas-a-01",
+  "message": "再给合成·森屿实验室二期建一个“15名管理员培训验收”，仍是tenant-senyv2，9月10日前，两批一起算。第一批今天结束了，麻烦直接创建。",
+  "currentDate": "2026-09-05",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "syn-saas-m7",
+  "teamId": "syn-team-saas-a",
+  "authorizedTeamIds": [
+    "syn-team-saas-a"
+  ],
+  "revision": 13,
+  "currentTaskId": null,
+  "synthetic": true,
+  "context": {
+    "snapshotId": "syn-snapshot-saas-a-13",
+    "asOf": "2026-09-05T12:20:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "syn-team-saas-a"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete",
+      "files": "complete"
+    },
+    "tasks": [
+      {
+        "id": "syn-saas-root",
+        "title": "交付森屿实验室二期沙箱试点",
+        "status": "in_progress",
+        "version": 12,
+        "updatedAt": "2026-09-05T12:00:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "租户配置、迁移演练、UAT与培训交接证据齐备"
+        ],
+        "ownerId": "syn-saas-m1",
+        "sourceRefs": [
+          "syn-saas-file-01",
+          "syn-saas-file-06"
+        ],
+        "dueOn": "2026-09-12",
+        "dependsOnTaskIds": [],
+        "goal": "让15名管理员在二期沙箱中完成审批与审计导出试点",
+        "identity": {
+          "customer": "合成·森屿实验室",
+          "tenant": "tenant-senyv2",
+          "phase": "2026-Q3-phase2"
+        }
+      },
+      {
+        "id": "syn-saas-config",
+        "title": "完成二期租户配置",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-05T10:00:00+08:00",
+        "parentId": "syn-saas-root",
+        "acceptanceCriteria": [
+          "SSO、证书和角色模型按批准范围配置"
+        ],
+        "ownerId": "syn-saas-m2",
+        "sourceRefs": [
+          "syn-saas-file-01",
+          "syn-saas-file-05"
+        ],
+        "dueOn": "2026-09-07",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-saas-data",
+        "title": "完成二期迁移演练",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-05T09:00:00+08:00",
+        "parentId": "syn-saas-root",
+        "acceptanceCriteria": [
+          "100条样本按映射表完成演练和核对"
+        ],
+        "ownerId": "syn-saas-m3",
+        "sourceRefs": [
+          "syn-saas-file-05"
+        ],
+        "dueOn": "2026-09-08",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-saas-adoption",
+        "title": "形成二期使用与交接记录",
+        "status": "in_progress",
+        "version": 7,
+        "updatedAt": "2026-09-05T12:00:00+08:00",
+        "parentId": "syn-saas-root",
+        "acceptanceCriteria": [
+          "UAT和管理员培训分别留证后完成交接"
+        ],
+        "ownerId": "syn-saas-m1",
+        "sourceRefs": [
+          "syn-saas-file-01",
+          "syn-saas-file-06"
+        ],
+        "dueOn": "2026-09-12",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-saas-sso",
+        "title": "配置二期沙箱SSO",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-05T10:00:00+08:00",
+        "parentId": "syn-saas-config",
+        "acceptanceCriteria": [
+          "沙箱登录和回退记录可复核"
+        ],
+        "ownerId": "syn-saas-m4",
+        "sourceRefs": [
+          "syn-saas-file-05"
+        ],
+        "dueOn": "2026-09-06",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-saas-cert",
+        "title": "换发沙箱SSO证书",
+        "status": "completed",
+        "version": 3,
+        "updatedAt": "2026-09-04T17:30:00+08:00",
+        "parentId": "syn-saas-sso",
+        "acceptanceCriteria": [
+          "证书指纹与tenant-senyv2配置一致"
+        ],
+        "ownerId": "syn-saas-m4",
+        "sourceRefs": [
+          "syn-saas-file-05"
+        ],
+        "dueOn": "2026-09-04",
+        "dependsOnTaskIds": [],
+        "deliveryEvidence": [
+          {
+            "sourceRef": "syn-saas-file-05",
+            "summary": "证书指纹已纳入UAT计划。"
+          }
+        ]
+      },
+      {
+        "id": "syn-saas-role-model",
+        "title": "确认二期管理员角色模型",
+        "status": "completed",
+        "version": 4,
+        "updatedAt": "2026-09-04T16:30:00+08:00",
+        "parentId": "syn-saas-config",
+        "acceptanceCriteria": [
+          "15名管理员角色权限与范围说明一致"
+        ],
+        "ownerId": "syn-saas-m2",
+        "sourceRefs": [
+          "syn-saas-file-01",
+          "syn-saas-file-02"
+        ],
+        "dueOn": "2026-09-04",
+        "dependsOnTaskIds": [],
+        "deliveryEvidence": [
+          {
+            "sourceRef": "syn-saas-file-01",
+            "summary": "角色边界已批准。"
+          }
+        ]
+      },
+      {
+        "id": "syn-saas-mapping",
+        "title": "确认100条迁移映射",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2026-09-04T13:00:00+08:00",
+        "parentId": "syn-saas-data",
+        "acceptanceCriteria": [
+          "源字段与沙箱字段一一对应并标注舍弃项"
+        ],
+        "ownerId": "syn-saas-m3",
+        "sourceRefs": [
+          "syn-saas-file-05"
+        ],
+        "dueOn": "2026-09-04",
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-saas-rehearsal",
+        "title": "执行100条迁移演练",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-05T09:00:00+08:00",
+        "parentId": "syn-saas-data",
+        "acceptanceCriteria": [
+          "导入、核对和回滚记录齐备"
+        ],
+        "ownerId": "syn-saas-m3",
+        "sourceRefs": [
+          "syn-saas-file-05"
+        ],
+        "dueOn": "2026-09-07",
+        "dependsOnTaskIds": [
+          "syn-saas-mapping",
+          "syn-saas-cert"
+        ]
+      },
+      {
+        "id": "syn-saas-handbook",
+        "title": "定稿管理员操作讲义",
+        "status": "completed",
+        "version": 6,
+        "updatedAt": "2026-09-05T09:30:00+08:00",
+        "parentId": "syn-saas-adoption",
+        "acceptanceCriteria": [
+          "讲义覆盖登录、审批和审计导出"
+        ],
+        "ownerId": "syn-saas-m6",
+        "sourceRefs": [
+          "syn-saas-file-03"
+        ],
+        "dueOn": "2026-09-05",
+        "dependsOnTaskIds": [],
+        "deliveryEvidence": [
+          {
+            "sourceRef": "syn-saas-file-03",
+            "summary": "讲义v5已定稿。"
+          }
+        ]
+      },
+      {
+        "id": "syn-saas-admin-training",
+        "title": "完成15名管理员两批培训记录",
+        "status": "in_progress",
+        "version": 8,
+        "updatedAt": "2026-09-05T11:45:00+08:00",
+        "parentId": "syn-saas-adoption",
+        "acceptanceCriteria": [
+          "A批8人和B批7人均有签到与测验",
+          "未解问题进入交接清单"
+        ],
+        "ownerId": "syn-saas-m6",
+        "sourceRefs": [
+          "syn-saas-file-01",
+          "syn-saas-file-02",
+          "syn-saas-file-03",
+          "syn-saas-file-04",
+          "syn-saas-file-06"
+        ],
+        "dueOn": "2026-09-10",
+        "dependsOnTaskIds": [
+          "syn-saas-handbook",
+          "syn-saas-role-model"
+        ]
+      },
+      {
+        "id": "syn-saas-uat",
+        "title": "形成二期沙箱UAT记录",
+        "status": "open",
+        "version": 5,
+        "updatedAt": "2026-09-04T14:30:00+08:00",
+        "parentId": "syn-saas-adoption",
+        "acceptanceCriteria": [
+          "SSO、权限与迁移样本均有验证结论"
+        ],
+        "ownerId": "syn-saas-m5",
+        "sourceRefs": [
+          "syn-saas-file-05"
+        ],
+        "dueOn": "2026-09-10",
+        "dependsOnTaskIds": [
+          "syn-saas-cert",
+          "syn-saas-rehearsal"
+        ]
+      },
+      {
+        "id": "syn-saas-handover",
+        "title": "完成二期客户交接",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-04T15:20:00+08:00",
+        "parentId": "syn-saas-adoption",
+        "acceptanceCriteria": [
+          "UAT和完整培训记录齐备后形成交接结果"
+        ],
+        "ownerId": "syn-saas-m1",
+        "sourceRefs": [
+          "syn-saas-file-06"
+        ],
+        "dueOn": "2026-09-12",
+        "dependsOnTaskIds": [
+          "syn-saas-uat",
+          "syn-saas-admin-training"
+        ]
+      }
+    ],
+    "discussions": [
+      {
+        "id": "syn-saas-d01",
+        "taskId": "syn-saas-admin-training",
+        "authorId": "syn-saas-m7",
+        "createdAt": "2026-09-05T08:40:00+08:00",
+        "threadId": "syn-saas-thread-training",
+        "replyToId": null,
+        "kind": "proposal",
+        "state": "active",
+        "text": "客户把15人拆成A、B两批，建议每批建一个培训验收任务。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-saas-d02",
+        "taskId": "syn-saas-admin-training",
+        "authorId": "syn-saas-m6",
+        "createdAt": "2026-09-05T08:55:00+08:00",
+        "threadId": "syn-saas-thread-training",
+        "replyToId": "syn-saas-d01",
+        "kind": "report",
+        "state": "active",
+        "text": "现有培训任务的完成标准已明确覆盖A批8人和B批7人，讲义也共用。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-saas-d03",
+        "taskId": "syn-saas-admin-training",
+        "authorId": "syn-saas-m1",
+        "createdAt": "2026-09-05T09:05:00+08:00",
+        "threadId": "syn-saas-thread-training",
+        "replyToId": "syn-saas-d02",
+        "kind": "decision",
+        "state": "confirmed",
+        "text": "确认按一个交付任务覆盖两批，不按日程拆成两个同结果任务。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-saas-d04",
+        "taskId": "syn-saas-admin-training",
+        "authorId": "syn-saas-m7",
+        "createdAt": "2026-09-05T09:12:00+08:00",
+        "threadId": "syn-saas-thread-training",
+        "replyToId": "syn-saas-d03",
+        "kind": "proposal",
+        "state": "withdrawn",
+        "text": "撤回按批建任务的提议，继续更新现有任务。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-saas-d05",
+        "taskId": "syn-saas-admin-training",
+        "authorId": "syn-saas-m6",
+        "createdAt": "2026-09-05T11:50:00+08:00",
+        "threadId": "syn-saas-thread-training",
+        "replyToId": "syn-saas-d03",
+        "kind": "report",
+        "state": "active",
+        "text": "A批8人已完成签到和测验；B批尚未开始，所以没有报告整项完成。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-saas-d06",
+        "taskId": "syn-saas-root",
+        "authorId": "syn-saas-m7",
+        "createdAt": "2026-09-05T11:55:00+08:00",
+        "threadId": "syn-saas-thread-status",
+        "replyToId": null,
+        "kind": "report",
+        "state": "contextual_report",
+        "text": "客户口头说“第一场很顺”，这与正式任务仍in_progress并不冲突，也不是完整验收。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-saas-d07",
+        "taskId": "syn-saas-handover",
+        "authorId": "syn-saas-m5",
+        "createdAt": "2026-09-05T12:05:00+08:00",
+        "threadId": "syn-saas-thread-handover",
+        "replyToId": null,
+        "kind": "question",
+        "state": "active",
+        "text": "交接仍要求UAT和两批培训记录，是否有人要改已确认范围？",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-saas-d08",
+        "taskId": "syn-saas-handover",
+        "authorId": "syn-saas-m1",
+        "createdAt": "2026-09-05T12:12:00+08:00",
+        "threadId": "syn-saas-thread-handover",
+        "replyToId": "syn-saas-d07",
+        "kind": "decision",
+        "state": "confirmed",
+        "text": "没有范围变更；若再次收到创建请求，定位到现有培训任务即可。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [],
+    "files": [
+      {
+        "id": "syn-saas-file-01",
+        "fileName": "cloudstack-phase2-sow.pdf",
+        "mimeType": "application/pdf",
+        "version": 4,
+        "checksum": "ca21b5daf31e8b8b94b727d972d9d90fbcaa96f3a00dbf3ddbdf0ffa5a782161",
+        "status": "approved",
+        "updatedAt": "2026-09-04T16:00:00+08:00",
+        "linkedTaskIds": [
+          "syn-saas-root",
+          "syn-saas-admin-training",
+          "syn-saas-handover"
+        ],
+        "summary": "二期对象为合成·森屿实验室tenant-senyv2；管理员共15人，分两批培训，单一培训任务需覆盖签到、测验与问题清单。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-saas-file-02",
+        "fileName": "tenant-senyv2-admin-roster-v3.csv",
+        "mimeType": "text/csv",
+        "version": 3,
+        "checksum": "6bcb4beaf6b2ffb53d44f0135c045d13d9c096657561c4cfc1d631cd74a70948",
+        "status": "approved",
+        "updatedAt": "2026-09-05T09:10:00+08:00",
+        "linkedTaskIds": [
+          "syn-saas-admin-training"
+        ],
+        "summary": "名单含15个纯合成席位，A批8人、B批7人；没有第三批，也不授权按批次重复创建交付任务。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-saas-file-03",
+        "fileName": "admin-training-deck-v5.pptx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "version": 5,
+        "checksum": "bf614a50db187e2bcea83094fad3d661671f01b7aa124aedcf002ee6939f7a88",
+        "status": "current",
+        "updatedAt": "2026-09-05T09:30:00+08:00",
+        "linkedTaskIds": [
+          "syn-saas-handbook",
+          "syn-saas-admin-training"
+        ],
+        "summary": "讲义覆盖登录、审批和审计导出；是培训输入，不能单独证明参训或验收完成。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-saas-file-04",
+        "fileName": "admin-cohort-a-attendance.csv",
+        "mimeType": "text/csv",
+        "version": 1,
+        "checksum": "11bc7aae0a8afbd9352cd76a08ccdd618c067cb0c59cff92cb4879a3cb54a268",
+        "status": "partial",
+        "updatedAt": "2026-09-05T11:45:00+08:00",
+        "linkedTaskIds": [
+          "syn-saas-admin-training"
+        ],
+        "summary": "A批8人已签到并完成测验；B批7人尚未开展，因此正式任务仍为in_progress。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-saas-file-05",
+        "fileName": "tenant-senyv2-uat-plan.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 3,
+        "checksum": "c77bc50f38f45f703fc571a2eb3b2e295da26d1462361409a4c9de531ec99c43",
+        "status": "current",
+        "updatedAt": "2026-09-04T14:30:00+08:00",
+        "linkedTaskIds": [
+          "syn-saas-uat",
+          "syn-saas-handover"
+        ],
+        "summary": "UAT验证SSO、角色权限和100条迁移样本；培训完成不是UAT完成，二者均为交接前置。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-saas-file-06",
+        "fileName": "phase2-handover-checklist.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": 2,
+        "checksum": "9a38ec2c472e6df627033fcd55f4180d0c24a82129755113adb51268aa9be962",
+        "status": "current",
+        "updatedAt": "2026-09-04T15:20:00+08:00",
+        "linkedTaskIds": [
+          "syn-saas-admin-training",
+          "syn-saas-uat",
+          "syn-saas-handover"
+        ],
+        "summary": "交接要求UAT记录和15人培训记录齐备；第一批签到不能替代完整培训交付。",
+        "source": "synthetic_file_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "syn-saas-file-01",
+        "title": "二期交付范围说明（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。二期对象为合成·森屿实验室tenant-senyv2；管理员共15人，分两批培训，单一培训任务需覆盖签到、测验与问题清单。",
+        "updatedAt": "2026-09-04T16:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "cloudstack-phase2-sow.pdf",
+        "mimeType": "application/pdf",
+        "version": 4,
+        "checksum": "ca21b5daf31e8b8b94b727d972d9d90fbcaa96f3a00dbf3ddbdf0ffa5a782161",
+        "status": "approved",
+        "linkedTaskIds": [
+          "syn-saas-root",
+          "syn-saas-admin-training",
+          "syn-saas-handover"
+        ]
+      },
+      {
+        "id": "syn-saas-file-02",
+        "title": "管理员名单v3（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。名单含15个纯合成席位，A批8人、B批7人；没有第三批，也不授权按批次重复创建交付任务。",
+        "updatedAt": "2026-09-05T09:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "tenant-senyv2-admin-roster-v3.csv",
+        "mimeType": "text/csv",
+        "version": 3,
+        "checksum": "6bcb4beaf6b2ffb53d44f0135c045d13d9c096657561c4cfc1d631cd74a70948",
+        "status": "approved",
+        "linkedTaskIds": [
+          "syn-saas-admin-training"
+        ]
+      },
+      {
+        "id": "syn-saas-file-03",
+        "title": "管理员培训讲义（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。讲义覆盖登录、审批和审计导出；是培训输入，不能单独证明参训或验收完成。",
+        "updatedAt": "2026-09-05T09:30:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "admin-training-deck-v5.pptx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "version": 5,
+        "checksum": "bf614a50db187e2bcea83094fad3d661671f01b7aa124aedcf002ee6939f7a88",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-saas-handbook",
+          "syn-saas-admin-training"
+        ]
+      },
+      {
+        "id": "syn-saas-file-04",
+        "title": "A批签到记录（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。A批8人已签到并完成测验；B批7人尚未开展，因此正式任务仍为in_progress。",
+        "updatedAt": "2026-09-05T11:45:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "admin-cohort-a-attendance.csv",
+        "mimeType": "text/csv",
+        "version": 1,
+        "checksum": "11bc7aae0a8afbd9352cd76a08ccdd618c067cb0c59cff92cb4879a3cb54a268",
+        "status": "partial",
+        "linkedTaskIds": [
+          "syn-saas-admin-training"
+        ]
+      },
+      {
+        "id": "syn-saas-file-05",
+        "title": "UAT计划（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。UAT验证SSO、角色权限和100条迁移样本；培训完成不是UAT完成，二者均为交接前置。",
+        "updatedAt": "2026-09-04T14:30:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "tenant-senyv2-uat-plan.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": 3,
+        "checksum": "c77bc50f38f45f703fc571a2eb3b2e295da26d1462361409a4c9de531ec99c43",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-saas-uat",
+          "syn-saas-handover"
+        ]
+      },
+      {
+        "id": "syn-saas-file-06",
+        "title": "客户交接清单（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。交接要求UAT记录和15人培训记录齐备；第一批签到不能替代完整培训交付。",
+        "updatedAt": "2026-09-04T15:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "phase2-handover-checklist.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": 2,
+        "checksum": "9a38ec2c472e6df627033fcd55f4180d0c24a82129755113adb51268aa9be962",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-saas-admin-training",
+          "syn-saas-uat",
+          "syn-saas-handover"
+        ]
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-saas-a"
+    ],
+    "matches": [
+      {
+        "taskId": "syn-saas-admin-training",
+        "title": "完成15名管理员两批培训记录",
+        "reason": "同一客户、tenant、15人、两批范围、截止日和交付证据，完整覆盖请求。",
+        "coverage": "full"
+      },
+      {
+        "taskId": "syn-saas-handbook",
+        "title": "定稿管理员操作讲义",
+        "reason": "讲义是培训输入，只覆盖内容材料，不覆盖签到、测验和问题清单。",
+        "coverage": "partial"
+      }
+    ],
+    "coverageNote": "纯合成查重已覆盖授权团队当前、活动和归档任务；完整候选仍在进行中。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "syn-saas-admin-training",
+      "field": "dueOn",
+      "value": "2026-09-10"
+    },
+    {
+      "taskId": "syn-saas-admin-training",
+      "field": "acceptanceCriteria",
+      "value": [
+        "A批8人和B批7人均有签到与测验",
+        "未解问题进入交接清单"
+      ]
+    }
+  ],
+  "constraints": {
+    "businessObject": "合成·森屿实验室 tenant-senyv2 二期",
+    "mustNotDuplicateCoveredOutcome": true,
+    "scope": "只判断是否需要新建；不更新现有任务、不指派、不把A批报告改成整项完成"
+  },
+  "dataClassification": "synthetic",
+  "members": [
+    {
+      "id": "syn-saas-m1",
+      "name": "合成成员·顾青",
+      "role": "交付负责人",
+      "responsibilities": [
+        "维护客户交付边界",
+        "协调验收与变更"
+      ],
+      "boundaries": [
+        "不代客户签收",
+        "不因同名需求重复建项"
+      ],
+      "evidence": [
+        {
+          "id": "syn-saas-m1-role",
+          "title": "交付负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护客户交付边界；协调验收与变更。边界：不代客户签收；不因同名需求重复建项。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-saas-m1-window",
+          "title": "交付负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T11:00:00+08:00 至 2026-09-05T13:00:00+08:00，仅表示可参与“客户范围与交接核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T11:00:00+08:00",
+            "endAt": "2026-09-05T13:00:00+08:00",
+            "purpose": "客户范围与交接核对",
+            "sourceRef": "syn-saas-m1-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-saas-m2",
+      "name": "合成成员·林析",
+      "role": "解决方案架构师",
+      "responsibilities": [
+        "设计租户配置",
+        "核对角色与集成边界"
+      ],
+      "boundaries": [
+        "不批准客户生产权限",
+        "不承担培训验收"
+      ],
+      "evidence": [
+        {
+          "id": "syn-saas-m2-role",
+          "title": "解决方案架构师职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：设计租户配置；核对角色与集成边界。边界：不批准客户生产权限；不承担培训验收。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-saas-m2-window",
+          "title": "解决方案架构师公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T13:00:00+08:00 至 2026-09-05T15:00:00+08:00，仅表示可参与“租户配置复核”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T13:00:00+08:00",
+            "endAt": "2026-09-05T15:00:00+08:00",
+            "purpose": "租户配置复核",
+            "sourceRef": "syn-saas-m2-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-saas-m3",
+      "name": "合成成员·沈禾",
+      "role": "数据迁移工程师",
+      "responsibilities": [
+        "维护字段映射",
+        "执行迁移演练与核对"
+      ],
+      "boundaries": [
+        "不决定客户保留范围",
+        "不把演练当生产迁移授权"
+      ],
+      "evidence": [
+        {
+          "id": "syn-saas-m3-role",
+          "title": "数据迁移工程师职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护字段映射；执行迁移演练与核对。边界：不决定客户保留范围；不把演练当生产迁移授权。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-saas-m3-window",
+          "title": "数据迁移工程师公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T15:00:00+08:00 至 2026-09-05T17:00:00+08:00，仅表示可参与“迁移核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T15:00:00+08:00",
+            "endAt": "2026-09-05T17:00:00+08:00",
+            "purpose": "迁移核对",
+            "sourceRef": "syn-saas-m3-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-saas-m4",
+      "name": "合成成员·方桥",
+      "role": "集成工程师",
+      "responsibilities": [
+        "配置沙箱SSO",
+        "维护证书和回退记录"
+      ],
+      "boundaries": [
+        "不操作未授权生产租户",
+        "不代客户确认业务流程"
+      ],
+      "evidence": [
+        {
+          "id": "syn-saas-m4-role",
+          "title": "集成工程师职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：配置沙箱SSO；维护证书和回退记录。边界：不操作未授权生产租户；不代客户确认业务流程。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-saas-m4-window",
+          "title": "集成工程师公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T09:00:00+08:00 至 2026-09-05T11:00:00+08:00，仅表示可参与“SSO证书联检”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T09:00:00+08:00",
+            "endAt": "2026-09-05T11:00:00+08:00",
+            "purpose": "SSO证书联检",
+            "sourceRef": "syn-saas-m4-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-saas-m5",
+      "name": "合成成员·钟知",
+      "role": "UAT负责人",
+      "responsibilities": [
+        "组织UAT用例",
+        "记录缺陷与验证结果"
+      ],
+      "boundaries": [
+        "不替客户签署验收",
+        "不把一次通过当全范围完成"
+      ],
+      "evidence": [
+        {
+          "id": "syn-saas-m5-role",
+          "title": "UAT负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：组织UAT用例；记录缺陷与验证结果。边界：不替客户签署验收；不把一次通过当全范围完成。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-saas-m5-window",
+          "title": "UAT负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T11:00:00+08:00 至 2026-09-05T13:00:00+08:00，仅表示可参与“UAT结果复核”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T11:00:00+08:00",
+            "endAt": "2026-09-05T13:00:00+08:00",
+            "purpose": "UAT结果复核",
+            "sourceRef": "syn-saas-m5-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-saas-m6",
+      "name": "合成成员·许棠",
+      "role": "客户培训负责人",
+      "responsibilities": [
+        "交付培训材料",
+        "维护参训和测验记录"
+      ],
+      "boundaries": [
+        "不重复创建已覆盖培训",
+        "不把首场签到当两批完成"
+      ],
+      "evidence": [
+        {
+          "id": "syn-saas-m6-role",
+          "title": "客户培训负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：交付培训材料；维护参训和测验记录。边界：不重复创建已覆盖培训；不把首场签到当两批完成。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-saas-m6-window",
+          "title": "客户培训负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T13:00:00+08:00 至 2026-09-05T15:00:00+08:00，仅表示可参与“管理员培训复核”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T13:00:00+08:00",
+            "endAt": "2026-09-05T15:00:00+08:00",
+            "purpose": "管理员培训复核",
+            "sourceRef": "syn-saas-m6-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-saas-m7",
+      "name": "合成成员·罗岸",
+      "role": "客户需求联络",
+      "responsibilities": [
+        "收集客户确认",
+        "定位合同与名单证据"
+      ],
+      "boundaries": [
+        "不自行扩大席位范围",
+        "不替交付负责人改排期"
+      ],
+      "evidence": [
+        {
+          "id": "syn-saas-m7-role",
+          "title": "客户需求联络职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：收集客户确认；定位合同与名单证据。边界：不自行扩大席位范围；不替交付负责人改排期。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-05T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-saas-m7-window",
+          "title": "客户需求联络公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-05T15:00:00+08:00 至 2026-09-05T17:00:00+08:00，仅表示可参与“客户确认记录核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-05T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-05T15:00:00+08:00",
+            "endAt": "2026-09-05T17:00:00+08:00",
+            "purpose": "客户确认记录核对",
+            "sourceRef": "syn-saas-m7-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-05T08:30:00+08:00"
+      }
+    }
+  ]
+}

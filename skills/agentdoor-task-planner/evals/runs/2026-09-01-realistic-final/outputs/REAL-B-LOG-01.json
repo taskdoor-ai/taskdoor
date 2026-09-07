@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-real-b-log-01",
+  "baseSnapshotId": "snapshot-real-b-log-01-v5",
+  "baseRevision": 5,
+  "baseTaskVersions": {
+    "b-log-root": 15,
+    "b-log-data": 6,
+    "b-log-infra": 7,
+    "b-log-ops": 8,
+    "b-log-map-pack": 5,
+    "b-log-label-map": 5,
+    "b-log-access-pack": 4,
+    "b-log-carrier-account": 6,
+    "b-log-customs-access": 3,
+    "b-log-runbook-pack": 6,
+    "b-log-runbook": 6,
+    "b-log-dryrun": 8,
+    "b-log-carrier-test": 4
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "当前不能给出“整棵切换树已更新”的候选方案：授权快照只返回 27 项中的 13 项，且映射消费者、相关讨论和历史仍在后续游标中；建议先补读指定分页，再基于新快照一次生成完整最小差异。",
+  "reasoningSummary": [
+    {
+      "text": "任务树当前只读取 13/27 项，读取回执明确说明其余 14 项及映射消费者位于后续两个任务游标，隐藏任务的身份、状态、负责人和依赖均不得猜测。",
+      "evidenceRefs": [
+        "b-log-page-receipt",
+        "req-real-b-log-01"
+      ]
+    },
+    {
+      "text": "讨论与历史也只读取部分主题，夜班作业、异常客服和关务切换主题仍未加载；这些内容可能决定其他直接消费者及其截止日期。",
+      "evidenceRefs": [
+        "b-log-discussion-receipt",
+        "b-log-d1",
+        "b-log-d2"
+      ]
+    },
+    {
+      "text": "当前页只能确认承运商联测和切换手册受映射 v4 影响，来源同时明确完整消费者仍在后续分页，因此不能把这两项冒充全树影响范围。",
+      "evidenceRefs": [
+        "b-log-map-v4",
+        "b-log-d1",
+        "b-log-h3"
+      ]
+    },
+    {
+      "text": "已验证承运商账号和已完成回退演练可以继续复用且不得重开；关务 SFTP 仍只是预计 9 月 16 日回执，需在完整树中核对其对 9 月 19 日窗口的实际影响。",
+      "evidenceRefs": [
+        "b-log-h1",
+        "b-log-h2",
+        "b-log-d4",
+        "b-log-customs-v1",
+        "b-log-d5",
+        "b-log-d6"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "partial",
+    "scopeTeamIds": [
+      "team-b-log"
+    ],
+    "assessments": [
+      {
+        "taskId": "b-log-label-map",
+        "relationship": "same_outcome",
+        "reason": "当前请求中的面单映射 v4 核对已由该既有任务承接；待补读后应复用原任务而非复制。",
+        "evidenceRefs": [
+          "req-real-b-log-01",
+          "b-log-label-map",
+          "b-log-map-v4"
+        ]
+      },
+      {
+        "taskId": "b-log-runbook",
+        "relationship": "same_outcome",
+        "reason": "当前请求中的切换手册修订与该既有任务是同一结果，但其他消费者尚未完成查重与读取。",
+        "evidenceRefs": [
+          "req-real-b-log-01",
+          "b-log-runbook",
+          "b-log-runbook-v6"
+        ]
+      }
+    ],
+    "coverageNote": "仅检索当前13项及本页相关归档；后续任务页和未读讨论未覆盖，不能排除其他同结果或消费者。"
+  },
+  "questions": [
+    {
+      "field": "context.coverage",
+      "question": "请先由调用方续读 b-log-page-2、b-log-page-3 和 b-log-thread-page-2，并用包含全部 27 项及相关讨论、历史的新快照重试，可以吗？",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "在任务、子任务、讨论、历史与查重仍为部分覆盖时，任何消费者清单、依赖图或日期重排都只能是局部事实，不能标为全树就绪。",
+    "关务生产 SFTP 当前只有预计 2026-09-16 回执且访问仍为 blocked；它对 9 月 19 日切换窗口的完整影响须结合未读消费者后再判断。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": "b-log-root",
+      "label": "按三个已授权游标补齐任务树、讨论与历史后重新规划"
+    }
+  ],
+  "externalEffects": "none"
+}

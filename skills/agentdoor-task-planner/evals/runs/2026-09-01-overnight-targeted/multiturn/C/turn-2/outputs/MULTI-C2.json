@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-c2",
+  "baseSnapshotId": "snapshot-multi-c2",
+  "baseRevision": 2,
+  "baseTaskVersions": {
+    "sim:C:1": 1
+  },
+  "intent": "create",
+  "disposition": "route_required",
+  "summary": "当前授权合成快照已包含同一 SKU、同一五处错字范围和同一 9 月 2 日期限的已保存任务；建议打开 sim:C:1 核对，不再创建重复任务。",
+  "reasoningSummary": [
+    {
+      "text": "现有开放任务与本轮请求的 SKU、交付物、修改边界和期限完全一致。",
+      "evidenceRefs": [
+        "req-multi-c2",
+        "sim:C:1",
+        "ecom01-copy"
+      ]
+    },
+    {
+      "text": "合成保存回执把前轮稳定候选 ID 映射到 sim:C:1，因此未看到成功页不表示需要再生成一批任务。",
+      "evidenceRefs": [
+        "simulation-C-receipt-1",
+        "sim:C:1"
+      ]
+    },
+    {
+      "text": "现有任务保留了颜北的负责人建议和 2026-09-02 交付日期，但正式 ownerId 尚未被写入。",
+      "evidenceRefs": [
+        "sim:C:1",
+        "ecom-m2-role"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "sim:C:1",
+        "relationship": "same_outcome",
+        "reason": "该任务与本轮请求具有相同 SKU-CUP-A、相同五处错字校对范围、相同清稿和改动清单交付物、相同候选负责人及相同 2026-09-02 期限，是前轮候选保存后的同一结果。",
+        "evidenceRefs": [
+          "req-multi-c2",
+          "sim:C:1",
+          "simulation-C-receipt-1"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "sim:C:1 的正式 ownerId 仍为 null；颜北目前是候选负责人，不能把合成保存回执解释为其已正式接受。",
+    "本轮只依据离线合成回执与快照判断，不代表已验证生产环境的保存、幂等或通知状态。"
+  ],
+  "nextActions": [
+    {
+      "action": "open_task",
+      "taskId": "sim:C:1",
+      "label": "打开已保存的校对任务"
+    }
+  ],
+  "externalEffects": "none"
+}

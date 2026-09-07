@@ -1,0 +1,182 @@
+{
+  "createdAt": "2026-08-31T20:17:24.912053+00:00",
+  "suite": "industry",
+  "fixtureSha256": "a139dace28ad6a6e311858d6ec6189c6e63621435463e101a81f173d0c2be42d",
+  "expectationsSha256": "9a3088de9c623fab53f187375f38c7aaffcfd528f14478f779d7b6af9c801af3",
+  "skillSha256": "43ae9defd34eaf7fbfaacbbd4efce6dc9f66b9da32f73dd6d89757eb2848aa00",
+  "contractSha256": "3c87217b53a946b6cd35f3f2b904a0bce18494981f9f9b91dc84bb844a1cbdb9",
+  "schemaSha256": "8c0192063fadf41d26e0b91d9f00e165c981173e46809197c5807d0090491cc7",
+  "notice": "Synthetic, offline Skill evaluation. No model API, production ACL or task writes are exercised by this script.",
+  "selectedCaseIds": [
+    "SAAS-01",
+    "SAAS-02",
+    "SAAS-03",
+    "SAAS-04",
+    "ECOM-01",
+    "ECOM-02",
+    "ECOM-03",
+    "ECOM-04",
+    "NPI-01",
+    "NPI-02",
+    "NPI-03",
+    "NPI-04",
+    "RETAIL-01",
+    "RETAIL-02",
+    "RETAIL-03",
+    "RETAIL-04",
+    "CONTENT-01",
+    "CONTENT-02",
+    "CONTENT-03",
+    "CONTENT-04",
+    "RENO-01",
+    "RENO-02",
+    "RENO-03",
+    "RENO-04"
+  ],
+  "cases": [
+    {
+      "id": "SAAS-01",
+      "industry": "saas_delivery",
+      "category": "cold_start",
+      "inputSha256": "3210cd83db2d8f0322039e4da4d284c9a435d1c109eb958e7bb97fb2f9ffb0fa"
+    },
+    {
+      "id": "SAAS-02",
+      "industry": "saas_delivery",
+      "category": "duplicate_boundary",
+      "inputSha256": "4234bba9ccb6220744547cf4fc68db3ca42778725f8bfb814b3f4f8f35d267f9"
+    },
+    {
+      "id": "SAAS-03",
+      "industry": "saas_delivery",
+      "category": "replan_or_next_batch",
+      "inputSha256": "3ce27f5eb01a9bdfea027fd8eb91b82cb74c42dece4c55e7c20954ed32e821d8"
+    },
+    {
+      "id": "SAAS-04",
+      "industry": "saas_delivery",
+      "category": "collaboration_risk",
+      "inputSha256": "7f89219e307bbf94d26fd1b9d56827b534725390b90417b032539d58d2b848ce"
+    },
+    {
+      "id": "ECOM-01",
+      "industry": "ecommerce_operations",
+      "category": "cold_start",
+      "inputSha256": "23b59507eef0d7836687c5ed3e868b09321449d913b75b5d821ef4b5c5b03501"
+    },
+    {
+      "id": "ECOM-02",
+      "industry": "ecommerce_operations",
+      "category": "duplicate_boundary",
+      "inputSha256": "813c62540d7066388841517cd74d1a718b2a36fbab1a3458f72b217898c2a4e5"
+    },
+    {
+      "id": "ECOM-03",
+      "industry": "ecommerce_operations",
+      "category": "replan_or_next_batch",
+      "inputSha256": "e5b7fb9caf404bc2c3d50728ce95fd5938c672a31e9604012c7e2004ac66f1e9"
+    },
+    {
+      "id": "ECOM-04",
+      "industry": "ecommerce_operations",
+      "category": "collaboration_risk",
+      "inputSha256": "764210928caef23f6ac4612efa0747ffee186aa7edd68c96ef3df46b74006d15"
+    },
+    {
+      "id": "NPI-01",
+      "industry": "manufacturing_npi",
+      "category": "cold_start",
+      "inputSha256": "a71fc4595a42642c3936d3c7ad8c3e84221d4295607ff04ee6324af46f6d9579"
+    },
+    {
+      "id": "NPI-02",
+      "industry": "manufacturing_npi",
+      "category": "duplicate_boundary",
+      "inputSha256": "ae5d9a14c1ac64bfc26bf4c8a55a8474f94a6308382ed1292b8c995510d5547d"
+    },
+    {
+      "id": "NPI-03",
+      "industry": "manufacturing_npi",
+      "category": "replan_or_next_batch",
+      "inputSha256": "0ea447e532762f510e98c86d9d72cf3528a1d800e188b74d5f8fab21f95617ff"
+    },
+    {
+      "id": "NPI-04",
+      "industry": "manufacturing_npi",
+      "category": "collaboration_risk",
+      "inputSha256": "18bc874e2e4a88c133445c953026861ff77f5830c6d457bc5714849350c8392a"
+    },
+    {
+      "id": "RETAIL-01",
+      "industry": "retail_chain_operations",
+      "category": "cold_start",
+      "inputSha256": "d2c0519283b5ca75c0c1dce1b6d2a0ae5c95cfcba99eeb517624368f67dbdbf2"
+    },
+    {
+      "id": "RETAIL-02",
+      "industry": "retail_chain_operations",
+      "category": "duplicate_boundary",
+      "inputSha256": "120713cf70e83d1e3e5980e57badb8dc2a5fe1bb1f2ad966d649df2b5614d613"
+    },
+    {
+      "id": "RETAIL-03",
+      "industry": "retail_chain_operations",
+      "category": "replan_or_next_batch",
+      "inputSha256": "e45a4f452271768ab63c3b3fa2ccb62f03092850448a832db4257e34ef167e27"
+    },
+    {
+      "id": "RETAIL-04",
+      "industry": "retail_chain_operations",
+      "category": "collaboration_risk",
+      "inputSha256": "2f343d264d33528e97860e0df8596cb133bb8f9fae363df7ab0d37cfaea7e7d1"
+    },
+    {
+      "id": "CONTENT-01",
+      "industry": "content_agency",
+      "category": "cold_start",
+      "inputSha256": "0b2447708298aaf1986f9ca7882b227c5f0069446ed213063bdfabcc4c70f0f5"
+    },
+    {
+      "id": "CONTENT-02",
+      "industry": "content_agency",
+      "category": "duplicate_boundary",
+      "inputSha256": "8b4ff445b8e10fc9a473e31633db25d5cd0bb22c20e7b5e6691a71de2acac37b"
+    },
+    {
+      "id": "CONTENT-03",
+      "industry": "content_agency",
+      "category": "replan_or_next_batch",
+      "inputSha256": "1a50e73cd7b94945822f499fe039b4dd34ed0e8966dc3c3a3e3ab5f0799e1df9"
+    },
+    {
+      "id": "CONTENT-04",
+      "industry": "content_agency",
+      "category": "collaboration_risk",
+      "inputSha256": "d192b9d0ff62123d81a83be34fe4e2d110320082b65d1fb7a1d04787e22c2afb"
+    },
+    {
+      "id": "RENO-01",
+      "industry": "renovation_handover",
+      "category": "cold_start",
+      "inputSha256": "4f12e43c3a583c76e63cd4edf408b40ddad0c976f7a4615ca34dc4758a7d548c"
+    },
+    {
+      "id": "RENO-02",
+      "industry": "renovation_handover",
+      "category": "duplicate_boundary",
+      "inputSha256": "7bb76601df577894484d53ad86f68479bb1394269d4fcc5016ff3cc292752d81"
+    },
+    {
+      "id": "RENO-03",
+      "industry": "renovation_handover",
+      "category": "replan_or_next_batch",
+      "inputSha256": "9e379a13c421bb4cf60cbc188d2d521aec1efb6116a46cde5da11e6f81752b66"
+    },
+    {
+      "id": "RENO-04",
+      "industry": "renovation_handover",
+      "category": "collaboration_risk",
+      "inputSha256": "21f7da195df9e5162cfc71775d71c11f8600e6b2b7d04d2fb75fcaaca603bf19"
+    }
+  ]
+}

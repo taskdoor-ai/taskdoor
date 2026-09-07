@@ -1,0 +1,10 @@
+{
+  "archivedRun": "2026-09-01-overnight-edge-regrade",
+  "pathMappings": [
+    {
+      "from": "/tmp/agentdoor-planner-overnight-edge-regrade-20260901",
+      "to": "."
+    }
+  ],
+  "note": "Semantic-review file paths and JSON Pointers resolve against this archived run after applying the prefix mapping."
+}

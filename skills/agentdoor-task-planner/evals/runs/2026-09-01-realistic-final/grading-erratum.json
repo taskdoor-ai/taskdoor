@@ -1,0 +1,35 @@
+{
+  "runId": "2026-09-01-realistic-final",
+  "policy": "Do not overwrite first outputs, frozen expectations, structural report or semantic reviews.",
+  "correctionsAfterRun": [
+    {
+      "scenarioId": "REAL-C-03",
+      "kind": "rubric_narrative_correction",
+      "before": "The manual check called hr-date-amend completed.",
+      "after": "The fixture status is open. Its current acceptance criteria is already adequate, so the task should still be preserved, but failure must not be attributed to modifying a completed task.",
+      "effectOnVerdict": "none; the output still fails for an unnecessary update, redundant dependencies and missing evidence."
+    },
+    {
+      "scenarioId": "REAL-B-PROC-01",
+      "kind": "grader_coverage_gap",
+      "before": "requiredDependencies only checked set inclusion, so an extra redundant dependency passed machine scoring.",
+      "after": "Current expectations and evaluator add exactDependencies for selected impact-sensitive tasks.",
+      "effectOnVerdict": "machine result remains frozen at 9/12; independent semantic result records this case as fail, producing 8/12."
+    },
+    {
+      "scenarioId": "REAL-B-NPI-01, REAL-C-02, REAL-C-03",
+      "kind": "grader_hardening",
+      "before": "Subset checks could miss extra producer/consumer edges.",
+      "after": "Current corpus declares exact dependency sets for high-risk impact graphs.",
+      "effectOnVerdict": "applies only to later runs; no retroactive model attempt or output rewrite."
+    },
+    {
+      "scenarioId": "REAL-C-03",
+      "kind": "dependency_semantics_correction",
+      "before": "An interim exact-dependency draft treated hr-date-amend as a required producer for all four date consumers.",
+      "after": "The approved date file itself supplies the authoritative scheduling fact; no source says those tasks must wait for the open dissemination task. Current exact sets preserve their old dependencies.",
+      "effectOnVerdict": "none; this correction is applied only to later targeted runs."
+    }
+  ],
+  "currentCorpusNotice": "The current realistic expectations may differ from this run snapshot. Use expectations-snapshot.json to reproduce the original machine result."
+}

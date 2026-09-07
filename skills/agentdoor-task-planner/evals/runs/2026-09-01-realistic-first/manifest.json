@@ -1,0 +1,98 @@
+{
+  "createdAt": "2026-09-01T03:32:45.403011+00:00",
+  "suite": "realistic",
+  "fixtureSha256": "362f8e27f5774c4fbd06aec7eb10d179c3136e5c93ce7152177f32c5b8727450",
+  "expectationsSha256": "de10fe62a7fc5bc44830cff651da281761dab3f2a11e9aa0672fcf97e04497dc",
+  "skillSha256": "5c3276c00f3eec23c7ba01c207dad24b0599b6fc5bf903706882990bf0693ed4",
+  "contractSha256": "e7f85ef35a7dc372355a9d2076f6b1212277d1d93265ef32775309508d4660e8",
+  "schemaSha256": "8c0192063fadf41d26e0b91d9f00e165c981173e46809197c5807d0090491cc7",
+  "notice": "Synthetic, offline Skill evaluation. No model API, production ACL or task writes are exercised by this script.",
+  "selectedCaseIds": [
+    "REAL-A-REL-01",
+    "REAL-A-SAAS-01",
+    "REAL-A-ECOM-01",
+    "REAL-A-CS-01",
+    "REAL-B-NPI-01",
+    "REAL-B-LOG-01",
+    "REAL-B-RETAIL-01",
+    "REAL-B-PROC-01",
+    "REAL-C-01",
+    "REAL-C-02",
+    "REAL-C-03",
+    "REAL-C-04"
+  ],
+  "cases": [
+    {
+      "id": "REAL-A-REL-01",
+      "industry": "software_release",
+      "category": "reuse_full_duplicate_and_rewire_consumers",
+      "inputSha256": "46cb9d29c4f24b56c1bc14e0e45cd73e0cc2ef9fe04edd8e6a7310c47348f7a0"
+    },
+    {
+      "id": "REAL-A-SAAS-01",
+      "industry": "saas_delivery",
+      "category": "exact_duplicate_create_request_routes_to_existing_task",
+      "inputSha256": "99cff71ca1d601dc195a4ad3610e6b307e9816e7e6b82d5272237cf9d9862c38"
+    },
+    {
+      "id": "REAL-A-ECOM-01",
+      "industry": "ecommerce_operations",
+      "category": "next_batch_reuses_existing_outcomes_and_repairs_gate",
+      "inputSha256": "86904f5b07e460d38099d67a2ee15e1d65dcb8cc504944d2c39e9534997ce007"
+    },
+    {
+      "id": "REAL-A-CS-01",
+      "industry": "customer_support_incident",
+      "category": "query_conflicting_reports_without_mutation",
+      "inputSha256": "f075927f63b2d674863e96d4471faefdf45f6fe43d73637b515121802fe80319"
+    },
+    {
+      "id": "REAL-B-NPI-01",
+      "industry": "manufacturing_npi",
+      "category": "versioned_change_consumers",
+      "inputSha256": "7b52012aea8d8d5f64c4c01f8c1bb2cf004d3f5fd910aacc3d41ec4e71dea2ce"
+    },
+    {
+      "id": "REAL-B-LOG-01",
+      "industry": "logistics_cutover",
+      "category": "partial_cutover_pagination",
+      "inputSha256": "351194193d234aea33fbdb35c1ab7aa96708fd78505f982d94a137aadd6c5cb4"
+    },
+    {
+      "id": "REAL-B-RETAIL-01",
+      "industry": "retail_store_opening",
+      "category": "hard_deadline_cross_branch_replan",
+      "inputSha256": "d9be742a794d236b8bca7d774999bf73c73ee608ac0d16417867d1e743f93e02"
+    },
+    {
+      "id": "REAL-B-PROC-01",
+      "industry": "procurement_vendor_onboarding",
+      "category": "entity_revision_existing_onboarding",
+      "inputSha256": "bdf45d2cc4c32d9f7870d60a6296bfad2ef2eaacb0e873950d20b8ab0900f9f0"
+    },
+    {
+      "id": "REAL-C-01",
+      "industry": "content_campaign",
+      "category": "approved_claim_fanout_minimal_replan",
+      "inputSha256": "9eccbee4a870fdf1532deb79d11855bce584f9e02a8431df4be6d7bacff79f90"
+    },
+    {
+      "id": "REAL-C-02",
+      "industry": "finance_close",
+      "category": "external_bank_wait_and_sensitive_close_replan",
+      "inputSha256": "c347b40baa77b5cbb98fb4c03f70d46e100052c1410f9b11940ea31c49fc4978"
+    },
+    {
+      "id": "REAL-C-03",
+      "industry": "hiring_onboarding",
+      "category": "date_shift_duplicate_avoidance_and_sensitive_access",
+      "inputSha256": "85e7efc3a312fe7463bcd29dd80f5e59d9ecac427e73057fe96be42183924863"
+    },
+    {
+      "id": "REAL-C-04",
+      "industry": "renovation_handover",
+      "category": "property_window_certificate_wait_and_handover_risk",
+      "inputSha256": "cbe6bb1abf0baa9d852626fa93057aa0fc5dbd57f051a47447b0aaf75a0aa5bc"
+    }
+  ]
+}

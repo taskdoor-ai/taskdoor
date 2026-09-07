@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-09",
+  "baseSnapshotId": "snapshot-edge-09-v2",
+  "baseRevision": 2,
+  "baseTaskVersions": {
+    "edge09-proof": 1
+  },
+  "intent": "create",
+  "disposition": "route_required",
+  "summary": "同一请求已有创建回执，直接查看现有校对任务，不生成第二份候选。",
+  "reasoningSummary": [
+    {
+      "text": "回执记录req-edge-09已于2026-09-01T10:00:02+08:00关联edge09-proof，本轮是正文不变的网络重送，没有新增范围。",
+      "evidenceRefs": [
+        "req-edge-09",
+        "edge09-receipt",
+        "edge09-created"
+      ]
+    },
+    {
+      "text": "现有任务版本1、状态open，正式Owner为颜北；SKU、TYPO-B-v1三处错字和清稿及改动清单标准均覆盖原请求。",
+      "evidenceRefs": [
+        "edge09-proof",
+        "edge09-typos",
+        "ecom-m2"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "edge09-proof",
+        "relationship": "same_outcome",
+        "reason": "相同请求键、SKU-CUP-B、DETAIL-B-v1、TYPO-B-v1三处错字及交付标准完全一致，属于原提交重试。",
+        "evidenceRefs": [
+          "req-edge-09",
+          "edge09-proof",
+          "edge09-receipt",
+          "edge09-typos"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；返回的候选均在本次可见快照内。"
+  },
+  "questions": [],
+  "warnings": [
+    "已有创建事实来自读取到的合成提交回执；本轮规划未创建、指派或执行任何任务，重试的回执复用应由提交服务保障。"
+  ],
+  "nextActions": [
+    {
+      "action": "open_task",
+      "taskId": "edge09-proof",
+      "label": "查看原校对任务与创建回执"
+    }
+  ],
+  "externalEffects": "none"
+}

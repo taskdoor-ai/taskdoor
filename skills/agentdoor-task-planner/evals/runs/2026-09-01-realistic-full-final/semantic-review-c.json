@@ -1,0 +1,302 @@
+{
+  "cases": [
+    {
+      "caseId": "REAL-C-01",
+      "verdict": "fails",
+      "summary": "核心v2生产者与页面、邮件、付费三个直接消费者判断正确，但输出把已有完整传递链的上线联合核对误判为直接消费者，产生第五项冗余更新，违反最小差异要求。",
+      "findings": [
+        {
+          "area": "consumer_matrix",
+          "status": "fail",
+          "detail": "冻结矩阵中，cc-claim-v2把客户回执与合规矩阵加工为可交接的替换清单；cc-landing-copy、cc-email-copy和cc-paid直接消费该结果。cc-crm经cc-email-copy传递消费，cc-launch-check审核cc-paid、cc-crm和cc-keyvisual的渠道产出，已有路径可获得v2结果，不应再直连cc-claim-v2。",
+          "evidenceIds": [
+            "cc-file-claim-approval-v2",
+            "cc-file-legal-matrix-v4",
+            "cc-landing-copy",
+            "cc-email-copy",
+            "cc-paid",
+            "cc-crm",
+            "cc-launch-check"
+          ]
+        },
+        {
+          "area": "minimal_change",
+          "status": "fail",
+          "detail": "输出正确更新cc-claim-v2、cc-landing-copy、cc-email-copy和cc-paid，却额外提交change-cc-launch-check-dependency，使更新数从必要的4项变成5项，并把本应保留的cc-launch-check移出preservedTaskIds。",
+          "evidenceIds": [
+            "change-cc-launch-check-dependency",
+            "cc-launch-check",
+            "cc-paid",
+            "cc-crm",
+            "cc-keyvisual"
+          ]
+        },
+        {
+          "area": "evidence",
+          "status": "partial",
+          "detail": "输出充分引用客户批准、合规矩阵、草稿与正式状态冲突以及硬上线窗口，也正确保留v1历史；但没有引用撤回复写v1建议的cc-d6。该遗漏不是主失败原因，正式任务和历史证据仍足以支持保留v1。",
+          "evidenceIds": [
+            "cc-file-claim-approval-v2",
+            "cc-file-legal-matrix-v4",
+            "cc-d3",
+            "cc-d4",
+            "cc-claim-v1",
+            "cc-h2",
+            "cc-d6",
+            "cc-hard-launch",
+            "cc-d7"
+          ]
+        },
+        {
+          "area": "privacy_and_risk",
+          "status": "pass",
+          "detail": "输出未展开受限上刊表正文，明确9月15日10:00是硬窗口而非按期保证，并保持externalEffects为none。",
+          "evidenceIds": [
+            "cc-file-media-sheet-v7",
+            "cc-hard-launch",
+            "cc-d7",
+            "real-c-01-snapshot-acl"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "status": "error",
+          "reason": "未在合并图上识别cc-launch-check已有传递路径，添加了冗余直接依赖和非最小更新。"
+        },
+        "fixture": {
+          "status": "sound",
+          "reason": "输入完整提供渠道完成标准、现有依赖、批准来源和硬窗口，足以区分直接消费者与审核型传递下游。"
+        },
+        "graderOracle": {
+          "status": "sound",
+          "reason": "期望保留cc-launch-check并限制为四项更新，符合冻结协议关于已有有效传递链不重复直连的规则。"
+        }
+      }
+    },
+    {
+      "caseId": "REAL-C-02",
+      "verdict": "fails",
+      "summary": "外币重估与日记账复核的依赖差分正确，但输出又改写了已经完整覆盖正式回单与期间归属边界的异常任务，形成第三项冗余且略带提前裁定的更新。",
+      "findings": [
+        {
+          "area": "consumer_matrix",
+          "status": "pass",
+          "detail": "fc-transfer-clear是正式回单与期间归属结论的生产任务；fc-fx直接消费该结论并继续消费已完成银行对账，fc-journal-approval直接审核fc-fx形成的调整。fc-statements已依赖fc-fx，fc-audit-evidence和fc-board-pack沿既有链传递消费，无需更新。",
+          "evidenceIds": [
+            "fc-transfer-clear",
+            "fc-fx",
+            "fc-bank-recon",
+            "fc-journal-approval",
+            "fc-statements",
+            "fc-audit-evidence",
+            "fc-board-pack"
+          ]
+        },
+        {
+          "area": "minimal_change",
+          "status": "fail",
+          "detail": "fc-transfer-clear现有完成标准已经要求取得正式回单、确认8月或9月归属，并在等待时不把口头通知当完成；来源和blocked状态也已是当前快照。change-fc-transfer-clear-criteria没有填补字段缺口，反而预写“归属9月”，而fc-d9仍记录来源冲突须待正式回单裁定。必要更新仅是fc-fx和fc-journal-approval。",
+          "evidenceIds": [
+            "change-fc-transfer-clear-criteria",
+            "fc-transfer-clear",
+            "fc-file-bank-advice-v2",
+            "fc-file-bank-wait-v1",
+            "fc-d2",
+            "fc-d9",
+            "fc-h4"
+          ]
+        },
+        {
+          "area": "evidence",
+          "status": "pass",
+          "detail": "输出同时引用银行通知、等待回执、控制人决定、台账冲突、完成对账证据和硬关闭记录，能够区分报告、正式状态和外部等待。",
+          "evidenceIds": [
+            "fc-file-bank-advice-v2",
+            "fc-file-bank-wait-v1",
+            "fc-d2",
+            "fc-d9",
+            "fc-file-bank-recon-v8",
+            "fc-hard-close"
+          ]
+        },
+        {
+          "area": "privacy_and_risk",
+          "status": "pass",
+          "detail": "输出没有泄露或猜测薪资行项目，明确约51小时是自然等待而非EWD，也没有把9月5日18:00硬关闭表述为保证。",
+          "evidenceIds": [
+            "fc-privacy-boundary",
+            "fc-file-payroll-register-v5",
+            "fc-d8",
+            "fc-hard-close",
+            "fc-d7"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "status": "error",
+          "reason": "未做逐字段等价比较，改写了现有标准已覆盖的生产任务，并在正式回单前把期间归属写得过实。"
+        },
+        "fixture": {
+          "status": "sound",
+          "reason": "输入同时提供异常任务现有标准、blocked状态、正式回单等待和台账冲突，足以判断生产任务应保留。"
+        },
+        "graderOracle": {
+          "status": "sound",
+          "reason": "期望只更新fc-fx与fc-journal-approval，符合产出者现有标准已覆盖时保持不变的冻结规则。"
+        }
+      }
+    },
+    {
+      "caseId": "REAL-C-03",
+      "verdict": "satisfies",
+      "summary": "输出正确把批准日期作为权威原始事实，只调整账号、设备、薪资和入职日核对四项日期；保留所有现有依赖、旧录用历史和生产数据权限的独立门槛。",
+      "findings": [
+        {
+          "area": "consumer_matrix",
+          "status": "pass",
+          "detail": "批准的日期补充文件对四个准备项属于source_only日期事实，hr-date-amend已负责归档与同步，无需机械成为每项依赖。hr-startday继续审核账号、设备、培训、首周计划和薪资结果；hr-prod-access独立依赖背景状态、培训和岗位范围，不是入职日必需完成项。",
+          "evidenceIds": [
+            "hr-file-date-amend-v2",
+            "hr-date-amend",
+            "hr-account",
+            "hr-laptop",
+            "hr-payroll",
+            "hr-startday",
+            "hr-prod-access",
+            "hr-file-access-matrix-v6",
+            "hr-d4"
+          ]
+        },
+        {
+          "area": "minimal_change",
+          "status": "pass",
+          "detail": "输出恰好更新hr-account、hr-laptop、hr-payroll和hr-startday的schedule，未创建任务、未改依赖、未改确认字段；日期分别有IT报告、批准配送单、薪资状态摘要和已确认入职日支撑。",
+          "evidenceIds": [
+            "hr-d3",
+            "hr-file-device-dispatch-v2",
+            "hr-d8",
+            "hr-file-payroll-check-v4",
+            "hr-d10",
+            "hr-hard-start"
+          ]
+        },
+        {
+          "area": "evidence",
+          "status": "pass",
+          "detail": "输出引用双方日期确认、设备文件与正式字段冲突、生产权限矩阵和安全决定，且没有把草稿首周计划、账号暂存或背景ETA提升为完成。",
+          "evidenceIds": [
+            "hr-d1",
+            "hr-d2",
+            "hr-d3",
+            "hr-d4",
+            "hr-d8",
+            "hr-file-week-plan-v1",
+            "hr-file-background-receipt-v3"
+          ]
+        },
+        {
+          "area": "privacy_and_risk",
+          "status": "pass",
+          "detail": "输出只使用状态和日期摘要，未暴露背景发现、证件、银行、地址或联系方式；同时说明背景仍pending、ETA不是通过、9月16日也不是全部前置按期保证。",
+          "evidenceIds": [
+            "hr-privacy-boundary",
+            "hr-h7",
+            "hr-d5",
+            "hr-hard-start"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "status": "correct",
+          "reason": "消费者分层、日期差分、依赖保留、证据与隐私边界均符合冻结协议。"
+        },
+        "fixture": {
+          "status": "sound",
+          "reason": "输入对四项日期、生产权限门槛和受限数据边界提供了充分且一致的可核来源。"
+        },
+        "graderOracle": {
+          "status": "sound",
+          "reason": "四项允许更新、精确依赖与保护任务要求和输入矩阵一致。"
+        }
+      }
+    },
+    {
+      "caseId": "REAL-C-04",
+      "verdict": "satisfies",
+      "summary": "输出正确局部调整正式复测与证书日期，并把业主复验从现场复测改接第三方证书；手册和钥匙通过现有链路消费结果，给排水完成项与隐私边界均保留。",
+      "findings": [
+        {
+          "area": "consumer_matrix",
+          "status": "pass",
+          "detail": "物业停电许可是rn-electric-retest的source_only排期事实；正式复测生产专业原始结果，rn-electric-cert直接审核并签发证书；rn-reinspection直接消费证书和rn-cabinet。rn-manual已直接消费证书，rn-key-handover通过复验、手册和表计传递消费，无需额外更新。",
+          "evidenceIds": [
+            "rn-file-outage-permit-v2",
+            "rn-electric-retest",
+            "rn-electric-cert",
+            "rn-reinspection",
+            "rn-cabinet",
+            "rn-manual",
+            "rn-key-handover"
+          ]
+        },
+        {
+          "area": "minimal_change",
+          "status": "pass",
+          "detail": "输出只更新rn-electric-retest、rn-electric-cert和rn-reinspection：复测改到9月18日批准窗口，证书改到9月19日ETA边界，复验最终依赖为证书与柜门整改；未复制缺陷、证书、手册、钥匙或给排水任务。",
+          "evidenceIds": [
+            "rn-file-outage-permit-v2",
+            "rn-file-cert-request-v2",
+            "rn-reinspection",
+            "rn-cabinet",
+            "rn-water-retest",
+            "rn-water-record"
+          ]
+        },
+        {
+          "area": "evidence",
+          "status": "pass",
+          "detail": "输出同时引用预检草稿、撤回建议、正式任务状态和证书blocked证据，正确拒绝现场日报“机电已全部关闭”的说法，也没有把第三方受理回执当作签发。",
+          "evidenceIds": [
+            "rn-d2",
+            "rn-d4",
+            "rn-file-electric-field-v3",
+            "rn-d8",
+            "rn-electric-retest",
+            "rn-electric-cert",
+            "rn-file-cert-request-v2"
+          ]
+        },
+        {
+          "area": "privacy_and_risk",
+          "status": "pass",
+          "detail": "输出明确9月18日窗口和9月19日证书ETA都是真实等待，9月20日14:00不自动顺延；没有读取或复述室内原图、住户人像、地址或联系方式。",
+          "evidenceIds": [
+            "rn-window",
+            "rn-file-cert-request-v2",
+            "rn-hard-handover",
+            "rn-d5",
+            "rn-privacy-boundary",
+            "rn-file-cabinet-photos-v4"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "status": "correct",
+          "reason": "三项局部差异、审核关系、传递链、状态冲突与风险边界均处理正确。"
+        },
+        "fixture": {
+          "status": "sound",
+          "reason": "输入完整给出物业窗口、第三方ETA、专业证明边界、现有依赖与冲突状态。"
+        },
+        "graderOracle": {
+          "status": "sound",
+          "reason": "三项更新与精确依赖要求符合输入和冻结协议，没有把传递下游误判为直接消费者。"
+        }
+      }
+    }
+  ]
+}

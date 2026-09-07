@@ -1,0 +1,18 @@
+{
+  "kind": "independent_multiturn_semantic_review",
+  "cases": [
+    {
+      "caseId": "MULTI-C3",
+      "status": "failed",
+      "summary": "输出正确把SKU-CUP-B判为不同实例、创建独立new:候选并保留sim:C:1，但把三处错字的位置、原文和正确文本当成确认前阻塞，导致本可审阅的创建被降为needs_clarification；保留冻结评分失败，不修改原答案。",
+      "reviewFile": "semantic-review-c.json",
+      "episodeId": "C"
+    }
+  ],
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

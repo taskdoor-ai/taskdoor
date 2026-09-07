@@ -1,0 +1,169 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-ecom-04",
+  "baseSnapshotId": "snapshot-ecom-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "ecom04-root": 3,
+    "ecom04-stock": 2,
+    "ecom04-cs": 1
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "建议保留现有负责人：岑舟核对库存及出库窗口，于薇汇总发货答复，唐穗协调上新取舍，颜北和梁宁同步获确认的页面与投放口径；先解决9月2日上新与发货承诺的冲突。",
+  "reasoningSummary": [
+    {
+      "text": "ERP中午500件含退货待复核，17时80件是岑舟的当前可售报告，差异尚未关单；两者不能直接互相替代为最终已确认库存。",
+      "evidenceRefs": [
+        "ecom04-erp",
+        "ecom04-d1",
+        "ecom04-stock"
+      ]
+    },
+    {
+      "text": "300单只是梁宁未获货量确认的投放提议，不是库存、销量事实或已经批准的活动承诺。",
+      "evidenceRefs": [
+        "ecom04-d2",
+        "ecom-m4"
+      ]
+    },
+    {
+      "text": "仓库只确认最早9月4日集中出库，例外尚未答复；9月2日上新且页面写次日发，当前履约依据无法支持该承诺。",
+      "evidenceRefs": [
+        "ecom04-root",
+        "ecom04-d3",
+        "ecom04-warehouse"
+      ]
+    },
+    {
+      "text": "现有岑舟库存任务和于薇客服任务已明确负责人与真实依赖；梁宁仅有9月2日下午联调窗口，于薇仅有9月3日上午培训窗口，不能推断上线前额外容量。",
+      "evidenceRefs": [
+        "ecom04-stock",
+        "ecom04-cs",
+        "ecom-m4",
+        "ecom-m5"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "ecom04-root",
+    "complexity": "complex",
+    "preservedTaskIds": [
+      "ecom04-root"
+    ],
+    "changes": [
+      {
+        "id": "change:ecom04-stock",
+        "action": "update",
+        "targetId": "ecom04-stock",
+        "parentId": "ecom04-root",
+        "fields": {
+          "tips": [
+            "由原负责人岑舟对照12时ERP500件（包含退货待复核）与17时80件可售报告，核对同一SKU、时间和可售口径，保留差异明细及最终来源；差异未关单前不改变正式状态。",
+            "把仓库最早9月4日集中出库的回复与库存核对记录放在一起，补核是否存在已批准例外；不把未答复写成次日发承诺。",
+            "将最终核对的可售数及可执行出库窗口提供给现有客服任务和唐穗；不以300单投放目标反推可售库存。"
+          ]
+        },
+        "reason": "保持既有库存结果与责任，仅把最新冲突和客服所需履约依据加入具体核对步骤。",
+        "evidenceRefs": [
+          "ecom04-stock",
+          "ecom04-d1",
+          "ecom04-erp",
+          "ecom04-warehouse",
+          "ecom04-d2"
+        ]
+      },
+      {
+        "id": "change:ecom04-cs",
+        "action": "update",
+        "targetId": "ecom04-cs",
+        "parentId": "ecom04-root",
+        "fields": {
+          "tips": [
+            "仍由原负责人于薇汇总发货答复，沿用对ecom04-stock的依赖；先区分仓库已确认窗口、待答复例外和页面现有次日发文案。",
+            "由唐穗协调9月2日上新日期与发货口径取舍，按用户最终选择及仓库有效依据形成版本化答复；未确认前不擅自把次日发改成任意新承诺。",
+            "颜北核对详情页发货文案，梁宁核对投放素材中的数量与履约表述，均在口径确认后提出对应差异，避免不同渠道冲突。",
+            "于薇9月3日上午仅为已知客服培训窗口，上线前的核对与传达时段需另行协调；不推断其9月2日有可用容量。"
+          ],
+          "participantRecommendations": [
+            {
+              "memberId": "ecom-m1",
+              "contribution": "协调本次上新范围及发货口径取舍，定位批准依据，不代仓库确认事实。",
+              "evidenceRefs": [
+                "ecom-m1",
+                "ecom04-root",
+                "ecom04-warehouse"
+              ]
+            },
+            {
+              "memberId": "ecom-m2",
+              "contribution": "依据最终确认口径提出详情页发货文案的对应修订并核对版本。",
+              "evidenceRefs": [
+                "ecom-m2",
+                "ecom04-d3"
+              ]
+            },
+            {
+              "memberId": "ecom-m4",
+              "contribution": "按获批口径核对投放素材，明确300单仅为未批准目标，不据此承诺货量。",
+              "evidenceRefs": [
+                "ecom-m4",
+                "ecom04-d2"
+              ]
+            }
+          ]
+        },
+        "reason": "使用现有客服任务汇总统一口径，必要协作者分别承担上新取舍协调、页面内容和投放素材贡献，不另建同义任务。",
+        "evidenceRefs": [
+          "ecom04-cs",
+          "ecom04-d3",
+          "ecom04-warehouse",
+          "ecom04-d2",
+          "ecom-m1",
+          "ecom-m2",
+          "ecom-m4",
+          "ecom-m5"
+        ]
+      }
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [
+    {
+      "field": "launch_and_shipping_scope",
+      "question": "仓库目前最早9月4日集中出库，无法支持9月2日下单次日发：本次选择保留9月2日上新并经确认调整对外发货口径，还是调整上新日期？如坚持次日发，需要先取得仓库例外履约确认。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "保留主任务9月2日期限、当前正式Owner、状态及库存到客服的原依赖；提案不自行决定延期或修改发货承诺。",
+    "于薇9月3日已知培训窗口晚于上新日，9月2日前口径核对及传达窗口仍未知；不能靠未经确认的换人或额外工时保证上线。",
+    "历史覆盖为partial，仅能使用已提供的库存快照，不能声称看过全部库存变化记录。",
+    "参与推荐尚未接受；计划只列候选差异，不写入ERP、页面、投放或客服系统，也不增加预算。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": "ecom04-root",
+      "label": "确认上新日期与发货承诺取舍"
+    },
+    {
+      "action": "review_proposal",
+      "taskId": "ecom04-root",
+      "label": "审阅保留原负责人的局部分工草稿"
+    },
+    {
+      "action": "open_task",
+      "taskId": "ecom04-stock",
+      "label": "在现有库存任务核对可售数及出库回执"
+    }
+  ],
+  "externalEffects": "none"
+}

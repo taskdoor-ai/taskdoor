@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-06",
+  "baseSnapshotId": "snapshot-edge-06-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "edge06-qw": 3,
+    "edge06-ny": 5
+  },
+  "intent": "unclear",
+  "disposition": "needs_clarification",
+  "summary": "已保留将目标日期改为2026年9月8日、其他内容不变的意图；需要先明确是哪一项“上线验收”，当前不修改任何任务。",
+  "reasoningSummary": [
+    {
+      "text": "用户明确要求只将目标日期改为2026年9月8日，但原文没有客户、租户或批次。",
+      "evidenceRefs": [
+        "req-edge-06"
+      ]
+    },
+    {
+      "text": "团队搜索入口没有选中Task ID，两个结果标题完全相同，不能按标题或旧日期自动代选。",
+      "evidenceRefs": [
+        "edge06-entry",
+        "edge06-qw",
+        "edge06-ny"
+      ]
+    },
+    {
+      "text": "两个可见对象分别为栖湾QW-CRM试点一批和南原NY-SERVICE试点二批，现有日期分别为9月6日、9月7日。",
+      "evidenceRefs": [
+        "edge06-qw",
+        "edge06-ny"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [
+      {
+        "taskId": "edge06-qw",
+        "relationship": "possible",
+        "reason": "同名候选是栖湾QW-CRM试点一批的UAT记录任务；用户未提供足以将本轮日期修改绑定到它的身份信息。",
+        "evidenceRefs": [
+          "edge06-qw",
+          "edge06-entry",
+          "req-edge-06"
+        ]
+      },
+      {
+        "taskId": "edge06-ny",
+        "relationship": "possible",
+        "reason": "另一同名候选是南原NY-SERVICE试点二批的UAT记录任务；不能因标题一致就将日期修改应用到此对象。",
+        "evidenceRefs": [
+          "edge06-ny",
+          "edge06-entry",
+          "req-edge-06"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；返回的候选均在本次可见快照内。"
+  },
+  "questions": [
+    {
+      "field": "currentTaskId",
+      "question": "要改为9月8日的是栖湾QW-CRM试点一批（当前9月6日），还是南原NY-SERVICE试点二批（当前9月7日）的“上线验收”？",
+      "blocking": true
+    }
+  ],
+  "warnings": [],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": null,
+      "label": "明确要调整日期的客户与验收任务"
+    }
+  ],
+  "externalEffects": "none"
+}

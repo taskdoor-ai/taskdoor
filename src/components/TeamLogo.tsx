@@ -1,4 +1,4 @@
-import { Blocks, Building2, Store } from "lucide-react";
+import { Blocks, Building2, Factory, Headphones, Store } from "lucide-react";
 
 type TeamLogoProps = {
   name: string;
@@ -7,13 +7,17 @@ type TeamLogoProps = {
 };
 
 const teamLogoIcons = {
+  "customer-success": Headphones,
   platform: Blocks,
   retail: Store,
+  "supply-operations": Factory,
 } as const;
 
 const teamLogoTones = {
+  "customer-success": "green",
   platform: "purple",
   retail: "green",
+  "supply-operations": "amber",
 } as const;
 
 export function TeamLogo({ name, size = "lg", teamId }: TeamLogoProps) {

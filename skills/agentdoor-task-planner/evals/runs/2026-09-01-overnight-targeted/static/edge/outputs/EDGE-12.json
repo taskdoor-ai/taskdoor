@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-12",
+  "baseSnapshotId": "snapshot-edge-12-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只建一个“30条品牌术语中日对照表”任务：唐钰负责交付版本，日语翻译与专业复核作为同一交付内尚待确认的贡献，不拆成占位子任务。",
+  "reasoningSummary": [
+    {
+      "text": "本轮只有一份可验收交付物，即逐项对应CN-TERM-v1的中日对照表。",
+      "evidenceRefs": [
+        "req-edge-12",
+        "edge12-brief"
+      ]
+    },
+    {
+      "text": "当前授权成员没有可用于推荐日语翻译或专业复核的能力证据，不能用文案或编辑岗位代替。",
+      "evidenceRefs": [
+        "edge12-capabilities"
+      ]
+    },
+    {
+      "text": "唐钰的职责只支持交付与版本管理，因此候选责任明确限制在版本交付，不扩展为翻译或日语审核。",
+      "evidenceRefs": [
+        "req-edge-12",
+        "content-m6-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:edge12-cn-jp-glossary",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "chg-edge12-glossary",
+        "action": "create",
+        "targetId": "new:edge12-cn-jp-glossary",
+        "parentId": null,
+        "fields": {
+          "title": "交付30条品牌术语中日对照表",
+          "goal": {
+            "text": "形成一份可追溯译法与核对版本的30条品牌术语中日对照表。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-edge-12",
+              "edge12-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "表中30条中文术语逐项对应品牌已确认清单CN-TERM-v1，不增加品牌主张或额外术语。",
+            "每条记录包含日语译法或明确的待确认标记；形成清稿前，所有日语译法均附具备日语能力人员的核对来源。",
+            "交付版本记录中文来源版本、译法核对来源与当前版本；产物仅供审阅，不作为未经批准的发布成稿。"
+          ],
+          "tips": [
+            "翻译、日语复核与版本整理共同形成同一张对照表，不因角色或先后步骤再拆任务。",
+            "在确认贡献者时要求提供日语翻译或专业复核的可核查能力依据；普通文案、编辑岗位不视为该依据。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "content-m6",
+            "basis": "explicit",
+            "reason": "用户明确唐钰只负责交付版本；候选责任不包含日语翻译或专业复核。",
+            "evidenceRefs": [
+              "req-edge-12",
+              "content-m6-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "用户未提出期限，且合格翻译与复核贡献者尚未确认。"
+            ],
+            "evidenceRefs": [
+              "req-edge-12",
+              "edge12-brief",
+              "edge12-capabilities"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供术语难度、翻译工具和可比历史，不能据30条数量直接承诺人时。"
+            ],
+            "evidenceRefs": [
+              "edge12-brief",
+              "edge12-capabilities"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "范围是一份共同交付的对照表，翻译与常规专业复核应写入同一任务的标准和贡献缺口。",
+        "evidenceRefs": [
+          "req-edge-12",
+          "edge12-brief",
+          "edge12-capabilities"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；此范围内无其他查重匹配。"
+  },
+  "questions": [],
+  "warnings": [
+    "日语翻译和专业复核贡献者均未确认；当前授权成员中没有足以推荐这些贡献的能力证据。",
+    "期限与EWD未知；可审阅候选不表示该任务已经具备正式提交所需的全部责任接受。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:edge12-cn-jp-glossary",
+      "label": "审阅单任务交付范围与责任缺口"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-09-01T02:50:07.172627+00:00",
+  "total": 1,
+  "structurallyValid": 1,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "ae3f0610fd5c957e105df98a993f79838fc19da2a90b0a1dd0b91b05c56cc483",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-C2",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "当前授权合成快照已包含同一 SKU、同一五处错字范围和同一 9 月 2 日期限的已保存任务；建议打开 sim:C:1 核对，不再创建重复任务。",
+      "intent": "create",
+      "disposition": "route_required",
+      "changes": 0,
+      "outputSha256": "c644a00f971135edecef8f1a0b57b2213094ff3c614ac754b1a09abddab95082",
+      "manualChecks": [
+        "根据合成保存回执及实际首轮生成任务定位原结果，不因用户没看到成功页再建，不声称自己已实施幂等服务。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

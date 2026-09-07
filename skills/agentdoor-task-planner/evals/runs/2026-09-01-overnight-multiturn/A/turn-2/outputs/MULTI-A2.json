@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-a2",
+  "baseSnapshotId": "snapshot-multi-a2",
+  "baseRevision": 2,
+  "baseTaskVersions": {
+    "new:multi-a-proofread": 1
+  },
+  "intent": "refine",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议仅将现有校对草稿的截止日期由2026年9月2日调整为9月3日，保留目的、校对标准和程简的候选负责人推荐；不另建任务，也不正式创建。",
+  "reasoningSummary": [
+    {
+      "text": "本轮明确要求调整同一份未创建草稿，只改截止日期；当前目标已由稳定草稿ID标明。",
+      "evidenceRefs": ["req-multi-a2", "new:multi-a-proofread", "simulation-candidate-context"]
+    },
+    {
+      "text": "目的、完成标准与候选负责人已列入确认字段，本轮不修改这些内容；期限未被锁定，新的硬截止日期为2026年9月3日。",
+      "evidenceRefs": ["req-multi-a2", "new:multi-a-proofread"]
+    },
+    {
+      "text": "现有草稿没有子任务或任务前置依赖；程简已提供的9月2日上午校对窗口早于新截止日期，但窗口不构成正式接受或排期承诺。",
+      "evidenceRefs": ["new:multi-a-proofread", "content-m5-window"]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:multi-a-proofread",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change:multi-a2-update-due",
+        "action": "update",
+        "targetId": "new:multi-a-proofread",
+        "parentId": null,
+        "fields": {
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-03",
+            "basis": "explicit",
+            "assumptions": [
+              "截止日期按本轮用户明确要求及当前硬交付约束调整为2026年9月3日，按Asia/Shanghai解释。",
+              "未指定开始日期；程简9月2日09:00至12:00的窗口仅为协作可用性依据，不等于排期已被接受。"
+            ],
+            "evidenceRefs": ["req-multi-a2", "content-m5-window"]
+          }
+        },
+        "reason": "只对当前有效草稿提出期限差异，保持原ID和归属；目的、完成标准、候选负责人及其他未列字段全部沿用当前快照。",
+        "evidenceRefs": ["req-multi-a2", "new:multi-a-proofread"]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": ["team-content"],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "本轮只输出草稿期限调整候选，不创建新任务，不正式创建草稿，也不使负责人推荐变成接受或指派。",
+    "原EWD估算仍为未知，开始日期仍未指定；不因延后截止日期而推断投入或完整可用容量。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:multi-a-proofread",
+      "label": "审阅同一草稿的截止日期调整"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,397 @@
+[
+  {
+    "caseId": "REAL-C-01",
+    "status": "pass",
+    "summary": "候选差异在语义上成立。cc-paid 直接消费主张v2替换清单与付费渠道合规措辞，新增该依赖有输入证据，并未把后续任务串成全串行链；结构失败主要由fixture将cc-paid预先列为禁止更新，以及grader机械执行该限制导致。",
+    "manualCheckResults": [
+      {
+        "index": 1,
+        "status": "fixture_issue",
+        "evidenceRefs": [
+          "cc-request",
+          "cc-claim-v2",
+          "cc-paid",
+          "cc-d2",
+          "cc-file-legal-matrix-v4"
+        ],
+        "note": "输出正确复用cc-claim-v2并替换页面、邮件的v1依赖。manualCheck要求绝不更新cc-paid，但cc-claim-v2的交付覆盖付费渠道，cc-d2又明确付费短文案不得自行缩写；按冻结协议的“实际消费者直接依赖”规则，cc-paid直连v2是可辩护的必要差异。"
+      },
+      {
+        "index": 2,
+        "status": "pass",
+        "evidenceRefs": [
+          "cc-root",
+          "cc-claim-v1",
+          "cc-keyvisual",
+          "cc-claim-v2"
+        ],
+        "note": "已完成策略、简报、v1与主视觉均保留，root确认字段和claim-v2正式Owner未改；更新仅涉及验收标准和依赖。"
+      },
+      {
+        "index": 3,
+        "status": "pass",
+        "evidenceRefs": [
+          "cc-file-claim-approval-v2",
+          "cc-file-legal-matrix-v4",
+          "cc-d1",
+          "cc-d2",
+          "cc-h2"
+        ],
+        "note": "客户品牌选择与合规允许用语分开取证，草稿、旧引用和成员报告未被提升为批准。未引用cc-d6不改变该判断，因为输出没有依赖已撤回提议，并以完成历史cc-h2保护v1。"
+      },
+      {
+        "index": 4,
+        "status": "pass",
+        "evidenceRefs": [
+          "cc-keyvisual",
+          "cc-paid",
+          "cc-crm",
+          "cc-launch-check"
+        ],
+        "note": "主视觉未重开；CRM和上线核对保持原依赖。新增paid到claim-v2的直接内容边没有把页面、邮件、投放、CRM和上线核对排成一条链。"
+      },
+      {
+        "index": 5,
+        "status": "pass",
+        "evidenceRefs": [
+          "cc-hard-launch",
+          "cc-d7"
+        ],
+        "note": "明确固定窗口不构成按期保证，且未给无依据EWD。"
+      },
+      {
+        "index": 6,
+        "status": "pass",
+        "evidenceRefs": [
+          "request-real-c-01"
+        ],
+        "note": "输出仅为候选差异，externalEffects为none；未发布、通知、改预算或改Owner。"
+      }
+    ],
+    "findings": [
+      {
+        "category": "fixture",
+        "severity": "major",
+        "summary": "fixture把cc-paid设为必须保留、禁止更新，与输入中的直接消费边界及冻结协议冲突。",
+        "evidenceRefs": [
+          "cc-claim-v2",
+          "cc-paid",
+          "cc-d2",
+          "cc-file-legal-matrix-v4"
+        ]
+      },
+      {
+        "category": "grader",
+        "severity": "major",
+        "summary": "结构grader据此报告protected/out-of-scope/maxUpdates/preservation错误，属于fixture驱动的假阴性，不能据此判定planner过度扩散。",
+        "evidenceRefs": [
+          "cc-paid"
+        ]
+      },
+      {
+        "category": "fixture",
+        "severity": "minor",
+        "summary": "强制要求cc-d6没有语义必要性；该撤回提议未被输出当作批准，v1保护已有任务状态与cc-h2支持。",
+        "evidenceRefs": [
+          "cc-d6",
+          "cc-claim-v1",
+          "cc-h2"
+        ]
+      }
+    ]
+  },
+  {
+    "caseId": "REAL-C-02",
+    "status": "fail",
+    "summary": "外币重估新增fc-transfer-clear前置是正确的，但输出进一步把fc-fx、日记账复核和主报表草稿串行化，超出最小差异且缺少“主报表草稿必须等待日记账批准”的证据。结构报告同时含fixture造成的假错误，二者需分开。",
+    "manualCheckResults": [
+      {
+        "index": 1,
+        "status": "fail",
+        "evidenceRefs": [
+          "fc-transfer-clear",
+          "fc-fx",
+          "fc-journal-approval",
+          "fc-statements"
+        ],
+        "note": "输出更新了journal-approval和statements，形成额外串行链。manualCheck要求更新transfer-clear本身则不合理：其验收、来源、状态和日期已准确，没有实际字段差异可写。"
+      },
+      {
+        "index": 2,
+        "status": "fail",
+        "evidenceRefs": [
+          "fc-fx",
+          "fc-statements",
+          "fc-audit-evidence",
+          "fc-board-pack"
+        ],
+        "note": "fx正确保留bank-recon并新增transfer-clear；但statements原已直接依赖fx，audit-evidence又并行等待journal-approval和statements，现有收敛链足以把结果带到审计与董事会包。新增statements等待journal-approval缺少依据。"
+      },
+      {
+        "index": 3,
+        "status": "pass",
+        "evidenceRefs": [
+          "fc-file-bank-advice-v2",
+          "fc-file-bank-wait-v1",
+          "fc-d2",
+          "fc-d9"
+        ],
+        "note": "银行通知、成员报告、应收台账和正式回单状态已分开；没有把异常标完成或自行裁定月份。"
+      },
+      {
+        "index": 4,
+        "status": "pass",
+        "evidenceRefs": [
+          "fc-root",
+          "fc-bank-recon",
+          "fc-journal-approval"
+        ],
+        "note": "root确认字段、已完成对账记录和journal-approval正式Owner均未改，也未执行分录。"
+      },
+      {
+        "index": 5,
+        "status": "pass",
+        "evidenceRefs": [
+          "fc-file-bank-wait-v1",
+          "fc-hard-close",
+          "fc-d7"
+        ],
+        "note": "51小时被表述为自然历时和风险，没有计入EWD或保证按期。"
+      },
+      {
+        "index": 6,
+        "status": "pass",
+        "evidenceRefs": [
+          "fc-d8",
+          "fc-file-payroll-register-v5"
+        ],
+        "note": "未输出受限薪资行项目，也未把审计问询或证据准备当作接受。"
+      }
+    ],
+    "findings": [
+      {
+        "category": "planner",
+        "severity": "major",
+        "summary": "不必要地将fc-statements新增依赖fc-journal-approval，把原本在fc-audit-evidence汇合的并行工作改成串行。",
+        "evidenceRefs": [
+          "fc-statements",
+          "fc-journal-approval",
+          "fc-audit-evidence",
+          "fc-d6"
+        ]
+      },
+      {
+        "category": "planner",
+        "severity": "minor",
+        "summary": "fc-journal-approval直连fc-fx有业务合理性，但在本轮窄范围内不是完成后续报表所必需；与statements改动合并后形成明显扩散。",
+        "evidenceRefs": [
+          "fc-fx",
+          "fc-journal-approval",
+          "fc-file-journal-pack-v4"
+        ]
+      },
+      {
+        "category": "fixture",
+        "severity": "major",
+        "summary": "fixture强制更新fc-transfer-clear，但输入中的任务字段已经准确；冻结协议要求删除等价值update，因此requiredUpdateTaskIds本身不合理。",
+        "evidenceRefs": [
+          "fc-transfer-clear",
+          "fc-file-bank-advice-v2",
+          "fc-file-bank-wait-v1"
+        ]
+      },
+      {
+        "category": "grader",
+        "severity": "minor",
+        "summary": "“Missing a required affected-task update”源于上述fixture问题；“Missing required source reference”也不应单独判语义失败，因为输出以fc-d8和封存文件落实隐私边界且没有泄露。",
+        "evidenceRefs": [
+          "fc-transfer-clear",
+          "fc-d8",
+          "fc-file-payroll-register-v5"
+        ]
+      }
+    ]
+  },
+  {
+    "caseId": "REAL-C-03",
+    "status": "pass",
+    "summary": "四项更新均局限于用户明确要求的既有任务，日期、依赖和隐私边界有对应证据；生产权限门槛与已确认字段保持不变。结构通过与语义结论一致。",
+    "manualCheckResults": [
+      {
+        "index": 1,
+        "status": "pass",
+        "evidenceRefs": [
+          "hr-date-amend",
+          "hr-account",
+          "hr-laptop",
+          "hr-payroll",
+          "hr-startday"
+        ],
+        "note": "保留原ID并仅更新账号、设备、薪资和入职日核对，没有复制、取消或重开任务。"
+      },
+      {
+        "index": 2,
+        "status": "pass",
+        "evidenceRefs": [
+          "hr-root",
+          "hr-offer-accept",
+          "hr-prod-access"
+        ],
+        "note": "root确认字段、录用历史以及生产权限Owner和验收标准均保留。"
+      },
+      {
+        "index": 3,
+        "status": "pass",
+        "evidenceRefs": [
+          "hr-prod-access",
+          "hr-d4",
+          "hr-file-access-matrix-v6"
+        ],
+        "note": "生产权限依赖与blocked状态不变，也未被加入入职日必需项。"
+      },
+      {
+        "index": 4,
+        "status": "pass",
+        "evidenceRefs": [
+          "hr-d1",
+          "hr-d2",
+          "hr-d3",
+          "hr-file-device-dispatch-v2",
+          "hr-d5",
+          "hr-d9",
+          "hr-d10"
+        ],
+        "note": "日期和排期分别由相应确认、IT报告与配送记录支持；草稿、ETA和登记状态未被当作完成。"
+      },
+      {
+        "index": 5,
+        "status": "pass",
+        "evidenceRefs": [
+          "hr-file-background-receipt-v3",
+          "hr-hard-start"
+        ],
+        "note": "背景等待没有计入EWD，9月16日也未被表述成全部前置按期保证。"
+      },
+      {
+        "index": 6,
+        "status": "pass",
+        "evidenceRefs": [
+          "hr-privacy-boundary",
+          "hr-external-role"
+        ],
+        "note": "没有输出或推断受限正文，也没有把候选人确认转成Owner、写入或安全批准。"
+      }
+    ],
+    "findings": [
+      {
+        "category": "fixture",
+        "severity": "minor",
+        "summary": "manualCheck 1把hr-date-amend称为“已完成”，但输入正式状态是open；输出按输入保留open，没有受该措辞误导。",
+        "evidenceRefs": [
+          "hr-date-amend"
+        ]
+      }
+    ]
+  },
+  {
+    "caseId": "REAL-C-04",
+    "status": "fail",
+    "summary": "三项候选更新、依赖链和真实等待风险总体正确，但reasoningSummary遗漏rn-d8这条直接声称“机电已全部关闭”的冲突报告。冻结协议要求关键“不能视为完成”冲突显式引用，因此核心计划虽可保留，当前证据说明仍未达语义通过。",
+    "manualCheckResults": [
+      {
+        "index": 1,
+        "status": "pass",
+        "evidenceRefs": [
+          "rn-electric-retest",
+          "rn-electric-cert",
+          "rn-reinspection"
+        ],
+        "note": "仅更新三项既有任务，没有复制缺陷、手册、表计、钥匙或给排水工作。"
+      },
+      {
+        "index": 2,
+        "status": "pass",
+        "evidenceRefs": [
+          "rn-file-outage-permit-v2",
+          "rn-electric-cert",
+          "rn-reinspection",
+          "rn-cabinet",
+          "rn-manual",
+          "rn-key-handover"
+        ],
+        "note": "复测窗口、证书前置、业主复验与既有跨分支交付链均正确。保留reinspection原有electric-retest边也有完成标准支持，不构成无依据扩散。"
+      },
+      {
+        "index": 3,
+        "status": "fail",
+        "evidenceRefs": [
+          "rn-file-electric-field-v3",
+          "rn-file-cert-request-v2",
+          "rn-d4",
+          "rn-d8"
+        ],
+        "note": "输出正确说明预检草稿和受理回执不等于完成，但没有在reasoningSummary引用或解释rn-d8与正式状态的直接冲突，未完整保留关键冲突。"
+      },
+      {
+        "index": 4,
+        "status": "pass",
+        "evidenceRefs": [
+          "rn-root",
+          "rn-water-retest",
+          "rn-water-record",
+          "rn-key-handover"
+        ],
+        "note": "root、给排水完成记录和钥匙任务确认字段均保持不变，交付日期未改。"
+      },
+      {
+        "index": 5,
+        "status": "pass",
+        "evidenceRefs": [
+          "rn-file-outage-permit-v2",
+          "rn-file-cert-request-v2",
+          "rn-hard-handover"
+        ],
+        "note": "两段等待未计EWD，第三方ETA和硬交付窗口均被表述为风险而非保证。"
+      },
+      {
+        "index": 6,
+        "status": "pass",
+        "evidenceRefs": [
+          "rn-privacy-boundary",
+          "rn-external-role"
+        ],
+        "note": "未输出影像、住户或联系信息，也未把物业窗口、业主确认当作专业验收或证书签发。"
+      }
+    ],
+    "findings": [
+      {
+        "category": "planner",
+        "severity": "major",
+        "summary": "遗漏rn-d8使“现场日报称已关闭”与正式in_progress/blocked状态的冲突没有进入可核查依据，违反冻结Skill对关键冲突的显式引用要求。",
+        "evidenceRefs": [
+          "rn-d8",
+          "rn-electric-retest",
+          "rn-electric-cert"
+        ]
+      },
+      {
+        "category": "fixture",
+        "severity": "minor",
+        "summary": "fixture把rn-d4与rn-privacy-boundary也列为全局必引来源；两者分别已有正式文件/状态替代且输出没有泄露，遗漏本身不影响核心判断。真正影响语义的是rn-d8。",
+        "evidenceRefs": [
+          "rn-d4",
+          "rn-privacy-boundary",
+          "rn-file-electric-field-v3"
+        ]
+      },
+      {
+        "category": "grader",
+        "severity": "minor",
+        "summary": "结构报告只给出笼统的“Missing a required source reference”，无法区分关键冲突rn-d8与非关键必引项，需由本次人工语义复核补足。",
+        "evidenceRefs": [
+          "rn-d8"
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,458 @@
+{
+  "schemaVersion": "agentdoor.planner-semantic-review.v1",
+  "scope": {
+    "caseIds": [
+      "SAAS-03",
+      "ECOM-03",
+      "CONTENT-03"
+    ],
+    "sourceDirectory": "/tmp/agentdoor-planner-skill-retest-20260901",
+    "readScope": "仅冻结protocol-snapshot.json、expectations-snapshot.json及三例inputs/outputs；未读取旧轮结果或旧语义报告。",
+    "underTestFilesModified": false
+  },
+  "modelSnapshot": {
+    "identifier": null,
+    "status": "unknown",
+    "note": "本次允许读取的证据未提供确切模型快照，不推断模型名称或版本。"
+  },
+  "method": [
+    "以原始输入事实为准，冻结期望为辅助可接受行为范围，不以期望替代输入。",
+    "检查用户请求覆盖、最小必要范围、已完成及进行中工作复用、正式责任和确认字段、讨论证据、真实前置和交付窗口、必要补问、容量/人时/授权边界。",
+    "独立语义复核；未修正或回填受测答案。satisfies表示候选响应满足冻结协议，不表示生产写入、实际完成或交期已获保证。"
+  ],
+  "cases": [
+    {
+      "id": "SAAS-03",
+      "verdict": "satisfies",
+      "reason": "候选只新增已确认的停用账号字段增量核对，复用完成的基础演练及已有UAT、培训任务。输入未说明新增核对对既有12条用例和培训的确切影响，输出把依赖和交付窗口列为阻塞问题并保持needs_clarification，未以文字交接冒充已落实的可确认计划。",
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/SAAS-03.json",
+          "pointer": "/message"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+          "pointer": "/disposition"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+          "pointer": "/proposal"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/2"
+        }
+      ],
+      "findings": [
+        {
+          "severity": "note",
+          "title": "最小增量与完成记录保护",
+          "reason": "新增结果对应客户v3新增字段；原200条基础演练仍有效，不重建或更新已完成范围任务和演练任务，也没有另造UAT或培训任务。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/SAAS-03.json",
+              "pointer": "/context/sourceRefs/5/text"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/SAAS-03.json",
+              "pointer": "/context/discussions/1/text"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/SAAS-03.json",
+              "pointer": "/context/history/0"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/proposal/preservedTaskIds"
+            }
+          ]
+        },
+        {
+          "severity": "note",
+          "title": "正式责任和确认标准未被提议覆盖",
+          "reason": "UAT的钟宁Owner与12条核心流程标准保持原记录；许棠接手仅作为未确认提议解释，新增核对推荐沈言有职责及直接工作证据，未声称已接受责任。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/SAAS-03.json",
+              "pointer": "/confirmedFields"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/SAAS-03.json",
+              "pointer": "/context/discussions/2"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/reasoningSummary/2"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation"
+            }
+          ]
+        },
+        {
+          "severity": "note",
+          "title": "交接关系和日期被明确阻塞，而非遗漏",
+          "reason": "输出未擅自认定新增字段必须改变已确认UAT标准，也未宣称可以独立并行；两个阻塞问题覆盖UAT/培训的必要前置与最晚交付窗口，具体点出9月5日协作窗口和9月9/10/12日现行期限。补问在当前输入下有决策价值，不构成失败。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/SAAS-03.json",
+              "pointer": "/context/tasks/3"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/SAAS-03.json",
+              "pointer": "/context/tasks/4"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/SAAS-03.json",
+              "pointer": "/members/3/availability"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/questions"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/warnings/1"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/fields/schedule"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/protocol-snapshot.json",
+              "pointer": "/references~1context-and-replanning.md/content"
+            }
+          ]
+        },
+        {
+          "severity": "note",
+          "title": "未知投入和授权边界如实保留",
+          "reason": "新增人时、沈言容量和精确日期未编造，EWD为null；已有完成演练没有被当作生产迁移或上线授权，externalEffects为none。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/fields/estimate"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria/2"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/warnings"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/SAAS-03.json",
+              "pointer": "/externalEffects"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ECOM-03",
+      "verdict": "satisfies",
+      "reason": "候选建立第二批独立根，保护第一批完成记录，复用获得本批授权的图片v3，补齐包装v2、本批库存及页面/订单核对三个必要结果。包装和库存到页面测试的交接已写入结构依赖，并给出上线前的相对交付边界；没有具体冲突证据时，精确日期和人时未知不妨碍审阅范围与依赖。",
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/ECOM-03.json",
+          "pointer": "/message"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/ECOM-03.json",
+          "pointer": "/context/sourceRefs/3"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+          "pointer": "/proposal"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/6"
+        }
+      ],
+      "findings": [
+        {
+          "severity": "note",
+          "title": "新批次与素材复用区分准确",
+          "reason": "第二批与8月20日第一批按日期、批次、包装版本和本批核对范围区分，建立parentId为null的独立后续根；保留三个旧任务，仅通过证据及图片依赖复用旧产出。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/ECOM-03.json",
+              "pointer": "/context/tasks/0"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/ECOM-03.json",
+              "pointer": "/context/discussions/1"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/0"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/preservedTaskIds"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/duplicateCheck/assessments/0"
+            }
+          ]
+        },
+        {
+          "severity": "note",
+          "title": "交接关系已经进入计划",
+          "reason": "页面配置与测试结构化依赖包装v2、第二批库存和已完成图片；包装与库存分别明确需在被页面测试使用前提供，页面测试需在9月15日上线前完成。说明允许并行准备，未把所有工作机械串行，也没有只在tips提及交接。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/1/fields/schedule"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/2/fields/schedule"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/3/fields/dependsOnTaskIds"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/3/fields/schedule"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/3/fields/tips/0"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria/2"
+            }
+          ]
+        },
+        {
+          "severity": "note",
+          "title": "缺失的业务数据作为待核实结果，不被虚构或转嫁成不必要补问",
+          "reason": "包装是否含杯刷、实际可售数量和履约信息属于候选工作要核实的内容；输出明确来源核对和不得擅自承诺。人员建议有职责或相关经验依据，客服与仓配贡献有具体用途，没有加入投放或虚构预算、销量。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/ECOM-03.json",
+              "pointer": "/context/discussions/0"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/1/fields/acceptanceCriteria"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/1/fields/participantRecommendations"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/2/fields/acceptanceCriteria"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/3/fields/ownerRecommendation"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/0/fields/tips/0"
+            }
+          ]
+        },
+        {
+          "severity": "note",
+          "title": "可审阅范围不构成交期或执行承诺",
+          "reason": "9月15日来自明确请求；子项具体日期与所有人时保留未知，并明确前置赶不上时需要再确认。第一批12人时含首次拍摄/搭建，3天等待不计人时，二者均未迁移为本批估算；未声称已接受、已发布或已下单。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/ECOM-03.json",
+              "pointer": "/context/history/1"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/0/fields/schedule"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/0/fields/estimate"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/3/fields/schedule/assumptions/1"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/warnings"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/ECOM-03.json",
+              "pointer": "/externalEffects"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CONTENT-03",
+      "verdict": "satisfies",
+      "reason": "候选按客户确认局部更新现有根交付标准、进行中文案及待做公众号适配，保留主目标、正式Owner、五项功能范围和完成的图片v2。既有适配任务本来就依赖文案及视觉，输出同步更新适配验收标准以消费本轮修订文案，因此不是仅口头交接。",
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/CONTENT-03.json",
+          "pointer": "/message"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/CONTENT-03.json",
+          "pointer": "/context/sourceRefs/5"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+          "pointer": "/proposal"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-retest-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/18"
+        }
+      ],
+      "findings": [
+        {
+          "severity": "note",
+          "title": "修改范围与客户确认一致",
+          "reason": "只调整面向首次使用者的表达及公众号适配，没有新增功能、渠道、KPI或预算；已完成的功能范围和五张功能图保持不变，文案事实表述按作者报告优先保留。根标准同步体现新受众仍在用户剩余计划调整范围内。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/CONTENT-03.json",
+              "pointer": "/context/discussions/0"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/CONTENT-03.json",
+              "pointer": "/context/discussions/1"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/proposal/changes/1/fields/acceptanceCriteria"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/proposal/preservedTaskIds"
+            }
+          ]
+        },
+        {
+          "severity": "note",
+          "title": "受保护字段及责任交接未被改写",
+          "reason": "更新字段未包含已确认主目标或Owner；全文接手发言仍是提议，陶然保持文字稿责任，唐钰保持原适配责任。没有重建任务或改变原归属。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/CONTENT-03.json",
+              "pointer": "/confirmedFields"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/CONTENT-03.json",
+              "pointer": "/context/discussions/2"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/proposal/changes/0/fields"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/proposal/changes/1/fields/tips/1"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/proposal/changes/2/fields/tips/1"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/warnings/0"
+            }
+          ]
+        },
+        {
+          "severity": "note",
+          "title": "下游使用修订文案已落实到标准和既有依赖",
+          "reason": "输入中的公众号适配已依赖content03-copy和content03-visual；输出保持这两条有效依赖，同时把使用本轮修订文字版本和图片v2、图文对应检查及版本清单写入适配完成标准。没有必要为同一文案另造前置任务。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/CONTENT-03.json",
+              "pointer": "/context/tasks/4/dependsOnTaskIds"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/proposal/changes/1/fields/acceptanceCriteria/2"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/proposal/changes/2/fields/acceptanceCriteria"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/proposal/changes/2/fields/tips/0"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/reasoningSummary/3"
+            }
+          ]
+        },
+        {
+          "severity": "note",
+          "title": "日期、容量和发布边界没有被伪装成已确认",
+          "reason": "输入只有主任务9月8日期限，未给文案和适配独立日期或必需评审窗口；输出保留期限并如实说明篇幅、容量和投入未知。没有证据证明已知冲突或缺少必答决策，因此不必仅因未估工时而阻塞本轮差异审阅；输出也未将适配完成等同发布批准。",
+          "evidencePointers": [
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/CONTENT-03.json",
+              "pointer": "/context/tasks/0/dueOn"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/CONTENT-03.json",
+              "pointer": "/context/tasks/3"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/inputs/CONTENT-03.json",
+              "pointer": "/context/tasks/4"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/warnings"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/proposal/changes/2/fields/acceptanceCriteria/2"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-skill-retest-20260901/outputs/CONTENT-03.json",
+              "pointer": "/externalEffects"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total": 3,
+    "satisfies": 3,
+    "fails": 0,
+    "uncertain": 0,
+    "mustFixFindings": 0,
+    "noteFindings": 12
+  },
+  "conclusion": "三例均满足候选规划语义要求，无must_fix。SAAS的依赖及时间问题仍需下一轮澄清，输出已明确阻塞；ECOM与CONTENT的交接已落实到真实依赖和交付/验收边界。工时、容量、子项精确日期未知不被机械判为失败，也未被当作交期或授权保证。",
+  "evidenceValidation": {
+    "pointerCount": 77,
+    "allResolvable": true,
+    "validation": "写入前逐一在允许读取的原JSON文档中解析全部证据指针。"
+  }
+}

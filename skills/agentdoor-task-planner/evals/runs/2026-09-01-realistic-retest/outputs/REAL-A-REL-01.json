@@ -1,0 +1,164 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "syn-req-rel-a-01",
+  "baseSnapshotId": "syn-snapshot-rel-a-11",
+  "baseRevision": 11,
+  "baseTaskVersions": {
+    "syn-rel-root": 10,
+    "syn-rel-build": 6,
+    "syn-rel-assurance": 5,
+    "syn-rel-distribution": 5,
+    "syn-rel-desktop": 8,
+    "syn-rel-notary-v2": 2,
+    "syn-rel-backend": 5,
+    "syn-rel-qa": 4,
+    "syn-rel-regression": 7,
+    "syn-rel-security-gate": 4,
+    "syn-rel-canary": 3,
+    "syn-rel-release-notes": 4,
+    "syn-rel-store-submit": 3,
+    "syn-rel-final-approval": 3
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议复用现有 rc3 公证回执 v2 任务，只为安全闸门和商店提交补上该直接前置；不新建回执任务，也不改 9 月 12 日窗口、两小时灰度或已确认标准。",
+  "reasoningSummary": [
+    {
+      "text": "现有回执任务与本次要求是同一 4.8.0-rc3、同一 v2 回执及同一签署和哈希结果，且已确认复用。",
+      "evidenceRefs": [
+        "syn-req-rel-a-01",
+        "syn-rel-notary-v2",
+        "syn-rel-file-02",
+        "syn-rel-d03"
+      ]
+    },
+    {
+      "text": "安全闸门必须消费已签署回执；当前仅有未签署草稿，原依赖只含回归，不能据此视为闸门通过。",
+      "evidenceRefs": [
+        "syn-rel-security-gate",
+        "syn-rel-file-03",
+        "syn-rel-file-04",
+        "syn-rel-d06"
+      ]
+    },
+    {
+      "text": "商店检查表同时要求发行说明和公证回执，而当前提交任务只依赖发行说明，因此需保留旧边并新增回执前置。",
+      "evidenceRefs": [
+        "syn-rel-store-submit",
+        "syn-rel-file-05",
+        "syn-rel-d07",
+        "syn-rel-d08"
+      ]
+    },
+    {
+      "text": "发布窗口和两小时灰度是明确保留的确认边界，本轮依赖修正不触碰这些字段。",
+      "evidenceRefs": [
+        "syn-req-rel-a-01",
+        "syn-rel-root",
+        "syn-rel-canary",
+        "syn-rel-file-01"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "syn-rel-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:rel-security-gate-add-notary",
+        "action": "update",
+        "targetId": "syn-rel-security-gate",
+        "parentId": "syn-rel-assurance",
+        "fields": {
+          "dependsOnTaskIds": [
+            "syn-rel-regression",
+            "syn-rel-notary-v2"
+          ]
+        },
+        "reason": "安全闸门会直接核对已签署公证回执，需在保留回归前置的基础上接入现有回执任务。",
+        "evidenceRefs": [
+          "syn-req-rel-a-01",
+          "syn-rel-notary-v2",
+          "syn-rel-security-gate",
+          "syn-rel-file-04",
+          "syn-rel-d08"
+        ]
+      },
+      {
+        "id": "change:rel-store-submit-add-notary",
+        "action": "update",
+        "targetId": "syn-rel-store-submit",
+        "parentId": "syn-rel-distribution",
+        "fields": {
+          "dependsOnTaskIds": [
+            "syn-rel-release-notes",
+            "syn-rel-notary-v2"
+          ]
+        },
+        "reason": "商店提交会直接使用发行说明和公证回执，需保留发行说明前置并接入现有回执任务。",
+        "evidenceRefs": [
+          "syn-req-rel-a-01",
+          "syn-rel-notary-v2",
+          "syn-rel-store-submit",
+          "syn-rel-file-05",
+          "syn-rel-d08"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "syn-rel-root",
+      "syn-rel-build",
+      "syn-rel-assurance",
+      "syn-rel-distribution",
+      "syn-rel-desktop",
+      "syn-rel-notary-v2",
+      "syn-rel-backend",
+      "syn-rel-qa",
+      "syn-rel-regression",
+      "syn-rel-canary",
+      "syn-rel-release-notes",
+      "syn-rel-final-approval"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-release-a"
+    ],
+    "assessments": [
+      {
+        "taskId": "syn-rel-notary-v2",
+        "relationship": "same_outcome",
+        "reason": "同一产品版本、rc3 构建、v2 回执和验收标准，完整覆盖本次回执结果，应直接复用。",
+        "evidenceRefs": [
+          "syn-req-rel-a-01",
+          "syn-rel-notary-v2",
+          "syn-rel-file-02",
+          "syn-rel-d03"
+        ]
+      },
+      {
+        "taskId": "syn-rel-security-gate",
+        "relationship": "overlap",
+        "reason": "安全闸门会消费回执证据，但还包含签名、SBOM 和回归结论，只与回执要求部分重叠。",
+        "evidenceRefs": [
+          "syn-rel-security-gate",
+          "syn-rel-file-04"
+        ]
+      }
+    ],
+    "coverageNote": "纯合成查重已覆盖授权团队的活动、归档与当前任务；未查询其他团队。"
+  },
+  "questions": [],
+  "warnings": [
+    "公证回执目前仍是未签署草稿；补充依赖只修正任务图，不代表回执、安全闸门或商店提交已经完成。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "syn-rel-root",
+      "label": "审阅两项依赖差异，确认后再由受控流程应用到候选草稿"
+    }
+  ],
+  "externalEffects": "none"
+}

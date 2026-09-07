@@ -1,0 +1,46 @@
+{
+  "synthetic": true,
+  "notice": "Only offline fixture transitions. No production records, ACL service, confirmations, writes or notifications are exercised.",
+  "episodes": [
+    {
+      "id": "A",
+      "name": "新草稿、局部改期、保持不变",
+      "seedCaseId": "CONTENT-01",
+      "turns": [
+        {"date": "2026-09-01", "asOf": "2026-09-01T18:00:00+08:00", "transition": "seed"},
+        {"date": "2026-09-01", "asOf": "2026-09-01T18:05:00+08:00", "transition": "draft", "event": "move_draft_deadline", "message": "保留刚才这份草稿的目的、校对范围和候选负责人，只把截止日期改成2026年9月3日。不要另建一份，也先别正式创建。"},
+        {"date": "2026-09-01", "asOf": "2026-09-01T18:10:00+08:00", "transition": "draft", "event": "no_change", "message": "这一版保持不变，继续保留为草稿。没有新增要求，不要为了回复再修改任何字段或新建任务。"}
+      ]
+    },
+    {
+      "id": "B",
+      "name": "新增字段、确认交接、复用已有培训",
+      "seedCaseId": "SAAS-03",
+      "turns": [
+        {"date": "2026-09-01", "asOf": "2026-09-01T18:00:00+08:00", "transition": "seed"},
+        {"date": "2026-09-02", "asOf": "2026-09-02T18:00:00+08:00", "transition": "draft", "event": "confirm_handoff", "message": "已确认：停用账号字段核对是UAT的必要输入，培训交接使用通过UAT的结果。沈言确认9月4日交付补充核对，钟宁可在9月5日下午核对，原UAT 9月9日、培训9月10日、主任务9月12日不变。沿用刚才的增量草稿和已有任务，只补齐必要日期与依赖，原负责人和12条UAT标准仍保留。"},
+        {"date": "2026-09-09", "asOf": "2026-09-09T17:00:00+08:00", "transition": "commit_simulated", "event": "complete_uat", "message": "上轮调整已经在这个合成场景中确认保存，字段核对和UAT都已有完成记录。培训仍按9月10日原安排继续，先看看是否还有必要改动；不用重新建培训，也不要重复已交付的结果。"}
+      ]
+    },
+    {
+      "id": "C",
+      "name": "确认后响应丢失、重复重试、不同SKU",
+      "seedCaseId": "ECOM-01",
+      "turns": [
+        {"date": "2026-09-01", "asOf": "2026-09-01T18:00:00+08:00", "transition": "seed"},
+        {"date": "2026-09-01", "asOf": "2026-09-01T18:05:00+08:00", "transition": "commit_simulated", "event": "lost_response", "message": "刚才确认按钮转了很久，我没看到成功页。还是SKU-CUP-A详情页那五处错字、颜北负责、9月2日交稿，帮我再建一次，别漏了。"},
+        {"date": "2026-09-01", "asOf": "2026-09-01T18:10:00+08:00", "transition": "retain", "event": "different_sku", "message": "SKU-CUP-A那份继续原样推进。这次另做SKU-CUP-B详情页的三处错字校对，仍由颜北负责，2026年9月3日交清稿和三处差异清单，不改图片、价格或卖点。"}
+      ]
+    },
+    {
+      "id": "D",
+      "name": "旧回复迟到、人工编辑、权限撤回",
+      "seedCaseId": "CONTENT-03",
+      "turns": [
+        {"date": "2026-09-01", "asOf": "2026-09-01T18:00:00+08:00", "transition": "seed"},
+        {"date": "2026-09-01", "asOf": "2026-09-01T18:05:00+08:00", "transition": "discard", "event": "human_edit", "message": "上一轮回复迟到了，不要应用旧候选。我已手动确认文字稿的新标准，当前快照就是最新版本；请只让现有公众号适配任务使用这份新标准对应的文案，别改主目标、负责人或我刚编辑的文字稿。"},
+        {"date": "2026-09-01", "asOf": "2026-09-01T18:10:00+08:00", "transition": "retain", "event": "revoke_acl", "message": "刚才我的团队权限被收回了，这个页面还能继续帮我调整剩下的任务吗？"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "artifactType": "offline_synthetic_multiturn_evaluation",
+  "createdOn": "2026-09-01",
+  "episodeCount": 4,
+  "turnCount": 12,
+  "executorContinuity": {
+    "A": "one executor conversation across 3 turns",
+    "B": "one executor conversation across 3 turns",
+    "C": "one executor conversation across 3 turns",
+    "D": "one executor conversation across 3 turns"
+  },
+  "plannerModelConfiguration": {
+    "modelSnapshot": "not_exposed",
+    "temperature": "not_exposed",
+    "seed": "not_exposed"
+  },
+  "transitionHarness": {
+    "kind": "synthetic_only",
+    "productionStore": false,
+    "mapsCandidateIdsToSyntheticIds": true,
+    "ownerAcceptanceSimulated": false,
+    "harnessAndProtocolHashesFrozenPerTurn": true
+  },
+  "firstAttemptHandling": {
+    "MULTI-B1": "raw first output and report preserved under B/turn-1/attempts/attempt-1; current output contains protocol-only repair before turn 2",
+    "MULTI-D2": "raw first output and report preserved under D/turn-2/attempts/attempt-1; current output contains protocol-only repair before turn 3",
+    "MULTI-C3": "semantic failure retained without correction"
+  },
+  "isolation": {
+    "expectationsHiddenFromExecutors": "enforced_by_orchestrator prompt and executor self-report",
+    "osLevelIsolation": false,
+    "sameEpisodeSharedConversation": true
+  },
+  "externalEffects": "none",
+  "productionServicesAccessed": false,
+  "productionWrites": false,
+  "reviewLimits": [
+    "same Codex model family may have been used across roles",
+    "reviewers are not human industry experts",
+    "cannot prove production ACL, retrieval, submit idempotency, concurrency, member acceptance, or actual writeback"
+  ]
+}

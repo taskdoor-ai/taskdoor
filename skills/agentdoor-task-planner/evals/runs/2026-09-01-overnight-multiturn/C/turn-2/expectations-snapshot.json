@@ -1,0 +1,24 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-C2",
+      "allowedIntents": [
+        "create",
+        "query"
+      ],
+      "allowedDispositions": [
+        "route_required",
+        "no_change"
+      ],
+      "maxCreates": 0,
+      "maxUpdates": 0,
+      "manualChecks": [
+        "根据合成保存回执及实际首轮生成任务定位原结果，不因用户没看到成功页再建，不声称自己已实施幂等服务。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "sim:C:1"
+      ]
+    }
+  ]
+}

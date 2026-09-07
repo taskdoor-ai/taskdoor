@@ -1,0 +1,35 @@
+{
+  "artifactType": "offline_synthetic_evaluation",
+  "createdOn": "2026-09-01",
+  "plannerModelConfiguration": {
+    "modelSnapshot": "not_exposed",
+    "temperature": "not_exposed",
+    "seed": "not_exposed"
+  },
+  "isolation": {
+    "expectationsHiddenFromExecutors": "enforced_by_orchestrator_prompt_and_executor_self_report",
+    "osLevelIsolation": false,
+    "casesWithinGroupSharedConversation": true
+  },
+  "externalEffects": "none",
+  "productionServicesAccessed": false,
+  "productionWrites": false,
+  "reviewLimits": [
+    "same Codex model family may have been used across roles",
+    "reviewers are not human industry experts",
+    "cannot prove production ACL, retrieval recall, submit idempotency, concurrency, member acceptance, or real writeback"
+  ],
+  "runKind": "first_attempt_industry_matrix",
+  "scenarioCount": 24,
+  "executorGrouping": [
+    "SAAS-01..04 + ECOM-01..04",
+    "NPI-01..04 + RETAIL-01..04",
+    "CONTENT-01..04 + RENO-01..04"
+  ],
+  "reviewGrouping": [
+    "SAAS + ECOM by non-author agent",
+    "NPI + RETAIL by non-author agent",
+    "CONTENT + RENO by non-author agent"
+  ],
+  "firstOutputsModified": false
+}

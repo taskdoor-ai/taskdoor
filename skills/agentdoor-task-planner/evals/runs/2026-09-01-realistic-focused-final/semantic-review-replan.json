@@ -1,0 +1,444 @@
+{
+  "cases": [
+    {
+      "caseId": "REAL-C-02",
+      "verdict": "fails",
+      "summary": "首次输出正确修补了异常核对到外币重估、再到日记账复核的最近生产者链，也保留了已完成银行对账和薪资最小披露边界；但它对证据索引制造了不必要的直接更新，并遗漏支撑入账日异常与正式回单等待的关键来源，未满足最小差异与关键冲突证据要求。",
+      "findings": [
+        {
+          "id": "REAL-C-02-MATRIX",
+          "type": "consumer_matrix",
+          "severity": "info",
+          "consumers": [
+            {
+              "taskId": "fc-fx",
+              "classification": [
+                "direct"
+              ],
+              "needs": "异常任务形成的正式回单与8月或9月归属结论，同时继续使用已封存银行对账基线。",
+              "producerOrAuthorityRefs": [
+                "fc-transfer-clear",
+                "fc-bank-recon"
+              ],
+              "requiredDependencyTaskIds": [
+                "fc-bank-recon",
+                "fc-transfer-clear"
+              ],
+              "evidenceIds": [
+                "fc-fx",
+                "fc-transfer-clear",
+                "fc-file-bank-advice-v2",
+                "fc-file-bank-wait-v1",
+                "fc-d2",
+                "fc-d9"
+              ]
+            },
+            {
+              "taskId": "fc-journal-approval",
+              "classification": [
+                "direct_reviewer"
+              ],
+              "needs": "直接复核外币重估形成的调整分录。",
+              "producerOrAuthorityRefs": [
+                "fc-fx"
+              ],
+              "requiredDependencyTaskIds": [
+                "fc-fx"
+              ],
+              "evidenceIds": [
+                "fc-journal-approval",
+                "fc-fx",
+                "fc-file-journal-pack-v4"
+              ]
+            },
+            {
+              "taskId": "fc-statements",
+              "classification": [
+                "transitive"
+              ],
+              "needs": "使用外币重估结果形成主报表；既有依赖已直接指向fc-fx。",
+              "producerOrAuthorityRefs": [
+                "fc-fx"
+              ],
+              "requiredDependencyTaskIds": [
+                "fc-ap",
+                "fc-payroll",
+                "fc-fx"
+              ],
+              "evidenceIds": [
+                "fc-statements",
+                "fc-file-trial-balance-v3",
+                "fc-d6"
+              ]
+            },
+            {
+              "taskId": "fc-audit-evidence",
+              "classification": [
+                "transitive",
+                "source_only"
+              ],
+              "needs": "经既有日记账复核和报表链路取得处理结果；最终带章回单作为原始证据被索引，不需要新增一条指向异常任务的直接边。",
+              "producerOrAuthorityRefs": [
+                "fc-journal-approval",
+                "fc-statements",
+                "final_stamped_receipt_source"
+              ],
+              "requiredDependencyTaskIds": [
+                "fc-journal-approval",
+                "fc-statements"
+              ],
+              "evidenceIds": [
+                "fc-audit-evidence",
+                "fc-d5",
+                "fc-external-role",
+                "fc-file-audit-index-v2"
+              ]
+            },
+            {
+              "taskId": "fc-board-pack",
+              "classification": [
+                "transitive"
+              ],
+              "needs": "仅消费已复核报表与关账证据，现有路径已覆盖异常结果。",
+              "producerOrAuthorityRefs": [
+                "fc-statements",
+                "fc-audit-evidence"
+              ],
+              "requiredDependencyTaskIds": [
+                "fc-statements",
+                "fc-audit-evidence"
+              ],
+              "evidenceIds": [
+                "fc-board-pack",
+                "fc-file-close-calendar-v6"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "REAL-C-02-F1",
+          "type": "planner_error",
+          "severity": "error",
+          "summary": "输出错误更新了fc-audit-evidence：它把外部问询写成新增验收标准，并新增fc-transfer-clear直接依赖。该任务原标准已覆盖必要证据索引，原始回单属于source_only；在本轮补齐fc-fx和fc-journal-approval后，它也已有两条传递路径获得处理结果。",
+          "evidenceIds": [
+            "fc-audit-evidence",
+            "fc-d5",
+            "fc-external-role",
+            "fc-journal-approval",
+            "fc-statements",
+            "fc-transfer-clear"
+          ],
+          "oracleRelation": "冻结期望明确把fc-audit-evidence列入mustNotUpdateTaskIds，并只允许更新fc-fx与fc-journal-approval；该限制与协议的传递消费者、source_only和逐字段最小差异规则一致。"
+        },
+        {
+          "id": "REAL-C-02-F2",
+          "type": "planner_error",
+          "severity": "error",
+          "summary": "输出没有在任何证据列表中引用fc-file-bank-advice-v2，也没有在reasoningSummary同时引用该银行通知与fc-d9的台账冲突。仅引用回单ETA不能证明实际9月1日入账或解释为何正式回单仍是归属裁定边界。",
+          "evidenceIds": [
+            "fc-file-bank-advice-v2",
+            "fc-d9",
+            "fc-file-bank-wait-v1",
+            "fc-transfer-clear",
+            "fc-d2"
+          ],
+          "oracleRelation": "冻结期望要求fc-file-bank-advice-v2；协议还要求直接支撑处置或不能视为完成的文件与讨论冲突在reasoningSummary中显式引用双方。"
+        },
+        {
+          "id": "REAL-C-02-F3",
+          "type": "planner_strength",
+          "severity": "pass",
+          "summary": "fc-fx保留fc-bank-recon并新增fc-transfer-clear，fc-journal-approval直接依赖fc-fx，符合最近生产者、保留旧有效边和直接审核者规则；已完成银行对账没有被重开。",
+          "evidenceIds": [
+            "fc-fx",
+            "fc-transfer-clear",
+            "fc-bank-recon",
+            "fc-journal-approval",
+            "fc-h3",
+            "fc-d2",
+            "fc-d4"
+          ]
+        },
+        {
+          "id": "REAL-C-02-F4",
+          "type": "boundary_check",
+          "severity": "pass",
+          "summary": "输出在reasoningSummary引用薪资最小披露边界，没有读取、复述或要求受限薪资行项目，也把回单ETA与9月5日硬关闭风险分开。",
+          "evidenceIds": [
+            "fc-privacy-boundary",
+            "fc-file-payroll-register-v5",
+            "fc-d8",
+            "fc-file-bank-wait-v1",
+            "fc-hard-close"
+          ]
+        },
+        {
+          "id": "REAL-C-02-F5",
+          "type": "frozen_grader_oracle_gap",
+          "severity": "warning",
+          "summary": "冻结oracle正确禁止更新fc-audit-evidence并要求fc-file-bank-advice-v2，但未把fc-file-bank-advice-v2与fc-d9设为冲突证据组，也未要求实际限制候选范围的fc-privacy-boundary；它能判出本次主要错误，但不足以完整执行冻结协议。",
+          "evidenceIds": [
+            "fc-file-bank-advice-v2",
+            "fc-d9",
+            "fc-privacy-boundary"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "status": "primary_failure",
+          "findingIds": [
+            "REAL-C-02-F1",
+            "REAL-C-02-F2"
+          ],
+          "summary": "主要失败来自消费者分层错误和关键来源漏引。"
+        },
+        "fixture": {
+          "status": "no_material_issue",
+          "findingIds": [],
+          "summary": "输入已完整提供任务图、外部问询权限、银行通知、台账冲突、等待回执、隐私边界和硬截止，足以作出确定判断。"
+        },
+        "frozen_grader_oracle": {
+          "status": "direction_correct_but_under_specified",
+          "findingIds": [
+            "REAL-C-02-F5"
+          ],
+          "summary": "oracle对允许更新范围和银行通知来源的方向正确，但缺少协议要求的冲突与隐私证据覆盖。"
+        }
+      }
+    },
+    {
+      "caseId": "REAL-C-03",
+      "verdict": "satisfies",
+      "summary": "首次输出只更新账号、设备、薪资登记和入职日核对四项排期，正确把已批准日期确认作为source_only权威事实，没有给归档任务制造冗余依赖，也完整保留生产数据权限、背景状态与候选隐私边界。",
+      "findings": [
+        {
+          "id": "REAL-C-03-MATRIX",
+          "type": "consumer_matrix",
+          "severity": "info",
+          "consumers": [
+            {
+              "taskId": "hr-account",
+              "classification": [
+                "source_only"
+              ],
+              "needs": "直接使用双方已批准的2026-09-16入职日控制基础账号激活；日期归档任务没有额外判断结果。",
+              "producerOrAuthorityRefs": [
+                "hr-file-date-amend-v2"
+              ],
+              "requiredDependencyTaskIds": [
+                "hr-offer-accept"
+              ],
+              "evidenceIds": [
+                "hr-account",
+                "hr-file-date-amend-v2",
+                "hr-d1",
+                "hr-d2",
+                "hr-d3"
+              ]
+            },
+            {
+              "taskId": "hr-laptop",
+              "classification": [
+                "source_only"
+              ],
+              "needs": "直接使用已批准日期确认和设备配送单，将交付截止改为9月15日；签收仍是完成边界。",
+              "producerOrAuthorityRefs": [
+                "hr-file-date-amend-v2",
+                "hr-file-device-dispatch-v2"
+              ],
+              "requiredDependencyTaskIds": [],
+              "evidenceIds": [
+                "hr-laptop",
+                "hr-file-device-dispatch-v2",
+                "hr-d8",
+                "hr-h6"
+              ]
+            },
+            {
+              "taskId": "hr-payroll",
+              "classification": [
+                "source_only"
+              ],
+              "needs": "只使用确认入职日和受控登记状态安排9月15日前完成，不读取银行、证件或税务字段。",
+              "producerOrAuthorityRefs": [
+                "hr-file-date-amend-v2",
+                "hr-file-payroll-check-v4"
+              ],
+              "requiredDependencyTaskIds": [
+                "hr-offer-accept"
+              ],
+              "evidenceIds": [
+                "hr-payroll",
+                "hr-d10",
+                "hr-privacy-boundary"
+              ]
+            },
+            {
+              "taskId": "hr-startday",
+              "classification": [
+                "direct_reviewer",
+                "source_only"
+              ],
+              "needs": "在9月16日直接核对账号、设备、培训、首周计划和薪资登记；日期来自批准文件，生产权限保持独立。",
+              "producerOrAuthorityRefs": [
+                "hr-account",
+                "hr-laptop",
+                "hr-policy",
+                "hr-weekplan",
+                "hr-payroll",
+                "hr-file-date-amend-v2"
+              ],
+              "requiredDependencyTaskIds": [
+                "hr-account",
+                "hr-laptop",
+                "hr-policy",
+                "hr-weekplan",
+                "hr-payroll"
+              ],
+              "evidenceIds": [
+                "hr-startday",
+                "hr-file-date-amend-v2",
+                "hr-d4"
+              ]
+            },
+            {
+              "taskId": "hr-prod-access",
+              "classification": [
+                "direct_reviewer"
+              ],
+              "needs": "独立审核背景最终状态、培训完成和岗位范围，随后由安全负责人批准；日期变更不改变该门禁。",
+              "producerOrAuthorityRefs": [
+                "hr-background",
+                "hr-policy",
+                "hr-role-outcomes"
+              ],
+              "requiredDependencyTaskIds": [
+                "hr-background",
+                "hr-policy",
+                "hr-role-outcomes"
+              ],
+              "evidenceIds": [
+                "hr-prod-access",
+                "hr-file-access-matrix-v6",
+                "hr-d4",
+                "hr-file-background-receipt-v3"
+              ]
+            },
+            {
+              "taskId": "hr-root/hr-onboarding/hr-readiness",
+              "classification": [
+                "transitive"
+              ],
+              "needs": "父层目标和2026-09-16日期已准确，通过四个既有子结果汇总，不需要重复更新。",
+              "producerOrAuthorityRefs": [
+                "hr-account",
+                "hr-laptop",
+                "hr-payroll",
+                "hr-startday"
+              ],
+              "requiredDependencyTaskIds": [],
+              "evidenceIds": [
+                "hr-root",
+                "hr-onboarding",
+                "hr-readiness",
+                "hr-h4"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "REAL-C-03-F1",
+          "type": "planner_strength",
+          "severity": "pass",
+          "summary": "输出只更新冻结期望允许且要求的四个任务：账号到9月16日、设备与薪资到9月15日、入职日核对到9月16日；其余任务全部保留。",
+          "evidenceIds": [
+            "hr-account",
+            "hr-laptop",
+            "hr-payroll",
+            "hr-startday",
+            "hr-file-date-amend-v2",
+            "hr-file-device-dispatch-v2",
+            "hr-d3",
+            "hr-d10"
+          ]
+        },
+        {
+          "id": "REAL-C-03-F2",
+          "type": "dependency_check",
+          "severity": "pass",
+          "summary": "输出没有把hr-date-amend强加为四项任务的新依赖。批准文件已足以提供日期事实，而该任务只负责归档与同步；hr-startday及hr-prod-access的既有直接审核依赖也保持正确。",
+          "evidenceIds": [
+            "hr-date-amend",
+            "hr-file-date-amend-v2",
+            "hr-startday",
+            "hr-prod-access",
+            "hr-d4"
+          ]
+        },
+        {
+          "id": "REAL-C-03-F3",
+          "type": "status_conflict_check",
+          "severity": "pass",
+          "summary": "输出在reasoningSummary同时引用hr-laptop正式9月14日日期、9月15日配送文件和冲突报告，并明确未签收不视为完成，正确处理了字段与文件冲突。",
+          "evidenceIds": [
+            "hr-laptop",
+            "hr-file-device-dispatch-v2",
+            "hr-d8",
+            "hr-h6"
+          ]
+        },
+        {
+          "id": "REAL-C-03-F4",
+          "type": "boundary_check",
+          "severity": "pass",
+          "summary": "输出引用hr-privacy-boundary和生产权限决定，仅使用背景pending状态与ETA，没有读取或复述背景、证件、银行、地址或联系方式正文，也没有修改独立生产权限门禁。",
+          "evidenceIds": [
+            "hr-privacy-boundary",
+            "hr-file-background-receipt-v3",
+            "hr-h7",
+            "hr-prod-access",
+            "hr-file-access-matrix-v6",
+            "hr-d4",
+            "hr-d5"
+          ]
+        },
+        {
+          "id": "REAL-C-03-F5",
+          "type": "frozen_grader_oracle_gap",
+          "severity": "warning",
+          "summary": "冻结oracle的更新范围、关键来源与生产权限证据组均与协议一致，但没有显式要求hr-laptop与hr-file-device-dispatch-v2或hr-d8成对出现来证明日期冲突；首次输出实际已经满足该更严格要求。",
+          "evidenceIds": [
+            "hr-laptop",
+            "hr-file-device-dispatch-v2",
+            "hr-d8"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "status": "satisfies",
+          "findingIds": [
+            "REAL-C-03-F1",
+            "REAL-C-03-F2",
+            "REAL-C-03-F3",
+            "REAL-C-03-F4"
+          ],
+          "summary": "规划器给出与输入、协议和冻结期望一致的最小差异。"
+        },
+        "fixture": {
+          "status": "no_material_issue",
+          "findingIds": [],
+          "summary": "输入明确提供双方日期确认、设备字段冲突、薪资可用窗口、生产权限门槛和隐私限制，足以确定计划。"
+        },
+        "frozen_grader_oracle": {
+          "status": "verdict_correct_with_minor_coverage_gap",
+          "findingIds": [
+            "REAL-C-03-F5"
+          ],
+          "summary": "oracle足以确认本次输出通过，但对日期冲突的成对证据要求编码不完整。"
+        }
+      }
+    }
+  ]
+}

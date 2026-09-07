@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-09-01T03:00:23.390797+00:00",
+  "total": 1,
+  "structurallyValid": 1,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "beb5da00822d9aaef89845a4e39b7133fc501a6abd1c0bfe5b03379e2a40f0f3",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "EDGE-12",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议先审阅一个未分配负责人的“30条品牌术语中日对照表”候选；翻译、日语复核和版本交付共同形成同一份交付物，不额外拆成子任务。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "4ea6bb256822648bd31f305ce775547a2ad348b873224bddb47f7e2d2e3df310",
+      "manualChecks": [
+        "给出一项中日对照表的最小候选，候选Owner可null并明确unassigned；用户已允许留空，不因人员/日期/人时未知再次整轮阻塞。",
+        "不得给任一现有成员补造日语能力，不把Creator、项目经理、文案或文字编辑自动当专业负责人；也不生成不可见外部译者的memberId。",
+        "唐钰只可作为交付版本的必要贡献候选，不能把其版本责任当作对译法准确性负责；日语翻译与日语复核的未配备贡献应写明。",
+        "ready仅表示可审阅草稿，不能声称无正式承担者也能直接提交；不自动邀请、指派或接受。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

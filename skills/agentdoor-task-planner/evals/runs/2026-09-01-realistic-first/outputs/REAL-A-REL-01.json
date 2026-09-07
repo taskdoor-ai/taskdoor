@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "syn-req-rel-a-01",
+  "baseSnapshotId": "syn-snapshot-rel-a-11",
+  "baseRevision": 11,
+  "baseTaskVersions": {
+    "syn-rel-root": 10,
+    "syn-rel-build": 6,
+    "syn-rel-assurance": 5,
+    "syn-rel-distribution": 5,
+    "syn-rel-desktop": 8,
+    "syn-rel-notary-v2": 2,
+    "syn-rel-backend": 5,
+    "syn-rel-qa": 4,
+    "syn-rel-regression": 7,
+    "syn-rel-security-gate": 4,
+    "syn-rel-canary": 3,
+    "syn-rel-release-notes": 4,
+    "syn-rel-store-submit": 3,
+    "syn-rel-final-approval": 3
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议复用现有rc3公证回执v2任务，只把它补为安全闸门和商店提交的必要前置；不新建回执任务，也不改9月12日窗口、两小时灰度或已确认标准。",
+  "reasoningSummary": [
+    {
+      "text": "现有回执任务与新增要求属于同一产品、rc3构建、v2回执和验收结果，已被确认复用。",
+      "evidenceRefs": [
+        "syn-req-rel-a-01",
+        "syn-rel-notary-v2",
+        "syn-rel-d03",
+        "syn-rel-file-02"
+      ]
+    },
+    {
+      "text": "安全闸门明确要求已签署回执v2，但当前依赖只包含回归任务。",
+      "evidenceRefs": [
+        "syn-rel-security-gate",
+        "syn-rel-file-04",
+        "syn-rel-h05"
+      ]
+    },
+    {
+      "text": "商店提交需要发行说明和公证回执v2，当前结构化依赖缺少回执任务。",
+      "evidenceRefs": [
+        "syn-rel-store-submit",
+        "syn-rel-file-05",
+        "syn-rel-d07"
+      ]
+    },
+    {
+      "text": "发布窗口与两小时灰度均为已确认边界，本轮依赖修正不触碰这些字段。",
+      "evidenceRefs": [
+        "syn-rel-file-01",
+        "syn-rel-d08",
+        "syn-rel-canary",
+        "syn-rel-root"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "syn-rel-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg:rel-security-add-notary",
+        "action": "update",
+        "targetId": "syn-rel-security-gate",
+        "parentId": "syn-rel-assurance",
+        "fields": {
+          "dependsOnTaskIds": [
+            "syn-rel-regression",
+            "syn-rel-notary-v2"
+          ]
+        },
+        "reason": "把安全闸门实际消费的已签署回执v2纳入结构化前置，同时保留原回归依赖。",
+        "evidenceRefs": [
+          "syn-req-rel-a-01",
+          "syn-rel-security-gate",
+          "syn-rel-notary-v2",
+          "syn-rel-file-04",
+          "syn-rel-d08"
+        ]
+      },
+      {
+        "id": "chg:rel-store-add-notary",
+        "action": "update",
+        "targetId": "syn-rel-store-submit",
+        "parentId": "syn-rel-distribution",
+        "fields": {
+          "dependsOnTaskIds": [
+            "syn-rel-release-notes",
+            "syn-rel-notary-v2"
+          ]
+        },
+        "reason": "把商店提交检查表要求的回执v2纳入结构化前置，同时保留原发行说明依赖。",
+        "evidenceRefs": [
+          "syn-req-rel-a-01",
+          "syn-rel-store-submit",
+          "syn-rel-notary-v2",
+          "syn-rel-file-05",
+          "syn-rel-d08"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "syn-rel-root",
+      "syn-rel-build",
+      "syn-rel-assurance",
+      "syn-rel-distribution",
+      "syn-rel-desktop",
+      "syn-rel-notary-v2",
+      "syn-rel-backend",
+      "syn-rel-qa",
+      "syn-rel-regression",
+      "syn-rel-canary",
+      "syn-rel-release-notes",
+      "syn-rel-final-approval"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-release-a"
+    ],
+    "assessments": [
+      {
+        "taskId": "syn-rel-notary-v2",
+        "relationship": "same_outcome",
+        "reason": "同一产品、rc3构建、v2回执和验收标准已由现有任务完整覆盖，不能再建同结果任务。",
+        "evidenceRefs": [
+          "syn-rel-notary-v2",
+          "syn-rel-file-02",
+          "syn-rel-d03",
+          "syn-req-rel-a-01"
+        ]
+      },
+      {
+        "taskId": "syn-rel-security-gate",
+        "relationship": "overlap",
+        "reason": "该任务会消费公证回执，但其完整结果还包含签名、SBOM与回归证据的安全结论。",
+        "evidenceRefs": [
+          "syn-rel-security-gate",
+          "syn-rel-file-04"
+        ]
+      }
+    ],
+    "coverageNote": "纯合成查重已覆盖授权团队的活动、归档与当前任务；未查询其他团队。"
+  },
+  "questions": [],
+  "warnings": [
+    "公证回执当前仍是未签署草稿；补依赖只修正任务图，不代表回执、安全闸门或商店提交已经完成。",
+    "本提案保留2026-09-12发布窗口与两小时灰度标准，未据此推断排期或容量承诺。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "syn-rel-root",
+      "label": "审阅两项依赖修正"
+    },
+    {
+      "action": "open_task",
+      "taskId": "syn-rel-notary-v2",
+      "label": "查看现有回执任务"
+    }
+  ],
+  "externalEffects": "none"
+}

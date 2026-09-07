@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-c2",
+  "baseSnapshotId": "snapshot-multi-c2",
+  "baseRevision": 2,
+  "baseTaskVersions": {
+    "sim:C:1": 1
+  },
+  "intent": "create",
+  "disposition": "route_required",
+  "summary": "当前合成快照中已存在同一结果的开放记录sim:C:1：SKU-CUP-A详情页五处错字校对、颜北为候选负责人、9月2日交清稿和改动清单。建议打开该记录核对，不再创建第二份；本地合成回执不代表生产创建或正式指派成功。",
+  "reasoningSummary": [
+    {
+      "text": "本轮请求与sim:C:1的SKU、五处错字范围、清稿和改动清单、9月2日期限均一致，没有新增周期、页面版本或交付缺口。",
+      "evidenceRefs": [
+        "req-multi-c2",
+        "sim:C:1",
+        "ecom01-copy"
+      ]
+    },
+    {
+      "text": "sim:C:1在当前授权快照中为open、版本1；查重已覆盖team-ecom并返回它作为前轮合成保存记录。",
+      "evidenceRefs": [
+        "sim:C:1",
+        "simulation-candidate-context",
+        "simulation-C-receipt-1"
+      ]
+    },
+    {
+      "text": "合成保存回执明确只存在于本地JSON，未调用真实创建或幂等服务，因此只能据本轮快照避免重复候选，不能声称生产任务已经创建成功。",
+      "evidenceRefs": [
+        "simulation-C-receipt-1"
+      ]
+    },
+    {
+      "text": "记录中的正式ownerId仍为null；颜北只出现在ownerRecommendation中，用户重述负责人也不能让规划输出代替正式接受或指派。",
+      "evidenceRefs": [
+        "sim:C:1",
+        "req-multi-c2",
+        "ecom-m2-role",
+        "simulation-candidate-context"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "sim:C:1",
+        "relationship": "same_outcome",
+        "reason": "同一SKU-CUP-A详情页、同一五处错字清单、同一清稿与改动清单交付、同一9月2日期限；本轮没有独立的新范围，重建只会产生重复结果。",
+        "evidenceRefs": [
+          "req-multi-c2",
+          "sim:C:1",
+          "ecom01-copy",
+          "simulation-C-receipt-1"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "sim:C:1及保存回执均为离线合成夹具记录；本输出不证明生产系统创建、提交幂等或成功页状态。",
+    "sim:C:1的正式ownerId为null；颜北仍只是明确指定且职责匹配的候选负责人，尚无接受或正式指派记录。",
+    "保留sim:C:1版本1、开放状态、9月2日期限、五处校对范围和所有现有字段，不更新或复制该记录。",
+    "本轮未执行创建、重试提交、指派、通知、页面发布或其他外部动作。"
+  ],
+  "nextActions": [
+    {
+      "action": "open_task",
+      "taskId": "sim:C:1",
+      "label": "查看现有五处错字校对记录并核对合成保存状态"
+    }
+  ],
+  "externalEffects": "none"
+}

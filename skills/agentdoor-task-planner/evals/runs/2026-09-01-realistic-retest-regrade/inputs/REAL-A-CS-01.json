@@ -1,0 +1,1036 @@
+{
+  "requestId": "syn-req-cs-a-01",
+  "message": "帮我查一下INC-SYN-482现在能不能对外说“事故已解决”？请给结论、依据和下一步核对动作，不要创建、修改、指派或发送任何内容。",
+  "currentDate": "2026-09-06",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "syn-cs-m1",
+  "teamId": "syn-team-support-a",
+  "authorizedTeamIds": [
+    "syn-team-support-a"
+  ],
+  "revision": 17,
+  "currentTaskId": "syn-cs-root",
+  "synthetic": true,
+  "context": {
+    "snapshotId": "syn-snapshot-cs-a-17",
+    "asOf": "2026-09-06T11:35:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "syn-team-support-a"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete",
+      "files": "complete"
+    },
+    "tasks": [
+      {
+        "id": "syn-cs-root",
+        "title": "处置INC-SYN-482请求积压事故",
+        "status": "in_progress",
+        "version": 16,
+        "updatedAt": "2026-09-06T11:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "恢复门槛满足并由事故指挥记录状态结论",
+          "客户影响与数据影响边界可追溯"
+        ],
+        "ownerId": "syn-cs-m1",
+        "sourceRefs": [
+          "syn-cs-file-01",
+          "syn-cs-file-04"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": [],
+        "goal": "恢复合成服务请求处理并以证据控制客户结论",
+        "identity": {
+          "incident": "INC-SYN-482",
+          "service": "合成·岭灯请求服务",
+          "severity": "P1"
+        }
+      },
+      {
+        "id": "syn-cs-mitigation",
+        "title": "恢复请求处理并验证稳定",
+        "status": "in_progress",
+        "version": 9,
+        "updatedAt": "2026-09-06T11:15:00+08:00",
+        "parentId": "syn-cs-root",
+        "acceptanceCriteria": [
+          "队列清空并满足120分钟稳定门槛"
+        ],
+        "ownerId": "syn-cs-m3",
+        "sourceRefs": [
+          "syn-cs-file-02",
+          "syn-cs-file-04"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-cs-comms",
+        "title": "控制事故客户沟通",
+        "status": "in_progress",
+        "version": 7,
+        "updatedAt": "2026-09-06T11:20:00+08:00",
+        "parentId": "syn-cs-root",
+        "acceptanceCriteria": [
+          "状态页和案例回复符合批准门槛"
+        ],
+        "ownerId": "syn-cs-m6",
+        "sourceRefs": [
+          "syn-cs-file-01",
+          "syn-cs-file-03",
+          "syn-cs-file-05"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-cs-learning",
+        "title": "形成事故根因与复盘记录",
+        "status": "open",
+        "version": 4,
+        "updatedAt": "2026-09-06T10:30:00+08:00",
+        "parentId": "syn-cs-root",
+        "acceptanceCriteria": [
+          "时间线、根因和改进项区分事实与假设"
+        ],
+        "ownerId": "syn-cs-m7",
+        "sourceRefs": [
+          "syn-cs-file-06"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-cs-evidence",
+        "title": "形成事故技术证据包",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-06T10:30:00+08:00",
+        "parentId": "syn-cs-mitigation",
+        "acceptanceCriteria": [
+          "日志、复现与数据影响初查可定位"
+        ],
+        "ownerId": "syn-cs-m4",
+        "sourceRefs": [
+          "syn-cs-file-06"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-cs-logs",
+        "title": "固化事故日志快照",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2026-09-06T09:45:00+08:00",
+        "parentId": "syn-cs-evidence",
+        "acceptanceCriteria": [
+          "关键节点日志含时间范围和缺口说明"
+        ],
+        "ownerId": "syn-cs-m3",
+        "sourceRefs": [
+          "syn-cs-file-06"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": [],
+        "deliveryEvidence": [
+          {
+            "sourceRef": "syn-cs-file-06",
+            "summary": "当前已采集节点日志固化，覆盖仍有限。"
+          }
+        ]
+      },
+      {
+        "id": "syn-cs-repro",
+        "title": "复现请求积压路径",
+        "status": "completed",
+        "version": 4,
+        "updatedAt": "2026-09-06T10:10:00+08:00",
+        "parentId": "syn-cs-evidence",
+        "acceptanceCriteria": [
+          "合成环境复现队列锁竞争并保留步骤"
+        ],
+        "ownerId": "syn-cs-m4",
+        "sourceRefs": [
+          "syn-cs-file-02"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": [],
+        "deliveryEvidence": [
+          {
+            "sourceRef": "syn-cs-file-02",
+            "summary": "复现完成，不等于生产恢复。"
+          }
+        ]
+      },
+      {
+        "id": "syn-cs-shift",
+        "title": "完成受影响流量切换",
+        "status": "completed",
+        "version": 6,
+        "updatedAt": "2026-09-06T10:20:00+08:00",
+        "parentId": "syn-cs-mitigation",
+        "acceptanceCriteria": [
+          "流量切换有执行与回退记录"
+        ],
+        "ownerId": "syn-cs-m3",
+        "sourceRefs": [
+          "syn-cs-file-02"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": [],
+        "deliveryEvidence": [
+          {
+            "sourceRef": "syn-cs-file-02",
+            "summary": "流量切换已完成。"
+          }
+        ]
+      },
+      {
+        "id": "syn-cs-drain",
+        "title": "清空积压请求队列",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-06T11:15:00+08:00",
+        "parentId": "syn-cs-mitigation",
+        "acceptanceCriteria": [
+          "队列归零且无新积压"
+        ],
+        "ownerId": "syn-cs-m3",
+        "sourceRefs": [
+          "syn-cs-file-02"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": [
+          "syn-cs-shift"
+        ]
+      },
+      {
+        "id": "syn-cs-verify",
+        "title": "完成120分钟恢复验证",
+        "status": "open",
+        "version": 4,
+        "updatedAt": "2026-09-06T11:15:00+08:00",
+        "parentId": "syn-cs-mitigation",
+        "acceptanceCriteria": [
+          "连续120分钟指标稳定、队列清空并记录异常"
+        ],
+        "ownerId": "syn-cs-m3",
+        "sourceRefs": [
+          "syn-cs-file-02",
+          "syn-cs-file-04"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": [
+          "syn-cs-drain",
+          "syn-cs-repro"
+        ]
+      },
+      {
+        "id": "syn-cs-status-update",
+        "title": "维护事故状态页更新",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-06T10:50:00+08:00",
+        "parentId": "syn-cs-comms",
+        "acceptanceCriteria": [
+          "状态页描述当前缓解与未知，不提前写已解决"
+        ],
+        "ownerId": "syn-cs-m6",
+        "sourceRefs": [
+          "syn-cs-file-01",
+          "syn-cs-file-05"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": [
+          "syn-cs-shift"
+        ]
+      },
+      {
+        "id": "syn-cs-case-replies",
+        "title": "处理新增P1客户案例",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-06T11:20:00+08:00",
+        "parentId": "syn-cs-comms",
+        "acceptanceCriteria": [
+          "新增P1案例均有影响确认与回复记录"
+        ],
+        "ownerId": "syn-cs-m2",
+        "sourceRefs": [
+          "syn-cs-file-03"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": []
+      },
+      {
+        "id": "syn-cs-allclear",
+        "title": "形成客户全量恢复批准记录",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-06T10:50:00+08:00",
+        "parentId": "syn-cs-comms",
+        "acceptanceCriteria": [
+          "120分钟稳定、队列清空且无新增P1后批准或拒绝话术"
+        ],
+        "ownerId": "syn-cs-m1",
+        "sourceRefs": [
+          "syn-cs-file-03",
+          "syn-cs-file-04",
+          "syn-cs-file-05"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": [
+          "syn-cs-verify",
+          "syn-cs-case-replies"
+        ]
+      },
+      {
+        "id": "syn-cs-rca",
+        "title": "形成INC-SYN-482根因结论",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-06T10:30:00+08:00",
+        "parentId": "syn-cs-learning",
+        "acceptanceCriteria": [
+          "区分已证实原因、贡献因素和未知"
+        ],
+        "ownerId": "syn-cs-m4",
+        "sourceRefs": [
+          "syn-cs-file-06"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": [
+          "syn-cs-logs",
+          "syn-cs-repro"
+        ]
+      },
+      {
+        "id": "syn-cs-postmortem",
+        "title": "形成INC-SYN-482复盘记录",
+        "status": "open",
+        "version": 2,
+        "updatedAt": "2026-09-06T10:30:00+08:00",
+        "parentId": "syn-cs-learning",
+        "acceptanceCriteria": [
+          "根因、恢复证据和改进Owner候选可核对"
+        ],
+        "ownerId": "syn-cs-m7",
+        "sourceRefs": [
+          "syn-cs-file-02",
+          "syn-cs-file-06"
+        ],
+        "dueOn": null,
+        "dependsOnTaskIds": [
+          "syn-cs-rca",
+          "syn-cs-verify"
+        ]
+      }
+    ],
+    "discussions": [
+      {
+        "id": "syn-cs-d01",
+        "taskId": "syn-cs-root",
+        "authorId": "syn-cs-m3",
+        "createdAt": "2026-09-06T10:25:00+08:00",
+        "threadId": "syn-cs-thread-status",
+        "replyToId": null,
+        "kind": "report",
+        "state": "active",
+        "text": "流量已切换，错误率恢复到阈值内；这只是缓解报告。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-cs-d02",
+        "taskId": "syn-cs-root",
+        "authorId": "syn-cs-m6",
+        "createdAt": "2026-09-06T10:35:00+08:00",
+        "threadId": "syn-cs-thread-status",
+        "replyToId": "syn-cs-d01",
+        "kind": "proposal",
+        "state": "active",
+        "text": "建议状态页直接写“事故已解决”，减少重复咨询。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-cs-d03",
+        "taskId": "syn-cs-root",
+        "authorId": "syn-cs-m1",
+        "createdAt": "2026-09-06T10:42:00+08:00",
+        "threadId": "syn-cs-thread-status",
+        "replyToId": "syn-cs-d02",
+        "kind": "decision",
+        "state": "confirmed",
+        "text": "不批准“已解决”；按全量恢复门槛继续观察。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-cs-d04",
+        "taskId": "syn-cs-root",
+        "authorId": "syn-cs-m6",
+        "createdAt": "2026-09-06T10:50:00+08:00",
+        "threadId": "syn-cs-thread-status",
+        "replyToId": "syn-cs-d03",
+        "kind": "proposal",
+        "state": "withdrawn",
+        "text": "撤回全量恢复话术草稿，状态页继续写“已缓解、持续观察”。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-cs-d05",
+        "taskId": "syn-cs-verify",
+        "authorId": "syn-cs-m3",
+        "createdAt": "2026-09-06T11:15:00+08:00",
+        "threadId": "syn-cs-thread-verify",
+        "replyToId": null,
+        "kind": "report",
+        "state": "active",
+        "text": "指标已稳定45分钟，队列仍有37条；尚未达到120分钟。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-cs-d06",
+        "taskId": "syn-cs-case-replies",
+        "authorId": "syn-cs-m2",
+        "createdAt": "2026-09-06T11:20:00+08:00",
+        "threadId": "syn-cs-thread-cases",
+        "replyToId": null,
+        "kind": "report",
+        "state": "conflicting_report",
+        "text": "切流后新增4个P1案例，2个等待回复；与“影响已清零”说法冲突。",
+        "source": "synthetic_discussion_store",
+        "conflictWithId": "syn-cs-d02"
+      },
+      {
+        "id": "syn-cs-d07",
+        "taskId": "syn-cs-rca",
+        "authorId": "syn-cs-m5",
+        "createdAt": "2026-09-06T11:23:00+08:00",
+        "threadId": "syn-cs-thread-privacy",
+        "replyToId": null,
+        "kind": "report",
+        "state": "active",
+        "text": "当前日志未见数据外泄迹象，但采集覆盖不完整，不能改写成确认无影响。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "syn-cs-d08",
+        "taskId": "syn-cs-root",
+        "authorId": "syn-cs-m1",
+        "createdAt": "2026-09-06T11:28:00+08:00",
+        "threadId": "syn-cs-thread-status",
+        "replyToId": "syn-cs-d03",
+        "kind": "decision",
+        "state": "confirmed",
+        "text": "当前正式状态保持in_progress；下一次结论核对需同时读取120分钟验证和P1案例。",
+        "source": "synthetic_discussion_store",
+        "relatedDiscussionIds": [
+          "syn-cs-d05",
+          "syn-cs-d06",
+          "syn-cs-d07"
+        ]
+      }
+    ],
+    "history": [
+      {
+        "id": "syn-cs-h01",
+        "taskId": "syn-cs-root",
+        "occurredAt": "2026-09-06T08:20:00+08:00",
+        "type": "severity_confirmed",
+        "summary": "事故等级以版本12确认为P1。",
+        "version": 12,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-cs-h02",
+        "taskId": "syn-cs-logs",
+        "occurredAt": "2026-09-06T09:45:00+08:00",
+        "type": "task_completed",
+        "summary": "日志快照以版本5完成，保留覆盖缺口。",
+        "version": 5,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-cs-h03",
+        "taskId": "syn-cs-repro",
+        "occurredAt": "2026-09-06T10:10:00+08:00",
+        "type": "task_completed",
+        "summary": "积压路径复现以版本4完成。",
+        "version": 4,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-cs-h04",
+        "taskId": "syn-cs-shift",
+        "occurredAt": "2026-09-06T10:20:00+08:00",
+        "type": "task_completed",
+        "summary": "受影响流量切换以版本6完成。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-cs-h05",
+        "taskId": "syn-cs-status-update",
+        "occurredAt": "2026-09-06T10:50:00+08:00",
+        "type": "draft_withdrawn",
+        "summary": "全量恢复草稿撤回，任务升至版本6并保持in_progress。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "syn-cs-h06",
+        "taskId": "syn-cs-root",
+        "occurredAt": "2026-09-06T11:30:00+08:00",
+        "type": "status_reviewed",
+        "summary": "依据45分钟监控和新增P1案例，版本16保持in_progress。",
+        "version": 16,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "files": [
+      {
+        "id": "syn-cs-file-01",
+        "fileName": "INC-SYN-482-severity-declaration.pdf",
+        "mimeType": "application/pdf",
+        "version": 2,
+        "checksum": "d9a07f79adb8e6c035d8335b470c40e6b48617072ef57f1f2b8af23ee978d070",
+        "status": "approved",
+        "updatedAt": "2026-09-06T08:20:00+08:00",
+        "linkedTaskIds": [
+          "syn-cs-root",
+          "syn-cs-comms"
+        ],
+        "summary": "INC-SYN-482被确认为P1部分请求积压；正式状态保持in_progress，直到恢复验证和客户案例门槛满足。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-cs-file-02",
+        "fileName": "INC-SYN-482-metrics-v5.json",
+        "mimeType": "application/json",
+        "version": 5,
+        "checksum": "97600de8c36e2bfe33d1e71624d3fa9c664d06600ecf90cf054e090964ae5651",
+        "status": "current_partial_window",
+        "updatedAt": "2026-09-06T11:15:00+08:00",
+        "linkedTaskIds": [
+          "syn-cs-drain",
+          "syn-cs-verify"
+        ],
+        "summary": "流量切换后错误率稳定45分钟，队列仍有37条；观察窗不足批准的120分钟，不能单独支持“已解决”。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-cs-file-03",
+        "fileName": "INC-SYN-482-p1-cases-v4.csv",
+        "mimeType": "text/csv",
+        "version": 4,
+        "checksum": "7d95c934ebc93fbb5e6eb8ce4bb12111fd01ebfa325c8e5da0809b8429f00f14",
+        "status": "current",
+        "updatedAt": "2026-09-06T11:20:00+08:00",
+        "linkedTaskIds": [
+          "syn-cs-case-replies",
+          "syn-cs-allclear"
+        ],
+        "summary": "流量切换后仍新增4个纯合成P1案例，其中2个等待回复；与“客户影响已清零”的口头报告冲突。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-cs-file-04",
+        "fileName": "INC-SYN-482-all-clear-criteria.pdf",
+        "mimeType": "application/pdf",
+        "version": 3,
+        "checksum": "6894aa96a4fc00fafb411a7dd8abdee0203f3ee816a7d0ed6af3b7c2b4f9d815",
+        "status": "approved",
+        "updatedAt": "2026-09-06T09:00:00+08:00",
+        "linkedTaskIds": [
+          "syn-cs-root",
+          "syn-cs-verify",
+          "syn-cs-allclear"
+        ],
+        "summary": "只有连续120分钟关键指标稳定、队列清空且无新增P1案例，事故指挥才可批准“已解决”话术。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-cs-file-05",
+        "fileName": "INC-SYN-482-all-clear-draft.md",
+        "mimeType": "text/markdown",
+        "version": 2,
+        "checksum": "01642d8823a35702adaac25d178b7e15c0c1a87d1bb54b0e66cf9154add87caf",
+        "status": "withdrawn_draft",
+        "updatedAt": "2026-09-06T10:50:00+08:00",
+        "linkedTaskIds": [
+          "syn-cs-status-update",
+          "syn-cs-allclear"
+        ],
+        "summary": "草稿曾写“服务已完全恢复”，因观察窗和P1案例未满足门槛被撤回，不能作为已发送或已批准证据。",
+        "source": "synthetic_file_store"
+      },
+      {
+        "id": "syn-cs-file-06",
+        "fileName": "INC-SYN-482-data-impact-review.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": 1,
+        "checksum": "1974d00fdd8902b166c5c508dd9fbe1b6da828c16afa888c6857462410e5bd7c",
+        "status": "preliminary",
+        "updatedAt": "2026-09-06T10:30:00+08:00",
+        "linkedTaskIds": [
+          "syn-cs-logs",
+          "syn-cs-rca"
+        ],
+        "summary": "当前可见日志未发现数据外泄迹象，但覆盖仅到已采集节点；结论是“尚未发现”，不是“确认无影响”。",
+        "source": "synthetic_file_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "syn-cs-file-01",
+        "title": "事故等级声明（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。INC-SYN-482被确认为P1部分请求积压；正式状态保持in_progress，直到恢复验证和客户案例门槛满足。",
+        "updatedAt": "2026-09-06T08:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "INC-SYN-482-severity-declaration.pdf",
+        "mimeType": "application/pdf",
+        "version": 2,
+        "checksum": "d9a07f79adb8e6c035d8335b470c40e6b48617072ef57f1f2b8af23ee978d070",
+        "status": "approved",
+        "linkedTaskIds": [
+          "syn-cs-root",
+          "syn-cs-comms"
+        ]
+      },
+      {
+        "id": "syn-cs-file-02",
+        "title": "恢复监控快照（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。流量切换后错误率稳定45分钟，队列仍有37条；观察窗不足批准的120分钟，不能单独支持“已解决”。",
+        "updatedAt": "2026-09-06T11:15:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "INC-SYN-482-metrics-v5.json",
+        "mimeType": "application/json",
+        "version": 5,
+        "checksum": "97600de8c36e2bfe33d1e71624d3fa9c664d06600ecf90cf054e090964ae5651",
+        "status": "current_partial_window",
+        "linkedTaskIds": [
+          "syn-cs-drain",
+          "syn-cs-verify"
+        ]
+      },
+      {
+        "id": "syn-cs-file-03",
+        "title": "P1案例趋势（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。流量切换后仍新增4个纯合成P1案例，其中2个等待回复；与“客户影响已清零”的口头报告冲突。",
+        "updatedAt": "2026-09-06T11:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "INC-SYN-482-p1-cases-v4.csv",
+        "mimeType": "text/csv",
+        "version": 4,
+        "checksum": "7d95c934ebc93fbb5e6eb8ce4bb12111fd01ebfa325c8e5da0809b8429f00f14",
+        "status": "current",
+        "linkedTaskIds": [
+          "syn-cs-case-replies",
+          "syn-cs-allclear"
+        ]
+      },
+      {
+        "id": "syn-cs-file-04",
+        "title": "全量恢复发布门槛（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。只有连续120分钟关键指标稳定、队列清空且无新增P1案例，事故指挥才可批准“已解决”话术。",
+        "updatedAt": "2026-09-06T09:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "INC-SYN-482-all-clear-criteria.pdf",
+        "mimeType": "application/pdf",
+        "version": 3,
+        "checksum": "6894aa96a4fc00fafb411a7dd8abdee0203f3ee816a7d0ed6af3b7c2b4f9d815",
+        "status": "approved",
+        "linkedTaskIds": [
+          "syn-cs-root",
+          "syn-cs-verify",
+          "syn-cs-allclear"
+        ]
+      },
+      {
+        "id": "syn-cs-file-05",
+        "title": "客户全量恢复话术草稿（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。草稿曾写“服务已完全恢复”，因观察窗和P1案例未满足门槛被撤回，不能作为已发送或已批准证据。",
+        "updatedAt": "2026-09-06T10:50:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "INC-SYN-482-all-clear-draft.md",
+        "mimeType": "text/markdown",
+        "version": 2,
+        "checksum": "01642d8823a35702adaac25d178b7e15c0c1a87d1bb54b0e66cf9154add87caf",
+        "status": "withdrawn_draft",
+        "linkedTaskIds": [
+          "syn-cs-status-update",
+          "syn-cs-allclear"
+        ]
+      },
+      {
+        "id": "syn-cs-file-06",
+        "title": "数据影响初查（纯合成）",
+        "text": "纯合成文件摘要，不对应任何真实个人或公司。当前可见日志未发现数据外泄迹象，但覆盖仅到已采集节点；结论是“尚未发现”，不是“确认无影响”。",
+        "updatedAt": "2026-09-06T10:30:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "INC-SYN-482-data-impact-review.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": 1,
+        "checksum": "1974d00fdd8902b166c5c508dd9fbe1b6da828c16afa888c6857462410e5bd7c",
+        "status": "preliminary",
+        "linkedTaskIds": [
+          "syn-cs-logs",
+          "syn-cs-rca"
+        ]
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-support-a"
+    ],
+    "matches": [
+      {
+        "taskId": "syn-cs-root",
+        "title": "处置INC-SYN-482请求积压事故",
+        "reason": "同一事故编号与状态判断对象，完整覆盖查询。",
+        "coverage": "full"
+      },
+      {
+        "taskId": "syn-cs-postmortem",
+        "title": "形成INC-SYN-482复盘记录",
+        "reason": "包含恢复证据和根因，但不是实时事故状态与对外批准记录。",
+        "coverage": "partial"
+      }
+    ],
+    "coverageNote": "纯合成查询路由已定位当前事故和相关复盘；本轮不需要创建。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "syn-cs-root",
+      "field": "acceptanceCriteria",
+      "value": [
+        "恢复门槛满足并由事故指挥记录状态结论",
+        "客户影响与数据影响边界可追溯"
+      ]
+    },
+    {
+      "taskId": "syn-cs-allclear",
+      "field": "acceptanceCriteria",
+      "value": [
+        "120分钟稳定、队列清空且无新增P1后批准或拒绝话术"
+      ]
+    }
+  ],
+  "constraints": {
+    "readOnly": true,
+    "prohibitedEffects": [
+      "create",
+      "update",
+      "assign",
+      "send_message",
+      "publish_status"
+    ],
+    "scope": "只基于本次纯合成快照回答状态、依据与下一步；报告不自动改变正式状态"
+  },
+  "dataClassification": "synthetic",
+  "members": [
+    {
+      "id": "syn-cs-m1",
+      "name": "合成成员·秦令",
+      "role": "事故指挥",
+      "responsibilities": [
+        "维护事故状态",
+        "协调恢复与对外结论"
+      ],
+      "boundaries": [
+        "不在证据门槛前宣布解决",
+        "不替专业负责人签署"
+      ],
+      "evidence": [
+        {
+          "id": "syn-cs-m1-role",
+          "title": "事故指挥职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护事故状态；协调恢复与对外结论。边界：不在证据门槛前宣布解决；不替专业负责人签署。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-06T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-cs-m1-window",
+          "title": "事故指挥公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-06T11:00:00+08:00 至 2026-09-06T13:00:00+08:00，仅表示可参与“事故状态复核”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-06T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-06T11:00:00+08:00",
+            "endAt": "2026-09-06T13:00:00+08:00",
+            "purpose": "事故状态复核",
+            "sourceRef": "syn-cs-m1-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-06T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-cs-m2",
+      "name": "合成成员·闻客",
+      "role": "支持值班负责人",
+      "responsibilities": [
+        "汇总客户案例",
+        "维护升级和回复队列"
+      ],
+      "boundaries": [
+        "不把工单下降当系统恢复",
+        "不修改技术根因"
+      ],
+      "evidence": [
+        {
+          "id": "syn-cs-m2-role",
+          "title": "支持值班负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：汇总客户案例；维护升级和回复队列。边界：不把工单下降当系统恢复；不修改技术根因。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-06T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-cs-m2-window",
+          "title": "支持值班负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-06T13:00:00+08:00 至 2026-09-06T15:00:00+08:00，仅表示可参与“P1案例核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-06T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-06T13:00:00+08:00",
+            "endAt": "2026-09-06T15:00:00+08:00",
+            "purpose": "P1案例核对",
+            "sourceRef": "syn-cs-m2-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-06T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-cs-m3",
+      "name": "合成成员·乔稳",
+      "role": "SRE负责人",
+      "responsibilities": [
+        "执行流量切换",
+        "监控队列和服务指标"
+      ],
+      "boundaries": [
+        "不代客户确认影响消除",
+        "不以短窗指标下最终结论"
+      ],
+      "evidence": [
+        {
+          "id": "syn-cs-m3-role",
+          "title": "SRE负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：执行流量切换；监控队列和服务指标。边界：不代客户确认影响消除；不以短窗指标下最终结论。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-06T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-cs-m3-window",
+          "title": "SRE负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-06T15:00:00+08:00 至 2026-09-06T17:00:00+08:00，仅表示可参与“恢复指标观察”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-06T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-06T15:00:00+08:00",
+            "endAt": "2026-09-06T17:00:00+08:00",
+            "purpose": "恢复指标观察",
+            "sourceRef": "syn-cs-m3-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-06T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-cs-m4",
+      "name": "合成成员·程栈",
+      "role": "应用工程师",
+      "responsibilities": [
+        "复现故障",
+        "定位应用缺陷和修复边界"
+      ],
+      "boundaries": [
+        "不发布未经闸门的修复",
+        "不判断隐私影响结论"
+      ],
+      "evidence": [
+        {
+          "id": "syn-cs-m4-role",
+          "title": "应用工程师职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：复现故障；定位应用缺陷和修复边界。边界：不发布未经闸门的修复；不判断隐私影响结论。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-06T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-cs-m4-window",
+          "title": "应用工程师公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-06T09:00:00+08:00 至 2026-09-06T11:00:00+08:00，仅表示可参与“复现与修复核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-06T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-06T09:00:00+08:00",
+            "endAt": "2026-09-06T11:00:00+08:00",
+            "purpose": "复现与修复核对",
+            "sourceRef": "syn-cs-m4-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-06T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-cs-m5",
+      "name": "合成成员·叶审",
+      "role": "隐私与合规负责人",
+      "responsibilities": [
+        "评估数据影响",
+        "维护合规沟通边界"
+      ],
+      "boundaries": [
+        "不以日志缺失证明无影响",
+        "不批准技术恢复状态"
+      ],
+      "evidence": [
+        {
+          "id": "syn-cs-m5-role",
+          "title": "隐私与合规负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：评估数据影响；维护合规沟通边界。边界：不以日志缺失证明无影响；不批准技术恢复状态。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-06T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-cs-m5-window",
+          "title": "隐私与合规负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-06T11:00:00+08:00 至 2026-09-06T13:00:00+08:00，仅表示可参与“数据影响复核”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-06T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-06T11:00:00+08:00",
+            "endAt": "2026-09-06T13:00:00+08:00",
+            "purpose": "数据影响复核",
+            "sourceRef": "syn-cs-m5-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-06T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-cs-m6",
+      "name": "合成成员·余声",
+      "role": "客户沟通负责人",
+      "responsibilities": [
+        "维护状态页和客户话术",
+        "保留批准链"
+      ],
+      "boundaries": [
+        "不提前发送全量恢复声明",
+        "不改事故严重级别"
+      ],
+      "evidence": [
+        {
+          "id": "syn-cs-m6-role",
+          "title": "客户沟通负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护状态页和客户话术；保留批准链。边界：不提前发送全量恢复声明；不改事故严重级别。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-06T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-cs-m6-window",
+          "title": "客户沟通负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-06T13:00:00+08:00 至 2026-09-06T15:00:00+08:00，仅表示可参与“全量恢复话术复核”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-06T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-06T13:00:00+08:00",
+            "endAt": "2026-09-06T15:00:00+08:00",
+            "purpose": "全量恢复话术复核",
+            "sourceRef": "syn-cs-m6-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-06T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "syn-cs-m7",
+      "name": "合成成员·杜因",
+      "role": "问题管理负责人",
+      "responsibilities": [
+        "维护时间线",
+        "组织根因与复盘产出"
+      ],
+      "boundaries": [
+        "不覆盖事故中实时状态",
+        "不把复盘草稿当已确认根因"
+      ],
+      "evidence": [
+        {
+          "id": "syn-cs-m7-role",
+          "title": "问题管理负责人职责章程（纯合成）",
+          "text": "纯合成职责证据。职责：维护时间线；组织根因与复盘产出。边界：不覆盖事故中实时状态；不把复盘草稿当已确认根因。不对应任何真实个人或公司。",
+          "updatedAt": "2026-09-06T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "syn-cs-m7-window",
+          "title": "问题管理负责人公开协作窗口（纯合成）",
+          "text": "纯合成可用性记录：2026-09-06T15:00:00+08:00 至 2026-09-06T17:00:00+08:00，仅表示可参与“时间线与复盘核对”，不代表当日或整周容量。",
+          "updatedAt": "2026-09-06T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "availability": {
+        "status": "declared_windows",
+        "windows": [
+          {
+            "startAt": "2026-09-06T15:00:00+08:00",
+            "endAt": "2026-09-06T17:00:00+08:00",
+            "purpose": "时间线与复盘核对",
+            "sourceRef": "syn-cs-m7-window"
+          }
+        ],
+        "note": "仅公开上述协作窗口；不能据此推断剩余容量、空闲程度或交付承诺。",
+        "updatedAt": "2026-09-06T08:30:00+08:00"
+      }
+    }
+  ]
+}

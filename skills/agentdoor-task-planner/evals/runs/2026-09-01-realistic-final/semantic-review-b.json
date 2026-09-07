@@ -1,0 +1,358 @@
+{
+  "runId": "agentdoor-planner-realistic-final-20260901-v2",
+  "reviewer": "/root/realistic_final_c independent semantic cross-review",
+  "reviewBasis": {
+    "protocol": "protocol-snapshot.json; contents match the current agentdoor-task-planner SKILL.md and required references byte-for-byte",
+    "rubric": "expectations-snapshot.json",
+    "comparisonMethod": "Compare each output with its authorized input, the merged final dependency graph, the v0.2 planning rules, and the scenario rubric. No output or fixture was modified."
+  },
+  "cases": [
+    {
+      "scenarioId": "REAL-B-NPI-01",
+      "verdict": "fail",
+      "plannerIssue": [
+        {
+          "code": "NPI_DVT_MISSING_DIRECT_PCN_TASK_DEPENDENCY",
+          "severity": "major",
+          "description": "The DVT update omits the completed b-npi-pcn task and substitutes b-npi-incoming. Its acceptance criteria and evidence cite b-npi-pcn-v3, but a file reference does not replace the task that produced and confirmed the PCN v3 result."
+        },
+        {
+          "code": "NPI_DVT_OVER_SERIALIZED_BEHIND_INCOMING",
+          "severity": "major",
+          "description": "By making DVT depend on b-npi-incoming instead of b-npi-pcn, the plan unnecessarily serializes matrix definition behind first-lot COC inspection and loses the direct provenance of the approved process-window requirement."
+        }
+      ],
+      "fixtureIssue": [],
+      "graderIssue": [],
+      "evidence": [
+        {
+          "location": "outputs/REAL-B-NPI-01.json proposal.changes[id=change-b-npi-dvt].fields.dependsOnTaskIds",
+          "observed": [
+            "b-npi-design",
+            "b-npi-incoming"
+          ],
+          "expected": [
+            "b-npi-design",
+            "b-npi-pcn"
+          ],
+          "refs": [
+            "b-npi-dvt",
+            "b-npi-pcn",
+            "b-npi-pcn-v3"
+          ]
+        },
+        {
+          "location": "inputs/REAL-B-NPI-01.json context.tasks[id=b-npi-pcn]",
+          "observed": {
+            "status": "completed",
+            "acceptanceCriteria": [
+              "PCN v3适用范围及EVT2批次要求已记录"
+            ],
+            "sourceRefs": [
+              "b-npi-pcn-v3"
+            ]
+          },
+          "implication": "b-npi-pcn is the stable completed producer for the PCN v3 result and must remain a direct DVT dependency."
+        },
+        {
+          "location": "inputs/REAL-B-NPI-01.json context.sourceRefs[id=b-npi-pcn-v3].text",
+          "observed": "PCN确认首批胶材需在来料记录中关联批次COC，并按ECO-042 v3的固化窗口用于试制和DVT。",
+          "implication": "The source directly links PCN v3 to DVT; citing this file only in evidenceRefs is insufficient under the task-dependency rule."
+        },
+        {
+          "location": "expectations-snapshot.json REAL-B-NPI-01.requiredDependencies",
+          "observed": {
+            "taskId": "b-npi-dvt",
+            "dependsOnTaskIds": [
+              "b-npi-design",
+              "b-npi-pcn"
+            ]
+          },
+          "implication": "The rubric agrees with the protocol's direct-producer rule."
+        },
+        {
+          "location": "cross-checks",
+          "observed": "No creates; exactly four permitted updates; completed design, BOM and PCN tasks are preserved; duplicate assessments echo all four matches; ACL scope is respected.",
+          "implication": "The failure is isolated to DVT dependency semantics, not deduplication, permission handling, or completed-task protection."
+        }
+      ],
+      "rationale": "The plan is structurally coherent elsewhere, but DVT's final dependency set has the wrong producer. Because the missing PCN edge affects provenance and execution ordering for a required consumer, this is a planner failure rather than a fixture or rubric defect."
+    },
+    {
+      "scenarioId": "REAL-B-LOG-01",
+      "verdict": "pass",
+      "plannerIssue": [],
+      "fixtureIssue": [],
+      "graderIssue": [],
+      "evidence": [
+        {
+          "location": "inputs/REAL-B-LOG-01.json context.coverage and b-log-page-receipt",
+          "observed": {
+            "tasks": "partial",
+            "subtasks": "partial",
+            "discussions": "partial",
+            "history": "partial",
+            "visibleTasks": "13/27",
+            "authorizedCursors": [
+              "b-log-page-2",
+              "b-log-page-3",
+              "b-log-thread-page-2"
+            ]
+          },
+          "implication": "A whole-tree proposal would be unsupported."
+        },
+        {
+          "location": "outputs/REAL-B-LOG-01.json",
+          "observed": {
+            "disposition": "needs_clarification",
+            "proposal": null,
+            "nextAction": "retry_context",
+            "duplicateStatus": "partial",
+            "updates": 0,
+            "creates": 0
+          },
+          "implication": "The planner correctly refuses to guess hidden consumers and routes to authorized context continuation."
+        },
+        {
+          "location": "outputs/REAL-B-LOG-01.json preserved behavior",
+          "observed": "b-log-carrier-account and b-log-dryrun are not updated; the output does not expose b-log-hidden-consumer-14 or plaintext customs credentials.",
+          "implication": "Completed-task protection and permission boundaries are respected."
+        },
+        {
+          "location": "outputs/REAL-B-LOG-01.json duplicateCheck.assessments",
+          "observed": [
+            "b-log-label-map",
+            "b-log-runbook"
+          ],
+          "expected": [
+            "b-log-label-map",
+            "b-log-runbook"
+          ],
+          "implication": "Partial deduplication is echoed exactly without claiming complete coverage."
+        }
+      ],
+      "rationale": "The output matches the required incomplete-context behavior: it preserves all visible tasks, proposes no changes, keeps duplicate coverage partial, identifies the exact authorized cursors, and avoids leaking or inventing hidden task and credential data."
+    },
+    {
+      "scenarioId": "REAL-B-PROC-01",
+      "verdict": "fail",
+      "plannerIssue": [
+        {
+          "code": "PROC_GATE_REDUNDANT_OWNER_REVIEW_EDGE",
+          "severity": "major",
+          "description": "The gate update adds b-proc-owner-review as a direct dependency even though the gate already consumes that result through b-proc-msa, b-proc-tax and b-proc-bank. This violates the protocol rule against redundant downstream direct edges."
+        },
+        {
+          "code": "PROC_GATE_MANUFACTURED_SCOPE_TO_JUSTIFY_EDGE",
+          "severity": "moderate",
+          "description": "The output rewrites the gate acceptance criteria to directly link the owner-review result, manufacturing a direct-consumer boundary that was unnecessary once all three actual address consumers were updated."
+        }
+      ],
+      "fixtureIssue": [],
+      "graderIssue": [],
+      "evidence": [
+        {
+          "location": "outputs/REAL-B-PROC-01.json proposal.changes[id=change-b-proc-gate].fields.dependsOnTaskIds",
+          "observed": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality",
+            "b-proc-owner-review"
+          ],
+          "expected": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality"
+          ],
+          "refs": [
+            "b-proc-gate",
+            "b-proc-owner-review"
+          ]
+        },
+        {
+          "location": "merged dependency graph",
+          "observed": {
+            "b-proc-msa": [
+              "b-proc-nda",
+              "b-proc-sanctions",
+              "b-proc-owner-review"
+            ],
+            "b-proc-tax": [
+              "b-proc-sanctions",
+              "b-proc-owner-review"
+            ],
+            "b-proc-bank": [
+              "b-proc-tax",
+              "b-proc-owner-review"
+            ]
+          },
+          "implication": "The gate has multiple existing transitive paths to b-proc-owner-review, so another direct edge adds no necessary producer."
+        },
+        {
+          "location": "inputs/REAL-B-PROC-01.json context.tasks[id=b-proc-gate].dependsOnTaskIds",
+          "observed": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality"
+          ],
+          "implication": "The original gate dependencies already represent its direct risk, contract, finance and quality inputs."
+        },
+        {
+          "location": "expectations-snapshot.json REAL-B-PROC-01.requiredDependencies",
+          "observed": {
+            "taskId": "b-proc-gate",
+            "dependsOnTaskIds": [
+              "b-proc-security",
+              "b-proc-msa",
+              "b-proc-tax",
+              "b-proc-bank",
+              "b-proc-quality"
+            ]
+          },
+          "implication": "The rubric correctly preserves the original direct producers while allowing the address result to flow through updated consumers."
+        },
+        {
+          "location": "cross-checks",
+          "observed": "No creates; exactly five permitted updates; completed sanctions, NDA and quality tasks are preserved; all five duplicate assessments match; no bank account data is invented or exposed.",
+          "implication": "The failure is the extra dependency and associated non-minimal gate rewrite, not deduplication, permissions, or completed-task protection."
+        }
+      ],
+      "rationale": "The address update is correctly propagated to owner review, MSA, tax and bank, but the final gate should retain its five direct producers. Adding owner review creates a redundant edge in a graph that already carries the result transitively, so the proposal is not the required minimal difference."
+    },
+    {
+      "scenarioId": "REAL-B-RETAIL-01",
+      "requestedScenarioId": "REAL-B-RENOV-01",
+      "verdict": "pass",
+      "plannerIssue": [],
+      "fixtureIssue": [],
+      "graderIssue": [],
+      "evidence": [
+        {
+          "location": "merged final dependency graph",
+          "observed": {
+            "b-ret-fixture": [
+              "b-ret-landlord"
+            ],
+            "b-ret-stock": [
+              "b-ret-fixture"
+            ],
+            "b-ret-vm": [
+              "b-ret-planogram",
+              "b-ret-fixture"
+            ],
+            "b-ret-softopen": [
+              "b-ret-fire",
+              "b-ret-pos",
+              "b-ret-training",
+              "b-ret-stock",
+              "b-ret-vm"
+            ]
+          },
+          "expected": {
+            "b-ret-fixture": [
+              "b-ret-landlord"
+            ],
+            "b-ret-stock": [
+              "b-ret-fixture"
+            ],
+            "b-ret-vm": [
+              "b-ret-planogram",
+              "b-ret-fixture"
+            ],
+            "b-ret-softopen": [
+              "b-ret-fire",
+              "b-ret-stock",
+              "b-ret-vm",
+              "b-ret-pos",
+              "b-ret-training"
+            ]
+          },
+          "implication": "All direct producer sets match as unordered sets; unchanged dependencies are correctly preserved rather than redundantly rewritten."
+        },
+        {
+          "location": "outputs/REAL-B-RETAIL-01.json schedules",
+          "observed": {
+            "fixture": [
+              "2026-09-13",
+              "2026-09-15"
+            ],
+            "stock": [
+              "2026-09-16",
+              "2026-09-18"
+            ],
+            "vm": [
+              "2026-09-16",
+              "2026-09-19"
+            ],
+            "softopenDuePreserved": "2026-09-23"
+          },
+          "implication": "The candidate respects the first authorized lift window and sequences direct consumers while retaining the hard soft-open boundary and disclosing assumptions."
+        },
+        {
+          "location": "completed-task and unaffected-branch checks",
+          "observed": "b-ret-landlord, b-ret-signage and b-ret-planogram remain untouched; b-ret-pos and b-ret-training retain their existing tasks and dates; no night-moving task is created and the fire appointment is not treated as approval.",
+          "implication": "Completed-task protection, minimal scope and authority boundaries are respected."
+        },
+        {
+          "location": "outputs/REAL-B-RETAIL-01.json duplicateCheck.assessments",
+          "observed": [
+            "b-ret-fixture",
+            "b-ret-stock",
+            "b-ret-vm",
+            "b-ret-softopen"
+          ],
+          "expected": [
+            "b-ret-fixture",
+            "b-ret-stock",
+            "b-ret-vm",
+            "b-ret-softopen"
+          ],
+          "implication": "Deduplication is echoed exactly and all four existing outcomes are reused."
+        }
+      ],
+      "rationale": "The output applies only the four requested updates, preserves completed and unaffected work, uses the correct direct dependency sets, and treats the schedule as a reviewable recommendation with explicit fire and capacity risks."
+    }
+  ],
+  "summary": {
+    "totalCases": 4,
+    "passed": 2,
+    "failed": 2,
+    "plannerIssueCases": 2,
+    "fixtureIssueCases": 0,
+    "graderIssueCases": 0,
+    "overallVerdict": "fail",
+    "failingScenarios": [
+      "REAL-B-NPI-01",
+      "REAL-B-PROC-01"
+    ],
+    "passingScenarios": [
+      "REAL-B-LOG-01",
+      "REAL-B-RETAIL-01"
+    ],
+    "primaryFindings": [
+      "NPI: DVT must depend directly on the completed b-npi-pcn task; evidenceRefs to b-npi-pcn-v3 cannot substitute for the production-task edge.",
+      "PROC: the gate must not add b-proc-owner-review because that result already reaches it through MSA, tax and bank.",
+      "LOG and RETAIL satisfy deduplication, authority, completed-task protection and dependency-direction requirements."
+    ],
+    "scopeDiscrepancy": {
+      "requestedScenarioId": "REAL-B-RENOV-01",
+      "actualScenarioId": "REAL-B-RETAIL-01",
+      "classification": "review_request_naming_mismatch",
+      "fixtureAssessment": "The run inputs, outputs and rubric are internally consistent for REAL-B-RETAIL-01; no REAL-B-RENOV-01 artifact exists in this run.",
+      "handling": "Reviewed the actual fourth B-group scenario REAL-B-RETAIL-01 and recorded the requested name as an alias."
+    },
+    "artifactNamingNote": {
+      "requestedProtocol": "protocol.md",
+      "actualProtocol": "protocol-snapshot.json",
+      "requestedRubric": "realistic-expectations.json",
+      "actualRubric": "expectations-snapshot.json",
+      "assessment": "The snapshot contents are internally valid; protocol-snapshot contents match the current Skill and required references exactly."
+    }
+  }
+}

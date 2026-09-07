@@ -1,0 +1,246 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-real-b-retail-01",
+  "baseSnapshotId": "snapshot-real-b-retail-01-v4",
+  "baseRevision": 4,
+  "baseTaskVersions": {
+    "b-ret-root": 18,
+    "b-ret-site": 8,
+    "b-ret-fitout": 7,
+    "b-ret-merch": 9,
+    "b-ret-ops": 10,
+    "b-ret-site-pack": 6,
+    "b-ret-landlord": 7,
+    "b-ret-fire": 4,
+    "b-ret-fixture": 5,
+    "b-ret-signage": 6,
+    "b-ret-planogram": 8,
+    "b-ret-stock": 4,
+    "b-ret-vm": 3,
+    "b-ret-pos": 5,
+    "b-ret-training": 4,
+    "b-ret-softopen": 6
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只重排货架安装、首批入库和现场陈列三个受影响节点，并给软开门禁补上入库与陈列的直接前置；9月23日软开、10月1日开业以及未受货梯影响的POS和培训日期保持不变。",
+  "reasoningSummary": [
+    {
+      "text": "物业交付纪要v3把首个有权整批进场窗口改为9月13日08:00，现有货架计划仍按9月10日，必须在原安装任务中重排。",
+      "evidenceRefs": [
+        "b-ret-handover-v3",
+        "b-ret-fixture-v4",
+        "b-ret-d2"
+      ]
+    },
+    {
+      "text": "首批842箱入库必须等待货架安装释放收货区；现场陈列继续复用已完成平面图，但缺少货架安装这一真实生产前置。",
+      "evidenceRefs": [
+        "b-ret-d6",
+        "b-ret-d9",
+        "b-ret-planogram"
+      ]
+    },
+    {
+      "text": "软开门禁现有标准直接要求首批入库和现场陈列证据，但当前依赖只含消防、POS与培训，应补齐两个直接生产任务；POS和培训不受货梯窗口影响。",
+      "evidenceRefs": [
+        "b-ret-softopen",
+        "b-ret-opening-v8",
+        "b-ret-pos-v3",
+        "b-ret-d10"
+      ]
+    },
+    {
+      "text": "夜间搬运未获物业批准，消防9月18日仅是约见而非通过结论；二者都不能用来压缩或提前解除门禁。",
+      "evidenceRefs": [
+        "b-ret-d3",
+        "b-ret-d4",
+        "b-ret-fire-v1",
+        "b-ret-d8"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "b-ret-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-b-ret-fixture-window-v3",
+        "action": "update",
+        "targetId": "b-ret-fixture",
+        "parentId": "b-ret-fitout",
+        "fields": {
+          "schedule": {
+            "startOn": "2026-09-13",
+            "dueOn": "2026-09-15",
+            "basis": "recommended",
+            "assumptions": [
+              "沿用原计划从9月10日整批进场到9月12日完成安装的两日衔接，把同一窗口平移到9月13日至15日；未采用未获批准的夜间搬运"
+            ],
+            "evidenceRefs": [
+              "b-ret-handover-v3",
+              "b-ret-fixture-v4",
+              "b-ret-d4"
+            ]
+          }
+        },
+        "reason": "原9月12日完成日期早于新的首个整批进场窗口，需在原任务内按已批准窗口重排。",
+        "evidenceRefs": [
+          "b-ret-handover-v3",
+          "b-ret-fixture-v4",
+          "b-ret-d2"
+        ]
+      },
+      {
+        "id": "chg-b-ret-stock-window-v3",
+        "action": "update",
+        "targetId": "b-ret-stock",
+        "parentId": "b-ret-merch",
+        "fields": {
+          "schedule": {
+            "startOn": "2026-09-16",
+            "dueOn": "2026-09-18",
+            "basis": "recommended",
+            "assumptions": [
+              "保持原计划在货架安装完成后的三日入库核对窗口；842箱仍在区域仓，只有实收入店后才计入完成"
+            ],
+            "evidenceRefs": [
+              "b-ret-fixture",
+              "b-ret-d6",
+              "b-ret-handover-v3"
+            ]
+          }
+        },
+        "reason": "首批入库已有货架安装前置，安装节点后移三日后需同步调整其本地窗口，不能把在途箱数当成已入库。",
+        "evidenceRefs": [
+          "b-ret-stock",
+          "b-ret-d6",
+          "b-ret-handover-v3"
+        ]
+      },
+      {
+        "id": "chg-b-ret-vm-window-v3",
+        "action": "update",
+        "targetId": "b-ret-vm",
+        "parentId": "b-ret-merch",
+        "fields": {
+          "schedule": {
+            "startOn": "2026-09-16",
+            "dueOn": "2026-09-19",
+            "basis": "recommended",
+            "assumptions": [
+              "货架安装建议9月15日完成后，从9月16日起执行现场陈列，并受商品与陈列分支9月19日截止日约束"
+            ],
+            "evidenceRefs": [
+              "b-ret-handover-v3",
+              "b-ret-d5",
+              "b-ret-d9"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "b-ret-planogram",
+            "b-ret-fixture"
+          ]
+        },
+        "reason": "现场陈列继续消费已完成平面图，同时必须等待货架安装完成；安装窗口变化要求局部调整陈列日期。",
+        "evidenceRefs": [
+          "b-ret-planogram",
+          "b-ret-fixture",
+          "b-ret-d9"
+        ]
+      },
+      {
+        "id": "chg-b-ret-softopen-deps-v3",
+        "action": "update",
+        "targetId": "b-ret-softopen",
+        "parentId": "b-ret-root",
+        "fields": {
+          "dependsOnTaskIds": [
+            "b-ret-fire",
+            "b-ret-pos",
+            "b-ret-training",
+            "b-ret-stock",
+            "b-ret-vm"
+          ]
+        },
+        "reason": "软开标准直接核对入库和陈列证据，现有依赖图却缺少这两个最近的结果生产任务；原消防、POS和培训前置继续保留。",
+        "evidenceRefs": [
+          "b-ret-softopen",
+          "b-ret-opening-v8",
+          "b-ret-d5"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "b-ret-root",
+      "b-ret-site",
+      "b-ret-fitout",
+      "b-ret-merch",
+      "b-ret-ops",
+      "b-ret-site-pack",
+      "b-ret-landlord",
+      "b-ret-fire",
+      "b-ret-signage",
+      "b-ret-planogram",
+      "b-ret-pos",
+      "b-ret-training"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-b-retail"
+    ],
+    "assessments": [
+      {
+        "taskId": "b-ret-fixture",
+        "relationship": "same_outcome",
+        "reason": "现有任务已覆盖徐汇店货架安装，本轮只调整有权进场窗口。",
+        "evidenceRefs": [
+          "b-ret-fixture",
+          "req-real-b-retail-01"
+        ]
+      },
+      {
+        "taskId": "b-ret-stock",
+        "relationship": "same_outcome",
+        "reason": "现有任务覆盖同一批842箱的首批入库核对，应原位重排。",
+        "evidenceRefs": [
+          "b-ret-stock",
+          "b-ret-d6"
+        ]
+      },
+      {
+        "taskId": "b-ret-vm",
+        "relationship": "same_outcome",
+        "reason": "现有任务覆盖平面图v6的现场陈列落位，本轮补真实前置即可。",
+        "evidenceRefs": [
+          "b-ret-vm",
+          "b-ret-d9"
+        ]
+      },
+      {
+        "taskId": "b-ret-softopen",
+        "relationship": "same_outcome",
+        "reason": "现有任务覆盖9月23日同一软开门禁聚合结果，无需另建。",
+        "evidenceRefs": [
+          "b-ret-softopen",
+          "b-ret-opening-v8"
+        ]
+      }
+    ],
+    "coverageNote": "合成查重已覆盖授权团队当前与归档索引，返回四个现有同结果任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "重排后现场陈列建议在9月19日前完成，距9月23日软开仅剩四天；消防检查9月18日仍只有预约，若结果含整改项，软开门禁必须保留未决风险而不能按预约自动通过。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "b-ret-root",
+      "label": "审阅四个受影响消费者的日期与依赖差异"
+    }
+  ],
+  "externalEffects": "none"
+}

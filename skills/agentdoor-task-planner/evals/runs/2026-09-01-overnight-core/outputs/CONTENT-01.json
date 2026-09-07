@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-content-01",
+  "baseSnapshotId": "snapshot-content-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只建一个蓝屿600字短稿校对任务，由文字编辑程简作为负责人候选，于9月2日交清稿和修改清单，不增设策划、重写或出图任务。",
+  "reasoningSummary": [
+    {
+      "text": "本轮结果是约600字稿件的错字与引用格式校对，选题及结构已确认，适合一个可核对的交付任务。",
+      "evidenceRefs": [
+        "req-content-01",
+        "content01-brief"
+      ]
+    },
+    {
+      "text": "程简职责直接覆盖错字、引用格式及范围检查；公开窗口为9月2日上午的短稿校对协作时间，不能视为已接受任务。",
+      "evidenceRefs": [
+        "content-m5-role",
+        "content-m5-window"
+      ]
+    },
+    {
+      "text": "当前授权快照中任务与历史均为完整空集合，查重已覆盖授权团队；不存在已提供的重复候选。",
+      "evidenceRefs": [
+        "req-content-01",
+        "content01-brief"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:content01-proofread",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-content01-proofread",
+        "action": "create",
+        "targetId": "new:content01-proofread",
+        "parentId": null,
+        "fields": {
+          "title": "蓝屿稿件A：600字短稿校对与修改清单",
+          "goal": {
+            "text": "让已确认选题和结构的蓝屿稿件A按给定引用格式完成错字校对，并可对照核查本轮修改。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-content-01",
+              "content01-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "交付对应蓝屿稿件A的清稿，逐项检查约600字原稿的错字和给定引用格式；未能核实的引用单列说明，不补造出处。",
+            "交付修改清单，能从每项原文定位到修改后文字或引用格式；没有修改的检查项也说明核对结果。",
+            "对照确认稿检查选题、结构和品牌表述未被本轮擅自改写；不包含重新策划、设计图片或发布批准。"
+          ],
+          "tips": [
+            "按原稿逐项校对并保留修改对照，将清稿与清单作为同一交付结果。",
+            "与程简协调9月2日09:00—12:00的已声明短稿校对窗口，候选确认前不宣称已接受。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "content-m5",
+            "basis": "recommended",
+            "reason": "文字编辑职责直接包括错字与引用格式核对，且边界明确不在校对中重写结构；不因发起人为项目经理而将其设为执行负责人。",
+            "evidenceRefs": [
+              "content-m5-role",
+              "content-m5-window"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "explicit",
+            "assumptions": [
+              "按2026-09-01、Asia/Shanghai将明天解析为2026-09-02。",
+              "开始时间未约定；9月2日上午窗口只用于协调，不表示已接受或保证可用。"
+            ],
+            "evidenceRefs": [
+              "req-content-01",
+              "content-m5-window"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有同类历史或本次校对投入测量；不以600字或三小时窗口直接认定人时。",
+              "后续估算只计人工校对、修改与清单整理，不含等待回复。"
+            ],
+            "evidenceRefs": [
+              "content01-brief",
+              "content-m5-window"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "将清稿和修改对照作为一个轻任务结果，操作步骤放入提示，避免重复主任务的单子任务。",
+        "evidenceRefs": [
+          "req-content-01",
+          "content01-brief",
+          "content-m5-role"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "负责人仅为候选；校对窗口不等于已接受，完整容量未知。",
+    "人时估算暂缺，不能用窗口时长替代EWD；本提案不包含发布或客户批准。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:content01-proofread",
+      "label": "审阅短稿校对候选"
+    }
+  ],
+  "externalEffects": "none"
+}

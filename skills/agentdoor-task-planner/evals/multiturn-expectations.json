@@ -1,0 +1,17 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {"scenarioId": "MULTI-A1", "allowedIntents": ["create"], "allowedDispositions": ["ready_for_confirmation"], "maxCreates": 1, "manualChecks": ["保持单任务；校对范围不扩展；无真实写入。"]},
+    {"scenarioId": "MULTI-A2", "allowedIntents": ["refine"], "allowedDispositions": ["ready_for_confirmation"], "maxCreates": 0, "maxUpdates": 1, "manualChecks": ["沿用第一轮实际生成的草稿ID，只改变未锁定的日期为9月3日；已确认目标、标准、人选不变。"]},
+    {"scenarioId": "MULTI-A3", "allowedIntents": ["refine", "query"], "allowedDispositions": ["no_change", "route_required"], "maxCreates": 0, "maxUpdates": 0, "manualChecks": ["既有草稿覆盖本轮，不制造空改动或成功创建回执。"]},
+    {"scenarioId": "MULTI-B1", "allowedIntents": ["replan", "next_batch"], "allowedDispositions": ["ready_for_confirmation", "needs_clarification"], "maxCreates": 1, "manualChecks": ["已完成范围及映射不重做；新增字段与UAT/培训的使用关系需落实或明确阻塞，保留确认字段。"]},
+    {"scenarioId": "MULTI-B2", "allowedIntents": ["replan", "refine"], "allowedDispositions": ["ready_for_confirmation"], "maxCreates": 1, "manualChecks": ["使用前一轮实际增量草稿ID，没有草稿才补新增；字段核对9月4日，UAT依赖核对、培训依赖UAT，原日期和确认内容不变。", "本轮已补齐上轮关键问题，不重复追问已经明确的前置与窗口。"]},
+    {"scenarioId": "MULTI-B3", "allowedIntents": ["replan", "next_batch", "query"], "allowedDispositions": ["no_change", "route_required"], "maxCreates": 0, "maxUpdates": 0, "manualChecks": ["正确读取实际前轮派生任务的完成记录，已有培训安排无需重建；不把再次推进理解成新增一批。"]},
+    {"scenarioId": "MULTI-C1", "allowedIntents": ["create"], "allowedDispositions": ["ready_for_confirmation"], "maxCreates": 1, "manualChecks": ["只为明确SKU/五处错字产生一项候选，保留明确人选和期限。"]},
+    {"scenarioId": "MULTI-C2", "allowedIntents": ["create", "query"], "allowedDispositions": ["route_required", "no_change"], "maxCreates": 0, "maxUpdates": 0, "manualChecks": ["根据合成保存回执及实际首轮生成任务定位原结果，不因用户没看到成功页再建，不声称自己已实施幂等服务。"]},
+    {"scenarioId": "MULTI-C3", "allowedIntents": ["create"], "allowedDispositions": ["ready_for_confirmation"], "maxCreates": 1, "maxUpdates": 0, "manualChecks": ["不同SKU与新交付清单是独立结果；旧SKU任务原样保留；不因共享负责人或标题相似误合并。"]},
+    {"scenarioId": "MULTI-D1", "allowedIntents": ["replan"], "allowedDispositions": ["ready_for_confirmation"], "maxCreates": 0, "manualChecks": ["受众改动只影响必要标准，保留已完成范围与图片。"]},
+    {"scenarioId": "MULTI-D2", "allowedIntents": ["replan", "refine"], "allowedDispositions": ["ready_for_confirmation"], "maxCreates": 0, "allowedUpdateTaskIds": ["content03-format"], "requiredUpdateTaskIds": ["content03-format"], "manualChecks": ["采用最新对象版本及人工确认的文案标准，不应用旧回复；只更新公众号适配。"]},
+    {"scenarioId": "MULTI-D3", "allowedIntents": ["replan", "refine", "query", "unclear"], "allowedDispositions": ["needs_clarification", "route_required"], "maxCreates": 0, "maxUpdates": 0, "manualChecks": ["撤权后无业务上下文，停止生成变更，不用前轮记忆继续暴露任务标题、成员姓名或已有标准；可说明重新取得授权后继续，不伪造读取。"]}
+  ]
+}

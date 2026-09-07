@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-11",
+  "baseSnapshotId": "snapshot-edge-11-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "needs_clarification",
+  "summary": "先保留六处格式统一的候选范围，待确认两位同名“阿宁”中的具体账号，不代选或换人。",
+  "reasoningSummary": [
+    {
+      "text": "本轮明确指定显示名阿宁，且要求不替换负责人。",
+      "evidenceRefs": [
+        "req-edge-11"
+      ]
+    },
+    {
+      "text": "授权目录内content-m3与content-m5均显示为阿宁，没有memberId或其他唯一选择信息。",
+      "evidenceRefs": [
+        "edge11-directory",
+        "edge11-directory-content-m3",
+        "edge11-directory-content-m5"
+      ]
+    },
+    {
+      "text": "工作仅限BRAND-LY-v5的FMT-6六处空格、全半角和标点，交付修订表与变更清单。",
+      "evidenceRefs": [
+        "edge11-brief"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:edge11-format",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-edge11-create-format",
+        "action": "create",
+        "targetId": "new:edge11-format",
+        "parentId": null,
+        "fields": {
+          "title": "统一BRAND-LY-v5术语表六处格式",
+          "goal": {
+            "text": "使已确认品牌术语的六处格式一致，同时保留原术语内容和含义。",
+            "basis": "inferred",
+            "evidenceRefs": [
+              "req-edge-11",
+              "edge11-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "逐项按FMT-6完成BRAND-LY-v5六处空格、全半角与标点修正，交付修订术语表。",
+            "附六处修改前后对照清单，可对照FMT-6核验无漏项、无额外改动；不翻译、不改词义、不发布。"
+          ],
+          "tips": [
+            "保留阿宁这一指定意图，先通过稳定memberId区分文案作者与文字编辑两位同名成员。"
+          ],
+          "ownerRecommendation": {
+            "memberId": null,
+            "basis": "unassigned",
+            "reason": "用户指定的显示名对应两个授权账号，在明确唯一账号前不根据职责偏好擅自代选。",
+            "evidenceRefs": [
+              "req-edge-11",
+              "edge11-directory"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "本轮未要求具体日期，且指定负责人账号尚待澄清。"
+            ],
+            "evidenceRefs": [
+              "req-edge-11",
+              "edge11-brief"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "尚无六处格式修改在本轮工具方式下的可比人时依据，暂不填EWD。"
+            ],
+            "evidenceRefs": [
+              "edge11-brief"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "保留已明确的最小工作范围；指定负责人存在身份歧义，因此本候选不能进入确认。",
+        "evidenceRefs": [
+          "req-edge-11",
+          "edge11-brief",
+          "edge11-directory"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；此范围内无其他查重匹配。"
+  },
+  "questions": [
+    {
+      "field": "ownerRecommendation.memberId",
+      "question": "你指定的“阿宁”是文案作者content-m3，还是文字编辑content-m5？",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "两个同名成员的职责和可用窗口不能代替用户的唯一身份选择；候选当前没有推荐任何具体负责人。",
+    "日期与人类投入估算未提供，暂留空；本轮仅为候选规划。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": null,
+      "label": "确认指定阿宁的稳定账号"
+    }
+  ],
+  "externalEffects": "none"
+}

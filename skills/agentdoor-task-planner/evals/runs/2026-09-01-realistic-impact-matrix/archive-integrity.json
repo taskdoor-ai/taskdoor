@@ -1,0 +1,156 @@
+{
+  "algorithm": "sha256",
+  "fileCount": 30,
+  "files": [
+    {
+      "path": "artifact-path-map.json",
+      "bytes": 663,
+      "sha256": "90b2ef8d7d4ebeb7f69f466593c502693f23694c87b0572247aecbb0d5206b89"
+    },
+    {
+      "path": "current-expectations-snapshot.json",
+      "bytes": 39569,
+      "sha256": "250a8b8fb86fa1dd33e600215eb96545b84d55760ed31c757e8dd6659dc5add6"
+    },
+    {
+      "path": "current-protocol-snapshot.json",
+      "bytes": 57243,
+      "sha256": "082a9aede83509003356d6d50528e0b904a2e0bc21635d2922101f1a4477676a"
+    },
+    {
+      "path": "current-rubric-regrade.json",
+      "bytes": 12330,
+      "sha256": "84799d9874c0a22b13cd291d9cb3538772eb1db1bb682a9e13e41effb6a68a5d"
+    },
+    {
+      "path": "execution-metadata.json",
+      "bytes": 1464,
+      "sha256": "2a5ec8d87d287328c68ba58d98c27501464c41e7037f4085d6dfe01cf2e9c273"
+    },
+    {
+      "path": "expectations-snapshot.json",
+      "bytes": 39495,
+      "sha256": "c9d285a9858bb632d015313dfd0270714f588132da93805bac743e8c2e2362c3"
+    },
+    {
+      "path": "grading-erratum.json",
+      "bytes": 1851,
+      "sha256": "94a8c3d0d11214f5d3dc0dd604126b616e8b9a7376417114de3cc6f1856b8020"
+    },
+    {
+      "path": "inputs/REAL-A-ECOM-01.json",
+      "bytes": 37633,
+      "sha256": "86904f5b07e460d38099d67a2ee15e1d65dcb8cc504944d2c39e9534997ce007"
+    },
+    {
+      "path": "inputs/REAL-B-NPI-01.json",
+      "bytes": 38955,
+      "sha256": "226b959304e86ffd303f94c12f01114f6cf2ea673686f2eb61a45f64a01911b6"
+    },
+    {
+      "path": "inputs/REAL-B-PROC-01.json",
+      "bytes": 41414,
+      "sha256": "bdf45d2cc4c32d9f7870d60a6296bfad2ef2eaacb0e873950d20b8ab0900f9f0"
+    },
+    {
+      "path": "inputs/REAL-C-01.json",
+      "bytes": 41585,
+      "sha256": "b2ae2408ca52079aec32c4a43702325337ba336a496c98063dc0fabc32c34b32"
+    },
+    {
+      "path": "inputs/REAL-C-02.json",
+      "bytes": 44250,
+      "sha256": "5df847142a5b402e3aad965cc6162c5b8d72e459386c7ced700b8a6bc1890bf5"
+    },
+    {
+      "path": "inputs/REAL-C-03.json",
+      "bytes": 43624,
+      "sha256": "7230ebdeb92af51bcf7d8c85018be2767aa56a3341189dfe53d78a8fee21a4b9"
+    },
+    {
+      "path": "inputs/REAL-C-04.json",
+      "bytes": 46206,
+      "sha256": "cbe6bb1abf0baa9d852626fa93057aa0fc5dbd57f051a47447b0aaf75a0aa5bc"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 2449,
+      "sha256": "7e48e6af484e95fb671dbc8370effc5166a4cd626a441695c500c0c8f741f4f1"
+    },
+    {
+      "path": "outputs/REAL-A-ECOM-01.json",
+      "bytes": 5141,
+      "sha256": "eaf1e47417b47a9f89093790ba7d738874e0743c27c451d10df5ed8610da319a"
+    },
+    {
+      "path": "outputs/REAL-B-NPI-01.json",
+      "bytes": 8143,
+      "sha256": "8c86aca6112a4bcea5faeec2942f178f9de8806104314f109b1ea65d4f80de74"
+    },
+    {
+      "path": "outputs/REAL-B-PROC-01.json",
+      "bytes": 9194,
+      "sha256": "7d45714a9134f1ac7f246cae15b4982d553d44c69436fd8b6a3bb2913af2d12a"
+    },
+    {
+      "path": "outputs/REAL-C-01.json",
+      "bytes": 6864,
+      "sha256": "75cb884cfa97ce357ec876fdc521284f071f54beb99683974034cdbdfbcfe8e1"
+    },
+    {
+      "path": "outputs/REAL-C-02.json",
+      "bytes": 5341,
+      "sha256": "bef35775252a2f12720e6fd124e70a50345473b71095b080f89cae5420febc90"
+    },
+    {
+      "path": "outputs/REAL-C-03.json",
+      "bytes": 8306,
+      "sha256": "9ad6fbd63cf0e99bf7c8f4184df97001e81550941ea404e0472813d599447366"
+    },
+    {
+      "path": "outputs/REAL-C-04.json",
+      "bytes": 6831,
+      "sha256": "6f82f24ef1733a0393bbecba51a673a7e21410b068bbe845e3a4e01d160281ba"
+    },
+    {
+      "path": "protocol-snapshot.json",
+      "bytes": 54693,
+      "sha256": "73096829ae6b7deebcbf9c7ffb8ea2ab526220c746c707ddb0a5486482a543c2"
+    },
+    {
+      "path": "semantic-review-controls.json",
+      "bytes": 18650,
+      "sha256": "346f44a44d6780b04342b224e6f24440ef50818e70a71f507cb018fb22651583"
+    },
+    {
+      "path": "semantic-review-dependencies.json",
+      "bytes": 20081,
+      "sha256": "ee33adaf5dcd77da68b07fd2c345b84ff0ca8bb1f2bb34d41ee2561af35ac74c"
+    },
+    {
+      "path": "semantic-review-replan.json",
+      "bytes": 14093,
+      "sha256": "800e01ab3c7a9cf23751660090586c74506506118d06eed6c46cd7092072aa77"
+    },
+    {
+      "path": "semantic-summary.json",
+      "bytes": 2375,
+      "sha256": "efc0eff114c2656711c32cf5a97c68df107486af76a5c2b92b4bc083d590d932"
+    },
+    {
+      "path": "structural-report.json",
+      "bytes": 12645,
+      "sha256": "bc27b9d49b6d24a1b4ff0844fb20d120e29f96db4a416725bdeef7517c5dbd5c"
+    },
+    {
+      "path": "validator-snapshot/evaluate.py",
+      "bytes": 13314,
+      "sha256": "33688162db79e4166fb29dfbbaca0f84db92ae3827b984c3b188421930b6475c"
+    },
+    {
+      "path": "validator-snapshot/validate_plan.py",
+      "bytes": 34459,
+      "sha256": "d37c84b5d350ba18c41d4cdcef53fefa8610ef7983e3219b46e0a06d4503acbd"
+    }
+  ]
+}

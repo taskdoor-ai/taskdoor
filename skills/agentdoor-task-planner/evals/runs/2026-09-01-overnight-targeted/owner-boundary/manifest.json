@@ -1,0 +1,21 @@
+{
+  "createdAt": "2026-09-01T02:58:26.544732+00:00",
+  "suite": "edge",
+  "fixtureSha256": "6f1170b7b72e36b75f848ca0185695309f6a2260c6d8f508165545467b57530e",
+  "expectationsSha256": "beb5da00822d9aaef89845a4e39b7133fc501a6abd1c0bfe5b03379e2a40f0f3",
+  "skillSha256": "cdc4386fdb5ac51132821765f3012f392fc67274d5ff76b128ba3529d3d49f9a",
+  "contractSha256": "1926907959c06c2b190465476b42837c8cabc105df5684759f0c5bbeab93fe95",
+  "schemaSha256": "8c0192063fadf41d26e0b91d9f00e165c981173e46809197c5807d0090491cc7",
+  "notice": "Synthetic, offline Skill evaluation. No model API, production ACL or task writes are exercised by this script.",
+  "selectedCaseIds": [
+    "EDGE-12"
+  ],
+  "cases": [
+    {
+      "id": "EDGE-12",
+      "industry": "content_agency",
+      "category": "no_qualified_owner_or_contributor",
+      "inputSha256": "f0661f9e54ad9d484c6c0f363d802b0012d5b0023c390f84d82196f900e6e8e7"
+    }
+  ]
+}

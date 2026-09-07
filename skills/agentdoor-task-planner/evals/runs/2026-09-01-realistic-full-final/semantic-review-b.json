@@ -1,0 +1,215 @@
+{
+  "cases": [
+    {
+      "caseId": "REAL-B-NPI-01",
+      "verdict": "fails",
+      "summary": "四项更新范围、完成项保护、COC风险和三条消费者链均正确，但DVT最终依赖漏掉了直接生产PCN-118 v3适用性结论的已完成任务，因此跨分支依赖不完整。",
+      "findings": [
+        {
+          "id": "REAL-B-NPI-01-F1",
+          "status": "fail",
+          "category": "dependency_graph",
+          "summary": "DVT输出依赖只有b-npi-design与b-npi-incoming，缺少b-npi-pcn。输入中PCN文件明确要求其适用性和固化窗口用于DVT，完成的PCN任务负责形成EVT2适用范围与批次要求；来料核对只生产实际批次COC核对，不能替代PCN适用性这一直接结果。",
+          "evidenceIds": [
+            "chg-b-npi-dvt-v3",
+            "b-npi-dvt",
+            "b-npi-pcn",
+            "b-npi-pcn-v3",
+            "b-npi-eco-v3",
+            "b-npi-h3",
+            "b-npi-d6"
+          ]
+        },
+        {
+          "id": "REAL-B-NPI-01-F2",
+          "status": "pass",
+          "category": "minimal_scope_and_risk",
+          "summary": "其余更新严格限于四个现有消费者；来料增加PCN前置、作业指导消费来料、门禁汇总来料/作业/DVT，BOM、RC图纸、完成PCN与确认字段均保持，且供应商承诺未被写成已收到。",
+          "evidenceIds": [
+            "b-npi-d1",
+            "b-npi-d4",
+            "b-npi-bom",
+            "b-npi-design",
+            "b-npi-pcn",
+            "b-npi-coc-v1",
+            "b-npi-d7",
+            "b-npi-d9"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "findingIds": [
+            "REAL-B-NPI-01-F1"
+          ],
+          "summary": "规划器漏加DVT到已完成PCN适用性任务的直接依赖。"
+        },
+        "fixture": {
+          "findingIds": [],
+          "summary": "未发现输入夹具自相矛盾；PCN任务、文件正文、历史和DVT消费者边界一致。"
+        },
+        "graderOracle": {
+          "findingIds": [],
+          "summary": "冻结期望要求DVT同时依赖design、pcn和incoming，与输入影响矩阵一致。"
+        }
+      }
+    },
+    {
+      "caseId": "REAL-B-LOG-01",
+      "verdict": "satisfies",
+      "summary": "正确识别13/27项、讨论/历史与查重均不完整，拒绝输出局部冒充全树的方案，保留完成项并给出授权游标续读动作。",
+      "findings": [
+        {
+          "id": "REAL-B-LOG-01-F1",
+          "status": "pass",
+          "category": "coverage_and_blocking",
+          "summary": "输出为needs_clarification且proposal为null，明确其余14项及映射消费者尚在分页中，并以retry_context指向任务页与讨论页，没有猜隐藏任务或声称全树就绪。",
+          "evidenceIds": [
+            "b-log-page-receipt",
+            "b-log-discussion-receipt",
+            "b-log-map-v4",
+            "b-log-d1",
+            "b-log-d2"
+          ]
+        },
+        {
+          "id": "REAL-B-LOG-01-F2",
+          "status": "pass",
+          "category": "history_duplicate_and_risk",
+          "summary": "完成的承运商账号和回退演练未被更新，查重保持partial且逐项回显；关务SFTP仍被表述为待审批、无正文权限并可能压缩9月19日前窗口。",
+          "evidenceIds": [
+            "b-log-carrier-account",
+            "b-log-dryrun",
+            "b-log-h1",
+            "b-log-h2",
+            "b-log-customs-v1",
+            "b-log-d5",
+            "b-log-d6"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "findingIds": [],
+          "summary": "未发现规划器语义缺陷。"
+        },
+        "fixture": {
+          "findingIds": [],
+          "summary": "未发现输入夹具缺陷；分页回执与coverage、查重状态一致。"
+        },
+        "graderOracle": {
+          "findingIds": [],
+          "summary": "冻结期望与协议关于不完整上下文、retry_context和proposal为空的要求一致。"
+        }
+      }
+    },
+    {
+      "caseId": "REAL-B-RETAIL-01",
+      "verdict": "satisfies",
+      "summary": "四个受影响消费者均做了局部差异：货架、入库、陈列按9月13日有权窗口衔接，陈列和软开补齐真实前置；硬期限、完成项、POS与培训保持。",
+      "findings": [
+        {
+          "id": "REAL-B-RETAIL-01-F1",
+          "status": "pass",
+          "category": "schedule_and_dependency_graph",
+          "summary": "货架起始不早于9月13日；入库继续依赖货架，陈列保留平面图并新增货架，软开保留消防/POS/培训并新增入库与陈列，形成完整而不冗余的消费者链。",
+          "evidenceIds": [
+            "chg-b-ret-fixture-window-v3",
+            "chg-b-ret-stock-window-v3",
+            "chg-b-ret-vm-window-v3",
+            "chg-b-ret-softopen-deps-v3",
+            "b-ret-handover-v3",
+            "b-ret-d6",
+            "b-ret-d9",
+            "b-ret-opening-v8"
+          ]
+        },
+        {
+          "id": "REAL-B-RETAIL-01-F2",
+          "status": "pass",
+          "category": "authority_history_and_risk",
+          "summary": "没有采用未批准夜间搬运，也没有把消防预约当通过；物业交付、招牌和平面图完成记录未重开，9月23日软开与10月1日开业保持硬边界，POS和培训未整体顺延。",
+          "evidenceIds": [
+            "b-ret-d3",
+            "b-ret-d4",
+            "b-ret-fire-v1",
+            "b-ret-d8",
+            "b-ret-landlord",
+            "b-ret-signage",
+            "b-ret-planogram",
+            "b-ret-d5",
+            "b-ret-d10"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "findingIds": [],
+          "summary": "未发现规划器语义缺陷。"
+        },
+        "fixture": {
+          "findingIds": [],
+          "summary": "未发现夹具缺陷；批准窗口、旧草稿冲突、消费者关系与硬期限可共同支持该最小方案。"
+        },
+        "graderOracle": {
+          "findingIds": [],
+          "summary": "冻结期望的四项更新、依赖集合和风险边界与输入一致。"
+        }
+      }
+    },
+    {
+      "caseId": "REAL-B-PROC-01",
+      "verdict": "fails",
+      "summary": "五项更新、完成项保护和银行函风险基本正确，但MSA被错误串到所有人核对任务后，扩大了完成标准并制造了未经输入证明的直接依赖。",
+      "findings": [
+        {
+          "id": "REAL-B-PROC-01-F1",
+          "status": "fail",
+          "category": "source_only_and_dependency_graph",
+          "summary": "登记册v3是verified_current的权威原始事实，MSA文件只要求把旧通知地址换成v3地址；输入未说明MSA等待所有人核对的团队结论。输出先把“与受益所有人核对结果一致”写入MSA标准，再据此新增b-proc-owner-review依赖，违反冻结矩阵不得由候选文字反向创造direct关系的规则。MSA应保留原nda与sanctions依赖并直接读取v3地址。",
+          "evidenceIds": [
+            "chg-b-proc-msa-v3",
+            "b-proc-reg-v3",
+            "b-proc-msa-v6",
+            "b-proc-msa",
+            "b-proc-owner-review",
+            "b-proc-d1",
+            "b-proc-d2"
+          ]
+        },
+        {
+          "id": "REAL-B-PROC-01-F2",
+          "status": "pass",
+          "category": "minimal_scope_history_and_risk",
+          "summary": "所有人、税务和银行均原位更新v3事实，门禁正确新增所有人风险结果并保留旧前置；制裁、NDA和试用完成记录未重做，银行函9月7日承诺未被当成已上传或已核验。",
+          "evidenceIds": [
+            "b-proc-reg-v3",
+            "b-proc-sanctions-v2",
+            "b-proc-nda-v3",
+            "b-proc-quality-v2",
+            "b-proc-bank-v1",
+            "b-proc-d5",
+            "b-proc-d6",
+            "b-proc-d7"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "findingIds": [
+            "REAL-B-PROC-01-F1"
+          ],
+          "summary": "规划器把source_only的登记册地址误建为MSA对所有人核对任务的直接依赖，并扩大了MSA验收范围。"
+        },
+        "fixture": {
+          "findingIds": [],
+          "summary": "未发现夹具矛盾；登记册状态、MSA文件正文和讨论足以区分原始地址事实与所有人核对结论。"
+        },
+        "graderOracle": {
+          "findingIds": [],
+          "summary": "冻结期望要求MSA保留原依赖且直接读取v3事实，符合协议的source_only与最小差异规则。"
+        }
+      }
+    }
+  ]
+}

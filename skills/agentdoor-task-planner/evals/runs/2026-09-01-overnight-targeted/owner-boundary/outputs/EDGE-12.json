@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-12",
+  "baseSnapshotId": "snapshot-edge-12-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议先审阅一个未分配负责人的“30条品牌术语中日对照表”候选；翻译、日语复核和版本交付共同形成同一份交付物，不额外拆成子任务。",
+  "reasoningSummary": [
+    {
+      "text": "本轮结果是一份基于 CN-TERM-v1 的30条中日对照表，翻译与复核都是形成该交付物的必要步骤，尚无独立交付边界。",
+      "evidenceRefs": [
+        "req-edge-12",
+        "edge12-brief"
+      ]
+    },
+    {
+      "text": "授权成员能力证据中没有日语翻译或专业复核记录，因此不能据现有岗位名称推荐整项负责人、译者或日语复核者。",
+      "evidenceRefs": [
+        "edge12-capabilities"
+      ]
+    },
+    {
+      "text": "唐钰的职责只覆盖交付清单和版本管理，可作为版本交付贡献者，但不覆盖翻译、日语复核或整项结果责任。",
+      "evidenceRefs": [
+        "req-edge-12",
+        "content-m6-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:edge-12-terminology-table",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change:edge-12-create-terminology-table",
+        "action": "create",
+        "targetId": "new:edge-12-terminology-table",
+        "parentId": null,
+        "fields": {
+          "title": "制作30条品牌术语中日对照表",
+          "goal": {
+            "text": "把已确认的30条中文品牌术语整理为可逐项核对、保留译法依据和版本记录的中日对照表。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-edge-12",
+              "edge12-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "交付一份带版本标识的中日对照表，中文项仅取自 CN-TERM-v1，恰好覆盖其中已确认的30条术语，逐项可追溯且不增删范围。",
+            "30条术语均给出对应日语译法；每条译法由具备可核对日语能力依据的人完成复核，并记录复核人、核对依据、结论及仍待确认项。",
+            "对照表不新增品牌主张，不被标记为已批准或可发布成稿；未确认译法保持明确的待确认状态，不以版本交付代替语言复核。",
+            "交付版本、来源版本和修改记录一致，接收方能够区分中文原词、日语译法、复核状态与核对来源。"
+          ],
+          "tips": [
+            "把锁定30条中文源词、形成日语译法、日语能力复核和版本交付作为同一任务内的协作步骤；只有以后出现可独立负责、验收或复用的交付结果时才考虑拆分。",
+            "开始执行前补充具备相应能力依据的翻译与日语复核贡献者；候选人尚未确定不妨碍本轮审阅，但不能把文案或编辑岗位名称当作日语能力证据。",
+            "唐钰仅维护交付清单、来源版本和修改记录，不承担译法产出、语言复核或批准发布。"
+          ],
+          "ownerRecommendation": {
+            "memberId": null,
+            "basis": "unassigned",
+            "reason": "现有授权成员没有覆盖日语译法产出、专业复核与整项交付责任边界的能力证据，因此整项负责人暂不推荐。",
+            "evidenceRefs": [
+              "req-edge-12",
+              "edge12-capabilities"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "content-m6",
+              "contribution": "维护交付清单、来源版本、复核状态和修改记录，仅负责最终文件的版本交付。",
+              "evidenceRefs": [
+                "req-edge-12",
+                "content-m6-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "用户未提出期限，现有成员可用性资料也不足以推导开始日或截止日。"
+            ],
+            "evidenceRefs": [
+              "req-edge-12",
+              "edge12-capabilities"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供可比历史、约定翻译工具、译法复杂度或返修轮次，不能据30条数量直接推算人时。"
+            ],
+            "evidenceRefs": [
+              "req-edge-12",
+              "edge12-brief"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "用户明确需要一份可审阅的30条中日术语对照表候选；当前可确定交付边界，但负责人、翻译和日语复核贡献者应保持未指定。",
+        "evidenceRefs": [
+          "req-edge-12",
+          "edge12-brief",
+          "edge12-capabilities"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；此范围内无其他查重匹配。"
+  },
+  "questions": [],
+  "warnings": [
+    "翻译、日语复核和整项负责人仍有责任缺口；正式创建或执行前需按现行责任规则补齐并接受相应角色。",
+    "唐钰只被建议承担版本交付贡献，不代表其接受任务，也不代表其具备日语翻译或复核能力。",
+    "本轮没有期限、成员完整可用性或可比投入历史，因此日期和EWD均保持未知。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": null,
+      "label": "审阅单任务候选及责任缺口"
+    }
+  ],
+  "externalEffects": "none"
+}

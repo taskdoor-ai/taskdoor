@@ -1,0 +1,202 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "request-real-c-03",
+  "baseSnapshotId": "real-c-03-snapshot",
+  "baseRevision": 11,
+  "baseTaskVersions": {
+    "hr-root": 7,
+    "hr-prehire": 5,
+    "hr-offer-accept": 4,
+    "hr-date-amend": 1,
+    "hr-background": 3,
+    "hr-role-outcomes": 3,
+    "hr-onboarding": 4,
+    "hr-access": 3,
+    "hr-account": 4,
+    "hr-prod-access": 2,
+    "hr-laptop": 3,
+    "hr-readiness": 2,
+    "hr-policy": 2,
+    "hr-weekplan": 1,
+    "hr-payroll": 3,
+    "hr-startday": 1
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议保留现有日期修订、账号、设备、薪资和入职日核对任务，只把它们同步到已确认的2026-09-16及其直接前置；生产数据权限继续沿用原背景状态、培训、岗位范围和安全审批门槛。",
+  "reasoningSummary": [
+    {
+      "text": "候选人N17和用人经理均确认2026-09-16入职，日期补充确认已获批并明确不覆盖旧录用完成记录。",
+      "evidenceRefs": ["hr-file-date-amend-v2", "hr-d1", "hr-d2", "hr-hard-start"]
+    },
+    {
+      "text": "基础账号可改为9月16日08:30激活，设备配送单确认9月15日送达，薪资登记可在9月15日前完成，均可在原任务内同步。",
+      "evidenceRefs": ["hr-account", "hr-laptop", "hr-payroll", "hr-d3", "hr-d8", "hr-d10", "hr-file-device-dispatch-v2", "hr-file-payroll-check-v4"]
+    },
+    {
+      "text": "生产数据权限的正式标准与Owner已受确认保护，安全审批人也明确日期变更不放宽背景、培训和岗位范围门槛。",
+      "evidenceRefs": ["hr-prod-access", "hr-d4", "hr-file-access-matrix-v6", "hr-background", "hr-policy", "hr-role-outcomes"]
+    },
+    {
+      "text": "背景服务目前只回传pending与ETA，规划输出不得读取或复述背景、证件、银行、地址和联系方式正文。",
+      "evidenceRefs": ["hr-file-background-receipt-v3", "hr-d5", "hr-h7", "hr-privacy-boundary"]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "hr-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-hr-date-amend",
+        "action": "update",
+        "targetId": "hr-date-amend",
+        "parentId": "hr-prehire",
+        "fields": {
+          "acceptanceCriteria": [
+            "归档候选人N17与用人经理对2026-09-16入职的一致确认，并保留确认来源与版本",
+            "将日期修订作为基础账号、设备配送、薪资登记和入职日核对的正式排期依据，不覆盖旧录用接受记录"
+          ]
+        },
+        "reason": "双方确认已经齐备，现有日期修订任务应从泛化同步要求收敛为可核对的9月16日交接结果。",
+        "evidenceRefs": ["hr-date-amend", "hr-file-date-amend-v2", "hr-d1", "hr-d2", "hr-h3"]
+      },
+      {
+        "id": "chg-hr-account-date",
+        "action": "update",
+        "targetId": "hr-account",
+        "parentId": "hr-access",
+        "fields": {
+          "acceptanceCriteria": [
+            "基础账号保持暂存状态，并按确认入职日2026-09-16 08:30激活",
+            "凭据仅通过受控渠道交付；该基础账号不包含生产数据权限"
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-16",
+            "basis": "explicit",
+            "assumptions": ["激活时间按IT报告中的2026-09-16 08:30执行，实际激活与凭据交付仍由受控流程记录"],
+            "evidenceRefs": ["hr-file-date-amend-v2", "hr-d3", "hr-hard-start"]
+          },
+          "dependsOnTaskIds": ["hr-offer-accept", "hr-date-amend"]
+        },
+        "reason": "账号业务对象与结果未变，只需保留原ID并将激活日期和日期修订前置同步到9月16日。",
+        "evidenceRefs": ["hr-account", "hr-date-amend", "hr-offer-accept", "hr-d3", "hr-h5", "hr-request"]
+      },
+      {
+        "id": "chg-hr-laptop-date",
+        "action": "update",
+        "targetId": "hr-laptop",
+        "parentId": "hr-onboarding",
+        "fields": {
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-15",
+            "basis": "explicit",
+            "assumptions": ["以设备配送单v2确认的9月15日交付日为候选期限；未签收仍不视为完成"],
+            "evidenceRefs": ["hr-file-device-dispatch-v2", "hr-d8"]
+          },
+          "dependsOnTaskIds": ["hr-date-amend"]
+        },
+        "reason": "配送单已改为9月15日而正式任务仍为9月14日，需更新原任务日期并引用入职日期修订。",
+        "evidenceRefs": ["hr-laptop", "hr-date-amend", "hr-file-device-dispatch-v2", "hr-d8", "hr-h6"]
+      },
+      {
+        "id": "chg-hr-payroll-date",
+        "action": "update",
+        "targetId": "hr-payroll",
+        "parentId": "hr-readiness",
+        "fields": {
+          "acceptanceCriteria": [
+            "按2026-09-16入职日完成N17必要薪资登记，并仅在受控系统记录完成状态与缺件标记",
+            "背景、证件、银行、地址及其他受限字段不进入普通任务讨论或规划输出"
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-15",
+            "basis": "explicit",
+            "assumptions": ["薪资数据保管人报告可在9月15日前完成；候选日期不授权读取或外发任何受限字段"],
+            "evidenceRefs": ["hr-file-date-amend-v2", "hr-file-payroll-check-v4", "hr-d10", "hr-privacy-boundary"]
+          },
+          "dependsOnTaskIds": ["hr-offer-accept", "hr-date-amend"]
+        },
+        "reason": "薪资登记仍由原任务覆盖，只需同步新入职日、完成窗口及最小披露边界。",
+        "evidenceRefs": ["hr-payroll", "hr-date-amend", "hr-offer-accept", "hr-file-payroll-check-v4", "hr-d10", "hr-request"]
+      },
+      {
+        "id": "chg-hr-startday-date",
+        "action": "update",
+        "targetId": "hr-startday",
+        "parentId": "hr-readiness",
+        "fields": {
+          "schedule": {
+            "startOn": "2026-09-16",
+            "dueOn": "2026-09-16",
+            "basis": "explicit",
+            "assumptions": ["入职日核对在双方确认的2026-09-16执行；日期确认不保证所有前置自动完成"],
+            "evidenceRefs": ["hr-file-date-amend-v2", "hr-hard-start", "hr-d1", "hr-d2"]
+          },
+          "dependsOnTaskIds": ["hr-date-amend", "hr-account", "hr-laptop", "hr-policy", "hr-weekplan", "hr-payroll"]
+        },
+        "reason": "现有入职日核对标准已经指向9月16日，但正式dueOn仍为9月14日；应保留原ID并同步日期及修订前置。",
+        "evidenceRefs": ["hr-startday", "hr-date-amend", "hr-account", "hr-laptop", "hr-policy", "hr-weekplan", "hr-payroll", "hr-file-date-amend-v2"]
+      }
+    ],
+    "preservedTaskIds": [
+      "hr-root",
+      "hr-prehire",
+      "hr-offer-accept",
+      "hr-background",
+      "hr-role-outcomes",
+      "hr-onboarding",
+      "hr-access",
+      "hr-prod-access",
+      "hr-readiness",
+      "hr-policy",
+      "hr-weekplan"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": ["real-c-hiring-team"],
+    "assessments": [
+      {
+        "taskId": "hr-account",
+        "relationship": "same_outcome",
+        "reason": "同一候选编号和同一基础账号结果，只需在原任务内更新激活日期。",
+        "evidenceRefs": ["hr-account", "hr-d3", "hr-request"]
+      },
+      {
+        "taskId": "hr-laptop",
+        "relationship": "same_outcome",
+        "reason": "同一N17设备配送结果已由原任务覆盖，配送单更新不构成新任务。",
+        "evidenceRefs": ["hr-laptop", "hr-file-device-dispatch-v2", "hr-d8"]
+      },
+      {
+        "taskId": "hr-payroll",
+        "relationship": "same_outcome",
+        "reason": "同一候选与同一入职周期的薪资登记由原任务继续覆盖。",
+        "evidenceRefs": ["hr-payroll", "hr-file-payroll-check-v4", "hr-request"]
+      },
+      {
+        "taskId": "hr-offer-accept",
+        "relationship": "overlap",
+        "reason": "旧录用接受记录与日期修订相关但已完成封存，本轮只更新后续日期，不覆盖该历史事实。",
+        "evidenceRefs": ["hr-offer-accept", "hr-file-offer-v4", "hr-h1", "hr-file-date-amend-v2"]
+      }
+    ],
+    "coverageNote": "已检索当前授权团队内候选编号N17的录用、账号、设备、薪资和访问工作；受限正文未进入检索。"
+  },
+  "questions": [],
+  "warnings": [
+    "背景核查当前仅为pending，2026-09-04 17:00只是预计完成时间；本提案不把ETA当通过，也不改变生产权限的已确认门槛。",
+    "候选隐私资料正文不在输出范围内；不得据本提案读取、推断或传播背景、证件、银行、地址和联系方式。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "hr-root",
+      "label": "审阅2026-09-16入职日期同步的最小差异"
+    }
+  ],
+  "externalEffects": "none"
+}

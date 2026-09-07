@@ -1,0 +1,393 @@
+{
+  "requestId": "req-npi-02",
+  "message": "再开一个“收纳盒试制验证”，这次是BOX-N1的B版，包装结构改了；A版去年做过。同事说还可能有人建过B版，但我没看到。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "npi-m6",
+  "teamId": "team-npi",
+  "authorizedTeamIds": [
+    "team-npi"
+  ],
+  "revision": 1,
+  "context": {
+    "snapshotId": "snapshot-npi-02-v1",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-npi"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "npi02-a",
+        "title": "收纳盒试制验证",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2025-11-20T15:00:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "核对BOX-N1 A版样品与图纸A2"
+        ],
+        "ownerId": "npi-m5",
+        "sourceRefs": [
+          "npi02-a-record"
+        ],
+        "identity": {
+          "product": "BOX-N1",
+          "revision": "A",
+          "period": "2025-11",
+          "scope": "旧包装结构"
+        }
+      },
+      {
+        "id": "npi02-old-buy",
+        "title": "A版补料采购",
+        "status": "cancelled",
+        "version": 3,
+        "updatedAt": "2025-11-22T12:00:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "补齐A版样料"
+        ],
+        "ownerId": "npi-m3",
+        "sourceRefs": [
+          "npi02-old-buy-record"
+        ],
+        "identity": {
+          "product": "BOX-N1",
+          "revision": "A"
+        }
+      }
+    ],
+    "discussions": [],
+    "history": [
+      {
+        "id": "npi02-h1",
+        "taskId": "npi02-a",
+        "occurredAt": "2025-11-20T15:00:00+08:00",
+        "type": "task_completed",
+        "summary": "A版验证于2025-11完成，依据图纸A2与旧包装；没有B版结论。",
+        "version": 5,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "npi02-a-record",
+        "title": "收纳盒试制验证当前记录",
+        "text": "合成任务库快照：npi02-a，版本5，状态completed；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2025-11-20T15:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "npi02-old-buy-record",
+        "title": "A版补料采购当前记录",
+        "text": "合成任务库快照：npi02-old-buy，版本3，状态cancelled；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2025-11-22T12:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "npi02-rev-b",
+        "title": "B版变更说明（合成）",
+        "text": "BOX-N1 B版包装结构与A版不同，需要单独确认包装样品和对应检验范围。B版是否已有任务尚未确认。",
+        "updatedAt": "2026-09-01T09:00:00+08:00",
+        "source": "synthetic_business_record"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "partial",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "matches": [
+      {
+        "taskId": "npi02-a",
+        "title": "收纳盒试制验证",
+        "reason": "同产品同名，已读记录仅为A版。"
+      }
+    ],
+    "coverageNote": "合成查询只完成归档项目第一页，活动任务索引超时；不能确认B版是否已有任务。"
+  },
+  "members": [
+    {
+      "id": "npi-m1",
+      "name": "俞衡",
+      "role": "NPI项目协调",
+      "responsibilities": [
+        "组织样机交付范围和阶段评审",
+        "跟踪跨部门待决策项"
+      ],
+      "boundaries": [
+        "不代品质放行",
+        "不批准未验证量产"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m1-role",
+          "title": "俞衡职责说明（合成）",
+          "text": "职责：组织样机交付范围和阶段评审；跟踪跨部门待决策项。边界：不代品质放行；不批准未验证量产。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m1-work",
+          "title": "俞衡当前工作自报（合成）",
+          "text": "协调收纳盒试制资料",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调收纳盒试制资料",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "npi-m2",
+      "name": "奚川",
+      "role": "产品工程师",
+      "responsibilities": [
+        "维护图纸和BOM版本",
+        "说明工程变更影响"
+      ],
+      "boundaries": [
+        "不替采购确认供应",
+        "不把旧版本结论套到新版本"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m2-role",
+          "title": "奚川职责说明（合成）",
+          "text": "职责：维护图纸和BOM版本；说明工程变更影响。边界：不替采购确认供应；不把旧版本结论套到新版本。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m2-work",
+          "title": "奚川当前工作自报（合成）",
+          "text": "整理BOM修订说明",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "npi-m2-window",
+          "title": "奚川公开协作窗口（合成）",
+          "text": "2026-09-03T10:00:00+08:00至2026-09-03T12:00:00+08:00。仅为版本评审窗口，未声明总工作容量。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理BOM修订说明",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-03T10:00:00+08:00",
+        "endAt": "2026-09-03T12:00:00+08:00",
+        "sourceRef": "npi-m2-window",
+        "note": "仅为版本评审窗口，未声明总工作容量。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "npi-m3",
+      "name": "何荔",
+      "role": "采购与供应商协调",
+      "responsibilities": [
+        "确认样料交期和采购资料",
+        "追踪供应商书面回复"
+      ],
+      "boundaries": [
+        "不擅自替代材料",
+        "不把报价日期当到货承诺"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m3-role",
+          "title": "何荔职责说明（合成）",
+          "text": "职责：确认样料交期和采购资料；追踪供应商书面回复。边界：不擅自替代材料；不把报价日期当到货承诺。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m3-work",
+          "title": "何荔当前工作自报（合成）",
+          "text": "跟进样料回签",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "跟进样料回签",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "npi-m4",
+      "name": "路远",
+      "role": "工艺工程师",
+      "responsibilities": [
+        "整理试制工艺版本与工装需求",
+        "收集试制问题"
+      ],
+      "boundaries": [
+        "不在夹具中给设备操作或安全指导",
+        "不直接批准产品变更"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m4-role",
+          "title": "路远职责说明（合成）",
+          "text": "职责：整理试制工艺版本与工装需求；收集试制问题。边界：不在夹具中给设备操作或安全指导；不直接批准产品变更。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m4-work",
+          "title": "路远当前工作自报（合成）",
+          "text": "核对试制工艺文件",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对试制工艺文件",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "npi-m5",
+      "name": "彭宁",
+      "role": "品质验证负责人",
+      "responsibilities": [
+        "维护检验口径",
+        "复核样品记录与不符合项"
+      ],
+      "boundaries": [
+        "不把执行者自报当正式通过",
+        "不在无证据时放行"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m5-role",
+          "title": "彭宁职责说明（合成）",
+          "text": "职责：维护检验口径；复核样品记录与不符合项。边界：不把执行者自报当正式通过；不在无证据时放行。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m5-work",
+          "title": "彭宁当前工作自报（合成）",
+          "text": "整理试制抽检记录",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "npi-m5-window",
+          "title": "彭宁公开协作窗口（合成）",
+          "text": "2026-09-07T13:00:00+08:00至2026-09-07T16:00:00+08:00。仅接受样品资料评审；实物准备情况需另核对。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理试制抽检记录",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-07T13:00:00+08:00",
+        "endAt": "2026-09-07T16:00:00+08:00",
+        "sourceRef": "npi-m5-window",
+        "note": "仅接受样品资料评审；实物准备情况需另核对。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "npi-m6",
+      "name": "苏行",
+      "role": "生产计划协调",
+      "responsibilities": [
+        "核对试制批次与准备条件",
+        "协调已确认车间窗口"
+      ],
+      "boundaries": [
+        "不从人时直接推自然工期",
+        "不自行插单"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m6-role",
+          "title": "苏行职责说明（合成）",
+          "text": "职责：核对试制批次与准备条件；协调已确认车间窗口。边界：不从人时直接推自然工期；不自行插单。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m6-work",
+          "title": "苏行当前工作自报（合成）",
+          "text": "收集下一批试制准备状态",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "收集下一批试制准备状态",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

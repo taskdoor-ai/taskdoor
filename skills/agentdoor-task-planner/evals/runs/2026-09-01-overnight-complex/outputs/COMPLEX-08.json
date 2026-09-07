@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-complex08",
+  "baseSnapshotId": "snapshot-complex08-v3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "complex08-root": 9,
+    "complex08-writing": 5,
+    "complex08-delivery": 4,
+    "complex08-outline": 4,
+    "complex08-copy": 6,
+    "complex08-quotes": 4,
+    "complex08-visual": 3,
+    "complex08-proof": 3,
+    "complex08-package": 2
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "不能依据旧12人时平均分工并保证9月3日12:00交付：两条引用答复最早14:00、原编辑只确认16:00复核窗口，均晚于硬截止；本轮保留已确认Owner、截止时间和最终引用核对要求，不输出虚假可行排期。",
+  "reasoningSummary": [
+    {
+      "text": "硬截止是2026年9月3日12:00（Asia/Shanghai）；引用表仍有两条须待受访方确认且最早14:00答复，成稿与引用复核又是最终打包的真实前置，平均分人时无法消除等待。",
+      "evidenceRefs": [
+        "complex08-deadline",
+        "complex08-quote-reply",
+        "complex08-quotes",
+        "complex08-proof",
+        "complex08-package"
+      ]
+    },
+    {
+      "text": "编辑本轮仅确认9月3日16至17时复核，9月2日旧窗口已撤回；作者仅确认9月2日10至11时文字交接，不能当连续写作容量，策划8月窗口已失效。",
+      "evidenceRefs": [
+        "complex08-editor-window",
+        "complex08-d-editor",
+        "complex08-author-window",
+        "complex08-planner-old-window"
+      ]
+    },
+    {
+      "text": "8月12人时均分表属于旧周期整项估算，可用性只到8月28日；本轮原叶项数值也是基线，未提供实际或剩余投入，不能换算成三人各4小时的当前排期承诺。",
+      "evidenceRefs": [
+        "complex08-capacity-old",
+        "complex08-h-estimate",
+        "complex08-copy",
+        "complex08-quotes",
+        "complex08-proof",
+        "complex08-package"
+      ]
+    },
+    {
+      "text": "策划、作者、编辑的改字能力有重叠，但成稿与最终复核责任不可因此互换；已确认成稿Owner为content-m3、复核Owner为content-m5，“能帮忙”没有接受新增责任。",
+      "evidenceRefs": [
+        "complex08-overlap-charter",
+        "complex08-d-help",
+        "content-m2-role",
+        "content-m3-role",
+        "content-m5-role"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "questions": [
+    {
+      "field": "schedule.conflictResolution",
+      "question": "若要继续形成可行重排，是否先协调取得12:00前受访答复、原Owner复核及后续打包窗口的新回执？若无法取得，需要另行明确解锁日期或范围进入受控协商；本轮不改这些锁定项，也不删减引用核对。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "当前证据下无法证明按期可行：引用答复最早晚于截止2小时，编辑已确认复核窗口开始晚于截止4小时；这不等于可直接改交期至14:00或16:00，后续核对与打包仍需时间。",
+    "日期字段仅记9月3日，硬截止的具体12:00时刻来自原始回执，不能按当日结束解释而掩盖冲突。",
+    "保留所有原任务、已完成提纲与视觉记录、正式Owner、状态、原始估算基线和现有依赖；不给三人平均派活，不宣称任何人已接受。",
+    "受访答复等待不计人类投入；成员工作自报、旧日历及能改字不构成当前可用容量。成稿、引用、复核和打包的当前剩余工作与有效窗口仍需受信上下文。",
+    "不得把两条待确认引述伪装成已确认，不提前宣称最终引用核对完成；无外部通知或真实业务写入。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": "complex08-root",
+      "label": "确认如何受控处理9月3日12:00截止与答复、复核窗口冲突，本轮保持锁定项"
+    },
+    {
+      "action": "retry_context",
+      "taskId": "complex08-root",
+      "label": "补读本轮剩余工作、原负责人有效窗口及任何已确认提前答复回执，再重新预览"
+    },
+    {
+      "action": "open_task",
+      "taskId": "complex08-proof",
+      "label": "查看保留原Owner和最终引用要求的复核任务"
+    }
+  ],
+  "externalEffects": "none"
+}

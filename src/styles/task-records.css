@@ -1,0 +1,135 @@
+/* Task discussion is a conversation; task activity is a quiet change ledger. */
+.task-discussion-panel[hidden] { display: none; }
+.task-detail-section.task-discussion-panel,
+.task-detail-section.task-activity-section { border-bottom: 0; }
+
+.task-discussion { min-width: 0; }
+.task-discussion-compose { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); }
+.task-discussion-compose > .person-avatar { margin-top: var(--ad-space-2); }
+.task-discussion .mention-composer { border-color: var(--ad-border); background: var(--ad-surface); box-shadow: none; }
+.task-discussion .mention-composer:focus-within { border-color: var(--ad-focus); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ad-focus) 12%, transparent); }
+.task-discussion .mention-composer-input { min-height: 76px; color: var(--ad-ink); font-size: var(--ad-text-body-sm); }
+.task-discussion .mention-composer-tag { font-size: var(--ad-text-body-sm) !important; }
+.task-discussion .mention-composer-submit { min-height: 32px; padding-inline: var(--ad-space-3); border-color: var(--ad-route); background: var(--ad-route); color: var(--ad-on-route, white); font-size: var(--ad-text-caption); }
+.task-discussion .mention-composer-cancel { min-height: 32px; font-size: var(--ad-text-caption); }
+.task-discussion .mention-composer-tools > button:not([data-slot="button"]) { color: var(--ad-ink-tertiary); }
+.task-discussion .mention-composer-ai-entry { display: inline-flex; }
+.task-discussion .mention-composer.compact .mention-composer-input { min-height: 54px; }
+
+.task-discussion-threads,
+.task-discussion-replies,
+.task-change-timeline,
+.task-change-values { margin: 0; padding: 0; list-style: none; }
+.task-discussion-threads { margin-top: var(--ad-space-6); }
+.task-discussion-thread { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: var(--ad-space-3); padding-block: var(--ad-space-5); scroll-margin-top: var(--ad-space-6); }
+.task-discussion-thread + .task-discussion-thread { border-top: 1px solid var(--ad-border-soft); }
+.task-discussion-thread-body,
+.task-discussion-replies li > div { min-width: 0; }
+.task-discussion-record { min-width: 0; margin: calc(var(--ad-space-2) * -1); padding: var(--ad-space-2); border-radius: var(--ad-radius-control); scroll-margin-top: var(--ad-space-6); }
+.task-discussion-record.is-attention { background: var(--ad-route-soft); }
+.task-discussion-record > header { display: flex; min-width: 0; align-items: baseline; flex-wrap: wrap; gap: var(--ad-space-3); }
+.task-discussion-record > .task-discussion-thread-header { align-items: center; flex-wrap: nowrap; }
+.task-discussion-meta { display: flex; min-width: 0; flex: 1; align-items: baseline; flex-wrap: wrap; gap: var(--ad-space-3); }
+.task-discussion-thread-header > .task-discussion-ai-trigger { flex: 0 0 auto; margin-left: auto; }
+.task-discussion-record > header strong { color: var(--ad-ink); font-size: var(--ad-text-body-sm); font-weight: 650; }
+.task-discussion time,
+.task-change-log time,
+.task-source-record time { flex: 0 0 auto; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); font-variant-numeric: tabular-nums; }
+.task-discussion-message { margin: var(--ad-space-2) 0 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.8; overflow-wrap: anywhere; white-space: pre-wrap; }
+.task-discussion-actions { display: flex; align-items: center; gap: var(--ad-space-3); margin-top: var(--ad-space-2); }
+.task-discussion-actions > button:not([data-slot="button"]) { display: inline-flex; min-height: 30px; align-items: center; gap: var(--ad-space-1); padding: 0; border: 0; background: transparent; color: var(--ad-ink-tertiary); cursor: pointer; font: inherit; font-size: var(--ad-text-caption); }
+.task-discussion-actions > button:not([data-slot="button"]):hover { color: var(--ad-route-ink); }
+.task-discussion-actions > span { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.task-discussion-replies { display: grid; gap: var(--ad-space-4); margin-top: var(--ad-space-3); padding-left: var(--ad-space-4); border-left: 1px solid var(--ad-border); }
+.task-discussion-replies > li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--ad-space-2); scroll-margin-top: var(--ad-space-6); }
+.task-discussion-reply-compose { margin-top: var(--ad-space-4); }
+
+.task-discussion-quote,
+.task-discussion-context { margin: var(--ad-space-3) 0 0; padding: var(--ad-space-3) var(--ad-space-4); border-left: 2px solid var(--ad-border-strong); border-radius: 0 var(--ad-radius-control) var(--ad-radius-control) 0; background: var(--ad-surface-quiet); }
+.task-discussion-quote > p,
+.task-discussion-context > p { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.7; overflow-wrap: anywhere; white-space: pre-wrap; }
+.task-discussion-quote > button { display: flex; max-width: 100%; min-height: 30px; align-items: center; gap: var(--ad-space-1); margin-top: var(--ad-space-2); padding: 0; border: 0; background: transparent; color: var(--ad-route-ink); cursor: pointer; font: inherit; font-size: var(--ad-text-caption); text-align: left; }
+.task-discussion-quote > button > span { min-width: 0; overflow-wrap: anywhere; }
+.task-discussion-quote > button small { flex: 0 0 auto; margin-left: var(--ad-space-2); font-size: inherit; }
+.task-discussion-quote > button:disabled { color: var(--ad-ink-tertiary); cursor: default; }
+.task-discussion-context > small,
+.task-discussion-context-unavailable { display: block; margin: 0 0 var(--ad-space-1); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.task-discussion-context-unavailable { margin-top: var(--ad-space-2); }
+
+.task-record-file-link { display: inline-flex; max-width: 100%; min-height: 30px; align-items: center; gap: var(--ad-space-2); margin-top: var(--ad-space-2); padding: var(--ad-space-1) var(--ad-space-2); border: 1px solid var(--ad-border-soft); border-radius: var(--ad-radius-control); background: var(--ad-surface); color: var(--ad-ink-secondary); cursor: pointer; font: inherit; font-size: var(--ad-text-caption); text-align: left; }
+.task-record-file-link svg { flex: 0 0 auto; color: var(--ad-ink-tertiary); }
+.task-record-file-link > span { min-width: 0; overflow-wrap: anywhere; }
+.task-record-file-link small { flex: 0 0 auto; color: var(--ad-ink-tertiary); font-size: inherit; }
+.task-record-file-link:not(:disabled):hover { border-color: var(--ad-route); color: var(--ad-route-ink); }
+.task-record-file-link:disabled { color: var(--ad-ink-tertiary); cursor: default; }
+
+.task-change-toolbar { display: flex; align-items: center; justify-content: space-between; gap: var(--ad-space-4); }
+.task-change-toolbar h2 { margin: 0; color: var(--ad-ink); font-size: var(--ad-text-body); font-weight: 650; }
+.task-change-toolbar p { margin: var(--ad-space-1) 0 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.6; }
+.task-change-log > .task-change-timeline { margin-top: var(--ad-space-4); }
+.task-change-event { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: var(--ad-space-3); padding: var(--ad-space-2) 0 var(--ad-space-5); scroll-margin-top: var(--ad-space-6); }
+.task-change-event:not(:last-child)::after { position: absolute; top: 35px; bottom: -7px; left: 13px; width: 1px; background: var(--ad-border); content: ""; }
+.task-change-marker { z-index: 1; display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid var(--ad-border-soft); border-radius: 50%; background: var(--ad-surface); color: var(--ad-ink-tertiary); }
+.task-change-content { min-width: 0; padding-top: var(--ad-space-1); }
+.task-change-content > header { display: flex; min-width: 0; align-items: baseline; justify-content: space-between; gap: var(--ad-space-3); }
+.task-change-content > header > p { display: flex; min-width: 0; flex-wrap: wrap; gap: var(--ad-space-2); margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.6; overflow-wrap: anywhere; }
+.task-change-content strong { color: var(--ad-ink); font-weight: 600; }
+.task-change-kind { display: inline-flex; min-height: 22px; align-items: center; padding: 1px var(--ad-space-2); border: 1px solid var(--ad-tag-gray-border); border-radius: var(--ad-radius-pill); background: var(--ad-tag-gray-bg); color: var(--ad-tag-gray-ink); font-size: var(--ad-text-caption); font-weight: 600; line-height: 1.5; }
+.task-change-kind--task { border-color: var(--ad-tag-blue-border); background: var(--ad-tag-blue-bg); color: var(--ad-tag-blue-ink); }
+.task-change-kind--discussion { border-color: var(--ad-tag-teal-border); background: var(--ad-tag-teal-bg); color: var(--ad-tag-teal-ink); }
+.task-change-kind--file { border-color: var(--ad-tag-purple-border); background: var(--ad-tag-purple-bg); color: var(--ad-tag-purple-ink); }
+.task-change-action { color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); font-weight: 500; }
+.task-change-description { margin: var(--ad-space-2) 0 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.7; overflow-wrap: anywhere; white-space: pre-wrap; }
+.task-change-discussion-link { display: inline-flex; min-height: 30px; align-items: center; margin-top: var(--ad-space-2); padding: 0; border: 0; background: transparent; color: var(--ad-route-ink); cursor: pointer; font: inherit; font-size: var(--ad-text-caption); }
+.task-change-discussion-link:hover { color: var(--ad-route); }
+.task-change-discussion-link:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; border-radius: var(--ad-radius-control); }
+.task-change-values { display: grid; gap: var(--ad-space-2); margin-top: var(--ad-space-2); }
+.task-change-values > li { display: flex; min-width: 0; align-items: baseline; flex-wrap: wrap; gap: var(--ad-space-2); font-size: var(--ad-text-caption); line-height: 1.7; }
+.task-change-values > li > svg { flex: 0 0 auto; align-self: center; color: var(--ad-ink-tertiary); }
+.task-change-field { flex: 0 0 auto; min-width: 4em; color: var(--ad-ink-tertiary); }
+.task-change-before,
+.task-change-after { min-width: 0; max-width: 100%; padding: 1px var(--ad-space-2); border: 1px solid var(--ad-border-soft); border-radius: var(--ad-radius-tag); overflow-wrap: anywhere; white-space: pre-wrap; }
+.task-change-before { background: var(--ad-surface-quiet); color: var(--ad-ink-tertiary); }
+.task-change-after { background: var(--ad-surface); color: var(--ad-ink); }
+.task-change-files { display: flex; min-width: 0; flex-wrap: wrap; gap: var(--ad-space-2); }
+
+.task-record-empty { display: grid; min-height: 190px; justify-items: center; align-content: center; gap: var(--ad-space-2); padding: var(--ad-space-6); color: var(--ad-ink-tertiary); text-align: center; }
+.task-record-empty > strong { margin-top: var(--ad-space-1); color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); font-weight: 550; }
+.task-record-empty > p { margin: 0; font-size: var(--ad-text-caption); line-height: 1.6; }
+.task-attention-message { color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); }
+.task-source-record { margin-top: var(--ad-space-4); padding: var(--ad-space-4); border: 1px solid var(--ad-border); border-radius: var(--ad-radius-control); background: var(--ad-surface-quiet); }
+.task-source-record > header { display: flex; align-items: center; gap: var(--ad-space-3); }
+.task-source-record > header strong { font-size: var(--ad-text-body-sm); }
+.task-source-record > header button { display: grid; width: 30px; height: 30px; place-items: center; margin-left: auto; border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-secondary); cursor: pointer; }
+.task-source-record > p { color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.7; overflow-wrap: anywhere; }
+.task-source-record > small { display: block; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+
+.task-discussion-record:focus:not(:focus-visible) { outline: none; }
+.task-discussion-record:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.task-change-event:focus { outline: none; }
+.task-source-record:focus { outline: 2px solid var(--ad-focus); outline-offset: 4px; border-radius: var(--ad-radius-control); }
+
+@media (max-width: 640px) {
+  .task-discussion-compose { grid-template-columns: minmax(0, 1fr); }
+  .task-discussion-compose > .person-avatar { display: none; }
+  .task-discussion-thread { grid-template-columns: 28px minmax(0, 1fr); gap: var(--ad-space-2); }
+  .task-discussion-replies { margin-left: -16px; padding-left: var(--ad-space-3); }
+  .task-discussion-quote,
+  .task-discussion-context { padding: var(--ad-space-2) var(--ad-space-3); }
+  .task-discussion-quote > button { flex-wrap: wrap; }
+  .task-discussion .mention-composer-submit,
+  .task-discussion .mention-composer-cancel,
+  .task-discussion .mention-composer-tools > button,
+  .task-discussion-actions > button,
+  .task-record-file-link,
+  .task-change-discussion-link,
+  .task-source-record > header button { min-height: var(--ad-control-touch-min); }
+  .task-discussion .mention-composer-tools > button,
+  .task-source-record > header button { min-width: var(--ad-control-touch-min); }
+  .task-discussion-ai-trigger,
+  .task-discussion .mention-composer-ai-trigger { min-width: var(--ad-control-touch-min); min-height: var(--ad-control-touch-min); }
+  .task-change-toolbar { align-items: flex-start; flex-direction: column; gap: var(--ad-space-3); }
+  .task-change-content > header { align-items: flex-start; flex-direction: column; gap: var(--ad-space-1); }
+  .task-change-values > li { align-items: start; }
+  .task-change-field { flex-basis: 100%; }
+}

@@ -1,0 +1,84 @@
+{
+  "kind": "independent_cross_group_semantic_review",
+  "total": 12,
+  "satisfies": 8,
+  "fails": 4,
+  "uncertain": 0,
+  "semanticPassRate": 0.6666666666666666,
+  "humanIndustryReview": false,
+  "reviewMethod": "Each blind executor reviewed a different case group against frozen input, output and manual rubric; no one reviewed their own outputs. No human industry-user adjudication.",
+  "results": [
+    {
+      "id": "REAL-A-REL-01",
+      "verdict": "satisfies",
+      "summary": "正确复用现有 rc3 公证回执任务，只为安全闸门和商店提交补齐直接依赖；未签署草稿与 CLI 成功均未被提升为完成或放行证据，硬窗口、两小时灰度、正式责任和最终批准传递链保持不变。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-A-SAAS-01",
+      "verdict": "satisfies",
+      "summary": "正确识别同一客户、tenant、15人、两批、截止日和交付证据的完整重复，拒绝再次创建并打开现有培训任务；A批只被视为部分进展。`no_change` 与 `route_required` 在本案业务语义上都能成立，冻结协议也明确允许完整复用时二选一，因此结构报告中的 disposition 失败应归为期望夹具过窄。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-A-ECOM-01",
+      "verdict": "satisfies",
+      "summary": "正确复用已经存在的四渠道联检、仓内异常卡和承运降级记录，仅补齐开售闸门对三项结果的直接依赖，并保留原演练与仓位前置；没有新建总卡或改变完成项、责任、硬窗口、SKU和价格。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-A-CS-01",
+      "verdict": "satisfies",
+      "summary": "正确给出当前不能对外称事故已解决的只读结论，区分缓解报告、撤回话术、正式状态和事故指挥决定；只建议打开三个现有核对对象，并把数据影响限定为当前覆盖内尚未发现外泄迹象。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-B-NPI-01",
+      "verdict": "fails",
+      "summary": "5/6 项人工检查通过。四项局部更新、完成记录保护、外部COC风险和查重处理均正确；DVT却以首批来料任务替代了PCN的直接前置，缺少冻结期望要求的 b-npi-pcn 依赖。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-B-LOG-01",
+      "verdict": "satisfies",
+      "summary": "6/6 项人工检查通过。输出准确识别13/27项及讨论、历史、查重覆盖不完整，返回null提案与授权游标续读动作，没有猜测隐藏消费者、泄露凭据或承诺整树可行性。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-B-RETAIL-01",
+      "verdict": "satisfies",
+      "summary": "6/6 项人工检查通过。输出仅更新货架、入库、陈列与软开门禁，日期从9月13日有权窗口向后衔接；消防保持未知，POS、培训和完成项未整体顺延。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-B-PROC-01",
+      "verdict": "fails",
+      "summary": "5/6 项人工检查通过。五项更新、完成记录保护、银行外部等待和查重处理均正确；银行验证却仍只依赖税务任务，未直接消费所有人核对结果。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-C-01",
+      "verdict": "satisfies",
+      "summary": "候选差异在语义上成立。cc-paid 直接消费主张v2替换清单与付费渠道合规措辞，新增该依赖有输入证据，并未把后续任务串成全串行链；结构失败主要由fixture将cc-paid预先列为禁止更新，以及grader机械执行该限制导致。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "REAL-C-02",
+      "verdict": "fails",
+      "summary": "外币重估新增fc-transfer-clear前置是正确的，但输出进一步把fc-fx、日记账复核和主报表草稿串行化，超出最小差异且缺少“主报表草稿必须等待日记账批准”的证据。结构报告同时含fixture造成的假错误，二者需分开。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "REAL-C-03",
+      "verdict": "satisfies",
+      "summary": "四项更新均局限于用户明确要求的既有任务，日期、依赖和隐私边界有对应证据；生产权限门槛与已确认字段保持不变。结构通过与语义结论一致。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "REAL-C-04",
+      "verdict": "fails",
+      "summary": "三项候选更新、依赖链和真实等待风险总体正确，但reasoningSummary遗漏rn-d8这条直接声称“机电已全部关闭”的冲突报告。冻结协议要求关键“不能视为完成”冲突显式引用，因此核心计划虽可保留，当前证据说明仍未达语义通过。",
+      "reviewFile": "semantic-review-c.json"
+    }
+  ]
+}

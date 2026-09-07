@@ -1,0 +1,169 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "syn-req-ecom-a-01",
+  "baseSnapshotId": "syn-snapshot-ecom-a-15",
+  "baseRevision": 15,
+  "baseTaskVersions": {
+    "syn-ecom-root": 14,
+    "syn-ecom-product": 7,
+    "syn-ecom-supply": 6,
+    "syn-ecom-launch": 8,
+    "syn-ecom-listing-package": 6,
+    "syn-ecom-page": 8,
+    "syn-ecom-compliance": 5,
+    "syn-ecom-channel-check": 3,
+    "syn-ecom-forecast": 6,
+    "syn-ecom-warehouse-slot": 5,
+    "syn-ecom-label-rule": 5,
+    "syn-ecom-exception-card": 4,
+    "syn-ecom-carrier-fallback": 4,
+    "syn-ecom-dry-run": 7,
+    "syn-ecom-launch-gate": 6
+  },
+  "intent": "next_batch",
+  "disposition": "ready_for_confirmation",
+  "summary": "复用现有四渠道联检、仓内异常卡和承运降级任务，不新建总卡；只把这三个直接产出补入现有开售闸门依赖。",
+  "reasoningSummary": [
+    {
+      "text": "四渠道联检、仓内异常卡和承运降级记录均已存在，负责人已确认三项直接复用且不再新建总异常卡。",
+      "evidenceRefs": [
+        "syn-ecom-channel-check",
+        "syn-ecom-exception-card",
+        "syn-ecom-carrier-fallback",
+        "syn-ecom-d02",
+        "syn-ecom-d03",
+        "syn-ecom-d04"
+      ]
+    },
+    {
+      "text": "开售闸门清单正文要求三项结果，但正式任务依赖仍只有订单演练和仓位；文件链接或冲突报告都不代表三项已完成。",
+      "evidenceRefs": [
+        "syn-ecom-file-06",
+        "syn-ecom-launch-gate",
+        "syn-ecom-d06",
+        "syn-ecom-h06"
+      ]
+    },
+    {
+      "text": "订单演练和仓位仍是有效前置，最终依赖应在原集合上加入渠道联检、仓内异常卡和承运降级三个直接生产任务。",
+      "evidenceRefs": [
+        "syn-ecom-launch-gate",
+        "syn-ecom-dry-run",
+        "syn-ecom-warehouse-slot",
+        "syn-ecom-file-04",
+        "syn-ecom-file-05",
+        "syn-ecom-file-06"
+      ]
+    },
+    {
+      "text": "2026-09-06 20:00开售、SKU范围、价格和已确认闸门标准均保持不变。",
+      "evidenceRefs": [
+        "syn-ecom-d08",
+        "syn-ecom-file-01",
+        "syn-ecom-root",
+        "syn-ecom-launch-gate"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "syn-ecom-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "update-syn-ecom-launch-gate-dependencies",
+        "action": "update",
+        "targetId": "syn-ecom-launch-gate",
+        "parentId": "syn-ecom-launch",
+        "fields": {
+          "dependsOnTaskIds": [
+            "syn-ecom-dry-run",
+            "syn-ecom-warehouse-slot",
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback"
+          ]
+        },
+        "reason": "保留仍被闸门消费的订单演练和仓位前置，并补入清单明确要求的三个实际生产任务。",
+        "evidenceRefs": [
+          "syn-ecom-launch-gate",
+          "syn-ecom-file-06",
+          "syn-ecom-d04",
+          "syn-ecom-d06",
+          "syn-ecom-channel-check",
+          "syn-ecom-exception-card",
+          "syn-ecom-carrier-fallback"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "syn-ecom-root",
+      "syn-ecom-product",
+      "syn-ecom-supply",
+      "syn-ecom-launch",
+      "syn-ecom-listing-package",
+      "syn-ecom-page",
+      "syn-ecom-compliance",
+      "syn-ecom-channel-check",
+      "syn-ecom-forecast",
+      "syn-ecom-warehouse-slot",
+      "syn-ecom-label-rule",
+      "syn-ecom-exception-card",
+      "syn-ecom-carrier-fallback",
+      "syn-ecom-dry-run"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-ecom-a"
+    ],
+    "assessments": [
+      {
+        "taskId": "syn-ecom-channel-check",
+        "relationship": "same_outcome",
+        "reason": "同一活动、四渠道、48字段和首波500单的联检结果已由现有任务完整覆盖。",
+        "evidenceRefs": [
+          "syn-ecom-channel-check",
+          "syn-ecom-d02",
+          "syn-ecom-file-02",
+          "syn-ecom-file-03"
+        ]
+      },
+      {
+        "taskId": "syn-ecom-exception-card",
+        "relationship": "overlap",
+        "reason": "现有任务覆盖请求中的仓内缺货、错拣和面单失败部分；承运接口部分由另一现有任务独立覆盖。",
+        "evidenceRefs": [
+          "syn-ecom-exception-card",
+          "syn-ecom-d03",
+          "syn-ecom-file-04",
+          "syn-req-ecom-a-01"
+        ]
+      },
+      {
+        "taskId": "syn-ecom-carrier-fallback",
+        "relationship": "overlap",
+        "reason": "现有任务覆盖请求中的承运接口降级部分；仓内异常部分由另一现有任务独立覆盖。",
+        "evidenceRefs": [
+          "syn-ecom-carrier-fallback",
+          "syn-ecom-d03",
+          "syn-ecom-file-05",
+          "syn-req-ecom-a-01"
+        ]
+      }
+    ],
+    "coverageNote": "纯合成查重已覆盖授权团队当前与归档任务；三个候选共同覆盖请求，无需新建总卡。"
+  },
+  "questions": [],
+  "warnings": [
+    "三个新增前置任务当前仍为open；文件已关联或清单已列出不等于结果完成，2026-09-06 20:00硬窗口也不构成按期保证。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "syn-ecom-root",
+      "label": "审阅开售闸门的一项依赖差异"
+    }
+  ],
+  "externalEffects": "none"
+}

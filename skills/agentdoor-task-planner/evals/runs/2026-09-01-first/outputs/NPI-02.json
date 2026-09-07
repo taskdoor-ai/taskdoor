@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-npi-02",
+  "baseSnapshotId": "snapshot-npi-02-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "npi02-a": 5,
+    "npi02-old-buy": 3
+  },
+  "intent": "create",
+  "disposition": "needs_clarification",
+  "summary": "先补查BOX-N1 B版现有任务；A版是不同实例，但活动任务索引超时，暂不提出新增变更。",
+  "reasoningSummary": [
+    {
+      "text": "A版记录仅覆盖2025年11月、图纸A2及旧包装，不能代替包装结构已经改变的B版验证。",
+      "evidenceRefs": [
+        "npi02-a",
+        "npi02-h1",
+        "npi02-rev-b"
+      ]
+    },
+    {
+      "text": "用户明确提出B版新结果，且已知还有未核实的B版任务线索。",
+      "evidenceRefs": [
+        "req-npi-02",
+        "npi02-rev-b"
+      ]
+    },
+    {
+      "text": "查重只完成归档第一页，活动任务索引超时；授权团队范围标签不能补足实际查询覆盖。",
+      "evidenceRefs": [
+        "req-npi-02"
+      ]
+    },
+    {
+      "text": "A版验证已完成、旧补料采购已取消，均应保持原ID和状态，不能更新或用取消采购作为B版前置。",
+      "evidenceRefs": [
+        "npi02-a",
+        "npi02-old-buy"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "partial",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "assessments": [
+      {
+        "taskId": "npi02-a",
+        "relationship": "different_instance",
+        "reason": "同属BOX-N1，但可见任务是2025年11月A版、图纸A2和旧包装；本次是包装结构变更后的B版，需重新核对包装样品和检验范围。",
+        "evidenceRefs": [
+          "npi02-a",
+          "npi02-h1",
+          "npi02-rev-b",
+          "req-npi-02"
+        ]
+      }
+    ],
+    "coverageNote": "合成查询只完成归档项目第一页，活动任务索引超时；不能确认B版是否已有任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "当前不是“未发现B版重复”，而是尚未查清。",
+    "未新建、指派、重开或恢复任何任务；A版完成与取消记录保持不变。",
+    "B版的检验范围、日期和人时尚未确认，不复制A版负责人、期限、结论或实绩。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": null,
+      "label": "补查授权团队的B版活动任务及剩余归档页"
+    }
+  ],
+  "externalEffects": "none"
+}

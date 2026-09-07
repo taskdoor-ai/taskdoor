@@ -1,0 +1,403 @@
+{
+  "requestId": "req-retail-02",
+  "message": "帮01店新建9月30日的月末盘点任务。8月31日那期已经完成，这次是九月期，不是补八月的差异。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "retail-m2",
+  "teamId": "team-retail",
+  "authorizedTeamIds": [
+    "team-retail"
+  ],
+  "revision": 1,
+  "context": {
+    "snapshotId": "snapshot-retail-02-v1",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-retail"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "retail02-aug",
+        "title": "01店月末盘点",
+        "status": "completed",
+        "version": 4,
+        "updatedAt": "2026-08-31T20:00:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "核对01店2026年8月月末库存并记录差异"
+        ],
+        "ownerId": "retail-m2",
+        "sourceRefs": [
+          "retail02-aug-record"
+        ],
+        "identity": {
+          "store": "合成·青桐01店",
+          "period": "2026-08",
+          "deliverable": "月末盘点"
+        }
+      },
+      {
+        "id": "retail02-02sep",
+        "title": "02店月末盘点",
+        "status": "open",
+        "version": 1,
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "核对02店2026年9月月末库存并记录差异"
+        ],
+        "ownerId": "retail-m3",
+        "sourceRefs": [
+          "retail02-02sep-record"
+        ],
+        "identity": {
+          "store": "合成·青桐02店",
+          "period": "2026-09",
+          "deliverable": "月末盘点"
+        }
+      }
+    ],
+    "discussions": [],
+    "history": [
+      {
+        "id": "retail02-h1",
+        "taskId": "retail02-aug",
+        "occurredAt": "2026-08-31T20:00:00+08:00",
+        "type": "task_completed",
+        "summary": "01店8月盘点已结项，差异清单AUG-01关闭。",
+        "version": 4,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "retail02-aug-record",
+        "title": "01店月末盘点当前记录",
+        "text": "合成任务库快照：retail02-aug，版本4，状态completed；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-08-31T20:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "retail02-02sep-record",
+        "title": "02店月末盘点当前记录",
+        "text": "合成任务库快照：retail02-02sep，版本1，状态open；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "retail02-period",
+        "title": "九月盘点口径（合成）",
+        "text": "本次对象为01店、2026年9月30日月末时点。02店同周期和01店8月均为其他实例。",
+        "updatedAt": "2026-09-01T09:00:00+08:00",
+        "source": "synthetic_business_record"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-retail"
+    ],
+    "matches": [
+      {
+        "taskId": "retail02-aug",
+        "title": "01店月末盘点",
+        "reason": "同门店同标题，周期不同且旧期已完成。"
+      },
+      {
+        "taskId": "retail02-02sep",
+        "title": "02店月末盘点",
+        "reason": "同周期同类交付，门店不同。"
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "constraints": {
+    "store": "合成·青桐01店",
+    "period": "2026-09",
+    "hardDueOn": "2026-09-30"
+  },
+  "members": [
+    {
+      "id": "retail-m1",
+      "name": "江若",
+      "role": "区域运营负责人",
+      "responsibilities": [
+        "定义门店推广范围",
+        "协调跨店问题和结果核对"
+      ],
+      "boundaries": [
+        "不自动替店长排班",
+        "不读取未授权区域资料"
+      ],
+      "evidence": [
+        {
+          "id": "retail-m1-role",
+          "title": "江若职责说明（合成）",
+          "text": "职责：定义门店推广范围；协调跨店问题和结果核对。边界：不自动替店长排班；不读取未授权区域资料。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "retail-m1-work",
+          "title": "江若当前工作自报（合成）",
+          "text": "汇总两家试点门店的问题",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "汇总两家试点门店的问题",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "retail-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "retail-m2",
+      "name": "林序",
+      "role": "01店店长",
+      "responsibilities": [
+        "安排01店落实",
+        "复核本店交付记录"
+      ],
+      "boundaries": [
+        "不代表02店承诺人力",
+        "不代总部改活动范围"
+      ],
+      "evidence": [
+        {
+          "id": "retail-m2-role",
+          "title": "林序职责说明（合成）",
+          "text": "职责：安排01店落实；复核本店交付记录。边界：不代表02店承诺人力；不代总部改活动范围。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "retail-m2-work",
+          "title": "林序当前工作自报（合成）",
+          "text": "跟进01店交接事项",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "retail-m2-window",
+          "title": "林序公开协作窗口（合成）",
+          "text": "2026-09-04T09:00:00+08:00至2026-09-04T10:00:00+08:00。只保证01店现场核对，不是跨店支援承诺。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "跟进01店交接事项",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "retail-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-04T09:00:00+08:00",
+        "endAt": "2026-09-04T10:00:00+08:00",
+        "sourceRef": "retail-m2-window",
+        "note": "只保证01店现场核对，不是跨店支援承诺。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "retail-m3",
+      "name": "叶芷",
+      "role": "02店店长",
+      "responsibilities": [
+        "安排02店落实",
+        "汇总本店货架与时段约束"
+      ],
+      "boundaries": [
+        "不替供应商确认到货",
+        "不代表其他门店验收"
+      ],
+      "evidence": [
+        {
+          "id": "retail-m3-role",
+          "title": "叶芷职责说明（合成）",
+          "text": "职责：安排02店落实；汇总本店货架与时段约束。边界：不替供应商确认到货；不代表其他门店验收。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "retail-m3-work",
+          "title": "叶芷当前工作自报（合成）",
+          "text": "核对02店促销陈列位置",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对02店促销陈列位置",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "retail-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "retail-m4",
+      "name": "陈韵",
+      "role": "陈列设计",
+      "responsibilities": [
+        "维护陈列指引版本",
+        "评审门店适配图"
+      ],
+      "boundaries": [
+        "不替门店确认已落地",
+        "不将效果图当现场证据"
+      ],
+      "evidence": [
+        {
+          "id": "retail-m4-role",
+          "title": "陈韵职责说明（合成）",
+          "text": "职责：维护陈列指引版本；评审门店适配图。边界：不替门店确认已落地；不将效果图当现场证据。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "retail-m4-work",
+          "title": "陈韵当前工作自报（合成）",
+          "text": "维护换季陈列指引",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "维护换季陈列指引",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "retail-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "retail-m5",
+      "name": "赵诚",
+      "role": "门店培训",
+      "responsibilities": [
+        "准备操作培训材料",
+        "收集门店学习反馈"
+      ],
+      "boundaries": [
+        "不从参加培训推断熟练或已执行",
+        "不决定店员班次"
+      ],
+      "evidence": [
+        {
+          "id": "retail-m5-role",
+          "title": "赵诚职责说明（合成）",
+          "text": "职责：准备操作培训材料；收集门店学习反馈。边界：不从参加培训推断熟练或已执行；不决定店员班次。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "retail-m5-work",
+          "title": "赵诚当前工作自报（合成）",
+          "text": "整理店长培训问题",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "retail-m5-window",
+          "title": "赵诚公开协作窗口（合成）",
+          "text": "2026-09-05T14:00:00+08:00至2026-09-05T16:00:00+08:00。线上培训窗口；门店能否参加需各店确认。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理店长培训问题",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "retail-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-05T14:00:00+08:00",
+        "endAt": "2026-09-05T16:00:00+08:00",
+        "sourceRef": "retail-m5-window",
+        "note": "线上培训窗口；门店能否参加需各店确认。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "retail-m6",
+      "name": "谢允",
+      "role": "补货协调",
+      "responsibilities": [
+        "对齐门店补货清单",
+        "核对配送回执"
+      ],
+      "boundaries": [
+        "不把总部库存当门店现货",
+        "不自行改变采购或配送承诺"
+      ],
+      "evidence": [
+        {
+          "id": "retail-m6-role",
+          "title": "谢允职责说明（合成）",
+          "text": "职责：对齐门店补货清单；核对配送回执。边界：不把总部库存当门店现货；不自行改变采购或配送承诺。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "retail-m6-work",
+          "title": "谢允当前工作自报（合成）",
+          "text": "追踪02店物料配送",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "追踪02店物料配送",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "retail-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

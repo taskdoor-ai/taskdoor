@@ -20,9 +20,25 @@
   --ad-route-active: #0a438e;
   --ad-route-soft: #e7f1fd;
   --ad-route-ink: #0a438e;
+  --ad-accent: var(--ad-route);
   --ad-focus: #1268d6;
   --ad-danger: #b43a35;
   --ad-danger-soft: #fce9e7;
+  --ad-notification-badge: #d92d3e;
+
+  /* Task status semantics — shared by badges, boards and canvas cards */
+  --ad-task-status-neutral: #777777;
+  --ad-task-status-neutral-soft: #f4f4f5;
+  --ad-task-status-progress: #008af5;
+  --ad-task-status-progress-soft: #e0f2fe;
+  --ad-task-status-review: #f0b13d;
+  --ad-task-status-review-soft: #fefce8;
+  --ad-task-status-warning: #eaa65d;
+  --ad-task-status-warning-soft: #fff7ed;
+  --ad-task-status-success: #57bc6c;
+  --ad-task-status-success-soft: #ecfdf3;
+  --ad-task-status-failed: #d57463;
+  --ad-task-status-failed-soft: #fff1f2;
 
   /* Enterprise tag palette */
   --ad-tag-gray-bg: #f4f4f5;
@@ -57,6 +73,10 @@
   --ad-tag-pink-border: #f4d9e7;
 
   /* Selection controls */
+  --ad-control-selected-bg: var(--ad-surface-subtle);
+  --ad-control-selected-ink: var(--ad-ink);
+  --ad-navigation-selected-bg: var(--ad-surface-subtle);
+  --ad-navigation-selected-ink: var(--ad-route-ink);
   --ad-checkbox-size: 18px;
   --ad-checkbox-radius: 5px;
   --ad-checkbox-border: var(--ad-border-strong);
@@ -86,17 +106,20 @@
   --ad-unknown-soft: #ecedef;
 
   /* Type */
-  --ad-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --ad-font-sans: "Geist Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
   --ad-font-serif: "Noto Serif SC", "Source Serif 4", "Songti SC", ui-serif, serif;
   --ad-font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, ui-monospace, monospace;
   --ad-text-display: 40px;
   --ad-text-title-1: 28px;
   --ad-text-title-2: 22px;
+  --ad-text-title-md: 20px;
   --ad-text-title-3: 18px;
+  --ad-text-title-sm: 16px;
   --ad-text-body: 15px;
   --ad-text-body-sm: 14px;
   --ad-text-label: 13px;
   --ad-text-caption: 12px;
+  --ad-text-micro: 11px;
 
   /* Control sizing */
   --ad-control-height-xs: 28px;
@@ -106,13 +129,16 @@
   --ad-control-touch-min: 44px;
   --ad-control-icon-sm: 16px;
   --ad-control-icon-md: 20px;
+  --ad-control-icon-lg: 24px;
   --ad-select-compact-min: 112px;
   --ad-filter-select-width: 180px;
   --ad-search-field-width: 288px;
-  --ad-person-picker-width: 288px;
+  --ad-person-picker-width: 420px;
   --ad-person-picker-list-max: 320px;
+  --ad-person-profile-width: 292px;
+  --ad-person-profile-avatar-size: 76px;
   --ad-person-name-max: 56px;
-  --ad-task-appearance-picker-width: 344px;
+  --ad-task-appearance-picker-width: 560px;
   --ad-date-range-field-width: 320px;
   --ad-collaboration-side-min: 288px;
   --ad-collaboration-copy-max: 512px;
@@ -126,6 +152,7 @@
   --ad-space-4: 16px;
   --ad-space-5: 20px;
   --ad-space-6: 24px;
+  --ad-space-7: 28px;
   --ad-space-8: 32px;
   --ad-space-10: 40px;
   --ad-space-12: 48px;
@@ -136,6 +163,11 @@
   --ad-radius-control: 8px;
   --ad-radius-card: 12px;
   --ad-radius-pill: 999px;
+  /* Expressive task-creation surface, composed from the shared brand palette. */
+  --ad-creation-width: 1080px;
+  --ad-creation-radius: 24px;
+  --ad-creation-glow: color-mix(in srgb, var(--ad-route) 12%, transparent);
+  --ad-creation-shadow: 0 16px 56px color-mix(in srgb, var(--ad-route) 9%, transparent), 0 2px 8px color-mix(in srgb, var(--ad-ink) 4%, transparent);
   --ad-sidebar-width: 232px;
   --ad-sidebar-collapsed-width: 64px;
   --ad-directory-group-width: 240px;
@@ -165,6 +197,8 @@
   --ad-duration: 160ms;
   --ad-duration-route: 240ms;
   --ad-shadow-float: 0 8px 24px rgb(23 25 28 / 10%);
+  --ad-shadow-soft: 0 2px 8px rgb(23 25 28 / 7%);
+  --ad-shadow-card: 0 8px 24px rgb(23 25 28 / 7%);
   --ad-shadow-dialog: 0 24px 72px rgb(23 25 28 / 14%);
   --ad-shadow-control-selected: 0 1px 3px rgb(23 25 28 / 12%);
   --ad-shadow-card-hover: 0 12px 30px rgb(23 25 28 / 7%);
@@ -191,6 +225,19 @@
   --ad-focus: #78acf2;
   --ad-danger: #e37f78;
   --ad-danger-soft: #3a211f;
+  --ad-notification-badge: #ee4d5a;
+  --ad-task-status-neutral: #d2d5d8;
+  --ad-task-status-neutral-soft: #303235;
+  --ad-task-status-progress: #9bc4fa;
+  --ad-task-status-progress-soft: #172d47;
+  --ad-task-status-review: #e8bf73;
+  --ad-task-status-review-soft: #3a2d17;
+  --ad-task-status-warning: #efb17e;
+  --ad-task-status-warning-soft: #3b281b;
+  --ad-task-status-success: #8bd0b4;
+  --ad-task-status-success-soft: #19352b;
+  --ad-task-status-failed: #eca09a;
+  --ad-task-status-failed-soft: #3a211f;
   --ad-tag-gray-bg: #303235;
   --ad-tag-gray-ink: #d2d5d8;
   --ad-tag-gray-border: #45484c;
@@ -268,6 +315,22 @@ body {
   border-color: var(--ad-focus);
   outline: none;
   outline-offset: 0;
+}
+
+/* Shared control typography contract. Keep page surfaces on one computed scale. */
+[data-slot="input"],
+[data-slot="textarea"],
+[data-slot="select-trigger"],
+[data-slot="select-item"],
+[data-slot="button"] {
+  font-family: var(--ad-font-sans);
+  font-size: var(--ad-text-body-sm);
+}
+
+[data-slot="select-trigger"][data-size="sm"],
+[data-slot="button"][data-size="xs"],
+[data-slot="button"][data-size="sm"] {
+  font-size: var(--ad-text-caption);
 }
 
 [data-slot="input-shell"] {

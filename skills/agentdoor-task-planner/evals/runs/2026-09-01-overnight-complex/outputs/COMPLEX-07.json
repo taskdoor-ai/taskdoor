@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-complex07",
+  "baseSnapshotId": "snapshot-complex07-v3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "complex07-root": 13,
+    "complex07-engineering": 5,
+    "complex07-review": 6,
+    "complex07-old-a": 4,
+    "complex07-baseline-c": 5,
+    "complex07-matrix": 4,
+    "complex07-checklist": 4,
+    "complex07-sample-index": 3,
+    "complex07-summary": 2,
+    "complex07-archive": 2
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "当前目标树存在变更矩阵与检查记录互相依赖，以及样品索引依赖已取消A版资料两个问题；建议先确认交付边界和有效替代来源，再给重排候选，独立文件命名目录可沿用原任务继续。",
+  "reasoningSummary": [
+    {
+      "text": "当前存储明确记录complex07-matrix依赖complex07-checklist，complex07-checklist又依赖complex07-matrix，形成两节点环；两项现有标准也分别要求对方结果，尚无纠错确认。",
+      "evidenceRefs": [
+        "complex07-graph-export",
+        "complex07-matrix",
+        "complex07-checklist",
+        "complex07-d-cycle"
+      ]
+    },
+    {
+      "text": "complex07-sample-index依赖已取消的complex07-old-a；取消记录没有指定替代供应资料任务，不能重开旧A任务或默认把C版范围基线当供应方资料。",
+      "evidenceRefs": [
+        "complex07-sample-index",
+        "complex07-old-a",
+        "complex07-cancellation",
+        "complex07-h-cancel",
+        "complex07-h-baseline"
+      ]
+    },
+    {
+      "text": "现有资料未明确空白编号模板与已填检查结果是否是不同交付，也未确认应移除哪条边；讨论中的替换建议仍未核实，不能静默修图。",
+      "evidenceRefs": [
+        "complex07-unresolved-handoffs",
+        "complex07-d-replace"
+      ]
+    },
+    {
+      "text": "评审待办汇总依赖检查记录及样品索引，因此会受上述两个缺口影响；文件命名目录不消费这些结果，可以保留原任务继续。",
+      "evidenceRefs": [
+        "complex07-summary",
+        "complex07-archive",
+        "complex07-unresolved-handoffs"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "assessments": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "questions": [
+    {
+      "field": "dependencies.matrixChecklistBoundary",
+      "question": "工程与品质能否确认：矩阵所需的检查记录编号是否可先由独立空白编号模板提供，而检查结果再使用矩阵核对？请明确两份交付边界及应调整的依赖，不能在当前证据下任选一条边删除。",
+      "blocking": true
+    },
+    {
+      "field": "dependencies.supplierReplacement",
+      "question": "C版本批供应方实际资料由哪个有效任务或可见交付承接，完成依据和可用时间是什么？旧A已取消，C版范围基线并不包含这些供应资料，尚不能直接替换。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "本轮只诊断并列出待确认关系，没有创建或更新候选；所有原ID、正式Owner、状态、日期、根目的与已完成/取消历史均保留。",
+    "依赖环与已取消前置尚未解决，不能承诺矩阵9月4日、检查和索引9月5日、汇总9月7日及总边界9月8日的可行性。",
+    "不把C版基线重命名为供应资料，不复活旧A任务，不为通过图检查而删除真实前置。",
+    "不生成重复的诊断任务或额外目录任务；可独立工作的目录无需等待整个图修复。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": "complex07-root",
+      "label": "先明确矩阵与检查交付边界、C版供应资料承接来源，再审阅最小依赖差异"
+    },
+    {
+      "action": "open_task",
+      "taskId": "complex07-matrix",
+      "label": "查看矩阵与检查记录互相等待的当前标准和依赖"
+    },
+    {
+      "action": "open_task",
+      "taskId": "complex07-sample-index",
+      "label": "查看已取消前置及尚未登记的C版供应资料替代关系"
+    },
+    {
+      "action": "open_task",
+      "taskId": "complex07-archive",
+      "label": "沿用原文件命名目录任务独立继续"
+    }
+  ],
+  "externalEffects": "none"
+}

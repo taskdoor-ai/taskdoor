@@ -1,0 +1,21 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-A3",
+      "allowedIntents": [
+        "refine",
+        "query"
+      ],
+      "allowedDispositions": [
+        "no_change",
+        "route_required"
+      ],
+      "maxCreates": 0,
+      "maxUpdates": 0,
+      "manualChecks": [
+        "既有草稿覆盖本轮，不制造空改动或成功创建回执。"
+      ]
+    }
+  ]
+}

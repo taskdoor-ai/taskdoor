@@ -1,0 +1,318 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-reno-01",
+  "baseSnapshotId": "snapshot-reno-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议创建一个澄居A户移交协调根任务，并按三项可独立核对的结果拆出问题清单复核、资料目录、移交记录与未完事项说明；范围保持为资料和协调。",
+  "reasoningSummary": [
+    {
+      "text": "9月20日移交及资料协调范围已经明确，不包含结构、水电施工、法规结论或有权验收。",
+      "evidenceRefs": [
+        "req-reno-01",
+        "reno01-brief"
+      ]
+    },
+    {
+      "text": "问题清单复核、图纸与设备资料目录、移交记录可分别负责和核对，并在移交前汇合。",
+      "evidenceRefs": [
+        "req-reno-01",
+        "renovation-m1-role",
+        "renovation-m5-role",
+        "renovation-m6-role"
+      ]
+    },
+    {
+      "text": "赵屿负责交付协调，何沐负责问题记录复核，林庭负责资料目录，职责边界均不替代正式验收。",
+      "evidenceRefs": [
+        "renovation-m1-role",
+        "renovation-m5-role",
+        "renovation-m6-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:reno01-handover-coordination",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-reno01-root",
+        "action": "create",
+        "targetId": "new:reno01-handover-coordination",
+        "parentId": null,
+        "fields": {
+          "title": "协调澄居A户装修收尾移交",
+          "goal": {
+            "text": "在2026-09-20完成澄居A户收尾资料与未完事项的可追溯移交。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-reno-01",
+              "reno01-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "移交包包含已复核的表面修补问题清单、图纸与设备资料目录、移交记录和未完事项说明。",
+            "每项资料标明当前版本、缺失项或未完状态，不把资料齐全、执行者报告或移交记录视为工程验收。",
+            "2026-09-20完成移交协调记录；范围不扩展到结构、水电施工、法规或安全结论。"
+          ],
+          "tips": [
+            "由具备相应资格和授权的人员处理具体技术问题，本任务只跟踪记录与交付边界。",
+            "移交前确认两项前置结果均提供当前版本，再形成最终移交记录。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m1",
+            "basis": "recommended",
+            "reason": "赵屿的职责覆盖收尾问题、移交计划和责任方协调；建议不等于正式指派或验收授权。",
+            "evidenceRefs": [
+              "renovation-m1-role",
+              "req-reno-01"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-20",
+            "basis": "explicit",
+            "assumptions": [
+              "只承诺用户给出的移交边界日，开始日和持续容量未提供。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "首次为该客户规划且未读取可比历史；根任务有子项，不另造汇总人时。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "reno01-brief"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "根任务承接最终移交边界并协调三个独立结果。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "reno01-brief",
+          "renovation-m1-role"
+        ]
+      },
+      {
+        "id": "chg-reno01-issue-review",
+        "action": "create",
+        "targetId": "new:reno01-surface-issue-review",
+        "parentId": "new:reno01-handover-coordination",
+        "fields": {
+          "title": "复核澄居A户表面修补问题清单",
+          "acceptanceCriteria": [
+            "逐项核对柜门色差及墙面局部补漆的现有记录，区分已报告处理、待复核和已由有权方确认关闭。",
+            "缺失记录与待责任方补充内容单列，不输出结构、施工安全或法规结论。"
+          ],
+          "tips": [
+            "现场是否开放须以独立回执为准；协调窗口不等于验收授权。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m5",
+            "basis": "recommended",
+            "reason": "何沐的职责覆盖问题清单和复核记录，并明确区分报告修复与确认关闭。",
+            "evidenceRefs": [
+              "renovation-m5-role",
+              "reno01-brief"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-10",
+            "basis": "recommended",
+            "assumptions": [
+              "9月10日仅作为已声明的问题复核协调窗口，不表示全天容量或正式验收。"
+            ],
+            "evidenceRefs": [
+              "renovation-m5-window",
+              "req-reno-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "问题数量、现场开放和记录完整度不足以形成可靠人时。"
+            ],
+            "evidenceRefs": [
+              "reno01-brief",
+              "renovation-m5-window"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "问题清单是一份可单独核对并交给最终移交记录使用的结果。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "reno01-brief",
+          "renovation-m5-role"
+        ]
+      },
+      {
+        "id": "chg-reno01-document-index",
+        "action": "create",
+        "targetId": "new:reno01-document-index",
+        "parentId": "new:reno01-handover-coordination",
+        "fields": {
+          "title": "整理澄居A户图纸与设备资料目录",
+          "acceptanceCriteria": [
+            "目录逐项列出图纸与设备资料的当前版本引用、可访问位置和缺失项。",
+            "设计变更记录的引用版本经核对；目录完整性不被表述为工程合格或设备验收。"
+          ],
+          "tips": [
+            "资料缺失时记录责任方和待补状态，不自行生成不存在的文件或批准记录。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m6",
+            "basis": "recommended",
+            "reason": "林庭的职责直接覆盖图纸目录、设备资料引用和缺失项记录。",
+            "evidenceRefs": [
+              "renovation-m6-role",
+              "req-reno-01"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "renovation-m2",
+              "contribution": "核对已确认图纸和饰面变更记录的版本引用。",
+              "evidenceRefs": [
+                "renovation-m2-role",
+                "reno01-brief"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-19",
+            "basis": "recommended",
+            "assumptions": [
+              "为9月20日移交预留一天汇总时间；成员持续容量仍未知。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "renovation-m6-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "图纸和设备资料数量、版本及缺失程度未提供。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "renovation-m6-role"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "资料目录可独立交付，并由移交记录消费其版本和缺失项。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "renovation-m6-role",
+          "renovation-m2-role"
+        ]
+      },
+      {
+        "id": "chg-reno01-handover-record",
+        "action": "create",
+        "targetId": "new:reno01-handover-record",
+        "parentId": "new:reno01-handover-coordination",
+        "fields": {
+          "title": "形成澄居A户移交记录与未完事项说明",
+          "acceptanceCriteria": [
+            "移交记录引用表面问题复核清单和图纸设备资料目录的当前版本。",
+            "未完事项逐项列出状态、待责任方和后续核对方式，不把未确认事项写成关闭或验收通过。",
+            "保留2026-09-20移交过程、接收范围与待补资料记录，不代有权人员签收。"
+          ],
+          "tips": [
+            "若前置清单仍有缺失，按缺失状态移交并显式记录，不静默删除。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m1",
+            "basis": "recommended",
+            "reason": "赵屿负责移交计划和责任方协调，适合作为移交记录的候选结果负责人。",
+            "evidenceRefs": [
+              "renovation-m1-role",
+              "req-reno-01"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "renovation-m6",
+              "contribution": "维护移交清单、版本引用和资料缺失项记录。",
+              "evidenceRefs": [
+                "renovation-m6-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-20",
+            "basis": "explicit",
+            "assumptions": [
+              "移交日由用户明确；具体现场时段和接收方尚未提供。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未完事项数量与移交过程未知，不能从截止日反推人时。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "reno01-brief"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:reno01-surface-issue-review",
+            "new:reno01-document-index"
+          ]
+        },
+        "reason": "最终记录需要消费两项独立前置结果，并保留未完状态和责任边界。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "reno01-brief",
+          "renovation-m1-role",
+          "renovation-m6-role"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-renovation"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "历史覆盖为not_requested，因此所有EWD保持未知；这不表示团队没有同类历史。",
+    "9月10日和9月19日为候选协调日期，成员持续容量、现场开放和正式验收授权仍需独立核对。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:reno01-handover-coordination",
+      "label": "审阅移交任务树与责任边界"
+    }
+  ],
+  "externalEffects": "none"
+}

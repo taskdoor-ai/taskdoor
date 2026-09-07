@@ -1,0 +1,18 @@
+{
+  "kind": "targeted_post_fix_multiturn_review",
+  "humanIndustryReview": false,
+  "productionValidation": false,
+  "cases": [
+    {
+      "caseId": "MULTI-C2",
+      "status": "passed",
+      "summary": "正确依据前轮实际候选的合成保存回执定位 sim:C:1，建议打开原任务且不再创建或更新，也没有把离线回执描述成生产幂等保证。",
+      "reviewFile": "semantic-review.json",
+      "episodeId": "C"
+    }
+  ],
+  "total": 1,
+  "passed": 1,
+  "failed": 0,
+  "unknown": 0
+}

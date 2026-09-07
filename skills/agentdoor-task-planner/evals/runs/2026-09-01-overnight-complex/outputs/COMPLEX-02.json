@@ -1,0 +1,191 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-complex02",
+  "baseSnapshotId": "snapshot-complex02-v3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "complex02-root": 9,
+    "complex02-engineering": 4,
+    "complex02-incoming": 5,
+    "complex02-review": 3,
+    "complex02-bom": 6,
+    "complex02-drawings": 4,
+    "complex02-receipts": 3,
+    "complex02-batch-map": 2,
+    "complex02-instructions": 2,
+    "complex02-checksheet": 2,
+    "complex02-index": 3
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议在原样料资料分支新增一份S-09标签与资料编号对照表，并让现有评审目录依赖它；保留三层结构、原叶任务估算及全部既有完成记录。",
+  "reasoningSummary": [
+    {
+      "text": "本轮已确认独立增加12条交付编号的标签、图纸D2与BOM B2对应表，归属样料资料包；目录需要使用该表，其他标准及范围不变。",
+      "evidenceRefs": [
+        "req-complex02",
+        "complex02-addition-v1",
+        "complex02-incoming",
+        "complex02-index"
+      ]
+    },
+    {
+      "text": "新表以9月4日批次对应表为输入，9月5日提交供9月7日目录使用；图纸D2与BOM B2的索引已完成。",
+      "evidenceRefs": [
+        "complex02-handoff-window",
+        "complex02-batch-map",
+        "complex02-drawings",
+        "complex02-bom"
+      ]
+    },
+    {
+      "text": "同工具、同12条编号核对的可比记录为1.5人时，48小时无人处理等待不计EWD；原有叶任务基线和父级不重复估算的规则保持。",
+      "evidenceRefs": [
+        "complex02-h-method",
+        "complex02-method-v1",
+        "req-complex02"
+      ]
+    },
+    {
+      "text": "采购协调负责样料与采购资料，工程负责图纸/BOM版本；新表推荐采购协调负责、工程仅贡献版本引用核对，不由发起人身份默认承担。",
+      "evidenceRefs": [
+        "npi-m3-role",
+        "npi-m2-role",
+        "complex02-handoff-window"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "complex02-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:complex02-create-label-map",
+        "action": "create",
+        "targetId": "new:complex02-label-map",
+        "parentId": "complex02-incoming",
+        "fields": {
+          "title": "交付S-09标签与资料编号对照表",
+          "acceptanceCriteria": [
+            "针对S-09批次12条原始交付编号逐条列出标签文本、图纸D2引用及对应BOM B2条目，保持供应方原始编号可追溯。",
+            "逐行核对引用版本与批次对应表，无法匹配项单列并标明缺失依据；不把缺失项填为已匹配。",
+            "在现有样料资料包内形成可引用表版本，供原B版评审资料目录定位；仅做资料核对，不包含制造操作、检验通过或量产授权。"
+          ],
+          "tips": [
+            "沿用既有电子表格核对12条编号，不重新建表或替换供应方原始编号。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "npi-m3",
+            "basis": "recommended",
+            "reason": "采购协调负责样料采购资料，且本轮由采购协调确认输入与交付边界；此为候选责任建议。",
+            "evidenceRefs": [
+              "npi-m3-role",
+              "complex02-handoff-window"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "npi-m2",
+              "contribution": "核对图纸D2与BOM B2版本引用，解释未匹配条目的工程资料边界。",
+              "evidenceRefs": [
+                "npi-m2-role",
+                "complex02-addition-v1"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-05",
+            "basis": "explicit",
+            "assumptions": [
+              "以9月4日批次对应表交付为输入，具体启动时刻未提供。",
+              "按本轮交接回执9月5日提供给目录；原目录9月7日交付边界不变。"
+            ],
+            "evidenceRefs": [
+              "complex02-handoff-window"
+            ]
+          },
+          "estimate": {
+            "ewdHours": 1.5,
+            "basis": "history",
+            "assumptions": [
+              "仅估新增叶项：沿用电子表格，对同规模12条编号逐行核对。",
+              "参考可比资料核对的1.5人时；不计48小时等待或无人处理时段。",
+              "该数为候选投入估算，不是实际或剩余投入，不改原叶项估算，也不在父项重复加总。"
+            ],
+            "evidenceRefs": [
+              "complex02-h-method",
+              "complex02-method-v1",
+              "complex02-addition-v1"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "complex02-batch-map",
+            "complex02-drawings",
+            "complex02-bom"
+          ]
+        },
+        "reason": "新增范围是已确认的独立资料对应表，放回现有样料分支而不重建工程、样料或评审包。",
+        "evidenceRefs": [
+          "complex02-addition-v1",
+          "complex02-method-v1",
+          "complex02-handoff-window",
+          "req-complex02"
+        ]
+      },
+      {
+        "id": "change:complex02-index-input",
+        "action": "update",
+        "targetId": "complex02-index",
+        "parentId": "complex02-review",
+        "fields": {
+          "dependsOnTaskIds": [
+            "complex02-instructions",
+            "complex02-checksheet",
+            "new:complex02-label-map"
+          ]
+        },
+        "reason": "目录实际使用新增编号表，补齐必要前置并保留原说明、空表输入；新表9月5日先于目录9月7日，日期、标准和估算基线均不改。",
+        "evidenceRefs": [
+          "complex02-index",
+          "complex02-addition-v1",
+          "complex02-handoff-window"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "complex02-root",
+      "complex02-engineering",
+      "complex02-incoming",
+      "complex02-review",
+      "complex02-bom",
+      "complex02-drawings",
+      "complex02-receipts",
+      "complex02-batch-map",
+      "complex02-instructions",
+      "complex02-checksheet"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "assessments": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "questions": [],
+  "warnings": [
+    "新负责人和参与贡献均为待审候选，不代表已指派或接受。",
+    "除给定交接边界外，完整成员容量未知；估算不用于均分承诺工期。",
+    "保留已完成BOM与图纸结果以及所有既有叶任务估算；不生成量产、设备操作或品质放行任务。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "complex02-root",
+      "label": "审阅一份新增编号表及目录依赖差异"
+    }
+  ],
+  "externalEffects": "none"
+}

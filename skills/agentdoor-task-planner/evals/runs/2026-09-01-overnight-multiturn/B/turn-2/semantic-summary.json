@@ -1,0 +1,18 @@
+{
+  "kind": "independent_multiturn_semantic_review",
+  "cases": [
+    {
+      "caseId": "MULTI-B2",
+      "status": "passed",
+      "summary": "MULTI-B2 current result independently reviewed.",
+      "reviewFile": "semantic-review-abd.json",
+      "episodeId": "B"
+    }
+  ],
+  "total": 1,
+  "passed": 1,
+  "failed": 0,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

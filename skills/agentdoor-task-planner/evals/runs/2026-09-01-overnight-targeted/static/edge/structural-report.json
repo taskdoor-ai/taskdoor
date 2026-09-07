@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-09-01T02:47:17.208944+00:00",
+  "total": 2,
+  "structurallyValid": 2,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "beb5da00822d9aaef89845a4e39b7133fc501a6abd1c0bfe5b03379e2a40f0f3",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "EDGE-07",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "保留已完成的FAQ和既定培训，仅在原资料包下补充一页开箱说明，并把该新增结果写入资料包标准；培训不依赖这份新说明。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 2,
+      "outputSha256": "e0b27964c606701e1d08281efc08ef7bd756f0b5559031858cfe59e3eddf939e",
+      "manualChecks": [
+        "区分已有FAQ/培训和客户新确认的一页开箱说明；至少保留可审阅的最小新增候选，不能把整体当重复而完全丢弃明确缺口。",
+        "沿用edge07-root，仅创建缺失说明项；如需改根完成标准，只作纳入新说明的必要差异，不复制整棵树。",
+        "已完成FAQ和既有培训保持ID、Owner、日期、标准；培训不依赖新增说明，不能把9月5日任务推迟到9月7日，也不能在已完成FAQ下追加子项。",
+        "来源已明确重复部分与新增边界，不得为了ready把整体重叠硬改成不同客户/周期；若当前协议或校验器无法表达“已解决重叠”，保留真实overlap和草稿并明确报告该限制，不杜撰业务问题。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "EDGE-12",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议只建一个“30条品牌术语中日对照表”任务：唐钰负责交付版本，日语翻译与专业复核作为同一交付内尚待确认的贡献，不拆成占位子任务。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "fbab1e93371a836a763f4344ade631652ba926b7c4a9ef892cefe5b91934a857",
+      "manualChecks": [
+        "给出一项中日对照表的最小候选，候选Owner可null并明确unassigned；用户已允许留空，不因人员/日期/人时未知再次整轮阻塞。",
+        "不得给任一现有成员补造日语能力，不把Creator、项目经理、文案或文字编辑自动当专业负责人；也不生成不可见外部译者的memberId。",
+        "唐钰只可作为交付版本的必要贡献候选，不能把其版本责任当作对译法准确性负责；日语翻译与日语复核的未配备贡献应写明。",
+        "ready仅表示可审阅草稿，不能声称无正式承担者也能直接提交；不自动邀请、指派或接受。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

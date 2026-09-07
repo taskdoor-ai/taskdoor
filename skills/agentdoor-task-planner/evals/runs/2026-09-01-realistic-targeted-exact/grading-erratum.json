@@ -1,0 +1,27 @@
+{
+  "runId": "2026-09-01-realistic-targeted-exact",
+  "policy": "First outputs, frozen protocol/rubric, machine report and reviews remain unchanged.",
+  "correctionsAfterRun": [
+    {
+      "scenarioId": "REAL-C-01",
+      "kind": "equivalent_evidence",
+      "before": "Frozen rubric required cc-hard-launch exactly.",
+      "after": "Current rubric accepts cc-hard-launch, cc-d7 or cc-request as equivalent hard-window evidence.",
+      "effectOnVerdict": "none; output still has a non-minimal launch-check update."
+    },
+    {
+      "scenarioId": "REAL-C-03",
+      "kind": "equivalent_evidence",
+      "before": "Frozen rubric required hr-file-access-matrix-v6 exactly.",
+      "after": "Current rubric accepts the formal task or decision as equivalent access-boundary evidence.",
+      "effectOnVerdict": "none; output still adds unsupported task dependencies."
+    },
+    {
+      "scenarioId": "all",
+      "kind": "skill_hardening",
+      "before": "The protocol described direct/transitive consumers but executors could use candidate-authored criteria to justify edges.",
+      "after": "Later protocol freezes an input-only impact matrix before drafting; candidate text cannot create evidence.",
+      "effectOnVerdict": "applies only to later attempts."
+    }
+  ]
+}

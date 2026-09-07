@@ -1,0 +1,18 @@
+{
+  "notice": "Resolve temporary paths against this archive.",
+  "prefixMappings": [
+    {
+      "original": "/tmp/agentdoor-planner-realistic-full-final-20260901/",
+      "archivedRelative": "./"
+    },
+    {
+      "original": "/tmp/agentdoor-planner-realistic-full-final-regrade-20260901/",
+      "archivedRelative": "./",
+      "retainedArtifacts": [
+        "current-expectations-snapshot.json",
+        "current-rubric-regrade.json"
+      ],
+      "note": "Only the corrected expectation snapshot and identical-output regrade report were retained; the temporary working directory itself was not archived."
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-09-01T02:39:39.262198+00:00",
+  "total": 1,
+  "structurallyValid": 0,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "2829a482780bae35fe5ccf2398803f2955ff3e9087d644509f1a683bbcb0ed3d",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-D2",
+      "industry": "content_agency",
+      "errors": [
+        "simple proposal cannot contain existing or newly created descendants"
+      ],
+      "semanticReview": "not_reviewed",
+      "summary": "建议只更新现有公众号适配任务的完成标准，使其使用当前版本4文字稿及已确认的五张功能图v2；不应用迟到的旧候选，也不修改主目标、任何负责人或人工确认的文字稿。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "b53c9d978ed833a54b30849c31a44152e53b93c5ed21420ea67a5bc0f2046305",
+      "manualChecks": [
+        "采用最新对象版本及人工确认的文案标准，不应用旧回复；只更新公众号适配。"
+      ],
+      "status": "failed"
+    }
+  ]
+}

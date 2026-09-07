@@ -1,0 +1,61 @@
+{
+  "status": "offline_design",
+  "version": "2026-09-03.1",
+  "rulesSource": "docs/product-v2/PRD-AgentDoor-协作任务全流程.md",
+  "skills": [
+    {
+      "id": "agentdoor-responsibility-advisor",
+      "title": "人员责任分析",
+      "entry": "skills/agentdoor-responsibility-advisor/SKILL.md",
+      "outputVersion": "agentdoor.responsibility-advice.v0.1",
+      "dependsOn": [],
+      "rulesFile": "skills/agentdoor-responsibility-advisor/references/product-rules.md",
+      "ruleSections": ["### 7.9 人员责任分析 Skill"]
+    },
+    {
+      "id": "agentdoor-task-planner",
+      "title": "创建任务与动态规划",
+      "entry": "skills/agentdoor-task-planner/SKILL.md",
+      "outputVersion": "agentdoor.task-plan.v0.2",
+      "dependsOn": ["agentdoor-ewd-progress"],
+      "rulesFile": "skills/agentdoor-task-planner/references/product-rules.md",
+      "ruleSections": ["### 7.3 创建任务 Skill"]
+    },
+    {
+      "id": "agentdoor-task-status-analyzer",
+      "title": "任务状态分析",
+      "entry": "skills/agentdoor-task-status-analyzer/SKILL.md",
+      "outputVersion": "agentdoor.task-status-analysis.v0.1",
+      "dependsOn": ["agentdoor-task-diagnostician", "agentdoor-ewd-progress"],
+      "rulesFile": "skills/agentdoor-task-status-analyzer/references/product-rules.md",
+      "ruleSections": ["### 7.4 任务状态分析 Skill"]
+    },
+    {
+      "id": "agentdoor-task-diagnostician",
+      "title": "任务诊断",
+      "entry": "skills/agentdoor-task-diagnostician/SKILL.md",
+      "outputVersion": "agentdoor.task-diagnosis.v0.1",
+      "dependsOn": [],
+      "rulesFile": "skills/agentdoor-task-diagnostician/references/product-rules.md",
+      "ruleSections": ["### 7.5 任务诊断 Skill"]
+    },
+    {
+      "id": "agentdoor-personal-priority",
+      "title": "我的工作推荐",
+      "entry": "skills/agentdoor-personal-priority/SKILL.md",
+      "outputVersion": "agentdoor.personal-priority.v0.1",
+      "dependsOn": [],
+      "rulesFile": "skills/agentdoor-personal-priority/references/product-rules.md",
+      "ruleSections": ["### 7.6 我的工作推荐 Skill"]
+    },
+    {
+      "id": "agentdoor-ewd-progress",
+      "title": "EWD 工时评估与进度",
+      "entry": "skills/agentdoor-ewd-progress/SKILL.md",
+      "outputVersion": "agentdoor.ewd-progress.v0.1",
+      "dependsOn": [],
+      "rulesFile": "skills/agentdoor-ewd-progress/references/product-rules.md",
+      "ruleSections": ["### 7.7 EWD 工时评估＋进度"]
+    }
+  ]
+}

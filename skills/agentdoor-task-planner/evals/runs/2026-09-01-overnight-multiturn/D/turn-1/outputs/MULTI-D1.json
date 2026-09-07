@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-d1",
+  "baseSnapshotId": "snapshot-multi-d1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "content03-root": 5,
+    "content03-outline": 2,
+    "content03-visual": 3,
+    "content03-copy": 3,
+    "content03-format": 2
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只调整现有文案和公众号适配的完成标准：文案改为面向首次使用者，公众号组合版使用更新后的文字稿和已确认的五张功能图v2；五项功能、品牌口径、视觉完成记录、负责人和现有依赖均保持不变。",
+  "reasoningSummary": [
+    {
+      "text": "客户已确认本期受众改为首次使用者，同时明确五项功能范围、品牌口径和五张功能图v2继续沿用。",
+      "evidenceRefs": [
+        "content03-d1",
+        "content03-confirm",
+        "req-multi-d1"
+      ]
+    },
+    {
+      "text": "当前文字稿偏向熟练用户，明确缺口是重写入门解释段；其余准确事实表述可以保留。",
+      "evidenceRefs": [
+        "content03-copy",
+        "content03-d2"
+      ]
+    },
+    {
+      "text": "公众号适配已经依赖文案和视觉，现有关系足以让更新后的文字稿与已审视觉汇合，无需新增任务或改变依赖。",
+      "evidenceRefs": [
+        "content03-format",
+        "content03-copy",
+        "content03-visual"
+      ]
+    },
+    {
+      "text": "陶然的文案负责人字段已确认；杜衡写全文只是未交接提议，不能据此改变负责人。",
+      "evidenceRefs": [
+        "content03-h2",
+        "content03-d3"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "content03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-multi-d1-copy-audience",
+        "action": "update",
+        "targetId": "content03-copy",
+        "parentId": "content03-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "围绕已确认的五项功能交付面向首次使用者的文字稿，重写现稿中的入门解释段，使内容无需熟练使用背景即可理解",
+            "保留现稿中仍准确的事实表述，并核对改稿未增加功能范围、未改变已确认品牌口径"
+          ],
+          "tips": [
+            "以现稿为修改基线，只改受众表达和入门解释，不从头重写仍准确的事实内容。"
+          ]
+        },
+        "reason": "受众已改为首次使用者，而现稿偏熟练用户；需要局部重写表达，同时保持已确认范围和品牌口径。",
+        "evidenceRefs": [
+          "req-multi-d1",
+          "content03-confirm",
+          "content03-d2",
+          "content03-copy"
+        ]
+      },
+      {
+        "id": "chg-multi-d1-format-audience",
+        "action": "update",
+        "targetId": "content03-format",
+        "parentId": "content03-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "使用面向首次使用者的更新后文字稿与客户已确认的五张功能图v2，交付公众号规格的文字与图片组合版",
+            "核对组合版保持五项功能范围和品牌口径，不要求重新拍摄、重绘或替换已确认的五张功能图v2"
+          ],
+          "tips": [
+            "继续复用content03-visual的版本3交付结果，仅随更新后文字稿完成公众号组合适配。"
+          ]
+        },
+        "reason": "渠道适配需要承接新的受众表达，但其现有文案和视觉前置关系已经正确，故只调整交付标准。",
+        "evidenceRefs": [
+          "req-multi-d1",
+          "content03-confirm",
+          "content03-format",
+          "content03-h1"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "content03-root",
+      "content03-outline",
+      "content03-visual"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "本轮没有提供子任务日期或可比EWD记录；主任务9月8日期限保持不变，但不能据成员在办工作或公开窗口推断完整容量。",
+    "已完成的五张功能图v2只按客户确认范围复用，本提案不重开视觉任务或把复用解释为无限授权。",
+    "本输出仅供审阅，不会执行任务更新、负责人变更、指派、通知或内容发布。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "content03-root",
+      "label": "审阅文案与公众号适配的首次使用者完成标准"
+    }
+  ],
+  "externalEffects": "none"
+}

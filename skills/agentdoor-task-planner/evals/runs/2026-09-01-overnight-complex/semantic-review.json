@@ -1,0 +1,779 @@
+{
+  "reviewer": {
+    "kind": "independent_codex_agent",
+    "taskName": "overnight_review_complex",
+    "humanIndustryReview": false
+  },
+  "cases": [
+    {
+      "caseId": "COMPLEX-01",
+      "status": "passed",
+      "summary": "通过：仅修正UAT、培训演示及交接清单三项依赖；保留原树、并行准备、已完成结果和锁定标准，既有使用窗口可衔接但未被包装成工期保证。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "UAT和培训演示均结构化接入样本v2与现行沙箱配置，最终交接同时接入两项结果；没有以提醒代替依赖，也没有新增交付或串行整树。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-01.json",
+              "pointer": "/context/sourceRefs/10/text",
+              "note": "共同确认的接口清单规定两个使用方各需样本与沙箱，最终交接使用UAT及演示。"
+            },
+            {
+              "file": "outputs/COMPLEX-01.json",
+              "pointer": "/proposal/changes/0/fields/dependsOnTaskIds",
+              "note": "UAT保留映射并补齐sample、sandbox。"
+            },
+            {
+              "file": "outputs/COMPLEX-01.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "note": "演示保留outline并补齐sample、sandbox；没有新增UAT依赖。"
+            },
+            {
+              "file": "outputs/COMPLEX-01.json",
+              "pointer": "/proposal/changes/2/fields/dependsOnTaskIds",
+              "note": "交接同时依赖uat和session。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "原培训提纲可独立准备，未调整数据、培训父分支或已完成映射与沙箱；更新仅含依赖字段，因此保留UAT已确认标准、正式Owner、原ID和归属。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-01.json",
+              "pointer": "/confirmedFields",
+              "note": "根目的、UAT标准及Owner受到确认保护。"
+            },
+            {
+              "file": "inputs/COMPLEX-01.json",
+              "pointer": "/context/tasks/7/dependsOnTaskIds",
+              "note": "提纲原本无前置，可独立准备。"
+            },
+            {
+              "file": "outputs/COMPLEX-01.json",
+              "pointer": "/proposal/changes",
+              "note": "三处update均沿用原ID与parentId且只含dependsOnTaskIds。"
+            },
+            {
+              "file": "outputs/COMPLEX-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "其余七项包含已完成项与独立提纲均保留。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "已核对9月4日样本、5日UAT、7日演示、8日交接的使用顺序；没有新增日期、估算或从有限日历推出总容量。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-01.json",
+              "pointer": "/context/sourceRefs/11/text",
+              "note": "使用窗口回执明确日期及其余完整可用日历缺失。"
+            },
+            {
+              "file": "outputs/COMPLEX-01.json",
+              "pointer": "/reasoningSummary/2",
+              "note": "说明现有边界的衔接依据。"
+            },
+            {
+              "file": "outputs/COMPLEX-01.json",
+              "pointer": "/warnings/1",
+              "note": "明确不能据此保证所有工作按期完成。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "COMPLEX-02",
+      "status": "passed",
+      "summary": "通过：仅在原样料分支补一份12条编号对照表并接入原评审目录；复用已完成版本资料，原叶估算及父层结构不变，1.5人时仅作为有适用边界的新增叶项估算。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "新增结果与本次明确范围一致，放在原样料分支；它依赖批次对应表及图纸/BOM，原目录结构化使用新表，不重建三层树或展开量产工作。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-02.json",
+              "pointer": "/context/sourceRefs/11/text",
+              "note": "已确认一份独立标签与资料编号对照表，要求目录引用。"
+            },
+            {
+              "file": "outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/0/parentId",
+              "note": "新增结果归属complex02-incoming。"
+            },
+            {
+              "file": "outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/0/fields/dependsOnTaskIds",
+              "note": "依赖batch-map、drawings、bom。"
+            },
+            {
+              "file": "outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/1",
+              "note": "目录沿用原ID、review归属与原输入，仅增加新表依赖。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "未把等待回执48小时计为EWD，也未把历史总投入改称当前剩余工时。采用同工具、同12条编号的1.5人时作为新增叶项候选有依据；没有回写父层或其他叶项基线。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-02.json",
+              "pointer": "/context/history/0/summary",
+              "note": "可比核对记录为1.5人时，48小时等待不属于投入。"
+            },
+            {
+              "file": "inputs/COMPLEX-02.json",
+              "pointer": "/context/sourceRefs/12/text",
+              "note": "原叶项基线保留，上层不重复记EWD。"
+            },
+            {
+              "file": "outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "note": "明确同规模同工具适用条件，且仅为新增项估算。"
+            },
+            {
+              "file": "outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/1/fields",
+              "note": "原目录只改依赖，未修改其估算。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "9月4日批次对应表、5日新增表和7日目录沿用已确认交接边界。说明和空白记录准备仍沿用各自已完成图纸/BOM输入，没有给所有分支增加串行边；采购候选Owner及工程版本核对贡献符合职责。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-02.json",
+              "pointer": "/context/sourceRefs/13/text",
+              "note": "新表和目录日期来自本轮采购交接回执。"
+            },
+            {
+              "file": "inputs/COMPLEX-02.json",
+              "pointer": "/context/tasks/8/dependsOnTaskIds",
+              "note": "资料使用说明原依赖已完成图纸。"
+            },
+            {
+              "file": "inputs/COMPLEX-02.json",
+              "pointer": "/context/tasks/9/dependsOnTaskIds",
+              "note": "样品空表原依赖已完成BOM。"
+            },
+            {
+              "file": "outputs/COMPLEX-02.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "说明、空表与所有其他未受影响项保持原状。"
+            },
+            {
+              "file": "outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "note": "采购为候选负责人且有职责与交接证据。"
+            },
+            {
+              "file": "outputs/COMPLEX-02.json",
+              "pointer": "/proposal/changes/0/fields/participantRecommendations",
+              "note": "只推荐工程贡献图纸/BOM版本核对。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "COMPLEX-03",
+      "status": "passed",
+      "summary": "通过：只补包装说明v2并更新页面、客服和发货答复三个消费者；联动核对复用已有传递关系，图片、库存、广告、确认Owner和估算基线保持不变。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "三个跨分支消费者都通过依赖字段接入同一新增说明，原联动核对已依赖这三个消费者，因此保留其原任务及传递路径合理；没有只修一处或只写提醒。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-03.json",
+              "pointer": "/context/sourceRefs/12/text",
+              "note": "页面包装栏、客服和发货答复都使用v2，联动已有三个前置。"
+            },
+            {
+              "file": "outputs/COMPLEX-03.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "note": "页面保留images并增加包装说明。"
+            },
+            {
+              "file": "outputs/COMPLEX-03.json",
+              "pointer": "/proposal/changes/2/fields/dependsOnTaskIds",
+              "note": "客服增加包装说明。"
+            },
+            {
+              "file": "outputs/COMPLEX-03.json",
+              "pointer": "/proposal/changes/3/fields/dependsOnTaskIds",
+              "note": "发货答复保留inventory并增加包装说明。"
+            },
+            {
+              "file": "outputs/COMPLEX-03.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "checkout保持原ID和原有三消费者依赖。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "新说明只采用已确认的同批SKU、件数、外箱规格，不补造旧参数；没有重拍图片、重核未变库存或调整不消费包装参数的广告。页面和客服局部初稿被复用但没有变更正式完成状态。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-03.json",
+              "pointer": "/context/sourceRefs/11/text",
+              "note": "确认QY-09、90件、每箱6件、外箱尺寸，价格渠道和主图不变。"
+            },
+            {
+              "file": "inputs/COMPLEX-03.json",
+              "pointer": "/context/discussions/0/text",
+              "note": "页面四个版块仅有初稿，正式任务仍在进行。"
+            },
+            {
+              "file": "outputs/COMPLEX-03.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria",
+              "note": "区分外箱变化与不变范围，明确不捏造旧尺寸和旧件数。"
+            },
+            {
+              "file": "outputs/COMPLEX-03.json",
+              "pointer": "/reasoningSummary/3",
+              "note": "区分局部报告与正式状态、基线与剩余投入。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "9月2日说明、3日消费者、4日联动核对的顺序有明确回执；依赖限定最终核对所需输入，没有要求非包装内容停工，也没有凭未知容量保证排期。新增说明负责人对应已明确商品运营职责。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-03.json",
+              "pointer": "/context/sourceRefs/13/text",
+              "note": "协调回执明确责任与各使用方交付日期。"
+            },
+            {
+              "file": "inputs/COMPLEX-03.json",
+              "pointer": "/confirmedFields/1",
+              "note": "页面Owner已确认，不在本轮调整。"
+            },
+            {
+              "file": "outputs/COMPLEX-03.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "note": "引用协调回执和商品运营职责。"
+            },
+            {
+              "file": "outputs/COMPLEX-03.json",
+              "pointer": "/reasoningSummary/2",
+              "note": "核对已有日期关系且不挪动无影响分支。"
+            },
+            {
+              "file": "outputs/COMPLEX-03.json",
+              "pointer": "/warnings/1",
+              "note": "区分最终核对依赖与可并行的非包装准备。"
+            },
+            {
+              "file": "outputs/COMPLEX-03.json",
+              "pointer": "/warnings/2",
+              "note": "明确完整容量和剩余投入未知。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "COMPLEX-04",
+      "status": "passed",
+      "summary": "通过：最终版本尚未确定不妨碍先整理忠实并列表；仅新增差异表及批准任务输入，未将晚入库、策划审阅或v4留存完成当作客户批准。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "输出忠实保留A/B相反版本要求、同一签署时间及未明的撤回/取代关系，不选择任何一份为有效批准。差异表还区分策划审阅与有权客户接受，没有补造签署人姓名。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-04.json",
+              "pointer": "/context/sourceRefs/10/text",
+              "note": "A要求文案/封面v4，09:00签署，未记录撤回。"
+            },
+            {
+              "file": "inputs/COMPLEX-04.json",
+              "pointer": "/context/sourceRefs/11/text",
+              "note": "B要求v5、同为09:00签署，仅晚十分钟入库且没有取代关系。"
+            },
+            {
+              "file": "inputs/COMPLEX-04.json",
+              "pointer": "/context/sourceRefs/13/text",
+              "note": "策划报告只属于内容审阅。"
+            },
+            {
+              "file": "outputs/COMPLEX-04.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria",
+              "note": "并列回执、冲突与待核对处，审阅意见单列且不裁定批准。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "局部整理范围和交接关系均已明确，零阻塞问题而允许审阅恰当。新增表接入原approval；原package已依赖approval，保持最终一致批准门槛，没有重建或重复更新package。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-04.json",
+              "pointer": "/context/sourceRefs/12/text",
+              "note": "本表完成条件是忠实并列，不是裁定批准有效性；现有批准任务使用它。"
+            },
+            {
+              "file": "inputs/COMPLEX-04.json",
+              "pointer": "/context/tasks/9/dependsOnTaskIds",
+              "note": "交付包原本依赖approval。"
+            },
+            {
+              "file": "outputs/COMPLEX-04.json",
+              "pointer": "/disposition",
+              "note": "ready仅针对局部候选。"
+            },
+            {
+              "file": "outputs/COMPLEX-04.json",
+              "pointer": "/questions",
+              "note": "没有要求用户先解决最终版本才能整理表。"
+            },
+            {
+              "file": "outputs/COMPLEX-04.json",
+              "pointer": "/proposal/changes/1/fields",
+              "note": "approval仅增新表输入并保留原依赖。"
+            },
+            {
+              "file": "outputs/COMPLEX-04.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "package以及所有版本任务均保持。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "原锁定批准标准和Owner未被改写，v4完成仅代表留存，v5供审不等于客户接受。9月2日整理可先做，但9月5日批准和9月6日总交期仍有冲突未解风险。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-04.json",
+              "pointer": "/confirmedFields",
+              "note": "approval的明确一致回执标准和Owner受到保护。"
+            },
+            {
+              "file": "inputs/COMPLEX-04.json",
+              "pointer": "/context/history/0/summary",
+              "note": "v4留存完成不代表最终交付批准。"
+            },
+            {
+              "file": "outputs/COMPLEX-04.json",
+              "pointer": "/proposal/changes/1/reason",
+              "note": "保留原v5准备依赖不代表裁定v5获批，原Owner、标准、日期不变。"
+            },
+            {
+              "file": "outputs/COMPLEX-04.json",
+              "pointer": "/warnings/0",
+              "note": "明确A/B冲突仍须在原批准任务解决。"
+            },
+            {
+              "file": "outputs/COMPLEX-04.json",
+              "pointer": "/warnings/3",
+              "note": "不据新增资料任务保证整体交期。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "COMPLEX-05",
+      "status": "passed",
+      "summary": "通过：正确将整树重规划阻塞在真实分页和讨论缺口，保留本页九项；提出按授权游标补读而非臆造余下任务或要求用户手抄。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "31项来自授权索引，当前只见9项；输出只回显九项版本并明确余下22项未知，不把根与直属分支已读等同于后代完整，也不补造进展、依赖或完整排期。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-05.json",
+              "pointer": "/context/sourceRefs/9/text",
+              "note": "授权分页回执明确31/9和后代缺口，未返回22项正文。"
+            },
+            {
+              "file": "inputs/COMPLEX-05.json",
+              "pointer": "/context/coverage",
+              "note": "tasks、subtasks、discussions、history均partial。"
+            },
+            {
+              "file": "outputs/COMPLEX-05.json",
+              "pointer": "/baseTaskVersions",
+              "note": "只含实际九个可见对象的版本。"
+            },
+            {
+              "file": "outputs/COMPLEX-05.json",
+              "pointer": "/proposal",
+              "note": "没有在缺失上下文下生成候选变更。"
+            },
+            {
+              "file": "outputs/COMPLEX-05.json",
+              "pointer": "/reasoningSummary/0",
+              "note": "明确当前页不能代表全项目。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "补读动作覆盖各分支后代、总部培训、两店学习反馈、物料讨论和历史及查重；使用已提供游标，不声称已经续读，也不转嫁为用户抄录。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-05.json",
+              "pointer": "/context/sourceRefs/10/text",
+              "note": "未读总部培训与学习反馈主题，历史仅一条。"
+            },
+            {
+              "file": "outputs/COMPLEX-05.json",
+              "pointer": "/nextActions",
+              "note": "两个retry_context指定页2及后续分页、讨论历史与查重。"
+            },
+            {
+              "file": "outputs/COMPLEX-05.json",
+              "pointer": "/warnings/2",
+              "note": "明确不要求手工重抄31项、不读取其他地区。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "可见已完成指引和进行中任务仍按原事实引用；输出正确保留partial查重和无新增/修改的边界，未制造门店、排班或通知动作。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-05.json",
+              "pointer": "/context/tasks/4/status",
+              "note": "指引任务正式completed。"
+            },
+            {
+              "file": "inputs/COMPLEX-05.json",
+              "pointer": "/duplicateSearch",
+              "note": "查重partial且matches为空不能等同无重复。"
+            },
+            {
+              "file": "outputs/COMPLEX-05.json",
+              "pointer": "/duplicateCheck",
+              "note": "如实回显partial覆盖。"
+            },
+            {
+              "file": "outputs/COMPLEX-05.json",
+              "pointer": "/warnings/1",
+              "note": "保留本页全部原ID、版本、确认字段、状态、Owner、日期和依赖。"
+            },
+            {
+              "file": "outputs/COMPLEX-05.json",
+              "pointer": "/externalEffects",
+              "note": "none；本评审只评价候选文本，不将其当生产写入验证。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "COMPLEX-06",
+      "status": "passed",
+      "summary": "通过：区分本组完整覆盖与外部前置不可见，保留外部依赖缺口并寻求受控摘要；资料目录和影像可继续，问题查看及移交可行性仍未知。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "本组ACL与完整树不授权读取外部对象。输出没有补造外部Task、版本、Owner、状态或完成证据，也没有删除现有不透明依赖来伪造可执行图。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-06.json",
+              "pointer": "/context/sourceRefs/9/text",
+              "note": "外部对象空间不在当前scope内，只能返回不透明引用。"
+            },
+            {
+              "file": "inputs/COMPLEX-06.json",
+              "pointer": "/context/tasks/7/dependsOnTaskIds",
+              "note": "问题查看原依赖包含external:complex06-readiness-ref。"
+            },
+            {
+              "file": "outputs/COMPLEX-06.json",
+              "pointer": "/baseTaskVersions",
+              "note": "只回显九个可见本组任务版本。"
+            },
+            {
+              "file": "outputs/COMPLEX-06.json",
+              "pointer": "/proposal",
+              "note": "null，不提出删边或占位对象。"
+            },
+            {
+              "file": "outputs/COMPLEX-06.json",
+              "pointer": "/warnings/1",
+              "note": "明确保留外部引用、blocked状态且不越权读取。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "必要阻塞集中在问题查看所需前置条件、就绪证据和可用时间；还识别现场回执未完成和目前协作窗口不能证明9月8日查看可行，不把有限已知窗口等同全部可用性。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-06.json",
+              "pointer": "/context/tasks/5/status",
+              "note": "现场开放回执任务仍open。"
+            },
+            {
+              "file": "inputs/COMPLEX-06.json",
+              "pointer": "/members/4/availability",
+              "note": "复核者目前只登记9月10日协调窗口。"
+            },
+            {
+              "file": "outputs/COMPLEX-06.json",
+              "pointer": "/questions/0",
+              "note": "请求有权方提供本组可用受控摘要而不要求越权正文。"
+            },
+            {
+              "file": "outputs/COMPLEX-06.json",
+              "pointer": "/reasoningSummary/2",
+              "note": "区分资料协作、现场开放和复核窗口。"
+            },
+            {
+              "file": "outputs/COMPLEX-06.json",
+              "pointer": "/warnings/2",
+              "note": "既不能保证9月8/10日，也不把未知写成已经延期或确定无人。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "对不使用外部结果的目录及影像明确继续原任务，未因局部缺口阻断全组。保留收件影像与问题复核的业务区别，移交仍需问题查看结果。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-06.json",
+              "pointer": "/context/sourceRefs/10/text",
+              "note": "目录、影像可独立继续，影像不能替代问题查看。"
+            },
+            {
+              "file": "inputs/COMPLEX-06.json",
+              "pointer": "/context/tasks/8/dependsOnTaskIds",
+              "note": "移交依赖materials、receipt-photos、issue-review。"
+            },
+            {
+              "file": "outputs/COMPLEX-06.json",
+              "pointer": "/reasoningSummary/3",
+              "note": "移交可行性受问题查看缺口影响。"
+            },
+            {
+              "file": "outputs/COMPLEX-06.json",
+              "pointer": "/nextActions/2",
+              "note": "打开原目录继续，不创建替代任务。"
+            },
+            {
+              "file": "outputs/COMPLEX-06.json",
+              "pointer": "/nextActions/3",
+              "note": "原影像任务继续，明确不替代问题关闭。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "COMPLEX-07",
+      "status": "passed",
+      "summary": "通过：同时识别两节点依赖环和已取消前置，未擅自修图或假定替代交付；提出两个关键边界问题，原文件命名目录可独立继续。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "明确识别matrix与checklist互相依赖，并结合双方标准判断是真正交付边界未决；没有把循环改写成任意串行顺序。第一问针对编号模板与已填结果能否拆清，属于消除阻塞所需信息。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-07.json",
+              "pointer": "/context/tasks/5/dependsOnTaskIds",
+              "note": "matrix依赖checklist及baseline-c。"
+            },
+            {
+              "file": "inputs/COMPLEX-07.json",
+              "pointer": "/context/tasks/6/dependsOnTaskIds",
+              "note": "checklist又依赖matrix。"
+            },
+            {
+              "file": "inputs/COMPLEX-07.json",
+              "pointer": "/context/sourceRefs/12/text",
+              "note": "未区分空白编号模板与已填检查结果，未确认删边。"
+            },
+            {
+              "file": "outputs/COMPLEX-07.json",
+              "pointer": "/reasoningSummary/0",
+              "note": "准确报告两节点环和标准互相要求。"
+            },
+            {
+              "file": "outputs/COMPLEX-07.json",
+              "pointer": "/questions/0",
+              "note": "提出交付拆分与依赖确认问题，未自行删除边。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "样品索引依赖已取消旧A是与循环独立的问题。输出保持取消记录，明确已完成C版范围基线不等于供应方资料，并请求真实有效承接来源及可用时间。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-07.json",
+              "pointer": "/context/tasks/7/dependsOnTaskIds",
+              "note": "sample-index仍指向old-a。"
+            },
+            {
+              "file": "inputs/COMPLEX-07.json",
+              "pointer": "/context/sourceRefs/11/text",
+              "note": "旧A取消且未指定替代，C基线不含实际供应资料。"
+            },
+            {
+              "file": "outputs/COMPLEX-07.json",
+              "pointer": "/reasoningSummary/1",
+              "note": "独立说明取消前置及不能复活/默认替代。"
+            },
+            {
+              "file": "outputs/COMPLEX-07.json",
+              "pointer": "/questions/1",
+              "note": "请求有效任务或可见交付承接与完成/时间依据。"
+            },
+            {
+              "file": "outputs/COMPLEX-07.json",
+              "pointer": "/proposal",
+              "note": "null，保留原图问题供后续纠错，不静默修改输入。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "汇总确实依赖两条受阻链，当前不能承诺9月8日前完成；文件命名目录没有消费这些结果，保持原ID独立继续。两个问题均影响当前决策，无额外表单负担。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-07.json",
+              "pointer": "/context/tasks/8/dependsOnTaskIds",
+              "note": "汇总依赖checklist和sample-index。"
+            },
+            {
+              "file": "inputs/COMPLEX-07.json",
+              "pointer": "/context/tasks/9/dependsOnTaskIds",
+              "note": "archive无这些前置。"
+            },
+            {
+              "file": "outputs/COMPLEX-07.json",
+              "pointer": "/warnings/1",
+              "note": "明确各节点及9月8日总边界不能承诺可行。"
+            },
+            {
+              "file": "outputs/COMPLEX-07.json",
+              "pointer": "/nextActions/3",
+              "note": "沿用原archive任务继续。"
+            },
+            {
+              "file": "outputs/COMPLEX-07.json",
+              "pointer": "/questions",
+              "note": "恰有两个阻塞问题，均对应真实未决交付关系。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "COMPLEX-08",
+      "status": "passed",
+      "summary": "通过：拒绝以旧12人时均分保证工期，准确识别同日12时截止、14时答复及16时复核的冲突；保护已确认责任与引用标准，提出受控协调路径而不自行改期限。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "日期同为9月3日不能掩盖日内顺序。输出指出两条必要引用最早14时和已确认编辑窗口16至17时均晚于12时硬截止；也没有把14时或16时直接改成新的保证交期。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-08.json",
+              "pointer": "/context/sourceRefs/9/text",
+              "note": "硬截止明确为9月3日12:00且已确认。"
+            },
+            {
+              "file": "inputs/COMPLEX-08.json",
+              "pointer": "/context/sourceRefs/10/text",
+              "note": "两条必要引用最早14:00答复。"
+            },
+            {
+              "file": "inputs/COMPLEX-08.json",
+              "pointer": "/members/4/availability",
+              "note": "编辑旧9月2日窗口撤回，当前16至17时复核。"
+            },
+            {
+              "file": "outputs/COMPLEX-08.json",
+              "pointer": "/reasoningSummary/0",
+              "note": "将答复与复核、打包依赖联系到硬截止。"
+            },
+            {
+              "file": "outputs/COMPLEX-08.json",
+              "pointer": "/warnings/0",
+              "note": "解释分别晚2/4小时且后续核对打包仍需时间。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "本轮成员快照被正确采用：作者仅1小时交接、编辑旧窗口撤回、策划窗口过期，其余时间未知。旧12人时属于旧周期整项估算，现有叶项也只是基线；没有均分、清零、把等待算投入或推断当前剩余量。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-08.json",
+              "pointer": "/members/2/availability",
+              "note": "作者仅确认9月2日10至11时交接核对，不是连续写作容量。"
+            },
+            {
+              "file": "inputs/COMPLEX-08.json",
+              "pointer": "/members/1/availability",
+              "note": "策划8月窗口已过期，不能外推。"
+            },
+            {
+              "file": "inputs/COMPLEX-08.json",
+              "pointer": "/context/sourceRefs/11/text",
+              "note": "旧表不是9月剩余投入或有效容量。"
+            },
+            {
+              "file": "outputs/COMPLEX-08.json",
+              "pointer": "/reasoningSummary/1",
+              "note": "准确区分三个成员当前窗口限制。"
+            },
+            {
+              "file": "outputs/COMPLEX-08.json",
+              "pointer": "/reasoningSummary/2",
+              "note": "不将旧均分表或叶项基线换算为当前排期。"
+            },
+            {
+              "file": "outputs/COMPLEX-08.json",
+              "pointer": "/warnings/3",
+              "note": "等待不计人类投入，当前剩余工作和有效窗口仍需证据。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "改字能力重叠和帮忙提议不等于接受成稿或最终复核责任。输出保持Owner、硬期限与核对标准，提出先争取新的可信答复/复核/打包窗口，若不成立再由有权流程协商解锁，没有替用户作决定。",
+          "evidence": [
+            {
+              "file": "inputs/COMPLEX-08.json",
+              "pointer": "/context/sourceRefs/12/text",
+              "note": "明确三角色边界，成稿与复核Owner已确认。"
+            },
+            {
+              "file": "inputs/COMPLEX-08.json",
+              "pointer": "/confirmedFields",
+              "note": "截止、目的、成稿Owner、复核Owner和标准锁定。"
+            },
+            {
+              "file": "outputs/COMPLEX-08.json",
+              "pointer": "/reasoningSummary/3",
+              "note": "不把帮忙当接受新增责任或互换责任。"
+            },
+            {
+              "file": "outputs/COMPLEX-08.json",
+              "pointer": "/proposal",
+              "note": "无候选修改，未自动解锁或分配工作。"
+            },
+            {
+              "file": "outputs/COMPLEX-08.json",
+              "pointer": "/questions/0",
+              "note": "只有一个必要冲突处理问题，保留锁定项且不删引用核对。"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

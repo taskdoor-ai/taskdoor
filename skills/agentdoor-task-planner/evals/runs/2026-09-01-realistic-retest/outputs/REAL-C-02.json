@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "request-real-c-02",
+  "baseSnapshotId": "real-c-02-snapshot",
+  "baseRevision": 17,
+  "baseTaskVersions": {
+    "fc-root": 9,
+    "fc-ledgers": 6,
+    "fc-cash": 5,
+    "fc-bank-recon": 8,
+    "fc-transfer-clear": 2,
+    "fc-ap": 6,
+    "fc-payroll": 5,
+    "fc-report": 3,
+    "fc-fx": 3,
+    "fc-statements": 2,
+    "fc-variance": 1,
+    "fc-controls": 4,
+    "fc-journal-approval": 4,
+    "fc-audit-evidence": 2,
+    "fc-board-pack": 1
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议复用现有收款异常任务，把正式回单依次接入外币重估、调整日记账复核和主报表草稿；已完成银行对账及薪资封存保持不变，不新建关账任务，也不执行入账。",
+  "reasoningSummary": [
+    {
+      "text": "银行更正通知写明实际入账日为9月1日，但应收台账仍列8月，带章回单预计2026-09-03 15:00到达；正式回单前归属冲突不能视为已解决。",
+      "evidenceRefs": [
+        "fc-file-bank-advice-v2",
+        "fc-file-bank-wait-v1",
+        "fc-d9"
+      ]
+    },
+    {
+      "text": "控制人确认由现有fc-transfer-clear承接异常并保留已完成银行对账，因此不重开历史结果或创建重复关账工作。",
+      "evidenceRefs": [
+        "fc-d2",
+        "fc-transfer-clear",
+        "fc-bank-recon",
+        "fc-h3"
+      ]
+    },
+    {
+      "text": "外币重估会形成调整分录；分录需经独立复核后才能进入主报表，现有证据索引与董事会包可继续沿既有下游依赖消费结果。",
+      "evidenceRefs": [
+        "fc-fx",
+        "fc-journal-approval",
+        "fc-statements",
+        "fc-audit-evidence"
+      ]
+    },
+    {
+      "text": "2026-09-05 18:00硬关闭不变，等待银行回单不计EWD且不构成按期保证；薪资仅可使用已批准合计和封存状态。",
+      "evidenceRefs": [
+        "fc-d7",
+        "fc-hard-close",
+        "fc-file-bank-wait-v1",
+        "fc-d8"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "fc-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-fc-fx-transfer-dependency",
+        "action": "update",
+        "targetId": "fc-fx",
+        "parentId": "fc-report",
+        "fields": {
+          "dependsOnTaskIds": [
+            "fc-bank-recon",
+            "fc-transfer-clear"
+          ]
+        },
+        "reason": "外币重估仍需保留封存对账作为余额基础，同时必须等待现有异常任务用正式回单裁定归属期。",
+        "evidenceRefs": [
+          "fc-fx",
+          "fc-bank-recon",
+          "fc-transfer-clear",
+          "fc-file-bank-advice-v2",
+          "fc-d9"
+        ]
+      },
+      {
+        "id": "chg-fc-journal-fx-dependency",
+        "action": "update",
+        "targetId": "fc-journal-approval",
+        "parentId": "fc-controls",
+        "fields": {
+          "dependsOnTaskIds": [
+            "fc-fx"
+          ]
+        },
+        "reason": "外币重估产生的调整分录必须先形成，控制人才能完成独立日记账复核。",
+        "evidenceRefs": [
+          "fc-journal-approval",
+          "fc-fx",
+          "fc-file-journal-pack-v4"
+        ]
+      },
+      {
+        "id": "chg-fc-statements-journal-dependency",
+        "action": "update",
+        "targetId": "fc-statements",
+        "parentId": "fc-report",
+        "fields": {
+          "dependsOnTaskIds": [
+            "fc-ap",
+            "fc-payroll",
+            "fc-fx",
+            "fc-journal-approval"
+          ]
+        },
+        "reason": "主报表继续直接使用应付、薪资合计与外币重估结果，并新增已复核调整日记账作为必要批准前置。",
+        "evidenceRefs": [
+          "fc-statements",
+          "fc-journal-approval",
+          "fc-fx",
+          "fc-d6"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "fc-root",
+      "fc-ledgers",
+      "fc-cash",
+      "fc-bank-recon",
+      "fc-transfer-clear",
+      "fc-ap",
+      "fc-payroll",
+      "fc-report",
+      "fc-variance",
+      "fc-controls",
+      "fc-audit-evidence",
+      "fc-board-pack"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "real-c-finance-team"
+    ],
+    "assessments": [
+      {
+        "taskId": "fc-transfer-clear",
+        "relationship": "same_outcome",
+        "reason": "同一银行事件、同一期间和同一待回单结果，完全覆盖请求。",
+        "evidenceRefs": [
+          "fc-transfer-clear",
+          "fc-request"
+        ]
+      },
+      {
+        "taskId": "fc-bank-recon",
+        "relationship": "overlap",
+        "reason": "对象相关但已按当时资料完成；后续异常不能覆盖历史结果。",
+        "evidenceRefs": [
+          "fc-bank-recon",
+          "fc-h3"
+        ]
+      }
+    ],
+    "coverageNote": "已覆盖当前授权团队2026年8月关账树及近三期异常索引；未访问其他团队或受限薪资正文。"
+  },
+  "questions": [],
+  "warnings": [
+    "带章回单预计2026-09-03 15:00到达，至2026-09-05 18:00硬关闭约有51小时历时窗口；第三方等待或回单异常仍可能压缩处理时间。",
+    "薪资行项目未授权进入规划；本候选只保留既有薪资汇总依赖，不读取、复制或复述受限明细。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "fc-root",
+      "label": "审阅本轮最小差异"
+    }
+  ],
+  "externalEffects": "none"
+}

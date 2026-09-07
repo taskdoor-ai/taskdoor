@@ -1,0 +1,70 @@
+{
+  "createdAt": "2026-08-31T20:18:05.074861+00:00",
+  "suite": "complex",
+  "fixtureSha256": "a562953fb2ac3add37643d0d599a47b3be99b62bd68b6ef4f1f2b37c0b77f741",
+  "expectationsSha256": "7aa7f8d5d2d2011ac12ad4660ae8a4f05a6c447097498ce26f845f4497f66b6c",
+  "skillSha256": "43ae9defd34eaf7fbfaacbbd4efce6dc9f66b9da32f73dd6d89757eb2848aa00",
+  "contractSha256": "3c87217b53a946b6cd35f3f2b904a0bce18494981f9f9b91dc84bb844a1cbdb9",
+  "schemaSha256": "8c0192063fadf41d26e0b91d9f00e165c981173e46809197c5807d0090491cc7",
+  "notice": "Synthetic, offline Skill evaluation. No model API, production ACL or task writes are exercised by this script.",
+  "selectedCaseIds": [
+    "COMPLEX-01",
+    "COMPLEX-02",
+    "COMPLEX-03",
+    "COMPLEX-04",
+    "COMPLEX-05",
+    "COMPLEX-06",
+    "COMPLEX-07",
+    "COMPLEX-08"
+  ],
+  "cases": [
+    {
+      "id": "COMPLEX-01",
+      "industry": "saas_delivery",
+      "category": "cross_branch_dependencies",
+      "inputSha256": "ae77b529761da6be3881ebc72ecc251237dd369a9ed59ba10d629ea9be7fd4eb"
+    },
+    {
+      "id": "COMPLEX-02",
+      "industry": "manufacturing_npi",
+      "category": "nested_estimate_boundaries",
+      "inputSha256": "dd7bef1972d44042cb8e19aad4ef665b1c992ddd80ac04f6cbda06d65149f928"
+    },
+    {
+      "id": "COMPLEX-03",
+      "industry": "ecommerce_operations",
+      "category": "fanout_local_replan",
+      "inputSha256": "d99a170d3d1d7d35ddac491102afa835438af4a413fc0206c70631169a2b7487"
+    },
+    {
+      "id": "COMPLEX-04",
+      "industry": "content_agency",
+      "category": "conflicting_evidence_local_preparation",
+      "inputSha256": "2d5021087ace930c30bd8c889ad2f6a335fe814e4afefc7a1d84e85877e6b0fe"
+    },
+    {
+      "id": "COMPLEX-05",
+      "industry": "retail_chain_operations",
+      "category": "partial_large_tree",
+      "inputSha256": "77caa3e1a97f4ed0cc7820a5362e3da8189f355b1451c32e36cf4a646f12d90a"
+    },
+    {
+      "id": "COMPLEX-06",
+      "industry": "renovation_handover",
+      "category": "external_reference_without_content",
+      "inputSha256": "0ce1e0b037a5193d84a9759f3172f17021828e4d2d0f2cebb9b46f2601221aa2"
+    },
+    {
+      "id": "COMPLEX-07",
+      "industry": "manufacturing_npi",
+      "category": "invalid_existing_graph",
+      "inputSha256": "a20aa6bcbc6a94727ff25066b50d8537a548a4bb12116651688ae3b534ea6348"
+    },
+    {
+      "id": "COMPLEX-08",
+      "industry": "content_agency",
+      "category": "overlap_and_stale_availability",
+      "inputSha256": "c420a335007d5da066094acceeb6427dfdca726835b3ed3c3ca3a01dacb23622"
+    }
+  ]
+}

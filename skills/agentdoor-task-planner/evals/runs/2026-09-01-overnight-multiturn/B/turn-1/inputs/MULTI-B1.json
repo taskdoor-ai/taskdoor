@@ -1,0 +1,509 @@
+{
+  "requestId": "req-multi-b1",
+  "message": "请读当前试点任务、子任务和今天的讨论，重新安排剩余交付。昨天确认的负责人和UAT完成标准先保留，客户已经交付的东西不用再做一遍。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "saas-m6",
+  "teamId": "team-saas",
+  "authorizedTeamIds": [
+    "team-saas"
+  ],
+  "revision": 1,
+  "context": {
+    "snapshotId": "snapshot-multi-b1",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-saas"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "saas03-root",
+        "title": "南桔CRM试点交付",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "完成约定CRM试点并交接"
+        ],
+        "ownerId": "saas-m1",
+        "sourceRefs": [
+          "saas03-root-record"
+        ],
+        "goal": "让试点用户按已确认范围使用CRM",
+        "dueOn": "2026-09-12"
+      },
+      {
+        "id": "saas03-scope",
+        "title": "确认CRM试点范围",
+        "status": "completed",
+        "version": 3,
+        "updatedAt": "2026-08-28T15:00:00+08:00",
+        "parentId": "saas03-root",
+        "acceptanceCriteria": [
+          "客户确认试点字段和用户范围"
+        ],
+        "ownerId": "saas-m6",
+        "sourceRefs": [
+          "saas03-scope-record"
+        ]
+      },
+      {
+        "id": "saas03-map",
+        "title": "完成基础字段迁移演练",
+        "status": "completed",
+        "version": 4,
+        "updatedAt": "2026-08-31T15:00:00+08:00",
+        "parentId": "saas03-root",
+        "acceptanceCriteria": [
+          "以映射表v2核对200条基础记录"
+        ],
+        "ownerId": "saas-m3",
+        "sourceRefs": [
+          "saas03-map-record"
+        ]
+      },
+      {
+        "id": "saas03-uat",
+        "title": "完成CRM试点UAT",
+        "status": "open",
+        "version": 2,
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "parentId": "saas03-root",
+        "acceptanceCriteria": [
+          "通过已确认的12条核心流程用例并记录遗留问题"
+        ],
+        "ownerId": "saas-m4",
+        "sourceRefs": [
+          "saas03-uat-record"
+        ],
+        "dueOn": "2026-09-09",
+        "dependsOnTaskIds": [
+          "saas03-map"
+        ]
+      },
+      {
+        "id": "saas03-train",
+        "title": "完成试点培训交接",
+        "status": "open",
+        "version": 2,
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "parentId": "saas03-root",
+        "acceptanceCriteria": [
+          "交付培训材料与问题清单"
+        ],
+        "ownerId": "saas-m5",
+        "sourceRefs": [
+          "saas03-train-record"
+        ],
+        "dueOn": "2026-09-10"
+      }
+    ],
+    "discussions": [
+      {
+        "id": "saas03-d1",
+        "taskId": "saas03-root",
+        "authorId": "saas-m6",
+        "createdAt": "2026-09-01T10:30:00+08:00",
+        "kind": "decision",
+        "text": "客户新确认：停用账号字段也需核对，历史关账数据本期不导入。确认邮件见saas03-client-v3。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "saas03-d2",
+        "taskId": "saas03-map",
+        "authorId": "saas-m3",
+        "createdAt": "2026-09-01T10:30:00+08:00",
+        "kind": "report",
+        "text": "已完成的映射表v2不包含停用账号字段；其余200条基础字段演练结果仍有效。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "saas03-d3",
+        "taskId": "saas03-uat",
+        "authorId": "saas-m1",
+        "createdAt": "2026-09-01T10:30:00+08:00",
+        "kind": "proposal",
+        "text": "要不让许棠接手UAT？还没和她或钟宁确认，只是一个想法。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "saas03-h1",
+        "taskId": "saas03-map",
+        "occurredAt": "2026-08-31T15:00:00+08:00",
+        "type": "task_completed",
+        "summary": "映射表v2演练核对通过，任务以版本4完成。",
+        "version": 4,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "saas03-h2",
+        "taskId": "saas03-uat",
+        "occurredAt": "2026-08-31T17:00:00+08:00",
+        "type": "field_confirmed",
+        "summary": "钟宁和12条核心用例标准经用户确认保留。",
+        "version": 2,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "saas03-root-record",
+        "title": "南桔CRM试点交付当前记录",
+        "text": "合成任务库快照：saas03-root，版本5，状态in_progress；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "saas03-scope-record",
+        "title": "确认CRM试点范围当前记录",
+        "text": "合成任务库快照：saas03-scope，版本3，状态completed；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-08-28T15:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "saas03-map-record",
+        "title": "完成基础字段迁移演练当前记录",
+        "text": "合成任务库快照：saas03-map，版本4，状态completed；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-08-31T15:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "saas03-uat-record",
+        "title": "完成CRM试点UAT当前记录",
+        "text": "合成任务库快照：saas03-uat，版本2，状态open；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "saas03-train-record",
+        "title": "完成试点培训交接当前记录",
+        "text": "合成任务库快照：saas03-train，版本2，状态open；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "saas03-client-v3",
+        "title": "客户范围确认v3（合成）",
+        "text": "客户明确新增停用账号字段核对；本期排除历史关账数据。其他已确认试点范围不变。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "req-saas-03",
+        "title": "前轮用户原文（合成）",
+        "text": "请读当前试点任务、子任务和今天的讨论，重新安排剩余交付。昨天确认的负责人和UAT完成标准先保留，客户已经交付的东西不用再做一遍。",
+        "updatedAt": "2026-09-01T18:00:00+08:00",
+        "source": "synthetic_test_transition"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "matches": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "currentTaskId": "saas03-root",
+  "confirmedFields": [
+    {
+      "taskId": "saas03-uat",
+      "field": "ownerId",
+      "value": "saas-m4"
+    },
+    {
+      "taskId": "saas03-uat",
+      "field": "acceptanceCriteria",
+      "value": [
+        "通过已确认的12条核心流程用例并记录遗留问题"
+      ]
+    }
+  ],
+  "members": [
+    {
+      "id": "saas-m1",
+      "name": "顾澄",
+      "role": "交付负责人",
+      "responsibilities": [
+        "拆清交付范围",
+        "协调客户验收与变更"
+      ],
+      "boundaries": [
+        "不代客户签收",
+        "不替工程师确认技术就绪"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m1-role",
+          "title": "顾澄职责说明（合成）",
+          "text": "职责：拆清交付范围；协调客户验收与变更。边界：不代客户签收；不替工程师确认技术就绪。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m1-work",
+          "title": "顾澄当前工作自报（合成）",
+          "text": "协调一项存量客户上线，未提供完整日历",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调一项存量客户上线，未提供完整日历",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "saas-m2",
+      "name": "袁序",
+      "role": "实施工程师",
+      "responsibilities": [
+        "配置沙箱集成与单点登录",
+        "整理上线与回退检查记录"
+      ],
+      "boundaries": [
+        "不替客户批准生产访问",
+        "不自动改生产配置"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m2-role",
+          "title": "袁序职责说明（合成）",
+          "text": "职责：配置沙箱集成与单点登录；整理上线与回退检查记录。边界：不替客户批准生产访问；不自动改生产配置。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m2-work",
+          "title": "袁序当前工作自报（合成）",
+          "text": "处理合成客户的沙箱连接问题",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "saas-m2-window",
+          "title": "袁序公开协作窗口（合成）",
+          "text": "2026-09-02T10:00:00+08:00至2026-09-02T12:00:00+08:00。仅承诺该时段可参加集成核对，不代表整周空闲。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "处理合成客户的沙箱连接问题",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-02T10:00:00+08:00",
+        "endAt": "2026-09-02T12:00:00+08:00",
+        "sourceRef": "saas-m2-window",
+        "note": "仅承诺该时段可参加集成核对，不代表整周空闲。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "saas-m3",
+      "name": "沈言",
+      "role": "数据迁移工程师",
+      "responsibilities": [
+        "字段映射与迁移演练",
+        "按约定口径核对迁移数据"
+      ],
+      "boundaries": [
+        "不决定客户保留范围",
+        "不把演练通过视为生产迁移授权"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m3-role",
+          "title": "沈言职责说明（合成）",
+          "text": "职责：字段映射与迁移演练；按约定口径核对迁移数据。边界：不决定客户保留范围；不把演练通过视为生产迁移授权。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m3-work",
+          "title": "沈言当前工作自报（合成）",
+          "text": "核对存量项目的数据映射表",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对存量项目的数据映射表",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "saas-m4",
+      "name": "钟宁",
+      "role": "测试负责人",
+      "responsibilities": [
+        "组织UAT用例与缺陷复核",
+        "记录版本和验证结果"
+      ],
+      "boundaries": [
+        "不替客户业务验收",
+        "不因报告完成自动上线"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m4-role",
+          "title": "钟宁职责说明（合成）",
+          "text": "职责：组织UAT用例与缺陷复核；记录版本和验证结果。边界：不替客户业务验收；不因报告完成自动上线。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m4-work",
+          "title": "钟宁当前工作自报（合成）",
+          "text": "整理试点回归用例",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "saas-m4-window",
+          "title": "钟宁公开协作窗口（合成）",
+          "text": "2026-09-05T13:00:00+08:00至2026-09-05T17:00:00+08:00。本次公开窗口用于UAT协作；其他日期可用性未提供。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理试点回归用例",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-05T13:00:00+08:00",
+        "endAt": "2026-09-05T17:00:00+08:00",
+        "sourceRef": "saas-m4-window",
+        "note": "本次公开窗口用于UAT协作；其他日期可用性未提供。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "saas-m5",
+      "name": "许棠",
+      "role": "客户成功与培训",
+      "responsibilities": [
+        "整理培训材料",
+        "协调培训反馈和使用交接"
+      ],
+      "boundaries": [
+        "不承担技术迁移验证",
+        "不代表客户接受交付"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m5-role",
+          "title": "许棠职责说明（合成）",
+          "text": "职责：整理培训材料；协调培训反馈和使用交接。边界：不承担技术迁移验证；不代表客户接受交付。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m5-work",
+          "title": "许棠当前工作自报（合成）",
+          "text": "准备培训讲义和常见问题清单",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "准备培训讲义和常见问题清单",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "saas-m6",
+      "name": "罗岸",
+      "role": "客户需求对接",
+      "responsibilities": [
+        "收集客户业务口径",
+        "定位客户确认记录"
+      ],
+      "boundaries": [
+        "不自动批准范围增加",
+        "不直接代替交付负责人排期"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m6-role",
+          "title": "罗岸职责说明（合成）",
+          "text": "职责：收集客户业务口径；定位客户确认记录。边界：不自动批准范围增加；不直接代替交付负责人排期。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m6-work",
+          "title": "罗岸当前工作自报（合成）",
+          "text": "等待客户回传试点范围确认",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "等待客户回传试点范围确认",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

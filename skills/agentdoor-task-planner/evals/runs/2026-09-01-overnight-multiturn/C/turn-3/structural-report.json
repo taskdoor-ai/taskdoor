@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-09-01T02:40:27.998971+00:00",
+  "total": 1,
+  "structurallyValid": 0,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "3be46af915a42e6ca960de39d94b603e058db2619059f9fa4977947a88ca2f7a",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-C3",
+      "industry": "ecommerce_operations",
+      "errors": [
+        "disposition outside the case's allowed outcomes"
+      ],
+      "semanticReview": "not_reviewed",
+      "summary": "建议保留SKU-CUP-A记录sim:C:1原样推进，并为不同业务对象SKU-CUP-B建立一项独立的三处错字校对草稿；但本轮未提供B的三处原文位置和正确文本，补齐清单前不能确认执行边界。",
+      "intent": "create",
+      "disposition": "needs_clarification",
+      "changes": 1,
+      "outputSha256": "faace9016190f77e9d6c89ee72eef326580845eb25a1f5c60af0d0c64b9a8ab7",
+      "manualChecks": [
+        "不同SKU与新交付清单是独立结果；旧SKU任务原样保留；不因共享负责人或标题相似误合并。"
+      ],
+      "status": "failed"
+    }
+  ]
+}

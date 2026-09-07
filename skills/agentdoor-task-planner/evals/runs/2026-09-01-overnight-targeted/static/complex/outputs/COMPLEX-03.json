@@ -1,0 +1,222 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-complex03",
+  "baseSnapshotId": "snapshot-complex03-v3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "complex03-root": 11,
+    "complex03-product": 5,
+    "complex03-channels": 4,
+    "complex03-service": 4,
+    "complex03-images": 6,
+    "complex03-page": 7,
+    "complex03-ads": 3,
+    "complex03-faq": 5,
+    "complex03-dispatch": 3,
+    "complex03-inventory": 5,
+    "complex03-checkout": 3
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "在商品资料包中新增包装说明v2，并把页面、客服问答和发货答复三项现有任务显式接到该前置；图片、库存、投放和已确认负责人全部保持不变。",
+  "reasoningSummary": [
+    {
+      "text": "本批包装变更只新增包装说明v2，单件规格、价格、渠道、主图和90件库存均不变。",
+      "evidenceRefs": [
+        "req-complex03",
+        "complex03-pack-v2"
+      ]
+    },
+    {
+      "text": "页面包装栏、客服问答和发货答复都需要消费包装说明v2，既定投放不使用包装参数。",
+      "evidenceRefs": [
+        "complex03-consumer-map"
+      ]
+    },
+    {
+      "text": "包装说明9月2日交付，三个消费者9月3日更新，联动核对和总边界仍分别为9月4日、9月5日。",
+      "evidenceRefs": [
+        "complex03-schedule-agreement"
+      ]
+    },
+    {
+      "text": "图片和库存已有正式完成记录，页面仍在原任务内推进，因此保留其ID、完成记录、Owner和估算基线。",
+      "evidenceRefs": [
+        "complex03-h-images",
+        "complex03-h-inventory",
+        "complex03-page",
+        "complex03-h-page-baseline"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "complex03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-complex03-pack-v2",
+        "action": "create",
+        "targetId": "new:complex03-packaging-note-v2",
+        "parentId": "complex03-product",
+        "fields": {
+          "title": "交付青芽首批包装说明v2",
+          "acceptanceCriteria": [
+            "说明v2记录SKU QY-09本批外箱每箱6件及45×32×28厘米外箱尺寸，并引用包装变更确认来源。",
+            "逐项列明相对旧包装口径的差异，同时明确本批90件可售礼盒、单件规格、价格、渠道和主图v3均不变。",
+            "形成可供商品页面包装栏、客服问答和发货答复逐项引用的受控版本。"
+          ],
+          "tips": [
+            "只整理已确认的本批包装记录，不提供实际物流建议或扩大到补货范围。",
+            "交付时保留版本与来源，使三个消费者能够核对同一份口径。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m1",
+            "basis": "explicit",
+            "reason": "协调回执明确由商品运营汇总包装说明v2；候选责任不替仓配确认实物库存。",
+            "evidenceRefs": [
+              "complex03-schedule-agreement",
+              "ecom-m1-role",
+              "complex03-pack-v2"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "ecom-m3",
+              "contribution": "核对本批包装规格与仓配回执，不重复已完成的库存核对。",
+              "evidenceRefs": [
+                "ecom-m3-role",
+                "complex03-pack-v2",
+                "complex03-h-inventory"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "explicit",
+            "assumptions": [
+              "日期来自包装信息交付协调回执，不代表成员额外容量承诺。"
+            ],
+            "evidenceRefs": [
+              "complex03-schedule-agreement"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供同范围、同工具的可比投入；不改写其他叶任务的原始估算。"
+            ],
+            "evidenceRefs": [
+              "complex03-pack-v2",
+              "complex03-schedule-agreement"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "包装说明是新确认且能独立交付给三个现有消费者的受控结果。",
+        "evidenceRefs": [
+          "req-complex03",
+          "complex03-pack-v2",
+          "complex03-consumer-map"
+        ]
+      },
+      {
+        "id": "chg-complex03-page",
+        "action": "update",
+        "targetId": "complex03-page",
+        "parentId": "complex03-channels",
+        "fields": {
+          "acceptanceCriteria": [
+            "页面按首批现行商品资料核对并保留逐处差异记录；包装栏逐项引用包装说明v2，其余四个不含包装的版块沿用原任务稿件。"
+          ],
+          "dependsOnTaskIds": [
+            "complex03-images",
+            "new:complex03-packaging-note-v2"
+          ]
+        },
+        "reason": "页面包装栏是包装说明v2的明确消费者，需在原任务上补齐前置与核对标准。",
+        "evidenceRefs": [
+          "complex03-page",
+          "complex03-d-page",
+          "complex03-consumer-map",
+          "complex03-schedule-agreement"
+        ]
+      },
+      {
+        "id": "chg-complex03-faq",
+        "action": "update",
+        "targetId": "complex03-faq",
+        "parentId": "complex03-service",
+        "fields": {
+          "acceptanceCriteria": [
+            "问答使用包装说明v2核对单箱6件、外箱尺寸及约定服务口径；非包装问题沿用原任务内容并保留差异记录。"
+          ],
+          "dependsOnTaskIds": [
+            "new:complex03-packaging-note-v2"
+          ]
+        },
+        "reason": "旧的单箱件数答复不能沿用，客服问答必须以包装说明v2作为前置依据。",
+        "evidenceRefs": [
+          "complex03-faq",
+          "complex03-d-faq",
+          "complex03-consumer-map",
+          "complex03-pack-v2"
+        ]
+      },
+      {
+        "id": "chg-complex03-dispatch",
+        "action": "update",
+        "targetId": "complex03-dispatch",
+        "parentId": "complex03-service",
+        "fields": {
+          "acceptanceCriteria": [
+            "发货答复同时引用本批已确认库存记录与包装说明v2，核对每箱6件、外箱尺寸及已确认仓配窗口。"
+          ],
+          "dependsOnTaskIds": [
+            "complex03-inventory",
+            "new:complex03-packaging-note-v2"
+          ]
+        },
+        "reason": "发货答复需要同时消费已完成库存结果和新包装说明，不能只在执行提示中口头提醒。",
+        "evidenceRefs": [
+          "complex03-dispatch",
+          "complex03-inventory",
+          "complex03-consumer-map",
+          "complex03-pack-v2"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "complex03-root",
+      "complex03-product",
+      "complex03-channels",
+      "complex03-service",
+      "complex03-images",
+      "complex03-ads",
+      "complex03-inventory",
+      "complex03-checkout"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "questions": [],
+  "warnings": [
+    "包装说明v2的EWD未知；既有页面、客服、发货和联动任务的估算基线均保持原值，不代表当前剩余投入。",
+    "所有负责人和正式状态均保持快照记录；新增负责人与参与者仍是候选建议，未执行指派或通知。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "complex03-root",
+      "label": "审阅包装说明及三项消费者依赖差异"
+    }
+  ],
+  "externalEffects": "none"
+}

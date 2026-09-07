@@ -1,0 +1,34 @@
+{
+  "createdAt": "2026-08-31T19:41:40.953026+00:00",
+  "fixtureSha256": "a139dace28ad6a6e311858d6ec6189c6e63621435463e101a81f173d0c2be42d",
+  "expectationsSha256": "9a3088de9c623fab53f187375f38c7aaffcfd528f14478f779d7b6af9c801af3",
+  "skillSha256": "f5d944c7533ddcc0af9efe48ef89794d108e83a71d0682fad886350c929c9938",
+  "contractSha256": "4364e32c97d9e7be25ace5074179841c7374ba6725595182bfa431a93e290e21",
+  "schemaSha256": "afc293104f48bf8b0339482605538f9c79017cc8eccccd1144e608a1ac9921aa",
+  "notice": "Synthetic, offline Skill evaluation. No model API, production ACL or task writes are exercised by this script.",
+  "selectedCaseIds": [
+    "SAAS-03",
+    "ECOM-03",
+    "CONTENT-03"
+  ],
+  "cases": [
+    {
+      "id": "SAAS-03",
+      "industry": "saas_delivery",
+      "category": "replan_or_next_batch",
+      "inputSha256": "3ce27f5eb01a9bdfea027fd8eb91b82cb74c42dece4c55e7c20954ed32e821d8"
+    },
+    {
+      "id": "ECOM-03",
+      "industry": "ecommerce_operations",
+      "category": "replan_or_next_batch",
+      "inputSha256": "e5b7fb9caf404bc2c3d50728ce95fd5938c672a31e9604012c7e2004ac66f1e9"
+    },
+    {
+      "id": "CONTENT-03",
+      "industry": "content_agency",
+      "category": "replan_or_next_batch",
+      "inputSha256": "1a50e73cd7b94945822f499fe039b4dd34ed0e8966dc3c3a3e3ab5f0799e1df9"
+    }
+  ]
+}

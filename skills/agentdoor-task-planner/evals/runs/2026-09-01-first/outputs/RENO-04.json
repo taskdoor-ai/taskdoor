@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-reno-04",
+  "baseSnapshotId": "snapshot-reno-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "reno04-root": 5,
+    "reno04-material": 2,
+    "reno04-review": 2,
+    "reno04-docs": 3
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "建议沿用原资料任务准备9月9日可交目录与未完说明，并在原材料、问题任务记录等待条件；材料最早9月12日到、现场只确认9月11日，不能承诺9月9日完成问题复核，需确认分阶段交付与后续安排。",
+  "reasoningSummary": [
+    {
+      "text": "供应商回签表明指定材料最早9月12日送达，晚于9月9日；没有替代材料批准，不能擅自替换。",
+      "evidenceRefs": [
+        "reno04-supplier",
+        "reno04-d1",
+        "reno04-h1",
+        "reno04-root"
+      ]
+    },
+    {
+      "text": "物业只确认9月11日下午开放；何沐已声明的9月10日上午窗口早于现场开放及材料到货，不能据此排成有效复核日期。",
+      "evidenceRefs": [
+        "reno04-access",
+        "reno04-d2",
+        "renovation-m5"
+      ]
+    },
+    {
+      "text": "资料整理已在进行中且没有材料或复核依赖，可先整理已具备资料与缺项；原问题复核依赖材料补送，仍应保留。",
+      "evidenceRefs": [
+        "reno04-docs",
+        "reno04-review",
+        "reno04-material"
+      ]
+    },
+    {
+      "text": "把收货截图当成问题验收只是未确认想法，与现行问题复核标准和职责边界不符，不能采纳为完成依据。",
+      "evidenceRefs": [
+        "reno04-d3",
+        "reno04-review",
+        "renovation-m3",
+        "renovation-m5"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "reno04-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:req-reno-04:docs-stage",
+        "action": "update",
+        "targetId": "reno04-docs",
+        "parentId": "reno04-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "列明当前已具备移交资料的名称、版本和出处，形成可先交资料目录；对缺失或未确认版本资料单列说明。",
+            "在资料交付说明中分开列出资料缺项与尚待材料、现场条件的问题状态，不将资料目录齐全等同于问题复核完成或工程验收。"
+          ],
+          "tips": [
+            "继续使用原资料任务整理，无需等待补送材料即可核对现有目录；具体可交文件以实际盘点结果为准，不虚构已具备清单。",
+            "可将资料及未完状态说明作为9月9日阶段展示候选；是否分阶段交付尚待确认，不据此减少原剩余工作的范围。"
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-09",
+            "basis": "recommended",
+            "assumptions": [
+              "沿用根任务9月9日目标，建议该日先提供已具备资料和缺项说明，分阶段交付方式仍需确认。",
+              "林庭具体容量与完整资料清单未知，本日期不是已确认的资源排期。"
+            ],
+            "evidenceRefs": [
+              "req-reno-04",
+              "reno04-root",
+              "reno04-docs",
+              "renovation-m6"
+            ]
+          }
+        },
+        "reason": "现有资料整理可独立推进，需把可先交内容与等待事项表述清楚；不另建同一资料任务。",
+        "evidenceRefs": [
+          "req-reno-04",
+          "reno04-docs",
+          "reno04-root"
+        ]
+      },
+      {
+        "id": "change:req-reno-04:material-wait",
+        "action": "update",
+        "targetId": "reno04-material",
+        "parentId": "reno04-root",
+        "fields": {
+          "tips": [
+            "按最新供应商回签跟进指定材料，当前最早到货为2026年9月12日，原9月6日计划已变更；9月12日不是已收货事实或保证完成日。",
+            "继续核对确认版本及真实补送回执；没有替代批准前不更换材料，收货截图只证明对应收货信息，不替代问题复核记录。"
+          ]
+        },
+        "reason": "把最新到货前提与未授权替代限制记录在原材料任务中，保持正式状态、负责人和原完成标准。",
+        "evidenceRefs": [
+          "reno04-material",
+          "reno04-supplier",
+          "reno04-d1",
+          "reno04-h1"
+        ]
+      },
+      {
+        "id": "change:req-reno-04:review-prerequisites",
+        "action": "update",
+        "targetId": "reno04-review",
+        "parentId": "reno04-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "在指定补送材料和实际现场条件具备后，保留指定表面问题的真实复核记录及对应依据，区分仍待核对与有依据的确认状态。",
+            "未具备材料或现场条件时如实说明等待项；不能使用收货截图代替问题复核或有权人员验收记录。"
+          ],
+          "tips": [
+            "保留原任务对reno04-material的依赖；父任务归属不增加为依赖。",
+            "现场仅确认9月11日下午，早于材料最早9月12日送达；何沐9月10日上午窗口也不能覆盖到货后的现场复核。",
+            "需协调材料具备后仍有效的现场开放与复核人员窗口；尚无依据时不填最终复核日期，也不承诺9月9日完成。"
+          ]
+        },
+        "reason": "明确现有真实前置条件和记录标准，保留原任务以待协调后的窗口执行，不用不相容的日期拼出完成承诺。",
+        "evidenceRefs": [
+          "req-reno-04",
+          "reno04-review",
+          "reno04-supplier",
+          "reno04-access",
+          "renovation-m5",
+          "reno04-d3"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "reno04-root"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-renovation"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [
+    {
+      "field": "scope_and_schedule",
+      "question": "是否保留9月9日作为已具备资料及未完事项说明的阶段交付，并将实际问题复核另约，还是调整整体交付日期？确认前不改变原9月9日期限或擅自缩减剩余范围。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "根任务9月9日期限、正式blocked状态及所有现有Owner保持不变；局部草稿不代表客户已同意分阶段交付。",
+    "材料最早9月12日、现场仅9月11日开放以及何沐9月10日协作窗口不能共同构成可执行复核安排，需补充到货后的有效窗口。",
+    "历史只有部分读取，不推定完整过往投入；材料和现场等待不计入人类EWD，也不从任务数推断成员容量。",
+    "收货、资料齐全和问题验收不是同一结果；不作专业技术或法律判断。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": "reno04-root",
+      "label": "确认9月9日阶段交付及后续期限的处理方式"
+    },
+    {
+      "action": "review_proposal",
+      "taskId": "reno04-root",
+      "label": "审阅原资料、材料和问题任务的局部草稿"
+    },
+    {
+      "action": "retry_context",
+      "taskId": "reno04-review",
+      "label": "补充到货后现场开放及复核人员可用窗口"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-content-03",
+  "baseSnapshotId": "snapshot-content-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "content03-root": 5,
+    "content03-outline": 2,
+    "content03-visual": 3,
+    "content03-copy": 3,
+    "content03-format": 2
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议在原内容项目内调整文案和公众号适配标准，使本期面向首次使用者；保留已确认目标、现有负责人、五项功能范围和五张功能图v2，不重复已完成工作。",
+  "reasoningSummary": [
+    {
+      "text": "客户书面确认本期受众改为首次使用者，同时明确五项功能范围不变、五张功能图v2继续使用，不要求重新拍摄或设计。",
+      "evidenceRefs": [
+        "content03-confirm",
+        "content03-d1",
+        "req-content-03"
+      ]
+    },
+    {
+      "text": "功能范围任务和视觉任务已经完成，图片v2的完成记录为版本3；本轮只调整未完成的文案和渠道适配，不覆盖旧完成范围。",
+      "evidenceRefs": [
+        "content03-outline",
+        "content03-visual",
+        "content03-h1"
+      ]
+    },
+    {
+      "text": "陶然报告现稿的入门解释段需要重写，其余事实表述可以保留；已确认陶然负责文字稿，杜衡的接手发言只是尚未交接的提议。",
+      "evidenceRefs": [
+        "content03-d2",
+        "content03-h2",
+        "content03-copy",
+        "content03-d3"
+      ]
+    },
+    {
+      "text": "公众号适配已依赖文案和视觉，文案受众调整会改变适配输入，所以一并更新渠道交付标准；仍使用原文案任务与已完成的视觉任务，既有依赖无需换成新任务。",
+      "evidenceRefs": [
+        "content03-format",
+        "content03-copy",
+        "content03-visual",
+        "content03-confirm"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "content03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:content03-root-audience",
+        "action": "update",
+        "targetId": "content03-root",
+        "parentId": null,
+        "fields": {
+          "acceptanceCriteria": [
+            "功能表述准确并按确认的公众号渠道规格交付，五项产品功能范围和已确认品牌口径保持不变。",
+            "本期文案及渠道组合面向首次使用者，核对入门解释与客户受众调整确认一致。",
+            "复用已获客户确认的五张功能图v2，不重复拍摄、设计或重做已完成的功能范围确认。"
+          ]
+        },
+        "reason": "将客户已确认的新受众和明确复用边界体现到当前交付标准；已确认目标“以已确认品牌口径说明产品功能”仍然适用，因此不修改目标。",
+        "evidenceRefs": [
+          "content03-confirm",
+          "content03-d1",
+          "content03-root",
+          "req-content-03"
+        ]
+      },
+      {
+        "id": "change:content03-copy-audience",
+        "action": "update",
+        "targetId": "content03-copy",
+        "parentId": "content03-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "按已确认五项功能交付文字稿，保持现行功能范围和品牌口径。",
+            "面向首次使用者重写入门解释段，逐段核对解释是否仍依赖熟练用户背景知识，并保留适用的既有事实表述。",
+            "交付可供公众号适配使用的当前文字版本，标明本轮受众调整涉及的段落；不得把文字修改扩成新增功能或重新设计五张功能图。"
+          ],
+          "tips": [
+            "以客户受众调整确认和当前稿件为依据处理差异，优先重写入门解释段。",
+            "陶然继续承担已确认的文字稿责任；杜衡的全文接手提议未被接受，本轮不形成责任交接。"
+          ]
+        },
+        "reason": "当前文案仍在进行，作者明确报告需要调整入门解释；在原任务中更新受众相关标准即可，无需新建同一份文案或重复全部事实内容。",
+        "evidenceRefs": [
+          "content03-copy",
+          "content03-d2",
+          "content03-confirm",
+          "content03-h2",
+          "content03-d3"
+        ]
+      },
+      {
+        "id": "change:content03-format-audience",
+        "action": "update",
+        "targetId": "content03-format",
+        "parentId": "content03-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "交付公众号规格的文字与图片组合，文字使用本轮面向首次使用者的文案版本，图片沿用客户已确认的五张功能图v2。",
+            "按确认的渠道规格检查文字和图片组合，确保排版与图文对应不遗漏或改变文案中的入门解释、五项功能事实及品牌口径。",
+            "交付清单标明文字和图片版本，核对使用的是本轮修订文案与图片v2；不将本轮渠道适配视为客户发布批准。"
+          ],
+          "tips": [
+            "保留现有content03-copy和content03-visual两项依赖；可准备已有图片和渠道版式，最终图文组合须使用本轮调整后的文案。",
+            "无需重做五张功能图；保持现有负责人唐钰及原任务归属，未获发布授权不执行发布。"
+          ]
+        },
+        "reason": "渠道适配直接使用修改后的文案，必须同步调整其输入版本和受众核对边界；文案与视觉仍是现有前置任务，依赖关系保持有效。",
+        "evidenceRefs": [
+          "content03-format",
+          "content03-copy",
+          "content03-visual",
+          "content03-confirm",
+          "content-m6-role"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "content03-outline",
+      "content03-visual"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "全部正式Owner和已确认主目标保持不变；更新中未列出的字段、完成记录及现有依赖也保持原值。",
+    "主任务9月8日期限不变。文案和渠道适配未提供独立日期、稿件篇幅与完整成员容量，当前不重排日期或承诺受众调整的人时。",
+    "沈禾的视觉适配评审窗口和程简的短稿校对窗口只适用于声明用途，不能据此推定成员有容量承接全文重写。",
+    "本候选只调整已有工作标准，不创建任务、不转移责任、不代客户批准成稿或发布内容。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "content03-root",
+      "label": "审阅受众调整对应的三处标准差异"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,54 @@
+{
+  "kind": "independent_cross_group_semantic_review",
+  "total": 7,
+  "satisfies": 4,
+  "fails": 3,
+  "uncertain": 0,
+  "semanticPassRate": 0.5714285714285714,
+  "humanIndustryReview": false,
+  "reviewMethod": "Three independent reviewers assessed groups they did not generate against frozen inputs, first outputs and the protocol. Oracle defects were adjudicated from input evidence; no production data or human industry-user review was used.",
+  "results": [
+    {
+      "id": "REAL-B-NPI-01",
+      "verdict": "fails",
+      "summary": "来料核对与DVT均漏掉已完成PCN所生产的适用性前置；DVT虽正确加入实际COC核对任务，仍不是完整依赖集。",
+      "reviewFile": "semantic-review-dependencies.json"
+    },
+    {
+      "id": "REAL-B-PROC-01",
+      "verdict": "satisfies",
+      "summary": "五个既有消费者直接改用登记册v3；MSA、税务和银行保留source_only原依赖，门禁补入所有人风险核对结果。冻结oracle对此案有误。",
+      "reviewFile": "semantic-review-dependencies.json"
+    },
+    {
+      "id": "REAL-C-02",
+      "verdict": "fails",
+      "summary": "日记账复核应直接依赖其审核的外币重估，而不是以银行异常任务替代；关键来源冲突证据也不完整。",
+      "reviewFile": "semantic-review-replan.json"
+    },
+    {
+      "id": "REAL-C-03",
+      "verdict": "satisfies",
+      "summary": "批准日期文件直接支持四项排期；开放的日期归档任务没有被误加为前置，旧依赖和隐私边界均保留。",
+      "reviewFile": "semantic-review-replan.json"
+    },
+    {
+      "id": "REAL-C-01",
+      "verdict": "fails",
+      "summary": "上线核对已通过付费与CRM链路消费v2，额外直连主张任务并更新上线核对属于冗余。",
+      "reviewFile": "semantic-review-controls.json"
+    },
+    {
+      "id": "REAL-C-04",
+      "verdict": "satisfies",
+      "summary": "正式复测、证书与业主复验保持旧有效边并补入证书前置；手册和钥匙沿现有链路不重复更新。",
+      "reviewFile": "semantic-review-controls.json"
+    },
+    {
+      "id": "REAL-A-ECOM-01",
+      "verdict": "satisfies",
+      "summary": "只给开售闸门补三项直接产出并保留演练、仓位旧边，未新建重复异常总卡。",
+      "reviewFile": "semantic-review-controls.json"
+    }
+  ]
+}

@@ -1,0 +1,258 @@
+{
+  "runId": "agentdoor-planner-realistic-final-20260901-v2",
+  "reviewer": "/root/realistic_final_a",
+  "cases": [
+    {
+      "scenarioId": "REAL-C-01",
+      "verdict": "pass",
+      "plannerIssue": {
+        "present": false,
+        "items": []
+      },
+      "fixtureIssue": {
+        "present": false,
+        "items": []
+      },
+      "graderIssue": {
+        "present": false,
+        "items": []
+      },
+      "evidence": [
+        {
+          "location": "output.proposal.changes[*].targetId",
+          "ids": [
+            "cc-claim-v2",
+            "cc-landing-copy",
+            "cc-email-copy",
+            "cc-paid"
+          ],
+          "finding": "只更新四个必要对象，没有创建任务，也没有更新CRM或上线核对。"
+        },
+        {
+          "location": "input.context.tasks",
+          "ids": [
+            "cc-crm",
+            "cc-launch-check"
+          ],
+          "finding": "CRM已依赖cc-email-copy，上线核对已依赖cc-paid、cc-crm和cc-keyvisual，现有传递链足以消费v2。"
+        },
+        {
+          "location": "output.reasoningSummary[1].evidenceRefs",
+          "ids": [
+            "cc-d6",
+            "cc-h2",
+            "cc-claim-v1"
+          ],
+          "finding": "同一依据项同时保留撤回提议、完成历史和v1正式任务，满足历史版本保护。"
+        },
+        {
+          "location": "output.reasoningSummary/output.proposal",
+          "ids": [
+            "cc-file-claim-approval-v2",
+            "cc-file-legal-matrix-v4",
+            "cc-hard-launch"
+          ],
+          "finding": "客户批准、合规矩阵和硬上线窗口均被明确引用。"
+        }
+      ],
+      "rationale": "规划复用现有v2任务，并只修改v2本身及三个直接消费者。CRM和上线核对通过既有跨分支依赖间接消费，没有为展示影响制造冗余更新；已完成策略、v1和主视觉均保留。"
+    },
+    {
+      "scenarioId": "REAL-C-02",
+      "verdict": "fail",
+      "plannerIssue": {
+        "present": true,
+        "items": [
+          "输出更新了fc-transfer-clear，但其原验收标准已经明确要求取得正式回单、确认8月/9月归属并在等待期间不标完成；本轮没有必要重写该生产任务。",
+          "输出给fc-audit-evidence新增了对fc-transfer-clear的直接依赖。现有fc-audit-evidence已依赖fc-journal-approval和fc-statements，两者都经fc-fx消费异常结论；fc-d5只是外部审计问询，不是已确认的任务边界，因此该直连是冗余下游更新。",
+          "候选共四项更新，超过最小必要的fc-fx与fc-journal-approval两项。"
+        ]
+      },
+      "fixtureIssue": {
+        "present": false,
+        "items": []
+      },
+      "graderIssue": {
+        "present": false,
+        "items": []
+      },
+      "evidence": [
+        {
+          "location": "input.context.tasks[fc-transfer-clear].acceptanceCriteria",
+          "ids": [
+            "fc-transfer-clear",
+            "fc-file-bank-advice-v2",
+            "fc-file-bank-wait-v1"
+          ],
+          "finding": "现有标准已经覆盖正式回单、期间归属和blocked完成边界。"
+        },
+        {
+          "location": "output.proposal.changes[*].targetId",
+          "ids": [
+            "fc-transfer-clear",
+            "fc-fx",
+            "fc-journal-approval",
+            "fc-audit-evidence"
+          ],
+          "finding": "实际产生四项更新；rubric只允许并要求fc-fx和fc-journal-approval。"
+        },
+        {
+          "location": "input.context.tasks[fc-audit-evidence].dependsOnTaskIds",
+          "ids": [
+            "fc-journal-approval",
+            "fc-statements",
+            "fc-fx"
+          ],
+          "finding": "证据索引已通过日记账和报表链间接取得外币重估结果。"
+        },
+        {
+          "location": "input.context.discussions[fc-d5]",
+          "ids": [
+            "fc-d5",
+            "fc-ext-auditor"
+          ],
+          "finding": "记录类型是question，且正文明确不构成审计接受或日记账批准，不能单独升级为依赖变更依据。"
+        }
+      ],
+      "rationale": "外币重估应保留已完成银行对账并新增fc-transfer-clear前置，日记账复核再消费fc-fx。报表、审计索引和董事会包已有有效传递链，应保持不变。输出虽然正确保留了报表与董事会包，却仍扩散更新到异常任务本身和审计索引，因此不满足最小差异。"
+    },
+    {
+      "scenarioId": "REAL-C-03",
+      "verdict": "fail",
+      "plannerIssue": {
+        "present": true,
+        "items": [
+          "输出额外更新hr-date-amend，使总更新数从所需四项扩为五项；其原验收标准已经覆盖双方确认及同步受影响准备项，用户也只要求同步账号、设备、薪资和入职日核对。",
+          "输出把hr-date-amend新增为账号、设备、薪资和入职日核对的依赖。批准的日期文件已经可直接支持排期，且没有来源要求四项工作必须等待日期归档任务完成，这些新边会造成不必要串行。",
+          "证据引用不完整：rubric要求的hr-file-access-matrix-v6和hr-privacy-boundary均未出现在输出evidenceRefs。输出遵守了隐私文字边界，但没有用这两个正式来源承载生产权限与最小披露依据。"
+        ]
+      },
+      "fixtureIssue": {
+        "present": true,
+        "items": [
+          "输入中hr-date-amend的正式status是open、version是1，hr-h3也只记录created；但expectations-snapshot的manualChecks把它描述为“已完成的日期修订任务”。夹具事实与rubric叙述冲突。"
+        ]
+      },
+      "graderIssue": {
+        "present": true,
+        "items": [
+          "若评分器把本案归因为“更新已完成任务”，该理由不受实际输入支持。mustNotUpdateTaskIds中的hr-date-amend仍可基于最小差异判错，但诊断应写“不必要更新现有日期修订任务”，不能声称其正式状态为completed。"
+        ]
+      },
+      "evidence": [
+        {
+          "location": "input.context.tasks[hr-date-amend]",
+          "ids": [
+            "hr-date-amend"
+          ],
+          "finding": "正式字段为status=open、version=1，验收标准已包含取得双方确认并同步受影响准备项。"
+        },
+        {
+          "location": "input.context.history[hr-h3]",
+          "ids": [
+            "hr-h3"
+          ],
+          "finding": "历史类型仅为created，没有completed记录。"
+        },
+        {
+          "location": "output.proposal.changes[*].targetId",
+          "ids": [
+            "hr-date-amend",
+            "hr-account",
+            "hr-laptop",
+            "hr-payroll",
+            "hr-startday"
+          ],
+          "finding": "输出产生五项更新，超出账号、设备、薪资和入职日核对四项最小范围。"
+        },
+        {
+          "location": "output.proposal.changes[*].fields.dependsOnTaskIds",
+          "ids": [
+            "hr-date-amend"
+          ],
+          "finding": "日期修订任务被新增到四个消费者依赖集合，rubric并未要求这些依赖，输入也没有失去直接使用批准日期文件的能力。"
+        },
+        {
+          "location": "output evidenceRefs",
+          "ids": [
+            "hr-file-access-matrix-v6",
+            "hr-privacy-boundary"
+          ],
+          "finding": "两个requiredEvidenceRefs均缺失；输出未泄露受限正文，但来源链不完整。"
+        }
+      ],
+      "rationale": "账号、设备、薪资和入职日核对的日期调整方向正确，生产权限门槛也被保留；失败来自额外改写日期修订任务、添加不必要依赖及关键正式来源缺失。与此同时，rubric把hr-date-amend称为已完成与实际夹具不符，必须把规划器的最小差异错误和夹具/评分诊断错误分开。"
+    },
+    {
+      "scenarioId": "REAL-C-04",
+      "verdict": "pass",
+      "plannerIssue": {
+        "present": false,
+        "items": []
+      },
+      "fixtureIssue": {
+        "present": false,
+        "items": []
+      },
+      "graderIssue": {
+        "present": false,
+        "items": []
+      },
+      "evidence": [
+        {
+          "location": "output.proposal.changes[*].targetId",
+          "ids": [
+            "rn-electric-retest",
+            "rn-electric-cert",
+            "rn-reinspection"
+          ],
+          "finding": "只更新正式复测、第三方证书和业主复验三项，没有重开给排水、手册、表计或钥匙任务。"
+        },
+        {
+          "location": "output.reasoningSummary[3]",
+          "ids": [
+            "rn-d8",
+            "rn-electric-retest",
+            "rn-electric-cert"
+          ],
+          "finding": "同一依据项明确呈现“现场日报称全部关闭”与正式复测in_progress、证书blocked的冲突，并选择正式状态和证据边界。"
+        },
+        {
+          "location": "output.proposal.changes[change-rn-electric-retest-window].evidenceRefs",
+          "ids": [
+            "rn-d2",
+            "rn-d4",
+            "rn-file-electric-field-v3"
+          ],
+          "finding": "成员可执行报告、撤回的提前完成提议和预检草稿三侧证据完整，未把预检当正式复测。"
+        },
+        {
+          "location": "output warnings/reasoningSummary",
+          "ids": [
+            "rn-file-outage-permit-v2",
+            "rn-file-cert-request-v2",
+            "rn-hard-handover"
+          ],
+          "finding": "90分钟窗口、第三方预计出证和不自动顺延的9月20日14:00硬交付边界均被保留。"
+        }
+      ],
+      "rationale": "输出满足三项最小更新，并显式处理report-vs-formal-state冲突。业主复验新增证书依赖并保留原正式复测与柜门前置；由于输出的复验标准仍直接核对正式复测记录，且没有来源宣布旧边失效，保留rn-electric-retest不构成冗余删除错误。"
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "pass": 2,
+    "fail": 2,
+    "plannerIssueCases": [
+      "REAL-C-02",
+      "REAL-C-03"
+    ],
+    "fixtureIssueCases": [
+      "REAL-C-03"
+    ],
+    "graderIssueCases": [
+      "REAL-C-03"
+    ],
+    "headline": "C01、C04通过；C02因非必要更新异常任务与审计索引失败；C03因额外更新日期修订任务、添加不必要依赖和证据来源缺失失败，同时存在hr-date-amend状态与rubric叙述冲突。"
+  }
+}

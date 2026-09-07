@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-15",
+  "baseSnapshotId": "snapshot-edge-15-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "edge15-old": 4
+  },
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "新增CUP-C八月末报表差异核对候选，按已确认的本地CSV工具方式规划；旧72小时不作本轮EWD依据。",
+  "reasoningSummary": [
+    {
+      "text": "本轮是ORDER-C-v20260831与CHANNEL-C-v20260831的八月末数据，旧已完成任务仅覆盖七月活动，不能替代新周期核对。",
+      "evidenceRefs": [
+        "req-edge-15",
+        "edge15-new-data",
+        "edge15-old"
+      ]
+    },
+    {
+      "text": "旧72小时原为含人工、等待补导出及无人值守处理的预计总历时，误导入EWD字段，缺少各部分和实际人时记录。",
+      "evidenceRefs": [
+        "edge15-old-estimate",
+        "edge15-estimate-history"
+      ]
+    },
+    {
+      "text": "本轮用本地CSV差异工具，仅人工复核差异行并写一页说明；差异行数及新方法投入样本未知。",
+      "evidenceRefs": [
+        "edge15-method-v2",
+        "edge15-new-data"
+      ]
+    },
+    {
+      "text": "程砚的现行职责包含报表周期、指标口径和活动差异复核，适合推荐负责本轮结果。",
+      "evidenceRefs": [
+        "ecom-m6-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:edge15-august-report-diff",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-edge15-create-report-diff",
+        "action": "create",
+        "targetId": "new:edge15-august-report-diff",
+        "parentId": null,
+        "fields": {
+          "title": "核对CUP-C八月末两份CSV报表差异",
+          "goal": {
+            "text": "使CUP-C八月末两份报表在已确认字段上的差异及其核对口径可追溯。",
+            "basis": "inferred",
+            "evidenceRefs": [
+              "req-edge-15",
+              "edge15-new-data"
+            ]
+          },
+          "acceptanceCriteria": [
+            "以ORDER-C-v20260831和CHANNEL-C-v20260831两份授权静态CSV为输入，按已确认的订单号、金额和状态字段使用本地CSV对比工具生成候选差异。",
+            "人工逐项复核候选差异行，保留输入版本、对应行标识、复核结论和仍不能确定的差异；无差异也须明确记录本轮核对范围。",
+            "交付一页口径与差异说明，区分工具结果、人工确认和未解决事项；不修改订单、退款、渠道或生产系统。"
+          ],
+          "tips": [
+            "旧七月结果仅可参考记录格式，不复用其完成结论或72小时数值。",
+            "工具执行、人工复核与一页说明是同一差异结果的操作步骤，无需重复拆分子任务。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m6",
+            "basis": "recommended",
+            "reason": "依据当前报表口径与活动差异复核职责推荐程砚，不是自动继承旧任务Owner或以在办任务数推测容量。",
+            "evidenceRefs": [
+              "ecom-m6-role",
+              "edge15-new-data"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未指定开始或截止日期，候选负责人可用时间未知；不以72小时推算期限。"
+            ],
+            "evidenceRefs": [
+              "req-edge-15",
+              "edge15-method-v2"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "旧72小时是混合预计总历时，不是可信的人类投入基线，不直接复制或按比例折算。",
+              "本轮工具方法已改变，差异行数、试运行结果及可比人工投入样本均未知。",
+              "仅计人工复核差异行及形成一页说明的人类投入，等待及无人值守运行不计EWD；当前留空。"
+            ],
+            "evidenceRefs": [
+              "edge15-old-estimate",
+              "edge15-estimate-history",
+              "edge15-method-v2",
+              "edge15-new-data"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "新周期与新工具方式产生独立核对结果；保留旧已完成任务及其原始历史字段，不覆写口径混用记录。",
+        "evidenceRefs": [
+          "req-edge-15",
+          "edge15-new-data",
+          "edge15-method-v2",
+          "edge15-old"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "edge15-old"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "edge15-old",
+        "relationship": "different_instance",
+        "reason": "旧任务覆盖SKU-CUP-C的2026-07活动并采用手工逐表核对，本轮覆盖2026-08-31版本的两份CSV和八月末活动；七月完成结果不能证明本轮数据一致。旧记录格式可参考，但不是新结果的前置条件或EWD基线。",
+        "evidenceRefs": [
+          "edge15-old",
+          "edge15-new-data",
+          "edge15-method-v2",
+          "edge15-old-estimate"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；返回的候选均在本次可见快照内。"
+  },
+  "questions": [],
+  "warnings": [
+    "EWD未知不等于零投入；当前没有足以把旧混合历时转换为本轮人工投入的证据。",
+    "负责人只是推荐，排期未知；本轮没有实际运行CSV工具或写入任何业务系统。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": null,
+      "label": "审阅八月末差异核对候选"
+    }
+  ],
+  "externalEffects": "none"
+}

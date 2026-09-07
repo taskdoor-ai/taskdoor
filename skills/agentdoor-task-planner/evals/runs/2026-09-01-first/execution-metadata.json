@@ -1,0 +1,53 @@
+{
+  "date": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "kind": "synthetic_offline_skill_trial",
+  "execution": "Current-session independent Codex agents; not an application model API",
+  "exactModelSnapshot": "not_provided",
+  "temperature": "not_provided",
+  "seed": "not_provided",
+  "executorGroups": {
+    "planner_blind_evaluation_a": [
+      "SAAS-01",
+      "SAAS-02",
+      "SAAS-03",
+      "SAAS-04",
+      "ECOM-01",
+      "ECOM-02",
+      "ECOM-03",
+      "ECOM-04"
+    ],
+    "planner_blind_evaluation_b": [
+      "NPI-01",
+      "NPI-02",
+      "NPI-03",
+      "NPI-04",
+      "RETAIL-01",
+      "RETAIL-02",
+      "RETAIL-03",
+      "RETAIL-04"
+    ],
+    "planner_blind_evaluation_c": [
+      "CONTENT-01",
+      "CONTENT-02",
+      "CONTENT-03",
+      "CONTENT-04",
+      "RENO-01",
+      "RENO-02",
+      "RENO-03",
+      "RENO-04"
+    ]
+  },
+  "blinding": "Fresh-context executors received Skill, required execution references and assigned inputs only; no expectation file, validator, prior output or evaluator feedback. Each group executed eight cases, not eight isolated model contexts.",
+  "attemptPolicy": "First output per case retained; no repair before first scoring.",
+  "review": "Different independent Codex agents reviewed original input, output and frozen rubric; root checked key findings. No human industry-user adjudication.",
+  "runtime": {
+    "python": "3.12.0",
+    "jsonschema": "4.26.0",
+    "os": "Darwin",
+    "architecture": "arm64"
+  },
+  "productionAccess": false,
+  "productionWrites": false,
+  "archiveNote": "First-run protocol, expectations and validator source are frozen here. Later rubric erratum and Skill revisions do not replace original outputs or original structural-report."
+}

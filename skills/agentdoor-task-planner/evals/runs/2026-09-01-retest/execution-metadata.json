@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "kind": "targeted_synthetic_offline_retest",
+  "exactModelSnapshot": "not_provided",
+  "temperature": "not_provided",
+  "seed": "not_provided",
+  "executor": "planner_retest_executor; fresh-context independent Codex agent",
+  "selectedCases": [
+    "SAAS-03",
+    "ECOM-03",
+    "CONTENT-03"
+  ],
+  "selectionReason": "SAAS-03 first-run semantic failure plus next-batch reuse and localized-replan controls; selected before outputs were generated.",
+  "inputPolicy": "Byte-identical to the same first-run case inputs; confirmed before execution.",
+  "changesSinceFirst": [
+    "Skill and references now require checking consumers of new/changed deliverables, their dependencies and delivery windows, or returning a specific blocking question.",
+    "SAAS-03 grading erratum removes an unintended full lock on the unchanged-ID training task; completed tasks and confirmed fields remain protected."
+  ],
+  "blinding": "Executor read only frozen execution Skill references and the three inputs; no rubric, validator, earlier outputs, reviews or failure-specific hints. First response per case retained without repair.",
+  "review": "Separate fresh-context Codex agent receives this run input/output/protocol/rubric, without first-run outputs or reviews; not human industry-user validation.",
+  "productionAccess": false,
+  "productionWrites": false,
+  "limitations": "Targeted regression only; not a second full 24-case trial or a statistical generalization estimate."
+}

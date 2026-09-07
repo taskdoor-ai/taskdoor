@@ -1,0 +1,18 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-C1",
+      "allowedIntents": [
+        "create"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "maxCreates": 1,
+      "manualChecks": [
+        "只为明确SKU/五处错字产生一项候选，保留明确人选和期限。"
+      ]
+    }
+  ]
+}

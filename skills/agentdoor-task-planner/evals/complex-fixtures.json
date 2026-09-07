@@ -1,0 +1,5335 @@
+{
+  "schemaVersion": "agentdoor.complex-fixtures.v1",
+  "syntheticNotice": "所有客户、组织、任务、讨论、证据、时间、数值与窗口均为合成评估记录；复用的六个团队也为合成。公开来源只提供既有流程背景，不能证明本例事实；此数据不授权任何真实读取、创建、通知、验收或其他外部写入。",
+  "createdOn": "2026-09-01",
+  "evaluationScope": "8个复杂候选规划输入，每例9至11个当前可见任务；检查局部变更、图关系、覆盖与证据边界，不提供法规、施工或安全建议，不接生产。",
+  "sources": [
+    {
+      "id": "SRC-SAAS-PS",
+      "publisher": "GitLab",
+      "title": "Professional Services Engineering Workflows",
+      "url": "https://handbook.gitlab.com/handbook/customer-success/professional-services-engineering/workflows/",
+      "supports": [
+        "服务交付包含启动、资料接收、项目沟通、范围变更、总结与复盘"
+      ],
+      "boundary": "引用其公开服务流程，不把其内部岗位或客户数据搬入夹具。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    },
+    {
+      "id": "SRC-ECOM-LAUNCH",
+      "publisher": "Shopify",
+      "title": "Preparing your Shopify store for launch",
+      "url": "https://help.shopify.com/en/manual/intro-to-shopify/initial-setup/setup-prepare-for-launch",
+      "supports": [
+        "发布前可通过测试订单检查结账、订单处理、库存与配送设置"
+      ],
+      "boundary": "只借鉴协同检查点，不建议真实下单或改动店铺。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    },
+    {
+      "id": "SRC-ECOM-EVENT",
+      "publisher": "Shopify",
+      "title": "Example Launchpad events",
+      "url": "https://help.shopify.com/en/manual/promoting-marketing/create-marketing/launchpad/launchpad-examples",
+      "supports": [
+        "产品发布、促销时段与补货是可区分的业务事件"
+      ],
+      "boundary": "Launchpad功能有产品计划限制；夹具不声称AgentDoor或合成团队已经接入。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    },
+    {
+      "id": "SRC-NPI-GATE",
+      "publisher": "Autodesk",
+      "title": "Fusion Manage template library",
+      "url": "https://help.autodesk.com/cloudhelp/ENU/Fusion-Manage/files/MNG-TEMPLATELIBRARY.htm",
+      "supports": [
+        "NPI可围绕阶段交付物和评审关口组织"
+      ],
+      "boundary": "不把模板阶段强加给所有轻任务，不产生认证或量产授权。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    },
+    {
+      "id": "SRC-NPI-BOM",
+      "publisher": "Autodesk",
+      "title": "About the bill of materials",
+      "url": "https://help.autodesk.com/cloudhelp/ENU/UC-BillMaterials/files/UC_BillMaterials_bm_bom_basics_bm_about_bom_html.htm",
+      "supports": [
+        "BOM描述装配、子装配和零件，工程与制造信息需按版本关联"
+      ],
+      "boundary": "夹具只验证版本与职责协调，不提供制造参数或设备操作指导。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    },
+    {
+      "id": "SRC-RETAIL-TASK",
+      "publisher": "Microsoft",
+      "title": "Task management overview",
+      "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/task-mgmt-overview",
+      "supports": [
+        "总部、店长和店员在门店任务清单、分派和状态跟踪上分工不同"
+      ],
+      "boundary": "产品操作说明用于提炼协作问题，不复制其权限或自动分派能力。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    },
+    {
+      "id": "SRC-RETAIL-RECURRENCE",
+      "publisher": "Microsoft",
+      "title": "Assign task lists to stores or employees",
+      "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/task-mgmt-assign-lists",
+      "supports": [
+        "同一任务清单可以用于不同门店或不同周期，目标日期是业务区分信息"
+      ],
+      "boundary": "用于周期和门店身份的查重测试，不授权定时任务或批量指派。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    },
+    {
+      "id": "SRC-CONTENT-STAGES",
+      "publisher": "Adobe",
+      "title": "Automated Workflow Stages overview",
+      "url": "https://experienceleague.adobe.com/en/docs/workfront/using/review-and-approve-work/proofing/proofing-overview/stages",
+      "supports": [
+        "内容评审阶段可以顺序或并行，只有真实前置评审才形成依赖"
+      ],
+      "boundary": "这是Workfront Proof流程资料；不将其私有阶段能力与新统一评审产品混为一谈。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    },
+    {
+      "id": "SRC-CONTENT-REVIEW",
+      "publisher": "Adobe",
+      "title": "Unified review and approval overview",
+      "url": "https://experienceleague.adobe.com/en/docs/workfront/using/review-and-approve-work/document-approvals-overview",
+      "supports": [
+        "审阅意见与批准决定不同，需修改内容应关联版本后再评审"
+      ],
+      "boundary": "只借鉴意见、决定与版本的区别，不宣称已部署Adobe集成或新增审批状态机。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    },
+    {
+      "id": "SRC-RENOVATION-PUNCH",
+      "publisher": "Procore",
+      "title": "What is the Punch List Workflow?",
+      "url": "https://support.procore.com/faq/what-is-the-punch-list-work-flow",
+      "supports": [
+        "整改执行、提交复核、管理核对与最终关闭是不同责任和证据状态"
+      ],
+      "boundary": "只用作交付协调与记录语义，不提供法律、施工安全、结构或专业技术判断。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    },
+    {
+      "id": "SRC-RENOVATION-CLOSE",
+      "publisher": "Procore",
+      "title": "Close a Punch List Item",
+      "url": "https://support.procore.com/products/online/user-guide/project-level/punch-list/tutorials/close-a-punch-list-item",
+      "supports": [
+        "执行者报告解决不等于有权人员复核关闭"
+      ],
+      "boundary": "不照搬该产品默认创建者/审批者规则，不自动验收、关闭或改变正式Owner。",
+      "accessedOn": "2026-09-01",
+      "sourceType": "official_primary",
+      "verification": "opened_official_page"
+    }
+  ],
+  "teams": [
+    {
+      "teamId": "team-saas",
+      "industry": "saas_delivery",
+      "name": "合成·星港SaaS交付组",
+      "synthetic": true,
+      "workflowSourceIds": [
+        "SRC-SAAS-PS"
+      ],
+      "members": [
+        {
+          "id": "saas-m1",
+          "name": "顾澄",
+          "role": "交付负责人",
+          "responsibilities": [
+            "拆清交付范围",
+            "协调客户验收与变更"
+          ],
+          "boundaries": [
+            "不代客户签收",
+            "不替工程师确认技术就绪"
+          ],
+          "evidence": [
+            {
+              "id": "saas-m1-role",
+              "title": "顾澄职责说明（合成）",
+              "text": "职责：拆清交付范围；协调客户验收与变更。边界：不代客户签收；不替工程师确认技术就绪。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "saas-m1-work",
+              "title": "顾澄当前工作自报（合成）",
+              "text": "协调一项存量客户上线，未提供完整日历",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "协调一项存量客户上线，未提供完整日历",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "saas-m1-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "saas-m2",
+          "name": "袁序",
+          "role": "实施工程师",
+          "responsibilities": [
+            "配置沙箱集成与单点登录",
+            "整理上线与回退检查记录"
+          ],
+          "boundaries": [
+            "不替客户批准生产访问",
+            "不自动改生产配置"
+          ],
+          "evidence": [
+            {
+              "id": "saas-m2-role",
+              "title": "袁序职责说明（合成）",
+              "text": "职责：配置沙箱集成与单点登录；整理上线与回退检查记录。边界：不替客户批准生产访问；不自动改生产配置。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "saas-m2-work",
+              "title": "袁序当前工作自报（合成）",
+              "text": "处理合成客户的沙箱连接问题",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "saas-m2-window",
+              "title": "袁序公开协作窗口（合成）",
+              "text": "2026-09-02T10:00:00+08:00至2026-09-02T12:00:00+08:00。仅承诺该时段可参加集成核对，不代表整周空闲。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "处理合成客户的沙箱连接问题",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "saas-m2-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-02T10:00:00+08:00",
+            "endAt": "2026-09-02T12:00:00+08:00",
+            "sourceRef": "saas-m2-window",
+            "note": "仅承诺该时段可参加集成核对，不代表整周空闲。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "saas-m3",
+          "name": "沈言",
+          "role": "数据迁移工程师",
+          "responsibilities": [
+            "字段映射与迁移演练",
+            "按约定口径核对迁移数据"
+          ],
+          "boundaries": [
+            "不决定客户保留范围",
+            "不把演练通过视为生产迁移授权"
+          ],
+          "evidence": [
+            {
+              "id": "saas-m3-role",
+              "title": "沈言职责说明（合成）",
+              "text": "职责：字段映射与迁移演练；按约定口径核对迁移数据。边界：不决定客户保留范围；不把演练通过视为生产迁移授权。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "saas-m3-work",
+              "title": "沈言当前工作自报（合成）",
+              "text": "核对存量项目的数据映射表",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "核对存量项目的数据映射表",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "saas-m3-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "saas-m4",
+          "name": "钟宁",
+          "role": "测试负责人",
+          "responsibilities": [
+            "组织UAT用例与缺陷复核",
+            "记录版本和验证结果"
+          ],
+          "boundaries": [
+            "不替客户业务验收",
+            "不因报告完成自动上线"
+          ],
+          "evidence": [
+            {
+              "id": "saas-m4-role",
+              "title": "钟宁职责说明（合成）",
+              "text": "职责：组织UAT用例与缺陷复核；记录版本和验证结果。边界：不替客户业务验收；不因报告完成自动上线。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "saas-m4-work",
+              "title": "钟宁当前工作自报（合成）",
+              "text": "整理试点回归用例",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "saas-m4-window",
+              "title": "钟宁公开协作窗口（合成）",
+              "text": "2026-09-05T13:00:00+08:00至2026-09-05T17:00:00+08:00。本次公开窗口用于UAT协作；其他日期可用性未提供。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "整理试点回归用例",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "saas-m4-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-05T13:00:00+08:00",
+            "endAt": "2026-09-05T17:00:00+08:00",
+            "sourceRef": "saas-m4-window",
+            "note": "本次公开窗口用于UAT协作；其他日期可用性未提供。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "saas-m5",
+          "name": "许棠",
+          "role": "客户成功与培训",
+          "responsibilities": [
+            "整理培训材料",
+            "协调培训反馈和使用交接"
+          ],
+          "boundaries": [
+            "不承担技术迁移验证",
+            "不代表客户接受交付"
+          ],
+          "evidence": [
+            {
+              "id": "saas-m5-role",
+              "title": "许棠职责说明（合成）",
+              "text": "职责：整理培训材料；协调培训反馈和使用交接。边界：不承担技术迁移验证；不代表客户接受交付。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "saas-m5-work",
+              "title": "许棠当前工作自报（合成）",
+              "text": "准备培训讲义和常见问题清单",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "准备培训讲义和常见问题清单",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "saas-m5-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "saas-m6",
+          "name": "罗岸",
+          "role": "客户需求对接",
+          "responsibilities": [
+            "收集客户业务口径",
+            "定位客户确认记录"
+          ],
+          "boundaries": [
+            "不自动批准范围增加",
+            "不直接代替交付负责人排期"
+          ],
+          "evidence": [
+            {
+              "id": "saas-m6-role",
+              "title": "罗岸职责说明（合成）",
+              "text": "职责：收集客户业务口径；定位客户确认记录。边界：不自动批准范围增加；不直接代替交付负责人排期。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "saas-m6-work",
+              "title": "罗岸当前工作自报（合成）",
+              "text": "等待客户回传试点范围确认",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "等待客户回传试点范围确认",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "saas-m6-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        }
+      ]
+    },
+    {
+      "teamId": "team-ecom",
+      "industry": "ecommerce_operations",
+      "name": "合成·禾光电商运营组",
+      "synthetic": true,
+      "workflowSourceIds": [
+        "SRC-ECOM-LAUNCH",
+        "SRC-ECOM-EVENT"
+      ],
+      "members": [
+        {
+          "id": "ecom-m1",
+          "name": "唐穗",
+          "role": "商品运营负责人",
+          "responsibilities": [
+            "确认SKU与上新范围",
+            "协调价格和活动口径"
+          ],
+          "boundaries": [
+            "不替仓库确认实物库存",
+            "不自动提高投放预算"
+          ],
+          "evidence": [
+            {
+              "id": "ecom-m1-role",
+              "title": "唐穗职责说明（合成）",
+              "text": "职责：确认SKU与上新范围；协调价格和活动口径。边界：不替仓库确认实物库存；不自动提高投放预算。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "ecom-m1-work",
+              "title": "唐穗当前工作自报（合成）",
+              "text": "整理两款商品的上新资料",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "整理两款商品的上新资料",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "ecom-m1-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "ecom-m2",
+          "name": "颜北",
+          "role": "商品内容设计",
+          "responsibilities": [
+            "详情页文案和视觉素材",
+            "按已确认信息修正错字和版式"
+          ],
+          "boundaries": [
+            "不自行改售价或功效承诺",
+            "不决定补货量"
+          ],
+          "evidence": [
+            {
+              "id": "ecom-m2-role",
+              "title": "颜北职责说明（合成）",
+              "text": "职责：详情页文案和视觉素材；按已确认信息修正错字和版式。边界：不自行改售价或功效承诺；不决定补货量。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "ecom-m2-work",
+              "title": "颜北当前工作自报（合成）",
+              "text": "校对详情页素材",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "校对详情页素材",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "ecom-m2-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "ecom-m3",
+          "name": "岑舟",
+          "role": "仓配协调",
+          "responsibilities": [
+            "核对可售库存",
+            "收集出库与履约窗口"
+          ],
+          "boundaries": [
+            "不把系统库存直接当可售实物",
+            "不代供应商承诺到货"
+          ],
+          "evidence": [
+            {
+              "id": "ecom-m3-role",
+              "title": "岑舟职责说明（合成）",
+              "text": "职责：核对可售库存；收集出库与履约窗口。边界：不把系统库存直接当可售实物；不代供应商承诺到货。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "ecom-m3-work",
+              "title": "岑舟当前工作自报（合成）",
+              "text": "复核库存差异和待出库清单",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "复核库存差异和待出库清单",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "ecom-m3-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "ecom-m4",
+          "name": "梁宁",
+          "role": "投放运营",
+          "responsibilities": [
+            "按批准方案准备渠道投放",
+            "反馈素材和落地页需求"
+          ],
+          "boundaries": [
+            "不自行提高预算",
+            "不把目标订单视作销量事实"
+          ],
+          "evidence": [
+            {
+              "id": "ecom-m4-role",
+              "title": "梁宁职责说明（合成）",
+              "text": "职责：按批准方案准备渠道投放；反馈素材和落地页需求。边界：不自行提高预算；不把目标订单视作销量事实。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "ecom-m4-work",
+              "title": "梁宁当前工作自报（合成）",
+              "text": "准备渠道素材包",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "ecom-m4-window",
+              "title": "梁宁公开协作窗口（合成）",
+              "text": "2026-09-02T14:00:00+08:00至2026-09-02T16:00:00+08:00。只保证活动页面联调窗口，未提供持续投放容量。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "准备渠道素材包",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "ecom-m4-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-02T14:00:00+08:00",
+            "endAt": "2026-09-02T16:00:00+08:00",
+            "sourceRef": "ecom-m4-window",
+            "note": "只保证活动页面联调窗口，未提供持续投放容量。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "ecom-m5",
+          "name": "于薇",
+          "role": "客服负责人",
+          "responsibilities": [
+            "确认客服问答与承诺口径",
+            "汇总售前售后问题"
+          ],
+          "boundaries": [
+            "不擅自承诺发货日",
+            "不把退款咨询当已退款"
+          ],
+          "evidence": [
+            {
+              "id": "ecom-m5-role",
+              "title": "于薇职责说明（合成）",
+              "text": "职责：确认客服问答与承诺口径；汇总售前售后问题。边界：不擅自承诺发货日；不把退款咨询当已退款。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "ecom-m5-work",
+              "title": "于薇当前工作自报（合成）",
+              "text": "更新发货问题答复",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "ecom-m5-window",
+              "title": "于薇公开协作窗口（合成）",
+              "text": "2026-09-03T09:00:00+08:00至2026-09-03T11:00:00+08:00。可用于客服培训，不能推算当日总空闲。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "更新发货问题答复",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "ecom-m5-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-03T09:00:00+08:00",
+            "endAt": "2026-09-03T11:00:00+08:00",
+            "sourceRef": "ecom-m5-window",
+            "note": "可用于客服培训，不能推算当日总空闲。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "ecom-m6",
+          "name": "程砚",
+          "role": "运营数据分析",
+          "responsibilities": [
+            "对齐报表周期与指标口径",
+            "复核活动数据和差异"
+          ],
+          "boundaries": [
+            "不虚构GMV或转化目标",
+            "不推断人员效率"
+          ],
+          "evidence": [
+            {
+              "id": "ecom-m6-role",
+              "title": "程砚职责说明（合成）",
+              "text": "职责：对齐报表周期与指标口径；复核活动数据和差异。边界：不虚构GMV或转化目标；不推断人员效率。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "ecom-m6-work",
+              "title": "程砚当前工作自报（合成）",
+              "text": "核对最近一场活动的订单统计",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "核对最近一场活动的订单统计",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "ecom-m6-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        }
+      ]
+    },
+    {
+      "teamId": "team-npi",
+      "industry": "manufacturing_npi",
+      "name": "合成·北岸新品导入组",
+      "synthetic": true,
+      "workflowSourceIds": [
+        "SRC-NPI-GATE",
+        "SRC-NPI-BOM"
+      ],
+      "members": [
+        {
+          "id": "npi-m1",
+          "name": "俞衡",
+          "role": "NPI项目协调",
+          "responsibilities": [
+            "组织样机交付范围和阶段评审",
+            "跟踪跨部门待决策项"
+          ],
+          "boundaries": [
+            "不代品质放行",
+            "不批准未验证量产"
+          ],
+          "evidence": [
+            {
+              "id": "npi-m1-role",
+              "title": "俞衡职责说明（合成）",
+              "text": "职责：组织样机交付范围和阶段评审；跟踪跨部门待决策项。边界：不代品质放行；不批准未验证量产。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "npi-m1-work",
+              "title": "俞衡当前工作自报（合成）",
+              "text": "协调收纳盒试制资料",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "协调收纳盒试制资料",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "npi-m1-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "npi-m2",
+          "name": "奚川",
+          "role": "产品工程师",
+          "responsibilities": [
+            "维护图纸和BOM版本",
+            "说明工程变更影响"
+          ],
+          "boundaries": [
+            "不替采购确认供应",
+            "不把旧版本结论套到新版本"
+          ],
+          "evidence": [
+            {
+              "id": "npi-m2-role",
+              "title": "奚川职责说明（合成）",
+              "text": "职责：维护图纸和BOM版本；说明工程变更影响。边界：不替采购确认供应；不把旧版本结论套到新版本。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "npi-m2-work",
+              "title": "奚川当前工作自报（合成）",
+              "text": "整理BOM修订说明",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "npi-m2-window",
+              "title": "奚川公开协作窗口（合成）",
+              "text": "2026-09-03T10:00:00+08:00至2026-09-03T12:00:00+08:00。仅为版本评审窗口，未声明总工作容量。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "整理BOM修订说明",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "npi-m2-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-03T10:00:00+08:00",
+            "endAt": "2026-09-03T12:00:00+08:00",
+            "sourceRef": "npi-m2-window",
+            "note": "仅为版本评审窗口，未声明总工作容量。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "npi-m3",
+          "name": "何荔",
+          "role": "采购与供应商协调",
+          "responsibilities": [
+            "确认样料交期和采购资料",
+            "追踪供应商书面回复"
+          ],
+          "boundaries": [
+            "不擅自替代材料",
+            "不把报价日期当到货承诺"
+          ],
+          "evidence": [
+            {
+              "id": "npi-m3-role",
+              "title": "何荔职责说明（合成）",
+              "text": "职责：确认样料交期和采购资料；追踪供应商书面回复。边界：不擅自替代材料；不把报价日期当到货承诺。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "npi-m3-work",
+              "title": "何荔当前工作自报（合成）",
+              "text": "跟进样料回签",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "跟进样料回签",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "npi-m3-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "npi-m4",
+          "name": "路远",
+          "role": "工艺工程师",
+          "responsibilities": [
+            "整理试制工艺版本与工装需求",
+            "收集试制问题"
+          ],
+          "boundaries": [
+            "不在夹具中给设备操作或安全指导",
+            "不直接批准产品变更"
+          ],
+          "evidence": [
+            {
+              "id": "npi-m4-role",
+              "title": "路远职责说明（合成）",
+              "text": "职责：整理试制工艺版本与工装需求；收集试制问题。边界：不在夹具中给设备操作或安全指导；不直接批准产品变更。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "npi-m4-work",
+              "title": "路远当前工作自报（合成）",
+              "text": "核对试制工艺文件",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "核对试制工艺文件",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "npi-m4-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "npi-m5",
+          "name": "彭宁",
+          "role": "品质验证负责人",
+          "responsibilities": [
+            "维护检验口径",
+            "复核样品记录与不符合项"
+          ],
+          "boundaries": [
+            "不把执行者自报当正式通过",
+            "不在无证据时放行"
+          ],
+          "evidence": [
+            {
+              "id": "npi-m5-role",
+              "title": "彭宁职责说明（合成）",
+              "text": "职责：维护检验口径；复核样品记录与不符合项。边界：不把执行者自报当正式通过；不在无证据时放行。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "npi-m5-work",
+              "title": "彭宁当前工作自报（合成）",
+              "text": "整理试制抽检记录",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "npi-m5-window",
+              "title": "彭宁公开协作窗口（合成）",
+              "text": "2026-09-07T13:00:00+08:00至2026-09-07T16:00:00+08:00。仅接受样品资料评审；实物准备情况需另核对。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "整理试制抽检记录",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "npi-m5-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-07T13:00:00+08:00",
+            "endAt": "2026-09-07T16:00:00+08:00",
+            "sourceRef": "npi-m5-window",
+            "note": "仅接受样品资料评审；实物准备情况需另核对。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "npi-m6",
+          "name": "苏行",
+          "role": "生产计划协调",
+          "responsibilities": [
+            "核对试制批次与准备条件",
+            "协调已确认车间窗口"
+          ],
+          "boundaries": [
+            "不从人时直接推自然工期",
+            "不自行插单"
+          ],
+          "evidence": [
+            {
+              "id": "npi-m6-role",
+              "title": "苏行职责说明（合成）",
+              "text": "职责：核对试制批次与准备条件；协调已确认车间窗口。边界：不从人时直接推自然工期；不自行插单。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "npi-m6-work",
+              "title": "苏行当前工作自报（合成）",
+              "text": "收集下一批试制准备状态",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "收集下一批试制准备状态",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "npi-m6-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        }
+      ]
+    },
+    {
+      "teamId": "team-retail",
+      "industry": "retail_chain_operations",
+      "name": "合成·青桐连锁运营组",
+      "synthetic": true,
+      "workflowSourceIds": [
+        "SRC-RETAIL-TASK",
+        "SRC-RETAIL-RECURRENCE"
+      ],
+      "members": [
+        {
+          "id": "retail-m1",
+          "name": "江若",
+          "role": "区域运营负责人",
+          "responsibilities": [
+            "定义门店推广范围",
+            "协调跨店问题和结果核对"
+          ],
+          "boundaries": [
+            "不自动替店长排班",
+            "不读取未授权区域资料"
+          ],
+          "evidence": [
+            {
+              "id": "retail-m1-role",
+              "title": "江若职责说明（合成）",
+              "text": "职责：定义门店推广范围；协调跨店问题和结果核对。边界：不自动替店长排班；不读取未授权区域资料。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "retail-m1-work",
+              "title": "江若当前工作自报（合成）",
+              "text": "汇总两家试点门店的问题",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "汇总两家试点门店的问题",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "retail-m1-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "retail-m2",
+          "name": "林序",
+          "role": "01店店长",
+          "responsibilities": [
+            "安排01店落实",
+            "复核本店交付记录"
+          ],
+          "boundaries": [
+            "不代表02店承诺人力",
+            "不代总部改活动范围"
+          ],
+          "evidence": [
+            {
+              "id": "retail-m2-role",
+              "title": "林序职责说明（合成）",
+              "text": "职责：安排01店落实；复核本店交付记录。边界：不代表02店承诺人力；不代总部改活动范围。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "retail-m2-work",
+              "title": "林序当前工作自报（合成）",
+              "text": "跟进01店交接事项",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "retail-m2-window",
+              "title": "林序公开协作窗口（合成）",
+              "text": "2026-09-04T09:00:00+08:00至2026-09-04T10:00:00+08:00。只保证01店现场核对，不是跨店支援承诺。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "跟进01店交接事项",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "retail-m2-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-04T09:00:00+08:00",
+            "endAt": "2026-09-04T10:00:00+08:00",
+            "sourceRef": "retail-m2-window",
+            "note": "只保证01店现场核对，不是跨店支援承诺。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "retail-m3",
+          "name": "叶芷",
+          "role": "02店店长",
+          "responsibilities": [
+            "安排02店落实",
+            "汇总本店货架与时段约束"
+          ],
+          "boundaries": [
+            "不替供应商确认到货",
+            "不代表其他门店验收"
+          ],
+          "evidence": [
+            {
+              "id": "retail-m3-role",
+              "title": "叶芷职责说明（合成）",
+              "text": "职责：安排02店落实；汇总本店货架与时段约束。边界：不替供应商确认到货；不代表其他门店验收。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "retail-m3-work",
+              "title": "叶芷当前工作自报（合成）",
+              "text": "核对02店促销陈列位置",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "核对02店促销陈列位置",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "retail-m3-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "retail-m4",
+          "name": "陈韵",
+          "role": "陈列设计",
+          "responsibilities": [
+            "维护陈列指引版本",
+            "评审门店适配图"
+          ],
+          "boundaries": [
+            "不替门店确认已落地",
+            "不将效果图当现场证据"
+          ],
+          "evidence": [
+            {
+              "id": "retail-m4-role",
+              "title": "陈韵职责说明（合成）",
+              "text": "职责：维护陈列指引版本；评审门店适配图。边界：不替门店确认已落地；不将效果图当现场证据。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "retail-m4-work",
+              "title": "陈韵当前工作自报（合成）",
+              "text": "维护换季陈列指引",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "维护换季陈列指引",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "retail-m4-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "retail-m5",
+          "name": "赵诚",
+          "role": "门店培训",
+          "responsibilities": [
+            "准备操作培训材料",
+            "收集门店学习反馈"
+          ],
+          "boundaries": [
+            "不从参加培训推断熟练或已执行",
+            "不决定店员班次"
+          ],
+          "evidence": [
+            {
+              "id": "retail-m5-role",
+              "title": "赵诚职责说明（合成）",
+              "text": "职责：准备操作培训材料；收集门店学习反馈。边界：不从参加培训推断熟练或已执行；不决定店员班次。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "retail-m5-work",
+              "title": "赵诚当前工作自报（合成）",
+              "text": "整理店长培训问题",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "retail-m5-window",
+              "title": "赵诚公开协作窗口（合成）",
+              "text": "2026-09-05T14:00:00+08:00至2026-09-05T16:00:00+08:00。线上培训窗口；门店能否参加需各店确认。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "整理店长培训问题",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "retail-m5-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-05T14:00:00+08:00",
+            "endAt": "2026-09-05T16:00:00+08:00",
+            "sourceRef": "retail-m5-window",
+            "note": "线上培训窗口；门店能否参加需各店确认。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "retail-m6",
+          "name": "谢允",
+          "role": "补货协调",
+          "responsibilities": [
+            "对齐门店补货清单",
+            "核对配送回执"
+          ],
+          "boundaries": [
+            "不把总部库存当门店现货",
+            "不自行改变采购或配送承诺"
+          ],
+          "evidence": [
+            {
+              "id": "retail-m6-role",
+              "title": "谢允职责说明（合成）",
+              "text": "职责：对齐门店补货清单；核对配送回执。边界：不把总部库存当门店现货；不自行改变采购或配送承诺。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "retail-m6-work",
+              "title": "谢允当前工作自报（合成）",
+              "text": "追踪02店物料配送",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "追踪02店物料配送",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "retail-m6-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        }
+      ]
+    },
+    {
+      "teamId": "team-content",
+      "industry": "content_agency",
+      "name": "合成·语岛内容服务组",
+      "synthetic": true,
+      "workflowSourceIds": [
+        "SRC-CONTENT-STAGES",
+        "SRC-CONTENT-REVIEW"
+      ],
+      "members": [
+        {
+          "id": "content-m1",
+          "name": "白璐",
+          "role": "客户项目经理",
+          "responsibilities": [
+            "收集客户范围和确认记录",
+            "协调版本与交付计划"
+          ],
+          "boundaries": [
+            "不代客户批准成稿",
+            "不默认为所有子任务Owner"
+          ],
+          "evidence": [
+            {
+              "id": "content-m1-role",
+              "title": "白璐职责说明（合成）",
+              "text": "职责：收集客户范围和确认记录；协调版本与交付计划。边界：不代客户批准成稿；不默认为所有子任务Owner。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "content-m1-work",
+              "title": "白璐当前工作自报（合成）",
+              "text": "协调合成客户的秋季内容包",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "协调合成客户的秋季内容包",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "content-m1-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "content-m2",
+          "name": "杜衡",
+          "role": "内容策划",
+          "responsibilities": [
+            "确定选题与受众表达",
+            "把客户需求转成内容提纲"
+          ],
+          "boundaries": [
+            "不自行增加业绩目标",
+            "不代客户确认新受众"
+          ],
+          "evidence": [
+            {
+              "id": "content-m2-role",
+              "title": "杜衡职责说明（合成）",
+              "text": "职责：确定选题与受众表达；把客户需求转成内容提纲。边界：不自行增加业绩目标；不代客户确认新受众。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "content-m2-work",
+              "title": "杜衡当前工作自报（合成）",
+              "text": "整理两份内容提纲",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "整理两份内容提纲",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "content-m2-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "content-m3",
+          "name": "陶然",
+          "role": "文案作者",
+          "responsibilities": [
+            "按确认提纲写作",
+            "处理文字修改"
+          ],
+          "boundaries": [
+            "不自行扩写受限范围",
+            "不改变已确认品牌口径"
+          ],
+          "evidence": [
+            {
+              "id": "content-m3-role",
+              "title": "陶然职责说明（合成）",
+              "text": "职责：按确认提纲写作；处理文字修改。边界：不自行扩写受限范围；不改变已确认品牌口径。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "content-m3-work",
+              "title": "陶然当前工作自报（合成）",
+              "text": "修改待审稿的文字版本",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "修改待审稿的文字版本",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "content-m3-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "content-m4",
+          "name": "沈禾",
+          "role": "视觉设计",
+          "responsibilities": [
+            "制作和复用已授权素材",
+            "按明确规格适配视觉"
+          ],
+          "boundaries": [
+            "不把旧素材自动当可无限复用",
+            "不确认客户验收"
+          ],
+          "evidence": [
+            {
+              "id": "content-m4-role",
+              "title": "沈禾职责说明（合成）",
+              "text": "职责：制作和复用已授权素材；按明确规格适配视觉。边界：不把旧素材自动当可无限复用；不确认客户验收。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "content-m4-work",
+              "title": "沈禾当前工作自报（合成）",
+              "text": "整理已审视觉资产",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "content-m4-window",
+              "title": "沈禾公开协作窗口（合成）",
+              "text": "2026-09-04T10:00:00+08:00至2026-09-04T12:00:00+08:00。只用于视觉适配评审，其他可用性未知。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "整理已审视觉资产",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "content-m4-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-04T10:00:00+08:00",
+            "endAt": "2026-09-04T12:00:00+08:00",
+            "sourceRef": "content-m4-window",
+            "note": "只用于视觉适配评审，其他可用性未知。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "content-m5",
+          "name": "程简",
+          "role": "文字编辑",
+          "responsibilities": [
+            "核对错字和引用格式",
+            "检查成稿与约定范围一致"
+          ],
+          "boundaries": [
+            "不代客户做发布批准",
+            "不在校对任务中重写结构"
+          ],
+          "evidence": [
+            {
+              "id": "content-m5-role",
+              "title": "程简职责说明（合成）",
+              "text": "职责：核对错字和引用格式；检查成稿与约定范围一致。边界：不代客户做发布批准；不在校对任务中重写结构。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "content-m5-work",
+              "title": "程简当前工作自报（合成）",
+              "text": "校对一篇短稿",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "content-m5-window",
+              "title": "程简公开协作窗口（合成）",
+              "text": "2026-09-02T09:00:00+08:00至2026-09-02T12:00:00+08:00。可用于短稿校对，不代表可承担完整创作。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "校对一篇短稿",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "content-m5-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-02T09:00:00+08:00",
+            "endAt": "2026-09-02T12:00:00+08:00",
+            "sourceRef": "content-m5-window",
+            "note": "可用于短稿校对，不代表可承担完整创作。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "content-m6",
+          "name": "唐钰",
+          "role": "交付与版本管理",
+          "responsibilities": [
+            "维护交付清单及版本",
+            "核对客户批准与发布前提"
+          ],
+          "boundaries": [
+            "不把审阅意见当批准",
+            "不未经授权发布内容"
+          ],
+          "evidence": [
+            {
+              "id": "content-m6-role",
+              "title": "唐钰职责说明（合成）",
+              "text": "职责：维护交付清单及版本；核对客户批准与发布前提。边界：不把审阅意见当批准；不未经授权发布内容。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "content-m6-work",
+              "title": "唐钰当前工作自报（合成）",
+              "text": "核对待发素材的版本和批准记录",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "核对待发素材的版本和批准记录",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "content-m6-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        }
+      ]
+    },
+    {
+      "teamId": "team-renovation",
+      "industry": "renovation_handover",
+      "name": "合成·澄居装修交付组",
+      "synthetic": true,
+      "workflowSourceIds": [
+        "SRC-RENOVATION-PUNCH",
+        "SRC-RENOVATION-CLOSE"
+      ],
+      "members": [
+        {
+          "id": "renovation-m1",
+          "name": "赵屿",
+          "role": "项目交付协调",
+          "responsibilities": [
+            "组织收尾问题与移交计划",
+            "协调业主和各责任方"
+          ],
+          "boundaries": [
+            "不代有权人员验收签字",
+            "不提供施工安全或法律结论"
+          ],
+          "evidence": [
+            {
+              "id": "renovation-m1-role",
+              "title": "赵屿职责说明（合成）",
+              "text": "职责：组织收尾问题与移交计划；协调业主和各责任方。边界：不代有权人员验收签字；不提供施工安全或法律结论。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "renovation-m1-work",
+              "title": "赵屿当前工作自报（合成）",
+              "text": "整理A户资料与未完问题",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "整理A户资料与未完问题",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "renovation-m1-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "renovation-m2",
+          "name": "汪晴",
+          "role": "设计资料协调",
+          "responsibilities": [
+            "核对已确认的饰面与图纸版本",
+            "定位客户设计变更记录"
+          ],
+          "boundaries": [
+            "不在夹具中判断结构或专业施工安全",
+            "不自动批准替代材料"
+          ],
+          "evidence": [
+            {
+              "id": "renovation-m2-role",
+              "title": "汪晴职责说明（合成）",
+              "text": "职责：核对已确认的饰面与图纸版本；定位客户设计变更记录。边界：不在夹具中判断结构或专业施工安全；不自动批准替代材料。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "renovation-m2-work",
+              "title": "汪晴当前工作自报（合成）",
+              "text": "核对A户收尾版本说明",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "核对A户收尾版本说明",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "renovation-m2-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "renovation-m3",
+          "name": "孟尧",
+          "role": "材料采购协调",
+          "responsibilities": [
+            "核对指定材料和交货记录",
+            "追踪供应商回复"
+          ],
+          "boundaries": [
+            "不把收货当工程验收",
+            "不擅自变更材料"
+          ],
+          "evidence": [
+            {
+              "id": "renovation-m3-role",
+              "title": "孟尧职责说明（合成）",
+              "text": "职责：核对指定材料和交货记录；追踪供应商回复。边界：不把收货当工程验收；不擅自变更材料。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "renovation-m3-work",
+              "title": "孟尧当前工作自报（合成）",
+              "text": "跟进收尾材料补送",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "跟进收尾材料补送",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "renovation-m3-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        },
+        {
+          "id": "renovation-m4",
+          "name": "陆行",
+          "role": "现场协调",
+          "responsibilities": [
+            "收集现场开放窗口",
+            "安排责任方查看问题"
+          ],
+          "boundaries": [
+            "不提供设备或施工操作指导",
+            "不替物业承诺开放时间"
+          ],
+          "evidence": [
+            {
+              "id": "renovation-m4-role",
+              "title": "陆行职责说明（合成）",
+              "text": "职责：收集现场开放窗口；安排责任方查看问题。边界：不提供设备或施工操作指导；不替物业承诺开放时间。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "renovation-m4-work",
+              "title": "陆行当前工作自报（合成）",
+              "text": "协调A户现场问题查看",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "renovation-m4-window",
+              "title": "陆行公开协作窗口（合成）",
+              "text": "2026-09-08T14:00:00+08:00至2026-09-08T16:00:00+08:00。可参与资料核对；现场是否开放以独立回执为准。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "协调A户现场问题查看",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "renovation-m4-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-08T14:00:00+08:00",
+            "endAt": "2026-09-08T16:00:00+08:00",
+            "sourceRef": "renovation-m4-window",
+            "note": "可参与资料核对；现场是否开放以独立回执为准。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "renovation-m5",
+          "name": "何沐",
+          "role": "交付问题复核",
+          "responsibilities": [
+            "核对问题清单与复核记录",
+            "区分报告修复和已确认关闭"
+          ],
+          "boundaries": [
+            "不代业主签收",
+            "不输出专业技术安全结论"
+          ],
+          "evidence": [
+            {
+              "id": "renovation-m5-role",
+              "title": "何沐职责说明（合成）",
+              "text": "职责：核对问题清单与复核记录；区分报告修复和已确认关闭。边界：不代业主签收；不输出专业技术安全结论。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "renovation-m5-work",
+              "title": "何沐当前工作自报（合成）",
+              "text": "核对表面问题记录",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            },
+            {
+              "id": "renovation-m5-window",
+              "title": "何沐公开协作窗口（合成）",
+              "text": "2026-09-10T09:00:00+08:00至2026-09-10T11:00:00+08:00。仅为问题复核协调窗口，非验收授权。",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_availability"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "核对表面问题记录",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "renovation-m5-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "declared_window",
+            "startAt": "2026-09-10T09:00:00+08:00",
+            "endAt": "2026-09-10T11:00:00+08:00",
+            "sourceRef": "renovation-m5-window",
+            "note": "仅为问题复核协调窗口，非验收授权。",
+            "updatedAt": "2026-09-01T08:30:00+08:00"
+          }
+        },
+        {
+          "id": "renovation-m6",
+          "name": "林庭",
+          "role": "移交资料管理",
+          "responsibilities": [
+            "整理图纸目录与设备资料引用",
+            "记录移交清单和缺失项"
+          ],
+          "boundaries": [
+            "不将文件齐全当工程合格",
+            "不自行关闭未完问题"
+          ],
+          "evidence": [
+            {
+              "id": "renovation-m6-role",
+              "title": "林庭职责说明（合成）",
+              "text": "职责：整理图纸目录与设备资料引用；记录移交清单和缺失项。边界：不将文件齐全当工程合格；不自行关闭未完问题。",
+              "updatedAt": "2026-08-31T09:00:00+08:00",
+              "source": "synthetic_role_charter"
+            },
+            {
+              "id": "renovation-m6-work",
+              "title": "林庭当前工作自报（合成）",
+              "text": "核对资料目录和回执",
+              "updatedAt": "2026-09-01T08:30:00+08:00",
+              "source": "synthetic_member_report"
+            }
+          ],
+          "currentWork": [
+            {
+              "title": "核对资料目录和回执",
+              "status": "reported_not_capacity_measurement",
+              "sourceRef": "renovation-m6-work",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          ],
+          "availability": {
+            "status": "unknown",
+            "windows": [],
+            "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+          }
+        }
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "COMPLEX-01",
+      "industry": "saas_delivery",
+      "category": "cross_branch_dependencies",
+      "teamId": "team-saas",
+      "input": {
+        "requestId": "req-complex01",
+        "message": "请根据这份桥灯CRM沙箱试点的交接记录，补齐已有任务之间缺失的真实前置关系。数据准备和培训准备能并行的保留并行；这轮不加新交付、不换负责人，也不重做已完成结果。给我只含必要差异的方案。",
+        "currentDate": "2026-09-01",
+        "timezone": "Asia/Shanghai",
+        "currentUserId": "saas-m6",
+        "teamId": "team-saas",
+        "authorizedTeamIds": [
+          "team-saas"
+        ],
+        "revision": 3,
+        "currentTaskId": "complex01-root",
+        "context": {
+          "snapshotId": "snapshot-complex01-v3",
+          "asOf": "2026-09-01T18:00:00+08:00",
+          "acl": {
+            "status": "verified",
+            "scopeTeamIds": [
+              "team-saas"
+            ]
+          },
+          "coverage": {
+            "tasks": "complete",
+            "subtasks": "complete",
+            "discussions": "complete",
+            "history": "complete"
+          },
+          "tasks": [
+            {
+              "id": "complex01-root",
+              "title": "桥灯CRM沙箱试点交付",
+              "status": "in_progress",
+              "version": 8,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": null,
+              "acceptanceCriteria": [
+                "形成沙箱验证、培训与交接记录；不涉及生产访问"
+              ],
+              "ownerId": "saas-m1",
+              "sourceRefs": [
+                "complex01-root-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-08",
+              "goal": "让桥灯试点小组在已确认沙箱范围内完成使用交接"
+            },
+            {
+              "id": "complex01-data",
+              "title": "试点数据准备包",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex01-root",
+              "acceptanceCriteria": [
+                "归集映射与脱敏演练样本的现行版本"
+              ],
+              "ownerId": "saas-m3",
+              "sourceRefs": [
+                "complex01-data-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-04"
+            },
+            {
+              "id": "complex01-enablement",
+              "title": "试点验证与培训包",
+              "status": "in_progress",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex01-root",
+              "acceptanceCriteria": [
+                "归集UAT记录、培训材料和演示反馈"
+              ],
+              "ownerId": "saas-m1",
+              "sourceRefs": [
+                "complex01-enablement-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-07"
+            },
+            {
+              "id": "complex01-mapping",
+              "title": "确认桥灯字段映射v2",
+              "status": "completed",
+              "version": 5,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex01-data",
+              "acceptanceCriteria": [
+                "映射v2含12个字段并有客户口径回执"
+              ],
+              "ownerId": "saas-m3",
+              "sourceRefs": [
+                "complex01-mapping-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex01-sample",
+              "title": "交付桥灯演练样本包v2",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex01-data",
+              "acceptanceCriteria": [
+                "提供按映射v2制作的80条合成样本及字段核对清单"
+              ],
+              "ownerId": "saas-m3",
+              "sourceRefs": [
+                "complex01-sample-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex01-mapping"
+              ],
+              "dueOn": "2026-09-04"
+            },
+            {
+              "id": "complex01-sandbox",
+              "title": "确认桥灯沙箱配置记录",
+              "status": "completed",
+              "version": 4,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex01-enablement",
+              "acceptanceCriteria": [
+                "记录当前沙箱租户、演示账户与配置版本"
+              ],
+              "ownerId": "saas-m2",
+              "sourceRefs": [
+                "complex01-sandbox-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex01-uat",
+              "title": "完成桥灯沙箱UAT记录",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex01-enablement",
+              "acceptanceCriteria": [
+                "按12条已确认核心用例记录结果和未解决项，不代客户业务验收"
+              ],
+              "ownerId": "saas-m4",
+              "sourceRefs": [
+                "complex01-uat-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex01-mapping"
+              ],
+              "dueOn": "2026-09-05"
+            },
+            {
+              "id": "complex01-outline",
+              "title": "交付桥灯培训提纲",
+              "status": "in_progress",
+              "version": 2,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex01-enablement",
+              "acceptanceCriteria": [
+                "提纲覆盖已确认功能及演示顺序；此任务不制作演示样本"
+              ],
+              "ownerId": "saas-m5",
+              "sourceRefs": [
+                "complex01-outline-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-03"
+            },
+            {
+              "id": "complex01-session",
+              "title": "形成桥灯培训演示记录",
+              "status": "open",
+              "version": 2,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex01-enablement",
+              "acceptanceCriteria": [
+                "使用同一沙箱与样本v2演示，记录参会反馈和未答问题"
+              ],
+              "ownerId": "saas-m5",
+              "sourceRefs": [
+                "complex01-session-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex01-outline"
+              ],
+              "dueOn": "2026-09-07"
+            },
+            {
+              "id": "complex01-handover",
+              "title": "整理桥灯试点交接清单",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex01-root",
+              "acceptanceCriteria": [
+                "交接清单链接本轮UAT与培训演示记录，逐项列出遗留问题"
+              ],
+              "ownerId": "saas-m1",
+              "sourceRefs": [
+                "complex01-handover-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex01-uat"
+              ],
+              "dueOn": "2026-09-08"
+            }
+          ],
+          "discussions": [
+            {
+              "id": "complex01-d-data",
+              "taskId": "complex01-sample",
+              "authorId": "saas-m3",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "report",
+              "text": "样本包正在生成字段清单；映射v2已完成且仍有效。样本包计划按9月4日的现有边界交付。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex01-d-training",
+              "taskId": "complex01-session",
+              "authorId": "saas-m5",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "decision",
+              "text": "培训与测试交接按complex01-handoff-v2记录执行，提纲不需要等样本。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex01-d-order",
+              "taskId": "complex01-root",
+              "authorId": "saas-m6",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "proposal",
+              "text": "为了看起来整齐，是否让全部任务按列表顺序一个结束再启动下一个？这尚未讨论通过。",
+              "source": "synthetic_discussion_store"
+            }
+          ],
+          "history": [
+            {
+              "id": "complex01-h-mapping",
+              "taskId": "complex01-mapping",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "客户字段口径已回执，映射任务以版本5完成。",
+              "version": 5,
+              "source": "synthetic_activity_store"
+            },
+            {
+              "id": "complex01-h-sandbox",
+              "taskId": "complex01-sandbox",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "沙箱配置清单v1记录齐备，任务以版本4完成；不含生产访问授权。",
+              "version": 4,
+              "source": "synthetic_activity_store"
+            }
+          ],
+          "sourceRefs": [
+            {
+              "id": "complex01-root-record",
+              "title": "桥灯CRM沙箱试点交付当前记录（合成）",
+              "text": "任务库读取：complex01-root，版本8，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-data-record",
+              "title": "试点数据准备包当前记录（合成）",
+              "text": "任务库读取：complex01-data，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-enablement-record",
+              "title": "试点验证与培训包当前记录（合成）",
+              "text": "任务库读取：complex01-enablement，版本3，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-mapping-record",
+              "title": "确认桥灯字段映射v2当前记录（合成）",
+              "text": "任务库读取：complex01-mapping，版本5，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-sample-record",
+              "title": "交付桥灯演练样本包v2当前记录（合成）",
+              "text": "任务库读取：complex01-sample，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-sandbox-record",
+              "title": "确认桥灯沙箱配置记录当前记录（合成）",
+              "text": "任务库读取：complex01-sandbox，版本4，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-uat-record",
+              "title": "完成桥灯沙箱UAT记录当前记录（合成）",
+              "text": "任务库读取：complex01-uat，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-outline-record",
+              "title": "交付桥灯培训提纲当前记录（合成）",
+              "text": "任务库读取：complex01-outline，版本2，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-session-record",
+              "title": "形成桥灯培训演示记录当前记录（合成）",
+              "text": "任务库读取：complex01-session，版本2，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-handover-record",
+              "title": "整理桥灯试点交接清单当前记录（合成）",
+              "text": "任务库读取：complex01-handover，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-handoff-v2",
+              "title": "交接接口清单v2（合成）",
+              "text": "交付负责人、数据、测试和培训负责人共同确认：UAT使用演练样本v2与现行沙箱配置；培训提纲只使用已经确认的功能范围，可独立准备；培训演示也使用样本v2与沙箱配置，但不以UAT结束为启动条件；最终交接清单同时使用UAT记录与培训演示记录。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-windows",
+              "title": "本轮交付与使用窗口回执（合成）",
+              "text": "样本包的既有交付边界为9月4日；测试负责人本轮9月5日13至17时核对UAT；培训演示本轮安排9月7日，交接清单9月8日。接口清单未改变这些边界；其余成员完整可用日历未提供。",
+              "updatedAt": "2026-09-01T10:20:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex01-scope-v2",
+              "title": "桥灯沙箱试点范围v2（合成）",
+              "text": "客户确认12个字段、80条合成样本及12条核心用例，本轮不增加数据量、不申请生产权限、不扩充培训对象。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            }
+          ]
+        },
+        "duplicateSearch": {
+          "status": "completed",
+          "scopeTeamIds": [
+            "team-saas"
+          ],
+          "matches": [],
+          "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+        },
+        "confirmedFields": [
+          {
+            "taskId": "complex01-root",
+            "field": "goal",
+            "value": "让桥灯试点小组在已确认沙箱范围内完成使用交接"
+          },
+          {
+            "taskId": "complex01-uat",
+            "field": "acceptanceCriteria",
+            "value": [
+              "按12条已确认核心用例记录结果和未解决项，不代客户业务验收"
+            ]
+          },
+          {
+            "taskId": "complex01-uat",
+            "field": "ownerId",
+            "value": "saas-m4"
+          }
+        ],
+        "constraints": {
+          "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+          "scope": "仅补现有目标树必要关系；保持任务身份、正式Owner、已确认目标与标准、既有日期边界。"
+        }
+      }
+    },
+    {
+      "id": "COMPLEX-02",
+      "industry": "manufacturing_npi",
+      "category": "nested_estimate_boundaries",
+      "teamId": "team-npi",
+      "input": {
+        "requestId": "req-complex02",
+        "message": "白榆B版资料准备里，新增确认了一份标签与资料编号对照表，放进现有样料资料分支，再让评审目录能用到它。请保留现有三层结构和叶任务估算基线，不把父任务汇总再算一次人时，也不要顺手扩成量产计划。",
+        "currentDate": "2026-09-01",
+        "timezone": "Asia/Shanghai",
+        "currentUserId": "npi-m1",
+        "teamId": "team-npi",
+        "authorizedTeamIds": [
+          "team-npi"
+        ],
+        "revision": 3,
+        "currentTaskId": "complex02-root",
+        "context": {
+          "snapshotId": "snapshot-complex02-v3",
+          "asOf": "2026-09-01T18:00:00+08:00",
+          "acl": {
+            "status": "verified",
+            "scopeTeamIds": [
+              "team-npi"
+            ]
+          },
+          "coverage": {
+            "tasks": "complete",
+            "subtasks": "complete",
+            "discussions": "complete",
+            "history": "complete"
+          },
+          "tasks": [
+            {
+              "id": "complex02-root",
+              "title": "白榆B版样品评审资料准备",
+              "status": "in_progress",
+              "version": 9,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": null,
+              "acceptanceCriteria": [
+                "提供工程、样料和评审资料的当前版本索引；不包含制造操作或量产授权"
+              ],
+              "ownerId": "npi-m1",
+              "sourceRefs": [
+                "complex02-root-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-07",
+              "goal": "让白榆B版样品评审能够逐项定位本批次对应资料"
+            },
+            {
+              "id": "complex02-engineering",
+              "title": "B版工程资料包",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex02-root",
+              "acceptanceCriteria": [
+                "归集已确认BOM与图纸的版本引用"
+              ],
+              "ownerId": "npi-m2",
+              "sourceRefs": [
+                "complex02-engineering-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-02"
+            },
+            {
+              "id": "complex02-incoming",
+              "title": "B版样料资料包",
+              "status": "in_progress",
+              "version": 5,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex02-root",
+              "acceptanceCriteria": [
+                "归集本批次收件记录及资料对应关系"
+              ],
+              "ownerId": "npi-m3",
+              "sourceRefs": [
+                "complex02-incoming-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-05"
+            },
+            {
+              "id": "complex02-review",
+              "title": "B版评审记录准备包",
+              "status": "in_progress",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex02-root",
+              "acceptanceCriteria": [
+                "归集资料说明、空白核对记录和最终目录"
+              ],
+              "ownerId": "npi-m1",
+              "sourceRefs": [
+                "complex02-review-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-07"
+            },
+            {
+              "id": "complex02-bom",
+              "title": "确认白榆B版BOM索引",
+              "status": "completed",
+              "version": 6,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex02-engineering",
+              "acceptanceCriteria": [
+                "BOM B2索引与本次范围回执一致"
+              ],
+              "ownerId": "npi-m2",
+              "sourceRefs": [
+                "complex02-bom-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31",
+              "estimate": {
+                "ewdHours": 3,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex02-bom-record"
+                ]
+              }
+            },
+            {
+              "id": "complex02-drawings",
+              "title": "确认白榆B版图纸目录",
+              "status": "completed",
+              "version": 4,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex02-engineering",
+              "acceptanceCriteria": [
+                "图纸目录D2逐项链接已确认文件版本"
+              ],
+              "ownerId": "npi-m2",
+              "sourceRefs": [
+                "complex02-drawings-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31",
+              "estimate": {
+                "ewdHours": 2,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex02-drawings-record"
+                ]
+              }
+            },
+            {
+              "id": "complex02-receipts",
+              "title": "汇总B版样料收件记录",
+              "status": "in_progress",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex02-incoming",
+              "acceptanceCriteria": [
+                "按批次S-09归集供应方交付编号、收件时间和缺失项"
+              ],
+              "ownerId": "npi-m3",
+              "sourceRefs": [
+                "complex02-receipts-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-03",
+              "estimate": {
+                "ewdHours": 2,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex02-receipts-record"
+                ]
+              }
+            },
+            {
+              "id": "complex02-batch-map",
+              "title": "核对S-09批次与BOM对应表",
+              "status": "open",
+              "version": 2,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex02-incoming",
+              "acceptanceCriteria": [
+                "将本批次12条交付编号与BOM B2对应，未匹配项单列"
+              ],
+              "ownerId": "npi-m3",
+              "sourceRefs": [
+                "complex02-batch-map-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex02-receipts",
+                "complex02-bom"
+              ],
+              "dueOn": "2026-09-04",
+              "estimate": {
+                "ewdHours": 2.5,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex02-batch-map-record"
+                ]
+              }
+            },
+            {
+              "id": "complex02-instructions",
+              "title": "整理B版资料使用说明",
+              "status": "in_progress",
+              "version": 2,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex02-review",
+              "acceptanceCriteria": [
+                "只说明资料版本与引用位置，不填造试制参数"
+              ],
+              "ownerId": "npi-m4",
+              "sourceRefs": [
+                "complex02-instructions-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex02-drawings"
+              ],
+              "dueOn": "2026-09-04",
+              "estimate": {
+                "ewdHours": 1.5,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex02-instructions-record"
+                ]
+              }
+            },
+            {
+              "id": "complex02-checksheet",
+              "title": "准备B版样品记录空表",
+              "status": "open",
+              "version": 2,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex02-review",
+              "acceptanceCriteria": [
+                "空表保留样品编号、引用版本和待填写结果栏；不预填通过"
+              ],
+              "ownerId": "npi-m5",
+              "sourceRefs": [
+                "complex02-checksheet-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex02-bom"
+              ],
+              "dueOn": "2026-09-04",
+              "estimate": {
+                "ewdHours": 1,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex02-checksheet-record"
+                ]
+              }
+            },
+            {
+              "id": "complex02-index",
+              "title": "交付B版评审资料目录",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex02-review",
+              "acceptanceCriteria": [
+                "逐项定位本批次约定资料及缺失项，不代替评审结论"
+              ],
+              "ownerId": "npi-m1",
+              "sourceRefs": [
+                "complex02-index-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex02-instructions",
+                "complex02-checksheet"
+              ],
+              "dueOn": "2026-09-07",
+              "estimate": {
+                "ewdHours": 1,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex02-index-record"
+                ]
+              }
+            }
+          ],
+          "discussions": [
+            {
+              "id": "complex02-d-addition",
+              "taskId": "complex02-incoming",
+              "authorId": "npi-m3",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "decision",
+              "text": "新增的编号对照表按complex02-addition-v1范围回执准备，供应方原始编号不会替换成新编号。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex02-d-estimate",
+              "taskId": "complex02-root",
+              "authorId": "npi-m6",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "proposal",
+              "text": "可否把三个资料包的叶项人时分别写回父项，再把父项与叶项一起求总量？这只是展示建议。",
+              "source": "synthetic_discussion_store"
+            }
+          ],
+          "history": [
+            {
+              "id": "complex02-h-method",
+              "taskId": "complex02-batch-map",
+              "occurredAt": "2026-08-29T16:00:00+08:00",
+              "type": "estimate_context",
+              "summary": "同工具、同12条编号规模的资料核对记录为1.5人时；另有48小时等待回执不属于投入。此为可比记录，不是本任务实际或剩余工时。",
+              "version": 2,
+              "source": "synthetic_activity_store"
+            },
+            {
+              "id": "complex02-h-bom",
+              "taskId": "complex02-bom",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "BOM B2索引已确认，任务版本6完成。",
+              "version": 6,
+              "source": "synthetic_activity_store"
+            },
+            {
+              "id": "complex02-h-drawings",
+              "taskId": "complex02-drawings",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "图纸目录D2已确认，任务版本4完成。",
+              "version": 4,
+              "source": "synthetic_activity_store"
+            }
+          ],
+          "sourceRefs": [
+            {
+              "id": "complex02-root-record",
+              "title": "白榆B版样品评审资料准备当前记录（合成）",
+              "text": "任务库读取：complex02-root，版本9，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-engineering-record",
+              "title": "B版工程资料包当前记录（合成）",
+              "text": "任务库读取：complex02-engineering，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-incoming-record",
+              "title": "B版样料资料包当前记录（合成）",
+              "text": "任务库读取：complex02-incoming，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-review-record",
+              "title": "B版评审记录准备包当前记录（合成）",
+              "text": "任务库读取：complex02-review，版本3，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-bom-record",
+              "title": "确认白榆B版BOM索引当前记录（合成）",
+              "text": "任务库读取：complex02-bom，版本6，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-drawings-record",
+              "title": "确认白榆B版图纸目录当前记录（合成）",
+              "text": "任务库读取：complex02-drawings，版本4，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-receipts-record",
+              "title": "汇总B版样料收件记录当前记录（合成）",
+              "text": "任务库读取：complex02-receipts，版本3，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-batch-map-record",
+              "title": "核对S-09批次与BOM对应表当前记录（合成）",
+              "text": "任务库读取：complex02-batch-map，版本2，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-instructions-record",
+              "title": "整理B版资料使用说明当前记录（合成）",
+              "text": "任务库读取：complex02-instructions，版本2，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-checksheet-record",
+              "title": "准备B版样品记录空表当前记录（合成）",
+              "text": "任务库读取：complex02-checksheet，版本2，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-index-record",
+              "title": "交付B版评审资料目录当前记录（合成）",
+              "text": "任务库读取：complex02-index，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-addition-v1",
+              "title": "B版新增资料范围确认（合成）",
+              "text": "NPI协调、工程与采购在本轮资料范围回执中确认增加一份“标签与资料编号对照表”：针对S-09批次12条交付编号，逐项列标签文本、图纸D2引用和对应BOM B2条目；未匹配项单列。该表在样料资料包内独立交付，评审目录需引用它，其他完成标准和范围不变。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-method-v1",
+              "title": "本轮资料核对工具约定（合成）",
+              "text": "本轮沿用已有电子表格，只对12条编号逐行核对，不重新建表。等待供应方收件回执期间无人处理的时间不计人类投入。原有叶任务估算已存为基线；上层三个资料包与总任务未另记EWD，界面汇总由各叶任务计算。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex02-handoff-window",
+              "title": "新增编号表交接边界（合成）",
+              "text": "采购协调确认以9月4日批次对应表为输入，新增标签对照表于9月5日提交供目录整理，目录仍在9月7日交付。该日期是本轮交付约定，不是按总人时均分算出的承诺。",
+              "updatedAt": "2026-09-01T10:15:00+08:00",
+              "source": "synthetic_business_record"
+            }
+          ]
+        },
+        "duplicateSearch": {
+          "status": "completed",
+          "scopeTeamIds": [
+            "team-npi"
+          ],
+          "matches": [],
+          "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+        },
+        "confirmedFields": [
+          {
+            "taskId": "complex02-root",
+            "field": "goal",
+            "value": "让白榆B版样品评审能够逐项定位本批次对应资料"
+          }
+        ],
+        "constraints": {
+          "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+          "scope": "只补已确认的一份资料交付与目录接口；不改现有叶任务估算基线，不生成任何量产或设备操作任务。"
+        }
+      }
+    },
+    {
+      "id": "COMPLEX-03",
+      "industry": "ecommerce_operations",
+      "category": "fanout_local_replan",
+      "teamId": "team-ecom",
+      "input": {
+        "requestId": "req-complex03",
+        "message": "青芽茶具礼盒这批包装信息已确认变更，请只重排受影响的剩余交付。已拍完的图片、已核过的库存和正在做的页面都沿用原任务。新说明要真正接到页面、客服和发货答复，别只写一句提醒；不改价格、投放范围和已确认负责人。",
+        "currentDate": "2026-09-01",
+        "timezone": "Asia/Shanghai",
+        "currentUserId": "ecom-m5",
+        "teamId": "team-ecom",
+        "authorizedTeamIds": [
+          "team-ecom"
+        ],
+        "revision": 3,
+        "currentTaskId": "complex03-root",
+        "context": {
+          "snapshotId": "snapshot-complex03-v3",
+          "asOf": "2026-09-01T18:00:00+08:00",
+          "acl": {
+            "status": "verified",
+            "scopeTeamIds": [
+              "team-ecom"
+            ]
+          },
+          "coverage": {
+            "tasks": "complete",
+            "subtasks": "complete",
+            "discussions": "complete",
+            "history": "complete"
+          },
+          "tasks": [
+            {
+              "id": "complex03-root",
+              "title": "青芽茶具礼盒9月首批上新准备",
+              "status": "in_progress",
+              "version": 11,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": null,
+              "acceptanceCriteria": [
+                "在同一SKU、渠道与首批范围内交付经核对的页面、库存和服务说明"
+              ],
+              "ownerId": "ecom-m1",
+              "sourceRefs": [
+                "complex03-root-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-05",
+              "goal": "让首批茶具礼盒的对客信息与本批包装及履约口径一致"
+            },
+            {
+              "id": "complex03-product",
+              "title": "首批商品资料包",
+              "status": "in_progress",
+              "version": 5,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex03-root",
+              "acceptanceCriteria": [
+                "归集图片及当前包装说明的来源版本"
+              ],
+              "ownerId": "ecom-m1",
+              "sourceRefs": [
+                "complex03-product-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-02"
+            },
+            {
+              "id": "complex03-channels",
+              "title": "首批页面与渠道准备",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex03-root",
+              "acceptanceCriteria": [
+                "形成页面及既定投放素材的当前版本"
+              ],
+              "ownerId": "ecom-m1",
+              "sourceRefs": [
+                "complex03-channels-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-04"
+            },
+            {
+              "id": "complex03-service",
+              "title": "首批服务答复准备",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex03-root",
+              "acceptanceCriteria": [
+                "形成客服与发货答复的一致口径"
+              ],
+              "ownerId": "ecom-m5",
+              "sourceRefs": [
+                "complex03-service-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-03"
+            },
+            {
+              "id": "complex03-images",
+              "title": "交付青芽礼盒主图v3",
+              "status": "completed",
+              "version": 6,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex03-product",
+              "acceptanceCriteria": [
+                "五张主图经商品运营核对，图片不标单箱件数或外箱尺寸"
+              ],
+              "ownerId": "ecom-m2",
+              "sourceRefs": [
+                "complex03-images-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex03-page",
+              "title": "完成青芽首批商品页面",
+              "status": "in_progress",
+              "version": 7,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex03-channels",
+              "acceptanceCriteria": [
+                "页面按首批现行商品资料核对并保留逐处差异记录"
+              ],
+              "ownerId": "ecom-m2",
+              "sourceRefs": [
+                "complex03-page-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex03-images"
+              ],
+              "dueOn": "2026-09-03",
+              "estimate": {
+                "ewdHours": 4,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex03-page-record"
+                ]
+              }
+            },
+            {
+              "id": "complex03-ads",
+              "title": "准备青芽既定投放素材",
+              "status": "in_progress",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex03-channels",
+              "acceptanceCriteria": [
+                "仅使用主图v3、既定价格和已批准渠道清单制作素材"
+              ],
+              "ownerId": "ecom-m4",
+              "sourceRefs": [
+                "complex03-ads-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex03-images"
+              ],
+              "dueOn": "2026-09-03",
+              "estimate": {
+                "ewdHours": 2,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex03-ads-record"
+                ]
+              }
+            },
+            {
+              "id": "complex03-faq",
+              "title": "形成青芽首批客服问答",
+              "status": "in_progress",
+              "version": 5,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex03-service",
+              "acceptanceCriteria": [
+                "问答涵盖单箱件数、包装尺寸及约定服务口径"
+              ],
+              "ownerId": "ecom-m5",
+              "sourceRefs": [
+                "complex03-faq-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-03",
+              "estimate": {
+                "ewdHours": 2,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex03-faq-record"
+                ]
+              }
+            },
+            {
+              "id": "complex03-dispatch",
+              "title": "确认青芽首批发货答复",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex03-service",
+              "acceptanceCriteria": [
+                "答复引用本批包装规格、单箱件数与已确认仓配窗口"
+              ],
+              "ownerId": "ecom-m3",
+              "sourceRefs": [
+                "complex03-dispatch-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex03-inventory"
+              ],
+              "dueOn": "2026-09-03",
+              "estimate": {
+                "ewdHours": 1.5,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex03-dispatch-record"
+                ]
+              }
+            },
+            {
+              "id": "complex03-inventory",
+              "title": "核对青芽首批可售库存",
+              "status": "completed",
+              "version": 5,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex03-product",
+              "acceptanceCriteria": [
+                "本批90件实物与记录一致，未包含将来补货"
+              ],
+              "ownerId": "ecom-m3",
+              "sourceRefs": [
+                "complex03-inventory-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex03-checkout",
+              "title": "核对青芽首批页面与服务联动",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex03-channels",
+              "acceptanceCriteria": [
+                "使用当前页面、客服与发货答复检查信息一致性；只做测试记录，不发真实订单"
+              ],
+              "ownerId": "ecom-m6",
+              "sourceRefs": [
+                "complex03-checkout-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex03-page",
+                "complex03-faq",
+                "complex03-dispatch"
+              ],
+              "dueOn": "2026-09-04",
+              "estimate": {
+                "ewdHours": 2,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex03-checkout-record"
+                ]
+              }
+            }
+          ],
+          "discussions": [
+            {
+              "id": "complex03-d-page",
+              "taskId": "complex03-page",
+              "authorId": "ecom-m2",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "report",
+              "text": "页面四个不含包装的版块已留稿，但正式任务仍在进行。只待包装说明的包装栏按新口径完成后一起核对。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex03-d-faq",
+              "taskId": "complex03-faq",
+              "authorId": "ecom-m5",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "report",
+              "text": "非包装问题可沿用，单箱件数的旧答复不能沿用。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex03-d-photo",
+              "taskId": "complex03-images",
+              "authorId": "ecom-m1",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "decision",
+              "text": "主图可复用的确认依据见complex03-pack-v2；不要覆盖8月31日完成记录。",
+              "source": "synthetic_discussion_store"
+            }
+          ],
+          "history": [
+            {
+              "id": "complex03-h-images",
+              "taskId": "complex03-images",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "主图v3任务以版本6完成，批准范围不含包装参数。",
+              "version": 6,
+              "source": "synthetic_activity_store"
+            },
+            {
+              "id": "complex03-h-inventory",
+              "taskId": "complex03-inventory",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "本批90件库存核对以版本5完成；包装变化未改变件数。",
+              "version": 5,
+              "source": "synthetic_activity_store"
+            },
+            {
+              "id": "complex03-h-page-baseline",
+              "taskId": "complex03-page",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "estimate_context",
+              "summary": "页面原估算4人时是整项投入基线，没有录入当前剩余工时。",
+              "version": 7,
+              "source": "synthetic_activity_store"
+            }
+          ],
+          "sourceRefs": [
+            {
+              "id": "complex03-root-record",
+              "title": "青芽茶具礼盒9月首批上新准备当前记录（合成）",
+              "text": "任务库读取：complex03-root，版本11，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-product-record",
+              "title": "首批商品资料包当前记录（合成）",
+              "text": "任务库读取：complex03-product，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-channels-record",
+              "title": "首批页面与渠道准备当前记录（合成）",
+              "text": "任务库读取：complex03-channels，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-service-record",
+              "title": "首批服务答复准备当前记录（合成）",
+              "text": "任务库读取：complex03-service，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-images-record",
+              "title": "交付青芽礼盒主图v3当前记录（合成）",
+              "text": "任务库读取：complex03-images，版本6，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-page-record",
+              "title": "完成青芽首批商品页面当前记录（合成）",
+              "text": "任务库读取：complex03-page，版本7，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-ads-record",
+              "title": "准备青芽既定投放素材当前记录（合成）",
+              "text": "任务库读取：complex03-ads，版本3，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-faq-record",
+              "title": "形成青芽首批客服问答当前记录（合成）",
+              "text": "任务库读取：complex03-faq，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-dispatch-record",
+              "title": "确认青芽首批发货答复当前记录（合成）",
+              "text": "任务库读取：complex03-dispatch，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-inventory-record",
+              "title": "核对青芽首批可售库存当前记录（合成）",
+              "text": "任务库读取：complex03-inventory，版本5，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-checkout-record",
+              "title": "核对青芽首批页面与服务联动当前记录（合成）",
+              "text": "任务库读取：complex03-checkout，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-pack-v2",
+              "title": "首批包装变更确认v2（合成）",
+              "text": "商品运营与仓配已核对供应方回执：本批SKU QY-09仍为90件可售礼盒；外箱改为每箱6件，外箱记录尺寸45×32×28厘米。新增范围只是整理本批包装说明v2及差异；销售单件规格、价格、渠道、主图v3均不变。资料为合成业务记录，不代表实际物流建议。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-consumer-map",
+              "title": "包装说明使用接口记录（合成）",
+              "text": "商品页面的包装栏、客服问答、发货答复分别需要包装说明v2作为最终核对依据。页面已有四个不含包装的版块完成初稿；客服已完成非包装问答。既定投放素材只用主图与价格，不使用包装参数。联动核对已有页面、客服和发货答复三个前置项，不另设一套重复检查。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex03-schedule-agreement",
+              "title": "包装信息交付协调回执（合成）",
+              "text": "商品运营负责汇总包装说明v2并在9月2日交付；页面、客服和发货答复按9月3日现有边界完成更新，联动核对仍为9月4日、上新准备总边界9月5日。本轮没有增加投放预算或要求任何人承诺额外可用时数。",
+              "updatedAt": "2026-09-01T10:30:00+08:00",
+              "source": "synthetic_business_record"
+            }
+          ]
+        },
+        "duplicateSearch": {
+          "status": "completed",
+          "scopeTeamIds": [
+            "team-ecom"
+          ],
+          "matches": [],
+          "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+        },
+        "confirmedFields": [
+          {
+            "taskId": "complex03-root",
+            "field": "goal",
+            "value": "让首批茶具礼盒的对客信息与本批包装及履约口径一致"
+          },
+          {
+            "taskId": "complex03-page",
+            "field": "ownerId",
+            "value": "ecom-m2"
+          }
+        ],
+        "constraints": {
+          "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+          "scope": "新增包装说明放在商品资料包；只调整有使用关系的现有任务，保留已完成结果和原始估算基线。"
+        }
+      }
+    },
+    {
+      "id": "COMPLEX-04",
+      "industry": "content_agency",
+      "category": "conflicting_evidence_local_preparation",
+      "teamId": "team-content",
+      "input": {
+        "requestId": "req-complex04",
+        "message": "观禾内容包收到两份相互矛盾的批准回执。先补一份回执差异核对表，供现有“收齐当前版本批准”任务使用；这轮不用替客户选择v4还是v5，不改变最终验收、交期或正在做的版本任务。表里把谁说过什么、针对哪个版本、哪里冲突列清楚即可。",
+        "currentDate": "2026-09-01",
+        "timezone": "Asia/Shanghai",
+        "currentUserId": "content-m6",
+        "teamId": "team-content",
+        "authorizedTeamIds": [
+          "team-content"
+        ],
+        "revision": 3,
+        "currentTaskId": "complex04-root",
+        "context": {
+          "snapshotId": "snapshot-complex04-v3",
+          "asOf": "2026-09-01T18:00:00+08:00",
+          "acl": {
+            "status": "verified",
+            "scopeTeamIds": [
+              "team-content"
+            ]
+          },
+          "coverage": {
+            "tasks": "complete",
+            "subtasks": "complete",
+            "discussions": "complete",
+            "history": "complete"
+          },
+          "tasks": [
+            {
+              "id": "complex04-root",
+              "title": "观禾9月内容包交付",
+              "status": "in_progress",
+              "version": 10,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": null,
+              "acceptanceCriteria": [
+                "交付包必须逐文件关联有权方对当前版本的明确批准"
+              ],
+              "ownerId": "content-m1",
+              "sourceRefs": [
+                "complex04-root-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-06",
+              "goal": "让观禾取得可定位版本与批准依据的约定内容包"
+            },
+            {
+              "id": "complex04-copy-branch",
+              "title": "观禾文案版本准备",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex04-root",
+              "acceptanceCriteria": [
+                "保留已交版本并记录新增版本差异"
+              ],
+              "ownerId": "content-m3",
+              "sourceRefs": [
+                "complex04-copy-branch-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-03"
+            },
+            {
+              "id": "complex04-visual-branch",
+              "title": "观禾视觉版本准备",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex04-root",
+              "acceptanceCriteria": [
+                "保留各视觉版本与源文件引用"
+              ],
+              "ownerId": "content-m4",
+              "sourceRefs": [
+                "complex04-visual-branch-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-04"
+            },
+            {
+              "id": "complex04-delivery-branch",
+              "title": "观禾批准与交付资料",
+              "status": "in_progress",
+              "version": 5,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex04-root",
+              "acceptanceCriteria": [
+                "核对回执、版本及最终交付目录"
+              ],
+              "ownerId": "content-m6",
+              "sourceRefs": [
+                "complex04-delivery-branch-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-06"
+            },
+            {
+              "id": "complex04-copy-v4",
+              "title": "留存观禾文案v4",
+              "status": "completed",
+              "version": 5,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex04-copy-branch",
+              "acceptanceCriteria": [
+                "文案v4及差异清单入库，供后续确认定位"
+              ],
+              "ownerId": "content-m3",
+              "sourceRefs": [
+                "complex04-copy-v4-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex04-cover-v4",
+              "title": "留存观禾封面v4",
+              "status": "completed",
+              "version": 4,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex04-visual-branch",
+              "acceptanceCriteria": [
+                "封面v4及引用清单入库，供后续确认定位"
+              ],
+              "ownerId": "content-m4",
+              "sourceRefs": [
+                "complex04-cover-v4-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex04-copy-v5",
+              "title": "准备观禾文案v5供审",
+              "status": "in_progress",
+              "version": 6,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex04-copy-branch",
+              "acceptanceCriteria": [
+                "提供v5文案与相对v4的改动清单，不包含客户接受"
+              ],
+              "ownerId": "content-m3",
+              "sourceRefs": [
+                "complex04-copy-v5-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex04-copy-v4"
+              ],
+              "dueOn": "2026-09-03"
+            },
+            {
+              "id": "complex04-cover-v5",
+              "title": "准备观禾封面v5供审",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex04-visual-branch",
+              "acceptanceCriteria": [
+                "提供v5封面与改动清单，不包含客户接受"
+              ],
+              "ownerId": "content-m4",
+              "sourceRefs": [
+                "complex04-cover-v5-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex04-cover-v4"
+              ],
+              "dueOn": "2026-09-04"
+            },
+            {
+              "id": "complex04-approval",
+              "title": "收齐观禾当前版本批准",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex04-delivery-branch",
+              "acceptanceCriteria": [
+                "取得有权方对最终文案、封面版本逐项一致的明确回执；冲突未消除不视为完成"
+              ],
+              "ownerId": "content-m1",
+              "sourceRefs": [
+                "complex04-approval-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex04-copy-v5",
+                "complex04-cover-v5"
+              ],
+              "dueOn": "2026-09-05"
+            },
+            {
+              "id": "complex04-package",
+              "title": "整理观禾最终交付包",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex04-delivery-branch",
+              "acceptanceCriteria": [
+                "清单与最终明确批准版本逐项一致，不代替批准"
+              ],
+              "ownerId": "content-m6",
+              "sourceRefs": [
+                "complex04-package-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex04-approval"
+              ],
+              "dueOn": "2026-09-06"
+            }
+          ],
+          "discussions": [
+            {
+              "id": "complex04-d-review",
+              "taskId": "complex04-copy-v5",
+              "authorId": "content-m2",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "report",
+              "text": "v5看过了，表达没问题；我没有客户版本确认权。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex04-d-newer",
+              "taskId": "complex04-approval",
+              "authorId": "content-m3",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "proposal",
+              "text": "B入库更新，是否直接把它当最新批准？我没有找到A被取代的记录。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex04-d-register",
+              "taskId": "complex04-delivery-branch",
+              "authorId": "content-m6",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "decision",
+              "text": "先按complex04-reconcile-scope整理并列表，后续由complex04-approval继续处理有权方核对。",
+              "source": "synthetic_discussion_store"
+            }
+          ],
+          "history": [
+            {
+              "id": "complex04-h-copy",
+              "taskId": "complex04-copy-v4",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "v4文件留存任务版本5完成；留存完成不代表最终交付批准。",
+              "version": 5,
+              "source": "synthetic_activity_store"
+            },
+            {
+              "id": "complex04-h-cover",
+              "taskId": "complex04-cover-v4",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "v4封面留存任务版本4完成；没有覆盖v5任务状态。",
+              "version": 4,
+              "source": "synthetic_activity_store"
+            }
+          ],
+          "sourceRefs": [
+            {
+              "id": "complex04-root-record",
+              "title": "观禾9月内容包交付当前记录（合成）",
+              "text": "任务库读取：complex04-root，版本10，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-copy-branch-record",
+              "title": "观禾文案版本准备当前记录（合成）",
+              "text": "任务库读取：complex04-copy-branch，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-visual-branch-record",
+              "title": "观禾视觉版本准备当前记录（合成）",
+              "text": "任务库读取：complex04-visual-branch，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-delivery-branch-record",
+              "title": "观禾批准与交付资料当前记录（合成）",
+              "text": "任务库读取：complex04-delivery-branch，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-copy-v4-record",
+              "title": "留存观禾文案v4当前记录（合成）",
+              "text": "任务库读取：complex04-copy-v4，版本5，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-cover-v4-record",
+              "title": "留存观禾封面v4当前记录（合成）",
+              "text": "任务库读取：complex04-cover-v4，版本4，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-copy-v5-record",
+              "title": "准备观禾文案v5供审当前记录（合成）",
+              "text": "任务库读取：complex04-copy-v5，版本6，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-cover-v5-record",
+              "title": "准备观禾封面v5供审当前记录（合成）",
+              "text": "任务库读取：complex04-cover-v5，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-approval-record",
+              "title": "收齐观禾当前版本批准当前记录（合成）",
+              "text": "任务库读取：complex04-approval，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-package-record",
+              "title": "整理观禾最终交付包当前记录（合成）",
+              "text": "任务库读取：complex04-package，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-receipt-a",
+              "title": "观禾批准回执A原文节选（合成）",
+              "text": "本地收件归档编号A-0901，登记签署人为项目约定有权确认人：本次交付使用文案v4及封面v4；v5不用于本期交付。登记签署时间2026-09-01 09:00。归档只证明本地收到了这一份，未记录其撤回或被取代。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-receipt-b",
+              "title": "观禾批准回执B原文节选（合成）",
+              "text": "本地收件归档编号B-0901，登记签署人为同一项目约定有权确认人：本次交付使用文案v5及封面v5；v4不用于本期交付。登记签署时间同为2026-09-01 09:00。比A晚十分钟入库，但没有撤回A或取代关系的记录。",
+              "updatedAt": "2026-09-01T10:10:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-reconcile-scope",
+              "title": "本轮回执核对表范围记录（合成）",
+              "text": "现有批准收集任务未包含独立回执差异表，版本管理员可以在9月2日整理两份已可见回执：原文位置、签署与入库时间、文案及封面版本、冲突点、尚待确认处。表的完成条件是忠实并列记录，不是裁定批准有效性；该表由现有批准收集任务使用。此次已确认的仅是整理工作。",
+              "updatedAt": "2026-09-01T12:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex04-review-report",
+              "title": "策划v5审阅报告（合成）",
+              "text": "策划在11:40留言“v5看过了，表达没问题”，报告角色是内容审阅；没有客户签收或对回执冲突的处理记录。",
+              "updatedAt": "2026-09-01T11:40:00+08:00",
+              "source": "synthetic_business_record"
+            }
+          ]
+        },
+        "duplicateSearch": {
+          "status": "completed",
+          "scopeTeamIds": [
+            "team-content"
+          ],
+          "matches": [],
+          "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+        },
+        "confirmedFields": [
+          {
+            "taskId": "complex04-root",
+            "field": "goal",
+            "value": "让观禾取得可定位版本与批准依据的约定内容包"
+          },
+          {
+            "taskId": "complex04-approval",
+            "field": "acceptanceCriteria",
+            "value": [
+              "取得有权方对最终文案、封面版本逐项一致的明确回执；冲突未消除不视为完成"
+            ]
+          },
+          {
+            "taskId": "complex04-approval",
+            "field": "ownerId",
+            "value": "content-m1"
+          }
+        ],
+        "constraints": {
+          "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+          "scope": "仅提出回执差异表及其与现有批准收集任务的交接关系；最终版本选择、正式状态、验收要求与现有交期不在本轮变更范围。"
+        }
+      }
+    },
+    {
+      "id": "COMPLEX-05",
+      "industry": "retail_chain_operations",
+      "category": "partial_large_tree",
+      "teamId": "team-retail",
+      "input": {
+        "requestId": "req-complex05",
+        "message": "请重新规划青桐两店换季项目整棵树的剩余工作，按真实进展接好总部指引、门店适配、到货和学习反馈。读不到的部分就说明要续读哪里，不要把当前页面的几项当成全项目，也不用通知店长。",
+        "currentDate": "2026-09-01",
+        "timezone": "Asia/Shanghai",
+        "currentUserId": "retail-m1",
+        "teamId": "team-retail",
+        "authorizedTeamIds": [
+          "team-retail"
+        ],
+        "revision": 3,
+        "currentTaskId": "complex05-root",
+        "context": {
+          "snapshotId": "snapshot-complex05-v3",
+          "asOf": "2026-09-01T18:00:00+08:00",
+          "acl": {
+            "status": "verified",
+            "scopeTeamIds": [
+              "team-retail"
+            ]
+          },
+          "coverage": {
+            "tasks": "partial",
+            "subtasks": "partial",
+            "discussions": "partial",
+            "history": "partial"
+          },
+          "tasks": [
+            {
+              "id": "complex05-root",
+              "title": "青桐两店9月换季落实",
+              "status": "in_progress",
+              "version": 17,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": null,
+              "acceptanceCriteria": [
+                "按同一推广版本归集两店落实与未完成事项"
+              ],
+              "ownerId": "retail-m1",
+              "sourceRefs": [
+                "complex05-root-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-12",
+              "goal": "让两店按已确认换季范围完成落实与反馈"
+            },
+            {
+              "id": "complex05-headquarters",
+              "title": "总部换季资料分支",
+              "status": "in_progress",
+              "version": 7,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex05-root",
+              "acceptanceCriteria": [
+                "整理总部指引、物料说明和培训引用"
+              ],
+              "ownerId": "retail-m1",
+              "sourceRefs": [
+                "complex05-headquarters-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-05"
+            },
+            {
+              "id": "complex05-store01",
+              "title": "01店换季落实分支",
+              "status": "in_progress",
+              "version": 8,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex05-root",
+              "acceptanceCriteria": [
+                "记录01店适配、到货、落实与反馈"
+              ],
+              "ownerId": "retail-m2",
+              "sourceRefs": [
+                "complex05-store01-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-10"
+            },
+            {
+              "id": "complex05-store02",
+              "title": "02店换季落实分支",
+              "status": "in_progress",
+              "version": 9,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex05-root",
+              "acceptanceCriteria": [
+                "记录02店适配、到货、落实与反馈"
+              ],
+              "ownerId": "retail-m3",
+              "sourceRefs": [
+                "complex05-store02-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-12"
+            },
+            {
+              "id": "complex05-guide",
+              "title": "确认两店换季指引v3",
+              "status": "completed",
+              "version": 6,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex05-headquarters",
+              "acceptanceCriteria": [
+                "指引v3覆盖两店已确认推广范围"
+              ],
+              "ownerId": "retail-m4",
+              "sourceRefs": [
+                "complex05-guide-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex05-layout01",
+              "title": "记录01店陈列适配",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex05-store01",
+              "acceptanceCriteria": [
+                "适配记录与指引v3及01店陈列范围对应"
+              ],
+              "ownerId": "retail-m2",
+              "sourceRefs": [
+                "complex05-layout01-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex05-guide"
+              ],
+              "dueOn": "2026-09-06"
+            },
+            {
+              "id": "complex05-photos01",
+              "title": "汇总01店落实照片",
+              "status": "open",
+              "version": 2,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex05-store01",
+              "acceptanceCriteria": [
+                "照片对应本轮位置清单并标出未完成处"
+              ],
+              "ownerId": "retail-m2",
+              "sourceRefs": [
+                "complex05-photos01-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex05-layout01"
+              ],
+              "dueOn": "2026-09-09"
+            },
+            {
+              "id": "complex05-layout02",
+              "title": "记录02店窄货架适配",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex05-store02",
+              "acceptanceCriteria": [
+                "适配记录保留02店尺寸约束及待核对点"
+              ],
+              "ownerId": "retail-m3",
+              "sourceRefs": [
+                "complex05-layout02-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex05-guide"
+              ],
+              "dueOn": "2026-09-07"
+            },
+            {
+              "id": "complex05-arrival02",
+              "title": "归集02店物料回执",
+              "status": "in_progress",
+              "version": 5,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex05-store02",
+              "acceptanceCriteria": [
+                "按本轮物料单记录实际到店项与未到项"
+              ],
+              "ownerId": "retail-m6",
+              "sourceRefs": [
+                "complex05-arrival02-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-08"
+            }
+          ],
+          "discussions": [
+            {
+              "id": "complex05-d-layout",
+              "taskId": "complex05-layout01",
+              "authorId": "retail-m2",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "report",
+              "text": "01店陈列适配记录仍在整理；后续学习反馈的讨论在另一个分页。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex05-d-arrival",
+              "taskId": "complex05-arrival02",
+              "authorId": "retail-m6",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "report",
+              "text": "目前只登记了部分到店回执，其余条目不在这次读取页内。",
+              "source": "synthetic_discussion_store"
+            }
+          ],
+          "history": [
+            {
+              "id": "complex05-h-guide",
+              "taskId": "complex05-guide",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "换季指引v3的确认任务版本6完成。",
+              "version": 6,
+              "source": "synthetic_activity_store"
+            }
+          ],
+          "sourceRefs": [
+            {
+              "id": "complex05-root-record",
+              "title": "青桐两店9月换季落实当前记录（合成）",
+              "text": "任务库读取：complex05-root，版本17，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex05-headquarters-record",
+              "title": "总部换季资料分支当前记录（合成）",
+              "text": "任务库读取：complex05-headquarters，版本7，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex05-store01-record",
+              "title": "01店换季落实分支当前记录（合成）",
+              "text": "任务库读取：complex05-store01，版本8，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex05-store02-record",
+              "title": "02店换季落实分支当前记录（合成）",
+              "text": "任务库读取：complex05-store02，版本9，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex05-guide-record",
+              "title": "确认两店换季指引v3当前记录（合成）",
+              "text": "任务库读取：complex05-guide，版本6，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex05-layout01-record",
+              "title": "记录01店陈列适配当前记录（合成）",
+              "text": "任务库读取：complex05-layout01，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex05-photos01-record",
+              "title": "汇总01店落实照片当前记录（合成）",
+              "text": "任务库读取：complex05-photos01，版本2，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex05-layout02-record",
+              "title": "记录02店窄货架适配当前记录（合成）",
+              "text": "任务库读取：complex05-layout02，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex05-arrival02-record",
+              "title": "归集02店物料回执当前记录（合成）",
+              "text": "任务库读取：complex05-arrival02，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex05-read-receipt",
+              "title": "授权任务树分页读取回执（合成）",
+              "text": "当前ACL已核验，仅team-retail；索引报告该目标树含31项任务，当前页返回9项。根和三个直属分支已返回，但各分支后代尚未完整返回。续读游标complex05-page-2可读剩余授权分页；游标只是本次合成回执数据，不表示模型已执行检索。没有提供余下22项的标题、责任、状态或依赖正文。",
+              "updatedAt": "2026-09-01T17:55:00+08:00",
+              "source": "synthetic_context_read_receipt"
+            },
+            {
+              "id": "complex05-discussion-receipt",
+              "title": "讨论与历史读取回执（合成）",
+              "text": "本页仅提供01店适配与02店物料主题的最近讨论；总部培训与两店学习反馈主题尚未读取，历史也仅返回一条已完成事件。没有证据证明未读分支已完成、未开始或无依赖。",
+              "updatedAt": "2026-09-01T17:56:00+08:00",
+              "source": "synthetic_context_read_receipt"
+            }
+          ]
+        },
+        "duplicateSearch": {
+          "status": "partial",
+          "scopeTeamIds": [
+            "team-retail"
+          ],
+          "matches": [],
+          "coverageNote": "仅完成当前可见9项及本页相关匹配；该授权任务树其余分页及归档索引尚未完成，不构成完整查重。"
+        },
+        "confirmedFields": [
+          {
+            "taskId": "complex05-root",
+            "field": "goal",
+            "value": "让两店按已确认换季范围完成落实与反馈"
+          }
+        ],
+        "constraints": {
+          "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+          "scope": "请求对象为整棵31项目标树；可按授权分页补读，不用用户手工重抄任务；不扩大到其他地区或生成店员排班。"
+        }
+      }
+    },
+    {
+      "id": "COMPLEX-06",
+      "industry": "renovation_handover",
+      "category": "external_reference_without_content",
+      "teamId": "team-renovation",
+      "input": {
+        "requestId": "req-complex06",
+        "message": "重新安排栖园A户剩余移交记录，只用我有权看的本组资料。项目里那个外部前置只返回了引用，别绕权限去取正文或猜它已完成。现有资料目录能继续就继续，但现场问题复核能否排期要讲清依据。",
+        "currentDate": "2026-09-01",
+        "timezone": "Asia/Shanghai",
+        "currentUserId": "renovation-m6",
+        "teamId": "team-renovation",
+        "authorizedTeamIds": [
+          "team-renovation"
+        ],
+        "revision": 3,
+        "currentTaskId": "complex06-root",
+        "context": {
+          "snapshotId": "snapshot-complex06-v3",
+          "asOf": "2026-09-01T18:00:00+08:00",
+          "acl": {
+            "status": "verified",
+            "scopeTeamIds": [
+              "team-renovation"
+            ]
+          },
+          "coverage": {
+            "tasks": "complete",
+            "subtasks": "complete",
+            "discussions": "complete",
+            "history": "complete"
+          },
+          "tasks": [
+            {
+              "id": "complex06-root",
+              "title": "栖园A户收尾移交协调",
+              "status": "in_progress",
+              "version": 12,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": null,
+              "acceptanceCriteria": [
+                "归集本组资料、问题复核记录和未完事项；不代客户验收"
+              ],
+              "ownerId": "renovation-m1",
+              "sourceRefs": [
+                "complex06-root-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-10",
+              "goal": "让栖园A户本组移交事实、来源与待办边界清楚"
+            },
+            {
+              "id": "complex06-documents",
+              "title": "栖园A户资料归集分支",
+              "status": "in_progress",
+              "version": 5,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex06-root",
+              "acceptanceCriteria": [
+                "整理已有资料目录及缺失引用"
+              ],
+              "ownerId": "renovation-m6",
+              "sourceRefs": [
+                "complex06-documents-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-06"
+            },
+            {
+              "id": "complex06-review",
+              "title": "栖园A户问题复核分支",
+              "status": "in_progress",
+              "version": 6,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex06-root",
+              "acceptanceCriteria": [
+                "收集可核对问题及复核记录，不从现场报告推定关闭"
+              ],
+              "ownerId": "renovation-m5",
+              "sourceRefs": [
+                "complex06-review-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-09"
+            },
+            {
+              "id": "complex06-materials",
+              "title": "整理A户已有材料资料目录",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex06-documents",
+              "acceptanceCriteria": [
+                "对本组已可见资料逐项编号，缺失项单列，不需读取外部前置正文"
+              ],
+              "ownerId": "renovation-m6",
+              "sourceRefs": [
+                "complex06-materials-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-05"
+            },
+            {
+              "id": "complex06-issue-index",
+              "title": "留存A户当前问题索引",
+              "status": "completed",
+              "version": 5,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex06-review",
+              "acceptanceCriteria": [
+                "索引保留本轮问题位置、报告来源和待复核状态"
+              ],
+              "ownerId": "renovation-m5",
+              "sourceRefs": [
+                "complex06-issue-index-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex06-site-window",
+              "title": "核对A户可查看窗口",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex06-review",
+              "acceptanceCriteria": [
+                "取得本轮现场开放窗口的本组可见回执"
+              ],
+              "ownerId": "renovation-m4",
+              "sourceRefs": [
+                "complex06-site-window-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-06"
+            },
+            {
+              "id": "complex06-receipt-photos",
+              "title": "归集A户收件影像引用",
+              "status": "in_progress",
+              "version": 2,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex06-documents",
+              "acceptanceCriteria": [
+                "按交货编号关联收件影像，单列无法匹配项；不作为问题关闭证据"
+              ],
+              "ownerId": "renovation-m3",
+              "sourceRefs": [
+                "complex06-receipt-photos-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-06"
+            },
+            {
+              "id": "complex06-issue-review",
+              "title": "形成A户问题查看记录",
+              "status": "blocked",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex06-review",
+              "acceptanceCriteria": [
+                "在所需前置具备后查看问题，记录观察结果与仍待核对项"
+              ],
+              "ownerId": "renovation-m5",
+              "sourceRefs": [
+                "complex06-issue-review-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex06-issue-index",
+                "complex06-site-window",
+                "external:complex06-readiness-ref"
+              ],
+              "dueOn": "2026-09-08"
+            },
+            {
+              "id": "complex06-handover",
+              "title": "整理A户本轮移交清单",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex06-root",
+              "acceptanceCriteria": [
+                "关联当前资料目录与问题查看记录，未具备项如实保留"
+              ],
+              "ownerId": "renovation-m6",
+              "sourceRefs": [
+                "complex06-handover-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex06-materials",
+                "complex06-receipt-photos",
+                "complex06-issue-review"
+              ],
+              "dueOn": "2026-09-10"
+            }
+          ],
+          "discussions": [
+            {
+              "id": "complex06-d-local",
+              "taskId": "complex06-materials",
+              "authorId": "renovation-m6",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "report",
+              "text": "本组目录已经整理一半条目，其余已有文件可以继续核对，不需要外部前置正文。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex06-d-external",
+              "taskId": "complex06-issue-review",
+              "authorId": "renovation-m4",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "proposal",
+              "text": "上次外部前置通常很快，要不要先按明天具备排？本次我没有当前状态或时间证据。",
+              "source": "synthetic_discussion_store"
+            }
+          ],
+          "history": [
+            {
+              "id": "complex06-h-index",
+              "taskId": "complex06-issue-index",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "A户问题索引已留存，版本5完成；问题本身仍待查看。",
+              "version": 5,
+              "source": "synthetic_activity_store"
+            }
+          ],
+          "sourceRefs": [
+            {
+              "id": "complex06-root-record",
+              "title": "栖园A户收尾移交协调当前记录（合成）",
+              "text": "任务库读取：complex06-root，版本12，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex06-documents-record",
+              "title": "栖园A户资料归集分支当前记录（合成）",
+              "text": "任务库读取：complex06-documents，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex06-review-record",
+              "title": "栖园A户问题复核分支当前记录（合成）",
+              "text": "任务库读取：complex06-review，版本6，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex06-materials-record",
+              "title": "整理A户已有材料资料目录当前记录（合成）",
+              "text": "任务库读取：complex06-materials，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex06-issue-index-record",
+              "title": "留存A户当前问题索引当前记录（合成）",
+              "text": "任务库读取：complex06-issue-index，版本5，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex06-site-window-record",
+              "title": "核对A户可查看窗口当前记录（合成）",
+              "text": "任务库读取：complex06-site-window，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex06-receipt-photos-record",
+              "title": "归集A户收件影像引用当前记录（合成）",
+              "text": "任务库读取：complex06-receipt-photos，版本2，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex06-issue-review-record",
+              "title": "形成A户问题查看记录当前记录（合成）",
+              "text": "任务库读取：complex06-issue-review，版本4，状态blocked；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex06-handover-record",
+              "title": "整理A户本轮移交清单当前记录（合成）",
+              "text": "任务库读取：complex06-handover，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex06-external-read-receipt",
+              "title": "外部前置引用读取回执（合成）",
+              "text": "本组任务complex06-issue-review保存了外部前置引用external:complex06-readiness-ref。此次受信读取只允许返回这个不透明引用；其对象所在空间不在当前scopeTeamIds内，未返回标题、正文、负责人、状态、版本、完成证据或交付时间。未尝试绕过权限，完整读取需有权方提供受控摘要或经授权重读。",
+              "updatedAt": "2026-09-01T17:45:00+08:00",
+              "source": "synthetic_context_read_receipt"
+            },
+            {
+              "id": "complex06-local-scope",
+              "title": "本组资料与复核边界（合成）",
+              "text": "资料目录和收件影像引用只使用已可见本组文件，可在原任务内继续。问题查看任务的外部前置关系来自现有项目登记，但本组无法从登记判断它满足了什么条件或何时具备。收件影像不能替代问题查看记录。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            }
+          ]
+        },
+        "duplicateSearch": {
+          "status": "completed",
+          "scopeTeamIds": [
+            "team-renovation"
+          ],
+          "matches": [],
+          "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+        },
+        "confirmedFields": [
+          {
+            "taskId": "complex06-root",
+            "field": "goal",
+            "value": "让栖园A户本组移交事实、来源与待办边界清楚"
+          }
+        ],
+        "constraints": {
+          "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+          "scope": "仅可修改本组目标树候选；外部对象仅引用可见，不能猜其内容、补造Task、越权读取或调整其工作。"
+        }
+      }
+    },
+    {
+      "id": "COMPLEX-07",
+      "industry": "manufacturing_npi",
+      "category": "invalid_existing_graph",
+      "teamId": "team-npi",
+      "input": {
+        "requestId": "req-complex07",
+        "message": "先诊断栎石C版资料项目现在的依赖问题，再决定怎样重排。有人说两项互相等，还有一项仍等已取消的旧资料。不要为了给出可行日期就静默删依赖或复活旧任务；没有确认的替代关系请明确列出来。",
+        "currentDate": "2026-09-01",
+        "timezone": "Asia/Shanghai",
+        "currentUserId": "npi-m6",
+        "teamId": "team-npi",
+        "authorizedTeamIds": [
+          "team-npi"
+        ],
+        "revision": 3,
+        "currentTaskId": "complex07-root",
+        "context": {
+          "snapshotId": "snapshot-complex07-v3",
+          "asOf": "2026-09-01T18:00:00+08:00",
+          "acl": {
+            "status": "verified",
+            "scopeTeamIds": [
+              "team-npi"
+            ]
+          },
+          "coverage": {
+            "tasks": "complete",
+            "subtasks": "complete",
+            "discussions": "complete",
+            "history": "complete"
+          },
+          "tasks": [
+            {
+              "id": "complex07-root",
+              "title": "栎石C版评审资料协调",
+              "status": "in_progress",
+              "version": 13,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": null,
+              "acceptanceCriteria": [
+                "形成可追溯本批次依据的资料清单与待决事项"
+              ],
+              "ownerId": "npi-m1",
+              "sourceRefs": [
+                "complex07-root-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-08",
+              "goal": "让栎石C版评审使用一致且有来源的资料关系"
+            },
+            {
+              "id": "complex07-engineering",
+              "title": "栎石工程资料分支",
+              "status": "in_progress",
+              "version": 5,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex07-root",
+              "acceptanceCriteria": [
+                "核对版本与变更对应信息"
+              ],
+              "ownerId": "npi-m2",
+              "sourceRefs": [
+                "complex07-engineering-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-04"
+            },
+            {
+              "id": "complex07-review",
+              "title": "栎石评审资料分支",
+              "status": "in_progress",
+              "version": 6,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex07-root",
+              "acceptanceCriteria": [
+                "归集检查与样品索引"
+              ],
+              "ownerId": "npi-m5",
+              "sourceRefs": [
+                "complex07-review-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-07"
+            },
+            {
+              "id": "complex07-old-a",
+              "title": "收齐栎石旧A版供应资料",
+              "status": "cancelled",
+              "version": 4,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex07-engineering",
+              "acceptanceCriteria": [
+                "原A版资料范围已撤销，不再作为本批交付"
+              ],
+              "ownerId": "npi-m3",
+              "sourceRefs": [
+                "complex07-old-a-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-29"
+            },
+            {
+              "id": "complex07-baseline-c",
+              "title": "留存栎石C版范围基线",
+              "status": "completed",
+              "version": 5,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex07-engineering",
+              "acceptanceCriteria": [
+                "保存C版范围回执与文档索引"
+              ],
+              "ownerId": "npi-m2",
+              "sourceRefs": [
+                "complex07-baseline-c-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex07-matrix",
+              "title": "整理栎石变更影响矩阵",
+              "status": "blocked",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex07-engineering",
+              "acceptanceCriteria": [
+                "矩阵逐条引用本批检查记录编号并列出影响范围"
+              ],
+              "ownerId": "npi-m2",
+              "sourceRefs": [
+                "complex07-matrix-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex07-checklist",
+                "complex07-baseline-c"
+              ],
+              "dueOn": "2026-09-04"
+            },
+            {
+              "id": "complex07-checklist",
+              "title": "核对栎石本批检查记录",
+              "status": "blocked",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex07-review",
+              "acceptanceCriteria": [
+                "检查记录依据本批变更矩阵逐项定位需核对内容"
+              ],
+              "ownerId": "npi-m5",
+              "sourceRefs": [
+                "complex07-checklist-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex07-matrix"
+              ],
+              "dueOn": "2026-09-05"
+            },
+            {
+              "id": "complex07-sample-index",
+              "title": "整理栎石C版样品资料索引",
+              "status": "blocked",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex07-review",
+              "acceptanceCriteria": [
+                "样品资料索引逐项定位本批供应资料及缺失项"
+              ],
+              "ownerId": "npi-m3",
+              "sourceRefs": [
+                "complex07-sample-index-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex07-old-a"
+              ],
+              "dueOn": "2026-09-05"
+            },
+            {
+              "id": "complex07-summary",
+              "title": "汇总栎石本批评审待办",
+              "status": "open",
+              "version": 2,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex07-review",
+              "acceptanceCriteria": [
+                "依据当前检查记录和样品索引列未解决事项，不预填结论"
+              ],
+              "ownerId": "npi-m1",
+              "sourceRefs": [
+                "complex07-summary-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex07-checklist",
+                "complex07-sample-index"
+              ],
+              "dueOn": "2026-09-07"
+            },
+            {
+              "id": "complex07-archive",
+              "title": "整理栎石现有文件命名目录",
+              "status": "in_progress",
+              "version": 2,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex07-root",
+              "acceptanceCriteria": [
+                "对已可见文件名称与版本登记做目录，不修改原文件"
+              ],
+              "ownerId": "npi-m6",
+              "sourceRefs": [
+                "complex07-archive-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-03"
+            }
+          ],
+          "discussions": [
+            {
+              "id": "complex07-d-cycle",
+              "taskId": "complex07-matrix",
+              "authorId": "npi-m2",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "report",
+              "text": "我在等检查记录编号，品质说也在等矩阵；目前没有确认哪一份能先以什么边界交付。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex07-d-replace",
+              "taskId": "complex07-sample-index",
+              "authorId": "npi-m3",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "proposal",
+              "text": "能否把old-a直接改成baseline-c？两者标题都有资料，但基线不是供应方交付，我还未核实。",
+              "source": "synthetic_discussion_store"
+            }
+          ],
+          "history": [
+            {
+              "id": "complex07-h-cancel",
+              "taskId": "complex07-old-a",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_cancelled",
+              "summary": "A版资料范围撤销，任务版本4取消；没有授权重开记录。",
+              "version": 4,
+              "source": "synthetic_activity_store"
+            },
+            {
+              "id": "complex07-h-baseline",
+              "taskId": "complex07-baseline-c",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "C版范围基线留存完成，任务版本5；不含供应方实际资料。",
+              "version": 5,
+              "source": "synthetic_activity_store"
+            }
+          ],
+          "sourceRefs": [
+            {
+              "id": "complex07-root-record",
+              "title": "栎石C版评审资料协调当前记录（合成）",
+              "text": "任务库读取：complex07-root，版本13，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-engineering-record",
+              "title": "栎石工程资料分支当前记录（合成）",
+              "text": "任务库读取：complex07-engineering，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-review-record",
+              "title": "栎石评审资料分支当前记录（合成）",
+              "text": "任务库读取：complex07-review，版本6，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-old-a-record",
+              "title": "收齐栎石旧A版供应资料当前记录（合成）",
+              "text": "任务库读取：complex07-old-a，版本4，状态cancelled；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-baseline-c-record",
+              "title": "留存栎石C版范围基线当前记录（合成）",
+              "text": "任务库读取：complex07-baseline-c，版本5，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-matrix-record",
+              "title": "整理栎石变更影响矩阵当前记录（合成）",
+              "text": "任务库读取：complex07-matrix，版本4，状态blocked；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-checklist-record",
+              "title": "核对栎石本批检查记录当前记录（合成）",
+              "text": "任务库读取：complex07-checklist，版本4，状态blocked；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-sample-index-record",
+              "title": "整理栎石C版样品资料索引当前记录（合成）",
+              "text": "任务库读取：complex07-sample-index，版本3，状态blocked；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-summary-record",
+              "title": "汇总栎石本批评审待办当前记录（合成）",
+              "text": "任务库读取：complex07-summary，版本2，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-archive-record",
+              "title": "整理栎石现有文件命名目录当前记录（合成）",
+              "text": "任务库读取：complex07-archive，版本2，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-graph-export",
+              "title": "栎石当前依赖导出回执（合成）",
+              "text": "现有存储导出：complex07-matrix依赖complex07-checklist与complex07-baseline-c；complex07-checklist依赖complex07-matrix；complex07-sample-index依赖complex07-old-a。上述边原样来自记录，当前没有依赖纠错确认。",
+              "updatedAt": "2026-09-01T17:40:00+08:00",
+              "source": "synthetic_context_read_receipt"
+            },
+            {
+              "id": "complex07-cancellation",
+              "title": "旧A版资料取消记录（合成）",
+              "text": "旧A版供应资料任务已在8月31日以版本4取消，原范围被撤销。取消记录没有指定C版替代供应资料任务；C版范围基线只是范围与文档索引，不是供应方实际资料交付。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex07-unresolved-handoffs",
+              "title": "本批接口讨论整理（合成）",
+              "text": "工程需要检查记录编号，品质需要矩阵列出核对范围。现有资料未区分“空白编号模板”和“已填检查结果”是否为同一交付，也没有确认应移除哪条边。采购报告C版供应资料的实际承接对象尚未登记；文件命名目录不使用这些结果，可在原任务继续。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            }
+          ]
+        },
+        "duplicateSearch": {
+          "status": "completed",
+          "scopeTeamIds": [
+            "team-npi"
+          ],
+          "matches": [],
+          "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+        },
+        "confirmedFields": [
+          {
+            "taskId": "complex07-root",
+            "field": "goal",
+            "value": "让栎石C版评审使用一致且有来源的资料关系"
+          }
+        ],
+        "constraints": {
+          "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+          "scope": "先暴露现有环与取消前置的未决关系；不变更正式状态、不替他人确认依赖修复；保持可独立继续的文件目录任务。"
+        }
+      }
+    },
+    {
+      "id": "COMPLEX-08",
+      "industry": "content_agency",
+      "category": "overlap_and_stale_availability",
+      "teamId": "team-content",
+      "input": {
+        "requestId": "req-complex08",
+        "message": "禾页访谈内容包9月3日中午必须交。策划、作者、编辑都说能帮文字，旧表上总共12人时，你帮我平均分给三个人并保证按期吧。如果这个保证没有依据，请直接指出缺口，但别改已确认的Owner、截止时间和最终引用核对要求。",
+        "currentDate": "2026-09-01",
+        "timezone": "Asia/Shanghai",
+        "currentUserId": "content-m1",
+        "teamId": "team-content",
+        "authorizedTeamIds": [
+          "team-content"
+        ],
+        "revision": 3,
+        "currentTaskId": "complex08-root",
+        "context": {
+          "snapshotId": "snapshot-complex08-v3",
+          "asOf": "2026-09-01T18:00:00+08:00",
+          "acl": {
+            "status": "verified",
+            "scopeTeamIds": [
+              "team-content"
+            ]
+          },
+          "coverage": {
+            "tasks": "complete",
+            "subtasks": "complete",
+            "discussions": "complete",
+            "history": "complete"
+          },
+          "tasks": [
+            {
+              "id": "complex08-root",
+              "title": "禾页访谈内容包9月交付",
+              "status": "in_progress",
+              "version": 9,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": null,
+              "acceptanceCriteria": [
+                "文案与引用逐项核对后交付，未经确认的引述不得伪装成已确认内容"
+              ],
+              "ownerId": "content-m1",
+              "sourceRefs": [
+                "complex08-root-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-03",
+              "goal": "让禾页取得有对应引用依据的访谈内容包"
+            },
+            {
+              "id": "complex08-writing",
+              "title": "禾页文案准备分支",
+              "status": "in_progress",
+              "version": 5,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex08-root",
+              "acceptanceCriteria": [
+                "形成约定文案与引用表"
+              ],
+              "ownerId": "content-m3",
+              "sourceRefs": [
+                "complex08-writing-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-03"
+            },
+            {
+              "id": "complex08-delivery",
+              "title": "禾页核对与交付分支",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex08-root",
+              "acceptanceCriteria": [
+                "逐项核对文案引用、视觉版本及交付清单"
+              ],
+              "ownerId": "content-m6",
+              "sourceRefs": [
+                "complex08-delivery-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-03"
+            },
+            {
+              "id": "complex08-outline",
+              "title": "确认禾页访谈提纲",
+              "status": "completed",
+              "version": 4,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex08-writing",
+              "acceptanceCriteria": [
+                "访谈提纲与客户确认受众、主题一致"
+              ],
+              "ownerId": "content-m2",
+              "sourceRefs": [
+                "complex08-outline-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex08-copy",
+              "title": "完成禾页访谈成稿",
+              "status": "in_progress",
+              "version": 6,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex08-writing",
+              "acceptanceCriteria": [
+                "按已确认提纲成稿，标明待确认引述"
+              ],
+              "ownerId": "content-m3",
+              "sourceRefs": [
+                "complex08-copy-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex08-outline"
+              ],
+              "dueOn": "2026-09-03",
+              "estimate": {
+                "ewdHours": 6,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex08-copy-record"
+                ]
+              }
+            },
+            {
+              "id": "complex08-quotes",
+              "title": "核对禾页访谈引用表",
+              "status": "in_progress",
+              "version": 4,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex08-writing",
+              "acceptanceCriteria": [
+                "引用表逐项关联受访方当前确认记录；尚未收到的答复保持待确认"
+              ],
+              "ownerId": "content-m2",
+              "sourceRefs": [
+                "complex08-quotes-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-09-03",
+              "estimate": {
+                "ewdHours": 3,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex08-quotes-record"
+                ]
+              }
+            },
+            {
+              "id": "complex08-visual",
+              "title": "留存禾页已批准视觉v2",
+              "status": "completed",
+              "version": 3,
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "parentId": "complex08-delivery",
+              "acceptanceCriteria": [
+                "已批准视觉v2和引用范围留存"
+              ],
+              "ownerId": "content-m4",
+              "sourceRefs": [
+                "complex08-visual-record"
+              ],
+              "dependsOnTaskIds": [],
+              "dueOn": "2026-08-31"
+            },
+            {
+              "id": "complex08-proof",
+              "title": "完成禾页成稿与引用复核",
+              "status": "open",
+              "version": 3,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex08-delivery",
+              "acceptanceCriteria": [
+                "逐条比对成稿与已确认引用表并记录差异，全部待确认引述保留明确状态"
+              ],
+              "ownerId": "content-m5",
+              "sourceRefs": [
+                "complex08-proof-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex08-copy",
+                "complex08-quotes"
+              ],
+              "dueOn": "2026-09-03",
+              "estimate": {
+                "ewdHours": 2,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex08-proof-record"
+                ]
+              }
+            },
+            {
+              "id": "complex08-package",
+              "title": "整理禾页最终内容包",
+              "status": "open",
+              "version": 2,
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "parentId": "complex08-delivery",
+              "acceptanceCriteria": [
+                "交付清单关联成稿引用复核与批准视觉v2，不代替客户接受"
+              ],
+              "ownerId": "content-m6",
+              "sourceRefs": [
+                "complex08-package-record"
+              ],
+              "dependsOnTaskIds": [
+                "complex08-proof",
+                "complex08-visual"
+              ],
+              "dueOn": "2026-09-03",
+              "estimate": {
+                "ewdHours": 1,
+                "basis": "history",
+                "assumptions": [
+                  "沿用已存估算基线，不代表实际或剩余投入。"
+                ],
+                "evidenceRefs": [
+                  "complex08-package-record"
+                ]
+              }
+            }
+          ],
+          "discussions": [
+            {
+              "id": "complex08-d-author",
+              "taskId": "complex08-copy",
+              "authorId": "content-m3",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "report",
+              "text": "我只确认9月2日10至11时能做文字交接核对，未承诺这就是连续写作窗口或其他日期可用。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex08-d-editor",
+              "taskId": "complex08-proof",
+              "authorId": "content-m5",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "report",
+              "text": "本轮9月2日旧协作窗口已撤回，当前只确认9月3日16至17时做复核；早于此时是否可参加我没有确认。",
+              "source": "synthetic_discussion_store"
+            },
+            {
+              "id": "complex08-d-help",
+              "taskId": "complex08-quotes",
+              "authorId": "content-m2",
+              "createdAt": "2026-09-01T11:00:00+08:00",
+              "kind": "proposal",
+              "text": "我能解释引用和提纲，也可以帮忙改字；尚未接受成稿或最终复核责任。8月日历不能表示本周时间。",
+              "source": "synthetic_discussion_store"
+            }
+          ],
+          "history": [
+            {
+              "id": "complex08-h-outline",
+              "taskId": "complex08-outline",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "访谈提纲已确认，任务版本4完成。",
+              "version": 4,
+              "source": "synthetic_activity_store"
+            },
+            {
+              "id": "complex08-h-visual",
+              "taskId": "complex08-visual",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "task_completed",
+              "summary": "视觉v2留存以版本3完成，没有待改视觉任务。",
+              "version": 3,
+              "source": "synthetic_activity_store"
+            },
+            {
+              "id": "complex08-h-estimate",
+              "taskId": "complex08-copy",
+              "occurredAt": "2026-08-31T16:00:00+08:00",
+              "type": "estimate_context",
+              "summary": "本轮成稿估算6人时为整项基线；没有提供实际投入或剩余投入。",
+              "version": 6,
+              "source": "synthetic_activity_store"
+            }
+          ],
+          "sourceRefs": [
+            {
+              "id": "complex08-root-record",
+              "title": "禾页访谈内容包9月交付当前记录（合成）",
+              "text": "任务库读取：complex08-root，版本9，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-writing-record",
+              "title": "禾页文案准备分支当前记录（合成）",
+              "text": "任务库读取：complex08-writing，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-delivery-record",
+              "title": "禾页核对与交付分支当前记录（合成）",
+              "text": "任务库读取：complex08-delivery，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-outline-record",
+              "title": "确认禾页访谈提纲当前记录（合成）",
+              "text": "任务库读取：complex08-outline，版本4，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-copy-record",
+              "title": "完成禾页访谈成稿当前记录（合成）",
+              "text": "任务库读取：complex08-copy，版本6，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-quotes-record",
+              "title": "核对禾页访谈引用表当前记录（合成）",
+              "text": "任务库读取：complex08-quotes，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-visual-record",
+              "title": "留存禾页已批准视觉v2当前记录（合成）",
+              "text": "任务库读取：complex08-visual，版本3，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-08-31T16:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-proof-record",
+              "title": "完成禾页成稿与引用复核当前记录（合成）",
+              "text": "任务库读取：complex08-proof，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-package-record",
+              "title": "整理禾页最终内容包当前记录（合成）",
+              "text": "任务库读取：complex08-package，版本2，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+              "updatedAt": "2026-09-01T09:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-deadline",
+              "title": "禾页交付边界原始回执（合成）",
+              "text": "本轮硬交付时间为2026-09-03 12:00（Asia/Shanghai），已确认；未授权自动延期、删减引用核对或将未确认引述当已确认。日期字段只能记9月3日，具体时刻保存在此回执。",
+              "updatedAt": "2026-09-01T10:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-quote-reply",
+              "title": "受访方当前答复窗口（合成）",
+              "text": "引用表仍有两条须由受访方确认，受访方本轮明确最早在9月3日14:00提供答复；没有12:00前可提前回复的确认。此为等待外部答复的业务记录，不等于参与者正在投入人时。",
+              "updatedAt": "2026-09-01T10:30:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-capacity-old",
+              "title": "8月文字协作估算表（合成）",
+              "text": "8月20日资料表写“本类内容包共12人时，策划、作者、编辑各约4小时”；该表用于8月单一版本的整项估算，未测量9月本轮剩余投入，且其可用性登记仅有效至8月28日。没有任何整周空闲承诺。",
+              "updatedAt": "2026-08-20T09:00:00+08:00",
+              "source": "synthetic_business_record"
+            },
+            {
+              "id": "complex08-overlap-charter",
+              "title": "本轮文字协作边界登记（合成）",
+              "text": "策划可解释受众与引用来源，作者承担成稿结果，编辑负责对照核对；三人都可提出改字建议，但当前职责不表示三人可互换承担全部结果。已确认的成稿Owner是content-m3、复核Owner是content-m5；“可以帮忙”不构成接受新增责任。",
+              "updatedAt": "2026-09-01T09:00:00+08:00",
+              "source": "synthetic_business_record"
+            }
+          ]
+        },
+        "duplicateSearch": {
+          "status": "completed",
+          "scopeTeamIds": [
+            "team-content"
+          ],
+          "matches": [],
+          "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+        },
+        "confirmedFields": [
+          {
+            "taskId": "complex08-root",
+            "field": "dueOn",
+            "value": "2026-09-03"
+          },
+          {
+            "taskId": "complex08-root",
+            "field": "goal",
+            "value": "让禾页取得有对应引用依据的访谈内容包"
+          },
+          {
+            "taskId": "complex08-copy",
+            "field": "ownerId",
+            "value": "content-m3"
+          },
+          {
+            "taskId": "complex08-proof",
+            "field": "ownerId",
+            "value": "content-m5"
+          },
+          {
+            "taskId": "complex08-proof",
+            "field": "acceptanceCriteria",
+            "value": [
+              "逐条比对成稿与已确认引用表并记录差异，全部待确认引述保留明确状态"
+            ]
+          }
+        ],
+        "constraints": {
+          "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+          "hardDueOn": "2026-09-03",
+          "hardDeadlineText": "2026-09-03T12:00:00+08:00",
+          "scope": "只诊断与提出受控候选；不自动改锁定Owner、最终引用核对标准或截止时间，不保证未有依据的工期。"
+        },
+        "members": [
+          {
+            "id": "content-m1",
+            "name": "白璐",
+            "role": "客户项目经理",
+            "responsibilities": [
+              "收集客户范围和确认记录",
+              "协调版本与交付计划"
+            ],
+            "boundaries": [
+              "不代客户批准成稿",
+              "不默认为所有子任务Owner"
+            ],
+            "evidence": [
+              {
+                "id": "content-m1-role",
+                "title": "白璐职责说明（合成）",
+                "text": "职责：收集客户范围和确认记录；协调版本与交付计划。边界：不代客户批准成稿；不默认为所有子任务Owner。",
+                "updatedAt": "2026-08-31T09:00:00+08:00",
+                "source": "synthetic_role_charter"
+              },
+              {
+                "id": "content-m1-work",
+                "title": "白璐当前工作自报（合成）",
+                "text": "协调合成客户的秋季内容包",
+                "updatedAt": "2026-09-01T08:30:00+08:00",
+                "source": "synthetic_member_report"
+              }
+            ],
+            "currentWork": [
+              {
+                "title": "协调合成客户的秋季内容包",
+                "status": "reported_not_capacity_measurement",
+                "sourceRef": "content-m1-work",
+                "updatedAt": "2026-09-01T08:30:00+08:00"
+              }
+            ],
+            "availability": {
+              "status": "unknown",
+              "windows": [],
+              "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+            }
+          },
+          {
+            "id": "content-m2",
+            "name": "杜衡",
+            "role": "内容策划",
+            "responsibilities": [
+              "确定选题与受众表达",
+              "把客户需求转成内容提纲"
+            ],
+            "boundaries": [
+              "不自行增加业绩目标",
+              "不代客户确认新受众"
+            ],
+            "evidence": [
+              {
+                "id": "content-m2-role",
+                "title": "杜衡职责说明（合成）",
+                "text": "职责：确定选题与受众表达；把客户需求转成内容提纲。边界：不自行增加业绩目标；不代客户确认新受众。",
+                "updatedAt": "2026-08-31T09:00:00+08:00",
+                "source": "synthetic_role_charter"
+              },
+              {
+                "id": "content-m2-work",
+                "title": "杜衡当前工作自报（合成）",
+                "text": "整理两份内容提纲",
+                "updatedAt": "2026-09-01T08:30:00+08:00",
+                "source": "synthetic_member_report"
+              },
+              {
+                "id": "complex08-planner-old-window",
+                "title": "杜衡本轮可用窗口记录（合成）",
+                "text": "2026-08-26T09:00:00+08:00至2026-08-26T12:00:00+08:00。这是8月单次窗口，有效性登记到8月28日；当前可用性未知，不可外推到9月。",
+                "updatedAt": "2026-08-20T09:00:00+08:00",
+                "source": "synthetic_member_availability"
+              }
+            ],
+            "currentWork": [
+              {
+                "title": "整理两份内容提纲",
+                "status": "reported_not_capacity_measurement",
+                "sourceRef": "content-m2-work",
+                "updatedAt": "2026-09-01T08:30:00+08:00"
+              }
+            ],
+            "availability": {
+              "status": "declared_window",
+              "startAt": "2026-08-26T09:00:00+08:00",
+              "endAt": "2026-08-26T12:00:00+08:00",
+              "sourceRef": "complex08-planner-old-window",
+              "note": "这是8月单次窗口，有效性登记到8月28日；当前可用性未知，不可外推到9月。",
+              "updatedAt": "2026-08-20T09:00:00+08:00"
+            }
+          },
+          {
+            "id": "content-m3",
+            "name": "陶然",
+            "role": "文案作者",
+            "responsibilities": [
+              "按确认提纲写作",
+              "处理文字修改"
+            ],
+            "boundaries": [
+              "不自行扩写受限范围",
+              "不改变已确认品牌口径"
+            ],
+            "evidence": [
+              {
+                "id": "content-m3-role",
+                "title": "陶然职责说明（合成）",
+                "text": "职责：按确认提纲写作；处理文字修改。边界：不自行扩写受限范围；不改变已确认品牌口径。",
+                "updatedAt": "2026-08-31T09:00:00+08:00",
+                "source": "synthetic_role_charter"
+              },
+              {
+                "id": "content-m3-work",
+                "title": "陶然当前工作自报（合成）",
+                "text": "修改待审稿的文字版本",
+                "updatedAt": "2026-09-01T08:30:00+08:00",
+                "source": "synthetic_member_report"
+              },
+              {
+                "id": "complex08-author-window",
+                "title": "陶然本轮可用窗口记录（合成）",
+                "text": "2026-09-02T10:00:00+08:00至2026-09-02T11:00:00+08:00。只确认文字交接核对这一个小时，不承诺连续写作容量，其他日期未知。",
+                "updatedAt": "2026-09-01T10:45:00+08:00",
+                "source": "synthetic_member_availability"
+              }
+            ],
+            "currentWork": [
+              {
+                "title": "修改待审稿的文字版本",
+                "status": "reported_not_capacity_measurement",
+                "sourceRef": "content-m3-work",
+                "updatedAt": "2026-09-01T08:30:00+08:00"
+              }
+            ],
+            "availability": {
+              "status": "declared_window",
+              "startAt": "2026-09-02T10:00:00+08:00",
+              "endAt": "2026-09-02T11:00:00+08:00",
+              "sourceRef": "complex08-author-window",
+              "note": "只确认文字交接核对这一个小时，不承诺连续写作容量，其他日期未知。",
+              "updatedAt": "2026-09-01T10:45:00+08:00"
+            }
+          },
+          {
+            "id": "content-m4",
+            "name": "沈禾",
+            "role": "视觉设计",
+            "responsibilities": [
+              "制作和复用已授权素材",
+              "按明确规格适配视觉"
+            ],
+            "boundaries": [
+              "不把旧素材自动当可无限复用",
+              "不确认客户验收"
+            ],
+            "evidence": [
+              {
+                "id": "content-m4-role",
+                "title": "沈禾职责说明（合成）",
+                "text": "职责：制作和复用已授权素材；按明确规格适配视觉。边界：不把旧素材自动当可无限复用；不确认客户验收。",
+                "updatedAt": "2026-08-31T09:00:00+08:00",
+                "source": "synthetic_role_charter"
+              },
+              {
+                "id": "content-m4-work",
+                "title": "沈禾当前工作自报（合成）",
+                "text": "整理已审视觉资产",
+                "updatedAt": "2026-09-01T08:30:00+08:00",
+                "source": "synthetic_member_report"
+              },
+              {
+                "id": "content-m4-window",
+                "title": "沈禾公开协作窗口（合成）",
+                "text": "2026-09-04T10:00:00+08:00至2026-09-04T12:00:00+08:00。只用于视觉适配评审，其他可用性未知。",
+                "updatedAt": "2026-09-01T08:30:00+08:00",
+                "source": "synthetic_member_availability"
+              }
+            ],
+            "currentWork": [
+              {
+                "title": "整理已审视觉资产",
+                "status": "reported_not_capacity_measurement",
+                "sourceRef": "content-m4-work",
+                "updatedAt": "2026-09-01T08:30:00+08:00"
+              }
+            ],
+            "availability": {
+              "status": "declared_window",
+              "startAt": "2026-09-04T10:00:00+08:00",
+              "endAt": "2026-09-04T12:00:00+08:00",
+              "sourceRef": "content-m4-window",
+              "note": "只用于视觉适配评审，其他可用性未知。",
+              "updatedAt": "2026-09-01T08:30:00+08:00"
+            }
+          },
+          {
+            "id": "content-m5",
+            "name": "程简",
+            "role": "文字编辑",
+            "responsibilities": [
+              "核对错字和引用格式",
+              "检查成稿与约定范围一致"
+            ],
+            "boundaries": [
+              "不代客户做发布批准",
+              "不在校对任务中重写结构"
+            ],
+            "evidence": [
+              {
+                "id": "content-m5-role",
+                "title": "程简职责说明（合成）",
+                "text": "职责：核对错字和引用格式；检查成稿与约定范围一致。边界：不代客户做发布批准；不在校对任务中重写结构。",
+                "updatedAt": "2026-08-31T09:00:00+08:00",
+                "source": "synthetic_role_charter"
+              },
+              {
+                "id": "content-m5-work",
+                "title": "程简当前工作自报（合成）",
+                "text": "校对一篇短稿",
+                "updatedAt": "2026-09-01T08:30:00+08:00",
+                "source": "synthetic_member_report"
+              },
+              {
+                "id": "complex08-editor-window",
+                "title": "程简本轮可用窗口记录（合成）",
+                "text": "2026-09-03T16:00:00+08:00至2026-09-03T17:00:00+08:00。本轮9月2日旧窗口已撤回，以本条替代；只确认9月3日16至17时可做复核，早于此时未确认。",
+                "updatedAt": "2026-09-01T11:00:00+08:00",
+                "source": "synthetic_member_availability"
+              }
+            ],
+            "currentWork": [
+              {
+                "title": "校对一篇短稿",
+                "status": "reported_not_capacity_measurement",
+                "sourceRef": "content-m5-work",
+                "updatedAt": "2026-09-01T08:30:00+08:00"
+              }
+            ],
+            "availability": {
+              "status": "declared_window",
+              "startAt": "2026-09-03T16:00:00+08:00",
+              "endAt": "2026-09-03T17:00:00+08:00",
+              "sourceRef": "complex08-editor-window",
+              "note": "本轮9月2日旧窗口已撤回，以本条替代；只确认9月3日16至17时可做复核，早于此时未确认。",
+              "updatedAt": "2026-09-01T11:00:00+08:00"
+            }
+          },
+          {
+            "id": "content-m6",
+            "name": "唐钰",
+            "role": "交付与版本管理",
+            "responsibilities": [
+              "维护交付清单及版本",
+              "核对客户批准与发布前提"
+            ],
+            "boundaries": [
+              "不把审阅意见当批准",
+              "不未经授权发布内容"
+            ],
+            "evidence": [
+              {
+                "id": "content-m6-role",
+                "title": "唐钰职责说明（合成）",
+                "text": "职责：维护交付清单及版本；核对客户批准与发布前提。边界：不把审阅意见当批准；不未经授权发布内容。",
+                "updatedAt": "2026-08-31T09:00:00+08:00",
+                "source": "synthetic_role_charter"
+              },
+              {
+                "id": "content-m6-work",
+                "title": "唐钰当前工作自报（合成）",
+                "text": "核对待发素材的版本和批准记录",
+                "updatedAt": "2026-09-01T08:30:00+08:00",
+                "source": "synthetic_member_report"
+              }
+            ],
+            "currentWork": [
+              {
+                "title": "核对待发素材的版本和批准记录",
+                "status": "reported_not_capacity_measurement",
+                "sourceRef": "content-m6-work",
+                "updatedAt": "2026-09-01T08:30:00+08:00"
+              }
+            ],
+            "availability": {
+              "status": "unknown",
+              "windows": [],
+              "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

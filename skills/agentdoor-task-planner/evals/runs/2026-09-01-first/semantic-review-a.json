@@ -1,0 +1,71 @@
+{
+  "reviewer": "independent Codex agent",
+  "cases": [
+    {
+      "id": "SAAS-01",
+      "verdict": "satisfies",
+      "findings": [],
+      "reason": "保留30人、请假审批、200条基础数据及仅沙箱的真实目标，按环境与流程、迁移核对、UAT、培训交接四类独立成果拆分，未扩成生产上线。负责人按当前职责分别推荐，发起人只承担必要口径贡献，公开窗口未被当作完整容量。UAT依赖环境和数据，最终培训引用UAT，允许准备工作并行；各项日期只是主期限上界且明确尚无承诺排期，没有已知相反窗口被当作可行证明。无历史时EWD留空，审阅下一步可执行，未声称已创建或已接受。"
+    },
+    {
+      "id": "SAAS-02",
+      "verdict": "satisfies",
+      "findings": [],
+      "reason": "通过客户、租户、系统和周期识别南桔CRM验收与北杉知识库旧验收为不同实例，并保留两个已完成任务。以已完成的南桔范围接收为前置，一个验收成果承载检查和审阅步骤，没有复制旧日期、状态或验收结论。钟宁推荐来自当前验证职责，顾澄仅协调客户审阅；客户审阅日期有明确来源、投入未知、客户接受与内部记录分开，下一步为审阅新候选。"
+    },
+    {
+      "id": "SAAS-03",
+      "verdict": "fails",
+      "findings": [
+        {
+          "severity": "must_fix",
+          "text": "新增字段补充记录的期限与它声称要支持的既有后续任务没有协调。输入saas03-uat.dueOn为2026-09-09，saas03-train.dueOn为2026-09-10；输出把二者全部保留，却将new:saas03-disabled-account-check的dueOn建议为2026-09-12，并在tips明确写“将补充核对结论提供给现有UAT及培训任务供使用；是否影响具体用例按证据核对”。这不是证明该工作必定到9月12日才完成，而是候选给出的最迟边界允许后续任务先截止、其输入后交付。输出既未提出UAT/培训受影响依赖及期限的局部差异，也未明确确认补充核对是独立于它们的交付，questions仍为空且disposition为ready_for_confirmation。应先核对新增字段是否是现有UAT/培训的必要输入：若是，保留已确认Owner和12条用例标准并协调前置交付边界/依赖；若尚无依据判断，显式提出这一阻塞影响和选择，不用一般性的“实际执行窗口需协调”替代。",
+          "evidenceRefs": [
+            "/tmp/agentdoor-planner-skill-eval-20260901/inputs/SAAS-03.json#/message",
+            "/tmp/agentdoor-planner-skill-eval-20260901/inputs/SAAS-03.json#/context/tasks/3/dueOn",
+            "/tmp/agentdoor-planner-skill-eval-20260901/inputs/SAAS-03.json#/context/tasks/3/dependsOnTaskIds",
+            "/tmp/agentdoor-planner-skill-eval-20260901/inputs/SAAS-03.json#/context/tasks/4/dueOn",
+            "/tmp/agentdoor-planner-skill-eval-20260901/inputs/SAAS-03.json#/context/sourceRefs/5",
+            "/tmp/agentdoor-planner-skill-eval-20260901/outputs/SAAS-03.json#/proposal/preservedTaskIds",
+            "/tmp/agentdoor-planner-skill-eval-20260901/outputs/SAAS-03.json#/proposal/changes/0/fields/tips/0",
+            "/tmp/agentdoor-planner-skill-eval-20260901/outputs/SAAS-03.json#/proposal/changes/0/fields/schedule",
+            "/tmp/agentdoor-planner-skill-eval-20260901/outputs/SAAS-03.json#/proposal/changes/0/fields/dependsOnTaskIds",
+            "/tmp/agentdoor-planner-skill-eval-20260901/outputs/SAAS-03.json#/questions",
+            "/tmp/agentdoor-planner-skill-eval-20260901/outputs/SAAS-03.json#/disposition"
+          ]
+        }
+      ],
+      "reason": "客户v3的新增字段范围、旧200条演练保护、正式Owner及12条已确认标准、接手提议尚未接受等方面处理正确，也没有重建UAT或培训。但本轮要重新安排剩余交付，新增成果与既有后续工作的时间及输入关系仍未决定，却给出可确认结论，影响计划是否可接收。"
+    },
+    {
+      "id": "SAAS-04",
+      "verdict": "satisfies",
+      "findings": [],
+      "reason": "明确揭示9月4日最早授权晚于9月3日实测演示硬期限，且已知成员窗口不能补足此冲突。没有把6月未经确认便签当当前容量，也没有把查重超时或部分任务覆盖当作完整结果。保持proposal为空及原任务状态、责任、期限、依赖，只提出补读与日期/范围取舍，并将无需访问的材料准备标为可选方向而非保证完成或替代原标准。"
+    },
+    {
+      "id": "ECOM-01",
+      "verdict": "satisfies",
+      "findings": [],
+      "reason": "单任务准确覆盖SKU-CUP-A五处清单错字，交付清稿和逐项改动记录，并核对清单外无改写及结构、图片、价格、卖点不变。明确指定的颜北与职责匹配，未让仓配发起人自动负责，也未扩为设计或增长项目。明天正确解析为9月2日；0.5人时明确标为带可编辑原稿等条件的模型估算，没有冒称实绩、容量或工期保证。下一步为审阅候选，未实施发布。"
+    },
+    {
+      "id": "ECOM-02",
+      "verdict": "satisfies",
+      "findings": [],
+      "reason": "依据09:02回执、当前进行中任务及SKU/渠道/周期/交付范围，将本轮定位为已有首发结果而非新批次。转到原任务并保留详情页、库存和8月旧记录；说明客服与测试已在主标准中但未单列，可在原任务中考虑局部补充，没有为凑子项重建整套。区分8月旧促销的不同实例，也未把读取到的创建回执冒称为模型本轮写入或幂等执行结果，打开原任务的下一步可执行。"
+    },
+    {
+      "id": "ECOM-03",
+      "verdict": "satisfies",
+      "findings": [],
+      "reason": "为9月15日第二批建独立后续根并以来源关联已完成第一批，所有旧完成记录保持不变。图片v3沿用有同SKU同渠道授权，新增包装v2和客服说明、第二批库存/履约核对、页面测试及发布记录有独立结果，未重拍或复制旧测试结论。包装是否含杯刷保持待核对，12人时和3天等待未挪用为本批投入。包装及库存并行、最终页面测试依赖其产出；前置日期未知而不是晚于后继的错误承诺，整体9月15日目标及窗口未知清楚保留，责任推荐及审阅下一步合理。"
+    },
+    {
+      "id": "ECOM-04",
+      "verdict": "satisfies",
+      "findings": [],
+      "reason": "区分ERP500件、17时80件可售自报、未关闭库存差异与300单投放提议，未将任一数值或讨论升级为已批准库存/销量/预算。明确9月2日上线不等于次日可发，最早9月4日出库及例外未知需用户选择。只局部补充已有库存和客服任务的步骤及必要贡献，保留原Owner、状态、主期限与库存到客服依赖；于薇已知窗口晚于上新日和历史partial均被保留为限制。needs_clarification、具体取舍问题及原任务核对入口与此风险相符。"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-npi-02",
+  "baseSnapshotId": "snapshot-npi-02-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "npi02-a": 5,
+    "npi02-old-buy": 3
+  },
+  "intent": "create",
+  "disposition": "needs_clarification",
+  "summary": "本轮B版包装验证与已完成A版属于不同版本结果，但活动任务查重超时，先补查B版是否已建，再决定复用或新建；不重开旧A版任务。",
+  "reasoningSummary": [
+    {
+      "text": "用户明确要BOX-N1 B版，包装结构与A版不同；旧A版结论不覆盖B版检验范围。",
+      "evidenceRefs": [
+        "req-npi-02",
+        "npi02-rev-b",
+        "npi02-h1"
+      ]
+    },
+    {
+      "text": "可见同名任务是2025年11月的A版，版本5已完成；A版补料任务版本3已取消。",
+      "evidenceRefs": [
+        "npi02-a",
+        "npi02-old-buy"
+      ]
+    },
+    {
+      "text": "查重只覆盖归档第一页，活动任务索引超时，当前不能确认B版是否已有推进任务。",
+      "evidenceRefs": [
+        "req-npi-02",
+        "npi02-rev-b"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "partial",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "assessments": [
+      {
+        "taskId": "npi02-a",
+        "relationship": "different_instance",
+        "reason": "旧记录对应BOX-N1 A版、2025-11、旧包装及图纸A2；本轮是包装结构已变更的B版，A版完成不覆盖B版验证。此差别不能排除尚未查到的其他B版任务。",
+        "evidenceRefs": [
+          "npi02-a",
+          "npi02-h1",
+          "npi02-rev-b",
+          "req-npi-02"
+        ]
+      }
+    ],
+    "coverageNote": "合成查询只完成归档项目第一页，活动任务索引超时；不能确认B版是否已有任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "查重状态是partial，不能以当前可见列表或不同标题推断没有B版重复。",
+    "A版完成记录与已取消的A版补料保持原ID、版本、状态和正式负责人；不把它们设为B版未完成前置。",
+    "本轮尚未形成可确认的新建差异，B版检验口径、期限和投入也不会从A版复制。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": null,
+      "label": "重试授权团队活动任务索引并补齐归档分页，按BOX-N1 B版包装验证查重"
+    }
+  ],
+  "externalEffects": "none"
+}

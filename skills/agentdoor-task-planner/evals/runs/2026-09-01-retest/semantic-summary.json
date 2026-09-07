@@ -1,0 +1,24 @@
+{
+  "total": 3,
+  "satisfies": 3,
+  "fails": 0,
+  "uncertain": 0,
+  "reviewMethod": "Fresh-context independent Codex agent; no human industry-user review",
+  "results": [
+    {
+      "id": "SAAS-03",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review.json"
+    },
+    {
+      "id": "ECOM-03",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review.json"
+    },
+    {
+      "id": "CONTENT-03",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review.json"
+    }
+  ]
+}

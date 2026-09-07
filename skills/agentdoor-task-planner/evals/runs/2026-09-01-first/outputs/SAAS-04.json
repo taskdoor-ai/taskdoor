@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-saas-04",
+  "baseSnapshotId": "snapshot-saas-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "saas04-root": 3,
+    "saas04-access": 2,
+    "saas04-check": 1
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "9月3日前无法按已知授权安排完成客户沙箱SSO实测；建议先补齐任务上下文，再由你选择调整演示日期或确认仅做不依赖访问的准备内容。",
+  "reasoningSummary": [
+    {
+      "text": "客户测试授权最早9月4日提供，晚于现有9月3日演示硬期限；登录验证明确依赖有效授权回执。",
+      "evidenceRefs": [
+        "saas04-access-reply",
+        "saas04-check",
+        "saas04-access",
+        "saas04-root"
+      ]
+    },
+    {
+      "text": "袁序仅确认9月2日10至12时集成核对窗口，此时授权仍未到；钟宁只确认9月5日下午协作，不能承诺演示前验证。",
+      "evidenceRefs": [
+        "saas-m2",
+        "saas-m4",
+        "saas04-d2",
+        "saas04-access-reply"
+      ]
+    },
+    {
+      "text": "6月便签未由袁序确认且未更新，不能据此认定他每天下午有4小时；等待客户授权也不是成员的人类投入。",
+      "evidenceRefs": [
+        "saas04-old-capacity",
+        "saas-m2",
+        "saas04-d1"
+      ]
+    },
+    {
+      "text": "当前已读任务可复用，但任务和子任务覆盖不完整，不能完成剩余工作的全局重排或认定没有其他准备项。",
+      "evidenceRefs": [
+        "saas04-root",
+        "saas04-access",
+        "saas04-check",
+        "req-saas-04"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "unavailable",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [],
+    "coverageNote": "合成查重服务超时，未返回可判断的结果。"
+  },
+  "questions": [
+    {
+      "field": "schedule_or_scope",
+      "question": "测试授权最早9月4日，而演示硬期限是9月3日：你希望协调延期，还是保留9月3日并明确批准只展示不依赖客户访问的流程说明与准备材料？",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "任务与子任务覆盖均为partial，history为unavailable；虽然含一条授权变更历史记录，也不能据此认为历史已完整读取。",
+    "查重服务超时，status为unavailable；没有返回匹配不代表不存在重复。",
+    "可以在授权前考虑准备流程讲解、接入条件核对和待处理问题清单；这些是不需客户访问的可选准备方向，现有快照和窗口不足以承诺9月3日前全部完成，且不能替代原实测演示标准。",
+    "保留现有正式Owner、状态、依赖和9月3日硬期限；不能绕过授权、假定额外容量或减少验证来化解冲突。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": "saas04-root",
+      "label": "补读根任务全部直属子任务、相关进展及可用历史，并重试查重"
+    },
+    {
+      "action": "ask_user",
+      "taskId": "saas04-root",
+      "label": "确认演示日期或范围的取舍"
+    },
+    {
+      "action": "open_task",
+      "taskId": "saas04-access",
+      "label": "核对现有授权等待事项"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,42 @@
+{
+  "date": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "kind": "high_fidelity_synthetic_offline_skill_trial",
+  "dataClassification": "synthetic",
+  "execution": "Current-session independent Codex agents; not an application model API",
+  "exactModelSnapshot": "not_provided",
+  "temperature": "not_provided",
+  "seed": "not_provided",
+  "executorGroups": {
+    "blind_planner_group_a": [
+      "REAL-A-REL-01",
+      "REAL-A-SAAS-01",
+      "REAL-A-ECOM-01",
+      "REAL-A-CS-01"
+    ],
+    "blind_planner_group_b": [
+      "REAL-B-NPI-01",
+      "REAL-B-LOG-01",
+      "REAL-B-RETAIL-01",
+      "REAL-B-PROC-01"
+    ],
+    "blind_planner_group_c": [
+      "REAL-C-01",
+      "REAL-C-02",
+      "REAL-C-03",
+      "REAL-C-04"
+    ]
+  },
+  "blinding": "Fresh-context executors received the frozen Skill/protocol and assigned inputs only; no expectations, evaluator feedback, prior outputs or production access.",
+  "attemptPolicy": "First written output per case retained; no repair before first scoring.",
+  "review": "Three different independent Codex agents reviewed disjoint case groups against the original input, output and frozen manual rubric; no human industry-user adjudication.",
+  "runtime": {
+    "python": "3.12.0",
+    "jsonschema": "4.26.0",
+    "os": "Darwin",
+    "architecture": "arm64"
+  },
+  "productionAccess": false,
+  "productionWrites": false,
+  "archiveNote": "The first-run inputs, outputs, protocol and frozen expectations are immutable evidence. Later corpus corrections and Skill revisions are documented in grading-erratum.json and never replace the first result."
+}

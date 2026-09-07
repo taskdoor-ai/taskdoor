@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-14",
+  "baseSnapshotId": "snapshot-edge-14-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "needs_clarification",
+  "summary": "先保留02店目录核对候选；2027年2月29日不存在，须确认有效期限后才能排定，不自动改成相邻日期。",
+  "reasoningSummary": [
+    {
+      "text": "本轮只核对DISPLAY-02-v1与已收到回执目录并记录对应或缺失，不含采购、补货、布置或验收。",
+      "evidenceRefs": [
+        "req-edge-14",
+        "edge14-brief"
+      ]
+    },
+    {
+      "text": "表单写明2027年2月29日周一且不可自行调整；2027年不是闰年，该日期无效，所写星期不能自动提供改期授权。",
+      "evidenceRefs": [
+        "edge14-date-form",
+        "req-edge-14"
+      ]
+    },
+    {
+      "text": "谢允职责包含对齐清单与核对配送回执，可建议负责资料对应核对；不因此承诺新到货或改变配送。",
+      "evidenceRefs": [
+        "retail-m6-role",
+        "edge14-brief"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:edge14-directory-check",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-edge14-create-directory-check",
+        "action": "create",
+        "targetId": "new:edge14-directory-check",
+        "parentId": null,
+        "fields": {
+          "title": "核对02店DISPLAY-02-v1展示物料目录",
+          "goal": {
+            "text": "让02店节后展示物料目录与已收到回执的对应和缺失情况可逐项核对。",
+            "basis": "inferred",
+            "evidenceRefs": [
+              "req-edge-14",
+              "edge14-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "逐项对照DISPLAY-02-v1与已收到的回执目录，列出物料目录项、对应回执引用或缺失状态。",
+            "交付完整对应清单与缺失项清单，可按源目录核对无漏项；不以回执目录代替现场验收或实物确认。",
+            "仅做资料核对，不采购、不补货、不搬运、不现场布置或验收。"
+          ],
+          "tips": [
+            "保留客户表单原始日期文字，等待有效日期确认，不擅自使用月末或顺延规则。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m6",
+            "basis": "recommended",
+            "reason": "依据清单对齐与配送回执核对职责建议谢允承担资料核对，不以用户为区域负责人就默认由其执行。",
+            "evidenceRefs": [
+              "retail-m6-role",
+              "edge14-brief"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "原始期限为“2027年2月29日周一”，且不可自行调整。",
+              "该日期不存在，没有备用日期或改期授权；dueOn暂留空，不静默变为2月28日、3月1日或其他年份。"
+            ],
+            "evidenceRefs": [
+              "req-edge-14",
+              "edge14-date-form"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "目录规模与可比核对人时未提供，EWD暂留空。"
+            ],
+            "evidenceRefs": [
+              "edge14-brief"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "范围可先形成候选，但无效且不可自行调整的期限构成阻塞，须由用户或客户确认更正。",
+        "evidenceRefs": [
+          "req-edge-14",
+          "edge14-brief",
+          "edge14-date-form"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-retail"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；此范围内无其他查重匹配。"
+  },
+  "questions": [
+    {
+      "field": "schedule.dueOn",
+      "question": "请确认客户实际要求的有效截止日期是什么；原文“2027年2月29日周一”中的日期不存在，不能自行按星期或相邻日期替换。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "候选负责人尚未接受，可用时间未知；日期更正前不承诺完成时间，也不将无效日期写入dueOn。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": null,
+      "label": "确认客户的有效截止日期"
+    }
+  ],
+  "externalEffects": "none"
+}

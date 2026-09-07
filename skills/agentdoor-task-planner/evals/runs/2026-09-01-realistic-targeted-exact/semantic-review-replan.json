@@ -1,0 +1,392 @@
+{
+  "schemaVersion": "agentdoor.semantic-review.v1",
+  "reviewDate": "2026-09-01",
+  "runRoot": "/tmp/agentdoor-planner-realistic-targeted-final-20260901-v4",
+  "reviewedScenarioIds": [
+    "REAL-C-02",
+    "REAL-C-03"
+  ],
+  "reviewedArtifacts": {
+    "inputs": [
+      "inputs/REAL-C-02.json",
+      "inputs/REAL-C-03.json"
+    ],
+    "outputs": [
+      "outputs/REAL-C-02.json",
+      "outputs/REAL-C-03.json"
+    ],
+    "expectations": "expectations-snapshot.json",
+    "protocol": "protocol-snapshot.json"
+  },
+  "reviewBasis": [
+    "依赖边只连接消费者实际需要的可验收任务产出；文件关联、同分支、时间相邻或讨论提及本身不构成任务依赖。",
+    "authoritative文件或有权确认已经直接确立事实时，字段可据该事实更新；仍开放的归档或同步任务不会自动成为该事实的生产者。",
+    "直接消费者补真实生产者依赖；已有链路覆盖的传递消费者保持不变，不为展示影响增加冗余直连。",
+    "开放问题、外部问询和成员提议不自动改变正式任务边界；若要采纳，需有受信决定和相应字段差异。"
+  ],
+  "summary": {
+    "verdict": "fail",
+    "scenarioCount": 2,
+    "passCount": 0,
+    "failCount": 2,
+    "plannerIssueCount": 3,
+    "fixtureIssueCount": 0,
+    "graderIssueCount": 0,
+    "note": "两份首次输出均有实质依赖错误；expectations-snapshot与输入事实、协议的直接/传递消费者规则一致。本审查未运行评分器。"
+  },
+  "cases": [
+    {
+      "scenarioId": "REAL-C-02",
+      "verdict": "fail",
+      "confidence": "high",
+      "verdictReason": "fc-fx的新增前置正确，但输出把fc-transfer-clear继续直连到两个已有传递消费者，造成一个冗余依赖和一个不应存在的任务更新。",
+      "authoritativeFactAssessment": {
+        "finding": "fc-transfer-clear是真实的待决生产任务，而非单纯归档任务。",
+        "reason": "fc-file-bank-advice-v2虽为approved并记载9月1日入账，但fc-file-bank-wait-v1仍只有带章回单ETA，fc-transfer-clear.acceptanceCriteria与fc-d2均要求取得正式回单并确认8月/9月归属后才可完成；fc-d9还记录银行通知与应收台账冲突。",
+        "sources": [
+          "fc-file-bank-advice-v2",
+          "fc-file-bank-wait-v1",
+          "fc-transfer-clear",
+          "fc-d2",
+          "fc-d9"
+        ]
+      },
+      "dependencyBoundary": [
+        {
+          "producerTaskId": "fc-transfer-clear",
+          "consumerTaskId": "fc-fx",
+          "classification": "direct",
+          "verdict": "correct_in_output",
+          "correctDependsOnTaskIds": [
+            "fc-bank-recon",
+            "fc-transfer-clear"
+          ],
+          "reason": "fc-fx直接使用确认归属期的现金余额；应保留已完成fc-bank-recon并新增产出正式回单与归属结论的fc-transfer-clear。",
+          "sources": [
+            "fc-fx",
+            "fc-transfer-clear",
+            "fc-file-bank-advice-v2",
+            "fc-file-bank-wait-v1",
+            "fc-d2"
+          ]
+        },
+        {
+          "producerTaskId": "fc-transfer-clear",
+          "consumerTaskId": "fc-journal-approval",
+          "classification": "transitive_via_fc-fx",
+          "verdict": "incorrect_direct_edge_in_output",
+          "correctDependsOnTaskIds": [
+            "fc-fx"
+          ],
+          "reason": "fc-file-journal-pack-v4只明确连接fc-fx与fc-journal-approval；重估调整由fc-fx产出后供日记账复核。fc-journal-approval中的待回单门禁不证明其直接生产或独立消费正式回单结论。",
+          "sources": [
+            "fc-fx",
+            "fc-journal-approval",
+            "fc-file-journal-pack-v4",
+            "fc-transfer-clear"
+          ]
+        },
+        {
+          "producerTaskId": "fc-transfer-clear",
+          "consumerTaskId": "fc-audit-evidence",
+          "classification": "transitive_via_fc-fx_and_existing_downstream",
+          "verdict": "incorrect_direct_edge_in_output",
+          "correctDependsOnTaskIds": [
+            "fc-journal-approval",
+            "fc-statements"
+          ],
+          "reason": "fc-audit-evidence已通过fc-journal-approval和fc-statements消费重估结果。fc-d5只是external_requester发出的open问询，fc-external-role明确其不构成任务写入授权，不能据此增加直连。",
+          "sources": [
+            "fc-audit-evidence",
+            "fc-journal-approval",
+            "fc-statements",
+            "fc-d5",
+            "fc-external-role",
+            "fc-file-audit-index-v2"
+          ]
+        },
+        {
+          "producerTaskId": "fc-fx",
+          "consumerTaskId": "fc-statements",
+          "classification": "direct_existing",
+          "verdict": "correctly_preserved",
+          "correctDependsOnTaskIds": [
+            "fc-ap",
+            "fc-payroll",
+            "fc-fx"
+          ],
+          "reason": "主报表已直接依赖外币重估，无需再次更新。",
+          "sources": [
+            "fc-statements",
+            "fc-fx"
+          ]
+        },
+        {
+          "producerTaskId": "fc-audit-evidence",
+          "consumerTaskId": "fc-board-pack",
+          "classification": "direct_existing",
+          "verdict": "correctly_preserved",
+          "correctDependsOnTaskIds": [
+            "fc-statements",
+            "fc-audit-evidence"
+          ],
+          "reason": "董事会包沿既有报表和控制证据链消费结果，不需要直连异常核对。",
+          "sources": [
+            "fc-board-pack",
+            "fc-statements",
+            "fc-audit-evidence"
+          ]
+        }
+      ],
+      "plannerIssue": [
+        {
+          "id": "REAL-C-02-P1",
+          "taskId": "fc-journal-approval",
+          "field": "proposal.changes[change-fc-journal-approval-dependencies].fields.dependsOnTaskIds",
+          "actual": [
+            "fc-transfer-clear",
+            "fc-fx"
+          ],
+          "expected": [
+            "fc-fx"
+          ],
+          "description": "多加fc-transfer-clear。正确链是fc-transfer-clear → fc-fx → fc-journal-approval；输出reason中“必须同时取得异常正式回单结论”没有直接来源支持。",
+          "impact": "制造冗余前置并把可经fc-fx传递的结论错误建模为独立直连。",
+          "sources": [
+            "fc-transfer-clear",
+            "fc-fx",
+            "fc-journal-approval",
+            "fc-file-journal-pack-v4"
+          ]
+        },
+        {
+          "id": "REAL-C-02-P2",
+          "taskId": "fc-audit-evidence",
+          "field": "proposal.changes[change-fc-audit-evidence-dependencies]",
+          "actual": {
+            "action": "update",
+            "dependsOnTaskIds": [
+              "fc-journal-approval",
+              "fc-statements",
+              "fc-transfer-clear"
+            ]
+          },
+          "expected": {
+            "action": "preserve",
+            "dependsOnTaskIds": [
+              "fc-journal-approval",
+              "fc-statements"
+            ]
+          },
+          "description": "整个update应删除并把fc-audit-evidence列入preservedTaskIds。开放的外部审计问询不足以建立正式直连，既有两条下游链已传递覆盖。",
+          "impact": "超出最小差异，将未接受问询升级为任务依赖，并把更新数从2增至3。",
+          "sources": [
+            "fc-audit-evidence",
+            "fc-d5",
+            "fc-external-role",
+            "fc-file-audit-index-v2",
+            "fc-journal-approval",
+            "fc-statements"
+          ]
+        }
+      ],
+      "fixtureIssue": [],
+      "fixtureAssessment": {
+        "verdict": "none",
+        "reason": "快照完整，任务标准、文件状态、讨论authority/state及权限摘要足以区分真实生产者与开放问询；诱导性表述是测试边界而非夹具缺陷。"
+      },
+      "graderIssue": [],
+      "graderAssessment": {
+        "verdict": "none_in_expectation_snapshot",
+        "reason": "expectations-snapshot要求maxUpdates=2，只允许更新fc-fx与fc-journal-approval，并给出与语义一致的exactDependencies；本审查未运行评分器，不能评价评分器实现是否落实这些条件。"
+      },
+      "minimalCorrection": [
+        "保留change-fc-fx-dependencies不变。",
+        "将fc-journal-approval.dependsOnTaskIds改为仅[fc-fx]。",
+        "删除change-fc-audit-evidence-dependencies，并把fc-audit-evidence加入preservedTaskIds。",
+        "将摘要中的“三个直接消费者”改为“两项必要依赖差异”。"
+      ]
+    },
+    {
+      "scenarioId": "REAL-C-03",
+      "verdict": "fail",
+      "confidence": "high",
+      "verdictReason": "四项日期更新本身有依据，但输出把开放的日期归档/同步任务误当作已确认日期事实的生产者，向四个消费者全部增加了不必要依赖。",
+      "authoritativeFactAssessment": {
+        "finding": "2026-09-16入职日已由authoritative文件和双方有权确认直接确立；hr-date-amend不是该日期事实的必要生产任务。",
+        "reason": "hr-file-date-amend-v2状态为approved并明确候选人与用人经理均确认9月16日，hr-d1与hr-d2分别记录双方confirmed确认。hr-date-amend仍为open，其acceptanceCriteria同时要求取得确认并同步到受影响准备项，说明未完成部分是归档/同步闭环；让消费者依赖它会把同步对象错误地串在同步任务之后。",
+        "sources": [
+          "hr-file-date-amend-v2",
+          "hr-d1",
+          "hr-d2",
+          "hr-date-amend",
+          "hr-hard-start"
+        ]
+      },
+      "dependencyBoundary": [
+        {
+          "sourceRef": "hr-file-date-amend-v2",
+          "consumerTaskIds": [
+            "hr-account",
+            "hr-laptop",
+            "hr-payroll",
+            "hr-startday"
+          ],
+          "classification": "authoritative_external_fact_supports_field_updates_without_task_dependency",
+          "verdict": "dates_supported_but_added_edges_incorrect",
+          "reason": "四项任务可直接依据批准文件与双方确认更新日期；依赖边需要任务产出，而不是为每个使用同一事实的任务强加归档任务前置。",
+          "sources": [
+            "hr-file-date-amend-v2",
+            "hr-d1",
+            "hr-d2",
+            "hr-request"
+          ]
+        },
+        {
+          "producerTaskId": "hr-date-amend",
+          "consumerTaskIds": [
+            "hr-account",
+            "hr-laptop",
+            "hr-payroll",
+            "hr-startday"
+          ],
+          "classification": "open_archive_and_sync_task_not_a_producer",
+          "verdict": "must_not_add",
+          "reason": "hr-date-amend的完成边界包含“同步到受影响准备项”；这些准备项不是等待其完成的下游。输出新增依赖会形成工作流上的反向串行，虽未生成图循环，也会让同步闭环语义自相依赖。",
+          "sources": [
+            "hr-date-amend",
+            "hr-file-date-amend-v2",
+            "hr-h3"
+          ]
+        },
+        {
+          "producerTaskIds": [
+            "hr-account",
+            "hr-laptop",
+            "hr-policy",
+            "hr-weekplan",
+            "hr-payroll"
+          ],
+          "consumerTaskId": "hr-startday",
+          "classification": "direct_existing",
+          "verdict": "must_preserve_without_hr-date-amend",
+          "correctDependsOnTaskIds": [
+            "hr-account",
+            "hr-laptop",
+            "hr-policy",
+            "hr-weekplan",
+            "hr-payroll"
+          ],
+          "reason": "入职日核对直接消费五项就绪结果；确认日期只改变其schedule，不增加新的任务生产者。",
+          "sources": [
+            "hr-startday",
+            "hr-file-date-amend-v2"
+          ]
+        },
+        {
+          "producerTaskIds": [
+            "hr-background",
+            "hr-policy",
+            "hr-role-outcomes"
+          ],
+          "consumerTaskId": "hr-prod-access",
+          "classification": "direct_existing_independent_gate",
+          "verdict": "correctly_preserved",
+          "correctDependsOnTaskIds": [
+            "hr-background",
+            "hr-policy",
+            "hr-role-outcomes"
+          ],
+          "reason": "生产数据权限继续由背景最终状态、培训和岗位范围驱动，日期变更不改变或放宽该独立门槛。",
+          "sources": [
+            "hr-prod-access",
+            "hr-file-access-matrix-v6",
+            "hr-d4"
+          ]
+        }
+      ],
+      "plannerIssue": [
+        {
+          "id": "REAL-C-03-P1",
+          "taskIds": [
+            "hr-account",
+            "hr-laptop",
+            "hr-payroll",
+            "hr-startday"
+          ],
+          "field": "proposal.changes[*].fields.dependsOnTaskIds",
+          "actualByTask": {
+            "hr-account": [
+              "hr-offer-accept",
+              "hr-date-amend"
+            ],
+            "hr-laptop": [
+              "hr-date-amend"
+            ],
+            "hr-payroll": [
+              "hr-offer-accept",
+              "hr-date-amend"
+            ],
+            "hr-startday": [
+              "hr-account",
+              "hr-laptop",
+              "hr-policy",
+              "hr-weekplan",
+              "hr-payroll",
+              "hr-date-amend"
+            ]
+          },
+          "expectedByTask": {
+            "hr-account": [
+              "hr-offer-accept"
+            ],
+            "hr-laptop": [],
+            "hr-payroll": [
+              "hr-offer-accept"
+            ],
+            "hr-startday": [
+              "hr-account",
+              "hr-laptop",
+              "hr-policy",
+              "hr-weekplan",
+              "hr-payroll"
+            ]
+          },
+          "description": "四个update均错误加入hr-date-amend。批准文件已经直接确认日期，开放任务负责归档与同步而非生产日期事实；日期字段更新不需要等待该任务完成。",
+          "impact": "将可并行同步的四项工作错误串行到开放任务之后，并与hr-date-amend自身“同步到受影响准备项”的完成边界形成工作流语义上的反向依赖。",
+          "sources": [
+            "hr-file-date-amend-v2",
+            "hr-d1",
+            "hr-d2",
+            "hr-date-amend",
+            "hr-request",
+            "hr-hard-start"
+          ]
+        }
+      ],
+      "fixtureIssue": [],
+      "fixtureAssessment": {
+        "verdict": "none",
+        "reason": "批准文件状态、双方确认authority/state、开放任务状态与验收标准均明确，足以区分权威日期事实和归档/同步工作；没有必要补充正文或敏感材料。"
+      },
+      "graderIssue": [],
+      "graderAssessment": {
+        "verdict": "none_in_expectation_snapshot",
+        "reason": "expectations-snapshot允许四项日期update，同时要求四项exactDependencies保持原集合，并明确不得为消费者增加日期修订串行；该要求与输入和协议一致。本审查未运行评分器。"
+      },
+      "minimalCorrection": [
+        "保留四项schedule更新及现有任务ID。",
+        "从hr-account、hr-laptop、hr-payroll、hr-startday的dependsOnTaskIds中删除hr-date-amend。",
+        "保留hr-date-amend本身及其开放归档/同步边界，不改写其任务字段。",
+        "保持hr-prod-access的Owner、验收标准和原三项依赖不变。"
+      ]
+    }
+  ],
+  "overallConclusion": {
+    "verdict": "fail",
+    "plannerIssue": "REAL-C-02有两项依赖过度扩张；REAL-C-03有一类覆盖四个任务的归档/同步依赖误判。",
+    "fixtureIssue": "none",
+    "graderIssue": "none_in_expectation_snapshot",
+    "scoringNote": "按要求未运行或修改评分；若实际评分接受这些首次输出，才需进一步检查评分器是否落实mustNotUpdateTaskIds、maxUpdates和exactDependencies。"
+  }
+}

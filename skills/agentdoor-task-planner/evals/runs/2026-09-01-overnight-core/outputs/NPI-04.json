@@ -1,0 +1,152 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-npi-04",
+  "baseSnapshotId": "snapshot-npi-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "npi04-root": 4,
+    "npi04-bom": 3,
+    "npi04-material": 2,
+    "npi04-quality": 1
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "建议沿用B版现有任务，先按确认B2对齐工程、采购与品质资料；供应商最早9月12日到样与9月8日评审存在冲突，需明确评审范围或期限后才能确认整体安排。",
+  "reasoningSummary": [
+    {
+      "text": "现行登记明确B2已确认，B3仍为待评审稿；工程最新稿不能覆盖采购所用确认版本。",
+      "evidenceRefs": [
+        "npi04-baseline",
+        "npi04-d1",
+        "npi04-bom"
+      ]
+    },
+    {
+      "text": "本订单书面回签最早9月12日到样，没有9月8日前到料承诺；6月常规3天的物料及订单条件不同。",
+      "evidenceRefs": [
+        "npi04-supplier",
+        "npi04-d2",
+        "npi04-h1"
+      ]
+    },
+    {
+      "text": "现有产出链为BOM到样料再到实物检验；当前未有当前版样品，不能提前生成实物检验结论。",
+      "evidenceRefs": [
+        "npi04-material",
+        "npi04-quality",
+        "npi04-d3"
+      ]
+    },
+    {
+      "text": "根任务保留9月8日期限；已有品质窗口9月7日只用于资料评审，不解决实物到样晚于评审的问题。",
+      "evidenceRefs": [
+        "req-npi-04",
+        "npi04-root",
+        "npi-m5-window"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "npi04-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "npi04-update-bom",
+        "action": "update",
+        "targetId": "npi04-bom",
+        "parentId": "npi04-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "工程和采购使用同一已确认BOM版本。",
+            "版本对照明确现行B2、待评审B3及其差异，记录确认依据，并让品质资料明确对应的适用版本；未经正式变更不将B3标为生效。"
+          ],
+          "tips": [
+            "利用9月3日版本评审窗口核对B2与B3差异及待决定项；是否评审通过以实际确认记录为准。"
+          ]
+        },
+        "reason": "把版本冲突显式纳入既有对齐任务，保持B2确认基线。",
+        "evidenceRefs": [
+          "npi04-bom",
+          "npi04-baseline",
+          "npi04-d1",
+          "npi-m2-window"
+        ]
+      },
+      {
+        "id": "npi04-update-material",
+        "action": "update",
+        "targetId": "npi04-material",
+        "parentId": "npi04-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "按确认BOM核对到料。",
+            "记录供应商回签对应BOM版本、样料项目、数量与实际到样证据；将最早9月12日和未承诺9月8日前到料如实列明。"
+          ],
+          "tips": [
+            "核对订单所用B2与工程B3草稿差异对供应的影响，不擅自改料或套用6月常规3天交期。",
+            "实际送样或订单条件变化后再核对实物检验可用时间；当前到料任务保持原blocked状态。"
+          ]
+        },
+        "reason": "保留原到料任务和BOM前置，明确当前订单与交期证据，避免把回签当到料。",
+        "evidenceRefs": [
+          "npi04-material",
+          "npi04-baseline",
+          "npi04-supplier",
+          "npi04-h1"
+        ]
+      },
+      {
+        "id": "npi04-update-quality",
+        "action": "update",
+        "targetId": "npi04-quality",
+        "parentId": "npi04-root",
+        "fields": {
+          "tips": [
+            "现行实物检验完成标准和样料前置不变；先准备版本映射与记录模板，实物结论必须在取得对应样品后形成。",
+            "9月7日13:00—16:00只能作为品质资料评审协作窗口，不能据此宣称9月8日已有实物检验结果。",
+            "9月8日是否仅评审资料与缺口、或调整整体评审时间，等待明确决定；本候选未缩减实物检验交付范围。"
+          ]
+        },
+        "reason": "让可先准备的资料工作与必须到样后完成的实物结果分开，同时保留原检验范围。",
+        "evidenceRefs": [
+          "npi04-quality",
+          "npi04-d3",
+          "npi04-supplier",
+          "npi-m5-window"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "npi04-root"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "unavailable",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "assessments": [],
+    "coverageNote": "合成查重接口失败，不能证明没有另建的评审任务。"
+  },
+  "questions": [
+    {
+      "field": "reviewScopeAndDeadline",
+      "question": "当前确认B2与供应商最早9月12日到样条件下，9月8日是否确认只评审现有资料和缺口、另排实物检验，还是保留实物检验作为本次评审输入并调整整体评审期限？未确认前保留原9月8日期限和实物检验范围。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "不把B3转为现行确认版本，不更改正式Owner、状态或既有依赖链；各任务原ID、归属及未列字段保持原值。",
+    "9月12日是最早送样界限，不是保证到样日期，也不是保证实物检验完成日期。",
+    "查重接口unavailable，不能证明不存在其他评审任务；本候选只局部更新已读目标树，不新建重复评审。",
+    "历史覆盖partial，不用旧询价或任务自报推算当前交期、EWD或人员容量；当前候选不宣称整体排期已可行。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": "npi04-root",
+      "label": "明确9月8日评审范围与实物检验期限冲突的处理选择"
+    }
+  ],
+  "externalEffects": "none"
+}

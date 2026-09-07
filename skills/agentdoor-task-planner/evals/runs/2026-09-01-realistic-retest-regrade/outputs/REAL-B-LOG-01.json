@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-real-b-log-01",
+  "baseSnapshotId": "snapshot-real-b-log-01-v5",
+  "baseRevision": 5,
+  "baseTaskVersions": {
+    "b-log-root": 15,
+    "b-log-data": 6,
+    "b-log-infra": 7,
+    "b-log-ops": 8,
+    "b-log-map-pack": 5,
+    "b-log-label-map": 5,
+    "b-log-access-pack": 4,
+    "b-log-carrier-account": 6,
+    "b-log-customs-access": 3,
+    "b-log-runbook-pack": 6,
+    "b-log-runbook": 6,
+    "b-log-dryrun": 8,
+    "b-log-carrier-test": 4
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "当前不能给出东沄华东仓整树重排方案；应先续读剩余14项任务及未加载讨论、历史和查重页，再基于完整消费者与依赖图生成最小差异。",
+  "reasoningSummary": [
+    {
+      "text": "授权索引显示目标树共有27项，当前只返回13项；后续两页包含其余14项及映射消费者，隐藏任务的标题、状态、Owner和依赖均不能猜测。",
+      "evidenceRefs": [
+        "b-log-page-receipt",
+        "req-real-b-log-01"
+      ]
+    },
+    {
+      "text": "讨论与历史也只加载了部分主题，夜班作业、异常客服和关务切换主题仍待续读，无法据此裁定整树影响。",
+      "evidenceRefs": [
+        "b-log-discussion-receipt",
+        "b-log-d1",
+        "b-log-d2"
+      ]
+    },
+    {
+      "text": "面单映射v4已知影响标签回归、承运商联测和切换手册，但文件本身明确完整消费者仍在后续分页。",
+      "evidenceRefs": [
+        "b-log-map-v4",
+        "b-log-runbook-v6"
+      ]
+    },
+    {
+      "text": "已完成的承运商测试账号和回退演练有可复用记录，不应在补读前重开；关务SFTP仍只是预计9月16日回执。",
+      "evidenceRefs": [
+        "b-log-h1",
+        "b-log-h2",
+        "b-log-d4",
+        "b-log-customs-v1",
+        "b-log-d5"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "partial",
+    "scopeTeamIds": [
+      "team-b-log"
+    ],
+    "assessments": [
+      {
+        "taskId": "b-log-label-map",
+        "relationship": "same_outcome",
+        "reason": "当前页已存在同一华东仓、同一切换周期的面单映射v4确认任务。",
+        "evidenceRefs": [
+          "b-log-label-map",
+          "b-log-map-v4"
+        ]
+      },
+      {
+        "taskId": "b-log-runbook",
+        "relationship": "same_outcome",
+        "reason": "当前页已存在同一切换手册消费者，但其余同结果项仍可能位于未读分页。",
+        "evidenceRefs": [
+          "b-log-runbook",
+          "b-log-runbook-v6",
+          "b-log-page-receipt"
+        ]
+      }
+    ],
+    "coverageNote": "仅检索当前13项及本页相关归档；后续任务页和未读讨论未覆盖，不能排除其他同结果或消费者。"
+  },
+  "questions": [],
+  "warnings": [
+    "任务、子任务、讨论、历史和查重覆盖均不完整，不能宣称已识别全部消费者或已验证完整依赖图。",
+    "9月19日切换窗口仍是硬边界；关务SFTP仅有9月16日预计回执，补读后仍需复核其对未见消费者和切换门禁的影响。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": "b-log-root",
+      "label": "续读b-log-page-2、b-log-page-3与b-log-thread-page-2后重新规划"
+    }
+  ],
+  "externalEffects": "none"
+}

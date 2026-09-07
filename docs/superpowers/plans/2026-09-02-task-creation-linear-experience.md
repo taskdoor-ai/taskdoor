@@ -4,7 +4,7 @@
 
 **Goal:** 在完整保留现有任务创建页的前提下，新增可切换的白纸式纵向分步创建体验。
 
-**Architecture:** `TaskCreationExperience` 负责模式 Tab 与双页面保活；现有 `TaskCreationPage` 不改内部流程；新的 `TaskCreationLinearPage` 复用 `planTaskCreation`、`CreationForm` 和创建回调。纯函数 `taskCreationLinearStages` 决定纵向章节顺序与揭示状态，线性编辑组件只负责渲染和更新同一份表单。
+**Architecture:** `TaskCreationExperience` 负责模式 Tab 与双页面保活；现有 `TaskCreationPage` 不改内部流程；新的 `TaskCreationLinearPage` 复用 `planTaskCreation`、`CreationForm` 和创建回调。纯函数 `taskCreationLinearStages` 只决定内部生成顺序与揭示状态；线性编辑组件将这些状态投影为主任务、协作成员和真实子任务，不渲染阶段编号或阶段模块。
 
 **Tech Stack:** React、TypeScript、Motion、Radix/现有 UI 组件、Node test runner、Vite。
 
@@ -13,7 +13,7 @@
 ## 文件结构
 
 - Create: `src/lib/taskCreationLinearStages.ts` — 从 `CreationForm` 生成线性章节顺序、拆分说明和揭示状态。
-- Create: `src/components/TaskCreationLinearSections.tsx` — 目标、人员、拆分、规划和可展开子任务的无卡片编辑 UI。
+- Create: `src/components/TaskCreationLinearSections.tsx` — 主任务、协作成员和可展开子任务的无卡片编辑 UI；拆分与规划仅作为内部状态。
 - Create: `src/components/TaskCreationLinearPage.tsx` — 分步模式的需求、规划、播放、澄清、关系决定、错误和提交状态。
 - Create: `src/components/TaskCreationExperience.tsx` — 标准 Tab 外壳，同时保活现有页与分步页。
 - Create: `src/styles/task-creation-linear.css` — 纵向文档、分隔线、展开内容、响应式和无动画状态。
@@ -89,7 +89,7 @@ Run: `npx tsx --test server/taskCreationLinearStages.test.ts`
 
 Expected: 2 tests PASS。
 
-### Task 2: 无卡片纵向章节与子任务编辑
+### Task 2: 无卡片任务内容与子任务编辑
 
 **Files:**
 - Create: `src/components/TaskCreationLinearSections.tsx`
@@ -105,12 +105,15 @@ import test from "node:test";
 
 const read = (path: string) => readFileSync(new URL(`../src/${path}`, import.meta.url), "utf8");
 
-test("线性章节使用纵向文档和原生展开语义，不复用卡片方案", () => {
+test("分步结果只呈现任务内容，不把内部思考阶段渲染成任务模块", () => {
   const source = read("components/TaskCreationLinearSections.tsx");
-  assert.match(source, /linear-creation-section/);
+  assert.match(source, /linear-creation-main/);
+  assert.match(source, /linear-creation-team/);
+  assert.match(source, /linear-creation-subtasks/);
   assert.match(source, /<details/);
-  assert.match(source, /aria-label=.*完成标准/);
   assert.match(source, /MemberSelector/);
+  assert.doesNotMatch(source, /已生成，可继续核对和修改|stage\.label/);
+  assert.doesNotMatch(source, /建议拆分为|当前无需拆分|先按可独立验收的交付拆分/);
   assert.doesNotMatch(source, /task-detail-hero-card|TaskCreationPlanEditor|TaskCreationSubtaskEditor/);
 });
 
@@ -143,32 +146,32 @@ type Props = {
 };
 
 export function TaskCreationLinearSections({ form, members, tags, revealCount, disabled = false, onChange, onInviteMembers }: Props) {
-  const stages = getLinearCreationStages(form, revealCount);
+  const revealedStageIds = new Set(getLinearCreationStages(form, revealCount).map(stage => stage.id));
   const updateTask = (clientId: string, patch: Partial<CreationTask>) => onChange({
     ...form,
     mainTask: clientId === form.mainTask.clientId ? { ...form.mainTask, ...patch } : form.mainTask,
     subtasks: form.subtasks.map(task => task.clientId === clientId ? { ...task, ...patch } : task),
   });
-  return <div className="linear-creation-document">{stages.map((stage, index) => (
-    <section className="linear-creation-section" data-stage={stage.id} key={stage.id}>
-      <header><span>{String(index + 1).padStart(2, "0")}</span><h2>{stage.label}</h2></header>
-      <LinearCreationStageBody disabled={disabled} form={form} members={members} onChange={onChange} onInviteMembers={onInviteMembers} stage={stage} tags={tags} updateTask={updateTask} />
-    </section>
-  ))}</div>;
+  return <div className="linear-creation-document">
+    {revealedStageIds.has("goal") && <MainTaskContent />}
+    {revealedStageIds.has("people") && <TeamContent />}
+    {revealedStageIds.has("plan") && <SubtaskContent />}
+  </div>;
 }
 ```
 
-同文件内定义 `LinearCreationStageBody`，按 `stage.id` 返回五种明确分支：`goal` 使用 `TaskCreationEditableText` 和 `TaskCriteriaFields`；`people` 使用两个 `MemberSelector`；`split` 返回拆分结论与依据；`plan` 返回顺序、并行和依赖列表；`subtask:*` 返回 `<details><summary>` 编辑器。子任务摘要显示名称、目标、负责人，展开区使用 `TaskCreationEditableText`、`TaskCriteriaFields`、`MemberSelector`、`TaskDueDatePicker`、`TagPicker` 和 `TagBadge`，并提供依赖选择与移除动作。所有分支只通过 `onChange` 更新传入的同一份 `CreationForm`。
+同文件内定义 `MainTaskContent`、`TeamContent` 和 `SubtaskContent`。`goal` 与 `people` 阶段只控制相应真实内容何时出现；`split` 与 `plan` 只控制是否开始呈现子任务，不输出阶段标题、拆分理由或重复规划列表；`subtask:*` 控制对应 `<details><summary>` 何时出现。子任务摘要显示名称、目标、负责人，展开区使用 `TaskCreationEditableText`、`TaskCriteriaFields`、`MemberSelector`、`TaskDueDatePicker`、`TagPicker` 和 `TagBadge`，并提供依赖选择与移除动作。所有组件只通过 `onChange` 更新传入的同一份 `CreationForm`。
 
 - [ ] **Step 4: 实现无卡片 CSS**
 
 ```css
 .linear-creation-document { width: min(100%, 860px); margin: 0 auto; }
-.linear-creation-section { position: relative; padding: var(--ad-space-7) 0; border-bottom: 1px solid var(--ad-border-soft); }
-.linear-creation-section > header { display: flex; align-items: baseline; gap: var(--ad-space-3); }
+.linear-creation-main { display: grid; gap: var(--ad-space-5); padding: var(--ad-space-7) 0; }
+.linear-creation-team { padding: var(--ad-space-5) 0; border-block: 1px solid var(--ad-border-soft); }
+.linear-creation-subtask-list { border-top: 1px solid var(--ad-border-soft); }
 .linear-creation-subtask { border-top: 1px solid var(--ad-border-soft); }
-.linear-creation-subtask > summary { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--ad-space-3); min-height: var(--ad-control-touch-min); cursor: pointer; }
-@media (max-width: 720px) { .linear-creation-section { padding-block: var(--ad-space-5); } }
+.linear-creation-subtask > summary { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--ad-space-3); min-height: var(--ad-control-touch-min); cursor: pointer; }
+@media (max-width: 720px) { .linear-creation-people { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .linear-creation-document * { scroll-behavior: auto; transition: none !important; } }
 ```
 

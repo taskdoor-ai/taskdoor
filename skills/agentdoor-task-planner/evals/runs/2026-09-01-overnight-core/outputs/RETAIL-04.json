@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-retail-04",
+  "baseSnapshotId": "snapshot-retail-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "当前没有经验证的西区授权，未读取任何开业任务、成员或讨论；需先完成授权校验并补读目标任务，再规划下周准备工作。直接通知所有店长也未执行。",
+  "reasoningSummary": [
+    {
+      "text": "授权团队列表为空，ACL状态为missing；权限回执明确本轮未读取西区任务、成员或讨论正文。",
+      "evidenceRefs": [
+        "retail04-access",
+        "req-retail-04"
+      ]
+    },
+    {
+      "text": "任务、子任务、讨论和历史覆盖均为unavailable，无法识别要重规划的目标ID、版本、既有工作或责任人。",
+      "evidenceRefs": [
+        "retail04-access"
+      ]
+    },
+    {
+      "text": "缺少授权范围时未进行查重，不能判断西区开业准备是否已有任务或是否需要新增。",
+      "evidenceRefs": [
+        "req-retail-04"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "unavailable",
+    "scopeTeamIds": [],
+    "assessments": [],
+    "coverageNote": "缺少经验证的授权范围，未进行任务查重。"
+  },
+  "questions": [],
+  "warnings": [
+    "不能由用户消息中的区域名称或“所有店长”推断可访问团队、成员列表、目标任务或通知对象。",
+    "“下周”可由服务时钟解释为2026年9月7日至13日，但在目标任务、现有期限和可见成员未知时不生成日期与候选分工。",
+    "本规划协议不发送通知；即使后续取得上下文，通知仍需由独立受控流程在明确对象和授权后执行。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": null,
+      "label": "完成西区授权校验后读取目标开业任务、直属子任务、相关讨论、历史、成员及查重范围"
+    }
+  ],
+  "externalEffects": "none"
+}

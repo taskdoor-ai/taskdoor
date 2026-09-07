@@ -1,0 +1,63 @@
+{
+  "createdAt": "2026-09-01T05:08:26.825395+00:00",
+  "suite": "realistic",
+  "fixtureSha256": "6bba29ab4747f8104ef3e9ff4e180c95c5f949116a45b3ad7885d620d9e44fc1",
+  "expectationsSha256": "250a8b8fb86fa1dd33e600215eb96545b84d55760ed31c757e8dd6659dc5add6",
+  "skillSha256": "496ed1fafcf84daeeb1891d8401f46a1f8c89fb502954b41edbd56e52dfcdf51",
+  "contractSha256": "e2fb46a143470773b877c32fe0adcddf457d20c191467a7fa2cb99aae21f2cbc",
+  "schemaSha256": "8c0192063fadf41d26e0b91d9f00e165c981173e46809197c5807d0090491cc7",
+  "notice": "Synthetic, offline Skill evaluation. No model API, production ACL or task writes are exercised by this script.",
+  "selectedCaseIds": [
+    "REAL-B-NPI-01",
+    "REAL-B-PROC-01",
+    "REAL-C-01",
+    "REAL-C-02",
+    "REAL-C-03",
+    "REAL-C-04",
+    "REAL-A-ECOM-01"
+  ],
+  "cases": [
+    {
+      "id": "REAL-B-NPI-01",
+      "industry": "manufacturing_npi",
+      "category": "versioned_change_consumers",
+      "inputSha256": "226b959304e86ffd303f94c12f01114f6cf2ea673686f2eb61a45f64a01911b6"
+    },
+    {
+      "id": "REAL-B-PROC-01",
+      "industry": "procurement_vendor_onboarding",
+      "category": "entity_revision_existing_onboarding",
+      "inputSha256": "bdf45d2cc4c32d9f7870d60a6296bfad2ef2eaacb0e873950d20b8ab0900f9f0"
+    },
+    {
+      "id": "REAL-C-01",
+      "industry": "content_campaign",
+      "category": "approved_claim_fanout_minimal_replan",
+      "inputSha256": "b2ae2408ca52079aec32c4a43702325337ba336a496c98063dc0fabc32c34b32"
+    },
+    {
+      "id": "REAL-C-02",
+      "industry": "finance_close",
+      "category": "external_bank_wait_and_sensitive_close_replan",
+      "inputSha256": "5df847142a5b402e3aad965cc6162c5b8d72e459386c7ced700b8a6bc1890bf5"
+    },
+    {
+      "id": "REAL-C-03",
+      "industry": "hiring_onboarding",
+      "category": "date_shift_duplicate_avoidance_and_sensitive_access",
+      "inputSha256": "7230ebdeb92af51bcf7d8c85018be2767aa56a3341189dfe53d78a8fee21a4b9"
+    },
+    {
+      "id": "REAL-C-04",
+      "industry": "renovation_handover",
+      "category": "property_window_certificate_wait_and_handover_risk",
+      "inputSha256": "cbe6bb1abf0baa9d852626fa93057aa0fc5dbd57f051a47447b0aaf75a0aa5bc"
+    },
+    {
+      "id": "REAL-A-ECOM-01",
+      "industry": "ecommerce_operations",
+      "category": "next_batch_reuses_existing_outcomes_and_repairs_gate",
+      "inputSha256": "86904f5b07e460d38099d67a2ee15e1d65dcb8cc504944d2c39e9534997ce007"
+    }
+  ]
+}

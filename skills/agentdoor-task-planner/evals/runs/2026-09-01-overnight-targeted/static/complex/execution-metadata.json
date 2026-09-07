@@ -1,0 +1,20 @@
+{
+  "artifactType": "offline_synthetic_targeted_retest",
+  "runKind": "post_fix_static_complex",
+  "createdOn": "2026-09-01",
+  "scenarioCount": 2,
+  "firstOutputsModified": false,
+  "executorContext": "one blinded executor generated all six targeted static cases; expectation access denied by prompt and self-report",
+  "plannerModelConfiguration": {
+    "modelSnapshot": "not_exposed",
+    "temperature": "not_exposed",
+    "seed": "not_exposed"
+  },
+  "productionServicesAccessed": false,
+  "productionWrites": false,
+  "humanIndustryReview": false,
+  "reviewLimits": [
+    "same Codex model family",
+    "not production ACL/retrieval/submit validation"
+  ]
+}

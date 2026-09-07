@@ -1,0 +1,154 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-08",
+  "baseSnapshotId": "snapshot-edge-08-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "edge08-sep": 2
+  },
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只新增01店2026年10月31日的一次性月末盘点候选，沿用9月盘点口径但核对10月数据；9月任务保持原状，不设置重复、排班或自动指派。",
+  "reasoningSummary": [
+    {
+      "text": "用户明确指定01店2026年10月31日这一次盘点，只要10月一单，不与9月合并也不启用自动重复。",
+      "evidenceRefs": [
+        "req-edge-08",
+        "edge08-period"
+      ]
+    },
+    {
+      "text": "查重候选edge08-sep对应9月30日闭店时点；本轮对应10月31日闭店时点，同店同交付类型但周期和本期核对数值不同。",
+      "evidenceRefs": [
+        "edge08-sep",
+        "edge08-period"
+      ]
+    },
+    {
+      "text": "本轮只需要一份带口径说明的盘点差异清单，沿用9月方法但不能复制9月数据或任务状态。",
+      "evidenceRefs": [
+        "edge08-sep",
+        "edge08-period",
+        "req-edge-08"
+      ]
+    },
+    {
+      "text": "林序职责覆盖01店落实与本店交付记录复核，适合推荐为该单一结果负责人；9月的协作窗口不构成10月排期承诺。",
+      "evidenceRefs": [
+        "retail-m2-role",
+        "retail-m2-window"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:edge08-oct-inventory",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-edge08-create-oct-inventory",
+        "action": "create",
+        "targetId": "new:edge08-oct-inventory",
+        "parentId": null,
+        "fields": {
+          "title": "01店2026年10月31日月末盘点",
+          "goal": {
+            "text": "形成01店2026年10月31日闭店时点库存的带口径说明差异清单，留存本期可核对结果。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-edge-08",
+              "edge08-period"
+            ]
+          },
+          "acceptanceCriteria": [
+            "核对合成·青桐01店2026年10月31日闭店时点库存，交付对应2026年10月本期数据的差异清单，并在清单中标明门店、周期和盘点时点。",
+            "差异清单沿用9月相同记录口径并附口径说明；逐项留存10月本期核对依据，不复制9月数值作为10月核对结果。",
+            "交付边界仅为本次10月盘点，不合并或修改9月任务，不包含循环、排班、通知、自动分派或批量创建。"
+          ],
+          "tips": [
+            "按已约定口径准备和逐项核对本期盘点记录；准备、盘点及汇总差异作为单任务执行步骤。",
+            "9月任务仅提供口径参考，不因复用口径建立对9月任务完成的依赖。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m2",
+            "basis": "recommended",
+            "reason": "林序负责01店落实和交付记录复核，责任范围与本次01店盘点一致；推荐依据职责，并非自动继承9月Owner或直接排班。",
+            "evidenceRefs": [
+              "retail-m2-role",
+              "edge08-period"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-10-31",
+            "basis": "explicit",
+            "assumptions": [
+              "保留用户明确的2026年10月31日交付边界及当日闭店盘点基准时点。",
+              "具体准备开始时间、闭店时刻和10月人员可用窗口尚未提供，不据9月4日窗口承诺10月容量。"
+            ],
+            "evidenceRefs": [
+              "req-edge-08",
+              "edge08-period",
+              "retail-m2-window"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供10月盘点规模、约定工具下的人类投入依据或可比较的历史耗时，EWD暂不估计。",
+              "不将相隔两个月的等待时长计入人类投入，也不据9月任务状态估计10月耗时。"
+            ],
+            "evidenceRefs": [
+              "edge08-period",
+              "edge08-sep",
+              "req-edge-08"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "本轮为明确不同周期的一次性新交付，9月任务继续沿用；单个任务即可承载月末盘点差异清单，不扩成自动周期或多月计划。",
+        "evidenceRefs": [
+          "req-edge-08",
+          "edge08-period",
+          "edge08-sep"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "edge08-sep"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-retail"
+    ],
+    "assessments": [
+      {
+        "taskId": "edge08-sep",
+        "relationship": "different_instance",
+        "reason": "既有任务对应01店2026年9月30日闭店库存，本轮明确对应2026年10月31日闭店库存；周期及需核对的本期数值不同，仅复用差异清单口径。",
+        "evidenceRefs": [
+          "edge08-sep",
+          "edge08-period",
+          "req-edge-08"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；返回的候选均在本次可见快照内。"
+  },
+  "questions": [],
+  "warnings": [
+    "10月人员可用性与人类投入估算未知；候选负责人尚未接受，不据9月窗口保证10月排期。",
+    "只输出一项一次性候选，没有设置任何自动重复、排班、通知或实际指派。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:edge08-oct-inventory",
+      "label": "审阅01店10月31日一次性盘点候选"
+    }
+  ],
+  "externalEffects": "none"
+}

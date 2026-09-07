@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-ecom-01",
+  "baseSnapshotId": "snapshot-ecom-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只建一项SKU-CUP-A详情页错字校对候选，由明确指定的颜北负责，9月2日交付清稿和五处改动清单。",
+  "reasoningSummary": [
+    {
+      "text": "用户明确限定为清单中的5处错别字，并要求不改文案结构、图片、售价或卖点。",
+      "evidenceRefs": [
+        "req-ecom-01",
+        "ecom01-copy"
+      ]
+    },
+    {
+      "text": "用户指定颜北，且其职责覆盖按已确认信息修正详情页错字；发起人的仓配职责不是本项负责人依据。",
+      "evidenceRefs": [
+        "req-ecom-01",
+        "ecom-m2",
+        "ecom-m3"
+      ]
+    },
+    {
+      "text": "服务日期为2026年9月1日，本轮“明天”对应9月2日，与硬期限一致。",
+      "evidenceRefs": [
+        "req-ecom-01"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:ecom01-copy-proofread",
+    "complexity": "simple",
+    "preservedTaskIds": [],
+    "changes": [
+      {
+        "id": "change:new:ecom01-copy-proofread",
+        "action": "create",
+        "targetId": "new:ecom01-copy-proofread",
+        "parentId": null,
+        "fields": {
+          "title": "校对SKU-CUP-A详情页清单中的5处错别字",
+          "goal": {
+            "text": "在不改变已确认页面内容范围的前提下，消除SKU-CUP-A详情页清单中的5处错别字，并交付可核对的清稿。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-ecom-01",
+              "ecom01-copy"
+            ]
+          },
+          "acceptanceCriteria": [
+            "交付SKU-CUP-A详情页清稿和改动清单，逐项对应v1清单中的“容谅”“轻松携戴”“清诜”“按扭”“包装内含说名书”五处文字，记录修改前后及位置。",
+            "逐项核对五处修改符合原句含义，并以版本差异确认没有清单之外的文字改写。",
+            "保持已确认的文案结构、图片、售价和卖点不变，不新增或改写功效承诺；9月2日向发起人提供清稿与改动清单。"
+          ],
+          "tips": [
+            "按原稿定位五处文字并校对，复核差异后交付清稿；定位、改字和列改动清单属于本任务步骤，不拆同义子任务。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m2",
+            "basis": "explicit",
+            "reason": "用户明确指定颜北；其商品内容设计职责覆盖按已确认信息修正错字，与本轮边界一致。",
+            "evidenceRefs": [
+              "req-ecom-01",
+              "ecom-m2"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "explicit",
+            "assumptions": [
+              "“明天”按输入的2026年9月1日、Asia/Shanghai解析为9月2日；没有指定开始时间。"
+            ],
+            "evidenceRefs": [
+              "req-ecom-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": 0.5,
+            "basis": "model",
+            "assumptions": [
+              "假设已有可编辑的详情页原稿，仅五处文字修正、一次校对和一次前后差异复核。",
+              "不包含重做版式图片、实际发布、等待反馈或追加改稿；如原稿不可编辑需另评估。"
+            ],
+            "evidenceRefs": [
+              "req-ecom-01",
+              "ecom01-copy"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "范围明确且只有清稿与对应改动清单这一组交付，一个轻任务足够。",
+        "evidenceRefs": [
+          "req-ecom-01",
+          "ecom01-copy"
+        ]
+      }
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "颜北为显式指定的候选负责人，本提案不意味着责任已接受或任务已创建。",
+    "0.5人时为按可编辑现稿、一次校对和一次差异复核作出的模型估算，不是历史实绩或工期承诺；可用窗口未提供。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:ecom01-copy-proofread",
+      "label": "审阅五处错字校对候选"
+    }
+  ],
+  "externalEffects": "none"
+}

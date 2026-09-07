@@ -1,0 +1,506 @@
+{
+  "requestId": "req-multi-d1",
+  "message": "基于当前内容项目和客户最新确认，改一下剩余计划：本期改为面向首次使用者，已审过的五张功能图继续用，文案和渠道适配需要跟着调。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "content-m6",
+  "teamId": "team-content",
+  "authorizedTeamIds": [
+    "team-content"
+  ],
+  "revision": 1,
+  "context": {
+    "snapshotId": "snapshot-multi-d1",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-content"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "content03-root",
+        "title": "蓝屿产品介绍内容包",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "功能表述准确并按确认渠道规格交付"
+        ],
+        "ownerId": "content-m1",
+        "sourceRefs": [
+          "content03-root-record"
+        ],
+        "goal": "以已确认品牌口径说明产品功能",
+        "dueOn": "2026-09-08"
+      },
+      {
+        "id": "content03-outline",
+        "title": "确认产品功能范围",
+        "status": "completed",
+        "version": 2,
+        "updatedAt": "2026-08-27T14:00:00+08:00",
+        "parentId": "content03-root",
+        "acceptanceCriteria": [
+          "确认介绍的五项产品功能"
+        ],
+        "ownerId": "content-m2",
+        "sourceRefs": [
+          "content03-outline-record"
+        ]
+      },
+      {
+        "id": "content03-visual",
+        "title": "交付五张功能图v2",
+        "status": "completed",
+        "version": 3,
+        "updatedAt": "2026-08-30T11:00:00+08:00",
+        "parentId": "content03-root",
+        "acceptanceCriteria": [
+          "客户确认五张功能图v2"
+        ],
+        "ownerId": "content-m4",
+        "sourceRefs": [
+          "content03-visual-record"
+        ]
+      },
+      {
+        "id": "content03-copy",
+        "title": "完成产品介绍文案",
+        "status": "in_progress",
+        "version": 3,
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "parentId": "content03-root",
+        "acceptanceCriteria": [
+          "按已确认五项功能交付文字稿"
+        ],
+        "ownerId": "content-m3",
+        "sourceRefs": [
+          "content03-copy-record"
+        ]
+      },
+      {
+        "id": "content03-format",
+        "title": "完成公众号渠道适配",
+        "status": "open",
+        "version": 2,
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "parentId": "content03-root",
+        "acceptanceCriteria": [
+          "交付公众号规格的文字与图片组合"
+        ],
+        "ownerId": "content-m6",
+        "sourceRefs": [
+          "content03-format-record"
+        ],
+        "dependsOnTaskIds": [
+          "content03-copy",
+          "content03-visual"
+        ]
+      }
+    ],
+    "discussions": [
+      {
+        "id": "content03-d1",
+        "taskId": "content03-root",
+        "authorId": "content-m1",
+        "createdAt": "2026-09-01T10:30:00+08:00",
+        "kind": "decision",
+        "text": "客户确认面向首次使用者；五张功能图v2继续使用，五项功能范围和品牌口径不变。见客户确认邮件content03-confirm.",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "content03-d2",
+        "taskId": "content03-copy",
+        "authorId": "content-m3",
+        "createdAt": "2026-09-01T10:30:00+08:00",
+        "kind": "report",
+        "text": "现稿偏熟练用户，需要重写入门解释段，其余事实表述可保留。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "content03-d3",
+        "taskId": "content03-copy",
+        "authorId": "content-m2",
+        "createdAt": "2026-09-01T10:30:00+08:00",
+        "kind": "proposal",
+        "text": "也许可以让我来写全文，但还没有交接，陶然仍是当前负责人。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "content03-h1",
+        "taskId": "content03-visual",
+        "occurredAt": "2026-08-30T11:00:00+08:00",
+        "type": "task_completed",
+        "summary": "五张功能图v2已确认，完成版本3。",
+        "version": 3,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "content03-h2",
+        "taskId": "content03-copy",
+        "occurredAt": "2026-08-31T15:00:00+08:00",
+        "type": "field_confirmed",
+        "summary": "用户确认陶然负责文字稿，保持现行功能范围。",
+        "version": 3,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "content03-root-record",
+        "title": "蓝屿产品介绍内容包当前记录",
+        "text": "合成任务库快照：content03-root，版本5，状态in_progress；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "content03-outline-record",
+        "title": "确认产品功能范围当前记录",
+        "text": "合成任务库快照：content03-outline，版本2，状态completed；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-08-27T14:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "content03-visual-record",
+        "title": "交付五张功能图v2当前记录",
+        "text": "合成任务库快照：content03-visual，版本3，状态completed；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-08-30T11:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "content03-copy-record",
+        "title": "完成产品介绍文案当前记录",
+        "text": "合成任务库快照：content03-copy，版本3，状态in_progress；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "content03-format-record",
+        "title": "完成公众号渠道适配当前记录",
+        "text": "合成任务库快照：content03-format，版本2，状态open；此状态来自任务记录，不从讨论推断。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "content03-confirm",
+        "title": "客户受众调整确认（合成）",
+        "text": "经客户书面确认，本期受众改为首次使用者；五项功能范围不变，五张功能图v2可继续使用，不要求重新拍摄或设计。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "req-content-03",
+        "title": "前轮用户原文（合成）",
+        "text": "基于当前内容项目和客户最新确认，改一下剩余计划：本期改为面向首次使用者，已审过的五张功能图继续用，文案和渠道适配需要跟着调。",
+        "updatedAt": "2026-09-01T18:00:00+08:00",
+        "source": "synthetic_test_transition"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "matches": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "currentTaskId": "content03-root",
+  "confirmedFields": [
+    {
+      "taskId": "content03-copy",
+      "field": "ownerId",
+      "value": "content-m3"
+    },
+    {
+      "taskId": "content03-root",
+      "field": "goal",
+      "value": "以已确认品牌口径说明产品功能"
+    }
+  ],
+  "members": [
+    {
+      "id": "content-m1",
+      "name": "白璐",
+      "role": "客户项目经理",
+      "responsibilities": [
+        "收集客户范围和确认记录",
+        "协调版本与交付计划"
+      ],
+      "boundaries": [
+        "不代客户批准成稿",
+        "不默认为所有子任务Owner"
+      ],
+      "evidence": [
+        {
+          "id": "content-m1-role",
+          "title": "白璐职责说明（合成）",
+          "text": "职责：收集客户范围和确认记录；协调版本与交付计划。边界：不代客户批准成稿；不默认为所有子任务Owner。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m1-work",
+          "title": "白璐当前工作自报（合成）",
+          "text": "协调合成客户的秋季内容包",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调合成客户的秋季内容包",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "content-m2",
+      "name": "杜衡",
+      "role": "内容策划",
+      "responsibilities": [
+        "确定选题与受众表达",
+        "把客户需求转成内容提纲"
+      ],
+      "boundaries": [
+        "不自行增加业绩目标",
+        "不代客户确认新受众"
+      ],
+      "evidence": [
+        {
+          "id": "content-m2-role",
+          "title": "杜衡职责说明（合成）",
+          "text": "职责：确定选题与受众表达；把客户需求转成内容提纲。边界：不自行增加业绩目标；不代客户确认新受众。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m2-work",
+          "title": "杜衡当前工作自报（合成）",
+          "text": "整理两份内容提纲",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理两份内容提纲",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "content-m3",
+      "name": "陶然",
+      "role": "文案作者",
+      "responsibilities": [
+        "按确认提纲写作",
+        "处理文字修改"
+      ],
+      "boundaries": [
+        "不自行扩写受限范围",
+        "不改变已确认品牌口径"
+      ],
+      "evidence": [
+        {
+          "id": "content-m3-role",
+          "title": "陶然职责说明（合成）",
+          "text": "职责：按确认提纲写作；处理文字修改。边界：不自行扩写受限范围；不改变已确认品牌口径。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m3-work",
+          "title": "陶然当前工作自报（合成）",
+          "text": "修改待审稿的文字版本",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "修改待审稿的文字版本",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "content-m4",
+      "name": "沈禾",
+      "role": "视觉设计",
+      "responsibilities": [
+        "制作和复用已授权素材",
+        "按明确规格适配视觉"
+      ],
+      "boundaries": [
+        "不把旧素材自动当可无限复用",
+        "不确认客户验收"
+      ],
+      "evidence": [
+        {
+          "id": "content-m4-role",
+          "title": "沈禾职责说明（合成）",
+          "text": "职责：制作和复用已授权素材；按明确规格适配视觉。边界：不把旧素材自动当可无限复用；不确认客户验收。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m4-work",
+          "title": "沈禾当前工作自报（合成）",
+          "text": "整理已审视觉资产",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "content-m4-window",
+          "title": "沈禾公开协作窗口（合成）",
+          "text": "2026-09-04T10:00:00+08:00至2026-09-04T12:00:00+08:00。只用于视觉适配评审，其他可用性未知。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理已审视觉资产",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-04T10:00:00+08:00",
+        "endAt": "2026-09-04T12:00:00+08:00",
+        "sourceRef": "content-m4-window",
+        "note": "只用于视觉适配评审，其他可用性未知。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "content-m5",
+      "name": "程简",
+      "role": "文字编辑",
+      "responsibilities": [
+        "核对错字和引用格式",
+        "检查成稿与约定范围一致"
+      ],
+      "boundaries": [
+        "不代客户做发布批准",
+        "不在校对任务中重写结构"
+      ],
+      "evidence": [
+        {
+          "id": "content-m5-role",
+          "title": "程简职责说明（合成）",
+          "text": "职责：核对错字和引用格式；检查成稿与约定范围一致。边界：不代客户做发布批准；不在校对任务中重写结构。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m5-work",
+          "title": "程简当前工作自报（合成）",
+          "text": "校对一篇短稿",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "content-m5-window",
+          "title": "程简公开协作窗口（合成）",
+          "text": "2026-09-02T09:00:00+08:00至2026-09-02T12:00:00+08:00。可用于短稿校对，不代表可承担完整创作。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "校对一篇短稿",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-02T09:00:00+08:00",
+        "endAt": "2026-09-02T12:00:00+08:00",
+        "sourceRef": "content-m5-window",
+        "note": "可用于短稿校对，不代表可承担完整创作。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "content-m6",
+      "name": "唐钰",
+      "role": "交付与版本管理",
+      "responsibilities": [
+        "维护交付清单及版本",
+        "核对客户批准与发布前提"
+      ],
+      "boundaries": [
+        "不把审阅意见当批准",
+        "不未经授权发布内容"
+      ],
+      "evidence": [
+        {
+          "id": "content-m6-role",
+          "title": "唐钰职责说明（合成）",
+          "text": "职责：维护交付清单及版本；核对客户批准与发布前提。边界：不把审阅意见当批准；不未经授权发布内容。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m6-work",
+          "title": "唐钰当前工作自报（合成）",
+          "text": "核对待发素材的版本和批准记录",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对待发素材的版本和批准记录",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

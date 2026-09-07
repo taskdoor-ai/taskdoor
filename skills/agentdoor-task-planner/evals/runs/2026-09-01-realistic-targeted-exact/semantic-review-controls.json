@@ -1,0 +1,367 @@
+{
+  "schemaVersion": "agentdoor.semantic-review.v1",
+  "reviewName": "controls",
+  "runRoot": "/tmp/agentdoor-planner-realistic-targeted-final-20260901-v4",
+  "reviewScope": {
+    "scenarioIds": [
+      "REAL-C-01",
+      "REAL-C-04",
+      "REAL-A-ECOM-01"
+    ],
+    "artifactsRead": [
+      "inputs/REAL-C-01.json",
+      "outputs/REAL-C-01.json",
+      "inputs/REAL-C-04.json",
+      "outputs/REAL-C-04.json",
+      "inputs/REAL-A-ECOM-01.json",
+      "outputs/REAL-A-ECOM-01.json",
+      "expectations-snapshot.json",
+      "protocol-snapshot.json"
+    ],
+    "mutations": [
+      "semantic-review-controls.json"
+    ],
+    "scorerRun": false
+  },
+  "protocolBasis": [
+    {
+      "rule": "direct-consumer-only",
+      "source": "protocol-snapshot.json#SKILL.md",
+      "text": "只检查直接读取新增或改变产出的消费者；已有依赖链已传递消费且目标、标准和日期仍准确的下游保持不变。"
+    },
+    {
+      "rule": "dependency-set-diff",
+      "source": "protocol-snapshot.json#references/context-and-replanning.md",
+      "text": "最终依赖等于原依赖并入新增直接生产者，再减去有明确失效证据的旧生产者；没有失效来源不能删旧边。"
+    },
+    {
+      "rule": "minimal-field-diff",
+      "source": "protocol-snapshot.json#SKILL.md",
+      "text": "现有标准已表达同一结果时不改写；任务仅因位于影响链路上不获得 update。"
+    }
+  ],
+  "cases": [
+    {
+      "scenarioId": "REAL-C-01",
+      "verdict": "fail",
+      "expectationAlignment": "output_has_one_forbidden_extra_update",
+      "acceptanceCriteriaRewrite": {
+        "present": true,
+        "taskId": "cc-claim-v2",
+        "field": "proposal.changes[id=update-cc-claim-v2-criteria].fields.acceptanceCriteria",
+        "oldValue": [
+          "列出需要替换的渠道与文件位置，等待有权回执后补精确措辞"
+        ],
+        "newValue": [
+          "基于获批主张v2回执列出页面、邮件和付费渠道需要替换的文件位置与精确措辞",
+          "逐项标明合规矩阵要求的限制语，旧“首月免费”不得继续用于现行渠道版本"
+        ],
+        "manufacturesDirectConsumption": false,
+        "assessment": "该改写由已到达的客户回执与合规矩阵支持，且只点名页面、邮件和付费渠道；它没有把cc-launch-check声明为直接消费者，因此本身是合法的生产任务边界更新。",
+        "sourceRefs": [
+          "cc-claim-v2",
+          "cc-d1",
+          "cc-d2",
+          "cc-file-claim-approval-v2",
+          "cc-file-legal-matrix-v4"
+        ]
+      },
+      "dependencyReview": [
+        {
+          "taskId": "cc-landing-copy",
+          "field": "dependsOnTaskIds",
+          "oldValue": [
+            "cc-claim-v1"
+          ],
+          "actualValue": [
+            "cc-claim-v2"
+          ],
+          "verdict": "valid_direct_consumer",
+          "sourceRefs": [
+            "cc-landing-copy",
+            "cc-d1",
+            "cc-d4",
+            "cc-file-claim-approval-v2"
+          ]
+        },
+        {
+          "taskId": "cc-email-copy",
+          "field": "dependsOnTaskIds",
+          "oldValue": [
+            "cc-claim-v1"
+          ],
+          "actualValue": [
+            "cc-claim-v2"
+          ],
+          "verdict": "valid_direct_consumer",
+          "sourceRefs": [
+            "cc-email-copy",
+            "cc-d8",
+            "cc-file-email-flow-v2",
+            "cc-file-claim-approval-v2"
+          ]
+        },
+        {
+          "taskId": "cc-paid",
+          "field": "dependsOnTaskIds",
+          "oldValue": [
+            "cc-landing-copy",
+            "cc-keyvisual"
+          ],
+          "actualValue": [
+            "cc-landing-copy",
+            "cc-keyvisual",
+            "cc-claim-v2"
+          ],
+          "verdict": "valid_direct_consumer",
+          "sourceRefs": [
+            "cc-paid",
+            "cc-d2",
+            "cc-d9",
+            "cc-file-media-sheet-v7",
+            "cc-file-legal-matrix-v4"
+          ]
+        },
+        {
+          "taskId": "cc-launch-check",
+          "field": "dependsOnTaskIds",
+          "oldValue": [
+            "cc-paid",
+            "cc-crm",
+            "cc-keyvisual"
+          ],
+          "actualValue": [
+            "cc-paid",
+            "cc-crm",
+            "cc-keyvisual",
+            "cc-claim-v2"
+          ],
+          "semanticValue": [
+            "cc-paid",
+            "cc-crm",
+            "cc-keyvisual"
+          ],
+          "verdict": "invalid_redundant_transitive_dependency",
+          "existingTransitivePaths": [
+            [
+              "cc-launch-check",
+              "cc-paid",
+              "cc-claim-v2"
+            ],
+            [
+              "cc-launch-check",
+              "cc-crm",
+              "cc-email-copy",
+              "cc-claim-v2"
+            ]
+          ],
+          "assessment": "原完成标准核对页面、邮件、付费渠道和主视觉的现行交付版本；cc-paid与cc-crm已把v2结果传入上线核对。cc-file-runbook-v3只提供核对步骤和固定窗口，获批主张文件也未关联cc-launch-check，没有证据表明它还直接读取替换清单。",
+          "sourceRefs": [
+            "cc-launch-check",
+            "cc-paid",
+            "cc-crm",
+            "cc-email-copy",
+            "cc-file-runbook-v3",
+            "cc-file-claim-approval-v2",
+            "cc-request"
+          ]
+        }
+      ],
+      "transitiveDownstreamReview": {
+        "cc-crm": "正确保持不变；它通过cc-email-copy消费v2。",
+        "cc-launch-check": "错误更新；它已通过cc-paid和cc-crm消费v2。"
+      },
+      "plannerIssue": [
+        {
+          "code": "redundant_transitive_downstream_update",
+          "taskId": "cc-launch-check",
+          "field": "proposal.changes[id=update-cc-launch-check-v2-dependency].fields.dependsOnTaskIds",
+          "actual": [
+            "cc-paid",
+            "cc-crm",
+            "cc-keyvisual",
+            "cc-claim-v2"
+          ],
+          "correct": [
+            "cc-paid",
+            "cc-crm",
+            "cc-keyvisual"
+          ],
+          "impact": "把四项最小更新扩大为五项，违反直接消费者范围，并把应列入preservedTaskIds的cc-launch-check变成update。",
+          "sourceRefs": [
+            "cc-launch-check",
+            "cc-paid",
+            "cc-crm",
+            "cc-email-copy",
+            "cc-file-runbook-v3"
+          ]
+        }
+      ],
+      "fixtureIssue": [],
+      "graderIssue": []
+    },
+    {
+      "scenarioId": "REAL-C-04",
+      "verdict": "pass",
+      "expectationAlignment": "frozen_expectation_conflicts_with_input_and_protocol",
+      "acceptanceCriteriaRewrite": {
+        "present": false,
+        "manufacturesDirectConsumption": false,
+        "assessment": "首次输出没有修改任何验收标准，新增rn-electric-cert依赖来自rn-reinspection原标准、正式任务关系与复验讨论，而非候选自造的消费边界。",
+        "sourceRefs": [
+          "rn-reinspection",
+          "rn-electric-cert",
+          "rn-d9",
+          "rn-request"
+        ]
+      },
+      "dependencyReview": [
+        {
+          "taskId": "rn-electric-cert",
+          "field": "dependsOnTaskIds",
+          "oldValue": [
+            "rn-electric-retest"
+          ],
+          "actualValue": [
+            "rn-electric-retest"
+          ],
+          "verdict": "valid_preserved_direct_producer",
+          "sourceRefs": [
+            "rn-electric-cert",
+            "rn-electric-retest",
+            "rn-file-cert-request-v2",
+            "rn-d6"
+          ]
+        },
+        {
+          "taskId": "rn-reinspection",
+          "field": "dependsOnTaskIds",
+          "oldValue": [
+            "rn-electric-retest",
+            "rn-cabinet"
+          ],
+          "actualValue": [
+            "rn-electric-retest",
+            "rn-cabinet",
+            "rn-electric-cert"
+          ],
+          "frozenExpectationValue": [
+            "rn-electric-cert",
+            "rn-cabinet"
+          ],
+          "verdict": "valid_old_union_new_direct_producer",
+          "assessment": "rn-reinspection原标准要求业主复验电气与木作结果，rn-request又明确让证书和业主复验消费正式复测结果；没有任何来源宣布rn-electric-retest不再需要。新增证书后保留正式复测与柜门整改，符合old ∪ direct producers − obsolete producers。",
+          "sourceRefs": [
+            "rn-reinspection",
+            "rn-electric-retest",
+            "rn-cabinet",
+            "rn-electric-cert",
+            "rn-request",
+            "rn-d9",
+            "rn-file-snag-v5"
+          ]
+        }
+      ],
+      "transitiveDownstreamReview": {
+        "rn-manual": "正确保持不变；它已直接依赖rn-electric-cert和rn-water-record。",
+        "rn-key-handover": "正确保持不变；它通过rn-reinspection与rn-manual消费电气结果和证书。"
+      },
+      "plannerIssue": [],
+      "fixtureIssue": [
+        {
+          "code": "expectation_drops_evidence_backed_old_dependency",
+          "field": "expectations[scenarioId=REAL-C-04].requiredDependencies[taskId=rn-reinspection].dependsOnTaskIds",
+          "frozenExpectation": [
+            "rn-electric-cert",
+            "rn-cabinet"
+          ],
+          "inputBaseline": [
+            "rn-electric-retest",
+            "rn-cabinet"
+          ],
+          "semanticallySupportedFinal": [
+            "rn-electric-retest",
+            "rn-cabinet",
+            "rn-electric-cert"
+          ],
+          "assessment": "冻结期望要求删除rn-electric-retest，但输入没有旧产出失效证据，反而由rn-reinspection.acceptanceCriteria与rn-request明确支持业主复验直接读取正式电气结果。期望与夹具及协议的依赖差分规则不一致。",
+          "sourceRefs": [
+            "rn-reinspection",
+            "rn-request",
+            "rn-electric-retest",
+            "rn-electric-cert",
+            "rn-d9"
+          ]
+        }
+      ],
+      "graderIssue": []
+    },
+    {
+      "scenarioId": "REAL-A-ECOM-01",
+      "verdict": "pass",
+      "expectationAlignment": "aligned",
+      "acceptanceCriteriaRewrite": {
+        "present": false,
+        "manufacturesDirectConsumption": false,
+        "assessment": "已确认的syn-ecom-launch-gate验收标准保持不变；三个新增直接消费者关系由开售闸门清单正文和已确认讨论独立证明。",
+        "sourceRefs": [
+          "syn-ecom-launch-gate",
+          "syn-ecom-file-06",
+          "syn-ecom-d04",
+          "syn-ecom-d06"
+        ]
+      },
+      "dependencyReview": [
+        {
+          "taskId": "syn-ecom-launch-gate",
+          "field": "dependsOnTaskIds",
+          "oldValue": [
+            "syn-ecom-dry-run",
+            "syn-ecom-warehouse-slot"
+          ],
+          "actualValue": [
+            "syn-ecom-dry-run",
+            "syn-ecom-warehouse-slot",
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback"
+          ],
+          "verdict": "valid_old_union_three_direct_producers",
+          "assessment": "保留演练和仓位两个仍有效前置，并加入清单明确直接读取的渠道联检、仓内异常卡与承运降级记录；三项生产任务均已存在且边界互补。",
+          "sourceRefs": [
+            "syn-ecom-launch-gate",
+            "syn-ecom-file-01",
+            "syn-ecom-file-04",
+            "syn-ecom-file-05",
+            "syn-ecom-file-06",
+            "syn-ecom-d04",
+            "syn-ecom-d06"
+          ]
+        }
+      ],
+      "transitiveDownstreamReview": {
+        "assessment": "除开售闸门外所有任务均保持不变；没有为展示影响而改写生产任务、已完成任务或其他下游。"
+      },
+      "plannerIssue": [],
+      "fixtureIssue": [],
+      "graderIssue": []
+    }
+  ],
+  "summary": {
+    "totalCases": 3,
+    "passCases": 2,
+    "failCases": 1,
+    "plannerIssueCases": [
+      "REAL-C-01"
+    ],
+    "fixtureIssueCases": [
+      "REAL-C-04"
+    ],
+    "graderIssueCases": [],
+    "keyFinding": "REAL-C-01误改传递下游；REAL-C-04首次输出的旧边保留符合协议，冻结期望错误删除了仍有证据支持的直接前置；REAL-A-ECOM-01为正确最小差异。"
+  },
+  "limitations": [
+    "本复核未读取或运行评分器，因此graderIssue只记录可从冻结输入、输出、期望和协议直接证明的问题；REAL-C-04当前归为fixture/expectation问题，而非独立评分器实现缺陷。",
+    "未修改任何input、output、expectation、protocol或评分结果。"
+  ]
+}

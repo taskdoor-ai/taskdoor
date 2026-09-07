@@ -1,11 +1,11 @@
-import { Home, ListTodo, Moon, Sparkles, Sun } from "lucide-react";
+import { ListTodo, Moon, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { PersonAvatar } from "./PersonAvatar";
 import { TeamSwitcher, type SwitchableTeam } from "./TeamSwitcher";
 import type { PersonalCenterModule } from "./PersonalInfoDialog";
 import { GlobalNotifications } from "./GlobalNotifications";
 
-export type PrimarySection = "home" | "tasks" | "ai" | "settings";
+export type PrimarySection = "conversation" | "home" | "tasks" | "ai" | "settings";
 
 type WorkspaceSidebarProps = {
   activeSection: PrimarySection;
@@ -15,6 +15,7 @@ type WorkspaceSidebarProps = {
   onSectionChange: (section: PrimarySection) => void;
   theme: "light" | "dark";
   toggleTheme: () => void;
+  userId: string;
   userProfile: { name: string; title: string };
   activeTeamId: string;
   onTeamChange: (teamId: string) => void;
@@ -22,12 +23,10 @@ type WorkspaceSidebarProps = {
 };
 
 const primaryItems = [
-  { id: "home" as const, icon: <Home size={18} />, label: "首页" },
   { id: "tasks" as const, icon: <ListTodo size={18} />, label: "任务" },
-  { id: "ai" as const, icon: <Sparkles size={19} />, label: "连接 AI" },
 ];
 
-export function WorkspaceSidebar({ activeSection, activeTeamId, mobileOpen, onOpenPersonalCenter, onOpenTaskInsight, onSectionChange, onTeamChange, teams, theme, toggleTheme, userProfile }: WorkspaceSidebarProps) {
+export function WorkspaceSidebar({ activeSection, activeTeamId, mobileOpen, onOpenPersonalCenter, onOpenTaskInsight, onSectionChange, onTeamChange, teams, theme, toggleTheme, userId, userProfile }: WorkspaceSidebarProps) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const userMenuTriggerRef = useRef<HTMLButtonElement>(null);
@@ -46,8 +45,8 @@ export function WorkspaceSidebar({ activeSection, activeTeamId, mobileOpen, onOp
   return <div className={`workspace-nav ${mobileOpen ? "open" : ""} rail-only`}>
     <aside aria-label="一级导航" className="primary-rail">
       <TeamSwitcher activeTeamId={activeTeamId} compact onTeamChange={onTeamChange} teams={teams} />
-      <nav>{primaryItems.map((item) => <button aria-label={item.label} className={`rail-item ${item.id === "ai" ? "rail-connect-ai" : ""} ${activeSection === item.id ? "active" : ""}`} key={item.id} onClick={() => onSectionChange(item.id)} title={item.label} type="button">{item.icon}</button>)}</nav>
-      <div className="rail-bottom"><GlobalNotifications onOpenTaskInsight={onOpenTaskInsight} /><button aria-label="切换主题" className="rail-item" onClick={toggleTheme} type="button">{theme === "light" ? <Moon size={18} /> : <Sun size={18} />}</button><div className="rail-user-dropdown" ref={userMenuRef}><button aria-controls="rail-user-menu" aria-expanded={userMenuOpen} aria-label="打开设置菜单" className="rail-user-trigger" onClick={() => setUserMenuOpen((value) => !value)} ref={userMenuTriggerRef} type="button"><PersonAvatar name={userProfile.name} size="sm" /></button>{userMenuOpen && <div aria-label="设置菜单" className="rail-user-menu" id="rail-user-menu"><div className="rail-user-menu-actions"><button onClick={() => { onOpenPersonalCenter("profile"); setUserMenuOpen(false); }} ref={firstMenuItemRef} type="button">设置</button><button className="danger" type="button">退出登录</button></div></div>}</div></div>
+      <nav>{primaryItems.map((item) => <button aria-label={item.label} className={`rail-item ${activeSection === item.id || activeSection === "conversation" ? "active" : ""}`} data-tooltip={item.label} key={item.id} onClick={() => onSectionChange(item.id)} type="button">{item.icon}</button>)}</nav>
+      <div className="rail-bottom"><GlobalNotifications onOpenTaskInsight={onOpenTaskInsight} /><button aria-label="切换主题" className="rail-item" data-tooltip="切换主题" onClick={toggleTheme} type="button">{theme === "light" ? <Moon size={18} /> : <Sun size={18} />}</button><div className="rail-user-dropdown" ref={userMenuRef}><button aria-controls="rail-user-menu" aria-expanded={userMenuOpen} aria-label="打开设置菜单" className="rail-user-trigger" onClick={() => setUserMenuOpen((value) => !value)} ref={userMenuTriggerRef} type="button"><PersonAvatar name={userProfile.name} personId={userId} profilePreviewFocusable={false} showProfilePreview={false} size="sm" /></button>{userMenuOpen && <div aria-label="设置菜单" className="rail-user-menu" id="rail-user-menu"><div className="rail-user-menu-actions"><button onClick={() => { onOpenPersonalCenter("profile"); setUserMenuOpen(false); }} ref={firstMenuItemRef} type="button">设置</button><button className="danger" type="button">退出登录</button></div></div>}</div></div>
     </aside>
   </div>;
 }

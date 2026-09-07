@@ -1,0 +1,347 @@
+{
+  "requestId": "req-edge-11",
+  "message": "把BRAND-LY-v5品牌术语表的6处格式统一交给“阿宁”，我明确要的是这个显示名对应的人；先不要替我换成其他负责人。范围只到格式，不改术语内容。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "content-m1",
+  "teamId": "team-content",
+  "authorizedTeamIds": [
+    "team-content"
+  ],
+  "revision": 1,
+  "context": {
+    "snapshotId": "snapshot-edge-11-v1",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-content"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [],
+    "discussions": [],
+    "history": [],
+    "sourceRefs": [
+      {
+        "id": "edge11-brief",
+        "title": "BRAND-LY-v5格式核对范围（合成）",
+        "text": "已提供术语表BRAND-LY-v5和六处格式差异清单FMT-6；只统一这六处的空格、全半角与标点，交付修订表和变更清单，不翻译、不改词义、不发布。",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "edge11-directory",
+        "title": "授权成员目录NICK-v2（合成）",
+        "text": "本案例授权目录存在两个显示名“阿宁”：content-m3（原合成姓名陶然，文案作者）与content-m5（原合成姓名程简，文字编辑）。账号、职责与其他人员均沿用原合成团队；当前请求未给memberId，没有聊天对象或其他唯一选择信息。",
+        "version": 2,
+        "updatedAt": "2026-09-01T09:00:00+08:00",
+        "source": "synthetic_member_directory"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "matches": [],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；此范围内无其他查重匹配。"
+  },
+  "members": [
+    {
+      "id": "content-m1",
+      "name": "白璐",
+      "role": "客户项目经理",
+      "responsibilities": [
+        "收集客户范围和确认记录",
+        "协调版本与交付计划"
+      ],
+      "boundaries": [
+        "不代客户批准成稿",
+        "不默认为所有子任务Owner"
+      ],
+      "evidence": [
+        {
+          "id": "content-m1-role",
+          "title": "白璐职责说明（合成）",
+          "text": "职责：收集客户范围和确认记录；协调版本与交付计划。边界：不代客户批准成稿；不默认为所有子任务Owner。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m1-work",
+          "title": "白璐当前工作自报（合成）",
+          "text": "协调合成客户的秋季内容包",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调合成客户的秋季内容包",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "content-m2",
+      "name": "杜衡",
+      "role": "内容策划",
+      "responsibilities": [
+        "确定选题与受众表达",
+        "把客户需求转成内容提纲"
+      ],
+      "boundaries": [
+        "不自行增加业绩目标",
+        "不代客户确认新受众"
+      ],
+      "evidence": [
+        {
+          "id": "content-m2-role",
+          "title": "杜衡职责说明（合成）",
+          "text": "职责：确定选题与受众表达；把客户需求转成内容提纲。边界：不自行增加业绩目标；不代客户确认新受众。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m2-work",
+          "title": "杜衡当前工作自报（合成）",
+          "text": "整理两份内容提纲",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理两份内容提纲",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "content-m3",
+      "name": "阿宁",
+      "role": "文案作者",
+      "responsibilities": [
+        "按确认提纲写作",
+        "处理文字修改"
+      ],
+      "boundaries": [
+        "不自行扩写受限范围",
+        "不改变已确认品牌口径"
+      ],
+      "evidence": [
+        {
+          "id": "content-m3-role",
+          "title": "陶然职责说明（合成）",
+          "text": "职责：按确认提纲写作；处理文字修改。边界：不自行扩写受限范围；不改变已确认品牌口径。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m3-work",
+          "title": "陶然当前工作自报（合成）",
+          "text": "修改待审稿的文字版本",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "edge11-directory-content-m3",
+          "title": "合成授权目录的重复显示名记录",
+          "text": "稳定memberId为content-m3；沿用合成成员陶然的原职责。本案例目录版本NICK-v2将其显示名设为“阿宁”；显示名可能重名，不能当作唯一ID。",
+          "version": 2,
+          "updatedAt": "2026-09-01T08:45:00+08:00",
+          "source": "synthetic_member_directory"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "修改待审稿的文字版本",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "content-m4",
+      "name": "沈禾",
+      "role": "视觉设计",
+      "responsibilities": [
+        "制作和复用已授权素材",
+        "按明确规格适配视觉"
+      ],
+      "boundaries": [
+        "不把旧素材自动当可无限复用",
+        "不确认客户验收"
+      ],
+      "evidence": [
+        {
+          "id": "content-m4-role",
+          "title": "沈禾职责说明（合成）",
+          "text": "职责：制作和复用已授权素材；按明确规格适配视觉。边界：不把旧素材自动当可无限复用；不确认客户验收。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m4-work",
+          "title": "沈禾当前工作自报（合成）",
+          "text": "整理已审视觉资产",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "content-m4-window",
+          "title": "沈禾公开协作窗口（合成）",
+          "text": "2026-09-04T10:00:00+08:00至2026-09-04T12:00:00+08:00。只用于视觉适配评审，其他可用性未知。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理已审视觉资产",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-04T10:00:00+08:00",
+        "endAt": "2026-09-04T12:00:00+08:00",
+        "sourceRef": "content-m4-window",
+        "note": "只用于视觉适配评审，其他可用性未知。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "content-m5",
+      "name": "阿宁",
+      "role": "文字编辑",
+      "responsibilities": [
+        "核对错字和引用格式",
+        "检查成稿与约定范围一致"
+      ],
+      "boundaries": [
+        "不代客户做发布批准",
+        "不在校对任务中重写结构"
+      ],
+      "evidence": [
+        {
+          "id": "content-m5-role",
+          "title": "程简职责说明（合成）",
+          "text": "职责：核对错字和引用格式；检查成稿与约定范围一致。边界：不代客户做发布批准；不在校对任务中重写结构。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m5-work",
+          "title": "程简当前工作自报（合成）",
+          "text": "校对一篇短稿",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "content-m5-window",
+          "title": "程简公开协作窗口（合成）",
+          "text": "2026-09-02T09:00:00+08:00至2026-09-02T12:00:00+08:00。可用于短稿校对，不代表可承担完整创作。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        },
+        {
+          "id": "edge11-directory-content-m5",
+          "title": "合成授权目录的重复显示名记录",
+          "text": "稳定memberId为content-m5；沿用合成成员程简的原职责。本案例目录版本NICK-v2将其显示名设为“阿宁”；显示名可能重名，不能当作唯一ID。",
+          "version": 2,
+          "updatedAt": "2026-09-01T08:45:00+08:00",
+          "source": "synthetic_member_directory"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "校对一篇短稿",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-02T09:00:00+08:00",
+        "endAt": "2026-09-02T12:00:00+08:00",
+        "sourceRef": "content-m5-window",
+        "note": "可用于短稿校对，不代表可承担完整创作。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "content-m6",
+      "name": "唐钰",
+      "role": "交付与版本管理",
+      "responsibilities": [
+        "维护交付清单及版本",
+        "核对客户批准与发布前提"
+      ],
+      "boundaries": [
+        "不把审阅意见当批准",
+        "不未经授权发布内容"
+      ],
+      "evidence": [
+        {
+          "id": "content-m6-role",
+          "title": "唐钰职责说明（合成）",
+          "text": "职责：维护交付清单及版本；核对客户批准与发布前提。边界：不把审阅意见当批准；不未经授权发布内容。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m6-work",
+          "title": "唐钰当前工作自报（合成）",
+          "text": "核对待发素材的版本和批准记录",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对待发素材的版本和批准记录",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

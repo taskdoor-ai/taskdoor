@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-03",
+  "baseSnapshotId": "snapshot-edge-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "edge03-drawing": 2,
+    "edge03-sample": 3
+  },
+  "intent": "unclear",
+  "disposition": "needs_clarification",
+  "summary": "请先明确“那个版本”指哪项资料，以及希望处理后的结果；当前不选择任务或生成变更候选。",
+  "reasoningSummary": [
+    {
+      "text": "原文没有产品、版本、交付结果或明确处理动作。",
+      "evidenceRefs": [
+        "req-edge-03"
+      ]
+    },
+    {
+      "text": "请求来自团队入口，未关联currentTaskId，也没有可用于消解指代的上文或附件。",
+      "evidenceRefs": [
+        "edge03-request-context"
+      ]
+    },
+    {
+      "text": "可见候选分别是K2图纸B3资料核对与M4样机A2记录归档，对象、版本及结果均不同，不能凭“版本”代选。",
+      "evidenceRefs": [
+        "edge03-drawing",
+        "edge03-sample"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "assessments": [
+      {
+        "taskId": "edge03-drawing",
+        "relationship": "possible",
+        "reason": "K2图纸B3是可见候选之一，但请求未说明产品或版本，也未说明希望新增还是调整何种结果。",
+        "evidenceRefs": [
+          "edge03-drawing",
+          "edge03-request-context",
+          "req-edge-03"
+        ]
+      },
+      {
+        "taskId": "edge03-sample",
+        "relationship": "possible",
+        "reason": "M4样机A2也是可见候选，现有信息无法确定它是否是本轮指代对象及所需交付。",
+        "evidenceRefs": [
+          "edge03-sample",
+          "edge03-request-context",
+          "req-edge-03"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；返回的候选均在本次可见快照内。"
+  },
+  "questions": [
+    {
+      "field": "currentTaskId",
+      "question": "你指的是K2图纸B3资料核对，还是M4样机A2记录归档？若是其他对象，请说明产品和版本。",
+      "blocking": true
+    },
+    {
+      "field": "intent",
+      "question": "你希望查询进展、修改现有计划的哪些内容，还是为新版本安排一项新的交付结果？",
+      "blocking": true
+    }
+  ],
+  "warnings": [],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": null,
+      "label": "明确版本对象与期望处理结果"
+    }
+  ],
+  "externalEffects": "none"
+}

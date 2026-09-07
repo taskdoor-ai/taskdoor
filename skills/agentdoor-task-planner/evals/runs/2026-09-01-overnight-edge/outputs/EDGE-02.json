@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-02",
+  "baseSnapshotId": "snapshot-edge-02-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "edge02-root": 5,
+    "edge02-index": 3,
+    "edge02-scope": 2
+  },
+  "intent": "replan",
+  "disposition": "no_change",
+  "summary": "沿用现有A户移交资料整理及目录任务即可：目录v3和缺失文件清单已全部纳入进行中任务，本轮没有需要新增或修改的计划。",
+  "reasoningSummary": [
+    {
+      "text": "用户要求沿用已确认范围；同一项目、DOC-202609批次的根任务已覆盖目录v3和缺失清单。",
+      "evidenceRefs": [
+        "req-edge-02",
+        "edge02-root"
+      ]
+    },
+    {
+      "text": "进行中的edge02-index明确要求目录逐项对应现有文件、缺失项单列，已包含本轮两项交付。",
+      "evidenceRefs": [
+        "edge02-index",
+        "edge02-confirmed-scope"
+      ]
+    },
+    {
+      "text": "本次范围不包含现场检查、缺失文件制作或工程验收，不增加这些工作或重拆已覆盖结果。",
+      "evidenceRefs": [
+        "edge02-confirmed-scope"
+      ]
+    },
+    {
+      "text": "保留已完成范围确认记录、根目的及正式Owner；本轮不修改任何任务字段。",
+      "evidenceRefs": [
+        "edge02-scope",
+        "edge02-root",
+        "edge02-index",
+        "req-edge-02"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-renovation"
+    ],
+    "assessments": [
+      {
+        "taskId": "edge02-root",
+        "relationship": "same_outcome",
+        "reason": "同一A户、DOC-202609批次与目录v3和缺失清单结果；根任务已经覆盖用户本轮要求。",
+        "evidenceRefs": [
+          "edge02-root",
+          "edge02-confirmed-scope",
+          "req-edge-02"
+        ]
+      },
+      {
+        "taskId": "edge02-index",
+        "relationship": "same_outcome",
+        "reason": "本轮要求的目录v3和缺失文件清单均已在此进行中任务的完成标准内，没有独立新增缺口。",
+        "evidenceRefs": [
+          "edge02-index",
+          "edge02-confirmed-scope",
+          "req-edge-02"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；返回的候选均在本次可见快照内。"
+  },
+  "questions": [],
+  "warnings": [],
+  "nextActions": [
+    {
+      "action": "open_task",
+      "taskId": "edge02-index",
+      "label": "沿用形成A户目录v3与缺失文件清单任务"
+    }
+  ],
+  "externalEffects": "none"
+}

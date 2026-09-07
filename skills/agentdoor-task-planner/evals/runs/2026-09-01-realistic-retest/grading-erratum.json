@@ -1,0 +1,8 @@
+{
+  "kind": "rubric_findings_after_original_score",
+  "changesAppliedToOriginalRun": false,
+  "originalMachineResult": "6/12 structurally valid",
+  "correctedRegradeDirectory": "../2026-09-01-realistic-retest-regrade",
+  "semanticResult": "8/12 passed independent cross-group review",
+  "note": "See the regrade grading-erratum.json. Original inputs, outputs, expectation snapshot and structural report remain unchanged."
+}

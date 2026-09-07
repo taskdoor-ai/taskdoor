@@ -1,0 +1,19 @@
+{
+  "notice": "Resolve temporary paths against this archive.",
+  "prefixMappings": [
+    {
+      "original": "/tmp/agentdoor-planner-realistic-impact-matrix-20260901-v2/",
+      "archivedRelative": "./"
+    },
+    {
+      "original": "/tmp/agentdoor-planner-realistic-impact-matrix-regrade-20260901/",
+      "archivedRelative": "./",
+      "retainedArtifacts": [
+        "current-expectations-snapshot.json",
+        "current-protocol-snapshot.json",
+        "current-rubric-regrade.json"
+      ],
+      "note": "Only the corrected snapshots and identical-output regrade report were retained; the temporary working directory itself was not archived."
+    }
+  ]
+}

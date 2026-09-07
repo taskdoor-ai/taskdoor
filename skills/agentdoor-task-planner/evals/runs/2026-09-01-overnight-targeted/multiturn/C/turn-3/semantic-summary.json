@@ -1,0 +1,18 @@
+{
+  "kind": "targeted_post_fix_multiturn_review",
+  "humanIndustryReview": false,
+  "productionValidation": false,
+  "cases": [
+    {
+      "caseId": "MULTI-C3",
+      "status": "passed",
+      "summary": "正确将 SKU-CUP-B 的三处错字清稿视为独立结果，新建一个候选并原样保留 sim:C:1；三处具体字样与位置可在执行开始时固定，因此没有把非身份细节当成规划阻塞项。",
+      "reviewFile": "semantic-review.json",
+      "episodeId": "C"
+    }
+  ],
+  "total": 1,
+  "passed": 1,
+  "failed": 0,
+  "unknown": 0
+}

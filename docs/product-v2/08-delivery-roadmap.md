@@ -8,7 +8,7 @@
 | 路线段 | 当前决定门槛 |
 | --- | --- |
 | P0-0 / P0-1 | 受 Q-05 的 Principal / Owner 边界影响；可继续只读架构评估，正式实现仍需 Git baseline 或宪章规定的等效机制，以及具体授权 / 存储 TA |
-| P0-2 | 受 Q-03、Q-05、Q-09 影响；Todo 入口与当前原型操作已由 D-139 取消，不再等待 Q-02 |
+| P0-2 | Owner 空值边界已由 D-189 确认，剩余受 Q-05、Q-09 影响；Todo 入口与当前原型操作已由 D-139 取消，不再等待 Q-02 |
 | P0-3 | 受 Q-04 与具体权限策略影响 |
 | P0-4 | 受 Q-06、Q-07、Q-17 影响 |
 | P0-5 | 受 Q-05、Q-10–Q-19 影响 |
@@ -19,16 +19,16 @@
 | 能力 | 当前代码事实 | 结论 |
 | --- | --- | --- |
 | Task Mock | `workspaceNodes.ts` 与 `taskDetailMocks.ts` 分别提供列表和详情演示数据；Todo Mock 已删除 | D-139 已落地到当前原型表面；生产前仍需统一 Task Store、查询与持久化 |
-| 单一 Task Owner | 工作区节点使用单值 `ownerId`；创建与部分 Props 仍使用数组且可为空 | 原则局部落地，正式 Task 不变量未全链路成立 |
+| 单一 Task Owner | 工作区节点使用单值 `ownerId`；当前 React 原型没有首次创建写入路径 | 原则局部落地，生产命令与数据库不变量仍未全链路成立 |
 | 多层级 Task | `parentTaskId` 能表达父子关系；任务列表按 D-139 收敛为不分目录的平面列表，详情以条件式“关联任务”页签投影直属上级 / 下级并逐级进入 | 单一主工作区与直属关系 UI 已落地；统一领域模型、生产查询、持久化与循环保护仍未跑通 |
 | 任务内文件夹 | `TaskDetail.tsx` 已有静态递归 Mock UI 和预览 | 用户已完成的展示基础应保留，下一步是接统一 File 真相 |
 | Task 文件与遗留团队文件页 | Task 详情已有静态递归文件 Mock；代码中仍可能保留一级“文件”入口和团队文件 List | D-139 要求独立团队文件模块退出当前表面，Task 文件页直接展示当前 Task 有权可见内容且不按人切换；统一 File 真相、真实权限、持久化、审计、版本和发布协议仍未接入 |
-| 渐进创建 | `App.tsx` 仍按关键词切换固定提案 | 未跟随需求逐步判断 |
-| 真正创建新 Task | 创建会覆盖固定本地对象 | 未写入统一 Store |
+| 任务意图输入 | Task List 内保留受控 `InputBar`；Enter 只换行，没有附件、发送、分析或本地持久化 | D-140 已落地；不得把输入壳解释为创建能力 |
+| 创建新 Task | React 创建状态机、Proposal、确认写入与成功态已删除；独立 MCP 契约不在本次表面调整范围 | 当前表面不提供；未来后端或 React 接入必须重新确认合同并写入统一 Store |
 | 候选人比较 | 候选与责任硬编码 | 尚无缺口判断、硬过滤和可解释路由 |
-| 动态责任画像 | 已新增个人中心“责任”、团队切换、本人 / 团队管理员共同维护的一份团队责任说明，以及仅供本人采纳 / 忽略的带依据 AI 建议；Coverage 仍保留在数据与推断约束中，不在个人中心单独汇总展示 | 仍是 localStorage 交互实现；尚无真实证据 ingest、团队管理员 PolicyDecision 与不可篡改修订记录 |
+| 动态责任画像 | 已新增个人中心“我的责任”、团队切换、本人 / 团队管理员共同维护的一份团队责任说明，以及内嵌在责任列表中的带依据新增／更新提议；界面按 D-185 将“我的责任”移至个人设置、在标题右侧提供受未保存保护的团队 Select，并把单列清单放宽到内容区可用宽度，同时不恢复右侧团队面板；按 D-184 使用目标行尾的 Sparkles +“AI 建议”浅蓝按钮展开只读候选文本与依据，新增仍以轻量候选行和加号确认。更新已执行基准版本与目标快照校验；Coverage 仍保留在数据与推断约束中，不在个人中心单独汇总展示 | 仍是 localStorage 交互实现；尚无真实证据 ingest、团队管理员 PolicyDecision、服务端 CAS 与不可篡改修订记录 |
 | 团队动态 | 只有任务内临时 Activity | 尚无任务外广播与收敛 |
-| 人际 Handoff | `TaskOverviewCard.tsx` 只有静态“AI 已准备可接续成果”；Owner 仍可直接改 | 尚无发出者 / 接收者、范围、协议版本、接收确认、权限预检与结果回传闭环 |
+| 人际 Handoff | Task 详情仍只有局部 Mock 交互，Owner 仍可直接改 | 尚无发出者 / 接收者、范围、协议版本、接收确认、权限预检与结果回传闭环 |
 | 权限与 Agent 委托 | 只有界面文案 | 没有可执行 ACL、PolicyDecision 或撤权机制 |
 | ChangeSet | 详情中的 Commit 为静态 Mock | 不是可信、append-only 的变更审计 |
 | Task 活动 | Mock 已覆盖动态、回复、AI 建议、状态变更、周期变更、参与者加入与静态代码提交，并以具体动作筛选；“AI 建议”具有特殊标识，Commit 关注引用可定位原事件 | 操作事件仍是静态演示，真实排序、权限过滤、生产 Activity / Insight / ChangeSet 数据链仍未接入 |
@@ -86,16 +86,17 @@ P0-0 身份、授权与可信存储
 - Handoff 激活、Owner 转移和文件发布均可从 ChangeSet 还原因果链。
 - 对不可逆动作，界面在确认前明确显示外部影响。
 
-## 五、P0-2：统一 Task 与 Proposal（Q-03 / Q-05 / Q-09 未决部分 blocked）
+## 五、P0-2：统一 Task 与 Proposal（Q-05 / Q-09 未决部分 blocked）
 
-- [ ] 正式 `Task.ownerId` 全链路为单值，数据库和命令层同时保证永不为 0/2。
-- [ ] Proposal 与正式 Task 分开；Proposal 可无 Owner，正式创建默认当前用户。
+- [ ] 正式 `Task.ownerId` 全链路为可空单值，数据库和命令层同时保证 `0..1`；已有 Owner 不得绕过 Handoff 清空或形成双 Owner。
+- [ ] Proposal 与正式 Task 分开；二者均可无 Owner，正式创建不默认当前用户，并保留创建者事实与未分配恢复索引。
 - [ ] Proposal 建立 revision / digest / recipient / status / expiresAt / materializedTaskId，并以 accepted revision 幂等地最多创建一个 Task。
 - [ ] 支持 `parentTaskId` 递归查询、循环保护、移动与删除规则。
 - [ ] 接入统一 Task 查询与持久化，使详情“关联任务”读取真实直属上级 / 下级并逐级进入；任务模块保持不分目录的平面列表，也不在详情一次展开整棵 Task 树。
 - [ ] 定义最小 TaskStatus 和父子汇总，不靠手动看板拖拽。
 - [ ] 移除当前产品中的 Todo 入口、详情投影、创建与操作路径；遗留 Todo Mock 不再作为生产迁移前提。
-- [ ] 新 Task 真实写入统一 Store，不再覆盖固定 `coupon-fix`。
+- [x] 当前 React 原型移除 Task 创建页、固定分析、Proposal、确认写入和成功态，仅保留不提交的输入壳。
+- [ ] 若产品重新确认创建入口，新 Task 必须真实写入统一 Store，不得恢复关键词 Mock 或覆盖固定对象。
 
 验收：
 
@@ -148,12 +149,13 @@ P0-0 身份、授权与可信存储
 - [ ] Handoff 中所有文件上下文必须带实际解析版本、内容摘要与权限依据摘要；`file-version` 只能 pin 且 resolvedVersionId 等于 objectRef，只有 `file` 可 follow-latest。缺失、跨 tenant / File 错配或漂移时拒绝发出 / 激活并生成新 Revision，不可见对象只存在于发出者侧预检。
 - [ ] Agent 可起草 Handoff，但不能替人 Consent；Agent 能否成为 Owner 服从 Q-05 的产品决定。
 
-验收：修改关键内容 / 策略版本后旧 Consent 失效；有条件接受保持 clarification 而非生效；伪造 Context + task-owner Effect、B 接受却写给 C、跨 tenant / 错误父子 Task、缺摘要文件条目、`file-version + follow-latest`、Principal / Member 映射不一致全部拒绝；普通命令与旧接口直接 `ownerId: A → B` 失败，只有首次物化或 Handoff 激活可写；Owner Transfer 激活前后始终只有一位 Owner；Result Return 把交付、验收、子 Task 完成和父 Task 整合分开。
+验收：修改关键内容 / 策略版本后旧 Consent 失效；有条件接受保持 clarification 而非生效；伪造 Context + task-owner Effect、B 接受却写给 C、跨 tenant / 错误父子 Task、缺摘要文件条目、`file-version + follow-latest`、Principal / Member 映射不一致全部拒绝；普通命令与旧接口直接 `ownerId: A → B` 失败，只有经接受的首次 `0 → 1` 指派或 Handoff 激活可写；Owner Transfer 激活前后始终只有一位 Owner；Result Return 把交付、验收、子 Task 完成和父 Task 整合分开。
 
-## 九、P1：需求驱动创建与协作选择
+## 九、P1：需求驱动创建与协作选择（未来候选，当前不实施）
 
 ### 渐进创建
 
+- [x] 当前 React 表面已按 D-140 退出该流程；以下条目只有在产品重新确认输入提交行为后才可启动。
 - [ ] 输入后先生成目标复述和最小 Proposal。
 - [ ] 默认建议当前用户为 Owner。
 - [ ] 只在高价值信息缺失时一次追问一个问题。
@@ -224,7 +226,7 @@ P0-0 身份、授权与可信存储
 
 ### 不变量与安全门槛
 
-- 100% 正式 Task 在任何事务完成点恰好一个 Owner。
+- 100% 正式 Task 在任何事务完成点最多一个 Owner；未分配 Task 有创建者事实与独立恢复入口，已有 Owner 的转移全程不出现 0/2。
 - 100% Agent 写入记录 actor、on-behalf-of、PolicyDecision 和 ChangeSet。
 - 0 次预置越权读取、跨 tenant 发现和受限字段泄露。
 - 撤权、过期与显式 deny 在下一次请求生效。
@@ -250,12 +252,11 @@ P0-0 身份、授权与可信存储
 ## 十四、编码前请产品负责人确认
 
 1. Q-01：团队动态是否首版作为一级导航，以及默认可见范围。
-2. Q-03：Proposal 可以无 Owner、正式 Task 必须有 Owner，这一边界是否接受。
-3. Q-04：任务自产 File 是否采用“task scope → 同 ID 发布到 team scope”。
-4. Q-05：是否接受统一 Principal，以及首版 Agent / 外部协作者不能成为 Task Owner。
-5. Q-06：是否接受候选比较只展示本人发布、可撤回且会过期的粗粒度协作窗口，不读取或展示原始日历、精确任务数、审核队列与个人历史速度。
-6. Q-07：观察责任何时团队可见，是否要求成员逐条确认。
-7. Q-08：首版 AI 是否严格停在 L3；若开放 L4，具体允许哪些低风险内部动作。
+2. Q-04：任务自产 File 是否采用“task scope → 同 ID 发布到 team scope”。
+3. Q-05：是否接受统一 Principal，以及首版 Agent / 外部协作者不能成为 Task Owner。
+4. Q-06：是否接受候选比较只展示本人发布、可撤回且会过期的粗粒度协作窗口，不读取或展示原始日历、精确任务数、审核队列与个人历史速度。
+5. Q-07：观察责任何时团队可见，是否要求成员逐条确认。
+6. Q-08：首版 AI 是否严格停在 L3；若开放 L4，具体允许哪些低风险内部动作。
 8. Q-09：最小 TaskStatus 是否采用 active / waiting / review / completed / cancelled / archived。
 9. Q-10：Task Owner 不可用时，是否采用受控 Steward 临时接管。
 10. Q-11：Handoff 是否作为 Task 下的支撑实体而不进入一级导航。

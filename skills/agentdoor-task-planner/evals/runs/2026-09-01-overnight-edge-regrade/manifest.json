@@ -1,0 +1,126 @@
+{
+  "createdAt": "2026-08-31T20:31:28.010245+00:00",
+  "suite": "edge",
+  "fixtureSha256": "6f1170b7b72e36b75f848ca0185695309f6a2260c6d8f508165545467b57530e",
+  "expectationsSha256": "beb5da00822d9aaef89845a4e39b7133fc501a6abd1c0bfe5b03379e2a40f0f3",
+  "skillSha256": "43ae9defd34eaf7fbfaacbbd4efce6dc9f66b9da32f73dd6d89757eb2848aa00",
+  "contractSha256": "3c87217b53a946b6cd35f3f2b904a0bce18494981f9f9b91dc84bb844a1cbdb9",
+  "schemaSha256": "8c0192063fadf41d26e0b91d9f00e165c981173e46809197c5807d0090491cc7",
+  "notice": "Synthetic, offline Skill evaluation. No model API, production ACL or task writes are exercised by this script.",
+  "selectedCaseIds": [
+    "EDGE-01",
+    "EDGE-02",
+    "EDGE-03",
+    "EDGE-04",
+    "EDGE-05",
+    "EDGE-06",
+    "EDGE-07",
+    "EDGE-08",
+    "EDGE-09",
+    "EDGE-10",
+    "EDGE-11",
+    "EDGE-12",
+    "EDGE-13",
+    "EDGE-14",
+    "EDGE-15",
+    "EDGE-16"
+  ],
+  "cases": [
+    {
+      "id": "EDGE-01",
+      "industry": "saas_delivery",
+      "category": "query_only",
+      "inputSha256": "a1a7c6083c02352270ef7fe5ed898dc2936d8b59bc3072a137be64a0f25beb76"
+    },
+    {
+      "id": "EDGE-02",
+      "industry": "renovation_handover",
+      "category": "already_covered",
+      "inputSha256": "4312dc69ea846b989bf41cdcc048730640a09f82fee2f9b333d742d3bc5bd2be"
+    },
+    {
+      "id": "EDGE-03",
+      "industry": "manufacturing_npi",
+      "category": "ambiguous_action_and_object",
+      "inputSha256": "ea5b4adec2dd48a34d1112561cc36383a7c0b9c3aa525ffb03779fd55ebba33d"
+    },
+    {
+      "id": "EDGE-04",
+      "industry": "content_agency",
+      "category": "greeting_only",
+      "inputSha256": "82c812674997f20c2ca276ac09d0746294c8f506f25ff32635bd7b61954b593c"
+    },
+    {
+      "id": "EDGE-05",
+      "industry": "saas_delivery",
+      "category": "mixed_query_and_create",
+      "inputSha256": "b191666fddd51ad26d2099c1270fd1d3b2528359456c74b31d40b04eb0b221ad"
+    },
+    {
+      "id": "EDGE-06",
+      "industry": "saas_delivery",
+      "category": "homonymous_task_target",
+      "inputSha256": "b1b59d69cfffe843ce10a77e2bf922bbd78d60ae258765f24e565fe20a3dd6dc"
+    },
+    {
+      "id": "EDGE-07",
+      "industry": "ecommerce_operations",
+      "category": "resolved_overlap_new_gap",
+      "inputSha256": "608f66bc07fe228a197026a043b242f97227cfe4e93857326b09ba161506c6df"
+    },
+    {
+      "id": "EDGE-08",
+      "industry": "retail_chain_operations",
+      "category": "explicit_new_period_no_recurrence",
+      "inputSha256": "a056c2bcfce1615eec263686e68474d2c2469e2695fbec0db9d4137327a9e82f"
+    },
+    {
+      "id": "EDGE-09",
+      "industry": "ecommerce_operations",
+      "category": "same_request_retry",
+      "inputSha256": "cf66051cb47e752e7032c42e7a6dc9d6948e0905a7119336b16d4496cefc25df"
+    },
+    {
+      "id": "EDGE-10",
+      "industry": "renovation_handover",
+      "category": "cancelled_root_new_work",
+      "inputSha256": "0ed531a4c5f0eb1cae3a92fc62b8bd5c2dd2c18075a250d06faf58138bf57647"
+    },
+    {
+      "id": "EDGE-11",
+      "industry": "content_agency",
+      "category": "ambiguous_explicit_member",
+      "inputSha256": "f6da875ae022e0e595b36ba2083767568452bd02dbb88b4a70a106f00b382525"
+    },
+    {
+      "id": "EDGE-12",
+      "industry": "content_agency",
+      "category": "no_qualified_owner_or_contributor",
+      "inputSha256": "f0661f9e54ad9d484c6c0f363d802b0012d5b0023c390f84d82196f900e6e8e7"
+    },
+    {
+      "id": "EDGE-13",
+      "industry": "content_agency",
+      "category": "relative_date_missing_timezone",
+      "inputSha256": "20aa2d0bf5048905ddb83f6af51f4d0fb53821930a91cbea3ed30ca2f7159b00"
+    },
+    {
+      "id": "EDGE-14",
+      "industry": "retail_chain_operations",
+      "category": "invalid_leap_day_calendar_conflict",
+      "inputSha256": "f9cc1a757cc05692f3103aa113c04f2df355569f3da20ce6dcabbc4101f090d1"
+    },
+    {
+      "id": "EDGE-15",
+      "industry": "ecommerce_operations",
+      "category": "historical_estimate_wait_and_method_change",
+      "inputSha256": "c76b8901beeb281e13762b1fa87c14fc472b6f9074bfc8f7cb224d47a1c45878"
+    },
+    {
+      "id": "EDGE-16",
+      "industry": "content_agency",
+      "category": "discussion_injection_and_unseen_evidence",
+      "inputSha256": "942ef5019991607cb2fff905ffb6fde4c55841180ba4efa55e92f56579b6f40a"
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "syn-req-ecom-a-01",
+  "baseSnapshotId": "syn-snapshot-ecom-a-15",
+  "baseRevision": 15,
+  "baseTaskVersions": {
+    "syn-ecom-root": 14,
+    "syn-ecom-product": 7,
+    "syn-ecom-supply": 6,
+    "syn-ecom-launch": 8,
+    "syn-ecom-listing-package": 6,
+    "syn-ecom-page": 8,
+    "syn-ecom-compliance": 5,
+    "syn-ecom-channel-check": 3,
+    "syn-ecom-forecast": 6,
+    "syn-ecom-warehouse-slot": 5,
+    "syn-ecom-label-rule": 5,
+    "syn-ecom-exception-card": 4,
+    "syn-ecom-carrier-fallback": 4,
+    "syn-ecom-dry-run": 7,
+    "syn-ecom-launch-gate": 6
+  },
+  "intent": "next_batch",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议复用现有四渠道联检、仓内异常卡和承运降级记录，只把三项接入开售闸门并保留原有演练与仓位前置；不新建总异常卡，也不改 20:00 开售、SKU 或价格。",
+  "reasoningSummary": [
+    {
+      "text": "四渠道联检已有同活动、四渠道、48 字段和首波 500 单的完整任务，无需再建。",
+      "evidenceRefs": [
+        "syn-req-ecom-a-01",
+        "syn-ecom-channel-check",
+        "syn-ecom-file-02",
+        "syn-ecom-d02"
+      ]
+    },
+    {
+      "text": "仓内异常卡与承运降级记录分别覆盖不同异常边界，两项共同覆盖首波异常处理，已确认保持分开。",
+      "evidenceRefs": [
+        "syn-ecom-exception-card",
+        "syn-ecom-carrier-fallback",
+        "syn-ecom-file-04",
+        "syn-ecom-file-05",
+        "syn-ecom-d03",
+        "syn-ecom-d05"
+      ]
+    },
+    {
+      "text": "闸门清单要求消费联检、仓内异常和承运降级结果，但当前依赖仍只有演练和仓位；这是一处任务图缺口，不表示三项已完成。",
+      "evidenceRefs": [
+        "syn-ecom-launch-gate",
+        "syn-ecom-file-06",
+        "syn-ecom-d06"
+      ]
+    },
+    {
+      "text": "9 月 6 日 20:00、SKU 范围、价格和已确认闸门标准均为保持不变的边界。",
+      "evidenceRefs": [
+        "syn-req-ecom-a-01",
+        "syn-ecom-root",
+        "syn-ecom-file-01",
+        "syn-ecom-d08"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "syn-ecom-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:ecom-launch-gate-add-existing-results",
+        "action": "update",
+        "targetId": "syn-ecom-launch-gate",
+        "parentId": "syn-ecom-launch",
+        "fields": {
+          "dependsOnTaskIds": [
+            "syn-ecom-dry-run",
+            "syn-ecom-warehouse-slot",
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback"
+          ]
+        },
+        "reason": "开售闸门直接消费渠道联检、仓内异常和承运降级结果；保留原有演练与仓位前置并补齐三项缺失依赖。",
+        "evidenceRefs": [
+          "syn-req-ecom-a-01",
+          "syn-ecom-launch-gate",
+          "syn-ecom-file-06",
+          "syn-ecom-d04",
+          "syn-ecom-d06"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "syn-ecom-root",
+      "syn-ecom-product",
+      "syn-ecom-supply",
+      "syn-ecom-launch",
+      "syn-ecom-listing-package",
+      "syn-ecom-page",
+      "syn-ecom-compliance",
+      "syn-ecom-channel-check",
+      "syn-ecom-forecast",
+      "syn-ecom-warehouse-slot",
+      "syn-ecom-label-rule",
+      "syn-ecom-exception-card",
+      "syn-ecom-carrier-fallback",
+      "syn-ecom-dry-run"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-ecom-a"
+    ],
+    "assessments": [
+      {
+        "taskId": "syn-ecom-channel-check",
+        "relationship": "same_outcome",
+        "reason": "同一活动、四渠道、48 字段和首波 500 单，现有联检任务完整覆盖请求。",
+        "evidenceRefs": [
+          "syn-req-ecom-a-01",
+          "syn-ecom-channel-check",
+          "syn-ecom-file-02",
+          "syn-ecom-d02"
+        ]
+      },
+      {
+        "taskId": "syn-ecom-exception-card",
+        "relationship": "overlap",
+        "reason": "现有异常卡覆盖缺货、错拣和面单失败的仓内部分，但不覆盖承运接口降级。",
+        "evidenceRefs": [
+          "syn-ecom-exception-card",
+          "syn-ecom-file-04",
+          "syn-ecom-d03"
+        ]
+      },
+      {
+        "taskId": "syn-ecom-carrier-fallback",
+        "relationship": "overlap",
+        "reason": "现有降级记录覆盖承运接口的路由切换和客服通知，但不覆盖仓内异常。",
+        "evidenceRefs": [
+          "syn-ecom-carrier-fallback",
+          "syn-ecom-file-05",
+          "syn-ecom-d03"
+        ]
+      }
+    ],
+    "coverageNote": "纯合成查重已覆盖授权团队当前与归档任务；三个候选共同覆盖请求，无需新建总卡。"
+  },
+  "questions": [],
+  "warnings": [
+    "三项复用任务目前仍为 open；补充闸门依赖只修正前置关系，不表示它们已完成或已经批准开售。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "syn-ecom-root",
+      "label": "审阅开售闸门的依赖差异，确认后再由受控流程应用到候选草稿"
+    }
+  ],
+  "externalEffects": "none"
+}

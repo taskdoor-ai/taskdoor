@@ -1,0 +1,25 @@
+.task-criteria-fields { display: grid; min-width: 0; align-content: start; grid-auto-rows: max-content; gap: var(--ad-space-2); }
+.task-criteria-field-row { display: grid; grid-template-columns: 17px minmax(0, 1fr) auto; align-items: start; gap: var(--ad-space-1); min-width: 0; }
+.task-criteria-field-mark { display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin-top: 7px; color: var(--ad-ink-tertiary); }
+.task-criteria-fields .task-criteria-field-input[data-slot="textarea"] { display: block; box-sizing: border-box; width: 100%; min-width: 0; min-height: 0; margin: 0; padding: 2px var(--ad-space-1); border: 1px solid transparent; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-secondary); font-family: inherit; font-size: var(--ad-text-body-sm); font-weight: 400; line-height: 1.65; overflow: hidden; overflow-wrap: anywhere; resize: none; box-shadow: none; outline: none; transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease; }
+.task-criteria-fields .task-criteria-field-input[data-slot="textarea"]:hover:not(:disabled) { background: color-mix(in srgb, var(--ad-ink) 3%, transparent); }
+.task-criteria-fields .task-criteria-field-input[data-slot="textarea"]:focus-visible { border-color: var(--ad-focus); background: var(--ad-surface); box-shadow: 0 0 0 3px var(--ad-route-soft); }
+.task-criteria-fields .task-criteria-field-input[data-slot="textarea"]::placeholder { color: var(--ad-ink-tertiary); }
+.task-criteria-fields .task-criteria-field-input[data-slot="textarea"]:disabled { cursor: not-allowed; opacity: .65; }
+.task-criteria-field-remove { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin-top: 2px; padding: 0; border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-tertiary); opacity: .4; cursor: pointer; transition: opacity 120ms ease, background-color 120ms ease; }
+.task-criteria-field-row:hover .task-criteria-field-remove, .task-criteria-field-remove:focus-visible { opacity: 1; }
+.task-criteria-field-remove:hover:not(:disabled) { background: color-mix(in srgb, var(--ad-ink) 5%, transparent); }
+.task-criteria-field-add { display: inline-flex; align-items: center; gap: var(--ad-space-1); width: fit-content; min-height: var(--ad-control-height-sm); margin: var(--ad-space-1) 0 0; padding: 0 var(--ad-space-1); border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-tertiary); font-family: inherit; font-size: var(--ad-text-caption); font-weight: 400; line-height: 1.5; text-align: left; cursor: pointer; }
+.task-criteria-field-add:hover:not(:disabled) { color: var(--ad-route); }
+.task-criteria-field-remove:focus-visible, .task-criteria-field-add:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.task-criteria-field-remove:disabled, .task-criteria-field-add:disabled { cursor: not-allowed; opacity: .4; }
+.task-detail-completion .task-criteria-fields { gap: var(--ad-space-1); }
+.task-detail-completion .task-criteria-field-add { min-height: var(--ad-space-6); margin-top: 0; }
+@media (max-width: 760px), (pointer: coarse) {
+  .task-criteria-fields .task-criteria-field-input[data-slot="textarea"] { min-height: var(--ad-control-touch-min); font-size: max(16px, var(--ad-text-body-sm)); }
+  .task-criteria-field-remove { width: var(--ad-control-touch-min); min-height: var(--ad-control-touch-min); margin-top: 0; }
+  .task-criteria-field-add, .task-detail-completion .task-criteria-field-add { min-height: var(--ad-control-touch-min); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .task-criteria-fields .task-criteria-field-input[data-slot="textarea"], .task-criteria-field-remove { transition: none; }
+}

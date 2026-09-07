@@ -1,0 +1,348 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-reno-01",
+  "baseSnapshotId": "snapshot-reno-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议建立“A户装修收尾资料与移交协调”根任务，并按可独立核对的结果拆为表面问题记录复核、图纸与设备资料目录、移交记录及未完事项说明三项；仅规划资料和协调，不作技术、法律或验收结论。",
+  "reasoningSummary": [
+    {
+      "text": "用户明确了合成·澄居A户、9月20日移交及三类交付结果，当前授权团队查重已完成且任务快照为空。",
+      "evidenceRefs": [
+        "req-reno-01",
+        "reno01-brief"
+      ]
+    },
+    {
+      "text": "本轮范围只涵盖资料整理、表面问题记录核对和移交协调；柜门色差与墙面补漆的现有缺口不能被扩展为结构、水电、法规或责任结论。",
+      "evidenceRefs": [
+        "reno01-brief"
+      ]
+    },
+    {
+      "text": "赵屿的职责覆盖收尾与移交协调；何沐覆盖问题清单复核，林庭覆盖资料目录与移交清单，适合分别承担结果责任候选。",
+      "evidenceRefs": [
+        "renovation-m1-role",
+        "renovation-m5-role",
+        "renovation-m6-role"
+      ]
+    },
+    {
+      "text": "现场与复核人员只有有限协作窗口，不能从窗口或在办工作推断完整容量；各前置结果的具体日期与EWD仍未知。",
+      "evidenceRefs": [
+        "renovation-m4-window",
+        "renovation-m5-window"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:reno01-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change-reno01-root",
+        "action": "create",
+        "targetId": "new:reno01-root",
+        "parentId": null,
+        "fields": {
+          "title": "澄居A户装修收尾资料与移交协调",
+          "goal": {
+            "text": "在2026年9月20日移交前，形成可追溯的表面修补问题复核记录、图纸与设备资料目录以及移交记录与未完事项说明。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-reno-01",
+              "reno01-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "交付包能够分别定位表面问题复核记录、图纸与设备资料目录、移交记录和未完事项说明，并标明各自版本或日期。",
+            "柜门色差与墙面局部补漆等问题区分“已报告、已复核、有权确认关闭”等状态；缺失记录不得写成已合格或已验收。",
+            "2026年9月20日移交时保留接收记录；资料协调结果不包含结构、水电、施工安全、法律或替有权方签字的结论。"
+          ],
+          "tips": [
+            "用一份交付索引关联三个子任务结果，避免复制相互矛盾的状态。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m1",
+            "basis": "recommended",
+            "reason": "项目交付协调职责直接覆盖收尾问题、移交计划及各责任方协调，同时其边界明确不能代替有权验收或技术判断。",
+            "evidenceRefs": [
+              "renovation-m1-role",
+              "req-reno-01"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-20",
+            "basis": "explicit",
+            "assumptions": [
+              "9月20日是移交硬日期；具体启动日期和各结果的提前交付日未提供。",
+              "根任务日期不表示每项前置都可等到9月20日才完成，具体内部节点需候选确认后协调。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "根任务有子任务，不重复估算汇总人时；确定性汇总应基于子任务。",
+              "没有工作量、数量与同类历史，不能从日期跨度推断EWD。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "reno01-brief"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "用一个根结果组织三项独立可核查交付，保持仅资料与协调的明确边界。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "reno01-brief",
+          "renovation-m1-role"
+        ]
+      },
+      {
+        "id": "change-reno01-issues",
+        "action": "create",
+        "targetId": "new:reno01-issues",
+        "parentId": "new:reno01-root",
+        "fields": {
+          "title": "复核A户表面修补问题清单与记录",
+          "acceptanceCriteria": [
+            "形成A户表面问题复核记录，逐项关联柜门色差、墙面局部补漆等原问题编号、位置、依据和核对结果。",
+            "明确缺失的墙面补漆记录及待补责任方；在取得现场或有权确认依据前，不把“报告修复”记录为“已确认关闭”。",
+            "复核只记录可见事实、资料版本与确认状态，不作成因、施工安全或责任归属结论。"
+          ],
+          "tips": [
+            "先核对原清单与已确认饰面或变更版本，再协调可访问的现场查看；协作窗口不等于现场开放或验收授权。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m5",
+            "basis": "recommended",
+            "reason": "交付问题复核职责直接覆盖问题清单、复核记录及报告与关闭状态区分。",
+            "evidenceRefs": [
+              "renovation-m5-role",
+              "reno01-brief"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "renovation-m2",
+              "contribution": "提供已确认饰面、图纸版本及设计变更记录的可核对引用。",
+              "evidenceRefs": [
+                "renovation-m2-role",
+                "reno01-brief"
+              ]
+            },
+            {
+              "memberId": "renovation-m4",
+              "contribution": "收集现场开放回执并协调责任方查看表面问题，不代物业承诺时间。",
+              "evidenceRefs": [
+                "renovation-m4-role",
+                "renovation-m4-window"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "必须在9月20日移交前产出，但尚无经确认的现场开放及复核交付日期。",
+              "9月8日和9月10日分别是有限协作窗口，不表示完整工作或现场已获开放。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "renovation-m4-window",
+              "renovation-m5-window"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "问题项数量、现有证据完整度和现场安排均未给出，人工投入未知。",
+              "等待物业、责任方或现场开放不计入EWD。"
+            ],
+            "evidenceRefs": [
+              "reno01-brief",
+              "renovation-m5-role"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "表面问题复核有独立记录与状态边界，适合由专业的交付问题复核角色承担。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "reno01-brief",
+          "renovation-m5-role"
+        ]
+      },
+      {
+        "id": "change-reno01-docs",
+        "action": "create",
+        "targetId": "new:reno01-docs",
+        "parentId": "new:reno01-root",
+        "fields": {
+          "title": "整理A户图纸与设备资料目录",
+          "acceptanceCriteria": [
+            "交付图纸与设备资料目录，逐项标明名称、当前版本或日期、可访问引用及是否已具备。",
+            "缺失、版本待核或尚未收到的资料单列，并给出对应来源或待补责任方；不把目录齐全写成工程合格。",
+            "目录范围保持在本次A户移交资料，不生成结构、水电施工或法规结论。"
+          ],
+          "tips": [
+            "以可追溯引用为主，不把文件名或截图当成版本确认。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m6",
+            "basis": "recommended",
+            "reason": "移交资料管理职责直接包括图纸目录、设备资料引用以及缺失项记录。",
+            "evidenceRefs": [
+              "renovation-m6-role",
+              "req-reno-01"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "renovation-m2",
+              "contribution": "核对目录中饰面与图纸的已确认版本及关联设计变更。",
+              "evidenceRefs": [
+                "renovation-m2-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "须在9月20日移交前提供给移交记录编制使用；具体提前日期未约定。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "reno01-brief"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "资料项数量、版本差异与当前齐备度未知，无法可靠估算人工整理投入。",
+              "等待资料提供不计入EWD。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "renovation-m6-role"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "资料目录是可独立核对并供移交记录使用的结果，交由资料管理角色候选负责。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "reno01-brief",
+          "renovation-m6-role"
+        ]
+      },
+      {
+        "id": "change-reno01-handover",
+        "action": "create",
+        "targetId": "new:reno01-handover",
+        "parentId": "new:reno01-root",
+        "fields": {
+          "title": "形成A户移交记录与未完事项说明",
+          "acceptanceCriteria": [
+            "形成2026年9月20日移交记录，列明实际提交的资料、对应版本、交接对象与接收记录。",
+            "附未完事项说明，逐项引用问题复核或资料目录中的缺失，区分已报告、等待、已复核和有权确认关闭。",
+            "不以资料交接、收货、截图或内部复核替代业主验收、工程合格或专业技术结论。"
+          ],
+          "tips": [
+            "仅在两个前置结果可用后汇总；若仍有缺失，保留为未完事项，不回写成已完成。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m1",
+            "basis": "recommended",
+            "reason": "移交记录是项目级交付协调结果，需要统筹业主与各责任方；赵屿职责覆盖该结果且不代验收签字。",
+            "evidenceRefs": [
+              "renovation-m1-role",
+              "req-reno-01"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "renovation-m6",
+              "contribution": "维护移交资料引用、实际提交清单、接收回执及资料缺失项。",
+              "evidenceRefs": [
+                "renovation-m6-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-20",
+            "basis": "explicit",
+            "assumptions": [
+              "移交日期明确为9月20日；记录整理开始日取决于两个前置结果，当前未约定。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "接收对象、未完事项数量和记录模板未提供，人时未知。",
+              "等待签收或责任方回复不计入EWD。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "renovation-m1-role",
+              "renovation-m6-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:reno01-issues",
+            "new:reno01-docs"
+          ]
+        },
+        "reason": "移交记录消费问题复核与资料目录两个前置结果，真实依赖集中在汇总交付项。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "reno01-brief",
+          "renovation-m1-role",
+          "renovation-m6-role"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-renovation"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "所有负责人和参与者均为候选，不构成指派、接受、验收或签字授权。",
+    "各前置任务的具体日期和EWD未知；9月8日、9月10日窗口只说明有限协作机会，不能证明完整容量或现场开放。",
+    "计划仅处理资料与交付协调；具体技术处理仍由具备资格和授权的人员负责。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:reno01-root",
+      "label": "审阅A户收尾资料与移交任务树"
+    }
+  ],
+  "externalEffects": "none"
+}

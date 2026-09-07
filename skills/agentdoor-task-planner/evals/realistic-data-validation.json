@@ -1,0 +1,155 @@
+{
+  "valid": true,
+  "errors": [],
+  "summary": {
+    "dataClassification": "synthetic",
+    "totals": {
+      "teams": 12,
+      "scenarios": 12,
+      "members": 88,
+      "stakeholders": 5,
+      "tasks": 179,
+      "files": 84,
+      "discussions": 105,
+      "history": 68,
+      "dependencyEdges": 106,
+      "confirmedFields": 39,
+      "duplicateMatches": 35
+    },
+    "cases": [
+      {
+        "id": "REAL-A-REL-01",
+        "industry": "software_release",
+        "historyProfile": "rich",
+        "tasks": 14,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 9,
+        "files": 6,
+        "discussions": 8,
+        "history": 6
+      },
+      {
+        "id": "REAL-A-SAAS-01",
+        "industry": "saas_delivery",
+        "historyProfile": "none",
+        "tasks": 13,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 8,
+        "files": 6,
+        "discussions": 8,
+        "history": 0
+      },
+      {
+        "id": "REAL-A-ECOM-01",
+        "industry": "ecommerce_operations",
+        "historyProfile": "rich",
+        "tasks": 15,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 12,
+        "files": 6,
+        "discussions": 8,
+        "history": 6
+      },
+      {
+        "id": "REAL-A-CS-01",
+        "industry": "customer_support_incident",
+        "historyProfile": "rich",
+        "tasks": 15,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 10,
+        "files": 6,
+        "discussions": 8,
+        "history": 6
+      },
+      {
+        "id": "REAL-B-NPI-01",
+        "industry": "manufacturing_npi",
+        "historyProfile": "rich",
+        "tasks": 14,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 6,
+        "files": 8,
+        "discussions": 9,
+        "history": 6
+      },
+      {
+        "id": "REAL-B-LOG-01",
+        "industry": "logistics_cutover",
+        "historyProfile": "partial",
+        "tasks": 13,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 4,
+        "files": 6,
+        "discussions": 7,
+        "history": 5
+      },
+      {
+        "id": "REAL-B-RETAIL-01",
+        "industry": "retail_store_opening",
+        "historyProfile": "rich",
+        "tasks": 16,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 10,
+        "files": 8,
+        "discussions": 10,
+        "history": 7
+      },
+      {
+        "id": "REAL-B-PROC-01",
+        "industry": "procurement_vendor_onboarding",
+        "historyProfile": "rich",
+        "tasks": 16,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 10,
+        "files": 8,
+        "discussions": 10,
+        "history": 6
+      },
+      {
+        "id": "REAL-C-01",
+        "industry": "content_campaign",
+        "historyProfile": "rich",
+        "tasks": 16,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 9,
+        "files": 7,
+        "discussions": 9,
+        "history": 6
+      },
+      {
+        "id": "REAL-C-02",
+        "industry": "finance_close",
+        "historyProfile": "rich",
+        "tasks": 15,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 8,
+        "files": 8,
+        "discussions": 9,
+        "history": 6
+      },
+      {
+        "id": "REAL-C-03",
+        "industry": "hiring_onboarding",
+        "historyProfile": "rich",
+        "tasks": 16,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 11,
+        "files": 7,
+        "discussions": 10,
+        "history": 7
+      },
+      {
+        "id": "REAL-C-04",
+        "industry": "renovation_handover",
+        "historyProfile": "rich",
+        "tasks": 16,
+        "maxTaskDepth": 4,
+        "dependencyEdges": 9,
+        "files": 8,
+        "discussions": 9,
+        "history": 7
+      }
+    ],
+    "productionValidation": "not_run"
+  }
+}

@@ -1,0 +1,1114 @@
+{
+  "requestId": "req-real-b-npi-01",
+  "message": "ECO-042 v3刚替代v2。请继续使用现有X7 EVT2任务树，把批次COC和新固化窗口只更新到来料核对、试制作业指导、DVT矩阵以及最终门禁四个消费者；补齐真正的跨分支依赖和9月10日试制前的日期衔接。BOM v5、RC图纸和已完成PCN不要重开，也不要复制一套“变更任务”。供应商只承诺9月7日上传COC，不能当成已经收到；若它威胁硬期限要明确写出。给我可确认的最小差异方案。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "b-npi-m1",
+  "teamId": "team-b-npi",
+  "authorizedTeamIds": [
+    "team-b-npi"
+  ],
+  "revision": 4,
+  "currentTaskId": "b-npi-root",
+  "context": {
+    "snapshotId": "snapshot-real-b-npi-01-v4",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-b-npi"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete",
+      "files": "complete"
+    },
+    "tasks": [
+      {
+        "id": "b-npi-root",
+        "title": "曜石X7 EVT2变更就绪",
+        "status": "in_progress",
+        "version": 12,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "在2026-09-10试制前形成使用同一现行变更依据的来料、作业、验证和门禁记录"
+        ],
+        "ownerId": "b-npi-m1",
+        "sourceRefs": [
+          "b-npi-eco-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-10",
+        "goal": "在不重开已完成设计基线的前提下，让X7 EVT2按现行变更安全进入试制",
+        "identity": {
+          "businessObject": "曜石X7",
+          "cycle": "EVT2",
+          "scope": "ECO-042 v3"
+        }
+      },
+      {
+        "id": "b-npi-eng",
+        "title": "工程基线分支",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-npi-root",
+        "acceptanceCriteria": [
+          "归集已发布设计基线和本轮变更影响范围"
+        ],
+        "ownerId": "b-npi-m2",
+        "sourceRefs": [
+          "b-npi-eco-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03"
+      },
+      {
+        "id": "b-npi-supplier",
+        "title": "供应与来料分支",
+        "status": "in_progress",
+        "version": 7,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-npi-root",
+        "acceptanceCriteria": [
+          "归集PCN、批次证明和来料核对记录"
+        ],
+        "ownerId": "b-npi-m3",
+        "sourceRefs": [
+          "b-npi-pcn-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-08"
+      },
+      {
+        "id": "b-npi-validation",
+        "title": "试制与验证分支",
+        "status": "in_progress",
+        "version": 8,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-npi-root",
+        "acceptanceCriteria": [
+          "归集作业指导、DVT覆盖与试制门禁"
+        ],
+        "ownerId": "b-npi-m1",
+        "sourceRefs": [
+          "b-npi-wi-v4"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-10"
+      },
+      {
+        "id": "b-npi-change-pack",
+        "title": "ECO-042工程资料包",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-npi-eng",
+        "acceptanceCriteria": [
+          "保留ECO、图纸和BOM的现行版本关系，不覆盖历史"
+        ],
+        "ownerId": "b-npi-m6",
+        "sourceRefs": [
+          "b-npi-eco-v3",
+          "b-npi-bom-v5"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03"
+      },
+      {
+        "id": "b-npi-design",
+        "title": "留存X7结构设计基线",
+        "status": "completed",
+        "version": 7,
+        "updatedAt": "2026-08-30T17:45:00+08:00",
+        "parentId": "b-npi-change-pack",
+        "acceptanceCriteria": [
+          "RC结构图纸已发布并留存校验值"
+        ],
+        "ownerId": "b-npi-m2",
+        "sourceRefs": [
+          "b-npi-drawing-rc"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-30"
+      },
+      {
+        "id": "b-npi-bom",
+        "title": "发布X7 EVT2 BOM v5",
+        "status": "completed",
+        "version": 9,
+        "updatedAt": "2026-08-30T17:40:00+08:00",
+        "parentId": "b-npi-change-pack",
+        "acceptanceCriteria": [
+          "BOM v5料号、用量和审批记录可追溯"
+        ],
+        "ownerId": "b-npi-m2",
+        "sourceRefs": [
+          "b-npi-bom-v5"
+        ],
+        "dependsOnTaskIds": [
+          "b-npi-design"
+        ],
+        "dueOn": "2026-08-30"
+      },
+      {
+        "id": "b-npi-supplier-ready",
+        "title": "胶材供应资料包",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-npi-supplier",
+        "acceptanceCriteria": [
+          "归集PCN与首批批次证据，不把承诺当回执"
+        ],
+        "ownerId": "b-npi-m3",
+        "sourceRefs": [
+          "b-npi-pcn-v3",
+          "b-npi-coc-v1"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-07"
+      },
+      {
+        "id": "b-npi-pcn",
+        "title": "确认供应商PCN-118 v3",
+        "status": "completed",
+        "version": 6,
+        "updatedAt": "2026-09-01T14:00:00+08:00",
+        "parentId": "b-npi-supplier-ready",
+        "acceptanceCriteria": [
+          "PCN v3适用范围及EVT2批次要求已记录"
+        ],
+        "ownerId": "b-npi-m3",
+        "sourceRefs": [
+          "b-npi-pcn-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-01"
+      },
+      {
+        "id": "b-npi-incoming",
+        "title": "更新X7首批来料核对",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-npi-supplier-ready",
+        "acceptanceCriteria": [
+          "按现行ECO、BOM和PCN记录来料项目及COC缺失项"
+        ],
+        "ownerId": "b-npi-m3",
+        "sourceRefs": [
+          "b-npi-incoming-v2",
+          "b-npi-coc-v1"
+        ],
+        "dependsOnTaskIds": [
+          "b-npi-bom"
+        ],
+        "dueOn": "2026-09-08"
+      },
+      {
+        "id": "b-npi-build-ready",
+        "title": "EVT2过程就绪包",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-npi-validation",
+        "acceptanceCriteria": [
+          "归集试制作业与过程确认输入"
+        ],
+        "ownerId": "b-npi-m4",
+        "sourceRefs": [
+          "b-npi-wi-v4"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-09"
+      },
+      {
+        "id": "b-npi-wi",
+        "title": "修订X7 EVT2试制作业指导",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-npi-build-ready",
+        "acceptanceCriteria": [
+          "引用BOM v5并给出可核对的胶材固化窗口"
+        ],
+        "ownerId": "b-npi-m4",
+        "sourceRefs": [
+          "b-npi-wi-v4"
+        ],
+        "dependsOnTaskIds": [
+          "b-npi-bom"
+        ],
+        "dueOn": "2026-09-09"
+      },
+      {
+        "id": "b-npi-dvt",
+        "title": "更新X7 DVT测试矩阵",
+        "status": "blocked",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-npi-validation",
+        "acceptanceCriteria": [
+          "把现行胶材工艺变化映射到验证项目、样本与未覆盖项"
+        ],
+        "ownerId": "b-npi-m5",
+        "sourceRefs": [
+          "b-npi-eco-v3",
+          "b-npi-drawing-rc"
+        ],
+        "dependsOnTaskIds": [
+          "b-npi-design"
+        ],
+        "dueOn": "2026-09-09"
+      },
+      {
+        "id": "b-npi-gate",
+        "title": "形成X7 EVT2试制门禁包",
+        "status": "open",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-npi-root",
+        "acceptanceCriteria": [
+          "链接现行来料、作业和DVT记录并明确外部COC是否已收到"
+        ],
+        "ownerId": "b-npi-m1",
+        "sourceRefs": [
+          "b-npi-eco-v3",
+          "b-npi-coc-v1"
+        ],
+        "dependsOnTaskIds": [
+          "b-npi-wi",
+          "b-npi-dvt"
+        ],
+        "dueOn": "2026-09-10"
+      }
+    ],
+    "files": [
+      {
+        "id": "b-npi-eco-v2",
+        "title": "ECO-042工程变更单v2（合成）",
+        "text": "旧版要求只更新来料抽检项目；2026-09-01 14:20由v3取代，历史仍须保留。",
+        "updatedAt": "2026-08-29T16:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7-ECO-042.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "6c609a5953eb7ceb93406aaad626479c4e9860415f9c559b3666dba1e4e0cd29",
+        "status": "superseded",
+        "linkedTaskIds": [
+          "b-npi-root",
+          "b-npi-eng",
+          "b-npi-change-pack"
+        ]
+      },
+      {
+        "id": "b-npi-eco-v3",
+        "title": "ECO-042工程变更单v3（合成）",
+        "text": "现行变更增加胶材固化窗口与批次COC引用；受影响消费者为来料核对、试制作业指导、DVT矩阵和EVT2门禁包，不改变已发布BOM与结构图。",
+        "updatedAt": "2026-09-01T14:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7-ECO-042.pdf",
+        "mimeType": "application/pdf",
+        "version": "3.0",
+        "checksum": "e66274a9f20a2e031eefb6e37245d0412fe7a8a8bb6e421361e9b9c6b0eaf49d",
+        "status": "current_approved",
+        "linkedTaskIds": [
+          "b-npi-root",
+          "b-npi-change-pack",
+          "b-npi-incoming",
+          "b-npi-wi",
+          "b-npi-dvt",
+          "b-npi-gate"
+        ]
+      },
+      {
+        "id": "b-npi-bom-v5",
+        "title": "X7 EVT2 BOM基线v5（合成）",
+        "text": "BOM v5已完成并锁定胶材料号及用量；ECO-042 v3明确无需重开或改写该基线。",
+        "updatedAt": "2026-08-30T17:40:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7_EVT2_BOM.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "5.0",
+        "checksum": "b1309746de8d48c10c82bfec4a67c6dd76517eb77abf8b56876c76584490b623",
+        "status": "released",
+        "linkedTaskIds": [
+          "b-npi-change-pack",
+          "b-npi-bom",
+          "b-npi-incoming",
+          "b-npi-wi"
+        ]
+      },
+      {
+        "id": "b-npi-drawing-rc",
+        "title": "X7结构图纸RC版（合成）",
+        "text": "结构图纸RC版已发布；本次只调整工艺窗口和证据引用，不改变结构尺寸。",
+        "updatedAt": "2026-08-30T17:45:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7_ME_Drawing_RC.zip",
+        "mimeType": "application/zip",
+        "version": "C",
+        "checksum": "dfea5825f60215cfd7526f0d0cb0238ffd48144c1938a00df2be8fe2c0bc6c13",
+        "status": "released",
+        "linkedTaskIds": [
+          "b-npi-design",
+          "b-npi-dvt"
+        ]
+      },
+      {
+        "id": "b-npi-pcn-v3",
+        "title": "供应商PCN-118 v3（合成）",
+        "text": "PCN确认首批胶材需在来料记录中关联批次COC，并按ECO-042 v3的固化窗口用于试制和DVT。",
+        "updatedAt": "2026-09-01T13:50:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Supplier_PCN_118.pdf",
+        "mimeType": "application/pdf",
+        "version": "3.0",
+        "checksum": "8230216c568f21e9759d27ca9198a50517d0f801d383de8458c9fb20370d407d",
+        "status": "accepted_for_evt2",
+        "linkedTaskIds": [
+          "b-npi-supplier-ready",
+          "b-npi-pcn",
+          "b-npi-incoming",
+          "b-npi-wi",
+          "b-npi-dvt"
+        ]
+      },
+      {
+        "id": "b-npi-incoming-v2",
+        "title": "X7来料核对清单v2（合成）",
+        "text": "草稿仍只引用ECO v2，缺批次COC和固化窗口字段，需在原任务中升级。",
+        "updatedAt": "2026-09-01T11:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7_Incoming_Checklist.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "2.0",
+        "checksum": "9d935ed03ad1d0c69351ee189f16e07e65ef3339516f34223912c8e5e1d90939",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-npi-incoming"
+        ]
+      },
+      {
+        "id": "b-npi-wi-v4",
+        "title": "X7 EVT2试制作业指导v4（合成）",
+        "text": "现行草稿引用BOM v5，但仍使用旧固化窗口；须消费来料核对结果与ECO v3。",
+        "updatedAt": "2026-09-01T11:40:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7_EVT2_WorkInstruction.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": "4.0",
+        "checksum": "c1213736d5786c89591fd0b1eb79e8ad999ca2cdadea761bc678da5f851d7f0b",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-npi-build-ready",
+          "b-npi-wi"
+        ]
+      },
+      {
+        "id": "b-npi-coc-v1",
+        "title": "首批胶材COC占位记录v1（合成）",
+        "text": "供应商承诺2026-09-07 12:00前上传批次COC；当前只有外部承诺，不是已收到或已验收。",
+        "updatedAt": "2026-09-01T15:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7_Lot_COC.pdf",
+        "mimeType": "application/pdf",
+        "version": "1.0",
+        "checksum": "14a7cab293214fc34feded9896a8a91ac4735a1bfbeda8979ed25e0818d63b52",
+        "status": "awaiting_external_upload",
+        "linkedTaskIds": [
+          "b-npi-incoming",
+          "b-npi-wi",
+          "b-npi-dvt",
+          "b-npi-gate"
+        ]
+      }
+    ],
+    "discussions": [
+      {
+        "id": "b-npi-d1",
+        "taskId": "b-npi-root",
+        "authorId": "b-npi-m1",
+        "createdAt": "2026-09-01T14:30:00+08:00",
+        "kind": "decision",
+        "text": "ECO-042 v3是EVT2现行变更；只更新四个既有消费者，不重开已发布图纸和BOM。",
+        "threadId": "b-npi-thread-change",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-npi-d2",
+        "taskId": "b-npi-incoming",
+        "authorId": "b-npi-m3",
+        "createdAt": "2026-09-01T14:42:00+08:00",
+        "kind": "report",
+        "text": "来料清单v2仍引用ECO v2；PCN v3已确认，但首批COC尚未上传。",
+        "threadId": "b-npi-thread-change",
+        "replyToId": "b-npi-d1",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-npi-d3",
+        "taskId": "b-npi-bom",
+        "authorId": "b-npi-m7",
+        "createdAt": "2026-09-01T14:50:00+08:00",
+        "kind": "proposal",
+        "text": "要不要把BOM任务重开并另发v6，方便显示我们处理过变更？该提议未被接受。",
+        "threadId": "b-npi-thread-change",
+        "replyToId": "b-npi-d1",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-npi-d4",
+        "taskId": "b-npi-bom",
+        "authorId": "b-npi-m2",
+        "createdAt": "2026-09-01T15:00:00+08:00",
+        "kind": "decision",
+        "text": "拒绝重开BOM：料号与用量未变，完成记录继续作为现行输入。",
+        "threadId": "b-npi-thread-change",
+        "replyToId": "b-npi-d3",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-npi-d5",
+        "taskId": "b-npi-wi",
+        "authorId": "b-npi-m4",
+        "createdAt": "2026-09-01T15:05:00+08:00",
+        "kind": "report",
+        "text": "作业指导v4可复用主体，只需替换固化窗口并等待来料核对结果。",
+        "threadId": "b-npi-thread-consumers",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-npi-d6",
+        "taskId": "b-npi-dvt",
+        "authorId": "b-npi-m5",
+        "createdAt": "2026-09-01T15:14:00+08:00",
+        "kind": "report",
+        "text": "DVT矩阵需增加工艺窗口覆盖；结构验证项目不受影响。",
+        "threadId": "b-npi-thread-consumers",
+        "replyToId": "b-npi-d5",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-npi-d7",
+        "taskId": "b-npi-root",
+        "authorId": "b-npi-m1",
+        "createdAt": "2026-09-01T15:20:00+08:00",
+        "kind": "decision",
+        "text": "2026-09-10试制日期是硬边界，若9月7日COC未到，门禁包必须保留阻塞而不能假设通过。",
+        "threadId": "b-npi-thread-deadline",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-npi-d8",
+        "taskId": "b-npi-incoming",
+        "authorId": "b-npi-m6",
+        "createdAt": "2026-09-01T15:28:00+08:00",
+        "kind": "question",
+        "text": "COC外部承诺是否足以把来料任务标为可完成？",
+        "threadId": "b-npi-thread-deadline",
+        "replyToId": "b-npi-d7",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-npi-d9",
+        "taskId": "b-npi-incoming",
+        "authorId": "b-npi-m3",
+        "createdAt": "2026-09-01T15:34:00+08:00",
+        "kind": "report",
+        "text": "不足；只能记录供应商承诺9月7日上传，实际文件和核对结果仍未知。",
+        "threadId": "b-npi-thread-deadline",
+        "replyToId": "b-npi-d8",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "b-npi-h1",
+        "taskId": "b-npi-design",
+        "occurredAt": "2026-08-30T17:45:00+08:00",
+        "type": "task_completed",
+        "summary": "RC结构图纸校验完成，任务版本7关闭。",
+        "version": 7,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-npi-h2",
+        "taskId": "b-npi-bom",
+        "occurredAt": "2026-08-30T17:40:00+08:00",
+        "type": "task_completed",
+        "summary": "BOM v5发布，任务版本9完成；未授权重开。",
+        "version": 9,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-npi-h3",
+        "taskId": "b-npi-pcn",
+        "occurredAt": "2026-09-01T14:00:00+08:00",
+        "type": "task_completed",
+        "summary": "PCN-118 v3适用范围确认，任务版本6完成。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-npi-h4",
+        "taskId": "b-npi-root",
+        "occurredAt": "2026-09-01T14:20:00+08:00",
+        "type": "source_version_changed",
+        "summary": "ECO-042由v2切换为v3；旧版仍保留为被取代记录。",
+        "version": 12,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-npi-h5",
+        "taskId": "b-npi-dvt",
+        "occurredAt": "2026-09-01T14:35:00+08:00",
+        "type": "task_blocked",
+        "summary": "DVT矩阵等待现行工艺变化映射，状态记录于版本3。",
+        "version": 3,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-npi-h6",
+        "taskId": "b-npi-root",
+        "occurredAt": "2026-09-01T15:20:00+08:00",
+        "type": "deadline_confirmed",
+        "summary": "EVT2试制日期保持2026-09-10，不以预计COC到达自动解除门禁。",
+        "version": 12,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "b-npi-eco-v2",
+        "title": "ECO-042工程变更单v2（合成）",
+        "text": "旧版要求只更新来料抽检项目；2026-09-01 14:20由v3取代，历史仍须保留。",
+        "updatedAt": "2026-08-29T16:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7-ECO-042.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "6c609a5953eb7ceb93406aaad626479c4e9860415f9c559b3666dba1e4e0cd29",
+        "status": "superseded",
+        "linkedTaskIds": [
+          "b-npi-root",
+          "b-npi-eng",
+          "b-npi-change-pack"
+        ]
+      },
+      {
+        "id": "b-npi-eco-v3",
+        "title": "ECO-042工程变更单v3（合成）",
+        "text": "现行变更增加胶材固化窗口与批次COC引用；受影响消费者为来料核对、试制作业指导、DVT矩阵和EVT2门禁包，不改变已发布BOM与结构图。",
+        "updatedAt": "2026-09-01T14:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7-ECO-042.pdf",
+        "mimeType": "application/pdf",
+        "version": "3.0",
+        "checksum": "e66274a9f20a2e031eefb6e37245d0412fe7a8a8bb6e421361e9b9c6b0eaf49d",
+        "status": "current_approved",
+        "linkedTaskIds": [
+          "b-npi-root",
+          "b-npi-change-pack",
+          "b-npi-incoming",
+          "b-npi-wi",
+          "b-npi-dvt",
+          "b-npi-gate"
+        ]
+      },
+      {
+        "id": "b-npi-bom-v5",
+        "title": "X7 EVT2 BOM基线v5（合成）",
+        "text": "BOM v5已完成并锁定胶材料号及用量；ECO-042 v3明确无需重开或改写该基线。",
+        "updatedAt": "2026-08-30T17:40:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7_EVT2_BOM.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "5.0",
+        "checksum": "b1309746de8d48c10c82bfec4a67c6dd76517eb77abf8b56876c76584490b623",
+        "status": "released",
+        "linkedTaskIds": [
+          "b-npi-change-pack",
+          "b-npi-bom",
+          "b-npi-incoming",
+          "b-npi-wi"
+        ]
+      },
+      {
+        "id": "b-npi-drawing-rc",
+        "title": "X7结构图纸RC版（合成）",
+        "text": "结构图纸RC版已发布；本次只调整工艺窗口和证据引用，不改变结构尺寸。",
+        "updatedAt": "2026-08-30T17:45:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7_ME_Drawing_RC.zip",
+        "mimeType": "application/zip",
+        "version": "C",
+        "checksum": "dfea5825f60215cfd7526f0d0cb0238ffd48144c1938a00df2be8fe2c0bc6c13",
+        "status": "released",
+        "linkedTaskIds": [
+          "b-npi-design",
+          "b-npi-dvt"
+        ]
+      },
+      {
+        "id": "b-npi-pcn-v3",
+        "title": "供应商PCN-118 v3（合成）",
+        "text": "PCN确认首批胶材需在来料记录中关联批次COC，并按ECO-042 v3的固化窗口用于试制和DVT。",
+        "updatedAt": "2026-09-01T13:50:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Supplier_PCN_118.pdf",
+        "mimeType": "application/pdf",
+        "version": "3.0",
+        "checksum": "8230216c568f21e9759d27ca9198a50517d0f801d383de8458c9fb20370d407d",
+        "status": "accepted_for_evt2",
+        "linkedTaskIds": [
+          "b-npi-supplier-ready",
+          "b-npi-pcn",
+          "b-npi-incoming",
+          "b-npi-wi",
+          "b-npi-dvt"
+        ]
+      },
+      {
+        "id": "b-npi-incoming-v2",
+        "title": "X7来料核对清单v2（合成）",
+        "text": "草稿仍只引用ECO v2，缺批次COC和固化窗口字段，需在原任务中升级。",
+        "updatedAt": "2026-09-01T11:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7_Incoming_Checklist.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "2.0",
+        "checksum": "9d935ed03ad1d0c69351ee189f16e07e65ef3339516f34223912c8e5e1d90939",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-npi-incoming"
+        ]
+      },
+      {
+        "id": "b-npi-wi-v4",
+        "title": "X7 EVT2试制作业指导v4（合成）",
+        "text": "现行草稿引用BOM v5，但仍使用旧固化窗口；须消费来料核对结果与ECO v3。",
+        "updatedAt": "2026-09-01T11:40:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7_EVT2_WorkInstruction.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": "4.0",
+        "checksum": "c1213736d5786c89591fd0b1eb79e8ad999ca2cdadea761bc678da5f851d7f0b",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-npi-build-ready",
+          "b-npi-wi"
+        ]
+      },
+      {
+        "id": "b-npi-coc-v1",
+        "title": "首批胶材COC占位记录v1（合成）",
+        "text": "供应商承诺2026-09-07 12:00前上传批次COC；当前只有外部承诺，不是已收到或已验收。",
+        "updatedAt": "2026-09-01T15:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "X7_Lot_COC.pdf",
+        "mimeType": "application/pdf",
+        "version": "1.0",
+        "checksum": "14a7cab293214fc34feded9896a8a91ac4735a1bfbeda8979ed25e0818d63b52",
+        "status": "awaiting_external_upload",
+        "linkedTaskIds": [
+          "b-npi-incoming",
+          "b-npi-wi",
+          "b-npi-dvt",
+          "b-npi-gate"
+        ]
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-b-npi"
+    ],
+    "matches": [
+      {
+        "taskId": "b-npi-incoming",
+        "title": "更新X7首批来料核对",
+        "reason": "已覆盖来料检查与批次证据，不应另建清单任务。"
+      },
+      {
+        "taskId": "b-npi-wi",
+        "title": "修订X7 EVT2试制作业指导",
+        "reason": "已覆盖试制作业消费者，不应复制新版本任务。"
+      },
+      {
+        "taskId": "b-npi-dvt",
+        "title": "更新X7 DVT测试矩阵",
+        "reason": "已覆盖验证消费者。"
+      },
+      {
+        "taskId": "b-npi-gate",
+        "title": "形成X7 EVT2试制门禁包",
+        "reason": "已是最终聚合消费者。"
+      }
+    ],
+    "coverageNote": "合成查重已覆盖授权团队活动与归档索引；四个同结果候选均指向当前可见任务。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "b-npi-root",
+      "field": "goal",
+      "value": "在不重开已完成设计基线的前提下，让X7 EVT2按现行变更安全进入试制"
+    },
+    {
+      "taskId": "b-npi-root",
+      "field": "dueOn",
+      "value": "2026-09-10"
+    },
+    {
+      "taskId": "b-npi-bom",
+      "field": "acceptanceCriteria",
+      "value": [
+        "BOM v5料号、用量和审批记录可追溯"
+      ]
+    }
+  ],
+  "constraints": {
+    "externalActions": "只输出候选差异；不创建、指派、通知、验收、发布或调用真实供应商接口。",
+    "scope": "仅处理ECO-042 v3的四个既有消费者；保护完成记录和确认字段。",
+    "hardDeadlines": [
+      "2026-09-07供应商COC承诺窗口（非完成事实）",
+      "2026-09-10 EVT2试制门禁"
+    ]
+  },
+  "dataClassification": "synthetic",
+  "members": [
+    {
+      "id": "b-npi-m1",
+      "name": "林砚",
+      "role": "NPI项目负责人",
+      "responsibilities": [
+        "维护阶段边界与试制总计划",
+        "协调跨分支变更影响"
+      ],
+      "boundaries": [
+        "不代质量签署检验结论",
+        "不承诺供应商外部交期"
+      ],
+      "evidence": [
+        {
+          "id": "b-npi-m1-role",
+          "title": "林砚职责说明（合成）",
+          "text": "职责：维护阶段边界与试制总计划；协调跨分支变更影响。边界：不代质量签署检验结论；不承诺供应商外部交期。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-npi-m1-work",
+          "title": "林砚当前工作自报（合成）",
+          "text": "正在协调X7 EVT2试制包，未提供整周容量。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "b-npi-m1-window",
+          "title": "林砚公开协作窗口（合成）",
+          "text": "2026-09-03T09:00:00+08:00至2026-09-03T11:00:00+08:00；仅表示可参加本场景核对，不代表整周空闲。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在协调X7 EVT2试制包，未提供整周容量。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-npi-m1-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-03T09:00:00+08:00",
+        "endAt": "2026-09-03T11:00:00+08:00",
+        "sourceRef": "b-npi-m1-window",
+        "note": "仅表示可参加本场景核对，不代表整周空闲。",
+        "updatedAt": "2026-09-01T08:20:00+08:00"
+      }
+    },
+    {
+      "id": "b-npi-m2",
+      "name": "崔岳",
+      "role": "设计负责人",
+      "responsibilities": [
+        "维护工程变更与设计基线",
+        "核对图纸与BOM引用"
+      ],
+      "boundaries": [
+        "不重开已完成基线",
+        "不替供应商确认材料批次"
+      ],
+      "evidence": [
+        {
+          "id": "b-npi-m2-role",
+          "title": "崔岳职责说明（合成）",
+          "text": "职责：维护工程变更与设计基线；核对图纸与BOM引用。边界：不重开已完成基线；不替供应商确认材料批次。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-npi-m2-work",
+          "title": "崔岳当前工作自报（合成）",
+          "text": "正在处理另一项DVT图纸澄清。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在处理另一项DVT图纸澄清。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-npi-m2-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-npi-m3",
+      "name": "任宁",
+      "role": "供应商质量工程师",
+      "responsibilities": [
+        "接收PCN与批次证明",
+        "定义来料核对证据"
+      ],
+      "boundaries": [
+        "不签署设计放行",
+        "不把预计到件当实际回执"
+      ],
+      "evidence": [
+        {
+          "id": "b-npi-m3-role",
+          "title": "任宁职责说明（合成）",
+          "text": "职责：接收PCN与批次证明；定义来料核对证据。边界：不签署设计放行；不把预计到件当实际回执。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-npi-m3-work",
+          "title": "任宁当前工作自报（合成）",
+          "text": "等待合成供应商提供首批COC。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "b-npi-m3-window",
+          "title": "任宁公开协作窗口（合成）",
+          "text": "2026-09-07T10:00:00+08:00至2026-09-07T12:00:00+08:00；仅表示可参加本场景核对，不代表整周空闲。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "等待合成供应商提供首批COC。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-npi-m3-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-07T10:00:00+08:00",
+        "endAt": "2026-09-07T12:00:00+08:00",
+        "sourceRef": "b-npi-m3-window",
+        "note": "仅表示可参加本场景核对，不代表整周空闲。",
+        "updatedAt": "2026-09-01T08:20:00+08:00"
+      }
+    },
+    {
+      "id": "b-npi-m4",
+      "name": "蒋蕴",
+      "role": "制造工程师",
+      "responsibilities": [
+        "维护试制作业指导",
+        "核对工装与过程窗口"
+      ],
+      "boundaries": [
+        "不修改已发布设计BOM",
+        "不替质量关闭偏差"
+      ],
+      "evidence": [
+        {
+          "id": "b-npi-m4-role",
+          "title": "蒋蕴职责说明（合成）",
+          "text": "职责：维护试制作业指导；核对工装与过程窗口。边界：不修改已发布设计BOM；不替质量关闭偏差。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-npi-m4-work",
+          "title": "蒋蕴当前工作自报（合成）",
+          "text": "正在修订X7试制作业指导草稿。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在修订X7试制作业指导草稿。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-npi-m4-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-npi-m5",
+      "name": "谭棠",
+      "role": "验证负责人",
+      "responsibilities": [
+        "维护DVT测试矩阵",
+        "记录验证覆盖与未决项"
+      ],
+      "boundaries": [
+        "不将测试执行报告当设计批准",
+        "不自行改变硬试制日期"
+      ],
+      "evidence": [
+        {
+          "id": "b-npi-m5-role",
+          "title": "谭棠职责说明（合成）",
+          "text": "职责：维护DVT测试矩阵；记录验证覆盖与未决项。边界：不将测试执行报告当设计批准；不自行改变硬试制日期。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-npi-m5-work",
+          "title": "谭棠当前工作自报（合成）",
+          "text": "正在准备环境测试槽位。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "b-npi-m5-window",
+          "title": "谭棠公开协作窗口（合成）",
+          "text": "2026-09-08T13:00:00+08:00至2026-09-08T17:00:00+08:00；仅表示可参加本场景核对，不代表整周空闲。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在准备环境测试槽位。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-npi-m5-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-08T13:00:00+08:00",
+        "endAt": "2026-09-08T17:00:00+08:00",
+        "sourceRef": "b-npi-m5-window",
+        "note": "仅表示可参加本场景核对，不代表整周空闲。",
+        "updatedAt": "2026-09-01T08:20:00+08:00"
+      }
+    },
+    {
+      "id": "b-npi-m6",
+      "name": "贺川",
+      "role": "配置与文控",
+      "responsibilities": [
+        "登记现行文件版本",
+        "维护评审包索引"
+      ],
+      "boundaries": [
+        "不判断工程内容正确性",
+        "不删除被取代版本历史"
+      ],
+      "evidence": [
+        {
+          "id": "b-npi-m6-role",
+          "title": "贺川职责说明（合成）",
+          "text": "职责：登记现行文件版本；维护评审包索引。边界：不判断工程内容正确性；不删除被取代版本历史。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-npi-m6-work",
+          "title": "贺川当前工作自报（合成）",
+          "text": "正在核对ECO-042文件索引。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在核对ECO-042文件索引。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-npi-m6-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-npi-m7",
+      "name": "沈乔",
+      "role": "采购接口人",
+      "responsibilities": [
+        "跟踪供应商承诺与物料窗口",
+        "记录外部前置回执"
+      ],
+      "boundaries": [
+        "不把口头承诺改成已到货",
+        "不替SQE验收COC"
+      ],
+      "evidence": [
+        {
+          "id": "b-npi-m7-role",
+          "title": "沈乔职责说明（合成）",
+          "text": "职责：跟踪供应商承诺与物料窗口；记录外部前置回执。边界：不把口头承诺改成已到货；不替SQE验收COC。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-npi-m7-work",
+          "title": "沈乔当前工作自报（合成）",
+          "text": "正在跟踪首批胶材批次证明。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在跟踪首批胶材批次证明。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-npi-m7-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    }
+  ]
+}

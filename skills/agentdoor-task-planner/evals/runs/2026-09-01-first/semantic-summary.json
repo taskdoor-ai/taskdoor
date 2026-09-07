@@ -1,0 +1,129 @@
+{
+  "total": 24,
+  "satisfies": 23,
+  "fails": 1,
+  "uncertain": 0,
+  "reviewMethod": "Independent Codex agent semantic review; no human industry-user review",
+  "results": [
+    {
+      "id": "SAAS-01",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "SAAS-02",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "SAAS-03",
+      "verdict": "fails",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "SAAS-04",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "ECOM-01",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "ECOM-02",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "ECOM-03",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "ECOM-04",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "NPI-01",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "NPI-02",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "NPI-03",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "NPI-04",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "RETAIL-01",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "RETAIL-02",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "RETAIL-03",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "RETAIL-04",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "CONTENT-01",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "CONTENT-02",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "CONTENT-03",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "CONTENT-04",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "RENO-01",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "RENO-02",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "RENO-03",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "RENO-04",
+      "verdict": "satisfies",
+      "reviewFile": "semantic-review-c.json"
+    }
+  ]
+}

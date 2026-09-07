@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-content-03",
+  "baseSnapshotId": "snapshot-content-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "content03-root": 5,
+    "content03-outline": 2,
+    "content03-visual": 3,
+    "content03-copy": 3,
+    "content03-format": 2
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议仅调整原文案与公众号适配任务的交付标准，使其面向首次使用者；继续复用五张功能图v2，保留已确认目标、五项功能范围和陶然的正式负责人记录。",
+  "reasoningSummary": [
+    {
+      "text": "客户书面确认只调整本期受众，五项功能范围、品牌口径及五张功能图v2均继续沿用。",
+      "evidenceRefs": [
+        "content03-confirm",
+        "content03-d1"
+      ]
+    },
+    {
+      "text": "功能范围与视觉任务已完成；图v2有完成历史，无需重新创建或覆盖已完成产出。",
+      "evidenceRefs": [
+        "content03-outline",
+        "content03-visual",
+        "content03-h1"
+      ]
+    },
+    {
+      "text": "文案仍在进行中，作者报告需要重写入门解释段；杜衡接写全文只是未交接提议，不能覆盖陶然的已确认责任。",
+      "evidenceRefs": [
+        "content03-copy",
+        "content03-d2",
+        "content03-d3",
+        "content03-h2"
+      ]
+    },
+    {
+      "text": "现有公众号适配已依赖文案及视觉，新的受众表达可沿用这组前置；根任务现有9月8日期限保留，没有依据统一挪动整棵树。",
+      "evidenceRefs": [
+        "content03-format",
+        "content03-root"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "content03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change-content03-copy-audience",
+        "action": "update",
+        "targetId": "content03-copy",
+        "parentId": "content03-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "按已确认五项功能和品牌口径交付面向首次使用者的文字稿；以客户受众确认记录核对，不新增功能或改变事实范围。",
+            "重写现稿中偏熟练用户的入门解释段，提供可对照的修改说明；已有准确事实表述可保留。",
+            "文字与继续使用的五张功能图v2逐项对应，不提出重新拍摄或设计要求。"
+          ],
+          "tips": [
+            "围绕首次使用者理解现有五项功能所需的解释调整表达，不将受众变化扩展成新的业绩目标。"
+          ]
+        },
+        "reason": "在原文案ID中落实客户已确认的受众变化，保留正式负责人和现有功能范围。",
+        "evidenceRefs": [
+          "req-content-03",
+          "content03-copy",
+          "content03-confirm",
+          "content03-d2",
+          "content03-h2"
+        ]
+      },
+      {
+        "id": "change-content03-format-audience",
+        "action": "update",
+        "targetId": "content03-format",
+        "parentId": "content03-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "按原确认的公众号规格交付文字与图片组合，使用面向首次使用者的本轮文字稿及已批准继续复用的五张功能图v2。",
+            "对照文案交付结果核对入门解释、图文对应和渠道呈现，无遗漏本期已确认的五项功能，不改品牌口径。"
+          ],
+          "tips": [
+            "沿用现有文案与视觉前置关系；文案受众调整完成后才能核对最终图文组合，已有图v2继续复用。"
+          ]
+        },
+        "reason": "下游图文组合消费受众调整后的文案，需要同步明确交付边界；既有前置关系已覆盖这两项输入，不新增依赖。",
+        "evidenceRefs": [
+          "req-content-03",
+          "content03-format",
+          "content03-copy",
+          "content03-visual",
+          "content03-confirm"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "content03-root",
+      "content03-outline",
+      "content03-visual"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "保留根目标“以已确认品牌口径说明产品功能”、文案正式Owner陶然以及所有未列字段；本提案不执行人员交接。",
+    "9月8日根期限保持原值。文案和适配没有单独期限或完整容量数据，不能据此保证调整一定按期完成。",
+    "没有本次剩余投入的可靠依据，不新增或覆盖估算基线。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "content03-root",
+      "label": "审阅文案与渠道适配的局部差异"
+    }
+  ],
+  "externalEffects": "none"
+}

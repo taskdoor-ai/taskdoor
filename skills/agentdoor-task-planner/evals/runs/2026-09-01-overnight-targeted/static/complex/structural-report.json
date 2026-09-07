@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-09-01T02:50:33.610790+00:00",
+  "total": 2,
+  "structurallyValid": 2,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "7aa7f8d5d2d2011ac12ad4660ae8a4f05a6c447097498ce26f845f4497f66b6c",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "COMPLEX-02",
+      "industry": "manufacturing_npi",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "在现有样料资料分支新增一份标签与资料编号对照表，并把评审资料目录显式改为依赖并引用该表；其他三层结构、已完成结果和叶任务估算保持不变。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 2,
+      "outputSha256": "119def623a384481768840de459e0b73c94fbd3288d3c35afa252b14ebbe23be",
+      "manualChecks": [
+        "只新增一份有独立核对价值的编号对照表，保留现有根和三层结构，挂在进行中的样料资料分支；不展开未请求的制造或量产工作。",
+        "新表依据批次对应表和已确认图纸/BOM引用；目录index仍使用原ID，结构化接入新表；说明哪些准备可并行，不给全部分支加串行边。",
+        "父层仅为归集结果，不另估一遍叶项总投入。现有叶任务估算是基线，禁止改写成实际或剩余投入，也不清零。",
+        "若给新叶任务估算，解释12条编号、同工具及可比历史的适用边界；等待回执48小时不计入EWD，保留null并说明依据不足也可接受。",
+        "原BOM和图纸目录已完成，直接引用；新表9月5日与目录9月7日的关系来自回执，不由人数除工时推导。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "COMPLEX-03",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "在商品资料包中新增包装说明v2，并把页面、客服问答和发货答复三项现有任务显式接到该前置；图片、库存、投放和已确认负责人全部保持不变。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 4,
+      "outputSha256": "e422fcb1eb375cadb5ecb6918f6321207526e9b796d30c487a8729dbc58c6c39",
+      "manualChecks": [
+        "只新增本批包装说明v2，不重拍图片、不重核未变化库存、不重建正在做的页面、客服与发货答复。",
+        "页面page、客服faq、发货答复dispatch三个现有消费者各自接到新增结果，按需更新标准或依赖；不能只更新其中一个或只在tips交接。",
+        "保留checkout已经包含的三个消费者前置，它已具有传递输入关系；不为了多改一项添加冗余新检查或移动无影响广告素材。",
+        "区分页面已有四个版块初稿、客服非包装问答进展与正式任务完成；不覆盖已完成资产、现有Owner或原EWD基线。",
+        "确认9月2日说明、9月3日三个使用方、9月4日联动核对的现有边界能衔接，未改日期也需说明检查依据；不增加价格、渠道、预算或对外发货承诺。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

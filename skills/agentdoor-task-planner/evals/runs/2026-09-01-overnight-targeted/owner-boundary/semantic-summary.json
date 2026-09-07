@@ -1,0 +1,17 @@
+{
+  "kind": "targeted_owner_boundary_retest",
+  "cases": [
+    {
+      "caseId": "EDGE-12",
+      "status": "passed",
+      "summary": "单一术语表任务保持未分配 Owner；唐钰仅承担版本交付贡献，未虚构日语翻译或复核能力。",
+      "reviewFile": "semantic-review.json"
+    }
+  ],
+  "total": 1,
+  "passed": 1,
+  "failed": 0,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

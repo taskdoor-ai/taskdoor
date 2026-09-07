@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-ecom-02",
+  "baseSnapshotId": "snapshot-ecom-02-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "ecom02-root": 2,
+    "ecom02-page": 1,
+    "ecom02-stock": 1,
+    "ecom02-last": 4
+  },
+  "intent": "create",
+  "disposition": "route_required",
+  "summary": "9月9日SKU-CUP-A天猫首发准备已经于09:02创建，建议打开既有任务继续，不再重复建立整套计划。",
+  "reasoningSummary": [
+    {
+      "text": "既有ecom02-root的SKU、天猫渠道、9月9日周期与本次首发交付范围一致，当前状态为进行中。",
+      "evidenceRefs": [
+        "req-ecom-02",
+        "ecom02-root"
+      ]
+    },
+    {
+      "text": "创建历史与本地回执都指向ecom02-root，确认此前发起已产生该任务，但不代表本轮模型获准写入。",
+      "evidenceRefs": [
+        "ecom02-h1",
+        "ecom02-receipt"
+      ]
+    },
+    {
+      "text": "详情页确认与库存核对已有子任务；主任务标准同时涵盖客服和测试口径，不应因子项列表少两项而重建整套。",
+      "evidenceRefs": [
+        "ecom02-root",
+        "ecom02-page",
+        "ecom02-stock"
+      ]
+    },
+    {
+      "text": "8月旧项是同SKU的前一期促销活动，与9月9日首发不是同一实例，旧完成记录保持不变。",
+      "evidenceRefs": [
+        "ecom02-last",
+        "ecom02-root"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "ecom02-root",
+        "relationship": "same_outcome",
+        "reason": "业务对象SKU-CUP-A、渠道天猫、首发日期2026-09-09及详情页、库存、客服和测试准备范围相同；且已有09:02创建回执。",
+        "evidenceRefs": [
+          "req-ecom-02",
+          "ecom02-root",
+          "ecom02-receipt",
+          "ecom02-h1"
+        ]
+      },
+      {
+        "taskId": "ecom02-last",
+        "relationship": "different_instance",
+        "reason": "该任务对应2026-08-09旧批次促销活动；本次对象为2026-09-09首发，周期及活动实例不同。",
+        "evidenceRefs": [
+          "ecom02-last",
+          "ecom02-root",
+          "req-ecom-02"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "目前客服和上线测试未单列子任务；若需要独立跟踪，应在既有主任务中提出局部补充候选，本轮不把已有结果复制为新计划。",
+    "不改变原Owner、状态和任务ID，也不把“再建一套”当作新周期授权。"
+  ],
+  "nextActions": [
+    {
+      "action": "open_task",
+      "taskId": "ecom02-root",
+      "label": "打开已创建的9月9日首发准备"
+    },
+    {
+      "action": "open_task",
+      "taskId": "ecom02-page",
+      "label": "查看已有详情页确认"
+    },
+    {
+      "action": "open_task",
+      "taskId": "ecom02-stock",
+      "label": "查看已有库存核对"
+    }
+  ],
+  "externalEffects": "none"
+}

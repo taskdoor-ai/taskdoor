@@ -1,0 +1,210 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-complex03",
+  "baseSnapshotId": "snapshot-complex03-v3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "complex03-root": 11,
+    "complex03-product": 5,
+    "complex03-channels": 4,
+    "complex03-service": 4,
+    "complex03-images": 6,
+    "complex03-page": 7,
+    "complex03-ads": 3,
+    "complex03-faq": 5,
+    "complex03-dispatch": 3,
+    "complex03-inventory": 5,
+    "complex03-checkout": 3
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议在原商品资料分支新增包装说明v2，并补齐页面、客服问答、发货答复对它的依赖；沿用主图、库存、页面任务及已有联动核对，不调整价格、投放或正式负责人。",
+  "reasoningSummary": [
+    {
+      "text": "已确认变更仅为本批包装：SKU QY-09仍90件，外箱每箱6件、45×32×28厘米；单件规格、价格、渠道与主图v3不变。",
+      "evidenceRefs": [
+        "complex03-pack-v2",
+        "req-complex03"
+      ]
+    },
+    {
+      "text": "包装栏、客服问答和发货答复分别需要说明v2；既定投放素材不使用包装参数，已有联动核对继续通过原三个前置项使用结果。",
+      "evidenceRefs": [
+        "complex03-consumer-map",
+        "complex03-page",
+        "complex03-faq",
+        "complex03-dispatch",
+        "complex03-ads",
+        "complex03-checkout"
+      ]
+    },
+    {
+      "text": "商品运营在9月2日交付包装说明；三项使用方9月3日、联动核对9月4日、总边界9月5日的协调日期可保留，无须挪动其他分支。",
+      "evidenceRefs": [
+        "complex03-schedule-agreement"
+      ]
+    },
+    {
+      "text": "主图版本6和库存版本5已正式完成；页面非包装初稿与客服非包装问答可以复用，但报告不改变正式任务状态，也不能由页面4人时基线推出剩余量。",
+      "evidenceRefs": [
+        "complex03-h-images",
+        "complex03-h-inventory",
+        "complex03-d-page",
+        "complex03-d-faq",
+        "complex03-h-page-baseline"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "complex03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:complex03-create-packaging",
+        "action": "create",
+        "targetId": "new:complex03-packaging-v2",
+        "parentId": "complex03-product",
+        "fields": {
+          "title": "整理青芽QY-09首批包装说明v2与差异",
+          "acceptanceCriteria": [
+            "形成可被页面、客服和发货答复共同引用的包装说明v2，逐项链接本批包装变更确认来源。",
+            "明确本批SKU QY-09可售礼盒90件、外箱每箱6件、外箱尺寸45×32×28厘米；只采用已确认记录，不新增物流或发货承诺。",
+            "区分外箱包装变更与保持不变的单件规格、价格、渠道及主图v3；按可见依据列差异，不捏造未提供的旧尺寸或旧单箱件数。"
+          ],
+          "tips": [
+            "复用已完成主图与库存记录；说明只整理本批包装信息，不重拍图片、不重核未变库存、不扩大投放范围。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m1",
+            "basis": "explicit",
+            "reason": "本轮协调回执明确由商品运营汇总包装说明v2；候选沿用这一已明确的结果责任意图。",
+            "evidenceRefs": [
+              "complex03-schedule-agreement",
+              "ecom-m1-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "explicit",
+            "assumptions": [
+              "启动日期未提供。",
+              "按本轮协调回执在9月2日交付供三项使用方9月3日完成最终核对，不按人时推工期。"
+            ],
+            "evidenceRefs": [
+              "complex03-schedule-agreement"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有此新增包装说明在约定工具下的可比投入记录；原页面等任务基线不能当作本项或当前剩余投入。"
+            ],
+            "evidenceRefs": [
+              "complex03-pack-v2",
+              "complex03-h-page-baseline"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "只补已确认的新包装说明，放入原商品资料分支，使用现有确认来源而不重建已完成结果。",
+        "evidenceRefs": [
+          "complex03-pack-v2",
+          "complex03-consumer-map",
+          "complex03-schedule-agreement",
+          "req-complex03"
+        ]
+      },
+      {
+        "id": "change:complex03-page-input",
+        "action": "update",
+        "targetId": "complex03-page",
+        "parentId": "complex03-channels",
+        "fields": {
+          "dependsOnTaskIds": [
+            "complex03-images",
+            "new:complex03-packaging-v2"
+          ]
+        },
+        "reason": "保留主图前置和已留稿的非包装版块，包装栏最终核对增加说明v2前置；沿用9月3日日期与原Owner、标准和估算。",
+        "evidenceRefs": [
+          "complex03-page",
+          "complex03-consumer-map",
+          "complex03-d-page",
+          "complex03-schedule-agreement"
+        ]
+      },
+      {
+        "id": "change:complex03-faq-input",
+        "action": "update",
+        "targetId": "complex03-faq",
+        "parentId": "complex03-service",
+        "fields": {
+          "dependsOnTaskIds": [
+            "new:complex03-packaging-v2"
+          ]
+        },
+        "reason": "非包装问答可继续复用，涉及单箱件数和尺寸的答复需使用说明v2，补上真实前置；保留9月3日日期及原任务。",
+        "evidenceRefs": [
+          "complex03-faq",
+          "complex03-d-faq",
+          "complex03-consumer-map",
+          "complex03-schedule-agreement"
+        ]
+      },
+      {
+        "id": "change:complex03-dispatch-input",
+        "action": "update",
+        "targetId": "complex03-dispatch",
+        "parentId": "complex03-service",
+        "fields": {
+          "dependsOnTaskIds": [
+            "complex03-inventory",
+            "new:complex03-packaging-v2"
+          ]
+        },
+        "reason": "保留库存输入并补入说明v2，确保发货答复使用本批包装口径；仍用已确认仓配窗口，不新增承诺。",
+        "evidenceRefs": [
+          "complex03-dispatch",
+          "complex03-consumer-map",
+          "complex03-schedule-agreement"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "complex03-root",
+      "complex03-product",
+      "complex03-channels",
+      "complex03-service",
+      "complex03-images",
+      "complex03-ads",
+      "complex03-inventory",
+      "complex03-checkout"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "questions": [],
+  "warnings": [
+    "原任务未列字段保持不变，包含所有既有估算基线、正式Owner、完成标准与日期。",
+    "新说明的依赖表示三项结果最终核对需要此输入，不要求已经可并行的非包装内容停止准备。",
+    "未提供完整成员容量和当前剩余投入；给定协调日期不构成新的工期保证。",
+    "只输出候选；不发布页面、不下单、不修改真实库存或通知任何人。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "complex03-root",
+      "label": "审阅包装说明及三个使用方的依赖差异"
+    }
+  ],
+  "externalEffects": "none"
+}

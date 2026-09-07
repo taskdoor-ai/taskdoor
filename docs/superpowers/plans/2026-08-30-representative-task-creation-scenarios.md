@@ -361,7 +361,7 @@ When the user chooses “创建为子任务”, store the selected parent ID alo
 
 - [ ] **Step 6: Run full verification**
 
-Run: `npm run verify`
+Run: `npm test && npm run build`
 
 Expected: all Node tests pass, TypeScript succeeds, and Vite production build completes. Existing Vite chunk-size warnings are acceptable if unchanged.
 
@@ -397,7 +397,7 @@ Assert the fourth scenario has exactly two actions, the fifth scenario has exact
 
 - [ ] **Step 2: Run all verification commands**
 
-Run: `npm run verify && npm run design:check`
+Run: `npm test && npm run build && npm run design:check`
 
 Expected: all tests and build pass; the design checker reports no new violations.
 

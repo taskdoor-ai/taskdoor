@@ -1,11 +1,11 @@
 # 跨行业 Demo 验证场景
 
 > 目标：用真实团队协作压力验证同一套架构，而不是为每个行业制作一套孤立演示。场景中的人、任务、文件、活动、团队画像证据和权限状态都必须相互关联。
-> D-139 当前投影：Task 是唯一行动对象；Demo 不再创建或操作 Todo。Task 创建与详情不录入或展示逐项 Responsibility 分配和验收标准；唯一 Task Owner、Participant、Activity、Task File、父子 Task、Handoff 与 ACL 继续验证。下文若讨论 Responsibility，只指团队画像证据或独立 Handoff 协议，不得恢复已被取代的 Task 详情“责任分布”。
+> D-140 当前投影：Task 是唯一行动对象，React 原型不再提供 Task 创建流程；列表输入壳不提交、不生成 Proposal 或正式 Task。下文的创建夹具与创建序列退出当前验收并保留为历史场景素材；既有 Task 的 Owner、Participant、Activity、Task File、父子关系、Handoff 与 ACL 继续验证。
 
-## 当前任务创建测试夹具
+## 已退出当前验收的任务创建夹具
 
-当前 Demo 的创建入口使用五个可重复验证的场景包。场景数据由 `src/data/taskCreationScenarios.ts` 统一维护；页面不得再用关键词只替换标题，也不得在组件内写死 POS 建议。
+这些夹具记录 D-140 之前的创建演示，不再对应当前代码或测试入口；`src/data/taskCreationScenarios.ts` 已随 React 创建流程删除。若未来重新接入创建能力，应先重新确认合同，再决定是否复用这些场景素材。
 
 | 示例 | 快速测试标记 | 分析来源 | 创建文件候选 | 结构 / 人员 | 关键约束 |
 | --- | --- | ---: | ---: | --- | --- |

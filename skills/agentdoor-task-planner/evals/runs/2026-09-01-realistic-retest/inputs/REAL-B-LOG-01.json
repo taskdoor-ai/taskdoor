@@ -1,0 +1,961 @@
+{
+  "requestId": "req-real-b-log-01",
+  "message": "面单映射v4替代v3后，请重排整棵东沄华东仓切换树：复用已经验证的承运商账号和完成的回退演练，把所有受影响消费者、跨分支依赖和9月19日切换窗口一次更新完整。不要重做完成项，也不要让我手抄后续任务。当前只读到13/27项和部分讨论；请先按已授权游标补读，未读到前不要猜其余消费者或给出“全树已就绪”的方案。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "b-log-m1",
+  "teamId": "team-b-log",
+  "authorizedTeamIds": [
+    "team-b-log"
+  ],
+  "revision": 5,
+  "currentTaskId": "b-log-root",
+  "context": {
+    "snapshotId": "snapshot-real-b-log-01-v5",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-b-log"
+      ]
+    },
+    "coverage": {
+      "tasks": "partial",
+      "subtasks": "partial",
+      "discussions": "partial",
+      "history": "partial",
+      "files": "complete"
+    },
+    "tasks": [
+      {
+        "id": "b-log-root",
+        "title": "东沄华东仓WMS切换",
+        "status": "in_progress",
+        "version": 15,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "在2026-09-19切换窗口形成可回退、可核对的仓配交接记录"
+        ],
+        "ownerId": "b-log-m1",
+        "sourceRefs": [
+          "b-log-map-v4"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-19",
+        "goal": "在不丢失已完成演练记录的前提下完成华东仓WMS切换",
+        "identity": {
+          "businessObject": "东沄华东仓",
+          "cycle": "2026-09切换",
+          "scope": "WMS蓝绿切换"
+        }
+      },
+      {
+        "id": "b-log-data",
+        "title": "映射与数据分支",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-log-root",
+        "acceptanceCriteria": [
+          "归集标签与主数据现行版本"
+        ],
+        "ownerId": "b-log-m2",
+        "sourceRefs": [
+          "b-log-map-v4"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-12"
+      },
+      {
+        "id": "b-log-infra",
+        "title": "访问与基础设施分支",
+        "status": "in_progress",
+        "version": 7,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-log-root",
+        "acceptanceCriteria": [
+          "归集网络、账号与关务访问状态"
+        ],
+        "ownerId": "b-log-m6",
+        "sourceRefs": [
+          "b-log-carrier-v5"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-16"
+      },
+      {
+        "id": "b-log-ops",
+        "title": "仓内与切换分支",
+        "status": "in_progress",
+        "version": 8,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-log-root",
+        "acceptanceCriteria": [
+          "归集现场联测、切换与回退记录"
+        ],
+        "ownerId": "b-log-m4",
+        "sourceRefs": [
+          "b-log-runbook-v6"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-19"
+      },
+      {
+        "id": "b-log-map-pack",
+        "title": "面单映射资料包",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-log-data",
+        "acceptanceCriteria": [
+          "保留v3至v4差异及使用方"
+        ],
+        "ownerId": "b-log-m2",
+        "sourceRefs": [
+          "b-log-map-v3",
+          "b-log-map-v4"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-10"
+      },
+      {
+        "id": "b-log-label-map",
+        "title": "确认面单字段映射v4",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-log-map-pack",
+        "acceptanceCriteria": [
+          "逐项记录新增字段、代码替换和受影响消费者"
+        ],
+        "ownerId": "b-log-m2",
+        "sourceRefs": [
+          "b-log-map-v4"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-10"
+      },
+      {
+        "id": "b-log-access-pack",
+        "title": "外部连接就绪包",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-log-infra",
+        "acceptanceCriteria": [
+          "区分已验证账号与仍待审批的访问"
+        ],
+        "ownerId": "b-log-m6",
+        "sourceRefs": [
+          "b-log-carrier-v5",
+          "b-log-customs-v1"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-16"
+      },
+      {
+        "id": "b-log-carrier-account",
+        "title": "验证承运商测试账号",
+        "status": "completed",
+        "version": 6,
+        "updatedAt": "2026-08-31T18:00:00+08:00",
+        "parentId": "b-log-access-pack",
+        "acceptanceCriteria": [
+          "三家承运商测试账号及端点已留存"
+        ],
+        "ownerId": "b-log-m3",
+        "sourceRefs": [
+          "b-log-carrier-v5"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "b-log-customs-access",
+        "title": "取得关务生产SFTP访问",
+        "status": "blocked",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-log-access-pack",
+        "acceptanceCriteria": [
+          "保存有权审批回执与访问验证，不记录明文凭据"
+        ],
+        "ownerId": "b-log-m5",
+        "sourceRefs": [
+          "b-log-customs-v1"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-16"
+      },
+      {
+        "id": "b-log-runbook-pack",
+        "title": "切换执行资料包",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-log-ops",
+        "acceptanceCriteria": [
+          "归集切换手册、联测与回退证据"
+        ],
+        "ownerId": "b-log-m1",
+        "sourceRefs": [
+          "b-log-runbook-v6"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-18"
+      },
+      {
+        "id": "b-log-runbook",
+        "title": "修订WMS切换手册",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-log-runbook-pack",
+        "acceptanceCriteria": [
+          "引用现行映射、访问状态和回退触发条件"
+        ],
+        "ownerId": "b-log-m1",
+        "sourceRefs": [
+          "b-log-runbook-v6"
+        ],
+        "dependsOnTaskIds": [
+          "b-log-label-map",
+          "b-log-customs-access"
+        ],
+        "dueOn": "2026-09-18"
+      },
+      {
+        "id": "b-log-dryrun",
+        "title": "完成WMS回退演练",
+        "status": "completed",
+        "version": 8,
+        "updatedAt": "2026-08-30T22:00:00+08:00",
+        "parentId": "b-log-runbook-pack",
+        "acceptanceCriteria": [
+          "演练记录含恢复时长、责任和未决项"
+        ],
+        "ownerId": "b-log-m7",
+        "sourceRefs": [
+          "b-log-dryrun-v2"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-30"
+      },
+      {
+        "id": "b-log-carrier-test",
+        "title": "执行承运商标签联测",
+        "status": "open",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-log-runbook-pack",
+        "acceptanceCriteria": [
+          "按现行映射记录三家承运商结果与差异"
+        ],
+        "ownerId": "b-log-m3",
+        "sourceRefs": [
+          "b-log-map-v4",
+          "b-log-carrier-v5"
+        ],
+        "dependsOnTaskIds": [
+          "b-log-label-map",
+          "b-log-carrier-account"
+        ],
+        "dueOn": "2026-09-13"
+      }
+    ],
+    "files": [
+      {
+        "id": "b-log-map-v3",
+        "title": "东沄面单字段映射v3（合成）",
+        "text": "旧版覆盖国内标准面单，已由v4取代；保留以核对回归差异。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Dongyun_Label_Map.csv",
+        "mimeType": "text/csv",
+        "version": "3.0",
+        "checksum": "0b9bd76bfa0dcb706d52525bdeb8b48b2985c27e45a674332353c65c024e78c0",
+        "status": "superseded",
+        "linkedTaskIds": [
+          "b-log-map-pack",
+          "b-log-label-map"
+        ]
+      },
+      {
+        "id": "b-log-map-v4",
+        "title": "东沄面单字段映射v4（合成）",
+        "text": "v4新增关务申报号并调整两家承运商服务代码；已知会影响标签回归、承运商联测和切换手册，但完整消费者仍在后续任务分页。",
+        "updatedAt": "2026-09-01T13:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Dongyun_Label_Map.csv",
+        "mimeType": "text/csv",
+        "version": "4.0",
+        "checksum": "84ad4734aa094fb146d00fd4d289d680d58e99577cb7a3b5c06be84d1d25ee48",
+        "status": "current_approved",
+        "linkedTaskIds": [
+          "b-log-root",
+          "b-log-label-map",
+          "b-log-carrier-test",
+          "b-log-runbook"
+        ]
+      },
+      {
+        "id": "b-log-runbook-v6",
+        "title": "东沄WMS切换手册v6（合成）",
+        "text": "手册当前引用映射v3和旧承运商代码，后续页可能还有未读取消费者。",
+        "updatedAt": "2026-09-01T11:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Dongyun_Cutover_Runbook.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": "6.0",
+        "checksum": "1d9c992625a607f240db8df010f851a77b6d7c4c4e7a6049d6c8ebacdb01b8c2",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-log-runbook-pack",
+          "b-log-runbook"
+        ]
+      },
+      {
+        "id": "b-log-dryrun-v2",
+        "title": "回退演练记录v2（合成）",
+        "text": "演练已按版本2完成，记录恢复时长和未决项；映射v4不授权覆盖该历史结果。",
+        "updatedAt": "2026-08-30T22:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Dongyun_Rollback_DryRun.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "9ba94482c7ecd50316cb9965ea13200ecd642c53ece1404da16afa56bf561a44",
+        "status": "accepted_complete",
+        "linkedTaskIds": [
+          "b-log-dryrun"
+        ]
+      },
+      {
+        "id": "b-log-carrier-v5",
+        "title": "承运商端点矩阵v5（合成）",
+        "text": "记录三家合成承运商测试与生产端点；生产账号开通状态与标签字段正确性分开。",
+        "updatedAt": "2026-09-01T10:40:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Carrier_Endpoint_Matrix.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "5.0",
+        "checksum": "4b7ed1d1e542f20e8b000a7c65757401620621c9119c6b0727d95d1bfccac0f0",
+        "status": "current",
+        "linkedTaskIds": [
+          "b-log-access-pack",
+          "b-log-carrier-account",
+          "b-log-carrier-test"
+        ]
+      },
+      {
+        "id": "b-log-customs-v1",
+        "title": "关务生产SFTP审批占位v1（合成）",
+        "text": "仅有审批编号和预计9月16日回执时间；凭据正文未授权给当前快照，不能视为已开通。",
+        "updatedAt": "2026-09-01T15:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Customs_SFTP_Approval.pdf",
+        "mimeType": "application/pdf",
+        "version": "1.0",
+        "checksum": "2710da08a329472afb47289577daf1bcbf5a57bffd16ae4139823c79d24b10e6",
+        "status": "permission_pending",
+        "linkedTaskIds": [
+          "b-log-customs-access",
+          "b-log-runbook"
+        ]
+      }
+    ],
+    "discussions": [
+      {
+        "id": "b-log-d1",
+        "taskId": "b-log-label-map",
+        "authorId": "b-log-m2",
+        "createdAt": "2026-09-01T13:20:00+08:00",
+        "kind": "report",
+        "text": "映射v4已收到，本页能确认标签联测和切换手册受影响，但消费者列表不完整。",
+        "threadId": "b-log-thread-map",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-log-d2",
+        "taskId": "b-log-runbook",
+        "authorId": "b-log-m1",
+        "createdAt": "2026-09-01T13:32:00+08:00",
+        "kind": "question",
+        "text": "后续分页是否还有报关回执或客服打印任务消费映射？当前页无法回答。",
+        "threadId": "b-log-thread-map",
+        "replyToId": "b-log-d1",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-log-d3",
+        "taskId": "b-log-dryrun",
+        "authorId": "b-log-m7",
+        "createdAt": "2026-09-01T13:40:00+08:00",
+        "kind": "proposal",
+        "text": "是否重开已完成回退演练，以便把v4写进去？该提议尚未接受。",
+        "threadId": "b-log-thread-map",
+        "replyToId": "b-log-d1",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-log-d4",
+        "taskId": "b-log-dryrun",
+        "authorId": "b-log-m1",
+        "createdAt": "2026-09-01T13:48:00+08:00",
+        "kind": "decision",
+        "text": "不重开完成记录；若v4需要新验证，应在完整消费者读取后决定复用哪个现有任务。",
+        "threadId": "b-log-thread-map",
+        "replyToId": "b-log-d3",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-log-d5",
+        "taskId": "b-log-customs-access",
+        "authorId": "b-log-m5",
+        "createdAt": "2026-09-01T15:05:00+08:00",
+        "kind": "report",
+        "text": "关务SFTP仍待审批；当前用户无凭据正文权限，预计回执时间是9月16日。",
+        "threadId": "b-log-thread-access",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-log-d6",
+        "taskId": "b-log-root",
+        "authorId": "b-log-m1",
+        "createdAt": "2026-09-01T15:18:00+08:00",
+        "kind": "decision",
+        "text": "9月19日切换窗口未改变；未读分页和关务审批不得被当作已完成。",
+        "threadId": "b-log-thread-access",
+        "replyToId": "b-log-d5",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-log-d7",
+        "taskId": "b-log-carrier-test",
+        "authorId": "b-log-m3",
+        "createdAt": "2026-09-01T15:30:00+08:00",
+        "kind": "report",
+        "text": "已确认的测试账号可继续复用；联测用例尚未执行。",
+        "threadId": "b-log-thread-carrier",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "b-log-h1",
+        "taskId": "b-log-carrier-account",
+        "occurredAt": "2026-08-31T18:00:00+08:00",
+        "type": "task_completed",
+        "summary": "三家承运商测试账号验证完成，任务版本6。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-log-h2",
+        "taskId": "b-log-dryrun",
+        "occurredAt": "2026-08-30T22:00:00+08:00",
+        "type": "task_completed",
+        "summary": "回退演练v2完成，任务版本8；未授权重开。",
+        "version": 8,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-log-h3",
+        "taskId": "b-log-label-map",
+        "occurredAt": "2026-09-01T13:10:00+08:00",
+        "type": "source_version_changed",
+        "summary": "面单映射从v3更新为v4，消费者读取尚不完整。",
+        "version": 5,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-log-h4",
+        "taskId": "b-log-customs-access",
+        "occurredAt": "2026-09-01T15:00:00+08:00",
+        "type": "task_blocked",
+        "summary": "关务生产SFTP等待有权审批，任务版本3。",
+        "version": 3,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-log-h5",
+        "taskId": "b-log-root",
+        "occurredAt": "2026-09-01T15:18:00+08:00",
+        "type": "deadline_confirmed",
+        "summary": "切换窗口保持2026-09-19。",
+        "version": 15,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "b-log-map-v3",
+        "title": "东沄面单字段映射v3（合成）",
+        "text": "旧版覆盖国内标准面单，已由v4取代；保留以核对回归差异。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Dongyun_Label_Map.csv",
+        "mimeType": "text/csv",
+        "version": "3.0",
+        "checksum": "0b9bd76bfa0dcb706d52525bdeb8b48b2985c27e45a674332353c65c024e78c0",
+        "status": "superseded",
+        "linkedTaskIds": [
+          "b-log-map-pack",
+          "b-log-label-map"
+        ]
+      },
+      {
+        "id": "b-log-map-v4",
+        "title": "东沄面单字段映射v4（合成）",
+        "text": "v4新增关务申报号并调整两家承运商服务代码；已知会影响标签回归、承运商联测和切换手册，但完整消费者仍在后续任务分页。",
+        "updatedAt": "2026-09-01T13:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Dongyun_Label_Map.csv",
+        "mimeType": "text/csv",
+        "version": "4.0",
+        "checksum": "84ad4734aa094fb146d00fd4d289d680d58e99577cb7a3b5c06be84d1d25ee48",
+        "status": "current_approved",
+        "linkedTaskIds": [
+          "b-log-root",
+          "b-log-label-map",
+          "b-log-carrier-test",
+          "b-log-runbook"
+        ]
+      },
+      {
+        "id": "b-log-runbook-v6",
+        "title": "东沄WMS切换手册v6（合成）",
+        "text": "手册当前引用映射v3和旧承运商代码，后续页可能还有未读取消费者。",
+        "updatedAt": "2026-09-01T11:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Dongyun_Cutover_Runbook.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": "6.0",
+        "checksum": "1d9c992625a607f240db8df010f851a77b6d7c4c4e7a6049d6c8ebacdb01b8c2",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-log-runbook-pack",
+          "b-log-runbook"
+        ]
+      },
+      {
+        "id": "b-log-dryrun-v2",
+        "title": "回退演练记录v2（合成）",
+        "text": "演练已按版本2完成，记录恢复时长和未决项；映射v4不授权覆盖该历史结果。",
+        "updatedAt": "2026-08-30T22:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Dongyun_Rollback_DryRun.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "9ba94482c7ecd50316cb9965ea13200ecd642c53ece1404da16afa56bf561a44",
+        "status": "accepted_complete",
+        "linkedTaskIds": [
+          "b-log-dryrun"
+        ]
+      },
+      {
+        "id": "b-log-carrier-v5",
+        "title": "承运商端点矩阵v5（合成）",
+        "text": "记录三家合成承运商测试与生产端点；生产账号开通状态与标签字段正确性分开。",
+        "updatedAt": "2026-09-01T10:40:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Carrier_Endpoint_Matrix.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "5.0",
+        "checksum": "4b7ed1d1e542f20e8b000a7c65757401620621c9119c6b0727d95d1bfccac0f0",
+        "status": "current",
+        "linkedTaskIds": [
+          "b-log-access-pack",
+          "b-log-carrier-account",
+          "b-log-carrier-test"
+        ]
+      },
+      {
+        "id": "b-log-customs-v1",
+        "title": "关务生产SFTP审批占位v1（合成）",
+        "text": "仅有审批编号和预计9月16日回执时间；凭据正文未授权给当前快照，不能视为已开通。",
+        "updatedAt": "2026-09-01T15:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Customs_SFTP_Approval.pdf",
+        "mimeType": "application/pdf",
+        "version": "1.0",
+        "checksum": "2710da08a329472afb47289577daf1bcbf5a57bffd16ae4139823c79d24b10e6",
+        "status": "permission_pending",
+        "linkedTaskIds": [
+          "b-log-customs-access",
+          "b-log-runbook"
+        ]
+      },
+      {
+        "id": "b-log-page-receipt",
+        "title": "授权任务树分页读取回执（合成）",
+        "text": "ACL已核验为team-b-log。索引显示该目标树共27项，当前仅返回13项；根和三个直属分支已见，但后续游标b-log-page-2与b-log-page-3包含其余14项及映射消费者。不得猜测隐藏任务的标题、状态、Owner或依赖。",
+        "updatedAt": "2026-09-01T17:50:00+08:00",
+        "source": "synthetic_context_read_receipt"
+      },
+      {
+        "id": "b-log-discussion-receipt",
+        "title": "讨论与历史分页回执（合成）",
+        "text": "当前仅加载映射、访问和承运商三个主题的7条讨论及5条历史；夜班作业、异常客服和关务切换主题仍待授权游标b-log-thread-page-2读取。",
+        "updatedAt": "2026-09-01T17:52:00+08:00",
+        "source": "synthetic_context_read_receipt"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "partial",
+    "scopeTeamIds": [
+      "team-b-log"
+    ],
+    "matches": [
+      {
+        "taskId": "b-log-label-map",
+        "title": "确认面单字段映射v4",
+        "reason": "当前页已见同结果映射任务。"
+      },
+      {
+        "taskId": "b-log-runbook",
+        "title": "修订WMS切换手册",
+        "reason": "当前页已见切换手册消费者；其他消费者尚未分页读取。"
+      }
+    ],
+    "coverageNote": "仅检索当前13项及本页相关归档；后续任务页和未读讨论未覆盖，不能排除其他同结果或消费者。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "b-log-root",
+      "field": "goal",
+      "value": "在不丢失已完成演练记录的前提下完成华东仓WMS切换"
+    },
+    {
+      "taskId": "b-log-root",
+      "field": "dueOn",
+      "value": "2026-09-19"
+    },
+    {
+      "taskId": "b-log-dryrun",
+      "field": "acceptanceCriteria",
+      "value": [
+        "演练记录含恢复时长、责任和未决项"
+      ]
+    }
+  ],
+  "constraints": {
+    "externalActions": "只输出候选规划；不读取未授权凭据、不创建、指派、通知或执行切换。",
+    "scope": "整棵27项目标树；必须由调用方续读b-log-page-2、b-log-page-3和b-log-thread-page-2。",
+    "hardDeadlines": [
+      "2026-09-16关务审批预计窗口（非完成事实）",
+      "2026-09-19切换窗口"
+    ]
+  },
+  "dataClassification": "synthetic",
+  "members": [
+    {
+      "id": "b-log-m1",
+      "name": "许珩",
+      "role": "切换经理",
+      "responsibilities": [
+        "维护切换范围、窗口与回退门槛",
+        "协调仓内与承运商分支"
+      ],
+      "boundaries": [
+        "不绕过海关访问审批",
+        "不以局部页推断整棵计划"
+      ],
+      "evidence": [
+        {
+          "id": "b-log-m1-role",
+          "title": "许珩职责说明（合成）",
+          "text": "职责：维护切换范围、窗口与回退门槛；协调仓内与承运商分支。边界：不绕过海关访问审批；不以局部页推断整棵计划。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-log-m1-work",
+          "title": "许珩当前工作自报（合成）",
+          "text": "正在主持WMS蓝绿切换准备。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在主持WMS蓝绿切换准备。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-log-m1-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-log-m2",
+      "name": "周屿",
+      "role": "WMS集成工程师",
+      "responsibilities": [
+        "维护标签映射与接口回归",
+        "记录版本差异"
+      ],
+      "boundaries": [
+        "不修改承运商生产账户",
+        "不替运营确认现场就绪"
+      ],
+      "evidence": [
+        {
+          "id": "b-log-m2-role",
+          "title": "周屿职责说明（合成）",
+          "text": "职责：维护标签映射与接口回归；记录版本差异。边界：不修改承运商生产账户；不替运营确认现场就绪。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-log-m2-work",
+          "title": "周屿当前工作自报（合成）",
+          "text": "正在对标签映射v4做静态核对。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在对标签映射v4做静态核对。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-log-m2-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-log-m3",
+      "name": "白荻",
+      "role": "承运商集成负责人",
+      "responsibilities": [
+        "核对面单端点与账号",
+        "组织承运商回归"
+      ],
+      "boundaries": [
+        "不审批海关SFTP",
+        "不保证外部接口零故障"
+      ],
+      "evidence": [
+        {
+          "id": "b-log-m3-role",
+          "title": "白荻职责说明（合成）",
+          "text": "职责：核对面单端点与账号；组织承运商回归。边界：不审批海关SFTP；不保证外部接口零故障。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-log-m3-work",
+          "title": "白荻当前工作自报（合成）",
+          "text": "等待两家合成承运商确认测试窗口。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "b-log-m3-window",
+          "title": "白荻公开协作窗口（合成）",
+          "text": "2026-09-10T14:00:00+08:00至2026-09-10T17:00:00+08:00；仅表示可参加本场景核对，不代表整周空闲。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "等待两家合成承运商确认测试窗口。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-log-m3-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-10T14:00:00+08:00",
+        "endAt": "2026-09-10T17:00:00+08:00",
+        "sourceRef": "b-log-m3-window",
+        "note": "仅表示可参加本场景核对，不代表整周空闲。",
+        "updatedAt": "2026-09-01T08:20:00+08:00"
+      }
+    },
+    {
+      "id": "b-log-m4",
+      "name": "乔溯",
+      "role": "仓内运营负责人",
+      "responsibilities": [
+        "维护波次、打印与交接SOP",
+        "组织现场演练"
+      ],
+      "boundaries": [
+        "不更改系统字段映射",
+        "不以演练完成代替上线批准"
+      ],
+      "evidence": [
+        {
+          "id": "b-log-m4-role",
+          "title": "乔溯职责说明（合成）",
+          "text": "职责：维护波次、打印与交接SOP；组织现场演练。边界：不更改系统字段映射；不以演练完成代替上线批准。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-log-m4-work",
+          "title": "乔溯当前工作自报（合成）",
+          "text": "正在安排夜班打印工位演练。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在安排夜班打印工位演练。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-log-m4-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-log-m5",
+      "name": "韩聿",
+      "role": "关务合规",
+      "responsibilities": [
+        "确认报关接口与审计要求",
+        "维护关务外部前置"
+      ],
+      "boundaries": [
+        "不共享未授权凭据",
+        "不替IT开通访问"
+      ],
+      "evidence": [
+        {
+          "id": "b-log-m5-role",
+          "title": "韩聿职责说明（合成）",
+          "text": "职责：确认报关接口与审计要求；维护关务外部前置。边界：不共享未授权凭据；不替IT开通访问。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-log-m5-work",
+          "title": "韩聿当前工作自报（合成）",
+          "text": "正在等待关务生产SFTP审批。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在等待关务生产SFTP审批。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-log-m5-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-log-m6",
+      "name": "费然",
+      "role": "基础设施与身份",
+      "responsibilities": [
+        "维护网络、证书与服务账号",
+        "记录访问审批状态"
+      ],
+      "boundaries": [
+        "不代业务签署切换门槛",
+        "不读取无权文件正文"
+      ],
+      "evidence": [
+        {
+          "id": "b-log-m6-role",
+          "title": "费然职责说明（合成）",
+          "text": "职责：维护网络、证书与服务账号；记录访问审批状态。边界：不代业务签署切换门槛；不读取无权文件正文。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-log-m6-work",
+          "title": "费然当前工作自报（合成）",
+          "text": "正在处理生产证书轮换。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在处理生产证书轮换。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-log-m6-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-log-m7",
+      "name": "叶寻",
+      "role": "上线支持负责人",
+      "responsibilities": [
+        "维护指挥台与故障分级",
+        "整理回退演练证据"
+      ],
+      "boundaries": [
+        "不自行宣布上线成功",
+        "不删除已完成演练记录"
+      ],
+      "evidence": [
+        {
+          "id": "b-log-m7-role",
+          "title": "叶寻职责说明（合成）",
+          "text": "职责：维护指挥台与故障分级；整理回退演练证据。边界：不自行宣布上线成功；不删除已完成演练记录。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-log-m7-work",
+          "title": "叶寻当前工作自报（合成）",
+          "text": "正在整理指挥台联系人轮值。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在整理指挥台联系人轮值。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-log-m7-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    }
+  ]
+}

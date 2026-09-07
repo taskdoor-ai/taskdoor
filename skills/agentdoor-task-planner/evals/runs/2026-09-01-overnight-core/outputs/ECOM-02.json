@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-ecom-02",
+  "baseSnapshotId": "snapshot-ecom-02-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "ecom02-root": 2,
+    "ecom02-page": 1,
+    "ecom02-stock": 1,
+    "ecom02-last": 4
+  },
+  "intent": "create",
+  "disposition": "route_required",
+  "summary": "9月9日SKU-CUP-A天猫首发上线准备已经存在且进行中；建议打开并复用原任务，不再新建一套。",
+  "reasoningSummary": [
+    {
+      "text": "现有ecom02-root与本轮SKU、天猫渠道、9月9日首发周期和上线准备结果相同，正式状态为进行中。",
+      "evidenceRefs": [
+        "req-ecom-02",
+        "ecom02-root"
+      ]
+    },
+    {
+      "text": "09:02创建回执及历史记录确认已有主任务，并已包含详情页与库存核对子项。",
+      "evidenceRefs": [
+        "ecom02-receipt",
+        "ecom02-h1",
+        "ecom02-page",
+        "ecom02-stock"
+      ]
+    },
+    {
+      "text": "主任务完成标准已覆盖资料、库存、客服和测试；未独立拆出客服与测试子项不表示整项任务未创建或已经完成。",
+      "evidenceRefs": [
+        "ecom02-root",
+        "ecom02-page",
+        "ecom02-stock"
+      ]
+    },
+    {
+      "text": "8月任务属于另一活动周期，仍作为已完成历史保留，不替代9月首发任务。",
+      "evidenceRefs": [
+        "ecom02-last",
+        "req-ecom-02"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "ecom02-root",
+        "relationship": "same_outcome",
+        "reason": "同为SKU-CUP-A、天猫、2026-09-09首发上线准备，根完成标准包含本轮列出的资料、库存、客服和测试结果；本轮可能是对已有创建的重复发起。",
+        "evidenceRefs": [
+          "req-ecom-02",
+          "ecom02-root",
+          "ecom02-receipt",
+          "ecom02-h1"
+        ]
+      },
+      {
+        "taskId": "ecom02-last",
+        "relationship": "different_instance",
+        "reason": "同SKU同渠道但属于2026-08-09促销活动，周期和活动交付实例不同，不能把其完成状态沿用到9月9日首发。",
+        "evidenceRefs": [
+          "req-ecom-02",
+          "ecom02-last",
+          "ecom02-root"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "没有执行再次创建、细分子任务、指派或更新；原任务和所有正式字段保持不变。",
+    "本地回执只是已创建事实，不是本轮写入授权，也不证明客服和测试工作已经完成。",
+    "若后续需要细化客服和测试的分工，应在原任务内局部规划，不能通过再次创建整套准备任务来代替。"
+  ],
+  "nextActions": [
+    {
+      "action": "open_task",
+      "taskId": "ecom02-root",
+      "label": "打开已有的9月9日保温杯首发上线准备"
+    }
+  ],
+  "externalEffects": "none"
+}

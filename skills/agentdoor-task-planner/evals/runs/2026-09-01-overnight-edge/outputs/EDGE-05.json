@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-05",
+  "baseSnapshotId": "snapshot-edge-05-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "edge05-demo": 6
+  },
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议为栖湾新增一项12字段对照表候选；现有沙箱演示仍因等待客户访问授权而阻塞，保持演示任务不变，两项工作无前置关系。",
+  "reasoningSummary": [
+    {
+      "text": "主要请求是按客户确认的12个字段制定静态对照表计划，同时只查询演示状态并明确不修改演示任务。",
+      "evidenceRefs": [
+        "req-edge-05"
+      ]
+    },
+    {
+      "text": "FIELD-QW-v4的字段名、类型和业务含义已确认且授权资料完整；一张逐项对照表即可覆盖结果，不需拆成子任务。",
+      "evidenceRefs": [
+        "edge05-field-brief"
+      ]
+    },
+    {
+      "text": "沙箱演示版本6仍为blocked，授权状态记录明确原因是客户未确认演示访问授权，此限制不影响静态资料读取。",
+      "evidenceRefs": [
+        "edge05-demo",
+        "edge05-auth-status"
+      ]
+    },
+    {
+      "text": "字段表是独立资料交付，既不是演示前置，也不依赖演示结果；沈言的字段映射职责与该交付相符。",
+      "evidenceRefs": [
+        "edge05-field-brief",
+        "saas-m3-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:edge05-field-table",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-edge05-create-field-table",
+        "action": "create",
+        "targetId": "new:edge05-field-table",
+        "parentId": null,
+        "fields": {
+          "title": "交付栖湾12个API字段对照表",
+          "goal": {
+            "text": "让栖湾已确认的12个API字段形成可逐项核对的静态字段对照表。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-edge-05",
+              "edge05-field-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "交付一张字段对照表，覆盖且仅覆盖FIELD-QW-v4已确认的12个字段，逐项对应字段名、类型及业务含义并保留来源版本引用。",
+            "按FIELD-QW-v4逐项核对表内对应关系，含义冲突单列说明，不自行改变已确认口径或增加字段。",
+            "本轮交付仅为静态资料表，不连接沙箱、不执行API、不以沙箱演示完成作为交付条件。"
+          ],
+          "tips": [
+            "以已授权的FIELD-QW-v4为唯一字段范围整理和逐项核对；操作步骤不另建子任务。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "saas-m3",
+            "basis": "recommended",
+            "reason": "沈言负责字段映射及按约定口径核对数据，适合承担该静态字段对照表结果；此为候选，不表示已接受。",
+            "evidenceRefs": [
+              "saas-m3-role",
+              "edge05-field-brief"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "本轮未提供字段对照表的开始或交付日期，不沿用演示任务日期。",
+              "成员可用时间未知，不据当前工作自报推算排期。"
+            ],
+            "evidenceRefs": [
+              "req-edge-05",
+              "edge05-field-brief",
+              "saas-m3"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "本轮没有可比较的人类投入历史或充分的操作耗时依据，暂不估计EWD。",
+              "不将等待沙箱授权计入本项人类投入；该资料表也不需要等待授权。"
+            ],
+            "evidenceRefs": [
+              "edge05-field-brief",
+              "edge05-auth-status",
+              "req-edge-05"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "客户确认的12字段对照表是明确、独立且尚无查重匹配的资料交付；保持演示任务及其授权处理流程原状。",
+        "evidenceRefs": [
+          "req-edge-05",
+          "edge05-field-brief",
+          "edge05-auth-status"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "edge05-demo"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；此范围内无其他查重匹配。"
+  },
+  "questions": [],
+  "warnings": [
+    "字段对照表的日期、人类投入估算与候选负责人的容量未知；建议人选尚未接受。",
+    "本轮仅形成可审阅候选并回答状态查询，没有创建任务、修改演示计划或执行API。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:edge05-field-table",
+      "label": "审阅12字段对照表候选"
+    },
+    {
+      "action": "open_task",
+      "taskId": "edge05-demo",
+      "label": "查看等待客户访问授权的栖湾沙箱演示"
+    }
+  ],
+  "externalEffects": "none"
+}

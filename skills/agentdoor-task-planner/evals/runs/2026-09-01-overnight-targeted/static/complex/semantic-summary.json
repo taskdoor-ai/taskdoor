@@ -1,0 +1,23 @@
+{
+  "kind": "targeted_post_fix_semantic_review",
+  "cases": [
+    {
+      "caseId": "COMPLEX-02",
+      "status": "passed",
+      "summary": "只新增一份可独立核对的标签与资料编号对照表，挂在现有样料资料分支；评审目录保留原 ID 并显式消费新表，三层结构、已完成结果及既有叶估算基线均保留。",
+      "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+    },
+    {
+      "caseId": "COMPLEX-03",
+      "status": "passed",
+      "summary": "新增包装说明 v2 作为独立结果，并把页面、客服 FAQ、发货答复三个现有消费者全部显式接入；checkout 既有消费者依赖继续保留，图片、库存、广告及基线未重做。",
+      "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+    }
+  ],
+  "total": 2,
+  "passed": 2,
+  "failed": 0,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

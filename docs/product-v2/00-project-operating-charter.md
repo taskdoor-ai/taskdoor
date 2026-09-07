@@ -100,7 +100,7 @@ AI 可以发现经验、知识、信息、权限、容量和利益相关缺口�
 
 ### 4. 一层 Task，一位 Owner
 
-共同参与不等于共同兜底。每个正式 Task 恰好一位结果 Owner；不同层级可以有不同 Owner。Reviewer、Advisor、Contributor 和 Approver 通过 Participant、邀请范围、Activity、子 Task 或 Handoff 表达清楚，不在 Task 详情另建逐项责任分配。
+共同参与不等于共同兜底。正式 Task 创建时可以明确处于“暂未分配”，一旦责任成立则每层最多一位结果 Owner；不同层级可以有不同 Owner。Reviewer、Advisor、Contributor 和 Approver 通过 Participant、邀请范围、Activity、子 Task 或 Handoff 表达清楚，不在 Task 详情另建逐项责任分配。
 
 判断题：出现问题时，团队能否在十秒内回答“这一层结果由谁持续跟进”？
 
@@ -235,7 +235,7 @@ Task 是当前产品唯一行动对象；File、FileVersion、Decision、Activit
 - 每项检查先绑定一条可观察验收并复现目标场景；构建只证明可编译，截图只证明该视口状态，不能替代行为、权限或产品语义证据。
 - 文档只检查触达链接、术语、决定状态与结构；代码按触达范围选择构建、类型检查或具体场景。
 - 常规 UI 检查实际受影响的视口、交互与键盘 / 焦点路径；新页面、重大重做或发布级工作再扩大到完整桌面 / 移动和跨页面一致性。
-- `npm run verify` 只执行前端生产构建；设计债务基线由 `npm run verify:design` 按需执行，仅用于全局 Token、共享基础组件、全局样式、设计检查本身或发布级验收。
+- 受影响测试使用 `npx tsx --test server/<name>.test.ts` 直接运行对应文件；`npm test` 只在确需全量回归时使用。前端生产构建使用 `npm run build`；设计债务基线由 `npm run design:check` 按需执行，仅用于全局 Token、共享基础组件、全局样式、设计检查本身或发布级验收。
 - 领域、权限与数据只在相应边界被触达时验证不变量、拒绝、并发、幂等、撤权和恢复；C3 增加必要独立架构、安全 / 隐私或人性 Review。
 - 连续小步反馈合并到任务边界验证一次；检查失败时再基于原因扩大范围。
 
@@ -475,7 +475,7 @@ Demo 要像已经有人使用过的团队，不像为了填页面生成的数据
 
 以下原则不能以“紧急”为由豁免：
 
-- 正式 Task 始终恰好一位 Owner。
+- 正式 Task 的 Owner 基数始终为 0..1；未分配必须显式可见，已有 Owner 不得绕过 Handoff 先清空或形成双 Owner。
 - 人不能被 Agent 代为 Consent。
 - 权限与数据最小化不能靠前端隐藏代替。
 - 不可逆外部动作不能伪装成可撤回。

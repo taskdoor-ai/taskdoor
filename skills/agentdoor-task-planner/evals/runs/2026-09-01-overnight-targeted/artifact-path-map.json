@@ -1,0 +1,30 @@
+{
+  "archivedRun": "2026-09-01-overnight-targeted",
+  "pathMappings": [
+    {
+      "from": "/tmp/agentdoor-planner-overnight-targeted-edge-20260901",
+      "to": "static/edge"
+    },
+    {
+      "from": "/tmp/agentdoor-planner-overnight-targeted-core-20260901",
+      "to": "static/core"
+    },
+    {
+      "from": "/tmp/agentdoor-planner-overnight-targeted-complex-20260901",
+      "to": "static/complex"
+    },
+    {
+      "from": "/tmp/agentdoor-planner-overnight-targeted-multi-20260901",
+      "to": "multiturn"
+    },
+    {
+      "from": "/tmp/agentdoor-planner-overnight-targeted-edge-owner-20260901",
+      "to": "owner-boundary"
+    },
+    {
+      "from": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json",
+      "to": "semantic-review-static.json"
+    }
+  ],
+  "note": "Apply these prefix mappings before resolving semantic-review file paths and JSON Pointers."
+}

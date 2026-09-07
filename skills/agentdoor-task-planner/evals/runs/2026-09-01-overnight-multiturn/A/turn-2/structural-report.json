@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-08-31T20:36:59.946482+00:00",
+  "total": 1,
+  "structurallyValid": 1,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "34239ace751a70848b0fd48b4dc60d2902d9a39447f2d0d091e143339ecba1a0",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-A2",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议仅将现有校对草稿的截止日期由2026年9月2日调整为9月3日，保留目的、校对标准和程简的候选负责人推荐；不另建任务，也不正式创建。",
+      "intent": "refine",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "e1c48daff3b9870e7439222afac3293c345f86105cb7ec5d09b1166fd7e79a74",
+      "manualChecks": [
+        "沿用第一轮实际生成的草稿ID，只改变未锁定的日期为9月3日；已确认目标、标准、人选不变。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

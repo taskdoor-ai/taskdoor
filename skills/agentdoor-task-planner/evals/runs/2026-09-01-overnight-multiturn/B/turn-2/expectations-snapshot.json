@@ -1,0 +1,41 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-B2",
+      "allowedIntents": [
+        "replan",
+        "refine"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "maxCreates": 0,
+      "manualChecks": [
+        "使用前一轮实际增量草稿ID，没有草稿才补新增；字段核对9月4日，UAT依赖核对、培训依赖UAT，原日期和确认内容不变。",
+        "本轮已补齐上轮关键问题，不重复追问已经明确的前置与窗口。"
+      ],
+      "requiredEvidenceRefs": [
+        "chain-b-confirm"
+      ],
+      "requiredDependencies": [
+        {
+          "taskId": "saas03-train",
+          "dependsOnTaskIds": [
+            "saas03-uat"
+          ]
+        },
+        {
+          "taskId": "saas03-uat",
+          "dependsOnTaskIds": [
+            "new:saas03-inactive-field-check"
+          ]
+        }
+      ],
+      "mustNotUpdateTaskIds": [
+        "saas03-scope",
+        "saas03-map"
+      ]
+    }
+  ]
+}

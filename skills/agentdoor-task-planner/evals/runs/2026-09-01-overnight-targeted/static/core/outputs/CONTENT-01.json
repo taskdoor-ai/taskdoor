@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-content-01",
+  "baseSnapshotId": "snapshot-content-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议创建一个短稿校对任务，由文字编辑程简候选负责，9月2日交付清稿和修改清单；不拆策划、写作或视觉子任务。",
+  "reasoningSummary": [
+    {
+      "text": "选题与结构已经确认，本轮范围仅是600字稿的错字和引用格式校对。",
+      "evidenceRefs": [
+        "req-content-01",
+        "content01-brief"
+      ]
+    },
+    {
+      "text": "程简的职责正好覆盖错字、引用格式和范围一致性检查，且其9月2日上午有短稿校对协作窗口。",
+      "evidenceRefs": [
+        "content-m5-role",
+        "content-m5-window"
+      ]
+    },
+    {
+      "text": "清稿与修改对照属于同一次校对交付，无需为了操作步骤增加子任务。",
+      "evidenceRefs": [
+        "req-content-01",
+        "content01-brief"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:content01-proofread-short-copy",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "chg-content01-proofread",
+        "action": "create",
+        "targetId": "new:content01-proofread-short-copy",
+        "parentId": null,
+        "fields": {
+          "title": "校对蓝屿客户600字短稿并交付清稿",
+          "goal": {
+            "text": "在2026-09-02前交付仅修正错字与引用格式的清稿和可核对修改清单。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-content-01",
+              "content01-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "清稿已逐处检查错字，并按给定引用格式核对所有可访问引用。",
+            "修改清单逐项列出修改位置、原文与改后内容，可与清稿互相核对。",
+            "选题和结构保持已确认版本，不新增策划、结构重写或视觉产出。"
+          ],
+          "tips": [
+            "在同一任务内依次核对错字、引用与修改清单，不为普通校对步骤拆分子任务。",
+            "遇到引用节选自身缺失时在清单中标记，不自行补造来源。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "content-m5",
+            "basis": "recommended",
+            "reason": "程简的职责直接覆盖错字、引用格式和范围一致性检查；这是候选建议而非正式指派。",
+            "evidenceRefs": [
+              "content-m5-role",
+              "content01-brief"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "explicit",
+            "assumptions": [
+              "硬交付日来自用户要求；9月2日上午窗口只说明可协作时段，不代表全天容量。"
+            ],
+            "evidenceRefs": [
+              "req-content-01",
+              "content-m5-window"
+            ]
+          },
+          "estimate": {
+            "ewdHours": 1.5,
+            "basis": "model",
+            "assumptions": [
+              "按约600字、只查错字与已给引用格式，并包含清稿和修改清单整理；不含等待客户回复。"
+            ],
+            "evidenceRefs": [
+              "content01-brief"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "这是边界明确、可一次验收的轻量校对交付。",
+        "evidenceRefs": [
+          "req-content-01",
+          "content01-brief",
+          "content-m5-role"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "1.5人时为模型候选估算，不是实际投入或程简的剩余容量；负责人建议仍需独立接受。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:content01-proofread-short-copy",
+      "label": "审阅单任务校对候选"
+    }
+  ],
+  "externalEffects": "none"
+}

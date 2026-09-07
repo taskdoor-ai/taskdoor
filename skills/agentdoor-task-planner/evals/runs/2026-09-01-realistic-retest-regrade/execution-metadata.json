@@ -1,0 +1,46 @@
+{
+  "date": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "kind": "same_outputs_corrected_rubric_regrade",
+  "dataClassification": "synthetic",
+  "execution": "Current-session independent Codex agents; not an application model API",
+  "exactModelSnapshot": "not_provided",
+  "temperature": "not_provided",
+  "seed": "not_provided",
+  "executorGroups": {
+    "realistic_retest_a": [
+      "REAL-A-REL-01",
+      "REAL-A-SAAS-01",
+      "REAL-A-ECOM-01",
+      "REAL-A-CS-01"
+    ],
+    "realistic_retest_b": [
+      "REAL-B-NPI-01",
+      "REAL-B-LOG-01",
+      "REAL-B-RETAIL-01",
+      "REAL-B-PROC-01"
+    ],
+    "realistic_retest_c": [
+      "REAL-C-01",
+      "REAL-C-02",
+      "REAL-C-03",
+      "REAL-C-04"
+    ]
+  },
+  "crossReview": {
+    "realistic_retest_b": "A group",
+    "realistic_retest_c": "B group",
+    "realistic_retest_a": "C group"
+  },
+  "blinding": "Fresh-context executors read current Skill/protocol and assigned inputs only; no expectations, evaluator feedback, earlier run or other outputs.",
+  "attemptPolicy": "First exclusive-created output per case retained; no score-driven repair.",
+  "runtime": {
+    "python": "3.12.0",
+    "jsonschema": "4.26.0",
+    "os": "Darwin",
+    "architecture": "arm64"
+  },
+  "productionAccess": false,
+  "productionWrites": false,
+  "archiveNote": "No new model attempts. Inputs and output bytes are identical to the full retest; only the expectation snapshot and machine report differ."
+}

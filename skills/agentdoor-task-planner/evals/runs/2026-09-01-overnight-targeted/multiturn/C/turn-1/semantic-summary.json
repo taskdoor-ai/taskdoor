@@ -1,0 +1,18 @@
+{
+  "kind": "targeted_post_fix_multiturn_review",
+  "humanIndustryReview": false,
+  "productionValidation": false,
+  "cases": [
+    {
+      "caseId": "MULTI-C1",
+      "status": "passed",
+      "summary": "正确把 SKU-CUP-A 的五处错字校对收敛为一个可审阅候选，保留明确负责人颜北和 2026-09-02 期限，没有扩展文案、图片、售价、卖点或功效承诺。",
+      "reviewFile": "semantic-review.json",
+      "episodeId": "C"
+    }
+  ],
+  "total": 1,
+  "passed": 1,
+  "failed": 0,
+  "unknown": 0
+}

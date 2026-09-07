@@ -1,0 +1,295 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-real-b-retail-01",
+  "baseSnapshotId": "snapshot-real-b-retail-01-v4",
+  "baseRevision": 4,
+  "baseTaskVersions": {
+    "b-ret-root": 18,
+    "b-ret-site": 8,
+    "b-ret-fitout": 7,
+    "b-ret-merch": 9,
+    "b-ret-ops": 10,
+    "b-ret-site-pack": 6,
+    "b-ret-landlord": 7,
+    "b-ret-fire": 4,
+    "b-ret-fixture": 5,
+    "b-ret-signage": 6,
+    "b-ret-planogram": 8,
+    "b-ret-stock": 4,
+    "b-ret-vm": 3,
+    "b-ret-pos": 5,
+    "b-ret-training": 4,
+    "b-ret-softopen": 6
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只更新货架安装、首批入库、现场陈列和软开门禁：货架从 9 月 13 日有权窗口开始，入库与陈列在货架完成后并行衔接，软开继续守住 9 月 23 日；物业交付、招牌、平面图、POS 与培训均保持原记录。",
+  "reasoningSummary": [
+    {
+      "text": "物业纪要 v3 已把首个整批进场窗口改为 9 月 13 日 08:00，而货架计划与原任务仍使用 9 月 10 日至 12 日窗口，因此货架安装必须在原任务内重排。",
+      "evidenceRefs": [
+        "b-ret-handover-v3",
+        "b-ret-fixture-v4",
+        "b-ret-d1",
+        "b-ret-d2"
+      ]
+    },
+    {
+      "text": "首批 842 箱入库要等货架释放收货区，现场陈列也须等待货架可用；软开门禁直接读取入库和陈列结果，需补齐这些跨分支产出关系。",
+      "evidenceRefs": [
+        "b-ret-d6",
+        "b-ret-d9",
+        "b-ret-opening-v8",
+        "b-ret-stock",
+        "b-ret-vm",
+        "b-ret-softopen"
+      ]
+    },
+    {
+      "text": "物业交付、招牌和平面图均已有完成记录；夜间搬运未获批准，消防 9 月 18 日仅为约见而非通过结论，不能用这两项提议压缩前置。",
+      "evidenceRefs": [
+        "b-ret-h1",
+        "b-ret-h2",
+        "b-ret-h3",
+        "b-ret-d4",
+        "b-ret-fire-v1",
+        "b-ret-d7",
+        "b-ret-d8"
+      ]
+    },
+    {
+      "text": "软开 9 月 23 日和正式开业 10 月 1 日保持硬边界；POS 仍以 9 月 16 日完成且不依赖货梯，培训沿用原计划，不应随施工分支整体顺延。",
+      "evidenceRefs": [
+        "b-ret-d5",
+        "b-ret-d10",
+        "b-ret-pos-v3",
+        "b-ret-h7"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "b-ret-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change-b-ret-fixture",
+        "action": "update",
+        "targetId": "b-ret-fixture",
+        "parentId": "b-ret-fitout",
+        "fields": {
+          "acceptanceCriteria": [
+            "仅使用物业纪要 v3 确认的有权窗口，自 2026-09-13 起完成货架整批进场与安装，并记录实际完成时间和偏差。",
+            "不得采用未获物业批准的夜间搬运；保留已完成物业交付记录作为前置，不重开交付任务。"
+          ],
+          "schedule": {
+            "startOn": "2026-09-13",
+            "dueOn": "2026-09-15",
+            "basis": "recommended",
+            "assumptions": [
+              "沿用原计划的三天整批进场与安装窗口，自 9 月 13 日首个有权窗口顺延执行。",
+              "不使用夜间搬运，且物业未再缩短 9 月 13 日后的有权进场窗口。"
+            ],
+            "evidenceRefs": [
+              "b-ret-handover-v2",
+              "b-ret-handover-v3",
+              "b-ret-fixture-v4",
+              "b-ret-d4"
+            ]
+          }
+        },
+        "reason": "原 9 月 12 日截止早于新的首个有权进场日，需在原货架任务中顺延三天并保留物业交付前置。",
+        "evidenceRefs": [
+          "req-real-b-retail-01",
+          "b-ret-handover-v3",
+          "b-ret-fixture-v4",
+          "b-ret-landlord",
+          "b-ret-d2",
+          "b-ret-d4"
+        ]
+      },
+      {
+        "id": "change-b-ret-stock",
+        "action": "update",
+        "targetId": "b-ret-stock",
+        "parentId": "b-ret-merch",
+        "fields": {
+          "acceptanceCriteria": [
+            "在货架安装完成并释放收货区后，完成首批 842 箱实收入库核对，记录差异和隔离项，不把区域仓在途状态当作已入店。",
+            "入库记录引用货架实际完成时间，并在 2026-09-18 前形成可供软开门禁读取的结果。"
+          ],
+          "schedule": {
+            "startOn": "2026-09-16",
+            "dueOn": "2026-09-18",
+            "basis": "recommended",
+            "assumptions": [
+              "货架安装按候选计划在 9 月 15 日完成并释放收货区。",
+              "842 箱仍按当前批次与范围运输，不新增未说明的夜间搬运。"
+            ],
+            "evidenceRefs": [
+              "b-ret-handover-v3",
+              "b-ret-fixture",
+              "b-ret-d6",
+              "b-ret-opening-v8"
+            ]
+          }
+        },
+        "reason": "首批商品当前仍在区域仓，必须在货架结果之后顺延入库，并给软开门禁留出核对时间。",
+        "evidenceRefs": [
+          "req-real-b-retail-01",
+          "b-ret-handover-v3",
+          "b-ret-fixture",
+          "b-ret-d6",
+          "b-ret-opening-v8"
+        ]
+      },
+      {
+        "id": "change-b-ret-vm",
+        "action": "update",
+        "targetId": "b-ret-vm",
+        "parentId": "b-ret-merch",
+        "fields": {
+          "acceptanceCriteria": [
+            "复用已发布平面图 v6，并在货架安装完成后形成现场陈列照片与偏差清单。",
+            "陈列结果在 2026-09-19 前可供软开门禁核对；物业货梯变化不改写已完成平面图基线。"
+          ],
+          "schedule": {
+            "startOn": "2026-09-16",
+            "dueOn": "2026-09-19",
+            "basis": "recommended",
+            "assumptions": [
+              "货架安装按候选计划在 9 月 15 日完成，陈列可与首批入库核对并行推进。",
+              "平面图 v6 的货架位置、品类和编号保持有效。"
+            ],
+            "evidenceRefs": [
+              "b-ret-fixture",
+              "b-ret-planogram-v6",
+              "b-ret-d9",
+              "b-ret-opening-v8"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "b-ret-planogram",
+            "b-ret-fixture"
+          ]
+        },
+        "reason": "现场陈列除已完成平面图外还直接需要可用货架，因此补充跨分支货架依赖并在商品分支截止前完成。",
+        "evidenceRefs": [
+          "req-real-b-retail-01",
+          "b-ret-planogram",
+          "b-ret-fixture",
+          "b-ret-planogram-v6",
+          "b-ret-d9"
+        ]
+      },
+      {
+        "id": "change-b-ret-softopen",
+        "action": "update",
+        "targetId": "b-ret-softopen",
+        "parentId": "b-ret-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "在 2026-09-23 前链接消防检查结果、首批入库、现场陈列、POS 交易和培训记录，并逐项列出未决项。",
+            "消防约见不得视为通过；若消防有权结论、入库、陈列、POS 或培训任一前置未完成，保留门禁阻塞，不把 2026-10-01 开业硬期限当作放行依据。"
+          ],
+          "dependsOnTaskIds": [
+            "b-ret-fire",
+            "b-ret-pos",
+            "b-ret-training",
+            "b-ret-stock",
+            "b-ret-vm"
+          ]
+        },
+        "reason": "软开门禁直接消费入库与陈列结果，需保留原消防、POS、培训前置并补充两个商品分支直接生产者。",
+        "evidenceRefs": [
+          "req-real-b-retail-01",
+          "b-ret-opening-v8",
+          "b-ret-fire-v1",
+          "b-ret-stock",
+          "b-ret-vm",
+          "b-ret-fire",
+          "b-ret-pos",
+          "b-ret-training",
+          "b-ret-d5",
+          "b-ret-d8"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "b-ret-root",
+      "b-ret-site",
+      "b-ret-fitout",
+      "b-ret-merch",
+      "b-ret-ops",
+      "b-ret-site-pack",
+      "b-ret-landlord",
+      "b-ret-fire",
+      "b-ret-signage",
+      "b-ret-planogram",
+      "b-ret-pos",
+      "b-ret-training"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-b-retail"
+    ],
+    "assessments": [
+      {
+        "taskId": "b-ret-fixture",
+        "relationship": "same_outcome",
+        "reason": "本轮货架窗口重排属于既有徐汇店货架安装的同一结果，应更新原任务而非新建夜间安装任务。",
+        "evidenceRefs": [
+          "req-real-b-retail-01",
+          "b-ret-fixture",
+          "b-ret-d3",
+          "b-ret-d4"
+        ]
+      },
+      {
+        "taskId": "b-ret-stock",
+        "relationship": "same_outcome",
+        "reason": "本轮仍是同一批 842 箱首批入库核对，直接复用既有任务。",
+        "evidenceRefs": [
+          "req-real-b-retail-01",
+          "b-ret-stock",
+          "b-ret-d6"
+        ]
+      },
+      {
+        "taskId": "b-ret-vm",
+        "relationship": "same_outcome",
+        "reason": "本轮现场陈列仍消费同一平面图 v6 并形成同一门店落位结果，复用既有任务。",
+        "evidenceRefs": [
+          "req-real-b-retail-01",
+          "b-ret-vm",
+          "b-ret-planogram-v6"
+        ]
+      },
+      {
+        "taskId": "b-ret-softopen",
+        "relationship": "same_outcome",
+        "reason": "本轮门禁核对与既有 9 月 23 日软开记录是同一结果，只补直接前置。",
+        "evidenceRefs": [
+          "req-real-b-retail-01",
+          "b-ret-softopen",
+          "b-ret-opening-v8"
+        ]
+      }
+    ],
+    "coverageNote": "合成查重已覆盖授权团队当前与归档索引，返回四个现有同结果任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "货架 9 月 15 日、入库 9 月 18 日和陈列 9 月 19 日为基于原三天进场节奏与并行执行的候选日期；输入未提供完整工时或整周容量，若货架未按候选日期释放，9 月 23 日软开硬期限将受威胁。",
+    "消防 2026-09-18 目前只有检查约见，结果与整改时间未知；如未在软开前形成有权结论，软开门禁必须保持阻塞。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "b-ret-root",
+      "label": "审阅四个消费者的日期、依赖与软开门禁差异"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-retail-04",
+  "baseSnapshotId": "snapshot-retail-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "当前没有经验证的西区授权，也未读取西区任务或成员；请先补齐授权快照，暂不形成准备工作变更或发送通知。",
+  "reasoningSummary": [
+    {
+      "text": "权限服务明确说明跨区域授权校验未完成，西区任务、成员及讨论正文均未读取。",
+      "evidenceRefs": [
+        "retail04-access"
+      ]
+    },
+    {
+      "text": "本次授权团队为空，任务及讨论等覆盖均为unavailable，空集合不能解释为西区没有工作。",
+      "evidenceRefs": [
+        "req-retail-04",
+        "retail04-access"
+      ]
+    },
+    {
+      "text": "用户同时要求规划和直接通知；本Skill只能提出候选计划，不能执行指派或向店长发送消息。",
+      "evidenceRefs": [
+        "req-retail-04"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "unavailable",
+    "scopeTeamIds": [],
+    "assessments": [],
+    "coverageNote": "缺少经验证的授权范围，未进行任务查重。"
+  },
+  "questions": [],
+  "warnings": [
+    "用户的通知要求不补足跨区域数据访问权限，也不能以角色或其他团队成员推断西区人员。",
+    "查重未执行，不能声称已排除重复；下周准备事项须在授权读取现有任务后判断。",
+    "本轮没有候选变更、任务写入、成员指派或外部通知。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": null,
+      "label": "经受信服务完成西区授权后，补读目标根任务、子任务、相关讨论、成员和查重结果"
+    }
+  ],
+  "externalEffects": "none"
+}

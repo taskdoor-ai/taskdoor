@@ -1,0 +1,246 @@
+{
+  "cases": [
+    {
+      "caseId": "REAL-A-REL-01",
+      "verdict": "satisfies",
+      "summary": "输出准确复用现有rc3公证回执v2任务，只补安全闸门与商店提交的直接依赖，保留原有前置、硬窗口、两小时灰度、确认字段及所有既有结果。",
+      "findings": [
+        {
+          "dimension": "minimal_changes_and_dependencies",
+          "assessment": "仅更新syn-rel-security-gate与syn-rel-store-submit，最终依赖集合分别为原有前置加syn-rel-notary-v2；syn-rel-final-approval通过既有链路消费结果，未被冗余改写。",
+          "evidenceIds": [
+            "syn-rel-security-gate",
+            "syn-rel-store-submit",
+            "syn-rel-regression",
+            "syn-rel-release-notes",
+            "syn-rel-notary-v2",
+            "syn-rel-file-04",
+            "syn-rel-file-05",
+            "syn-rel-d08"
+          ]
+        },
+        {
+          "dimension": "duplicate_and_reuse",
+          "assessment": "同一rc3构建、v2回执和验收标准已由syn-rel-notary-v2完整覆盖；输出判为same_outcome且没有创建回执、灰度或商店提交副本。",
+          "evidenceIds": [
+            "syn-rel-notary-v2",
+            "syn-rel-file-02",
+            "syn-rel-d02",
+            "syn-rel-d03",
+            "syn-rel-h03"
+          ]
+        },
+        {
+          "dimension": "authority_and_status",
+          "assessment": "输出明确区分未签署草稿、CLI成功报告与正式公证及安全闸门结论，没有把文件上传或成员报告提升为完成。",
+          "evidenceIds": [
+            "syn-rel-file-03",
+            "syn-rel-d06",
+            "syn-rel-notary-v2",
+            "syn-rel-security-gate",
+            "syn-rel-h04"
+          ]
+        },
+        {
+          "dimension": "preservation_and_read_only_boundary",
+          "assessment": "2026-09-12窗口、两小时灰度、正式Owner、父子归属和确认字段均未改变；externalEffects为none，计划未执行创建、提交、指派或状态更新。",
+          "evidenceIds": [
+            "syn-rel-root",
+            "syn-rel-canary",
+            "syn-rel-file-01",
+            "syn-rel-d05",
+            "syn-rel-d08"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": "no_defect：输出满足协议与冻结期望的全部必要语义。",
+        "fixture": "no_defect：输入中的任务、文件、讨论、历史和查重事实足以确定两项最小依赖差异。",
+        "graderOracle": "no_defect：冻结期望要求的两个更新、依赖集合、保留项和证据边界与协议一致。"
+      }
+    },
+    {
+      "caseId": "REAL-A-SAAS-01",
+      "verdict": "satisfies",
+      "summary": "输出识别出创建请求与现有15名管理员两批培训任务完全重复，返回no_change并路由到原任务，没有因第一批完成而复制任务或改写正式状态。",
+      "findings": [
+        {
+          "dimension": "duplicate_identity",
+          "assessment": "客户、tenant、二期范围、15人、A/B两批、9月10日截止和验收证据均一致，same_outcome判断成立。",
+          "evidenceIds": [
+            "syn-saas-admin-training",
+            "syn-saas-file-01",
+            "syn-saas-file-02",
+            "syn-saas-d02",
+            "syn-saas-d03"
+          ]
+        },
+        {
+          "dimension": "partial_progress_and_status",
+          "assessment": "A批8人签到和测验只是部分进展，B批7人尚未开展；输出保留任务in_progress，没有声称整项培训完成。",
+          "evidenceIds": [
+            "syn-saas-admin-training",
+            "syn-saas-file-04",
+            "syn-saas-file-06",
+            "syn-saas-d05",
+            "syn-saas-d06"
+          ]
+        },
+        {
+          "dimension": "overlap_and_existing_results",
+          "assessment": "讲义被正确判为只覆盖培训输入的overlap，而不是签到、测验和问题清单的完整交付；两批日程没有被错误拆成独立结果。",
+          "evidenceIds": [
+            "syn-saas-handbook",
+            "syn-saas-file-03",
+            "syn-saas-d01",
+            "syn-saas-d04"
+          ]
+        },
+        {
+          "dimension": "minimal_change_and_read_only_boundary",
+          "assessment": "proposal为null，所有任务、确认字段、Owner、日期和既有交接依赖保持不变；externalEffects为none，仅给出打开原任务的受控下一步。",
+          "evidenceIds": [
+            "syn-saas-handover",
+            "syn-saas-uat",
+            "syn-saas-admin-training",
+            "syn-saas-d08"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": "no_defect：完整重复、部分进展、讲义重叠和只读边界均处理正确。",
+        "fixture": "no_defect：业务身份、两批边界、部分进展与确认决定完整且互相一致。",
+        "graderOracle": "no_defect：允许no_change，要求零创建零更新并路由原任务，符合协议对完整重复的处理。"
+      }
+    },
+    {
+      "caseId": "REAL-A-ECOM-01",
+      "verdict": "satisfies",
+      "summary": "输出复用三个已有下一批任务，只更新开售闸门依赖并保留演练与仓位旧前置；没有新建总异常卡，也未改开售窗口、SKU、价格或已完成结果。",
+      "findings": [
+        {
+          "dimension": "minimal_dependency_diff",
+          "assessment": "唯一更新是syn-ecom-launch-gate，最终集合严格保留syn-ecom-dry-run与syn-ecom-warehouse-slot，并加入渠道联检、仓内异常卡和承运降级三个直接生产任务。",
+          "evidenceIds": [
+            "syn-ecom-launch-gate",
+            "syn-ecom-dry-run",
+            "syn-ecom-warehouse-slot",
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback",
+            "syn-ecom-file-06",
+            "syn-ecom-d06"
+          ]
+        },
+        {
+          "dimension": "duplicate_and_scope_composition",
+          "assessment": "渠道联检是same_outcome；仓内异常卡与承运降级分别覆盖互补范围，两个overlap共同满足异常边界，因此不需要新建总卡。",
+          "evidenceIds": [
+            "syn-ecom-file-02",
+            "syn-ecom-file-04",
+            "syn-ecom-file-05",
+            "syn-ecom-d02",
+            "syn-ecom-d03",
+            "syn-ecom-d04",
+            "syn-ecom-d05"
+          ]
+        },
+        {
+          "dimension": "authority_and_status",
+          "assessment": "输出把闸门清单与任务依赖不一致识别为结构化缺口，没有把清单正文、成员报告或开放任务误述为三个结果已经完成。",
+          "evidenceIds": [
+            "syn-ecom-file-06",
+            "syn-ecom-d06",
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback"
+          ]
+        },
+        {
+          "dimension": "preservation_and_read_only_boundary",
+          "assessment": "已完成页面、合规、预测、规则和演练记录全部保留；2026-09-06 20:00、SKU与价格边界未变，externalEffects为none。",
+          "evidenceIds": [
+            "syn-ecom-file-01",
+            "syn-ecom-d08",
+            "syn-ecom-page",
+            "syn-ecom-compliance",
+            "syn-ecom-forecast",
+            "syn-ecom-label-rule",
+            "syn-ecom-dry-run"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": "no_defect：更新范围、依赖差分、重复关系和固定边界均满足协议。",
+        "fixture": "no_defect：三个消费者前置、两个互补异常范围和旧依赖的有效性均有直接证据。",
+        "graderOracle": "no_defect：冻结期望只允许一个闸门更新并要求五项最终依赖，与输入影响矩阵一致。"
+      }
+    },
+    {
+      "caseId": "REAL-A-CS-01",
+      "verdict": "satisfies",
+      "summary": "输出正确回答当前不能对外宣称事故已解决，区分缓解、正式状态、批准门槛和数据影响初查，并只给核对动作，没有创建、更新、指派、发送或发布。",
+      "findings": [
+        {
+          "dimension": "query_routing_and_read_only_boundary",
+          "assessment": "intent为query、disposition为route_required、proposal为null且externalEffects为none；下一步仅打开恢复验证、P1案例和全量恢复批准任务核对。",
+          "evidenceIds": [
+            "syn-cs-root",
+            "syn-cs-verify",
+            "syn-cs-case-replies",
+            "syn-cs-allclear"
+          ]
+        },
+        {
+          "dimension": "recovery_thresholds",
+          "assessment": "批准门槛要求120分钟稳定、队列清空且无新增P1；当前仅稳定45分钟、队列37条且恢复验证仍open，所以不能称已解决。",
+          "evidenceIds": [
+            "syn-cs-file-02",
+            "syn-cs-file-04",
+            "syn-cs-d05",
+            "syn-cs-verify",
+            "syn-cs-drain"
+          ]
+        },
+        {
+          "dimension": "authority_and_conflict",
+          "assessment": "输出区分SRE缓解报告、客户沟通提议、撤回草稿、正式in_progress状态和事故指挥决定；新增4个P1与“影响已清零”提议的冲突也被双侧引用。",
+          "evidenceIds": [
+            "syn-cs-d01",
+            "syn-cs-d02",
+            "syn-cs-d03",
+            "syn-cs-d04",
+            "syn-cs-d06",
+            "syn-cs-d08",
+            "syn-cs-file-03",
+            "syn-cs-file-05"
+          ]
+        },
+        {
+          "dimension": "data_impact_boundary",
+          "assessment": "数据影响被限定为当前覆盖内尚未发现外泄迹象，输出明确拒绝将不完整日志扩写成确认无影响。",
+          "evidenceIds": [
+            "syn-cs-file-06",
+            "syn-cs-d07",
+            "syn-cs-logs"
+          ]
+        },
+        {
+          "dimension": "duplicate_and_existing_results",
+          "assessment": "当前事故根任务被正确识别为状态查询的same_outcome，复盘任务只是部分重叠；没有为状态批准、事故处置或复盘创建副本。",
+          "evidenceIds": [
+            "syn-cs-root",
+            "syn-cs-postmortem",
+            "syn-cs-file-01",
+            "syn-cs-file-06"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": "no_defect：结论、证据权威、冲突处理、数据影响措辞和只读动作均正确。",
+        "fixture": "no_defect：恢复门槛、实时指标、P1案例、正式决定和数据覆盖边界足以确定查询结论。",
+        "graderOracle": "no_defect：冻结期望要求query、route_required、零变更及保守数据影响表述，符合协议。"
+      }
+    }
+  ]
+}

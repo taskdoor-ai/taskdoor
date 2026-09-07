@@ -1,0 +1,378 @@
+{
+  "requestId": "req-edge-09",
+  "message": "给SKU-CUP-B详情页建一个校对任务，只修清单TYPO-B-v1里的3处错字，颜北给清稿和改动清单即可。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "ecom-m1",
+  "teamId": "team-ecom",
+  "authorizedTeamIds": [
+    "team-ecom"
+  ],
+  "revision": 2,
+  "context": {
+    "snapshotId": "snapshot-edge-09-v2",
+    "asOf": "2026-09-01T10:00:05+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-ecom"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "edge09-proof",
+        "title": "校对CUP-B详情页三处错字",
+        "status": "open",
+        "version": 1,
+        "updatedAt": "2026-09-01T10:00:02+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "按TYPO-B-v1修正3处错字，交付清稿和逐项改动清单；不改结构、图片、价格或卖点"
+        ],
+        "ownerId": "ecom-m2",
+        "sourceRefs": [
+          "edge09-proof-record"
+        ],
+        "identity": {
+          "sku": "SKU-CUP-B",
+          "document": "DETAIL-B-v1",
+          "deliverable": "TYPO-B-v1三处校对"
+        }
+      }
+    ],
+    "discussions": [],
+    "history": [
+      {
+        "id": "edge09-created",
+        "taskId": "edge09-proof",
+        "occurredAt": "2026-09-01T10:00:02+08:00",
+        "type": "task_created",
+        "summary": "相同请求键req-edge-09已提交并映射到edge09-proof；原创建结果版本1。",
+        "version": 1,
+        "source": "synthetic_activity_store",
+        "requestId": "req-edge-09",
+        "receiptSourceRef": "edge09-receipt"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "edge09-proof-record",
+        "title": "校对CUP-B详情页三处错字当前记录（合成）",
+        "text": "合成任务库读取：edge09-proof，版本1，状态open，正式Owner为ecom-m2；字段来自任务记录，不由讨论推断。",
+        "version": 1,
+        "updatedAt": "2026-09-01T10:00:02+08:00",
+        "source": "synthetic_task_store"
+      },
+      {
+        "id": "edge09-typos",
+        "title": "TYPO-B-v1错字清单（合成）",
+        "text": "已确认CUP-B详情页三处错字：容谅、按扭、说名书。只修这三处，文案结构、图片、价格和卖点不变。",
+        "version": 1,
+        "updatedAt": "2026-09-01T09:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "edge09-receipt",
+        "title": "相同请求已提交的合成创建回执v1（合成）",
+        "text": "合成受信提交记录RCPT-EDGE09：幂等请求键req-edge-09，原始请求正文与本轮message完全一致；2026-09-01T10:00:02+08:00已关联正式Task edge09-proof，版本1。客户端因未收到返回而原样重送同一requestId；没有新周期、新对象或新增范围。此为读取到的历史回执，不是规划模型执行写入。",
+        "version": 1,
+        "updatedAt": "2026-09-01T10:00:02+08:00",
+        "source": "synthetic_commit_store"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "matches": [
+      {
+        "taskId": "edge09-proof",
+        "title": "校对CUP-B详情页三处错字",
+        "reason": "同requestId已有提交回执，SKU、版本、错字清单与交付标准均相同。"
+      }
+    ],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；返回的候选均在本次可见快照内。"
+  },
+  "members": [
+    {
+      "id": "ecom-m1",
+      "name": "唐穗",
+      "role": "商品运营负责人",
+      "responsibilities": [
+        "确认SKU与上新范围",
+        "协调价格和活动口径"
+      ],
+      "boundaries": [
+        "不替仓库确认实物库存",
+        "不自动提高投放预算"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m1-role",
+          "title": "唐穗职责说明（合成）",
+          "text": "职责：确认SKU与上新范围；协调价格和活动口径。边界：不替仓库确认实物库存；不自动提高投放预算。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m1-work",
+          "title": "唐穗当前工作自报（合成）",
+          "text": "整理两款商品的上新资料",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理两款商品的上新资料",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "ecom-m2",
+      "name": "颜北",
+      "role": "商品内容设计",
+      "responsibilities": [
+        "详情页文案和视觉素材",
+        "按已确认信息修正错字和版式"
+      ],
+      "boundaries": [
+        "不自行改售价或功效承诺",
+        "不决定补货量"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m2-role",
+          "title": "颜北职责说明（合成）",
+          "text": "职责：详情页文案和视觉素材；按已确认信息修正错字和版式。边界：不自行改售价或功效承诺；不决定补货量。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m2-work",
+          "title": "颜北当前工作自报（合成）",
+          "text": "校对详情页素材",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "校对详情页素材",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "ecom-m3",
+      "name": "岑舟",
+      "role": "仓配协调",
+      "responsibilities": [
+        "核对可售库存",
+        "收集出库与履约窗口"
+      ],
+      "boundaries": [
+        "不把系统库存直接当可售实物",
+        "不代供应商承诺到货"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m3-role",
+          "title": "岑舟职责说明（合成）",
+          "text": "职责：核对可售库存；收集出库与履约窗口。边界：不把系统库存直接当可售实物；不代供应商承诺到货。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m3-work",
+          "title": "岑舟当前工作自报（合成）",
+          "text": "复核库存差异和待出库清单",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "复核库存差异和待出库清单",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "ecom-m4",
+      "name": "梁宁",
+      "role": "投放运营",
+      "responsibilities": [
+        "按批准方案准备渠道投放",
+        "反馈素材和落地页需求"
+      ],
+      "boundaries": [
+        "不自行提高预算",
+        "不把目标订单视作销量事实"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m4-role",
+          "title": "梁宁职责说明（合成）",
+          "text": "职责：按批准方案准备渠道投放；反馈素材和落地页需求。边界：不自行提高预算；不把目标订单视作销量事实。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m4-work",
+          "title": "梁宁当前工作自报（合成）",
+          "text": "准备渠道素材包",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "ecom-m4-window",
+          "title": "梁宁公开协作窗口（合成）",
+          "text": "2026-09-02T14:00:00+08:00至2026-09-02T16:00:00+08:00。只保证活动页面联调窗口，未提供持续投放容量。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "准备渠道素材包",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-02T14:00:00+08:00",
+        "endAt": "2026-09-02T16:00:00+08:00",
+        "sourceRef": "ecom-m4-window",
+        "note": "只保证活动页面联调窗口，未提供持续投放容量。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "ecom-m5",
+      "name": "于薇",
+      "role": "客服负责人",
+      "responsibilities": [
+        "确认客服问答与承诺口径",
+        "汇总售前售后问题"
+      ],
+      "boundaries": [
+        "不擅自承诺发货日",
+        "不把退款咨询当已退款"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m5-role",
+          "title": "于薇职责说明（合成）",
+          "text": "职责：确认客服问答与承诺口径；汇总售前售后问题。边界：不擅自承诺发货日；不把退款咨询当已退款。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m5-work",
+          "title": "于薇当前工作自报（合成）",
+          "text": "更新发货问题答复",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "ecom-m5-window",
+          "title": "于薇公开协作窗口（合成）",
+          "text": "2026-09-03T09:00:00+08:00至2026-09-03T11:00:00+08:00。可用于客服培训，不能推算当日总空闲。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "更新发货问题答复",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-03T09:00:00+08:00",
+        "endAt": "2026-09-03T11:00:00+08:00",
+        "sourceRef": "ecom-m5-window",
+        "note": "可用于客服培训，不能推算当日总空闲。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "ecom-m6",
+      "name": "程砚",
+      "role": "运营数据分析",
+      "responsibilities": [
+        "对齐报表周期与指标口径",
+        "复核活动数据和差异"
+      ],
+      "boundaries": [
+        "不虚构GMV或转化目标",
+        "不推断人员效率"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m6-role",
+          "title": "程砚职责说明（合成）",
+          "text": "职责：对齐报表周期与指标口径；复核活动数据和差异。边界：不虚构GMV或转化目标；不推断人员效率。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m6-work",
+          "title": "程砚当前工作自报（合成）",
+          "text": "核对最近一场活动的订单统计",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对最近一场活动的订单统计",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

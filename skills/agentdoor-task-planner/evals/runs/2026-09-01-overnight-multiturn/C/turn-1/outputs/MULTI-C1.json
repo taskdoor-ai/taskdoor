@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-c1",
+  "baseSnapshotId": "snapshot-multi-c1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只建立一个SKU-CUP-A详情页五处错字校对候选，由用户明确指定且职责匹配的颜北负责候选，于2026年9月2日交清稿和改动清单；不改结构、图片、售价、卖点或功效承诺。",
+  "reasoningSummary": [
+    {
+      "text": "本轮只修清单列出的五处错别字，详情页结构和图片已经确认，适合用一个可核对的轻任务承载清稿与改动清单。",
+      "evidenceRefs": [
+        "req-multi-c1",
+        "ecom01-copy"
+      ]
+    },
+    {
+      "text": "用户明确指定颜北；其职责包含详情页文案及按确认信息修正错字，边界也明确不得自行改售价或功效承诺。",
+      "evidenceRefs": [
+        "req-multi-c1",
+        "ecom-m2-role"
+      ]
+    },
+    {
+      "text": "以当前日期和Asia/Shanghai时区解释“明天”为2026年9月2日；输入未提供开始时间或完整容量。",
+      "evidenceRefs": [
+        "req-multi-c1"
+      ]
+    },
+    {
+      "text": "授权快照中的任务、讨论和历史均完整为空，团队查重已完成且无匹配。",
+      "evidenceRefs": [
+        "req-multi-c1"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:multi-c1-proofread",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-multi-c1-proofread",
+        "action": "create",
+        "targetId": "new:multi-c1-proofread",
+        "parentId": null,
+        "fields": {
+          "title": "SKU-CUP-A详情页五处错字校对",
+          "goal": {
+            "text": "让SKU-CUP-A详情页只完成已列五处错字修正，并通过清稿和改动清单可逐项核对。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-multi-c1",
+              "ecom01-copy"
+            ]
+          },
+          "acceptanceCriteria": [
+            "交付SKU-CUP-A详情页清稿，五处文字按清单逐项修正为“容量”“轻松携带”“清洗”“按钮”“包装内含说明书”。",
+            "交付改动清单，逐项列出原文“容谅、轻松携戴、清诜、按扭、包装内含说名书”及对应修正，并能在清稿中定位。",
+            "对照原确认页面检查除上述五处文字外无其他内容变化；不改文案结构、图片、售价、卖点或功效承诺。",
+            "本任务只交付校对结果，不包含页面发布、价格调整、图片处理或效果验收。"
+          ],
+          "tips": [
+            "直接在确认版本上逐项校对并保留修改对照；发现清单外疑点时单列提示，不自行扩写或改稿。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m2",
+            "basis": "explicit",
+            "reason": "用户明确指定颜北，且其职责和边界与限定范围内的详情页错字修正一致；该建议仍不等于已接受或正式指派。",
+            "evidenceRefs": [
+              "req-multi-c1",
+              "ecom-m2-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "explicit",
+            "assumptions": [
+              "按currentDate 2026-09-01及Asia/Shanghai时区，将用户原文“明天”解析为2026-09-02。",
+              "开始时间与颜北完整可用性未提供；截止日不表示候选已被接受或保证完成。"
+            ],
+            "evidenceRefs": [
+              "req-multi-c1"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有同范围历史实际投入、工具方式或容量记录；不根据五处数量直接套用默认工时。",
+              "EWD如后续评估只计人工校对和改动清单整理，不含等待审阅。"
+            ],
+            "evidenceRefs": [
+              "req-multi-c1",
+              "ecom01-copy",
+              "ecom-m2-role"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "范围轻且交付物共同构成一次校对结果，操作步骤放入tips，不增设同义子任务。",
+        "evidenceRefs": [
+          "req-multi-c1",
+          "ecom01-copy",
+          "ecom-m2-role"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "颜北仅为明确指定的候选负责人；规划输出未创建任务、未指派人员，也没有颜北的接受或完整容量记录。",
+    "9月2日是明确截止日；开始时间和EWD仍未知，不能以五处错字数量推导默认工时。",
+    "范围严格限于五处错字修正，不包含发布、改价、图片处理、卖点或功效承诺调整。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:multi-c1-proofread",
+      "label": "审阅五处错字校对候选"
+    }
+  ],
+  "externalEffects": "none"
+}

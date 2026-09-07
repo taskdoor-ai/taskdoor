@@ -1,0 +1,28 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-B3",
+      "allowedIntents": [
+        "replan",
+        "next_batch",
+        "query"
+      ],
+      "allowedDispositions": [
+        "no_change",
+        "route_required"
+      ],
+      "maxCreates": 0,
+      "maxUpdates": 0,
+      "manualChecks": [
+        "正确读取实际前轮派生任务的完成记录，已有培训安排无需重建；不把再次推进理解成新增一批。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "saas03-scope",
+        "saas03-map",
+        "saas03-uat",
+        "sim:B:1"
+      ]
+    }
+  ]
+}

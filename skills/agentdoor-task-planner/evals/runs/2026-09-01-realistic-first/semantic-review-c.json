@@ -1,0 +1,862 @@
+{
+  "reviewer": {
+    "kind": "independent_codex_agent",
+    "taskName": "/root/semantic_review_real_c",
+    "humanIndustryReview": false
+  },
+  "cases": [
+    {
+      "caseId": "REAL-C-01",
+      "status": "failed",
+      "summary": "意图、批准来源、历史保护、版本回显、隐私与外部效果基本正确，但候选把应由现有跨分支依赖传递的v2要求重复写入投放、CRM和上线核对，产生6项更新而冻结期望只允许更新主张v2、页面和邮件3项；因此最小差异与受保护任务协议失败。输入本身另含cc-claim-v2晚于已完成祖先的日期矛盾，结构报告把该既存问题计入本输出，应与模型错误分开。",
+      "manualCheckResults": [
+        {
+          "check": "只复用并补全现有cc-claim-v2，再把页面和邮件的必要前置从历史v1换为v2；渠道与上线任务通过现有跨分支依赖消费结果，不为展示动作重复更新。",
+          "status": "failed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-01.json",
+              "pointer": "/context/tasks/12/dependsOnTaskIds",
+              "note": "cc-paid已依赖cc-landing-copy与cc-keyvisual；页面切到v2后会自然传递。"
+            },
+            {
+              "file": "inputs/REAL-C-01.json",
+              "pointer": "/context/tasks/13/dependsOnTaskIds",
+              "note": "cc-crm已依赖cc-email-copy。"
+            },
+            {
+              "file": "inputs/REAL-C-01.json",
+              "pointer": "/context/tasks/15/dependsOnTaskIds",
+              "note": "cc-launch-check已依赖cc-paid、cc-crm与cc-keyvisual。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes/3",
+              "note": "又直接更新cc-paid并新增cc-claim-v2依赖。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes/4",
+              "note": "又直接更新cc-crm并新增cc-claim-v2依赖。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes/5",
+              "note": "又直接更新cc-launch-check并新增cc-claim-v2依赖，导致共6项更新。"
+            }
+          ]
+        },
+        {
+          "check": "保留已完成策略、简报、v1历史与主视觉，不改cc-root已确认goal/dueOn，也不改cc-claim-v2已确认ownerId；更新字段应局限于验收、来源、依赖或确有依据的日期。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "保留根、已完成策略/简报/v1/主视觉等对象。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes",
+              "note": "没有写goal、root dueOn、ownerRecommendation或正式ownerId；cc-claim-v2确认Owner未改变。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/baseTaskVersions",
+              "note": "完整且逐值回显16个输入任务版本。"
+            }
+          ]
+        },
+        {
+          "check": "客户回执与合规矩阵分别证明品牌选择和允许用语；成员试填、媒体表旧引用、草稿建议及其撤回都不能代替批准。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-01.json",
+              "pointer": "/context/sourceRefs/2",
+              "note": "客户回执v2明确品牌选择。"
+            },
+            {
+              "file": "inputs/REAL-C-01.json",
+              "pointer": "/context/sourceRefs/3",
+              "note": "合规矩阵v4明确允许用语与限制语。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/reasoningSummary/0",
+              "note": "分别引用客户回执、合规矩阵及两条有权确认。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/duplicateCheck/assessments/1",
+              "note": "引用cc-d6并保留v1为已完成历史，没有采纳改名覆盖提议。"
+            }
+          ]
+        },
+        {
+          "check": "不因v2措辞变化重开无影响主视觉，也不把页面、邮件、投放、CRM和上线核对串成一条不必要的全串行链。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "cc-keyvisual保持未更新。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "note": "页面只依赖v2替换清单。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes/2/fields/dependsOnTaskIds",
+              "note": "邮件只依赖v2替换清单；页面和邮件没有互相串行。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes/5/fields/dependsOnTaskIds",
+              "note": "虽有冗余直接边，但仍是汇合依赖而非把页面、邮件、投放、CRM、上线排成全串行链。"
+            }
+          ]
+        },
+        {
+          "check": "明确9月15日10:00是硬窗口而非模型保证；若建议EWD，等待批准与自然日不计入人类投入，缺依据可保持未知。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-01.json",
+              "pointer": "/constraints/hardDeadlineText",
+              "note": "9月15日10:00为不可自动移动的硬窗口。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/warnings/0",
+              "note": "明确未读取完整可用性，不能保证固定窗口可达。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes",
+              "note": "没有新增estimate，未把等待或自然日计为EWD。"
+            }
+          ]
+        },
+        {
+          "check": "输出是候选差异，不能发布、通知客户、改预算或把推荐Owner写成已接受。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/externalEffects",
+              "note": "为none。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/nextActions/0",
+              "note": "唯一下一步为review_proposal。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes",
+              "note": "没有预算、Owner/参与推荐、发布或通知字段。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "type": "planner",
+          "severity": "error",
+          "text": "候选违反最小差异和冻结允许范围：在三项必要更新之外又更新cc-paid、cc-crm、cc-launch-check；这些任务已有跨分支依赖可消费页面/邮件结果，额外直接依赖和验收改写属于冗余。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/8/allowedUpdateTaskIds",
+              "note": "只允许cc-claim-v2、cc-landing-copy、cc-email-copy。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/8/maxUpdates",
+              "note": "上限为3。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes/3",
+              "note": "第4项更新超出范围。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes/4",
+              "note": "第5项更新超出范围。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes/5",
+              "note": "第6项更新超出范围。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/8/errors/2",
+              "note": "结构评分已报告未保留必要既有工作。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/8/errors/3",
+              "note": "结构评分已报告更新受保护任务。"
+            }
+          ]
+        },
+        {
+          "type": "fixture",
+          "severity": "warning",
+          "text": "输入夹具中open的cc-claim-v2截止9月2日，却挂在截止8月28日且已完成的cc-brief/cc-strategy之下；冻结期望又强制更新该子任务并禁止更新祖先，使结构报告中的两条祖先日期错误无法由合规最小差异消除。该问题不是首次输出改写日期造成。",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-01.json",
+              "pointer": "/context/tasks/4/dueOn",
+              "note": "cc-claim-v2为2026-09-02。"
+            },
+            {
+              "file": "inputs/REAL-C-01.json",
+              "pointer": "/context/tasks/2",
+              "note": "祖先cc-brief已完成且dueOn为2026-08-28。"
+            },
+            {
+              "file": "inputs/REAL-C-01.json",
+              "pointer": "/context/tasks/1",
+              "note": "祖先cc-strategy已完成且dueOn为2026-08-28。"
+            },
+            {
+              "file": "outputs/REAL-C-01.json",
+              "pointer": "/proposal/changes/0/fields",
+              "note": "此次只改验收标准，没有改日期。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/8/errors/0",
+              "note": "结构报告仍把既存祖先日期矛盾记为输出错误。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/8/errors/1",
+              "note": "第二个祖先日期错误同源。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-C-02",
+      "status": "failed",
+      "summary": "正确复用了异常任务、保护已完成对账与敏感薪资正文，并说明正式回单等待和硬关闭风险；但把最小两项更新扩成5项，更新了受保护的报表、日记账和审计索引，还把fc-fx原有的已完成银行对账基线从依赖中删除，违反关键依赖与最小差异检查。输入另有fc-variance晚于父任务的既存日期矛盾。",
+      "manualCheckResults": [
+        {
+          "check": "复用fc-transfer-clear承接后到事实，只更新它与直接消费者fc-fx；不重开fc-bank-recon，不为报表、审计索引和董事会包制造冗余更新。",
+          "status": "failed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/0",
+              "note": "复用并更新fc-transfer-clear正确。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/1",
+              "note": "更新直接消费者fc-fx正确。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/2",
+              "note": "额外更新fc-statements。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/3",
+              "note": "额外更新受保护的fc-journal-approval。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/4",
+              "note": "额外更新fc-audit-evidence，超过最小两项。"
+            }
+          ]
+        },
+        {
+          "check": "外币重估必须同时保留已完成对账基线并新增异常核对前置；报表、审计证据与董事会包的既有跨分支依赖继续有效。",
+          "status": "failed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-02.json",
+              "pointer": "/context/tasks/8/dependsOnTaskIds",
+              "note": "fc-fx原来依赖已完成对账基线fc-bank-recon。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "note": "输出用单一fc-transfer-clear替换依赖，删除了fc-bank-recon；期望是同时保留两者。"
+            },
+            {
+              "file": "inputs/REAL-C-02.json",
+              "pointer": "/context/tasks/9/dependsOnTaskIds",
+              "note": "fc-statements已有ap、payroll、fx三项跨分支依赖。"
+            },
+            {
+              "file": "inputs/REAL-C-02.json",
+              "pointer": "/context/tasks/13/dependsOnTaskIds",
+              "note": "fc-audit-evidence已有journal与statements依赖。"
+            },
+            {
+              "file": "inputs/REAL-C-02.json",
+              "pointer": "/context/tasks/14/dependsOnTaskIds",
+              "note": "fc-board-pack既有报表与审计证据门槛保持不变。"
+            }
+          ]
+        },
+        {
+          "check": "银行口头/成员报告、应收台账与正式回单状态分开；正式回单前异常任务不能完成，也不能自行裁定8月或9月归属。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-02.json",
+              "pointer": "/context/discussions/8",
+              "note": "应收台账与银行通知冲突，需等待正式回单。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria",
+              "note": "要求取得带章回单后核验，回单到达前不得完成。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/reasoningSummary/0",
+              "note": "区分更正通知、带章回单ETA和任务完成状态。"
+            }
+          ]
+        },
+        {
+          "check": "保护fc-root的已确认goal/dueOn、fc-bank-recon完成记录和fc-journal-approval正式Owner；候选不得执行分录或把推荐写成接受。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "fc-root与fc-bank-recon均保持未更新。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/3/fields",
+              "note": "虽然不应更新此任务，但没有改fc-journal-approval的正式Owner，且标准明确不绕过复核执行入账。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/externalEffects",
+              "note": "为none。"
+            }
+          ]
+        },
+        {
+          "check": "银行等待约51小时是自然历时，不计入EWD；9月5日18:00是硬截止与风险来源，不能据此保证按期。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-02.json",
+              "pointer": "/constraints/realWorldWaits/0",
+              "note": "回单等待明确不计EWD。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/warnings/0",
+              "note": "把9月3日15:00到9月5日18:00描述为风险窗口而非保证。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes",
+              "note": "没有建议EWD或压缩等待。"
+            }
+          ]
+        },
+        {
+          "check": "不得输出、猜测或要求展开受限薪资行项目；审计问询不是审计接受，证据准备完成也不是外部验收。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-02.json",
+              "pointer": "/context/files/5",
+              "note": "受限薪资正文未进入规划器。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/warnings/1",
+              "note": "只允许引用批准合计与封存状态。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/4/fields/acceptanceCriteria/1",
+              "note": "明确证据准备与外部审计接受分开，并不展开薪资行项目。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "type": "planner",
+          "severity": "error",
+          "text": "输出将冻结允许的两项更新扩展为5项，更新了fc-statements、受确认保护范围内的fc-journal-approval和fc-audit-evidence；既有依赖已经把外币重估结果传递到报表、审计索引和董事会包，不需要这些展示性改写。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/9/allowedUpdateTaskIds",
+              "note": "只允许fc-transfer-clear与fc-fx。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/9/maxUpdates",
+              "note": "上限为2。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/2",
+              "note": "超范围更新fc-statements。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/3",
+              "note": "超范围更新fc-journal-approval。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/4",
+              "note": "超范围更新fc-audit-evidence。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/9/errors/1",
+              "note": "评分报告确认必要既有工作未全部保留。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/9/errors/2",
+              "note": "评分报告确认更新了受保护任务。"
+            }
+          ]
+        },
+        {
+          "type": "planner",
+          "severity": "error",
+          "text": "fc-fx的候选依赖删除了已完成银行对账基线，只保留异常核对；冻结契约要求新异常前置与历史对账基线同时存在。",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-02.json",
+              "pointer": "/context/tasks/8/dependsOnTaskIds",
+              "note": "原依赖为fc-bank-recon。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/9/requiredDependencies/0",
+              "note": "要求fc-fx同时依赖fc-bank-recon与fc-transfer-clear。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "note": "实际仅有fc-transfer-clear。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/9/errors/5",
+              "note": "结构评分报告缺少fc-fx必要交接依赖。"
+            }
+          ]
+        },
+        {
+          "type": "fixture",
+          "severity": "warning",
+          "text": "输入夹具的fc-variance截止9月5日而父任务fc-statements截止9月4日；输出没有改任何日期，结构报告仍将该既存父子日期矛盾计入本案。",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-02.json",
+              "pointer": "/context/tasks/9/dueOn",
+              "note": "父任务fc-statements为2026-09-04。"
+            },
+            {
+              "file": "inputs/REAL-C-02.json",
+              "pointer": "/context/tasks/10/dueOn",
+              "note": "子任务fc-variance为2026-09-05。"
+            },
+            {
+              "file": "outputs/REAL-C-02.json",
+              "pointer": "/proposal/changes/2/fields",
+              "note": "对fc-statements只改验收标准，没有改dueOn。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/9/errors/0",
+              "note": "结构报告报告既存祖先日期错误。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-C-03",
+      "status": "passed",
+      "summary": "五项候选差异与用户要求和冻结期望一致：保留原ID更新日期修订、账号、设备、薪资与入职日核对，保护旧录用完成记录及生产权限的确认Owner/标准；来源版本、外部候选人与经理确认、历史/重复、日期/EWD、依赖、隐私和externalEffects均处理正确。",
+      "manualCheckResults": [
+        {
+          "check": "复用日期修订、账号、设备、薪资和入职日核对原任务，更新到有依据的新日期；不复制、取消或重开同结果任务。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/changes",
+              "note": "恰有5个update，目标为日期修订、账号、设备、薪资与入职日核对，无create。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/duplicateCheck/assessments",
+              "note": "账号、设备、薪资判为same_outcome，旧录用记录判为overlap并继续保留。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/baseTaskVersions",
+              "note": "完整回显16个输入任务版本。"
+            }
+          ]
+        },
+        {
+          "check": "保留hr-root已确认goal/dueOn、录用接受完成记录和生产权限已确认Owner/验收标准；日期修订不覆盖旧录用历史。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "hr-root、hr-offer-accept与hr-prod-access均保持未更新。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria/1",
+              "note": "明确日期修订不覆盖旧录用接受记录。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/changes",
+              "note": "没有ownerRecommendation或正式ownerId字段。"
+            }
+          ]
+        },
+        {
+          "check": "生产数据权限继续依赖背景最终状态、培训完成和岗位范围，并由安全负责人审批；它不是入职日必需完成项，也不能因日期变更自动放行。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-03.json",
+              "pointer": "/context/tasks/9",
+              "note": "生产权限原任务保持背景、政策培训、岗位范围三项依赖及安全Owner。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "hr-prod-access未更新。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/changes/4/fields/dependsOnTaskIds",
+              "note": "入职日核对依赖基础账号、设备、政策、首周计划和薪资，不包含生产权限。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/warnings/0",
+              "note": "pending和ETA不被当作通过。"
+            }
+          ]
+        },
+        {
+          "check": "候选人与经理确认可支持日期，成员IT报告和配送单可支持各自排期；草稿首周计划、服务商ETA和报名状态都不能冒充完成或批准。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/reasoningSummary/0",
+              "note": "候选人与用人经理的书面确认共同支持9月16日。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/changes/1/fields/schedule",
+              "note": "IT成员报告支持账号激活候选排期。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/changes/2/fields/schedule",
+              "note": "设备配送单v2支持9月15日交付候选日期，且明确未签收不算完成。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/changes/4/fields/dependsOnTaskIds",
+              "note": "仍等待政策与首周计划，不把报名或草稿当完成。"
+            }
+          ]
+        },
+        {
+          "check": "背景服务等待到9月4日17:00是历时而非EWD；9月16日是确认日期，不构成所有工作按期保证。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-03.json",
+              "pointer": "/constraints/realWorldWaits/0",
+              "note": "背景服务等待明确不计EWD。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/warnings/0",
+              "note": "9月4日17:00仅为ETA。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/changes/4/fields/schedule/assumptions/0",
+              "note": "9月16日确认日期不保证所有前置自动完成。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/proposal/changes",
+              "note": "未提供无依据的estimate。"
+            }
+          ]
+        },
+        {
+          "check": "不得输出或推断背景发现、证件、银行、地址和联系方式；候选人自我确认不授权Owner变更、系统写入或安全批准。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-03.json",
+              "pointer": "/context/files/2",
+              "note": "背景发现正文未进入快照。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/warnings/1",
+              "note": "只说明类别级隐私边界，没有输出具体发现、证件、银行、地址或联系方式。"
+            },
+            {
+              "file": "outputs/REAL-C-03.json",
+              "pointer": "/externalEffects",
+              "note": "为none；候选人确认未被解释为Owner、安全批准或系统写入授权。"
+            }
+          ]
+        }
+      ],
+      "findings": []
+    },
+    {
+      "caseId": "REAL-C-04",
+      "status": "failed",
+      "summary": "三项更新、实际依赖图、硬窗口、等待风险、确认字段、隐私与外部效果总体正确；但证书任务把原本已存在的dependsOnTaskIds原样重复提交，违反v0.2只输出实际变化字段的协议，且整份输出遗漏现场日报与正式状态冲突rn-d8，未满足关键冲突保留检查和必需来源要求。",
+      "manualCheckResults": [
+        {
+          "check": "复用现有正式复测、第三方证书和业主复验任务，仅更新三项；不复制缺陷、手册、表计、钥匙或已完成给排水工作。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes",
+              "note": "恰有3个update，目标为正式复测、第三方证书、业主复验，无create。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "给排水、缺陷、手册、表计、钥匙及其他任务均保留。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/baseTaskVersions",
+              "note": "完整回显16个输入任务版本。"
+            }
+          ]
+        },
+        {
+          "check": "正式复测使用物业90分钟窗口，证书依赖正式复测，业主复验依赖第三方证书与柜门整改；钥匙交付继续通过手册、复验和表计形成跨分支门槛。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes/0/fields/schedule",
+              "note": "正式复测使用9月18日09:30至11:00窗口。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "note": "证书依赖正式复测，净依赖关系正确。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes/2/fields/dependsOnTaskIds",
+              "note": "业主复验依赖证书与柜门整改。"
+            },
+            {
+              "file": "inputs/REAL-C-04.json",
+              "pointer": "/context/tasks/10/dependsOnTaskIds",
+              "note": "手册已有证书与给排水记录依赖。"
+            },
+            {
+              "file": "inputs/REAL-C-04.json",
+              "pointer": "/context/tasks/15/dependsOnTaskIds",
+              "note": "钥匙任务继续依赖复验、手册与表计。"
+            }
+          ]
+        },
+        {
+          "check": "成员预检草稿、现场日报和第三方受理回执均不能标志专业工作完成；冲突须保留并以正式状态与签发证据核对。",
+          "status": "failed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria/1",
+              "note": "正确拒绝把成员预检草稿、正常读数报告或补签当正式复测。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes/1/fields/acceptanceCriteria/1",
+              "note": "正确拒绝把受理回执、ETA或成员报告当证书。"
+            },
+            {
+              "file": "inputs/REAL-C-04.json",
+              "pointer": "/context/discussions/7",
+              "note": "rn-d8记录现场日报声称机电全部关闭与正式任务/证书状态冲突。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/reasoningSummary",
+              "note": "没有引用或说明rn-d8冲突，未保留该冲突来源。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/11/errors/1",
+              "note": "结构评分也报告缺少必需来源。"
+            }
+          ]
+        },
+        {
+          "check": "保护rn-root已确认goal/dueOn、给排水完成记录和rn-key-handover已确认Owner/验收标准；不改业主交付日期。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "rn-root、已完成给排水任务和rn-key-handover均未更新。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes",
+              "note": "没有ownerRecommendation、participantRecommendations或正式Owner字段。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/warnings/1",
+              "note": "明确交付窗口无权自动顺延。"
+            }
+          ]
+        },
+        {
+          "check": "9月18日停电窗口与9月19日证书ETA都是真实等待且不计EWD；9月20日14:00只是硬交付窗口，必须说明证书迟到风险而不能保证按期。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/warnings/0",
+              "note": "物业窗口等待不计EWD且逾时需重申。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/warnings/1",
+              "note": "证书日期为ETA，迟到会压缩窗口且不保证交付。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes",
+              "note": "未给无依据EWD估算。"
+            }
+          ]
+        },
+        {
+          "check": "不得输出室内原图、住户人像、地址或联系方式；物业窗口批准不等于质量验收，业主确认也不等于专业证书签发。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-04.json",
+              "pointer": "/context/files/4",
+              "note": "室内原图payload未进入规划器。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/warnings/2",
+              "note": "只使用去人像状态摘要并拒绝输出原图、人像、地址与联系方式。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/externalEffects",
+              "note": "为none；没有联系、验收、交付或证书签发效果。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes/1/fields/acceptanceCriteria",
+              "note": "证书仍要求第三方真实签发，未把物业/业主确认当专业签发。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "type": "planner",
+          "severity": "error",
+          "text": "rn-electric-cert原本已经依赖rn-electric-retest，输出在更新验收与排期时又原样提交同一dependsOnTaskIds；v0.2要求update只包含实际变化字段，因此这是协议错误，即使最终依赖图语义正确。",
+          "evidence": [
+            {
+              "file": "inputs/REAL-C-04.json",
+              "pointer": "/context/tasks/8/dependsOnTaskIds",
+              "note": "原值已经是rn-electric-retest。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "note": "候选重复提交完全相同的依赖值。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/11/errors/0",
+              "note": "结构报告明确要求省略未变化字段。"
+            }
+          ]
+        },
+        {
+          "type": "planner",
+          "severity": "error",
+          "text": "输出遗漏rn-d8所载“现场日报称机电全部关闭”与正式任务/证书状态冲突；这既违反手工检查中保留冲突的要求，也缺少冻结期望规定的必需证据。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/11/requiredEvidenceRefs/4",
+              "note": "必需来源包含rn-d8。"
+            },
+            {
+              "file": "inputs/REAL-C-04.json",
+              "pointer": "/context/discussions/7",
+              "note": "rn-d8说明日报草稿与正式状态冲突，必须以正式状态和证据核对。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/reasoningSummary",
+              "note": "四条依据均未引用rn-d8。"
+            },
+            {
+              "file": "outputs/REAL-C-04.json",
+              "pointer": "/proposal/changes",
+              "note": "所有变更证据也均未引用rn-d8。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/11/errors/1",
+              "note": "报告缺少必需来源。"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "kind": "first_run_corpus_and_rubric_erratum",
+  "changesAppliedToFirstRun": false,
+  "firstRunRegraded": false,
+  "notice": "These findings separate pre-existing fixture/rubric defects from planner failures. Original inputs, outputs and structural-report remain unchanged.",
+  "findings": [
+    {
+      "caseId": "REAL-A-REL-01",
+      "type": "fixture",
+      "issue": "Nested desktop delivery date was internally inconsistent with its ancestor window in the dense corpus audit.",
+      "finalCorrection": "syn-rel-desktop dueOn changed from 2026-09-05 to 2026-09-06.",
+      "effectOnFirstScore": "No reported structural failure; correction is corpus integrity only."
+    },
+    {
+      "caseId": "REAL-B-NPI-01",
+      "type": "fixture",
+      "issue": "b-npi-incoming dueOn 2026-09-08 exceeded protected parent b-npi-supplier-ready dueOn 2026-09-07.",
+      "finalCorrection": "Parent dueOn changed to 2026-09-08.",
+      "effectOnFirstScore": "One structural error was caused by the fixture, not the candidate output."
+    },
+    {
+      "caseId": "REAL-B-NPI-01",
+      "type": "rubric",
+      "issue": "The frozen first evidence group treated BOM or drawing as interchangeable and excluded equivalent task/history evidence.",
+      "finalCorrection": "Final rubric has separate BOM and drawing groups, each accepting file, task, history or decision evidence, plus a refusal-to-reopen decision group.",
+      "effectOnFirstScore": "Original score is not retroactively changed."
+    },
+    {
+      "caseId": "REAL-C-01",
+      "type": "fixture",
+      "issue": "cc-claim-v2 dueOn exceeded completed cc-brief/cc-strategy ancestors.",
+      "finalCorrection": "cc-claim-v2 is linked to cc-root; brief/strategy dates were normalized.",
+      "effectOnFirstScore": "Two structural errors were fixture-origin; over-updating three downstream tasks remains a planner failure."
+    },
+    {
+      "caseId": "REAL-C-02",
+      "type": "fixture",
+      "issue": "fc-variance dueOn exceeded fc-statements, and the board pack was modeled as a child despite occurring after close.",
+      "finalCorrection": "fc-statements dueOn changed to 2026-09-05 and fc-board-pack became an associated root linked by dependencies.",
+      "effectOnFirstScore": "The ancestor-date error was fixture-origin; expanding from two to five updates and deleting the bank-reconciliation baseline remain planner failures."
+    },
+    {
+      "caseId": "REAL-C-03",
+      "type": "fixture_and_rubric",
+      "issue": "Production access was nested under an onboarding root that ends earlier, and the rubric forced an update to a date-amendment task whose v2 result was already accurate.",
+      "finalCorrection": "hr-prod-access became an associated root; hr-date-amend is preserved and the expected update set is four tasks.",
+      "effectOnFirstScore": "Original passing output is not regraded; the corrected retest judges the revised scope."
+    }
+  ],
+  "retainedStrictChecks": [
+    "REAL-A-REL-01 keeps the unsigned-draft source traceability check.",
+    "REAL-B-LOG-01 keeps customs-v1/d5 because these are the only sources supporting both the 2026-09-16 ETA and not-approved/not-complete boundary.",
+    "REAL-C-01 and REAL-C-04 keep withdrawal/conflict source checks; they are supported by the inputs and were not relaxed to fit first outputs."
+  ]
+}

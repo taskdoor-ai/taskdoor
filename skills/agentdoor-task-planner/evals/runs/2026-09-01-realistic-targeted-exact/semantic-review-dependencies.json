@@ -1,0 +1,402 @@
+{
+  "runId": "agentdoor-planner-realistic-targeted-final-20260901-v4",
+  "reviewer": {
+    "kind": "independent_codex_agent",
+    "taskName": "/root/exact_dependency_validator",
+    "scope": [
+      "REAL-B-NPI-01",
+      "REAL-B-PROC-01"
+    ],
+    "humanIndustryReview": false
+  },
+  "reviewBasis": {
+    "protocol": "protocol-snapshot.json",
+    "rubric": "expectations-snapshot.json",
+    "method": "For each case, reconstruct the final dependency set by retaining snapshot dependencies for untouched fields and replacing them only where the candidate writes dependsOnTaskIds. Compare the unordered final sets with exactDependencies, then independently test whether each added or removed edge is supported by pre-candidate task criteria, loaded file excerpts, discussions and history. Candidate-authored acceptance criteria are treated as proposed changes, not as prior evidence for their own dependency edges.",
+    "mutationPolicy": "Inputs, outputs, expectations and scoring artifacts were read only. This review file is the only artifact created by the reviewer."
+  },
+  "cases": [
+    {
+      "scenarioId": "REAL-B-NPI-01",
+      "verdict": "fail",
+      "plannerIssues": [
+        {
+          "code": "NPI_DVT_REPLACES_TRUE_PCN_PRODUCER_WITH_INCOMING",
+          "severity": "major",
+          "description": "The DVT candidate drops the required completed PCN producer and adds b-npi-incoming instead. The loaded PCN v3 excerpt says its accepted process window is used for DVT, while the incoming task records and verifies the batch COC. An evidence reference or an intermediate incoming task cannot substitute for the completed task that confirmed the applicable PCN result."
+        },
+        {
+          "code": "NPI_DVT_CANDIDATE_CRITERION_MANUFACTURES_DIRECT_CONSUMPTION",
+          "severity": "major",
+          "description": "The candidate changes DVT acceptance from mapping the current process change to additionally mapping the 'incoming verification result' and actual COC status, then uses that newly written criterion to justify b-npi-incoming as a direct prerequisite. Before the candidate, the DVT task, DVT discussion and PCN excerpt support direct consumption of the design baseline and accepted PCN process window; only the work-instruction source explicitly says it must consume the incoming result. The proposal cannot manufacture its own evidence for a new direct edge."
+        }
+      ],
+      "fixtureIssues": [],
+      "graderIssues": [],
+      "dependencyAudit": [
+        {
+          "taskId": "b-npi-incoming",
+          "snapshotDependsOnTaskIds": [
+            "b-npi-bom"
+          ],
+          "candidateDependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-pcn"
+          ],
+          "finalDependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-pcn"
+          ],
+          "expectedExactDependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-pcn"
+          ],
+          "status": "match"
+        },
+        {
+          "taskId": "b-npi-wi",
+          "snapshotDependsOnTaskIds": [
+            "b-npi-bom"
+          ],
+          "candidateDependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-incoming"
+          ],
+          "finalDependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-incoming"
+          ],
+          "expectedExactDependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-incoming"
+          ],
+          "status": "match"
+        },
+        {
+          "taskId": "b-npi-dvt",
+          "snapshotDependsOnTaskIds": [
+            "b-npi-design"
+          ],
+          "candidateDependsOnTaskIds": [
+            "b-npi-design",
+            "b-npi-incoming"
+          ],
+          "finalDependsOnTaskIds": [
+            "b-npi-design",
+            "b-npi-incoming"
+          ],
+          "expectedExactDependsOnTaskIds": [
+            "b-npi-design",
+            "b-npi-pcn"
+          ],
+          "missing": [
+            "b-npi-pcn"
+          ],
+          "unexpected": [
+            "b-npi-incoming"
+          ],
+          "status": "mismatch"
+        },
+        {
+          "taskId": "b-npi-gate",
+          "snapshotDependsOnTaskIds": [
+            "b-npi-wi",
+            "b-npi-dvt"
+          ],
+          "candidateDependsOnTaskIds": [
+            "b-npi-wi",
+            "b-npi-dvt",
+            "b-npi-incoming"
+          ],
+          "finalDependsOnTaskIds": [
+            "b-npi-wi",
+            "b-npi-dvt",
+            "b-npi-incoming"
+          ],
+          "expectedExactDependsOnTaskIds": [
+            "b-npi-incoming",
+            "b-npi-wi",
+            "b-npi-dvt"
+          ],
+          "status": "match"
+        }
+      ],
+      "acceptanceCriteriaCausalityAudit": {
+        "candidateText": "基于ECO-042 v3、RC结构基线和来料核对结果，把胶材固化窗口与实际批次COC状态映射到DVT项目、样本及未覆盖项；不重做不受影响的结构验证。",
+        "priorInputEvidence": [
+          {
+            "location": "inputs/REAL-B-NPI-01.json context.tasks[id=b-npi-dvt].acceptanceCriteria",
+            "text": "把现行胶材工艺变化映射到验证项目、样本与未覆盖项",
+            "finding": "The snapshot criterion requires process-change coverage but does not say DVT waits for or consumes the incoming verification result."
+          },
+          {
+            "location": "inputs/REAL-B-NPI-01.json context.sourceRefs[id=b-npi-pcn-v3].text",
+            "text": "PCN确认首批胶材需在来料记录中关联批次COC，并按ECO-042 v3的固化窗口用于试制和DVT。",
+            "finding": "The source separates COC recording in incoming from the PCN-confirmed process-window result used by DVT. b-npi-pcn is the completed producer of that accepted result."
+          },
+          {
+            "location": "inputs/REAL-B-NPI-01.json context.discussions[id=b-npi-d6].text",
+            "text": "DVT矩阵需增加工艺窗口覆盖；结构验证项目不受影响。",
+            "finding": "The DVT report corroborates direct process-window coverage, not a direct incoming-result handoff."
+          },
+          {
+            "location": "inputs/REAL-B-NPI-01.json context.sourceRefs[id=b-npi-wi-v4].text",
+            "text": "现行草稿引用BOM v5，但仍使用旧固化窗口；须消费来料核对结果与ECO v3。",
+            "finding": "The fixture explicitly names incoming consumption for work instruction, demonstrating that the absence of equivalent language for DVT is meaningful."
+          }
+        ],
+        "conclusion": "The new DVT criterion creates an unsupported direct incoming-result relationship and still omits the independently supported PCN producer. It cannot be used to validate its own dependency choice."
+      },
+      "otherSemanticChecks": {
+        "status": "pass_except_dependency",
+        "observations": [
+          "Exactly four allowed existing tasks are updated; there are no creates or reopened completed tasks.",
+          "BOM v5, RC design and completed PCN records remain preserved.",
+          "The September 7 COC promise is treated as an external promise rather than completion, and the September 10 gate remains conditional.",
+          "All four duplicate candidates are assessed and no confirmed field is changed."
+        ]
+      },
+      "evidence": [
+        {
+          "location": "outputs/REAL-B-NPI-01.json proposal.changes[id=chg-b-npi-dvt-v3].fields.dependsOnTaskIds",
+          "observed": [
+            "b-npi-design",
+            "b-npi-incoming"
+          ],
+          "expected": [
+            "b-npi-design",
+            "b-npi-pcn"
+          ]
+        },
+        {
+          "location": "inputs/REAL-B-NPI-01.json context.tasks[id=b-npi-pcn] and context.history[id=b-npi-h3]",
+          "observed": "b-npi-pcn is completed at version 6 and its acceptance criterion records the PCN v3 scope and EVT2 batch requirement.",
+          "implication": "The completed producer stays reusable as a direct dependency; it must not be reopened, but completion is not a reason to omit its edge."
+        },
+        {
+          "location": "expectations-snapshot.json REAL-B-NPI-01.exactDependencies",
+          "observed": "All four exact sets are grounded in the fixture; only b-npi-dvt differs in the output.",
+          "implication": "The grader correctly identifies a planner error rather than enforcing an unsupported edge."
+        }
+      ],
+      "rationale": "Three of four exact dependency sets are correct. DVT is materially wrong because the proposal both omits the confirmed PCN producer and invents an incoming-result requirement to rationalize an alternative edge. This affects provenance and execution order, so the case fails semantic review."
+    },
+    {
+      "scenarioId": "REAL-B-PROC-01",
+      "verdict": "fail",
+      "plannerIssues": [
+        {
+          "code": "PROC_GATE_ADDS_REDUNDANT_OWNER_REVIEW_EDGE",
+          "severity": "major",
+          "description": "The gate candidate adds b-proc-owner-review to the five existing direct producers. MSA, tax and bank already directly consume the owner-review conclusion, and all three remain direct gate prerequisites. The resulting gate therefore receives that conclusion through valid existing paths; another direct edge is redundant."
+        },
+        {
+          "code": "PROC_GATE_CANDIDATE_CRITERION_MANUFACTURES_DIRECT_CONSUMPTION",
+          "severity": "major",
+          "description": "The candidate rewrites the gate criterion to say it links the owner-review result and then cites that new sentence as the reason for a direct dependency. The snapshot gate criterion, loaded decisions and user request require the gate to reflect registry v3 and retain the original risk, security, contract, tax, bank and quality result boundary, but do not say it directly waits for the owner-review task. A proposed criterion cannot retroactively establish a pre-existing direct consumer relationship."
+        }
+      ],
+      "fixtureIssues": [],
+      "graderIssues": [],
+      "dependencyAudit": [
+        {
+          "taskId": "b-proc-owner-review",
+          "snapshotDependsOnTaskIds": [
+            "b-proc-sanctions"
+          ],
+          "candidateDependsOnTaskIds": null,
+          "finalDependsOnTaskIds": [
+            "b-proc-sanctions"
+          ],
+          "expectedExactDependsOnTaskIds": [
+            "b-proc-sanctions"
+          ],
+          "status": "match_via_snapshot_fallback"
+        },
+        {
+          "taskId": "b-proc-msa",
+          "snapshotDependsOnTaskIds": [
+            "b-proc-nda",
+            "b-proc-sanctions"
+          ],
+          "candidateDependsOnTaskIds": [
+            "b-proc-nda",
+            "b-proc-sanctions",
+            "b-proc-owner-review"
+          ],
+          "finalDependsOnTaskIds": [
+            "b-proc-nda",
+            "b-proc-sanctions",
+            "b-proc-owner-review"
+          ],
+          "expectedExactDependsOnTaskIds": [
+            "b-proc-nda",
+            "b-proc-sanctions",
+            "b-proc-owner-review"
+          ],
+          "status": "match"
+        },
+        {
+          "taskId": "b-proc-tax",
+          "snapshotDependsOnTaskIds": [
+            "b-proc-sanctions"
+          ],
+          "candidateDependsOnTaskIds": [
+            "b-proc-sanctions",
+            "b-proc-owner-review"
+          ],
+          "finalDependsOnTaskIds": [
+            "b-proc-sanctions",
+            "b-proc-owner-review"
+          ],
+          "expectedExactDependsOnTaskIds": [
+            "b-proc-sanctions",
+            "b-proc-owner-review"
+          ],
+          "status": "match"
+        },
+        {
+          "taskId": "b-proc-bank",
+          "snapshotDependsOnTaskIds": [
+            "b-proc-tax"
+          ],
+          "candidateDependsOnTaskIds": [
+            "b-proc-tax",
+            "b-proc-owner-review"
+          ],
+          "finalDependsOnTaskIds": [
+            "b-proc-tax",
+            "b-proc-owner-review"
+          ],
+          "expectedExactDependsOnTaskIds": [
+            "b-proc-tax",
+            "b-proc-owner-review"
+          ],
+          "status": "match"
+        },
+        {
+          "taskId": "b-proc-gate",
+          "snapshotDependsOnTaskIds": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality"
+          ],
+          "candidateDependsOnTaskIds": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality",
+            "b-proc-owner-review"
+          ],
+          "finalDependsOnTaskIds": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality",
+            "b-proc-owner-review"
+          ],
+          "expectedExactDependsOnTaskIds": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality"
+          ],
+          "missing": [],
+          "unexpected": [
+            "b-proc-owner-review"
+          ],
+          "status": "mismatch"
+        }
+      ],
+      "acceptanceCriteriaCausalityAudit": {
+        "candidateText": "在2026-09-10门禁审阅时链接登记册v3的所有人核对、安全、MSA、税务、银行和质量结果，保留同一实体与人员的复用边界，作为2026-09-12首单释放前置；银行函未实际收到并完成双人核验时不得声明可释放。",
+        "priorInputEvidence": [
+          {
+            "location": "inputs/REAL-B-PROC-01.json context.tasks[id=b-proc-gate].acceptanceCriteria",
+            "text": "链接风险、安全、合同、税务、银行和质量结果；缺银行函时不得声明可释放",
+            "finding": "The snapshot does not name the owner-review task as an additional direct gate result, and its five direct task dependencies already instantiate the required result boundary."
+          },
+          {
+            "location": "inputs/REAL-B-PROC-01.json context.discussions[id=b-proc-d5].text",
+            "text": "拒绝平行准入；MSA、税务、银行和门禁都应更新原任务，完成记录继续复用。",
+            "finding": "This decision identifies tasks whose content must be updated, not a new direct owner-review-to-gate handoff."
+          },
+          {
+            "location": "inputs/REAL-B-PROC-01.json context.sourceRefs[id=b-proc-reg-v3]",
+            "text": "v3 is verified current and linked to owner review, MSA, tax, bank and gate.",
+            "finding": "The protocol explicitly says linkedTaskIds alone do not establish producer-consumer task edges. Registry v3 is an authoritative loaded source already attached to the gate; owner review is itself one consumer, not the producer of the external registry file."
+          },
+          {
+            "location": "merged candidate graph before the extra gate edge",
+            "text": "MSA -> owner-review; tax -> owner-review; bank -> owner-review; gate -> MSA, tax and bank.",
+            "finding": "The owner-review conclusion already reaches the gate through three direct consumers, so the extra direct edge does not supply a missing result."
+          }
+        ],
+        "conclusion": "The proposal changes the gate criterion to manufacture a direct owner-review relationship that was not established by the input. The correct minimal update can mention registry v3 and retain the original five producer tasks without adding the redundant edge."
+      },
+      "otherSemanticChecks": {
+        "status": "pass_except_dependency",
+        "observations": [
+          "Exactly five allowed existing tasks are updated; no fast-track tree or replacement file task is created.",
+          "Completed sanctions, NDA and quality tasks and their histories remain preserved.",
+          "The bank-letter promise remains an external promise, and the September 10 and September 12 boundaries remain conditional.",
+          "All five duplicate candidates are assessed, no bank data is invented, and confirmed fields remain locked."
+        ]
+      },
+      "evidence": [
+        {
+          "location": "outputs/REAL-B-PROC-01.json proposal.changes[id=chg-b-proc-gate-v3].fields.dependsOnTaskIds",
+          "observed": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality",
+            "b-proc-owner-review"
+          ],
+          "expected": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality"
+          ]
+        },
+        {
+          "location": "outputs/REAL-B-PROC-01.json proposal.changes[id=chg-b-proc-msa-v3|chg-b-proc-tax-v3|chg-b-proc-bank-v3].fields.dependsOnTaskIds",
+          "observed": "MSA, tax and bank all correctly add b-proc-owner-review while preserving their valid prior dependencies.",
+          "implication": "These three direct consumer edges are sufficient to carry the reviewed v3 conclusion to the gate."
+        },
+        {
+          "location": "expectations-snapshot.json REAL-B-PROC-01.exactDependencies",
+          "observed": "The owner-review, MSA, tax and bank sets match; only the gate has one additional edge.",
+          "implication": "The exact-set grader correctly prevents an output from rationalizing a redundant edge by rewriting its own criterion."
+        }
+      ],
+      "rationale": "Four of five exact dependency sets are correct. The gate adds one unsupported and redundant owner-review edge, then manufactures a matching acceptance phrase to justify it. Because this violates minimal-difference and direct-versus-transitive consumer rules, the case fails semantic review."
+    }
+  ],
+  "summary": {
+    "totalCases": 2,
+    "passed": 0,
+    "failed": 2,
+    "plannerIssueCases": 2,
+    "fixtureIssueCases": 0,
+    "graderIssueCases": 0,
+    "overallVerdict": "fail",
+    "failingScenarios": [
+      "REAL-B-NPI-01",
+      "REAL-B-PROC-01"
+    ],
+    "primaryFindings": [
+      "REAL-B-NPI-01: b-npi-dvt must retain b-npi-design and add the completed b-npi-pcn producer; the candidate instead adds b-npi-incoming and rewrites DVT acceptance to make that unsupported relationship appear necessary.",
+      "REAL-B-PROC-01: b-proc-gate must retain its original five direct producers; the candidate adds a redundant b-proc-owner-review edge and rewrites gate acceptance to manufacture direct consumption already carried transitively by MSA, tax and bank.",
+      "Both failures are planner errors. The fixtures provide task, file, discussion and history evidence that resolves the relationship, and the exactDependencies rubric matches that evidence."
+    ]
+  }
+}

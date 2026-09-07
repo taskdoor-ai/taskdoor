@@ -1,0 +1,25 @@
+.task-subtask-list-section[hidden], .task-subtask-create-form[hidden] { display: none; }
+.task-subtask-heading { flex-wrap: wrap; }
+.task-subtask-heading > .task-subtask-heading-actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--ad-space-2); margin-left: auto; }
+.task-subtask-create-form { display: grid; gap: var(--ad-space-3); margin-bottom: var(--ad-space-4); padding: var(--ad-space-4); border: 1px solid var(--ad-border); border-radius: var(--ad-radius-control); background: var(--ad-surface); }
+.task-subtask-create-field { display: grid; min-width: 0; gap: var(--ad-space-2); }
+.task-subtask-create-field > label, .task-subtask-create-field > span { color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); font-weight: 550; }
+.task-subtask-create-hint, .task-subtask-create-notice { margin: 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.7; overflow-wrap: anywhere; }
+.task-subtask-create-notice { margin-bottom: var(--ad-space-3); color: var(--ad-route-ink); }
+.task-subtask-create-error { margin: 0; color: var(--ad-danger); font-size: var(--ad-text-caption); line-height: 1.7; overflow-wrap: anywhere; }
+.task-subtask-create-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--ad-space-2); }
+.task-subtask-actions-menu[data-slot="popover-content"] { display: grid; min-width: 144px; gap: var(--ad-space-1); background: var(--ad-surface); color: var(--ad-ink); }
+.task-subtask-action { display: flex; align-items: center; width: 100%; min-height: var(--ad-control-height-sm); padding: var(--ad-space-1) var(--ad-space-2); border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-secondary); font: inherit; font-size: var(--ad-text-caption); cursor: pointer; text-align: left; }
+.task-subtask-action:hover { background: var(--ad-surface-subtle); color: var(--ad-ink); }
+.task-subtask-action:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.task-subtask-action-delete { color: var(--ad-danger); }
+.task-subtask-action-delete:hover { background: color-mix(in srgb, var(--ad-danger) 7%, var(--ad-surface)); color: var(--ad-danger); }
+.task-subtask-actions-menu .task-ai-adjust-trigger { width: 100%; justify-content: flex-start; }
+@media (max-width: 640px), (pointer: coarse) {
+  .task-subtask-heading-actions [data-slot="button"], .task-subtask-create-form [data-slot="button"], .task-subtask-create-form [data-slot="input"], .task-subtask-action, .task-subtask-actions-menu .task-ai-adjust-trigger { min-height: var(--ad-control-touch-min); }
+  .task-subtask-ai-menu-trigger { min-width: var(--ad-control-touch-min); min-height: var(--ad-control-touch-min); }
+  .task-subtask-create-form { padding: var(--ad-space-3); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .task-subtask-heading-actions [data-slot="button"], .task-subtask-create-actions [data-slot="button"], .task-subtask-action { transition: none; animation: none; }
+}

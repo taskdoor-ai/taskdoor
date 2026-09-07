@@ -1,0 +1,24 @@
+{
+  "artifactType": "offline_synthetic_targeted_multiturn_retest",
+  "createdOn": "2026-09-01",
+  "episodeCount": 1,
+  "turnCount": 3,
+  "postFixFocus": [
+    "execution-level details are not create-time blockers",
+    "same-result retry reuses synthetic receipt",
+    "different SKU remains a distinct task instance"
+  ],
+  "plannerModelConfiguration": {
+    "modelSnapshot": "not_exposed",
+    "temperature": "not_exposed",
+    "seed": "not_exposed"
+  },
+  "transitionHarness": {
+    "kind": "synthetic_only",
+    "productionStore": false,
+    "productionWrites": false
+  },
+  "expectationsHiddenFromExecutor": "orchestrator prompt and executor self-report",
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

@@ -1,0 +1,28 @@
+{
+  "createdAt": "2026-09-01T02:42:27.493649+00:00",
+  "suite": "complex",
+  "fixtureSha256": "a562953fb2ac3add37643d0d599a47b3be99b62bd68b6ef4f1f2b37c0b77f741",
+  "expectationsSha256": "7aa7f8d5d2d2011ac12ad4660ae8a4f05a6c447097498ce26f845f4497f66b6c",
+  "skillSha256": "91ee8396b0fcaf20703c61d821a0e4e6b464e8e501f406772fafe97d9568ec9b",
+  "contractSha256": "1926907959c06c2b190465476b42837c8cabc105df5684759f0c5bbeab93fe95",
+  "schemaSha256": "8c0192063fadf41d26e0b91d9f00e165c981173e46809197c5807d0090491cc7",
+  "notice": "Synthetic, offline Skill evaluation. No model API, production ACL or task writes are exercised by this script.",
+  "selectedCaseIds": [
+    "COMPLEX-02",
+    "COMPLEX-03"
+  ],
+  "cases": [
+    {
+      "id": "COMPLEX-02",
+      "industry": "manufacturing_npi",
+      "category": "nested_estimate_boundaries",
+      "inputSha256": "dd7bef1972d44042cb8e19aad4ef665b1c992ddd80ac04f6cbda06d65149f928"
+    },
+    {
+      "id": "COMPLEX-03",
+      "industry": "ecommerce_operations",
+      "category": "fanout_local_replan",
+      "inputSha256": "d99a170d3d1d7d35ddac491102afa835438af4a413fc0206c70631169a2b7487"
+    }
+  ]
+}

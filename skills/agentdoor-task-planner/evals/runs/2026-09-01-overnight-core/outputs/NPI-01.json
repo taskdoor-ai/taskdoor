@@ -1,0 +1,448 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-npi-01",
+  "baseSnapshotId": "snapshot-npi-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议建立BOX-N1首轮30套样品试制与9月16日内部评审候选计划，按BOM、样料、试制资料、样品交付和检验记录分清责任；尚未创建或指派。",
+  "reasoningSummary": [
+    {
+      "text": "本轮是BOX-N1首轮30套样品，评审边界为内部下一步决策，不是量产或认证放行。",
+      "evidenceRefs": [
+        "req-npi-01",
+        "npi01-brief"
+      ]
+    },
+    {
+      "text": "授权快照中任务与历史完整为空；查重已覆盖本团队相关活动及归档任务，没有返回候选。",
+      "evidenceRefs": [
+        "req-npi-01"
+      ]
+    },
+    {
+      "text": "最终材料牌号尚未确认，应作为BOM交付中的待解决项，再据确认版本核对样料与试制资料。",
+      "evidenceRefs": [
+        "npi01-brief",
+        "npi-m2-role",
+        "npi-m3-role"
+      ]
+    },
+    {
+      "text": "协调、工程、采购、工艺、品质和批次准备有不同职责；公开窗口仅覆盖版本或资料评审，不能推出总容量。",
+      "evidenceRefs": [
+        "npi-m1-role",
+        "npi-m2-role",
+        "npi-m3-role",
+        "npi-m4-role",
+        "npi-m5-role",
+        "npi-m6-role",
+        "npi-m2-window",
+        "npi-m5-window"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:npi01-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "npi01-create-root",
+        "action": "create",
+        "targetId": "new:npi01-root",
+        "parentId": null,
+        "fields": {
+          "title": "BOX-N1首轮30套试制与内部评审准备",
+          "acceptanceCriteria": [
+            "9月16日内部评审可按样品编号核对首轮30套样品及其对应的BOM、到料、试制和检验记录。",
+            "评审包列明各资料版本、实际交付证据、不符合项与仍待决策的问题；未证实结果不得写为通过。",
+            "评审仅支持下一步决策，不含量产、认证或无依据的产品放行。"
+          ],
+          "tips": [
+            "沿用用户的30套范围和评审日期；发现准备条件与期限冲突时提出范围、日期或资源选择，不自行插单。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "npi-m1",
+            "basis": "recommended",
+            "reason": "负责样机交付范围和阶段评审协调，适合承担整体资料与跨职能结果核对候选责任。",
+            "evidenceRefs": [
+              "npi-m1-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-16",
+            "basis": "explicit",
+            "assumptions": [
+              "9月16日是本轮内部评审硬期限；开始日及具体协作窗口尚未确认。"
+            ],
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi01-brief"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "父任务仅承载整体结果，不重复估算子任务投入；汇总由确定性代码处理。"
+            ],
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi01-brief"
+            ]
+          },
+          "dependsOnTaskIds": [],
+          "goal": {
+            "text": "让BOX-N1首轮30套样品及可追溯资料能够支持9月16日内部评审决定下一步。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi01-brief"
+            ]
+          }
+        },
+        "reason": "用户需要多种独立可核对结果，建立一个总体结果及必要子任务。",
+        "evidenceRefs": [
+          "req-npi-01",
+          "npi01-brief"
+        ]
+      },
+      {
+        "id": "npi01-create-bom",
+        "action": "create",
+        "targetId": "new:npi01-bom",
+        "parentId": "new:npi01-root",
+        "fields": {
+          "title": "形成BOX-N1首轮试制确认BOM",
+          "acceptanceCriteria": [
+            "BOM标明产品、适用首轮30套样品、图纸关联、版本以及材料牌号；最终材料牌号有明确确认来源。",
+            "记录确认人及确认依据，区分待评审草稿与本轮可用版本；工程、采购、工艺和品质可引用同一版本。"
+          ],
+          "tips": [
+            "可利用9月3日10:00—12:00版本评审窗口协商确认；该窗口不代表此前所有工程工作已完成。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "npi-m2",
+            "basis": "recommended",
+            "reason": "工程职责包括图纸和BOM版本维护。",
+            "evidenceRefs": [
+              "npi-m2-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "npi-m3",
+              "contribution": "核对BOM材料规格与供应商采购资料的对应关系，不代工程批准材料。",
+              "evidenceRefs": [
+                "npi-m3-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "前置交付和人员可用性尚未确认，不据职责或评审窗口承诺开始日、完成日。"
+            ],
+            "evidenceRefs": [
+              "npi01-brief",
+              "npi-m2-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "无同范围历史投入、约定工具方式和足够工作量明细，暂不量化人类投入；供应商等待、无人值守运行不计EWD。"
+            ],
+            "evidenceRefs": [
+              "npi01-brief",
+              "npi-m2-role"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "材料牌号尚未确认，先形成供后续使用的受控版本。",
+        "evidenceRefs": [
+          "npi01-brief",
+          "npi-m2-role",
+          "npi-m2-window"
+        ]
+      },
+      {
+        "id": "npi01-create-material",
+        "action": "create",
+        "targetId": "new:npi01-material",
+        "parentId": "new:npi01-root",
+        "fields": {
+          "title": "核对首轮30套试制样料到位记录",
+          "acceptanceCriteria": [
+            "逐项将样料规格、数量和批次对应确认BOM及30套试制需求，留存供应商书面交期回复和实际到料证据。",
+            "列出缺料、规格不符及其对试制的影响；报价日、常规交期和发货预告不能作为已到货证据。"
+          ],
+          "tips": [
+            "供应协调可先并行沟通；最终到料核对必须使用确认BOM，未经确认不替代材料。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "npi-m3",
+            "basis": "recommended",
+            "reason": "职责是确认样料交期、采购资料及供应商书面回复。",
+            "evidenceRefs": [
+              "npi-m3-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "前置交付和人员可用性尚未确认，不据职责或评审窗口承诺开始日、完成日。"
+            ],
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi-m3-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "无同范围历史投入、约定工具方式和足够工作量明细，暂不量化人类投入；供应商等待、无人值守运行不计EWD。"
+            ],
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi-m3-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:npi01-bom"
+          ]
+        },
+        "reason": "样料到位记录是实际试制的必要输入，并与BOM版本绑定。",
+        "evidenceRefs": [
+          "req-npi-01",
+          "npi-m3-role",
+          "npi01-brief"
+        ]
+      },
+      {
+        "id": "npi01-create-process",
+        "action": "create",
+        "targetId": "new:npi01-process",
+        "parentId": "new:npi01-root",
+        "fields": {
+          "title": "整理BOX-N1首轮试制资料与工装需求",
+          "acceptanceCriteria": [
+            "试制资料标明适用BOM和图纸版本、批次范围及所需工装清单，工装准备状态有可核对记录。",
+            "试制资料保留版本和待解决问题，能供本轮样品执行与后续检验追溯；不以草稿冒充批准的工艺版本。"
+          ],
+          "tips": [
+            "资料结构和工装需求可先准备，最终版本以确认BOM为输入。",
+            "本计划不提供设备操作或安全作业指导。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "npi-m4",
+            "basis": "recommended",
+            "reason": "职责是整理试制工艺版本、工装需求和试制问题。",
+            "evidenceRefs": [
+              "npi-m4-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "npi-m6",
+              "contribution": "核对资料和工装准备条件是否匹配拟用试制批次与已确认车间窗口。",
+              "evidenceRefs": [
+                "npi-m6-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "前置交付和人员可用性尚未确认，不据职责或评审窗口承诺开始日、完成日。"
+            ],
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi-m4-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "无同范围历史投入、约定工具方式和足够工作量明细，暂不量化人类投入；供应商等待、无人值守运行不计EWD。"
+            ],
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi-m4-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:npi01-bom"
+          ]
+        },
+        "reason": "工艺资料与工装状态可独立核对，并作为样品试制准备条件。",
+        "evidenceRefs": [
+          "req-npi-01",
+          "npi-m4-role"
+        ]
+      },
+      {
+        "id": "npi01-create-samples",
+        "action": "create",
+        "targetId": "new:npi01-samples",
+        "parentId": "new:npi01-root",
+        "fields": {
+          "title": "协调首轮30套样品交付及批次记录",
+          "acceptanceCriteria": [
+            "首轮30套样品有逐套编号、实际完成与交接记录，并可追溯到本轮BOM、样料批次及试制资料。",
+            "记录实际试制准备条件、使用窗口、执行资源与问题；未完成套数如实标明，不以计划数当实交数。"
+          ],
+          "tips": [
+            "执行生产所需人员与车间窗口需依现行流程确认，本候选不构成插单或生产操作授权。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "npi-m6",
+            "basis": "recommended",
+            "reason": "生产计划职责支持核对批次准备条件与协调已确认窗口；推荐承担样品交付协调，不假定其亲自执行生产。",
+            "evidenceRefs": [
+              "npi-m6-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "npi-m4",
+              "contribution": "核对试制资料的实际使用版本并整理试制问题。",
+              "evidenceRefs": [
+                "npi-m4-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "前置交付和人员可用性尚未确认，不据职责或评审窗口承诺开始日、完成日。"
+            ],
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi-m6-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "无同范围历史投入、约定工具方式和足够工作量明细，暂不量化人类投入；供应商等待、无人值守运行不计EWD。"
+            ],
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi-m6-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:npi01-material",
+            "new:npi01-process"
+          ]
+        },
+        "reason": "实物样品是检验记录的真实输入，不能仅用资料准备替代30套交付。",
+        "evidenceRefs": [
+          "req-npi-01",
+          "npi-m6-role"
+        ]
+      },
+      {
+        "id": "npi01-create-quality",
+        "action": "create",
+        "targetId": "new:npi01-quality",
+        "parentId": "new:npi01-root",
+        "fields": {
+          "title": "形成首轮样品检验记录与不符合项清单",
+          "acceptanceCriteria": [
+            "检验记录关联实际样品编号、适用BOM及试制资料版本，并记明采用的检验口径、覆盖范围和结果证据。",
+            "未检、未通过和待复核项分别列明；覆盖多少样品按实际记录，不能未经依据默认全部通过或自定合格阈值。",
+            "提供可供9月16日评审核对的不符合项与待决策事项，不以执行者自报替代品质结论。"
+          ],
+          "tips": [
+            "检验口径和记录模板可先准备，实物结论以实际样品与证据为准。",
+            "9月7日13:00—16:00仅为资料评审窗口，不能视为实物准备或完整检验承诺。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "npi-m5",
+            "basis": "recommended",
+            "reason": "负责维护检验口径、复核样品记录与不符合项。",
+            "evidenceRefs": [
+              "npi-m5-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "前置交付和人员可用性尚未确认，不据职责或评审窗口承诺开始日、完成日。"
+            ],
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi-m5-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "无同范围历史投入、约定工具方式和足够工作量明细，暂不量化人类投入；供应商等待、无人值守运行不计EWD。"
+            ],
+            "evidenceRefs": [
+              "req-npi-01",
+              "npi-m5-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:npi01-samples"
+          ]
+        },
+        "reason": "检验结果须依赖实际样品，独立保留品质证据边界。",
+        "evidenceRefs": [
+          "req-npi-01",
+          "npi-m5-role",
+          "npi-m5-window"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "负责人和参与贡献均为候选，未取得接受记录；发起人不会因此自动承担总结果。",
+    "材料牌号、供样承诺、实际车间窗口和生产执行资源尚未提供；本轮保留9月16日期限，但尚不能保证工期可行。",
+    "9月3日工程版本评审与9月7日品质资料评审窗口不等于样品已齐或实物检验窗口。",
+    "没有历史项目可套，不虚构EWD；未知投入和排期留空。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:npi01-root",
+      "label": "审阅首轮30套试制准备候选计划与未知排期"
+    }
+  ],
+  "externalEffects": "none"
+}

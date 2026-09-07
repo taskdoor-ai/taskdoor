@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-07",
+  "baseSnapshotId": "snapshot-edge-07-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "edge07-root": 4,
+    "edge07-faq": 3,
+    "edge07-training": 2
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议在原CUP-A首发资料包内仅新增9月7日交付的一页开箱说明，并把它纳入根任务标准；已完成FAQ和9月5日培训的范围、日期及依赖保持不变。",
+  "reasoningSummary": [
+    {
+      "text": "客户书面确认只追加一页开箱说明，依据PK-CUP-A-v1，交付边界为9月7日；现有资料包尚未覆盖该结果，且没有对应任务或稿件。",
+      "evidenceRefs": [
+        "req-edge-07",
+        "edge07-gap-confirm",
+        "edge07-root"
+      ]
+    },
+    {
+      "text": "FAQ v2已经正式完成，培训仍是原进行路径上的未完成任务；复用这些记录，不重做或新建同一结果。",
+      "evidenceRefs": [
+        "edge07-faq",
+        "edge07-training"
+      ]
+    },
+    {
+      "text": "培训只使用FAQ，不使用新增说明；因此仍保持9月5日及对FAQ的原依赖，不增加对开箱说明的依赖。",
+      "evidenceRefs": [
+        "edge07-gap-confirm",
+        "edge07-training"
+      ]
+    },
+    {
+      "text": "新增说明9月7日交付早于根资料包9月8日边界；根标准未锁定可补充必要差异，已确认根目的和正式Owner保持原值。",
+      "evidenceRefs": [
+        "edge07-gap-confirm",
+        "edge07-root",
+        "req-edge-07"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "edge07-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change-edge07-update-root-criteria",
+        "action": "update",
+        "targetId": "edge07-root",
+        "parentId": null,
+        "fields": {
+          "acceptanceCriteria": [
+            "交付客服FAQ v2并完成基于该FAQ的培训记录",
+            "同一CUP-A首发客服资料包纳入一页开箱说明，逐项对应已提供的包装内容清单PK-CUP-A-v1并保留来源版本引用；FAQ与培训保持原范围。"
+          ]
+        },
+        "reason": "客户已确认新增说明属于同一资料包，根任务标准未锁定；只补充新增结果的收口标准，不改目的、Owner或原FAQ与培训要求。",
+        "evidenceRefs": [
+          "edge07-root",
+          "edge07-gap-confirm",
+          "req-edge-07"
+        ]
+      },
+      {
+        "id": "change-edge07-create-unboxing",
+        "action": "create",
+        "targetId": "new:edge07-unboxing",
+        "parentId": "edge07-root",
+        "fields": {
+          "title": "交付CUP-A首发一页开箱说明",
+          "acceptanceCriteria": [
+            "交付一页开箱说明，逐项对应已提供的包装内容清单PK-CUP-A-v1，能够逐项核对对应关系和信息一致性，不擅自新增未确认的内容或承诺。",
+            "说明保留PK-CUP-A-v1来源版本引用，并纳入SKU-CUP-A旗舰店2026年9月首发客服资料包；不重做FAQ，也不改变原FAQ培训内容。"
+          ],
+          "tips": [
+            "按已提供的包装内容清单整理并核对一页说明；写作、排版和逐项核对作为执行步骤，不另拆子任务。",
+            "说明与原FAQ培训并行推进；不把完成开箱说明作为FAQ培训开始或完成的条件。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m2",
+            "basis": "recommended",
+            "reason": "颜北负责商品文案和视觉素材，能够按已确认包装清单形成一页说明；推荐承担新增结果，不更换根任务正式Owner。",
+            "evidenceRefs": [
+              "ecom-m2-role",
+              "edge07-gap-confirm"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "ecom-m5",
+              "contribution": "核对新增说明在客服资料包中的引用和口径，使其纳入原资料包且不扩展现有FAQ培训范围。",
+              "evidenceRefs": [
+                "ecom-m5-role",
+                "edge07-root",
+                "edge07-gap-confirm"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-07",
+            "basis": "explicit",
+            "assumptions": [
+              "交付边界来自客户书面确认；具体开始时间尚未给出。",
+              "新增说明不影响9月5日FAQ培训，也不改根资料包9月8日边界。",
+              "成员公开的培训协作窗口不代表开箱说明制作或核对的完整可用容量。"
+            ],
+            "evidenceRefs": [
+              "edge07-gap-confirm",
+              "edge07-root",
+              "edge07-training",
+              "ecom-m2",
+              "ecom-m5-window"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有本项可比较的人类投入历史或充分耗时依据，EWD暂留空。",
+              "只记录新增说明制作及必要核对的人类投入候选，不重复估计已完成FAQ、培训或根任务总量。"
+            ],
+            "evidenceRefs": [
+              "edge07-gap-confirm",
+              "edge07-faq",
+              "edge07-training"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "仅补客户已确认、现有FAQ及培训尚未覆盖的一页开箱说明；已提供的包装清单足以界定输入，新结果与原培训不存在必要前置关系。",
+        "evidenceRefs": [
+          "req-edge-07",
+          "edge07-gap-confirm",
+          "edge07-root",
+          "edge07-faq",
+          "edge07-training"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "edge07-faq",
+      "edge07-training"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "edge07-root",
+        "relationship": "overlap",
+        "reason": "同一SKU、渠道和首发周期的资料包已覆盖FAQ与培训，但没有本轮确认的一页开箱说明；继续复用原根，仅补独立缺口。",
+        "evidenceRefs": [
+          "edge07-root",
+          "edge07-gap-confirm",
+          "req-edge-07"
+        ],
+        "resolution": {
+          "kind": "propose_uncovered_scope",
+          "newScope": "仅新增逐项对应PK-CUP-A-v1、于2026年9月7日交付的一页开箱说明；原FAQ和培训继续复用。",
+          "changeIds": [
+            "change-edge07-create-unboxing"
+          ],
+          "evidenceRefs": [
+            "edge07-root",
+            "edge07-gap-confirm",
+            "req-edge-07"
+          ]
+        }
+      },
+      {
+        "taskId": "edge07-faq",
+        "relationship": "overlap",
+        "reason": "本轮完整需求中的FAQ部分已由已完成FAQ v2覆盖，新增包装开箱说明是尚无任务或稿件的独立结果，不重新交付FAQ。",
+        "evidenceRefs": [
+          "edge07-faq",
+          "edge07-gap-confirm",
+          "req-edge-07"
+        ],
+        "resolution": {
+          "kind": "propose_uncovered_scope",
+          "newScope": "仅补原FAQ未覆盖的一页CUP-A开箱说明，引用PK-CUP-A-v1；不更改已完成FAQ或原培训的范围、日期和依赖。",
+          "changeIds": [
+            "change-edge07-create-unboxing"
+          ],
+          "evidenceRefs": [
+            "edge07-faq",
+            "edge07-gap-confirm",
+            "req-edge-07"
+          ]
+        }
+      }
+    ],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；返回的候选均在本次可见快照内。"
+  },
+  "questions": [],
+  "warnings": [
+    "新增负责人与参与贡献均为推荐，尚未接受；完整可用时间和EWD未知，不以培训窗口承诺新增工作容量。",
+    "本轮只是同一目标树的局部候选，未创建、指派或更改正式任务字段。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "edge07-root",
+      "label": "审阅开箱说明补缺及根标准的必要差异"
+    }
+  ],
+  "externalEffects": "none"
+}

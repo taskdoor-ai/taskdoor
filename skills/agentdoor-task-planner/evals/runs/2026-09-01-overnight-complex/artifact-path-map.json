@@ -1,0 +1,10 @@
+{
+  "archivedRun": "2026-09-01-overnight-complex",
+  "pathMappings": [
+    {
+      "from": "/tmp/agentdoor-planner-overnight-complex-20260901",
+      "to": "."
+    }
+  ],
+  "note": "Semantic-review file paths and JSON Pointers resolve against this archived run after applying the prefix mapping."
+}

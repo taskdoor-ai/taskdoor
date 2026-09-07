@@ -418,6 +418,6 @@ Expected: 没有拖拽、状态写入、时间视图或用户视图持久化代�
 
 - [ ] **Step 2: 检查工作区和最终测试**
 
-Run: `git status --short && npm run verify`
+Run: `git status --short && npm test && npm run build`
 
 Expected: 本任务文件没有未提交改动；用户原有的无关工作区改动保持原样；验证 PASS。

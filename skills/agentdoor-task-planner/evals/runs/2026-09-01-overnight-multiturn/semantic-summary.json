@@ -1,0 +1,96 @@
+{
+  "kind": "independent_multiturn_semantic_review",
+  "cases": [
+    {
+      "caseId": "MULTI-A1",
+      "status": "passed",
+      "summary": "MULTI-A1 current result independently reviewed.",
+      "reviewFile": "semantic-review-abd.json",
+      "episodeId": "A"
+    },
+    {
+      "caseId": "MULTI-A2",
+      "status": "passed",
+      "summary": "MULTI-A2 current result independently reviewed.",
+      "reviewFile": "semantic-review-abd.json",
+      "episodeId": "A"
+    },
+    {
+      "caseId": "MULTI-A3",
+      "status": "passed",
+      "summary": "MULTI-A3 current result independently reviewed.",
+      "reviewFile": "semantic-review-abd.json",
+      "episodeId": "A"
+    },
+    {
+      "caseId": "MULTI-B1",
+      "status": "passed",
+      "summary": "MULTI-B1 current result independently reviewed.",
+      "reviewFile": "semantic-review-abd.json",
+      "episodeId": "B"
+    },
+    {
+      "caseId": "MULTI-B2",
+      "status": "passed",
+      "summary": "MULTI-B2 current result independently reviewed.",
+      "reviewFile": "semantic-review-abd.json",
+      "episodeId": "B"
+    },
+    {
+      "caseId": "MULTI-B3",
+      "status": "passed",
+      "summary": "MULTI-B3 current result independently reviewed.",
+      "reviewFile": "semantic-review-abd.json",
+      "episodeId": "B"
+    },
+    {
+      "caseId": "MULTI-C1",
+      "status": "passed",
+      "summary": "候选保持为一个轻量根任务，准确限定SKU-CUP-A、五处错字、清稿与改动清单、颜北和9月2日；没有增加子任务、参与者、默认工时或越界修改，也没有不必要的阻塞问题。",
+      "reviewFile": "semantic-review-c.json",
+      "episodeId": "C"
+    },
+    {
+      "caseId": "MULTI-C2",
+      "status": "passed",
+      "summary": "输出通过合成回执和当前快照定位首轮保存记录sim:C:1，将重试判为same_outcome，返回原记录入口且不创建、不更新；同时明确本地合成回执不证明生产创建、幂等或正式指派。",
+      "reviewFile": "semantic-review-c.json",
+      "episodeId": "C"
+    },
+    {
+      "caseId": "MULTI-C3",
+      "status": "failed",
+      "summary": "输出正确把SKU-CUP-B判为不同实例、创建独立new:候选并保留sim:C:1，但把三处错字的位置、原文和正确文本当成确认前阻塞，导致本可审阅的创建被降为needs_clarification；保留冻结评分失败，不修改原答案。",
+      "reviewFile": "semantic-review-c.json",
+      "episodeId": "C"
+    },
+    {
+      "caseId": "MULTI-D1",
+      "status": "passed",
+      "summary": "MULTI-D1 current result independently reviewed.",
+      "reviewFile": "semantic-review-abd.json",
+      "episodeId": "D"
+    },
+    {
+      "caseId": "MULTI-D2",
+      "status": "passed",
+      "summary": "MULTI-D2 current result independently reviewed.",
+      "reviewFile": "semantic-review-abd.json",
+      "episodeId": "D"
+    },
+    {
+      "caseId": "MULTI-D3",
+      "status": "passed",
+      "summary": "MULTI-D3 current result independently reviewed.",
+      "reviewFile": "semantic-review-abd.json",
+      "episodeId": "D"
+    }
+  ],
+  "total": 12,
+  "passed": 11,
+  "failed": 1,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "productionValidation": false,
+  "note": "Current corrected artifacts are reviewed here; raw first-attempt protocol failures remain separately archived and are not superseded."
+}

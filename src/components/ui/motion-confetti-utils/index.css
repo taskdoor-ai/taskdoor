@@ -1,0 +1,54 @@
+.confetti-stage {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.confetti-root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.confetti-portal {
+  position: fixed;
+  z-index: 1400;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-burst {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.confetti-trigger {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.confetti-trigger:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}

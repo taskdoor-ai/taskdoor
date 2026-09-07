@@ -1,0 +1,32 @@
+.task-dependencies-field { display: grid; grid-template-columns: 68px minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); min-width: 0; }
+.task-dependencies-field > .task-detail-field-label { padding-top: var(--ad-space-1); }
+.task-dependencies-content { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ad-space-2); min-width: 0; }
+.task-dependencies-chips { display: flex; flex-wrap: wrap; gap: var(--ad-space-2); min-width: 0; }
+.task-dependencies-chip { display: inline-flex; align-items: center; flex-wrap: wrap; gap: var(--ad-space-2); min-width: 0; max-width: 100%; padding: var(--ad-space-1) var(--ad-space-2); border: 1px solid var(--ad-border-soft); border-radius: var(--ad-radius-control); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.task-dependencies-chip > button, .task-dependencies-edit { display: inline-flex; align-items: center; gap: var(--ad-space-1); min-width: 0; padding: 0; border: 0; background: transparent; color: var(--ad-ink-secondary); font: inherit; text-align: left; cursor: pointer; }
+.task-dependencies-chip > button > span { overflow-wrap: anywhere; }
+.task-dependencies-chip > button > svg { flex-shrink: 0; }
+.task-dependencies-edit { min-height: var(--ad-space-6); padding: 0 var(--ad-space-1); border-radius: var(--ad-radius-control); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); font-weight: 400; line-height: 1.5; }
+.task-dependencies-edit:hover:not(:disabled) { color: var(--ad-route); }
+.task-dependencies-chip > button:hover:not(:disabled) { color: var(--ad-route); }
+.task-dependencies-chip > button:disabled { cursor: default; }
+.task-dependencies-chip > button:focus-visible, .task-dependencies-edit:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; border-radius: var(--ad-radius-control); }
+.task-dependencies-popover { width: min(380px, calc(100vw - 32px)); max-height: min(540px, calc(100dvh - 32px)); overflow-y: auto; padding: var(--ad-space-4); }
+.task-dependencies-popover header strong { font-size: var(--ad-text-body-sm); }
+.task-dependencies-popover p { margin: var(--ad-space-2) 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.6; }
+.task-dependencies-options { display: grid; max-height: 250px; overflow-y: auto; margin-top: var(--ad-space-2); }
+.task-dependencies-options label { display: flex; align-items: start; gap: var(--ad-space-2); padding: var(--ad-space-2); border-radius: var(--ad-radius-control); color: var(--ad-ink); font-size: var(--ad-text-body-sm); cursor: pointer; overflow-wrap: anywhere; }
+.task-dependencies-options label:hover { background: var(--ad-surface-subtle); }
+.task-dependencies-options label:has(input:disabled) { color: var(--ad-ink-tertiary); cursor: default; }
+.task-dependencies-options input { margin-top: 4px; accent-color: var(--ad-route); }
+.task-dependencies-options small { display: block; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.task-dependencies-popover footer { display: flex; justify-content: flex-end; gap: var(--ad-space-2); margin-top: var(--ad-space-3); }
+.task-dependencies-popover footer > button:first-child { margin-right: auto; }
+.task-dependencies-popover .task-dependencies-error { color: var(--ad-danger, #b42318); }
+.task-subtask-dependency-note { display: block; margin-top: var(--ad-space-1); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); font-weight: 400; }
+@media (max-width: 760px) {
+  .task-dependencies-field { grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-1); }
+}
+@media (pointer: coarse) {
+  .task-dependencies-edit, .task-dependencies-chip > button, .task-dependencies-options label { min-height: var(--ad-control-touch-min); }
+}

@@ -1,0 +1,665 @@
+{
+  "requestId": "req-complex04",
+  "message": "观禾内容包收到两份相互矛盾的批准回执。先补一份回执差异核对表，供现有“收齐当前版本批准”任务使用；这轮不用替客户选择v4还是v5，不改变最终验收、交期或正在做的版本任务。表里把谁说过什么、针对哪个版本、哪里冲突列清楚即可。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "content-m6",
+  "teamId": "team-content",
+  "authorizedTeamIds": [
+    "team-content"
+  ],
+  "revision": 3,
+  "currentTaskId": "complex04-root",
+  "context": {
+    "snapshotId": "snapshot-complex04-v3",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-content"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "complex04-root",
+        "title": "观禾9月内容包交付",
+        "status": "in_progress",
+        "version": 10,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "交付包必须逐文件关联有权方对当前版本的明确批准"
+        ],
+        "ownerId": "content-m1",
+        "sourceRefs": [
+          "complex04-root-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-06",
+        "goal": "让观禾取得可定位版本与批准依据的约定内容包"
+      },
+      {
+        "id": "complex04-copy-branch",
+        "title": "观禾文案版本准备",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex04-root",
+        "acceptanceCriteria": [
+          "保留已交版本并记录新增版本差异"
+        ],
+        "ownerId": "content-m3",
+        "sourceRefs": [
+          "complex04-copy-branch-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03"
+      },
+      {
+        "id": "complex04-visual-branch",
+        "title": "观禾视觉版本准备",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex04-root",
+        "acceptanceCriteria": [
+          "保留各视觉版本与源文件引用"
+        ],
+        "ownerId": "content-m4",
+        "sourceRefs": [
+          "complex04-visual-branch-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-04"
+      },
+      {
+        "id": "complex04-delivery-branch",
+        "title": "观禾批准与交付资料",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex04-root",
+        "acceptanceCriteria": [
+          "核对回执、版本及最终交付目录"
+        ],
+        "ownerId": "content-m6",
+        "sourceRefs": [
+          "complex04-delivery-branch-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-06"
+      },
+      {
+        "id": "complex04-copy-v4",
+        "title": "留存观禾文案v4",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "parentId": "complex04-copy-branch",
+        "acceptanceCriteria": [
+          "文案v4及差异清单入库，供后续确认定位"
+        ],
+        "ownerId": "content-m3",
+        "sourceRefs": [
+          "complex04-copy-v4-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "complex04-cover-v4",
+        "title": "留存观禾封面v4",
+        "status": "completed",
+        "version": 4,
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "parentId": "complex04-visual-branch",
+        "acceptanceCriteria": [
+          "封面v4及引用清单入库，供后续确认定位"
+        ],
+        "ownerId": "content-m4",
+        "sourceRefs": [
+          "complex04-cover-v4-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "complex04-copy-v5",
+        "title": "准备观禾文案v5供审",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex04-copy-branch",
+        "acceptanceCriteria": [
+          "提供v5文案与相对v4的改动清单，不包含客户接受"
+        ],
+        "ownerId": "content-m3",
+        "sourceRefs": [
+          "complex04-copy-v5-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex04-copy-v4"
+        ],
+        "dueOn": "2026-09-03"
+      },
+      {
+        "id": "complex04-cover-v5",
+        "title": "准备观禾封面v5供审",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex04-visual-branch",
+        "acceptanceCriteria": [
+          "提供v5封面与改动清单，不包含客户接受"
+        ],
+        "ownerId": "content-m4",
+        "sourceRefs": [
+          "complex04-cover-v5-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex04-cover-v4"
+        ],
+        "dueOn": "2026-09-04"
+      },
+      {
+        "id": "complex04-approval",
+        "title": "收齐观禾当前版本批准",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex04-delivery-branch",
+        "acceptanceCriteria": [
+          "取得有权方对最终文案、封面版本逐项一致的明确回执；冲突未消除不视为完成"
+        ],
+        "ownerId": "content-m1",
+        "sourceRefs": [
+          "complex04-approval-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex04-copy-v5",
+          "complex04-cover-v5"
+        ],
+        "dueOn": "2026-09-05"
+      },
+      {
+        "id": "complex04-package",
+        "title": "整理观禾最终交付包",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex04-delivery-branch",
+        "acceptanceCriteria": [
+          "清单与最终明确批准版本逐项一致，不代替批准"
+        ],
+        "ownerId": "content-m6",
+        "sourceRefs": [
+          "complex04-package-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex04-approval"
+        ],
+        "dueOn": "2026-09-06"
+      }
+    ],
+    "discussions": [
+      {
+        "id": "complex04-d-review",
+        "taskId": "complex04-copy-v5",
+        "authorId": "content-m2",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "report",
+        "text": "v5看过了，表达没问题；我没有客户版本确认权。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "complex04-d-newer",
+        "taskId": "complex04-approval",
+        "authorId": "content-m3",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "proposal",
+        "text": "B入库更新，是否直接把它当最新批准？我没有找到A被取代的记录。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "complex04-d-register",
+        "taskId": "complex04-delivery-branch",
+        "authorId": "content-m6",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "decision",
+        "text": "先按complex04-reconcile-scope整理并列表，后续由complex04-approval继续处理有权方核对。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "complex04-h-copy",
+        "taskId": "complex04-copy-v4",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "task_completed",
+        "summary": "v4文件留存任务版本5完成；留存完成不代表最终交付批准。",
+        "version": 5,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "complex04-h-cover",
+        "taskId": "complex04-cover-v4",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "task_completed",
+        "summary": "v4封面留存任务版本4完成；没有覆盖v5任务状态。",
+        "version": 4,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "complex04-root-record",
+        "title": "观禾9月内容包交付当前记录（合成）",
+        "text": "任务库读取：complex04-root，版本10，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-copy-branch-record",
+        "title": "观禾文案版本准备当前记录（合成）",
+        "text": "任务库读取：complex04-copy-branch，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-visual-branch-record",
+        "title": "观禾视觉版本准备当前记录（合成）",
+        "text": "任务库读取：complex04-visual-branch，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-delivery-branch-record",
+        "title": "观禾批准与交付资料当前记录（合成）",
+        "text": "任务库读取：complex04-delivery-branch，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-copy-v4-record",
+        "title": "留存观禾文案v4当前记录（合成）",
+        "text": "任务库读取：complex04-copy-v4，版本5，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-cover-v4-record",
+        "title": "留存观禾封面v4当前记录（合成）",
+        "text": "任务库读取：complex04-cover-v4，版本4，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-copy-v5-record",
+        "title": "准备观禾文案v5供审当前记录（合成）",
+        "text": "任务库读取：complex04-copy-v5，版本6，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-cover-v5-record",
+        "title": "准备观禾封面v5供审当前记录（合成）",
+        "text": "任务库读取：complex04-cover-v5，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-approval-record",
+        "title": "收齐观禾当前版本批准当前记录（合成）",
+        "text": "任务库读取：complex04-approval，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-package-record",
+        "title": "整理观禾最终交付包当前记录（合成）",
+        "text": "任务库读取：complex04-package，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-receipt-a",
+        "title": "观禾批准回执A原文节选（合成）",
+        "text": "本地收件归档编号A-0901，登记签署人为项目约定有权确认人：本次交付使用文案v4及封面v4；v5不用于本期交付。登记签署时间2026-09-01 09:00。归档只证明本地收到了这一份，未记录其撤回或被取代。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-receipt-b",
+        "title": "观禾批准回执B原文节选（合成）",
+        "text": "本地收件归档编号B-0901，登记签署人为同一项目约定有权确认人：本次交付使用文案v5及封面v5；v4不用于本期交付。登记签署时间同为2026-09-01 09:00。比A晚十分钟入库，但没有撤回A或取代关系的记录。",
+        "updatedAt": "2026-09-01T10:10:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-reconcile-scope",
+        "title": "本轮回执核对表范围记录（合成）",
+        "text": "现有批准收集任务未包含独立回执差异表，版本管理员可以在9月2日整理两份已可见回执：原文位置、签署与入库时间、文案及封面版本、冲突点、尚待确认处。表的完成条件是忠实并列记录，不是裁定批准有效性；该表由现有批准收集任务使用。此次已确认的仅是整理工作。",
+        "updatedAt": "2026-09-01T12:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex04-review-report",
+        "title": "策划v5审阅报告（合成）",
+        "text": "策划在11:40留言“v5看过了，表达没问题”，报告角色是内容审阅；没有客户签收或对回执冲突的处理记录。",
+        "updatedAt": "2026-09-01T11:40:00+08:00",
+        "source": "synthetic_business_record"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "matches": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "complex04-root",
+      "field": "goal",
+      "value": "让观禾取得可定位版本与批准依据的约定内容包"
+    },
+    {
+      "taskId": "complex04-approval",
+      "field": "acceptanceCriteria",
+      "value": [
+        "取得有权方对最终文案、封面版本逐项一致的明确回执；冲突未消除不视为完成"
+      ]
+    },
+    {
+      "taskId": "complex04-approval",
+      "field": "ownerId",
+      "value": "content-m1"
+    }
+  ],
+  "constraints": {
+    "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+    "scope": "仅提出回执差异表及其与现有批准收集任务的交接关系；最终版本选择、正式状态、验收要求与现有交期不在本轮变更范围。"
+  },
+  "members": [
+    {
+      "id": "content-m1",
+      "name": "白璐",
+      "role": "客户项目经理",
+      "responsibilities": [
+        "收集客户范围和确认记录",
+        "协调版本与交付计划"
+      ],
+      "boundaries": [
+        "不代客户批准成稿",
+        "不默认为所有子任务Owner"
+      ],
+      "evidence": [
+        {
+          "id": "content-m1-role",
+          "title": "白璐职责说明（合成）",
+          "text": "职责：收集客户范围和确认记录；协调版本与交付计划。边界：不代客户批准成稿；不默认为所有子任务Owner。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m1-work",
+          "title": "白璐当前工作自报（合成）",
+          "text": "协调合成客户的秋季内容包",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调合成客户的秋季内容包",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "content-m2",
+      "name": "杜衡",
+      "role": "内容策划",
+      "responsibilities": [
+        "确定选题与受众表达",
+        "把客户需求转成内容提纲"
+      ],
+      "boundaries": [
+        "不自行增加业绩目标",
+        "不代客户确认新受众"
+      ],
+      "evidence": [
+        {
+          "id": "content-m2-role",
+          "title": "杜衡职责说明（合成）",
+          "text": "职责：确定选题与受众表达；把客户需求转成内容提纲。边界：不自行增加业绩目标；不代客户确认新受众。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m2-work",
+          "title": "杜衡当前工作自报（合成）",
+          "text": "整理两份内容提纲",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理两份内容提纲",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "content-m3",
+      "name": "陶然",
+      "role": "文案作者",
+      "responsibilities": [
+        "按确认提纲写作",
+        "处理文字修改"
+      ],
+      "boundaries": [
+        "不自行扩写受限范围",
+        "不改变已确认品牌口径"
+      ],
+      "evidence": [
+        {
+          "id": "content-m3-role",
+          "title": "陶然职责说明（合成）",
+          "text": "职责：按确认提纲写作；处理文字修改。边界：不自行扩写受限范围；不改变已确认品牌口径。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m3-work",
+          "title": "陶然当前工作自报（合成）",
+          "text": "修改待审稿的文字版本",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "修改待审稿的文字版本",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "content-m4",
+      "name": "沈禾",
+      "role": "视觉设计",
+      "responsibilities": [
+        "制作和复用已授权素材",
+        "按明确规格适配视觉"
+      ],
+      "boundaries": [
+        "不把旧素材自动当可无限复用",
+        "不确认客户验收"
+      ],
+      "evidence": [
+        {
+          "id": "content-m4-role",
+          "title": "沈禾职责说明（合成）",
+          "text": "职责：制作和复用已授权素材；按明确规格适配视觉。边界：不把旧素材自动当可无限复用；不确认客户验收。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m4-work",
+          "title": "沈禾当前工作自报（合成）",
+          "text": "整理已审视觉资产",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "content-m4-window",
+          "title": "沈禾公开协作窗口（合成）",
+          "text": "2026-09-04T10:00:00+08:00至2026-09-04T12:00:00+08:00。只用于视觉适配评审，其他可用性未知。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理已审视觉资产",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-04T10:00:00+08:00",
+        "endAt": "2026-09-04T12:00:00+08:00",
+        "sourceRef": "content-m4-window",
+        "note": "只用于视觉适配评审，其他可用性未知。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "content-m5",
+      "name": "程简",
+      "role": "文字编辑",
+      "responsibilities": [
+        "核对错字和引用格式",
+        "检查成稿与约定范围一致"
+      ],
+      "boundaries": [
+        "不代客户做发布批准",
+        "不在校对任务中重写结构"
+      ],
+      "evidence": [
+        {
+          "id": "content-m5-role",
+          "title": "程简职责说明（合成）",
+          "text": "职责：核对错字和引用格式；检查成稿与约定范围一致。边界：不代客户做发布批准；不在校对任务中重写结构。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m5-work",
+          "title": "程简当前工作自报（合成）",
+          "text": "校对一篇短稿",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "content-m5-window",
+          "title": "程简公开协作窗口（合成）",
+          "text": "2026-09-02T09:00:00+08:00至2026-09-02T12:00:00+08:00。可用于短稿校对，不代表可承担完整创作。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "校对一篇短稿",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-02T09:00:00+08:00",
+        "endAt": "2026-09-02T12:00:00+08:00",
+        "sourceRef": "content-m5-window",
+        "note": "可用于短稿校对，不代表可承担完整创作。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "content-m6",
+      "name": "唐钰",
+      "role": "交付与版本管理",
+      "responsibilities": [
+        "维护交付清单及版本",
+        "核对客户批准与发布前提"
+      ],
+      "boundaries": [
+        "不把审阅意见当批准",
+        "不未经授权发布内容"
+      ],
+      "evidence": [
+        {
+          "id": "content-m6-role",
+          "title": "唐钰职责说明（合成）",
+          "text": "职责：维护交付清单及版本；核对客户批准与发布前提。边界：不把审阅意见当批准；不未经授权发布内容。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m6-work",
+          "title": "唐钰当前工作自报（合成）",
+          "text": "核对待发素材的版本和批准记录",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对待发素材的版本和批准记录",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

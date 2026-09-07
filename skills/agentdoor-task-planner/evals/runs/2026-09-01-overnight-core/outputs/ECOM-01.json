@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-ecom-01",
+  "baseSnapshotId": "snapshot-ecom-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议仅建立一项保温杯详情页五处错字校对候选，由明确指定的颜北交付清稿和改动清单，期限为9月2日。",
+  "reasoningSummary": [
+    {
+      "text": "本轮明确只修SKU-CUP-A清单中的五处错字，结构、图片、售价、卖点和功效承诺都不改。",
+      "evidenceRefs": [
+        "req-ecom-01",
+        "ecom01-copy"
+      ]
+    },
+    {
+      "text": "用户点名颜北，且其职责包含按已确认信息修正详情页错字；无需另增负责人或无实际贡献的参与者。",
+      "evidenceRefs": [
+        "req-ecom-01",
+        "ecom-m2-role"
+      ]
+    },
+    {
+      "text": "当前日期为9月1日，用户说明明天交付，约束已明确为9月2日。",
+      "evidenceRefs": [
+        "req-ecom-01"
+      ]
+    },
+    {
+      "text": "该范围仅一个可核对结果，清稿和改动清单合并交付即可；完整查重未返回现有候选。",
+      "evidenceRefs": [
+        "req-ecom-01",
+        "ecom01-copy"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:ecom01-proofread",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "ecom01-create-proofread",
+        "action": "create",
+        "targetId": "new:ecom01-proofread",
+        "parentId": null,
+        "fields": {
+          "title": "校对SKU-CUP-A详情页五处错字",
+          "acceptanceCriteria": [
+            "仅针对错字清单v1中的容谅、轻松携戴、清诜、按扭、包装内含说名书五处完成校对与修正，逐项对应清单。",
+            "交付一份清稿及逐处列明原文、修正文和位置的改动清单，便于与原稿逐项核对。",
+            "对照原稿确认文案结构、图片、售价、卖点和功效承诺未发生改变，不借校对改写其他内容。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m2",
+            "basis": "explicit",
+            "reason": "用户明确指定颜北；职责也覆盖详情页错字修正，建议保留指定人选。",
+            "evidenceRefs": [
+              "req-ecom-01",
+              "ecom-m2-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "explicit",
+            "assumptions": [
+              "用户指定明天交付，按当前时区和日期为9月2日；开始日及颜北可用窗口未知。"
+            ],
+            "evidenceRefs": [
+              "req-ecom-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": 0.5,
+            "basis": "model",
+            "assumptions": [
+              "模型候选估算：假设已有可编辑详情页原稿，只定位并修改五处文字、比对和输出清稿及清单；不含等待文件、审批或排版重制。"
+            ],
+            "evidenceRefs": [
+              "req-ecom-01",
+              "ecom01-copy"
+            ]
+          },
+          "dependsOnTaskIds": [],
+          "tips": [
+            "按清单逐项定位、修正、对照，再输出清稿和改动清单；这些操作不拆成子任务。",
+            "若遇到上下文不足以判断的词义，保留疑点并核对原稿，不擅自改写卖点。"
+          ],
+          "goal": {
+            "text": "消除这款保温杯详情页清单内五处错字，并保持其余已确认内容不变。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-ecom-01",
+              "ecom01-copy"
+            ]
+          }
+        },
+        "reason": "范围清晰且轻量，建立单一校对结果，不增设同义子任务。",
+        "evidenceRefs": [
+          "req-ecom-01",
+          "ecom01-copy"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "0.5人时为带条件的模型估算，不是历史实绩、实际工时或完成日期保证。",
+    "颜北的完整可用窗口未知；指定人选和交付期限尚不代表已接受责任或排期。",
+    "本轮只产出任务候选，不修改真实详情页、不发布、不指派。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:ecom01-proofread",
+      "label": "审阅五处校对范围、指定人选和交付物"
+    }
+  ],
+  "externalEffects": "none"
+}

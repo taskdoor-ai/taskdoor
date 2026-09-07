@@ -1,0 +1,44 @@
+{
+  "requestId": "req-multi-d3",
+  "message": "刚才我的团队权限被收回了，这个页面还能继续帮我调整剩下的任务吗？",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "content-m6",
+  "teamId": "team-content",
+  "authorizedTeamIds": [],
+  "revision": 3,
+  "context": {
+    "snapshotId": "snapshot-multi-d3",
+    "asOf": "2026-09-01T18:10:00+08:00",
+    "acl": {
+      "status": "missing",
+      "scopeTeamIds": []
+    },
+    "coverage": {
+      "tasks": "unavailable",
+      "subtasks": "unavailable",
+      "discussions": "unavailable",
+      "history": "unavailable"
+    },
+    "tasks": [],
+    "discussions": [],
+    "history": [],
+    "sourceRefs": [
+      {
+        "id": "chain-d-access",
+        "title": "可见的权限状态回执",
+        "text": "合成访问控制事件：本轮团队权限已撤回。未返回原任务、成员或讨论。",
+        "updatedAt": "2026-09-01T18:10:00+08:00",
+        "source": "synthetic_test_transition"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "unavailable",
+    "scopeTeamIds": [],
+    "matches": [],
+    "coverageNote": "合成权限撤回，未读取任何团队任务或成员。"
+  },
+  "members": [],
+  "constraints": {}
+}

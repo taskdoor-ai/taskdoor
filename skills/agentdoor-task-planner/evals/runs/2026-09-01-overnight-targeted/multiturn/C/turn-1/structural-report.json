@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-09-01T02:48:36.678799+00:00",
+  "total": 1,
+  "structurallyValid": 1,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "7d08464bb4ef04c80ed629328ba27ab0a5b0fd72670ca782f50cff5ec2f34aca",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-C1",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议只创建一个保温杯详情页校对任务，由颜北在 2026-09-02 前交付清稿和五处改动清单；不拆子任务，也不扩大到文案结构、图片、售价、卖点或功效承诺。",
+      "intent": "create",
+      "disposition": "ready_for_confirmation",
+      "changes": 1,
+      "outputSha256": "d41420b3d68752dfe29ed3922cf80450f5daf76638b106a28639e6f10cd4b1b6",
+      "manualChecks": [
+        "只为明确SKU/五处错字产生一项候选，保留明确人选和期限。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-04",
+  "baseSnapshotId": "snapshot-edge-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "unclear",
+  "disposition": "needs_clarification",
+  "summary": "早上好！当前只有问候，没有需要规划的具体事项，我不会据此创建或修改任务。",
+  "reasoningSummary": [
+    {
+      "text": "本轮原文仅为问候，未表达任务目标或变更意图。",
+      "evidenceRefs": [
+        "req-edge-04"
+      ]
+    },
+    {
+      "text": "入口记录确认没有附件、草稿、目标任务或待处理业务内容；授权成员名录不代表用户请求创建工作。",
+      "evidenceRefs": [
+        "edge04-ingress"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；此范围内无其他查重匹配。"
+  },
+  "questions": [
+    {
+      "field": "intent",
+      "question": "有希望我帮你处理的具体事项吗？",
+      "blocking": true
+    }
+  ],
+  "warnings": [],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": null,
+      "label": "需要规划时再说明具体事项"
+    }
+  ],
+  "externalEffects": "none"
+}

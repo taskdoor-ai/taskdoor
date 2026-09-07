@@ -1,0 +1,173 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-reno-02",
+  "baseSnapshotId": "snapshot-reno-02-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "reno02-kitchen": 2,
+    "reno02-b": 4
+  },
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议为A户主卧反馈A-BED-02单独建立一个柜门色差记录复核任务，候选负责人为何沐；保留A户厨房原单和B户已完成记录。",
+  "reasoningSummary": [
+    {
+      "text": "本次明确定位A户主卧、反馈单A-BED-02，原厨房为A-KIT-01，属于不同位置的业务对象。",
+      "evidenceRefs": [
+        "req-reno-02",
+        "reno02-location",
+        "reno02-d1"
+      ]
+    },
+    {
+      "text": "另一同名任务属于B户主卧，项目对象不同；不能仅按标题合并或删除记录。",
+      "evidenceRefs": [
+        "reno02-b",
+        "reno02-location"
+      ]
+    },
+    {
+      "text": "何沐的职责是核对问题清单和复核记录；位置及文字记录足以定义本轮记录复核范围，但目前没有现场诊断依据。",
+      "evidenceRefs": [
+        "renovation-m5",
+        "reno02-location"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:req-reno-02:bedroom-review",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change:req-reno-02:bedroom-review",
+        "action": "create",
+        "targetId": "new:req-reno-02:bedroom-review",
+        "parentId": null,
+        "fields": {
+          "title": "复核A户主卧柜门色差反馈A-BED-02",
+          "goal": {
+            "text": "将A户主卧新增柜门色差反馈形成有位置、版本和复核依据的独立记录，便于跟进且不混入厨房原问题。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-reno-02",
+              "reno02-location"
+            ]
+          },
+          "acceptanceCriteria": [
+            "复核记录明确标识合成·澄居A户、主卧柜门及反馈号A-BED-02，并与厨房A-KIT-01、B户任务分开。",
+            "核对反馈位置和已有文字记录，登记相关已确认饰面版本及可用复核依据；无法取得的资料、现场查看或确认记录明确列为待补。",
+            "形成事实核对结果与未确认事项说明，区分业主反馈、现场记录和确认关闭；仅凭当前文字不判断色差成因、工程质量或责任。"
+          ],
+          "tips": [
+            "先核对位置与已确认饰面资料，再按实际需要协调现场查看并补足记录；未具备资料时不写“已验证”或“已修复”。",
+            "已有厨房和B户任务保持原ID、范围、负责人及状态，不把它们设置为本任务的依赖。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m5",
+            "basis": "recommended",
+            "reason": "何沐负责问题清单与复核记录，适合对本轮独立反馈的核对结果承担候选责任；不是因为原同名任务曾由其负责而自动复制。",
+            "evidenceRefs": [
+              "renovation-m5",
+              "reno02-location"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "renovation-m2",
+              "contribution": "核对该位置对应的已确认饰面版本及已有变更资料。",
+              "evidenceRefs": [
+                "renovation-m2",
+                "reno02-location"
+              ]
+            },
+            {
+              "memberId": "renovation-m4",
+              "contribution": "协调取得所需现场查看窗口和位置记录，不替物业承诺开放。",
+              "evidenceRefs": [
+                "renovation-m4",
+                "reno02-location"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "用户未指定截止日；现有成员协作窗口不等于本次现场开放或已接受任务，日期保留未知。"
+            ],
+            "evidenceRefs": [
+              "req-reno-02",
+              "renovation-m4",
+              "renovation-m5"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "当前只有位置和文字记录，缺少复核资料完整度、具体查看范围及方式，无法可靠估计人类投入。",
+              "等待现场开放或资料回传不计入EWD。"
+            ],
+            "evidenceRefs": [
+              "reno02-location"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "对象和位置已明确区分，可新建单一复核结果；操作性核对步骤放在提示中即可。",
+        "evidenceRefs": [
+          "req-reno-02",
+          "reno02-location",
+          "renovation-m5"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "reno02-kitchen",
+      "reno02-b"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-renovation"
+    ],
+    "assessments": [
+      {
+        "taskId": "reno02-kitchen",
+        "relationship": "different_instance",
+        "reason": "同为A户柜门色差，但原单A-KIT-01仅覆盖厨房；本轮A-BED-02明确覆盖主卧，不是厨房问题的新照片。",
+        "evidenceRefs": [
+          "reno02-kitchen",
+          "reno02-location",
+          "reno02-d1"
+        ]
+      },
+      {
+        "taskId": "reno02-b",
+        "relationship": "different_instance",
+        "reason": "原完成单属于B户主卧；本轮属于A户主卧，项目对象不同。",
+        "evidenceRefs": [
+          "reno02-b",
+          "reno02-location",
+          "req-reno-02"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "未提供可诊断照片或现场复核依据，不能推定技术原因、责任或需更换材料。",
+    "责任与参与均为候选，日期及容量未知；没有执行创建、指派或现场操作。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:req-reno-02:bedroom-review",
+      "label": "审阅A户主卧独立复核草稿"
+    }
+  ],
+  "externalEffects": "none"
+}

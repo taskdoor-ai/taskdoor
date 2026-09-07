@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-01",
+  "baseSnapshotId": "snapshot-edge-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "edge01-check": 4
+  },
+  "intent": "query",
+  "disposition": "route_required",
+  "summary": "建议查看原核对任务：沈言报告已跑过12个字段，但逐字段核对记录尚未附上，正式结果仍待记录核对；当前状态为进行中，本轮不创建任务或修改计划。",
+  "reasoningSummary": [
+    {
+      "text": "本轮明确只查询进展和未完成原因，并要求不建任务、不改计划。",
+      "evidenceRefs": [
+        "req-edge-01"
+      ]
+    },
+    {
+      "text": "任务版本4的正式状态为in_progress，完成标准要求对MAP-C4的12个字段逐项留核对记录并标明未通过项。",
+      "evidenceRefs": [
+        "edge01-check",
+        "edge01-check-record"
+      ]
+    },
+    {
+      "text": "执行者仅报告已跑过一遍，并明确核对记录未附、正式结果待记录核对，不能据此认定正式完成。",
+      "evidenceRefs": [
+        "edge01-report"
+      ]
+    },
+    {
+      "text": "完整附件索引截至快照只有映射说明MAP-C4，未找到本轮逐字段核对表或接受记录，尚缺核对完成标准的证据。",
+      "evidenceRefs": [
+        "edge01-evidence-index"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；此范围内无其他查重匹配。"
+  },
+  "questions": [],
+  "warnings": [
+    "结论仅反映2026年9月1日18:00快照；未把执行者报告改写为正式完成，也未推断任何人的投入或工作停滞。"
+  ],
+  "nextActions": [
+    {
+      "action": "open_task",
+      "taskId": "edge01-check",
+      "label": "查看栖湾沙箱字段核对及待补核对记录"
+    }
+  ],
+  "externalEffects": "none"
+}

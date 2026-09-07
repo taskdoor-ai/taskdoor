@@ -1,0 +1,162 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "request-real-c-02",
+  "baseSnapshotId": "real-c-02-snapshot",
+  "baseRevision": 17,
+  "baseTaskVersions": {
+    "fc-root": 9,
+    "fc-ledgers": 6,
+    "fc-cash": 5,
+    "fc-bank-recon": 8,
+    "fc-transfer-clear": 2,
+    "fc-ap": 6,
+    "fc-payroll": 5,
+    "fc-report": 3,
+    "fc-fx": 3,
+    "fc-statements": 2,
+    "fc-variance": 1,
+    "fc-controls": 4,
+    "fc-journal-approval": 4,
+    "fc-audit-evidence": 2,
+    "fc-board-pack": 1
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议保留已完成银行对账和现有任务树，只给外币重估、调整日记账复核补上现有异常核对任务的直接依赖；报表、证据索引和董事会包沿用已有链路，不执行入账。",
+  "reasoningSummary": [
+    {
+      "text": "银行对账已按当时资料完成并封存；控制人确认后续更正由现有异常任务承接，不能重开或覆盖该完成记录。",
+      "evidenceRefs": [
+        "fc-bank-recon",
+        "fc-h3",
+        "fc-d2",
+        "fc-file-bank-recon-v8"
+      ]
+    },
+    {
+      "text": "冻结影响矩阵显示，外币重估直接需要异常任务形成的正式回单与归属结论，日记账复核也明确把银行回单事项保持待决；两者应直接依赖 fc-transfer-clear，并保留各自仍有效的旧依赖。",
+      "evidenceRefs": [
+        "fc-transfer-clear",
+        "fc-fx",
+        "fc-journal-approval",
+        "fc-d4"
+      ]
+    },
+    {
+      "text": "主报表已直接依赖外币重估，证据索引已依赖日记账复核与主报表，董事会包再依赖二者；最终回单对证据索引是权威文件输入，因此这些传递下游不新增冗余直连。",
+      "evidenceRefs": [
+        "fc-statements",
+        "fc-audit-evidence",
+        "fc-board-pack",
+        "fc-d5"
+      ]
+    },
+    {
+      "text": "9月5日18:00硬关闭保持不变，回单等待不计入EWD且不构成按期保证；候选只使用薪资封存状态与已批准合计，不读取或复制受限行项目。",
+      "evidenceRefs": [
+        "fc-hard-close",
+        "fc-file-bank-wait-v1",
+        "fc-privacy-boundary"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "fc-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change-real-c-02-fx-dependency",
+        "action": "update",
+        "targetId": "fc-fx",
+        "parentId": "fc-report",
+        "fields": {
+          "dependsOnTaskIds": [
+            "fc-bank-recon",
+            "fc-transfer-clear"
+          ]
+        },
+        "reason": "外币重估现有标准要求使用确认归属期的现金余额，正式回单与8月/9月归属结论由 fc-transfer-clear 形成；原银行对账结果仍被使用，因此保留旧边并新增直接生产者。",
+        "evidenceRefs": [
+          "fc-fx",
+          "fc-transfer-clear",
+          "fc-d2",
+          "fc-d4",
+          "fc-h5"
+        ]
+      },
+      {
+        "id": "change-real-c-02-journal-dependency",
+        "action": "update",
+        "targetId": "fc-journal-approval",
+        "parentId": "fc-controls",
+        "fields": {
+          "dependsOnTaskIds": [
+            "fc-transfer-clear"
+          ]
+        },
+        "reason": "调整日记账复核的现有标准明确要求银行回单事项在正式证据到达前保持待决，因而直接消费 fc-transfer-clear 形成的回单核对结论。",
+        "evidenceRefs": [
+          "fc-journal-approval",
+          "fc-transfer-clear",
+          "fc-d2",
+          "fc-file-bank-wait-v1"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "fc-root",
+      "fc-ledgers",
+      "fc-cash",
+      "fc-bank-recon",
+      "fc-transfer-clear",
+      "fc-ap",
+      "fc-payroll",
+      "fc-report",
+      "fc-statements",
+      "fc-variance",
+      "fc-controls",
+      "fc-audit-evidence",
+      "fc-board-pack"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "real-c-finance-team"
+    ],
+    "assessments": [
+      {
+        "taskId": "fc-transfer-clear",
+        "relationship": "same_outcome",
+        "reason": "同一银行事件、同一期间和同一正式回单核对结果已由现有异常任务覆盖，本轮复用该任务。",
+        "evidenceRefs": [
+          "fc-transfer-clear",
+          "fc-request"
+        ]
+      },
+      {
+        "taskId": "fc-bank-recon",
+        "relationship": "overlap",
+        "reason": "银行对象相关，但该任务已封存当时资料下的对账结果；本轮只承接后续更正影响，不修改或重建完成记录。",
+        "evidenceRefs": [
+          "fc-bank-recon",
+          "fc-file-bank-recon-v8",
+          "fc-d2"
+        ]
+      }
+    ],
+    "coverageNote": "已覆盖当前授权团队2026年8月关账树及近三期异常索引；未访问其他团队或受限薪资正文。"
+  },
+  "questions": [],
+  "warnings": [
+    "带章回单预计2026-09-03 15:00到达，至2026-09-05 18:00硬关闭的处理窗口不是按期保证；本候选不执行分录、不改变任务状态，也不联系银行或审计方。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "fc-root",
+      "label": "审阅两项直接依赖差异"
+    }
+  ],
+  "externalEffects": "none"
+}

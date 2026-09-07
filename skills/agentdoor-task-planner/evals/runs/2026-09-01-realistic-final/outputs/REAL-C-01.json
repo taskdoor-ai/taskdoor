@@ -1,0 +1,207 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "request-real-c-01",
+  "baseSnapshotId": "real-c-01-snapshot",
+  "baseRevision": 12,
+  "baseTaskVersions": {
+    "cc-root": 8,
+    "cc-strategy": 4,
+    "cc-brief": 3,
+    "cc-claim-v1": 5,
+    "cc-claim-v2": 1,
+    "cc-production": 5,
+    "cc-copy": 4,
+    "cc-landing-copy": 6,
+    "cc-email-copy": 4,
+    "cc-visual": 3,
+    "cc-keyvisual": 5,
+    "cc-channel": 2,
+    "cc-paid": 4,
+    "cc-crm": 3,
+    "cc-qa": 1,
+    "cc-launch-check": 2
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议复用现有主张v2任务，补齐已确认的替换清单，并只调整落地页、邮件和付费渠道三个直接消费者的依赖；其余任务沿现有链路消费v2，不新建渠道任务，也不重做已完成结果。",
+  "reasoningSummary": [
+    {
+      "text": "客户审批回执已确认现行主张为“首月权益体验”，旧“首月免费”停止使用；合规复核要求页面和邮件保留限制语、付费短文案不得自行缩写。",
+      "evidenceRefs": [
+        "cc-file-claim-approval-v2",
+        "cc-file-legal-matrix-v4",
+        "cc-d1",
+        "cc-d2"
+      ]
+    },
+    {
+      "text": "同周期、同版本的替换清单已由cc-claim-v2承接，查重结果要求复用；已完成的v1记录仍是历史版本，不能改名、覆盖或重开。",
+      "evidenceRefs": [
+        "cc-claim-v2",
+        "cc-claim-v1",
+        "cc-h2",
+        "cc-d6"
+      ]
+    },
+    {
+      "text": "落地页草稿只在首屏试填v2且正式依赖仍指向v1，邮件草稿也仍含v1；这些报告与任务当前未完成状态共同说明必须修正依赖，不能把草稿视为已交接。",
+      "evidenceRefs": [
+        "cc-landing-copy",
+        "cc-email-copy",
+        "cc-d3",
+        "cc-d4",
+        "cc-d8"
+      ]
+    },
+    {
+      "text": "付费配置直接读取现行文案和合规口径，因此在保留落地页与主视觉前置的同时加入v2清单；CRM和上线核对已经通过邮件、付费配置的现有依赖链消费结果，固定上线窗口无需改写。",
+      "evidenceRefs": [
+        "cc-paid",
+        "cc-crm",
+        "cc-launch-check",
+        "cc-d7",
+        "cc-hard-launch"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "cc-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change-cc-claim-v2",
+        "action": "update",
+        "targetId": "cc-claim-v2",
+        "parentId": "cc-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "逐渠道替换清单明确页面、三封会员邮件、付费渠道和上线核对使用获批主张“首月权益体验”，旧“首月免费”不得继续使用",
+            "替换清单逐项引用主张v2客户回执与渠道措辞合规矩阵，页面和邮件保留规定限制语，付费短文案不得自行缩写"
+          ]
+        },
+        "reason": "有权客户回执与合规复核已经补齐精确口径，原标准中的“等待有权回执”已失效。",
+        "evidenceRefs": [
+          "cc-claim-v2",
+          "cc-file-claim-approval-v2",
+          "cc-file-legal-matrix-v4",
+          "cc-d1",
+          "cc-d2"
+        ]
+      },
+      {
+        "id": "change-cc-landing-v2-dependency",
+        "action": "update",
+        "targetId": "cc-landing-copy",
+        "parentId": "cc-copy",
+        "fields": {
+          "dependsOnTaskIds": [
+            "cc-claim-v2"
+          ]
+        },
+        "reason": "落地页必须直接消费现行v2替换清单；客户已明确停止使用v1，因此用v2生产任务替换已失效的v1前置。",
+        "evidenceRefs": [
+          "cc-landing-copy",
+          "cc-claim-v2",
+          "cc-file-claim-approval-v2",
+          "cc-d3",
+          "cc-d4"
+        ]
+      },
+      {
+        "id": "change-cc-email-v2-dependency",
+        "action": "update",
+        "targetId": "cc-email-copy",
+        "parentId": "cc-copy",
+        "fields": {
+          "dependsOnTaskIds": [
+            "cc-claim-v2"
+          ]
+        },
+        "reason": "三封邮件仍含旧主张，必须直接消费现行v2替换清单；v1已被明确停止使用。",
+        "evidenceRefs": [
+          "cc-email-copy",
+          "cc-claim-v2",
+          "cc-file-email-flow-v2",
+          "cc-d1",
+          "cc-d8"
+        ]
+      },
+      {
+        "id": "change-cc-paid-v2-dependency",
+        "action": "update",
+        "targetId": "cc-paid",
+        "parentId": "cc-channel",
+        "fields": {
+          "dependsOnTaskIds": [
+            "cc-landing-copy",
+            "cc-keyvisual",
+            "cc-claim-v2"
+          ]
+        },
+        "reason": "付费上刊表直接使用v2精确措辞与合规限制，需加入v2清单生产任务，同时保留仍被消费的落地页文案和主视觉前置。",
+        "evidenceRefs": [
+          "cc-paid",
+          "cc-claim-v2",
+          "cc-file-media-sheet-v7",
+          "cc-file-legal-matrix-v4",
+          "cc-d9"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "cc-root",
+      "cc-strategy",
+      "cc-brief",
+      "cc-claim-v1",
+      "cc-production",
+      "cc-copy",
+      "cc-visual",
+      "cc-keyvisual",
+      "cc-channel",
+      "cc-crm",
+      "cc-qa",
+      "cc-launch-check"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "real-c-content-team"
+    ],
+    "assessments": [
+      {
+        "taskId": "cc-claim-v2",
+        "relationship": "same_outcome",
+        "reason": "当前周期、客户、版本与交付结果完全一致，复用并局部更新现有任务，不创建副本。",
+        "evidenceRefs": [
+          "cc-claim-v2",
+          "cc-request"
+        ]
+      },
+      {
+        "taskId": "cc-claim-v1",
+        "relationship": "overlap",
+        "reason": "业务对象相同，但v1是已完成的历史版本；本轮只保留该记录并将未完成消费者切换到获批v2。",
+        "evidenceRefs": [
+          "cc-claim-v1",
+          "cc-h2",
+          "cc-file-claim-approval-v2"
+        ]
+      }
+    ],
+    "coverageNote": "已在当前授权团队检索同客户、同战役、同周期与主张版本；覆盖完整。"
+  },
+  "questions": [],
+  "warnings": [
+    "成员可用性与完整日历未读取；本提案不据此承诺固定上线窗口一定可达。",
+    "提案仅供审阅，不执行发布、通知、Owner变更或外部文件发送。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "cc-root",
+      "label": "审阅主张v2的四项最小差异"
+    }
+  ],
+  "externalEffects": "none"
+}

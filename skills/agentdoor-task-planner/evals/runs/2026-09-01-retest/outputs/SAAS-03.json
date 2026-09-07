@@ -1,0 +1,161 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-saas-03",
+  "baseSnapshotId": "snapshot-saas-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "saas03-root": 5,
+    "saas03-scope": 3,
+    "saas03-map": 4,
+    "saas03-uat": 2,
+    "saas03-train": 2
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "建议只追加停用账号字段核对，复用已完成的基础迁移演练，并保留现有负责人、UAT标准及期限；新增结果与UAT、培训的依赖和交付窗口仍需确认。",
+  "reasoningSummary": [
+    {
+      "text": "客户范围确认v3明确新增停用账号字段核对、排除历史关账数据，其他试点范围保持不变。",
+      "evidenceRefs": [
+        "saas03-client-v3",
+        "saas03-d1"
+      ]
+    },
+    {
+      "text": "基础字段迁移演练已以版本4完成；沈言报告映射表v2未覆盖新增字段，但200条基础记录的既有演练结果仍有效，因此仅补充增量结果。",
+      "evidenceRefs": [
+        "saas03-map",
+        "saas03-h1",
+        "saas03-d2",
+        "req-saas-03"
+      ]
+    },
+    {
+      "text": "钟宁和12条核心流程用例标准已有确认，许棠接手UAT仅是未确认提议，不构成责任交接。",
+      "evidenceRefs": [
+        "saas03-uat",
+        "saas03-h2",
+        "saas03-d3",
+        "req-saas-03"
+      ]
+    },
+    {
+      "text": "UAT当前依赖基础演练，期限为9月9日，培训期限为9月10日；新增字段核对是否成为两者必要前置尚未明确，钟宁只提供了9月5日下午的UAT协作窗口，不能据此保证新增工作的工期。",
+      "evidenceRefs": [
+        "saas03-uat",
+        "saas03-train",
+        "saas03-client-v3",
+        "saas-m4-window"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "saas03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:saas03-disabled-accounts",
+        "action": "create",
+        "targetId": "new:saas03-disabled-accounts",
+        "parentId": "saas03-root",
+        "fields": {
+          "title": "补充停用账号字段核对结果",
+          "acceptanceCriteria": [
+            "依据客户范围确认v3，交付停用账号字段的补充映射及核对记录，记录核对口径、结果和需处理的差异，结果可追溯至本次使用的数据与映射版本。",
+            "引用映射表v2及已完成的200条基础字段演练结果，仅核对新增停用账号字段，不重复已完成的基础演练。",
+            "交付范围明确排除历史关账数据导入，其他已确认试点范围保持不变；不将演练核对视为生产迁移或上线授权。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "saas-m3",
+            "basis": "recommended",
+            "reason": "沈言负责字段映射和迁移数据核对，并持有本次映射表v2的直接工作背景；这是新增结果的候选责任建议，不改变既有正式负责人。",
+            "evidenceRefs": [
+              "saas-m3-role",
+              "saas03-map",
+              "saas03-d2"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "新增结果的最晚交付时间须根据其是否为UAT或培训前置确定。",
+              "保留主任务9月12日、UAT 9月9日和培训9月10日的现行期限，不假设沈言有未声明的可用时间。"
+            ],
+            "evidenceRefs": [
+              "saas03-root",
+              "saas03-uat",
+              "saas03-train",
+              "saas-m3"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "新增字段的实际记录量、核对工具和差异处理范围未提供，不能据基础演练记录推定新增人时。",
+              "EWD只计人类投入，不计客户等待或无人值守运行。"
+            ],
+            "evidenceRefs": [
+              "saas03-client-v3",
+              "saas03-d2"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "saas03-map"
+          ]
+        },
+        "reason": "新增范围未被已完成的映射表v2覆盖，作为关联既有产出的独立增量核对，不更新或重开已完成任务。下游影响尚未确定，本候选不能直接进入确认。",
+        "evidenceRefs": [
+          "saas03-client-v3",
+          "saas03-d2",
+          "saas03-h1",
+          "req-saas-03"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "saas03-root",
+      "saas03-scope",
+      "saas03-map",
+      "saas03-uat",
+      "saas03-train"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [
+    {
+      "field": "dependsOnTaskIds",
+      "question": "新增停用账号字段核对是既有12条UAT用例和培训交接的必要前置，还是可以独立交付、与二者并行？这决定是否需要调整saas03-uat或saas03-train的依赖。",
+      "blocking": true
+    },
+    {
+      "field": "schedule",
+      "question": "如果新增核对必须先于UAT或培训，能否明确其最晚交付时间，并说明是否需赶上钟宁9月5日下午的UAT协作窗口，以核对现有9月9日、9月10日和9月12日期限是否仍可保持？",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "全部既有正式Owner、已确认UAT标准和完成记录保持原样；讨论中的换人提议未被采纳。",
+    "当前未调整UAT或培训依赖；这表示下游关系待确认，不表示新增核对已被证明可独立进行。",
+    "新增工作的人时和成员容量未知，当前候选不保证现有日期可达。",
+    "这是离线候选计划，未创建、指派、验收或运行任务。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": "saas03-root",
+      "label": "确认新增核对的下游依赖与交付窗口"
+    }
+  ],
+  "externalEffects": "none"
+}

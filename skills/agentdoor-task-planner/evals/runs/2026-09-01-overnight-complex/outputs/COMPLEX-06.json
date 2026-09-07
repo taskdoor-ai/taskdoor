@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-complex06",
+  "baseSnapshotId": "snapshot-complex06-v3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "complex06-root": 12,
+    "complex06-documents": 5,
+    "complex06-review": 6,
+    "complex06-materials": 4,
+    "complex06-issue-index": 5,
+    "complex06-site-window": 3,
+    "complex06-receipt-photos": 2,
+    "complex06-issue-review": 4,
+    "complex06-handover": 3
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "建议沿用本组资料目录和收件影像原任务继续整理；问题查看及移交排期暂不能确认，需先取得外部前置的受控可见摘要与有效现场、复核窗口，保留现有依赖和全部任务不变。",
+  "reasoningSummary": [
+    {
+      "text": "本组目录和收件影像只使用已可见文件，可在原任务内继续，目录整理一半的报告不代表正式完成，也不需要外部前置正文。",
+      "evidenceRefs": [
+        "complex06-local-scope",
+        "complex06-materials",
+        "complex06-receipt-photos",
+        "complex06-d-local"
+      ]
+    },
+    {
+      "text": "问题查看仍为blocked并登记外部不透明引用；读取回执未提供外部对象的条件、状态、版本、完成证据或时间，不能猜其已就绪、删除前置或补造外部任务。",
+      "evidenceRefs": [
+        "complex06-issue-review",
+        "complex06-external-read-receipt"
+      ]
+    },
+    {
+      "text": "现场窗口回执任务尚未完成；陆行9月8日窗口只用于资料核对，何沐仅确认9月10日复核协调窗口，现有信息不能支持9月8日问题查看排期。",
+      "evidenceRefs": [
+        "complex06-site-window",
+        "renovation-m4-window",
+        "renovation-m5-window",
+        "complex06-issue-review"
+      ]
+    },
+    {
+      "text": "问题索引留存完成不等于问题已关闭，收件影像不能替代问题查看；移交清单需要问题查看结果，因此9月10日移交的可行性仍受此缺口影响。",
+      "evidenceRefs": [
+        "complex06-h-index",
+        "complex06-local-scope",
+        "complex06-handover"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-renovation"
+    ],
+    "assessments": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "questions": [
+    {
+      "field": "context.externalPredecessor",
+      "question": "能否由有权方提供本组可用的外部前置受控摘要，说明问题查看实际需要的条件、当前版本、满足证据和可用时间？不要求越权读取正文；取得依据后再结合本组现场与复核窗口核对现有日期。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "ACL verified仅覆盖team-renovation；本组任务树完整不代表外部前置已获读取权限。外部对象的标题、负责人、状态和版本均未知。",
+    "保留现有外部引用及问题查看的blocked状态；不将其虚构成可选Task，不新增其版本，也不绕权限获取正文。",
+    "保持所有原任务、Owner、根目的与日期；9月8日查看及9月10日移交当前不能保证，未知不等于已经延期或确定无人可用。",
+    "资料目录与收件影像工作可独立继续，不为了展示重规划而重建或修改它们。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": "complex06-issue-review",
+      "label": "经现有授权流程取得可供本组使用的外部前置摘要；无摘要则保留阻塞，不越权读取"
+    },
+    {
+      "action": "retry_context",
+      "taskId": "complex06-site-window",
+      "label": "补读本轮现场开放回执及问题复核有效窗口，重新核对查看与移交日期"
+    },
+    {
+      "action": "open_task",
+      "taskId": "complex06-materials",
+      "label": "沿用原任务继续整理已可见本组资料目录"
+    },
+    {
+      "action": "open_task",
+      "taskId": "complex06-receipt-photos",
+      "label": "沿用原任务整理收件影像引用，不替代问题关闭证据"
+    }
+  ],
+  "externalEffects": "none"
+}

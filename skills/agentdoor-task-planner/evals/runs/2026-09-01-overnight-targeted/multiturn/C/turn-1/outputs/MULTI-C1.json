@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-c1",
+  "baseSnapshotId": "snapshot-multi-c1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只创建一个保温杯详情页校对任务，由颜北在 2026-09-02 前交付清稿和五处改动清单；不拆子任务，也不扩大到文案结构、图片、售价、卖点或功效承诺。",
+  "reasoningSummary": [
+    {
+      "text": "本轮只产生一份清稿及其配套改动清单，属于同一可核对交付，不需要按校对步骤拆分子任务。",
+      "evidenceRefs": [
+        "req-multi-c1",
+        "ecom01-copy"
+      ]
+    },
+    {
+      "text": "范围已明确锁定为清单中的五处错别字，结构、图片、售价、卖点和功效承诺均保持不变。",
+      "evidenceRefs": [
+        "req-multi-c1",
+        "ecom01-copy"
+      ]
+    },
+    {
+      "text": "用户明确指定颜北，且其职责包含按已确认信息修正详情页错字和版式。",
+      "evidenceRefs": [
+        "req-multi-c1",
+        "ecom-m2-role"
+      ]
+    },
+    {
+      "text": "交付期限明确为当前日期次日，即 2026-09-02。",
+      "evidenceRefs": [
+        "req-multi-c1"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:multi-c-cup-a-proofreading",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "create:multi-c-cup-a-proofreading",
+        "action": "create",
+        "targetId": "new:multi-c-cup-a-proofreading",
+        "parentId": null,
+        "fields": {
+          "title": "校对保温杯 SKU-CUP-A 详情页五处错别字",
+          "goal": {
+            "text": "在不改变详情页既有结构、图片、售价、卖点及功效承诺的前提下，交付 SKU-CUP-A 修正五处错别字后的清稿和改动清单。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-multi-c1",
+              "ecom01-copy"
+            ]
+          },
+          "acceptanceCriteria": [
+            "交付一份可审阅的详情页清稿，错字清单中的五处文字均已逐项处理。",
+            "交付一份改动清单，逐项列出原文字样、修改后文字及其在详情页中的位置，能够与清稿核对。",
+            "版本差异仅包含清单中的五处文字修正；文案结构、图片、售价、卖点、功效承诺及其他文字均未改变。"
+          ],
+          "tips": [
+            "逐项定位清单中的“容谅、轻松携戴、清诜、按扭、包装内含说名书”，保留修改前后对照。",
+            "提交前用版本差异复核只有五处文字发生变化；若某处目标字词无法从页面上下文唯一确认，在执行中向商品运营核对，不自行扩写或改写。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m2",
+            "basis": "explicit",
+            "reason": "用户明确指定颜北，且该工作位于其详情页内容校对职责范围内。",
+            "evidenceRefs": [
+              "req-multi-c1",
+              "ecom-m2-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "explicit",
+            "assumptions": [
+              "“明天”按 Asia/Shanghai 时区及当前日期 2026-09-01 解释为 2026-09-02；用户未指定开始日期。"
+            ],
+            "evidenceRefs": [
+              "req-multi-c1"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "本次快照未提供同范围历史投入或颜北的可用容量，不能据五处错字数量推算人时。"
+            ],
+            "evidenceRefs": [
+              "req-multi-c1",
+              "ecom-m2-work"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "用户要求为该 SKU 新建一个边界明确、可独立验收的校对结果。",
+        "evidenceRefs": [
+          "req-multi-c1",
+          "ecom01-copy"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "颜北没有当前完整可用时间记录；候选负责人和期限可供审阅，但正式接受与排期仍须由现行流程确认。",
+    "预计投入缺少同范围历史与容量依据，因此保留为未知。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:multi-c-cup-a-proofreading",
+      "label": "审阅单任务校对候选"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,23 @@
+{
+  "kind": "targeted_post_fix_semantic_review",
+  "cases": [
+    {
+      "caseId": "EDGE-07",
+      "status": "passed",
+      "summary": "部分重叠被保留为 overlap，只在原首发资料包下新增一页开箱说明；已完成 FAQ 与既定培训保持不变，培训没有被错误接到 9 月 7 日的新说明。",
+      "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+    },
+    {
+      "caseId": "EDGE-12",
+      "status": "failed",
+      "summary": "术语表粒度正确且未虚构日语能力，但把“只负责交付版本”的唐钰放进整个 Task 的 ownerRecommendation；冻结标准要求该职责只能作为交付版本贡献候选，日语翻译/复核仍未配备。",
+      "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+    }
+  ],
+  "total": 2,
+  "passed": 1,
+  "failed": 1,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

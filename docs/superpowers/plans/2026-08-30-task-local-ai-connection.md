@@ -191,7 +191,7 @@ Open a task, verify the “连接 AI” entry, open the modal, switch all four t
 
 - [ ] **Step 3: Run final verification after any visual fixes**
 
-Run: `npm run verify`
+Run: `npm test && npm run build`
 
 Expected: all tests and the production build pass.
 

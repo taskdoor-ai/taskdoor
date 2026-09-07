@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-09-01T02:37:09.619183+00:00",
+  "total": 1,
+  "structurallyValid": 1,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "069ab3a80fb984fa0766cd03937e3a1295d997ff7cd49b2e1ffd5c7102b757d7",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-B3",
+      "industry": "saas_delivery",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "当前无需改动：停用账号字段核对和UAT已有完成记录，培训交接任务已存在并依赖UAT，可继续按9月10日原安排推进；不重建培训，也不重复已交付结果。",
+      "intent": "replan",
+      "disposition": "no_change",
+      "changes": 0,
+      "outputSha256": "033e5be9f69b2c238068cf20056eac34f6d32890ea1d9d4aaeb1cecc608ba618",
+      "manualChecks": [
+        "正确读取实际前轮派生任务的完成记录，已有培训安排无需重建；不把再次推进理解成新增一批。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

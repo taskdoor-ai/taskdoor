@@ -1,0 +1,22 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-C3",
+      "allowedIntents": [
+        "create"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "maxCreates": 1,
+      "maxUpdates": 0,
+      "manualChecks": [
+        "不同SKU与新交付清单是独立结果；旧SKU任务原样保留；不因共享负责人或标题相似误合并。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "sim:C:1"
+      ]
+    }
+  ]
+}

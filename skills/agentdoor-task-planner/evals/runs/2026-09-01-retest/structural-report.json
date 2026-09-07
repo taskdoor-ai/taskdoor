@@ -1,0 +1,71 @@
+{
+  "checkedAt": "2026-08-31T19:48:06.581248+00:00",
+  "total": 3,
+  "structurallyValid": 3,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "6b823a8b3c0b0be386fc1e15817f2eb6a18bee657e6221baf0a7534164b5a48a",
+  "expectationsSha256": "9a3088de9c623fab53f187375f38c7aaffcfd528f14478f779d7b6af9c801af3",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "SAAS-03",
+      "industry": "saas_delivery",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议只追加停用账号字段核对，复用已完成的基础迁移演练，并保留现有负责人、UAT标准及期限；新增结果与UAT、培训的依赖和交付窗口仍需确认。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 1,
+      "outputSha256": "6612144af50e20740c55a992850fdca5bd858c52f707d28a1ac552d6a3937fe9",
+      "manualChecks": [
+        "新增字段差异可以单独核对，不重建已经完成的基础演练。",
+        "保留已确认Owner和UAT标准；负责人提议不等于责任转移。",
+        "剩余工作尽量引用已有UAT和培训任务，真实前置依据来自新增字段的验证需要。",
+        "保留培训任务原ID和归属；如新产出确实影响培训，可依据证据更新未锁定的排期或依赖，不能把保留任务误解成所有字段都不可调整。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "ECOM-03",
+      "industry": "ecommerce_operations",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议建立9月15日第二批上线的独立后续任务，沿用图片v3，只补包装清单v2、当批库存核对及页面配置与上线测试，保留第一批全部完成记录。",
+      "intent": "next_batch",
+      "disposition": "ready_for_confirmation",
+      "changes": 4,
+      "outputSha256": "f46ffefa9c320236c4c9e65d8423a4f5bc44baa2e4adbcebe4927eecb09af551",
+      "manualChecks": [
+        "新批次关联第一批产出，不修改已完成原记录。",
+        "复用允许使用的v3图片，但第二批库存/页面测试仍需按新实例判断。",
+        "12人时包含首拍首搭，不照抄为第二批估算，也不把3天等待算成人时。",
+        "第一批根已完成；第二批应建独立后续根，用证据关联旧批次，不追加到已完成根。",
+        "候选ecom03-root可接受的重复关系：different_instance或template_only；需用身份/范围证据解释。"
+      ],
+      "status": "structurally_valid"
+    },
+    {
+      "id": "CONTENT-03",
+      "industry": "content_agency",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议在原内容项目内调整文案和公众号适配标准，使本期面向首次使用者；保留已确认目标、现有负责人、五项功能范围和五张功能图v2，不重复已完成工作。",
+      "intent": "replan",
+      "disposition": "ready_for_confirmation",
+      "changes": 3,
+      "outputSha256": "745bf6c9ca7ddcf12223d238c13ddcf46fdb1d3a1bf9376ed0c166a638c67704",
+      "manualChecks": [
+        "局部更新现有文案/适配任务，不重建已审图或整个树。",
+        "保留已确认Owner与主目标，最新接手提议不是接受或解锁确认字段。",
+        "客户改变受众不自动扩大功能、KPI、渠道或预算。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

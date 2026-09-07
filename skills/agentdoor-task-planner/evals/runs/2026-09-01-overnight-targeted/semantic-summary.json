@@ -1,0 +1,152 @@
+{
+  "kind": "targeted_post_fix_summary",
+  "phase1": {
+    "description": "First narrow-fix regression plus controls",
+    "cases": [
+      {
+        "caseId": "EDGE-07",
+        "status": "passed",
+        "summary": "部分重叠被保留为 overlap，只在原首发资料包下新增一页开箱说明；已完成 FAQ 与既定培训保持不变，培训没有被错误接到 9 月 7 日的新说明。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "EDGE-12",
+        "status": "failed",
+        "summary": "术语表粒度正确且未虚构日语能力，但把“只负责交付版本”的唐钰放进整个 Task 的 ownerRecommendation；冻结标准要求该职责只能作为交付版本贡献候选，日语翻译/复核仍未配备。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "CONTENT-01",
+        "status": "passed",
+        "summary": "轻量校对保持一个可验收结果，普通步骤写在 tips；编辑职责匹配，发起人未被自动设为 Owner，1.5 人时明确为带假设的模型候选而非字数公式或实际投入。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "RENO-01",
+        "status": "passed",
+        "summary": "一个协调根下保留三项可独立核对的结果：问题清单复核、资料目录、移交记录与未完事项说明；依赖只表达消费关系，未把三项合并，且明确 not_requested 不等于没有历史。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "COMPLEX-02",
+        "status": "passed",
+        "summary": "只新增一份可独立核对的标签与资料编号对照表，挂在现有样料资料分支；评审目录保留原 ID 并显式消费新表，三层结构、已完成结果及既有叶估算基线均保留。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "COMPLEX-03",
+        "status": "passed",
+        "summary": "新增包装说明 v2 作为独立结果，并把页面、客服 FAQ、发货答复三个现有消费者全部显式接入；checkout 既有消费者依赖继续保留，图片、库存、广告及基线未重做。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "MULTI-C1",
+        "status": "passed",
+        "summary": "正确把 SKU-CUP-A 的五处错字校对收敛为一个可审阅候选，保留明确负责人颜北和 2026-09-02 期限，没有扩展文案、图片、售价、卖点或功效承诺。",
+        "reviewFile": "semantic-review.json",
+        "episodeId": "C"
+      },
+      {
+        "caseId": "MULTI-C2",
+        "status": "passed",
+        "summary": "正确依据前轮实际候选的合成保存回执定位 sim:C:1，建议打开原任务且不再创建或更新，也没有把离线回执描述成生产幂等保证。",
+        "reviewFile": "semantic-review.json",
+        "episodeId": "C"
+      },
+      {
+        "caseId": "MULTI-C3",
+        "status": "passed",
+        "summary": "正确将 SKU-CUP-B 的三处错字清稿视为独立结果，新建一个候选并原样保留 sim:C:1；三处具体字样与位置可在执行开始时固定，因此没有把非身份细节当成规划阻塞项。",
+        "reviewFile": "semantic-review.json",
+        "episodeId": "C"
+      }
+    ],
+    "total": 9,
+    "passed": 8,
+    "failed": 1,
+    "unknown": 0
+  },
+  "phase2": {
+    "description": "Owner-boundary follow-up after preserving the phase-1 EDGE-12 failure",
+    "cases": [
+      {
+        "caseId": "EDGE-12",
+        "status": "passed",
+        "summary": "单一术语表任务保持未分配 Owner；唐钰仅承担版本交付贡献，未虚构日语翻译或复核能力。",
+        "reviewFile": "semantic-review.json"
+      }
+    ],
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "unknown": 0
+  },
+  "latestSelected": {
+    "description": "Latest result per nine targeted scenario/turn IDs; phase-1 EDGE-12 is replaced only in this derived view, not deleted",
+    "cases": [
+      {
+        "caseId": "EDGE-07",
+        "status": "passed",
+        "summary": "部分重叠被保留为 overlap，只在原首发资料包下新增一页开箱说明；已完成 FAQ 与既定培训保持不变，培训没有被错误接到 9 月 7 日的新说明。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "CONTENT-01",
+        "status": "passed",
+        "summary": "轻量校对保持一个可验收结果，普通步骤写在 tips；编辑职责匹配，发起人未被自动设为 Owner，1.5 人时明确为带假设的模型候选而非字数公式或实际投入。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "RENO-01",
+        "status": "passed",
+        "summary": "一个协调根下保留三项可独立核对的结果：问题清单复核、资料目录、移交记录与未完事项说明；依赖只表达消费关系，未把三项合并，且明确 not_requested 不等于没有历史。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "COMPLEX-02",
+        "status": "passed",
+        "summary": "只新增一份可独立核对的标签与资料编号对照表，挂在现有样料资料分支；评审目录保留原 ID 并显式消费新表，三层结构、已完成结果及既有叶估算基线均保留。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "COMPLEX-03",
+        "status": "passed",
+        "summary": "新增包装说明 v2 作为独立结果，并把页面、客服 FAQ、发货答复三个现有消费者全部显式接入；checkout 既有消费者依赖继续保留，图片、库存、广告及基线未重做。",
+        "reviewFile": "/tmp/agentdoor-planner-overnight-targeted-static-review-20260901.json"
+      },
+      {
+        "caseId": "MULTI-C1",
+        "status": "passed",
+        "summary": "正确把 SKU-CUP-A 的五处错字校对收敛为一个可审阅候选，保留明确负责人颜北和 2026-09-02 期限，没有扩展文案、图片、售价、卖点或功效承诺。",
+        "reviewFile": "semantic-review.json",
+        "episodeId": "C"
+      },
+      {
+        "caseId": "MULTI-C2",
+        "status": "passed",
+        "summary": "正确依据前轮实际候选的合成保存回执定位 sim:C:1，建议打开原任务且不再创建或更新，也没有把离线回执描述成生产幂等保证。",
+        "reviewFile": "semantic-review.json",
+        "episodeId": "C"
+      },
+      {
+        "caseId": "MULTI-C3",
+        "status": "passed",
+        "summary": "正确将 SKU-CUP-B 的三处错字清稿视为独立结果，新建一个候选并原样保留 sim:C:1；三处具体字样与位置可在执行开始时固定，因此没有把非身份细节当成规划阻塞项。",
+        "reviewFile": "semantic-review.json",
+        "episodeId": "C"
+      },
+      {
+        "caseId": "EDGE-12",
+        "status": "passed",
+        "summary": "单一术语表任务保持未分配 Owner；唐钰仅承担版本交付贡献，未虚构日语翻译或复核能力。",
+        "reviewFile": "semantic-review.json"
+      }
+    ],
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "unknown": 0
+  },
+  "humanIndustryReview": false,
+  "productionValidation": false
+}

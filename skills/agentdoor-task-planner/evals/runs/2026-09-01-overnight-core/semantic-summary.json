@@ -1,0 +1,155 @@
+{
+  "kind": "independent_semantic_review",
+  "cases": [
+    {
+      "caseId": "SAAS-01",
+      "status": "passed",
+      "summary": "create意图、四项独立交付拆分、职责分工、生产边界、依赖和未知估算均符合冻结检查。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "caseId": "SAAS-02",
+      "status": "passed",
+      "summary": "同名任务依据客户、租户、系统和周期判为different_instance；旧结项完整保留，新候选保持单任务最小范围。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "caseId": "SAAS-03",
+      "status": "passed",
+      "summary": "仅新增停用账号字段核对，保留已完成演练和锁定UAT字段；对新增产出是否影响UAT及培训提出必要阻塞问题。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "caseId": "SAAS-04",
+      "status": "passed",
+      "summary": "正确外显9月3日演示与最早9月4日授权的硬冲突；任务覆盖不全和查重超时时不生成候选，也未使用旧容量便签作承诺。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "caseId": "ECOM-01",
+      "status": "passed",
+      "summary": "保持一个轻量校对任务，严格限制在五处错字、指定负责人和9月2日交付，没有扩展商品或增长范围。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "caseId": "ECOM-02",
+      "status": "passed",
+      "summary": "正确定位并复用同SKU、渠道、日期和结果的现有主任务，重复发起没有产生新建或局部伪动作。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "caseId": "ECOM-03",
+      "status": "passed",
+      "summary": "第二批建立独立后续根，复用图片v3并重新核对本批包装、库存、页面和上线结果；旧完成记录和历史投入口径均受保护。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "caseId": "ECOM-04",
+      "status": "passed",
+      "summary": "正确分离系统库存、实物清点和投放目标，保留上线与出库冲突，并在原库存、客服任务及必要页面同步间形成有据分工。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "caseId": "NPI-01",
+      "status": "passed",
+      "summary": "按BOX-N1首轮30套和9月16日内部评审建立一棵最小结果树，材料牌号保留为受控BOM待决项；职责、依赖、日期和未知EWD均未越界。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "caseId": "NPI-02",
+      "status": "passed",
+      "summary": "正确区分B版与旧A版，但因活动任务查重不完整而停止在补读路由；没有重开A版、复用取消采购或生成B版候选。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "caseId": "NPI-03",
+      "status": "passed",
+      "summary": "把结项后的F-09划痕反馈建立为独立后续根，只安排证据核对和有依据的改进建议；旧根、BOM及检验记录全部保留。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "caseId": "NPI-04",
+      "status": "passed",
+      "summary": "局部调整既有B版任务时保持B2为确认基线，公开9月8日评审与9月12日最早到样冲突，并让用户选择评审范围或期限；查重失败未被伪装成成功。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "caseId": "RETAIL-01",
+      "status": "passed",
+      "summary": "按总部共用指引和两家门店独立结果拆分落地、物料、培训与现场回传；店长责任不跨店，依赖只连接真实交付，未生成排班。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "caseId": "RETAIL-02",
+      "status": "passed",
+      "summary": "仅为01店创建2026年9月30日单期盘点候选，按周期和门店区分8月旧期及02店同期任务；旧记录不改且未启用月度循环。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "caseId": "RETAIL-03",
+      "status": "passed",
+      "summary": "在进行中的两店推广根下只补02店窄货架适配和02店落地，复用已完成指引、01店试点及在办配送；物料影响未明时正确阻止确认。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "caseId": "RETAIL-04",
+      "status": "passed",
+      "summary": "ACL缺失时停止读取和规划西区任务，未生成候选、责任、排期或通知对象；只要求受控补授权与上下文。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "caseId": "CONTENT-01",
+      "status": "passed",
+      "summary": "保持单一轻量校对任务，责任、期限与未知估算均有来源，没有扩展到策划、重写、设计或发布。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "caseId": "CONTENT-02",
+      "status": "passed",
+      "summary": "正确复用同客户、周期、渠道和交付物的蓝屿原项目，区分云栖实例，并拒绝导入正文中的越权指令。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "caseId": "CONTENT-03",
+      "status": "passed",
+      "summary": "仅更新在办文案与公众号适配标准，复用已完成范围和视觉结果，并保护确认Owner、根目标及功能边界。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "caseId": "CONTENT-04",
+      "status": "passed",
+      "summary": "正确区分内部审阅、旧版批准和当前版本批准，并因讨论不完整、历史不可用及日期冲突而停止候选变更。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "caseId": "RENO-01",
+      "status": "failed",
+      "summary": "任务拆分、责任和交付边界整体合理，但输出把未请求读取的历史表述为“没有同类历史”，违反冻结的缺失上下文规则。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "caseId": "RENO-02",
+      "status": "passed",
+      "summary": "按项目、位置和反馈编号区分主卧新问题，保留厨房与B户旧单，并把成因和现场条件保持未知。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "caseId": "RENO-03",
+      "status": "passed",
+      "summary": "移交后新增反馈被建立为独立后续根，完整保护原移交及子任务，并保留疑似色差的原因与责任未知。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "caseId": "RENO-04",
+      "status": "passed",
+      "summary": "正确拆分9月9日可先交资料与后续材料、现场复核，保留时间冲突、证据类型和未知共同窗口。",
+      "reviewFile": "semantic-review-c.json"
+    }
+  ],
+  "total": 24,
+  "passed": 23,
+  "failed": 1,
+  "unknown": 0,
+  "humanIndustryReview": false,
+  "note": "冻结合成工件的独立 agent 语义评审；不代表生产验证。"
+}

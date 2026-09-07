@@ -1,0 +1,225 @@
+{
+  "reviewId": "agentdoor-planner-semantic-review-b",
+  "reviewScope": "冻结协议下NPI与RETAIL共8例首轮输出的独立业务语义复核；不生成或修正被评测答案。",
+  "protocolSnapshot": "/tmp/agentdoor-planner-skill-eval-20260901/protocol-snapshot.json",
+  "expectationsSnapshot": "/tmp/agentdoor-planner-skill-eval-20260901/expectations-snapshot.json",
+  "reviewedDimensions": [
+    "最小拆解与完整交付",
+    "真实职责与最小参与者",
+    "无虚构容量或时间承诺",
+    "业务对象/版本/周期查重",
+    "保护已完成记录与确认内容",
+    "增量变更、真实依赖与排期",
+    "缺失上下文与读取真实性",
+    "外部操作边界",
+    "提问必要性"
+  ],
+  "cases": [
+    {
+      "scenarioId": "NPI-01",
+      "status": "satisfies",
+      "conclusion": "BOM、到料、试制资料、30套样品与检验分为必要的独立交付，按职责推荐协调、工程、采购、工艺和品质人员；材料未定转为明确待交付条件，依赖有实际产出依据。保留9月16日期限但不保证工期，未虚构选材、产能、工时或放行；当前计划无需强行补问。",
+      "issues": [],
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-01.json",
+          "pointer": "/proposal/changes"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-01.json",
+          "pointer": "/warnings"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/NPI-01.json",
+          "pointer": "/context/sourceRefs/0"
+        }
+      ]
+    },
+    {
+      "scenarioId": "NPI-02",
+      "status": "satisfies",
+      "conclusion": "正确把A版与包装变更后的B版视为不同实例，同时因活动索引超时停止新增并要求补查；未把A版验证结论或已取消采购当成B版结果和前置。补读动作具体，未把服务缺口转嫁为无必要的用户提问。",
+      "issues": [],
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-02.json",
+          "pointer": "/duplicateCheck"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-02.json",
+          "pointer": "/proposal"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-02.json",
+          "pointer": "/nextActions"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/NPI-02.json",
+          "pointer": "/duplicateSearch"
+        }
+      ]
+    },
+    {
+      "scenarioId": "NPI-03",
+      "status": "satisfies",
+      "conclusion": "以独立后续单任务承接F-09复核和改进建议，保留原根、BOM及检验结项记录；明确只有文字反馈，照片与逐样品记录待补读，不预判划痕原因或供应商责任，也未采纳全量重做提议。先核证据、再决定实际改进范围，拆解与参与贡献适度。",
+      "issues": [],
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-03.json",
+          "pointer": "/proposal"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-03.json",
+          "pointer": "/warnings"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-03.json",
+          "pointer": "/nextActions/1"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/NPI-03.json",
+          "pointer": "/context/sourceRefs/3"
+        }
+      ]
+    },
+    {
+      "scenarioId": "NPI-04",
+      "status": "satisfies",
+      "conclusion": "仅补充现有BOM、到料和品质任务的Tips，保留已确认B2、待审B3、原责任、依赖及9月8日期限；明确最早9月12日到样与实物检验冲突，用一个阻塞问题交由用户决定范围或日期。历史部分可见、查重失败均如实保留，未新增或伪造按期结论。",
+      "issues": [],
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-04.json",
+          "pointer": "/proposal/changes"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-04.json",
+          "pointer": "/questions/0"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/NPI-04.json",
+          "pointer": "/duplicateCheck"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/NPI-04.json",
+          "pointer": "/context/sourceRefs"
+        }
+      ]
+    },
+    {
+      "scenarioId": "RETAIL-01",
+      "status": "satisfies",
+      "conclusion": "覆盖共用指引与培训，并按门店分别跟踪回执和现场结果，各店由本店店长候选负责，无跨店指派或排班。到料按店拆分避免互相等待，培训最终交付依赖确认指引有业务依据，未让两店现场机械等待培训反馈；保留期限并说明交期、窗口和人时未知。",
+      "issues": [],
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-01.json",
+          "pointer": "/proposal/changes"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-01.json",
+          "pointer": "/warnings"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/RETAIL-01.json",
+          "pointer": "/members"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/expectations-snapshot.json",
+          "pointer": "/expectations/12/manualChecks"
+        }
+      ]
+    },
+    {
+      "scenarioId": "RETAIL-02",
+      "status": "satisfies",
+      "conclusion": "按门店与周期区分01店八月和02店九月两条相似任务，只提出01店九月单期盘点候选；不重开旧期、不挂入已完成根、不启用自动重复任务。负责人来自本店职责，日期依据明确盘点时点，具体时段、容量和工时仍为未知。",
+      "issues": [],
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-02.json",
+          "pointer": "/duplicateCheck/assessments"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-02.json",
+          "pointer": "/proposal"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-02.json",
+          "pointer": "/warnings"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/RETAIL-02.json",
+          "pointer": "/context/sourceRefs/2"
+        }
+      ]
+    },
+    {
+      "scenarioId": "RETAIL-03",
+      "status": "satisfies",
+      "conclusion": "只在进行中的推广根下追加02店局部适配和现场落地，保留通用v2、01店完成结果及原到货任务；适配引用指引，落地引用适配和实际到料，依赖与增量范围合理。未将林序跨店支援提议当作接受或容量，也未改动正式责任。",
+      "issues": [],
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-03.json",
+          "pointer": "/proposal"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-03.json",
+          "pointer": "/reasoningSummary/3"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-03.json",
+          "pointer": "/warnings"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/RETAIL-03.json",
+          "pointer": "/context/sourceRefs/4"
+        }
+      ]
+    },
+    {
+      "scenarioId": "RETAIL-04",
+      "status": "satisfies",
+      "conclusion": "授权缺失时不产出候选变更、不猜测西区人员或开业情况，也不把空列表当无任务；只请求受信授权与必要上下文。用户的直接通知要求未被规划输出当作执行许可，外部作用保持none。",
+      "issues": [],
+      "evidencePointers": [
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-04.json",
+          "pointer": "/proposal"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-04.json",
+          "pointer": "/nextActions/0"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/outputs/RETAIL-04.json",
+          "pointer": "/externalEffects"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-skill-eval-20260901/inputs/RETAIL-04.json",
+          "pointer": "/context/acl"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total": 8,
+    "satisfies": 8,
+    "fails": 0,
+    "uncertain": 0,
+    "mustFixIssues": 0,
+    "noteIssues": 0
+  },
+  "mainFindings": [
+    "8例首轮答案均满足本次适用的业务语义检查，未发现必须修正的问题。",
+    "NPI-02、NPI-04及RETAIL-04的澄清或补读属于正确处理，不能因没有可提交计划而算失败。",
+    "未知工时、未确认窗口、缺失照片等没有被补成事实；本次对可审阅候选与实际执行作了区分。"
+  ],
+  "limitations": [
+    "结论仅针对8例冻结的合成输入和首轮输出，不是生产模型准确率或全行业能力声明。",
+    "依据为提供的JSON与冻结协议；不独立证明实际工具轨迹无写入、生产ACL有效或真实业务闭环完成。",
+    "没有执行或修正被评测输出，也没有生成期待答案。"
+  ]
+}

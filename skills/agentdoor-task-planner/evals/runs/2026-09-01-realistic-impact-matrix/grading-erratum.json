@@ -1,0 +1,34 @@
+{
+  "runId": "2026-09-01-realistic-impact-matrix",
+  "policy": "First outputs, frozen protocol/rubric, original machine report and independent reviews remain unchanged.",
+  "correctionsAfterRun": [
+    {
+      "scenarioId": "REAL-B-NPI-01",
+      "kind": "oracle_dependency_correction",
+      "before": "Frozen exactDependencies for DVT required design + pcn and omitted the actual incoming COC review.",
+      "after": "Current rubric requires design + pcn + incoming.",
+      "effectOnVerdict": "none; the first output still omits pcn for DVT and incoming review."
+    },
+    {
+      "scenarioId": "REAL-B-PROC-01",
+      "kind": "oracle_dependency_correction",
+      "before": "Frozen rubric forced MSA, tax and bank through owner-review and omitted owner-review from the final gate.",
+      "after": "Current rubric keeps MSA, tax and bank on their source_only old dependencies, and adds owner-review only to the gate that directly consumes the risk review.",
+      "effectOnVerdict": "changes this case from machine fail to semantic and current-rubric pass."
+    },
+    {
+      "scenarioId": "all",
+      "kind": "same_output_regrade",
+      "before": "Frozen machine score was 3/7.",
+      "after": "The identical output bytes score 4/7 against the corrected current rubric, matching independent semantic adjudication.",
+      "effectOnVerdict": "no output was regenerated or edited."
+    },
+    {
+      "scenarioId": "all",
+      "kind": "skill_hardening",
+      "before": "The run used the input-only impact matrix rule but could still confuse an authoritative file with a value-added team result or skip the immediate reviewed output.",
+      "after": "A later Skill revision distinguishes source_only facts, value-added verification and immediate review dependencies.",
+      "effectOnVerdict": "applies only to later attempts."
+    }
+  ]
+}

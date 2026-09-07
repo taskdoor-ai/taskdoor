@@ -1,0 +1,44 @@
+{
+  "input": {
+    "requestId": "example-complex", "message": "9月4日当天结束前准备好活动报名页，李青出文案、陈宇搭页面、林悦验收报名链路；我只发起，请推荐总负责人。文案预计4小时、搭页8小时、验收2小时。页面须包含时间地点、报名字段和成功提示，不包含对外发布。",
+    "currentDate": "2026-08-31", "timezone": "Asia/Shanghai", "currentUserId": "m0", "teamId": "team-a", "authorizedTeamIds": ["team-a"],
+    "members": [{"id": "m0", "name": "王明", "role": "发起者"}, {"id": "m1", "name": "赵宁", "role": "活动项目整合负责人"}, {"id": "m2", "name": "李青", "role": "编辑"}, {"id": "m3", "name": "陈宇", "role": "页面开发"}, {"id": "m4", "name": "林悦", "role": "测试验收"}],
+    "duplicateSearch": {"status": "completed", "scopeTeamIds": ["team-a"], "matches": [], "coverageNote": "当前有权范围检索完成，无相似候选。"}
+  },
+  "output": {
+    "schemaVersion": "agentdoor.task-plan.v0.1", "requestId": "example-complex", "intent": "create", "disposition": "ready_for_confirmation",
+    "summary": "规划三项独立交付，建议赵宁负责整合；排期等待各人确认。",
+    "reasoningSummary": ["文案、页面和验收分别有独立交付及明确责任人。", "赵宁承担活动整合职责；不因王明发起而推荐王明。", "验收依赖可测试页面；正式发布不在范围内。"],
+    "plan": {
+      "complexity": "complex", "goal": {"text": "获得一份可验收的活动报名页，保证报名链路满足要求。", "basis": "inferred", "evidence": ["准备好活动报名页", "不包含对外发布"]},
+      "mainTask": {
+        "clientId": "main", "title": "准备活动报名页", "acceptanceCriteria": ["页面包含约定的时间地点、报名字段和成功提示。", "林悦提交报名链路验收记录，赵宁整合确认；不对外发布。"], "tips": ["集中确认文案与测试范围，避免搭页中途变更。"],
+        "ownerRecommendation": {"memberId": "m1", "basis": "recommended", "reason": "成员目录显示赵宁负责活动项目整合，接受与容量未知。"},
+        "schedule": {"startOn": null, "dueOn": "2026-09-04", "originalText": "9月4日当天结束前", "basis": "explicit", "assumptions": ["按Asia/Shanghai解析，包含9月4日当天。"]},
+        "estimate": {"ewdHours": null, "basis": "unknown", "reason": "父级从叶子汇总14h，不再重复估算；若另有整合工时须单列。", "confirmed": false}, "dependsOnClientIds": []
+      },
+      "subtasks": [
+        {
+          "clientId": "copy", "title": "交付报名页文案", "acceptanceCriteria": ["交付时间地点、报名字段说明及成功提示文案。"], "tips": ["把需要确认的信息单独标注。"],
+          "ownerRecommendation": {"memberId": "m2", "basis": "explicit", "reason": "用户指定李青出文案。"},
+          "schedule": {"startOn": "2026-09-01", "dueOn": "2026-09-01", "originalText": "", "basis": "recommended", "assumptions": ["暂按当天可安排4h，待本人确认。"]},
+          "estimate": {"ewdHours": 4, "basis": "user", "reason": "用户初估4h。", "confirmed": false}, "dependsOnClientIds": []
+        },
+        {
+          "clientId": "page", "title": "交付可测试报名页", "acceptanceCriteria": ["根据文案配置页面和字段，提供可测试链接及成功提示。"], "tips": ["先自测提交与成功状态，再交给林悦。"],
+          "ownerRecommendation": {"memberId": "m3", "basis": "explicit", "reason": "用户指定陈宇搭页面。"},
+          "schedule": {"startOn": "2026-09-02", "dueOn": "2026-09-03", "originalText": "", "basis": "recommended", "assumptions": ["暂按两天合计可安排8h，待本人确认。"]},
+          "estimate": {"ewdHours": 8, "basis": "user", "reason": "用户初估8h。", "confirmed": false}, "dependsOnClientIds": ["copy"]
+        },
+        {
+          "clientId": "verify", "title": "验收报名链路", "acceptanceCriteria": ["核对页面内容、报名字段与成功提示，提交结果和未决问题。"], "tips": ["使用测试数据，不进行对外发布。"],
+          "ownerRecommendation": {"memberId": "m4", "basis": "explicit", "reason": "用户指定林悦验收。"},
+          "schedule": {"startOn": "2026-09-04", "dueOn": "2026-09-04", "originalText": "", "basis": "recommended", "assumptions": ["暂按当天可安排2h，在当日结束前交付，待本人确认。"]},
+          "estimate": {"ewdHours": 2, "basis": "user", "reason": "用户初估2h。", "confirmed": false}, "dependsOnClientIds": ["page"]
+        }
+      ]
+    },
+    "duplicateCheck": {"status": "completed", "scopeTeamIds": ["team-a"], "matches": [], "coverageNote": "当前有权范围检索完成，无相似候选。"},
+    "questions": [], "warnings": ["所有时间分配为待确认计划，不是成员承诺。"], "externalEffects": "none"
+  }
+}

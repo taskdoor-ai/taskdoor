@@ -1,0 +1,506 @@
+{
+  "reviewer": {
+    "kind": "independent_codex_agent",
+    "taskName": "/root/semantic_review_real_a",
+    "humanIndustryReview": false
+  },
+  "cases": [
+    {
+      "caseId": "REAL-A-REL-01",
+      "status": "failed",
+      "summary": "业务语义和最小差异正确：仅修正安全闸门与商店提交的依赖，保护完成项、确认字段、正式责任、硬窗口和灰度边界；但冻结期望要求显式引用未签署草稿 syn-rel-file-03，首次输出没有在任何 evidenceRefs 中引用该来源，因此按原标准失败。",
+      "manualCheckResults": [
+        {
+          "check": "只更新安全闸门与商店提交的依赖，复用现有公证回执任务；不得复制回执、灰度或商店提交。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/proposal/changes",
+              "note": "仅有两个 update，目标分别是 syn-rel-security-gate 与 syn-rel-store-submit，均只改 dependsOnTaskIds。"
+            },
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/duplicateCheck/assessments/0",
+              "note": "将现有 syn-rel-notary-v2 判为 same_outcome，并明确不能再建同结果任务。"
+            }
+          ]
+        },
+        {
+          "check": "未签署草稿和CLI成功报告不能被描述为公证完成或安全放行；正式状态保持。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-REL-01.json",
+              "pointer": "/context/files/2",
+              "note": "v1 文件状态为 draft_unsigned，只能证明材料已生成。"
+            },
+            {
+              "file": "inputs/REAL-A-REL-01.json",
+              "pointer": "/context/discussions/5",
+              "note": "CLI 成功报告明确拒绝据此报告安全闸门通过。"
+            },
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/warnings/0",
+              "note": "明确依赖修正不代表回执、安全闸门或商店提交完成。"
+            }
+          ]
+        },
+        {
+          "check": "保留9月12日硬窗口、两小时灰度、正式Owner和确认字段；不以赶日期为由删闸门。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-REL-01.json",
+              "pointer": "/confirmedFields",
+              "note": "根任务 dueOn 与灰度 acceptanceCriteria 均为锁定确认字段。"
+            },
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/proposal/changes",
+              "note": "候选未写 schedule、ownerRecommendation、participantRecommendations、acceptanceCriteria 或状态字段。"
+            },
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/warnings/1",
+              "note": "保留 2026-09-12 与两小时灰度，且没有据此作排期或容量承诺。"
+            }
+          ]
+        },
+        {
+          "check": "父子归属不变；最终批准已有传递关系，无需冗余改写或把整棵树串行化。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-REL-01.json",
+              "pointer": "/context/tasks/13/dependsOnTaskIds",
+              "note": "最终批准已依赖安全闸门、灰度和商店提交。"
+            },
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/proposal/changes/0/parentId",
+              "note": "安全闸门仍归属 syn-rel-assurance。"
+            },
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/proposal/changes/1/parentId",
+              "note": "商店提交仍归属 syn-rel-distribution；未更新最终批准或其他树节点。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "severity": "error",
+          "text": "冻结期望要求 syn-rel-file-03 必须显式出现在 evidenceRefs 中；输出虽在 warning 中正确说明未签署事实，却没有给该警告绑定证据，也未在其他 evidenceRefs 引用此文件。该来源覆盖缺失触发本案失败，未发现相应的业务结论错误。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/0/requiredEvidenceRefs/2",
+              "note": "指定必需来源为 syn-rel-file-03。"
+            },
+            {
+              "file": "inputs/REAL-A-REL-01.json",
+              "pointer": "/context/sourceRefs/2",
+              "note": "该来源是 v1 未签署回执草稿的正文节选。"
+            },
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/warnings/0",
+              "note": "文字使用了未签署事实，但 warnings 结构不含 evidenceRefs。"
+            },
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/reasoningSummary",
+              "note": "四条依据及其他 evidenceRefs 均未显式包含 syn-rel-file-03。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "除固定来源引用缺失外，版本、历史、重复、Owner/参与、日期/EWD、父子关系、安全边界和 externalEffects 均与输入一致；baseTaskVersions 完整回显 14 个任务，未伪造历史空集、人员承诺或执行效果。",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-REL-01.json",
+              "pointer": "/context/coverage",
+              "note": "任务、子任务、讨论、历史和文件均完整读取。"
+            },
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/baseTaskVersions",
+              "note": "完整回显输入 14 个任务版本。"
+            },
+            {
+              "file": "outputs/REAL-A-REL-01.json",
+              "pointer": "/externalEffects",
+              "note": "固定为 none。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-A-SAAS-01",
+      "status": "passed",
+      "summary": "正确识别同一客户、tenant、15人、两批、截止日和证据边界的完整重复，路由至现有在办培训任务；没有把A批部分进展升级为完成，也没有创建、更新、指派或改变交接依赖。",
+      "manualCheckResults": [
+        {
+          "check": "识别同一客户、tenant、15人、两批、截止日和证据边界的完整重复，路由到syn-saas-admin-training，不靠改标题绕过。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-SAAS-01.json",
+              "pointer": "/duplicateSearch/matches/0",
+              "note": "完整匹配同一客户、tenant、15人、两批、截止日和交付证据。"
+            },
+            {
+              "file": "outputs/REAL-A-SAAS-01.json",
+              "pointer": "/duplicateCheck/assessments/0",
+              "note": "判为 same_outcome。"
+            },
+            {
+              "file": "outputs/REAL-A-SAAS-01.json",
+              "pointer": "/nextActions/0",
+              "note": "仅打开并继续 syn-saas-admin-training。"
+            }
+          ]
+        },
+        {
+          "check": "第一批签到只证明部分进展，不能将正式in_progress改成completed，也不能生成第二份任务。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-SAAS-01.json",
+              "pointer": "/context/tasks/10/status",
+              "note": "正式状态为 in_progress。"
+            },
+            {
+              "file": "inputs/REAL-A-SAAS-01.json",
+              "pointer": "/context/files/3",
+              "note": "v1 A批记录状态为 partial，B批尚未开展。"
+            },
+            {
+              "file": "outputs/REAL-A-SAAS-01.json",
+              "pointer": "/proposal",
+              "note": "proposal 为 null，没有创建或更新。"
+            }
+          ]
+        },
+        {
+          "check": "讲义是部分重叠输入，不等于培训交付；两批日程不构成独立交付边界。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-SAAS-01.json",
+              "pointer": "/context/discussions/2",
+              "note": "确认两批共同构成一个交付任务。"
+            },
+            {
+              "file": "inputs/REAL-A-SAAS-01.json",
+              "pointer": "/context/files/2",
+              "note": "讲义 v5 是培训输入，不能证明参训或验收。"
+            },
+            {
+              "file": "outputs/REAL-A-SAAS-01.json",
+              "pointer": "/duplicateCheck/assessments/1",
+              "note": "讲义被正确判为 overlap，不能替代培训交付。"
+            }
+          ]
+        },
+        {
+          "check": "proposal应为空，外部影响为none；不更新确认字段、Owner、日期或交接依赖。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-A-SAAS-01.json",
+              "pointer": "/proposal",
+              "note": "为空。"
+            },
+            {
+              "file": "outputs/REAL-A-SAAS-01.json",
+              "pointer": "/externalEffects",
+              "note": "为 none。"
+            },
+            {
+              "file": "inputs/REAL-A-SAAS-01.json",
+              "pointer": "/context/tasks/12/dependsOnTaskIds",
+              "note": "交接继续依赖 UAT 与原培训任务，输出未改写。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "severity": "info",
+          "text": "意图、最小范围和保护边界完整：create 请求因完整重复返回 route_required；13个任务版本完整回显，完整历史读取为空被保持为空义，没有从成员窗口推断容量，也没有日期、EWD、Owner、参与者、父子或依赖变更。",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-SAAS-01.json",
+              "pointer": "/context/coverage/history",
+              "note": "历史覆盖为 complete。"
+            },
+            {
+              "file": "inputs/REAL-A-SAAS-01.json",
+              "pointer": "/context/history",
+              "note": "完整读取结果为空；输出没有伪造历史。"
+            },
+            {
+              "file": "outputs/REAL-A-SAAS-01.json",
+              "pointer": "/baseTaskVersions",
+              "note": "完整回显13个任务版本。"
+            },
+            {
+              "file": "outputs/REAL-A-SAAS-01.json",
+              "pointer": "/disposition",
+              "note": "返回 route_required。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-A-ECOM-01",
+      "status": "passed",
+      "summary": "正确复用已经存在的渠道联检、仓内异常卡和承运降级记录，仅补齐开售闸门的三个消费者依赖；保护已完成结果、正式责任、EWD/历史、SKU、价格和20:00硬窗口。",
+      "manualCheckResults": [
+        {
+          "check": "下一批三个结果已存在；复用联检、仓内异常卡和承运降级记录，只修正开售闸门消费者依赖。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-ECOM-01.json",
+              "pointer": "/context/discussions/3",
+              "note": "已确认复用三个现有结果，只补开售闸门前置。"
+            },
+            {
+              "file": "outputs/REAL-A-ECOM-01.json",
+              "pointer": "/proposal/changes/0",
+              "note": "唯一 update 保留原演练与仓位，并新增联检、仓内异常和承运降级依赖。"
+            }
+          ]
+        },
+        {
+          "check": "仓内与承运两份部分结果共同覆盖异常范围，不得为了“完整”新建总卡或合并正式责任边界。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-ECOM-01.json",
+              "pointer": "/context/files/3",
+              "note": "仓内卡覆盖仓内路径，不覆盖承运接口降级。"
+            },
+            {
+              "file": "inputs/REAL-A-ECOM-01.json",
+              "pointer": "/context/files/4",
+              "note": "承运降级记录与仓内卡共同覆盖首波异常。"
+            },
+            {
+              "file": "outputs/REAL-A-ECOM-01.json",
+              "pointer": "/proposal/changes",
+              "note": "没有 create，也没有合并或更新两项正式责任边界。"
+            }
+          ]
+        },
+        {
+          "check": "保留已完成页面、合规、预测、规则和演练记录，不覆盖状态、Owner、EWD或历史。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-ECOM-01.json",
+              "pointer": "/context/history",
+              "note": "五项完成历史及闸门文件挂接历史均有版本记录。"
+            },
+            {
+              "file": "outputs/REAL-A-ECOM-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "除唯一更新的闸门外，其余14个任务均被保留。"
+            },
+            {
+              "file": "outputs/REAL-A-ECOM-01.json",
+              "pointer": "/proposal/changes/0/fields",
+              "note": "只含 dependsOnTaskIds，没有状态、Owner、参与者、schedule 或 estimate。"
+            }
+          ]
+        },
+        {
+          "check": "保持9月6日20:00、SKU与价格确认边界；不从排期或任务数量推断必定准时。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-ECOM-01.json",
+              "pointer": "/constraints",
+              "note": "硬窗口、SKU/价格和确认字段保护边界明确。"
+            },
+            {
+              "file": "inputs/REAL-A-ECOM-01.json",
+              "pointer": "/context/discussions/7",
+              "note": "确认不增SKU、不改价并保留20:00硬窗口。"
+            },
+            {
+              "file": "outputs/REAL-A-ECOM-01.json",
+              "pointer": "/warnings/1",
+              "note": "明确没有从成员协作窗口推断交付承诺。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "severity": "info",
+          "text": "next_batch 的最小范围、重复判断与图关系正确；15个任务版本完整回显，文件v2/v3/v6/v7和讨论决定均被区分使用，父子归属不变，唯一变更建立真实消费者依赖，externalEffects 为 none。",
+          "evidence": [
+            {
+              "file": "outputs/REAL-A-ECOM-01.json",
+              "pointer": "/baseTaskVersions",
+              "note": "完整回显15个任务版本。"
+            },
+            {
+              "file": "outputs/REAL-A-ECOM-01.json",
+              "pointer": "/duplicateCheck/assessments",
+              "note": "一个 same_outcome 与两个互补 overlap 均对应输入匹配。"
+            },
+            {
+              "file": "outputs/REAL-A-ECOM-01.json",
+              "pointer": "/proposal/changes/0/parentId",
+              "note": "开售闸门继续归属 syn-ecom-launch。"
+            },
+            {
+              "file": "outputs/REAL-A-ECOM-01.json",
+              "pointer": "/externalEffects",
+              "note": "为 none。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-A-CS-01",
+      "status": "passed",
+      "summary": "正确给出当前不能对外称事故已解决的只读结论，区分缓解报告、撤回草稿、正式状态与事故指挥决定；仅建议打开三个现有核对对象，并谨慎限定数据影响结论。",
+      "manualCheckResults": [
+        {
+          "check": "明确当前不能对外称“已解决”：只有45分钟稳定、队列仍37条且有4个新增P1，未满足120分钟、清零与无新增P1门槛。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-CS-01.json",
+              "pointer": "/context/files/1",
+              "note": "v5 快照仅稳定45分钟，队列仍37条。"
+            },
+            {
+              "file": "inputs/REAL-A-CS-01.json",
+              "pointer": "/context/files/2",
+              "note": "v4 趋势显示新增4个P1。"
+            },
+            {
+              "file": "inputs/REAL-A-CS-01.json",
+              "pointer": "/context/files/3",
+              "note": "v3 批准门槛要求120分钟、队列清空且无新增P1。"
+            },
+            {
+              "file": "outputs/REAL-A-CS-01.json",
+              "pointer": "/summary",
+              "note": "明确拒绝“已解决”并列出待满足门槛。"
+            }
+          ]
+        },
+        {
+          "check": "区分SRE缓解报告、撤回话术、正式任务状态与事故指挥决定；不把最新发言自动提升为正式状态。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-CS-01.json",
+              "pointer": "/context/discussions/0",
+              "note": "SRE 明确只是缓解报告。"
+            },
+            {
+              "file": "inputs/REAL-A-CS-01.json",
+              "pointer": "/context/discussions/3",
+              "note": "全量恢复话术已撤回。"
+            },
+            {
+              "file": "inputs/REAL-A-CS-01.json",
+              "pointer": "/context/discussions/7",
+              "note": "事故指挥确认正式状态保持 in_progress。"
+            },
+            {
+              "file": "outputs/REAL-A-CS-01.json",
+              "pointer": "/reasoningSummary/3",
+              "note": "结论依据正式决定、版本16复核历史与根任务状态。"
+            }
+          ]
+        },
+        {
+          "check": "只回答查询并给下一步核对对象，不创建、更新、指派、发送或发布；proposal必须为空。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-A-CS-01.json",
+              "pointer": "/proposal",
+              "note": "为空。"
+            },
+            {
+              "file": "outputs/REAL-A-CS-01.json",
+              "pointer": "/nextActions",
+              "note": "仅包含三个 open_task 展示动作。"
+            },
+            {
+              "file": "outputs/REAL-A-CS-01.json",
+              "pointer": "/externalEffects",
+              "note": "为 none。"
+            }
+          ]
+        },
+        {
+          "check": "数据影响只能表述为当前覆盖内尚未发现外泄迹象，不能推断确认无影响。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-A-CS-01.json",
+              "pointer": "/context/files/5",
+              "note": "v1 初查仅覆盖已采集节点，结论是尚未发现。"
+            },
+            {
+              "file": "inputs/REAL-A-CS-01.json",
+              "pointer": "/context/discussions/6",
+              "note": "合规负责人明确不能改写成确认无影响。"
+            },
+            {
+              "file": "outputs/REAL-A-CS-01.json",
+              "pointer": "/warnings/0",
+              "note": "输出保留覆盖不完整与不得外推的限定。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "severity": "info",
+          "text": "query/route_required 与只读最小范围一致；15个任务版本、确认字段、正式Owner、父子和依赖均未改变，也未建议EWD或日期。重复检查只用于定位当前事故和相关复盘，未转成候选写入。",
+          "evidence": [
+            {
+              "file": "outputs/REAL-A-CS-01.json",
+              "pointer": "/intent",
+              "note": "为 query。"
+            },
+            {
+              "file": "outputs/REAL-A-CS-01.json",
+              "pointer": "/disposition",
+              "note": "为 route_required。"
+            },
+            {
+              "file": "outputs/REAL-A-CS-01.json",
+              "pointer": "/baseTaskVersions",
+              "note": "完整回显15个任务版本。"
+            },
+            {
+              "file": "outputs/REAL-A-CS-01.json",
+              "pointer": "/duplicateCheck/assessments",
+              "note": "定位当前事故 same_outcome 与复盘 overlap，未生成提案。"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

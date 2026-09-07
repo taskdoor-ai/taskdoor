@@ -1,25 +1,10 @@
-export type TagIconName = "tag" | "folder" | "flag" | "layers" | "package" | "shopping" | "users" | "building" | "coins" | "shield" | "wrench" | "sparkles";
-export type TagColorName = "gray" | "blue" | "cyan" | "teal" | "green" | "amber" | "orange" | "red" | "purple" | "pink";
-
-export type TagDefinition = { id: string; name: string; icon: TagIconName; color: TagColorName };
+import type { TagColorName, TagDefinition, TagIconName } from "./sharedTypes";
+import { multiTeamTags } from "./teamWorkspaceScenarios.ts";
+export type { TagColorName, TagDefinition, TagIconName } from "./sharedTypes";
 
 const tag = (id: string, name: string, icon: TagIconName, color: TagColorName): TagDefinition => ({ id, name, icon, color });
 
-export const initialTags: TagDefinition[] = [
-  tag("pos-governance", "POS 治理", "folder", "blue"),
-  tag("data-governance", "数据治理", "layers", "purple"),
-  tag("member-benefits", "会员权益", "users", "pink"),
-  tag("investigation", "问题调查", "flag", "amber"),
-  tag("delivery", "修复与灰度", "wrench", "orange"),
-  tag("gray-validation", "灰度验证", "sparkles", "cyan"),
-  tag("validation", "验证", "shield", "green"),
-  tag("pos", "POS", "shopping", "blue"),
-  tag("inventory", "库存", "package", "teal"),
-  tag("member", "会员", "users", "pink"),
-  tag("invoice", "发票", "coins", "amber"),
-  tag("audit", "审计", "shield", "purple"),
-  tag("refund", "退款", "wrench", "red"),
-];
+export const initialTags: TagDefinition[] = multiTeamTags.map((item) => ({ ...item }));
 
 const tagIconNames = new Set<TagIconName>(["tag", "folder", "flag", "layers", "package", "shopping", "users", "building", "coins", "shield", "wrench", "sparkles"]);
 const tagColorNames = new Set<TagColorName>(["gray", "blue", "cyan", "teal", "green", "amber", "orange", "red", "purple", "pink"]);

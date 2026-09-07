@@ -1,0 +1,18 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-D1",
+      "allowedIntents": [
+        "replan"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "maxCreates": 0,
+      "manualChecks": [
+        "受众改动只影响必要标准，保留已完成范围与图片。"
+      ]
+    }
+  ]
+}

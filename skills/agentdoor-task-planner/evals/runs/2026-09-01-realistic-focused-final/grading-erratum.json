@@ -1,0 +1,9 @@
+{
+  "runId": "2026-09-01-realistic-focused-final",
+  "policy": "First outputs, frozen rubric, machine report and independent reviews remain unchanged.",
+  "correctionsAfterRun": [],
+  "notes": [
+    "REAL-C-04 has a possible conservative-edge interpretation tension, but the missing hard-handover evidence independently fails the frozen and semantic requirement.",
+    "No expectation change was made to improve this run."
+  ]
+}

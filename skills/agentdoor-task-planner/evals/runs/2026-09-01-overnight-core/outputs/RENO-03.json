@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-reno-03",
+  "baseSnapshotId": "snapshot-reno-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "reno03-root": 6,
+    "reno03-docs": 2,
+    "reno03-old": 4
+  },
+  "intent": "next_batch",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议把9月1日客厅墙面色差反馈建为独立后续复核任务，关联8月28日移交结果；原移交根任务、资料目录和P-08复核记录全部保持完成，不重开或覆盖。",
+  "reasoningSummary": [
+    {
+      "text": "8月28日移交根任务及其两个子任务均正式完成，历史确认当时批次已完成，不能通过讨论提议改回未完成。",
+      "evidenceRefs": [
+        "reno03-root",
+        "reno03-docs",
+        "reno03-old",
+        "reno03-h1",
+        "reno03-d2"
+      ]
+    },
+    {
+      "text": "新增反馈A-NEW-09发生于9月1日，位置为客厅墙面；原批次和P-08均不包含该位置，是移交后的新增范围。",
+      "evidenceRefs": [
+        "req-reno-03",
+        "reno03-handover",
+        "reno03-feedback",
+        "reno03-d1"
+      ]
+    },
+    {
+      "text": "当前还没有现场复核或责任判断，应先核对位置与原确认饰面版本，再协调现场查看，不预判成因。",
+      "evidenceRefs": [
+        "reno03-feedback",
+        "reno03-d3"
+      ]
+    },
+    {
+      "text": "何沐可负责问题复核记录，汪晴与陆行分别提供版本核对和现场安排所需贡献。",
+      "evidenceRefs": [
+        "renovation-m5-role",
+        "renovation-m2-role",
+        "renovation-m4-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:reno03-followup-review",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-reno03-followup-review",
+        "action": "create",
+        "targetId": "new:reno03-followup-review",
+        "parentId": null,
+        "fields": {
+          "title": "A户移交后客厅墙面色差反馈复核",
+          "goal": {
+            "text": "对2026年9月1日新增反馈A-NEW-09形成独立、可追溯的客厅墙面复核记录，不改变8月28日已完成移交批次。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-reno-03",
+              "reno03-feedback",
+              "reno03-handover"
+            ]
+          },
+          "acceptanceCriteria": [
+            "复核记录标明合成·澄居A户、客厅墙面、反馈编号A-NEW-09，并引用8月28日移交记录说明该位置不在原P-08范围。",
+            "核对反馈位置和适用的已确认饰面版本，保留现场查看时间、条件、可见事实、引用证据及待核事项。",
+            "区分业主文字反馈、现场复核与有权确认关闭；缺少现场或授权依据时不作成因、责任、工程合格或问题关闭判断。",
+            "新记录与原移交批次分别存续，不改写原目录v2、P-08复核结果或8月28日移交记录。"
+          ],
+          "tips": [
+            "先确认A-NEW-09的位置标注和原饰面版本，再取得现场开放回执并协调查看。",
+            "把原移交记录作为历史范围依据，不把已完成节点重开为本次跟进容器。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m5",
+            "basis": "recommended",
+            "reason": "交付问题复核职责覆盖问题记录核对及状态区分，适合对新增反馈形成独立复核结果。",
+            "evidenceRefs": [
+              "renovation-m5-role",
+              "reno03-feedback"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "renovation-m2",
+              "contribution": "核对客厅墙面的已确认饰面或设计变更版本，提供可追溯引用。",
+              "evidenceRefs": [
+                "renovation-m2-role",
+                "reno03-d3"
+              ]
+            },
+            {
+              "memberId": "renovation-m4",
+              "contribution": "取得现场开放回执并安排责任方查看客厅位置，不提供施工指导。",
+              "evidenceRefs": [
+                "renovation-m4-role",
+                "renovation-m4-window"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有明确交付期限或已确认现场开放时间。",
+              "9月8日和9月10日的协作窗口不表示现场已开放或候选已接受。"
+            ],
+            "evidenceRefs": [
+              "reno03-feedback",
+              "renovation-m4-window",
+              "renovation-m5-window"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "现场条件、证据完整度与记录范围尚未确定，人时未知。",
+              "等待资料和现场不计入EWD。"
+            ],
+            "evidenceRefs": [
+              "reno03-feedback",
+              "reno03-d3"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "完成后的新增反馈应建立独立后续结果，以证据关联旧移交，不更新或重开已完成记录。",
+        "evidenceRefs": [
+          "req-reno-03",
+          "reno03-handover",
+          "reno03-feedback",
+          "reno03-h1"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "reno03-root",
+      "reno03-docs",
+      "reno03-old"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-renovation"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "本候选不执行重开、状态变更、指派、现场操作或验收；所有旧任务版本和完成记录保持不变。",
+    "没有现场复核或原因证据，不能从“疑似色差”推断施工责任或解决方案。",
+    "负责人和参与者为候选；协作窗口不能证明完整容量或现场开放。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:reno03-followup-review",
+      "label": "审阅移交后新增反馈复核候选"
+    },
+    {
+      "action": "open_task",
+      "taskId": "reno03-root",
+      "label": "查看并保留8月28日移交记录"
+    }
+  ],
+  "externalEffects": "none"
+}

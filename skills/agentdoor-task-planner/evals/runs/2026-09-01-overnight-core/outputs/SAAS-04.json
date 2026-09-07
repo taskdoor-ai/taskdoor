@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-saas-04",
+  "baseSnapshotId": "snapshot-saas-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "saas04-root": 3,
+    "saas04-access": 2,
+    "saas04-check": 1
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "现有前置条件不能支持9月3日完成真实SSO演示验证；建议先补齐任务与查重上下文，并确认授权、验证窗口或演示日期／范围如何协调，暂不生成可确认变更。",
+  "reasoningSummary": [
+    {
+      "text": "原演示截止9月3日，但客户沙箱IdP测试授权最早9月4日；SSO验证明确依赖该授权，现有时间条件冲突。",
+      "evidenceRefs": [
+        "saas04-root",
+        "saas04-check",
+        "saas04-access-reply"
+      ]
+    },
+    {
+      "text": "袁序仅明确9月2日10至12点可集成核对，该窗口早于授权；钟宁仅明确9月5日下午协作，9月3日前额外窗口未确认。",
+      "evidenceRefs": [
+        "saas-m2-window",
+        "saas-m4-window",
+        "saas04-d2"
+      ]
+    },
+    {
+      "text": "本轮任务与子任务覆盖仅partial，查重服务unavailable，不能据此声称已完成剩余工作规划或排除重复。",
+      "evidenceRefs": [
+        "req-saas-04",
+        "saas04-root"
+      ]
+    },
+    {
+      "text": "六月便签未经本人确认且未更新，不能推算袁序每天4小时可用；等待授权也不是人的EWD。",
+      "evidenceRefs": [
+        "saas04-old-capacity",
+        "saas-m2-window",
+        "saas04-access-reply"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "unavailable",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [],
+    "coverageNote": "合成查重服务超时，未返回可判断的结果。"
+  },
+  "questions": [
+    {
+      "field": "constraints.hardDueOn",
+      "question": "9月3日演示与最早9月4日测试授权冲突：是否有可核验的提前授权及验证窗口，还是需要明确调整演示日期或先展示不依赖该授权的说明材料？当前不代替你改变期限或演示范围。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "可以先整理演示脚本、登录验证清单和待处理问题模板作为准备建议；完成这些材料不代表真实SSO登录已验证，也不能替代原演示结果。",
+    "history覆盖声明为unavailable但包含一条变更记录，只能视为可见片段，不能据此补出完整历史或投入估算。",
+    "原根、授权和验证任务及其正式Owner、状态、依赖、版本均保持不变；本轮没有候选变更。",
+    "生产访问不包含在客户授权安排中；旧容量便签与任务状态不用于判断成员效率或推断停工。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": "saas04-root",
+      "label": "补读完整当前根与直属子任务，并重试授权团队查重"
+    },
+    {
+      "action": "ask_user",
+      "taskId": "saas04-root",
+      "label": "确认演示时间、范围与授权冲突的处理选择"
+    },
+    {
+      "action": "open_task",
+      "taskId": "saas04-access",
+      "label": "查看现有测试授权等待事项"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,164 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-retail-02",
+  "baseSnapshotId": "snapshot-retail-02-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "retail02-aug": 4,
+    "retail02-02sep": 1
+  },
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议新建01店2026年9月30日月末盘点这一项任务，保留01店八月结项和02店九月任务。",
+  "reasoningSummary": [
+    {
+      "text": "用户已明确本轮是01店九月期，不是补做八月差异。",
+      "evidenceRefs": [
+        "req-retail-02",
+        "retail02-period"
+      ]
+    },
+    {
+      "text": "01店八月盘点和AUG-01差异已经结项，本轮周期不同；02店九月任务则是门店不同。",
+      "evidenceRefs": [
+        "retail02-aug",
+        "retail02-h1",
+        "retail02-02sep"
+      ]
+    },
+    {
+      "text": "林序负责01店落实及本店交付复核，责任建议来自职责，不是因其为创建者。",
+      "evidenceRefs": [
+        "retail-m2"
+      ]
+    },
+    {
+      "text": "盘点清单、差异记录和本店复核构成同一结果，使用单个Task即可，无需复制一个同义子任务。",
+      "evidenceRefs": [
+        "req-retail-02",
+        "retail02-period"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:retail02-september01",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change:retail02-september01",
+        "action": "create",
+        "targetId": "new:retail02-september01",
+        "parentId": null,
+        "fields": {
+          "title": "完成01店2026年9月月末盘点",
+          "acceptanceCriteria": [
+            "形成合成·青桐01店截至2026年9月30日月末时点的盘点记录，记录本轮库存核对范围、时间及核对依据。",
+            "实盘与对应库存记录的差异逐项留存，并注明复核情况和未解决项；无差异也有核对记录，不能沿用八月数量或AUG-01关闭结论。",
+            "由01店核对本轮盘点记录，资料标明01店与2026年9月周期，不混入02店九月盘点或八月补差。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m2",
+            "basis": "recommended",
+            "reason": "林序负责安排01店落实并复核本店交付记录，适合承担本次01店月末盘点结果。",
+            "evidenceRefs": [
+              "retail-m2"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": "2026-09-30",
+            "dueOn": "2026-09-30",
+            "basis": "explicit",
+            "assumptions": [
+              "9月30日来自用户明确指定的盘点时点和硬期限；当天具体时段及人员安排未确认。"
+            ],
+            "evidenceRefs": [
+              "req-retail-02",
+              "retail02-period"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "缺少适用的人时历史、工具方式及足够的工作量细节，暂不虚构估算。",
+              "EWD仅计人类投入，不计等待、运输或无人值守时间，也不换算为自然工期。"
+            ],
+            "evidenceRefs": [
+              "req-retail-02",
+              "retail02-period"
+            ]
+          },
+          "dependsOnTaskIds": [],
+          "goal": {
+            "text": "核对01店2026年9月30日月末库存并形成本期差异记录。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-retail-02",
+              "retail02-period"
+            ]
+          },
+          "tips": [
+            "核对本期盘点范围和库存记录时点，再记录实盘及差异。",
+            "复核发现的九月差异并留存依据；需要后续处理时另行判断，不混入八月已关闭事项。"
+          ]
+        },
+        "reason": "用户明确了新周期和门店，两个查重候选均为不同实例；只需一个可核对的盘点结果。",
+        "evidenceRefs": [
+          "req-retail-02",
+          "retail02-period",
+          "retail02-aug",
+          "retail02-02sep"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "retail02-aug",
+      "retail02-02sep"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-retail"
+    ],
+    "assessments": [
+      {
+        "taskId": "retail02-aug",
+        "relationship": "different_instance",
+        "reason": "同为01店月末盘点，但可见记录覆盖2026年8月且已经结项，本次明确为2026年9月30日新周期。",
+        "evidenceRefs": [
+          "retail02-aug",
+          "retail02-h1",
+          "retail02-period",
+          "req-retail-02"
+        ]
+      },
+      {
+        "taskId": "retail02-02sep",
+        "relationship": "different_instance",
+        "reason": "同属2026年9月盘点，但已有任务对象是02店，本次明确只覆盖01店。",
+        "evidenceRefs": [
+          "retail02-02sep",
+          "retail02-period",
+          "req-retail-02"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "本轮不重开八月任务、不处理已关闭的AUG-01，也不修改02店现有九月盘点。",
+    "9月30日为本轮月末时点与硬日期，具体当天执行安排尚未接受。",
+    "没有盘点规模及适用人时历史，EWD保留未知；林序9月4日窗口不能证明9月30日可用性。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:retail02-september01",
+      "label": "审阅01店九月盘点候选"
+    }
+  ],
+  "externalEffects": "none"
+}

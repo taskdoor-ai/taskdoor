@@ -1,0 +1,563 @@
+{
+  "reviewer": {
+    "kind": "independent_codex_agent",
+    "taskName": "/root/realistic_retest_c",
+    "humanIndustryReview": false
+  },
+  "cases": [
+    {
+      "caseId": "REAL-B-NPI-01",
+      "status": "failed",
+      "summary": "5/6 项人工检查通过。四项局部更新、完成记录保护、外部COC风险和查重处理均正确；DVT却以首批来料任务替代了PCN的直接前置，缺少冻结期望要求的 b-npi-pcn 依赖。",
+      "manualCheckResults": [
+        {
+          "check": "仅四个既有消费者出现update，proposal复杂度为complex；没有create、重开或复制“变更任务”。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/proposal",
+              "note": "complexity为complex，changes恰为4个update，目标仅为incoming、wi、dvt、gate，没有create。"
+            },
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "其余10个任务全部保留。"
+            }
+          ]
+        },
+        {
+          "check": "来料核对新增PCN前置，作业指导消费来料结果，DVT消费PCN，门禁同时消费来料、作业和DVT；父子归属没有被机械当依赖。",
+          "status": "failed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/proposal/changes/2/fields/dependsOnTaskIds",
+              "note": "DVT最终依赖为[b-npi-design,b-npi-incoming]，缺少b-npi-pcn。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/4/requiredDependencies/2",
+              "note": "冻结期望要求DVT直接依赖b-npi-design与b-npi-pcn。"
+            },
+            {
+              "file": "inputs/REAL-B-NPI-01.json",
+              "pointer": "/context/sourceRefs/4",
+              "note": "PCN v3明确把现行固化窗口用于DVT，b-npi-incoming不能替代这一真正前置。"
+            }
+          ]
+        },
+        {
+          "check": "BOM v5、RC图纸、完成PCN及其历史版本保持原ID、状态、Owner、标准和完成记录；ECO v2作为superseded历史保留。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "BOM、设计基线、PCN及其父级均未update。"
+            },
+            {
+              "file": "inputs/REAL-B-NPI-01.json",
+              "pointer": "/context/history",
+              "note": "BOM、RC图纸和PCN的完成历史仍由原任务承载；输出未重开。"
+            },
+            {
+              "file": "inputs/REAL-B-NPI-01.json",
+              "pointer": "/context/sourceRefs/0",
+              "note": "ECO v2仍作为superseded来源存在，输出没有覆盖或删除它。"
+            }
+          ]
+        },
+        {
+          "check": "四个update实际修改受影响的完成标准、schedule或dependsOnTaskIds；不能只在tips或summary口头提到交接。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/proposal/changes",
+              "note": "四个update均实际修改acceptanceCriteria和dependsOnTaskIds，没有只写tips或summary。"
+            }
+          ]
+        },
+        {
+          "check": "9月7日COC是外部承诺而非完成事实；9月10日硬门禁保留，方案用风险或条件表达，不保证试制必然按时。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/warnings/0",
+              "note": "明确9月7日只是COC承诺，延迟会影响9月8日至10日链路且门禁保持阻塞。"
+            },
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/proposal/changes/3/fields/acceptanceCriteria/1",
+              "note": "缺COC时不得宣称可试制，未保证9月10日必然按时。"
+            }
+          ]
+        },
+        {
+          "check": "confirmedFields未解锁且不变，duplicateCheck逐项回显四个现有匹配。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "锁定root与BOM均未更新，confirmedFields未被解锁或改写。"
+            },
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/duplicateCheck",
+              "note": "completed状态、团队范围、coverageNote及四个现有匹配均逐项保留。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "severity": "error",
+          "text": "planner：DVT缺少对完成PCN产出的直接依赖，并错误地用中间来料核对任务代替；这违反冻结协议“按消费者实际使用的产出建立直接依赖”。fixture：PCN文本和期望依赖一致，没有夹具矛盾。grader：structural-report正确报告该缺边，并非误报。",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/proposal/changes/2/fields/dependsOnTaskIds",
+              "note": "实际为design+incoming。"
+            },
+            {
+              "file": "inputs/REAL-B-NPI-01.json",
+              "pointer": "/context/sourceRefs/4/text",
+              "note": "PCN直接规定固化窗口用于DVT。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/4/errors/0",
+              "note": "Missing required handoff dependencies for b-npi-dvt。"
+            },
+            {
+              "file": "protocol-snapshot.json",
+              "pointer": "/SKILL.md/content",
+              "note": "冻结规则要求消费者连接真正前置，不以中间任务替代。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-B-LOG-01",
+      "status": "passed",
+      "summary": "6/6 项人工检查通过。输出准确识别13/27项及讨论、历史、查重覆盖不完整，返回null提案与授权游标续读动作，没有猜测隐藏消费者、泄露凭据或承诺整树可行性。",
+      "manualCheckResults": [
+        {
+          "check": "识别当前仅13/27项，tasks、subtasks、discussions、history与查重均不完整；proposal应为null，不能把可见局部包装成全树方案。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "inputs/REAL-B-LOG-01.json",
+              "pointer": "/context/coverage",
+              "note": "tasks、subtasks、discussions、history均为partial。"
+            },
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/proposal",
+              "note": "proposal为null，未把当前页包装成整树方案。"
+            },
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/reasoningSummary/0",
+              "note": "明确当前13项、剩余14项及不得猜测边界。"
+            }
+          ]
+        },
+        {
+          "check": "nextActions包含retry_context并指向已授权任务和讨论游标；不让用户手抄、不声称已经执行分页。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/nextActions/0",
+              "note": "retry_context指向b-log-root，label包含b-log-page-2、b-log-page-3和b-log-thread-page-2。"
+            },
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/summary",
+              "note": "使用“应先续读”而非声称已经执行分页，也未要求用户手抄。"
+            }
+          ]
+        },
+        {
+          "check": "baseTaskVersions仍完整回显本页13项，已完成账号和回退演练被保护；没有对任何可见任务update或create。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/baseTaskVersions",
+              "note": "完整回显本页13个任务版本。"
+            },
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/proposal",
+              "note": "没有任何update或create；已完成账号与回退演练未被重开。"
+            }
+          ]
+        },
+        {
+          "check": "不猜测其余14项的标题、Owner、状态、依赖或消费者，不泄露关务凭据；ACL verified不等于未加载页已可见。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/reasoningSummary/0",
+              "note": "只说明隐藏项数量和游标，不猜标题、Owner、状态或依赖。"
+            },
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/",
+              "note": "输出未出现b-log-hidden-consumer-14或未授权关务SFTP明文凭据。"
+            },
+            {
+              "file": "inputs/REAL-B-LOG-01.json",
+              "pointer": "/context/sourceRefs/6",
+              "note": "分页回执明确ACL已验证仍不等于后续页可见。"
+            }
+          ]
+        },
+        {
+          "check": "duplicateCheck保持partial及原有两个matches，不能声称已排除重复。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/duplicateCheck",
+              "note": "保持partial、原team范围、原coverageNote和两个matches，没有声称排除其余重复。"
+            }
+          ]
+        },
+        {
+          "check": "保留9月19日窗口和9月16日审批预计值的事实边界，未读上下文前不承诺完整日期可行性。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/warnings/1",
+              "note": "保留9月19日硬窗口和9月16日预计回执，并要求补读后再复核可行性。"
+            },
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/reasoningSummary/3",
+              "note": "明确SFTP只是预计回执，未视为完成。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "severity": "info",
+          "text": "planner：六项人工检查均满足。fixture：分页数量、游标、预计回执和隐藏资料边界相互一致。grader：结构报告无错误，与本次语义复核一致。",
+          "evidence": [
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/5",
+              "note": "status为structurally_valid且errors为空。"
+            },
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/proposal",
+              "note": "null提案与needs_clarification符合冻结期望。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-B-RETAIL-01",
+      "status": "passed",
+      "summary": "6/6 项人工检查通过。输出仅更新货架、入库、陈列与软开门禁，日期从9月13日有权窗口向后衔接；消防保持未知，POS、培训和完成项未整体顺延。",
+      "manualCheckResults": [
+        {
+          "check": "只更新货架、入库、现场陈列和软开门禁四个现有消费者；没有创建夜间搬运或复制门禁任务。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/changes",
+              "note": "恰有fixture、stock、vm、softopen四个update，没有create。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "其余12项均保留，没有夜间搬运或复制门禁任务。"
+            }
+          ]
+        },
+        {
+          "check": "货架schedule不早于9月13日有权窗口；入库和陈列日期按真实前置衔接，软开仍保留9月23日硬边界并暴露消防结果未知。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/changes/0/fields/schedule",
+              "note": "货架startOn为9月13日，未早于08:00有权窗口。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/changes/1/fields/schedule",
+              "note": "入库建议截止9月17日，晚于货架9月15日边界。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/warnings/1",
+              "note": "消防仍只是预约，结果未知时软开门禁保持阻塞。"
+            }
+          ]
+        },
+        {
+          "check": "陈列新增货架安装前置，软开新增入库与陈列消费者；POS和培训保持原任务与日期，不整体顺延。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/changes/2/fields/dependsOnTaskIds",
+              "note": "陈列保留planogram并新增fixture前置。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/changes/3/fields/dependsOnTaskIds",
+              "note": "软开保留fire、pos、training，并新增stock与vm。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "POS和培训未更新，原日期保持。"
+            }
+          ]
+        },
+        {
+          "check": "已完成物业交付、招牌和平面图的ID、状态、Owner、标准与历史不变；物业v2保留为superseded文件。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "landlord、signage、planogram及其父级均保留原ID。"
+            },
+            {
+              "file": "inputs/REAL-B-RETAIL-01.json",
+              "pointer": "/context/history",
+              "note": "三项完成历史仍绑定原任务。"
+            },
+            {
+              "file": "inputs/REAL-B-RETAIL-01.json",
+              "pointer": "/context/sourceRefs/0",
+              "note": "物业v2仍保留为superseded。"
+            }
+          ]
+        },
+        {
+          "check": "不采用未接受的夜间搬运提议，也不把消防预约解释为通过；外部机构结果保持未知。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/reasoningSummary/1",
+              "note": "明确拒绝未批准夜间搬运。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/warnings/1",
+              "note": "未把消防预约写成通过，外部结果保持未知。"
+            }
+          ]
+        },
+        {
+          "check": "confirmedFields保持锁定，duplicateCheck逐项回显四个现有任务，更新字段有文件和讨论证据。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "锁定root、softopen截止与planogram标准未被改写。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/duplicateCheck",
+              "note": "四个现有匹配逐项回显。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/changes",
+              "note": "schedule与依赖均附物业、文件或讨论证据。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "severity": "info",
+          "text": "planner：六项人工检查均满足，日期建议明确标为recommended并披露容量与施工时长未知。fixture：窗口、硬期限和完成历史一致。grader：结构报告无错误，与语义复核一致。",
+          "evidence": [
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/6",
+              "note": "status为structurally_valid且errors为空。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/warnings",
+              "note": "未把建议日期或消防预约包装成完成保证。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-B-PROC-01",
+      "status": "failed",
+      "summary": "5/6 项人工检查通过。五项更新、完成记录保护、银行外部等待和查重处理均正确；银行验证却仍只依赖税务任务，未直接消费所有人核对结果。",
+      "manualCheckResults": [
+        {
+          "check": "只更新所有人核对、MSA、税务、银行验证和采购门禁五个既有消费者；没有“快速准入”或重复文件任务。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes",
+              "note": "恰有owner-review、msa、tax、bank、gate五个update，没有create。"
+            },
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "其余11项均保留，没有快速准入或重复文件任务。"
+            }
+          ]
+        },
+        {
+          "check": "MSA与税务消费所有人核对，银行消费税务与所有人核对，门禁保留安全、合同、税务、银行和质量前置；不把父分支机械串行。",
+          "status": "failed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes/3/fields",
+              "note": "银行update没有dependsOnTaskIds，因此最终仍只有旧前置b-proc-tax。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/7/requiredDependencies/3",
+              "note": "冻结期望要求银行直接依赖b-proc-tax与b-proc-owner-review。"
+            },
+            {
+              "file": "inputs/REAL-B-PROC-01.json",
+              "pointer": "/context/sourceRefs/1",
+              "note": "登记册v3把银行列为直接地址消费者；经所有人核对的v3结果不能由税务任务代替。"
+            }
+          ]
+        },
+        {
+          "check": "完成的制裁筛查、NDA和样品试用保持原ID、状态、Owner、标准及历史；登记册v2保留为superseded，不被删除或改称错误完成。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "sanctions、nda、quality均保留且未update。"
+            },
+            {
+              "file": "inputs/REAL-B-PROC-01.json",
+              "pointer": "/context/history",
+              "note": "三项完成历史仍绑定原ID。"
+            },
+            {
+              "file": "inputs/REAL-B-PROC-01.json",
+              "pointer": "/context/sourceRefs/0",
+              "note": "登记册v2继续以superseded状态留存。"
+            }
+          ]
+        },
+        {
+          "check": "五个update实际改用登记册v3的地址来源，并按需更新完成标准、schedule或依赖；不能只在summary中说“同步所有消费者”。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes",
+              "note": "五个update均实际修改acceptanceCriteria，MSA、税务和门禁还修改依赖；不是只写summary。"
+            },
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes/3/fields/acceptanceCriteria/0",
+              "note": "银行标准明确要求用登记册v3与税务结果核验地址。"
+            }
+          ]
+        },
+        {
+          "check": "银行函9月7日仅为外部承诺，9月10日门禁和9月12日首单硬期限需保留风险，不得编造账号或双人核验完成。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/warnings/0",
+              "note": "明确9月7日仅为上传承诺，延迟时不得释放首单。"
+            },
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes/3/fields/acceptanceCriteria",
+              "note": "只描述银行函到达后的双人核验，不编造账号或完成事实。"
+            },
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes/4/fields/acceptanceCriteria/1",
+              "note": "保留9月10日门禁与9月12日首单硬边界。"
+            }
+          ]
+        },
+        {
+          "check": "confirmedFields保持锁定，duplicateCheck逐项回显五个现有匹配；撤回的重签NDA和未接受的快速准入提议不进入候选。",
+          "status": "passed",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "锁定root与NDA均未更新。"
+            },
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/duplicateCheck",
+              "note": "completed状态与五个现有匹配逐项回显。"
+            },
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes",
+              "note": "撤回的重签NDA和未接受的快速准入均未进入候选。"
+            }
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "severity": "error",
+          "text": "planner：银行验证是登记册v3地址的直接消费者，却没有新增b-proc-owner-review前置；仅通过税务任务间接传递不能满足冻结协议的直接依赖要求。门禁额外直连owner-review不能修复银行缺边。fixture：登记册链接、任务标准和冻结期望一致，没有夹具矛盾。grader：structural-report正确报告银行缺边，并非误报。",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes/3",
+              "note": "银行只更新完成标准，依赖仍为b-proc-tax。"
+            },
+            {
+              "file": "inputs/REAL-B-PROC-01.json",
+              "pointer": "/context/sourceRefs/1/linkedTaskIds",
+              "note": "b-proc-bank被明确列为登记册v3消费者。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/7/errors/0",
+              "note": "Missing required handoff dependencies for b-proc-bank。"
+            },
+            {
+              "file": "protocol-snapshot.json",
+              "pointer": "/SKILL.md/content",
+              "note": "冻结规则要求消费者连接真正前置，不以中间任务替代。"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

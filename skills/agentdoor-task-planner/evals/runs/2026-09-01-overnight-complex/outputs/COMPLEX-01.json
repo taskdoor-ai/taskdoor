@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-complex01",
+  "baseSnapshotId": "snapshot-complex01-v3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "complex01-root": 8,
+    "complex01-data": 4,
+    "complex01-enablement": 3,
+    "complex01-mapping": 5,
+    "complex01-sample": 4,
+    "complex01-sandbox": 4,
+    "complex01-uat": 3,
+    "complex01-outline": 2,
+    "complex01-session": 2,
+    "complex01-handover": 3
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议仅补齐UAT、培训演示、最终交接清单的真实前置关系；保留数据与培训提纲并行，所有任务身份、负责人、日期及已完成结果不变。",
+  "reasoningSummary": [
+    {
+      "text": "共同确认的接口清单要求UAT使用样本v2与现行沙箱配置，当前UAT仅登记映射前置，需补齐两项输入。",
+      "evidenceRefs": [
+        "complex01-handoff-v2",
+        "complex01-uat",
+        "complex01-sample",
+        "complex01-sandbox"
+      ]
+    },
+    {
+      "text": "培训提纲可独立准备；培训演示需要提纲、样本与沙箱，但不需要等待UAT完成，不能按列表顺序串行全部任务。",
+      "evidenceRefs": [
+        "complex01-handoff-v2",
+        "complex01-outline",
+        "complex01-session",
+        "complex01-d-order"
+      ]
+    },
+    {
+      "text": "最终交接同时使用UAT与培训演示记录，当前只登记UAT；样本9月4日、UAT9月5日、培训9月7日、交接9月8日的现有边界可按此衔接。",
+      "evidenceRefs": [
+        "complex01-handover",
+        "complex01-handoff-v2",
+        "complex01-windows"
+      ]
+    },
+    {
+      "text": "映射版本5及沙箱配置版本4已完成；本轮仅补关系，不改变根目的、UAT标准与正式Owner，也不增加生产访问或培训范围。",
+      "evidenceRefs": [
+        "req-complex01",
+        "complex01-h-mapping",
+        "complex01-h-sandbox",
+        "complex01-scope-v2"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "complex01-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:complex01-uat-inputs",
+        "action": "update",
+        "targetId": "complex01-uat",
+        "parentId": "complex01-enablement",
+        "fields": {
+          "dependsOnTaskIds": [
+            "complex01-mapping",
+            "complex01-sample",
+            "complex01-sandbox"
+          ]
+        },
+        "reason": "保留原映射前置，补入接口清单明确需要的样本与沙箱配置；9月4日样本先于9月5日UAT窗口。",
+        "evidenceRefs": [
+          "complex01-uat",
+          "complex01-handoff-v2",
+          "complex01-windows"
+        ]
+      },
+      {
+        "id": "change:complex01-session-inputs",
+        "action": "update",
+        "targetId": "complex01-session",
+        "parentId": "complex01-enablement",
+        "fields": {
+          "dependsOnTaskIds": [
+            "complex01-outline",
+            "complex01-sample",
+            "complex01-sandbox"
+          ]
+        },
+        "reason": "保留提纲前置，补齐演示使用的样本与沙箱；不增加对UAT的依赖，9月7日演示日期不变。",
+        "evidenceRefs": [
+          "complex01-session",
+          "complex01-handoff-v2",
+          "complex01-windows"
+        ]
+      },
+      {
+        "id": "change:complex01-handover-inputs",
+        "action": "update",
+        "targetId": "complex01-handover",
+        "parentId": "complex01-root",
+        "fields": {
+          "dependsOnTaskIds": [
+            "complex01-uat",
+            "complex01-session"
+          ]
+        },
+        "reason": "保留UAT前置并纳入培训演示记录，满足现有交接标准；9月8日交接日期不变。",
+        "evidenceRefs": [
+          "complex01-handover",
+          "complex01-handoff-v2",
+          "complex01-windows"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "complex01-root",
+      "complex01-data",
+      "complex01-enablement",
+      "complex01-mapping",
+      "complex01-sample",
+      "complex01-sandbox",
+      "complex01-outline"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "questions": [],
+  "warnings": [
+    "本轮仅提出依赖字段差异，不写入任务、不改变正式状态或负责人。",
+    "已核对给定交付与使用窗口的先后关系；未提供完整成员容量，不能据此保证所有工作按期完成。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "complex01-root",
+      "label": "审阅三项必要依赖差异，保留原并行关系与日期"
+    }
+  ],
+  "externalEffects": "none"
+}

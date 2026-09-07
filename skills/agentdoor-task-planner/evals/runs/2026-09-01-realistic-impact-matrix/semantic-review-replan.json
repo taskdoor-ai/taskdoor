@@ -1,0 +1,435 @@
+{
+  "schemaVersion": "agentdoor.semantic-review.v1",
+  "runDirectory": "/tmp/agentdoor-planner-realistic-impact-matrix-20260901-v2",
+  "reviewScope": {
+    "scenarios": [
+      "REAL-C-02",
+      "REAL-C-03"
+    ],
+    "artifacts": [
+      "inputs",
+      "first outputs",
+      "expectations-snapshot.json",
+      "protocol-snapshot.json"
+    ],
+    "scoringRun": false,
+    "existingArtifactsModified": false
+  },
+  "overallVerdict": {
+    "status": "mixed",
+    "fail": [
+      "REAL-C-02"
+    ],
+    "pass": [
+      "REAL-C-03"
+    ],
+    "summary": "C02错把日记账复核直连银行异常核对，并把尚不存在的最终回单误判为证据索引的source_only权威输入；C03正确区分批准文件与开放归档任务。"
+  },
+  "cases": [
+    {
+      "scenarioId": "REAL-C-02",
+      "verdict": "fail",
+      "confidence": "high",
+      "impactMatrix": {
+        "direct": [
+          {
+            "consumer": "fc-fx",
+            "requiredResult": "正式回单及8月/9月归属核对结论",
+            "producer": "fc-transfer-clear",
+            "evidenceRefs": [
+              "fc-transfer-clear",
+              "fc-fx",
+              "fc-d2",
+              "fc-d4",
+              "fc-h5"
+            ]
+          },
+          {
+            "consumer": "fc-journal-approval",
+            "requiredResult": "外币重估形成的调整分录",
+            "producer": "fc-fx",
+            "evidenceRefs": [
+              "fc-fx",
+              "fc-journal-approval",
+              "fc-file-journal-pack-v4"
+            ]
+          }
+        ],
+        "transitive": [
+          {
+            "taskId": "fc-statements",
+            "path": [
+              "fc-transfer-clear",
+              "fc-fx",
+              "fc-statements"
+            ],
+            "action": "preserve"
+          },
+          {
+            "taskId": "fc-audit-evidence",
+            "paths": [
+              [
+                "fc-transfer-clear",
+                "fc-fx",
+                "fc-journal-approval",
+                "fc-audit-evidence"
+              ],
+              [
+                "fc-transfer-clear",
+                "fc-fx",
+                "fc-statements",
+                "fc-audit-evidence"
+              ]
+            ],
+            "action": "preserve"
+          },
+          {
+            "taskId": "fc-board-pack",
+            "path": [
+              "fc-transfer-clear",
+              "fc-fx",
+              "fc-statements",
+              "fc-audit-evidence",
+              "fc-board-pack"
+            ],
+            "action": "preserve"
+          }
+        ],
+        "sourceOnly": [
+          {
+            "sourceId": "fc-file-bank-advice-v2",
+            "classification": "authoritative_input_not_edge_substitute",
+            "analysis": "虽为approved，但fc-d9与其冲突，正式回单未到且fc-d2要求fc-transfer-clear形成可验收归属结论；不能替代fc-transfer-clear→fc-fx。",
+            "evidenceRefs": [
+              "fc-file-bank-advice-v2",
+              "fc-d9",
+              "fc-file-bank-wait-v1",
+              "fc-d2"
+            ]
+          },
+          {
+            "sourceId": "future-stamped-receipt",
+            "classification": "not_present",
+            "analysis": "快照只有acknowledged等待回执，没有最终带章回单。",
+            "evidenceRefs": [
+              "fc-file-bank-wait-v1"
+            ]
+          },
+          {
+            "taskId": "fc-audit-evidence",
+            "classification": "transitive_not_source_only",
+            "analysis": "fc-d5是authority=external_requester、state=open的问询，fc-file-audit-index-v2为draft；两者不构成审计接受、日记账批准或已确认的直接消费边界。",
+            "evidenceRefs": [
+              "fc-d5",
+              "fc-file-audit-index-v2",
+              "fc-external-role"
+            ]
+          }
+        ],
+        "dependencyDiff": [
+          {
+            "taskId": "fc-fx",
+            "old": [
+              "fc-bank-recon"
+            ],
+            "expectedFinal": [
+              "fc-bank-recon",
+              "fc-transfer-clear"
+            ],
+            "outputFinal": [
+              "fc-bank-recon",
+              "fc-transfer-clear"
+            ],
+            "verdict": "correct"
+          },
+          {
+            "taskId": "fc-journal-approval",
+            "old": [],
+            "expectedFinal": [
+              "fc-fx"
+            ],
+            "outputFinal": [
+              "fc-transfer-clear"
+            ],
+            "verdict": "wrong"
+          },
+          {
+            "taskId": "fc-statements",
+            "expectedFinal": [
+              "fc-ap",
+              "fc-payroll",
+              "fc-fx"
+            ],
+            "verdict": "preserved"
+          },
+          {
+            "taskId": "fc-audit-evidence",
+            "expectedFinal": [
+              "fc-journal-approval",
+              "fc-statements"
+            ],
+            "verdict": "preserved"
+          },
+          {
+            "taskId": "fc-board-pack",
+            "expectedFinal": [
+              "fc-statements",
+              "fc-audit-evidence"
+            ],
+            "verdict": "preserved"
+          }
+        ]
+      },
+      "plannerIssues": [
+        {
+          "id": "C02-P1",
+          "severity": "high",
+          "field": "proposal.changes[targetId=fc-journal-approval].fields.dependsOnTaskIds",
+          "observed": [
+            "fc-transfer-clear"
+          ],
+          "expected": [
+            "fc-fx"
+          ],
+          "analysis": "正确链是fc-transfer-clear→fc-fx→fc-journal-approval。“待银行回单事项保持待决”只描述门禁状态，不能证明日记账复核直接读取异常任务结果。",
+          "evidenceRefs": [
+            "fc-transfer-clear",
+            "fc-fx",
+            "fc-journal-approval",
+            "fc-file-journal-pack-v4"
+          ]
+        },
+        {
+          "id": "C02-P2",
+          "severity": "medium",
+          "field": "reasoningSummary[2].text",
+          "observed": "称最终回单是证据索引的权威文件输入。",
+          "expected": "把fc-audit-evidence归为传递下游；当前没有最终回单，开放问询也未确认新边界。",
+          "analysis": "保持fc-audit-evidence字段不变是对的，但source_only理由没有输入支持。",
+          "evidenceRefs": [
+            "fc-d5",
+            "fc-file-audit-index-v2",
+            "fc-external-role",
+            "fc-file-bank-wait-v1"
+          ]
+        },
+        {
+          "id": "C02-P3",
+          "severity": "medium",
+          "field": "reasoningSummary.evidenceRefs",
+          "observed": "输出未引用fc-file-bank-advice-v2，也未在reasoningSummary同时引用与之冲突的fc-d9。",
+          "expected": "关键阻塞边界同时引用approved通知、应收台账冲突和等待回执。",
+          "evidenceRefs": [
+            "fc-file-bank-advice-v2",
+            "fc-d9",
+            "fc-file-bank-wait-v1",
+            "fc-d2"
+          ]
+        }
+      ],
+      "fixtureIssues": {
+        "status": "none",
+        "analysis": "输入含任务标准、共享日记账包、文件状态、authority/state、完整依赖图和隐私边界，足以判定direct/transitive/source_only。"
+      },
+      "graderIssues": {
+        "status": "none_in_frozen_expectation",
+        "analysis": "exactDependencies要求fc-journal-approval=[fc-fx]，requiredEvidenceRefs包含fc-file-bank-advice-v2，冻结期望正确；未运行评分器，不能评价评分实现。"
+      },
+      "expectationAlignment": {
+        "passed": [
+          "intent/disposition",
+          "零create且仅两项update",
+          "fc-fx依赖",
+          "下游依赖保持",
+          "隐私token未暴露"
+        ],
+        "failed": [
+          "exactDependencies: fc-journal-approval",
+          "requiredEvidenceRefs: fc-file-bank-advice-v2"
+        ]
+      },
+      "privacyReview": {
+        "verdict": "pass",
+        "analysis": "只引用薪资封存状态与最小披露边界，没有输出或猜测薪资行项目，未出现C02受限payload sentinel。",
+        "evidenceRefs": [
+          "fc-privacy-boundary",
+          "fc-d8",
+          "fc-file-payroll-register-v5"
+        ]
+      }
+    },
+    {
+      "scenarioId": "REAL-C-03",
+      "verdict": "pass",
+      "confidence": "high",
+      "impactMatrix": {
+        "sourceOnly": [
+          {
+            "consumers": [
+              "hr-account",
+              "hr-payroll",
+              "hr-startday"
+            ],
+            "sourceId": "hr-file-date-amend-v2",
+            "analysis": "approved文件已直接确认2026-09-16，无需等待open的hr-date-amend形成结论。",
+            "evidenceRefs": [
+              "hr-file-date-amend-v2",
+              "hr-d1",
+              "hr-d2"
+            ]
+          },
+          {
+            "consumers": [
+              "hr-laptop"
+            ],
+            "sourceId": "hr-file-device-dispatch-v2",
+            "analysis": "approved配送单直接确认9月15日交付。",
+            "evidenceRefs": [
+              "hr-file-device-dispatch-v2",
+              "hr-d8"
+            ]
+          },
+          {
+            "consumers": [
+              "hr-payroll"
+            ],
+            "sourceId": "hr-d10",
+            "analysis": "数据保管人报告只支持推荐排期，不是完成事实；输出正确使用basis=recommended。",
+            "evidenceRefs": [
+              "hr-d10",
+              "hr-file-payroll-check-v4"
+            ]
+          }
+        ],
+        "openArchiveTask": {
+          "taskId": "hr-date-amend",
+          "classification": "archive_sync_not_producer",
+          "analysis": "现有标准已覆盖归档与同步，approved文件可直接消费；不应新增hr-date-amend依赖或等价改写该任务。",
+          "evidenceRefs": [
+            "hr-date-amend",
+            "hr-file-date-amend-v2"
+          ]
+        },
+        "directDependenciesPreserved": [
+          {
+            "taskId": "hr-account",
+            "dependsOnTaskIds": [
+              "hr-offer-accept"
+            ]
+          },
+          {
+            "taskId": "hr-payroll",
+            "dependsOnTaskIds": [
+              "hr-offer-accept"
+            ]
+          },
+          {
+            "taskId": "hr-startday",
+            "dependsOnTaskIds": [
+              "hr-account",
+              "hr-laptop",
+              "hr-policy",
+              "hr-weekplan",
+              "hr-payroll"
+            ]
+          },
+          {
+            "taskId": "hr-prod-access",
+            "dependsOnTaskIds": [
+              "hr-background",
+              "hr-policy",
+              "hr-role-outcomes"
+            ],
+            "analysis": "独立生产权限门槛，不是入职日必需完成项，日期变化不自动放行。"
+          }
+        ],
+        "transitive": [
+          {
+            "taskIds": [
+              "hr-root",
+              "hr-onboarding",
+              "hr-readiness"
+            ],
+            "classification": "parent_or_aggregate",
+            "action": "preserve"
+          }
+        ],
+        "scheduleDiff": [
+          {
+            "taskId": "hr-account",
+            "oldDueOn": "2026-09-14",
+            "outputDueOn": "2026-09-16",
+            "basis": "explicit",
+            "verdict": "correct"
+          },
+          {
+            "taskId": "hr-laptop",
+            "oldDueOn": "2026-09-14",
+            "outputDueOn": "2026-09-15",
+            "basis": "explicit",
+            "verdict": "correct"
+          },
+          {
+            "taskId": "hr-payroll",
+            "oldDueOn": "2026-09-14",
+            "outputDueOn": "2026-09-15",
+            "basis": "recommended",
+            "verdict": "correct"
+          },
+          {
+            "taskId": "hr-startday",
+            "oldDueOn": "2026-09-14",
+            "outputDueOn": "2026-09-16",
+            "basis": "explicit",
+            "verdict": "correct"
+          }
+        ]
+      },
+      "plannerIssues": [],
+      "fixtureIssues": {
+        "status": "none",
+        "analysis": "输入明确给出approved日期文件、open归档任务、旧dueOn、配送单、薪资排期、权限门槛和隐私范围，足以判定。"
+      },
+      "graderIssues": {
+        "status": "none_in_frozen_expectation",
+        "analysis": "冻结期望要求恰好四项排期更新并保持所有exactDependencies，首次输出完全匹配；未运行评分器。"
+      },
+      "expectationAlignment": {
+        "passed": [
+          "仅四项schedule更新且零create",
+          "hr-date-amend和已完成录用历史保持",
+          "hr-account/hr-payroll旧前置保持",
+          "hr-startday五项依赖保持",
+          "hr-prod-access三项门槛保持",
+          "requiredEvidenceRefs/Groups",
+          "隐私token未暴露"
+        ],
+        "failed": []
+      },
+      "privacyReview": {
+        "verdict": "pass",
+        "analysis": "仅使用候选编号、批准日期、设备日期、背景pending/ETA与薪资登记状态；未输出或推断背景发现、证件、银行、税务、地址或联系方式，未出现C03受限payload sentinel。",
+        "evidenceRefs": [
+          "hr-privacy-boundary",
+          "hr-file-background-receipt-v3",
+          "hr-file-payroll-check-v4",
+          "hr-file-device-dispatch-v2"
+        ]
+      }
+    }
+  ],
+  "crossCaseFindings": [
+    {
+      "topic": "权威文件与开放归档任务",
+      "finding": "C03的approved日期文件已提供可直接消费事实，hr-date-amend不是依赖；C02尚无最终回单，open问询与draft索引不能把未来回单变成source_only输入。"
+    },
+    {
+      "topic": "依赖集合差分",
+      "finding": "fc-fx保留fc-bank-recon并加入fc-transfer-clear；fc-journal-approval应直连fc-fx。C03只改日期，全部旧依赖原样保留。"
+    },
+    {
+      "topic": "隐私证据",
+      "finding": "两案均未泄露mustNotExpose token，也没有把背景ETA当通过或展开薪资明细。"
+    }
+  ]
+}

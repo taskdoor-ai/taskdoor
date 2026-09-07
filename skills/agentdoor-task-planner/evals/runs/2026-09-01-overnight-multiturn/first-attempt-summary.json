@@ -1,0 +1,95 @@
+{
+  "kind": "raw_first_attempt_summary",
+  "cases": [
+    {
+      "caseId": "MULTI-A1",
+      "status": "passed",
+      "failureKind": null,
+      "errors": []
+    },
+    {
+      "caseId": "MULTI-A2",
+      "status": "passed",
+      "failureKind": null,
+      "errors": []
+    },
+    {
+      "caseId": "MULTI-A3",
+      "status": "passed",
+      "failureKind": null,
+      "errors": []
+    },
+    {
+      "caseId": "MULTI-B1",
+      "status": "failed",
+      "failureKind": "protocol_invariant",
+      "errors": [
+        "duplicateCheck coverage and assessment set did not mirror input"
+      ]
+    },
+    {
+      "caseId": "MULTI-B2",
+      "status": "passed",
+      "failureKind": null,
+      "errors": []
+    },
+    {
+      "caseId": "MULTI-B3",
+      "status": "passed",
+      "failureKind": null,
+      "errors": []
+    },
+    {
+      "caseId": "MULTI-C1",
+      "status": "passed",
+      "failureKind": null,
+      "errors": []
+    },
+    {
+      "caseId": "MULTI-C2",
+      "status": "passed",
+      "failureKind": null,
+      "errors": []
+    },
+    {
+      "caseId": "MULTI-C3",
+      "status": "failed",
+      "failureKind": "semantic",
+      "errors": [
+        "unnecessary blocking question for execution-level typo details"
+      ]
+    },
+    {
+      "caseId": "MULTI-D1",
+      "status": "passed",
+      "failureKind": null,
+      "errors": []
+    },
+    {
+      "caseId": "MULTI-D2",
+      "status": "failed",
+      "failureKind": "protocol_invariant",
+      "errors": [
+        "complexity described the delta instead of the effective task tree"
+      ]
+    },
+    {
+      "caseId": "MULTI-D3",
+      "status": "passed",
+      "failureKind": null,
+      "errors": []
+    }
+  ],
+  "total": 12,
+  "passed": 9,
+  "failed": 3,
+  "unknown": 0,
+  "correctedProtocolAttempts": [
+    "MULTI-B1",
+    "MULTI-D2"
+  ],
+  "semanticFailureRetained": [
+    "MULTI-C3"
+  ],
+  "note": "B1 and D2 first JSON plus their original structural reports are preserved under each turn attempts/attempt-1. Corrected current files do not erase these failures."
+}

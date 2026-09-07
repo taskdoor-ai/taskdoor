@@ -1,0 +1,159 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-saas-03",
+  "baseSnapshotId": "snapshot-saas-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "saas03-root": 5,
+    "saas03-scope": 3,
+    "saas03-map": 4,
+    "saas03-uat": 2,
+    "saas03-train": 2
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只追加停用账号字段核对，复用已完成的映射表v2及现有UAT、培训任务，保留钟宁和12条核心用例标准。",
+  "reasoningSummary": [
+    {
+      "text": "客户确认v3只新增停用账号字段核对，并明确本期排除历史关账数据。",
+      "evidenceRefs": [
+        "saas03-client-v3",
+        "saas03-d1"
+      ]
+    },
+    {
+      "text": "映射表v2的200条基础字段演练已正式完成；报告说明只缺停用账号字段，原成果仍有效。",
+      "evidenceRefs": [
+        "saas03-map",
+        "saas03-h1",
+        "saas03-d2"
+      ]
+    },
+    {
+      "text": "钟宁和12条核心用例标准已确认；让许棠接手仅为未经接受的提议，不能转移责任或覆盖标准。",
+      "evidenceRefs": [
+        "req-saas-03",
+        "saas03-h2",
+        "saas03-d3",
+        "saas03-uat"
+      ]
+    },
+    {
+      "text": "UAT和培训已分别存在，现有9月9日、9月10日期限及主任务9月12日期限保留，无须重复创建。",
+      "evidenceRefs": [
+        "saas03-uat",
+        "saas03-train",
+        "saas03-root"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "saas03-root",
+    "complexity": "complex",
+    "preservedTaskIds": [
+      "saas03-root",
+      "saas03-scope",
+      "saas03-map",
+      "saas03-uat",
+      "saas03-train"
+    ],
+    "changes": [
+      {
+        "id": "change:new:saas03-disabled-account-check",
+        "action": "create",
+        "targetId": "new:saas03-disabled-account-check",
+        "parentId": "saas03-root",
+        "fields": {
+          "title": "补充核对本期CRM停用账号字段",
+          "acceptanceCriteria": [
+            "以客户范围确认v3为依据，记录停用账号字段的确认口径、数据版本和核对范围，保留逐项差异及处理结论。",
+            "引用已完成的映射表v2作为基础，仅核对其未覆盖的停用账号字段；保留原200条基础字段演练成果，不覆盖旧完成记录。",
+            "提交可供本期交付引用的字段核对补充记录；本期不导入历史关账数据，不改变原UAT的12条核心流程用例标准。"
+          ],
+          "tips": [
+            "将补充核对结论提供给现有UAT及培训任务供使用；是否影响具体用例按证据核对，不把新的字段标准偷偷写入已确认UAT标准。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "saas-m3",
+            "basis": "recommended",
+            "reason": "沈言负责字段映射和迁移核对，且已说明v2缺少该字段，适合负责这一局部补充结果。",
+            "evidenceRefs": [
+              "saas-m3",
+              "saas03-d2"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "saas-m6",
+              "contribution": "定位客户v3确认并核对停用账号字段业务口径及本期排除范围。",
+              "evidenceRefs": [
+                "saas-m6",
+                "saas03-client-v3"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-12",
+            "basis": "recommended",
+            "assumptions": [
+              "建议在现有主任务交付边界前提供补充记录；人员窗口和具体核对起始日未知，不改UAT、培训或主任务原期限。"
+            ],
+            "evidenceRefs": [
+              "saas03-root",
+              "saas03-client-v3"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "历史只说明v2已完成，没有可复用人时；新增字段数据量、异常情况及工具方式未知。"
+            ],
+            "evidenceRefs": [
+              "saas03-d2",
+              "saas03-client-v3",
+              "saas03-h1"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "saas03-map"
+          ]
+        },
+        "reason": "客户已确认新增范围未被已完成v2覆盖，作为引用旧成果的新增工作，不重开或覆写已完成任务。",
+        "evidenceRefs": [
+          "saas03-client-v3",
+          "saas03-d2",
+          "saas03-map"
+        ]
+      }
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "停用账号字段的定义、取值口径和新增核对量尚需从客户确认资料中落实，不能扩大为重新演练所有200条基础字段。",
+    "新候选由沈言负责的建议尚未接受；完整可用窗口和工具方式未知，EWD暂留空。",
+    "新核对候选建议对齐9月12日整体交付边界，实际执行窗口需协调；不据现有任务数量推断容量。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "saas03-root",
+      "label": "审阅停用账号字段核对这一新增差异"
+    },
+    {
+      "action": "open_task",
+      "taskId": "saas03-uat",
+      "label": "继续现有UAT并保留已确认标准"
+    }
+  ],
+  "externalEffects": "none"
+}

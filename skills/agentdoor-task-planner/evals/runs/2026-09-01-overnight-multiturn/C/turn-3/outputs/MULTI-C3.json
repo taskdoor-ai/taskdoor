@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-c3",
+  "baseSnapshotId": "snapshot-multi-c3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "sim:C:1": 1
+  },
+  "intent": "create",
+  "disposition": "needs_clarification",
+  "summary": "建议保留SKU-CUP-A记录sim:C:1原样推进，并为不同业务对象SKU-CUP-B建立一项独立的三处错字校对草稿；但本轮未提供B的三处原文位置和正确文本，补齐清单前不能确认执行边界。",
+  "reasoningSummary": [
+    {
+      "text": "本轮明确对象是SKU-CUP-B，交付为9月3日清稿和三处差异清单；现有sim:C:1对应SKU-CUP-A五处校对，业务对象、错字数量和期限均不同。",
+      "evidenceRefs": [
+        "req-multi-c3",
+        "chain-c-sku-b",
+        "sim:C:1"
+      ]
+    },
+    {
+      "text": "用户明确要求SKU-CUP-A继续原样推进，因此不更新、重开、合并或依赖该记录。",
+      "evidenceRefs": [
+        "req-multi-c3",
+        "chain-c-sku-b",
+        "sim:C:1"
+      ]
+    },
+    {
+      "text": "当前输入只说明B有三处错字，没有列出原文、页面位置、正确文本或清单版本；不能套用A的五处清单来补造B的修改内容。",
+      "evidenceRefs": [
+        "req-multi-c3",
+        "chain-c-sku-b",
+        "ecom01-copy"
+      ]
+    },
+    {
+      "text": "用户明确指定颜北，其职责支持按已确认信息修正详情页错字；该推荐仍不等于正式Owner接受或指派。",
+      "evidenceRefs": [
+        "req-multi-c3",
+        "chain-c-sku-b",
+        "ecom-m2-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:multi-c3-proofread",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-multi-c3-proofread",
+        "action": "create",
+        "targetId": "new:multi-c3-proofread",
+        "parentId": null,
+        "fields": {
+          "title": "SKU-CUP-B详情页三处错字校对",
+          "goal": {
+            "text": "让SKU-CUP-B详情页仅完成本轮三处错字修正，并通过清稿和三处差异清单逐项核对。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-multi-c3",
+              "chain-c-sku-b"
+            ]
+          },
+          "acceptanceCriteria": [
+            "以待补充的SKU-CUP-B三处错字清单为唯一修改范围；清单须逐项标明页面位置、原文和正确文本，并能在当前B版页面中定位。",
+            "交付SKU-CUP-B详情页清稿，三处文字与经确认清单逐项一致；未列入清单的文字不自行扩写或改写。",
+            "交付三处差异清单，逐项记录原文、修正后文字和定位依据，能与清稿对应核查。",
+            "对照当前B版页面确认不改图片、价格或卖点；本任务也不包含页面发布、功效承诺调整或效果验收。"
+          ],
+          "tips": [
+            "收到B的三处明确清单后再逐项校对；不要复用SKU-CUP-A的五处错字内容。",
+            "发现清单外疑点时单列提示，不擅自扩大本轮修改范围。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "ecom-m2",
+            "basis": "explicit",
+            "reason": "用户明确指定颜北，且其职责包含按已确认信息修正详情页错字；候选仍需独立接受，规划不写正式ownerId。",
+            "evidenceRefs": [
+              "req-multi-c3",
+              "chain-c-sku-b",
+              "ecom-m2-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-03",
+            "basis": "explicit",
+            "assumptions": [
+              "用户明确要求2026年9月3日交清稿和三处差异清单。",
+              "开始时间取决于三处错字清单补齐；颜北完整可用性未知，截止日不表示已接受或保证完成。"
+            ],
+            "evidenceRefs": [
+              "req-multi-c3",
+              "chain-c-sku-b"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "三处原文位置和正确文本尚未提供，也没有同范围历史、工具方式或容量记录，不能按错字数量套用默认工时。",
+              "EWD如后续评估只计人工校对和差异清单整理，不含等待用户补清单或审阅。"
+            ],
+            "evidenceRefs": [
+              "req-multi-c3",
+              "chain-c-sku-b",
+              "ecom-m2-role"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "SKU-CUP-B是独立对象，三处清稿和差异清单共同构成一个轻任务；清单内容未提供时保留最小草稿并请求补齐。",
+        "evidenceRefs": [
+          "req-multi-c3",
+          "chain-c-sku-b",
+          "ecom-m2-role"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "sim:C:1"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "assessments": [
+      {
+        "taskId": "sim:C:1",
+        "relationship": "different_instance",
+        "reason": "现有记录是SKU-CUP-A的五处校对、9月2日交付；本轮是SKU-CUP-B的三处校对、9月3日交付，业务对象和交付实例均明确不同。",
+        "evidenceRefs": [
+          "req-multi-c3",
+          "chain-c-sku-b",
+          "sim:C:1",
+          "ecom01-copy"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [
+    {
+      "field": "acceptanceCriteria.typoList",
+      "question": "请提供SKU-CUP-B三处错字清单：每处在当前页面中的位置、原文和应改成的正确文本；无需重复SKU、负责人、日期或不改项。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "SKU-CUP-A的sim:C:1保持版本1和全部现有字段，不更新、不合并，也不作为SKU-CUP-B任务的依赖。",
+    "SKU-CUP-B三处具体内容未提供；补齐前不能把A的清单、行业常见错字或其他页面内容套入本轮。",
+    "颜北只是明确指定且职责匹配的候选负责人，输入没有正式接受或指派记录；完整容量也未知。",
+    "本轮未执行创建、指派、通知、页面编辑、发布、改价或其他外部动作。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": "new:multi-c3-proofread",
+      "label": "补充SKU-CUP-B三处错字的定位、原文和正确文本"
+    },
+    {
+      "action": "review_proposal",
+      "taskId": "new:multi-c3-proofread",
+      "label": "清单补齐后审阅SKU-CUP-B校对候选"
+    }
+  ],
+  "externalEffects": "none"
+}

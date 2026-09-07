@@ -1,14 +1,16 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, CornerDownRight, ListTree } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 import { findTagByName, type TagDefinition } from "../data/tagGroups";
 import { type TaskNode } from "../data/workspaceNodes";
-import { PersonAvatar } from "./PersonAvatar";
+import { getTaskTimeRangeLabel } from "../lib/taskTimeRange";
+import { PersonAvatar, PersonName } from "./PersonAvatar";
 import { TagBadge } from "./TagBadge";
 import { TaskStatusBadge } from "./TaskStatusBadge";
 import { TaskIcon } from "./TaskIcon";
 import { Button } from "./ui/button";
 
 type WorkspaceDirectoryViewProps = {
+  allTasks: TaskNode[];
   onTaskSelect: (task: TaskNode) => void;
   resultsHeader?: ReactNode;
   tagDefinitions: TagDefinition[];
@@ -17,18 +19,32 @@ type WorkspaceDirectoryViewProps = {
 
 const taskPageSize = 10;
 
-function TaskDistributionRow({ onSelect, tagDefinitions, task }: { onSelect: (task: TaskNode) => void; tagDefinitions: TagDefinition[]; task: TaskNode }) {
+function TaskDistributionRow({ allTasks, onSelect, tagDefinitions, task }: { allTasks: TaskNode[]; onSelect: (task: TaskNode) => void; tagDefinitions: TagDefinition[]; task: TaskNode }) {
   const tags = (task.labels ?? []).map((name) => findTagByName(tagDefinitions, name)).filter((tag) => tag !== undefined);
-  return <button className="workspace-directory-task" onClick={() => onSelect(task)} type="button">
-    <span className="workspace-directory-task-title"><TaskIcon iconName={task.iconName} tone={task.iconTone} /><span><strong>{task.name}</strong><small>{task.goal?.trim() || "暂无任务说明"}</small></span></span>
-    <TaskStatusBadge size="sm" value={task.status} />
-    <span className="workspace-directory-task-tags">{tags.slice(0, 2).map((tag) => <TagBadge key={tag.id} size="xs" tag={tag} />)}{tags.length > 2 && <small>+{tags.length - 2}</small>}{tags.length === 0 && <small>—</small>}</span>
-    <span className="workspace-owner"><PersonAvatar name={task.ownerId} size="xs" />{task.ownerId}</span>
-    <span className="workspace-directory-task-due">{task.dueAt ?? "暂无到期日"}</span>
-  </button>;
+  const timeRange = getTaskTimeRangeLabel(task);
+  const childCount = allTasks.filter((candidate) => candidate.parentTaskId === task.id).length;
+  const parentTask = task.parentTaskId ? allTasks.find((candidate) => candidate.id === task.parentTaskId) : undefined;
+  return <article className="workspace-directory-task" data-tone={task.iconTone ?? "neutral"}>
+    <button aria-label={`打开任务：${task.name}`} className="workspace-directory-task-open-area" onClick={() => onSelect(task)} type="button" />
+    <span className="workspace-directory-task-title">
+      <TaskIcon iconName={task.iconName} size="lg" tone={task.iconTone} />
+      <span className="workspace-directory-task-copy">
+        <span className="workspace-directory-task-heading"><strong>{task.name}</strong></span>
+        <small>{task.goal?.trim() || "暂无任务说明"}</small>
+        <span className="workspace-directory-task-meta">
+          <span aria-label={`状态：${task.status}`} className="workspace-directory-task-status"><TaskStatusBadge size="sm" value={task.status} /></span>
+          <span aria-label={`负责人：${task.ownerId}`} className="workspace-owner"><PersonAvatar name={task.ownerId} personId={task.ownerId} profilePreviewFocusable={false} size="xs" /><strong><PersonName name={task.ownerId} personId={task.ownerId} /></strong></span>
+          <span aria-label={`标签：${tags.map((tag) => tag.name).join("、") || "暂无"}`} className="workspace-directory-task-tags">{tags.slice(0, 2).map((tag) => <TagBadge key={tag.id} size="xs" tag={tag} />)}{tags.length > 2 && <em>+{tags.length - 2}</em>}{tags.length === 0 && <em>暂无</em>}</span>
+          {timeRange && <span className="workspace-directory-task-time"><CalendarDays aria-hidden="true" size={14} /><span>{timeRange}</span></span>}
+          {parentTask ? <span className="workspace-directory-task-hierarchy"><CornerDownRight aria-hidden="true" size={14} /><small>主任务</small><strong>{parentTask.name}</strong></span> : childCount > 0 ? <span className="workspace-directory-task-hierarchy"><ListTree aria-hidden="true" size={14} /><small>子任务</small><strong>{childCount}</strong></span> : null}
+        </span>
+      </span>
+    </span>
+    <ChevronRight aria-hidden="true" className="workspace-directory-task-open" />
+  </article>;
 }
 
-export function WorkspaceDirectoryView({ onTaskSelect, resultsHeader, tagDefinitions, tasks }: WorkspaceDirectoryViewProps) {
+export function WorkspaceDirectoryView({ allTasks, onTaskSelect, resultsHeader, tagDefinitions, tasks }: WorkspaceDirectoryViewProps) {
   const [page, setPage] = useState(1);
   const pageCount = Math.max(1, Math.ceil(tasks.length / taskPageSize));
   const currentPage = Math.min(page, pageCount);
@@ -43,9 +59,8 @@ export function WorkspaceDirectoryView({ onTaskSelect, resultsHeader, tagDefinit
   return <section aria-label="任务列表" className="workspace-directory-shell">
     <div className="workspace-directory-results">
       {resultsHeader}
-      <div aria-hidden="true" className="workspace-directory-columns"><span>任务</span><span>状态</span><span>标签</span><span>负责人</span><span>截止时间</span></div>
-      <div>{pagedTasks.length ? pagedTasks.map((task) => <TaskDistributionRow key={task.id} onSelect={onTaskSelect} tagDefinitions={tagDefinitions} task={task} />) : <div className="workspace-list-empty">没有匹配的任务</div>}</div>
-      {tasks.length > 0 && <nav aria-label="任务列表分页" className="workspace-directory-pagination"><span>共 {tasks.length} 项</span><div><Button aria-label="上一页" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)} size="icon-sm" type="button" variant="outline"><ChevronLeft /></Button>{visiblePages.map((pageNumber) => <Button aria-current={pageNumber === currentPage ? "page" : undefined} key={pageNumber} onClick={() => setPage(pageNumber)} size="sm" type="button" variant={pageNumber === currentPage ? "default" : "ghost"}>{pageNumber}</Button>)}<Button aria-label="下一页" disabled={currentPage === pageCount} onClick={() => setPage(currentPage + 1)} size="icon-sm" type="button" variant="outline"><ChevronRight /></Button></div></nav>}
+      <div className="workspace-directory-task-list">{pagedTasks.length ? pagedTasks.map((task) => <TaskDistributionRow allTasks={allTasks} key={task.id} onSelect={onTaskSelect} tagDefinitions={tagDefinitions} task={task} />) : <div className="workspace-list-empty"><strong>没有匹配的任务</strong><span>调整搜索词或筛选条件后再试。</span></div>}</div>
+      {tasks.length > 0 && <nav aria-label="任务列表分页" className="workspace-directory-pagination"><span>共 {tasks.length} 项</span><div><Button aria-label="上一页" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)} size="icon-sm" type="button" variant="outline"><ChevronLeft /></Button>{visiblePages.map((pageNumber) => <Button aria-current={pageNumber === currentPage ? "page" : undefined} key={pageNumber} onClick={() => setPage(pageNumber)} size="sm" type="button" variant="ghost">{pageNumber}</Button>)}<Button aria-label="下一页" disabled={currentPage === pageCount} onClick={() => setPage(currentPage + 1)} size="icon-sm" type="button" variant="outline"><ChevronRight /></Button></div></nav>}
     </div>
   </section>;
 }

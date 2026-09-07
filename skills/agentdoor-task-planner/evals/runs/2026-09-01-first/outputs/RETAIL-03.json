@@ -1,0 +1,224 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-retail-03",
+  "baseSnapshotId": "snapshot-retail-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "retail03-root": 4,
+    "retail03-guide": 2,
+    "retail03-pilot": 3,
+    "retail03-delivery": 2
+  },
+  "intent": "next_batch",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议在原推广任务下只追加02店窄货架适配和现场落地两项候选，复用已确认v2、01店试点及正在跟进的02店到货任务。",
+  "reasoningSummary": [
+    {
+      "text": "原推广根仍在进行，通用指引v2和01店试点均已完成，应保留原ID和完成记录。",
+      "evidenceRefs": [
+        "retail03-root",
+        "retail03-guide",
+        "retail03-pilot",
+        "retail03-h1"
+      ]
+    },
+    {
+      "text": "已确认范围只要求02店窄货架局部适配，不重做通用指引，也不影响01店结果。",
+      "evidenceRefs": [
+        "retail03-scope",
+        "retail03-d1",
+        "retail03-d3"
+      ]
+    },
+    {
+      "text": "02店物料已有谢允负责的进行中任务，现场落实应依赖并复用该原任务。",
+      "evidenceRefs": [
+        "retail03-delivery",
+        "retail03-scope"
+      ]
+    },
+    {
+      "text": "跨店支援只是未接受提议；02店落实依据本店店长职责，林序的01店窗口不等于跨店可用。",
+      "evidenceRefs": [
+        "retail03-d2",
+        "retail-m2",
+        "retail-m3",
+        "retail-m4"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "retail03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:retail03-adapt",
+        "action": "create",
+        "targetId": "new:retail03-adapt",
+        "parentId": "retail03-root",
+        "fields": {
+          "title": "确认02店窄货架局部适配图",
+          "acceptanceCriteria": [
+            "依据02店实际货架尺寸和现场限制形成局部适配图，清楚标明适用门店、位置、尺寸与版本。",
+            "适配图引用已确认通用指引v2，逐项标明仅影响02店窄货架的差异及确认依据；通用v2和01店结果不被重写。",
+            "与02店核对本地可实施性及物料需求差异，交付可供本店现场落实的确认版本；未确认差异单列。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m4",
+            "basis": "recommended",
+            "reason": "陈韵负责陈列指引版本和门店适配图评审，适合承担02店局部适配结果。",
+            "evidenceRefs": [
+              "retail-m4"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "retail-m3",
+              "contribution": "提供02店实际货架尺寸、现场及实施时段约束，核对适配图是否适用。",
+              "evidenceRefs": [
+                "retail-m3"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "尚无已确认的完整执行窗口，不能把候选日期当作成员接受或工期保证。"
+            ],
+            "evidenceRefs": [
+              "req-retail-03",
+              "retail03-scope",
+              "retail03-d1"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "缺少适用的人时历史、工具方式及足够的工作量细节，暂不虚构估算。",
+              "EWD仅计人类投入，不计等待、运输或无人值守时间，也不换算为自然工期。"
+            ],
+            "evidenceRefs": [
+              "req-retail-03",
+              "retail03-scope",
+              "retail03-d1"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "retail03-guide"
+          ],
+          "tips": [
+            "到货仍在retail03-delivery中跟进；适配新增物料差异在原任务下协调，不再建一份补货任务。"
+          ]
+        },
+        "reason": "02店货架与通用指引不匹配，已确认需独立局部适配结果；已完成v2继续复用。",
+        "evidenceRefs": [
+          "retail03-scope",
+          "retail03-d1",
+          "retail03-guide",
+          "retail-m4",
+          "retail-m3"
+        ]
+      },
+      {
+        "id": "change:retail03-site",
+        "action": "create",
+        "targetId": "new:retail03-site",
+        "parentId": "retail03-root",
+        "fields": {
+          "title": "完成02店适配陈列并回传现场记录",
+          "acceptanceCriteria": [
+            "依据已确认02店局部适配图及通用v2完成本店陈列，回传注明02店、日期、位置和适配版本的现场记录。",
+            "落实前对照retail03-delivery的实际到店数量和回执核对所需物料，未到货不标为具备条件。",
+            "由02店核对窄货架实际呈现与确认方案的差异，保留结果与处理记录；不使用01店试点、适配效果图或他人自报代替本店现场证据。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m3",
+            "basis": "recommended",
+            "reason": "叶芷负责02店落实及本店货架、时段约束，不需要假定01店店长跨店支援。",
+            "evidenceRefs": [
+              "retail-m3"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-10",
+            "basis": "explicit",
+            "assumptions": [
+              "尚无已确认的完整执行窗口，不能把候选日期当作成员接受或工期保证。"
+            ],
+            "evidenceRefs": [
+              "req-retail-03",
+              "retail03-root",
+              "retail03-scope"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "缺少适用的人时历史、工具方式及足够的工作量细节，暂不虚构估算。",
+              "EWD仅计人类投入，不计等待、运输或无人值守时间，也不换算为自然工期。"
+            ],
+            "evidenceRefs": [
+              "req-retail-03",
+              "retail03-root",
+              "retail03-scope"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:retail03-adapt",
+            "retail03-delivery"
+          ],
+          "tips": [
+            "根据本店可用窗口协调实施，不自动安排店员班次；物料迟到或局部适配影响期限时报告原任务负责人决定后续安排。"
+          ]
+        },
+        "reason": "02店现场结果尚不存在，且以已确认适配和原到货任务的实际产出作为前置。",
+        "evidenceRefs": [
+          "req-retail-03",
+          "retail03-delivery",
+          "retail03-root",
+          "retail-m3"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "retail03-root",
+      "retail03-guide",
+      "retail03-pilot",
+      "retail03-delivery"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-retail"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "保留江若的正式根任务Owner、谢允的到货责任，以及全部原状态和确认内容。",
+    "林序支援02店未接受，本提案不安排该协作、不推定她有空。",
+    "02店准确货架尺寸与适配细节、到料日期和实施窗口仍需在相应工作中核对；9月10日原期限保留但不构成按期保证。",
+    "候选负责人尚未接受，EWD未知；适配图不能替代现场记录。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "retail03-root",
+      "label": "审阅02店局部适配与落实候选"
+    },
+    {
+      "action": "open_task",
+      "taskId": "retail03-delivery",
+      "label": "查看正在跟进的02店到货任务"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,334 @@
+{
+  "reviewer": {
+    "kind": "independent_semantic_review",
+    "taskName": "/root/semantic_review_real_b",
+    "humanIndustryReview": false
+  },
+  "cases": [
+    {
+      "caseId": "REAL-B-NPI-01",
+      "status": "failed",
+      "summary": "最小四项局部更新、完成记录保护、版本边界、硬期限风险和查重回显大体正确，但DVT没有按要求直接依赖已完成PCN，而改为依赖来料核对；这是关键跨分支依赖缺失。另有一项夹具日期矛盾：既有父任务9月7日到期、来料子任务既有及候选到期日均为9月8日，同时期望又禁止更新父任务。",
+      "manualCheckResults": [
+        {
+          "check": "仅四个既有消费者出现update，proposal复杂度为complex；没有create、重开或复制“变更任务”。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-NPI-01.json#/proposal/complexity 为 complex，#/proposal/changes/0 至 /3 均为四个允许的 update，#/proposal/preservedTaskIds 保留其余十项。"
+        },
+        {
+          "check": "来料核对新增PCN前置，作业指导消费来料结果，DVT消费PCN，门禁同时消费来料、作业和DVT；父子归属没有被机械当依赖。",
+          "status": "failed",
+          "evidence": "outputs/REAL-B-NPI-01.json#/proposal/changes/2/fields/dependsOnTaskIds 为 [b-npi-design,b-npi-incoming]，缺少 expectations-snapshot.json#/expectations/4/requiredDependencies/2 要求的 b-npi-pcn；其余三项依赖符合要求。"
+        },
+        {
+          "check": "BOM v5、RC图纸、完成PCN及其历史版本保持原ID、状态、Owner、标准和完成记录；ECO v2作为superseded历史保留。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-NPI-01.json#/proposal/preservedTaskIds 包含 b-npi-design、b-npi-bom、b-npi-pcn；#/baseTaskVersions 原样回显版本；无上述任务 update，externalEffects 为 none。inputs/REAL-B-NPI-01.json#/context/files/0 仍为 superseded 的 ECO v2。"
+        },
+        {
+          "check": "四个update实际修改受影响的完成标准、schedule或dependsOnTaskIds；不能只在tips或summary口头提到交接。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-NPI-01.json#/proposal/changes/0 至 /3 均写入新的 acceptanceCriteria，并写入 schedule 和 dependsOnTaskIds；不是仅在摘要中叙述。"
+        },
+        {
+          "check": "9月7日COC是外部承诺而非完成事实；9月10日硬门禁保留，方案用风险或条件表达，不保证试制必然按时。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-NPI-01.json#/warnings/0 明确9月7日仅为承诺；#/proposal/changes/3/fields/acceptanceCriteria/2 和 /schedule/assumptions/0 均规定前置缺失时门禁不得通过。"
+        },
+        {
+          "check": "confirmedFields未解锁且不变，duplicateCheck逐项回显四个现有匹配。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-NPI-01.json#/proposal/changes 未触碰 inputs/REAL-B-NPI-01.json#/confirmedFields 中的根目标、根到期日和BOM标准；#/duplicateCheck 与输入四个 matches 一一对应。"
+        }
+      ],
+      "findings": [
+        {
+          "type": "planner",
+          "severity": "high",
+          "text": "DVT候选缺少PCN这一真实跨分支前置。PCN v3明确把固化窗口用于DVT，期望与人工检查也要求DVT消费PCN；候选却用来料核对替代PCN，导致结构报告报缺失交接依赖。",
+          "evidence": [
+            {
+              "file": "inputs/REAL-B-NPI-01.json",
+              "pointer": "/context/files/4/text",
+              "note": "PCN v3明确适用于试制和DVT。"
+            },
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/proposal/changes/2/fields/dependsOnTaskIds",
+              "note": "候选只有 design 和 incoming，没有 pcn。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/4/errors/1",
+              "note": "结构评分报告缺少 b-npi-dvt 的必要交接依赖。"
+            }
+          ]
+        },
+        {
+          "type": "fixture",
+          "severity": "high",
+          "text": "夹具的既有日期和允许更新范围互相冲突：供应资料包到期日为9月7日，来料子任务到期日为9月8日，但父任务又在禁止更新列表中。要求同时重排日期、保持 ready_for_confirmation 且不更新父任务，无法得到祖先日期一致的候选。",
+          "evidence": [
+            {
+              "file": "inputs/REAL-B-NPI-01.json",
+              "pointer": "/context/tasks/7/dueOn",
+              "note": "父任务 b-npi-supplier-ready 到期日为2026-09-07。"
+            },
+            {
+              "file": "inputs/REAL-B-NPI-01.json",
+              "pointer": "/context/tasks/9/dueOn",
+              "note": "子任务 b-npi-incoming 既有到期日为2026-09-08。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/4/mustNotUpdateTaskIds/7",
+              "note": "父任务被明确禁止更新。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/4/errors/0",
+              "note": "结构报告因此报子任务到期日晚于祖先。"
+            }
+          ]
+        },
+        {
+          "type": "fixture",
+          "severity": "low",
+          "text": "requiredEvidenceGroups把BOM/图纸文件ID设为唯一等价证据过窄。输出已用任务完成历史与拒绝重开决定证明基线保持，满足人工检查，但评分仍因未直接引用两个文件ID而失败。",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-NPI-01.json",
+              "pointer": "/reasoningSummary/2/evidenceRefs",
+              "note": "使用 h1、h2、h3 和 d4 支撑完成与不重开结论。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/4/requiredEvidenceGroups/0",
+              "note": "评分仅接受 BOM 文件或图纸文件ID。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/4/errors/2",
+              "note": "结构报告报等价证据组缺失。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-B-LOG-01",
+      "status": "passed",
+      "summary": "正确识别13/27项与讨论、历史、查重均未完整读取，返回needs_clarification和null proposal；没有猜测隐藏任务、泄露凭据或修改已完成记录，并保留9月16日预计审批与9月19日硬窗口的事实边界。结构报告的唯一失败来自过窄的证据组要求，不构成人工检查或v0.2协议失败。",
+      "manualCheckResults": [
+        {
+          "check": "识别当前仅13/27项，tasks、subtasks、discussions、history与查重均不完整；proposal应为null，不能把可见局部包装成全树方案。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-LOG-01.json#/disposition 为 needs_clarification，#/proposal 为 null，#/reasoningSummary/0 至 /2 准确说明分页与覆盖缺口。"
+        },
+        {
+          "check": "nextActions包含retry_context并指向已授权任务和讨论游标；不让用户手抄、不声称已经执行分页。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-LOG-01.json#/nextActions/0/action 为 retry_context，label列出 b-log-page-2、b-log-page-3、b-log-thread-page-2；输出只要求续读，没有宣称已读。"
+        },
+        {
+          "check": "baseTaskVersions仍完整回显本页13项，已完成账号和回退演练被保护；没有对任何可见任务update或create。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-LOG-01.json#/baseTaskVersions 含输入本页全部13项及原版本；#/proposal 为 null，故没有任何 create/update。#/reasoningSummary/3 明确保留两项完成记录。"
+        },
+        {
+          "check": "不猜测其余14项的标题、Owner、状态、依赖或消费者，不泄露关务凭据；ACL verified不等于未加载页已可见。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-LOG-01.json 没有出现 mustNotExpose 的隐藏任务ID或明文凭据，#/warnings/0 和 /1 明确区分部分覆盖与未授权凭据正文。"
+        },
+        {
+          "check": "duplicateCheck保持partial及原有两个matches，不能声称已排除重复。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-LOG-01.json#/duplicateCheck/status 为 partial，assessments恰为 b-log-label-map 与 b-log-runbook，coverageNote 原样回显不完整覆盖。"
+        },
+        {
+          "check": "保留9月19日窗口和9月16日审批预计值的事实边界，未读上下文前不承诺完整日期可行性。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-LOG-01.json#/warnings/1 把9月16日写成预计回执且不视为开通，#/warnings/2 保留9月19日硬边界并要求完整读取后复核前置日期。"
+        }
+      ],
+      "findings": [
+        {
+          "type": "fixture",
+          "severity": "low",
+          "text": "requiredEvidenceGroups要求全局证据引用必须出现 customs-v1 或 d5，但v0.2的 warnings 结构没有 evidenceRefs，且输出已经在warning中准确保留同一9月16日事实边界；结构评分据此判失败，超出了人工检查和协议的明确要求。",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-LOG-01.json",
+              "pointer": "/warnings/1",
+              "note": "准确表达审批预计值、权限边界和非完成状态。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/5/requiredEvidenceGroups/1",
+              "note": "限定必须出现 customs-v1 或 d5。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/5/errors/0",
+              "note": "评分仅因此报一个等价证据组缺失。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-B-RETAIL-01",
+      "status": "failed",
+      "summary": "业务语义和六项人工检查均满足：只重排四个消费者，日期链、消防未知、完成记录、未接受提议、确认字段与查重均处理正确。但两个update重复写入未变化的dependsOnTaskIds，违反v0.2“更新只放实际改变字段”的局部差异协议，因此整体失败。",
+      "manualCheckResults": [
+        {
+          "check": "只更新货架、入库、现场陈列和软开门禁四个现有消费者；没有创建夜间搬运或复制门禁任务。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-RETAIL-01.json#/proposal/changes 恰含 b-ret-fixture、b-ret-stock、b-ret-vm、b-ret-softopen 四个 update，且无 create。"
+        },
+        {
+          "check": "货架schedule不早于9月13日有权窗口；入库和陈列日期按真实前置衔接，软开仍保留9月23日硬边界并暴露消防结果未知。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-RETAIL-01.json#/proposal/changes/0 至 /2 的排期依次为9月13-14日、15-16日、17-19日；#/proposal/changes/3/acceptanceCriteria 与 #/warnings/1 保留消防未知，已确认的软开dueOn未被修改。"
+        },
+        {
+          "check": "陈列新增货架安装前置，软开新增入库与陈列消费者；POS和培训保持原任务与日期，不整体顺延。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-RETAIL-01.json#/proposal/changes/2/fields/dependsOnTaskIds 含 b-ret-fixture；#/proposal/changes/3/fields/dependsOnTaskIds 含 b-ret-stock 与 b-ret-vm；b-ret-pos、b-ret-training 仅在 preservedTaskIds 中。"
+        },
+        {
+          "check": "已完成物业交付、招牌和平面图的ID、状态、Owner、标准与历史不变；物业v2保留为superseded文件。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-RETAIL-01.json#/proposal/preservedTaskIds 包含 b-ret-landlord、b-ret-signage、b-ret-planogram，且没有对应update；inputs/REAL-B-RETAIL-01.json#/context/files/0 的 v2 仍为 superseded。"
+        },
+        {
+          "check": "不采用未接受的夜间搬运提议，也不把消防预约解释为通过；外部机构结果保持未知。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-RETAIL-01.json#/proposal/changes/0/fields/acceptanceCriteria/2 明确不采用夜间搬运；#/proposal/changes/3/fields/acceptanceCriteria/1 和 #/warnings/1 明确消防预约不是通过。"
+        },
+        {
+          "check": "confirmedFields保持锁定，duplicateCheck逐项回显四个现有任务，更新字段有文件和讨论证据。",
+          "status": "passed",
+          "evidence": "输出没有修改根goal、根dueOn、软开dueOn或平面图标准；outputs/REAL-B-RETAIL-01.json#/duplicateCheck/assessments 与输入四个matches一一对应，各change均引用相关文件和讨论。"
+        }
+      ],
+      "findings": [
+        {
+          "type": "planner",
+          "severity": "medium",
+          "text": "货架和入库两个update把与输入完全相同的dependsOnTaskIds再次写入fields。v0.2要求update只放实际改变字段；结构验证器正确判为非法冗余差异。",
+          "evidence": [
+            {
+              "file": "inputs/REAL-B-RETAIL-01.json",
+              "pointer": "/context/tasks/8/dependsOnTaskIds",
+              "note": "货架原依赖已经是 [b-ret-landlord]。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/changes/0/fields/dependsOnTaskIds",
+              "note": "候选重复写入相同依赖。"
+            },
+            {
+              "file": "inputs/REAL-B-RETAIL-01.json",
+              "pointer": "/context/tasks/11/dependsOnTaskIds",
+              "note": "入库原依赖已经是 [b-ret-fixture]。"
+            },
+            {
+              "file": "outputs/REAL-B-RETAIL-01.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "note": "候选重复写入相同依赖。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/6/errors",
+              "note": "结构报告准确列出两个 unchanged fields 错误。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "REAL-B-PROC-01",
+      "status": "failed",
+      "summary": "五个消费者、完成记录、v3地址边界、外部银行函风险、硬期限和查重保护大体正确，但银行验证仍只依赖税务，没有新增对所有人核对结果的跨分支依赖；同时重复写入原有税务依赖，既不满足关键人工检查，也违反最小差异协议。",
+      "manualCheckResults": [
+        {
+          "check": "只更新所有人核对、MSA、税务、银行验证和采购门禁五个既有消费者；没有“快速准入”或重复文件任务。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-PROC-01.json#/proposal/changes 恰含五个允许的 update，没有 create，且summary明确复用现有准入树。"
+        },
+        {
+          "check": "MSA与税务消费所有人核对，银行消费税务与所有人核对，门禁保留安全、合同、税务、银行和质量前置；不把父分支机械串行。",
+          "status": "failed",
+          "evidence": "outputs/REAL-B-PROC-01.json#/proposal/changes/3/fields/dependsOnTaskIds 只有 b-proc-tax，缺少 expectations-snapshot.json#/expectations/7/requiredDependencies/3 所要求的 b-proc-owner-review。MSA、税务和门禁其余必要前置存在。"
+        },
+        {
+          "check": "完成的制裁筛查、NDA和样品试用保持原ID、状态、Owner、标准及历史；登记册v2保留为superseded，不被删除或改称错误完成。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-PROC-01.json#/proposal/preservedTaskIds 包含 b-proc-sanctions、b-proc-nda、b-proc-quality，且无对应update；inputs/REAL-B-PROC-01.json#/context/files/0 的登记册v2仍为 superseded。"
+        },
+        {
+          "check": "五个update实际改用登记册v3的地址来源，并按需更新完成标准、schedule或依赖；不能只在summary中说“同步所有消费者”。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-PROC-01.json#/proposal/changes/0 至 /4 均实际更新 acceptanceCriteria，且各自引用 b-proc-reg-v3；MSA、税务、银行、门禁还按需写入依赖或schedule。"
+        },
+        {
+          "check": "银行函9月7日仅为外部承诺，9月10日门禁和9月12日首单硬期限需保留风险，不得编造账号或双人核验完成。",
+          "status": "passed",
+          "evidence": "outputs/REAL-B-PROC-01.json#/proposal/changes/3/fields/acceptanceCriteria/1 和 #/warnings/0 明确承诺不是已收到/已核验；#/proposal/changes/4/fields/schedule 保留9月10日审阅，标准保留9月12日前置风险。"
+        },
+        {
+          "check": "confirmedFields保持锁定，duplicateCheck逐项回显五个现有匹配；撤回的重签NDA和未接受的快速准入提议不进入候选。",
+          "status": "passed",
+          "evidence": "输出未修改根goal、根dueOn或NDA确认标准；outputs/REAL-B-PROC-01.json#/duplicateCheck/assessments 与输入五个matches一一对应，proposal没有NDA update或快速准入create。"
+        }
+      ],
+      "findings": [
+        {
+          "type": "planner",
+          "severity": "high",
+          "text": "银行验证缺少对 b-proc-owner-review 的必要依赖。候选标准要求用登记册v3完整地址进行核验，而所有人核对正是确认v3地址差异和主体覆盖的上游结果；只保留税务依赖无法表达该跨分支交接。",
+          "evidence": [
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes/3/fields/acceptanceCriteria/0",
+              "note": "银行验证声明要使用登记册v3完整地址。"
+            },
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes/3/fields/dependsOnTaskIds",
+              "note": "依赖只有税务，缺少 owner-review。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/7/errors/1",
+              "note": "结构报告报 b-proc-bank 缺少必要交接依赖。"
+            }
+          ]
+        },
+        {
+          "type": "planner",
+          "severity": "medium",
+          "text": "银行update重复写入输入中已存在的 [b-proc-tax]，违反update只提交实际改变字段的协议。正确差异应把 owner-review 加入依赖，而不是原样重写旧依赖。",
+          "evidence": [
+            {
+              "file": "inputs/REAL-B-PROC-01.json",
+              "pointer": "/context/tasks/13/dependsOnTaskIds",
+              "note": "输入银行任务原依赖就是 [b-proc-tax]。"
+            },
+            {
+              "file": "outputs/REAL-B-PROC-01.json",
+              "pointer": "/proposal/changes/3/fields/dependsOnTaskIds",
+              "note": "输出未形成依赖差异。"
+            },
+            {
+              "file": "structural-report.json",
+              "pointer": "/results/7/errors/0",
+              "note": "结构报告正确标记 unchanged fields。"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

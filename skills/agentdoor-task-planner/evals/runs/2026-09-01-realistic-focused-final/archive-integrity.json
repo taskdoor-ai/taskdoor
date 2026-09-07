@@ -1,0 +1,141 @@
+{
+  "algorithm": "sha256",
+  "fileCount": 27,
+  "files": [
+    {
+      "path": "artifact-path-map.json",
+      "bytes": 212,
+      "sha256": "8d7adcc980574711d097ce4b92c60c8be1b269165880f15073b43c50da656307"
+    },
+    {
+      "path": "execution-metadata.json",
+      "bytes": 1476,
+      "sha256": "d128ed5271d8994306e142013e00668e12175fc0fa6562fe274b65203356f1c0"
+    },
+    {
+      "path": "expectations-snapshot.json",
+      "bytes": 39569,
+      "sha256": "250a8b8fb86fa1dd33e600215eb96545b84d55760ed31c757e8dd6659dc5add6"
+    },
+    {
+      "path": "grading-erratum.json",
+      "bytes": 429,
+      "sha256": "b02a13503f1318da56f8dd39f0899e8612ceb607e849d267467e88312bdaea2d"
+    },
+    {
+      "path": "inputs/REAL-A-ECOM-01.json",
+      "bytes": 37633,
+      "sha256": "86904f5b07e460d38099d67a2ee15e1d65dcb8cc504944d2c39e9534997ce007"
+    },
+    {
+      "path": "inputs/REAL-B-NPI-01.json",
+      "bytes": 38955,
+      "sha256": "226b959304e86ffd303f94c12f01114f6cf2ea673686f2eb61a45f64a01911b6"
+    },
+    {
+      "path": "inputs/REAL-B-PROC-01.json",
+      "bytes": 41414,
+      "sha256": "bdf45d2cc4c32d9f7870d60a6296bfad2ef2eaacb0e873950d20b8ab0900f9f0"
+    },
+    {
+      "path": "inputs/REAL-C-01.json",
+      "bytes": 41585,
+      "sha256": "b2ae2408ca52079aec32c4a43702325337ba336a496c98063dc0fabc32c34b32"
+    },
+    {
+      "path": "inputs/REAL-C-02.json",
+      "bytes": 44250,
+      "sha256": "5df847142a5b402e3aad965cc6162c5b8d72e459386c7ced700b8a6bc1890bf5"
+    },
+    {
+      "path": "inputs/REAL-C-03.json",
+      "bytes": 43624,
+      "sha256": "7230ebdeb92af51bcf7d8c85018be2767aa56a3341189dfe53d78a8fee21a4b9"
+    },
+    {
+      "path": "inputs/REAL-C-04.json",
+      "bytes": 46206,
+      "sha256": "cbe6bb1abf0baa9d852626fa93057aa0fc5dbd57f051a47447b0aaf75a0aa5bc"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 2449,
+      "sha256": "5bdd0ffcddb2800e91545c52d3fd5f2a531784455b02cfb5a6ab2cf141fc6650"
+    },
+    {
+      "path": "outputs/REAL-A-ECOM-01.json",
+      "bytes": 5497,
+      "sha256": "bec91f74c27eb7a71efe96c46316de07cd41b5f1579cb833f8ca0f4bc15cb2c2"
+    },
+    {
+      "path": "outputs/REAL-B-NPI-01.json",
+      "bytes": 8369,
+      "sha256": "b133538a1d21be50c3878752b44ac6a569dcfef370c4b958c00db31b647451d7"
+    },
+    {
+      "path": "outputs/REAL-B-PROC-01.json",
+      "bytes": 9582,
+      "sha256": "7fb37c003c41c8137432cd7660ea0d64d74b3fd67cf531e8ee499c2e74803664"
+    },
+    {
+      "path": "outputs/REAL-C-01.json",
+      "bytes": 7138,
+      "sha256": "2e0ad827f8aa37c77af350860aed657b3fe542df4dd2d5b7c98f5d587fe17524"
+    },
+    {
+      "path": "outputs/REAL-C-02.json",
+      "bytes": 5866,
+      "sha256": "8b3cda918d92ac4daf8a24fb92ef5d6d112277524fb5be0aa658a37996946c81"
+    },
+    {
+      "path": "outputs/REAL-C-03.json",
+      "bytes": 7962,
+      "sha256": "3cc5174f2c44f34e7efe601be42222a4c940a250b32dcf34adbedb833917f72f"
+    },
+    {
+      "path": "outputs/REAL-C-04.json",
+      "bytes": 7080,
+      "sha256": "783551932ce0b678c2d9a73bd3d9bd954e61887c55a5e98298ab64fa733685f3"
+    },
+    {
+      "path": "protocol-snapshot.json",
+      "bytes": 57243,
+      "sha256": "082a9aede83509003356d6d50528e0b904a2e0bc21635d2922101f1a4477676a"
+    },
+    {
+      "path": "semantic-review-controls.json",
+      "bytes": 23736,
+      "sha256": "bf98e258752a88aa326a8c4bf2f3fbe56c5dbe09d7c1994fbd5e0dc4eeb640ec"
+    },
+    {
+      "path": "semantic-review-dependencies.json",
+      "bytes": 13597,
+      "sha256": "05547887a23e9a1c27f1d7588e91388eae2e74d756ef9c63e25bf3b8a5183bd7"
+    },
+    {
+      "path": "semantic-review-replan.json",
+      "bytes": 16958,
+      "sha256": "6879e653cff35417363e87fdad87159f98de872886d61d3fb3713fb5f35719ee"
+    },
+    {
+      "path": "semantic-summary.json",
+      "bytes": 2054,
+      "sha256": "c6f6725a2aecc28a92c709b20b40799ad60d674317af0858db7b08f62267dbaf"
+    },
+    {
+      "path": "structural-report.json",
+      "bytes": 12683,
+      "sha256": "a87b7af6e52063c9a23495db8b1e269e4618b0bc89d0559592925646c4cf31a1"
+    },
+    {
+      "path": "validator-snapshot/evaluate.py",
+      "bytes": 13314,
+      "sha256": "33688162db79e4166fb29dfbbaca0f84db92ae3827b984c3b188421930b6475c"
+    },
+    {
+      "path": "validator-snapshot/validate_plan.py",
+      "bytes": 34459,
+      "sha256": "d37c84b5d350ba18c41d4cdcef53fefa8610ef7983e3219b46e0a06d4503acbd"
+    }
+  ]
+}

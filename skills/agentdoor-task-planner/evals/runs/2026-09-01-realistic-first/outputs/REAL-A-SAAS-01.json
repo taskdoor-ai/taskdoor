@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "syn-req-saas-a-01",
+  "baseSnapshotId": "syn-snapshot-saas-a-13",
+  "baseRevision": 13,
+  "baseTaskVersions": {
+    "syn-saas-root": 12,
+    "syn-saas-config": 6,
+    "syn-saas-data": 5,
+    "syn-saas-adoption": 7,
+    "syn-saas-sso": 4,
+    "syn-saas-cert": 3,
+    "syn-saas-role-model": 4,
+    "syn-saas-mapping": 5,
+    "syn-saas-rehearsal": 4,
+    "syn-saas-handbook": 6,
+    "syn-saas-admin-training": 8,
+    "syn-saas-uat": 5,
+    "syn-saas-handover": 3
+  },
+  "intent": "create",
+  "disposition": "route_required",
+  "summary": "不建议再创建“15名管理员培训验收”；同一客户、tenant、两批15人和9月10日截止已由现有在办任务完整覆盖，应直接进入该任务继续完成B批。",
+  "reasoningSummary": [
+    {
+      "text": "现有培训任务已经明确覆盖A批8人、B批7人的签到、测验和未解问题清单，身份与本次请求一致。",
+      "evidenceRefs": [
+        "syn-req-saas-a-01",
+        "syn-saas-admin-training",
+        "syn-saas-file-01",
+        "syn-saas-file-02"
+      ]
+    },
+    {
+      "text": "团队已确认两批共同构成一个交付结果，不按日程拆成两个同结果任务。",
+      "evidenceRefs": [
+        "syn-saas-d03",
+        "syn-saas-d04",
+        "syn-saas-d08"
+      ]
+    },
+    {
+      "text": "A批完成只形成部分证据，B批尚未开始，正式任务仍为in_progress。",
+      "evidenceRefs": [
+        "syn-saas-d05",
+        "syn-saas-file-04",
+        "syn-saas-admin-training"
+      ]
+    },
+    {
+      "text": "现有任务截止日已经是已确认的2026-09-10，无需新建任务承载同一日期。",
+      "evidenceRefs": [
+        "syn-saas-admin-training",
+        "syn-req-saas-a-01"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-saas-a"
+    ],
+    "assessments": [
+      {
+        "taskId": "syn-saas-admin-training",
+        "relationship": "same_outcome",
+        "reason": "同一客户、tenant、15人、两批范围、截止日和交付证据均由在办任务完整覆盖。",
+        "evidenceRefs": [
+          "syn-saas-admin-training",
+          "syn-saas-file-01",
+          "syn-saas-file-02",
+          "syn-req-saas-a-01"
+        ]
+      },
+      {
+        "taskId": "syn-saas-handbook",
+        "relationship": "overlap",
+        "reason": "讲义覆盖培训内容材料，但不覆盖两批签到、测验和问题清单，因此不能替代培训验收结果。",
+        "evidenceRefs": [
+          "syn-saas-handbook",
+          "syn-saas-file-03"
+        ]
+      }
+    ],
+    "coverageNote": "纯合成查重已覆盖授权团队当前、活动和归档任务；完整候选仍在进行中。"
+  },
+  "questions": [],
+  "warnings": [
+    "第一批已结束不等于整项培训完成；B批7人的签到、测验及未解问题记录仍待形成。",
+    "本轮仅路由到现有任务，没有创建、更新、指派或改写正式状态。"
+  ],
+  "nextActions": [
+    {
+      "action": "open_task",
+      "taskId": "syn-saas-admin-training",
+      "label": "继续现有两批培训任务"
+    }
+  ],
+  "externalEffects": "none"
+}

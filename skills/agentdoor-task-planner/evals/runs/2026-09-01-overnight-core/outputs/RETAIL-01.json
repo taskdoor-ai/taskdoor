@@ -1,0 +1,527 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-retail-01",
+  "baseSnapshotId": "snapshot-retail-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议建立合成·青桐01店和02店的9月换季陈列准备候选计划，保留总部共用指引，并分别核对两店物料、现场落地与回传；培训问题单独留痕。尚未创建或排班。",
+  "reasoningSummary": [
+    {
+      "text": "范围仅含合成·青桐01店、02店，要求9月10日前完成本次陈列落地。",
+      "evidenceRefs": [
+        "req-retail-01",
+        "retail01-brief"
+      ]
+    },
+    {
+      "text": "独立交付包括总部指引、每店现场回传、培训问题清单和物料到店回执，应按结果拆分而不把操作清单全建成任务。",
+      "evidenceRefs": [
+        "retail01-brief",
+        "req-retail-01"
+      ]
+    },
+    {
+      "text": "快照内任务与历史完整为空；授权团队查重已完成且没有返回候选。",
+      "evidenceRefs": [
+        "req-retail-01"
+      ]
+    },
+    {
+      "text": "区域、店长、陈列、培训和补货职责边界不同；公开窗口仅是一次现场核对或线上培训窗口，不代表总容量与另一门店承诺。",
+      "evidenceRefs": [
+        "retail-m1-role",
+        "retail-m2-role",
+        "retail-m3-role",
+        "retail-m4-role",
+        "retail-m5-role",
+        "retail-m6-role",
+        "retail-m2-window",
+        "retail-m5-window"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:retail01-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "retail01-create-root",
+        "action": "create",
+        "targetId": "new:retail01-root",
+        "parentId": null,
+        "fields": {
+          "title": "合成·青桐01店与02店9月换季陈列准备",
+          "acceptanceCriteria": [
+            "截至9月10日，可分别核对01店、02店按同一受控总部指引完成的现场记录，含门店、时间、陈列区域及真实回传证据。",
+            "总部指引、两店物料到店回执和培训问题清单均注明版本、适用门店及未解决项，并能与现场回传对应。",
+            "任一门店未到料、未培训或未完成现场时如实记录，不以总部库存、效果图或参加培训替代实际落地证据。"
+          ],
+          "tips": [
+            "只协调两店共同边界和结果核对；各店具体班次由对应店长依现行流程安排。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m1",
+            "basis": "recommended",
+            "reason": "区域运营职责覆盖推广范围、跨店问题协调和结果核对，适合承担两店总体结果的候选责任。",
+            "evidenceRefs": [
+              "retail-m1-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-10",
+            "basis": "explicit",
+            "assumptions": [
+              "本轮两店整体硬期限为9月10日；缺少必要前置完成时间和完整可用性，不额外承诺子任务日期。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail01-brief"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "父任务不重复估算子任务投入；汇总由确定性代码处理。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail01-brief"
+            ]
+          },
+          "dependsOnTaskIds": [],
+          "goal": {
+            "text": "让合成·青桐01店和02店在9月10日前按受控总部指引完成换季陈列，并留下可分别核对的培训、到料和现场记录。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail01-brief"
+            ]
+          }
+        },
+        "reason": "用户要求两个门店和多种独立结果，建立一棵跨店候选计划。",
+        "evidenceRefs": [
+          "req-retail-01",
+          "retail01-brief"
+        ]
+      },
+      {
+        "id": "retail01-create-guide",
+        "action": "create",
+        "targetId": "new:retail01-guide",
+        "parentId": "new:retail01-root",
+        "fields": {
+          "title": "发布两店适用的总部陈列指引",
+          "acceptanceCriteria": [
+            "指引标明版本、适用门店、陈列范围及关键核对点，并记录发布或确认依据。",
+            "明确哪些内容为两店共用、哪些现场差异需门店回报；效果图不作为门店已经落地的证据。"
+          ],
+          "tips": [
+            "发布前分别核对两店适用边界；版本变化需保留差异，不让门店自行猜测。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m4",
+            "basis": "recommended",
+            "reason": "陈列设计职责是维护指引版本并评审门店适配图。",
+            "evidenceRefs": [
+              "retail-m4-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "retail-m2",
+              "contribution": "提供01店现场陈列限制供指引适用性核对，不代总部改范围。",
+              "evidenceRefs": [
+                "retail-m2-role"
+              ]
+            },
+            {
+              "memberId": "retail-m3",
+              "contribution": "提供02店货架和时段限制供指引适用性核对，不代表其他门店。",
+              "evidenceRefs": [
+                "retail-m3-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "尚未提供足够的前置完成时间和人员可用性，不从职责或在办事项推算日期。"
+            ],
+            "evidenceRefs": [
+              "retail01-brief",
+              "retail-m4-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有同范围历史实际投入、约定工具方式或充分工作量明细，暂不量化EWD；物流等待不计人类投入。"
+            ],
+            "evidenceRefs": [
+              "retail01-brief",
+              "retail-m4-role"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "总部指引是两店共用交付，单独维护一个受控版本，避免重复制作。",
+        "evidenceRefs": [
+          "retail01-brief",
+          "retail-m4-role"
+        ]
+      },
+      {
+        "id": "retail01-create-material-01",
+        "action": "create",
+        "targetId": "new:retail01-material-01",
+        "parentId": "new:retail01-root",
+        "fields": {
+          "title": "核对01店陈列物料到店回执",
+          "acceptanceCriteria": [
+            "按总部指引形成01店所需物料清单，记录每项数量、配送凭证、实际到店时间及门店接收核对。",
+            "短缺、错配和未到店项单独列明；总部库存或配送计划不写成01店现货。"
+          ],
+          "tips": [
+            "配送可以先行协调，最终数量与适用性须对照受控指引；不得自行改变采购或配送承诺。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m6",
+            "basis": "recommended",
+            "reason": "补货协调职责包括对齐门店补货清单和核对配送回执。",
+            "evidenceRefs": [
+              "retail-m6-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "retail-m2",
+              "contribution": "核对01店实际接收数量和缺口，不替02店承诺人力或结果。",
+              "evidenceRefs": [
+                "retail-m2-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "尚未提供足够的前置完成时间和人员可用性，不从职责或在办事项推算日期。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail-m6-role",
+              "retail-m2-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有同范围历史实际投入、约定工具方式或充分工作量明细，暂不量化EWD；物流等待不计人类投入。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail-m6-role",
+              "retail-m2-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:retail01-guide"
+          ]
+        },
+        "reason": "01店到料证据独立于02店，避免一店延误掩盖另一店状态。",
+        "evidenceRefs": [
+          "retail01-brief",
+          "retail-m6-role",
+          "retail-m2-role"
+        ]
+      },
+      {
+        "id": "retail01-create-material-02",
+        "action": "create",
+        "targetId": "new:retail01-material-02",
+        "parentId": "new:retail01-root",
+        "fields": {
+          "title": "核对02店陈列物料到店回执",
+          "acceptanceCriteria": [
+            "按总部指引形成02店所需物料清单，记录每项数量、配送凭证、实际到店时间及门店接收核对。",
+            "短缺、错配和未到店项单独列明；总部库存或配送计划不写成02店现货。"
+          ],
+          "tips": [
+            "现有在办事项自报可作沟通线索，不能当02店已收货证据或容量证明。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m6",
+            "basis": "recommended",
+            "reason": "补货协调职责包括对齐门店补货清单和核对配送回执。",
+            "evidenceRefs": [
+              "retail-m6-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "retail-m3",
+              "contribution": "核对02店实际接收数量及货架适用问题，不替供应商确认到货。",
+              "evidenceRefs": [
+                "retail-m3-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "尚未提供足够的前置完成时间和人员可用性，不从职责或在办事项推算日期。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail-m6-role",
+              "retail-m3-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有同范围历史实际投入、约定工具方式或充分工作量明细，暂不量化EWD；物流等待不计人类投入。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail-m6-role",
+              "retail-m3-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:retail01-guide"
+          ]
+        },
+        "reason": "02店到料证据按门店独立留痕，便于判断其现场准备条件。",
+        "evidenceRefs": [
+          "retail01-brief",
+          "retail-m6-role",
+          "retail-m3-role"
+        ]
+      },
+      {
+        "id": "retail01-create-training",
+        "action": "create",
+        "targetId": "new:retail01-training",
+        "parentId": "new:retail01-root",
+        "fields": {
+          "title": "开展两店陈列操作培训并形成问题清单",
+          "acceptanceCriteria": [
+            "培训材料明确所用总部指引版本、适用两店和操作范围，培训记录区分实际参与者、时间及回放或答疑材料。",
+            "形成01店、02店各自的问题与待答复清单，记录答复依据和仍未解决项；参加培训不写成已熟练或已落地。"
+          ],
+          "tips": [
+            "可优先协调9月5日14:00—16:00线上窗口；两店未确认参加前不写成已定排班。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m5",
+            "basis": "recommended",
+            "reason": "门店培训职责包括准备操作材料和收集门店学习反馈。",
+            "evidenceRefs": [
+              "retail-m5-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "retail-m2",
+              "contribution": "确认01店可参加安排并反馈本店理解问题，不由培训负责人决定班次。",
+              "evidenceRefs": [
+                "retail-m2-role"
+              ]
+            },
+            {
+              "memberId": "retail-m3",
+              "contribution": "确认02店可参加安排并反馈本店货架与时段相关问题。",
+              "evidenceRefs": [
+                "retail-m3-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-05",
+            "basis": "recommended",
+            "assumptions": [
+              "9月5日14:00—16:00是培训负责人的公开线上窗口；两店能否参加尚待各店确认，该推荐不是已承诺班次。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail-m5-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有同范围历史实际投入、约定工具方式或充分工作量明细，暂不量化EWD；物流等待不计人类投入。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail-m5-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:retail01-guide"
+          ]
+        },
+        "reason": "培训问题清单是独立交付，使用受控指引且不替代现场执行。",
+        "evidenceRefs": [
+          "retail01-brief",
+          "retail-m5-role",
+          "retail-m5-window"
+        ]
+      },
+      {
+        "id": "retail01-create-store-01",
+        "action": "create",
+        "targetId": "new:retail01-store-01",
+        "parentId": "new:retail01-root",
+        "fields": {
+          "title": "完成01店陈列并回传现场记录",
+          "acceptanceCriteria": [
+            "01店按受控总部指引和实际到店物料完成本店陈列，现场记录注明门店、区域、完成时间和指引版本。",
+            "回传能核对实际陈列状态及未解决偏差；效果图、配送回执或培训参加记录均不单独视为落地完成。"
+          ],
+          "tips": [
+            "具体班次和现场人员由01店依现行流程安排；本候选不替店长排班。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m2",
+            "basis": "recommended",
+            "reason": "01店店长职责是安排本店落实并复核本店交付记录。",
+            "evidenceRefs": [
+              "retail-m2-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-10",
+            "basis": "explicit",
+            "assumptions": [
+              "本轮两店整体硬期限为9月10日；缺少必要前置完成时间和完整可用性，不额外承诺子任务日期。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail-m2-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有同范围历史实际投入、约定工具方式或充分工作量明细，暂不量化EWD；物流等待不计人类投入。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail-m2-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:retail01-guide",
+            "new:retail01-material-01"
+          ]
+        },
+        "reason": "两店须各自落实与回传，01店结果应能独立核对。",
+        "evidenceRefs": [
+          "retail01-brief",
+          "retail-m2-role"
+        ]
+      },
+      {
+        "id": "retail01-create-store-02",
+        "action": "create",
+        "targetId": "new:retail01-store-02",
+        "parentId": "new:retail01-root",
+        "fields": {
+          "title": "完成02店陈列并回传现场记录",
+          "acceptanceCriteria": [
+            "02店按受控总部指引和实际到店物料完成本店陈列，现场记录注明门店、区域、完成时间和指引版本。",
+            "回传能核对实际陈列状态、货架适用偏差及未解决项；配送计划或培训参加记录不单独视为落地完成。"
+          ],
+          "tips": [
+            "具体班次和现场人员由02店依现行流程安排；不默认01店人员跨店支援。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "retail-m3",
+            "basis": "recommended",
+            "reason": "02店店长职责是安排本店落实并汇总本店货架与时段约束。",
+            "evidenceRefs": [
+              "retail-m3-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-10",
+            "basis": "explicit",
+            "assumptions": [
+              "本轮两店整体硬期限为9月10日；缺少必要前置完成时间和完整可用性，不额外承诺子任务日期。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail-m3-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有同范围历史实际投入、约定工具方式或充分工作量明细，暂不量化EWD；物流等待不计人类投入。"
+            ],
+            "evidenceRefs": [
+              "req-retail-01",
+              "retail-m3-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:retail01-guide",
+            "new:retail01-material-02"
+          ]
+        },
+        "reason": "02店结果独立于01店，必须留下本店现场回传和限制记录。",
+        "evidenceRefs": [
+          "retail01-brief",
+          "retail-m3-role"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-retail"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "负责人和参与贡献均为候选，未替店长排班、未取得接受记录，也未发出通知。",
+    "两店完成期限明确，但总部指引、配送承诺、两店实际班次与完整可用性未知，当前不能保证所有前置在9月10日前完成。",
+    "9月4日01店现场核对窗口不代表02店支援；9月5日线上培训窗口需两店另行确认参加。",
+    "没有历史落地案例，不虚构EWD、培训熟练度、到店状态或现场完成情况。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:retail01-root",
+      "label": "审阅两店换季陈列准备候选与排期未知"
+    }
+  ],
+  "externalEffects": "none"
+}

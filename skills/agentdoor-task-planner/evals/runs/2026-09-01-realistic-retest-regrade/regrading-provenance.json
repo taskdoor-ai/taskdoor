@@ -1,0 +1,13 @@
+{
+  "kind": "same_first_outputs_regraded",
+  "originalRun": "/tmp/agentdoor-planner-realistic-retest-20260901-v2",
+  "newModelAttempts": 0,
+  "inputAndOutputBytesUnchanged": true,
+  "reason": "Independent semantic review found flexible disposition/direct-consumer cases and over-strict evidence requirements; planner failures remain strict.",
+  "changedRubricCases": [
+    "REAL-A-SAAS-01",
+    "REAL-C-01",
+    "REAL-C-02",
+    "REAL-C-04"
+  ]
+}

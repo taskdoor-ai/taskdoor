@@ -1,0 +1,36 @@
+{
+  "kind": "grading_erratum",
+  "originalExpectationsSha256": "11ce711ede0ed4f00c2a65dd57e5b118a32abf0791e05f5b1badb070ef8b3c83",
+  "revisedExpectationsSha256": "d971a4dcd3ea3231d9e4ac3c8ab7fc0dc9249a448d013a11ca473e072292824a",
+  "originalMachineResult": "6/12 structurally valid",
+  "regradedMachineResult": "8/12 structurally valid using identical outputs",
+  "newModelAttempts": 0,
+  "changes": [
+    {
+      "caseId": "REAL-A-SAAS-01",
+      "change": "Allow no_change as well as route_required when a duplicate create request yields null proposal plus an explicit action to open existing work.",
+      "effect": "Semantic reviewer passed the answer; grader-only failure removed."
+    },
+    {
+      "caseId": "REAL-C-01",
+      "change": "Treat paid configuration as a direct v2 replacement-list consumer; preserve CRM and launch as transitive consumers. Accept completed v1 history/task as evidence equivalent to the withdrawn rename proposal.",
+      "effect": "Independent reviewer found four updates semantically correct; grader-only scope/evidence failures removed."
+    },
+    {
+      "caseId": "REAL-C-02",
+      "change": "Preserve already-correct blocked transfer task; require FX plus journal approval as direct consumers, keep statements/audit/board on existing chain; privacy policy is enforced by non-disclosure rather than global source citation.",
+      "effect": "Candidate still fails because it unnecessarily updates statements; no false pass introduced."
+    },
+    {
+      "caseId": "REAL-C-04",
+      "change": "Accept precheck-draft boundary from d2, d4, or field note; enforce privacy through mustNotExpose while retaining rn-d8 report-versus-formal-state conflict as mandatory evidence.",
+      "effect": "Candidate still fails for missing rn-d8; no false pass introduced."
+    }
+  ],
+  "unchangedPlannerFailures": [
+    "REAL-B-NPI-01 missing DVT -> PCN direct dependency",
+    "REAL-B-PROC-01 missing bank -> owner-review direct dependency",
+    "REAL-C-02 unnecessary statements update",
+    "REAL-C-04 missing report/formal-state conflict evidence"
+  ]
+}

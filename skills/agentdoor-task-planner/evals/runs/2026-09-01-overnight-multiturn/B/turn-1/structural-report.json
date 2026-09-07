@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-09-01T02:30:00.866662+00:00",
+  "total": 1,
+  "structurallyValid": 1,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "f09b29db4fea69c761d27e4df8cd589de29dc5f183148dd26ef6dfda0fdc7084",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-B1",
+      "industry": "saas_delivery",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议保留已完成的试点范围确认和映射表v2结果，并新增一项仅核对停用账号字段的增量工作；UAT负责人、UAT完成标准及其他现有任务先不改，待确认新增核对对UAT和培训的前置关系及交付窗口后再审阅排期。",
+      "intent": "replan",
+      "disposition": "needs_clarification",
+      "changes": 1,
+      "outputSha256": "b89f6bbf7772a4625000d9cae50665a0642d30e83271667c557f5009ab416fe6",
+      "manualChecks": [
+        "已完成范围及映射不重做；新增字段与UAT/培训的使用关系需落实或明确阻塞，保留确认字段。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

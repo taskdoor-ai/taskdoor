@@ -1,0 +1,741 @@
+{
+  "requestId": "req-complex02",
+  "message": "白榆B版资料准备里，新增确认了一份标签与资料编号对照表，放进现有样料资料分支，再让评审目录能用到它。请保留现有三层结构和叶任务估算基线，不把父任务汇总再算一次人时，也不要顺手扩成量产计划。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "npi-m1",
+  "teamId": "team-npi",
+  "authorizedTeamIds": [
+    "team-npi"
+  ],
+  "revision": 3,
+  "currentTaskId": "complex02-root",
+  "context": {
+    "snapshotId": "snapshot-complex02-v3",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-npi"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "complex02-root",
+        "title": "白榆B版样品评审资料准备",
+        "status": "in_progress",
+        "version": 9,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "提供工程、样料和评审资料的当前版本索引；不包含制造操作或量产授权"
+        ],
+        "ownerId": "npi-m1",
+        "sourceRefs": [
+          "complex02-root-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-07",
+        "goal": "让白榆B版样品评审能够逐项定位本批次对应资料"
+      },
+      {
+        "id": "complex02-engineering",
+        "title": "B版工程资料包",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex02-root",
+        "acceptanceCriteria": [
+          "归集已确认BOM与图纸的版本引用"
+        ],
+        "ownerId": "npi-m2",
+        "sourceRefs": [
+          "complex02-engineering-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-02"
+      },
+      {
+        "id": "complex02-incoming",
+        "title": "B版样料资料包",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex02-root",
+        "acceptanceCriteria": [
+          "归集本批次收件记录及资料对应关系"
+        ],
+        "ownerId": "npi-m3",
+        "sourceRefs": [
+          "complex02-incoming-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-05"
+      },
+      {
+        "id": "complex02-review",
+        "title": "B版评审记录准备包",
+        "status": "in_progress",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex02-root",
+        "acceptanceCriteria": [
+          "归集资料说明、空白核对记录和最终目录"
+        ],
+        "ownerId": "npi-m1",
+        "sourceRefs": [
+          "complex02-review-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-07"
+      },
+      {
+        "id": "complex02-bom",
+        "title": "确认白榆B版BOM索引",
+        "status": "completed",
+        "version": 6,
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "parentId": "complex02-engineering",
+        "acceptanceCriteria": [
+          "BOM B2索引与本次范围回执一致"
+        ],
+        "ownerId": "npi-m2",
+        "sourceRefs": [
+          "complex02-bom-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31",
+        "estimate": {
+          "ewdHours": 3,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex02-bom-record"
+          ]
+        }
+      },
+      {
+        "id": "complex02-drawings",
+        "title": "确认白榆B版图纸目录",
+        "status": "completed",
+        "version": 4,
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "parentId": "complex02-engineering",
+        "acceptanceCriteria": [
+          "图纸目录D2逐项链接已确认文件版本"
+        ],
+        "ownerId": "npi-m2",
+        "sourceRefs": [
+          "complex02-drawings-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31",
+        "estimate": {
+          "ewdHours": 2,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex02-drawings-record"
+          ]
+        }
+      },
+      {
+        "id": "complex02-receipts",
+        "title": "汇总B版样料收件记录",
+        "status": "in_progress",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex02-incoming",
+        "acceptanceCriteria": [
+          "按批次S-09归集供应方交付编号、收件时间和缺失项"
+        ],
+        "ownerId": "npi-m3",
+        "sourceRefs": [
+          "complex02-receipts-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03",
+        "estimate": {
+          "ewdHours": 2,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex02-receipts-record"
+          ]
+        }
+      },
+      {
+        "id": "complex02-batch-map",
+        "title": "核对S-09批次与BOM对应表",
+        "status": "open",
+        "version": 2,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex02-incoming",
+        "acceptanceCriteria": [
+          "将本批次12条交付编号与BOM B2对应，未匹配项单列"
+        ],
+        "ownerId": "npi-m3",
+        "sourceRefs": [
+          "complex02-batch-map-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex02-receipts",
+          "complex02-bom"
+        ],
+        "dueOn": "2026-09-04",
+        "estimate": {
+          "ewdHours": 2.5,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex02-batch-map-record"
+          ]
+        }
+      },
+      {
+        "id": "complex02-instructions",
+        "title": "整理B版资料使用说明",
+        "status": "in_progress",
+        "version": 2,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex02-review",
+        "acceptanceCriteria": [
+          "只说明资料版本与引用位置，不填造试制参数"
+        ],
+        "ownerId": "npi-m4",
+        "sourceRefs": [
+          "complex02-instructions-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex02-drawings"
+        ],
+        "dueOn": "2026-09-04",
+        "estimate": {
+          "ewdHours": 1.5,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex02-instructions-record"
+          ]
+        }
+      },
+      {
+        "id": "complex02-checksheet",
+        "title": "准备B版样品记录空表",
+        "status": "open",
+        "version": 2,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex02-review",
+        "acceptanceCriteria": [
+          "空表保留样品编号、引用版本和待填写结果栏；不预填通过"
+        ],
+        "ownerId": "npi-m5",
+        "sourceRefs": [
+          "complex02-checksheet-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex02-bom"
+        ],
+        "dueOn": "2026-09-04",
+        "estimate": {
+          "ewdHours": 1,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex02-checksheet-record"
+          ]
+        }
+      },
+      {
+        "id": "complex02-index",
+        "title": "交付B版评审资料目录",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex02-review",
+        "acceptanceCriteria": [
+          "逐项定位本批次约定资料及缺失项，不代替评审结论"
+        ],
+        "ownerId": "npi-m1",
+        "sourceRefs": [
+          "complex02-index-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex02-instructions",
+          "complex02-checksheet"
+        ],
+        "dueOn": "2026-09-07",
+        "estimate": {
+          "ewdHours": 1,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex02-index-record"
+          ]
+        }
+      }
+    ],
+    "discussions": [
+      {
+        "id": "complex02-d-addition",
+        "taskId": "complex02-incoming",
+        "authorId": "npi-m3",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "decision",
+        "text": "新增的编号对照表按complex02-addition-v1范围回执准备，供应方原始编号不会替换成新编号。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "complex02-d-estimate",
+        "taskId": "complex02-root",
+        "authorId": "npi-m6",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "proposal",
+        "text": "可否把三个资料包的叶项人时分别写回父项，再把父项与叶项一起求总量？这只是展示建议。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "complex02-h-method",
+        "taskId": "complex02-batch-map",
+        "occurredAt": "2026-08-29T16:00:00+08:00",
+        "type": "estimate_context",
+        "summary": "同工具、同12条编号规模的资料核对记录为1.5人时；另有48小时等待回执不属于投入。此为可比记录，不是本任务实际或剩余工时。",
+        "version": 2,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "complex02-h-bom",
+        "taskId": "complex02-bom",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "task_completed",
+        "summary": "BOM B2索引已确认，任务版本6完成。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "complex02-h-drawings",
+        "taskId": "complex02-drawings",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "task_completed",
+        "summary": "图纸目录D2已确认，任务版本4完成。",
+        "version": 4,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "complex02-root-record",
+        "title": "白榆B版样品评审资料准备当前记录（合成）",
+        "text": "任务库读取：complex02-root，版本9，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-engineering-record",
+        "title": "B版工程资料包当前记录（合成）",
+        "text": "任务库读取：complex02-engineering，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-incoming-record",
+        "title": "B版样料资料包当前记录（合成）",
+        "text": "任务库读取：complex02-incoming，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-review-record",
+        "title": "B版评审记录准备包当前记录（合成）",
+        "text": "任务库读取：complex02-review，版本3，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-bom-record",
+        "title": "确认白榆B版BOM索引当前记录（合成）",
+        "text": "任务库读取：complex02-bom，版本6，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-drawings-record",
+        "title": "确认白榆B版图纸目录当前记录（合成）",
+        "text": "任务库读取：complex02-drawings，版本4，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-receipts-record",
+        "title": "汇总B版样料收件记录当前记录（合成）",
+        "text": "任务库读取：complex02-receipts，版本3，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-batch-map-record",
+        "title": "核对S-09批次与BOM对应表当前记录（合成）",
+        "text": "任务库读取：complex02-batch-map，版本2，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-instructions-record",
+        "title": "整理B版资料使用说明当前记录（合成）",
+        "text": "任务库读取：complex02-instructions，版本2，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-checksheet-record",
+        "title": "准备B版样品记录空表当前记录（合成）",
+        "text": "任务库读取：complex02-checksheet，版本2，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-index-record",
+        "title": "交付B版评审资料目录当前记录（合成）",
+        "text": "任务库读取：complex02-index，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-addition-v1",
+        "title": "B版新增资料范围确认（合成）",
+        "text": "NPI协调、工程与采购在本轮资料范围回执中确认增加一份“标签与资料编号对照表”：针对S-09批次12条交付编号，逐项列标签文本、图纸D2引用和对应BOM B2条目；未匹配项单列。该表在样料资料包内独立交付，评审目录需引用它，其他完成标准和范围不变。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-method-v1",
+        "title": "本轮资料核对工具约定（合成）",
+        "text": "本轮沿用已有电子表格，只对12条编号逐行核对，不重新建表。等待供应方收件回执期间无人处理的时间不计人类投入。原有叶任务估算已存为基线；上层三个资料包与总任务未另记EWD，界面汇总由各叶任务计算。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex02-handoff-window",
+        "title": "新增编号表交接边界（合成）",
+        "text": "采购协调确认以9月4日批次对应表为输入，新增标签对照表于9月5日提交供目录整理，目录仍在9月7日交付。该日期是本轮交付约定，不是按总人时均分算出的承诺。",
+        "updatedAt": "2026-09-01T10:15:00+08:00",
+        "source": "synthetic_business_record"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "matches": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "complex02-root",
+      "field": "goal",
+      "value": "让白榆B版样品评审能够逐项定位本批次对应资料"
+    }
+  ],
+  "constraints": {
+    "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+    "scope": "只补已确认的一份资料交付与目录接口；不改现有叶任务估算基线，不生成任何量产或设备操作任务。"
+  },
+  "members": [
+    {
+      "id": "npi-m1",
+      "name": "俞衡",
+      "role": "NPI项目协调",
+      "responsibilities": [
+        "组织样机交付范围和阶段评审",
+        "跟踪跨部门待决策项"
+      ],
+      "boundaries": [
+        "不代品质放行",
+        "不批准未验证量产"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m1-role",
+          "title": "俞衡职责说明（合成）",
+          "text": "职责：组织样机交付范围和阶段评审；跟踪跨部门待决策项。边界：不代品质放行；不批准未验证量产。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m1-work",
+          "title": "俞衡当前工作自报（合成）",
+          "text": "协调收纳盒试制资料",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调收纳盒试制资料",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "npi-m2",
+      "name": "奚川",
+      "role": "产品工程师",
+      "responsibilities": [
+        "维护图纸和BOM版本",
+        "说明工程变更影响"
+      ],
+      "boundaries": [
+        "不替采购确认供应",
+        "不把旧版本结论套到新版本"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m2-role",
+          "title": "奚川职责说明（合成）",
+          "text": "职责：维护图纸和BOM版本；说明工程变更影响。边界：不替采购确认供应；不把旧版本结论套到新版本。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m2-work",
+          "title": "奚川当前工作自报（合成）",
+          "text": "整理BOM修订说明",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "npi-m2-window",
+          "title": "奚川公开协作窗口（合成）",
+          "text": "2026-09-03T10:00:00+08:00至2026-09-03T12:00:00+08:00。仅为版本评审窗口，未声明总工作容量。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理BOM修订说明",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-03T10:00:00+08:00",
+        "endAt": "2026-09-03T12:00:00+08:00",
+        "sourceRef": "npi-m2-window",
+        "note": "仅为版本评审窗口，未声明总工作容量。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "npi-m3",
+      "name": "何荔",
+      "role": "采购与供应商协调",
+      "responsibilities": [
+        "确认样料交期和采购资料",
+        "追踪供应商书面回复"
+      ],
+      "boundaries": [
+        "不擅自替代材料",
+        "不把报价日期当到货承诺"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m3-role",
+          "title": "何荔职责说明（合成）",
+          "text": "职责：确认样料交期和采购资料；追踪供应商书面回复。边界：不擅自替代材料；不把报价日期当到货承诺。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m3-work",
+          "title": "何荔当前工作自报（合成）",
+          "text": "跟进样料回签",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "跟进样料回签",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "npi-m4",
+      "name": "路远",
+      "role": "工艺工程师",
+      "responsibilities": [
+        "整理试制工艺版本与工装需求",
+        "收集试制问题"
+      ],
+      "boundaries": [
+        "不在夹具中给设备操作或安全指导",
+        "不直接批准产品变更"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m4-role",
+          "title": "路远职责说明（合成）",
+          "text": "职责：整理试制工艺版本与工装需求；收集试制问题。边界：不在夹具中给设备操作或安全指导；不直接批准产品变更。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m4-work",
+          "title": "路远当前工作自报（合成）",
+          "text": "核对试制工艺文件",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对试制工艺文件",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "npi-m5",
+      "name": "彭宁",
+      "role": "品质验证负责人",
+      "responsibilities": [
+        "维护检验口径",
+        "复核样品记录与不符合项"
+      ],
+      "boundaries": [
+        "不把执行者自报当正式通过",
+        "不在无证据时放行"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m5-role",
+          "title": "彭宁职责说明（合成）",
+          "text": "职责：维护检验口径；复核样品记录与不符合项。边界：不把执行者自报当正式通过；不在无证据时放行。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m5-work",
+          "title": "彭宁当前工作自报（合成）",
+          "text": "整理试制抽检记录",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "npi-m5-window",
+          "title": "彭宁公开协作窗口（合成）",
+          "text": "2026-09-07T13:00:00+08:00至2026-09-07T16:00:00+08:00。仅接受样品资料评审；实物准备情况需另核对。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理试制抽检记录",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-07T13:00:00+08:00",
+        "endAt": "2026-09-07T16:00:00+08:00",
+        "sourceRef": "npi-m5-window",
+        "note": "仅接受样品资料评审；实物准备情况需另核对。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "npi-m6",
+      "name": "苏行",
+      "role": "生产计划协调",
+      "responsibilities": [
+        "核对试制批次与准备条件",
+        "协调已确认车间窗口"
+      ],
+      "boundaries": [
+        "不从人时直接推自然工期",
+        "不自行插单"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m6-role",
+          "title": "苏行职责说明（合成）",
+          "text": "职责：核对试制批次与准备条件；协调已确认车间窗口。边界：不从人时直接推自然工期；不自行插单。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m6-work",
+          "title": "苏行当前工作自报（合成）",
+          "text": "收集下一批试制准备状态",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "收集下一批试制准备状态",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

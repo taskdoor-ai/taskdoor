@@ -1,0 +1,46 @@
+{
+  "date": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "kind": "high_fidelity_synthetic_input_impact_matrix_trial",
+  "dataClassification": "synthetic",
+  "execution": "Current-session fresh-context Codex agents; not an application model API",
+  "exactModelSnapshot": "not_provided",
+  "temperature": "not_provided",
+  "seed": "not_provided",
+  "executorGroups": {
+    "impact_planner_dependencies": [
+      "REAL-B-NPI-01",
+      "REAL-B-PROC-01"
+    ],
+    "impact_planner_replan": [
+      "REAL-C-02",
+      "REAL-C-03"
+    ],
+    "impact_planner_controls": [
+      "REAL-C-01",
+      "REAL-C-04",
+      "REAL-A-ECOM-01"
+    ]
+  },
+  "reviewGroups": {
+    "impact_planner_controls": [
+      "REAL-B-NPI-01",
+      "REAL-B-PROC-01"
+    ],
+    "impact_planner_dependencies": [
+      "REAL-C-02",
+      "REAL-C-03"
+    ],
+    "impact_planner_replan": [
+      "REAL-C-01",
+      "REAL-C-04",
+      "REAL-A-ECOM-01"
+    ]
+  },
+  "blinding": "Executors received the frozen Skill/protocol and assigned inputs only. They did not read expectations, prior outputs or production services.",
+  "attemptPolicy": "First official output files retained with no scoring repair.",
+  "review": "Cross-review used different agents; outputs were not edited.",
+  "productionAccess": false,
+  "productionWrites": false,
+  "archiveNote": "Original frozen machine result is 3/7. Independent semantic review and an identical-output regrade against corrected expectations are 4/7."
+}

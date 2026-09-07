@@ -1,0 +1,264 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "request-real-c-03",
+  "baseSnapshotId": "real-c-03-snapshot",
+  "baseRevision": 11,
+  "baseTaskVersions": {
+    "hr-root": 7,
+    "hr-prehire": 5,
+    "hr-offer-accept": 4,
+    "hr-date-amend": 1,
+    "hr-background": 3,
+    "hr-role-outcomes": 3,
+    "hr-onboarding": 4,
+    "hr-access": 3,
+    "hr-account": 4,
+    "hr-prod-access": 2,
+    "hr-laptop": 3,
+    "hr-readiness": 2,
+    "hr-policy": 2,
+    "hr-weekplan": 1,
+    "hr-payroll": 3,
+    "hr-startday": 1
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议保留现有账号、设备、薪资登记和入职日核对任务，只同步其日期并把直接准备项接到现有日期变更记录；生产数据权限的背景、培训和安全审批门槛保持不变，不读取敏感正文。",
+  "reasoningSummary": [
+    {
+      "text": "候选人N17与用人经理均确认2026-09-16入职，补充确认文件已批准，主任务日期也已同步。",
+      "evidenceRefs": [
+        "hr-file-date-amend-v2",
+        "hr-d1",
+        "hr-d2",
+        "hr-root"
+      ]
+    },
+    {
+      "text": "账号、设备和薪资登记均为同一候选与同一交付结果，查重已确认应保留原ID并局部改期。",
+      "evidenceRefs": [
+        "hr-account",
+        "hr-laptop",
+        "hr-payroll",
+        "hr-request"
+      ]
+    },
+    {
+      "text": "基础账号可在9月16日激活，设备配送记录为9月15日，薪资登记可在9月15日前完成；设备文件日期与当前任务字段存在冲突，需更新正式候选而非标完成。",
+      "evidenceRefs": [
+        "hr-d3",
+        "hr-file-device-dispatch-v2",
+        "hr-d8",
+        "hr-d10"
+      ]
+    },
+    {
+      "text": "生产数据权限仍等待背景最终状态、培训完成与安全批准；背景发现及证件、银行、地址正文均未进入规划。",
+      "evidenceRefs": [
+        "hr-d4",
+        "hr-file-access-matrix-v6",
+        "hr-file-background-receipt-v3",
+        "hr-privacy-boundary"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "hr-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-hr-account-date",
+        "action": "update",
+        "targetId": "hr-account",
+        "parentId": "hr-access",
+        "fields": {
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-16",
+            "basis": "explicit",
+            "assumptions": [
+              "基础账号可提前暂存，但只在2026-09-16按受控方案激活；该日期不授权生产数据权限。"
+            ],
+            "evidenceRefs": [
+              "hr-file-date-amend-v2",
+              "hr-d3"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "hr-offer-accept",
+            "hr-date-amend"
+          ]
+        },
+        "reason": "基础账号结果不变；将激活日期同步到确认入职日，并把现有日期变更记录作为直接前置。",
+        "evidenceRefs": [
+          "hr-account",
+          "hr-date-amend",
+          "hr-file-date-amend-v2",
+          "hr-d3"
+        ]
+      },
+      {
+        "id": "chg-hr-laptop-date",
+        "action": "update",
+        "targetId": "hr-laptop",
+        "parentId": "hr-onboarding",
+        "fields": {
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-15",
+            "basis": "explicit",
+            "assumptions": [
+              "承运记录安排2026-09-15送达；未取得候选收件回执不视为完成。"
+            ],
+            "evidenceRefs": [
+              "hr-file-device-dispatch-v2",
+              "hr-d8"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "hr-date-amend"
+          ]
+        },
+        "reason": "设备任务仍为同一交付，只需用已更新承运记录修正正式日期，并关联已确认日期变更。",
+        "evidenceRefs": [
+          "hr-laptop",
+          "hr-date-amend",
+          "hr-file-device-dispatch-v2",
+          "hr-d8"
+        ]
+      },
+      {
+        "id": "chg-hr-payroll-date",
+        "action": "update",
+        "targetId": "hr-payroll",
+        "parentId": "hr-readiness",
+        "fields": {
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-15",
+            "basis": "explicit",
+            "assumptions": [
+              "仅同步登记截止；银行、证件和税务字段不进入普通任务或本规划输出。"
+            ],
+            "evidenceRefs": [
+              "hr-file-date-amend-v2",
+              "hr-file-payroll-check-v4",
+              "hr-d10"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "hr-offer-accept",
+            "hr-date-amend"
+          ]
+        },
+        "reason": "薪资登记业务对象不变；按9月16日入职将登记截止同步至9月15日，并保留受限字段边界。",
+        "evidenceRefs": [
+          "hr-payroll",
+          "hr-date-amend",
+          "hr-d10",
+          "hr-privacy-boundary"
+        ]
+      },
+      {
+        "id": "chg-hr-startday-date",
+        "action": "update",
+        "targetId": "hr-startday",
+        "parentId": "hr-readiness",
+        "fields": {
+          "schedule": {
+            "startOn": "2026-09-16",
+            "dueOn": "2026-09-16",
+            "basis": "explicit",
+            "assumptions": [
+              "入职日核对在2026-09-16执行；生产数据权限按独立门槛可后续完成。"
+            ],
+            "evidenceRefs": [
+              "hr-file-date-amend-v2",
+              "hr-d1",
+              "hr-d2",
+              "hr-d4"
+            ]
+          }
+        },
+        "reason": "完成标准已写明9月16日，但正式dueOn仍为旧日期9月14日，需要消除字段冲突而不重建任务。",
+        "evidenceRefs": [
+          "hr-startday",
+          "hr-file-date-amend-v2",
+          "hr-d2"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "hr-root",
+      "hr-prehire",
+      "hr-offer-accept",
+      "hr-date-amend",
+      "hr-background",
+      "hr-role-outcomes",
+      "hr-onboarding",
+      "hr-access",
+      "hr-prod-access",
+      "hr-readiness",
+      "hr-policy",
+      "hr-weekplan"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "real-c-hiring-team"
+    ],
+    "assessments": [
+      {
+        "taskId": "hr-account",
+        "relationship": "same_outcome",
+        "reason": "同一候选编号、同一账号结果，只需改激活日期。",
+        "evidenceRefs": [
+          "hr-account",
+          "hr-request"
+        ]
+      },
+      {
+        "taskId": "hr-laptop",
+        "relationship": "same_outcome",
+        "reason": "同一设备配送结果，配送单已更新，不应重建。",
+        "evidenceRefs": [
+          "hr-laptop",
+          "hr-file-device-dispatch-v2"
+        ]
+      },
+      {
+        "taskId": "hr-payroll",
+        "relationship": "same_outcome",
+        "reason": "同一候选与同一入职周期，原任务继续覆盖。",
+        "evidenceRefs": [
+          "hr-payroll",
+          "hr-request"
+        ]
+      },
+      {
+        "taskId": "hr-offer-accept",
+        "relationship": "overlap",
+        "reason": "已完成历史记录与日期修订部分重叠，但不能覆盖。",
+        "evidenceRefs": [
+          "hr-offer-accept",
+          "hr-h1"
+        ]
+      }
+    ],
+    "coverageNote": "已检索当前授权团队内候选编号N17的录用、账号、设备、薪资和访问工作；受限正文未进入检索。"
+  },
+  "questions": [],
+  "warnings": [
+    "背景核查当前仅有pending状态和2026-09-04 17:00预计时间；ETA不等于通过，生产数据权限继续保持blocked门槛。",
+    "本候选未读取或输出背景发现、证件、银行、地址和联系方式正文，也不发送账号凭据或批准权限。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "hr-root",
+      "label": "审阅本轮最小差异"
+    }
+  ],
+  "externalEffects": "none"
+}

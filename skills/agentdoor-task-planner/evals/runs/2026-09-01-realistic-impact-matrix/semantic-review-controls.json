@@ -1,0 +1,402 @@
+{
+  "schemaVersion": "agentdoor.semantic-review.v1",
+  "reviewName": "impact-matrix-v2-controls-cross-review",
+  "runDirectory": "/tmp/agentdoor-planner-realistic-impact-matrix-20260901-v2",
+  "reviewedCases": [
+    "REAL-C-01",
+    "REAL-C-04",
+    "REAL-A-ECOM-01"
+  ],
+  "reviewScope": {
+    "artifacts": [
+      "frozen input",
+      "first output",
+      "expectations snapshot",
+      "protocol snapshot"
+    ],
+    "mutations": "Only this new review report is written; frozen artifacts are unchanged.",
+    "graderImplementationInspected": false,
+    "graderAssessmentMeaning": "The grader attribution below states what a grader should conclude from the frozen expectation contract; it does not claim observation of grader code or a prior score."
+  },
+  "protocolRulesApplied": [
+    {
+      "rule": "Freeze direct, transitive and source_only relationships from input evidence before drafting candidate fields.",
+      "source": "protocol-snapshot.json#SKILL.md/执行顺序5及重规划提交前的影响清单"
+    },
+    {
+      "rule": "A downstream task already reached through a valid dependency chain stays unchanged when its goal, criteria and date remain accurate.",
+      "source": "protocol-snapshot.json#SKILL.md/执行顺序6及context-and-replanning.md/新增结果如何接入已有工作"
+    },
+    {
+      "rule": "Final dependencies equal old dependencies plus evidenced direct producers minus only producers explicitly made obsolete.",
+      "source": "protocol-snapshot.json#SKILL.md/重规划提交前的影响清单3"
+    },
+    {
+      "rule": "When a report or draft conflicts with formal status or evidence and affects the proposal, reasoning must cite both sides.",
+      "source": "protocol-snapshot.json#SKILL.md/执行顺序2及context-and-replanning.md/提交前冲突核对"
+    }
+  ],
+  "cases": [
+    {
+      "caseId": "REAL-C-01",
+      "overallVerdict": "planner_semantic_error",
+      "severity": "high",
+      "frozenImpactMatrix": [
+        {
+          "consumerTaskId": "cc-landing-copy",
+          "requiredResult": "主张v2替换清单及获批限制语",
+          "producerOrSource": "cc-claim-v2",
+          "classification": "direct",
+          "inputEvidenceRefs": [
+            "cc-request",
+            "cc-file-claim-approval-v2",
+            "cc-d3",
+            "cc-d4"
+          ]
+        },
+        {
+          "consumerTaskId": "cc-email-copy",
+          "requiredResult": "主张v2替换清单及获批限制语",
+          "producerOrSource": "cc-claim-v2",
+          "classification": "direct",
+          "inputEvidenceRefs": [
+            "cc-request",
+            "cc-file-email-flow-v2",
+            "cc-d8"
+          ]
+        },
+        {
+          "consumerTaskId": "cc-paid",
+          "requiredResult": "主张v2精确短文案及合规限制语",
+          "producerOrSource": "cc-claim-v2",
+          "classification": "direct",
+          "inputEvidenceRefs": [
+            "cc-request",
+            "cc-file-legal-matrix-v4",
+            "cc-file-media-sheet-v7",
+            "cc-d2",
+            "cc-d9"
+          ]
+        },
+        {
+          "consumerTaskId": "cc-crm",
+          "requiredResult": "采用主张v2的邮件成稿",
+          "producerOrSource": "cc-email-copy",
+          "classification": "transitive_from_cc_claim_v2",
+          "inputEvidenceRefs": [
+            "cc-crm",
+            "cc-email-copy",
+            "cc-file-email-flow-v2"
+          ]
+        },
+        {
+          "consumerTaskId": "cc-launch-check",
+          "requiredResult": "页面、邮件、付费和主视觉的现行版本一致性结果",
+          "producerOrSource": "cc-paid + cc-crm + cc-keyvisual",
+          "classification": "transitive_from_cc_claim_v2",
+          "inputEvidenceRefs": [
+            "cc-launch-check",
+            "cc-paid",
+            "cc-crm",
+            "cc-keyvisual",
+            "cc-request"
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "findingId": "C01-F1",
+          "title": "上线核对已有两条有效链路消费v2，新增直连是冗余依赖",
+          "assessment": "The first output adds cc-claim-v2 directly to cc-launch-check in chg-cc-launch-check-deps. After the other valid changes, cc-launch-check already receives the v2 result through cc-paid -> cc-landing-copy -> cc-claim-v2 and cc-crm -> cc-email-copy -> cc-claim-v2. Its existing criteria still ask for final channel-version consistency, so it remains a transitive consumer.",
+          "inputEvidenceRefs": [
+            "cc-launch-check",
+            "cc-paid",
+            "cc-crm",
+            "cc-landing-copy",
+            "cc-email-copy",
+            "cc-request"
+          ],
+          "outputEvidenceRefs": [
+            "chg-cc-launch-check-deps"
+          ],
+          "expectationEvidence": [
+            "expectations-snapshot.json#REAL-C-01.mustNotUpdateTaskIds[cc-launch-check]",
+            "expectations-snapshot.json#REAL-C-01.maxUpdates=4",
+            "expectations-snapshot.json#REAL-C-01.exactDependencies[cc-launch-check]=[cc-paid,cc-crm,cc-keyvisual]"
+          ],
+          "correctSemanticOutcome": "Remove the cc-launch-check update and preserve its original dependency set [cc-paid, cc-crm, cc-keyvisual]."
+        },
+        {
+          "findingId": "C01-F2",
+          "title": "其他依赖差分与旧边处理正确",
+          "assessment": "cc-landing-copy and cc-email-copy may replace the obsolete cc-claim-v1 edge because the approved v2 source explicitly stops use of the old claim. cc-paid correctly preserves its old cc-landing-copy and cc-keyvisual edges and adds the direct cc-claim-v2 producer. The cc-claim-v2 acceptance update is also a real field difference because the approval and compliance review have arrived.",
+          "inputEvidenceRefs": [
+            "cc-file-claim-approval-v2",
+            "cc-d1",
+            "cc-d2",
+            "cc-claim-v1",
+            "cc-h2",
+            "cc-claim-v2"
+          ],
+          "outputEvidenceRefs": [
+            "chg-cc-claim-v2-criteria",
+            "chg-cc-landing-copy-deps",
+            "chg-cc-email-copy-deps",
+            "chg-cc-paid-deps"
+          ]
+        },
+        {
+          "findingId": "C01-F3",
+          "title": "草稿与正式关系冲突证据基本完整",
+          "assessment": "The output correctly cites the partial v2 draft and the formal dependency conflict together. Preservation of the completed v1 history is also supported by the formal task and history; citing cc-d6 in the reasoning item would make the withdrawn overwrite proposal more explicit, but this is not the cause of the dependency error.",
+          "inputEvidenceRefs": [
+            "cc-d3",
+            "cc-d4",
+            "cc-file-landing-wire-v5",
+            "cc-landing-copy",
+            "cc-d6",
+            "cc-h2",
+            "cc-claim-v1"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": "Responsible for the material error: it converted a transitive consumer into a direct consumer and produced a fifth update that violates minimal-difference planning.",
+        "fixture": "The frozen input is sufficient. Although the user says several tasks should consume v2, the existing dependency graph and each task's criteria distinguish direct channel producers from the final consistency check; no fixture repair is required.",
+        "grader": "A grader should reject the extra cc-launch-check update. The frozen expectation has three independent protections: mustNotUpdateTaskIds, maxUpdates=4 and exactDependencies. If a grader accepts this output, that is a grader enforcement gap; rejecting it is correct."
+      }
+    },
+    {
+      "caseId": "REAL-C-04",
+      "overallVerdict": "planner_semantically_correct",
+      "severity": "none",
+      "frozenImpactMatrix": [
+        {
+          "consumerTaskId": "rn-electric-cert",
+          "requiredResult": "批准窗口内形成的RCD正式复测记录",
+          "producerOrSource": "rn-electric-retest",
+          "classification": "direct_existing_edge",
+          "inputEvidenceRefs": [
+            "rn-electric-cert",
+            "rn-file-cert-request-v2",
+            "rn-d6",
+            "rn-h6"
+          ]
+        },
+        {
+          "consumerTaskId": "rn-reinspection",
+          "requiredResult": "RCD正式复测结果",
+          "producerOrSource": "rn-electric-retest",
+          "classification": "direct_existing_edge",
+          "inputEvidenceRefs": [
+            "rn-reinspection",
+            "rn-request"
+          ]
+        },
+        {
+          "consumerTaskId": "rn-reinspection",
+          "requiredResult": "第三方电气合格证",
+          "producerOrSource": "rn-electric-cert",
+          "classification": "direct_new_edge",
+          "inputEvidenceRefs": [
+            "rn-reinspection",
+            "rn-file-snag-v5",
+            "rn-d9",
+            "rn-request"
+          ]
+        },
+        {
+          "consumerTaskId": "rn-reinspection",
+          "requiredResult": "柜门整改与质检结果",
+          "producerOrSource": "rn-cabinet",
+          "classification": "direct_existing_edge",
+          "inputEvidenceRefs": [
+            "rn-reinspection",
+            "rn-cabinet",
+            "rn-d7"
+          ]
+        },
+        {
+          "consumerTaskId": "rn-manual",
+          "requiredResult": "电气证书与给排水归档证明",
+          "producerOrSource": "rn-electric-cert + rn-water-record",
+          "classification": "direct_existing_edges",
+          "inputEvidenceRefs": [
+            "rn-manual",
+            "rn-file-manual-v7"
+          ]
+        },
+        {
+          "consumerTaskId": "rn-key-handover",
+          "requiredResult": "业主复验、资料包与表计记录",
+          "producerOrSource": "rn-reinspection + rn-manual + rn-meter",
+          "classification": "transitive_from_electric_retest_and_cert",
+          "inputEvidenceRefs": [
+            "rn-key-handover",
+            "rn-hard-handover"
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "findingId": "C04-F1",
+          "title": "业主复验必须保留旧复测边并新增证书边",
+          "assessment": "The first output correctly produces [rn-electric-retest, rn-cabinet, rn-electric-cert]. rn-reinspection still directly checks the electrical retest and cabinet result, and no source declares either old producer obsolete. rn-electric-cert is an additional distinct professional-signoff result, not a replacement for the field retest.",
+          "inputEvidenceRefs": [
+            "rn-reinspection",
+            "rn-electric-retest",
+            "rn-cabinet",
+            "rn-electric-cert",
+            "rn-d9",
+            "rn-request"
+          ],
+          "outputEvidenceRefs": [
+            "chg-rn-reinspection-deps"
+          ],
+          "correctSemanticOutcome": "Keep the output's final set [rn-electric-retest, rn-cabinet, rn-electric-cert]."
+        },
+        {
+          "findingId": "C04-F2",
+          "title": "手册和钥匙交付通过现有链路消费结果，不需要冗余直连",
+          "assessment": "rn-manual already directly waits for the certificate and water record. rn-key-handover already waits for rn-manual and rn-reinspection, so the new certificate result reaches it through two valid branches. Preserving both tasks is the minimal result.",
+          "inputEvidenceRefs": [
+            "rn-manual",
+            "rn-key-handover",
+            "rn-electric-cert",
+            "rn-reinspection",
+            "rn-water-record",
+            "rn-meter"
+          ]
+        },
+        {
+          "findingId": "C04-F3",
+          "title": "正式状态冲突与真实等待证据处理正确",
+          "assessment": "The reasoning cites rn-d8 together with the in-progress retest task and blocked certificate task, so the draft claim that MEP was closed cannot become a completion fact. It separately cites the precheck reports and withdrawal, and treats the certificate ETA as a risk rather than signed evidence.",
+          "inputEvidenceRefs": [
+            "rn-d8",
+            "rn-electric-retest",
+            "rn-electric-cert",
+            "rn-d2",
+            "rn-d4",
+            "rn-file-electric-field-v3",
+            "rn-file-cert-request-v2",
+            "rn-hard-handover"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": "No material semantic fault found. It updates only the two schedules and the one genuinely changed dependency set, preserves every still-consumed old edge, and keeps downstream handover tasks unchanged.",
+        "fixture": "The machine-readable expectation is compatible because requiredDependencies is an inclusion requirement and REAL-C-04 has no exactDependencies entry. The manual-check sentence that mentions certificate plus cabinet is abbreviated and should not be read as authorization to remove rn-electric-retest; clarifying that sentence would reduce reviewer ambiguity.",
+        "grader": "A grader should accept the retained rn-electric-retest edge and the absence of rn-manual/rn-key-handover updates. If it treats the required dependency list as an exact set and rejects the old retest edge, that would contradict both the protocol and the input."
+      }
+    },
+    {
+      "caseId": "REAL-A-ECOM-01",
+      "overallVerdict": "planner_fixture_grader_aligned",
+      "severity": "none",
+      "frozenImpactMatrix": [
+        {
+          "consumerTaskId": "syn-ecom-launch-gate",
+          "requiredResult": "四渠道上架联检记录",
+          "producerOrSource": "syn-ecom-channel-check",
+          "classification": "direct_new_edge",
+          "inputEvidenceRefs": [
+            "syn-ecom-file-02",
+            "syn-ecom-file-06",
+            "syn-ecom-d02",
+            "syn-ecom-d04"
+          ]
+        },
+        {
+          "consumerTaskId": "syn-ecom-launch-gate",
+          "requiredResult": "首波仓内异常处理卡",
+          "producerOrSource": "syn-ecom-exception-card",
+          "classification": "direct_new_edge",
+          "inputEvidenceRefs": [
+            "syn-ecom-file-04",
+            "syn-ecom-file-06",
+            "syn-ecom-d03",
+            "syn-ecom-d04"
+          ]
+        },
+        {
+          "consumerTaskId": "syn-ecom-launch-gate",
+          "requiredResult": "承运接口降级记录",
+          "producerOrSource": "syn-ecom-carrier-fallback",
+          "classification": "direct_new_edge",
+          "inputEvidenceRefs": [
+            "syn-ecom-file-05",
+            "syn-ecom-file-06",
+            "syn-ecom-d03",
+            "syn-ecom-d04"
+          ]
+        },
+        {
+          "consumerTaskId": "syn-ecom-launch-gate",
+          "requiredResult": "订单链路演练和仓位波次结果",
+          "producerOrSource": "syn-ecom-dry-run + syn-ecom-warehouse-slot",
+          "classification": "direct_existing_edges",
+          "inputEvidenceRefs": [
+            "syn-ecom-launch-gate",
+            "syn-ecom-file-01"
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "findingId": "ECOM-F1",
+          "title": "闸门五项最终依赖准确且最小",
+          "assessment": "The checklist and confirmed discussion identify three missing direct producers. The first output adds exactly those three while retaining dry-run and warehouse-slot because no evidence makes either old result obsolete. It does not add page, compliance, forecast or label-rule directly because those results already reach the gate through the direct producer tasks.",
+          "inputEvidenceRefs": [
+            "syn-ecom-file-01",
+            "syn-ecom-file-06",
+            "syn-ecom-d04",
+            "syn-ecom-d06",
+            "syn-ecom-launch-gate",
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback",
+            "syn-ecom-dry-run",
+            "syn-ecom-warehouse-slot"
+          ],
+          "outputEvidenceRefs": [
+            "chg-syn-ecom-launch-gate-deps"
+          ]
+        },
+        {
+          "findingId": "ECOM-F2",
+          "title": "正文与结构字段冲突被显式引用",
+          "assessment": "The output cites the checklist body, the formal launch-gate task and the conflicting report together, and does not mistake the listed items for completed tasks. Its warning correctly states that the three new prerequisites remain unfinished.",
+          "inputEvidenceRefs": [
+            "syn-ecom-file-06",
+            "syn-ecom-launch-gate",
+            "syn-ecom-d06"
+          ]
+        },
+        {
+          "findingId": "ECOM-F3",
+          "title": "复用拆开的异常结果而不新建总卡",
+          "assessment": "The warehouse and carrier tasks jointly cover the requested exception scope with distinct responsibility boundaries. Reusing both and creating nothing matches the confirmed decision and duplicate snapshot.",
+          "inputEvidenceRefs": [
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback",
+            "syn-ecom-d03",
+            "syn-ecom-d04",
+            "syn-ecom-d05"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": "Correct. The first output makes one update, preserves all old direct producers, adds only the three evidenced missing producers and leaves all transitive tasks unchanged.",
+        "fixture": "The input is unambiguous: syn-ecom-file-06 and syn-ecom-d06 expose the structured gap, while syn-ecom-d04 confirms reuse and no create. No fixture defect found.",
+        "grader": "The frozen expectation exactly matches the final five-dependency set, one-update limit and preservation set. A grader should pass this case; rejecting it would be inconsistent with the frozen contract."
+      }
+    }
+  ],
+  "crossCaseConclusions": [
+    "A user's statement that several tasks should consume a new result does not automatically make every named task a direct dependency consumer; the existing graph and each task's own result boundary decide direct versus transitive.",
+    "A final launch or handover check should not receive a redundant source-task edge when its direct channel or document producers already carry the result and its criteria remain accurate.",
+    "Adding a new producer never authorizes deletion of a still-consumed old producer. REAL-C-04 and REAL-A-ECOM-01 correctly retain old edges; REAL-C-01 correctly removes only the explicitly superseded v1 edges but incorrectly adds one redundant downstream edge.",
+    "Conflict reasoning is strongest when it cites the informal report or draft and the formal task status or signed evidence in the same reasoning item."
+  ]
+}

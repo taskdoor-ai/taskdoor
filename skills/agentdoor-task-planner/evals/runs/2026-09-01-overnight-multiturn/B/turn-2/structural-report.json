@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-09-01T02:36:17.879287+00:00",
+  "total": 1,
+  "structurallyValid": 1,
+  "semanticPassRate": null,
+  "productionValidation": "not_run",
+  "versionChecks": {
+    "skill": true,
+    "contract": true,
+    "schema": true
+  },
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "expectationsSha256": "8b2ec676b99dc82bc7c1d598bf873a8d28e5d0e7bc223cecee163f963f2140c8",
+  "expectationsSource": "run_snapshot",
+  "results": [
+    {
+      "id": "MULTI-B2",
+      "industry": "saas_delivery",
+      "errors": [],
+      "semanticReview": "not_reviewed",
+      "summary": "建议沿用停用账号字段核对草稿和现有任务，只把增量核对排到9月4日、将其设为UAT前置，并让培训交接依赖通过UAT的结果；原UAT负责人、12条用例标准及9月9日、9月10日、9月12日期限均保持不变。",
+      "intent": "refine",
+      "disposition": "ready_for_confirmation",
+      "changes": 3,
+      "outputSha256": "168c9216ad1b6e36d83364f6144a9eb8c2d3c04233ed76fd42bbd67f6fa0d597",
+      "manualChecks": [
+        "使用前一轮实际增量草稿ID，没有草稿才补新增；字段核对9月4日，UAT依赖核对、培训依赖UAT，原日期和确认内容不变。",
+        "本轮已补齐上轮关键问题，不重复追问已经明确的前置与窗口。"
+      ],
+      "status": "structurally_valid"
+    }
+  ]
+}

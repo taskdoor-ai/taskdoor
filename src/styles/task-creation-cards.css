@@ -1,0 +1,42 @@
+.creation-subtasks.creation-subtasks-cards { margin-top: var(--ad-space-6); padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.creation-subtasks-cards > .creation-subtasks-heading { padding: 0 0 var(--ad-space-3); }
+.creation-subtasks-cards > .creation-task-list { padding: 0; }
+.creation-heading { --creation-heading-action-space: 112px; }
+.creation-member-match-basis { display: grid; grid-template-columns: 68px minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); margin: 0 var(--creation-row-padding, var(--ad-space-6)); padding: var(--ad-space-4) 0; border-top: 1px solid var(--ad-border-soft); }
+.creation-member-match-basis > .task-detail-field-label { padding-top: 0; line-height: 1.7; }
+.creation-member-match-basis > div { display: grid; min-width: 0; gap: var(--ad-space-1); }
+.creation-member-match-basis p { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.7; overflow-wrap: anywhere; }
+.creation-subtask-dependency-field { display: grid; grid-template-columns: 68px minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); min-width: 0; }
+.creation-subtask-dependency-field > .task-detail-field-label { padding-top: 6px; }
+.creation-heading .task-effort-cost { align-items: baseline; }
+.creation-heading .task-effort-cost > .task-effort-field-label, .creation-heading .task-effort-cost-value { font-size: var(--ad-text-body-sm); font-weight: 400; line-height: 1.5; }
+.creation-heading .task-effort-cost > .task-effort-field-label { padding-top: 0; }
+.creation-heading .task-effort-cost-summary { min-height: 0; align-items: flex-end; }
+.creation-heading .task-effort-info { align-self: flex-end; }
+.creation-heading > .task-ai-detail-tools { position: absolute; top: var(--ad-space-5); right: var(--ad-space-6); z-index: 1; padding: 0; }
+.creation-heading:has(> .task-ai-detail-tools) .task-detail-title-row { padding-right: var(--creation-heading-action-space); }
+.task-detail-properties:is(.creation-heading-properties, .creation-subtask-metadata) { align-items: center; column-gap: var(--ad-space-3); row-gap: var(--ad-space-2); }
+.task-detail-properties:is(.creation-heading-properties, .creation-subtask-metadata) > .task-detail-property { max-width: 100%; flex-wrap: nowrap; }
+.task-detail-properties:is(.creation-heading-properties, .creation-subtask-metadata) > .task-detail-property-separator { display: block; flex: 0 0 1px; align-self: center; width: 1px; height: var(--ad-space-6); background: var(--ad-border-soft); pointer-events: none; }
+.task-detail-properties:is(.creation-heading-properties, .creation-subtask-metadata) > .task-detail-title-tags { max-width: 100%; min-height: var(--ad-control-height-sm); margin-left: 0; }
+@media (max-width: 840px) {
+  .creation-heading > .creation-member-match-basis { margin-inline: var(--ad-space-5); }
+  .creation-heading > .task-ai-detail-tools { right: var(--ad-space-5); }
+  .task-detail-properties:is(.creation-heading-properties, .creation-subtask-metadata) { column-gap: var(--ad-space-4); }
+  .task-detail-properties:is(.creation-heading-properties, .creation-subtask-metadata) > .task-detail-property-separator { display: none; }
+}
+@media (max-width: 760px) {
+  .creation-subtask-dependency-field, .creation-member-match-basis { grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-1); }
+  .creation-subtask-dependency-field > .task-detail-field-label { padding-top: 0; }
+}
+@media (max-width: 640px) {
+  .creation-heading > .creation-member-match-basis { margin-inline: var(--ad-space-4); }
+  .creation-subtasks-cards > .creation-subtasks-heading { align-items: flex-start; flex-wrap: wrap; gap: var(--ad-space-2); padding: 0 0 var(--ad-space-3); }
+  .creation-subtasks-cards > .creation-subtasks-heading > div:last-child { margin-left: auto; }
+  .creation-heading > .task-ai-detail-tools { position: static; padding: var(--ad-space-3) var(--ad-space-4) 0; }
+  .creation-heading:has(> .task-ai-detail-tools) .task-detail-title-row { padding-right: 0; }
+}
+@media (max-width: 720px), (pointer: coarse) {
+  .creation-heading .task-effort-cost-summary { align-items: center; }
+  .creation-heading .task-effort-info { align-self: auto; }
+}

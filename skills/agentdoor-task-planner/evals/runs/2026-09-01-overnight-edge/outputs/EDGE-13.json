@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-13",
+  "baseSnapshotId": "snapshot-edge-13-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "needs_clarification",
+  "summary": "保留六个链接核对的最小候选，先明确“本地明天收工前”的时区和具体截止时刻，不按服务器日期猜期限。",
+  "reasoningSummary": [
+    {
+      "text": "范围只含DOC-LINK-v1六个链接的地址一致性、可读取情况和异常清单，不改正文、不发布或外站写入。",
+      "evidenceRefs": [
+        "req-edge-13",
+        "edge13-links"
+      ]
+    },
+    {
+      "text": "currentDate是UTC服务器日期，认证会话没有IANA时区，本地所指地区和收工钟点均不明，不能把服务器明天当作用户本地明天。",
+      "evidenceRefs": [
+        "edge13-clock",
+        "req-edge-13"
+      ]
+    },
+    {
+      "text": "程简的引用格式与范围核对职责可支持链接核对建议；旧的9月2日窗口不能证明本轮月底可用。",
+      "evidenceRefs": [
+        "content-m5-role",
+        "content-m5-window",
+        "edge13-clock"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:edge13-link-check",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-edge13-create-link-check",
+        "action": "create",
+        "targetId": "new:edge13-link-check",
+        "parentId": null,
+        "fields": {
+          "title": "核对DOC-LINK-v1六个链接并列出异常",
+          "goal": {
+            "text": "让已定稿的六个链接具备可核对的地址与读取情况记录，便于识别交付前异常。",
+            "basis": "inferred",
+            "evidenceRefs": [
+              "req-edge-13",
+              "edge13-links"
+            ]
+          },
+          "acceptanceCriteria": [
+            "清单逐项覆盖DOC-LINK-v1六个链接，记录给定文字和目标地址的一致性、可读取情况及核对结果。",
+            "异常逐项说明现象和待核对点；不可读取不等同于链接已失效，不改正文、不发布、不进行外站写入。"
+          ],
+          "tips": [
+            "按原始六项清单逐条记录，不因检查步骤拆出同义子任务。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "content-m5",
+            "basis": "recommended",
+            "reason": "程简负责引用格式和约定范围核对，可建议承担这份链接检查清单；不依据过期窗口承诺交付时间。",
+            "evidenceRefs": [
+              "content-m5-role",
+              "edge13-links"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "原始硬期限保留为“明天本地收工前”。",
+              "未明确本地所指IANA时区和收工时刻，具体日期未解析，不能套用运行环境时区或服务器UTC日期。"
+            ],
+            "evidenceRefs": [
+              "req-edge-13",
+              "edge13-clock"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供本轮读取异常量和可比人工投入，暂不填EWD；等待不计人时。"
+            ],
+            "evidenceRefs": [
+              "edge13-links"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "工作范围清楚，但必需期限不能唯一确定；保留候选且阻塞进入确认。",
+        "evidenceRefs": [
+          "req-edge-13",
+          "edge13-links",
+          "edge13-clock"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；此范围内无其他查重匹配。"
+  },
+  "questions": [
+    {
+      "field": "schedule",
+      "question": "“本地”指哪个IANA时区，期望交付的具体当地日期和收工钟点是什么？",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "当前协议schedule只存日期；明确后的当地钟点和时区也应保留在排期说明中，不能只用日期字段丢失“收工前”约束。",
+    "候选负责人尚未接受，当前可用时间与EWD未知；未执行实际链接访问。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": null,
+      "label": "明确本地时区与准确截止时刻"
+    }
+  ],
+  "externalEffects": "none"
+}

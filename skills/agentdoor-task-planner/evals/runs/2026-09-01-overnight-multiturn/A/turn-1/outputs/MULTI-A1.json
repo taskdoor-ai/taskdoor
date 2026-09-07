@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-a1",
+  "baseSnapshotId": "snapshot-multi-a1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议新建一个蓝屿客户稿件A的短稿校对任务，仅检查错字与引用格式，于2026年9月2日交付清稿和修改清单；建议程简负责。",
+  "reasoningSummary": [
+    {
+      "text": "约600字稿件的选题和结构已确认，本轮仅校对错字与给定引用格式，一个任务即可覆盖清稿与修改清单，无需拆出策划、重写或出图任务。",
+      "evidenceRefs": ["req-multi-a1", "content01-brief"]
+    },
+    {
+      "text": "程简的职责直接涵盖错字、引用格式和范围一致性检查，并有9月2日上午可用于短稿校对的公开协作窗口。",
+      "evidenceRefs": ["content-m5-role", "content-m5-window"]
+    },
+    {
+      "text": "当前授权团队相关活动及归档任务的查重已完成且没有候选匹配；本次快照中的任务、子任务、讨论与历史均为完整空集合。",
+      "evidenceRefs": ["req-multi-a1", "content01-brief"]
+    },
+    {
+      "text": "依照当前日期和上海时区，用户所说的明天对应2026年9月2日，与硬交付日期一致。",
+      "evidenceRefs": ["req-multi-a1"]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:multi-a-proofread",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change:multi-a1-create-proofread",
+        "action": "create",
+        "targetId": "new:multi-a-proofread",
+        "parentId": null,
+        "fields": {
+          "title": "蓝屿客户稿件A校对及清稿交付",
+          "goal": {
+            "text": "在不改变已确认选题与结构的前提下，完成蓝屿客户约600字稿件A的错字和引用格式校对，交付可核对的清稿与修改清单。",
+            "basis": "explicit",
+            "evidenceRefs": ["req-multi-a1", "content01-brief"]
+          },
+          "acceptanceCriteria": [
+            "交付蓝屿客户稿件A的清稿，逐项核对约600字原稿的错字及给定引用格式，引用格式以提供的可访问资料为依据。",
+            "交付与清稿同一版本的修改清单，逐项列明修改位置、原文、修改后内容及修改类型，清单与清稿可逐项对照；如未发现需修改项，明确记录检查结果。",
+            "对照原稿确认选题、结构及约定内容范围保持不变，不增加重新策划、结构重写、出图或发布批准范围。"
+          ],
+          "tips": [
+            "使用已确认原稿和给定引用格式资料逐项校对，再对照清稿复核修改清单。",
+            "超出错字或引用格式的疑问单独备注，不直接改写已确认结构或品牌口径。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "content-m5",
+            "basis": "recommended",
+            "reason": "程简是文字编辑，职责直接覆盖错字、引用格式和约定范围核对；其9月2日上午窗口可用于短稿校对。该推荐不代表已经接受或完成正式指派。",
+            "evidenceRefs": ["content-m5-role", "content-m5-window", "content01-brief"]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "explicit",
+            "assumptions": [
+              "截止日期依据用户所说的明天及硬交付约束，按Asia/Shanghai解释。",
+              "未指定开始日期；程简9月2日09:00至12:00的窗口仅为协作可用性依据，不等于排期已被接受。"
+            ],
+            "evidenceRefs": ["req-multi-a1", "content-m5-window"]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "没有同类历史投入或约定工具方式的估算依据，暂不填人类投入时数。",
+              "公开协作窗口不是本任务EWD，等待交付或客户反馈也不计为人类投入。"
+            ],
+            "evidenceRefs": ["content01-brief", "content-m5-window"]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "当前明确需求是一份既定短稿的有限校对结果，输入没有既有同类任务或额外前置交付，新增一个任务即可。",
+        "evidenceRefs": ["req-multi-a1", "content01-brief", "content-m5-role"]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": ["team-content"],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "本输出仅为候选计划；负责人推荐、交付日期与可审阅状态均不代表已创建、已指派或已接受任务。",
+    "EWD暂未知；程简公开协作窗口可用于校对，但不据此推断其全部容量或承诺已经排期。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:multi-a-proofread",
+      "label": "审阅短稿校对候选计划"
+    }
+  ],
+  "externalEffects": "none"
+}

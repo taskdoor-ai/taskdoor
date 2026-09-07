@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-npi-04",
+  "baseSnapshotId": "snapshot-npi-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "npi04-root": 4,
+    "npi04-bom": 3,
+    "npi04-material": 2,
+    "npi04-quality": 1
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "保留9月8日评审和现有任务，先对齐已确认B2与待审B3的资料状态；最早9月12日才到样，实物检验如何安排仍需决定。",
+  "reasoningSummary": [
+    {
+      "text": "现行确认BOM为B2，B3仍是待评审稿；更新较新的工程稿不能自行覆盖现行确认版本。",
+      "evidenceRefs": [
+        "npi04-baseline",
+        "npi04-d1",
+        "npi04-bom"
+      ]
+    },
+    {
+      "text": "本订单书面回签最早9月12日到样，晚于9月8日硬评审期限；6月不同条件的3天交期不能替代本次回签。",
+      "evidenceRefs": [
+        "npi04-supplier",
+        "npi04-root",
+        "npi04-h1",
+        "req-npi-04"
+      ]
+    },
+    {
+      "text": "现有到料任务依赖BOM对齐，实物检验依赖到料；无当前版样品不能提前形成实际检验结论。",
+      "evidenceRefs": [
+        "npi04-material",
+        "npi04-quality",
+        "npi04-d3"
+      ]
+    },
+    {
+      "text": "根任务与直属子任务、相关讨论已完整读取，当前可提出局部差异；历史仅部分可见且查重不可用，不新增平行评审任务。",
+      "evidenceRefs": [
+        "npi04-root",
+        "npi04-bom",
+        "npi04-material",
+        "npi04-quality"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "npi04-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:npi04-bom",
+        "action": "update",
+        "targetId": "npi04-bom",
+        "parentId": "npi04-root",
+        "fields": {
+          "tips": [
+            "建立工程、采购与品质使用版本对照：当前已确认B2与待评审B3分别登记，引用对应文件和确认依据。",
+            "核对B3相对B2的差异及采购、检验影响；没有正式变更依据前继续以B2作为现行确认基线，不把B3评审稿标成已生效。"
+          ]
+        },
+        "reason": "将已发现的版本差异纳入现有BOM对齐任务，不改变其原标准或正式Owner。",
+        "evidenceRefs": [
+          "npi04-baseline",
+          "npi04-d1",
+          "npi04-bom"
+        ]
+      },
+      {
+        "id": "change:npi04-material",
+        "action": "update",
+        "targetId": "npi04-material",
+        "parentId": "npi04-root",
+        "fields": {
+          "tips": [
+            "引用本订单供应商回签：最早2026年9月12日送样，未承诺9月8日前到料；到料前保留实际等待状态，不以预计日期填回执。",
+            "确认送样对应的BOM版本并核对与已确认B2的关系；B3未生效前不擅自替代。",
+            "向评审准备说明到样与9月8日期限冲突，任何提前到料或替代安排须有新的可核实依据；不用6月常规3天交期覆盖本订单回签。"
+          ]
+        },
+        "reason": "把本订单供应事实与版本核对补充到正在等待的原任务，保留到料结果标准和BOM前置。",
+        "evidenceRefs": [
+          "npi04-supplier",
+          "npi04-baseline",
+          "npi04-material",
+          "npi04-h1"
+        ]
+      },
+      {
+        "id": "change:npi04-quality",
+        "action": "update",
+        "targetId": "npi04-quality",
+        "parentId": "npi04-root",
+        "fields": {
+          "tips": [
+            "实物检验继续依赖本轮样料到位，并核对实际样品号和生效版本；不能把9月8日前的资料核对写成实物检验通过。",
+            "可准备检验口径与未具备条件清单，但9月8日是否只做资料与缺口评审仍待明确决定。",
+            "实物最早到样日为9月12日，未提供后续检验可用窗口，不承诺9月12日当天即可完成检验。"
+          ]
+        },
+        "reason": "回应品质提出的实际证据缺口，保留检验交付本身，不提前生成结论。",
+        "evidenceRefs": [
+          "npi04-quality",
+          "npi04-d3",
+          "npi04-supplier"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "npi04-root"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "unavailable",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "assessments": [],
+    "coverageNote": "合成查重接口失败，不能证明没有另建的评审任务。"
+  },
+  "questions": [
+    {
+      "field": "reviewScopeAndDeadline",
+      "question": "供应商最早9月12日才送样，9月8日是否确认只做资料与缺口评审、实物检验另排，还是需要调整评审日期或取得可核实的新供样安排？",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "9月8日硬期限保持不变；资料与缺口评审只是待确认选项，本提案没有自行缩减范围或修改日期。",
+    "未改变任何正式Owner、状态、依赖或确认版本；B3生效仍需受控确认。",
+    "查重不可用，不能证明没有其他评审任务；本提案只更新当前树，不产生create。",
+    "历史读取为partial，现有6月交期不适用；成员窗口与在办记录不构成完整容量或实物检验排期。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": "npi04-root",
+      "label": "确定9月8日评审与实物检验的范围安排"
+    },
+    {
+      "action": "review_proposal",
+      "taskId": "npi04-root",
+      "label": "查看现有准备任务的局部补充"
+    }
+  ],
+  "externalEffects": "none"
+}

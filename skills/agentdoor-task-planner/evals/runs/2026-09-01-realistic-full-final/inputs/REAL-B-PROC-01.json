@@ -1,0 +1,1185 @@
+{
+  "requestId": "req-real-b-proc-01",
+  "message": "受益所有人登记册v3只补全注册地址，实体号、税号和人员都没变。请继续使用澄壤现有准入树，把v3更新到所有人核对、MSA、税务、银行验证和最终采购门禁五个消费者，并复核9月10日门禁、9月12日首单期限。不要重签已完成NDA、重跑已覆盖同一人员的制裁筛查、重做样品试用，也不要另建“快速准入”。银行函只有9月7日外部承诺，不能当成已上传或已核验；给我保留风险的最小差异方案。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "b-proc-m1",
+  "teamId": "team-b-proc",
+  "authorizedTeamIds": [
+    "team-b-proc"
+  ],
+  "revision": 4,
+  "currentTaskId": "b-proc-root",
+  "context": {
+    "snapshotId": "snapshot-real-b-proc-01-v4",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-b-proc"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete",
+      "files": "complete"
+    },
+    "tasks": [
+      {
+        "id": "b-proc-root",
+        "title": "澄壤包装供应商准入",
+        "status": "in_progress",
+        "version": 14,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "2026-09-12首张采购单释放前形成风险、合同、主数据与质量准入记录"
+        ],
+        "ownerId": "b-proc-m1",
+        "sourceRefs": [
+          "b-proc-reg-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-12",
+        "goal": "在复用已完成审查的前提下，让澄壤同一法律实体完成可追溯准入",
+        "identity": {
+          "businessObject": "澄壤包装材料有限公司（合成）",
+          "cycle": "首次准入",
+          "scope": "再生纸包装"
+        }
+      },
+      {
+        "id": "b-proc-risk",
+        "title": "合规与安全分支",
+        "status": "in_progress",
+        "version": 7,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-root",
+        "acceptanceCriteria": [
+          "归集实体、所有人、制裁与安全审查"
+        ],
+        "ownerId": "b-proc-m2",
+        "sourceRefs": [
+          "b-proc-reg-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-05"
+      },
+      {
+        "id": "b-proc-contract",
+        "title": "合同分支",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-root",
+        "acceptanceCriteria": [
+          "归集NDA与MSA现行版本"
+        ],
+        "ownerId": "b-proc-m3",
+        "sourceRefs": [
+          "b-proc-msa-v6"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-06"
+      },
+      {
+        "id": "b-proc-enable",
+        "title": "财务与质量分支",
+        "status": "in_progress",
+        "version": 8,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-root",
+        "acceptanceCriteria": [
+          "归集税务、银行与试用结果"
+        ],
+        "ownerId": "b-proc-m4",
+        "sourceRefs": [
+          "b-proc-tax-v4"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-08"
+      },
+      {
+        "id": "b-proc-risk-pack",
+        "title": "实体风险审查包",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-risk",
+        "acceptanceCriteria": [
+          "保留登记册版本、完成筛查与增量核对"
+        ],
+        "ownerId": "b-proc-m2",
+        "sourceRefs": [
+          "b-proc-reg-v2",
+          "b-proc-reg-v3",
+          "b-proc-sanctions-v2"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-04"
+      },
+      {
+        "id": "b-proc-sanctions",
+        "title": "完成澄壤制裁筛查",
+        "status": "completed",
+        "version": 8,
+        "updatedAt": "2026-08-29T18:00:00+08:00",
+        "parentId": "b-proc-risk-pack",
+        "acceptanceCriteria": [
+          "同一法律实体号及三名所有人筛查证书已留存"
+        ],
+        "ownerId": "b-proc-m2",
+        "sourceRefs": [
+          "b-proc-sanctions-v2"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-29"
+      },
+      {
+        "id": "b-proc-owner-review",
+        "title": "核对澄壤受益所有人资料",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-risk-pack",
+        "acceptanceCriteria": [
+          "核对实体号、地址、所有人名单及与制裁证书的覆盖关系"
+        ],
+        "ownerId": "b-proc-m2",
+        "sourceRefs": [
+          "b-proc-reg-v2",
+          "b-proc-sanctions-v2"
+        ],
+        "dependsOnTaskIds": [
+          "b-proc-sanctions"
+        ],
+        "dueOn": "2026-09-04"
+      },
+      {
+        "id": "b-proc-security",
+        "title": "完成澄壤安全问卷审查",
+        "status": "blocked",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-risk",
+        "acceptanceCriteria": [
+          "记录数据范围、控制缺口与有权风险结论"
+        ],
+        "ownerId": "b-proc-m5",
+        "sourceRefs": [
+          "b-proc-reg-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-05"
+      },
+      {
+        "id": "b-proc-contract-pack",
+        "title": "合同文件包",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-contract",
+        "acceptanceCriteria": [
+          "保留已签NDA并形成现行MSA草案"
+        ],
+        "ownerId": "b-proc-m3",
+        "sourceRefs": [
+          "b-proc-nda-v3",
+          "b-proc-msa-v6"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-06"
+      },
+      {
+        "id": "b-proc-nda",
+        "title": "签署澄壤NDA v3",
+        "status": "completed",
+        "version": 7,
+        "updatedAt": "2026-08-30T15:10:00+08:00",
+        "parentId": "b-proc-contract-pack",
+        "acceptanceCriteria": [
+          "双方签署文件与法律实体号可核对"
+        ],
+        "ownerId": "b-proc-m3",
+        "sourceRefs": [
+          "b-proc-nda-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-30"
+      },
+      {
+        "id": "b-proc-msa",
+        "title": "完成澄壤MSA准入草案",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-contract-pack",
+        "acceptanceCriteria": [
+          "合同主体、通知地址、商业条款和未决项可核对"
+        ],
+        "ownerId": "b-proc-m3",
+        "sourceRefs": [
+          "b-proc-msa-v6",
+          "b-proc-nda-v3"
+        ],
+        "dependsOnTaskIds": [
+          "b-proc-nda",
+          "b-proc-sanctions"
+        ],
+        "dueOn": "2026-09-06"
+      },
+      {
+        "id": "b-proc-fin-pack",
+        "title": "付款与质量就绪包",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-enable",
+        "acceptanceCriteria": [
+          "归集税务、银行双人验证和样品试用证据"
+        ],
+        "ownerId": "b-proc-m4",
+        "sourceRefs": [
+          "b-proc-tax-v4",
+          "b-proc-bank-v1",
+          "b-proc-quality-v2"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-08"
+      },
+      {
+        "id": "b-proc-tax",
+        "title": "核对澄壤税务资料",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-fin-pack",
+        "acceptanceCriteria": [
+          "税号、注册地址和发票字段与有权登记一致"
+        ],
+        "ownerId": "b-proc-m4",
+        "sourceRefs": [
+          "b-proc-tax-v4",
+          "b-proc-reg-v2"
+        ],
+        "dependsOnTaskIds": [
+          "b-proc-sanctions"
+        ],
+        "dueOn": "2026-09-05"
+      },
+      {
+        "id": "b-proc-bank",
+        "title": "验证澄壤银行资料",
+        "status": "blocked",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-fin-pack",
+        "acceptanceCriteria": [
+          "在银行函到达后完成账号双人核验并保留差异"
+        ],
+        "ownerId": "b-proc-m4",
+        "sourceRefs": [
+          "b-proc-bank-v1",
+          "b-proc-reg-v2"
+        ],
+        "dependsOnTaskIds": [
+          "b-proc-tax"
+        ],
+        "dueOn": "2026-09-08"
+      },
+      {
+        "id": "b-proc-quality",
+        "title": "完成澄壤样品试用记录",
+        "status": "completed",
+        "version": 6,
+        "updatedAt": "2026-08-31T16:30:00+08:00",
+        "parentId": "b-proc-fin-pack",
+        "acceptanceCriteria": [
+          "20箱样品试用结果和偏差已留存"
+        ],
+        "ownerId": "b-proc-m6",
+        "sourceRefs": [
+          "b-proc-quality-v2"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "b-proc-gate",
+        "title": "形成澄壤采购释放门禁",
+        "status": "open",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-proc-root",
+        "acceptanceCriteria": [
+          "链接风险、安全、合同、税务、银行和质量结果；缺银行函时不得声明可释放"
+        ],
+        "ownerId": "b-proc-m1",
+        "sourceRefs": [
+          "b-proc-reg-v3",
+          "b-proc-bank-v1",
+          "b-proc-quality-v2"
+        ],
+        "dependsOnTaskIds": [
+          "b-proc-security",
+          "b-proc-msa",
+          "b-proc-tax",
+          "b-proc-bank",
+          "b-proc-quality"
+        ],
+        "dueOn": "2026-09-10"
+      }
+    ],
+    "files": [
+      {
+        "id": "b-proc-reg-v2",
+        "title": "澄壤受益所有人登记册v2（合成）",
+        "text": "旧版注册地址缺楼层信息；所有人名单与v3相同，已被v3取代。",
+        "updatedAt": "2026-08-27T16:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Beneficial_Owners.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "a4f182012291f9781081fea01d772e56e3e5b6e4b252fa234d8d3cd25528fd2b",
+        "status": "superseded",
+        "linkedTaskIds": [
+          "b-proc-risk-pack",
+          "b-proc-owner-review"
+        ]
+      },
+      {
+        "id": "b-proc-reg-v3",
+        "title": "澄壤受益所有人登记册v3（合成）",
+        "text": "有权回执确认仅补全注册地址楼层，法律实体号、税号和三名受益所有人均未变化；须更新仍消费旧地址的审查与主数据任务。",
+        "updatedAt": "2026-09-01T11:30:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Beneficial_Owners.pdf",
+        "mimeType": "application/pdf",
+        "version": "3.0",
+        "checksum": "dd9a3336c5b34dae79e1638ae267785026e23379dcc94b9e23be56e7316fc31a",
+        "status": "verified_current",
+        "linkedTaskIds": [
+          "b-proc-root",
+          "b-proc-owner-review",
+          "b-proc-msa",
+          "b-proc-tax",
+          "b-proc-bank",
+          "b-proc-gate"
+        ]
+      },
+      {
+        "id": "b-proc-sanctions-v2",
+        "title": "澄壤制裁筛查证书v2（合成）",
+        "text": "证书覆盖同一法律实体号及v3中未变化的三名受益所有人；地址格式更正不要求重开完成任务。",
+        "updatedAt": "2026-08-29T18:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Sanctions_Certificate.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "b316aa2ab27294b3aae6e536a31f95a0cea36fd5e6e8b9929d6b2ff50112634c",
+        "status": "accepted_complete",
+        "linkedTaskIds": [
+          "b-proc-sanctions",
+          "b-proc-owner-review",
+          "b-proc-gate"
+        ]
+      },
+      {
+        "id": "b-proc-nda-v3",
+        "title": "澄壤已签NDA v3（合成）",
+        "text": "NDA已签署并以法律实体号识别主体，通知地址不在该文件范围；不因登记册v3重签。",
+        "updatedAt": "2026-08-30T15:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_NDA.pdf",
+        "mimeType": "application/pdf",
+        "version": "3.0",
+        "checksum": "96064beb036a9a48064e100d772af374b5de9933654f26063864a68f0c68102f",
+        "status": "executed_complete",
+        "linkedTaskIds": [
+          "b-proc-nda",
+          "b-proc-msa"
+        ]
+      },
+      {
+        "id": "b-proc-msa-v6",
+        "title": "澄壤MSA草案v6（合成）",
+        "text": "封面仍使用v2地址，正文商业条款未受影响；需在原合同任务更新通知地址引用。",
+        "updatedAt": "2026-09-01T10:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_MSA.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": "6.0",
+        "checksum": "e23e7556e6969afae7b8b77f3638710f3c2f63981bad4904e585e54a2a1038ed",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-proc-contract-pack",
+          "b-proc-msa"
+        ]
+      },
+      {
+        "id": "b-proc-tax-v4",
+        "title": "澄壤税务资料表v4（合成）",
+        "text": "税号不变，开户地址字段仍是v2格式；必须与登记册v3核对。",
+        "updatedAt": "2026-09-01T10:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Tax_Profile.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "4.0",
+        "checksum": "32bfa7062e9d21973163674ae90d5dc263c0effab9c209d5dba23b0ded85e188",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-proc-fin-pack",
+          "b-proc-tax"
+        ]
+      },
+      {
+        "id": "b-proc-bank-v1",
+        "title": "澄壤银行函占位记录v1（合成）",
+        "text": "供应商承诺9月7日上传银行函；当前无账号正文，不能完成双人验证或推断银行字段。",
+        "updatedAt": "2026-09-01T12:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Bank_Letter.pdf",
+        "mimeType": "application/pdf",
+        "version": "1.0",
+        "checksum": "358dc2b23c00e9b38c21c91dd7836aaf2ee54745d24add1dde4dd22afebf41d2",
+        "status": "awaiting_external_upload",
+        "linkedTaskIds": [
+          "b-proc-bank",
+          "b-proc-gate"
+        ]
+      },
+      {
+        "id": "b-proc-quality-v2",
+        "title": "澄壤样品试用报告v2（合成）",
+        "text": "20箱再生包装样品试用完成；登记地址变化不影响质量结果。",
+        "updatedAt": "2026-08-31T16:30:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Trial_Report.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "5fe0f180fde243f5d78af4c47ece92fb3f63a00c07fd6ff2872428e08bf3779d",
+        "status": "accepted_complete",
+        "linkedTaskIds": [
+          "b-proc-quality",
+          "b-proc-gate"
+        ]
+      }
+    ],
+    "discussions": [
+      {
+        "id": "b-proc-d1",
+        "taskId": "b-proc-root",
+        "authorId": "b-proc-m2",
+        "createdAt": "2026-09-01T11:40:00+08:00",
+        "kind": "decision",
+        "text": "登记册v3仅补全注册地址楼层；实体号、税号和三名受益所有人未变化。",
+        "threadId": "b-proc-thread-entity",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-proc-d2",
+        "taskId": "b-proc-owner-review",
+        "authorId": "b-proc-m2",
+        "createdAt": "2026-09-01T11:48:00+08:00",
+        "kind": "report",
+        "text": "已完成制裁证书仍覆盖同一实体和人员；所有人核对任务需改用v3并记录地址差异。",
+        "threadId": "b-proc-thread-entity",
+        "replyToId": "b-proc-d1",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-proc-d3",
+        "taskId": "b-proc-nda",
+        "authorId": "b-proc-m3",
+        "createdAt": "2026-09-01T11:55:00+08:00",
+        "kind": "proposal",
+        "text": "上午曾建议重签NDA以显示新地址，但NDA按实体号识别主体，这个建议现在撤回。",
+        "threadId": "b-proc-thread-entity",
+        "replyToId": "b-proc-d1",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-proc-d4",
+        "taskId": "b-proc-root",
+        "authorId": "b-proc-m1",
+        "createdAt": "2026-09-01T12:02:00+08:00",
+        "kind": "proposal",
+        "text": "能否另建一棵“快速准入”任务绕开当前阻塞？该提议未接受。",
+        "threadId": "b-proc-thread-fasttrack",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-proc-d5",
+        "taskId": "b-proc-root",
+        "authorId": "b-proc-m4",
+        "createdAt": "2026-09-01T12:08:00+08:00",
+        "kind": "decision",
+        "text": "拒绝平行准入；MSA、税务、银行和门禁都应更新原任务，完成记录继续复用。",
+        "threadId": "b-proc-thread-fasttrack",
+        "replyToId": "b-proc-d4",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-proc-d6",
+        "taskId": "b-proc-bank",
+        "authorId": "b-proc-m8",
+        "createdAt": "2026-09-01T12:15:00+08:00",
+        "kind": "report",
+        "text": "供应商承诺9月7日上传银行函；尚无正文或账号，不能提前完成双人验证。",
+        "threadId": "b-proc-thread-bank",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-proc-d7",
+        "taskId": "b-proc-gate",
+        "authorId": "b-proc-m1",
+        "createdAt": "2026-09-01T12:22:00+08:00",
+        "kind": "decision",
+        "text": "9月10日门禁审阅、9月12日首单释放是硬边界；银行函迟到必须暴露风险。",
+        "threadId": "b-proc-thread-bank",
+        "replyToId": "b-proc-d6",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-proc-d8",
+        "taskId": "b-proc-security",
+        "authorId": "b-proc-m5",
+        "createdAt": "2026-09-01T12:30:00+08:00",
+        "kind": "report",
+        "text": "安全问卷补充件预计9月5日返回，登记地址变化不改变安全审查范围。",
+        "threadId": "b-proc-thread-security",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-proc-d9",
+        "taskId": "b-proc-tax",
+        "authorId": "b-proc-m7",
+        "createdAt": "2026-09-01T12:38:00+08:00",
+        "kind": "question",
+        "text": "税号不变时，税务任务是否仍需更新地址来源？",
+        "threadId": "b-proc-thread-entity",
+        "replyToId": "b-proc-d1",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-proc-d10",
+        "taskId": "b-proc-tax",
+        "authorId": "b-proc-m4",
+        "createdAt": "2026-09-01T12:44:00+08:00",
+        "kind": "decision",
+        "text": "需要：保持原任务与税号结论，只替换注册地址来源并记录核对。",
+        "threadId": "b-proc-thread-entity",
+        "replyToId": "b-proc-d9",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "b-proc-h1",
+        "taskId": "b-proc-sanctions",
+        "occurredAt": "2026-08-29T18:00:00+08:00",
+        "type": "task_completed",
+        "summary": "制裁筛查证书v2完成，任务版本8。",
+        "version": 8,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-proc-h2",
+        "taskId": "b-proc-nda",
+        "occurredAt": "2026-08-30T15:10:00+08:00",
+        "type": "task_completed",
+        "summary": "NDA v3双方签署，任务版本7；未授权重签。",
+        "version": 7,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-proc-h3",
+        "taskId": "b-proc-quality",
+        "occurredAt": "2026-08-31T16:30:00+08:00",
+        "type": "task_completed",
+        "summary": "样品试用报告v2完成，任务版本6。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-proc-h4",
+        "taskId": "b-proc-root",
+        "occurredAt": "2026-09-01T11:30:00+08:00",
+        "type": "source_version_changed",
+        "summary": "受益所有人登记册从v2更新为v3，仅地址格式变化。",
+        "version": 14,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-proc-h5",
+        "taskId": "b-proc-bank",
+        "occurredAt": "2026-09-01T12:10:00+08:00",
+        "type": "task_blocked",
+        "summary": "银行验证等待外部银行函，任务版本3。",
+        "version": 3,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-proc-h6",
+        "taskId": "b-proc-root",
+        "occurredAt": "2026-09-01T12:22:00+08:00",
+        "type": "deadline_confirmed",
+        "summary": "门禁9月10日、首单释放9月12日保持硬边界。",
+        "version": 14,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "b-proc-reg-v2",
+        "title": "澄壤受益所有人登记册v2（合成）",
+        "text": "旧版注册地址缺楼层信息；所有人名单与v3相同，已被v3取代。",
+        "updatedAt": "2026-08-27T16:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Beneficial_Owners.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "a4f182012291f9781081fea01d772e56e3e5b6e4b252fa234d8d3cd25528fd2b",
+        "status": "superseded",
+        "linkedTaskIds": [
+          "b-proc-risk-pack",
+          "b-proc-owner-review"
+        ]
+      },
+      {
+        "id": "b-proc-reg-v3",
+        "title": "澄壤受益所有人登记册v3（合成）",
+        "text": "有权回执确认仅补全注册地址楼层，法律实体号、税号和三名受益所有人均未变化；须更新仍消费旧地址的审查与主数据任务。",
+        "updatedAt": "2026-09-01T11:30:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Beneficial_Owners.pdf",
+        "mimeType": "application/pdf",
+        "version": "3.0",
+        "checksum": "dd9a3336c5b34dae79e1638ae267785026e23379dcc94b9e23be56e7316fc31a",
+        "status": "verified_current",
+        "linkedTaskIds": [
+          "b-proc-root",
+          "b-proc-owner-review",
+          "b-proc-msa",
+          "b-proc-tax",
+          "b-proc-bank",
+          "b-proc-gate"
+        ]
+      },
+      {
+        "id": "b-proc-sanctions-v2",
+        "title": "澄壤制裁筛查证书v2（合成）",
+        "text": "证书覆盖同一法律实体号及v3中未变化的三名受益所有人；地址格式更正不要求重开完成任务。",
+        "updatedAt": "2026-08-29T18:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Sanctions_Certificate.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "b316aa2ab27294b3aae6e536a31f95a0cea36fd5e6e8b9929d6b2ff50112634c",
+        "status": "accepted_complete",
+        "linkedTaskIds": [
+          "b-proc-sanctions",
+          "b-proc-owner-review",
+          "b-proc-gate"
+        ]
+      },
+      {
+        "id": "b-proc-nda-v3",
+        "title": "澄壤已签NDA v3（合成）",
+        "text": "NDA已签署并以法律实体号识别主体，通知地址不在该文件范围；不因登记册v3重签。",
+        "updatedAt": "2026-08-30T15:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_NDA.pdf",
+        "mimeType": "application/pdf",
+        "version": "3.0",
+        "checksum": "96064beb036a9a48064e100d772af374b5de9933654f26063864a68f0c68102f",
+        "status": "executed_complete",
+        "linkedTaskIds": [
+          "b-proc-nda",
+          "b-proc-msa"
+        ]
+      },
+      {
+        "id": "b-proc-msa-v6",
+        "title": "澄壤MSA草案v6（合成）",
+        "text": "封面仍使用v2地址，正文商业条款未受影响；需在原合同任务更新通知地址引用。",
+        "updatedAt": "2026-09-01T10:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_MSA.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": "6.0",
+        "checksum": "e23e7556e6969afae7b8b77f3638710f3c2f63981bad4904e585e54a2a1038ed",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-proc-contract-pack",
+          "b-proc-msa"
+        ]
+      },
+      {
+        "id": "b-proc-tax-v4",
+        "title": "澄壤税务资料表v4（合成）",
+        "text": "税号不变，开户地址字段仍是v2格式；必须与登记册v3核对。",
+        "updatedAt": "2026-09-01T10:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Tax_Profile.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "4.0",
+        "checksum": "32bfa7062e9d21973163674ae90d5dc263c0effab9c209d5dba23b0ded85e188",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-proc-fin-pack",
+          "b-proc-tax"
+        ]
+      },
+      {
+        "id": "b-proc-bank-v1",
+        "title": "澄壤银行函占位记录v1（合成）",
+        "text": "供应商承诺9月7日上传银行函；当前无账号正文，不能完成双人验证或推断银行字段。",
+        "updatedAt": "2026-09-01T12:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Bank_Letter.pdf",
+        "mimeType": "application/pdf",
+        "version": "1.0",
+        "checksum": "358dc2b23c00e9b38c21c91dd7836aaf2ee54745d24add1dde4dd22afebf41d2",
+        "status": "awaiting_external_upload",
+        "linkedTaskIds": [
+          "b-proc-bank",
+          "b-proc-gate"
+        ]
+      },
+      {
+        "id": "b-proc-quality-v2",
+        "title": "澄壤样品试用报告v2（合成）",
+        "text": "20箱再生包装样品试用完成；登记地址变化不影响质量结果。",
+        "updatedAt": "2026-08-31T16:30:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Chengrang_Trial_Report.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "5fe0f180fde243f5d78af4c47ece92fb3f63a00c07fd6ff2872428e08bf3779d",
+        "status": "accepted_complete",
+        "linkedTaskIds": [
+          "b-proc-quality",
+          "b-proc-gate"
+        ]
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-b-proc"
+    ],
+    "matches": [
+      {
+        "taskId": "b-proc-owner-review",
+        "title": "核对澄壤受益所有人资料",
+        "reason": "已覆盖登记册差异核对。"
+      },
+      {
+        "taskId": "b-proc-msa",
+        "title": "完成澄壤MSA准入草案",
+        "reason": "已覆盖合同地址消费者。"
+      },
+      {
+        "taskId": "b-proc-tax",
+        "title": "核对澄壤税务资料",
+        "reason": "已覆盖税务地址消费者。"
+      },
+      {
+        "taskId": "b-proc-bank",
+        "title": "验证澄壤银行资料",
+        "reason": "已覆盖银行函与地址核验。"
+      },
+      {
+        "taskId": "b-proc-gate",
+        "title": "形成澄壤采购释放门禁",
+        "reason": "已覆盖最终聚合结果。"
+      }
+    ],
+    "coverageNote": "合成查重已覆盖授权团队现行与归档索引；同一法律实体已有完整准入树。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "b-proc-root",
+      "field": "goal",
+      "value": "在复用已完成审查的前提下，让澄壤同一法律实体完成可追溯准入"
+    },
+    {
+      "taskId": "b-proc-root",
+      "field": "dueOn",
+      "value": "2026-09-12"
+    },
+    {
+      "taskId": "b-proc-nda",
+      "field": "acceptanceCriteria",
+      "value": [
+        "双方签署文件与法律实体号可核对"
+      ]
+    }
+  ],
+  "constraints": {
+    "externalActions": "只输出候选差异；不联系供应商、不上传银行资料、不创建主数据、不批准采购或付款。",
+    "scope": "只处理登记册v3地址差异的五个现有消费者，保护已完成筛查、NDA和质量记录。",
+    "hardDeadlines": [
+      "2026-09-07银行函外部承诺（非完成事实）",
+      "2026-09-10门禁审阅",
+      "2026-09-12首张采购单释放"
+    ]
+  },
+  "dataClassification": "synthetic",
+  "members": [
+    {
+      "id": "b-proc-m1",
+      "name": "虞川",
+      "role": "采购准入负责人",
+      "responsibilities": [
+        "维护准入范围与采购释放门槛",
+        "协调风险、合同和主数据"
+      ],
+      "boundaries": [
+        "不代合规确认制裁筛查",
+        "不自行批准付款"
+      ],
+      "evidence": [
+        {
+          "id": "b-proc-m1-role",
+          "title": "虞川职责说明（合成）",
+          "text": "职责：维护准入范围与采购释放门槛；协调风险、合同和主数据。边界：不代合规确认制裁筛查；不自行批准付款。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-proc-m1-work",
+          "title": "虞川当前工作自报（合成）",
+          "text": "正在协调澄壤包装供应商准入。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在协调澄壤包装供应商准入。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-proc-m1-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-proc-m2",
+      "name": "季岑",
+      "role": "合规专员",
+      "responsibilities": [
+        "核对受益所有人和制裁筛查",
+        "保留完成证书历史"
+      ],
+      "boundaries": [
+        "不篡改外部登记册",
+        "不将地址更正当新增实体"
+      ],
+      "evidence": [
+        {
+          "id": "b-proc-m2-role",
+          "title": "季岑职责说明（合成）",
+          "text": "职责：核对受益所有人和制裁筛查；保留完成证书历史。边界：不篡改外部登记册；不将地址更正当新增实体。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-proc-m2-work",
+          "title": "季岑当前工作自报（合成）",
+          "text": "正在核对登记册v3的地址差异。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "b-proc-m2-window",
+          "title": "季岑公开协作窗口（合成）",
+          "text": "2026-09-04T09:00:00+08:00至2026-09-04T11:00:00+08:00；仅表示可参加本场景核对，不代表整周空闲。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在核对登记册v3的地址差异。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-proc-m2-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-04T09:00:00+08:00",
+        "endAt": "2026-09-04T11:00:00+08:00",
+        "sourceRef": "b-proc-m2-window",
+        "note": "仅表示可参加本场景核对，不代表整周空闲。",
+        "updatedAt": "2026-09-01T08:20:00+08:00"
+      }
+    },
+    {
+      "id": "b-proc-m3",
+      "name": "裴谨",
+      "role": "法务",
+      "responsibilities": [
+        "维护MSA与NDA版本",
+        "判断实体信息对合同页影响"
+      ],
+      "boundaries": [
+        "不重写已签NDA历史",
+        "不代业务批准采购释放"
+      ],
+      "evidence": [
+        {
+          "id": "b-proc-m3-role",
+          "title": "裴谨职责说明（合成）",
+          "text": "职责：维护MSA与NDA版本；判断实体信息对合同页影响。边界：不重写已签NDA历史；不代业务批准采购释放。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-proc-m3-work",
+          "title": "裴谨当前工作自报（合成）",
+          "text": "正在修订MSA封面与通知地址。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在修订MSA封面与通知地址。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-proc-m3-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-proc-m4",
+      "name": "辛禾",
+      "role": "应付与税务",
+      "responsibilities": [
+        "核对税务资料与付款前置",
+        "验证银行资料"
+      ],
+      "boundaries": [
+        "不接受聊天中的账号替代文件",
+        "不绕过双人核验"
+      ],
+      "evidence": [
+        {
+          "id": "b-proc-m4-role",
+          "title": "辛禾职责说明（合成）",
+          "text": "职责：核对税务资料与付款前置；验证银行资料。边界：不接受聊天中的账号替代文件；不绕过双人核验。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-proc-m4-work",
+          "title": "辛禾当前工作自报（合成）",
+          "text": "等待供应商银行函上传。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "等待供应商银行函上传。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-proc-m4-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-proc-m5",
+      "name": "庄珂",
+      "role": "信息安全",
+      "responsibilities": [
+        "评估安全问卷与数据范围",
+        "记录未决风险"
+      ],
+      "boundaries": [
+        "不因采购期限降低控制",
+        "不处理银行主数据"
+      ],
+      "evidence": [
+        {
+          "id": "b-proc-m5-role",
+          "title": "庄珂职责说明（合成）",
+          "text": "职责：评估安全问卷与数据范围；记录未决风险。边界：不因采购期限降低控制；不处理银行主数据。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-proc-m5-work",
+          "title": "庄珂当前工作自报（合成）",
+          "text": "安全问卷补充件预计9月5日返回。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "安全问卷补充件预计9月5日返回。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-proc-m5-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-proc-m6",
+      "name": "沈知",
+      "role": "供应商质量",
+      "responsibilities": [
+        "组织样品试用与质量协议",
+        "保留质量证据"
+      ],
+      "boundaries": [
+        "不决定法律实体名称",
+        "不批准付款账号"
+      ],
+      "evidence": [
+        {
+          "id": "b-proc-m6-role",
+          "title": "沈知职责说明（合成）",
+          "text": "职责：组织样品试用与质量协议；保留质量证据。边界：不决定法律实体名称；不批准付款账号。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-proc-m6-work",
+          "title": "沈知当前工作自报（合成）",
+          "text": "试用报告已完成，质量协议范围未变。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "试用报告已完成，质量协议范围未变。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-proc-m6-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-proc-m7",
+      "name": "罗引",
+      "role": "供应商主数据",
+      "responsibilities": [
+        "维护税号、地址和银行字段",
+        "记录双人核验"
+      ],
+      "boundaries": [
+        "不从合同草稿猜银行账号",
+        "不覆盖已完成合规记录"
+      ],
+      "evidence": [
+        {
+          "id": "b-proc-m7-role",
+          "title": "罗引职责说明（合成）",
+          "text": "职责：维护税号、地址和银行字段；记录双人核验。边界：不从合同草稿猜银行账号；不覆盖已完成合规记录。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-proc-m7-work",
+          "title": "罗引当前工作自报（合成）",
+          "text": "正在等待税务与银行字段就绪。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在等待税务与银行字段就绪。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-proc-m7-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-proc-m8",
+      "name": "温砚",
+      "role": "供应商关系协调",
+      "responsibilities": [
+        "向供应商收集外部文件",
+        "记录承诺与实际回传差异"
+      ],
+      "boundaries": [
+        "不把承诺日期当完成",
+        "不代内部审批"
+      ],
+      "evidence": [
+        {
+          "id": "b-proc-m8-role",
+          "title": "温砚职责说明（合成）",
+          "text": "职责：向供应商收集外部文件；记录承诺与实际回传差异。边界：不把承诺日期当完成；不代内部审批。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-proc-m8-work",
+          "title": "温砚当前工作自报（合成）",
+          "text": "供应商承诺9月7日上传银行函。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "供应商承诺9月7日上传银行函。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-proc-m8-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    }
+  ]
+}

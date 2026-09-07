@@ -1,0 +1,206 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "request-real-c-04",
+  "baseSnapshotId": "real-c-04-snapshot",
+  "baseRevision": 14,
+  "baseTaskVersions": {
+    "rn-root": 10,
+    "rn-site": 6,
+    "rn-mep": 5,
+    "rn-electric-retest": 3,
+    "rn-water-retest": 4,
+    "rn-finishes": 3,
+    "rn-cabinet": 4,
+    "rn-docs": 5,
+    "rn-electric-cert": 2,
+    "rn-water-record": 3,
+    "rn-manual": 7,
+    "rn-client": 4,
+    "rn-snag": 5,
+    "rn-reinspection": 2,
+    "rn-meter": 1,
+    "rn-key-handover": 3
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议复用现有RCD复测、证书和业主复验任务：把正式复测改到物业窗口、证书日期改为第三方预计出证日，并让业主复验同时等待电气证书；手册和钥匙沿现有链路消费结果，9月20日交付不自动顺延。",
+  "reasoningSummary": [
+    {
+      "text": "物业只批准2026-09-18 09:30至11:00的90分钟窗口，预检草稿未在该窗口执行，不能替代正式复测。",
+      "evidenceRefs": [
+        "rn-file-outage-permit-v2",
+        "rn-d1",
+        "rn-d2",
+        "rn-file-electric-field-v3"
+      ]
+    },
+    {
+      "text": "第三方预计在收到正式复测记录后于2026-09-19 11:00前出证，受理回执或成员报告均不等于合格证。",
+      "evidenceRefs": [
+        "rn-file-cert-request-v2",
+        "rn-d6",
+        "rn-electric-cert"
+      ]
+    },
+    {
+      "text": "业主复验的电气完成边界要求专业证明可见，因此在保留现场复测和木作前置的同时，还需等待现有电气证书任务。",
+      "evidenceRefs": [
+        "rn-reinspection",
+        "rn-d9",
+        "rn-file-snag-v5",
+        "rn-electric-cert"
+      ]
+    },
+    {
+      "text": "业主确认2026-09-20 14:00取钥匙且不授权自动顺延；手册与钥匙任务已有证书到交付的传递链，无需重复改写。",
+      "evidenceRefs": [
+        "rn-d5",
+        "rn-hard-handover",
+        "rn-manual",
+        "rn-key-handover"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "rn-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-rn-retest-window",
+        "action": "update",
+        "targetId": "rn-electric-retest",
+        "parentId": "rn-mep",
+        "fields": {
+          "schedule": {
+            "startOn": "2026-09-18",
+            "dueOn": "2026-09-18",
+            "basis": "explicit",
+            "assumptions": [
+              "正式复测须在09:30至11:00批准窗口内完成；逾时需重新申请，外部等待不计EWD。"
+            ],
+            "evidenceRefs": [
+              "rn-file-outage-permit-v2",
+              "rn-d1"
+            ]
+          }
+        },
+        "reason": "当前dueOn为9月17日，与唯一获批的9月18日停电窗口冲突，需同步正式复测日期。",
+        "evidenceRefs": [
+          "rn-electric-retest",
+          "rn-file-outage-permit-v2",
+          "rn-d1"
+        ]
+      },
+      {
+        "id": "chg-rn-cert-date",
+        "action": "update",
+        "targetId": "rn-electric-cert",
+        "parentId": "rn-docs",
+        "fields": {
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-19",
+            "basis": "recommended",
+            "assumptions": [
+              "第三方仅预计在收到9月18日正式复测记录后，于9月19日11:00前出证；该时间不是签发保证。"
+            ],
+            "evidenceRefs": [
+              "rn-file-cert-request-v2",
+              "rn-d6"
+            ]
+          }
+        },
+        "reason": "当前dueOn为9月18日，早于第三方预计出证时间；保留既有复测依赖，只修正证书候选日期。",
+        "evidenceRefs": [
+          "rn-electric-cert",
+          "rn-file-cert-request-v2",
+          "rn-d6"
+        ]
+      },
+      {
+        "id": "chg-rn-reinspection-cert-dependency",
+        "action": "update",
+        "targetId": "rn-reinspection",
+        "parentId": "rn-client",
+        "fields": {
+          "dependsOnTaskIds": [
+            "rn-electric-retest",
+            "rn-cabinet",
+            "rn-electric-cert"
+          ]
+        },
+        "reason": "业主复验仍需现场电气结果与木作结果，同时其电气确认边界明确要求专业证书可见，因此新增现有证书任务作为直接前置。",
+        "evidenceRefs": [
+          "rn-reinspection",
+          "rn-electric-cert",
+          "rn-d9",
+          "rn-file-snag-v5"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "rn-root",
+      "rn-site",
+      "rn-mep",
+      "rn-water-retest",
+      "rn-finishes",
+      "rn-cabinet",
+      "rn-docs",
+      "rn-water-record",
+      "rn-manual",
+      "rn-client",
+      "rn-snag",
+      "rn-meter",
+      "rn-key-handover"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "real-c-renovation-team"
+    ],
+    "assessments": [
+      {
+        "taskId": "rn-electric-retest",
+        "relationship": "same_outcome",
+        "reason": "同一虚构户号、同一缺陷与同一复测结果，已有任务应复用。",
+        "evidenceRefs": [
+          "rn-electric-retest",
+          "rn-request"
+        ]
+      },
+      {
+        "taskId": "rn-electric-cert",
+        "relationship": "same_outcome",
+        "reason": "同一证书申请与签发结果，现有blocked任务继续覆盖。",
+        "evidenceRefs": [
+          "rn-electric-cert",
+          "rn-file-cert-request-v2"
+        ]
+      },
+      {
+        "taskId": "rn-water-retest",
+        "relationship": "overlap",
+        "reason": "同属机电分支但专业与本次变更不同，且已完成，不应重开。",
+        "evidenceRefs": [
+          "rn-water-retest",
+          "rn-h1"
+        ]
+      }
+    ],
+    "coverageNote": "已覆盖B12本次移交树和当前授权团队缺陷索引；未读取住户影像原文或其他户号。"
+  },
+  "questions": [],
+  "warnings": [
+    "9月18日正式复测只有90分钟物业窗口，逾时须重新申请；此等待不计EWD但会直接压缩后续时间。",
+    "第三方9月19日11:00前出证只是预计，业主9月20日14:00取钥匙又不能自动顺延，证书延迟会形成真实交付风险。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "rn-root",
+      "label": "审阅本轮最小差异"
+    }
+  ],
+  "externalEffects": "none"
+}

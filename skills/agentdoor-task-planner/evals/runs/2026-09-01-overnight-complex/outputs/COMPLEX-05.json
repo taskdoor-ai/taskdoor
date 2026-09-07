@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-complex05",
+  "baseSnapshotId": "snapshot-complex05-v3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "complex05-root": 17,
+    "complex05-headquarters": 7,
+    "complex05-store01": 8,
+    "complex05-store02": 9,
+    "complex05-guide": 6,
+    "complex05-layout01": 4,
+    "complex05-photos01": 2,
+    "complex05-layout02": 3,
+    "complex05-arrival02": 5
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "建议先续读青桐目标树余下22项及总部培训、两店学习反馈相关讨论与历史，再重排整棵树；当前9项快照不足以形成完整候选，本轮不新增或修改任务，也不通知店长。",
+  "reasoningSummary": [
+    {
+      "text": "授权读取回执说明目标树有31项，本页只有9项；虽然根和三个直属分支可见，各分支后代仍不完整，不能把当前页作为全项目。",
+      "evidenceRefs": [
+        "complex05-read-receipt",
+        "complex05-root",
+        "req-complex05"
+      ]
+    },
+    {
+      "text": "当前讨论仅覆盖01店适配与02店物料部分主题，总部培训和两店学习反馈未读，历史仅一条完成事件；尚无法核对完整交接与剩余关系。",
+      "evidenceRefs": [
+        "complex05-discussion-receipt",
+        "complex05-d-layout",
+        "complex05-d-arrival"
+      ]
+    },
+    {
+      "text": "可确定指引v3任务已完成，01店适配和02店物料仍在进行；这些状态仅适用于可见任务，不推断未读22项状态。",
+      "evidenceRefs": [
+        "complex05-guide",
+        "complex05-h-guide",
+        "complex05-layout01",
+        "complex05-arrival02"
+      ]
+    },
+    {
+      "text": "本轮请求对象是整棵树，允许按已有授权分页补读；游标是可供调用方续读的依据，并不表示规划器已经取回缺失内容。",
+      "evidenceRefs": [
+        "req-complex05",
+        "complex05-read-receipt"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "partial",
+    "scopeTeamIds": [
+      "team-retail"
+    ],
+    "assessments": [],
+    "coverageNote": "仅完成当前可见9项及本页相关匹配；该授权任务树其余分页及归档索引尚未完成，不构成完整查重。"
+  },
+  "questions": [],
+  "warnings": [
+    "tasks、subtasks、discussions、history覆盖均为partial；查重也仅完成当前页，空matches不代表全树或团队不存在重复。",
+    "保留本页全部原ID、版本、已确认根目的、正式状态、Owner、日期和现有依赖，不补造未读任务或全项目排期。",
+    "本轮不要求用户手工重抄31项，不读取其他地区，不从店长窗口或在办事项推断容量。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": "complex05-root",
+      "label": "由授权读取服务按complex05-page-2续读余下22项及后续分页，返回完整分支后代与最新版本"
+    },
+    {
+      "action": "retry_context",
+      "taskId": "complex05-root",
+      "label": "续读总部培训、两店学习反馈、物料回执相关讨论与历史，并完成当前授权范围查重后重新预览"
+    }
+  ],
+  "externalEffects": "none"
+}

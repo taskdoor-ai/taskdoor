@@ -19,10 +19,14 @@ function SheetClose(props: DialogPrimitive.Close.Props) {
   return <DialogPrimitive.Close data-slot="sheet-close" {...props} />
 }
 
-function SheetContent({ children, className, ...props }: DialogPrimitive.Popup.Props) {
+type SheetContentProps = DialogPrimitive.Popup.Props & {
+  side?: "left" | "right"
+}
+
+function SheetContent({ children, className, side = "left", ...props }: SheetContentProps) {
   return <DialogPrimitive.Portal>
-    <DialogPrimitive.Backdrop className="sheet-backdrop" data-slot="sheet-backdrop" />
-    <DialogPrimitive.Popup className={cn("sheet-content", className)} data-slot="sheet-content" {...props}>
+    <DialogPrimitive.Backdrop className="sheet-backdrop" data-side={side} data-slot="sheet-backdrop" />
+    <DialogPrimitive.Popup className={cn("sheet-content", className)} data-side={side} data-slot="sheet-content" {...props}>
       {children}
       <DialogPrimitive.Close render={<Button aria-label="关闭通知" className="sheet-close" size="icon-sm" type="button" variant="ghost" />}>
         <X aria-hidden="true" />

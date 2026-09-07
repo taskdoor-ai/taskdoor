@@ -1,0 +1,192 @@
+{
+  "algorithm": "sha256",
+  "immutableEvidence": "Third full-run inputs, first outputs, frozen protocol/rubric and original reports; later corrections are additive in grading-erratum.json.",
+  "fileCount": 37,
+  "files": [
+    {
+      "path": "artifact-path-map.json",
+      "bytes": 778,
+      "sha256": "f8a5c246183265f41505a5aad1f4cb69fdc1ab4e22c4ed0390eb5a2bca1dbf4b"
+    },
+    {
+      "path": "execution-metadata.json",
+      "bytes": 1476,
+      "sha256": "b43f6aa164ff8c9956bfcc2cf1aeeac0c1354fcdcce1fe9b397b4072bb173471"
+    },
+    {
+      "path": "expectations-snapshot.json",
+      "bytes": 35222,
+      "sha256": "d971a4dcd3ea3231d9e4ac3c8ab7fc0dc9249a448d013a11ca473e072292824a"
+    },
+    {
+      "path": "grading-erratum.json",
+      "bytes": 2208,
+      "sha256": "7d74c79f5e0db37c6c0cd96991a5f12ca2ce366e01123259b6fa29c202b25f81"
+    },
+    {
+      "path": "inputs/REAL-A-CS-01.json",
+      "bytes": 36951,
+      "sha256": "f075927f63b2d674863e96d4471faefdf45f6fe43d73637b515121802fe80319"
+    },
+    {
+      "path": "inputs/REAL-A-ECOM-01.json",
+      "bytes": 37633,
+      "sha256": "86904f5b07e460d38099d67a2ee15e1d65dcb8cc504944d2c39e9534997ce007"
+    },
+    {
+      "path": "inputs/REAL-A-REL-01.json",
+      "bytes": 37070,
+      "sha256": "57917d3e0948ff998e10352a13cb461860f01a1805cc5f1d2976fb28a61515c9"
+    },
+    {
+      "path": "inputs/REAL-A-SAAS-01.json",
+      "bytes": 34103,
+      "sha256": "99cff71ca1d601dc195a4ad3610e6b307e9816e7e6b82d5272237cf9d9862c38"
+    },
+    {
+      "path": "inputs/REAL-B-LOG-01.json",
+      "bytes": 33848,
+      "sha256": "351194193d234aea33fbdb35c1ab7aa96708fd78505f982d94a137aadd6c5cb4"
+    },
+    {
+      "path": "inputs/REAL-B-NPI-01.json",
+      "bytes": 38955,
+      "sha256": "226b959304e86ffd303f94c12f01114f6cf2ea673686f2eb61a45f64a01911b6"
+    },
+    {
+      "path": "inputs/REAL-B-PROC-01.json",
+      "bytes": 41414,
+      "sha256": "bdf45d2cc4c32d9f7870d60a6296bfad2ef2eaacb0e873950d20b8ab0900f9f0"
+    },
+    {
+      "path": "inputs/REAL-B-RETAIL-01.json",
+      "bytes": 41635,
+      "sha256": "d9be742a794d236b8bca7d774999bf73c73ee608ac0d16417867d1e743f93e02"
+    },
+    {
+      "path": "inputs/REAL-C-01.json",
+      "bytes": 41585,
+      "sha256": "b2ae2408ca52079aec32c4a43702325337ba336a496c98063dc0fabc32c34b32"
+    },
+    {
+      "path": "inputs/REAL-C-02.json",
+      "bytes": 44250,
+      "sha256": "5df847142a5b402e3aad965cc6162c5b8d72e459386c7ced700b8a6bc1890bf5"
+    },
+    {
+      "path": "inputs/REAL-C-03.json",
+      "bytes": 43624,
+      "sha256": "7230ebdeb92af51bcf7d8c85018be2767aa56a3341189dfe53d78a8fee21a4b9"
+    },
+    {
+      "path": "inputs/REAL-C-04.json",
+      "bytes": 46206,
+      "sha256": "cbe6bb1abf0baa9d852626fa93057aa0fc5dbd57f051a47447b0aaf75a0aa5bc"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 3717,
+      "sha256": "31abb354863417acca1247834b444ba80364ec18e926a6cb38f31938bb1e75d8"
+    },
+    {
+      "path": "outputs/REAL-A-CS-01.json",
+      "bytes": 3753,
+      "sha256": "ec39b88f848f08f7aa4ebf1e8d48a6a83da6b9881e76a093540f0faf63c93f2a"
+    },
+    {
+      "path": "outputs/REAL-A-ECOM-01.json",
+      "bytes": 5203,
+      "sha256": "67605b57a8c046b49faa124235614cc4e0bcd9ff70b2a63bf931d398771e9834"
+    },
+    {
+      "path": "outputs/REAL-A-REL-01.json",
+      "bytes": 5004,
+      "sha256": "f24a83dfc0a8bc48e6503ef9281b7a064b1fdd9e356167c2f16fd4267e7aa2e1"
+    },
+    {
+      "path": "outputs/REAL-A-SAAS-01.json",
+      "bytes": 3313,
+      "sha256": "18a77294512b22fb6097dc89f490c9189949c2f8b87cccd8bd1c7e7b8b30a053"
+    },
+    {
+      "path": "outputs/REAL-B-LOG-01.json",
+      "bytes": 4073,
+      "sha256": "a118bfc73852fabf1e52a1fda9e0043c145b6b35970617541e52f436d9acb8ed"
+    },
+    {
+      "path": "outputs/REAL-B-NPI-01.json",
+      "bytes": 8527,
+      "sha256": "7205180954e0ac07f61bdbdaf8746d92d3b04f249b147b17ad39dd2f472b6d95"
+    },
+    {
+      "path": "outputs/REAL-B-PROC-01.json",
+      "bytes": 10723,
+      "sha256": "024b7e2794a5a178c6a55c3fa6315a385c40c160372c5bab4472f24f98c92ade"
+    },
+    {
+      "path": "outputs/REAL-B-RETAIL-01.json",
+      "bytes": 10524,
+      "sha256": "c6cd559d9616fcadacb6b5c923d40c0a5938c96ba9a89723517a17120b23b1a0"
+    },
+    {
+      "path": "outputs/REAL-C-01.json",
+      "bytes": 6669,
+      "sha256": "60812a8a765c51dbb793b3ffd97040949eae1fd0d380dad47197915e076dd06e"
+    },
+    {
+      "path": "outputs/REAL-C-02.json",
+      "bytes": 7158,
+      "sha256": "ce440e8c3a7c31bd53d4b495eadfecee7ee82fb22c3aa4692307a22431cd4061"
+    },
+    {
+      "path": "outputs/REAL-C-03.json",
+      "bytes": 9661,
+      "sha256": "2e7e0799e2074adf946cb365a7e95fd73413048904c5ca4aedebe2d70afd4c49"
+    },
+    {
+      "path": "outputs/REAL-C-04.json",
+      "bytes": 8057,
+      "sha256": "e46ac49f65d76a47c0dfda413a7b099b8d3901273f836cbaaf86914e180d19c4"
+    },
+    {
+      "path": "protocol-snapshot.json",
+      "bytes": 50372,
+      "sha256": "86b8e36135a082573533e2502a6698a322c338bcf3ac5d41219df681a6ec5991"
+    },
+    {
+      "path": "semantic-review-a.json",
+      "bytes": 12449,
+      "sha256": "5cf741434a5e5f5540eda1af3ae39eab74121caf6b1823a9e740790a73fe6d1b"
+    },
+    {
+      "path": "semantic-review-b.json",
+      "bytes": 14802,
+      "sha256": "74a1290629ed957dad8997a189f5378c5eb05f6ba50757dad37e50343e90cb16"
+    },
+    {
+      "path": "semantic-review-c.json",
+      "bytes": 10589,
+      "sha256": "714b74ad5e02787497b8429af836704772bd053d3b3057aa41c5df02db744212"
+    },
+    {
+      "path": "semantic-summary.json",
+      "bytes": 6832,
+      "sha256": "728af5d685f83e2d64d371730267f6f3ba90bb3cc3289d59e3f048bfc5e3bc2a"
+    },
+    {
+      "path": "structural-report.json",
+      "bytes": 18276,
+      "sha256": "6b4ab3c519affd637e842a1e008a241815bbcc88edcc33c19fc6b436e03400d9"
+    },
+    {
+      "path": "validator-snapshot/evaluate.py",
+      "bytes": 13314,
+      "sha256": "33688162db79e4166fb29dfbbaca0f84db92ae3827b984c3b188421930b6475c"
+    },
+    {
+      "path": "validator-snapshot/validate_plan.py",
+      "bytes": 34459,
+      "sha256": "d37c84b5d350ba18c41d4cdcef53fefa8610ef7983e3219b46e0a06d4503acbd"
+    }
+  ]
+}

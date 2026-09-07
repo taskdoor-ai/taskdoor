@@ -1,0 +1,58 @@
+{
+  "kind": "independent_semantic_review",
+  "cases": [
+    {
+      "caseId": "COMPLEX-01",
+      "status": "passed",
+      "summary": "通过：仅修正UAT、培训演示及交接清单三项依赖；保留原树、并行准备、已完成结果和锁定标准，既有使用窗口可衔接但未被包装成工期保证。",
+      "reviewFile": "semantic-review.json"
+    },
+    {
+      "caseId": "COMPLEX-02",
+      "status": "passed",
+      "summary": "通过：仅在原样料分支补一份12条编号对照表并接入原评审目录；复用已完成版本资料，原叶估算及父层结构不变，1.5人时仅作为有适用边界的新增叶项估算。",
+      "reviewFile": "semantic-review.json"
+    },
+    {
+      "caseId": "COMPLEX-03",
+      "status": "passed",
+      "summary": "通过：只补包装说明v2并更新页面、客服和发货答复三个消费者；联动核对复用已有传递关系，图片、库存、广告、确认Owner和估算基线保持不变。",
+      "reviewFile": "semantic-review.json"
+    },
+    {
+      "caseId": "COMPLEX-04",
+      "status": "passed",
+      "summary": "通过：最终版本尚未确定不妨碍先整理忠实并列表；仅新增差异表及批准任务输入，未将晚入库、策划审阅或v4留存完成当作客户批准。",
+      "reviewFile": "semantic-review.json"
+    },
+    {
+      "caseId": "COMPLEX-05",
+      "status": "passed",
+      "summary": "通过：正确将整树重规划阻塞在真实分页和讨论缺口，保留本页九项；提出按授权游标补读而非臆造余下任务或要求用户手抄。",
+      "reviewFile": "semantic-review.json"
+    },
+    {
+      "caseId": "COMPLEX-06",
+      "status": "passed",
+      "summary": "通过：区分本组完整覆盖与外部前置不可见，保留外部依赖缺口并寻求受控摘要；资料目录和影像可继续，问题查看及移交可行性仍未知。",
+      "reviewFile": "semantic-review.json"
+    },
+    {
+      "caseId": "COMPLEX-07",
+      "status": "passed",
+      "summary": "通过：同时识别两节点依赖环和已取消前置，未擅自修图或假定替代交付；提出两个关键边界问题，原文件命名目录可独立继续。",
+      "reviewFile": "semantic-review.json"
+    },
+    {
+      "caseId": "COMPLEX-08",
+      "status": "passed",
+      "summary": "通过：拒绝以旧12人时均分保证工期，准确识别同日12时截止、14时答复及16时复核的冲突；保护已确认责任与引用标准，提出受控协调路径而不自行改期限。",
+      "reviewFile": "semantic-review.json"
+    }
+  ],
+  "total": 8,
+  "passed": 8,
+  "failed": 0,
+  "unknown": 0,
+  "humanIndustryReview": false
+}

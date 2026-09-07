@@ -1,0 +1,66 @@
+.task-detail-hero-card[data-current-situation] {
+  --task-card-background: radial-gradient(ellipse 840px 280px at top left,
+    color-mix(in srgb, var(--task-card-tint) 48%, var(--ad-surface)) 0%,
+    var(--ad-surface) 100%);
+}
+.task-detail-hero-card[data-current-situation] > .task-detail-heading-main { grid-template-columns: minmax(0, 1fr); padding-bottom: var(--ad-space-3); }
+.task-detail-hero-card[data-current-situation] .task-detail-title-row { grid-template-columns: var(--ad-control-touch-min) minmax(0, 1fr) auto; align-items: center; }
+.task-detail-hero-card[data-current-situation] .task-ai-detail-tools { padding: 0; }
+.task-detail-hero-card[data-current-situation] .task-detail-properties { --task-property-gap: var(--ad-space-6); column-gap: var(--task-property-gap); }
+/* Keep dividers attached to fields so they cannot wrap onto a line by themselves. */
+.task-detail-hero-card[data-current-situation] .task-detail-properties > :not(:last-child) { position: relative; }
+.task-detail-hero-card[data-current-situation] .task-detail-properties > :not(:last-child)::after { position: absolute; top: 50%; inset-inline-end: calc(var(--task-property-gap) / -2); width: 1px; height: var(--ad-space-6); background: var(--ad-border-soft); content: ""; pointer-events: none; transform: translateY(-50%); }
+.task-detail-hero-card[data-current-situation] .task-detail-description { margin-left: 0; }
+.task-detail-hero-card[data-current-situation] .task-detail-goal-field { grid-template-columns: 64px minmax(0, 1fr); }
+
+.task-situation { min-width: 0; padding: var(--ad-space-6); border-top: 1px solid var(--ad-border-soft); }
+.task-situation-heading { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ad-space-2) var(--ad-space-3); margin-bottom: var(--ad-space-3); }
+.task-situation-heading h2 { margin: 0; color: var(--ad-ink); font-size: var(--ad-text-label); font-weight: 650; }
+.task-situation-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ad-space-2); color: var(--ad-ink-tertiary); font-size: var(--ad-text-micro); }
+.task-situation-layout { display: grid; min-width: 0; grid-template-columns: minmax(0, 1fr); column-gap: var(--ad-space-5); }
+.task-situation[data-has-trend="true"] .task-situation-layout { grid-template-columns: minmax(0, 2.15fr) minmax(240px, 1fr); }
+.task-situation-content { display: flex; min-width: 0; flex-direction: column; gap: var(--ad-space-5); }
+.task-situation-column { min-width: 0; align-content: start; }
+.task-situation-summary { max-width: 72ch; margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); font-weight: 400; line-height: 1.7; overflow-wrap: anywhere; }
+.task-situation-notice { margin: var(--ad-space-2) 0 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.6; }
+.task-situation-stale { color: var(--ad-warning-ink, var(--ad-ink-secondary)); }
+.task-situation-list { display: grid; min-width: 0; gap: var(--ad-space-3); margin: 0; padding: 0 0 0 1.5em; list-style: decimal outside; }
+.task-situation-item { color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.75; overflow-wrap: anywhere; }
+.task-situation-item::marker { color: var(--ad-ink-tertiary); font-variant-numeric: tabular-nums; }
+.task-situation-item > span:first-child { display: block; }
+.task-situation-reference { display: inline-flex; max-width: 100%; align-items: baseline; gap: 2px; margin-top: var(--ad-space-1); padding: 0; border: 0; border-radius: var(--ad-radius-tag); background: transparent; color: var(--ad-route-ink); font: inherit; font-size: var(--ad-text-caption); text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.task-situation-reference svg { flex: 0 0 auto; align-self: center; }
+.task-situation-reference:hover { text-decoration: underline; text-underline-offset: 3px; }
+.task-situation-reference:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
+.task-situation-source-label { display: block; margin-top: var(--ad-space-1); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.task-situation-trend { min-width: 0; padding-left: var(--ad-space-5); border-left: 1px solid var(--ad-border-soft); }
+.task-situation-trend .task-burnup { display: grid; min-width: 0; grid-template-columns: minmax(0, 1fr); align-self: start; padding: 0; border: 0; }
+.task-situation-trend .task-burnup > * { min-width: 0; align-content: start; }
+.task-situation-trend .task-burnup-visual { position: relative; margin-top: var(--ad-space-5); padding-top: var(--ad-space-4); border-top: 1px solid var(--ad-border-soft); }
+.task-workload-estimate { min-width: 0; }
+.task-situation-trend .task-burnup-chart { grid-column: auto; grid-row: auto; align-self: auto; margin-top: var(--ad-space-4); }
+
+@container task-detail-pane (max-width: 1000px) {
+  .task-situation { padding: var(--ad-space-5); }
+}
+@container task-detail-pane (max-width: 760px) {
+  .task-detail-hero-card[data-current-situation] .task-detail-properties { --task-property-gap: var(--ad-space-4); }
+  .task-detail-hero-card[data-current-situation] .task-detail-properties > :not(:last-child)::after { display: none; }
+  .task-situation[data-has-trend="true"] .task-situation-layout { grid-template-columns: minmax(0, 1fr); }
+  .task-situation-layout { row-gap: var(--ad-space-5); }
+  .task-situation-trend { padding: var(--ad-space-5) 0 0; border-top: 1px solid var(--ad-border-soft); border-left: 0; }
+  .task-situation-trend .task-burnup-visual { margin-top: var(--ad-space-4); }
+}
+@container task-detail-pane (max-width: 480px) {
+  .task-situation { padding: var(--ad-space-4); }
+  .task-situation-reference { min-height: var(--ad-control-touch-min); align-items: center; }
+}
+@media (max-width: 640px) {
+  .task-detail-hero-card[data-current-situation] .task-detail-properties { --task-property-gap: var(--ad-space-4); }
+  .task-detail-hero-card[data-current-situation] .task-detail-properties > :not(:last-child)::after { display: none; }
+  .task-situation { padding: var(--ad-space-4); }
+  .task-situation[data-has-trend="true"] .task-situation-layout { grid-template-columns: minmax(0, 1fr); }
+  .task-situation-layout { row-gap: var(--ad-space-5); }
+  .task-situation-trend { padding: var(--ad-space-5) 0 0; border-top: 1px solid var(--ad-border-soft); border-left: 0; }
+  .task-detail-hero-card[data-current-situation] .task-detail-goal-field { grid-template-columns: minmax(0, 1fr); }
+}

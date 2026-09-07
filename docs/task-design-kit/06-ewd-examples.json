@@ -1,0 +1,503 @@
+{
+  "schemaVersion": "agentdoor.ewd-design-examples.v0.1",
+  "status": "proposal",
+  "synthetic": true,
+  "notes": [
+    "仅用于方案评审与算术检查，不是当前运行时API或真实业务数据。",
+    "时间为合成事件顺序，不代表实际执行工期。",
+    "估算候选、人工确认、验收和权限均需真实服务另行校验；回放夹具不实现鉴权。"
+  ],
+  "metricPolicy": {
+    "id": "planned-human-effort-v1-proposal",
+    "definition": "约定AI/工具方式下，完成既定范围预计需要的人类总投入",
+    "storageUnit": "minute",
+    "displayUnit": "human-hour",
+    "accountingClock": "server-commit-sequence",
+    "acceptanceRule": "effective-human-acceptance-of-current-work-definition",
+    "leafRule": "server-verified-structural-leaves"
+  },
+  "estimateProposalExample": {
+    "taskId": "sample-a",
+    "basedOn": {
+      "taskVersion": 3,
+      "taskScopeVersion": 1,
+      "criteriaVersion": 1,
+      "workModeVersion": 1
+    },
+    "estimate": {
+      "ewdHours": 2,
+      "basis": "model",
+      "reason": "人工准备0.5h、AI辅助操作0.5h、复核1h；后台运行与等待不计人工",
+      "confirmed": false
+    },
+    "proposedExtension": {
+      "lowerHumanMinutes": 90,
+      "upperHumanMinutes": 180,
+      "assumptions": [
+        "使用约定AI工具",
+        "已有可用会议记录"
+      ],
+      "scopeNote": "区间和工作方式属于待发布的新协议扩展，不能直接塞入当前planner v0.1 estimate Schema"
+    }
+  },
+  "confirmedEstimateExample": {
+    "id": "sample-estimate-a-v1",
+    "taskId": "sample-a",
+    "revision": 1,
+    "totalHumanMinutes": 120,
+    "taskScopeVersion": 1,
+    "criteriaVersion": 1,
+    "workModeVersion": 1,
+    "metricPolicyVersion": "planned-human-effort-v1-proposal",
+    "basis": "model",
+    "reason": "有权人核对输入与人工复核范围后确认",
+    "assumptions": [
+      "使用约定AI工具",
+      "已有可用会议记录"
+    ],
+    "sourceRefs": [
+      {
+        "objectId": "sample-source-a",
+        "version": 1
+      }
+    ],
+    "createdBy": "sample-planner",
+    "createdAt": "2026-08-31T08:58:00+08:00",
+    "confirmedBy": "sample-authorized-human",
+    "confirmedAt": "2026-08-31T09:00:00+08:00",
+    "supersedesId": null,
+    "trustNote": "confirmedBy/At由服务端认证会话与明确确认动作生成，模型同名字段不可信"
+  },
+  "acceptanceExample": {
+    "id": "sample-acceptance-a-v1",
+    "taskId": "sample-a",
+    "taskScopeVersion": 1,
+    "criteriaVersion": 1,
+    "acceptedScopeRef": {
+      "kind": "leaf-work-definition",
+      "taskScopeVersion": 1,
+      "criteriaVersion": 1,
+      "structureVersion": null
+    },
+    "evidenceRefs": [
+      {
+        "objectType": "FileVersion",
+        "objectId": "sample-delivery-a",
+        "version": 1
+      }
+    ],
+    "acceptedBy": "sample-authorized-owner",
+    "acceptedAt": "2026-08-31T09:01:00+08:00",
+    "estimateIdAtAcceptance": "sample-estimate-a-v1",
+    "revocationRef": null,
+    "trustNote": "记录资格绑定结果范围和标准；estimate引用用于审计，纯工时更正不会自动撤销验收"
+  },
+  "progressResponseExamples": [
+    {
+      "case": "complete",
+      "rootTaskId": "sample-root-p",
+      "asOfSequence": 2,
+      "structureVersion": 1,
+      "currentScopeMinutes": 1200,
+      "currentAcceptedMinutes": 120,
+      "overallRatio": 0.1,
+      "coverage": {
+        "access": "complete",
+        "structure": "reconciled",
+        "estimates": "complete",
+        "acceptance": "complete",
+        "freshness": "current",
+        "confirmedEstimateLeafCount": 2,
+        "totalLeafCount": 2
+      },
+      "reasonCodes": [],
+      "taskClosed": false
+    },
+    {
+      "case": "unknown-new-estimate",
+      "rootTaskId": "sample-root-p",
+      "asOfSequence": 5,
+      "structureVersion": 3,
+      "currentScopeMinutes": null,
+      "currentAcceptedMinutes": 600,
+      "overallRatio": null,
+      "coverage": {
+        "access": "complete",
+        "structure": "reconciled",
+        "estimates": "partial",
+        "acceptance": "complete",
+        "freshness": "current",
+        "confirmedEstimateLeafCount": 3,
+        "totalLeafCount": 4
+      },
+      "estimatedSubset": {
+        "scopeMinutes": 1200,
+        "acceptedMinutes": 600,
+        "label": "已估子集，不是完整范围"
+      },
+      "reasonCodes": [
+        "missing_estimate"
+      ],
+      "taskClosed": false
+    },
+    {
+      "case": "partial-access",
+      "rootTaskId": "sample-root-p",
+      "asOfSequence": 2,
+      "currentScopeMinutes": null,
+      "currentAcceptedMinutes": null,
+      "overallRatio": null,
+      "coverage": {
+        "access": "partial",
+        "structure": "server-verified",
+        "estimates": "unknown-for-full-scope",
+        "acceptance": "unknown-for-full-scope",
+        "freshness": "current",
+        "confirmedEstimateLeafCount": null,
+        "totalLeafCount": null
+      },
+      "visibleSubset": {
+        "scopeMinutes": 120,
+        "acceptedMinutes": 120,
+        "leafCount": 1,
+        "label": "仅当前获准可见范围"
+      },
+      "reasonCodes": [
+        "partial_access"
+      ],
+      "disclosureNote": "仅在授权策略允许披露该状态与可见子集时返回，不返回隐藏数量、工时或历史差值"
+    },
+    {
+      "case": "legacy-completed-without-acceptance",
+      "rootTaskId": "sample-legacy",
+      "currentScopeMinutes": 120,
+      "currentAcceptedMinutes": null,
+      "overallRatio": null,
+      "coverage": {
+        "access": "complete",
+        "structure": "reconciled",
+        "estimates": "complete",
+        "acceptance": "unknown_legacy",
+        "freshness": "current",
+        "confirmedEstimateLeafCount": 1,
+        "totalLeafCount": 1
+      },
+      "reasonCodes": [
+        "unknown_acceptance"
+      ],
+      "displayNote": "原状态为已完成，当前验收依据待核对；不能推成可信0%或100%"
+    },
+    {
+      "case": "zero-effort-result-pending",
+      "rootTaskId": "sample-zero-mixed",
+      "currentScopeMinutes": 120,
+      "currentAcceptedMinutes": 120,
+      "overallRatio": 1,
+      "coverage": {
+        "access": "complete",
+        "structure": "reconciled",
+        "estimates": "complete",
+        "acceptance": "complete",
+        "freshness": "current",
+        "confirmedEstimateLeafCount": 2,
+        "totalLeafCount": 2
+      },
+      "unacceptedResultCount": 1,
+      "reasonCodes": [],
+      "taskClosed": false,
+      "displayNote": "工时进度100%，仍有0h结果未验收"
+    },
+    {
+      "case": "all-zero",
+      "rootTaskId": "sample-zero",
+      "currentScopeMinutes": 0,
+      "currentAcceptedMinutes": 0,
+      "overallRatio": null,
+      "reasonCodes": [
+        "zero_scope"
+      ],
+      "displayNote": "暂无可计量工时，结果完成另核对"
+    }
+  ],
+  "eventReplay": {
+    "rootTaskId": "sample-root-p",
+    "workspaceRoots": [
+      "sample-root-p",
+      "sample-root-q"
+    ],
+    "initialTasks": [
+      {
+        "id": "sample-root-p",
+        "parentId": null,
+        "measurementRole": "aggregate",
+        "inScope": true,
+        "estimateMinutes": null,
+        "accepted": false
+      },
+      {
+        "id": "sample-root-q",
+        "parentId": null,
+        "measurementRole": "aggregate",
+        "inScope": true,
+        "estimateMinutes": null,
+        "accepted": false
+      },
+      {
+        "id": "sample-a",
+        "parentId": "sample-root-p",
+        "measurementRole": "leaf",
+        "inScope": true,
+        "estimateMinutes": 120,
+        "accepted": false
+      },
+      {
+        "id": "sample-b",
+        "parentId": "sample-root-p",
+        "measurementRole": "leaf",
+        "inScope": true,
+        "estimateMinutes": 1080,
+        "accepted": false
+      }
+    ],
+    "events": [
+      {
+        "eventId": "sample-event-0",
+        "tableIndex": 0,
+        "sequence": 1,
+        "serverCommittedAt": "2026-08-31T09:00:00+08:00",
+        "type": "baseline_confirmed",
+        "expected": {
+          "rootScopeMinutes": 1200,
+          "rootAcceptedMinutes": 0,
+          "rootOverallRatio": 0,
+          "workspaceScopeMinutes": 1200,
+          "workspaceAcceptedMinutes": 0
+        }
+      },
+      {
+        "eventId": "sample-event-1",
+        "tableIndex": 1,
+        "sequence": 2,
+        "serverCommittedAt": "2026-08-31T09:01:00+08:00",
+        "type": "result_accepted",
+        "taskId": "sample-a",
+        "expected": {
+          "rootScopeMinutes": 1200,
+          "rootAcceptedMinutes": 120,
+          "rootOverallRatio": 0.1,
+          "workspaceScopeMinutes": 1200,
+          "workspaceAcceptedMinutes": 120
+        }
+      },
+      {
+        "eventId": "sample-event-2",
+        "tableIndex": 2,
+        "sequence": 3,
+        "serverCommittedAt": "2026-08-31T09:02:00+08:00",
+        "type": "leaf_split",
+        "taskId": "sample-b",
+        "children": [
+          {
+            "id": "sample-b1",
+            "estimateMinutes": 480
+          },
+          {
+            "id": "sample-b2",
+            "estimateMinutes": 600
+          }
+        ],
+        "workDefinitionReconciled": true,
+        "expected": {
+          "rootScopeMinutes": 1200,
+          "rootAcceptedMinutes": 120,
+          "rootOverallRatio": 0.1,
+          "workspaceScopeMinutes": 1200,
+          "workspaceAcceptedMinutes": 120
+        }
+      },
+      {
+        "eventId": "sample-event-3",
+        "tableIndex": 3,
+        "sequence": 4,
+        "serverCommittedAt": "2026-08-31T09:03:00+08:00",
+        "type": "result_accepted",
+        "taskId": "sample-b1",
+        "expected": {
+          "rootScopeMinutes": 1200,
+          "rootAcceptedMinutes": 600,
+          "rootOverallRatio": 0.5,
+          "workspaceScopeMinutes": 1200,
+          "workspaceAcceptedMinutes": 600
+        }
+      },
+      {
+        "eventId": "sample-event-4",
+        "tableIndex": 4,
+        "sequence": 5,
+        "serverCommittedAt": "2026-08-31T09:04:00+08:00",
+        "type": "task_added",
+        "taskId": "sample-d",
+        "parentId": "sample-root-p",
+        "estimateMinutes": null,
+        "expected": {
+          "rootScopeMinutes": null,
+          "rootAcceptedMinutes": 600,
+          "rootOverallRatio": null,
+          "workspaceScopeMinutes": null,
+          "workspaceAcceptedMinutes": 600
+        }
+      },
+      {
+        "eventId": "sample-event-5",
+        "tableIndex": 5,
+        "sequence": 6,
+        "serverCommittedAt": "2026-08-31T09:05:00+08:00",
+        "type": "estimate_confirmed",
+        "taskId": "sample-d",
+        "estimateMinutes": 600,
+        "expected": {
+          "rootScopeMinutes": 1800,
+          "rootAcceptedMinutes": 600,
+          "rootOverallRatio": 0.3333333333333333,
+          "workspaceScopeMinutes": 1800,
+          "workspaceAcceptedMinutes": 600
+        }
+      },
+      {
+        "eventId": "sample-event-6",
+        "tableIndex": 6,
+        "sequence": 7,
+        "serverCommittedAt": "2026-08-31T09:06:00+08:00",
+        "type": "estimate_confirmed",
+        "taskId": "sample-b2",
+        "estimateMinutes": 840,
+        "expected": {
+          "rootScopeMinutes": 2040,
+          "rootAcceptedMinutes": 600,
+          "rootOverallRatio": 0.29411764705882354,
+          "workspaceScopeMinutes": 2040,
+          "workspaceAcceptedMinutes": 600
+        }
+      },
+      {
+        "eventId": "sample-event-7",
+        "tableIndex": 7,
+        "sequence": 8,
+        "serverCommittedAt": "2026-08-31T09:07:00+08:00",
+        "type": "task_cancelled",
+        "taskId": "sample-d",
+        "expected": {
+          "rootScopeMinutes": 1440,
+          "rootAcceptedMinutes": 600,
+          "rootOverallRatio": 0.4166666666666667,
+          "workspaceScopeMinutes": 1440,
+          "workspaceAcceptedMinutes": 600
+        }
+      },
+      {
+        "eventId": "sample-event-8",
+        "tableIndex": 8,
+        "sequence": 9,
+        "serverCommittedAt": "2026-08-31T09:08:00+08:00",
+        "type": "task_reopened",
+        "taskId": "sample-b1",
+        "expected": {
+          "rootScopeMinutes": 1440,
+          "rootAcceptedMinutes": 120,
+          "rootOverallRatio": 0.08333333333333333,
+          "workspaceScopeMinutes": 1440,
+          "workspaceAcceptedMinutes": 120
+        }
+      },
+      {
+        "eventId": "sample-event-9",
+        "tableIndex": 9,
+        "sequence": 10,
+        "serverCommittedAt": "2026-08-31T09:09:00+08:00",
+        "type": "result_accepted",
+        "taskId": "sample-b1",
+        "expected": {
+          "rootScopeMinutes": 1440,
+          "rootAcceptedMinutes": 600,
+          "rootOverallRatio": 0.4166666666666667,
+          "workspaceScopeMinutes": 1440,
+          "workspaceAcceptedMinutes": 600
+        }
+      },
+      {
+        "eventId": "sample-event-10",
+        "tableIndex": 10,
+        "sequence": 11,
+        "serverCommittedAt": "2026-08-31T09:10:00+08:00",
+        "type": "task_reparented",
+        "taskId": "sample-b2",
+        "parentId": "sample-root-q",
+        "workDefinitionUnchangedConfirmed": true,
+        "expected": {
+          "rootScopeMinutes": 600,
+          "rootAcceptedMinutes": 600,
+          "rootOverallRatio": 1,
+          "workspaceScopeMinutes": 1440,
+          "workspaceAcceptedMinutes": 600
+        }
+      },
+      {
+        "eventId": "sample-event-11",
+        "tableIndex": 11,
+        "sequence": 12,
+        "serverCommittedAt": "2026-08-31T09:11:00+08:00",
+        "type": "definition_changed_with_estimate_confirmation",
+        "taskId": "sample-a",
+        "taskScopeVersion": 2,
+        "criteriaVersion": 2,
+        "estimateMinutes": 120,
+        "expected": {
+          "rootScopeMinutes": 600,
+          "rootAcceptedMinutes": 480,
+          "rootOverallRatio": 0.8,
+          "workspaceScopeMinutes": 1440,
+          "workspaceAcceptedMinutes": 480
+        }
+      },
+      {
+        "eventId": "sample-event-12",
+        "tableIndex": 12,
+        "sequence": 13,
+        "serverCommittedAt": "2026-08-31T09:12:00+08:00",
+        "type": "result_accepted",
+        "taskId": "sample-a",
+        "expected": {
+          "rootScopeMinutes": 600,
+          "rootAcceptedMinutes": 600,
+          "rootOverallRatio": 1,
+          "workspaceScopeMinutes": 1440,
+          "workspaceAcceptedMinutes": 600
+        }
+      },
+      {
+        "eventId": "sample-event-13",
+        "tableIndex": 13,
+        "sequence": 14,
+        "serverCommittedAt": "2026-08-31T09:13:00+08:00",
+        "type": "accepted_estimate_corrected",
+        "taskId": "sample-a",
+        "estimateMinutes": 180,
+        "reason": "同范围原估算记错，已有验收仍有效，本次无新增交付",
+        "expected": {
+          "rootScopeMinutes": 660,
+          "rootAcceptedMinutes": 660,
+          "rootOverallRatio": 1,
+          "workspaceScopeMinutes": 1500,
+          "workspaceAcceptedMinutes": 660
+        }
+      }
+    ],
+    "notes": [
+      "非空estimateMinutes表示当前已确认估算，null表示未估，不表示确认0。",
+      "结构拆分将B改为aggregate，保留其旧估算作沿革但不纳入当前计量。",
+      "本例重挂的两个父级目标兼容且有权人已确认工作边界不变；若继承目标改变，应另核对范围及验收。",
+      "任务D取消后保留结构与历史，但退出当前范围。",
+      "本例accepted布尔仅简化期望资格，不替代服务端验收记录/版本校验。"
+    ]
+  }
+}

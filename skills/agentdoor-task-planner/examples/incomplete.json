@@ -1,0 +1,25 @@
+{
+  "input": {
+    "requestId": "example-incomplete", "message": "请李青今天校对这份活动通知，约2小时，只改错别字，发给我确认。",
+    "currentDate": null, "timezone": null, "currentUserId": "m1", "teamId": "team-a", "authorizedTeamIds": ["team-a"],
+    "members": [{"id": "m1", "name": "王明", "role": "项目经理"}, {"id": "m2", "name": "李青", "role": "编辑"}],
+    "duplicateSearch": {"status": "unavailable", "scopeTeamIds": ["team-a"], "matches": [], "coverageNote": "查重服务不可用，未检查当前团队，也未查询其他团队。"}
+  },
+  "output": {
+    "schemaVersion": "agentdoor.task-plan.v0.1", "requestId": "example-incomplete", "intent": "create", "disposition": "needs_clarification",
+    "summary": "已整理为单任务草稿；需补充日期并确认未查重风险。",
+    "reasoningSummary": ["约2小时的独立校对不需要子任务。", "李青由用户指定，王明负责接收确认。", "缺少日期上下文，不能将今天转换为具体日期。"],
+    "plan": {
+      "complexity": "simple", "goal": {"text": "消除通知错别字并交王明确认，保持其他内容不变。", "basis": "inferred", "evidence": ["只改错别字，发给我确认"]},
+      "mainTask": {
+        "clientId": "main", "title": "校对活动通知错别字", "acceptanceCriteria": ["仅修正错别字，校对结果回传王明确认。"], "tips": ["保留修改痕迹。", "执行前确认待校对通知版本。"],
+        "ownerRecommendation": {"memberId": "m2", "basis": "explicit", "reason": "用户点名李青；尚未表示接受。"},
+        "schedule": {"startOn": null, "dueOn": null, "originalText": "今天", "basis": "unknown", "assumptions": ["缺少当前日期与时区。"]},
+        "estimate": {"ewdHours": 2, "basis": "user", "reason": "用户给出的初步估算。", "confirmed": false}, "dependsOnClientIds": []
+      }, "subtasks": []
+    },
+    "duplicateCheck": {"status": "unavailable", "scopeTeamIds": ["team-a"], "matches": [], "coverageNote": "查重服务不可用，未检查当前团队，也未查询其他团队。"},
+    "questions": [{"field": "schedule", "question": "这里的今天是哪个日期、按哪个时区？", "blocking": true}, {"field": "duplicateCheck", "question": "暂时无法查重，是否等待恢复后检测，或确认承担重复风险继续准备？", "blocking": true}],
+    "warnings": ["草稿可以保留；尚未创建、指派或联系成员。", "缺少通知引用不阻止形成草稿，执行前仍需取得可访问版本。"], "externalEffects": "none"
+  }
+}

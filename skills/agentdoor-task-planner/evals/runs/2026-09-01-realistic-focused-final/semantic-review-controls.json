@@ -1,0 +1,636 @@
+{
+  "cases": [
+    {
+      "caseId": "REAL-C-01",
+      "verdict": "fails",
+      "summary": "首版正确更新了主张v2本身以及页面、邮件、付费三个直接消费者，但又把cc-launch-check直接连接到cc-claim-v2，破坏了输入中已存在的付费/CRM传递链和最小差异边界；这是依赖语义错误，不是证据ID是否出现的问题。",
+      "findings": [
+        {
+          "kind": "frozen_consumer_matrix",
+          "status": "established_from_input",
+          "items": [
+            {
+              "consumerTaskId": "cc-claim-v2",
+              "classification": "source_only",
+              "requiredResult": "把客户批准的v2主张和合规限制加工为可交接的渠道替换清单",
+              "producerTaskIds": [],
+              "authoritativeSourceIds": [
+                "cc-file-claim-approval-v2",
+                "cc-file-legal-matrix-v4",
+                "cc-d1",
+                "cc-d2"
+              ],
+              "expectedDirectDependencies": [],
+              "inputEvidenceIds": [
+                "cc-claim-v2",
+                "cc-d1",
+                "cc-d2",
+                "cc-file-claim-approval-v2",
+                "cc-file-legal-matrix-v4"
+              ]
+            },
+            {
+              "consumerTaskId": "cc-landing-copy",
+              "classification": "direct",
+              "requiredResult": "v2替换清单中的精确措辞和页面限制语",
+              "producerTaskIds": [
+                "cc-claim-v2"
+              ],
+              "authoritativeSourceIds": [
+                "cc-file-claim-approval-v2"
+              ],
+              "expectedDirectDependencies": [
+                "cc-claim-v2"
+              ],
+              "obsoleteDirectDependencies": [
+                "cc-claim-v1"
+              ],
+              "inputEvidenceIds": [
+                "cc-landing-copy",
+                "cc-d1",
+                "cc-d3",
+                "cc-d4"
+              ]
+            },
+            {
+              "consumerTaskId": "cc-email-copy",
+              "classification": "direct",
+              "requiredResult": "v2替换清单中的邮件主题、首屏和CTA口径",
+              "producerTaskIds": [
+                "cc-claim-v2"
+              ],
+              "authoritativeSourceIds": [
+                "cc-file-claim-approval-v2"
+              ],
+              "expectedDirectDependencies": [
+                "cc-claim-v2"
+              ],
+              "obsoleteDirectDependencies": [
+                "cc-claim-v1"
+              ],
+              "inputEvidenceIds": [
+                "cc-email-copy",
+                "cc-d1",
+                "cc-d8"
+              ]
+            },
+            {
+              "consumerTaskId": "cc-paid",
+              "classification": "direct",
+              "requiredResult": "v2短主张与合规限制语，以及已核落地页和主视觉",
+              "producerTaskIds": [
+                "cc-claim-v2",
+                "cc-landing-copy",
+                "cc-keyvisual"
+              ],
+              "authoritativeSourceIds": [
+                "cc-file-legal-matrix-v4"
+              ],
+              "expectedDirectDependencies": [
+                "cc-landing-copy",
+                "cc-keyvisual",
+                "cc-claim-v2"
+              ],
+              "inputEvidenceIds": [
+                "cc-paid",
+                "cc-d2",
+                "cc-d9",
+                "cc-file-media-sheet-v7"
+              ]
+            },
+            {
+              "consumerTaskId": "cc-crm",
+              "classification": "transitive",
+              "requiredResult": "已完成的三封邮件发送版本",
+              "producerTaskIds": [
+                "cc-email-copy"
+              ],
+              "authoritativeSourceIds": [
+                "cc-file-legal-matrix-v4"
+              ],
+              "expectedDirectDependencies": [
+                "cc-email-copy"
+              ],
+              "inputEvidenceIds": [
+                "cc-crm",
+                "cc-email-copy",
+                "cc-file-email-flow-v2"
+              ]
+            },
+            {
+              "consumerTaskId": "cc-launch-check",
+              "classification": "reviewer",
+              "requiredResult": "页面、邮件发送配置、付费配置和主视觉的集成一致性",
+              "producerTaskIds": [
+                "cc-paid",
+                "cc-crm",
+                "cc-keyvisual"
+              ],
+              "authoritativeSourceIds": [
+                "cc-file-runbook-v3",
+                "cc-hard-launch"
+              ],
+              "expectedDirectDependencies": [
+                "cc-paid",
+                "cc-crm",
+                "cc-keyvisual"
+              ],
+              "transitiveResultIds": [
+                "cc-claim-v2"
+              ],
+              "inputEvidenceIds": [
+                "cc-launch-check",
+                "cc-request",
+                "cc-d7",
+                "cc-hard-launch"
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "dependency_semantics",
+          "status": "fail",
+          "summary": "输出前四项更新符合冻结矩阵；第五项把cc-launch-check从集成审核者错误提升为cc-claim-v2的直接消费者。上线核对已有cc-paid和cc-crm路径取得v2结果，其自身标准核对的是渠道成品而非替换清单。",
+          "expectedUpdates": [
+            "cc-claim-v2",
+            "cc-landing-copy",
+            "cc-email-copy",
+            "cc-paid"
+          ],
+          "actualUpdates": [
+            "cc-claim-v2",
+            "cc-landing-copy",
+            "cc-email-copy",
+            "cc-paid",
+            "cc-launch-check"
+          ],
+          "erroneousDependency": {
+            "taskId": "cc-launch-check",
+            "dependsOnTaskId": "cc-claim-v2"
+          },
+          "evidenceIds": [
+            "cc-launch-check",
+            "cc-paid",
+            "cc-crm",
+            "cc-email-copy",
+            "cc-request"
+          ]
+        },
+        {
+          "kind": "candidate_text_circularity",
+          "status": "fail",
+          "summary": "输出先在cc-claim-v2的新验收标准中写入“可供上线核对直接消费”，随后用这段候选文字支撑直连；冻结协议禁止用候选新增文字把transitive消费者变成direct消费者。",
+          "evidenceIds": [
+            "cc-claim-v2",
+            "cc-launch-check",
+            "cc-request"
+          ]
+        },
+        {
+          "kind": "evidence_reference_alignment",
+          "status": "pass_but_nonprobative_for_extra_edge",
+          "summary": "冻结期望要求的cc-file-claim-approval-v2、cc-file-legal-matrix-v4及两组历史/硬窗口证据均有命中；然而cc-launch-check、cc-request、cc-d7只是合法ID，不能证明上线核对直接读取替换清单。证据ID命中不修复错误依赖。",
+          "evidenceIds": [
+            "cc-file-claim-approval-v2",
+            "cc-file-legal-matrix-v4",
+            "cc-h2",
+            "cc-claim-v1",
+            "cc-hard-launch",
+            "cc-d7",
+            "cc-request"
+          ]
+        },
+        {
+          "kind": "frozen_oracle_alignment",
+          "status": "fail",
+          "summary": "冻结期望最多允许4个更新，并明确禁止更新cc-launch-check；首版实际包含5个更新。冻结oracle与输入消费者矩阵一致。",
+          "evidenceIds": [
+            "cc-launch-check",
+            "cc-paid",
+            "cc-crm"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "assessment": "primary_failure",
+          "summary": "没有按输入先冻结direct/transitive矩阵，并用候选验收文字反向制造了冗余直连。",
+          "evidenceIds": [
+            "cc-launch-check",
+            "cc-claim-v2",
+            "cc-request"
+          ]
+        },
+        "fixture": {
+          "assessment": "not_at_fault",
+          "summary": "夹具已通过cc-launch-check现有标准与依赖、cc-paid/cc-crm路径清楚区分直接渠道产出和传递v2结果；用户的“都消费v2”按冻结协议只确定覆盖范围，不自动要求全部直连。",
+          "evidenceIds": [
+            "cc-launch-check",
+            "cc-paid",
+            "cc-crm",
+            "cc-request"
+          ]
+        },
+        "frozenGraderOracle": {
+          "assessment": "aligned",
+          "summary": "mustNotUpdateTaskIds、maxUpdates和依赖期望与输入冻结矩阵一致，没有发现oracle误判。",
+          "evidenceIds": [
+            "cc-launch-check",
+            "cc-paid",
+            "cc-crm"
+          ]
+        }
+      }
+    },
+    {
+      "caseId": "REAL-C-04",
+      "verdict": "fails",
+      "summary": "首版正确调整了正式复测和证书日期，并把证书加入业主复验；但没有在任何证据承载位置引用rn-hard-handover，且把复测继续作为业主复验直连是否必要存在最小链解释张力。硬交付边界的证据缺失足以判定不满足。",
+      "findings": [
+        {
+          "kind": "frozen_consumer_matrix",
+          "status": "established_from_input",
+          "items": [
+            {
+              "consumerTaskId": "rn-electric-retest",
+              "classification": "source_only",
+              "requiredResult": "在唯一获批停电窗口形成正式RCD复测记录",
+              "producerTaskIds": [],
+              "authoritativeSourceIds": [
+                "rn-file-outage-permit-v2",
+                "rn-d1",
+                "rn-window"
+              ],
+              "expectedDirectDependencies": [],
+              "inputEvidenceIds": [
+                "rn-electric-retest",
+                "rn-file-outage-permit-v2",
+                "rn-d1",
+                "rn-d2",
+                "rn-d4"
+              ]
+            },
+            {
+              "consumerTaskId": "rn-electric-cert",
+              "classification": "direct",
+              "requiredResult": "正式RCD复测记录",
+              "producerTaskIds": [
+                "rn-electric-retest"
+              ],
+              "authoritativeSourceIds": [
+                "rn-file-cert-request-v2"
+              ],
+              "expectedDirectDependencies": [
+                "rn-electric-retest"
+              ],
+              "inputEvidenceIds": [
+                "rn-electric-cert",
+                "rn-electric-retest",
+                "rn-d6",
+                "rn-file-cert-request-v2"
+              ]
+            },
+            {
+              "consumerTaskId": "rn-reinspection",
+              "classification": "reviewer",
+              "requiredResult": "第三方电气专业证明与柜门整改结果",
+              "producerTaskIds": [
+                "rn-electric-cert",
+                "rn-cabinet"
+              ],
+              "authoritativeSourceIds": [
+                "rn-file-snag-v5"
+              ],
+              "expectedDirectDependencies": [
+                "rn-electric-cert",
+                "rn-cabinet"
+              ],
+              "transitiveResultIds": [
+                "rn-electric-retest"
+              ],
+              "inputEvidenceIds": [
+                "rn-reinspection",
+                "rn-d9",
+                "rn-file-snag-v5",
+                "rn-electric-cert",
+                "rn-cabinet"
+              ]
+            },
+            {
+              "consumerTaskId": "rn-manual",
+              "classification": "direct",
+              "requiredResult": "电气证书编号和已归档给排水证明",
+              "producerTaskIds": [
+                "rn-electric-cert",
+                "rn-water-record"
+              ],
+              "authoritativeSourceIds": [
+                "rn-file-manual-v7"
+              ],
+              "expectedDirectDependencies": [
+                "rn-electric-cert",
+                "rn-water-record"
+              ],
+              "inputEvidenceIds": [
+                "rn-manual",
+                "rn-file-manual-v7",
+                "rn-electric-cert",
+                "rn-water-record"
+              ]
+            },
+            {
+              "consumerTaskId": "rn-key-handover",
+              "classification": "reviewer",
+              "requiredResult": "业主复验、资料手册和表计记录",
+              "producerTaskIds": [
+                "rn-reinspection",
+                "rn-manual",
+                "rn-meter"
+              ],
+              "authoritativeSourceIds": [
+                "rn-hard-handover",
+                "rn-file-key-check-v4"
+              ],
+              "expectedDirectDependencies": [
+                "rn-reinspection",
+                "rn-manual",
+                "rn-meter"
+              ],
+              "transitiveResultIds": [
+                "rn-electric-cert",
+                "rn-electric-retest"
+              ],
+              "inputEvidenceIds": [
+                "rn-key-handover",
+                "rn-hard-handover",
+                "rn-d5",
+                "rn-h4"
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "schedule_semantics",
+          "status": "pass",
+          "summary": "rn-electric-retest被安排到2026-09-18唯一物业窗口，rn-electric-cert被安排到2026-09-19预计签发日；输出明确ETA、停电等待和受理回执均不等于完成。",
+          "evidenceIds": [
+            "rn-file-outage-permit-v2",
+            "rn-d1",
+            "rn-file-cert-request-v2",
+            "rn-d6"
+          ]
+        },
+        {
+          "kind": "dependency_semantics",
+          "status": "uncertain",
+          "summary": "加入rn-electric-cert和保留rn-cabinet是正确的。输出还保留rn-electric-retest直连；按“审核最近产出”和d9的证书完成边界，它已通过rn-electric-cert传递而显得冗余。另一方面，冻结协议要求无明确失效来源时保留旧依赖，而rn-reinspection原标准仍写“复验电气结果”，所以该额外边存在夹具解释张力，不能单独作为确定性失败依据。",
+          "expectedLeanDependencies": [
+            "rn-electric-cert",
+            "rn-cabinet"
+          ],
+          "actualDependencies": [
+            "rn-electric-retest",
+            "rn-cabinet",
+            "rn-electric-cert"
+          ],
+          "evidenceIds": [
+            "rn-reinspection",
+            "rn-d9",
+            "rn-electric-cert",
+            "rn-electric-retest",
+            "rn-file-snag-v5"
+          ]
+        },
+        {
+          "kind": "evidence_reference_alignment",
+          "status": "fail",
+          "summary": "输出命中rn-file-outage-permit-v2、rn-file-cert-request-v2和rn-d8，但完全未引用冻结要求的rn-hard-handover。它在warnings中讨论9月20日14:00不顺延，却没有证据引用；warning不能成为该硬边界的唯一承载位置。",
+          "missingRequiredEvidenceIds": [
+            "rn-hard-handover"
+          ],
+          "presentRequiredEvidenceIds": [
+            "rn-file-outage-permit-v2",
+            "rn-file-cert-request-v2",
+            "rn-d8"
+          ],
+          "evidenceIds": [
+            "rn-hard-handover",
+            "rn-d5",
+            "rn-h4",
+            "rn-file-key-check-v4"
+          ]
+        },
+        {
+          "kind": "frozen_evidence_group_alignment",
+          "status": "oracle_only_miss",
+          "summary": "冻结组要求至少命中rn-d2、rn-d4、rn-file-electric-field-v3中的一项，首版均未引用；不过它引用rn-electric-retest自身验收标准与rn-d8，已语义表达“预检草稿不等于正式完成”。因此这是纯引用命中缺口，不能与依赖语义混为一谈。",
+          "missingEvidenceGroup": [
+            "rn-d2",
+            "rn-d4",
+            "rn-file-electric-field-v3"
+          ],
+          "semanticallySubstitutedBy": [
+            "rn-electric-retest",
+            "rn-d8"
+          ],
+          "evidenceIds": [
+            "rn-d2",
+            "rn-d4",
+            "rn-file-electric-field-v3",
+            "rn-electric-retest",
+            "rn-d8"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "assessment": "primary_failure",
+          "summary": "讨论硬交付风险时没有把rn-hard-handover放入reasoningSummary或变更证据；这违反证据承载边界。对rn-reinspection保留复测直连也没有明确解释其仍是独立直接输入，而只笼统称为有效前置。",
+          "evidenceIds": [
+            "rn-hard-handover",
+            "rn-reinspection",
+            "rn-d9"
+          ]
+        },
+        "fixture": {
+          "assessment": "contributing_ambiguity",
+          "summary": "rn-d9倾向让专业证书成为最近审核产出，但rn-reinspection原验收仍写复验电气结果，且协议一般要求无失效证据时保留旧依赖；这使是否删除rn-electric-retest存在轻微歧义。该歧义不影响rn-hard-handover证据缺失的确定结论。",
+          "evidenceIds": [
+            "rn-reinspection",
+            "rn-d9",
+            "rn-electric-retest",
+            "rn-electric-cert"
+          ]
+        },
+        "frozenGraderOracle": {
+          "assessment": "mixed",
+          "summary": "要求rn-hard-handover与硬窗口语义一致；但预检证据组只接受三个特定ID，未把语义等价的rn-electric-retest验收标准与rn-d8纳入，属于引用层面的脆弱oracle。requiredDependencies只要求证书和柜门，并未用exactDependencies明确禁止额外复测边。",
+          "evidenceIds": [
+            "rn-hard-handover",
+            "rn-d2",
+            "rn-d4",
+            "rn-file-electric-field-v3",
+            "rn-electric-retest",
+            "rn-d8"
+          ]
+        }
+      }
+    },
+    {
+      "caseId": "REAL-A-ECOM-01",
+      "verdict": "satisfies",
+      "summary": "首版只更新开售闸门，保留演练与仓位旧前置并新增联检、仓内异常卡、承运降级三项直接结果；没有创建总卡、改确认标准或改开售边界，依赖语义和冻结证据要求均满足。",
+      "findings": [
+        {
+          "kind": "frozen_consumer_matrix",
+          "status": "established_from_input",
+          "items": [
+            {
+              "consumerTaskId": "syn-ecom-launch-gate",
+              "classification": "reviewer",
+              "requiredResult": "订单演练、仓位、四渠道联检、仓内异常卡和承运降级五项正式结果",
+              "producerTaskIds": [
+                "syn-ecom-dry-run",
+                "syn-ecom-warehouse-slot",
+                "syn-ecom-channel-check",
+                "syn-ecom-exception-card",
+                "syn-ecom-carrier-fallback"
+              ],
+              "authoritativeSourceIds": [
+                "syn-ecom-file-01",
+                "syn-ecom-file-06",
+                "syn-ecom-d04",
+                "syn-ecom-d06"
+              ],
+              "expectedDirectDependencies": [
+                "syn-ecom-dry-run",
+                "syn-ecom-warehouse-slot",
+                "syn-ecom-channel-check",
+                "syn-ecom-exception-card",
+                "syn-ecom-carrier-fallback"
+              ],
+              "inputEvidenceIds": [
+                "syn-ecom-launch-gate",
+                "syn-ecom-file-01",
+                "syn-ecom-file-04",
+                "syn-ecom-file-05",
+                "syn-ecom-file-06",
+                "syn-ecom-d04",
+                "syn-ecom-d06"
+              ]
+            },
+            {
+              "consumerTaskId": "syn-ecom-launch-gate",
+              "classification": "source_only",
+              "requiredResult": "固定20:00窗口、SKU与价格不变的闸门边界",
+              "producerTaskIds": [],
+              "authoritativeSourceIds": [
+                "syn-ecom-file-01",
+                "syn-ecom-d08"
+              ],
+              "expectedDirectDependencies": [],
+              "inputEvidenceIds": [
+                "syn-ecom-file-01",
+                "syn-ecom-d08"
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "dependency_semantics",
+          "status": "pass",
+          "summary": "输出的最终依赖恰为旧集合加三项直接生产者，没有删除仍有效的演练或仓位，也没有给父任务或其他下游增加冗余边。",
+          "expectedDependencies": [
+            "syn-ecom-dry-run",
+            "syn-ecom-warehouse-slot",
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback"
+          ],
+          "actualDependencies": [
+            "syn-ecom-dry-run",
+            "syn-ecom-warehouse-slot",
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback"
+          ],
+          "evidenceIds": [
+            "syn-ecom-launch-gate",
+            "syn-ecom-d04",
+            "syn-ecom-file-06",
+            "syn-ecom-d06"
+          ]
+        },
+        {
+          "kind": "scope_and_preservation",
+          "status": "pass",
+          "summary": "三个请求结果均复用现有任务，仓内和承运边界保持分开；已完成页面、合规、预测、规则和演练均未更新或重建。",
+          "evidenceIds": [
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback",
+            "syn-ecom-d03",
+            "syn-ecom-d04",
+            "syn-ecom-d05"
+          ]
+        },
+        {
+          "kind": "evidence_reference_alignment",
+          "status": "pass",
+          "summary": "首版命中冻结要求的syn-ecom-file-01、04、05、06，并在查重评估中同时引用syn-ecom-channel-check和syn-ecom-file-02；这些引用分别证明硬边界、两类异常范围、闸门缺口和联检身份。",
+          "evidenceIds": [
+            "syn-ecom-file-01",
+            "syn-ecom-file-02",
+            "syn-ecom-file-04",
+            "syn-ecom-file-05",
+            "syn-ecom-file-06",
+            "syn-ecom-channel-check"
+          ]
+        },
+        {
+          "kind": "frozen_oracle_alignment",
+          "status": "pass",
+          "summary": "intent、disposition、单一update、无create、保留任务集合和最终依赖均与冻结期望一致。",
+          "evidenceIds": [
+            "syn-ecom-launch-gate",
+            "syn-ecom-channel-check",
+            "syn-ecom-exception-card",
+            "syn-ecom-carrier-fallback"
+          ]
+        }
+      ],
+      "attribution": {
+        "planner": {
+          "assessment": "correct",
+          "summary": "正确冻结了唯一直接审核者，区分了任务产出与范围文件，并执行了old并集direct producers的最小依赖差分。",
+          "evidenceIds": [
+            "syn-ecom-launch-gate",
+            "syn-ecom-file-06",
+            "syn-ecom-d06"
+          ]
+        },
+        "fixture": {
+          "assessment": "clear",
+          "summary": "夹具通过闸门清单、冲突讨论和三个现有任务边界充分说明消费者与生产者关系。",
+          "evidenceIds": [
+            "syn-ecom-file-04",
+            "syn-ecom-file-05",
+            "syn-ecom-file-06",
+            "syn-ecom-d04"
+          ]
+        },
+        "frozenGraderOracle": {
+          "assessment": "aligned",
+          "summary": "依赖、更新范围、证据引用和不创建总卡的要求均与冻结输入及协议一致。",
+          "evidenceIds": [
+            "syn-ecom-launch-gate",
+            "syn-ecom-file-01",
+            "syn-ecom-file-04",
+            "syn-ecom-file-05",
+            "syn-ecom-file-06"
+          ]
+        }
+      }
+    }
+  ]
+}

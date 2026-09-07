@@ -1,0 +1,54 @@
+{
+  "kind": "independent_cross_group_semantic_review",
+  "total": 7,
+  "satisfies": 3,
+  "fails": 4,
+  "uncertain": 0,
+  "semanticPassRate": 0.42857142857142855,
+  "humanIndustryReview": false,
+  "reviewMethod": "Three independent reviewers assessed groups they did not generate against frozen inputs, first outputs, protocol and rubric. No production data or human industry-user review was used.",
+  "results": [
+    {
+      "id": "REAL-B-NPI-01",
+      "verdict": "fails",
+      "summary": "DVT遗漏实际来料COC核对任务的直接边；其正确依赖应同时包含design、pcn和incoming。",
+      "reviewFile": "semantic-review-dependencies.json"
+    },
+    {
+      "id": "REAL-B-PROC-01",
+      "verdict": "satisfies",
+      "summary": "五项消费者切换登记册v3，source_only与门禁风险核对边界准确。",
+      "reviewFile": "semantic-review-dependencies.json"
+    },
+    {
+      "id": "REAL-C-01",
+      "verdict": "fails",
+      "summary": "上线核对已有传递链，额外直连主张v2并更新该任务属于冗余。",
+      "reviewFile": "semantic-review-controls.json"
+    },
+    {
+      "id": "REAL-C-02",
+      "verdict": "fails",
+      "summary": "外币重估到日记账审核的最近生产者链正确，但额外更新证据索引且漏关键冲突来源。",
+      "reviewFile": "semantic-review-replan.json"
+    },
+    {
+      "id": "REAL-C-03",
+      "verdict": "satisfies",
+      "summary": "四项排期、source_only日期文件、旧依赖、权限和隐私边界均正确。",
+      "reviewFile": "semantic-review-replan.json"
+    },
+    {
+      "id": "REAL-C-04",
+      "verdict": "fails",
+      "summary": "核心排期和证书前置基本正确，但未引用硬交付依据，关键边界不可追溯。",
+      "reviewFile": "semantic-review-controls.json"
+    },
+    {
+      "id": "REAL-A-ECOM-01",
+      "verdict": "satisfies",
+      "summary": "只给开售闸门补三个直接结果，旧边与确认范围均保留。",
+      "reviewFile": "semantic-review-controls.json"
+    }
+  ]
+}

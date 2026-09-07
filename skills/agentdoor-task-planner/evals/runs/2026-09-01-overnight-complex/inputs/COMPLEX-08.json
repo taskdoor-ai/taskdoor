@@ -1,0 +1,721 @@
+{
+  "requestId": "req-complex08",
+  "message": "禾页访谈内容包9月3日中午必须交。策划、作者、编辑都说能帮文字，旧表上总共12人时，你帮我平均分给三个人并保证按期吧。如果这个保证没有依据，请直接指出缺口，但别改已确认的Owner、截止时间和最终引用核对要求。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "content-m1",
+  "teamId": "team-content",
+  "authorizedTeamIds": [
+    "team-content"
+  ],
+  "revision": 3,
+  "currentTaskId": "complex08-root",
+  "context": {
+    "snapshotId": "snapshot-complex08-v3",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-content"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "complex08-root",
+        "title": "禾页访谈内容包9月交付",
+        "status": "in_progress",
+        "version": 9,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "文案与引用逐项核对后交付，未经确认的引述不得伪装成已确认内容"
+        ],
+        "ownerId": "content-m1",
+        "sourceRefs": [
+          "complex08-root-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03",
+        "goal": "让禾页取得有对应引用依据的访谈内容包"
+      },
+      {
+        "id": "complex08-writing",
+        "title": "禾页文案准备分支",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex08-root",
+        "acceptanceCriteria": [
+          "形成约定文案与引用表"
+        ],
+        "ownerId": "content-m3",
+        "sourceRefs": [
+          "complex08-writing-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03"
+      },
+      {
+        "id": "complex08-delivery",
+        "title": "禾页核对与交付分支",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex08-root",
+        "acceptanceCriteria": [
+          "逐项核对文案引用、视觉版本及交付清单"
+        ],
+        "ownerId": "content-m6",
+        "sourceRefs": [
+          "complex08-delivery-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03"
+      },
+      {
+        "id": "complex08-outline",
+        "title": "确认禾页访谈提纲",
+        "status": "completed",
+        "version": 4,
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "parentId": "complex08-writing",
+        "acceptanceCriteria": [
+          "访谈提纲与客户确认受众、主题一致"
+        ],
+        "ownerId": "content-m2",
+        "sourceRefs": [
+          "complex08-outline-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "complex08-copy",
+        "title": "完成禾页访谈成稿",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex08-writing",
+        "acceptanceCriteria": [
+          "按已确认提纲成稿，标明待确认引述"
+        ],
+        "ownerId": "content-m3",
+        "sourceRefs": [
+          "complex08-copy-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex08-outline"
+        ],
+        "dueOn": "2026-09-03",
+        "estimate": {
+          "ewdHours": 6,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex08-copy-record"
+          ]
+        }
+      },
+      {
+        "id": "complex08-quotes",
+        "title": "核对禾页访谈引用表",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex08-writing",
+        "acceptanceCriteria": [
+          "引用表逐项关联受访方当前确认记录；尚未收到的答复保持待确认"
+        ],
+        "ownerId": "content-m2",
+        "sourceRefs": [
+          "complex08-quotes-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03",
+        "estimate": {
+          "ewdHours": 3,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex08-quotes-record"
+          ]
+        }
+      },
+      {
+        "id": "complex08-visual",
+        "title": "留存禾页已批准视觉v2",
+        "status": "completed",
+        "version": 3,
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "parentId": "complex08-delivery",
+        "acceptanceCriteria": [
+          "已批准视觉v2和引用范围留存"
+        ],
+        "ownerId": "content-m4",
+        "sourceRefs": [
+          "complex08-visual-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "complex08-proof",
+        "title": "完成禾页成稿与引用复核",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex08-delivery",
+        "acceptanceCriteria": [
+          "逐条比对成稿与已确认引用表并记录差异，全部待确认引述保留明确状态"
+        ],
+        "ownerId": "content-m5",
+        "sourceRefs": [
+          "complex08-proof-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex08-copy",
+          "complex08-quotes"
+        ],
+        "dueOn": "2026-09-03",
+        "estimate": {
+          "ewdHours": 2,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex08-proof-record"
+          ]
+        }
+      },
+      {
+        "id": "complex08-package",
+        "title": "整理禾页最终内容包",
+        "status": "open",
+        "version": 2,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex08-delivery",
+        "acceptanceCriteria": [
+          "交付清单关联成稿引用复核与批准视觉v2，不代替客户接受"
+        ],
+        "ownerId": "content-m6",
+        "sourceRefs": [
+          "complex08-package-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex08-proof",
+          "complex08-visual"
+        ],
+        "dueOn": "2026-09-03",
+        "estimate": {
+          "ewdHours": 1,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex08-package-record"
+          ]
+        }
+      }
+    ],
+    "discussions": [
+      {
+        "id": "complex08-d-author",
+        "taskId": "complex08-copy",
+        "authorId": "content-m3",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "report",
+        "text": "我只确认9月2日10至11时能做文字交接核对，未承诺这就是连续写作窗口或其他日期可用。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "complex08-d-editor",
+        "taskId": "complex08-proof",
+        "authorId": "content-m5",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "report",
+        "text": "本轮9月2日旧协作窗口已撤回，当前只确认9月3日16至17时做复核；早于此时是否可参加我没有确认。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "complex08-d-help",
+        "taskId": "complex08-quotes",
+        "authorId": "content-m2",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "proposal",
+        "text": "我能解释引用和提纲，也可以帮忙改字；尚未接受成稿或最终复核责任。8月日历不能表示本周时间。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "complex08-h-outline",
+        "taskId": "complex08-outline",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "task_completed",
+        "summary": "访谈提纲已确认，任务版本4完成。",
+        "version": 4,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "complex08-h-visual",
+        "taskId": "complex08-visual",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "task_completed",
+        "summary": "视觉v2留存以版本3完成，没有待改视觉任务。",
+        "version": 3,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "complex08-h-estimate",
+        "taskId": "complex08-copy",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "estimate_context",
+        "summary": "本轮成稿估算6人时为整项基线；没有提供实际投入或剩余投入。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "complex08-root-record",
+        "title": "禾页访谈内容包9月交付当前记录（合成）",
+        "text": "任务库读取：complex08-root，版本9，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-writing-record",
+        "title": "禾页文案准备分支当前记录（合成）",
+        "text": "任务库读取：complex08-writing，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-delivery-record",
+        "title": "禾页核对与交付分支当前记录（合成）",
+        "text": "任务库读取：complex08-delivery，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-outline-record",
+        "title": "确认禾页访谈提纲当前记录（合成）",
+        "text": "任务库读取：complex08-outline，版本4，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-copy-record",
+        "title": "完成禾页访谈成稿当前记录（合成）",
+        "text": "任务库读取：complex08-copy，版本6，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-quotes-record",
+        "title": "核对禾页访谈引用表当前记录（合成）",
+        "text": "任务库读取：complex08-quotes，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-visual-record",
+        "title": "留存禾页已批准视觉v2当前记录（合成）",
+        "text": "任务库读取：complex08-visual，版本3，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-proof-record",
+        "title": "完成禾页成稿与引用复核当前记录（合成）",
+        "text": "任务库读取：complex08-proof，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-package-record",
+        "title": "整理禾页最终内容包当前记录（合成）",
+        "text": "任务库读取：complex08-package，版本2，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-deadline",
+        "title": "禾页交付边界原始回执（合成）",
+        "text": "本轮硬交付时间为2026-09-03 12:00（Asia/Shanghai），已确认；未授权自动延期、删减引用核对或将未确认引述当已确认。日期字段只能记9月3日，具体时刻保存在此回执。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-quote-reply",
+        "title": "受访方当前答复窗口（合成）",
+        "text": "引用表仍有两条须由受访方确认，受访方本轮明确最早在9月3日14:00提供答复；没有12:00前可提前回复的确认。此为等待外部答复的业务记录，不等于参与者正在投入人时。",
+        "updatedAt": "2026-09-01T10:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-capacity-old",
+        "title": "8月文字协作估算表（合成）",
+        "text": "8月20日资料表写“本类内容包共12人时，策划、作者、编辑各约4小时”；该表用于8月单一版本的整项估算，未测量9月本轮剩余投入，且其可用性登记仅有效至8月28日。没有任何整周空闲承诺。",
+        "updatedAt": "2026-08-20T09:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex08-overlap-charter",
+        "title": "本轮文字协作边界登记（合成）",
+        "text": "策划可解释受众与引用来源，作者承担成稿结果，编辑负责对照核对；三人都可提出改字建议，但当前职责不表示三人可互换承担全部结果。已确认的成稿Owner是content-m3、复核Owner是content-m5；“可以帮忙”不构成接受新增责任。",
+        "updatedAt": "2026-09-01T09:00:00+08:00",
+        "source": "synthetic_business_record"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "matches": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "complex08-root",
+      "field": "dueOn",
+      "value": "2026-09-03"
+    },
+    {
+      "taskId": "complex08-root",
+      "field": "goal",
+      "value": "让禾页取得有对应引用依据的访谈内容包"
+    },
+    {
+      "taskId": "complex08-copy",
+      "field": "ownerId",
+      "value": "content-m3"
+    },
+    {
+      "taskId": "complex08-proof",
+      "field": "ownerId",
+      "value": "content-m5"
+    },
+    {
+      "taskId": "complex08-proof",
+      "field": "acceptanceCriteria",
+      "value": [
+        "逐条比对成稿与已确认引用表并记录差异，全部待确认引述保留明确状态"
+      ]
+    }
+  ],
+  "constraints": {
+    "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+    "hardDueOn": "2026-09-03",
+    "hardDeadlineText": "2026-09-03T12:00:00+08:00",
+    "scope": "只诊断与提出受控候选；不自动改锁定Owner、最终引用核对标准或截止时间，不保证未有依据的工期。"
+  },
+  "members": [
+    {
+      "id": "content-m1",
+      "name": "白璐",
+      "role": "客户项目经理",
+      "responsibilities": [
+        "收集客户范围和确认记录",
+        "协调版本与交付计划"
+      ],
+      "boundaries": [
+        "不代客户批准成稿",
+        "不默认为所有子任务Owner"
+      ],
+      "evidence": [
+        {
+          "id": "content-m1-role",
+          "title": "白璐职责说明（合成）",
+          "text": "职责：收集客户范围和确认记录；协调版本与交付计划。边界：不代客户批准成稿；不默认为所有子任务Owner。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m1-work",
+          "title": "白璐当前工作自报（合成）",
+          "text": "协调合成客户的秋季内容包",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调合成客户的秋季内容包",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "content-m2",
+      "name": "杜衡",
+      "role": "内容策划",
+      "responsibilities": [
+        "确定选题与受众表达",
+        "把客户需求转成内容提纲"
+      ],
+      "boundaries": [
+        "不自行增加业绩目标",
+        "不代客户确认新受众"
+      ],
+      "evidence": [
+        {
+          "id": "content-m2-role",
+          "title": "杜衡职责说明（合成）",
+          "text": "职责：确定选题与受众表达；把客户需求转成内容提纲。边界：不自行增加业绩目标；不代客户确认新受众。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m2-work",
+          "title": "杜衡当前工作自报（合成）",
+          "text": "整理两份内容提纲",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "complex08-planner-old-window",
+          "title": "杜衡本轮可用窗口记录（合成）",
+          "text": "2026-08-26T09:00:00+08:00至2026-08-26T12:00:00+08:00。这是8月单次窗口，有效性登记到8月28日；当前可用性未知，不可外推到9月。",
+          "updatedAt": "2026-08-20T09:00:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理两份内容提纲",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-08-26T09:00:00+08:00",
+        "endAt": "2026-08-26T12:00:00+08:00",
+        "sourceRef": "complex08-planner-old-window",
+        "note": "这是8月单次窗口，有效性登记到8月28日；当前可用性未知，不可外推到9月。",
+        "updatedAt": "2026-08-20T09:00:00+08:00"
+      }
+    },
+    {
+      "id": "content-m3",
+      "name": "陶然",
+      "role": "文案作者",
+      "responsibilities": [
+        "按确认提纲写作",
+        "处理文字修改"
+      ],
+      "boundaries": [
+        "不自行扩写受限范围",
+        "不改变已确认品牌口径"
+      ],
+      "evidence": [
+        {
+          "id": "content-m3-role",
+          "title": "陶然职责说明（合成）",
+          "text": "职责：按确认提纲写作；处理文字修改。边界：不自行扩写受限范围；不改变已确认品牌口径。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m3-work",
+          "title": "陶然当前工作自报（合成）",
+          "text": "修改待审稿的文字版本",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "complex08-author-window",
+          "title": "陶然本轮可用窗口记录（合成）",
+          "text": "2026-09-02T10:00:00+08:00至2026-09-02T11:00:00+08:00。只确认文字交接核对这一个小时，不承诺连续写作容量，其他日期未知。",
+          "updatedAt": "2026-09-01T10:45:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "修改待审稿的文字版本",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-02T10:00:00+08:00",
+        "endAt": "2026-09-02T11:00:00+08:00",
+        "sourceRef": "complex08-author-window",
+        "note": "只确认文字交接核对这一个小时，不承诺连续写作容量，其他日期未知。",
+        "updatedAt": "2026-09-01T10:45:00+08:00"
+      }
+    },
+    {
+      "id": "content-m4",
+      "name": "沈禾",
+      "role": "视觉设计",
+      "responsibilities": [
+        "制作和复用已授权素材",
+        "按明确规格适配视觉"
+      ],
+      "boundaries": [
+        "不把旧素材自动当可无限复用",
+        "不确认客户验收"
+      ],
+      "evidence": [
+        {
+          "id": "content-m4-role",
+          "title": "沈禾职责说明（合成）",
+          "text": "职责：制作和复用已授权素材；按明确规格适配视觉。边界：不把旧素材自动当可无限复用；不确认客户验收。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m4-work",
+          "title": "沈禾当前工作自报（合成）",
+          "text": "整理已审视觉资产",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "content-m4-window",
+          "title": "沈禾公开协作窗口（合成）",
+          "text": "2026-09-04T10:00:00+08:00至2026-09-04T12:00:00+08:00。只用于视觉适配评审，其他可用性未知。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理已审视觉资产",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-04T10:00:00+08:00",
+        "endAt": "2026-09-04T12:00:00+08:00",
+        "sourceRef": "content-m4-window",
+        "note": "只用于视觉适配评审，其他可用性未知。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "content-m5",
+      "name": "程简",
+      "role": "文字编辑",
+      "responsibilities": [
+        "核对错字和引用格式",
+        "检查成稿与约定范围一致"
+      ],
+      "boundaries": [
+        "不代客户做发布批准",
+        "不在校对任务中重写结构"
+      ],
+      "evidence": [
+        {
+          "id": "content-m5-role",
+          "title": "程简职责说明（合成）",
+          "text": "职责：核对错字和引用格式；检查成稿与约定范围一致。边界：不代客户做发布批准；不在校对任务中重写结构。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m5-work",
+          "title": "程简当前工作自报（合成）",
+          "text": "校对一篇短稿",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "complex08-editor-window",
+          "title": "程简本轮可用窗口记录（合成）",
+          "text": "2026-09-03T16:00:00+08:00至2026-09-03T17:00:00+08:00。本轮9月2日旧窗口已撤回，以本条替代；只确认9月3日16至17时可做复核，早于此时未确认。",
+          "updatedAt": "2026-09-01T11:00:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "校对一篇短稿",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-03T16:00:00+08:00",
+        "endAt": "2026-09-03T17:00:00+08:00",
+        "sourceRef": "complex08-editor-window",
+        "note": "本轮9月2日旧窗口已撤回，以本条替代；只确认9月3日16至17时可做复核，早于此时未确认。",
+        "updatedAt": "2026-09-01T11:00:00+08:00"
+      }
+    },
+    {
+      "id": "content-m6",
+      "name": "唐钰",
+      "role": "交付与版本管理",
+      "responsibilities": [
+        "维护交付清单及版本",
+        "核对客户批准与发布前提"
+      ],
+      "boundaries": [
+        "不把审阅意见当批准",
+        "不未经授权发布内容"
+      ],
+      "evidence": [
+        {
+          "id": "content-m6-role",
+          "title": "唐钰职责说明（合成）",
+          "text": "职责：维护交付清单及版本；核对客户批准与发布前提。边界：不把审阅意见当批准；不未经授权发布内容。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "content-m6-work",
+          "title": "唐钰当前工作自报（合成）",
+          "text": "核对待发素材的版本和批准记录",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对待发素材的版本和批准记录",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "content-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

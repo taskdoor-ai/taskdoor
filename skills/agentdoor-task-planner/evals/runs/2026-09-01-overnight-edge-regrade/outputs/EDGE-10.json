@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-edge-10",
+  "baseSnapshotId": "snapshot-edge-10-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "edge10-cancelled": 4,
+    "edge10-old-child": 2
+  },
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "为A-LIVING-09新增一份独立的客厅照片与图纸位置对照候选，保留已取消的厨房任务及子项。",
+  "reasoningSummary": [
+    {
+      "text": "旧根及子项仅处理KITCHEN-08厨房材料采购资料，均已取消，本轮明确不恢复。",
+      "evidenceRefs": [
+        "req-edge-10",
+        "edge10-cancelled",
+        "edge10-old-child",
+        "edge10-cancel-history"
+      ]
+    },
+    {
+      "text": "新增反馈要求将LIVING-PHOTO-v1逐张对应到DRAW-A-v3，无法定位项单列；不含厨房范围或技术诊断。",
+      "evidenceRefs": [
+        "req-edge-10",
+        "edge10-new-feedback"
+      ]
+    },
+    {
+      "text": "汪晴的职责包含核对已确认图纸版本，适合建议负责这份资料位置对照；没有据当前工作推定其容量。",
+      "evidenceRefs": [
+        "renovation-m2-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:edge10-living-map",
+    "complexity": "simple",
+    "changes": [
+      {
+        "id": "change-edge10-create-living-map",
+        "action": "create",
+        "targetId": "new:edge10-living-map",
+        "parentId": null,
+        "fields": {
+          "title": "A-LIVING-09客厅照片与图纸位置对照",
+          "goal": {
+            "text": "让业主能够依据照片目录查到客厅对应图纸位置，并看清尚不能定位的资料。",
+            "basis": "inferred",
+            "evidenceRefs": [
+              "req-edge-10",
+              "edge10-new-feedback"
+            ]
+          },
+          "acceptanceCriteria": [
+            "对照LIVING-PHOTO-v1全部照片目录条目与已确认平面图DRAW-A-v3，逐项列出照片标识、对应图纸位置及所用版本。",
+            "无法定位的项目单列，说明缺少或不明确的资料；可按照片目录逐项核对覆盖完整性，不编造位置。",
+            "范围仅为A-LIVING-09客厅资料对照，不纳入KITCHEN-08、不恢复已取消任务、不修改图纸，也不判断施工质量、成因或安全。"
+          ],
+          "tips": [
+            "以既有照片目录和已确认图纸为输入，保留无法定位项供后续澄清；无需拆出同义子任务。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m2",
+            "basis": "recommended",
+            "reason": "依据核对已确认图纸版本的职责建议汪晴负责资料位置对照，不赋予技术诊断或批准权限。",
+            "evidenceRefs": [
+              "renovation-m2-role",
+              "edge10-new-feedback"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "本轮未提供开始或截止日期；候选负责人的当前可用时间未知。"
+            ],
+            "evidenceRefs": [
+              "req-edge-10",
+              "edge10-new-feedback"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供照片数量、定位复杂度或可比人类投入记录，EWD暂留空；不以等待时间代替人时。"
+            ],
+            "evidenceRefs": [
+              "edge10-new-feedback"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "新增客厅反馈有独立资料对照结果，建立新根并引用旧取消记录，不改变旧完成范围或状态。",
+        "evidenceRefs": [
+          "req-edge-10",
+          "edge10-new-feedback",
+          "edge10-cancelled",
+          "edge10-cancel-history"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "edge10-cancelled",
+      "edge10-old-child"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-renovation"
+    ],
+    "assessments": [
+      {
+        "taskId": "edge10-cancelled",
+        "relationship": "different_instance",
+        "reason": "旧实例为厨房KITCHEN-08材料照片与采购清单核对；本次为新反馈A-LIVING-09、客厅LIVING-PHOTO-v1与DRAW-A-v3的位置对照，地点、资料批次和交付结果不同。",
+        "evidenceRefs": [
+          "edge10-cancelled",
+          "edge10-new-feedback",
+          "req-edge-10"
+        ]
+      }
+    ],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；返回的候选均在本次可见快照内。"
+  },
+  "questions": [],
+  "warnings": [
+    "负责人为尚未接受的推荐；排期和EWD未知，不影响审阅范围，但不代表已创建或已有人承诺交付。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": null,
+      "label": "审阅A-LIVING-09独立候选"
+    }
+  ],
+  "externalEffects": "none"
+}

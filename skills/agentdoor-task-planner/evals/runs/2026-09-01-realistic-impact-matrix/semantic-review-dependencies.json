@@ -1,0 +1,688 @@
+{
+  "schemaVersion": "agentdoor.semantic-dependency-review.v1",
+  "runId": "agentdoor-planner-realistic-impact-matrix-20260901-v2",
+  "reviewDate": "2026-09-01",
+  "scope": {
+    "cases": [
+      "REAL-B-NPI-01",
+      "REAL-B-PROC-01"
+    ],
+    "reviewedArtifacts": [
+      "inputs/REAL-B-NPI-01.json",
+      "outputs/REAL-B-NPI-01.json",
+      "inputs/REAL-B-PROC-01.json",
+      "outputs/REAL-B-PROC-01.json",
+      "expectations-snapshot.json",
+      "protocol-snapshot.json"
+    ],
+    "excluded": [
+      "grader implementation",
+      "manifest",
+      "prior score reports",
+      "production"
+    ],
+    "graderScopeNote": "grader归因针对冻结expectation oracle；未读取grader实现。"
+  },
+  "protocolRules": [
+    {
+      "id": "freeze-before-candidate",
+      "rule": "只用输入原文、现有标准、讨论和来源正文冻结关系；候选新写文字不是证据。",
+      "ref": "references/context-and-replanning.md#新增结果如何接入已有工作"
+    },
+    {
+      "id": "source-only",
+      "rule": "已确认权威文件可被消费者直接读取时为source_only，不因linkedTaskIds增加任务边。",
+      "ref": "references/context-and-replanning.md#文件到任务"
+    },
+    {
+      "id": "team-result",
+      "rule": "消费者需要团队核对、批准或验收结果时，必须依赖生产该结果的任务。",
+      "ref": "references/planning-v0.2.md#哪些情况可以进入确认-7"
+    },
+    {
+      "id": "dependency-diff",
+      "rule": "保留仍有效旧边，仅加入输入证据证明的直接生产者。",
+      "ref": "references/context-and-replanning.md#依赖集合差分"
+    }
+  ],
+  "overallVerdict": {
+    "REAL-B-NPI-01": "DVT同时需要PCN适用性结论与实际COC核对结果；planner漏PCN，冻结oracle漏incoming。",
+    "REAL-B-PROC-01": "planner依赖分类正确；冻结oracle把source_only消费者错误串到owner-review，并漏掉门禁真正需要的风险结果边。"
+  },
+  "cases": [
+    {
+      "caseId": "REAL-B-NPI-01",
+      "verdict": "correct_graph_requires_both_pcn_and_incoming_for_dvt",
+      "fixture": {
+        "status": "sufficient",
+        "reason": "用户原文把“批次COC和新固化窗口”共同更新到DVT等四个消费者；PCN适用性生产任务、COC未到状态及来料核对生产边界均可从输入辨认。",
+        "evidenceRefs": [
+          "req-real-b-npi-01",
+          "b-npi-pcn",
+          "b-npi-h3",
+          "b-npi-pcn-v3",
+          "b-npi-incoming",
+          "b-npi-coc-v1",
+          "b-npi-d9"
+        ]
+      },
+      "consumerMatrix": [
+        {
+          "consumerTaskId": "b-npi-incoming",
+          "authoritativeSources": [
+            "b-npi-eco-v3"
+          ],
+          "directTaskOutputs": [
+            {
+              "producerTaskId": "b-npi-bom",
+              "result": "已发布BOM v5基线",
+              "evidenceRefs": [
+                "b-npi-incoming",
+                "b-npi-bom-v5",
+                "b-npi-h2",
+                "b-npi-d4"
+              ]
+            },
+            {
+              "producerTaskId": "b-npi-pcn",
+              "result": "PCN v3对EVT2的适用范围及批次要求",
+              "evidenceRefs": [
+                "b-npi-incoming",
+                "b-npi-pcn",
+                "b-npi-pcn-v3",
+                "b-npi-h3",
+                "b-npi-d2"
+              ]
+            }
+          ],
+          "pendingExternalSource": {
+            "sourceRef": "b-npi-coc-v1",
+            "state": "只有9月7日上传承诺，不是实际COC或核对结果",
+            "evidenceRefs": [
+              "b-npi-coc-v1",
+              "b-npi-d8",
+              "b-npi-d9"
+            ]
+          },
+          "oldDependsOnTaskIds": [
+            "b-npi-bom"
+          ],
+          "correctDependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-pcn"
+          ]
+        },
+        {
+          "consumerTaskId": "b-npi-wi",
+          "authoritativeSources": [
+            "b-npi-eco-v3"
+          ],
+          "directTaskOutputs": [
+            {
+              "producerTaskId": "b-npi-bom",
+              "result": "BOM v5基线",
+              "evidenceRefs": [
+                "b-npi-wi",
+                "b-npi-bom-v5"
+              ]
+            },
+            {
+              "producerTaskId": "b-npi-incoming",
+              "result": "实际COC是否到达、缺失状态及首批批次关联",
+              "evidenceRefs": [
+                "b-npi-wi-v4",
+                "b-npi-d5",
+                "b-npi-incoming",
+                "b-npi-coc-v1"
+              ]
+            }
+          ],
+          "oldDependsOnTaskIds": [
+            "b-npi-bom"
+          ],
+          "correctDependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-incoming"
+          ]
+        },
+        {
+          "consumerTaskId": "b-npi-dvt",
+          "authoritativeSources": [
+            "b-npi-eco-v3"
+          ],
+          "directTaskOutputs": [
+            {
+              "producerTaskId": "b-npi-design",
+              "result": "未变化的RC结构设计基线",
+              "evidenceRefs": [
+                "b-npi-dvt",
+                "b-npi-drawing-rc",
+                "b-npi-h1"
+              ]
+            },
+            {
+              "producerTaskId": "b-npi-pcn",
+              "result": "PCN v3对EVT2与DVT的适用性及工艺/批次要求",
+              "evidenceRefs": [
+                "b-npi-pcn",
+                "b-npi-pcn-v3",
+                "b-npi-h3",
+                "b-npi-d6"
+              ]
+            },
+            {
+              "producerTaskId": "b-npi-incoming",
+              "result": "实际COC核对结果，包含缺失状态与首批批次关联",
+              "evidenceRefs": [
+                "req-real-b-npi-01",
+                "b-npi-incoming",
+                "b-npi-coc-v1",
+                "b-npi-d9"
+              ]
+            }
+          ],
+          "oldDependsOnTaskIds": [
+            "b-npi-design"
+          ],
+          "correctDependsOnTaskIds": [
+            "b-npi-design",
+            "b-npi-pcn",
+            "b-npi-incoming"
+          ],
+          "rationale": "原文明确将批次COC和新固化窗口都更新到DVT；当前没有可直接消费的实际COC，incoming形成可消费的核对/缺失结论，pcn则独立形成适用性结论。"
+        },
+        {
+          "consumerTaskId": "b-npi-gate",
+          "authoritativeSources": [
+            "b-npi-eco-v3"
+          ],
+          "directTaskOutputs": [
+            {
+              "producerTaskId": "b-npi-incoming",
+              "result": "现行来料及COC核对记录",
+              "evidenceRefs": [
+                "b-npi-gate",
+                "b-npi-coc-v1",
+                "b-npi-d7"
+              ]
+            },
+            {
+              "producerTaskId": "b-npi-wi",
+              "result": "现行作业指导",
+              "evidenceRefs": [
+                "b-npi-gate"
+              ]
+            },
+            {
+              "producerTaskId": "b-npi-dvt",
+              "result": "现行DVT矩阵",
+              "evidenceRefs": [
+                "b-npi-gate"
+              ]
+            }
+          ],
+          "oldDependsOnTaskIds": [
+            "b-npi-wi",
+            "b-npi-dvt"
+          ],
+          "correctDependsOnTaskIds": [
+            "b-npi-wi",
+            "b-npi-dvt",
+            "b-npi-incoming"
+          ]
+        }
+      ],
+      "dependencyComparison": {
+        "firstOutputEffective": {
+          "b-npi-incoming": [
+            "b-npi-bom"
+          ],
+          "b-npi-wi": [
+            "b-npi-bom",
+            "b-npi-incoming"
+          ],
+          "b-npi-dvt": [
+            "b-npi-design",
+            "b-npi-incoming"
+          ],
+          "b-npi-gate": [
+            "b-npi-wi",
+            "b-npi-dvt",
+            "b-npi-incoming"
+          ]
+        },
+        "semanticCorrect": {
+          "b-npi-incoming": [
+            "b-npi-bom",
+            "b-npi-pcn"
+          ],
+          "b-npi-wi": [
+            "b-npi-bom",
+            "b-npi-incoming"
+          ],
+          "b-npi-dvt": [
+            "b-npi-design",
+            "b-npi-pcn",
+            "b-npi-incoming"
+          ],
+          "b-npi-gate": [
+            "b-npi-wi",
+            "b-npi-dvt",
+            "b-npi-incoming"
+          ]
+        },
+        "frozenExpectationExact": {
+          "b-npi-incoming": [
+            "b-npi-bom",
+            "b-npi-pcn"
+          ],
+          "b-npi-wi": [
+            "b-npi-bom",
+            "b-npi-incoming"
+          ],
+          "b-npi-dvt": [
+            "b-npi-design",
+            "b-npi-pcn"
+          ],
+          "b-npi-gate": [
+            "b-npi-incoming",
+            "b-npi-wi",
+            "b-npi-dvt"
+          ]
+        }
+      },
+      "attribution": {
+        "planner": [
+          {
+            "severity": "major",
+            "finding": "incoming遗漏b-npi-pcn。",
+            "evidenceRefs": [
+              "b-npi-incoming",
+              "b-npi-pcn",
+              "b-npi-pcn-v3",
+              "b-npi-h3"
+            ]
+          },
+          {
+            "severity": "major",
+            "finding": "DVT正确加入incoming，但遗漏独立的b-npi-pcn适用性结果。",
+            "evidenceRefs": [
+              "req-real-b-npi-01",
+              "b-npi-pcn-v3",
+              "b-npi-incoming",
+              "b-npi-coc-v1"
+            ]
+          }
+        ],
+        "fixture": {
+          "severity": "none",
+          "finding": "输入足够；可选地把DVT等待“实际COC核对结果”写得更直白以减少误读。"
+        },
+        "graderOracle": {
+          "severity": "major",
+          "finding": "DVT exactDependencies遗漏incoming；严格执行会把完整的[design,pcn,incoming]判错。",
+          "evidenceRefs": [
+            "req-real-b-npi-01",
+            "b-npi-coc-v1",
+            "b-npi-d9",
+            "b-npi-incoming"
+          ]
+        }
+      }
+    },
+    {
+      "caseId": "REAL-B-PROC-01",
+      "verdict": "reg_v3_is_source_only_for_five_consumers_but_gate_also_needs_owner_review_result",
+      "fixture": {
+        "status": "sufficient_with_minor_label_ambiguity",
+        "reason": "“风险结果”标签较宽，但owner-review明确生产实体、地址、所有人及制裁覆盖结论；security已单列，制裁证书可直接引用，因此owner-review是本轮增量风险结果的最具体生产任务。",
+        "evidenceRefs": [
+          "b-proc-gate",
+          "b-proc-owner-review",
+          "b-proc-reg-v3",
+          "b-proc-sanctions-v2",
+          "b-proc-security"
+        ]
+      },
+      "consumerMatrix": [
+        {
+          "consumerTaskId": "b-proc-owner-review",
+          "authoritativeSources": [
+            "b-proc-reg-v3"
+          ],
+          "directTaskOutputs": [
+            {
+              "producerTaskId": "b-proc-sanctions",
+              "result": "已完成制裁筛查结果",
+              "evidenceRefs": [
+                "b-proc-owner-review",
+                "b-proc-sanctions-v2",
+                "b-proc-h1"
+              ]
+            }
+          ],
+          "correctDependsOnTaskIds": [
+            "b-proc-sanctions"
+          ]
+        },
+        {
+          "consumerTaskId": "b-proc-msa",
+          "authoritativeSources": [
+            "b-proc-reg-v3"
+          ],
+          "directTaskOutputs": [
+            {
+              "producerTaskId": "b-proc-nda",
+              "result": "已签NDA",
+              "evidenceRefs": [
+                "b-proc-msa",
+                "b-proc-nda-v3",
+                "b-proc-d3"
+              ]
+            },
+            {
+              "producerTaskId": "b-proc-sanctions",
+              "result": "仍有效旧前置",
+              "evidenceRefs": [
+                "b-proc-msa",
+                "b-proc-sanctions-v2"
+              ]
+            }
+          ],
+          "correctDependsOnTaskIds": [
+            "b-proc-nda",
+            "b-proc-sanctions"
+          ],
+          "mustNotAdd": [
+            "b-proc-owner-review"
+          ],
+          "sourceOnlyEvidenceRefs": [
+            "req-real-b-proc-01",
+            "b-proc-reg-v3",
+            "b-proc-msa-v6",
+            "b-proc-d5"
+          ]
+        },
+        {
+          "consumerTaskId": "b-proc-tax",
+          "authoritativeSources": [
+            "b-proc-reg-v3"
+          ],
+          "directTaskOutputs": [
+            {
+              "producerTaskId": "b-proc-sanctions",
+              "result": "仍有效旧前置",
+              "evidenceRefs": [
+                "b-proc-tax",
+                "b-proc-sanctions-v2"
+              ]
+            }
+          ],
+          "correctDependsOnTaskIds": [
+            "b-proc-sanctions"
+          ],
+          "mustNotAdd": [
+            "b-proc-owner-review"
+          ],
+          "sourceOnlyEvidenceRefs": [
+            "req-real-b-proc-01",
+            "b-proc-reg-v3",
+            "b-proc-tax-v4",
+            "b-proc-d9",
+            "b-proc-d10"
+          ]
+        },
+        {
+          "consumerTaskId": "b-proc-bank",
+          "authoritativeSources": [
+            "b-proc-reg-v3"
+          ],
+          "directTaskOutputs": [
+            {
+              "producerTaskId": "b-proc-tax",
+              "result": "税务核对结果",
+              "evidenceRefs": [
+                "b-proc-bank",
+                "b-proc-tax"
+              ]
+            }
+          ],
+          "pendingExternalSource": {
+            "sourceRef": "b-proc-bank-v1",
+            "state": "只有9月7日上传承诺，无银行函正文或账号",
+            "evidenceRefs": [
+              "b-proc-bank-v1",
+              "b-proc-d6",
+              "b-proc-h5"
+            ]
+          },
+          "correctDependsOnTaskIds": [
+            "b-proc-tax"
+          ],
+          "mustNotAdd": [
+            "b-proc-owner-review"
+          ]
+        },
+        {
+          "consumerTaskId": "b-proc-gate",
+          "authoritativeSources": [
+            "b-proc-reg-v3"
+          ],
+          "directTaskOutputs": [
+            {
+              "producerTaskId": "b-proc-owner-review",
+              "result": "所有人、地址及制裁覆盖的增量风险核对结论",
+              "evidenceRefs": [
+                "b-proc-gate",
+                "b-proc-owner-review",
+                "b-proc-d2",
+                "b-proc-reg-v3"
+              ]
+            },
+            {
+              "producerTaskId": "b-proc-security",
+              "result": "安全风险结论",
+              "evidenceRefs": [
+                "b-proc-gate",
+                "b-proc-security"
+              ]
+            },
+            {
+              "producerTaskId": "b-proc-msa",
+              "result": "合同结果",
+              "evidenceRefs": [
+                "b-proc-gate",
+                "b-proc-msa"
+              ]
+            },
+            {
+              "producerTaskId": "b-proc-tax",
+              "result": "税务结果",
+              "evidenceRefs": [
+                "b-proc-gate",
+                "b-proc-tax"
+              ]
+            },
+            {
+              "producerTaskId": "b-proc-bank",
+              "result": "银行双人验证结果",
+              "evidenceRefs": [
+                "b-proc-gate",
+                "b-proc-bank-v1",
+                "b-proc-d7"
+              ]
+            },
+            {
+              "producerTaskId": "b-proc-quality",
+              "result": "质量试用结果",
+              "evidenceRefs": [
+                "b-proc-gate",
+                "b-proc-quality-v2"
+              ]
+            }
+          ],
+          "correctDependsOnTaskIds": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality",
+            "b-proc-owner-review"
+          ],
+          "rationale": "门禁候选产生前的标准已要求链接“风险结果”；reg-v3可直接读取，但不能替代owner-review形成的团队风险核对结论。"
+        }
+      ],
+      "dependencyComparison": {
+        "firstOutputEffective": {
+          "b-proc-owner-review": [
+            "b-proc-sanctions"
+          ],
+          "b-proc-msa": [
+            "b-proc-nda",
+            "b-proc-sanctions"
+          ],
+          "b-proc-tax": [
+            "b-proc-sanctions"
+          ],
+          "b-proc-bank": [
+            "b-proc-tax"
+          ],
+          "b-proc-gate": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality",
+            "b-proc-owner-review"
+          ]
+        },
+        "semanticCorrect": {
+          "b-proc-owner-review": [
+            "b-proc-sanctions"
+          ],
+          "b-proc-msa": [
+            "b-proc-nda",
+            "b-proc-sanctions"
+          ],
+          "b-proc-tax": [
+            "b-proc-sanctions"
+          ],
+          "b-proc-bank": [
+            "b-proc-tax"
+          ],
+          "b-proc-gate": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality",
+            "b-proc-owner-review"
+          ]
+        },
+        "frozenExpectationExact": {
+          "b-proc-owner-review": [
+            "b-proc-sanctions"
+          ],
+          "b-proc-msa": [
+            "b-proc-nda",
+            "b-proc-sanctions",
+            "b-proc-owner-review"
+          ],
+          "b-proc-tax": [
+            "b-proc-sanctions",
+            "b-proc-owner-review"
+          ],
+          "b-proc-bank": [
+            "b-proc-tax",
+            "b-proc-owner-review"
+          ],
+          "b-proc-gate": [
+            "b-proc-security",
+            "b-proc-msa",
+            "b-proc-tax",
+            "b-proc-bank",
+            "b-proc-quality"
+          ]
+        }
+      },
+      "attribution": {
+        "planner": {
+          "severity": "none",
+          "finding": "首次输出五项有效依赖与冻结输入矩阵一致；门禁新增owner-review有候选前证据。"
+        },
+        "fixture": {
+          "severity": "minor",
+          "finding": "“风险结果”可命名得更精确，但当前任务标准与分支结构已足够判断，不是阻塞缺陷。"
+        },
+        "graderOracle": [
+          {
+            "severity": "major",
+            "finding": "MSA、税务和银行被错误要求依赖owner-review；三者消费的是reg-v3权威地址事实。",
+            "evidenceRefs": [
+              "b-proc-reg-v3",
+              "b-proc-msa-v6",
+              "b-proc-tax-v4",
+              "b-proc-bank-v1",
+              "b-proc-d10"
+            ]
+          },
+          {
+            "severity": "major",
+            "finding": "门禁遗漏owner-review；严格exactDependencies会把语义正确的首次输出判为依赖过多。",
+            "evidenceRefs": [
+              "b-proc-gate",
+              "b-proc-owner-review",
+              "b-proc-d2",
+              "b-proc-reg-v3"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "recommendedExpectationChanges": [
+    {
+      "caseId": "REAL-B-NPI-01",
+      "taskId": "b-npi-dvt",
+      "replaceExactDependsOnTaskIdsWith": [
+        "b-npi-design",
+        "b-npi-pcn",
+        "b-npi-incoming"
+      ]
+    },
+    {
+      "caseId": "REAL-B-PROC-01",
+      "taskId": "b-proc-msa",
+      "replaceExactDependsOnTaskIdsWith": [
+        "b-proc-nda",
+        "b-proc-sanctions"
+      ]
+    },
+    {
+      "caseId": "REAL-B-PROC-01",
+      "taskId": "b-proc-tax",
+      "replaceExactDependsOnTaskIdsWith": [
+        "b-proc-sanctions"
+      ]
+    },
+    {
+      "caseId": "REAL-B-PROC-01",
+      "taskId": "b-proc-bank",
+      "replaceExactDependsOnTaskIdsWith": [
+        "b-proc-tax"
+      ]
+    },
+    {
+      "caseId": "REAL-B-PROC-01",
+      "taskId": "b-proc-gate",
+      "replaceExactDependsOnTaskIdsWith": [
+        "b-proc-security",
+        "b-proc-msa",
+        "b-proc-tax",
+        "b-proc-bank",
+        "b-proc-quality",
+        "b-proc-owner-review"
+      ]
+    }
+  ]
+}

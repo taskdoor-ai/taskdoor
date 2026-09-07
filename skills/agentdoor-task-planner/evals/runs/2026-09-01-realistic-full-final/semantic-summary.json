@@ -1,0 +1,84 @@
+{
+  "kind": "independent_cross_group_semantic_review_with_targeted_adjudication",
+  "total": 12,
+  "satisfies": 7,
+  "fails": 5,
+  "uncertain": 0,
+  "semanticPassRate": 0.5833333333333334,
+  "humanIndustryReview": false,
+  "reviewMethod": "Three independent reviewers assessed groups they did not generate. A targeted supplemental review resolved one C04 old-edge question from the input itself. Original reports remain unchanged. No production data or human industry-user review was used.",
+  "results": [
+    {
+      "id": "REAL-A-REL-01",
+      "verdict": "satisfies",
+      "summary": "只更新安全闸门与商店提交，复用现有公证回执，保留灰度与确认字段。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-A-SAAS-01",
+      "verdict": "satisfies",
+      "summary": "完整空历史仍识别同租户、同15人、同两批与同期限的重复培训，零创建零更新。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-A-ECOM-01",
+      "verdict": "satisfies",
+      "summary": "下一批三项结果全部复用，只修开售闸门跨分支依赖。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-A-CS-01",
+      "verdict": "satisfies",
+      "summary": "只读查询正确区分缓解报告、撤回话术、正式状态和数据影响边界。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-B-NPI-01",
+      "verdict": "fails",
+      "summary": "DVT遗漏已完成PCN所生产的适用性直接边；设计、PCN和来料核对三项结果没有同时保留。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-B-LOG-01",
+      "verdict": "satisfies",
+      "summary": "识别13/27分页不完整，提出授权补读而不猜隐藏任务、依赖或历史。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-B-RETAIL-01",
+      "verdict": "satisfies",
+      "summary": "只重排四个受货梯影响节点，保留硬窗口、已完成结果和无关POS/培训。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-B-PROC-01",
+      "verdict": "fails",
+      "summary": "MSA可直接读取权威登记册v3，输出却新增所有人核对任务边，并用候选文字扩大消费关系。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-C-01",
+      "verdict": "fails",
+      "summary": "上线核对已有付费与CRM传递链，输出仍冗余直连主张v2。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "REAL-C-02",
+      "verdict": "fails",
+      "summary": "现有异常任务标准已经完整覆盖正式回单与期间归属，输出仍重复改写该生产任务。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "REAL-C-03",
+      "verdict": "satisfies",
+      "summary": "只同步四项有依据的日期，保留日期归档、旧依赖、生产权限与隐私边界。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "REAL-C-04",
+      "verdict": "fails",
+      "summary": "业主复验应保留正式复测与柜门旧边并新增证书；输出错误删除正式复测直连。",
+      "reviewFile": "semantic-review-c-supplement.json"
+    }
+  ]
+}

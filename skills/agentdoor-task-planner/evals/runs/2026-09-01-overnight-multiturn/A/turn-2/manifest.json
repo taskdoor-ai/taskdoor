@@ -1,0 +1,29 @@
+{
+  "createdAt": "2026-08-31T20:35:54.805371+00:00",
+  "suite": "multiturn",
+  "fixtureSha256": "c496e4386fe4ad35539649e6b111c871acf6718cccf1f5de8bbc46decc3f8da3",
+  "seedFixtureSha256": "a139dace28ad6a6e311858d6ec6189c6e63621435463e101a81f173d0c2be42d",
+  "expectationsSha256": "34239ace751a70848b0fd48b4dc60d2902d9a39447f2d0d091e143339ecba1a0",
+  "skillSha256": "43ae9defd34eaf7fbfaacbbd4efce6dc9f66b9da32f73dd6d89757eb2848aa00",
+  "contractSha256": "3c87217b53a946b6cd35f3f2b904a0bce18494981f9f9b91dc84bb844a1cbdb9",
+  "schemaSha256": "8c0192063fadf41d26e0b91d9f00e165c981173e46809197c5807d0090491cc7",
+  "previous": {
+    "previousCaseId": "MULTI-A1",
+    "inputSha256": "1b33c1fbad04a8731672c3302f41ec41e191028a3d63c5f55d3f5f6b4d51b20b",
+    "outputSha256": "1661082f3e851cd293075710b65d71007a1c43a912b720f00c7c39abe289cf08",
+    "transition": "draft",
+    "notice": "Derived from the prior actual output; no production operations."
+  },
+  "notice": "Only offline fixture transitions. No production records, ACL service, confirmations, writes or notifications are exercised.",
+  "selectedCaseIds": [
+    "MULTI-A2"
+  ],
+  "cases": [
+    {
+      "id": "MULTI-A2",
+      "industry": "content_agency",
+      "category": "multiturn",
+      "inputSha256": "66e22ac7ed9f8842c66ebba3fbce4f97e2095801036b410d5566e8f2114dbebc"
+    }
+  ]
+}

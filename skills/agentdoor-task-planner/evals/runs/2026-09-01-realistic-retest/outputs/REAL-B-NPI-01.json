@@ -1,0 +1,233 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-real-b-npi-01",
+  "baseSnapshotId": "snapshot-real-b-npi-01-v4",
+  "baseRevision": 4,
+  "baseTaskVersions": {
+    "b-npi-root": 12,
+    "b-npi-eng": 6,
+    "b-npi-supplier": 7,
+    "b-npi-validation": 8,
+    "b-npi-change-pack": 5,
+    "b-npi-design": 7,
+    "b-npi-bom": 9,
+    "b-npi-supplier-ready": 4,
+    "b-npi-pcn": 6,
+    "b-npi-incoming": 4,
+    "b-npi-build-ready": 5,
+    "b-npi-wi": 5,
+    "b-npi-dvt": 3,
+    "b-npi-gate": 4
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议沿用X7 EVT2现有任务树，仅更新来料核对、试制作业指导、DVT矩阵和试制门禁四项；补齐实际产出依赖，保留BOM v5、RC图纸和已完成PCN。",
+  "reasoningSummary": [
+    {
+      "text": "ECO-042 v3只新增胶材固化窗口与批次COC引用，并明确四个既有消费者；已发布BOM与结构图不变。",
+      "evidenceRefs": [
+        "b-npi-eco-v3",
+        "b-npi-d1",
+        "b-npi-bom-v5",
+        "b-npi-drawing-rc"
+      ]
+    },
+    {
+      "text": "来料清单仍引用ECO v2，作业指导仍使用旧固化窗口；COC当前只有9月7日上传承诺，不能视为已收到或验收。",
+      "evidenceRefs": [
+        "b-npi-incoming-v2",
+        "b-npi-wi-v4",
+        "b-npi-coc-v1",
+        "b-npi-d2",
+        "b-npi-d9"
+      ]
+    },
+    {
+      "text": "来料结果是作业指导、DVT批次覆盖和最终门禁实际消费的跨分支输入；现有9月8日、9月9日、9月10日期边界已按该顺序衔接，无需重写日期。",
+      "evidenceRefs": [
+        "b-npi-pcn-v3",
+        "b-npi-wi-v4",
+        "b-npi-incoming",
+        "b-npi-wi",
+        "b-npi-dvt",
+        "b-npi-gate"
+      ]
+    },
+    {
+      "text": "BOM、RC图纸和PCN均有完成记录，且重开BOM的提议已被拒绝，本轮保持原记录。",
+      "evidenceRefs": [
+        "b-npi-h1",
+        "b-npi-h2",
+        "b-npi-h3",
+        "b-npi-d4"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "b-npi-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-b-npi-incoming-v4",
+        "action": "update",
+        "targetId": "b-npi-incoming",
+        "parentId": "b-npi-supplier-ready",
+        "fields": {
+          "acceptanceCriteria": [
+            "来料清单引用ECO-042 v3、BOM v5和PCN-118 v3，并逐项记录现行胶材固化窗口。",
+            "首批胶材记录关联实际收到并核对的批次COC；若未收到，明确标记缺失，不以2026-09-07供应商承诺代替回执。"
+          ],
+          "dependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-pcn"
+          ]
+        },
+        "reason": "原来料任务仍引用旧ECO且缺少已完成PCN这一直接前置，需要在原任务中升级证据边界。",
+        "evidenceRefs": [
+          "b-npi-eco-v3",
+          "b-npi-pcn-v3",
+          "b-npi-incoming-v2",
+          "b-npi-coc-v1"
+        ]
+      },
+      {
+        "id": "chg-b-npi-wi-v4",
+        "action": "update",
+        "targetId": "b-npi-wi",
+        "parentId": "b-npi-build-ready",
+        "fields": {
+          "acceptanceCriteria": [
+            "作业指导引用BOM v5、ECO-042 v3及已完成的首批来料核对，固化窗口与批次COC引用可核对。",
+            "未收到或未核对批次COC时保留试制前阻塞，不将外部承诺写成完成事实。"
+          ],
+          "dependsOnTaskIds": [
+            "b-npi-bom",
+            "b-npi-incoming"
+          ]
+        },
+        "reason": "作业指导必须消费现行来料核对结果和ECO v3，同时保留仍被使用的BOM前置。",
+        "evidenceRefs": [
+          "b-npi-wi-v4",
+          "b-npi-eco-v3",
+          "b-npi-coc-v1"
+        ]
+      },
+      {
+        "id": "chg-b-npi-dvt-v4",
+        "action": "update",
+        "targetId": "b-npi-dvt",
+        "parentId": "b-npi-validation",
+        "fields": {
+          "acceptanceCriteria": [
+            "将ECO-042 v3固化窗口及首批批次COC映射到DVT项目、样本和覆盖边界，并列出未覆盖项。",
+            "结构验证继续复用RC图纸，不改变已完成设计基线。"
+          ],
+          "dependsOnTaskIds": [
+            "b-npi-design",
+            "b-npi-incoming"
+          ]
+        },
+        "reason": "DVT需消费首批来料的批次证据并保留既有结构设计前置，不与作业指导机械串行。",
+        "evidenceRefs": [
+          "b-npi-eco-v3",
+          "b-npi-pcn-v3",
+          "b-npi-drawing-rc",
+          "b-npi-d6"
+        ]
+      },
+      {
+        "id": "chg-b-npi-gate-v4",
+        "action": "update",
+        "targetId": "b-npi-gate",
+        "parentId": "b-npi-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "链接来料核对、试制作业指导和DVT矩阵的现行记录，并核对三者均使用ECO-042 v3。",
+            "明确实际批次COC的收到与核对状态；缺失时保留门禁阻塞，不宣称可试制。"
+          ],
+          "dependsOnTaskIds": [
+            "b-npi-wi",
+            "b-npi-dvt",
+            "b-npi-incoming"
+          ]
+        },
+        "reason": "最终门禁直接聚合三项消费者结果，需补入来料核对前置并保留原作业与DVT前置。",
+        "evidenceRefs": [
+          "b-npi-eco-v3",
+          "b-npi-coc-v1",
+          "b-npi-d7",
+          "b-npi-gate"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "b-npi-root",
+      "b-npi-eng",
+      "b-npi-supplier",
+      "b-npi-validation",
+      "b-npi-change-pack",
+      "b-npi-design",
+      "b-npi-bom",
+      "b-npi-supplier-ready",
+      "b-npi-pcn",
+      "b-npi-build-ready"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-b-npi"
+    ],
+    "assessments": [
+      {
+        "taskId": "b-npi-incoming",
+        "relationship": "same_outcome",
+        "reason": "同一X7 EVT2首批来料核对已在当前任务推进，本轮只更新其ECO v3与COC边界。",
+        "evidenceRefs": [
+          "b-npi-incoming",
+          "req-real-b-npi-01"
+        ]
+      },
+      {
+        "taskId": "b-npi-wi",
+        "relationship": "same_outcome",
+        "reason": "同一EVT2试制作业指导已存在，本轮在原任务修订固化窗口。",
+        "evidenceRefs": [
+          "b-npi-wi",
+          "req-real-b-npi-01"
+        ]
+      },
+      {
+        "taskId": "b-npi-dvt",
+        "relationship": "same_outcome",
+        "reason": "同一X7 DVT矩阵已存在且处于阻塞状态，本轮补齐现行工艺与批次证据。",
+        "evidenceRefs": [
+          "b-npi-dvt",
+          "req-real-b-npi-01"
+        ]
+      },
+      {
+        "taskId": "b-npi-gate",
+        "relationship": "same_outcome",
+        "reason": "同一EVT2试制门禁包已存在，本轮只补齐其实际消费者依赖。",
+        "evidenceRefs": [
+          "b-npi-gate",
+          "req-real-b-npi-01"
+        ]
+      }
+    ],
+    "coverageNote": "合成查重已覆盖授权团队活动与归档索引；四个同结果候选均指向当前可见任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "供应商仅承诺2026-09-07上传COC；若实际文件或核对结果延迟，9月8日来料核对、9月9日作业与DVT以及9月10日试制门禁将依次受影响，门禁必须保持阻塞。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "b-npi-root",
+      "label": "审阅X7 EVT2四项局部差异"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,337 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-reno-01",
+  "baseSnapshotId": "snapshot-reno-01-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {},
+  "intent": "create",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议建立A户9月20日收尾交付协调草稿，由赵屿候选统筹，分别跟踪表面问题复核、资料目录与移交记录三个结果；不规划施工处理或代替有权人员验收。",
+  "reasoningSummary": [
+    {
+      "text": "明确范围是A户表面问题记录复核、图纸和设备资料目录、移交记录与未完说明，硬期限为9月20日。",
+      "evidenceRefs": [
+        "req-reno-01",
+        "reno01-brief"
+      ]
+    },
+    {
+      "text": "当前已知的是柜门色差和局部补漆记录缺失；范围只到资料及交付协调，不能推定技术成因或工程合格。",
+      "evidenceRefs": [
+        "reno01-brief"
+      ]
+    },
+    {
+      "text": "赵屿负责移交协调，何沐负责问题复核记录，林庭负责资料目录与缺项，适合按三个可独立核对的结果分担。",
+      "evidenceRefs": [
+        "renovation-m1",
+        "renovation-m5",
+        "renovation-m6"
+      ]
+    },
+    {
+      "text": "授权团队查重已完成且没有候选；历史未请求，不能把首次客户或空历史数组当作全部历史已读取。",
+      "evidenceRefs": [
+        "req-reno-01"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:req-reno-01:handover",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:req-reno-01:handover",
+        "action": "create",
+        "targetId": "new:req-reno-01:handover",
+        "parentId": null,
+        "fields": {
+          "title": "协调澄居A户9月20日收尾资料与问题移交",
+          "goal": {
+            "text": "让合成·澄居A户在9月20日移交时，能核对表面问题状态、图纸及设备资料目录，并明确移交内容与未完事项。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-reno-01",
+              "reno01-brief"
+            ]
+          },
+          "acceptanceCriteria": [
+            "交付相互对应的问题复核清单、图纸及设备资料目录、移交记录与未完事项说明；按A户及本次移交批次标识范围和版本。",
+            "移交记录区分已交资料、未交资料、已具备复核依据的问题及仍待处理的问题，不以资料齐全或收货记录替代工程验收。",
+            "9月20日完成本轮约定的资料与交付协调；缺失、未完和待有权人员确认的事项在移交说明中如实保留，不代替任何主体签字或作专业安全结论。"
+          ],
+          "tips": [
+            "先并行整理问题记录和资料目录，移交记录使用两项已整理结果汇总；不把父任务设置为子任务前置。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m1",
+            "basis": "recommended",
+            "reason": "赵屿的职责是组织收尾问题、移交计划及业主协调，适合对本次整体交付协调结果承担候选责任。",
+            "evidenceRefs": [
+              "renovation-m1",
+              "req-reno-01"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-20",
+            "basis": "explicit",
+            "assumptions": [
+              "移交日期来自用户；开始日期、现场开放和参与者具体安排尚未确认。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "父任务包含独立子结果，不重复估算总投入；子任务估算由确定性汇总处理。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "用户要求跨问题记录、资料和移交协调的整体结果，需要一个根任务统一范围。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "reno01-brief",
+          "renovation-m1"
+        ]
+      },
+      {
+        "id": "change:req-reno-01:surface-review",
+        "action": "create",
+        "targetId": "new:req-reno-01:surface-review",
+        "parentId": "new:req-reno-01:handover",
+        "fields": {
+          "title": "核对A户表面问题清单与复核记录",
+          "acceptanceCriteria": [
+            "对照现有问题记录逐项标识A户的位置、问题描述、相关版本和证据出处，至少覆盖已知柜门色差及墙面局部补漆记录缺失。",
+            "对每项问题保留复核记录或明确的待复核、待补记录说明，区分当事人报告已修复和有依据的确认关闭；缺失依据不得当作问题已完成。",
+            "输出可用于本次移交的问题状态清单，不判断结构、水电、施工安全或技术责任，也不提供施工操作方案。"
+          ],
+          "tips": [
+            "先由设计资料协调核对相关已确认饰面版本，再由现场协调取得必要查看窗口；未知条件写入待办说明。",
+            "何沐9月10日上午只声明问题复核协调窗口，陆行9月8日下午只声明资料核对窗口；二者均不代表物业已开放或授予验收权。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m5",
+            "basis": "recommended",
+            "reason": "何沐负责问题清单和复核记录，并能区分修复报告与已确认关闭。",
+            "evidenceRefs": [
+              "renovation-m5",
+              "reno01-brief"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "renovation-m2",
+              "contribution": "核对问题涉及的已确认饰面与图纸版本，定位已有变更记录。",
+              "evidenceRefs": [
+                "renovation-m2",
+                "reno01-brief"
+              ]
+            },
+            {
+              "memberId": "renovation-m4",
+              "contribution": "取得必要的现场开放信息并协调责任方查看，记录尚未确认的条件。",
+              "evidenceRefs": [
+                "renovation-m4",
+                "reno01-brief"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "需为9月20日移交提供清单，具体复核日期取决于记录补齐和现场回执；不把协作窗口当作现场承诺。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "renovation-m4",
+              "renovation-m5"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "问题总量、现有证据完整度和需要查看的范围未知，无法可靠估计人类投入。",
+              "供应商等待、约访等待不计入EWD。"
+            ],
+            "evidenceRefs": [
+              "reno01-brief"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "问题状态清单是独立可核对的移交输入，并且需要专门复核职责。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "reno01-brief",
+          "renovation-m5"
+        ]
+      },
+      {
+        "id": "change:req-reno-01:document-directory",
+        "action": "create",
+        "targetId": "new:req-reno-01:document-directory",
+        "parentId": "new:req-reno-01:handover",
+        "fields": {
+          "title": "整理A户图纸与设备资料目录及缺失项",
+          "acceptanceCriteria": [
+            "建立A户本次移交的图纸和设备资料目录，逐项记录名称、版本及可访问出处，并与实际已具备资料对应。",
+            "将缺失、版本待核对或尚未取得的资料单列，不用空白占位宣称资料齐全；保留资料来源和待补说明。"
+          ],
+          "tips": [
+            "仅整理现有授权资料及缺项；与设计资料协调核对已确认图纸版本，不自行批准设计变更。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m6",
+            "basis": "recommended",
+            "reason": "林庭负责图纸目录、设备资料引用以及移交缺项记录。",
+            "evidenceRefs": [
+              "renovation-m6"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "renovation-m2",
+              "contribution": "核对目录中图纸和饰面相关版本是否对应已有确认记录。",
+              "evidenceRefs": [
+                "renovation-m2",
+                "renovation-m6"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "需为9月20日移交提供目录，具体资料收齐时间及林庭投入窗口未知；可与问题记录核对并行。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "renovation-m6"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "资料数量、格式及缺失程度未提供；历史未请求，不据空集合填入历史估算。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "reno01-brief"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "资料目录与缺失项可独立核对，无需等待现场问题全部关闭才能开始整理。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "renovation-m6"
+        ]
+      },
+      {
+        "id": "change:req-reno-01:handover-record",
+        "action": "create",
+        "targetId": "new:req-reno-01:handover-record",
+        "parentId": "new:req-reno-01:handover",
+        "fields": {
+          "title": "形成A户本次移交记录和未完事项说明",
+          "acceptanceCriteria": [
+            "依据问题状态清单和资料目录，形成9月20日本次移交的内容清单及对应版本，记录实际提交、收到的回执或待确认情况。",
+            "逐项列明未完问题、缺失资料、已知后续责任接口和仍未确认的安排，不虚构承诺、签收或关闭记录。",
+            "移交记录清楚区分资料提交、问题复核和有权人员确认，不代业主签收、不把资料交付认定为工程验收合格。"
+          ],
+          "tips": [
+            "收集实际发生的移交确认与反馈后留存引用；未取得的回执明确写待确认。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "renovation-m1",
+            "basis": "recommended",
+            "reason": "赵屿负责组织移交及协调业主和责任方，适合负责移交结果的完整说明。",
+            "evidenceRefs": [
+              "renovation-m1"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "renovation-m6",
+              "contribution": "维护实际移交资料清单、版本与缺项，并整理移交记录引用。",
+              "evidenceRefs": [
+                "renovation-m6"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-20",
+            "basis": "explicit",
+            "assumptions": [
+              "按用户指定移交日组织；本提案不确认现场窗口、成员接手或有权人员签收。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "需汇总的清单数量、沟通轮次和交付方式未知；等待回执不计入人类投入。"
+            ],
+            "evidenceRefs": [
+              "req-reno-01",
+              "reno01-brief"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:req-reno-01:surface-review",
+            "new:req-reno-01:document-directory"
+          ]
+        },
+        "reason": "移交说明需要问题复核清单与资料目录两个实际产出，二者构成真正的前置条件。",
+        "evidenceRefs": [
+          "req-reno-01",
+          "reno01-brief",
+          "renovation-m1",
+          "renovation-m6"
+        ]
+      }
+    ],
+    "preservedTaskIds": []
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-renovation"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "本轮只有候选规划，未创建、指派、签收或关闭问题。",
+    "历史未加载，不等于没有历史；除有限协作窗口外，成员容量、现场条件与准确人类投入均未知。",
+    "9月20日是输入交付约束，不是基于总工时除人数得出的工期保证；技术处理需由具备相应资格和授权的人员另行负责。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:req-reno-01:handover",
+      "label": "审阅A户收尾交付协调草稿"
+    }
+  ],
+  "externalEffects": "none"
+}

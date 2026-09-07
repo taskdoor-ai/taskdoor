@@ -1,7 +1,11 @@
 node_modules/
+.env.local
+.superpowers/
+.worktrees/
 dist/
 dist-mcp/
 data/mcp-tasks.json
+data/test-lab/
 *.tsbuildinfo
 vite.config.js
 vite.config.d.ts

@@ -1,0 +1,56 @@
+{
+  "date": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "kind": "high_fidelity_synthetic_final_full_regression",
+  "dataClassification": "synthetic",
+  "execution": "Current-session fresh-context Codex agents; not an application model API",
+  "exactModelSnapshot": "not_provided",
+  "temperature": "not_provided",
+  "seed": "not_provided",
+  "executorGroups": {
+    "full_final_planner_a": [
+      "REAL-A-REL-01",
+      "REAL-A-SAAS-01",
+      "REAL-A-ECOM-01",
+      "REAL-A-CS-01"
+    ],
+    "full_final_planner_b": [
+      "REAL-B-NPI-01",
+      "REAL-B-LOG-01",
+      "REAL-B-RETAIL-01",
+      "REAL-B-PROC-01"
+    ],
+    "full_final_planner_c": [
+      "REAL-C-01",
+      "REAL-C-02",
+      "REAL-C-03",
+      "REAL-C-04"
+    ]
+  },
+  "reviewGroups": {
+    "full_final_planner_c": [
+      "REAL-A-REL-01",
+      "REAL-A-SAAS-01",
+      "REAL-A-ECOM-01",
+      "REAL-A-CS-01"
+    ],
+    "full_final_planner_a": [
+      "REAL-B-NPI-01",
+      "REAL-B-LOG-01",
+      "REAL-B-RETAIL-01",
+      "REAL-B-PROC-01"
+    ],
+    "full_final_planner_b": [
+      "REAL-C-01",
+      "REAL-C-02",
+      "REAL-C-03",
+      "REAL-C-04"
+    ]
+  },
+  "blinding": "Executors received the frozen Skill/protocol and assigned inputs only. They did not read expectations, prior outputs or production services.",
+  "attemptPolicy": "First schema-valid official output files retained with no semantic repair. REAL-B-RETAIL-01 had one pre-official calendar correction prompted by validate_plan; that invalid draft was not used for scoring and was not retained.",
+  "review": "Cross-review used different agents; outputs were not edited. A targeted supplement adjudicated C04 without changing the original review.",
+  "productionAccess": false,
+  "productionWrites": false,
+  "archiveNote": "Frozen machine result 8/12; corrected identical-output regrade and final semantic adjudication both 7/12."
+}

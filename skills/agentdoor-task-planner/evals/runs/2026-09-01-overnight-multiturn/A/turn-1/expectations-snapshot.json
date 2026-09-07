@@ -1,0 +1,18 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-A1",
+      "allowedIntents": [
+        "create"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "maxCreates": 1,
+      "manualChecks": [
+        "保持单任务；校对范围不扩展；无真实写入。"
+      ]
+    }
+  ]
+}

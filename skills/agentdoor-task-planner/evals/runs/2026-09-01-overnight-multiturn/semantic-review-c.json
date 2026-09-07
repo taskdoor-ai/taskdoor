@@ -1,0 +1,506 @@
+{
+  "schemaVersion": "agentdoor.semantic-review.v1",
+  "episodeId": "C",
+  "reviewKind": "continuous_session_semantic",
+  "overallStatus": "failed",
+  "cases": [
+    {
+      "caseId": "MULTI-C1",
+      "status": "passed",
+      "structuralStatus": "structurally_valid",
+      "summary": "候选保持为一个轻量根任务，准确限定SKU-CUP-A、五处错字、清稿与改动清单、颜北和9月2日；没有增加子任务、参与者、默认工时或越界修改，也没有不必要的阻塞问题。",
+      "checks": [
+        {
+          "name": "candidate_necessity_and_granularity",
+          "status": "passed",
+          "finding": "请求明确要求创建校对任务，完整空快照和完成查重未发现已有结果；输出只创建一个simple根任务，清稿与改动清单作为同一校对结果，没有拆出同义子任务。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/inputs/MULTI-C1.json",
+              "pointer": "/message",
+              "supports": "用户明确要求为SKU-CUP-A建立校对任务。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/inputs/MULTI-C1.json",
+              "pointer": "/context/tasks",
+              "supports": "授权快照中的任务集合完整为空。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes",
+              "supports": "输出仅含一项create变化。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/complexity",
+              "supports": "单一根任务被标为simple。"
+            }
+          ]
+        },
+        {
+          "name": "scope_owner_and_deadline",
+          "status": "passed",
+          "finding": "完成标准逐项覆盖五处错字并保护结构、图片、售价、卖点和功效承诺；候选负责人为用户明确指定且职责匹配的颜北，截止日正确解析为2026-09-02，EWD保持未知。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/inputs/MULTI-C1.json",
+              "pointer": "/constraints",
+              "supports": "输入给出严格范围、显式负责人和硬期限。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/inputs/MULTI-C1.json",
+              "pointer": "/context/sourceRefs/0/text",
+              "supports": "合成错字清单标明SKU-CUP-A、五处原文和禁止新增功效承诺。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria",
+              "supports": "候选标准限定五处修正、清稿、改动清单及禁止修改项。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation/memberId",
+              "supports": "候选负责人保持为ecom-m2。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes/0/fields/schedule/dueOn",
+              "supports": "截止日为2026-09-02。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "supports": "没有依据时EWD为null且basis为unknown。"
+            }
+          ]
+        },
+        {
+          "name": "blocking_questions",
+          "status": "passed",
+          "finding": "任务身份、结果边界、负责人和期限均足以审阅，输出没有制造阻塞问题，并进入ready_for_confirmation。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/disposition",
+              "supports": "输出为ready_for_confirmation。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/questions",
+              "supports": "没有阻塞问题。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/expectations-snapshot.json",
+              "pointer": "/expectations/0/manualChecks/0",
+              "supports": "评分要求只产生一项明确SKU和五处错字的候选，并保留人选与期限。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/structural-report.json",
+              "pointer": "/results/0/status",
+              "supports": "冻结结构报告为structurally_valid。"
+            }
+          ]
+        }
+      ],
+      "defects": []
+    },
+    {
+      "caseId": "MULTI-C2",
+      "status": "passed",
+      "structuralStatus": "structurally_valid",
+      "summary": "输出通过合成回执和当前快照定位首轮保存记录sim:C:1，将重试判为same_outcome，返回原记录入口且不创建、不更新；同时明确本地合成回执不证明生产创建、幂等或正式指派。",
+      "checks": [
+        {
+          "name": "candidate_to_simulated_id_continuity",
+          "status": "passed",
+          "finding": "首轮稳定候选ID new:multi-c1-proofread 经合成回执映射为 sim:C:1；C2读取并回显该保存记录的版本1，没有继续使用旧new: ID冒充保存对象。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes/0/targetId",
+              "supports": "首轮候选稳定ID为new:multi-c1-proofread。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/inputs/MULTI-C2.json",
+              "pointer": "/context/sourceRefs/3/syntheticTaskIdMap/new:multi-c1-proofread",
+              "supports": "合成保存回执把首轮候选映射为sim:C:1。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/inputs/MULTI-C2.json",
+              "pointer": "/context/tasks/0/id",
+              "supports": "当前快照包含保存后的sim:C:1。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/baseTaskVersions/sim:C:1",
+              "supports": "输出基于sim:C:1版本1。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/manifest.json",
+              "pointer": "/previous/transition",
+              "supports": "冻结过渡类型为commit_simulated。"
+            }
+          ]
+        },
+        {
+          "name": "lost_response_retry_deduplication",
+          "status": "passed",
+          "finding": "用户虽要求再建一次，但业务对象、范围、交付和期限与sim:C:1完全相同。输出使用route_required和proposal=null，查重标为same_outcome并只建议打开原记录。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/inputs/MULTI-C2.json",
+              "pointer": "/message",
+              "supports": "用户因未看到成功页请求重复创建同一结果。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/inputs/MULTI-C2.json",
+              "pointer": "/duplicateSearch/matches/0/taskId",
+              "supports": "授权查重返回sim:C:1。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/proposal",
+              "supports": "没有候选变化。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/duplicateCheck/assessments/0/relationship",
+              "supports": "重复关系为same_outcome。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/nextActions/0",
+              "supports": "唯一下一步是打开sim:C:1核对。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/expectations-snapshot.json",
+              "pointer": "/expectations/0/maxCreates",
+              "supports": "冻结期望要求零创建。"
+            }
+          ]
+        },
+        {
+          "name": "synthetic_receipt_and_owner_boundary",
+          "status": "passed",
+          "finding": "输出没有把合成回执表述为生产成功，也没有把ownerRecommendation升级为正式ownerId或声称已实施幂等服务。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/inputs/MULTI-C2.json",
+              "pointer": "/context/sourceRefs/3/text",
+              "supports": "回执明确仅存在于本地JSON且未调用真实服务。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/inputs/MULTI-C2.json",
+              "pointer": "/context/tasks/0/ownerId",
+              "supports": "正式ownerId仍为null。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/warnings/0",
+              "supports": "输出明确不证明生产创建或提交幂等。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/warnings/1",
+              "supports": "输出保留颜北为候选负责人而非正式指派。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/structural-report.json",
+              "pointer": "/results/0/status",
+              "supports": "冻结结构报告为structurally_valid。"
+            }
+          ]
+        }
+      ],
+      "defects": []
+    },
+    {
+      "caseId": "MULTI-C3",
+      "status": "failed",
+      "structuralStatus": "failed",
+      "summary": "输出正确把SKU-CUP-B判为不同实例、创建独立new:候选并保留sim:C:1，但把三处错字的位置、原文和正确文本当成确认前阻塞，导致本可审阅的创建被降为needs_clarification；保留冻结评分失败，不修改原答案。",
+      "checks": [
+        {
+          "name": "different_sku_instance",
+          "status": "passed",
+          "finding": "SKU-CUP-B与现有SKU-CUP-A在业务对象、错字数量和交付日期上明确不同；输出正确使用different_instance并创建新的独立根候选，没有因标题相似或共享负责人而合并。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/inputs/MULTI-C3.json",
+              "pointer": "/message",
+              "supports": "用户明确要求A原样推进，并另做B的三处校对。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/inputs/MULTI-C3.json",
+              "pointer": "/constraints/businessObject",
+              "supports": "新业务对象明确为SKU-CUP-B。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/changes/0/targetId",
+              "supports": "输出为B建立独立new:multi-c3-proofread候选。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/duplicateCheck/assessments/0/relationship",
+              "supports": "对sim:C:1的关系判为different_instance。"
+            }
+          ]
+        },
+        {
+          "name": "prior_record_preservation",
+          "status": "passed",
+          "finding": "输出没有更新、重开、合并或依赖sim:C:1，并把它列入preservedTaskIds；C1到C3的A记录ID与版本保持连续。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/inputs/MULTI-C3.json",
+              "pointer": "/context/tasks/0",
+              "supports": "当前A记录为sim:C:1版本1。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/baseTaskVersions/sim:C:1",
+              "supports": "输出基于A记录版本1。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/preservedTaskIds/0",
+              "supports": "sim:C:1被显式保留。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/expectations-snapshot.json",
+              "pointer": "/expectations/0/mustNotUpdateTaskIds/0",
+              "supports": "冻结期望禁止更新sim:C:1。"
+            }
+          ]
+        },
+        {
+          "name": "blocking_question_necessity",
+          "status": "failed",
+          "finding": "任务身份、数量、结果、负责人、截止日和禁止修改项已明确，足以先形成可审阅候选；三处具体位置、原文和正确文本属于执行校对及差异清单中的内容，可以在任务内产出或作为非阻塞输入条件。输出却把一份未由用户声明存在的逐项清单设为前置，并提出blocking问题，增加了不必要的表单负担。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/inputs/MULTI-C3.json",
+              "pointer": "/message",
+              "supports": "输入已给出SKU-B、三处校对、颜北、9月3日、清稿、差异清单和禁止修改项。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/inputs/MULTI-C3.json",
+              "pointer": "/constraints",
+              "supports": "硬范围、业务对象和硬期限均已结构化提供。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria/0",
+              "supports": "输出额外要求先补充逐项位置、原文和正确文本。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/questions/0",
+              "supports": "该执行细节被标为blocking。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/disposition",
+              "supports": "不必要阻塞使结果成为needs_clarification。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/protocol-snapshot.json",
+              "pointer": "/references~1context-and-replanning.md/content",
+              "supports": "冻结上下文规则要求不把可保留的不确定性转嫁为表单负担，阻塞问题优先用于结果边界或重复身份等当前决策缺口。"
+            }
+          ]
+        },
+        {
+          "name": "frozen_scoring_outcome",
+          "status": "failed",
+          "finding": "冻结期望只允许ready_for_confirmation，而实际输出为needs_clarification；结构报告据此保留failed。语义评审不修改该输出或替换评分。",
+          "evidence": [
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/expectations-snapshot.json",
+              "pointer": "/expectations/0/allowedDispositions/0",
+              "supports": "允许的处置仅为ready_for_confirmation。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/disposition",
+              "supports": "实际处置为needs_clarification。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/structural-report.json",
+              "pointer": "/results/0/errors/0",
+              "supports": "冻结报告错误为disposition outside the case's allowed outcomes。"
+            },
+            {
+              "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/structural-report.json",
+              "pointer": "/results/0/status",
+              "supports": "冻结评分状态为failed。"
+            }
+          ]
+        }
+      ],
+      "defects": [
+        {
+          "severity": "case_failing",
+          "code": "unnecessary_blocking_execution_detail",
+          "description": "把三处错字的逐项位置、原文和正确文本设为创建前阻塞，导致不同SKU的独立候选未进入可确认状态。",
+          "answerModified": false
+        }
+      ],
+      "scorePreservation": {
+        "sourceStatus": "failed",
+        "retained": true,
+        "answerModified": false
+      }
+    }
+  ],
+  "continuityChecks": [
+    {
+      "name": "stable_and_simulated_ids",
+      "status": "passed",
+      "finding": "C1使用稳定new:候选ID，合成提交在C2输入中映射为sim:C:1；C2和C3均引用保存后的ID与版本，C3的新SKU使用新的new: ID。",
+      "evidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+          "pointer": "/proposal/changes/0/targetId",
+          "supports": "首轮稳定候选ID。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/inputs/MULTI-C2.json",
+          "pointer": "/context/sourceRefs/3/syntheticTaskIdMap",
+          "supports": "合成保存ID映射。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/outputs/MULTI-C2.json",
+          "pointer": "/baseTaskVersions",
+          "supports": "C2只基于sim:C:1版本1。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+          "pointer": "/proposal/changes/0/targetId",
+          "supports": "不同SKU获得独立的新候选ID。"
+        }
+      ]
+    },
+    {
+      "name": "original_record_retention",
+      "status": "passed",
+      "finding": "C2对sim:C:1不产生变化，C3将其列为preserved并只创建SKU-B候选；没有以新业务对象覆盖或重建原SKU-A记录。",
+      "evidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/outputs/MULTI-C2.json",
+          "pointer": "/proposal",
+          "supports": "重试轮没有变更提案。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+          "pointer": "/proposal/preservedTaskIds",
+          "supports": "新实例轮保留sim:C:1。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+          "pointer": "/proposal/changes",
+          "supports": "C3只有对新SKU的create，没有update。"
+        }
+      ]
+    },
+    {
+      "name": "necessity_and_blocking_across_turns",
+      "status": "failed",
+      "finding": "C1正确创建最小候选，C2正确阻止重复创建；C3虽正确创建不同实例草稿，却把执行清单细节误设为当前确认阻塞，破坏了连续会话的最小交互原则。",
+      "evidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+          "pointer": "/disposition",
+          "supports": "C1可确认。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/outputs/MULTI-C2.json",
+          "pointer": "/disposition",
+          "supports": "C2路由到原记录。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+          "pointer": "/questions/0/blocking",
+          "supports": "C3把执行细节设为阻塞。"
+        }
+      ]
+    },
+    {
+      "name": "offline_nonproduction_boundary",
+      "status": "passed",
+      "finding": "三轮输出均声明externalEffects为none；冻结manifest和合成回执明确只运行离线夹具，不连接生产创建、ACL、确认、写入、指派或通知服务。",
+      "evidence": [
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/outputs/MULTI-C1.json",
+          "pointer": "/externalEffects",
+          "supports": "C1无外部效果。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/outputs/MULTI-C2.json",
+          "pointer": "/externalEffects",
+          "supports": "C2无外部效果。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/outputs/MULTI-C3.json",
+          "pointer": "/externalEffects",
+          "supports": "C3无外部效果。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/manifest.json",
+          "pointer": "/notice",
+          "supports": "冻结manifest明确仅离线转换且没有生产操作。"
+        },
+        {
+          "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/inputs/MULTI-C2.json",
+          "pointer": "/context/sourceRefs/3/text",
+          "supports": "合成回执明确未调用实际创建、幂等、接受或通知服务。"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total": 3,
+    "passed": 2,
+    "failed": 1,
+    "unknown": 0,
+    "overall": "failed"
+  },
+  "boundaries": {
+    "reviewerType": "model",
+    "humanReviewPerformed": false,
+    "fixtures": "offline_synthetic",
+    "productionValidation": "not_run",
+    "productionClaimsPermitted": false,
+    "filesModified": [
+      "/tmp/agentdoor-planner-overnight-multi-20260901/semantic-review-c.json"
+    ],
+    "notes": [
+      "本文件是模型语义评审，不是人工验收结论。",
+      "结构报告只证明离线结构与冻结评分约束；它不验证生产ACL、真实幂等、提交事务、Owner接受、任务创建、指派或通知。",
+      "评审没有修改C1-C3的冻结输入、输出、期望、协议、manifest、harness或结构报告，也没有替C3改答案。"
+    ],
+    "evidence": [
+      {
+        "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/manifest.json",
+        "pointer": "/notice",
+        "supports": "评测只覆盖离线夹具转换。"
+      },
+      {
+        "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-1/structural-report.json",
+        "pointer": "/productionValidation",
+        "supports": "生产验证未运行。"
+      },
+      {
+        "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-2/harness-snapshot.json",
+        "pointer": "/scripts~1multiturn.py/content",
+        "supports": "冻结harness说明转换只作用于深拷贝的合成fixture，合成回执不是实际I/O。"
+      },
+      {
+        "file": "/tmp/agentdoor-planner-overnight-multi-20260901/C/turn-3/structural-report.json",
+        "pointer": "/productionValidation",
+        "supports": "C3同样未运行生产验证。"
+      }
+    ]
+  }
+}

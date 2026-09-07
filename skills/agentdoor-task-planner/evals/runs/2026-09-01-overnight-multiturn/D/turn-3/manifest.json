@@ -1,0 +1,33 @@
+{
+  "createdAt": "2026-09-01T02:40:37.799353+00:00",
+  "suite": "multiturn",
+  "fixtureSha256": "c496e4386fe4ad35539649e6b111c871acf6718cccf1f5de8bbc46decc3f8da3",
+  "seedFixtureSha256": "a139dace28ad6a6e311858d6ec6189c6e63621435463e101a81f173d0c2be42d",
+  "expectationsSha256": "7ccf5877820338932ba0a9f92362b6069318a684e33507dd73aa8af43dc5d372",
+  "skillSha256": "43ae9defd34eaf7fbfaacbbd4efce6dc9f66b9da32f73dd6d89757eb2848aa00",
+  "contractSha256": "3c87217b53a946b6cd35f3f2b904a0bce18494981f9f9b91dc84bb844a1cbdb9",
+  "schemaSha256": "8c0192063fadf41d26e0b91d9f00e165c981173e46809197c5807d0090491cc7",
+  "harnessSha256": "48808abfcc5699c0feb7fb0790ec3178bb04d074fe4921d81726ff8788cea957",
+  "evaluatorSha256": "c5b3612d80dc0b58d69ae876a04179c6a89c0b3c91677f22183cad767cb107d3",
+  "validatorSha256": "80f4baf26e7ae5cb04d8fced761dfbd0958a9f0950954d6e77c39570d6d33357",
+  "previous": {
+    "previousCaseId": "MULTI-D2",
+    "inputSha256": "ab3595f43effcba1abf1b7e10b8069d63eeb023ae188f63130c01006cd16697a",
+    "outputSha256": "6ef69a34c4433cf490741347a52d66a14cfc2dfa1cc3442ad8f1ca9db896292f",
+    "transition": "retain",
+    "previousHarnessSha256": "48808abfcc5699c0feb7fb0790ec3178bb04d074fe4921d81726ff8788cea957",
+    "notice": "Derived from the prior actual output; no production operations."
+  },
+  "notice": "Only offline fixture transitions. No production records, ACL service, confirmations, writes or notifications are exercised.",
+  "selectedCaseIds": [
+    "MULTI-D3"
+  ],
+  "cases": [
+    {
+      "id": "MULTI-D3",
+      "industry": "content_agency",
+      "category": "multiturn",
+      "inputSha256": "c6390179531cae1a01c0e062e505dc23240c6cf3e20e7f51c11305f0e46710b8"
+    }
+  ]
+}

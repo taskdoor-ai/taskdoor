@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-content-04",
+  "baseSnapshotId": "snapshot-content-04-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "content04-root": 4,
+    "content04-cut": 4,
+    "content04-deliver": 2
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "暂不形成可确认的收尾变更：v4只有内部审阅报告、未见有权客户批准，且已知评审窗口晚于9月2日硬期限；需补齐相关讨论并解决交付日期或范围冲突。",
+  "reasoningSummary": [
+    {
+      "text": "短片v4的任务正式状态仍为进行中；“看过v4”属于内部内容审阅，发言者明确不负责客户最终批准。",
+      "evidenceRefs": [
+        "content04-cut",
+        "content04-d1"
+      ]
+    },
+    {
+      "text": "现有客户批准仅对应v3；v4修改片尾后尚未收到有权确认人答复，不能套用旧批准或将先交后补批准的提议视为决策。",
+      "evidenceRefs": [
+        "content04-approval-v3",
+        "content04-d2",
+        "content04-d3"
+      ]
+    },
+    {
+      "text": "根任务与请求要求9月2日交付，但客户当前评审窗口为9月3日上午，9月2日前审阅未获确认。",
+      "evidenceRefs": [
+        "req-content-04",
+        "content04-root",
+        "content04-client-window"
+      ]
+    },
+    {
+      "text": "本次相关讨论覆盖为partial、历史为unavailable，尚不满足完整读取相关讨论后的重规划条件；任务与子任务虽完整也不能补足批准缺口。",
+      "evidenceRefs": [
+        "req-content-04",
+        "content04-root-record"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [
+    {
+      "field": "schedule.dueOn",
+      "question": "在补齐批准上下文后，9月2日硬期限与9月3日客户评审窗口的冲突，应协调提前取得当前版本批准，还是由有权方明确调整交付日期或范围？",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "保持原根任务、供审任务与最终交付任务的ID、正式状态、负责人和9月2日期限，不宣称v4已经批准或已完成。",
+    "需要补读完整的v4评审与批准相关讨论，以及授权可读的当前版本确认记录；历史不可用不能解释为没有历史。",
+    "已存在最终交付任务，先复用它；批准未就绪时只能准备材料，不能将准备完成表述为最终可交付。",
+    "候选规划不执行发送、发布、邀请或客户验收；不得以内部审阅替代客户有权确认。"
+  ],
+  "nextActions": [
+    {
+      "action": "retry_context",
+      "taskId": "content04-root",
+      "label": "补读完整评审讨论及v4当前批准记录"
+    },
+    {
+      "action": "ask_user",
+      "taskId": "content04-root",
+      "label": "明确9月2日交付冲突的处理选择"
+    },
+    {
+      "action": "open_task",
+      "taskId": "content04-deliver",
+      "label": "查看现有最终交付任务及批准前提"
+    }
+  ],
+  "externalEffects": "none"
+}

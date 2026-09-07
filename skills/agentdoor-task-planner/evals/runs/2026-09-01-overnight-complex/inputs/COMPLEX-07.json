@@ -1,0 +1,638 @@
+{
+  "requestId": "req-complex07",
+  "message": "先诊断栎石C版资料项目现在的依赖问题，再决定怎样重排。有人说两项互相等，还有一项仍等已取消的旧资料。不要为了给出可行日期就静默删依赖或复活旧任务；没有确认的替代关系请明确列出来。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "npi-m6",
+  "teamId": "team-npi",
+  "authorizedTeamIds": [
+    "team-npi"
+  ],
+  "revision": 3,
+  "currentTaskId": "complex07-root",
+  "context": {
+    "snapshotId": "snapshot-complex07-v3",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-npi"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "complex07-root",
+        "title": "栎石C版评审资料协调",
+        "status": "in_progress",
+        "version": 13,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "形成可追溯本批次依据的资料清单与待决事项"
+        ],
+        "ownerId": "npi-m1",
+        "sourceRefs": [
+          "complex07-root-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-08",
+        "goal": "让栎石C版评审使用一致且有来源的资料关系"
+      },
+      {
+        "id": "complex07-engineering",
+        "title": "栎石工程资料分支",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex07-root",
+        "acceptanceCriteria": [
+          "核对版本与变更对应信息"
+        ],
+        "ownerId": "npi-m2",
+        "sourceRefs": [
+          "complex07-engineering-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-04"
+      },
+      {
+        "id": "complex07-review",
+        "title": "栎石评审资料分支",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex07-root",
+        "acceptanceCriteria": [
+          "归集检查与样品索引"
+        ],
+        "ownerId": "npi-m5",
+        "sourceRefs": [
+          "complex07-review-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-07"
+      },
+      {
+        "id": "complex07-old-a",
+        "title": "收齐栎石旧A版供应资料",
+        "status": "cancelled",
+        "version": 4,
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "parentId": "complex07-engineering",
+        "acceptanceCriteria": [
+          "原A版资料范围已撤销，不再作为本批交付"
+        ],
+        "ownerId": "npi-m3",
+        "sourceRefs": [
+          "complex07-old-a-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-29"
+      },
+      {
+        "id": "complex07-baseline-c",
+        "title": "留存栎石C版范围基线",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "parentId": "complex07-engineering",
+        "acceptanceCriteria": [
+          "保存C版范围回执与文档索引"
+        ],
+        "ownerId": "npi-m2",
+        "sourceRefs": [
+          "complex07-baseline-c-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "complex07-matrix",
+        "title": "整理栎石变更影响矩阵",
+        "status": "blocked",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex07-engineering",
+        "acceptanceCriteria": [
+          "矩阵逐条引用本批检查记录编号并列出影响范围"
+        ],
+        "ownerId": "npi-m2",
+        "sourceRefs": [
+          "complex07-matrix-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex07-checklist",
+          "complex07-baseline-c"
+        ],
+        "dueOn": "2026-09-04"
+      },
+      {
+        "id": "complex07-checklist",
+        "title": "核对栎石本批检查记录",
+        "status": "blocked",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex07-review",
+        "acceptanceCriteria": [
+          "检查记录依据本批变更矩阵逐项定位需核对内容"
+        ],
+        "ownerId": "npi-m5",
+        "sourceRefs": [
+          "complex07-checklist-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex07-matrix"
+        ],
+        "dueOn": "2026-09-05"
+      },
+      {
+        "id": "complex07-sample-index",
+        "title": "整理栎石C版样品资料索引",
+        "status": "blocked",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex07-review",
+        "acceptanceCriteria": [
+          "样品资料索引逐项定位本批供应资料及缺失项"
+        ],
+        "ownerId": "npi-m3",
+        "sourceRefs": [
+          "complex07-sample-index-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex07-old-a"
+        ],
+        "dueOn": "2026-09-05"
+      },
+      {
+        "id": "complex07-summary",
+        "title": "汇总栎石本批评审待办",
+        "status": "open",
+        "version": 2,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex07-review",
+        "acceptanceCriteria": [
+          "依据当前检查记录和样品索引列未解决事项，不预填结论"
+        ],
+        "ownerId": "npi-m1",
+        "sourceRefs": [
+          "complex07-summary-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex07-checklist",
+          "complex07-sample-index"
+        ],
+        "dueOn": "2026-09-07"
+      },
+      {
+        "id": "complex07-archive",
+        "title": "整理栎石现有文件命名目录",
+        "status": "in_progress",
+        "version": 2,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex07-root",
+        "acceptanceCriteria": [
+          "对已可见文件名称与版本登记做目录，不修改原文件"
+        ],
+        "ownerId": "npi-m6",
+        "sourceRefs": [
+          "complex07-archive-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03"
+      }
+    ],
+    "discussions": [
+      {
+        "id": "complex07-d-cycle",
+        "taskId": "complex07-matrix",
+        "authorId": "npi-m2",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "report",
+        "text": "我在等检查记录编号，品质说也在等矩阵；目前没有确认哪一份能先以什么边界交付。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "complex07-d-replace",
+        "taskId": "complex07-sample-index",
+        "authorId": "npi-m3",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "proposal",
+        "text": "能否把old-a直接改成baseline-c？两者标题都有资料，但基线不是供应方交付，我还未核实。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "complex07-h-cancel",
+        "taskId": "complex07-old-a",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "task_cancelled",
+        "summary": "A版资料范围撤销，任务版本4取消；没有授权重开记录。",
+        "version": 4,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "complex07-h-baseline",
+        "taskId": "complex07-baseline-c",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "task_completed",
+        "summary": "C版范围基线留存完成，任务版本5；不含供应方实际资料。",
+        "version": 5,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "complex07-root-record",
+        "title": "栎石C版评审资料协调当前记录（合成）",
+        "text": "任务库读取：complex07-root，版本13，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-engineering-record",
+        "title": "栎石工程资料分支当前记录（合成）",
+        "text": "任务库读取：complex07-engineering，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-review-record",
+        "title": "栎石评审资料分支当前记录（合成）",
+        "text": "任务库读取：complex07-review，版本6，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-old-a-record",
+        "title": "收齐栎石旧A版供应资料当前记录（合成）",
+        "text": "任务库读取：complex07-old-a，版本4，状态cancelled；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-baseline-c-record",
+        "title": "留存栎石C版范围基线当前记录（合成）",
+        "text": "任务库读取：complex07-baseline-c，版本5，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-matrix-record",
+        "title": "整理栎石变更影响矩阵当前记录（合成）",
+        "text": "任务库读取：complex07-matrix，版本4，状态blocked；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-checklist-record",
+        "title": "核对栎石本批检查记录当前记录（合成）",
+        "text": "任务库读取：complex07-checklist，版本4，状态blocked；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-sample-index-record",
+        "title": "整理栎石C版样品资料索引当前记录（合成）",
+        "text": "任务库读取：complex07-sample-index，版本3，状态blocked；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-summary-record",
+        "title": "汇总栎石本批评审待办当前记录（合成）",
+        "text": "任务库读取：complex07-summary，版本2，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-archive-record",
+        "title": "整理栎石现有文件命名目录当前记录（合成）",
+        "text": "任务库读取：complex07-archive，版本2，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-graph-export",
+        "title": "栎石当前依赖导出回执（合成）",
+        "text": "现有存储导出：complex07-matrix依赖complex07-checklist与complex07-baseline-c；complex07-checklist依赖complex07-matrix；complex07-sample-index依赖complex07-old-a。上述边原样来自记录，当前没有依赖纠错确认。",
+        "updatedAt": "2026-09-01T17:40:00+08:00",
+        "source": "synthetic_context_read_receipt"
+      },
+      {
+        "id": "complex07-cancellation",
+        "title": "旧A版资料取消记录（合成）",
+        "text": "旧A版供应资料任务已在8月31日以版本4取消，原范围被撤销。取消记录没有指定C版替代供应资料任务；C版范围基线只是范围与文档索引，不是供应方实际资料交付。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex07-unresolved-handoffs",
+        "title": "本批接口讨论整理（合成）",
+        "text": "工程需要检查记录编号，品质需要矩阵列出核对范围。现有资料未区分“空白编号模板”和“已填检查结果”是否为同一交付，也没有确认应移除哪条边。采购报告C版供应资料的实际承接对象尚未登记；文件命名目录不使用这些结果，可在原任务继续。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "matches": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "complex07-root",
+      "field": "goal",
+      "value": "让栎石C版评审使用一致且有来源的资料关系"
+    }
+  ],
+  "constraints": {
+    "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+    "scope": "先暴露现有环与取消前置的未决关系；不变更正式状态、不替他人确认依赖修复；保持可独立继续的文件目录任务。"
+  },
+  "members": [
+    {
+      "id": "npi-m1",
+      "name": "俞衡",
+      "role": "NPI项目协调",
+      "responsibilities": [
+        "组织样机交付范围和阶段评审",
+        "跟踪跨部门待决策项"
+      ],
+      "boundaries": [
+        "不代品质放行",
+        "不批准未验证量产"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m1-role",
+          "title": "俞衡职责说明（合成）",
+          "text": "职责：组织样机交付范围和阶段评审；跟踪跨部门待决策项。边界：不代品质放行；不批准未验证量产。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m1-work",
+          "title": "俞衡当前工作自报（合成）",
+          "text": "协调收纳盒试制资料",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调收纳盒试制资料",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "npi-m2",
+      "name": "奚川",
+      "role": "产品工程师",
+      "responsibilities": [
+        "维护图纸和BOM版本",
+        "说明工程变更影响"
+      ],
+      "boundaries": [
+        "不替采购确认供应",
+        "不把旧版本结论套到新版本"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m2-role",
+          "title": "奚川职责说明（合成）",
+          "text": "职责：维护图纸和BOM版本；说明工程变更影响。边界：不替采购确认供应；不把旧版本结论套到新版本。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m2-work",
+          "title": "奚川当前工作自报（合成）",
+          "text": "整理BOM修订说明",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "npi-m2-window",
+          "title": "奚川公开协作窗口（合成）",
+          "text": "2026-09-03T10:00:00+08:00至2026-09-03T12:00:00+08:00。仅为版本评审窗口，未声明总工作容量。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理BOM修订说明",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-03T10:00:00+08:00",
+        "endAt": "2026-09-03T12:00:00+08:00",
+        "sourceRef": "npi-m2-window",
+        "note": "仅为版本评审窗口，未声明总工作容量。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "npi-m3",
+      "name": "何荔",
+      "role": "采购与供应商协调",
+      "responsibilities": [
+        "确认样料交期和采购资料",
+        "追踪供应商书面回复"
+      ],
+      "boundaries": [
+        "不擅自替代材料",
+        "不把报价日期当到货承诺"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m3-role",
+          "title": "何荔职责说明（合成）",
+          "text": "职责：确认样料交期和采购资料；追踪供应商书面回复。边界：不擅自替代材料；不把报价日期当到货承诺。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m3-work",
+          "title": "何荔当前工作自报（合成）",
+          "text": "跟进样料回签",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "跟进样料回签",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "npi-m4",
+      "name": "路远",
+      "role": "工艺工程师",
+      "responsibilities": [
+        "整理试制工艺版本与工装需求",
+        "收集试制问题"
+      ],
+      "boundaries": [
+        "不在夹具中给设备操作或安全指导",
+        "不直接批准产品变更"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m4-role",
+          "title": "路远职责说明（合成）",
+          "text": "职责：整理试制工艺版本与工装需求；收集试制问题。边界：不在夹具中给设备操作或安全指导；不直接批准产品变更。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m4-work",
+          "title": "路远当前工作自报（合成）",
+          "text": "核对试制工艺文件",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对试制工艺文件",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "npi-m5",
+      "name": "彭宁",
+      "role": "品质验证负责人",
+      "responsibilities": [
+        "维护检验口径",
+        "复核样品记录与不符合项"
+      ],
+      "boundaries": [
+        "不把执行者自报当正式通过",
+        "不在无证据时放行"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m5-role",
+          "title": "彭宁职责说明（合成）",
+          "text": "职责：维护检验口径；复核样品记录与不符合项。边界：不把执行者自报当正式通过；不在无证据时放行。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m5-work",
+          "title": "彭宁当前工作自报（合成）",
+          "text": "整理试制抽检记录",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "npi-m5-window",
+          "title": "彭宁公开协作窗口（合成）",
+          "text": "2026-09-07T13:00:00+08:00至2026-09-07T16:00:00+08:00。仅接受样品资料评审；实物准备情况需另核对。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理试制抽检记录",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-07T13:00:00+08:00",
+        "endAt": "2026-09-07T16:00:00+08:00",
+        "sourceRef": "npi-m5-window",
+        "note": "仅接受样品资料评审；实物准备情况需另核对。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "npi-m6",
+      "name": "苏行",
+      "role": "生产计划协调",
+      "responsibilities": [
+        "核对试制批次与准备条件",
+        "协调已确认车间窗口"
+      ],
+      "boundaries": [
+        "不从人时直接推自然工期",
+        "不自行插单"
+      ],
+      "evidence": [
+        {
+          "id": "npi-m6-role",
+          "title": "苏行职责说明（合成）",
+          "text": "职责：核对试制批次与准备条件；协调已确认车间窗口。边界：不从人时直接推自然工期；不自行插单。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "npi-m6-work",
+          "title": "苏行当前工作自报（合成）",
+          "text": "收集下一批试制准备状态",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "收集下一批试制准备状态",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "npi-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

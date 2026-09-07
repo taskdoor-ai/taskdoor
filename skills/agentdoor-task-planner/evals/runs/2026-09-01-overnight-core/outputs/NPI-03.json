@@ -1,0 +1,287 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-npi-03",
+  "baseSnapshotId": "snapshot-npi-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "npi03-root": 7,
+    "npi03-bom": 3,
+    "npi03-qa": 4
+  },
+  "intent": "next_batch",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议为A-01批次F-09划痕反馈建立独立后续候选，先核对样品与证据，再提出有依据的改进范围；A版结项、BOM和原检验记录全部保留。",
+  "reasoningSummary": [
+    {
+      "text": "原交付根任务及BOM、检验任务均正式完成，用户要求保留原结项记录；后续反馈应关联旧结果另建候选。",
+      "evidenceRefs": [
+        "req-npi-03",
+        "npi03-root",
+        "npi03-bom",
+        "npi03-qa",
+        "npi03-h1"
+      ]
+    },
+    {
+      "text": "F-09指向A-01样品03、07、11，但只有文字反馈和照片引用，没有原始照片，原因及处理方式未核定。",
+      "evidenceRefs": [
+        "npi03-feedback",
+        "npi03-d1"
+      ]
+    },
+    {
+      "text": "品质讨论只提出先核对样品编号和照片、再明确复核范围；未构成划痕责任判定。",
+      "evidenceRefs": [
+        "npi03-d2",
+        "npi-m5-role"
+      ]
+    },
+    {
+      "text": "供应商全部重做只是未接受提议，没有原因确认或供应商接受记录，不能变成本轮执行承诺。",
+      "evidenceRefs": [
+        "npi03-d3",
+        "npi-m3-role"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "new:npi03-feedback-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "npi03-create-followup",
+        "action": "create",
+        "targetId": "new:npi03-feedback-root",
+        "parentId": null,
+        "fields": {
+          "title": "BOX-N1 A-01批次F-09划痕复核与改进建议",
+          "acceptanceCriteria": [
+            "形成F-09样品03、07、11与A-01交付、原检验记录的证据对应表，区分已核对事实、客户报告及未取得证据。",
+            "提出基于可核对证据的复核结论或明确的未定结论，并提供本轮可决策的处理与改进范围建议。",
+            "所有结论标注本轮反馈范围；原A版结项和当时检验记录只关联引用，不追写或覆盖。"
+          ],
+          "tips": [
+            "在本轮结论充分前不扩大为整批重做；进一步实施应基于明确范围形成后续候选。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "npi-m1",
+            "basis": "recommended",
+            "reason": "负责跨部门待决策项与样机交付范围协调，可汇总本轮复核和改进范围供决定。",
+            "evidenceRefs": [
+              "npi-m1-role"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未给本轮复核期限、原始证据取得时间或完整可用性；旧项目日期不沿用。"
+            ],
+            "evidenceRefs": [
+              "req-npi-03",
+              "npi03-root",
+              "npi03-feedback"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "父任务不重复估算子任务投入；汇总交由确定性代码处理。"
+            ],
+            "evidenceRefs": [
+              "req-npi-03",
+              "npi03-root",
+              "npi03-feedback"
+            ]
+          },
+          "dependsOnTaskIds": [],
+          "goal": {
+            "text": "查清客户F-09划痕反馈的可核对事实并确定有依据的后续改进范围，同时保留原试制结项记录。",
+            "basis": "explicit",
+            "evidenceRefs": [
+              "req-npi-03",
+              "npi03-root",
+              "npi03-feedback"
+            ]
+          }
+        },
+        "reason": "原根已完成，新反馈是独立后续范围，不在旧完成节点下添加工作。",
+        "evidenceRefs": [
+          "req-npi-03",
+          "npi03-root",
+          "npi03-h1",
+          "npi03-feedback"
+        ]
+      },
+      {
+        "id": "npi03-create-evidence",
+        "action": "create",
+        "targetId": "new:npi03-evidence",
+        "parentId": "new:npi03-feedback-root",
+        "fields": {
+          "title": "核对F-09样品编号、照片和原检验依据",
+          "acceptanceCriteria": [
+            "将样品03、07、11分别与F09-P1/P2/P3、A-01批次交付编号和当时检验口径对应，记录使用的原始来源与版本。",
+            "取得原始照片和相关原始检验明细后逐项比对；未能取得的材料列明具体缺口及其限制，不声称已看过图片或完成实物复核。",
+            "输出本轮可复核范围和仍需验证的问题清单，区分划痕报告、可见证据与原因假设。"
+          ],
+          "tips": [
+            "先核对对应关系和证据完整性；不能把原任务completed状态当成本轮划痕不存在的证据。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "npi-m5",
+            "basis": "recommended",
+            "reason": "品质职责覆盖样品记录、不符合项和检验口径复核。",
+            "evidenceRefs": [
+              "npi-m5-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "npi-m1",
+              "contribution": "协调取得客户F-09原始材料及相应交付信息，不代品质判断划痕责任。",
+              "evidenceRefs": [
+                "npi-m1-role",
+                "npi03-d1"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未给本轮复核期限、原始证据取得时间或完整可用性；旧项目日期不沿用。"
+            ],
+            "evidenceRefs": [
+              "npi03-feedback",
+              "npi03-qa",
+              "npi03-d2"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供同范围实际投入和工具方式；原始照片与记录取得前不能确定完整复核工作量，等待不计EWD。"
+            ],
+            "evidenceRefs": [
+              "npi03-feedback",
+              "npi03-qa",
+              "npi03-d2"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "当前独立缺口是原始证据与样品对应核对，可先形成明确的复核输入。",
+        "evidenceRefs": [
+          "npi03-feedback",
+          "npi03-qa",
+          "npi03-d2"
+        ]
+      },
+      {
+        "id": "npi03-create-improvement",
+        "action": "create",
+        "targetId": "new:npi03-improvement",
+        "parentId": "new:npi03-feedback-root",
+        "fields": {
+          "title": "形成划痕复核结论及后续改进候选",
+          "acceptanceCriteria": [
+            "以证据核对结果为输入，记录支持或排除某类原因的依据；证据不足时保持原因未定并说明必要的追加核对。",
+            "对每项处理或改进建议标明针对的已证实问题、适用样品范围、拟采用的验证方式及仍待决定事项。",
+            "将可提出的改进建议与已获批准的执行措施分开；不默认供应商重做、接受责任或产品已获放行。"
+          ],
+          "tips": [
+            "如果核对证据仍不足，只提出有明确目的的补充验证建议；不提前排整批返工。",
+            "涉及工程变更、供应商执行或责任调整时，需按后续确认范围处理，当前不进行正式指派。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "npi-m4",
+            "basis": "recommended",
+            "reason": "工艺职责包括收集试制问题，适合整理证据对应的改进候选；此职责不含批准产品变更。",
+            "evidenceRefs": [
+              "npi-m4-role"
+            ]
+          },
+          "participantRecommendations": [
+            {
+              "memberId": "npi-m5",
+              "contribution": "复核改进建议的品质依据和拟验证范围，避免把未核实原因或自报结果作为通过结论。",
+              "evidenceRefs": [
+                "npi-m5-role"
+              ]
+            }
+          ],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未给本轮复核期限、原始证据取得时间或完整可用性；旧项目日期不沿用。"
+            ],
+            "evidenceRefs": [
+              "req-npi-03",
+              "npi03-feedback",
+              "npi03-d3",
+              "npi-m4-role"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供同范围实际投入和工具方式；原始照片与记录取得前不能确定完整复核工作量，等待不计EWD。"
+            ],
+            "evidenceRefs": [
+              "req-npi-03",
+              "npi03-feedback",
+              "npi03-d3",
+              "npi-m4-role"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "new:npi03-evidence"
+          ]
+        },
+        "reason": "后续改进必须使用本轮复核依据，不能由未接受的全量重做提议直接生成执行任务。",
+        "evidenceRefs": [
+          "req-npi-03",
+          "npi03-feedback",
+          "npi03-d3"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "npi03-root",
+      "npi03-bom",
+      "npi03-qa"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-npi"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "本轮候选只安排证据核对、复核结论与改进建议；不重开完成任务，不修改旧版结论，不直接执行重做或放行。",
+    "原始照片、当时原始检验与交付明细需在候选工作中取得并核对；目前不能断定生产、运输或供应商责任。",
+    "npi03-d2虽标为decision，未提供额外可信确认记录；将其限于与用户要求一致的核对建议，不据此作责任或处理决定。",
+    "角色职责支持候选分工，不等于人员已接受；旧项目完成历史没有可复用EWD，当前容量及期限仍未知。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "new:npi03-feedback-root",
+      "label": "审阅与原结项关联的F-09复核及改进候选"
+    }
+  ],
+  "externalEffects": "none"
+}

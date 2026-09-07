@@ -1,0 +1,365 @@
+{
+  "requestId": "req-edge-01",
+  "message": "我只是想知道：栖湾沙箱字段核对现在到哪了，为什么任务还没显示完成？不要建任务或改计划。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "saas-m6",
+  "teamId": "team-saas",
+  "authorizedTeamIds": [
+    "team-saas"
+  ],
+  "revision": 1,
+  "context": {
+    "snapshotId": "snapshot-edge-01-v1",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-saas"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "edge01-check",
+        "title": "栖湾沙箱字段核对",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "对导出样本MAP-C4的12个字段逐项留核对记录，并标明未通过项"
+        ],
+        "ownerId": "saas-m3",
+        "sourceRefs": [
+          "edge01-check-record"
+        ],
+        "identity": {
+          "customer": "合成·栖湾",
+          "tenant": "sandbox-QW",
+          "deliverable": "MAP-C4字段核对"
+        },
+        "dueOn": "2026-09-03"
+      }
+    ],
+    "discussions": [
+      {
+        "id": "edge01-report",
+        "taskId": "edge01-check",
+        "authorId": "saas-m3",
+        "createdAt": "2026-09-01T10:30:00+08:00",
+        "kind": "report",
+        "text": "12个字段我已跑过一遍，感觉没问题；核对记录还没附到任务，正式结果仍待记录核对。",
+        "version": 1,
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [],
+    "sourceRefs": [
+      {
+        "id": "edge01-check-record",
+        "title": "栖湾沙箱字段核对当前记录（合成）",
+        "text": "合成任务库读取：edge01-check，版本4，状态in_progress，正式Owner为saas-m3；字段来自任务记录，不由讨论推断。",
+        "version": 4,
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_task_store"
+      },
+      {
+        "id": "edge01-evidence-index",
+        "title": "MAP-C4交付附件索引v2（合成）",
+        "text": "截至快照只找到映射说明MAP-C4，无本轮逐字段核对表或接受记录。索引完整读取，不把执行者发言视为正式完成。",
+        "version": 2,
+        "updatedAt": "2026-09-01T09:00:00+08:00",
+        "source": "synthetic_business_record"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "matches": [],
+    "coverageNote": "合成服务端已完整读取本次授权团队中相关活动、完成和取消任务；此范围内无其他查重匹配。"
+  },
+  "currentTaskId": "edge01-check",
+  "members": [
+    {
+      "id": "saas-m1",
+      "name": "顾澄",
+      "role": "交付负责人",
+      "responsibilities": [
+        "拆清交付范围",
+        "协调客户验收与变更"
+      ],
+      "boundaries": [
+        "不代客户签收",
+        "不替工程师确认技术就绪"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m1-role",
+          "title": "顾澄职责说明（合成）",
+          "text": "职责：拆清交付范围；协调客户验收与变更。边界：不代客户签收；不替工程师确认技术就绪。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m1-work",
+          "title": "顾澄当前工作自报（合成）",
+          "text": "协调一项存量客户上线，未提供完整日历",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "协调一项存量客户上线，未提供完整日历",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "saas-m2",
+      "name": "袁序",
+      "role": "实施工程师",
+      "responsibilities": [
+        "配置沙箱集成与单点登录",
+        "整理上线与回退检查记录"
+      ],
+      "boundaries": [
+        "不替客户批准生产访问",
+        "不自动改生产配置"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m2-role",
+          "title": "袁序职责说明（合成）",
+          "text": "职责：配置沙箱集成与单点登录；整理上线与回退检查记录。边界：不替客户批准生产访问；不自动改生产配置。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m2-work",
+          "title": "袁序当前工作自报（合成）",
+          "text": "处理合成客户的沙箱连接问题",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "saas-m2-window",
+          "title": "袁序公开协作窗口（合成）",
+          "text": "2026-09-02T10:00:00+08:00至2026-09-02T12:00:00+08:00。仅承诺该时段可参加集成核对，不代表整周空闲。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "处理合成客户的沙箱连接问题",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-02T10:00:00+08:00",
+        "endAt": "2026-09-02T12:00:00+08:00",
+        "sourceRef": "saas-m2-window",
+        "note": "仅承诺该时段可参加集成核对，不代表整周空闲。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "saas-m3",
+      "name": "沈言",
+      "role": "数据迁移工程师",
+      "responsibilities": [
+        "字段映射与迁移演练",
+        "按约定口径核对迁移数据"
+      ],
+      "boundaries": [
+        "不决定客户保留范围",
+        "不把演练通过视为生产迁移授权"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m3-role",
+          "title": "沈言职责说明（合成）",
+          "text": "职责：字段映射与迁移演练；按约定口径核对迁移数据。边界：不决定客户保留范围；不把演练通过视为生产迁移授权。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m3-work",
+          "title": "沈言当前工作自报（合成）",
+          "text": "核对存量项目的数据映射表",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对存量项目的数据映射表",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "saas-m4",
+      "name": "钟宁",
+      "role": "测试负责人",
+      "responsibilities": [
+        "组织UAT用例与缺陷复核",
+        "记录版本和验证结果"
+      ],
+      "boundaries": [
+        "不替客户业务验收",
+        "不因报告完成自动上线"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m4-role",
+          "title": "钟宁职责说明（合成）",
+          "text": "职责：组织UAT用例与缺陷复核；记录版本和验证结果。边界：不替客户业务验收；不因报告完成自动上线。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m4-work",
+          "title": "钟宁当前工作自报（合成）",
+          "text": "整理试点回归用例",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "saas-m4-window",
+          "title": "钟宁公开协作窗口（合成）",
+          "text": "2026-09-05T13:00:00+08:00至2026-09-05T17:00:00+08:00。本次公开窗口用于UAT协作；其他日期可用性未提供。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理试点回归用例",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-05T13:00:00+08:00",
+        "endAt": "2026-09-05T17:00:00+08:00",
+        "sourceRef": "saas-m4-window",
+        "note": "本次公开窗口用于UAT协作；其他日期可用性未提供。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "saas-m5",
+      "name": "许棠",
+      "role": "客户成功与培训",
+      "responsibilities": [
+        "整理培训材料",
+        "协调培训反馈和使用交接"
+      ],
+      "boundaries": [
+        "不承担技术迁移验证",
+        "不代表客户接受交付"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m5-role",
+          "title": "许棠职责说明（合成）",
+          "text": "职责：整理培训材料；协调培训反馈和使用交接。边界：不承担技术迁移验证；不代表客户接受交付。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m5-work",
+          "title": "许棠当前工作自报（合成）",
+          "text": "准备培训讲义和常见问题清单",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "准备培训讲义和常见问题清单",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "saas-m6",
+      "name": "罗岸",
+      "role": "客户需求对接",
+      "responsibilities": [
+        "收集客户业务口径",
+        "定位客户确认记录"
+      ],
+      "boundaries": [
+        "不自动批准范围增加",
+        "不直接代替交付负责人排期"
+      ],
+      "evidence": [
+        {
+          "id": "saas-m6-role",
+          "title": "罗岸职责说明（合成）",
+          "text": "职责：收集客户业务口径；定位客户确认记录。边界：不自动批准范围增加；不直接代替交付负责人排期。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "saas-m6-work",
+          "title": "罗岸当前工作自报（合成）",
+          "text": "等待客户回传试点范围确认",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "等待客户回传试点范围确认",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "saas-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

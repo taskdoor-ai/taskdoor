@@ -1,0 +1,1086 @@
+{
+  "reviewer": {
+    "kind": "independent_codex_agent",
+    "taskName": "overnight_blind_core_b_semantic_review",
+    "humanIndustryReview": false,
+    "productionValidation": false
+  },
+  "executionBoundaries": {
+    "runRoot": "/tmp/agentdoor-planner-overnight-core-20260901",
+    "reviewMode": "仅对冻结协议、期望、八份输入、八份输出及结构报告作离线独立语义评审；没有执行规划或重写被测答案。",
+    "readScope": [
+      "protocol-snapshot.json",
+      "expectations-snapshot.json",
+      "structural-report.json",
+      "inputs/SAAS-01.json",
+      "outputs/SAAS-01.json",
+      "inputs/SAAS-02.json",
+      "outputs/SAAS-02.json",
+      "inputs/SAAS-03.json",
+      "outputs/SAAS-03.json",
+      "inputs/SAAS-04.json",
+      "outputs/SAAS-04.json",
+      "inputs/ECOM-01.json",
+      "outputs/ECOM-01.json",
+      "inputs/ECOM-02.json",
+      "outputs/ECOM-02.json",
+      "inputs/ECOM-03.json",
+      "outputs/ECOM-03.json",
+      "inputs/ECOM-04.json",
+      "outputs/ECOM-04.json",
+      "/tmp/agentdoor-planner-overnight-edge-20260901/semantic-review-a.json（仅参考字段结构）"
+    ],
+    "writes": [
+      "semantic-review-a.json"
+    ],
+    "inputOutputProtocolOrExpectationModified": false,
+    "plannerModelCalled": false,
+    "structuralReportUse": "仅确认确定性结构检查结果；structurally_valid没有被当作语义通过。",
+    "visibleChecks": [
+      "逐例核对冻结manualChecks、allowed intent/disposition、mustPreserve/mustNotUpdate/mustNotCreate、requiredEvidenceRefs及全局禁止无据写入。",
+      "逐例核对意图、最小范围、查重、ACL、责任与参与、依赖、日期、EWD及externalEffects。",
+      "逐条验证本评审引用的file和JSON Pointer在冻结工件中实际存在。"
+    ],
+    "unobserved": [
+      "未进行人类SaaS或电商行业专家评审、真实客户验收或用户闭环。",
+      "未验证生产ACL、服务端版本重读、幂等事务、真实任务写回、指派、通知、上线或其他外部副作用。",
+      "JSON中的externalEffects=none只能证明输出声明，不能独立证明运行环境未发生副作用。"
+    ],
+    "statusPolicy": "passed/failed/unknown只描述冻结合成工件在可见证据下的语义表现；passed不等于人类行业评审或生产验证。"
+  },
+  "cases": [
+    {
+      "caseId": "SAAS-01",
+      "status": "passed",
+      "summary": "create意图、四项独立交付拆分、职责分工、生产边界、依赖和未知估算均符合冻结检查。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "按集成配置、数据演练、UAT和培训交接形成四个可独立核对结果；UAT使用沙箱与数据产出，培训交接使用UAT结果，没有把每个操作继续拆成任务。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/0/manualChecks/0",
+              "note": "冻结的复杂度与最小拆分检查。"
+            },
+            {
+              "file": "inputs/SAAS-01.json",
+              "pointer": "/message",
+              "note": "用户要求试点配置、200条演练、12条UAT和30人培训交接。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/proposal/changes",
+              "note": "一项根任务和四项结果子任务。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/proposal/changes/3/fields/dependsOnTaskIds",
+              "note": "UAT引用沙箱配置和数据演练产出。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/proposal/changes/4/fields/dependsOnTaskIds",
+              "note": "培训交接引用UAT结果。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "责任候选按交付协调、实施、迁移、UAT和培训职责区分；发起人罗岸只提供必要业务口径，没有因创建者身份包办。ACL和团队查重完整，冻结必需来源saas01-brief已显式引用。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/0/manualChecks/1",
+              "note": "冻结的责任分工检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/0/requiredEvidenceRefs/0",
+              "note": "必需来源ID。"
+            },
+            {
+              "file": "inputs/SAAS-01.json",
+              "pointer": "/context/acl/status",
+              "note": "授权状态为verified。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/duplicateCheck/status",
+              "note": "查重如实回显completed。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "note": "总体结果按交付职责推荐负责人。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/proposal/changes/1/fields/participantRecommendations/0",
+              "note": "罗岸仅承担业务口径贡献。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/proposal/changes/0/evidenceRefs/1",
+              "note": "显式引用saas01-brief。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "生产访问未批准被保留为范围边界；仅使用明确的9月18日根期限，子项日期和EWD在依据不足时留空。输出没有声称已创建、已获生产访问或成员容量充足。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/0/manualChecks/2",
+              "note": "冻结的生产边界和估算检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/0/manualChecks/3",
+              "note": "冻结的禁止无据声明检查。"
+            },
+            {
+              "file": "inputs/SAAS-01.json",
+              "pointer": "/constraints",
+              "note": "输入限定沙箱范围并给出硬期限。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria/2",
+              "note": "明确排除生产访问、生产配置和生产迁移。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/proposal/changes/0/fields/schedule",
+              "note": "根期限有明确来源且不表示容量已接受。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/proposal/changes/1/fields/estimate",
+              "note": "无依据时EWD为null。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/warnings",
+              "note": "集中声明候选责任、未知容量和生产边界。"
+            },
+            {
+              "file": "outputs/SAAS-01.json",
+              "pointer": "/externalEffects",
+              "note": "无外部副作用声明。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "SAAS-02",
+      "status": "passed",
+      "summary": "同名任务依据客户、租户、系统和周期判为different_instance；旧结项完整保留，新候选保持单任务最小范围。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "南桔tenant-nanju的9月CRM试点与北杉tenant-beishan的8月知识库试点在客户、租户、系统、周期和交付上均不同，different_instance判断有身份依据。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/1/manualChecks/0",
+              "note": "冻结的实例区分检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/1/manualChecks/2",
+              "note": "允许different_instance或template_only，但要求身份依据。"
+            },
+            {
+              "file": "inputs/SAAS-02.json",
+              "pointer": "/context/tasks/0/identity",
+              "note": "既有北杉知识库任务身份。"
+            },
+            {
+              "file": "inputs/SAAS-02.json",
+              "pointer": "/context/sourceRefs/2/text",
+              "note": "南桔CRM试点客户、租户及范围。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/duplicateCheck/assessments/0",
+              "note": "用客户、租户、系统和周期解释different_instance。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "saas02-a和saas02-b均被保留，唯一变更是创建南桔验收根；没有更新或重开旧完成记录，也没有复制旧Owner、完成状态或旧日期。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/1/manualChecks/1",
+              "note": "冻结的旧结项保护检查。"
+            },
+            {
+              "file": "inputs/SAAS-02.json",
+              "pointer": "/context/tasks/0/status",
+              "note": "saas02-a正式状态为completed。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "两个既有任务均保留。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/proposal/changes/0/action",
+              "note": "唯一操作为create。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/proposal/changes/0/parentId",
+              "note": "新任务为独立根。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "note": "当前职责推荐没有复制旧Owner。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "单任务范围、前置、9月12日客户审阅期限和未知EWD均有边界；saas02-brief显式引用，输出没有把候选说成已创建、已签收或已上线。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/1/requiredEvidenceRefs/0",
+              "note": "冻结必需来源。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/proposal/complexity",
+              "note": "单项验收使用simple。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/proposal/changes/0/fields/dependsOnTaskIds",
+              "note": "以前置范围确认saas02-b作为产出条件。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/proposal/changes/0/fields/schedule",
+              "note": "客户审阅期限及假设。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "note": "无可比投入时EWD为null。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/proposal/changes/0/evidenceRefs/1",
+              "note": "显式引用saas02-brief。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/warnings/1",
+              "note": "候选不等于创建、签收或上线。"
+            },
+            {
+              "file": "outputs/SAAS-02.json",
+              "pointer": "/externalEffects",
+              "note": "无外部副作用声明。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "SAAS-03",
+      "status": "passed",
+      "summary": "仅新增停用账号字段核对，保留已完成演练和锁定UAT字段；对新增产出是否影响UAT及培训提出必要阻塞问题。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "新增范围被压缩为停用账号字段核对，并使用映射表v2及原200条演练为基线；没有重建已完成的范围确认或基础演练，也明确排除历史关账数据。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/2/manualChecks/0",
+              "note": "冻结的新增差异和已完成结果保护检查。"
+            },
+            {
+              "file": "inputs/SAAS-03.json",
+              "pointer": "/context/tasks/2/status",
+              "note": "基础字段迁移演练已completed。"
+            },
+            {
+              "file": "inputs/SAAS-03.json",
+              "pointer": "/context/discussions/1/text",
+              "note": "原200条结果仍有效，只缺停用账号字段。"
+            },
+            {
+              "file": "outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria",
+              "note": "只补字段并保留版本、排除重做和历史关账数据。"
+            },
+            {
+              "file": "outputs/SAAS-03.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "全部既有任务原ID保留。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "锁定的UAT Owner和12条标准没有更新；许棠接手只被识别为未接受proposal。新增字段工作按数据迁移职责推荐沈言，没有将讨论提议升级为责任转移。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/2/manualChecks/1",
+              "note": "冻结的确认字段及责任转移检查。"
+            },
+            {
+              "file": "inputs/SAAS-03.json",
+              "pointer": "/confirmedFields",
+              "note": "UAT Owner与验收标准已确认锁定。"
+            },
+            {
+              "file": "inputs/SAAS-03.json",
+              "pointer": "/context/discussions/2",
+              "note": "许棠接手仅为proposal。"
+            },
+            {
+              "file": "outputs/SAAS-03.json",
+              "pointer": "/reasoningSummary/2",
+              "note": "明确保留钟宁及12条UAT标准。"
+            },
+            {
+              "file": "outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "note": "新增结果按迁移职责推荐沈言。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "新字段核对依赖已完成映射基线；因输入没有说明新增字段是否供UAT或培训使用，输出保持needs_clarification并询问真实影响，再决定是否更新现有任务依赖或日期。必需来源、日期和估算处理均合规。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/2/manualChecks/2",
+              "note": "冻结的既有UAT与培训复用检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/2/manualChecks/3",
+              "note": "有证据时可局部调整培训，但不能臆定影响。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/2/requiredEvidenceRefs/0",
+              "note": "必需来源为saas03-client-v3。"
+            },
+            {
+              "file": "inputs/SAAS-03.json",
+              "pointer": "/context/sourceRefs/5/text",
+              "note": "客户确认新增字段但未规定对UAT或培训的使用关系。"
+            },
+            {
+              "file": "outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/fields/dependsOnTaskIds",
+              "note": "新字段核对引用映射表v2基线。"
+            },
+            {
+              "file": "outputs/SAAS-03.json",
+              "pointer": "/questions/0",
+              "note": "阻塞询问UAT和培训的实际使用边界。"
+            },
+            {
+              "file": "outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/fields/schedule",
+              "note": "日期保持未知。"
+            },
+            {
+              "file": "outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "note": "新增投入和工具未知时EWD为null。"
+            },
+            {
+              "file": "outputs/SAAS-03.json",
+              "pointer": "/proposal/changes/0/evidenceRefs/0",
+              "note": "显式引用saas03-client-v3。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "SAAS-04",
+      "status": "passed",
+      "summary": "正确外显9月3日演示与最早9月4日授权的硬冲突；任务覆盖不全和查重超时时不生成候选，也未使用旧容量便签作承诺。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "真实SSO验证依赖测试授权，而授权最早9月4日，晚于9月3日硬期限；输出没有承诺按期完成，要求用户在授权、日期或演示范围之间选择。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/3/manualChecks/0",
+              "note": "冻结的授权前置与期限冲突检查。"
+            },
+            {
+              "file": "inputs/SAAS-04.json",
+              "pointer": "/constraints/hardDueOn",
+              "note": "硬期限为2026-09-03。"
+            },
+            {
+              "file": "inputs/SAAS-04.json",
+              "pointer": "/context/sourceRefs/3/text",
+              "note": "测试授权最早2026-09-04。"
+            },
+            {
+              "file": "inputs/SAAS-04.json",
+              "pointer": "/context/tasks/2/dependsOnTaskIds",
+              "note": "SSO验证依赖授权任务。"
+            },
+            {
+              "file": "outputs/SAAS-04.json",
+              "pointer": "/summary",
+              "note": "明确当前条件不能支持9月3日完成真实验证。"
+            },
+            {
+              "file": "outputs/SAAS-04.json",
+              "pointer": "/questions/0",
+              "note": "请求选择提前授权、调整日期或调整演示范围。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "任务和子任务覆盖partial、history unavailable、查重unavailable；输出为needs_clarification、proposal=null并要求补读和重试，没有把超时说成无重复。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/3/manualChecks/1",
+              "note": "冻结的上下文与查重处理检查。"
+            },
+            {
+              "file": "inputs/SAAS-04.json",
+              "pointer": "/context/coverage",
+              "note": "上下文覆盖不足。"
+            },
+            {
+              "file": "inputs/SAAS-04.json",
+              "pointer": "/duplicateSearch/status",
+              "note": "查重服务unavailable。"
+            },
+            {
+              "file": "outputs/SAAS-04.json",
+              "pointer": "/disposition",
+              "note": "结果为needs_clarification。"
+            },
+            {
+              "file": "outputs/SAAS-04.json",
+              "pointer": "/proposal",
+              "note": "没有不完整候选。"
+            },
+            {
+              "file": "outputs/SAAS-04.json",
+              "pointer": "/duplicateCheck",
+              "note": "如实回显unavailable和覆盖说明。"
+            },
+            {
+              "file": "outputs/SAAS-04.json",
+              "pointer": "/nextActions/0",
+              "note": "要求补读任务并重试查重。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "6月未经确认的4小时便签没有用于容量或日期推算；saas04-access-reply显式引用，现有任务与副作用边界保持不变。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/3/manualChecks/2",
+              "note": "冻结的旧容量便签检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/3/manualChecks/3",
+              "note": "冻结的禁止无据声明检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/3/requiredEvidenceRefs/0",
+              "note": "冻结必需来源。"
+            },
+            {
+              "file": "inputs/SAAS-04.json",
+              "pointer": "/context/sourceRefs/4/text",
+              "note": "旧便签明确未确认且未更新。"
+            },
+            {
+              "file": "outputs/SAAS-04.json",
+              "pointer": "/reasoningSummary/3",
+              "note": "拒绝用旧便签推算当前容量，并区分等待与EWD。"
+            },
+            {
+              "file": "outputs/SAAS-04.json",
+              "pointer": "/reasoningSummary/0/evidenceRefs/2",
+              "note": "显式引用saas04-access-reply。"
+            },
+            {
+              "file": "outputs/SAAS-04.json",
+              "pointer": "/warnings/2",
+              "note": "既有任务、Owner、状态、依赖和版本保持不变。"
+            },
+            {
+              "file": "outputs/SAAS-04.json",
+              "pointer": "/externalEffects",
+              "note": "无外部副作用声明。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "ECOM-01",
+      "status": "passed",
+      "summary": "保持一个轻量校对任务，严格限制在五处错字、指定负责人和9月2日交付，没有扩展商品或增长范围。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "输出只创建一个simple根任务，把逐项定位和比对留在tips；完成标准要求清稿、五处逐项差异及其余结构、图片、售价、卖点和功效承诺不变。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/4/manualChecks/0",
+              "note": "冻结的单任务检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/4/manualChecks/2",
+              "note": "冻结的五处差异和禁止扩展检查。"
+            },
+            {
+              "file": "inputs/ECOM-01.json",
+              "pointer": "/message",
+              "note": "用户明确只修五处错字并禁止改其他范围。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/proposal/complexity",
+              "note": "复杂度为simple。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/proposal/changes",
+              "note": "只有一个create change。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria",
+              "note": "清稿、五处差异及不变边界均可核对。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/proposal/changes/0/fields/tips/0",
+              "note": "操作步骤保留在tips。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "明确指定的颜北被保留且职责匹配，仓配发起人没有成为Owner或参与者；日期由“明天”和服务日期解析，0.5人时是带范围假设的模型候选而非容量承诺。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/4/manualChecks/1",
+              "note": "冻结的负责人检查。"
+            },
+            {
+              "file": "inputs/ECOM-01.json",
+              "pointer": "/constraints/explicitOwnerId",
+              "note": "显式Owner为ecom-m2。"
+            },
+            {
+              "file": "inputs/ECOM-01.json",
+              "pointer": "/members/1/responsibilities",
+              "note": "颜北职责覆盖详情页错字修正。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "note": "按explicit保留颜北。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/proposal/changes/0/fields/participantRecommendations",
+              "note": "没有凑数参与者。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/proposal/changes/0/fields/schedule",
+              "note": "9月2日日期与不确定可用性分开。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "note": "模型估算限定已有原稿、五处修改及不含等待审批。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/warnings/0",
+              "note": "明确估算不是实绩或完成保证。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "ACL和团队查重完整，必需来源ecom01-copy显式引用，且输出明确没有修改详情页、发布或指派。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/4/requiredEvidenceRefs/0",
+              "note": "冻结必需来源。"
+            },
+            {
+              "file": "inputs/ECOM-01.json",
+              "pointer": "/context/acl/status",
+              "note": "ACL为verified。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/duplicateCheck/status",
+              "note": "查重为completed。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/proposal/changes/0/evidenceRefs/1",
+              "note": "显式引用ecom01-copy。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/warnings/2",
+              "note": "未执行真实修改、发布或指派。"
+            },
+            {
+              "file": "outputs/ECOM-01.json",
+              "pointer": "/externalEffects",
+              "note": "无外部副作用声明。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "ECOM-02",
+      "status": "passed",
+      "summary": "正确定位并复用同SKU、渠道、日期和结果的现有主任务，重复发起没有产生新建或局部伪动作。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "现有ecom02-root与本轮SKU-CUP-A、天猫、9月9日首发和完整上线准备结果相同，且09:02已有创建回执；输出使用route_required和proposal=null，优先打开原任务。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/5/manualChecks/0",
+              "note": "冻结的复用原任务检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/5/manualChecks/1",
+              "note": "冻结的重复点击/重试边界。"
+            },
+            {
+              "file": "inputs/ECOM-02.json",
+              "pointer": "/context/tasks/0/identity",
+              "note": "已有主任务身份与本轮一致。"
+            },
+            {
+              "file": "inputs/ECOM-02.json",
+              "pointer": "/context/sourceRefs/4/text",
+              "note": "创建回执说明已有对象且不授予本轮写入。"
+            },
+            {
+              "file": "outputs/ECOM-02.json",
+              "pointer": "/disposition",
+              "note": "路由到已有任务。"
+            },
+            {
+              "file": "outputs/ECOM-02.json",
+              "pointer": "/proposal",
+              "note": "无候选变更。"
+            },
+            {
+              "file": "outputs/ECOM-02.json",
+              "pointer": "/nextActions/0",
+              "note": "打开ecom02-root。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "same_outcome判断引用身份、根完成标准、回执和历史；根标准已覆盖资料、库存、客服与测试，因此没有因缺少独立客服/测试子项重建整套。8月旧活动按周期不同判为different_instance。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/5/manualChecks/2",
+              "note": "ecom02-root可判same_outcome或overlap。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/5/manualChecks/3",
+              "note": "ecom02-last需判different_instance或template_only。"
+            },
+            {
+              "file": "inputs/ECOM-02.json",
+              "pointer": "/context/tasks/0/acceptanceCriteria",
+              "note": "根标准覆盖首发四类结果。"
+            },
+            {
+              "file": "outputs/ECOM-02.json",
+              "pointer": "/duplicateCheck/assessments/0",
+              "note": "同一结果的身份与范围解释。"
+            },
+            {
+              "file": "outputs/ECOM-02.json",
+              "pointer": "/duplicateCheck/assessments/1",
+              "note": "8月任务按周期与活动类型区分。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "所有既有任务保持不变，必需来源ecom02-receipt和ecom02-root均显式引用；输出没有声称执行了幂等写入、创建或完成客服测试。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/5/requiredEvidenceRefs",
+              "note": "两个冻结必需来源。"
+            },
+            {
+              "file": "outputs/ECOM-02.json",
+              "pointer": "/reasoningSummary/0/evidenceRefs/1",
+              "note": "显式引用ecom02-root。"
+            },
+            {
+              "file": "outputs/ECOM-02.json",
+              "pointer": "/reasoningSummary/1/evidenceRefs/0",
+              "note": "显式引用ecom02-receipt。"
+            },
+            {
+              "file": "outputs/ECOM-02.json",
+              "pointer": "/warnings",
+              "note": "说明没有再次创建或更新，回执不证明子工作完成。"
+            },
+            {
+              "file": "outputs/ECOM-02.json",
+              "pointer": "/externalEffects",
+              "note": "无外部副作用声明。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "ECOM-03",
+      "status": "passed",
+      "summary": "第二批建立独立后续根，复用图片v3并重新核对本批包装、库存、页面和上线结果；旧完成记录和历史投入口径均受保护。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "第一批根、图片和测试均已完成；第二批新建独立根且原三任务全部preserved，没有update已完成节点或把新工作追加为旧根子项。查重按批次日期与新增结果判different_instance。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/6/manualChecks/0",
+              "note": "冻结的新批次与旧记录保护检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/6/manualChecks/3",
+              "note": "冻结的独立后续根要求。"
+            },
+            {
+              "file": "inputs/ECOM-03.json",
+              "pointer": "/context/tasks/0/status",
+              "note": "第一批根为completed。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/rootTaskId",
+              "note": "根为新的new:ecom03-batch2。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/0/parentId",
+              "note": "新根parentId为null。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "旧根、图片和测试全部保留。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/duplicateCheck/assessments/0",
+              "note": "以批次日期、包装、库存和页面范围解释different_instance。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "图片v3按确认范围复用，未重建首拍；只新增包装清单v2，并让本批上线核对依赖本批包装与库存，第一批测试仅作参考。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/6/manualChecks/1",
+              "note": "冻结的图片复用和本批核对检查。"
+            },
+            {
+              "file": "inputs/ECOM-03.json",
+              "pointer": "/context/sourceRefs/3/text",
+              "note": "第二批确认允许沿用图片v3，并要求包装v2、本批库存和页面核对。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/1/fields/acceptanceCriteria",
+              "note": "包装v2与图片复用边界。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/1/fields/dependsOnTaskIds",
+              "note": "包装交付引用已完成图片v3产出。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/2/fields/acceptanceCriteria",
+              "note": "第二批库存重新核对。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/3/fields/dependsOnTaskIds",
+              "note": "上线核对依赖本批包装和库存。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/3/fields/acceptanceCriteria/1",
+              "note": "第一批测试只作参考。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "第一批12人时和3天等待没有复制为第二批投入；所有EWD保持未知，9月15日仅作为明确上线边界。ecom03-batch2与ecom03-h2均显式引用。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/6/manualChecks/2",
+              "note": "冻结的历史投入和等待口径检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/6/requiredEvidenceRefs",
+              "note": "两个冻结必需来源。"
+            },
+            {
+              "file": "inputs/ECOM-03.json",
+              "pointer": "/context/history/1/summary",
+              "note": "12人时含首拍首搭，3天等待另计。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "note": "父根不重复估算且不沿用旧12人时。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/1/fields/estimate",
+              "note": "包装EWD保持未知并排除首拍历史。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/3/fields/estimate",
+              "note": "上线核对EWD未知且等待不计入。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/proposal/changes/0/fields/schedule",
+              "note": "9月15日来自用户和范围确认。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/reasoningSummary/1/evidenceRefs/0",
+              "note": "显式引用ecom03-batch2。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/reasoningSummary/3/evidenceRefs/0",
+              "note": "显式引用ecom03-h2。"
+            },
+            {
+              "file": "outputs/ECOM-03.json",
+              "pointer": "/externalEffects",
+              "note": "无外部副作用声明。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "ECOM-04",
+      "status": "passed",
+      "summary": "正确分离系统库存、实物清点和投放目标，保留上线与出库冲突，并在原库存、客服任务及必要页面同步间形成有据分工。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "500是含待复核退货的系统快照，80是较晚实物清点报告且差异未关单，300只是投放目标提议；输出没有选一个数字冒充已确认库存，也没有把300升级为预算、销量或售卖承诺。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/7/manualChecks/0",
+              "note": "冻结的三种数量口径检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/7/manualChecks/2",
+              "note": "冻结的投放提议与历史边界检查。"
+            },
+            {
+              "file": "inputs/ECOM-04.json",
+              "pointer": "/context/discussions/0/text",
+              "note": "80件清点报告及差异未关单。"
+            },
+            {
+              "file": "inputs/ECOM-04.json",
+              "pointer": "/context/discussions/1/text",
+              "note": "300单明确只是未获货量确认的投放目标。"
+            },
+            {
+              "file": "inputs/ECOM-04.json",
+              "pointer": "/context/sourceRefs/3/text",
+              "note": "500系统数包含待复核退货。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/reasoningSummary/0",
+              "note": "区分500、80及正式blocked状态。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/reasoningSummary/1",
+              "note": "把300限制为未批准目标。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria/1",
+              "note": "库存任务要求保留口径、时间和确认依据。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "9月2日上新与最早9月4日统一出库、页面“次日发”之间的冲突被作为阻塞问题外显；输出保留原日期，要求在可核验例外、口径/范围调整或日期调整间选择，没有承诺次日发。",
+          "evidence": [
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/7/manualChecks/1",
+              "note": "冻结的上线日与发货日检查。"
+            },
+            {
+              "file": "expectations-snapshot.json",
+              "pointer": "/expectations/7/requiredEvidenceRefs/0",
+              "note": "必需来源为ecom04-warehouse。"
+            },
+            {
+              "file": "inputs/ECOM-04.json",
+              "pointer": "/context/sourceRefs/4/text",
+              "note": "最早9月4日出库且例外未答复。"
+            },
+            {
+              "file": "inputs/ECOM-04.json",
+              "pointer": "/context/discussions/2/text",
+              "note": "详情页仍写次日发，口径未确认。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/disposition",
+              "note": "结果为needs_clarification。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/questions/0",
+              "note": "阻塞询问冲突处理方向。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/reasoningSummary/2/evidenceRefs/0",
+              "note": "显式引用ecom04-warehouse。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/warnings/0",
+              "note": "保留原期限且不声明排期可行。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "已有库存和客服任务被局部补清完成标准并保持Owner、状态及库存前置；新增页面与投放口径同步只处理尚无独立承载的结果，并真实依赖客服确认。历史partial与EWD未知均被保留。",
+          "evidence": [
+            {
+              "file": "inputs/ECOM-04.json",
+              "pointer": "/context/tasks/1",
+              "note": "既有库存任务为blocked且Owner为ecom-m3。"
+            },
+            {
+              "file": "inputs/ECOM-04.json",
+              "pointer": "/context/tasks/2",
+              "note": "既有客服任务依赖库存且Owner为ecom-m5。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/proposal/changes/0",
+              "note": "局部更新原库存任务而非重复创建。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/proposal/changes/1",
+              "note": "局部更新原客服任务并保留原依赖。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/proposal/changes/2/fields/dependsOnTaskIds",
+              "note": "页面与渠道同步依赖原客服口径结果。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/proposal/changes/2/fields/estimate",
+              "note": "修改量与版本未知时EWD为null，等待不计入。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/warnings/2",
+              "note": "明确history为partial且不补造历史、容量或EWD。"
+            },
+            {
+              "file": "outputs/ECOM-04.json",
+              "pointer": "/externalEffects",
+              "note": "不执行发布、投放、库存修改或指派。"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "passed": 8,
+    "failed": 0,
+    "unknown": 0,
+    "substantiveSemanticFailures": 0
+  },
+  "adjudicationRecommendations": [],
+  "conclusion": "八例在冻结manualChecks、必需来源、禁止无据暴露、意图、最小范围、查重、ACL、责任、依赖、日期和估算维度均通过本次离线语义评审。此结论只覆盖所见合成工件，不是人类行业评审，也不验证生产可靠性、真实权限、写回或外部执行。"
+}

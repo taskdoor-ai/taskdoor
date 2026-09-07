@@ -1,0 +1,33 @@
+{
+  "artifactType": "offline_synthetic_evaluation",
+  "createdOn": "2026-09-01",
+  "plannerModelConfiguration": {
+    "modelSnapshot": "not_exposed",
+    "temperature": "not_exposed",
+    "seed": "not_exposed"
+  },
+  "isolation": {
+    "expectationsHiddenFromExecutors": "enforced_by_orchestrator_prompt_and_executor_self_report",
+    "osLevelIsolation": false,
+    "casesWithinGroupSharedConversation": true
+  },
+  "externalEffects": "none",
+  "productionServicesAccessed": false,
+  "productionWrites": false,
+  "reviewLimits": [
+    "same Codex model family may have been used across roles",
+    "reviewers are not human industry experts",
+    "cannot prove production ACL, retrieval recall, submit idempotency, concurrency, member acceptance, or real writeback"
+  ],
+  "runKind": "first_attempt_edge_matrix",
+  "scenarioCount": 16,
+  "executorGrouping": [
+    "EDGE-01..08",
+    "EDGE-09..16"
+  ],
+  "reviewGrouping": [
+    "EDGE-01..08 by non-author agent",
+    "EDGE-09..16 by non-author agent"
+  ],
+  "firstOutputsModified": false
+}

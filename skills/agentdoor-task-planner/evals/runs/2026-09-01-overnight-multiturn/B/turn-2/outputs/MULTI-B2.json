@@ -1,0 +1,159 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-b2",
+  "baseSnapshotId": "snapshot-multi-b2",
+  "baseRevision": 2,
+  "baseTaskVersions": {
+    "saas03-root": 5,
+    "saas03-scope": 3,
+    "saas03-map": 4,
+    "saas03-uat": 2,
+    "saas03-train": 2,
+    "new:saas03-inactive-field-check": 1
+  },
+  "intent": "refine",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议沿用停用账号字段核对草稿和现有任务，只把增量核对排到9月4日、将其设为UAT前置，并让培训交接依赖通过UAT的结果；原UAT负责人、12条用例标准及9月9日、9月10日、9月12日期限均保持不变。",
+  "reasoningSummary": [
+    {
+      "text": "本轮已确认停用账号字段核对是UAT的必要输入，培训交接使用通过UAT的结果，因此两个既有任务需要补齐明确依赖。",
+      "evidenceRefs": [
+        "req-multi-b2",
+        "chain-b-confirm"
+      ]
+    },
+    {
+      "text": "沈言确认9月4日交付增量核对，钟宁可在9月5日下午核对；该顺序早于UAT 9月9日和培训9月10日期限。",
+      "evidenceRefs": [
+        "chain-b-confirm",
+        "saas-m4-window",
+        "saas03-uat",
+        "saas03-train"
+      ]
+    },
+    {
+      "text": "停用账号字段核对已作为稳定草稿存在，应局部更新日期并复用，而不是重新创建一份。",
+      "evidenceRefs": [
+        "new:saas03-inactive-field-check",
+        "simulation-candidate-context",
+        "req-multi-b2"
+      ]
+    },
+    {
+      "text": "UAT的钟宁负责人和12条核心流程用例标准仍受确认保护，未确认的换人提议不构成本轮变更依据。",
+      "evidenceRefs": [
+        "saas03-h2",
+        "saas03-d3",
+        "chain-b-confirm"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "saas03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-multi-b2-inactive-schedule",
+        "action": "update",
+        "targetId": "new:saas03-inactive-field-check",
+        "parentId": "saas03-root",
+        "fields": {
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-04",
+            "basis": "explicit",
+            "assumptions": [
+              "本轮只确认9月4日交付，未指定开始日期。"
+            ],
+            "evidenceRefs": [
+              "req-multi-b2",
+              "chain-b-confirm"
+            ]
+          }
+        },
+        "reason": "为当前增量草稿补上已确认的9月4日交付日期，其他草稿字段保持不变。",
+        "evidenceRefs": [
+          "new:saas03-inactive-field-check",
+          "chain-b-confirm"
+        ]
+      },
+      {
+        "id": "chg-multi-b2-uat-dependency",
+        "action": "update",
+        "targetId": "saas03-uat",
+        "parentId": "saas03-root",
+        "fields": {
+          "schedule": {
+            "startOn": "2026-09-05",
+            "dueOn": "2026-09-09",
+            "basis": "explicit",
+            "assumptions": [
+              "9月5日开始日期对应钟宁已确认的当日下午核对窗口；UAT原9月9日期限不变。"
+            ],
+            "evidenceRefs": [
+              "chain-b-confirm",
+              "saas-m4-window",
+              "saas03-uat"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "saas03-map",
+            "new:saas03-inactive-field-check"
+          ]
+        },
+        "reason": "停用账号字段核对已确认是UAT必要输入；保留原映射演练前置，并新增对稳定增量草稿的依赖。",
+        "evidenceRefs": [
+          "req-multi-b2",
+          "chain-b-confirm",
+          "saas03-uat",
+          "saas03-map"
+        ]
+      },
+      {
+        "id": "chg-multi-b2-training-dependency",
+        "action": "update",
+        "targetId": "saas03-train",
+        "parentId": "saas03-root",
+        "fields": {
+          "dependsOnTaskIds": [
+            "saas03-uat"
+          ]
+        },
+        "reason": "培训交接已确认使用通过UAT的结果，因此需要把UAT设为必要前置，原9月10日期限保持不变。",
+        "evidenceRefs": [
+          "req-multi-b2",
+          "chain-b-confirm",
+          "saas03-uat",
+          "saas03-train"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "saas03-root",
+      "saas03-scope",
+      "saas03-map"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "沈言确认交付时间不会自动把草稿中的负责人推荐变成正式Owner；正式责任仍由独立确认和提交流程处理。",
+    "增量核对的EWD及成员完整容量仍未知，本轮仅依据明确日期和协作窗口安排依赖。",
+    "本输出只更新候选草稿与既有任务的必要差异，不执行任务创建、指派或通知。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "saas03-root",
+      "label": "审阅增量核对、UAT和培训交接的日期与依赖差异"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,48 +1,67 @@
 import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
-import { PersonAvatar } from "./PersonAvatar";
+import { CheckCircle2, CircleDashed, CornerDownRight, Link2 } from "lucide-react";
+import { PersonAvatar, PersonName } from "./PersonAvatar";
 import { TaskIcon } from "./TaskIcon";
 import { TaskStatusBadge, type TaskStatus } from "./TaskStatusBadge";
 
 export type TaskRelationSummary = {
+  completionCriteria?: string[];
+  proposedOwnerId?: string;
+  dependsOnTaskIds?: string[];
+  parentTaskId?: string;
   dueAt: string;
   goal: string;
   iconName?: TaskIconName;
   iconTone?: TaskIconTone;
   id: string;
+  labels?: string[];
   owner: string;
   status: TaskStatus;
   title: string;
+  updatedAt?: string;
 };
 
-type TaskRelationRow = {
-  task: TaskRelationSummary;
-  type: "上级任务" | "下级任务";
-};
+type RelationGroupProps = { icon: typeof Link2; label: string; tasks: TaskRelationSummary[] };
 
-export function TaskRelationsSection({ childTasks = [], onOpenTask, parentTask }: { childTasks?: TaskRelationSummary[]; onOpenTask?: (taskId: string) => void; parentTask?: TaskRelationSummary }) {
-  const total = childTasks.length + (parentTask ? 1 : 0);
-  if (total === 0) return null;
+function RelationGroup({ icon: Icon, label, tasks }: RelationGroupProps) {
+  return <div className="task-context-group">
+    <span className="task-context-label"><Icon aria-hidden="true" size={14} />{label}</span>
+    <div className="task-context-items">{tasks.length ? tasks.map((task) => {
+      const ready = task.status === "已完成";
+      const readinessLabel = ready ? "已完成" : "未完成";
+      return <div className="task-context-dependency" data-ready={ready ? "true" : "false"} key={task.id}>
+      <em aria-label={readinessLabel} title={readinessLabel}>{ready ? <CheckCircle2 aria-hidden="true" size={13} /> : <CircleDashed aria-hidden="true" size={13} />}</em>
+      <TaskIcon iconName={task.iconName} tone={task.iconTone} />
+      <span>{task.title}</span>
+    </div>;
+    }) : <span className="task-context-empty">无前置依赖，可直接推进</span>}</div>
+  </div>;
+}
 
-  const relations: TaskRelationRow[] = [
-    ...(parentTask ? [{ task: parentTask, type: "上级任务" as const }] : []),
-    ...childTasks.map((task) => ({ task, type: "下级任务" as const })),
-  ];
-
-  return <section aria-labelledby="task-relations-heading" className="task-detail-section first-section task-relations-section">
-    <div className="task-section-heading"><h2 id="task-relations-heading">关联任务</h2><span>{total} 项</span></div>
-    <p className="task-section-intro">展示当前任务直接关联的上级和下级任务；点击任一行进入对应任务。</p>
-    <div className="task-relation-table">
-      <div aria-hidden="true" className="task-relation-columns"><span>任务名称</span><span>类型</span><span>状态</span><span>负责人</span></div>
-      <ul className="task-relation-list">
-        {relations.map(({ task, type }) => <li key={task.id}>
-          <button className="task-relation-row" onClick={() => onOpenTask?.(task.id)} type="button">
-            <span className="task-relation-field task-relation-row-title"><small aria-hidden="true" className="task-relation-inline-label">任务名称</small><span className="task-relation-title-content"><span className="sr-only">任务名称：</span><TaskIcon iconName={task.iconName} tone={task.iconTone} /><strong>{task.title}</strong></span></span>
-            <span className="task-relation-field task-relation-type"><small aria-hidden="true" className="task-relation-inline-label">类型</small><span><span className="sr-only">类型：</span>{type}</span></span>
-            <span className="task-relation-field task-relation-row-status"><small aria-hidden="true" className="task-relation-inline-label">状态</small><span className="sr-only">状态：</span><TaskStatusBadge size="sm" value={task.status} /></span>
-            <span className="task-relation-field task-relation-owner"><small aria-hidden="true" className="task-relation-inline-label">负责人</small><span className="task-relation-owner-content"><span className="sr-only">负责人：</span><PersonAvatar name={task.owner} size="xs" /><span>{task.owner}</span></span></span>
-          </button>
-        </li>)}
-      </ul>
+function ParentTaskCard({ task }: { task: TaskRelationSummary }) {
+  return <article className="task-parent-card">
+    <span className="task-context-label"><CornerDownRight aria-hidden="true" size={14} />主任务</span>
+    <div className="task-parent-card-body">
+      <TaskIcon iconName={task.iconName} tone={task.iconTone} />
+      <span className="task-parent-card-copy">
+        <strong>{task.title}</strong>
+        <span className="task-parent-card-meta">
+          <TaskStatusBadge size="sm" value={task.status} />
+          <span className="task-parent-card-owner"><PersonAvatar name={task.owner} personId={task.owner} profilePreviewFocusable={false} size="xs" /><PersonName name={task.owner} personId={task.owner} /></span>
+        </span>
+      </span>
     </div>
+  </article>;
+}
+
+export function TaskRelationsSection({ dependencyTasks = [], hasChildTasks = false, parentTask }: { dependencyTasks?: TaskRelationSummary[]; hasChildTasks?: boolean; parentTask?: TaskRelationSummary }) {
+  const standalone = !parentTask && !hasChildTasks && dependencyTasks.length === 0;
+  if (standalone) return null;
+  if (hasChildTasks && !parentTask && dependencyTasks.length === 0) return null;
+  return <section aria-label="任务关系" className="task-context-strip" data-has-parent={parentTask ? "true" : "false"}>
+    <>
+      {parentTask ? <ParentTaskCard task={parentTask} /> : <RelationGroup icon={CornerDownRight} label="归属于主任务" tasks={[]} />}
+      <RelationGroup icon={Link2} label="前置依赖" tasks={dependencyTasks} />
+    </>
   </section>;
 }

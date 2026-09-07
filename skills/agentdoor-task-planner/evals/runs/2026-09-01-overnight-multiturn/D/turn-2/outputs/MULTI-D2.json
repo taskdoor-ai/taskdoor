@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-multi-d2",
+  "baseSnapshotId": "snapshot-multi-d2",
+  "baseRevision": 2,
+  "baseTaskVersions": {
+    "content03-root": 5,
+    "content03-outline": 2,
+    "content03-visual": 3,
+    "content03-copy": 4,
+    "content03-format": 2
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只更新现有公众号适配任务的完成标准，使其使用当前版本4文字稿及已确认的五张功能图v2；不应用迟到的旧候选，也不修改主目标、任何负责人或人工确认的文字稿。",
+  "reasoningSummary": [
+    {
+      "text": "文字稿版本4是最新人工编辑结果，其三条完成标准已确认，不能被旧快照候选覆盖。",
+      "evidenceRefs": [
+        "content03-copy",
+        "chain-d-human-edit",
+        "req-multi-d2"
+      ]
+    },
+    {
+      "text": "公众号适配任务已经存在，并依赖文字稿与五张功能图；只调整它的交付标准即可承接最新文案。",
+      "evidenceRefs": [
+        "content03-format",
+        "content03-copy",
+        "content03-visual"
+      ]
+    },
+    {
+      "text": "五张功能图v2已完成且客户确认继续使用，因此不需要重开或修改视觉任务。",
+      "evidenceRefs": [
+        "content03-visual",
+        "content03-h1",
+        "content03-confirm"
+      ]
+    },
+    {
+      "text": "主目标及文字稿负责人均为确认字段，本轮请求也明确要求保持不变。",
+      "evidenceRefs": [
+        "content03-root",
+        "content03-h2",
+        "req-multi-d2"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "content03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "chg-multi-d2-format-current-copy",
+        "action": "update",
+        "targetId": "content03-format",
+        "parentId": "content03-root",
+        "fields": {
+          "acceptanceCriteria": [
+            "使用content03-copy版本4交付的带本轮修改标记文字版本及客户已确认的五张功能图v2，交付公众号规格的文字与图片组合",
+            "逐项核对组合版保留两个已核实的入门使用例和已确认的五项功能，不增加功能承诺",
+            "核对组合版未新增未经确认的百分比、销量或效果数字，并保留文字稿中适用的事实表述"
+          ],
+          "tips": [
+            "以当前快照中的content03-copy版本4为文字来源，不恢复或套用未应用旧候选中的文字标准。",
+            "继续复用content03-visual版本3的五张功能图v2，不重新拍摄或设计。"
+          ]
+        },
+        "reason": "现有适配任务需要明确消费最新人工确认的文字稿标准；原依赖已经正确，无需新增任务或改动其他字段。",
+        "evidenceRefs": [
+          "req-multi-d2",
+          "chain-d-human-edit",
+          "content03-copy",
+          "content03-format"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "content03-root",
+      "content03-outline",
+      "content03-visual",
+      "content03-copy"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [],
+  "warnings": [
+    "迟到的旧候选仅用于识别版本冲突，本提案没有恢复其中对content03-copy的修改。",
+    "本轮未提供新的子任务日期、EWD或完整容量记录，主任务9月8日期限保持不变。",
+    "本输出仅供审阅，不会执行任务更新、指派、通知或内容发布。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "content03-root",
+      "label": "审阅公众号适配对当前版本4文字稿的使用标准"
+    }
+  ],
+  "externalEffects": "none"
+}

@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "syn-req-cs-a-01",
+  "baseSnapshotId": "syn-snapshot-cs-a-17",
+  "baseRevision": 17,
+  "baseTaskVersions": {
+    "syn-cs-root": 16,
+    "syn-cs-mitigation": 9,
+    "syn-cs-comms": 7,
+    "syn-cs-learning": 4,
+    "syn-cs-evidence": 6,
+    "syn-cs-logs": 5,
+    "syn-cs-repro": 4,
+    "syn-cs-shift": 6,
+    "syn-cs-drain": 5,
+    "syn-cs-verify": 4,
+    "syn-cs-status-update": 6,
+    "syn-cs-case-replies": 5,
+    "syn-cs-allclear": 3,
+    "syn-cs-rca": 3,
+    "syn-cs-postmortem": 2
+  },
+  "intent": "query",
+  "disposition": "route_required",
+  "summary": "当前不能对外说“事故已解决”；正式状态仍为in_progress，只能维持“已缓解、持续观察”，待120分钟稳定、队列清空、无新增P1并形成全量恢复批准记录后再复核。",
+  "reasoningSummary": [
+    {
+      "text": "批准门槛要求连续120分钟指标稳定、队列清空且无新增P1案例，之后才可批准“已解决”话术。",
+      "evidenceRefs": [
+        "syn-cs-file-04",
+        "syn-cs-allclear",
+        "syn-cs-root"
+      ]
+    },
+    {
+      "text": "当前只稳定45分钟且队列仍有37条，恢复验证任务尚未完成。",
+      "evidenceRefs": [
+        "syn-cs-file-02",
+        "syn-cs-d05",
+        "syn-cs-drain",
+        "syn-cs-verify"
+      ]
+    },
+    {
+      "text": "切流后仍新增4个P1案例，其中2个等待回复，客户影响尚未清零。",
+      "evidenceRefs": [
+        "syn-cs-file-03",
+        "syn-cs-d06",
+        "syn-cs-case-replies"
+      ]
+    },
+    {
+      "text": "事故指挥已明确不批准“已解决”，正式状态在最新复核中保持in_progress。",
+      "evidenceRefs": [
+        "syn-cs-d03",
+        "syn-cs-d08",
+        "syn-cs-h06",
+        "syn-cs-root"
+      ]
+    }
+  ],
+  "proposal": null,
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "syn-team-support-a"
+    ],
+    "assessments": [
+      {
+        "taskId": "syn-cs-root",
+        "relationship": "same_outcome",
+        "reason": "当前事故任务就是INC-SYN-482实时状态与对外结论的判断对象。",
+        "evidenceRefs": [
+          "syn-cs-root",
+          "syn-req-cs-a-01",
+          "syn-cs-d08"
+        ]
+      },
+      {
+        "taskId": "syn-cs-postmortem",
+        "relationship": "overlap",
+        "reason": "复盘会使用恢复证据和根因，但不负责实时事故状态或全量恢复话术批准。",
+        "evidenceRefs": [
+          "syn-cs-postmortem",
+          "syn-cs-file-02",
+          "syn-cs-file-06"
+        ]
+      }
+    ],
+    "coverageNote": "纯合成查询路由已定位当前事故和相关复盘；本轮不需要创建。"
+  },
+  "questions": [],
+  "warnings": [
+    "当前数据影响结论仅为“尚未发现外泄迹象”，日志覆盖不完整，不能对外改写为“确认无数据影响”。",
+    "全量恢复话术草稿已经撤回，不能作为已发送或已批准证据。"
+  ],
+  "nextActions": [
+    {
+      "action": "open_task",
+      "taskId": "syn-cs-verify",
+      "label": "核对120分钟稳定观察与队列归零"
+    },
+    {
+      "action": "open_task",
+      "taskId": "syn-cs-case-replies",
+      "label": "核对新增P1案例及待回复情况"
+    },
+    {
+      "action": "open_task",
+      "taskId": "syn-cs-allclear",
+      "label": "门槛满足后复核全量恢复批准记录"
+    }
+  ],
+  "externalEffects": "none"
+}

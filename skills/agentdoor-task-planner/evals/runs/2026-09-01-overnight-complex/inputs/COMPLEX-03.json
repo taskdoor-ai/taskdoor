@@ -1,0 +1,735 @@
+{
+  "requestId": "req-complex03",
+  "message": "青芽茶具礼盒这批包装信息已确认变更，请只重排受影响的剩余交付。已拍完的图片、已核过的库存和正在做的页面都沿用原任务。新说明要真正接到页面、客服和发货答复，别只写一句提醒；不改价格、投放范围和已确认负责人。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "ecom-m5",
+  "teamId": "team-ecom",
+  "authorizedTeamIds": [
+    "team-ecom"
+  ],
+  "revision": 3,
+  "currentTaskId": "complex03-root",
+  "context": {
+    "snapshotId": "snapshot-complex03-v3",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-ecom"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete"
+    },
+    "tasks": [
+      {
+        "id": "complex03-root",
+        "title": "青芽茶具礼盒9月首批上新准备",
+        "status": "in_progress",
+        "version": 11,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "在同一SKU、渠道与首批范围内交付经核对的页面、库存和服务说明"
+        ],
+        "ownerId": "ecom-m1",
+        "sourceRefs": [
+          "complex03-root-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-05",
+        "goal": "让首批茶具礼盒的对客信息与本批包装及履约口径一致"
+      },
+      {
+        "id": "complex03-product",
+        "title": "首批商品资料包",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex03-root",
+        "acceptanceCriteria": [
+          "归集图片及当前包装说明的来源版本"
+        ],
+        "ownerId": "ecom-m1",
+        "sourceRefs": [
+          "complex03-product-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-02"
+      },
+      {
+        "id": "complex03-channels",
+        "title": "首批页面与渠道准备",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex03-root",
+        "acceptanceCriteria": [
+          "形成页面及既定投放素材的当前版本"
+        ],
+        "ownerId": "ecom-m1",
+        "sourceRefs": [
+          "complex03-channels-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-04"
+      },
+      {
+        "id": "complex03-service",
+        "title": "首批服务答复准备",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex03-root",
+        "acceptanceCriteria": [
+          "形成客服与发货答复的一致口径"
+        ],
+        "ownerId": "ecom-m5",
+        "sourceRefs": [
+          "complex03-service-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03"
+      },
+      {
+        "id": "complex03-images",
+        "title": "交付青芽礼盒主图v3",
+        "status": "completed",
+        "version": 6,
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "parentId": "complex03-product",
+        "acceptanceCriteria": [
+          "五张主图经商品运营核对，图片不标单箱件数或外箱尺寸"
+        ],
+        "ownerId": "ecom-m2",
+        "sourceRefs": [
+          "complex03-images-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "complex03-page",
+        "title": "完成青芽首批商品页面",
+        "status": "in_progress",
+        "version": 7,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex03-channels",
+        "acceptanceCriteria": [
+          "页面按首批现行商品资料核对并保留逐处差异记录"
+        ],
+        "ownerId": "ecom-m2",
+        "sourceRefs": [
+          "complex03-page-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex03-images"
+        ],
+        "dueOn": "2026-09-03",
+        "estimate": {
+          "ewdHours": 4,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex03-page-record"
+          ]
+        }
+      },
+      {
+        "id": "complex03-ads",
+        "title": "准备青芽既定投放素材",
+        "status": "in_progress",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex03-channels",
+        "acceptanceCriteria": [
+          "仅使用主图v3、既定价格和已批准渠道清单制作素材"
+        ],
+        "ownerId": "ecom-m4",
+        "sourceRefs": [
+          "complex03-ads-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex03-images"
+        ],
+        "dueOn": "2026-09-03",
+        "estimate": {
+          "ewdHours": 2,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex03-ads-record"
+          ]
+        }
+      },
+      {
+        "id": "complex03-faq",
+        "title": "形成青芽首批客服问答",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex03-service",
+        "acceptanceCriteria": [
+          "问答涵盖单箱件数、包装尺寸及约定服务口径"
+        ],
+        "ownerId": "ecom-m5",
+        "sourceRefs": [
+          "complex03-faq-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-03",
+        "estimate": {
+          "ewdHours": 2,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex03-faq-record"
+          ]
+        }
+      },
+      {
+        "id": "complex03-dispatch",
+        "title": "确认青芽首批发货答复",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex03-service",
+        "acceptanceCriteria": [
+          "答复引用本批包装规格、单箱件数与已确认仓配窗口"
+        ],
+        "ownerId": "ecom-m3",
+        "sourceRefs": [
+          "complex03-dispatch-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex03-inventory"
+        ],
+        "dueOn": "2026-09-03",
+        "estimate": {
+          "ewdHours": 1.5,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex03-dispatch-record"
+          ]
+        }
+      },
+      {
+        "id": "complex03-inventory",
+        "title": "核对青芽首批可售库存",
+        "status": "completed",
+        "version": 5,
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "parentId": "complex03-product",
+        "acceptanceCriteria": [
+          "本批90件实物与记录一致，未包含将来补货"
+        ],
+        "ownerId": "ecom-m3",
+        "sourceRefs": [
+          "complex03-inventory-record"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "complex03-checkout",
+        "title": "核对青芽首批页面与服务联动",
+        "status": "open",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "complex03-channels",
+        "acceptanceCriteria": [
+          "使用当前页面、客服与发货答复检查信息一致性；只做测试记录，不发真实订单"
+        ],
+        "ownerId": "ecom-m6",
+        "sourceRefs": [
+          "complex03-checkout-record"
+        ],
+        "dependsOnTaskIds": [
+          "complex03-page",
+          "complex03-faq",
+          "complex03-dispatch"
+        ],
+        "dueOn": "2026-09-04",
+        "estimate": {
+          "ewdHours": 2,
+          "basis": "history",
+          "assumptions": [
+            "沿用已存估算基线，不代表实际或剩余投入。"
+          ],
+          "evidenceRefs": [
+            "complex03-checkout-record"
+          ]
+        }
+      }
+    ],
+    "discussions": [
+      {
+        "id": "complex03-d-page",
+        "taskId": "complex03-page",
+        "authorId": "ecom-m2",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "report",
+        "text": "页面四个不含包装的版块已留稿，但正式任务仍在进行。只待包装说明的包装栏按新口径完成后一起核对。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "complex03-d-faq",
+        "taskId": "complex03-faq",
+        "authorId": "ecom-m5",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "report",
+        "text": "非包装问题可沿用，单箱件数的旧答复不能沿用。",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "complex03-d-photo",
+        "taskId": "complex03-images",
+        "authorId": "ecom-m1",
+        "createdAt": "2026-09-01T11:00:00+08:00",
+        "kind": "decision",
+        "text": "主图可复用的确认依据见complex03-pack-v2；不要覆盖8月31日完成记录。",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "complex03-h-images",
+        "taskId": "complex03-images",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "task_completed",
+        "summary": "主图v3任务以版本6完成，批准范围不含包装参数。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "complex03-h-inventory",
+        "taskId": "complex03-inventory",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "task_completed",
+        "summary": "本批90件库存核对以版本5完成；包装变化未改变件数。",
+        "version": 5,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "complex03-h-page-baseline",
+        "taskId": "complex03-page",
+        "occurredAt": "2026-08-31T16:00:00+08:00",
+        "type": "estimate_context",
+        "summary": "页面原估算4人时是整项投入基线，没有录入当前剩余工时。",
+        "version": 7,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "complex03-root-record",
+        "title": "青芽茶具礼盒9月首批上新准备当前记录（合成）",
+        "text": "任务库读取：complex03-root，版本11，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-product-record",
+        "title": "首批商品资料包当前记录（合成）",
+        "text": "任务库读取：complex03-product，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-channels-record",
+        "title": "首批页面与渠道准备当前记录（合成）",
+        "text": "任务库读取：complex03-channels，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-service-record",
+        "title": "首批服务答复准备当前记录（合成）",
+        "text": "任务库读取：complex03-service，版本4，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-images-record",
+        "title": "交付青芽礼盒主图v3当前记录（合成）",
+        "text": "任务库读取：complex03-images，版本6，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-page-record",
+        "title": "完成青芽首批商品页面当前记录（合成）",
+        "text": "任务库读取：complex03-page，版本7，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-ads-record",
+        "title": "准备青芽既定投放素材当前记录（合成）",
+        "text": "任务库读取：complex03-ads，版本3，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-faq-record",
+        "title": "形成青芽首批客服问答当前记录（合成）",
+        "text": "任务库读取：complex03-faq，版本5，状态in_progress；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-dispatch-record",
+        "title": "确认青芽首批发货答复当前记录（合成）",
+        "text": "任务库读取：complex03-dispatch，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-inventory-record",
+        "title": "核对青芽首批可售库存当前记录（合成）",
+        "text": "任务库读取：complex03-inventory，版本5，状态completed；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-08-31T16:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-checkout-record",
+        "title": "核对青芽首批页面与服务联动当前记录（合成）",
+        "text": "任务库读取：complex03-checkout，版本3，状态open；以下正式状态与责任来自任务存储，不由讨论计算。",
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-pack-v2",
+        "title": "首批包装变更确认v2（合成）",
+        "text": "商品运营与仓配已核对供应方回执：本批SKU QY-09仍为90件可售礼盒；外箱改为每箱6件，外箱记录尺寸45×32×28厘米。新增范围只是整理本批包装说明v2及差异；销售单件规格、价格、渠道、主图v3均不变。资料为合成业务记录，不代表实际物流建议。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-consumer-map",
+        "title": "包装说明使用接口记录（合成）",
+        "text": "商品页面的包装栏、客服问答、发货答复分别需要包装说明v2作为最终核对依据。页面已有四个不含包装的版块完成初稿；客服已完成非包装问答。既定投放素材只用主图与价格，不使用包装参数。联动核对已有页面、客服和发货答复三个前置项，不另设一套重复检查。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_business_record"
+      },
+      {
+        "id": "complex03-schedule-agreement",
+        "title": "包装信息交付协调回执（合成）",
+        "text": "商品运营负责汇总包装说明v2并在9月2日交付；页面、客服和发货答复按9月3日现有边界完成更新，联动核对仍为9月4日、上新准备总边界9月5日。本轮没有增加投放预算或要求任何人承诺额外可用时数。",
+        "updatedAt": "2026-09-01T10:30:00+08:00",
+        "source": "synthetic_business_record"
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-ecom"
+    ],
+    "matches": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "complex03-root",
+      "field": "goal",
+      "value": "让首批茶具礼盒的对客信息与本批包装及履约口径一致"
+    },
+    {
+      "taskId": "complex03-page",
+      "field": "ownerId",
+      "value": "ecom-m2"
+    }
+  ],
+  "constraints": {
+    "externalActions": "只输出候选规划；不创建、指派、通知、验收、发布或调用真实业务接口。",
+    "scope": "新增包装说明放在商品资料包；只调整有使用关系的现有任务，保留已完成结果和原始估算基线。"
+  },
+  "members": [
+    {
+      "id": "ecom-m1",
+      "name": "唐穗",
+      "role": "商品运营负责人",
+      "responsibilities": [
+        "确认SKU与上新范围",
+        "协调价格和活动口径"
+      ],
+      "boundaries": [
+        "不替仓库确认实物库存",
+        "不自动提高投放预算"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m1-role",
+          "title": "唐穗职责说明（合成）",
+          "text": "职责：确认SKU与上新范围；协调价格和活动口径。边界：不替仓库确认实物库存；不自动提高投放预算。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m1-work",
+          "title": "唐穗当前工作自报（合成）",
+          "text": "整理两款商品的上新资料",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "整理两款商品的上新资料",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m1-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "ecom-m2",
+      "name": "颜北",
+      "role": "商品内容设计",
+      "responsibilities": [
+        "详情页文案和视觉素材",
+        "按已确认信息修正错字和版式"
+      ],
+      "boundaries": [
+        "不自行改售价或功效承诺",
+        "不决定补货量"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m2-role",
+          "title": "颜北职责说明（合成）",
+          "text": "职责：详情页文案和视觉素材；按已确认信息修正错字和版式。边界：不自行改售价或功效承诺；不决定补货量。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m2-work",
+          "title": "颜北当前工作自报（合成）",
+          "text": "校对详情页素材",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "校对详情页素材",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m2-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "ecom-m3",
+      "name": "岑舟",
+      "role": "仓配协调",
+      "responsibilities": [
+        "核对可售库存",
+        "收集出库与履约窗口"
+      ],
+      "boundaries": [
+        "不把系统库存直接当可售实物",
+        "不代供应商承诺到货"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m3-role",
+          "title": "岑舟职责说明（合成）",
+          "text": "职责：核对可售库存；收集出库与履约窗口。边界：不把系统库存直接当可售实物；不代供应商承诺到货。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m3-work",
+          "title": "岑舟当前工作自报（合成）",
+          "text": "复核库存差异和待出库清单",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "复核库存差异和待出库清单",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m3-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    },
+    {
+      "id": "ecom-m4",
+      "name": "梁宁",
+      "role": "投放运营",
+      "responsibilities": [
+        "按批准方案准备渠道投放",
+        "反馈素材和落地页需求"
+      ],
+      "boundaries": [
+        "不自行提高预算",
+        "不把目标订单视作销量事实"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m4-role",
+          "title": "梁宁职责说明（合成）",
+          "text": "职责：按批准方案准备渠道投放；反馈素材和落地页需求。边界：不自行提高预算；不把目标订单视作销量事实。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m4-work",
+          "title": "梁宁当前工作自报（合成）",
+          "text": "准备渠道素材包",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "ecom-m4-window",
+          "title": "梁宁公开协作窗口（合成）",
+          "text": "2026-09-02T14:00:00+08:00至2026-09-02T16:00:00+08:00。只保证活动页面联调窗口，未提供持续投放容量。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "准备渠道素材包",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m4-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-02T14:00:00+08:00",
+        "endAt": "2026-09-02T16:00:00+08:00",
+        "sourceRef": "ecom-m4-window",
+        "note": "只保证活动页面联调窗口，未提供持续投放容量。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "ecom-m5",
+      "name": "于薇",
+      "role": "客服负责人",
+      "responsibilities": [
+        "确认客服问答与承诺口径",
+        "汇总售前售后问题"
+      ],
+      "boundaries": [
+        "不擅自承诺发货日",
+        "不把退款咨询当已退款"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m5-role",
+          "title": "于薇职责说明（合成）",
+          "text": "职责：确认客服问答与承诺口径；汇总售前售后问题。边界：不擅自承诺发货日；不把退款咨询当已退款。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m5-work",
+          "title": "于薇当前工作自报（合成）",
+          "text": "更新发货问题答复",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "ecom-m5-window",
+          "title": "于薇公开协作窗口（合成）",
+          "text": "2026-09-03T09:00:00+08:00至2026-09-03T11:00:00+08:00。可用于客服培训，不能推算当日总空闲。",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "更新发货问题答复",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m5-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-03T09:00:00+08:00",
+        "endAt": "2026-09-03T11:00:00+08:00",
+        "sourceRef": "ecom-m5-window",
+        "note": "可用于客服培训，不能推算当日总空闲。",
+        "updatedAt": "2026-09-01T08:30:00+08:00"
+      }
+    },
+    {
+      "id": "ecom-m6",
+      "name": "程砚",
+      "role": "运营数据分析",
+      "responsibilities": [
+        "对齐报表周期与指标口径",
+        "复核活动数据和差异"
+      ],
+      "boundaries": [
+        "不虚构GMV或转化目标",
+        "不推断人员效率"
+      ],
+      "evidence": [
+        {
+          "id": "ecom-m6-role",
+          "title": "程砚职责说明（合成）",
+          "text": "职责：对齐报表周期与指标口径；复核活动数据和差异。边界：不虚构GMV或转化目标；不推断人员效率。",
+          "updatedAt": "2026-08-31T09:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "ecom-m6-work",
+          "title": "程砚当前工作自报（合成）",
+          "text": "核对最近一场活动的订单统计",
+          "updatedAt": "2026-09-01T08:30:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "核对最近一场活动的订单统计",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "ecom-m6-work",
+          "updatedAt": "2026-09-01T08:30:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "没有当前完整可用时间记录；职责、在办工作或无更新不代表容量。"
+      }
+    }
+  ]
+}

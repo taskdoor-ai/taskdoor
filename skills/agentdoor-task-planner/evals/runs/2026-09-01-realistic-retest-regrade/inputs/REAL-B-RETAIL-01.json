@@ -1,0 +1,1205 @@
+{
+  "requestId": "req-real-b-retail-01",
+  "message": "物业交付纪要v3把货梯整批进场从9月10日改到9月13日。请复用当前徐汇店开业树，只更新货架安装、首批入库、现场陈列和软开门禁四个受影响消费者，补齐跨分支前置并处理9月23日软开、10月1日开业硬期限。已完成的物业交付、招牌和平面图保持原记录；POS与培训未受货梯影响不要整体顺延；未获批准的夜间搬运和把消防预约当通过的提议都不要采用。给我最小可审阅差异。",
+  "currentDate": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "currentUserId": "b-ret-m1",
+  "teamId": "team-b-retail",
+  "authorizedTeamIds": [
+    "team-b-retail"
+  ],
+  "revision": 4,
+  "currentTaskId": "b-ret-root",
+  "context": {
+    "snapshotId": "snapshot-real-b-retail-01-v4",
+    "asOf": "2026-09-01T18:00:00+08:00",
+    "acl": {
+      "status": "verified",
+      "scopeTeamIds": [
+        "team-b-retail"
+      ]
+    },
+    "coverage": {
+      "tasks": "complete",
+      "subtasks": "complete",
+      "discussions": "complete",
+      "history": "complete",
+      "files": "complete"
+    },
+    "tasks": [
+      {
+        "id": "b-ret-root",
+        "title": "青岚徐汇店开业",
+        "status": "in_progress",
+        "version": 18,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": null,
+        "acceptanceCriteria": [
+          "2026-10-01开业前完成场地、商品、系统和人员门禁记录"
+        ],
+        "ownerId": "b-ret-m1",
+        "sourceRefs": [
+          "b-ret-handover-v3",
+          "b-ret-opening-v8"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-10-01",
+        "goal": "让青岚徐汇店在已确认范围内按期、可核对地开业",
+        "identity": {
+          "businessObject": "青岚徐汇店",
+          "cycle": "2026首次开业",
+          "scope": "徐汇单店"
+        }
+      },
+      {
+        "id": "b-ret-site",
+        "title": "场地与合规分支",
+        "status": "in_progress",
+        "version": 8,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-root",
+        "acceptanceCriteria": [
+          "归集物业交付与消防结果"
+        ],
+        "ownerId": "b-ret-m2",
+        "sourceRefs": [
+          "b-ret-handover-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-18"
+      },
+      {
+        "id": "b-ret-fitout",
+        "title": "施工与设施分支",
+        "status": "in_progress",
+        "version": 7,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-root",
+        "acceptanceCriteria": [
+          "归集货架与招牌完成证据"
+        ],
+        "ownerId": "b-ret-m2",
+        "sourceRefs": [
+          "b-ret-fixture-v4"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-15"
+      },
+      {
+        "id": "b-ret-merch",
+        "title": "商品与陈列分支",
+        "status": "in_progress",
+        "version": 9,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-root",
+        "acceptanceCriteria": [
+          "归集平面图、入库和现场陈列"
+        ],
+        "ownerId": "b-ret-m4",
+        "sourceRefs": [
+          "b-ret-planogram-v6"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-19"
+      },
+      {
+        "id": "b-ret-ops",
+        "title": "系统与人员分支",
+        "status": "in_progress",
+        "version": 10,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-root",
+        "acceptanceCriteria": [
+          "归集POS与培训记录"
+        ],
+        "ownerId": "b-ret-m5",
+        "sourceRefs": [
+          "b-ret-pos-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-20"
+      },
+      {
+        "id": "b-ret-site-pack",
+        "title": "物业与检查资料包",
+        "status": "in_progress",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-site",
+        "acceptanceCriteria": [
+          "保留物业版本变化及消防约见结果"
+        ],
+        "ownerId": "b-ret-m2",
+        "sourceRefs": [
+          "b-ret-handover-v2",
+          "b-ret-handover-v3",
+          "b-ret-fire-v1"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-18"
+      },
+      {
+        "id": "b-ret-landlord",
+        "title": "确认徐汇店物业交付",
+        "status": "completed",
+        "version": 7,
+        "updatedAt": "2026-09-01T12:40:00+08:00",
+        "parentId": "b-ret-site-pack",
+        "acceptanceCriteria": [
+          "场地交付范围和物业责任已签收"
+        ],
+        "ownerId": "b-ret-m2",
+        "sourceRefs": [
+          "b-ret-handover-v3"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-09-01"
+      },
+      {
+        "id": "b-ret-fire",
+        "title": "完成徐汇店消防检查记录",
+        "status": "in_progress",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-site-pack",
+        "acceptanceCriteria": [
+          "记录9月18日检查结果、整改项和有权结论；预约不等于通过"
+        ],
+        "ownerId": "b-ret-m7",
+        "sourceRefs": [
+          "b-ret-fire-v1"
+        ],
+        "dependsOnTaskIds": [
+          "b-ret-landlord"
+        ],
+        "dueOn": "2026-09-18"
+      },
+      {
+        "id": "b-ret-fixture",
+        "title": "完成徐汇店货架安装",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-fitout",
+        "acceptanceCriteria": [
+          "按有权进场窗口完成安装并记录偏差"
+        ],
+        "ownerId": "b-ret-m2",
+        "sourceRefs": [
+          "b-ret-fixture-v4",
+          "b-ret-handover-v3"
+        ],
+        "dependsOnTaskIds": [
+          "b-ret-landlord"
+        ],
+        "dueOn": "2026-09-12"
+      },
+      {
+        "id": "b-ret-signage",
+        "title": "完成徐汇店招牌安装",
+        "status": "completed",
+        "version": 6,
+        "updatedAt": "2026-08-31T18:10:00+08:00",
+        "parentId": "b-ret-fitout",
+        "acceptanceCriteria": [
+          "招牌安装、照片和物业确认可追溯"
+        ],
+        "ownerId": "b-ret-m2",
+        "sourceRefs": [
+          "b-ret-signage-v1"
+        ],
+        "dependsOnTaskIds": [
+          "b-ret-landlord"
+        ],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "b-ret-planogram",
+        "title": "发布徐汇店陈列平面图v6",
+        "status": "completed",
+        "version": 8,
+        "updatedAt": "2026-08-31T17:00:00+08:00",
+        "parentId": "b-ret-merch",
+        "acceptanceCriteria": [
+          "货架位置、品类和陈列编号已发布"
+        ],
+        "ownerId": "b-ret-m3",
+        "sourceRefs": [
+          "b-ret-planogram-v6"
+        ],
+        "dependsOnTaskIds": [],
+        "dueOn": "2026-08-31"
+      },
+      {
+        "id": "b-ret-stock",
+        "title": "完成徐汇店首批入库核对",
+        "status": "open",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-merch",
+        "acceptanceCriteria": [
+          "记录842箱实收、差异和隔离项，不把在途当入库"
+        ],
+        "ownerId": "b-ret-m4",
+        "sourceRefs": [
+          "b-ret-fixture-v4"
+        ],
+        "dependsOnTaskIds": [
+          "b-ret-fixture"
+        ],
+        "dueOn": "2026-09-15"
+      },
+      {
+        "id": "b-ret-vm",
+        "title": "完成徐汇店现场陈列落位",
+        "status": "blocked",
+        "version": 3,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-merch",
+        "acceptanceCriteria": [
+          "按平面图v6形成现场照片与偏差清单"
+        ],
+        "ownerId": "b-ret-m3",
+        "sourceRefs": [
+          "b-ret-planogram-v6",
+          "b-ret-fixture-v4"
+        ],
+        "dependsOnTaskIds": [
+          "b-ret-planogram"
+        ],
+        "dueOn": "2026-09-17"
+      },
+      {
+        "id": "b-ret-pos",
+        "title": "完成徐汇店POS就绪核对",
+        "status": "in_progress",
+        "version": 5,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-ops",
+        "acceptanceCriteria": [
+          "6台POS完成配置、交易演练和异常记录"
+        ],
+        "ownerId": "b-ret-m6",
+        "sourceRefs": [
+          "b-ret-pos-v3"
+        ],
+        "dependsOnTaskIds": [
+          "b-ret-landlord"
+        ],
+        "dueOn": "2026-09-16"
+      },
+      {
+        "id": "b-ret-training",
+        "title": "完成徐汇店开业培训记录",
+        "status": "open",
+        "version": 4,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-ops",
+        "acceptanceCriteria": [
+          "记录POS、服务和安全主题训练及未通过项"
+        ],
+        "ownerId": "b-ret-m8",
+        "sourceRefs": [
+          "b-ret-pos-v3"
+        ],
+        "dependsOnTaskIds": [
+          "b-ret-pos"
+        ],
+        "dueOn": "2026-09-20"
+      },
+      {
+        "id": "b-ret-softopen",
+        "title": "形成徐汇店软开门禁记录",
+        "status": "open",
+        "version": 6,
+        "updatedAt": "2026-09-01T09:30:00+08:00",
+        "parentId": "b-ret-root",
+        "acceptanceCriteria": [
+          "在9月23日前链接消防、入库、陈列、POS与培训证据并列未决项"
+        ],
+        "ownerId": "b-ret-m5",
+        "sourceRefs": [
+          "b-ret-opening-v8"
+        ],
+        "dependsOnTaskIds": [
+          "b-ret-fire",
+          "b-ret-pos",
+          "b-ret-training"
+        ],
+        "dueOn": "2026-09-23"
+      }
+    ],
+    "files": [
+      {
+        "id": "b-ret-handover-v2",
+        "title": "徐汇店物业交付纪要v2（合成）",
+        "text": "旧版允许9月10日至12日使用货梯，已被v3取代。",
+        "updatedAt": "2026-08-28T16:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Landlord_Handover.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "e6c2e1f1d784f41cad2e6d10b506068c6d3e5dd884669f1937b0a46a84cba3ea",
+        "status": "superseded",
+        "linkedTaskIds": [
+          "b-ret-site-pack",
+          "b-ret-landlord",
+          "b-ret-fixture"
+        ]
+      },
+      {
+        "id": "b-ret-handover-v3",
+        "title": "徐汇店物业交付纪要v3（合成）",
+        "text": "物业确认货梯9月10日至12日检修，首个整批进场窗口为9月13日08:00；已交付场地范围和开业日不变。",
+        "updatedAt": "2026-09-01T12:30:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Landlord_Handover.pdf",
+        "mimeType": "application/pdf",
+        "version": "3.0",
+        "checksum": "b395ebdaeadddb889ed82e8a0706aecd99630383222716adf83129370d15996a",
+        "status": "current_approved",
+        "linkedTaskIds": [
+          "b-ret-root",
+          "b-ret-landlord",
+          "b-ret-fixture",
+          "b-ret-stock",
+          "b-ret-vm",
+          "b-ret-softopen"
+        ]
+      },
+      {
+        "id": "b-ret-fire-v1",
+        "title": "徐汇店消防检查约见确认v1（合成）",
+        "text": "监管检查约见为9月18日09:00；预约不是通过结论，检查结果仍未知。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Fire_Appointment.pdf",
+        "mimeType": "application/pdf",
+        "version": "1.0",
+        "checksum": "08108edf4e6a69a78d119894c04ea38fe917ec7bc0ca4de165d9b2f0eaf07917",
+        "status": "appointment_confirmed",
+        "linkedTaskIds": [
+          "b-ret-fire",
+          "b-ret-softopen"
+        ]
+      },
+      {
+        "id": "b-ret-planogram-v6",
+        "title": "徐汇店陈列平面图v6（合成）",
+        "text": "平面图v6已完成并锁定货架位置；物业v3不改变陈列设计。",
+        "updatedAt": "2026-08-31T17:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Planogram.pdf",
+        "mimeType": "application/pdf",
+        "version": "6.0",
+        "checksum": "137bcc5c068cb90aa532da29362f59f8d2c7588112cb2f15ed6fd87334f6d054",
+        "status": "released_complete",
+        "linkedTaskIds": [
+          "b-ret-planogram",
+          "b-ret-vm"
+        ]
+      },
+      {
+        "id": "b-ret-fixture-v4",
+        "title": "货架到场与安装计划v4（合成）",
+        "text": "草稿仍安排9月10日整批进场，与物业纪要v3冲突。",
+        "updatedAt": "2026-09-01T11:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Fixture_Delivery_Plan.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "4.0",
+        "checksum": "d0e699ec0463934d7fd903145b207fbf49d272f97ba7fa3779956aedcdab041b",
+        "status": "draft_conflicted",
+        "linkedTaskIds": [
+          "b-ret-fitout",
+          "b-ret-fixture",
+          "b-ret-stock",
+          "b-ret-vm"
+        ]
+      },
+      {
+        "id": "b-ret-pos-v3",
+        "title": "徐汇店POS就绪清单v3（合成）",
+        "text": "6台POS配置和测试账号计划不依赖货梯窗口，仍以9月16日完成为边界。",
+        "updatedAt": "2026-09-01T09:45:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_POS_Readiness.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "3.0",
+        "checksum": "4f9b63804c9ac6699d8a21caef13d7bb2c1592252e5a1998cad866175ad1b373",
+        "status": "current",
+        "linkedTaskIds": [
+          "b-ret-pos",
+          "b-ret-training",
+          "b-ret-softopen"
+        ]
+      },
+      {
+        "id": "b-ret-opening-v8",
+        "title": "徐汇店开业门禁清单v8（合成）",
+        "text": "软开门槛含消防结果、首批入库、陈列落位、POS交易和培训记录；软开硬边界9月23日，正式开业10月1日。",
+        "updatedAt": "2026-09-01T12:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Opening_Gate.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": "8.0",
+        "checksum": "59dfe1c31a360d0abbf718bc79e9caf49758005c3301318eabbf15cae7f2ca8d",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-ret-root",
+          "b-ret-softopen"
+        ]
+      },
+      {
+        "id": "b-ret-signage-v1",
+        "title": "徐汇店招牌完工记录v1（合成）",
+        "text": "招牌安装及照片记录已完成；本轮货梯变化不影响该结果。",
+        "updatedAt": "2026-08-31T18:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Signage_Closeout.pdf",
+        "mimeType": "application/pdf",
+        "version": "1.0",
+        "checksum": "4b6e2c5d371610f5fe5b520e286c470f8a5b1e4665586e7489906e16ece34a7f",
+        "status": "accepted_complete",
+        "linkedTaskIds": [
+          "b-ret-signage"
+        ]
+      }
+    ],
+    "discussions": [
+      {
+        "id": "b-ret-d1",
+        "taskId": "b-ret-root",
+        "authorId": "b-ret-m2",
+        "createdAt": "2026-09-01T12:45:00+08:00",
+        "kind": "decision",
+        "text": "物业纪要v3生效：9月10日至12日货梯检修，首个整批进场窗口改为9月13日。",
+        "threadId": "b-ret-thread-access",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-ret-d2",
+        "taskId": "b-ret-fixture",
+        "authorId": "b-ret-m2",
+        "createdAt": "2026-09-01T12:52:00+08:00",
+        "kind": "report",
+        "text": "货架计划v4仍排9月10日，必须在原安装任务中重排；已交付场地任务不重开。",
+        "threadId": "b-ret-thread-access",
+        "replyToId": "b-ret-d1",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-ret-d3",
+        "taskId": "b-ret-fixture",
+        "authorId": "b-ret-m4",
+        "createdAt": "2026-09-01T13:00:00+08:00",
+        "kind": "proposal",
+        "text": "可否新建一个夜间搬运任务绕开货梯检修？物业未批准夜间进场，这个提议未接受。",
+        "threadId": "b-ret-thread-access",
+        "replyToId": "b-ret-d1",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-ret-d4",
+        "taskId": "b-ret-fixture",
+        "authorId": "b-ret-m2",
+        "createdAt": "2026-09-01T13:08:00+08:00",
+        "kind": "decision",
+        "text": "不采用夜间搬运提议，只使用9月13日后的有权窗口。",
+        "threadId": "b-ret-thread-access",
+        "replyToId": "b-ret-d3",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-ret-d5",
+        "taskId": "b-ret-softopen",
+        "authorId": "b-ret-m1",
+        "createdAt": "2026-09-01T13:16:00+08:00",
+        "kind": "decision",
+        "text": "软开门禁保持9月23日、正式开业保持10月1日；受影响任务应按消费者链局部调整。",
+        "threadId": "b-ret-thread-deadline",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-ret-d6",
+        "taskId": "b-ret-stock",
+        "authorId": "b-ret-m4",
+        "createdAt": "2026-09-01T13:24:00+08:00",
+        "kind": "report",
+        "text": "842箱仍在区域仓，尚未入店；到店必须等货架安装释放收货区。",
+        "threadId": "b-ret-thread-deadline",
+        "replyToId": "b-ret-d5",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-ret-d7",
+        "taskId": "b-ret-fire",
+        "authorId": "b-ret-m5",
+        "createdAt": "2026-09-01T13:30:00+08:00",
+        "kind": "proposal",
+        "text": "如果时间紧，能否把消防预约当作已通过并先软开？该提议未被接受。",
+        "threadId": "b-ret-thread-fire",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-ret-d8",
+        "taskId": "b-ret-fire",
+        "authorId": "b-ret-m7",
+        "createdAt": "2026-09-01T13:37:00+08:00",
+        "kind": "report",
+        "text": "不能；9月18日只是约见，结果与整改项仍未知。",
+        "threadId": "b-ret-thread-fire",
+        "replyToId": "b-ret-d7",
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-ret-d9",
+        "taskId": "b-ret-vm",
+        "authorId": "b-ret-m3",
+        "createdAt": "2026-09-01T13:45:00+08:00",
+        "kind": "report",
+        "text": "平面图v6已经完成可复用，现场落位需增加“货架安装完成”的真实前置。",
+        "threadId": "b-ret-thread-merch",
+        "replyToId": null,
+        "source": "synthetic_discussion_store"
+      },
+      {
+        "id": "b-ret-d10",
+        "taskId": "b-ret-root",
+        "authorId": "b-ret-m1",
+        "createdAt": "2026-09-01T13:55:00+08:00",
+        "kind": "decision",
+        "text": "撤回上午“所有分支整体顺延三天”的建议；POS与培训当前窗口不受货梯影响，保持原任务。",
+        "threadId": "b-ret-thread-deadline",
+        "replyToId": "b-ret-d5",
+        "source": "synthetic_discussion_store"
+      }
+    ],
+    "history": [
+      {
+        "id": "b-ret-h1",
+        "taskId": "b-ret-planogram",
+        "occurredAt": "2026-08-31T17:00:00+08:00",
+        "type": "task_completed",
+        "summary": "陈列平面图v6发布，任务版本8完成。",
+        "version": 8,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-ret-h2",
+        "taskId": "b-ret-signage",
+        "occurredAt": "2026-08-31T18:10:00+08:00",
+        "type": "task_completed",
+        "summary": "招牌安装记录完成，任务版本6。",
+        "version": 6,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-ret-h3",
+        "taskId": "b-ret-landlord",
+        "occurredAt": "2026-09-01T12:40:00+08:00",
+        "type": "task_completed",
+        "summary": "物业交付范围签收，任务版本7完成；后续窗口变化不撤销交付事实。",
+        "version": 7,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-ret-h4",
+        "taskId": "b-ret-root",
+        "occurredAt": "2026-09-01T12:30:00+08:00",
+        "type": "source_version_changed",
+        "summary": "物业纪要从v2更新为v3，货梯窗口变化。",
+        "version": 18,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-ret-h5",
+        "taskId": "b-ret-vm",
+        "occurredAt": "2026-09-01T12:50:00+08:00",
+        "type": "task_blocked",
+        "summary": "现场陈列等待可用货架，状态版本3。",
+        "version": 3,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-ret-h6",
+        "taskId": "b-ret-fire",
+        "occurredAt": "2026-09-01T10:00:00+08:00",
+        "type": "appointment_confirmed",
+        "summary": "消防检查约见9月18日，尚无通过结论。",
+        "version": 4,
+        "source": "synthetic_activity_store"
+      },
+      {
+        "id": "b-ret-h7",
+        "taskId": "b-ret-root",
+        "occurredAt": "2026-09-01T13:16:00+08:00",
+        "type": "deadline_confirmed",
+        "summary": "软开9月23日、开业10月1日保持硬边界。",
+        "version": 18,
+        "source": "synthetic_activity_store"
+      }
+    ],
+    "sourceRefs": [
+      {
+        "id": "b-ret-handover-v2",
+        "title": "徐汇店物业交付纪要v2（合成）",
+        "text": "旧版允许9月10日至12日使用货梯，已被v3取代。",
+        "updatedAt": "2026-08-28T16:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Landlord_Handover.pdf",
+        "mimeType": "application/pdf",
+        "version": "2.0",
+        "checksum": "e6c2e1f1d784f41cad2e6d10b506068c6d3e5dd884669f1937b0a46a84cba3ea",
+        "status": "superseded",
+        "linkedTaskIds": [
+          "b-ret-site-pack",
+          "b-ret-landlord",
+          "b-ret-fixture"
+        ]
+      },
+      {
+        "id": "b-ret-handover-v3",
+        "title": "徐汇店物业交付纪要v3（合成）",
+        "text": "物业确认货梯9月10日至12日检修，首个整批进场窗口为9月13日08:00；已交付场地范围和开业日不变。",
+        "updatedAt": "2026-09-01T12:30:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Landlord_Handover.pdf",
+        "mimeType": "application/pdf",
+        "version": "3.0",
+        "checksum": "b395ebdaeadddb889ed82e8a0706aecd99630383222716adf83129370d15996a",
+        "status": "current_approved",
+        "linkedTaskIds": [
+          "b-ret-root",
+          "b-ret-landlord",
+          "b-ret-fixture",
+          "b-ret-stock",
+          "b-ret-vm",
+          "b-ret-softopen"
+        ]
+      },
+      {
+        "id": "b-ret-fire-v1",
+        "title": "徐汇店消防检查约见确认v1（合成）",
+        "text": "监管检查约见为9月18日09:00；预约不是通过结论，检查结果仍未知。",
+        "updatedAt": "2026-09-01T10:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Fire_Appointment.pdf",
+        "mimeType": "application/pdf",
+        "version": "1.0",
+        "checksum": "08108edf4e6a69a78d119894c04ea38fe917ec7bc0ca4de165d9b2f0eaf07917",
+        "status": "appointment_confirmed",
+        "linkedTaskIds": [
+          "b-ret-fire",
+          "b-ret-softopen"
+        ]
+      },
+      {
+        "id": "b-ret-planogram-v6",
+        "title": "徐汇店陈列平面图v6（合成）",
+        "text": "平面图v6已完成并锁定货架位置；物业v3不改变陈列设计。",
+        "updatedAt": "2026-08-31T17:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Planogram.pdf",
+        "mimeType": "application/pdf",
+        "version": "6.0",
+        "checksum": "137bcc5c068cb90aa532da29362f59f8d2c7588112cb2f15ed6fd87334f6d054",
+        "status": "released_complete",
+        "linkedTaskIds": [
+          "b-ret-planogram",
+          "b-ret-vm"
+        ]
+      },
+      {
+        "id": "b-ret-fixture-v4",
+        "title": "货架到场与安装计划v4（合成）",
+        "text": "草稿仍安排9月10日整批进场，与物业纪要v3冲突。",
+        "updatedAt": "2026-09-01T11:20:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Fixture_Delivery_Plan.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "4.0",
+        "checksum": "d0e699ec0463934d7fd903145b207fbf49d272f97ba7fa3779956aedcdab041b",
+        "status": "draft_conflicted",
+        "linkedTaskIds": [
+          "b-ret-fitout",
+          "b-ret-fixture",
+          "b-ret-stock",
+          "b-ret-vm"
+        ]
+      },
+      {
+        "id": "b-ret-pos-v3",
+        "title": "徐汇店POS就绪清单v3（合成）",
+        "text": "6台POS配置和测试账号计划不依赖货梯窗口，仍以9月16日完成为边界。",
+        "updatedAt": "2026-09-01T09:45:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_POS_Readiness.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "version": "3.0",
+        "checksum": "4f9b63804c9ac6699d8a21caef13d7bb2c1592252e5a1998cad866175ad1b373",
+        "status": "current",
+        "linkedTaskIds": [
+          "b-ret-pos",
+          "b-ret-training",
+          "b-ret-softopen"
+        ]
+      },
+      {
+        "id": "b-ret-opening-v8",
+        "title": "徐汇店开业门禁清单v8（合成）",
+        "text": "软开门槛含消防结果、首批入库、陈列落位、POS交易和培训记录；软开硬边界9月23日，正式开业10月1日。",
+        "updatedAt": "2026-09-01T12:00:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Opening_Gate.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "version": "8.0",
+        "checksum": "59dfe1c31a360d0abbf718bc79e9caf49758005c3301318eabbf15cae7f2ca8d",
+        "status": "draft_current",
+        "linkedTaskIds": [
+          "b-ret-root",
+          "b-ret-softopen"
+        ]
+      },
+      {
+        "id": "b-ret-signage-v1",
+        "title": "徐汇店招牌完工记录v1（合成）",
+        "text": "招牌安装及照片记录已完成；本轮货梯变化不影响该结果。",
+        "updatedAt": "2026-08-31T18:10:00+08:00",
+        "source": "synthetic_file_store",
+        "fileName": "Xuhui_Signage_Closeout.pdf",
+        "mimeType": "application/pdf",
+        "version": "1.0",
+        "checksum": "4b6e2c5d371610f5fe5b520e286c470f8a5b1e4665586e7489906e16ece34a7f",
+        "status": "accepted_complete",
+        "linkedTaskIds": [
+          "b-ret-signage"
+        ]
+      }
+    ]
+  },
+  "duplicateSearch": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-b-retail"
+    ],
+    "matches": [
+      {
+        "taskId": "b-ret-fixture",
+        "title": "完成徐汇店货架安装",
+        "reason": "覆盖货架重排，不应新建夜间安装任务。"
+      },
+      {
+        "taskId": "b-ret-stock",
+        "title": "完成徐汇店首批入库核对",
+        "reason": "覆盖本批842箱入库。"
+      },
+      {
+        "taskId": "b-ret-vm",
+        "title": "完成徐汇店现场陈列落位",
+        "reason": "覆盖平面图v6现场消费。"
+      },
+      {
+        "taskId": "b-ret-softopen",
+        "title": "形成徐汇店软开门禁记录",
+        "reason": "覆盖9月23日软开聚合结果。"
+      }
+    ],
+    "coverageNote": "合成查重已覆盖授权团队当前与归档索引，返回四个现有同结果任务。"
+  },
+  "confirmedFields": [
+    {
+      "taskId": "b-ret-root",
+      "field": "goal",
+      "value": "让青岚徐汇店在已确认范围内按期、可核对地开业"
+    },
+    {
+      "taskId": "b-ret-root",
+      "field": "dueOn",
+      "value": "2026-10-01"
+    },
+    {
+      "taskId": "b-ret-softopen",
+      "field": "dueOn",
+      "value": "2026-09-23"
+    },
+    {
+      "taskId": "b-ret-planogram",
+      "field": "acceptanceCriteria",
+      "value": [
+        "货架位置、品类和陈列编号已发布"
+      ]
+    }
+  ],
+  "constraints": {
+    "externalActions": "只输出候选差异；不联系物业、监管机构、承运商或门店人员，不执行创建、指派或验收。",
+    "scope": "仅更新货梯窗口实际影响的四个消费者，保护完成项及未受影响的POS与培训。",
+    "hardDeadlines": [
+      "2026-09-18消防检查约见（结果未知）",
+      "2026-09-23软开门禁",
+      "2026-10-01正式开业"
+    ]
+  },
+  "dataClassification": "synthetic",
+  "members": [
+    {
+      "id": "b-ret-m1",
+      "name": "孟洵",
+      "role": "开业项目经理",
+      "responsibilities": [
+        "维护开业里程碑与跨分支协调",
+        "记录硬期限冲突"
+      ],
+      "boundaries": [
+        "不代消防机构确认通过",
+        "不自动改变门店Owner"
+      ],
+      "evidence": [
+        {
+          "id": "b-ret-m1-role",
+          "title": "孟洵职责说明（合成）",
+          "text": "职责：维护开业里程碑与跨分支协调；记录硬期限冲突。边界：不代消防机构确认通过；不自动改变门店Owner。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-ret-m1-work",
+          "title": "孟洵当前工作自报（合成）",
+          "text": "正在协调9月23日软开门槛。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在协调9月23日软开门槛。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-ret-m1-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-ret-m2",
+      "name": "程栩",
+      "role": "工程与物业接口",
+      "responsibilities": [
+        "维护物业交付与施工窗口",
+        "协调货梯和进场许可"
+      ],
+      "boundaries": [
+        "不签署消防检查结论",
+        "不把物业口头说明当正式窗口"
+      ],
+      "evidence": [
+        {
+          "id": "b-ret-m2-role",
+          "title": "程栩职责说明（合成）",
+          "text": "职责：维护物业交付与施工窗口；协调货梯和进场许可。边界：不签署消防检查结论；不把物业口头说明当正式窗口。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-ret-m2-work",
+          "title": "程栩当前工作自报（合成）",
+          "text": "正在处理货梯检修后的进场重排。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "b-ret-m2-window",
+          "title": "程栩公开协作窗口（合成）",
+          "text": "2026-09-03T15:00:00+08:00至2026-09-03T17:00:00+08:00；仅表示可参加本场景核对，不代表整周空闲。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在处理货梯检修后的进场重排。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-ret-m2-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-03T15:00:00+08:00",
+        "endAt": "2026-09-03T17:00:00+08:00",
+        "sourceRef": "b-ret-m2-window",
+        "note": "仅表示可参加本场景核对，不代表整周空闲。",
+        "updatedAt": "2026-09-01T08:20:00+08:00"
+      }
+    },
+    {
+      "id": "b-ret-m3",
+      "name": "陆纾",
+      "role": "视觉陈列负责人",
+      "responsibilities": [
+        "维护陈列图与现场落位",
+        "记录陈列偏差"
+      ],
+      "boundaries": [
+        "不修改库存数量",
+        "不绕过完成的平面图基线"
+      ],
+      "evidence": [
+        {
+          "id": "b-ret-m3-role",
+          "title": "陆纾职责说明（合成）",
+          "text": "职责：维护陈列图与现场落位；记录陈列偏差。边界：不修改库存数量；不绕过完成的平面图基线。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-ret-m3-work",
+          "title": "陆纾当前工作自报（合成）",
+          "text": "已完成平面图，等待货架可用。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "已完成平面图，等待货架可用。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-ret-m3-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-ret-m4",
+      "name": "唐梨",
+      "role": "商品与库存负责人",
+      "responsibilities": [
+        "组织首批入库与差异记录",
+        "协调上架顺序"
+      ],
+      "boundaries": [
+        "不把在途当已入库",
+        "不修改物业进场权限"
+      ],
+      "evidence": [
+        {
+          "id": "b-ret-m4-role",
+          "title": "唐梨职责说明（合成）",
+          "text": "职责：组织首批入库与差异记录；协调上架顺序。边界：不把在途当已入库；不修改物业进场权限。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-ret-m4-work",
+          "title": "唐梨当前工作自报（合成）",
+          "text": "正在跟踪首批842箱到仓计划。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在跟踪首批842箱到仓计划。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-ret-m4-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-ret-m5",
+      "name": "江霁",
+      "role": "门店经理",
+      "responsibilities": [
+        "组织门店训练与软开核对",
+        "汇总现场问题"
+      ],
+      "boundaries": [
+        "不代消防验收",
+        "不单方面取消开业硬日期"
+      ],
+      "evidence": [
+        {
+          "id": "b-ret-m5-role",
+          "title": "江霁职责说明（合成）",
+          "text": "职责：组织门店训练与软开核对；汇总现场问题。边界：不代消防验收；不单方面取消开业硬日期。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-ret-m5-work",
+          "title": "江霁当前工作自报（合成）",
+          "text": "正在编排不含容量承诺的培训主题。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在编排不含容量承诺的培训主题。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-ret-m5-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-ret-m6",
+      "name": "谢衡",
+      "role": "零售IT负责人",
+      "responsibilities": [
+        "交付POS与网络核对记录",
+        "支持软开交易演练"
+      ],
+      "boundaries": [
+        "不改商品陈列计划",
+        "不宣布商业开业批准"
+      ],
+      "evidence": [
+        {
+          "id": "b-ret-m6-role",
+          "title": "谢衡职责说明（合成）",
+          "text": "职责：交付POS与网络核对记录；支持软开交易演练。边界：不改商品陈列计划；不宣布商业开业批准。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-ret-m6-work",
+          "title": "谢衡当前工作自报（合成）",
+          "text": "正在配置6台POS测试账号。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在配置6台POS测试账号。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-ret-m6-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    },
+    {
+      "id": "b-ret-m7",
+      "name": "顾真",
+      "role": "安全与合规",
+      "responsibilities": [
+        "跟踪消防约见与整改证据",
+        "核对开业门槛"
+      ],
+      "boundaries": [
+        "不代表监管机构出具结论",
+        "不以预约等同通过"
+      ],
+      "evidence": [
+        {
+          "id": "b-ret-m7-role",
+          "title": "顾真职责说明（合成）",
+          "text": "职责：跟踪消防约见与整改证据；核对开业门槛。边界：不代表监管机构出具结论；不以预约等同通过。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-ret-m7-work",
+          "title": "顾真当前工作自报（合成）",
+          "text": "消防检查已约见，结果仍未知。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        },
+        {
+          "id": "b-ret-m7-window",
+          "title": "顾真公开协作窗口（合成）",
+          "text": "2026-09-18T09:00:00+08:00至2026-09-18T12:00:00+08:00；仅表示可参加本场景核对，不代表整周空闲。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_availability"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "消防检查已约见，结果仍未知。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-ret-m7-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "declared_window",
+        "startAt": "2026-09-18T09:00:00+08:00",
+        "endAt": "2026-09-18T12:00:00+08:00",
+        "sourceRef": "b-ret-m7-window",
+        "note": "仅表示可参加本场景核对，不代表整周空闲。",
+        "updatedAt": "2026-09-01T08:20:00+08:00"
+      }
+    },
+    {
+      "id": "b-ret-m8",
+      "name": "苏澄",
+      "role": "培训协调",
+      "responsibilities": [
+        "维护训练材料与签到记录",
+        "协调POS演练"
+      ],
+      "boundaries": [
+        "不替门店经理确认上岗",
+        "不将签到当技能通过"
+      ],
+      "evidence": [
+        {
+          "id": "b-ret-m8-role",
+          "title": "苏澄职责说明（合成）",
+          "text": "职责：维护训练材料与签到记录；协调POS演练。边界：不替门店经理确认上岗；不将签到当技能通过。",
+          "updatedAt": "2026-09-01T08:00:00+08:00",
+          "source": "synthetic_role_charter"
+        },
+        {
+          "id": "b-ret-m8-work",
+          "title": "苏澄当前工作自报（合成）",
+          "text": "正在更新POS训练脚本。",
+          "updatedAt": "2026-09-01T08:20:00+08:00",
+          "source": "synthetic_member_report"
+        }
+      ],
+      "currentWork": [
+        {
+          "title": "正在更新POS训练脚本。",
+          "status": "reported_not_capacity_measurement",
+          "sourceRef": "b-ret-m8-work",
+          "updatedAt": "2026-09-01T08:20:00+08:00"
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "windows": [],
+        "note": "未提供完整可用日历；职责、在办事项和未更新均不代表容量。"
+      }
+    }
+  ]
+}

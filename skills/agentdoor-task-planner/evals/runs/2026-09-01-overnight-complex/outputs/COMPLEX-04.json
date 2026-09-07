@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-complex04",
+  "baseSnapshotId": "snapshot-complex04-v3",
+  "baseRevision": 3,
+  "baseTaskVersions": {
+    "complex04-root": 10,
+    "complex04-copy-branch": 4,
+    "complex04-visual-branch": 4,
+    "complex04-delivery-branch": 5,
+    "complex04-copy-v4": 5,
+    "complex04-cover-v4": 4,
+    "complex04-copy-v5": 6,
+    "complex04-cover-v5": 3,
+    "complex04-approval": 4,
+    "complex04-package": 3
+  },
+  "intent": "replan",
+  "disposition": "ready_for_confirmation",
+  "summary": "建议只新增回执差异核对表并接入现有批准收集任务；忠实并列A/B冲突及审阅意见，不替客户选v4或v5，不变更最终标准、交期或版本任务。",
+  "reasoningSummary": [
+    {
+      "text": "回执A指定文案/封面v4，回执B指定文案/封面v5；两者登记签署人为同一有权确认人且签署时间相同，B晚入库不能证明已撤回或取代A。",
+      "evidenceRefs": [
+        "complex04-receipt-a",
+        "complex04-receipt-b"
+      ]
+    },
+    {
+      "text": "本轮只确认整理独立回执差异表，9月2日可形成并供现有批准收集任务使用；表的完成条件是并列事实，不是裁定批准有效性。",
+      "evidenceRefs": [
+        "req-complex04",
+        "complex04-reconcile-scope"
+      ]
+    },
+    {
+      "text": "策划对v5表达的审阅不构成客户批准；已完成的v4留存记录也不证明最终交付版本已确定。",
+      "evidenceRefs": [
+        "complex04-review-report",
+        "complex04-d-review",
+        "complex04-h-copy",
+        "complex04-h-cover"
+      ]
+    },
+    {
+      "text": "原批准任务的标准明确要求逐项一致回执且冲突未消除不算完成；新增表9月2日早于原版本准备9月3/4日和批准9月5日，交付包仍沿用原批准依赖及9月6日边界。",
+      "evidenceRefs": [
+        "complex04-approval",
+        "complex04-copy-v5",
+        "complex04-cover-v5",
+        "complex04-package",
+        "complex04-reconcile-scope"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "complex04-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "change:complex04-create-receipt-diff",
+        "action": "create",
+        "targetId": "new:complex04-receipt-diff",
+        "parentId": "complex04-delivery-branch",
+        "fields": {
+          "title": "整理观禾9月内容包批准回执差异核对表",
+          "acceptanceCriteria": [
+            "并列A-0901、B-0901两份可见回执的原文位置、登记签署人角色、签署时间及入库时间，逐项注明文案和封面版本及适用期。",
+            "明确A要求文案/封面v4且不使用v5，B要求文案/封面v5且不使用v4；两者同为9月1日09:00签署且无撤回或取代记录，将冲突及待有权方核对处单列。",
+            "将策划对v5表达的审阅报告单列为审阅意见并标明发言人和角色，不转写为客户接受或批准；没有给出的签署人姓名不补造。",
+            "核对表可由原“收齐观禾当前版本批准”任务引用；完整并列事实即满足本表结果边界，不要求本表裁定最终版本、不改变现有批准标准或状态。"
+          ],
+          "tips": [
+            "逐条链接原始回执节选及审阅报告，不以更新时间替代权限、版本适用范围或撤回关系。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "content-m6",
+            "basis": "recommended",
+            "reason": "交付与版本管理负责维护版本与核对批准前提，符合本次独立差异表的整理边界；不因其为发起人而默认负责。",
+            "evidenceRefs": [
+              "content-m6-role",
+              "complex04-reconcile-scope"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": "2026-09-02",
+            "basis": "explicit",
+            "assumptions": [
+              "范围记录提供9月2日整理边界，未提供具体启动时刻。",
+              "表作为现有批准任务的输入；不据此宣称冲突已消除或保证9月5日获得一致批准。"
+            ],
+            "evidenceRefs": [
+              "complex04-reconcile-scope",
+              "complex04-approval"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "未提供本次差异表在约定工具下的投入依据，保留未知；等待有权方消除冲突不计入资料整理人时。"
+            ],
+            "evidenceRefs": [
+              "complex04-reconcile-scope"
+            ]
+          },
+          "dependsOnTaskIds": []
+        },
+        "reason": "已确认的独立整理工作可先使用已可见回执完成，不以最终版本选择作为本表前置。",
+        "evidenceRefs": [
+          "req-complex04",
+          "complex04-reconcile-scope",
+          "complex04-receipt-a",
+          "complex04-receipt-b"
+        ]
+      },
+      {
+        "id": "change:complex04-approval-input",
+        "action": "update",
+        "targetId": "complex04-approval",
+        "parentId": "complex04-delivery-branch",
+        "fields": {
+          "dependsOnTaskIds": [
+            "complex04-copy-v5",
+            "complex04-cover-v5",
+            "new:complex04-receipt-diff"
+          ]
+        },
+        "reason": "现有批准收集任务使用新差异表，补上正式的候选依赖；原v5准备前置仅保持现有记录，不代表本轮裁定v5获批，原Owner、标准与日期不变。",
+        "evidenceRefs": [
+          "complex04-approval",
+          "complex04-reconcile-scope",
+          "req-complex04"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "complex04-root",
+      "complex04-copy-branch",
+      "complex04-visual-branch",
+      "complex04-delivery-branch",
+      "complex04-copy-v4",
+      "complex04-cover-v4",
+      "complex04-copy-v5",
+      "complex04-cover-v5",
+      "complex04-package"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-content"
+    ],
+    "assessments": [],
+    "coverageNote": "合成检索服务已读本授权团队相关活动与归档索引；本轮请求的新增独立结果未返回候选匹配。当前任务树另由context.tasks提供。"
+  },
+  "questions": [],
+  "warnings": [
+    "可审阅的是差异表及其交接关系；A/B版本冲突仍待有权方在原批准任务内解决，不能据此标记批准或交付完成。",
+    "不因B晚入库认定其取代A，不将策划审阅或v4留存完成转成客户批准。",
+    "保持所有既有版本任务、最终批准标准、正式Owner及日期；本轮不通知客户或发布内容。",
+    "完整成员容量与最终批准时间未提供，不据新增资料任务保证整体交期。"
+  ],
+  "nextActions": [
+    {
+      "action": "review_proposal",
+      "taskId": "complex04-root",
+      "label": "审阅回执差异表及批准任务新增前置"
+    },
+    {
+      "action": "open_task",
+      "taskId": "complex04-approval",
+      "label": "在原批准任务查看待有权方核对的版本冲突"
+    }
+  ],
+  "externalEffects": "none"
+}

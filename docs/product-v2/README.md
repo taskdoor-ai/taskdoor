@@ -18,7 +18,7 @@
 
 | 术语 | 本文含义 |
 | --- | --- |
-| Task / Owner | 需要持续跟进的结果对象；每个正式 Task 恰好一位 Owner |
+| Task / Owner | 需要持续跟进的结果对象；创建时可暂未分配，正式 Owner 最多一位 |
 | Proposal | 尚可编辑、尚未形成正式责任的候选 Task 或协作方案 |
 | Responsibility | Task 内成员已接受的有界协作预期，不等于 Owner 或权限 |
 | Handoff | 已有上下文、工作或责任的双边接续协议；新工作委托不自动属于 Handoff |
@@ -34,22 +34,24 @@
 2. Task 可以多层级扩展；每个 Task 只有一位 Owner，不同层级 Task 可以有不同 Owner。
 3. Task 内继续展示 File、版本与引用；取消独立团队文件模块不改变文件真相或 ACL。
 4. Task 列表不使用 Folder 分组，新建 Task 不选择目录；分类只使用无标签组的扁平标签。
-5. 创建任务默认由当前用户自己完成。AI 先理解需求，只在发现经验、知识、权限、容量或协作范围缺口时建议找人。
-6. 是否邀请协作者由用户主动决定；系统提供候选人对比与依据，不自动分配。
+5. 当前 React 原型按 D-143 / D-145 提供表单式创建：从列表进入空白任务编辑页，经校验与确认后写入浏览器本机任务列表；不代表已接入真实 AI、外部邀请或生产写入。
+6. 未来接入真实创建服务与协作建议时，仍必须由用户明确触发正式写入并主动决定是否邀请协作者；系统不得自动分配。
 7. 责任画像要基于平台可见证据解释“团队实际上如何工作”，必须显示证据覆盖，并受权限约束；当前 Task 创建与详情不提供逐项 Responsibility 分配表面。
 8. AI 不只辅助阶段推进，而要对平台内整个协作过程提供洞察与下一步建议。
 9. Demo 必须模拟真实团队，覆盖多行业、多复杂度与多种协作关系。
 10. 人与人的 Handoff 工作部分必须足够清晰，并与 Agent 间协作遵循同一底层原则。
+11. 任务是唯一业务模块；“我的工作”位于任务列表上方并默认呈现，不预选详情。移除常驻侧栏和移动导航抽屉，轻量顶栏只保留团队切换、通知与头像，不再单列主题快捷按钮；主题切换回到头像菜单首项并位于“设置”上方，菜单最后保留退出登录。当前本地原型不以退出入口清除任务数据或冒充真实会话撤销。顶栏与一级 AI 连接页保持隐藏、实现与数据保留；D-172 仅在“我的工作”头部提供局部“连接 AI”按钮，D-177 要求该入口复用既有 `AiConnectionDialog` 的 ChatGPT、Claude Code、CodeBuddy、Cursor 四产品选择，D-178 要求其带入 `personalWorkbenchModel.ownedTasks` 的完整正式负责任务列表且每项仅含 Task ID、名称和真实状态；各页面继续通过上下文路径返回任务列表（D-141 / D-146 / D-156 / D-172 / D-177 / D-178 / D-181 / D-183，2026-08-31—2026-09-02）。
+12. 任务详情移除概览，默认进入讨论，保留子任务、文件和活动；讨论只承载人的交流，活动只承载任务变更，不混用计数、输入框和内容（D-142，2026-08-31）。
 
-“不知道找谁时通过团队动态广播”已经作为重点设计方向展开，但它是否首版进入一级导航、默认广播范围多大，仍留在决策台账等待确认。
+“不知道找谁时通过团队动态广播”保留为未来设计方向；当前单任务工作区不展示独立团队动态入口，恢复入口及默认广播范围仍需另行确认。
 
 当前设计把第 10 条展开为“发送不等于完成、接收者理解并主动接受、责任原子生效”，但具体 Profile、状态机和界面位置仍是待确认默认，不冒充产品负责人已经拍板。
 
-## 建议确认顺序
+## 首次审阅或治理变更的建议顺序
 
 1. 先看 [00-project-operating-charter.md](./00-project-operating-charter.md)，确认全项目怎样判断、推进、验证和交接。
 2. 再看 [01-product-definition.md](./01-product-definition.md)，确认产品边界。
-3. 再看 [03-demand-led-collaboration.md](./03-demand-led-collaboration.md)，确认创建与找人流程。
+3. 再看 [03-demand-led-collaboration.md](./03-demand-led-collaboration.md)，了解已退出当前表面的渐进创建候选，以及未来恢复时仍需遵守的协作边界。
 4. 再看 [11-human-handoff.md](./11-human-handoff.md)，确认邀请、接续、回传与 Owner 转移的边界。
 5. 集中处理 [09-decision-register.md](./09-decision-register.md) 的待确认项。
 6. 最后看 [08-delivery-roadmap.md](./08-delivery-roadmap.md)，确认后才拆编码任务。
@@ -61,7 +63,7 @@
 | [00-project-operating-charter.md](./00-project-operating-charter.md) | 生效的治理规范 | 全项目以什么原则、流程、质量门槛和风格推进 |
 | [01-product-definition.md](./01-product-definition.md) | 已确认原则 + Proposal | AgentDoor 是什么、解决什么、不做什么 |
 | [02-information-architecture.md](./02-information-architecture.md) | 已确认对象 + 待确认模型 | Task、File、动态、成员与 AI 如何组成产品 |
-| [03-demand-led-collaboration.md](./03-demand-led-collaboration.md) | 已确认方向 + 待确认交互 | 如何从用户需求渐进规划，并让用户主动选择协作者 |
+| [03-demand-led-collaboration.md](./03-demand-led-collaboration.md) | 未来候选 + 仍生效的安全边界 | 若未来恢复创建，如何渐进规划并保留人的主动选择 |
 | [04-responsibility-and-routing.md](./04-responsibility-and-routing.md) | 已确认方向 + 待确认数据规则 | 动态责任画像、人员推荐规则、解释与权限 |
 | [05-team-files-and-activity.md](./05-team-files-and-activity.md) | 已确认方向 + 待确认模型 | Task 内文件真相和任务外协作广播如何衔接 |
 | [06-ai-collaboration-insights.md](./06-ai-collaboration-insights.md) | 已确认覆盖范围 + 待确认写入级别 | AI 可以在哪些协作节点提供什么洞察 |
@@ -70,6 +72,9 @@
 | [09-decision-register.md](./09-decision-register.md) | 决定状态唯一台账 | 已确认决策、假设与待确认问题 |
 | [10-research-basis.md](./10-research-basis.md) | 研究依据，不替代决定 | 协作心理、人员推荐与权限判断的研究依据 |
 | [11-human-handoff.md](./11-human-handoff.md) | 已确认原则 + Q-11–Q-19 Proposal | 人与人的工作如何清晰接续、回传和验收 |
+| [14-agentdoor-skill-suite.md](./14-agentdoor-skill-suite.md) | 六类 Skill 离线设计，服务待接入 | 责任建议与更新、创建、状态、诊断、排序、EWD 各自怎么判断与协作 |
+| [12-current-product-prd.md](./12-current-product-prd.md) | 待审阅研发主 PRD | 当前端到端产品闭环、研发边界与验收矩阵 |
+| [13-task-rest-api-and-mcp.md](./13-task-rest-api-and-mcp.md) | Proposal | Task、讨论、文件、提交与 Activity 的 REST API 和 MCP Tool 契约 |
 
 ## 文档边界
 

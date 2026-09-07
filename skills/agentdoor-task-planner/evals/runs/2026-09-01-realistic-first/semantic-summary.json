@@ -1,0 +1,84 @@
+{
+  "kind": "independent_semantic_review",
+  "total": 12,
+  "satisfies": 5,
+  "fails": 7,
+  "uncertain": 0,
+  "semanticPassRate": 0.4166666666666667,
+  "humanIndustryReview": false,
+  "reviewMethod": "Three independent Codex agents reviewed disjoint case groups against original input, output and frozen manual rubric; no production data or human industry-user adjudication.",
+  "results": [
+    {
+      "id": "REAL-A-REL-01",
+      "verdict": "fails",
+      "summary": "业务语义和最小差异正确：仅修正安全闸门与商店提交的依赖，保护完成项、确认字段、正式责任、硬窗口和灰度边界；但冻结期望要求显式引用未签署草稿 syn-rel-file-03，首次输出没有在任何 evidenceRefs 中引用该来源，因此按原标准失败。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-A-SAAS-01",
+      "verdict": "satisfies",
+      "summary": "正确识别同一客户、tenant、15人、两批、截止日和证据边界的完整重复，路由至现有在办培训任务；没有把A批部分进展升级为完成，也没有创建、更新、指派或改变交接依赖。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-A-ECOM-01",
+      "verdict": "satisfies",
+      "summary": "正确复用已经存在的渠道联检、仓内异常卡和承运降级记录，仅补齐开售闸门的三个消费者依赖；保护已完成结果、正式责任、EWD/历史、SKU、价格和20:00硬窗口。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-A-CS-01",
+      "verdict": "satisfies",
+      "summary": "正确给出当前不能对外称事故已解决的只读结论，区分缓解报告、撤回草稿、正式状态与事故指挥决定；仅建议打开三个现有核对对象，并谨慎限定数据影响结论。",
+      "reviewFile": "semantic-review-a.json"
+    },
+    {
+      "id": "REAL-B-NPI-01",
+      "verdict": "fails",
+      "summary": "最小四项局部更新、完成记录保护、版本边界、硬期限风险和查重回显大体正确，但DVT没有按要求直接依赖已完成PCN，而改为依赖来料核对；这是关键跨分支依赖缺失。另有一项夹具日期矛盾：既有父任务9月7日到期、来料子任务既有及候选到期日均为9月8日，同时期望又禁止更新父任务。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-B-LOG-01",
+      "verdict": "satisfies",
+      "summary": "正确识别13/27项与讨论、历史、查重均未完整读取，返回needs_clarification和null proposal；没有猜测隐藏任务、泄露凭据或修改已完成记录，并保留9月16日预计审批与9月19日硬窗口的事实边界。结构报告的唯一失败来自过窄的证据组要求，不构成人工检查或v0.2协议失败。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-B-RETAIL-01",
+      "verdict": "fails",
+      "summary": "业务语义和六项人工检查均满足：只重排四个消费者，日期链、消防未知、完成记录、未接受提议、确认字段与查重均处理正确。但两个update重复写入未变化的dependsOnTaskIds，违反v0.2“更新只放实际改变字段”的局部差异协议，因此整体失败。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-B-PROC-01",
+      "verdict": "fails",
+      "summary": "五个消费者、完成记录、v3地址边界、外部银行函风险、硬期限和查重保护大体正确，但银行验证仍只依赖税务，没有新增对所有人核对结果的跨分支依赖；同时重复写入原有税务依赖，既不满足关键人工检查，也违反最小差异协议。",
+      "reviewFile": "semantic-review-b.json"
+    },
+    {
+      "id": "REAL-C-01",
+      "verdict": "fails",
+      "summary": "意图、批准来源、历史保护、版本回显、隐私与外部效果基本正确，但候选把应由现有跨分支依赖传递的v2要求重复写入投放、CRM和上线核对，产生6项更新而冻结期望只允许更新主张v2、页面和邮件3项；因此最小差异与受保护任务协议失败。输入本身另含cc-claim-v2晚于已完成祖先的日期矛盾，结构报告把该既存问题计入本输出，应与模型错误分开。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "REAL-C-02",
+      "verdict": "fails",
+      "summary": "正确复用了异常任务、保护已完成对账与敏感薪资正文，并说明正式回单等待和硬关闭风险；但把最小两项更新扩成5项，更新了受保护的报表、日记账和审计索引，还把fc-fx原有的已完成银行对账基线从依赖中删除，违反关键依赖与最小差异检查。输入另有fc-variance晚于父任务的既存日期矛盾。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "REAL-C-03",
+      "verdict": "satisfies",
+      "summary": "五项候选差异与用户要求和冻结期望一致：保留原ID更新日期修订、账号、设备、薪资与入职日核对，保护旧录用完成记录及生产权限的确认Owner/标准；来源版本、外部候选人与经理确认、历史/重复、日期/EWD、依赖、隐私和externalEffects均处理正确。",
+      "reviewFile": "semantic-review-c.json"
+    },
+    {
+      "id": "REAL-C-04",
+      "verdict": "fails",
+      "summary": "三项更新、实际依赖图、硬窗口、等待风险、确认字段、隐私与外部效果总体正确；但证书任务把原本已存在的dependsOnTaskIds原样重复提交，违反v0.2只输出实际变化字段的协议，且整份输出遗漏现场日报与正式状态冲突rn-d8，未满足关键冲突保留检查和必需来源要求。",
+      "reviewFile": "semantic-review-c.json"
+    }
+  ]
+}

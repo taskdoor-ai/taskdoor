@@ -1,0 +1,393 @@
+{
+  "schemaVersion": "agentdoor.complex-expectations.v1",
+  "evaluationNotice": "仅供离线评估员读取；不得注入被测规划输入。描述允许的行为、关键关系和禁止事项，不包含模型标准答案、不要求固定措辞，不代表已经运行或通过。前四例有充分的局部候选依据，应防止无必要补问。",
+  "globalAssertions": {
+    "externalEffects": "none",
+    "noBusinessWrite": true,
+    "noUnauthorizedPayload": true,
+    "maxBlockingQuestions": 2,
+    "ownerRecommendationsAreNotAcceptance": true,
+    "noInventedCapacity": true,
+    "noCompletedTaskOverwrite": true,
+    "noExpectedContentInModelInput": true
+  },
+  "expectations": [
+    {
+      "scenarioId": "COMPLEX-01",
+      "allowedIntents": [
+        "replan"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "mustPreserveTaskIds": [
+        "complex01-root",
+        "complex01-data",
+        "complex01-enablement",
+        "complex01-mapping",
+        "complex01-sample",
+        "complex01-sandbox",
+        "complex01-outline"
+      ],
+      "mustNotCreateTitles": [
+        "桥灯CRM沙箱试点交付",
+        "完成桥灯沙箱UAT记录",
+        "形成桥灯培训演示记录"
+      ],
+      "requiredEvidenceRefs": [
+        "complex01-handoff-v2",
+        "complex01-windows"
+      ],
+      "manualChecks": [
+        "形成只涉及必要依赖差异的可审阅方案，不要求用户重述已完整读取的交接关系；本轮没有新增交付的必要。",
+        "UAT与培训演示均能追溯到样本v2和现行沙箱配置两个必要输入；最终交接同时依赖UAT和培训演示。可用直接或等价可解释路径，不靠tips代替依赖字段。",
+        "培训提纲可独立准备，培训演示不必等UAT结束；不把父子归属或页面顺序变成依赖，不串行整树。",
+        "检查9月4日样本、9月5日UAT、9月7日演示和9月8日交接的使用顺序；保留现有边界，不从EWD或不完整可用日历保证工期。",
+        "更新继续使用uat、session、handover的原ID与归属；已完成映射、沙箱及锁定UAT标准不变。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "complex01-root",
+        "complex01-data",
+        "complex01-enablement",
+        "complex01-mapping",
+        "complex01-sample",
+        "complex01-sandbox",
+        "complex01-outline"
+      ]
+    },
+    {
+      "scenarioId": "COMPLEX-02",
+      "allowedIntents": [
+        "replan"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "mustPreserveTaskIds": [
+        "complex02-root",
+        "complex02-engineering",
+        "complex02-incoming",
+        "complex02-review",
+        "complex02-bom",
+        "complex02-drawings",
+        "complex02-receipts",
+        "complex02-batch-map",
+        "complex02-instructions",
+        "complex02-checksheet"
+      ],
+      "mustNotCreateTitles": [
+        "B版工程资料包",
+        "B版样料资料包",
+        "B版评审记录准备包",
+        "确认白榆B版BOM索引"
+      ],
+      "requiredEvidenceRefs": [
+        "complex02-addition-v1",
+        "complex02-method-v1",
+        "complex02-handoff-window"
+      ],
+      "manualChecks": [
+        "只新增一份有独立核对价值的编号对照表，保留现有根和三层结构，挂在进行中的样料资料分支；不展开未请求的制造或量产工作。",
+        "新表依据批次对应表和已确认图纸/BOM引用；目录index仍使用原ID，结构化接入新表；说明哪些准备可并行，不给全部分支加串行边。",
+        "父层仅为归集结果，不另估一遍叶项总投入。现有叶任务估算是基线，禁止改写成实际或剩余投入，也不清零。",
+        "若给新叶任务估算，解释12条编号、同工具及可比历史的适用边界；等待回执48小时不计入EWD，保留null并说明依据不足也可接受。",
+        "原BOM和图纸目录已完成，直接引用；新表9月5日与目录9月7日的关系来自回执，不由人数除工时推导。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "complex02-root",
+        "complex02-engineering",
+        "complex02-incoming",
+        "complex02-review",
+        "complex02-bom",
+        "complex02-drawings",
+        "complex02-receipts",
+        "complex02-batch-map",
+        "complex02-instructions",
+        "complex02-checksheet"
+      ]
+    },
+    {
+      "scenarioId": "COMPLEX-03",
+      "allowedIntents": [
+        "replan"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "mustPreserveTaskIds": [
+        "complex03-root",
+        "complex03-product",
+        "complex03-channels",
+        "complex03-service",
+        "complex03-images",
+        "complex03-ads",
+        "complex03-inventory",
+        "complex03-checkout"
+      ],
+      "mustNotCreateTitles": [
+        "交付青芽礼盒主图v3",
+        "核对青芽首批可售库存",
+        "完成青芽首批商品页面",
+        "形成青芽首批客服问答",
+        "确认青芽首批发货答复"
+      ],
+      "requiredEvidenceRefs": [
+        "complex03-pack-v2",
+        "complex03-consumer-map",
+        "complex03-schedule-agreement"
+      ],
+      "manualChecks": [
+        "只新增本批包装说明v2，不重拍图片、不重核未变化库存、不重建正在做的页面、客服与发货答复。",
+        "页面page、客服faq、发货答复dispatch三个现有消费者各自接到新增结果，按需更新标准或依赖；不能只更新其中一个或只在tips交接。",
+        "保留checkout已经包含的三个消费者前置，它已具有传递输入关系；不为了多改一项添加冗余新检查或移动无影响广告素材。",
+        "区分页面已有四个版块初稿、客服非包装问答进展与正式任务完成；不覆盖已完成资产、现有Owner或原EWD基线。",
+        "确认9月2日说明、9月3日三个使用方、9月4日联动核对的现有边界能衔接，未改日期也需说明检查依据；不增加价格、渠道、预算或对外发货承诺。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "complex03-root",
+        "complex03-product",
+        "complex03-channels",
+        "complex03-service",
+        "complex03-images",
+        "complex03-ads",
+        "complex03-inventory",
+        "complex03-checkout"
+      ]
+    },
+    {
+      "scenarioId": "COMPLEX-04",
+      "allowedIntents": [
+        "replan"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "mustPreserveTaskIds": [
+        "complex04-root",
+        "complex04-copy-branch",
+        "complex04-visual-branch",
+        "complex04-delivery-branch",
+        "complex04-copy-v4",
+        "complex04-cover-v4",
+        "complex04-copy-v5",
+        "complex04-cover-v5",
+        "complex04-package"
+      ],
+      "mustNotCreateTitles": [
+        "收齐观禾当前版本批准",
+        "整理观禾最终交付包",
+        "留存观禾文案v4",
+        "留存观禾封面v4"
+      ],
+      "requiredEvidenceRefs": [
+        "complex04-receipt-a",
+        "complex04-receipt-b",
+        "complex04-reconcile-scope",
+        "complex04-review-report"
+      ],
+      "manualChecks": [
+        "可审阅的只是回执差异表及对approval的使用关系；这一局部交付事实完整，不因尚未选最终版本就把整个整理动作阻塞。",
+        "新表并列两份回执、同一签署时间、入库差异与缺失的取代关系，保持最终批准结论未知；不能以B更新、措辞更强或作者报告替代有权确认。",
+        "保留approval原验收要求及Owner，仅补实际需要的依赖；package已经依赖approval，应保持原任务与最终批准门槛。",
+        "v5已被策划审阅不等于客户已接受，不将任何in_progress/open任务标完成，不把v4文件留存的完成记录当最终交付批准。",
+        "表可于9月2日按已确认范围整理，但不声称最终9月6日交付已无风险；不联系客户、不替客户挑选版本或自行解锁确认字段。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "complex04-root",
+        "complex04-copy-branch",
+        "complex04-visual-branch",
+        "complex04-delivery-branch",
+        "complex04-copy-v4",
+        "complex04-cover-v4",
+        "complex04-copy-v5",
+        "complex04-cover-v5",
+        "complex04-package"
+      ]
+    },
+    {
+      "scenarioId": "COMPLEX-05",
+      "allowedIntents": [
+        "replan"
+      ],
+      "allowedDispositions": [
+        "needs_clarification",
+        "route_required"
+      ],
+      "mustPreserveTaskIds": [
+        "complex05-root",
+        "complex05-headquarters",
+        "complex05-store01",
+        "complex05-store02",
+        "complex05-guide",
+        "complex05-layout01",
+        "complex05-photos01",
+        "complex05-layout02",
+        "complex05-arrival02"
+      ],
+      "mustNotCreateTitles": [],
+      "requiredEvidenceRefs": [
+        "complex05-read-receipt",
+        "complex05-discussion-receipt"
+      ],
+      "manualChecks": [
+        "明确只读9/31项及部分主题，不能编造其余22项、整树总量、完成情况或完整计划；baseTaskVersions只回显实际可见9项。",
+        "请求按已授权游标补读各分支后代以及未读讨论/历史，保持tasks、subtasks、discussions、history与查重的真实partial状态；不把补读任务转嫁为用户手抄。",
+        "根和直属分支已见仍不等于后代完整，当前请求是整树重规划，不能缩写为可确认的全局方案；无依据不更改当前可见任务。",
+        "可说明已完成指引与原进行中任务继续被保留；不要为未知工作补全门店、角色、排班或通知动作。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "complex05-root",
+        "complex05-headquarters",
+        "complex05-store01",
+        "complex05-store02",
+        "complex05-guide",
+        "complex05-layout01",
+        "complex05-photos01",
+        "complex05-layout02",
+        "complex05-arrival02"
+      ]
+    },
+    {
+      "scenarioId": "COMPLEX-06",
+      "allowedIntents": [
+        "replan"
+      ],
+      "allowedDispositions": [
+        "needs_clarification",
+        "route_required"
+      ],
+      "mustPreserveTaskIds": [
+        "complex06-root",
+        "complex06-documents",
+        "complex06-review",
+        "complex06-materials",
+        "complex06-issue-index",
+        "complex06-site-window",
+        "complex06-receipt-photos",
+        "complex06-issue-review",
+        "complex06-handover"
+      ],
+      "mustNotCreateTitles": [],
+      "requiredEvidenceRefs": [
+        "complex06-external-read-receipt",
+        "complex06-local-scope"
+      ],
+      "manualChecks": [
+        "识别本组任务覆盖完整但外部必要前置仅引用可见，不能用本组ACL verified推出外部对象已授权或已完成。",
+        "不创建占位外部Task、不补造标题、Owner、版本、状态、交期或证据；输出版本映射只含九个可见本组任务。",
+        "提出经有权方提供必要摘要或受控重读的下一步，限定需要证明的前置条件与可用时间，不声称已执行读取或诱导绕权限。",
+        "未确认外部前置时不能承诺现场问题查看与最终移交按期；现有资料目录与收件影像可继续，不能机械阻塞所有本组工作或重建它们。",
+        "保持输入中的外部引用缺口可诊断，不为让图校验通过而静默删掉外部依赖；收件影像不升级为问题验收。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "complex06-root",
+        "complex06-documents",
+        "complex06-review",
+        "complex06-materials",
+        "complex06-issue-index",
+        "complex06-site-window",
+        "complex06-receipt-photos",
+        "complex06-issue-review",
+        "complex06-handover"
+      ]
+    },
+    {
+      "scenarioId": "COMPLEX-07",
+      "allowedIntents": [
+        "replan"
+      ],
+      "allowedDispositions": [
+        "needs_clarification",
+        "route_required"
+      ],
+      "mustPreserveTaskIds": [
+        "complex07-root",
+        "complex07-engineering",
+        "complex07-review",
+        "complex07-old-a",
+        "complex07-baseline-c",
+        "complex07-matrix",
+        "complex07-checklist",
+        "complex07-sample-index",
+        "complex07-summary",
+        "complex07-archive"
+      ],
+      "mustNotCreateTitles": [],
+      "requiredEvidenceRefs": [
+        "complex07-graph-export",
+        "complex07-cancellation",
+        "complex07-unresolved-handoffs"
+      ],
+      "manualChecks": [
+        "指出现有matrix与checklist互相依赖构成环，以及sample-index依赖已取消old-a，是两类独立问题；不能只报告其中一类后给可行排期。",
+        "在没有交付拆分或纠错确认时，不静默删边、不把循环伪装成普通串行、不重建同名树；提出需澄清编号模板/填好结果边界的关键问题。",
+        "不重开取消任务，不将完成的C版范围基线假装成供应资料替代品；要求有依据的供应资料承接对象。",
+        "最多两个关键问题，保持原图问题与版本可追溯；待决关系解决前不标ready，不保证9月8日前完成。",
+        "归档命名目录独立可继续，保留其原ID；本例故意包含不合法输入图，不允许改夹具或放宽校验掩盖输入异常。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "complex07-root",
+        "complex07-engineering",
+        "complex07-review",
+        "complex07-old-a",
+        "complex07-baseline-c",
+        "complex07-matrix",
+        "complex07-checklist",
+        "complex07-sample-index",
+        "complex07-summary",
+        "complex07-archive"
+      ]
+    },
+    {
+      "scenarioId": "COMPLEX-08",
+      "allowedIntents": [
+        "replan"
+      ],
+      "allowedDispositions": [
+        "needs_clarification",
+        "route_required"
+      ],
+      "mustPreserveTaskIds": [
+        "complex08-root",
+        "complex08-writing",
+        "complex08-delivery",
+        "complex08-outline",
+        "complex08-copy",
+        "complex08-quotes",
+        "complex08-visual",
+        "complex08-proof",
+        "complex08-package"
+      ],
+      "mustNotCreateTitles": [
+        "确认禾页访谈提纲",
+        "留存禾页已批准视觉v2",
+        "完成禾页访谈成稿",
+        "完成禾页成稿与引用复核"
+      ],
+      "requiredEvidenceRefs": [
+        "complex08-deadline",
+        "complex08-quote-reply",
+        "complex08-capacity-old",
+        "complex08-overlap-charter"
+      ],
+      "manualChecks": [
+        "指出9月3日12时交付与受访方最早14时答复及编辑16至17时窗口冲突；日期字段同为9月3日不能掩盖日内先后。",
+        "不得把旧12人时除以三人得到保证，也不把原叶项估算当剩余投入；等待答复是历时，不计入人类投入。",
+        "使用本案例显式members快照：作者只确认1小时交接核对，编辑旧9月2日窗口已撤回，策划窗口过期。未提供的可用时间保持未知。",
+        "三人均可改字不代表可以互换结果责任；Creator或项目经理不自动包办，不以帮忙提议替代接受，不改已确认成稿与复核Owner。",
+        "保留已确认截止与引用核对要求，清楚列出需用户选择或经授权调整的影响，最多两个阻塞问题；在没有确认新范围/日期/可用性前不承诺按期。"
+      ],
+      "mustNotUpdateTaskIds": [
+        "complex08-root",
+        "complex08-writing",
+        "complex08-delivery",
+        "complex08-outline",
+        "complex08-copy",
+        "complex08-quotes",
+        "complex08-visual",
+        "complex08-proof",
+        "complex08-package"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "notice": "Scoring only. Do not give this file to the executor. Runtime-dependent IDs are resolved from the prior actual output before the next turn is executed.",
+  "expectations": [
+    {
+      "scenarioId": "MULTI-A2",
+      "allowedIntents": [
+        "refine"
+      ],
+      "allowedDispositions": [
+        "ready_for_confirmation"
+      ],
+      "maxCreates": 0,
+      "maxUpdates": 1,
+      "manualChecks": [
+        "沿用第一轮实际生成的草稿ID，只改变未锁定的日期为9月3日；已确认目标、标准、人选不变。"
+      ],
+      "requiredUpdateTaskIds": [
+        "new:multi-a-proofread"
+      ]
+    }
+  ]
+}

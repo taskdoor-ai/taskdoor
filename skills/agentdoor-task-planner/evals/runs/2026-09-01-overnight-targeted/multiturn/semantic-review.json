@@ -1,0 +1,409 @@
+{
+  "reviewer": {
+    "kind": "independent_codex_agent",
+    "taskName": "overnight_blind_core_b",
+    "humanIndustryReview": false,
+    "productionValidation": false
+  },
+  "executionBoundaries": {
+    "runRoot": "/tmp/agentdoor-planner-overnight-targeted-multi-20260901",
+    "reviewMode": "仅对 episode C 三轮冻结输入、输出、期望、协议、清单与结构报告作离线独立语义评审；没有生成或改写被评输出。",
+    "readScope": [
+      "C/turn-1/protocol-snapshot.json",
+      "C/turn-1/expectations-snapshot.json",
+      "C/turn-1/inputs/MULTI-C1.json",
+      "C/turn-1/outputs/MULTI-C1.json",
+      "C/turn-1/manifest.json",
+      "C/turn-1/structural-report.json",
+      "C/turn-2/protocol-snapshot.json",
+      "C/turn-2/expectations-snapshot.json",
+      "C/turn-2/inputs/MULTI-C2.json",
+      "C/turn-2/outputs/MULTI-C2.json",
+      "C/turn-2/manifest.json",
+      "C/turn-2/structural-report.json",
+      "C/turn-3/protocol-snapshot.json",
+      "C/turn-3/expectations-snapshot.json",
+      "C/turn-3/inputs/MULTI-C3.json",
+      "C/turn-3/outputs/MULTI-C3.json",
+      "C/turn-3/manifest.json",
+      "C/turn-3/structural-report.json"
+    ],
+    "writes": [
+      "semantic-review.json"
+    ],
+    "inputOutputProtocolExpectationManifestOrStructuralReportModified": false,
+    "plannerModelCalled": false,
+    "visibleChecks": [
+      "逐轮核对冻结 manualChecks、允许 intent/disposition、create/update 上限和 mustNotUpdateTaskIds。",
+      "核对 C1 单任务最小范围、明确负责人和期限；C2 合成保存映射与 sim:C:1 复用；C3 不同 SKU 的独立新建、旧任务保留及三处错字细节可在执行时定位而不阻塞。",
+      "核对跨轮 manifest 哈希链、候选/合成任务稳定 ID、任务版本回显、查重关系、ACL 范围声明和 externalEffects 字段。",
+      "对本评审每条 evidence 的 file 与 JSON Pointer 做存在性自检。"
+    ],
+    "unobserved": [
+      "这是模型执行的离线语义评审，不是人类行业专家评审。",
+      "这是合成夹具评审，不是生产验证；没有调用真实创建、保存、幂等、ACL、接受、通知或写回服务。",
+      "冻结工件声明 externalEffects=none 且 manifest 声明仅离线转换；仅凭这些 JSON 不能独立证明运行时绝无外部副作用。",
+      "没有评估真实执行者能否在生产素材中成功定位 SKU-CUP-B 的三处错字，只判断该细节缺口是否应阻塞任务候选。"
+    ],
+    "statusPolicy": "passed 表示冻结可见证据满足该轮期望和本 episode 指定语义；failed 表示有可证实违背；unknown 表示冻结证据不足以裁定。结构有效仅作输入信号，不自动等于语义通过。"
+  },
+  "cases": [
+    {
+      "caseId": "MULTI-C1",
+      "status": "passed",
+      "summary": "正确把 SKU-CUP-A 的五处错字校对收敛为一个可审阅候选，保留明确负责人颜北和 2026-09-02 期限，没有扩展文案、图片、售价、卖点或功效承诺。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "意图和最小范围符合冻结 manualCheck：仅一个根级 create，清稿与五处改动清单作为同一可核对结果，没有拆分步骤任务。",
+          "evidence": [
+            {
+              "file": "C/turn-1/expectations-snapshot.json",
+              "pointer": "/expectations/0/manualChecks/0",
+              "note": "冻结期望要求只为明确 SKU/五处错字产生一项候选。"
+            },
+            {
+              "file": "C/turn-1/inputs/MULTI-C1.json",
+              "pointer": "/message",
+              "note": "用户明确要求单个校对任务及清稿、改动清单。"
+            },
+            {
+              "file": "C/turn-1/inputs/MULTI-C1.json",
+              "pointer": "/context/sourceRefs/0/text",
+              "note": "合成业务记录列出 SKU-CUP-A 和五处具体错字。"
+            },
+            {
+              "file": "C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes",
+              "note": "changes 中只有一个 create。"
+            },
+            {
+              "file": "C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria",
+              "note": "验收同时覆盖清稿、五项差异和禁止扩大范围。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "责任、日期与未知估算处理有据：颜北来自明确指定，明天按 Asia/Shanghai 解析为 2026-09-02；缺历史与容量时没有臆测 EWD。",
+          "evidence": [
+            {
+              "file": "C/turn-1/inputs/MULTI-C1.json",
+              "pointer": "/constraints",
+              "note": "冻结约束给出 explicitOwnerId 和 hardDueOn。"
+            },
+            {
+              "file": "C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "note": "负责人推荐为 ecom-m2，basis=explicit。"
+            },
+            {
+              "file": "C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes/0/fields/schedule",
+              "note": "期限为 2026-09-02，且解释了时区日期推导。"
+            },
+            {
+              "file": "C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "note": "EWD 保持 null/unknown 并说明证据缺口。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "首轮候选 ID 在 root、create target 与下一步中一致；输出只进入审阅态并声明无外部副作用。",
+          "evidence": [
+            {
+              "file": "C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/rootTaskId",
+              "note": "稳定候选 ID 为 new:multi-c-cup-a-proofreading。"
+            },
+            {
+              "file": "C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/proposal/changes/0/targetId",
+              "note": "create target 与 rootTaskId 相同。"
+            },
+            {
+              "file": "C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/nextActions/0",
+              "note": "下一步仅审阅同一候选。"
+            },
+            {
+              "file": "C/turn-1/outputs/MULTI-C1.json",
+              "pointer": "/externalEffects",
+              "note": "声明 none。"
+            },
+            {
+              "file": "C/turn-1/manifest.json",
+              "pointer": "/notice",
+              "note": "运行清单声明仅离线夹具转换，无生产写入或通知。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "MULTI-C2",
+      "status": "passed",
+      "summary": "正确依据前轮实际候选的合成保存回执定位 sim:C:1，建议打开原任务且不再创建或更新，也没有把离线回执描述成生产幂等保证。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "跨轮链路和 ID 映射可验证：turn-2 manifest 从实际 MULTI-C1 输出执行 commit_simulated，输入回执将首轮稳定候选 ID 映射为 sim:C:1，当前快照也包含该任务版本 1。",
+          "evidence": [
+            {
+              "file": "C/turn-2/manifest.json",
+              "pointer": "/previous",
+              "note": "previousCaseId=MULTI-C1、transition=commit_simulated，并记录前轮实际输出哈希。"
+            },
+            {
+              "file": "C/turn-1/structural-report.json",
+              "pointer": "/results/0/outputSha256",
+              "note": "该前轮实际输出哈希与 turn-2 manifest 的 previous.outputSha256 一致。"
+            },
+            {
+              "file": "C/turn-2/inputs/MULTI-C2.json",
+              "pointer": "/context/sourceRefs/3/syntheticTaskIdMap",
+              "note": "new:multi-c-cup-a-proofreading 映射到 sim:C:1。"
+            },
+            {
+              "file": "C/turn-2/inputs/MULTI-C2.json",
+              "pointer": "/context/tasks/0",
+              "note": "合成已保存任务为 sim:C:1、version=1，内容保留首轮候选。"
+            },
+            {
+              "file": "C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/baseTaskVersions",
+              "note": "回显 sim:C:1 的版本 1。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "重试复用了原任务：same_outcome 判断覆盖相同 SKU、五处错字、交付物和期限；proposal=null、零 create/update，只路由打开 sim:C:1，满足 mustNotUpdate。",
+          "evidence": [
+            {
+              "file": "C/turn-2/inputs/MULTI-C2.json",
+              "pointer": "/message",
+              "note": "用户因未见成功页请求再次创建同一结果。"
+            },
+            {
+              "file": "C/turn-2/expectations-snapshot.json",
+              "pointer": "/expectations/0",
+              "note": "冻结期望要求 maxCreates=0、maxUpdates=0 且不得更新 sim:C:1。"
+            },
+            {
+              "file": "C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/duplicateCheck/assessments/0",
+              "note": "将 sim:C:1 判为 same_outcome 并说明同一结果。"
+            },
+            {
+              "file": "C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/proposal",
+              "note": "没有候选变更。"
+            },
+            {
+              "file": "C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/nextActions/0",
+              "note": "只打开 sim:C:1。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "没有夸大保存、Owner 接受或幂等状态；输出明确限定为离线合成判断并声明 externalEffects=none。",
+          "evidence": [
+            {
+              "file": "C/turn-2/inputs/MULTI-C2.json",
+              "pointer": "/context/sourceRefs/3/text",
+              "note": "回执明确未调用真实创建、幂等、接受或通知服务。"
+            },
+            {
+              "file": "C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/warnings/0",
+              "note": "正式 ownerId 仍为 null，没有把推荐当作接受。"
+            },
+            {
+              "file": "C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/warnings/1",
+              "note": "明确不代表生产保存、幂等或通知验证。"
+            },
+            {
+              "file": "C/turn-2/outputs/MULTI-C2.json",
+              "pointer": "/externalEffects",
+              "note": "声明 none。"
+            },
+            {
+              "file": "C/turn-2/manifest.json",
+              "pointer": "/previous/notice",
+              "note": "跨轮状态来自前轮实际输出，但没有生产操作。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "MULTI-C3",
+      "status": "passed",
+      "summary": "正确将 SKU-CUP-B 的三处错字清稿视为独立结果，新建一个候选并原样保留 sim:C:1；三处具体字样与位置可在执行开始时固定，因此没有把非身份细节当成规划阻塞项。",
+      "findings": [
+        {
+          "severity": "info",
+          "text": "不同 SKU 和不同错字集合被判为 different_instance；输出只为 SKU-CUP-B 新建一项候选，并以 preservedTaskIds 明确保留 SKU-CUP-A 的 sim:C:1，未因共同负责人或相似标题误合并或更新旧任务。",
+          "evidence": [
+            {
+              "file": "C/turn-3/inputs/MULTI-C3.json",
+              "pointer": "/message",
+              "note": "用户明确要求 SKU-CUP-A 原样推进，另做 SKU-CUP-B 三处错字。"
+            },
+            {
+              "file": "C/turn-3/expectations-snapshot.json",
+              "pointer": "/expectations/0",
+              "note": "冻结期望允许一个 create、零 update，并禁止更新 sim:C:1。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/changes",
+              "note": "只有一个 SKU-CUP-B create。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/preservedTaskIds",
+              "note": "显式保留 sim:C:1。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/duplicateCheck/assessments/0",
+              "note": "把现有 SKU-CUP-A 任务判为 different_instance。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "三处错字的具体文字和位置缺失没有错误阻塞：业务对象、数量、交付物和禁止改动边界已确定，输出把清单及源版本定位留到执行开始，并用三项差异与版本差异形成可验收标准。",
+          "evidence": [
+            {
+              "file": "C/turn-3/inputs/MULTI-C3.json",
+              "pointer": "/context/sourceRefs/6/text",
+              "note": "冻结需求给出 SKU-CUP-B、三处错字、清稿、三处差异和禁止改动范围，但没有具体字样或位置。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/changes/0/fields/acceptanceCriteria",
+              "note": "要求取得并修正三处指定错字、列出三项差异且只改三处文字。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/changes/0/fields/tips/0",
+              "note": "把清单和源版本固定为执行开始步骤，并说明不扩大任务身份。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/warnings/0",
+              "note": "如实披露素材细节缺口及其非阻塞性质。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/questions",
+              "note": "没有为可执行时定位的细节提出阻塞问题。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/disposition",
+              "note": "保持 ready_for_confirmation。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "新旧 ID、版本和跨轮保留稳定：turn-3 以 retain 承接 MULTI-C2，回显 sim:C:1 版本 1；新候选在 root、create target 和下一步中一致且与旧 ID 不同。",
+          "evidence": [
+            {
+              "file": "C/turn-3/manifest.json",
+              "pointer": "/previous",
+              "note": "previousCaseId=MULTI-C2、transition=retain，并记录前轮实际输出哈希。"
+            },
+            {
+              "file": "C/turn-2/structural-report.json",
+              "pointer": "/results/0/outputSha256",
+              "note": "前轮实际输出哈希与 turn-3 manifest 的 previous.outputSha256 一致。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/baseTaskVersions",
+              "note": "旧任务 sim:C:1 版本 1 被稳定回显。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/rootTaskId",
+              "note": "新候选 ID 为 new:multi-c-cup-b-proofreading。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/changes/0/targetId",
+              "note": "create target 与新 rootTaskId 一致。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/nextActions/0/taskId",
+              "note": "下一步审阅同一新候选。"
+            }
+          ]
+        },
+        {
+          "severity": "info",
+          "text": "明确负责人和期限均被保留，EWD 在证据不足时保持未知；输出声明无外部副作用，正式接受与排期仍留给现行流程。",
+          "evidence": [
+            {
+              "file": "C/turn-3/inputs/MULTI-C3.json",
+              "pointer": "/constraints",
+              "note": "冻结约束锁定 SKU-CUP-B 范围和 2026-09-03。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/changes/0/fields/ownerRecommendation",
+              "note": "颜北 ecom-m2 为 explicit 推荐。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/changes/0/fields/schedule",
+              "note": "明确期限为 2026-09-03。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/proposal/changes/0/fields/estimate",
+              "note": "缺同范围历史、具体位置和容量时保留 null/unknown。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/warnings/1",
+              "note": "明确正式接受与排期尚未发生。"
+            },
+            {
+              "file": "C/turn-3/outputs/MULTI-C3.json",
+              "pointer": "/externalEffects",
+              "note": "声明 none。"
+            },
+            {
+              "file": "C/turn-3/manifest.json",
+              "pointer": "/notice",
+              "note": "清单声明仅离线夹具转换，无生产记录或通知。"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "passed": 3,
+    "failed": 0,
+    "unknown": 0
+  },
+  "pointerSelfCheck": {
+    "verified": true,
+    "checkedEvidencePointers": 53,
+    "errors": []
+  },
+  "conclusion": "episode C 三轮在冻结离线证据范围内均通过：C1 单任务，C2 复用 sim:C:1 且不重复创建，C3 为不同 SKU 新建并保留旧任务；这不是人类行业评审，也不是生产验证。"
+}

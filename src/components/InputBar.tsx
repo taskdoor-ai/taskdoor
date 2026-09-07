@@ -22,9 +22,10 @@ export type InputAttachment = {
 };
 
 type InputBarProps = {
+  ariaLabel?: string;
   value?: string;
   onChange?: (value: string) => void;
-  onSend: (content: string) => void;
+  onSend?: (content: string) => void;
   onStop?: () => void;
   onAttach?: (files: FileList) => void;
   onRemoveAttachment?: (id: string) => void;
@@ -32,6 +33,7 @@ type InputBarProps = {
   status?: InputStatus;
   placeholder?: string;
   autoFocus?: boolean;
+  draftHint?: string;
 };
 
 function formatBytes(bytes: number) {
@@ -41,6 +43,7 @@ function formatBytes(bytes: number) {
 }
 
 export const InputBar = memo(function InputBar({
+  ariaLabel = "描述问题",
   value: controlledValue,
   onChange,
   onSend,
@@ -51,6 +54,7 @@ export const InputBar = memo(function InputBar({
   status = "ready",
   placeholder = "描述你想解决的问题…",
   autoFocus = true,
+  draftHint,
 }: InputBarProps) {
   const [internalValue, setInternalValue] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
@@ -58,7 +62,7 @@ export const InputBar = memo(function InputBar({
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
   const isAnalyzing = status === "analyzing";
-  const canSend = value.trim().length > 0 && !isAnalyzing;
+  const canSend = Boolean(onSend) && value.trim().length > 0 && !isAnalyzing;
 
   const setValue = useCallback(
     (next: string) => {
@@ -83,13 +87,13 @@ export const InputBar = memo(function InputBar({
 
   const submit = useCallback(() => {
     const content = value.trim();
-    if (!content || isAnalyzing) return;
+    if (!content || isAnalyzing || !onSend) return;
     onSend(content);
     setValue("");
   }, [isAnalyzing, onSend, setValue, value]);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (onSend && event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       submit();
     }
@@ -125,7 +129,7 @@ export const InputBar = memo(function InputBar({
       )}
 
       <textarea
-        aria-label="描述问题"
+        aria-label={ariaLabel}
         disabled={isAnalyzing}
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={handleKeyDown}
@@ -135,32 +139,34 @@ export const InputBar = memo(function InputBar({
         value={value}
       />
 
-      <div className="input-toolbar">
+      {(onAttach || onSend || draftHint) && <div className="input-toolbar">
         <div className="input-tools-left">
-          <input
-            hidden
-            multiple
-            onChange={handleFileChange}
-            ref={fileRef}
-            type="file"
-          />
-          <button
-            aria-label="添加参考资料"
-            className="icon-button"
-            disabled={isAnalyzing}
-            onClick={(event) => {
-              event.stopPropagation();
-              fileRef.current?.click();
-            }}
-            type="button"
-          >
-            <Paperclip size={17} />
-          </button>
-          <span className="input-hint">Enter 发送 · Shift + Enter 换行</span>
+          {onAttach && <>
+            <input
+              hidden
+              multiple
+              onChange={handleFileChange}
+              ref={fileRef}
+              type="file"
+            />
+            <button
+              aria-label="添加参考资料"
+              className="icon-button"
+              disabled={isAnalyzing}
+              onClick={(event) => {
+                event.stopPropagation();
+                fileRef.current?.click();
+              }}
+              type="button"
+            >
+              <Paperclip size={17} />
+            </button>
+          </>}
+          <span className="input-hint">{draftHint ?? "Enter 发送 · Shift + Enter 换行"}</span>
         </div>
 
-        <button
-          aria-label={isAnalyzing ? "停止分析" : "开始分析"}
+        {onSend && <button
+          aria-label={isAnalyzing ? "停止处理" : "发送"}
           className={`send-button ${canSend || isAnalyzing ? "active" : ""}`}
           disabled={!canSend && !isAnalyzing}
           onClick={(event) => {
@@ -171,8 +177,8 @@ export const InputBar = memo(function InputBar({
           type="button"
         >
           {isAnalyzing ? <Square fill="currentColor" size={12} /> : <ArrowUp size={17} />}
-        </button>
-      </div>
+        </button>}
+      </div>}
     </div>
   );
 });

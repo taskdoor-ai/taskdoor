@@ -447,7 +447,7 @@ Handoff 激活的 ChangeSet 对被改 Task / Responsibility 必须记录 before 
 - 原 Owner 在激活前始终保留。
 - 通常由当前 Owner 与目标成员接受同一 Revision。仅当当前 Owner 确实不可用且应急策略授权时，`fromPrincipalId` 仍记录当前 Owner，Steward 同时是临时 recipient 与 `createdByPrincipalId`；`authorized-steward Consent` 记录正常 source Consent 的例外，不得伪造当前 Owner Consent，也不得借例外直接把 Owner 指给第三人。
 - 激活时一次性执行 `ownerId: A → B`，不能先清空，也不能短暂双 Owner。
-- 正式 Task 首次由已接受 Proposal 物化后，任何 Owner 变化只能由 `owner-transfer` Handoff 激活事务写入；普通 ChangeSet、旧 UI / API、管理员直改与 Agent 命令都必须拒绝。Steward 应急路径也不例外。
+- 正式 Task 可以以空 `ownerId` 创建；首次 `0 → 1` 仍需明确人选、目标成员接受、权限与版本检查，并记录指派事实，但不是 `A → B` 转移。已有有效 Owner 后，任何 Owner 变化只能由 `owner-transfer` Handoff 激活事务写入；普通 ChangeSet、旧 UI / API、管理员直改与 Agent 命令都必须拒绝。Steward 应急路径也不例外。
 - 父 Task Owner 变化不自动覆盖子 Task Owner。
 
 对于 Result Return：

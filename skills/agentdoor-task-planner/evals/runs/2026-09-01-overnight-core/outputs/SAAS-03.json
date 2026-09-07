@@ -1,0 +1,162 @@
+{
+  "schemaVersion": "agentdoor.task-plan.v0.2",
+  "requestId": "req-saas-03",
+  "baseSnapshotId": "snapshot-saas-03-v1",
+  "baseRevision": 1,
+  "baseTaskVersions": {
+    "saas03-root": 5,
+    "saas03-scope": 3,
+    "saas03-map": 4,
+    "saas03-uat": 2,
+    "saas03-train": 2
+  },
+  "intent": "replan",
+  "disposition": "needs_clarification",
+  "summary": "建议只补一项停用账号字段核对候选，保留已完成迁移、UAT负责人和12条标准；先明确新增结果对UAT及培训的前置影响，再确认剩余排期。",
+  "reasoningSummary": [
+    {
+      "text": "客户范围确认v3新增停用账号字段核对，并明确本期不导入历史关账数据；其他已确认范围不变。",
+      "evidenceRefs": [
+        "saas03-client-v3",
+        "saas03-d1"
+      ]
+    },
+    {
+      "text": "映射表v2及200条基础字段演练已完成且仍有效，只缺停用账号字段，不能覆盖原完成记录或重做全量。",
+      "evidenceRefs": [
+        "saas03-map",
+        "saas03-h1",
+        "saas03-d2"
+      ]
+    },
+    {
+      "text": "钟宁与12条核心用例标准已确认；改由许棠负责只是一条未接受提议，本轮保持原责任及标准。",
+      "evidenceRefs": [
+        "req-saas-03",
+        "saas03-h2",
+        "saas03-uat",
+        "saas03-d3"
+      ]
+    },
+    {
+      "text": "既有UAT截止9月9日、培训截止9月10日，总交付9月12日；快照没有说明新字段结果是否影响两项现行交付，尚不能确认依赖与可行日期。",
+      "evidenceRefs": [
+        "saas03-uat",
+        "saas03-train",
+        "saas03-root",
+        "saas03-client-v3"
+      ]
+    }
+  ],
+  "proposal": {
+    "rootTaskId": "saas03-root",
+    "complexity": "complex",
+    "changes": [
+      {
+        "id": "saas03-create-inactive-account-check",
+        "action": "create",
+        "targetId": "new:saas03-inactive-account-check",
+        "parentId": "saas03-root",
+        "fields": {
+          "title": "补齐停用账号字段核对",
+          "acceptanceCriteria": [
+            "以已完成映射表v2和有效200条基础演练记录为基线，仅补充停用账号字段的映射与核对记录。",
+            "按客户范围确认v3逐项记录停用账号字段核对结果、差异及处理状态，并说明补充记录与原v2的版本关系。",
+            "本项不重新执行已有效的基础字段演练，不导入历史关账数据，也不更改原迁移任务的完成记录。"
+          ],
+          "ownerRecommendation": {
+            "memberId": "saas-m3",
+            "basis": "recommended",
+            "reason": "数据迁移职责匹配新增字段核对，且当前报告明确原映射的缺口；这是新增工作责任候选。",
+            "evidenceRefs": [
+              "saas-m3-role",
+              "saas03-d2"
+            ]
+          },
+          "participantRecommendations": [],
+          "schedule": {
+            "startOn": null,
+            "dueOn": null,
+            "basis": "unknown",
+            "assumptions": [
+              "需先确认本结果是否为9月9日UAT和9月10日培训的必要输入，以及实际使用窗口；本轮不捏造交付日或自动平移旧日期。"
+            ],
+            "evidenceRefs": [
+              "saas03-uat",
+              "saas03-train",
+              "saas03-client-v3"
+            ]
+          },
+          "estimate": {
+            "ewdHours": null,
+            "basis": "unknown",
+            "assumptions": [
+              "新字段核对量、数据状态及工具方式尚未提供，不能从原完成记录推算新增人时。"
+            ],
+            "evidenceRefs": [
+              "saas03-d2",
+              "saas03-h1"
+            ]
+          },
+          "dependsOnTaskIds": [
+            "saas03-map"
+          ],
+          "tips": [
+            "完成后引用新的补充记录，不覆盖映射表v2和原200条基础演练结果。"
+          ]
+        },
+        "reason": "客户已经确认独立新增字段范围，以新增子任务保留原完成结果；依赖及排期影响仍待明确。",
+        "evidenceRefs": [
+          "saas03-client-v3",
+          "saas03-d2",
+          "saas03-map"
+        ]
+      }
+    ],
+    "preservedTaskIds": [
+      "saas03-root",
+      "saas03-scope",
+      "saas03-map",
+      "saas03-uat",
+      "saas03-train"
+    ]
+  },
+  "duplicateCheck": {
+    "status": "completed",
+    "scopeTeamIds": [
+      "team-saas"
+    ],
+    "assessments": [],
+    "coverageNote": "合成服务端查重已覆盖本次授权团队的相关活动及归档任务。"
+  },
+  "questions": [
+    {
+      "field": "proposal.dependencies_and_schedule",
+      "question": "停用账号字段核对结果是否必须在现有9月9日UAT、9月10日培训前使用，具体影响哪些用例或培训内容？请确认使用边界，以便只调整受影响任务的依赖和日期，并保留钟宁及12条已确认标准。",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "本候选仍为needs_clarification；在新增结果对后续工作的影响明确前，不能把原UAT与培训日期视作已核验可行。",
+    "所有既有Owner、任务ID、完成状态、确认字段和未列字段原样保留；不采纳未确认的换人提议。",
+    "成员完整容量未知，9月5日UAT协作窗口不能代表整段验证工期；EWD不含等待。"
+  ],
+  "nextActions": [
+    {
+      "action": "ask_user",
+      "taskId": "saas03-root",
+      "label": "确认新增字段结果对UAT和培训的使用边界"
+    },
+    {
+      "action": "open_task",
+      "taskId": "saas03-uat",
+      "label": "核对现行UAT用例和使用窗口"
+    },
+    {
+      "action": "open_task",
+      "taskId": "saas03-train",
+      "label": "核对培训材料受影响范围"
+    }
+  ],
+  "externalEffects": "none"
+}

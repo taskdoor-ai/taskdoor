@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>我的工作 · AgentDoor 设计稿</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231268d6'/%3E%3Cpath d='M10 25V7h12v18M7 25h18M18 16h1' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <style>
+    /* Independent, throwaway design proposal. No application storage or production API.
+       Reuses the palette, type scale and shapes in styles/agentdoor-tokens.css.
+       Question: what task information helps an owner decide what to do next?
+       Proposal: one action list, with reasons and traceable evidence; no second task truth. */
+    :root {
+      --ad-canvas:#fff; --ad-surface:#fff; --ad-surface-quiet:#fafafa;
+      --ad-surface-subtle:#f3f3f2; --ad-sidebar:#f7f7f6;
+      --ad-ink:#17191c; --ad-ink-secondary:#565a60; --ad-ink-tertiary:#6b7077;
+      --ad-border:#dcd8d1; --ad-border-soft:#ebe8e3;
+      --ad-route:#1268d6; --ad-route-hover:#0d57b5; --ad-route-soft:#e7f1fd; --ad-route-ink:#0a438e;
+      --ad-danger:#b43a35; --ad-danger-soft:#fce9e7; --ad-inference:#8a5a13; --ad-fact:#24735a;
+      --ad-font-sans:"Geist Variable","Noto Sans SC","PingFang SC","Microsoft YaHei",ui-sans-serif,system-ui,sans-serif;
+      --ad-font-mono:"IBM Plex Mono","SFMono-Regular",Consolas,ui-monospace,monospace;
+      --ad-radius-control:8px; --ad-radius-card:12px; --sidebar-width:284px;
+    }
+    * { box-sizing:border-box; }
+    [hidden] { display:none !important; }
+    body { margin:0; color:var(--ad-ink); background:var(--ad-canvas); font:14px/1.6 var(--ad-font-sans); -webkit-font-smoothing:antialiased; }
+    button,input,select,textarea { font:inherit; color:inherit; }
+    button { cursor:pointer; }
+    button:disabled { cursor:not-allowed; opacity:.5; }
+    button,a,input,select,summary { -webkit-tap-highlight-color:transparent; }
+    button { border:0; background:none; }
+    a { color:var(--ad-route); text-decoration:none; }
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[tabindex="-1"]:focus-visible { outline:2px solid var(--ad-route); outline-offset:3px; }
+    :focus:not(:focus-visible) { outline:none; }
+    h1,h2,h3,p { margin:0; }
+    .icon { width:18px; height:18px; flex:none; fill:none; stroke:currentColor; stroke-width:1.65; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; }
+    .icon.sm { width:15px; height:15px; }
+    .muted { color:var(--ad-ink-tertiary); }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .skip { position:fixed; top:-60px; left:20px; z-index:100; padding:10px 16px; border-radius:8px; background:var(--ad-route); color:#fff; }
+    .skip:focus { top:12px; }
+    .icon-button { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:8px; color:var(--ad-ink-secondary); flex:none; }
+    .icon-button:hover { background:var(--ad-surface-subtle); color:var(--ad-ink); }
+    .text-button { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:32px; padding:4px 7px; border-radius:6px; font-size:13px; }
+    .text-button:hover { background:var(--ad-surface-subtle); }
+    .blue { color:var(--ad-route); }
+    .button { display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:8px 14px; min-height:38px; background:var(--ad-surface); border:1px solid var(--ad-border); border-radius:8px; font-weight:500; font-size:13px; }
+    .button:hover { border-color:#aaaeb4; background:var(--ad-surface-quiet); }
+    .button.primary { color:#fff; background:var(--ad-route); border-color:var(--ad-route); }
+    .button.primary:hover { background:var(--ad-route-hover); }
+    .topbar { height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 24px; border-bottom:1px solid var(--ad-border-soft); background:#fff; position:relative; z-index:20; }
+    .team-button { display:flex; gap:11px; align-items:center; min-height:40px; padding:3px 6px 3px 0; border-radius:8px; font-weight:600; letter-spacing:-.15px; }
+    .team-mark { display:grid; place-items:center; width:30px; height:32px; color:var(--ad-route); }
+    .team-mark .icon { width:26px; height:28px; stroke-width:1.8; }
+    .topbar-actions { display:flex; gap:16px; align-items:center; }
+    .avatar { display:inline-grid; place-items:center; width:32px; height:32px; background:#e9ecef; border:1px solid #dfe3e6; border-radius:50%; font-size:12px; font-weight:600; color:#505861; flex:none; }
+    .avatar.me { background:var(--ad-route-soft); color:var(--ad-route-ink); border-color:#d9e7f7; }
+    .notification-button { position:relative; }
+    .notification-button::after { content:""; position:absolute; right:8px; top:7px; width:5px; height:5px; background:var(--ad-route); border-radius:50%; border:1px solid #fff; }
+    .workspace { display:grid; grid-template-columns:var(--sidebar-width) minmax(0,1fr); height:calc(100dvh - 64px); }
+    .sidebar { display:flex; flex-direction:column; min-height:0; background:var(--ad-sidebar); border-right:1px solid var(--ad-border-soft); padding:20px 14px 12px; }
+    .sidebar-tools { display:flex; align-items:center; gap:6px; position:relative; margin:0 2px 14px; }
+    .search-shell { display:flex; align-items:center; gap:7px; background:var(--ad-surface); border:1px solid var(--ad-border-soft); border-radius:8px; min-width:0; height:36px; padding:0 10px; flex:1; color:var(--ad-ink-tertiary); }
+    .search-shell:focus-within { border-color:var(--ad-route); }
+    .search-shell input { border:0; outline:none; width:100%; min-width:0; background:transparent; font-size:13px; }
+    .search-shell input::placeholder { color:var(--ad-ink-tertiary); }
+    .sidebar-tools .icon-button { width:32px; height:36px; }
+    .sidebar-tools .is-filtered { color:var(--ad-route); background:var(--ad-route-soft); }
+    .home-button { display:flex; align-items:center; gap:10px; width:100%; min-height:42px; padding:8px 12px; border-radius:8px; text-align:left; font-weight:600; margin-bottom:15px; }
+    .home-button[aria-current="page"] { color:var(--ad-route-ink); background:var(--ad-route-soft); }
+    .home-button .home-dot { margin-left:auto; width:5px; height:5px; border-radius:50%; background:var(--ad-route); }
+    .home-button:not([aria-current="page"]) .home-dot { display:none; }
+    .index-scroll { flex:1; min-height:0; overflow:auto; scrollbar-width:thin; }
+    .tag-group { margin:0 0 16px; }
+    .group-toggle { display:flex; align-items:center; width:100%; min-height:32px; gap:7px; padding:4px 10px; text-align:left; font-size:12px; color:var(--ad-ink-secondary); }
+    .group-toggle .chevron { margin-left:auto; transition:transform 120ms ease; }
+    .group-toggle[aria-expanded="false"] .chevron { transform:rotate(-90deg); }
+    .group-count { margin-left:4px; color:var(--ad-ink-tertiary); font-family:var(--ad-font-mono); font-size:11px; }
+    .task-index-button { width:100%; min-height:40px; padding:9px 12px 9px 32px; font-size:13px; text-align:left; border-radius:7px; line-height:1.55; overflow-wrap:anywhere; }
+    .task-index-button:hover { background:#edeeed; }
+    .task-index-button[aria-current="page"] { background:var(--ad-route-soft); color:var(--ad-route-ink); font-weight:600; }
+    .sidebar-bottom { padding:10px 3px 0; }
+    .sidebar-bottom button { display:flex; justify-content:flex-start; gap:9px; width:100%; color:var(--ad-ink-secondary); }
+    .filter-chips { display:flex; flex-wrap:wrap; gap:5px; margin:0 4px 10px; }
+    .filter-chip { display:inline-flex; align-items:center; gap:3px; max-width:100%; padding:2px 5px 2px 8px; background:#fff; border:1px solid var(--ad-border-soft); border-radius:6px; font-size:11px; }
+    .filter-chip button { display:grid; place-items:center; width:24px; height:24px; }
+    .filter-popover { position:absolute; left:0; top:44px; z-index:50; width:270px; padding:15px; border:1px solid var(--ad-border-soft); border-radius:12px; background:#fff; box-shadow:0 10px 40px #17191c1a; max-height:min(610px,75vh); overflow:auto; }
+    .popover-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; font-weight:600; }
+    .filter-popover fieldset { border:0; padding:10px 0; margin:0; }
+    .filter-popover fieldset + fieldset { border-top:1px solid var(--ad-border-soft); }
+    .filter-popover legend { padding:0; font-size:12px; color:var(--ad-ink-tertiary); }
+    .filter-option { display:flex; align-items:center; gap:8px; min-height:35px; font-size:13px; cursor:pointer; padding:3px 3px; }
+    input[type="checkbox"] { accent-color:var(--ad-route); width:15px; height:15px; margin:0 3px 0 0; }
+    .filter-foot { display:flex; justify-content:space-between; border-top:1px solid var(--ad-border-soft); padding-top:9px; }
+    .main-scroll { overflow:auto; min-width:0; background:var(--ad-surface-quiet); scrollbar-width:thin; }
+    .page { max-width:1136px; padding:32px 44px 20px; margin:0 auto; }
+    .page-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:23px; }
+    .heading-title { display:flex; align-items:center; gap:12px; }
+    h1 { font-size:28px; line-height:1.35; font-weight:650; letter-spacing:-.8px; }
+    .sample-badge { padding:1px 7px; font-size:10px; font-weight:500; letter-spacing:.3px; color:var(--ad-ink-tertiary); border:1px solid var(--ad-border); border-radius:4px; background:#fff; white-space:nowrap; }
+    .scope-line { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:11px; font-size:12px; color:var(--ad-ink-secondary); }
+    .scope-dot { color:#b7b9bd; }
+    .date-block { text-align:right; flex:none; padding-top:2px; }
+    .date-block .date { display:flex; align-items:center; justify-content:flex-end; gap:7px; font-size:13px; }
+    .date-block .asof { display:block; margin-top:5px; font-size:11px; color:var(--ad-ink-tertiary); }
+    .work-intro { font-size:13px; color:var(--ad-ink-secondary); margin:0 0 16px; }
+    .work-intro strong { font-weight:600; color:var(--ad-ink); }
+    .quick-filters { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .quick-filter { position:relative; text-align:left; padding:14px 18px 12px; border:1px solid var(--ad-border-soft); background:#fff; border-radius:10px; transition:background 140ms ease,border-color 140ms ease; }
+    .quick-filter:hover { border-color:#b8cde8; }
+    .quick-filter[aria-pressed="true"] { border-color:#b9d2f4; background:#f0f6fe; }
+    .quick-filter-top { display:flex; align-items:center; gap:8px; color:var(--ad-ink-secondary); font-size:13px; font-weight:500; }
+    .quick-filter[aria-pressed="true"] .quick-filter-top { color:var(--ad-route-ink); }
+    .quick-number { font-size:29px; font-weight:550; letter-spacing:-1px; margin-left:auto; line-height:1; color:var(--ad-ink); font-variant-numeric:tabular-nums; }
+    .quick-filter[aria-pressed="true"] .quick-number { color:var(--ad-route-ink); }
+    .quick-filter-sub { display:block; font-size:11px; color:var(--ad-ink-tertiary); margin-top:11px; }
+    .classification-note { display:flex; justify-content:flex-end; align-items:center; gap:5px; margin:8px 1px 20px; color:var(--ad-ink-tertiary); font-size:11px; }
+    .section-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+    h2 { font-size:17px; letter-spacing:-.25px; font-weight:600; }
+    .section-heading-left { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+    .section-count { font-size:12px; color:var(--ad-ink-tertiary); }
+    .list-controls { display:flex; align-items:center; gap:9px; }
+    .all-button { color:var(--ad-ink-secondary); border:1px solid transparent; }
+    .all-button[aria-pressed="true"] { background:#fff; border-color:var(--ad-border-soft); color:var(--ad-route-ink); }
+    .list-controls select { font-size:12px; border:0; background:transparent; padding:5px 3px; max-width:130px; }
+    .action-list { background:#fff; border:1px solid var(--ad-border-soft); border-radius:12px; overflow:clip; }
+    .action-row { padding:18px 24px 12px; position:relative; }
+    .action-row + .action-row { border-top:1px solid var(--ad-border-soft); }
+    .action-row:hover { background:#fcfdff; }
+    .row-heading { display:flex; align-items:flex-start; gap:10px; margin-bottom:9px; }
+    .role-label { display:inline-flex; align-items:center; justify-content:center; min-width:32px; height:21px; font-size:10px; letter-spacing:.3px; border:1px solid var(--ad-border-soft); border-radius:4px; background:var(--ad-surface-quiet); color:var(--ad-ink-secondary); margin-top:2px; flex:none; }
+    .task-title { text-align:left; padding:0; font-size:14px; font-weight:600; line-height:1.65; }
+    .task-title:hover { color:var(--ad-route); }
+    .deadline { font-size:11px; white-space:nowrap; margin-left:auto; padding-top:3px; color:var(--ad-ink-tertiary); }
+    .deadline.today { color:var(--ad-inference); }
+    .deadline.overdue { color:var(--ad-danger); }
+    .row-body { padding-left:42px; }
+    .next-action { display:flex; align-items:flex-start; gap:8px; font-size:16px; font-weight:550; letter-spacing:-.2px; line-height:1.65; }
+    .next-action .icon { width:16px; height:16px; color:var(--ad-route); margin-top:5px; }
+    .reason { margin-top:5px; font-size:12px; color:var(--ad-ink-secondary); line-height:1.8; }
+    .reason .signal { font-weight:500; }
+    .signal.conflict { color:var(--ad-danger); }
+    .signal.blocked { color:var(--ad-inference); }
+    .signal.unknown { color:var(--ad-ink-secondary); }
+    .row-bottom { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:10px; }
+    .evidence-details { flex:1; min-width:0; }
+    summary { cursor:pointer; list-style:none; }
+    summary::-webkit-details-marker { display:none; }
+    .evidence-details > summary { display:inline-flex; align-items:center; gap:5px; min-height:28px; color:var(--ad-ink-tertiary); font-size:11px; border-radius:4px; }
+    .evidence-details > summary:hover { color:var(--ad-route); }
+    .evidence-details > summary .icon { width:13px; height:13px; }
+    details[open] > summary .disclosure-chevron { transform:rotate(90deg); }
+    .open-task { color:var(--ad-route); font-size:12px; white-space:nowrap; min-height:28px; padding:2px 0 2px 8px; }
+    .open-task:hover { color:var(--ad-route-hover); }
+    .open-task .icon { width:14px; height:14px; margin-left:3px; }
+    .evidence-list { display:grid; gap:7px; margin:8px 0 3px; padding:12px 14px; background:var(--ad-surface-quiet); border-left:2px solid #d9e7f8; border-radius:0 5px 5px 0; }
+    .evidence-link { display:flex; align-items:flex-start; gap:7px; text-align:left; font-size:12px; padding:3px 0; line-height:1.65; color:var(--ad-ink-secondary); }
+    .evidence-link:hover { color:var(--ad-route); }
+    .evidence-link .icon { width:14px; height:14px; margin-top:3px; }
+    .evidence-link small { display:block; color:var(--ad-ink-tertiary); font-size:10px; }
+    .conflict-hint { display:flex; align-items:center; gap:7px; font-size:12px; margin:12px 1px 0; color:var(--ad-ink-secondary); }
+    .conflict-hint .icon { color:var(--ad-danger); width:15px; height:15px; }
+    .conflict-hint button { color:var(--ad-route); font-size:12px; padding:5px; margin-left:auto; white-space:nowrap; }
+    .work-footnote { color:var(--ad-ink-tertiary); font-size:11px; margin:13px 1px 22px; }
+    .secondary-items { border-top:1px solid var(--ad-border-soft); margin-top:24px; }
+    .secondary-disclosure { border-bottom:1px solid var(--ad-border-soft); }
+    .secondary-disclosure > summary { min-height:49px; display:flex; gap:8px; align-items:center; font-size:12px; color:var(--ad-ink-secondary); }
+    .secondary-disclosure > summary .icon { width:15px; height:15px; }
+    .secondary-disclosure .disclosure-chevron { margin-left:auto; }
+    .secondary-disclosure .tiny-count { font-size:11px; color:var(--ad-ink-tertiary); margin-left:2px; }
+    .disclosure-caption { font-size:11px; color:var(--ad-ink-tertiary); margin-left:auto; }
+    .secondary-disclosure:has(.disclosure-caption) .disclosure-chevron { margin-left:2px; }
+    .secondary-content { padding:0 0 14px 23px; font-size:12px; }
+    .change-item { display:flex; align-items:flex-start; gap:16px; padding:8px 0; }
+    .change-item time { flex:none; font-family:var(--ad-font-mono); font-size:10px; color:var(--ad-ink-tertiary); padding-top:2px; }
+    .change-item button { text-align:left; padding:0; color:var(--ad-ink-secondary); }
+    .change-item button:hover { color:var(--ad-route); }
+    .pending-item { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .pending-item small { display:block; margin-top:2px; color:var(--ad-ink-tertiary); }
+    .prototype-footer { display:flex; align-items:center; gap:12px; margin-top:26px; padding-top:15px; color:var(--ad-ink-tertiary); font-size:10px; }
+    .prototype-footer > span { margin-right:auto; }
+    .prototype-footer .text-button { font-size:11px; color:var(--ad-ink-secondary); }
+    .prototype-footer select { border:1px solid var(--ad-border-soft); background:transparent; border-radius:6px; padding:4px 6px; max-width:140px; font-size:11px; }
+    .notice { display:flex; align-items:flex-start; gap:9px; margin-bottom:21px; padding:12px 14px; border:1px solid #e7d7b9; border-radius:8px; font-size:12px; background:#fffcf5; color:var(--ad-inference); }
+    .notice .icon { margin-top:2px; width:16px; height:16px; }
+    .notice small { display:block; color:var(--ad-ink-secondary); font-size:11px; margin-top:3px; }
+    .notice button { color:var(--ad-route); font-size:11px; padding:0; margin-left:auto; flex:none; }
+    .empty-state { text-align:center; padding:58px 22px; background:#fff; border:1px solid var(--ad-border-soft); border-radius:12px; }
+    .empty-icon { margin:0 auto 14px; display:grid; place-items:center; width:44px; height:44px; border-radius:12px; background:var(--ad-surface-subtle); color:var(--ad-ink-tertiary); }
+    .empty-state h2 { font-size:17px; }
+    .empty-state p { font-size:12px; color:var(--ad-ink-secondary); max-width:390px; margin:9px auto 18px; }
+    .sidebar-empty { padding:20px 12px; color:var(--ad-ink-tertiary); font-size:12px; }
+    .skeleton { display:block; height:12px; width:65%; border-radius:4px; background:#eceeed; margin:15px 0; }
+    .skeleton.short { width:38%; }
+    .skeleton.wide { width:85%; }
+    .loading-rows { padding:20px 25px; border:1px solid var(--ad-border-soft); background:#fff; border-radius:12px; }
+    .loading-row + .loading-row { border-top:1px solid var(--ad-border-soft); padding-top:20px; margin-top:25px; }
+    .back-link { display:inline-flex; align-items:center; gap:7px; color:var(--ad-ink-secondary); padding:4px 0; min-height:32px; margin-bottom:20px; font-size:12px; }
+    .back-link:hover { color:var(--ad-route); }
+    .detail-heading h1 { font-size:25px; letter-spacing:-.5px; margin-bottom:11px; }
+    .detail-goal { color:var(--ad-ink-secondary); font-size:13px; line-height:1.8; }
+    .detail-meta { display:flex; flex-wrap:wrap; gap:18px; align-items:center; margin-top:20px; font-size:12px; }
+    .detail-meta > span { display:inline-flex; align-items:center; gap:7px; }
+    .detail-meta .avatar { width:22px; height:22px; font-size:9px; }
+    .status-dot { display:inline-block; width:6px; height:6px; background:#008af5; border-radius:50%; }
+    .criteria { margin-top:15px; font-size:12px; color:var(--ad-ink-secondary); }
+    .criteria summary { display:flex; align-items:center; gap:5px; min-height:30px; }
+    .criteria ol { margin:8px 0 0; padding-left:21px; }
+    .criteria li { padding:3px 0; }
+    .situation { border-top:1px solid var(--ad-border-soft); border-bottom:1px solid var(--ad-border-soft); padding:25px 0; margin:23px 0; }
+    .situation h2 { font-size:15px; margin-bottom:10px; }
+    .situation-lede { font-size:14px; line-height:1.9; }
+    .situation-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:23px; margin-top:20px; }
+    .situation-grid section + section { border-left:1px solid var(--ad-border-soft); padding-left:23px; }
+    .situation-grid h3 { color:var(--ad-ink-tertiary); font-size:11px; font-weight:500; margin-bottom:7px; }
+    .situation-grid p { font-size:12px; color:var(--ad-ink-secondary); line-height:1.9; }
+    .situation-source { font-size:10px; color:var(--ad-ink-tertiary); margin-top:15px; }
+    .detail-tabs { display:flex; align-items:center; gap:26px; border-bottom:1px solid var(--ad-border-soft); }
+    .detail-tab { min-height:44px; padding:8px 0 12px; font-size:13px; border-bottom:2px solid transparent; margin-bottom:-1px; color:var(--ad-ink-secondary); }
+    .detail-tab[aria-selected="true"] { border-bottom-color:var(--ad-route); color:var(--ad-route); font-weight:600; }
+    .detail-tab small { color:var(--ad-ink-tertiary); margin-left:4px; font-size:10px; }
+    .detail-panel { min-height:190px; padding:22px 0; }
+    .source-record { padding:17px 18px; background:#fff; border:1px solid var(--ad-border-soft); border-radius:8px; margin-bottom:12px; scroll-margin-top:20px; }
+    .source-record.located { border-color:#a9c9f2; background:#f3f8ff; box-shadow:0 0 0 2px #e7f1fd; }
+    .source-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:7px; font-size:12px; font-weight:500; }
+    .source-head time { font-size:10px; color:var(--ad-ink-tertiary); font-weight:400; }
+    .source-record p { font-size:13px; line-height:1.9; color:var(--ad-ink-secondary); margin-top:9px; white-space:pre-line; }
+    .source-located-label { font-size:10px; color:var(--ad-route); margin-bottom:5px; }
+    .panel-empty { font-size:12px; color:var(--ad-ink-tertiary); padding:15px 0; }
+    .child-row { display:flex; justify-content:space-between; align-items:center; gap:18px; padding:16px 0; border-bottom:1px solid var(--ad-border-soft); font-size:13px; }
+    .child-row small { color:var(--ad-ink-tertiary); font-size:11px; }
+    .detail-note { font-size:10px; color:var(--ad-ink-tertiary); margin-top:12px; }
+    .board { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; align-items:start; }
+    .board-column { min-width:0; border-radius:10px; background:var(--ad-surface-subtle); padding:13px; }
+    .board-column h2 { font-size:12px; margin-bottom:13px; }
+    .board-task { display:block; width:100%; text-align:left; margin-top:9px; background:#fff; border:1px solid var(--ad-border-soft); border-radius:7px; padding:12px; font-size:12px; }
+    .mobile-index-link { display:none; }
+    dialog { padding:0; border:1px solid var(--ad-border-soft); border-radius:14px; width:min(760px,calc(100vw - 32px)); max-height:calc(100dvh - 64px); color:var(--ad-ink); background:#fff; box-shadow:0 25px 80px #17191c2b; }
+    dialog::backdrop { background:#22283155; backdrop-filter:blur(2px); }
+    .dialog-header { padding:20px 24px 16px; display:flex; align-items:center; justify-content:space-between; gap:14px; border-bottom:1px solid var(--ad-border-soft); position:sticky; top:0; background:#fff; z-index:2; }
+    .dialog-header h2 { font-size:17px; }
+    .dialog-content { padding:23px 26px 28px; }
+    .dialog-content h3 { font-size:14px; margin:24px 0 8px; }
+    .dialog-content h3:first-child { margin-top:0; }
+    .dialog-content p,.dialog-content li { font-size:13px; color:var(--ad-ink-secondary); line-height:1.9; }
+    .dialog-content ul { padding-left:19px; margin:8px 0 0; }
+    .dialog-content table { border-collapse:collapse; width:100%; font-size:12px; margin:12px 0; text-align:left; }
+    .dialog-content th,.dialog-content td { border-bottom:1px solid var(--ad-border-soft); padding:10px 8px; vertical-align:top; }
+    .dialog-content th { font-weight:500; color:var(--ad-ink-tertiary); background:var(--ad-surface-quiet); }
+    .dialog-content td { color:var(--ad-ink-secondary); }
+    .dialog-content code { font-family:var(--ad-font-mono); font-size:11px; background:var(--ad-surface-subtle); border-radius:3px; padding:2px 4px; overflow-wrap:anywhere; }
+    .source-document { font-size:11px !important; color:var(--ad-ink-tertiary) !important; }
+    .status-live { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+    @media (min-width:1600px) { :root { --sidebar-width:310px; } .page { padding-top:46px; } }
+    @media (max-width:1150px) { :root { --sidebar-width:252px; } .page { padding:30px 28px 18px; } .quick-filter { padding:15px 13px 12px; } .quick-filter-top { font-size:12px; gap:5px; } .quick-number { font-size:26px; } .quick-filter-sub { font-size:10px; } .action-row { padding:20px 19px 15px; } .board { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:900px) {
+      .workspace { display:block; height:calc(100dvh - 60px); } .topbar { height:60px; padding:0 18px; }
+      .sidebar { height:100%; border-right:0; display:none; max-width:600px; margin:0 auto; padding:20px; }
+      .main-scroll { height:100%; } body[data-mobile-index="true"] .sidebar { display:flex; } body[data-mobile-index="true"] .main-scroll { display:none; }
+      .mobile-index-link { display:flex; align-items:center; gap:6px; width:calc(100% + 60px); margin-left:-30px; font-size:12px; color:var(--ad-ink-secondary); min-height:44px; padding:0 30px; margin-bottom:17px; position:sticky; top:0; z-index:10; background:var(--ad-surface-quiet); border-bottom:1px solid var(--ad-border-soft); }
+      .page { padding:24px 30px 18px; max-width:800px; }
+      .sidebar-tools .icon-button { width:44px; height:44px; } .search-shell { height:44px; }
+      .task-index-button,.home-button,.group-toggle,.filter-option { min-height:44px; }
+      .index-scroll { margin-top:4px; }
+      .sidebar-bottom { padding-bottom:10px; }
+      .filter-popover { width:min(310px,calc(100vw - 50px)); top:52px; }
+      .icon-button,.open-task,.text-button,.evidence-details > summary,.secondary-disclosure > summary,.back-link,.filter-chip button { min-height:44px; }
+      .icon-button { min-width:44px; }
+      .evidence-link { padding:9px 0; }
+      .detail-tab { min-width:44px; }
+      .team-button,.criteria summary,.task-title { min-height:44px; }
+      .task-title { display:flex; align-items:center; }
+      .filter-chip button { min-width:44px; }
+    }
+    @media (max-width:600px) {
+      .topbar { padding:0 13px; } .team-button { font-size:13px; gap:6px; } .topbar-actions { gap:4px; }
+      .page { padding:18px 18px 22px; } .page-heading { gap:12px; margin-bottom:20px; }
+      .mobile-index-link { width:calc(100% + 36px); margin-left:-18px; padding:0 18px; }
+      h1 { font-size:26px; } .heading-title { gap:9px; } .sample-badge { font-size:9px; }
+      .scope-line { font-size:11px; gap:5px; margin-top:10px; } .scope-explanation { display:none; }
+      .date-block { padding-top:5px; } .date-block .date { font-size:11px; } .date-block .date .icon { display:none; } .date-block .asof { font-size:10px; }
+      .work-intro { font-size:13px; margin-bottom:17px; line-height:1.85; }
+      .quick-filters { gap:7px; } .quick-filter { padding:12px 9px 11px; border-radius:8px; }
+      .quick-filter-top { display:flex; flex-direction:column; align-items:flex-start; gap:10px; font-size:11px; }
+      .quick-filter-top > .icon { display:none; } .quick-number { margin:0; order:-1; font-size:26px; }
+      .quick-filter-sub { display:none; } .classification-note { font-size:10px; margin:8px 0 22px; }
+      h2 { font-size:16px; } .section-heading { align-items:flex-start; } .section-heading-left { gap:3px; flex-direction:column; align-items:flex-start; }
+      .section-count { font-size:10px; } .list-controls { gap:3px; } .list-controls select { font-size:11px; min-height:44px; max-width:95px; }
+      .all-button { font-size:11px; padding:3px 7px; }
+      .action-row { padding:17px 15px 11px; } .row-heading { gap:7px; flex-wrap:wrap; margin-bottom:9px; }
+      .role-label { font-size:9px; min-width:27px; margin-top:11px; } .task-title { font-size:12px; flex:1; min-width:0; }
+      .deadline { margin-left:34px; width:100%; padding-top:0; font-size:10px; margin-top:-3px; }
+      .row-body { padding-left:0; } .next-action { font-size:14px; gap:7px; } .next-action .icon { margin-top:4px; width:14px; height:14px; }
+      .reason { font-size:11px; margin-top:7px; line-height:1.95; padding-left:21px; }
+      .row-bottom { padding-left:21px; margin-top:6px; gap:4px; } .evidence-details > summary { font-size:10px; gap:3px; }
+      .open-task { font-size:11px; padding-left:5px; } .source-time-short { display:none; }
+      .evidence-list { margin-left:-21px; padding:9px 10px; } .evidence-link { font-size:11px; }
+      .conflict-hint { align-items:flex-start; font-size:11px; } .conflict-hint > .icon { margin-top:6px; } .conflict-hint > span { padding-top:3px; }
+      .conflict-hint button { font-size:11px; min-height:44px; padding-top:0; margin-top:-3px; }
+      .secondary-disclosure > summary { font-size:11px; } .disclosure-caption { font-size:10px; }
+      .change-item { flex-direction:column; gap:3px; } .change-item button { min-height:44px; }
+      .pending-item { align-items:flex-start; flex-direction:column; gap:6px; }
+      .prototype-footer { flex-wrap:wrap; gap:4px 10px; margin-top:20px; } .prototype-footer > span { width:100%; font-size:9px; }
+      .prototype-footer select { margin-left:auto; min-height:44px; }
+      .notice { padding:11px 12px; } .notice button { max-width:68px; min-height:44px; }
+      .detail-heading h1 { font-size:22px; } .detail-meta { gap:12px 16px; }
+      .situation-grid { grid-template-columns:1fr; gap:17px; } .situation-grid section + section { border:0; padding:0; }
+      .detail-tabs { gap:24px; } .detail-tab { font-size:12px; }
+      .detail-note { line-height:1.9; } .board { grid-template-columns:1fr; }
+      .dialog-header { padding:15px 17px 12px; } .dialog-content { padding:18px 19px 23px; }
+      .dialog-content table { font-size:11px; } .dialog-content th,.dialog-content td { padding:8px 5px; }
+    }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none !important; animation:none !important; scroll-behavior:auto !important; } }
+  </style>
+</head>
+<body data-mobile-index="false">
+  <a class="skip" href="#main-content">跳到工作内容</a>
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <symbol id="i-door" viewBox="0 0 24 24"><path d="M5 21h14M7 21V3h10v18M13.5 12h.01"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+      <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16M7 12h10M10 19h4"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="M20 12H4m6 6-6-6 6-6"/></symbol>
+      <symbol id="i-work" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16m-12 5 2 2 4-4"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01"/></symbol>
+      <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m20 0v-2a4 4 0 0 0-3-3.87M15 3.13a4 4 0 0 1 0 7.75"/><circle cx="9" cy="7" r="4"/></symbol>
+      <symbol id="i-check-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Zm0 0v6h6m-12 7 3 3 5-5"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+      <symbol id="i-tag" viewBox="0 0 24 24"><path d="m3 3 8 .01L21 13l-8 8L3 11Z"/><circle cx="7.5" cy="7.5" r=".5"/></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 10 6-10 6L2 9Zm-10 12 10 6 10-6M2 12l10 6 10-6"/></symbol>
+      <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 5-6 7 6 7m8-14 6 7-6 7m-3-16-2 20"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+      <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M15 4v16"/></symbol>
+      <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a3 3 0 0 1-3 3H8l-5 4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3Z"/><path d="M7 8h10M7 12h6"/></symbol>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Zm0 0v6h6M8 13h8M8 17h5"/></symbol>
+      <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 11a9 9 0 1 1 2.6 7.4M3 4v7h7m2-4v5l3 2"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2Z"/><path d="M12 9v5M12 17h.01"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    </defs>
+  </svg>
+  <header class="topbar">
+    <button class="team-button" data-info="team" aria-label="查看当前团队"><span class="team-mark"><svg class="icon"><use href="#i-door"/></svg></span><span>AgentDoor 产品团队</span><svg class="icon sm muted"><use href="#i-down"/></svg></button>
+    <div class="topbar-actions">
+      <button class="icon-button notification-button" data-info="notifications" aria-label="通知"><svg class="icon"><use href="#i-bell"/></svg></button>
+      <button class="icon-button" data-info="account" aria-label="林然的账户（示例）"><span class="avatar me">林</span></button>
+    </div>
+  </header>
+  <div class="workspace">
+    <aside class="sidebar" aria-label="个人任务索引">
+      <div class="sidebar-tools">
+        <label class="search-shell"><svg class="icon sm"><use href="#i-search"/></svg><input id="task-search" type="search" placeholder="搜索任务" aria-label="搜索我的任务" autocomplete="off"></label>
+        <button id="filter-trigger" class="icon-button" aria-label="筛选任务" title="筛选任务" aria-expanded="false" aria-controls="filter-popover"><svg class="icon"><use href="#i-filter"/></svg></button>
+        <button class="icon-button" data-info="create" aria-label="新建任务" title="新建任务"><svg class="icon"><use href="#i-plus"/></svg></button>
+        <div id="filter-popover" class="filter-popover" role="dialog" aria-label="筛选任务" hidden></div>
+      </div>
+      <div id="filter-chips" class="filter-chips" hidden></div>
+      <button id="my-work" class="home-button" aria-current="page"><svg class="icon"><use href="#i-work"/></svg><span>我的工作</span><span class="home-dot"></span></button>
+      <nav id="task-index" class="index-scroll" aria-label="按标签查找任务"></nav>
+      <div class="sidebar-bottom"><button class="text-button" id="board-trigger"><svg class="icon sm"><use href="#i-board"/></svg>看板视图</button></div>
+    </aside>
+    <main id="main-content" class="main-scroll" tabindex="-1"><div id="page" class="page"></div></main>
+  </div>
+  <dialog id="context-dialog" aria-labelledby="dialog-title"><div class="dialog-header"><h2 id="dialog-title"></h2><button class="icon-button" id="dialog-close" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><div class="dialog-content" id="dialog-content"></div></dialog>
+  <div id="live-status" class="status-live" aria-live="polite"></div>
+  <script>
+    'use strict';
+    const AS_OF = '2026-09-01T10:30:00+08:00';
+    const CURRENT_USER = { id:'sample-member-lin', name:'林然' };
+    const tagDefinitions = {
+      '产品体验':{icon:'layers',color:'#1268d6'},
+      '研发协作':{icon:'code',color:'#177665'},
+      'AI 协作':{icon:'grid',color:'#6c3cf0'},
+      '9月迭代':{icon:'tag',color:'#936200'},
+      '未打标签':{icon:'tag',color:'#6b7077'}
+    };
+    // Everything below is synthetic and deliberately isolated from the real application.
+    // Stable IDs determine ownership. A pending proposal never changes ownerId.
+    const tasks = [
+      {id:'sample-mobile',ownerId:CURRENT_USER.id,title:'任务详情 · 移动端适配',labels:['产品体验','9月迭代'],status:'进行中',role:'执行',due:'2026-09-01T18:00:00+08:00',categories:['due','review'],
+        next:'补齐窄屏下的完成标准与返回路径',reason:'桌面稿已提供；窄屏检查仍发现标准被截断、返回后筛选丢失。',signal:'待修正',signalType:'unknown',
+        goal:'让用户在手机上也能读清任务要求，并返回原来的任务位置。',
+        criteria:['375px 宽度下，完成标准和下一步可完整阅读。','打开任务再返回，保留搜索、筛选和列表位置。'],
+        delivered:'已提供桌面稿与移动端检查记录。',remaining:'窄屏标准换行和返回位置仍需修正。',
+        sources:[
+          {id:'mobile-check',kind:'file',title:'移动端走查记录.md',version:'v2',by:'陈可',at:'2026-09-01T09:40:00+08:00',text:'走查宽度：375px。\n1. 完成标准的长文本在第二行被截断。\n2. 从任务返回列表，之前选择的状态筛选被清空。\n桌面稿已收到，本次记录仅覆盖上述移动端路径。'},
+          {id:'mobile-discussion',kind:'discussion',title:'陈可的走查反馈',by:'陈可',at:'2026-09-01T09:45:00+08:00',text:'桌面布局可以继续沿用。今天请先补齐窄屏标准的换行和返回位置，修正后按走查记录中的两个路径再核对。'}
+        ]},
+      {id:'sample-api',ownerId:CURRENT_USER.id,title:'创建流程 · 真实 API 对接',labels:['研发协作'],status:'受阻',role:'协调',due:'2026-09-01T16:00:00+08:00',categories:['due','collaboration'],
+        next:'确认鉴权字段的交付时间，再安排联调',reason:'客户端联调需要鉴权字段；接口负责人在讨论中说明该部分尚未提供。',signal:'前置未就绪',signalType:'blocked',
+        goal:'核对创建链路的接口与权限边界，为真实服务联调提供明确输入。',criteria:['所需接口、字段与错误返回有可定位的说明。','鉴权与确认写入的职责边界得到明确。'],
+        delivered:'任务字段映射初稿已提供。',remaining:'鉴权字段和返回约定尚未提供，联调依赖未就绪。',
+        children:[{title:'创建鉴权协议',owner:'陈可',status:'进行中'}],
+        sources:[
+          {id:'api-discussion',kind:'discussion',title:'陈可说明前置交付',by:'陈可',at:'2026-09-01T10:05:00+08:00',text:'任务字段映射已经发出。鉴权字段和错误返回还没有整理完，目前不能直接据此联调。我需要再确认交付时间。'},
+          {id:'api-dependency',kind:'activity',title:'联调的前置条件',by:'林然',at:'2026-08-31T16:20:00+08:00',text:'明确前置条件：客户端联调需要「创建鉴权协议」中的鉴权字段和返回约定。\n这是一条交付依赖，不是由父子归属自动推导。'}
+        ]},
+      {id:'sample-planning',ownerId:CURRENT_USER.id,title:'任务规划 Skill · 回归样例',labels:['AI 协作'],status:'进行中',role:'核对',due:'2026-08-31T18:00:00+08:00',categories:['due','review'],
+        next:'核对无人选场景的证据，再确认本轮结果',reason:'已收到回归文件；「没有合适负责人」这一场景尚无对应记录。',signal:'依据待补',signalType:'unknown',
+        goal:'用可追溯样例检查任务理解、轻任务不过拆与负责人推荐。',criteria:['轻任务不生成不必要子任务。','负责人推荐有职责依据；无人选时明确留空。'],
+        delivered:'已收到轻任务和明确人选两个场景的回归记录。',remaining:'没有合适负责人场景未附执行记录；不能据此判定通过或失败。',
+        sources:[
+          {id:'planning-file',kind:'file',title:'规划回归记录.md',version:'v2',by:'周航',at:'2026-09-01T09:10:00+08:00',text:'已附记录：\n- 轻任务：未拆子任务。\n- 指定职责的人选：推荐理由对应已提供职责。\n尚未附记录：没有合适负责人。\n本文件是界面用例，不是实际模型验收结果。'},
+          {id:'planning-discussion',kind:'discussion',title:'周航提交回归材料',by:'周航',at:'2026-09-01T09:12:00+08:00',text:'两个场景的材料已放到 v2。无人选的场景尚未补上记录，先请核对已提供的部分，不要把缺记录当成已经通过。'}
+        ]},
+      {id:'sample-handoff',ownerId:CURRENT_USER.id,pendingOwnerId:'sample-member-zhou',title:'任务上下文 · 工具接力',labels:['AI 协作','研发协作'],status:'进行中',role:'协调',due:'2026-09-03T18:00:00+08:00',categories:['collaboration'],
+        next:'确认交接前的跟进安排，并请候选人回应',reason:'周航尚未接受负责人提议，这项任务目前仍由我负责。',signal:'责任未转移',signalType:'unknown',
+        goal:'让工具接力携带准确任务上下文，并始终保留明确的人类责任。',criteria:['仅携带当前任务允许的上下文。','提出负责人变更不等于责任已转移。'],
+        delivered:'上下文清单草案已整理。',remaining:'负责人变更仍待候选人回应；当前负责人不变。',
+        sources:[
+          {id:'handoff-proposal',kind:'activity',title:'负责人提议仍待回应',by:'林然',at:'2026-09-01T09:20:00+08:00',text:'向周航提出负责人变更建议。\n提议状态：待接受。\n当前有效负责人：林然。没有接受记录，未发生正式责任转移。'}
+        ]},
+      {id:'sample-tags',ownerId:CURRENT_USER.id,title:'个人任务索引 · 标签分组',labels:['产品体验'],status:'已完成',role:'核对',due:null,categories:['review'],
+        next:'核对父任务完成状态与未结束的子任务',reason:'父任务已标为完成，但「无标签任务入口」仍处于进行中。',signal:'状态不一致',signalType:'conflict',
+        goal:'通过现有标签帮助个人找到任务，不增加目录或复制任务。',criteria:['多标签任务只展示一次。','未打标签的任务可查找、可打开。'],
+        delivered:'父任务记录为已完成；这只是当前状态，不代表交付已验收。',remaining:'「无标签任务入口」记录为进行中，需核对收口范围与状态。',
+        children:[{title:'无标签任务入口',owner:'陈可',status:'进行中'},{title:'多标签唯一展示',owner:'周航',status:'已完成'}],
+        sources:[
+          {id:'tags-parent-status',kind:'activity',title:'父任务状态变更',by:'林然',at:'2026-08-31T17:30:00+08:00',text:'「个人任务索引 · 标签分组」状态从进行中改为已完成。\n该变更记录不自动代表业务验收，也没有修改子任务状态。'},
+          {id:'tags-child-status',kind:'activity',title:'子任务当前记录',by:'陈可',at:'2026-09-01T10:12:00+08:00',text:'「无标签任务入口」当前状态：进行中。\n负责人：陈可。\n父任务：个人任务索引 · 标签分组。'}
+        ]},
+      {id:'sample-review',ownerId:CURRENT_USER.id,title:'下轮评审 · 对齐问题',labels:[],status:'未开始',role:'执行',due:null,categories:[],
+        next:'整理这次评审需要决定的问题',reason:'评审目标已明确，会议日期尚未确认；暂不判断是否紧急。',signal:'期限未定',signalType:'unknown',
+        goal:'把未决定的问题和已有证据放在一起，让下一轮评审可以作出具体决定。',criteria:['区分已确认决定、设计建议和开放问题。','每个待决定问题附当前依据。'],
+        delivered:'已有评审范围的讨论记录。',remaining:'还没有问题清单，也没有确认会议日期。',
+        sources:[{id:'review-discussion',kind:'discussion',title:'对齐下一轮评审范围',by:'林然',at:'2026-08-31T15:30:00+08:00',text:'下一轮先看任务规划的逻辑和样例，再看尚未确认的服务边界。先整理需要决定的问题，具体评审日期尚未确认。'}]},
+      {id:'sample-navigation',ownerId:CURRENT_USER.id,title:'任务导航 · 返回上下文',labels:['产品体验'],status:'进行中',role:'执行',due:null,categories:[],next:null,
+        goal:'核对任务导航在不同入口下的上下文保留。',criteria:[],reason:'当前记录没有提供可定位的下一步依据。',delivered:'尚未提供交付记录。',remaining:'下一步与完成标准待核对。',sources:[]},
+      {id:'sample-discussion',ownerId:CURRENT_USER.id,title:'讨论与系统活动分离',labels:['研发协作'],status:'已完成',role:'核对',due:null,categories:[],next:null,
+        goal:'人的讨论和系统变更各有清晰、可定位的入口。',criteria:['讨论不混入自动状态流水。','变更保留操作者、时间和真实前后值。'],reason:'当前状态已完成；没有待处理事项的明确记录。',delivered:'当前状态为已完成，不将其直接解释为正式验收。',remaining:'未提供新的待处理依据。',
+        sources:[{id:'discussion-activity',kind:'activity',title:'任务状态变更',by:'林然',at:'2026-08-30T16:00:00+08:00',text:'任务状态从进行中改为已完成。\n本例只呈现已有状态记录，不推断验收结论。'}]},
+      {id:'sample-invitation',ownerId:'sample-member-zhou',pendingOwnerId:CURRENT_USER.id,title:'新成员接入指南',labels:['研发协作'],status:'未开始',role:'执行',due:null,categories:[],next:null,
+        goal:'整理新成员首次使用的必要说明。',criteria:[],reason:'负责人提议待你回应；当前仍由周航负责。',delivered:'尚未提供交付记录。',remaining:'是否接手由你决定，本页不代为接受。',
+        sources:[{id:'invitation-event',kind:'activity',title:'向你提出负责人建议',by:'周航',at:'2026-09-01T08:50:00+08:00',text:'周航建议林然担任该任务负责人。\n提议状态：待回应。\n有效负责人仍为周航；浏览提议不代表接受。'}]}
+    ];
+    const categories = [
+      {id:'due',label:'到期要处理',icon:'calendar',hint:'今天到期 2 · 已逾期 1'},
+      {id:'collaboration',label:'协作需跟进',icon:'users',hint:'前置交付 · 责任衔接'},
+      {id:'review',label:'结果需核对',icon:'check-file',hint:'交付依据 · 状态一致性'}
+    ];
+    const scenarios = [['normal','正常示例'],['empty','无负责任务'],['no-actions','暂无行动建议'],['loading','首次加载'],['error','刷新失败'],['restricted','无查看权限'],['stale','旧建议过期']];
+    const state = {category:'due',selected:null,tab:'discussion',view:'home',scenario:'normal',search:'',statuses:new Set(),labels:new Set(),folded:new Set(),expanded:new Set(),secondaryExpanded:new Set(),sort:'date',homeScroll:0,locatedSource:null,returnFocus:null};
+    const $ = selector => document.querySelector(selector);
+    const icon = (name, cls='') => `<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const shortDate = value => new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value)).replace(/\//g,'-');
+    const fullDate = value => `2026-${shortDate(value)}`;
+    const unavailable = () => ['restricted','loading'].includes(state.scenario);
+    function sceneTasks() {
+      if(['empty','restricted','loading'].includes(state.scenario)) return [];
+      if(state.scenario==='no-actions') return tasks.filter(task=>task.id==='sample-navigation');
+      return tasks;
+    }
+    function ownedTasks() { return sceneTasks().filter(t=>t.ownerId===CURRENT_USER.id); }
+    function actionableTasks() { return ownedTasks().filter(t=>t.next); }
+    function deadline(task) {
+      if(!task.due) return {text:'未设期限',className:''};
+      const date = task.due.slice(0,10), current = AS_OF.slice(0,10);
+      if(date<current) return {text:'已逾期 · 8月31日到期',className:'overdue'};
+      if(date===current) return {text:`今天 ${task.due.slice(11,16)} 到期`,className:'today'};
+      return {text:`${Number(task.due.slice(5,7))}月${Number(task.due.slice(8,10))}日到期`,className:''};
+    }
+    function visibleIndexTasks() {
+      return ownedTasks().filter(task=>
+        (!state.search || task.title.toLowerCase().includes(state.search.toLowerCase())) &&
+        (!state.statuses.size || state.statuses.has(task.status)) &&
+        (!state.labels.size || task.labels.some(label=>state.labels.has(label)) || (!task.labels.length && state.labels.has('未打标签')))
+      );
+    }
+    function groupOf(task) { return (state.labels.size ? task.labels.find(label=>state.labels.has(label)) : task.labels.find(label=>label.trim())) || '未打标签'; }
+    function renderFilter() {
+      const block = (heading,options,kind,selected) => `<fieldset><legend>${heading} · 可多选</legend>${options.map(value=>`<label class="filter-option"><input type="checkbox" data-filter-kind="${kind}" value="${escapeHtml(value)}" ${selected.has(value)?'checked':''}>${kind==='label'?`<span style="color:${tagDefinitions[value].color}">${icon(tagDefinitions[value].icon,'sm')}</span>`:''}<span>${escapeHtml(value)}</span></label>`).join('')}</fieldset>`;
+      $('#filter-popover').innerHTML=`<div class="popover-header">筛选任务<button class="icon-button" data-close-filter aria-label="关闭筛选">${icon('close','sm')}</button></div>${block('状态',['未开始','进行中','受阻','已完成'],'status',state.statuses)}${block('标签',Object.keys(tagDefinitions),'label',state.labels)}<div class="filter-foot"><button class="text-button blue" data-reset-filters>重置条件</button><button class="text-button" data-info="tags">管理标签 ${icon('chevron','sm')}</button></div>`;
+    }
+    function renderIndex() {
+      const scroll=$('#task-index').scrollTop;
+      $('#my-work').toggleAttribute('aria-current',state.view==='home');
+      if(state.view==='home') $('#my-work').setAttribute('aria-current','page');
+      $('#filter-trigger').classList.toggle('is-filtered',!!(state.statuses.size+state.labels.size));
+      $('#filter-trigger').disabled=unavailable();
+      $('#task-search').disabled=unavailable();
+      const chips=[...state.statuses].map(value=>({value,kind:'status'})).concat([...state.labels].map(value=>({value,kind:'label'})));
+      $('#filter-chips').hidden=!chips.length || unavailable();
+      $('#filter-chips').innerHTML=chips.map(({value,kind})=>`<span class="filter-chip">${escapeHtml(value)}<button data-remove-filter="${escapeHtml(value)}" data-kind="${kind}" aria-label="移除${escapeHtml(value)}筛选">${icon('close','sm')}</button></span>`).join('');
+      if(unavailable()) { $('#task-index').innerHTML=state.scenario==='restricted'?'<p class="sidebar-empty">无法确认当前可见范围</p>':'<div class="sidebar-empty" aria-label="索引加载中"><span class="skeleton wide"></span><span class="skeleton"></span><span class="skeleton short"></span></div>'; return; }
+      const filtered=visibleIndexTasks();
+      const groups=Object.keys(tagDefinitions).map(label=>({label,tasks:filtered.filter(t=>groupOf(t)===label)})).filter(group=>group.tasks.length);
+      $('#task-index').innerHTML=groups.length?groups.map(group=>{
+        const expanded=!!state.search || !state.folded.has(group.label), def=tagDefinitions[group.label];
+        return `<section class="tag-group"><button class="group-toggle" data-group="${escapeHtml(group.label)}" aria-expanded="${expanded}"><span style="color:${def.color}">${icon(def.icon,'sm')}</span>${escapeHtml(group.label)}<span class="group-count">${group.tasks.length}</span>${icon('down','sm chevron')}</button><div ${expanded?'':'hidden'}>${group.tasks.map(task=>`<button class="task-index-button" data-open="${task.id}" ${state.selected===task.id?'aria-current="page"':''}>${escapeHtml(task.title)}</button>`).join('')}</div></section>`;
+      }).join(''):`<p class="sidebar-empty">${ownedTasks().length?'没有符合当前条件的任务。<br>可调整搜索或筛选；我的工作范围不受影响。':'当前没有可见的负责任务。'}</p>`;
+      $('#task-index').scrollTop=scroll;
+    }
+    function footer() { return `<footer class="prototype-footer"><span>设计样例 · 姓名、任务与日期均为模拟，不连接真实数据或 AI</span><button class="text-button" data-info="design">${icon('info','sm')}设计依据</button><label><span class="sr-only">预览页面状态</span><select id="scenario-select">${scenarios.map(([value,label])=>`<option value="${value}" ${state.scenario===value?'selected':''}>${label}</option>`).join('')}</select></label></footer>`; }
+    function pageHeader() {
+      const count=unavailable()?'范围待确认':`${ownedTasks().length} 项负责任务`;
+      return `<button class="mobile-index-link" data-mobile-index>${icon('list','sm')}任务索引</button><header class="page-heading"><div><div class="heading-title"><h1 id="page-heading" tabindex="-1">我的工作</h1><span class="sample-badge">示例</span></div><p class="scope-line"><span>${CURRENT_USER.name}</span><span class="scope-dot">·</span><span id="ownership-count">${count}</span><span class="scope-explanation"><span class="scope-dot"> · </span> 不受左侧筛选影响</span></p></div><div class="date-block"><span class="date">${icon('calendar','sm')}9月1日，星期二</span><time class="asof" datetime="${AS_OF}">${state.scenario==='loading'?'尚未取得任务数据':state.scenario==='restricted'?'可见范围未知':'示例截至 10:30'}</time></div></header>`;
+    }
+    function notice() {
+      if(state.scenario==='error') return `<div class="notice" role="status">${icon('alert')}<div>刷新失败，以下保留 9月1日 10:30 的快照。<small>刷新失败状态示意；未发起真实请求，也未更新来源时间。</small></div><button data-normal>恢复正常预览</button></div>`;
+      if(state.scenario==='stale') return `<div class="notice" role="status">${icon('history')}<div>8月31日 18:00 的旧建议已过期。<small>以下只展示截至 9月1日 10:30 的可核记录；下一步需要重新判断。</small></div><button data-normal>恢复正常预览</button></div>`;
+      return '';
+    }
+    function row(task) {
+      const due=deadline(task), stale=state.scenario==='stale';
+      const latest=task.sources.map(s=>s.at).sort().at(-1);
+      return `<article class="action-row" data-task-id="${task.id}"><div class="row-heading"><span class="role-label">${task.role}</span><button class="task-title" data-open="${task.id}">${escapeHtml(task.title)}</button><span class="deadline ${due.className}">${due.text}</span></div><div class="row-body"><div class="next-action">${icon('arrow')}<span>${stale?'打开当前记录，重新核对下一步':escapeHtml(task.next)}</span></div><p class="reason"><span class="signal ${task.signalType}">${stale?'旧建议已过期':escapeHtml(task.signal)}</span><span class="muted"> · </span>${escapeHtml(task.reason)}</p><div class="row-bottom"><details class="evidence-details" data-evidence="${task.id}" ${state.expanded.has(task.id)?'open':''}><summary>${icon('chevron','disclosure-chevron')}<span>查看依据 · ${task.sources.length} 条</span><span class="source-time-short"> · ${latest?shortDate(latest):'时间未知'}</span></summary><div class="evidence-list">${task.sources.map(source=>`<button class="evidence-link" data-source="${source.id}" data-task="${task.id}">${icon(source.kind==='discussion'?'message':source.kind==='file'?'file':'history')}<span>${escapeHtml(source.title)}${source.version?` <span class="muted">${source.version}</span>`:''}<small>${escapeHtml(source.by)} · ${fullDate(source.at)} · 示例记录</small></span></button>`).join('')}<span class="muted" style="font-size:10px">这里只提供行动建议；不会自动修改任务或发出通知。</span></div></details><button class="open-task" data-open="${task.id}" aria-label="查看任务：${escapeHtml(task.title)}">查看任务 ${icon('arrow')}</button></div></div></article>`;
+    }
+    function emptyView(title,body,iconName='work',action='') { return `<section class="empty-state"><div class="empty-icon">${icon(iconName)}</div><h2>${title}</h2><p>${body}</p>${action}</section>`; }
+    function renderHome() {
+      let html=pageHeader()+notice();
+      if(state.scenario==='restricted') {
+        html+=emptyView('暂时无法查看工作内容','没有当前范围的读取权限，因此无法确认任务数量或行动。未展示此前的任务名称和来源。','lock','<button class="button" data-info="permission">查看访问说明</button>');
+      } else if(state.scenario==='loading') {
+        html+='<p class="work-intro">正在读取当前可见任务<span class="muted"> · 加载状态示意</span></p><div class="loading-rows" role="status" aria-label="工作内容加载中">'+[0,1,2].map(()=>'<div class="loading-row"><span class="skeleton short"></span><span class="skeleton wide"></span><span class="skeleton"></span></div>').join('')+'</div>';
+      } else if(state.scenario==='empty') {
+        html+=emptyView('还没有由你负责的任务','当前可见范围内没有有效负责人为你的任务。待接受的提议不计入负责范围；这不代表所有工作已经完成。','work','<button class="button" data-info="create">查看任务创建入口</button>');
+      } else {
+        const actions=actionableTasks();
+        if(['no-actions','stale'].includes(state.scenario)) html+=`<p class="work-intro">${state.scenario==='no-actions'?'当前记录还不足以形成具体行动建议。':'依据已经变化，<strong>先核对当前记录，再决定下一步。</strong>'}</p>`;
+        html+=`<div class="quick-filters" aria-label="按需要处理的事项筛选">${categories.map(category=>`<button class="quick-filter" data-category="${category.id}" aria-pressed="${state.category===category.id}"><span class="quick-filter-top">${icon(category.icon)}<span>${category.label}</span><span class="quick-number">${actions.filter(t=>t.categories.includes(category.id)).length}</span></span><span class="quick-filter-sub">${state.scenario==='no-actions'?'当前暂无可依据的事项':category.hint}</span></button>`).join('')}</div><p class="classification-note">${icon('info','sm')}同一任务可属于多个分类，数量不相加</p>`;
+        let shown=actions.filter(t=>state.category==='all'||t.categories.includes(state.category));
+        if(state.sort==='date') shown=[...shown].sort((a,b)=>(a.due?Date.parse(a.due):Infinity)-(b.due?Date.parse(b.due):Infinity));
+        else shown=[...shown].sort((a,b)=>a.title.localeCompare(b.title,'zh-CN'));
+        const label=categories.find(c=>c.id===state.category)?.label||'全部事项';
+        html+=`<section aria-labelledby="actions-heading"><div class="section-heading"><div class="section-heading-left"><h2 id="actions-heading">接下来做什么</h2><span id="action-count" class="section-count">${label} · ${shown.length} 项</span></div><div class="list-controls"><button class="text-button all-button" data-category="all" aria-pressed="${state.category==='all'}">全部事项 <span class="muted">${actions.length}</span></button><select id="sort-select" aria-label="行动排列方式"><option value="date" ${state.sort==='date'?'selected':''}>按期限排列</option><option value="title" ${state.sort==='title'?'selected':''}>按任务名称</option></select></div></div>`;
+        html+=shown.length?`<div class="action-list">${shown.map(row).join('')}</div>`:emptyView('这一类暂时没有明确行动','没有行动建议不等于没有工作，也不代表任务没有风险。你仍可以从任务索引查找并查看当前记录。','list','<button class="button" data-focus-index>查看任务索引</button>');
+        const conflictOutside=actions.filter(t=>t.signalType==='conflict'&&!shown.some(item=>item.id===t.id));
+        if(conflictOutside.length) html+=`<div class="conflict-hint">${icon('alert')}<span>另有 ${conflictOutside.length} 项父子任务完成状态不一致，仍需核对。</span><button data-category="review">查看核对事项 ${icon('arrow','sm')}</button></div>`;
+        html+='</section><p class="work-footnote">这是基于现有记录的行动建议，不是已排定日程。未列出的任务仍可从左侧查找。</p>';
+        if(state.scenario!=='no-actions') html+=`<div class="secondary-items"><details class="secondary-disclosure" data-secondary="proposals" ${state.secondaryExpanded.has('proposals')?'open':''}><summary>${icon('users')}待你回应的负责人提议<span class="tiny-count">1</span><span class="disclosure-caption">尚不属于我负责</span>${icon('chevron','disclosure-chevron')}</summary><div class="secondary-content"><div class="pending-item"><div>新成员接入指南<small>周航向你提出负责人建议 · 2026-09-01 08:50 · 示例</small></div><button class="text-button blue" data-open="sample-invitation">查看提议 ${icon('arrow','sm')}</button></div><p class="muted" style="margin-top:8px;font-size:11px">查看不代表接受，当前负责人仍为周航。</p></div></details><details class="secondary-disclosure" data-secondary="changes" ${state.secondaryExpanded.has('changes')?'open':''}><summary>${icon('history')}近期协作变化<span class="tiny-count">3</span><span class="disclosure-caption">按需回看来源</span>${icon('chevron','disclosure-chevron')}</summary><div class="secondary-content"><div class="change-item"><time>09-01 10:05</time><button data-source="api-discussion" data-task="sample-api">陈可说明鉴权字段尚未提供，联调仍需等待。</button></div><div class="change-item"><time>09-01 09:20</time><button data-source="handoff-proposal" data-task="sample-handoff">工具接力的负责人提议发给周航，尚未接受。</button></div><div class="change-item"><time>09-01 09:10</time><button data-source="planning-file" data-task="sample-planning">规划回归材料更新至 v2，无人选场景仍待补记录。</button></div><p class="muted" style="font-size:10px">以上为 2026 年示例记录；仅说明来源变化，不代表成果已验收。</p></div></details></div>`;
+      }
+      $('#page').innerHTML=html+footer();
+    }
+    function renderDetail() {
+      const task=sceneTasks().find(item=>item.id===state.selected);
+      if(!task || unavailable()) { state.view='home'; state.selected=null; renderHome(); return; }
+      const due=deadline(task), owner=task.ownerId===CURRENT_USER.id?CURRENT_USER.name:'周航';
+      const next=state.scenario==='stale'?'旧建议已过期，请从当前记录重新核对下一步。':task.next||'当前记录不足以给出明确的下一步，需本人核对。';
+      $('#page').innerHTML=`<button class="back-link" data-home>${icon('back','sm')}我的工作</button><span class="muted" style="font-size:10px;margin-left:12px">同一任务上下文 · 只读设计演示</span>${notice()}<header class="detail-heading"><h1 id="page-heading" tabindex="-1">${escapeHtml(task.title)}</h1><p class="detail-goal">${escapeHtml(task.goal)}</p><details class="criteria"><summary>${icon('chevron','sm disclosure-chevron')}完成标准${task.criteria.length?` · ${task.criteria.length} 条`:' · 尚未提供'}</summary>${task.criteria.length?`<ol>${task.criteria.map(criterion=>`<li>${escapeHtml(criterion)}</li>`).join('')}</ol>`:'<p>当前任务没有提供完成标准，不填入通用示例。</p>'}</details><div class="detail-meta"><span><span class="avatar me">${owner.slice(0,1)}</span>${owner}负责</span><span><i class="status-dot" style="background:${task.status==='已完成'?'#24735a':task.status==='受阻'?'#8a5a13':'#008af5'}"></i>${task.status}</span><span class="${due.className}">${icon('calendar','sm')}${due.text}</span><span class="muted">预计投入：暂无法估算</span></div>${task.pendingOwnerId?`<p class="detail-note">负责人提议待接受。当前有效负责人仍是${owner}，本页不会代为接受或转移责任。</p>`:''}</header><section class="situation"><h2>当前情况</h2><p class="situation-lede">${escapeHtml(task.reason)}</p><div class="situation-grid"><section><h3>已交付与剩余</h3><p>${escapeHtml(task.delivered)} ${escapeHtml(task.remaining)}</p></section><section><h3>需要关注</h3><p>${task.signal?escapeHtml(task.signal)+'。':''}${escapeHtml(task.reason)}</p></section><section><h3>下一步 · ${task.role}</h3><p>${escapeHtml(next)}</p></section></div><p class="situation-source">来源：本页下方 ${task.sources.length} 条示例记录；${task.sources.length?'截至 '+fullDate(task.sources.map(s=>s.at).sort().at(-1)):'缺少可定位记录'}。状态不等于验收结论。</p></section><div class="detail-tabs" role="tablist" aria-label="任务内容">${[['discussion','讨论'],['children','子任务'],['file','文件'],['activity','活动']].map(([value,label])=>`<button class="detail-tab" id="tab-${value}" role="tab" aria-selected="${state.tab===value}" tabindex="${state.tab===value?'0':'-1'}" aria-controls="detail-panel" data-tab="${value}">${label}<small>${value==='children'?(task.children||[]).length:task.sources.filter(s=>s.kind===value).length}</small></button>`).join('')}</div><section class="detail-panel" id="detail-panel" role="tabpanel" aria-labelledby="tab-${state.tab}" tabindex="0">${detailPanel(task)}</section><p class="detail-note">这里只演示工作台进入原任务与来源定位。正式产品复用原详情，不新增另一份任务或独立诊断页；未提供真实趋势，因此不画燃起图。</p>${footer()}`;
+    }
+    function detailPanel(task) {
+      if(state.tab==='children') return task.children?.length?task.children.map(child=>`<div class="child-row"><span>${escapeHtml(child.title)}<br><small>${escapeHtml(child.owner)}负责</small></span><span>${child.status}</span></div>`).join(''):'<p class="panel-empty">当前任务没有子任务，不为此补拆。</p>';
+      const sources=task.sources.filter(source=>source.kind===state.tab);
+      if(!sources.length) return `<p class="panel-empty">当前尚未提供${state.tab==='discussion'?'讨论':state.tab==='file'?'文件':'变更'}记录；没有记录不代表没有进展。</p>`;
+      return sources.map(source=>`<article class="source-record ${state.locatedSource===source.id?'located':''}" id="record-${source.id}" tabindex="-1">${state.locatedSource===source.id?'<div class="source-located-label">已定位到这条依据</div>':''}<div class="source-head"><span>${escapeHtml(source.title)}${source.version?' · '+source.version:''}<span class="muted"> · ${source.by}</span></span><time datetime="${source.at}">${fullDate(source.at)} · 示例</time></div><p>${escapeHtml(source.text)}</p></article>`).join('');
+    }
+    function renderBoard() {
+      const filtered=visibleIndexTasks();
+      $('#page').innerHTML=`<button class="back-link" data-home>${icon('back','sm')}我的工作</button><header class="page-heading"><div><div class="heading-title"><h1 id="page-heading" tabindex="-1">任务看板</h1><span class="sample-badge">示例</span></div><p class="scope-line">与左侧任务索引共用搜索和筛选 · ${filtered.length} 项</p></div><button class="mobile-index-link" data-mobile-index>${icon('filter','sm')}搜索与筛选</button></header><div class="board">${['未开始','进行中','受阻','已完成'].map(status=>`<section class="board-column"><h2>${status} <span class="muted">${filtered.filter(task=>task.status===status).length}</span></h2>${filtered.filter(task=>task.status===status).map(task=>`<button class="board-task" data-open="${task.id}">${escapeHtml(task.title)}</button>`).join('')||'<span class="muted" style="font-size:11px">暂无匹配任务</span>'}</section>`).join('')}</div>${footer()}`;
+    }
+    function renderPage() { state.view==='detail'?renderDetail():state.view==='board'?renderBoard():renderHome(); }
+    function renderAll() { renderIndex(); renderPage(); }
+    function announce(message) { $('#live-status').textContent=message; }
+    function rememberHome() {
+      if(state.view==='home' && document.body.dataset.mobileIndex!=='true') {
+        state.homeScroll=$('#main-content').scrollTop;
+        const element=document.activeElement;
+        state.returnFocus=element?.dataset.source?{source:element.dataset.source,secondary:element.closest('[data-secondary]')?.dataset.secondary}:element?.dataset.open?{task:element.dataset.open,index:!!element.closest('#task-index')}:null;
+      }
+    }
+    function openTask(id,sourceId=null) {
+      if(unavailable() || state.scenario==='empty') return;
+      const task=sceneTasks().find(item=>item.id===id); if(!task) return;
+      rememberHome();
+      state.selected=id; state.view='detail'; state.locatedSource=sourceId;
+      state.tab=sourceId?task.sources.find(source=>source.id===sourceId)?.kind||'discussion':'discussion';
+      document.body.dataset.mobileIndex='false'; closeFilter(); renderAll();
+      requestAnimationFrame(()=>{ const target=sourceId?$(`#record-${sourceId}`):$('#page-heading'); target?.focus({preventScroll:true}); if(sourceId) target?.scrollIntoView({block:'center'}); else $('#main-content').scrollTop=0; });
+    }
+    function goHome() {
+      state.selected=null; state.view='home'; state.locatedSource=null; document.body.dataset.mobileIndex='false'; closeFilter(); renderAll();
+      requestAnimationFrame(()=>{
+        $('#main-content').scrollTop=state.homeScroll;
+        const returned=state.returnFocus;
+        const target=returned?.source?document.querySelector(`${returned.secondary?'[data-secondary="'+returned.secondary+'"] ':'.action-list '}[data-source="${returned.source}"]`):returned?.task?document.querySelector(`${returned.index?'#task-index ':'.action-list '}[data-open="${returned.task}"]`):null;
+        (target?.getClientRects().length?target:$('#page-heading'))?.focus({preventScroll:true});
+      });
+    }
+    function closeFilter(focus=false) { $('#filter-popover').hidden=true; $('#filter-trigger').setAttribute('aria-expanded','false'); if(focus) $('#filter-trigger').focus(); }
+    let dialogReturnFocus=null;
+    const designNotes=`<h3>这一页只回答一个问题：我接下来做什么？</h3><p>采用一份行动清单，把任务、下一步、为什么处理和原始依据放在同一阅读路径。风险识别、完成标准检查、协作摘要是行动的依据，不被机械拆成三块 AI 功能区。三个分类直接筛选同一清单，数量交叉、不相加。</p><table><thead><tr><th>保留的信息</th><th>帮助作出的判断</th><th>数据依赖</th></tr></thead><tbody><tr><td>本人范围与时间</td><td>这份清单是否覆盖我的工作？</td><td>稳定成员 ID、有效 ownerId、可见范围、数据时间</td></tr><tr><td>任务与具体下一步</td><td>我现在要执行、协调还是核对？</td><td>任务目标、当前情况、责任与明确行动</td></tr><tr><td>期限与行动理由</td><td>为什么现在看它？能否开始？</td><td>有效期限、真实前置、完成标准及交付依据</td></tr><tr><td>来源、版本与未知</td><td>这个判断能信到什么程度？</td><td>可定位的讨论、文件版本、活动和依赖版本</td></tr><tr><td>可搜索的任务索引</td><td>没被建议的任务在哪里？</td><td>同一本人范围、任务全部标签、状态与搜索</td></tr></tbody></table><h3>参考能力如何落在页面上</h3><ul><li>风险识别 → 明确的前置未交付、期限已过、状态冲突；不由沉默推断停工。</li><li>完成标准检查 → 指出缺少哪一项交付依据，打开对应文件版本；缺证据是待核对，不自动判定失败或验收通过。</li><li>每日协作摘要 → 影响下一步的变化进入相关行动理由，完整变化折叠回看，自动活动不混入人的讨论。</li><li>Agent 接力 → 留在原任务上下文。首页不新增全局运行按钮，也不把连接或心跳当成工作完成。</li></ul><h3>会议方向与现行决定的关系</h3><table><thead><tr><th>会议早期方向</th><th>本稿沿用的后续决定</th><th>仍需确认</th></tr></thead><tbody><tr><td>首页回归纯任务列表</td><td>D-154 / D-156：列表上方“我的工作”，主内容仍以行动列表为主，无注意力地图或通知墙。</td><td>若要取消个人页，由产品负责人确认。</td></tr><tr><td>AI 洞察独立 Tab</td><td>D-142 / D-152：当前情况在任务首屏，讨论／子任务／文件／活动保持同级。本稿不新增诊断 Tab。</td><td>独立深入诊断入口另行确认。</td></tr><tr><td>自然语言对话创建</td><td>D-143 / D-147：沿用 AI 辅助需求工作区，不恢复旧对话或默认空表。</td><td>本稿只保留入口位置，不设计或实现创建解析。</td></tr></tbody></table><h3>刻意不放的内容</h3><p>不放个人总燃起图、任务数完成率、健康分、成员排名或精确排程。EWD 是预计人类总投入，不是剩余投入；没有真实日历和剩余量，不能报告负载、完成概率或“今天可以做完”。有子任务且有有效历史时，燃起图才在原任务详情辅助说明趋势。</p><h3>交互与状态边界</h3><ul><li>搜索、状态／标签多选只影响左侧及看板，个人行动范围不变。标签过滤匹配全部标签，命中多个标签也只展示一次；筛选内 OR、维度间 AND，空选不限。</li><li>待接受负责人提议不计入本人负责数。已完成父任务仍有未结束子项时，保留结果核对事项，不自动重开。</li><li>来源可直接定位到具体讨论、文件版本或活动。返回保留行动分类、展开位置以及左侧搜索、条件和分组折叠。</li><li>右下角可预览无任务、无行动、加载、失败、受限、过期。过期时撤下旧建议；受限时不保留任务名称、数量或来源。</li></ul><p class="source-document">内容依据：用户提供的《AgentDoor AI 协作能力参考》（2026-08-30）与会议纪要；本仓库 agentdoor-task-design Skill、09 我的工作设计及 D-154 / D-156 / D-158 / D-159 / D-160。文件里的“已实现”或测试数量不作为本稿的实测结论。</p><p class="source-document" style="margin-top:12px">交付边界：仅新增这个独立 HTML；全部数据为内存样例，无存储、网络请求、真实 AI 分析、通知发送或任务写入。源文档和产品决定未修改。正式接入必须复用原任务实体、原详情与来源入口，并实施服务端权限过滤。</p>`;
+    const infoContent = {
+      design:{title:'设计依据与信息取舍',content:designNotes},
+      team:{title:'当前团队 · 设计示例',content:'<p>当前展示 AgentDoor 产品团队的界面样例。团队切换沿用已有入口；这份独立设计稿不执行真实组织或权限切换。</p>'},
+      account:{title:'林然 · 示例账户',content:'<p>用于演示本人负责范围。有效负责人为林然的任务有 8 项；待接受提议另行呈现。设置与主题仍收在账户菜单，本稿不修改真实账户。</p>'},
+      create:{title:'沿用现有任务创建入口',content:'<p>加号进入已有的 AI 辅助需求工作区。本次只设计“我的工作”，不恢复旧对话、不增加默认空白表单，也不创建任何真实任务。</p>'},
+      tags:{title:'标签管理 · 二级入口',content:'<p>沿用当前标签管理页面。这份工作台稿只演示标签筛选与展示分组，不修改标签定义、顺序、任务归属或父子关系。</p><p style="margin-top:12px">标签始终选填；“未打标签”是视图状态，不是一个新业务标签。</p>'},
+      notifications:{title:'通知仍从顶栏查看',content:'<p>首页不再复制一面通知墙。这个入口沿用原通知面板；本设计稿不读取、发送或标记真实通知，也不把“已读”当成处理完成。</p>'},
+      permission:{title:'当前访问说明',content:'<p>这是无权限状态的界面示意。真实接入需要先完成服务端鉴权，再取得本人可见任务。本地按 ownerId 过滤不是生产权限验证。</p><p style="margin-top:12px">权限恢复前不显示旧任务名称、来源正文或历史数量；可以通过页面底部恢复正常示例。</p>'}
+    };
+    function showInfo(kind) {
+      let info=infoContent[kind]; if(!info) return;
+      if(unavailable() && ['account','notifications'].includes(kind)) info={title:'当前范围不可用',content:'<p>尚未取得可见范围，不展示先前的任务数量、名称或来源内容。</p>'};
+      else if(kind==='account') info={title:'林然 · 示例账户',content:`<p>当前场景中有效负责人为林然的任务有 ${ownedTasks().length} 项。设置与主题沿用账户菜单，本稿不修改真实账户。</p>`};
+      dialogReturnFocus=document.activeElement?.closest('#filter-popover')?$('#filter-trigger'):document.activeElement; closeFilter(); $('#dialog-title').textContent=info.title; $('#dialog-content').innerHTML=info.content; $('#context-dialog').showModal(); $('#dialog-close').focus();
+    }
+    function setScenario(value) {
+      state.scenario=value; state.selected=null; state.locatedSource=null; state.view='home'; state.homeScroll=0; state.returnFocus=null; state.expanded.clear(); state.secondaryExpanded.clear();
+      state.category=['empty','no-actions','restricted','loading'].includes(value)?'all':'due';
+      closeFilter(); if($('#context-dialog').open) $('#context-dialog').close(); renderAll(); $('#main-content').scrollTop=0; announce(`已切换为${scenarios.find(s=>s[0]===value)?.[1]}，仅为设计状态预览`);
+    }
+    $('#task-search').addEventListener('input',event=>{state.search=event.target.value;renderIndex();if(state.view==='board')renderBoard();});
+    $('#filter-trigger').addEventListener('click',()=>{const opening=$('#filter-popover').hidden;if(opening){renderFilter();$('#filter-popover').hidden=false;$('#filter-trigger').setAttribute('aria-expanded','true');}else closeFilter();});
+    $('#my-work').addEventListener('click',goHome);
+    $('#board-trigger').addEventListener('click',()=>{if(unavailable())return;rememberHome();state.selected=null;state.view='board';document.body.dataset.mobileIndex='false';renderAll();$('#main-content').scrollTop=0;});
+    $('#dialog-close').addEventListener('click',()=>$('#context-dialog').close());
+    $('#context-dialog').addEventListener('click',event=>{if(event.target===$('#context-dialog')){const rect=event.target.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom) event.target.close();}});
+    $('#context-dialog').addEventListener('close',()=>{if(dialogReturnFocus?.isConnected&&dialogReturnFocus.getClientRects().length)dialogReturnFocus.focus({preventScroll:true});else $('#page-heading')?.focus({preventScroll:true});});
+    document.addEventListener('click',event=>{
+      const target=event.target.closest('button');
+      if(!event.target.closest('.sidebar-tools')) closeFilter();
+      if(!target)return;
+      if(target.dataset.category){state.category=target.dataset.category;renderHome();announce(`${categories.find(c=>c.id===state.category)?.label||'全部事项'}，${actionableTasks().filter(t=>state.category==='all'||t.categories.includes(state.category)).length} 项`);$(`[data-category="${state.category}"]`)?.focus({preventScroll:true});}
+      else if(target.dataset.source)openTask(target.dataset.task,target.dataset.source);
+      else if(target.dataset.open)openTask(target.dataset.open);
+      else if(target.dataset.group){const group=target.dataset.group;state.folded.has(group)?state.folded.delete(group):state.folded.add(group);renderIndex();[...document.querySelectorAll('[data-group]')].find(button=>button.dataset.group===group)?.focus({preventScroll:true});}
+      else if(target.dataset.info)showInfo(target.dataset.info);
+      else if(target.hasAttribute('data-home'))goHome();
+      else if(target.hasAttribute('data-close-filter'))closeFilter(true);
+      else if(target.hasAttribute('data-reset-filters')){state.statuses.clear();state.labels.clear();renderFilter();renderIndex();if(state.view==='board')renderBoard();$('[data-reset-filters]')?.focus({preventScroll:true});}
+      else if(target.dataset.removeFilter){(target.dataset.kind==='status'?state.statuses:state.labels).delete(target.dataset.removeFilter);renderIndex();renderFilter();if(state.view==='board')renderBoard();$('#filter-trigger').focus();}
+      else if(target.hasAttribute('data-mobile-index')||target.hasAttribute('data-focus-index')){rememberHome();if(window.matchMedia('(max-width:900px)').matches)document.body.dataset.mobileIndex='true';$('#task-search').focus();}
+      else if(target.hasAttribute('data-normal'))setScenario('normal');
+      else if(target.dataset.tab){state.tab=target.dataset.tab;state.locatedSource=null;const scroll=$('#main-content').scrollTop;renderDetail();$('#main-content').scrollTop=scroll;$(`#tab-${state.tab}`)?.focus({preventScroll:true});}
+    });
+    document.addEventListener('change',event=>{
+      if(event.target.id==='scenario-select')setScenario(event.target.value);
+      else if(event.target.id==='sort-select'){state.sort=event.target.value;renderHome();$('#sort-select').focus({preventScroll:true});}
+      else if(event.target.dataset.filterKind){const set=event.target.dataset.filterKind==='status'?state.statuses:state.labels;event.target.checked?set.add(event.target.value):set.delete(event.target.value);renderIndex();if(state.view==='board')renderBoard();announce('任务索引已更新，我的工作范围不变');}
+    });
+    document.addEventListener('toggle',event=>{const id=event.target.dataset?.evidence,secondary=event.target.dataset?.secondary;if(id){event.target.open?state.expanded.add(id):state.expanded.delete(id);}if(secondary){event.target.open?state.secondaryExpanded.add(secondary):state.secondaryExpanded.delete(secondary);}},true);
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape'&&!$('#context-dialog').open)closeFilter(true);
+      const tab=event.target.closest('[role="tab"]');
+      if(tab&&['ArrowRight','ArrowLeft','Home','End'].includes(event.key)){event.preventDefault();const values=['discussion','children','file','activity'];let i=values.indexOf(state.tab);i=event.key==='Home'?0:event.key==='End'?3:(i+(event.key==='ArrowRight'?1:3))%4;state.tab=values[i];state.locatedSource=null;const scroll=$('#main-content').scrollTop;renderDetail();$('#main-content').scrollTop=scroll;$(`#tab-${state.tab}`)?.focus({preventScroll:true});}
+    });
+    renderAll();
+  </script>
+</body>
+</html>
