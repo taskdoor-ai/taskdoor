@@ -1,7 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { marked } from "marked";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
@@ -70,6 +69,98 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function renderInline(source) {
+  return escapeHtml(source)
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+}
+
+function isTableDivider(line) {
+  const cells = line.trim().replace(/^\||\|$/g, "").split("|");
+  return cells.length > 1 && cells.every((cell) => /^\s*:?-{3,}:?\s*$/.test(cell));
+}
+
+function tableCells(line, tag) {
+  return line
+    .trim()
+    .replace(/^\||\|$/g, "")
+    .split("|")
+    .map((cell) => `<${tag}>${renderInline(cell.trim())}</${tag}>`)
+    .join("");
+}
+
+function renderMarkdown(source) {
+  const lines = source.replace(/\r\n/g, "\n").split("\n");
+  const html = [];
+  let index = 0;
+
+  while (index < lines.length) {
+    const line = lines[index];
+    if (!line.trim()) {
+      index += 1;
+      continue;
+    }
+    if (/^<(?:h[1-6]|figure)\b/.test(line)) {
+      html.push(line);
+      index += 1;
+      continue;
+    }
+    const heading = line.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
+      const level = heading[1].length;
+      html.push(`<h${level}>${renderInline(heading[2])}</h${level}>`);
+      index += 1;
+      continue;
+    }
+    if (line.includes("|") && isTableDivider(lines[index + 1] ?? "")) {
+      const rows = [`<thead><tr>${tableCells(line, "th")}</tr></thead>`];
+      index += 2;
+      const bodyRows = [];
+      while (index < lines.length && lines[index].includes("|") && lines[index].trim()) {
+        bodyRows.push(`<tr>${tableCells(lines[index], "td")}</tr>`);
+        index += 1;
+      }
+      rows.push(`<tbody>${bodyRows.join("")}</tbody>`);
+      html.push(`<table>${rows.join("")}</table>`);
+      continue;
+    }
+    if (/^[-*]\s+/.test(line)) {
+      const items = [];
+      while (index < lines.length && /^[-*]\s+/.test(lines[index])) {
+        items.push(`<li>${renderInline(lines[index].replace(/^[-*]\s+/, ""))}</li>`);
+        index += 1;
+      }
+      html.push(`<ul>${items.join("")}</ul>`);
+      continue;
+    }
+    if (/^\d+\.\s+/.test(line)) {
+      const items = [];
+      while (index < lines.length && /^\d+\.\s+/.test(lines[index])) {
+        items.push(`<li>${renderInline(lines[index].replace(/^\d+\.\s+/, ""))}</li>`);
+        index += 1;
+      }
+      html.push(`<ol>${items.join("")}</ol>`);
+      continue;
+    }
+
+    const paragraph = [line.trim()];
+    index += 1;
+    while (
+      index < lines.length &&
+      lines[index].trim() &&
+      !/^(?:#{1,6}\s|<|[-*]\s+|\d+\.\s+)/.test(lines[index]) &&
+      !(lines[index].includes("|") && isTableDivider(lines[index + 1] ?? ""))
+    ) {
+      paragraph.push(lines[index].trim());
+      index += 1;
+    }
+    html.push(`<p>${renderInline(paragraph.join(" "))}</p>`);
+  }
+
+  return html.join("\n");
 }
 
 function plainText(markdown) {
@@ -232,7 +323,7 @@ export async function build() {
     moduleIds.add(module.metadata.module_id);
     const figuresInlined = await inlineFigures(module.body, filePath);
     const prepared = withStableHeadings(figuresInlined, module.metadata.module_id);
-    module.html = wrapTables(await marked.parse(prepared, { gfm: true }));
+    module.html = wrapTables(renderMarkdown(prepared));
     modules.push(module);
   }
 
@@ -247,7 +338,7 @@ export async function build() {
       );
     }
   }
-  const changelogHtml = wrapTables(await marked.parse(changelogSource, { gfm: true }));
+  const changelogHtml = wrapTables(renderMarkdown(changelogSource));
   const generatedAt = new Date().toISOString();
   const title = index.metadata.title || "AgentDoor 产品需求文档";
   const version = index.metadata.version || "0.1";

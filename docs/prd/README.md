@@ -36,4 +36,4 @@
 - `CHANGELOG.md`：语义需求变更日志。
 - `public/prd/`：自动生成的完整 HTML PRD 和 AI 模块索引。
 
-运行 `npm run build:prd` 重新生成阅读页。生成前会校验模块元数据、四段结构、模块 ID 和本地图片；构建失败时先修复源 Markdown，不要直接修改 `public/prd/`。
+运行 `node scripts/build-agentdoor-prd.mjs` 重新生成阅读页。生成前会校验模块元数据、四段结构、模块 ID 和本地图片；构建失败时先修复源 Markdown，不要直接修改 `public/prd/`。

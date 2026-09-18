@@ -29,100 +29,32 @@
           <button class="copy-link" type="button" data-copy-link="task-list">复制链接</button>
         </header>
         <h2 id="task-list-purpose">1. 目的</h2>
-
 <p>任务列表是用户查找和进入任务的主要入口。它需要让用户快速看清近期任务、缩小查找范围，并把需要持续关注的任务固定在列表顶部，减少重复搜索。</p>
 <h2 id="task-list-boundary">2. 范围和边界</h2>
-
 <p>本模块覆盖任务列表页中的页面结构、搜索、筛选、排序、加载、打开任务和置顶管理。任务正文、任务内讨论、文件管理以及任务创建和编辑流程由各自模块定义；本模块只说明它们在列表中的入口和结果反馈。</p>
 <h2 id="task-list-detail">3. 详细功能设计</h2>
-
 <h3 id="task-list-section-3-1">3.1 页面结构</h3>
-
 <p>页面由搜索与筛选区、置顶区和普通任务列表区组成。系统先根据搜索、筛选和排序条件得到完整结果，再按是否置顶分区展示；同一个任务只出现一次。没有置顶任务时不展示空的置顶区，普通任务列表直接承接搜索与筛选区。</p>
 <figure id="fig-list-001"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NjAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+5Lu75Yqh5YiX6KGo572u6aG25Yqf6IO956S65oSPPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+5Lu75Yqh5YiX6KGo6aG26YOo5pi+56S6572u6aG25Yy677yM5Lu75Yqh6KGM5Y+z5L6n5Zyo5oKs5YGc5oiW6IGa54Sm5pe25pi+56S65Zu+6ZKJ5pON5L2c44CCPC9kZXNjPgogIDxyZWN0IHdpZHRoPSI5NjAiIGhlaWdodD0iNjAwIiByeD0iMzIiIGZpbGw9IiNmNmY3ZmIiLz4KICA8cmVjdCB4PSI3NiIgeT0iNTQiIHdpZHRoPSI4MDgiIGhlaWdodD0iNDkyIiByeD0iMjAiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2RjZTFlYiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHJlY3QgeD0iMTA4IiB5PSI4NiIgd2lkdGg9Ijc0NCIgaGVpZ2h0PSI1OCIgcng9IjE0IiBmaWxsPSIjZjRmNmZhIi8+CiAgPGNpcmNsZSBjeD0iMTQwIiBjeT0iMTE1IiByPSIxMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjY3MDg1IiBzdHJva2Utd2lkdGg9IjQiLz4KICA8cGF0aCBkPSJtMTQ4IDEyMyAxMCAxMCIgc3Ryb2tlPSIjNjY3MDg1IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDx0ZXh0IHg9IjE3OCIgeT0iMTIzIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIzIiBmaWxsPSIjODc5MDlmIj7mkJzntKLku7vliqE8L3RleHQ+CiAgPHRleHQgeD0iMTEwIiB5PSIxOTAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI2NTAiIGZpbGw9IiM4YjkzYTEiPue9rumhtjwvdGV4dD4KICA8cmVjdCB4PSIxMDgiIHk9IjIwOCIgd2lkdGg9Ijc0NCIgaGVpZ2h0PSI3NiIgcng9IjE0IiBmaWxsPSIjZmZmOGU4IiBzdHJva2U9IiNmMGRjYTgiLz4KICA8Y2lyY2xlIGN4PSIxNDYiIGN5PSIyNDYiIHI9IjE4IiBmaWxsPSIjNzU1OWQ5Ii8+CiAgPHRleHQgeD0iMTgwIiB5PSIyNDEiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjEiIGZvbnQtd2VpZ2h0PSI2NTAiIGZpbGw9IiMyOTMwNDIiPuaVtOeQhuS7u+WKoeWIl+ihqCBQUkQ8L3RleHQ+CiAgPHRleHQgeD0iMTgwIiB5PSIyNjUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTUiIGZpbGw9IiM3Yjg0OTQiPkFnZW50RG9vciDCtyDliJrliJrmm7TmlrA8L3RleHQ+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzkyIDIyNikgcm90YXRlKDQ1IDIwIDIwKSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNzU1OWQ5IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPHBhdGggZD0iTTEzIDloMTRsLTMgOSA2IDZIMTBsNi02eiIgZmlsbD0iI2VlZTlmZiIvPgogICAgPHBhdGggZD0iTTIwIDI0djE0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8L2c+CiAgPHRleHQgeD0iMTEwIiB5PSIzMzAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI2NTAiIGZpbGw9IiM4YjkzYTEiPuacgOi/keS7u+WKoTwvdGV4dD4KICA8cmVjdCB4PSIxMDgiIHk9IjM1MCIgd2lkdGg9Ijc0NCIgaGVpZ2h0PSI3NiIgcng9IjE0IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNlNWU4ZWYiLz4KICA8Y2lyY2xlIGN4PSIxNDYiIGN5PSIzODgiIHI9IjE4IiBmaWxsPSIjNTBhODg5Ii8+CiAgPHRleHQgeD0iMTgwIiB5PSIzODMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjEiIGZvbnQtd2VpZ2h0PSI2NTAiIGZpbGw9IiMyOTMwNDIiPuWujOWWhOetm+mAiemdouadv+S6pOS6kjwvdGV4dD4KICA8dGV4dCB4PSIxODAiIHk9IjQwNyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZmlsbD0iIzdiODQ5NCI+QWdlbnREb29yIMK3IDEyIOWIhumSn+WJjTwvdGV4dD4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3OTIgMzY4KSByb3RhdGUoNDUgMjAgMjApIiBmaWxsPSJub25lIiBzdHJva2U9IiM5OGEyYjMiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aCBkPSJNMTMgOWgxNGwtMyA5IDYgNkgxMGw2LTZ6Ii8+CiAgICA8cGF0aCBkPSJNMjAgMjR2MTQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwvZz4KICA8cmVjdCB4PSIxMDgiIHk9IjQ0MiIgd2lkdGg9Ijc0NCIgaGVpZ2h0PSI3NiIgcng9IjE0IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNlNWU4ZWYiLz4KICA8Y2lyY2xlIGN4PSIxNDYiIGN5PSI0ODAiIHI9IjE4IiBmaWxsPSIjZTk4YzViIi8+CiAgPHRleHQgeD0iMTgwIiB5PSI0NzUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjEiIGZvbnQtd2VpZ2h0PSI2NTAiIGZpbGw9IiMyOTMwNDIiPuihpeWFheS7u+WKoeivpuaDhemqjOaUtuagh+WHhjwvdGV4dD4KICA8dGV4dCB4PSIxODAiIHk9IjQ5OSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZmlsbD0iIzdiODQ5NCI+QWdlbnREb29yIMK3IOaYqOWkqTwvdGV4dD4KPC9zdmc+Cg==" alt="任务列表中置顶区与普通任务区的结构示意"><figcaption>FIG-LIST-001 · 置顶任务固定显示在当前结果顶部，右侧图钉是置顶与取消置顶的直接入口。</figcaption></figure>
-
 <h3 id="task-list-section-3-2">3.2 搜索与筛选区</h3>
-
 <p><strong>展示内容。</strong> 页面顶部展示搜索输入框和筛选入口；筛选入口显示当前生效的条件数量，已选条件在展开面板底部连续排列。用户在任何筛选分类中都能看到“清除全部”，位置固定在面板右上方。</p>
 <p><strong>可用操作。</strong> 用户可以输入关键词、选择或移除筛选条件、清除全部条件，以及调整排序方式。</p>
 <p><strong>操作步骤与结果。</strong> 用户输入关键词或改变筛选条件后，系统在短暂防抖后刷新结果，保留搜索焦点和已选条件。点击单个条件的关闭按钮只移除该条件；点击“清除全部”一次移除全部筛选条件，但不清空搜索关键词。结果刷新后重新从列表顶部开始加载。</p>
 <h3 id="task-list-section-3-3">3.3 任务列表区</h3>
-
 <p><strong>展示内容。</strong> 每个任务项至少展示标题、所属项目或上下文、最近更新时间和可辨识的状态。补充信息只在能够帮助用户区分任务时呈现，避免把列表变成任务详情页。</p>
 <p><strong>可用操作。</strong> 点击任务项打开任务；悬停任务项时，右侧显示图钉和更多操作。键盘用户在任务项获得焦点时看到相同操作，触屏用户通过任务项右侧的常驻更多入口访问这些操作。</p>
 <p><strong>操作步骤与结果。</strong> 用户打开任务后进入对应任务页面，返回时恢复此前的搜索、筛选、排序和滚动位置。用户点击更多操作后，在原任务项附近打开菜单；完成操作后菜单关闭，并在原位置给出结果反馈。</p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>展示内容</th>
-<th>可用操作</th>
-<th>操作步骤与结果</th>
-<th>必要说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>完整任务项</td>
-<td>打开任务</td>
-<td>点击任务项或按回车进入任务；返回后恢复列表上下文。</td>
-<td>主点击区域不与右侧快捷操作重叠。</td>
-</tr>
-<tr>
-<td>右侧图钉</td>
-<td>置顶、取消置顶</td>
-<td>点击后任务在置顶区和普通任务区之间移动。</td>
-<td>悬停或键盘聚焦时显示；触屏从更多菜单进入。</td>
-</tr>
-<tr>
-<td>右侧更多入口</td>
-<td>查看其他可用操作</td>
-<td>打开贴近当前任务项的菜单，执行后就地反馈。</td>
-<td>菜单内容由任务权限决定。</td>
-</tr>
-</tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>展示内容</th><th>可用操作</th><th>操作步骤与结果</th><th>必要说明</th></tr></thead><tbody><tr><td>完整任务项</td><td>打开任务</td><td>点击任务项或按回车进入任务；返回后恢复列表上下文。</td><td>主点击区域不与右侧快捷操作重叠。</td></tr><tr><td>右侧图钉</td><td>置顶、取消置顶</td><td>点击后任务在置顶区和普通任务区之间移动。</td><td>悬停或键盘聚焦时显示；触屏从更多菜单进入。</td></tr><tr><td>右侧更多入口</td><td>查看其他可用操作</td><td>打开贴近当前任务项的菜单，执行后就地反馈。</td><td>菜单内容由任务权限决定。</td></tr></tbody></table></div>
 <p><strong>排序与分页或加载。</strong> 初版采用连续加载：首次只加载一批结果，接近列表底部时继续加载下一批。排序对全部匹配结果生效，而不是只作用于已加载内容。加载失败时保留当前内容，并在列表底部提供明确的重试入口；重新搜索或筛选会取消尚未完成的旧请求。</p>
 <h3 id="task-list-section-3-4">3.4 置顶区</h3>
-
 <p><strong>展示内容。</strong> 置顶区位于普通任务之前，显示当前搜索和筛选结果中已置顶的任务。区标题为“置顶”；置顶任务仍按当前排序规则排列，不再出现在普通任务区。</p>
 <p><strong>可用操作。</strong> 用户悬停或用键盘聚焦任务项时，可点击右侧图钉置顶或取消置顶。已置顶状态使用实心或高亮图钉，并提供可被辅助技术读取的状态名称。</p>
 <p><strong>操作步骤与结果。</strong> 点击未置顶任务的图钉后，任务立即移动到置顶区，并显示短暂成功反馈；点击已置顶任务的图钉后，任务回到普通任务区的正确排序位置。请求失败时任务恢复原位置和原状态，并提示用户重试。置顶是用户个人偏好，不改变任务本身，也不影响其他用户看到的列表。</p>
 <h2 id="task-list-acceptance">4. 验收标准</h2>
-
-<ul>
-<li>搜索、筛选和排序后，置顶区与普通任务区共同构成完整结果，且不存在重复任务。</li>
-<li>没有置顶结果时不显示空置顶区；出现首个置顶结果后，该区域位于普通任务区上方。</li>
-<li>鼠标、键盘和触屏用户都能访问打开任务、置顶、取消置顶和更多操作。</li>
-<li>置顶或取消置顶成功后，任务立即移动到正确分区；失败后恢复原状态并提供可理解的反馈。</li>
-<li>连续加载失败不会清空已加载任务，列表底部提供可执行的重试入口。</li>
-<li>从任务页面返回列表时，搜索、筛选、排序和滚动位置保持不变。</li>
-</ul>
-
+<ul><li>搜索、筛选和排序后，置顶区与普通任务区共同构成完整结果，且不存在重复任务。</li><li>没有置顶结果时不显示空置顶区；出现首个置顶结果后，该区域位于普通任务区上方。</li><li>鼠标、键盘和触屏用户都能访问打开任务、置顶、取消置顶和更多操作。</li><li>置顶或取消置顶成功后，任务立即移动到正确分区；失败后恢复原状态并提供可理解的反馈。</li><li>连续加载失败不会清空已加载任务，列表底部提供可执行的重试入口。</li><li>从任务页面返回列表时，搜索、筛选、排序和滚动位置保持不变。</li></ul>
       </article><section id="changelog" class="changelog"><h1>PRD 需求变更日志</h1>
 <p>本文件只记录语义需求变更。纯文字修正和视觉样式调整由 Git 历史追踪。</p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>变更 ID</th>
-<th>日期</th>
-<th>版本</th>
-<th>影响模块</th>
-<th>类型</th>
-<th>变更内容</th>
-<th>原因与影响</th>
-<th>相关链接</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>PRD-0001</td>
-<td>2026-09-18</td>
-<td>0.1</td>
-<td>PRD 体系、<a href="#task-list">任务列表</a></td>
-<td>新增</td>
-<td>建立模块化 PRD 模板、内容规则和变更机制，并以任务列表作为首个示例模块。</td>
-<td>统一后续需求编写与维护方式，明确任务列表的目标交互；不描述当前实现进度。</td>
-<td><a href="../superpowers/specs/2026-09-18-prd-template-system-design.md">设计说明</a></td>
-</tr>
-</tbody></table></div>
-</section></div>
+<div class="table-wrap"><table><thead><tr><th>变更 ID</th><th>日期</th><th>版本</th><th>影响模块</th><th>类型</th><th>变更内容</th><th>原因与影响</th><th>相关链接</th></tr></thead><tbody><tr><td>PRD-0001</td><td>2026-09-18</td><td>0.1</td><td>PRD 体系、<a href="#task-list">任务列表</a></td><td>新增</td><td>建立模块化 PRD 模板、内容规则和变更机制，并以任务列表作为首个示例模块。</td><td>统一后续需求编写与维护方式，明确任务列表的目标交互；不描述当前实现进度。</td><td><a href="../superpowers/specs/2026-09-18-prd-template-system-design.md">设计说明</a></td></tr></tbody></table></div></section></div>
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite">链接已复制</div>
   <script>
