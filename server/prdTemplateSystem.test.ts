@@ -42,3 +42,25 @@ test("PRD 索引提供模块顺序和入口", async () => {
   assert.match(index, /模块顺序/);
   assert.match(index, /templates\/module-template\.md/);
 });
+
+test("任务列表示例遵循模板并连续描述关键交互", async () => {
+  const module = await readProjectFile("docs/prd/modules/01-task-list.md");
+
+  assert.deepEqual(h2Headings(module), [
+    "## 1. 目的",
+    "## 2. 范围和边界",
+    "## 3. 详细功能设计",
+    "## 4. 验收标准",
+  ]);
+  assert.match(module, /^### 3\.1 页面结构$/m);
+  assert.match(module, /^### 3\.2 搜索与筛选区$/m);
+  assert.match(module, /^### 3\.3 任务列表区$/m);
+  assert.match(module, /^### 3\.4 置顶区$/m);
+  assert.match(module, /展示内容/);
+  assert.match(module, /可用操作/);
+  assert.match(module, /操作步骤与结果/);
+  assert.match(module, /分页或加载/);
+  assert.match(module, /键盘/);
+  assert.match(module, /!\[[^\]]+\]\([^)]*task-list-pinned\.svg\)/);
+  assert.match(module, /FIG-LIST-001/);
+});

@@ -10,11 +10,10 @@ status: "draft"
 
 ## 模块顺序
 
-<!-- 在这里按期望的阅读顺序添加 modules/ 下的文件。 -->
+1. [任务列表](modules/01-task-list.md)
 
 ## 编写入口
 
 - [新模块模板](templates/module-template.md)
 - [编写与维护说明](README.md)
 - [需求变更日志](CHANGELOG.md)
-
