@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="AgentDoor 产品需求文档">
+  <title>AgentDoor 产品需求文档</title>
+  <style>
+    :root{color-scheme:light;--ink:#222838;--muted:#687286;--line:#e3e6ed;--soft:#f5f6f9;--accent:#5b5ee6;--accent-soft:#eeeeff;--paper:#fff;--sidebar:290px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);padding:32px 24px;background:#fafafd;border-right:1px solid var(--line);overflow:auto;z-index:10}.brand{display:flex;align-items:center;gap:10px;margin-bottom:22px;font-size:17px;font-weight:760}.brand-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--ink);color:#fff}.search-wrap{position:relative}.search-wrap span{position:absolute;left:12px;top:9px;color:var(--muted)}#prd-search{width:100%;height:42px;padding:0 12px 0 36px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);font:inherit;outline:none}#prd-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.search-count{min-height:24px;margin:7px 2px 18px;color:var(--muted);font-size:13px}.nav-label{margin:18px 8px 8px;color:#9aa1af;font-size:11px;font-weight:750;letter-spacing:.12em}.nav-link{display:flex;gap:10px;align-items:center;margin:3px 0;padding:9px 10px;border-radius:9px;color:#4b5568;text-decoration:none}.nav-link span{color:#a1a8b5;font-size:12px}.nav-link:hover,.nav-link.is-active{background:var(--accent-soft);color:#4245bd}.sidebar-actions{display:grid;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}button,.sidebar-actions a{border:0;background:none;color:inherit;font:inherit;cursor:pointer}.sidebar-actions a,.sidebar-actions button{padding:8px 10px;border-radius:8px;text-align:left;text-decoration:none}.sidebar-actions a:hover,.sidebar-actions button:hover{background:var(--soft)}.page{margin-left:var(--sidebar)}.document-header{padding:74px clamp(28px,7vw,100px) 56px;border-bottom:1px solid var(--line);background:linear-gradient(140deg,#fbfbff 0%,#fff 60%)}.document-header h1{max-width:760px;margin:10px 0 12px;font-size:clamp(38px,6vw,66px);line-height:1.08;letter-spacing:-.045em}.document-header p{max-width:650px;margin:0;color:var(--muted);font-size:18px}.meta{color:var(--accent);font-size:13px;font-weight:720;letter-spacing:.08em;text-transform:uppercase}.content{width:min(900px,calc(100% - 56px));margin:0 auto;padding:18px 0 100px}article{padding:72px 0 40px;border-bottom:1px solid var(--line);scroll-margin-top:22px}article[hidden]{display:none}.module-header{display:flex;justify-content:space-between;gap:28px;align-items:flex-start;margin-bottom:44px}.module-header h1{margin:5px 0 5px;font-size:38px;line-height:1.2}.eyebrow{margin:0;color:var(--accent);font-size:12px;font-weight:750;letter-spacing:.09em;text-transform:uppercase}.summary{margin:0;color:var(--muted);font-size:18px}.copy-link{flex:none;margin-top:25px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;color:var(--muted)}.copy-link:hover{border-color:#bfc4d0;color:var(--ink)}h2{margin:54px 0 16px;font-size:27px;line-height:1.3;scroll-margin-top:24px}h3{margin:36px 0 12px;font-size:21px;scroll-margin-top:24px}p{margin:12px 0}strong{font-weight:720}ul,ol{padding-left:24px}li+li{margin-top:7px}figure{margin:32px 0;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--soft)}figure img{display:block;width:100%;height:auto;border-radius:10px}figcaption{padding:11px 5px 3px;color:var(--muted);font-size:14px}.table-wrap{margin:22px 0;overflow-x:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;min-width:720px;border-collapse:collapse;font-size:14px}th,td{padding:13px 15px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:var(--soft);font-weight:720}tr:last-child td{border-bottom:0}.changelog{padding:70px 0}.changelog>h1{font-size:34px}.empty{display:none;padding:70px 0;text-align:center;color:var(--muted)}.empty.is-visible{display:block}.mobile-bar{display:none}.toast{position:fixed;right:22px;bottom:22px;padding:10px 15px;border-radius:9px;background:var(--ink);color:#fff;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}.toast.is-visible{opacity:1;transform:none}
+    @media (max-width:760px){.mobile-bar{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(12px);z-index:20}.mobile-bar button{padding:7px 10px;border:1px solid var(--line);border-radius:8px}.sidebar{transform:translateX(-100%);transition:transform .22s;box-shadow:12px 0 35px rgba(32,39,55,.12)}body.nav-open .sidebar{transform:none}.page{margin-left:0}.document-header{padding:48px 24px 38px}.content{width:min(100% - 36px,900px)}article{padding-top:50px}.module-header{display:block}.copy-link{margin-top:16px}body.nav-open:after{content:"";position:fixed;inset:0;background:rgba(22,27,38,.22);z-index:5}.document-header h1{font-size:40px}}
+    @media print{.sidebar,.mobile-bar,.copy-link,.toast{display:none!important}.page{margin:0}.document-header{padding:20px 0 28px}.content{width:100%;padding:0}article,article[hidden]{display:block!important;break-before:page;border:0;padding:28px 0}article:first-child{break-before:auto}figure{break-inside:avoid}.changelog{break-before:page}.table-wrap{overflow:visible}a{color:inherit;text-decoration:none}}
+  </style>
+</head>
+<body>
+  <aside class="sidebar" aria-label="文档导航">
+    <div class="brand"><span class="brand-mark">A</span>AgentDoor PRD</div>
+    <label class="search-wrap"><span>⌕</span><input id="prd-search" type="search" placeholder="搜索模块或需求" autocomplete="off"></label>
+    <div id="search-count" class="search-count">1 个模块</div>
+    <div class="nav-label">模块</div>
+    <nav><a class="nav-link is-active" href="#task-list" data-module-link="task-list"><span>01</span>任务列表</a></nav>
+    <div class="sidebar-actions"><a href="#changelog">需求变更日志</a><button id="print-prd" type="button">打印 / 导出 PDF</button></div>
+  </aside>
+  <div class="mobile-bar"><strong>AgentDoor PRD</strong><button id="toggle-nav" type="button" aria-expanded="false">目录</button></div>
+  <main class="page">
+    <header class="document-header"><div class="meta">Version 0.1 · 2026-09-18</div><h1>AgentDoor 产品需求文档</h1><p>以模块化 Markdown 为唯一内容源，连续呈现目标、边界、详细设计与验收标准。</p></header>
+    <div class="content"><div id="empty-state" class="empty">没有找到匹配的模块，请更换关键词。</div><article id="task-list" data-module-id="task-list" data-search-text="任务列表 让用户快速定位、打开和置顶需要持续关注的任务。 任务列表 1. 目的 任务列表是用户查找和进入任务的主要入口。它需要让用户快速看清近期任务、缩小查找范围，并把需要持续关注的任务固定在列表顶部，减少重复搜索。 2. 范围和边界 本模块覆盖任务列表页中的页面结构、搜索、筛选、排序、加载、打开任务和置顶管理。任务正文、任务内讨论、文件管理以及任务创建和编辑流程由各自模块定义；本模块只说明它们在列表中的入口和结果反馈。 3. 详细功能设计 3.1 页面结构 页面由搜索与筛选区、置顶区和普通任务列表区组成。系统先根据搜索、筛选和排序条件得到完整结果，再按是否置顶分区展示；同一个任务只出现一次。没有置顶任务时不展示空的置顶区，普通任务列表直接承接搜索与筛选区。 任务列表中置顶区与普通任务区的结构示意 fig list 001 · 置顶任务固定显示在当前结果顶部，右侧图钉是置顶与取消置顶的直接入口。 3.2 搜索与筛选区 展示内容。 页面顶部展示搜索输入框和筛选入口；筛选入口显示当前生效的条件数量，已选条件在展开面板底部连续排列。用户在任何筛选分类中都能看到“清除全部”，位置固定在面板右上方。 可用操作。 用户可以输入关键词、选择或移除筛选条件、清除全部条件，以及调整排序方式。 操作步骤与结果。 用户输入关键词或改变筛选条件后，系统在短暂防抖后刷新结果，保留搜索焦点和已选条件。点击单个条件的关闭按钮只移除该条件；点击“清除全部”一次移除全部筛选条件，但不清空搜索关键词。结果刷新后重新从列表顶部开始加载。 3.3 任务列表区 展示内容。 每个任务项至少展示标题、所属项目或上下文、最近更新时间和可辨识的状态。补充信息只在能够帮助用户区分任务时呈现，避免把列表变成任务详情页。 可用操作。 点击任务项打开任务；悬停任务项时，右侧显示图钉和更多操作。键盘用户在任务项获得焦点时看到相同操作，触屏用户通过任务项右侧的常驻更多入口访问这些操作。 操作步骤与结果。 用户打开任务后进入对应任务页面，返回时恢复此前的搜索、筛选、排序和滚动位置。用户点击更多操作后，在原任务项附近打开菜单；完成操作后菜单关闭，并在原位置给出结果反馈。 展示内容 可用操作 操作步骤与结果 必要说明 完整任务项 打开任务 点击任务项或按回车进入任务；返回后恢复列表上下文。 主点击区域不与右侧快捷操作重叠。 右侧图钉 置顶、取消置顶 点击后任务在置顶区和普通任务区之间移动。 悬停或键盘聚焦时显示；触屏从更多菜单进入。 右侧更多入口 查看其他可用操作 打开贴近当前任务项的菜单，执行后就地反馈。 菜单内容由任务权限决定。 排序与分页或加载。 初版采用连续加载：首次只加载一批结果，接近列表底部时继续加载下一批。排序对全部匹配结果生效，而不是只作用于已加载内容。加载失败时保留当前内容，并在列表底部提供明确的重试入口；重新搜索或筛选会取消尚未完成的旧请求。 3.4 置顶区 展示内容。 置顶区位于普通任务之前，显示当前搜索和筛选结果中已置顶的任务。区标题为“置顶”；置顶任务仍按当前排序规则排列，不再出现在普通任务区。 可用操作。 用户悬停或用键盘聚焦任务项时，可点击右侧图钉置顶或取消置顶。已置顶状态使用实心或高亮图钉，并提供可被辅助技术读取的状态名称。 操作步骤与结果。 点击未置顶任务的图钉后，任务立即移动到置顶区，并显示短暂成功反馈；点击已置顶任务的图钉后，任务回到普通任务区的正确排序位置。请求失败时任务恢复原位置和原状态，并提示用户重试。置顶是用户个人偏好，不改变任务本身，也不影响其他用户看到的列表。 4. 验收标准 搜索、筛选和排序后，置顶区与普通任务区共同构成完整结果，且不存在重复任务。 没有置顶结果时不显示空置顶区；出现首个置顶结果后，该区域位于普通任务区上方。 鼠标、键盘和触屏用户都能访问打开任务、置顶、取消置顶和更多操作。 置顶或取消置顶成功后，任务立即移动到正确分区；失败后恢复原状态并提供可理解的反馈。 连续加载失败不会清空已加载任务，列表底部提供可执行的重试入口。 从任务页面返回列表时，搜索、筛选、排序和滚动位置保持不变。">
+        <header class="module-header">
+          <div><p class="eyebrow">task-list · v0.1</p><h1>任务列表</h1><p class="summary">让用户快速定位、打开和置顶需要持续关注的任务。</p></div>
+          <button class="copy-link" type="button" data-copy-link="task-list">复制链接</button>
+        </header>
+        <h2 id="task-list-purpose">1. 目的</h2>
+
+<p>任务列表是用户查找和进入任务的主要入口。它需要让用户快速看清近期任务、缩小查找范围，并把需要持续关注的任务固定在列表顶部，减少重复搜索。</p>
+<h2 id="task-list-boundary">2. 范围和边界</h2>
+
+<p>本模块覆盖任务列表页中的页面结构、搜索、筛选、排序、加载、打开任务和置顶管理。任务正文、任务内讨论、文件管理以及任务创建和编辑流程由各自模块定义；本模块只说明它们在列表中的入口和结果反馈。</p>
+<h2 id="task-list-detail">3. 详细功能设计</h2>
+
+<h3 id="task-list-section-3-1">3.1 页面结构</h3>
+
+<p>页面由搜索与筛选区、置顶区和普通任务列表区组成。系统先根据搜索、筛选和排序条件得到完整结果，再按是否置顶分区展示；同一个任务只出现一次。没有置顶任务时不展示空的置顶区，普通任务列表直接承接搜索与筛选区。</p>
+<figure id="fig-list-001"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NjAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+5Lu75Yqh5YiX6KGo572u6aG25Yqf6IO956S65oSPPC90aXRsZT4KICA8ZGVzYyBpZD0iZGVzYyI+5Lu75Yqh5YiX6KGo6aG26YOo5pi+56S6572u6aG25Yy677yM5Lu75Yqh6KGM5Y+z5L6n5Zyo5oKs5YGc5oiW6IGa54Sm5pe25pi+56S65Zu+6ZKJ5pON5L2c44CCPC9kZXNjPgogIDxyZWN0IHdpZHRoPSI5NjAiIGhlaWdodD0iNjAwIiByeD0iMzIiIGZpbGw9IiNmNmY3ZmIiLz4KICA8cmVjdCB4PSI3NiIgeT0iNTQiIHdpZHRoPSI4MDgiIGhlaWdodD0iNDkyIiByeD0iMjAiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2RjZTFlYiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHJlY3QgeD0iMTA4IiB5PSI4NiIgd2lkdGg9Ijc0NCIgaGVpZ2h0PSI1OCIgcng9IjE0IiBmaWxsPSIjZjRmNmZhIi8+CiAgPGNpcmNsZSBjeD0iMTQwIiBjeT0iMTE1IiByPSIxMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjY3MDg1IiBzdHJva2Utd2lkdGg9IjQiLz4KICA8cGF0aCBkPSJtMTQ4IDEyMyAxMCAxMCIgc3Ryb2tlPSIjNjY3MDg1IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDx0ZXh0IHg9IjE3OCIgeT0iMTIzIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIzIiBmaWxsPSIjODc5MDlmIj7mkJzntKLku7vliqE8L3RleHQ+CiAgPHRleHQgeD0iMTEwIiB5PSIxOTAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI2NTAiIGZpbGw9IiM4YjkzYTEiPue9rumhtjwvdGV4dD4KICA8cmVjdCB4PSIxMDgiIHk9IjIwOCIgd2lkdGg9Ijc0NCIgaGVpZ2h0PSI3NiIgcng9IjE0IiBmaWxsPSIjZmZmOGU4IiBzdHJva2U9IiNmMGRjYTgiLz4KICA8Y2lyY2xlIGN4PSIxNDYiIGN5PSIyNDYiIHI9IjE4IiBmaWxsPSIjNzU1OWQ5Ii8+CiAgPHRleHQgeD0iMTgwIiB5PSIyNDEiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjEiIGZvbnQtd2VpZ2h0PSI2NTAiIGZpbGw9IiMyOTMwNDIiPuaVtOeQhuS7u+WKoeWIl+ihqCBQUkQ8L3RleHQ+CiAgPHRleHQgeD0iMTgwIiB5PSIyNjUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTUiIGZpbGw9IiM3Yjg0OTQiPkFnZW50RG9vciDCtyDliJrliJrmm7TmlrA8L3RleHQ+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzkyIDIyNikgcm90YXRlKDQ1IDIwIDIwKSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNzU1OWQ5IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPHBhdGggZD0iTTEzIDloMTRsLTMgOSA2IDZIMTBsNi02eiIgZmlsbD0iI2VlZTlmZiIvPgogICAgPHBhdGggZD0iTTIwIDI0djE0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8L2c+CiAgPHRleHQgeD0iMTEwIiB5PSIzMzAiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI2NTAiIGZpbGw9IiM4YjkzYTEiPuacgOi/keS7u+WKoTwvdGV4dD4KICA8cmVjdCB4PSIxMDgiIHk9IjM1MCIgd2lkdGg9Ijc0NCIgaGVpZ2h0PSI3NiIgcng9IjE0IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNlNWU4ZWYiLz4KICA8Y2lyY2xlIGN4PSIxNDYiIGN5PSIzODgiIHI9IjE4IiBmaWxsPSIjNTBhODg5Ii8+CiAgPHRleHQgeD0iMTgwIiB5PSIzODMiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjEiIGZvbnQtd2VpZ2h0PSI2NTAiIGZpbGw9IiMyOTMwNDIiPuWujOWWhOetm+mAiemdouadv+S6pOS6kjwvdGV4dD4KICA8dGV4dCB4PSIxODAiIHk9IjQwNyIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZmlsbD0iIzdiODQ5NCI+QWdlbnREb29yIMK3IDEyIOWIhumSn+WJjTwvdGV4dD4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3OTIgMzY4KSByb3RhdGUoNDUgMjAgMjApIiBmaWxsPSJub25lIiBzdHJva2U9IiM5OGEyYjMiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aCBkPSJNMTMgOWgxNGwtMyA5IDYgNkgxMGw2LTZ6Ii8+CiAgICA8cGF0aCBkPSJNMjAgMjR2MTQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwvZz4KICA8cmVjdCB4PSIxMDgiIHk9IjQ0MiIgd2lkdGg9Ijc0NCIgaGVpZ2h0PSI3NiIgcng9IjE0IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNlNWU4ZWYiLz4KICA8Y2lyY2xlIGN4PSIxNDYiIGN5PSI0ODAiIHI9IjE4IiBmaWxsPSIjZTk4YzViIi8+CiAgPHRleHQgeD0iMTgwIiB5PSI0NzUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjEiIGZvbnQtd2VpZ2h0PSI2NTAiIGZpbGw9IiMyOTMwNDIiPuihpeWFheS7u+WKoeivpuaDhemqjOaUtuagh+WHhjwvdGV4dD4KICA8dGV4dCB4PSIxODAiIHk9IjQ5OSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZmlsbD0iIzdiODQ5NCI+QWdlbnREb29yIMK3IOaYqOWkqTwvdGV4dD4KPC9zdmc+Cg==" alt="任务列表中置顶区与普通任务区的结构示意"><figcaption>FIG-LIST-001 · 置顶任务固定显示在当前结果顶部，右侧图钉是置顶与取消置顶的直接入口。</figcaption></figure>
+
+<h3 id="task-list-section-3-2">3.2 搜索与筛选区</h3>
+
+<p><strong>展示内容。</strong> 页面顶部展示搜索输入框和筛选入口；筛选入口显示当前生效的条件数量，已选条件在展开面板底部连续排列。用户在任何筛选分类中都能看到“清除全部”，位置固定在面板右上方。</p>
+<p><strong>可用操作。</strong> 用户可以输入关键词、选择或移除筛选条件、清除全部条件，以及调整排序方式。</p>
+<p><strong>操作步骤与结果。</strong> 用户输入关键词或改变筛选条件后，系统在短暂防抖后刷新结果，保留搜索焦点和已选条件。点击单个条件的关闭按钮只移除该条件；点击“清除全部”一次移除全部筛选条件，但不清空搜索关键词。结果刷新后重新从列表顶部开始加载。</p>
+<h3 id="task-list-section-3-3">3.3 任务列表区</h3>
+
+<p><strong>展示内容。</strong> 每个任务项至少展示标题、所属项目或上下文、最近更新时间和可辨识的状态。补充信息只在能够帮助用户区分任务时呈现，避免把列表变成任务详情页。</p>
+<p><strong>可用操作。</strong> 点击任务项打开任务；悬停任务项时，右侧显示图钉和更多操作。键盘用户在任务项获得焦点时看到相同操作，触屏用户通过任务项右侧的常驻更多入口访问这些操作。</p>
+<p><strong>操作步骤与结果。</strong> 用户打开任务后进入对应任务页面，返回时恢复此前的搜索、筛选、排序和滚动位置。用户点击更多操作后，在原任务项附近打开菜单；完成操作后菜单关闭，并在原位置给出结果反馈。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>展示内容</th>
+<th>可用操作</th>
+<th>操作步骤与结果</th>
+<th>必要说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>完整任务项</td>
+<td>打开任务</td>
+<td>点击任务项或按回车进入任务；返回后恢复列表上下文。</td>
+<td>主点击区域不与右侧快捷操作重叠。</td>
+</tr>
+<tr>
+<td>右侧图钉</td>
+<td>置顶、取消置顶</td>
+<td>点击后任务在置顶区和普通任务区之间移动。</td>
+<td>悬停或键盘聚焦时显示；触屏从更多菜单进入。</td>
+</tr>
+<tr>
+<td>右侧更多入口</td>
+<td>查看其他可用操作</td>
+<td>打开贴近当前任务项的菜单，执行后就地反馈。</td>
+<td>菜单内容由任务权限决定。</td>
+</tr>
+</tbody></table></div>
+<p><strong>排序与分页或加载。</strong> 初版采用连续加载：首次只加载一批结果，接近列表底部时继续加载下一批。排序对全部匹配结果生效，而不是只作用于已加载内容。加载失败时保留当前内容，并在列表底部提供明确的重试入口；重新搜索或筛选会取消尚未完成的旧请求。</p>
+<h3 id="task-list-section-3-4">3.4 置顶区</h3>
+
+<p><strong>展示内容。</strong> 置顶区位于普通任务之前，显示当前搜索和筛选结果中已置顶的任务。区标题为“置顶”；置顶任务仍按当前排序规则排列，不再出现在普通任务区。</p>
+<p><strong>可用操作。</strong> 用户悬停或用键盘聚焦任务项时，可点击右侧图钉置顶或取消置顶。已置顶状态使用实心或高亮图钉，并提供可被辅助技术读取的状态名称。</p>
+<p><strong>操作步骤与结果。</strong> 点击未置顶任务的图钉后，任务立即移动到置顶区，并显示短暂成功反馈；点击已置顶任务的图钉后，任务回到普通任务区的正确排序位置。请求失败时任务恢复原位置和原状态，并提示用户重试。置顶是用户个人偏好，不改变任务本身，也不影响其他用户看到的列表。</p>
+<h2 id="task-list-acceptance">4. 验收标准</h2>
+
+<ul>
+<li>搜索、筛选和排序后，置顶区与普通任务区共同构成完整结果，且不存在重复任务。</li>
+<li>没有置顶结果时不显示空置顶区；出现首个置顶结果后，该区域位于普通任务区上方。</li>
+<li>鼠标、键盘和触屏用户都能访问打开任务、置顶、取消置顶和更多操作。</li>
+<li>置顶或取消置顶成功后，任务立即移动到正确分区；失败后恢复原状态并提供可理解的反馈。</li>
+<li>连续加载失败不会清空已加载任务，列表底部提供可执行的重试入口。</li>
+<li>从任务页面返回列表时，搜索、筛选、排序和滚动位置保持不变。</li>
+</ul>
+
+      </article><section id="changelog" class="changelog"><h1>PRD 需求变更日志</h1>
+<p>本文件只记录语义需求变更。纯文字修正和视觉样式调整由 Git 历史追踪。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>变更 ID</th>
+<th>日期</th>
+<th>版本</th>
+<th>影响模块</th>
+<th>类型</th>
+<th>变更内容</th>
+<th>原因与影响</th>
+<th>相关链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PRD-0001</td>
+<td>2026-09-18</td>
+<td>0.1</td>
+<td>PRD 体系、<a href="#task-list">任务列表</a></td>
+<td>新增</td>
+<td>建立模块化 PRD 模板、内容规则和变更机制，并以任务列表作为首个示例模块。</td>
+<td>统一后续需求编写与维护方式，明确任务列表的目标交互；不描述当前实现进度。</td>
+<td><a href="../superpowers/specs/2026-09-18-prd-template-system-design.md">设计说明</a></td>
+</tr>
+</tbody></table></div>
+</section></div>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite">链接已复制</div>
+  <script>
+    const search=document.querySelector('#prd-search');const articles=[...document.querySelectorAll('article[data-module-id]')];const count=document.querySelector('#search-count');const empty=document.querySelector('#empty-state');let searchSnapshot='';function applySearch(value){const query=value.trim().toLowerCase();let visible=0;for(const article of articles){const match=!query||article.dataset.searchText.includes(query);article.hidden=!match;if(match)visible+=1}count.textContent=query?visible+' 个匹配模块':articles.length+' 个模块';empty.classList.toggle('is-visible',visible===0)}search.addEventListener('input',event=>applySearch(event.target.value));
+    const links=[...document.querySelectorAll('[data-module-link]')];const observer=new IntersectionObserver(entries=>{const current=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!current)return;for(const link of links)link.classList.toggle('is-active',link.dataset.moduleLink===current.target.id)},{rootMargin:'-15% 0px -65% 0px',threshold:[0,.25,.5]});articles.forEach(article=>observer.observe(article));
+    const toast=document.querySelector('#toast');document.querySelectorAll('[data-copy-link]').forEach(button=>button.addEventListener('click',async()=>{const url=new URL(location.href);url.hash=button.dataset.copyLink;await navigator.clipboard.writeText(url.href);toast.classList.add('is-visible');setTimeout(()=>toast.classList.remove('is-visible'),1600)}));
+    const toggle=document.querySelector('#toggle-nav');toggle.addEventListener('click',()=>{const open=document.body.classList.toggle('nav-open');toggle.setAttribute('aria-expanded',String(open))});document.querySelectorAll('.sidebar a').forEach(link=>link.addEventListener('click',()=>document.body.classList.remove('nav-open')));document.querySelector('#print-prd').addEventListener('click',()=>window.print());
+    addEventListener('beforeprint',()=>{searchSnapshot=search.value;applySearch('')});addEventListener('afterprint',()=>applySearch(searchSnapshot));
+  </script>
+</body>
+</html>

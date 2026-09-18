@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-09-18T11:53:06.770Z",
+  "modules": [
+    {
+      "moduleId": "task-list",
+      "title": "任务列表",
+      "summary": "让用户快速定位、打开和置顶需要持续关注的任务。",
+      "source": "docs/prd/modules/01-task-list.md",
+      "url": "./index.html#task-list",
+      "sections": [
+        {
+          "id": "task-list-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "task-list-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "task-list-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "task-list-acceptance",
+          "title": "4. 验收标准"
+        }
+      ]
+    }
+  ]
+}

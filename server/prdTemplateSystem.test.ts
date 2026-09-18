@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 const projectRoot = new URL("../", import.meta.url);
 
@@ -63,4 +66,35 @@ test("任务列表示例遵循模板并连续描述关键交互", async () => {
   assert.match(module, /键盘/);
   assert.match(module, /!\[[^\]]+\]\([^)]*task-list-pinned\.svg\)/);
   assert.match(module, /FIG-LIST-001/);
+});
+
+test("构建脚本生成连续 HTML 和 AI 模块索引", () => {
+  const scriptPath = fileURLToPath(
+    new URL("../scripts/build-agentdoor-prd.mjs", import.meta.url),
+  );
+  execFileSync(process.execPath, [scriptPath], { stdio: "pipe" });
+
+  const html = readFileSync(
+    new URL("../public/prd/index.html", import.meta.url),
+    "utf8",
+  );
+  const index = JSON.parse(
+    readFileSync(
+      new URL("../public/prd/module-index.json", import.meta.url),
+      "utf8",
+    ),
+  );
+
+  assert.match(html, /<article[^>]+data-module-id="task-list"/);
+  assert.match(html, /<figure[^>]+id="fig-list-001"/);
+  assert.match(html, /id="prd-search"/);
+  assert.match(html, /@media\s+print/);
+  assert.match(html, /@media\s+\(max-width:\s*760px\)/);
+  assert.match(html, /data:image\/svg\+xml;base64,/);
+  assert.equal(index.modules[0].moduleId, "task-list");
+  assert.ok(
+    index.modules[0].sections.some(
+      (section: { id: string }) => section.id === "task-list-detail",
+    ),
+  );
 });
