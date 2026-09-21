@@ -1,6 +1,7 @@
 import type { TaskEffortDistributionInput } from "./taskEffortDistribution";
 import { effortEstimateSchema, getTaskEffortState } from "./taskEffort";
 import { getTaskBurnUpModel, type TaskBurnUpSeries } from "./taskBurnUp";
+import { getTaskEffortBaselineSeries } from "./taskEffortBaseline";
 
 export type TaskProgressAssessmentState = "zero" | "single" | "partial" | "ready" | "stale" | "unavailable" | "invalid";
 
@@ -99,17 +100,17 @@ export function getTaskProgressAssessment(
   }
   if (totalMinutes <= 0) return withoutProgress(burnUp, "unavailable", "当前范围 EWD 为 0，完成度暂不可计算", estimatedLeafCount, effortTasks.length);
 
+  const baseline = getTaskBurnUpModel(getTaskEffortBaselineSeries(effortTasks));
   return {
-    state: "zero",
+    state: baseline.state === "single" ? "single" : "partial",
     source: hasExample ? "example" : "recorded",
-    progressRatio: 0,
+    progressRatio: null,
     scopeHours: totalMinutes / 60,
-    completedHours: 0,
+    completedHours: null,
     estimatedLeafCount,
     totalLeafCount: effortTasks.length,
     issue: null,
-    hasTrend: false,
-    burnUp,
+    hasTrend: baseline.points.some(point => point.scopeY !== null),
+    burnUp: baseline,
   };
 }
-

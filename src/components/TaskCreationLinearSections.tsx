@@ -10,7 +10,7 @@ import { TaskCreationEditableText } from "./TaskCreationEditableText";
 import { TaskCriteriaFields } from "./TaskCriteriaFields";
 import { TaskExecutionTipsField } from "./TaskExecutionTipsField";
 import { TaskDueDatePicker } from "./TaskDueDatePicker";
-import { TaskEffortCost } from "./TaskEffortCost";
+import { TaskEffortField } from "./TaskEffortField";
 import { Button } from "./ui/button";
 import "../styles/task-creation-linear.css";
 
@@ -58,7 +58,7 @@ function LinearSubtask({ disabled = false, form, members, onChange, onInviteMemb
   const owner = members.find(member => member.id === task.ownerId);
   return <details className="linear-creation-subtask">
     <summary>
-      <span className="linear-creation-subtask-summary"><strong>{task.title || "未命名子任务"}</strong><small>{task.goal || form.mainTask.goal || "目标待补充"}</small></span>
+      <span className="linear-creation-subtask-summary"><strong>{task.title || "未命名子任务"}</strong><small>{task.goal || "目标待补充"}</small></span>
       <span className="linear-creation-subtask-owner">{owner ? owner.name : <><UserRound aria-hidden="true" size={14} />暂不分配</>}</span>
       <ChevronDown aria-hidden="true" className="linear-creation-subtask-chevron" size={16} />
     </summary>
@@ -75,7 +75,7 @@ function LinearSubtask({ disabled = false, form, members, onChange, onInviteMemb
         <div><small>截止时间</small><TaskDueDatePicker initialValue={task.endDate} label={`子任务 ${index + 1} 截止时间`} onChange={endDate => updateTask(task.clientId, { startDate: "", endDate })} /></div>
       </div>
       <div className="linear-creation-property-row"><small>标签</small><div className="linear-creation-tags">{task.labels.map(name => <TagBadge key={name} onRemove={disabled ? undefined : () => updateTask(task.clientId, { labels: task.labels.filter(item => item !== name) })} size="sm" tag={findTagByName(tags, name) ?? { id: name, name, color: "gray", icon: "tag" }} />)}<TagPicker onChange={labels => updateTask(task.clientId, { labels })} selected={task.labels} tags={tags} /></div></div>
-      <div className="linear-creation-property-row"><small>预计投入</small><TaskEffortCost mode="creation" showDistribution={false} tasks={[{ ...task, goal: form.mainTask.goal }]} /></div>
+      <div className="linear-creation-property-row"><TaskEffortField disabled={disabled} label={`子任务 ${index + 1}`} task={task} onChange={effortEstimate => updateTask(task.clientId, { effortEstimate })} /></div>
       <div className="linear-creation-property-row"><small>前置依赖</small><DependencyFields disabled={disabled} form={form} task={task} updateTask={updateTask} /></div>
       <footer><span>人选仍待成员接受，排期需共同确认。</span><Button disabled={disabled} onClick={() => onChange(removeCreationSubtask(form, task.clientId))} size="sm" type="button" variant="ghost"><Trash2 aria-hidden="true" size={14} />移除子任务</Button></footer>
     </div>
@@ -86,7 +86,7 @@ function MainTaskContent({ disabled = false, form, onChange, updateTask }: Conte
   const main = form.mainTask;
   return <section aria-label="主任务信息" className="linear-creation-main">
     <label className="linear-creation-field"><span>任务名称</span><TaskCreationEditableText disabled={disabled} label="任务名称" onChange={title => updateTask(main.clientId, { title })} value={main.title} /></label>
-    <label className="linear-creation-field"><span>任务目标</span><TaskCreationEditableText disabled={disabled || form.decision === "attach"} label="任务目标" onChange={goal => onChange({ ...form, mainTask: { ...main, goal }, subtasks: form.subtasks.map(task => ({ ...task, goal })) })} value={form.decision === "attach" ? form.candidate?.goal ?? "" : main.goal} /></label>
+    <label className="linear-creation-field"><span>任务目标</span><TaskCreationEditableText disabled={disabled} label="任务目标" onChange={goal => onChange({ ...form, mainTask: { ...main, goal } })} value={main.goal} /></label>
     <div className="linear-creation-field"><span>完成标准</span><TaskCriteriaFields disabled={disabled} label="任务完成标准" onChange={completionCriteria => updateTask(main.clientId, { completionCriteria })} values={main.completionCriteria} /></div>
     <TaskExecutionTipsField disabled={disabled} label="主任务执行建议" onChange={executionTips => updateTask(main.clientId, { executionTips })} values={main.executionTips} />
   </section>;

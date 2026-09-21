@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "productVersion": "MVP",
+  "screenshots": [
+    {
+      "id": "login",
+      "moduleId": "02",
+      "page": "登录",
+      "state": "未登录用户打开 /login 的空白登录表单（localhost:5173，1280×720）",
+      "type": "current-page",
+      "source": "src/components/OnboardingExperience.tsx",
+      "path": "assets/account-identity/screens/login.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "signup",
+      "moduleId": "02",
+      "page": "注册",
+      "state": "未登录用户打开 /signup 的空白注册表单（localhost:5173，1280×720）",
+      "type": "current-page",
+      "source": "src/components/OnboardingExperience.tsx",
+      "path": "assets/account-identity/screens/signup.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "create-team",
+      "moduleId": "03",
+      "page": "创建团队",
+      "state": "本地注册 prd-demo@example.test 并以任意六位验证码通过后，首次进入团队创建表单（localhost:5173/onboarding，1280×720）",
+      "type": "current-page",
+      "source": "src/components/OnboardingExperience.tsx",
+      "path": "assets/team-onboarding/screens/create-team.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "invite-join",
+      "moduleId": "03",
+      "page": "接受邀请",
+      "state": "已登录本地演示账号打开 /signup?invite=demo-valid 后，核对“方舟产品团队”并确认加入（最终 /onboarding?invite=demo-valid，1280×720）",
+      "type": "current-page",
+      "source": "src/components/OnboardingExperience.tsx",
+      "path": "assets/team-onboarding/screens/invite-join.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "empty-workspace",
+      "moduleId": "04",
+      "page": "空工作区",
+      "state": "新建“PRD 截图演示团队”后进入无任务工作区（localhost:5173/，1280×720）",
+      "type": "current-page",
+      "source": "src/components/TaskWorkspace.tsx",
+      "path": "assets/workspace-navigation/screens/empty-workspace.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "task-list",
+      "moduleId": "06",
+      "page": "任务列表",
+      "state": "待重采集：PRD-0008 已更新常显搜索、外部快捷筛选与分类清除布局；旧图片不再作为当前界面证据。",
+      "type": "current-page",
+      "source": "src/components/TaskWorkspaceList.tsx",
+      "path": "assets/task-list/screens/task-list.png",
+      "capturedAt": "planned",
+      "status": "planned"
+    },
+    {
+      "id": "filter-panel",
+      "moduleId": "06",
+      "page": "任务列表",
+      "state": "待重采集：PRD-0008 已更新常显搜索、外部快捷筛选与分类清除布局；旧图片不再作为当前界面证据。",
+      "type": "current-component",
+      "source": "src/components/TaskListFilterPanel.tsx",
+      "path": "assets/task-list/screens/filter-panel.png",
+      "capturedAt": "planned",
+      "status": "planned"
+    },
+    {
+      "id": "task-creation",
+      "moduleId": "07",
+      "page": "任务创建",
+      "state": "从“复杂项目 · 共 8 个任务”演示场景发起本地规划后进入方案审阅；展示主任务目标、完成标准、执行建议、预计投入、7 个子任务摘要与最终确认，不含任务模板控件（127.0.0.1:5173，1280×720）",
+      "type": "current-page",
+      "source": "src/components/TaskCreationPage.tsx",
+      "path": "assets/task-creation/screens/task-creation.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "task-detail-three-column",
+      "moduleId": "08",
+      "page": "任务详情",
+      "state": "打开“完成秋季抗老精华首发闭环”；左侧为当前筛选后的任务列表，中间为目标、完成标准、AI 分析和子任务，右侧只显示讨论、文件、活动三个 Tab（127.0.0.1:5173，1280×720）",
+      "type": "current-page",
+      "source": "src/components/TaskDetail.tsx",
+      "path": "assets/task-detail/screens/task-detail-three-column.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "task-detail-subtasks",
+      "moduleId": "08",
+      "page": "任务详情",
+      "state": "从“完成秋季抗老精华首发闭环”当前详情页机械裁取任务信息与协作区交界：目标、完成标准、AI 分析之后内联展示子任务，右侧可见讨论、文件、活动三个 Tab，无独立子任务 Tab（127.0.0.1:5173，740×505）",
+      "type": "current-component",
+      "source": "src/components/TaskSubtaskList.tsx",
+      "path": "assets/task-detail/screens/task-detail-subtasks.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "discussion",
+      "moduleId": "10",
+      "page": "讨论",
+      "state": "复用采集浏览器当前本地状态中已存在的演示数据（本轮未新建）：在达人带货运营团队打开“梳理达人渠道归因字段口径”并切到讨论，可恢复“已整理核对说明…”正文及 agentdoor-manual-file.txt／agentdoor-discussion-demo.md 引用（127.0.0.1:5173，1280×720）",
+      "type": "current-component",
+      "source": "src/components/TaskDiscussion.tsx",
+      "path": "assets/discussion-activity/screens/discussion.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "files",
+      "moduleId": "11",
+      "page": "文件",
+      "state": "复用同一浏览器当前本地状态中已存在的演示数据（本轮未新建）：在“梳理达人渠道归因字段口径”切到文件并返回文件结构，可恢复 agentdoor-manual-file.txt、agentdoor-discussion-demo.md 等 4 个本地任务文件（127.0.0.1:5173，1280×720）",
+      "type": "current-component",
+      "source": "src/components/task-files/TaskFileExplorer.tsx",
+      "path": "assets/files-commits/screens/files.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "activity",
+      "moduleId": "10",
+      "page": "活动",
+      "state": "复用同一浏览器当前本地状态：在“梳理达人渠道归因字段口径”切到活动；截图可见两条周岚发布讨论记录和一条周岚修改任务外观记录，以及活动类型筛选（127.0.0.1:5173，1280×720）",
+      "type": "current-component",
+      "source": "src/components/TaskActivityLog.tsx",
+      "path": "assets/discussion-activity/screens/activity.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "member-invite",
+      "moduleId": "09",
+      "page": "成员邀请",
+      "state": "设置 > 成员中打开真实邀请人员对话框；名称选填、邮箱必填、角色默认为成员，表单为空且未发送邀请（127.0.0.1:5173，1280×720）",
+      "type": "current-component",
+      "source": "src/components/MemberInvitations.tsx",
+      "path": "assets/member-collaboration/screens/member-invite.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "connect-ai",
+      "moduleId": "05",
+      "page": "连接 AI",
+      "state": "从“梳理达人渠道归因字段口径”打开当前任务连接本地 Agent 对话框；显示 Codex、Claude Code、WorkBuddy、Cursor 与当前任务自然语言卡片，工具均为未连接（127.0.0.1:5173，1280×720）",
+      "type": "current-component",
+      "source": "src/components/AiConnectionDialog.tsx",
+      "path": "assets/cli-connection/screens/connect-ai.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "notifications",
+      "moduleId": "10",
+      "page": "通知",
+      "state": "顶栏全局通知抽屉展开；展示 1 条当前本地演示协作邀请及全部标为已读／筛选入口，不含 AI 诊断通知（127.0.0.1:5173，1280×720）",
+      "type": "current-component",
+      "source": "src/components/GlobalNotifications.tsx",
+      "path": "assets/discussion-activity/screens/notifications.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    },
+    {
+      "id": "personal-settings",
+      "moduleId": "04",
+      "page": "个人设置",
+      "state": "账户菜单进入设置后打开个人信息；左侧展示个人信息、我的责任、团队信息、成员，正文显示演示用户周岚的姓名与本地邮箱字段（127.0.0.1:5173，1280×720）",
+      "type": "current-component",
+      "source": "src/components/PersonalInfoDialog.tsx",
+      "path": "assets/workspace-navigation/screens/personal-settings.png",
+      "capturedAt": "2026-09-19",
+      "status": "captured"
+    }
+  ]
+}

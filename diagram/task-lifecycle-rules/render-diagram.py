@@ -4,7 +4,7 @@ from html import escape
 OUT = Path(__file__).parent
 W, H = 2240, 1260
 parts = [f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" role="img" aria-labelledby="diagram-title diagram-description">
-<title id="diagram-title">AgentDoor 任务生命周期与对应规则</title>
+<title id="diagram-title">TaskDoor 任务生命周期与对应规则</title>
 <desc id="diagram-description">上方七个节点从左到右为明确需求与查重、拆分任务、匹配人员、估算投入、确认创建、任务状态分析、验收与完成。下方七列与各节点一一对应。第六步包含任务状态、下一步建议和进度。底部区分任务维度的 AI 诊断和燃起图、个人维度的任务优先级。</desc>
 <defs>
   <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#21304a" stroke-width="0.65" opacity="0.42"/></pattern>
@@ -46,7 +46,7 @@ def line(x1,y1,x2,y2,color='#30445e',width=1.5,dashed=False,arrow=False):
     attr=(' stroke-dasharray="4 6"' if dashed else '')+(' marker-end="url(#arrow)"' if arrow else '')
     parts.append(f'<path d="M{x1} {y1}L{x2} {y2}" fill="none" stroke="{color}" stroke-width="{width}"{attr}/>')
 
-text(74,59,'AGENTDOOR  /  产品规则总图','eyebrow')
+text(74,59,'TaskDoor  /  产品规则总图','eyebrow')
 text(74,123,'一条任务主线，每一步都有对应规则','title')
 text(74,169,'上方看流程，下方看规则；创建步骤与持续管理分开表达。','subtitle')
 text(2144,61,'依据当前 PRD · 规则设计稿','rule-foot',anchor='end')

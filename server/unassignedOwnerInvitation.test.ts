@@ -80,21 +80,19 @@ test("搜索下方的暂不分配选项使用单行邀请说明和立即邀请�
   assert.doesNotMatch(detail, />邀请同事</);
 });
 
-test("邀请弹窗不显示重复小标题，但输入框保留邀请地址的无障碍名称", async () => {
+test("团队邀请链接保留在设置，人员邀请入口复用名称和邮箱弹窗", async () => {
   const app = read("App.tsx");
+  const form = read("components/MemberInvitations.tsx");
+  const settings = read("components/PersonalCenterPage.tsx");
   const profiles = await import(new URL("../src/data/memberProfiles.ts", import.meta.url).href);
-
-  assert.equal(
-    profiles.getTeamInviteLink({ id: "creator-commerce", inviteToken: "abc123" }),
-    "https://agentdoor.local/t/creator-commerce/join/abc123",
-  );
-  assert.match(app, /open=\{memberInviteOpen\}/);
-  assert.match(app, /<DialogTitle>邀请成员<\/DialogTitle>/);
-  assert.match(app, /aria-label="邀请地址"/);
-  assert.doesNotMatch(app, /<span>邀请地址<\/span>/);
-  assert.match(app, /aria-label="复制邀请地址"/);
-  assert.match(app, />复制<\/Button>/);
-  assert.match(app, /copyTextToClipboard\(activeTeamInviteLink\)/);
+  assert.equal(profiles.getTeamInviteLink({ id: "creator-commerce", inviteToken: "abc123" }), "https://agentdoor.local/t/creator-commerce/join/abc123");
+  assert.match(app, /memberInvitationsRef.current\?\.openInvite/);
+  assert.match(settings, /invitations\?\.openInvite/);
+  assert.match(form, /<DialogTitle>邀请人员<\/DialogTitle>/);
+  assert.match(form, /aria-label="名称"/);
+  assert.match(form, /aria-label="邮箱"/);
+  assert.match(settings, /aria-label="复制邀请链接"/);
+  assert.doesNotMatch(settings, /邀请于/);
 });
 
 test("系统剪贴板不可用时，邀请地址复制会回退到页面内复制", async () => {
@@ -123,22 +121,22 @@ test("负责人未分配文案不再混用暂未分配", () => {
   assert.doesNotMatch(sources, /暂未分配/);
 });
 
-test("待接受负责人直接使用头像右下角状态，不冒充已确认负责人", () => {
+test("负责人保存后直接作为正式负责人展示，不显示任务内邀请状态", () => {
   const detail = read("components/TaskDetail.tsx");
 
-  assert.match(detail, /const displayedOwnerId = pendingOwnerId \?\? confirmedOwnerId/);
-  assert.match(detail, /invitationStatusById=\{ownerInvitationStatus\}/);
+  assert.match(detail, /const displayedOwnerId = confirmedOwnerId/);
   assert.match(detail, /selected=\{displayedOwnerId \? \[displayedOwnerId\] : \[\]\}/);
-  assert.match(detail, /pendingOwnerId \? "pending"(?: as const)? : "accepted"/);
+  assert.doesNotMatch(detail, /pendingOwnerId|ownerInvitationStatus|onOwnerProposalChange/);
 });
 
-test("人员弹窗只展示头像名称，并把 AI 匹配度与理由放在右侧", () => {
+test("人员弹窗只为未选择成员展示推荐度星芒，选中后只保留勾选", () => {
   const picker = read("components/PersonPicker.tsx");
 
   assert.match(picker, /memberRecommendations/);
-  assert.match(picker, /person-picker-match-score/);
-  assert.match(picker, /data-match-tone=\{getMemberMatchTone\(recommendation\.score\)\}/);
-  assert.match(picker, /AI 建议理由/);
+  assert.doesNotMatch(picker, /person-picker-match-score|recommendation\.score|\{recommendation\.score\}%/);
+  assert.match(picker, /const recommendation = !selected &&/);
+  assert.match(picker, /data-recommendation-level=\{recommendation\.level\}/);
+  assert.match(picker, /getMemberRecommendationLabel\(recommendation\.level\)/);
   assert.match(picker, /Sparkles/);
   assert.match(picker, /listRef\.current\.scrollTop = 0/);
   assert.doesNotMatch(picker, /isSelf && selfOptionLabel === "我自己处理" \? `\$\{person\.name\} · \$\{person\.role\}` : person\.role/);
@@ -153,17 +151,15 @@ test("人员弹窗加宽并让邀请说明与操作保持一行", () => {
   assert.match(styles, /\.person-picker-invite-row\s*\{[^}]*align-items:\s*baseline/s);
 });
 
-test("人员匹配度按高、中、低三档着色", async () => {
-  const { getMemberMatchTone } = await import(new URL("../src/components/PersonPicker.tsx", import.meta.url).href);
+test("人员推荐度使用同一紫色语义的深、中、浅三档", async () => {
+  const { getMemberRecommendationLabel } = await import(new URL("../src/components/PersonPicker.tsx", import.meta.url).href);
   const styles = read("styles.css");
 
-  assert.equal(getMemberMatchTone(100), "high");
-  assert.equal(getMemberMatchTone(80), "high");
-  assert.equal(getMemberMatchTone(79), "medium");
-  assert.equal(getMemberMatchTone(50), "medium");
-  assert.equal(getMemberMatchTone(49), "low");
-  assert.equal(getMemberMatchTone(0), "low");
-  assert.match(styles, /person-picker-match-score\[data-match-tone="high"\][^{]*\{[^}]*var\(--ad-tag-green-ink\)/s);
-  assert.match(styles, /person-picker-match-score\[data-match-tone="medium"\][^{]*\{[^}]*var\(--ad-tag-orange-ink\)/s);
-  assert.match(styles, /person-picker-match-score\[data-match-tone="low"\][^{]*\{[^}]*var\(--ad-tag-red-ink\)/s);
+  assert.equal(getMemberRecommendationLabel("high"), "推荐度较高");
+  assert.equal(getMemberRecommendationLabel("medium"), "推荐度适中");
+  assert.equal(getMemberRecommendationLabel("low"), "推荐度较低");
+  assert.match(styles, /person-picker-ai-reason\[data-recommendation-level="high"\][^{]*\{[^}]*var\(--ad-route\)/s);
+  assert.match(styles, /person-picker-ai-reason\[data-recommendation-level="medium"\][^{]*\{[^}]*color-mix\(in srgb, var\(--ad-route\) 64%, var\(--ad-border-strong\)\)/s);
+  assert.match(styles, /person-picker-ai-reason\[data-recommendation-level="low"\][^{]*\{[^}]*color-mix\(in srgb, var\(--ad-route\) 32%, var\(--ad-border-strong\)\)/s);
+  assert.doesNotMatch(styles, /person-picker-match-score/);
 });

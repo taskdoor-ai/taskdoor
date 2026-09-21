@@ -4,7 +4,7 @@ import "./task-card.css";
 type Source = { id: string; title: string; summary?: string };
 type Draft = { draftId: string; status: "draft" | "created"; title: string; goal: string; owner: string; participants: string[]; startDate: string; dueDate: string; sources: Source[]; taskId?: string; createdAt?: string };
 const root = document.querySelector<HTMLElement>("#app")!;
-const app = new App({ name: "AgentDoor task approval", version: "1.0.0" });
+const app = new App({ name: "TaskDoor task approval", version: "1.0.0" });
 const esc = (s: string) => s.replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[c]!);
 const data = (r: { structuredContent?: unknown }) => (r.structuredContent as { task?: Draft } | undefined)?.task ?? null;
 const svg = (d: string) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
@@ -29,7 +29,7 @@ function render(task: Draft) {
       <header><span class="finger">${icons.finger}</span><h2>${esc(task.title)}</h2></header><div class="divider"></div>
       <div class="people"><section><span>拥有者</span>${avatar(task.owner)}</section><section><span>参与者</span><div class="avatars">${participants.length?participants.map((n,i)=>avatar(n,i+1)).join(""):`<small>暂无参与者</small>`}</div></section></div>
       <div class="cycle"><span>周期</span><strong>${shortDate(task.startDate)}至 ${shortDate(task.dueDate)}</strong></div>
-      ${created?`<div class="receipt"><span>${icons.check}</span><div><strong>任务已创建</strong><small>${esc(task.taskId??"")} · 已写入 AgentDoor</small></div></div>`:`<button class="confirm" id="confirm"><span>确认并创建任务</span>${icons.arrow}</button>`}
+      ${created?`<div class="receipt"><span>${icons.check}</span><div><strong>任务已创建</strong><small>${esc(task.taskId??"")} · 已写入 TaskDoor</small></div></div>`:`<button class="confirm" id="confirm"><span>确认并创建任务</span>${icons.arrow}</button>`}
     </aside></div></main>`;
   document.querySelectorAll<HTMLElement>("[contenteditable]").forEach(el=>el.addEventListener("input",()=>{ const v=el.textContent?.trim(); if(!v)return; if(el.dataset.field==="title"){task.title=v;document.querySelector<HTMLElement>(".summary>header h2")!.textContent=v;document.querySelector<HTMLElement>(".topbar h1")!.textContent=v}else task.goal=v;}));
   document.querySelector<HTMLButtonElement>("#confirm")?.addEventListener("click",async e=>{const b=e.currentTarget as HTMLButtonElement;b.disabled=true;b.querySelector("span")!.textContent="正在创建任务…";try{const r=await app.callServerTool({name:"agentdoor_create_task",arguments:{draft_id:task.draftId,title:task.title,goal:task.goal}});const next=data(r);if(!next)throw new Error("创建响应缺少任务数据");render(next);await app.updateModelContext({content:[{type:"text",text:`用户已确认并创建任务 ${next.taskId}：${next.title}`}]});}catch(err){b.disabled=false;b.querySelector("span")!.textContent="重试创建任务";b.title=err instanceof Error?err.message:"创建失败";}});

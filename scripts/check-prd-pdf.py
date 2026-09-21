@@ -33,7 +33,8 @@ ids = tree.xpath('//@id')
 assert len(ids) == len(set(ids)), 'Duplicate HTML anchor IDs'
 for href in tree.xpath('//a[starts-with(@href,"#")]/@href'):
     assert href[1:] in ids, f'Unresolved anchor {href}'
-assert len(tree.xpath('//section[contains(@class,"prd-section")]')) == 8
+prd_source = (ROOT / 'docs/product-v2/PRD-AgentDoor-协作任务全流程.md').read_text()
+assert len(tree.xpath('//section[contains(@class,"prd-section")]')) == len(re.findall(r'^## \d+\. ', prd_source, re.M))
 
 if '--text-only' in sys.argv:
     print(f'PASS: {len(reader.pages)} PDF pages, all 38 MCP tools, 6 Skills, valid HTML anchors and text encoding; visual review remains separate')

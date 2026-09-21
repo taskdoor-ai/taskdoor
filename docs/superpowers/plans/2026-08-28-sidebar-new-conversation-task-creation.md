@@ -6,7 +6,7 @@
 
 **Architecture:** `WorkspaceSidebar` 只发出导航事件；新组件 `TaskCreationConversation` 管理消息、草案和成功态；`App` 是正式任务写入的唯一边界。对话采用确定性的本地演示逻辑，未确认内容不写入 `workspaceNodes`。
 
-**Tech Stack:** React、TypeScript、Vite、Lucide React、现有 AgentDoor CSS tokens 与基础组件。
+**Tech Stack:** React、TypeScript、Vite、Lucide React、现有 TaskDoor CSS tokens 与基础组件。
 
 ---
 

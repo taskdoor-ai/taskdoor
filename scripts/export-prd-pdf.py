@@ -101,7 +101,7 @@ def page_chrome(canvas, doc):
     canvas.line(MARGIN, PAGE_H - 35, PAGE_W - MARGIN, PAGE_H - 35)
     canvas.setFont('CJK', 8)
     canvas.setFillColor(MUTED)
-    canvas.drawString(MARGIN, PAGE_H - 25, 'AgentDoor / 产品 PRD')
+    canvas.drawString(MARGIN, PAGE_H - 25, 'TaskDoor / 产品 PRD')
     canvas.drawRightString(PAGE_W - MARGIN, PAGE_H - 25, 'v1.1 · 2026.09.03')
     canvas.line(MARGIN, 33, PAGE_W - MARGIN, 33)
     canvas.drawString(MARGIN, 20, '产品流程 · Skill 判断 · MCP 工具与参数')
@@ -109,15 +109,15 @@ def page_chrome(canvas, doc):
     canvas.restoreState()
 
 doc = Document(str(OUTPUT), pagesize=A4, leftMargin=MARGIN, rightMargin=MARGIN,
-               topMargin=49, bottomMargin=45, title='AgentDoor 产品 PRD v1.1',
-               author='AgentDoor', subject='产品流程、六类 Skill 与 MCP 参数设计')
+               topMargin=49, bottomMargin=45, title='TaskDoor 产品 PRD v1.1',
+               author='TaskDoor', subject='产品流程、六类 Skill 与 MCP 参数设计')
 frame = Frame(MARGIN, 45, WIDTH, PAGE_H - 94, id='body', leftPadding=0, rightPadding=0,
               topPadding=0, bottomPadding=0)
 doc.addPageTemplates(PageTemplate(id='main', frames=[frame], onPage=page_chrome))
 story = []
 
 # A concise cover with scope and implementation status, not product-background filler.
-story += [Spacer(1, 48), Paragraph('AGENTDOOR', style('brand', fontName='CJK-Bold', fontSize=13, textColor=BLUE)),
+story += [Spacer(1, 48), Paragraph('TaskDoor', style('brand', fontName='CJK-Bold', fontSize=13, textColor=BLUE)),
           Spacer(1, 22), Paragraph('产品 PRD', style('cover-title', fontName='CJK-Bold', fontSize=36, leading=46)),
           Paragraph('从任务创建到持续协作', style('cover-subtitle', fontSize=20, leading=30, textColor=MUTED)),
           Spacer(1, 18), HRFlowable(width=WIDTH, thickness=2, color=BLUE), Spacer(1, 25),

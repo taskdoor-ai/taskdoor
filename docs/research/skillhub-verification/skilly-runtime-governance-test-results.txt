@@ -1,0 +1,25 @@
+✔ the tool inventory is exactly the §29 ceiling, with unique names (0.79ms)
+✔ the excluded surface has no tool (§29): no review decisions, no admin, no destruction (0.129667ms)
+✔ every write tool is a real tool, and the read tools are not marked as writes (0.109084ms)
+✔ resource URIs round-trip in all three forms (1.584959ms)
+✔ resource URI parsing refuses traversal, junk schemes and malformed slugs (0.157458ms)
+✔ bundle path safety (0.115292ms)
+✔ resources/list advertises templates only — never a concrete skill URI (0.247333ms)
+✔ inline bundle decode enforces the cap loudly and points at the browser (1.230041ms)
+✔ JSON-RPC helpers (1.220041ms)
+✔ MCP inventory is 24 fixed skill operations; resource parser accepts skill resources only (0.934917ms)
+✔ active synthetic caller authenticates and lookup uses a hash, not raw bearer (5.369667ms)
+✔ Skilly MCP rejects expired token (0.685041ms)
+✔ Skilly MCP rejects revoked grant (0.143791ms)
+✔ Skilly MCP rejects blocked client (0.837375ms)
+✔ Skilly MCP rejects inactive user (0.114875ms)
+✔ Skilly MCP rejects missing bearer (0.114291ms)
+✔ install rate allows 30/min and rejects 31st; a second client cannot bypass user ceiling (0.28325ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 115.07225

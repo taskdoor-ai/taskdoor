@@ -4,7 +4,7 @@
 
 **Goal:** 创建页、详情页的 AI 调整改为锚定入口的非模态浮层，保留局部输入和现有安全写入流程。
 
-**Architecture:** 复用 Base UI / AgentDoor Popover 的 Portal、碰撞检测和焦点行为；扩展共享 PopoverContent 支持显式 anchor、fixed 定位和安全边距，其他调用默认不变。页面保留最近 scope 与独立 open 状态，并通过 useTaskAiAdjustmentDrafts 持有按 mode / 主任务稳定 ID / scope / 子任务 ID 隔离的会话草稿，浮层可临时卸载。输入、预览、错误保留到本页生命周期结束；明确取消和成功应用只清除当前范围。关闭不写入任务；上下文变化沿用旧候选签名校验，不更改解析或保存适配器。外部锚点没有基础库 Trigger 的焦点保护目标，首尾 Tab 显式收起并返回真实入口，中间按键仍放行。
+**Architecture:** 复用 Base UI / TaskDoor Popover 的 Portal、碰撞检测和焦点行为；扩展共享 PopoverContent 支持显式 anchor、fixed 定位和安全边距，其他调用默认不变。页面保留最近 scope 与独立 open 状态，并通过 useTaskAiAdjustmentDrafts 持有按 mode / 主任务稳定 ID / scope / 子任务 ID 隔离的会话草稿，浮层可临时卸载。输入、预览、错误保留到本页生命周期结束；明确取消和成功应用只清除当前范围。关闭不写入任务；上下文变化沿用旧候选签名校验，不更改解析或保存适配器。外部锚点没有基础库 Trigger 的焦点保护目标，首尾 Tab 显式收起并返回真实入口，中间按键仍放行。
 
 **Tech Stack:** React / TypeScript、已有 21st 适配 Button / Textarea / Popover、语义 Token、node:test / tsx、Codex 浏览器验证。无新增依赖和真实 AI 调用。
 

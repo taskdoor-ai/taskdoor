@@ -25,27 +25,31 @@ test("基于讨论携带原文、同串回复、真实任务背景与引用，�
   assert.ok(result);
   assert.equal(result.workObject.kind, "讨论");
   assert.equal(result.workObject.content, root.message);
-  assert.deepEqual(result.contextPreview?.items.map((item: { label: string }) => item.label), ["当前任务", "当前讨论"]);
-  assert.equal(result.contextPreview?.items[0].title, task.title);
-  assert.match(result.contextPreview?.items[0].detail ?? "", /Task ID、名称、目标、状态、完成标准/);
+  const preview = result.contextPreview!.items;
+  assert.equal(preview.find(item => item.label === "任务名称")?.value, task.title);
+  assert.equal(preview.find(item => item.label === "任务目标")?.value, task.goal);
   assert.equal(contextValue(result, "发起人"), "");
-  assert.equal(result.contextPreview?.items[1].title, "陈默发起的讨论");
-  assert.match(result.contextPreview?.items[1].detail ?? "", /包含当前讨论及 2 条回复/);
+  for (const record of [root, reply, sibling]) {
+    const item = preview.find(item => item.value === record.message);
+    assert.ok(item);
+    assert.ok(item.meta?.includes(record.author));
+  }
   for (const text of [root.id, root.author, root.createdAt!, reply.message, sibling.message, task.title, task.goal, "核对表.xlsx", "file-a", "v3"]) assert.ok(textOf(result).includes(text), text);
   for (const text of [unrelated.message, "不相关文件.md", file.content!, task.summary]) assert.ok(!textOf(result).includes(text), text);
-  assert.equal(result.instruction, undefined);
-  assert.equal(result.expectedOutput, undefined);
+  assert.equal(Object.hasOwn(result, "instruction"), false);
+  assert.equal(Object.hasOwn(result, "expectedOutput"), false);
 });
 
-test("具体回复只携带其祖先链，不扩展到同级回复或别的讨论", async () => {
+test("具体回复携带所属整串有效讨论，排除别的讨论", async () => {
   const result = await build(input({ kind: "reply", activityId: reply.id }));
   assert.equal(result.workObject.kind, "回复");
   assert.equal(result.workObject.content, reply.message);
-  assert.equal(result.contextPreview?.items[1].title, "周岚的回复");
-  assert.match(result.contextPreview?.items[1].detail ?? "", /包含当前回复及 1 条上文/);
+  assert.ok(result.contextPreview?.items.some(item => item.value === reply.message));
+  assert.ok(result.contextPreview?.items.some(item => item.value === root.message));
   assert.match(textOf(result), /discussion-a/);
   assert.match(textOf(result), /请核对第一批合作状态/);
-  assert.doesNotMatch(textOf(result), /另一条相关回复|另一个讨论串的内容/);
+  assert.match(textOf(result), /另一条相关回复/);
+  assert.doesNotMatch(textOf(result), /另一个讨论串的内容/);
 });
 
 test("任务文件快照不冒充当前文件状态，明确引用时版本与当前状态未核验", async () => {
@@ -62,20 +66,20 @@ test("回复编辑入口带入当前未发送草稿，不改原讨论或草稿",
   const result = await build(input({ kind: "reply-draft", activityId: root.id, draft: "我会核对预算，请帮我说得更清楚。" }));
   assert.equal(result.workObject.kind, "回复草稿");
   assert.equal(result.workObject.content, root.message);
-  assert.equal(result.contextPreview?.items[1].title, "回复陈默的讨论");
-  assert.match(result.contextPreview?.items[1].detail ?? "", /包含被回复原文与未发送草稿/);
+  assert.ok(result.contextPreview?.items.some(item => item.value === root.message));
+  assert.equal(result.contextPreview?.items.find(item => item.label === "未发送的回复草稿")?.value, "我会核对预算，请帮我说得更清楚。");
   assert.ok(result.context.some((item: { label: string; value: string }) => item.label === "未发送的回复草稿" && item.value === "我会核对预算，请帮我说得更清楚。"));
-  assert.equal(result.instruction, undefined);
-  assert.equal(result.expectedOutput, undefined);
+  assert.equal(Object.hasOwn(result, "instruction"), false);
+  assert.equal(Object.hasOwn(result, "expectedOutput"), false);
   assert.deepEqual(task, before);
 });
 
-test("无草稿仍可连接，不预设工作目标；没有真实完成标准时不补示例", async () => {
+test("无草稿仍可连接，不预设目标和结果；没有真实完成标准时不补示例", async () => {
   const result = await build(input({ kind: "reply-draft", activityId: root.id, draft: "" }, { completionCriteria: undefined }));
   assert.ok(result);
   assert.doesNotMatch(textOf(result.context), /完成标准/);
-  assert.equal(result.instruction, undefined);
-  assert.equal(result.expectedOutput, undefined);
+  assert.equal(Object.hasOwn(result, "instruction"), false);
+  assert.equal(Object.hasOwn(result, "expectedOutput"), false);
 });
 
 test("缺失或非人类讨论目标拒绝构建，不以整个任务兜底", async () => {
@@ -88,7 +92,7 @@ test("缺失父引用、归档文件与重名文件明确不导出未经定位�
   const orphan: TaskActivityMock = { ...reply, replyToActivityId: "missing-parent", file: "核对表.xlsx" };
   const result = await build(input({ kind: "reply", activityId: orphan.id }, { activities: [orphan], files: [{ ...file, archived: true }] }));
   assert.match(textOf(result), /原记录暂不可用/);
-  assert.match(result.contextPreview?.items[1].detail ?? "", /部分上文不可用/);
+  assert.match(result.contextPreview?.items.find(item => item.label === "来源缺口")?.value ?? "", /原记录暂不可用/);
   assert.match(textOf(result), /任务传入快照未找到唯一可用文件/);
   assert.match(textOf(result), /当前文件状态与版本未核验/);
   assert.doesNotMatch(textOf(result), /file-a/);
@@ -103,4 +107,45 @@ test("损坏的回复循环能够结束，并保留来源缺口", async () => {
   const result = await build(input({ kind: "reply", activityId: left.id }, { activities: [left, right], files: [] }));
   assert.ok(result);
   assert.match(textOf(result), /循环|异常/);
+});
+
+
+test("回复草稿也携带整串回复，预览与导出都保留相同记录和引用关系", async () => {
+  const nested = { ...reply, id: "nested", replyToActivityId: reply.id, message: "嵌套回复原文" };
+  const result = await build(input({ kind: "reply-draft", activityId: reply.id, draft: "未发送内容" }, { activities: [root, reply, sibling, nested, unrelated] }));
+  assert.ok(result);
+  const payload = JSON.stringify({ workObject: result.workObject, context: result.context });
+  const records = result.contextPreview!.items.filter(item => item.id.startsWith("record-"));
+  assert.equal(new Set(records.map(item => item.id)).size, 4);
+  for (const record of [root, reply, sibling, nested]) {
+    assert.ok(records.some(item => item.value === record.message));
+    assert.ok(payload.includes(record.message));
+  }
+  assert.ok(payload.includes(`回复 ${reply.id}`));
+  assert.doesNotMatch(payload, /另一个讨论串的内容/);
+});
+
+test("删除的目标拒绝连接，已删除主动态和回复不导出正文、附件或引用摘录", async () => {
+  const deleted = { ...root, deletedAt: "2026-09-17T00:00:00Z", message: "已删除主动态秘密", attachmentRefs: [{ fileId: "secret", name: "已删除附件.pdf", version: 1 }] };
+  const removedReply = { ...sibling, deletedAt: deleted.deletedAt, message: "已删除回复秘密" };
+  const survivor = { ...reply, quote: { messageId: root.id, author: root.author, text: deleted.message } };
+  const activities = [deleted, survivor, removedReply, unrelated];
+  assert.equal(await build(input({ kind: "discussion", activityId: root.id }, { activities })), null);
+  const result = await build(input({ kind: "reply", activityId: reply.id }, { activities }));
+  assert.ok(result);
+  assert.match(textOf(result), /原记录已删除/);
+  assert.match(textOf(result), /还需确认预算边界/);
+  assert.doesNotMatch(textOf(result), /已删除主动态秘密|已删除回复秘密|已删除附件|核对表.xlsx|另一个讨论串/);
+});
+
+test("整串附件使用结构化文件引用，预览和导出均含来源版本，不带完整文件", async () => {
+  const attached = { ...sibling, attachmentRefs: [{ fileId: "uploaded", name: "新上传资料.pdf", version: 2 }] };
+  const uploaded = { ...file, id: "uploaded", name: "新上传资料.pdf", version: 3, content: "附件完整内容不应导出" };
+  const result = await build(input({ kind: "reply", activityId: reply.id }, { activities: [root, reply, attached, unrelated], files: [file, uploaded] }));
+  assert.ok(result);
+  const attachment = result.context.find(item => item.label === "讨论附件");
+  assert.ok(attachment);
+  for (const text of ["uploaded", "新上传资料.pdf", "v2", sibling.id]) assert.ok(attachment.value.includes(text), text);
+  assert.ok(result.contextPreview!.items.some(item => item.label === "讨论附件" && item.value === attachment.value));
+  assert.doesNotMatch(textOf(result), /附件完整内容不应导出|不相关文件/);
 });

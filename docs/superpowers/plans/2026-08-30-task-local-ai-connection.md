@@ -6,7 +6,7 @@
 
 **Architecture:** `TaskDetail` owns the whole-task entry and produces an `AiConnectionRequest`. `AiConnectionDialog` remains the single launch surface and reuses `agentIconUrls` plus the existing Deep Link/clipboard behavior. A small source-level regression test protects the required entry, tools, logos, and permission copy while the TypeScript build verifies component integration.
 
-**Tech Stack:** React, TypeScript, Lucide React, existing Agentdoor CSS tokens, Node test runner, Vite.
+**Tech Stack:** React, TypeScript, Lucide React, existing TaskDoor CSS tokens, Node test runner, Vite.
 
 ---
 

@@ -1,11 +1,19 @@
 import type { PersonOption } from "../data/sharedTypes";
 
+export type TaskMemberRecommendationLevel = "high" | "medium" | "low";
+
 export type TaskMemberRecommendation = {
+  level: TaskMemberRecommendationLevel;
   reason: string;
-  score: number;
 };
 
 export type TaskMemberRecommendations = Record<string, TaskMemberRecommendation>;
+
+const recommendationLevelWeight: Record<TaskMemberRecommendationLevel, number> = {
+  high: 2,
+  medium: 1,
+  low: 0,
+};
 
 const responsibilityKeywords = [
   "达人", "筛选", "建联", "商务", "佣金", "报价", "档期", "排期", "合作",
@@ -24,17 +32,23 @@ export function createTaskMemberRecommendations({ members, taskText }: { members
   return Object.fromEntries(members.map(member => {
     const responsibility = `${member.role} ${member.dynamicResponsibility ?? ""}`;
     const matches = uniqueMatches(normalizedTaskText, responsibility);
-    const score = matches.length ? Math.min(98, 58 + matches.length * 8) : 52;
+    const level: TaskMemberRecommendationLevel = matches.length >= 3 ? "high" : matches.length ? "medium" : "low";
     const reason = matches.length
       ? `任务中的“${matches.slice(0, 4).join("、")}”与${member.name}的责任范围直接匹配。`
       : `当前任务描述与${member.name}的责任记录缺少直接命中，建议结合实际经验与可用时间再确认。`;
-    return [member.id, { reason, score }];
+    return [member.id, { level, reason }];
   }));
 }
 
 export function sortMembersByRecommendation(members: PersonOption[], recommendations: TaskMemberRecommendations): PersonOption[] {
   return members
     .map((member, index) => ({ index, member }))
-    .sort((left, right) => (recommendations[right.member.id]?.score ?? 0) - (recommendations[left.member.id]?.score ?? 0) || left.index - right.index)
+    .sort((left, right) => {
+      const rightRecommendation = recommendations[right.member.id];
+      const leftRecommendation = recommendations[left.member.id];
+      const rightWeight = rightRecommendation ? recommendationLevelWeight[rightRecommendation.level] : -1;
+      const leftWeight = leftRecommendation ? recommendationLevelWeight[leftRecommendation.level] : -1;
+      return rightWeight - leftWeight || left.index - right.index;
+    })
     .map(({ member }) => member);
 }

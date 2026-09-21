@@ -69,13 +69,12 @@ test("诊断图标颜色按类型固定为执行阻塞红色、决策冲突黄�
   assert.doesNotMatch(css, /task-diagnosis-finding\[data-severity=/);
 });
 
-test("任务详情把诊断放在讨论之后、子任务之前并作为同级可键盘切换页签", () => {
+test("任务详情只保留讨论、子任务、文件和活动页签并支持键盘切换", () => {
   const source = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
 
-  assert.match(source, /type TaskDetailTab = "discussion" \| "subtasks" \| "diagnosis" \| "files" \| "activity"/);
-  assert.match(source, /id: "discussion", label: "讨论"[^]*?id: "diagnosis", label: "诊断"[^]*?id: "subtasks", label: "子任务"[^]*?id: "files", label: "文件"/);
-  assert.match(source, /aria-labelledby="task-detail-tab-diagnosis"[^]*?<TaskDiagnosisReport[^]*?report=\{diagnosisReport\}/);
-  assert.match(source, /<TaskDiagnosisReport[^]*?analysisError=\{diagnosisAnalysisError\}[^]*?analyzing=\{diagnosisAnalyzing\}[^]*?onReanalyze=\{\(\) => void reanalyzeDiagnosis\(\)\}[^]*?report=\{diagnosisReport\}/);
+  assert.match(source, /type TaskDetailTab = "discussion" \| "subtasks" \| "files" \| "activity"/);
+  assert.match(source, /id: "discussion", label: "讨论"[^]*?id: "subtasks", label: "子任务"[^]*?id: "files", label: "文件"[^]*?id: "activity", label: "活动"/);
+  assert.doesNotMatch(source, /id: "diagnosis"|task-detail-tab-diagnosis|task-detail-panel-diagnosis|TaskDiagnosisReport/);
   assert.match(source, /setActiveTab\(nextTab\.id\)/);
 });
 
@@ -175,23 +174,19 @@ test("文件活动不冒充讨论，且来源和原文按文本安全展示", ()
   assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
 });
 
-test("任务详情诊断接入完整可见任务树和每个子任务自己的诊断快照", () => {
+test("助手继续使用可见任务的诊断快照，任务详情不再接入独立诊断面板", () => {
   const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
   const detailSource = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
 
-  assert.match(appSource, /diagnosisTasks=\{selectedDiagnosisTasks\}/);
+  assert.match(appSource, /taskEvidence:\s*selectedDiagnosisTasks\.map/);
   assert.match(appSource, /parentTaskId:\s*node\.parentTaskId/);
   assert.match(appSource, /decisionConflicts:\s*taskDetailMocks\[[^\]]+\]\?\.diagnosis\?\.decisionConflicts/);
   assert.match(appSource, /getTeamTaskDiagnosisSnapshot\(node\)\?\.decisionConflicts/);
-  assert.match(detailSource, /getTaskDiagnosisDescendants\(diagnosisTasks, taskId\)/);
-  assert.match(detailSource, /descendantTasks:\s*diagnosisDescendantTasks/);
   assert.match(appSource, /context:\s*buildTaskDiagnosisContext/);
   assert.match(appSource, /activities:\s*\[[^]*?taskActivityStore\[node.id\]/);
-  assert.match(detailSource, /context:\s*\{[^]*?goal:\s*currentGoal[^]*?completionCriteria[^]*?activities[^]*?commits:\s*task.commits/);
-  assert.match(detailSource, /onFilesChange=\{setDiagnosisFileSnapshot\}/);
+  assert.doesNotMatch(detailSource, /diagnosisTasks|diagnosisAnalysisSnapshot|setDiagnosisFileSnapshot/);
   assert.match(detailSource, /key=\{`due-\$\{taskId\}`\}/, "同一属性行的控件不能复用任务 ID 作为 key");
   assert.match(detailSource, /key=\{`tags-\$\{taskId\}`\}/);
-  assert.match(detailSource, /diagnosisAnalysisSnapshot\?\.signature === diagnosisSignature/, "分析时间只适用于实际核对的那一版上下文");
 });
 
 test("说明条只展示检索范围和更新时间，有读取缺口时保持同一中性样式", () => {

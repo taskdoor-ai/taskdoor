@@ -276,7 +276,7 @@ function TaskPlanPanel({ draft, memberById, members, onChange, onClose, tags }: 
     const nextValue = `subtask-${nextIndex}`;
     const subtask: TaskDraft = {
       endDate: draft.mainTask.endDate,
-      goal: "",
+      goal: draft.mainTask.goal,
       labels: [...draft.mainTask.labels],
       ownerId: "",
       participantIds: [],
@@ -302,7 +302,7 @@ function TaskPlanPanel({ draft, memberById, members, onChange, onClose, tags }: 
               <TaskIcon iconName={mainVisual.iconName} size="lg" tone={mainVisual.iconTone} />
               <div>
                 <Input aria-label="任务名称" className="task-plan-panel-title-input" onChange={(event) => updateMainTask({ title: event.target.value })} placeholder="待补充任务名称" value={draft.mainTask.title} />
-                <Textarea aria-label="任务目标" className="task-plan-panel-goal-input" onChange={(event) => updateMainTask({ goal: event.target.value })} placeholder={draft.subtasks.length ? "补充清晰目标后，AgentDoor 会同步更新子任务。" : "补充清晰目标，明确任务需要达成的结果。"} rows={2} value={draft.mainTask.goal} />
+                <Textarea aria-label="任务目标" className="task-plan-panel-goal-input" onChange={(event) => updateMainTask({ goal: event.target.value })} placeholder="补充清晰目标，明确任务需要达成的结果。" rows={2} value={draft.mainTask.goal} />
               </div>
             </div>
             <div className="task-plan-panel-overview-strip">
@@ -763,7 +763,7 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
   };
 
   const isScenarioRetryPending = Boolean(error && pendingScenarioAnalysisRef.current);
-  const composer = <AnimatedAgentChatInput ariaLabel="给 AgentDoor 发消息" autoFocus disabled={isScenarioRetryPending} onSend={handleSend} onStop={() => abortRef.current?.abort()} placeholder={isScenarioRetryPending ? "请先重试本轮场景分析…" : output ? "回复 AgentDoor，继续完善任务…" : "向 AgentDoor 描述任务…"} status={isAnalyzing ? "analyzing" : "ready"} />;
+  const composer = <AnimatedAgentChatInput ariaLabel="给 TaskDoor 发消息" autoFocus disabled={isScenarioRetryPending} onSend={handleSend} onStop={() => abortRef.current?.abort()} placeholder={isScenarioRetryPending ? "请先重试本轮场景分析…" : output ? "回复 TaskDoor，继续完善任务…" : "向 TaskDoor 描述任务…"} status={isAnalyzing ? "analyzing" : "ready"} />;
 
   const taskOutputCard = output ? <article aria-labelledby="task-assistant-output-title" className={`task-assistant-output${createdPlan ? " is-created" : ""}`} data-tone={taskVisualFor(output.draft.mainTask, 0, true).iconTone}>
       <button aria-label={`${createdPlan ? "打开" : "查看"}任务详情：${output.draft.mainTask.title || "待补充任务名称"}`} className="task-assistant-card-hit-area" onClick={() => createdPlan ? onOpenTask(createdPlan.mainTaskId) : setIsDetailOpen(true)} type="button" />
@@ -802,11 +802,11 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
       </div>
     </aside>
     {historyOpen && <button aria-label="关闭历史对话" className="task-conversation-history-scrim" onClick={() => setHistoryOpen(false)} type="button" />}
-    <section aria-label="AgentDoor 任务对话" className={`task-conversation-page${isStarting ? " is-starting" : ""}`}>
+    <section aria-label="TaskDoor 任务对话" className={`task-conversation-page${isStarting ? " is-starting" : ""}`}>
     <div className={`task-conversation-workspace${isDetailOpen ? " has-detail" : ""}`}>
       <div className="task-conversation-column">
         {isStarting ? <main className="task-conversation-start">
-          <header><h1>今天想推进什么？</h1><p>输入一个任务，或告诉 AgentDoor 你的目标</p></header>
+          <header><h1>今天想推进什么？</h1><p>TaskDoor 帮你分析目标、拆解工作并创建任务</p></header>
         </main> : <div aria-live="polite" className="task-conversation-messages" onScroll={(event) => {
           const container = event.currentTarget;
           shouldAutoScrollRef.current = container.scrollHeight - container.scrollTop - container.clientHeight <= 72;
@@ -817,7 +817,7 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
               && Boolean(scenarioSession)
               && currentScenarioChoiceMessageId === message.id;
             return <Fragment key={message.id}>
-              {!isAnalyzing && output && message.role === "assistant" && index === messages.length - 1 && <AgentWorkflow completed phases={taskCreationWorkflow} tools={taskCreationTools} workingLabel="AgentDoor 正在工作…" />}
+              {!isAnalyzing && output && message.role === "assistant" && index === messages.length - 1 && <AgentWorkflow completed phases={taskCreationWorkflow} tools={taskCreationTools} workingLabel="TaskDoor 正在工作…" />}
               {message === outputMessage && taskOutputCard}
               <div className="task-conversation-turn" data-from={message.role}>
                 <AIMessage copyText={message.role === "assistant" ? message.content : undefined} from={message.role} onRetry={message.role === "assistant" && !message.scenarioChoices && index === messages.length - 1 ? () => void requestAssistant(messages.filter((item) => item.role === "user" || item.id !== message.id)) : undefined} timestamp={messageTimeFormatter.format(new Date(message.createdAt))}>{message.content}</AIMessage>
@@ -829,7 +829,7 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
               </div>
             </Fragment>;
           })}
-          {isAnalyzing && <AgentWorkflow phases={taskCreationWorkflow} tools={taskCreationTools} workingLabel="AgentDoor 正在工作…" />}
+          {isAnalyzing && <AgentWorkflow phases={taskCreationWorkflow} tools={taskCreationTools} workingLabel="TaskDoor 正在工作…" />}
           {error && <article className="task-assistant-error"><AlertTriangle aria-hidden="true" /><div><strong>本轮分析未完成</strong><p>{error.message}</p></div><Button onClick={retryCurrentAnalysis} size="sm" type="button" variant="outline"><RotateCcw data-icon="inline-start" />重试本轮</Button></article>}
           {output && !outputMessage && taskOutputCard}
         </div>}

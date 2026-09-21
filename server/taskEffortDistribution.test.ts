@@ -46,27 +46,27 @@ test("存在未知或过期任务时保留已估分钟，但所有整体占比�
   assert.equal(stale.rows[0].share, null);
 });
 
-test("详情排除手填和Mock但保留覆盖分母，创建可查看三种有效来源", () => {
+test("详情采用已确认手工估算并排除Mock，创建可查看三种有效来源", () => {
   const tasks = [task("model", 60), task("manual", 120, { basis: "manual", confirmed: true }), task("mock", 180, { basis: "mock" })];
   const detail = getTaskEffortDistribution(tasks);
   assert.equal(detail.state, "partial");
-  assert.equal(detail.knownMinutes, 60);
+  assert.equal(detail.knownMinutes, 180);
   assert.equal(detail.totalCount, 3);
-  assert.equal(detail.estimatedCount, 1);
+  assert.equal(detail.estimatedCount, 2);
   assert.equal(detail.hasMock, true);
   assert.equal(detail.hasManual, true);
   assert.deepEqual(detail.rows.map(row => [row.source, row.state, row.minutes, row.share]), [
-    ["model", "estimated", 60, null], ["manual", "unknown", null, null], ["mock", "unknown", null, null],
+    ["model", "estimated", 60, null], ["manual", "estimated", 120, null], ["mock", "unknown", null, null],
   ]);
   const creation = getTaskEffortDistribution(tasks, "creation");
   assert.equal(creation.state, "available");
   assert.equal(creation.totalMinutes, 360);
   assert.deepEqual(creation.rows.map(row => row.share), [1 / 6, 1 / 3, 1 / 2]);
-  assert.equal(getTaskEffortDistribution(tasks.slice(1)).state, "unavailable");
-  assert.equal(getTaskEffortDistribution([{ ...tasks[1], goal: "范围变化" }]).state, "unavailable");
+  assert.equal(getTaskEffortDistribution(tasks.slice(1)).state, "partial");
+  assert.equal(getTaskEffortDistribution([{ ...tasks[1], goal: "范围变化" }]).state, "stale");
 });
 
-test("示例模式只采用有效的系统与Mock估算，手填估算仍不可用", () => {
+test("示例模式采用有效的系统、Mock与已确认手工估算", () => {
   const mock = getTaskEffortDistribution([task("mock", 180, { basis: "mock" })], "example");
   assert.equal(mock.state, "available");
   assert.equal(mock.totalMinutes, 180);
@@ -86,13 +86,13 @@ test("示例模式只采用有效的系统与Mock估算，手填估算仍不可�
   ]);
 
   const manual = getTaskEffortDistribution([task("manual", 120, { basis: "manual", confirmed: true })], "example");
-  assert.equal(manual.state, "unavailable");
-  assert.equal(manual.totalMinutes, null);
-  assert.equal(manual.knownMinutes, 0);
-  assert.equal(manual.estimatedCount, 0);
+  assert.equal(manual.state, "available");
+  assert.equal(manual.totalMinutes, 120);
+  assert.equal(manual.knownMinutes, 120);
+  assert.equal(manual.estimatedCount, 1);
   assert.equal(manual.hasManual, true);
   assert.deepEqual(manual.rows.map(row => [row.source, row.state, row.minutes, row.share]), [
-    ["manual", "unknown", null, null],
+    ["manual", "estimated", 120, 1],
   ]);
 });
 

@@ -726,7 +726,7 @@ function createActivities(task: TaskNode, config: DomainConfig, files: TeamEvide
       evidenceFileIds: [fileId(config.fileNames.decision)],
     }),
     make({
-      id: `${task.id}-ai-evidence`, author: "AgentDoor AI", type: "ai-insight", basis: "cross-evidence-check",
+      id: `${task.id}-ai-evidence`, author: "TaskDoor AI", type: "ai-insight", basis: "cross-evidence-check",
       insightType: "证据缺口", createdAt: "2026-09-01T10:26:00+08:00", time: "2026-09-01 10:26",
       message: `交叉核对门禁文件、汇总表和原始样本后，发现当前结论仍受这一缺口限制：${focus.risk} 请相关成员核对来源。`,
       file: config.fileNames.evidence, evidenceFileIds: [fileId(config.fileNames.runbook), fileId(config.fileNames.evidence), fileId(config.fileNames.raw)],

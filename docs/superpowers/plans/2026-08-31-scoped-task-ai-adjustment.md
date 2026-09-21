@@ -10,7 +10,7 @@
 
 ## 视觉与复用
 
-沿用当前 AgentDoor 蓝白视觉和已适配 21st 的人员／日期／Accordion 组件；共享 Base UI Dialog 负责焦点、Esc 和遮罩，Button 的 ai 变体负责入口。使用现行 Geist／中文系统字体，标题 medium、正文 regular、数字使用等宽特性，不引入新字体或依赖。
+沿用当前 TaskDoor 蓝白视觉和已适配 21st 的人员／日期／Accordion 组件；共享 Base UI Dialog 负责焦点、Esc 和遮罩，Button 的 ai 变体负责入口。使用现行 Geist／中文系统字体，标题 medium、正文 regular、数字使用等宽特性，不引入新字体或依赖。
 
 视觉签名为「范围标识 + 字段差异纸片」：紧凑蓝色作用范围标识，输入与预览在一个弹窗中连续展开；变更前灰色、变更后蓝色并标注文字，不只靠颜色。桌面复用共享 544px 宽度、窄屏可滚动；固定可达的取消／应用区域。使用现有 `--ad-*` 的 surface、text、route-blue、border、radius 和 shadow Token。任务页的主体布局和 D-148 左侧列表不变。
 

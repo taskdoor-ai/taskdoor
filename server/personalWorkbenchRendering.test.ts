@@ -4,6 +4,7 @@ import { register } from "node:module";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { I18nProvider } from "../src/i18n/I18nProvider";
 import { buildPersonalWorkbenchModel } from "../src/lib/personalWorkbench.ts";
 import { createWorkspaceTaskDetail, type TaskDetailMock } from "../src/data/taskDetailMocks.ts";
 import type { TaskNode } from "../src/data/workspaceNodes.ts";
@@ -39,11 +40,16 @@ const render = async (
   analysis: { analyzing?: boolean; analysisError?: string } = {},
 ) => {
   const { PersonalWorkbench } = await import(new URL("../src/components/PersonalWorkbench.tsx", import.meta.url).href);
-  return renderToStaticMarkup(createElement(PersonalWorkbench, {
+  const originalWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+  Object.defineProperty(globalThis, "window", { configurable: true, value: { localStorage: { getItem: () => "zh-CN" } } });
+  try { return renderToStaticMarkup(createElement(I18nProvider, { children: createElement(PersonalWorkbench, {
     ...analysis,
     currentUserName: "新的显示姓名", model: buildPersonalWorkbenchModel({ tasks, currentUserId: "me-id", asOf, detailsByTaskId }),
     onConnectAi: () => {}, onOpenTask: () => {}, onOpenTaskList: () => {}, onReanalyze: () => {},
-  }));
+  }) })); } finally {
+    if (originalWindow) Object.defineProperty(globalThis, "window", originalWindow);
+    else Reflect.deleteProperty(globalThis, "window");
+  }
 };
 
 function button(html: string, name: RegExp) {
@@ -129,7 +135,7 @@ test("AI 分析规则默认收起并排在更新时间之前", async () => {
   assert.ok(html.indexOf("AI 分析规则") < html.indexOf("personal-workbench-updated-at"));
 });
 
-test("今日建议提供 AgentDoor 重新分析按钮及加载失败状态", async () => {
+test("今日建议提供 TaskDoor 重新分析按钮及加载失败状态", async () => {
   const normal = await render([owned]);
   const reanalyze = button(normal, /^重新分析今日建议$/);
   assert.doesNotMatch(reanalyze.attributes, /\sdisabled=""/);

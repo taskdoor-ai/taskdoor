@@ -1,0 +1,178 @@
+{
+  "source": "36de54157bff59c18c5eff255d2c158df45a3e2a",
+  "server": "ghcr.io/iflytek/skillhub-server:v0.2.20",
+  "transport": "real local Spring/PostgreSQL/Redis server; local storage; scanner disabled; PRIVATE skill",
+  "root": "/private/tmp/skillhub-verification/iflytek/run-1789375096379",
+  "cases": [
+    {
+      "name": "local_admin_login",
+      "status": 200
+    },
+    {
+      "name": "server_full_package_validation",
+      "valid": false,
+      "errors": [],
+      "warnings": [
+        "Disallowed file extension: assets/fonts/brand.woff2"
+      ],
+      "resolvedSlug": "brand-probe-1789375096379",
+      "resolvedVersion": "1.0.0"
+    },
+    {
+      "name": "cli_font_publish",
+      "succeeded": false,
+      "error": "Pre-publish warnings require confirmation before publishing:\n- Disallowed file extension: assets/fonts/brand.woff2",
+      "details": {
+        "registry": "http://127.0.0.1:18880",
+        "requestId": "6848c893-1c1d-4b27-8a0d-008e3c4c8104"
+      }
+    },
+    {
+      "name": "portal_confirmed_font_publish_v1",
+      "result": {
+        "skillId": 2,
+        "namespace": "global",
+        "slug": "brand-probe-1789375096379",
+        "version": "1.0.0",
+        "status": "PUBLISHED",
+        "fileCount": 8,
+        "totalSize": 30058
+      }
+    },
+    {
+      "name": "installed_1.0.0",
+      "targets": [
+        {
+          "agent": "codex",
+          "rootDir": "/private/tmp/skillhub-verification/iflytek/run-1789375096379/state/.codex/skills"
+        },
+        {
+          "agent": "claude-code",
+          "rootDir": "/private/tmp/skillhub-verification/iflytek/run-1789375096379/state/.claude/skills"
+        },
+        {
+          "agent": "cursor",
+          "rootDir": "/private/tmp/skillhub-verification/iflytek/run-1789375096379/state/.cursor/skills"
+        }
+      ],
+      "filesPerTarget": 8,
+      "sha256Match": true
+    },
+    {
+      "name": "installed_script_references",
+      "exitCode": 0,
+      "stdout": "brand-assets-ok"
+    },
+    {
+      "name": "portal_confirmed_font_publish_v2",
+      "result": {
+        "skillId": 2,
+        "namespace": "global",
+        "slug": "brand-probe-1789375096379",
+        "version": "2.0.0",
+        "status": "PUBLISHED",
+        "fileCount": 9,
+        "totalSize": 30077
+      }
+    },
+    {
+      "name": "actual_upgrade_service",
+      "upgraded": 1,
+      "failed": 0
+    },
+    {
+      "name": "installed_2.0.0",
+      "targets": [
+        {
+          "agent": "codex",
+          "rootDir": "/private/tmp/skillhub-verification/iflytek/run-1789375096379/state/.codex/skills"
+        },
+        {
+          "agent": "claude-code",
+          "rootDir": "/private/tmp/skillhub-verification/iflytek/run-1789375096379/state/.claude/skills"
+        },
+        {
+          "agent": "cursor",
+          "rootDir": "/private/tmp/skillhub-verification/iflytek/run-1789375096379/state/.cursor/skills"
+        }
+      ],
+      "filesPerTarget": 9,
+      "sha256Match": true
+    },
+    {
+      "name": "installed_1.0.0",
+      "targets": [
+        {
+          "agent": "codex",
+          "rootDir": "/private/tmp/skillhub-verification/iflytek/run-1789375096379/state/.codex/skills"
+        },
+        {
+          "agent": "claude-code",
+          "rootDir": "/private/tmp/skillhub-verification/iflytek/run-1789375096379/state/.claude/skills"
+        },
+        {
+          "agent": "cursor",
+          "rootDir": "/private/tmp/skillhub-verification/iflytek/run-1789375096379/state/.cursor/skills"
+        }
+      ],
+      "filesPerTarget": 8,
+      "sha256Match": true
+    },
+    {
+      "name": "rollback_removes_newer_files",
+      "passed": true
+    },
+    {
+      "name": "private_download_without_identity",
+      "status": 403
+    },
+    {
+      "name": "download_source",
+      "downloadUrl": "/api/v1/skills/global/brand-probe-1789375096379/versions/1.0.0/download",
+      "originalGitNeeded": false
+    }
+  ],
+  "fixtures": [
+    {
+      "name": "SKILL.md",
+      "bytes": 202,
+      "sha256": "4f7b554bd8060fca61763f5f3b984178072935d2cb10687a228701c1a6bbeed3"
+    },
+    {
+      "name": "references/brand.md",
+      "bytes": 88,
+      "sha256": "4a306c5e4722d582ab661543f0de88faa33db563dd01a5590cf19ec6e59b1c4b"
+    },
+    {
+      "name": "assets/logo.png",
+      "bytes": 68,
+      "sha256": "4c5d573cfb85b8ab0a5659062b830a058d1a449e51a6d79c13b483a77ea7ed28"
+    },
+    {
+      "name": "assets/logo.svg",
+      "bytes": 110,
+      "sha256": "49d3d903544bbb2447d61c89653cbb97a7134c8b32cb724e3f54710bf67a2ff9"
+    },
+    {
+      "name": "assets/fonts/brand.woff2",
+      "bytes": 29400,
+      "sha256": "19f9c92546aa300c312235e3125af1b81394d8db9a4bc4a425cd5b641d2d54e1"
+    },
+    {
+      "name": "assets/theme.css",
+      "bytes": 59,
+      "sha256": "7305f087b9f6fb93b62e58722d3ae7601e23132673d80cf337af676068b28624"
+    },
+    {
+      "name": "scripts/check.py",
+      "bytes": 112,
+      "sha256": "e955455037d5e514de9eb855a4c66a32d558bd80178e0c5660607034ef05c625"
+    },
+    {
+      "name": "manifest.json",
+      "bytes": 19,
+      "sha256": "2afa0f3c420ac37f226ceed715865e390c67593793f413018af33d8a79f56b9f"
+    }
+  ],
+  "passed": true
+}

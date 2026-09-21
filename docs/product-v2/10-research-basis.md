@@ -4,7 +4,7 @@
 
 ## 一、证据如何进入产品
 
-| 研究主题 | 相对稳定的结论 | AgentDoor 设计假设 | 必须验证的部分 |
+| 研究主题 | 相对稳定的结论 | TaskDoor 设计假设 | 必须验证的部分 |
 | --- | --- | --- | --- |
 | 自主与动机 | 控制感、自主、胜任和关系感影响工作动机 | 默认自己拥有；AI 建议而不强制分配 | 哪种措辞和展开时机最好 |
 | 求助行为 | 求助存在能力、依赖和地位风险 | 把缺口归因于任务；提供最小协作方式 | 私聊、引荐、广播的使用偏好 |
@@ -54,7 +54,7 @@
 - Forsyth et al. (2002), [Responsibility Diffusion in Cooperative Collectives](https://doi.org/10.1177/0146167202281005)。
 - Tubre, T. C. & Collins, J. M. (2000), [Jackson and Schuler role conflict and ambiguity meta-analysis](https://doi.org/10.1177/014920630002600104)。
 
-产品影响：研究支持角色清晰、程序公平与责任边界；唯一 Owner 是已确认的 AgentDoor 产品选择，仍需在不同任务类型中验证体验与副作用。
+产品影响：研究支持角色清晰、程序公平与责任边界；唯一 Owner 是已确认的 TaskDoor 产品选择，仍需在不同任务类型中验证体验与副作用。
 
 ### 工作负载与协作成本
 

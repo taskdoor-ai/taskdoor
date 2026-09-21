@@ -1,3 +1,4 @@
+import { useGlobalUi } from "../../i18n/globalUi";
 import type { LucideIcon } from "lucide-react";
 import { BrainCircuit, Check, ChevronDown, LoaderCircle, Search, Terminal, Wrench } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -92,6 +93,7 @@ export function AgentActivityIndicator({ active = true, className }: { active?: 
 }
 
 export function AgentWorkflow({ completed = false, phases, tools = {}, workingLabel = "Working..." }: AgentWorkflowProps) {
+  const ui = useGlobalUi();
   const playback = useMemo<PlaybackStep[]>(() => phases.flatMap((phase, phaseIndex) => phase.trace.flatMap((item, traceIndex) => (
     item.type === "reasoning"
       ? item.sentences.map((_, sentenceIndex) => ({ phaseIndex, sentenceIndex, traceIndex }))
@@ -147,7 +149,7 @@ export function AgentWorkflow({ completed = false, phases, tools = {}, workingLa
           <span className={cn("min-w-0 font-medium", isActive ? "text-foreground" : "text-muted-foreground")}>
             {isActive
               ? <span className="agent-workflow-gradient-text motion-reduce:animate-none">{workingLabel}</span>
-              : `已工作 ${phaseDuration(phase).toFixed(1)} 秒`}
+              : ui("已工作 {0} 秒", {0: phaseDuration(phase).toFixed(1)})}
           </span>
           <ChevronDown aria-hidden="true" className={cn("size-3 shrink-0 text-muted-foreground/70 transition-transform", isOpen && "rotate-180")} />
         </button>
@@ -194,7 +196,7 @@ export function AgentWorkflow({ completed = false, phases, tools = {}, workingLa
                   </button>
                   {isTraceOpen && <div className="agent-workflow-trace-content grid gap-1 text-xs text-muted-foreground">
                     {(trace.sources ?? []).map((source) => <a href={source.url} key={source.url} rel="noreferrer" target="_blank">{source.name}</a>)}
-                    {!trace.sources?.length && <span>搜索已完成</span>}
+                    {!trace.sources?.length && <span>{ui("搜索已完成")}</span>}
                   </div>}
                 </div>;
               }
@@ -212,11 +214,11 @@ export function AgentWorkflow({ completed = false, phases, tools = {}, workingLa
                   ? trace.details.map((detail) => isTraceActive
                     ? <span key={detail.text}>{detail.text}</span>
                     : <span className="flex items-start gap-1.5" key={detail.text}><Check className="mt-0.5 size-3 shrink-0 text-emerald-600" />{detail.text}</span>)
-                  : <span>操作已完成</span>}</div>}
+                  : <span>{ui("操作已完成")}</span>}</div>}
               </div>;
             })}
 
-            {isActive && <div className="flex items-center gap-2 text-xs text-muted-foreground"><LoaderCircle aria-hidden="true" className="size-3.5 animate-spin motion-reduce:animate-none" />继续处理</div>}
+            {isActive && <div className="flex items-center gap-2 text-xs text-muted-foreground"><LoaderCircle aria-hidden="true" className="size-3.5 animate-spin motion-reduce:animate-none" />{ui("继续处理")}</div>}
             {!isActive && phase.message && <p className="m-0 text-xs leading-relaxed text-foreground/80">{phase.message}</p>}
           </div>
         </div>}

@@ -1,4 +1,7 @@
+import { parseCriterionReviews, type CriterionReview } from "../lib/taskCriterionReview";
 import { effortEstimateSchema, getEffortScopeKey, type TaskEffortEstimate } from "../lib/taskEffort";
+import { applyProgressDemoFixture, getProgressDemoCreatedAt } from "./taskProgressDemoFixtures";
+import {isValidTaskEffortBaseline, type TaskEffortBaseline} from "../lib/taskEffortBaseline";
 
 type BaseNode = {
   id: string;
@@ -19,12 +22,16 @@ type WorkspaceTaskStatus = "待开始" | "进行中" | "待审核" | "已阻塞"
 export type TaskNode = BaseNode & {
   kind: "task";
   completionCriteria?: string[];
+  criterionReviews?: CriterionReview[];
   executionTips?: string[];
   effortEstimate?: TaskEffortEstimate;
+  effortBaseline?: TaskEffortBaseline;
   proposedOwnerId?: string;
   createdFrom?: "task-planner" | "task-editor";
   createdBy?: string;
   createdAt?: string;
+  completedAt?: string;
+  progressReopenedAt?: string;
   dependsOnTaskIds?: string[];
   ownerId: string;
   participantIds?: string[];
@@ -241,7 +248,7 @@ const workspaceNodeSeeds: WorkspaceNode[] = [
     ownerId: "周岚",
     dependsOnTaskIds: ["fragrance-data", "fragrance-compliance"],
     participantIds: ["许宁", "韩序"],
-    status: "待审核",
+    status: "进行中",
     dueAt: "今天 16:00",
     goal: "确认追加投放的 GMV 目标、预算边界与资源优先级，并完成项目最终决策。",
     completionCriteria: ["追加投放目标、预算上限、资源优先级和停止条件形成一份可执行决定，并记录依据与异议。"],
@@ -270,7 +277,7 @@ const workspaceNodeSeeds: WorkspaceNode[] = [
     labels: ["高优先级", "内容制作"],
     updatedAt: "今天",
   },
-  fixtureLeaf({
+  {
     id: "product-launch-venue",
     kind: "task",
     name: "场地确认",
@@ -286,16 +293,39 @@ const workspaceNodeSeeds: WorkspaceNode[] = [
     iconTone: "blue",
     labels: ["高优先级"],
     updatedAt: "1 小时前",
-  }, productLaunchGoal, 360, "工具归并场地报价与条件，由陈默完成现场核验和商务确认"),
+  },
   fixtureLeaf({
+    id: "product-launch-venue-contract",
+    kind: "task",
+    name: "签署场地与设备服务确认",
+    parentId: workspaceRootId,
+    parentTaskId: "product-launch-venue",
+    ownerId: "陈默",
+    participantIds: ["周岚"],
+    status: "进行中",
+    dueAt: "9 月 5 日",
+    plannedStartOn: "2026-09-02",
+    plannedEndOn: "2026-09-05",
+    goal: "将场地档期、容量、设备、服务人员和费用边界落实到可执行确认记录。",
+    completionCriteria: ["合同与设备清单覆盖档期、容量、进撤场、供电、网络、音视频和额外费用，双方联系人已确认。"],
+    executionTips: ["以现场核验结果为准，报价单未覆盖的限制和增项必须写入确认记录。"],
+    iconName: "file-check",
+    iconTone: "blue",
+    labels: ["高优先级"],
+    updatedAt: "1 小时前",
+  }, productLaunchGoal, 360, "工具归并合同、报价与设备清单，由陈默完成现场条件和商务边界确认"),
+  {
     id: "product-launch-run-of-show",
     kind: "task",
     name: "发布会流程设计",
     parentId: workspaceRootId,
     parentTaskId: "product-launch-planning",
     ownerId: "林洁",
-    status: "待开始",
+    participantIds: ["高远", "陈默"],
+    status: "进行中",
     dueAt: "9 月 10 日",
+    plannedStartOn: "2026-09-02",
+    plannedEndOn: "2026-09-10",
     goal: "完成发布会完整流程、嘉宾衔接与现场应急预案。",
     completionCriteria: ["完整流程表写明时间、环节、人员、物料和切换信号，嘉宾衔接与关键异常均有预案。"],
     executionTips: ["AI 可生成流程初稿和冲突检查，林洁负责现场节奏、内容顺序与应急取舍。"],
@@ -303,8 +333,91 @@ const workspaceNodeSeeds: WorkspaceNode[] = [
     iconTone: "purple",
     labels: ["内容制作"],
     updatedAt: "今天",
-  }, productLaunchGoal, 480, "AI 辅助生成流程初稿与冲突检查，由林洁核对嘉宾衔接和现场预案"),
+  },
   fixtureLeaf({
+    id: "product-launch-agenda-timing",
+    kind: "task",
+    name: "确认发布会议程与时长",
+    parentId: workspaceRootId,
+    parentTaskId: "product-launch-run-of-show",
+    ownerId: "林洁",
+    participantIds: ["周岚", "高远"],
+    status: "已完成",
+    completedAt: "2026-09-04T17:30:00.000Z",
+    dueAt: "9 月 4 日",
+    plannedStartOn: "2026-09-02",
+    plannedEndOn: "2026-09-04",
+    goal: "把开场、产品发布、演示、媒体问答和合影环节排成可执行议程。",
+    completionCriteria: ["每个环节都有开始时间、预计时长、负责人和所需物料，整体时长不超过已确认场地窗口。"],
+    executionTips: ["先锁定不能移动的嘉宾档期，再调整演示和问答时长。"],
+    iconName: "list-todo",
+    iconTone: "blue",
+    labels: ["内容制作"],
+    updatedAt: "今天",
+  }, productLaunchGoal, 180, "AI 辅助检查议程冲突和总时长，由林洁确认现场节奏"),
+  fixtureLeaf({
+    id: "product-launch-host-script",
+    kind: "task",
+    name: "完善主持人串词与转场",
+    parentId: workspaceRootId,
+    parentTaskId: "product-launch-run-of-show",
+    ownerId: "林洁",
+    participantIds: ["周岚"],
+    status: "进行中",
+    dueAt: "9 月 6 日",
+    plannedStartOn: "2026-09-04",
+    plannedEndOn: "2026-09-06",
+    goal: "让主持人串词覆盖开场、产品介绍、嘉宾引入、问答和收尾转场。",
+    completionCriteria: ["串词版本标明适用环节、关键产品信息和禁用表达，并完成负责人核对。"],
+    executionTips: ["先引用已确认卖点和嘉宾称谓，避免在串词里新增未经核对的承诺。"],
+    iconName: "sparkles",
+    iconTone: "purple",
+    labels: ["内容制作"],
+    updatedAt: "今天",
+  }, productLaunchGoal, 240, "AI 辅助生成串词初稿和禁用表达检查，由林洁完成口播取舍"),
+  fixtureLeaf({
+    id: "product-launch-guest-cue",
+    kind: "task",
+    name: "核对嘉宾衔接与导播 cue",
+    parentId: workspaceRootId,
+    parentTaskId: "product-launch-run-of-show",
+    ownerId: "高远",
+    participantIds: ["林洁", "陈默"],
+    dependsOnTaskIds: ["product-launch-agenda-timing"],
+    status: "进行中",
+    dueAt: "9 月 8 日",
+    plannedStartOn: "2026-09-06",
+    plannedEndOn: "2026-09-08",
+    goal: "把嘉宾上台、PPT 切换、视频播放和摄影导播信号统一到一张 cue 表。",
+    completionCriteria: ["cue 表覆盖嘉宾、主持人、导播、摄影和物料责任人，关键切换点均有备选处理。"],
+    executionTips: ["用议程版本逐项核对，不用口头确认替代现场 cue 表。"],
+    iconName: "flag",
+    iconTone: "amber",
+    labels: ["内容制作"],
+    updatedAt: "今天",
+  }, productLaunchGoal, 300, "AI 辅助从议程提取 cue 点，由高远核对现场执行信号"),
+  fixtureLeaf({
+    id: "product-launch-flow-rehearsal",
+    kind: "task",
+    name: "完成发布会流程联排",
+    parentId: workspaceRootId,
+    parentTaskId: "product-launch-run-of-show",
+    ownerId: "高远",
+    participantIds: ["周岚", "林洁", "陈默"],
+    dependsOnTaskIds: ["product-launch-host-script", "product-launch-guest-cue"],
+    status: "待开始",
+    dueAt: "9 月 10 日",
+    plannedStartOn: "2026-09-08",
+    plannedEndOn: "2026-09-10",
+    goal: "用一次完整联排验证主持、嘉宾、物料、导播和应急预案能按流程衔接。",
+    completionCriteria: ["联排记录包含问题、责任人和关闭时间；上线前必须关闭阻断流程的问题。"],
+    executionTips: ["联排只记录已验证的问题和决策，不把待确认项写成已解决。"],
+    iconName: "clipboard-check",
+    iconTone: "green",
+    labels: ["高优先级", "内容制作"],
+    updatedAt: "今天",
+  }, productLaunchGoal, 360, "AI 辅助整理联排问题清单，由高远确认上线前关闭条件"),
+  {
     id: "product-launch-promo-assets",
     kind: "task",
     name: "宣传物料制作",
@@ -320,7 +433,69 @@ const workspaceNodeSeeds: WorkspaceNode[] = [
     iconTone: "pink",
     labels: ["内容制作"],
     updatedAt: "今天",
-  }, productLaunchGoal, 720, "AI 辅助多尺寸适配与版本检查，由林洁完成创意、品牌和版权终审"),
+  },
+  fixtureLeaf({
+    id: "product-launch-promo-key-visual",
+    kind: "task",
+    name: "定稿发布会主视觉",
+    parentId: workspaceRootId,
+    parentTaskId: "product-launch-promo-assets",
+    ownerId: "林洁",
+    participantIds: ["周岚"],
+    status: "进行中",
+    dueAt: "9 月 10 日",
+    plannedStartOn: "2026-09-08",
+    plannedEndOn: "2026-09-10",
+    goal: "形成适用于会场、邀请和渠道传播的统一主视觉母版。",
+    completionCriteria: ["主视觉母版通过品牌、产品信息和版权核对，并给出字体、色彩、留白和安全区规范。"],
+    executionTips: ["先确认唯一母版再展开尺寸适配，避免多个渠道各自形成不一致版本。"],
+    iconName: "sparkles",
+    iconTone: "pink",
+    labels: ["内容制作"],
+    updatedAt: "今天",
+  }, productLaunchGoal, 300, "AI 辅助生成方向稿与版式检查，由林洁完成创意、品牌和版权终审"),
+  fixtureLeaf({
+    id: "product-launch-promo-invitation",
+    kind: "task",
+    name: "完成嘉宾邀请函",
+    parentId: workspaceRootId,
+    parentTaskId: "product-launch-promo-assets",
+    ownerId: "林洁",
+    participantIds: ["陈默"],
+    dependsOnTaskIds: ["product-launch-promo-key-visual"],
+    status: "待开始",
+    dueAt: "9 月 12 日",
+    plannedStartOn: "2026-09-10",
+    plannedEndOn: "2026-09-12",
+    goal: "交付包含准确时间、地点、议程摘要和确认方式的嘉宾邀请函。",
+    completionCriteria: ["电子邀请函与可打印版本信息一致，嘉宾称谓、时间地点、交通和 RSVP 方式均已核对。"],
+    executionTips: ["只使用已确认议程和嘉宾信息，尚未确认的安排不得写成正式承诺。"],
+    iconName: "file-check",
+    iconTone: "purple",
+    labels: ["内容制作"],
+    updatedAt: "今天",
+  }, productLaunchGoal, 180, "AI 辅助生成多版文案与一致性检查，由林洁确认称谓、信息和对外口径"),
+  fixtureLeaf({
+    id: "product-launch-promo-channel-assets",
+    kind: "task",
+    name: "交付渠道宣传物料",
+    parentId: workspaceRootId,
+    parentTaskId: "product-launch-promo-assets",
+    ownerId: "林洁",
+    participantIds: ["高远"],
+    dependsOnTaskIds: ["product-launch-promo-key-visual", "product-launch-promo-invitation"],
+    status: "待开始",
+    dueAt: "9 月 15 日",
+    plannedStartOn: "2026-09-12",
+    plannedEndOn: "2026-09-15",
+    goal: "按渠道规格交付预热、直播预约和会后回顾所需宣传物料。",
+    completionCriteria: ["各渠道尺寸、文案、链接与发布时间形成清单，品牌和版权检查通过，发布版本可追溯。"],
+    executionTips: ["从受控主视觉母版适配，渠道差异只调整规格和必要文案，不重做品牌表达。"],
+    iconName: "sparkles",
+    iconTone: "pink",
+    labels: ["内容制作"],
+    updatedAt: "今天",
+  }, productLaunchGoal, 240, "AI 辅助多尺寸适配与版本比对，由林洁确认渠道文案和最终交付版本"),
   {
     id: "weekly-retro-notes",
     kind: "task",
@@ -407,7 +582,7 @@ const workspaceNodeSeeds: WorkspaceNode[] = [
 
 /** Legacy creator-commerce fixture, now explicitly scoped so team switching cannot mix local data. */
 export const workspaceNodes: WorkspaceNode[] = workspaceNodeSeeds.map((node) => ({
-  ...node,
+  ...applyProgressDemoFixture(node),
   teamId: node.id === workspaceRootId ? "__all__" : "creator-commerce",
 }));
 
@@ -458,7 +633,8 @@ const normalizeTaskNode = (value: unknown): TaskNode | null => {
   if (!isRecord(value) || value.kind !== "task") return null;
   if (typeof value.id !== "string" || !value.id.trim() || value.id === workspaceRootId) return null;
   if (typeof value.name !== "string" || !value.name.trim()) return null;
-  if (typeof value.ownerId !== "string" || (!value.ownerId.trim() && value.createdFrom !== "task-planner" && value.createdFrom !== "task-editor")) return null;
+  const legacyProposedOwnerId = asOptionalString(value.proposedOwnerId);
+  if (typeof value.ownerId !== "string" || (!value.ownerId.trim() && !legacyProposedOwnerId && value.createdFrom !== "task-planner" && value.createdFrom !== "task-editor")) return null;
   if (typeof value.updatedAt !== "string" || !value.updatedAt.trim()) return null;
   if (typeof value.status !== "string" || !taskStatuses.has(value.status as WorkspaceTaskStatus)) return null;
 
@@ -472,23 +648,28 @@ const normalizeTaskNode = (value: unknown): TaskNode | null => {
   const iconTone = typeof value.iconTone === "string" && taskIconTones.has(value.iconTone as TaskIconTone)
     ? value.iconTone as TaskIconTone
     : undefined;
+  const ownerId = legacyProposedOwnerId ?? value.ownerId;
   return {
     id: value.id,
     kind: "task",
     name: value.name,
-    ownerId: value.ownerId,
+    ownerId,
     parentId: typeof value.parentId === "string" && value.parentId.trim() ? value.parentId : workspaceRootId,
     teamId: asOptionalString(value.teamId) ?? "creator-commerce",
     status: value.status as WorkspaceTaskStatus,
     updatedAt: value.updatedAt,
+    ...(asOptionalString(value.completedAt) ? { completedAt: value.completedAt as string } : {}),
+    ...(asOptionalString(value.progressReopenedAt) ? { progressReopenedAt: value.progressReopenedAt as string } : {}),
     ...(dependsOnTaskIds ? { dependsOnTaskIds } : {}),
     ...(asStringList(value.completionCriteria) ? { completionCriteria: asStringList(value.completionCriteria) } : {}),
+    ...(Array.isArray(value.criterionReviews) ? { criterionReviews: parseCriterionReviews(value.criterionReviews, asStringList(value.completionCriteria) ?? []) } : {}),
     ...(asStringList(value.executionTips) ? { executionTips: asStringList(value.executionTips) } : {}),
     ...(effortEstimate.success ? { effortEstimate: effortEstimate.data } : {}),
+    ...(isValidTaskEffortBaseline(value.effortBaseline) ? {effortBaseline:{...value.effortBaseline}} : {}),
     ...(value.createdFrom === "task-planner" || value.createdFrom === "task-editor" ? { createdFrom: value.createdFrom } : {}),
     ...(asOptionalString(value.createdBy) ? { createdBy: value.createdBy as string } : {}),
-    ...(asOptionalString(value.createdAt) ? { createdAt: value.createdAt as string } : {}),
-    ...(asOptionalString(value.proposedOwnerId) ? { proposedOwnerId: value.proposedOwnerId as string } : {}),
+    ...(asOptionalString(value.createdAt) || getProgressDemoCreatedAt(value.id)
+      ? {createdAt:asOptionalString(value.createdAt) ?? getProgressDemoCreatedAt(value.id)} : {}),
     ...(labels ? { labels } : {}),
     ...(participantIds ? { participantIds } : {}),
     ...(asOptionalString(value.parentTaskId) ? { parentTaskId: value.parentTaskId as string } : {}),

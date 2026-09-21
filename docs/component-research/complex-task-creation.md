@@ -12,7 +12,7 @@
 
 - 用户任务：让快速测试同时覆盖单项任务与复杂拆分任务；复杂场景在创建确认前直接展示可编辑的父任务 + 子任务结构。子任务不是精简附属记录，而是只额外具有 `parentTaskId` 的 Task，需要独立确认结果、负责人、协作人员和所需资料。
 - 交互关键词：editable task list、nested task、subtask editor、owner picker、member selector、source selector、accessible tabs。
-- 技术约束：React + TypeScript；不安装依赖；复用共享 `Input`、`Textarea`、`Button`、`PersonPicker`、`MemberSelector`、`PersonAvatar`、`CheckboxIndicator` 与 AgentDoor Token。
+- 技术约束：React + TypeScript；不安装依赖；复用共享 `Input`、`Textarea`、`Button`、`PersonPicker`、`MemberSelector`、`PersonAvatar`、`CheckboxIndicator` 与 TaskDoor Token。
 - 必须覆盖的状态：单 Task、3 个真实独立子 Task、编辑与删除已有子 Task、本人负责、拟交给同事且待接受、0..n 协作人员、0..n 资料引用、父 / 子 Task 各自的 0..n 协作缺口、字段缺失、桌面 / 窄屏和键盘路径。
 
 ## 搜索过程
@@ -37,7 +37,7 @@
 - 2026-08-28 纵向平铺增量：产品负责人否定父 / 子 Task 页签，要求全部任务直接连续审阅。重新比较后保留现有共享任务编辑组合，拒绝 Radix Tabs 与 Tree 作为当前页面结构；两者分别增加隐藏上下文或多余层级操作，不符合一层任务在创建前逐项核对的目标。
 - 采用的行为基础：父 Task 与一层子 Task 按顺序纵向排列，每一项都编辑完整 Task，并提供互不排斥的独立展开 / 收起；创建确认页只审阅 Proposal 已有结构，删除使用对应项内的具名按钮，不维护当前选中状态，也不打开 Dialog。
 - 采用的视觉结构：单 Task 直接使用标准表单，不绘制只有一个父项的列表规则、编号或“父任务”标签；只有初始 Proposal 已含子 Task 时才出现连续“任务”列表。单项与复杂创建都不显示父 / 子数量统计或“添加子任务”入口，复杂列表只编辑、展开、收起或删除 Proposal 已有子 Task。每个任务块以圆形浅绿数字序号、“父任务 / 子任务”和任务名称建立边界；序号使用既有 teal Tag palette、标准触控尺寸与 pill 圆角 Token，只表达顺序。表单按“任务信息 → 上级任务 → [文件] → 责任”呈现；文件只在当前 Task 有候选或已有选择时出现，“责任”区只保留具体缺口与处理候选，不显示负责人或其他协作人员编辑段。不用大面积蓝色卡片、横向滚动或嵌套侧栏，不新增 primitive、依赖或外部源码。
-- AgentDoor 适配：任务信息复用共享 Input / Textarea，父任务和子任务使用同一个 `TaskSourceSelector` 密度与同一个 `TaskCollaborationEditor`；删除 `TaskPeopleEditor`，不以嵌入、折叠或隐藏形式保留。主 Task 人员在右侧摘要只读复用 `PersonAvatar`；创建者、Owner、Participant 和待接受状态继续保留在正式数据与创建投影中，但当前表单不提供重复的人员编辑入口。
+- TaskDoor 适配：任务信息复用共享 Input / Textarea，父任务和子任务使用同一个 `TaskSourceSelector` 密度与同一个 `TaskCollaborationEditor`；删除 `TaskPeopleEditor`，不以嵌入、折叠或隐藏形式保留。主 Task 人员在右侧摘要只读复用 `PersonAvatar`；创建者、Owner、Participant 和待接受状态继续保留在正式数据与创建投影中，但当前表单不提供重复的人员编辑入口。
 - 来源注释或许可动作：未复制 21st 或树库源码；Base UI / shadcn 只作为行为比较。无需新增许可文件或依赖。
 - 为什么必须做轻量组合：现有共享组件已经覆盖可靠输入、搜索和焦点行为；成熟 Tree 能力过重，Tabs 会隐藏兄弟 Task，互斥 Accordion 又阻碍任务间对照。本页采用语义列表加独立 Disclosure 状态，默认全部展开且允许按需收起，不需要新增依赖或第二套 primitive。
 - 2026-08-28 实例修正：不新增视觉组件或外部依赖。父 / 子 Task 继续复用同一个 `TaskCollaborationEditor`，但每个 Task 块传入各自的缺口、候选人和选择状态；POS 示例收敛为“修复实现与自测 / 离线重放回归 / 门店灰度”三个独立结果，规则判断与最终整合回到父 Task。原四项中“单一规则判断、短评审、父任务最终整合”不再为了凑数被建成子 Task。

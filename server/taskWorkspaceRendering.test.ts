@@ -165,14 +165,14 @@ test("当前用户变化后只展示该用户本人任务，不通过成员显�
   assert.doesNotMatch(html, /确认发布安排/);
 });
 
-test("通知或前置仍可打开别人原详情，并明确说明个人列表范围而非筛选隐藏", async () => {
+test("通知或前置仍可打开别人原详情，不展示个人列表范围提示", async () => {
   const html = await renderWorkspace({
     nodes: [first, { ...second, id: "outside", ownerId: "other", name: "他人的前置交付" }],
     selectedTaskId: "outside", children: createElement("h1", {}, "他人的前置交付原详情"),
   });
   assert.equal((html.match(/data-task-id=/g) ?? []).length, 1);
   assert.match(html, /他人的前置交付原详情/);
-  assert.match(html, /当前任务不在我的任务列表中，可继续查看原详情。/);
+  assert.doesNotMatch(html, /当前任务不在我的任务列表中|task-workspace-filter-note/);
   assert.doesNotMatch(html, /筛选条件已保留|data-task-id="outside"|aria-current="page"/);
 });
 

@@ -1,3 +1,4 @@
+import { useDetailCopy } from "../i18n/detailMessages";
 import { useId, type ReactNode } from "react";
 import { TaskCreationEditableText as EditableText } from "./TaskCreationEditableText";
 import { TaskCriteriaFields } from "./TaskCriteriaFields";
@@ -27,23 +28,24 @@ type Props = {
 
 /** Shared task fields; the caller owns draft/commit behaviour and task relationships. */
 export function TaskDetailFields({ value, labels, onChange, variant = "embedded", disabled = false, showExecutionTips = false, icon, titleAction, description, properties, attributes, dependencies, effort }: Props) {
+  const d = useDetailCopy();
   const id = useId();
   const update = (patch: Partial<TaskFieldValues>) => { if (!disabled) onChange(patch); };
-  const nameInput = <EditableText className={variant === "heading" ? "task-detail-title-input" : "task-detail-inline-name"} disabled={disabled} id={`${id}-name`} label={labels.name} onChange={title => update({ title })} placeholder="任务名称" value={value.title} />;
+  const nameInput = <EditableText className={variant === "heading" ? "task-detail-title-input" : "task-detail-inline-name"} disabled={disabled} id={`${id}-name`} label={labels.name} onChange={title => update({ title })} placeholder={d('name')} value={value.title} />;
 
   return <div className={`task-detail-fields task-detail-fields-${variant}`}>
     {variant === "heading" ? <div className="task-detail-title-row">{icon}<h1>{nameInput}</h1></div> :
       <div className="task-detail-field-row task-detail-name-field">
-        <label className="task-detail-field-label" htmlFor={`${id}-name`}>名称</label>
+        <label className="task-detail-field-label" htmlFor={`${id}-name`}>{d('fieldName')}</label>
         <div className="task-detail-name-control">{nameInput}{titleAction}</div>
       </div>}
     <div className={variant === "heading" ? "task-detail-description" : "task-detail-fields-body"}>
       {description && <div className="task-detail-goal-field">
         <span className="task-detail-field-label">{description.label}</span>
-        {description.onChange ? <EditableText className="task-detail-goal-input" disabled={disabled} label={description.inputLabel} onChange={next => { if (!disabled) description.onChange?.(next); }} placeholder="这件事希望带来什么结果？" value={description.value} /> : <p className="creation-inherited-goal">{description.value}</p>}
+        {description.onChange ? <EditableText className="task-detail-goal-input" disabled={disabled} label={description.inputLabel} onChange={next => { if (!disabled) description.onChange?.(next); }} placeholder={d('goalHint')} value={description.value} /> : <p className="creation-inherited-goal">{description.value}</p>}
       </div>}
-      <section aria-label="完成标准" className="task-detail-completion creation-completion">
-        <span className="task-detail-field-label">完成标准</span>
+      <section aria-label={d('criteria')} className="task-detail-completion creation-completion">
+        <span className="task-detail-field-label">{d('criteria')}</span>
         <TaskCriteriaFields disabled={disabled} idPrefix={`${id}-criterion`} label={labels.criteria} onChange={completionCriteria => update({ completionCriteria })} values={value.completionCriteria} />
       </section>
       {showExecutionTips && <TaskExecutionTipsField disabled={disabled} onChange={executionTips => update({ executionTips })} values={value.executionTips} />}

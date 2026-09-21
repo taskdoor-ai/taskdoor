@@ -69,5 +69,5 @@ export function applyTaskDependencies(nodes: WorkspaceNode[], taskId: string, ex
     author, type: "task-definition-change", message: "修改前置依赖",
     changes: [{ label: "前置依赖", before: beforeLabel, after: beforeLabel === afterLabel ? `${afterLabel}（关联任务已变更）` : afterLabel }],
   });
-  return { nodes: nodes.map(node => node.id === taskId ? { ...original, dependsOnTaskIds: next, updatedAt: "刚刚" } : node), original, activity };
+  return { nodes: nodes.map(node => node.id === taskId ? { ...original, dependsOnTaskIds: next, updatedAt: new Date().toISOString() } : node), original, activity };
 }

@@ -12,10 +12,7 @@ export function syncCreationSubtaskEdit(
     throw new Error("子任务已被其他操作更新，当前输入已保留。请载入最新内容后再编辑。");
   }
 
-  const next: CreationTask = {
-    ...structuredClone(edited),
-    goal: (form.decision === "attach" ? form.candidate?.goal : form.mainTask.goal) ?? "",
-  };
+  const next: CreationTask = structuredClone(edited);
   // Reuse member, date and effort validation without requiring complete text on each
   // keystroke. These validation-only values never enter the returned draft.
   const invalid = validateCreationTask(

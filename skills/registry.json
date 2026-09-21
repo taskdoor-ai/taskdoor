@@ -1,6 +1,6 @@
 {
   "status": "offline_design",
-  "version": "2026-09-03.1",
+  "version": "2026-09-08.1",
   "rulesSource": "docs/product-v2/PRD-AgentDoor-协作任务全流程.md",
   "skills": [
     {
@@ -10,25 +10,60 @@
       "outputVersion": "agentdoor.responsibility-advice.v0.1",
       "dependsOn": [],
       "rulesFile": "skills/agentdoor-responsibility-advisor/references/product-rules.md",
-      "ruleSections": ["### 7.9 人员责任分析 Skill"]
+      "ruleSections": [
+        "### 2.5 人员责任分析 Skill",
+        "### 7.9 人员责任分析 Skill"
+      ],
+      "references": [
+        "skills/agentdoor-responsibility-advisor/references/output-contract.md"
+      ]
     },
     {
       "id": "agentdoor-task-planner",
       "title": "创建任务与动态规划",
       "entry": "skills/agentdoor-task-planner/SKILL.md",
       "outputVersion": "agentdoor.task-plan.v0.2",
-      "dependsOn": ["agentdoor-ewd-progress"],
+      "dependsOn": [
+        "agentdoor-ewd-progress"
+      ],
       "rulesFile": "skills/agentdoor-task-planner/references/product-rules.md",
-      "ruleSections": ["### 7.3 创建任务 Skill"]
+      "ruleSections": [
+        "### 3.1 创建流程",
+        "### 3.2 创建任务 Skill",
+        "### 3.3 任务内容",
+        "### 3.4 子任务拆分",
+        "### 3.5 人员匹配",
+        "### 3.6 负责人规则",
+        "### 3.7 标签",
+        "### 3.8 工时和成本",
+        "### 3.9 创建确认",
+        "### 7.3 创建任务 Skill"
+      ],
+      "references": [
+        "skills/agentdoor-task-planner/references/planning-v0.2.md",
+        "skills/agentdoor-task-planner/references/context-and-replanning.md",
+        "skills/agentdoor-task-planner/references/current-product-alignment.md",
+        "skills/agentdoor-task-planner/references/planning-v0.2.schema.json"
+      ]
     },
     {
       "id": "agentdoor-task-status-analyzer",
       "title": "任务状态分析",
       "entry": "skills/agentdoor-task-status-analyzer/SKILL.md",
       "outputVersion": "agentdoor.task-status-analysis.v0.1",
-      "dependsOn": ["agentdoor-task-diagnostician", "agentdoor-ewd-progress"],
+      "dependsOn": [
+        "agentdoor-task-diagnostician",
+        "agentdoor-ewd-progress"
+      ],
       "rulesFile": "skills/agentdoor-task-status-analyzer/references/product-rules.md",
-      "ruleSections": ["### 7.4 任务状态分析 Skill"]
+      "ruleSections": [
+        "### 6.2 当前情况",
+        "### 6.3 任务进度模块",
+        "### 7.4 任务状态分析 Skill"
+      ],
+      "references": [
+        "skills/agentdoor-task-status-analyzer/references/output-contract.md"
+      ]
     },
     {
       "id": "agentdoor-task-diagnostician",
@@ -37,7 +72,13 @@
       "outputVersion": "agentdoor.task-diagnosis.v0.1",
       "dependsOn": [],
       "rulesFile": "skills/agentdoor-task-diagnostician/references/product-rules.md",
-      "ruleSections": ["### 7.5 任务诊断 Skill"]
+      "ruleSections": [
+        "### 6.6 诊断",
+        "### 7.5 任务诊断 Skill"
+      ],
+      "references": [
+        "skills/agentdoor-task-diagnostician/references/output-contract.md"
+      ]
     },
     {
       "id": "agentdoor-personal-priority",
@@ -46,7 +87,16 @@
       "outputVersion": "agentdoor.personal-priority.v0.1",
       "dependsOn": [],
       "rulesFile": "skills/agentdoor-personal-priority/references/product-rules.md",
-      "ruleSections": ["### 7.6 我的工作推荐 Skill"]
+      "ruleSections": [
+        "### 5.1 模块作用",
+        "### 5.2 展示内容",
+        "### 5.3 分析范围",
+        "### 5.4 推荐逻辑",
+        "### 7.6 我的工作推荐 Skill"
+      ],
+      "references": [
+        "skills/agentdoor-personal-priority/references/output-contract.md"
+      ]
     },
     {
       "id": "agentdoor-ewd-progress",
@@ -55,7 +105,48 @@
       "outputVersion": "agentdoor.ewd-progress.v0.1",
       "dependsOn": [],
       "rulesFile": "skills/agentdoor-ewd-progress/references/product-rules.md",
-      "ruleSections": ["### 7.7 EWD 工时评估＋进度"]
+      "ruleSections": [
+        "### 3.8 工时和成本",
+        "### 6.3 任务进度模块",
+        "### 7.7 EWD 工时评估＋进度"
+      ],
+      "references": [
+        "skills/agentdoor-ewd-progress/references/output-contract.md"
+      ]
+    }
+  ],
+  "sharedFiles": [
+    "skills/shared/evidence-and-updates.md",
+    "skills/shared/product-rules.md",
+    "skills/shared/assistant-path-rules.md"
+  ],
+  "ruleSnapshots": [
+    {
+      "output": "skills/shared/product-rules.md",
+      "title": "Skill 共用产品规则",
+      "sources": [
+        {
+          "path": "docs/product-v2/PRD-AgentDoor-协作任务全流程.md",
+          "sections": [
+            "### 7.1 各自负责什么",
+            "### 7.2 判断前需要的数据",
+            "### 7.8 谁调用规则，什么时候更新"
+          ]
+        }
+      ]
+    },
+    {
+      "output": "skills/shared/assistant-path-rules.md",
+      "title": "常驻助手路径：已确认的规则补充",
+      "sources": [
+        {
+          "path": "docs/superpowers/specs/2026-09-08-resident-task-assistant-design.md",
+          "sections": [
+            "## 6. 变更与确认",
+            "## 7. 已确认替换关系与迁移"
+          ]
+        }
+      ]
     }
   ]
 }

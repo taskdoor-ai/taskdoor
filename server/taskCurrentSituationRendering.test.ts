@@ -18,7 +18,7 @@ const model: TaskSituationModel = {
 
 test("详情先展示当前情况，再展示下一步建议", () => {
   const html = renderToStaticMarkup(createElement(TaskCurrentSituation, { model }));
-  for (const content of ["当前情况", "交付文件标记已完成", "缺少异常情况的验证依据", "下一步建议", "截至"]) assert.ok(html.includes(content));
+  for (const content of ["当前情况", "交付文件标记已完成", "缺少异常情况的验证依据", "下一步建议"]) assert.ok(html.includes(content));
   assert.doesNotMatch(html, /已完成内容|需要关注|下一步计划/);
   assert.doesNotMatch(html, /查看交付文件|task-situation-reference|task-situation-source-label/);
   assert.match(html, /data-has-trend="false"/);
@@ -113,14 +113,22 @@ test("过期与信息不足可见，空分组不会制造正常或已完成结�
   assert.doesNotMatch(empty, /需要关注|无风险|已完成|Mock 示例/);
 });
 
-test("只有记录日期时不补造精确分析时刻", () => {
+test("只有记录日期时也不显示截至时间", () => {
   const html = renderToStaticMarkup(createElement(TaskCurrentSituation, { model: { ...model, asOf: "2026-08-31" } }));
-  assert.match(html, /截至 8\/31/);
+  assert.doesNotMatch(html, /截至|<time\b|8\/31/);
   assert.doesNotMatch(html, /08:00|00:00/);
 });
 
-test("讨论时间只标为最近讨论，不冒充整个任务的分析截止时间", () => {
+test("当前情况不显示最近讨论时间，也不将其改标为分析截止时间", () => {
   const html = renderToStaticMarkup(createElement(TaskCurrentSituation, { model: { ...model, asOfSource: "discussion" } }));
-  assert.match(html, /最近讨论/);
-  assert.doesNotMatch(html, /截至/);
+  assert.doesNotMatch(html, /最近讨论|截至|<time\b/);
+});
+
+test("当前情况不显示数据截至日期，正文不变",()=>{
+  for(const asOfSource of [undefined,"discussion","progress"] as const){
+    const html=renderToStaticMarkup(createElement(TaskCurrentSituation,{model:{...model,asOf:"2026-09-14",asOfSource}}));
+    assert.doesNotMatch(html,/截至|<time\b|2026-09-14|9\/14/);
+    assert.ok(html.includes(model.summary));
+    for(const group of model.groups)for(const item of group.items)assert.ok(html.includes(item.text));
+  }
 });

@@ -2,10 +2,14 @@ import { normalizeTags, type TagDefinition } from "../data/tagGroups.ts";
 import { normalizeWorkspaceNodes, workspaceNodes, type TaskNode, type WorkspaceNode } from "../data/workspaceNodes.ts";
 import { allTeamWorkspaceNodes, multiTeamTags, teamWorkspaceExpansionNodes } from "../data/teamWorkspaceScenarios.ts";
 import { getEffortScopeKey } from "./taskEffort.ts";
+import { getTaskDefinitionGoal } from "./taskGoal.ts";
 import { unassignedTaskFixtures } from "../data/unassignedTaskFixtures.ts";
+import {residentDeletionDemoTasks} from "../data/residentDeletionDemo.ts";
 
 /** Kept under the historical export name because existing storage callers import it. */
-export const creatorCommerceScenarioVersion = "multi-team-v18-unassigned-effort";
+const productLaunchNestedSubtasksVersion = "multi-team-v20-product-launch-nested-subtasks";
+const productLaunchNestedSubtasksRepairVersion = "multi-team-v21-product-launch-nested-subtasks-repair";
+export const creatorCommerceScenarioVersion = "multi-team-v22-subtask-child-count-fixtures";
 
 type WorkspaceScenarioResetInput = {
   storedVersion: string | null;
@@ -67,11 +71,27 @@ const migrateUnassignedTaskEffort = (stored: unknown): WorkspaceNode[] => {
   });
 };
 
+const productLaunchNestedSubtaskIds = new Set([
+  "product-launch-agenda-timing",
+  "product-launch-host-script",
+  "product-launch-guest-cue",
+  "product-launch-flow-rehearsal",
+]);
+
+const productLaunchDetailSubtaskIds = new Set([
+  "product-launch-venue-contract",
+  "product-launch-promo-key-visual",
+  "product-launch-promo-invitation",
+  "product-launch-promo-channel-assets",
+]);
+
 const productLaunchFixtureIds = new Set([
   "product-launch-planning",
   "product-launch-venue",
   "product-launch-run-of-show",
   "product-launch-promo-assets",
+  ...productLaunchNestedSubtaskIds,
+  ...productLaunchDetailSubtaskIds,
 ]);
 
 const cloneNode = (node: WorkspaceNode): WorkspaceNode => node.kind === "task"
@@ -103,8 +123,9 @@ const newlyEstimatedFixtureIds = new Set([
   "fragrance-compliance",
   "fragrance-final-decision",
   "product-launch-venue",
-  "product-launch-run-of-show",
   "product-launch-promo-assets",
+  ...productLaunchNestedSubtaskIds,
+  ...productLaunchDetailSubtaskIds,
 ]);
 const newlyDefinedFixtureIds = new Set([
   ...newlyEstimatedFixtureIds,
@@ -129,7 +150,7 @@ const migrateWeeklyRetroInsight = (storedWorkspaceNodes: unknown, {
   supplementFixture = true,
 }: { repairFixtureScopeKey?: boolean; supplementFixture?: boolean } = {}) => {
   const normalized = normalizeWorkspaceNodes(storedWorkspaceNodes);
-  const fixtureNodes = workspaceNodes.filter((node) => weeklyRetroFixtureIds.has(node.id)).map(cloneNode);
+  const fixtureNodes = allTeamWorkspaceNodes.filter((node) => weeklyRetroFixtureIds.has(node.id)).map(cloneNode);
   const fixtureById = new Map(fixtureNodes.map((node) => [node.id, node]));
   const rootFixture = fixtureNodes.find((node) => node.id === "weekly-retro-notes");
   const upgraded = normalized.map((node): WorkspaceNode => {
@@ -179,26 +200,13 @@ const migrateMockEffortCoverage = (storedWorkspaceNodes: unknown, originalStored
       executionTips: node.executionTips ?? (fixture.executionTips ? [...fixture.executionTips] : undefined),
     };
   });
-  const taskById = new Map(enriched.filter((node): node is TaskNode => node.kind === "task").map((task) => [task.id, task]));
-  const inheritedGoal = (task: TaskNode) => {
-    const seen = new Set<string>();
-    let current = task;
-    while (current.parentTaskId && !seen.has(current.id)) {
-      seen.add(current.id);
-      const parent = taskById.get(current.parentTaskId);
-      if (!parent) break;
-      current = parent;
-    }
-    return current.goal ?? "";
-  };
-
   return enriched.map((node): WorkspaceNode => {
     if (node.kind !== "task") return node;
     const fixture = fixtureById.get(node.id);
     const fixtureEffort = fixture?.effortEstimate;
     if (!fixture || fixtureEffort?.basis !== "mock") return node;
     const currentScopeKey = getEffortScopeKey({
-      goal: inheritedGoal(node),
+      goal: getTaskDefinitionGoal(enriched, node),
       completionCriteria: node.completionCriteria,
       executionTips: node.executionTips,
     }, fixtureEffort.workMethod);
@@ -248,7 +256,6 @@ const dedupePlannerCreatedTasks = (storedWorkspaceNodes: unknown): WorkspaceNode
     participantIds: task.participantIds ?? [],
     plannedEndOn: task.plannedEndOn ?? "",
     plannedStartOn: task.plannedStartOn ?? "",
-    proposedOwnerId: task.proposedOwnerId ?? "",
     status: task.status,
     teamId: task.teamId ?? "",
   });
@@ -313,6 +320,52 @@ const upgradeV5WorkspaceNodes = (storedWorkspaceNodes: unknown) => {
     .map(cloneNode);
   return [...normalized, ...missingProductLaunchNodes];
 };
+
+const addProductLaunchNestedSubtasks = (storedWorkspaceNodes: unknown): WorkspaceNode[] => {
+  const normalized = normalizeWorkspaceNodes(storedWorkspaceNodes);
+  const ids = new Set(normalized.map(({ id }) => id));
+  const parentExists = ids.has("product-launch-run-of-show");
+  const hasNestedSubtask = [...productLaunchNestedSubtaskIds].some((id) => ids.has(id));
+  if (!parentExists || hasNestedSubtask) return normalized;
+
+  const nestedSubtasks = workspaceNodes
+    .filter(({ id }) => productLaunchNestedSubtaskIds.has(id))
+    .map(cloneNode);
+
+  return [
+    ...normalized.map((node) => {
+      if (node.kind !== "task" || node.id !== "product-launch-run-of-show") return node;
+      if (node.effortEstimate?.basis !== "mock" || node.effortEstimate.confirmed) return node;
+      const { effortEstimate: _effortEstimate, ...parent } = node;
+      return parent;
+    }),
+    ...nestedSubtasks,
+  ];
+};
+
+const addProductLaunchDetailSubtasks = (storedWorkspaceNodes: unknown): WorkspaceNode[] => {
+  const normalized = normalizeWorkspaceNodes(storedWorkspaceNodes);
+  const ids = new Set(normalized.map(({ id }) => id));
+  const fixtures = workspaceNodes
+    .filter((node): node is TaskNode => node.kind === "task" && productLaunchDetailSubtaskIds.has(node.id))
+    .filter((node) => !ids.has(node.id) && Boolean(node.parentTaskId && ids.has(node.parentTaskId)))
+    .map(cloneNode) as TaskNode[];
+  if (!fixtures.length) return normalized;
+
+  const aggregateParentIds = new Set(fixtures.flatMap((task) => task.parentTaskId ? [task.parentTaskId] : []));
+  return [
+    ...normalized.map((node): WorkspaceNode => {
+      if (node.kind !== "task" || !aggregateParentIds.has(node.id)
+        || node.effortEstimate?.basis !== "mock" || node.effortEstimate.confirmed) return node;
+      const { effortEstimate: _effortEstimate, ...parent } = node;
+      return parent;
+    }),
+    ...fixtures,
+  ];
+};
+
+const addProductLaunchSubtaskFixtures = (storedWorkspaceNodes: unknown) =>
+  addProductLaunchDetailSubtasks(addProductLaunchNestedSubtasks(storedWorkspaceNodes));
 
 const upgradeV6WorkspaceNodes = (storedWorkspaceNodes: unknown) => normalizeWorkspaceNodes(storedWorkspaceNodes)
   .map((node) => node.kind === "task" && node.id === "fragrance-data"
@@ -464,13 +517,24 @@ const mergeMultiTeamTags = (storedTags: unknown) => {
  * 旧演示数据只在版本切换时被替换一次；版本已匹配时只做容错归一，
  * 从而保留用户后续新建、修改或删除的任务和标签。
  */
-export function resolveWorkspaceScenarioReset(input: WorkspaceScenarioResetInput): WorkspaceScenarioResetResult {
+function resolveExistingWorkspaceScenario(input: WorkspaceScenarioResetInput): WorkspaceScenarioResetResult {
+  if (input.storedVersion === productLaunchNestedSubtasksRepairVersion) {
+    return {
+      didReset: false,
+      didMigrate: true,
+      version: creatorCommerceScenarioVersion,
+      workspaceNodes: Array.isArray(input.storedWorkspaceNodes)
+        ? addProductLaunchDetailSubtasks(input.storedWorkspaceNodes)
+        : cloneWorkspaceNodes(),
+      tags: normalizeTags(input.storedTags),
+    };
+  }
   if (input.storedVersion === "multi-team-v17-unassigned-tasks") {
     return {
       didReset: false,
       didMigrate: true,
       version: creatorCommerceScenarioVersion,
-      workspaceNodes: Array.isArray(input.storedWorkspaceNodes) ? migrateUnassignedTaskEffort(input.storedWorkspaceNodes) : cloneWorkspaceNodes(),
+      workspaceNodes: addProductLaunchSubtaskFixtures(Array.isArray(input.storedWorkspaceNodes) ? migrateUnassignedTaskEffort(input.storedWorkspaceNodes) : cloneWorkspaceNodes()),
       tags: normalizeTags(input.storedTags),
     };
   }
@@ -480,9 +544,22 @@ export function resolveWorkspaceScenarioReset(input: WorkspaceScenarioResetInput
       didReset: false,
       didMigrate: true,
       version: creatorCommerceScenarioVersion,
-      workspaceNodes: mergeUnassignedTaskFixtures(Array.isArray(input.storedWorkspaceNodes)
+      workspaceNodes: addProductLaunchSubtaskFixtures(mergeUnassignedTaskFixtures(Array.isArray(input.storedWorkspaceNodes)
         ? normalizeWorkspaceNodes(input.storedWorkspaceNodes)
-        : cloneWorkspaceNodes()),
+        : cloneWorkspaceNodes())),
+      tags: normalizeTags(input.storedTags),
+    };
+  }
+  if (input.storedVersion === "multi-team-v18-unassigned-effort"
+    || input.storedVersion === "multi-team-v19-deletion-family"
+    || input.storedVersion === productLaunchNestedSubtasksVersion) {
+    return {
+      didReset: false,
+      didMigrate: true,
+      version: creatorCommerceScenarioVersion,
+      workspaceNodes: Array.isArray(input.storedWorkspaceNodes)
+        ? addProductLaunchSubtaskFixtures(input.storedWorkspaceNodes)
+        : cloneWorkspaceNodes(),
       tags: normalizeTags(input.storedTags),
     };
   }
@@ -526,10 +603,11 @@ export function resolveWorkspaceScenarioReset(input: WorkspaceScenarioResetInput
       repairFixtureScopeKey: isWeeklyRetroScopeRepair,
       supplementFixture: !isV15PlannerDedupeUpgrade && !isWeeklyRetroScopeRepair && !isV14MockEffortUpgrade,
     });
+    const migratedNodes = mergeUnassignedTaskFixtures(migrateMockEffortCoverage(weeklyNodes, input.storedWorkspaceNodes));
     return {
       didReset: true,
       version: creatorCommerceScenarioVersion,
-      workspaceNodes: mergeUnassignedTaskFixtures(migrateMockEffortCoverage(weeklyNodes, input.storedWorkspaceNodes)),
+      workspaceNodes: addProductLaunchSubtaskFixtures(migratedNodes),
       tags: isV15PlannerDedupeUpgrade || isV14MockEffortUpgrade || isWeeklyRetroInsightUpgrade
         ? normalizeTags(input.storedTags)
         : isV9DependencySemanticsUpgrade
@@ -550,6 +628,16 @@ export function resolveWorkspaceScenarioReset(input: WorkspaceScenarioResetInput
       : cloneWorkspaceNodes(),
     tags: normalizeTags(input.storedTags),
   };
+}
+
+/** Add the new family once. A later deletion must survive reloads and version checks. */
+export function resolveWorkspaceScenarioReset(input: WorkspaceScenarioResetInput): WorkspaceScenarioResetResult {
+  const result = resolveExistingWorkspaceScenario(input);
+  if (input.storedVersion === creatorCommerceScenarioVersion) return result;
+  const ids = new Set(result.workspaceNodes.map(node=>node.id));
+  // A partial family may contain prior user edits or deletions; do not repair it silently.
+  const addFamily = !residentDeletionDemoTasks.some(task=>ids.has(task.id));
+  return {...result,didMigrate:true,workspaceNodes:addFamily ? [...result.workspaceNodes,...cloneNodes(residentDeletionDemoTasks)] : result.workspaceNodes};
 }
 
 /**

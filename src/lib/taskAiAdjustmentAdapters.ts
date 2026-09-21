@@ -1,9 +1,12 @@
+import { taskScheduleError } from "./taskSchedule";
 import type { TaskActivityMock } from "../data/taskDetailMocks";
 import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes";
 import { createTaskChangeActivity } from "./taskActivity";
 import { buildTaskAiAdjustment, getTaskAiContextSignature } from "./taskAiAdjustment";
 import type { TaskAiAdjustmentContext, TaskAiAdjustmentProposal, TaskAiEditableTask } from "./taskAiAdjustmentTypes";
 import type { CreationForm, CreationTask } from "./taskCreationForm";
+import { getTaskDefinitionGoal } from "./taskGoal";
+export { getTaskDefinitionGoal } from "./taskGoal";
 
 type Members = TaskAiAdjustmentContext["members"];
 const clone = <T,>(value: T): T => structuredClone(value);
@@ -16,9 +19,9 @@ const memberSnapshots = (members: Members): Members => members.map(({ id, name, 
   ...(dynamicResponsibility !== undefined ? { dynamicResponsibility } : {}),
 }));
 
-function creationTaskContext(task: CreationTask, goal: string, goalInherited: boolean, parentTaskId?: string): TaskAiEditableTask {
+function creationTaskContext(task: CreationTask, parentTaskId?: string): TaskAiEditableTask {
   return {
-    id: task.clientId, title: task.title, goal, goalInherited, parentTaskId,
+    id: task.clientId, title: task.title, goal: task.goal, goalInherited: false, parentTaskId,
     completionCriteria: [...task.completionCriteria], executionTips: [...task.executionTips],
     ownerId: task.ownerId, participantIds: [...task.participantIds],
     startDate: task.startDate, endDate: task.endDate, dependsOnTaskIds: [...task.dependsOnClientIds],
@@ -27,10 +30,9 @@ function creationTaskContext(task: CreationTask, goal: string, goalInherited: bo
 }
 
 export function createDraftTaskAiContext(form: CreationForm, members: Members, currentUserId: string): TaskAiAdjustmentContext {
-  const goal = (form.decision === "attach" ? form.candidate?.goal : form.mainTask.goal) ?? "";
   const parent = form.decision === "attach" ? form.candidate : undefined;
-  const task = creationTaskContext(form.mainTask, goal, form.decision === "attach", parent?.id);
-  const subtasks = form.subtasks.map(item => creationTaskContext(item, goal, true, task.id));
+  const task = creationTaskContext(form.mainTask, parent?.id);
+  const subtasks = form.subtasks.map(item => creationTaskContext(item, item.parentClientId ?? task.id));
   const dependencyTasks: TaskAiAdjustmentContext["dependencyTasks"] = [task, ...subtasks].map(({ id, title, dependsOnTaskIds, parentTaskId, endDate }) => ({ id, title, dependsOnTaskIds, parentTaskId, endDate }));
   if (parent) dependencyTasks.push({ id: parent.id, title: parent.name ?? parent.title ?? "主任务", dependsOnTaskIds: [], parentTaskId: parent.parentTaskId, endDate: parent.plannedEndOn ?? parent.endDate });
   return {
@@ -79,25 +81,13 @@ export function applyDraftTaskAiAdjustment(form: CreationForm, context: TaskAiAd
   return { ...form, mainTask: update(form.mainTask), subtasks: [...form.subtasks.map(update), ...additions] };
 }
 
-export function getTaskDefinitionGoal(nodes: WorkspaceNode[], task: TaskNode): string {
-  let current = task;
-  const visited = new Set<string>();
-  while (current.parentTaskId && !visited.has(current.id)) {
-    visited.add(current.id);
-    const parent = nodes.find((node): node is TaskNode => node.kind === "task" && node.id === current.parentTaskId);
-    if (!parent) break;
-    current = parent;
-  }
-  return current.goal ?? "";
-}
-
 export function createSavedTaskAiContext(nodes: WorkspaceNode[], taskId: string, members: Members, currentUserId: string, ownerProposals: Record<string, string> = {}): TaskAiAdjustmentContext | null {
   const tasks = nodes.filter((node): node is TaskNode => node.kind === "task");
   const main = tasks.find(task => task.id === taskId);
   if (!main) return null;
   const convert = (task: TaskNode): TaskAiEditableTask => ({
     id: task.id, title: task.name, goal: getTaskDefinitionGoal(nodes, task), parentTaskId: task.parentTaskId,
-    goalInherited: Boolean(task.parentTaskId && tasks.some(parent => parent.id === task.parentTaskId)),
+    goalInherited: false, createdAt: task.createdAt,
     completionCriteria: [...(task.completionCriteria ?? [])], executionTips: [...(task.executionTips ?? [])],
     ownerId: task.ownerId, proposedOwnerId: ownerProposals[task.id] ?? task.proposedOwnerId,
     participantIds: [...(task.participantIds ?? [])], startDate: task.plannedStartOn ?? "",
@@ -126,7 +116,7 @@ export function applySavedTaskAiAdjustment(nodes: WorkspaceNode[], context: Task
     if (node.kind !== "task") return node;
     const patch = proposal.updates.find(item => item.taskId === node.id)?.patch;
     if (!patch) return node;
-    const next = { ...node, updatedAt: "刚刚" };
+    const next = { ...node, updatedAt: new Date().toISOString() };
     const effectiveTask = [current.task, ...current.subtasks].find(task => task.id === node.id);
     if (effectiveTask?.effortEstimate) next.effortEstimate = clone(effectiveTask.effortEstimate);
     if (patch.title !== undefined) next.name = patch.title;
@@ -135,8 +125,11 @@ export function applySavedTaskAiAdjustment(nodes: WorkspaceNode[], context: Task
     if (patch.executionTips !== undefined) next.executionTips = [...patch.executionTips];
     if (patch.effortEstimate !== undefined) next.effortEstimate = clone(patch.effortEstimate);
     if (patch.dependsOnTaskIds !== undefined) next.dependsOnTaskIds = [...patch.dependsOnTaskIds];
-    // AI proposes a person. The formal owner and accepted participation stay intact.
-    if (patch.ownerId) next.proposedOwnerId = patch.ownerId;
+    if (patch.ownerId !== undefined) {
+      next.ownerId = patch.ownerId;
+      delete next.proposedOwnerId;
+      next.participantIds = (next.participantIds ?? []).filter(id => id !== patch.ownerId);
+    }
     if (patch.startDate !== undefined) next.plannedStartOn = patch.startDate || undefined;
     if (patch.endDate !== undefined) {
       // Preserve the recorded start even when it currently lives in a legacy snapshot.
@@ -144,15 +137,19 @@ export function applySavedTaskAiAdjustment(nodes: WorkspaceNode[], context: Task
       next.plannedEndOn = patch.endDate || undefined;
       next.dueAt = patch.endDate ? `${Number(patch.endDate.slice(5, 7))} 月 ${Number(patch.endDate.slice(8, 10))} 日` : "—";
     }
+    if (patch.endDate !== undefined || patch.startDate !== undefined) {
+      const error = taskScheduleError(next.plannedEndOn, node.createdAt, next.plannedStartOn);
+      if (error) throw new Error(error);
+    }
     return next;
   });
   for (const task of proposal.additions) nextNodes.push({
     id: task.id, kind: "task", parentId: main.parentId, parentTaskId: main.id, name: task.title,
     ...(main.teamId ? { teamId: main.teamId } : {}),
     goal: context.task.goal, completionCriteria: [...task.completionCriteria], executionTips: [...task.executionTips],
-    ownerId: "", participantIds: [], status: "待开始", dependsOnTaskIds: [...task.dependsOnTaskIds],
+    ownerId: task.ownerId, participantIds: [...task.participantIds].filter(id => id !== task.ownerId), status: "待开始", dependsOnTaskIds: [...task.dependsOnTaskIds],
     createdFrom: "task-planner", createdBy: context.currentUserId, createdAt: now.toISOString(),
-    iconName: "list-todo", iconTone: "blue", updatedAt: "刚刚",
+    iconName: "list-todo", iconTone: "blue", updatedAt: new Date().toISOString(),
   });
   const activities: Record<string, TaskActivityMock[]> = {};
   const groups = new Map<string, typeof proposal.changes>();
@@ -164,8 +161,8 @@ export function applySavedTaskAiAdjustment(nodes: WorkspaceNode[], context: Task
   for (const [taskId, changes] of groups) {
     const ownerOnly = proposal.updates.some(item => item.taskId === taskId && item.patch.ownerId !== undefined) && changes.every(change => change.label.includes("负责人"));
     const activity = createTaskChangeActivity({
-      author: options.author, type: ownerOnly ? "owner-proposal" : "task-definition-change",
-      message: ownerOnly ? "通过 AI 调整提出负责人变更（待接受）" : "应用 AI 调整，更新任务定义",
+      author: options.author, type: ownerOnly ? "owner-change" : "task-definition-change",
+      message: ownerOnly ? "通过 AI 调整修改负责人" : "应用 AI 调整，更新任务定义",
       changes: changes.map(({ label, before, after }) => ({ label, before: before || null, after: after || null })),
     }, { now });
     if (activity) activities[taskId] = [activity];

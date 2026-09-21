@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {readFileSync} from 'node:fs';
+import postcss from 'postcss';
+import {TaskSubtaskList} from '../src/components/TaskSubtaskList.tsx';
+(globalThis as typeof globalThis & {React:typeof React}).React=React;
+test('subtask empty box has natural compact height and retains its dashed border and message',()=>{
+ const css=postcss.parse(readFileSync(new URL('../src/styles.css',import.meta.url),'utf8'));
+ const rules:postcss.Rule[]=[];
+ css.walkRules(rule=>{if(rule.selector.includes('.task-subtask-list-empty'))rules.push(rule);});
+ assert.equal(rules.length,1);
+ assert.equal(rules[0].selector,'.task-subtask-list-empty','empty styling cannot target populated rows or surrounding sections');
+ const styles:Record<string,string>={};rules[0].walkDecls(d=>{styles[d.prop]=d.value;});
+ assert.equal(parseFloat(styles['min-height']),0);
+ const padding=styles.padding.split(' ').map(parseFloat);
+ assert.ok(padding[0]<=32&&padding[1]<=16);
+ const naturalHeight=2*padding[0]+parseFloat(styles['line-height'])+2;
+ assert.ok(naturalHeight>=80&&naturalHeight<=100,`empty height ${naturalHeight}`);
+ assert.match(styles.border,/1px dashed/);assert.equal(styles.height,undefined);
+ assert.notEqual(styles.position,'absolute');
+ assert.equal(renderToStaticMarkup(React.createElement(TaskSubtaskList,{tasks:[]})),'<div class="task-subtask-list-empty">当前任务还没有子任务</div>');
+ const populated=renderToStaticMarkup(React.createElement(TaskSubtaskList,{tasks:[{id:'child',title:'已有子任务',status:'待开始',owner:'',goal:'核对结果',dueAt:'未设置'}]}));
+ assert.match(populated,/task-subtask-list-items/);assert.doesNotMatch(populated,/task-subtask-list-empty/);
+});

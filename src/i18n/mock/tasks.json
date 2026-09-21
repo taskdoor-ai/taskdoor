@@ -1,0 +1,2322 @@
+{
+  "fragrance-creator-wrapup": {
+    "title": {
+      "zh": "香氛礼盒达人带货收尾",
+      "en": "Wrap up the fragrance gift set creator campaign"
+    },
+    "goal": {
+      "zh": "统筹香氛礼盒达人带货项目收尾，确认各责任环节完成并对最终结果负责。",
+      "en": "Coordinate campaign closeout, confirm each workstream is complete, and take responsibility for the final result."
+    }
+  },
+  "fragrance-creator-business": {
+    "title": {
+      "zh": "确认第二批达人名单与合作档期",
+      "en": "Confirm the second creator cohort and campaign dates"
+    },
+    "goal": {
+      "zh": "完成第二批达人筛选、建联、佣金谈判与合作档期确认。",
+      "en": "Complete creator selection, outreach, commission negotiations, and schedule confirmation."
+    }
+  },
+  "fragrance-content": {
+    "title": {
+      "zh": "终审短视频脚本与直播卖点",
+      "en": "Approve short-video scripts and livestream selling points"
+    },
+    "goal": {
+      "zh": "完成核心卖点、短视频脚本、直播话术与素材终审。",
+      "en": "Finalize product benefits, short-video scripts, livestream talking points, and creative assets."
+    }
+  },
+  "fragrance-live": {
+    "title": {
+      "zh": "完成直播间彩排与场控清单",
+      "en": "Complete the livestream rehearsal and production checklist"
+    },
+    "goal": {
+      "zh": "锁定直播排期，完成彩排、场控清单和异常预案。",
+      "en": "Confirm the broadcast schedule, rehearse the show, and prepare production and contingency checklists."
+    }
+  },
+  "fragrance-product": {
+    "title": {
+      "zh": "锁定礼盒价格、赠品与库存",
+      "en": "Lock gift set pricing, gifts, and inventory"
+    },
+    "goal": {
+      "zh": "确认礼盒价格机制、赠品方案、库存水位与履约保障。",
+      "en": "Confirm pricing, promotional gifts, stock levels, and fulfillment capacity."
+    }
+  },
+  "fragrance-growth": {
+    "title": {
+      "zh": "调整第二轮投流预算与人群包",
+      "en": "Adjust the second paid-media budget and audiences"
+    },
+    "goal": {
+      "zh": "根据首轮表现调整投放预算、定向与人群包，控制 ROI。",
+      "en": "Use first-round results to refine budgets, targeting, and audience segments while controlling ROI."
+    }
+  },
+  "fragrance-data": {
+    "title": {
+      "zh": "更新 GMV 看板与渠道归因",
+      "en": "Update the GMV dashboard and channel attribution"
+    },
+    "goal": {
+      "zh": "更新 GMV 指标看板、统一渠道归因口径并准备项目复盘。",
+      "en": "Update GMV reporting, align channel attribution definitions, and prepare the campaign retrospective."
+    }
+  },
+  "fragrance-compliance": {
+    "title": {
+      "zh": "审核素材宣称与达人合同",
+      "en": "Review marketing claims and creator contracts"
+    },
+    "goal": {
+      "zh": "完成素材宣称、广告法、达人合同与平台规则审核。",
+      "en": "Review advertising claims, applicable advertising rules, creator contracts, and platform requirements."
+    }
+  },
+  "fragrance-final-decision": {
+    "title": {
+      "zh": "确认追加投放目标与最终决策",
+      "en": "Confirm incremental campaign targets and final decisions"
+    },
+    "goal": {
+      "zh": "确认追加投放的 GMV 目标、预算边界与资源优先级，并完成项目最终决策。",
+      "en": "Confirm incremental GMV targets, budget limits, and resource priorities, then make the final campaign decision."
+    }
+  },
+  "product-launch-planning": {
+    "title": {
+      "zh": "新品发布会筹备",
+      "en": "Prepare the product launch event"
+    },
+    "goal": {
+      "zh": "统筹新品发布会场地、流程与宣传物料，确保发布会按期落地。",
+      "en": "Coordinate the venue, run of show, and promotional assets to deliver the event on schedule."
+    }
+  },
+  "product-launch-venue": {
+    "title": {
+      "zh": "场地确认",
+      "en": "Confirm the event venue"
+    },
+    "goal": {
+      "zh": "确认发布会场地、档期、容量与现场配套条件。",
+      "en": "Confirm the venue, availability, capacity, and on-site facilities."
+    }
+  },
+  "product-launch-venue-contract": {
+    "title": {
+      "zh": "签署场地与设备服务确认",
+      "en": "Sign off on venue and equipment services"
+    },
+    "goal": {
+      "zh": "将场地档期、容量、设备、服务人员和费用边界落实到可执行确认记录。",
+      "en": "Document actionable commitments for the venue, dates, capacity, equipment, staffing, and costs."
+    }
+  },
+  "product-launch-run-of-show": {
+    "title": {
+      "zh": "发布会流程设计",
+      "en": "Design the launch run of show"
+    },
+    "goal": {
+      "zh": "完成发布会完整流程、嘉宾衔接与现场应急预案。",
+      "en": "Complete the event flow, speaker handoffs, and on-site contingency plan."
+    }
+  },
+  "product-launch-agenda-timing": {
+    "title": {
+      "zh": "确认发布会议程与时长",
+      "en": "Confirm the launch agenda and timing"
+    },
+    "goal": {
+      "zh": "把开场、产品发布、演示、媒体问答和合影环节排成可执行议程。",
+      "en": "Build an executable agenda covering the opening, product reveal, demo, press Q&A, and photos."
+    }
+  },
+  "product-launch-host-script": {
+    "title": {
+      "zh": "完善主持人串词与转场",
+      "en": "Refine the host script and transitions"
+    },
+    "goal": {
+      "zh": "让主持人串词覆盖开场、产品介绍、嘉宾引入、问答和收尾转场。",
+      "en": "Cover the opening, product introduction, speaker introductions, Q&A, and closing transitions."
+    }
+  },
+  "product-launch-guest-cue": {
+    "title": {
+      "zh": "核对嘉宾衔接与导播 cue",
+      "en": "Check speaker handoffs and production cues"
+    },
+    "goal": {
+      "zh": "把嘉宾上台、PPT 切换、视频播放和摄影导播信号统一到一张 cue 表。",
+      "en": "Align stage entrances, slides, video playback, camera direction, and production signals in one cue sheet."
+    }
+  },
+  "product-launch-flow-rehearsal": {
+    "title": {
+      "zh": "完成发布会流程联排",
+      "en": "Complete the full launch rehearsal"
+    },
+    "goal": {
+      "zh": "用一次完整联排验证主持、嘉宾、物料、导播和应急预案能按流程衔接。",
+      "en": "Rehearse the entire event to verify the host, speakers, assets, production, and contingencies work together."
+    }
+  },
+  "product-launch-promo-assets": {
+    "title": {
+      "zh": "宣传物料制作",
+      "en": "Produce promotional assets"
+    },
+    "goal": {
+      "zh": "完成发布会主视觉、邀请函与渠道宣传物料制作。",
+      "en": "Deliver the launch key visual, invitations, and channel promotional assets."
+    }
+  },
+  "product-launch-promo-key-visual": {
+    "title": {
+      "zh": "定稿发布会主视觉",
+      "en": "Finalize the launch key visual"
+    },
+    "goal": {
+      "zh": "形成适用于会场、邀请和渠道传播的统一主视觉母版。",
+      "en": "Create a consistent master visual for the venue, invitations, and distribution channels."
+    }
+  },
+  "product-launch-promo-invitation": {
+    "title": {
+      "zh": "完成嘉宾邀请函",
+      "en": "Complete guest invitations"
+    },
+    "goal": {
+      "zh": "交付包含准确时间、地点、议程摘要和确认方式的嘉宾邀请函。",
+      "en": "Deliver invitations with accurate dates, location, agenda highlights, and RSVP instructions."
+    }
+  },
+  "product-launch-promo-channel-assets": {
+    "title": {
+      "zh": "交付渠道宣传物料",
+      "en": "Deliver channel promotional assets"
+    },
+    "goal": {
+      "zh": "按渠道规格交付预热、直播预约和会后回顾所需宣传物料。",
+      "en": "Deliver channel-specific assets for pre-launch promotion, livestream reservations, and post-event recaps."
+    }
+  },
+  "weekly-retro-notes": {
+    "title": {
+      "zh": "整理本周团队复盘纪要",
+      "en": "Prepare this week's team retrospective notes"
+    },
+    "goal": {
+      "zh": "汇总本周关键决定、未解决问题与下周行动项，形成可直接共享的团队复盘纪要。",
+      "en": "Summarize key decisions, unresolved issues, and next week's actions in shareable meeting notes."
+    }
+  },
+  "weekly-retro-decisions": {
+    "title": {
+      "zh": "汇总本周关键决定与依据",
+      "en": "Summarize this week's decisions and evidence"
+    },
+    "goal": {
+      "zh": "整理本周已经形成的决定，并把每条结论关联到可核对的讨论或文件依据。",
+      "en": "Connect each confirmed decision to verifiable discussion or document evidence."
+    }
+  },
+  "weekly-retro-open-issues": {
+    "title": {
+      "zh": "整理未解决问题与责任边界",
+      "en": "Document unresolved issues and responsibilities"
+    },
+    "goal": {
+      "zh": "把仍未收口的问题、影响与需要确认的人整理为可接续的问题清单。",
+      "en": "Create an actionable list of open issues, impacts, and people who need to confirm next steps."
+    }
+  },
+  "weekly-retro-actions": {
+    "title": {
+      "zh": "确认下周行动项与负责人",
+      "en": "Confirm next week's actions and owners"
+    },
+    "goal": {
+      "zh": "把复盘结论转成下周可执行、可核对且责任清晰的行动项。",
+      "en": "Turn retrospective findings into executable, verifiable actions with clear ownership."
+    }
+  },
+  "ccx-serum-launch": {
+    "title": {
+      "zh": "完成秋季抗老精华首发闭环",
+      "en": "Complete the fall anti-aging serum launch"
+    },
+    "goal": {
+      "zh": "在 9 月首发窗口内完成达人、内容、商品、投放与数据闭环，并守住宣称和库存边界。",
+      "en": "Coordinate creators, content, merchandising, paid media, and reporting within the September launch window while respecting claims and inventory limits."
+    }
+  },
+  "ccx-serum-creator-track": {
+    "title": {
+      "zh": "锁定精华首发达人合作",
+      "en": "Secure serum launch creator partnerships"
+    },
+    "goal": {
+      "zh": "形成覆盖测评、成分党和熟龄人群的可执行达人合作组合。",
+      "en": "Build an executable creator mix covering product reviews, ingredient experts, and mature skincare audiences."
+    }
+  },
+  "ccx-serum-content-track": {
+    "title": {
+      "zh": "交付精华首发内容与直播方案",
+      "en": "Deliver serum launch content and livestream plans"
+    },
+    "goal": {
+      "zh": "把已确认的产品事实转成可投放、可直播且符合平台规则的内容资产。",
+      "en": "Turn confirmed product facts into advertising and livestream assets that meet platform requirements."
+    }
+  },
+  "ccx-serum-commerce-track": {
+    "title": {
+      "zh": "建立精华首发交易与增长保障",
+      "en": "Establish serum launch commerce and growth readiness"
+    },
+    "goal": {
+      "zh": "让价格、库存、投放和归因围绕同一首发范围协同运行。",
+      "en": "Align pricing, inventory, advertising, and attribution around one launch scope."
+    }
+  },
+  "ccx-serum-creator-longlist": {
+    "title": {
+      "zh": "签发精华达人长名单与分层依据",
+      "en": "Publish the serum creator longlist and segmentation"
+    },
+    "goal": {
+      "zh": "基于受众、历史转化和内容适配形成可解释的达人长名单。",
+      "en": "Build an explainable creator longlist based on audience, past conversion, and content fit."
+    }
+  },
+  "ccx-serum-contract-close": {
+    "title": {
+      "zh": "收口精华核心达人报价与合同版本",
+      "en": "Finalize serum creator quotes and contracts"
+    },
+    "goal": {
+      "zh": "为核心达人形成报价、权益、排他与交付范围一致的可签版本。",
+      "en": "Align pricing, rights, exclusivity, and deliverables in signable contracts for core creators."
+    }
+  },
+  "ccx-serum-creator-calendar": {
+    "title": {
+      "zh": "冻结精华达人发布与直播档期",
+      "en": "Freeze serum creator publishing and livestream dates"
+    },
+    "goal": {
+      "zh": "形成不冲突且满足预热、首发和追投节奏的达人档期表。",
+      "en": "Create a conflict-free schedule for warm-up, launch, and follow-up advertising."
+    }
+  },
+  "ccx-serum-claim-matrix": {
+    "title": {
+      "zh": "签发精华功效宣称证据矩阵",
+      "en": "Publish the serum claims evidence matrix"
+    },
+    "goal": {
+      "zh": "把检测报告、成分资料和可用表述映射为内容团队可执行的宣称边界。",
+      "en": "Map test reports, ingredient information, and approved wording into usable content boundaries."
+    }
+  },
+  "ccx-serum-asset-batch": {
+    "title": {
+      "zh": "交付精华首批短视频母版素材",
+      "en": "Deliver the first serum short-video master assets"
+    },
+    "goal": {
+      "zh": "交付适配测评型与成分型达人的短视频母版、镜头清单和替换规则。",
+      "en": "Provide video masters, shot lists, and adaptation rules for review and ingredient-focused creators."
+    }
+  },
+  "ccx-serum-live-rehearsal": {
+    "title": {
+      "zh": "完成精华首发直播全链路彩排",
+      "en": "Rehearse the full serum launch livestream"
+    },
+    "goal": {
+      "zh": "验证直播脚本、商品机制、上下架和异常切换能够按首发方案执行。",
+      "en": "Verify scripts, offers, product listing changes, and fallback procedures against the launch plan."
+    }
+  },
+  "ccx-serum-price-stock": {
+    "title": {
+      "zh": "冻结精华首发价格与库存分配",
+      "en": "Freeze serum launch prices and stock allocations"
+    },
+    "goal": {
+      "zh": "为自播、达人直播和短视频渠道冻结可履约的价格与库存边界。",
+      "en": "Confirm fulfillable pricing and inventory allocations for owned livestreams, creators, and short videos."
+    }
+  },
+  "ccx-serum-budget-gate": {
+    "title": {
+      "zh": "核准精华首发投流预算与止损线",
+      "en": "Approve serum advertising budgets and stop-loss limits"
+    },
+    "goal": {
+      "zh": "依据毛利、素材供给和人群规模形成分阶段预算与止损条件。",
+      "en": "Define staged budgets and stop-loss conditions using margins, asset supply, and audience size."
+    }
+  },
+  "ccx-serum-attribution-board": {
+    "title": {
+      "zh": "上线精华首发归因与库存联动看板",
+      "en": "Launch the serum attribution and inventory dashboard"
+    },
+    "goal": {
+      "zh": "让团队按同一口径查看达人、素材、投放、成交和库存变化。",
+      "en": "Give the team consistent visibility into creators, assets, advertising, sales, and inventory changes."
+    }
+  },
+  "ccx-double11-presale": {
+    "title": {
+      "zh": "完成双十一预售商品与履约准备",
+      "en": "Prepare Singles' Day presale products and fulfillment"
+    },
+    "goal": {
+      "zh": "基于已验证销售与库存事实完成双十一预售选品、投放和履约准备。",
+      "en": "Use verified sales and inventory facts to prepare products, advertising, and fulfillment for the presale."
+    }
+  },
+  "ccx-double11-assortment-track": {
+    "title": {
+      "zh": "形成双十一预售商品组合",
+      "en": "Define the Singles' Day presale assortment"
+    },
+    "goal": {
+      "zh": "按利润、库存、退款和宣称风险形成可执行商品组合。",
+      "en": "Build an executable assortment based on margin, inventory, refunds, and claims risk."
+    }
+  },
+  "ccx-double11-growth-track": {
+    "title": {
+      "zh": "准备双十一预售获客计划",
+      "en": "Prepare the Singles' Day acquisition plan"
+    },
+    "goal": {
+      "zh": "形成按人群、素材和渠道分阶段验证的获客计划。",
+      "en": "Create a staged acquisition plan validated by audience, creative, and channel."
+    }
+  },
+  "ccx-double11-fulfillment-track": {
+    "title": {
+      "zh": "验证双十一预售履约韧性",
+      "en": "Validate Singles' Day fulfillment resilience"
+    },
+    "goal": {
+      "zh": "验证峰值下单、锁库、赠品和客服升级路径能承受预售首日压力。",
+      "en": "Verify peak ordering, inventory reservation, gifts, and support escalations can handle day-one demand."
+    }
+  },
+  "ccx-double11-segment-replay": {
+    "title": {
+      "zh": "复算双十一候选人群的历史贡献",
+      "en": "Recalculate historical contribution of candidate audiences"
+    },
+    "goal": {
+      "zh": "利用精华首发已统一的归因口径复算候选人群的增量成交和退款表现。",
+      "en": "Use the serum launch attribution definitions to recalculate incremental sales and refunds for candidate audiences."
+    }
+  },
+  "ccx-double11-margin-review": {
+    "title": {
+      "zh": "核对双十一候选 SKU 边际利润",
+      "en": "Check contribution margins for candidate SKUs"
+    },
+    "goal": {
+      "zh": "在平台券、佣金、投流和退款假设下核对候选 SKU 的边际利润。",
+      "en": "Evaluate contribution margins under platform coupons, commissions, advertising, and refund assumptions."
+    }
+  },
+  "ccx-double11-assortment-gate": {
+    "title": {
+      "zh": "签发双十一预售选品结论",
+      "en": "Approve the Singles' Day presale assortment"
+    },
+    "goal": {
+      "zh": "冻结预售入选商品、退出项和待观察项及其边界。",
+      "en": "Freeze selected products, exclusions, watch-list items, and their boundaries."
+    }
+  },
+  "ccx-double11-audience-suppression": {
+    "title": {
+      "zh": "建立双十一投放排除人群规则",
+      "en": "Define advertising audience exclusions"
+    },
+    "goal": {
+      "zh": "减少已购、高退款和不适用人群的重复触达与浪费。",
+      "en": "Reduce repeated or wasteful exposure to existing buyers, high-refund audiences, and unsuitable segments."
+    }
+  },
+  "ccx-double11-creative-matrix": {
+    "title": {
+      "zh": "交付双十一分人群素材矩阵",
+      "en": "Deliver the Singles' Day audience creative matrix"
+    },
+    "goal": {
+      "zh": "为核心人群与选品组合交付差异化素材主题、证据和投放规格。",
+      "en": "Provide differentiated creative themes, evidence, and ad specifications for key audiences and products."
+    }
+  },
+  "ccx-double11-channel-budget": {
+    "title": {
+      "zh": "冻结双十一渠道预算与迁移条件",
+      "en": "Freeze channel budgets and reallocation rules"
+    },
+    "goal": {
+      "zh": "按素材供给、边际利润和增量回报冻结渠道预算及迁移规则。",
+      "en": "Set channel budgets and reallocation conditions using creative availability, contribution margins, and incremental returns."
+    }
+  },
+  "ccx-double11-stock-stress": {
+    "title": {
+      "zh": "完成双十一锁库与超卖压力验证",
+      "en": "Stress-test inventory reservation and overselling"
+    },
+    "goal": {
+      "zh": "验证峰值并发下库存扣减、回补和渠道隔离不会造成不可控超卖。",
+      "en": "Verify stock deduction, replenishment, and channel isolation under peak concurrency."
+    }
+  },
+  "ccx-double11-service-macro": {
+    "title": {
+      "zh": "签发双十一预售客服处理口径",
+      "en": "Approve presale customer support guidance"
+    },
+    "goal": {
+      "zh": "为预售延迟、赠品、改址和退款问题形成一致且不过度承诺的处理口径。",
+      "en": "Create consistent guidance for delays, gifts, address changes, and refunds without overpromising."
+    }
+  },
+  "ccx-double11-fulfillment-drill": {
+    "title": {
+      "zh": "组织双十一预售异常桌面演练",
+      "en": "Run a presale incident tabletop exercise"
+    },
+    "goal": {
+      "zh": "验证超卖、券错价、素材下架和直播中断时的决策与对客路径。",
+      "en": "Validate decisions and customer communications for overselling, coupon errors, asset takedowns, and livestream outages."
+    }
+  },
+  "ccx-creator-pool-governance": {
+    "title": {
+      "zh": "完成九月达人池质量治理",
+      "en": "Complete September creator pool quality governance"
+    },
+    "goal": {
+      "zh": "清理身份、履约和授权风险，形成可用于后续活动的健康达人池。",
+      "en": "Resolve identity, delivery, and authorization risks to prepare a healthy creator pool for future campaigns."
+    }
+  },
+  "ccx-creator-pool-data-track": {
+    "title": {
+      "zh": "修复达人池身份与绩效底账",
+      "en": "Repair creator identity and performance records"
+    },
+    "goal": {
+      "zh": "建立去重、可追溯且保留数据缺口的达人基础与绩效记录。",
+      "en": "Build deduplicated, traceable creator records that retain known data gaps."
+    }
+  },
+  "ccx-creator-pool-decision-track": {
+    "title": {
+      "zh": "形成达人续约与扩充决策",
+      "en": "Decide creator renewals and pool expansion"
+    },
+    "goal": {
+      "zh": "基于清理后的证据形成续约、观察、退出与新增垂类建议。",
+      "en": "Use cleaned evidence to recommend renewals, monitoring, exits, and new content categories."
+    }
+  },
+  "ccx-creator-identity-merge": {
+    "title": {
+      "zh": "合并达人跨平台重复身份",
+      "en": "Merge duplicate creator identities across platforms"
+    },
+    "goal": {
+      "zh": "将同一达人在抖音、视频号和合同系统的身份映射为稳定记录。",
+      "en": "Map each creator's Douyin, WeChat Channels, and contract-system identities into a stable record."
+    }
+  },
+  "ccx-creator-consent-audit": {
+    "title": {
+      "zh": "核对达人联系方式与素材授权状态",
+      "en": "Audit creator contact and asset permissions"
+    },
+    "goal": {
+      "zh": "确认联系方式使用、素材二次投放和授权到期边界。",
+      "en": "Confirm contact use, paid-media reuse rights, and authorization expiry boundaries."
+    }
+  },
+  "ccx-creator-performance-window": {
+    "title": {
+      "zh": "统一达人近九十天绩效窗口",
+      "en": "Align creator performance to a 90-day window"
+    },
+    "goal": {
+      "zh": "统一成交、退款、内容交付和投流增量的九十天绩效口径。",
+      "en": "Standardize 90-day sales, refunds, content delivery, and incremental advertising performance."
+    }
+  },
+  "ccx-creator-risk-score": {
+    "title": {
+      "zh": "签发达人履约与合规风险分层",
+      "en": "Publish creator delivery and compliance risk tiers"
+    },
+    "goal": {
+      "zh": "把授权、迟交、违规和异常退款证据转为可复核的风险分层。",
+      "en": "Turn authorization, lateness, violations, and unusual refunds into reviewable risk tiers."
+    }
+  },
+  "ccx-creator-ratecard-renewal": {
+    "title": {
+      "zh": "复核核心达人四季度报价卡",
+      "en": "Review core creator Q4 rate cards"
+    },
+    "goal": {
+      "zh": "依据绩效、稀缺档期和风险边界形成四季度谈判底稿。",
+      "en": "Prepare negotiation evidence using performance, scarce availability, and risk boundaries."
+    }
+  },
+  "ccx-creator-inactive-exit": {
+    "title": {
+      "zh": "关闭失效达人与过期合作入口",
+      "en": "Close inactive creators and expired partnerships"
+    },
+    "goal": {
+      "zh": "停止对已确认失效、禁用或无授权达人的后续邀约和素材调用。",
+      "en": "Stop outreach and asset use for confirmed inactive, disabled, or unauthorized creators."
+    }
+  },
+  "ccx-creator-vertical-recruit": {
+    "title": {
+      "zh": "建立熟龄护肤达人补充名单",
+      "en": "Build a mature-skincare creator shortlist"
+    },
+    "goal": {
+      "zh": "针对双十一人群复算暴露的熟龄内容缺口补充新达人候选。",
+      "en": "Recruit candidates to address mature-audience content gaps identified in Singles' Day audience analysis."
+    }
+  },
+  "ccx-creator-monthly-committee": {
+    "title": {
+      "zh": "召开九月达人池决策会",
+      "en": "Hold the September creator pool decision meeting"
+    },
+    "goal": {
+      "zh": "对续约、退出和扩充建议形成可追溯决定及下一步责任。",
+      "en": "Record traceable decisions on renewals, exits, expansion, and next-step ownership."
+    }
+  },
+  "ccx-weekly-settlement": {
+    "title": {
+      "zh": "核对本周达人佣金与退货冲抵",
+      "en": "Reconcile weekly creator commissions and refunds"
+    },
+    "goal": {
+      "zh": "按已生效合同和退款截点核对本周可结算佣金及冲抵差异。",
+      "en": "Check payable commissions and refund offsets against active contracts and the refund cutoff."
+    }
+  },
+  "ccx-extreme-claim-incident": {
+    "title": {
+      "zh": "处理达人视频极限词下架事件",
+      "en": "Resolve a creator video takedown for prohibited claims"
+    },
+    "goal": {
+      "zh": "控制误用极限词视频的传播并形成替换、申诉和复发防控记录。",
+      "en": "Contain distribution and document replacement, appeal, and recurrence prevention actions."
+    }
+  },
+  "ccx-october-studio-calendar": {
+    "title": {
+      "zh": "冻结十月直播间资源日历",
+      "en": "Freeze the October livestream studio calendar"
+    },
+    "goal": {
+      "zh": "协调自播、达人连麦和大促彩排的直播间、场控与设备资源。",
+      "en": "Coordinate studio, production staff, and equipment for owned shows, creator appearances, and campaign rehearsals."
+    }
+  },
+  "ccx-holiday-crossplatform-live": {
+    "title": {
+      "zh": "国庆专场跨平台联播筹备",
+      "en": "Prepare the National Day cross-platform livestream"
+    },
+    "goal": {
+      "zh": "在抖音与视频号同步执行国庆主题联播并统一优惠机制。",
+      "en": "Run a coordinated National Day livestream on Douyin and WeChat Channels with consistent offers."
+    }
+  },
+  "ccx-creator-collaboration-handbook": {
+    "title": {
+      "zh": "维护达人合作异常处理手册",
+      "en": "Maintain the creator partnership incident handbook"
+    },
+    "goal": {
+      "zh": "持续沉淀达人失联、临时改档、素材授权争议和履约异常的处理边界，供后续合作直接复用。",
+      "en": "Document reusable boundaries for lost contact, schedule changes, asset-rights disputes, and delivery incidents."
+    }
+  },
+  "unassigned-creator-sample-tracking": {
+    "title": {
+      "zh": "整理达人寄样签收与试用反馈",
+      "en": "Track creator sample deliveries and trial feedback"
+    },
+    "goal": {
+      "zh": "汇总本轮寄样的签收和试用情况，为后续合作筛选提供依据。",
+      "en": "Summarize sample receipt and trial feedback to support partnership selection."
+    }
+  },
+  "unassigned-short-video-covers": {
+    "title": {
+      "zh": "制作秋季上新短视频封面",
+      "en": "Produce short-video covers for the fall collection"
+    },
+    "goal": {
+      "zh": "为秋季上新内容准备可直接发布的封面素材，统一标题和商品视觉。",
+      "en": "Prepare publish-ready covers with consistent headlines and product visuals."
+    }
+  },
+  "unassigned-live-backup-plan": {
+    "title": {
+      "zh": "补齐直播断流与缺货应急预案",
+      "en": "Complete livestream outage and stockout contingencies"
+    },
+    "goal": {
+      "zh": "让直播遇到断流、商品售罄或优惠异常时有可执行的处理步骤。",
+      "en": "Provide executable steps for broadcast outages, sold-out products, and promotional errors."
+    }
+  },
+  "unassigned-gift-stock-check": {
+    "title": {
+      "zh": "核对中秋礼盒赠品库存",
+      "en": "Check Mid-Autumn gift inventory"
+    },
+    "goal": {
+      "zh": "确认中秋礼盒赠品的可用库存和补货时间，避免活动承诺超出履约能力。",
+      "en": "Confirm available promotional gifts and replenishment dates so campaign promises remain fulfillable."
+    }
+  },
+  "unassigned-attribution-dictionary": {
+    "title": {
+      "zh": "梳理达人渠道归因字段口径",
+      "en": "Define creator channel attribution fields"
+    },
+    "goal": {
+      "zh": "整理达人、短视频和直播间的归因字段，减少团队报表之间的口径差异。",
+      "en": "Align creator, short-video, and livestream attribution fields across team reports."
+    }
+  },
+  "demo-autumn-creator-event": {
+    "title": {
+      "zh": "筹备秋季新品达人专场",
+      "en": "Prepare the fall product creator showcase"
+    },
+    "goal": {
+      "zh": "完成秋季新品达人专场的合作确认、内容准备和开播检查。",
+      "en": "Confirm partnerships, prepare content, and complete pre-broadcast checks for the fall showcase."
+    }
+  },
+  "demo-autumn-creator-event-creators": {
+    "title": {
+      "zh": "确认达人名单与合作档期",
+      "en": "Confirm creators and partnership dates"
+    },
+    "goal": {
+      "zh": "完成秋季新品达人专场的合作确认、内容准备和开播检查。",
+      "en": "Confirm partnerships, prepare content, and complete pre-broadcast checks for the fall showcase."
+    }
+  },
+  "demo-autumn-creator-event-content": {
+    "title": {
+      "zh": "准备专场脚本与商品素材",
+      "en": "Prepare showcase scripts and product assets"
+    },
+    "goal": {
+      "zh": "完成秋季新品达人专场的合作确认、内容准备和开播检查。",
+      "en": "Confirm partnerships, prepare content, and complete pre-broadcast checks for the fall showcase."
+    }
+  },
+  "demo-autumn-creator-event-launch": {
+    "title": {
+      "zh": "核对库存与开播安排",
+      "en": "Check inventory and broadcast arrangements"
+    },
+    "goal": {
+      "zh": "完成秋季新品达人专场的合作确认、内容准备和开播检查。",
+      "en": "Confirm partnerships, prepare content, and complete pre-broadcast checks for the fall showcase."
+    }
+  },
+  "platform-mobile-release": {
+    "title": {
+      "zh": "完成移动端 3.8.0 可控发布",
+      "en": "Deliver a controlled mobile 3.8.0 release"
+    },
+    "goal": {
+      "zh": "在不扩大同步与隐私风险的前提下完成 iOS 与 Android 分阶段发布，并保留可执行回滚路径。",
+      "en": "Roll out iOS and Android in stages without increasing sync or privacy risks, and retain an executable rollback path."
+    }
+  },
+  "platform-client-track": {
+    "title": {
+      "zh": "收口双端候选版本",
+      "en": "Finalize release candidates for both platforms"
+    },
+    "goal": {
+      "zh": "形成 iOS 与 Android 均可进入发布门禁的候选版本。",
+      "en": "Produce iOS and Android candidates ready for release gates."
+    }
+  },
+  "platform-service-track": {
+    "title": {
+      "zh": "冻结服务端契约与运行保障",
+      "en": "Freeze backend contracts and operational readiness"
+    },
+    "goal": {
+      "zh": "冻结客户端依赖的接口语义并建立发布期间的运行保障。",
+      "en": "Freeze client-facing API semantics and establish safeguards for the release window."
+    }
+  },
+  "platform-governance-track": {
+    "title": {
+      "zh": "完成发布治理与支持准备",
+      "en": "Complete release governance and support readiness"
+    },
+    "goal": {
+      "zh": "把安全门禁、支持响应和发布决定收敛为可执行方案。",
+      "en": "Turn security gates, support response, and release decisions into an executable plan."
+    }
+  },
+  "platform-api-contract": {
+    "title": {
+      "zh": "冻结离线同步 API 契约",
+      "en": "Freeze the offline sync API contract"
+    },
+    "goal": {
+      "zh": "冻结批量同步、冲突响应和版本兼容语义。",
+      "en": "Freeze batch synchronization, conflict responses, and version compatibility semantics."
+    }
+  },
+  "platform-ios-review": {
+    "title": {
+      "zh": "完成 iOS 候选版审核材料",
+      "en": "Complete iOS release review materials"
+    },
+    "goal": {
+      "zh": "形成可提交 App Store 的 iOS 候选版本与隐私材料。",
+      "en": "Prepare the iOS candidate and privacy materials for App Store submission."
+    }
+  },
+  "platform-android-staged": {
+    "title": {
+      "zh": "验证 Android 分阶段发布与回滚",
+      "en": "Validate Android staged rollout and rollback"
+    },
+    "goal": {
+      "zh": "验证重点机型、分阶段比例与一键回滚路径。",
+      "en": "Verify priority devices, rollout percentages, and the one-click rollback path."
+    }
+  },
+  "platform-observability-alerts": {
+    "title": {
+      "zh": "配置同步链路 SLO 与灰度告警",
+      "en": "Configure sync SLOs and canary alerts"
+    },
+    "goal": {
+      "zh": "让灰度期间的错误率、积压和数据延迟可被及时发现并路由。",
+      "en": "Detect and route errors, backlog, and data latency during the canary release."
+    }
+  },
+  "platform-support-runbook": {
+    "title": {
+      "zh": "更新同步故障支持手册",
+      "en": "Update the sync troubleshooting runbook"
+    },
+    "goal": {
+      "zh": "让一线支持可识别版本、定位常见故障并按影响升级。",
+      "en": "Help frontline support identify versions, diagnose common issues, and escalate by impact."
+    }
+  },
+  "platform-security-gate": {
+    "title": {
+      "zh": "签发移动数据安全门禁结论",
+      "en": "Approve the mobile data security gate"
+    },
+    "goal": {
+      "zh": "确认令牌、离线缓存和第三方 SDK 权限符合发布边界。",
+      "en": "Confirm tokens, offline caches, and third-party SDK permissions meet release boundaries."
+    }
+  },
+  "platform-access-review": {
+    "title": {
+      "zh": "季度管理员访问复核",
+      "en": "Review quarterly administrator access"
+    },
+    "goal": {
+      "zh": "核对生产管理员访问是否仍与岗位职责一致。",
+      "en": "Verify production administrator access still matches job responsibilities."
+    }
+  },
+  "platform-design-token-cleanup": {
+    "title": {
+      "zh": "清理旧版移动设计 Token",
+      "en": "Remove legacy mobile design tokens"
+    },
+    "goal": {
+      "zh": "移除已废弃的颜色与间距 Token，减少双端样式漂移。",
+      "en": "Remove deprecated color and spacing tokens to reduce visual drift across platforms."
+    }
+  },
+  "platform-scim-ga": {
+    "title": {
+      "zh": "推动 SCIM 账号生命周期能力正式可用",
+      "en": "Make SCIM account lifecycle management generally available"
+    },
+    "goal": {
+      "zh": "让企业管理员能够安全地批量开通、停用和恢复成员账号，并为既有租户提供可回滚迁移路径。",
+      "en": "Enable safe bulk provisioning, deactivation, and restoration with reversible migration for existing tenants."
+    }
+  },
+  "platform-scim-contract-track": {
+    "title": {
+      "zh": "冻结目录同步契约与安全边界",
+      "en": "Freeze directory sync contracts and security boundaries"
+    },
+    "goal": {
+      "zh": "形成跨身份源一致的 SCIM 字段、幂等和权限边界。",
+      "en": "Define consistent SCIM fields, idempotency, and permission boundaries across identity providers."
+    }
+  },
+  "platform-scim-schema-map": {
+    "title": {
+      "zh": "统一 Okta 与 Entra ID 属性映射",
+      "en": "Align Okta and Entra ID attribute mappings"
+    },
+    "goal": {
+      "zh": "明确两类主流身份源的标准属性、扩展属性和空值覆盖行为。",
+      "en": "Define standard and custom attributes and null-overwrite behavior for both identity providers."
+    }
+  },
+  "platform-scim-idempotency": {
+    "title": {
+      "zh": "验证成员停用与恢复的幂等语义",
+      "en": "Validate idempotent member deactivation and restoration"
+    },
+    "goal": {
+      "zh": "避免目录重试造成重复成员、权限残留或误删业务数据。",
+      "en": "Prevent directory retries from duplicating members, retaining permissions, or deleting business data."
+    }
+  },
+  "platform-scim-directory-matrix": {
+    "title": {
+      "zh": "完成目录同步兼容矩阵回归",
+      "en": "Run the directory sync compatibility matrix"
+    },
+    "goal": {
+      "zh": "验证 Okta、Entra ID 与标准 SCIM 客户端在限流、乱序和重试下的行为。",
+      "en": "Verify Okta, Entra ID, and standard SCIM clients under throttling, out-of-order delivery, and retries."
+    }
+  },
+  "platform-scim-rollout-track": {
+    "title": {
+      "zh": "完成首批租户迁移与支持准备",
+      "en": "Complete pilot tenant migration and support readiness"
+    },
+    "goal": {
+      "zh": "以小批量租户验证迁移、观测、回滚和支持协同。",
+      "en": "Prepare the first tenant migrations, troubleshooting guidance, and release support."
+    }
+  },
+  "platform-scim-pilot-migration": {
+    "title": {
+      "zh": "迁移六家试点租户的目录连接",
+      "en": "Migrate directory connections for six pilot tenants"
+    },
+    "goal": {
+      "zh": "验证存量配置转换、增量同步与回退到旧连接器的完整路径。",
+      "en": "Migrate six pilot tenants with verification and a reversible transition path."
+    }
+  },
+  "platform-scim-support-playbook": {
+    "title": {
+      "zh": "发布目录同步排障与升级手册",
+      "en": "Publish the directory sync troubleshooting playbook"
+    },
+    "goal": {
+      "zh": "让一线支持能区分身份源配置、平台处理和客户权限三类问题。",
+      "en": "Provide actionable troubleshooting and escalation guidance for directory synchronization."
+    }
+  },
+  "platform-scim-launch-gate": {
+    "title": {
+      "zh": "签发 SCIM 正式可用门禁结论",
+      "en": "Approve the SCIM general availability gate"
+    },
+    "goal": {
+      "zh": "基于兼容、安全和试点证据决定是否扩大到所有企业租户。",
+      "en": "Review pilot and operational evidence before approving general availability."
+    }
+  },
+  "platform-audit-export": {
+    "title": {
+      "zh": "交付企业审计日志合规导出",
+      "en": "Deliver enterprise audit log exports"
+    },
+    "goal": {
+      "zh": "让受监管客户可按时间、成员和事件类型导出完整、可验证的审计记录。",
+      "en": "Provide reliable audit exports with compliance evidence and administrator guidance."
+    }
+  },
+  "platform-audit-evidence-track": {
+    "title": {
+      "zh": "建立审计事件与保留证据",
+      "en": "Establish audit events and retention evidence"
+    },
+    "goal": {
+      "zh": "确定审计事件覆盖、租户隔离、保留与防篡改边界。",
+      "en": "Define auditable events and verify the associated retention evidence."
+    }
+  },
+  "platform-audit-event-dictionary": {
+    "title": {
+      "zh": "冻结高风险操作事件字典",
+      "en": "Freeze the high-risk operation event dictionary"
+    },
+    "goal": {
+      "zh": "统一登录、权限、导出、删除和管理配置变更的事件语义。",
+      "en": "Align event definitions and fields for high-risk administrative operations."
+    }
+  },
+  "platform-audit-retention": {
+    "title": {
+      "zh": "验证分层保留与租户删除策略",
+      "en": "Validate tiered retention and tenant deletion"
+    },
+    "goal": {
+      "zh": "确保不同套餐的保留期限、法律保全和租户删除动作互不冲突。",
+      "en": "Verify data retention tiers and tenant deletion behavior."
+    }
+  },
+  "platform-audit-integrity-proof": {
+    "title": {
+      "zh": "实现导出清单与完整性校验",
+      "en": "Implement export manifests and integrity checks"
+    },
+    "goal": {
+      "zh": "让客户能够验证导出文件未缺页、未被替换且属于指定查询。",
+      "en": "Make exported audit records traceable through manifests and integrity verification."
+    }
+  },
+  "platform-audit-customer-track": {
+    "title": {
+      "zh": "完成大租户导出体验与支持验证",
+      "en": "Validate large-tenant exports and support"
+    },
+    "goal": {
+      "zh": "验证高数据量下的查询、取消、下载和支持响应。",
+      "en": "Verify large-scale export usability and prepare operational support."
+    }
+  },
+  "platform-audit-scale-pilot": {
+    "title": {
+      "zh": "完成千万级审计记录导出试点",
+      "en": "Pilot exports with ten million audit records"
+    },
+    "goal": {
+      "zh": "确认大租户导出不会挤占交互流量且中断后可安全重试。",
+      "en": "Validate export performance and correctness at ten-million-record scale."
+    }
+  },
+  "platform-audit-admin-guide": {
+    "title": {
+      "zh": "发布审计导出管理员指南",
+      "en": "Publish the audit export administrator guide"
+    },
+    "goal": {
+      "zh": "帮助管理员正确选择范围、保护下载文件并解释校验结果。",
+      "en": "Help administrators request, verify, and use audit exports."
+    }
+  },
+  "platform-audit-release-gate": {
+    "title": {
+      "zh": "完成审计导出合规发布评审",
+      "en": "Complete the audit export compliance release review"
+    },
+    "goal": {
+      "zh": "以事件覆盖、完整性、性能和客户操作证据形成发布决定。",
+      "en": "Review export evidence and compliance requirements before release."
+    }
+  },
+  "platform-webhook-reliability": {
+    "title": {
+      "zh": "提升开放平台 Webhook 可靠性",
+      "en": "Improve platform webhook reliability"
+    },
+    "goal": {
+      "zh": "在突发流量和下游故障下保持租户隔离、可追溯投递与安全签名轮换。",
+      "en": "Improve event delivery reliability and make failures diagnosable and recoverable."
+    }
+  },
+  "platform-webhook-runtime-track": {
+    "title": {
+      "zh": "重构投递队列与失败恢复",
+      "en": "Rework delivery queues and failure recovery"
+    },
+    "goal": {
+      "zh": "消除热点租户挤占并形成可控的退避、死信和恢复机制。",
+      "en": "Strengthen queue isolation, retries, and recovery from delivery failures."
+    }
+  },
+  "platform-webhook-tenant-isolation": {
+    "title": {
+      "zh": "实现租户级投递队列隔离",
+      "en": "Isolate webhook delivery queues by tenant"
+    },
+    "goal": {
+      "zh": "避免单一租户的高流量或慢端点拖累全局投递。",
+      "en": "Prevent one tenant's traffic or failures from disrupting others."
+    }
+  },
+  "platform-webhook-retry-policy": {
+    "title": {
+      "zh": "冻结退避、过期与死信策略",
+      "en": "Freeze backoff, expiry, and dead-letter policies"
+    },
+    "goal": {
+      "zh": "明确不同错误类型的重试频率、最长保留和客户可见状态。",
+      "en": "Define predictable retry timing, expiry limits, and dead-letter handling."
+    }
+  },
+  "platform-webhook-failure-drill": {
+    "title": {
+      "zh": "完成突发流量与下游故障演练",
+      "en": "Run burst-traffic and downstream-failure drills"
+    },
+    "goal": {
+      "zh": "验证十倍突发、半数慢端点和区域切换下的隔离与恢复。",
+      "en": "Validate delivery behavior under traffic spikes and downstream outages."
+    }
+  },
+  "platform-webhook-developer-track": {
+    "title": {
+      "zh": "升级开发者签名与投递诊断体验",
+      "en": "Improve developer signing and delivery diagnostics"
+    },
+    "goal": {
+      "zh": "让开发者安全轮换签名并自行定位、验证和重放失败事件。",
+      "en": "Provide clearer signature rotation and event-delivery troubleshooting."
+    }
+  },
+  "platform-webhook-signature-v2": {
+    "title": {
+      "zh": "推出双密钥 Webhook 签名轮换",
+      "en": "Introduce dual-key webhook signature rotation"
+    },
+    "goal": {
+      "zh": "让客户在不中断投递的情况下从旧密钥迁移到新密钥。",
+      "en": "Allow controlled signing-key rotation without interrupting webhook verification."
+    }
+  },
+  "platform-webhook-delivery-log": {
+    "title": {
+      "zh": "开放单事件投递轨迹与安全重放",
+      "en": "Expose event delivery traces and safe replay"
+    },
+    "goal": {
+      "zh": "向管理员呈现每次尝试的状态、响应摘要和可控重放入口。",
+      "en": "Enable diagnosis and controlled replay of individual webhook events."
+    }
+  },
+  "platform-webhook-migration-comms": {
+    "title": {
+      "zh": "完成签名升级客户沟通与支持培训",
+      "en": "Complete signature upgrade communications and support training"
+    },
+    "goal": {
+      "zh": "让高用量客户理解迁移期限、验证方式和异常升级路径。",
+      "en": "Prepare customers and support teams for the signing upgrade."
+    }
+  },
+  "platform-daily-production-triage": {
+    "title": {
+      "zh": "每日生产健康信号分诊",
+      "en": "Triage daily production health signals"
+    },
+    "goal": {
+      "zh": "在工作日上午核对 SLO、错误预算、积压和高影响工单，明确当天需升级的信号。",
+      "en": "Review production signals and route actionable risks to the appropriate owners."
+    }
+  },
+  "platform-weekly-release-risk-review": {
+    "title": {
+      "zh": "每周跨端发布风险复核",
+      "en": "Review weekly cross-platform release risks"
+    },
+    "goal": {
+      "zh": "滚动检查未来两周的客户端版本、依赖服务和商店窗口冲突。",
+      "en": "Reassess release risks across clients and backend dependencies each week."
+    }
+  },
+  "platform-biweekly-defect-triage": {
+    "title": {
+      "zh": "双周企业客户缺陷分级",
+      "en": "Triage enterprise defects every two weeks"
+    },
+    "goal": {
+      "zh": "把重复工单、已知缺陷和版本修复计划对齐到统一优先级。",
+      "en": "Classify customer defects by severity and agree on follow-up ownership."
+    }
+  },
+  "platform-monthly-privileged-review": {
+    "title": {
+      "zh": "月度紧急生产权限复核",
+      "en": "Review monthly emergency production access"
+    },
+    "goal": {
+      "zh": "核对本月临时提权、过期授权和紧急访问是否已关闭并留存理由。",
+      "en": "Verify emergency production permissions remain justified and correctly scoped."
+    }
+  },
+  "platform-quarterly-restore-drill": {
+    "title": {
+      "zh": "季度配置备份恢复演练",
+      "en": "Run the quarterly configuration restore drill"
+    },
+    "goal": {
+      "zh": "验证租户配置备份在隔离环境可恢复、可核对且不会覆盖现网。",
+      "en": "Verify backups can restore the approved configuration and operating state."
+    }
+  },
+  "platform-incident-apns-certificate": {
+    "title": {
+      "zh": "处置推送证书临近过期告警",
+      "en": "Resolve an expiring push certificate alert"
+    },
+    "goal": {
+      "zh": "在证书过期前完成新证书签发、灰度验证和旧证书撤销计划。",
+      "en": "Renew and validate push credentials before expiration affects delivery."
+    }
+  },
+  "platform-risk-legacy-android-tls": {
+    "title": {
+      "zh": "评估旧版 Android TLS 根证书风险",
+      "en": "Assess legacy Android TLS root certificate risk"
+    },
+    "goal": {
+      "zh": "确认旧系统设备在证书链切换后的失败比例和受支持边界。",
+      "en": "Evaluate certificate compatibility and mitigations for older Android clients."
+    }
+  },
+  "platform-incident-billing-webhook-duplicates": {
+    "title": {
+      "zh": "修复计费 Webhook 重复投递事故",
+      "en": "Fix duplicate billing webhook deliveries"
+    },
+    "goal": {
+      "zh": "停止重复投递，圈定受影响租户并防止客户产生重复账务动作。",
+      "en": "Contain duplicate events and verify billing delivery semantics."
+    }
+  },
+  "platform-monthly-sdk-dependency-scan": {
+    "title": {
+      "zh": "月度移动 SDK 依赖风险扫描",
+      "en": "Scan mobile SDK dependency risks monthly"
+    },
+    "goal": {
+      "zh": "识别双端第三方 SDK 的高风险漏洞、权限变化和停止维护风险。",
+      "en": "Review dependency changes and actionable security or compatibility risks."
+    }
+  },
+  "platform-enterprise-launch-office-hours": {
+    "title": {
+      "zh": "企业功能上线答疑专场",
+      "en": "Host enterprise feature launch office hours"
+    },
+    "goal": {
+      "zh": "集中解答管理员对 SCIM、审计导出和 Webhook 变更的配置与迁移问题。",
+      "en": "Answer customer rollout questions and capture unresolved launch issues."
+    }
+  },
+  "platform-status-page-localization-gap": {
+    "title": {
+      "zh": "补齐状态页多语言故障模板",
+      "en": "Complete multilingual status-page incident templates"
+    },
+    "goal": {
+      "zh": "让不同语言客户在重大事件中收到一致、及时且不夸大结论的更新。",
+      "en": "Provide consistent localized incident communications for the status page."
+    }
+  },
+  "factory-pilot-ramp": {
+    "title": {
+      "zh": "完成智能门锁 PVT 试产放行",
+      "en": "Approve the smart-lock PVT pilot build"
+    },
+    "goal": {
+      "zh": "验证 500 台 PVT 试产的物料、工艺、质量和人员准备，在已知偏差受控后决定是否进入量产爬坡。",
+      "en": "Complete pilot production verification and approve release based on evidence."
+    }
+  },
+  "factory-supplier-track": {
+    "title": {
+      "zh": "收口关键物料与包装准备",
+      "en": "Finalize critical materials and packaging readiness"
+    },
+    "goal": {
+      "zh": "确认关键供应商证据、来料批次与包装标签满足试产边界。",
+      "en": "Confirm critical component and packaging readiness for the pilot build."
+    }
+  },
+  "factory-production-track": {
+    "title": {
+      "zh": "验证产线能力与人员准备",
+      "en": "Validate production capacity and staffing readiness"
+    },
+    "goal": {
+      "zh": "确认工艺、线体、人员和节拍支持 PVT 批次。",
+      "en": "Verify line performance and trained staff are ready for production."
+    }
+  },
+  "factory-launch-track": {
+    "title": {
+      "zh": "完成质量门禁与放行准备",
+      "en": "Complete quality gates and release readiness"
+    },
+    "goal": {
+      "zh": "以试产证据完成质量门禁并准备放行决定。",
+      "en": "Collect quality evidence and confirm conditions for production release."
+    }
+  },
+  "factory-supplier-ppap": {
+    "title": {
+      "zh": "签收电芯与锁体供应商 PPAP",
+      "en": "Accept battery and lock-body supplier PPAPs"
+    },
+    "goal": {
+      "zh": "确认关键特性、过程能力和来料批次满足 PVT 要求。",
+      "en": "Verify supplier production approval evidence for batteries and lock bodies."
+    }
+  },
+  "factory-line-validation": {
+    "title": {
+      "zh": "完成工装与首件参数验证",
+      "en": "Validate tooling and first-article parameters"
+    },
+    "goal": {
+      "zh": "用受控物料验证关键工装、扭矩参数和首件检查。",
+      "en": "Confirm tooling and first-article parameters meet the approved process baseline."
+    }
+  },
+  "factory-quality-gate": {
+    "title": {
+      "zh": "签发 PVT 质量门禁结论",
+      "en": "Approve the PVT quality gate"
+    },
+    "goal": {
+      "zh": "汇总进料、过程、成品与可靠性证据并签发质量结论。",
+      "en": "Review pilot quality evidence and record the production release decision."
+    }
+  },
+  "factory-operator-training": {
+    "title": {
+      "zh": "完成关键工位培训与技能确认",
+      "en": "Complete critical-station training and skill checks"
+    },
+    "goal": {
+      "zh": "确保两班操作员能按受控 SOP 执行关键工位并识别停线条件。",
+      "en": "Verify operators can perform standard work at critical stations."
+    }
+  },
+  "factory-packaging-readiness": {
+    "title": {
+      "zh": "验证包装、运输与标签版本",
+      "en": "Validate packaging, transport, and label versions"
+    },
+    "goal": {
+      "zh": "确认包装结构、运输可靠性和法规标签支持 PVT 发运。",
+      "en": "Confirm packaging protection, transport readiness, and approved labels."
+    }
+  },
+  "factory-capacity-trial": {
+    "title": {
+      "zh": "执行 4 小时产能试跑",
+      "en": "Run a four-hour capacity trial"
+    },
+    "goal": {
+      "zh": "验证连续生产节拍、良率、停线响应和换班稳定性。",
+      "en": "Measure sustained production performance during a four-hour trial."
+    }
+  },
+  "factory-label-rework": {
+    "title": {
+      "zh": "完成 PVT 标签错版返工",
+      "en": "Rework incorrect PVT labels"
+    },
+    "goal": {
+      "zh": "隔离错版标签并完成 PVT 批次返工与数量核对。",
+      "en": "Correct wrong-version labels and verify affected units before release."
+    }
+  },
+  "factory-warranty-trace": {
+    "title": {
+      "zh": "建立首批量产保修件追溯方案",
+      "en": "Define warranty traceability for the first production batch"
+    },
+    "goal": {
+      "zh": "让首批量产退货可追溯到关键物料和工艺批次。",
+      "en": "Link warranty returns to production units and their original batch evidence."
+    }
+  },
+  "factory-october-demand-freeze": {
+    "title": {
+      "zh": "冻结 10 月滚动需求与长料采购",
+      "en": "Freeze October demand and long-lead purchasing"
+    },
+    "goal": {
+      "zh": "基于销售预测冻结长交期物料的采购边界。",
+      "en": "Confirm rolling demand and purchasing boundaries for long-lead materials."
+    }
+  },
+  "supply-battery-second-source": {
+    "title": {
+      "zh": "完成智能门锁电芯第二来源认证",
+      "en": "Qualify a second battery source for smart locks"
+    },
+    "goal": {
+      "zh": "在不降低安全、续航和追溯能力的前提下认证第二电芯来源，降低单一供应商断供风险。",
+      "en": "Reduce single-source disruption risk without compromising safety, battery life, or traceability."
+    }
+  },
+  "supply-battery-qualification-track": {
+    "title": {
+      "zh": "完成电芯供应商过程与材料认证",
+      "en": "Qualify the battery supplier's process and materials"
+    },
+    "goal": {
+      "zh": "确认新供应商过程能力、关键材料与批次证据满足受控要求。",
+      "en": "Confirm process capability, critical materials, and batch evidence meet controlled requirements."
+    }
+  },
+  "supply-battery-process-audit": {
+    "title": {
+      "zh": "完成电芯供应商现场过程审核",
+      "en": "Audit the battery supplier's on-site processes"
+    },
+    "goal": {
+      "zh": "核对混料防错、涂布参数、老化筛选和批次追溯是否按文件执行。",
+      "en": "Check material error-proofing, coating parameters, aging screens, and batch traceability against approved procedures."
+    }
+  },
+  "supply-battery-material-verification": {
+    "title": {
+      "zh": "核验电芯材料证书与禁限用物质",
+      "en": "Verify battery material certificates and restricted substances"
+    },
+    "goal": {
+      "zh": "确认正负极、电解液和包装材料与申报配方及法规证据一致。",
+      "en": "Confirm electrodes, electrolyte, and packaging match declared formulations and regulatory evidence."
+    }
+  },
+  "supply-battery-ppap-signoff": {
+    "title": {
+      "zh": "签发第二来源电芯 PPAP 结论",
+      "en": "Approve the second-source battery PPAP"
+    },
+    "goal": {
+      "zh": "把尺寸、性能、过程能力和变更证据收敛为批次受控的认证结论。",
+      "en": "Combine dimensional, performance, capability, and change evidence into a batch-controlled qualification decision."
+    }
+  },
+  "supply-battery-product-track": {
+    "title": {
+      "zh": "验证第二来源整机适配与切换",
+      "en": "Validate second-source device fit and transition"
+    },
+    "goal": {
+      "zh": "验证新电芯在装配、功耗、可靠性和批次切换中的真实表现。",
+      "en": "Verify assembly, power consumption, reliability, and batch switching with the new battery."
+    }
+  },
+  "supply-battery-device-validation": {
+    "title": {
+      "zh": "完成第二来源电芯整机可靠性验证",
+      "en": "Complete device reliability tests for the second battery source"
+    },
+    "goal": {
+      "zh": "验证续航、低温放电、过流保护和仓储老化不劣于当前来源。",
+      "en": "Verify battery life, low-temperature discharge, overcurrent protection, and storage aging match or exceed the current source."
+    }
+  },
+  "supply-battery-switch-trial": {
+    "title": {
+      "zh": "执行第二来源百台切换试跑",
+      "en": "Run a controlled 100-unit second-source trial"
+    },
+    "goal": {
+      "zh": "用受控批次验证上料、防错、装配节拍和序列号绑定。",
+      "en": "Verify loading, error-proofing, assembly cycle time, and serial-number binding with a controlled batch."
+    }
+  },
+  "supply-battery-release-gate": {
+    "title": {
+      "zh": "签发电芯第二来源切换门禁",
+      "en": "Approve the second-source battery switch gate"
+    },
+    "goal": {
+      "zh": "基于供应商、可靠性和试跑证据决定切换比例与回退库存。",
+      "en": "Use supplier, reliability, and trial evidence to decide the switch ratio and fallback inventory."
+    }
+  },
+  "supply-chengdu-line-transfer": {
+    "title": {
+      "zh": "完成成都装配线转产验证",
+      "en": "Validate the Chengdu assembly line transfer"
+    },
+    "goal": {
+      "zh": "把智能门锁标准机型从苏州平稳转移到成都，在人员、工装和供应链均受控后释放量产。",
+      "en": "Transfer the standard smart lock from Suzhou to Chengdu and release production only when people, tooling, and supply are controlled."
+    }
+  },
+  "supply-chengdu-engineering-track": {
+    "title": {
+      "zh": "复制受控工艺与工装能力",
+      "en": "Replicate controlled processes and tooling"
+    },
+    "goal": {
+      "zh": "确保成都线使用的工艺文件、工装和测量系统与批准基线一致。",
+      "en": "Ensure Chengdu process documents, tooling, and measurement systems match the approved baseline."
+    }
+  },
+  "supply-chengdu-tooling-acceptance": {
+    "title": {
+      "zh": "完成成都线关键工装复制验收",
+      "en": "Accept replicated critical tooling for Chengdu"
+    },
+    "goal": {
+      "zh": "确认扭矩、密封和功能测试工装满足尺寸、能力和安全要求。",
+      "en": "Verify torque, sealing, and functional-test tooling meets dimensional, capability, and safety requirements."
+    }
+  },
+  "supply-chengdu-document-release": {
+    "title": {
+      "zh": "受控发布成都线工艺文件包",
+      "en": "Release the controlled Chengdu process document pack"
+    },
+    "goal": {
+      "zh": "确保 SOP、检验卡、参数表和异常响应均基于同一批准版本。",
+      "en": "Keep SOPs, inspection cards, parameter sheets, and incident responses on one approved version."
+    }
+  },
+  "supply-chengdu-measurement-correlation": {
+    "title": {
+      "zh": "完成两地产线测量相关性验证",
+      "en": "Validate measurement correlation between both sites"
+    },
+    "goal": {
+      "zh": "确认成都与苏州对关键尺寸和功能结果的判定一致。",
+      "en": "Ensure Chengdu and Suzhou agree on critical dimensional and functional results."
+    }
+  },
+  "supply-chengdu-people-track": {
+    "title": {
+      "zh": "建立成都班组能力与爬坡节奏",
+      "en": "Build Chengdu team capability and ramp-up cadence"
+    },
+    "goal": {
+      "zh": "让两班人员能按受控文件稳定生产并正确响应异常。",
+      "en": "Enable both shifts to produce consistently and respond correctly to incidents using controlled procedures."
+    }
+  },
+  "supply-chengdu-skill-certification": {
+    "title": {
+      "zh": "完成成都两班关键岗位技能认证",
+      "en": "Certify critical skills for both Chengdu shifts"
+    },
+    "goal": {
+      "zh": "确保操作员、检验员和线长能够独立执行标准作业和停线判断。",
+      "en": "Verify operators, inspectors, and line leaders can independently perform standard work and stop-line decisions."
+    }
+  },
+  "supply-chengdu-three-shift-trial": {
+    "title": {
+      "zh": "执行成都线三班连续试跑",
+      "en": "Run three continuous shifts on the Chengdu line"
+    },
+    "goal": {
+      "zh": "验证换班、物料补给、节拍、良率和异常响应在连续运行下稳定。",
+      "en": "Validate handovers, material supply, cycle time, yield, and incident response during continuous operation."
+    }
+  },
+  "supply-chengdu-ramp-gate": {
+    "title": {
+      "zh": "签发成都线量产爬坡结论",
+      "en": "Approve the Chengdu production ramp-up"
+    },
+    "goal": {
+      "zh": "决定成都线首周产量、苏州保障量和逐步切换条件。",
+      "en": "Decide first-week output, Suzhou backup capacity, and conditions for staged transition."
+    }
+  },
+  "supply-winter-peak-readiness": {
+    "title": {
+      "zh": "完成冬季促销备货与履约准备",
+      "en": "Prepare winter promotion inventory and fulfillment"
+    },
+    "goal": {
+      "zh": "在需求波动和长交期物料约束下形成可执行的备货、产能与发运方案。",
+      "en": "Create an executable inventory, capacity, and shipping plan under demand variability and long-lead constraints."
+    }
+  },
+  "supply-winter-plan-track": {
+    "title": {
+      "zh": "冻结需求情景与关键物料策略",
+      "en": "Freeze demand scenarios and critical material strategy"
+    },
+    "goal": {
+      "zh": "把基准、上行情景和缺料风险转化为采购与库存边界。",
+      "en": "Translate baseline and upside demand and shortage risks into purchasing and stock boundaries."
+    }
+  },
+  "supply-winter-demand-scenarios": {
+    "title": {
+      "zh": "形成冬季促销三档需求情景",
+      "en": "Develop three winter promotion demand scenarios"
+    },
+    "goal": {
+      "zh": "以基准、上行和延迟促销三种情景表达周度需求与承诺差异。",
+      "en": "Describe weekly demand and commitment differences for baseline, upside, and delayed-promotion scenarios."
+    }
+  },
+  "supply-winter-long-lead-gap": {
+    "title": {
+      "zh": "核对长交期物料缺口与替代边界",
+      "en": "Check long-lead material gaps and substitution limits"
+    },
+    "goal": {
+      "zh": "按周识别主控 IC、电芯和锁体的数量缺口、最晚下单日与替代风险。",
+      "en": "Identify weekly gaps, latest order dates, and substitution risks for controller ICs, batteries, and lock bodies."
+    }
+  },
+  "supply-winter-buffer-policy": {
+    "title": {
+      "zh": "确认关键物料缓冲与采购释放策略",
+      "en": "Confirm critical material buffers and purchasing releases"
+    },
+    "goal": {
+      "zh": "平衡缺货风险、现金占用和过期报废，形成分阶段采购边界。",
+      "en": "Balance shortages, working capital, and obsolescence with phased purchasing limits."
+    }
+  },
+  "supply-winter-execution-track": {
+    "title": {
+      "zh": "验证峰值产能、包装与发运协同",
+      "en": "Validate peak capacity, packaging, and shipping coordination"
+    },
+    "goal": {
+      "zh": "验证高峰计划能被线体、包装和承运能力共同执行。",
+      "en": "Verify the peak plan can be executed jointly by production, packaging, and carriers."
+    }
+  },
+  "supply-winter-capacity-simulation": {
+    "title": {
+      "zh": "执行峰值周产能与换型模拟",
+      "en": "Simulate peak-week capacity and changeovers"
+    },
+    "goal": {
+      "zh": "验证标准款与礼盒款交替生产时的节拍、换型损失和人员覆盖。",
+      "en": "Validate cycle time, changeover losses, and staffing when alternating standard and gift-box products."
+    }
+  },
+  "supply-winter-packout-trial": {
+    "title": {
+      "zh": "完成促销礼盒包装线试装",
+      "en": "Trial the promotional gift-box packaging line"
+    },
+    "goal": {
+      "zh": "验证礼盒物料齐套、装箱防错、条码和外箱强度支持峰值发运。",
+      "en": "Verify material readiness, packing error-proofing, barcodes, and carton strength for peak shipping."
+    }
+  },
+  "supply-winter-logistics-drill": {
+    "title": {
+      "zh": "演练峰值发运分仓与异常改派",
+      "en": "Drill peak shipping allocation and emergency rerouting"
+    },
+    "goal": {
+      "zh": "验证华东、华南分仓和主承运商中断时的订单改派路径。",
+      "en": "Validate East and South China warehouse allocation and rerouting if the primary carrier fails."
+    }
+  },
+  "supply-daily-shortage-standup": {
+    "title": {
+      "zh": "每日关键缺料与停线风险核对",
+      "en": "Check critical shortages and stop-line risks daily"
+    },
+    "goal": {
+      "zh": "在每日排产前确认未来七天关键料、到料质量和停线风险。",
+      "en": "Confirm seven-day material availability, incoming quality, and stop-line risks before daily scheduling."
+    }
+  },
+  "supply-weekly-supplier-capa-review": {
+    "title": {
+      "zh": "每周供应商纠正措施评审",
+      "en": "Review supplier corrective actions weekly"
+    },
+    "goal": {
+      "zh": "核对重大来料问题的遏制、根因、纠正和效果验证进展。",
+      "en": "Check containment, root causes, corrections, and effectiveness of major incoming-quality issues."
+    }
+  },
+  "supply-monthly-cycle-count": {
+    "title": {
+      "zh": "月度高价值物料循环盘点",
+      "en": "Count high-value materials monthly"
+    },
+    "goal": {
+      "zh": "核对主控 IC、电芯和成品锁体的账实、冻结和批次状态。",
+      "en": "Reconcile controller IC, battery, and finished lock-body balances, holds, and batch status."
+    }
+  },
+  "supply-quarterly-torque-audit": {
+    "title": {
+      "zh": "季度扭矩工具与参数审计",
+      "en": "Audit torque tools and parameters quarterly"
+    },
+    "goal": {
+      "zh": "确认关键锁附工具校准、程序版本和现场参数与控制计划一致。",
+      "en": "Verify calibration, program versions, and on-site settings match the control plan."
+    }
+  },
+  "supply-incident-lockbody-rust": {
+    "title": {
+      "zh": "遏制锁体盐雾后锈蚀异常",
+      "en": "Contain lock-body corrosion after salt-spray testing"
+    },
+    "goal": {
+      "zh": "隔离可疑批次、保护在制品并确定镀层异常的真实范围。",
+      "en": "Isolate suspect batches, protect work in progress, and determine the actual coating defect scope."
+    }
+  },
+  "supply-risk-sole-source-mcu": {
+    "title": {
+      "zh": "评估主控 MCU 单一来源断供应急方案",
+      "en": "Assess controller MCU single-source contingencies"
+    },
+    "goal": {
+      "zh": "量化现有库存覆盖、供应中断窗口和替代芯片重新认证代价。",
+      "en": "Quantify inventory coverage, interruption windows, and alternative-chip requalification costs."
+    }
+  },
+  "supply-incident-label-serial-gap": {
+    "title": {
+      "zh": "修复标签序列号断号与重复打印",
+      "en": "Fix serial-number gaps and duplicate label printing"
+    },
+    "goal": {
+      "zh": "停止重复标签流出，核对断号是否对应报废、重打或遗漏成品。",
+      "en": "Stop duplicate labels and reconcile gaps against scrap, reprints, or missed finished units."
+    }
+  },
+  "supply-monthly-sop-floor-audit": {
+    "title": {
+      "zh": "月度现场 SOP 版本抽查",
+      "en": "Audit on-site SOP versions monthly"
+    },
+    "goal": {
+      "zh": "确认关键工位实际使用的电子和纸质 SOP 与受控版本一致。",
+      "en": "Verify electronic and paper SOPs at critical stations match controlled versions."
+    }
+  },
+  "supply-packaging-humidity-risk": {
+    "title": {
+      "zh": "验证海运高湿环境包装防护",
+      "en": "Validate packaging for humid sea transport"
+    },
+    "goal": {
+      "zh": "确认长航程高湿环境下锁体、说明书和外箱不会出现锈蚀、霉变或强度失效。",
+      "en": "Ensure lock bodies, manuals, and cartons resist corrosion, mold, and strength loss on long humid voyages."
+    }
+  },
+  "supply-operator-absence-contingency": {
+    "title": {
+      "zh": "更新关键岗位缺员应急替岗表",
+      "en": "Update emergency coverage for critical roles"
+    },
+    "goal": {
+      "zh": "确保夜班关键岗位突发缺员时只由通过认证的人员替岗。",
+      "en": "Allow only certified substitutes to cover unexpected absences at critical night-shift stations."
+    }
+  },
+  "supply-customer-return-teardown": {
+    "title": {
+      "zh": "双周客退锁体联合拆解评审",
+      "en": "Review returned lock bodies every two weeks"
+    },
+    "goal": {
+      "zh": "把客退症状与物料、工艺、包装和使用环境证据对齐，识别重复失效。",
+      "en": "Align return symptoms with material, process, packaging, and use-environment evidence to find recurring failures."
+    }
+  },
+  "service-incident-recovery": {
+    "title": {
+      "zh": "完成企业同步故障恢复与客户闭环",
+      "en": "Restore enterprise sync and close the customer incident"
+    },
+    "goal": {
+      "zh": "恢复企业客户同步服务与受影响数据，在正式事实一致的基础上完成沟通、补偿判断和防复发闭环。",
+      "en": "Restore synchronization and affected data, then align communications, compensation decisions, and recurrence prevention with confirmed facts."
+    }
+  },
+  "service-containment-track": {
+    "title": {
+      "zh": "控制影响并恢复核心服务",
+      "en": "Contain impact and restore core service"
+    },
+    "goal": {
+      "zh": "先限制新增影响，再恢复核心同步路径。",
+      "en": "Limit new impact before restoring the core synchronization path."
+    }
+  },
+  "service-customer-track": {
+    "title": {
+      "zh": "完成客户沟通与商业处理",
+      "en": "Complete customer communications and commercial resolution"
+    },
+    "goal": {
+      "zh": "保持客户事实一致并处理需补偿的合同边界。",
+      "en": "Keep customer facts consistent and address applicable compensation boundaries."
+    }
+  },
+  "service-prevention-track": {
+    "title": {
+      "zh": "形成根因与防复发闭环",
+      "en": "Close root-cause and recurrence-prevention actions"
+    },
+    "goal": {
+      "zh": "形成可验证根因和运行手册更新。",
+      "en": "Produce a verifiable root cause and updated operating procedures."
+    }
+  },
+  "service-traffic-mitigation": {
+    "title": {
+      "zh": "执行同步流量削峰与租户隔离",
+      "en": "Reduce sync traffic peaks and isolate tenants"
+    },
+    "goal": {
+      "zh": "限制故障扩散并恢复高优先级租户写入。",
+      "en": "Limit incident spread and restore writes for high-priority tenants."
+    }
+  },
+  "service-data-repair": {
+    "title": {
+      "zh": "修复受影响同步状态记录",
+      "en": "Repair affected synchronization state records"
+    },
+    "goal": {
+      "zh": "按可回滚批次修复受影响记录并验证业务一致性。",
+      "en": "Repair affected records in reversible batches and verify business consistency."
+    }
+  },
+  "service-customer-comms": {
+    "title": {
+      "zh": "完成受影响客户分层沟通",
+      "en": "Communicate with affected customers by impact tier"
+    },
+    "goal": {
+      "zh": "向不同影响等级客户提供一致、及时且不过度承诺的更新。",
+      "en": "Provide consistent, timely updates without overpromising to each customer impact tier."
+    }
+  },
+  "service-root-cause": {
+    "title": {
+      "zh": "签发队列竞态根因分析",
+      "en": "Approve the queue race-condition root-cause analysis"
+    },
+    "goal": {
+      "zh": "用时序、代码路径和复现实验确认根因及触发条件。",
+      "en": "Confirm the cause and triggers using timelines, code paths, and reproduction experiments."
+    }
+  },
+  "service-compensation-review": {
+    "title": {
+      "zh": "核对 SLA 与补偿适用范围",
+      "en": "Review SLA coverage and compensation scope"
+    },
+    "goal": {
+      "zh": "按正式影响时长和合同分层形成补偿建议。",
+      "en": "Use confirmed impact duration and contract tiers to recommend compensation."
+    }
+  },
+  "service-runbook-update": {
+    "title": {
+      "zh": "更新同步积压处置手册",
+      "en": "Update the sync backlog response runbook"
+    },
+    "goal": {
+      "zh": "把确认的触发条件、指标与处置动作转为一线可执行手册。",
+      "en": "Turn confirmed triggers, metrics, and actions into an executable frontline runbook."
+    }
+  },
+  "service-quarterly-drill": {
+    "title": {
+      "zh": "组织季度企业故障桌面演练",
+      "en": "Run the quarterly enterprise incident tabletop"
+    },
+    "goal": {
+      "zh": "验证跨团队事件角色、升级和客户沟通路径。",
+      "en": "Validate cross-team incident roles, escalation, and customer communications."
+    }
+  },
+  "service-enterprise-sla-review": {
+    "title": {
+      "zh": "复核年度企业版 SLA 模板",
+      "en": "Review the annual enterprise SLA template"
+    },
+    "goal": {
+      "zh": "核对新合同模板中的可用性定义、排除项和补偿上限。",
+      "en": "Check availability definitions, exclusions, and compensation caps in the new contract template."
+    }
+  },
+  "csx-retail-renewal": {
+    "title": {
+      "zh": "完成华东零售集团年度续约",
+      "en": "Complete East China Retail Group's annual renewal"
+    },
+    "goal": {
+      "zh": "以可核对的使用价值、风险处置和合同边界完成华东零售集团年度续约。",
+      "en": "Use verifiable value, risk resolution, and contract boundaries to complete the annual renewal."
+    }
+  },
+  "csx-retail-evidence-track": {
+    "title": {
+      "zh": "收口华东零售续约事实底稿",
+      "en": "Finalize the retail renewal evidence baseline"
+    },
+    "goal": {
+      "zh": "形成使用、工单、目标达成和未决问题的一致事实底稿。",
+      "en": "Align usage, tickets, goal attainment, and open issues in one factual record."
+    }
+  },
+  "csx-retail-value-track": {
+    "title": {
+      "zh": "形成华东零售下年度成功计划",
+      "en": "Define the retail customer's next-year success plan"
+    },
+    "goal": {
+      "zh": "把客户业务目标、产品使用差距和可承诺支持转为下年度共同计划。",
+      "en": "Turn business goals, adoption gaps, and support commitments into a shared annual plan."
+    }
+  },
+  "csx-retail-commercial-track": {
+    "title": {
+      "zh": "完成华东零售商务与合同收口",
+      "en": "Finalize retail renewal commercial and legal terms"
+    },
+    "goal": {
+      "zh": "在价值计划和风险边界明确后完成价格、SLA 与合同条款收口。",
+      "en": "Agree pricing, SLA, and contract terms after clarifying value and risk boundaries."
+    }
+  },
+  "csx-retail-usage-baseline": {
+    "title": {
+      "zh": "签发华东零售年度使用基线",
+      "en": "Publish the retail customer's annual usage baseline"
+    },
+    "goal": {
+      "zh": "统一活跃组织、关键流程采用、席位和数据同步的年度使用口径。",
+      "en": "Align annual active organizations, key workflow adoption, seats, and data synchronization measures."
+    }
+  },
+  "csx-retail-stakeholder-map": {
+    "title": {
+      "zh": "确认华东零售续约决策人图谱",
+      "en": "Map retail renewal decision makers"
+    },
+    "goal": {
+      "zh": "确认业务、IT、采购和法务在续约中的决策权、关注点与沟通路径。",
+      "en": "Identify business, IT, procurement, and legal decision rights, priorities, and communication paths."
+    }
+  },
+  "csx-retail-support-closure": {
+    "title": {
+      "zh": "关闭华东零售批量导入遗留问题",
+      "en": "Resolve outstanding retail bulk-import issues"
+    },
+    "goal": {
+      "zh": "验证批量导入超时、错误提示和重试路径已达到客户可接受状态。",
+      "en": "Verify import timeouts, error messages, and retries meet the customer's acceptance criteria."
+    }
+  },
+  "csx-retail-outcome-evidence": {
+    "title": {
+      "zh": "核对华东零售门店协同成效",
+      "en": "Verify retail store collaboration outcomes"
+    },
+    "goal": {
+      "zh": "核对门店任务准时率、总部催办和异常闭环改善是否可归因于已用能力。",
+      "en": "Check whether on-time tasks, headquarters follow-ups, and issue closure improvements relate to adopted capabilities."
+    }
+  },
+  "csx-retail-risk-workshop": {
+    "title": {
+      "zh": "完成华东零售续约风险工作坊",
+      "en": "Run the retail renewal risk workshop"
+    },
+    "goal": {
+      "zh": "基于客户事实与季度健康度校准结果，确认续约阻力、应对动作和责任。",
+      "en": "Use customer evidence and quarterly health calibration to agree renewal barriers, responses, and owners."
+    }
+  },
+  "csx-retail-success-plan": {
+    "title": {
+      "zh": "交付华东零售下年度成功计划",
+      "en": "Deliver the retail customer's annual success plan"
+    },
+    "goal": {
+      "zh": "形成按季度推进的业务结果、产品采用和支持协作计划。",
+      "en": "Provide a quarterly plan for business outcomes, adoption, and support collaboration."
+    }
+  },
+  "csx-retail-security-questionnaire": {
+    "title": {
+      "zh": "回复华东零售年度安全问卷",
+      "en": "Respond to the retail annual security questionnaire"
+    },
+    "goal": {
+      "zh": "以现行控制和证据回复客户安全、隐私和业务连续性问题。",
+      "en": "Answer security, privacy, and continuity questions using current controls and evidence."
+    }
+  },
+  "csx-retail-pricing-proposal": {
+    "title": {
+      "zh": "形成华东零售续约报价建议",
+      "en": "Prepare the retail renewal pricing proposal"
+    },
+    "goal": {
+      "zh": "根据使用范围、支持计划和风险边界形成可审核的续约报价建议。",
+      "en": "Build a reviewable quote using actual scope, the support plan, and risk boundaries."
+    }
+  },
+  "csx-retail-contract-redline": {
+    "title": {
+      "zh": "收口华东零售续约合同红线",
+      "en": "Resolve retail renewal contract redlines"
+    },
+    "goal": {
+      "zh": "收口 SLA、数据处理、责任限制和支持服务的合同差异。",
+      "en": "Resolve differences in SLA, data processing, liability limits, and support services."
+    }
+  },
+  "csx-retail-signature-gate": {
+    "title": {
+      "zh": "确认华东零售续约签署条件",
+      "en": "Confirm retail renewal signing readiness"
+    },
+    "goal": {
+      "zh": "在发起签署前确认版本、审批、签署主体和生效条件完整。",
+      "en": "Verify versions, approvals, contracting entities, and effective conditions before signature."
+    }
+  },
+  "csx-payment-migration": {
+    "title": {
+      "zh": "完成跨境支付客户数据域迁移",
+      "en": "Migrate the cross-border payment customer's data domain"
+    },
+    "goal": {
+      "zh": "在可回滚、客户可理解且数据一致的前提下完成跨境支付客户数据域迁移。",
+      "en": "Complete a reversible, understandable migration while preserving data consistency."
+    }
+  },
+  "csx-migration-readiness-track": {
+    "title": {
+      "zh": "冻结跨境支付迁移数据边界",
+      "en": "Freeze payment migration data boundaries"
+    },
+    "goal": {
+      "zh": "冻结租户、字段、保留要求和回滚边界。",
+      "en": "Define tenants, fields, retention requirements, and rollback boundaries."
+    }
+  },
+  "csx-migration-pilot-track": {
+    "title": {
+      "zh": "完成跨境支付迁移试点验证",
+      "en": "Validate the payment migration pilot"
+    },
+    "goal": {
+      "zh": "用低风险租户验证迁移、回滚、观测和客户确认路径。",
+      "en": "Use low-risk tenants to validate migration, rollback, monitoring, and customer sign-off."
+    }
+  },
+  "csx-migration-adoption-track": {
+    "title": {
+      "zh": "完成跨境支付客户切换准备",
+      "en": "Prepare the payment customer for cutover"
+    },
+    "goal": {
+      "zh": "让客户管理员和一线支持理解影响、窗口、验证和升级路径。",
+      "en": "Help administrators and frontline support understand impact, timing, verification, and escalation."
+    }
+  },
+  "csx-migration-tenant-inventory": {
+    "title": {
+      "zh": "签发跨境支付迁移租户清单",
+      "en": "Publish the payment migration tenant inventory"
+    },
+    "goal": {
+      "zh": "冻结本轮迁移租户、地区、数据驻留和排除原因。",
+      "en": "Freeze tenant scope, regions, residency requirements, and exclusion reasons."
+    }
+  },
+  "csx-migration-field-map": {
+    "title": {
+      "zh": "核对跨境支付新旧数据字段映射",
+      "en": "Check old-to-new payment data mappings"
+    },
+    "goal": {
+      "zh": "确认新旧数据域字段、枚举、时区与保留策略的可迁移映射。",
+      "en": "Verify migratable mappings for fields, enums, time zones, and retention policies."
+    }
+  },
+  "csx-migration-rollback-validation": {
+    "title": {
+      "zh": "验证跨境支付迁移回滚脚本",
+      "en": "Validate payment migration rollback scripts"
+    },
+    "goal": {
+      "zh": "验证在迁移中断或校验失败时可恢复到一致旧域状态。",
+      "en": "Verify interrupted or failed migrations can return to a consistent legacy state."
+    }
+  },
+  "csx-migration-pilot-cohort": {
+    "title": {
+      "zh": "确认跨境支付迁移试点租户",
+      "en": "Confirm the payment migration pilot cohort"
+    },
+    "goal": {
+      "zh": "选择业务风险可控、覆盖主要数据形态且愿意配合验证的试点租户。",
+      "en": "Choose willing, low-risk tenants that cover the principal data shapes."
+    }
+  },
+  "csx-migration-pilot-rehearsal": {
+    "title": {
+      "zh": "完成跨境支付试点迁移彩排",
+      "en": "Rehearse the payment pilot migration"
+    },
+    "goal": {
+      "zh": "在脱敏副本上验证迁移顺序、观测、校验与回滚动作。",
+      "en": "Validate migration order, monitoring, checks, and rollback on sanitized copies."
+    }
+  },
+  "csx-migration-pilot-observation": {
+    "title": {
+      "zh": "签发跨境支付试点观察结论",
+      "en": "Approve payment pilot observation findings"
+    },
+    "goal": {
+      "zh": "汇总技术校验、客户验证和支持工单形成是否进入正式迁移的结论。",
+      "en": "Combine technical checks, customer verification, and support tickets into a go-live decision."
+    }
+  },
+  "csx-migration-admin-training": {
+    "title": {
+      "zh": "完成跨境支付客户管理员培训",
+      "en": "Train payment customer administrators"
+    },
+    "goal": {
+      "zh": "让客户管理员能够执行切换后验证、常见排查和升级。",
+      "en": "Enable administrators to verify cutover, diagnose common issues, and escalate."
+    }
+  },
+  "csx-migration-support-knowledge": {
+    "title": {
+      "zh": "发布跨境支付迁移支持知识包",
+      "en": "Publish the payment migration support pack"
+    },
+    "goal": {
+      "zh": "为一线支持交付版本识别、数据校验、常见故障与升级材料。",
+      "en": "Provide frontline materials for version recognition, data checks, common failures, and escalation."
+    }
+  },
+  "csx-migration-go-live-comms": {
+    "title": {
+      "zh": "确认跨境支付正式迁移通知",
+      "en": "Confirm production payment migration notices"
+    },
+    "goal": {
+      "zh": "向各客户提供准确的窗口、影响、验证和升级说明并回收确认。",
+      "en": "Give every customer accurate windows, impacts, checks, and escalation details and collect acknowledgment."
+    }
+  },
+  "csx-health-governance": {
+    "title": {
+      "zh": "完成三季度企业客户健康度治理",
+      "en": "Complete Q3 enterprise customer health governance"
+    },
+    "goal": {
+      "zh": "统一健康度数据、阈值与人工判断，减少流失预警遗漏和误报。",
+      "en": "Align health data, thresholds, and human judgment to reduce missed churn risks and false alerts."
+    }
+  },
+  "csx-health-data-track": {
+    "title": {
+      "zh": "修复企业客户健康度数据口径",
+      "en": "Repair enterprise health data definitions"
+    },
+    "goal": {
+      "zh": "统一采用、工单、续约和客户反馈的数据窗口与缺失处理。",
+      "en": "Align adoption, support, renewal, and feedback windows and missing-data handling."
+    }
+  },
+  "csx-health-action-track": {
+    "title": {
+      "zh": "建立企业客户健康度行动闭环",
+      "en": "Establish enterprise health follow-through"
+    },
+    "goal": {
+      "zh": "将风险信号转为有证据、责任和复查时间的客户行动。",
+      "en": "Turn risk signals into customer actions with evidence, ownership, and review dates."
+    }
+  },
+  "csx-health-usage-window": {
+    "title": {
+      "zh": "统一企业客户采用率观察窗口",
+      "en": "Align enterprise adoption observation windows"
+    },
+    "goal": {
+      "zh": "按客户业务周期统一活跃、关键流程和席位采用率的观察窗口。",
+      "en": "Match activity, key workflow, and seat adoption windows to each customer's business cycle."
+    }
+  },
+  "csx-health-ticket-severity": {
+    "title": {
+      "zh": "校准企业工单严重度映射",
+      "en": "Calibrate enterprise ticket severity mappings"
+    },
+    "goal": {
+      "zh": "统一支持工单、事件和客户自报影响在健康度中的严重度语义。",
+      "en": "Align support tickets, incidents, and customer-reported impact in health assessments."
+    }
+  },
+  "csx-health-data-freshness": {
+    "title": {
+      "zh": "修复健康度数据刷新缺口",
+      "en": "Close health-data freshness gaps"
+    },
+    "goal": {
+      "zh": "让采用、工单和合同数据在声明的刷新时间内进入健康度计算。",
+      "en": "Ensure adoption, ticket, and contract data reaches health calculations within declared refresh intervals."
+    }
+  },
+  "csx-health-adoption-threshold": {
+    "title": {
+      "zh": "签发企业采用率风险阈值",
+      "en": "Approve enterprise adoption risk thresholds"
+    },
+    "goal": {
+      "zh": "结合业务周期和跨境迁移试点观察，确定采用率下降的风险阈值与例外。",
+      "en": "Use business cycles and migration pilot observations to set decline thresholds and exceptions."
+    }
+  },
+  "csx-health-score-calibration": {
+    "title": {
+      "zh": "完成三季度客户健康分校准",
+      "en": "Calibrate Q3 customer health scores"
+    },
+    "goal": {
+      "zh": "用已知续约、扩容和流失样本检验健康分分层是否可用于当前行动。",
+      "en": "Test whether health tiers support current decisions using known renewal, expansion, and churn cases."
+    }
+  },
+  "csx-health-alert-routing": {
+    "title": {
+      "zh": "配置高风险客户预警路由",
+      "en": "Configure high-risk customer alert routing"
+    },
+    "goal": {
+      "zh": "将不同风险等级路由到客户负责人、支持或重大事件路径。",
+      "en": "Route each risk tier to the customer owner, support, or major-incident process."
+    }
+  },
+  "csx-health-manual-review": {
+    "title": {
+      "zh": "完成高风险客户人工复核",
+      "en": "Complete human review of high-risk customers"
+    },
+    "goal": {
+      "zh": "复核高风险客户的最新事实、商业窗口和现有行动，避免机械触达。",
+      "en": "Review current facts, commercial timing, and existing actions before outreach."
+    }
+  },
+  "csx-access-incident": {
+    "title": {
+      "zh": "关闭华东零售管理员误授权事件",
+      "en": "Close the retail administrator misauthorization incident"
+    },
+    "goal": {
+      "zh": "撤销误授权、确认访问范围并以一致事实完成客户和合规闭环。",
+      "en": "Revoke incorrect permissions, confirm access scope, and align customer and compliance closure with facts."
+    }
+  },
+  "csx-access-containment": {
+    "title": {
+      "zh": "撤销华东零售异常管理员权限",
+      "en": "Revoke anomalous retail administrator permissions"
+    },
+    "goal": {
+      "zh": "立即撤销异常授权并冻结相关权限变更证据。",
+      "en": "Immediately revoke incorrect access and preserve permission-change evidence."
+    }
+  },
+  "csx-access-impact-review": {
+    "title": {
+      "zh": "核对华东零售误授权访问范围",
+      "en": "Review the retail misauthorization access scope"
+    },
+    "goal": {
+      "zh": "确认误授权期间可见字段、实际访问和导出行为及披露边界。",
+      "en": "Confirm visible fields, actual access, exports, and disclosure boundaries during the incident."
+    }
+  },
+  "csx-access-customer-update": {
+    "title": {
+      "zh": "完成华东零售误授权客户更新",
+      "en": "Update the retail customer on misauthorization"
+    },
+    "goal": {
+      "zh": "向已确认的业务、IT 和法务联系人提供一致的影响、处置和下一步说明。",
+      "en": "Give confirmed business, IT, and legal contacts consistent impact, remediation, and next-step information."
+    }
+  },
+  "csx-quarterly-access-review": {
+    "title": {
+      "zh": "复核三季度客户数据访问授权",
+      "en": "Review Q3 customer data access permissions"
+    },
+    "goal": {
+      "zh": "核对客户成功、支持和值班角色的数据访问是否仍与当前职责和客户范围一致。",
+      "en": "Verify customer success, support, and on-call access still matches current responsibilities and customer scope."
+    }
+  },
+  "csx-support-macro-retirement": {
+    "title": {
+      "zh": "清理过期同步故障客服宏",
+      "en": "Retire outdated sync troubleshooting macros"
+    },
+    "goal": {
+      "zh": "下线引用旧队列架构或过期承诺口径的客服宏，避免一线继续发送错误排障步骤。",
+      "en": "Remove macros that reference obsolete queue architecture or promises so support stops sending incorrect instructions."
+    }
+  }
+}

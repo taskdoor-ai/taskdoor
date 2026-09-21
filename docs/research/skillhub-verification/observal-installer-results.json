@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-09-14T11:26:05.132871+00:00",
+  "upstream_commit": "28fd855236405cc9ca83e7b357b1362b323c801a",
+  "method": "Executed unmodified upstream installer functions extracted by AST; isolated temporary local Git repository; no running Observal service or corporate SSO. Only terminal output suppressed.",
+  "full_git_package_files_match": {
+    "SKILL.md": true,
+    "refs/guide.md": true,
+    "assets/logo.png": true,
+    "assets/font.woff2": true,
+    "assets/logo.svg": true,
+    "assets/style.css": true,
+    "scripts/check.py": true
+  },
+  "git_old_version_content_restored": true,
+  "git_rollback_leaves_new_file": true,
+  "direct_rollback_leaves_new_script": true,
+  "direct_installer_accepts_only_skill_text_and_optional_single_script": true
+}

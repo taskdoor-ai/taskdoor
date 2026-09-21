@@ -73,7 +73,7 @@ test("工作台入口隔离，首屏展示真实状态且不提供密钥输入",
   assert.match(html, /团队沙箱/);
   assert.match(html, /用例库/);
   assert.match(html, /运行报告/);
-  assert.match(html, /API 设置/);
+  assert.match(html, /模型与 API/);
   assert.match(html, /暂无团队/);
   assert.doesNotMatch(html, /private-csrf|type="password"/);
   const entry = readFileSync(new URL("../test-lab.html", import.meta.url), "utf8");
@@ -175,5 +175,5 @@ test("仅活动运行轮询，编辑期间保留草稿及版本冲突反馈", ()
   assert.match(source, /导出草稿/);
   assert.doesNotMatch(source, /window\.(prompt|confirm)|localStorage/);
   assert.match(source, /const requestId = uid\(\);/);
-  assert.match(source, /client\.run\(ids, requestId\)/);
+  assert.match(source, /client\.run\(runSetup\.ids,runSetup\.requestId,selection\)/);
 });

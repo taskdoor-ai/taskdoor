@@ -38,7 +38,7 @@
       "supports": [
         "产品发布、促销时段与补货是可区分的业务事件"
       ],
-      "boundary": "Launchpad功能有产品计划限制；夹具不声称AgentDoor或合成团队已经接入。",
+      "boundary": "Launchpad功能有产品计划限制；夹具不声称TaskDoor或合成团队已经接入。",
       "accessedOn": "2026-09-01",
       "sourceType": "official_primary",
       "verification": "opened_official_page"

@@ -25,21 +25,20 @@ test("详情与列表使用相同状态更新入口且无变化不写记录", ()
 });
 
 test("每种详情字段修改均有具体动作日志", () => {
-  for (const type of ["title-change", "goal-change", "schedule-change", "tags-change", "appearance-change", "owner-change", "owner-proposal", "participants-change"]) {
+  for (const type of ["title-change", "goal-change", "schedule-change", "tags-change", "appearance-change", "owner-change", "participants-change"]) {
     assert.ok(app.includes(`"${type}"`), `缺少字段变更记录：${type}`);
   }
   assert.match(app, /createTaskChangeActivity\(\{ author: currentUserName/);
   assert.match(app, /onActivityAppend=\{\(activity\) => appendActivityForTask\(selectedTaskId, activity\)\}/);
 });
 
-test("负责人提议与参与人邀请记录待接受而非自动生效", () => {
-  assert.match(app, /发起负责人变更邀请（待接受）/);
-  assert.match(app, /撤回负责人变更邀请/);
-  assert.match(app, /新增参与人（待接受）/);
+test("负责人和参与人修改直接生效并记录正式变更", () => {
+  assert.doesNotMatch(app, /负责人变更邀请|待接受/);
+  assert.match(app, /修改任务负责人/);
+  assert.match(app, /新增参与人/);
   assert.match(app, /移除参与人/);
-  assert.match(app, /taskParticipantInvitationOverrides/);
-  const proposalHandler = app.slice(app.indexOf("const changeOwnerProposal ="), app.indexOf("const changeParticipants ="));
-  assert.doesNotMatch(proposalHandler, /ownerId: ownerId|ownerId: nextOwnerId/);
+  const ownerHandler = app.slice(app.indexOf("const changeOwner ="), app.indexOf("const changeParticipants ="));
+  assert.match(ownerHandler, /changeTaskFields\(task\.id, \{ ownerId \}/);
 });
 
 test("详情重新进入时读取最新参与人和期限投影", () => {

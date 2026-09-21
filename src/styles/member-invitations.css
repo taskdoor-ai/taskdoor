@@ -1,0 +1,22 @@
+.person-membership-badge { display: inline-flex; flex: 0 0 auto; align-items: center; border-radius: var(--ad-radius-control); background: var(--ad-surface-subtle); color: var(--ad-ink-secondary); padding: var(--ad-space-1) var(--ad-space-2); font-size: var(--ad-text-caption); font-weight: 500; white-space: nowrap; }
+.person-picker-email-invite { display: flex; flex-direction: column; align-items: center; gap: var(--ad-space-3); padding: var(--ad-space-6) var(--ad-space-5); text-align: center; }
+.person-picker-email-invite > strong { color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); font-weight: 500; }
+.person-picker-email-invite > p { max-width: 100%; margin: 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.7; overflow-wrap: anywhere; }
+.person-picker-email-invite button { display: inline-flex; align-items: center; justify-content: center; gap: var(--ad-space-2); max-width: 100%; min-height: var(--ad-control-touch-min); margin-top: var(--ad-space-1); padding: var(--ad-space-2) var(--ad-space-4); border: 0; border-radius: var(--ad-radius-control); background: var(--ad-route-soft); color: var(--ad-route-ink); font: inherit; font-size: var(--ad-text-body-sm); text-align: center; cursor: pointer; }
+.person-picker-email-invite button svg { flex-shrink: 0; }
+.person-picker-email-invite button span { min-width: 0; overflow-wrap: anywhere; }
+.person-picker-email-invite button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.person-picker-email-invite button:disabled { cursor: default; opacity: .5; }
+.person-picker-email-invite [role="alert"] { margin: 0; color: var(--ad-tag-red-ink); font-size: var(--ad-text-caption); }
+.member-invite-backdrop { animation-duration: 180ms; }
+.member-invite-dialog { max-width: calc(100vw - var(--ad-space-6)); max-height: calc(100dvh - var(--ad-space-6)); overflow-y: auto; animation-duration: 180ms; }
+@media (prefers-reduced-motion: reduce) { .member-invite-backdrop, .member-invite-dialog { animation-duration: .01ms; } }
+.member-invitation-form { display: grid; gap: var(--ad-space-4); }
+.member-invitation-form label { display: grid; gap: var(--ad-space-2); }
+.member-invitation-form label > span { color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); }
+.member-invitation-form small, .member-invitation-form > p { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); font-weight: 400; }
+.member-invitation-form small { margin-left: var(--ad-space-1); }
+.member-invitation-form > p { margin: 0; }
+.member-invitation-form > [role="alert"] { color: var(--ad-tag-red-ink); }
+.member-invitation-form footer { display: flex; justify-content: flex-end; gap: var(--ad-space-2); margin-top: var(--ad-space-2); }
+.member-invited-actions { display: flex; flex-wrap: wrap; gap: var(--ad-space-2); }

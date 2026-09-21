@@ -6,11 +6,13 @@ import { z, ZodError } from 'zod';
 import { createLabStore } from './store.ts';
 import { seedLab } from './seeds.ts';
 import { createRunner } from './runner.ts';
-import { labSkills } from './skills.ts';
+import { labSkills, loadSkill } from './skills.ts';
 import { buildView } from './context.ts';
 import { importLibrary } from './library.ts';
-import { editableSchema } from './schema.ts';
-import type { LabCase } from '../../src/test-lab/types.ts';
+import { editableSchema, runSelectionSchema, skillVersionInputSchema } from './schema.ts';
+import { skillIds, type LabCase } from '../../src/test-lab/types.ts';
+import { buildWorkflows, summarizeWorkflow } from '../../src/test-lab/workflows.ts';
+import { preflightWorkflow } from './workflows.ts';
 
 export function guardRequest(method:string,headers:IncomingHttpHeaders,address:string,token:string){
   if(!['127.0.0.1','::1','::ffff:127.0.0.1'].includes(address))throw new Error('测试工作台仅允许本机访问');
@@ -44,9 +46,22 @@ export function testLabPlugin():Plugin{
       try{
         const url=new URL(req.url,'http://localhost'),path=url.pathname.replace('/api/test-lab','');
         if(req.method==='GET'&&path==='/bootstrap'){send(res,200,{state:store.get(),config,skills:labSkills,csrfToken});return;}
+        if(req.method==='GET'&&path==='/workflows'){send(res,200,buildWorkflows(store.get()));return;}
+        if(req.method==='POST'&&path==='/workflows/check'){const value=z.object({workflowId:z.string().min(1).max(160)}).strict().parse(await body(req));send(res,200,preflightWorkflow(store.get(),value.workflowId));return;}
+        if(req.method==='GET'&&path==='/workflow-report'){const batchId=url.searchParams.get('batchId');if(!batchId)throw new Error('请提供批次 ID');const runs=store.get().runs.filter(r=>r.batchId===batchId);if(!runs.length)throw new Error('运行批次不存在');send(res,200,summarizeWorkflow(runs));return;}
+        if(req.method==='GET'&&path.startsWith('/skills/')){const id=z.enum(skillIds).parse(path.slice('/skills/'.length));send(res,200,loadSkill(id));return;}
+        if(req.method==='POST'&&path==='/skill-versions'){const value=z.object({expectedRevision:z.number().int(),version:skillVersionInputSchema}).strict().parse(await body(req));send(res,200,store.addSkillVersion(value.expectedRevision,value.version));return;}
+        if(req.method==='PUT'&&path==='/skill-default'){const value=z.object({expectedRevision:z.number().int(),skillId:z.enum(skillIds),versionId:z.string().nullable()}).strict().parse(await body(req));send(res,200,store.setSkillDefault(value.expectedRevision,value.skillId,value.versionId));return;}
+        if(req.method==='PUT'&&path==='/models'){const value=z.object({expectedRevision:z.number().int(),models:z.array(z.string())}).strict().parse(await body(req));send(res,200,store.saveModels(value.expectedRevision,value.models));return;}
+        if(req.method==='GET'&&path==='/model-catalog'){
+          if(!options.apiKey)throw new Error('请先配置服务端 API Key');
+          let response:Response;try{response=await fetch(endpoint.replace(/\/responses$/,'/models'),{headers:{Authorization:`Bearer ${options.apiKey}`},signal:AbortSignal.timeout(15000),redirect:'error'});}catch{throw new Error('无法读取模型目录，请稍后重试或手动填写模型 ID');}
+          if(!response.ok)throw new Error(`模型目录返回 HTTP ${response.status}，可以手动填写模型 ID`);
+          const data=await response.json();const models=z.array(z.object({id:z.string()})).parse(data.data).map(item=>item.id);send(res,200,{models});return;
+        }
         if(req.method==='GET'&&path==='/view'){const team=store.get().teams.find(t=>t.id===url.searchParams.get('teamId'));if(!team)throw new Error('团队不存在');send(res,200,buildView(team,url.searchParams.get('actorId')??''));return;}
         if(req.method==='PUT'&&path==='/state'){const value=editableSchema.parse(await body(req));send(res,200,store.save(value.expectedRevision,value.teams,value.cases as LabCase[]));return;}
-        if(req.method==='POST'&&path==='/runs'){const value=z.object({caseIds:z.array(z.string()).min(1).max(5),requestId:z.string().min(1).max(100)}).strict().parse(await body(req));send(res,202,runner.enqueue(value.caseIds,value.requestId));return;}
+        if(req.method==='POST'&&path==='/runs'){const value=z.object({caseIds:z.array(z.string()).min(1).max(5),requestId:z.string().min(1).max(100),selection:runSelectionSchema.optional()}).strict().parse(await body(req));send(res,202,runner.enqueue(value.caseIds,value.requestId,value.selection));return;}
         if(req.method==='POST'&&path==='/library/import'){await body(req);send(res,200,importLibrary(store));return;}
         const match=path.match(/^\/runs\/([^/]+)\/(cancel|review)$/);
         if(req.method==='POST'&&match){const value=await body(req);if(match[2]==='cancel')send(res,200,runner.cancel(match[1]));else{const review=z.object({verdict:z.enum(['passed','failed']),note:z.string().min(1).max(5000)}).strict().parse(value);send(res,200,runner.review(match[1],review.verdict,review.note));}return;}

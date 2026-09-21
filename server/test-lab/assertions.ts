@@ -3,8 +3,14 @@ import type { LabAssertion, AssertionResult } from '../../src/test-lab/types.ts'
 export function readPath(value:unknown,path:string):unknown {
   if(!path||path==='$')return value;
   const parts=path.replace(/^\$\.?/,'').replace(/\[(\d+)\]/g,'.$1').split('.');
-  for(const key of parts){if(['__proto__','constructor','prototype'].includes(key))return undefined;if(value===null||typeof value!=='object'||!Object.hasOwn(value,key))return undefined;value=(value as Record<string,unknown>)[key];}
-  return value;
+  const walk=(current:unknown,index:number):unknown=>{
+    if(index===parts.length)return current;
+    const key=parts[index];if(['__proto__','constructor','prototype'].includes(key))return undefined;
+    if(key==='*')return Array.isArray(current)?current.map(item=>walk(item,index+1)):undefined;
+    if(current===null||typeof current!=='object'||!Object.hasOwn(current,key))return undefined;
+    return walk((current as Record<string,unknown>)[key],index+1);
+  };
+  return walk(value,0);
 }
 export function evaluateAssertions(output:unknown,assertions:LabAssertion[]):AssertionResult[]{
   return assertions.map(a=>{

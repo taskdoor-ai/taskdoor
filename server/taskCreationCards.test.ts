@@ -44,25 +44,24 @@ test("展开复用主任务heading布局且仅一份名称，底部复用紧凑�
   const source = read("components/TaskCreationSubtaskEditor.tsx");
   const heading = source.slice(source.indexOf("<TaskDetailFields"), source.indexOf("{stale &&"));
   assert.ok(heading.includes('variant="heading"'));
-  assert.ok(heading.includes("icon={<TaskIcon"));
-  assert.ok(!heading.includes("description={"), "子任务不重复显示共享目标");
+  assert.ok(heading.includes("icon={taskIcon}"));
+  assert.ok(heading.includes('description={{ label: "目标"') && heading.includes("value: draft.goal"), "子任务展示自身目标，允许与主任务相同");
+  assert.ok(heading.includes("onChange: goal => change({ ...draft, goal })"), "目标编辑同步到当前子任务");
   assert.ok(!heading.includes("titleAction={") && !heading.includes("properties={") && !heading.includes("attributes={"), "标题操作与底部属性复用主卡片外层布局");
   assert.ok(source.includes('{!open && <>'), "收起摘要的图标名称不能在展开时重复出现");
   assert.ok(source.includes('className="task-detail-heading-main"'));
   assert.ok(source.includes('className="task-detail-properties creation-subtask-metadata"'));
   const planning = heading.slice(heading.indexOf('className="creation-subtask-planning"'));
   assert.ok(!heading.includes("effort={"), "预计投入不再占据heading中的单独一行");
-  assert.ok(planning.includes("<TaskEffortCost") && !planning.includes("creation-subtask-dependency-property"), "前置依赖移到标准下方，预计投入留在属性区");
+  assert.ok(planning.includes("<TaskEffortField") && !planning.includes("creation-subtask-dependency-property"), "前置依赖移到标准下方，预计投入留在属性区");
   assert.ok(heading.indexOf("dependencies={") < heading.indexOf('aria-label={`${label}属性`}'), "前置依赖属于正文而非属性条");
   assert.ok(!source.includes("creation-subtask-field"), "不再使用竖向表单格子");
 });
 
-test("匹配依据只保留在主任务，子任务收起和展开均不展示", () => {
+test("创建方案的主任务与子任务均不展示匹配依据行", () => {
   const plan = read("components/TaskCreationPlanEditor.tsx");
   const child = read("components/TaskCreationSubtaskEditor.tsx");
-  assert.ok(plan.indexOf("<TaskMemberMatchBasis") > plan.indexOf('aria-label="任务属性"'));
-  assert.ok(plan.indexOf("<TaskMemberMatchBasis") < plan.indexOf("</header>"));
-  assert.match(plan, /<TaskMemberMatchBasis[^>]*task=\{form\.mainTask\}/);
+  assert.doesNotMatch(plan, /TaskMemberMatchBasis|匹配依据/);
   assert.doesNotMatch(child, /TaskMemberMatchBasis|匹配依据/);
 });
 
@@ -73,10 +72,9 @@ test("右侧展开触发器保持稳定，已同步输入可直接收起，异�
   assert.ok(source.includes("onAiAdjust(trigger.current)"));
   assert.ok(source.includes("disabled={disabled || dirty || stale}"));
   assert.ok(!source.includes("if (!value && dirty)"));
-  assert.ok(!source.includes("effortDirty"), "只读估算不能继续阻挡子任务收起");
   assert.ok(source.includes("if (value && !dirty) reload()"));
   assert.ok(source.includes("const accepted = onChange(next, baseline)"));
-  assert.ok(source.includes("dirtyCallback.current(dirty)"), "收起不能绕过未同步输入保护");
+  assert.ok(source.includes("dirtyCallback.current(dirty || effortDirty)"), "收起不能绕过未同步输入和工时编辑保护");
   assert.ok(!source.includes("onSave="));
   assert.ok(source.includes("dependsOnClientIds.filter(item => item !== id)"));
   const css = read("styles/task-creation-subtask.css");

@@ -1,0 +1,6306 @@
+{
+  "fragrance-creator-business": {
+    "scopeMinutes": 360,
+    "completedMinutes": 360,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「确认第二批达人名单与合作档期」已由用户标记完成；原完成日期未记录。",
+    "actor": "陈默"
+  },
+  "fragrance-content": {
+    "scopeMinutes": 480,
+    "completedMinutes": 384,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "脚本与直播卖点已形成终审稿，仍有两处功效措辞待核对。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "脚本与直播卖点已形成终审稿，仍有两处功效措辞待核对。本次协作记录预计在 2026-09-15 完成剩余核对。",
+    "actor": "林洁",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。脚本与直播卖点已形成终审稿，仍有两处功效措辞待核对。本次协作记录预计在 2026-09-15 完成剩余核对。"
+      }
+    ]
+  },
+  "fragrance-live": {
+    "scopeMinutes": 480,
+    "completedMinutes": 168,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "首次彩排已记录串场与异常问题，核心达人档期尚未确认，无法锁定复排结束日。",
+    "actor": "高远",
+    "timingBasis": "演示缺失场景：核心达人尚未回复复排档期，恢复日期未知，暂不提供完工日期。"
+  },
+  "fragrance-product": {
+    "scopeMinutes": 300,
+    "completedMinutes": 300,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「锁定礼盒价格、赠品与库存」已由用户标记完成；原完成日期未记录。",
+    "actor": "梁川"
+  },
+  "fragrance-growth": {
+    "scopeMinutes": 360,
+    "completedMinutes": 234,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "第二轮预算与人群包已完成初稿，渠道归因差异和停止条件仍待复核。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "第二轮预算与人群包已完成初稿，渠道归因差异和停止条件仍待复核。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "许宁",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 300,
+        "note": "演示预测节点：渠道归因差异预计核对完毕，停止条件留到次日复核。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。第二轮预算与人群包已完成初稿，渠道归因差异和停止条件仍待复核。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ]
+  },
+  "fragrance-data": {
+    "scopeMinutes": 240,
+    "completedMinutes": 240,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「更新 GMV 看板与渠道归因」已由用户标记完成；原完成日期未记录。",
+    "actor": "韩序"
+  },
+  "fragrance-compliance": {
+    "scopeMinutes": 180,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「审核素材宣称与达人合同」尚未执行，未形成可计入完成量的交付内容；已预留 9/15 的审核窗口，待内容终稿提交后核对宣称与合同。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "演示记录预留 9/15 的 3 小时审核窗口，以当天上午取得内容终稿为前提，预计当日给出合规结论；该预测不由用户截止时间倒推。",
+    "actor": "苏禾",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 180,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示记录预留 9/15 的 3 小时审核窗口，以当天上午取得内容终稿为前提，预计当日给出合规结论；该预测不由用户截止时间倒推。"
+      }
+    ]
+  },
+  "fragrance-final-decision": {
+    "scopeMinutes": 180,
+    "completedMinutes": 153,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "追加预算测算已提交，尚待合规结论和最终预算边界确认；合规预计 9/15 反馈，最终预算核对安排在 9/16 上午。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "依据演示中的合规反馈窗口及 9/16 上午预算核对安排，预计 9/16 完成最终决定。剩余核对工作约 27 分钟，不把等待反馈折算为完成进度。",
+    "actor": "周岚",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 180,
+        "note": "演示预测节点：剩余交付与核对预计收口。依据演示中的合规反馈窗口及 9/16 上午预算核对安排，预计 9/16 完成最终决定。剩余核对工作约 27 分钟，不把等待反馈折算为完成进度。"
+      }
+    ]
+  },
+  "product-launch-venue-contract": {
+    "scopeMinutes": 360,
+    "completedMinutes": 324,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "场地合同与动线图已核对，剩入场时段和设备清单签回。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "场地合同与动线图已核对，剩入场时段和设备清单签回。本次协作记录预计在 2026-09-15 完成剩余核对。",
+    "actor": "陈默",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。场地合同与动线图已核对，剩入场时段和设备清单签回。本次协作记录预计在 2026-09-15 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-product-launch-venue-contract-v1",
+        "note": "演示历史观察：明确「场地确认」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-product-launch-venue-contract-v1",
+        "note": "演示历史观察：场地候选与费用清单已整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 270,
+        "scopeVersion": "demo-product-launch-venue-contract-v1",
+        "note": "演示历史观察：合同与动线图完成首轮核对。"
+      }
+    ]
+  },
+  "product-launch-promo-key-visual": {
+    "scopeMinutes": 300,
+    "completedMinutes": 240,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "主视觉方向与版式已经确认，剩品牌细节、版权来源和最终母版导出。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "依据当前母版核对记录，品牌细节和版权来源预计在 9/16 完成确认并导出最终母版。",
+    "actor": "林洁",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 300,
+        "note": "演示预测节点：完成品牌、版权核对并导出受控主视觉母版。"
+      }
+    ]
+  },
+  "product-launch-promo-invitation": {
+    "scopeMinutes": 180,
+    "completedMinutes": 84,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "邀请函信息结构和文案初稿已完成，活动日期存在两种写法，嘉宾称谓和 RSVP 方式仍待核对。",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "待 9/16 主视觉母版确认后完成版式替换，并在 9/17 核对嘉宾称谓、日期和 RSVP 方式。",
+    "actor": "林洁",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 180,
+        "note": "演示预测节点：交付信息一致的电子邀请函和可打印版本。"
+      }
+    ]
+  },
+  "product-launch-promo-channel-assets": {
+    "scopeMinutes": 240,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "渠道规格与发布时间清单已确认，但需等待主视觉母版和邀请函定稿后才能开始正式裁切与发布稿制作。",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "主视觉与邀请函预计在 9/17 前完成，渠道适配和发布稿交叉核对安排在 9/18 收口。",
+    "actor": "林洁",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 240,
+        "note": "演示预测节点：完成渠道尺寸适配、链接核对和发布版本归档。"
+      }
+    ]
+  },
+  "ccx-serum-creator-longlist": {
+    "scopeMinutes": 420,
+    "completedMinutes": 420,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「签发精华达人长名单与分层依据」已由用户标记完成；原完成日期未记录。",
+    "actor": "陈默",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-serum-creator-longlist-v1",
+        "note": "演示历史观察：明确「签发精华达人长名单与分层依据」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-ccx-serum-creator-longlist-v1",
+        "note": "演示历史观察：达人候选名单整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 330,
+        "scopeVersion": "demo-ccx-serum-creator-longlist-v1",
+        "note": "演示历史观察：分层理由和报价样本完成交叉核对。"
+      }
+    ]
+  },
+  "ccx-serum-contract-close": {
+    "scopeMinutes": 660,
+    "completedMinutes": 462,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "核心达人报价已汇总，合同授权范围和付款节点仍有两处未签回。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "核心达人报价已汇总，合同授权范围和付款节点仍有两处未签回。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "陈默",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 570,
+        "note": "演示预测节点：付款节点预计签回，授权条款留待次日核对。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 660,
+        "note": "演示预测节点：剩余交付与核对预计收口。核心达人报价已汇总，合同授权范围和付款节点仍有两处未签回。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-serum-contract-close-v1",
+        "note": "演示历史观察：明确「收口精华核心达人报价与合同版本」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 660,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-ccx-serum-contract-close-v1",
+        "note": "演示历史观察：核心报价汇总首批回复。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 660,
+        "completedMinutes": 360,
+        "scopeVersion": "demo-ccx-serum-contract-close-v1",
+        "note": "演示历史观察：合同初审完成，授权与付款节点待签回。"
+      }
+    ]
+  },
+  "ccx-serum-creator-calendar": {
+    "scopeMinutes": 300,
+    "completedMinutes": 120,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "意向档期已汇总，核心达人合同尚未收口；演示假设合同在 9/16 收口后，9/17 核对最终发布窗口。",
+    "actor": "陈默",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "演示时间假设：以合同授权范围在 9/16 收口为前提，9/17 用 3 小时核对达人回复与发布窗口。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以合同授权范围在 9/16 收口为前提，9/17 用 3 小时核对达人回复与发布窗口。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-serum-creator-calendar-v1",
+        "note": "演示历史观察：明确「冻结精华达人发布与直播档期」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-ccx-serum-creator-calendar-v1",
+        "note": "演示历史观察：候选档期开始汇总。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-ccx-serum-creator-calendar-v1",
+        "note": "演示历史观察：意向档期齐备，等待合同收口。"
+      }
+    ]
+  },
+  "ccx-serum-claim-matrix": {
+    "scopeMinutes": 480,
+    "completedMinutes": 480,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「签发精华功效宣称证据矩阵」已由用户标记完成；原完成日期未记录。",
+    "actor": "苏禾",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-serum-claim-matrix-v1",
+        "note": "演示历史观察：明确「签发精华功效宣称证据矩阵」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-ccx-serum-claim-matrix-v1",
+        "note": "演示历史观察：功效证据索引整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 390,
+        "scopeVersion": "demo-ccx-serum-claim-matrix-v1",
+        "note": "演示历史观察：宣称与证据逐条映射，终核待完成。"
+      }
+    ]
+  },
+  "ccx-serum-asset-batch": {
+    "scopeMinutes": 900,
+    "completedMinutes": 765,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "首批母版和字幕已提交核对，尚需修订功效措辞和补齐授权引用。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "首批母版和字幕已提交核对，尚需修订功效措辞和补齐授权引用。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "林洁",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 840,
+        "note": "演示预测节点：完成两处功效措辞修改，授权引用仍待补齐。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 900,
+        "note": "演示预测节点：剩余交付与核对预计收口。首批母版和字幕已提交核对，尚需修订功效措辞和补齐授权引用。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 780,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-serum-asset-batch-initial",
+        "note": "演示历史观察：明确「交付精华首批短视频母版素材」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 780,
+        "completedMinutes": 210,
+        "scopeVersion": "demo-ccx-serum-asset-batch-initial",
+        "note": "演示历史观察：脚本与母版首稿形成。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 900,
+        "completedMinutes": 570,
+        "scopeVersion": "demo-ccx-serum-asset-batch-v1",
+        "note": "演示历史观察：补充字幕版本与授权引用核对，共 120 分钟；首批字幕与母版通过首轮核对。"
+      }
+    ]
+  },
+  "ccx-serum-live-rehearsal": {
+    "scopeMinutes": 540,
+    "completedMinutes": 108,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "直播脚本和场控检查表已准备，尚未完成全链路彩排。",
+    "actor": "高远",
+    "forecastOn": "2026-09-21",
+    "timingBasis": "演示时间假设：以 9/17 档期核对通过为前提，9/18 做链路检查，9/21 完成全链路彩排与问题复核；两次窗口合计约 7.2 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 108,
+        "note": "演示预测节点：等待档期确认，不增加已预测完成量。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 324,
+        "note": "演示预测节点：直播链路与设备检查完成，正式彩排留待下一窗口。"
+      },
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 540,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以 9/17 档期核对通过为前提，9/18 做链路检查，9/21 完成全链路彩排与问题复核；两次窗口合计约 7.2 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-serum-live-rehearsal-v1",
+        "note": "演示历史观察：明确「完成精华首发直播全链路彩排」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 540,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-ccx-serum-live-rehearsal-v1",
+        "note": "演示历史观察：场控岗位清单整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 540,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-ccx-serum-live-rehearsal-v1",
+        "note": "演示历史观察：直播脚本初稿与联调检查表齐备。"
+      }
+    ]
+  },
+  "ccx-serum-price-stock": {
+    "scopeMinutes": 420,
+    "completedMinutes": 420,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「冻结精华首发价格与库存分配」已由用户标记完成；原完成日期未记录。",
+    "actor": "梁川",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-serum-price-stock-v1",
+        "note": "演示历史观察：明确「冻结精华首发价格与库存分配」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-ccx-serum-price-stock-v1",
+        "note": "演示历史观察：价格机制与库存底账汇总。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 330,
+        "scopeVersion": "demo-ccx-serum-price-stock-v1",
+        "note": "演示历史观察：价格与分配方案完成初核。"
+      }
+    ]
+  },
+  "ccx-serum-budget-gate": {
+    "scopeMinutes": 480,
+    "completedMinutes": 432,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "预算测算与止损草案已提交，等待预算上限与追加条件确认。",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "演示时间假设：首批素材预计 9/16 完成，9/17 核对投流边界与预算门禁；剩余工作不由截止日倒推。",
+    "actor": "许宁",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：首批素材预计 9/16 完成，9/17 核对投流边界与预算门禁；剩余工作不由截止日倒推。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-serum-budget-gate-v1",
+        "note": "演示历史观察：明确「核准精华首发投流预算与止损线」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-ccx-serum-budget-gate-v1",
+        "note": "演示历史观察：预算边界与历史投放数据整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 300,
+        "scopeVersion": "demo-ccx-serum-budget-gate-v1",
+        "note": "演示历史观察：预算测算和止损条件初稿齐备。"
+      }
+    ]
+  },
+  "ccx-serum-attribution-board": {
+    "scopeMinutes": 600,
+    "completedMinutes": 210,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "归因字段样表和库存接口样例已整理，联动看板尚未完成验证。",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：预算门禁预计 9/17 确认，9/18 更新归因看板并核对预算与成交口径。",
+    "actor": "韩序",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：预算门禁预计 9/17 确认，9/18 更新归因看板并核对预算与成交口径。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-serum-attribution-board-v1",
+        "note": "演示历史观察：明确「上线精华首发归因与库存联动看板」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-ccx-serum-attribution-board-v1",
+        "note": "演示历史观察：归因字段清单整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 150,
+        "scopeVersion": "demo-ccx-serum-attribution-board-v1",
+        "note": "演示历史观察：样表与接口样例已核对。"
+      }
+    ]
+  },
+  "ccx-double11-segment-replay": {
+    "scopeMinutes": 480,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「复算双十一候选人群的历史贡献」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "韩序",
+    "forecastOn": "2026-09-21",
+    "timingBasis": "演示时间假设：归因看板预计 9/18 更新后，9/18 与 9/21 分两次复算历史贡献并复核口径，合计 8 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 240,
+        "note": "演示预测节点：归因看板更新后完成第一批历史人群复算。"
+      },
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：归因看板预计 9/18 更新后，9/18 与 9/21 分两次复算历史贡献并复核口径，合计 8 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-segment-replay-v1",
+        "note": "演示历史观察：明确「复算双十一候选人群的历史贡献」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-segment-replay-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-segment-replay-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "ccx-double11-margin-review": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「核对双十一候选 SKU 边际利润」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "梁川",
+    "forecastOn": "2026-09-23",
+    "timingBasis": "演示时间假设：等待 9/21 人群复算结果，9/22 至 9/23 核对 SKU 成本、优惠和边际利润，合计 7 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 240,
+        "note": "演示预测节点：核对主要 SKU 成本与优惠，边际利润次日复核。"
+      },
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：等待 9/21 人群复算结果，9/22 至 9/23 核对 SKU 成本、优惠和边际利润，合计 7 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-margin-review-v1",
+        "note": "演示历史观察：明确「核对双十一候选 SKU 边际利润」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-margin-review-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-margin-review-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "ccx-double11-assortment-gate": {
+    "scopeMinutes": 300,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「签发双十一预售选品结论」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-24",
+    "timingBasis": "演示时间假设：利润核对预计 9/23 完成，9/24 预留 5 小时比较候选组合并形成选品结论。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：利润核对预计 9/23 完成，9/24 预留 5 小时比较候选组合并形成选品结论。"
+      }
+    ]
+  },
+  "ccx-double11-audience-suppression": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「建立双十一投放排除人群规则」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "许宁",
+    "forecastOn": "2026-09-23",
+    "timingBasis": "演示时间假设：9/21 取得人群复算结果后，9/22 至 9/23 核对排除条件和交叉人群，合计 6 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 180,
+        "note": "演示预测节点：初步核对人群排除条件，交叉人群次日验证。"
+      },
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：9/21 取得人群复算结果后，9/22 至 9/23 核对排除条件和交叉人群，合计 6 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-audience-suppression-v1",
+        "note": "演示历史观察：明确「建立双十一投放排除人群规则」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-audience-suppression-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-audience-suppression-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "ccx-double11-creative-matrix": {
+    "scopeMinutes": 780,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「交付双十一分人群素材矩阵」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "林洁",
+    "forecastOn": "2026-09-28",
+    "timingBasis": "演示时间假设：选品与排除规则最晚预计 9/24 齐备，9/25 和 9/28 分批制作并核对素材，合计 13 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 420,
+        "note": "演示预测节点：第一批渠道素材制作与初核完成。"
+      },
+      {
+        "at": "2026-09-28",
+        "completedMinutes": 780,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：选品与排除规则最晚预计 9/24 齐备，9/25 和 9/28 分批制作并核对素材，合计 13 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 780,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-creative-matrix-v1",
+        "note": "演示历史观察：明确「交付双十一分人群素材矩阵」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 780,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-creative-matrix-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 780,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-creative-matrix-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "ccx-double11-channel-budget": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「冻结双十一渠道预算与迁移条件」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "许宁",
+    "forecastOn": "2026-09-29",
+    "timingBasis": "演示时间假设：以 9/28 素材矩阵齐备为前提，9/29 用 7 小时完成渠道预算测算与迁移条件核对。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-29",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以 9/28 素材矩阵齐备为前提，9/29 用 7 小时完成渠道预算测算与迁移条件核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-channel-budget-v1",
+        "note": "演示历史观察：明确「冻结双十一渠道预算与迁移条件」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-channel-budget-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-channel-budget-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "ccx-double11-stock-stress": {
+    "scopeMinutes": 600,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成双十一锁库与超卖压力验证」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "梁川",
+    "forecastOn": "2026-09-28",
+    "timingBasis": "演示时间假设：9/24 取得选品结果，9/25 和 9/28 完成锁库压测、异常复核与记录，合计 10 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 360,
+        "note": "演示预测节点：锁库压测执行完成，异常记录留待第二个窗口复核。"
+      },
+      {
+        "at": "2026-09-28",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：9/24 取得选品结果，9/25 和 9/28 完成锁库压测、异常复核与记录，合计 10 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-stock-stress-v1",
+        "note": "演示历史观察：明确「完成双十一锁库与超卖压力验证」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-stock-stress-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-stock-stress-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "ccx-double11-service-macro": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「签发双十一预售客服处理口径」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "高远",
+    "forecastOn": "2026-09-25",
+    "timingBasis": "演示时间假设：9/24 取得选品和促销边界，9/25 用 6 小时编写客服处理口径并交叉核对。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：9/24 取得选品和促销边界，9/25 用 6 小时编写客服处理口径并交叉核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-service-macro-v1",
+        "note": "演示历史观察：明确「签发双十一预售客服处理口径」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-service-macro-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-service-macro-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "ccx-double11-fulfillment-drill": {
+    "scopeMinutes": 480,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「组织双十一预售异常桌面演练」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "高远",
+    "forecastOn": "2026-09-30",
+    "timingBasis": "演示时间假设：库存验证、客服口径和预算最晚预计 9/29 齐备，9/30 留出 8 小时完成异常桌面演练及问题收口。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-30",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：库存验证、客服口径和预算最晚预计 9/29 齐备，9/30 留出 8 小时完成异常桌面演练及问题收口。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-fulfillment-drill-v1",
+        "note": "演示历史观察：明确「组织双十一预售异常桌面演练」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-fulfillment-drill-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-double11-fulfillment-drill-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "ccx-creator-identity-merge": {
+    "scopeMinutes": 360,
+    "completedMinutes": 360,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「合并达人跨平台重复身份」已由用户标记完成；原完成日期未记录。",
+    "actor": "韩序",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-identity-merge-v1",
+        "note": "演示历史观察：明确「合并达人跨平台重复身份」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-ccx-creator-identity-merge-v1",
+        "note": "演示历史观察：重复身份样本归类。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 270,
+        "scopeVersion": "demo-ccx-creator-identity-merge-v1",
+        "note": "演示历史观察：跨平台标识映射完成，合并结果待终核。"
+      }
+    ]
+  },
+  "ccx-creator-consent-audit": {
+    "scopeMinutes": 480,
+    "completedMinutes": 312,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "主要达人联系与授权记录已核对，少数授权有效期和可用渠道仍需回访。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "主要达人联系与授权记录已核对，少数授权有效期和可用渠道仍需回访。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "苏禾",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 408,
+        "note": "演示预测节点：主要授权渠道回访完成，个别有效期次日收口。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。主要达人联系与授权记录已核对，少数授权有效期和可用渠道仍需回访。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-consent-audit-v1",
+        "note": "演示历史观察：明确「核对达人联系方式与素材授权状态」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-ccx-creator-consent-audit-v1",
+        "note": "演示历史观察：授权与联系记录归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 240,
+        "scopeVersion": "demo-ccx-creator-consent-audit-v1",
+        "note": "演示历史观察：完成主要渠道授权初核。"
+      }
+    ]
+  },
+  "ccx-creator-performance-window": {
+    "scopeMinutes": 540,
+    "completedMinutes": 432,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "近九十天窗口已重算，退款口径与跨平台去重仍有抽样差异。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "近九十天窗口已重算，退款口径与跨平台去重仍有抽样差异。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "韩序",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 492,
+        "note": "演示预测节点：跨平台去重抽样完成，退款口径次日复核。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 540,
+        "note": "演示预测节点：剩余交付与核对预计收口。近九十天窗口已重算，退款口径与跨平台去重仍有抽样差异。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-performance-window-v1",
+        "note": "演示历史观察：明确「统一达人近九十天绩效窗口」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 540,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-ccx-creator-performance-window-v1",
+        "note": "演示历史观察：近九十天数据清洗。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 540,
+        "completedMinutes": 330,
+        "scopeVersion": "demo-ccx-creator-performance-window-v1",
+        "note": "演示历史观察：窗口重算完成，退款与去重待抽样。"
+      }
+    ]
+  },
+  "ccx-creator-risk-score": {
+    "scopeMinutes": 420,
+    "completedMinutes": 105,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "风险维度与样本初稿已整理，分层结果尚未与授权及绩效底账交叉核对。",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "风险维度与样本初稿已整理，分层结果尚未与授权及绩效底账交叉核对。本次协作记录预计在 2026-09-18 完成剩余核对。",
+    "actor": "苏禾",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 240,
+        "note": "演示预测节点：授权及绩效底账齐备后完成第一轮风险分层。"
+      },
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 360,
+        "note": "演示预测节点：风险样本交叉核对完成，剩余异常次日确认。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。风险维度与样本初稿已整理，分层结果尚未与授权及绩效底账交叉核对。本次协作记录预计在 2026-09-18 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-risk-score-v1",
+        "note": "演示历史观察：明确「签发达人履约与合规风险分层」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-ccx-creator-risk-score-v1",
+        "note": "演示历史观察：风险维度草拟。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 75,
+        "scopeVersion": "demo-ccx-creator-risk-score-v1",
+        "note": "演示历史观察：样本标签完成初轮整理。"
+      }
+    ]
+  },
+  "ccx-creator-ratecard-renewal": {
+    "scopeMinutes": 480,
+    "completedMinutes": 72,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "已收集核心达人报价卡，报价有效期和授权范围尚未逐条核对。",
+    "forecastOn": "2026-09-19",
+    "timingBasis": "已收集核心达人报价卡，报价有效期和授权范围尚未逐条核对。本次协作记录预计在 2026-09-19 完成剩余核对。",
+    "actor": "陈默",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 240,
+        "note": "演示预测节点：完成核心报价卡有效期核对。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 420,
+        "note": "演示预测节点：续签条款与可用授权范围核对，次日保存结论。"
+      },
+      {
+        "at": "2026-09-19",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。已收集核心达人报价卡，报价有效期和授权范围尚未逐条核对。本次协作记录预计在 2026-09-19 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-ratecard-renewal-v1",
+        "note": "演示历史观察：明确「复核核心达人四季度报价卡」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-ratecard-renewal-v1",
+        "note": "演示历史观察：本轮报价卡尚未收到。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 45,
+        "scopeVersion": "demo-ccx-creator-ratecard-renewal-v1",
+        "note": "演示历史观察：收集首批报价卡，待核对有效期。"
+      }
+    ]
+  },
+  "ccx-creator-inactive-exit": {
+    "scopeMinutes": 300,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「关闭失效达人与过期合作入口」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈默",
+    "forecastOn": "2026-09-21",
+    "timingBasis": "演示时间假设：9/18 取得风险评分后，9/21 用 5 小时核对失效合作、关闭入口并保存处理记录。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：9/18 取得风险评分后，9/21 用 5 小时核对失效合作、关闭入口并保存处理记录。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-inactive-exit-v1",
+        "note": "演示历史观察：明确「关闭失效达人与过期合作入口」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-inactive-exit-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-inactive-exit-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "ccx-creator-vertical-recruit": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「建立熟龄护肤达人补充名单」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈默",
+    "forecastOn": "2026-09-23",
+    "timingBasis": "演示时间假设：9/21 取得人群复算结果，9/22 至 9/23 筛选熟龄护肤达人并核对匹配理由，合计 7 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 240,
+        "note": "演示预测节点：熟龄护肤候选达人筛选完成，匹配理由次日核对。"
+      },
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：9/21 取得人群复算结果，9/22 至 9/23 筛选熟龄护肤达人并核对匹配理由，合计 7 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-vertical-recruit-v1",
+        "note": "演示历史观察：明确「建立熟龄护肤达人补充名单」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-vertical-recruit-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-vertical-recruit-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "ccx-creator-monthly-committee": {
+    "scopeMinutes": 240,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「召开九月达人池决策会」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-24",
+    "timingBasis": "演示时间假设：费率、退出名单与补充名单最晚预计 9/23 齐备，9/24 用 4 小时完成会前核对、决策会和结论整理。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 240,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：费率、退出名单与补充名单最晚预计 9/23 齐备，9/24 用 4 小时完成会前核对、决策会和结论整理。"
+      }
+    ]
+  },
+  "ccx-weekly-settlement": {
+    "scopeMinutes": 300,
+    "completedMinutes": 210,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "佣金明细已对账，仍有退款跨期和优惠承担差异待财务确认。",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "演示时间假设：本轮合同授权与付款节点预计 9/16 收口，9/17 对照合同核对周结算及付款申请。",
+    "actor": "陈默",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：本轮合同授权与付款节点预计 9/16 收口，9/17 对照合同核对周结算及付款申请。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-weekly-settlement-v1",
+        "note": "演示历史观察：明确「核对本周达人佣金与退货冲抵」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-ccx-weekly-settlement-v1",
+        "note": "演示历史观察：佣金与退款明细归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 150,
+        "scopeVersion": "demo-ccx-weekly-settlement-v1",
+        "note": "演示历史观察：佣金明细首轮对账完成。"
+      }
+    ]
+  },
+  "ccx-extreme-claim-incident": {
+    "scopeMinutes": 420,
+    "completedMinutes": 189,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "风险视频已定位并提交修改，平台申诉回执尚未返回，恢复时间未知。",
+    "actor": "苏禾",
+    "timingBasis": "演示缺失场景：平台申诉没有反馈时限，无法确定恢复日期，保留已有进度。",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-extreme-claim-incident-v1",
+        "note": "演示历史观察：明确「处理达人视频极限词下架事件」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-ccx-extreme-claim-incident-v1",
+        "note": "演示历史观察：定位风险视频与影响范围。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 189,
+        "scopeVersion": "demo-ccx-extreme-claim-incident-v1",
+        "note": "演示历史观察：修改已提交，等待平台申诉回复。"
+      }
+    ]
+  },
+  "ccx-october-studio-calendar": {
+    "scopeMinutes": 300,
+    "completedMinutes": 255,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "十月直播间日历草稿已排出，两场设备和人员冲突仍待核对。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "十月直播间日历草稿已排出，两场设备和人员冲突仍待核对。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "高远",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。十月直播间日历草稿已排出，两场设备和人员冲突仍待核对。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-october-studio-calendar-v1",
+        "note": "演示历史观察：明确「冻结十月直播间资源日历」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-ccx-october-studio-calendar-v1",
+        "note": "演示历史观察：收集直播间申请时段。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 180,
+        "scopeVersion": "demo-ccx-october-studio-calendar-v1",
+        "note": "演示历史观察：形成日历草案并识别资源冲突。"
+      }
+    ]
+  },
+  "ccx-holiday-crossplatform-live": {
+    "scopeMinutes": 600,
+    "completedMinutes": 180,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "取消前已形成频道分工与联播脚本初稿，后续工作停止。",
+    "actor": "高远",
+    "timingBasis": "演示取消场景：保留取消前工作量，后续执行停止，不显示未来完工预测。",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-holiday-crossplatform-live-v1",
+        "note": "演示历史观察：明确「国庆专场跨平台联播筹备」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-ccx-holiday-crossplatform-live-v1",
+        "note": "演示历史观察：频道分工初稿形成。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-ccx-holiday-crossplatform-live-v1",
+        "note": "演示历史观察：联播脚本与沟通清单初稿形成。"
+      }
+    ]
+  },
+  "ccx-creator-collaboration-handbook": {
+    "scopeMinutes": 180,
+    "completedMinutes": 99,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "报价、寄样和授权异常章节已整理，违约与下架案例尚需补充。",
+    "actor": "陈默",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "演示时间假设：以 9/16 收到违约与下架案例材料为前提，9/17 完成补写和交叉核对，剩余约 81 分钟。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 180,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以 9/16 收到违约与下架案例材料为前提，9/17 完成补写和交叉核对，剩余约 81 分钟。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 180,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-collaboration-handbook-v1",
+        "note": "演示历史观察：明确「维护达人合作异常处理手册」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 180,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-ccx-creator-collaboration-handbook-v1",
+        "note": "演示历史观察：明确异常处理手册范围。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 180,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-ccx-creator-collaboration-handbook-v1",
+        "note": "演示历史观察：报价寄样与授权章节完成初稿。"
+      }
+    ]
+  },
+  "unassigned-creator-sample-tracking": {
+    "creation": {
+      "at": "2026-09-02T18:00:00+08:00",
+      "scopeMinutes": 144
+    },
+    "scopeMinutes": 180,
+    "completedMinutes": 63,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "周岚已汇总本轮寄样物流台账，部分签收已核对；试用反馈和异常跟进名单尚未整理。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：以 9/17 收到本轮签收及试用反馈为前提，周岚在 9/18 核对物流异常和未回复名单，剩余约 117 分钟；未指定负责人不清除这项独立预测。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 63,
+        "note": "演示预测节点：等待本轮签收与试用反馈，不把等待折算为进度。"
+      },
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 120,
+        "note": "演示预测节点：签收与反馈清单齐备，尚需核对物流异常和未回复项。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 180,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以 9/17 收到本轮签收及试用反馈为前提，周岚在 9/18 核对物流异常和未回复名单，剩余约 117 分钟；未指定负责人不清除这项独立预测。"
+      }
+    ]
+  },
+  "unassigned-short-video-covers": {
+    "creation": {
+      "at": "2026-09-02T18:00:00+08:00",
+      "scopeMinutes": 192
+    },
+    "scopeMinutes": 240,
+    "completedMinutes": 60,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "周岚已准备视觉模板和标题草稿，商品信息、安全区与三版竖屏裁切尚未核对。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "演示时间假设：商品信息预计 9/15 核对后可用，品牌预计同时补充横版封面适配，新增 60 分钟；周岚在 9/16 用 4 小时完成剩余裁切与核对。当前总量仍为 240 分钟，预测总量为 300 分钟。",
+    "forecastScopePoints": [
+      {
+        "at": "2026-09-15",
+        "scopeMinutes": 300,
+        "note": "演示范围预测：品牌预计补充横版封面适配，新增 60 分钟；尚未计入当前总量。"
+      }
+    ],
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 108,
+        "note": "演示预测节点：商品信息核对完成，三版裁切与安全区检查待次日执行。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 300,
+        "note": "演示预测节点：三版竖屏裁切、预计补充的横版适配与安全区核对收口，完成量达到预测总量 300 分钟。"
+      }
+    ]
+  },
+  "unassigned-gift-stock-check": {
+    "creation": {
+      "at": "2026-09-02T18:00:00+08:00",
+      "scopeMinutes": 120
+    },
+    "scopeMinutes": 120,
+    "completedMinutes": 48,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "周岚已整理系统库存和活动占用表，仓库实物数量与补货安排尚待核对。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "演示时间假设：以仓库 9/16 下午返回实物盘点和补货回复为前提，周岚在 9/17 上午完成差异核对与替代方案整理，剩余约 72 分钟；补货到仓本身不计入本任务工作量。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 48,
+        "note": "演示预测节点：等待仓库盘点回复，预测完成量保持不变。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 84,
+        "note": "演示预测节点：实物盘点与补货回复到齐并完成初核，次日核对差异与替代方案。"
+      },
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 120,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以仓库 9/16 下午返回实物盘点和补货回复为前提，周岚在 9/17 上午完成差异核对与替代方案整理，剩余约 72 分钟；补货到仓本身不计入本任务工作量。"
+      }
+    ]
+  },
+  "platform-api-contract": {
+    "scopeMinutes": 480,
+    "completedMinutes": 480,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「冻结离线同步 API 契约」已由用户标记完成；原完成日期未记录。",
+    "actor": "程砚",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-api-contract-v1",
+        "note": "演示历史观察：明确「冻结离线同步 API 契约」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-platform-api-contract-v1",
+        "note": "演示历史观察：离线同步接口草案整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 360,
+        "scopeVersion": "demo-platform-api-contract-v1",
+        "note": "演示历史观察：字段与错误码完成交叉核对。"
+      }
+    ]
+  },
+  "platform-ios-review": {
+    "scopeMinutes": 720,
+    "completedMinutes": 576,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "审核材料与隐私截图已准备，剩离线同步录屏和审核账号复核。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "审核材料与隐私截图已准备，剩离线同步录屏和审核账号复核。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "乔安",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 648,
+        "note": "演示预测节点：离线同步录屏补齐，审核账号次日复核。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 720,
+        "note": "演示预测节点：剩余交付与核对预计收口。审核材料与隐私截图已准备，剩离线同步录屏和审核账号复核。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-ios-review-v1",
+        "note": "演示历史观察：明确「完成 iOS 候选版审核材料」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 180,
+        "scopeVersion": "demo-platform-ios-review-v1",
+        "note": "演示历史观察：审核材料初稿与账号信息归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 720,
+        "completedMinutes": 420,
+        "scopeVersion": "demo-platform-ios-review-v1",
+        "note": "演示历史观察：隐私截图及主要说明齐备。"
+      }
+    ]
+  },
+  "platform-android-staged": {
+    "scopeMinutes": 600,
+    "completedMinutes": 390,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "首档灰度与回滚脚本已验证，弱网和停用恢复场景仍需回归。",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "首档灰度与回滚脚本已验证，弱网和停用恢复场景仍需回归。本次协作记录预计在 2026-09-17 完成剩余核对。",
+    "actor": "唐澈",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 510,
+        "note": "演示预测节点：弱网回归完成，停用恢复与回滚结果次日复核。"
+      },
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。首档灰度与回滚脚本已验证，弱网和停用恢复场景仍需回归。本次协作记录预计在 2026-09-17 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-android-staged-v1",
+        "note": "演示历史观察：明确「验证 Android 分阶段发布与回滚」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-platform-android-staged-v1",
+        "note": "演示历史观察：首档灰度策略与脚本形成。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 300,
+        "scopeVersion": "demo-platform-android-staged-v1",
+        "note": "演示历史观察：首轮回滚验证完成。"
+      }
+    ]
+  },
+  "platform-observability-alerts": {
+    "scopeMinutes": 420,
+    "completedMinutes": 378,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "SLO 面板和告警规则已配置，待值班组确认阈值与升级路由。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "SLO 面板和告警规则已配置，待值班组确认阈值与升级路由。本次协作记录预计在 2026-09-15 完成剩余核对。",
+    "actor": "叶宁",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。SLO 面板和告警规则已配置，待值班组确认阈值与升级路由。本次协作记录预计在 2026-09-15 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-observability-alerts-v1",
+        "note": "演示历史观察：明确「配置同步链路 SLO 与灰度告警」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-platform-observability-alerts-v1",
+        "note": "演示历史观察：SLO 指标与阈值草拟。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 270,
+        "scopeVersion": "demo-platform-observability-alerts-v1",
+        "note": "演示历史观察：面板及主要告警配置完成。"
+      }
+    ]
+  },
+  "platform-support-runbook": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「更新同步故障支持手册」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "许悦",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "演示时间假设：告警配置预计 9/15 核对通过，9/16 至 9/17 用 6 小时整理处置步骤并做支持复核。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 240,
+        "note": "演示预测节点：完成主要处置步骤，次日支持组交叉复核。"
+      },
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：告警配置预计 9/15 核对通过，9/16 至 9/17 用 6 小时整理处置步骤并做支持复核。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-support-runbook-v1",
+        "note": "演示历史观察：明确「更新同步故障支持手册」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-support-runbook-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-support-runbook-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-security-gate": {
+    "scopeMinutes": 540,
+    "completedMinutes": 216,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "数据流与加密检查已完成一轮，第三方组件风险尚无处置结论。",
+    "actor": "宋衡",
+    "timingBasis": "演示缺失场景：第三方组件风险处置方案和验证时间均未明确，暂不提供门禁完成日期。",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-security-gate-v1",
+        "note": "演示历史观察：明确「签发移动数据安全门禁结论」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 540,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-platform-security-gate-v1",
+        "note": "演示历史观察：移动数据流初核。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 540,
+        "completedMinutes": 216,
+        "scopeVersion": "demo-platform-security-gate-v1",
+        "note": "演示历史观察：加密检查完成一轮，等待第三方风险结论。"
+      }
+    ]
+  },
+  "platform-access-review": {
+    "scopeMinutes": 300,
+    "completedMinutes": 255,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "管理员名单和权限使用记录已比对，少数紧急账号授权仍待负责人签回。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "管理员名单和权限使用记录已比对，少数紧急账号授权仍待负责人签回。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "宋衡",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。管理员名单和权限使用记录已比对，少数紧急账号授权仍待负责人签回。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-access-review-v1",
+        "note": "演示历史观察：明确「季度管理员访问复核」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-platform-access-review-v1",
+        "note": "演示历史观察：管理员名单归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 180,
+        "scopeVersion": "demo-platform-access-review-v1",
+        "note": "演示历史观察：权限使用记录完成主要比对。"
+      }
+    ]
+  },
+  "platform-design-token-cleanup": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「清理旧版移动设计 Token」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "乔安",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：9/17 和 9/18 分批替换旧 Token、检查页面回归并整理兼容说明，合计 7 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 240,
+        "note": "演示预测节点：首批旧 Token 替换，次日页面回归及兼容说明收口。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：9/17 和 9/18 分批替换旧 Token、检查页面回归并整理兼容说明，合计 7 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-design-token-cleanup-v1",
+        "note": "演示历史观察：明确「清理旧版移动设计 Token」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-design-token-cleanup-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-design-token-cleanup-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-scim-schema-map": {
+    "scopeMinutes": 660,
+    "completedMinutes": 396,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "标准属性已映射，扩展字段和跨目录冲突样例仍待验证。",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "标准属性已映射，扩展字段和跨目录冲突样例仍待验证。本次协作记录预计在 2026-09-17 完成剩余核对。",
+    "actor": "程砚",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 540,
+        "note": "演示预测节点：扩展字段验证完成，跨目录冲突次日核对。"
+      },
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 660,
+        "note": "演示预测节点：剩余交付与核对预计收口。标准属性已映射，扩展字段和跨目录冲突样例仍待验证。本次协作记录预计在 2026-09-17 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-schema-map-initial",
+        "note": "演示历史观察：明确「统一 Okta 与 Entra ID 属性映射」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 540,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-platform-scim-schema-map-initial",
+        "note": "演示历史观察：标准属性列表整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 660,
+        "completedMinutes": 270,
+        "scopeVersion": "demo-platform-scim-schema-map-v1",
+        "note": "演示历史观察：增加扩展字段和跨目录冲突样例，共 120 分钟；完成主要目录标准字段映射。"
+      }
+    ]
+  },
+  "platform-scim-idempotency": {
+    "scopeMinutes": 720,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「验证成员停用与恢复的幂等语义」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "程砚",
+    "forecastOn": "2026-09-21",
+    "timingBasis": "演示时间假设：字段映射预计 9/17 冻结，9/18 和 9/21 完成停用、恢复与重复请求用例，合计 12 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 420,
+        "note": "演示预测节点：停用与恢复用例完成，重复请求留待下一窗口。"
+      },
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 720,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：字段映射预计 9/17 冻结，9/18 和 9/21 完成停用、恢复与重复请求用例，合计 12 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-idempotency-v1",
+        "note": "演示历史观察：明确「验证成员停用与恢复的幂等语义」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-idempotency-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-idempotency-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-scim-directory-matrix": {
+    "scopeMinutes": 600,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成目录同步兼容矩阵回归」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "顾言",
+    "forecastOn": "2026-09-23",
+    "timingBasis": "演示时间假设：幂等用例预计 9/21 通过，9/22 至 9/23 执行目录兼容矩阵并复核差异，合计 10 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 360,
+        "note": "演示预测节点：执行首批目录兼容用例，次日复核差异。"
+      },
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：幂等用例预计 9/21 通过，9/22 至 9/23 执行目录兼容矩阵并复核差异，合计 10 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-directory-matrix-v1",
+        "note": "演示历史观察：明确「完成目录同步兼容矩阵回归」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-directory-matrix-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-directory-matrix-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-scim-pilot-migration": {
+    "scopeMinutes": 900,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「迁移六家试点租户的目录连接」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-25",
+    "timingBasis": "演示时间假设：兼容矩阵预计 9/23 通过，六家试点按 9/24 和 9/25 两批迁移及人工复核，合计 15 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 480,
+        "note": "演示预测节点：前三家试点完成迁移与人工复核。"
+      },
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 900,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：兼容矩阵预计 9/23 通过，六家试点按 9/24 和 9/25 两批迁移及人工复核，合计 15 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 900,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-pilot-migration-v1",
+        "note": "演示历史观察：明确「迁移六家试点租户的目录连接」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 900,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-pilot-migration-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 900,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-pilot-migration-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-scim-support-playbook": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「发布目录同步排障与升级手册」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "许悦",
+    "forecastOn": "2026-09-28",
+    "timingBasis": "演示时间假设：以 9/25 试点迁移记录齐备为前提，9/28 用 7 小时整理排障、升级及回滚路径。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-28",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以 9/25 试点迁移记录齐备为前提，9/28 用 7 小时整理排障、升级及回滚路径。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-support-playbook-v1",
+        "note": "演示历史观察：明确「发布目录同步排障与升级手册」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-support-playbook-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-support-playbook-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-scim-launch-gate": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「签发 SCIM 正式可用门禁结论」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-29",
+    "timingBasis": "演示时间假设：试点和支持手册最晚预计 9/28 齐备，9/29 用 6 小时完成门禁材料复核与结论签发。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-29",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：试点和支持手册最晚预计 9/28 齐备，9/29 用 6 小时完成门禁材料复核与结论签发。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-launch-gate-v1",
+        "note": "演示历史观察：明确「签发 SCIM 正式可用门禁结论」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-launch-gate-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-scim-launch-gate-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-audit-event-dictionary": {
+    "scopeMinutes": 540,
+    "completedMinutes": 486,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "高风险事件字典已完成初审，操作主体和资源快照字段尚待统一。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "高风险事件字典已完成初审，操作主体和资源快照字段尚待统一。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "宋衡",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 540,
+        "note": "演示预测节点：剩余交付与核对预计收口。高风险事件字典已完成初审，操作主体和资源快照字段尚待统一。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-event-dictionary-v1",
+        "note": "演示历史观察：明确「冻结高风险操作事件字典」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 540,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-platform-audit-event-dictionary-v1",
+        "note": "演示历史观察：高风险事件样本整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 540,
+        "completedMinutes": 360,
+        "scopeVersion": "demo-platform-audit-event-dictionary-v1",
+        "note": "演示历史观察：事件字典初审，快照字段待统一。"
+      }
+    ]
+  },
+  "platform-audit-retention": {
+    "scopeMinutes": 720,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「验证分层保留与租户删除策略」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "程砚",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：事件字典预计 9/16 冻结，9/17 至 9/18 验证保留层级与租户删除路径，合计 12 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 420,
+        "note": "演示预测节点：保留层级验证完成，租户删除路径次日复核。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 720,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：事件字典预计 9/16 冻结，9/17 至 9/18 验证保留层级与租户删除路径，合计 12 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-retention-v1",
+        "note": "演示历史观察：明确「验证分层保留与租户删除策略」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-retention-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-retention-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-audit-integrity-proof": {
+    "scopeMinutes": 660,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「实现导出清单与完整性校验」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "程砚",
+    "forecastOn": "2026-09-22",
+    "timingBasis": "演示时间假设：保留策略预计 9/18 通过，9/21 至 9/22 实现清单校验并复核缺失、重复案例，合计 11 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 360,
+        "note": "演示预测节点：清单校验实现完成，缺失与重复案例次日复核。"
+      },
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 660,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：保留策略预计 9/18 通过，9/21 至 9/22 实现清单校验并复核缺失、重复案例，合计 11 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-integrity-proof-v1",
+        "note": "演示历史观察：明确「实现导出清单与完整性校验」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-integrity-proof-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-integrity-proof-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-audit-scale-pilot": {
+    "scopeMinutes": 840,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成千万级审计记录导出试点」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "顾言",
+    "forecastOn": "2026-09-24",
+    "timingBasis": "演示时间假设：完整性校验预计 9/22 完成，9/23 至 9/24 运行千万级试点并核对抽样结果，人工投入合计 14 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 480,
+        "note": "演示预测节点：千万级试点运行完成首轮采样。"
+      },
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 840,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：完整性校验预计 9/22 完成，9/23 至 9/24 运行千万级试点并核对抽样结果，人工投入合计 14 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-scale-pilot-v1",
+        "note": "演示历史观察：明确「完成千万级审计记录导出试点」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-scale-pilot-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-scale-pilot-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-audit-admin-guide": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「发布审计导出管理员指南」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "许悦",
+    "forecastOn": "2026-09-25",
+    "timingBasis": "演示时间假设：以 9/24 试点结论齐备为前提，9/25 用 6 小时编写管理员操作与异常处理说明。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以 9/24 试点结论齐备为前提，9/25 用 6 小时编写管理员操作与异常处理说明。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-admin-guide-v1",
+        "note": "演示历史观察：明确「发布审计导出管理员指南」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-admin-guide-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-admin-guide-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-audit-release-gate": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成审计导出合规发布评审」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-28",
+    "timingBasis": "演示时间假设：试点和指南预计 9/25 齐备，9/28 用 7 小时核对删除、导出授权与发布条件。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-28",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：试点和指南预计 9/25 齐备，9/28 用 7 小时核对删除、导出授权与发布条件。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-release-gate-v1",
+        "note": "演示历史观察：明确「完成审计导出合规发布评审」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-release-gate-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-audit-release-gate-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-webhook-tenant-isolation": {
+    "scopeMinutes": 960,
+    "completedMinutes": 576,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "租户队列拆分已实现，剩突发负载下的公平性与隔离回归。",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "租户队列拆分已实现，剩突发负载下的公平性与隔离回归。本次协作记录预计在 2026-09-18 完成剩余核对。",
+    "actor": "程砚",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 720,
+        "note": "演示预测节点：公平性负载回归通过，隔离异常继续验证。"
+      },
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 864,
+        "note": "演示预测节点：异常用例完成修订，次日最终回归。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 960,
+        "note": "演示预测节点：剩余交付与核对预计收口。租户队列拆分已实现，剩突发负载下的公平性与隔离回归。本次协作记录预计在 2026-09-18 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 780,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-tenant-isolation-initial",
+        "note": "演示历史观察：明确「实现租户级投递队列隔离」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 780,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-platform-webhook-tenant-isolation-initial",
+        "note": "演示历史观察：队列拆分设计与首批实现完成。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 960,
+        "completedMinutes": 420,
+        "scopeVersion": "demo-platform-webhook-tenant-isolation-v1",
+        "note": "演示历史观察：增加突发负载公平性回归，共 180 分钟；租户隔离实现完成首轮验证。"
+      }
+    ]
+  },
+  "platform-webhook-retry-policy": {
+    "scopeMinutes": 480,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「冻结退避、过期与死信策略」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "程砚",
+    "forecastOn": "2026-09-21",
+    "timingBasis": "演示时间假设：租户隔离预计 9/18 验证通过，9/21 用 8 小时核对退避、过期与死信边界。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：租户隔离预计 9/18 验证通过，9/21 用 8 小时核对退避、过期与死信边界。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-retry-policy-v1",
+        "note": "演示历史观察：明确「冻结退避、过期与死信策略」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-retry-policy-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-retry-policy-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-webhook-failure-drill": {
+    "scopeMinutes": 720,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成突发流量与下游故障演练」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "叶宁",
+    "forecastOn": "2026-09-23",
+    "timingBasis": "演示时间假设：重试策略预计 9/21 冻结，9/22 至 9/23 执行突发流量和下游故障用例，合计 12 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 420,
+        "note": "演示预测节点：突发流量演练完成，下游故障次日复核。"
+      },
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 720,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：重试策略预计 9/21 冻结，9/22 至 9/23 执行突发流量和下游故障用例，合计 12 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-failure-drill-v1",
+        "note": "演示历史观察：明确「完成突发流量与下游故障演练」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-failure-drill-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-failure-drill-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-webhook-signature-v2": {
+    "scopeMinutes": 660,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「推出双密钥 Webhook 签名轮换」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "宋衡",
+    "forecastOn": "2026-09-22",
+    "timingBasis": "演示时间假设：9/21 至 9/22 实现双密钥轮换并验证新旧签名兼容，合计 11 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 360,
+        "note": "演示预测节点：双密钥轮换实现完成，新旧签名兼容次日验证。"
+      },
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 660,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：9/21 至 9/22 实现双密钥轮换并验证新旧签名兼容，合计 11 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-signature-v2-v1",
+        "note": "演示历史观察：明确「推出双密钥 Webhook 签名轮换」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-signature-v2-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-signature-v2-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-webhook-delivery-log": {
+    "scopeMinutes": 840,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「开放单事件投递轨迹与安全重放」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "顾言",
+    "forecastOn": "2026-09-25",
+    "timingBasis": "演示时间假设：故障演练与签名轮换最晚预计 9/23 完成，9/24 至 9/25 核对投递轨迹和安全重放，合计 14 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 480,
+        "note": "演示预测节点：投递轨迹核对完成，安全重放次日复核。"
+      },
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 840,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：故障演练与签名轮换最晚预计 9/23 完成，9/24 至 9/25 核对投递轨迹和安全重放，合计 14 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-delivery-log-v1",
+        "note": "演示历史观察：明确「开放单事件投递轨迹与安全重放」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-delivery-log-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-delivery-log-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-webhook-migration-comms": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成签名升级客户沟通与支持培训」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "许悦",
+    "forecastOn": "2026-09-24",
+    "timingBasis": "演示时间假设：签名轮换预计 9/22 完成，9/23 至 9/24 整理客户升级说明并完成支持培训，合计 7 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 240,
+        "note": "演示预测节点：客户升级说明完成，次日支持培训。"
+      },
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：签名轮换预计 9/22 完成，9/23 至 9/24 整理客户升级说明并完成支持培训，合计 7 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-migration-comms-v1",
+        "note": "演示历史观察：明确「完成签名升级客户沟通与支持培训」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-migration-comms-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-webhook-migration-comms-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-weekly-release-risk-review": {
+    "scopeMinutes": 90,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「每周跨端发布风险复核」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：本轮复核按 9/18 的 90 分钟窗口进行，检查跨端风险和未关闭门禁，不据此生成后续周次记录。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 90,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：本轮复核按 9/18 的 90 分钟窗口进行，检查跨端风险和未关闭门禁，不据此生成后续周次记录。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 90,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-weekly-release-risk-review-v1",
+        "note": "演示历史观察：明确「每周跨端发布风险复核」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 90,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-weekly-release-risk-review-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 90,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-weekly-release-risk-review-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-biweekly-defect-triage": {
+    "scopeMinutes": 150,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「双周企业客户缺陷分级」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "顾言",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：本轮缺陷清单预计 9/17 汇总，9/18 用 150 分钟完成分级与责任核对。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 150,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：本轮缺陷清单预计 9/17 汇总，9/18 用 150 分钟完成分级与责任核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 150,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-biweekly-defect-triage-v1",
+        "note": "演示历史观察：明确「双周企业客户缺陷分级」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 150,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-biweekly-defect-triage-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 150,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-biweekly-defect-triage-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-monthly-privileged-review": {
+    "scopeMinutes": 240,
+    "completedMinutes": 204,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "紧急权限使用日志已整理，两个临时授权的撤销记录仍待核对。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "紧急权限使用日志已整理，两个临时授权的撤销记录仍待核对。本次协作记录预计在 2026-09-15 完成剩余核对。",
+    "actor": "宋衡",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 240,
+        "note": "演示预测节点：剩余交付与核对预计收口。紧急权限使用日志已整理，两个临时授权的撤销记录仍待核对。本次协作记录预计在 2026-09-15 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 240,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-monthly-privileged-review-v1",
+        "note": "演示历史观察：明确「月度紧急生产权限复核」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 240,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-platform-monthly-privileged-review-v1",
+        "note": "演示历史观察：紧急权限日志归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 240,
+        "completedMinutes": 150,
+        "scopeVersion": "demo-platform-monthly-privileged-review-v1",
+        "note": "演示历史观察：主要临时授权完成核对。"
+      }
+    ]
+  },
+  "platform-quarterly-restore-drill": {
+    "scopeMinutes": 480,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「季度配置备份恢复演练」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "叶宁",
+    "forecastOn": "2026-09-24",
+    "timingBasis": "演示时间假设：演练环境假设在 9/23 可用，9/24 留出 8 小时执行恢复、校验和记录。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：演练环境假设在 9/23 可用，9/24 留出 8 小时执行恢复、校验和记录。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-quarterly-restore-drill-v1",
+        "note": "演示历史观察：明确「季度配置备份恢复演练」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-quarterly-restore-drill-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-quarterly-restore-drill-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-incident-apns-certificate": {
+    "scopeMinutes": 300,
+    "completedMinutes": 150,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "证书影响范围和替换步骤已核对，新的签名材料尚待账号持有人提供。",
+    "actor": "乔安",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "演示时间假设：以账号持有人在 9/16 上午交付新签名材料为前提，当天下午完成替换与推送复核，剩余约 150 分钟。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以账号持有人在 9/16 上午交付新签名材料为前提，当天下午完成替换与推送复核，剩余约 150 分钟。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-incident-apns-certificate-v1",
+        "note": "演示历史观察：明确「处置推送证书临近过期告警」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-platform-incident-apns-certificate-v1",
+        "note": "演示历史观察：识别证书影响应用。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 150,
+        "scopeVersion": "demo-platform-incident-apns-certificate-v1",
+        "note": "演示历史观察：替换步骤核对完成，等待签名材料。"
+      }
+    ]
+  },
+  "platform-risk-legacy-android-tls": {
+    "scopeMinutes": 420,
+    "completedMinutes": 231,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "受影响系统版本与证书链已识别，兼容方案尚需真机验证。",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "受影响系统版本与证书链已识别，兼容方案尚需真机验证。本次协作记录预计在 2026-09-17 完成剩余核对。",
+    "actor": "唐澈",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 336,
+        "note": "演示预测节点：兼容方案完成首轮真机验证，次日复核边界。"
+      },
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。受影响系统版本与证书链已识别，兼容方案尚需真机验证。本次协作记录预计在 2026-09-17 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-risk-legacy-android-tls-v1",
+        "note": "演示历史观察：明确「评估旧版 Android TLS 根证书风险」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-platform-risk-legacy-android-tls-v1",
+        "note": "演示历史观察：受影响系统版本盘点。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 180,
+        "scopeVersion": "demo-platform-risk-legacy-android-tls-v1",
+        "note": "演示历史观察：证书链与兼容方案完成初核。"
+      }
+    ]
+  },
+  "platform-incident-billing-webhook-duplicates": {
+    "scopeMinutes": 600,
+    "completedMinutes": 450,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "重复投递路径已复现并提交去重修复，剩历史账单核对与回放验证。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "重复投递路径已复现并提交去重修复，剩历史账单核对与回放验证。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "程砚",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。重复投递路径已复现并提交去重修复，剩历史账单核对与回放验证。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-incident-billing-webhook-duplicates-v1",
+        "note": "演示历史观察：明确「修复计费 Webhook 重复投递事故」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-platform-incident-billing-webhook-duplicates-v1",
+        "note": "演示历史观察：重复投递路径已复现。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 330,
+        "scopeVersion": "demo-platform-incident-billing-webhook-duplicates-v1",
+        "note": "演示历史观察：去重修复已提交首轮验证。"
+      }
+    ]
+  },
+  "platform-monthly-sdk-dependency-scan": {
+    "scopeMinutes": 300,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「月度移动 SDK 依赖风险扫描」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "宋衡",
+    "forecastOn": "2026-09-22",
+    "timingBasis": "演示时间假设：9/22 用 5 小时核对本月 SDK 依赖与风险清单；无人值守扫描耗时不直接折算为人工工作量。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：9/22 用 5 小时核对本月 SDK 依赖与风险清单；无人值守扫描耗时不直接折算为人工工作量。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-monthly-sdk-dependency-scan-v1",
+        "note": "演示历史观察：明确「月度移动 SDK 依赖风险扫描」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-monthly-sdk-dependency-scan-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-monthly-sdk-dependency-scan-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-enterprise-launch-office-hours": {
+    "scopeMinutes": 240,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「企业功能上线答疑专场」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "许悦",
+    "forecastOn": "2026-09-25",
+    "timingBasis": "演示时间假设：本场答疑假设在 9/25 举行，准备、答疑和问题归档共需 4 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 240,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：本场答疑假设在 9/25 举行，准备、答疑和问题归档共需 4 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 240,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-enterprise-launch-office-hours-v1",
+        "note": "演示历史观察：明确「企业功能上线答疑专场」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 240,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-enterprise-launch-office-hours-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 240,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-enterprise-launch-office-hours-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "platform-status-page-localization-gap": {
+    "scopeMinutes": 300,
+    "completedMinutes": 255,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "故障模板译文已提交，状态词与服务名称待最后一次交叉校对。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "故障模板译文已提交，状态词与服务名称待最后一次交叉校对。本次协作记录预计在 2026-09-15 完成剩余核对。",
+    "actor": "许悦",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。故障模板译文已提交，状态词与服务名称待最后一次交叉校对。本次协作记录预计在 2026-09-15 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-platform-status-page-localization-gap-v1",
+        "note": "演示历史观察：明确「补齐状态页多语言故障模板」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-platform-status-page-localization-gap-v1",
+        "note": "演示历史观察：故障模板译文形成初稿。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 210,
+        "scopeVersion": "demo-platform-status-page-localization-gap-v1",
+        "note": "演示历史观察：主要状态词完成交叉校对。"
+      }
+    ]
+  },
+  "factory-supplier-ppap": {
+    "scopeMinutes": 720,
+    "completedMinutes": 720,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「签收电芯与锁体供应商 PPAP」已由用户标记完成；原完成日期未记录。",
+    "actor": "沈工",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-supplier-ppap-v1",
+        "note": "演示历史观察：明确「签收电芯与锁体供应商 PPAP」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 180,
+        "scopeVersion": "demo-factory-supplier-ppap-v1",
+        "note": "演示历史观察：供应商 PPAP 材料归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 720,
+        "completedMinutes": 570,
+        "scopeVersion": "demo-factory-supplier-ppap-v1",
+        "note": "演示历史观察：关键样本与过程能力完成复核。"
+      }
+    ]
+  },
+  "factory-line-validation": {
+    "scopeMinutes": 900,
+    "completedMinutes": 585,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "工装安装和首件参数已记录，重复测量与异常参数复验尚未完成。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "工装安装和首件参数已记录，重复测量与异常参数复验尚未完成。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "赵妍",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 765,
+        "note": "演示预测节点：重复测量完成，异常参数次日复验。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 900,
+        "note": "演示预测节点：剩余交付与核对预计收口。工装安装和首件参数已记录，重复测量与异常参数复验尚未完成。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 900,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-line-validation-v1",
+        "note": "演示历史观察：明确「完成工装与首件参数验证」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 900,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-factory-line-validation-v1",
+        "note": "演示历史观察：工装安装及参数底稿齐备。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 900,
+        "completedMinutes": 420,
+        "scopeVersion": "demo-factory-line-validation-v1",
+        "note": "演示历史观察：完成首件核对，重复测量待开展。"
+      }
+    ]
+  },
+  "factory-quality-gate": {
+    "scopeMinutes": 600,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「签发 PVT 质量门禁结论」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "贺青",
+    "forecastOn": "2026-09-25",
+    "timingBasis": "演示时间假设：产能试跑和标签返工最晚预计 9/23 完成，9/24 至 9/25 用 10 小时交叉核对放行证据。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 360,
+        "note": "演示预测节点：交叉核对首批放行材料，次日签发结论。"
+      },
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：产能试跑和标签返工最晚预计 9/23 完成，9/24 至 9/25 用 10 小时交叉核对放行证据。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-quality-gate-v1",
+        "note": "演示历史观察：明确「签发 PVT 质量门禁结论」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-quality-gate-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-quality-gate-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "factory-operator-training": {
+    "scopeMinutes": 840,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成关键工位培训与技能确认」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "唐静",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：产线验证预计 9/16 通过，9/17 至 9/18 分两班完成关键工位培训及技能核对，合计 14 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 480,
+        "note": "演示预测节点：首班关键工位培训及技能核对完成。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 840,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：产线验证预计 9/16 通过，9/17 至 9/18 分两班完成关键工位培训及技能核对，合计 14 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-operator-training-v1",
+        "note": "演示历史观察：明确「完成关键工位培训与技能确认」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-operator-training-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-operator-training-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "factory-packaging-readiness": {
+    "scopeMinutes": 660,
+    "completedMinutes": 495,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "包装样件和运输测试已完成初轮，标签版本与跌落复测尚需收口。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "包装样件和运输测试已完成初轮，标签版本与跌落复测尚需收口。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "冯维",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 585,
+        "note": "演示预测节点：标签版本核对完成，跌落复测次日收口。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 660,
+        "note": "演示预测节点：剩余交付与核对预计收口。包装样件和运输测试已完成初轮，标签版本与跌落复测尚需收口。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-packaging-readiness-initial",
+        "note": "演示历史观察：明确「验证包装、运输与标签版本」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 540,
+        "completedMinutes": 150,
+        "scopeVersion": "demo-factory-packaging-readiness-initial",
+        "note": "演示历史观察：包装样件完成首轮核对。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 660,
+        "completedMinutes": 360,
+        "scopeVersion": "demo-factory-packaging-readiness-v1",
+        "note": "演示历史观察：增加标签版本核对和跌落复测，共 120 分钟；运输试验记录与标签清单归集。"
+      }
+    ]
+  },
+  "factory-capacity-trial": {
+    "scopeMinutes": 780,
+    "completedMinutes": 234,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "试跑物料和记录表已准备，关键工装异常仍待修复；演示假设维修在 9/21 验证通过后安排试跑，未将阻塞状态自动改为进行中。",
+    "actor": "罗骁",
+    "forecastOn": "2026-09-23",
+    "timingBasis": "演示时间假设：以工装维修验证在 9/21 通过为前提，9/22 至 9/23 完成 4 小时试跑、数据核对和异常闭环，剩余人工投入约 546 分钟。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 234,
+        "note": "演示预测节点：等待工装维修验证完成，未开展试跑的工作量不增加。"
+      },
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 540,
+        "note": "演示预测节点：试跑与初轮数据核对完成，异常闭环留待次日。"
+      },
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 780,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以工装维修验证在 9/21 通过为前提，9/22 至 9/23 完成 4 小时试跑、数据核对和异常闭环，剩余人工投入约 546 分钟。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 780,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-capacity-trial-v1",
+        "note": "演示历史观察：明确「执行 4 小时产能试跑」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 780,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-factory-capacity-trial-v1",
+        "note": "演示历史观察：试跑方案与采集表准备。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 780,
+        "completedMinutes": 234,
+        "scopeVersion": "demo-factory-capacity-trial-v1",
+        "note": "演示历史观察：准备材料齐备，等待工装修复。"
+      }
+    ]
+  },
+  "factory-label-rework": {
+    "scopeMinutes": 480,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成 PVT 标签错版返工」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "冯维",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：包装准备预计 9/16 完成，9/17 至 9/18 用 8 小时核对错版批次、重贴和追溯记录。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 300,
+        "note": "演示预测节点：错版批次核对与重贴完成，追溯记录次日复核。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：包装准备预计 9/16 完成，9/17 至 9/18 用 8 小时核对错版批次、重贴和追溯记录。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-label-rework-v1",
+        "note": "演示历史观察：明确「完成 PVT 标签错版返工」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-label-rework-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-label-rework-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "factory-warranty-trace": {
+    "scopeMinutes": 600,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「建立首批量产保修件追溯方案」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈琛",
+    "forecastOn": "2026-09-22",
+    "timingBasis": "演示时间假设：9/21 至 9/22 整理保修件编码、流转与抽样查找流程，合计 10 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 360,
+        "note": "演示预测节点：保修件编码与流转清单完成，抽样查找次日验证。"
+      },
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：9/21 至 9/22 整理保修件编码、流转与抽样查找流程，合计 10 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-warranty-trace-v1",
+        "note": "演示历史观察：明确「建立首批量产保修件追溯方案」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-warranty-trace-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-warranty-trace-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "factory-october-demand-freeze": {
+    "scopeMinutes": 300,
+    "completedMinutes": 270,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "需求与长料清单已完成核对，两个增量订单的释放窗口待签回。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "需求与长料清单已完成核对，两个增量订单的释放窗口待签回。本次协作记录预计在 2026-09-15 完成剩余核对。",
+    "actor": "陈琛",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。需求与长料清单已完成核对，两个增量订单的释放窗口待签回。本次协作记录预计在 2026-09-15 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-factory-october-demand-freeze-v1",
+        "note": "演示历史观察：明确「冻结 10 月滚动需求与长料采购」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-factory-october-demand-freeze-v1",
+        "note": "演示历史观察：订单需求与长料清单整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 210,
+        "scopeVersion": "demo-factory-october-demand-freeze-v1",
+        "note": "演示历史观察：主要需求核对完成，增量窗口待签回。"
+      }
+    ]
+  },
+  "supply-battery-process-audit": {
+    "scopeMinutes": 960,
+    "completedMinutes": 576,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "现场过程与追溯记录已抽查，剩纠正措施和关键参数复核。",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "现场过程与追溯记录已抽查，剩纠正措施和关键参数复核。本次协作记录预计在 2026-09-17 完成剩余核对。",
+    "actor": "沈工",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 816,
+        "note": "演示预测节点：纠正措施材料核对完成，关键参数次日复核。"
+      },
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 960,
+        "note": "演示预测节点：剩余交付与核对预计收口。现场过程与追溯记录已抽查，剩纠正措施和关键参数复核。本次协作记录预计在 2026-09-17 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 960,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-process-audit-v1",
+        "note": "演示历史观察：明确「完成电芯供应商现场过程审核」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 960,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-supply-battery-process-audit-v1",
+        "note": "演示历史观察：审核清单与现场过程资料整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 960,
+        "completedMinutes": 420,
+        "scopeVersion": "demo-supply-battery-process-audit-v1",
+        "note": "演示历史观察：追溯记录完成首轮抽查。"
+      }
+    ]
+  },
+  "supply-battery-material-verification": {
+    "scopeMinutes": 600,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「核验电芯材料证书与禁限用物质」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "贺青",
+    "forecastOn": "2026-09-21",
+    "timingBasis": "演示时间假设：过程审核预计 9/17 完成，9/18 和 9/21 核对材料证书及禁限用物质，合计 10 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 360,
+        "note": "演示预测节点：材料证书核对完成，禁限用物质下一窗口复核。"
+      },
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：过程审核预计 9/17 完成，9/18 和 9/21 核对材料证书及禁限用物质，合计 10 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-material-verification-v1",
+        "note": "演示历史观察：明确「核验电芯材料证书与禁限用物质」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-material-verification-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-material-verification-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-battery-ppap-signoff": {
+    "scopeMinutes": 480,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「签发第二来源电芯 PPAP 结论」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "沈工",
+    "forecastOn": "2026-09-22",
+    "timingBasis": "演示时间假设：材料验证预计 9/21 完成，9/22 用 8 小时交叉核对 PPAP 包并形成签发结论。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：材料验证预计 9/21 完成，9/22 用 8 小时交叉核对 PPAP 包并形成签发结论。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-ppap-signoff-v1",
+        "note": "演示历史观察：明确「签发第二来源电芯 PPAP 结论」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-ppap-signoff-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-ppap-signoff-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-battery-device-validation": {
+    "scopeMinutes": 1080,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成第二来源电芯整机可靠性验证」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "贺青",
+    "forecastOn": "2026-09-28",
+    "timingBasis": "演示时间假设：PPAP 预计 9/22 通过，9/23 起开展整机可靠性验证；包含设备试验等待，人工复核约 18 小时，预计 9/28 整理结论。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 360,
+        "note": "演示预测节点：整机验证样件与试验准备完成。"
+      },
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 360,
+        "note": "演示预测节点：设备试验持续，等待不折算为人工完成量。"
+      },
+      {
+        "at": "2026-09-28",
+        "completedMinutes": 1080,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：PPAP 预计 9/22 通过，9/23 起开展整机可靠性验证；包含设备试验等待，人工复核约 18 小时，预计 9/28 整理结论。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 1080,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-device-validation-v1",
+        "note": "演示历史观察：明确「完成第二来源电芯整机可靠性验证」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 1080,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-device-validation-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 1080,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-device-validation-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-battery-switch-trial": {
+    "scopeMinutes": 840,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「执行第二来源百台切换试跑」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "罗骁",
+    "forecastOn": "2026-09-30",
+    "timingBasis": "演示时间假设：整机验证预计 9/28 完成，9/29 至 9/30 做百台切换、参数抽样及复核，合计 14 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-29",
+        "completedMinutes": 480,
+        "note": "演示预测节点：首批切换与参数抽样完成，次日收口复核。"
+      },
+      {
+        "at": "2026-09-30",
+        "completedMinutes": 840,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：整机验证预计 9/28 完成，9/29 至 9/30 做百台切换、参数抽样及复核，合计 14 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-switch-trial-v1",
+        "note": "演示历史观察：明确「执行第二来源百台切换试跑」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-switch-trial-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-switch-trial-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-battery-release-gate": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「签发电芯第二来源切换门禁」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周岚",
+    "forecastOn": "2026-10-08",
+    "timingBasis": "演示时间假设：以 9/30 切换试跑记录齐备为前提，切换门禁复核窗口设在 10/8，材料检查和签发共 7 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-10-08",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以 9/30 切换试跑记录齐备为前提，切换门禁复核窗口设在 10/8，材料检查和签发共 7 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-release-gate-v1",
+        "note": "演示历史观察：明确「签发电芯第二来源切换门禁」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-release-gate-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-battery-release-gate-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-chengdu-tooling-acceptance": {
+    "scopeMinutes": 960,
+    "completedMinutes": 528,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "复制工装已到位并完成静态检查，剩首件对标与重复性验证。",
+    "forecastOn": "2026-09-24",
+    "timingBasis": "复制工装已到位并完成静态检查，剩首件对标与重复性验证。本次协作记录预计在 2026-09-24 完成剩余核对。",
+    "actor": "赵妍",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 720,
+        "note": "演示预测节点：首件对标完成，重复性试验待后续窗口。"
+      },
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 888,
+        "note": "演示预测节点：重复性验证完成，次日复核验收记录。"
+      },
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 960,
+        "note": "演示预测节点：剩余交付与核对预计收口。复制工装已到位并完成静态检查，剩首件对标与重复性验证。本次协作记录预计在 2026-09-24 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 840,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-tooling-acceptance-initial",
+        "note": "演示历史观察：明确「完成成都线关键工装复制验收」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 840,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-supply-chengdu-tooling-acceptance-initial",
+        "note": "演示历史观察：复制工装清单核对。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 960,
+        "completedMinutes": 360,
+        "scopeVersion": "demo-supply-chengdu-tooling-acceptance-v1",
+        "note": "演示历史观察：增加重复性验证和首件对标，共 120 分钟；到货静态检查完成，首件对标待开展。"
+      }
+    ]
+  },
+  "supply-chengdu-document-release": {
+    "scopeMinutes": 600,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「受控发布成都线工艺文件包」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "唐静",
+    "forecastOn": "2026-09-28",
+    "timingBasis": "演示时间假设：工装验收预计 9/24 完成，9/25 和 9/28 用 10 小时核对工艺版本、受控编号并发布。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 360,
+        "note": "演示预测节点：工艺版本及受控编号核对完成，下一窗口发布复核。"
+      },
+      {
+        "at": "2026-09-28",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：工装验收预计 9/24 完成，9/25 和 9/28 用 10 小时核对工艺版本、受控编号并发布。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-document-release-v1",
+        "note": "演示历史观察：明确「受控发布成都线工艺文件包」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-document-release-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-document-release-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-chengdu-measurement-correlation": {
+    "scopeMinutes": 720,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成两地产线测量相关性验证」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "贺青",
+    "forecastOn": "2026-09-28",
+    "timingBasis": "演示时间假设：工装验收预计 9/24 完成，9/25 和 9/28 做两地量测比对和差异复核，合计 12 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 420,
+        "note": "演示预测节点：两地量测比对完成，差异留待下一窗口复核。"
+      },
+      {
+        "at": "2026-09-28",
+        "completedMinutes": 720,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：工装验收预计 9/24 完成，9/25 和 9/28 做两地量测比对和差异复核，合计 12 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-measurement-correlation-v1",
+        "note": "演示历史观察：明确「完成两地产线测量相关性验证」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-measurement-correlation-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-measurement-correlation-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-chengdu-skill-certification": {
+    "scopeMinutes": 1080,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成成都两班关键岗位技能认证」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "唐静",
+    "forecastOn": "2026-09-30",
+    "timingBasis": "演示时间假设：工艺包预计 9/28 发布，两班在 9/29 至 9/30 交错安排技能认证，合计 18 人时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-29",
+        "completedMinutes": 540,
+        "note": "演示预测节点：第一班技能认证完成。"
+      },
+      {
+        "at": "2026-09-30",
+        "completedMinutes": 1080,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：工艺包预计 9/28 发布，两班在 9/29 至 9/30 交错安排技能认证，合计 18 人时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 1080,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-skill-certification-v1",
+        "note": "演示历史观察：明确「完成成都两班关键岗位技能认证」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 1080,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-skill-certification-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 1080,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-skill-certification-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-chengdu-three-shift-trial": {
+    "scopeMinutes": 1260,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「执行成都线三班连续试跑」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "罗骁",
+    "forecastOn": "2026-10-09",
+    "timingBasis": "演示时间假设：量测验证与技能认证最晚预计 9/30 完成，试跑窗口设在 10/8 至 10/9，三班观察和问题复核合计 21 人时。",
+    "forecastPoints": [
+      {
+        "at": "2026-10-08",
+        "completedMinutes": 720,
+        "note": "演示预测节点：首轮跨班观察完成，次日完成剩余班次和问题复核。"
+      },
+      {
+        "at": "2026-10-09",
+        "completedMinutes": 1260,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：量测验证与技能认证最晚预计 9/30 完成，试跑窗口设在 10/8 至 10/9，三班观察和问题复核合计 21 人时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 1260,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-three-shift-trial-v1",
+        "note": "演示历史观察：明确「执行成都线三班连续试跑」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 1260,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-three-shift-trial-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 1260,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-three-shift-trial-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-chengdu-ramp-gate": {
+    "scopeMinutes": 480,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「签发成都线量产爬坡结论」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周岚",
+    "forecastOn": "2026-10-12",
+    "timingBasis": "演示时间假设：以 10/9 三班试跑记录齐备为前提，10/12 用 8 小时核对质量、产能及爬坡条件。",
+    "forecastPoints": [
+      {
+        "at": "2026-10-12",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以 10/9 三班试跑记录齐备为前提，10/12 用 8 小时核对质量、产能及爬坡条件。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-ramp-gate-v1",
+        "note": "演示历史观察：明确「签发成都线量产爬坡结论」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-ramp-gate-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-chengdu-ramp-gate-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-winter-demand-scenarios": {
+    "scopeMinutes": 480,
+    "completedMinutes": 408,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "三档需求情景已形成，渠道增量假设仍待销售确认。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "三档需求情景已形成，渠道增量假设仍待销售确认。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "陈琛",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。三档需求情景已形成，渠道增量假设仍待销售确认。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-demand-scenarios-v1",
+        "note": "演示历史观察：明确「形成冬季促销三档需求情景」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-supply-winter-demand-scenarios-v1",
+        "note": "演示历史观察：整理渠道需求与历史销量。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 300,
+        "scopeVersion": "demo-supply-winter-demand-scenarios-v1",
+        "note": "演示历史观察：三档情景初稿形成。"
+      }
+    ]
+  },
+  "supply-winter-long-lead-gap": {
+    "scopeMinutes": 600,
+    "completedMinutes": 360,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "长料交期和缺口已汇总，替代料适用边界尚需工程核对。",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "长料交期和缺口已汇总，替代料适用边界尚需工程核对。本次协作记录预计在 2026-09-18 完成剩余核对。",
+    "actor": "陈琛",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 504,
+        "note": "演示预测节点：长料交期与缺口复核完成，替代料适用边界次日确认。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。长料交期和缺口已汇总，替代料适用边界尚需工程核对。本次协作记录预计在 2026-09-18 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-long-lead-gap-v1",
+        "note": "演示历史观察：明确「核对长交期物料缺口与替代边界」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-supply-winter-long-lead-gap-v1",
+        "note": "演示历史观察：长料交期回复归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 270,
+        "scopeVersion": "demo-supply-winter-long-lead-gap-v1",
+        "note": "演示历史观察：缺口首轮汇总，替代边界待核对。"
+      }
+    ]
+  },
+  "supply-winter-buffer-policy": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「确认关键物料缓冲与采购释放策略」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-21",
+    "timingBasis": "演示时间假设：长周期缺口预计 9/18 明确，9/21 用 7 小时核对缓冲数量、采购释放与停止条件。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：长周期缺口预计 9/18 明确，9/21 用 7 小时核对缓冲数量、采购释放与停止条件。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-buffer-policy-v1",
+        "note": "演示历史观察：明确「确认关键物料缓冲与采购释放策略」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-buffer-policy-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-buffer-policy-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-winter-capacity-simulation": {
+    "scopeMinutes": 900,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「执行峰值周产能与换型模拟」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "罗骁",
+    "forecastOn": "2026-09-24",
+    "timingBasis": "演示时间假设：缓冲策略预计 9/21 确认，9/22 至 9/24 完成峰值周与换型模拟，人工投入合计 15 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 300,
+        "note": "演示预测节点：峰值周输入与假设核对完成。"
+      },
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 660,
+        "note": "演示预测节点：峰值周模拟完成，换型边界次日验证。"
+      },
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 900,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：缓冲策略预计 9/21 确认，9/22 至 9/24 完成峰值周与换型模拟，人工投入合计 15 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 900,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-capacity-simulation-v1",
+        "note": "演示历史观察：明确「执行峰值周产能与换型模拟」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 900,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-capacity-simulation-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 900,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-capacity-simulation-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-winter-packout-trial": {
+    "scopeMinutes": 720,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成促销礼盒包装线试装」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "冯维",
+    "forecastOn": "2026-09-28",
+    "timingBasis": "演示时间假设：产能模拟预计 9/24 完成，9/25 和 9/28 试装礼盒、核对节拍与包装缺陷，合计 12 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 420,
+        "note": "演示预测节点：礼盒试装与节拍采样完成，缺陷留待下一窗口复核。"
+      },
+      {
+        "at": "2026-09-28",
+        "completedMinutes": 720,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：产能模拟预计 9/24 完成，9/25 和 9/28 试装礼盒、核对节拍与包装缺陷，合计 12 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-packout-trial-v1",
+        "note": "演示历史观察：明确「完成促销礼盒包装线试装」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-packout-trial-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-packout-trial-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-winter-logistics-drill": {
+    "scopeMinutes": 480,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「演练峰值发运分仓与异常改派」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈琛",
+    "forecastOn": "2026-09-29",
+    "timingBasis": "演示时间假设：包装试装预计 9/28 完成，9/29 用 8 小时演练分仓与异常改派并整理记录。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-29",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：包装试装预计 9/28 完成，9/29 用 8 小时演练分仓与异常改派并整理记录。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-logistics-drill-v1",
+        "note": "演示历史观察：明确「演练峰值发运分仓与异常改派」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-logistics-drill-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-winter-logistics-drill-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-weekly-supplier-capa-review": {
+    "scopeMinutes": 120,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「每周供应商纠正措施评审」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "沈工",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：本轮供应商证据假设于 9/17 汇总，9/18 用 2 小时复核纠正措施及待追踪项。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 120,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：本轮供应商证据假设于 9/17 汇总，9/18 用 2 小时复核纠正措施及待追踪项。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 120,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-weekly-supplier-capa-review-v1",
+        "note": "演示历史观察：明确「每周供应商纠正措施评审」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 120,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-weekly-supplier-capa-review-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 120,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-weekly-supplier-capa-review-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-monthly-cycle-count": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「月度高价值物料循环盘点」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈琛",
+    "forecastOn": "2026-09-22",
+    "timingBasis": "演示时间假设：本轮盘点窗口设在 9/22，账实抽样、差异核对与复盘合计 6 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：本轮盘点窗口设在 9/22，账实抽样、差异核对与复盘合计 6 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-monthly-cycle-count-v1",
+        "note": "演示历史观察：明确「月度高价值物料循环盘点」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-monthly-cycle-count-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-monthly-cycle-count-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-quarterly-torque-audit": {
+    "scopeMinutes": 480,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「季度扭矩工具与参数审计」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "赵妍",
+    "forecastOn": "2026-09-23",
+    "timingBasis": "演示时间假设：工具清单与校准资料假设在 9/22 可用，9/23 用 8 小时抽查扭矩工具和参数。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：工具清单与校准资料假设在 9/22 可用，9/23 用 8 小时抽查扭矩工具和参数。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-quarterly-torque-audit-v1",
+        "note": "演示历史观察：明确「季度扭矩工具与参数审计」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-quarterly-torque-audit-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-quarterly-torque-audit-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-incident-lockbody-rust": {
+    "scopeMinutes": 780,
+    "completedMinutes": 351,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "问题批次已隔离并完成拆解，供应商根因与复验样件尚未返回。",
+    "actor": "贺青",
+    "timingBasis": "演示缺失场景：供应商未确认复验样件寄回时间，无法确定异常闭环日期。",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 780,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-incident-lockbody-rust-v1",
+        "note": "演示历史观察：明确「遏制锁体盐雾后锈蚀异常」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 780,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-supply-incident-lockbody-rust-v1",
+        "note": "演示历史观察：问题批次隔离。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 780,
+        "completedMinutes": 351,
+        "scopeVersion": "demo-supply-incident-lockbody-rust-v1",
+        "note": "演示历史观察：拆解与影响范围整理完成，等待样件复验。"
+      }
+    ]
+  },
+  "supply-risk-sole-source-mcu": {
+    "scopeMinutes": 600,
+    "completedMinutes": 330,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "库存覆盖和替代芯片清单已整理，固件迁移与采购周期仍待验证。",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "库存覆盖和替代芯片清单已整理，固件迁移与采购周期仍待验证。本次协作记录预计在 2026-09-18 完成剩余核对。",
+    "actor": "陈琛",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 450,
+        "note": "演示预测节点：替代芯片清单核对完成，继续验证固件迁移与采购周期。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。库存覆盖和替代芯片清单已整理，固件迁移与采购周期仍待验证。本次协作记录预计在 2026-09-18 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-risk-sole-source-mcu-v1",
+        "note": "演示历史观察：明确「评估主控 MCU 单一来源断供应急方案」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-supply-risk-sole-source-mcu-v1",
+        "note": "演示历史观察：库存覆盖与采购回复整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 210,
+        "scopeVersion": "demo-supply-risk-sole-source-mcu-v1",
+        "note": "演示历史观察：替代芯片清单初核。"
+      }
+    ]
+  },
+  "supply-incident-label-serial-gap": {
+    "scopeMinutes": 540,
+    "completedMinutes": 432,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "重复打印路径已修正，剩断号清单回溯与现场追溯复核。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "重复打印路径已修正，剩断号清单回溯与现场追溯复核。本次协作记录预计在 2026-09-15 完成剩余核对。",
+    "actor": "冯维",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 540,
+        "note": "演示预测节点：剩余交付与核对预计收口。重复打印路径已修正，剩断号清单回溯与现场追溯复核。本次协作记录预计在 2026-09-15 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-incident-label-serial-gap-v1",
+        "note": "演示历史观察：明确「修复标签序列号断号与重复打印」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 540,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-supply-incident-label-serial-gap-v1",
+        "note": "演示历史观察：重复打印路径定位。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 540,
+        "completedMinutes": 300,
+        "scopeVersion": "demo-supply-incident-label-serial-gap-v1",
+        "note": "演示历史观察：修正方案完成首轮现场验证。"
+      }
+    ]
+  },
+  "supply-monthly-sop-floor-audit": {
+    "scopeMinutes": 300,
+    "completedMinutes": 270,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "现场版本抽查已完成，两处旧版作业指导书撤回凭证尚待确认。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "现场版本抽查已完成，两处旧版作业指导书撤回凭证尚待确认。本次协作记录预计在 2026-09-15 完成剩余核对。",
+    "actor": "唐静",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。现场版本抽查已完成，两处旧版作业指导书撤回凭证尚待确认。本次协作记录预计在 2026-09-15 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-monthly-sop-floor-audit-v1",
+        "note": "演示历史观察：明确「月度现场 SOP 版本抽查」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-supply-monthly-sop-floor-audit-v1",
+        "note": "演示历史观察：现场版本抽样。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 210,
+        "scopeVersion": "demo-supply-monthly-sop-floor-audit-v1",
+        "note": "演示历史观察：旧版作业指导书清单核对。"
+      }
+    ]
+  },
+  "supply-packaging-humidity-risk": {
+    "scopeMinutes": 660,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「验证海运高湿环境包装防护」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "冯维",
+    "forecastOn": "2026-09-24",
+    "timingBasis": "演示时间假设：试样假设在 9/21 齐备，环境试验持续至 9/23，9/24 完成结果核对；人工投入约 11 小时，不含设备等待。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 240,
+        "note": "演示预测节点：试样齐备并完成试验准备。"
+      },
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 240,
+        "note": "演示预测节点：等待环境试验，人工完成量不增加。"
+      },
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 480,
+        "note": "演示预测节点：试验数据归集完成，次日核对结果。"
+      },
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 660,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：试样假设在 9/21 齐备，环境试验持续至 9/23，9/24 完成结果核对；人工投入约 11 小时，不含设备等待。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-packaging-humidity-risk-v1",
+        "note": "演示历史观察：明确「验证海运高湿环境包装防护」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-packaging-humidity-risk-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-packaging-humidity-risk-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-operator-absence-contingency": {
+    "scopeMinutes": 300,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「更新关键岗位缺员应急替岗表」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "唐静",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "演示时间假设：班组技能资料假设在 9/16 齐备，9/17 用 5 小时核对关键岗位替补及授权边界。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：班组技能资料假设在 9/16 齐备，9/17 用 5 小时核对关键岗位替补及授权边界。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-operator-absence-contingency-v1",
+        "note": "演示历史观察：明确「更新关键岗位缺员应急替岗表」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-operator-absence-contingency-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-operator-absence-contingency-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "supply-customer-return-teardown": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「双周客退锁体联合拆解评审」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "贺青",
+    "forecastOn": "2026-09-25",
+    "timingBasis": "演示时间假设：本轮客退样件假设在 9/24 齐备，9/25 用 7 小时完成联合拆解与问题归类。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：本轮客退样件假设在 9/24 齐备，9/25 用 7 小时完成联合拆解与问题归类。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-customer-return-teardown-v1",
+        "note": "演示历史观察：明确「双周客退锁体联合拆解评审」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-customer-return-teardown-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-supply-customer-return-teardown-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "service-traffic-mitigation": {
+    "scopeMinutes": 240,
+    "completedMinutes": 240,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「执行同步流量削峰与租户隔离」已由用户标记完成；原完成日期未记录。",
+    "actor": "沈闻",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 240,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-traffic-mitigation-v1",
+        "note": "演示历史观察：明确「执行同步流量削峰与租户隔离」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 240,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-service-traffic-mitigation-v1",
+        "note": "演示历史观察：受影响租户和流量识别。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 240,
+        "completedMinutes": 180,
+        "scopeVersion": "demo-service-traffic-mitigation-v1",
+        "note": "演示历史观察：削峰与隔离措施实施，效果待确认。"
+      }
+    ]
+  },
+  "service-data-repair": {
+    "scopeMinutes": 900,
+    "completedMinutes": 675,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "受影响记录已完成主要批次修复，剩差异样本核对和补偿回放。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "受影响记录已完成主要批次修复，剩差异样本核对和补偿回放。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "白露",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 810,
+        "note": "演示预测节点：差异样本修复完成，补偿回放次日验证。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 900,
+        "note": "演示预测节点：剩余交付与核对预计收口。受影响记录已完成主要批次修复，剩差异样本核对和补偿回放。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-data-repair-initial",
+        "note": "演示历史观察：明确「修复受影响同步状态记录」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-service-data-repair-initial",
+        "note": "演示历史观察：受影响同步记录识别。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 900,
+        "completedMinutes": 450,
+        "scopeVersion": "demo-service-data-repair-v1",
+        "note": "演示历史观察：纳入额外差异样本与补偿回放，共 180 分钟；主要修复批次完成初验。"
+      }
+    ]
+  },
+  "service-customer-comms": {
+    "scopeMinutes": 600,
+    "completedMinutes": 480,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "高影响客户已通知，剩低活跃租户触达与回复归档。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "高影响客户已通知，剩低活跃租户触达与回复归档。本次协作记录预计在 2026-09-15 完成剩余核对。",
+    "actor": "陈沁",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。高影响客户已通知，剩低活跃租户触达与回复归档。本次协作记录预计在 2026-09-15 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-customer-comms-v1",
+        "note": "演示历史观察：明确「完成受影响客户分层沟通」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-service-customer-comms-v1",
+        "note": "演示历史观察：影响分层与通知稿形成。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 360,
+        "scopeVersion": "demo-service-customer-comms-v1",
+        "note": "演示历史观察：主要客户已完成第一轮沟通。"
+      }
+    ]
+  },
+  "service-root-cause": {
+    "scopeMinutes": 720,
+    "completedMinutes": 648,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "竞态根因和时间线已提交，待工程复核修复覆盖与防复发项。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "竞态根因和时间线已提交，待工程复核修复覆盖与防复发项。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "薛航",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 690,
+        "note": "演示预测节点：根因时间线复核完成，修复覆盖次日确认。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 720,
+        "note": "演示预测节点：剩余交付与核对预计收口。竞态根因和时间线已提交，待工程复核修复覆盖与防复发项。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-root-cause-v1",
+        "note": "演示历史观察：明确「签发队列竞态根因分析」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-service-root-cause-v1",
+        "note": "演示历史观察：竞态时间线与日志归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 720,
+        "completedMinutes": 510,
+        "scopeVersion": "demo-service-root-cause-v1",
+        "note": "演示历史观察：根因分析初稿及修复说明齐备。"
+      }
+    ]
+  },
+  "service-compensation-review": {
+    "scopeMinutes": 480,
+    "completedMinutes": 168,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "受影响客户与合同条款已收集，补偿适用边界仍待商务和法务确认。",
+    "actor": "江予",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：数据修复预计 9/16 完成，商务与法务核对窗口假设为 9/17，9/18 整理适用范围与例外清单，剩余约 312 分钟。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 360,
+        "note": "演示预测节点：商务法务适用范围核对完成，例外清单次日收口。"
+      },
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：数据修复预计 9/16 完成，商务与法务核对窗口假设为 9/17，9/18 整理适用范围与例外清单，剩余约 312 分钟。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-compensation-review-v1",
+        "note": "演示历史观察：明确「核对 SLA 与补偿适用范围」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-service-compensation-review-v1",
+        "note": "演示历史观察：受影响合同范围整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-service-compensation-review-v1",
+        "note": "演示历史观察：客户与合同条款归集完成。"
+      }
+    ]
+  },
+  "service-runbook-update": {
+    "scopeMinutes": 540,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「更新同步积压处置手册」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陆遥",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：根因分析预计 9/16 签发，9/17 至 9/18 用 9 小时整理处置决策树并做桌面复核。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 540,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：根因分析预计 9/16 签发，9/17 至 9/18 用 9 小时整理处置决策树并做桌面复核。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-runbook-update-v1",
+        "note": "演示历史观察：明确「更新同步积压处置手册」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-runbook-update-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-runbook-update-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "service-quarterly-drill": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「组织季度企业故障桌面演练」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陆遥",
+    "forecastOn": "2026-09-21",
+    "timingBasis": "演示时间假设：本次桌面演练窗口设在 9/21，角色核对、演练和问题记录合计 6 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：本次桌面演练窗口设在 9/21，角色核对、演练和问题记录合计 6 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-quarterly-drill-v1",
+        "note": "演示历史观察：明确「组织季度企业故障桌面演练」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-quarterly-drill-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-quarterly-drill-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "service-enterprise-sla-review": {
+    "scopeMinutes": 420,
+    "completedMinutes": 357,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "SLA 模板已形成修订稿，统计窗口和排除项待法务终审。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "SLA 模板已形成修订稿，统计窗口和排除项待法务终审。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "江予",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。SLA 模板已形成修订稿，统计窗口和排除项待法务终审。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-service-enterprise-sla-review-v1",
+        "note": "演示历史观察：明确「复核年度企业版 SLA 模板」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-service-enterprise-sla-review-v1",
+        "note": "演示历史观察：SLA 条款初审。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 270,
+        "scopeVersion": "demo-service-enterprise-sla-review-v1",
+        "note": "演示历史观察：修订稿齐备，统计窗口待终审。"
+      }
+    ]
+  },
+  "csx-retail-usage-baseline": {
+    "scopeMinutes": 420,
+    "completedMinutes": 420,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「签发华东零售年度使用基线」已由用户标记完成；原完成日期未记录。",
+    "actor": "白露",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-usage-baseline-v1",
+        "note": "演示历史观察：明确「签发华东零售年度使用基线」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-csx-retail-usage-baseline-v1",
+        "note": "演示历史观察：年度使用数据清洗。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 330,
+        "scopeVersion": "demo-csx-retail-usage-baseline-v1",
+        "note": "演示历史观察：基线口径和样本完成交叉核对。"
+      }
+    ]
+  },
+  "csx-retail-stakeholder-map": {
+    "scopeMinutes": 300,
+    "completedMinutes": 300,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「确认华东零售续约决策人图谱」已由用户标记完成；原完成日期未记录。",
+    "actor": "陈沁",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-stakeholder-map-v1",
+        "note": "演示历史观察：明确「确认华东零售续约决策人图谱」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-csx-retail-stakeholder-map-v1",
+        "note": "演示历史观察：访谈角色清单形成。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 240,
+        "scopeVersion": "demo-csx-retail-stakeholder-map-v1",
+        "note": "演示历史观察：决策关系完成主要核对。"
+      }
+    ]
+  },
+  "csx-retail-support-closure": {
+    "scopeMinutes": 660,
+    "completedMinutes": 462,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "主要导入问题已修复，剩客户样本回归与关闭确认。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "主要导入问题已修复，剩客户样本回归与关闭确认。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "陆遥",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 660,
+        "note": "演示预测节点：剩余交付与核对预计收口。主要导入问题已修复，剩客户样本回归与关闭确认。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-support-closure-v1",
+        "note": "演示历史观察：明确「关闭华东零售批量导入遗留问题」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 660,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-csx-retail-support-closure-v1",
+        "note": "演示历史观察：导入问题归类和复现。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 660,
+        "completedMinutes": 330,
+        "scopeVersion": "demo-csx-retail-support-closure-v1",
+        "note": "演示历史观察：主要问题修复完成，客户样本待回归。"
+      }
+    ]
+  },
+  "csx-retail-outcome-evidence": {
+    "scopeMinutes": 480,
+    "completedMinutes": 408,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "门店成效数据已汇总，基线可比性和客户认可的指标尚需签回。",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "门店成效数据已汇总，基线可比性和客户认可的指标尚需签回。本次协作记录预计在 2026-09-17 完成剩余核对。",
+    "actor": "陈沁",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。门店成效数据已汇总，基线可比性和客户认可的指标尚需签回。本次协作记录预计在 2026-09-17 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-outcome-evidence-v1",
+        "note": "演示历史观察：明确「核对华东零售门店协同成效」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-csx-retail-outcome-evidence-v1",
+        "note": "演示历史观察：门店成效数据归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 300,
+        "scopeVersion": "demo-csx-retail-outcome-evidence-v1",
+        "note": "演示历史观察：指标及基线完成首轮核对。"
+      }
+    ]
+  },
+  "csx-retail-risk-workshop": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成华东零售续约风险工作坊」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈沁",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：客户成果证据与健康分校准预计 9/17 齐备，9/18 用 6 小时完成风险工作坊与结论整理。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：客户成果证据与健康分校准预计 9/17 齐备，9/18 用 6 小时完成风险工作坊与结论整理。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-risk-workshop-v1",
+        "note": "演示历史观察：明确「完成华东零售续约风险工作坊」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-risk-workshop-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-risk-workshop-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-retail-success-plan": {
+    "scopeMinutes": 600,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「交付华东零售下年度成功计划」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈沁",
+    "forecastOn": "2026-09-22",
+    "timingBasis": "演示时间假设：工作坊预计 9/18 完成，9/21 至 9/22 用 10 小时拆解下一年度成果、角色与检查点。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：工作坊预计 9/18 完成，9/21 至 9/22 用 10 小时拆解下一年度成果、角色与检查点。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-success-plan-v1",
+        "note": "演示历史观察：明确「交付华东零售下年度成功计划」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-success-plan-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-success-plan-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-retail-security-questionnaire": {
+    "scopeMinutes": 720,
+    "completedMinutes": 468,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "标准安全问题已回复，定制部署与数据留存问题待安全组补充。",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "标准安全问题已回复，定制部署与数据留存问题待安全组补充。本次协作记录预计在 2026-09-17 完成剩余核对。",
+    "actor": "周牧",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 720,
+        "note": "演示预测节点：剩余交付与核对预计收口。标准安全问题已回复，定制部署与数据留存问题待安全组补充。本次协作记录预计在 2026-09-17 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-security-questionnaire-v1",
+        "note": "演示历史观察：明确「回复华东零售年度安全问卷」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-csx-retail-security-questionnaire-v1",
+        "note": "演示历史观察：标准安全问题整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 720,
+        "completedMinutes": 360,
+        "scopeVersion": "demo-csx-retail-security-questionnaire-v1",
+        "note": "演示历史观察：通用问题完成首轮回复。"
+      }
+    ]
+  },
+  "csx-retail-pricing-proposal": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「形成华东零售续约报价建议」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "江予",
+    "forecastOn": "2026-09-23",
+    "timingBasis": "演示时间假设：成功计划预计 9/22 齐备，9/23 用 7 小时核对续约范围、报价及例外条件。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-23",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：成功计划预计 9/22 齐备，9/23 用 7 小时核对续约范围、报价及例外条件。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-pricing-proposal-v1",
+        "note": "演示历史观察：明确「形成华东零售续约报价建议」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-pricing-proposal-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-pricing-proposal-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-retail-contract-redline": {
+    "scopeMinutes": 600,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「收口华东零售续约合同红线」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周牧",
+    "forecastOn": "2026-09-25",
+    "timingBasis": "演示时间假设：报价与安全问卷最晚预计 9/23 齐备，假设客户 9/24 返回红线，9/25 收口条款，人工投入约 10 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：报价与安全问卷最晚预计 9/23 齐备，假设客户 9/24 返回红线，9/25 收口条款，人工投入约 10 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-contract-redline-v1",
+        "note": "演示历史观察：明确「收口华东零售续约合同红线」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-contract-redline-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-contract-redline-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-retail-signature-gate": {
+    "scopeMinutes": 240,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「确认华东零售续约签署条件」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "周岚",
+    "forecastOn": "2026-09-28",
+    "timingBasis": "演示时间假设：合同红线预计 9/25 收口，9/28 用 4 小时检查签署条件及授权链。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-28",
+        "completedMinutes": 240,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：合同红线预计 9/25 收口，9/28 用 4 小时检查签署条件及授权链。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 240,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-signature-gate-v1",
+        "note": "演示历史观察：明确「确认华东零售续约签署条件」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 240,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-signature-gate-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 240,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-retail-signature-gate-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-migration-tenant-inventory": {
+    "scopeMinutes": 480,
+    "completedMinutes": 480,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「签发跨境支付迁移租户清单」已由用户标记完成；原完成日期未记录。",
+    "actor": "白露",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-tenant-inventory-v1",
+        "note": "演示历史观察：明确「签发跨境支付迁移租户清单」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-csx-migration-tenant-inventory-v1",
+        "note": "演示历史观察：租户及环境底账整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 390,
+        "scopeVersion": "demo-csx-migration-tenant-inventory-v1",
+        "note": "演示历史观察：迁移范围与例外清单完成复核。"
+      }
+    ]
+  },
+  "csx-migration-field-map": {
+    "scopeMinutes": 900,
+    "completedMinutes": 630,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "主表字段映射已核对，历史枚举和空值迁移样本仍有差异。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "主表字段映射已核对，历史枚举和空值迁移样本仍有差异。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "白露",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 900,
+        "note": "演示预测节点：剩余交付与核对预计收口。主表字段映射已核对，历史枚举和空值迁移样本仍有差异。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 720,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-field-map-initial",
+        "note": "演示历史观察：明确「核对跨境支付新旧数据字段映射」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 720,
+        "completedMinutes": 180,
+        "scopeVersion": "demo-csx-migration-field-map-initial",
+        "note": "演示历史观察：主表字段清单归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 900,
+        "completedMinutes": 450,
+        "scopeVersion": "demo-csx-migration-field-map-v1",
+        "note": "演示历史观察：增加历史枚举与空值迁移验证，共 180 分钟；主要字段映射初核，历史枚举待验证。"
+      }
+    ]
+  },
+  "csx-migration-rollback-validation": {
+    "scopeMinutes": 600,
+    "completedMinutes": 240,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "回滚脚本已完成首轮演练，跨库恢复一致性问题尚未解除。",
+    "actor": "薛航",
+    "forecastOn": "2026-09-18",
+    "timingBasis": "演示时间假设：以跨库一致性修复在 9/17 验证通过为前提，9/18 用 6 小时重跑回滚演练并复核差异。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：以跨库一致性修复在 9/17 验证通过为前提，9/18 用 6 小时重跑回滚演练并复核差异。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-rollback-validation-v1",
+        "note": "演示历史观察：明确「验证跨境支付迁移回滚脚本」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-csx-migration-rollback-validation-v1",
+        "note": "演示历史观察：回滚脚本初稿完成。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 240,
+        "scopeVersion": "demo-csx-migration-rollback-validation-v1",
+        "note": "演示历史观察：首轮演练完成，跨库一致性问题待解除。"
+      }
+    ]
+  },
+  "csx-migration-pilot-cohort": {
+    "scopeMinutes": 300,
+    "completedMinutes": 300,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「确认跨境支付迁移试点租户」已由用户标记完成；原完成日期未记录。",
+    "actor": "陈沁",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-pilot-cohort-v1",
+        "note": "演示历史观察：明确「确认跨境支付迁移试点租户」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-csx-migration-pilot-cohort-v1",
+        "note": "演示历史观察：候选试点意愿回访。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 240,
+        "scopeVersion": "demo-csx-migration-pilot-cohort-v1",
+        "note": "演示历史观察：试点范围与窗口完成初核。"
+      }
+    ]
+  },
+  "csx-migration-pilot-rehearsal": {
+    "scopeMinutes": 540,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成跨境支付试点迁移彩排」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "沈闻",
+    "forecastOn": "2026-09-22",
+    "timingBasis": "演示时间假设：回滚验证预计 9/18 通过，9/21 至 9/22 分批彩排试点迁移并检查回退点，合计 9 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 540,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：回滚验证预计 9/18 通过，9/21 至 9/22 分批彩排试点迁移并检查回退点，合计 9 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-pilot-rehearsal-v1",
+        "note": "演示历史观察：明确「完成跨境支付试点迁移彩排」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-pilot-rehearsal-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-pilot-rehearsal-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-migration-pilot-observation": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「签发跨境支付试点观察结论」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "白露",
+    "forecastOn": "2026-09-24",
+    "timingBasis": "演示时间假设：彩排预计 9/22 完成，预留一个观察日后于 9/24 复核业务指标和异常，人工投入约 7 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-24",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：彩排预计 9/22 完成，预留一个观察日后于 9/24 复核业务指标和异常，人工投入约 7 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-pilot-observation-v1",
+        "note": "演示历史观察：明确「签发跨境支付试点观察结论」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-pilot-observation-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-pilot-observation-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-migration-admin-training": {
+    "scopeMinutes": 660,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成跨境支付客户管理员培训」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陆遥",
+    "forecastOn": "2026-09-28",
+    "timingBasis": "演示时间假设：试点观察预计 9/24 完成，9/25 和 9/28 分批培训管理员并核对操作掌握情况，合计 11 小时。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-28",
+        "completedMinutes": 660,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：试点观察预计 9/24 完成，9/25 和 9/28 分批培训管理员并核对操作掌握情况，合计 11 小时。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-admin-training-v1",
+        "note": "演示历史观察：明确「完成跨境支付客户管理员培训」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-admin-training-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 660,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-admin-training-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-migration-support-knowledge": {
+    "scopeMinutes": 480,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「发布跨境支付迁移支持知识包」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陆遥",
+    "forecastOn": "2026-09-29",
+    "timingBasis": "演示时间假设：试点观察预计 9/24 完成，管理员培训期间收集问题，9/29 用 8 小时补齐迁移支持知识包。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-29",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：试点观察预计 9/24 完成，管理员培训期间收集问题，9/29 用 8 小时补齐迁移支持知识包。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-support-knowledge-v1",
+        "note": "演示历史观察：明确「发布跨境支付迁移支持知识包」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-support-knowledge-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-support-knowledge-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-migration-go-live-comms": {
+    "scopeMinutes": 420,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「确认跨境支付正式迁移通知」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈沁",
+    "forecastOn": "2026-09-30",
+    "timingBasis": "演示时间假设：培训与知识包最晚预计 9/29 齐备，9/30 用 7 小时核对正式迁移通知、对象及支持窗口。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-30",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：培训与知识包最晚预计 9/29 齐备，9/30 用 7 小时核对正式迁移通知、对象及支持窗口。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-go-live-comms-v1",
+        "note": "演示历史观察：明确「确认跨境支付正式迁移通知」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-go-live-comms-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-migration-go-live-comms-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-health-usage-window": {
+    "scopeMinutes": 420,
+    "completedMinutes": 420,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「统一企业客户采用率观察窗口」已由用户标记完成；原完成日期未记录。",
+    "actor": "白露",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-usage-window-v1",
+        "note": "演示历史观察：明确「统一企业客户采用率观察窗口」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-csx-health-usage-window-v1",
+        "note": "演示历史观察：采用率窗口差异整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 330,
+        "scopeVersion": "demo-csx-health-usage-window-v1",
+        "note": "演示历史观察：统一口径并完成抽样核对。"
+      }
+    ]
+  },
+  "csx-health-ticket-severity": {
+    "scopeMinutes": 360,
+    "completedMinutes": 360,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「校准企业工单严重度映射」已由用户标记完成；原完成日期未记录。",
+    "actor": "陆遥",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-ticket-severity-v1",
+        "note": "演示历史观察：明确「校准企业工单严重度映射」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-csx-health-ticket-severity-v1",
+        "note": "演示历史观察：工单样本与等级对照整理。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 270,
+        "scopeVersion": "demo-csx-health-ticket-severity-v1",
+        "note": "演示历史观察：映射修订完成，剩最后交叉核对。"
+      }
+    ]
+  },
+  "csx-health-data-freshness": {
+    "scopeMinutes": 720,
+    "completedMinutes": 468,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "主要数据源刷新已恢复，历史缺口回填和延迟告警仍待验证。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "主要数据源刷新已恢复，历史缺口回填和延迟告警仍待验证。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "白露",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 720,
+        "note": "演示预测节点：剩余交付与核对预计收口。主要数据源刷新已恢复，历史缺口回填和延迟告警仍待验证。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-data-freshness-initial",
+        "note": "演示历史观察：明确「修复健康度数据刷新缺口」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-csx-health-data-freshness-initial",
+        "note": "演示历史观察：识别数据刷新缺口。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 720,
+        "completedMinutes": 330,
+        "scopeVersion": "demo-csx-health-data-freshness-v1",
+        "note": "演示历史观察：增加历史缺口回填和延迟告警验证，共 120 分钟；主要数据源刷新恢复。"
+      }
+    ]
+  },
+  "csx-health-adoption-threshold": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「签发企业采用率风险阈值」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈沁",
+    "forecastOn": "2026-09-25",
+    "timingBasis": "演示时间假设：采用率窗口已具备，等待 9/24 试点观察结果，9/25 用 6 小时交叉核对风险阈值。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-25",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：采用率窗口已具备，等待 9/24 试点观察结果，9/25 用 6 小时交叉核对风险阈值。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-adoption-threshold-v1",
+        "note": "演示历史观察：明确「签发企业采用率风险阈值」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-adoption-threshold-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-adoption-threshold-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-health-score-calibration": {
+    "scopeMinutes": 600,
+    "completedMinutes": 510,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "三季度校准样本已跑完，异常客户与人工判断差异仍待复核。",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "三季度校准样本已跑完，异常客户与人工判断差异仍待复核。本次协作记录预计在 2026-09-17 完成剩余核对。",
+    "actor": "白露",
+    "forecastPoints": [
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 600,
+        "note": "演示预测节点：剩余交付与核对预计收口。三季度校准样本已跑完，异常客户与人工判断差异仍待复核。本次协作记录预计在 2026-09-17 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 600,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-score-calibration-v1",
+        "note": "演示历史观察：明确「完成三季度客户健康分校准」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 600,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-csx-health-score-calibration-v1",
+        "note": "演示历史观察：校准样本初轮复算。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 600,
+        "completedMinutes": 390,
+        "scopeVersion": "demo-csx-health-score-calibration-v1",
+        "note": "演示历史观察：三季度样本已跑完，异常待人工核对。"
+      }
+    ]
+  },
+  "csx-health-alert-routing": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「配置高风险客户预警路由」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陆遥",
+    "forecastOn": "2026-09-30",
+    "timingBasis": "演示时间假设：评分校准与采用率阈值最晚预计 9/25 齐备，9/30 用 6 小时核对预警对象、升级路由和去重。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-30",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：评分校准与采用率阈值最晚预计 9/25 齐备，9/30 用 6 小时核对预警对象、升级路由和去重。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-alert-routing-v1",
+        "note": "演示历史观察：明确「配置高风险客户预警路由」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-alert-routing-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-alert-routing-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-health-manual-review": {
+    "scopeMinutes": 540,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成高风险客户人工复核」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈沁",
+    "forecastOn": "2026-09-22",
+    "timingBasis": "演示时间假设：健康分校准预计 9/17 完成，9/21 至 9/22 用 9 小时核对高风险客户证据与例外判断。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 540,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：健康分校准预计 9/17 完成，9/21 至 9/22 用 9 小时核对高风险客户证据与例外判断。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-manual-review-v1",
+        "note": "演示历史观察：明确「完成高风险客户人工复核」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-manual-review-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 540,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-health-manual-review-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-access-containment": {
+    "scopeMinutes": 180,
+    "completedMinutes": 180,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "confirmation",
+    "basis": "截至本次核对，「撤销华东零售异常管理员权限」已由用户标记完成；原完成日期未记录。",
+    "actor": "沈闻",
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 180,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-access-containment-v1",
+        "note": "演示历史观察：明确「撤销华东零售异常管理员权限」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 180,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-csx-access-containment-v1",
+        "note": "演示历史观察：异常授权范围识别。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 180,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-csx-access-containment-v1",
+        "note": "演示历史观察：撤销措施已执行，等待交叉确认。"
+      }
+    ]
+  },
+  "csx-access-impact-review": {
+    "scopeMinutes": 480,
+    "completedMinutes": 360,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "访问日志与授权时间线已整理，少数导出记录仍需确认影响范围。",
+    "forecastOn": "2026-09-15",
+    "timingBasis": "访问日志与授权时间线已整理，少数导出记录仍需确认影响范围。本次协作记录预计在 2026-09-15 完成剩余核对。",
+    "actor": "周牧",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 480,
+        "note": "演示预测节点：剩余交付与核对预计收口。访问日志与授权时间线已整理，少数导出记录仍需确认影响范围。本次协作记录预计在 2026-09-15 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 480,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-access-impact-review-v1",
+        "note": "演示历史观察：明确「核对华东零售误授权访问范围」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 480,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-csx-access-impact-review-v1",
+        "note": "演示历史观察：访问日志归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 480,
+        "completedMinutes": 270,
+        "scopeVersion": "demo-csx-access-impact-review-v1",
+        "note": "演示历史观察：授权时间线完成首轮核对。"
+      }
+    ]
+  },
+  "csx-access-customer-update": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "本次准备检查已确认「完成华东零售误授权客户更新」尚未执行，现有材料仅用于明确要求，未形成可计入完成量的交付内容。",
+    "actor": "陈沁",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "演示时间假设：影响核对预计 9/15 完成，9/16 用 6 小时核对客户说明、影响边界和后续联络记录。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 360,
+        "note": "演示预测节点：剩余交付与核对预计收口。演示时间假设：影响核对预计 9/15 完成，9/16 用 6 小时核对客户说明、影响边界和后续联络记录。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-access-customer-update-v1",
+        "note": "演示历史观察：明确「完成华东零售误授权客户更新」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-access-customer-update-v1",
+        "note": "演示历史观察：范围已核对，交付尚未开展，完成量保持 0。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 360,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-access-customer-update-v1",
+        "note": "演示历史观察：复核本轮前置条件，尚无可计入完成量的交付。"
+      }
+    ]
+  },
+  "csx-quarterly-access-review": {
+    "scopeMinutes": 420,
+    "completedMinutes": 378,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "客户数据授权清单已核对，剩跨团队例外授权签回。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "客户数据授权清单已核对，剩跨团队例外授权签回。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "周牧",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 420,
+        "note": "演示预测节点：剩余交付与核对预计收口。客户数据授权清单已核对，剩跨团队例外授权签回。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 420,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-quarterly-access-review-v1",
+        "note": "演示历史观察：明确「复核三季度客户数据访问授权」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 420,
+        "completedMinutes": 90,
+        "scopeVersion": "demo-csx-quarterly-access-review-v1",
+        "note": "演示历史观察：客户授权清单归集。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 420,
+        "completedMinutes": 270,
+        "scopeVersion": "demo-csx-quarterly-access-review-v1",
+        "note": "演示历史观察：主要数据授权核对完成。"
+      }
+    ]
+  },
+  "csx-support-macro-retirement": {
+    "scopeMinutes": 300,
+    "completedMinutes": 180,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "失效宏已识别并标注替代内容，剩支持团队验证与旧入口下线。",
+    "forecastOn": "2026-09-16",
+    "timingBasis": "失效宏已识别并标注替代内容，剩支持团队验证与旧入口下线。本次协作记录预计在 2026-09-16 完成剩余核对。",
+    "actor": "陆遥",
+    "forecastPoints": [
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 300,
+        "note": "演示预测节点：剩余交付与核对预计收口。失效宏已识别并标注替代内容，剩支持团队验证与旧入口下线。本次协作记录预计在 2026-09-16 完成剩余核对。"
+      }
+    ],
+    "history": [
+      {
+        "at": "2026-09-08",
+        "scopeMinutes": 300,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-csx-support-macro-retirement-v1",
+        "note": "演示历史观察：明确「清理过期同步故障客服宏」本轮交付范围，尚无已形成的结果。"
+      },
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 300,
+        "completedMinutes": 30,
+        "scopeVersion": "demo-csx-support-macro-retirement-v1",
+        "note": "演示历史观察：失效宏清单识别。"
+      },
+      {
+        "at": "2026-09-12",
+        "scopeMinutes": 300,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-csx-support-macro-retirement-v1",
+        "note": "演示历史观察：替代内容初稿整理完成。"
+      }
+    ]
+  },
+  "product-launch-agenda-timing": {
+    "scopeMinutes": 180,
+    "completedMinutes": 180,
+    "observedAt": "2026-09-04T17:30:00.000Z",
+    "kind": "confirmation",
+    "basis": "议程各环节的时长、负责人和物料已逐项确认，林洁已标记完成。",
+    "actor": "林洁",
+    "history": [
+      {
+        "at": "2026-09-03",
+        "scopeMinutes": 180,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-product-launch-agenda-timing-v1",
+        "note": "已列出所有环节，场地窗口与嘉宾档期仍需核对。"
+      }
+    ]
+  },
+  "product-launch-host-script": {
+    "scopeMinutes": 240,
+    "completedMinutes": 180,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "主持串词与转场初稿已完成，剩余产品承诺及嘉宾称谓需终审。",
+    "actor": "林洁",
+    "history": [
+      {
+        "at": "2026-09-10",
+        "scopeMinutes": 240,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-product-launch-host-script-v1",
+        "note": "串词初稿覆盖开场和产品介绍，问答与收尾尚未核对。"
+      }
+    ],
+    "forecastOn": "2026-09-15",
+    "timingBasis": "林洁已安排 9/15 终审串词与转场，保留晚于原计划的交付预测。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 240,
+        "note": "林洁核对产品承诺和嘉宾称谓，交付主持终稿。"
+      }
+    ]
+  },
+  "product-launch-guest-cue": {
+    "scopeMinutes": 300,
+    "completedMinutes": 210,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "嘉宾上台与导播切换点已整理，视频播放及摄影备选信号仍需现场核对。",
+    "actor": "高远",
+    "history": [
+      {
+        "at": "2026-09-11",
+        "scopeMinutes": 300,
+        "completedMinutes": 120,
+        "scopeVersion": "demo-product-launch-guest-cue-v1",
+        "note": "已从确认议程提取关键切换点，责任人及备选处理待补充。"
+      }
+    ],
+    "forecastOn": "2026-09-16",
+    "timingBasis": "根据已确认议程核对 cue，9/15 与主持终稿对齐，9/16 关闭备选信号缺口。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 270,
+        "note": "与主持终稿核对嘉宾上台、PPT和视频信号。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 300,
+        "note": "高远完成摄影与导播备选信号确认。"
+      }
+    ]
+  },
+  "product-launch-flow-rehearsal": {
+    "scopeMinutes": 360,
+    "completedMinutes": 0,
+    "observedAt": "2026-09-14T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "联排尚未执行；主持串词与 cue 核对分别安排在 9/15、9/16，联排窗口预留于 9/17。",
+    "actor": "高远",
+    "forecastOn": "2026-09-17",
+    "timingBasis": "以主持串词 9/15、cue 9/16 的交付为前置，9/17 完成联排与阻断问题复核。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-15",
+        "completedMinutes": 0,
+        "note": "等待主持串词和 cue 完成核对，不提前计入联排完成量。"
+      },
+      {
+        "at": "2026-09-16",
+        "completedMinutes": 120,
+        "note": "前置稿件确认后完成设备与人员检查。"
+      },
+      {
+        "at": "2026-09-17",
+        "completedMinutes": 360,
+        "note": "执行完整联排并核对阻断问题关闭情况。"
+      }
+    ]
+  },
+  "demo-autumn-creator-event-creators": {
+    "scopeMinutes": 180,
+    "completedMinutes": 180,
+    "observedAt": "2026-09-16T10:00:00+08:00",
+    "kind": "confirmation",
+    "basis": "合作达人名单与档期已确认，林洁于 9/16 10:00 标记完成。",
+    "actor": "林洁"
+  },
+  "demo-autumn-creator-event-content": {
+    "scopeMinutes": 300,
+    "completedMinutes": 180,
+    "observedAt": "2026-09-17T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "专场脚本初稿和商品素材已整理，剩余商品信息、授权及口播用语待核对。",
+    "actor": "陈默",
+    "history": [
+      {
+        "at": "2026-09-16",
+        "scopeMinutes": 300,
+        "completedMinutes": 60,
+        "scopeVersion": "demo-demo-autumn-creator-event-content-v1",
+        "note": "完成脚本提纲与商品素材清单。"
+      }
+    ],
+    "forecastOn": "2026-09-21",
+    "timingBasis": "9/18 核对商品与授权，9/21 确认脚本终稿，早于专场准备截止日。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 240,
+        "note": "完成商品信息与素材授权核对。"
+      },
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 300,
+        "note": "确认最终口播用语并交付专场终稿。"
+      }
+    ]
+  },
+  "demo-autumn-creator-event-launch": {
+    "scopeMinutes": 180,
+    "completedMinutes": 45,
+    "observedAt": "2026-09-17T17:30:00+08:00",
+    "kind": "prediction",
+    "basis": "已收集库存和优惠清单，仓库实物核对与开播人员安排尚未完成；任务仍待开始。",
+    "actor": "周岚",
+    "history": [
+      {
+        "at": "2026-09-16",
+        "scopeMinutes": 180,
+        "completedMinutes": 0,
+        "scopeVersion": "demo-demo-autumn-creator-event-launch-v1",
+        "note": "已确认开播检查范围，尚未收到库存与优惠清单。"
+      }
+    ],
+    "forecastOn": "2026-09-22",
+    "timingBasis": "9/18 库存初核，9/21 核对脚本与开播物料，9/22 完成最终检查。",
+    "forecastPoints": [
+      {
+        "at": "2026-09-18",
+        "completedMinutes": 90,
+        "note": "仓库完成库存和优惠占用初核。"
+      },
+      {
+        "at": "2026-09-21",
+        "completedMinutes": 120,
+        "note": "对照脚本终稿核对开播物料与人员。"
+      },
+      {
+        "at": "2026-09-22",
+        "completedMinutes": 180,
+        "note": "完成库存差异复核及开播安排确认。"
+      }
+    ]
+  }
+}

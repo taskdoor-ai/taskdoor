@@ -308,7 +308,11 @@ function effortFor(tasks: TaskNode[], task: TaskNode): PersonalWorkbenchEffort {
 
 /** 当前有权任务的个人投影；调用方必须传完整任务集合，不能传列表分页/标签筛选结果。 */
 export function buildPersonalWorkbenchModel(input: PersonalWorkbenchInput): PersonalWorkbenchModel {
-  const byId = new Map(input.tasks.map((task) => [task.id, task]));
+  const byId = new Map(input.tasks.map((task) => {
+    if (!task.proposedOwnerId) return [task.id, task] as const;
+    const { proposedOwnerId: _legacyProposal, ...restored } = task;
+    return [task.id, { ...restored, ownerId: task.proposedOwnerId }] as const;
+  }));
   const tasks = [...byId.values()];
   const owned = input.currentUserId.trim() ? tasks.filter((task) => task.ownerId === input.currentUserId) : [];
   const clock = clockFor(input.asOf);
@@ -454,10 +458,7 @@ export function buildPersonalWorkbenchModel(input: PersonalWorkbenchInput): Pers
   }
   const orderedActions = sortedActions
     .map(({ order: _order, dateKey: _dateKey, dueTimestamp: _dueTimestamp, position: _position, ...action }) => action);
-  const awaitingAcceptance: PersonalWorkbenchInvitation[] = input.currentUserId.trim()
-    ? tasks.filter((task) => isActive(task) && task.ownerId !== input.currentUserId && task.proposedOwnerId === input.currentUserId).map((task) => ({
-      taskId: task.id, title: task.name, text: "你被提议为负责人，正式责任尚未变更。", source: sourceFor(task), evidence: taskEvidence(task),
-    })) : [];
+  const awaitingAcceptance: PersonalWorkbenchInvitation[] = [];
   const counts = {
     owned: owned.length, active: orderedActions.length,
     coordinating: orderedActions.filter((action) => action.role === "coordination").length,
@@ -519,7 +520,7 @@ function agentPriorityScore(item: PersonalWorkbenchItem): number {
   return score;
 }
 
-function priorityReasonFor(item: PersonalWorkbenchItem): string {
+export function priorityReasonFor(item: PersonalWorkbenchItem): string {
   const context = item.priorityContext;
   const date = item.dueLabel ? `（${item.dueLabel}）` : "";
   const timePressure = item.dueState === "overdue" ? `已超过承诺时间${date}`
@@ -552,7 +553,7 @@ function priorityReasonFor(item: PersonalWorkbenchItem): string {
   return parts.join("");
 }
 
-export function buildPersonalWorkbenchPriorities(items: PersonalWorkbenchItem[]) {
+export function buildPersonalWorkbenchPriorities(items: PersonalWorkbenchItem[], formatReason: (item: PersonalWorkbenchItem) => string = priorityReasonFor) {
   return items
     .map((item, position) => ({ item, position, score: agentPriorityScore(item) }))
     .sort((left, right) => right.score - left.score || left.position - right.position)
@@ -563,7 +564,7 @@ export function buildPersonalWorkbenchPriorities(items: PersonalWorkbenchItem[])
         iconName: item.iconName,
         iconTone: item.iconTone,
         summary: item.summary,
-        priorityReason: priorityReasonFor(item),
+        priorityReason: formatReason(item),
         effort: { ...item.effort },
       },
       rank: index + 1,

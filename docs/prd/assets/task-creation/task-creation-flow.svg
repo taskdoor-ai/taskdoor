@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+  <title id="title">任务创建与规划流程</title>
+  <desc id="desc">从用户输入工作意图开始，信息充分时跳过补问，否则经过必要补问，再形成候选草稿、用户编辑和校验；最终确认后通过服务端鉴权、资源版本及幂等校验，写入正式任务并生成活动记录。</desc>
+  <defs>
+    <marker id="arrow" markerHeight="8" markerWidth="8" orient="auto" refX="7" refY="4">
+      <path d="M0 0 8 4 0 8Z" fill="#6b7280"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" flood-color="#172033" flood-opacity="0.08" stdDeviation="8"/>
+    </filter>
+  </defs>
+  <rect width="960" height="600" rx="32" fill="#f6f7fb"/>
+  <text x="68" y="72" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="#20283a">从意图到正式任务</text>
+  <text x="68" y="104" font-family="system-ui, sans-serif" font-size="16" fill="#667085">草稿阶段可随时修改；最终确认前没有正式写入。</text>
+
+  <g fill="none" stroke="#6b7280" stroke-linecap="round" stroke-width="3" marker-end="url(#arrow)">
+    <path d="M234 190H272"/>
+    <path d="M450 190H488"/>
+    <path d="M234 224C264 282 458 282 488 224"/>
+    <path d="M666 190H704"/>
+    <path d="M793 246V314"/>
+    <path d="M704 370H666"/>
+    <path d="M488 370H450"/>
+    <path d="M272 370H234"/>
+  </g>
+  <rect x="304" y="254" width="152" height="28" rx="14" fill="#ffffff" stroke="#cfd8e8"/>
+  <text x="380" y="273" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="650" fill="#53607b">信息充分 · 跳过补问</text>
+
+  <g filter="url(#shadow)" font-family="system-ui, sans-serif">
+    <g>
+      <rect x="56" y="136" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
+      <circle cx="88" cy="168" r="14" fill="#e8efff"/>
+      <text x="88" y="173" text-anchor="middle" font-size="14" font-weight="700" fill="#4169e1">1</text>
+      <text x="112" y="174" font-size="20" font-weight="700" fill="#273047">输入意图</text>
+      <text x="76" y="211" font-size="15" fill="#667085">手工填写或自然语言描述</text>
+    </g>
+    <g>
+      <rect x="272" y="136" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
+      <circle cx="304" cy="168" r="14" fill="#fff1d8"/>
+      <text x="304" y="173" text-anchor="middle" font-size="14" font-weight="700" fill="#b76a12">2</text>
+      <text x="328" y="174" font-size="20" font-weight="700" fill="#273047">必要补问</text>
+      <text x="292" y="204" font-size="15" fill="#667085">只确认会改变目标、</text>
+      <text x="292" y="225" font-size="15" fill="#667085">交付或结构的缺口</text>
+    </g>
+    <g>
+      <rect x="488" y="136" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
+      <circle cx="520" cy="168" r="14" fill="#efeaff"/>
+      <text x="520" y="173" text-anchor="middle" font-size="14" font-weight="700" fill="#7048d7">3</text>
+      <text x="544" y="174" font-size="20" font-weight="700" fill="#273047">候选草稿</text>
+      <text x="508" y="204" font-size="15" fill="#667085">简单任务或父子结构</text>
+      <text x="508" y="225" font-size="15" fill="#667085">关系均为待确认建议</text>
+    </g>
+    <g>
+      <rect x="704" y="136" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
+      <circle cx="736" cy="168" r="14" fill="#e6f6f1"/>
+      <text x="736" y="173" text-anchor="middle" font-size="14" font-weight="700" fill="#168263">4</text>
+      <text x="760" y="174" font-size="20" font-weight="700" fill="#273047">用户编辑</text>
+      <text x="724" y="204" font-size="15" fill="#667085">修改字段、人员、日期、</text>
+      <text x="724" y="225" font-size="15" fill="#667085">投入、子任务与依赖</text>
+    </g>
+    <g>
+      <rect x="704" y="316" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
+      <circle cx="736" cy="348" r="14" fill="#ffe9e7"/>
+      <text x="736" y="353" text-anchor="middle" font-size="14" font-weight="700" fill="#bd4b43">5</text>
+      <text x="760" y="354" font-size="20" font-weight="700" fill="#273047">统一校验</text>
+      <text x="724" y="384" font-size="15" fill="#667085">权限、版本、字段、关系</text>
+      <text x="724" y="405" font-size="15" fill="#667085">有问题就保留草稿返回</text>
+    </g>
+    <g>
+      <rect x="488" y="316" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
+      <circle cx="520" cy="348" r="14" fill="#e8efff"/>
+      <text x="520" y="353" text-anchor="middle" font-size="14" font-weight="700" fill="#4169e1">6</text>
+      <text x="544" y="354" font-size="20" font-weight="700" fill="#273047">最终确认后</text>
+      <text x="508" y="384" font-size="14" fill="#667085">服务端鉴权 + 资源版本</text>
+      <text x="508" y="405" font-size="14" fill="#667085">幂等校验通过才继续写入</text>
+    </g>
+    <g>
+      <rect x="272" y="316" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
+      <circle cx="304" cy="348" r="14" fill="#e6f6f1"/>
+      <text x="304" y="353" text-anchor="middle" font-size="14" font-weight="700" fill="#168263">7</text>
+      <text x="328" y="354" font-size="20" font-weight="700" fill="#273047">原子写入</text>
+      <text x="292" y="384" font-size="15" fill="#667085">正式任务、父子与依赖</text>
+      <text x="292" y="405" font-size="15" fill="#667085">不留下半套结果</text>
+    </g>
+    <g>
+      <rect x="56" y="316" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
+      <circle cx="88" cy="348" r="14" fill="#efeaff"/>
+      <text x="88" y="353" text-anchor="middle" font-size="14" font-weight="700" fill="#7048d7">8</text>
+      <text x="112" y="354" font-size="20" font-weight="700" fill="#273047">回执与活动</text>
+      <text x="76" y="384" font-size="15" fill="#667085">返回 ID、版本与实际数量</text>
+      <text x="76" y="405" font-size="15" fill="#667085">创建事实可审计、可重读</text>
+    </g>
+  </g>
+
+  <rect x="56" y="474" width="826" height="70" rx="16" fill="#eef2ff" stroke="#cfd8ff"/>
+  <text x="82" y="504" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#3446a8">正式写入边界</text>
+  <text x="82" y="530" font-family="system-ui, sans-serif" font-size="15" fill="#53607b">AI 建议、人员选择和草稿编辑都不是正式业务事实；用户确认且服务端校验成功后才产生任务。</text>
+</svg>

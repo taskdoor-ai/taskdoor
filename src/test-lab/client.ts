@@ -1,4 +1,4 @@
-import type { LabBootstrap, LabRun, LabState, LabView } from "./types";
+import type { LabBootstrap, LabRun, LabState, LabView, LabRunSelection, LabSkillVersion, SkillId, LabPreflight } from "./types";
 
 export class LabApiError extends Error {
   constructor(message: string, public status: number) { super(message); this.name = "LabApiError"; }
@@ -18,9 +18,15 @@ export function createLabClient(csrfToken = "", fetcher: typeof fetch = fetch) {
   }
   return {
     bootstrap: () => request<LabBootstrap>("/bootstrap"),
+    checkWorkflow: (workflowId:string) => request<LabPreflight>("/workflows/check", "POST", {workflowId}),
     saveState: (input: Pick<LabState, "teams" | "cases"> & { expectedRevision: number }) => request<LabState>("/state", "PUT", input),
     view: (teamId: string, actorId: string) => request<LabView>(`/view?${new URLSearchParams({ teamId, actorId })}`),
-    run: (caseIds: string[], requestId: string) => request<LabRun[]>("/runs", "POST", { caseIds, requestId }),
+    run: (caseIds: string[], requestId: string, selection?: LabRunSelection) => request<LabRun[]>("/runs", "POST", { caseIds, requestId, selection }),
+    skill: (id: SkillId) => request<{snapshot:string; hash:string}>(`/skills/${id}`),
+    addSkillVersion: (expectedRevision:number, version:Pick<LabSkillVersion,"skillId"|"label"|"notes"|"snapshot">) => request<LabState>("/skill-versions", "POST", {expectedRevision,version}),
+    setSkillDefault: (expectedRevision:number,skillId:SkillId,versionId:string|null) => request<LabState>("/skill-default", "PUT", {expectedRevision,skillId,versionId}),
+    saveModels: (expectedRevision:number,models:string[]) => request<LabState>("/models", "PUT", {expectedRevision,models}),
+    modelCatalog: () => request<{models:string[]}>("/model-catalog"),
     cancel: (id: string) => request<LabRun>(`/runs/${encodeURIComponent(id)}/cancel`, "POST", {}),
     review: (id: string, verdict: "passed" | "failed", note: string) => request<LabRun>(`/runs/${encodeURIComponent(id)}/review`, "POST", { verdict, note }),
     importLibrary: () => request<{ state: LabState; imported: number }>("/library/import", "POST", {}),

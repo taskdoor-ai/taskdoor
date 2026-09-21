@@ -1,9 +1,11 @@
+import type { TaskProgressContext } from "./taskProgressDisplay";
+import type { TaskWithEffortBaseline } from "./taskEffortBaseline";
 import {
   effortEstimateSchema, getTaskEffortState, summarizeTaskEffort,
   type TaskEffortEstimate, type TaskEffortTask,
 } from "./taskEffort";
 
-export type TaskEffortDistributionInput = TaskEffortTask & {
+export type TaskEffortDistributionInput = TaskWithEffortBaseline & TaskProgressContext & {
   id?: string;
   clientId?: string;
   title?: string;
@@ -51,7 +53,7 @@ export function getTaskEffortDistribution(
       const parsed = effortEstimateSchema.safeParse(task.effortEstimate);
       if (task.effortEstimate !== undefined && !parsed.success) return invalid();
       const source = parsed.success ? parsed.data.basis : "unknown";
-      const eligible = source === "model"
+      const eligible = source === "model" || (source === "manual" && parsed.success && parsed.data.confirmed)
         || (mode === "creation" && (source === "manual" || source === "mock"))
         || (mode === "example" && source === "mock");
       const eligibleTask = eligible ? task : {};

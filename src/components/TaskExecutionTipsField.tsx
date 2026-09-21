@@ -1,3 +1,4 @@
+import { useDetailCopy } from "../i18n/detailMessages";
 import { TaskCreationEditableText } from "./TaskCreationEditableText";
 
 type Props = {
@@ -7,15 +8,16 @@ type Props = {
   disabled?: boolean;
 };
 
-export function TaskExecutionTipsField({ values, onChange, label = "执行建议", disabled = false }: Props) {
+export function TaskExecutionTipsField({ values, onChange, label, disabled = false }: Props) {
+  const d = useDetailCopy();
   return <label className="task-execution-tips-field">
-    <span className="task-detail-field-label">执行建议</span>
+    <span className="task-detail-field-label">{d('executionTips')}</span>
     <TaskCreationEditableText
       className="task-execution-tips-input"
       disabled={disabled}
-      label={label}
+      label={label ?? d('executionTips')}
       onChange={text => { if (!disabled) onChange(text === "" ? [] : text.split("\n")); }}
-      placeholder="补充执行方法或注意事项（选填）"
+      placeholder={d('noExecutionTips')}
       value={values.join("\n")}
     />
   </label>;

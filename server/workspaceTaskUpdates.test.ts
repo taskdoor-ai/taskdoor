@@ -11,6 +11,6 @@ test("从概览修改状态只更新目标任务并记录最新时间", () => {
 
   assert.equal(target?.kind, "task");
   assert.equal(target?.kind === "task" ? target.status : undefined, "已阻塞");
-  assert.equal(target?.updatedAt, "刚刚");
+  assert.ok(Number.isFinite(Date.parse(target?.updatedAt ?? "")));
   assert.equal(untouched, workspaceNodes.find((node) => node.id === "fragrance-content"));
 });

@@ -25,9 +25,11 @@ test("任务看板按统一状态顺序分组并跳过空列", () => {
   assert.equal(taskBoardStatusTone["已阻塞"], "blocked");
 });
 
-test("任务列表以当前用户作为默认负责人", () => {
+test("任务列表初始条件展示团队全部任务", () => {
   assert.deepEqual(createInitialTaskListFilters("周岚"), {
-    owner: "周岚",
+    view: "all",
+    completion: "all",
+    owner: "all",
     status: "all",
     tag: "all",
   });

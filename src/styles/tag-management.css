@@ -96,8 +96,8 @@
 .ad-tag-badge-remove:hover { background: color-mix(in srgb, currentColor 10%, transparent); opacity: 1; }
 .ad-tag-badge-remove svg { width: var(--ad-space-3); height: var(--ad-space-3); }
 
-.tag-picker-trigger { display: inline-flex; min-height: var(--ad-control-height-sm); align-items: center; gap: var(--ad-space-1); padding: 0 var(--ad-space-2); border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-secondary); font: inherit; font-size: var(--ad-text-caption); font-weight: 600; cursor: pointer; }
-.tag-picker-trigger:hover, .tag-picker-trigger[aria-expanded="true"] { background: var(--ad-surface-subtle); color: var(--ad-ink); }
+.tag-picker-trigger { display: inline-flex; min-height: var(--ad-control-height-sm); align-items: center; gap: var(--ad-space-1); padding: 0 var(--ad-space-2); border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-tertiary); font: inherit; font-size: var(--ad-text-caption); font-weight: 400; cursor: pointer; }
+.tag-picker-trigger:hover:not(:disabled), .tag-picker-trigger[aria-expanded="true"] { background: var(--ad-surface-subtle); color: var(--ad-route); }
 .tag-picker-trigger:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 .tag-picker-trigger:disabled { cursor: not-allowed; opacity: .5; }
 .tag-picker-trigger svg { width: var(--ad-space-3); height: var(--ad-space-3); }

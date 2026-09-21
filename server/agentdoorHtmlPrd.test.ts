@@ -8,7 +8,7 @@ test("HTML PRD 保留六个产品模块和 Skill、MCP，移除研发底线", ()
   const html = readPrd();
   const sectionIds = ["flow", "team", "create", "task-list", "my-work", "task-detail", "skill-design", "mcp-design"];
 
-  assert.match(html, /<title>AgentDoor 产品 PRD<\/title>/);
+  assert.match(html, /<title>TaskDoor 产品 PRD<\/title>/);
   for (const id of sectionIds) {
     assert.match(html, new RegExp(`<section[^>]+id="${id}"`));
     assert.match(html, new RegExp(`href="#${id}"`));

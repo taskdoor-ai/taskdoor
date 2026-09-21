@@ -1,85 +1,38 @@
+import { useI18n } from '../i18n/I18nProvider';
+import { notificationCopy } from '../i18n/notificationCopy';
+import { useGlobalUi } from "../i18n/globalUi";
+import { useDetailCopy } from "../i18n/detailMessages";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Bell, Broom, Check, Filter, Inbox } from "lucide-react";
-import { Button } from "./ui/button";
+import { PersonName } from "./PersonAvatar";
+import { Bell, Broom, Check, Filter, Inbox } from "lucide-react";
+import { notificationExamples, notificationTypeLabels, type WorkspaceNotification } from "../data/notificationExamples";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import "@/styles/notifications.css";
 
 type NotificationReadFilter = "all" | "unread" | "read";
-type NotificationResponse = "pending" | "accepted" | "declined";
-
-type NotificationBase = {
-  id: string;
-  read: boolean;
-  time: string;
-  title: string;
-};
-
-type InvitationNotification = NotificationBase & {
-  actor: string;
-  completionCriteria: string[];
-  dueAt: string;
-  kind: "invitation";
-  response: NotificationResponse;
-};
-
-type AiUpdateNotification = NotificationBase & {
-  discoveredAt: string;
-  kind: "ai-update";
-  summary: string;
-  taskId: string;
-};
-
-type NotificationItem = InvitationNotification | AiUpdateNotification;
-
-const initialNotifications: NotificationItem[] = [
-  {
-    actor: "陈默",
-    completionCriteria: [
-      "第二批达人名单按合作优先级完成确认",
-      "目标预算与合作档期形成可执行结论",
-    ],
-    dueAt: "2026 / 09 / 30",
-    id: "creator-business-assignment",
-    kind: "invitation",
-    read: false,
-    response: "pending",
-    time: "10 分钟前",
-    title: "确认第二批达人名单与合作档期",
-  },
-  {
-    discoveredAt: "今天 09:10",
-    id: "creator-schedule-conflict",
-    kind: "ai-update",
-    read: false,
-    summary: "第二批达人中有 3 位合作档期与双十一排期冲突，可能影响后续签约。",
-    taskId: "fragrance-creator-business",
-    time: "22 分钟前",
-    title: "确认第二批达人名单与合作档期",
-  },
-];
-
 const readFilterLabels: Record<NotificationReadFilter, string> = { all: "全部", read: "已读", unread: "未读" };
 
-export function GlobalNotifications({ onOpenTaskInsight, placement = "rail" }: {
-  onOpenTaskInsight?: (taskId: string) => void;
+export function GlobalNotifications({ placement = "rail", showDemoNotifications = true, onOpenTask }: {
   placement?: "rail" | "topbar";
+  showDemoNotifications?: boolean;
+  onOpenTask?: (taskId: string) => void;
 }) {
+  const ui = useGlobalUi();
+  const d = useDetailCopy();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
   const filterTriggerRef = useRef<HTMLButtonElement>(null);
-  const [items, setItems] = useState(initialNotifications);
+  const [items, setItems] = useState(() => showDemoNotifications ? notificationExamples : []);
   const [activeFilter, setActiveFilter] = useState<NotificationReadFilter>("all");
   const [filterOpen, setFilterOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const counts = useMemo(() => ({
     all: items.length,
     read: items.filter((item) => item.read).length,
     unread: items.filter((item) => !item.read).length,
   }), [items]);
-  const selectedItem = items.find((item) => item.id === selectedId) ?? null;
   const visibleItems = items.filter((item) => activeFilter === "all" || (activeFilter === "read" ? item.read : !item.read));
 
   useEffect(() => {
@@ -95,108 +48,60 @@ export function GlobalNotifications({ onOpenTaskInsight, placement = "rail" }: {
     setItems((current) => current.map((item) => item.read ? item : { ...item, read: true }));
   };
 
-  const respondToInvitation = (item: InvitationNotification, response: Exclude<NotificationResponse, "pending">) => {
-    setItems((current) => current.map((currentItem) => currentItem.id === item.id && currentItem.kind === "invitation"
-      ? { ...currentItem, read: true, response }
-      : currentItem));
-    setSelectedId(null);
+  const markRead = (item: WorkspaceNotification) => {
+    setItems(current => current.map(value => value.id === item.id ? { ...value, read: true } : value));
   };
-
-  const openItem = (item: NotificationItem) => {
-    setItems((current) => current.map((currentItem) => currentItem.id === item.id ? { ...currentItem, read: true } : currentItem));
-    setSelectedId(item.id);
-  };
-
-  const resetDetail = () => {
-    setSelectedId(null);
-  };
-
   const changeSheetOpen = (open: boolean) => {
     setSheetOpen(open);
-    if (!open) {
-      resetDetail();
-      setFilterOpen(false);
-    }
-  };
-
-  const openRelatedTask = (item: AiUpdateNotification) => {
-    onOpenTaskInsight?.(item.taskId);
-    changeSheetOpen(false);
+    if (!open) setFilterOpen(false);
   };
 
   return <Sheet onOpenChange={changeSheetOpen} open={sheetOpen}>
-    <SheetTrigger ref={triggerRef} render={<button aria-label={`通知，${counts.unread} 项未读`} className={placement === "topbar" ? "notification-trigger notification-trigger-topbar" : "rail-item notification-trigger"} data-tooltip={placement === "rail" ? "通知" : undefined} title={placement === "topbar" ? "通知" : undefined} type="button" />}>
+    <SheetTrigger ref={triggerRef} render={<button aria-label={`${d("notifications")} (${counts.unread})`} className={placement === "topbar" ? "notification-trigger notification-trigger-topbar" : "rail-item notification-trigger"} data-tooltip={placement === "rail" ? d('notifications') : undefined} title={placement === "topbar" ? d('notifications') : undefined} type="button" />}>
       <Bell aria-hidden="true" size={18} />
       {counts.unread > 0 && <span aria-hidden="true" className="notification-trigger-count">{counts.unread > 99 ? "99+" : counts.unread}</span>}
     </SheetTrigger>
     <SheetContent finalFocus={triggerRef} initialFocus={panelRef} ref={panelRef} side={placement === "topbar" ? "right" : "left"} tabIndex={-1}>
-      <SheetHeader className={selectedItem ? "notification-header-detail" : undefined}>
-        {selectedItem && <Button aria-label="返回通知列表" className="notification-back" onClick={resetDetail} size="icon-sm" type="button" variant="ghost"><ArrowLeft aria-hidden="true" /></Button>}
-        <div>
-          <SheetTitle>{selectedItem ? selectedItem.kind === "invitation" ? "协作邀请" : "AI 诊断" : "通知"}</SheetTitle>
-          <SheetDescription>{selectedItem
-            ? selectedItem.kind === "invitation" ? `${selectedItem.actor} · ${selectedItem.time}` : `AI 发现 · ${selectedItem.time}`
-            : "协作邀请与 AI 发现的重要变化。"}</SheetDescription>
-        </div>
-        {!selectedItem && <div className="notification-header-actions">
-          <button aria-label="全部标为已读" className="notification-mark-read" disabled={counts.unread === 0} onClick={markAllRead} title="全部标为已读" type="button"><Broom aria-hidden="true" /></button>
+      <SheetHeader>
+        <div><SheetTitle>{d('notifications')}</SheetTitle><SheetDescription>{ui("查看与你有关的协作动态。")}</SheetDescription></div>
+        <div className="notification-header-actions">
+          <button aria-label={ui("全部标为已读")} className="notification-mark-read" disabled={counts.unread === 0} onClick={markAllRead} title={ui("全部标为已读")} type="button"><Broom aria-hidden="true" /></button>
           <div className="notification-filter" ref={filterRef}>
-            <button aria-expanded={filterOpen} aria-haspopup="menu" aria-label={`筛选通知，当前${readFilterLabels[activeFilter]}`} className={`notification-filter-trigger ${activeFilter !== "all" ? "active" : ""}`} onClick={() => setFilterOpen((open) => { const nextOpen = !open; if (nextOpen) window.requestAnimationFrame(() => filterRef.current?.querySelector<HTMLButtonElement>('[role="menuitemradio"]')?.focus()); return nextOpen; })} ref={filterTriggerRef} title="筛选通知" type="button"><Filter aria-hidden="true" /></button>
-            {filterOpen && <div aria-label="通知已读状态" className="notification-filter-menu" onKeyDown={(event) => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); setFilterOpen(false); filterTriggerRef.current?.focus(); } }} role="menu">
-              {(["all", "unread", "read"] as const).map((filter) => <button aria-checked={activeFilter === filter} className="notification-filter-option" key={filter} onClick={() => { setActiveFilter(filter); setFilterOpen(false); filterTriggerRef.current?.focus(); }} role="menuitemradio" type="button"><Check aria-hidden="true" /><span>{readFilterLabels[filter]}</span><small>{counts[filter]}</small></button>)}
+            <button aria-expanded={filterOpen} aria-haspopup="menu" aria-label={ui("筛选通知，当前{0}", {0: ui(readFilterLabels[activeFilter])})} className={`notification-filter-trigger ${activeFilter !== "all" ? "active" : ""}`} onClick={() => setFilterOpen((open) => { const nextOpen = !open; if (nextOpen) window.requestAnimationFrame(() => filterRef.current?.querySelector<HTMLButtonElement>('[role="menuitemradio"]')?.focus()); return nextOpen; })} ref={filterTriggerRef} title={ui("筛选通知")} type="button"><Filter aria-hidden="true" /></button>
+            {filterOpen && <div aria-label={ui("通知已读状态")} className="notification-filter-menu" onKeyDown={(event) => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); setFilterOpen(false); filterTriggerRef.current?.focus(); } }} role="menu">
+              {(["all", "unread", "read"] as const).map((filter) => <button aria-checked={activeFilter === filter} className="notification-filter-option" key={filter} onClick={() => { setActiveFilter(filter); setFilterOpen(false); filterTriggerRef.current?.focus(); }} role="menuitemradio" type="button"><Check aria-hidden="true" /><span>{ui(readFilterLabels[filter])}</span><small>{counts[filter]}</small></button>)}
             </div>}
           </div>
-        </div>}
+        </div>
       </SheetHeader>
 
-      {selectedItem ? <div className="notification-detail">
-        {selectedItem.kind === "invitation" ? <>
-          <section className="notification-invitation-heading">
-            <span>任务名称</span>
-            <h2 className="notification-invitation-title">{selectedItem.title}</h2>
-          </section>
-
-          <section className="notification-criteria">
-            <h3>完成标准</h3>
-            <ul>{selectedItem.completionCriteria.map((criterion) => <li key={criterion}>{criterion}</li>)}</ul>
-          </section>
-
-          <dl className="notification-deadline">
-            <div><dt>截止时间</dt><dd>{selectedItem.dueAt}</dd></div>
-          </dl>
-
-          {selectedItem.response === "pending" ? <div className="notification-detail-actions">
-            <Button onClick={() => respondToInvitation(selectedItem, "declined")} type="button" variant="outline">拒绝</Button>
-            <Button onClick={() => respondToInvitation(selectedItem, "accepted")} type="button">接受</Button>
-          </div> : <div className="notification-response">
-            <p>{selectedItem.response === "accepted" ? "已接受该任务邀请。" : "已拒绝该任务邀请。"}</p>
-            <Button onClick={resetDetail} type="button" variant="outline">返回通知</Button>
-          </div>}
-        </> : <section className="notification-ai-update">
-          <div>
-            <h3>结论</h3>
-            <p>{selectedItem.summary}</p>
-          </div>
-          <dl>
-            <div><dt>任务</dt><dd><button className="notification-task-link" onClick={() => openRelatedTask(selectedItem)} type="button">{selectedItem.title}</button></dd></div>
-          </dl>
-        </section>}
-      </div> : <div className="notification-list-view">
+      <div className="notification-list-view">
         {visibleItems.length > 0 ? <div className="notification-list">
-          {visibleItems.map((item) => <button className={`notification-item ${item.read ? "read" : "unread"}`} key={item.id} onClick={() => openItem(item)} type="button">
-            <span className="notification-item-copy">
-              <span className="notification-item-event">
-                {!item.read && <span aria-hidden="true" className="notification-unread-dot" />}
-                <span className="notification-item-event-copy">{item.kind === "invitation"
-                  ? <><strong>【协作邀请】</strong>{item.actor}邀请你参与任务</>
-                  : <><strong>【AI 诊断】</strong>发现一项需要你留意的变化</>}</span>
-                <time>{item.time}</time>
-              </span>
-              <span className="notification-item-context"><small>{item.title}</small></span>
-            </span>
-          </button>)}
-        </div> : <div className="notification-empty"><Inbox aria-hidden="true" /><h2>没有{readFilterLabels[activeFilter]}通知</h2><p>{activeFilter === "unread" ? "你已经读完了当前所有通知。" : "符合当前筛选条件的通知会出现在这里。"}</p></div>}
-      </div>}
+          {visibleItems.map(item => <NotificationItem item={item} key={item.id} onOpenTask={onOpenTask} onRead={() => markRead(item)} />)}
+        </div> : <div className="notification-empty"><Inbox aria-hidden="true" /><h2>{ui("没有通知：{filter}", { filter: ui(readFilterLabels[activeFilter]) })}</h2><p>{activeFilter === "unread" ? ui("你已经读完了当前所有通知。") : ui("符合当前筛选条件的通知会出现在这里。")}</p></div>}
+      </div>
     </SheetContent>
   </Sheet>;
+}
+
+export function NotificationItem({ item, onRead, onOpenTask }: { item: WorkspaceNotification; onRead: () => void; onOpenTask?: (taskId: string) => void }) {
+  const ui = useGlobalUi();
+  const { locale } = useI18n();
+  item = notificationCopy(locale, item);
+  const task = item.task;
+  const labels = [...(item.people ?? []).map(person => `@${person.name}`), ...(task ? [task.title] : [])];
+  const parts = labels.length ? item.content.split(new RegExp(`(${labels.map(label => label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g")) : [item.content];
+  return <div className={`notification-item ${item.read ? "read" : "unread"}`}>
+    <button aria-label={ui("标为已读：【{0}】{1}", {0: ui(notificationTypeLabels[item.kind]), 1: item.content})} className="notification-item-read" onClick={onRead} type="button" />
+    <span className="notification-item-copy">
+      {!item.read && <span aria-label={ui("未读")} className="notification-unread-dot" />}
+      <span className="notification-item-text"><strong>【{ui(notificationTypeLabels[item.kind])}】</strong>{parts.map((part, index) => {
+        const person = item.people?.find(value => part === `@${value.name}`);
+        if (person) return <PersonName className="notification-person-link" key={index} name={person.name} personId={person.id} prefix="@" profilePreviewFocusable />;
+        if (task && part === task.title && onOpenTask) return <button className="notification-task-link" key={index} onClick={() => { onRead(); onOpenTask(task.id); }} role="link" type="button">{task.title}</button>;
+        return part;
+      })}</span>
+    </span>
+    <time dateTime={item.createdAt}>{item.time}</time>
+  </div>;
 }

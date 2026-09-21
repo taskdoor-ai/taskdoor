@@ -1,8 +1,8 @@
-# Manual AgentDoor Reanalysis Implementation Plan
+# Manual TaskDoor Reanalysis Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 在“我的工作”和任务“诊断”报告中加入由 AgentDoor 自己触发的“重新分析”按钮，并提供不可重复提交的加载、成功更新时间与失败反馈。
+**Goal:** 在“我的工作”和任务“诊断”报告中加入由 TaskDoor 自己触发的“重新分析”按钮，并提供不可重复提交的加载、成功更新时间与失败反馈。
 
 **Architecture:** 保留现有 `buildPersonalWorkbenchModel` 与 `getTaskDiagnosisReport` 确定性分析逻辑，在它们外部增加一个可测试的异步执行边界。`App` 管理工作台分析状态，`TaskDetail` 管理当前任务诊断状态；`PersonalWorkbench` 与 `TaskDiagnosisReport` 只按受控 props 呈现按钮、忙碌语义和错误，不打开外部 AI 连接弹层。
 
@@ -12,7 +12,7 @@
 
 ## File map
 
-- Create `src/lib/agentdoorReanalysis.ts`: 在下一次浏览器绘制后执行一次 AgentDoor 分析回调，允许测试注入调度器。
+- Create `src/lib/agentdoorReanalysis.ts`: 在下一次浏览器绘制后执行一次 TaskDoor 分析回调，允许测试注入调度器。
 - Create `server/agentdoorReanalysis.test.ts`: 验证执行顺序、单次调用、返回值与错误传播。
 - Modify `src/App.tsx`: 管理“我的工作”重新分析的 in-flight、loading、error 与成功时间。
 - Modify `src/components/PersonalWorkbench.tsx`: 呈现工作台重新分析按钮、`aria-busy` 和错误反馈。
@@ -23,7 +23,7 @@
 - Modify `src/styles/task-diagnosis.css`: 布置诊断标题动作与错误状态。
 - Modify `server/taskDiagnosisRendering.test.ts`: 验证诊断正常／加载／失败状态及受控接线。
 
-### Task 1: 可测试的 AgentDoor 异步分析边界
+### Task 1: 可测试的 TaskDoor 异步分析边界
 
 **Files:**
 - Create: `src/lib/agentdoorReanalysis.ts`
@@ -36,7 +36,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { runAgentdoorReanalysis } from "../src/lib/agentdoorReanalysis.ts";
 
-test("AgentDoor 等待调度完成后只执行一次重新分析", async () => {
+test("TaskDoor 等待调度完成后只执行一次重新分析", async () => {
   const order: string[] = [];
   let release: (() => void) | undefined;
   const pending = runAgentdoorReanalysis({
@@ -52,7 +52,7 @@ test("AgentDoor 等待调度完成后只执行一次重新分析", async () => {
   assert.deepEqual(order, ["schedule", "analyze"]);
 });
 
-test("AgentDoor 重新分析错误原样交给调用方处理", async () => {
+test("TaskDoor 重新分析错误原样交给调用方处理", async () => {
   await assert.rejects(() => runAgentdoorReanalysis({
     analyze: () => { throw new Error("analysis failed"); },
     schedule: (complete) => complete(),
@@ -133,7 +133,7 @@ const render = async (
 新增测试：
 
 ```ts
-test("我的工作提供 AgentDoor 重新分析按钮及加载失败状态", async () => {
+test("我的工作提供 TaskDoor 重新分析按钮及加载失败状态", async () => {
   const normal = await render([owned]);
   const reanalyze = button(normal, /^重新分析我的工作$/);
   assert.doesNotMatch(reanalyze.attributes, /disabled/);
@@ -201,7 +201,7 @@ type PersonalWorkbenchProps = {
 {analysisError && <p className="personal-workbench-analysis-error" role="alert">{analysisError}</p>}
 ```
 
-- [ ] **Step 4: 在 `App` 接入 AgentDoor 分析，不复用外部 AI 弹层**
+- [ ] **Step 4: 在 `App` 接入 TaskDoor 分析，不复用外部 AI 弹层**
 
 导入 `runAgentdoorReanalysis`，并在工作台 state 附近增加：
 

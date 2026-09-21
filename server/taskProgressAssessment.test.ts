@@ -25,14 +25,16 @@ function effort(id: string, minutes: number, overrides: Partial<TaskEffortEstima
   };
 }
 
-test("没有账本但当前叶子范围完整时是正常 0%，且不生成趋势点", () => {
+test("没有进度记录但已有范围估算时显示总量观察点，完成量仍未知", () => {
   const assessment = getTaskProgressAssessment(undefined, [effort("leaf", 420)]);
-  assert.equal(assessment.state, "zero");
-  assert.equal(assessment.progressRatio, 0);
+  assert.equal(assessment.state, "single");
+  assert.equal(assessment.progressRatio, null);
   assert.equal(assessment.scopeHours, 7);
-  assert.equal(assessment.completedHours, 0);
-  assert.equal(assessment.hasTrend, false);
-  assert.deepEqual(assessment.burnUp.points, []);
+  assert.equal(assessment.completedHours, null);
+  assert.equal(assessment.hasTrend, true);
+  assert.equal(assessment.burnUp.points.length, 1);
+  assert.equal(assessment.burnUp.points[0].scopeHours, 7);
+  assert.equal(assessment.burnUp.completedPath, "");
 });
 
 test("已有账本优先于当前 EWD 基线", () => {
@@ -66,4 +68,3 @@ test("部分叶子缺估时不能把已估子集显示成总体完成度", () =>
   assert.equal(assessment.estimatedLeafCount, 1);
   assert.equal(assessment.totalLeafCount, 2);
 });
-

@@ -1,5 +1,6 @@
 import { workspaceRootId, type TaskNode } from "./workspaceNodes";
 import { getEffortScopeKey, type TaskEffortEstimate } from "../lib/taskEffort";
+import { applyProgressDemoFixture } from "./taskProgressDemoFixtures";
 
 // 模拟周岚已创建、尚未找到负责人的任务，复用个人列表的待确认入口。
 const seeds: (Omit<TaskNode, "kind" | "parentId" | "ownerId" | "status" | "updatedAt"> & {
@@ -79,7 +80,7 @@ const seeds: (Omit<TaskNode, "kind" | "parentId" | "ownerId" | "status" | "updat
   },
 ];
 
-export const unassignedTaskFixtures = seeds.map<TaskNode>(({ estimate, ...seed }) => ({
+export const unassignedTaskFixtures = seeds.map<TaskNode>(({ estimate, ...seed }) => applyProgressDemoFixture({
   ...seed,
   effortEstimate: { ...estimate, basis: "mock", confirmed: false, version: 1, scopeKey: getEffortScopeKey(seed, estimate.workMethod) },
   kind: "task",

@@ -95,7 +95,12 @@
 .creation-process-step-spinner { color: var(--ad-route); animation: creation-process-spin 1s linear infinite; }
 @keyframes creation-process-spin { to { transform: rotate(360deg); } }
 .creation-process-steps [data-state="completed"] .agent-workflow-trace-toggle > svg:first-child { color: var(--ad-route); }
-.creation-process-steps .agent-workflow-trace-content { color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.8; overflow-wrap: anywhere; }
+.creation-process-steps .agent-workflow-trace-content {
+  /* Center the 1px line under the 14px step icon, preserving the text inset. */
+  margin-left: calc(var(--ad-space-2) + 6.5px);
+  padding-left: calc(var(--ad-space-5) - var(--ad-space-2) + 1.5px);
+  color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.8; overflow-wrap: anywhere;
+}
 .creation-process-steps .agent-workflow-trace-content p { margin: var(--ad-space-1) 0; }
 .creation-process-steps .creation-process-basis { color: var(--ad-ink-tertiary); white-space: pre-line; }
 .creation-process .is-open { transform: rotate(180deg); }
@@ -143,7 +148,7 @@
 @media (max-width: 1100px) {
 }
 @media (max-width: 760px) {
-  .creation-request-panel .animated-agent-chat-shell > footer > span::after { content: "Enter 发起"; }
+  .creation-request-panel .animated-agent-chat-shell > footer > span::after { content: none; }
 }
 @media (max-width: 720px) {
   .creation-page-top { gap: var(--ad-space-2); }

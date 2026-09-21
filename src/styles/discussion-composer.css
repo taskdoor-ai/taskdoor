@@ -1,0 +1,73 @@
+.discussion-composer { min-width: 0; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--ad-surface); color: var(--ad-ink); transition: border-color .15s, box-shadow .15s; }
+.discussion-composer:focus-within, .discussion-composer.is-dragging { border-color: var(--ad-focus); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ad-focus) 12%, transparent); }
+.discussion-composer.is-dragging { background: var(--ad-route-soft); }
+.discussion-composer-editor { position: relative; }
+.discussion-composer-input { min-height: 88px; max-height: 320px; overflow-y: auto; padding: var(--ad-space-3) var(--ad-space-4); outline: none; font-size: var(--ad-text-body-sm); line-height: 1.8; overflow-wrap: anywhere; white-space: pre-wrap; }
+.discussion-composer-input:focus-visible { outline: none; }
+.discussion-composer.compact .discussion-composer-input { min-height: 64px; }
+.discussion-composer-input[contenteditable="false"] { color: var(--ad-ink-secondary); }
+.discussion-composer-paragraph { margin: 0; }
+.discussion-composer-placeholder { position: absolute; top: var(--ad-space-3); right: var(--ad-space-4); left: var(--ad-space-4); pointer-events: none; color: var(--ad-ink-tertiary); font-size: var(--ad-text-body-sm); line-height: 1.8; }
+.discussion-composer-mention { padding: 1px var(--ad-space-1); border-radius: var(--ad-radius-tag); background: var(--ad-route-soft); color: var(--ad-route-ink); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.discussion-composer-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--ad-space-2); padding: var(--ad-space-2) var(--ad-space-3); }
+.discussion-composer-tools, .discussion-composer-actions { display: flex; align-items: center; gap: var(--ad-space-1); }
+.discussion-composer-tools { flex-wrap: wrap; min-width: 0; }
+.discussion-composer-actions { min-width: 0; max-width: 100%; margin-left: auto; gap: var(--ad-space-2); }
+.discussion-composer-actions > button { flex-shrink: 0; }
+.discussion-composer-attachment-menu { min-width: 190px; }
+.discussion-composer-attachment-menu [data-slot="dropdown-menu-item"] { gap: var(--ad-space-2); }
+.discussion-composer-file-menu { width: 280px; min-width: 0; max-width: calc(100vw - 24px); max-height: min(320px, var(--available-height)); }
+.discussion-composer-file-option { gap: var(--ad-space-2); min-width: 0; }
+.discussion-composer-file-option > svg { flex-shrink: 0; }
+.discussion-composer-file-search { display: flex; flex-shrink: 0; align-items: center; gap: var(--ad-space-1); padding: var(--ad-space-1) var(--ad-space-1) var(--ad-space-2); border-bottom: 1px solid var(--ad-border-soft); }
+.discussion-composer-file-search > [data-slot="input-shell"] { min-width: 0; flex: 1; }
+.discussion-composer-file-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.discussion-composer-file-path { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.discussion-composer button { cursor: pointer; }
+.discussion-composer button:disabled { cursor: default; opacity: .5; }
+.discussion-composer button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.discussion-composer-tools > button:not([data-slot="button"]), .discussion-composer-tools > .discussion-composer-person-trigger { display: inline-flex; align-items: center; justify-content: center; min-width: var(--ad-control-height-sm); min-height: var(--ad-control-height-sm); padding: 0; border: 1px solid transparent; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-tertiary); }
+.discussion-composer-tools > button:not([data-slot="button"]):hover:not(:disabled) { background: var(--ad-surface-subtle); color: var(--ad-ink); }
+.discussion-composer-tools > button.discussion-composer-attachment-source { gap: var(--ad-space-1); padding-inline: var(--ad-space-2); font-size: var(--ad-text-caption); white-space: nowrap; }
+.discussion-composer-submit, .discussion-composer-cancel { display: inline-flex; align-items: center; justify-content: center; gap: var(--ad-space-2); min-height: var(--ad-control-height-sm); padding: 0 var(--ad-space-3); border: 1px solid transparent; border-radius: var(--ad-radius-control); font-size: var(--ad-text-caption); font-weight: 500; }
+.discussion-composer-submit { background: var(--ad-route); color: var(--ad-on-route, white); }
+.discussion-composer-submit:hover:not(:disabled) { background: var(--ad-route-hover); }
+.discussion-composer-cancel { background: transparent; color: var(--ad-ink-secondary); }
+.discussion-composer-cancel:hover:not(:disabled) { background: var(--ad-surface-subtle); }
+.discussion-composer-hint { min-width: 0; margin: 0; padding: 0; color: color-mix(in srgb, var(--ad-tag-gray-ink) 72%, var(--ad-surface)); font-size: var(--ad-text-micro); line-height: 1.6; text-align: right; }
+.discussion-composer-error { margin: 0; padding: 0 var(--ad-space-4) var(--ad-space-3); color: var(--ad-danger); font-size: var(--ad-text-caption); line-height: 1.6; }
+.discussion-composer-quote { display: flex; align-items: flex-start; gap: var(--ad-space-2); margin: var(--ad-space-3) var(--ad-space-4) 0; padding: var(--ad-space-2) var(--ad-space-3); border-left: 2px solid var(--ad-route); background: var(--ad-surface-subtle); font-size: var(--ad-text-caption); }
+.discussion-composer-quote > span { display: grid; flex: 1; gap: var(--ad-space-1); min-width: 0; }
+.discussion-composer-quote strong { color: var(--ad-ink-secondary); font-weight: 500; }
+.discussion-composer-quote > span > span { display: -webkit-box; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: var(--ad-ink-tertiary); white-space: pre-wrap; overflow-wrap: anywhere; }
+.discussion-composer-quote button { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: var(--ad-control-height-sm); min-height: var(--ad-control-height-sm); padding: 0; border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-tertiary); }
+.discussion-composer-quote button:hover:not(:disabled) { background: var(--ad-surface-subtle); color: var(--ad-ink); }
+.discussion-composer-attachments { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--ad-space-2); margin: 0; padding: 0 var(--ad-space-3) var(--ad-space-2); list-style: none; }
+/* File Card Collections supplies the paper preview and colored format badge. */
+.discussion-composer-attachment { position: relative; display: flex; flex: 0 1 80px; flex-direction: column; align-items: center; gap: var(--ad-space-1); min-width: 0; max-width: 100%; padding: var(--ad-space-1); border-radius: var(--ad-radius-card); background: var(--ad-surface); }
+.discussion-composer-attachment-preview { display: block; width: 100%; height: 56px; object-fit: contain; }
+.discussion-composer-attachment-copy { display: grid; align-self: stretch; gap: var(--ad-space-1); min-width: 0; text-align: center; }
+.discussion-composer-attachment-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ad-text-caption); font-weight: 500; }
+.discussion-composer-attachment-copy small { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); overflow-wrap: anywhere; }
+.discussion-composer-attachment[data-status="failed"] { background: var(--ad-danger-soft); }
+.discussion-composer-attachment[data-status="failed"] small { color: var(--ad-danger); }
+.discussion-composer-attachment-remove { position: absolute; top: 2px; right: 2px; z-index: 3; width: 18px; height: 18px; padding: 0; border-radius: var(--ad-radius-pill); background: var(--ad-ink); color: var(--ad-surface); }
+.discussion-composer-attachment-remove svg, .discussion-composer-attachment-retry svg { width: 12px; height: 12px; }
+.discussion-composer-attachment-remove:hover:not(:disabled) { background: var(--ad-ink-secondary); }
+.discussion-composer-attachment [data-slot="file-card"] > .discussion-composer-spinner { position: absolute; bottom: 2px; left: 2px; z-index: 3; color: var(--ad-ink-tertiary); }
+.discussion-composer-attachment-retry { position: absolute; bottom: 2px; left: 2px; z-index: 3; width: 18px; height: 18px; padding: 0; background: var(--ad-danger-soft); color: var(--ad-danger); }
+.discussion-composer-spinner { flex-shrink: 0; animation: discussion-composer-spin .9s linear infinite; }
+@keyframes discussion-composer-spin { to { transform: rotate(360deg); } }
+@media (max-width: 640px) {
+  .discussion-composer-input { min-height: 88px; padding-inline: var(--ad-space-3); }
+  .discussion-composer-placeholder { right: var(--ad-space-3); left: var(--ad-space-3); }
+  .discussion-composer-tools > button:not([data-slot="button"]), .discussion-composer-tools > .discussion-composer-person-trigger, .discussion-composer-tools > .discussion-composer-ai-trigger, .discussion-composer-submit, .discussion-composer-cancel { min-width: var(--ad-control-touch-min); min-height: var(--ad-control-touch-min); }
+  .discussion-composer-file-menu [role="menuitem"], .discussion-composer-attachment-menu [role="menuitem"] { min-height: var(--ad-control-touch-min); }
+  .discussion-composer-footer { padding-inline: var(--ad-space-2); }
+  .discussion-composer-error { padding-inline: var(--ad-space-3); }
+  .discussion-composer-quote button { min-height: var(--ad-control-touch-min); }
+}
+@media (pointer: coarse) {
+  .discussion-composer-attachment button::after { position: absolute; inset: -13px; content: ""; }
+}
+@media (prefers-reduced-motion: reduce) { .discussion-composer-spinner { animation: none; } }

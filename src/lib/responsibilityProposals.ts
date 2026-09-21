@@ -1,4 +1,4 @@
-import type { ResponsibilityClaim, ResponsibilityDocument } from "../data/memberProfiles";
+import type { PersonalCenterState, ResponsibilityClaim, ResponsibilityDocument } from "../data/memberProfiles";
 
 export const splitResponsibilityContent = (value: string) => value
   .split(/\n\s*\n/)
@@ -58,4 +58,51 @@ export function applyResponsibilityProposal(document: ResponsibilityDocument, cl
     previousText: expectedText,
     resultIndex: paragraphIndex,
   };
+}
+
+export function applyAutomaticResponsibilityUpdates(
+  state: PersonalCenterState,
+  { pausedTeamId, now = new Date().toISOString() }: { pausedTeamId?: string; now?: string } = {},
+): PersonalCenterState {
+  let changed = false;
+  const teams = state.teams.map((team) => {
+    if (team.responsibilityAutoUpdate !== true || team.id === pausedTeamId) return team;
+    let document = team.responsibilityDocument;
+    let teamChanged = false;
+    const observedClaims = team.observedClaims.map((claim) => {
+      if (claim.reviewState && claim.reviewState !== "active") return claim;
+      const currentClaim = rebaseResponsibilityUpdateProposal(document, claim);
+      const appliedText = currentClaim.description.trim();
+      const result = applyResponsibilityProposal(document, currentClaim, appliedText);
+      if (result.status !== "applied" && result.status !== "duplicate") return claim;
+      const actor = `${claim.aiActor ?? "TaskDoor"}（自动更新）`;
+      if (result.status === "applied") {
+        document = {
+          content: result.content,
+          updatedAt: now,
+          updatedBy: actor,
+          revisionId: `RESP-${team.id}-${now}-${claim.id}`,
+        };
+      }
+      teamChanged = true;
+      return {
+        ...currentClaim,
+        reviewState: "accepted" as const,
+        updatedAt: now,
+        changeHistory: [...(claim.changeHistory ?? []), {
+          id: `CS-AUTO-${team.id}-${now}-${claim.id}`,
+          actor,
+          action: "accepted" as const,
+          at: now,
+          appliedText,
+          ...(result.previousText ? { previousText: result.previousText } : {}),
+          resultRevisionId: document.revisionId,
+        }],
+      };
+    });
+    if (!teamChanged) return team;
+    changed = true;
+    return { ...team, responsibilityDocument: document, observedClaims };
+  });
+  return changed ? { ...state, teams } : state;
 }

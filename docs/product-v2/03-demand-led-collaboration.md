@@ -181,7 +181,7 @@ AI 不是判断“任务大不大”，而是判断“由当前用户独立完�
 
 ### 4. 责任清晰与责任扩散
 
-多人共同参与会降低个人主观责任感。AgentDoor 坚持每层 Task 最多一位 Owner；未分配是明确状态，不被 Participant 或邀请替代。Participant、邀请范围、Activity、子 Task 与 Handoff 说明协作边界，不在 Task 创建或详情中维护逐项责任分配。
+多人共同参与会降低个人主观责任感。TaskDoor 坚持每层 Task 最多一位 Owner；未分配是明确状态，不被 Participant 或邀请替代。Participant、邀请范围、Activity、子 Task 与 Handoff 说明协作边界，不在 Task 创建或详情中维护逐项责任分配。
 
 设计规则：
 

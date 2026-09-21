@@ -8,6 +8,7 @@ const readSource = (path: string) => {
 };
 const detail = readSource("src/components/TaskDetail.tsx");
 const discussion = readSource("src/components/TaskDiscussion.tsx");
+const messages = readSource("src/components/discussion/DiscussionMessages.tsx");
 const activity = readSource("src/components/TaskActivityLog.tsx");
 const app = readSource("src/App.tsx");
 
@@ -21,11 +22,12 @@ test("讨论与活动使用独立组件，概览不再进入详情", () => {
 });
 
 test("讨论保留发布、回复、稳定定位和文件引用", () => {
-  assert.match(discussion, /MentionComposer/);
+  assert.match(discussion, /DiscussionComposer/);
   assert.match(discussion, /replyToActivityId/);
-  assert.match(discussion, /task-activity-\$\{reply\.id\}/);
+  assert.match(messages, /task-activity-\$\{message\.id\}/);
   assert.match(discussion, /onOpenFile/);
-  assert.match(detail, /publishSelectionActivity[\s\S]*?setActiveTab\("discussion"\)/);
+  assert.doesNotMatch(detail, /publishSelectionActivity|发起对话/);
+  assert.match(detail, /fileThreadId: thread\?\.id/);
   assert.match(detail, /hidden=\{activeTab !== "discussion"\}/);
 });
 
@@ -37,9 +39,8 @@ test("活动按真实前后值呈现，不用讨论卡片伪装变更", () => {
   assert.doesNotMatch(activity, /activity-message-featured|activity-replies/);
 });
 
-test("活动计数覆盖三类记录，讨论摘要可返回原讨论", () => {
-  assert.match(detail, /getTaskActivityItems\(activities, task\.commits\)/);
-  assert.match(detail, /<TaskActivityLog[^>]*onOpenDiscussion=/s);
+test("活动保留记录入口，讨论摘要可返回原讨论", () => {
+  assert.match(detail, /<TaskActivityLog[\s\S]*?onOpenDiscussion=/);
   assert.match(activity, /onOpenDiscussion/);
   assert.match(activity, /查看讨论/);
 });
@@ -65,11 +66,11 @@ test("名称与目标失焦时合并保存，避免逐字写日志", () => {
   assert.doesNotMatch(detail, /onChange=\{[^\n]*onTaskGoalChange/);
 });
 
-test("文件选区讨论引用实际打开的文件，而不是第一次聚焦的文件", () => {
+test("文件评论保存路径独立于任务讨论，右侧使用实际选中文件", () => {
   const explorer = readSource("src/components/task-files/TaskFileExplorer.tsx");
-  assert.ok(explorer.includes("onSelectText(selected)"), "文件预览应回传实际选中文件");
-  assert.ok(detail.includes("captureFileSelection = (file: TaskFileNode, fileSelection?: TaskFileTextSelection)"), "选区应接收真实来源文件及编辑器选区");
-  assert.ok(detail.includes("source: file.name"), "引用名称来自本次选区文件");
+  assert.match(explorer, /FileDiscussionPanel/);
+  assert.match(detail, /onPost: \(draft, thread, replyToId\) => postDiscussion\(draft, replyToId, thread\)/);
+  assert.doesNotMatch(detail, /publishSelectionActivity/);
 });
 
 test("文件跳转聚焦实际预览锚点，在移动端也不误报记录缺失", () => {

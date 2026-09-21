@@ -18,13 +18,17 @@ test("已保存任务的任意深度汇总只取叶子，父估算不会重复�
   assert.equal(summarizeTaskEffort(leaves).totalMinutes, 180);
 });
 
-test("继承目标变更使已保存子项的估算需复核，旧goal不能冒充有效", () => {
+test("主目标变化不影响已保存子目标估算，修改子目标才需复核", () => {
   const root = task("root"), leaf = task("leaf", "root");
   leaf.effortEstimate = estimate(leaf, 120);
   root.goal = "扩展到全部团队";
   const summary = summarizeTaskEffort(getWorkspaceEffortLeaves([root, leaf], "root"));
-  assert.equal(summary.totalMinutes, null);
-  assert.equal(summary.staleCount, 1);
+  assert.equal(summary.totalMinutes, 120);
+  assert.equal(summary.staleCount, 0);
+  leaf.goal = "子任务调整后的范围";
+  const changed = summarizeTaskEffort(getWorkspaceEffortLeaves([root, leaf], "root"));
+  assert.equal(changed.totalMinutes, null);
+  assert.equal(changed.staleCount, 1);
 });
 
 test("丢失根任务或循环结构不返回伪造的完整工时", () => {

@@ -1,0 +1,380 @@
+{
+  "fragrance-creator-wrapup": [
+    {
+      "id": "fragrance-creator-wrapup-activity",
+      "text": "已汇总第二批达人合作状态，等待周岚确认最终目标与资源优先级。",
+      "en": "The second wave of creator partnerships has been summarized. Waiting for Lan Zhou to confirm the final goals and resource priorities."
+    },
+    {
+      "id": "fragrance-creator-wrapup-activity-ai",
+      "text": "八个责任环节均已建立，当前重点是收口投流预算、素材合规与数据复盘口径。",
+      "en": "All eight areas of responsibility are in place. The focus is now on finalizing paid media budgets, content compliance, and analytics definitions."
+    },
+    {
+      "id": "fragrance-creator-wrapup-activity-status",
+      "text": "将任务状态更新为“进行中”。",
+      "en": "Changed the task status to “In progress”."
+    },
+    {
+      "id": "fragrance-creator-wrapup-activity-reply",
+      "text": "收到，我会按当前责任边界完成核对并回传结论。",
+      "en": "Got it. I will review this within the agreed responsibilities and share my findings."
+    },
+    {
+      "id": "example-progress-fragrance-creator-business-added",
+      "text": "初始范围纳入「确认第二批达人名单与合作档期」，估算 6 h。",
+      "en": "Included in initial scope: “Confirm the second creator cohort and campaign dates”, estimated 6 h."
+    },
+    {
+      "id": "example-progress-fragrance-content-added",
+      "text": "初始范围纳入「终审短视频脚本与直播卖点」，估算 8 h。",
+      "en": "Included in initial scope: “Approve short-video scripts and livestream selling points”, estimated 8 h."
+    },
+    {
+      "id": "example-progress-fragrance-live-added",
+      "text": "初始范围纳入「完成直播间彩排与场控清单」，估算 8 h。",
+      "en": "Included in initial scope: “Complete the livestream rehearsal and production checklist”, estimated 8 h."
+    },
+    {
+      "id": "example-progress-fragrance-product-added",
+      "text": "初始范围纳入「锁定礼盒价格、赠品与库存」，估算 5 h。",
+      "en": "Included in initial scope: “Lock gift set pricing, gifts, and inventory”, estimated 5 h."
+    },
+    {
+      "id": "example-progress-fragrance-growth-added",
+      "text": "初始范围纳入「调整第二轮投流预算与人群包」，估算 6 h。",
+      "en": "Included in initial scope: “Adjust the second paid-media budget and audiences”, estimated 6 h."
+    },
+    {
+      "id": "example-progress-fragrance-data-added",
+      "text": "初始范围纳入「更新 GMV 看板与渠道归因」，估算 4 h。",
+      "en": "Included in initial scope: “Update the GMV dashboard and channel attribution”, estimated 4 h."
+    },
+    {
+      "id": "example-progress-fragrance-compliance-added",
+      "text": "新增子任务「审核素材宣称与达人合同」，估算 3 h。",
+      "en": "Added subtask: “Review marketing claims and creator contracts”, estimated 3 h."
+    },
+    {
+      "id": "example-progress-fragrance-creator-business-accepted",
+      "text": "达人合作确认记录完成核对，验收商务交付 6 h。",
+      "en": "The creator partnership confirmation records have been reviewed. Accepted 6 h of partnership deliverables."
+    },
+    {
+      "id": "example-progress-fragrance-final-decision-added",
+      "text": "新增子任务「确认追加投放目标与最终决策」，估算 3 h。",
+      "en": "Added subtask: “Confirm incremental campaign targets and final decisions”, estimated 3 h."
+    },
+    {
+      "id": "example-progress-fragrance-product-accepted",
+      "text": "价格、赠品与库存确认记录完成核对，验收商品交付 5 h。",
+      "en": "Pricing, gifts, and inventory confirmation records have been reviewed. Accepted 5 h of merchandising deliverables."
+    },
+    {
+      "id": "example-progress-fragrance-data-accepted",
+      "text": "看板与归因口径完成约定范围的核对，验收数据交付 4 h；保留已注明的数据限制。",
+      "en": "The dashboard and attribution definitions have been reviewed within the agreed scope. Accepted 4 h of analytics deliverables; the documented data limitations remain."
+    }
+  ],
+  "fragrance-creator-business": [
+    {
+      "id": "fragrance-creator-business-activity",
+      "text": "第二批达人合作名单、已确认佣金条款与档期已完成核对，合作确认记录已交付。",
+      "en": "The second-wave creator list, confirmed commission terms, and schedules have been reviewed. Partnership confirmation records have been delivered."
+    },
+    {
+      "id": "fragrance-creator-business-activity-ai",
+      "text": "两位高匹配达人档期重叠，建议在确认合作顺序前核对目标贡献与预算占用。",
+      "en": "Two well-matched creators have overlapping schedules. Review their expected contribution and budget requirements before deciding the partnership order."
+    },
+    {
+      "id": "fragrance-creator-business-activity-status",
+      "text": "将任务状态更新为“已完成”。",
+      "en": "Changed the task status to “Completed”."
+    },
+    {
+      "id": "fragrance-creator-business-activity-reply",
+      "text": "收到，我会按当前责任边界完成核对并回传结论。",
+      "en": "Got it. I will review this within the agreed responsibilities and share my findings."
+    },
+    {
+      "id": "example-progress-fragrance-creator-business-added",
+      "text": "初始范围纳入「确认第二批达人名单与合作档期」，估算 6 h。",
+      "en": "Included in initial scope: “Confirm the second creator cohort and campaign dates”, estimated 6 h."
+    },
+    {
+      "id": "example-progress-fragrance-creator-business-accepted",
+      "text": "达人合作确认记录完成核对，验收商务交付 6 h。",
+      "en": "The creator partnership confirmation records have been reviewed. Accepted 6 h of partnership deliverables."
+    },
+    {
+      "id": "fragrance-creator-business-progress-evidence-v1",
+      "text": "截至本次核对，「确认第二批达人名单与合作档期」已由用户标记完成；原完成日期未记录。",
+      "en": "As of this review, the user has marked “Confirm the second creator cohort and campaign dates” complete. The original completion date was not recorded."
+    }
+  ],
+  "fragrance-content": [
+    {
+      "id": "fragrance-content-activity",
+      "text": "短视频脚本、直播话术与核心卖点已整理到最新素材版本；一处功效表述仍待合规复核，终审尚未完成。",
+      "en": "The video scripts, livestream talking points, and key selling points are in the latest content version. One efficacy claim still needs a compliance review; final approval is pending."
+    },
+    {
+      "id": "fragrance-content-activity-ai",
+      "text": "直播话术仍有一处功效表达需要苏禾确认，建议在彩排前锁定最终表述。",
+      "en": "One efficacy claim in the livestream script still needs confirmation from He Su. Finalize the wording before rehearsal."
+    },
+    {
+      "id": "fragrance-content-activity-status",
+      "text": "将任务状态更新为“进行中”。",
+      "en": "Changed the task status to “In progress”."
+    },
+    {
+      "id": "fragrance-content-activity-reply",
+      "text": "收到，我会按当前责任边界完成核对并回传结论。",
+      "en": "Got it. I will review this within the agreed responsibilities and share my findings."
+    },
+    {
+      "id": "example-progress-fragrance-content-added",
+      "text": "初始范围纳入「终审短视频脚本与直播卖点」，估算 8 h。",
+      "en": "Included in initial scope: “Approve short-video scripts and livestream selling points”, estimated 8 h."
+    },
+    {
+      "id": "fragrance-content-progress-evidence-v1",
+      "text": "脚本与直播卖点已形成终审稿，仍有两处功效措辞待核对。",
+      "en": "The scripts and livestream selling points are ready for final review. Two efficacy claims still need to be checked."
+    }
+  ],
+  "fragrance-live": [
+    {
+      "id": "fragrance-live-activity",
+      "text": "@周岚 直播排期、彩排流程与异常预案草案已准备；最终话术版本尚未锁定，请协助确认内容终审安排。",
+      "en": "@周岚 The livestream schedule, rehearsal plan, and contingency draft are ready. The final script has not been locked; please help confirm the content review schedule."
+    },
+    {
+      "id": "fragrance-live-activity-ai",
+      "text": "彩排前仍需确认最终商品机制与合规话术版本，避免现场信息不一致。",
+      "en": "Confirm the final product offer and compliant script before rehearsal to avoid inconsistent information on set."
+    },
+    {
+      "id": "fragrance-live-activity-status",
+      "text": "将任务状态更新为“已阻塞”。",
+      "en": "Changed the task status to “Blocked”."
+    },
+    {
+      "id": "fragrance-live-activity-reply",
+      "text": "收到，我会按当前责任边界完成核对并回传结论。",
+      "en": "Got it. I will review this within the agreed responsibilities and share my findings."
+    },
+    {
+      "id": "example-progress-fragrance-live-added",
+      "text": "初始范围纳入「完成直播间彩排与场控清单」，估算 8 h。",
+      "en": "Included in initial scope: “Complete the livestream rehearsal and production checklist”, estimated 8 h."
+    },
+    {
+      "id": "fragrance-live-progress-evidence-v1",
+      "text": "首次彩排已记录串场与异常问题，核心达人档期尚未确认，无法锁定复排结束日。",
+      "en": "The first rehearsal recorded transition and contingency issues. The key creator's availability is unconfirmed, so the final rehearsal date cannot be set."
+    }
+  ],
+  "fragrance-product": [
+    {
+      "id": "fragrance-product-activity",
+      "text": "礼盒价格、赠品门槛、库存水位与履约保障已完成联合核对。",
+      "en": "Gift set pricing, gift thresholds, inventory levels, and fulfillment arrangements have been reviewed together."
+    },
+    {
+      "id": "fragrance-product-activity-ai",
+      "text": "高峰库存预留仍需与直播排期联动，建议在最终场次确认后更新安全水位。",
+      "en": "Peak inventory reserves still need to align with the livestream schedule. Update safety stock after the final sessions are confirmed."
+    },
+    {
+      "id": "fragrance-product-activity-status",
+      "text": "将任务状态更新为“已完成”。",
+      "en": "Changed the task status to “Completed”."
+    },
+    {
+      "id": "fragrance-product-activity-reply",
+      "text": "收到，我会按当前责任边界完成核对并回传结论。",
+      "en": "Got it. I will review this within the agreed responsibilities and share my findings."
+    },
+    {
+      "id": "example-progress-fragrance-product-added",
+      "text": "初始范围纳入「锁定礼盒价格、赠品与库存」，估算 5 h。",
+      "en": "Included in initial scope: “Lock gift set pricing, gifts, and inventory”, estimated 5 h."
+    },
+    {
+      "id": "example-progress-fragrance-product-accepted",
+      "text": "价格、赠品与库存确认记录完成核对，验收商品交付 5 h。",
+      "en": "Pricing, gifts, and inventory confirmation records have been reviewed. Accepted 5 h of merchandising deliverables."
+    },
+    {
+      "id": "fragrance-product-progress-evidence-v1",
+      "text": "截至本次核对，「锁定礼盒价格、赠品与库存」已由用户标记完成；原完成日期未记录。",
+      "en": "As of this review, the user has marked “Lock gift set pricing, gifts, and inventory” complete. The original completion date was not recorded."
+    },
+    {
+      "id": "fragrance-product-diagnosis-context-post-1",
+      "text": "仓库回传了首批打包清单，商品权益确认表保留给客服和仓库共同核对。",
+      "en": "The warehouse has shared the first packing list. The product benefits confirmation sheet remains available for joint review by customer service and the warehouse."
+    }
+  ],
+  "fragrance-growth": [
+    {
+      "id": "fragrance-growth-activity",
+      "text": "已根据首轮表现更新预算消耗、定向策略与第二轮人群包组合。",
+      "en": "Budget spend, targeting, and second-wave audience combinations have been updated based on first-wave performance."
+    },
+    {
+      "id": "fragrance-growth-activity-ai",
+      "text": "新增人群包预计提升触达，但需按 GMV 目标设置分段止损线并持续观察 ROI。",
+      "en": "The new audiences are expected to improve reach. Set staged stop-loss thresholds against the GMV goal and continue monitoring ROI."
+    },
+    {
+      "id": "fragrance-growth-activity-status",
+      "text": "将任务状态更新为“进行中”。",
+      "en": "Changed the task status to “In progress”."
+    },
+    {
+      "id": "fragrance-growth-activity-reply",
+      "text": "收到，我会按当前责任边界完成核对并回传结论。",
+      "en": "Got it. I will review this within the agreed responsibilities and share my findings."
+    },
+    {
+      "id": "example-progress-fragrance-growth-added",
+      "text": "初始范围纳入「调整第二轮投流预算与人群包」，估算 6 h。",
+      "en": "Included in initial scope: “Adjust the second paid-media budget and audiences”, estimated 6 h."
+    },
+    {
+      "id": "fragrance-growth-progress-evidence-v1",
+      "text": "第二轮预算与人群包已完成初稿，渠道归因差异和停止条件仍待复核。",
+      "en": "The second-wave budget and audience draft is ready. Channel attribution differences and stop conditions still need review."
+    },
+    {
+      "id": "fragrance-growth-diagnosis-context-post-1",
+      "text": "已导出第二轮人群包配置和停止条件，低效人群的自动暂停规则也在表里。",
+      "en": "The second-wave audience configuration and stop conditions have been exported. The sheet also includes automatic pause rules for low-performing audiences."
+    }
+  ],
+  "fragrance-data": [
+    {
+      "id": "fragrance-data-activity",
+      "text": "已交付约定范围的 GMV 看板与归因口径说明，两个缺失渠道已单独标注，不将缺失数据用于最终追加投放决策。",
+      "en": "The GMV dashboard and attribution definitions have been delivered within the agreed scope. Two missing channels are flagged separately; missing data will not inform the final decision on additional spend."
+    },
+    {
+      "id": "fragrance-data-activity-ai",
+      "text": "两个渠道仍缺少可比数据，建议在复盘前补齐转化链路并标注口径差异。",
+      "en": "Two channels still lack comparable data. Complete the conversion paths and flag differences in definitions before the review."
+    },
+    {
+      "id": "fragrance-data-activity-status",
+      "text": "将任务状态更新为“已完成”。",
+      "en": "Changed the task status to “Completed”."
+    },
+    {
+      "id": "fragrance-data-activity-reply",
+      "text": "收到，我会按当前责任边界完成核对并回传结论。",
+      "en": "Got it. I will review this within the agreed responsibilities and share my findings."
+    },
+    {
+      "id": "example-progress-fragrance-data-added",
+      "text": "初始范围纳入「更新 GMV 看板与渠道归因」，估算 4 h。",
+      "en": "Included in initial scope: “Update the GMV dashboard and channel attribution”, estimated 4 h."
+    },
+    {
+      "id": "example-progress-fragrance-data-accepted",
+      "text": "看板与归因口径完成约定范围的核对，验收数据交付 4 h；保留已注明的数据限制。",
+      "en": "The dashboard and attribution definitions have been reviewed within the agreed scope. Accepted 4 h of analytics deliverables; the documented data limitations remain."
+    },
+    {
+      "id": "fragrance-data-progress-evidence-v1",
+      "text": "截至本次核对，「更新 GMV 看板与渠道归因」已由用户标记完成；原完成日期未记录。",
+      "en": "As of this review, the user has marked “Update the GMV dashboard and channel attribution” complete. The original completion date was not recorded."
+    },
+    {
+      "id": "fragrance-data-diagnosis-context-post-1",
+      "text": "看板已导出当前字段配置，指标定义表与配置表分别保留，便于核对净成交计算。",
+      "en": "The dashboard field configuration has been exported. Metric definitions and configuration are kept separately to help verify net sales calculations."
+    }
+  ],
+  "fragrance-compliance": [
+    {
+      "id": "fragrance-compliance-activity",
+      "text": "已收集待审素材与达人合同，并标记需要重点核对的功效表述；正式审核等待内容终审稿。",
+      "en": "Content and creator contracts for review have been collected, with efficacy claims flagged for closer attention. Formal review awaits the final content draft."
+    },
+    {
+      "id": "fragrance-compliance-activity-ai",
+      "text": "一条直播功效话术尚未关联证据，建议修订后再提交最终合规结论。",
+      "en": "One efficacy claim in the livestream script still lacks linked evidence. Revise it before issuing the final compliance assessment."
+    },
+    {
+      "id": "fragrance-compliance-activity-status",
+      "text": "将任务状态更新为“待开始”。",
+      "en": "Changed the task status to “Not started”."
+    },
+    {
+      "id": "fragrance-compliance-activity-reply",
+      "text": "收到，我会按当前责任边界完成核对并回传结论。",
+      "en": "Got it. I will review this within the agreed responsibilities and share my findings."
+    },
+    {
+      "id": "example-progress-fragrance-compliance-added",
+      "text": "新增子任务「审核素材宣称与达人合同」，估算 3 h。",
+      "en": "Added subtask: “Review marketing claims and creator contracts”, estimated 3 h."
+    },
+    {
+      "id": "fragrance-compliance-progress-evidence-v1",
+      "text": "本次准备检查已确认「审核素材宣称与达人合同」尚未执行，未形成可计入完成量的交付内容；已预留 9/15 的审核窗口，待内容终稿提交后核对宣称与合同。",
+      "en": "The readiness check confirms that the content claims and creator contract review has not started. No deliverables can count toward completed effort. A September 15 review window is reserved to check the claims and contracts after the final content is submitted."
+    }
+  ],
+  "fragrance-final-decision": [
+    {
+      "id": "fragrance-final-decision-activity",
+      "text": "已提交追加投放预算、人群包与预期 GMV 贡献测算；预算和停止条件需要与本任务讨论中的执行边界核对。",
+      "en": "Additional advertising budget, audiences, and expected GMV contribution estimates have been submitted. The budget and stop conditions need checking against the execution boundaries discussed in this task."
+    },
+    {
+      "id": "fragrance-final-decision-activity-ai",
+      "text": "追加投放仍需同时核对 ROI 止损线与渠道归因口径，建议完成最终决策后同步许宁和韩序执行。",
+      "en": "Additional spend still requires checking both the ROI stop-loss threshold and channel attribution definitions. After the final decision, coordinate execution with Ning Xu and Xu Han."
+    },
+    {
+      "id": "fragrance-final-decision-activity-status",
+      "text": "将任务状态更新为“进行中”。",
+      "en": "Changed the task status to “In progress”."
+    },
+    {
+      "id": "fragrance-final-decision-activity-reply",
+      "text": "收到，我会按当前责任边界完成核对并回传结论。",
+      "en": "Got it. I will review this within the agreed responsibilities and share my findings."
+    },
+    {
+      "id": "example-progress-fragrance-final-decision-added",
+      "text": "新增子任务「确认追加投放目标与最终决策」，估算 3 h。",
+      "en": "Added subtask: “Confirm incremental campaign targets and final decisions”, estimated 3 h."
+    },
+    {
+      "id": "fragrance-final-decision-result-context-post-0",
+      "text": "已把四种方案的预算和 GMV 测算补进《追加投放测算与风险记录》，退款按同一截点扣除，备选方案单独列示。",
+      "en": "Budget and GMV estimates for all four options have been added to “Additional Spend Estimates and Risk Log”. Refunds use the same cutoff; alternatives are listed separately."
+    },
+    {
+      "id": "fragrance-final-decision-result-context-post-1",
+      "text": "《最终投放决策记录》已填写放量方案：预算 12 万元、GMV 目标 48 万元，并标为执行版；投放尚未启动。",
+      "en": "The “Final Advertising Decision Record” now contains the scale-up plan: CNY 120,000 budget and CNY 480,000 GMV target, marked as the execution version. Advertising has not started."
+    },
+    {
+      "id": "fragrance-final-decision-result-context-post-2",
+      "text": "预算与目标口径文件已补齐，请对照文件核对最终投放记录；讨论中的放量建议不直接替换文件里的执行金额。",
+      "en": "The budget and goal definitions are now documented. Check the final advertising record against those files; scale-up suggestions in the discussion do not directly replace the execution amounts in the files."
+    },
+    {
+      "id": "fragrance-final-decision-progress-evidence-v1",
+      "text": "追加预算测算已提交，尚待合规结论和最终预算边界确认；合规预计 9/15 反馈，最终预算核对安排在 9/16 上午。",
+      "en": "The additional budget estimates have been submitted. Compliance findings and the final budget limits are still pending. Compliance feedback is expected on September 15, with the final budget review scheduled for the morning of September 16."
+    }
+  ]
+}

@@ -206,18 +206,18 @@ Vokal 是第一个实测案例，后续可以用同一框架研究 Dust、Micros
 
 | 角色 | 负责什么 | 不负责什么 |
 |---|---|---|
-| Scout / Competitive Intelligence | 收集事实、建立统一竞品框架、标记未知项 | 不直接决定 AgentDoor 产品方向 |
+| Scout / Competitive Intelligence | 收集事实、建立统一竞品框架、标记未知项 | 不直接决定 TaskDoor 产品方向 |
 | Product Manager | 从竞品观察提炼用户问题、机会和 MVP | 不修改代码 |
-| Cosmo / Engineering | 检查 AgentDoor 真实实现和技术影响 | 不替产品做优先级决策 |
+| Cosmo / Engineering | 检查 TaskDoor 真实实现和技术影响 | 不替产品做优先级决策 |
 | Nova / Reviewer | 审查证据、权限、安全和逻辑跳跃 | 不批准开发或上线 |
 | Human Owner | 决定研究范围、接受结论和下一步 | 不把最终责任转给 Agent |
 
 ### 8.3 共享工作对象
 
 - Channel：`#agentdoor-feature-review`
-- Task：`研究人与 Agent 协作产品，并提出 AgentDoor 方向`
+- Task：`研究人与 Agent 协作产品，并提出 TaskDoor 方向`
 - Document：`Human–Agent Collaboration Landscape`
-- 附件：《AgentDoor 产品定义》
+- 附件：《TaskDoor 产品定义》
 
 共享文档建议包含：
 
@@ -257,11 +257,11 @@ Scout 读取 Vokal 实测记录和公开材料，按统一框架输出：Agent �
 
 #### 第四阶段：产品、工程与审查接力
 
-Product Manager 提炼方向；Cosmo 只读检查 AgentDoor；Nova 审查产品和技术证据。三者写入同一文档的不同章节，避免反复复制完整聊天记录。
+Product Manager 提炼方向；Cosmo 只读检查 TaskDoor；Nova 审查产品和技术证据。三者写入同一文档的不同章节，避免反复复制完整聊天记录。
 
 #### 第五阶段：Human Decision
 
-人类查看事实、产品建议、技术约束和审查意见，决定 AgentDoor 下一步实验。最终决定必须由人类写入共享文档。
+人类查看事实、产品建议、技术约束和审查意见，决定 TaskDoor 下一步实验。最终决定必须由人类写入共享文档。
 
 ### 8.5 最有说服力的对照实验
 
@@ -274,7 +274,7 @@ Handoff 后让 Product Manager 列出自己获得的信息和来源。理想结�
 
 这个实验同时验证：团队上下文可以延续，私人上下文不会因 Handoff 自动泄露。
 
-## 9. 对 AgentDoor 的启示
+## 9. 对 TaskDoor 的启示
 
 ### 9.1 值得借鉴
 
@@ -293,9 +293,9 @@ Handoff 后让 Product Manager 列出自己获得的信息和来源。理想结�
 - 不应以 Agent 数量或 Agent 自主性作为核心成功指标；
 - 不应让多个 Agent 只是并行生成内容，反而增加人类审查负担。
 
-### 9.3 AgentDoor 的潜在差异化
+### 9.3 TaskDoor 的潜在差异化
 
-AgentDoor 可以更聚焦“个人 Agent 工作如何进入现有企业协作”，而不是要求团队迁移到一个全新的 Agent 工作空间：
+TaskDoor 可以更聚焦“个人 Agent 工作如何进入现有企业协作”，而不是要求团队迁移到一个全新的 Agent 工作空间：
 
 - 更强的最小必要上下文选择；
 - 更清晰的成果回传和人类确认；
@@ -310,7 +310,7 @@ Vokal 是一个方向明确、产品结构完整但仍处早期验证期的 Huma
 
 它的机会来自真实存在的协调问题；风险则在于需要同时做好协作软件、本地 Runtime、权限治理、集成和组织记忆，产品面很宽。短期市场信号积极但有限，不能据此判断已经形成稳定 PMF。
 
-对 AgentDoor 而言，最值得学习的不是复刻 Vokal 的模块列表，而是围绕一个具体闭环验证：
+对 TaskDoor 而言，最值得学习的不是复刻 Vokal 的模块列表，而是围绕一个具体闭环验证：
 
 > 个人或 Agent 发现问题后，能否只带入必要上下文，形成团队工作，由正确的人和 Agent 接力，并最终留下可审查、可复用的人类决策。
 

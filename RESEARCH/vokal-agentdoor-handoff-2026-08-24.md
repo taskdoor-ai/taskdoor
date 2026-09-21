@@ -1,7 +1,7 @@
-# Vokal × AgentDoor 2 产品分析与测试交接
+# Vokal × TaskDoor 2 产品分析与测试交接
 
 > 日期：2026-08-24  
-> 用途：把今天对 Vokal 的研究、实测和演示搭建上下文带入 AgentDoor 2 工作空间继续推进。  
+> 用途：把今天对 Vokal 的研究、实测和演示搭建上下文带入 TaskDoor 2 工作空间继续推进。
 > 状态原则：以下内容明确区分“已验证”“当前判断”和“待验证”。
 
 ## 1. 一句话结论
@@ -55,7 +55,7 @@ Vokal 不是另一个单人 Agent 或聊天工具，而是一个面向人类与�
 
 ### 本地项目
 
-- AgentDoor 2 路径：`/Users/yxzuji/Documents/ChatGPT/agentdoor2`
+- TaskDoor 2 路径：`/Users/yxzuji/Documents/ChatGPT/agentdoor2`
 
 ### 三个在线 Agent
 
@@ -65,7 +65,7 @@ Vokal 不是另一个单人 Agent 或聊天工具，而是一个面向人类与�
 
 2. **Cosmo / Engineering**
    - Runtime：本地 Codex。
-   - Working folder：AgentDoor 2 真实项目目录。
+   - Working folder：TaskDoor 2 真实项目目录。
    - 职责：只读理解架构，引用文件路径，评估改动范围、风险和测试建议。
    - 约束：未经人类批准，不修改代码、不安装依赖、不提交 Git。
 
@@ -76,14 +76,14 @@ Vokal 不是另一个单人 Agent 或聊天工具，而是一个面向人类与�
 
 ### 协作空间
 
-- Agent Group：`AgentDoor Feature Squad`
+- Agent Group：`TaskDoor Feature Squad`
 - Channel：`#agentdoor-feature-review`
 - 成员：用户、Product Manager、Cosmo、Nova。
 - Channel 用途：共享脱敏结论、证据摘要、任务状态、交接和人类决策。
 
 ### 共享文档
 
-- 名称：`AgentDoor Shared Agent Template Review`
+- 名称：`TaskDoor Shared Agent Template Review`
 - 三个 Agent 都已获得 Editor 权限。
 - 文档包括：测试目标、背景、用户问题、角色分工、约束，以及以下四个产物区：
   - Decision Brief
@@ -94,14 +94,14 @@ Vokal 不是另一个单人 Agent 或聊天工具，而是一个面向人类与�
 ### 三张任务卡
 
 1. `输出 Decision Brief 并更新共享文档` → Product Manager
-2. `只读评估 AgentDoor 2 技术影响` → Cosmo
+2. `只读评估 TaskDoor 2 技术影响` → Cosmo
 3. `交叉审查产品与技术方案` → Nova
 
 任务均要求完成后更新共享文档、在 Channel 发布脱敏摘要，并交接给下一角色。
 
 ## 5. 当前测试题目
 
-评估 AgentDoor 2 是否应该增加“团队共享 Agent 模板”能力。
+评估 TaskDoor 2 是否应该增加“团队共享 Agent 模板”能力。
 
 核心问题：
 
@@ -122,7 +122,7 @@ Vokal 不是另一个单人 Agent 或聊天工具，而是一个面向人类与�
 
 ## 6. 本轮安全约束
 
-- 不修改 AgentDoor 2 源码。
+- 不修改 TaskDoor 2 源码。
 - 不安装依赖，不执行迁移，不提交或 Push Git。
 - 不在 Channel 上传完整源码、配置文件、密钥或客户原始数据。
 - 技术 Agent 只共享必要文件路径、模块关系、影响范围和少量证据摘要。
@@ -153,7 +153,7 @@ Vokal 曾提示 `gpt-5.6-sol[low]` 需要 Codex CLI 0.144.0+。实测环境：
 已验证：
 
 - 三个本地 Codex Agent 均可创建并上线。
-- Cosmo 可把 Working folder 指向 AgentDoor 2。
+- Cosmo 可把 Working folder 指向 TaskDoor 2。
 - Group 可部署到 Channel。
 - Channel 可同时容纳人类和多个 Agent。
 - 文档可共享给多个 Agent 并授予 Editor。
@@ -169,11 +169,11 @@ Vokal 曾提示 `gpt-5.6-sol[low]` 需要 Codex CLI 0.144.0+。实测环境：
 - Document、Task、Channel 历史是否能在后续会话中稳定恢复上下文。
 - 正式企业环境下的权限、审计、数据保留和隐私边界。
 
-## 9. 在 AgentDoor 2 中继续工作的建议
+## 9. 在 TaskDoor 2 中继续工作的建议
 
 请先只读完成以下工作：
 
-1. 识别 AgentDoor 2 中与 Agent 配置、模板保存、导入导出、成员权限、连接器和发布流程相关的目录与文件。
+1. 识别 TaskDoor 2 中与 Agent 配置、模板保存、导入导出、成员权限、连接器和发布流程相关的目录与文件。
 2. 输出当前领域模型和数据流，不修改代码。
 3. 对照“团队共享 Agent 模板”MVP，给出：
    - 需要新增或修改的模块；
@@ -188,7 +188,7 @@ Vokal 曾提示 `gpt-5.6-sol[low]` 需要 Codex CLI 0.144.0+。实测环境：
 
 ## 10. 建议的后续交付物
 
-- AgentDoor 2 当前 Agent 配置模型图。
+- TaskDoor 2 当前 Agent 配置模型图。
 - 共享模板的最小数据 Schema。
 - “可共享字段 / 必须剔除字段 / 需要重新授权字段”清单。
 - 权限和数据泄漏威胁模型。
@@ -203,4 +203,4 @@ Vokal 曾提示 `gpt-5.6-sol[low]` 需要 Codex CLI 0.144.0+。实测环境：
 
 - `/Users/yxzuji/Documents/Garfield/docs/vokal-product-analysis.md`
 
-本交接稿是用于 AgentDoor 2 后续工作的精简事实源。
+本交接稿是用于 TaskDoor 2 后续工作的精简事实源。

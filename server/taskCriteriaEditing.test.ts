@@ -19,7 +19,8 @@ test("保存多条只修改目标标准和更新时间，原数据不变，生�
   assert.equal(result.original, child);
   assert.equal(result.nodes[0], parent);
   assert.equal(result.nodes[2], nodes[2]);
-  assert.deepEqual(result.nodes[1], { ...child, completionCriteria: ["第一条", "第二条"], updatedAt: "刚刚" });
+  assert.ok(Number.isFinite(Date.parse(result.nodes[1].updatedAt)));
+  assert.deepEqual(result.nodes[1], { ...child, completionCriteria: ["第一条", "第二条"], updatedAt: result.nodes[1].updatedAt });
   assert.deepEqual(child.completionCriteria, ["原标准"]);
   assert.equal(result.activity?.type, "task-definition-change");
   assert.equal(result.activity?.author, "编辑者");
@@ -58,7 +59,8 @@ test("拆分或合并相同换行正文仍保存条目边界并记录活动", ()
 test("当前任务从空标准新增多条，只更新当前任务并保留子任务及任务状态", () => {
   const result = applyCurrentTaskCriteria(nodes, "parent", [], [" 确认最终交付范围 ", "交付内容可供复核"], "编辑者");
   assert.equal(result.original, parent);
-  assert.deepEqual(result.nodes[0], { ...parent, completionCriteria: ["确认最终交付范围", "交付内容可供复核"], updatedAt: "刚刚" });
+  assert.ok(Number.isFinite(Date.parse(result.nodes[0].updatedAt)));
+  assert.deepEqual(result.nodes[0], { ...parent, completionCriteria: ["确认最终交付范围", "交付内容可供复核"], updatedAt: result.nodes[0].updatedAt });
   assert.equal(result.nodes[1], child);
   assert.equal(result.nodes[2], nodes[2]);
   assert.equal(parent.completionCriteria, undefined);

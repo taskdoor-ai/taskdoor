@@ -6,7 +6,7 @@
 
 **Architecture:** 从 `TaskDetail.tsx` 中拆出独立的文件领域模型、纯操作函数、递归 Tree 和格式查看器。`TaskFileExplorer` 在前端本地状态中组合这些单元，所有写操作通过可测试的不可变树函数完成；预览通过格式路由器选择专用查看器，未知格式安全回退。
 
-**Tech Stack:** React、TypeScript、Lucide React、Base UI/Radix 风格的现有 Dialog/Popover/Dropdown、Node `tsx --test`、现有 AgentDoor CSS Tokens。
+**Tech Stack:** React、TypeScript、Lucide React、Base UI/Radix 风格的现有 Dialog/Popover/Dropdown、Node `tsx --test`、现有 TaskDoor CSS Tokens。
 
 ---
 

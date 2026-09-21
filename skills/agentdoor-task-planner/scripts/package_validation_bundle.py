@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a portable, integrity-checked AgentDoor planner validation bundle."""
+"""Build a portable, integrity-checked TaskDoor planner validation bundle."""
 
 from __future__ import annotations
 
@@ -178,7 +178,7 @@ def rewrite_markdown_links(staging: Path) -> dict[str, int]:
 
 def package_readme() -> bytes:
     return (
-        "# AgentDoor 任务规划 Skill 验证包\n\n"
+        "# TaskDoor 任务规划 Skill 验证包\n\n"
         "本包只包含高拟真合成数据、候选规划 Skill、离线校验器与已记录运行；"
         "没有生产数据、生产访问或任务写入。\n\n"
         "- 从 `skills/agentdoor-task-planner/SKILL.md` 开始。\n"

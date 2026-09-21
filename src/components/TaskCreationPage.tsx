@@ -1,12 +1,15 @@
-import { ArrowLeft, ArrowRight, Check, ChevronRight, GitBranch, Layers3, Lightbulb, RotateCcw, Sparkles, UserPlus } from "lucide-react";
+import { creationScenarioEnglish } from "../i18n/creationMock";
+import { useCreationI18n } from "../i18n/creationMessages";
+import { ArrowLeft, ArrowRight, Check, ChevronRight, GitBranch, Layers3, Lightbulb, PanelLeftOpen, RotateCcw, Sparkles, UserPlus } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { taskCreationScenarios, type TaskCreationScenarioId } from "../data/taskCreationScenarios";
 import type { TagDefinition } from "../data/tagGroups";
 import type { ExistingTaskCandidate } from "../lib/taskCreationScenario";
 import type { TaskPlanDraft } from "../lib/taskAssistantProtocol";
-import { toTaskPlanDraft, validateCreationForm, type CreationForm } from "../lib/taskCreationForm";
+import { toTaskPlanDraft, validateCreationForm, withCreationParticipantDefaults, type CreationForm } from "../lib/taskCreationForm";
 import { reconcileCreationEffort } from "../lib/taskCreationEffort";
+import { getCreationHierarchyDepth } from "../lib/taskCreationHierarchy";
 import { planTaskCreation, resolveCreationRelationship, type CreationPlanningQuestion, type CreationPlanningResult } from "../lib/taskCreationPlanning";
 import { createCreationRelationshipProcess, CREATION_MOCK_STEP_MS, getCreationDisplayStage, getCreationFeedback, getCreationResponseSummary, markLatestCreationDecisionResolved, recordCreationAdjustmentProgress, type CreationProcess } from "../lib/taskCreationProgress";
 import { playMockAiSteps } from "../lib/taskAiFeedback";
@@ -17,6 +20,8 @@ import { AnimatedAgentChatInput } from "./AnimatedAgentChatInput";
 import { TaskCreationExistingTaskCard } from "./TaskCreationExistingTaskCard";
 import { TaskCreationPlanEditor } from "./TaskCreationPlanEditor";
 import { TaskCreationProcess } from "./TaskCreationProcess";
+import { TaskCreationSessionList } from "./TaskCreationSessionList";
+import { creationHistoryKey, parseCreationSessions, restoreCreationSession, upsertCreationSession, type CreationSession, type CreationWorkspaceDraft, type TaskCreationParentContext } from "../lib/taskCreationSessions";
 import { TaskAiAdjustButton, TaskAiAdjustmentPopover, useTaskAiAdjustmentDrafts } from "./TaskAiAdjustmentPopover";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/input";
@@ -25,16 +30,18 @@ import "../styles/task-creation-page.css";
 import "../styles/task-ai-adjustment.css";
 import "../styles/task-criteria-editor.css";
 import "../styles/task-creation-subtask.css";
+import "../styles/task-creation-sessions.css";
+
+// Temporarily hide planning history while preserving saved drafts.
+const CREATION_HISTORY_ENABLED = false;
 
 type CreationResult = { createdCount: number; mainTaskId: string; taskTitles: string[] };
-export type TaskCreationParentContext = {
-  parentTaskId: string;
-  pathItems: Array<{ id: string; label: string }>;
-};
+export type { TaskCreationParentContext } from "../lib/taskCreationSessions";
 type Props = {
   active?: boolean;
   creationParent?: TaskCreationParentContext | null;
   currentUserId: string;
+  teamId?: string;
   existingTasks: ExistingTaskCandidate[];
   members: Member[];
   tags: TagDefinition[];
@@ -45,14 +52,6 @@ type Props = {
   onDraftStart?: () => void;
   onInviteMembers?: (returnFocus?: HTMLElement | null) => void;
   onPathSelect?: (nodeId: string) => void;
-};
-type CreationWorkspaceDraft = {
-  request: string;
-  scenarioId?: TaskCreationScenarioId;
-  planning: CreationPlanningResult | null;
-  answers: { goal?: string; deliverable?: string };
-  processes: CreationProcess[];
-  editingBrief: boolean;
 };
 const emptyWorkspaceDraft = (): CreationWorkspaceDraft => ({ request: "", planning: null, answers: {}, processes: [], editingBrief: false });
 
@@ -80,29 +79,65 @@ function ClarificationStep({ question, answer, disabled, finalStep, onAnswer, on
   onContinue: () => void;
   onPrevious: () => void;
 }) {
+  const { c, locale, localize } = useCreationI18n();
   const inputId = "creation-answer-" + question.field;
   const customAnswer = answer && !question.choices.includes(answer) ? answer : "";
   return <form className="creation-questions" onSubmit={event => { event.preventDefault(); if (!disabled && answer?.trim()) onContinue(); }}><section className="creation-question">
     <h2 id={inputId + "-title"}>{question.title}</h2>
-    <div aria-label={question.title + "的建议选项"} className="creation-answer-options">
+    <div aria-label={question.title + c("suggestedOptions")} className="creation-answer-options">
       {question.choices.map(choice => <button aria-pressed={answer === choice} disabled={disabled} key={choice} onClick={() => onAnswer(choice)} type="button"><span>{choice}</span>{answer === choice && <Check aria-hidden="true" size={16} />}</button>)}
     </div>
     <div className="creation-custom-answer">
-      <label htmlFor={inputId}>自定义</label>
+      <label htmlFor={inputId}>{c("custom")}</label>
       <Textarea disabled={disabled} id={inputId} onChange={event => onAnswer(event.target.value)} placeholder={question.placeholder} rows={1} value={customAnswer} />
     </div>
   </section>
     <footer className="creation-question-actions">
-      <Button disabled={disabled} onClick={onPrevious} size="lg" type="button" variant="outline"><ArrowLeft size={15} />上一步</Button>
-      <Button className="creation-primary" disabled={disabled || !answer?.trim()} size="lg" type="submit">{finalStep && <Sparkles size={15} />}{finalStep ? "生成方案" : "下一步"}{!finalStep && <ArrowRight size={15} />}</Button>
+      <Button disabled={disabled} onClick={onPrevious} size="lg" type="button" variant="outline"><ArrowLeft size={15} />{c("previous")}</Button>
+      <Button className="creation-primary" disabled={disabled || !answer?.trim()} size="lg" type="submit">{finalStep && <Sparkles size={15} />}{finalStep ? c("generatePlan") : c("next")}{!finalStep && <ArrowRight size={15} />}</Button>
     </footer>
   </form>;
 }
 
-export function TaskCreationPage({ active = true, creationParent, currentUserId, existingTasks, members, tags, onCreateTaskPlan, onCreateSubtask, onOpenTask, onCancel, onDraftStart, onInviteMembers, onPathSelect }: Props) {
+export function TaskCreationPage({ active = true, creationParent: initialParent, currentUserId, teamId = "default", existingTasks, members, tags, onCreateTaskPlan, onCreateSubtask, onOpenTask, onCancel, onDraftStart, onInviteMembers, onPathSelect }: Props) {
+  const { c, locale, localize } = useCreationI18n();
   const context = { currentUserId, existingTasks, members, tags: tags.map(t => t.name), currentDate: new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai" }).format(new Date()) };
+  const [creationParent, setCreationParent] = useState(initialParent ?? null);
   const [workspace, setWorkspace] = useState<CreationWorkspaceDraft>(emptyWorkspaceDraft);
   const [clarificationStep, setClarificationStep] = useState(0);
+  const storageKey = creationHistoryKey(currentUserId, teamId);
+  const [loadedHistory] = useState(() => {
+    try { return parseCreationSessions(localStorage.getItem(storageKey)); }
+    catch { return { sessions: [] as CreationSession[], error: c("conversationHistoryIsUnavailableYouCanContinue") }; }
+  });
+  const [sessions, setSessions] = useState(loadedHistory.sessions);
+  const sessionsRef = useRef(sessions);
+  const [historyError, setHistoryError] = useState(loadedHistory.error);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [sessionId, setSessionId] = useState<string>(() => crypto.randomUUID());
+  const completedSession = useRef<CreationResult | undefined>(undefined);
+  const historyId = useId();
+  const historyToggle = useRef<HTMLButtonElement>(null);
+  const scenarioSessionIds = useRef(new Map<string, string>());
+  const saveSession = useCallback((session: CreationSession) => {
+    const next = upsertCreationSession(sessionsRef.current, session);
+    if (next === sessionsRef.current) return;
+    sessionsRef.current = next;
+    setSessions(next);
+    if (loadedHistory.error) return;
+    try { localStorage.setItem(storageKey, JSON.stringify(next)); setHistoryError(""); }
+    catch { setHistoryError(c("historyCouldNotBeSavedKeepThis")); }
+  }, [storageKey, loadedHistory.error]);
+  useEffect(() => {
+    if (completedSession.current) return;
+    saveSession({ id: sessionId, updatedAt: Date.now(), workspace, clarificationStep, parent: creationParent });
+  }, [workspace, clarificationStep, creationParent, sessionId, saveSession]);
+  const closeHistory = () => { setHistoryOpen(false); requestAnimationFrame(() => historyToggle.current?.focus()); };
+  useEffect(() => {
+    if (!CREATION_HISTORY_ENABLED || !historyOpen || !active) return;
+    const frame = requestAnimationFrame(() => document.getElementById(historyId)?.querySelector<HTMLButtonElement>("button")?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, [historyOpen, active, historyId]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [planningNotice, setPlanningNotice] = useState("");
@@ -112,7 +147,7 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
   const [adjustmentNotice, setAdjustmentNotice] = useState("");
   const [dirtySubtasks, setDirtySubtasks] = useState<Record<string, boolean>>({});
   const hasUnsavedSubtasks = Object.values(dirtySubtasks).some(Boolean);
-  const unsavedMessage = "子任务有未能同步的修改，请展开核对。";
+  const unsavedMessage = c("saveOrCancelYourPendingChangesBefore");
   const onSubtaskDirtyChange = (taskId: string, dirty: boolean) => setDirtySubtasks(current => {
     if (Boolean(current[taskId]) === dirty) return current;
     const next = { ...current };
@@ -144,7 +179,7 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
   const validation = form ? validateCreationForm(form, members) : null;
   const unassignedTaskCount = form ? [form.mainTask, ...form.subtasks].filter((task) => !task.ownerId).length : 0;
   const stageKey = displayStage === "review" ? form?.mainTask.clientId ?? "review" : displayStage;
-  const stageLabel = showDescribe ? "描述任务需求" : displayStage === "planning" ? "正在整理需求" : displayStage === "clarify" ? "补充关键信息" : displayStage === "decision" ? "确认任务关系" : "任务方案详情";
+  const stageLabel = showDescribe ? c("describeYourRequest") : displayStage === "planning" ? c("organizingYourRequest") : displayStage === "clarify" ? c("clarifyKeyDetails") : displayStage === "decision" ? c("confirmTaskRelationship") : c("taskPlanDetails");
   const updateProcess = (id: CreationProcess["id"], patch: Partial<CreationProcess>) => setWorkspace(current => ({
     ...current, processes: current.processes.map(process => process.id === id ? { ...process, ...patch } : process),
   }));
@@ -167,7 +202,6 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
     focusedStage.current = stageKey;
     pageRef.current?.scrollIntoView({ block: "start", behavior: "auto" });
     if (showDescribe) requestRef.current?.focus({ preventScroll: true });
-    else if (displayStage === "planning") stageRef.current?.querySelector<HTMLButtonElement>('button[aria-label="停止生成方案"]')?.focus({ preventScroll: true });
     else if (displayStage === "clarify") stageRef.current?.querySelector<HTMLButtonElement>(".creation-answer-options > button")?.focus({ preventScroll: true });
     else stageRef.current?.focus({ preventScroll: true });
   };
@@ -204,7 +238,7 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
     restorePlanningFocus.current = true;
     updateProcess(run, { status: "stopped", outcome: "生成已停止，需求和原有方案已保留" });
     setBusy(false);
-    setPlanningNotice("已停止整理，需求和原有方案均已保留。");
+    setPlanningNotice(c("planningStoppedYourRequestAndPreviousPlan"));
   };
 
   const clearTransientState = () => {
@@ -222,16 +256,52 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
   const openScenario = (id: TaskCreationScenarioId | "custom") => {
     if (busy || adjustmentRunning) return;
     if (hasUnsavedSubtasks) { setError(unsavedMessage); return; }
-    if (workspace.request.trim()) drafts.current.set(workspace.scenarioId ?? "custom", workspace);
+    if (workspace.request.trim()) {
+      drafts.current.set(workspace.scenarioId ?? "custom", workspace);
+      scenarioSessionIds.current.set(workspace.scenarioId ?? "custom", sessionId);
+    }
     const scenario = taskCreationScenarios.find(item => item.id === id);
-    setWorkspace(drafts.current.get(id) ?? { ...emptyWorkspaceDraft(), request: scenario?.prompt ?? "", scenarioId: scenario?.id });
+    setSessionId(scenarioSessionIds.current.get(id) ?? crypto.randomUUID());
+    completedSession.current = undefined;
+    setWorkspace(drafts.current.get(id) ?? { ...emptyWorkspaceDraft(), request: scenario ? locale === "en" ? creationScenarioEnglish[scenario.id].prompt : scenario.prompt : "", scenarioId: scenario?.id });
     clearTransientState();
     requestRef.current?.focus();
   };
-  const startAnother = () => { setWorkspace(emptyWorkspaceDraft()); clearTransientState(); };
+  const startAnother = () => {
+    if (busy || adjustmentRunning) return;
+    if (hasUnsavedSubtasks) { setError(unsavedMessage); return; }
+    setWorkspace(emptyWorkspaceDraft());
+    setCreationParent(initialParent ?? null);
+    setSessionId(crypto.randomUUID()); completedSession.current = undefined;
+    drafts.current.clear(); scenarioSessionIds.current.clear();
+    clearTransientState();
+    setHistoryOpen(false);
+    focusedStage.current = "";
+    requestAnimationFrame(() => requestRef.current?.focus());
+  };
+  const openSession = (session: CreationSession) => {
+    if (busy || adjustmentRunning || hasUnsavedSubtasks) return;
+    if (session.created) {
+      if (!existingTasks.some(task => task.id === session.created!.mainTaskId)) {
+        setHistoryError(c("theTaskLinkedToThisConversationIs")); return;
+      }
+      onOpenTask(session.created.mainTaskId); return;
+    }
+    if (session.id === sessionId) { closeHistory(); return; }
+    const restored = restoreCreationSession(session);
+    clearTransientState();
+    for (const key of Object.keys(aiDraftSession[0])) aiDraftSession[1]({ type: "discard", key });
+    drafts.current.clear(); scenarioSessionIds.current.clear();
+    completedSession.current = undefined;
+    planningRun.current = Math.max(planningRun.current, ...restored.workspace.processes.map(process => typeof process.id === "number" ? process.id : 0));
+    setSessionId(restored.id); setWorkspace(restored.workspace);
+    setCreationParent(restored.parent); setClarificationStep(restored.clarificationStep);
+    setHistoryOpen(false); focusedStage.current = "";
+    requestAnimationFrame(() => stageRef.current?.focus());
+  };
   const updateForm = (next: CreationForm) => {
     if (busy || adjustmentRunning || planning?.stage !== "review") return;
-    setWorkspace(current => ({ ...current, planning: { stage: "review", form: reconcileCreationEffort(planning.form, next), summary: planning.summary } }));
+    setWorkspace(current => ({ ...current, planning: { stage: "review", form: reconcileCreationEffort(planning.form, withCreationParticipantDefaults(next, currentUserId, planning.form)), summary: planning.summary } }));
     setAdjustmentNotice(""); setError("");
   };
   const generatePlan = async (answers?: CreationWorkspaceDraft["answers"]) => {
@@ -245,11 +315,11 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
     setBusy(true); setError(""); setPlanningNotice("");
     try {
       const next = normalizePlanningForFixedParent(
-        planTaskCreation(workspace.request, context, { scenarioId: workspace.scenarioId, answers: effectiveAnswers }),
+        planTaskCreation(workspace.request, context, { scenarioId: workspace.scenarioId, answers: effectiveAnswers, locale }),
         creationParent,
       );
       const feedback = getCreationFeedback(next);
-      const title = answers ? "补充信息后规划" : workspace.processes.length ? "重新生成" : "初次生成";
+      const title = answers ? c("planWithAdditionalDetails") : workspace.processes.length ? c("regenerate") : c("initialGeneration");
       const startedAt = Date.now();
       setWorkspace(current => ({ ...current, processes: [...current.processes, {
         id: run, title, request: workspace.request.trim(), answers: { ...effectiveAnswers }, steps: feedback,
@@ -278,13 +348,13 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
       setAiOpen(false); setAiScope(null); setAdjustmentNotice("");
       if (next.stage === "clarify" && answers) {
         restorePlanningFocus.current = true;
-        setError("还需要明确以下信息：" + next.questions.map(question => question.title).join(" "));
+        setError(c("pleaseClarifyTheFollowing") + next.questions.map(question => question.title).join(" "));
       }
     } catch (caught) {
       if (run === planningRun.current) {
         restorePlanningFocus.current = true;
         updateProcess(run, { status: "failed", outcome: "生成未完成，需求和原有方案已保留" });
-        setError(caught instanceof Error ? caught.message : "暂时无法生成方案，需求和已有方案已保留，请重试。");
+        setError(caught instanceof Error ? caught.message : c("unableToGenerateAPlanYourRequest"));
       }
     } finally {
       if (run === planningRun.current) {
@@ -326,7 +396,7 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
       processes: [...markLatestCreationDecisionResolved(current.processes), createCreationRelationshipProcess(
         `relationship:${current.processes.length + 1}`,
         decision,
-        form.candidate?.name ?? form.candidate?.title ?? "已有任务",
+        form.candidate?.name ?? form.candidate?.title ?? c("existingTask"),
         next.summary,
       )],
     }));
@@ -339,13 +409,13 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
     setAiScope(scope); setAiOpen(true); setAdjustmentNotice("");
   };
   const applyAiAdjustment = (proposal: TaskAiAdjustmentProposal) => {
-    if (!aiContext || busy || planning?.stage !== "review") throw new Error("当前方案不可修改，请返回方案后重试。");
-    if (planning.form.decision === "attach" && existingTasks.find(task => task.id === planning.form.candidate?.id)?.goal !== planning.form.candidate?.goal) {
-      throw new Error("主任务目标已变化，请重新确认关联后再调整。");
+    if (!aiContext || busy || planning?.stage !== "review") throw new Error(c("thisPlanCannotBeEditedRightNow"));
+    if (planning.form.decision === "attach" && !existingTasks.some(task => task.id === planning.form.candidate?.id)) {
+      throw new Error(c("theParentTaskNoLongerExistsConfirm"));
     }
-    const next = applyDraftTaskAiAdjustment(planning.form, aiContext, proposal);
+    const next = withCreationParticipantDefaults(applyDraftTaskAiAdjustment(planning.form, aiContext, proposal), currentUserId, planning.form);
     setWorkspace(current => ({ ...current, planning: { stage: "review", form: reconcileCreationEffort(planning.form, next), summary: planning.summary } }));
-    setAdjustmentNotice("调整已应用到草稿，确认创建后才会加入任务列表。"); setError("");
+    setAdjustmentNotice(c("changesAppliedToTheDraftTasksWill")); setError("");
   };
   const submit = () => {
     if (creating.current) return;
@@ -355,15 +425,11 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
     const invalid = validateCreationForm(form, members);
     if (invalid) { setError(invalid); return; }
     if (creationParent && !existingTasks.some(task => task.id === creationParent.parentTaskId)) {
-      setError("父任务已不存在。方案已保留，请返回有效任务后重新创建子任务。"); return;
+      setError(c("theParentTaskNoLongerExistsYour")); return;
     }
     if (form.decision === "attach") {
       const parent = existingTasks.find(task => task.id === form.candidate?.id);
-      if (!parent) { setError("主任务已不存在。方案已保留，请返回需求重新规划。"); return; }
-      if (parent.goal !== form.candidate?.goal) {
-        setWorkspace(current => ({ ...current, planning: { stage: "decision", form: { ...form, candidate: parent, decision: "pending" }, summary: "主任务目标已变化，请重新确认关联。" } }));
-        setError("主任务目标已更新，请重新确认后创建。"); return;
-      }
+      if (!parent) { setError(c("theParentTaskNoLongerExistsYourLabel")); return; }
     }
     creating.current = true;
     try {
@@ -374,21 +440,23 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
           ? onCreateSubtask(form.candidate.id, plan)
           : onCreateTaskPlan(plan);
       drafts.current.delete(workspace.scenarioId ?? "custom"); setError("");
+      completedSession.current = created;
+      saveSession({ id: sessionId, updatedAt: Date.now(), workspace, clarificationStep, parent: creationParent, created });
       onOpenTask(created.mainTaskId);
-    } catch (caught) { setError(caught instanceof Error ? caught.message : "创建未完成，方案已保留，请重试。"); creating.current = false; }
+    } catch (caught) { setError(caught instanceof Error ? caught.message : c("creationFailedYourPlanWasPreservedPlease")); creating.current = false; }
   };
 
-  const scenarioPicker = <div aria-label="快速开始" className="animated-agent-suggestions">
+  const scenarioPicker = <div aria-label={c("quickStart")} className="animated-agent-suggestions">
     {taskCreationScenarios.map(scenario => {
-      const selected = workspace.scenarioId === scenario.id && workspace.request.trim() === scenario.prompt;
+      const selected = workspace.scenarioId === scenario.id && workspace.request.trim() === (locale === "en" ? creationScenarioEnglish[scenario.id].prompt : scenario.prompt);
       return <button aria-pressed={selected} disabled={busy || adjustmentRunning} key={scenario.id} onClick={() => openScenario(scenario.id)} type="button">
-        <Sparkles aria-hidden="true" />{scenario.label}
+        <Sparkles aria-hidden="true" />{locale === "en" ? creationScenarioEnglish[scenario.id].label : scenario.label}
       </button>;
     })}
   </div>;
   const aiAdjustmentAction = !showDescribe
     ? <motion.div className="creation-ai-adjust-action" layoutId="creation-ai-composer" transition={{ duration: reducedMotion ? 0 : .22, ease: "easeInOut" }}>
-      <TaskAiAdjustButton disabled={!form || planning?.stage !== "review" || busy || adjustmentRunning || hasUnsavedSubtasks || aiOpen} label="AI 帮你改任务方案" onClick={anchor => openAiAdjustment(aiScope ?? { kind: "task" }, anchor)} />
+      <TaskAiAdjustButton disabled={!form || planning?.stage !== "review" || busy || adjustmentRunning || hasUnsavedSubtasks || aiOpen} label={c("askAiToAdjustThePlan")} onClick={anchor => openAiAdjustment(aiScope ?? { kind: "task" }, anchor)} />
     </motion.div>
     : undefined;
   const cancelProcess = busy ? stopPlanning : adjustmentRunning ? stopAdjustment : undefined;
@@ -397,81 +465,85 @@ export function TaskCreationPage({ active = true, creationParent, currentUserId,
     ? <TaskCreationProcess onCancel={cancelProcess} processes={pageProcesses} />
     : null;
 
-  return <LayoutGroup id="task-creation-ai-composer"><section className={`task-detail-view task-creation-page${showDescribe ? " creation-start-page" : ""}`} ref={pageRef}>
+  return <div className={`creation-session-layout${CREATION_HISTORY_ENABLED && historyOpen ? " history-open" : ""}`}>
+    {CREATION_HISTORY_ENABLED && historyOpen && <TaskCreationSessionList disabled={busy || adjustmentRunning || hasUnsavedSubtasks} error={localize(historyError)} id={historyId} onClose={closeHistory} onNew={startAnother} onSelect={openSession} selectedId={sessionId} sessions={sessions} />}
+    <div className="creation-session-content"><LayoutGroup id="task-creation-ai-composer"><section className={`task-detail-view task-creation-page${showDescribe ? " creation-start-page" : ""}`} ref={pageRef}>
     <div className="creation-page-top">
-      <nav aria-label="任务路径" className="task-detail-path">
+      {CREATION_HISTORY_ENABLED && <Button aria-controls={historyOpen ? historyId : undefined} aria-expanded={historyOpen} aria-label={historyOpen ? c("hideHistory") : c("showHistory")} className="creation-session-toggle" onClick={() => historyOpen ? closeHistory() : setHistoryOpen(true)} ref={historyToggle} size="icon-sm" title={historyOpen ? c("hideHistory") : c("showHistory")} type="button" variant="ghost"><PanelLeftOpen aria-hidden="true" /></Button>}
+      <nav aria-label={c("taskPath")} className="task-detail-path">
         {creationParent ? creationParent.pathItems.map((item, index) => <span key={item.id}>
           {index > 0 && <ChevronRight aria-hidden="true" size={12} />}
           <button onClick={() => onPathSelect?.(item.id)} type="button">{item.label}</button>
         </span>) : <>
-          <span><button aria-label="返回新建任务" onClick={startAnother} type="button">任务</button></span>
-          {form?.decision === "attach" && form.candidate && <span><ChevronRight aria-hidden="true" size={12} /><button aria-label={`打开主任务：${form.candidate.name ?? form.candidate.title}`} onClick={() => onOpenTask(form.candidate!.id)} type="button">{form.candidate.name ?? form.candidate.title}</button></span>}
+          <span><button aria-label={c("backToNewTask")} onClick={startAnother} type="button">{c("tasks")}</button></span>
+          {form?.decision === "attach" && form.candidate && <span><ChevronRight aria-hidden="true" size={12} /><button aria-label={c("openParentTask", { v0: form.candidate.name ?? form.candidate.title })} onClick={() => onOpenTask(form.candidate!.id)} type="button">{form.candidate.name ?? form.candidate.title}</button></span>}
         </>}
-        <span><ChevronRight aria-hidden="true" size={12} /><em aria-current="page">新建任务</em></span>
+        <span><ChevronRight aria-hidden="true" size={12} /><em aria-current="page">{c("newTask")}</em></span>
       </nav>
       <div className="creation-page-actions">
-        {workspace.scenarioId && drafts.current.has("custom") && <button className="creation-example-trigger" disabled={busy || adjustmentRunning} onClick={() => openScenario("custom")} type="button"><RotateCcw size={13} />返回我的需求</button>}
+        {historyError && !historyOpen && <span className="creation-session-save-warning" role="status">{localize(historyError)}</span>}
+        {workspace.scenarioId && drafts.current.has("custom") && <button className="creation-example-trigger" disabled={busy || adjustmentRunning} onClick={() => openScenario("custom")} type="button"><RotateCcw size={13} />{c("backToMyRequest")}</button>}
         {aiAdjustmentAction}
       </div>
     </div>
     <AnimatePresence mode="wait"><motion.div animate={{ opacity: 1, y: 0 }} aria-label={stageLabel} className={`creation-sheet${showDescribe ? " task-conversation-page is-starting" : ""}`} initial={reducedMotion ? false : { opacity: 0, y: 8 }} key={stageKey} onAnimationComplete={focusStage} ref={stageRef} role="region" tabIndex={-1} transition={{ duration: reducedMotion ? 0 : .18 }}>
-      {!showDescribe && planningNotice && <p className="creation-planning-notice" role="status">{planningNotice}</p>}
+      {!showDescribe && planningNotice && <p className="creation-planning-notice" role="status">{localize(planningNotice)}</p>}
       {showDescribe ? <div className="task-conversation-workspace"><div className="task-conversation-column">
-        <section className="task-conversation-start"><header><h1>今天想推进什么？</h1><p>输入一个任务，或告诉 AgentDoor 你的目标</p></header></section>
+        <section className="task-conversation-start"><header><h1>{c("whatWouldYouLikeToWorkOn")}</h1><p>{c("agentdoorHelpsYouClarifyGoalsBreakDown")}</p></header></section>
         <div className="task-conversation-composer creation-request-panel">
           <motion.div className="creation-request-composer-transition" layoutId="creation-ai-composer" transition={{ duration: reducedMotion ? 0 : .22, ease: "easeInOut" }}>
             <AnimatedAgentChatInput
               allowAttachments={false}
-              ariaLabel="需求描述"
+              ariaLabel={c("taskRequest")}
               autoFocus={active}
               clearOnSend={false}
               disabled={busy}
-              hint="Enter 发起 · Shift + Enter 换行"
+              hint={c("enterToStartShiftEnterForA")}
               inputRef={requestRef}
               onChange={request => { setWorkspace(current => ({ ...current, request })); setError(""); }}
               onSend={() => { void generatePlan(); }}
-              placeholder="告诉 AgentDoor 你想推进什么…"
-              sendLabel={form ? "重新发起" : "发起"}
+              placeholder={c("tellAgentdoorWhatYouWantToWork")}
+              sendLabel={form ? c("startAgain") : c("start")}
               value={workspace.request}
             />
           </motion.div>
-          <div className="creation-request-actions"><span>先生成方案，确认后才创建</span>{form && <Button disabled={busy} onClick={() => { setWorkspace(current => ({ ...current, editingBrief: false })); setError(""); }} type="button" variant="ghost">返回现有方案</Button>}</div>
-          {planningNotice && <p className="creation-planning-notice" role="status">{planningNotice}</p>}
-          {form && <p className="creation-request-caution">重新生成会替换当前方案；生成失败时保留原方案。也可以通过“AI 帮你改”继续补充需求。</p>}
-          {error && <p className="creation-stage-error" role="alert">{error}</p>}
+          {form && <div className="creation-request-actions"><Button disabled={busy} onClick={() => { setWorkspace(current => ({ ...current, editingBrief: false })); setError(""); }} type="button" variant="ghost">{c("backToCurrentPlan")}</Button></div>}
+          {planningNotice && <p className="creation-planning-notice" role="status">{localize(planningNotice)}</p>}
+          {form && <p className="creation-request-caution">{c("generatingAgainReplacesTheCurrentPlanIf")}</p>}
+          {error && <p className="creation-stage-error" role="alert">{localize(error)}</p>}
           {creationAssistantRow}
         </div>
         {scenarioPicker}
       </div></div> : <>
         {creationAssistantRow}
         {displayStage === "clarify" && planning?.stage === "clarify" && currentClarificationQuestion && <section className="task-detail-hero-card creation-clarify-panel">
-          <header className="creation-stage-heading"><span className="creation-stage-icon"><Lightbulb size={20} /></span><div><h1>{planning.questions.length === 2 ? "再明确两个关键信息" : planning.questions.length === 1 ? "再明确一个关键信息" : `再明确 ${planning.questions.length} 个关键信息`}（{clarificationStep + 1}/{planning.questions.length}）</h1><p>每次确认一个答案，AgentDoor 再继续规划。</p></div></header>
+          <header className="creation-stage-heading"><span className="creation-stage-icon"><Lightbulb size={20} /></span><div><h1>{planning.questions.length === 2 ? c("clarifyTwoKeyDetails") : planning.questions.length === 1 ? c("clarifyOneKeyDetail") : c("clarifyKeyDetailsLabel", { v0: planning.questions.length })}（{clarificationStep + 1}/{planning.questions.length}）</h1><p>{c("confirmOneAnswerAtATimeSo")}</p></div></header>
           <ClarificationStep answer={workspace.answers[currentClarificationQuestion.field]} disabled={busy} finalStep={clarificationStep === planning.questions.length - 1} onAnswer={value => selectClarificationAnswer(currentClarificationQuestion, value)} onContinue={() => submitClarificationAnswer(currentClarificationQuestion, workspace.answers[currentClarificationQuestion.field] ?? "")} onPrevious={previousClarificationStep} question={currentClarificationQuestion} />
-          <p className="creation-stage-note">选择或填写答案后，点击下方按钮继续；期限与人选可以在方案中补充。</p>
-          {error && <p className="creation-stage-error" role="alert">{error}</p>}
+          <p className="creation-stage-note">{c("chooseOrEnterAnAnswerThenContinue")}</p>
+          {error && <p className="creation-stage-error" role="alert">{localize(error)}</p>}
         </section>}
         {displayStage === "decision" && form?.candidate && <section className="task-detail-hero-card creation-decision">
-          <header className="creation-stage-heading"><span className="creation-stage-icon"><GitBranch size={20} /></span><div><h1>{form.candidateKind === "parent" ? "这项工作，可以放进已有任务" : "先确认，是不是同一件事"}</h1><p>{form.candidateKind === "parent" ? "作为子任务将继承主任务目标；也可以独立规划。" : "请核对这项已有任务，确认关系后再继续。"}</p></div></header>
+          <header className="creation-stage-heading"><span className="creation-stage-icon"><GitBranch size={20} /></span><div><h1>{form.candidateKind === "parent" ? c("thisWorkMayBelongToAnExisting") : c("firstCheckWhetherThisIsTheSame")}</h1><p>{form.candidateKind === "parent" ? c("createASubtaskWithItsOwnEditable") : c("reviewTheExistingTaskAndConfirmThe")}</p></div></header>
           <TaskCreationExistingTaskCard kind={form.candidateKind!} ownerName={members.find(member => member.id === form.candidate?.ownerId)?.name} reason={form.candidateReason ?? ""} tags={tags} task={form.candidate} />
-          <div className="creation-decision-actions"><Button className="creation-primary" onClick={() => { if (form.candidateKind === "parent") resolveRelationship("attach"); else if (existingTasks.some(task => task.id === form.candidate?.id)) onOpenTask(form.candidate!.id); else setError("已有任务已不存在，需求已保留，请重新规划。"); }} size="lg" type="button">{form.candidateKind === "parent" ? "作为子任务继续" : "查看已有任务"}<ArrowRight size={15} /></Button><Button onClick={() => resolveRelationship("independent")} size="lg" type="button" variant="outline">仍然独立规划</Button></div>
-          <p className="creation-stage-note">此处只确认归属，不会创建任务，也不会修改已有任务。</p>
-          {error && <p className="creation-stage-error" role="alert">{error}</p>}
+          <div className="creation-decision-actions"><Button className="creation-primary" onClick={() => { if (form.candidateKind === "parent") resolveRelationship("attach"); else if (existingTasks.some(task => task.id === form.candidate?.id)) onOpenTask(form.candidate!.id); else setError(c("theExistingTaskIsUnavailableYourRequest")); }} size="lg" type="button">{form.candidateKind === "parent" ? c("continueAsASubtask") : c("viewExistingTask")}<ArrowRight size={15} /></Button><Button onClick={() => resolveRelationship("independent")} size="lg" type="button" variant="outline">{c("planIndependently")}</Button></div>
+          <p className="creation-stage-note">{c("thisOnlyConfirmsTheParentRelationshipNo")}</p>
+          {error && <p className="creation-stage-error" role="alert">{localize(error)}</p>}
         </section>}
         {displayStage === "review" && form && <>
           <TaskCreationPlanEditor disabled={busy || adjustmentRunning} form={form} members={members} tags={tags} onChange={updateForm} onInviteMembers={onInviteMembers} onSubtaskDirtyChange={onSubtaskDirtyChange} />
           {hasUnsavedSubtasks && <p className="creation-error" role="status">{unsavedMessage}</p>}
-          {adjustmentNotice && <p className="task-ai-inline-notice" role="status"><Check size={14} />{adjustmentNotice}</p>}
+          {adjustmentNotice && <p className="task-ai-inline-notice" role="status"><Check size={14} />{localize(adjustmentNotice)}</p>}
           <footer className="creation-confirm-bar">
-            <div className="creation-confirm-copy"><span className="creation-confirm-icon"><Layers3 /></span><div><strong>{form.subtasks.length ? "1 个主任务 · " + form.subtasks.length + " 个子任务" : form.decision === "attach" ? "1 个子任务" : "1 个任务"}</strong><span>{unassignedTaskCount ? `${unassignedTaskCount} 个任务暂不分配负责人，可先创建` : "确认后加入任务列表"}</span></div></div>
+            <div className="creation-confirm-copy"><span className="creation-confirm-icon"><Layers3 /></span><div><strong>{getCreationHierarchyDepth(form) > 2 ? c("tasksInTotal", { v0: form.subtasks.length + 1 }) : form.subtasks.length ? c("1MainTask") + form.subtasks.length + c("subtasks") : form.decision === "attach" ? c("1Subtask") : c("1Task")}</strong><span>{getCreationHierarchyDepth(form) > 2 ? c("1MainTaskSubtasksAcrossAllLevels", { v0: form.subtasks.length }) : unassignedTaskCount ? c("tasksHaveNoOwnerYetYouCan", { v0: unassignedTaskCount }) : c("confirmToAddTasksToYourList")}</span></div></div>
             <div className="creation-confirm-actions">
-              {unassignedTaskCount > 0 && onInviteMembers && <Button disabled={busy || adjustmentRunning} onClick={event => onInviteMembers(event.currentTarget)} size="lg" type="button" variant="outline"><UserPlus size={17} />邀请成员</Button>}
-              <Button className="creation-primary" disabled={Boolean(validation || aiOpen || busy || adjustmentRunning || hasUnsavedSubtasks)} onClick={submit} size="lg" type="button">确认创建<Check size={17} /></Button>
+              {unassignedTaskCount > 0 && onInviteMembers && <Button disabled={busy || adjustmentRunning} onClick={event => onInviteMembers(event.currentTarget)} size="lg" type="button" variant="outline"><UserPlus size={17} />{c("inviteMembers")}</Button>}
+              <Button className="creation-primary" disabled={Boolean(validation || aiOpen || busy || adjustmentRunning || hasUnsavedSubtasks)} onClick={submit} size="lg" type="button">{c("confirmCreation")}<Check size={17} /></Button>
             </div>
-            {(error || validation) && <p className="creation-validation" role={error ? "alert" : "status"}>{error || validation}</p>}
+            {(error || validation) && <p className="creation-validation" role={error ? "alert" : "status"}>{localize(error || validation)}</p>}
           </footer>
         </>}
       </>}
     </motion.div></AnimatePresence>
-    {aiScope && aiContext && <TaskAiAdjustmentPopover anchor={aiReturnFocus.current} compactCreation context={aiContext} draftSession={aiDraftSession} history={workspace.processes} onApply={applyAiAdjustment} onOpenChange={setAiOpen} onProgressChange={updateAdjustmentProgress} open={aiOpen && active} scope={aiScope} />}
-  </section></LayoutGroup>;
+    {aiScope && aiContext && <TaskAiAdjustmentPopover anchor={aiReturnFocus.current} compactCreation context={aiContext} draftSession={aiDraftSession} history={workspace.processes} key={sessionId} onApply={applyAiAdjustment} onOpenChange={setAiOpen} onProgressChange={updateAdjustmentProgress} open={aiOpen && active} scope={aiScope} />}
+  </section></LayoutGroup></div></div>;
 }

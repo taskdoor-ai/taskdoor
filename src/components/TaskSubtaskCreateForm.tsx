@@ -73,7 +73,7 @@ export function TaskSubtaskCreateForm({ id, open, onCreate, onCancel }: Props) {
           setCompletionCriteria(values); setError("");
         }} values={completionCriteria} />
       </div>
-      <p className="task-subtask-create-hint" id={`${id}-hint`}>目标继承当前任务；负责人和期限可在详情中继续设置。</p>
+      <p className="task-subtask-create-hint" id={`${id}-hint`}>初始目标带入当前任务目标，创建后可独立修改；负责人和期限可在详情中继续设置。</p>
       {error && <p className="task-subtask-create-error" id={`${id}-error`} role="alert">{error}</p>}
       <footer className="task-subtask-create-actions">
         <Button disabled={saving} onClick={close} size="sm" type="button" variant="ghost">取消</Button>

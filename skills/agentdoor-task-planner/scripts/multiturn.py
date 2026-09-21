@@ -77,7 +77,7 @@ def project_fixture(source, output, *, commit=False, episode="X"):
             row["version"] += 1
             row["updatedAt"] = projected["context"]["asOf"]
         projected["currentTaskId"] = proposal["rootTaskId"]
-    _source(projected, "simulation-candidate-context", "本文件为离线测试用的当前有效候选视图。新增记录尚未真实创建；局部修改未使Owner推荐变成正式接受，版本仅是合成快照版本。", "合成草稿上下文", replace=True)
+    _source(projected, "simulation-candidate-context", "本文件为离线测试用的当前有效候选视图。新增记录尚未真实创建；Owner 推荐仍是草稿候选，只有创建用户确认并由服务端成功写入后才成为正式负责人。", "合成草稿上下文", replace=True)
     mapping = {}
     if commit:
         for identifier in tasks:

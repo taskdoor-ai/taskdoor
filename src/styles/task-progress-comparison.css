@@ -1,0 +1,179 @@
+.task-burnup, .task-progress-comparison, .task-progress-race-track { --progress-actual: var(--ad-route); --progress-expected: var(--ad-tag-purple-ink); }
+.task-progress-comparison .task-burnup-heading { flex-wrap: wrap; }
+.task-progress-actual-metric { display: flex; align-items: baseline; gap: var(--ad-space-2); }
+.task-progress-actual-metric > span { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.task-progress-actual-metric > .task-ai-prediction-label,
+.task-progress-calculation-title .task-ai-prediction-label,
+.task-progress-calculation-dates .task-ai-prediction-label,
+.task-ai-prediction-label { color:var(--ad-tag-purple-ink); }
+.task-progress-comparison .task-completion-effort-total { font-size: var(--ad-text-caption); }
+.task-progress-race-track { position: relative; height: 8px; margin: 22px 5px 18px; isolation: isolate; }
+.task-progress-race-track[data-has-expected="true"] { margin-top: 44px; }
+.task-progress-actual-track { height: 100%; overflow: hidden; border-radius: 8px; background: var(--ad-surface-subtle); }
+.task-progress-actual-track > span { display: block; height: 100%; border-radius: inherit; background: var(--progress-actual); }
+.task-progress-race-gap { position: absolute; top: 0; height: 100%; border-radius: 2px; background: color-mix(in srgb, var(--progress-expected) 15%, transparent); }
+.task-progress-actual-head { position: absolute; top: 50%; width: 12px; height: 12px; transform: translate(-50%, -50%); border: 2px solid var(--ad-surface); border-radius: 50%; background: var(--progress-actual); box-shadow: 0 0 0 1px color-mix(in srgb, var(--progress-actual) 35%, transparent); }
+.task-progress-pace-marker { position: absolute; top: -18px; bottom: -9px; width: 0; border-left: 2px dashed var(--progress-expected); transform: translateX(-50%); }
+.task-progress-expected-label { position: absolute; bottom: 24px; transform: translateX(-50%); color: var(--progress-expected); font-size: var(--ad-text-caption); line-height: 1.5; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.task-progress-asof { margin: var(--ad-space-2) 0 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-micro); }
+.task-burnup-legend > .task-progress-legend-actual { color: var(--progress-actual); }
+.task-progress-comparison .task-burnup-legend { flex-wrap: wrap; }
+.task-burnup-legend strong { font-weight: 500; font-variant-numeric: tabular-nums; }
+.task-burnup-legend > .task-progress-legend-actual::before { border-top-color: var(--progress-actual); border-top-width: 3px; }
+.task-burnup-legend > .task-progress-legend-expected::before { flex: 0 0 2px; width: 2px; height: 12px; border-top: 0; border-left: 2px dashed var(--progress-expected); }
+.task-burnup-legend > .task-progress-legend-expected { color:var(--progress-expected); }
+.task-burnup-legend > .task-progress-legend-expected[data-trend="true"]::before { flex-basis: 14px; width: 14px; height: 0; border-left: 0; border-top: 2px dashed var(--progress-expected); }
+.task-progress-forecast-trend { stroke: var(--progress-expected); stroke-width: 2; stroke-dasharray: 5 4; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.task-progress-forecast-milestone { fill: var(--ad-surface); stroke: var(--progress-expected); stroke-width: 1.5; }
+.task-progress-chart-interaction { margin-top: var(--ad-space-3); border-radius: var(--ad-radius-control); }
+.task-situation-trend .task-progress-comparison-chart { margin-top: 0; }
+.task-progress-chart-grid { stroke: var(--ad-border-soft); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.task-progress-chart-axis { fill: var(--ad-ink-tertiary); font-family: var(--ad-font-sans); font-size: 11px; }
+.task-progress-actual-path { stroke: var(--progress-actual); stroke-width: 3; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.task-progress-actual-point { fill: var(--progress-actual); stroke: var(--ad-surface); stroke-width: 1.5; }
+.task-progress-forecast-point { fill: var(--progress-expected); stroke: var(--ad-surface); stroke-width: 1.5; }
+.task-progress-chart-date-axis { fill:var(--ad-ink-tertiary); font-family:var(--ad-font-sans); font-variant-numeric:tabular-nums; }
+.task-progress-chart-axis-date { font-weight:500; }
+.task-progress-chart-axis-leader { fill:none; stroke:var(--ad-border); stroke-width:1; vector-effect:non-scaling-stroke; }
+.task-progress-chart-date-axis > [data-kind="forecast"] > .task-progress-chart-axis-date,
+.task-progress-chart-axis-caption > [data-kind="forecast"] { fill:var(--ad-tag-purple-ink); }
+.task-progress-chart-date-axis > [data-kind="completed"] > .task-progress-chart-axis-date,
+.task-progress-chart-axis-caption > [data-kind="completed"] { fill:var(--ad-route); }
+.task-progress-chart-axis-separator { fill:var(--ad-ink-tertiary); }
+.task-progress-help { position: relative; display: flex; }
+.task-progress-help > summary { display: flex; padding: 4px; color: var(--ad-ink-tertiary); list-style: none; cursor: pointer; }
+.task-progress-help > summary::-webkit-details-marker { display: none; }
+.task-progress-help > p { position: absolute; z-index: 60; top: 100%; right: -100px; width: min(260px, 75vw); margin: 4px 0; padding: var(--ad-space-3); border: 1px solid var(--ad-border); border-radius: var(--ad-radius-control); background: var(--ad-surface); box-shadow: var(--ad-shadow-float); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.65; }
+.task-progress-help > summary:focus-visible, .task-progress-chart-interaction:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
+.task-progress-comparison-details .task-burnup-data { position: static; width: 100%; max-width: 100%; margin-top: var(--ad-space-3); box-shadow: none; }
+.task-progress-comparison-details { min-width: 0; margin-top: var(--ad-space-2); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.task-progress-comparison-details > summary { width: fit-content; }
+.task-progress-calculation-title { color: var(--ad-ink); font-weight: 500; }
+.task-progress-calculation-value { color: var(--ad-ink); font-variant-numeric: tabular-nums; }
+.task-progress-calculation-value strong { font-size: var(--ad-text-label); }
+.task-progress-history-details { margin-top: var(--ad-space-3); border-top: 1px solid var(--ad-border-soft); }
+.task-progress-workload-status { color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.task-progress-workload-status[data-relation="ahead"] { color: var(--ad-tag-green-ink); }
+.task-progress-workload-status[data-relation="behind"] { color: var(--ad-tag-amber-ink); }
+.task-progress-time-status { color: var(--ad-route-ink); white-space: nowrap; }
+.task-progress-time-status[data-relation="ahead"] { color: var(--ad-tag-green-ink); }
+.task-progress-time-status[data-relation="behind"] { color: var(--ad-tag-amber-ink); }
+.task-progress-time-status[data-relation="unknown"] { color: var(--ad-ink-tertiary); }
+/* Dates are milestones on a fine axis; only the work scale above uses a filled bar. */
+.task-progress-schedule { margin-top: var(--ad-space-5); }
+.task-progress-schedule-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: var(--ad-space-2); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); }
+.task-progress-schedule-chart { display: flow-root; overflow-x:auto; }
+.task-progress-schedule-axis { display:grid; align-items:start; min-width:260px; width:100%; padding:12px 5px 4px; margin-top:16px; }
+.task-progress-schedule-stop, .task-progress-schedule-gap { grid-row:1; }
+.task-progress-schedule-unset { grid-row:1; justify-self:end; padding-top:20px; color:var(--ad-ink-tertiary); font-size:var(--ad-text-caption); line-height:1.5; white-space:nowrap; }
+.task-progress-schedule-stop { position:relative; padding-top:20px; text-align:center; --date-anchor:50%; }
+.task-progress-schedule-stop[data-edge="first"] { text-align:left; --date-anchor:0%; }
+.task-progress-schedule-stop[data-edge="last"] { text-align:right; --date-anchor:100%; }
+.task-progress-schedule-node { position:absolute; top:0; left:0; width:100%; height:1px; }
+.task-progress-schedule-link { position:absolute; top:0; border-top:1px solid var(--ad-border); }
+.task-progress-schedule-link[data-side="before"] { left:0; width:var(--date-anchor); }
+.task-progress-schedule-link[data-side="after"] { left:var(--date-anchor); right:0; }
+.task-progress-schedule-gap { position:relative; min-width:0; height:1px; container-type:inline-size; container-name:progress-interval; }
+.task-progress-schedule-gap::before { content:""; position:absolute; inset:0; border-top:1px solid var(--ad-border); }
+.task-progress-schedule-link[data-kind="forecast"],.task-progress-schedule-gap[data-kind="forecast"]::before { border-top:1px dashed var(--progress-expected); }
+.task-progress-schedule-link[data-kind="actual"],.task-progress-schedule-gap[data-kind="actual"]::before { border-top:1px solid var(--ad-route); }
+.task-progress-schedule-link[data-kind="observed"],.task-progress-schedule-gap[data-kind="observed"]::before { border-top:1px dashed var(--ad-ink-tertiary); }
+.task-progress-schedule-start { position: absolute; top: 50%; left: 0; width: 4px; height: 4px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--ad-ink-tertiary); }
+.task-progress-schedule-now { position: absolute; top: -3px; height: 7px; border-left: 1px solid var(--ad-ink-tertiary); transform: translateX(-50%); }
+.task-progress-schedule-deadline { position: absolute; top: 50%; width: 7px; height: 7px; background: var(--ad-ink-tertiary); transform: translate(-50%, -50%) rotate(45deg); }
+.task-progress-schedule-gap[data-has-delta="true"] { min-width:7em; }
+.task-progress-schedule-delta { position: absolute; z-index:1; left:50%; top:0; transform: translate(-50%, -50%); padding: 0 4px; background: var(--ad-surface); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.5; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.task-progress-schedule-delta[data-coincident="true"] { position:static; transform:none; padding:0; }
+.task-progress-schedule-delta[data-relation="ahead"] { color: var(--ad-tag-green-ink); }
+.task-progress-schedule-delta[data-relation="behind"] { color: var(--ad-tag-amber-ink); }
+.task-progress-schedule-label { display:flex; flex-direction:column; color:var(--ad-ink-secondary); font-size:var(--ad-text-caption); line-height:1.5; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.task-progress-schedule-types > span { color:var(--ad-ink-secondary); }
+.task-progress-schedule-types > span[data-kind="forecast"],.task-progress-schedule-label[data-kind="forecast"] time { color:var(--progress-expected); }
+.task-progress-schedule-types > span[data-kind="completed"],.task-progress-schedule-label[data-kind="completed"] time { color:var(--ad-route-ink); }
+.task-progress-schedule-types > .task-progress-schedule-separator { color:var(--ad-ink-tertiary); }
+.task-progress-schedule-label time { font-weight:500; }
+.task-progress-completed-marker { position: absolute; top: -18px; bottom: -9px; border-left: 2px solid var(--ad-route); transform: translateX(-50%); }
+.task-progress-calculation-dates { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ad-space-3); margin: var(--ad-space-3) 0; }
+.task-progress-calculation-dates dt { color: var(--ad-ink-tertiary); }
+.task-progress-calculation-dates dd { margin: 0; color: var(--ad-ink); font-weight: 500; }
+.task-progress-chart-unit { margin-left: auto; }
+.task-progress-scope-path { stroke: var(--ad-chart-scope); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+.task-progress-scope-forecast { stroke: var(--ad-chart-scope); stroke-width: 1.4; stroke-dasharray: 4 3; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.task-progress-scope-overlap { stroke: var(--ad-chart-scope); stroke-width: 6; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.task-progress-scope-point { fill: var(--ad-surface); stroke: var(--ad-chart-scope); stroke-width: 1.4; }
+.task-burnup-legend > .task-progress-legend-scope { color: var(--ad-tag-gray-ink); }
+.task-burnup-legend > .task-progress-legend-scope::before { border-top-color: var(--ad-chart-scope); border-top-width: 1.4px; }
+
+/* Work and time retain identical markers; children use a tighter size, not another visual language. */
+.task-progress-overview { --progress-actual: var(--ad-route); --progress-expected: var(--ad-tag-purple-ink); min-width: 0; }
+.task-progress-overview .task-completion-progress-metrics { display:flex; align-items:baseline; justify-content:space-between; gap:var(--ad-space-2); }
+.task-progress-overview .task-completion-progress-value { color:var(--ad-ink); font-size:32px; line-height:1.2; font-weight:650; font-variant-numeric:tabular-nums; }
+.task-progress-overview[data-progress-state="unknown"] .task-progress-actual-metric > span { color:var(--ad-ink-tertiary); font-size:var(--ad-text-body-sm); font-weight:400; line-height:1.5; }
+.task-progress-overview[data-progress-state="unknown"][data-size="compact"] .task-progress-actual-metric > span { font-size:var(--ad-text-caption); }
+.task-progress-unavailable { display:block; margin:var(--ad-space-2) 0; color:var(--ad-ink-tertiary); font-size:var(--ad-text-caption); }
+.task-progress-overview[data-size="compact"] { margin-top:var(--ad-space-2); }
+.task-progress-overview[data-size="compact"] .task-completion-progress-value { font-size:18px; font-weight:600; }
+.task-progress-overview[data-size="compact"] .task-progress-race-track { height:4px; margin-top:16px; margin-bottom:10px; }
+.task-progress-overview[data-size="compact"] .task-progress-race-track[data-has-expected="true"] { margin-top:30px; }
+.task-progress-overview[data-size="compact"] .task-progress-schedule { margin-top:var(--ad-space-3); }
+.task-progress-overview[data-size="compact"] .task-progress-actual-head { width:8px; height:8px; border-width:1.5px; }
+.task-progress-overview[data-size="compact"] .task-progress-pace-marker { top:-10px; bottom:-6px; }
+.task-progress-overview[data-size="compact"] .task-progress-expected-label { bottom:14px; }
+.task-progress-overview[data-size="compact"] .task-progress-schedule-axis { margin-top:8px; padding-top:8px; padding-bottom:0; }
+.task-progress-overview[data-size="compact"] .task-progress-schedule-stop,
+.task-progress-overview[data-size="compact"] .task-progress-schedule-unset { padding-top:12px; }
+.task-progress-overview[data-size="compact"] .task-progress-schedule-label,
+.task-progress-overview[data-size="compact"] .task-progress-schedule-unset { line-height:1.4; }
+.task-progress-overview[data-size="compact"] .task-progress-schedule-start { width:3px; height:3px; }
+.task-progress-overview[data-size="compact"] .task-progress-schedule-now { top:-2px; height:5px; }
+.task-progress-overview[data-size="compact"] .task-progress-schedule-deadline { width:5px; height:5px; }
+.task-progress-overview .task-progress-schedule-track .task-progress-pace-marker,
+.task-progress-overview .task-progress-schedule-track .task-progress-completed-marker { top:-9px; bottom:-9px; }
+.task-progress-overview[data-size="compact"] .task-progress-schedule-track .task-progress-pace-marker,
+.task-progress-overview[data-size="compact"] .task-progress-schedule-track .task-progress-completed-marker { top:-6px; bottom:-6px; }
+.task-effort-cost[data-presentation="summary"] .task-effort-distribution-name { grid-column:1; }
+.task-effort-cost[data-presentation="summary"] .task-effort-distribution-row > .task-status-control { justify-self:end; }
+.task-effort-cost[data-presentation="summary"] .task-effort-distribution ol { gap:var(--ad-space-4); }
+.task-effort-cost[data-presentation="summary"] .task-effort-distribution li + li { padding-top:var(--ad-space-4); border-top:1px solid var(--ad-border-soft); }
+.task-progress-overview .task-progress-expected-label { max-width:calc(100% - 2px); }
+
+.task-progress-ai-record { margin-block: var(--ad-space-3); padding-block: var(--ad-space-2); border-block: 1px solid var(--ad-border-soft); font-size: var(--ad-text-caption); color: var(--ad-ink-secondary); }
+.task-progress-ai-record > p { margin: 6px 0; }
+.task-progress-ai-record > .task-progress-ai-record-title { color: var(--ad-tag-purple-ink); }
+.task-progress-ai-record-title strong { font-weight: 600; }
+.task-progress-ai-record time { font-variant-numeric: tabular-nums; }
+
+/* Finish dates belong to the burn-up; compact children retain their small timeline. */
+.task-progress-chart-timing { --progress-expected:var(--ad-tag-purple-ink); margin:12px 0; }
+.task-burnup-heading .task-progress-chart-unit { margin-left:4px; color:var(--ad-ink-tertiary); font-size:var(--ad-text-micro); font-weight:400; }
+.task-progress-chart-time-status { margin:0 0 8px; color:var(--ad-ink-tertiary); font-size:var(--ad-text-caption); font-weight:500; }
+.task-progress-chart-time-status[data-relation="ahead"] { color:var(--ad-tag-green-ink); }
+.task-progress-chart-time-status[data-relation="behind"] { color:var(--ad-tag-amber-ink); }
+.task-progress-chart-time-status[data-relation="on-track"] { color:var(--ad-route-ink); }
+.task-progress-chart-time-delta { background:var(--ad-surface); color:var(--ad-ink-tertiary); font-family:var(--ad-font-sans); font-weight:500; line-height:1.3; text-align:center; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.task-progress-chart-time-link, .task-progress-chart-finish-node { stroke:var(--ad-tag-purple-ink); stroke-width:1.5; stroke-dasharray:4 3; vector-effect:non-scaling-stroke; }
+.task-progress-chart-plan-node { fill:var(--ad-ink-tertiary); }
+.task-progress-chart-time-comparison[data-kind="completed"] .task-progress-chart-time-link,
+.task-progress-chart-time-comparison[data-kind="completed"] .task-progress-chart-finish-node { stroke:var(--ad-route); stroke-dasharray:none; }
+.task-progress-chart-time-delta[data-relation="ahead"] { color:var(--ad-tag-green-ink); }
+.task-progress-chart-time-delta[data-relation="behind"] { color:var(--ad-tag-amber-ink); }
+.task-progress-chart-time-delta[data-relation="on-track"] { color:var(--ad-route-ink); }
+.task-progress-chart-dates { display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px 20px; margin:0; }
+.task-progress-chart-date { display:flex; flex-direction:column; gap:2px; color:var(--ad-ink-secondary); font-size:var(--ad-text-caption); }
+.task-progress-chart-date-types { display:flex; align-items:center; white-space:nowrap; }
+.task-progress-chart-date-types > [data-kind] { display:inline-flex; align-items:center; gap:6px; }
+.task-progress-chart-date-types > [data-kind]::before { content:""; width:0; height:12px; border-left:2px solid var(--ad-ink-tertiary); }
+.task-progress-chart-date-types > [data-kind="forecast"]::before { border-color:var(--progress-expected); border-left-style:dashed; }
+.task-progress-chart-date-types > [data-kind="completed"]::before { border-color:var(--ad-route); }
+.task-progress-chart-date-types > [data-kind="forecast"], .task-progress-chart-date[data-kind="forecast"] time { color:var(--progress-expected); }
+.task-progress-chart-date-types > [data-kind="completed"], .task-progress-chart-date[data-kind="completed"] time { color:var(--ad-route-ink); }
+.task-progress-chart-date-separator { margin-inline:6px; color:var(--ad-ink-tertiary); }
+.task-progress-chart-date time { padding-left:8px; font-size:var(--ad-text-body); font-weight:550; font-variant-numeric:tabular-nums; }
+.task-progress-chart-deadline { stroke:var(--ad-ink-tertiary); stroke-width:1.2; stroke-dasharray:none; vector-effect:non-scaling-stroke; }
+.task-progress-chart-forecast-date { stroke:var(--ad-tag-purple-ink); stroke-width:1.5; stroke-dasharray:5 4; vector-effect:non-scaling-stroke; }
+.task-progress-chart-completed-date { stroke:var(--ad-route); stroke-width:1.5; vector-effect:non-scaling-stroke; }
+
+.task-progress-refresh { display:inline-flex; align-items:center; gap:5px; margin-left:auto; padding:3px 0 3px 8px; border:0; background:none; color:var(--ad-tag-purple-ink); font-size:var(--ad-text-caption); cursor:pointer; }
+.task-progress-refresh:hover { text-decoration:underline; }
+.task-progress-refresh:focus-visible { outline:2px solid var(--ad-focus); outline-offset:3px; border-radius:4px; }
+.task-progress-refresh:disabled { cursor:wait; opacity:.6; }

@@ -36,33 +36,33 @@ test("任务连接以当前任务为对象，保留标题目标原文与真实�
   assert.equal(contextValue(request, "发起人"), "current-user");
   assert.equal(contextValue(request, "完成标准"), task.completionCriteria!.join("\n"));
   assert.equal(contextValue(request, "执行建议"), task.executionTips!.join("\n"));
-  assert.deepEqual(request.contextPreview?.items.map(item => item.label), ["当前任务"]);
-  assert.equal(request.contextPreview?.items[0].title, task.title);
-  assert.match(request.contextPreview?.items[0].detail ?? "", /Task ID、名称、目标、状态、期限、人员、完成标准、执行建议/);
+  const preview = Object.fromEntries(request.contextPreview!.items.map(item => [item.label, item.value]));
+  assert.equal(preview["任务名称"], task.title);
+  assert.equal(preview["任务目标"], task.goal);
+  assert.equal(preview["状态"], task.status);
+  assert.equal(preview["负责人"], task.owner);
+  assert.equal(preview["完成标准"], task.completionCriteria!.join("\n"));
   assert.equal(Object.hasOwn(request, "instruction"), false);
   assert.equal(Object.hasOwn(request, "expectedOutput"), false);
   assert.doesNotMatch(textOf(request), /旧 AI 摘要不得作为当前事实|希望 AI 完成|期望成果/);
 });
 
-test("正式负责人与待接受提议分开，参与者缺失的接受状态不作默认接受", async () => {
-  const request = await build({ ...input(), pendingOwnerId: "member-proposed" });
+test("负责人和参与人按当前正式任务字段进入上下文，不附加接受状态", async () => {
+  const request = await build(input());
   assert.equal(contextValue(request, "正式负责人"), "member-owner");
-  assert.match(contextValue(request, "负责人提议"), /member-proposed.*待接受/);
-  assert.doesNotMatch(contextValue(request, "正式负责人"), /member-proposed/);
-  const participants = contextValue(request, "参与人");
-  assert.match(participants, /member-accepted.*已接受/);
-  assert.match(participants, /member-pending.*待接受/);
-  assert.match(participants, /member-unknown.*接受状态未提供/);
+  assert.equal(contextValue(request, "负责人提议"), "");
+  assert.equal(contextValue(request, "参与人"), task.participants.join("\n"));
+  assert.doesNotMatch(textOf(request), /待接受|已接受|接受状态/);
 });
 
 test("真实空值不回填目标、标准、负责人或截止日期，也不自动指定发起人", async () => {
-  const request = await build({ ...input({ title: "", goal: "", owner: "", completionCriteria: [], executionTips: [], participants: [], activities: [], files: [], due: "旧日期" }), due: "", pendingOwnerId: "candidate" });
+  const request = await build({ ...input({ title: "", goal: "", owner: "", completionCriteria: [], executionTips: [], participants: [], activities: [], files: [], due: "旧日期" }), due: "" });
   assert.equal(request.workObject.title, "");
   assert.equal(request.workObject.content, "");
   assert.equal(contextValue(request, "完成标准"), "");
   assert.equal(contextValue(request, "执行建议"), "");
   assert.match(contextValue(request, "正式负责人"), /未设置|未提供/);
-  assert.doesNotMatch(contextValue(request, "正式负责人"), /current-user|candidate/);
+  assert.doesNotMatch(contextValue(request, "正式负责人"), /current-user/);
   assert.match(contextValue(request, "截止日期"), /未设置|未提供/);
   assert.doesNotMatch(textOf(request), /旧日期|核对合作状态|交付验收|加强沟通/);
 });
@@ -82,7 +82,7 @@ test("任务只附直接父任务投影，不带子任务、前置关系或路�
   const request = await build({ ...input(), parentTask, childTasks: [child], dependencyTasks: [dependency], dependencyTaskIds: [dependency.id, "missing-dependency"], pathItems: [{ id: "fake-parent", label: "不能推断为父任务" }, { id: "current-task", label: task.title }] });
   const text = textOf(request);
   assert.match(contextValue(request, "主任务"), /父任务标题.*parent-task.*父任务目标.*进行中/s);
-  assert.deepEqual(request.contextPreview?.items.map(item => item.label), ["当前任务", "主任务"]);
+  assert.match(request.contextPreview?.items.find(item => item.label === "主任务")?.value ?? "", /父任务标题.*父任务目标.*进行中/s);
   for (const excluded of [child.id, dependency.id, "missing-dependency", "fake-parent", "直属子任务", "前置任务", "前置资料缺口", "归属路径"]) assert.doesNotMatch(text, new RegExp(excluded));
 });
 

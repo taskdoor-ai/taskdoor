@@ -1,6 +1,14 @@
+import AvvvatarsModule from "avvvatars-react";
+import { personInitials } from "../lib/personInitials";
+import { settingsMockText } from "../i18n/settingsMock";
+import { useModuleCopy } from "../i18n/moduleMessages";
+import { useGlobalUi } from "../i18n/globalUi";
+import { useRemainingCopy } from "../i18n/remainingMessages";
+import { useI18n } from "../i18n/I18nProvider";
+import { mockPersonName } from "../i18n/mockContent";
 import { PreviewCard } from "@base-ui/react/preview-card";
 import React, { type ComponentPropsWithoutRef, type CSSProperties, forwardRef, type ReactElement, useEffect, useRef, useState } from "react";
-import { Check, ClipboardCheck, Mail, Phone, X } from "lucide-react";
+import { ClipboardCheck, Mail, Phone, UserRound, X } from "lucide-react";
 import type { PersonOption } from "../data/sharedTypes";
 import { useResolvedPersonProfile } from "./PersonDirectory";
 import { createPersonProfileCardModel } from "./personProfileCardModel";
@@ -21,37 +29,34 @@ export type PersonAvatarProps = {
   className?: string;
 };
 
+// The package's CommonJS build wraps its default export during server rendering.
+const Avvvatars = typeof AvvvatarsModule === "function"
+  ? AvvvatarsModule
+  : (AvvvatarsModule as unknown as { default: typeof AvvvatarsModule }).default;
+
 const sizeMap = { xs: 22, sm: 28, md: 36, lg: 48 };
-function nameSeed(name: string) {
-  return Array.from(name).reduce((total, character) => total + (character.codePointAt(0) ?? 0), 0);
-}
-
-const backgrounds = ["b6e3f4", "c0aede", "d1d4f9", "ffd5dc", "ffdfbf"];
-const anonymousSeeds = ["Aster", "Birch", "Cedar", "Dune", "Elm", "Flint", "Grove"];
-
 type PersonAvatarVisualProps = Pick<PersonAvatarProps, "avatarUrl" | "className" | "invitationStatus" | "name" | "size" | "status"> & Omit<ComponentPropsWithoutRef<"span">, "children" | "className" | "title"> & {
+  identity?: string;
+  pendingMembership?: boolean;
   ariaLabel?: string;
   decorative?: boolean;
   focusable?: boolean;
   title?: string;
 };
 
-const PersonAvatarVisual = forwardRef<HTMLSpanElement, PersonAvatarVisualProps>(function PersonAvatarVisual({ ariaLabel, avatarUrl, className = "", decorative = true, focusable = false, invitationStatus, name, role: _injectedRole, size = "md", status, tabIndex: _injectedTabIndex, title, ...triggerProps }, forwardedRef) {
+const PersonAvatarVisual = forwardRef<HTMLSpanElement, PersonAvatarVisualProps>(function PersonAvatarVisual({ ariaLabel, avatarUrl, className = "", decorative = true, focusable = false, invitationStatus, identity, name, pendingMembership, role: _injectedRole, size = "md", status, tabIndex: _injectedTabIndex, title, ...triggerProps }, forwardedRef) {
+  const ui = useGlobalUi();
+  const { locale } = useI18n();
+  const displayName = mockPersonName(locale, identity, name);
   const [customImageFailed, setCustomImageFailed] = useState(false);
-  const [generatedImageFailed, setGeneratedImageFailed] = useState(false);
-  const seed = nameSeed(name);
   const style = {
     "--person-avatar-size": size === "xl" ? "var(--ad-person-profile-avatar-size)" : `${sizeMap[size]}px`,
   } as CSSProperties;
-  const generatedImageUrl = `https://api.dicebear.com/9.x/micah/svg?seed=${anonymousSeeds[seed % anonymousSeeds.length]}&backgroundColor=${backgrounds[seed % backgrounds.length]}`;
-  const imageUrl = avatarUrl && !customImageFailed ? avatarUrl : generatedImageUrl;
-  const imageFailed = avatarUrl && !customImageFailed ? false : generatedImageFailed;
   const resolvedAriaLabel = ariaLabel ?? triggerProps["aria-label"];
 
   useEffect(() => {
     setCustomImageFailed(false);
-    setGeneratedImageFailed(false);
-  }, [avatarUrl, name]);
+  }, [avatarUrl]);
 
   return (
     <span
@@ -66,28 +71,33 @@ const PersonAvatarVisual = forwardRef<HTMLSpanElement, PersonAvatarVisualProps>(
       tabIndex={focusable ? 0 : undefined}
       title={title}
     >
-      <span className="person-avatar-fallback">{name.slice(0, 1)}</span>
-      {!imageFailed && <img alt="" onError={() => avatarUrl && !customImageFailed ? setCustomImageFailed(true) : setGeneratedImageFailed(true)} src={imageUrl} />}
-      {invitationStatus ? (
+      <span className="person-avatar-fallback">{pendingMembership ? <UserRound aria-hidden="true" size={16} /> : name.slice(0, 1)}</span>
+      {!pendingMembership && (avatarUrl && !customImageFailed
+        ? <img alt="" onError={() => setCustomImageFailed(true)} src={avatarUrl} />
+        : <span aria-hidden="true" className="person-avatar-initials"><Avvvatars value={identity ?? name} displayValue={personInitials(displayName)} style="character" size={size === "xl" ? 80 : sizeMap[size]} /></span>)}
+      {invitationStatus === "pending" ? (
         <i
           aria-hidden="true"
-          className={`person-avatar-invitation-status ${invitationStatus}`}
-          title={invitationStatus === "accepted" ? "邀请已接受" : "等待接受邀请"}
+          className="person-avatar-invitation-status pending"
+          title={ui("等待接受邀请")}
         >
-          {invitationStatus === "accepted" && <Check strokeWidth={3} />}
         </i>
-      ) : status ? <i aria-label={status === "online" ? "在线" : "忙碌"} className={`person-avatar-status ${status}`} /> : null}
+      ) : status ? <i aria-label={status === "online" ? ui("在线") : ui("忙碌")} className={`person-avatar-status ${status}`} /> : null}
     </span>
   );
 });
 
 export function PersonProfileCardContent({ profile }: { profile: PersonOption }) {
+  const u = useRemainingCopy();
+  const m = useModuleCopy();
+  const { locale } = useI18n();
   const card = createPersonProfileCardModel(profile);
   return (
     <div className="person-profile-card-content">
-      <span className="person-profile-avatar-shell"><PersonAvatarVisual avatarUrl={profile.avatarUrl} name={card.name} size="xl" /><i aria-hidden="true" className="person-profile-avatar-ring" /></span>
-      <strong className="person-profile-name">{card.name}</strong>
-      <p aria-label="责任" className="person-profile-responsibility"><ClipboardCheck aria-hidden="true" size={16} strokeWidth={1.7} /><span>{card.responsibility}</span></p>
+      <span className="person-profile-avatar-shell"><PersonAvatarVisual avatarUrl={profile.avatarUrl} identity={profile.id} name={card.name} pendingMembership={profile.membershipStatus === "invited"} size="xl" /><i aria-hidden="true" className="person-profile-avatar-ring" /></span>
+      <strong className="person-profile-name">{mockPersonName(locale, profile.id, card.name)}</strong>
+      {profile.membershipStatus === "invited" && <span className="person-membership-badge">{u('invited')}</span>}
+      <p aria-label={u('responsibility')} className="person-profile-responsibility"><ClipboardCheck aria-hidden="true" size={16} strokeWidth={1.7} /><span>{profile.dynamicResponsibility?.trim() ? settingsMockText(locale, profile.id, card.responsibility) : m("noResponsibility")}</span></p>
       {card.contacts.length > 0 && <div className="person-profile-contact-list">
         {card.contacts.map((contact) => <div className="person-profile-contact" key={contact.kind}>
           {contact.kind === "email" ? <Mail aria-hidden="true" size={16} strokeWidth={1.9} /> : <Phone aria-hidden="true" size={16} strokeWidth={1.9} />}
@@ -99,17 +109,19 @@ export function PersonProfileCardContent({ profile }: { profile: PersonOption })
 }
 
 function PersonProfilePreview({ onOpenChange, open, profile, trigger }: { onOpenChange: (open: boolean) => void; open: boolean; profile: PersonOption; trigger: ReactElement }) {
+  const u = useRemainingCopy();
+  const { locale } = useI18n();
   return (
     <PreviewCard.Root onOpenChange={onOpenChange} open={open}>
       <PreviewCard.Trigger
-        aria-label={`查看${profile.name}的人员信息`}
+        aria-label={u("personProfile", { name: mockPersonName(locale, profile.id, profile.name) })}
         closeDelay={160}
         delay={320}
         render={trigger}
       />
       <PreviewCard.Portal>
         <PreviewCard.Positioner align="center" className="person-profile-card-positioner" side="top" sideOffset={12}>
-          <PreviewCard.Popup aria-label={`${profile.name}的人员信息`} className="person-profile-card">
+          <PreviewCard.Popup aria-label={u("personProfile", { name: mockPersonName(locale, profile.id, profile.name) })} className="person-profile-card">
             <PreviewCard.Arrow className="person-profile-card-arrow" />
             <PersonProfileCardContent profile={profile} />
           </PreviewCard.Popup>
@@ -119,21 +131,25 @@ function PersonProfilePreview({ onOpenChange, open, profile, trigger }: { onOpen
   );
 }
 
-// Uses the same DiceBear Micah portrait source as 21st.dev Member Selector #9908.
+// Avvvatars colors are keyed by member identity; initials follow the displayed name.
 // Base UI PreviewCard keeps the hover content outside scrolling containers.
 export function PersonAvatar({ avatarUrl, className = "", invitationStatus, name, personId, profile, profilePreviewFocusable = true, showProfilePreview = true, size = "md", status }: PersonAvatarProps) {
+  const { locale } = useI18n();
+  const u = useRemainingCopy();
   const resolvedProfile = useResolvedPersonProfile({ identity: personId, name, profile });
   const [previewOpen, setPreviewOpen] = useState(false);
   const hasProfilePreview = Boolean(showProfilePreview && resolvedProfile);
   const avatar = <PersonAvatarVisual
-    ariaLabel={resolvedProfile && profilePreviewFocusable ? `查看${resolvedProfile.name}的人员信息` : undefined}
+    ariaLabel={resolvedProfile && profilePreviewFocusable ? u("personProfile", { name: mockPersonName(locale, resolvedProfile.id, resolvedProfile.name) }) : undefined}
     avatarUrl={avatarUrl ?? resolvedProfile?.avatarUrl}
+    identity={personId ?? resolvedProfile?.id}
     className={`${className}${hasProfilePreview ? " is-profile-trigger" : ""}`}
     data-person-preview-trigger={hasProfilePreview ? "avatar" : undefined}
     decorative={!resolvedProfile || !profilePreviewFocusable}
     focusable={Boolean(resolvedProfile && profilePreviewFocusable)}
-    invitationStatus={invitationStatus}
-    name={name}
+    invitationStatus={resolvedProfile?.membershipStatus === "invited" ? "pending" : invitationStatus}
+    pendingMembership={resolvedProfile?.membershipStatus === "invited"}
+    name={resolvedProfile?.name ?? name}
     onClick={hasProfilePreview ? (event) => {
       event.stopPropagation();
       setPreviewOpen(true);
@@ -151,6 +167,7 @@ export function PersonAvatar({ avatarUrl, className = "", invitationStatus, name
 
 type PersonNameProps = {
   className?: string;
+  prefix?: string;
   name: string;
   personId?: string;
   profile?: PersonOption | null;
@@ -169,13 +186,16 @@ const PersonNameVisual = forwardRef<HTMLSpanElement, PersonNameVisualProps>(func
   return <span {...triggerProps} aria-label={ariaLabel ?? triggerProps["aria-label"]} className={`person-name-trigger ${className}`.trim()} ref={forwardedRef} role={focusable ? "group" : undefined} tabIndex={focusable ? 0 : undefined}>{name}</span>;
 });
 
-export function PersonName({ className = "", name, personId, profile, profilePreviewFocusable = false, showProfilePreview = true }: PersonNameProps) {
+export function PersonName({ className = "", prefix = "", name, personId, profile, profilePreviewFocusable = false, showProfilePreview = true }: PersonNameProps) {
+  const u = useRemainingCopy();
+  const { locale } = useI18n();
   const resolvedProfile = useResolvedPersonProfile({ identity: personId, name, profile });
   const [previewOpen, setPreviewOpen] = useState(false);
-  const label = <PersonNameVisual ariaLabel={resolvedProfile && profilePreviewFocusable ? `查看${resolvedProfile.name}的人员信息` : undefined} className={className} focusable={Boolean(resolvedProfile && profilePreviewFocusable)} name={name} />;
+  const label = <PersonNameVisual ariaLabel={resolvedProfile && profilePreviewFocusable ? u("personProfile", { name: mockPersonName(locale, resolvedProfile.id, resolvedProfile.name) }) : undefined} className={className} focusable={Boolean(resolvedProfile && profilePreviewFocusable)} name={`${prefix}${mockPersonName(locale, personId ?? resolvedProfile?.id, resolvedProfile?.name ?? name)}`} />;
+  const badge = resolvedProfile?.membershipStatus === "invited" ? <span className="person-membership-badge">{u('invited')}</span> : null;
 
-  if (!showProfilePreview || !resolvedProfile) return label;
-  return <PersonProfilePreview onOpenChange={setPreviewOpen} open={previewOpen} profile={resolvedProfile} trigger={label as ReactElement} />;
+  if (!showProfilePreview || !resolvedProfile) return <>{label}{badge}</>;
+  return <><PersonProfilePreview onOpenChange={setPreviewOpen} open={previewOpen} profile={resolvedProfile} trigger={label as ReactElement} />{badge}</>;
 }
 
 export function PersonOverflowList({ className = "person-avatar-overflow", invitationStatusById = {}, label = "参与者", people, style }: {
@@ -185,15 +205,17 @@ export function PersonOverflowList({ className = "person-avatar-overflow", invit
   people: PersonOption[];
   style?: CSSProperties;
 }) {
+  const ui = useGlobalUi();
+  const { locale } = useI18n();
   const [open, setOpen] = useState(false);
 
   return <Popover onOpenChange={setOpen} open={open}>
-    <PopoverTrigger aria-label={`另有 ${people.length} 位${label}`} className={className} closeDelay={150} delay={100} onFocus={(event) => { if (event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover style={style} type="button">+{people.length}</PopoverTrigger>
-    <PopoverContent aria-label={`更多${label}`} className="person-overflow-popover" finalFocus={false} initialFocus={false}>
-      <ul aria-label={`收起的${label}`} className="person-overflow-list">
+    <PopoverTrigger aria-label={ui("另有 {0} 位{1}", {0: people.length, 1: label})} className={className} closeDelay={150} delay={100} onFocus={(event) => { if (event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover style={style} type="button">+{people.length}</PopoverTrigger>
+    <PopoverContent aria-label={ui("更多{0}", {0: label})} className="person-overflow-popover" finalFocus={false} initialFocus={false}>
+      <ul aria-label={ui("收起的{0}", {0: label})} className="person-overflow-list">
         {people.map((person) => <li key={person.id}>
           <PersonAvatar invitationStatus={invitationStatusById[person.id]} name={person.name} profile={person} showProfilePreview={false} size="sm" />
-          <span>{person.name}</span>
+          <span>{mockPersonName(locale, person.id, person.name)}</span>
         </li>)}
       </ul>
     </PopoverContent>
@@ -213,6 +235,8 @@ type PersonAvatarGroupProps = {
 
 // Adapted from the stacked avatar-group anatomy used by 21st.dev's Hero UI and ReUI components.
 export function PersonAvatarGroup({ className = "", fitAvailable = false, invitationStatusById = {}, onRemove, people, removeLabel = "参与人", maxVisible = people.length, size = "sm" }: PersonAvatarGroupProps) {
+  const u = useRemainingCopy();
+  const { locale } = useI18n();
   const groupRef = useRef<HTMLSpanElement>(null);
   const [fittedMaxVisible, setFittedMaxVisible] = useState(maxVisible);
 
@@ -253,14 +277,14 @@ export function PersonAvatarGroup({ className = "", fitAvailable = false, invita
 
   return (
     <span
-      aria-label={`参与者：${people.map((person) => person.name).join("、")}`}
+      aria-label={u("participants", { names: people.map(person => mockPersonName(locale, person.id, person.name)).join(", ") })}
       className={`person-avatar-group${fitAvailable ? " is-fit-available" : ""} ${className}`}
       ref={groupRef}
       role="group"
     >
       {visiblePeople.map((person) => onRemove ? <span className="person-avatar-group-item" key={person.id}>
         <PersonAvatar invitationStatus={invitationStatusById[person.id]} name={person.name} profile={person} size={size} />
-        <button aria-label={`移除${removeLabel}：${person.name}`} className="person-avatar-group-remove" onClick={() => onRemove(person.id)} type="button"><X aria-hidden="true" /></button>
+        <button aria-label={u("removePerson", { label: removeLabel, name: mockPersonName(locale, person.id, person.name) })} className="person-avatar-group-remove" onClick={() => onRemove(person.id)} type="button"><X aria-hidden="true" /></button>
       </span> : <PersonAvatar invitationStatus={invitationStatusById[person.id]} key={person.id} name={person.name} profile={person} size={size} />)}
       {hiddenCount > 0 && <PersonOverflowList invitationStatusById={invitationStatusById} people={people.slice(visiblePeople.length)} style={style} />}
     </span>

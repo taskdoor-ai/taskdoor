@@ -23,10 +23,28 @@ export function copyTeam(source: LabTeam): LabTeam {
   const copied = structuredClone(source);
   const ids = new Map([source.id, ...source.members.map((item) => item.id), ...source.tasks.map((item) => item.id), ...source.evidence.map((item) => item.id)].map((id) => [id, uid()]));
   const mapped = (id: string) => ids.get(id) || id;
+  const referencePattern = new RegExp(`(?<![\\w-])(?:${[...ids.keys()].sort((a,b)=>b.length-a.length).map(id=>id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?![\\w-])`, 'g');
+  const remapText = (value: string) => value.replace(referencePattern, mapped);
   return { ...copied, id: mapped(source.id), name: `${source.name} · 副本`, archived: false,
     members: copied.members.map((member) => ({ ...member, id: mapped(member.id), version: 1 })),
     tasks: copied.tasks.map((task) => ({ ...task, id: mapped(task.id), createdById: task.createdById ? mapped(task.createdById) : null, ownerId: task.ownerId ? mapped(task.ownerId) : null, participantIds: task.participantIds.map(mapped), parentId: task.parentId ? mapped(task.parentId) : null, dependsOnTaskIds: task.dependsOnTaskIds.map(mapped), version: 1 })),
-    evidence: copied.evidence.map((item) => ({ ...item, id: mapped(item.id), taskId: mapped(item.taskId), authorId: mapped(item.authorId), visibleToIds: item.visibleToIds.map(mapped), version: 1 })),
+    evidence: copied.evidence.map((item) => {
+      const content = remapText(item.content);
+      let attachment = item.attachment;
+      // Only rewrite an attachment when its bytes are the same text as the record body.
+      if (attachment && content !== item.content && /^(text\/|application\/json)/.test(attachment.mimeType) && attachment.dataUrl.includes(';base64,')) {
+        const original = new TextDecoder().decode(Uint8Array.from(atob(attachment.dataUrl.split(',')[1]), char=>char.charCodeAt(0)));
+        if (original === item.content) {
+          const bytes = new TextEncoder().encode(content);
+          let binary = ''; for (const byte of bytes) binary += String.fromCharCode(byte);
+          attachment = { ...attachment, size: bytes.length, dataUrl: `data:${attachment.mimeType};base64,${btoa(binary)}` };
+        }
+      }
+      return { ...item, id: mapped(item.id), taskId: mapped(item.taskId), authorId: mapped(item.authorId), visibleToIds: item.visibleToIds.map(mapped), content, attachment,
+        ...(item.replyToId ? {replyToId:mapped(item.replyToId)} : {}),
+        ...(item.supersedesId ? {supersedesId:mapped(item.supersedesId)} : {}),
+        ...(item.relatedEvidenceIds ? {relatedEvidenceIds:item.relatedEvidenceIds.map(mapped)} : {}), version: 1 };
+    }),
   };
 }
 export function copyCase(source: LabCase): LabCase {
@@ -35,6 +53,7 @@ export function copyCase(source: LabCase): LabCase {
   return { ...copied, id: uid(), name: `${copied.name} · 副本`, archived: false, version: 1,
     steps: copied.steps.map((step) => ({ ...step, id: stepIds.get(step.id)! })),
     assertions: copied.assertions.map((assertion) => ({ ...assertion, id: uid(), stepId: stepIds.get(assertion.stepId) || assertion.stepId })),
+    ...(copied.verification?{verification:{...copied.verification,expectedResults:copied.verification.expectedResults.map(result=>({...result,stepId:stepIds.get(result.stepId)||result.stepId}))}}:{}),
   };
 }
 export function downloadJson(name: string, data: unknown) {

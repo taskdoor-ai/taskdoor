@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+  <title id="title">三类邀请的独立状态线</title>
+  <desc id="desc">团队邀请、任务参与邀请和负责人变更分别从发起进入待处理，并在接受、拒绝、撤销或过期后产生不同结果。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker>
+    <style>
+      .title{font:700 26px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.sub{font:400 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#667085}.lane{font:700 17px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#344054}.node{font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#24324a}.note{font:400 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#667085}.line{stroke:#667085;stroke-width:2;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="960" height="600" rx="28" fill="#f8fafc"/>
+  <text class="title" x="56" y="62">团队、参与和负责人邀请</text>
+  <text class="sub" x="56" y="92">加入团队、参与任务、接手负责人必须分别确认</text>
+
+  <g transform="translate(56 132)">
+    <rect width="848" height="116" rx="18" fill="#eef4ff" stroke="#c7d7fe"/>
+    <text class="lane" x="22" y="34">团队邀请</text><text class="note" x="22" y="58">加入团队</text>
+    <rect x="220" y="26" width="126" height="54" rx="12" fill="#fff" stroke="#84adff"/><text class="node" x="251" y="59">邮件发起</text>
+    <path class="line" d="M346 53 H410"/><rect x="412" y="26" width="126" height="54" rx="12" fill="#fff" stroke="#84adff"/><text class="node" x="447" y="59">待加入</text>
+    <path class="line" d="M538 53 H602"/><rect x="604" y="16" width="198" height="74" rx="12" fill="#fff" stroke="#84adff"/>
+    <text class="node" x="624" y="44">接受 → 有效成员</text><text class="note" x="624" y="68">拒绝／撤销／过期 → 结束</text>
+  </g>
+
+  <g transform="translate(56 266)">
+    <rect width="848" height="116" rx="18" fill="#f3f0ff" stroke="#d6ccff"/>
+    <text class="lane" x="22" y="34">任务参与邀请</text><text class="note" x="22" y="58">参与任务</text>
+    <rect x="220" y="26" width="126" height="54" rx="12" fill="#fff" stroke="#a48afb"/><text class="node" x="251" y="59">选择成员</text>
+    <path class="line" d="M346 53 H410"/><rect x="412" y="26" width="126" height="54" rx="12" fill="#fff" stroke="#a48afb"/><text class="node" x="447" y="59">待接受</text>
+    <path class="line" d="M538 53 H602"/><rect x="604" y="16" width="198" height="74" rx="12" fill="#fff" stroke="#a48afb"/>
+    <text class="node" x="624" y="44">接受 → Participant</text><text class="note" x="624" y="68">拒绝／撤销／过期 → 不参与</text>
+  </g>
+
+  <g transform="translate(56 400)">
+    <rect width="848" height="116" rx="18" fill="#fff4ed" stroke="#ffd6ae"/>
+    <text class="lane" x="22" y="34">负责人提议</text><text class="note" x="22" y="58">负责人至多一人，接受后生效</text>
+    <rect x="220" y="26" width="126" height="54" rx="12" fill="#fff" stroke="#fdb022"/><text class="node" x="247" y="59">发起提议</text>
+    <path class="line" d="M346 53 H410"/><rect x="412" y="26" width="126" height="54" rx="12" fill="#fff" stroke="#fdb022"/><text class="node" x="447" y="59">待接受</text>
+    <path class="line" d="M538 53 H602"/><rect x="604" y="16" width="198" height="74" rx="12" fill="#fff" stroke="#fdb022"/>
+    <text class="node" x="624" y="44">接受 → Owner 建立／转移</text><text class="note" x="624" y="68">其他结果 → 原 Owner 或 null 不变</text>
+  </g>
+  <text class="note" x="56" y="560">共同规则：版本与权限复核 · 幂等回执 · 各自通知与 Activity</text>
+</svg>

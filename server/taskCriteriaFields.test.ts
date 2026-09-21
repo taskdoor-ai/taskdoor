@@ -18,9 +18,9 @@ test("空标准显示一个可输入的单行，不允许删除最后一行", as
   assert.equal((html.match(/<textarea\b/g) ?? []).length, 1);
   assert.match(html, /aria-label="主任务完成标准 1"/);
   assert.match(html, /rows="1"/);
-  assert.match(html, /aria-label="添加主任务完成标准"/);
-  assert.match(html, />添加完成标准<\/button>/);
-  assert.doesNotMatch(html, /aria-label="删除/);
+  assert.match(html, /aria-label="Add 主任务完成标准"/);
+  assert.match(html, />Add<\/button>/);
+  assert.doesNotMatch(html, /aria-label="Remove /);
 });
 
 test("多条标准独立显示并保留文本，序号与删除标签一致", async () => {
@@ -29,7 +29,7 @@ test("多条标准独立显示并保留文本，序号与删除标签一致", as
   assert.equal((html.match(/<textarea\b/g) ?? []).length, 2);
   for (const index of [1, 2]) {
     assert.ok(html.includes(`aria-label="子任务 1 完成标准 ${index}"`));
-    assert.ok(html.includes(`aria-label="删除子任务 1 完成标准 ${index}"`));
+    assert.ok(html.includes(`aria-label="Remove 子任务 1 完成标准 ${index}"`));
   }
   assert.match(html, /id="child-one-0"/);
   assert.match(html, /id="child-one-1"/);
@@ -43,8 +43,8 @@ test("多条标准独立显示并保留文本，序号与删除标签一致", as
 test("唯一一条已有标准仍然不可删除，但允许继续添加", async () => {
   const Fields = await loadFields();
   const html = renderToStaticMarkup(createElement(Fields, { values: ["已定义的标准"], onChange: () => undefined, label: "任务完成标准" }));
-  assert.doesNotMatch(html, /aria-label="删除/);
-  assert.match(html, /aria-label="添加任务完成标准"/);
+  assert.doesNotMatch(html, /aria-label="Remove /);
+  assert.match(html, /aria-label="Add 任务完成标准"/);
 });
 
 test("保存期间同时禁用输入、新增和删除，未禁用时可以编辑", async () => {
@@ -93,7 +93,7 @@ test("已保存子任务接入共用字段，保留原保存、取消、只读�
   assert.ok(editor.includes("dirtyCallback.current?.((inline || open) && dirty)"));
   assert.ok(editor.includes("disabled={saving || dirty || stale}"));
   assert.ok(editor.includes("请先保存或取消当前修改。"));
-  assert.ok(editor.includes("放弃当前修改，载入最新标准"));
+  assert.ok(editor.includes("d('reloadCriteria')"));
   assert.ok(editor.includes("onClick={close}"));
   assert.ok(editor.includes('className="task-criteria-readonly"'));
   assert.ok(editor.includes("aria-expanded={open}"));

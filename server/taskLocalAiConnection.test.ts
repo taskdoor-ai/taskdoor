@@ -6,16 +6,17 @@ import { transformSync } from "esbuild";
 
 const readSource = (path: string) => readFileSync(fileURLToPath(new URL(`../${path}`, import.meta.url)), "utf8");
 
-test("任务头部以纯图标连接 AI，不打开任务信息调整；讨论继续使用同一个连接弹窗", () => {
+test("任务头部以文字按钮连接 AI，讨论继续使用同一个连接弹窗", () => {
   const source = readSource("src/components/TaskDetail.tsx");
 
-  assert.match(source, /aria-label="连接 AI：当前任务"/);
-  assert.match(source, /onClick=\{[^\n]*openTaskAiConnection\(event.currentTarget\)/);
-  const connectionButton = source.match(/<Button\b[^>]*aria-label="连接 AI：当前任务"[\s\S]*?<\/Button>/)?.[0];
-  assert.ok(connectionButton);
-  assert.match(connectionButton, /variant="ai"><Sparkles[^>]*\/><\/Button>/);
-  assert.match(connectionButton, /size=\{connectionButtonSize === "touch" \? "icon-touch" : "icon-sm"\}/);
-  assert.match(connectionButton, /title="连接 AI"/);
+  assert.match(source, /<AiConnectionButton contextLabel="当前任务" key=\{taskId\} onConnect=\{openTaskAiConnection\}/);
+  const button = readSource("src/components/AiConnectionButton.tsx");
+  assert.match(button, /连接 AI/);
+  assert.match(button, /attempt\.current\?\.abort\(\)/);
+  assert.match(button, /if \(disabled \|\| attempt\.current/);
+  assert.match(button, /ref=\{mainButton\}/);
+  assert.doesNotMatch(button, /查看带入信息|action:\s*\{/);
+  assert.match(source, /if \(shortcut\) return launchAiContext\(request, shortcut.agent, shortcut.signal\)/);
   assert.doesNotMatch(source, /AI 调整任务信息|openAiAdjustment\(\{ kind: "task" \}/);
   assert.doesNotMatch(source, /aiAdjustmentContext && onAiAdjustmentApply && <div className="task-ai-detail-tools"/);
   assert.match(source, /AiConnectionDialog/);
@@ -26,7 +27,6 @@ test("任务头部以纯图标连接 AI，不打开任务信息调整；讨论�
   assert.equal(source.match(/<AiConnectionDialog\b/g)?.length, 1);
   assert.match(source, /aiConnectionRequest\?\.taskId === taskId/);
   assert.match(source, /returnFocus=\{aiConnectionTrigger.current\}/);
-  assert.doesNotMatch(readSource("src/components/WorkspaceTopbar.tsx"), /连接 AI/);
   assert.match(readSource("src/App.tsx"), /parentTask=\{selectedParentTask \? toTaskRelationSummary\(selectedParentTask\) : undefined\}/);
 });
 
@@ -81,8 +81,34 @@ test("关闭共享连接弹窗只清除连接请求，不清除讨论或其他�
 test("连接弹窗复用真实工具 Logo 并保持简约上下文", () => {
   const source = readSource("src/components/AiConnectionDialog.tsx");
 
-  for (const tool of ["ChatGPT", "Claude Code", "CodeBuddy", "Cursor"]) assert.match(source, new RegExp(tool));
+  const catalog = readSource("src/lib/aiTools.ts");
+  for (const tool of ["ChatGPT", "Claude Code", "WorkBuddy", "Cursor"]) assert.match(catalog, new RegExp(tool));
   assert.match(source, /agentIconUrls/);
   assert.match(source, /仅带入你当前有权查看的信息，不会获得额外权限/);
   assert.doesNotMatch(source, /Stepper|EvervaultCard|ai-coordination-loop/);
+});
+
+
+test("讨论连接使用当前任务字段及最新附件快照，预览与复制范围一致", async () => {
+  const { buildDiscussionAiRequest } = await import("../src/lib/taskDiscussionAi.ts");
+  const task = { title: "旧名称", goal: "旧目标", owner: "旧负责人", participants: ["旧参与人"], status: "待开始", due: "旧截止", summary: "", activities: [], files: [], commits: [], completionCriteria: ["完成标准"] };
+  const activity = { id: "root", author: "周岚", type: "member-post", message: "当前动态", time: "今天", attachmentRefs: [{ fileId: "latest-file", name: "新上传文件.pdf", version: 1 }] };
+  const requests: Array<{ taskId: string; request: unknown }> = [];
+  const open = handler("openDiscussionAi", {
+    buildDiscussionAiRequest, taskId: "current-task", task, currentUser: "周岚", currentTitle: "当前名称", currentGoal: "当前目标",
+    confirmedOwnerId: "当前负责人", currentParticipants: ["当前参与人"], participantInvitationStatus: { 当前参与人: "accepted" },
+    currentStatus: "进行中", activities: [activity], plannedEndOn: "2026-09-30", tags: ["当前标签"],
+    taskFiles: [{ id: "latest-file", kind: "file", parentId: null, name: "新上传文件.pdf", version: 1, updatedAt: "当前附件时间" }],
+    aiConnectionTrigger: { current: null }, setAiConnectionRequest: (value: (typeof requests)[number]) => requests.push(value),
+    setAttentionMessage: () => assert.fail("有效动态应成功构建"),
+  });
+  open({ kind: "discussion", activityId: "root" }, {});
+  assert.equal(requests.length, 1);
+  const result = requests[0].request as ReturnType<typeof buildDiscussionAiRequest>;
+  assert.ok(result);
+  for (const data of [result.context, result.contextPreview]) {
+    const text = JSON.stringify(data);
+    for (const value of ["当前名称", "当前目标", "当前负责人", "当前参与人", "2026-09-30", "当前标签", "当前附件时间"]) assert.ok(text.includes(value), value);
+    assert.doesNotMatch(text, /旧名称|旧目标|旧负责人|旧参与人|旧截止/);
+  }
 });

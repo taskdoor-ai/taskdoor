@@ -93,7 +93,7 @@ function stepPath(points: TaskBurnUpPlotPoint[], key: "scopeY" | "completedY"): 
  */
 export function getTaskBurnUpModel(
   series?: TaskBurnUpSeries,
-  options: { width?: number; height?: number } = {},
+  options: { width?: number; height?: number; includeDates?: string[] } = {},
 ): TaskBurnUpModel {
   const requestedWidth = options.width ?? DEFAULT_WIDTH;
   const requestedHeight = options.height ?? DEFAULT_HEIGHT;
@@ -151,6 +151,10 @@ export function getTaskBurnUpModel(
   const snapshots = [...byTimestamp.entries()].sort(([left], [right]) => left - right);
   const [startTimestamp, first] = snapshots[0];
   const [endTimestamp, last] = snapshots[snapshots.length - 1];
+  // Reference dates extend the plot domain, never the saved workload history.
+  const referenceTimes = (options.includeDates ?? []).map(parseTimestamp).filter((at): at is number => at !== null);
+  const plotStart = Math.min(startTimestamp, ...referenceTimes);
+  const plotEnd = Math.max(endTimestamp, ...referenceTimes);
   const largestValue = snapshots.reduce((largest, [, point]) => Math.max(largest, point.scopeHours ?? 0, point.completedHours ?? 0), 0);
   const maxHours = largestValue > 0 ? largestValue : 1;
   const paddingX = Math.min(4, width / 2);
@@ -159,9 +163,9 @@ export function getTaskBurnUpModel(
   const points: TaskBurnUpPlotPoint[] = snapshots.map(([timestamp, point]) => ({
     ...point,
     timestamp,
-    x: startTimestamp === endTimestamp
+    x: plotStart === plotEnd
       ? width / 2
-      : paddingX + (timestamp - startTimestamp) / (endTimestamp - startTimestamp) * (width - 2 * paddingX),
+      : paddingX + (timestamp - plotStart) / (plotEnd - plotStart) * (width - 2 * paddingX),
     scopeY: toY(point.scopeHours),
     completedY: toY(point.completedHours),
   }));

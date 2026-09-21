@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>TaskDoor · 创建任务交互稿</title>
+<style>
+:root{--ad-task-gradient:linear-gradient(110deg,#edf6ff 0%,#f7fbff 44%,#fff 100%);--ad-route:#1268d6;--ad-route-soft:#e7f1fd;--ad-ink:#17191c;--ad-ink-secondary:#565a60;--ad-ink-tertiary:#6b7077;--ad-border-soft:#ebe8e3;--ad-surface:#fff;--ad-surface-subtle:#f8f9fb;--green:#237455;--danger:#b64040;--focus:#1268d6;font-family:Geist,Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ad-ink);background:#f5f6f8;font-synthesis:none}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;font-size:13px;line-height:1.7}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.5}button,input,select,textarea{outline-offset:3px}button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--focus)}button{background:none;border:0;color:inherit}h1,h2,h3,p{margin:0}a{color:var(--ad-route)}svg{width:18px;height:18px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.topbar{height:64px;border-bottom:1px solid #e5e7eb;background:#fff;display:flex;align-items:center;padding:0 25px;gap:15px;position:sticky;top:0;z-index:30}.brand{font-weight:650;font-size:17px;display:flex;align-items:center;gap:10px;letter-spacing:-.4px}.brand-mark{width:29px;height:29px;background:var(--ad-route);border-radius:9px;color:#fff;display:grid;place-items:center}.topbar .divider{height:20px;border-left:1px solid #e3e6eb}.eyebrow{font-size:11px;color:var(--ad-ink-tertiary);letter-spacing:.08em}.prototype-tag{font-size:11px;padding:3px 8px;background:var(--ad-route-soft);color:var(--ad-route);border-radius:5px;white-space:nowrap}.topbar .note{margin-left:auto;font-size:11px;color:var(--ad-ink-tertiary)}.topbar select{display:none;min-width:0;border:1px solid var(--ad-border-soft);border-radius:7px;background:#fff;padding:7px}.workspace{margin-right:444px;max-width:1100px;padding:38px 35px}.intro h1{font-size:26px;letter-spacing:-.7px;font-weight:600;margin:5px 0 9px}.intro p{color:var(--ad-ink-secondary);max-width:660px;line-height:1.9}.review-grid{display:grid;grid-template-columns:190px minmax(0,1fr);gap:28px;margin-top:32px}.scenario-list{display:grid;align-content:start;gap:6px}.scenario-item{display:flex;align-items:flex-start;gap:10px;padding:11px 10px;text-align:left;border-radius:10px;border:1px solid transparent;transition:background 150ms,border-color 150ms}.scenario-item:hover{background:#edf0f5}.scenario-item[aria-current=true]{background:#fff;border-color:#dce7f7;box-shadow:0 2px 6px #15305705}.case-number{font-size:11px;color:#89929f;font-variant-numeric:tabular-nums;line-height:22px}.scenario-item[aria-current=true] .case-number{color:var(--ad-route)}.scenario-item strong{display:block;font-size:12px;font-weight:550}.scenario-item small{display:block;color:var(--ad-ink-tertiary);font-size:11px;margin-top:3px}.scenario-item[aria-current=true] strong{color:var(--ad-route)}.guide{min-width:0}.guide-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.guide-head h2{font-weight:550;font-size:15px}.muted{color:var(--ad-ink-tertiary)}.text-button{color:var(--ad-route);font-size:12px;padding:5px 0;display:inline-flex;gap:5px;align-items:center}.text-button:hover{text-decoration:underline}.guide-state{padding:18px 0 20px;border-top:1px solid #e0e4ea;border-bottom:1px solid #e0e4ea}.guide-state h3{font-size:19px;letter-spacing:-.3px;font-weight:550;margin:4px 0 12px}.guide-state dl{margin:0;display:grid;gap:12px}.guide-state dt{font-size:11px;color:var(--ad-ink-tertiary);margin-bottom:3px}.guide-state dd{font-size:12px;margin:0;line-height:1.8}.boundary{margin-top:18px;padding:13px 14px;background:#ecf1f7;border-radius:9px;font-size:12px;color:#526376}.boundary strong{font-weight:550;color:#384b62;display:block;margin-bottom:4px}.sandbox-controls{margin-top:22px;font-size:12px;color:var(--ad-ink-secondary)}.sandbox-controls summary{cursor:pointer;width:fit-content;font-size:11px;color:var(--ad-ink-tertiary)}.sandbox-controls label{display:flex;align-items:center;gap:7px;margin-top:10px}.sandbox-controls input{accent-color:var(--ad-route)}.sandbox-controls button{margin-top:10px}.preview-area{margin-top:26px}.preview-area .mini-title{font-size:11px;color:var(--ad-ink-tertiary);margin-bottom:9px}.empty-list{padding:20px 16px;background:#ffffff7a;border:1px dashed #dce1e8;border-radius:10px;color:var(--ad-ink-tertiary);font-size:12px}.preview-box{background:#fff;border:1px solid #e3e7ee;border-radius:12px;padding:16px}.preview-box h3{font-size:15px;margin:7px 0 12px}.preview-box p{font-size:12px;color:var(--ad-ink-secondary);white-space:pre-wrap}.preview-box .text-button{margin-top:10px}.demo-list{border:1px solid #e1e6ed;border-radius:10px;background:#fff;overflow:hidden}.demo-list button{display:flex;align-items:center;gap:9px;width:100%;padding:12px;text-align:left;font-size:12px;border-bottom:1px solid #eef0f3}.demo-list button:last-child{border:0}.demo-list button.child{padding-left:28px}.demo-list button:hover{background:#f7faff}.demo-list button>span:nth-child(2){flex:1}.new-tag{color:var(--ad-route);background:var(--ad-route-soft);border-radius:4px;font-size:10px;padding:1px 5px}.flow-note{margin-top:30px;font-size:11px;color:var(--ad-ink-tertiary)}.assistant{position:fixed;right:12px;top:76px;bottom:12px;width:420px;display:flex;flex-direction:column;background:#fff;border:1px solid #e3e7ec;border-radius:20px;overflow:hidden;box-shadow:0 12px 40px #20334b0c,0 1px 4px #20334b06;z-index:20}.assistant[hidden],.launcher[hidden]{display:none}.assistant-header{display:flex;align-items:center;gap:10px;padding:18px;min-height:76px;background:linear-gradient(120deg,#f1f7ff,#fff 80%)}.assistant-mark{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;border:1px solid #dce9fb;background:linear-gradient(150deg,#fff,#e7f1fd);color:var(--ad-route);flex-shrink:0}.assistant-header strong{font-size:14px;font-weight:600;display:block}.assistant-header small{font-size:11px;color:var(--ad-ink-tertiary)}.assistant-header-copy{flex:1;min-width:0}.assistant-header-context{display:flex;align-items:center;gap:5px;min-width:0;margin-top:3px;color:var(--ad-ink-tertiary);line-height:18px}.assistant-header-context>span{display:flex;flex-shrink:0}.assistant-header-context svg{width:12px;height:12px}.assistant-header-context small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.assistant-mark,.assistant-header>.icon-button{flex-shrink:0}.icon-button{display:grid;place-items:center;width:34px;height:34px;border-radius:8px}.icon-button:hover{background:#eef3f9}.assistant-header .icon-button{margin-left:auto}.conversation{flex:1;min-height:0;overflow-y:auto;padding:20px;border-top:1px solid #eff1f4;scrollbar-width:thin;overscroll-behavior:contain}.message{margin-bottom:22px}.message.user{display:flex;justify-content:flex-end}.bubble{max-width:91%;background:#edf5ff;border:1px solid #e3eefc;border-radius:14px 14px 4px 14px;padding:10px 13px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8}.assistant-label{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:550;color:var(--ad-ink-secondary);margin-bottom:8px}.assistant-label svg{width:15px;color:var(--ad-route)}.message p{line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere}.welcome{padding:16px 2px}.welcome .assistant-mark{width:54px;height:54px;border-radius:17px;margin-bottom:22px}.welcome h2{font-size:23px;font-weight:550;letter-spacing:-.65px;line-height:1.45;margin-bottom:12px}.welcome p{font-size:12px;line-height:1.9;color:var(--ad-ink-secondary)}.welcome-context{margin-top:22px;padding:14px;background:#f7f9fc;border-radius:11px;font-size:12px;color:var(--ad-ink-secondary)}.welcome-context strong{display:block;font-size:11px;color:var(--ad-ink-tertiary);font-weight:400;margin-bottom:7px}.choices{display:grid;border:1px solid #e2e7ee;border-radius:11px;overflow:hidden;margin-top:-6px;margin-bottom:20px}.choice{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:13px 12px;background:#fff;min-height:46px}.choice+.choice{border-top:1px solid #eef0f4}.choice:hover{background:#f3f8ff;color:var(--ad-route)}.choice svg{width:14px;color:#8594a8}.choice.custom{color:var(--ad-route);font-size:12px}.existing-card{border:1px solid #dfe5ec;border-radius:12px;margin:2px 0 18px;overflow:hidden;background:var(--ad-task-gradient);box-shadow:0 2px 5px #21354d04}
+.candidate-heading{display:flex;align-items:center;gap:9px;padding:11px 12px;min-height:64px}
+.candidate-copy{flex:1;min-width:0}
+.existing-card h3{font-size:13px;font-weight:550;line-height:1.6;overflow-wrap:anywhere;margin:0 0 3px}
+.candidate-content{padding:0 12px 11px}
+.candidate-reason{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;align-items:baseline;font-size:12px;line-height:1.75;color:var(--ad-ink-secondary)}
+.candidate-reason>span{font-size:11px;color:var(--ad-ink-tertiary)}
+.candidate-child{display:flex;align-items:center;gap:8px;border-top:1px solid #edf0f4;padding:8px 12px 8px 18px;font-size:12px;line-height:1.7;color:var(--ad-ink-secondary)}
+.candidate-child svg{width:14px;height:14px;color:#8b96a5}
+.candidate-child span{min-width:0;overflow-wrap:anywhere}
+.existing-card .notice{margin:0 12px 10px;padding:8px 10px;font-size:11px}
+.existing-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--ad-ink-tertiary);margin-top:10px}.decision-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:7px;margin:0;padding:8px 10px;border-top:1px solid #e9edf2;background:#ffffff70}.decision-actions .btn{min-height:32px;padding:5px 9px;border-radius:6px;box-shadow:none}.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 12px;border:1px solid #dfe5ed;border-radius:8px;font-size:12px;background:#fff;min-height:35px;white-space:nowrap;font-weight:500}.btn:hover:not(:disabled){background:#f7faff;border-color:#b9cee9}.btn.primary{background:var(--ad-route);border-color:var(--ad-route);color:#fff;box-shadow:0 2px 4px #1268d618}.btn.primary:hover:not(:disabled){background:#0e5ebb}.btn.soft{background:#f4f8fe;border-color:#e2ebf8;color:var(--ad-route)}.btn.danger{color:var(--danger)}/* One proposal is one surface: task content and its actions stay together.
+   Batch tasks are flat disclosure rows inside the same surface. */
+.proposal{margin:2px 0 18px;border:1px solid #dfe5ec;border-radius:12px;background:var(--ad-task-gradient);overflow:hidden;box-shadow:0 2px 5px #21354d04}
+.proposal-count{display:flex;align-items:center;gap:7px;padding:9px 12px;border-bottom:1px solid #edf0f4;color:var(--ad-ink-tertiary);font-size:11px;background:#fafbfd}
+.proposal-count strong{font-weight:500;color:var(--ad-ink-secondary)}
+.proposal-count>span{margin-left:auto}
+.proposal-relationship{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 12px;border-bottom:1px solid #edf0f4;font-size:11px;color:var(--ad-ink-secondary)}
+.proposal-relationship .text-button{font-size:11px;min-height:28px;flex-shrink:0}
+.task-editor{border:0;border-radius:0;margin:0;background:transparent}
+.draft-level{padding:12px 14px 0;font-size:10px;font-weight:550;color:var(--ad-route)}
+.subtask-section{padding:12px;border-top:1px solid #e5eaf2;background:#f6f8fc99}
+.subtask-section h4{display:flex;align-items:baseline;gap:7px;margin:0 0 9px;font-size:12px;font-weight:550;color:var(--ad-ink-secondary)}
+.subtask-section h4 span,.subtask-section h4 small{font-size:10px;font-weight:400;color:var(--ad-ink-tertiary)}
+.subtask-section h4 small{margin-left:auto}.subtask-rows{border:1px solid #e5eaf2;border-radius:9px;overflow:hidden;background:white}
+.proposal>.task-editor>summary .task-title,.proposal>.task-editor>summary .task-name-control{font-size:14px;font-weight:600}
+.proposal .task-properties .property-date{margin-left:auto}
+.proposal .property-date input{border:0;background:transparent;color:var(--ad-ink-secondary);padding:3px;font:inherit;min-width:0;max-width:116px}
+.proposal .participants-field{margin-bottom:12px}.proposal .task-effort{display:grid;grid-template-columns:52px minmax(0,1fr);gap:7px;padding:8px 0;font-size:12px;color:var(--ad-ink-secondary);line-height:1.7}
+.proposal .task-effort>span{font-size:11px;color:var(--ad-ink-tertiary)}
+.inherited-goal{margin:8px 0;font-size:11px;color:var(--ad-ink-tertiary)}.inherited-goal summary{cursor:pointer;min-height:28px;padding:4px 0}.inherited-goal p{line-height:1.7}
+.task-editor+.task-editor{border-top:1px solid #edf0f4}
+.task-editor>summary{padding:11px 12px;cursor:pointer;display:flex;list-style:none;align-items:center;gap:8px;min-height:52px}
+.task-editor>summary:hover{background:#e7f1fc66}
+.task-editor>summary:focus-visible{outline-offset:-3px;border-radius:6px}
+.task-editor>summary::-webkit-details-marker{display:none}
+.task-editor .task-visual,.result-task .task-visual,.candidate-heading .task-visual{display:grid;place-items:center;flex-shrink:0;width:26px;height:26px;border-radius:7px;background:#edf4fc;color:#3472b6}
+.task-editor .task-visual svg,.result-task .task-visual svg,.candidate-heading .task-visual svg{width:16px;height:16px}
+.task-editor[data-child=true] .task-visual,.result-task[data-child=true] .task-visual{background:#f2f4f7;color:#7a899b}
+.task-editor>summary .task-title{min-width:0;flex:1;font-size:13px;font-weight:550;line-height:1.6;overflow-wrap:anywhere}
+.task-editor>summary .task-name-control{display:none;flex:1;min-width:0;margin:0;padding:2px 3px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--ad-ink);font-weight:550;font-size:13px;line-height:1.6;resize:none;overflow:hidden;font-family:inherit}
+.task-editor>summary .task-name-control:hover{background:#fff;border-color:#e1e7ef}
+.task-editor>summary .task-name-control:focus{background:#fff;border-color:#8eb6e9;outline:2px solid #1268d612;outline-offset:1px}
+.task-editor[open]>summary .task-title{display:none}.task-editor[open]>summary .task-name-control{display:block}
+.task-editor>summary .owner-short{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;font-size:11px;color:var(--ad-ink-tertiary)}
+.owner-avatar{display:none}
+.task-editor[open]>summary .owner-short{display:none}
+.task-editor .expand-control{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:22px;min-height:28px;color:#8b96a5}
+.task-editor .expand-control svg{width:12px;height:12px;transition:transform 150ms}
+.task-editor[open] .expand-control svg{transform:rotate(90deg)}
+.task-editor .collapsed-label,.task-editor .expanded-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.task-editor .expanded-label{display:none}.task-editor[open] .expanded-label{display:inline}.task-editor[open] .collapsed-label{display:none}
+.editor-fields{padding:0 12px 10px}
+.field{display:block;font-size:11px;color:var(--ad-ink-secondary);margin-top:10px}.field>span{display:block;margin-bottom:5px}.field input,.field textarea,.field select{display:block;width:100%;min-width:0;background:#fff;border:1px solid #dde3eb;border-radius:7px;padding:8px;color:var(--ad-ink);font-size:12px;line-height:1.6}.field textarea{resize:vertical;min-height:57px}.field input:focus,.field textarea:focus,.field select:focus{outline:2px solid #d3e5ff;border-color:#88b5ef;outline-offset:1px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.small-note{font-size:11px;color:var(--ad-ink-tertiary);margin-top:8px;line-height:1.7}.notice{padding:10px 11px;border-radius:8px;background:#fff8eb;color:#846339;font-size:12px;line-height:1.8;margin:0 0 14px}.notice.neutral{background:#f4f7fb;color:#62718a}.details-more{font-size:11px;color:var(--ad-ink-secondary);margin-top:11px}.details-more summary{cursor:pointer;padding:5px 0}.deps{margin-top:10px;padding:9px;background:#f7f9fc;border-radius:7px;font-size:11px;color:#6b7584;line-height:1.8}.proposal-footer{display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:8px 10px;border-top:1px solid #e9edf2;background:#f9fafc}
+.proposal-footer .btn{min-height:30px;padding:4px 10px;border-radius:6px;box-shadow:none;font-size:12px}
+.proposal-state{margin-right:auto;padding-left:2px;font-size:11px;color:#7a8491}
+.proposal-footer .btn:not(.primary){border-color:transparent;background:transparent;color:var(--ad-ink-tertiary)}
+.proposal-footer .btn:not(.primary):hover{background:#f5f7fa;color:var(--ad-ink)}
+.proposal-error{padding:8px 10px;border-radius:7px;margin:8px 12px;color:var(--danger);background:#fff5f5;font-size:12px}
+/* Created tasks keep the proposal gradient and task identity; the message reports success. */
+.result-task{width:100%;min-height:64px;display:flex;align-items:center;gap:9px;padding:11px 12px;text-align:left}
+.result-task:hover{background:#e7f1fc66}
+.result-task:focus-visible{outline-offset:-3px;border-radius:7px}
+.result-task-copy{min-width:0;flex:1;display:grid;gap:3px}
+.result-task-name{font-size:13px;font-weight:550;line-height:1.6;overflow-wrap:anywhere}
+.result-task-meta{display:flex;flex-wrap:wrap;gap:4px 8px;font-size:11px;color:var(--ad-ink-tertiary);line-height:1.6}
+.result-task-meta>span+span::before{content:'·';margin-right:8px;color:#a5adb8}
+.result-task>.result-arrow{width:14px;height:14px;color:#8b96a5}
+.result-children{border-top:1px solid #edf0f4}
+.result-children>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;min-height:36px;font-size:11px;color:var(--ad-ink-secondary)}
+.result-children>summary:hover{background:#e7f1fc66}
+.result-children>summary:focus-visible{outline-offset:-3px}
+.result-children>summary::-webkit-details-marker{display:none}
+.result-children>summary svg{width:12px;height:12px;color:#8b96a5;transition:transform 150ms}
+.result-children[open]>summary svg{transform:rotate(90deg)}
+.result-children .result-task{border-top:1px solid #edf0f4;padding-left:18px}
+.result-parent{font-size:11px;color:var(--ad-ink-tertiary);padding:8px 12px;border-bottom:1px solid #edf0f4;overflow-wrap:anywhere}
+@media(pointer:coarse){.result-children>summary{min-height:44px}}
+.composer{padding:10px 14px 12px;flex-shrink:0;background:#fff}.input-box{border:1px solid #dfe5ec;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px #23395605}.input-box:focus-within{border-color:#98bde9;box-shadow:0 0 0 3px #1268d608}.input-box textarea{display:block;width:100%;border:0;outline:none;background:transparent;min-height:63px;max-height:145px;resize:none;padding:13px 13px 4px;font-size:13px;line-height:1.7;color:var(--ad-ink)}.input-toolbar{display:flex;align-items:center;justify-content:space-between;padding:3px 10px 9px;gap:7px}.input-toolbar span{font-size:11px;color:#8a94a1}.send{border-radius:50%;width:31px;height:31px;display:grid;place-items:center;background:var(--ad-route);color:#fff;flex-shrink:0}.composer-note{font-size:11px;color:var(--ad-ink-tertiary);text-align:center;margin-top:8px}.composer-error{font-size:12px;color:var(--danger);margin:0 2px 8px}.launcher{position:fixed;bottom:24px;right:24px;border:1px solid #dce7f7;border-radius:50px;background:#fff;box-shadow:0 8px 25px #22385516;display:flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;font-size:13px;font-weight:550}.stopped{border-left:2px solid #ccd5e1;padding:10px 13px;font-size:12px;color:#657389}.dialog{padding:22px;border:1px solid #dfe5ec;border-radius:16px;box-shadow:0 20px 80px #15283c30;width:380px;max-width:calc(100vw - 32px);color:var(--ad-ink)}.dialog::backdrop{background:#14243b3b}.dialog h2{font-size:17px;font-weight:550;margin-bottom:8px}.dialog p{font-size:12px;color:var(--ad-ink-secondary)}.dialog .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.dialog .close-dialog{float:right;margin:-8px -7px 0 8px}.dialog .field{margin-top:17px}.dialog-error{font-size:12px;color:var(--danger);margin-top:8px}.floating-update{position:sticky;bottom:0;margin:10px auto 0;display:block;box-shadow:0 3px 15px #15283c12}.floating-update[hidden]{display:none}
+@media(min-width:1500px){.workspace{padding-left:55px;padding-right:50px}.review-grid{grid-template-columns:210px minmax(0,1fr);gap:42px}.topbar{padding-inline:35px}}
+@media(max-width:1120px){.workspace{padding:27px 24px}.review-grid{grid-template-columns:1fr;gap:22px}.scenario-list{grid-template-columns:1fr 1fr;gap:5px}.scenario-item{padding:8px}.scenario-item small{display:none}.topbar .note{max-width:220px;line-height:1.5}.intro h1{font-size:23px}.intro p{font-size:12px}}
+@media(max-width:760px){.topbar{height:62px;padding:0 12px;gap:9px}.brand{font-size:14px}.brand-mark{width:26px;height:26px}.topbar .divider,.topbar .eyebrow,.topbar .note,.topbar .prototype-tag{display:none}.topbar select{display:block;margin-left:auto;max-width:190px;font-size:12px}.workspace{margin-right:0;padding:25px 18px}.assistant{top:62px;bottom:0;right:0;width:100%;border:0;border-radius:0}.assistant-header{padding:13px 17px;min-height:67px}.assistant .icon-button,.send{width:44px;height:44px}.conversation{padding:18px}.btn,.choice{min-height:44px}.text-button{min-height:40px}.composer{padding-bottom:max(12px,env(safe-area-inset-bottom))}.input-toolbar span{font-size:11px}.field input,.field textarea,.field select{font-size:14px;min-height:42px}.proposal-footer{flex-wrap:wrap}.dialog{width:calc(100vw - 28px)}.launcher{bottom:18px;right:18px}.intro h1{font-size:24px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.proposal .field.inline-field{display:grid;grid-template-columns:52px minmax(0,1fr);gap:7px;margin-top:8px;align-items:start;font-size:11px}
+.proposal .inline-field>span{padding-top:3px;margin:0;color:var(--ad-ink-tertiary);line-height:1.7}
+.proposal .inline-field input,.proposal .inline-field textarea,.proposal .inline-field select{border:1px solid transparent;background:transparent;border-radius:5px;padding:2px 4px;min-height:24px;color:var(--ad-ink-secondary);font-size:12px;line-height:1.7}
+.proposal .inline-field textarea{resize:none;overflow:hidden;min-height:25px}
+.proposal .inline-field input:hover,.proposal .inline-field textarea:hover,.proposal .inline-field select:hover{background:#f6f8fb}
+.proposal .inline-field input:focus,.proposal .inline-field textarea:focus,.proposal .inline-field select:focus{background:#fff;border-color:#8eb6e9;outline:2px solid #1268d612;outline-offset:1px}
+.proposal .inline-field textarea[readonly]{color:var(--ad-ink-secondary)}
+.task-properties{display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px;margin:0 0 9px;padding:0 0 8px;border-bottom:1px solid #f0f2f5}
+.task-properties .field.inline-field{display:flex;align-items:center;gap:5px;margin:0}
+.task-properties .inline-field>span{padding:0}
+.task-properties .inline-field select{width:auto;max-width:82px;padding-right:0;font-size:11px}
+.task-properties .property-date{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--ad-ink-tertiary)}
+.task-properties .property-date svg{width:13px;height:13px}
+.proposal .details-more{margin-top:7px;padding:0;border:0;font-size:11px}
+.proposal .details-more>summary{padding:3px 0;color:var(--ad-ink-tertiary)}
+.proposal .field-grid .inline-field{grid-template-columns:1fr;gap:1px}
+.proposal .details-more .small-note{margin:6px 0;font-size:11px}
+.proposal .deps{background:transparent;border-top:1px solid #e6e9ed;border-radius:0;margin-top:8px;padding:7px 0 0;font-size:11px}
+.proposal .invite-row{margin-top:8px;font-size:11px;color:var(--ad-ink-tertiary)}
+.proposal .invite-row .text-button{min-height:26px;padding:2px 0;font-size:11px}
+.proposal .invite-row p{line-height:1.7}
+.proposal .notice{font-size:11px;padding:8px 10px;margin:9px 12px 0}
+@media(max-width:760px){.proposal .task-editor>summary{min-height:52px}.proposal-footer .btn,.decision-actions .btn{min-height:34px;padding:5px 10px}.task-properties .inline-field select{min-height:32px}.proposal .details-more>summary{min-height:30px;display:flex;align-items:center}.proposal .inline-field textarea{min-height:26px}.proposal .inline-field input{min-height:30px}.proposal .task-name-control{font-size:14px}.task-editor .expand-control{min-height:28px}}
+@media(pointer:coarse){.proposal-footer .btn,.decision-actions .btn,.task-properties .inline-field select,.proposal .details-more>summary{min-height:44px}.task-editor .expand-control{min-height:44px}.proposal .inline-field input,.proposal .inline-field textarea,.proposal .task-name-control{font-size:16px}}
+
+</style>
+</head>
+<body>
+<header class="topbar"><div class="brand"><span class="brand-mark" data-icon="door"></span>TaskDoor</div><span class="divider"></span><span class="eyebrow">创建任务 · 交互设计</span><span class="prototype-tag">可点击流程稿</span><span class="note">固定示例演示 · 不调用模型、不保存正式任务、不发送邀请</span><select id="mobile-scenario" aria-label="选择演示案例"></select></header>
+<main class="workspace" id="workspace">
+  <section class="intro"><div class="eyebrow">ASSISTANT / TASK CREATION</div><h1>从一句需求，到可确认的任务。</h1><p>在右侧实际走一遍创建流程。这里把每一个分支、每一次选择，以及真正保存的时刻放在一起。</p></section>
+  <div class="review-grid"><nav class="scenario-list" id="scenario-list" aria-label="创建交互案例"></nav><section class="guide" aria-label="交互说明"><div class="guide-head"><h2 id="case-heading"></h2><button class="text-button" data-action="reset">重新体验 <span data-icon="reset"></span></button></div><div id="guide-state" class="guide-state" aria-live="polite"></div><div id="boundary" class="boundary"></div><details class="sandbox-controls"><summary>查看异常分支</summary><label><input id="fail-next" type="checkbox">模拟下一次保存失败</label><button id="invalidate" class="text-button" data-action="invalidate">模拟已有任务失效</button><p class="small-note">仅影响本页演示数据，可随时重新体验。</p></details><div id="preview-area" class="preview-area"></div><p class="flow-note">设计稿 v1.7 · 创建规范第 14 节<br>外侧案例与说明用于评审，不属于正式助手界面。</p></section></div>
+</main>
+<aside id="assistant" class="assistant" aria-label="TaskDoor 助手演示"><header class="assistant-header"><span class="assistant-mark" data-icon="spark"></span><div class="assistant-header-copy"><strong>TaskDoor 助手</strong><div class="assistant-header-context"><span data-icon="team"></span><small id="scope-title" title="达人带货团队 · 演示">达人带货团队 · 演示</small></div></div><button class="icon-button" data-action="close" aria-label="收起助手" title="收起助手"><span data-icon="close-panel"></span></button></header><div id="conversation" class="conversation" role="log" aria-label="助手对话"></div><footer class="composer"><p id="composer-error" class="composer-error" role="alert" hidden></p><div class="input-box"><textarea id="composer" aria-label="对助手说" placeholder="描述你想完成的事…" maxlength="16000"></textarea><div class="input-toolbar"><span id="input-hint">Enter 发送 · Shift + Enter 换行</span><button id="send" class="send" data-action="send" aria-label="发送"><span data-icon="up"></span></button></div></div><p class="composer-note">对话仅自己可见</p></footer></aside>
+<button class="launcher" id="launcher" data-action="open" hidden><span class="assistant-mark" data-icon="spark"></span>TaskDoor 助手 <span data-icon="arrow"></span></button>
+<dialog class="dialog" id="invite-dialog" aria-labelledby="invite-title"><button class="icon-button close-dialog" data-action="cancel-invite" aria-label="关闭邀请"><span data-icon="x"></span></button><h2 id="invite-title">邀请成员</h2><p>流程演示。填写后只模拟邀请状态，不发送邮件，也不把对方自动设为负责人。</p><label class="field"><span>成员邮箱</span><input id="invite-email" type="email" autocomplete="off" placeholder="colleague@example.com"></label><p class="dialog-error" id="invite-error" role="alert"></p><div class="actions"><button class="btn" data-action="cancel-invite">取消</button><button class="btn primary" data-action="submit-invite">模拟邀请</button></div></dialog>
+<dialog class="dialog" id="task-dialog" aria-label="演示任务详情"><div id="task-dialog-content"></div><div class="actions"><button class="btn" data-action="close-preview">返回助手</button></div></dialog>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const paths={door:'<path d="M5 20V4h14v16M9 4v16m5-8h.01"/>',spark:'<path d="m12 3 2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4L12 3Z"/>',arrow:'<path d="M5 12h14m-5-5 5 5-5 5"/>',up:'<path d="M12 19V5m-6 6 6-6 6 6"/>',x:'<path d="m6 6 12 12M6 18 18 6"/>',team:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m20 0v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/><circle cx="9" cy="7" r="4"/>',task:'<rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6m-6 4h3"/>',chevron:'<path d="m9 5 7 7-7 7"/>',check:'<path d="m5 12 4 4L19 6"/>',reset:'<path d="M3 11a9 9 0 1 1 2.5 7M3 4v7h7"/>','close-panel':'<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M15 4v16m-7-11 3 3-3 3"/>'};
+Object.assign(paths,{target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>',briefcase:'<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V3h8v4M3 12h18m-9 0v3"/>',flag:'<path d="M5 21V3m0 1c5-3 9 3 14 0v10c-5 3-9-3-14 0"/>',chart:'<path d="M4 3v18h17M9 16v-5m5 5V7m5 9V3"/>'});
+const icon = (name,cls='') => `<svg aria-hidden="true" class="${cls}" viewBox="0 0 24 24">${paths[name] || paths.task}</svg>`;
+const hydrateIcons = () => document.querySelectorAll('[data-icon]').forEach(el => {el.innerHTML=icon(el.dataset.icon);el.removeAttribute('data-icon');});
+const scenarios=[
+{id:'single-task',name:'单任务',detail:'不做多余拆分',prompt:'整理下周例会纪要',boundary:'一个目标、一个集中交付，只形成一个任务。未设置的日期不自动补成今天。'},
+{id:'complex-plan',name:'复杂项目',detail:'1 个主任务 + 7 个子任务',prompt:'策划新品防晒衣抖音达人带货项目，9 月 15 日上线，目标 GMV 50 万。需要商务、素材、直播、履约、投流、复盘和合规协作。',boundary:'总数包含主任务。参考依赖绑定任务标识，改名、换人不改变关联。整份方案确认后统一保存。'},
+{id:'clarify-requirement',name:'需求不明确',detail:'先问目标与交付',prompt:'帮我策划一个活动',boundary:'选择答案只是在补充需求。目标和交付明确后才生成方案；时间不确定也可以继续。'},
+{id:'similar-task',name:'发现相似任务',detail:'查看已有 / 仍然创建',prompt:'整理新品发布复盘',boundary:'相似不代表重复。打开只读任务不创建也不合并；“仍然创建”之后还需审阅具体方案。'},
+{id:'existing-parent',name:'关联已有任务',detail:'子任务 / 独立创建',prompt:'准备新品发布会的媒体邀请名单',boundary:'选择关系只改变草稿。创建为子任务只新增媒体名单，不重复创建发布会主任务。'},
+{id:'unassigned-owner',name:'无合适负责人',detail:'选人 / 邀请 / 本人兜底',prompt:'完成办公室无线网络部署',boundary:'未匹配不代表没有能力。创建者兜底必须可见；邀请成功不等于加入团队或成为负责人。'},
+];
+const members=['周岚','陈默','林洁','高远','梁川','许宁','韩序','苏禾'];
+const childTitles=['筛选达人并确认商务合作','完成卖点、脚本与直播素材','完成直播彩排与上线执行','确认价格机制、库存与履约','制定投流计划并控制 ROI','搭建数据看板并完成复盘','完成素材宣称与合同合规审核'];
+const childCriteria=['候选名单、合作条款和确认结果可核对','形成经核对的卖点、脚本和直播素材','按排期完成彩排与上线执行记录','形成价格、库存和履约方案','形成投流计划与 ROI 跟踪记录','形成数据看板和复盘结论','明确素材宣称与合同的审核结论'];
+const dependencyIndexes={2:[0,1,3,6],4:[0,1],5:[2,4],6:[0,1]};
+const existing={similar:{id:'weekly-retro-notes',name:'整理本周团队复盘纪要',goal:'汇总关键决策、未解决问题和后续行动，形成可共享的团队纪要。',owner:'周岚',status:'进行中',date:'2026-09-10'},parent:{id:'product-launch-planning',name:'新品发布会筹备',goal:'按期完成新品发布会，让目标客户与媒体理解新品价值。',owner:'周岚',status:'进行中',date:'2026-09-20',children:['场地确认','发布会流程设计','宣传物料制作']}};
+let state, saveTimer, focusAfterInvite;
+function reset(index=0){clearTimeout(saveTimer);$('invite-dialog').close();$('task-dialog').close();state={index,phase:'input',messages:[],answers:{},tasks:[],saved:[],relation:null,candidateValid:true,preview:null,error:'',invited:false,open:true};$('composer').value=scenarios[index].prompt;$('composer').placeholder='描述你想完成的事…';$('invite-email').value='';$('composer-error').hidden=true;$('fail-next').checked=false;render(true);}
+function add(role,text){state.messages.push({role,text});}
+function task(id,name,goal,criteria,owner='周岚',date='',deps=[]){return{id,name,goal,criteria,owner,date,start:'',tips:'',participants:'',deps};}
+function makeDraft(){const s=scenarios[state.index];let main;
+ if(s.id==='single-task')main=task('main',s.prompt,'汇总会议议题、关键结论、责任人和后续行动，形成可共享的会议纪要。','纪要包含关键结论、对应责任人及后续行动；原始议题可追溯。');
+ if(s.id==='complex-plan')main=task('main','新品防晒衣抖音达人带货项目','9 月 15 日上线新品防晒衣达人带货，目标 GMV 50 万。','完成商务、素材、直播、履约、投流、复盘与合规交付。','周岚','2026-09-15');
+ if(s.id==='clarify-requirement')main=task('main','完成活动策划与执行',state.answers.goal,state.answers.deliverable);
+ if(s.id==='similar-task')main=task('main','整理新品发布复盘','汇总新品发布结果、关键数据、问题和后续行动。','形成可共享的专项复盘，包含数据、问题与改进行动。');
+ if(s.id==='existing-parent')main=task('main','整理并确认媒体邀请名单','完成目标媒体筛选和联系人核对，确认最终出席名单。','媒体名单、联系方式核对结果及邀请状态可追溯。','林洁');
+ if(s.id==='unassigned-owner')main=task('main',s.prompt,'让办公室会议与日常办公保持稳定联网。','明确部署范围并核对网络覆盖、连接稳定性与交接记录。');
+ state.tasks=[main];if(s.id==='complex-plan'){main.participants=members.slice(1).join('、');main.tips='先确认 GMV 的统计周期和退款口径，再协调达人排期与备货。';state.tasks.push(...childTitles.map((name,i)=>({...task(`child-${i}`,name,main.goal,childCriteria[i],members[i+1],'2026-09-15',(dependencyIndexes[i]||[]).map(j=>`child-${j}`)),tips:'先确认交付范围，再按前置安排推进并核对结果。'})));}
+ state.phase='draft';state.error='';
+}
+function start(){const s=scenarios[state.index];add('user',$('composer').value.trim());$('composer').value='';
+ if(s.id==='clarify-requirement'){state.phase='goal';add('assistant','先确认一个关键点：这次活动希望达到什么目标？你可以选择，也可以直接描述。');}
+ else if(s.id==='similar-task'){state.phase='decision';add('assistant','有一项已有工作与你的需求相似。可以先看看它是否已经覆盖这次复盘，再决定是否新建。');}
+ else if(s.id==='existing-parent'){state.phase='decision';add('assistant','媒体邀请可能属于已有的发布会筹备工作。你希望放到这个项目下，还是单独管理？');}
+ else {makeDraft();add('assistant',s.id==='complex-plan'?'我把这次工作整理为 1 个主任务和 7 个子任务。请核对交付、人选和参考前置关系，确认后统一创建。':s.id==='unassigned-owner'?'当前团队责任资料中没有找到网络部署的匹配依据。方案先由你承接，可以换人，也可以邀请合适的成员。':'这件事的交付比较集中，保留为一个任务就够了。你可以直接修改下面的方案。');}
+ render(true);
+}
+function answer(value){value=value.trim();if(!value || /^(待定|暂时不确定|不确定|不知道|随便)$/.test(value)){showComposerError('目标和交付需要能说明结果；可以先描述你已经知道的部分。');return;}
+ add('user',value);$('composer').value='';
+ if(state.phase==='goal'){state.answers.goal=value;state.phase='deliverable';add('assistant',`目标已记下：${value}。\n团队最终需要交付什么，才算完成？`);}
+ else {state.answers.deliverable=value;makeDraft();add('assistant','目标和交付已经明确，先整理成一个任务。日期可以稍后补充；确认前仍可修改。');}
+ render(true);
+}
+function showComposerError(text){$('composer-error').textContent=text;$('composer-error').hidden=false;}
+function send(){const value=$('composer').value.trim();if(!value||state.phase==='saving')return;$('composer-error').hidden=true;
+ if(state.phase==='input'){if(value!==scenarios[state.index].prompt){showComposerError('这是固定案例流程稿。请点击“重新体验”恢复示例需求；自由回答可在澄清环节体验。');return;}start();}
+ else if(['goal','deliverable'].includes(state.phase))answer(value);
+ else if(/^(取消|取消方案)$/.test(value)){cancel();}
+ else showComposerError('本流程稿在下面的选项和可编辑方案中体验操作；这里未接入通用模型。');
+}
+function chooseRelationship(relation){if(!state.candidateValid){state.error='已有任务已失效，不能按旧候选继续。请重新定位，或明确改为独立创建。';render(true);return;}
+ add('user',relation==='attach'?'创建为子任务':'仍然独立创建');state.relation=relation;if(!state.tasks.length)makeDraft();else{state.phase='draft';state.error='';}add('assistant',relation==='attach'?'只新增一个媒体名单子任务，归属“新品发布会筹备”。具体交付保留在自己的完成标准中。':'按独立任务准备，保留媒体邀请自己的目标，不关联发布会主任务。');render(true);}
+function cancel(){if(state.phase==='saving')return;add('user','取消方案');add('assistant','方案已取消，没有新增任务。可以重新体验这个案例。');state.phase='canceled';state.error='';$('composer').value='';render(true);}
+function validate(){for(const t of state.tasks){if(!t.name.trim())return{message:'请填写任务名称。',id:t.id,field:'name'};if(!t.goal.trim())return{message:'请填写任务目标。',id:t.id,field:'goal'};if(!t.criteria.trim())return{message:'请填写可核对的完成标准。',id:t.id,field:'criteria'};if(t.start&&t.date&&t.start>t.date)return{message:'截止日期不能早于开始日期。',id:t.id,field:'date'};}if(state.relation==='attach'&&!state.candidateValid)return{message:'父任务已失效，原关联无法保存。草稿已保留。'};return null;}
+function save(){if(state.phase!=='draft')return;const invalid=validate();if(invalid){state.error=invalid.message;render(false);if(invalid.id){const control=document.querySelector(`[data-task="${invalid.id}"][data-field="${invalid.field}"]`);control.closest('details.task-editor').open=true;control.focus();}return;}
+ state.error='';state.phase='saving';render(false);const shouldFail=$('fail-next').checked;saveTimer=setTimeout(()=>{if(shouldFail){state.phase='draft';state.error='模拟保存失败：没有新增任务，编辑内容已保留。关闭异常开关后可以重试。';$('fail-next').checked=false;}else{state.phase='success';state.saved=structuredClone(state.tasks);if(state.relation==='attach'){state.saved[0].goal=existing.parent.goal;state.saved[0].parentName=existing.parent.name;}state.preview=null;}render(true);},450);
+}
+function field(t,name,label,kind='input'){
+ const disabled=state.phase==='saving'?' disabled':'';
+ const value=name==='goal'&&state.relation==='attach'?existing.parent.goal:t[name]??'';
+ const attrs=`data-task="${t.id}" data-field="${name}"${disabled}${name==='goal'&&(state.relation==='attach'||t.id!=='main')?' readonly':''}`;
+ if(name==='name')return `<textarea class="task-name-control" aria-label="任务名称" ${attrs} rows="1">${escapeHtml(value)}</textarea>`;
+ return `<label class="field inline-field"><span>${label}</span>${kind==='textarea'?`<textarea ${attrs} rows="1">${escapeHtml(value)}</textarea>`:kind==='select'?`<select ${attrs}>${members.map(m=>`<option${m===t.owner?' selected':''}>${m}</option>`).join('')}</select>`:`<input ${attrs} type="${kind==='date'?'date':'text'}" value="${escapeHtml(value)}">`}</label>`;
+}
+function proposal(){
+ const disabled=state.phase==='saving'?' disabled':'';
+ const s=scenarios[state.index];
+ return `<section class="proposal" aria-label="可编辑任务方案">
+ ${state.tasks.length>1?`<div class="proposal-count"><strong>任务方案</strong><span>1 个主任务 · ${state.tasks.length-1} 个子任务</span></div>`:''}
+ ${s.id==='existing-parent'?`<div class="proposal-relationship"><span>${state.relation==='attach'?'上级：新品发布会筹备':'独立任务 · 未设置上级'}</span><button class="text-button" data-action="change-relation"${disabled}>更改关系</button></div>`:''}
+ ${s.id==='unassigned-owner'?`<div class="notice">${state.invited?'演示邀请已记录，没有发送邮件。对方尚未加入，负责人保持当前选择。':'没有匹配的责任依据，暂由创建者承接；你可以换人或邀请成员。'}</div>`:''}
+ ${state.tasks.length>1?'<div class="draft-level">主任务</div>':state.relation==='attach'?'<div class="draft-level">子任务</div>':''}
+ ${state.tasks.map((t,i)=>`${i===1?`<section class="subtask-section" aria-label="子任务方案"><h4>子任务<span>${state.tasks.length-1} 项</span><small>点击展开查看和调整</small></h4><div class="subtask-rows">`:''}<details class="task-editor" data-child="${i>0||state.relation==='attach'}" data-editor="${t.id}"${i===0?' open':''}>
+ <summary><span class="task-visual">${icon(i===0?'target':'task')}</span><span class="task-title">${escapeHtml(t.name)}</span>${field(t,'name','任务名称')}
+ <span class="owner-short"><span class="owner-avatar" aria-hidden="true">${escapeHtml(t.owner.slice(0,1))}</span><span class="owner-name">${escapeHtml(t.owner||'待定')}</span></span>
+ <span class="expand-control"><span class="collapsed-label">展开</span><span class="expanded-label">收起</span>${icon('chevron')}</span></summary>
+ <div class="editor-fields">
+ <div class="task-properties">${field(t,'owner','负责人','select')}<label class="property-date">${icon('calendar')}<input aria-label="${escapeHtml(t.name)}截止时间" data-task="${t.id}" data-field="date" type="date" value="${escapeHtml(t.date)}"${disabled}></label></div>
+ <div class="participants-field">${field(t,'participants','参与人')}</div>
+ ${i===0&&state.relation!=='attach'?field(t,'goal','目标','textarea'):`<details class="inherited-goal"><summary>继承主目标 · ${escapeHtml(state.relation==='attach'?existing.parent.name:state.tasks[0].name)}</summary><p>${escapeHtml(state.relation==='attach'?existing.parent.goal:state.tasks[0].goal)}</p></details>`}
+ ${field(t,'criteria','完成标准','textarea')}
+ ${field(t,'tips','执行建议','textarea')}<div class="task-effort"><span>预计投入</span><div>${s.id==='complex-plan'?(i===0?'5 人天 · 子任务合计':([1,1.25,.75,.5,.625,.5,.375][i-1]+' 人天 · 示例估算')):'待评估'}</div></div>
+ ${t.deps.length?`<div class="deps">参考前置交付<br>${t.deps.map(id=>escapeHtml(state.tasks.find(item=>item.id===id)?.name || '引用已失效')).join(' · ')}</div>`:''}
+ ${s.id==='unassigned-owner'?`<div class="invite-row"><p>${t.owner==='周岚'?'创建者兜底，不代表已匹配网络部署能力。':'按你的选择保留人选，能力匹配仍待核对。'}</p><button class="text-button" data-action="invite"${disabled}>${icon('team')} 邀请成员</button></div>`:''}
+ </div></details>`).join('')}${state.tasks.length>1?'</div></section>':''}
+ ${state.error?`<div class="proposal-error" role="alert">${escapeHtml(state.error)}</div>`:''}
+ <footer class="proposal-footer"><span class="proposal-state">${state.phase==='saving'?'提交中':'待确认'}</span><button class="btn" data-action="cancel"${disabled}>取消</button><button class="btn primary" data-action="save"${disabled}>${state.phase==='saving'?'正在保存…':`确认创建${state.tasks.length>1?' '+state.tasks.length+' 项':''}`}</button></footer>
+ </section>`;
+}
+function candidateCard(){
+ const parent=scenarios[state.index].id==='existing-parent';
+ const c=parent?existing.parent:existing.similar;
+ return `<article class="existing-card" aria-label="${parent?'建议的上级任务':'可能相似的任务'}">
+ <header class="candidate-heading"><span class="task-visual">${icon('target')}</span><div class="candidate-copy"><h3>${escapeHtml(c.name)}</h3><div class="result-task-meta"><span>${escapeHtml(c.owner)}</span><span>${escapeHtml(c.status)}</span><span title="${escapeHtml(c.date)} 截止">${escapeHtml(c.date.slice(5).replace('-','/'))} 截止</span></div></div></header>
+ <div class="candidate-content">
+ <div class="candidate-reason"><span>${parent?'主目标':'判断依据'}</span><p>${parent?escapeHtml(c.goal):'都包含复盘结论、关键问题和后续行动。'}</p></div>
+ </div>
+ ${parent?`<details class="result-children candidate-children"><summary>已有 ${c.children.length} 个子任务${icon('chevron')}</summary>${c.children.map(name=>`<div class="candidate-child">${icon('task')}<span>${escapeHtml(name)}</span></div>`).join('')}</details>`:''}
+ ${state.error?`<div class="notice" role="alert">${escapeHtml(state.error)}</div>`:''}
+ <footer class="decision-actions">${!state.candidateValid?'<button class="btn" data-action="reset">重新定位</button><button class="btn primary" data-action="independent-invalid">改为独立创建</button>':parent?'<button class="btn" data-action="independent">仍然独立创建</button><button class="btn primary" data-action="attach">创建为子任务</button>':'<button class="btn" data-action="view-existing">查看已有任务</button><button class="btn primary" data-action="create-anyway">仍然创建</button>'}</footer>
+ </article>`;
+}
+function choices(){const goal=state.phase==='goal';const values=goal?['提升新品曝光','获取销售线索','促进用户复购']:['活动方案和执行排期','方案、物料和复盘'];return `<div class="choices" role="group" aria-label="${goal?'活动目标':'最终交付'}">${values.map(v=>`<button class="choice" data-action="answer" data-value="${escapeHtml(v)}">${v}${icon('arrow')}</button>`).join('')}<button class="choice custom" data-action="custom">我来描述具体${goal?'目标':'交付'}${icon('arrow')}</button></div>`;}
+function createdTaskRow(t,child=false){
+ return `<button class="result-task" data-child="${child}" data-action="preview-task" data-id="${escapeHtml(t.id)}" aria-label="查看任务：${escapeHtml(t.name)}">
+ <span class="task-visual">${icon(child?'task':'target')}</span>
+ <span class="result-task-copy"><span class="result-task-name">${escapeHtml(t.name||'未命名任务')}</span><span class="result-task-meta"><span>${escapeHtml(t.owner||'负责人待定')}</span><span>${t.date?escapeHtml(t.date.slice(5).replace('-','/'))+' 截止':'未设截止日期'}</span></span></span>${icon('arrow','result-arrow')}</button>`;
+}
+function createdCard(){
+ const main=state.saved[0],children=state.saved.slice(1);
+ return `<section class="proposal success" aria-label="已创建的任务">
+ ${main.parentName?`<div class="result-parent">上级：${escapeHtml(main.parentName)}</div>`:''}
+ ${createdTaskRow(main)}
+ ${children.length?`<details class="result-children"><summary>${children.length} 个子任务${icon('chevron')}</summary>${children.map(t=>createdTaskRow(t,true)).join('')}</details>`:''}
+ </section>`;
+}
+function createdMessage(){return state.saved.length>1?`已创建 1 个主任务和 ${state.saved.length-1} 个子任务。`:'已创建，点击任务查看详情。';}
+function renderConversation(scrollToEnd){const el=$('conversation');const previous=el.scrollTop;const closeToBottom=el.scrollHeight-el.scrollTop-el.clientHeight<70;let content;
+ if(state.phase==='input')content=`<div class="welcome"><span class="assistant-mark">${icon('spark')}</span><h2>你想完成什么？</h2><p>说清想达到的结果，我会帮你整理任务。需要你判断的地方，我们一起确认。</p><div class="welcome-context"><strong>这次体验</strong>${escapeHtml(scenarios[state.index].prompt)}</div></div>`;
+ else content=state.messages.map((m,i)=>m.role==='user'?`<div class="message user"><div class="bubble">${escapeHtml(m.text)}</div></div>`:`<div class="message"><div class="assistant-label">${icon('spark')}TaskDoor 助手</div><p>${escapeHtml(state.phase==='success'&&i===state.messages.length-1?createdMessage():m.text)}</p></div>`).join('');
+ if(['goal','deliverable'].includes(state.phase))content+=choices();
+ if(state.phase==='decision')content+=candidateCard();
+ if(['draft','saving'].includes(state.phase))content+=proposal();
+ if(state.phase==='success')content+=createdCard();
+ if(state.phase==='canceled')content+='<div class="stopped">没有新增任务。<br><button class="text-button" data-action="reset">重新体验当前案例</button></div>';
+ el.innerHTML=content;
+ el.querySelectorAll('.task-editor').forEach(editor=>editor.addEventListener('toggle',()=>sizeInlineFields(editor)));
+ requestAnimationFrame(()=>sizeInlineFields(el));
+ requestAnimationFrame(()=>{if(scrollToEnd){const target=[...el.querySelectorAll('.message:not(.user)')].at(-1);el.scrollTop=target?el.scrollTop+target.getBoundingClientRect().top-el.getBoundingClientRect().top-6:0;}else if(closeToBottom)el.scrollTop=el.scrollHeight;else el.scrollTop=previous;});
+}
+function guideCopy(){const phase=state.phase;const name=scenarios[state.index].name;
+ if(phase==='input')return['等待你的需求','点击右侧发送，开始这个案例。','展示当前范围和可编辑输入，不自动生成任务。','尚未创建任务。'];
+ if(phase==='goal')return['先明确活动目标','点击一个目标，或在输入框写自己的目标。','把有效回答留在对话里，再询问缺少的交付。','答案只补充意图，不创建空任务。'];
+ if(phase==='deliverable')return['再确认最终交付','选择交付内容，或自行描述。','已明确的目标不再重复询问。日期可以稍后补充。','“我来描述”只聚焦输入，实际回答后才生成方案。'];
+ if(phase==='decision')return[name==='发现相似任务'?'先看已有工作，再决定新建':'决定这项工作的归属','查看候选，在两个分支中做选择。','保留已有任务快照与匹配依据，关系选择后再展示可编辑方案。','浏览与选择关系均不写入；还需要最终确认。'];
+ if(phase==='draft')return['核对并编辑具体方案','直接修改名称、完成标准、人选；展开查看日期和参考依赖。','改动只留在草稿。点击确认后再次核对，再统一保存。',state.error?'当前保存未完成，错误说明在方案中，输入仍然保留。':'尚未新增任务；最终确认是本流程的写入动作。'];
+ if(phase==='saving')return['正在模拟提交','可以收起面板；不能重复点击确认。','冻结这次方案，等待明确结果。此处是演示保存状态。','保存动作结束前不提前显示已创建。'];
+ if(phase==='success')return['看到实际结果','点击任务名称查看详情；批量结果可展开子任务。','原卡片转为只读任务入口，创建结果由上方消息说明；不再保留底栏和确认按钮。','结果仅在本页内存中；正式工作区完全未写入。'];
+ return['方案已取消','可以重新体验这个案例。','保留取消说明，不显示创建成功。','没有新增任务。'];
+}
+function previewContent(t){return `<div class="eyebrow">只读任务 · 演示数据</div><h3>${escapeHtml(t.name)}</h3><p>${escapeHtml(t.goal)}</p><div class="existing-meta"><span>负责人 ${escapeHtml(t.owner)}</span><span>${escapeHtml(t.status || '待开始')}</span></div>${t.criteria?`<p style="margin-top:12px">完成标准<br>${escapeHtml(t.criteria)}</p>`:''}${t.parentName?`<p class="small-note">上级任务：${escapeHtml(t.parentName)}</p>`:''}`;}
+function renderPreview(){const el=$('preview-area');if(state.preview){el.innerHTML=`<div class="mini-title">主区域 · 打开任务，助手会话保持原位</div><div class="preview-box">${previewContent(state.preview)}<button class="text-button" data-action="clear-preview">返回演示列表</button></div>`;return;}
+ el.innerHTML=`<div class="mini-title">演示任务列表 · 本轮新增 ${state.saved.length} 项</div>${state.saved.length?`<div class="demo-list">${state.saved.map((t,i)=>`<button data-action="preview-task" data-id="${t.id}" class="${i>0?'child':''}">${icon('task')}<span>${escapeHtml(t.name)}</span><span class="new-tag">new</span></button>`).join('')}</div>`:'<div class="empty-list">确认创建后，结果会出现在这里。<br>这是独立演示列表，不读取你的真实任务。</div>'}`;
+}
+function render(scroll=false){$('scenario-list').innerHTML=scenarios.map((s,i)=>`<button class="scenario-item" data-action="scenario" data-index="${i}" aria-current="${i===state.index}"><span class="case-number">0${i+1}</span><span><strong>${s.name}</strong><small>${s.detail}</small></span></button>`).join('');$('mobile-scenario').value=String(state.index);$('case-heading').textContent=`0${state.index+1} / ${scenarios[state.index].name}`;const g=guideCopy();$('guide-state').innerHTML=`<span class="eyebrow">当前交互</span><h3>${g[0]}</h3><dl><div><dt>用户怎么做</dt><dd>${g[1]}</dd></div><div><dt>助手如何回应</dt><dd>${g[2]}</dd></div></dl>`;$('boundary').innerHTML=`<strong>${g[3]}</strong>${scenarios[state.index].boundary}`;$('scope-title').textContent=state.relation==='attach'?'新品发布会筹备 · 子任务':'达人带货团队 · 演示';$('scope-title').title=$('scope-title').textContent;$('invalidate').hidden=!['similar-task','existing-parent'].includes(scenarios[state.index].id)||['success','saving','canceled'].includes(state.phase);$('assistant').hidden=!state.open;$('launcher').hidden=state.open;syncBackground();$('input-hint').textContent=state.phase==='success'?'点击任务查看详情':(['draft','decision'].includes(state.phase)?'使用上方选项继续此流程':'Enter 发送 · Shift + Enter 换行');$('send').disabled=!$('composer').value.trim()||state.phase==='saving';renderConversation(scroll);renderPreview();hydrateIcons();}
+function openPreview(t){state.preview=t;renderPreview();if(matchMedia('(max-width:760px)').matches){$('task-dialog').setAttribute('aria-label','演示任务详情');$('task-dialog-content').innerHTML=previewContent(t);$('task-dialog').showModal();}}
+function invalidate(){if(['saving','success','canceled'].includes(state.phase))return;state.candidateValid=false;state.error='演示候选已失效。原任务 ID 不能继续使用，草稿与对话已保留。';if(state.relation==='attach')state.phase='draft';render(false);}
+function handle(action,el){
+ if(action==='scenario')reset(Number(el.dataset.index));
+ else if(action==='reset')reset(state.index);
+ else if(action==='send')send();
+ else if(action==='answer')answer(el.dataset.value);
+ else if(action==='custom'){$('composer').placeholder=state.phase==='goal'?'例如：让校园用户了解新品…':'例如：活动方案、报名页和复盘报告…';$('composer').focus();}
+ else if(action==='attach')chooseRelationship('attach');
+ else if(action==='independent')chooseRelationship('independent');
+ else if(action==='create-anyway'){add('user','仍然创建');makeDraft();add('assistant','保留为独立的新品发布复盘，不修改或关联已有任务。核对下面的方案后再创建。');render(true);}
+ else if(action==='independent-invalid'){add('user','改为独立创建');state.relation='independent';if(!state.tasks.length)makeDraft();else state.phase='draft';state.error='';add('assistant','已按你的选择改为独立草稿，仍需核对并最终确认。');render(true);}
+ else if(action==='change-relation'){state.phase='decision';state.error='';render(true);}
+ else if(action==='view-existing')openPreview(existing.similar);
+ else if(action==='save')save();
+ else if(action==='cancel')cancel();
+ else if(action==='invalidate')invalidate();
+ else if(action==='preview-task')openPreview(state.saved.find(t=>t.id===el.dataset.id));
+ else if(action==='clear-preview'){state.preview=null;renderPreview();}
+ else if(action==='close-preview')$('task-dialog').close();
+ else if(action==='close'){state.open=false;$('assistant').hidden=true;$('launcher').hidden=false;$('launcher').focus();syncBackground();}
+ else if(action==='open'){state.open=true;$('assistant').hidden=false;$('launcher').hidden=true;$('composer').focus();syncBackground();}
+ else if(action==='invite'){focusAfterInvite=el;$('invite-error').textContent='';$('invite-dialog').showModal();$('invite-email').focus();}
+ else if(action==='cancel-invite'){$('invite-dialog').close();focusAfterInvite?.focus();}
+ else if(action==='submit-invite'){const input=$('invite-email');if(!input.value.trim()||!input.validity.valid){$('invite-error').textContent='请输入有效邮箱，例如 colleague@example.com。';input.focus();return;}state.invited=true;$('invite-dialog').close();render(false);requestAnimationFrame(()=>document.querySelector('[data-action="invite"]')?.focus());}
+}
+document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(el&&!el.disabled)handle(el.dataset.action,el);});
+function sizeInlineFields(root){root.querySelectorAll('.task-editor[open] textarea,textarea.task-name-control').forEach(el=>{if(!el.getClientRects().length)return;el.style.height='0px';el.style.height=el.scrollHeight+'px';});}
+document.addEventListener('input',event=>{if(event.target.tagName==='TEXTAREA'&&event.target.closest('.proposal')){event.target.style.height='0px';event.target.style.height=event.target.scrollHeight+'px';}if(event.target.id==='composer'){$('send').disabled=!event.target.value.trim()||state.phase==='saving';$('composer-error').hidden=true;return;}const el=event.target;if(el.dataset.field&&state.phase==='draft'){const t=state.tasks.find(item=>item.id===el.dataset.task);if(!t)return;if(el.dataset.field==='goal'&&(state.relation==='attach'||t.id!=='main'))return;t[el.dataset.field]=el.value;if(el.dataset.field==='name'){el.closest('.task-editor').querySelector('.task-title').textContent=el.value;}if(el.dataset.field==='goal'&&t.id==='main'&&state.tasks.length>1){for(const child of state.tasks.slice(1)){child.goal=el.value;const goalControl=document.querySelector(`[data-task="${child.id}"][data-field="goal"]`);if(goalControl)goalControl.value=el.value;const goalSummary=document.querySelector('[data-editor="'+child.id+'"] .inherited-goal p');if(goalSummary)goalSummary.textContent=el.value;}}if(el.dataset.field==='date'){const dateLabel=el.closest('.task-editor').querySelector('.date-short');if(dateLabel)dateLabel.textContent=el.value?el.value.slice(5).replace('-','/')+' 截止':'不设截止时间';}if(el.dataset.field==='owner'){el.closest('.task-editor').querySelector('.owner-name').textContent=el.value||'待定';el.closest('.task-editor').querySelector('.owner-avatar').textContent=el.value.slice(0,1);const note=el.closest('.editor-fields').querySelector('.invite-row p');if(scenarios[state.index].id==='unassigned-owner'&&note)note.textContent=el.value==='周岚'?'创建者兜底，不代表已匹配网络部署能力。':'按你的选择保留人选；现有资料尚未证实网络部署能力。';}}});
+$('mobile-scenario').addEventListener('change',event=>reset(Number(event.target.value)));
+$('composer').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();send();}});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!event.isComposing&&!document.querySelector('dialog[open]')&&state.open){event.preventDefault();handle('close');}});
+function syncBackground(){$('workspace').inert=state.open&&matchMedia('(max-width:760px)').matches;}
+matchMedia('(max-width:760px)').addEventListener('change',()=>syncBackground());
+window.addEventListener('resize',()=>requestAnimationFrame(()=>sizeInlineFields($('conversation'))));
+$('mobile-scenario').innerHTML=scenarios.map((s,i)=>`<option value="${i}">0${i+1} ${s.name}</option>`).join('');
+const requested=new URL(location.href).searchParams.get('case');reset(Math.max(0,scenarios.findIndex(s=>s.id===requested)));hydrateIcons();
+</script>
+</body>
+</html>

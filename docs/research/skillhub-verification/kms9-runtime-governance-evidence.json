@@ -1,0 +1,1445 @@
+{
+  "commit": "228c46e1d3eeee3b7464d0f1d77b4f019a602f14",
+  "archiveSha256": "f16f1d86bd3055832fb797db75d384cd9b6689d8f55cfbae408b4728ee5504db",
+  "scanSource": "Original GitHub fixed-commit tarball, no installed dependencies or local verification scripts",
+  "sourceFilesScanned": 457,
+  "termHits": {
+    "mcp_protocol": [],
+    "runtime_lifecycle": [],
+    "audit_rate": [
+      {
+        "path": "convex/_generated/api.d.ts",
+        "line": 55,
+        "text": "import type * as lib_httpRateLimit from \"../lib/httpRateLimit.js\";"
+      },
+      {
+        "path": "convex/_generated/api.d.ts",
+        "line": 79,
+        "text": "import type * as rateLimits from \"../rateLimits.js\";"
+      },
+      {
+        "path": "convex/_generated/api.d.ts",
+        "line": 149,
+        "text": "  \"lib/httpRateLimit\": typeof lib_httpRateLimit;"
+      },
+      {
+        "path": "convex/_generated/api.d.ts",
+        "line": 173,
+        "text": "  rateLimits: typeof rateLimits;"
+      },
+      {
+        "path": "convex/auth.ts",
+        "line": 36,
+        "text": "    .query('auditLogs')"
+      },
+      {
+        "path": "convex/auth.ts",
+        "line": 78,
+        "text": "     * audit log query ONLY executes when a legacy deleted user attempts to sign"
+      },
+      {
+        "path": "convex/commentModeration.test.ts",
+        "line": 225,
+        "text": "    expect(insert).toHaveBeenCalledWith('auditLogs', {"
+      },
+      {
+        "path": "convex/commentModeration.ts",
+        "line": 148,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/comments.handlers.ts",
+        "line": 52,
+        "text": "  await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/comments.handlers.ts",
+        "line": 140,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/comments.test.ts",
+        "line": 577,
+        "text": "    expect(insert).toHaveBeenCalledWith('auditLogs', {"
+      },
+      {
+        "path": "convex/devSeed.ts",
+        "line": 183,
+        "text": "    summary: 'Teach Mandarin with the xuezh engine for review, speaking, and audits.',"
+      },
+      {
+        "path": "convex/devSeed.ts",
+        "line": 217,
+        "text": "description: Teach Mandarin using the xuezh engine for review, speaking, and audits."
+      },
+      {
+        "path": "convex/downloads.ts",
+        "line": 5,
+        "text": "import { applyRateLimit, getClientIp } from './lib/httpRateLimit'"
+      },
+      {
+        "path": "convex/downloads.ts",
+        "line": 29,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'download')"
+      },
+      {
+        "path": "convex/githubRestore.ts",
+        "line": 143,
+        "text": "          bypassNewSkillRateLimit: true,"
+      },
+      {
+        "path": "convex/githubRestoreMutations.ts",
+        "line": 61,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/httpApiV1.handlers.test.ts",
+        "line": 19,
+        "text": "type RateLimitArgs = { key: string; limit: number; windowMs: number }"
+      },
+      {
+        "path": "convex/httpApiV1.handlers.test.ts",
+        "line": 21,
+        "text": "function isRateLimitArgs(args: unknown): args is RateLimitArgs {"
+      },
+      {
+        "path": "convex/httpApiV1.handlers.test.ts",
+        "line": 43,
+        "text": "    if (isRateLimitArgs(args)) return okRate()"
+      },
+      {
+        "path": "convex/httpApiV1.handlers.test.ts",
+        "line": 114,
+        "text": "      if (isRateLimitArgs(args)) return okRate()"
+      },
+      {
+        "path": "convex/httpApiV1.handlers.test.ts",
+        "line": 169,
+        "text": "      if (isRateLimitArgs(args)) return okRate()"
+      },
+      {
+        "path": "convex/httpApiV1.handlers.test.ts",
+        "line": 231,
+        "text": "  it('search rate limits', async () => {"
+      },
+      {
+        "path": "convex/httpApiV1/skillsV1.ts",
+        "line": 5,
+        "text": "import { applyRateLimit, parseBearerToken } from '../lib/httpRateLimit'"
+      },
+      {
+        "path": "convex/httpApiV1/skillsV1.ts",
+        "line": 98,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'read')"
+      },
+      {
+        "path": "convex/httpApiV1/skillsV1.ts",
+        "line": 131,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'read')"
+      },
+      {
+        "path": "convex/httpApiV1/skillsV1.ts",
+        "line": 174,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'read')"
+      },
+      {
+        "path": "convex/httpApiV1/skillsV1.ts",
+        "line": 270,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'read')"
+      },
+      {
+        "path": "convex/httpApiV1/skillsV1.ts",
+        "line": 478,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'write')"
+      },
+      {
+        "path": "convex/httpApiV1/skillsV1.ts",
+        "line": 511,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'write')"
+      },
+      {
+        "path": "convex/httpApiV1/skillsV1.ts",
+        "line": 533,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'write')"
+      },
+      {
+        "path": "convex/httpApiV1/soulsV1.ts",
+        "line": 5,
+        "text": "import { applyRateLimit, parseBearerToken } from '../lib/httpRateLimit'"
+      },
+      {
+        "path": "convex/httpApiV1/soulsV1.ts",
+        "line": 74,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'read')"
+      },
+      {
+        "path": "convex/httpApiV1/soulsV1.ts",
+        "line": 113,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'read')"
+      },
+      {
+        "path": "convex/httpApiV1/soulsV1.ts",
+        "line": 268,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'write')"
+      },
+      {
+        "path": "convex/httpApiV1/soulsV1.ts",
+        "line": 301,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'write')"
+      },
+      {
+        "path": "convex/httpApiV1/soulsV1.ts",
+        "line": 323,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'write')"
+      },
+      {
+        "path": "convex/httpApiV1/starsV1.ts",
+        "line": 4,
+        "text": "import { applyRateLimit } from '../lib/httpRateLimit'"
+      },
+      {
+        "path": "convex/httpApiV1/starsV1.ts",
+        "line": 8,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'write')"
+      },
+      {
+        "path": "convex/httpApiV1/starsV1.ts",
+        "line": 31,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'write')"
+      },
+      {
+        "path": "convex/httpApiV1/usersV1.ts",
+        "line": 5,
+        "text": "import { applyRateLimit } from '../lib/httpRateLimit'"
+      },
+      {
+        "path": "convex/httpApiV1/usersV1.ts",
+        "line": 17,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'write')"
+      },
+      {
+        "path": "convex/httpApiV1/usersV1.ts",
+        "line": 214,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'read')"
+      },
+      {
+        "path": "convex/httpApiV1/whoamiV1.ts",
+        "line": 3,
+        "text": "import { applyRateLimit } from '../lib/httpRateLimit'"
+      },
+      {
+        "path": "convex/httpApiV1/whoamiV1.ts",
+        "line": 7,
+        "text": "  const rate = await applyRateLimit(ctx, request, 'read')"
+      },
+      {
+        "path": "convex/lib/embeddings.test.ts",
+        "line": 53,
+        "text": "    fetchMock.mockResolvedValueOnce(new Response('rate limited', { status: 429 }))"
+      },
+      {
+        "path": "convex/lib/githubAccount.test.ts",
+        "line": 177,
+        "text": "  it('throws rate-limit error on 403', async () => {"
+      },
+      {
+        "path": "convex/lib/githubAccount.test.ts",
+        "line": 190,
+        "text": "    ).rejects.toThrow(/rate limit exceeded/i)"
+      },
+      {
+        "path": "convex/lib/githubAccount.test.ts",
+        "line": 193,
+        "text": "  it('throws rate-limit error on 429', async () => {"
+      },
+      {
+        "path": "convex/lib/githubAccount.test.ts",
+        "line": 206,
+        "text": "    ).rejects.toThrow(/rate limit exceeded/i)"
+      },
+      {
+        "path": "convex/lib/githubAccount.ts",
+        "line": 58,
+        "text": "        throw new ConvexError('GitHub API rate limit exceeded — please try again in a few minutes')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 3,
+        "text": "import { applyRateLimit, getClientIp } from './httpRateLimit'"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 5,
+        "text": "type MockRateLimitStatus = {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 12,
+        "text": "type MockRateLimitPlan = {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 13,
+        "text": "  ip: MockRateLimitStatus"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 14,
+        "text": "  user?: MockRateLimitStatus"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 19,
+        "text": "function makeRateLimitCtx(plan: MockRateLimitPlan) {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 40,
+        "text": "    if (!source) throw new Error(`Missing rate limit source for ${key}`)"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 47,
+        "text": "  } as unknown as Parameters<typeof applyRateLimit>[0]"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 114,
+        "text": "describe('applyRateLimit headers', () => {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 130,
+        "text": "    } as unknown as Parameters<typeof applyRateLimit>[0]"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 135,
+        "text": "    const result = await applyRateLimit(ctx, request, 'download')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 140,
+        "text": "    expect(result.response.headers.get('X-RateLimit-Reset')).toBe('1031')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 141,
+        "text": "    expect(result.response.headers.get('RateLimit-Reset')).toBe('31')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 145,
+        "text": "  it('includes rate-limit headers without Retry-After when allowed', async () => {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 158,
+        "text": "    } as unknown as Parameters<typeof applyRateLimit>[0]"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 163,
+        "text": "    const result = await applyRateLimit(ctx, request, 'download')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 167,
+        "text": "    expect(headers.get('X-RateLimit-Limit')).toBe('20')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 168,
+        "text": "    expect(headers.get('X-RateLimit-Remaining')).toBe('18')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 169,
+        "text": "    expect(headers.get('X-RateLimit-Reset')).toBe('2015')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 170,
+        "text": "    expect(headers.get('RateLimit-Limit')).toBe('20')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 171,
+        "text": "    expect(headers.get('RateLimit-Remaining')).toBe('18')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 172,
+        "text": "    expect(headers.get('RateLimit-Reset')).toBe('15')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 178,
+        "text": "    const ctx = makeRateLimitCtx({"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 199,
+        "text": "    const result = await applyRateLimit(ctx, request, 'download')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 203,
+        "text": "    expect(headers.get('X-RateLimit-Limit')).toBe('120')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 204,
+        "text": "    expect(headers.get('X-RateLimit-Remaining')).toBe('42')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 210,
+        "text": "    const ctx = makeRateLimitCtx({"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 231,
+        "text": "    const result = await applyRateLimit(ctx, request, 'download')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 241,
+        "text": "    const ctx = makeRateLimitCtx({"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 262,
+        "text": "    const result = await applyRateLimit(ctx, request, 'download')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 266,
+        "text": "    expect(result.response.headers.get('X-RateLimit-Limit')).toBe('120')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 267,
+        "text": "    expect(result.response.headers.get('X-RateLimit-Remaining')).toBe('0')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 273,
+        "text": "    const ctx = makeRateLimitCtx({"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 289,
+        "text": "    const result = await applyRateLimit(ctx, request, 'download')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.test.ts",
+        "line": 293,
+        "text": "    expect(result.response.headers.get('X-RateLimit-Limit')).toBe('20')"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 6,
+        "text": "const RATE_LIMIT_WINDOW_MS = 60_000"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 7,
+        "text": "export const RATE_LIMITS = {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 13,
+        "text": "type RateLimitResult = {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 20,
+        "text": "export async function applyRateLimit("
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 23,
+        "text": "  kind: keyof typeof RATE_LIMITS,"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 33,
+        "text": "    const userResult = await checkRateLimit(ctx, `user:${userId}`, RATE_LIMITS[kind].key)"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 36,
+        "text": "      console.info('rate_limit_denied', {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 46,
+        "text": "        response: new Response('Rate limit exceeded', {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 63,
+        "text": "  const ipResult = await checkRateLimit(ctx, `ip:${ip}`, RATE_LIMITS[kind].ip)"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 67,
+        "text": "    console.info('rate_limit_denied', {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 77,
+        "text": "      response: new Response('Rate limit exceeded', {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 117,
+        "text": "async function checkRateLimit("
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 121,
+        "text": "): Promise<RateLimitResult> {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 123,
+        "text": "  const status = (await ctx.runQuery(internal.rateLimits.getRateLimitStatusInternal, {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 126,
+        "text": "    windowMs: RATE_LIMIT_WINDOW_MS,"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 127,
+        "text": "  })) as RateLimitResult"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 136,
+        "text": "    result = (await ctx.runMutation(internal.rateLimits.consumeRateLimitInternal, {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 139,
+        "text": "      windowMs: RATE_LIMIT_WINDOW_MS,"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 142,
+        "text": "    if (isRateLimitWriteConflict(error)) {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 161,
+        "text": "function rateHeaders(result: RateLimitResult): HeadersInit {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 166,
+        "text": "    'X-RateLimit-Limit': String(result.limit),"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 167,
+        "text": "    'X-RateLimit-Remaining': String(result.remaining),"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 168,
+        "text": "    'X-RateLimit-Reset': String(resetSeconds),"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 169,
+        "text": "    'RateLimit-Limit': String(result.limit),"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 170,
+        "text": "    'RateLimit-Remaining': String(result.remaining),"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 171,
+        "text": "    'RateLimit-Reset': String(resetDelaySeconds),"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 203,
+        "text": "function isRateLimitWriteConflict(error: unknown) {"
+      },
+      {
+        "path": "convex/lib/httpRateLimit.ts",
+        "line": 206,
+        "text": "    error.message.includes('rateLimits') &&"
+      },
+      {
+        "path": "convex/lib/skillPublish.ts",
+        "line": 70,
+        "text": "  bypassNewSkillRateLimit?: boolean"
+      },
+      {
+        "path": "convex/lib/skillPublish.ts",
+        "line": 262,
+        "text": "    bypassNewSkillRateLimit: options.bypassNewSkillRateLimit || undefined,"
+      },
+      {
+        "path": "convex/llmEval.ts",
+        "line": 152,
+        "text": "    // 7. Call OpenAI Responses API (with retry for rate limits)"
+      },
+      {
+        "path": "convex/llmEval.ts",
+        "line": 183,
+        "text": "              `[llmEval] Rate limited (${response.status}), retrying in ${Math.round(delay)}ms (attempt ${attempt + 1}/${MAX_RETRIES})`,"
+      },
+      {
+        "path": "convex/maintenance.ts",
+        "line": 1044,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/maintenance.ts",
+        "line": 1074,
+        "text": "      .query('auditLogs')"
+      },
+      {
+        "path": "convex/maintenance.ts",
+        "line": 1081,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/rateLimits.ts",
+        "line": 5,
+        "text": " * Read-only rate limit check. Returns current status without writing anything."
+      },
+      {
+        "path": "convex/rateLimits.ts",
+        "line": 8,
+        "text": "export const getRateLimitStatusInternal = internalQuery({"
+      },
+      {
+        "path": "convex/rateLimits.ts",
+        "line": 23,
+        "text": "      .query('rateLimits')"
+      },
+      {
+        "path": "convex/rateLimits.ts",
+        "line": 39,
+        "text": " * Consume one rate limit token. Only call this after getRateLimitStatusInternal"
+      },
+      {
+        "path": "convex/rateLimits.ts",
+        "line": 43,
+        "text": "export const consumeRateLimitInternal = internalMutation({"
+      },
+      {
+        "path": "convex/rateLimits.ts",
+        "line": 54,
+        "text": "      .query('rateLimits')"
+      },
+      {
+        "path": "convex/rateLimits.ts",
+        "line": 65,
+        "text": "      await ctx.db.insert('rateLimits', {"
+      },
+      {
+        "path": "convex/schema.ts",
+        "line": 484,
+        "text": "const auditLogs = defineTable({"
+      },
+      {
+        "path": "convex/schema.ts",
+        "line": 525,
+        "text": "const rateLimits = defineTable({"
+      },
+      {
+        "path": "convex/schema.ts",
+        "line": 626,
+        "text": "  auditLogs,"
+      },
+      {
+        "path": "convex/schema.ts",
+        "line": 629,
+        "text": "  rateLimits,"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 73,
+        "text": "const RATE_LIMIT_HOUR_MS = 60 * 60 * 1000"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 74,
+        "text": "const RATE_LIMIT_DAY_MS = 24 * RATE_LIMIT_HOUR_MS"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 76,
+        "text": "const SLUG_RESERVATION_MS = SLUG_RESERVATION_DAYS * RATE_LIMIT_DAY_MS"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 77,
+        "text": "const LOW_TRUST_ACCOUNT_AGE_MS = 30 * RATE_LIMIT_DAY_MS"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 81,
+        "text": "const NEW_SKILL_RATE_LIMITS = {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 149,
+        "text": "  const hourThreshold = now - RATE_LIMIT_HOUR_MS"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 150,
+        "text": "  const dayThreshold = now - RATE_LIMIT_DAY_MS"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 173,
+        "text": "function enforceNewSkillRateLimit(signals: OwnerTrustSignals) {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 174,
+        "text": "  const limits = signals.isLowTrust ? NEW_SKILL_RATE_LIMITS.lowTrust : NEW_SKILL_RATE_LIMITS.trusted"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 177,
+        "text": "      `Rate limit: max ${limits.perHour} new skills per hour. Please wait before publishing more.`,"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 182,
+        "text": "      `Rate limit: max ${limits.perDay} new skills per 24 hours. Please wait before publishing more.`,"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 489,
+        "text": "      await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 1525,
+        "text": "      await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3032,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3066,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3104,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3144,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3226,
+        "text": "      await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3290,
+        "text": "        await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3309,
+        "text": "        await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3333,
+        "text": "      await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3367,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3403,
+        "text": "      await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3437,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3468,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3499,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3544,
+        "text": "    bypassNewSkillRateLimit: v.optional(v.boolean()),"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3658,
+        "text": "      if (!args.bypassNewSkillRateLimit) {"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3660,
+        "text": "        enforceNewSkillRateLimit(ownerTrustSignals)"
+      },
+      {
+        "path": "convex/skills.ts",
+        "line": 3888,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/soulComments.ts",
+        "line": 92,
+        "text": "  await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/souls.ts",
+        "line": 556,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/users.test.ts",
+        "line": 555,
+        "text": "      'auditLogs',"
+      },
+      {
+        "path": "convex/users.ts",
+        "line": 355,
+        "text": "  await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/users.ts",
+        "line": 478,
+        "text": "  await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/users.ts",
+        "line": 544,
+        "text": "  await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/users.ts",
+        "line": 578,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/users.ts",
+        "line": 611,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "convex/users.ts",
+        "line": 687,
+        "text": "    // Audit log -- use the target as actor since there's no human actor"
+      },
+      {
+        "path": "convex/users.ts",
+        "line": 688,
+        "text": "    await ctx.db.insert('auditLogs', {"
+      },
+      {
+        "path": "packages/clawhub/src/http.bun.test.ts",
+        "line": 118,
+        "text": "      stdout: 'rate limited\\n429',"
+      },
+      {
+        "path": "packages/clawhub/src/http.bun.test.ts",
+        "line": 128,
+        "text": "    ).rejects.toThrow('rate limited')"
+      },
+      {
+        "path": "packages/clawhub/src/http.bun.test.ts",
+        "line": 133,
+        "text": "  it('includes rate-limit guidance from curl metadata on 429', async () => {"
+      },
+      {
+        "path": "packages/clawhub/src/http.bun.test.ts",
+        "line": 138,
+        "text": "        'rate limited\\n__CLAWHUB_CURL_META__\\n429\\n20\\n0\\n1771404540\\n20\\n0\\n34\\n34\\n',"
+      },
+      {
+        "path": "packages/clawhub/src/http.test.ts",
+        "line": 161,
+        "text": "  it('includes rate-limit guidance from headers on 429', async () => {"
+      },
+      {
+        "path": "packages/clawhub/src/http.test.ts",
+        "line": 168,
+        "text": "        'X-RateLimit-Limit': '20',"
+      },
+      {
+        "path": "packages/clawhub/src/http.test.ts",
+        "line": 169,
+        "text": "        'X-RateLimit-Remaining': '0',"
+      },
+      {
+        "path": "packages/clawhub/src/http.test.ts",
+        "line": 170,
+        "text": "        'X-RateLimit-Reset': '1771404540',"
+      },
+      {
+        "path": "packages/clawhub/src/http.test.ts",
+        "line": 172,
+        "text": "      text: async () => 'Rate limit exceeded',"
+      },
+      {
+        "path": "packages/clawhub/src/http.test.ts",
+        "line": 191,
+        "text": "        'X-RateLimit-Limit': '20',"
+      },
+      {
+        "path": "packages/clawhub/src/http.test.ts",
+        "line": 192,
+        "text": "        'X-RateLimit-Remaining': '0',"
+      },
+      {
+        "path": "packages/clawhub/src/http.test.ts",
+        "line": 194,
+        "text": "      text: async () => 'Rate limit exceeded',"
+      },
+      {
+        "path": "packages/clawhub/src/http.test.ts",
+        "line": 297,
+        "text": "      text: async () => 'rate limited',"
+      },
+      {
+        "path": "packages/clawhub/src/http.test.ts",
+        "line": 306,
+        "text": "    ).rejects.toThrow('rate limited')"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 21,
+        "text": "  '%{header:x-ratelimit-limit}',"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 22,
+        "text": "  '%{header:x-ratelimit-remaining}',"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 23,
+        "text": "  '%{header:x-ratelimit-reset}',"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 24,
+        "text": "  '%{header:ratelimit-limit}',"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 25,
+        "text": "  '%{header:ratelimit-remaining}',"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 26,
+        "text": "  '%{header:ratelimit-reset}',"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 63,
+        "text": "type RateLimitInfo = {"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 72,
+        "text": "  readonly rateLimit: RateLimitInfo"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 74,
+        "text": "  constructor(status: number, message: string, rateLimit: RateLimitInfo) {"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 78,
+        "text": "    this.rateLimit = rateLimit"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 245,
+        "text": "  if (rootError instanceof HttpStatusError && rootError.rateLimit.retryAfterSeconds !== undefined) {"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 246,
+        "text": "    return rootError.rateLimit.retryAfterSeconds * 1000 + jitterMs(RETRY_AFTER_JITTER_MS)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 264,
+        "text": "  const rateLimit = parseRateLimitInfo(headers)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 265,
+        "text": "  const message = buildHttpErrorMessage(status, text, rateLimit)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 267,
+        "text": "    throw new HttpStatusError(status, message, rateLimit)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 272,
+        "text": "function buildHttpErrorMessage(status: number, text: string, rateLimit: RateLimitInfo): string {"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 275,
+        "text": "  if (rateLimit.retryAfterSeconds !== undefined) {"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 276,
+        "text": "    details.push(`retry in ${rateLimit.retryAfterSeconds}s`)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 278,
+        "text": "  if (rateLimit.remaining !== undefined && rateLimit.limit !== undefined) {"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 279,
+        "text": "    details.push(`remaining: ${rateLimit.remaining}/${rateLimit.limit}`)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 281,
+        "text": "  if (rateLimit.resetDelaySeconds !== undefined) {"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 282,
+        "text": "    details.push(`reset in ${rateLimit.resetDelaySeconds}s`)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 290,
+        "text": "function parseRateLimitInfo(headers?: HeaderSource): RateLimitInfo {"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 292,
+        "text": "  const limit = parseIntHeader(getHeader(headers, 'x-ratelimit-limit') ?? getHeader(headers, 'ratelimit-limit'))"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 294,
+        "text": "    getHeader(headers, 'x-ratelimit-remaining') ?? getHeader(headers, 'ratelimit-remaining'),"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 315,
+        "text": "  const standardized = parseIntHeader(getHeader(headers, 'ratelimit-reset'))"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 319,
+        "text": "  const legacyEpochSeconds = parseIntHeader(getHeader(headers, 'x-ratelimit-reset'))"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 547,
+        "text": "    xRateLimitLimit,"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 548,
+        "text": "    xRateLimitRemaining,"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 549,
+        "text": "    xRateLimitReset,"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 550,
+        "text": "    rateLimitLimit,"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 551,
+        "text": "    rateLimitRemaining,"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 552,
+        "text": "    rateLimitReset,"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 557,
+        "text": "  setHeaderIfPresent(headers, 'x-ratelimit-limit', xRateLimitLimit)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 558,
+        "text": "  setHeaderIfPresent(headers, 'x-ratelimit-remaining', xRateLimitRemaining)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 559,
+        "text": "  setHeaderIfPresent(headers, 'x-ratelimit-reset', xRateLimitReset)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 560,
+        "text": "  setHeaderIfPresent(headers, 'ratelimit-limit', rateLimitLimit)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 561,
+        "text": "  setHeaderIfPresent(headers, 'ratelimit-remaining', rateLimitRemaining)"
+      },
+      {
+        "path": "packages/clawhub/src/http.ts",
+        "line": 562,
+        "text": "  setHeaderIfPresent(headers, 'ratelimit-reset', rateLimitReset)"
+      }
+    ]
+  },
+  "goRoutes": [
+    {
+      "group": "router",
+      "method": "GET",
+      "path": "/.well-known/clawhub.json"
+    },
+    {
+      "group": "auth",
+      "method": "POST",
+      "path": "/register"
+    },
+    {
+      "group": "auth",
+      "method": "POST",
+      "path": "/activate"
+    },
+    {
+      "group": "auth",
+      "method": "POST",
+      "path": "/login"
+    },
+    {
+      "group": "auth",
+      "method": "POST",
+      "path": "/resend-activation"
+    },
+    {
+      "group": "auth",
+      "method": "GET",
+      "path": "/feishu"
+    },
+    {
+      "group": "auth",
+      "method": "GET",
+      "path": "/feishu/callback"
+    },
+    {
+      "group": "auth",
+      "method": "POST",
+      "path": "/feishu/h5-login"
+    },
+    {
+      "group": "auth",
+      "method": "POST",
+      "path": "/feishu/bind"
+    },
+    {
+      "group": "auth",
+      "method": "GET",
+      "path": "/feishu/bind"
+    },
+    {
+      "group": "auth",
+      "method": "GET",
+      "path": "/feishu/bind/callback"
+    },
+    {
+      "group": "auth",
+      "method": "POST",
+      "path": "/email/bind"
+    },
+    {
+      "group": "auth",
+      "method": "POST",
+      "path": "/email/activate"
+    },
+    {
+      "group": "auth",
+      "method": "POST",
+      "path": "/email/resend-binding"
+    },
+    {
+      "group": "auth",
+      "method": "POST",
+      "path": "/logout"
+    },
+    {
+      "group": "auth",
+      "method": "GET",
+      "path": "/github"
+    },
+    {
+      "group": "auth",
+      "method": "GET",
+      "path": "/github/callback"
+    },
+    {
+      "group": "auth",
+      "method": "GET",
+      "path": "/gitlab"
+    },
+    {
+      "group": "auth",
+      "method": "GET",
+      "path": "/gitlab/callback"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/skills"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/skills/:slug"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/skills/:slug/versions"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/skills/:slug/versions/:version"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/skills/:slug/file"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/skills/:slug/comments"
+    },
+    {
+      "group": "v1",
+      "method": "POST",
+      "path": "/skills/:slug/comments"
+    },
+    {
+      "group": "v1",
+      "method": "DELETE",
+      "path": "/skills/:slug"
+    },
+    {
+      "group": "v1",
+      "method": "POST",
+      "path": "/skills/:slug/undelete"
+    },
+    {
+      "group": "v1",
+      "method": "POST",
+      "path": "/skills"
+    },
+    {
+      "group": "v1",
+      "method": "POST",
+      "path": "/skills/:slug/star"
+    },
+    {
+      "group": "v1",
+      "method": "DELETE",
+      "path": "/skills/:slug/star"
+    },
+    {
+      "group": "v1",
+      "method": "POST",
+      "path": "/stars/:slug"
+    },
+    {
+      "group": "v1",
+      "method": "DELETE",
+      "path": "/stars/:slug"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/search"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/download"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/resolve"
+    },
+    {
+      "group": "v1",
+      "method": "POST",
+      "path": "/import/gitlab/preview"
+    },
+    {
+      "group": "v1",
+      "method": "POST",
+      "path": "/import/gitlab/candidate"
+    },
+    {
+      "group": "v1",
+      "method": "POST",
+      "path": "/import/gitlab/files"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/health"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/whoami"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/users/me"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/my/skills"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/my/skills/:slug"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/users/me/stars"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/users/me/tokens"
+    },
+    {
+      "group": "v1",
+      "method": "POST",
+      "path": "/users/me/tokens"
+    },
+    {
+      "group": "v1",
+      "method": "DELETE",
+      "path": "/users/me/tokens/:id"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/users/:handle"
+    },
+    {
+      "group": "v1",
+      "method": "GET",
+      "path": "/users/:handle/skills"
+    },
+    {
+      "group": "admin",
+      "method": "GET",
+      "path": "/skills"
+    },
+    {
+      "group": "admin",
+      "method": "GET",
+      "path": "/skills/:slug"
+    },
+    {
+      "group": "admin",
+      "method": "POST",
+      "path": "/skills/:slug/delete"
+    },
+    {
+      "group": "admin",
+      "method": "POST",
+      "path": "/skills/:slug/undelete"
+    },
+    {
+      "group": "admin",
+      "method": "POST",
+      "path": "/skills/:slug/highlighted"
+    },
+    {
+      "group": "admin",
+      "method": "GET",
+      "path": "/users"
+    },
+    {
+      "group": "admin",
+      "method": "GET",
+      "path": "/users/:id"
+    },
+    {
+      "group": "admin",
+      "method": "POST",
+      "path": "/users/:id/approve"
+    },
+    {
+      "group": "admin",
+      "method": "POST",
+      "path": "/users/:id/reject"
+    },
+    {
+      "group": "admin",
+      "method": "POST",
+      "path": "/users/:id/disable"
+    },
+    {
+      "group": "admin",
+      "method": "POST",
+      "path": "/users/:id/enable"
+    }
+  ],
+  "validationLevel": "Static source inventory + line-by-line runtime entry/router/model/config review; no new end-to-end runtime test for features absent from code"
+}

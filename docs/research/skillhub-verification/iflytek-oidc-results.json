@@ -1,0 +1,220 @@
+{
+  "skillhubVersion": "v0.2.20",
+  "oidcProvider": "oidc-provider 9.8.1",
+  "mode": "Real SkillHub Docker image + PostgreSQL/Redis + standard local virtual-user OIDC Provider; OAuth authorization code flow and ID-token verification; not real Mingdao integration",
+  "before": [],
+  "firstLogin": {
+    "trace": [
+      {
+        "origin": "http://127.0.0.1:18880",
+        "path": "/oauth2/authorization/verifyoidc",
+        "method": "GET",
+        "status": 302
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/auth",
+        "method": "GET",
+        "status": 303
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/interaction/ZDNv9HtvkM5pBKmzY_YZzK0JK5kIb9lUyUgw9z9NhGo",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/interaction/ZDNv9HtvkM5pBKmzY_YZzK0JK5kIb9lUyUgw9z9NhGo",
+        "method": "POST",
+        "status": 303
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/auth/ZDNv9HtvkM5pBKmzY_YZzK0JK5kIb9lUyUgw9z9NhGo",
+        "method": "GET",
+        "status": 303
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/interaction/awG4uHKp1C0R6iAOYJf1I_y1NLxv8MFnPwc3ezsP9fL",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/interaction/awG4uHKp1C0R6iAOYJf1I_y1NLxv8MFnPwc3ezsP9fL",
+        "method": "POST",
+        "status": 303
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/auth/awG4uHKp1C0R6iAOYJf1I_y1NLxv8MFnPwc3ezsP9fL",
+        "method": "GET",
+        "status": 303
+      },
+      {
+        "origin": "http://127.0.0.1:18880",
+        "path": "/login/oauth2/code/verifyoidc",
+        "method": "GET",
+        "status": 302
+      },
+      {
+        "origin": "http://127.0.0.1:18880",
+        "path": "/api/v1/auth/me",
+        "method": "GET",
+        "status": 200
+      }
+    ],
+    "auth": {
+      "code": 0,
+      "msg": "Fetched successfully",
+      "data": {
+        "userId": "usr_6769b6a2-dc83-4eca-b27c-6b780d3c8254",
+        "displayName": "jit-fixture-one",
+        "email": "jit-fixture@example.test",
+        "avatarUrl": "",
+        "oauthProvider": "verifyoidc",
+        "canChangePassword": false,
+        "platformRoles": [
+          "USER"
+        ]
+      },
+      "timestamp": "2026-09-14T08:42:43.402284175Z",
+      "requestId": "a87f2d24-38c0-477c-9c8e-8e0c43fff14b"
+    }
+  },
+  "afterFirst": [
+    {
+      "id": "usr_6769b6a2-dc83-4eca-b27c-6b780d3c8254",
+      "display_name": "jit-fixture-one",
+      "email": "jit-fixture@example.test",
+      "status": "ACTIVE",
+      "provider_code": "verifyoidc",
+      "subject": "skillhub-jit-fixture-20260914",
+      "login_name": "jit-fixture-one",
+      "memberships": [
+        {
+          "namespace": "global",
+          "role": "MEMBER"
+        },
+        {
+          "namespace": "personal-4b02ddc3",
+          "role": "OWNER"
+        }
+      ],
+      "local_credentials": 0
+    }
+  ],
+  "secondLogin": {
+    "trace": [
+      {
+        "origin": "http://127.0.0.1:18880",
+        "path": "/oauth2/authorization/verifyoidc",
+        "method": "GET",
+        "status": 302
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/auth",
+        "method": "GET",
+        "status": 303
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/interaction/ZUTrTE09rtqw69OkBR1jfJ8biFlPuRVYlXELfWKJvrJ",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/interaction/ZUTrTE09rtqw69OkBR1jfJ8biFlPuRVYlXELfWKJvrJ",
+        "method": "POST",
+        "status": 303
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/auth/ZUTrTE09rtqw69OkBR1jfJ8biFlPuRVYlXELfWKJvrJ",
+        "method": "GET",
+        "status": 303
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/interaction/FfOmDbq4v7GnyhHGOlFcJfLJ4fkk4T1sHkI77uV6HCn",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/interaction/FfOmDbq4v7GnyhHGOlFcJfLJ4fkk4T1sHkI77uV6HCn",
+        "method": "POST",
+        "status": 303
+      },
+      {
+        "origin": "http://host.docker.internal:18881",
+        "path": "/auth/FfOmDbq4v7GnyhHGOlFcJfLJ4fkk4T1sHkI77uV6HCn",
+        "method": "GET",
+        "status": 303
+      },
+      {
+        "origin": "http://127.0.0.1:18880",
+        "path": "/login/oauth2/code/verifyoidc",
+        "method": "GET",
+        "status": 302
+      },
+      {
+        "origin": "http://127.0.0.1:18880",
+        "path": "/api/v1/auth/me",
+        "method": "GET",
+        "status": 200
+      }
+    ],
+    "auth": {
+      "code": 0,
+      "msg": "Fetched successfully",
+      "data": {
+        "userId": "usr_6769b6a2-dc83-4eca-b27c-6b780d3c8254",
+        "displayName": "jit-fixture-two",
+        "email": "jit-fixture@example.test",
+        "avatarUrl": "",
+        "oauthProvider": "verifyoidc",
+        "canChangePassword": false,
+        "platformRoles": [
+          "USER"
+        ]
+      },
+      "timestamp": "2026-09-14T08:42:43.854562217Z",
+      "requestId": "a72c8060-86e4-4bf9-9675-ad9eacad6f97"
+    }
+  },
+  "afterSecond": [
+    {
+      "id": "usr_6769b6a2-dc83-4eca-b27c-6b780d3c8254",
+      "display_name": "jit-fixture-two",
+      "email": "jit-fixture@example.test",
+      "status": "ACTIVE",
+      "provider_code": "verifyoidc",
+      "subject": "skillhub-jit-fixture-20260914",
+      "login_name": "jit-fixture-one",
+      "memberships": [
+        {
+          "namespace": "global",
+          "role": "MEMBER"
+        },
+        {
+          "namespace": "personal-4b02ddc3",
+          "role": "OWNER"
+        }
+      ],
+      "local_credentials": 0
+    }
+  ],
+  "assertions": {
+    "firstLoginCreatesExactlyOneUser": "pass",
+    "sameSubjectReusesUser": "pass",
+    "changedUsernameUpdatesDisplayName": "pass",
+    "externalIdentityMapped": "pass",
+    "defaultStatusActive": "pass",
+    "noLocalPasswordRegistration": "pass"
+  }
+}

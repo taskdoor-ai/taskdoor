@@ -4,17 +4,15 @@ import test from "node:test";
 
 const read = (file: string) => readFileSync(new URL(`../src/${file}`, import.meta.url), "utf8");
 
-test("创建主子任务展示只读预计投入，移除手填估算及专用草稿门禁", () => {
+test("创建主子任务允许编辑预计投入，总量只汇总叶子", () => {
   const plan = read("components/TaskCreationPlanEditor.tsx");
   const child = read("components/TaskCreationSubtaskEditor.tsx");
-  for (const source of [plan, child]) {
-    assert.match(source, /<TaskEffortCost\b[^>]*mode="creation"/);
-    assert.doesNotMatch(source, /TaskEffortField|TaskEffortSummary|TaskEffortValue|effortDirty|effortRevision|collapseBlocked|setEffortDirty/);
-  }
-  assert.doesNotMatch(child, /TaskCollaborationSchedule/, "子任务移除排期依据入口，人员和日期仍在原属性行编辑");
-  assert.match(plan, /showDistribution=\{form\.subtasks\.length > 0\}/, "复杂任务可查看叶子工时分布");
-  assert.match(plan, /tasks=\{getCreationEffortLeaves\(form\)\}/, "汇总仍从叶子获取，不重复加入主任务");
-  assert.match(child, /showDistribution=\{false\}/, "单项不显示同名分布");
+  assert.match(plan, /<TaskEffortEditor/);
+  assert.match(plan, /getCreationEffortLeaves\(form\)/);
+  assert.match(plan, /applyCreationEffortEdits/);
+  assert.match(child, /<TaskEffortField/);
+  assert.match(child, /effortDirty/);
+  assert.match(child, /onDirtyChange/);
 });
 
 test("创建子任务使用最右侧唯一展开入口，不保留三点菜单与嵌套标准展开", () => {
@@ -31,8 +29,11 @@ test("创建子任务使用最右侧唯一展开入口，不保留三点菜单�
 test("展开呈现完整对象字段，修改即时同步且保留AI帮助入口", () => {
   assert.ok(existsSync(new URL("../src/components/TaskCreationSubtaskEditor.tsx", import.meta.url)));
   const editor = read("components/TaskCreationSubtaskEditor.tsx");
-  for (const field of ["名称", "完成标准", "负责人", "截止时间", "前置依赖", "标签"]) assert.ok(editor.includes(field), field);
-  assert.doesNotMatch(editor, /creation-subtask-participants|\$\{label\}参与人|<small>参与人<\/small>/, "创建子任务不设置参与人");
+  for (const field of ["名称", "目标", "完成标准", "负责人", "截止时间", "前置依赖", "标签"]) assert.ok(editor.includes(field), field);
+  assert.match(editor, /creation-subtask-participants/, "各级子任务均可设置自身参与人");
+  assert.match(editor, /selected=\{draft\.participantIds\}/);
+  assert.match(editor, /members\.filter\(member => member\.id !== draft\.ownerId\)/, "参与人不重复包含负责人");
+  assert.match(editor, /creation-property-label">标签/, "标签添加入口有明确字段标题");
   assert.doesNotMatch(editor, /继承主任务目标|creation-subtask-inherited|const inheritedGoal/);
   assert.doesNotMatch(editor, /保存子任务|>取消<|const save =|const close =/);
   assert.match(editor, /const accepted = onChange\(next, baseline\)/);
@@ -43,15 +44,16 @@ test("展开呈现完整对象字段，修改即时同步且保留AI帮助入口
   assert.match(editor, /onDirtyChange/);
   assert.match(editor, /移除前置依赖：/);
   assert.doesNotMatch(editor, /className="creation-subtask-planning-separator"/, "前置依赖已上移，不再与预计投入同排");
-  assert.match(editor, /:\s*<small>无<\/small>/, "无前置依赖时只显示“无”");
+  assert.doesNotMatch(editor, /<small>无<\/small>|编辑\$\{label\}前置依赖/, "空依赖不显示无或编辑");
+  assert.match(editor, /aria-label=\{`添加\$\{label\}前置依赖`\}/, "使用添加入口选择依赖");
   assert.doesNotMatch(editor, /无前置依赖，可独立开始/);
 });
 
-test("最终创建仍阻止未能同步的输入，但不要求子任务或估算手工保存", () => {
+test("最终创建阻止未保存的工时或未同步的输入", () => {
   const page = read("components/TaskCreationPage.tsx");
   assert.match(page, /hasUnsavedSubtasks/);
   assert.match(page, /onSubtaskDirtyChange/);
-  assert.match(page, /子任务有未能同步的修改，请展开核对/);
+  assert.match(page, /有尚未保存的修改，请先保存或取消后再创建。/);
   assert.doesNotMatch(page, /请先保存或取消子任务修改/);
   assert.doesNotMatch(page, /hasUnsavedCriteria|onCriteriaDirtyChange/);
 });

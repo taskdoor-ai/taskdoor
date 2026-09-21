@@ -1,47 +1,58 @@
 ---
 name: agentdoor-task-status-analyzer
-description: Use when an AgentDoor user asks for a task's current situation, next action, completion progress, or an updated summary after deliverables or requirements change.
+description: 当用户询问任务当前情况、下一步、完成度或燃起图，或目标、标准、交付、讨论及确认变化后需要更新情况说明时使用。
 ---
 
 # 任务状态分析
 
-组织“当前情况、下一步建议、进度”三部分。分析不等于修改任务状态，进度不等于已通过正式验收。
+按“当前情况、下一步建议、进度”回答任务现在怎样，以及接下来可以做什么。
 
-输出 `schemaVersion: agentdoor.task-status-analysis.v0.1`，规则 `ruleVersion: TASK-STATUS-2026-09-03-v1`。
+## 规则依据
 
-## 先读取与输入
+业务依据为 PRD **6.2、6.3、7.4**，见[产品规则](references/product-rules.md)。先读取[共用规则](../shared/product-rules.md)及[证据与更新契约](../shared/evidence-and-updates.md)；输出按[字段契约](references/output-contract.md)组织。
 
-完整读取 [证据与更新契约](../shared/evidence-and-updates.md) 和 [产品规则](references/product-rules.md)。需要当前任务和子任务范围、目标／标准、正式状态与版本、当前讨论、文件正文／交付／确认，以及有效诊断和进度结果。
+输出协议：`agentdoor.task-status-analysis.v0.1`。规则版本：`TASK-STATUS-2026-09-08-v2`。
 
-诊断不足且实际需要识别问题时，读取并应用 [任务诊断](../agentdoor-task-diagnostician/SKILL.md)；计算进度时读取并应用 [EWD 与进度](../agentdoor-ewd-progress/SKILL.md) 的 progress／trend 模式。已有同版本有效结果直接复用；所需数据或计算能力不可用时，返回对应缺口，不模拟成功调用。
+## 适用范围
 
-## 分析顺序
+分析当前任务及与本次问题有关的子任务、讨论和交付。需要识别问题时复用[任务诊断](../agentdoor-task-diagnostician/SKILL.md)，需要计算进度时复用 [EWD](../agentdoor-ewd-progress/SKILL.md) 的 `progress`、`trend` 模式。同一输入版本的有效结果直接引用，不重复计算。
 
-1. 锁定任务、标准、文件和当前确认的有效版本。把事实分成正式状态、讨论报告、已核对结果、未满足项、待核对项；“我做完了”是报告，不能推翻当前缺失结果。
-2. **当前情况**：先写有依据的已交付结果与剩余缺口，必要时解释近期实质变化。保留正式状态；发现状态与交付矛盾时建议核对，不暗改状态或自动宣告完成。父任务汇总注明哪些是子任务结果，不将个别子项完成说成整体完成。
-3. **下一步建议**：优先核对当前有效冲突、解除确证阻塞，再补齐尚未满足结果。只引用诊断 Skill 的两种类型，参考前置尚未完成不等于阻塞。通常给一项最直接可执行行动；需要多人分别处理时按具体贡献列出，不虚构处理人或分配权限。
-4. **进度**：只引用同一当前输入版本下的 EWD 结果，包含完成量、总量、完成度和真实燃起图。不要用子任务数量、耗时、评论或提交次数另算百分比；EWD 服务／必要数据不可用时 percent=null，说明待核对。旧版本 100% 不可充当当前进度。
-5. 总结是否收敛时区分新增完成、范围增减和重估；历史不足不判断趋势。内容缺失、读取失败或旧核对失效分别说明，不能用“0%”代替未知。
-6. 标准、交付内容、反馈或确认变化时只重算受影响部分。重复刷新不制造新进展或分析时间；失效版本结果不覆盖新结果。输出可读摘要和可追溯依据，不展示内部推理链。
+本 Skill 产生分析与行动建议；任务修改由后续受控流程完成。分析可以进入助手的变更预览，但不能把分析文字当成已执行操作；助手路径的适用边界见[已确认的路径补充](../shared/assistant-path-rules.md)。
 
-## 返回 result
+## 输入要求
 
-```text
-{taskId, taskVersion, formalStatus,
- currentSituation: {summary, confirmedResults, unmetResults, pendingChecks,
-                    recentChanges, evidenceRefs},
- nextActions: [{action, actorId: null|id,
-                diagnosisType: null|execution_blockage|decision_conflict,
-                reason, evidenceRefs}],
- progress: {state: current|unknown|stale,
-            ewdResultRef: null|ref, inputVersions,
-            totalEwdMinutes: null|number, completedEwdMinutes: null|number,
-            completionPercent: null|number, trend: null|result, reason},
- formalStatusUnchanged: true}
-```
+| 输入 | 用途 | 缺失时处理 |
+| --- | --- | --- |
+| 当前任务 ID、版本、正式状态、目标与完成标准 | 确定对象和结果边界 | 不能定位任务时返回待补上下文 |
+| 当前讨论、活动、文件正文、交付与确认 | 判断已完成内容、缺口和变化 | 已知部分继续分析，未读取部分标待核对 |
+| 子任务及范围覆盖 | 父任务汇总 | 不把局部子任务说成整个任务 |
+| 当前有效诊断 | 排列下一步行动 | 需要时按诊断规则核对，不伪造服务结果 |
+| 估算明细、内容核对及历史快照 | 完成度和燃起图 | 无有效依据时数值或趋势为 `null` |
 
-必要进度未知但当前情况仍可判定时，外层 status=partial；不要让一个不可用服务阻止已知事实展示，也不要假装全部完成。仅列声明为当前有效的证据；如果保留旧结果供历史对照，要明确历史版本、不得填入当前数值字段。writeReceipt=null。
+## 执行流程
 
-## 验证例
+1. **核对版本。** 固定任务、标准、文件和确认的有效版本，区分正式字段、讨论报告、内容核对与历史结果。新发言不自动替代正式状态或确认。
+2. **说明当前情况。** 先写当前已有结果，再写未满足的完成标准、待核对事项和近期实质变化。引用具体内容和版本，不用“总体顺利”等空泛判断代替事实。
+3. **确定下一步。** 有当前决策冲突先核对双方要求；有确证执行阻塞先推动缺失交付或确认替代；否则补齐尚未满足的结果。给出最直接可执行的行动，有依据时注明处理人。
+4. **引用进度。** 使用同一当前输入版本下的 EWD 总量、已完成量、待确认量和完成度。已有有效结果原样引用；自行应用 EWD 规则时标明为本次计算，不能伪造调用记录。
+5. **解释燃起图。** 基于真实历史点解释总量与完成量之间的差距；分别说明新增完成、范围增减和重估。只有一个时点或没有历史时，不推断收敛趋势。
+6. **返回可继续处理的分析。** 三部分分别给出结果与未知项。一个部分不可用不阻止展示其他已知事实；整体有必要缺口时返回 `partial`。
 
-任务 v4 正式状态为进行中，讨论说“完成”，但当前文件缺少 c2；旧 v3 进度为 100%，当前进度服务不可用。输出“已提交结果仍缺 c2，需要补齐并核对”，正式状态仍进行中，当前 completionPercent=null；不能沿用旧 100% 或编造新百分比。
+## 输出要求
+
+- `currentSituation`：一句摘要、已核对结果、未满足结果、待核对项、近期变化及证据。
+- `nextActions`：具体行动、建议处理人、对应诊断类型及原因；未知处理人为 `null`。
+- `progress`：当前有效性、EWD 结果来源或本次计算说明、版本、数值和趋势。
+- `formalStatus` 原样保留；`formalStatusUnchanged=true`、`writeReceipt=null`。
+
+具体字段见[输出契约](references/output-contract.md)。不得用时间流逝、子任务数量、上传次数或讨论活跃度另算百分比；不得把旧版 100% 填入当前进度。文件内容完成度不等于正式验收，状态“已完成”也不自动证明验收通过。
+
+## 更新与失效
+
+目标、标准、交付、反馈或确认变化时复核受影响部分。引用的诊断与进度必须分别核对版本；来源失效时标记过期或未知，不拼接成一份“当前”结论。刷新不制造新进展。
+
+## 场景核对
+
+任务 v4 仍在进行中，讨论说“做完了”，当前文件却缺少风险预案；旧 v3 进度为 100%。应说明已提交主体内容、仍缺风险预案并建议补齐核对；当前进度无法重算时为 `null`，正式状态保持进行中。
+
+提交前检查：三部分齐全；摘要有具体依据；下一步针对当前缺口；进度来源与版本一致；未知未写成零或完成。

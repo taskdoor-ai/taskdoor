@@ -1,5 +1,6 @@
 /** Shared data contracts kept free of component/runtime imports. */
 export type PersonOption = {
+  membershipStatus?: "active" | "invited";
   avatarUrl?: string;
   availability?: string;
   currentWork?: string[];

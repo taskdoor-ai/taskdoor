@@ -28,7 +28,9 @@ test("顶栏只保留团队与必要工具，推荐入口留在任务索引内",
   assert.match(topbarSource, /id="workspace-account-trigger"/);
   assert.match(topbarSource, /<DropdownMenuTrigger\b[^>]*aria-label="打开账户菜单"/);
   assert.match(topbarSource, /<DropdownMenuContent\b[^>]*aria-label="账户菜单"/);
-  assert.doesNotMatch(topbarSource, /<nav\b|onSectionChange|activeSection|primaryItems|连接 AI|新建对话|注意力地图/);
+  assert.match(topbarSource, /id="workspace-ai-trigger" onClick=\{onConnectAi\}/);
+  assert.match(appSource, /<AiConnectionPage embedded/);
+  assert.doesNotMatch(topbarSource, /<nav\b|onSectionChange|activeSection|primaryItems|新建对话|注意力地图/);
   const taskList = readFileSync(new URL("../src/components/TaskWorkspaceList.tsx", import.meta.url), "utf8");
   const header = taskList.match(/<header\b[\s\S]*?<\/header>/)?.[0];
   assert.ok(header, "个人入口保留可聚焦标题");
@@ -105,11 +107,14 @@ test("回到我的工作不重置筛选、已选详情或未完成创建草稿",
   assert.match(appSource, /onOpenTaskList=\{showTaskList\}/, "窄屏可明确返回列表，不被上次已选详情挡住");
 });
 
-test("隐藏入口保留 AI 页面，我的工作复用共享产品弹层且不记录伪连接", () => {
+test("全局连接保留 AI 指南，我的工作复用共享产品弹层且不记录伪连接", () => {
   for (const component of ["AiConnectionPage", "AiConnectionDialog"]) {
     assert.ok(existsSync(new URL(`../src/components/${component}.tsx`, import.meta.url)));
   }
   assert.match(appSource, /<AiConnectionDialog[\s\S]*?request=\{workbenchAiConnectionRequest\}/);
+  assert.match(appSource, /onConnectAi=\{\(\) => setGlobalAiConnectionOpen\(true\)\}/);
+  assert.match(appSource, /<Dialog onOpenChange=\{setGlobalAiConnectionOpen\} open=\{globalAiConnectionOpen\}/);
+  assert.doesNotMatch(appSource, /aiConnectionReturnSection|showAiConnection|closeAiConnectionPage/);
   assert.doesNotMatch(appSource, /<CliConnectionDialog|agentdoor-local-ai-connected|onConnected=/);
   assert.doesNotMatch(appSource, /localStorage\.clear\(\)/);
 });

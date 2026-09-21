@@ -18,7 +18,10 @@
 .task-subtask-list-items > .task-subtask-list-item:last-child { border-bottom: 0; }
 .task-subtask-list-item > .task-subtask-list-row { border: 0 !important; cursor: default; }
 .task-subtask-list-item > .task-subtask-list-row:hover { background: transparent; }
-.task-subtask-title { padding: 0; border: 0; min-width: 0; width: fit-content; background: transparent; color: var(--ad-ink); font-size: var(--ad-text-label); font-weight: 550; cursor: pointer; text-align: left; overflow-wrap: anywhere; }
+.task-subtask-title { display: inline-flex; min-width: 0; width: fit-content; flex-wrap: wrap; align-items: center; gap: var(--ad-space-2); padding: 0; border: 0; background: transparent; color: var(--ad-ink); font-size: var(--ad-text-label); font-weight: 550; cursor: pointer; text-align: left; overflow-wrap: anywhere; }
+.task-subtask-title > span { min-width: 0; }
+.task-subtask-title-count { display: inline-flex; flex: 0 0 auto; box-sizing: border-box; align-items: center; justify-content: center; gap: .25em; height: 1.65em; min-height: 0; padding: 0 .4em; border: 1px solid var(--ad-border); border-radius: .45em; background: transparent; color: var(--ad-ink-secondary); font-size: .85em; font-weight: 400; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.task-subtask-title-count > svg { flex-shrink: 0; width: 1em; height: 1em; }
 .task-subtask-title:hover { color: var(--ad-route); }
 .task-subtask-title:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; border-radius: var(--ad-radius-control); }
 .task-subtask-title:disabled { cursor: default; }

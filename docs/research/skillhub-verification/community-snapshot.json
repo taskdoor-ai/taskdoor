@@ -1,0 +1,302 @@
+{
+  "checked_at": "2026-09-14T10:25:20.000231+00:00",
+  "source": "GitHub REST API",
+  "repositories": {
+    "iflytek/skillhub": {
+      "full_name": "iflytek/skillhub",
+      "stargazers_count": 5094,
+      "forks_count": 834,
+      "created_at": "2026-03-11T12:17:05Z",
+      "pushed_at": "2026-09-14T07:08:50Z",
+      "archived": false,
+      "html_url": "https://github.com/iflytek/skillhub",
+      "recent_releases": [
+        {
+          "tag_name": "v0.2.20",
+          "published_at": "2026-09-13T09:27:27Z",
+          "prerelease": false,
+          "html_url": "https://github.com/iflytek/skillhub/releases/tag/v0.2.20"
+        },
+        {
+          "tag_name": "cli-v0.1.12",
+          "published_at": "2026-09-09T09:50:14Z",
+          "prerelease": false,
+          "html_url": "https://github.com/iflytek/skillhub/releases/tag/cli-v0.1.12"
+        },
+        {
+          "tag_name": "v0.2.19",
+          "published_at": "2026-09-04T11:11:26Z",
+          "prerelease": false,
+          "html_url": "https://github.com/iflytek/skillhub/releases/tag/v0.2.19"
+        },
+        {
+          "tag_name": "cli-v0.1.11",
+          "published_at": "2026-09-04T10:09:01Z",
+          "prerelease": false,
+          "html_url": "https://github.com/iflytek/skillhub/releases/tag/cli-v0.1.11"
+        },
+        {
+          "tag_name": "cli-v0.1.10",
+          "published_at": "2026-09-03T08:32:40Z",
+          "prerelease": false,
+          "html_url": "https://github.com/iflytek/skillhub/releases/tag/cli-v0.1.10"
+        }
+      ],
+      "contributors_first_page": [
+        {
+          "login": "XiaoSeS",
+          "type": "User",
+          "contributions": 365
+        },
+        {
+          "login": "dongmucat",
+          "type": "User",
+          "contributions": 350
+        },
+        {
+          "login": "vsxd",
+          "type": "User",
+          "contributions": 236
+        },
+        {
+          "login": "yun-zhi-ztl",
+          "type": "User",
+          "contributions": 190
+        },
+        {
+          "login": "wowo-zZ",
+          "type": "User",
+          "contributions": 66
+        },
+        {
+          "login": "FenjuFu",
+          "type": "User",
+          "contributions": 54
+        },
+        {
+          "login": "Pipreola",
+          "type": "User",
+          "contributions": 19
+        },
+        {
+          "login": "tap-top",
+          "type": "User",
+          "contributions": 13
+        },
+        {
+          "login": "jangrui",
+          "type": "User",
+          "contributions": 11
+        },
+        {
+          "login": "myml",
+          "type": "User",
+          "contributions": 7
+        },
+        {
+          "login": "Vast-Stars",
+          "type": "User",
+          "contributions": 7
+        },
+        {
+          "login": "likes1234-bro",
+          "type": "User",
+          "contributions": 6
+        },
+        {
+          "login": "LHB6540",
+          "type": "User",
+          "contributions": 4
+        },
+        {
+          "login": "michael-xiii",
+          "type": "User",
+          "contributions": 4
+        },
+        {
+          "login": "gale-popai",
+          "type": "User",
+          "contributions": 3
+        },
+        {
+          "login": "mosesyu95",
+          "type": "User",
+          "contributions": 3
+        },
+        {
+          "login": "tenten-shih",
+          "type": "User",
+          "contributions": 2
+        },
+        {
+          "login": "shychee",
+          "type": "User",
+          "contributions": 2
+        },
+        {
+          "login": "dongjiang1989",
+          "type": "User",
+          "contributions": 2
+        },
+        {
+          "login": "betterlmy",
+          "type": "User",
+          "contributions": 2
+        },
+        {
+          "login": "Rsweater",
+          "type": "User",
+          "contributions": 2
+        },
+        {
+          "login": "CaffreySun",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "xiaoyaner0201",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "yaffir",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "xring",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "vzpd",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "qwn3213",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "Phil-OSophy-42",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "15258725278",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "zhaieryuan",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "bbdu3",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "utafrali",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "TechQuery",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "ShinyHero666",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "SenLinLeo",
+          "type": "User",
+          "contributions": 1
+        },
+        {
+          "login": "zhukai9527",
+          "type": "User",
+          "contributions": 1
+        }
+      ],
+      "sources": {
+        "repository": "https://api.github.com/repos/iflytek/skillhub",
+        "releases": "https://api.github.com/repos/iflytek/skillhub/releases?per_page=5",
+        "contributors": "https://api.github.com/repos/iflytek/skillhub/contributors?per_page=100"
+      }
+    },
+    "scalefocus/skilly": {
+      "full_name": "scalefocus/skilly",
+      "stargazers_count": 6,
+      "forks_count": 0,
+      "created_at": "2026-07-09T09:44:46Z",
+      "pushed_at": "2026-09-11T03:55:07Z",
+      "archived": false,
+      "html_url": "https://github.com/scalefocus/skilly",
+      "recent_releases": [
+        {
+          "tag_name": "v1.151.0",
+          "published_at": "2026-09-10T10:34:04Z",
+          "prerelease": false,
+          "html_url": "https://github.com/scalefocus/skilly/releases/tag/v1.151.0"
+        },
+        {
+          "tag_name": "v1.148.0",
+          "published_at": "2026-09-08T14:24:51Z",
+          "prerelease": false,
+          "html_url": "https://github.com/scalefocus/skilly/releases/tag/v1.148.0"
+        },
+        {
+          "tag_name": "v1.147.1",
+          "published_at": "2026-09-08T11:44:00Z",
+          "prerelease": false,
+          "html_url": "https://github.com/scalefocus/skilly/releases/tag/v1.147.1"
+        },
+        {
+          "tag_name": "v1.147.0",
+          "published_at": "2026-09-08T10:55:29Z",
+          "prerelease": false,
+          "html_url": "https://github.com/scalefocus/skilly/releases/tag/v1.147.0"
+        },
+        {
+          "tag_name": "v1.146.0",
+          "published_at": "2026-09-03T08:02:27Z",
+          "prerelease": false,
+          "html_url": "https://github.com/scalefocus/skilly/releases/tag/v1.146.0"
+        }
+      ],
+      "contributors_first_page": [
+        {
+          "login": "krazymir",
+          "type": "User",
+          "contributions": 61
+        },
+        {
+          "login": "dependabot[bot]",
+          "type": "Bot",
+          "contributions": 19
+        },
+        {
+          "login": "krazymirk",
+          "type": "User",
+          "contributions": 2
+        },
+        {
+          "login": "vladimirskarlatovsc",
+          "type": "User",
+          "contributions": 1
+        }
+      ],
+      "sources": {
+        "repository": "https://api.github.com/repos/scalefocus/skilly",
+        "releases": "https://api.github.com/repos/scalefocus/skilly/releases?per_page=5",
+        "contributors": "https://api.github.com/repos/scalefocus/skilly/contributors?per_page=100"
+      }
+    }
+  }
+}

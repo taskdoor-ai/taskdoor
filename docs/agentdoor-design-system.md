@@ -1,8 +1,18 @@
-# AgentDoor Design System（待按 V2 重构）
+# TaskDoor Design System（待按 V2 重构）
 
 > 本文仍包含固定阶段、看板、时间线和自定义视图等历史设计。2026-08-26 之后的产品与实现判断以 [产品定义 V2](./product-v2/README.md) 为准；视觉 Token 仍可参考，产品结构不再视为 canonical。
 
 > 项目基调、工作流和规则优先级见 [项目工作宪章](./product-v2/00-project-operating-charter.md)。本文只对视觉、内容、交互品质、组件治理和无障碍负责，不能反向定义产品对象、状态、权限或导航。
+
+### 全局操作提示 Toast（2026-09-14）
+
+- 邀请发送、保存、复制、删除／撤销等短时操作反馈统一使用共用 Toast，固定在视口顶部居中；桌面距顶部 24px，窄屏 12px，并避让安全区域。弹窗打开时仍显示在上方，不跟随页面或弹窗滚动。
+- 成功、失败、普通说明复用同一尺寸、圆角、阴影与关闭入口，以图标和文案区分；普通提示 4 秒、错误 6 秒、带操作的提示 8 秒自动消失。悬停、键盘聚焦或窗口失焦时暂停倒计时。
+- 同一提示重复触发时更新内容并重新计时，不重复堆叠；最多显示 3 条。新提示不抢焦点，F6 可聚焦提示区；关闭和操作按钮支持键盘与至少 44px 触达，窄屏长文案及操作换行，不产生横向滚动。减少动态效果时关闭过渡。
+- 邀请成功提示只显示「邀请已发送，等待对方加入」和关闭按钮；重发只显示一条「邀请已重新发送，旧链接已失效」。两者均不提供「查看邮件」，按普通提示 4 秒自动消失（2026-09-15 修订）。文件删除后的「撤销」保持原恢复操作；带上下文的操作在离开对应任务或切换团队后移除，避免操作旧对象。
+- 输入校验、草稿冲突、加载及需要持续处理的错误留在相关字段／区域，不用会自动消失的 Toast 替代。界面显示正式运行文案。
+
+组件入口为 `src/components/ui/toast.tsx` 的 `ToastProvider` 和 `toast.success / error / info / dismiss`，应用根节点只挂一份 Provider；定时器、暂停、播报、焦点和关闭沿用已安装的 Base UI Toast。样式统一在 `src/styles/toast.css`，功能页不得重新定义位置或自建通知定时器。PRD 与静态参考页通过 `src/prd/StandaloneToast.tsx` 复用同一组件，运行 `npm run build:toast` 更新静态产物（dev/build 前自动执行），不另写一套 Toast。
 
 ### 有效性地图
 
@@ -51,7 +61,7 @@
 
 按 D-147，点击新建进入任务页内的紧凑需求工作区，保留 AI 理解、最多两项关键补问、已有任务关系判断和人工确认；不提供默认空白任务表，不恢复聊天气泡、弹窗或巨型居中入口。真实阶段用轻量步骤标识，补问和关系选择在同一页面呈现；生成后头部复用任务详情的 `task-detail-hero-card`、标题、目标、完成标准和紧凑属性栏样式，只有一份可编辑方案。子任务使用清单、彩色任务图标与前置依赖提示；自然语言调整先展示具体字段差异，再应用到当前方案。已有 21st 适配的 PersonPicker / MemberSelector、TaskDueDatePicker、Accordion 继续使用，保留蓝色主动作与必要过渡，不另造双栏简报。五个 Mock 场景在需求阶段以可识别的业务卡片呈现，生成后收在“使用示例”，切换可返回原草稿；能力限制显式标注。阶段切换正确移动焦点，窄屏重排；减弱动效偏好下关闭过渡，必要字段和已设依赖不依赖 hover 才可见。
 
-AgentDoor is the shared context and continuation layer between people and their personal AIs. Its interface should feel like a carefully prepared working brief: clear, readable, source-backed, and ready for a human decision.
+TaskDoor is the shared context and continuation layer between people and their personal AIs. Its interface should feel like a carefully prepared working brief: clear, readable, source-backed, and ready for a human decision.
 
 The system uses white surfaces, clear typography, and blue for primary actions. The default light theme uses a white canvas; gray distinguishes navigation and grouped regions. Color communicates evidence type, uncertainty, confirmation, risk, and acceptance.
 
@@ -73,11 +83,11 @@ The visual standard is defined by four qualities:
 - **Character:** each important surface should contain at least one product-specific design decision that could not be copied unchanged into a generic admin template.
 - **Coherence:** Home, Tasks, Settings, and AI connection may have different jobs, but they must unmistakably belong to the same product.
 
-A mature external component is raw material, not the finished design. It must be composed, adapted, and visually reviewed in AgentDoor's real content and surrounding layout.
+A mature external component is raw material, not the finished design. It must be composed, adapted, and visually reviewed in TaskDoor's real content and surrounding layout.
 
 ### Signature: the Routing Thread
 
-A 2px blue line connects the five things AgentDoor must never blur:
+A 2px blue line connects the five things TaskDoor must never blur:
 
 ```text
 问题 → 证据 → 责任 / 能力 / 权限 → 路由决定 → 业务验收
@@ -110,22 +120,22 @@ This short path does not require external search, a Component Research Record, r
 
 A **new page, materially reshaped workflow, new reusable interaction primitive, or new dependency** uses full preparation before implementation:
 
-1. Read the relevant product definition, design-system sections, and adjacent AgentDoor surfaces.
+1. Read the relevant product definition, design-system sections, and adjacent TaskDoor surfaces.
 2. Use the `frontend-design` skill and identify the visual / interaction principles being introduced or changed.
-3. Inventory AgentDoor's foundation first. If it cannot express the requirement, research mature external primitives and verify license, dependencies, maintenance, accessibility, framework fit, adoption signal, and visual fit.
+3. Inventory TaskDoor's foundation first. If it cannot express the requirement, research mature external primitives and verify license, dependencies, maintenance, accessibility, framework fit, adoption signal, and visual fit.
 4. Define the affected object model, states, keyboard path, responsive behavior, and failure / permission behavior.
-5. Implement with semantic `--ad-*` tokens and one AgentDoor-owned shared API.
+5. Implement with semantic `--ad-*` tokens and one TaskDoor-owned shared API.
 6. Verify the production build plus the actual desktop / mobile and keyboard states affected by the new pattern.
 
-“Pure handcrafting” is not a virtue by itself. When a suitable mature primitive exists, source-adapt it and preserve attribution; custom implementation is reserved for AgentDoor-specific domain semantics that established components cannot express.
+“Pure handcrafting” is not a virtue by itself. When a suitable mature primitive exists, source-adapt it and preserve attribution; custom implementation is reserved for TaskDoor-specific domain semantics that established components cannot express.
 
 #### External component discovery gate
 
-External discovery is required only when full preparation is triggered **and** the existing AgentDoor foundation cannot represent the interaction, or when an external implementation / dependency is being considered. Reusing or composing an established local pattern does not trigger a new search. The designer or agent owns any required discovery; the user must not be expected to find the component.
+External discovery is required only when full preparation is triggered **and** the existing TaskDoor foundation cannot represent the interaction, or when an external implementation / dependency is being considered. Reusing or composing an established local pattern does not trigger a new search. The designer or agent owns any required discovery; the user must not be expected to find the component.
 
 Use the relevant entries in this order; do not exhaust every source when the local foundation or an authoritative implementation already settles the choice:
 
-1. **AgentDoor foundation:** inventory existing `src/components/ui`, product components, Token variants, and the closest relevant current screen.
+1. **TaskDoor foundation:** inventory existing `src/components/ui`, product components, Token variants, and the closest relevant current screen.
 2. **21st.dev first pass:** search the exact interaction noun and related category; inspect Popular as well as visually relevant results. Record usage counts when available, dependencies, source code, and installation method. A high count is a useful adoption signal, not proof of product fit.
 3. **Accessible foundation:** check shadcn/ui and its registry, Base UI, React Aria, or Radix for behavior-heavy controls. Prefer these for Dialog, Combobox, Select, Menu, Tooltip, Calendar, focus management, and keyboard behavior.
 4. **Application patterns:** check maintained collections such as Origin UI and Tremor for forms, settings, filters, tables, pagination, dashboard, and enterprise application compositions.
@@ -138,16 +148,16 @@ Compare the smallest credible set that can answer the choice. A novel shared pri
 - evidence of maturity or adoption;
 - interaction and accessibility strengths;
 - dependency, license, and maintenance risks;
-- visual fit with AgentDoor and the amount of adaptation required;
+- visual fit with TaskDoor and the amount of adaptation required;
 - one of **adopt**, **adapt**, or **reject**, with a concrete reason.
 
-The final selection may combine layers—for example, Base UI behavior with a 21st.dev visual anatomy—but must produce one AgentDoor-owned shared API. Copying a component into a single page without Token adaptation, attribution, state coverage, and reuse does not count as successful adoption.
+The final selection may combine layers—for example, Base UI behavior with a 21st.dev visual anatomy—but must produce one TaskDoor-owned shared API. Copying a component into a single page without Token adaptation, attribution, state coverage, and reuse does not count as successful adoption.
 
 When a required discovery finds no suitable candidate, record the evidence that custom work is justified. “Faster to hand-code” and “I already know how” are not sufficient reasons when the discovery gate is actually triggered.
 
 ### Design system governance and reuse
 
-AgentDoor has one visual and interaction system. Pages may express different jobs, but they may not invent independent typography, button styles, card language, form behavior, spacing scales, or navigation patterns. A design change is incomplete until the reusable part has been incorporated into the design system.
+TaskDoor has one visual and interaction system. Pages may express different jobs, but they may not invent independent typography, button styles, card language, form behavior, spacing scales, or navigation patterns. A design change is incomplete until the reusable part has been incorporated into the design system.
 
 #### Token hierarchy
 
@@ -158,11 +168,11 @@ All reusable visual decisions must enter the system through the appropriate laye
 3. **Component tokens:** shared decisions for Button, Input, Select, Dialog, Badge, Card, Table, Navigation, and other canonical components.
 4. **Pattern tokens:** page-shell width, header spacing, toolbar rhythm, list density, detail layout, and responsive transitions shared across multiple surfaces.
 
-Compact selection follows one shared visual contract: pagination, view switches, filter chips, and similar reversible choices use `--ad-control-selected-bg` with `--ad-control-selected-ink`, never the black primary-action fill. The primary rail uses the same quiet selected surface with `--ad-navigation-selected-ink` for its active icon; route-blue communicates the current destination, while the Connect AI entry keeps its existing route treatment. Black fill is reserved for explicit primary actions, not persistent selection state.
+Compact selection follows one shared visual contract: pagination, view switches, filter chips, and similar reversible choices use `--ad-control-selected-bg` with `--ad-control-selected-ink`. The primary rail uses the same quiet blue selected surface with `--ad-navigation-selected-ink` for its active icon. The solid route-blue fill belongs to explicit primary actions; persistent selection uses a soft tint.
 
 Pages consume semantic, component, and pattern tokens. They must not introduce hard-coded visual values when an existing token expresses the same decision. If no suitable token exists, propose and document a reusable token instead of hiding the decision inside a page selector.
 
-External components never bring their own scale into AgentDoor. Their raw `px`, `rem`, Tailwind arbitrary values, radii, and control heights must be translated to the nearest existing AgentDoor Token before adoption. If that translation makes the component fail, reject or recompose the component; do not create a parallel scale to preserve its screenshot exactly.
+External components never bring their own scale into TaskDoor. Their raw `px`, `rem`, Tailwind arbitrary values, radii, and control heights must be translated to the nearest existing TaskDoor Token before adoption. If that translation makes the component fail, reject or recompose the component; do not create a parallel scale to preserve its screenshot exactly.
 
 #### Required reuse order
 
@@ -188,7 +198,7 @@ When a task creates or changes a reusable pattern, leave the system stronger:
 4. Replace nearby duplicates when the new shared solution makes them obsolete.
 5. Update this specification or the component selection record only when a reusable contract changed.
 6. Capture the desktop, mobile, hover, focus, empty, loading, error or disabled states that the change actually affects.
-7. Compare with the closest relevant AgentDoor pattern; major pages and release work expand the comparison as needed.
+7. Compare with the closest relevant TaskDoor pattern; major pages and release work expand the comparison as needed.
 
 #### Consistency gates
 
@@ -200,7 +210,7 @@ A change cannot be considered complete when any of the following is true:
 - A page-specific selector recreates an existing shared component.
 - Internal data values leak into user-facing labels.
 - The design system documentation and the implemented component disagree.
-- The new surface looks polished in isolation but does not visually belong beside the rest of AgentDoor.
+- The new surface looks polished in isolation but does not visually belong beside the rest of TaskDoor.
 
 #### Automated enforcement
 
@@ -211,28 +221,37 @@ A change cannot be considered complete when any of the following is true:
 
 ## 3. Color system
 
+### 2026-09-10 色系与控件更新
+
+用户要求按钮、Checkbox 和开关更年轻、减少深色重量。本次统一为冷白表面、蓝灰文字与边框、明亮蓝色主动作；主按钮的 hover / active 保持同一蓝色，不再压到深海军蓝。普通控件圆角统一为 10px，阴影降低不透明度。主按钮仍保留实色与白字，禁用态使用专用浅底灰字。
+
+Checkbox 使用浅蓝选中底与蓝色勾选标记；Switch 使用浅色轨道，开启时由蓝色圆点和位置同时表达状态。两者的尺寸、边界、标记、底色和焦点均通过 `styles/agentdoor-tokens.css` 中的 `--ad-checkbox-*`、`--ad-switch-*` 与 `--ad-focus-*` 控制，页面仅控制布局。
+
+shadcn / Tailwind 的 `--primary`、`--background`、`--muted`、`--border` 等映射到同一套 `--ad-*`，深色主题由应用现有 `data-theme` 驱动，退出独立灰黑默认色板。关键正文、按钮、提示正文含 hover 状态的文字对比度至少 4.5:1，选中标记与焦点至少 3:1；减弱动效偏好继续生效。
+
 ### Foundation
 
 | Token | Value | Use |
 | --- | --- | --- |
 | `--ad-canvas` | `#FFFFFF` | Default light-theme page canvas. |
 | `--ad-surface` | `#FFFFFF` | Cards, drawers, menus, and prepared briefs. |
-| `--ad-surface-subtle` | `#F3F3F2` | Selected rows and grouped evidence. |
-| `--ad-sidebar` | `#F7F7F6` | Quiet navigation surface in the light theme. |
-| `--ad-ink` | `#17191C` | Primary text. |
-| `--ad-ink-secondary` | `#565A60` | Supporting content. |
-| `--ad-ink-tertiary` | `#7A7E84` | Metadata and placeholders; not for critical information. |
-| `--ad-border` | `#DCD8D1` | Hairline separation. |
+| `--ad-surface-subtle` | `#F3F6FC` | Quiet grouped surfaces. |
+| `--ad-sidebar` | `#F7F9FD` | Quiet navigation surface in the light theme. |
+| `--ad-ink` | `#2E3A50` | Primary text. |
+| `--ad-ink-secondary` | `#53627A` | Supporting content. |
+| `--ad-ink-tertiary` | `#617089` | Metadata and placeholders; not for critical information. |
+| `--ad-border` | `#E0E6F0` | Hairline separation. |
 
 ### Actions and routing
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--ad-route` | `#1268D6` | The single primary action and Routing Thread. |
-| `--ad-route-hover` | `#0D57B5` | Primary hover. |
-| `--ad-route-soft` | `#E7F1FD` | Selected routing path and focus wash. |
-| `--ad-route-ink` | `#0A438E` | Text on route-soft. |
-| `--ad-focus` | `#1268D6` | 2px keyboard focus ring with 2px offset. |
+| `--ad-route` | `#4B6EDF` | The single primary action and Routing Thread. |
+| `--ad-route-hover` | `#4263D0` | Primary hover. |
+| `--ad-route-active` | `#3D5DC4` | Primary pressed state. |
+| `--ad-route-soft` | `#EFF3FF` | Selected controls and quiet AI actions. |
+| `--ad-route-ink` | `#4763C5` | Text and checkmarks on route-soft. |
+| `--ad-focus` | `#5579E5` | Keyboard focus. |
 
 ### Semantic evidence
 
@@ -240,12 +259,12 @@ These colors support labels and left-edge markers; they do not fill large decora
 
 | Meaning | Strong | Soft | Required label |
 | --- | --- | --- | --- |
-| Fact / 已验证事实 | `#24735A` | `#E5F3ED` | “事实” |
-| Inference / 推断 | `#8A5A13` | `#FFF1CF` | “推断” |
-| Conflict / 冲突 | `#B43A35` | `#FCE9E7` | “冲突” |
-| Unknown / 未知 | `#62666D` | `#ECEDEF` | “未知” |
-| Accepted / 已接受 | `#24735A` | `#E5F3ED` | Check icon + “已接受” |
-| Blocked / 阻塞 | `#B43A35` | `#FCE9E7` | Stop icon + reason |
+| Fact / 已验证事实 | `#207B63` | `#EAF9F2` | “事实” |
+| Inference / 推断 | `#93620D` | `#FFF8E6` | “推断” |
+| Conflict / 冲突 | `#C13E61` | `#FFF0F4` | “冲突” |
+| Unknown / 未知 | `#53627A` | `#F3F6FC` | “未知” |
+| Accepted / 已接受 | `#207B63` | `#EAF9F2` | Check icon + “已接受” |
+| Blocked / 阻塞 | `#C13E61` | `#FFF0F4` | Stop icon + reason |
 
 ### Color discipline
 
@@ -306,7 +325,7 @@ Typography is selected by semantic role, not by visual nudging. Page CSS must co
 ### Radius
 
 - Card and panel: 12px.
-- Button and input: 8px.
+- Button and input: 10px.
 - Compact tag: 6px.
 - Pill: reserved for compact categorical labels and short immutable status only. Never use it to imply online presence, activity, “currently working”, responsiveness, or availability inferred from behavior.
 
@@ -446,6 +465,14 @@ D-140 removes the React Task-creation surface. The Task List may retain one quie
 - The shell uses existing color, typography, spacing, focus and radius Tokens. On narrow screens, place the explanation above the input; preserve the same text semantics and a visible focus ring.
 - Restoring Task creation, persistence, file selection, people selection, parent / child planning or AI Proposal behavior requires a new confirmed product contract; none may be hidden inside the retained shell.
 
+### Task progress chart
+
+燃起图总工作量使用 `--ad-chart-scope` 中性灰（浅色主题 #858585、深色主题 #a3a3a3），线宽 1.4px、节点空心；完成工作量使用 `--ad-route` 蓝色，线宽 3px、节点实心。AI 预测保留紫色虚线。图例线段与曲线颜色、粗细一致，图例文字分别用中性灰、蓝色和紫色，不能仅靠两种接近的蓝灰色区分。
+
+### Task status
+
+任务列表、详情和子任务引用统一复用 `TaskStatusBadge` 的图标与语义色。列表采用 22px 高、12px 字号、12px 图标；详情保留标准规格。状态菜单复用共享 `DropdownMenu` 单选项，宽 176px，桌面行高 34px，触摸行高至少 44px。每项只放图标、名称和右侧选中勾，不放大色块、解释副文案或重复标题；悬停高亮与选中勾分开表达。支持方向键、Enter 和 Escape，关闭后焦点返回触发按钮。
+
 ### Classification tag
 
 A classification tag is identity metadata, not lifecycle status. Every surface that displays a tag uses one shared `TagBadge`; list rows, task detail, filters, pickers, and management previews must not re-create it with local chip markup.
@@ -453,7 +480,7 @@ A classification tag is identity metadata, not lifecycle status. Every surface t
 `TagBadge` sizes follow information density: `md` for focused editing and previews, `sm` for selectors and task detail, and `xs` for dense table columns. The `xs` variant keeps the canonical color and icon anatomy while using the compact spacing scale; pages must not shrink tags with local CSS.
 
 - Anatomy is fixed: **user-facing name + user-selected Lucide icon + curated soft background palette**. Text and icon remain present, so color is never the only identifier.
-- The visual foundation source-adapts the 21st.dev Status Badge and shadcn Badge mechanics. AgentDoor changes the meaning from system status to user-managed classification.
+- The visual foundation source-adapts the 21st.dev Status Badge and shadcn Badge mechanics. TaskDoor changes the meaning from system status to user-managed classification.
 - Radius is 6px, not a full pill. Compact height is 24px and standard height is 32px; icon size is 12–16px. Do not shrink tag text below the global 12px readability floor.
 - Icons come from a reviewed Lucide registry exposed by the product. Do not dynamically import arbitrary icon names or introduce a second icon library for the same job.
 - Colors source-adapt the user-selected 21st.dev Status Badge relationship: Tailwind 50/100-like pastel backgrounds, lively same-hue foregrounds, and an almost invisible boundary. Users choose a named swatch; they do not enter arbitrary hex values.
@@ -656,6 +683,24 @@ Task detail keeps its existing card language. Its hero is one tone-aware summary
 
 There is no independent Team File module in the current product surface. Task detail owns the File entry and renders the current Task's ACL-visible File / reference set directly, without a people selector or per-person switching. A Task may still present its internal file hierarchy, current version, visibility summary and source path using the shared File components; these projections never duplicate File, FileVersion, TaskFilePlacement or ACL truth. Front-end Mock visibility editing must state that saving affects only the current session and does not perform ACL evaluation, authorization, revocation, persistence, or audit.
 
+### 文件讨论、动态附件与回复（2026-09-13 设计增量）
+
+`FILE-DISCUSSION-2026-09-13-v1` 的用户方向及目标交互，以 [文字版 PRD 6.5、6.8、6.9](./product-v2/PRD-AgentDoor-协作任务全流程.md#65-讨论) 为准，[HTML 设计 PRD](../public/agentdoor-prd.html#task-detail) 同步。2026-09-15 已实现的 Demo 能力与剩余缺口见本节“组件与数据／Demo 边界”，下列目标要求不等同于全部已完成。
+
+- **对象与目的：** 文件讨论解决成员不离开原文也能写意见、追问及找到结论的问题；动态是当前任务“讨论”中的成员消息，系统“活动”仍只读。文件评论与动态不自动互相复制。
+- **桌面布局：** 沿用文件树与正文，右侧按需打开约 320px 的“文件讨论”栏；宽度值为实现建议，以正文可读为准。顶部移除“下载”“添加评论”，保留“查看讨论 N”；正文不展示常驻评论操作说明。划词工具栏“评论”打开输入，“查看讨论 N”或正文标记打开右侧串，整文件评论从右侧面板内进入；确认后定位新串。顶部标题／路径、正文标题及段落统一使用 16px 左侧边距，正文左对齐而非额外居中；打开讨论栏仍保持对齐。窄屏文件标题独立成行，返回及操作放在下一行，保持正文左侧一致。空间不足先将文件树收为入口，再使用讨论面板，不让三栏横向溢出。
+- **选区输入：** 轻工具栏“评论”→ 右侧来源版本／PDF 页码与原文摘录 → 多行输入“补充对这段内容的讨论，可 @ 成员” → @／附件 →“取消／确认”。不展示一排预选协作者，工具栏保持在可视区内。阅读与编辑均可选区；正文未保存时先提示“保存文件并评论”，成功后再打开评论输入，失败保留文件草稿与选区。
+- **按钮含义：** “确认”提交当前文件评论并定位右侧串；“回复”提交串内后续内容；“标记已解决／重新打开”只改变讨论状态；“编辑 → 保存”才修改文件正文。以上均不自动验收任务。
+- **右侧列表：** 默认未解决，可看已解决／全部；每串有来源版本／PDF 页码／摘录、作者、正文、回复数和操作；点击具体消息的“回复”继续同串讨论。原文标记与串双向定位；旧版片段只在对应版本高亮，失效时显示“原文已变化”。关闭面板恢复阅读位置。
+- **回复结构：** 评论、回复及针对回复的回复都在同一根串中，一层缩进，动态和文件讨论均在头部同一行展示“甲 回复 乙”，作者、“回复”和对象字号统一使用正文小号 token，作为一个不拆行的组合；正文另起一段，点击回复对象定位原消息。时间移到正文与附件下方、操作按钮上方，用弱化色显示 YYYY-MM-DD HH:mm；读取保存的发布时间，按 Asia/Shanghai 展示，编辑不替换发布时间，不显示“原时间”或相对时间。预置演示消息使用固定示例日期，真实旧记录缺少时间时不推算。动态不显示重复摘录或单独的“引用”按钮；文件讨论保留原文锚点及消息引用。点击“取消”收起输入框并保留会话草稿；已删除评论及回复直接从列表隐藏，不保留占位、作者或时间，不计入评论数和折叠配额；父消息删除后未删除回复继续展示，回复对象仅保留姓名关系且不再跳转原消息，已删除来源的引用摘录一并隐藏。整串无可见消息时去掉空白讨论组，文件讨论数量与正文标记同步移除；不连带删除子回复或附件文件。
+- **统一输入与附件：** 动态和文件讨论共用评论输入规则；正文支持 @ 可见成员及附件。工具栏只保留图标加文字的“附件”，下拉提供“上传本地文件”与“从文件列表选择”。后者复用共享 DropdownMenu 的层级子菜单，按现有文件夹展开，文件夹只导航；点选文件后收起全部菜单并回到正文光标，不撑高输入框。已添加文件显示勾选且禁用，通过草稿附件移除后可重选。文件菜单建议宽 280px、最大高 320px，并受视口约束；顶部保留紧凑搜索框，按文件名或文件夹路径跨所有层级搜索，结果用两行显示文件名／完整所属路径；清空回到文件夹层级。搜索框左右方向键保留光标编辑，↓ 进入结果、首项 ↑ 返回搜索框，Enter 选择首个可用结果，输入法组合时不提交。无结果显示“没有找到匹配的文件”，已归档分支不进入结果；长列表滚动，空文件夹显示“文件夹为空”，无文件显示“暂无任务文件”。支持方向键逐级进入／返回、Esc 逐层关闭及触控展开；也支持拖入文件和粘贴图片；已有文件复用同一 File ID，不增加副本。草稿附件使用产品负责人指定的 [File Card Collections](https://21st.dev/@urmauur/components/file-card-collections)，直接适配作者 registry 源码；组件来源及改动见[接入记录](./component-research/discussion-file-card-collections.md)。使用紧凑尺寸的纸张缩略卡（约 48 × 60px），保留格式色标及类型示意；附件单元宽 80px，下方只显示单行文件名，不显示大小或“待发布”等常驻状态。18px 移除按钮放在纸张卡内部右上角，动作不受装饰预览的 aria-hidden 影响。图片在纸张卡内显示实际缩略图并保持比例；未解析文件使用类型示意。多个单元并排换行，受输入区宽度约束；长名称省略并保留完整名称提示及无障碍名称。添加中仅在卡内显示小型加载图标；失败才出现完整错误及卡内重试入口。按钮支持键盘，触屏通过透明命中区保留 44px 触达区域，不放大可见叉号。发布成功后同一文件出现在任务文件列表；附件卡可预览／下载固定版本，文件来源可返回原消息。
+- **状态：** 空态给“评论整个文件”；筛选空与全空分开；加载不冒充 0。保存中禁重复提交，失败保留草稿；仅无正文编辑权不阻止评论权，无评论权则只读。过期显示真实源版本，并发修改保留草稿；无来源权限时隐藏文件名、摘录和讨论。
+- **移动端与键盘：** 窄屏讨论面板全屏并提供“返回文件”，保留原阅读位置；触控目标至少 44px。Enter 换行，⌘／Ctrl + Enter 提交；中文输入组合中不提交。回复输入框不展示常驻快捷键提示，快捷键仍可使用。@ 支持方向键／Enter／Esc；弹层 Esc 关闭并还原焦点、保留会话草稿，标记和引用都能用键盘定位。
+- **组件与数据（2026-09-15 Demo）：** 已接入 Lexical 0.50.0（MIT）的讨论输入、文本及 PDF 提取正文阅读和 MarkNode 划词高亮，PDF 保存页码／版本／页内范围，防止同文跨页或跨版本误标；确认仅保存文件右栏；具体回复／文件内引用、稳定 ID 的 @、作者编辑／删除、解决／重开和附件入文件列表已接入。文件关系、消息和本地通知按团队／Task 写入同一份 localStorage 快照，IndexedDB 保存上传原文件二进制，刷新可恢复；手动上传／已有文件选择共用 File ID，引用保留源版本。视觉不展示包名或底层 ID。
+- **Demo 边界：** 上述其余条目保留目标交互要求；当前无服务端 ACL、多人同步或外部通知，本地通知记录未接全局通知 UI。旧版全文快照预览尚未实现，引用 vN／原文与当前最新正文必须明确区分；真实 DOCX／XLSX 等上传未解析、仅下载，未提取正文的真实 PDF 由浏览器预览，仅支持整文件讨论。
+
+验收以“选区确认留在文件 → 右侧两人互相回复并定位 → 解决后仍可找回”及“动态附件发布入文件列表 → 重复引用不复制 → 删除评论保留文件”为最小闭环；框架本身不证明这些业务流程已可用。
+
 ### Task and todo views（列表视觉可参考；看板 / 自定义视图语义 inactive）
 
 > **历史区块边界：仅限本标题下方折叠的 “Historical task / todo view specification”。**其中的 `canonical`、`fixed`、`must`、默认看板、时间线、自定义视图和拖拽等表述只记录旧方案，不具备当前规范效力；新设计不得据此恢复这些产品结构。当前只可抽取列表的密度、排序可读性和权限不扩张等视觉 / 通用原则，产品入口与状态必须回到 product-v2 和决策台账判断。后续同级的 `Context package` 仍是有效的上下文边界规范。
@@ -853,8 +898,88 @@ Never expose profile strings such as `owner-transfer` as primary copy. “交接
 
 ## 12. External component foundation
 
-AgentDoor uses mature open-code components as foundations rather than repeatedly drawing behavior-heavy controls from scratch.
+TaskDoor uses mature open-code components as foundations rather than repeatedly drawing behavior-heavy controls from scratch.
 
-- **shadcn/ui is the preferred behavioral and structural foundation** for Button, Dialog, Alert Dialog, Select, Combobox, Command, Popover, Dropdown Menu, Table, Pagination, Form controls, and related primitives. Use its official documentation and registry examples first, then adapt all typography, spacing, radius, color, and elevation through AgentDoor tokens and shared APIs.
-- **When external discovery is triggered, 21st.dev is a preferred source for visual anatomy and interaction references, not a per-task requirement.** Reusable selected component IDs, adaptation decisions and install references are documented in [AgentDoor × 21st.dev Component Selection](./agentdoor-21st-component-selection.md).
-- shadcn/ui and 21st.dev are inputs, not parallel visual systems. Adopt behavior, adapt appearance, preserve attribution, and expose only one AgentDoor-owned component API to product pages.
+- **shadcn/ui is the preferred behavioral and structural foundation** for Button, Dialog, Alert Dialog, Select, Combobox, Command, Popover, Dropdown Menu, Table, Pagination, Form controls, and related primitives. Use its official documentation and registry examples first, then adapt all typography, spacing, radius, color, and elevation through TaskDoor tokens and shared APIs.
+- **When external discovery is triggered, 21st.dev is a preferred source for visual anatomy and interaction references, not a per-task requirement.** Reusable selected component IDs, adaptation decisions and install references are documented in [TaskDoor × 21st.dev Component Selection](./agentdoor-21st-component-selection.md).
+- shadcn/ui and 21st.dev are inputs, not parallel visual systems. Adopt behavior, adapt appearance, preserve attribution, and expose only one TaskDoor-owned component API to product pages.
+
+### 2026-09-08 常驻助手视觉增量
+
+用户要求在 21st.dev 选取更好的组件样式。本轮实看 AI Message、Prompt Input with Actions、AI Approval 的预览，记录于 `docs/component-research/resident-task-assistant.md`。常驻助手复用已有 AIMessage、TaskIcon、TaskStatusBadge、AgentActivityIndicator 与 Base UI Button；采用白色留边侧栏、浅蓝消息与操作方案标题、一体式输入和圆形发送按钮。颜色沿用语义 Token，状态与团队／任务范围语义不变，窄屏全宽、支持 reduced motion，不新增依赖。待确认内容保持可编辑，已执行状态与取消状态仍按真实结果显示。
+
+
+### Task progress source and compact children · 2026-09-14
+
+`PROGRESS-STATE-SOURCE-2026-09-14-v13`: TaskProgressOverview is shared by root and child tasks. Blue solid work tracks show current completion with its source (AI 评估 / 用户确认 / 子任务汇总); purple dashed markers show 计划应完成. The date scale below distinguishes the user-set plan endpoint from AI 预计; overdue forecasts extend beyond the planned segment. Root/child values use 32/20px and work tracks 8/6px, while captions, marker geometry, semantic colors and keyboard behavior stay consistent. Child names and status remain visible; effort/share move into 投入与依据. User status completion displays 100% with explicit provenance, never silently rewriting earlier AI history.
+
+
+### Completion date nodes · 2026-09-14
+
+`PROGRESS-TIME-NODES-2026-09-14-v14`: The date scale is a 1px baseline in both root and compact children. Remove elapsed fills and the large current-date thumb. Use a small start dot, a quiet current-date tick and a solid gray diamond for the user-set planned finish; keep the purple vertical dashed AI forecast marker and its adjacent date label. Late forecasts extend past the plan node; early forecasts sit to its left. Show signed day differences between the two positions when they occupy at least 14% of the axis; otherwise keep the existing time-status text and date tooltip to avoid crowded labels. Actual completion remains a blue solid marker. This updates the lower date axis only, without introducing milestone entities or changing the work track and burn-up history.
+
+
+### Date labels below the axis · 2026-09-14
+
+`PROGRESS-DATES-BELOW-2026-09-14-v15`: All date labels sit below the time axis: 开始, 当前, 计划结束 and AI 预计 (确认完成 after confirmation). Each uses the same caption size, with date beneath its type. Keep the purple dashed forecast marker while removing its above-axis label. Nearby or coincident labels move to a lower lane; never hide the current date or invent a missing start date. Root and compact children share this layout. Work-percentage labels retain their position above the work track.
+
+
+### Single-row date labels · 2026-09-14
+
+`PROGRESS-DATES-SINGLE-ROW-2026-09-14-v16` (date leaders superseded by v19 below): Supersedes the v15 lower-lane collision rule. All date labels stay on one row below the axis, with matching type and date baselines. Pack labels horizontally in chronological order; subtle leaders connect displaced labels to unchanged date positions. Retain 12px captions and a 260px minimum date-axis width with horizontal overflow for narrower containers. Never hide a date or distort the time scale to avoid overlap.
+
+
+### Progress state catalog · PRD design v17 · 2026-09-14
+
+The central catalog in PRD §6.3 defines 28 states, with a single complete TaskProgressComparison preview per scene (v18 supersedes the earlier two-size comparison). Progress facts, data validity and request lifecycle are separate. Unknown comparisons hide numeric deltas and explain the reason locally; current unknown, missing work baseline and missing finish forecast can occur independently. Neutral empty tracks differ from explicit zero, permission placeholders and static loading skeletons. Errors include text and a retry action; retained results identify their source and observation time. The JSON catalog generates both searchable visual specifications and the Markdown/HTML case tables. Copy overrides are used only by the PRD catalog; production request/permission/error branches remain pending. The main Demo retains its default rendering.
+
+### Complete progress component catalog · PRD design v18 · 2026-09-14
+
+One bounded card contains completion progress, completion dates, calculation details, embedded child distribution and the burn-up chart. Reuse `TaskProgressComparison`, `TaskEffortCost` and their existing shared styles; remove the separate compact sample and the duplicate full-demo playground. Children retain their smaller inline overview and independent data. PRD opens the child distribution by default; its existing collapse control and effort/share details remain available. Demo defaults do not change.
+
+The burn-up chart varies with the selected case: scope changes remain separate from completed work; rework may lower the completed line; a missing forecast hides only the forecast. Empty history, failed reads and permission loss have different states. Partial visibility suppresses aggregate history and hidden shares, while accessible child progress remains available. A user-confirmed 100% without a completion date cannot create a dated completion snapshot. Known child minute totals match the parent; unknown totals are never treated as zero. Scope additions retain the historical absolute completion amount. The scene fixture and copy remain PRD-only; production loading and retry are still outside this preview.
+
+### Date label distribution without leaders · v19 · 2026-09-14
+
+`PROGRESS-DATE-LAYOUT-2026-09-14-v19` supersedes v16's displaced labels and leader lines. The user requested controlled content spacing rather than connecting offset text back to nodes. A date and its labels form one intrinsic-width grid column. Merge identical dates and render the date once, retaining every source label (e.g. 计划结束 · AI 预计). Keep source colors and the planned diamond / AI dashed marker. Different dates remain in chronological order, with at least 16px between label columns; distribute spare width by date intervals. This is a milestone overview, not a proportional elapsed-time scale. Align endpoint labels inward and internal labels centrally to their markers. All labels share one row; narrow containers scroll only the date region. Main tasks and embedded children use the same layout. Burn-up coordinates and recorded work quantities remain unchanged. Validate coincident dates, nearby dates, early/late finishes and all labels on narrow cards.
+
+### Embedded child progress hierarchy · v20 · 2026-09-14
+
+`PROGRESS-CHILD-HIERARCHY-2026-09-14-v20`: Keep the complete parent progress component prominent. Embedded child overviews use 18px / 600 completion figures versus the parent's 32px / 650; a 4px work track and 8px current marker versus 8px / 12px; a 5px planned-date diamond versus 7px; and a shorter 13px date prediction marker versus 19px. Reduce the work-to-time gap from 20px to 12px and the date-to-label gap from 20px to 12px. Tighten track and axis whitespace and child item separation. Date, source and expected-progress labels stay at the readable 12px caption size. Preserve dates, prediction semantics, state, deltas, child effort details and v19's grouped dates without leader lines. This is a shared child-size variant within Demo and PRD, not another standalone preview card.
+
+### Progress component presentation model · v21 · 2026-09-14
+
+`PROGRESS-COMPONENT-MODEL-2026-09-14-v21` consolidates the component's A01–A13 positions, information sources, conditional copy, decision gates, state combinations, event transitions and acceptance in PRD §6.3. The position catalog lives in `docs/product-v2/progress-component-model.json`; the sync script generates its Markdown/HTML table and the PRD guide reads the same entries. Optional PRD annotations label the existing component DOM and never appear in Demo. This is a presentation contract, not a new business status model or a claim of connected production AI/ACL/request handling. Preserve v19 grouping and v20 child hierarchy. Known user facts, current AI assessment, adopted work baseline and finish forecast have separate sources; unknown comparisons, missing forecasts and request failures remain distinct.
+
+
+### Component model with adjacent explanations · v22 · 2026-09-14
+
+`PROGRESS-COMPONENT-INSPECTOR-2026-09-14-v22`: Replace the ASCII schematic and detached annotation list with the shared complete component on the left and a persistent position inspector on the right. Clicking a region or its badge selects the corresponding explanation; a native position selector and previous/next buttons provide keyboard equivalents and reveal the region inside the specimen scroll area. The inspector includes information, source, conditional copy, rules and interaction, followed by exact position, selected case and decision-rule links. Selecting another case retains the selected slot and explicitly identifies absent regions. Use the same 28 fixtures and JSON position model; keep this documentation UI out of Demo. On narrow screens stack template above inspector without horizontal page overflow.
+
+
+### Concise progress PRD · 2026-09-14
+
+The progress module overview contains its purpose, shared component model and one core-rule table. Position specs, scenarios, calculation inputs, state rules and update/acceptance details use labelled disclosures. Position and scenario links expand their target and ancestor disclosures, including on direct page load; printing and the existing expand-all control include these disclosures. Keep one generated source per position and case, remove repeated prose and version history from the module body, and preserve all established data and visual rules.
+
+
+### Unified AI prediction labels · 2026-09-14
+
+Use purple “AI 预测” for both the current-progress AI source and forecast-date label; stale sources read “上次 AI 预测”. This supersedes earlier AI 评估 / AI 预计 display labels while keeping current-work assessment and future finish prediction as distinct calculations. User confirmation and child aggregation retain their own source labels and colors. For coincident dates use “计划结束｜AI 预测”, with a neutral separator and planned label, purple forecast label, and one date. Apply through the shared parent/child component and PRD; the burn-up forecast legend also uses purple.
+
+### Progress prediction and status events · 2026-09-14
+
+Current product inputs include status and a deadline, without a work schedule. Remove scheduled-work checkpoints and workload deltas. The work bar shows the AI estimate with purple AI 预测 provenance, or 100% 用户确认 after a successful completion status change. The right caption gives the result observation date. Completion-date forecasts remain purple dashed milestones; confirmed completion replaces the future forecast with a blue marker. Parent and child statuses remain independent. Saved scope and completion history retain their sources.
+
+PRD §6.3 is the single reference for prediction triggers and state transitions. Content evidence triggers progress prediction; deadline-only changes do not alter the percentage. Completion confirmation wins over late AI responses, reopening invalidates the old confirmation, and observing another day cannot create completed work. Event queues, independent timestamps and production concurrency enforcement remain design contracts pending integration. This supersedes older work-baseline comparison requirements above.
+
+### Retained AI assessment after completion · 2026-09-14
+
+Keep 100% 用户确认 as the primary display. The collapsed calculation details retain the independent AI percentage, observation time and evidence; the embedded child list contains only its progress and dates; open the child task to inspect its own calculation details. Label earlier observations 确认前 AI 预测 and later observations 确认后 AI 预测. If timestamp precision cannot establish order, use 已保存 AI 预测 and explain the missing precision. Missing records are never reconstructed from user confirmation or parent rollups. A stale percentage difference alone does not constitute a conflict. No second progress bar is added.
+
+### 2026-09-15 · 任务完成时间合入燃起图
+
+主任务使用「完成度 → 计算明细 → 子任务 → 燃起图」结构，替代独立完成时间轴。时间结论留在图内上方。计划截止、AI 预测／确认完成及日期直接放在图底部的横向时间轴，与各自竖线对齐；同日以「｜」合并，日期一次。近距离标签调整左右对齐，仍拥挤时分行；关键日期优先，有空间再保留截至日和端点刻度。绘图区使用灰色截止实竖线（1.2px）、紫色 AI 预测虚竖线（1.5px）、蓝色确认完成实竖线（1.5px），按真实日期覆盖完整区间。移除图下重复日期区及「日期／总量／完成」常驻汇总行，详细记录保留在计算明细的工作量历史中。绘图区保持白底，不加跨图引线；未知日期隐藏对应标记，无图时保留已知日期空态。总量与完成历史不变，未来虚线不写入历史。子项无独立燃起图，继续使用较小的日期轴。
+
+### 2026-09-15 · 未知完成度的文字空态
+
+没有有效进度预测时，只显示浅色原因文案（如「尚无进度预测」「需重新预测」），主任务 14px、子任务 12px，400 字重；取消大号横杠和占位百分比，保留中性空轨道。有依据的 0% 与用户确认 100% 继续正常显示数值。Demo 与 PRD 共用该规则。

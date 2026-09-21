@@ -1,0 +1,2374 @@
+{
+  "aiTools": {
+    "zh": "AI 工具",
+    "en": "AI tools"
+  },
+  "openInAnAITool": {
+    "zh": "在 AI 工具中打开",
+    "en": "Open in an AI tool"
+  },
+  "recentlyUsed": {
+    "zh": "最近使用",
+    "en": "Recently used"
+  },
+  "cancelOpeningAITool": {
+    "zh": "取消打开 AI 工具",
+    "en": "Cancel opening AI tool"
+  },
+  "preview": {
+    "zh": "预览",
+    "en": "Preview"
+  },
+  "contextToInclude": {
+    "zh": "本次带入的上下文",
+    "en": "Context to include"
+  },
+  "includedInformation": {
+    "zh": "带入的信息",
+    "en": "Included information"
+  },
+  "includedDiscussion": {
+    "zh": "本次带入的讨论",
+    "en": "Included discussion"
+  },
+  "onlyInformationYouCanCurrentlyAccessIsIncluded": {
+    "zh": "仅带入你当前有权查看的信息，不会获得额外权限。",
+    "en": "Only information you can currently access is included. No additional permissions are granted."
+  },
+  "connectALocalAgent": {
+    "zh": "连接本地 Agent",
+    "en": "Connect a local agent"
+  },
+  "bringThisContextToALocalToolAnd": {
+    "zh": "把当前上下文带到本地工具，在 Agent 中继续工作。",
+    "en": "Bring this context to a local tool and continue working with your agent."
+  },
+  "closeLocalAgentConnection": {
+    "zh": "关闭连接本地 Agent 弹窗",
+    "en": "Close local agent connection"
+  },
+  "chooseAnAITool": {
+    "zh": "选择要使用的 AI 工具",
+    "en": "Choose an AI tool"
+  },
+  "chooseATool": {
+    "zh": "选择要使用的工具",
+    "en": "Choose a tool"
+  },
+  "youCanSelectAndTryOpeningATool": {
+    "zh": "未连接也可选择并尝试打开。",
+    "en": "You can select and try opening a tool before connecting."
+  },
+  "notConnectedToThisTool": {
+    "zh": "尚未与此工具建立连接",
+    "en": "Not connected to this tool"
+  },
+  "notConnected": {
+    "zh": "未连接",
+    "en": "Not connected"
+  },
+  "back": {
+    "zh": "返回",
+    "en": "Back"
+  },
+  "connectALocalAgent2": {
+    "zh": "连接本地 Agent，",
+    "en": "Connect a local agent,"
+  },
+  "collaborateWithYourTeam": {
+    "zh": "开启团队协作",
+    "en": "collaborate with your team"
+  },
+  "connectYourWorkingDirectoryWithOneCommandShare": {
+    "zh": "一条命令连接当前工作目录。需要协作时，再把成果、进展和关键背景同步给团队。",
+    "en": "Connect your working directory with one command. Share deliverables, progress and context with your team when needed."
+  },
+  "chooseAnAgent": {
+    "zh": "选择 Agent",
+    "en": "Choose an agent"
+  },
+  "connected": {
+    "zh": "已连接",
+    "en": "Connected"
+  },
+  "runInYourTerminal": {
+    "zh": "在终端中运行",
+    "en": "Run in your terminal"
+  },
+  "installTaskDoorCLIAndSignIn": {
+    "zh": "安装 TaskDoor CLI 并登录",
+    "en": "Install TaskDoor CLI and log in"
+  },
+  "connectYourWorkingDirectoryAfterSigningIn": {
+    "zh": "登录后引导连接当前工作目录",
+    "en": "Connect your working directory after signing in"
+  },
+  "chooseATeamWorkspaceAfterSigningInYou": {
+    "zh": "登录完成后选择团队工作空间；你决定同步哪些成果，所有操作遵循当前用户权限。",
+    "en": "Choose a team workspace after signing in. You control what to sync; all actions respect your current permissions."
+  },
+  "recentConnections": {
+    "zh": "最近连接",
+    "en": "Recent connections"
+  },
+  "notConnected2": {
+    "zh": "· 未连接",
+    "en": "· Not connected"
+  },
+  "taskCommandExamples": {
+    "zh": "任务操作示例",
+    "en": "Task command examples"
+  },
+  "proposedCLISyntaxSubjectToConfirmationWhenImplemented": {
+    "zh": "CLI 命令示例：拟定语法，待 CLI 实现确认。",
+    "en": "Proposed CLI syntax; subject to confirmation when implemented."
+  },
+  "copyCommand": {
+    "zh": "复制命令",
+    "en": "Copy command"
+  },
+  "addReferences": {
+    "zh": "添加参考资料",
+    "en": "Add references"
+  },
+  "quickPrompts": {
+    "zh": "快捷指令",
+    "en": "Quick prompts"
+  },
+  "seeCollaborationUpdatesRelevantToYou": {
+    "zh": "查看与你有关的协作动态。",
+    "en": "See collaboration updates relevant to you."
+  },
+  "markAllAsRead": {
+    "zh": "全部标为已读",
+    "en": "Mark all as read"
+  },
+  "filterNotifications": {
+    "zh": "筛选通知",
+    "en": "Filter notifications"
+  },
+  "notificationReadStatus": {
+    "zh": "通知已读状态",
+    "en": "Notification read status"
+  },
+  "no": {
+    "zh": "没有",
+    "en": "No "
+  },
+  "unread": {
+    "zh": "未读",
+    "en": "Unread"
+  },
+  "invitationPending": {
+    "zh": "等待接受邀请",
+    "en": "Invitation pending"
+  },
+  "manageThePersonalTagsAvailableForYourTasks": {
+    "zh": "管理你添加任务标签时可使用的个人标签。",
+    "en": "Manage the personal tags available for your tasks."
+  },
+  "whyThisIsAPriority": {
+    "zh": "优先原因",
+    "en": "Why this is a priority"
+  },
+  "hereIsYourSuggestedFocusForToday": {
+    "zh": "，这是今天建议你优先推进的工作",
+    "en": ", here is your suggested focus for today"
+  },
+  "taskList": {
+    "zh": "任务列表",
+    "en": "Task list"
+  },
+  "connectAI": {
+    "zh": "连接 AI",
+    "en": "Connect AI"
+  },
+  "aiAnalysisRules": {
+    "zh": "AI 分析规则",
+    "en": "AI analysis rules"
+  },
+  "sort": {
+    "zh": "排序",
+    "en": "Sort"
+  },
+  "tasksArePrioritizedUsingStatusDeadlinesDependenciesCompletion": {
+    "zh": "当前顺序综合任务状态、期限、依赖、完成标准，以及你有权查看的讨论、动态和文件；先处理阻塞、临期或需要核对的事项，同档沿用原顺序。",
+    "en": "Tasks are prioritized using status, deadlines, dependencies, acceptance criteria and accessible discussions, activity and files. Blocked, due-soon and review items come first; ties retain their original order."
+  },
+  "scope": {
+    "zh": "范围",
+    "en": "Scope"
+  },
+  "includesYourOutstandingTasksAndClosedTasksWith": {
+    "zh": "仅包含你负责且仍需处理的任务，以及已结束但记录尚未收口的核对事项；左侧筛选不影响，同一任务只出现一次，建议不会自动修改任务。",
+    "en": "Includes your outstanding tasks and closed tasks with records still to reconcile. Sidebar filters do not apply. Each task appears once; suggestions never change tasks automatically."
+  },
+  "updated": {
+    "zh": "更新于",
+    "en": "Updated "
+  },
+  "suggestedPriorities": {
+    "zh": "推荐关注任务",
+    "en": "Suggested priorities"
+  },
+  "suggestedPriorityList": {
+    "zh": "推荐关注任务列表",
+    "en": "Suggested priority list"
+  },
+  "total": {
+    "zh": "共",
+    "en": "Total: "
+  },
+  "tasks": {
+    "zh": "项任务",
+    "en": " tasks"
+  },
+  "viewTaskList": {
+    "zh": "查看任务列表",
+    "en": "View task list"
+  },
+  "consistentAcrossTasksListsAndFilters": {
+    "zh": "任务、列表与筛选中保持一致",
+    "en": "Consistent across tasks, lists and filters"
+  },
+  "currentLocation": {
+    "zh": "当前位置",
+    "en": "Current location"
+  },
+  "tasks2": {
+    "zh": "任务",
+    "en": "Task"
+  },
+  "myTags": {
+    "zh": "我的标签",
+    "en": "My tags"
+  },
+  "tags": {
+    "zh": "个标签",
+    "en": " tags"
+  },
+  "manageThePersonalTagsYouCanAddTo": {
+    "zh": "维护你添加任务标签时可使用的个人标签。",
+    "en": "Manage the personal tags you can add to tasks."
+  },
+  "createTag": {
+    "zh": "新建标签",
+    "en": "Create tag"
+  },
+  "personalTagList": {
+    "zh": "个人标签列表",
+    "en": "Personal tag list"
+  },
+  "edit": {
+    "zh": "编辑",
+    "en": "Edit"
+  },
+  "emptyTagList": {
+    "zh": "空标签列表",
+    "en": "Empty tag list"
+  },
+  "noTagsYet": {
+    "zh": "还没有标签",
+    "en": "No tags yet"
+  },
+  "createATagToFilterAndIdentifyTasks": {
+    "zh": "创建一个标签，用于筛选和识别任务。",
+    "en": "Create a tag to filter and identify tasks."
+  },
+  "name": {
+    "zh": "名称",
+    "en": "Name"
+  },
+  "eGHighPriority": {
+    "zh": "例如：高优先级",
+    "en": "e.g. High priority"
+  },
+  "aTagWithThisNameAlreadyExists": {
+    "zh": "该标签名称已存在",
+    "en": "A tag with this name already exists"
+  },
+  "deleteTag": {
+    "zh": "删除标签",
+    "en": "Delete tag"
+  },
+  "cancel": {
+    "zh": "取消",
+    "en": "Cancel"
+  },
+  "deletePersonalTag": {
+    "zh": "删除个人标签？",
+    "en": "Delete personal tag?"
+  },
+  "willBeRemovedFromYourAvailableTagsTags": {
+    "zh": "」将从你的可选标签列表中移除，已添加到任务上的标签会保留。",
+    "en": "” will be removed from your available tags. Tags already added to tasks will remain."
+  },
+  "confirmDeletion": {
+    "zh": "确认删除",
+    "en": "Confirm deletion"
+  },
+  "selectTags": {
+    "zh": "选择标签",
+    "en": "Select tags"
+  },
+  "availableTags": {
+    "zh": "可选标签",
+    "en": "Available tags"
+  },
+  "noPersonalTagsYetCreateOneInMy": {
+    "zh": "还没有个人标签，可在「我的标签」中新建。",
+    "en": "No personal tags yet. Create one in My tags."
+  },
+  "tellTaskDoorHowToAdjustThePlan": {
+    "zh": "继续告诉 TaskDoor 怎样调整任务方案",
+    "en": "Tell TaskDoor how to adjust the plan"
+  },
+  "enterToSendShiftEnterForANew": {
+    "zh": "Enter 发送 · Shift + Enter 换行",
+    "en": "Enter to send · Shift + Enter for a new line"
+  },
+  "tellTaskDoorWhatYouWouldLikeToChange": {
+    "zh": "继续告诉 TaskDoor 你想怎样调整…",
+    "en": "Tell TaskDoor what you would like to change…"
+  },
+  "sendChangeRequest": {
+    "zh": "发送修改要求",
+    "en": "Send change request"
+  },
+  "whatWouldYouLikeToChange": {
+    "zh": "你想怎样调整？",
+    "en": "What would you like to change?"
+  },
+  "stopAdjustmentPreview": {
+    "zh": "停止预览调整",
+    "en": "Stop adjustment preview"
+  },
+  "previewFirstThenConfirmToApply": {
+    "zh": "先预览，确认后应用",
+    "en": "Preview first, then confirm to apply"
+  },
+  "previewChanges": {
+    "zh": "预览调整",
+    "en": "Preview changes"
+  },
+  "previewChangesCtrlEnter": {
+    "zh": "预览调整 · ⌘ / Ctrl + Enter",
+    "en": "Preview changes · ⌘ / Ctrl + Enter"
+  },
+  "currentCreationConversation": {
+    "zh": "本次创建对话",
+    "en": "Current creation conversation"
+  },
+  "turns": {
+    "zh": "轮",
+    "en": " turns"
+  },
+  "collapseAIAdjustment": {
+    "zh": "收起 AI 帮你改",
+    "en": "Collapse AI adjustment"
+  },
+  "collapseAndKeepInput": {
+    "zh": "收起，保留输入",
+    "en": "Collapse and keep input"
+  },
+  "adjustmentScope": {
+    "zh": "调整范围",
+    "en": "Adjustment scope"
+  },
+  "adjust": {
+    "zh": "调整：",
+    "en": "Adjust: "
+  },
+  "changesAwaitingConfirmation": {
+    "zh": "待应用的调整",
+    "en": "Changes awaiting confirmation"
+  },
+  "proposedChanges": {
+    "zh": "本次修改",
+    "en": "Proposed changes"
+  },
+  "before": {
+    "zh": "修改前",
+    "en": "Before"
+  },
+  "after": {
+    "zh": "修改后",
+    "en": "After"
+  },
+  "theContentHasChangedAndThisPreviewHas": {
+    "zh": "内容已变化，当前预览已过期。请重新预览，避免覆盖最新修改。",
+    "en": "The content has changed and this preview has expired. Preview again to avoid overwriting newer edits."
+  },
+  "viewLatestProgress": {
+    "zh": "查看最新进度",
+    "en": "View latest progress"
+  },
+  "youCanContinueEditingAfterCollapsing": {
+    "zh": "收起后可继续编辑",
+    "en": "You can continue editing after collapsing"
+  },
+  "stop": {
+    "zh": "停止",
+    "en": "Stop"
+  },
+  "yourInput": {
+    "zh": "你的输入",
+    "en": "Your input"
+  },
+  "aiResponse": {
+    "zh": "AI 回复",
+    "en": "AI response"
+  },
+  "viewChangesInThisTurn": {
+    "zh": "查看本轮差异",
+    "en": "View changes in this turn"
+  },
+  "changes": {
+    "zh": "处",
+    "en": " changes"
+  },
+  "items": {
+    "zh": "条",
+    "en": " items"
+  },
+  "saveOrCancelYourEditsBeforeUsingAI": {
+    "zh": "先保存或取消手工修改，再使用 AI 调整。",
+    "en": "Save or cancel your edits before using AI adjustment."
+  },
+  "to": {
+    "zh": "至",
+    "en": "to"
+  },
+  "addDates": {
+    "zh": "添加时间",
+    "en": "Add dates"
+  },
+  "chooseStartAndEndDates": {
+    "zh": "选择开始和结束时间",
+    "en": "Choose start and end dates"
+  },
+  "previousMonth": {
+    "zh": "上个月",
+    "en": "Previous month"
+  },
+  "separator": {
+    "zh": "年",
+    "en": "/"
+  },
+  "monthSuffix": {
+    "zh": "月",
+    "en": ""
+  },
+  "nextMonth": {
+    "zh": "下个月",
+    "en": "Next month"
+  },
+  "clear": {
+    "zh": "清空",
+    "en": "Clear"
+  },
+  "apply": {
+    "zh": "应用",
+    "en": "Apply"
+  },
+  "taskUnavailableNeedsReview": {
+    "zh": "任务不可用 · 待核对",
+    "en": "Task unavailable · needs review"
+  },
+  "forCoordinationOnlyAdjustAnytimeDependenciesDoNot": {
+    "zh": "仅作协作参考，可随时调整，不限制任务开始或完成。",
+    "en": "For coordination only. Adjust anytime; dependencies do not restrict starting or completing tasks."
+  },
+  "searchPrerequisiteTasks": {
+    "zh": "搜索前置任务",
+    "en": "Search dependency tasks"
+  },
+  "searchTasksInThisTeam": {
+    "zh": "搜索当前团队任务…",
+    "en": "Search tasks in this team…"
+  },
+  "availablePrerequisiteTasks": {
+    "zh": "可选前置任务",
+    "en": "Available dependency tasks"
+  },
+  "uncheckToRemoveThisRelationship": {
+    "zh": "取消勾选可移除此关联",
+    "en": "Uncheck to remove this relationship"
+  },
+  "dependenciesChangedYourCurrentSelectionHasBeenRetained": {
+    "zh": "前置依赖已更新，当前选择已保留。",
+    "en": "Dependencies changed. Your current selection has been retained."
+  },
+  "loadLatestDependencies": {
+    "zh": "载入最新依赖",
+    "en": "Load latest dependencies"
+  },
+  "replyToOriginalActivity": {
+    "zh": "回复原活动记录 ·",
+    "en": "Reply to original activity · "
+  },
+  "pleaseSetItAgain": {
+    "zh": "请重新设置。",
+    "en": "Please set it again."
+  },
+  "dueDateType": {
+    "zh": "截止时间类型",
+    "en": "Due date type"
+  },
+  "specificDate": {
+    "zh": "指定日期",
+    "en": "Specific date"
+  },
+  "aboutEstimatedHumanEffort": {
+    "zh": "预计人类工时说明",
+    "en": "About estimated human effort"
+  },
+  "includesManualEstimates": {
+    "zh": "含手工估算",
+    "en": "Includes manual estimates"
+  },
+  "highestEffortFirst": {
+    "zh": "按工时从高到低",
+    "en": "Highest effort first"
+  },
+  "items2": {
+    "zh": "项",
+    "en": " items"
+  },
+  "itemsPreviousEstimatesExcluded": {
+    "zh": "项，旧估算未计入",
+    "en": " items; previous estimates excluded"
+  },
+  "noPrerequisitesReadyToStart": {
+    "zh": "无前置依赖，可直接推进",
+    "en": "No dependencies; ready to start"
+  },
+  "parentTask": {
+    "zh": "主任务",
+    "en": "Parent task"
+  },
+  "taskRelationships": {
+    "zh": "任务关系",
+    "en": "Task relationships"
+  },
+  "parentTask2": {
+    "zh": "归属于主任务",
+    "en": "Parent task"
+  },
+  "dependencies": {
+    "zh": "前置依赖",
+    "en": "Dependencies"
+  },
+  "subtasks": {
+    "zh": "子任务(",
+    "en": "Subtasks ("
+  },
+  "taskProgress": {
+    "zh": "任务进度",
+    "en": "Task progress"
+  },
+  "dataNeedsReview": {
+    "zh": "数据待核对",
+    "en": "Data needs review"
+  },
+  "pleaseSetTheDueDateAgain": {
+    "zh": "请重新设置截止时间。",
+    "en": "Please set the due date again."
+  },
+  "progress": {
+    "zh": "完成进度",
+    "en": "Progress"
+  },
+  "removeReference": {
+    "zh": "移除引用",
+    "en": "Remove reference"
+  },
+  "retry": {
+    "zh": "重试",
+    "en": "Retry"
+  },
+  "uploadLocalFile": {
+    "zh": "上传本地文件",
+    "en": "Upload local file"
+  },
+  "chooseFromFiles": {
+    "zh": "从文件列表选择",
+    "en": "Choose from files"
+  },
+  "connectAICurrentReplyDraft": {
+    "zh": "连接 AI：当前回复草稿",
+    "en": "Connect AI: current reply draft"
+  },
+  "searchTaskFiles": {
+    "zh": "搜索任务文件",
+    "en": "Search task files"
+  },
+  "searchFilesOrFolders": {
+    "zh": "搜索文件或文件夹",
+    "en": "Search files or folders"
+  },
+  "clearFileSearch": {
+    "zh": "清除文件搜索",
+    "en": "Clear file search"
+  },
+  "noMatchingFilesFound": {
+    "zh": "没有找到匹配的文件",
+    "en": "No matching files found"
+  },
+  "fileDiscussion": {
+    "zh": "文件讨论",
+    "en": "File discussion"
+  },
+  "closeFileDiscussion": {
+    "zh": "关闭文件讨论",
+    "en": "Close file discussion"
+  },
+  "addFileComment": {
+    "zh": "新增文件评论",
+    "en": "Add file comment"
+  },
+  "confirm": {
+    "zh": "确认",
+    "en": "Confirm"
+  },
+  "discussThisFileOrATeammate": {
+    "zh": "围绕这份文件讨论，也可以 @ 协作者…",
+    "en": "Discuss this file or @ a teammate…"
+  },
+  "thisDiscussionRefersToV": {
+    "zh": "此讨论针对 v",
+    "en": "This discussion refers to v"
+  },
+  "theCurrentFileIsV": {
+    "zh": "，当前文件为 v",
+    "en": "; the current file is v"
+  },
+  "theOriginalQuoteHasBeenRetained": {
+    "zh": "。原文引用已保留。",
+    "en": ". The original quote has been retained."
+  },
+  "resolved": {
+    "zh": "已解决",
+    "en": "Resolved"
+  },
+  "replies": {
+    "zh": "条回复",
+    "en": " replies"
+  },
+  "noFileDiscussionsYet": {
+    "zh": "暂无文件讨论",
+    "en": "No file discussions yet"
+  },
+  "selectTextToCommentOrDiscussTheEntire": {
+    "zh": "选中文字添加评论，或讨论整个文件。",
+    "en": "Select text to comment, or discuss the entire file."
+  },
+  "commentOnEntireFile": {
+    "zh": "评论整个文件",
+    "en": "Comment on entire file"
+  },
+  "fileContent": {
+    "zh": "文件正文",
+    "en": "File content"
+  },
+  "taskFilesRoot": {
+    "zh": "任务文件根目录",
+    "en": "Task files root"
+  },
+  "thisFolderContains": {
+    "zh": "此文件夹包含",
+    "en": "This folder contains "
+  },
+  "directChildrenChooseHowToProceed": {
+    "zh": "个直接子项，请选择处理方式。",
+    "en": " direct children. Choose how to proceed."
+  },
+  "moveContentsUpOneLevelThenDelete": {
+    "zh": "将内容移动到上一级后删除",
+    "en": "Move contents up one level, then delete"
+  },
+  "archiveTheFolderAndItsContents": {
+    "zh": "将整个文件夹及内容归档",
+    "en": "Archive the folder and its contents"
+  },
+  "youCanUndoImmediatelyUsingTheNotificationAt": {
+    "zh": "删除后可通过页面底部提示立即撤销。",
+    "en": "You can undo immediately using the notification at the bottom of the page."
+  },
+  "taskFiles": {
+    "zh": "任务文件",
+    "en": "Task files"
+  },
+  "uploadFiles": {
+    "zh": "上传文件",
+    "en": "Upload files"
+  },
+  "chooseFilesToUpload": {
+    "zh": "选择上传文件",
+    "en": "Choose files to upload"
+  },
+  "uploadingFiles": {
+    "zh": "正在上传文件…",
+    "en": "Uploading files…"
+  },
+  "searchThisTaskSFiles": {
+    "zh": "搜索当前任务文件",
+    "en": "Search this task’s files"
+  },
+  "clearSearch": {
+    "zh": "清除搜索",
+    "en": "Clear search"
+  },
+  "noMatchingFiles": {
+    "zh": "没有匹配的文件",
+    "en": "No matching files"
+  },
+  "backToFileStructure": {
+    "zh": "返回文件结构",
+    "en": "Back to file structure"
+  },
+  "saveFile": {
+    "zh": "保存文件",
+    "en": "Save file"
+  },
+  "viewVersionHistory": {
+    "zh": "查看版本记录",
+    "en": "View version history"
+  },
+  "versions": {
+    "zh": "版本",
+    "en": "Versions"
+  },
+  "moreFileActions": {
+    "zh": "更多文件操作",
+    "en": "More file actions"
+  },
+  "recentlyUpdated": {
+    "zh": "最近更新",
+    "en": "Recently updated"
+  },
+  "on": {
+    "zh": "于",
+    "en": " on "
+  },
+  "updated2": {
+    "zh": "更新",
+    "en": " updated"
+  },
+  "viewFileDiscussion": {
+    "zh": "查看文件讨论",
+    "en": "View file discussion"
+  },
+  "viewVersion": {
+    "zh": "查看版本",
+    "en": "View version"
+  },
+  "moveTo": {
+    "zh": "移动到",
+    "en": "Move to"
+  },
+  "saveYourChangesBeforeCommentingOnThisVersion": {
+    "zh": "正文有未保存的修改，保存后可围绕这一版内容评论。",
+    "en": "Save your changes before commenting on this version."
+  },
+  "saveAndComment": {
+    "zh": "保存文件并评论",
+    "en": "Save and comment"
+  },
+  "cancelComment": {
+    "zh": "取消评论",
+    "en": "Cancel comment"
+  },
+  "attachmentReferencesV": {
+    "zh": "附件引用 v",
+    "en": "Attachment references v"
+  },
+  "currentlyShowingV": {
+    "zh": "；当前显示 v",
+    "en": "; currently showing v"
+  },
+  "historicalReferencesKeepTheirOriginalVersionReviewChanges": {
+    "zh": "。历史引用保持原版本，可在版本记录中核对修改。",
+    "en": ". Historical references keep their original version. Review changes in version history."
+  },
+  "directChildren": {
+    "zh": "个直接子项",
+    "en": " direct children"
+  },
+  "thisFolderIsEmptyCreateASubfolderOn": {
+    "zh": "这个文件夹还是空的。可以在左侧创建子文件夹。",
+    "en": "This folder is empty. Create a subfolder on the left."
+  },
+  "selectAFileOrFolder": {
+    "zh": "选择一个文件或文件夹",
+    "en": "Select a file or folder"
+  },
+  "browseThisTaskSFilesOnTheLeft": {
+    "zh": "从左侧浏览当前任务的文件结构。",
+    "en": "Browse this task’s files on the left."
+  },
+  "selectedTextActions": {
+    "zh": "选中文字操作",
+    "en": "Selected text actions"
+  },
+  "commentOnSelectedText": {
+    "zh": "评论这段文字",
+    "en": "Comment on selected text"
+  },
+  "comment": {
+    "zh": "评论",
+    "en": "Comment"
+  },
+  "closeSelectionActions": {
+    "zh": "关闭选区操作",
+    "en": "Close selection actions"
+  },
+  "versionHistory": {
+    "zh": "版本记录",
+    "en": "Version history"
+  },
+  "fileVersionHistory": {
+    "zh": "文件版本记录",
+    "en": "File version history"
+  },
+  "closeVersionHistory": {
+    "zh": "关闭版本记录",
+    "en": "Close version history"
+  },
+  "currentV": {
+    "zh": "当前 v",
+    "en": "Current v"
+  },
+  "recordsSavesInThisBrowserOnlyThisIs": {
+    "zh": "· 仅记录本浏览器中的保存，不代表云端审计。",
+    "en": "· Records saves in this browser only; this is not a cloud audit log."
+  },
+  "changesViewDiff": {
+    "zh": "处修改 · 查看差异",
+    "en": " changes · View diff"
+  },
+  "beforeV": {
+    "zh": "修改前 · v",
+    "en": "Before · v"
+  },
+  "afterV": {
+    "zh": "修改后 · v",
+    "en": "After · v"
+  },
+  "noChangesRecordedYet": {
+    "zh": "还没有修改记录",
+    "en": "No changes recorded yet"
+  },
+  "afterSavingReviewTheAuthorTimeLocationAnd": {
+    "zh": "保存正文后，可在这里查看修改人、时间、位置和前后内容。既有 v",
+    "en": "After saving, review the author, time, location and before/after content here. History for existing v"
+  },
+  "isNotAvailable": {
+    "zh": "的历史未接入。",
+    "en": " is not available."
+  },
+  "taskFileStructure": {
+    "zh": "任务文件结构",
+    "en": "Task file structure"
+  },
+  "changeIcon": {
+    "zh": "更换图标",
+    "en": "Change icon"
+  },
+  "restoreDefault": {
+    "zh": "恢复默认",
+    "en": "Restore default"
+  },
+  "downloadFile": {
+    "zh": "下载文件",
+    "en": "Download file"
+  },
+  "loadingAttachment": {
+    "zh": "正在读取附件…",
+    "en": "Loading attachment…"
+  },
+  "previewIsNotAvailableForThisFormat": {
+    "zh": "暂不支持在线预览此格式",
+    "en": "Preview is not available for this format"
+  },
+  "downloadTheOriginalFileToViewItOr": {
+    "zh": "可以下载原文件查看，也可以在右侧讨论整个文件。",
+    "en": "Download the original file to view it, or discuss the file on the right."
+  },
+  "startWriting": {
+    "zh": "开始写作…",
+    "en": "Start writing…"
+  },
+  "worksheets": {
+    "zh": "工作表",
+    "en": "Worksheets"
+  },
+  "thisFileHasNoEditableWorksheets": {
+    "zh": "文件中没有可编辑的工作表。",
+    "en": "This file has no editable worksheets."
+  },
+  "page": {
+    "zh": "第",
+    "en": "Page "
+  },
+  "pageSuffix": {
+    "zh": "页",
+    "en": ""
+  },
+  "searchComplete": {
+    "zh": "搜索已完成",
+    "en": "Search complete"
+  },
+  "actionComplete": {
+    "zh": "操作已完成",
+    "en": "Action complete"
+  },
+  "continue": {
+    "zh": "继续处理",
+    "en": "Continue"
+  },
+  "dismissNotification": {
+    "zh": "关闭通知",
+    "en": "Dismiss notification"
+  },
+  "online": {
+    "zh": "在线",
+    "en": "Online"
+  },
+  "busy": {
+    "zh": "忙碌",
+    "en": "Busy"
+  },
+  "stopProcessing": {
+    "zh": "停止处理",
+    "en": "Stop processing"
+  },
+  "removeTag": {
+    "zh": "移除标签",
+    "en": "Remove tag"
+  },
+  "editTag": {
+    "zh": "编辑标签",
+    "en": "Edit tag"
+  },
+  "changeThisPersonalTagSNameAndAppearance": {
+    "zh": "调整个人标签的名称和识别样式，已保存任务上的标签保持不变。",
+    "en": "Change this personal tag’s name and appearance. Tags already saved on tasks remain unchanged."
+  },
+  "createAPersonalTagToUseOnTasks": {
+    "zh": "创建一个可直接用于任务的个人标签。",
+    "en": "Create a personal tag to use on tasks."
+  },
+  "saveChanges": {
+    "zh": "保存更改",
+    "en": "Save changes"
+  },
+  "createTag2": {
+    "zh": "创建标签",
+    "en": "Create tag"
+  },
+  "eGAssignTheSubtaskTaskNameTo": {
+    "zh": "例如：子任务「任务名称」：负责人改为林洁",
+    "en": "e.g. Assign the subtask “Task name” to Jie Lin"
+  },
+  "eGAddACompletionCriterionDeliverablesReviewed": {
+    "zh": "例如：增加完成标准：交付结果已与相关成员核对",
+    "en": "e.g. Add a completion criterion: deliverables reviewed with relevant teammates"
+  },
+  "preparingChangePreview": {
+    "zh": "整理修改预览",
+    "en": "Preparing change preview"
+  },
+  "understandingYourRequest": {
+    "zh": "理解调整要求",
+    "en": "Understanding your request"
+  },
+  "saving": {
+    "zh": "正在保存",
+    "en": "Saving"
+  },
+  "applyToDraft": {
+    "zh": "应用到草稿",
+    "en": "Apply to draft"
+  },
+  "previewAgain": {
+    "zh": "重新预览",
+    "en": "Preview again"
+  },
+  "untitledTask": {
+    "zh": "未命名任务",
+    "en": "Untitled task"
+  },
+  "creationConversationAndChangePreview": {
+    "zh": "本次创建对话和修改预览",
+    "en": "Creation conversation and change preview"
+  },
+  "thisProposalHasExpired": {
+    "zh": "当前候选已过期",
+    "en": "This proposal has expired"
+  },
+  "thisProposalAwaitsConfirmation": {
+    "zh": "当前候选待应用",
+    "en": "This proposal awaits confirmation"
+  },
+  "confirmCreationAfterApplying": {
+    "zh": "应用后仍需确认创建",
+    "en": "Confirm creation after applying"
+  },
+  "savedChangesAppearInTaskActivity": {
+    "zh": "保存后记录到任务活动",
+    "en": "Saved changes appear in task activity"
+  },
+  "notSet": {
+    "zh": "未设置",
+    "en": "Not set"
+  },
+  "usingThisTaskSAgreedWorkingMethod": {
+    "zh": "按当前任务约定的执行方式",
+    "en": "Using this task’s agreed working method"
+  },
+  "incomplete": {
+    "zh": " · 待补全",
+    "en": " · Incomplete"
+  },
+  "youHaveReadAllYourNotifications": {
+    "zh": "你已经读完了当前所有通知。",
+    "en": "You have read all your notifications."
+  },
+  "notificationsMatchingThisFilterWillAppearHere": {
+    "zh": "符合当前筛选条件的通知会出现在这里。",
+    "en": "Notifications matching this filter will appear here."
+  },
+  "refreshingTodaySSuggestions": {
+    "zh": "正在重新分析今日建议",
+    "en": "Refreshing today’s suggestions"
+  },
+  "refreshTodaySSuggestions": {
+    "zh": "重新分析今日建议",
+    "en": "Refresh today’s suggestions"
+  },
+  "analyzing": {
+    "zh": "分析中",
+    "en": "Analyzing"
+  },
+  "analyzeAgain": {
+    "zh": "重新分析",
+    "en": "Analyze again"
+  },
+  "noActionsNeedYourAttention": {
+    "zh": "当前没有需要你处理的行动",
+    "en": "No actions need your attention"
+  },
+  "youDoNotOwnAnyTasksYet": {
+    "zh": "还没有由你负责的任务",
+    "en": "You do not own any tasks yet"
+  },
+  "visitTheTaskListToReviewCompletedTasks": {
+    "zh": "可进入任务列表回看已经结束的任务。",
+    "en": "Visit the task list to review completed tasks."
+  },
+  "actionsWillAppearHereOnceTaskOwnersAre": {
+    "zh": "正式负责人确定后，相关行动会汇总在这里。",
+    "en": "Actions will appear here once task owners are assigned."
+  },
+  "completed": {
+    "zh": "已完成",
+    "en": "Completed"
+  },
+  "incomplete2": {
+    "zh": "未完成",
+    "en": "Incomplete"
+  },
+  "showLess": {
+    "zh": "收起全文",
+    "en": "Show less"
+  },
+  "showFullText": {
+    "zh": "展开全文",
+    "en": "Show full text"
+  },
+  "noGoalProvided": {
+    "zh": "目标未提供",
+    "en": "No goal provided"
+  },
+  "notProvided": {
+    "zh": "未提供",
+    "en": "Not provided"
+  },
+  "close": {
+    "zh": "关闭",
+    "en": "Close"
+  },
+  "copying": {
+    "zh": "正在复制…",
+    "en": "Copying…"
+  },
+  "retryCopyingAndOpening": {
+    "zh": "重试复制并打开",
+    "en": "Retry copying and opening"
+  },
+  "subtaskTotal": {
+    "zh": "子任务汇总",
+    "en": "Subtask total"
+  },
+  "progressUnknown": {
+    "zh": "进度未知",
+    "en": "Progress unknown"
+  },
+  "collapse": {
+    "zh": "收起",
+    "en": "Collapse"
+  },
+  "expand": {
+    "zh": "展开",
+    "en": "Expand"
+  },
+  "reEstimationNeeded": {
+    "zh": "需重估",
+    "en": "Re-estimation needed"
+  },
+  "notEstimated": {
+    "zh": "未估算",
+    "en": "Not estimated"
+  },
+  "saving2": {
+    "zh": "保存中…",
+    "en": "Saving…"
+  },
+  "noCompletionCriteriaYet": {
+    "zh": "尚未填写完成标准",
+    "en": "No acceptance criteria yet"
+  },
+  "chooseAnEndDate": {
+    "zh": "请选择结束时间",
+    "en": "Choose an end date"
+  },
+  "dateRangeSelected": {
+    "zh": "已选择时间范围",
+    "en": "Date range selected"
+  },
+  "datesAreOptional": {
+    "zh": "时间为可选项",
+    "en": "Dates are optional"
+  },
+  "added": {
+    "zh": "，已添加",
+    "en": ", added"
+  },
+  "thisFolderIsEmpty": {
+    "zh": "文件夹为空",
+    "en": "This folder is empty"
+  },
+  "noTaskFilesYet": {
+    "zh": "暂无任务文件",
+    "en": "No task files yet"
+  },
+  "deleteFolder": {
+    "zh": "删除文件夹",
+    "en": "Delete folder"
+  },
+  "deleteFile": {
+    "zh": "删除文件",
+    "en": "Delete file"
+  },
+  "noMatchingTasks": {
+    "zh": "没有匹配的任务",
+    "en": "No matching tasks"
+  },
+  "noPrerequisiteTasksAvailable": {
+    "zh": "暂无可选前置任务",
+    "en": "No dependency tasks available"
+  },
+  "fileEditing": {
+    "zh": "文件编辑",
+    "en": "File editing"
+  },
+  "unsaved": {
+    "zh": "未保存",
+    "en": "Unsaved"
+  },
+  "editing": {
+    "zh": "编辑中",
+    "en": "Editing"
+  },
+  "continueEditing": {
+    "zh": "继续编辑",
+    "en": "Continue editing"
+  },
+  "collapseDiscussion": {
+    "zh": "收起讨论",
+    "en": "Collapse discussion"
+  },
+  "viewDiscussion": {
+    "zh": "查看讨论",
+    "en": "View discussion"
+  },
+  "move": {
+    "zh": "移动",
+    "en": "Move"
+  },
+  "save": {
+    "zh": "保存",
+    "en": "Save"
+  },
+  "empty": {
+    "zh": "（空）",
+    "en": "(empty)"
+  },
+  "theAttachmentCouldNotBeReadPleaseUpload": {
+    "zh": "附件原文件无法读取，请重新上传。",
+    "en": "Could not read the original attachment. Please upload it again."
+  },
+  "downloadFailedPleaseTryAgain": {
+    "zh": "下载失败，请重试。",
+    "en": "Download failed. Please try again."
+  },
+  "editFileContent": {
+    "zh": "编辑文件正文",
+    "en": "Edit file content"
+  },
+  "selectedText": {
+    "zh": "所选正文",
+    "en": "Selected text"
+  },
+  "entireFile": {
+    "zh": "整个文件",
+    "en": "Entire file"
+  },
+  "reopenDiscussion": {
+    "zh": "重新打开讨论",
+    "en": "Reopen discussion"
+  },
+  "resolveDiscussion": {
+    "zh": "解决讨论",
+    "en": "Resolve discussion"
+  },
+  "actionFailedPleaseTryAgain": {
+    "zh": "操作失败，请重试。",
+    "en": "Action failed. Please try again."
+  },
+  "reopen": {
+    "zh": "重开",
+    "en": "Reopen"
+  },
+  "resolve": {
+    "zh": "解决",
+    "en": "Resolve"
+  },
+  "commandCopied": {
+    "zh": "命令已复制",
+    "en": "Command copied"
+  },
+  "copyInstallCommand": {
+    "zh": "复制安装命令",
+    "en": "Copy install command"
+  },
+  "messageTaskDoor": {
+    "zh": "给 TaskDoor 发消息",
+    "en": "Message TaskDoor"
+  },
+  "tellTaskDoorWhatYouWantToWorkOn": {
+    "zh": "告诉 TaskDoor 你想推进什么…",
+    "en": "Tell TaskDoor what you want to work on…"
+  },
+  "send": {
+    "zh": "发送",
+    "en": "Send"
+  },
+  "all": {
+    "zh": "全部",
+    "en": "All"
+  },
+  "read": {
+    "zh": "已读",
+    "en": "Read"
+  },
+  "collaborationInvitation": {
+    "zh": "协作邀请",
+    "en": "Collaboration invitation"
+  },
+  "memberJoined": {
+    "zh": "成员加入",
+    "en": "Member joined"
+  },
+  "discussionMention": {
+    "zh": "讨论提及",
+    "en": "Discussion mention"
+  },
+  "thisContentIsUnavailablePleaseTryAgainLater": {
+    "zh": "当前内容暂不可用，请稍后重试。",
+    "en": "This content is unavailable. Please try again later."
+  },
+  "couldNotOpenTheAIToolPleaseTry": {
+    "zh": "未能打开 AI 工具，请重试。",
+    "en": "Could not open the AI tool. Please try again."
+  },
+  "cancelledNoAttemptWasMadeToOpenThe": {
+    "zh": "已取消，未尝试打开工具。",
+    "en": "Cancelled. No attempt was made to open the tool."
+  },
+  "copyFailedTheToolWasNotOpenedAllow": {
+    "zh": "复制失败，尚未尝试打开工具。请允许剪贴板访问后重试。",
+    "en": "Copy failed; the tool was not opened. Allow clipboard access and try again."
+  },
+  "subtaskPlan": {
+    "zh": "子任务安排",
+    "en": "Subtask plan"
+  },
+  "individualSubtask": {
+    "zh": "单个子任务",
+    "en": "Individual subtask"
+  },
+  "untitledSubtask": {
+    "zh": "未命名子任务",
+    "en": "Untitled subtask"
+  },
+  "removedSubtask": {
+    "zh": "已移除的子任务",
+    "en": "Removed subtask"
+  },
+  "previewStoppedYourInputHasBeenRetained": {
+    "zh": "预览已中止，输入已保留。",
+    "en": "Preview stopped. Your input has been retained."
+  },
+  "contentChangedAndThisPreviewExpiredPreviewAgain": {
+    "zh": "内容已变化，当前预览已过期。请重新预览，输入已保留。",
+    "en": "Content changed and this preview expired. Preview again; your input has been retained."
+  },
+  "previewStoppedYourInputHasBeenRetained2": {
+    "zh": "已停止预览，输入已保留。",
+    "en": "Preview stopped. Your input has been retained."
+  },
+  "inputUpdatedThePreviousProposalWasNotApplied": {
+    "zh": "输入已更新，原候选未应用；可重新预览。",
+    "en": "Input updated. The previous proposal was not applied; you can preview again."
+  },
+  "taskOrMemberDetailsChangedPreviewAgainYour": {
+    "zh": "任务内容或成员信息已变化，请重新预览。输入已保留。",
+    "en": "Task or member details changed. Preview again; your input has been retained."
+  },
+  "changesAreReadyToPreviewAndWillOnly": {
+    "zh": "修改候选已生成，确认后才应用。",
+    "en": "Changes are ready to preview and will only be applied after confirmation."
+  },
+  "previewFailedYourInputHasBeenRetainedPlease": {
+    "zh": "预览未完成，输入已保留，请重试。",
+    "en": "Preview failed. Your input has been retained; please retry."
+  },
+  "changesAppliedToTheDraftYouCanRequest": {
+    "zh": "调整已应用到草稿，可以继续提出要求。",
+    "en": "Changes applied to the draft. You can request further adjustments."
+  },
+  "changesAppliedToTheDraft": {
+    "zh": "调整已应用到草稿。",
+    "en": "Changes applied to the draft."
+  },
+  "changesSaved": {
+    "zh": "修改已保存。",
+    "en": "Changes saved."
+  },
+  "appliedToTheDraftTellMeWhatElse": {
+    "zh": "已应用到草稿，可以继续告诉我你想怎样调整。",
+    "en": "Applied to the draft. Tell me what else you would like to change."
+  },
+  "changesWereNotSavedReviewAndRetryYour": {
+    "zh": "修改尚未保存，请检查后重试。输入和预览已保留。",
+    "en": "Changes were not saved. Review and retry; your input and preview have been retained."
+  },
+  "proposalCancelledNoChangesAppliedYourInputHas": {
+    "zh": "已取消候选，未应用修改；输入已保留。",
+    "en": "Proposal cancelled. No changes applied; your input has been retained."
+  },
+  "adjustmentCancelledNoChangesApplied": {
+    "zh": "已取消本次调整，未应用修改。",
+    "en": "Adjustment cancelled. No changes applied."
+  },
+  "proposalCancelledYourInputHasBeenRetainedFor": {
+    "zh": "已取消候选，输入已保留，可继续调整。",
+    "en": "Proposal cancelled. Your input has been retained for further adjustments."
+  },
+  "stopAIProcessing": {
+    "zh": "停止 AI 处理",
+    "en": "Stop AI processing"
+  },
+  "completionCriteria": {
+    "zh": "完成标准",
+    "en": "Acceptance criteria"
+  },
+  "owner": {
+    "zh": "负责人",
+    "en": "Owner"
+  },
+  "owner2": {
+    "zh": "正式负责人",
+    "en": "Owner"
+  },
+  "participants": {
+    "zh": "参与人",
+    "en": "Collaborators"
+  },
+  "dueDate": {
+    "zh": "截止时间",
+    "en": "Due date"
+  },
+  "dueDate2": {
+    "zh": "截止日期",
+    "en": "Due date"
+  },
+  "tags2": {
+    "zh": "标签",
+    "en": "Tags"
+  },
+  "status": {
+    "zh": "状态",
+    "en": "Status"
+  },
+  "taskStatus": {
+    "zh": "当前任务状态",
+    "en": "Task status"
+  },
+  "taskName": {
+    "zh": "任务名称",
+    "en": "Task name"
+  },
+  "goal": {
+    "zh": "任务目标",
+    "en": "Goal"
+  },
+  "notProvided2": {
+    "zh": "未填写",
+    "en": "Not provided"
+  },
+  "noParticipants": {
+    "zh": "未添加参与人",
+    "en": "No collaborators"
+  },
+  "copyAndTryOpening": {
+    "zh": "复制并尝试打开 {tool}",
+    "en": "Copy and try opening {tool}"
+  },
+  "currentActivityAndReplies": {
+    "zh": "当前动态及 {count} 条回复",
+    "en": "Current activity and {count} replies"
+  },
+  "discussion": {
+    "zh": "讨论",
+    "en": "Discussion"
+  },
+  "reply": {
+    "zh": "回复",
+    "en": "Reply"
+  },
+  "replyingTo": {
+    "zh": "被回复内容",
+    "en": "Replying to"
+  },
+  "referencedHistory": {
+    "zh": "引用的历史记录",
+    "en": "Referenced history"
+  },
+  "unsentReplyDraft": {
+    "zh": "未发送的回复草稿",
+    "en": "Unsent reply draft"
+  },
+  "missingSources": {
+    "zh": "来源缺口",
+    "en": "Missing sources"
+  },
+  "discussionAttachments": {
+    "zh": "讨论附件",
+    "en": "Discussion attachments"
+  },
+  "referencedFiles": {
+    "zh": "引用文件",
+    "en": "Referenced files"
+  },
+  "currentActivity": {
+    "zh": "当前动态",
+    "en": "Current activity"
+  },
+  "more": {
+    "zh": "另有 {0} 位{1}",
+    "en": "{0} more {1}"
+  },
+  "more2": {
+    "zh": "更多{0}",
+    "en": "More {0}"
+  },
+  "hidden": {
+    "zh": "收起的{0}",
+    "en": "Hidden {0}"
+  },
+  "inviteThemByEmailToCollaborateIn": {
+    "zh": "发送邮件邀请对方加入「{0}」，一起协作。",
+    "en": "Invite them by email to collaborate in “{0}”."
+  },
+  "remove": {
+    "zh": "移除 {0}",
+    "en": "Remove {0}"
+  },
+  "set": {
+    "zh": "设置{0}",
+    "en": "Set {0}"
+  },
+  "editTag2": {
+    "zh": "编辑标签：{0}",
+    "en": "Edit tag: {0}"
+  },
+  "deleteTag2": {
+    "zh": "删除标签：{0}",
+    "en": "Delete tag: {0}"
+  },
+  "subtask": {
+    "zh": "子任务 {0}：{1}",
+    "en": "Subtask {0}: {1}"
+  },
+  "adjustOnlyPreviewFirstThenConfirmToApply": {
+    "zh": "仅调整{0}，先预览，确认后应用",
+    "en": "Adjust only {0}. Preview first, then confirm to apply."
+  },
+  "aiAdjustment": {
+    "zh": "AI 帮你改：{0}",
+    "en": "AI adjustment: {0}"
+  },
+  "addSubtasks": {
+    "zh": "新增 {0} 个子任务",
+    "en": "Add {0} subtasks"
+  },
+  "changes2": {
+    "zh": "{0} 处变化",
+    "en": "{0} changes"
+  },
+  "newSubtask": {
+    "zh": "新增子任务：{0}",
+    "en": "New subtask: {0}"
+  },
+  "workingForSeconds": {
+    "zh": "已工作 {0} 秒",
+    "en": "Working for {0} seconds"
+  },
+  "aiIsProcessing": {
+    "zh": "AI 正在处理：{0}，{1}/{2}",
+    "en": "AI is processing: {0}, {1}/{2}"
+  },
+  "viewEstimatedEffortFor": {
+    "zh": "查看{0}预估投入",
+    "en": "View estimated effort for {0}"
+  },
+  "forReferenceOnly": {
+    "zh": "{0} · 仅供参考",
+    "en": "{0} · For reference only"
+  },
+  "about": {
+    "zh": "约 {0}",
+    "en": "About {0}"
+  },
+  "estimatedPortionAbout": {
+    "zh": "已估部分约 {0}",
+    "en": "Estimated portion: about {0}"
+  },
+  "estimatedPortion": {
+    "zh": "已估部分 {0}",
+    "en": "Estimated portion: {0}"
+  },
+  "estimatedEffort": {
+    "zh": "{0}预计投入",
+    "en": "{0} estimated effort"
+  },
+  "filterNotifications2": {
+    "zh": "筛选通知，当前{0}",
+    "en": "Filter notifications: {0}"
+  },
+  "markAsRead": {
+    "zh": "标为已读：【{0}】{1}",
+    "en": "Mark as read: [{0}] {1}"
+  },
+  "todaySSuggestionsFor": {
+    "zh": "{0}的今日建议",
+    "en": "Today’s suggestions for {0}"
+  },
+  "itemsEstimated": {
+    "zh": "已估算 {0}/{1} 项",
+    "en": "{0}/{1} items estimated"
+  },
+  "estimatedTotalEffortPersonDays": {
+    "zh": "预计总工作量 {0} 人天",
+    "en": "Estimated total effort: {0} person-days"
+  },
+  "itemsEstimated2": {
+    "zh": "{0}/{1} 项已估{2}",
+    "en": "{0}/{1} items estimated{2}"
+  },
+  "estimatedEffortIsNotActualTimeSpent": {
+    "zh": "{0}{1}{2}预计投入不代表实际耗时。{3}",
+    "en": "{0}{1}{2}Estimated effort is not actual time spent. {3}"
+  },
+  "aggregatedFromSubtasks": {
+    "zh": "汇总 {0} 项子任务，",
+    "en": "Aggregated from {0} subtasks. "
+  },
+  "noModelEffortEstimateAppliesToTheCurrent": {
+    "zh": "尚无适用于当前任务的模型工时估算。{0}缺失值不按零计算。",
+    "en": "No model effort estimate applies to the current task. {0}Missing values are not treated as zero."
+  },
+  "estimatedEffort2": {
+    "zh": "预计投入 {0}{1}",
+    "en": "Estimated effort: {0}{1}"
+  },
+  "shareOfEffort": {
+    "zh": "，工时占比 {0}",
+    "en": ", share of effort: {0}"
+  },
+  "shareOfEffort2": {
+    "zh": "{0}工时占比",
+    "en": "{0} share of effort"
+  },
+  "progress2": {
+    "zh": "{0}完成进度",
+    "en": "{0} progress"
+  },
+  "moreTags": {
+    "zh": "另有 {0} 个标签",
+    "en": "{0} more tags"
+  },
+  "adjustCompletionCriteriaWithAI": {
+    "zh": "AI 调整{0}完成标准",
+    "en": "Adjust {0} acceptance criteria with AI"
+  },
+  "to2": {
+    "zh": "{0} 至 {1}",
+    "en": "{0} to {1}"
+  },
+  "eachCommentSupportsUpToAttachmentsSelectFewer": {
+    "zh": "每条评论最多添加 {0} 个附件，请减少选择后重试。",
+    "en": "Each comment supports up to {0} attachments. Select fewer files and retry."
+  },
+  "eachCommentSupportsUpToAttachments": {
+    "zh": "每条评论最多添加 {0} 个附件。",
+    "en": "Each comment supports up to {0} attachments."
+  },
+  "retryAdding": {
+    "zh": "重试添加 {0}",
+    "en": "Retry adding {0}"
+  },
+  "removeAttachment": {
+    "zh": "移除附件 {0}",
+    "en": "Remove attachment {0}"
+  },
+  "collapse2": {
+    "zh": "收起{0}",
+    "en": "Collapse {0}"
+  },
+  "expand2": {
+    "zh": "展开{0}",
+    "en": "Expand {0}"
+  },
+  "moreActionsFor": {
+    "zh": "{0}的更多操作",
+    "en": "More actions for {0}"
+  },
+  "attachment": {
+    "zh": "附件：{0}",
+    "en": "Attachment: {0}"
+  },
+  "discussionFor": {
+    "zh": "{0}的讨论",
+    "en": "Discussion for {0}"
+  },
+  "subtaskDetails": {
+    "zh": "子任务详情：{0}",
+    "en": "Subtask details: {0}"
+  },
+  "openSubtask": {
+    "zh": "打开子任务：{0}",
+    "en": "Open subtask: {0}"
+  },
+  "directSubtasks": {
+    "zh": "{0} 个直接子任务",
+    "en": "{0} direct subtasks"
+  },
+  "progress3": {
+    "zh": "{0} 完成进度",
+    "en": "{0} progress"
+  },
+  "openPrerequisite": {
+    "zh": "打开前置任务：{0}",
+    "en": "Open dependency: {0}"
+  },
+  "removeDependency": {
+    "zh": "移除前置依赖：{0}",
+    "en": "Remove dependency: {0}"
+  },
+  "unavailableTask": {
+    "zh": "不可用任务 {0}",
+    "en": "Unavailable task {0}"
+  },
+  "removeUnavailableDependency": {
+    "zh": "移除不可用的前置依赖 {0}",
+    "en": "Remove unavailable dependency {0}"
+  },
+  "prerequisite": {
+    "zh": "前置任务：{0}",
+    "en": "Dependency: {0}"
+  },
+  "originalRecordsHaveBeenRetainedThisFileIs": {
+    "zh": "{0} 原记录已保留，当前文件暂时只读。",
+    "en": "{0} Original records have been retained. This file is temporarily read-only."
+  },
+  "uploadUpToFilesAtATime": {
+    "zh": "一次最多上传 {0} 个文件。",
+    "en": "Upload up to {0} files at a time."
+  },
+  "contentSavedButFileListSyncFailed": {
+    "zh": "正文已保存，文件列表同步失败：{0}",
+    "en": "Content saved, but file list sync failed: {0}"
+  },
+  "separator2": {
+    "zh": "已{0}“{1}”",
+    "en": "{0}: “{1}”"
+  },
+  "fileEditing2": {
+    "zh": "文件编辑：{0}",
+    "en": "File editing: {0}"
+  },
+  "items3": {
+    "zh": "{0} 项",
+    "en": "{0} items"
+  },
+  "createIn": {
+    "zh": "创建位置：{0}",
+    "en": "Create in: {0}"
+  },
+  "editParagraph": {
+    "zh": "编辑正文第 {0} 段",
+    "en": "Edit paragraph {0}"
+  },
+  "paragraph": {
+    "zh": "第 {0} 段",
+    "en": "Paragraph {0}"
+  },
+  "page2": {
+    "zh": "第 {0} 页",
+    "en": "Page {0}"
+  },
+  "editPage": {
+    "zh": "编辑第 {0} 页正文",
+    "en": "Edit page {0}"
+  },
+  "today": {
+    "zh": "今天 {0}",
+    "en": "Today {0}"
+  },
+  "connectTaskDoorTo": {
+    "zh": "TaskDoor 连接 {0}",
+    "en": "Connect TaskDoor to {0}"
+  },
+  "commandCopied2": {
+    "zh": "{0}命令已复制",
+    "en": "{0} command copied"
+  },
+  "copyCommand2": {
+    "zh": "复制{0}命令",
+    "en": "Copy {0} command"
+  },
+  "noNotifications": {
+    "zh": "没有通知：{filter}",
+    "en": "No notifications: {filter}"
+  },
+  "createTask": {
+    "zh": "创建任务",
+    "en": "Create task"
+  },
+  "viewTasks": {
+    "zh": "查看任务",
+    "en": "View tasks"
+  },
+  "updateTaskDetails": {
+    "zh": "更新基础信息",
+    "en": "Update task details"
+  },
+  "replyToActivity": {
+    "zh": "回复动态",
+    "en": "Reply to activity"
+  },
+  "deleteTask": {
+    "zh": "删除任务",
+    "en": "Delete task"
+  },
+  "turnNewWorkIntoATaskWithA": {
+    "zh": "把新的工作需求整理为任务，明确接下来要推进的事。",
+    "en": "Turn new work into a task with a clear next step."
+  },
+  "viewYourTasksStatusesAndDueDates": {
+    "zh": "查看自己负责的任务，了解状态与截止时间。",
+    "en": "View your tasks, statuses and due dates."
+  },
+  "updateTheTaskNameOwnerDueDateAnd": {
+    "zh": "调整任务名称、负责人、截止时间等基础信息。",
+    "en": "Update the task name, owner, due date and other details."
+  },
+  "uploadDeliverablesOrReferenceMaterialsToATask": {
+    "zh": "把交付成果或参考资料上传到指定任务。",
+    "en": "Upload deliverables or reference materials to a task."
+  },
+  "replyToTaskActivityWithProgressQuestionsOr": {
+    "zh": "在指定任务动态下补充进展、问题或核对结果。",
+    "en": "Reply to task activity with progress, questions or review findings."
+  },
+  "removeTasksCreatedByMistakeOrNoLonger": {
+    "zh": "移除误建或确认不再需要的任务；需要权限并二次确认。",
+    "en": "Remove tasks created by mistake or no longer needed. Requires permission and confirmation."
+  },
+  "adjustWithAI": {
+    "zh": "AI 帮你改",
+    "en": "Adjust with AI"
+  },
+  "participants2": {
+    "zh": "参与者",
+    "en": "Collaborators"
+  },
+  "dates": {
+    "zh": "时间",
+    "en": "Dates"
+  },
+  "estimateForReferenceOnly": {
+    "zh": "预估 · 仅供参考",
+    "en": "Estimate · For reference only"
+  },
+  "includesAIEstimatesForReferenceOnly": {
+    "zh": "含 AI 预估 · 仅供参考",
+    "en": "Includes AI estimates · For reference only"
+  },
+  "aiEstimateForReferenceOnly": {
+    "zh": "AI 预估 · 仅供参考",
+    "en": "AI estimate · For reference only"
+  },
+  "manualEstimateForReferenceOnly": {
+    "zh": "手工预估 · 仅供参考",
+    "en": "Manual estimate · For reference only"
+  },
+  "reEstimationNeeded2": {
+    "zh": "需重新估算",
+    "en": "Re-estimation needed"
+  },
+  "estimateUnavailable": {
+    "zh": "暂无法估算",
+    "en": "Estimate unavailable"
+  },
+  "subtaskProgress": {
+    "zh": "子任务进度",
+    "en": "Subtask progress"
+  },
+  "subtaskEffortDistribution": {
+    "zh": "子任务工时分布",
+    "en": "Subtask effort distribution"
+  },
+  "sharesUnavailableUntilEstimatesAreComplete": {
+    "zh": " · 占比待估算完整",
+    "en": " · Shares unavailable until estimates are complete"
+  },
+  "shownInPersonDaysPersonDayEqualsPerson": {
+    "zh": "按人天展示，1 人天＝8 人时。结合资料量、完成标准及人／AI 分工估算，历史内容只用于解释具体工作差异，不从完成历时推算人工投入。等待时长不计入，人数也不直接决定工期。",
+    "en": "Shown in person-days: 1 person-day equals 8 person-hours. Estimates reflect materials, acceptance criteria and human/AI responsibilities. Historical context explains differences in work; elapsed time is not used to infer effort. Waiting is excluded, and headcount does not directly determine duration."
+  },
+  "includesSavedManualEstimates": {
+    "zh": "当前含已保存的手工估算。",
+    "en": "Includes saved manual estimates. "
+  },
+  "basedOnRecordedEstimates": {
+    "zh": "基于当前已记录的估算。",
+    "en": "Based on recorded estimates. "
+  },
+  "someTasksLackValidEstimatesTotalEffortAnd": {
+    "zh": "部分任务尚未完成有效估算，暂不计算总工时及占比。",
+    "en": "Some tasks lack valid estimates; total effort and shares are unavailable."
+  },
+  "totalEffortIsZeroSharesAreNotCalculated": {
+    "zh": "总工时为零，不计算占比。",
+    "en": "Total effort is zero; shares are not calculated."
+  },
+  "sharesRepresentEachSubtaskSEstimatedEffortAs": {
+    "zh": "占比为各子任务预计工时占总工时的比例，与完成度无关。",
+    "en": "Shares represent each subtask’s estimated effort as a proportion of the total, independently of completion."
+  },
+  "theScopeOrHumanAIResponsibilitiesChangedThe": {
+    "zh": "任务范围或人／AI 分工已变化，原估算不再适用，需重新估算。",
+    "en": "The scope or human/AI responsibilities changed. The previous estimate no longer applies; re-estimate it."
+  },
+  "estimatesAreIncompleteOrInvalidEffortTotalsAnd": {
+    "zh": "估算记录不完整或数据异常，暂无法汇总工时及占比。",
+    "en": "Estimates are incomplete or invalid. Effort totals and shares are unavailable."
+  },
+  "criterionReview0": {
+    "zh": "AI 尚无可量化评估",
+    "en": "AI assessment unavailable"
+  },
+  "criterionReview1": {
+    "zh": "已人工确认",
+    "en": "Confirmed by a person"
+  },
+  "criterionReview2": {
+    "zh": "完成标准依据",
+    "en": "Criterion evidence"
+  },
+  "criterionReview3": {
+    "zh": "尚无此条标准的 AI 评估依据。",
+    "en": "No AI assessment evidence for this criterion yet."
+  },
+  "criterionReview4": {
+    "zh": "评估时间",
+    "en": "Assessed"
+  },
+  "criterionReview5": {
+    "zh": "撤销确认",
+    "en": "Undo confirmation"
+  },
+  "criterionReview6": {
+    "zh": "确认达成",
+    "en": "Confirm met"
+  },
+  "criterionReview7": {
+    "zh": "确认未保存，请重试；若标准已变化，请先重新加载。",
+    "en": "Confirmation was not saved. Try again, or reload if the criteria changed."
+  },
+  "criterionReview8": {
+    "zh": "{done} / {total} 已确认",
+    "en": "{done} / {total} confirmed"
+  },
+  "criterionReview9": {
+    "zh": "确认完成标准",
+    "en": "Confirmed completion criterion"
+  },
+  "criterionReview10": {
+    "zh": "撤销完成标准确认",
+    "en": "Undid criterion confirmation"
+  },
+  "auditTerminology0": {
+    "zh": "推荐度较高",
+    "en": "Strong match"
+  },
+  "auditTerminology1": {
+    "zh": "推荐度适中",
+    "en": "Moderate match"
+  },
+  "auditTerminology2": {
+    "zh": "推荐度较低",
+    "en": "Limited match"
+  },
+  "auditTerminology3": {
+    "zh": "估算未能保存，请重试；当前输入已保留。",
+    "en": "Could not save the estimate. Your input is preserved. Please try again."
+  },
+  "auditTerminology4": {
+    "zh": "标签未能保存，请重试。",
+    "en": "Could not save the tag. Please try again."
+  },
+  "auditTerminology5": {
+    "zh": "标签未能删除，请重试。",
+    "en": "Could not delete the tag. Please try again."
+  },
+  "auditTerminology6": {
+    "zh": "请先保存或取消当前修改。",
+    "en": "Save or cancel your changes first."
+  },
+  "auditTerminology7": {
+    "zh": "完成标准已保存到草稿",
+    "en": "Acceptance criteria saved to draft"
+  },
+  "auditTerminology8": {
+    "zh": "完成标准已保存",
+    "en": "Acceptance criteria saved"
+  },
+  "auditTerminology9": {
+    "zh": "保存失败，输入已保留，请重试。",
+    "en": "Could not save. Your input is preserved. Please try again."
+  },
+  "auditTerminology10": {
+    "zh": "前置依赖未能保存，请重试。",
+    "en": "Could not save dependencies. Please try again."
+  },
+  "auditTerminology11": {
+    "zh": "AI 处理已停止",
+    "en": "AI processing stopped"
+  },
+  "auditTerminology12": {
+    "zh": "AI 回复未完成",
+    "en": "The AI response is incomplete"
+  },
+  "auditTerminology13": {
+    "zh": "AI 思考完成，回复已生成",
+    "en": "AI response ready"
+  },
+  "auditTerminology14": {
+    "zh": "正在根据这轮输入整理候选方案。",
+    "en": "Preparing a draft plan from your latest input."
+  },
+  "auditTerminology15": {
+    "zh": "这轮处理已停止，之前的草稿仍然保留。",
+    "en": "Processing stopped. Your previous draft is preserved."
+  },
+  "auditTerminology16": {
+    "zh": "这轮处理未完成，输入和之前的草稿仍然保留。",
+    "en": "Processing could not finish. Your input and previous draft are preserved."
+  },
+  "auditTerminology17": {
+    "zh": "交付内容",
+    "en": "Deliverables"
+  },
+  "auditTerminology18": {
+    "zh": "本地版本无法读取。",
+    "en": "Could not read the local version."
+  },
+  "auditTerminology19": {
+    "zh": "本地文件记录读取失败，请检查浏览器存储后重新打开。",
+    "en": "Could not read local file records. Check browser storage and reopen."
+  },
+  "auditTerminology20": {
+    "zh": "文件列表保存失败，请重试。",
+    "en": "Could not save the file list. Please try again."
+  },
+  "auditTerminology21": {
+    "zh": "上传失败，请重试。",
+    "en": "Upload failed. Please try again."
+  },
+  "auditTerminology22": {
+    "zh": "文件版本已更新，草稿已保留。请先核对版本记录，不会覆盖新内容。",
+    "en": "A newer version is available. Your draft is preserved. Review version history before saving."
+  },
+  "auditTerminology23": {
+    "zh": "请重新打开文件。",
+    "en": "Please reopen the file."
+  },
+  "auditTerminology24": {
+    "zh": "保存失败，草稿已保留，请重试。",
+    "en": "Could not save. Your draft is preserved. Please try again."
+  },
+  "auditTerminology25": {
+    "zh": "重命名不能转换文件格式，请保留原扩展名。",
+    "en": "Renaming cannot change the file format. Keep the original extension."
+  },
+  "auditTerminology27": {
+    "zh": "附件读取失败。",
+    "en": "Could not read the attachment."
+  },
+  "auditTerminology28": {
+    "zh": "操作失败",
+    "en": "Action failed"
+  },
+  "auditTerminology30": {
+    "zh": "当前任务描述与{name}的职责记录缺少直接匹配，建议结合实际经验与可用时间再确认。",
+    "en": "No direct match was found between this task and {name}'s responsibilities. Check their experience and availability."
+  },
+  "auditTerminology31": {
+    "zh": "任务中的{keywords}与{name}的职责范围直接匹配。",
+    "en": "The task keywords {keywords} match {name}'s responsibilities."
+  },
+  "oneMoreTag": {
+    "zh": "另有 1 个标签",
+    "en": "1 more tag"
+  },
+  "dynamicCopyAudit1": {
+    "zh": "父任务",
+    "en": "Parent task"
+  },
+  "dynamicCopyAudit2": {
+    "zh": "预计投入 {0}",
+    "en": "Estimated effort {0}"
+  },
+  "dynamicCopyAudit3": {
+    "zh": "预计投入 需重估",
+    "en": "Estimated effort: re-estimation needed"
+  },
+  "dynamicCopyAudit4": {
+    "zh": "预计投入 待核对",
+    "en": "Estimated effort: review needed"
+  },
+  "dynamicCopyAudit5": {
+    "zh": "预计投入 待估算",
+    "en": "Estimated effort: not estimated"
+  },
+  "dynamicCopyAudit7": {
+    "zh": "（无文字内容）",
+    "en": "(No text)"
+  },
+  "dynamicCopyAudit8": {
+    "zh": "不能将任务自身设为前置依赖。",
+    "en": "A task cannot depend on itself."
+  },
+  "dynamicCopyAudit9": {
+    "zh": "前置任务不可用，请核对当前可见任务。",
+    "en": "The dependency is unavailable. Check the tasks you can access."
+  },
+  "dynamicCopyAudit10": {
+    "zh": "父子任务的归属关系不是前置依赖。",
+    "en": "A parent–subtask relationship is not a dependency."
+  },
+  "dynamicCopyAudit11": {
+    "zh": "这个前置依赖会形成循环，请重新核对。",
+    "en": "This dependency would create a cycle. Review the selection."
+  },
+  "dynamicCopyAudit12": {
+    "zh": "当前任务已不存在或不可用，请返回任务列表。",
+    "en": "This task no longer exists or is unavailable. Return to the task list."
+  },
+  "dynamicCopyAudit13": {
+    "zh": "前置依赖已被其他操作更新，请核对最新内容后再保存。",
+    "en": "Dependencies have changed. Review the latest values before saving."
+  },
+  "dynamicCopyAudit15": {
+    "zh": "名称不能为空",
+    "en": "Enter a name."
+  },
+  "dynamicCopyAudit16": {
+    "zh": "同级已存在同名项目",
+    "en": "An item with this name already exists in this folder."
+  },
+  "dynamicCopyAudit17": {
+    "zh": "目标文件夹不存在",
+    "en": "The destination folder no longer exists."
+  },
+  "dynamicCopyAudit18": {
+    "zh": "文件项目不存在",
+    "en": "The file no longer exists."
+  },
+  "dynamicCopyAudit19": {
+    "zh": "文件夹不能移动到自身或后代",
+    "en": "A folder cannot be moved into itself or one of its subfolders."
+  },
+  "dynamicCopyAudit20": {
+    "zh": "文件夹不存在",
+    "en": "The folder no longer exists."
+  },
+  "dynamicCopyAudit21": {
+    "zh": "任务已不存在，请返回任务列表。",
+    "en": "This task no longer exists. Return to the task list."
+  },
+  "dynamicCopyAudit22": {
+    "zh": "主任务投入由子任务汇总，请到对应子任务确认估算。",
+    "en": "Effort is calculated from subtasks. Confirm the estimates on the relevant subtasks."
+  },
+  "dynamicCopyAudit23": {
+    "zh": "任务范围或估算已有变化，请载入最新内容后再确认；当前输入已保留。",
+    "en": "The task scope or estimate has changed. Load the latest values before confirming. Your input has been kept."
+  },
+  "dynamicCopyAudit24": {
+    "zh": "预计投入数据无效，请重新核对估算。",
+    "en": "The effort estimate is invalid. Review the estimate."
+  },
+  "dynamicCopyAudit25": {
+    "zh": "估算与当前范围或版本不一致，请重新核对后确认。",
+    "en": "The estimate does not match the current scope or version. Review it before confirming."
+  },
+  "dynamicCopyAudit26": {
+    "zh": "文件编辑记录损坏：表格内容不完整。",
+    "en": "The file edit record is corrupted: incomplete spreadsheet content."
+  },
+  "dynamicCopyAudit27": {
+    "zh": "文件编辑记录损坏：正文格式无效。",
+    "en": "The file edit record is corrupted: invalid content format."
+  },
+  "dynamicCopyAudit28": {
+    "zh": "不能通过正文编辑转换文件格式。",
+    "en": "Editing content cannot change the file format."
+  },
+  "dynamicCopyAudit29": {
+    "zh": "此文件格式不支持当前正文编辑，不能转换文件格式。",
+    "en": "This file format does not support this content editor. The format cannot be changed."
+  },
+  "dynamicCopyAudit30": {
+    "zh": "文件修改人不能为空。",
+    "en": "A file editor must be specified."
+  },
+  "dynamicCopyAudit31": {
+    "zh": "文件修改时间无效。",
+    "en": "The file modification time is invalid."
+  },
+  "dynamicCopyAudit32": {
+    "zh": "文件版本无效。",
+    "en": "The file version is invalid."
+  },
+  "dynamicCopyAudit33": {
+    "zh": "文件编辑记录损坏：缺少文件或版本信息。",
+    "en": "The file edit record is corrupted: missing file or version information."
+  },
+  "dynamicCopyAudit34": {
+    "zh": "文件编辑记录损坏：修改历史无效。",
+    "en": "The file edit record is corrupted: invalid revision history."
+  },
+  "dynamicCopyAudit35": {
+    "zh": "文件编辑记录损坏：修改位置或前后值无效。",
+    "en": "The file edit record is corrupted: invalid edit location or content values."
+  },
+  "dynamicCopyAudit36": {
+    "zh": "文件编辑记录损坏：当前版本缺少对应修改记录。",
+    "en": "The file edit record is corrupted: no revision record for the current version."
+  },
+  "dynamicCopyAudit37": {
+    "zh": "文件编辑记录不属于当前文件。",
+    "en": "The edit record belongs to a different file."
+  },
+  "dynamicCopyAudit38": {
+    "zh": "本地文件修改早于当前来源版本，已保留较新的来源正文，不能用旧版本覆盖。",
+    "en": "Local edits are older than the source version. The newer source content has been kept and cannot be overwritten by an older version."
+  },
+  "dynamicCopyAudit39": {
+    "zh": "文件编辑记录与当前文件格式不符。",
+    "en": "The edit record does not match the current file format."
+  },
+  "dynamicCopyAudit40": {
+    "zh": "缺少任务标识，不能读取或保存文件。",
+    "en": "The task ID is missing. Files cannot be read or saved."
+  },
+  "dynamicCopyAudit41": {
+    "zh": "无法读取本地文件修改记录，已停止保存以保护原记录。",
+    "en": "Local file edits could not be read. Saving has stopped to protect the existing record."
+  },
+  "dynamicCopyAudit42": {
+    "zh": "记录应为文件映射。",
+    "en": "The record must be a file mapping."
+  },
+  "dynamicCopyAudit43": {
+    "zh": "文件标识不匹配。",
+    "en": "The file IDs do not match."
+  },
+  "dynamicCopyAudit44": {
+    "zh": "本地文件修改记录损坏，已保留原数据并停止覆盖。",
+    "en": "Local file edits are corrupted. The original data has been kept and will not be overwritten."
+  },
+  "dynamicCopyAudit45": {
+    "zh": "文件版本已变化，请重新打开最新版本后再保存。",
+    "en": "The file version has changed. Reopen the latest version before saving."
+  },
+  "dynamicCopyAudit46": {
+    "zh": "文件格式已变化，不能覆盖现有内容。",
+    "en": "The file format has changed. Existing content cannot be overwritten."
+  },
+  "dynamicCopyAudit47": {
+    "zh": "保存记录缺少已有版本历史，请重新打开文件后重试。",
+    "en": "The saved record is missing revision history. Reopen the file and try again."
+  },
+  "dynamicCopyAudit48": {
+    "zh": "保存后的文件记录校验失败。",
+    "en": "The saved file record could not be verified."
+  },
+  "dynamicCopyAudit49": {
+    "zh": "文件修改未确认保存，请保留当前输入并重试。",
+    "en": "File edits could not be confirmed as saved. Keep your input and try again."
+  },
+  "dynamicCopyAudit50": {
+    "zh": "请至少填写一条完成标准。",
+    "en": "Add at least one acceptance criterion."
+  },
+  "dynamicCopyAudit51": {
+    "zh": "当前任务已不存在，请返回任务列表。",
+    "en": "This task no longer exists. Return to the task list."
+  },
+  "dynamicCopyAudit52": {
+    "zh": "只能编辑当前任务的直属子任务，任务关系可能已有变化。",
+    "en": "Only direct subtasks can be edited here. The task relationship may have changed."
+  },
+  "dynamicCopyAudit53": {
+    "zh": "完成标准已被其他操作更新，请核对最新内容后再保存。",
+    "en": "Acceptance criteria have changed. Review the latest values before saving."
+  },
+  "dynamicCopyAudit54": {
+    "zh": "第 {0} 条完成标准不能为空，请补全或删除这一条。",
+    "en": "Acceptance criterion {0} is empty. Complete it or remove it."
+  },
+  "dynamicDisplay0": {
+    "zh": "计划应完成 {0}",
+    "en": "Expected progress {0}"
+  },
+  "dynamicDisplay1": {
+    "zh": "计划应完成位置 {0}",
+    "en": "Expected progress marker {0}"
+  },
+  "dynamicDisplay2": {
+    "zh": "推荐关注任务：{0}",
+    "en": "Recommended task: {0}"
+  },
+  "dynamicDisplay3": {
+    "zh": "打开推荐任务：{0}",
+    "en": "Open recommended task: {0}"
+  },
+  "dynamicDisplay4": {
+    "zh": "时间待核对",
+    "en": "Date needs review"
+  },
+  "workbenchCountOne": {
+    "zh": "共 1 项任务",
+    "en": "1 task"
+  },
+  "workbenchCountMany": {
+    "zh": "共 {0} 项任务",
+    "en": "{0} tasks"
+  },
+  "criterionNoAssessment": {
+    "zh": "AI 暂无评估",
+    "en": "AI assessment unavailable"
+  },
+  "criterionAiAssessmentLabel": {
+    "zh": "AI 分析：{stage}",
+    "en": "AI assessment: {stage}"
+  },
+  "criterionHumanConfirmHint": {
+    "zh": "点击人工确认达成",
+    "en": "Click to confirm as met"
+  },
+  "criterionHumanUndoHint": {
+    "zh": "已人工确认 · 点击撤销",
+    "en": "Confirmed by a person · Click to undo"
+  },
+  "autoTranslateContent": {
+    "zh": "自动翻译协作内容",
+    "en": "Auto-translate content"
+  },
+  "contentTranslated": {
+    "zh": "已翻译",
+    "en": "Translated"
+  },
+  "contentOriginal": {
+    "zh": "原文",
+    "en": "Original"
+  },
+  "viewContentOriginal": {
+    "zh": "查看原文",
+    "en": "View original"
+  },
+  "showContentTranslation": {
+    "zh": "显示译文",
+    "en": "Show translation"
+  },
+  "translationUnavailable": {
+    "zh": "暂无译文",
+    "en": "Translation unavailable"
+  },
+  "localTranslationUnavailable": {
+    "zh": "本地演示尚无此内容的译文，原文已保留。",
+    "en": "No translation is available for this content in the local demo. The original is shown."
+  },
+  "editingOriginalContent": {
+    "zh": "正在编辑原文",
+    "en": "Editing original"
+  },
+  "taskReadingOptions": {
+    "zh": "任务阅读选项",
+    "en": "Task reading options"
+  },
+  "viewTaskOriginal": {
+    "zh": "查看任务原文",
+    "en": "View task original"
+  },
+  "showTaskTranslation": {
+    "zh": "显示任务译文",
+    "en": "Show task translation"
+  },
+  "aiConnectionGuideDescription": {
+    "zh": "安装并登录 TaskDoor CLI，在本地工具中继续工作。",
+    "en": "Install TaskDoor CLI and log in to continue working in your local tools."
+  },
+  "criterionConfirmationUndone": {
+    "zh": "已撤销确认",
+    "en": "Confirmation undone"
+  }
+}

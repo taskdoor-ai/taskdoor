@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n/I18nProvider";
 import { ListTodo, Moon, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { PersonAvatar } from "./PersonAvatar";
@@ -11,7 +12,6 @@ type WorkspaceSidebarProps = {
   activeSection: PrimarySection;
   mobileOpen: boolean;
   onOpenPersonalCenter: (module: PersonalCenterModule) => void;
-  onOpenTaskInsight: (taskId: string) => void;
   onSectionChange: (section: PrimarySection) => void;
   theme: "light" | "dark";
   toggleTheme: () => void;
@@ -23,10 +23,11 @@ type WorkspaceSidebarProps = {
 };
 
 const primaryItems = [
-  { id: "tasks" as const, icon: <ListTodo size={18} />, label: "任务" },
+  { id: "tasks" as const, icon: <ListTodo size={18} />, label: "nav.tasks" as const },
 ];
 
-export function WorkspaceSidebar({ activeSection, activeTeamId, mobileOpen, onOpenPersonalCenter, onOpenTaskInsight, onSectionChange, onTeamChange, teams, theme, toggleTheme, userId, userProfile }: WorkspaceSidebarProps) {
+export function WorkspaceSidebar({ activeSection, activeTeamId, mobileOpen, onOpenPersonalCenter, onSectionChange, onTeamChange, teams, theme, toggleTheme, userId, userProfile }: WorkspaceSidebarProps) {
+  const { t } = useI18n();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const userMenuTriggerRef = useRef<HTMLButtonElement>(null);
@@ -43,10 +44,10 @@ export function WorkspaceSidebar({ activeSection, activeTeamId, mobileOpen, onOp
   }, [userMenuOpen]);
 
   return <div className={`workspace-nav ${mobileOpen ? "open" : ""} rail-only`}>
-    <aside aria-label="一级导航" className="primary-rail">
+    <aside aria-label={t('nav.primary')} className="primary-rail">
       <TeamSwitcher activeTeamId={activeTeamId} compact onTeamChange={onTeamChange} teams={teams} />
-      <nav>{primaryItems.map((item) => <button aria-label={item.label} className={`rail-item ${activeSection === item.id || activeSection === "conversation" ? "active" : ""}`} data-tooltip={item.label} key={item.id} onClick={() => onSectionChange(item.id)} type="button">{item.icon}</button>)}</nav>
-      <div className="rail-bottom"><GlobalNotifications onOpenTaskInsight={onOpenTaskInsight} /><button aria-label="切换主题" className="rail-item" data-tooltip="切换主题" onClick={toggleTheme} type="button">{theme === "light" ? <Moon size={18} /> : <Sun size={18} />}</button><div className="rail-user-dropdown" ref={userMenuRef}><button aria-controls="rail-user-menu" aria-expanded={userMenuOpen} aria-label="打开设置菜单" className="rail-user-trigger" onClick={() => setUserMenuOpen((value) => !value)} ref={userMenuTriggerRef} type="button"><PersonAvatar name={userProfile.name} personId={userId} profilePreviewFocusable={false} showProfilePreview={false} size="sm" /></button>{userMenuOpen && <div aria-label="设置菜单" className="rail-user-menu" id="rail-user-menu"><div className="rail-user-menu-actions"><button onClick={() => { onOpenPersonalCenter("profile"); setUserMenuOpen(false); }} ref={firstMenuItemRef} type="button">设置</button><button className="danger" type="button">退出登录</button></div></div>}</div></div>
+      <nav>{primaryItems.map((item) => <button aria-label={t(item.label)} className={`rail-item ${activeSection === item.id || activeSection === "conversation" ? "active" : ""}`} data-tooltip={t(item.label)} key={item.id} onClick={() => onSectionChange(item.id)} type="button">{item.icon}</button>)}</nav>
+      <div className="rail-bottom"><GlobalNotifications /><button aria-label={t('theme.toggle')} className="rail-item" data-tooltip={t('theme.toggle')} onClick={toggleTheme} type="button">{theme === "light" ? <Moon size={18} /> : <Sun size={18} />}</button><div className="rail-user-dropdown" ref={userMenuRef}><button aria-controls="rail-user-menu" aria-expanded={userMenuOpen} aria-label={t('account.open')} className="rail-user-trigger" onClick={() => setUserMenuOpen((value) => !value)} ref={userMenuTriggerRef} type="button"><PersonAvatar name={userProfile.name} personId={userId} profilePreviewFocusable={false} showProfilePreview={false} size="sm" /></button>{userMenuOpen && <div aria-label={t('account.menu')} className="rail-user-menu" id="rail-user-menu"><div className="rail-user-menu-actions"><button onClick={() => { onOpenPersonalCenter("profile"); setUserMenuOpen(false); }} ref={firstMenuItemRef} type="button">{t('account.settings')}</button><button className="danger" type="button">{t('account.signOut')}</button></div></div>}</div></div>
     </aside>
   </div>;
 }

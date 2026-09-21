@@ -12,7 +12,7 @@
 | --- | --- | --- | --- |
 | `lavikatiyar/list` | [21st.dev](https://21st.dev/@lavikatiyar/components/list) | List 分类约 349 个结果；该实现以连续分隔行呈现活动，依赖 Framer Motion | **改造**：复用“单容器连续行”的结构，不引入依赖与动画 |
 | `serafimcloud/alert` | [21st.dev](https://21st.dev/community/components/serafimcloud/alert/alert-with-list) · registry `serafimcloud/alert` | Alert with list/actions；使用 CVA、Lucide | **改造**：复用状态标记、正文、补充信息与动作区的层级 |
-| `coss.com/alert` | [21st.dev](https://21st.dev/community/components/coss.com/alert/warning) · registry `coss.com/alert` | warning / info / success / action 变体，2026-03 更新 | **改造**：参考语义色分工，全部转换为 AgentDoor Token |
+| `coss.com/alert` | [21st.dev](https://21st.dev/community/components/coss.com/alert/warning) · registry `coss.com/alert` | warning / info / success / action 变体，2026-03 更新 | **改造**：参考语义色分工，全部转换为 TaskDoor Token |
 | `rynkovski/notification-alert-dialog` | [21st.dev](https://21st.dev/community/components/extendui/notification-alert-dialog/default) · registry `rynkovski/notification-alert-dialog` | 完整 Alert Dialog，适合需要确认的动作 | **拒绝代码、保留模式**：已有共享 Dialog，不建立第二套弹窗 |
 | Base UI Dialog | [官方文档](https://base-ui.com/react/components/dialog) | 维护中的官方实现；具备焦点管理、标题描述关联和键盘关闭 | **采用现有实现**：项目共享 Dialog 已基于 Base UI |
 | Radix Collapsible | [官方文档](https://www.radix-ui.com/primitives/docs/components/collapsible) | 维护中的官方 Disclosure 原语 | **拒绝**：洞察行不藏关键事实，处理细节进入 Dialog，避免额外展开状态 |

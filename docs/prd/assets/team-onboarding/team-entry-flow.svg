@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 680" role="img" aria-labelledby="title desc">
+<title id="title">首次团队建立 · 三条进入路径</title>
+<desc id="desc">已验证账号可创建团队成为管理员、通过通用邀请链接确认成为成员，或通过邮箱定向邀请核对邮箱和角色后加入。三条路径汇合到有效成员关系，再进入工作区。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#53666c"/></marker></defs>
+<style>text{font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;fill:#23363c}.heading{font-size:25px;font-weight:650}.label{font-size:17px;font-weight:600}.body{font-size:15px}.small{font-size:13px;fill:#53666c}.line{stroke:#53666c;stroke-width:2;fill:none;marker-end:url(#arrow)}.guide{stroke:#d2ddda;stroke-width:1.5;fill:none}.node{fill:#e8f2ee;stroke:#6b8c80;stroke-width:1.5}.muted{fill:#f2f5f4;stroke:#c3d1cc;stroke-width:1.5}</style>
+<rect width="960" height="680" fill="#fbfcfa"/>
+<text x="40" y="49" class="heading">首次团队建立 · 三条进入路径</text>
+<text x="40" y="82" class="body">目标流程｜未登录时保留邀请上下文，先完成注册／登录和邮箱验证</text>
+
+<text x="42" y="150" class="label">创建团队</text>
+<rect x="211" y="112" width="357" height="72" rx="8" class="node"/>
+<text x="389" y="142" class="body" text-anchor="middle">输入名称（1–40 字）</text>
+<text x="389" y="168" class="small" text-anchor="middle">创建团队与管理员成员关系</text>
+<path d="M149 147 H196" class="line"/>
+
+<text x="42" y="265" class="label">通用邀请链接</text>
+<rect x="211" y="221" width="357" height="86" rx="8" class="node"/>
+<text x="389" y="252" class="body" text-anchor="middle">直接打开，或在团队进入页粘贴链接</text>
+<text x="389" y="279" class="small" text-anchor="middle">核对团队 → 主动确认 → 以成员身份加入</text>
+<text x="389" y="299" class="small" text-anchor="middle">可多人使用；重新生成后旧链接失效</text>
+<path d="M166 261 H196" class="line"/>
+
+<text x="42" y="386" class="label">邮箱定向邀请</text>
+<rect x="211" y="340" width="357" height="90" rx="8" class="node"/>
+<text x="389" y="372" class="body" text-anchor="middle">链接保留 token、受邀邮箱与指定角色</text>
+<text x="389" y="399" class="small" text-anchor="middle">邮箱一致且邀请有效 → 接受邀请</text>
+<text x="389" y="420" class="small" text-anchor="middle">拒绝不建立成员关系</text>
+<path d="M166 382 H196" class="line"/>
+
+<path d="M568 148 H630 V262 H684" class="line"/>
+<path d="M568 264 H684" class="line"/>
+<path d="M568 385 H630 V279 H684" class="line"/>
+<rect x="699" y="228" width="214" height="72" rx="8" class="node"/>
+<text x="806" y="271" class="label" text-anchor="middle">有效成员关系</text>
+<path d="M806 301 V394" class="line"/>
+<text x="806" y="426" class="label" text-anchor="middle">进入工作区</text>
+<text x="806" y="454" class="small" text-anchor="middle">当前团队切换为新加入团队</text>
+
+<rect x="211" y="475" width="357" height="103" rx="8" class="muted"/>
+<text x="389" y="505" class="body" text-anchor="middle">异常不建立成员关系</text>
+<text x="389" y="533" class="small" text-anchor="middle">无效／过期／撤销／旧通用链接：获取新链接</text>
+<text x="389" y="558" class="small" text-anchor="middle">邮箱不符：切换账号后重新核对</text>
+
+<path d="M40 631 H920" class="guide"/>
+<text x="40" y="658" class="small">FIG-TEAM-001 · 目标流程示意 · 加入团队不产生任务参与或负责人责任</text>
+</svg>

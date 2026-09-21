@@ -1,0 +1,882 @@
+{
+  "slightlyComplete0": {
+    "zh": "少量完成",
+    "en": "Slightly complete"
+  },
+  "partiallyComplete1": {
+    "zh": "部分完成",
+    "en": "Partially complete"
+  },
+  "mostlyComplete2": {
+    "zh": "大部分完成",
+    "en": "Mostly complete"
+  },
+  "nearlyComplete3": {
+    "zh": "接近完成",
+    "en": "Nearly complete"
+  },
+  "completionProgress4": {
+    "zh": "完成进度",
+    "en": "Completion progress"
+  },
+  "noResultsYet5": {
+    "zh": "未形成结果",
+    "en": "No results yet"
+  },
+  "userConfirmed6": {
+    "zh": "用户确认",
+    "en": "User confirmed"
+  },
+  "completed7": {
+    "zh": "已完成",
+    "en": "Completed"
+  },
+  "subtaskRollup8": {
+    "zh": "子任务汇总",
+    "en": "Subtask rollup"
+  },
+  "aiForecast9": {
+    "zh": "AI 预测",
+    "en": "AI forecast"
+  },
+  "noProgressEvidenceAvailable10": {
+    "zh": "；尚无可用进度依据",
+    "en": "; No progress evidence available"
+  },
+  "progress11": {
+    "zh": "进度",
+    "en": "Progress"
+  },
+  "analysis12": {
+    "zh": "分析",
+    "en": "analysis"
+  },
+  "forecast13": {
+    "zh": "预测",
+    "en": "forecast"
+  },
+  "updated14": {
+    "zh": "已重新{0}",
+    "en": "Updated {0}"
+  },
+  "reviewedTheCurrentSituationNextSteps15": {
+    "zh": "已按当前记录核对当前情况、下一步建议和进度；依据未变化时，分析结果可能保持不变。",
+    "en": "Reviewed the current situation, next steps, and progress against current records. Results may stay the same if the evidence has not changed."
+  },
+  "reviewedCurrentAssessmentsAndConfirmationsThe16": {
+    "zh": "已按当前评估与确认记录重新核对；依据未变化时，预测结果可能保持不变。",
+    "en": "Reviewed current assessments and confirmations. The forecast may stay the same if the evidence has not changed."
+  },
+  "couldNotCompleteTryAgain17": {
+    "zh": "{0}未完成，请重试。",
+    "en": "Could not complete {0}. Try again."
+  },
+  "reanalyzeTheCurrentSituationNextSteps18": {
+    "zh": "重新分析当前情况、下一步建议和进度",
+    "en": "Reanalyze the current situation, next steps, and progress"
+  },
+  "updateTheForecastUsingCurrentAssessments19": {
+    "zh": "根据当前评估与子任务状态重新预测",
+    "en": "Update the forecast using current assessments and subtask status"
+  },
+  "updating20": {
+    "zh": "{0}中…",
+    "en": "Updating {0}…"
+  },
+  "retry21": {
+    "zh": "重试{0}",
+    "en": "Retry {0}"
+  },
+  "update22": {
+    "zh": "重新{0}",
+    "en": "Update {0}"
+  },
+  "subtaskWorkloadTrend23": {
+    "zh": "子任务工作量趋势",
+    "en": "Subtask workload trend"
+  },
+  "noProgressRecordsAvailable24": {
+    "zh": "暂无可用的进展记录。",
+    "en": "No progress records available."
+  },
+  "currentSituation25": {
+    "zh": "当前情况",
+    "en": "Current situation"
+  },
+  "summaryNeedsReview26": {
+    "zh": "摘要待核对",
+    "en": "Summary needs review"
+  },
+  "nextSteps27": {
+    "zh": "下一步建议",
+    "en": "Next steps"
+  },
+  "burnupChart28": {
+    "zh": "燃起图",
+    "en": "Burn-up chart"
+  },
+  "persondays29": {
+    "zh": "人天",
+    "en": "person-days"
+  },
+  "onTime30": {
+    "zh": "按期",
+    "en": "On time"
+  },
+  "days31": {
+    "zh": "{0}{1} 天",
+    "en": "{0}{1} days"
+  },
+  "relativeToThePlannedDueDate32": {
+    "zh": "{0}，相对计划截止日期",
+    "en": "{0}, relative to the planned due date"
+  },
+  "current33": {
+    "zh": "当前",
+    "en": "Current"
+  },
+  "created34": {
+    "zh": "创建",
+    "en": "Created"
+  },
+  "dueDate35": {
+    "zh": "计划截止",
+    "en": "Due date"
+  },
+  "confirmedComplete36": {
+    "zh": "确认完成",
+    "en": "Confirmed complete"
+  },
+  "forecastCompletion37": {
+    "zh": "AI 预测完成",
+    "en": "Forecast completion"
+  },
+  "burnupTimeline38": {
+    "zh": "燃起图时间轴",
+    "en": "Burn-up timeline"
+  },
+  "taskCompletionTiming39": {
+    "zh": "任务完成时间",
+    "en": "Task completion timing"
+  },
+  "unknown40": {
+    "zh": "未知",
+    "en": "Unknown"
+  },
+  "incompleteEstimate41": {
+    "zh": "估算不完整",
+    "en": "Incomplete estimate"
+  },
+  "unknownWorkload42": {
+    "zh": "工作量未知",
+    "en": "Unknown workload"
+  },
+  "dataNeedsReview43": {
+    "zh": "数据待核对",
+    "en": "Data needs review"
+  },
+  "estimateNeedsReview44": {
+    "zh": "估算需复核",
+    "en": "Estimate needs review"
+  },
+  "noTrendAvailable45": {
+    "zh": "暂无趋势",
+    "en": "No trend available"
+  },
+  "insufficientHistory46": {
+    "zh": "历史不足",
+    "en": "Insufficient history"
+  },
+  "historyIncludesUnestimatedWork47": {
+    "zh": "历史含未估算记录",
+    "en": "History includes unestimated work"
+  },
+  "noWorkloadHistoryYet48": {
+    "zh": "尚无 EWD 历史记录",
+    "en": "No workload history yet"
+  },
+  "taskProgressAndBurnupChart49": {
+    "zh": "任务完成进度与燃起图",
+    "en": "Task progress and burn-up chart"
+  },
+  "aboutCompletionProgress50": {
+    "zh": "完成进度说明",
+    "en": "About completion progress"
+  },
+  "progressAIestimatedCompletedWorkTotalWork51": {
+    "zh": "完成进度＝AI 预测完成量 ÷ 总工作量 × 100%。标记「已完成」后显示 100% · 用户确认。",
+    "en": "Progress = AI-estimated completed work ÷ total work × 100%. Marking the task completed shows 100% · User confirmed."
+  },
+  "notYetCalculable52": {
+    "zh": "暂不可计算",
+    "en": "Not yet calculable"
+  },
+  "completionProgress53": {
+    "zh": "完成进度 {0}",
+    "en": "Completion progress {0}"
+  },
+  "taskStatusAndAcceptedProgressDiffer54": {
+    "zh": "任务状态与验收进度不一致，待核对",
+    "en": "Task status and accepted progress differ. Review needed."
+  },
+  "estimatedItems55": {
+    "zh": "已估算 {0}/{1} 项",
+    "en": "Estimated {0}/{1} items"
+  },
+  "workEstimatesHaveNotBeenRecorded56": {
+    "zh": "工时值尚未记录",
+    "en": "Work estimates have not been recorded"
+  },
+  "burnupLegend57": {
+    "zh": "燃起图图例",
+    "en": "Burn-up legend"
+  },
+  "totalWork58": {
+    "zh": "总工作量",
+    "en": "Total work"
+  },
+  "completedWork59": {
+    "zh": "完成工作量",
+    "en": "Completed work"
+  },
+  "workloadOverTimeSolidGrayShows60": {
+    "zh": "任务工作量随时间的变化：灰色实线为已记录总工作量，灰色虚线按当前总量延续；蓝线为完成工作量，图例数值单位为人天；悬浮节点查看日期与工作量。",
+    "en": "Workload over time: solid gray shows recorded total work; dashed gray extends the current total. Blue shows completed work. Values are in person-days. Focus or hover over a node for dates and amounts."
+  },
+  "forecastTotalWorkPersondays61": {
+    "zh": "预计总工作量 {0} 人天",
+    "en": "Forecast total work: {0} person-days"
+  },
+  "noAdditionalWorkForecastContinuingThe62": {
+    "zh": "暂无预计新增工作，按当前总量延续",
+    "en": "No additional work forecast; continuing the current total"
+  },
+  "dueDate63": {
+    "zh": "计划截止 {0}",
+    "en": "Due date: {0}"
+  },
+  "totalWorkPersondays64": {
+    "zh": "总工作量 {0} 人天",
+    "en": "Total work: {0} person-days"
+  },
+  "completedWorkPersondays65": {
+    "zh": "完成量 {0} 人天",
+    "en": "Completed work: {0} person-days"
+  },
+  "lastRecorded66": {
+    "zh": "上次记录",
+    "en": "Last recorded"
+  },
+  "completionAndDueDatesCannotYet67": {
+    "zh": "暂无法比较完成日与截止日",
+    "en": "Completion and due dates cannot yet be compared"
+  },
+  "inCalendarDays68": {
+    "zh": "{0}{1}{2}，按日历天比较",
+    "en": "{0} {1}{2}, in calendar days"
+  },
+  "actual69": {
+    "zh": "实际",
+    "en": "Actual"
+  },
+  "expected70": {
+    "zh": "预计",
+    "en": "Expected"
+  },
+  "late71": {
+    "zh": "延期",
+    "en": "late"
+  },
+  "early72": {
+    "zh": "提前",
+    "en": "early"
+  },
+  "completionOnTime73": {
+    "zh": "按期完成",
+    "en": "completion on time"
+  },
+  "days74": {
+    "zh": " {0} 天",
+    "en": " {0} days"
+  },
+  "reassessmentNeeded75": {
+    "zh": "待重新评估",
+    "en": "Reassessment needed"
+  },
+  "burnupLegendValuesInPersondays76": {
+    "zh": "燃起图图例，数值单位为人天",
+    "en": "Burn-up legend, values in person-days"
+  },
+  "totalWork77": {
+    "zh": "{0} 总工作量 {1}",
+    "en": "{0} Total work: {1}"
+  },
+  "completedWork78": {
+    "zh": "{0} 完成量 {1}",
+    "en": "{0} Completed work: {1}"
+  },
+  "completedWork79": {
+    "zh": "完成量",
+    "en": "Completed work"
+  },
+  "burnupChartTotalAndCompletedWork80": {
+    "zh": "燃起图：总工作量与完成量",
+    "en": "Burn-up chart: total and completed work"
+  },
+  "totalWorkIncludesTheInitialScope81": {
+    "zh": "总工作量包含初始范围与后续增减，保留各日原始量；完成量来自 AI 预测或用户确认。",
+    "en": "Total work includes the initial scope and subsequent changes, preserving the values recorded each day. Completed work comes from AI estimates or user confirmation."
+  },
+  "dashedGrayShowsForecastTotalWork82": {
+    "zh": "灰色虚线为预计总工作量；无预计范围变化时保持当前总量，有依据的新增按未来节点上升。",
+    "en": "Dashed gray shows forecast total work. It holds steady unless supported scope additions are expected at future milestones."
+  },
+  "dashedPurpleStepsShowForecastWork83": {
+    "zh": "紫色阶梯虚线为未来交付节点的预测完成量，等待阶段持平，不是已完成记录。",
+    "en": "Dashed purple steps show forecast work at future delivery milestones. Waiting periods are flat; these are forecasts, not completion records."
+  },
+  "theVerticalPurpleLineMarksThe84": {
+    "zh": "紫色竖虚线仅标记预测完成日，暂无未来完成量节点。",
+    "en": "The vertical purple line marks the forecast completion date. No future completion milestones are available."
+  },
+  "theUpperConnectorRepresentsOnlyThe85": {
+    "zh": "上方连接线只表示日期差。",
+    "en": "The upper connector represents only the date difference."
+  },
+  "totalAndCompletedWorkAreEqual86": {
+    "zh": "此段总工作量与完成量相等：灰色外沿为总量，蓝色内线为完成量",
+    "en": "Total and completed work are equal here: gray outlines total work and blue shows completed work."
+  },
+  "forecastCompletion87": {
+    "zh": "AI 预测完成 {0}",
+    "en": "Forecast completion: {0}"
+  },
+  "userconfirmedCompletion88": {
+    "zh": "用户确认完成 {0}",
+    "en": "User-confirmed completion: {0}"
+  },
+  "aiForecastTotalWork89": {
+    "zh": "AI 预测总工作量 {0}",
+    "en": "AI forecast total work: {0}"
+  },
+  "aiForecastCompletedWork90": {
+    "zh": "AI 预测完成量 {0}",
+    "en": "AI forecast completed work: {0}"
+  },
+  "forecastTotalWork91": {
+    "zh": "预测总工作量 {0}",
+    "en": "Forecast total work: {0}"
+  },
+  "forecastCompletedWork92": {
+    "zh": "预测完成量 {0}",
+    "en": "Forecast completed work: {0}"
+  },
+  "initialTotalWork93": {
+    "zh": "创建时初始总工作量",
+    "en": "Initial total work"
+  },
+  "added94": {
+    "zh": "新增",
+    "en": "Added"
+  },
+  "reduced95": {
+    "zh": "缩减",
+    "en": "Reduced"
+  },
+  "totalWork96": {
+    "zh": "总工作量 {0}",
+    "en": "Total work: {0}"
+  },
+  "completedWork97": {
+    "zh": "完成量 {0}",
+    "en": "Completed work: {0}"
+  },
+  "asOf98": {
+    "zh": "{0}{1}；{2}；{3}。截至 {4}。{5}",
+    "en": "{0}{1}; {2}; {3}. As of {4}. {5}"
+  },
+  "completedWorkUnknown99": {
+    "zh": "完成量未知",
+    "en": "Completed work unknown"
+  },
+  "totalWorkUnknown100": {
+    "zh": "总量未知",
+    "en": "Total work unknown"
+  },
+  "total101": {
+    "zh": "总量 {0}",
+    "en": "Total: {0}"
+  },
+  "basedOnTheUsersCompletionStatement102": {
+    "zh": "来自用户完成声明。",
+    "en": "Based on the user's completion statement."
+  },
+  "aForecastDoesNotImplyUser103": {
+    "zh": "预测不代表用户确认。",
+    "en": "A forecast does not imply user confirmation."
+  },
+  "userconfirmedCompletion104": {
+    "zh": "用户确认完成：{0}",
+    "en": "User-confirmed completion: {0}"
+  },
+  "forecastCompletion105": {
+    "zh": "AI 预测完成：{0}",
+    "en": "Forecast completion: {0}"
+  },
+  "noCompletionForecast106": {
+    "zh": "完工预测：尚无",
+    "en": "No completion forecast"
+  },
+  "usersetDueDateObservedDifferencesUse107": {
+    "zh": "用户设置的计划完成日期：{0}；{1}；观测日期 {2}。日期差按当前截止日期计算；修改截止不改变 AI 预测日期。",
+    "en": "User-set due date: {0}; {1}; observed {2}. Differences use the current due date; changing it does not change the AI forecast date."
+  },
+  "notSet108": {
+    "zh": "未设置",
+    "en": "Not set"
+  },
+  "days109": {
+    "zh": "{0} {1} 天",
+    "en": "{0} {1} days"
+  },
+  "plannedFinish110": {
+    "zh": "计划结束",
+    "en": "Planned finish"
+  },
+  "setTheDueDateAgain111": {
+    "zh": "请重新设置截止时间。",
+    "en": "Set the due date again."
+  },
+  "completionDate112": {
+    "zh": "完成时间",
+    "en": "Completion date"
+  },
+  "timelineCreationCurrentDateDueDate113": {
+    "zh": "时间轴：创建、当前日期、计划完成与预计完成日期",
+    "en": "Timeline: creation, current date, due date, and forecast completion"
+  },
+  "currentObservation114": {
+    "zh": "当前观测 {0}",
+    "en": "Current observation: {0}"
+  },
+  "dueDateSetByUser115": {
+    "zh": "计划完成 {0}，用户设置",
+    "en": "Due date: {0}, set by user"
+  },
+  "aiForecast116": {
+    "zh": "AI 预测 {0}",
+    "en": "AI forecast: {0}"
+  },
+  "noDueDateSet117": {
+    "zh": "未设置截止时间",
+    "en": "No due date set"
+  },
+  "setADueDateToCompare118": {
+    "zh": "设置计划时间后可对比",
+    "en": "Set a due date to compare"
+  },
+  "progressMessage119": {
+    "zh": "待开始",
+    "en": "Not started"
+  },
+  "progressMessage120": {
+    "zh": "进行中",
+    "en": "In progress"
+  },
+  "progressMessage121": {
+    "zh": "已阻塞",
+    "en": "Blocked"
+  },
+  "progressMessage122": {
+    "zh": "已取消",
+    "en": "Cancelled"
+  },
+  "progressMessage123": {
+    "zh": "待审核",
+    "en": "In review"
+  },
+  "progressMessage124": {
+    "zh": "负责人尚未明确。",
+    "en": "The owner has not been assigned."
+  },
+  "progressMessage125": {
+    "zh": "交付结果与完成标准尚待核对。",
+    "en": "Deliverables still need checking against the acceptance criteria."
+  },
+  "progressMessage126": {
+    "zh": "尚未设置完成标准。",
+    "en": "Acceptance criteria have not been set."
+  },
+  "progressMessage127": {
+    "zh": "本任务标记已完成，交付结果仍需核对。",
+    "en": "The task is marked completed; deliverables still need review."
+  },
+  "progressMessage128": {
+    "zh": "尚无子任务标记已完成。",
+    "en": "No subtasks are marked completed."
+  },
+  "progressMessage129": {
+    "zh": "尚未记录已完成内容。",
+    "en": "No completed deliverables have been recorded."
+  },
+  "progressMessage130": {
+    "zh": "已关联 {0} 份任务文件，交付完成情况待核对。",
+    "en": "{0} task files are linked; delivery completion still needs review."
+  },
+  "progressMessage131": {
+    "zh": "{0}记录：“{1}”",
+    "en": "{0} wrote: “{1}”"
+  },
+  "progressMessage132": {
+    "zh": "「{0}」",
+    "en": "“{0}”"
+  },
+  "progressMessage133": {
+    "zh": "「{0}」标记已完成。",
+    "en": "“{0}” is marked completed."
+  },
+  "progressMessage134": {
+    "zh": "任务{0}；{1}项子任务标记已完成，{2}项待收口。",
+    "en": "Task status: {0}; {1} subtasks marked completed, {2} still open."
+  },
+  "progressMessage135": {
+    "zh": "任务{0}；{1}项子任务标记已完成，{2}项待收口，{3}项已取消。",
+    "en": "Task status: {0}; {1} subtasks marked completed, {2} still open, {3} cancelled."
+  },
+  "progressMessage136": {
+    "zh": "任务{0}，最新讨论由{1}补充。",
+    "en": "Task status: {0}. Latest discussion added by {1}."
+  },
+  "progressMessage137": {
+    "zh": "任务{0}，尚未记录交付进展。",
+    "en": "Task status: {0}. No delivery progress recorded yet."
+  },
+  "progressMessage138": {
+    "zh": "任务{0}。",
+    "en": "Task status: {0}."
+  },
+  "progressMessage139": {
+    "zh": "任务已取消，{0}停止范围与需保留结果待核对。",
+    "en": "Task cancelled. {0}Review the stopped scope and results to preserve."
+  },
+  "progressMessage140": {
+    "zh": "任务已阻塞，{0}阻塞原因与解除条件待核对。",
+    "en": "Task blocked. {0}Review the cause and conditions for unblocking."
+  },
+  "progressMessage141": {
+    "zh": "最新讨论由{0}补充；",
+    "en": "Latest discussion added by {0}. "
+  },
+  "progressMessage142": {
+    "zh": "当前标记已阻塞，具体原因与解除条件待核对。",
+    "en": "Currently blocked; review the cause and conditions for unblocking."
+  },
+  "progressMessage143": {
+    "zh": "{0}项前置任务资料未提供，依赖是否满足待核对。",
+    "en": "Records for {0} dependencies are missing; dependency readiness needs review."
+  },
+  "progressMessage144": {
+    "zh": "本任务标记已完成，但前置「{0}」仍为{1}。",
+    "en": "This task is marked completed, but dependency “{0}” is still {1}."
+  },
+  "progressMessage145": {
+    "zh": "前置「{0}」仍为{1}。",
+    "en": "Dependency “{0}” is still {1}."
+  },
+  "progressMessage146": {
+    "zh": "父任务标记已完成，但子任务「{0}」仍为{1}，尚未收口。",
+    "en": "The parent is marked completed, but subtask “{0}” remains {1} and open."
+  },
+  "progressMessage147": {
+    "zh": "任务已取消，但子任务「{0}」仍为{1}，停止范围需核对。",
+    "en": "The task is cancelled, but subtask “{0}” remains {1}; review what should stop."
+  },
+  "progressMessage148": {
+    "zh": "「{0}」标记已阻塞，解除条件待核对。",
+    "en": "“{0}” is marked blocked; review the conditions for unblocking."
+  },
+  "progressMessage149": {
+    "zh": "「{0}」标记已完成，但其前置仍未完成。",
+    "en": "“{0}” is marked completed, but its dependencies are incomplete."
+  },
+  "progressMessage150": {
+    "zh": "「{0}」{1}；暂无分析：{2}。",
+    "en": "“{0}” — {1}. Analysis unavailable: {2}."
+  },
+  "progressMessage151": {
+    "zh": "「{0}」{1}；{2}。{3}",
+    "en": "“{0}” — {1}. {2}. {3}"
+  },
+  "progressMessage152": {
+    "zh": "{0}完成度 {1}%",
+    "en": "{0} progress: {1}%"
+  },
+  "progressMessage153": {
+    "zh": "确认完成日 {0}；{1}。",
+    "en": "Confirmed completion date: {0}; {1}."
+  },
+  "progressMessage154": {
+    "zh": "AI 预测完成日 {0}；{1}。",
+    "en": "Forecast completion date: {0}; {1}."
+  },
+  "progressMessage155": {
+    "zh": "已停止完工预测。",
+    "en": "Completion forecasting has stopped."
+  },
+  "progressMessage156": {
+    "zh": "完成日期待核对。",
+    "en": "Completion date needs review."
+  },
+  "progressMessage157": {
+    "zh": "完成量尚待核对",
+    "en": "Completed work needs review"
+  },
+  "progressMessage158": {
+    "zh": "进度记录：{0}",
+    "en": "Progress evidence: {0}"
+  },
+  "progressMessage159": {
+    "zh": "时间依据：{0}",
+    "en": "Timing evidence: {0}"
+  },
+  "progressMessage160": {
+    "zh": "任务范围已变化，估算需要重新核对",
+    "en": "Task scope changed; estimates need review"
+  },
+  "progressMessage161": {
+    "zh": "部分子任务缺少有效估算，无法汇总当前进度",
+    "en": "Some subtasks lack valid estimates; current progress cannot be aggregated"
+  },
+  "progressMessage162": {
+    "zh": "估算记录格式无效，需要核对原记录",
+    "en": "Invalid estimate format; review the original records"
+  },
+  "progressMessage163": {
+    "zh": "缺少当前范围的有效估算",
+    "en": "No valid estimate for the current scope"
+  },
+  "progressMessage164": {
+    "zh": "当前估算与进度记录的范围不一致，需重新评估",
+    "en": "Current estimates and progress records cover different scopes; reassessment is needed"
+  },
+  "progressMessage165": {
+    "zh": "尚无可核对的完成量记录，现有估算不能证明执行进展",
+    "en": "No verifiable completed-work records; estimates alone do not prove progress"
+  },
+  "progressMessage166": {
+    "zh": "建议先明确负责人，再{0}",
+    "en": "Assign an owner, then {0}"
+  },
+  "progressMessage167": {
+    "zh": "建议{0}先核对「{1}」的解除条件。",
+    "en": "{0}: first check the conditions for unblocking “{1}”."
+  },
+  "progressMessage168": {
+    "zh": "建议{0}先核对前置「{1}」的产出及依赖关系。",
+    "en": "{0}: first check dependency “{1}” and its dependencies."
+  },
+  "progressMessage169": {
+    "zh": "建议{0}对照{1}补充带日期的完成量记录并核对当前估算，再评估进度。",
+    "en": "{0}: add dated completed-work records against {1} and review current estimates before reassessing progress."
+  },
+  "progressMessage170": {
+    "zh": "建议{0}对照{1}补充带日期的完成量记录，再评估进度。",
+    "en": "{0}: add dated completed-work records against {1}, then reassess progress."
+  },
+  "progressMessage171": {
+    "zh": "建议{0}先核对「{1}」的剩余交付及时间，再对照{2}确认整体结果。",
+    "en": "{0}: review remaining delivery and timing for “{1}”, then confirm overall results against {2}."
+  },
+  "progressMessage172": {
+    "zh": "建议{0}对照{1}核对整体交付结果与来源。",
+    "en": "{0}: check overall deliverables and sources against {1}."
+  },
+  "progressMessage173": {
+    "zh": "建议{0}对照{1}保留交付确认和原始依据。",
+    "en": "{0}: preserve delivery confirmation and original evidence against {1}."
+  },
+  "progressMessage174": {
+    "zh": "建议{0}对照{1}核对剩余工作与 {2} 的时间依据，再协调截止安排。",
+    "en": "{0}: check remaining work against {1} and the timing evidence for {2}, then coordinate the due date."
+  },
+  "progressMessage175": {
+    "zh": "建议{0}对照{1}核对剩余交付，在 {2} 前更新结果与依据。",
+    "en": "{0}: check remaining deliverables against {1} and update results and evidence before {2}."
+  },
+  "progressMessage176": {
+    "zh": "建议{0}对照{1}核对剩余交付，补充下一次核对时间。",
+    "en": "{0}: check remaining deliverables against {1} and set the next review time."
+  },
+  "progressMessage177": {
+    "zh": "全部已完成",
+    "en": "All completed"
+  },
+  "progressMessage179": {
+    "zh": "已按期完成",
+    "en": "Completed on time"
+  },
+  "progressMessage180": {
+    "zh": "预计按期完成",
+    "en": "Expected on time"
+  },
+  "progressMessage181": {
+    "zh": "延期 {0} 天",
+    "en": "{0} days late"
+  },
+  "progressMessage182": {
+    "zh": "提前 {0} 天",
+    "en": "{0} days early"
+  },
+  "progressMessage183": {
+    "zh": "已延期 {0} 天完成",
+    "en": "Completed {0} days late"
+  },
+  "progressMessage184": {
+    "zh": "已提前 {0} 天完成",
+    "en": "Completed {0} days early"
+  },
+  "progressMessage185": {
+    "zh": "预计延期 {0} 天",
+    "en": "Expected {0} days late"
+  },
+  "progressMessage186": {
+    "zh": "预计提前 {0} 天",
+    "en": "Expected {0} days early"
+  },
+  "progressMessage187": {
+    "zh": "当前仅有完成度核对，未记录剩余工作的完成时间。",
+    "en": "Only progress has been reviewed; completion timing for remaining work is not recorded."
+  },
+  "progressMessage188": {
+    "zh": "所有未完成子任务均有时间预测，取最晚完成日作为当前汇总预测。",
+    "en": "All unfinished subtasks have timing forecasts; the latest finish date is used for the rollup."
+  },
+  "progressMessage189": {
+    "zh": "部分子任务未记录完工预测，暂不推算父任务完成日。",
+    "en": "Some subtasks lack completion forecasts; the parent completion date is not inferred."
+  },
+  "progressMessage190": {
+    "zh": "用户确认完成；AI 预测独立保留，可在计算明细查看",
+    "en": "User confirmed completion; the AI forecast is preserved separately in calculation details"
+  },
+  "nextAction0": {
+    "zh": "建议{0}补充已交付结果和下一项行动。",
+    "en": "{0}: record delivered results and the next action."
+  },
+  "action0": {
+    "zh": "补充已交付结果和下一项行动。",
+    "en": "record delivered results and the next action."
+  },
+  "nextAction1": {
+    "zh": "建议{0}核对停止范围及需保留的结果。",
+    "en": "{0}: review the stopped scope and results to preserve."
+  },
+  "action1": {
+    "zh": "核对停止范围及需保留的结果。",
+    "en": "review the stopped scope and results to preserve."
+  },
+  "nextAction2": {
+    "zh": "建议{0}先补齐前置任务资料，再核对可推进的范围。",
+    "en": "{0}: collect dependency records, then review what can proceed."
+  },
+  "action2": {
+    "zh": "先补齐前置任务资料，再核对可推进的范围。",
+    "en": "collect dependency records, then review what can proceed."
+  },
+  "nextAction3": {
+    "zh": "建议{0}明确阻塞原因、解除条件和需要的支持。",
+    "en": "{0}: clarify the blocker, unblocking conditions, and support needed."
+  },
+  "action3": {
+    "zh": "明确阻塞原因、解除条件和需要的支持。",
+    "en": "clarify the blocker, unblocking conditions, and support needed."
+  },
+  "nextAction4": {
+    "zh": "建议{0}核对未收口子任务的结果与下一步。",
+    "en": "{0}: review results and next steps for open subtasks."
+  },
+  "action4": {
+    "zh": "核对未收口子任务的结果与下一步。",
+    "en": "review results and next steps for open subtasks."
+  },
+  "nextAction5": {
+    "zh": "建议{0}核对整体交付结果与完成标准。",
+    "en": "{0}: check overall deliverables against acceptance criteria."
+  },
+  "action5": {
+    "zh": "核对整体交付结果与完成标准。",
+    "en": "check overall deliverables against acceptance criteria."
+  },
+  "nextAction6": {
+    "zh": "建议{0}先明确可核对的完成标准。",
+    "en": "{0}: define verifiable acceptance criteria."
+  },
+  "action6": {
+    "zh": "先明确可核对的完成标准。",
+    "en": "define verifiable acceptance criteria."
+  },
+  "nextAction7": {
+    "zh": "建议{0}对照完成标准核对结果与来源。",
+    "en": "{0}: check results and sources against acceptance criteria."
+  },
+  "action7": {
+    "zh": "对照完成标准核对结果与来源。",
+    "en": "check results and sources against acceptance criteria."
+  },
+  "nextAction8": {
+    "zh": "建议{0}对照最新讨论，明确已交付结果和剩余事项。",
+    "en": "{0}: review the latest discussion to clarify delivered results and remaining items."
+  },
+  "action8": {
+    "zh": "对照最新讨论，明确已交付结果和剩余事项。",
+    "en": "review the latest discussion to clarify delivered results and remaining items."
+  },
+  "nextAction9": {
+    "zh": "建议{0}对照已有文件与完成标准，核对已形成的结果和剩余事项。",
+    "en": "{0}: use existing files and acceptance criteria to check results and remaining items."
+  },
+  "action9": {
+    "zh": "对照已有文件与完成标准，核对已形成的结果和剩余事项。",
+    "en": "use existing files and acceptance criteria to check results and remaining items."
+  },
+  "additionalProgress0": {
+    "zh": "完成标准",
+    "en": "Acceptance criteria"
+  },
+  "additionalProgress1": {
+    "zh": "完成日期待确认",
+    "en": "Completion date unconfirmed"
+  },
+  "additionalProgress2": {
+    "zh": "未设截止时间",
+    "en": "No due date set"
+  },
+  "additionalProgress3": {
+    "zh": "等待完成确认",
+    "en": "Awaiting completion confirmation"
+  },
+  "additionalProgress4": {
+    "zh": "预计按期",
+    "en": "Expected on time"
+  },
+  "additionalProgress5": {
+    "zh": "按截至该日各子任务最近记录汇总。{0}",
+    "en": "Aggregated from each subtask’s latest record as of this date. {0}"
+  },
+  "additionalProgress6": {
+    "zh": "演示预测节点：{0} 个子任务预计在本日更新交付，其余沿用此前预测量。",
+    "en": "Demo forecast milestone: {0} subtasks are expected to update delivery today; others retain their previous forecast amounts."
+  },
+  "scheduleValidation0": {
+    "zh": "截止日期无效，请选择有效日期。",
+    "en": "Invalid due date. Choose a valid date."
+  },
+  "scheduleValidation1": {
+    "zh": "截止时间不能早于创建日期（{0}）。",
+    "en": "The due date cannot be before the creation date ({0})."
+  },
+  "scheduleValidation2": {
+    "zh": "截止时间不能早于计划开始日期。",
+    "en": "The due date cannot be before the planned start date."
+  }
+}

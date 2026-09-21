@@ -1,3 +1,4 @@
+import type { CriterionReview } from "../lib/taskCriterionReview";
 import { workspaceNodes, type TaskIconName, type TaskIconTone, type TaskNode } from "./workspaceNodes.ts";
 import type { TaskBurnUpSeries } from "../lib/taskBurnUp";
 import type { TaskDiagnosisSnapshot } from "../lib/taskDiagnosis";
@@ -7,6 +8,8 @@ import { getCreatorPoolTaskExample } from "./creatorPoolTaskExamples";
 import { withResultTaskDecisionExample } from "./resultTaskDecisionExamples";
 import { withExpandedTaskDiagnosisExample } from "./expandedTaskDiagnosisExamples";
 import { getMockContextDiagnosis } from "../lib/mockTaskDiagnosis";
+import { getWeeklyRetroDetailDemo } from "./weeklyRetroDetailDemo";
+import { withDemoProgressEvidence } from "./taskProgressEvidenceDetails";
 
 type TaskStatus = TaskNode["status"];
 
@@ -15,6 +18,9 @@ const inferFileFormat = (name: string) => name.split(".").pop()?.toUpperCase() ?
 export type TaskDetailId = "fragrance-creator-wrapup" | "fragrance-creator-business" | "fragrance-content" | "fragrance-live" | "fragrance-product" | "fragrance-growth" | "fragrance-data" | "fragrance-compliance" | "fragrance-final-decision";
 
 export type TaskFileNode = {
+  blobId?: string;
+  sizeBytes?: number;
+  originalName?: string;
   archived?: boolean;
   content?: string;
   format?: string;
@@ -81,6 +87,7 @@ export type TaskCommitMock = {
 export type TaskDetailMock = {
   burnUp?: TaskBurnUpSeries;
   completionCriteria?: string[];
+  criterionReviews?: CriterionReview[];
   executionTips?: string[];
   activities: TaskActivityMock[];
   commits: TaskCommitMock[];
@@ -174,14 +181,15 @@ const withScenarioExtraFiles = (prefix: string, files: TaskFileNode[], extraFile
   })),
 ];
 
+// 演示活动和文件提交使用固定时间；不随页面刷新或任务 updatedAt 改写事件发生时刻。
 const makeTask = (overrides: Partial<TaskDetailMock> & Pick<TaskDetailMock, "goal" | "owner" | "title">): TaskDetailMock => ({
   activities: [
-    { id: "activity-human", author: overrides.owner, message: "已补充当前进展和需要共同确认的问题。", time: "8 分钟前", type: "member-post" },
-    { id: "activity-ai", author: "AgentDoor AI", message: "已根据最新文件整理任务摘要和风险提示。", time: "18 分钟前", type: "ai-insight" },
-    { id: "activity-status", author: overrides.owner, message: "将任务状态更新为进行中。", time: "今天 09:42", type: "status-change" },
-    { id: "activity-schedule", author: overrides.owner, message: "补充了任务开始时间，并调整了计划截止时间。", time: "今天 09:36", type: "schedule-change" },
+    { id: "activity-human", author: overrides.owner, message: "已补充当前进展和需要共同确认的问题。", createdAt: "2026-09-01T09:52:00+08:00", time: "2026-09-01 09:52", type: "member-post" },
+    { id: "activity-ai", author: "TaskDoor AI", message: "已根据最新文件整理任务摘要和风险提示。", createdAt: "2026-09-01T09:46:00+08:00", time: "2026-09-01 09:46", type: "ai-insight" },
+    { id: "activity-status", author: overrides.owner, message: "将任务状态更新为进行中。", createdAt: "2026-09-01T09:42:00+08:00", time: "2026-09-01 09:42", type: "status-change" },
+    { id: "activity-schedule", author: overrides.owner, message: "补充了任务开始时间，并调整了计划截止时间。", createdAt: "2026-09-01T09:36:00+08:00", time: "2026-09-01 09:36", type: "schedule-change" },
   ],
-  commits: [{ id: "commit-1", author: overrides.owner, message: "更新了任务目标，并补充了相关文件依据。", time: "今天 10:24", files: ["历史判断记录.md"] }],
+  commits: [{ id: "commit-1", author: overrides.owner, message: "更新了任务目标，并补充了相关文件依据。", createdAt: "2026-09-01T10:24:00+08:00", time: "2026-09-01 10:24", files: ["历史判断记录.md"] }],
   due: "8 月 28 日",
   files: [],
   participants: [],
@@ -208,14 +216,14 @@ const participantByOwner: Record<string, string[]> = {
 };
 
 function withResultDecisions(task: TaskNode, detail: TaskDetailMock): TaskDetailMock {
-  const enriched = withExpandedTaskDiagnosisExample(task, withResultTaskDecisionExample(task, detail));
+  const enriched = withExpandedTaskDiagnosisExample(task, withDemoProgressEvidence(task, withResultTaskDecisionExample(task, detail)));
   if (enriched === detail) return detail;
   // 旧的无上下文调用也使用同一批原始记录生成快照；页面每次仍按当前可读正文重新核对。
   const findings = getMockContextDiagnosis({ id: task.id, title: task.name, status: task.status, context: {
     goal: enriched.goal, completionCriteria: task.completionCriteria ?? [],
     activities: enriched.activities, commits: enriched.commits, files: enriched.files,
   } }, { id: task.id, title: task.name, path: [task.name] }).filter((finding) => finding.type === "decision-conflict");
-  const checkedAt = enriched.files.some((file) => file.id === `${task.id}-diagnosis-current`) ? "2026-09-02T18:20:00+08:00" : "2026-09-02T17:00:00+08:00";
+  const checkedAt = task.id.startsWith("weekly-retro-") ? "2026-09-14T17:30:00+08:00" : enriched.files.some((file) => file.id === `${task.id}-diagnosis-current`) ? "2026-09-02T18:20:00+08:00" : "2026-09-02T17:00:00+08:00";
   return { ...enriched, diagnosis: { checkedAt, decisionConflicts: findings.map((finding) => ({
     id: finding.id.slice(`decision-conflict:${task.id}:`.length), title: finding.title, conclusion: finding.conclusion,
     impact: finding.impact, recommendation: finding.recommendation, evidence: finding.evidence,
@@ -223,9 +231,11 @@ function withResultDecisions(task: TaskNode, detail: TaskDetailMock): TaskDetail
 }
 
 export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailMock {
+  const weekly = getWeeklyRetroDetailDemo(task);
+  if (weekly) return withResultDecisions(task, weekly);
   if (task.createdFrom === "task-planner" || task.createdFrom === "task-editor") return withResultDecisions(task, {
     title: task.name, goal: task.goal ?? "", owner: task.ownerId, participants: task.participantIds ?? [],
-    participantInvitationStatus: Object.fromEntries((task.participantIds ?? []).map(id => [id, "pending" as const])),
+    participantInvitationStatus: Object.fromEntries((task.participantIds ?? []).map(id => [id, "accepted" as const])),
     status: task.status, due: task.dueAt ?? "—", iconName: task.iconName, iconTone: task.iconTone,
     completionCriteria: task.completionCriteria, executionTips: task.executionTips,
     summary: "尚未收到执行进展。", activities: [], commits: [], files: [],
@@ -249,11 +259,12 @@ export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailMock {
   return withResultDecisions(task, makeTask({
     activities: [
       ...(poolExample?.activities ?? [
-        { id: `${task.id}-activity`, author: participants[0] ?? task.ownerId, message: `已补充“${task.name}”的最新核对信息，等待 Task Owner 确认下一步。`, time: task.updatedAt, file: evidenceFile, type: "member-post" },
-        { id: `${task.id}-activity-ai`, author: "AgentDoor AI", insightType: "证据缺口", message: `发现“${task.name}”仍有一项结果依据需要补齐，建议在提交结果前核对。`, time: "24 分钟前", file: ruleFile, type: "ai-insight" },
-        { id: `${task.id}-activity-status`, author: task.ownerId, message: `将任务状态更新为“${task.status}”。`, time: "今天 09:42", type: "status-change" },
-        { id: `${task.id}-activity-schedule`, author: task.ownerId, message: "调整了任务的计划截止时间。", time: "今天 09:36", type: "schedule-change" },
-        { id: `${task.id}-activity-reply`, author: task.ownerId, message: "收到，我会在本轮完成前核对并回传结论。", time: "6 分钟前", replyToActivityId: `${task.id}-activity`, type: "member-reply" },
+        // Fixed timestamps belong to these demo fixtures, never inferred from relative labels at render time.
+        { id: `${task.id}-activity`, author: participants[0] ?? task.ownerId, message: `已补充“${task.name}”的最新核对信息，等待 Task Owner 确认下一步。`, createdAt: "2026-09-01T10:00:00+08:00", time: "2026-09-01 10:00", file: evidenceFile, type: "member-post" },
+        { id: `${task.id}-activity-ai`, author: "TaskDoor AI", insightType: "证据缺口", message: `发现“${task.name}”仍有一项结果依据需要补齐，建议在提交结果前核对。`, createdAt: "2026-09-01T09:48:00+08:00", time: "2026-09-01 09:48", file: ruleFile, type: "ai-insight" },
+        { id: `${task.id}-activity-status`, author: task.ownerId, message: `将任务状态更新为“${task.status}”。`, createdAt: "2026-09-01T09:42:00+08:00", time: "2026-09-01 09:42", type: "status-change" },
+        { id: `${task.id}-activity-schedule`, author: task.ownerId, message: "调整了任务的计划截止时间。", createdAt: "2026-09-01T09:36:00+08:00", time: "2026-09-01 09:36", type: "schedule-change" },
+        { id: `${task.id}-activity-reply`, author: task.ownerId, message: "收到，我会在本轮完成前核对并回传结论。", createdAt: "2026-09-01T10:06:00+08:00", time: "2026-09-01 10:06", replyToActivityId: `${task.id}-activity`, type: "member-reply" },
       ] as TaskActivityMock[]),
       ...progressActivities,
       ...(diagnosisExample?.activities ?? []),
@@ -261,7 +272,7 @@ export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailMock {
     ...(burnUp ? { burnUp } : {}),
     ...(diagnosisExample ? { diagnosis: diagnosisExample.diagnosis } : {}),
     ...(poolExample ? { summary: poolExample.summary } : {}),
-    commits: poolExample?.commits ?? [{ id: `${task.id}-commit`, author: task.ownerId, message: "更新了任务范围、结果判断与当前依据。", time: task.updatedAt, files: [resultFile] }],
+    commits: poolExample?.commits ?? [{ id: `${task.id}-commit`, author: task.ownerId, message: "更新了任务范围、结果判断与当前依据。", createdAt: "2026-09-01T10:24:00+08:00", time: "2026-09-01 10:24", files: [resultFile] }],
     completionCriteria: task.completionCriteria,
     executionTips: task.executionTips,
     due: task.dueAt ?? "待排期",
@@ -283,7 +294,7 @@ type ScenarioDetailSpec = {
   aiMessage: string;
   aiInsightType?: "协作重点" | "状态一致性" | "证据缺口" | "验收风险";
   diagnosis?: TaskDiagnosisSnapshot;
-  extraCommits?: Array<{ files: string[]; message: string; time: string }>;
+  extraCommits?: Array<{ files: string[]; message: string; createdAt: string; time: string }>;
   extraFiles?: ScenarioExtraFile[];
   fileNames: [string, string, string];
   participants?: string[];
@@ -304,10 +315,10 @@ const createScenarioTaskDetail = (id: TaskDetailId, spec: ScenarioDetailSpec): T
     // Keep the scenario's fixed history explicit; never relabel it as recorded progress.
     burnUp: getTaskProgressBurnUp(id),
     activities: [
-      { id: `${id}-activity`, author: spec.activityAuthor, message: spec.activityMessage, time: task.updatedAt, file: evidenceFile, type: "member-post" },
-      { id: `${id}-activity-ai`, author: "AgentDoor AI", insightType: spec.aiInsightType ?? "验收风险", message: spec.aiMessage, time: "24 分钟前", file: ruleFile, type: "ai-insight" },
-      { id: `${id}-activity-status`, author: task.ownerId, message: `将任务状态更新为“${task.status}”。`, time: "今天 09:42", type: "status-change" },
-      { id: `${id}-activity-reply`, author: task.ownerId, message: "收到，我会按当前责任边界完成核对并回传结论。", time: "6 分钟前", replyToActivityId: `${id}-activity`, type: "member-reply" },
+      { id: `${id}-activity`, author: spec.activityAuthor, message: spec.activityMessage, createdAt: "2026-09-01T10:00:00+08:00", time: "2026-09-01 10:00", file: evidenceFile, type: "member-post" },
+      { id: `${id}-activity-ai`, author: "TaskDoor AI", insightType: spec.aiInsightType ?? "验收风险", message: spec.aiMessage, createdAt: "2026-09-01T09:48:00+08:00", time: "2026-09-01 09:48", file: ruleFile, type: "ai-insight" },
+      { id: `${id}-activity-status`, author: task.ownerId, message: `将任务状态更新为“${task.status}”。`, createdAt: "2026-09-01T09:42:00+08:00", time: "2026-09-01 09:42", type: "status-change" },
+      { id: `${id}-activity-reply`, author: task.ownerId, message: "收到，我会按当前责任边界完成核对并回传结论。", createdAt: "2026-09-01T10:06:00+08:00", time: "2026-09-01 10:06", replyToActivityId: `${id}-activity`, type: "member-reply" },
       // 原活动与引用 ID 保留；新增的固定演示历史和父级燃起图使用同一事件账本。
       ...getTaskProgressEvents(id).map((event): TaskActivityMock => ({
         id: event.id,
@@ -319,7 +330,7 @@ const createScenarioTaskDetail = (id: TaskDetailId, spec: ScenarioDetailSpec): T
       })),
     ],
     commits: [
-      { id: `${id}-commit`, author: task.ownerId, message: `更新“${task.name}”的范围、依据与交付结果。`, time: task.updatedAt, files: [resultFile] },
+      { id: `${id}-commit`, author: task.ownerId, message: `更新“${task.name}”的范围、依据与交付结果。`, createdAt: "2026-09-01T10:24:00+08:00", time: "2026-09-01 10:24", files: [resultFile] },
       ...(spec.extraCommits ?? []).map((commit, index) => ({ ...commit, author: task.ownerId, id: `${id}-commit-${index + 2}` })),
     ],
     diagnosis: spec.diagnosis,
@@ -354,7 +365,7 @@ export const taskDetailMocks: Record<TaskDetailId, TaskDetailMock> = {
     activityAuthor: "陈默",
     activityMessage: "第二批达人合作名单、已确认佣金条款与档期已完成核对，合作确认记录已交付。",
     aiMessage: "两位高匹配达人档期重叠，建议在确认合作顺序前核对目标贡献与预算占用。",
-    extraCommits: [{ files: ["第二批达人建联进度表.xlsx", "达人候选池.csv"], message: "完成候选达人分层并回填首轮建联结果。", time: "昨天 18:20" }],
+    extraCommits: [{ files: ["第二批达人建联进度表.xlsx", "达人候选池.csv"], message: "完成候选达人分层并回填首轮建联结果。", createdAt: "2026-08-31T18:20:00+08:00", time: "2026-08-31 18:20" }],
     extraFiles: [
       { content: "记录候选达人画像、历史带货品类、预估贡献与当前建联阶段。", name: "达人候选池.csv", section: "evidence", updatedAt: "昨天" },
       { content: "汇总佣金、坑位费、档期与排他条款的已确认内容。", name: "商务沟通纪要.md", section: "evidence", updatedAt: "今天" },
@@ -372,9 +383,9 @@ export const taskDetailMocks: Record<TaskDetailId, TaskDetailMock> = {
   }),
   "fragrance-live": createScenarioTaskDetail("fragrance-live", {
     activityAuthor: "高远",
-    activityMessage: "直播排期、彩排流程与异常预案草案已准备；最终话术版本尚未锁定，彩排仍在等待内容终审。",
+    activityMessage: "@周岚 直播排期、彩排流程与异常预案草案已准备；最终话术版本尚未锁定，请协助确认内容终审安排。",
     aiMessage: "彩排前仍需确认最终商品机制与合规话术版本，避免现场信息不一致。",
-    extraCommits: [{ files: ["直播彩排问题记录.docx", "现场异常预案.xlsx"], message: "根据首次走台补充串场节奏和异常切换条件。", time: "昨天 21:10" }],
+    extraCommits: [{ files: ["直播彩排问题记录.docx", "现场异常预案.xlsx"], message: "根据首次走台补充串场节奏和异常切换条件。", createdAt: "2026-08-31T21:10:00+08:00", time: "2026-08-31 21:10" }],
     extraFiles: [
       { content: "按网络、库存、价格机制和主播节奏四类问题记录处理口径。", name: "现场异常预案.xlsx", section: "requirements", updatedAt: "今天" },
       { content: "保留首次彩排录像位置、时间码与对应问题编号。", name: "首次彩排录像索引.md", section: "evidence", updatedAt: "今天" },
@@ -394,7 +405,7 @@ export const taskDetailMocks: Record<TaskDetailId, TaskDetailMock> = {
     activityAuthor: "许宁",
     activityMessage: "已根据首轮表现更新预算消耗、定向策略与第二轮人群包组合。",
     aiMessage: "新增人群包预计提升触达，但需按 GMV 目标设置分段止损线并持续观察 ROI。",
-    extraCommits: [{ files: ["首轮投放明细.csv"], message: "补录首轮渠道消耗与分时转化，修正两处归因映射。", time: "昨天 16:40" }],
+    extraCommits: [{ files: ["首轮投放明细.csv"], message: "补录首轮渠道消耗与分时转化，修正两处归因映射。", createdAt: "2026-08-31T16:40:00+08:00", time: "2026-08-31 16:40" }],
     extraFiles: [
       { content: "保留渠道、时段、人群包、消耗、成交和归因状态的原始记录。", name: "首轮投放明细.csv", section: "evidence", updatedAt: "昨天" },
       { content: "定义分段 ROI 阈值、预算暂停条件和恢复观察窗口。", name: "投流止损线说明.md", section: "requirements", updatedAt: "35 分钟前" },
@@ -407,8 +418,8 @@ export const taskDetailMocks: Record<TaskDetailId, TaskDetailMock> = {
     activityMessage: "已交付约定范围的 GMV 看板与归因口径说明，两个缺失渠道已单独标注，不将缺失数据用于最终追加投放决策。",
     aiMessage: "两个渠道仍缺少可比数据，建议在复盘前补齐转化链路并标注口径差异。",
     extraCommits: [
-      { files: ["渠道归因原始数据.csv"], message: "导入最新渠道回传并标记缺失的转化节点。", time: "昨天 19:30" },
-      { files: ["GMV 渠道数据看板.xlsx", "指标口径变更记录.md"], message: "统一 GMV 去重规则并更新看板计算口径。", time: "今天 08:55" },
+      { files: ["渠道归因原始数据.csv"], message: "导入最新渠道回传并标记缺失的转化节点。", createdAt: "2026-08-31T19:30:00+08:00", time: "2026-08-31 19:30" },
+      { files: ["GMV 渠道数据看板.xlsx", "指标口径变更记录.md"], message: "统一 GMV 去重规则并更新看板计算口径。", createdAt: "2026-09-01T08:55:00+08:00", time: "2026-09-01 08:55" },
     ],
     extraFiles: [
       { content: "保留未经汇总的渠道回传、订单、素材与达人标识。", name: "渠道归因原始数据.csv", section: "evidence", updatedAt: "15 分钟前" },

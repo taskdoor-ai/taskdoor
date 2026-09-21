@@ -1,3 +1,5 @@
+import { useCreationI18n } from "../i18n/creationMessages";
+import { useGlobalUi } from "../i18n/globalUi";
 import { ChevronDown } from "lucide-react";
 import type { CreationProcess } from "../lib/taskCreationProgress";
 import { TaskCreationProcessView } from "./TaskCreationProcess";
@@ -25,31 +27,33 @@ export function TaskCreationHistory({ processes, hideLatestPendingChanges = fals
   hideLatestPendingChanges?: boolean;
   onStopLatest?: () => void;
 }) {
+  const ui = useGlobalUi();
+  const { localize } = useCreationI18n();
   const latest = processes.at(-1);
   const latestStep = latest?.steps[latest.activeStep];
   const liveStatus = latest?.status === "running"
-    ? `AI 正在处理：${latestStep?.label ?? "整理需求"}，${latest.activeStep + 1}/${latest.steps.length || 1}`
+    ? ui("AI 正在处理：{0}，{1}/{2}", {0: localize(latestStep?.label ?? "整理需求"), 1: latest.activeStep + 1, 2: latest.steps.length || 1})
     : latest?.status === "stopped" ? "AI 处理已停止"
       : latest?.status === "failed" ? "AI 回复未完成"
         : latest ? "AI 思考完成，回复已生成" : "";
-  return <section aria-label="本次创建对话" className="task-creation-history">
-    <span aria-atomic="true" className="sr-only" role="status">{liveStatus}</span>
+  return <section aria-label={ui("本次创建对话")} className="task-creation-history">
+    <span aria-atomic="true" className="sr-only" role="status">{ui(liveStatus)}</span>
     <ol>
       {processes.map((process, index) => {
         const user = userTurn(process);
         const running = process.status === "running";
         return <li className="task-creation-history-round" key={process.id}>
-          <div aria-label="你的输入" className="task-creation-history-user" role="group">
-            {user.answers ? <dl>{user.answers.map(answer => <div key={answer.label}><dt>{answer.label}</dt><dd>{answer.value}</dd></div>)}</dl> : <p>{user.text}</p>}
+          <div aria-label={ui("你的输入")} className="task-creation-history-user" role="group">
+            {user.answers ? <dl>{user.answers.map(answer => <div key={answer.label}><dt>{ui(answer.label)}</dt><dd>{answer.value}</dd></div>)}</dl> : <p>{user.text}</p>}
           </div>
           {process.steps.length > 0 && <TaskCreationProcessView onCancel={running && index === processes.length - 1 ? onStopLatest : undefined} process={process} />}
-          {!running && <div aria-label="AI 回复" className="task-creation-history-ai" role="group">
-            <p>{fallbackReply(process)}</p>
+          {!running && <div aria-label={ui("AI 回复")} className="task-creation-history-ai" role="group">
+            <p>{ui(localize(fallbackReply(process)))}</p>
             {process.changes?.length && !(hideLatestPendingChanges && index === processes.length - 1 && (process.applicationStatus === "pending" || process.applicationStatus === "expired")) ? <details className="task-creation-history-changes">
-              <summary>查看本轮差异 <span>{process.changes.length} 处</span><ChevronDown aria-hidden="true" size={13} /></summary>
+              <summary>{ui("查看本轮差异")}<span>{process.changes.length}{ui("处")}</span><ChevronDown aria-hidden="true" size={13} /></summary>
               <ul>{process.changes.map((change, changeIndex) => <li key={`${process.id}:${change.taskId}:${change.label}:${changeIndex}`}>
-                <strong>{change.taskTitle} · {change.label}</strong>
-                <div><span><small>修改前</small>{change.before || "未设置"}</span><span><small>修改后</small>{change.after || "未设置"}</span></div>
+                <strong>{change.taskTitle} · {ui(localize(change.label))}</strong>
+                <div><span><small>{ui("修改前")}</small>{change.before || ui("未设置")}</span><span><small>{ui("修改后")}</small>{change.after || ui("未设置")}</span></div>
               </li>)}</ul>
             </details> : null}
           </div>}

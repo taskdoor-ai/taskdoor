@@ -1,0 +1,180 @@
+=== RUN   TestParseGitURL
+=== RUN   TestParseGitURL/full_URL_with_branch_and_subpath
+=== RUN   TestParseGitURL/repo_root_only
+=== RUN   TestParseGitURL/branch_without_subpath
+=== RUN   TestParseGitURL/deeply_nested_subpath
+=== RUN   TestParseGitURL/trailing_slash_on_repo_URL
+=== RUN   TestParseGitURL/blob_URL_with_file_path
+=== RUN   TestParseGitURL/three_path_segments_without_tree
+=== RUN   TestParseGitURL/repo_name_with_dots_and_hyphens
+=== RUN   TestParseGitURL/URL_with_query_params_stripped
+=== RUN   TestParseGitURL/URL_with_fragment_stripped
+=== RUN   TestParseGitURL/tag-style_ref_with_dots
+=== RUN   TestParseGitURL/encoded_slash_in_branch_preserved
+=== RUN   TestParseGitURL/repo_URL_ending_with_.git
+=== RUN   TestParseGitURL/repo_URL_with_.git_and_tree_path
+=== RUN   TestParseGitURL/gitlab_repo_root
+=== RUN   TestParseGitURL/gitlab_nested_group_repo_root
+=== RUN   TestParseGitURL/self-hosted_gitlab_tree_URL
+=== RUN   TestParseGitURL/self-hosted_gitlab_blob_URL
+=== RUN   TestParseGitURL/self-hosted_gitlab_nested_group_tree_URL
+=== RUN   TestParseGitURL/missing_repo_in_path
+=== RUN   TestParseGitURL/empty_path
+=== RUN   TestParseGitURL/invalid_URL
+=== RUN   TestParseGitURL/unsupported_scheme
+--- PASS: TestParseGitURL (0.00s)
+    --- PASS: TestParseGitURL/full_URL_with_branch_and_subpath (0.00s)
+    --- PASS: TestParseGitURL/repo_root_only (0.00s)
+    --- PASS: TestParseGitURL/branch_without_subpath (0.00s)
+    --- PASS: TestParseGitURL/deeply_nested_subpath (0.00s)
+    --- PASS: TestParseGitURL/trailing_slash_on_repo_URL (0.00s)
+    --- PASS: TestParseGitURL/blob_URL_with_file_path (0.00s)
+    --- PASS: TestParseGitURL/three_path_segments_without_tree (0.00s)
+    --- PASS: TestParseGitURL/repo_name_with_dots_and_hyphens (0.00s)
+    --- PASS: TestParseGitURL/URL_with_query_params_stripped (0.00s)
+    --- PASS: TestParseGitURL/URL_with_fragment_stripped (0.00s)
+    --- PASS: TestParseGitURL/tag-style_ref_with_dots (0.00s)
+    --- PASS: TestParseGitURL/encoded_slash_in_branch_preserved (0.00s)
+    --- PASS: TestParseGitURL/repo_URL_ending_with_.git (0.00s)
+    --- PASS: TestParseGitURL/repo_URL_with_.git_and_tree_path (0.00s)
+    --- PASS: TestParseGitURL/gitlab_repo_root (0.00s)
+    --- PASS: TestParseGitURL/gitlab_nested_group_repo_root (0.00s)
+    --- PASS: TestParseGitURL/self-hosted_gitlab_tree_URL (0.00s)
+    --- PASS: TestParseGitURL/self-hosted_gitlab_blob_URL (0.00s)
+    --- PASS: TestParseGitURL/self-hosted_gitlab_nested_group_tree_URL (0.00s)
+    --- PASS: TestParseGitURL/missing_repo_in_path (0.00s)
+    --- PASS: TestParseGitURL/empty_path (0.00s)
+    --- PASS: TestParseGitURL/invalid_URL (0.00s)
+    --- PASS: TestParseGitURL/unsupported_scheme (0.00s)
+=== RUN   TestCopyRepoContents
+=== RUN   TestCopyRepoContents/copies_files_and_skips_.git_directory
+=== RUN   TestCopyRepoContents/navigates_to_subpath
+=== RUN   TestCopyRepoContents/copies_single_file_subpath
+=== RUN   TestCopyRepoContents/rejects_symlink_file_subpath_before_creating_output_directory
+=== RUN   TestCopyRepoContents/subpath_not_found_returns_error
+=== RUN   TestCopyRepoContents/rejects_dotdot_traversal_in_subpath
+=== RUN   TestCopyRepoContents/rejects_absolute_subpath
+=== RUN   TestCopyRepoContents/empty_repo_directory_copies_nothing
+=== RUN   TestCopyRepoContents/repo_with_only_.git_directory_copies_nothing
+=== RUN   TestCopyRepoContents/deeply_nested_subpath
+=== RUN   TestCopyRepoContents/preserves_file_permissions
+=== RUN   TestCopyRepoContents/copies_mixed_files_and_directories
+=== RUN   TestCopyRepoContents/skips_file_symlinks
+=== RUN   TestCopyRepoContents/skips_directory_symlinks
+=== RUN   TestCopyRepoContents/skips_symlinks_pointing_outside_repo
+=== RUN   TestCopyRepoContents/skips_nested_symlinks_in_subdirectories
+--- PASS: TestCopyRepoContents (0.03s)
+    --- PASS: TestCopyRepoContents/copies_files_and_skips_.git_directory (0.00s)
+    --- PASS: TestCopyRepoContents/navigates_to_subpath (0.00s)
+    --- PASS: TestCopyRepoContents/copies_single_file_subpath (0.00s)
+    --- PASS: TestCopyRepoContents/rejects_symlink_file_subpath_before_creating_output_directory (0.00s)
+    --- PASS: TestCopyRepoContents/subpath_not_found_returns_error (0.00s)
+    --- PASS: TestCopyRepoContents/rejects_dotdot_traversal_in_subpath (0.00s)
+    --- PASS: TestCopyRepoContents/rejects_absolute_subpath (0.00s)
+    --- PASS: TestCopyRepoContents/empty_repo_directory_copies_nothing (0.00s)
+    --- PASS: TestCopyRepoContents/repo_with_only_.git_directory_copies_nothing (0.00s)
+    --- PASS: TestCopyRepoContents/deeply_nested_subpath (0.00s)
+    --- PASS: TestCopyRepoContents/preserves_file_permissions (0.00s)
+    --- PASS: TestCopyRepoContents/copies_mixed_files_and_directories (0.01s)
+    --- PASS: TestCopyRepoContents/skips_file_symlinks (0.00s)
+    --- PASS: TestCopyRepoContents/skips_directory_symlinks (0.00s)
+    --- PASS: TestCopyRepoContents/skips_symlinks_pointing_outside_repo (0.00s)
+    --- PASS: TestCopyRepoContents/skips_nested_symlinks_in_subdirectories (0.00s)
+=== RUN   TestCopyFile
+=== RUN   TestCopyFile/copies_content_and_preserves_permissions
+=== RUN   TestCopyFile/source_does_not_exist
+=== RUN   TestCopyFile/destination_directory_does_not_exist
+--- PASS: TestCopyFile (0.00s)
+    --- PASS: TestCopyFile/copies_content_and_preserves_permissions (0.00s)
+    --- PASS: TestCopyFile/source_does_not_exist (0.00s)
+    --- PASS: TestCopyFile/destination_directory_does_not_exist (0.00s)
+=== RUN   TestCopyDir
+=== RUN   TestCopyDir/copies_directory_tree_recursively
+=== RUN   TestCopyDir/empty_source_directory
+=== RUN   TestCopyDir/source_does_not_exist
+--- PASS: TestCopyDir (0.00s)
+    --- PASS: TestCopyDir/copies_directory_tree_recursively (0.00s)
+    --- PASS: TestCopyDir/empty_source_directory (0.00s)
+    --- PASS: TestCopyDir/source_does_not_exist (0.00s)
+=== RUN   TestVerificationDesignResourcesRoundTrip
+    verification_test.go:48: SHA256 OK assets/pixel.png b99e123ef45e5b6699c61f73fa5399fcc51b45231d86ef162ce419fff70c10ee
+    verification_test.go:48: SHA256 OK assets/pixel.jpg 00a2dfe6f69ab3a364510efa07d9dfdc654ed03c212b2947f7910390801c29dc
+    verification_test.go:48: SHA256 OK assets/logo.svg 9ac61949d97aa4224027bd507e8c208d3fea1e2020ece2ac440f51613333a1fe
+    verification_test.go:48: SHA256 OK styles/brand.css 1c89c6bb176c7ab0cae97f509f9ea95beb4b620afeec28ffc36786b1c3d8f868
+    verification_test.go:48: SHA256 OK references/notes.md e35d387b94d7173f9d3f82cc77a05df15008e3200377bcd31e290f6a3d485b3f
+    verification_test.go:48: SHA256 OK SKILL.md accf8fe79e1ce00a4826a7fd4ff2ab0470cd7f2d1f10b19d67a1e40edd88bb44
+    verification_test.go:48: SHA256 OK assets/fonts/brand.woff2 d37fd6f2571236c8c10e4d04f5b4b76bfcac1e8b1a21bd979a2fdf8dc077e4ce
+    verification_test.go:48: SHA256 OK scripts/design.py 348a253d8d879443a09350d7b3404f71f39cf1cfc4f97462ad33b2b326099f9b
+    verification_test.go:48: SHA256 OK .hidden-config c1a66b9d085b43601135241826537b5d5e215143065c41c300a5aa9cb56980ab
+    verification_test.go:54: PASS: nine ordinary files byte-identical, relative paths and executable permission preserved; .git and symlinks skipped
+--- PASS: TestVerificationDesignResourcesRoundTrip (0.01s)
+=== RUN   TestVerificationCommitPinAndOverwriteBoundary
+Cloning into '/var/folders/fj/835dg5_11m119vlnf4j4krc80000gn/T/arctl-git-clone-4125450362'...
+From file:///var/folders/fj/835dg5_11m119vlnf4j4krc80000gn/T/TestVerificationCommitPinAndOverwriteBoundary3130115914/001
+ * branch            c0ceb1f244cc5aae74518a9b2a6bab8a616622db -> FETCH_HEAD
+Note: switching to 'FETCH_HEAD'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at c0ceb1f v2
+Cloning into '/var/folders/fj/835dg5_11m119vlnf4j4krc80000gn/T/arctl-git-clone-4096179788'...
+From file:///var/folders/fj/835dg5_11m119vlnf4j4krc80000gn/T/TestVerificationCommitPinAndOverwriteBoundary3130115914/001
+ * branch            0dd95043ccb88f2a7156db692089441aceee567a -> FETCH_HEAD
+Note: switching to 'FETCH_HEAD'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 0dd9504 v1
+    verification_test.go:83: PASS: source function checks out v2=c0ceb1f244cc5aae74518a9b2a6bab8a616622db then v1=0dd95043ccb88f2a7156db692089441aceee567a; explicit client-style destination honored
+    verification_test.go:84: CONFIRMED LIMIT: overwriting with an older commit leaves files introduced by the newer version; no atomic clean rollback
+Cloning into '/var/folders/fj/835dg5_11m119vlnf4j4krc80000gn/T/arctl-git-clone-1166777769'...
+From file:///var/folders/fj/835dg5_11m119vlnf4j4krc80000gn/T/TestVerificationCommitPinAndOverwriteBoundary3130115914/001
+ * branch            0dd95043ccb88f2a7156db692089441aceee567a -> FETCH_HEAD
+Note: switching to 'FETCH_HEAD'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 0dd9504 v1
+    verification_test.go:88: PASS: fresh target materializes the pinned older commit without stale files
+--- PASS: TestVerificationCommitPinAndOverwriteBoundary (0.55s)
+PASS
+ok  	verification/agentregistry/gitutil	1.548s

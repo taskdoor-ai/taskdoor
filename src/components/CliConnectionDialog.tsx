@@ -1,7 +1,7 @@
 import { Check, Clipboard, TerminalSquare, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-const connectCommand = "agentdoor connect";
+const connectCommand = "taskdoor connect";
 
 export function CliConnectionDialog({ onClose, onConnected, returnFocus }: { onClose: () => void; onConnected?: () => void; returnFocus?: HTMLElement | null }) {
   const [copied, setCopied] = useState(false);
@@ -50,7 +50,7 @@ export function CliConnectionDialog({ onClose, onConnected, returnFocus }: { onC
     <section aria-labelledby="cli-connect-title" aria-modal="true" className="cli-connect-dialog" ref={dialog} role="dialog">
       <header>
         <span><TerminalSquare size={21} /></span>
-        <div><h2 id="cli-connect-title">通过 CLI 连接 AI</h2><p>让你的本地 Agent 通过 Agentdoor CLI 与 Agentdoor 协作。</p></div>
+        <div><h2 id="cli-connect-title">通过 CLI 连接 AI</h2><p>让你的本地 Agent 通过 TaskDoor CLI 与 TaskDoor 协作。</p></div>
         <button aria-label="关闭" onClick={onClose} ref={closeButton} type="button"><X size={18} /></button>
       </header>
       <div className="cli-connect-body">
@@ -63,7 +63,7 @@ export function CliConnectionDialog({ onClose, onConnected, returnFocus }: { onC
         <ol>
           <li><span>1</span><div><strong>连接身份</strong><p>在浏览器中确认登录和组织身份。</p></div></li>
           <li><span>2</span><div><strong>在本地发起请求</strong><p>通过 CLI 查询我的任务或获取指定任务信息。</p></div></li>
-          <li><span>3</span><div><strong>确认后同步</strong><p>选择本地成果，经你确认后写回 Agentdoor。</p></div></li>
+          <li><span>3</span><div><strong>确认后同步</strong><p>选择本地成果，经你确认后写回 TaskDoor。</p></div></li>
         </ol>
       </div>
       {onConnected && <footer className="cli-connect-footer">

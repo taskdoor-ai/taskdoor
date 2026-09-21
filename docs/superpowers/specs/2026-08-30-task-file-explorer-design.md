@@ -1,5 +1,7 @@
 # Task 文件资源管理器改造设计
 
+> 2026-09-13 局部替代：文件内容评论按 `FILE-DISCUSSION-2026-09-13-v1` 改为“确认”保存并留在文件，右侧查看／回复，不自动发布到任务动态。本文旧“发起有来源对话”入口与跳转方式不再作为新实现依据；文件树与组织规则保留。目标需求及边界见 [PRD 第 6.5、6.8 节](../../product-v2/PRD-AgentDoor-协作任务全流程.md#68-文件)。2026-09-14 Demo 已接入 Lexical 0.50.0（MIT）的输入、文本阅读和 MarkNode 划词高亮，以及文件右栏确认／具体回复／引用／@／作者编辑删除／解决重开。动态及回复附件自动入文件列表，手动上传／已有文件选择保留同一 File ID 和引用源版本；团队／Task 的 localStorage 快照与 IndexedDB 原文件支持刷新恢复。无服务端 ACL、多人同步或外部通知，本地通知未接全局通知 UI；旧版全文快照预览未实现，保留引用 vN／原文并明确展示当前最新正文。
+
 ## 目标
 
 把 Task 详情中的“文件”页从只读文件树改造成可组织、可维护、可查看的任务文件资源管理器。它必须支持多级文件夹、文件夹增删改、文件唯一归属、文件移动、自定义 Icon、版本展示和多格式预览，同时保持现有 Task 内权限与引用语义不变。
@@ -35,7 +37,7 @@
 - Header 展示 Icon、文件名、格式、当前版本、更新时间和完整文件路径。
 - 稳定操作区提供“移动”和“更多”；版本信息始终可见，不藏在菜单中。
 - 主区根据文件格式切换查看器。
-- 底部保留现有“选中正文并发起有来源对话”能力，仅对可选择文字的查看器启用。
+- 文件内容评论入口与右侧讨论栏按上述 2026-09-13 PRD 更新；局部锚点仅对已验证能可靠定位的查看器启用，其他格式先评论整份文件。
 - 没有选中节点时显示引导空状态；无法预览时显示文件信息、格式说明以及打开/下载动作。
 
 ### 响应式
@@ -86,12 +88,12 @@
 
 | 格式 | 查看方式 | 版本内能力 |
 | --- | --- | --- |
-| Markdown (`md`, `mdx`) | 标题、列表、引用、代码块等结构化渲染 | 可选择正文并发起来源对话 |
+| Markdown (`md`, `mdx`) | 文本阅读与结构化展示 | Demo 使用 Lexical 选择正文、MarkNode 高亮及文件右栏评论；确认后留在文件 |
 | 纯文本 (`txt`, `log`, `csv` 文本回退) | 保留换行和等宽内容 | 可选择正文 |
-| 表格 (`xlsx`, `xls`, `csv`, `tsv`) | 工作表标签、冻结表头、行列网格和横向滚动 | Demo 使用结构化 Mock 数据，不解析真实二进制 Excel |
-| PDF | 分页纸张预览、页码和缩放工具 | Demo 展示可搜索的模拟正文；不新增 PDF 引擎依赖 |
+| 表格 (`xlsx`, `xls`, `csv`, `tsv`) | 工作表标签、冻结表头、行列网格和横向滚动 | 结构化 Mock 保留；真实上传的 XLSX／XLS 等尚未解析，仅支持下载原文件 |
+| PDF | 结构化 Mock 分页预览；真实上传使用浏览器预览 | 原文件保存在 IndexedDB；真实 PDF 不提供可靠局部评论锚点，不新增 PDF 解析引擎 |
 | 图片 (`png`, `jpg`, `jpeg`, `gif`, `webp`, `svg`) | 居中适配、原始尺寸信息、缩放 | 不提供正文选择 |
-| 文档 (`doc`, `docx`) | 文档纸张式结构化预览 | Demo 使用提取后的 Mock 正文，不解析真实二进制文件 |
+| 文档 (`doc`, `docx`) | 提取后的 Mock 正文可预览 | 真实上传的 DOC／DOCX 尚未解析，仅支持下载原文件 |
 | 其他或未知格式 | 文件 Icon、格式、大小、版本、更新时间与无法预览说明 | 提供打开/下载入口 |
 
 每个查看器都接受统一的 `TaskFileNode` 与版本信息，输出一致的加载、空、错误和不可预览状态。这样可以独立增加新格式，不让文件树承担格式判断。
@@ -113,6 +115,9 @@ type TaskFileNode = {
   sizeLabel?: string;
   version?: number;
   content?: string;
+  blobId?: string; // IndexedDB 中上传原文件的本地引用
+  sizeBytes?: number;
+  originalName?: string;
   previewData?: MarkdownPreview | TextPreview | TablePreview | PdfPreview | ImagePreview;
   archived?: boolean;
 };
@@ -121,7 +126,7 @@ type TaskFileNode = {
 - `parentId` 是 Task 内唯一归属真相。
 - `version` 是当前有效版本号；这次原型不新增完整版本历史编辑器。
 - `previewData` 是 Demo 查看数据，不等同于真实 File 内容存储。
-- 数据更新先在 TaskDetail 本地状态完成；不声称已经接入持久化 API、ACL 或审计。
+- 文件树、消息与附件关系在团队／Task 的 localStorage 快照保存成功后发布到 UI；上传原文件由 IndexedDB 保存，失败可重试。此处是本机持久化，不代表生产 API、ACL 或审计已接入。
 
 ## 组件边界
 
@@ -172,4 +177,4 @@ type TaskFileNode = {
 
 ## 视觉依据
 
-设计参考 21st 的 Ruixen FileTree 与 shadcn/Radix Dropdown Menu，但只借鉴递归节点、行内操作和菜单模式。最终视觉继续使用 AgentDoor 的 Geist 字体、现有设计 Token、克制蓝色选中态、浅灰文件轨道和 Lucide 图标，不直接复制第三方主题。
+设计参考 21st 的 Ruixen FileTree 与 shadcn/Radix Dropdown Menu，但只借鉴递归节点、行内操作和菜单模式。最终视觉继续使用 TaskDoor 的 Geist 字体、现有设计 Token、克制蓝色选中态、浅灰文件轨道和 Lucide 图标，不直接复制第三方主题。

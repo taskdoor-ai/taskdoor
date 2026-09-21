@@ -5,13 +5,13 @@ import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
 import { taskPlanDraftSchema } from "../src/lib/taskAssistantProtocol.ts";
 import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
 
-test("完成标准、执行建议随新任务保存，详情不编造文件和讨论，候选负责人不冒充已接受", () => {
+test("完成标准、执行建议和正式负责人随新任务保存，详情不编造文件和讨论", () => {
   const draft = taskPlanDraftSchema.parse({ mainTask: { title: "测试交付", goal: "明确结果", completionCriteria: ["交付经确认的结果"], executionTips: ["先核对范围"], ownerId: "林洁", participantIds: [], labels: [], startDate: "", endDate: "" }, subtasks: [] });
   assert.deepEqual(draft.mainTask.completionCriteria, ["交付经确认的结果"]);
   const result = createWorkspaceTasksFromDraft([], draft, { currentUserId: "周岚", idForIndex: () => "new-form-task", teamId: "creator-commerce" });
   const node = result.createdNodes[0];
-  assert.equal(node.ownerId, "");
-  assert.equal(node.proposedOwnerId, "林洁");
+  assert.equal(node.ownerId, "林洁");
+  assert.equal(node.proposedOwnerId, undefined);
   assert.equal(node.teamId, "creator-commerce");
   assert.deepEqual(node.completionCriteria, ["交付经确认的结果"]);
   const detail = createWorkspaceTaskDetail(node);
@@ -21,7 +21,7 @@ test("完成标准、执行建议随新任务保存，详情不编造文件和�
   assert.equal(detail.commits.length, 0);
   assert.equal(detail.activities.filter(a => a.type === "member-post" || a.type === "member-reply").length, 0);
   const restored = normalizeWorkspaceNodes(JSON.parse(JSON.stringify(result.nodes)));
-  assert.deepEqual(restored.find(n => n.id === node.id), node, "刷新不能丢失负责人待定的新任务或完成标准");
+  assert.deepEqual(restored.find(n => n.id === node.id), node, "刷新不能丢失正式负责人或完成标准");
 });
 
 for (const { name, mainEndDate, childEndDate, expectedDueLabels } of [

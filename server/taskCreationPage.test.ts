@@ -6,7 +6,7 @@ test("创建入口挂载新表单，旧对话仅留作归档", () => {
   const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
   assert.match(app, /<TaskCreationExperience/);
   assert.doesNotMatch(app, /<TaskCreationConversation/);
-  assert.ok(app.includes("?? task.proposedOwnerId"), "撤回创建时的人选也必须以持久化提议为旧值");
+  assert.doesNotMatch(app, /initialProposedOwnerId|onOwnerProposalChange=/, "当前创建流程不再恢复任务内待接受负责人");
 });
 
 test("任务创建体验只挂载统一对话页", () => {
@@ -121,8 +121,9 @@ test("创建页把同一页面状态中的全部轮次交给对话浮层，并�
   assert.doesNotMatch(source, /AI 辅助创建|creation-workflow-bar|creation-ai-adjust-entry/, "不再用独立标签或正文行重复表达 AI 创建");
   assert.doesNotMatch(source, /actions=\{processActions\}/);
   assert.match(source, /form\.candidate\?\.name \?\? form\.candidate\?\.title \?\? "已有任务"/, "关系轮次优先记录 App 实际传入的任务名称");
-  assert.match(source, /const startAnother = \(\) => \{ setWorkspace\(emptyWorkspaceDraft\(\)\)/, "继续创建必须开启一段没有旧轮次的新会话");
-  assert.doesNotMatch(source, /localStorage/, "本次创建对话不能由创建页跨刷新持久化");
+  assert.match(source, /const startAnother = \(\) => \{[\s\S]*?setWorkspace\(emptyWorkspaceDraft\(\)\)/, "继续创建必须开启一段没有旧轮次的新会话");
+  assert.match(source, /creationHistoryKey\(currentUserId, teamId\)/, "历史按当前账号及团队区分");
+  assert.match(source, /saveSession\(\{ id: sessionId,[\s\S]*?created \}\)/, "实际创建后记录结果，重开时跳转任务而非再次创建");
 });
 
 test("候选过期或应用失败只更新应用状态，不把已经完成的预览步骤倒写成失败", () => {
@@ -151,6 +152,8 @@ test("新表单创建成功直接打开任务详情，写入失败保留草稿�
   assert.doesNotMatch(source, /setResult|creation-plan-summary|任务已创建|继续创建|result \? "查看任务"/, "不保留创建成功中间态");
   assert.match(source, /catch \(caught\)[\s\S]*setError[\s\S]*creating\.current = false/);
   const creation = app.slice(app.indexOf("const createTaskPlanFromConversation"), app.indexOf("const openTask", app.indexOf("const createTaskPlanFromConversation")));
-  const storage = creation.indexOf("localStorage.setItem(workspaceNodesStorageKey");
+  const storage = creation.indexOf("commitTaskAiStorage(localStorage");
+  assert.match(creation, /\[workspaceNodesStorageKey, JSON\.stringify\(result\.nodes\)\]/);
+  assert.match(creation, /\[getPersonalTagStorageKey\(currentUserId\), JSON\.stringify\(prepared\.tags\)\]/);
   assert.ok(storage >= 0 && storage < creation.indexOf("setWorkspaceNodes("), "保存成功后才更新工作区，失败时让表单保留草稿");
 });

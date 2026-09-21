@@ -1,10 +1,10 @@
-# AgentDoor 产品定义 V2
+# TaskDoor 产品定义 V2
 
 > 状态：治理规则与“已确认”条目生效；其余产品细节仍是讨论稿，等待产品负责人确认后再进入功能改造  
 > 日期：2026-08-26  
 > 依据：2026-08-26 会话、上周会议纪要、当前本地 Demo 代码、协作心理与高可靠行业交接研究
 
-本目录是 AgentDoor 当前产品事实的统一入口；每个条目的状态决定它能否直接作为实现依据。内容分为三种状态：
+本目录是 TaskDoor 当前产品事实的统一入口；每个条目的状态决定它能否直接作为实现依据。内容分为三种状态：
 
 - **已确认**：产品负责人在会议或当前会话中明确确认。
 - **设计建议**：根据已确认方向展开，仍允许调整。
@@ -61,7 +61,7 @@
 | 文档 | 当前效力 | 回答的问题 |
 | --- | --- | --- |
 | [00-project-operating-charter.md](./00-project-operating-charter.md) | 生效的治理规范 | 全项目以什么原则、流程、质量门槛和风格推进 |
-| [01-product-definition.md](./01-product-definition.md) | 已确认原则 + Proposal | AgentDoor 是什么、解决什么、不做什么 |
+| [01-product-definition.md](./01-product-definition.md) | 已确认原则 + Proposal | TaskDoor 是什么、解决什么、不做什么 |
 | [02-information-architecture.md](./02-information-architecture.md) | 已确认对象 + 待确认模型 | Task、File、动态、成员与 AI 如何组成产品 |
 | [03-demand-led-collaboration.md](./03-demand-led-collaboration.md) | 未来候选 + 仍生效的安全边界 | 若未来恢复创建，如何渐进规划并保留人的主动选择 |
 | [04-responsibility-and-routing.md](./04-responsibility-and-routing.md) | 已确认方向 + 待确认数据规则 | 动态责任画像、人员推荐规则、解释与权限 |

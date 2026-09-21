@@ -5,16 +5,16 @@ const minuteSchema = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER)
 /** Product display convention only; it does not describe a person's daily availability. */
 export const MINUTES_PER_PERSON_DAY = 480;
 
-export function formatPersonDays(days: number | null): string {
-  if (days === null) return "待估算";
+export function formatPersonDays(days: number | null, locale: "zh-CN" | "en" = "zh-CN"): string {
+  if (days === null) return locale === "en" ? "Not estimated" : "待估算";
   if (!Number.isFinite(days) || days < 0) throw new Error("人天必须是有效的非负数。");
-  const amount = days > 0 && days < .01 ? "<0.01" : days.toLocaleString("zh-CN", { maximumFractionDigits: 2, useGrouping: false });
-  return `${amount} 人天`;
+  const amount = days > 0 && days < .01 ? "<0.01" : days.toLocaleString(locale, { maximumFractionDigits: 2, useGrouping: false });
+  return locale === "en" ? `${amount} ${days === 1 ? "person-day" : "person-days"}` : `${amount} 人天`;
 }
 
-export function formatEffortPersonDays(minutes: number | null): string {
+export function formatEffortPersonDays(minutes: number | null, locale: "zh-CN" | "en" = "zh-CN"): string {
   if (!minuteSchema.safeParse(minutes).success) throw new Error("工时必须是非负整数分钟，或留空表示未知。");
-  return formatPersonDays(minutes === null ? null : minutes / MINUTES_PER_PERSON_DAY);
+  return formatPersonDays(minutes === null ? null : minutes / MINUTES_PER_PERSON_DAY, locale);
 }
 
 /** Expected total human input under the stated AI/tool method; excludes waiting and unattended runs. */

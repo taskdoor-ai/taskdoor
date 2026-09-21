@@ -6,7 +6,7 @@ const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8
 const conversationSource = readFileSync(new URL("../src/components/TaskCreationConversation.tsx", import.meta.url), "utf8");
 
 test("App 持久化真实创建结果且不再映射预览任务 ID", () => {
-  assert.match(appSource, /createWorkspaceTasksFromDraft\(workspaceNodesRef\.current, draft, \{ parentTaskId, currentUserId, teamId: activeTeamId \}\)/);
+  assert.match(appSource, /createWorkspaceTasksFromDraft\(workspaceNodesRef\.current, prepared\.draft, \{ parentTaskId, currentUserId, teamId: activeTeamId \}\)/);
   assert.match(appSource, /createdCount: result\.createdNodes\.length/);
   assert.match(appSource, /mainTaskId: result\.mainTaskId/);
   assert.match(appSource, /taskTitles: result\.createdNodes\.map/);

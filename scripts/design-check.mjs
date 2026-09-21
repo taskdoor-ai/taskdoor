@@ -65,7 +65,7 @@ const regressions = Object.entries(metrics)
   .filter(([name, value]) => typeof baseline[name] !== "number" || value > baseline[name])
   .map(([name, value]) => `${name}: ${baseline[name] ?? "未登记"} → ${value}`);
 
-console.log("Agentdoor design check");
+console.log("TaskDoor design check");
 for (const [name, value] of Object.entries(metrics)) console.log(`  ${name}: ${value}（基线 ${baseline[name]}）`);
 
 if (forbiddenFindings.length || regressions.length) {

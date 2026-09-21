@@ -1,0 +1,27 @@
+.task-burnup-node { outline: none; }
+.task-burnup-node > :not(.task-burnup-node-hit) { pointer-events: none; }
+.task-burnup-node-hit { fill: transparent; stroke: transparent; pointer-events: all; }
+.task-burnup-node:hover .task-burnup-node-hit,
+.task-burnup-node:focus-visible .task-burnup-node-hit { fill: rgb(80 108 230 / 8%); }
+.task-burnup-node:focus-visible .task-burnup-node-hit { stroke: var(--ad-focus); stroke-width: 1; }
+.task-burnup-node-tooltip {
+  position: fixed;
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  box-sizing: border-box;
+  max-width: min(240px, calc(100vw - 16px));
+  padding: 9px 12px;
+  border: 1px solid var(--ad-border);
+  border-radius: 8px;
+  background: var(--ad-surface);
+  color: var(--ad-ink-secondary);
+  box-shadow: var(--ad-shadow-float);
+  font: 12px/1.5 var(--ad-font-sans, sans-serif);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+.task-burnup-node-tooltip strong { font-weight: 600; color: var(--ad-ink); }
+.task-burnup-node-tooltip[data-kind="forecast"] span,
+.task-burnup-node-tooltip[data-kind="scope-forecast"] span { color: var(--ad-tag-purple-ink); }

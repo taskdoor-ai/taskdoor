@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
-  <title id="title">Agentdoor Open Portal</title><desc id="desc">A strong arched doorway with an open blue door.</desc>
+  <title id="title">TaskDoor Open Portal</title><desc id="desc">A strong arched doorway with an open blue door.</desc>
   <defs><mask id="opening"><rect width="100" height="100" fill="white"/><path d="M35 82V47a15 15 0 0 1 30 0v35Z" fill="black"/></mask></defs>
   <path d="M18 84V47a32 32 0 0 1 64 0v37Z" fill="currentColor" mask="url(#opening)"/>
   <path d="m64 82 16-7V39l-16 8Z" fill="#1268D6"/>

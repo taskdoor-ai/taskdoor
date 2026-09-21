@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { beforeEach } from "node:test";
+
+// Historical fixtures run at their authored creation date.
+beforeEach(t => t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") }));
 import type { TaskNode, WorkspaceNode } from "../src/data/workspaceNodes.ts";
 import { createDraftTaskAiContext, applyDraftTaskAiAdjustment, createSavedTaskAiContext, applySavedTaskAiAdjustment, commitTaskAiStorage } from "../src/lib/taskAiAdjustmentAdapters.ts";
 import { buildTaskAiAdjustment } from "../src/lib/taskAiAdjustment.ts";
@@ -41,12 +44,12 @@ test("草稿人工编辑后拒绝旧预览，修改指令不能冒充预览结�
   assert.throws(() => applyDraftTaskAiAdjustment(base, context, { ...planned, updates: [{ taskId: base.subtasks[0].clientId, patch: { title: "越界" } }] }), /预览|范围|不一致/);
 });
 
-test("关联创建锁定继承目标，不可通过模块新增另一层任务", () => {
+test("关联创建保留独立目标，不可通过模块新增另一层任务", () => {
   const base = form(); base.subtasks = []; base.decision = "attach";
   base.candidate = { id: "parent", name: "父任务", ownerId: "self", status: "进行中", goal: "父任务真实目标" };
   const context = createDraftTaskAiContext(base, members, "self");
-  assert.equal(context.task.goal, "父任务真实目标");
-  assert.equal(context.task.goalInherited, true);
+  assert.equal(context.task.goal, base.mainTask.goal);
+  assert.equal(context.task.goalInherited, false);
   assert.equal(context.canAddSubtasks, false);
 });
 
@@ -62,14 +65,15 @@ test("已创建任务只保存真实标准，不把详情示例标准转为真�
   assert.deepEqual(next.nodes[2], base[2]);
 });
 
-test("详情修改负责人生成待接受提议，保留正式Owner和参与人", () => {
+test("详情修改负责人应用后直接更新正式Owner并去除重复参与人", () => {
   const base = nodes(); const context = createSavedTaskAiContext(base, "task", members, "self")!;
   const next = applySavedTaskAiAdjustment(base, context, proposal(context, "负责人改为林洁"), { author: "我" });
   const task = next.nodes[1] as TaskNode;
-  assert.equal(task.ownerId, "self");
-  assert.equal(task.proposedOwnerId, "lin");
-  assert.deepEqual(task.participantIds, ["lin"]);
-  assert.match(next.activities.task[0].changes?.[0].after ?? "", /待接受/);
+  assert.equal(task.ownerId, "lin");
+  assert.equal(task.proposedOwnerId, undefined);
+  assert.deepEqual(task.participantIds, []);
+  assert.equal(next.activities.task[0].type, "owner-change");
+  assert.equal(next.activities.task[0].changes?.[0].after, "林洁");
 });
 
 test("显式新增保存为当前任务的子任务，不复制主任务、状态或历史", () => {
@@ -154,11 +158,15 @@ test("上下文保留真实主任务与祖先日期，独立打开子任务不�
   assert.ok("error" in buildTaskAiAdjustment(context, { kind: "task" }, "截止时间改为2026-09-21"));
 });
 
-test("关联创建将已有主任务截止日纳入上下文，但不猜测未知日期", () => {
+test("关联创建保留已有主任务日期作为 Mock 上下文，不以日期冲突拦截编辑", () => {
   const base = form(); base.subtasks = []; base.decision = "attach";
   base.candidate = { id: "parent", name: "父任务", ownerId: "self", status: "进行中", goal: "父任务目标", plannedEndOn: "2026-09-15" };
   const context = createDraftTaskAiContext(base, members, "self");
   assert.equal(context.task.parentTaskId, "parent");
   assert.equal(context.dependencyTasks.find(task => task.id === "parent")?.endDate, "2026-09-15");
-  assert.ok("error" in buildTaskAiAdjustment(context, { kind: "task" }, "截止时间改为2026-09-16"));
+  const result = buildTaskAiAdjustment(context, { kind: "task" }, "截止时间改为2026-09-16");
+  assert.ok("proposal" in result);
+  const applied = applyDraftTaskAiAdjustment(base, context, result.proposal);
+  assert.equal(applied.mainTask.endDate, "2026-09-16");
+  assert.equal(applied.candidate?.plannedEndOn, "2026-09-15");
 });

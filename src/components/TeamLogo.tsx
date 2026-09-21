@@ -24,5 +24,5 @@ export function TeamLogo({ name, size = "lg", teamId }: TeamLogoProps) {
   const Icon = teamLogoIcons[teamId as keyof typeof teamLogoIcons] ?? Building2;
   const tone = teamLogoTones[teamId as keyof typeof teamLogoTones] ?? "blue";
 
-  return <span aria-label={`${name}标志`} className={`team-logo team-logo-${tone} team-logo-${size}`} role="img"><Icon aria-hidden="true" /></span>;
+  return <span aria-label={`${name} logo`} className={`team-logo team-logo-${tone} team-logo-${size}`} role="img"><Icon aria-hidden="true" /></span>;
 }

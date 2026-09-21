@@ -1,5 +1,6 @@
 import type { AiConnectionRequest } from "../components/AiConnectionDialog";
 import type { TaskActivityMock, TaskDetailMock } from "../data/taskDetailMocks";
+import type { CollaborationMessage } from "./taskCollaboration";
 import { getTaskDiscussionThreads, isDiscussionActivity } from "./taskActivity";
 
 export type DiscussionAiTarget =
@@ -8,7 +9,8 @@ export type DiscussionAiTarget =
 
 type DiscussionAiInput = {
   taskId: string;
-  task: TaskDetailMock;
+  task: Omit<TaskDetailMock, "activities"> & { activities: CollaborationMessage[] };
+  tags?: string[];
   target: DiscussionAiTarget;
   currentUser: string;
 };
@@ -21,21 +23,28 @@ function recordMeta(activity: TaskActivityMock): string {
 }
 
 /** Uses only the visible task snapshot supplied by the page; this is not a production ACL check. */
-export function buildDiscussionAiRequest({ taskId, task, target }: DiscussionAiInput): AiConnectionRequest | null {
+export function buildDiscussionAiRequest({ taskId, task, target, tags }: DiscussionAiInput): AiConnectionRequest | null {
   const activity = task.activities.find(item => item.id === target.activityId);
-  if (!activity || !isDiscussionActivity(activity)) return null;
+  if (!activity || activity.deletedAt || !isDiscussionActivity(activity)) return null;
 
   const context: AiConnectionRequest["context"] = [
     { label: "当前任务", value: `${task.title}（${taskId}）` },
     { label: "任务目标", value: task.goal },
     { label: "当前任务状态", value: task.status },
+    { label: "负责人", value: task.owner || "未设置" },
+    { label: "参与人", value: task.participants.join("\n") || "未添加参与人" },
+    { label: "截止时间", value: task.due || "未设置" },
   ];
+  if (tags?.length) context.push({ label: "标签", value: tags.join("、") });
   const criteria = task.completionCriteria?.filter(value => value.trim());
   if (criteria?.length) context.push({ label: "完成标准", value: criteria.join("\n") });
+  const taskPreview = context.slice(1).filter(item => item.value.trim()).map((item, index) => ({
+    id: `task-field-${index}`, label: item.label === "当前任务状态" ? "状态" : item.label, value: item.value,
+  }));
 
   const byId = new Map(task.activities.map(item => [item.id, item]));
   const seen = new Set([activity.id]);
-  const ancestors: TaskActivityMock[] = [];
+  const ancestors: CollaborationMessage[] = [];
   let parentId = activity.replyToActivityId;
   while (parentId) {
     if (seen.has(parentId)) {
@@ -48,23 +57,29 @@ export function buildDiscussionAiRequest({ taskId, task, target }: DiscussionAiI
       context.push({ label: "来源缺口", value: `原记录暂不可用（${parentId}），不推断缺失原文。` });
       break;
     }
-    ancestors.unshift(parent);
+    if (parent.deletedAt) context.push({ label: "来源缺口", value: `原记录已删除（${parent.id}），不带入已删除原文或引用摘录。` });
+    else ancestors.unshift(parent);
     if (!isDiscussionActivity(parent)) break;
     parentId = parent.replyToActivityId;
   }
-  ancestors.forEach(parent => context.push({
-    label: isDiscussionActivity(parent) ? "引用的原讨论／回复" : "引用的历史记录（不代表已确认事实）",
-    value: `${recordMeta(parent)}\n${parent.message}`,
+  // Resolve with tombstones intact so a deleted parent does not split surviving replies.
+  const thread = getTaskDiscussionThreads(task.activities).find(item => item.activity.id === activity.id || item.replies.some(reply => reply.id === activity.id));
+  const threadRecords = (thread ? [thread.activity, ...thread.replies] : [activity]) as CollaborationMessage[];
+  const records = threadRecords.filter(record => !record.deletedAt);
+  const historicalParents = ancestors.filter(parent => !isDiscussionActivity(parent));
+  historicalParents.forEach(parent => context.push({ label: "引用的历史记录（不代表已确认事实）", value: `${recordMeta(parent)}\n${parent.message}` }));
+  records.filter(record => record.id !== activity.id).forEach(record => context.push({
+    label: record.id === thread?.activity.id ? "当前动态" : "同一讨论的回复",
+    value: `${recordMeta(record)}\n${record.message}`,
   }));
 
-  const threadReplies = target.kind === "discussion"
-    ? getTaskDiscussionThreads(task.activities).find(thread => thread.activity.id === activity.id)?.replies ?? []
-    : [];
-  threadReplies.forEach(reply => context.push({ label: "同一讨论的回复", value: `${recordMeta(reply)}\n${reply.message}` }));
-
   const sourceNames = new Set<string>();
-  for (const record of [activity, ...ancestors, ...threadReplies]) {
-    if (record.file) sourceNames.add(record.file);
+  for (const record of [...historicalParents, ...records]) {
+    for (const ref of record.attachmentRefs ?? []) {
+      const file = task.files.find(item => item.kind === "file" && !item.archived && item.id === ref.fileId);
+      context.push({ label: "讨论附件", value: `${ref.name} · 文件 ${ref.fileId} · 引用版本 v${ref.version} · 来源记录 ${record.id}。${file ? `任务传入快照：${file.name}${file.version !== undefined ? ` · v${file.version}` : ""} · 记录的更新时间：${file.updatedAt}。` : "当前任务快照未找到可用文件。"}仅带入附件引用信息，不包含完整文件内容。` });
+    }
+    if (record.file && !record.attachmentRefs?.some(ref => ref.name === record.file)) sourceNames.add(record.file);
     const quote = record.message.match(/\n\n引用「([^」]+)」：/);
     if (quote) sourceNames.add(quote[1]);
   }
@@ -83,30 +98,20 @@ export function buildDiscussionAiRequest({ taskId, task, target }: DiscussionAiI
 
   const isDiscussion = target.kind === "discussion";
   const isDraft = target.kind === "reply-draft";
-  const taskFieldNames = [
-    "Task ID",
-    "名称",
-    task.goal.trim() ? "目标" : "",
-    task.status.trim() ? "状态" : "",
-    criteria?.length ? "完成标准" : "",
-  ].filter(Boolean);
-  const hasSourceGap = context.some(item => item.label === "来源缺口");
-  const discussionTitle = isDraft
-    ? `回复${activity.author}的${activity.type === "member-reply" ? "回复" : "讨论"}`
-    : isDiscussion ? `${activity.author}发起的讨论` : `${activity.author}的回复`;
-  const discussionScope = isDraft
-    ? target.draft.trim() ? "包含被回复原文与未发送草稿" : "包含被回复原文"
-    : isDiscussion
-      ? threadReplies.length ? `包含当前讨论及 ${threadReplies.length} 条回复` : "包含当前讨论，无上下回复"
-      : ancestors.length ? `包含当前回复及 ${ancestors.length} 条上文` : "包含当前回复，无可用上文";
   return {
     title: "连接 AI",
-    description: "带着这条讨论或回复继续分析，先核对本次带入的信息。",
+    description: "带入当前任务、这条动态及相关回复，先核对本次带入的信息。",
     contextPreview: {
-      description: "连接后，AI 将基于以下信息继续处理。",
       items: [
-        { id: "task", label: "当前任务", title: task.title, detail: taskFieldNames.join("、") },
-        { id: "discussion", label: "当前讨论", title: discussionTitle, detail: `基于当前任务 · ${discussionScope}${hasSourceGap ? "；部分上文不可用" : ""}` },
+        { id: "task", label: "任务名称", value: task.title || "未命名任务" },
+        ...taskPreview,
+        ...[...historicalParents, ...records].map(record => ({
+          id: `record-${record.id}`,
+          label: isDiscussionActivity(record) ? record.id === thread?.activity.id && !record.replyToActivityId ? "当前动态" : "回复" : "引用的历史记录",
+          meta: recordMeta(record),
+          value: record.message,
+        })),
+        ...context.filter(item => item.label === "未发送的回复草稿" || item.label === "来源缺口" || item.label === "讨论附件" || item.label === "引用文件").map((item, index) => ({ ...item, id: `additional-${index}` })),
       ],
     },
     workObject: {

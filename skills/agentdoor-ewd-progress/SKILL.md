@@ -1,56 +1,68 @@
 ---
 name: agentdoor-ewd-progress
-description: Use when estimating AgentDoor task effort, allocating effort to verifiable outcomes, calculating content-backed completion, or explaining workload and completion trends.
+description: 当需要根据任务名称、目标和完成标准估算人工投入，按 EWD 明细核对当前内容完成度，或根据真实历史快照解释燃起图时使用。供创建任务和任务状态分析按需调用。
 ---
 
 # EWD 工时评估与进度
 
-统一预计投入、完成量和燃起图的数据口径。EWD 是工作量估算，不是任务历时、已投入工时或人员效率。
+先形成可核对的人工工作明细，再估算每项 EWD；执行中逐项核对完成内容，按 EWD 权重计算完成度并记录趋势。
 
-输出 `schemaVersion: agentdoor.ewd-progress.v0.1`，规则 `ruleVersion: EWD-2026-09-04-v9`；采用团队规则时另记该规则版本，不伪造历史数据。
+## 规则依据
 
-## 先读取与选择模式
+业务依据为 PRD **3.8、6.3、7.7**，见[产品规则](references/product-rules.md)。先读取[共用规则](../shared/product-rules.md)及[证据与更新契约](../shared/evidence-and-updates.md)；输出按[字段与计算契约](references/output-contract.md)组织。
 
-完整读取 [证据与更新契约](../shared/evidence-and-updates.md) 和 [模板、完成度与燃起图规则](references/product-rules.md)。只执行请求的模式，不把执行阶段核对变成创建任务必跑步骤。
+输出协议：`agentdoor.ewd-progress.v0.1`。规则版本：`EWD-2026-09-08-v10`。采用团队规则时另记实际规则版本和依据。
 
-- `estimate`：名称、目标、完成标准、明确数量与追加要求；团队有效规则和历史可选。
-- `progress`：有效估算及版本、EWD 明细项及数值、当前标准与任务已提供内容、确认来源和有效性；父任务另需完整叶子范围。
-- `trend`：真实历史快照及发生时间、总量／完成量、范围及规则版本、变更原因。
+## 选择模式与输入
 
-## 计算顺序
+| 模式 | 输入 | 输出 | 缺失时处理 |
+| --- | --- | --- | --- |
+| `estimate` | 任务名称、目标、完成标准、明确数量、工作条件及风险；有效团队规则与可比历史可选 | 人工工作明细、八维检查、三点估算、总 EWD | 关键范围未知时对应项待估；没有历史仍使用平台规则 |
+| `progress` | 有效估算基线及明细 ID、标准、当前文件正文或可核对内容、来源版本 | 每项完成内容、进度、已完成 EWD、待确认量与总体完成度 | 没有正文或不能可靠判断的项为未知 |
+| `trend` | 真实历史时点、当时总 EWD 与完成 EWD、基线及来源版本、范围变化 | 两条历史曲线数据和变化解释 | 不补画历史，不用当前值回填过去 |
 
-1. **估算工作量。** 根据任务名称、目标和完成标准生成任务 EWD 拆分明细；每个 EWD 明细项是一项具体人工工作，同时对应一项可核对的完成结果，同级不重叠并覆盖当前已确认范围的 100%。例如整理资料、操作 AI、分析、制作、修改、沟通、审核和验收；等待、排队和 AI 无人值守运行不列入明细。按交付规模、实现难度、信息不确定性、资料准备、协作依赖、修改迭代、核验验收、工具环境八个维度检查，识别需要新增或调整的明细项、数量、条件、风险与依据。维度不打分；同一项工作受多个维度影响时只保留一条明细，不能重复计时。AI 可列 additionalFactor，但必须同时给出受影响的明细项与依据。
-2. **三点估算。** 首版由 AI 根据任务名称、目标、完成标准、八个检查维度和已识别风险，为每个 EWD 明细项给出乐观值 O、最可能值 M、保守值 P；它们不是固定分档或自由打分，每个数值必须有对应工作和判断依据。O、M、P 满足 0≤O≤M≤P：O 假设现有条件顺利且无额外返工；M 表示按当前信息正常完成；P 只包含已识别不确定因素发生后的投入，不增加任务范围。程序计算 expectedEwdMinutes＝(O＋4M＋P)÷6，任务 EWD 为全部明细项 EWD 之和。关键条件未知且足以改变区间时返回 unknown。用户可修正数值；团队历史校准后续明细项估算，不改变维度含义。
-3. **统一单位。** 内部以分钟记录，1 人天＝8 人时＝480 分钟；显示人天不改变计算精度。未知用 null，不用 0。有些部分未知时保留 knownEwdMinutes，totalEwdMinutes=null；不能把已知部分当作完整总量。父任务只汇总有效叶子，不能再加一份父任务估算。
-4. **形成明细与基线。** 每个 EWD 明细项写明应完成内容、对应完成标准和 EWD；各项之和必须等于有效总 EWD。共享工作只列一次，跨项质量要求只作为相关项的判断条件。能独立交付、验收并需要单独负责、交接或并行的结果应拆为子任务，不混入同一任务的 EWD 明细。用户确认后保存拆分明细、总 EWD 和规则版本作为估算基线；范围或估算变化生成新版本，不回写旧基线。
-5. **判断进度。** 根据每个 EWD 明细项及任务已提供的当前内容，直接判断该项 0–100% 的进度，并说明已完成内容、未完成内容和依据。不能可靠判断时返回 unknown，不编百分比；任务状态、上传动作或讨论“做完了”不能单独代表内容完成。
-6. **汇总。** 单项已完成 EWD＝单项 EWD × 单项进度；全部 EWD 明细项均有数字进度时，completionPercent＝completedEwdMinutes / totalEwdMinutes × 100。总量未知、明细覆盖不全或存在 unknown 时 percent=null、status=partial；已知完成量和待确认 EWD 分别返回。
-7. **解释趋势。** 使用当时真实总 EWD 和完成 EWD，不用现在数据回填过去或读取失败补 0。分别标注 scope_added、scope_removed、reestimated、content_confirmed、confirmation_revoked；两条量都可能回退。比例提高先核对分母变化，范围缩减不算新完成。
+只执行本次请求的模式；可以复用同版本有效结果。创建任务只需 `estimate`，不以未提交执行文件阻止初始估算。父任务汇总需明确全部有效叶子范围。
 
-## 返回 result
+## 执行流程
 
-```text
-{mode, estimate: null|{basis: platform|team_rule|history|unknown,
- estimationRuleVersion, items: [{breakdownItem, criteriaRefs,
-   dimensionChecks:{deliverableScale,implementationDifficulty,uncertainty,
-     inputReadiness,coordination,iteration,verification,tooling},
-   quantity, basis, additionalFactors,
-   threePoint:{optimisticMinutes,mostLikelyMinutes,
-     pessimisticMinutes,expectedMinutes}, ewdMinutes, evidenceRefs}],
- knownEwdMinutes, totalEwdMinutes, personDays, assumptions, unknowns},
- progress: null|{taskVersion, estimateVersion, criteriaVersion,
- items: [{id, ewdMinutes, progressPercent, completedEwdMinutes,
-          completedContent, remainingContent, evidenceRefs, confirmationSource}],
- knownCompletedEwdMinutes, completedEwdMinutes, totalEwdMinutes,
- completionPercent, unknownOutcomeIds},
- trend: null|{points: [{at, totalEwdMinutes, completedEwdMinutes,
-                       inputVersions, changeReasons}], explanation}}
-```
+### 1. 形成工作明细（estimate）
 
-未执行的模式为 null；不可获得的字段为 null 并列缺口。候选分配与已有效分配分开标识；返回输入版本和规则版本供调用方复用。创建适配时将人天 × 8 填入 planner 的 `ewdHours`，平台八维明细检查与三点估算／团队规则映射 `basis:model`，不是伪造 history。
+从完成标准反推必须亲自投入的具体工作，每项同时写明可核对结果、对应标准和稳定明细 ID。明细同级不重叠，覆盖当前已确认范围的 100%；未知范围如实列明，不声称已完全覆盖。整理资料、操作 AI、分析、制作、修改、沟通、审核和验收计入；纯等待、排队、无人值守运行不计。
 
-燃起图沿用用户界面文案“新增工作量”“完成工作量”：底层分别映射各时点累计范围总 EWD、已完成 EWD，不把第一条误算成每日增量；范围缩减或重估在说明中标明，避免把比例上升解读成新增交付。
+按八个维度逐一检查：交付规模、实现难度、信息不确定性、资料准备、协作依赖、修改迭代、核验验收、工具环境。每维写是否需要新增或调整明细、具体工作、数量或次数、依据和风险；不打分或直接换算人天。同一工作受多个维度影响仍只计一次。补充因素必须说明实际影响的明细及依据，不自动升级团队规则。
 
-## 验证例
+EWD 明细是计算和核对单位，**不会自动创建为子任务**。任务是否拆分由创建任务 Skill 按独立交付规则决定。
 
-一个任务的三个 EWD 明细项分别为 240、480、240 分钟，AI 根据当前内容判断进度为 100%、60%、0%：总 EWD 为 960 分钟，已完成 EWD 为 528 分钟，完成度为 55%。若其中一项无法判断，则总体百分比为空，单独返回已确认完成量和待确认 EWD。
+### 2. 逐项估算与汇总（estimate）
+
+为每项给出乐观 O、最可能 M、保守 P，满足 `0 ≤ O ≤ M ≤ P`。O 为现有条件顺利，M 为当前已知条件正常完成，P 只包含已识别风险发生后的投入，不暗加交付范围。每个值注明工作依据，关键条件不足时使用 `null`。
+
+程序按 `EWD = (O + 4M + P) / 6` 计算；任务总量为各项之和。统一展示人天，1 人天 = 8 人时 = 480 分钟。内部契约用分钟，先统一单位再计算，不把人天直接填进分钟字段。
+
+共享工作只列一次，父任务只汇总叶子，不能再加一份父任务估算。部分待估时保留已知量，总量和人天为 `null`。用户确认后保存估算基线；新增、删除、重估明细产生新版本，不回写旧基线。
+
+### 3. 逐项核对内容（progress）
+
+沿用估算基线中的同一明细 ID，检查该项结果、当前文件版本和对应完成标准。写明已完成、未完成及待确认内容，有充分内容依据才给 0–100% 数字；不可判断时用 `null`。
+
+单项已完成 EWD = 单项 EWD × 单项进度 / 100。全部范围与进度可计算且总量大于零时，总体完成度 = 已完成 EWD / 总 EWD × 100。存在待确认项时总体比例为 `null`，分开返回已知完成量、待确认项与待确认 EWD，不能将未知项解释为 0%。
+
+任务状态、上传动作和讨论“做完了”不单独证明内容完成；当前内容可支持进度判断，不要求把正式验收作为唯一前提。正式验收和 AI 内容判断分开记录。
+
+### 4. 解释变化（trend）
+
+每个历史点使用当时的范围总 EWD、已完成 EWD、待确认 EWD 和版本。总量是累计范围，不是当日新增量。两条线差距缩小表示趋于收敛，扩大时核对新增范围、重估和新增完成各自影响；范围缩减导致比例上升不等于新增交付。
+
+范围、估算或单项进度变化才产生对应快照；重复上传同一内容不重复累计。读取失败不补零，历史不足不判断趋势，现行规则不重算旧历史点。
+
+## 输出要求
+
+`result` 固定包含 `mode`、`estimate`、`progress`、`trend`，未运行模式为 `null`。保留明细 ID、标准引用、八维检查、三点估算、依据和未知项；进度按相同明细 ID 对应，趋势保留当时版本。详见[输出契约](references/output-contract.md)。
+
+EWD 是预计人工投入，不是实际耗时、日历工期、剩余时间或个人效率；不计算金额成本。创建适配将分钟 ÷ 60 写入 `ewdHours`。用户修改估算不是实际投入反馈；团队历史校准须有真实可比数据，不默认开展模型训练。`writeReceipt=null`。
+
+## 场景核对
+
+PRD 的三个明细为 0.25、1.00、0.25 人天，内容进度为 100%、80%、40%：总量 1.50 人天，完成量 1.15 人天，完成度约 76.7%。内部对应总量 720 分钟、完成量 552 分钟。若其中一项无法判断，保留已知完成量，总体百分比为空，并列待确认明细。
+
+提交前检查：明细与标准可对应；范围无重叠；八维只作检查；O/M/P 单位一致且顺序正确；父子不重复；进度沿用明细 ID；历史没有回填或重复累计。

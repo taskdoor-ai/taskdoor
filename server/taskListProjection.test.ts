@@ -68,6 +68,21 @@ test("搜索、负责人和状态同时约束结果与标签计数", async () =>
   assert.deepEqual(result.tagFacets.map(({ count }) => count), [1, 0, 0]);
 });
 
+test("任务范围胶囊数量沿用其他筛选，并忽略当前任务范围", async () => {
+  const projectionModule = await import("../src/lib/taskListProjection.ts");
+  assert.equal(typeof projectionModule.buildTaskScopeCounts, "function");
+  const nodes = [
+    task("owned", { name: "Launch owned", labels: ["制作"] }),
+    task("participating", { name: "Launch participating", ownerId: "other", participantIds: ["me"], labels: ["制作"] }),
+    task("both", { name: "Launch both", participantIds: ["me"], labels: ["制作"] }),
+    task("wrong-tag", { name: "Launch wrong tag", participantIds: ["me"], labels: ["发布"] }),
+    task("wrong-status", { name: "Launch done", participantIds: ["me"], labels: ["制作"], status: "已完成" }),
+  ];
+  const filters: TaskListFilters = { ...allFilters, scope: "owned", statuses: ["进行中"], tags: ["制作"] };
+  assert.deepEqual(projectionModule.buildTaskScopeCounts(nodes, "Launch", filters, tags, "me"), { all: 3, owned: 2, participating: 2 });
+  assert.deepEqual(projectionModule.buildTaskScopeCounts(nodes, "Launch", filters, tags, ""), { all: 3, owned: 0, participating: 0 });
+});
+
 test("无标签和未知标签任务仍能从全部标签找到，不建立虚拟领域标签", async () => {
   const result = await project([task("absent"), task("empty", { labels: [] }), task("unknown", { labels: ["旧标签"] })]);
   assert.equal(result.allTagsCount, 3);

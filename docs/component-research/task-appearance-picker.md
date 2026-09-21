@@ -4,7 +4,7 @@
 
 - 用户任务：在任务详情标题左侧直接编辑 Task 图标与图标背景色，并同步到任务列表。
 - 交互关键词：icon picker、preset color picker、popover、single selection。
-- 技术约束：复用现有 Base UI Popover、Lucide React 和 AgentDoor Token；不安装依赖，不开放任意 Hex 色值。
+- 技术约束：复用现有 Base UI Popover、Lucide React 和 TaskDoor Token；不安装依赖，不开放任意 Hex 色值。
 - 必须覆盖的状态：当前图标与颜色、键盘焦点、选中态、旧数据回退、桌面弹层、窄屏可触达。
 
 ## 搜索过程
@@ -26,9 +26,9 @@
 
 - 采用的行为基础：现有 Base UI `Popover` 负责弹层、关闭与焦点。任务与标签共用 `AppearancePicker`，图标和底色采用带 `aria-pressed` 的单选按钮，保留 Tab、方向键、Home / End 导航，任务选择后自动保存。
 - 2026-09-03 用户确认统一任务与标签的设置样式，替代此前无预览的矩阵布局：左侧实时预览，右侧图标矩阵与底色色板；图标选中项使用白底与轻阴影，颜色选中项使用勾选标记和对应色环。窄屏改为上下排列，弹层内容可滚动。任务保留 8 个图标与 8 个规范色，不改变已保存的图标和颜色值。
-- Agentdoor 适配：尺寸、间距、圆角、边框、焦点与色调全部使用 `--ad-*` Token；色调只做对象识别，不承载状态。
+- TaskDoor 适配：尺寸、间距、圆角、边框、焦点与色调全部使用 `--ad-*` Token；色调只做对象识别，不承载状态。
 - 来源注释或许可动作：没有复制外部组件源码；复用项目已有 Base UI Popover 与已有 Lucide 依赖，无新增许可文件。
-- 为什么必须自研：外部 Color Picker 面向任意颜色空间，超出本产品的规范预设；本实现只组合现有基础组件形成一个 AgentDoor 共享 `TaskAppearancePicker` API。
+- 为什么必须自研：外部 Color Picker 面向任意颜色空间，超出本产品的规范预设；本实现只组合现有基础组件形成一个 TaskDoor 共享 `TaskAppearancePicker` API。
 
 ## 验证
 

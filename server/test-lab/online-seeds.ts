@@ -8,7 +8,7 @@ const task = (value: Partial<LabTask> & Pick<LabTask, 'id' | 'title' | 'goal' | 
 export function onlineCollaborationSeed(): { teams: LabTeam[]; cases: LabCase[] } {
   const legal: LabTeam = {
     id: 'lab-legal', name: '瀚川商事律师团队', industry: 'legal_services', archived: false,
-    description: '全合成的线上法律服务团队，用于测试律师、助理、合规与客户协作中的责任、前置依赖和证据判断。',
+    description: '线上法律服务团队，用于测试律师、助理、合规与客户协作中的责任、前置依赖和证据判断。',
     members: [
       { id: 'legal-lead', name: '何峻', role: '主办律师', responsibilities: ['确认委托范围、分配审查责任并对最终法律意见负责'], version: 1 },
       { id: 'legal-lawyer', name: '沈宁', role: '商事律师', responsibilities: ['审查合同条款并形成风险修改意见'], version: 1 },
@@ -31,7 +31,7 @@ export function onlineCollaborationSeed(): { teams: LabTeam[]; cases: LabCase[] 
 
   const video: LabTeam = {
     id: 'lab-short-video', name: '跃色视频创作团队', industry: 'short_video_media', archived: false,
-    description: '全合成的自媒体短视频团队，用于测试选题、脚本、拍摄、剪辑、合规和发布数据的线上协作。',
+    description: '自媒体短视频团队，用于测试选题、脚本、拍摄、剪辑、合规和发布数据的线上协作。',
     members: [
       { id: 'video-owner', name: '乔一', role: '账号负责人', responsibilities: ['确定账号目标、选题优先级与最终发布决策'], version: 1 },
       { id: 'video-director', name: '夏知', role: '短视频编导', responsibilities: ['完成选题策划、分镜与拍摄执行'], version: 1 },

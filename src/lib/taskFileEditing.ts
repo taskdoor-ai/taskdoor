@@ -54,6 +54,7 @@ export function getTaskFileContent(file: TaskFileNode): TaskFileContent | null {
   if (kind === "image" || kind === "unknown") return null;
   if (kind === "pdf") return file.previewData?.kind === "pdf" ? parseContent(file.previewData) : null;
   if (kind === "table") return file.previewData?.kind === "table" ? parseContent(file.previewData) : null;
+  if (file.blobId && file.content == null && !(file.previewData && "text" in file.previewData)) return null;
   return { kind: "text", text: file.previewData && "text" in file.previewData ? file.previewData.text : file.content ?? "" };
 }
 

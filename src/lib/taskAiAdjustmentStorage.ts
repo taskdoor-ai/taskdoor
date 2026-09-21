@@ -1,3 +1,5 @@
+import { compressStorageText, decompressStorageText } from "./taskStorageCompression";
+
 type TaskAiStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
 export const TASK_AI_JOURNAL_KEY = "agentdoor-task-ai-adjustment-journal";
@@ -31,7 +33,13 @@ function assertJournal(storage: TaskAiStorage, expected: string | null): void {
 function parseJournal(raw: string): TaskAiJournal {
   const message = "任务调整恢复记录损坏或版本不受支持，已保留原始记录并停止恢复。";
   try {
-    const value: unknown = JSON.parse(raw);
+    let value: unknown = JSON.parse(raw);
+    if (value && typeof value === "object" && "version" in value && value.version === 2) {
+      const envelope = value as { encoding?: unknown; payload?: unknown; state?: unknown };
+      if (envelope.encoding !== "lzw-utf8" || typeof envelope.payload !== "string") throw new Error(message);
+      value = JSON.parse(decompressStorageText(envelope.payload));
+      if (!value || typeof value !== "object" || !("state" in value) || value.state !== envelope.state) throw new Error(message);
+    }
     if (!value || typeof value !== "object") throw new Error(message);
     const record = value as Partial<TaskAiJournal>;
     if (record.version !== 1 || !["prepared", "committed"].includes(record.state ?? "")
@@ -131,8 +139,8 @@ export function commitTaskAiStorage(storage: TaskAiStorage, writes: Array<[strin
     state: "prepared",
     writes: writes.map(([key, after]) => ({ key, before: readValue(storage, key), after })),
   };
-  const prepared = JSON.stringify(journal);
-  const committed = JSON.stringify({ ...journal, state: "committed" });
+  const prepared = serializeJournal(journal);
+  const committed = serializeJournal({ ...journal, state: "committed" });
   assertJournal(storage, null);
   try {
     storage.setItem(TASK_AI_JOURNAL_KEY, prepared);
@@ -162,4 +170,11 @@ export function commitTaskAiStorage(storage: TaskAiStorage, writes: Array<[strin
   }
 
   cleanJournal(storage, committed, true);
+}
+
+function serializeJournal(journal: TaskAiJournal): string {
+  const raw = JSON.stringify(journal);
+  if (raw.length < 16384) return raw;
+  const compressed = JSON.stringify({ version: 2, state: journal.state, encoding: "lzw-utf8", payload: compressStorageText(raw) });
+  return compressed.length < raw.length ? compressed : raw;
 }

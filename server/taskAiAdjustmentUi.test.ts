@@ -123,17 +123,15 @@ test("详情保存更新同一任务而不调用创建流程，记录日志并�
   const detail = read("components/TaskDetail.tsx");
   assert.match(detail, /setCurrentTitle\(task.title\)/);
   assert.match(detail, /setCurrentGoal\(task.goal\)/);
-  assert.match(detail, /setPendingOwnerId\(initialProposedOwnerId\)/);
+  assert.doesNotMatch(detail, /setPendingOwnerId|initialProposedOwnerId/);
 });
 
-test("详情负责人提议不替换正式负责人展示，撤回只取消提议", () => {
+test("详情负责人修改直接更新正式负责人，不保留提议状态", () => {
   const detail = read("components/TaskDetail.tsx");
-  assert.match(detail, /selected=\{confirmedOwnerId \? \[confirmedOwnerId\] : \[\]\}/);
-  assert.match(detail, /待接受/);
-  assert.match(detail, /aria-label="撤回负责人提议"/);
-  assert.match(detail, /onOwnerProposalChange\?\.\(undefined\)/);
-  assert.doesNotMatch(detail, /displayedOwnerId/);
+  assert.match(detail, /const displayedOwnerId = confirmedOwnerId/);
+  assert.match(detail, /onOwnerChange\?\.\(value\)/);
+  assert.doesNotMatch(detail, /待接受|撤回负责人提议|onOwnerProposalChange/);
   const app = read("App.tsx");
-  const ownerHandler = app.slice(app.indexOf("const changeOwnerProposal ="), app.indexOf("const changeParticipants ="));
-  assert.doesNotMatch(ownerHandler, /task.createdFrom === "task-planner"/);
+  const ownerHandler = app.slice(app.indexOf("const changeOwner ="), app.indexOf("const changeParticipants ="));
+  assert.match(ownerHandler, /changeTaskFields\(task\.id, \{ ownerId \}/);
 });

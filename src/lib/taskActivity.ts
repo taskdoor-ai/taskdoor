@@ -66,7 +66,7 @@ function compareTimes(left: number | null, right: number | null, newestFirst = t
 
 function compareSortTimes(left: SortTime, right: SortTime, newestFirst = true): number {
   if (left.recorded !== right.recorded) {
-    // Reverse both cohorts for replies, whose reading order remains historical-to-recent.
+    // Keep recorded and legacy events in separate cohorts when choosing the display order.
     return newestFirst ? Number(right.recorded) - Number(left.recorded) : Number(left.recorded) - Number(right.recorded);
   }
   return compareTimes(left.timestamp, right.timestamp, newestFirst);
@@ -145,11 +145,8 @@ export function getTaskDiscussionThreads(activities: TaskActivityMock[]): TaskDi
   return [...threads.entries()]
     .map(([index, thread]) => ({
       index,
-      thread: { ...thread, replies: sortRecords(thread.replies, now, false) },
-      time: [thread.activity, ...thread.replies].reduce<SortTime>((latest, record) => {
-        const time = sortTime(record, now);
-        return compareSortTimes(time, latest) < 0 ? time : latest;
-      }, { recorded: false, timestamp: null }),
+      thread: { ...thread, replies: sortRecords(thread.replies, now) },
+      time: sortTime(thread.activity, now),
     }))
     .sort((left, right) => compareSortTimes(left.time, right.time) || left.index - right.index)
     .map(({ thread }) => thread);

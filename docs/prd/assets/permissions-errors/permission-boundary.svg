@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+  <title id="title">统一权限判断边界</title>
+  <desc id="desc">一次操作只有同时满足已认证主体、有效团队成员关系、对象访问控制和具体操作范围才会获准。CLI 还需有效设备和用户委托，管理员角色不能跳过任务访问控制。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .title { font: 700 28px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #172033; }
+      .subtitle { font: 400 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #64748b; }
+      .step { font: 700 18px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #26334d; }
+      .body { font: 400 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #536179; }
+      .small { font: 600 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #40516d; }
+      .line { stroke: #64748b; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="960" height="600" rx="24" fill="#f8fafc"/>
+  <text x="54" y="58" class="title">操作权限校验</text>
+  <text x="54" y="86" class="subtitle">每次读取、搜索、AI 分析和写入都重新形成 PolicyDecision</text>
+
+  <rect x="54" y="130" width="186" height="112" rx="18" fill="#eff6ff" stroke="#60a5fa" stroke-width="2"/>
+  <text x="78" y="168" class="step">Principal</text>
+  <text x="78" y="197" class="body">已认证 · 未停用</text>
+  <text x="78" y="220" class="body">实际用户或受托 Agent</text>
+  <text x="253" y="195" class="title">∩</text>
+
+  <rect x="286" y="130" width="186" height="112" rx="18" fill="#f0fdf4" stroke="#4ade80" stroke-width="2"/>
+  <text x="310" y="168" class="step">Team Membership</text>
+  <text x="310" y="197" class="body">当前团队 · 关系有效</text>
+  <text x="310" y="220" class="body">admin 或 member</text>
+  <text x="485" y="195" class="title">∩</text>
+
+  <rect x="518" y="130" width="186" height="112" rx="18" fill="#fff7ed" stroke="#fb923c" stroke-width="2"/>
+  <text x="542" y="168" class="step">Object ACL</text>
+  <text x="542" y="197" class="body">Task · File · Invitation</text>
+  <text x="542" y="220" class="body">对象可发现与可操作</text>
+  <text x="717" y="195" class="title">∩</text>
+
+  <rect x="750" y="130" width="156" height="112" rx="18" fill="#f5f3ff" stroke="#a78bfa" stroke-width="2"/>
+  <text x="774" y="168" class="step">Operation Scope</text>
+  <text x="774" y="197" class="body">read · update</text>
+  <text x="774" y="220" class="body">delete · complete</text>
+
+  <path d="M 480 260 L 480 305" class="line"/>
+  <rect x="318" y="307" width="324" height="94" rx="18" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+  <text x="372" y="344" class="step">服务端 PolicyDecision</text>
+  <text x="355" y="373" class="body">任一边界缺失即拒绝；按钮隐藏不代替鉴权</text>
+
+  <path d="M 480 401 L 480 446" class="line"/>
+  <rect x="244" y="448" width="472" height="94" rx="18" fill="#ecfdf5" stroke="#34d399" stroke-width="2"/>
+  <text x="356" y="484" class="step">允许本次具体操作</text>
+  <text x="278" y="514" class="body">最小数据进入业务服务 · 记录授权依据 · 返回不泄密回执</text>
+
+  <rect x="54" y="307" width="210" height="150" rx="18" fill="#eef2ff" stroke="#818cf8" stroke-width="2"/>
+  <text x="78" y="344" class="step">CLI 授权校验</text>
+  <text x="78" y="375" class="body">有效设备授权</text>
+  <text x="78" y="398" class="body">用户委托与团队 scope</text>
+  <text x="78" y="421" class="body">对象 scope 与用途限制</text>
+  <path d="M 264 382 L 318 359" class="line"/>
+
+  <rect x="696" y="307" width="210" height="150" rx="18" fill="#fef2f2" stroke="#f87171" stroke-width="2"/>
+  <text x="720" y="344" class="step">拒绝时最小披露</text>
+  <text x="720" y="375" class="body">不可发现对象统一 404</text>
+  <text x="720" y="398" class="body">不返回标题、数量或版本</text>
+  <text x="720" y="421" class="body">不复用撤权后的旧回执</text>
+  <path d="M 696 382 L 642 359" class="line"/>
+
+  <text x="54" y="578" class="small">Team Admin 只能使用明确授予的团队能力；对 Task、File 和 Commit 仍必须通过对应 Object ACL。</text>
+</svg>

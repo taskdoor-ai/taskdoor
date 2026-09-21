@@ -1,6 +1,8 @@
+import { creationScenarioEnglish, localizeFreshCreationPlan } from "../i18n/creationMock";
+import type { Locale } from "../i18n/core";
 import { taskCreationScenarios, type TaskCreationScenarioId } from "../data/taskCreationScenarios";
 import { assignTaskByResponsibility } from "./responsibilityAssignment";
-import { createCreationForm, validateCreationForm, type CreationForm } from "./taskCreationForm";
+import { createCreationForm, validateCreationForm, withCreationParticipantDefaults, type CreationForm } from "./taskCreationForm";
 import { withMockCreationEffort } from "./taskCreationEffort";
 import { advanceTaskCreationScenario, startTaskCreationScenario, type ExistingTaskCandidate, type ScenarioContext } from "./taskCreationScenario";
 
@@ -35,11 +37,6 @@ const meaningfulAnswer = (answer?: string) => {
     || /^(?:暂时不确定|不确定|不知道|不清楚|还没想好|待定|待补充|我来补充具体要求|custom|uncertain)$/.test(value) ? "" : value;
 };
 
-const validDate = (value: string) => {
-  const date = new Date(`${value}T12:00:00Z`);
-  return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
-};
-
 const similarCandidateReason = (candidate: ExistingTaskCandidate, context: ScenarioContext) => {
   const title = candidate.name ?? candidate.title ?? "";
   const goal = candidate.goal ?? "";
@@ -53,7 +50,7 @@ const similarCandidateReason = (candidate: ExistingTaskCandidate, context: Scena
 };
 
 /** A deterministic adapter for explicit demos, not a general-purpose AI parser. */
-export function planTaskCreation(
+function planTaskCreationOriginal(
   request: string,
   context: ScenarioContext,
   options?: { scenarioId?: TaskCreationScenarioId; answers?: { goal?: string; deliverable?: string } },
@@ -61,9 +58,6 @@ export function planTaskCreation(
   const scenario = taskCreationScenarios.find(item => item.prompt === request.trim()
     && (options?.scenarioId === undefined || item.id === options.scenarioId));
   if (!scenario) return unavailable(request);
-  if (scenario.id === "complex-plan" && !validDate(context.currentDate)) {
-    return unavailable(request, "当前日期缺失或无效，无法核对上线时间；没有猜测年份，原文已保留。");
-  }
 
   const answers = { goal: meaningfulAnswer(options?.answers?.goal), deliverable: meaningfulAnswer(options?.answers?.deliverable) };
   if (scenario.id === "clarify-requirement") {
@@ -85,9 +79,6 @@ export function planTaskCreation(
   if (fixture && !candidate) return unavailable(request, `未找到对应的已有任务「${fixture.name}」，无法判断关系；未完成查重，原文已保留。`);
   const planningContext = candidate ? { ...context, existingTasks: [candidate] } : context;
   let form = createCreationForm(request, planningContext, scenario.id);
-  if (scenario.id === "complex-plan" && form.mainTask.endDate !== `${context.currentDate.slice(0, 4)}-09-15`) {
-    return unavailable(request, "当前日期与 9 月 15 日的截止及准备排期存在冲突，不能自动顺延到下一年；原文已保留，请重新确认期限。");
-  }
 
   if (scenario.id === "clarify-requirement") {
     // The archived engine asks three questions. Supply the intentionally unasked time
@@ -119,7 +110,7 @@ export function planTaskCreation(
       : similarCandidateReason(candidate, context);
   }
 
-  form = withMockCreationEffort(form);
+  form = withMockCreationEffort(withCreationParticipantDefaults(form, context.currentUserId));
   const invalid = validateCreationForm({ ...form, decision: "independent" }, context.members);
   if (invalid) return unavailable(request, `候选暂不可审阅：${invalid}原文已保留。`);
   const boundary = "尚未完成查重，尚未创建任务。";
@@ -158,17 +149,17 @@ export function resolveCreationRelationship(
   const candidate = currentCandidate(form, context);
   if (!candidate) return { error: "已有任务候选已不可用或发生变化，请重新判断关系；原方案已保留。" };
   if (decision === "attach" && form.candidateKind !== "parent") return { error: "相似任务不能直接作为主任务关联，请查看已有任务或明确选择独立创建。" };
-  if (decision === "attach" && !candidate.goal?.trim()) return { error: "已有主任务尚未填写目标，不能确认继承；请补充主目标或选择独立创建。" };
 
-  // Attachment inherits candidate.goal during projection; retain the independent
-  // draft's own goal so detaching does not widen its scope to the whole parent.
-  const next: CreationForm = { ...form, decision, candidate: structuredClone(candidate) };
+  // Copy a default only when first attaching an empty draft; never replace user input.
+  const mainTask = decision === "attach" && form.decision !== "attach" && !form.mainTask.goal.trim()
+    ? { ...form.mainTask, goal: candidate.goal ?? "" } : form.mainTask;
+  const next: CreationForm = { ...form, mainTask, decision, candidate: structuredClone(candidate) };
   const invalid = validatePlan(next, context);
   if (invalid) return { error: invalid };
   return {
     form: next,
     summary: decision === "attach"
-      ? `已选择作为「${candidate.name ?? candidate.title}」的子任务候选，继承主目标；原完成标准、人选和期限保留，已有任务未修改。`
+      ? `已选择作为「${candidate.name ?? candidate.title}」的子任务候选，目标可独立修改；原完成标准、人选和期限保留，已有任务未修改。`
       : "已选择独立创建，已有任务保持不变。当前仍是候选方案，未完成查重，尚未创建任务。",
   };
 }
@@ -188,9 +179,6 @@ export function reviseCreationPlan(
   if (form.candidate) {
     const candidate = currentCandidate(form, context);
     if (!candidate) return { error: "已有任务候选已不可用，请重新判断关系；原方案已保留。" };
-    if (form.decision === "attach" && (!candidate.goal?.trim() || candidate.goal.trim() !== form.candidate.goal?.trim())) {
-      return { error: "已有主任务目标缺失或已经变化，请重新确认继承目标；原方案已保留。" };
-    }
   }
   const text = instruction.trim();
   const match = /^(任务名称改为|目标改为|负责人改为|截止时间改为|增加完成标准[：:])[ \t]*(.+)$/u.exec(text);
@@ -199,7 +187,7 @@ export function reviseCreationPlan(
   const value = rawValue.trim();
   if (!value) return { error: revisionFormatError };
 
-  const next: CreationForm = { ...form, mainTask: { ...form.mainTask } };
+  let next: CreationForm = { ...form, mainTask: { ...form.mainTask } };
   const changes: string[] = [];
   const describe = (label: string, before: string, after: string) => {
     if (before !== after) changes.push(`${label}：「${before || "待定"}」→「${after || "待定"}」`);
@@ -208,11 +196,9 @@ export function reviseCreationPlan(
     next.mainTask.title = value;
     describe("任务名称", form.mainTask.title, value);
   } else if (operation === "目标改为") {
-    if (form.decision === "attach") return { error: "当前方案继承已有主任务目标，不能在此改写主任务；请先选择独立创建。" };
     if (!meaningfulAnswer(value)) return { error: "请提供明确的任务目标；原方案已保留。" };
     next.mainTask.goal = value;
-    next.subtasks = form.subtasks.map(task => ({ ...task, goal: value }));
-    describe(`目标${form.subtasks.length ? `（同步 ${form.subtasks.length} 个子任务的继承目标）` : ""}`, form.mainTask.goal, value);
+    describe("目标", form.mainTask.goal, value);
   } else if (operation.startsWith("增加完成标准")) {
     if (!form.mainTask.completionCriteria.includes(value)) {
       next.mainTask.completionCriteria = [...form.mainTask.completionCriteria, value];
@@ -237,15 +223,24 @@ export function reviseCreationPlan(
     describe("截止时间", form.mainTask.endDate, next.mainTask.endDate);
   }
 
+  const hadCreatorParticipant = next.mainTask.participantIds.includes(context.currentUserId);
+  next = withCreationParticipantDefaults(next, context.currentUserId, form);
+  if (!hadCreatorParticipant && next.mainTask.participantIds.includes(context.currentUserId)) {
+    changes.push("参与人：默认加入创建者，可在确认创建前调整。");
+  }
   // Validate the patched form, allowing a targeted edit to repair a stale owner.
   const invalid = validatePlan(next, context);
   if (invalid) return { error: invalid };
-  if (operation === "截止时间改为" && next.mainTask.endDate
-    && next.subtasks.some(task => task.endDate && task.endDate > next.mainTask.endDate)) {
-    return { error: "新的主任务截止时间早于现有子任务交付，请先核对子任务排期；没有自动重排，原方案已保留。" };
-  }
   return {
     form: next, changes,
     summary: changes.length ? `已整理「${operation.replace(/改为|[：:]/gu, "")}」的调整建议，仅影响列出的字段；尚未创建或指派任务。` : "内容没有变化，当前候选方案保持原样。",
   };
+}
+
+/** Match only an exact built-in prompt; keep freeform requests and answers intact. */
+export function planTaskCreation(request: string, context: ScenarioContext, options?: { scenarioId?: TaskCreationScenarioId; answers?: { goal?: string; deliverable?: string }; locale?: Locale }): CreationPlanningResult {
+  const scenario = taskCreationScenarios.find(item => (item.prompt === request.trim() || creationScenarioEnglish[item.id].prompt === request.trim()) && (!options?.scenarioId || item.id === options.scenarioId));
+  const result = planTaskCreationOriginal(scenario?.prompt ?? request, context, options);
+  const localized = localizeFreshCreationPlan(result, options?.locale ?? 'zh-CN', options?.answers);
+  return 'form' in localized ? { ...localized, form: { ...localized.form, request } } : { ...localized, request };
 }

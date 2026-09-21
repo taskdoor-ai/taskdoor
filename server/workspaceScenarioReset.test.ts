@@ -88,7 +88,6 @@ test("旧版本本地数据会一次性替换为跨行业团队 fixture", () => 
   assert.deepEqual(result.workspaceNodes, allTeamWorkspaceNodes);
   assert.deepEqual(result.tags, multiTeamTags);
   assert.equal(result.version, creatorCommerceScenarioVersion);
-  assert.equal(result.version, "multi-team-v18-unassigned-effort");
 });
 
 test("v3 对话创建演示残留会在升级时从任务目录移除", () => {
@@ -270,7 +269,7 @@ test("v5 升级只补入发布会任务组并保留用户任务，v7 后尊重�
   });
 
   assert.equal(upgraded.didReset, true);
-  assert.equal(upgraded.version, "multi-team-v18-unassigned-effort");
+  assert.equal(upgraded.version, creatorCommerceScenarioVersion);
   assert.ok(upgraded.workspaceNodes.some((node) => node.id === customTask.id));
   assert.deepEqual(upgraded.workspaceNodes.filter((node) => launchIds.has(node.id)).map(({ id }) => id), [...launchIds]);
 
@@ -739,7 +738,7 @@ test("v14 安全补齐 Mock 叶子并修复继承范围，不覆盖用户估算�
   const migratedById = new Map(migrated.map((task) => [task.id, task]));
 
   assert.equal(result.didReset, true);
-  assert.equal(result.version, "multi-team-v18-unassigned-effort");
+  assert.equal(result.version, creatorCommerceScenarioVersion);
   assert.ok(migratedById.has(customTask.id));
   assert.equal(migratedById.has(deletedId), false);
   assert.equal(migratedById.get("fragrance-creator-business")?.effortEstimate?.basis, "mock");
@@ -789,7 +788,7 @@ test("fixture 包含达人带货项目、独立发布会项目和代表性独立
     { id: "workspace-root", parentId: null },
     { id: "fragrance-campaign", parentId: "workspace-root" },
   ]);
-  assert.equal(tasks.length, 17);
+  assert.equal(tasks.length, 21);
   assert.equal(mainTask?.ownerId, "周岚");
   assert.equal(mainTask?.name, "香氛礼盒达人带货收尾");
   assert.equal(mainTask?.parentId, "fragrance-campaign");
@@ -815,8 +814,182 @@ test("fixture 包含达人带货项目、独立发布会项目和代表性独立
   assert.equal(launchParent?.plannedEndOn, "2026-09-20");
   assert.deepEqual(launchParent?.labels, ["高优先级", "内容制作"]);
   assert.deepEqual(launchChildren.map(({ name }) => name), ["场地确认", "发布会流程设计", "宣传物料制作"]);
+  const runOfShowChildren = tasks.filter((task) => task.parentTaskId === "product-launch-run-of-show");
+  assert.deepEqual(runOfShowChildren.map(({ name }) => name), [
+    "确认发布会议程与时长",
+    "完善主持人串词与转场",
+    "核对嘉宾衔接与导播 cue",
+    "完成发布会流程联排",
+  ]);
+  assert.ok(runOfShowChildren.every((task) => task.goal && task.completionCriteria?.length));
+  assert.deepEqual(Object.fromEntries(runOfShowChildren.map((task) => [task.id, task.status])), {
+    "product-launch-agenda-timing": "已完成",
+    "product-launch-host-script": "进行中",
+    "product-launch-guest-cue": "进行中",
+    "product-launch-flow-rehearsal": "待开始",
+  });
+  assert.equal(runOfShowChildren.find((task) => task.id === "product-launch-agenda-timing")?.completedAt, "2026-09-04T17:30:00.000Z");
+  assert.equal(tasks.find((task) => task.id === "product-launch-run-of-show")?.effortEstimate, undefined);
   assert.ok(children.every((task) => task.parentId === "fragrance-campaign"));
   assert.ok(workspaceNodes.every((node) => !/(零售|灰度|退款|POS)/i.test(`${node.name} ${node.kind === "task" ? node.labels?.join(" ") ?? "" : ""}`)));
+});
+
+
+test("fresh fixture 和无版本初始化都包含发布会流程设计的嵌套子任务", () => {
+  const nestedIds = [
+    "product-launch-agenda-timing",
+    "product-launch-host-script",
+    "product-launch-guest-cue",
+    "product-launch-flow-rehearsal",
+  ];
+  const fresh = resolveWorkspaceScenarioReset({ storedVersion: null, storedWorkspaceNodes: null, storedTags: null });
+
+  assert.ok(nestedIds.every((id) => allTeamWorkspaceNodes.some((node) => node.id === id)));
+  assert.ok(nestedIds.every((id) => fresh.workspaceNodes.some((node) => node.id === id)));
+});
+
+test("v16 到 v20 的旧存储都会补齐发布会流程设计嵌套子任务", () => {
+  const nestedIds = [
+    "product-launch-agenda-timing",
+    "product-launch-host-script",
+    "product-launch-guest-cue",
+    "product-launch-flow-rehearsal",
+  ];
+  const legacyNodes = allTeamWorkspaceNodes.filter((node) => !nestedIds.includes(node.id));
+
+  for (const storedVersion of [
+    "multi-team-v16-planner-dedupe",
+    "multi-team-v17-unassigned-tasks",
+    "multi-team-v18-unassigned-effort",
+    "multi-team-v19-deletion-family",
+    "multi-team-v20-product-launch-nested-subtasks",
+  ]) {
+    const result = resolveWorkspaceScenarioReset({ storedVersion, storedWorkspaceNodes: legacyNodes, storedTags: multiTeamTags });
+    const children = result.workspaceNodes.filter((node) => node.kind === "task" && node.parentTaskId === "product-launch-run-of-show");
+
+    assert.equal(result.version, creatorCommerceScenarioVersion, storedVersion);
+    assert.equal(result.didMigrate, true, storedVersion);
+    assert.deepEqual(children.map((task) => task.id), nestedIds, storedVersion);
+  }
+});
+
+test("v20 纠偏不补回用户已部分删除的发布会流程设计嵌套子任务", () => {
+  const nestedIds = [
+    "product-launch-agenda-timing",
+    "product-launch-host-script",
+    "product-launch-guest-cue",
+    "product-launch-flow-rehearsal",
+  ];
+  const keptNestedTask = allTeamWorkspaceNodes.find((node) => node.id === "product-launch-agenda-timing")!;
+  const partialNodes = [
+    ...allTeamWorkspaceNodes.filter((node) => !nestedIds.includes(node.id)),
+    keptNestedTask,
+  ];
+
+  const result = resolveWorkspaceScenarioReset({
+    storedVersion: "multi-team-v20-product-launch-nested-subtasks",
+    storedWorkspaceNodes: partialNodes,
+    storedTags: multiTeamTags,
+  });
+
+  assert.equal(result.version, creatorCommerceScenarioVersion);
+  assert.equal(result.didMigrate, true);
+  assert.deepEqual(result.workspaceNodes.filter((node) => nestedIds.includes(node.id)).map((node) => node.id), ["product-launch-agenda-timing"]);
+});
+
+test("v19 升级只给发布会流程设计补一次嵌套子任务", () => {
+  const nestedIds = [
+    "product-launch-agenda-timing",
+    "product-launch-host-script",
+    "product-launch-guest-cue",
+    "product-launch-flow-rehearsal",
+  ];
+  const deletedExistingFixtureId = "product-launch-promo-assets";
+  const staleParentEffort = (allTeamWorkspaceNodes.find((node): node is TaskNode => node.kind === "task" && node.id === "product-launch-venue")?.effortEstimate)!;
+  const legacyNodes = allTeamWorkspaceNodes
+    .filter((node) => !nestedIds.includes(node.id) && node.id !== deletedExistingFixtureId)
+    .map((node) => node.kind === "task" && node.id === "product-launch-run-of-show"
+      ? { ...node, goal: "用户改过的流程目标", status: "已阻塞" as const, effortEstimate: { ...staleParentEffort } }
+      : node);
+  const customNode = { id: "user-kept-v19-task", kind: "task" as const, name: "用户自己的任务", parentId: "workspace-root", teamId: "creator-commerce", ownerId: "周岚", status: "待开始" as const, updatedAt: "刚刚" };
+  const result = resolveWorkspaceScenarioReset({
+    storedVersion: "multi-team-v19-deletion-family",
+    storedWorkspaceNodes: [...legacyNodes, customNode],
+    storedTags: multiTeamTags,
+  });
+  const tasks = result.workspaceNodes.filter((node): node is TaskNode => node.kind === "task");
+  const byId = new Map(tasks.map((task) => [task.id, task]));
+
+  assert.equal(result.version, creatorCommerceScenarioVersion);
+  assert.equal(result.didMigrate, true);
+  assert.deepEqual(nestedIds.map((id) => byId.get(id)?.parentTaskId), [
+    "product-launch-run-of-show",
+    "product-launch-run-of-show",
+    "product-launch-run-of-show",
+    "product-launch-run-of-show",
+  ]);
+  assert.ok(nestedIds.every((id) => byId.get(id)?.completionCriteria?.length));
+  assert.equal(byId.get("product-launch-run-of-show")?.goal, "用户改过的流程目标");
+  assert.equal(byId.get("product-launch-run-of-show")?.status, "已阻塞");
+  assert.equal(byId.get("product-launch-run-of-show")?.effortEstimate, undefined);
+  assert.equal(byId.has(deletedExistingFixtureId), false);
+  assert.ok(byId.has(customNode.id));
+
+  const rerun = resolveWorkspaceScenarioReset({
+    storedVersion: creatorCommerceScenarioVersion,
+    storedWorkspaceNodes: result.workspaceNodes.filter((node) => node.id !== "product-launch-host-script"),
+    storedTags: result.tags,
+  });
+  assert.equal(rerun.workspaceNodes.some((node) => node.id === "product-launch-host-script"), false, "当前版本中用户删除的新增子任务不能复活");
+  assert.equal(rerun.workspaceNodes.filter((node) => nestedIds.includes(node.id)).length, 3);
+});
+
+test("发布会 Mock 为三个一级子任务提供 1、4、3 个直接下级", () => {
+  const tasks = allTeamWorkspaceNodes.filter((node): node is TaskNode => node.kind === "task");
+  const directCount = (parentTaskId: string) => tasks.filter((task) => task.parentTaskId === parentTaskId).length;
+
+  assert.equal(directCount("product-launch-venue"), 1);
+  assert.equal(directCount("product-launch-run-of-show"), 4);
+  assert.equal(directCount("product-launch-promo-assets"), 3);
+  assert.equal(tasks.find((task) => task.id === "product-launch-venue")?.effortEstimate, undefined);
+  assert.equal(tasks.find((task) => task.id === "product-launch-promo-assets")?.effortEstimate, undefined);
+});
+
+test("v21 只补一次下级数量示例并保留用户确认的父任务估算", () => {
+  const detailIds = [
+    "product-launch-venue-contract",
+    "product-launch-promo-key-visual",
+    "product-launch-promo-invitation",
+    "product-launch-promo-channel-assets",
+  ];
+  const fixtureEstimate = allTeamWorkspaceNodes.find((node): node is TaskNode => node.kind === "task" && node.id === detailIds[0])?.effortEstimate;
+  assert.ok(fixtureEstimate);
+  const legacyNodes = allTeamWorkspaceNodes
+    .filter((node) => !detailIds.includes(node.id))
+    .map((node) => node.kind === "task" && node.id === "product-launch-venue"
+      ? { ...node, effortEstimate: { ...fixtureEstimate, basis: "manual" as const, confirmed: true } }
+      : node.kind === "task" && node.id === "product-launch-promo-assets"
+        ? { ...node, effortEstimate: { ...fixtureEstimate } }
+        : node);
+
+  const upgraded = resolveWorkspaceScenarioReset({
+    storedVersion: "multi-team-v21-product-launch-nested-subtasks-repair",
+    storedWorkspaceNodes: legacyNodes,
+    storedTags: multiTeamTags,
+  });
+  const tasks = upgraded.workspaceNodes.filter((node): node is TaskNode => node.kind === "task");
+
+  assert.equal(upgraded.version, "multi-team-v22-subtask-child-count-fixtures");
+  assert.ok(detailIds.every((id) => tasks.filter((task) => task.id === id).length === 1));
+  assert.equal(tasks.find((task) => task.id === "product-launch-venue")?.effortEstimate?.basis, "manual");
+  assert.equal(tasks.find((task) => task.id === "product-launch-promo-assets")?.effortEstimate, undefined);
+
+  const rerun = resolveWorkspaceScenarioReset({
+    storedVersion: upgraded.version,
+    storedWorkspaceNodes: upgraded.workspaceNodes.filter((node) => node.id !== detailIds[0]),
+    storedTags: upgraded.tags,
+  });
+  assert.equal(rerun.workspaceNodes.some((node) => node.id === detailIds[0]), false, "当前版本中用户删除的新示例不能复活");
 });
 
 test("fixture 中每个任务引用的标签都存在于达人带货标签目录", () => {
@@ -849,7 +1022,7 @@ test("当前版本不会回填用户已删除的 fixture 任务或标签，并�
   });
 
   assert.equal(result.didReset, false);
-  assert.equal(result.version, "multi-team-v18-unassigned-effort");
+  assert.equal(result.version, creatorCommerceScenarioVersion);
   assert.ok(!result.workspaceNodes.some((node) => node.id === deletedTaskId));
   assert.ok(!result.tags.some((tag) => tag.id === deletedTagId));
   assert.ok(result.workspaceNodes.some((node) => node.id === customTask.id));

@@ -6,7 +6,7 @@
 
 **Architecture:** Extend the existing workspace projection with explicit overview role/current-task metadata, keep all dependency and judgment calculations in pure library functions, and branch only the top summary plus insight candidate scope inside the shared `TaskOverviewWorkspace`. Main-task rendering remains the current path; standalone behavior is intentionally unchanged in this iteration.
 
-**Tech Stack:** React 19, TypeScript, Motion, existing AgentDoor CSS tokens/components, Node test runner with `tsx`, Vite.
+**Tech Stack:** React 19, TypeScript, Motion, existing TaskDoor CSS tokens/components, Node test runner with `tsx`, Vite.
 
 ---
 

@@ -4,7 +4,7 @@
 
 **Goal:** Add a “子任务” tab to task details that lists the current task’s direct children while retaining the existing overview board and dependency canvas.
 
-**Architecture:** Add a focused `TaskSubtaskList` presentation component that consumes existing `TaskRelationSummary[]` data and delegates navigation through an optional callback. Integrate it into `TaskDetail` as a fourth accessible tab and style it with the existing AgentDoor tokens, task icons, statuses, and avatars.
+**Architecture:** Add a focused `TaskSubtaskList` presentation component that consumes existing `TaskRelationSummary[]` data and delegates navigation through an optional callback. Integrate it into `TaskDetail` as a fourth accessible tab and style it with the existing TaskDoor tokens, task icons, statuses, and avatars.
 
 **Tech Stack:** React 19, TypeScript, lucide-react, Node test runner, React server rendering, CSS design tokens.
 

@@ -7,7 +7,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 // Source anatomy: shadcn Accordion as distributed through 21st.dev.
-// AgentDoor keeps the Radix keyboard contract and owns the visual tokens.
+// TaskDoor keeps the Radix keyboard contract and owns the visual tokens.
 const Accordion = AccordionPrimitive.Root
 
 function AccordionItem({ className, ...props }: React.ComponentProps<typeof AccordionPrimitive.Item>) {

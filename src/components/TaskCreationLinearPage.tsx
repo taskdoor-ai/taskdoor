@@ -137,7 +137,7 @@ export function TaskCreationLinearPage({
     if (invalid) { setError(invalid); return; }
     if (form.decision === "attach" && form.candidate) {
       const parent = existingTasks.find(task => task.id === form.candidate?.id);
-      if (!parent || parent.goal !== form.candidate.goal) {
+      if (!parent) {
         setError("已有主任务已变化，请重新确认任务归属后再创建。");
         return;
       }
@@ -169,7 +169,7 @@ export function TaskCreationLinearPage({
       <nav aria-label="任务路径" className="task-detail-path"><span><button onClick={onCancel} type="button">任务</button></span><span><ChevronRight aria-hidden="true" size={12} /><em aria-current="page">分步创建</em></span></nav>
     </div>
     {workspace.status === "idle" ? <div className="linear-creation-start">
-      <header><span>从一张白纸开始</span><h1>先说清楚，想推进什么</h1><p>AgentDoor 会依次整理目标与标准、寻找参与者，再判断是否需要拆分。</p></header>
+      <header><span>从一张白纸开始</span><h1>先说清楚，想推进什么</h1><p>TaskDoor 会依次整理目标与标准、寻找参与者，再判断是否需要拆分。</p></header>
       <AnimatedAgentChatInput
         allowAttachments={false}
         ariaLabel="需求描述"

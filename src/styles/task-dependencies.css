@@ -2,7 +2,7 @@
 .task-dependencies-field > .task-detail-field-label { padding-top: var(--ad-space-1); }
 .task-dependencies-content { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ad-space-2); min-width: 0; }
 .task-dependencies-chips { display: flex; flex-wrap: wrap; gap: var(--ad-space-2); min-width: 0; }
-.task-dependencies-chip { display: inline-flex; align-items: center; flex-wrap: wrap; gap: var(--ad-space-2); min-width: 0; max-width: 100%; padding: var(--ad-space-1) var(--ad-space-2); border: 1px solid var(--ad-border-soft); border-radius: var(--ad-radius-control); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.task-dependencies-chip { position: relative; display: inline-flex; align-items: center; flex-wrap: wrap; gap: var(--ad-space-2); min-width: 0; max-width: 100%; padding: var(--ad-space-1) var(--ad-space-2); border: 1px solid var(--ad-border-soft); border-radius: var(--ad-radius-control); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
 .task-dependencies-chip > button, .task-dependencies-edit { display: inline-flex; align-items: center; gap: var(--ad-space-1); min-width: 0; padding: 0; border: 0; background: transparent; color: var(--ad-ink-secondary); font: inherit; text-align: left; cursor: pointer; }
 .task-dependencies-chip > button > span { overflow-wrap: anywhere; }
 .task-dependencies-chip > button > svg { flex-shrink: 0; }
@@ -11,6 +11,10 @@
 .task-dependencies-chip > button:hover:not(:disabled) { color: var(--ad-route); }
 .task-dependencies-chip > button:disabled { cursor: default; }
 .task-dependencies-chip > button:focus-visible, .task-dependencies-edit:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; border-radius: var(--ad-radius-control); }
+.task-dependencies-chip > .task-dependencies-remove { position: absolute; top: -6px; right: -6px; z-index: 1; justify-content: center; width: 20px; height: 20px; border: 1px solid var(--ad-border); border-radius: 50%; background: var(--ad-surface); color: var(--ad-ink-tertiary); opacity: 0; pointer-events: none; }
+.task-dependencies-chip:hover > .task-dependencies-remove, .task-dependencies-chip:focus-within > .task-dependencies-remove { opacity: 1; pointer-events: auto; }
+.task-dependencies-chip > .task-dependencies-remove:hover:not(:disabled) { background: var(--ad-surface-subtle); color: var(--ad-ink); }
+.task-dependencies-chip:hover > .task-dependencies-remove:disabled, .task-dependencies-chip:focus-within > .task-dependencies-remove:disabled { opacity: .5; }
 .task-dependencies-popover { width: min(380px, calc(100vw - 32px)); max-height: min(540px, calc(100dvh - 32px)); overflow-y: auto; padding: var(--ad-space-4); }
 .task-dependencies-popover header strong { font-size: var(--ad-text-body-sm); }
 .task-dependencies-popover p { margin: var(--ad-space-2) 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.6; }
@@ -22,11 +26,15 @@
 .task-dependencies-options small { display: block; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
 .task-dependencies-popover footer { display: flex; justify-content: flex-end; gap: var(--ad-space-2); margin-top: var(--ad-space-3); }
 .task-dependencies-popover footer > button:first-child { margin-right: auto; }
-.task-dependencies-popover .task-dependencies-error { color: var(--ad-danger, #b42318); }
-.task-subtask-dependency-note { display: block; margin-top: var(--ad-space-1); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); font-weight: 400; }
+.task-dependencies-error, .task-dependencies-popover .task-dependencies-error { color: var(--ad-danger, #b42318); }
+.task-dependencies-content > .task-dependencies-error { flex-basis: 100%; margin: 0; font-size: var(--ad-text-caption); }
 @media (max-width: 760px) {
   .task-dependencies-field { grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-1); }
 }
 @media (pointer: coarse) {
   .task-dependencies-edit, .task-dependencies-chip > button, .task-dependencies-options label { min-height: var(--ad-control-touch-min); }
+}
+@media (hover: none), (pointer: coarse) {
+  .task-dependencies-chip > .task-dependencies-remove { position: static; flex: 0 0 auto; width: var(--ad-control-touch-min); height: var(--ad-control-touch-min); opacity: 1; pointer-events: auto; }
+  .task-dependencies-chip > .task-dependencies-remove:disabled { opacity: .5; }
 }

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 450" role="img" aria-labelledby="title desc">
+<title id="title">创建任务、任务协作、完成任务</title>
+<desc id="desc">登录注册并创建或加入团队后，参考历史任务拆解和分配人员；本地 Agent 工作、回填任务上下文、邀请成员接续协作，最后人工确认完成。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#6b8c80"/></marker></defs>
+<style>text{font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;fill:#23363c}.heading{font-size:25px;font-weight:650}.label{font-size:20px;font-weight:600}.body{font-size:16px}.small{font-size:14px;fill:#53666c}.line{stroke:#6b8c80;stroke-width:2;fill:none;marker-end:url(#arrow)}</style>
+<rect width="960" height="450" fill="#fbfcfa"/>
+<text x="40" y="48" class="heading">创建任务 → 任务协作 → 完成任务</text>
+<text x="40" y="84" class="body">前置：登录／注册 → 创建／加入团队</text>
+<rect x="40" y="120" width="252" height="186" rx="12" fill="#e8f2ee"/>
+<text x="62" y="158" class="label">01 创建任务</text>
+<text x="62" y="194" class="body">输入目标，参考历史任务</text>
+<text x="62" y="224" class="body">拆解步骤，识别人员责任</text>
+<text x="62" y="254" class="body">建议分配，审阅后创建</text>
+<path d="M298 208H324" class="line"/>
+<rect x="336" y="120" width="288" height="186" rx="12" fill="#e8f2ee"/>
+<text x="358" y="158" class="label">02 任务协作</text>
+<text x="358" y="194" class="body">连接本地 Agent 工作</text>
+<text x="358" y="224" class="body">回填产出物与需协作的内容</text>
+<text x="358" y="254" class="body">邀请成员，共享任务上下文</text>
+<path d="M630 208H656" class="line"/>
+<rect x="668" y="120" width="252" height="186" rx="12" fill="#e8f2ee"/>
+<text x="690" y="158" class="label">03 完成任务</text>
+<text x="690" y="194" class="body">核对成果与完成标准</text>
+<text x="690" y="224" class="body">人工确认完成</text>
+<text x="690" y="254" class="body">保留上下文与协作记录</text>
+<path d="M588 314V348H372V314" class="line"/>
+<text x="480" y="380" text-anchor="middle" class="body">成员基于更新后的上下文连接本地 Agent，继续工作</text>
+<text x="480" y="410" text-anchor="middle" class="small">工作 → 回填 → 接续协作，按需重复</text>
+</svg>

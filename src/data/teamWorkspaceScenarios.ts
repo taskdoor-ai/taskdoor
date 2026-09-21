@@ -1,3 +1,5 @@
+import { applyCriterionReviewMocks } from "./taskCriterionReviewMocks";
+import { withProgressDemoCreation } from "./taskProgressDemoFixtures";
 import { creatorCommerceMembers, creatorCommerceTags } from "./creatorCommerceScenario";
 import type { PersonOption, TagDefinition, TagColorName, TagIconName } from "./sharedTypes";
 import {
@@ -10,9 +12,11 @@ import {
   type WorkspaceNode,
 } from "./workspaceNodes";
 import { getEffortScopeKey, getTaskEffortState } from "../lib/taskEffort";
+import { getTaskDefinitionGoal } from "../lib/taskGoal";
 import { platformAdditionNodes, supplyOperationsAdditionNodes } from "./expandedTeamTaskBacklog";
 import { creatorCommerceAdditionNodes, customerSuccessAdditionNodes } from "./extendedTeamTaskFixtures";
 import { unassignedTaskFixtures } from "./unassignedTaskFixtures";
+import {residentDeletionDemoTasks} from "./residentDeletionDemo";
 
 export const teamIds = ["creator-commerce", "platform", "supply-operations", "customer-success"] as const;
 export type TeamId = (typeof teamIds)[number];
@@ -128,14 +132,14 @@ const platformNodes: WorkspaceNode[] = [
   task({ id: "platform-mobile-release", teamId: "platform", name: "完成移动端 3.8.0 可控发布", ownerId: "周岚", participantIds: ["程砚", "乔安", "唐澈", "叶宁", "宋衡", "顾言", "许悦"], status: "进行中", goal: "在不扩大同步与隐私风险的前提下完成 iOS 与 Android 分阶段发布，并保留可执行回滚路径。", completionCriteria: ["安全与质量门禁均形成可核对结论", "灰度监控、支持手册和回滚负责人已确认", "Go/No-Go 决定及未决风险已记录"], executionTips: ["商店审核耗时属于外部等待，不计入 EWD", "任何扩大灰度比例的决定均引用最新 SLO 证据"], dueAt: "9 月 8 日 18:00", plannedStartOn: "2026-08-25", plannedEndOn: "2026-09-08", labels: ["发布门禁", "高优先级"], iconName: "flag", iconTone: "red" }),
   task({ id: "platform-client-track", teamId: "platform", name: "收口双端候选版本", parentTaskId: "platform-mobile-release", ownerId: "顾言", participantIds: ["乔安", "唐澈"], status: "进行中", goal: "形成 iOS 与 Android 均可进入发布门禁的候选版本。", completionCriteria: ["双端版本号、构建号和变更范围可追溯", "阻断缺陷均有关闭或书面接受结论"], executionTips: ["该任务只整合双端结果，不重复计算叶子工时"], dueAt: "9 月 4 日", plannedStartOn: "2026-08-28", plannedEndOn: "2026-09-04", labels: ["客户端", "发布门禁"], iconName: "clipboard-check", iconTone: "purple" }),
   task({ id: "platform-service-track", teamId: "platform", name: "冻结服务端契约与运行保障", parentTaskId: "platform-mobile-release", ownerId: "程砚", participantIds: ["叶宁", "宋衡"], status: "进行中", goal: "冻结客户端依赖的接口语义并建立发布期间的运行保障。", completionCriteria: ["契约、兼容策略与告警边界均有受控版本"], executionTips: ["父任务不计 EWD，以下属叶子结果汇总"], dueAt: "9 月 5 日", plannedStartOn: "2026-08-26", plannedEndOn: "2026-09-05", labels: ["服务端", "可观测性"], iconName: "briefcase", iconTone: "blue" }),
-  task({ id: "platform-governance-track", teamId: "platform", name: "完成发布治理与支持准备", parentTaskId: "platform-mobile-release", ownerId: "周岚", participantIds: ["宋衡", "许悦"], status: "待审核", goal: "把安全门禁、支持响应和发布决定收敛为可执行方案。", completionCriteria: ["门禁结论和支持路径均可追溯到责任人"], executionTips: ["不把安全审核视为父子关系产生的默认依赖"], dueAt: "9 月 6 日", plannedStartOn: "2026-08-29", plannedEndOn: "2026-09-06", labels: ["发布门禁", "客户影响"], iconName: "file-check", iconTone: "green" }),
+  task({ id: "platform-governance-track", teamId: "platform", name: "完成发布治理与支持准备", parentTaskId: "platform-mobile-release", ownerId: "周岚", participantIds: ["宋衡", "许悦"], status: "进行中", goal: "把安全门禁、支持响应和发布决定收敛为可执行方案。", completionCriteria: ["门禁结论和支持路径均可追溯到责任人"], executionTips: ["不把安全审核视为父子关系产生的默认依赖"], dueAt: "9 月 6 日", plannedStartOn: "2026-08-29", plannedEndOn: "2026-09-06", labels: ["发布门禁", "客户影响"], iconName: "file-check", iconTone: "green" }),
   task({ id: "platform-api-contract", teamId: "platform", name: "冻结离线同步 API 契约", parentTaskId: "platform-service-track", ownerId: "程砚", participantIds: ["乔安", "唐澈"], status: "已完成", goal: "冻结批量同步、冲突响应和版本兼容语义。", completionCriteria: ["OpenAPI 版本已签发", "旧客户端回放无破坏性差异"], executionTips: ["对比 3.6、3.7 客户端请求样本"], dueAt: "8 月 29 日", plannedStartOn: "2026-08-25", plannedEndOn: "2026-08-29", labels: ["服务端", "契约"], iconName: "file-check", iconTone: "blue", minutes: 480 }),
   task({ id: "platform-ios-review", teamId: "platform", name: "完成 iOS 候选版审核材料", parentTaskId: "platform-client-track", ownerId: "乔安", participantIds: ["顾言"], dependsOnTaskIds: ["platform-api-contract"], status: "进行中", goal: "形成可提交 App Store 的 iOS 候选版本与隐私材料。", completionCriteria: ["回归矩阵通过且无 P0/P1", "隐私清单与 SDK 权限一致", "审核截图和说明已复核"], executionTips: ["记录审核退回属于外部等待"], dueAt: "9 月 3 日", plannedStartOn: "2026-08-29", plannedEndOn: "2026-09-03", labels: ["客户端", "iOS"], iconName: "sparkles", iconTone: "purple", minutes: 720 }),
   task({ id: "platform-android-staged", teamId: "platform", name: "验证 Android 分阶段发布与回滚", parentTaskId: "platform-client-track", ownerId: "唐澈", participantIds: ["顾言", "叶宁"], dependsOnTaskIds: ["platform-api-contract"], status: "进行中", goal: "验证重点机型、分阶段比例与一键回滚路径。", completionCriteria: ["重点机型矩阵通过", "5%→20% 灰度条件明确", "回滚演练留存证据"], executionTips: ["厂商推送到达时间不计入人类工时"], dueAt: "9 月 4 日", plannedStartOn: "2026-08-30", plannedEndOn: "2026-09-04", labels: ["客户端", "Android"], iconName: "list-todo", iconTone: "green", minutes: 600 }),
-  task({ id: "platform-observability-alerts", teamId: "platform", name: "配置同步链路 SLO 与灰度告警", parentTaskId: "platform-service-track", ownerId: "叶宁", participantIds: ["程砚"], dependsOnTaskIds: ["platform-api-contract"], status: "待审核", goal: "让灰度期间的错误率、积压和数据延迟可被及时发现并路由。", completionCriteria: ["告警覆盖错误率、队列积压与同步延迟", "阈值有历史基线和处置责任人", "测试告警已触达值班渠道"], executionTips: ["避免用单次峰值替代滚动窗口"], dueAt: "9 月 2 日", plannedStartOn: "2026-08-28", plannedEndOn: "2026-09-02", labels: ["可观测性", "SRE"], iconName: "chart", iconTone: "cyan", minutes: 420 }),
+  task({ id: "platform-observability-alerts", teamId: "platform", name: "配置同步链路 SLO 与灰度告警", parentTaskId: "platform-service-track", ownerId: "叶宁", participantIds: ["程砚"], dependsOnTaskIds: ["platform-api-contract"], status: "进行中", goal: "让灰度期间的错误率、积压和数据延迟可被及时发现并路由。", completionCriteria: ["告警覆盖错误率、队列积压与同步延迟", "阈值有历史基线和处置责任人", "测试告警已触达值班渠道"], executionTips: ["避免用单次峰值替代滚动窗口"], dueAt: "9 月 2 日", plannedStartOn: "2026-08-28", plannedEndOn: "2026-09-02", labels: ["可观测性", "SRE"], iconName: "chart", iconTone: "cyan", minutes: 420 }),
   task({ id: "platform-support-runbook", teamId: "platform", name: "更新同步故障支持手册", parentTaskId: "platform-governance-track", ownerId: "许悦", participantIds: ["叶宁", "乔安", "唐澈"], dependsOnTaskIds: ["platform-observability-alerts"], status: "待开始", goal: "让一线支持可识别版本、定位常见故障并按影响升级。", completionCriteria: ["四类高频故障均有可执行排查步骤", "升级路径、值班人与客户话术已确认", "晚班支持完成一次桌面演练"], executionTips: ["只引用已验证的诊断动作"], dueAt: "9 月 5 日", plannedStartOn: "2026-09-02", plannedEndOn: "2026-09-05", labels: ["客户影响", "支持准备"], iconName: "clipboard-check", iconTone: "amber", minutes: 360 }),
   task({ id: "platform-security-gate", teamId: "platform", name: "签发移动数据安全门禁结论", parentTaskId: "platform-governance-track", ownerId: "宋衡", participantIds: ["程砚", "乔安", "唐澈"], dependsOnTaskIds: ["platform-api-contract"], status: "已阻塞", goal: "确认令牌、离线缓存和第三方 SDK 权限符合发布边界。", completionCriteria: ["威胁模型覆盖离线缓存与令牌刷新", "高风险项关闭或有明确例外批准", "安全结论绑定候选版本"], executionTips: ["当前等待第三方 SDK 权限清单 v4，不把等待计入 EWD"], dueAt: "9 月 3 日 15:00", plannedStartOn: "2026-08-29", plannedEndOn: "2026-09-03", labels: ["安全门禁"], iconName: "file-check", iconTone: "red", minutes: 540 }),
-  task({ id: "platform-access-review", teamId: "platform", name: "季度管理员访问复核", ownerId: "宋衡", participantIds: ["周岚"], status: "待审核", goal: "核对生产管理员访问是否仍与岗位职责一致。", completionCriteria: ["全部高权限账号有保留或移除结论"], executionTips: ["与移动发布并行，不属于发布主任务范围"], dueAt: "9 月 10 日", plannedStartOn: "2026-09-01", plannedEndOn: "2026-09-10", labels: ["安全门禁"], iconName: "file-check", iconTone: "neutral", minutes: 300 }),
+  task({ id: "platform-access-review", teamId: "platform", name: "季度管理员访问复核", ownerId: "宋衡", participantIds: ["周岚"], status: "进行中", goal: "核对生产管理员访问是否仍与岗位职责一致。", completionCriteria: ["全部高权限账号有保留或移除结论"], executionTips: ["与移动发布并行，不属于发布主任务范围"], dueAt: "9 月 10 日", plannedStartOn: "2026-09-01", plannedEndOn: "2026-09-10", labels: ["安全门禁"], iconName: "file-check", iconTone: "neutral", minutes: 300 }),
   task({ id: "platform-design-token-cleanup", teamId: "platform", name: "清理旧版移动设计 Token", ownerId: "乔安", participantIds: ["唐澈"], status: "待开始", goal: "移除已废弃的颜色与间距 Token，减少双端样式漂移。", completionCriteria: ["无运行时引用且迁移说明已记录"], executionTips: ["不与 3.8.0 发布耦合"], dueAt: "9 月 18 日", plannedStartOn: "2026-09-09", plannedEndOn: "2026-09-18", labels: ["技术债"], iconName: "sparkles", iconTone: "neutral", minutes: 420 }),
 ];
 
@@ -153,7 +157,7 @@ const factoryNodes: WorkspaceNode[] = [
   task({ id: "factory-capacity-trial", teamId: "supply-operations", name: "执行 4 小时产能试跑", parentTaskId: "factory-production-track", ownerId: "罗骁", participantIds: ["赵妍", "贺青", "唐静"], dependsOnTaskIds: ["factory-line-validation", "factory-operator-training"], status: "已阻塞", goal: "验证连续生产节拍、良率、停线响应和换班稳定性。", completionCriteria: ["连续 4 小时试跑完成", "节拍与 FPY 达到门禁", "停线事件均有分类和处置"], executionTips: ["当前等待夜班关键岗位补训完成"], dueAt: "9 月 10 日", plannedStartOn: "2026-09-01", plannedEndOn: "2026-09-10", labels: ["产能"], iconName: "chart", iconTone: "amber", minutes: 780 }),
   task({ id: "factory-label-rework", teamId: "supply-operations", name: "完成 PVT 标签错版返工", parentTaskId: "factory-launch-track", ownerId: "冯维", participantIds: ["罗骁", "贺青"], dependsOnTaskIds: ["factory-packaging-readiness"], status: "待开始", goal: "隔离错版标签并完成 PVT 批次返工与数量核对。", completionCriteria: ["错版标签全部隔离销毁", "500 台返工后条码抽检通过", "返工记录绑定序列号范围"], executionTips: ["返工范围以隔离清单为准，不扩大到已核对批次"], dueAt: "9 月 9 日", plannedStartOn: "2026-09-06", plannedEndOn: "2026-09-09", labels: ["包装", "返工"], iconName: "flag", iconTone: "red", minutes: 480 }),
   task({ id: "factory-warranty-trace", teamId: "supply-operations", name: "建立首批量产保修件追溯方案", ownerId: "陈琛", participantIds: ["沈工", "贺青"], status: "待开始", goal: "让首批量产退货可追溯到关键物料和工艺批次。", completionCriteria: ["序列号、物料批次和工艺版本映射可查询"], executionTips: ["不属于 PVT 放行硬门禁"], dueAt: "9 月 25 日", plannedStartOn: "2026-09-16", plannedEndOn: "2026-09-25", labels: ["追溯"], iconName: "chart", iconTone: "neutral", minutes: 600 }),
-  task({ id: "factory-october-demand-freeze", teamId: "supply-operations", name: "冻结 10 月滚动需求与长料采购", ownerId: "陈琛", participantIds: ["周岚"], status: "待审核", goal: "基于销售预测冻结长交期物料的采购边界。", completionCriteria: ["需求版本和采购承诺已确认"], executionTips: ["需求变更通过下一版本调整，不覆盖本次确认"], dueAt: "9 月 12 日", plannedStartOn: "2026-09-01", plannedEndOn: "2026-09-12", labels: ["物料齐套"], iconName: "list-todo", iconTone: "blue", minutes: 300 }),
+  task({ id: "factory-october-demand-freeze", teamId: "supply-operations", name: "冻结 10 月滚动需求与长料采购", ownerId: "陈琛", participantIds: ["周岚"], status: "进行中", goal: "基于销售预测冻结长交期物料的采购边界。", completionCriteria: ["需求版本和采购承诺已确认"], executionTips: ["需求变更通过下一版本调整，不覆盖本次确认"], dueAt: "9 月 12 日", plannedStartOn: "2026-09-01", plannedEndOn: "2026-09-12", labels: ["物料齐套"], iconName: "list-todo", iconTone: "blue", minutes: 300 }),
 ];
 
 const serviceNodes: WorkspaceNode[] = [
@@ -165,11 +169,11 @@ const serviceNodes: WorkspaceNode[] = [
   task({ id: "service-traffic-mitigation", teamId: "customer-success", name: "执行同步流量削峰与租户隔离", parentTaskId: "service-containment-track", ownerId: "沈闻", participantIds: ["薛航"], status: "已完成", goal: "限制故障扩散并恢复高优先级租户写入。", completionCriteria: ["队列积压停止增长", "高优先级租户写入恢复", "限流配置与回退条件已记录"], executionTips: ["保持故障时序指标原始快照"], dueAt: "8 月 30 日 11:30", plannedStartOn: "2026-08-30", plannedEndOn: "2026-08-30", labels: ["事件响应", "服务恢复"], iconName: "flag", iconTone: "green", minutes: 240 }),
   task({ id: "service-data-repair", teamId: "customer-success", name: "修复受影响同步状态记录", parentTaskId: "service-containment-track", ownerId: "白露", participantIds: ["沈闻", "薛航"], dependsOnTaskIds: ["service-traffic-mitigation"], status: "进行中", goal: "按可回滚批次修复受影响记录并验证业务一致性。", completionCriteria: ["受影响记录范围已冻结", "每批修复前后校验可追溯", "分层抽样无新增不一致"], executionTips: ["脚本运行时间不计 EWD，人类复核按批次记录"], dueAt: "9 月 1 日 20:00", plannedStartOn: "2026-08-30", plannedEndOn: "2026-09-01", labels: ["数据修复", "可回滚"], iconName: "chart", iconTone: "cyan", minutes: 900 }),
   task({ id: "service-customer-comms", teamId: "customer-success", name: "完成受影响客户分层沟通", parentTaskId: "service-customer-track", ownerId: "陈沁", participantIds: ["周岚", "周牧"], dependsOnTaskIds: ["service-traffic-mitigation"], status: "进行中", goal: "向不同影响等级客户提供一致、及时且不过度承诺的更新。", completionCriteria: ["状态页与一对一话术事实一致", "重点客户已确认影响和临时方案", "所有承诺均有责任人与时间"], executionTips: ["根因未知时明确标注调查中"], dueAt: "9 月 2 日 12:00", plannedStartOn: "2026-08-30", plannedEndOn: "2026-09-02", labels: ["客户沟通", "客户影响"], iconName: "briefcase", iconTone: "blue", minutes: 600 }),
-  task({ id: "service-root-cause", teamId: "customer-success", name: "签发队列竞态根因分析", parentTaskId: "service-prevention-track", ownerId: "薛航", participantIds: ["沈闻", "白露"], dependsOnTaskIds: ["service-traffic-mitigation"], status: "待审核", goal: "用时序、代码路径和复现实验确认根因及触发条件。", completionCriteria: ["根因可稳定复现", "替代假设有排除证据", "修复与监控项对应具体失效模式"], executionTips: ["讨论发言不替代签发的 RCA 文档"], dueAt: "9 月 3 日", plannedStartOn: "2026-08-31", plannedEndOn: "2026-09-03", labels: ["根因分析"], iconName: "file-check", iconTone: "purple", minutes: 720 }),
+  task({ id: "service-root-cause", teamId: "customer-success", name: "签发队列竞态根因分析", parentTaskId: "service-prevention-track", ownerId: "薛航", participantIds: ["沈闻", "白露"], dependsOnTaskIds: ["service-traffic-mitigation"], status: "进行中", goal: "用时序、代码路径和复现实验确认根因及触发条件。", completionCriteria: ["根因可稳定复现", "替代假设有排除证据", "修复与监控项对应具体失效模式"], executionTips: ["讨论发言不替代签发的 RCA 文档"], dueAt: "9 月 3 日", plannedStartOn: "2026-08-31", plannedEndOn: "2026-09-03", labels: ["根因分析"], iconName: "file-check", iconTone: "purple", minutes: 720 }),
   task({ id: "service-compensation-review", teamId: "customer-success", name: "核对 SLA 与补偿适用范围", parentTaskId: "service-customer-track", ownerId: "江予", participantIds: ["陈沁", "周牧"], dependsOnTaskIds: ["service-data-repair", "service-customer-comms"], status: "已阻塞", goal: "按正式影响时长和合同分层形成补偿建议。", completionCriteria: ["客户、套餐、影响窗口和条款匹配", "例外客户有审批路径", "建议未被表述为已批准"], executionTips: ["当前等待数据修复后的最终影响清单"], dueAt: "9 月 4 日", plannedStartOn: "2026-09-01", plannedEndOn: "2026-09-04", labels: ["SLA"], iconName: "list-todo", iconTone: "amber", minutes: 480 }),
   task({ id: "service-runbook-update", teamId: "customer-success", name: "更新同步积压处置手册", parentTaskId: "service-prevention-track", ownerId: "陆遥", participantIds: ["沈闻", "薛航"], dependsOnTaskIds: ["service-root-cause"], status: "待开始", goal: "把确认的触发条件、指标与处置动作转为一线可执行手册。", completionCriteria: ["决策树覆盖发现、遏制、恢复和升级", "每个动作有可观测结果和停止条件", "支持与值班团队完成桌面演练"], executionTips: ["仅纳入已经验证的操作"], dueAt: "9 月 6 日", plannedStartOn: "2026-09-03", plannedEndOn: "2026-09-06", labels: ["防复发", "支持准备"], iconName: "clipboard-check", iconTone: "green", minutes: 540 }),
   task({ id: "service-quarterly-drill", teamId: "customer-success", name: "组织季度企业故障桌面演练", ownerId: "陆遥", participantIds: ["周岚", "沈闻", "陈沁"], status: "待开始", goal: "验证跨团队事件角色、升级和客户沟通路径。", completionCriteria: ["完成演练并记录未通过检查项"], executionTips: ["独立于本次事件改进项"], dueAt: "9 月 20 日", plannedStartOn: "2026-09-12", plannedEndOn: "2026-09-20", labels: ["事件响应"], iconName: "clipboard-check", iconTone: "neutral", minutes: 360 }),
-  task({ id: "service-enterprise-sla-review", teamId: "customer-success", name: "复核年度企业版 SLA 模板", ownerId: "江予", participantIds: ["周牧", "陈沁"], status: "待审核", goal: "核对新合同模板中的可用性定义、排除项和补偿上限。", completionCriteria: ["商业、合规和客户成功意见已收口"], executionTips: ["不回写已生效客户合同"], dueAt: "9 月 16 日", plannedStartOn: "2026-09-01", plannedEndOn: "2026-09-16", labels: ["SLA"], iconName: "file-check", iconTone: "neutral", minutes: 420 }),
+  task({ id: "service-enterprise-sla-review", teamId: "customer-success", name: "复核年度企业版 SLA 模板", ownerId: "江予", participantIds: ["周牧", "陈沁"], status: "进行中", goal: "核对新合同模板中的可用性定义、排除项和补偿上限。", completionCriteria: ["商业、合规和客户成功意见已收口"], executionTips: ["不回写已生效客户合同"], dueAt: "9 月 16 日", plannedStartOn: "2026-09-01", plannedEndOn: "2026-09-16", labels: ["SLA"], iconName: "file-check", iconTone: "neutral", minutes: 420 }),
 ];
 
 const tag = (id: string, name: string, icon: TagIconName, color: TagColorName): TagDefinition => ({ id, name, icon, color });
@@ -210,25 +214,13 @@ export const teamWorkspaceExpansionNodes: TaskNode[] = [
   ...customerSuccessAdditionNodes,
 ];
 
-/** Detail EWD inherits the top-level task goal; align synthetic Mock signatures to that same scope. */
-const alignMockEffortScopes = (nodes: readonly WorkspaceNode[]): WorkspaceNode[] => {
-  const tasks = nodes.filter((node): node is TaskNode => node.kind === "task");
-  const taskById = new Map(tasks.map((item) => [item.id, item]));
-  const inheritedGoal = (task: TaskNode) => {
-    const seen = new Set<string>();
-    let current = task;
-    while (current.parentTaskId && !seen.has(current.id)) {
-      seen.add(current.id);
-      const parent = taskById.get(current.parentTaskId);
-      if (!parent) break;
-      current = parent;
-    }
-    return current.goal ?? "";
-  };
-  return nodes.map((node) => {
+/** Keep authored mock estimates aligned with the same definition used by live EWD. */
+const alignMockEffortScopes = (nodes: WorkspaceNode[]): WorkspaceNode[] => {
+  return nodes.map((input) => {
+    const node = input.kind === "task" ? withProgressDemoCreation(input, nodes) : input;
     if (node.kind !== "task" || node.effortEstimate?.basis !== "mock") return node;
     const scopeKey = getEffortScopeKey({
-      goal: inheritedGoal(node),
+      goal: getTaskDefinitionGoal(nodes, node),
       completionCriteria: node.completionCriteria,
       executionTips: node.executionTips,
     }, node.effortEstimate.workMethod);
@@ -239,17 +231,17 @@ const alignMockEffortScopes = (nodes: readonly WorkspaceNode[]): WorkspaceNode[]
 };
 
 export const teamWorkspaceScenarios: TeamWorkspaceScenario[] = [
-  { id: "creator-commerce", name: "达人带货运营团队", industry: "内容电商", mainTaskId: creatorCommerceMainTaskId, members: creatorCommerceMembers, nodes: alignMockEffortScopes([...creatorNodes, ...creatorCommerceAdditionNodes, ...unassignedTaskFixtures]), asOf: "2026-09-02T18:30:00+08:00", coverage: "达人合作、内容、直播、商品、投流、数据、合规、首发与大促项目的本地合成记录；达人池治理历史补充至 9 月 2 日。", missingSources: "不含达人私聊、外部投放平台和线下沟通。", source: "synthetic-fixture" },
+  { id: "creator-commerce", name: "达人带货运营团队", industry: "内容电商", mainTaskId: creatorCommerceMainTaskId, members: creatorCommerceMembers, nodes: alignMockEffortScopes([...creatorNodes, ...creatorCommerceAdditionNodes, ...unassignedTaskFixtures, ...residentDeletionDemoTasks]), asOf: "2026-09-02T18:30:00+08:00", coverage: "达人合作、内容、直播、商品、投流、数据、合规、首发与大促项目的本地合成记录；达人池治理历史补充至 9 月 2 日。", missingSources: "不含达人私聊、外部投放平台和线下沟通。", source: "synthetic-fixture" },
   { id: "platform", name: "协作平台团队", industry: "企业 SaaS", mainTaskId: "platform-mobile-release", members: platformMembers, nodes: alignMockEffortScopes([...platformNodes, ...platformAdditionNodes]), asOf: "2026-09-01T10:10:00+08:00", coverage: "移动发布、身份目录、审计导出、权限治理、API、安全、SRE、质量与客户支持的本地合成记录。", missingSources: "不含应用商店后台实时状态和生产遥测正文。", source: "synthetic-fixture" },
   { id: "supply-operations", name: "智能硬件试产团队", industry: "制造与供应链", mainTaskId: "factory-pilot-ramp", members: supplyOperationsMembers, nodes: alignMockEffortScopes([...factoryNodes, ...supplyOperationsAdditionNodes]), asOf: "2026-09-01T08:40:00+08:00", coverage: "供应商质量、试产、产线、追溯、包装、培训、物料与量产爬坡项目的本地合成记录。", missingSources: "不含 MES 实时节拍、供应商门户和实验室原始仪器数据。", source: "synthetic-fixture" },
   { id: "customer-success", name: "企业客户成功团队", industry: "B2B 客户运营", mainTaskId: "service-incident-recovery", members: customerSuccessMembers, nodes: alignMockEffortScopes([...serviceNodes, ...customerSuccessAdditionNodes]), asOf: "2026-09-01T11:05:00+08:00", coverage: "重大事件、数据修复、客户沟通、续约、迁移、健康度治理、SLA 与防复发的本地合成记录。", missingSources: "不含生产日志正文、客户邮件和正式合同附件。", source: "synthetic-fixture" },
 ];
 
 const scenarioById = new Map(teamWorkspaceScenarios.map((scenario) => [scenario.id, scenario]));
-export const allTeamWorkspaceNodes: WorkspaceNode[] = [
+export const allTeamWorkspaceNodes: WorkspaceNode[] = applyCriterionReviewMocks([
   { id: workspaceRootId, kind: "folder", name: "任务", parentId: null, teamId: "__all__", updatedAt: "刚刚" },
   ...teamWorkspaceScenarios.flatMap((scenario) => scenario.nodes),
-];
+]);
 
 export function getTeamWorkspaceScenario(teamId: string): TeamWorkspaceScenario | undefined {
   return scenarioById.get(teamId as TeamId);

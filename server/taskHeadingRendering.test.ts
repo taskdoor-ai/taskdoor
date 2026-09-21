@@ -21,41 +21,26 @@ const series: TaskBurnUpSeries = {
   ],
 };
 
-test("小型燃起图显示范围与已验收 EWD 双线，并提供可展开的数据表", async () => {
+test("小型燃起图保留工作量双线与进度，不再展开明细表", async () => {
   const html = await renderTrend(series);
   assert.match(html, /完成进度/);
   assert.match(html, /燃起图/);
-  assert.match(html, /已验收/);
-  assert.match(html, /范围/);
-  assert.doesNotMatch(html, /EWD · h/);
   assert.match(html, /role="progressbar"/);
   assert.match(html, /aria-valuenow="10"/);
   assert.match(html, /task-completion-progress-value">10%/);
   assert.match(html, /task-burnup-scope/);
   assert.match(html, /task-burnup-completed/);
-  assert.match(html, /<details/);
-  assert.match(html, /<table/);
-  assert.match(html, /2026-08-25/);
-  assert.match(html, /2026-08-31/);
-  assert.doesNotMatch(html, /50%|预测|任务完成率/);
+  assert.doesNotMatch(html, /查看数据|计算明细|<table|<details/);
 });
 
-test("燃起图以新增工作量和完成工作量解释双线，工作量单位和验收口径留在数据详情", async () => {
+test("移除明细后燃起图节点仍可读取日期和人天数值", async () => {
   const html = await renderTrend(series);
-  const visibleChart = html.slice(html.indexOf('class="task-burnup-visual"'), html.indexOf('<details class="task-burnup-details"'));
-  assert.match(visibleChart, /task-burnup-heading"><span>燃起图<\/span><\/div>/);
-  assert.match(visibleChart, /task-burnup-legend-scope[^>]*>新增工作量/);
-  assert.match(visibleChart, /task-burnup-legend-completed[^>]*>完成工作量/);
-  assert.match(visibleChart, /虚线为新增工作量，实线为完成工作量/);
-  assert.doesNotMatch(visibleChart, /当前总工作量|已完成工作量|新增任务|完成任务/);
-  assert.doesNotMatch(visibleChart, /EWD|工时|小时|\bh\b/);
-  const details = html.slice(html.indexOf('<details class="task-burnup-details"'));
-  assert.match(details, /按 EWD 加权/);
-  assert.match(details, /完成工作量以验收为准/);
-  assert.match(details, /不代表实际耗时/);
-  assert.match(details, /单位：人天/);
-  assert.match(details, /<th scope="col">新增工作量<\/th><th scope="col">完成工作量<\/th>/);
-  assert.match(details, /<td>2\.5<\/td><td>0\.25<\/td>/, "仍使用现有人天读数，不改成任务个数");
+  const chart = html.slice(html.indexOf('class="task-burnup-visual"'));
+  assert.match(chart, /task-burnup-legend-scope[^>]*>总工作量 <strong>2\.5<\/strong>/);
+  assert.match(chart, /task-burnup-legend-completed[^>]*>完成工作量/);
+  assert.match(chart, /aria-label="2026\/08\/31，总工作量 2\.5 人天"/);
+  assert.match(chart, /aria-label="2026\/08\/31，完成量 0\.25 人天"/);
+  assert.doesNotMatch(chart, /下方数据表|task-burnup-data/);
 });
 
 test("燃起图两项图例固定同一行，文字和线型标记不被压缩换行", () => {
@@ -92,7 +77,7 @@ test("空数据不绘制装饰曲线，单点保留读数并提示历史不足",
   assert.doesNotMatch(emptyChart, /<svg|<path|0%/);
   const single = await renderTrend({ ...series, points: [series.points[1]] });
   assert.match(single, /历史不足/);
-  assert.match(single, /已验收/);
+  assert.match(single, /完成量 0\.25 人天/);
   const singleChart = single.slice(single.indexOf('class="task-burnup-visual"'));
   assert.match(singleChart, /<circle/);
   assert.doesNotMatch(singleChart, /<path/);
@@ -109,24 +94,23 @@ test("单点仍披露缺估，历史缺估与最新缺估分别说明", async ()
   assert.doesNotMatch(recovered, /估算不完整/);
 });
 
-test("时间戳读数统一为上海时区，并区分同一天的不同时刻", async () => {
+test("节点时间戳读数统一为上海时区，历史原始时间保持不变", async () => {
   const html = await renderTrend({ ...series, points: [
     { ...series.points[0], at: "2026-08-25T20:00:00Z" },
     { ...series.points[1], at: "2026-08-26T08:00:00Z" },
   ] });
-  assert.match(html, /2026\/08\/26 04:00:00/);
   assert.match(html, /2026\/08\/26 16:00:00/);
-  assert.match(html, /北京时间/);
+  assert.doesNotMatch(html, /查看数据|<table/);
 });
 
 test("缺失估算和无效数据明确呈现，未知值不当成零", async () => {
   const partial = await renderTrend({ ...series, points: [series.points[0], { ...series.points[1], scopeHours: null, estimatedLeafCount: 1 }] });
   assert.match(partial, /估算不完整/);
-  assert.match(partial, /未知/);
+  assert.match(partial, /已估算 1\/2 项/);
   assert.doesNotMatch(partial, /\d+%/);
   const invalid = await renderTrend({ ...series, points: [{ ...series.points[0], scopeHours: -1 }] });
   assert.match(invalid, /数据待核对/);
-  assert.doesNotMatch(invalid, /<svg|<path/);
+  assert.doesNotMatch(invalid.slice(invalid.indexOf('class="task-burnup-visual"')), /<svg|<path/);
 });
 
 test("极限完成度的可访问数值和条宽不被展示精度取整成零或一百", async () => {

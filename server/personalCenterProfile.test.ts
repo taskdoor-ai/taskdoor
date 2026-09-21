@@ -69,7 +69,7 @@ test("personal information is a compact avatar, name, and editable email layout"
   assert.match(panelSource, /avatarUrl=\{draft\.avatarDataUrl\}/);
   assert.match(panelSource, /<span>姓名<\/span>[\s\S]*?<Input\b/);
   assert.match(panelSource, /<span>邮箱<\/span>[\s\S]*?<Input[^>]*aria-label="邮箱"[^>]*type="email"[^>]*value=\{draft\.email\}/);
-  assert.match(dialogSource, /applyPersonalProfileDraft\(state, draft, "周岚"\)/);
+  assert.match(dialogSource, /applyPersonalProfileDraft\(state, draft, currentWorkspaceUserId\(\)\)/);
   assert.doesNotMatch(panelSource, />工作身份<|>时区<|>关于我</);
   assert.doesNotMatch(panelSource, /personal-profile-email|draft\.title|draft\.timezone|draft\.bio/);
 });

@@ -1,3 +1,5 @@
+import { useGlobalUi } from "../i18n/globalUi";
+import { useDetailCopy } from "../i18n/detailMessages";
 import { Check, Plus, Settings2 } from "lucide-react";
 import { useRef, useState } from "react";
 import type { TagDefinition } from "../data/tagGroups";
@@ -12,6 +14,8 @@ type Props = {
 };
 
 export function TagPicker({ onChange, selected, tags }: Props) {
+  const ui = useGlobalUi();
+  const d = useDetailCopy();
   const personalTags = usePersonalTags();
   const availableTags = personalTags?.tags ?? tags;
   const [open, setOpen] = useState(false);
@@ -22,12 +26,12 @@ export function TagPicker({ onChange, selected, tags }: Props) {
   };
 
   return <Popover open={open} onOpenChange={setOpen}>
-    <PopoverTrigger aria-label="添加标签" className="tag-picker-trigger" ref={trigger} type="button">
-      <Plus aria-hidden="true" /><span>添加</span>
+    <PopoverTrigger aria-label={d('addTags')} className="tag-picker-trigger" ref={trigger} type="button">
+      <Plus aria-hidden="true" /><span>{d('append')}</span>
     </PopoverTrigger>
-    <PopoverContent aria-label="选择标签" className="tag-picker-popover">
-      <div aria-label="可选标签" className="tag-picker-options" role="group">
-        {!availableTags.length && <p className="tag-picker-empty">还没有个人标签，可在「我的标签」中新建。</p>}
+    <PopoverContent aria-label={ui("选择标签")} className="tag-picker-popover">
+      <div aria-label={ui("可选标签")} className="tag-picker-options" role="group">
+        {!availableTags.length && <p className="tag-picker-empty">{ui("还没有个人标签，可在「我的标签」中新建。")}</p>}
         {availableTags.map((tag) => {
           const checked = selectedNames.has(tag.name);
           return <button aria-pressed={checked} className="tag-picker-option" key={tag.id} onClick={() => toggleTag(tag.name)} type="button">
@@ -36,7 +40,7 @@ export function TagPicker({ onChange, selected, tags }: Props) {
           </button>;
         })}
       </div>
-      {personalTags && <footer className="tag-picker-footer"><button className="tag-picker-manage" onClick={() => { setOpen(false); personalTags.onManage(trigger.current); }} type="button"><Settings2 aria-hidden="true" /><span>我的标签</span></button></footer>}
+      {personalTags && <footer className="tag-picker-footer"><button className="tag-picker-manage" onClick={() => { setOpen(false); personalTags.onManage(trigger.current); }} type="button"><Settings2 aria-hidden="true" /><span>{ui("我的标签")}</span></button></footer>}
     </PopoverContent>
   </Popover>;
 }

@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { beforeEach } from "node:test";
+
+// Historical fixtures run at their authored creation date.
+beforeEach(t => t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") }));
 import { creatorCommerceMembers } from "../src/data/creatorCommerceScenario.ts";
 import { workspaceNodes } from "../src/data/workspaceNodes.ts";
 import { taskCreationScenarios } from "../src/data/taskCreationScenarios.ts";
@@ -23,14 +26,15 @@ test("直接打开的空白任务不预填示例，补全任务字段即可提�
   assert.equal(toTaskPlanDraft(form).mainTask.title, "确认发布范围");
 });
 
-test("六个场景变成可编辑表单，复杂项目保留七项子任务且每项有完成标准", () => {
+test("创建场景变成可编辑表单，一级与多层级项目保留各项完成标准", () => {
   for (const scenario of taskCreationScenarios) {
     const form = createCreationForm(scenario.prompt, context, scenario.id);
     assert.ok(form.mainTask.clientId);
     assert.ok(form.mainTask.title);
-    if (scenario.id === "complex-plan") {
-      assert.equal(form.subtasks.length, 7);
-      assert.equal(new Set(form.subtasks.map(t => t.clientId)).size, 7);
+    if (scenario.id === "complex-plan" || scenario.id === "nested-plan") {
+      const count = scenario.id === "nested-plan" ? 9 : 7;
+      assert.equal(form.subtasks.length, count);
+      assert.equal(new Set(form.subtasks.map(t => t.clientId)).size, count);
       for (const task of [form.mainTask, ...form.subtasks]) assert.ok(task.completionCriteria.some(c => c.trim()));
       assert.equal(validateCreationForm(form, context.members), null);
     } else assert.equal(form.subtasks.length, 0);
@@ -83,10 +87,10 @@ test("拒绝自环、循环、悬空引用、空完成标准及失效的候选�
   assert.match(validateCreationForm(form, context.members)!, /负责人/);
 });
 
-test("关联已有主任务继承目标，非法日期不可提交", () => {
+test("关联已有主任务保留草稿目标，非法日期不可提交", () => {
   const form = createCreationForm("", context, "existing-parent");
   form.decision = "attach";
-  assert.equal(toTaskPlanDraft(form).mainTask.goal, form.candidate?.goal);
+  assert.equal(toTaskPlanDraft(form).mainTask.goal, form.mainTask.goal);
   form.mainTask.endDate = "2026-02-30";
   assert.match(validateCreationForm(form, context.members)!, /日期/);
 });

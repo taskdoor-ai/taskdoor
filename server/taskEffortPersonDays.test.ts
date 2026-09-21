@@ -24,3 +24,12 @@ test("人天输入精确保存为分钟，并继续兼容明确的小时输入",
   assert.throws(() => effort.parseEffortPersonDays("0.001"));
   assert.equal(effort.parseEffortHours("40"), 2400);
 });
+
+test("英文工时保留精度、未知值和单复数，切回中文不改变数据", () => {
+  assert.equal(effort.formatEffortPersonDays(2880, "en"), "6 person-days");
+  assert.equal(effort.formatEffortPersonDays(480, "en"), "1 person-day");
+  assert.equal(effort.formatEffortPersonDays(1, "en"), "<0.01 person-days");
+  assert.equal(effort.formatEffortPersonDays(0, "en"), "0 person-days");
+  assert.equal(effort.formatEffortPersonDays(null, "en"), "Not estimated");
+  assert.equal(effort.formatEffortPersonDays(2880, "zh-CN"), "6 人天");
+});

@@ -22,7 +22,7 @@ test("profile preview trigger forwards Base UI attributes to the real avatar ele
     profilePreviewFocusable: false,
   }));
 
-  assert.match(html, /aria-label="查看陈默的人员信息"/);
+  assert.match(html, /aria-label="View 陈默’s profile"/);
 });
 
 test("a rendered person name is also a profile preview trigger", () => {
@@ -32,7 +32,7 @@ test("a rendered person name is also a profile preview trigger", () => {
   }));
 
   assert.match(html, /class="person-name-trigger"/);
-  assert.match(html, /aria-label="查看陈默的人员信息"/);
+  assert.match(html, /aria-label="View 陈默’s profile"/);
   assert.match(html, />陈默<\/span>/);
 });
 
@@ -41,4 +41,21 @@ test("a non-focusable avatar preview never binds itself to the surrounding canva
 
   assert.doesNotMatch(source, /closest<HTMLElement>\("button, a\[href\], \[tabindex\]"\)/);
   assert.doesNotMatch(source, /focusOwner\.addEventListener\("focus"/);
+});
+
+test("正式任务成员头像不显示已接受角标，团队待加入提示仍保留", () => {
+  const accepted = renderToStaticMarkup(createElement(PersonAvatar, {
+    invitationStatus: "accepted",
+    name: profile.name,
+    profile,
+  }));
+  const pending = renderToStaticMarkup(createElement(PersonAvatar, {
+    invitationStatus: "pending",
+    name: "待加入成员",
+    showProfilePreview: false,
+  }));
+
+  assert.doesNotMatch(accepted, /person-avatar-invitation-status|邀请已接受/);
+  assert.match(pending, /person-avatar-invitation-status pending/);
+  assert.match(pending, /Invitation pending/);
 });

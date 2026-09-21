@@ -124,38 +124,49 @@ test("人工确认后仍是参考估计，空列表与未知不伪装成0", asyn
 test("字段显示紧凑EWD入口，无修改权限仍可查看依据", async () => {
   const { TaskEffortField } = await components();
   const html = renderToStaticMarkup(createElement(TaskEffortField, { task, label: "子任务 1" }));
-  assert.match(visible(html), /预估投入.*约 0\.19 人天/);
+  assert.match(visible(html), /预计投入.*约 0\.19 人天/);
   assert.doesNotMatch(visible(html), /子任务 1|EWD|预计总投入/);
-  assert.equal((visible(html).match(/预估投入/g) ?? []).length, 1);
+  assert.equal((visible(html).match(/预计投入/g) ?? []).length, 1);
   assert.match(html, /aria-label="查看子任务 1预估投入"/);
   assert.match(html, /aria-haspopup="dialog"/);
   assert.doesNotMatch(html, /disabled=""/);
   const editable = renderToStaticMarkup(createElement(TaskEffortField, { task, label: "子任务 2", onChange: () => undefined }));
-  assert.match(editable, /aria-label="编辑子任务 2预估投入"/);
+  assert.match(editable, /aria-label="子任务 2预计人天"/);
+  assert.match(editable, /role="spinbutton"/);
+  assert.match(editable, /value="0.1875"/);
+  assert.doesNotMatch(editable, /aria-haspopup="dialog"|确认估算|仅供参考|待确认/);
 });
 
-test("编辑遵循签名核对、折叠保留和异步防重入边界", async () => {
-  await components();
-  const source = readFileSync(new URL("../src/components/TaskEffortField.tsx", import.meta.url), "utf8");
-  assert.match(source, /getTaskEffortEditSignature/);
-  assert.match(source, /createManualEffortEstimate/);
-  assert.match(source, /savingRef\.current/);
-  assert.match(source, /onDirtyChange/);
-  assert.match(source, /未保存/);
-  assert.match(source, /放弃修改，载入最新/);
-  assert.match(source, /设为待估算/);
-  assert.match(source, /readOnly/);
-  assert.match(source, /minutes % 3 !== 0 \? "minutes" : "hours"/);
-  assert.match(source, /aria-label="预估投入单位"/);
-  assert.match(source, /当前分钟值无法精确换算为有限小数小时/);
-  assert.match(source, /预估投入（EWD）/);
-  assert.doesNotMatch(source, /示例数据（Mock），并非本次真实 AI 估算/);
-  assert.match(source, /确认后也不代表准确值/);
-  assert.match(source, /summary\.estimatedCount/);
-  assert.match(source, /summary\.confirmedCount/);
-  assert.doesNotMatch(source, /import[^\n]*\.css/);
-  const css = readFileSync(new URL("../src/styles/task-effort.css", import.meta.url), "utf8");
-  assert.match(css, /--ad-control-touch-min/);
-  assert.match(css, /overflow-y:\s*auto/);
-  assert.match(css, /100dvh/);
+test("人天计数器保留未知与零的区别，禁用时不能加减", async () => {
+  const { TaskEffortField } = await components();
+  const unknown = renderToStaticMarkup(createElement(TaskEffortField, { task: scope, label: "未知任务", onChange: () => undefined }));
+  assert.match(unknown, /placeholder="待估算"/);
+  assert.match(unknown, /value=""/);
+  const zero = renderToStaticMarkup(createElement(TaskEffortField, { task: { ...task, effortEstimate: { ...estimate, minutes: 0 } }, label: "零投入", onChange: () => undefined }));
+  assert.match(zero, /value="0"/);
+  const locked = renderToStaticMarkup(createElement(TaskEffortField, { task, label: "锁定任务", disabled: true, onChange: () => undefined }));
+  assert.equal((locked.match(/<(?:input|button)\b[^>]*\sdisabled=""/g) ?? []).length, 3);
+});
+
+test("有子任务的总投入只读，只有一个子任务也不能编辑", async () => {
+  const { TaskEffortEditor } = await import("../src/components/TaskEffortEditor.tsx");
+  const tasks = [{ ...task, id: "one" }, { ...task, id: "two" }];
+  for (const items of [tasks, tasks.slice(0, 1)]) {
+    const html = renderToStaticMarkup(createElement(TaskEffortEditor, { tasks: items, hasSubtasks: true, label: "主任务", onChange: () => assert.fail("合计不能触发修改") }));
+    assert.match(visible(html), /子任务合计/);
+    assert.match(visible(html), items.length === 2 ? /0\.38 人天/ : /0\.19 人天/);
+    assert.doesNotMatch(html, /<input|<button|spinbutton|aria-haspopup="dialog"/);
+  }
+});
+
+test("无子任务时保留计数器，合计缺少估算时不伪装成零", async () => {
+  const { TaskEffortEditor } = await import("../src/components/TaskEffortEditor.tsx");
+  const html = renderToStaticMarkup(createElement(TaskEffortEditor, { tasks: [{ ...task, id: "one" }], hasSubtasks: false, onChange: () => undefined }));
+  assert.match(html, /role="spinbutton"/);
+  assert.doesNotMatch(html, /子任务合计/);
+  const partial = visible(renderToStaticMarkup(createElement(TaskEffortEditor, { tasks: [{ ...task, id: "one" }, { ...scope, id: "unknown" }], hasSubtasks: true })));
+  assert.match(partial, /已估部分 0\.19 人天.*子任务合计 · 待补全/);
+  const unknown = visible(renderToStaticMarkup(createElement(TaskEffortEditor, { tasks: [{ ...scope, id: "unknown" }], hasSubtasks: true })));
+  assert.match(unknown, /待估算.*子任务合计 · 待补全/);
+  assert.doesNotMatch(unknown, /0 人天/);
 });

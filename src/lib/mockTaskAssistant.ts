@@ -119,7 +119,7 @@ const creatorCommerceContext = (request: TaskAssistantRequest) => {
 const targetDateFor = (request: TaskAssistantRequest) => {
   const year = Number(request.currentDate.slice(0, 4));
   const thisYear = `${year}-09-15`;
-  return thisYear >= addDays(request.currentDate, 4) ? thisYear : `${year + 1}-09-15`;
+  return thisYear >= request.currentDate ? thisYear : "";
 };
 
 const acceptSpecialistAssignment = (
@@ -175,7 +175,7 @@ const createCreatorCommerceDraft = (request: TaskAssistantRequest) => {
         goal: seed.goal,
         iconName: seed.iconName,
         iconTone: seed.iconTone,
-        startDate: addDays(request.currentDate, Math.min(index, 4)),
+        startDate: targetDate ? [addDays(request.currentDate, Math.min(index, 4)), targetDate].sort()[0] : "",
         endDate: targetDate,
         labels: labelsAvailableIn(request, [seed.label]),
         ownerId: assignment.ownerId,

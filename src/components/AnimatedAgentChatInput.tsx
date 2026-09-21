@@ -1,3 +1,4 @@
+import { useGlobalUi } from "../i18n/globalUi";
 import { ArrowUp, Paperclip, Sparkles, Square, X } from "lucide-react";
 import { memo, useCallback, useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent, type RefObject } from "react";
 
@@ -24,7 +25,7 @@ type LocalAttachment = { id: string; name: string };
 
 export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
   actionRef,
-  ariaLabel = "给 AgentDoor 发消息",
+  ariaLabel = "给 TaskDoor 发消息",
   autoFocus = true,
   allowAttachments = true,
   clearOnSend = true,
@@ -34,12 +35,13 @@ export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
   onChange,
   onSend,
   onStop,
-  placeholder = "告诉 AgentDoor 你想推进什么…",
+  placeholder = "告诉 TaskDoor 你想推进什么…",
   status = "ready",
   suggestions = [],
   sendLabel = "发送",
   value: controlledValue,
 }: AnimatedAgentChatInputProps) {
+  const ui = useGlobalUi();
   const [attachments, setAttachments] = useState<LocalAttachment[]>([]);
   const [internalValue, setInternalValue] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
@@ -93,17 +95,17 @@ export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
 
   return <div className="animated-agent-chat" data-state={isAnalyzing ? "analyzing" : disabled ? "disabled" : "ready"}>
     <div className="animated-agent-chat-shell" onClick={() => textareaRef.current?.focus()}>
-      {allowAttachments && attachments.length > 0 && <div className="animated-agent-attachments">{attachments.map((attachment) => <span key={attachment.id}><Paperclip aria-hidden="true" /><em>{attachment.name}</em><button aria-label={`移除 ${attachment.name}`} onClick={(event) => { event.stopPropagation(); setAttachments((current) => current.filter((item) => item.id !== attachment.id)); }} type="button"><X /></button></span>)}</div>}
-      <textarea aria-label={ariaLabel} disabled={isAnalyzing || disabled} onChange={(event) => setValue(event.target.value)} onKeyDown={handleKeyDown} placeholder={placeholder} ref={textareaRef} rows={1} value={value} />
+      {allowAttachments && attachments.length > 0 && <div className="animated-agent-attachments">{attachments.map((attachment) => <span key={attachment.id}><Paperclip aria-hidden="true" /><em>{attachment.name}</em><button aria-label={ui("移除 {0}", {0: attachment.name})} onClick={(event) => { event.stopPropagation(); setAttachments((current) => current.filter((item) => item.id !== attachment.id)); }} type="button"><X /></button></span>)}</div>}
+      <textarea aria-label={ui(ariaLabel)} disabled={isAnalyzing || disabled} onChange={(event) => setValue(event.target.value)} onKeyDown={handleKeyDown} placeholder={ui(placeholder)} ref={textareaRef} rows={1} value={value} />
       <footer>
         {allowAttachments && <div className="animated-agent-tools">
           <input hidden multiple onChange={handleFiles} ref={fileRef} type="file" />
-          <button aria-label="添加参考资料" disabled={isAnalyzing || disabled} onClick={(event) => { event.stopPropagation(); fileRef.current?.click(); }} title="添加参考资料" type="button"><Paperclip /></button>
+          <button aria-label={ui("添加参考资料")} disabled={isAnalyzing || disabled} onClick={(event) => { event.stopPropagation(); fileRef.current?.click(); }} title={ui("添加参考资料")} type="button"><Paperclip /></button>
         </div>}
-        <span>{hint}</span>
-        <button aria-label={isAnalyzing ? "停止处理" : sendLabel} className="animated-agent-send" disabled={disabled || (!canSend && !isAnalyzing)} onClick={(event) => { event.stopPropagation(); if (isAnalyzing) onStop?.(); else submit(); }} ref={actionRef} type="button">{isAnalyzing ? <Square fill="currentColor" /> : <ArrowUp />}</button>
+        <span>{ui(hint)}</span>
+        <button aria-label={isAnalyzing ? ui("停止处理") : sendLabel} className="animated-agent-send" disabled={disabled || (!canSend && !isAnalyzing)} onClick={(event) => { event.stopPropagation(); if (isAnalyzing) onStop?.(); else submit(); }} ref={actionRef} type="button">{isAnalyzing ? <Square fill="currentColor" /> : <ArrowUp />}</button>
       </footer>
     </div>
-    {suggestions.length > 0 && !value && !isAnalyzing && !disabled && <div aria-label="快捷指令" className="animated-agent-suggestions">{suggestions.map((suggestion) => <button key={suggestion} onClick={() => submit(suggestion)} type="button"><Sparkles aria-hidden="true" />{suggestion}</button>)}</div>}
+    {suggestions.length > 0 && !value && !isAnalyzing && !disabled && <div aria-label={ui("快捷指令")} className="animated-agent-suggestions">{suggestions.map((suggestion) => <button key={suggestion} onClick={() => submit(suggestion)} type="button"><Sparkles aria-hidden="true" />{suggestion}</button>)}</div>}
   </div>;
 });

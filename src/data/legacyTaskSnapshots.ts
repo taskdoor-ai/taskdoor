@@ -40,17 +40,22 @@ const loadStoredValue = <T,>(key: string, fallback: T): T => {
 };
 
 const normalizePeriod = (task: LegacyTaskSnapshot): LegacyTaskSnapshot => {
+  const { ownerAssignmentStatus: _legacyStatus, proposedOwnerId: legacyOwnerId, ...current } = task;
+  const normalized = { ...current, ownerId: legacyOwnerId ?? task.ownerId };
   if (!task.plannedStartOn || !task.plannedEndOn) {
-    return { ...task, plannedEndOn: undefined, plannedStartOn: undefined };
+    return { ...normalized, plannedEndOn: undefined, plannedStartOn: undefined };
   }
   return {
-    ...task,
+    ...normalized,
     plannedEndOn: task.plannedEndOn < task.plannedStartOn ? task.plannedStartOn : task.plannedEndOn,
   };
 };
 
 export const loadLatestLegacyTaskSnapshot = (): LegacyTaskSnapshot | null =>
-  loadStoredValue<LegacyTaskSnapshot | null>(legacyTaskStorageKey, null);
+  (() => {
+    const task = loadStoredValue<LegacyTaskSnapshot | null>(legacyTaskStorageKey, null);
+    return task ? normalizePeriod(task) : null;
+  })();
 
 export const loadLegacyTaskSnapshots = (): Record<string, LegacyTaskSnapshot> => {
   const storedTasks = loadStoredValue<Record<string, LegacyTaskSnapshot>>(legacyTasksStorageKey, {});

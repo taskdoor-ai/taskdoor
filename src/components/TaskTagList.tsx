@@ -1,3 +1,5 @@
+import { useGlobalUi } from "../i18n/globalUi";
+import { useDetailCopy } from "../i18n/detailMessages";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { findTagByName, type TagDefinition } from "../data/tagGroups";
 import { TagBadge } from "./TagBadge";
@@ -11,6 +13,8 @@ type Props = {
 };
 
 export function TaskTagList({ onChange, selected, tags }: Props) {
+  const ui = useGlobalUi();
+  const d = useDetailCopy();
   const selectedTags = useMemo(() => selected.map((name) => findTagByName(tags, name) ?? { id: name, name, icon: "tag" as const, color: "gray" as const }), [selected, tags]);
   const containerRef = useRef<HTMLDivElement>(null);
   const measurementRef = useRef<HTMLDivElement>(null);
@@ -56,12 +60,12 @@ export function TaskTagList({ onChange, selected, tags }: Props) {
   const hiddenTags = selectedTags.slice(visibleCount);
   const renderBadge = (tag: TagDefinition) => <TagBadge key={tag.id} onRemove={onChange ? () => onChange(selected.filter((name) => name !== tag.name)) : undefined} size="sm" tag={tag} />;
 
-  return <div aria-label="任务标签" className="task-detail-title-tags task-tag-list" ref={containerRef}>
+  return <div aria-label={d('taskTags')} className="task-detail-title-tags task-tag-list" ref={containerRef}>
     {selectedTags.slice(0, visibleCount).map(renderBadge)}
     {hiddenTags.length > 0 && <Popover onOpenChange={setOpen} open={open}>
-      <PopoverTrigger aria-label={`另有 ${hiddenTags.length} 个标签`} className="task-tag-overflow" closeDelay={150} delay={100} onFocus={(event) => { if (event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover type="button">+{hiddenTags.length}</PopoverTrigger>
-      <PopoverContent align="end" aria-label="更多标签" className="task-tag-overflow-popover" finalFocus={false} initialFocus={false}>
-        <ul aria-label="收起的标签" className="task-tag-overflow-list">
+      <PopoverTrigger aria-label={ui(hiddenTags.length === 1 ? "另有 1 个标签" : "另有 {0} 个标签", {0: hiddenTags.length})} className="task-tag-overflow" closeDelay={150} delay={100} onFocus={(event) => { if (event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover type="button">+{hiddenTags.length}</PopoverTrigger>
+      <PopoverContent align="end" aria-label={d('moreTags')} className="task-tag-overflow-popover" finalFocus={false} initialFocus={false}>
+        <ul aria-label={d('hiddenTags')} className="task-tag-overflow-list">
           {hiddenTags.map((tag) => <li key={tag.id}>{renderBadge(tag)}</li>)}
         </ul>
       </PopoverContent>

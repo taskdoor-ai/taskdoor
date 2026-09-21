@@ -48,7 +48,7 @@ function updateCriteria(
     changes: [{ label: "完成标准", before: sameJoinedText ? JSON.stringify(before) : before.join("\n") || null, after: sameJoinedText ? JSON.stringify(next) : next.join("\n") }],
   });
   return {
-    nodes: nodes.map(node => node.id === original.id ? { ...original, completionCriteria: next, updatedAt: "刚刚" } : node),
+    nodes: nodes.map(node => node.id === original.id ? { ...original, completionCriteria: next, ...(original.criterionReviews ? { criterionReviews: next.map((text, index) => original.completionCriteria?.[index] === text && original.criterionReviews?.[index]?.text === text ? original.criterionReviews[index] : { text }) } : {}), updatedAt: new Date().toISOString() } : node),
     activity, original,
   };
 }

@@ -118,14 +118,14 @@ const fragranceScenario = scenario(
 
 const weeklyRetroScenario = scenario(
   "weekly-retro-notes",
-  ["2026-08-29", "2026-08-30", "2026-08-31", "2026-09-01"],
+  ["2026-09-11", "2026-09-14"],
   [
-    { taskId: "weekly-retro-decisions", taskTitle: "汇总本周关键决定与依据", ewdHours: 2, addedAt: "2026-08-29T09:00:00+08:00", isBaseline: true, actor: "周岚" },
-    { taskId: "weekly-retro-open-issues", taskTitle: "整理未解决问题与责任边界", ewdHours: 3, addedAt: "2026-08-29T09:05:00+08:00", isBaseline: true, actor: "周岚" },
-    { taskId: "weekly-retro-actions", taskTitle: "确认下周行动项与负责人", ewdHours: 2, addedAt: "2026-08-31T09:00:00+08:00", isBaseline: false, actor: "周岚" },
+    { taskId: "weekly-retro-decisions", taskTitle: "汇总本周关键决定与依据", ewdHours: 2, addedAt: "2026-09-11T09:00:00+08:00", isBaseline: true, actor: "周岚" },
+    { taskId: "weekly-retro-open-issues", taskTitle: "整理未解决问题与责任边界", ewdHours: 3, addedAt: "2026-09-11T09:05:00+08:00", isBaseline: true, actor: "周岚" },
+    { taskId: "weekly-retro-actions", taskTitle: "确认下周行动项与负责人", ewdHours: 2, addedAt: "2026-09-11T09:10:00+08:00", isBaseline: true, actor: "周岚" },
   ],
   [
-    { taskId: "weekly-retro-decisions", at: "2026-08-31T16:20:00+08:00", kind: "accepted", note: "关键决定与对应依据完成复盘成员核对，验收纪要决定部分 2 h。", actor: "周岚" },
+    { taskId: "weekly-retro-decisions", at: "2026-09-14T12:00:00+08:00", kind: "accepted", note: "关键决定与对应依据完成复盘成员核对，验收纪要决定部分 2 h。", actor: "陈默" },
   ],
 );
 

@@ -1,4 +1,4 @@
-# AgentDoor 排版 Token 通用规范
+# TaskDoor 排版 Token 通用规范
 
 日期：2026-08-30  
 状态：方向已确认，待实现

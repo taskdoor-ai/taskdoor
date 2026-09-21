@@ -1,0 +1,7 @@
+{
+  "ccx-serum-budget-gate": {
+    "三阶段 ROI 统一使用扣退款口径，连续低于停止线时暂停；已补上消耗异常的监测字段。": "ROI across all three stages is calculated after refunds. Pause spending when it remains below the stop-loss threshold. Monitoring fields for abnormal spending have been added.",
+    "冷启、放量和追投预算已分列，素材尚未全部验收，配置还没有上线，不代表已经产生投放消耗。": "Budgets for the initial test, scaling, and additional spending are listed separately. Assets have not all been accepted and the configuration is not live; this does not mean any ad spend has occurred.",
+    "追加预算按核对表配置执行，冷启组预算耗尽后自动增加 5,000 元，不再等负责人在任务里确认；我这轮提交的就是这套执行配置。": "Additional spending follows the configuration in the review sheet. Once the initial test budget is exhausted, CNY 5,000 will be added automatically, without waiting for the owner to confirm in the task. This is the execution configuration I submitted in this round."
+  }
+}

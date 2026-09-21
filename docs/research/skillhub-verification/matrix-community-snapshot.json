@@ -1,0 +1,41 @@
+{
+  "checked_at": "2026-09-14T11:20:53.874620+00:00",
+  "source": "GitHub public repository API",
+  "repositories": {
+    "iflytek/skillhub": {
+      "full_name": "iflytek/skillhub",
+      "html_url": "https://github.com/iflytek/skillhub",
+      "stargazers_count": 5095,
+      "forks_count": 834,
+      "pushed_at": "2026-09-14T07:08:50Z"
+    },
+    "scalefocus/skilly": {
+      "full_name": "scalefocus/skilly",
+      "html_url": "https://github.com/scalefocus/skilly",
+      "stargazers_count": 6,
+      "forks_count": 0,
+      "pushed_at": "2026-09-11T03:55:07Z"
+    },
+    "Observal/Observal": {
+      "full_name": "Observal/Observal",
+      "html_url": "https://github.com/Observal/Observal",
+      "stargazers_count": 2361,
+      "forks_count": 473,
+      "pushed_at": "2026-09-14T09:02:49Z"
+    },
+    "kms9/skillhub": {
+      "full_name": "kms9/skillhub",
+      "html_url": "https://github.com/kms9/skillhub",
+      "stargazers_count": 7,
+      "forks_count": 1,
+      "pushed_at": "2026-04-05T15:12:31Z"
+    },
+    "agentregistry-dev/agentregistry": {
+      "full_name": "agentregistry-dev/agentregistry",
+      "html_url": "https://github.com/agentregistry-dev/agentregistry",
+      "stargazers_count": 488,
+      "forks_count": 89,
+      "pushed_at": "2026-09-11T21:02:41Z"
+    }
+  }
+}

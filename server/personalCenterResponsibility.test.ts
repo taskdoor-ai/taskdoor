@@ -10,6 +10,7 @@ const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8
 const buttonSource = readFileSync(new URL("../src/components/ui/button.tsx", import.meta.url), "utf8");
 const selectComponentSource = readFileSync(new URL("../src/components/ui/select.tsx", import.meta.url), "utf8");
 const stylesheetSource = readFileSync(new URL("../src/styles/personal-center.css", import.meta.url), "utf8");
+const toastStylesheetSource = readFileSync(new URL("../src/styles/toast.css", import.meta.url), "utf8");
 
 test("members table lets team admins edit one active member responsibility at a time", () => {
   assert.match(
@@ -150,8 +151,9 @@ test("responsibility is edited as one large text document instead of separate ro
   assert.match(statementSource, /className="responsibility-document-editor-actions"[\s\S]*?disabled=\{!dirty\}[\s\S]*?>取消<\/Button>[\s\S]*?disabled=\{!dirty\}[\s\S]*?>保存<\/Button>/);
   assert.match(statementSource, /<Textarea[\s\S]*?<div className="responsibility-document-editor-footer">[\s\S]*?最近由 \{document\.updatedBy\} 更新于 \{document\.updatedAt\}[\s\S]*?responsibility-document-editor-actions/);
   assert.doesNotMatch(panelSource, /<footer>本机原型，最近由/);
-  assert.match(stylesheetSource, /\.personal-center-toast \{[^}]*top:\s*var\(--ad-space-6\)[^}]*left:\s*50%[^}]*transform:\s*translate\(-50%,/s, "操作结果 Toast 应统一显示在顶部居中");
-  assert.doesNotMatch(stylesheetSource.match(/\.personal-center-toast \{[^}]*}/s)?.[0] ?? "", /right:|bottom:/);
+  assert.match(panelSource, /toast\.success\(message\)/, "责任保存使用全局操作提示");
+  assert.match(toastStylesheetSource, /\.ad-toast-viewport \{[^}]*top:\s*max\(var\(--ad-space-6, 24px\)[^}]*left:\s*50%[^}]*transform:\s*translateX\(-50%\)/s, "操作结果 Toast 应统一显示在顶部居中");
+  assert.doesNotMatch(stylesheetSource, /\.personal-center-toast/, "页面不再维护独立的浮动提示");
   assert.doesNotMatch(statementSource, /responsibility-statement-row|编辑责任：|添加一条责任|<Pencil\b/);
   assert.doesNotMatch(panelSource, /editingParagraphIndex|editingParagraphDraft|deleteParagraphIndex/);
 });

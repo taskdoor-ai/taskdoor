@@ -1,3 +1,5 @@
+import { readWorkspaceSession, workspaceProfileKey } from "../lib/workspaceSession";
+
 export type ResponsibilityEvidence = {
   id: string;
   label: string;
@@ -56,6 +58,8 @@ export type ResponsibilityDocument = {
 export type TeamAccessRole = "admin" | "member";
 
 export type TeamMembership = {
+  name?: string;
+  emailInvitation?: { token: string; inviter: string; createdAt: number; expiresAt: number; delivery: "preview" };
   email: string;
   id: string;
   invitedAt?: string;
@@ -74,6 +78,7 @@ export type TeamResponsibilityProfile = {
   lastSyncedAt: string;
   inviteToken: string;
   memberships: TeamMembership[];
+  responsibilityAutoUpdate?: boolean;
   responsibilityDocument: ResponsibilityDocument;
   observedClaims: ResponsibilityClaim[];
 };
@@ -91,7 +96,8 @@ export type PersonalCenterState = {
 };
 
 export const personalCenterStorageKey = "agentdoor-personal-center-v6";
-export const getTeamInviteLink = ({ id, inviteToken }: Pick<TeamResponsibilityProfile, "id" | "inviteToken">) => `https://agentdoor.local/t/${id}/join/${inviteToken}`;
+export const personalCenterChangedEvent = "agentdoor-personal-center-changed";
+export const getTeamInviteLink = ({ inviteToken }: Pick<TeamResponsibilityProfile, "id" | "inviteToken">) => `${typeof window === "undefined" ? "http://127.0.0.1:5173" : window.location.origin}/signup?invite=${encodeURIComponent(inviteToken)}`;
 export const isValidProfileEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 
 export function applyPersonalProfileDraft(
@@ -184,7 +190,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
       id: "creator-commerce",
       name: "达人带货运营团队",
       role: "内容电商负责人",
-      coverage: "覆盖最近 90 天 AgentDoor 内的达人合作、内容、直播、商品、投流、数据与合规任务。",
+      coverage: "覆盖最近 90 天 TaskDoor 内的达人合作、内容、直播、商品、投流、数据与合规任务。",
       missingSources: "未覆盖达人私聊、外部投放平台和线下沟通记录。",
       lastSyncedAt: "今天 09:20",
       ...teamSettingsFixture("creator-commerce"),
@@ -202,7 +208,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
           description: "负责达人带货目标、资源优先级、项目预算、跨角色协调与最终结果确认。",
           sourceLabel: "AI 根据已确认结果更新",
           updatedAt: "今天 09:20",
-          aiActor: "AgentDoor 责任观察 Agent",
+          aiActor: "TaskDoor 责任观察 Agent",
           ruleVersion: "责任观察规则 v1.2",
           changeSetId: "CS-20260827-014",
           proposal: {
@@ -227,7 +233,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
           description: "整合达人商务、内容、直播、商品、投流、数据与合规结果，形成下一步项目决定。",
           sourceLabel: "AI 根据已确认结果更新",
           updatedAt: "昨天 18:40",
-          aiActor: "AgentDoor 责任观察 Agent",
+          aiActor: "TaskDoor 责任观察 Agent",
           ruleVersion: "责任观察规则 v1.2",
           changeSetId: "CS-20260826-031",
           proposal: { baseRevisionId: "RESP-CREATOR-008", operation: "add" },
@@ -261,7 +267,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
           description: "负责整合客户端、服务端、安全与运行保障结论，确定移动端版本的发布范围及最终 Go/No-Go 决定。",
           sourceLabel: "AI 根据本地合成记录更新",
           updatedAt: "今天 10:10",
-          aiActor: "AgentDoor 责任观察 Agent",
+          aiActor: "TaskDoor 责任观察 Agent",
           ruleVersion: "责任观察规则 v1.2",
           changeSetId: "CS-PLATFORM-20260901-003",
           proposal: {
@@ -300,7 +306,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
           description: "负责整合供应商、工艺、质量与产能证据，确定 PVT 试产放行边界及量产 Go/No-Go 决定。",
           sourceLabel: "AI 根据本地合成记录更新",
           updatedAt: "今天 08:40",
-          aiActor: "AgentDoor 责任观察 Agent",
+          aiActor: "TaskDoor 责任观察 Agent",
           ruleVersion: "责任观察规则 v1.2",
           changeSetId: "CS-SUPPLY-20260901-002",
           proposal: {
@@ -339,7 +345,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
           description: "负责协调重大客户事件中的服务恢复、数据修复、客户沟通与商业处理，统一正式事实并推动改进项闭环。",
           sourceLabel: "AI 根据本地合成记录更新",
           updatedAt: "今天 11:05",
-          aiActor: "AgentDoor 责任观察 Agent",
+          aiActor: "TaskDoor 责任观察 Agent",
           ruleVersion: "责任观察规则 v1.2",
           changeSetId: "CS-SERVICE-20260901-005",
           proposal: {
@@ -436,11 +442,16 @@ const isMembership = (value: unknown): value is TeamMembership => {
     && ["active", "invited"].includes(membership.status ?? "")
     && (membership.memberId === undefined || isText(membership.memberId))
     && (membership.invitedAt === undefined || isText(membership.invitedAt))
+    && (membership.name === undefined || isText(membership.name))
+    && (membership.emailInvitation === undefined || (isText(membership.emailInvitation.token)
+      && isText(membership.emailInvitation.inviter) && Number.isFinite(membership.emailInvitation.createdAt)
+      && Number.isFinite(membership.emailInvitation.expiresAt) && membership.emailInvitation.delivery === "preview"))
     && (membership.responsibility === undefined || typeof membership.responsibility === "string");
 };
 
 const isTeamCore = (team: Partial<TeamResponsibilityProfile>) => Boolean(team)
   && isText(team.id) && isText(team.name) && isText(team.role) && isText(team.coverage) && isText(team.missingSources) && isText(team.lastSyncedAt)
+  && (team.responsibilityAutoUpdate === undefined || typeof team.responsibilityAutoUpdate === "boolean")
   && isResponsibilityDocument(team.responsibilityDocument)
   && Array.isArray(team.observedClaims) && team.observedClaims.every((claim) => isClaim(claim) && claim.kind === "observed");
 
@@ -555,7 +566,7 @@ function migrateLegacyState(value: unknown): PersonalCenterState | null {
   return isPersonalCenterState(migrated) ? migrateV4State(migrated) : null;
 }
 
-export function loadPersonalCenterState(): PersonalCenterState {
+export function loadPersonalCenterDirectory(): PersonalCenterState {
   let stored: string | null;
   let legacyV5Stored: string | null;
   let legacyV4Stored: string | null;
@@ -622,11 +633,37 @@ export function loadPersonalCenterState(): PersonalCenterState {
   }
 }
 
-export function savePersonalCenterState(state: PersonalCenterState): boolean {
+export function savePersonalCenterDirectory(state: PersonalCenterState): boolean {
   try {
     localStorage.setItem(personalCenterStorageKey, JSON.stringify(state));
+    if (typeof window !== "undefined") window.dispatchEvent(new Event(personalCenterChangedEvent));
     return true;
   } catch {
     return false;
   }
+}
+
+export function loadPersonalCenterState(): PersonalCenterState {
+  const directory = loadPersonalCenterDirectory();
+  const session = readWorkspaceSession();
+  if (!session) return directory;
+  let profile: PersonalCenterState["profile"] = { name: session.name, email: session.email, title: "成员", timezone: "Asia/Shanghai", bio: "" };
+  try {
+    const stored = JSON.parse(localStorage.getItem(workspaceProfileKey(session.userId)) ?? "null");
+    if (stored && isText(stored.name) && isText(stored.email) && isText(stored.title) && isText(stored.timezone) && typeof stored.bio === "string") profile = stored;
+  } catch { /* Use the signed-in identity when no profile has been saved. */ }
+  const teams = directory.teams.filter(team => team.memberships.some(member => member.status === "active" && member.memberId === session.userId));
+  return { profile, teams: teams.map(team => ({ ...team, role: team.memberships.find(member => member.memberId === session.userId)?.role === "admin" ? "管理员" : "成员" })) };
+}
+
+export function savePersonalCenterState(state: PersonalCenterState): boolean {
+  const session = readWorkspaceSession();
+  if (!session) return savePersonalCenterDirectory(state);
+  const directory = loadPersonalCenterDirectory();
+  const ownIds = new Set(directory.teams.filter(team => team.memberships.some(member => member.status === "active" && member.memberId === session.userId)).map(team => team.id));
+  const teams = directory.teams.filter(team => !ownIds.has(team.id));
+  try {
+    localStorage.setItem(workspaceProfileKey(session.userId), JSON.stringify(state.profile));
+    return savePersonalCenterDirectory({ ...directory, teams: [...teams, ...state.teams] });
+  } catch { return false; }
 }

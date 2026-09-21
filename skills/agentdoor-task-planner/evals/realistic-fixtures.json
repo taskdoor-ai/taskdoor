@@ -3,7 +3,7 @@
   "dataPolicy": {
     "classification": "synthetic",
     "noProductionData": true,
-    "purpose": "AgentDoor task-planner offline evaluation with high-fidelity synthetic collaboration traces",
+    "purpose": "TaskDoor task-planner offline evaluation with high-fidelity synthetic collaboration traces",
     "limitations": [
       "No production ACL or file transport",
       "No real people, organizations, customer records, credentials or task writes",

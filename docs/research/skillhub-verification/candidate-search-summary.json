@@ -1,0 +1,338 @@
+{
+  "checked_at": "2026-09-14T10:28:31.932344+00:00",
+  "queries": [
+    {
+      "query": "skillhub in:name fork:false",
+      "total_count": 1709,
+      "items": [
+        {
+          "full_name": "iflytek/skillhub",
+          "stargazers_count": 5094,
+          "description": "Self-hosted, open-source agent skill registry for enterprises. Publish & version skill packages, govern with RBAC and audit logs, deploy   on-premise with Docker or Kubernetes.",
+          "html_url": "https://github.com/iflytek/skillhub",
+          "archived": false
+        },
+        {
+          "full_name": "skillhub-club/skillhub-desktop",
+          "stargazers_count": 600,
+          "description": "One desktop to manage your agent skills",
+          "html_url": "https://github.com/skillhub-club/skillhub-desktop",
+          "archived": false
+        },
+        {
+          "full_name": "keyuyuan/skillhub-awesome-skills",
+          "stargazers_count": 74,
+          "description": "skillhub-awesome-skills Curated by Skillhub.club",
+          "html_url": "https://github.com/keyuyuan/skillhub-awesome-skills",
+          "archived": false
+        },
+        {
+          "full_name": "BiglionX/SkillHub",
+          "stargazers_count": 35,
+          "description": "开源 AI Agent 技能市场 | 发布、分享和管理 Skills | 支持多租户、命名空间、审核流程 | Docker 一键部署",
+          "html_url": "https://github.com/BiglionX/SkillHub",
+          "archived": false
+        },
+        {
+          "full_name": "openJiuwen-ai/skillhub",
+          "stargazers_count": 28,
+          "description": "The openJiuwen ecosystem provides an open-source solution for skill hosting and distribution, supporting both self-built and optional ClawHub compatibility.",
+          "html_url": "https://github.com/openJiuwen-ai/skillhub",
+          "archived": false
+        },
+        {
+          "full_name": "Tencent/skillhub",
+          "stargazers_count": 27,
+          "description": "SkillHub Open API documentation, examples, and DeepSeek Harness plugin",
+          "html_url": "https://github.com/Tencent/skillhub",
+          "archived": false
+        },
+        {
+          "full_name": "airano-ir/skillhub",
+          "stargazers_count": 19,
+          "description": "Open-source marketplace for AI Agent skills",
+          "html_url": "https://github.com/airano-ir/skillhub",
+          "archived": false
+        },
+        {
+          "full_name": "Francis-Zxp/AI-SkillHub",
+          "stargazers_count": 19,
+          "description": "**AI SkillHub** is an AI Agent Skills Manager for Windows. It centralizes and manages Skills and Prompt resources from GitHub repositories, local folders, or ZIP packages, and automatically deploys available Skills to locations recognized b",
+          "html_url": "https://github.com/Francis-Zxp/AI-SkillHub",
+          "archived": false
+        },
+        {
+          "full_name": "v1k22/skillhub-registry",
+          "stargazers_count": 15,
+          "description": "skill.md specialized skill registry for AI agents",
+          "html_url": "https://github.com/v1k22/skillhub-registry",
+          "archived": false
+        },
+        {
+          "full_name": "ashj-yf/skillhub-compose",
+          "stargazers_count": 14,
+          "description": "将 skillhub 服务拆分出来 https://github.com/iflytek/skillhub",
+          "html_url": "https://github.com/ashj-yf/skillhub-compose",
+          "archived": false
+        },
+        {
+          "full_name": "chandrudp29/skillhub",
+          "stargazers_count": 13,
+          "description": "The skill composer for AI agents — merge skills from Anthropic, OpenAI, GitHub Copilot, Microsoft, Google + 8 more ecosystems with AI-powered conflict resolution",
+          "html_url": "https://github.com/chandrudp29/skillhub",
+          "archived": false
+        },
+        {
+          "full_name": "cnwpdb/skillhub-openclaw-windows",
+          "stargazers_count": 12,
+          "description": "Windows 上安装腾讯 SkillHub，并接入 OpenClaw 与 Tavily Web Search 的完整方案",
+          "html_url": "https://github.com/cnwpdb/skillhub-openclaw-windows",
+          "archived": false
+        },
+        {
+          "full_name": "shier-12-zwf/kunkun-skillhub",
+          "stargazers_count": 10,
+          "description": "Local-first Skill management desktop app for Claude Code and Codex",
+          "html_url": "https://github.com/shier-12-zwf/kunkun-skillhub",
+          "archived": false
+        },
+        {
+          "full_name": "Ricaardo/iwencai-skillhub-tools",
+          "stargazers_count": 10,
+          "description": "同花顺 Aime SkillHub 工具集 - 批量安装脚本 + AI Skill",
+          "html_url": "https://github.com/Ricaardo/iwencai-skillhub-tools",
+          "archived": false
+        },
+        {
+          "full_name": "duthaho/skillhub",
+          "stargazers_count": 9,
+          "description": "Give Claude Code a memory and make it cite its sources — keyless skills for research, daily work, and an evidence-gated coding loop.",
+          "html_url": "https://github.com/duthaho/skillhub",
+          "archived": false
+        }
+      ]
+    },
+    {
+      "query": "skills registry in:description fork:false",
+      "total_count": 1207,
+      "items": [
+        {
+          "full_name": "VoltAgent/awesome-openclaw-skills",
+          "stargazers_count": 52561,
+          "description": "The awesome collection of OpenClaw skills. 5,400+ skills filtered and categorized from the official OpenClaw Skills Registry.🦞",
+          "html_url": "https://github.com/VoltAgent/awesome-openclaw-skills",
+          "archived": false
+        },
+        {
+          "full_name": "openclaw/clawhub",
+          "stargazers_count": 9419,
+          "description": "Skill + Plugin Registry for OpenClaw",
+          "html_url": "https://github.com/openclaw/clawhub",
+          "archived": false
+        },
+        {
+          "full_name": "tech-leads-club/agent-skills",
+          "stargazers_count": 5869,
+          "description": "The secure, validated skill registry for professional AI coding agents. Extend Antigravity, Claude Code, Cursor, Copilot and more with absolute confidence.",
+          "html_url": "https://github.com/tech-leads-club/agent-skills",
+          "archived": false
+        },
+        {
+          "full_name": "iflytek/skillhub",
+          "stargazers_count": 5094,
+          "description": "Self-hosted, open-source agent skill registry for enterprises. Publish & version skill packages, govern with RBAC and audit logs, deploy   on-premise with Docker or Kubernetes.",
+          "html_url": "https://github.com/iflytek/skillhub",
+          "archived": false
+        },
+        {
+          "full_name": "Observal/Observal",
+          "stargazers_count": 2361,
+          "description": "Observal is self-hosted registry for your coding agent extensions with a built in insight engine.  Setup Observal, define the scope and share your Skills, MCPs and Agents with your peers.",
+          "html_url": "https://github.com/Observal/Observal",
+          "archived": false
+        },
+        {
+          "full_name": "majiayu000/claude-skill-registry",
+          "stargazers_count": 607,
+          "description": "The most comprehensive Claude Code skills registry | Web Search: https://majiayu000.github.io/claude-skill-registry-core/",
+          "html_url": "https://github.com/majiayu000/claude-skill-registry",
+          "archived": false
+        },
+        {
+          "full_name": "Kamalnrf/claude-plugins",
+          "stargazers_count": 563,
+          "description": "Lightweight registry to discover, install, and manage all public Claude plugins and agent skills for your favourite AI coding agent.",
+          "html_url": "https://github.com/Kamalnrf/claude-plugins",
+          "archived": false
+        },
+        {
+          "full_name": "cosmicstack-labs/mercury-agent-skills",
+          "stargazers_count": 470,
+          "description": "A curated registry of reusable Mercury Agent, Open Claw or Hermes Agent skills designed for real developer workflows, persistent memory, and token-efficient execution.",
+          "html_url": "https://github.com/cosmicstack-labs/mercury-agent-skills",
+          "archived": false
+        },
+        {
+          "full_name": "GoPlusSecurity/agentguard",
+          "stargazers_count": 461,
+          "description": "Security guard for AI agents — blocks malicious skills, prevents data leaks, protects secrets. 24 detection rules, runtime action evaluation, trust registry.",
+          "html_url": "https://github.com/GoPlusSecurity/agentguard",
+          "archived": false
+        },
+        {
+          "full_name": "hashgraph-online/registry-broker-skills",
+          "stargazers_count": 428,
+          "description": "AI agent skills for the Universal Registry - search, chat, and register 72,000+ agents across 14+ protocols. Works with Claude, Codex, Cursor, OpenClaw, and any AI assistant.",
+          "html_url": "https://github.com/hashgraph-online/registry-broker-skills",
+          "archived": false
+        },
+        {
+          "full_name": "MajorGeek/MajorGeeks-Windows-Tweaks",
+          "stargazers_count": 413,
+          "description": "MajorGeeks Windows Tweaks contains well over 200  registry, PowerShell, Visual Basic, and batch files to enable tweaks and hidden features in Windows 10, 8, and 7 for any skill level.",
+          "html_url": "https://github.com/MajorGeek/MajorGeeks-Windows-Tweaks",
+          "archived": false
+        },
+        {
+          "full_name": "JSONbored/awesome-claude",
+          "stargazers_count": 297,
+          "description": "HeyClaude is a curated registry and distribution surface for Claude and AI-workflow assets: agents, MCP servers, skills, commands, hooks, rules, guides, tools, jobs, Raycast feeds, static data exports, and an npm MCP package.",
+          "html_url": "https://github.com/JSONbored/awesome-claude",
+          "archived": false
+        },
+        {
+          "full_name": "Sfedfcv/redesigned-pancake",
+          "stargazers_count": 263,
+          "description": "Skip to content github / docs Code Issues 80 Pull requests 35 Discussions Actions Projects 2 Security Insights Merge branch 'main' into 1862-Add-Travis-CI-migration-table  1862-Add-Travis-CI-migration-table (#1869, Iixixi/ZachryTylerWood#10",
+          "html_url": "https://github.com/Sfedfcv/redesigned-pancake",
+          "archived": false
+        },
+        {
+          "full_name": "hashgraph-online/skill-publish",
+          "stargazers_count": 165,
+          "description": "GitHub Action and CLI to validate, monitor, and publish verifiable skills (SKILL.md) via Registry Broker",
+          "html_url": "https://github.com/hashgraph-online/skill-publish",
+          "archived": false
+        },
+        {
+          "full_name": "browsing-skills/browsing-skills",
+          "stargazers_count": 113,
+          "description": "Open-source registry of browser-automation skills for AI agents",
+          "html_url": "https://github.com/browsing-skills/browsing-skills",
+          "archived": false
+        }
+      ]
+    },
+    {
+      "query": "skills manager in:description fork:false",
+      "total_count": 2923,
+      "items": [
+        {
+          "full_name": "jeremylongshore/tons-of-skills-marketplace",
+          "stargazers_count": 2738,
+          "description": "Model-agnostic agent-skills platform with a harness-free canonical layer, verified adapters, and the ccpi package manager. Explore at tonsofskills.com.",
+          "html_url": "https://github.com/jeremylongshore/tons-of-skills-marketplace",
+          "archived": false
+        },
+        {
+          "full_name": "DreambigOu/ELI5",
+          "stargazers_count": 1160,
+          "description": "ELI5 — A Claude Code skill that explains anything to anyone: kids, managers, engineers, parents. Adapts tone, vocabulary, and analogies to match the audience.",
+          "html_url": "https://github.com/DreambigOu/ELI5",
+          "archived": false
+        },
+        {
+          "full_name": "MoizIbnYousaf/ai-agent-skills",
+          "stargazers_count": 1141,
+          "description": "Universal skill installer and package manager for AI coding agents. One command, 12+ runtimes. npx ai-agent-skills",
+          "html_url": "https://github.com/MoizIbnYousaf/ai-agent-skills",
+          "archived": false
+        },
+        {
+          "full_name": "jiweiyeah/Skills-Manager",
+          "stargazers_count": 995,
+          "description": "Free, open-source desktop manager for AI Agent Skills. Write a skill once, sync it to 32 AI coding tools (Claude Code, Codex, Cursor, Gemini CLI, and more) via symlinks. Local-first, MIT licensed. macOS, Windows, Linux.",
+          "html_url": "https://github.com/jiweiyeah/Skills-Manager",
+          "archived": false
+        },
+        {
+          "full_name": "luongnv89/asm",
+          "stargazers_count": 930,
+          "description": "The universal skill manager for AI coding agents.",
+          "html_url": "https://github.com/luongnv89/asm",
+          "archived": false
+        },
+        {
+          "full_name": "enulus/OpenPackage",
+          "stargazers_count": 612,
+          "description": "The open, universal, coding agent skills, agents, rules, and commands organizer and package manager.",
+          "html_url": "https://github.com/enulus/OpenPackage",
+          "archived": false
+        },
+        {
+          "full_name": "wanghuan9/skilldock",
+          "stargazers_count": 558,
+          "description": "SkillDock is an AI skill manager and skill management desktop app for Claude Code, Cursor, Codex, Windsurf, Gemini CLI, and other AI coding tools. Install, organize, edit, sync, and update Skills, MCP servers, and plugins with real-director",
+          "html_url": "https://github.com/wanghuan9/skilldock",
+          "archived": false
+        },
+        {
+          "full_name": "computerlovetech/agr",
+          "stargazers_count": 453,
+          "description": "Educational package-manager project for AI agent skills. Not actively maintained.",
+          "html_url": "https://github.com/computerlovetech/agr",
+          "archived": false
+        },
+        {
+          "full_name": "RealZST/HarnessKit",
+          "stargazers_count": 431,
+          "description": "More than a skill manager — manage skills, MCP servers, plugins, hooks, CLIs, configs, memory & rules across every AI coding agent. 🌟 Star if you like it!",
+          "html_url": "https://github.com/RealZST/HarnessKit",
+          "archived": false
+        },
+        {
+          "full_name": "fleurytian/awesome-claude-skills",
+          "stargazers_count": 317,
+          "description": "Claude Skills developed for brain-workers. Dev by Fleury, an Ex-McKinsey and now AI product manager. 小红书/RedNote@如宝｜AI&Anlalytics. Email me @fleurytian@gmail.com",
+          "html_url": "https://github.com/fleurytian/awesome-claude-skills",
+          "archived": false
+        },
+        {
+          "full_name": "knoxgraeme/skillfish",
+          "stargazers_count": 315,
+          "description": "The skill manager for AI coding agents. Install, update, and sync skills across Claude Code, Cursor, Copilot + more.",
+          "html_url": "https://github.com/knoxgraeme/skillfish",
+          "archived": false
+        },
+        {
+          "full_name": "what1f/kitter",
+          "stargazers_count": 286,
+          "description": "A simple, lightweight Skill manager built in Rust. One library, just the Skills each project needs.",
+          "html_url": "https://github.com/what1f/kitter",
+          "archived": false
+        },
+        {
+          "full_name": "Sfedfcv/redesigned-pancake",
+          "stargazers_count": 263,
+          "description": "Skip to content github / docs Code Issues 80 Pull requests 35 Discussions Actions Projects 2 Security Insights Merge branch 'main' into 1862-Add-Travis-CI-migration-table  1862-Add-Travis-CI-migration-table (#1869, Iixixi/ZachryTylerWood#10",
+          "html_url": "https://github.com/Sfedfcv/redesigned-pancake",
+          "archived": false
+        },
+        {
+          "full_name": "OldJii/mcp-dock",
+          "stargazers_count": 228,
+          "description": "MCP Server & Config Manager for 14 AI Clients — Cursor, VS Code, Claude Code, Gemini CLI, Windsurf, Zed, TRAE, Kiro, JetBrains & more. 8500+ servers, 4400+ skills.",
+          "html_url": "https://github.com/OldJii/mcp-dock",
+          "archived": false
+        },
+        {
+          "full_name": "Rito-w/skills-manager",
+          "stargazers_count": 197,
+          "description": "A cross-platform skills manager for AI IDEs. Search marketplace, download locally, and install to Claude, Cursor, Windsurf, and more with one click.",
+          "html_url": "https://github.com/Rito-w/skills-manager",
+          "archived": false
+        }
+      ]
+    }
+  ]
+}

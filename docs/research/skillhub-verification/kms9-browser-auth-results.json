@@ -1,0 +1,15 @@
+{
+  "commit": "228c46e1d3eeee3b7464d0f1d77b4f019a602f14",
+  "method": "Actual CLI loopback HTTP callback HTML executed in isolated VM with web-generated query format; positive-control fragment sends token to actual loopback endpoint",
+  "webUses": "URL.searchParams",
+  "cliReads": "location.hash",
+  "queryCallback": {
+    "status": "Missing token in URL. You can close this tab and try again.",
+    "tokenPosts": 0
+  },
+  "fragmentPositiveControl": {
+    "tokenDelivered": true,
+    "tokenPosts": 1
+  },
+  "conclusion": "Browser automatic CLI authorization does not complete in this fixed version; query/fragment mismatch requires repair; manual token login remains available"
+}

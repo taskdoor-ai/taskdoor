@@ -1,0 +1,302 @@
+{
+  "RESP-CREATOR-008": [
+    {
+      "zh": "达人带货目标、预算、跨角色协调与最终结果",
+      "en": "Creator commerce goals, budgets, cross-functional coordination, and final outcomes"
+    }
+  ],
+  "RESP-PLATFORM-009": [
+    {
+      "zh": "负责移动端版本目标、发布范围、跨 API／客户端／SRE／安全／质量与支持团队的节奏，以及最终 Go/No-Go 决定。",
+      "en": "Own mobile release goals, scope, coordination across API, client, SRE, security, quality and support teams, and the final Go/No-Go decision."
+    }
+  ],
+  "RESP-SUPPLY-006": [
+    {
+      "zh": "负责 PVT 试产目标、跨供应商与制造职能协调、偏差处理边界和量产 Go/No-Go 决定。",
+      "en": "Own PVT pilot goals, supplier and manufacturing coordination, deviation boundaries, and the production Go/No-Go decision."
+    }
+  ],
+  "RESP-SERVICE-011": [
+    {
+      "zh": "负责重大客户事件的影响边界、恢复优先级、跨团队决策、对外结论与改进项闭环。",
+      "en": "Own major customer incident scope, recovery priorities, cross-team decisions, external communications, and follow-through on improvements."
+    }
+  ],
+  "creator-observed-goal": [
+    {
+      "zh": "负责达人带货目标、资源优先级、项目预算、跨角色协调与最终结果确认。",
+      "en": "Own creator commerce goals, resource priorities, project budgets, cross-functional coordination, and final outcome approval."
+    }
+  ],
+  "creator-observed-coordination": [
+    {
+      "zh": "整合达人商务、内容、直播、商品、投流、数据与合规结果，形成下一步项目决定。",
+      "en": "Combine creator partnerships, content, livestream, product, paid media, analytics, and compliance results into the next project decisions."
+    }
+  ],
+  "platform-observed-release-gate": [
+    {
+      "zh": "负责整合客户端、服务端、安全与运行保障结论，确定移动端版本的发布范围及最终 Go/No-Go 决定。",
+      "en": "Combine client, server, security, and operations findings to determine the mobile release scope and final Go/No-Go decision."
+    }
+  ],
+  "supply-observed-pilot-release": [
+    {
+      "zh": "负责整合供应商、工艺、质量与产能证据，确定 PVT 试产放行边界及量产 Go/No-Go 决定。",
+      "en": "Combine supplier, process, quality, and capacity evidence to determine PVT release boundaries and the production Go/No-Go decision."
+    }
+  ],
+  "service-observed-incident-command": [
+    {
+      "zh": "负责协调重大客户事件中的服务恢复、数据修复、客户沟通与商业处理，统一正式事实并推动改进项闭环。",
+      "en": "Coordinate service recovery, data repair, customer communications, and commercial responses during major incidents; align official findings and complete improvements."
+    }
+  ],
+  "周岚": [
+    {
+      "zh": "达人带货目标、预算、跨角色协调与最终结果",
+      "en": "Creator commerce goals, budgets, cross-functional coordination, and final outcomes"
+    },
+    {
+      "zh": "移动端发布目标、范围取舍、跨团队节奏与最终 Go/No-Go 决策",
+      "en": "Mobile release goals, scope tradeoffs, cross-team schedules, and final Go/No-Go decisions"
+    },
+    {
+      "zh": "试产目标、跨供应商决策、变更边界与量产放行",
+      "en": "Pilot goals, cross-supplier decisions, change boundaries, and production approval"
+    },
+    {
+      "zh": "客户影响边界、恢复优先级、跨团队决策与对外结论",
+      "en": "Customer impact boundaries, recovery priorities, cross-team decisions, and external communications"
+    }
+  ],
+  "陈默": [
+    {
+      "zh": "达人筛选、建联、佣金谈判、排期与合作确认",
+      "en": "Creator selection, outreach, commission negotiations, schedules, and partnership confirmation"
+    }
+  ],
+  "林洁": [
+    {
+      "zh": "卖点提炼、短视频脚本、直播话术与素材交付",
+      "en": "Selling points, short-video scripts, livestream talking points, and creative delivery"
+    }
+  ],
+  "高远": [
+    {
+      "zh": "直播排期、场控、彩排、上线执行与异常处理",
+      "en": "Livestream scheduling, stage management, rehearsals, launch execution, and incident handling"
+    }
+  ],
+  "梁川": [
+    {
+      "zh": "选品、价格机制、赠品、库存与履约",
+      "en": "Product selection, pricing, gifts, inventory, and fulfillment"
+    }
+  ],
+  "许宁": [
+    {
+      "zh": "媒体投放、预算消耗、定向、人群包与 ROI",
+      "en": "Paid media, budget spending, targeting, audience segments, and ROI"
+    }
+  ],
+  "韩序": [
+    {
+      "zh": "指标口径、数据看板、渠道归因与项目复盘",
+      "en": "Metric definitions, dashboards, channel attribution, and project reviews"
+    }
+  ],
+  "苏禾": [
+    {
+      "zh": "广告法、素材宣称、达人合同与平台规则",
+      "en": "Advertising compliance, marketing claims, creator contracts, and platform policies"
+    }
+  ],
+  "creator-goal": [
+    {
+      "zh": "香氛礼盒达人带货目标与分工",
+      "en": "Fragrance gift set creator commerce goals and responsibilities"
+    },
+    {
+      "zh": "已确认决定 · 2 天前",
+      "en": "Confirmed decision · 2 days ago"
+    }
+  ],
+  "media-budget": [
+    {
+      "zh": "第二轮投流预算调整任务",
+      "en": "Second-round paid media budget adjustments"
+    },
+    {
+      "zh": "任务结果记录 · 昨天",
+      "en": "Task outcome record · Yesterday"
+    }
+  ],
+  "creator-wrapup": [
+    {
+      "zh": "香氛礼盒达人带货收尾",
+      "en": "Fragrance gift set creator commerce wrap-up"
+    },
+    {
+      "zh": "结果交回并确认 · 昨天",
+      "en": "Outcome submitted and confirmed · Yesterday"
+    }
+  ],
+  "platform-release-gate": [
+    {
+      "zh": "移动端 3.8.0 发布门禁",
+      "en": "Mobile 3.8.0 release gate"
+    },
+    {
+      "zh": "今天",
+      "en": "Today"
+    }
+  ],
+  "factory-pvt-gate": [
+    {
+      "zh": "智能门锁 PVT 试产放行",
+      "en": "Smart lock PVT pilot release"
+    },
+    {
+      "zh": "今天",
+      "en": "Today"
+    }
+  ],
+  "service-incident": [
+    {
+      "zh": "企业同步故障恢复与客户闭环",
+      "en": "Enterprise sync recovery and customer follow-up"
+    },
+    {
+      "zh": "今天",
+      "en": "Today"
+    }
+  ],
+  "程砚": [
+    {
+      "zh": "接口契约、兼容策略、鉴权语义与服务端发布",
+      "en": "API contracts, compatibility strategy, authentication semantics, and server releases"
+    }
+  ],
+  "乔安": [
+    {
+      "zh": "iOS 客户端实现、性能、审核材料与 App Store 提交",
+      "en": "iOS implementation, performance, review materials, and App Store submission"
+    }
+  ],
+  "唐澈": [
+    {
+      "zh": "Android 客户端、机型兼容、分阶段发布与回滚",
+      "en": "Android clients, device compatibility, staged rollouts, and rollback"
+    }
+  ],
+  "叶宁": [
+    {
+      "zh": "可观测性、容量、告警路由、灰度监控与回滚执行",
+      "en": "Observability, capacity, alert routing, canary monitoring, and rollback execution"
+    }
+  ],
+  "宋衡": [
+    {
+      "zh": "威胁建模、移动端数据保护、权限审查与安全门禁",
+      "en": "Threat modeling, mobile data protection, permission reviews, and security gates"
+    }
+  ],
+  "顾言": [
+    {
+      "zh": "跨端测试策略、兼容矩阵、发布验收与缺陷分级",
+      "en": "Cross-platform test strategy, compatibility matrices, release acceptance, and defect triage"
+    }
+  ],
+  "许悦": [
+    {
+      "zh": "发布公告、支持手册、工单分流与客户影响回传",
+      "en": "Release announcements, support guides, ticket routing, and customer impact feedback"
+    }
+  ],
+  "沈工": [
+    {
+      "zh": "PPAP、来料质量、供应商纠正措施与变更追溯",
+      "en": "PPAP, incoming quality, supplier corrective actions, and change traceability"
+    }
+  ],
+  "赵妍": [
+    {
+      "zh": "工艺参数、工装验证、首件确认与产线节拍",
+      "en": "Process parameters, tooling validation, first-article approval, and line cycle times"
+    }
+  ],
+  "贺青": [
+    {
+      "zh": "控制计划、检验标准、质量门禁与不合格处置",
+      "en": "Control plans, inspection standards, quality gates, and nonconformance handling"
+    }
+  ],
+  "罗骁": [
+    {
+      "zh": "产线资源、人员排班、产能试跑与现场异常闭环",
+      "en": "Production resources, staffing, capacity trials, and incident resolution"
+    }
+  ],
+  "唐静": [
+    {
+      "zh": "SOP、岗位培训、技能确认与版本受控",
+      "en": "SOPs, operator training, skills verification, and version control"
+    }
+  ],
+  "冯维": [
+    {
+      "zh": "包装结构、标签、运输测试与法规信息落版",
+      "en": "Packaging structure, labels, shipping tests, and regulatory information"
+    }
+  ],
+  "陈琛": [
+    {
+      "zh": "物料齐套、排产、库存风险与试产批次追踪",
+      "en": "Material readiness, production scheduling, inventory risks, and pilot batch tracking"
+    }
+  ],
+  "沈闻": [
+    {
+      "zh": "流量治理、服务恢复、容量与运行时证据保全",
+      "en": "Traffic management, service recovery, capacity, and preservation of runtime evidence"
+    }
+  ],
+  "白露": [
+    {
+      "zh": "数据一致性核对、修复脚本、抽样验证与回滚",
+      "en": "Data consistency checks, repair scripts, sampling validation, and rollback"
+    }
+  ],
+  "陈沁": [
+    {
+      "zh": "客户分级沟通、业务影响确认、承诺管理与跟进",
+      "en": "Customer communications by tier, business impact assessment, commitment management, and follow-up"
+    }
+  ],
+  "薛航": [
+    {
+      "zh": "根因定位、代码修复、变更审查与防复发技术方案",
+      "en": "Root cause analysis, code fixes, change reviews, and recurrence prevention"
+    }
+  ],
+  "江予": [
+    {
+      "zh": "SLA 适用性、补偿边界、合同口径与审批材料",
+      "en": "SLA applicability, compensation boundaries, contract interpretation, and approval materials"
+    }
+  ],
+  "陆遥": [
+    {
+      "zh": "一线排查手册、工单路由、客服培训与知识库",
+      "en": "Frontline troubleshooting guides, ticket routing, support training, and knowledge base"
+    }
+  ],
+  "周牧": [
+    {
+      "zh": "事故数据披露、隐私影响判断、通知边界与证据留存",
+      "en": "Incident disclosures, privacy impact assessment, notification boundaries, and evidence retention"
+    }
+  ]
+}

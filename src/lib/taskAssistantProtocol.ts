@@ -7,6 +7,7 @@ const taskIconNameSchema = z.enum(["list-todo", "clipboard-check", "target", "fl
 const taskIconToneSchema = z.enum(["neutral", "blue", "cyan", "green", "amber", "red", "purple", "pink"] satisfies [TaskIconTone, ...TaskIconTone[]]);
 
 export const taskDraftSchema = z.object({
+  parentSubtaskIndex: z.number().int().nonnegative().optional(),
   completionCriteria: z.array(z.string()).optional(),
   executionTips: z.array(z.string()).optional(),
   effortEstimate: effortEstimateSchema.optional(),

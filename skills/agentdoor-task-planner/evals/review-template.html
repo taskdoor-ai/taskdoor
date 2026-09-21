@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AgentDoor · 任务规划验证</title>
+<title>TaskDoor · 任务规划验证</title>
 <style>
 :root{color-scheme:light;--ink:#20242a;--muted:#717985;--line:#e5e8ed;--blue:#1670e8;--soft:#f5f8fc;--green:#237657;--amber:#936017;--red:#b03b3b}
 *{box-sizing:border-box}body{margin:0;font:14px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:#fff}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #8db9f5;outline-offset:3px}
@@ -16,7 +16,7 @@ main{overflow:auto;padding:28px 38px 72px}.content{max-width:1140px;margin:0 aut
 </style>
 </head>
 <body>
-<header><div class="brand"><div class="logo" aria-hidden="true">A</div><div><h1>任务规划验证</h1><p>AgentDoor · 合成场景 / 只读回放 / 不创建真实任务</p></div></div><div id="stats" class="stats"></div></header>
+<header><div class="brand"><div class="logo" aria-hidden="true">A</div><div><h1>任务规划验证</h1><p>TaskDoor · 合成场景 / 只读回放 / 不创建真实任务</p></div></div><div id="stats" class="stats"></div></header>
 <div class="shell"><aside aria-label="测试场景"><div class="filters"><input id="search" type="search" placeholder="搜索场景、行业或任务…" aria-label="搜索场景"><select id="suite" aria-label="选择场景类型"><option value="all">全部场景</option><option value="industry">六行业回归</option><option value="edge">边缘场景</option><option value="complex">复杂协作</option><option value="multiturn">连续多轮</option><option value="realistic">高拟真协作</option></select></div><nav id="case-list" class="case-list" aria-label="场景列表"></nav></aside><main id="main" tabindex="-1"><div id="content" class="content"></div></main></div>
 <dialog id="source-dialog" aria-labelledby="source-title"><div class="dialog-head"><h2 id="source-title">判断依据</h2><button class="close" type="button" id="close-dialog" aria-label="关闭依据">关闭</button></div><div id="source-body"></div></dialog>
 <script id="recorded-cases" type="application/json">__RECORDED_CASES__</script>

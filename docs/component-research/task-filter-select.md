@@ -4,7 +4,7 @@
 
 - 用户任务：状态、负责人和标签筛选全部使用用户指定的 21st.dev shadcn Select，并保持同一外观与交互。
 - 交互关键词：select trigger、filter dropdown、grouped options、keyboard typeahead、clearable all option。
-- 技术约束：React + TypeScript；复用 `src/components/ui/select.tsx`、现有 `@base-ui/react` 和 Lucide；不安装新依赖；尺寸必须转换为 AgentDoor Token。
+- 技术约束：React + TypeScript；复用 `src/components/ui/select.tsx`、现有 `@base-ui/react` 和 Lucide；不安装新依赖；尺寸必须转换为 TaskDoor Token。
 - 必须覆盖的状态：默认值、已选择、展开、键盘焦点、长标签、组合筛选、移动端换行和深色模式。
 
 ## 搜索过程
@@ -25,7 +25,7 @@
 
 - 采用的行为基础：保留现有 `src/components/ui/select.tsx` 的 Base UI Root、Trigger、Value、Popup、Group、Item 与键盘行为。
 - 采用的视觉结构：恢复 21st.dev / shadcn 的有边框白色 Trigger、标准控件高度、圆角、Chevron、阴影和 focus ring；三个筛选都通过同一个 `WorkspaceFilterSelect` 组合。筛选弹层关闭 `alignItemWithTrigger`，统一从 Trigger 下方留出标准间距展开，避免选中项对齐模式覆盖触发器形成双层边框。
-- AgentDoor 适配：将示例的 180px 宽度转换为 `--ad-filter-select-width`；任务筛选使用共享 `sm` 规格的 `--ad-control-height-sm` 与 `--ad-text-caption`。中文默认值简化为“状态 / 负责人 / 标签”，重置项使用“不限…”；工具栏不重复展示任务总数，数量继续由结果区摘要表达。
+- TaskDoor 适配：将示例的 180px 宽度转换为 `--ad-filter-select-width`；任务筛选使用共享 `sm` 规格的 `--ad-control-height-sm` 与 `--ad-text-caption`。中文默认值简化为“状态 / 负责人 / 标签”，重置项使用“不限…”；工具栏不重复展示任务总数，数量继续由结果区摘要表达。
 - 来源注释或许可动作：共享 Select 已保留 shadcn 来源注释；未复制新增第三方源码、未安装依赖，MIT 许可无新增动作。
 - 为什么不需要自研：现有共享 Select 已覆盖用户指定组件的结构和行为；此前外观异常来自 `.workspace-list-toolbar button` 的页面级覆盖，清理覆盖即可。
 

@@ -1,3 +1,4 @@
+import { useGlobalUi } from "../../i18n/globalUi";
 "use client"
 
 import * as React from "react"
@@ -24,11 +25,12 @@ type SheetContentProps = DialogPrimitive.Popup.Props & {
 }
 
 function SheetContent({ children, className, side = "left", ...props }: SheetContentProps) {
+  const ui = useGlobalUi();
   return <DialogPrimitive.Portal>
     <DialogPrimitive.Backdrop className="sheet-backdrop" data-side={side} data-slot="sheet-backdrop" />
     <DialogPrimitive.Popup className={cn("sheet-content", className)} data-side={side} data-slot="sheet-content" {...props}>
       {children}
-      <DialogPrimitive.Close render={<Button aria-label="关闭通知" className="sheet-close" size="icon-sm" type="button" variant="ghost" />}>
+      <DialogPrimitive.Close render={<Button aria-label={ui("关闭通知")} className="sheet-close" size="icon-sm" type="button" variant="ghost" />}>
         <X aria-hidden="true" />
       </DialogPrimitive.Close>
     </DialogPrimitive.Popup>

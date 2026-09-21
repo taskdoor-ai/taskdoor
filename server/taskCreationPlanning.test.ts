@@ -176,7 +176,7 @@ test("只有明确选择独立创建后才解除关系阻塞，不改已有任�
   }
 });
 
-test("确认关联通过投影使用最新主目标，独立底稿和 Stable IDs 保持不变", () => {
+test("确认关联保留已有草稿目标与 Stable IDs，更新候选信息", () => {
   const form = formFor("existing-parent");
   form.mainTask.ownerId = "林洁";
   form.mainTask.completionCriteria = ["人工确认的媒体名单及邀请状态表"];
@@ -191,7 +191,7 @@ test("确认关联通过投影使用最新主目标，独立底稿和 Stable IDs
   assert.ok("form" in result);
   assert.equal(result.form.decision, "attach");
   assert.equal(result.form.candidate?.goal, "按期完成新版发布会");
-  assert.equal(toTaskPlanDraft(result.form).mainTask.goal, "按期完成新版发布会");
+  assert.equal(toTaskPlanDraft(result.form).mainTask.goal, form.mainTask.goal);
   assert.deepEqual(result.form.mainTask, form.mainTask);
   assert.deepEqual(form, before);
   assert.equal(validateCreationForm(result.form, context.members), null);
@@ -203,7 +203,7 @@ test("关联后改回独立创建仍保留媒体邀请自己的目标，不沿�
   const before = structuredClone(form);
   const attached = resolveCreationRelationship(form, "attach", context);
   assert.ok("form" in attached);
-  assert.equal(toTaskPlanDraft(attached.form).mainTask.goal, form.candidate!.goal);
+  assert.equal(toTaskPlanDraft(attached.form).mainTask.goal, form.mainTask.goal);
   const independent = resolveCreationRelationship(attached.form, "independent", context);
   assert.ok("form" in independent);
   assert.equal(independent.form.decision, "independent");
@@ -235,14 +235,28 @@ test("候选丢失或换成同名新 ID 时，任何关系确认都报错且保�
   }
 });
 
-test("主任务缺少目标时不能关联，也不能借用子任务原目标假装完成继承", () => {
+test("主任务缺少目标时可保留子任务自己的有效目标关联", () => {
   const form = formFor("existing-parent");
   const result = resolveCreationRelationship(form, "attach", {
     ...context, existingTasks: [{ ...form.candidate!, goal: " " }],
   });
-  assert.ok("error" in result);
-  assert.match(result.error, /目标/);
+  assert.ok("form" in result);
+  assert.equal(result.form.mainTask.goal, form.mainTask.goal);
   assert.equal(form.decision, "pending");
+});
+
+test("首次关联空目标带入父目标，后续修改和父目标变化都不覆盖输入", () => {
+  const form = formFor("existing-parent");
+  form.mainTask.goal = "";
+  const attached = resolveCreationRelationship(form, "attach", context);
+  assert.ok("form" in attached);
+  assert.equal(attached.form.mainTask.goal, form.candidate!.goal);
+  const edited = { ...attached.form, mainTask: { ...attached.form.mainTask, goal: "自己确认的目标" } };
+  const changed = resolveCreationRelationship(edited, "attach", {
+    ...context, existingTasks: [{ ...form.candidate!, goal: "父任务的新目标" }],
+  });
+  assert.ok("form" in changed);
+  assert.equal(changed.form.mainTask.goal, "自己确认的目标");
 });
 
 test("关系确认检查最新成员列表，失效负责人或参与人不会静默清空", () => {
@@ -275,13 +289,13 @@ test("改名仅 patch 主任务，人工删除、重排、换人和日期不被�
   assert.ok(result.changes.length > 0);
 });
 
-test("目标修订同步子任务的继承目标，其他字段与依赖 ID 保持原样", () => {
+test("目标修订仅修改当前任务，子任务及依赖 ID 保持原样", () => {
   const form = formFor("complex-plan");
   const goal = "让首次参与的客户理解新品使用场景";
   const result = reviseCreationPlan(form, `目标改为 ${goal}`, context);
   assert.ok("form" in result);
   assert.equal(result.form.mainTask.goal, goal);
-  assert.deepEqual(result.form.subtasks, form.subtasks.map(task => ({ ...task, goal })));
+  assert.deepEqual(result.form.subtasks, form.subtasks);
   assert.equal(result.form.mainTask.clientId, form.mainTask.clientId);
   assert.ok(result.changes.some(change => change.includes("目标")));
 });
@@ -297,7 +311,7 @@ test("增加完成标准只追加一项，保留人工标准与所有子任务",
 });
 
 test("负责人可按确切姓名或 ID 修改，也能显式待定，不重新分配子任务", () => {
-  const latestContext: ScenarioContext = { ...context, members: [{ id: "member-1", name: "林洁" }, { id: "member-2", name: "周岚" }] };
+  const latestContext: ScenarioContext = { ...context, currentUserId: "member-2", members: [{ id: "member-1", name: "林洁" }, { id: "member-2", name: "周岚" }] };
   const form = formFor("single-task", latestContext);
   for (const instruction of ["负责人改为 林洁", "负责人改为 member-1"]) {
     const result = reviseCreationPlan(form, instruction, latestContext);
@@ -311,16 +325,17 @@ test("负责人可按确切姓名或 ID 修改，也能显式待定，不重新�
   assert.equal(unassigned.form.mainTask.ownerId, "");
 });
 
-test("设参与人为负责人时只从主任务参与人移除该成员，预览说明这项衍生去重", () => {
+test("设参与人为负责人时去重并默认加入创建者，预览说明两项变化", () => {
   const form = formFor("complex-plan");
   form.mainTask.participantIds = ["陈默", "林洁", "许宁"];
   const before = structuredClone(form);
   const result = reviseCreationPlan(form, "负责人改为林洁", context);
   assert.ok("form" in result);
-  assert.deepEqual(result.form.mainTask, { ...form.mainTask, ownerId: "林洁", participantIds: ["陈默", "许宁"] });
+  assert.deepEqual(result.form.mainTask, { ...form.mainTask, ownerId: "林洁", participantIds: ["陈默", "许宁", "周岚"] });
   assert.deepEqual(result.form.subtasks, before.subtasks);
   assert.deepEqual(form, before);
-  assert.equal(result.changes.length, 2);
+  assert.equal(result.changes.length, 3);
+  assert.ok(result.changes.some(change => change.includes("默认加入创建者")));
   assert.ok(result.changes.some(change => change.includes("负责人") && change.includes("周岚") && change.includes("林洁")));
   assert.ok(result.changes.some(change => change.includes("参与人") && change.includes("林洁") && /移除|去重/.test(change)));
 });
@@ -338,15 +353,15 @@ test("负责人本身未变但仍列为参与人时只预览并移除这个重�
   assert.match(result.changes[0], /林洁/);
 });
 
-test("负责人改为待定不会清空其他参与人或回填原负责人", () => {
+test("负责人改为待定保留原参与人并默认加入创建者", () => {
   const form = formFor("complex-plan");
   const result = reviseCreationPlan(form, "负责人改为待定", context);
   assert.ok("form" in result);
   assert.equal(result.form.mainTask.ownerId, "");
-  assert.deepEqual(result.form.mainTask.participantIds, form.mainTask.participantIds);
+  assert.deepEqual(result.form.mainTask.participantIds, [...form.mainTask.participantIds, context.currentUserId]);
   assert.deepEqual(result.form.subtasks, form.subtasks);
-  assert.equal(result.changes.length, 1);
-  assert.ok(!result.changes[0].includes("参与人"));
+  assert.equal(result.changes.length, 2);
+  assert.ok(result.changes.some(change => change.includes("默认加入创建者")));
 });
 
 test("未知、模糊与同名多人的负责人指令报错，不猜成员", () => {
@@ -373,11 +388,11 @@ test("截止时间只改主任务日期，待定可清空，不隐式改变开�
   }
 });
 
-test("无效日期、模糊相对日期和开始晚于截止的修改原子失败", () => {
+test("无效日期与模糊相对日期的修改原子失败", () => {
   const form = formFor("single-task");
   form.mainTask.startDate = "2026-09-01";
   const before = structuredClone(form);
-  for (const value of ["2026-02-30", "2026-13-01", "2026-9-20", "明天", "2026-08-30"]) {
+  for (const value of ["2026-02-30", "2026-13-01", "2026-9-20", "明天"]) {
     const result = reviseCreationPlan(form, `截止时间改为 ${value}`, context);
     assert.ok("error" in result);
     assert.match(result.error, /日期|时间|截止/);
@@ -385,11 +400,16 @@ test("无效日期、模糊相对日期和开始晚于截止的修改原子失�
   }
 });
 
-test("主任务截止早于已保留子任务交付时提示冲突，不自动重排子任务", () => {
+test("Mock 创建允许截止早于开始或子任务交付，其他日期保持原样", () => {
   const form = formFor("complex-plan");
-  const result = reviseCreationPlan(form, "截止时间改为 2026-09-10", context);
-  assert.ok("error" in result);
-  assert.match(result.error, /子任务|排期|截止/);
+  for (const endDate of ["2026-08-20", "2026-09-10"]) {
+    const result = reviseCreationPlan(form, `截止时间改为 ${endDate}`, context);
+    assert.ok("form" in result);
+    assert.equal(result.form.mainTask.endDate, endDate);
+    assert.equal(result.form.mainTask.startDate, form.mainTask.startDate);
+    assert.deepEqual(result.form.subtasks, form.subtasks);
+    assert.equal(validateCreationForm(result.form, context.members), null);
+  }
   assert.equal(form.mainTask.endDate, "2026-09-15");
 });
 
@@ -420,9 +440,10 @@ test("关系尚未确认时不能用修订绕过决策；关联方案不能改�
   assert.match(premature.error, /关系|确认/);
   const attached = resolveCreationRelationship(pending, "attach", context);
   assert.ok("form" in attached);
-  const result = reviseCreationPlan(attached.form, "目标改为 替换主目标", context);
-  assert.ok("error" in result);
-  assert.match(result.error, /继承|主任务/);
+  const result = reviseCreationPlan(attached.form, "目标改为 子任务独立交付目标", context);
+  assert.ok("form" in result);
+  assert.equal(result.form.mainTask.goal, "子任务独立交付目标");
+  assert.equal(result.form.candidate!.goal, attached.form.candidate!.goal);
 });
 
 test("修订时重新校验当前成员；修正失效主负责人不被旧值阻塞", () => {
@@ -464,11 +485,14 @@ test("澄清中的标点、占位文本不能冒充真实目标或交付", () =>
   }
 });
 
-test("复杂示例没有有效当前日期时保留原文并说明不可规划，不抛异常或猜年份", () => {
+test("复杂示例使用固定 Mock 日期，不依赖有效的当前日期", () => {
   for (const currentDate of ["", "invalid", "2026-02-30"]) {
     const result = planTaskCreation(promptFor("complex-plan"), { ...context, currentDate });
-    assert.equal(result.stage, "unavailable");
-    if (result.stage === "unavailable") assert.match(result.message, /日期|时间/);
+    assert.equal(result.stage, "review");
+    if (result.stage === "review") {
+      assert.equal(result.form.mainTask.endDate, "2026-09-15");
+      assert.equal(validateCreationForm(result.form, context.members), null);
+    }
   }
 });
 
@@ -496,21 +520,26 @@ test("修订预览明确展示原值、新值或完整新增标准", () => {
   assert.ok(extended.changes.some(change => change.includes(standard)));
 });
 
-test("确认关联后父目标变更或候选移出当前上下文会使旧修订失效", () => {
+test("确认关联后父目标变更不阻止编辑，候选移出上下文仍拒绝", () => {
   const attached = resolveCreationRelationship(formFor("existing-parent"), "attach", context);
   assert.ok("form" in attached);
-  for (const existingTasks of [[], [{ ...attached.form.candidate!, goal: "新的主任务目标" }]]) {
-    const result = reviseCreationPlan(attached.form, "任务名称改为 新媒体名单", { ...context, existingTasks });
-    assert.ok("error" in result);
-    assert.match(result.error, /已有|目标|关系/);
-  }
+  const changed = reviseCreationPlan(attached.form, "任务名称改为 新媒体名单", {
+    ...context, existingTasks: [{ ...attached.form.candidate!, goal: "新的主任务目标" }],
+  });
+  assert.ok("form" in changed);
+  assert.equal(changed.form.mainTask.goal, attached.form.mainTask.goal);
+  const missing = reviseCreationPlan(attached.form, "任务名称改为 新媒体名单", { ...context, existingTasks: [] });
+  assert.ok("error" in missing);
+  assert.match(missing.error, /已有|关系/);
 });
 
-test("临近或超过示例硬截止时暴露排期冲突，不自动把 9 月 15 日推到下一年", () => {
-  for (const currentDate of ["2026-09-14", "2026-09-20"]) {
+test("临近、超过截止或跨年仍展示相同 Mock 方案，不做准备时间冲突判断", () => {
+  const baseline = formFor("complex-plan");
+  const dates = (form: CreationForm) => [form.mainTask, ...form.subtasks].map(({ startDate, endDate }) => ({ startDate, endDate }));
+  for (const currentDate of ["2026-09-14", "2026-09-16", "2026-09-20", "2027-10-01"]) {
     const result = planTaskCreation(promptFor("complex-plan"), { ...context, currentDate });
-    assert.equal(result.stage, "unavailable");
-    if (result.stage === "unavailable") assert.match(result.message, /截止|排期|日期/);
+    assert.equal(result.stage, "review");
+    if (result.stage === "review") assert.deepEqual(dates(result.form), dates(baseline));
   }
 });
 

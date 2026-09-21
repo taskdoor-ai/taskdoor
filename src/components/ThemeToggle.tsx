@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n/I18nProvider";
 import { Moon, Sun } from "lucide-react";
 import { DropdownMenuItem } from "./ui/dropdown-menu";
 
@@ -9,7 +10,8 @@ type ThemeToggleProps = {
 };
 
 export function ThemeToggle({ onToggle, theme }: ThemeToggleProps) {
-  const label = theme === "light" ? "切换到深色" : "切换到浅色";
+  const { t } = useI18n();
+  const label = theme === "light" ? t('theme.dark') : t('theme.light');
   const Icon = theme === "light" ? Moon : Sun;
 
   return <DropdownMenuItem aria-label={label} onClick={onToggle} title={label}>

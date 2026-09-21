@@ -1,0 +1,117 @@
+{
+  "commit": "228c46e1d3eeee3b7464d0f1d77b4f019a602f14",
+  "method": "Actual source CLI against local fixture HTTP registry; not a deployed Go/Postgres backend or real AI client execution",
+  "fileFilter": {
+    "input": [
+      "SKILL.md",
+      "references.md",
+      "script.py",
+      "assets/logo.svg",
+      "assets/style.css",
+      "assets/logo.png",
+      "assets/brand.woff2"
+    ],
+    "selected": [
+      "SKILL.md",
+      "assets/logo.svg",
+      "assets/style.css",
+      "references.md",
+      "script.py"
+    ],
+    "omitted": [
+      "assets/logo.png",
+      "assets/brand.woff2"
+    ]
+  },
+  "publishResponseContract": {
+    "backendPayload": {
+      "ok": "true",
+      "skillId": "demo",
+      "versionId": "v1"
+    },
+    "result": "rejected by actual CLI schema",
+    "error": "Go backend publish response: ok: true"
+  },
+  "installPinnedVersion": "pass",
+  "updateLatest": "pass",
+  "rollbackPinnedVersion": "pass",
+  "customClientDirectories": [
+    ".agents/skills",
+    ".claude/skills"
+  ],
+  "byteAndLockIntegrity": "pass",
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/v1/skills/brand-demo",
+      "query": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/download",
+      "query": "?slug=brand-demo&version=1.0.0"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/skills/brand-demo",
+      "query": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/resolve",
+      "query": "?slug=brand-demo&hash=461b50f97833f4a8d97a34545bd22f9404a1fc3bb06d2d44673238254bc7d5cc"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/download",
+      "query": "?slug=brand-demo&version=2.0.0"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/skills/brand-demo",
+      "query": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/resolve",
+      "query": "?slug=brand-demo&hash=e3f9b19b154fa863ed0d2f44b657fcafd007106af7dba95df395b4a1fda07b91"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/download",
+      "query": "?slug=brand-demo&version=1.0.0"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/skills/brand-demo",
+      "query": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/download",
+      "query": "?slug=brand-demo&version=1.0.0"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node dist/cli.js --registry http://127.0.0.1:57757 --site http://127.0.0.1:57757 --workdir /private/tmp/skillhub-verification/kms9/packages/clawhub/verification-artifacts --dir .agents/skills --no-input install brand-demo --version 1.0.0",
+      "stdout": "",
+      "stderr": "- Resolving brand-demo\n✔ OK. Installed brand-demo -> /private/tmp/skillhub-verification/kms9/packages/clawhub/verification-artifacts/.agents/skills/brand-demo\n"
+    },
+    {
+      "command": "node dist/cli.js --registry http://127.0.0.1:57757 --site http://127.0.0.1:57757 --workdir /private/tmp/skillhub-verification/kms9/packages/clawhub/verification-artifacts --dir .agents/skills --no-input update brand-demo",
+      "stdout": "",
+      "stderr": "- Checking brand-demo\n- Updating brand-demo -> 2.0.0\n✔ brand-demo: updated -> 2.0.0\n"
+    },
+    {
+      "command": "node dist/cli.js --registry http://127.0.0.1:57757 --site http://127.0.0.1:57757 --workdir /private/tmp/skillhub-verification/kms9/packages/clawhub/verification-artifacts --dir .agents/skills --no-input update brand-demo --version 1.0.0",
+      "stdout": "",
+      "stderr": "- Checking brand-demo\n- Updating brand-demo -> 1.0.0\n✔ brand-demo: updated -> 1.0.0\n"
+    },
+    {
+      "command": "node dist/cli.js --registry http://127.0.0.1:57757 --site http://127.0.0.1:57757 --workdir /private/tmp/skillhub-verification/kms9/packages/clawhub/verification-artifacts --dir .claude/skills --no-input install brand-demo --version 1.0.0",
+      "stdout": "",
+      "stderr": "- Resolving brand-demo\n✔ OK. Installed brand-demo -> /private/tmp/skillhub-verification/kms9/packages/clawhub/verification-artifacts/.claude/skills/brand-demo\n"
+    }
+  ]
+}

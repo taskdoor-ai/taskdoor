@@ -1,0 +1,310 @@
+[
+  {
+    "title": {
+      "zh": "整理下周例会纪要",
+      "en": "Prepare next week’s meeting minutes"
+    },
+    "goal": {
+      "zh": "让参会成员对会议结论与后续行动形成一致理解。",
+      "en": "Give participants a shared understanding of the meeting decisions and next actions."
+    },
+    "records": {
+      "纪要包含会议议题、关键结论和待解决问题，并共享给参会成员。": "Share minutes covering topics, decisions and unresolved questions. Record an owner and agreed date for each action and confirm them with participants.",
+      "先从会议记录提取议题、决定与待办，再逐项核对行动负责人和时间；将有歧义的结论标出并请参会人确认。": "Extract topics, decisions and actions from the meeting notes. Verify owners and dates, and ask participants to clarify ambiguous conclusions."
+    }
+  },
+  {
+    "title": {
+      "zh": "新品防晒衣抖音达人带货项目",
+      "en": "Sun-protection jacket creator commerce campaign"
+    },
+    "goal": {
+      "zh": "统筹新品防晒衣抖音达人带货项目，以 9 月 15 日上线和 GMV 50 万为目标，协调达人、内容、直播、商品、投流、数据和合规交付。",
+      "en": "Coordinate the Douyin creator campaign for a September 15 launch and GMV of 500,000, covering creators, content, operations, inventory, advertising, data and compliance."
+    },
+    "records": {
+      "9 月 15 日按已确认排期上线，商品、达人内容与履约准备就绪。": "Launch on September 15 with approved content and fulfillment ready. Reach GMV of 500,000 and deliver verifiable sales data and a retrospective.",
+      "先确认 GMV 的统计周期和退款口径，再协调达人排期与备货；上线前统一核对素材、链接、优惠和履约准备。": "Confirm the GMV measurement and refund window. Coordinate creator availability and inventory, then check assets, links, promotions and fulfillment before launch."
+    }
+  },
+  {
+    "title": {
+      "zh": "筛选达人并确认商务合作",
+      "en": "Confirm creator partnerships"
+    },
+    "goal": {
+      "zh": "统筹新品防晒衣抖音达人带货项目，以 9 月 15 日上线和 GMV 50 万为目标，协调达人、内容、直播、商品、投流、数据和合规交付。",
+      "en": "Secure suitable creators for the product campaign."
+    },
+    "records": {
+      "交付已确认合作的达人名单、报价、排期及合作协议。": "Deliver the confirmed creator list, commercial terms, agreements and schedule.",
+      "按受众匹配度和历史履约筛选达人，逐项确认报价、佣金、授权与排期，并保留书面合作记录。": "Screen audience fit and past delivery. Confirm fees, commissions, usage rights and availability in writing."
+    }
+  },
+  {
+    "title": {
+      "zh": "完成卖点、脚本与直播素材",
+      "en": "Produce scripts and campaign assets"
+    },
+    "goal": {
+      "zh": "统筹新品防晒衣抖音达人带货项目，以 9 月 15 日上线和 GMV 50 万为目标，协调达人、内容、直播、商品、投流、数据和合规交付。",
+      "en": "Provide accurate, approved promotional content for creators."
+    },
+    "records": {
+      "交付通过审核的卖点文案、直播脚本及可用素材。": "Deliver approved selling-point copy, livestream scripts and usable campaign assets.",
+      "先核实卖点和宣称依据，再编排口播、演示与互动环节；脚本和直播素材使用同一审核版本。": "Verify claims before drafting. Keep scripts, demonstrations and assets on the same approved version."
+    }
+  },
+  {
+    "title": {
+      "zh": "完成直播彩排与上线执行",
+      "en": "Run the launch"
+    },
+    "goal": {
+      "zh": "统筹新品防晒衣抖音达人带货项目，以 9 月 15 日上线和 GMV 50 万为目标，协调达人、内容、直播、商品、投流、数据和合规交付。",
+      "en": "Publish on schedule and resolve operational issues promptly."
+    },
+    "records": {
+      "完成彩排和问题闭环，按确认排期上线并留存执行记录。": "Complete the rehearsal, close issues, publish on the confirmed schedule and retain execution records.",
+      "按真实流程完成彩排，记录并关闭问题；上线前复核链接、优惠、库存与值守安排。": "Test links, promotions and inventory before release. Record incidents, owners and recovery times while monitoring the launch."
+    }
+  },
+  {
+    "title": {
+      "zh": "确认价格机制、库存与履约",
+      "en": "Confirm inventory, pricing and fulfillment"
+    },
+    "goal": {
+      "zh": "统筹新品防晒衣抖音达人带货项目，以 9 月 15 日上线和 GMV 50 万为目标，协调达人、内容、直播、商品、投流、数据和合规交付。",
+      "en": "Keep product offers accurate and customer orders fulfillable."
+    },
+    "records": {
+      "确认最终价格及优惠配置，备货、发货与售后方案可执行。": "Confirm final prices, promotion settings, stock, shipping and after-sales arrangements.",
+      "逐项核对价格、赠品和优惠叠加规则，确认可售库存及发货时效，并准备缺货和退换货方案。": "Check promotion stacking, sellable inventory and shipping times. Prepare responses to stockouts, returns and exchanges."
+    }
+  },
+  {
+    "title": {
+      "zh": "制定投流计划并控制 ROI",
+      "en": "Plan and run advertising"
+    },
+    "goal": {
+      "zh": "统筹新品防晒衣抖音达人带货项目，以 9 月 15 日上线和 GMV 50 万为目标，协调达人、内容、直播、商品、投流、数据和合规交付。",
+      "en": "Reach the intended audience within the agreed budget and ROI measurement."
+    },
+    "records": {
+      "交付确认后的投流计划和执行记录，ROI 按约定口径核对。": "Deliver the approved media plan and execution records, with ROI checked using the agreed method.",
+      "先统一 ROI 口径和预算上限，再配置人群与素材测试；设置检查频率和止损条件，保留调整依据。": "Agree budget limits and ROI definitions. Test audiences and assets, set review frequency and stopping conditions, and record adjustments."
+    }
+  },
+  {
+    "title": {
+      "zh": "搭建数据看板并完成复盘",
+      "en": "Deliver campaign analysis"
+    },
+    "goal": {
+      "zh": "统筹新品防晒衣抖音达人带货项目，以 9 月 15 日上线和 GMV 50 万为目标，协调达人、内容、直播、商品、投流、数据和合规交付。",
+      "en": "Understand campaign results and define improvements for the next round."
+    },
+    "records": {
+      "销售与投流数据可核对，复盘包含结论、问题及后续行动。": "Deliver reconciled sales and advertising data, findings, issues and follow-up actions.",
+      "统一交易、退款和归因窗口后核对各渠道数据，复盘差异原因，并明确下一轮行动及负责人。": "Align refund and attribution windows before comparing channels. Turn findings into actions with owners and deadlines."
+    }
+  },
+  {
+    "title": {
+      "zh": "完成素材宣称与合同合规审核",
+      "en": "Review content and contract compliance"
+    },
+    "goal": {
+      "zh": "统筹新品防晒衣抖音达人带货项目，以 9 月 15 日上线和 GMV 50 万为目标，协调达人、内容、直播、商品、投流、数据和合规交付。",
+      "en": "Ensure campaign assets and agreements satisfy the applicable requirements."
+    },
+    "records": {
+      "交付素材与合同审核记录，需整改事项在上线前关闭。": "Deliver asset and contract review records. Close required corrections before launch.",
+      "逐项检查功效宣称、素材授权和合同义务，标出需修改的内容；整改后复核并归档确认版本。": "Check claims, licenses and contractual obligations. Recheck corrections and archive the approved versions."
+    }
+  },
+  {
+    "title": {
+      "zh": "新品达人带货项目",
+      "en": "Creator commerce launch"
+    },
+    "goal": {
+      "zh": "完成达人合作、内容制作与上线复盘，推动新品销售。",
+      "en": "Complete creator partnerships, content production, launch and review to support product sales."
+    },
+    "records": {
+      "合作与内容交付通过验收，完成上线执行并交付效果复盘。": "Accept partnership and content deliverables, execute the launch and deliver the results review.",
+      "先对齐推广范围、销售统计口径与上线排期，再协调商务、内容和履约；上线前集中核对各项交付。": "Align campaign scope, sales measurement and launch dates before coordinating commercial, content and fulfillment work."
+    }
+  },
+  {
+    "title": {
+      "zh": "确认达人商务合作",
+      "en": "Confirm creator partnerships"
+    },
+    "goal": {
+      "zh": "确保合适的达人按约定参与新品推广。",
+      "en": "Secure suitable creators for the product campaign."
+    },
+    "records": {
+      "交付已确认的达人名单、合作条款与排期。": "Deliver the confirmed creator list, commercial terms, agreements and schedule.",
+      "按受众匹配度和历史履约情况筛选达人，逐项确认报价、佣金、素材授权与档期，并保留书面合作记录。": "Screen audience fit and past delivery. Confirm fees, commissions, usage rights and availability in writing."
+    }
+  },
+  {
+    "title": {
+      "zh": "完成内容制作",
+      "en": "Produce campaign content"
+    },
+    "goal": {
+      "zh": "提供能够准确传达新品价值的推广内容。",
+      "en": "Communicate the new product’s value accurately."
+    },
+    "records": {
+      "脚本与视频素材通过审核，可用于上线。": "Approve scripts and video assets for launch.",
+      "先确认卖点及宣称依据，再推进脚本和拍摄；统一版本与审核人，避免脚本、商品信息和成片表述不一致。": "Confirm claims first, then coordinate writing and filming using one approved version and designated reviewers."
+    }
+  },
+  {
+    "title": {
+      "zh": "完成脚本策划",
+      "en": "Plan the script"
+    },
+    "goal": {
+      "zh": "让主播准确传达卖点并完成直播转化引导。",
+      "en": "Help presenters explain selling points and guide purchases accurately."
+    },
+    "records": {
+      "商品卖点与直播脚本通过审核。": "Approve the product selling points and livestream script.",
+      "将已核实卖点整理成讲解顺序，明确演示、互动和转化节点；与主播试读后再定稿。": "Turn verified selling points into a clear sequence of demonstrations, interactions and conversion guidance. Read through it with the presenter."
+    }
+  },
+  {
+    "title": {
+      "zh": "整理商品卖点",
+      "en": "Verify product selling points"
+    },
+    "goal": {
+      "zh": "明确可验证的产品价值，为脚本提供依据。",
+      "en": "Give the script a clear basis in verifiable product value."
+    },
+    "records": {
+      "交付已核对的核心卖点与证明材料。": "Deliver verified selling points and supporting evidence.",
+      "逐条关联产品参数、使用场景与证明材料，区分可公开宣称和待核实信息，优先保留受众最关心的三项卖点。": "Connect each claim to product specifications and evidence. Separate approved claims from information that still needs verification."
+    }
+  },
+  {
+    "title": {
+      "zh": "撰写直播脚本",
+      "en": "Write livestream scripts"
+    },
+    "goal": {
+      "zh": "让直播流程、商品讲解和互动引导可执行。",
+      "en": "Make product demonstrations, interactions and purchase guidance executable."
+    },
+    "records": {
+      "交付通过审核的直播流程、口播与互动脚本。": "Deliver approved scripts covering the livestream flow, spoken content and interactions.",
+      "按开场、演示、答疑和下单引导编排脚本，标注时长、优惠条件与禁用表述，并预留缺货和冷场的替代话术。": "Sequence the opening, demonstrations, questions and purchase guidance. Include timing, promotion conditions and fallback responses."
+    }
+  },
+  {
+    "title": {
+      "zh": "拍摄并交付视频素材",
+      "en": "Film and deliver video assets"
+    },
+    "goal": {
+      "zh": "提供可直接发布的新品推广视频。",
+      "en": "Provide campaign videos ready for publication."
+    },
+    "records": {
+      "交付通过审核、规格符合发布要求的视频素材。": "Deliver approved videos that meet the publishing specifications.",
+      "按确认脚本准备分镜和样品，拍摄前检查画幅、收音与光线；交付时同步字幕、封面和素材授权记录。": "Prepare storyboards and samples. Check framing, audio and lighting, then deliver captions, covers and usage rights with the videos."
+    }
+  },
+  {
+    "title": {
+      "zh": "完成上线与复盘",
+      "en": "Complete launch and review"
+    },
+    "goal": {
+      "zh": "确保活动顺利上线并沉淀可复用的经验。",
+      "en": "Launch successfully and retain lessons for future campaigns."
+    },
+    "records": {
+      "上线执行完成，数据可核对，复盘结论明确。": "Complete launch operations, reconcile data and document clear review findings.",
+      "上线前统一核对链接、价格、库存与排期，明确值守和异常联系人；按同一统计窗口收集数据用于复盘。": "Check links, prices, inventory and schedules. Assign monitoring contacts and collect data over one consistent measurement window."
+    }
+  },
+  {
+    "title": {
+      "zh": "完成上线执行",
+      "en": "Run the launch"
+    },
+    "goal": {
+      "zh": "按确认排期完成发布并及时处理现场问题。",
+      "en": "Publish on schedule and resolve operational issues promptly."
+    },
+    "records": {
+      "完成发布检查与上线值守，留存执行记录。": "Complete the rehearsal, close issues, publish on the confirmed schedule and retain execution records.",
+      "发布前完成链接和优惠测试，按检查清单逐项放行；值守期间记录异常、处理人和恢复时间。": "Test links, promotions and inventory before release. Record incidents, owners and recovery times while monitoring the launch."
+    }
+  },
+  {
+    "title": {
+      "zh": "交付效果复盘",
+      "en": "Deliver campaign analysis"
+    },
+    "goal": {
+      "zh": "明确活动效果与下一轮需要改进的行动。",
+      "en": "Understand campaign results and define improvements for the next round."
+    },
+    "records": {
+      "交付核对后的销售数据、效果分析与后续行动。": "Deliver reconciled sales and advertising data, findings, issues and follow-up actions.",
+      "统一退款和归因口径后核对销售与投流数据，比较各达人和内容表现，将问题转化为有负责人和期限的行动项。": "Align refund and attribution windows before comparing channels. Turn findings into actions with owners and deadlines."
+    }
+  },
+  {
+    "title": {
+      "zh": "整理新品发布复盘",
+      "en": "Prepare the product launch retrospective"
+    },
+    "goal": {
+      "zh": "汇总新品发布结果、关键数据、问题和后续行动，形成可共享的专项复盘。",
+      "en": "Summarize launch outcomes, key data, issues and next actions in a shared review."
+    },
+    "records": {
+      "交付专项复盘，包含发布结果、关键数据、问题和后续行动。": "Deliver a focused retrospective covering results, data, problems and next actions.",
+      "先核对已有复盘的范围与数据窗口，重点补充本次专项问题、原因和改进行动，避免重复记录同一结论。": "Check the scope and data window of existing reviews. Add the specific causes and improvements from this launch without duplicating conclusions."
+    }
+  },
+  {
+    "title": {
+      "zh": "整理并确认媒体邀请名单",
+      "en": "Prepare and confirm media invitations"
+    },
+    "goal": {
+      "zh": "完成目标媒体筛选、联系人核对、邀请状态跟进，并在发布会前确认最终出席名单。",
+      "en": "Verify target media, contacts and invitation status, and confirm attendees before the launch."
+    },
+    "records": {
+      "交付已核对的媒体邀请名单，含联系人、邀请状态与出席确认。": "Deliver a verified media list with contact details, invitation status and attendance confirmations.",
+      "从现有媒体名单开始去重，逐项核对联系人、邀请渠道和出席状态；未回复与已确认名单分开跟进。": "Deduplicate the existing list and verify contacts and channels. Track pending replies separately from confirmed attendees."
+    }
+  },
+  {
+    "title": {
+      "zh": "完成办公室无线网络部署",
+      "en": "Deploy the office wireless network"
+    },
+    "goal": {
+      "zh": "让办公室会议与日常办公保持稳定联网。",
+      "en": "Provide stable connectivity for office work and meetings."
+    },
+    "records": {
+      "无线网络覆盖全部办公区域，连接测试通过并记录网络配置。": "Cover every office area, pass connection and video meeting tests, and deliver network configuration, usage and troubleshooting notes.",
+      "先核对办公区域、终端数量和现有网络设备，再分区配置与测试；保留配置记录并验证会议室联网和故障恢复。": "Check coverage areas, device counts and existing equipment. Configure and test each area, retain configuration records and verify recovery procedures."
+    }
+  }
+]

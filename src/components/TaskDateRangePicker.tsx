@@ -1,3 +1,5 @@
+import { useI18n } from '../i18n/I18nProvider';
+import { useGlobalUi } from "../i18n/globalUi";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -21,6 +23,8 @@ function SegmentedDate({ value }: { value: string }) {
 }
 
 export function TaskDateRangePicker({ initialEnd = "", initialStart = "", label = "时间", onChange }: Props) {
+  const ui = useGlobalUi();
+  const { locale } = useI18n();
   const initialRange = initialStart && initialEnd ? { end: initialEnd, start: initialStart } : emptyRange;
   const [range, setRange] = useState<TaskDateRange>(initialRange);
   const [draft, setDraft] = useState<TaskDateRange>(initialRange);
@@ -81,23 +85,23 @@ export function TaskDateRangePicker({ initialEnd = "", initialStart = "", label 
 
   return <div className="task-date-range-picker" ref={rootRef}>
     <small className="task-date-range-label">{label}</small>
-    <button aria-expanded={open} aria-haspopup="dialog" aria-label={`${label}：${range.start ? `${range.start} 至 ${range.end}` : "未设置"}`} className="task-date-range-trigger" onClick={toggle} ref={triggerRef} type="button">
-      <span className={`task-date-field-group ${range.start ? "" : "empty"}`}>{range.start ? <><SegmentedDate value={range.start} /><i>至</i><SegmentedDate value={range.end} /></> : <strong>添加时间</strong>}<CalendarIcon aria-hidden="true" size={13} /></span>
+    <button aria-expanded={open} aria-haspopup="dialog" aria-label={`${label}：${range.start ? ui("{0} 至 {1}", {0: range.start, 1: range.end}) : ui("未设置")}`} className="task-date-range-trigger" onClick={toggle} ref={triggerRef} type="button">
+      <span className={`task-date-field-group ${range.start ? "" : "empty"}`}>{range.start ? <><SegmentedDate value={range.start} /><i>{ui("至")}</i><SegmentedDate value={range.end} /></> : <strong>{ui("添加时间")}</strong>}<CalendarIcon aria-hidden="true" size={13} /></span>
     </button>
-    {open && typeof document !== "undefined" && createPortal(<div aria-label="选择开始和结束时间" className="task-date-range-popover task-date-range-popover-fixed" ref={popoverRef} role="dialog" style={{ left: position?.left ?? 0, top: position?.top ?? 0, visibility: position ? "visible" : "hidden" }}>
+    {open && typeof document !== "undefined" && createPortal(<div aria-label={ui("选择开始和结束时间")} className="task-date-range-popover task-date-range-popover-fixed" ref={popoverRef} role="dialog" style={{ left: position?.left ?? 0, top: position?.top ?? 0, visibility: position ? "visible" : "hidden" }}>
       <div className="task-range-calendar-heading">
-        <button aria-label="上个月" onClick={() => setVisibleMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))} type="button"><ChevronLeft size={14} /></button>
-        <strong>{visibleMonth.getFullYear()} 年 {visibleMonth.getMonth() + 1} 月</strong>
-        <button aria-label="下个月" onClick={() => setVisibleMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))} type="button"><ChevronRight size={14} /></button>
+        <button aria-label={ui("上个月")} onClick={() => setVisibleMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))} type="button"><ChevronLeft size={14} /></button>
+        <strong>{visibleMonth.getFullYear()}{ui("年")}{visibleMonth.getMonth() + 1}{ui("月")}</strong>
+        <button aria-label={ui("下个月")} onClick={() => setVisibleMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))} type="button"><ChevronRight size={14} /></button>
       </div>
       <div className="task-range-calendar-grid">
-        {["日", "一", "二", "三", "四", "五", "六"].map((day) => <span className="task-range-weekday" key={day}>{day}</span>)}
+        {(locale === "en" ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] : ["日", "一", "二", "三", "四", "五", "六"]).map((day) => <span className="task-range-weekday" key={day}>{day}</span>)}
         {days.map((date) => { const value = toValue(date); const outside = date.getMonth() !== visibleMonth.getMonth(); const inRange = Boolean(draft.start && value >= draft.start && value <= draft.end); const edge = value === draft.start || value === draft.end; return <button aria-label={value} aria-pressed={inRange} className={`${outside ? "outside" : ""} ${inRange ? "in-range" : ""} ${edge ? "range-edge" : ""}`} key={value} onClick={() => chooseDate(date)} type="button"><span>{date.getDate()}</span></button>; })}
       </div>
       <div className="task-range-calendar-footer">
-        <button className="task-range-clear" disabled={!range.start} onClick={() => { setRange(emptyRange); setDraft(emptyRange); setSelectingEnd(false); setOpen(false); onChange?.(null); }} type="button">清空</button>
-        <span>{selectingEnd ? "请选择结束时间" : draft.start ? "已选择时间范围" : "时间为可选项"}</span>
-        <div><button onClick={() => setOpen(false)} type="button">取消</button><button disabled={!draft.start || selectingEnd} onClick={() => { setRange(draft); setOpen(false); onChange?.(draft); }} type="button">应用</button></div>
+        <button className="task-range-clear" disabled={!range.start} onClick={() => { setRange(emptyRange); setDraft(emptyRange); setSelectingEnd(false); setOpen(false); onChange?.(null); }} type="button">{ui("清空")}</button>
+        <span>{selectingEnd ? ui("请选择结束时间") : draft.start ? ui("已选择时间范围") : ui("时间为可选项")}</span>
+        <div><button onClick={() => setOpen(false)} type="button">{ui("取消")}</button><button disabled={!draft.start || selectingEnd} onClick={() => { setRange(draft); setOpen(false); onChange?.(draft); }} type="button">{ui("应用")}</button></div>
       </div>
     </div>, document.body)}
   </div>;

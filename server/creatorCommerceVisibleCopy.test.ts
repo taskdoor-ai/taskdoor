@@ -248,14 +248,10 @@ test("切换场景会清空旧会话临时状态，已提交与历史选择卡�
   assert.ok(historyChoiceCard.includes("currentScenarioChoiceMessageId === message.id"));
 });
 
-test("全局通知保留需要本人回应的协作邀请与只需阅读的 AI 动态", () => {
-  const source = readSource("src/components/GlobalNotifications.tsx");
-  const fixtureSource = source.slice(source.indexOf("const initialNotifications"), source.indexOf("const readFilterLabels"));
-
-  assert.equal(fixtureSource.match(/\bid:/g)?.length, 2);
-  assert.match(fixtureSource, /确认第二批达人名单与合作档期/);
-  assert.match(fixtureSource, /第二批达人中有 3 位合作档期与双十一排期冲突/);
-  assert.doesNotMatch(fixtureSource, /脚本评审|直播执行|合规审核|数据归因/);
+test("全局通知提供邀请协助、成员加入和讨论提及三类示例", () => {
+  const source = readSource("src/data/notificationExamples.ts");
+  for (const kind of ["invitation", "member-joined", "mention"]) assert.ok(source.includes(`kind: "${kind}"`));
+  assert.doesNotMatch(readSource("src/components/GlobalNotifications.tsx"), /respondToInvitation|>接受<|>拒绝</);
 });
 
 test("任务详情顶部状态始终允许手动更新当前任务", () => {

@@ -1,24 +1,24 @@
 import type { CreationForm, CreationTask } from "./taskCreationForm";
 import { getEffortScopeKey, type TaskEffortEstimate } from "./taskEffort";
+import { getCreationBranchLeaves } from "./taskCreationHierarchy";
 
 /** Only the leaf scope is added; a coordinator's parent estimate is never added again. */
 export function getCreationEffortLeaves(form: CreationForm): CreationTask[] {
-  const goal = (form.decision === "attach" ? form.candidate?.goal : form.mainTask.goal) ?? "";
-  return (form.subtasks.length ? form.subtasks : [form.mainTask]).map(task => ({ ...task, goal }));
+  return form.subtasks.length ? getCreationBranchLeaves(form) : [form.mainTask];
 }
 
-/** Keep inherited scope current without replacing an estimate's original basis. */
+/** A split invalidates the parent estimate without changing task goals. */
 export function reconcileCreationEffort(_previous: CreationForm, next: CreationForm): CreationForm {
-  const goal = (next.decision === "attach" ? next.candidate?.goal : next.mainTask.goal) ?? "";
   const estimate = next.mainTask.effortEstimate;
+  const parents = new Set(next.subtasks.map(task => task.parentClientId));
   return {
     ...next,
+    subtasks: next.subtasks.map(task => parents.has(task.clientId) && task.effortEstimate ? { ...task, effortEstimate: { ...task.effortEstimate, confirmed: false, scopeKey: "needs-review:split" } } : task),
     mainTask: {
-      ...next.mainTask, goal,
+      ...next.mainTask,
       // A split is a scope change even if all children are later removed.
       ...(next.subtasks.length && estimate ? { effortEstimate: { ...estimate, confirmed: false, scopeKey: "needs-review:split" } } : {}),
     },
-    subtasks: next.subtasks.map(task => task.goal === goal ? task : { ...task, goal }),
   };
 }
 
@@ -46,5 +46,13 @@ export function withMockCreationEffort(form: CreationForm): CreationForm {
     effortEstimate: { ...example, basis: "mock", confirmed: false, version: 1, scopeKey: getEffortScopeKey(task, example.workMethod) },
   };
   if (form.scenarioId === "complex-plan") return { ...form, subtasks: form.subtasks.map((task, index) => estimate(task, complexExamples[index])) };
+  if (form.scenarioId === "nested-plan") {
+    const leaves = getCreationEffortLeaves(form);
+    const minutes = [480, 120, 240, 480, 360, 240];
+    return { ...form, subtasks: form.subtasks.map(task => {
+      const index = leaves.findIndex(leaf => leaf.clientId === task.clientId);
+      return index < 0 ? task : estimate(task, { minutes: minutes[index], workMethod: "工具辅助整理与检查，人工执行并核对交付", reason: `估算假设：${task.title}需人员实际投入 ${minutes[index] / 60} 小时，包含准备、执行与复核；不计等待与后台运行时间。` });
+    }) };
+  }
   return { ...form, mainTask: estimate(form.mainTask, form.scenarioId ? singleExamples[form.scenarioId] : undefined) };
 }

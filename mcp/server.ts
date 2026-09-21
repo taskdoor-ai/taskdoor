@@ -39,7 +39,7 @@ export function createServer() {
   const server = new McpServer({ name: "agentdoor-mcp-server", version: "1.0.0" });
 
   registerAppTool(server, "agentdoor_prepare_task", {
-    title: "准备 AgentDoor 任务",
+    title: "准备 TaskDoor 任务",
     description: "根据用户需求生成可编辑前的任务草案，并显示确认卡片。此工具不会创建任务；必须由用户在卡片中点击“确认并创建任务”。",
     inputSchema: {
       request: z.string().min(3).max(4000).describe("用户的原始需求与任务背景"),
@@ -64,8 +64,8 @@ export function createServer() {
   });
 
   registerAppTool(server, "agentdoor_create_task", {
-    title: "确认创建 AgentDoor 任务",
-    description: "仅供嵌入卡片在用户点击确认按钮后调用，将指定草案写入 AgentDoor 任务存储。",
+    title: "确认创建 TaskDoor 任务",
+    description: "仅供嵌入卡片在用户点击确认按钮后调用，将指定草案写入 TaskDoor 任务存储。",
     inputSchema: {
       draft_id: z.string().uuid().describe("待确认草案 ID"),
       title: z.string().min(2).max(120).optional().describe("用户在卡片内确认或修改后的任务名称"),
@@ -83,7 +83,7 @@ export function createServer() {
     return textResult(task, `已确认并创建任务 ${task.taskId}：${task.title}`);
   });
 
-  registerAppResource(server, "AgentDoor 任务确认卡片", resourceUri, { mimeType: RESOURCE_MIME_TYPE, description: "用于审核并确认创建任务的交互卡片" }, async () => ({
+  registerAppResource(server, "TaskDoor 任务确认卡片", resourceUri, { mimeType: RESOURCE_MIME_TYPE, description: "用于审核并确认创建任务的交互卡片" }, async () => ({
     contents: [{ uri: resourceUri, mimeType: RESOURCE_MIME_TYPE, text: await readFile(viewPath, "utf8") }],
   }));
   return server;
@@ -112,7 +112,7 @@ async function main() {
       await transport.handleRequest(req, res, req.body);
     });
     const port = Number(process.env.PORT ?? 8787);
-    app.listen(port, "127.0.0.1", () => console.error(`AgentDoor MCP listening on http://127.0.0.1:${port}/mcp`));
+    app.listen(port, "127.0.0.1", () => console.error(`TaskDoor MCP listening on http://127.0.0.1:${port}/mcp`));
     // Keep the standalone HTTP process alive after main() resolves. Some Node
     // runtimes unref the Express listener created by the SDK helper.
     await new Promise<void>(() => { setInterval(() => undefined, 2_147_000_000); });

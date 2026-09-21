@@ -114,6 +114,6 @@ export function describeTaskCollaborationSchedule(task: CollaborationScheduleTas
     owner: task.ownerId ? person(task.ownerId) : null,
     participants: [...new Set(task.participantIds)].filter(id => id && id !== task.ownerId).map(person),
     dependencies,
-    limitations: ["人选待接受，候选分工不代表已承诺排期。", "缺少可用工作时段，未核对真实日历。"],
+    limitations: ["人员分配在任务保存后直接生效，但不代表成员已承诺具体排期。", "缺少可用工作时段，未核对真实日历。"],
   };
 }

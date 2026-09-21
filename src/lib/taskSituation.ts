@@ -1,3 +1,5 @@
+import type { TaskProgressDisplay } from "./taskProgressDisplay";
+import type { TaskEffortDistribution } from "./taskEffortDistribution";
 import type { TaskRelationSummary } from "../components/TaskRelationsSection";
 import type { TaskActivityMock, TaskDetailMock } from "../data/taskDetailMocks";
 
@@ -16,7 +18,7 @@ export type TaskSituationModel = {
   source: "example" | "recorded";
   freshness: "current" | "stale" | "missing";
   asOf?: string;
-  asOfSource?: "discussion";
+  asOfSource?: "discussion" | "progress";
   summary: string;
   notice?: string;
   groups: TaskSituationGroup[];
@@ -24,6 +26,9 @@ export type TaskSituationModel = {
 export type TaskSituationInput = {
   taskId: string;
   task: TaskDetailMock;
+  /** Same validated projection shown in the progress chart; no ID-based copy fallback. */
+  progress?: TaskProgressDisplay;
+  progressScopeState?: TaskEffortDistribution["state"];
   /** 仅用于文案；任务责任与关系仍以 task.owner 的稳定 ID 为准。 */
   ownerName?: string;
   childTasks: TaskRelationSummary[];
@@ -40,6 +45,7 @@ export type DefaultTaskSituationSummaryInput = {
   remainingChildCount: number;
   cancelledChildCount: number;
   latestDiscussionAuthor?: string;
+  hasTaskFiles?: boolean;
 };
 
 const criteriaReference = (): TaskSituationReference => ({ kind: "criteria", label: "核对完成标准" });
@@ -98,6 +104,7 @@ export function defaultTaskSituationSummary(input: DefaultTaskSituationSummaryIn
   const discussionLead = discussionAuthor ? "最新讨论由" + discussionAuthor + "补充；" : "";
   if (input.status === "已取消") return "任务已取消，" + discussionLead + "停止范围与需保留结果待核对。";
   if (input.status === "已阻塞") return "任务已阻塞，" + discussionLead + "阻塞原因与解除条件待核对。";
+  if (!discussionAuthor && input.hasTaskFiles) return "任务" + input.status + "。";
   return "任务" + input.status + "，" + (discussionAuthor ? "最新讨论由" + discussionAuthor + "补充。" : "尚未记录交付进展。");
 }
 
@@ -111,6 +118,8 @@ export function getTaskSituationModel(input: TaskSituationInput): TaskSituationM
   const missingDependencyCount = [...dependencyIds].filter(id => !dependencies.some(dependency => dependency.id === id)).length;
   const pendingDependencies = dependencies.filter(dependency => dependency.status !== "已完成");
   const latestDiscussion = latestRecordedDiscussion(input.recordedActivities ?? []);
+  // File presence is a visible fact, not a verified delivery or a numerical estimate.
+  const files = task.files.filter(file => file.kind === "file" && !file.archived);
   const done = childTasks.filter(child => child.status === "已完成");
   const remaining = childTasks.filter(child => child.status !== "已完成" && child.status !== "已取消");
   const cancelled = childTasks.filter(child => child.status === "已取消");
@@ -158,6 +167,10 @@ export function getTaskSituationModel(input: TaskSituationInput): TaskSituationM
     text: "本任务标记已完成，交付结果仍需核对。",
     reference: criteriaReference(),
   });
+  if (!delivery.length && files.length) delivery.push({
+    text: `已关联 ${files.length} 份任务文件，交付完成情况待核对。`,
+    reference: { kind: "file", id: files[0].id, label: "查看任务文件" },
+  });
   if (!delivery.length) delivery.push({ text: childTasks.length ? "尚无子任务标记已完成。" : "尚未记录已完成内容。" });
   // 成员发言保留原文和入口，不因落入完成分组而被解读为已经核实的成果。
   if (latestDiscussion) attention.push(discussionItem(latestDiscussion));
@@ -188,6 +201,10 @@ export function getTaskSituationModel(input: TaskSituationInput): TaskSituationM
     text: suggest("对照最新讨论，明确已交付结果和剩余事项。"),
     reference: { kind: "activity", id: latestDiscussion.id, label: "查看讨论依据" },
   };
+  else if (files.length) next = {
+    text: suggest("对照已有文件与完成标准，核对已形成的结果和剩余事项。"),
+    reference: { kind: "file", id: files[0].id, label: "查看任务文件" },
+  };
 
   const summary = defaultTaskSituationSummary({
     status: task.status,
@@ -195,14 +212,61 @@ export function getTaskSituationModel(input: TaskSituationInput): TaskSituationM
     remainingChildCount: remaining.length,
     cancelledChildCount: cancelled.length,
     latestDiscussionAuthor: latestDiscussion?.author,
+    hasTaskFiles: files.length > 0,
   });
-  return {
+  const model: TaskSituationModel = {
     source: "recorded",
     freshness: missingDependencyCount || (!childTasks.length && !latestDiscussion) ? "missing" : "current",
     ...(latestDiscussion ? { asOf: latestDiscussion.createdAt, asOfSource: "discussion" as const } : {}),
     summary,
     groups: [
       { id: "delivery", label: "已完成内容", items: delivery },
+      { id: "attention", label: "需要关注", items: attention },
+      { id: "next", label: "下一步", items: [next] },
+    ],
+  };
+  const progress = input.progress;
+  if (!progress) return model;
+  const scopeIssue = input.progressScopeState === "stale" ? "任务范围已变化，估算需要重新核对"
+    : input.progressScopeState === "partial" ? "部分子任务缺少有效估算，无法汇总当前进度"
+      : input.progressScopeState === "invalid" ? "估算记录格式无效，需要核对原记录"
+        : input.progressScopeState === "unavailable" ? "缺少当前范围的有效估算"
+          : progress.historySeries && progress.total !== progress.historySeries.workload.at(-1)?.scopeMinutes ? "当前估算与进度记录的范围不一致，需重新评估"
+          : "尚无可核对的完成量记录，现有估算不能证明执行进展";
+  const hasPriorityAction = task.status === "已取消" || missingDependencyCount || pendingDependencies.length || blocked.length || task.status === "已阻塞";
+  const criterion = criteria[0] ? `「${criteria[0]}」` : "完成标准";
+  if (progress.ratio === null) {
+    return { ...model, freshness: "missing", summary: `「${task.title}」${task.status}；暂无分析：${scopeIssue}。`,
+      groups: model.groups.map(group => group.id !== "next" || hasPriorityAction ? group : { ...group, items: [{
+        text: suggest(`对照${criterion}补充带日期的完成量记录${input.progressScopeState !== "available" ? "并核对当前估算" : ""}，再评估进度。`), reference: criteriaReference(),
+      }] }) };
+  }
+  const hasAmount = progress.currentMinutes !== null && progress.total !== null && progress.total > 0;
+  const progressText = hasAmount ? `${progress.sourceLabel}完成度 ${Number((progress.ratio * 100).toFixed(1))}%` : "完成量尚待核对";
+  const finishText = progress.completedOn ? `确认完成日 ${progress.completedOn}；${progress.timeStatus}。`
+    : progress.forecastOn ? `AI 预测完成日 ${progress.forecastOn}；${progress.timeStatus}。`
+      : task.status === "已取消" ? "已停止完工预测。" : task.status === "已完成" ? "完成日期待核对。" : "";
+  // Quote the evidence actually used by the chart. A stale/changed scope cannot reuse an old basis.
+  const history = progress.historySeries;
+  const sameScope = hasAmount && progress.total === history?.workload.at(-1)?.scopeMinutes;
+  const basis = sameScope ? history?.aiAssessment?.basis ?? history?.workload.at(-1)?.note : undefined;
+  const timingBasis = sameScope && !progress.forecastOn && !progress.completedOn && task.status !== "已取消" && task.status !== "已完成" ? history?.timing.basis : undefined;
+  const evidence: TaskSituationItem[] = [
+    ...(basis ? [{ text: `进度记录：${basis}` }] : []),
+    ...(timingBasis ? [{ text: `时间依据：${timingBasis}` }] : []),
+  ];
+  if (!hasPriorityAction) {
+    if (childTasks.length) next = { text: suggest(remaining.length
+      ? `先核对「${remaining[0].title}」的剩余交付及时间，再对照${criterion}确认整体结果。`
+      : `对照${criterion}核对整体交付结果与来源。`), reference: remaining.length ? taskReference(remaining[0]) : criteriaReference() };
+    else if (task.status === "已完成") next = { text: suggest(`对照${criterion}保留交付确认和原始依据。`), reference: criteriaReference() };
+    else if (progress.deltaDays !== null && progress.deltaDays > 0) next = { text: suggest(`对照${criterion}核对剩余工作与 ${progress.forecastOn ?? progress.completedOn} 的时间依据，再协调截止安排。`), reference: criteriaReference() };
+    else next = { text: suggest(`对照${criterion}核对剩余交付${progress.forecastOn ? `，在 ${progress.forecastOn} 前更新结果与依据` : "，补充下一次核对时间"}。`), reference: criteriaReference() };
+  }
+  return { ...model, freshness: "current", asOf: progress.asOf, asOfSource: "progress",
+    summary: `「${task.title}」${task.status}；${progressText}。${finishText}`,
+    groups: [
+      { id: "delivery", label: "已完成内容", items: evidence.length ? evidence : delivery },
       { id: "attention", label: "需要关注", items: attention },
       { id: "next", label: "下一步", items: [next] },
     ],

@@ -1,3 +1,4 @@
+import { useProgressCopy } from "../i18n/progressCopy";
 import React, { useId, type ReactNode } from "react";
 import type { TaskSituationModel, TaskSituationReference } from "../lib/taskSituation";
 
@@ -9,16 +10,8 @@ type TaskCurrentSituationProps = {
   trendLabel?: string;
 };
 
-function dateLabel(value: string) {
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return `${Number(value.slice(5, 7))}/${Number(value.slice(8, 10))}`;
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return value;
-  return new Intl.DateTimeFormat("zh-CN", {
-    month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "Asia/Shanghai",
-  }).format(date);
-}
-
 export function TaskCurrentSituation({ hasBurnUp = false, model, trend, trendLabel = "子任务工作量趋势" }: TaskCurrentSituationProps) {
+  const p = useProgressCopy();
   const titleId = useId();
   const nextTitleId = `${titleId}-next`;
   // Legacy example payloads must not become apparently real by hiding their badge.
@@ -30,8 +23,8 @@ export function TaskCurrentSituation({ hasBurnUp = false, model, trend, trendLab
     ? model.groups.filter(group => group.id === "delivery" || group.id === "attention").flatMap(group => group.items)
     : [];
   const currentDescription = isRecorded
-    ? [model.summary, ...currentItems.map(item => item.text)].filter(Boolean).join(" ")
-    : "暂无可用的进展记录。";
+    ? [p(model.summary), ...currentItems.map(item => p(item.text))].filter(Boolean).join(" ")
+    : p("暂无可用的进展记录。");
   const nextItems = isRecorded ? model.groups.find(group => group.id === "next")?.items ?? [] : [];
   const visibleTrend = isRecorded ? trend : undefined;
 
@@ -40,25 +33,24 @@ export function TaskCurrentSituation({ hasBurnUp = false, model, trend, trendLab
       <div className="task-situation-content">
         <div className="task-situation-column task-situation-current" data-column="current">
           <div className="task-situation-heading">
-            <h2 id={titleId}>当前情况</h2>
+            <h2 id={titleId}>{p("当前情况")}</h2>
             <div className="task-situation-meta">
-              {isRecorded && model.asOf && <time dateTime={model.asOf}>{model.asOfSource === "discussion" ? "最近讨论" : "截至"} {dateLabel(model.asOf)}</time>}
-              {isRecorded && model.freshness === "stale" && <span className="task-situation-stale">摘要待核对</span>}
+              {isRecorded && model.freshness === "stale" && <span className="task-situation-stale">{p("摘要待核对")}</span>}
             </div>
           </div>
           <p className="task-situation-summary">{currentDescription}</p>
-          {isRecorded && model.freshness === "stale" && model.notice && <p className="task-situation-notice">{model.notice}</p>}
+          {isRecorded && model.freshness === "stale" && model.notice && <p className="task-situation-notice">{p(model.notice)}</p>}
         </div>
         {nextItems.length > 0 && <div className="task-situation-column task-situation-next" data-column="next">
-          <div className="task-situation-heading"><h2 id={nextTitleId}>下一步建议</h2></div>
+          <div className="task-situation-heading"><h2 id={nextTitleId}>{p("下一步建议")}</h2></div>
           <ol aria-labelledby={nextTitleId} className="task-situation-list">
             {nextItems.map((item, index) => <li className="task-situation-item" key={`next-${index}`}>
-              <span>{item.text}</span>
+              <span>{p(item.text)}</span>
             </li>)}
           </ol>
         </div>}
       </div>
-      {visibleTrend && <aside aria-label={trendLabel} className="task-situation-trend">{visibleTrend}</aside>}
+      {visibleTrend && <aside aria-label={p(trendLabel)} className="task-situation-trend">{visibleTrend}</aside>}
     </div>
   </section>;
 }

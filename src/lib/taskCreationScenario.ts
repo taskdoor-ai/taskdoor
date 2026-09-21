@@ -1,4 +1,5 @@
 import { normalizePersonalTagNames } from "./personalTags.ts";
+import { createNestedTaskCreationDraft } from "./nestedTaskCreationScenario";
 import type { TaskCreationScenarioId } from "../data/taskCreationScenarios";
 import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
 import { createCreatorCommerceScenarioDraft } from "./mockTaskAssistant";
@@ -134,7 +135,7 @@ const childDraft = (session: ScenarioSession, context: ScenarioContext, parent: 
     ...baseDraft,
     mainTask: {
       ...baseDraft.mainTask,
-      endDate: parent.plannedEndOn ?? fallbackEndDate,
+      endDate: (parent.plannedEndOn ?? fallbackEndDate) >= context.currentDate ? parent.plannedEndOn ?? fallbackEndDate : "",
       labels: normalizePersonalTagNames(parent.labels ?? []).filter(label => context.tags.includes(label)),
       startDate: parent.plannedStartOn ?? (fallbackEndDate ? context.currentDate : ""),
     },
@@ -143,6 +144,7 @@ const childDraft = (session: ScenarioSession, context: ScenarioContext, parent: 
 
 const scenarioDraft = (session: ScenarioSession, context: ScenarioContext): TaskPlanDraft => {
   switch (session.scenarioId) {
+    case "nested-plan": return createNestedTaskCreationDraft(context);
     case "single-task": {
       const title = "整理下周例会纪要";
       const goal = "汇总会议议题、关键结论、责任人和后续行动，形成可直接共享的会议纪要。";

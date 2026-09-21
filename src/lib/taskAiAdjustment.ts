@@ -1,3 +1,4 @@
+import { taskCreationDay, taskScheduleError } from "./taskSchedule";
 import type {
   TaskAiAdjustmentChange,
   TaskAiAdjustmentContext,
@@ -131,6 +132,9 @@ function canReach(graph: Map<string, DependencyTask>, from: string, target: stri
 }
 
 function validateDeadline(context: TaskAiAdjustmentContext, target: TaskAiEditableTask, date: string): string | null {
+  const error = taskScheduleError(date, context.mode === "draft" ? taskCreationDay() : target.createdAt, target.startDate);
+  if (error) return error;
+  if (context.mode === "draft") return null;
   if (target.startDate && !validDate(target.startDate)) return "当前任务的开始日期无效，请先核对开始日期；原文与任务保持不变。";
   if (date && target.startDate && date < target.startDate) return "截止日期不能早于当前任务的开始日期；原文与任务保持不变。";
   if (!date) return null;
@@ -202,13 +206,13 @@ export function buildTaskAiAdjustment(
       const criteria = match && splitItems(match[2]);
       if (!title || !criteria) return { error: "新增子任务须明确名称和完成标准，格式为「添加子任务：名称；完成标准：A；B」；请补充后重试，原文已保留。" };
       const child: TaskAiEditableTask = {
-        id: globalThis.crypto.randomUUID(), title, goal: context.task.goal, goalInherited: true,
+        id: globalThis.crypto.randomUUID(), title, goal: context.task.goal, goalInherited: false,
         completionCriteria: criteria, executionTips: [], ownerId: "", participantIds: [],
         startDate: "", endDate: "", dependsOnTaskIds: [],
       };
       additions.push(child);
       const addedFields = [
-        ["新增子任务", title], ["目标（继承主任务）", child.goal || "待定"],
+        ["新增子任务", title], ["目标（创建时带入）", child.goal || "待定"],
         ["完成标准", criteria.join("\n")], ["负责人", "待定"], ["截止时间", "待定"], ["前置依赖", "无"],
       ];
       for (const [label, after] of addedFields) changes.push({ taskId: child.id, taskTitle: child.title, label, before: null, after });
@@ -217,7 +221,7 @@ export function buildTaskAiAdjustment(
         updates.push({ taskId: context.task.id, patch: { effortEstimate: { ...context.task.effortEstimate, confirmed: false, scopeKey: "needs-review:split" } } });
         changes.push({ taskId: context.task.id, taskTitle: context.task.title, label: "预计投入口径", before: "按当前任务估算", after: "改由子任务汇总；原父项估算保留待复核" });
       }
-      return result("已整理新增子任务候选，继承主目标，人选与日期待定，没有自动添加依赖；尚未创建或指派任务。");
+      return result("已整理新增子任务候选，初始目标带入主目标，创建后可独立修改；人选与日期待定，没有自动添加依赖，尚未创建或指派任务。");
     }
     const selector = /^子任务「([^「」]+)」[ \t]*[：:][ \t]*(.+)$/u.exec(text);
     if (!selector) return { error: "子任务模块需要指定唯一任务，格式为「子任务「精确名称」：单条调整要求」；不会自动选择第一项，自由拆分暂不支持。原文与任务保持不变。" };
@@ -259,13 +263,9 @@ export function buildTaskAiAdjustment(
       describe("任务名称", target.title, value);
     }
   } else if (operation === "目标改为") {
-    if (target.goalInherited) return { error: "当前任务继承主任务目标，不能在这里单独改写；请到主任务调整目标，原文与任务保持不变。" };
     if (target.goal !== value) {
       patch.goal = value;
       describe("目标", target.goal, value);
-      if (target.id === context.task.id && context.subtasks.some(child => child.goalInherited)) {
-        summary = "已整理主目标调整候选；继承主目标的子任务仍随主任务读取目标，其他字段不变。尚未应用或保存。";
-      }
     }
   } else if (["增加完成标准", "完成标准改为", "执行建议改为"].includes(operation)) {
     const items = splitItems(value);
@@ -281,6 +281,7 @@ export function buildTaskAiAdjustment(
       describe(isTips ? "执行建议" : "完成标准", before.join("\n"), after.join("\n"));
     }
   } else if (operation === "预计投入改为") {
+    if (context.mode === "saved") return { error: "预计投入仅支持在创建任务时修改，已创建任务暂不支持修改。" };
     const graph = dependencyGraph(context);
     if (typeof graph === "string") return { error: graph };
     if ([...graph.values()].some(task => task.parentTaskId === target.id)) return { error: "当前任务已有子任务，预计投入应由叶子任务汇总。请展开子任务逐项调整，避免父子重复计量；原文与估算保持不变。" };
@@ -312,16 +313,10 @@ export function buildTaskAiAdjustment(
       : "未找到这个精确姓名或 ID 的有效成员，请核对当前成员列表；原文与任务保持不变。" };
     const ownerId = value === "待定" ? "" : matches[0].id;
     if (context.mode === "saved") {
-      if (ownerId === target.ownerId || ownerId === target.proposedOwnerId) {
-        return result(target.proposedOwnerId
-          ? "内容没有变化；已有待接受提议仍保留，正式负责人不变。"
-          : "内容没有变化，正式负责人保持原样。");
-      }
-      patch.ownerId = ownerId; // Adapter persists a proposal, never the formal Owner.
-      describe("负责人提议", target.proposedOwnerId
-        ? `${memberLabel(context, target.proposedOwnerId)}（待接受）`
-        : `${memberLabel(context, target.ownerId)}（正式负责人）`, `${memberLabel(context, ownerId)}（待接受）`);
-      summary = `已生成负责人提议，${memberLabel(context, ownerId)}待接受；正式负责人「${memberLabel(context, target.ownerId)}」不变，参与人不变。尚未应用或发送邀请。`;
+      if (ownerId === target.ownerId) return result("内容没有变化，负责人保持原样。");
+      patch.ownerId = ownerId;
+      describe("负责人", memberLabel(context, target.ownerId), memberLabel(context, ownerId));
+      summary = "已生成负责人修改候选，尚未应用；用户应用本次调整后将直接生效，参与人保持不变。";
     } else if (target.ownerId !== ownerId) {
       patch.ownerId = ownerId;
       describe("负责人", memberLabel(context, target.ownerId), memberLabel(context, ownerId));

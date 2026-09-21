@@ -6,7 +6,7 @@
 
 **Architecture:** `App` 继续持有任务筛选状态并注入当前用户与成员目录；`WorkspaceList` 只负责过滤和选择列表/看板投影。状态顺序、状态 tone 与分组逻辑下沉到共享 `taskBoard` 模型，任务详情看板和全局任务看板共同消费；全局看板复用详情看板的 CSS 解剖但保持只读。
 
-**Tech Stack:** React 19、TypeScript、Base UI Combobox、Lucide React、现有 AgentDoor CSS Token、Node test runner + `tsx`。
+**Tech Stack:** React 19、TypeScript、Base UI Combobox、Lucide React、现有 TaskDoor CSS Token、Node test runner + `tsx`。
 
 ---
 

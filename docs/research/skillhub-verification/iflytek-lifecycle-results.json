@@ -1,0 +1,32 @@
+{
+  "cases": [
+    {
+      "name": "default_local_registration",
+      "status": 200,
+      "account": {
+        "userId": "usr_d1a63073-c901-4f4e-841d-a8d2ad1b48c9",
+        "displayName": "probeuser1789375220936",
+        "email": "probeuser1789375220936@example.test",
+        "avatarUrl": "",
+        "oauthProvider": "local",
+        "canChangePassword": true,
+        "platformRoles": [
+          "USER"
+        ]
+      }
+    },
+    {
+      "name": "active_token_access",
+      "status": 200
+    },
+    {
+      "name": "non_owner_private_download",
+      "status": 403
+    },
+    {
+      "name": "disabled_user_existing_token",
+      "status": 401
+    }
+  ],
+  "passed": true
+}

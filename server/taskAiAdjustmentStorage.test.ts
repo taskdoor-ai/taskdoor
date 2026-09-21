@@ -330,3 +330,29 @@ for (const invalidJournal of [
     assert.deepEqual(storage.mutations, []);
   });
 }
+
+test('large task snapshots fit a quota without duplicating full before/after recovery data', () => {
+  const before = JSON.stringify(Array.from({length:1000},(_,id)=>({id,text:'场地、流程与宣传物料 😀',confirmed:false})));
+  const after = before.replace('false','true');
+  const storage = new MemoryStorage([['tasks',before]]);
+  let prepared = '';
+  let committed = '';
+  storage.failMutation = mutation => {
+    const next = new Map(storage.values);
+    if(mutation.kind==='set') next.set(mutation.key,mutation.value!); else next.delete(mutation.key);
+    return [...next.values()].reduce((n,value)=>n+value.length,0) > before.length * 2;
+  };
+  storage.afterMutation = mutation => {
+    if(mutation.key!==TASK_AI_JOURNAL_KEY || mutation.kind!=='set') return;
+    if(JSON.parse(mutation.value!).state==='prepared') prepared=mutation.value!; else committed=mutation.value!;
+  };
+  commitTaskAiStorage(storage,[['tasks',after]]);
+  assert.equal(storage.getItem('tasks'),after);
+  assert.equal(JSON.parse(prepared).version,2);
+  const interrupted = new MemoryStorage([['tasks',after],[TASK_AI_JOURNAL_KEY,prepared]]);
+  recoverTaskAiStorage(interrupted);
+  assert.equal(interrupted.getItem('tasks'),before);
+  const completed = new MemoryStorage([['tasks',before],[TASK_AI_JOURNAL_KEY,committed]]);
+  recoverTaskAiStorage(completed);
+  assert.equal(completed.getItem('tasks'),after);
+});

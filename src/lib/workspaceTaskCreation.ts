@@ -1,9 +1,17 @@
+import { taskScheduleError } from "./taskSchedule";
 import { workspaceRootId, type TaskNode, type WorkspaceNode } from "../data/workspaceNodes";
 import type { TaskDraft, TaskPlanDraft } from "./taskAssistantProtocol";
 import { effortEstimateSchema, type TaskEffortEstimate } from "./taskEffort";
+import { commitTaskAiStorage } from "./taskAiAdjustmentStorage";
+import { createTaskEffortBaseline } from "./taskEffortBaseline";
+import { defaultCreationParticipantIds } from "./taskCreationParticipants";
+import { getTaskDefinitionGoal } from "./taskGoal";
+import { validateDraftHierarchy } from "./taskCreationHierarchy";
 
 export type WorkspaceTaskCreationOptions = {
   currentUserId?: string;
+  /** The creation form has shown the defaults and the user has reviewed its participants. */
+  participantsReviewed?: boolean;
   idForIndex?: (index: number) => string;
   parentTaskId?: string;
   /** Local demo data scope. A child always inherits the saved parent's team. */
@@ -54,7 +62,7 @@ const toTaskNode = (draft: TaskDraft, id: string, parentId: string, parentTaskId
   kind: "task",
   name: draft.title,
   parentId,
-  updatedAt: "刚刚",
+  updatedAt: new Date().toISOString(),
   ownerId: draft.ownerId,
   participantIds: [...draft.participantIds],
   status: "待开始",
@@ -77,23 +85,30 @@ export function createWorkspaceTasksFromDraft(
   draft: TaskPlanDraft,
   options: WorkspaceTaskCreationOptions = {},
 ): { createdNodes: TaskNode[]; mainTaskId: string; nodes: WorkspaceNode[] } {
+  validateDraftHierarchy(draft.subtasks);
+  const createdAt = new Date().toISOString();
+  for (const task of [draft.mainTask, ...draft.subtasks]) {
+    const error = taskScheduleError(task.endDate, createdAt, task.startDate);
+    if (error) throw new Error(`「${task.title}」${error}`);
+  }
   const usedIds = new Set(nodes.map(({ id }) => id));
   const idForIndex = options.idForIndex ?? (() => randomId());
-  const prepareNewTask = (task: TaskNode): TaskNode => options.currentUserId ? {
-    ...task,
-    createdFrom: "task-planner",
-    createdBy: options.currentUserId,
-    createdAt: new Date().toISOString(),
-    ownerId: task.ownerId === options.currentUserId ? task.ownerId : "",
-    ...(task.ownerId && task.ownerId !== options.currentUserId ? { proposedOwnerId: task.ownerId } : {}),
-  } : task;
+  const prepareNewTask = (task: TaskNode): TaskNode => {
+
+    const effortBaseline = createTaskEffortBaseline(task,createdAt);
+    return {...task,createdAt,...(effortBaseline ? {effortBaseline} : {}),
+      ...(options.currentUserId ? {
+        createdFrom: "task-planner" as const,createdBy: options.currentUserId,
+        participantIds: options.participantsReviewed ? task.participantIds : defaultCreationParticipantIds(task, options.currentUserId),
+      } : {})};
+  };
 
   if (options.parentTaskId) {
     const parent = nodes.find((node): node is TaskNode => node.kind === "task" && node.id === options.parentTaskId);
     if (!parent) throw new WorkspaceTaskCreationError(options.parentTaskId);
     const ids = [draft.mainTask, ...draft.subtasks].map((_, index) => uniqueId(idForIndex(index), usedIds));
     const childNode = toTaskNode(
-      { ...draft.mainTask, ...(options.currentUserId ? { goal: parent.goal ?? "" } : {}) },
+      { ...draft.mainTask, goal: draft.mainTask.goal ?? getTaskDefinitionGoal(nodes, parent) },
       ids[0],
       parent.parentId ?? workspaceRootId,
       parent.id,
@@ -108,7 +123,7 @@ export function createWorkspaceTasksFromDraft(
         .filter((dependencyIndex) => dependencyIndex >= 0 && dependencyIndex < draft.subtasks.length && dependencyIndex !== index)
         .map((dependencyIndex) => ids[dependencyIndex + 1]))];
       return {
-        ...toTaskNode(task, taskId, child.parentId ?? workspaceRootId, child.id, child.teamId),
+        ...toTaskNode(task, taskId, child.parentId ?? workspaceRootId, task.parentSubtaskIndex === undefined ? child.id : ids[task.parentSubtaskIndex + 1], child.teamId),
         ...(dependsOnTaskIds.length ? { dependsOnTaskIds } : {}),
       };
     });
@@ -116,7 +131,7 @@ export function createWorkspaceTasksFromDraft(
     const nextNodes = wasLeaf && parent.effortEstimate
       ? nodes.map(node => node.id === parent.id ? invalidateSplitEffort(parent) : node)
       : nodes;
-    const createdNodes = [child, ...subtasks].map(prepareNewTask);
+    const createdNodes = [child, ...subtasks].map(task => prepareNewTask(subtasks.some(item => item.parentTaskId === task.id) ? invalidateSplitEffort(task) : task));
     return { createdNodes, mainTaskId: child.id, nodes: [...nextNodes, ...createdNodes] };
   }
 
@@ -131,10 +146,29 @@ export function createWorkspaceTasksFromDraft(
       .filter((dependencyIndex) => dependencyIndex >= 0 && dependencyIndex < draft.subtasks.length && dependencyIndex !== index)
       .map((dependencyIndex) => ids[dependencyIndex + 1]))];
     return {
-      ...toTaskNode(task, taskId, main.parentId ?? workspaceRootId, main.id, main.teamId),
+      ...toTaskNode(task, taskId, main.parentId ?? workspaceRootId, task.parentSubtaskIndex === undefined ? main.id : ids[task.parentSubtaskIndex + 1], main.teamId),
       ...(dependsOnTaskIds.length ? { dependsOnTaskIds } : {}),
     };
   });
-  const createdNodes = [main, ...subtasks].map(prepareNewTask);
+  const createdNodes = [main, ...subtasks].map(task => prepareNewTask(subtasks.some(item => item.parentTaskId === task.id) ? invalidateSplitEffort(task) : task));
   return { createdNodes, mainTaskId: main.id, nodes: [...nodes, ...createdNodes] };
+}
+
+/** The manual plus button creates one blank task before opening its editable detail. */
+export function commitManualWorkspaceTask(
+  storage: Pick<Storage, "getItem" | "setItem" | "removeItem">,
+  nodes: WorkspaceNode[],
+  options: { currentUserId: string; teamId: string; idForIndex?: (index: number) => string },
+) {
+  const result = createWorkspaceTasksFromDraft(nodes, {
+    mainTask: {
+      title: "未命名任务", goal: "", completionCriteria: [], executionTips: [],
+      ownerId: "", participantIds: [], labels: [], startDate: "", endDate: "",
+    },
+    subtasks: [],
+  }, options);
+  const created: TaskNode = { ...result.createdNodes[0], createdFrom: "task-editor" };
+  const next = { ...result, createdNodes: [created], nodes: result.nodes.map(node => node.id === created.id ? created : node) };
+  commitTaskAiStorage(storage, [["agentdoor-workspace-nodes", JSON.stringify(next.nodes)]]);
+  return next;
 }

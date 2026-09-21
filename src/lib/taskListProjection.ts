@@ -1,6 +1,7 @@
 import { taskMatchesListFilters, type TaskListFilters } from "../components/taskListFilters.ts";
 import type { TagDefinition } from "../data/sharedTypes.ts";
 import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes.ts";
+import { compareTaskUpdates } from "./taskListPresentation.ts";
 import { taskBoardStatusOrder } from "./taskBoard.ts";
 
 export type TaskListProjection = {
@@ -11,6 +12,8 @@ export type TaskListProjection = {
   untaggedCount?: number;
   statuses: TaskNode["status"][];
 };
+
+export type TaskScopeCounts = { all: number; owned: number; participating: number };
 
 export type PersonalTaskTagGroup = {
   key: string;
@@ -76,17 +79,20 @@ export function buildTaskListProjection(
   query: string,
   filters: TaskListFilters,
   tagDefinitions: TagDefinition[],
+  currentUserId = filters.owner,
+  displayName?: (task: TaskNode) => string,
 ): TaskListProjection {
   const tasksById = new Map<string, TaskNode>();
   for (const node of nodes) {
     if (node.kind === "task" && !tasksById.has(node.id)) tasksById.set(node.id, node);
   }
   const allTasks = [...tasksById.values()];
+  const queryFor = (task: TaskNode) => displayName?.(task).toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()) ? "" : query;
   const scopeFilters = { ...filters, tag: "all", tags: [], includeUntagged: false };
-  const scopedTasks = allTasks.filter((task) => taskMatchesListFilters(task, query, scopeFilters));
+  const scopedTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), scopeFilters, currentUserId));
   const visibleTasks = scopedTasks
-    .filter((task) => taskMatchesListFilters(task, query, filters))
-    .sort((a, b) => a.name.localeCompare(b.name, "zh-CN") || a.id.localeCompare(b.id));
+    .filter((task) => taskMatchesListFilters(task, queryFor(task), filters, currentUserId))
+    .sort((a, b) => compareTaskUpdates(a, b, filters.sort === "created"));
   const presentStatuses = new Set(allTasks.map((task) => task.status));
 
   return {
@@ -97,4 +103,26 @@ export function buildTaskListProjection(
     untaggedCount: scopedTasks.filter((task) => !task.labels?.some((label) => label.trim().length > 0)).length,
     statuses: taskBoardStatusOrder.filter((status) => presentStatuses.has(status)),
   };
+}
+
+/** 范围胶囊沿用当前查询和其他筛选，只替换本人关系范围。 */
+export function buildTaskScopeCounts(
+  nodes: WorkspaceNode[],
+  query: string,
+  filters: TaskListFilters,
+  tagDefinitions: TagDefinition[],
+  currentUserId: string,
+  displayName?: (task: TaskNode) => string,
+): TaskScopeCounts {
+  const count = (scope: "all" | "owned" | "participating") => buildTaskListProjection(
+    nodes,
+    query,
+    { ...filters, scope },
+    tagDefinitions,
+    currentUserId,
+    displayName,
+  ).visibleTasks.length;
+  const all = count("all");
+  if (!currentUserId.trim()) return { all, owned: 0, participating: 0 };
+  return { all, owned: count("owned"), participating: count("participating") };
 }

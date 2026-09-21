@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+  <title id="title">任务分析与完成确认流程</title>
+  <desc id="desc">任务资料形成当前情况和不同口径的进度；我的工作只排序本人作为正式 Owner 或 Participant 且处于待开始、进行中、已阻塞的任务；AI 提供候选建议，用户执行受控动作。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/></marker>
+    <style>.title{font:700 26px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.sub{font:400 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#667085}.head{font:700 16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#24324a}.body{font:400 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#667085}.line{stroke:#667085;stroke-width:2;fill:none;marker-end:url(#arrow)}.dash{stroke:#98a2b3;stroke-width:2;stroke-dasharray:7 7;fill:none;marker-end:url(#arrow)}</style>
+  </defs>
+  <rect width="960" height="600" rx="28" fill="#f8fafc"/>
+  <text class="title" x="56" y="64">分析进度与确认完成</text>
+  
+
+  <rect x="56" y="154" width="164" height="126" rx="18" fill="#eef4ff" stroke="#84adff"/><text class="head" x="80" y="190">任务资料</text><text class="body" x="80" y="218">字段 · 完成标准</text><text class="body" x="80" y="242">讨论 · 文件版本</text><text class="body" x="80" y="264">Commit · Activity</text>
+  <path class="line" d="M220 217 H272"/>
+  <rect x="274" y="138" width="188" height="158" rx="18" fill="#fff" stroke="#84adff"/><text class="head" x="304" y="174">当前情况与进度</text><text class="body" x="304" y="202">内容完成度</text><text class="body" x="304" y="226">时间进度</text><text class="body" x="304" y="250">预计投入 · 阻塞</text><text class="body" x="304" y="274">资料不足 → 未知</text>
+  <path class="line" d="M462 217 H514"/>
+  <rect x="516" y="154" width="164" height="126" rx="18" fill="#f3f0ff" stroke="#a48afb"/><text class="head" x="548" y="190">AI 建议</text><text class="body" x="544" y="218">来源可定位</text><text class="body" x="544" y="242">只给候选动作</text><text class="body" x="544" y="264">不自动写入</text>
+  <path class="line" d="M680 217 H732"/>
+  <rect x="734" y="154" width="170" height="126" rx="18" fill="#fff4ed" stroke="#fdb022"/><text class="head" x="766" y="190">用户动作</text><text class="body" x="762" y="218">核对来源与影响</text><text class="body" x="762" y="242">受控状态转换</text><text class="body" x="762" y="264">版本与权限复核</text>
+
+  <path class="line" d="M819 280 V354"/>
+  <rect x="650" y="356" width="254" height="120" rx="18" fill="#ecfdf3" stroke="#6ce9a6"/><text class="head" x="684" y="392">完成任务：独立确认</text><text class="body" x="684" y="420">完成标准 · 成果 · 草稿 · 文件</text><text class="body" x="684" y="444">阻塞 · 关系 · 最新任务版本</text>
+  <path class="dash" d="M650 416 H542"/>
+  <rect x="274" y="356" width="268" height="120" rx="18" fill="#fff" stroke="#98a2b3"/><text class="head" x="306" y="392">我的工作</text><text class="body" x="306" y="420">正式 Owner／Participant</text><text class="body" x="306" y="444">待开始 · 进行中 · 已阻塞</text><text class="body" x="306" y="466">重要度 60%＋紧急度 40%（待验证）</text>
+  <path class="dash" d="M138 280 V416 H274"/>
+  <text class="body" x="56" y="544">Commit、100% 进度或子任务完成均不会自动关闭父任务</text>
+  <text class="body" x="56" y="568">完成成功后保留讨论、文件、Commit、Activity 与完成记录</text>
+</svg>

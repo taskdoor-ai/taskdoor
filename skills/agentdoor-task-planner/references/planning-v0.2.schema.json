@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "AgentDoor contextual task planning v0.2 (proposal only)",
+  "title": "TaskDoor contextual task planning v0.2 (proposal only)",
   "type": "object",
   "additionalProperties": false,
   "required": [

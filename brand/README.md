@@ -1,6 +1,6 @@
-# Agentdoor logo exploration
+# TaskDoor logo exploration
 
-Six SVG directions built around Agentdoor's product idea: a shared context and continuation layer between people and their personal AIs.
+Six SVG directions built around TaskDoor's product idea: a shared context and continuation layer between people and their personal AIs.
 
 1. **Open Portal — recommended.** A bold arch and a blue door shown in the act of opening.
 2. **Ajar.** The clearest literal door, reduced to frame and door leaf.

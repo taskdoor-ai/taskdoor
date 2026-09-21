@@ -1,9 +1,14 @@
+import { useGlobalUi } from "../i18n/globalUi";
+import { useI18n } from "../i18n/I18nProvider";
+import { useDetailCopy } from "../i18n/detailMessages";
+import { taskCreationDay, taskScheduleError } from "../lib/taskSchedule";
 import { CalendarIcon, ChevronLeft, ChevronRight, InfinityIcon } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 type TaskDueDatePickerProps = {
   initialValue?: string;
+  minDate?: string;
   label?: string;
   onChange?: (value: string) => void;
 };
@@ -27,11 +32,17 @@ function SegmentedDate({ value }: { value: string }) {
 }
 
 // Single-date adaptation of jolbol1's 21st.dev Date Range Picker anatomy.
-export function TaskDueDatePicker({ initialValue = "", label = "截止时间", onChange }: TaskDueDatePickerProps) {
+export function TaskDueDatePicker({ initialValue = "", label = "截止时间", minDate = taskCreationDay(), onChange }: TaskDueDatePickerProps) {
+  const ui = useGlobalUi();
+  const d = useDetailCopy();
+  const { locale } = useI18n();
   const [value, setValue] = useState(initialValue);
   const [draft, setDraft] = useState(initialValue);
   const [mode, setMode] = useState<"date" | "none">(initialValue ? "date" : "none");
   const [open, setOpen] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const existingError = taskScheduleError(value, minDate);
+  const draftError = mode === "date" ? taskScheduleError(draft, minDate) : null;
   const pickerId = useId();
   const [popoverPosition, setPopoverPosition] = useState<{ left: number; top: number } | null>(null);
   const [visibleMonth, setVisibleMonth] = useState(() => {
@@ -114,6 +125,7 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", o
   }, [open, isPositioned]);
 
   const toggle = () => {
+    setSaveError("");
     setDraft(value);
     setMode(value ? "date" : "none");
     const date = value ? fromValue(value) : new Date();
@@ -126,55 +138,59 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", o
   };
   const apply = () => {
     const nextValue = mode === "none" ? "" : draft;
-    if (mode === "date" && !nextValue) return;
-    setValue(nextValue);
-    dismiss();
-    onChange?.(nextValue);
+    if (mode === "date" && (!nextValue || draftError)) return;
+    try {
+      onChange?.(nextValue);
+      setValue(nextValue);
+      dismiss();
+    } catch (error) { setSaveError(error instanceof Error ? error.message : d('saveFailed')); }
   };
 
   return <div className="task-due-date-picker" ref={rootRef}>
     <small className="task-due-date-label">{label}</small>
-    <button aria-controls={open ? pickerId : undefined} aria-expanded={open} aria-haspopup="dialog" aria-label={`${label}：${value || "不设截止时间"}`} className="task-due-date-trigger" onClick={toggle} ref={triggerRef} type="button">
-      <span className={`task-due-date-field ${value ? "" : "empty"}`}>{value ? <SegmentedDate value={value} /> : <strong>不设截止时间</strong>}<CalendarIcon size={13} /></span>
+    <button aria-controls={open ? pickerId : undefined} aria-expanded={open} aria-haspopup="dialog" aria-label={`${label}：${value || d('noDueDate')}`} className="task-due-date-trigger" onClick={toggle} ref={triggerRef} type="button">
+      <span className={`task-due-date-field ${value ? "" : "empty"}`}>{value ? <SegmentedDate value={value} /> : <strong>{d('noDueDate')}</strong>}<CalendarIcon size={13} /></span>
     </button>
-    {open && typeof document !== "undefined" && createPortal(<div aria-label={`设置${label}`} className="task-due-date-popover" id={pickerId} ref={popoverRef} role="dialog" style={{
+    {existingError && <span className="task-schedule-error" role="status">{existingError}{ui("请重新设置。")}</span>}
+    {open && typeof document !== "undefined" && createPortal(<div aria-label={ui("设置{0}", {0: label})} className="task-due-date-popover" id={pickerId} ref={popoverRef} role="dialog" style={{
       left: popoverPosition?.left ?? 0,
       top: popoverPosition?.top ?? 0,
       visibility: popoverPosition ? "visible" : "hidden",
     }}>
       <fieldset className="task-due-date-modes">
-        <legend className="sr-only">截止时间类型</legend>
+        <legend className="sr-only">{ui("截止时间类型")}</legend>
         <label>
           <input checked={mode === "date"} name={`${pickerId}-mode`} onChange={() => setMode("date")} type="radio" value="date" />
-          <CalendarIcon size={15} /><span>指定日期</span>
+          <CalendarIcon size={15} /><span>{ui("指定日期")}</span>
         </label>
         <label>
           <input checked={mode === "none"} name={`${pickerId}-mode`} onChange={() => setMode("none")} type="radio" value="none" />
-          <InfinityIcon size={16} /><span>不设截止时间</span>
+          <InfinityIcon size={16} /><span>{d('noDueDate')}</span>
         </label>
       </fieldset>
       {mode === "date" ? <>
       <div className="task-range-calendar-heading">
-        <button aria-label="上个月" onClick={() => setVisibleMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))} type="button"><ChevronLeft size={14} /></button>
-        <strong>{visibleMonth.getFullYear()} 年 {visibleMonth.getMonth() + 1} 月</strong>
-        <button aria-label="下个月" onClick={() => setVisibleMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))} type="button"><ChevronRight size={14} /></button>
+        <button aria-label={d("previousMonth")} onClick={() => setVisibleMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))} type="button"><ChevronLeft size={14} /></button>
+        <strong>{new Intl.DateTimeFormat(locale, { year: "numeric", month: "long" }).format(visibleMonth)}</strong>
+        <button aria-label={d("nextMonth")} onClick={() => setVisibleMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))} type="button"><ChevronRight size={14} /></button>
       </div>
       <div className="task-range-calendar-grid">
-        {["日", "一", "二", "三", "四", "五", "六"].map((day) => <span className="task-range-weekday" key={day}>{day}</span>)}
+        {(locale === "en" ? ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] : ["日", "一", "二", "三", "四", "五", "六"]).map((day) => <span className="task-range-weekday" key={day}>{day}</span>)}
         {days.map((date) => {
           const dateValue = toValue(date);
           const outside = date.getMonth() !== visibleMonth.getMonth();
           const selected = draft === dateValue;
-          return <button aria-label={dateValue} aria-pressed={selected} className={`${outside ? "outside" : ""} ${selected ? "in-range range-edge" : ""}`} key={dateValue} onClick={() => setDraft(dateValue)} type="button"><span>{date.getDate()}</span></button>;
+          return <button disabled={Boolean(minDate && dateValue < minDate)} aria-label={dateValue} aria-pressed={selected} className={`${outside ? "outside" : ""} ${selected ? "in-range range-edge" : ""}`} key={dateValue} onClick={() => setDraft(dateValue)} type="button"><span>{date.getDate()}</span></button>;
         })}
       </div>
       </> : <div className="task-due-date-unlimited">
         <InfinityIcon size={23} />
-        <p>任务没有固定截止日期，之后仍可调整。</p>
+        <p>{d('noDateHint')}</p>
       </div>}
+      {(draftError || saveError) && <p className="task-schedule-error" role="alert">{saveError || draftError}</p>}
       <div className="task-range-calendar-footer">
-        <span>{mode === "none" ? "不设截止时间" : draft || "请选择日期"}</span>
-        <div><button onClick={dismiss} type="button">取消</button><button disabled={mode === "date" && !draft} onClick={apply} type="button">应用</button></div>
+        <span>{mode === "none" ? d('noDueDate') : draft || d("chooseDate")}</span>
+        <div><button onClick={dismiss} type="button">{d('cancel')}</button><button disabled={mode === "date" && (!draft || Boolean(draftError))} onClick={apply} type="button">{d("confirm")}</button></div>
       </div>
     </div>, document.body)}
   </div>;

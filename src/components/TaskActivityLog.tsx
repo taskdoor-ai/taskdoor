@@ -1,3 +1,7 @@
+import { useMockText } from "../i18n/MockDataProvider";
+import { useI18n } from "../i18n/I18nProvider";
+import { activityMessage, activityChangeValue } from "../i18n/activityDisplay";
+import { useModuleCopy } from "../i18n/moduleMessages";
 import { ArrowRight, FileText, History, ListChecks, MessageSquareText } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import type { TaskActivityMock, TaskActivityType, TaskCommitMock, TaskFileNode } from "../data/taskDetailMocks";
@@ -39,6 +43,9 @@ export function TaskActivityLog({ activities, commits, files, focusedTargetId, o
   onOpenDiscussion: (activityId: string) => void;
   onOpenFile: (fileId: string) => void;
 }) {
+  const m = useModuleCopy();
+  const mock = useMockText();
+  const { locale } = useI18n();
   const [filter, setFilter] = useState<ActivityFilter>("all");
   const controlSize = useResponsiveControlSize();
   const items = getTaskActivityItems(activities, commits);
@@ -54,10 +61,10 @@ export function TaskActivityLog({ activities, commits, files, focusedTargetId, o
     const { label: categoryLabel, icon: Icon } = activityCategories[category];
     const changes = item.kind === "activity" ? item.activity.changes : undefined;
     const actionLabel = item.kind === "commit"
-      ? "提交了文件"
+      ? m('submittedFiles')
       : category === "discussion"
-        ? item.activity.type === "member-reply" ? "回复了讨论" : "发布了讨论"
-        : changes?.length ? item.activity.message : taskActionLabels[item.activity.type as TaskInformationType];
+        ? item.activity.type === "member-reply" ? m('repliedToADiscussion') : m('postedADiscussion')
+        : taskActionLabels[item.activity.type as TaskInformationType];
     const recordFiles = item.kind === "commit"
       ? item.commit.files
       : category === "discussion" || !item.activity.file ? [] : [item.activity.file];
@@ -65,11 +72,11 @@ export function TaskActivityLog({ activities, commits, files, focusedTargetId, o
     return <li className="task-change-event" id={`task-${item.kind}-${record.id}`} key={item.id} tabIndex={-1}>
       <span aria-hidden="true" className="task-change-marker"><Icon size={15} /></span>
       <div className="task-change-content">
-        <header><p><strong><PersonName name={record.author} personId={record.author} /></strong><span className={`task-change-kind task-change-kind--${category}`}>{categoryLabel}</span><span className="task-change-action">{actionLabel}</span></p>{recordHasTimestamp && <time dateTime={record.createdAt}>{record.time}</time>}</header>
-        {changes?.length ? <ul aria-label="变更前后" className="task-change-values">{changes.map((change, index) => <li key={`${change.label}:${index}`}>
-          <span className="task-change-field">{change.label}</span><span className="task-change-before"><span className="sr-only">变更前：</span>{change.before || "未设置"}</span><ArrowRight aria-hidden="true" size={13} /><span className="task-change-after"><span className="sr-only">变更后：</span>{change.after || "未设置"}</span>
-        </li>)}</ul> : <p className="task-change-description">{record.message}</p>}
-        {category === "discussion" && item.kind === "activity" && <button className="task-change-discussion-link" onClick={() => onOpenDiscussion(item.activity.id)} type="button">查看讨论</button>}
+        <header><p><strong><PersonName name={record.author} personId={record.author} /></strong><span className={`task-change-kind task-change-kind--${category}`}>{m.text(categoryLabel)}</span><span className="task-change-action">{m.text(actionLabel)}</span></p>{recordHasTimestamp && <time dateTime={record.createdAt}>{record.time}</time>}</header>
+        {changes?.length ? <ul aria-label={m('beforeAndAfter')} className="task-change-values">{changes.map((change, index) => <li key={`${change.label}:${index}`}>
+          <span className="task-change-field">{m.text(change.label)}</span><span className="task-change-before"><span className="sr-only">{m('before')}</span>{activityChangeValue(locale, change.label, change.before) || m('notSet')}</span><ArrowRight aria-hidden="true" size={13} /><span className="task-change-after"><span className="sr-only">{m('after')}</span>{activityChangeValue(locale, change.label, change.after) || m('notSet')}</span>
+        </li>)}</ul> : <p className="task-change-description">{item.kind === "activity" && "updatedAt" in record && record.updatedAt ? record.message : activityMessage(locale, item.kind === "activity" ? item.activity.type : "commit", mock.text(record.message))}</p>}
+        {category === "discussion" && item.kind === "activity" && <button className="task-change-discussion-link" onClick={() => onOpenDiscussion(item.activity.id)} type="button">{m('viewDiscussion')}</button>}
         {recordFiles.length > 0 && <div className="task-change-files">{recordFiles.map((name) => <TaskActivityFileLink fileId={files.find((file) => file.kind === "file" && !file.archived && file.name === name)?.id} fileName={name} key={name} onOpen={onOpenFile} />)}</div>}
       </div>
     </li>;
@@ -77,15 +84,15 @@ export function TaskActivityLog({ activities, commits, files, focusedTargetId, o
 
   return <div className="task-change-log">
     <header className="task-change-toolbar">
-      <div><h2>任务活动</h2><p>谁在何时做了什么，按时间从新到旧记录。</p></div>
-      <ListFilterSelect align="end" ariaLabel="活动类型" label={filter === "all" ? "全部活动" : activityCategories[filter].label} onChange={(value) => setFilter(value as ActivityFilter)} size={controlSize} value={filter}>
-        <SelectItem value="all">全部活动</SelectItem>
-        <SelectItem value="task">任务信息</SelectItem>
-        <SelectItem value="discussion">讨论</SelectItem>
-        <SelectItem value="file">文件</SelectItem>
+      <div><h2>{m('taskActivity')}</h2><p>{m('whoDidWhatAndWhenWithThe')}</p></div>
+      <ListFilterSelect align="end" ariaLabel={m('activityType')} label={filter === "all" ? m('allActivity') : m.text(activityCategories[filter].label)} onChange={(value) => setFilter(value as ActivityFilter)} size={controlSize} value={filter}>
+        <SelectItem value="all">{m('allActivity')}</SelectItem>
+        <SelectItem value="task">{m('taskInformation')}</SelectItem>
+        <SelectItem value="discussion">{m('discussion')}</SelectItem>
+        <SelectItem value="file">{m('files')}</SelectItem>
       </ListFilterSelect>
     </header>
-    {visibleItems.length === 0 ? <div className="task-record-empty"><History aria-hidden="true" size={22} /><strong>{items.length ? "没有这类活动" : "还没有任务活动"}</strong><p>{items.length ? "切换筛选，查看其他活动。" : "修改任务信息、发布讨论或操作文件后，记录会出现在这里。"}</p></div>
-      : <ol aria-label="任务活动记录" className="task-change-timeline">{visibleItems.map(renderEvent)}</ol>}
+    {visibleItems.length === 0 ? <div className="task-record-empty"><History aria-hidden="true" size={22} /><strong>{items.length ? m('noActivityOfThisType') : m('noTaskActivityYet')}</strong><p>{items.length ? m('changeTheFilterToViewOtherActivity') : m('changesToTaskInformationDiscussionsAndFiles')}</p></div>
+      : <ol aria-label={m('taskActivityHistory')} className="task-change-timeline">{visibleItems.map(renderEvent)}</ol>}
   </div>;
 }

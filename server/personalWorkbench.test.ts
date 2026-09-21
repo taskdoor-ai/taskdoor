@@ -45,7 +45,7 @@ function selectTaskTree(input: PersonalWorkbenchInput, rootTaskId: string): Pers
   };
 }
 
-test("只按稳定Owner ID覆盖全部有效任务，待接受/参与不算负责，已结束不进入行动", () => {
+test("只按稳定Owner ID覆盖全部有效任务，旧提议迁移为负责，参与不算负责，已结束不进入行动", () => {
   const tasks = [
     task("owner-active", { labels: ["甲", "乙"] }),
     task("owner-completed", { status: "已完成" }),
@@ -55,16 +55,14 @@ test("只按稳定Owner ID覆盖全部有效任务，待接受/参与不算负�
     task("display-name", { ownerId: "我的新显示名称" }),
   ];
   const model = buildPersonalWorkbenchModel({ tasks, currentUserId: "me", asOf });
-  assert.deepEqual(model.actions.map((item) => item.taskId), ["owner-active"]);
-  assert.equal(model.counts.owned, 3);
-  assert.equal(model.counts.active, 1);
+  assert.deepEqual(model.actions.map((item) => item.taskId), ["owner-active", "proposed"]);
+  assert.equal(model.counts.owned, 4);
+  assert.equal(model.counts.active, 2);
   assert.equal(model.counts.completed, 1);
   assert.equal(model.counts.cancelled, 1);
-  assert.equal(model.counts.awaitingAcceptance, 1);
-  assert.deepEqual(model.awaitingAcceptance.map((item) => item.taskId), ["proposed"]);
-  assert.equal(model.awaitingAcceptance[0].evidence.taskId, "proposed");
-  assert.match(model.awaitingAcceptance[0].text, /正式责任尚未变更/);
-  assert.equal(model.ownedTasks.length, 3);
+  assert.equal(model.counts.awaitingAcceptance, 0);
+  assert.deepEqual(model.awaitingAcceptance, []);
+  assert.equal(model.ownedTasks.length, 4);
   assert.equal(buildPersonalWorkbenchModel({ tasks, currentUserId: "", asOf }).counts.owned, 0);
 });
 
@@ -231,12 +229,12 @@ test("建议句只将本人Owner替换为你，保留建议语气、具体动作
   ];
   const before = structuredClone(tasks);
   const model = buildPersonalWorkbenchModel({ tasks, currentUserId: "user-123", asOf });
-  assert.deepEqual(model.actions.map(item => item.taskId), ["personal"]);
+  assert.deepEqual(model.actions.map(item => item.taskId), ["personal", "other"]);
   assert.equal(model.actions[0].action, "建议你先明确可核对的完成标准。");
   assert.equal(model.actions[0].source, "recorded");
   assert.equal(model.actions[0].freshness, "missing");
   assert.equal(model.actions[0].evidence?.taskId, "personal");
-  assert.deepEqual(model.awaitingAcceptance.map(item => item.taskId), ["other"]);
+  assert.deepEqual(model.awaitingAcceptance, []);
   assert.doesNotMatch(JSON.stringify(model), /user-123/);
   assert.deepEqual(tasks, before);
 });
@@ -484,18 +482,18 @@ test("同一任务的期限、前置与结果依据合并成一个建议动作",
   assert.equal(model.counts.owned, 1);
 });
 
-test("待接受仍独立于处理事项，缺失或相对期限不冒充今日到期", () => {
+test("旧负责人提议迁移为负责事项，缺失或相对期限不冒充今日到期", () => {
   const proposed = task("proposed", { ownerId: "other", proposedOwnerId: "me", plannedEndOn: "2026-08-31" });
   const pendingModel = buildPersonalWorkbenchModel({ tasks: [proposed], currentUserId: "me", asOf });
-  assert.deepEqual(buildPersonalWorkbenchItems(pendingModel), { items: [] });
-  assert.equal(pendingModel.counts.awaitingAcceptance, 1);
+  assert.deepEqual(buildPersonalWorkbenchItems(pendingModel).items.map(item => item.taskId), ["proposed"]);
+  assert.equal(pendingModel.counts.awaitingAcceptance, 0);
   const model = buildPersonalWorkbenchModel({
     tasks: [task("relative", { dueAt: "今天 16:00", createdFrom: "task-planner" }), task("missing"), proposed],
     currentUserId: "me", asOf,
   });
   const projected = buildPersonalWorkbenchItems(model);
-  assert.equal(projected.items.length, 2);
-  assert.ok(projected.items.every((item) => item.taskId !== "proposed"));
+  assert.equal(projected.items.length, 3);
+  assert.ok(projected.items.some((item) => item.taskId === "proposed"));
   assert.equal(projected.items.find((item) => item.taskId === "relative")?.dueState, "unknown");
   assert.equal(projected.items.find((item) => item.taskId === "missing")?.dueState, "none");
 });

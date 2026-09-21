@@ -1,0 +1,78 @@
+.local-agent-trigger:is(.task-local-agent-trigger, .discussion-ai) {
+  display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; gap: 7px;
+  width: 32px; height: 32px; min-height: 32px; padding: 0;
+  border: 1px solid color-mix(in srgb, var(--ad-route-ink) 20%, var(--ad-border)); border-radius: 9px;
+  background: linear-gradient(110deg, var(--ad-surface) 35%, color-mix(in srgb, var(--ad-route-soft) 60%, var(--ad-surface)));
+  color: var(--ad-ink-secondary); font-size: 12px; font-weight: 500; line-height: 1; white-space: nowrap;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ad-ink) 4%, transparent), inset 0 1px 0 var(--ad-surface);
+  cursor: pointer; transition: border-color 150ms, color 150ms, box-shadow 150ms;
+}
+.local-agent-trigger:is(.task-local-agent-trigger, .discussion-ai):hover {
+  border-color: color-mix(in srgb, var(--ad-route-ink) 45%, var(--ad-border)); color: var(--ad-route-ink);
+  box-shadow: 0 2px 5px color-mix(in srgb, var(--ad-route-ink) 9%, transparent), inset 0 1px 0 var(--ad-surface);
+}
+.local-agent-trigger:is(.task-local-agent-trigger, .discussion-ai):focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
+.local-agent-trigger .local-agent-trigger-mark { display: grid; place-items: center; flex: 0 0 auto; width: 22px; height: 22px; border-radius: 5px; background: var(--ad-route-soft); color: var(--ad-route-ink); }
+.local-agent-trigger .local-agent-trigger-mark > svg { width: 15px; height: 15px; }
+.local-agent-trigger.discussion-ai { width: 28px; height: 28px; min-height: 28px; padding: 0; border-radius: 7px; font-size: 11px; box-shadow: none; }
+.local-agent-trigger.discussion-ai .local-agent-trigger-mark { width: 20px; height: 20px; border-radius: 4px; }
+.local-agent-trigger.discussion-ai .local-agent-trigger-mark > svg { width: 14px; height: 14px; }
+@media (pointer: coarse) { .local-agent-trigger:is(.task-local-agent-trigger, .discussion-ai) { min-width: var(--ad-control-touch-min); min-height: var(--ad-control-touch-min); } }
+@media (prefers-reduced-motion: reduce) { .local-agent-trigger:is(.task-local-agent-trigger, .discussion-ai) { transition: none; } }
+.ai-agent-options button > span:nth-child(2) > .ai-agent-connection-status {
+  display: flex; align-items: center; gap: 5px; margin-top: 5px;
+  color: var(--ad-ink-tertiary); font-size: 9px; font-weight: 400; line-height: 1.4;
+}
+.ai-agent-connection-dot { flex: 0 0 auto; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .55; }
+
+/* A persistent primary target with a separate tool-switching control. */
+.ai-tool-shortcut { display: inline-flex; align-items: center; flex-shrink: 0; position: relative; }
+.ai-tool-shortcut.has-default { overflow: visible; border: 1px solid color-mix(in srgb, var(--ad-route-ink) 20%, var(--ad-border)); border-radius: 10px; background: linear-gradient(110deg, var(--ad-surface) 40%, var(--ad-route-soft)); box-shadow: 0 1px 3px color-mix(in srgb, var(--ad-ink) 5%, transparent); }
+.ai-tool-shortcut.has-default > button { display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 0; border: 0; background: transparent; color: var(--ad-ink-secondary); cursor: pointer; }
+.ai-tool-shortcut.has-default > .ai-tool-shortcut-main { width: 32px; border-radius: 9px 0 0 9px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.ai-tool-shortcut-main > img { width: 18px; height: 18px; object-fit: contain; }
+.ai-tool-shortcut.has-default > .ai-tool-shortcut-menu-trigger { width: 26px; border-left: 1px solid color-mix(in srgb, var(--ad-border) 75%, transparent); border-radius: 0 9px 9px 0; }
+.ai-tool-shortcut.has-default > button:hover { background: var(--ad-route-soft); color: var(--ad-route-ink); }
+.ai-tool-shortcut button:focus-visible, .ai-tool-shortcut-menu button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.ai-tool-shortcut button:disabled { cursor: default; opacity: .5; }
+.ai-tool-shortcut.has-default > .ai-tool-shortcut-cancel { width: 26px; border-left: 1px solid var(--ad-border); border-radius: 0 9px 9px 0; }
+.ai-tool-shortcut.is-compact.has-default { border-radius: 8px; box-shadow: none; }
+.ai-tool-shortcut.is-compact.has-default > button { height: 26px; }
+.ai-tool-shortcut.is-compact.has-default > .ai-tool-shortcut-main { width: 28px; }
+.ai-tool-shortcut.is-compact .ai-tool-shortcut-main > img { width: 16px; height: 16px; }
+.ai-tool-shortcut.is-compact.has-default > .ai-tool-shortcut-menu-trigger { width: 24px; }
+.ai-tool-shortcut-menu { width: 276px; max-width: calc(100vw - 24px); padding: 6px; background: var(--ad-surface); border: 1px solid var(--ad-border); border-radius: 12px; color: var(--ad-ink); box-shadow: 0 8px 24px color-mix(in srgb, var(--ad-ink) 12%, transparent); }
+.ai-tool-shortcut-menu > header { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 6px; color: var(--ad-ink-tertiary); font-size: 11px; }
+.ai-tool-shortcut-menu button { cursor: pointer; border: 0; background: transparent; color: inherit; }
+.ai-tool-shortcut-menu .ai-tool-order-toggle { display: flex; align-items: center; gap: 4px; color: var(--ad-ink-secondary); padding: 4px; border-radius: 4px; font-size: 11px; }
+.ai-tool-shortcut-menu button:hover { background: var(--ad-route-soft); }
+.ai-tool-shortcut-menu ul { list-style: none; padding: 0; margin: 0; }
+.ai-tool-shortcut-menu li { display: flex; align-items: center; gap: 2px; }
+.ai-tool-shortcut-menu .ai-tool-menu-launch { display: flex; align-items: center; min-width: 0; flex: 1; gap: 10px; height: 40px; padding: 0 9px; border-radius: 6px; text-align: left; font-size: 13px; }
+.ai-tool-menu-launch > img { width: 21px; height: 21px; object-fit: contain; flex-shrink: 0; }
+.ai-tool-menu-launch > span { flex: 1; white-space: nowrap; }
+.ai-tool-menu-launch > small { font-size: 10px; color: var(--ad-ink-tertiary); }
+.ai-tool-shortcut-menu button:disabled { opacity: .25; cursor: default; background: transparent; }
+.ai-tool-shortcut-menu > footer { margin: 6px -6px -6px; padding: 6px; border-top: 1px solid var(--ad-border); }
+.ai-tool-shortcut-menu > footer > button { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 36px; padding: 0 9px; border-radius: 6px; text-align: left; color: var(--ad-ink-secondary); font-size: 12px; }
+.ai-tool-shortcut-spinner { animation: ai-shortcut-spin .8s linear infinite; }
+@keyframes ai-shortcut-spin { to { transform: rotate(360deg); } }
+@media (pointer: coarse) { .ai-tool-shortcut.has-default > button, .ai-tool-shortcut.is-compact.has-default > button { min-width: var(--ad-control-touch-min); height: var(--ad-control-touch-min); } .ai-tool-shortcut-menu .ai-tool-menu-launch { min-height: 44px; } }
+@media (prefers-reduced-motion: reduce) { .ai-tool-shortcut-spinner { animation: none; } }
+
+.ai-tool-preview-mark { position: absolute; right: calc(100% + 6px); color: var(--ad-ink-tertiary); font-size: 10px; font-weight: 400; white-space: nowrap; }
+
+.ai-tool-shortcut-menu .ai-tool-sort-list { position: relative; }
+.ai-tool-sort-list > li { position: relative; border-radius: 7px; }
+.ai-tool-menu-sort-row { display: flex; align-items: center; flex: 1; min-width: 0; gap: 10px; height: 40px; padding: 0 9px; font-size: 13px; user-select: none; }
+.ai-tool-menu-sort-row > img { width: 21px; height: 21px; object-fit: contain; flex-shrink: 0; }
+.ai-tool-menu-sort-row > span { flex: 1; white-space: nowrap; }
+.ai-tool-menu-sort-row > small { font-size: 10px; color: var(--ad-ink-tertiary); }
+.ai-tool-shortcut-menu .ai-tool-drag-handle { display: grid; place-items: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 6px; color: var(--ad-ink-tertiary); cursor: grab; touch-action: none; }
+.ai-tool-sort-list > .is-drag-placeholder { outline: 1px dashed var(--ad-route-ink); outline-offset: -2px; background: var(--ad-route-soft); }
+.ai-tool-sort-list > .is-drag-placeholder > * { opacity: .2; }
+.ai-tool-sort-list > .is-keyboard-picked { outline: 2px solid var(--ad-focus); outline-offset: -2px; background: var(--ad-route-soft); }
+.ai-tool-shortcut-menu .ai-tool-drag-handle[aria-pressed="true"] { cursor: grabbing; }
+.ai-tool-shortcut-menu .ai-tool-drag-ghost { position: absolute; top: 0; left: 0; width: 100%; padding-right: 10px; z-index: 2; background: var(--ad-surface); border: 1px solid var(--ad-route-ink); box-shadow: 0 6px 16px color-mix(in srgb, var(--ad-ink) 14%, transparent); pointer-events: none; color: var(--ad-ink-secondary); }
+.ai-tool-shortcut-menu .ai-tool-drag-ghost.is-outside { opacity: .5; }
+@media (pointer: coarse) { .ai-tool-shortcut-menu .ai-tool-drag-handle { width: 44px; height: 44px; } .ai-tool-menu-sort-row { height: 44px; } }

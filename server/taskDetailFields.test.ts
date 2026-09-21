@@ -66,7 +66,8 @@ test("创建任务按需恢复执行建议，位于完成标准与预计投入�
     }));
     assert.match(html, /aria-label="执行建议"/);
     assert.match(html, /先核对原始资料\n再记录未决问题/);
-    assert.ok(html.indexOf("添加完成标准") < html.indexOf('aria-label="执行建议"'));
+    const addCriteriaIndex = html.indexOf('aria-label="添加任务完成标准"');
+    assert.ok(addCriteriaIndex >= 0 && addCriteriaIndex < html.indexOf('aria-label="执行建议"'));
     assert.ok(html.indexOf('aria-label="执行建议"') < html.indexOf("预计投入"));
   }
   for (const file of ["TaskCreationPlanEditor", "TaskCreationSubtaskEditor"]) {
@@ -89,7 +90,7 @@ test("执行建议支持空白补充与禁用，展示不会改写原始任务�
     value: { title: "整理纪要", completionCriteria: [], executionTips: [] },
     labels: { name: "任务名称", criteria: "任务完成标准" }, showExecutionTips: true, disabled: true, onChange: () => assert.fail("禁用时不能修改"),
   }));
-  assert.match(empty, /<textarea[^>]*aria-label="执行建议"[^>]*disabled=""[^>]*placeholder="补充执行方法或注意事项（选填）"/);
+  assert.match(empty, /<textarea[^>]*aria-label="执行建议"[^>]*disabled=""[^>]*placeholder="暂无执行建议"/);
 });
 
 test("前置依赖在完成标准和执行建议之后、预计投入之前展示", async () => {

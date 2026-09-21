@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { beforeEach } from "node:test";
+beforeEach(t => t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") }));
 import { creatorCommerceMembers } from "../src/data/creatorCommerceScenario.ts";
 import { taskCreationScenarios } from "../src/data/taskCreationScenarios.ts";
 import { workspaceNodes } from "../src/data/workspaceNodes.ts";
@@ -79,21 +80,21 @@ test("单任务拆分再移除最后子项，不自动恢复旧的已确认总�
   assert.equal(summarizeTaskEffort(getCreationEffortLeaves(restored)).totalMinutes, null);
 });
 
-test("主目标改变传递给子项并触发复核；只改人选日期不重置估算", () => {
+test("主目标改变不覆盖子项目标；只改人选日期不重置估算", () => {
   const form = plan("complex-plan");
   const changed = reconcileCreationEffort(form, { ...form, mainTask: { ...form.mainTask, goal: "扩大到三个产品的上线" } });
-  assert.ok(changed.subtasks.every(task => task.goal === changed.mainTask.goal));
-  assert.equal(summarizeTaskEffort(getCreationEffortLeaves(changed)).staleCount, 7);
+  assert.deepEqual(changed.subtasks, form.subtasks);
+  assert.equal(summarizeTaskEffort(getCreationEffortLeaves(changed)).staleCount, 0);
   const people = reconcileCreationEffort(form, { ...form, subtasks: form.subtasks.map(task => ({ ...task, ownerId: "", endDate: "" })) });
   assert.equal(summarizeTaskEffort(getCreationEffortLeaves(people)).estimatedCount, 7);
 });
 
-test("关联已有主任务后估算绑定继承目标，不复用原独立目标的确认", () => {
+test("关联已有主任务后仍按当前草稿目标估算", () => {
   const form = plan("existing-parent");
   assert.ok(form.candidate);
   const attached = reconcileCreationEffort(form, { ...form, decision: "attach" });
-  assert.equal(getCreationEffortLeaves(attached)[0].goal, form.candidate.goal);
-  if (form.mainTask.goal !== form.candidate.goal) assert.equal(getTaskEffortState(attached.mainTask), "stale");
+  assert.equal(getCreationEffortLeaves(attached)[0].goal, form.mainTask.goal);
+  assert.equal(getTaskEffortState(attached.mainTask), getTaskEffortState(form.mainTask));
 });
 
 test("最终创建保留估算确认状态；无估算不阻止创建，非法工时不可写入", () => {

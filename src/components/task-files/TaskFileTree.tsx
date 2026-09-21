@@ -1,3 +1,6 @@
+import { useGlobalUi } from "../../i18n/globalUi";
+import { useDetailCopy } from "../../i18n/detailMessages";
+import { useMockText } from "../../i18n/MockDataProvider";
 import { ChevronDown, ChevronRight, File, FileText, FileType2, Folder, FolderOpen, Image, MoreHorizontal, NotebookTabs, Pencil, RotateCcw, Sheet, Trash2, MoveRight } from "lucide-react";
 import React, { type KeyboardEvent } from "react";
 import type { TaskFileNode } from "../../data/taskDetailMocks";
@@ -22,6 +25,9 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
   onSelect: (id: string) => void;
   selectedId: string | null;
 }) {
+  const ui = useGlobalUi();
+  const d = useDetailCopy();
+  const mock = useMockText();
   const visible = nodes.filter((node) => !node.archived);
   const toggle = (id: string) => { const next = new Set(expandedIds); next.has(id) ? next.delete(id) : next.add(id); onExpandedChange(next); };
   const rows: Array<{ node: TaskFileNode; level: number }> = [];
@@ -44,21 +50,21 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
     if (target) { onSelect(target.id); window.setTimeout(() => document.getElementById(`task-file-node-${target.id}`)?.focus(), 0); }
   };
 
-  return <div aria-label="任务文件结构" className="task-file-explorer-tree" role="tree">{rows.map(({ node, level }, index) => {
+  return <div aria-label={ui("任务文件结构")} className="task-file-explorer-tree" role="tree">{rows.map(({ node, level }, index) => {
     const expanded = node.kind === "folder" && expandedIds.has(node.id);
     const childCount = visible.filter((item) => item.parentId === node.id).length;
     return <div aria-expanded={node.kind === "folder" ? expanded : undefined} aria-level={level} aria-selected={selectedId === node.id} className={`task-file-explorer-row ${selectedId === node.id ? "active" : ""}`} id={`task-file-node-${node.id}`} key={node.id} onClick={() => onSelect(node.id)} onKeyDown={(event) => keyDown(event, index)} role="treeitem" style={{ paddingLeft: 8 + (level - 1) * 16 }} tabIndex={selectedId === node.id || (!selectedId && index === 0) ? 0 : -1}>
-      {node.kind === "folder" ? <button aria-label={expanded ? `收起${node.name}` : `展开${node.name}`} className="task-file-explorer-chevron" onClick={(event) => { event.stopPropagation(); toggle(node.id); }} type="button">{expanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}</button> : <span className="task-file-explorer-chevron" />}
+      {node.kind === "folder" ? <button aria-label={expanded ? ui("收起{0}", {0: node.name}) : ui("展开{0}", {0: node.name})} className="task-file-explorer-chevron" onClick={(event) => { event.stopPropagation(); toggle(node.id); }} type="button">{expanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}</button> : <span className="task-file-explorer-chevron" />}
       <TaskFileNodeIcon expanded={expanded} node={node} />
-      <span className="task-file-explorer-name" title={node.name}>{node.name}</span>
+      <span className="task-file-explorer-name" title={mock.text(node.name)}>{mock.text(node.name)}</span>
       {node.kind === "folder" && childCount > 0 && <small>{childCount}</small>}
-      <DropdownMenu><DropdownMenuTrigger aria-label={`${node.name}的更多操作`} className="task-file-explorer-more" onClick={(event) => event.stopPropagation()}><MoreHorizontal aria-hidden="true" size={16} /></DropdownMenuTrigger><DropdownMenuContent align="end" className="task-file-explorer-menu">
-        <DropdownMenuItem onClick={() => onAction({ type: "rename", nodeId: node.id })}><Pencil size={14} />重命名</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onAction({ type: "move", nodeId: node.id })}><MoveRight size={14} />移动到</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onAction({ type: "change-icon", nodeId: node.id })}><NotebookTabs size={14} />更换图标</DropdownMenuItem>
-        {node.iconName && <DropdownMenuItem onClick={() => onAction({ type: "restore-icon", nodeId: node.id })}><RotateCcw size={14} />恢复默认</DropdownMenuItem>}
+      <DropdownMenu><DropdownMenuTrigger aria-label={ui("{0}的更多操作", {0: node.name})} className="task-file-explorer-more" onClick={(event) => event.stopPropagation()}><MoreHorizontal aria-hidden="true" size={16} /></DropdownMenuTrigger><DropdownMenuContent align="end" className="task-file-explorer-menu">
+        <DropdownMenuItem onClick={() => onAction({ type: "rename", nodeId: node.id })}><Pencil size={14} />{d('rename')}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onAction({ type: "move", nodeId: node.id })}><MoveRight size={14} />{ui("移动到")}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onAction({ type: "change-icon", nodeId: node.id })}><NotebookTabs size={14} />{ui("更换图标")}</DropdownMenuItem>
+        {node.iconName && <DropdownMenuItem onClick={() => onAction({ type: "restore-icon", nodeId: node.id })}><RotateCcw size={14} />{ui("恢复默认")}</DropdownMenuItem>}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onAction({ type: "delete", nodeId: node.id })} variant="destructive"><Trash2 size={14} />{node.kind === "folder" ? "删除文件夹" : "删除文件"}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onAction({ type: "delete", nodeId: node.id })} variant="destructive"><Trash2 size={14} />{node.kind === "folder" ? ui("删除文件夹") : ui("删除文件")}</DropdownMenuItem>
       </DropdownMenuContent></DropdownMenu>
     </div>;
   })}</div>;

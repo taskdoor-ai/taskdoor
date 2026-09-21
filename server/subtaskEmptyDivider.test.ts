@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {readFileSync} from 'node:fs';
+import postcss from 'postcss';
+import {TaskSubtaskList} from '../src/components/TaskSubtaskList.tsx';
+(globalThis as typeof globalThis & {React:typeof React}).React=React;
+test('only an empty subtask section hides its inherited solid bottom border without changing layout',()=>{
+ const base=postcss.parse(readFileSync(new URL('../src/styles.css',import.meta.url),'utf8'));
+ const split=postcss.parse(readFileSync(new URL('../src/styles/task-detail-split.css',import.meta.url),'utf8'));
+ const rule=(root:postcss.Root,selector:string)=>{const result:Record<string,string>={};root.walkRules(r=>{if(r.selector===selector)r.walkDecls(d=>{result[d.prop]=d.value;});});return result;};
+ assert.match(rule(base,'.task-detail-section')['border-bottom'],/1px solid/);
+ const emptyRule=rule(split,'.task-detail-split .task-subtask-list-section:has(> .task-subtask-list-empty)');
+ assert.deepEqual(emptyRule,{'border-bottom-color':'transparent'},'keep border width and spacing; only remove its visible ink');
+ assert.match(rule(base,'.task-subtask-list-empty').border,/1px dashed/);
+ assert.match(rule(split,'.task-detail-split .task-subtask-list-item')['border-bottom'],/1px solid/);
+ const dependencies=rule(split,'.task-detail-split .task-detail-dependencies-section');
+ assert.equal(dependencies['margin-top'],'24px');assert.equal(dependencies['padding-top'],'24px');
+ assert.match(dependencies['border-top'],/1px solid/);
+ const empty=renderToStaticMarkup(React.createElement(TaskSubtaskList,{tasks:[]}));
+ assert.equal(empty,'<div class="task-subtask-list-empty">当前任务还没有子任务</div>');
+ const populated=renderToStaticMarkup(React.createElement(TaskSubtaskList,{tasks:[{id:'child',title:'已有子任务',status:'待开始',owner:'',goal:'核对结果',dueAt:'未设置'}]}));
+ assert.match(populated,/task-subtask-list-items/);assert.doesNotMatch(populated,/task-subtask-list-empty/);
+});

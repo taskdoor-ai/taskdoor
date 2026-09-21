@@ -1,14 +1,24 @@
+import { applyCriterionReviewMocks } from "./data/taskCriterionReviewMocks";
+import { confirmTaskCriterion } from "./lib/taskCriterionReview";
+import { buildCreatedMockCatalog } from "./i18n/createdMockCatalog";
+import { MockDataProvider } from "./i18n/MockDataProvider";
+import { useGlobalUi } from "./i18n/globalUi";
+import { taskScheduleError } from "./lib/taskSchedule";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { TaskCreationExperience } from "./components/TaskCreationExperience";
 import type { TaskCreationParentContext } from "./components/TaskCreationPage";
 import type { PrimarySection } from "./components/WorkspaceSidebar";
 import { WorkspaceTopbar } from "./components/WorkspaceTopbar";
 import { PersonDirectoryProvider } from "./components/PersonDirectory";
+import { MemberInvitationProvider, type MemberInvitationHandle } from "./components/MemberInvitations";
+import "./styles/member-invitations.css";
+import { getTeamPeople } from "./lib/teamInvitations";
 import { TaskWorkspace } from "./components/TaskWorkspace";
 import { PersonalWorkbench } from "./components/PersonalWorkbench";
 import { AiConnectionDialog } from "./components/AiConnectionDialog";
 import { TaskDetail, type TaskAttentionTarget } from "./components/TaskDetail";
-import type { TaskRelationSummary } from "./components/TaskRelationsSection";
+import { COLLABORATION_CHANGED, projectTaskCollaboration } from "./lib/useTaskCollaboration";
+import { getDirectChildTaskCounts, toTaskRelationSummary } from "./lib/taskRelationProjection";
 import type { TaskDateRange } from "./components/TaskDateRangePicker";
 import { taskIconOptions, taskIconToneOptions } from "./components/TaskIcon";
 import { AiConnectionPage } from "./components/AiConnectionPage";
@@ -22,7 +32,7 @@ import { getTeamTaskDiagnosisSnapshot, getTeamTaskDetailFixture } from "./data/t
 import { getTaskAcceptedEffortMinutes } from "./data/taskProgressExamples";
 import { initialTags, type TagDefinition } from "./data/tagGroups";
 import { normalizeWorkspaceNodes, workspaceRootId, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode } from "./data/workspaceNodes";
-import { getTeamInviteLink, loadPersonalCenterState, type PersonalCenterState } from "./data/memberProfiles";
+import { loadPersonalCenterState, personalCenterChangedEvent, personalCenterStorageKey, type PersonalCenterState } from "./data/memberProfiles";
 import { allTeamWorkspaceNodes as initialWorkspaceNodes, getTeamMembers, getTeamWorkspaceNodes, getTeamWorkspaceScenario } from "./data/teamWorkspaceScenarios";
 import { legacyTaskSources, loadLatestLegacyTaskSnapshot, loadLegacyTaskSnapshots, persistLegacyTaskSnapshots, type LegacyTaskSnapshot } from "./data/legacyTaskSnapshots";
 import type { TaskPlanDraft } from "./lib/taskAssistantProtocol";
@@ -31,22 +41,29 @@ import { createWorkspaceTasksFromDraft } from "./lib/workspaceTaskCreation";
 import { deleteWorkspaceSubtask, deleteWorkspaceTask, getSubtaskDeletionPreview, getSubtaskDeletionWrites, getTaskDeletionPreview, getTaskDeletionWrites } from "./lib/workspaceSubtaskEditing";
 import { clearTaskFileDraftSessions } from "./lib/taskFileDrafts";
 import { commitWorkspaceScenarioReset, resolveWorkspaceScenarioReset } from "./lib/workspaceScenarioReset";
+import { migrateProgressDemoFixtures } from "./lib/taskProgressDemoMigration";
+import { migrateTaskStatusDemoFixtures } from "./lib/taskStatusDemoMigration";
+import { migrateNestedTaskVisuals } from "./lib/nestedTaskCreationScenario";
+import { getCreatedProjectProgressDemo, withCreatedProjectProgressDetail } from "./data/createdProjectProgressDemo";
 import { updateWorkspaceTaskStatus } from "./lib/workspaceTaskUpdates";
+import { getTaskProgressDemoExample } from "./data/taskProgressDemo";
+import { progressPredictionInputKey, progressPredictionStorageKey, readProgressPredictions, recalculateTaskProgressPrediction } from "./lib/taskProgressPrediction";
 import { applySavedTaskAiAdjustment, createSavedTaskAiContext, getTaskDefinitionGoal } from "./lib/taskAiAdjustmentAdapters";
 import { commitTaskAiStorage, recoverTaskAiStorage } from "./lib/taskAiAdjustmentStorage";
 import type { TaskAiAdjustmentProposal } from "./lib/taskAiAdjustmentTypes";
 import { applyCurrentTaskCriteria, applySavedTaskCriteria } from "./lib/taskCriteriaEditing";
 import { applyTaskDependencies } from "./lib/taskDependencies";
-import { applySavedTaskEffort, getWorkspaceEffortLeaves } from "./lib/taskEffortEditing";
-import type { TaskEffortEstimate } from "./lib/taskEffort";
+import { getWorkspaceEffortLeaves } from "./lib/taskEffortEditing";
 import { runAgentdoorReanalysis } from "./lib/agentdoorReanalysis";
 import { buildTaskDiagnosisContext } from "./lib/taskDiagnosisContext";
 import { buildPersonalWorkbenchModel } from "./lib/personalWorkbench";
 import { buildPersonalWorkbenchAiConnectionRequest } from "./lib/personalWorkbenchAiConnection";
-import { copyTextToClipboard } from "./lib/clipboard";
 import { Button } from "./components/ui/button";
+import { toast } from "./components/ui/toast";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from "./components/ui/dialog";
 import { Input } from "./components/ui/input";
+
+import { readWorkspaceSession, saveWorkspaceSession, signOutWorkspace } from "./lib/workspaceSession";
 
 type Theme = "light" | "dark";
 type ParticipantInvitationStatuses = Record<string, "accepted" | "pending">;
@@ -59,7 +76,7 @@ const taskActivityStorageKey = "agentdoor-task-activity";
 const taskDetailSeedsStorageKey = "agentdoor-task-detail-seeds";
 const taskOwnerProposalsStorageKey = "agentdoor-task-owner-proposals";
 const taskParticipantInvitationsStorageKey = "agentdoor-task-participant-invitations";
-const currentUserId = "周岚";
+
 const loadStoredValue = <T,>(key: string, fallback: T): T => {
   try {
     const value = localStorage.getItem(key);
@@ -95,7 +112,7 @@ const persistStoredText = (key: string, value: string) => {
 
 const focusPrimaryHeadingAfterNavigation = (target: "auto" | "list" | "detail" | "home" | "creation" = "auto") => {
   window.requestAnimationFrame(() => {
-    // The desktop index stays visible; retain its focus for successive selections.
+    // Keep keyboard focus in the visible desktop index when selecting successive tasks.
     if (target === "detail" && window.matchMedia("(min-width: 901px)").matches && document.activeElement?.closest(".task-workspace-row")) return;
     const selector = target === "list" ? "#task-workspace-list-heading" : target === "detail" ? ".task-workspace-detail h1" : target === "home" ? "#personal-workbench-heading" : target === "creation" ? ".task-workspace-creation h1" : ".main-content h1";
     const heading = [...document.querySelectorAll<HTMLElement>(selector)].find((element) => element.getClientRects().length > 0);
@@ -104,23 +121,6 @@ const focusPrimaryHeadingAfterNavigation = (target: "auto" | "list" | "detail" |
     heading.focus({ preventScroll: true });
   });
 };
-
-const toTaskRelationSummary = (task: TaskNode): TaskRelationSummary => ({
-  completionCriteria: task.completionCriteria,
-  proposedOwnerId: task.proposedOwnerId,
-  dependsOnTaskIds: task.dependsOnTaskIds,
-  parentTaskId: task.parentTaskId,
-  dueAt: task.dueAt && task.dueAt !== "—" ? task.dueAt : "未设置截止时间",
-  goal: task.goal?.trim() || "暂未填写任务目标。",
-  iconName: task.iconName,
-  iconTone: task.iconTone,
-  id: task.id,
-  labels: task.labels,
-  owner: task.ownerId,
-  status: task.status,
-  title: task.name,
-  updatedAt: task.updatedAt,
-});
 
 const getTaskPathItems = (nodes: readonly WorkspaceNode[], task: TaskNode) => {
   const tasks = new Map(nodes.filter((node): node is TaskNode => node.kind === "task").map((node) => [node.id, node]));
@@ -163,20 +163,40 @@ const taskDateValue = (value?: string): string | null => {
 };
 
 function App() {
+  const ui = useGlobalUi();
+  const [workspaceSession] = useState(readWorkspaceSession);
+  const currentUserId = workspaceSession?.userId ?? "周岚";
+  const [, refreshCollaboration] = useState(0);
+  useEffect(() => {
+    const refresh = () => refreshCollaboration(value => value + 1);
+    window.addEventListener(COLLABORATION_CHANGED, refresh);
+    return () => window.removeEventListener(COLLABORATION_CHANGED, refresh);
+  }, []);
   const [taskStorageRecoveryError, setTaskStorageRecoveryError] = useState("");
   const [theme, setTheme] = useState<Theme>(() => (loadStoredText("agentdoor-theme") as Theme) || "light");
   const [initialScenarioState] = useState(() => {
-    return resolveWorkspaceScenarioReset({
+    const scenario = resolveWorkspaceScenarioReset({
       storedVersion: loadStoredText(workspaceScenarioVersionKey),
       storedWorkspaceNodes: loadStoredValue<unknown>(workspaceNodesStorageKey, initialWorkspaceNodes),
       storedTags: loadStoredValue<unknown>(tagStorageKey, loadStoredValue<unknown>(legacyTagGroupsStorageKey, initialTags)),
     });
+    const migratedNodes = migrateNestedTaskVisuals(migrateTaskStatusDemoFixtures(migrateProgressDemoFixtures(scenario.workspaceNodes, parseTaskActivityStore(loadStoredValue<unknown>(taskActivityStorageKey, {})))));
+    const storedOwnerAssignments = loadStoredValue<Record<string, string>>(taskOwnerProposalsStorageKey, {});
+    let assignmentsMigrated = false;
+    const nodes = migratedNodes.map((node): WorkspaceNode => {
+      if (node.kind !== "task") return node;
+      const ownerId = storedOwnerAssignments[node.id] || node.proposedOwnerId || node.ownerId;
+      if (ownerId !== node.ownerId || node.proposedOwnerId) assignmentsMigrated = true;
+      const { proposedOwnerId: _legacyProposal, ...task } = node;
+      return { ...task, ownerId };
+    });
+    return { ...scenario, workspaceNodes: nodes, didMigrate: scenario.didMigrate || migratedNodes !== scenario.workspaceNodes || assignmentsMigrated };
   });
   const [latestLegacyTask, setLatestLegacyTask] = useState<LegacyTaskSnapshot | null>(() => initialScenarioState.didReset ? null : loadLatestLegacyTaskSnapshot());
   const [legacyTaskSnapshots, setLegacyTaskSnapshots] = useState<Record<string, LegacyTaskSnapshot>>(() => initialScenarioState.didReset ? {} : loadLegacyTaskSnapshots());
   const [legacyTaskSnapshotsDirty, setLegacyTaskSnapshotsDirty] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-  const [workspaceNodes, setWorkspaceNodes] = useState<WorkspaceNode[]>(initialScenarioState.workspaceNodes);
+  const [workspaceNodes, setWorkspaceNodes] = useState<WorkspaceNode[]>(() => applyCriterionReviewMocks(initialScenarioState.workspaceNodes));
   const workspaceNodesRef = useRef(workspaceNodes);
   const [taskActivityStore, setTaskActivityStore] = useState<TaskActivityStore>(() => parseTaskActivityStore(loadStoredValue<unknown>(taskActivityStorageKey, {})));
   const [taskDetailSeedNodes, setTaskDetailSeedNodes] = useState<TaskNode[]>(() => {
@@ -190,13 +210,43 @@ function App() {
     return [...seeds.values()];
   });
   const taskDetailSeedNodesRef = useRef(taskDetailSeedNodes);
+  const createdProjectProgressDemo = useMemo(() => {
+    const seeds = new Map(taskDetailSeedNodes.map(task => [task.id, task]));
+    workspaceNodes.forEach(node => { if (node.kind === "task" && !seeds.has(node.id)) seeds.set(node.id, node); });
+    return getCreatedProjectProgressDemo([...seeds.values()], workspaceNodes);
+  }, [taskDetailSeedNodes, workspaceNodes]);
+  const additionalMockTasks = useMemo(() => {
+    const seeds = new Map(taskDetailSeedNodes.map(task => [task.id, task]));
+    workspaceNodes.forEach(node => { if (node.kind === "task" && !seeds.has(node.id)) seeds.set(node.id, node); });
+    return buildCreatedMockCatalog([...seeds.values()]);
+  }, [taskDetailSeedNodes, workspaceNodes]);
+  const [progressPredictions, setProgressPredictions] = useState(() => readProgressPredictions(loadStoredValue<unknown>(progressPredictionStorageKey, {})));
+  const progressComparisons = useMemo(() => ({ ...createdProjectProgressDemo.comparisons,
+    ...Object.fromEntries(Object.entries(progressPredictions)
+      .filter(([id, result]) => result.inputKey === progressPredictionInputKey(workspaceNodes, id))
+      .map(([id, result]) => [id, result.series])),
+  }), [createdProjectProgressDemo, progressPredictions, workspaceNodes]);
+  const refreshTaskPrediction = async (taskId: string) => {
+    const nodes = workspaceNodesRef.current;
+    const task = nodes.find(node => node.kind === "task" && node.id === taskId);
+    if (!task || task.kind !== "task" || task.status === "已完成" || task.status === "已取消") throw new Error("任务状态已变化，当前无需预测。");
+    const inputKey = progressPredictionInputKey(nodes, taskId);
+    const result = await runAgentdoorReanalysis({ analyze: () => recalculateTaskProgressPrediction({ nodes, taskId,
+      getSeries: id => createdProjectProgressDemo.comparisons[id] ?? getTaskProgressDemoExample(id),
+    }) });
+    if (progressPredictionInputKey(workspaceNodesRef.current, taskId) !== inputKey) throw new Error("任务已更新，已保留最新状态，请重新分析。");
+    const next = { ...progressPredictions, [taskId]: result };
+    try { localStorage.setItem(progressPredictionStorageKey, JSON.stringify(next)); }
+    catch { throw new Error("预测结果未能保存，请重试。"); }
+    setProgressPredictions(next);
+  };
   const [personalTagLoadError, setPersonalTagLoadError] = useState("");
   const [tagDefinitions, setTagDefinitions] = useState<TagDefinition[]>(() => {
-    try { return loadPersonalTags(localStorage, currentUserId, initialScenarioState.tags); }
-    catch { return initialScenarioState.tags; }
+    try { return loadPersonalTags(localStorage, currentUserId, workspaceSession ? [] : initialScenarioState.tags); }
+    catch { return workspaceSession ? [] : initialScenarioState.tags; }
   });
   useEffect(() => {
-    try { loadPersonalTags(localStorage, currentUserId, initialScenarioState.tags); }
+    try { loadPersonalTags(localStorage, currentUserId, workspaceSession ? [] : initialScenarioState.tags); }
     catch { setPersonalTagLoadError("个人标签无法读取，暂时显示初始列表。请刷新后重试，原记录已保留。"); }
   }, [initialScenarioState]);
   const savePersonalTags = (tags: TagDefinition[]) => {
@@ -206,24 +256,30 @@ function App() {
     setTagDefinitions(tags);
   };
   const [personalCenterState, setPersonalCenterState] = useState<PersonalCenterState>(() => loadPersonalCenterState());
-  const [activeTeamId, setActiveTeamId] = useState(() => personalCenterState.teams[0]?.id ?? "");
+  const [activeTeamId, setActiveTeamId] = useState(() => personalCenterState.teams.find(team => team.id === workspaceSession?.activeTeamId)?.id ?? personalCenterState.teams[0]?.id ?? "");
+  useEffect(() => {
+    if (workspaceSession && activeTeamId) saveWorkspaceSession({ ...workspaceSession, activeTeamId });
+  }, [activeTeamId, workspaceSession]);
   const [personalInfoOpen, setPersonalInfoOpen] = useState(false);
   const [personalCenterModule, setPersonalCenterModule] = useState<PersonalCenterModule>("profile");
   const personalCenterReturnFocus = useRef<HTMLElement | null>(null);
-  const [memberInviteOpen, setMemberInviteOpen] = useState(false);
-  const [memberInviteFeedback, setMemberInviteFeedback] = useState("");
-  const memberInviteReturnFocus = useRef<HTMLElement | null>(null);
-  const memberInviteCopyButton = useRef<HTMLButtonElement>(null);
+  const memberInvitationsRef = useRef<MemberInvitationHandle>(null);
   const currentUserName = personalCenterState.profile.name;
-  const collaborationMembers = useMemo(() => getTeamMembers(activeTeamId).map((member) => member.id === currentUserId
+  const collaborationMembers = useMemo(() => getTeamPeople(personalCenterState.teams.find(team => team.id === activeTeamId), getTeamMembers(activeTeamId)).map((member) => member.id === currentUserId
     ? { ...member, avatarUrl: personalCenterState.profile.avatarDataUrl, name: personalCenterState.profile.name, email: personalCenterState.profile.email }
-    : member), [activeTeamId, personalCenterState.profile]);
-  const activeTeamInviteLink = useMemo(() => {
-    const activeTeam = personalCenterState.teams.find((team) => team.id === activeTeamId) ?? personalCenterState.teams[0];
-    return activeTeam ? getTeamInviteLink(activeTeam) : "";
-  }, [activeTeamId, personalCenterState.teams]);
+    : member), [activeTeamId, personalCenterState]);
+  useEffect(() => {
+    const reload = (event: Event) => {
+      if (event instanceof StorageEvent && event.key !== personalCenterStorageKey) return;
+      setPersonalCenterState(loadPersonalCenterState());
+    };
+    window.addEventListener("storage", reload);
+    window.addEventListener(personalCenterChangedEvent, reload);
+    return () => { window.removeEventListener("storage", reload); window.removeEventListener(personalCenterChangedEvent, reload); };
+  }, []);
   const teamWorkspaceNodes = useMemo(() => getTeamWorkspaceNodes(activeTeamId, workspaceNodes), [activeTeamId, workspaceNodes]);
-  const [activeSection, setActiveSection] = useState<PrimarySection>("home");
+  const [activeSection, setActiveSection] = useState<PrimarySection>("tasks");
+  const [globalAiConnectionOpen, setGlobalAiConnectionOpen] = useState(false);
   const [conversationRevision, setConversationRevision] = useState(0);
   const [creationSessionOpen, setCreationSessionOpen] = useState(false);
   const [creationParentContext, setCreationParentContext] = useState<TaskCreationParentContext | null>(null);
@@ -237,19 +293,8 @@ function App() {
   const [taskQuery, setTaskQuery] = useState("");
   const [taskFilters, setTaskFilters] = useState<TaskListFilters>(() => createInitialTaskListFilters(currentUserId));
   const [taskPeriodOverrides, setTaskPeriodOverrides] = useState<Record<string, { end: string; start: string } | null>>({});
-  const [taskOwnerProposals, setTaskOwnerProposals] = useState<Record<string, string>>(() => {
-    const stored = loadStoredValue<unknown>(taskOwnerProposalsStorageKey, {});
-    return stored && typeof stored === "object" && !Array.isArray(stored)
-      ? Object.fromEntries(Object.entries(stored).filter((entry): entry is [string, string] => typeof entry[1] === "string" && Boolean(entry[1])))
-      : {};
-  });
-  const [taskParticipantInvitationOverrides, setTaskParticipantInvitationOverrides] = useState<Record<string, ParticipantInvitationStatuses>>(() => {
-    const stored = loadStoredValue<unknown>(taskParticipantInvitationsStorageKey, {});
-    if (!stored || typeof stored !== "object" || Array.isArray(stored)) return {};
-    return Object.fromEntries(Object.entries(stored).flatMap(([taskId, statuses]) => statuses && typeof statuses === "object" && !Array.isArray(statuses)
-      ? [[taskId, Object.fromEntries(Object.entries(statuses).filter((entry): entry is [string, "accepted" | "pending"] => entry[1] === "accepted" || entry[1] === "pending"))]]
-      : []));
-  });
+  const [taskOwnerProposals, setTaskOwnerProposals] = useState<Record<string, string>>({});
+  const [taskParticipantInvitationOverrides, setTaskParticipantInvitationOverrides] = useState<Record<string, ParticipantInvitationStatuses>>({});
   const [taskAttentionTarget, setTaskAttentionTarget] = useState<TaskAttentionTarget | null>(null);
   const [subtaskDeleteTarget, setSubtaskDeleteTarget] = useState<{ taskId: string; parentTaskId: string; signature: string } | null>(null);
   const [subtaskDeleteError, setSubtaskDeleteError] = useState("");
@@ -289,18 +334,7 @@ function App() {
   };
 
   const openMemberInviteDialog = (returnFocus?: HTMLElement | null) => {
-    memberInviteReturnFocus.current = returnFocus ?? null;
-    setMemberInviteFeedback("");
-    setMemberInviteOpen(true);
-  };
-
-  const copyMemberInviteLink = async () => {
-    try {
-      await copyTextToClipboard(activeTeamInviteLink);
-      setMemberInviteFeedback("邀请地址已复制");
-    } catch {
-      setMemberInviteFeedback("复制失败，请选中邀请地址后手动复制");
-    }
+    memberInvitationsRef.current?.openInvite({ returnFocus });
   };
 
   const resetCreationSessionForTeamChange = () => {
@@ -318,7 +352,7 @@ function App() {
     setTaskAttentionTarget(null);
     setTaskQuery("");
     setTaskFilters(createInitialTaskListFilters(currentUserId));
-    setActiveSection("home");
+    setActiveSection("tasks");
     setWorkbenchAnalysisError("");
     setWorkbenchAsOf(getTeamWorkspaceScenario(teamId)?.asOf ?? new Date().toISOString());
   };
@@ -330,7 +364,7 @@ function App() {
     focusPrimaryHeadingAfterNavigation("list");
   };
 
-  const openTask = (taskId: string) => {
+  const openTask = (taskId: string, focusHeading = true) => {
     const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId);
     if (!task) return;
     setPersonalInfoOpen(false);
@@ -341,7 +375,7 @@ function App() {
     }
     setSelectedTaskId(taskId);
     setActiveSection("tasks");
-    focusPrimaryHeadingAfterNavigation("detail");
+    if (focusHeading) focusPrimaryHeadingAfterNavigation("detail");
   };
 
   const startNewTaskConversation = () => {
@@ -414,8 +448,10 @@ function App() {
 
   useEffect(() => {
     if (taskStorageRecoveryError) return;
-    workspaceNodesRef.current = workspaceNodes;
-    persistStoredValue(workspaceNodesStorageKey, workspaceNodes);
+    const withCriterionMocks = applyCriterionReviewMocks(workspaceNodes);
+    workspaceNodesRef.current = withCriterionMocks;
+    if (withCriterionMocks !== workspaceNodes) setWorkspaceNodes(withCriterionMocks);
+    persistStoredValue(workspaceNodesStorageKey, withCriterionMocks);
   }, [workspaceNodes, taskStorageRecoveryError]);
   useEffect(() => { if (!taskStorageRecoveryError) persistStoredValue(taskActivityStorageKey, taskActivityStore); }, [taskActivityStore, taskStorageRecoveryError]);
   useEffect(() => { if (!taskStorageRecoveryError) persistStoredValue(taskDetailSeedsStorageKey, taskDetailSeedNodes); }, [taskDetailSeedNodes, taskStorageRecoveryError]);
@@ -444,11 +480,18 @@ function App() {
     setTaskDetailSeedNodes(next);
   };
 
+  const touchTask = (taskId: string) => {
+    const next = workspaceNodesRef.current.map(node => node.id === taskId && node.kind === "task" ? { ...node, updatedAt: new Date().toISOString() } : node);
+    workspaceNodesRef.current = next;
+    setWorkspaceNodes(next);
+  };
+
   const appendActivityForTask = (taskId: string, activity: TaskActivityMock) => {
     const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId);
     if (!task) return;
     preserveTaskDetailSeed(task);
     setTaskActivityStore((current) => appendTaskActivity(current, taskId, activity));
+    touchTask(taskId);
   };
 
   const changeTaskFields = (taskId: string, patch: Partial<TaskNode>, type: TaskActivityType, message: string, changes: TaskActivityChange[]) => {
@@ -457,7 +500,7 @@ function App() {
     const activity = createTaskChangeActivity({ author: currentUserName, type, message, changes });
     if (!activity) return;
     preserveTaskDetailSeed(task);
-    const next = workspaceNodesRef.current.map((node) => node.id === taskId && node.kind === "task" ? { ...node, ...patch, updatedAt: "刚刚" } : node);
+    const next = workspaceNodesRef.current.map((node) => node.id === taskId && node.kind === "task" ? { ...node, ...patch, updatedAt: new Date().toISOString() } : node);
     workspaceNodesRef.current = next;
     setWorkspaceNodes(next);
     appendActivityForTask(taskId, activity);
@@ -478,7 +521,7 @@ function App() {
   const createTaskPlanFromConversation = (draft: TaskPlanDraft, parentTaskId?: string) => {
     if (personalTagLoadError || taskStorageRecoveryError) throw new Error(personalTagLoadError || taskStorageRecoveryError);
     const prepared = preparePersonalTaskTags(tagDefinitions, draft);
-    const result = createWorkspaceTasksFromDraft(workspaceNodesRef.current, prepared.draft, { parentTaskId, currentUserId, teamId: activeTeamId });
+    const result = createWorkspaceTasksFromDraft(workspaceNodesRef.current, prepared.draft, { parentTaskId, currentUserId, teamId: activeTeamId, participantsReviewed: true });
     // Save new tasks and the caller's personal catalog as one recoverable write.
     try {
       commitTaskAiStorage(localStorage, [
@@ -653,7 +696,7 @@ function App() {
   // 示例原文只使用首次快照；当前字段编辑不能重写已有事件、提交或文件名称。
   const selectedTaskSeedNode = taskDetailSeedNodes.find((node) => node.id === selectedTaskId);
   const customTaskDetail: TaskDetailMock | undefined = selectedTaskId && selectedTreeTask?.kind === "task" && !selectedTaskMock ? !selectedLegacyTask ? createWorkspaceTaskDetail(selectedTaskSeedNode ?? selectedTreeTask) : {
-    activities: [{ id: `${selectedTaskId}-created`, author: "AgentDoor AI", message: "此任务来自已停用的旧创建流程；原有文件、成员与父子任务关系已保留。", time: "历史记录", type: "ai-insight" }],
+    activities: [{ id: `${selectedTaskId}-created`, author: "TaskDoor AI", message: "此任务来自已停用的旧创建流程；原有文件、成员与父子任务关系已保留。", time: "历史记录", type: "ai-insight" }],
     commits: [],
     due: selectedLegacyTask.plannedStartOn && selectedLegacyTask.plannedEndOn ? formatPeriodLabel(selectedLegacyTask.plannedStartOn, selectedLegacyTask.plannedEndOn) : selectedTreeTask.dueAt ?? "—",
     files: selectedLegacyTask.contextIds.map((sourceId) => {
@@ -672,26 +715,27 @@ function App() {
     iconName: selectedTreeTask.iconName,
     iconTone: selectedTreeTask.iconTone,
     owner: selectedTreeTask.ownerId,
-    participantInvitationStatus: Object.fromEntries(selectedLegacyTask.participants.map((id) => [id, "pending" as const])),
+    participantInvitationStatus: Object.fromEntries(selectedLegacyTask.participants.map((id) => [id, "accepted" as const])),
     participants: selectedLegacyTask.participants.filter((id) => id !== selectedTreeTask.ownerId),
     status: selectedTreeTask.status,
     summary: "任务已保留；当前继续围绕目标、文件和活动推进。",
     title: selectedTreeTask.name,
   } : undefined;
-  const selectedTaskDetailBase: TaskDetailMock | undefined = customTaskDetail ?? selectedTaskMock;
+  const rawTaskDetailBase = customTaskDetail ?? selectedTaskMock;
+  const selectedTaskDetailBase: TaskDetailMock | undefined = rawTaskDetailBase && selectedTaskId
+    ? withCreatedProjectProgressDetail(rawTaskDetailBase, selectedTaskId, createdProjectProgressDemo) : rawTaskDetailBase;
   const selectedTaskPeriodOverride = selectedTaskId ? taskPeriodOverrides[selectedTaskId] : undefined;
   const selectedParticipants = selectedTaskDetailBase && selectedTreeTask?.kind === "task"
     ? (selectedLegacyTask?.participants ?? selectedTreeTask.participantIds ?? selectedTaskDetailBase.participants).filter((id) => id !== selectedTreeTask.ownerId)
     : selectedTaskDetailBase?.participants ?? [];
   const selectedParticipantInvitationStatus: ParticipantInvitationStatuses = Object.fromEntries(selectedParticipants.map((id) => [id,
-    (selectedTaskId ? taskParticipantInvitationOverrides[selectedTaskId]?.[id] : undefined)
-      ?? selectedTaskDetailBase?.participantInvitationStatus?.[id]
-      ?? "pending",
+    "accepted",
   ]));
   const seedActivityIds = new Set(selectedTaskDetailBase?.activities.map((activity) => activity.id));
-  const selectedTaskDetail = selectedTaskDetailBase && selectedTaskId && selectedTreeTask?.kind === "task" ? {
+  const selectedTaskDetail = selectedTaskDetailBase && selectedTaskId && selectedTreeTask?.kind === "task" ? projectTaskCollaboration(activeTeamId, selectedTaskId, {
     ...selectedTaskDetailBase,
     completionCriteria: selectedTreeTask.completionCriteria,
+    criterionReviews: selectedTreeTask.criterionReviews,
     executionTips: selectedTreeTask.executionTips ?? selectedTaskDetailBase.executionTips,
     activities: [
       ...(taskActivityStore[selectedTaskId] ?? []).filter((activity) => !seedActivityIds.has(activity.id)),
@@ -706,11 +750,18 @@ function App() {
     participants: selectedParticipants,
     status: selectedTreeTask.status,
     title: selectedTreeTask.name,
-  } : undefined;
+  }) : undefined;
+  const directChildTaskCounts = useMemo(() => getDirectChildTaskCounts(teamWorkspaceNodes), [teamWorkspaceNodes]);
   const selectedChildTasks = selectedTaskId ? teamWorkspaceNodes
     .filter((node): node is TaskNode => node.kind === "task" && node.parentTaskId === selectedTaskId)
-    .map(node => ({ ...toTaskRelationSummary(node), proposedOwnerId: legacyTaskSnapshots[node.id]?.proposedOwnerId ?? taskOwnerProposals[node.id] ?? node.proposedOwnerId })) : [];
-  const selectedDiagnosisTasks = selectedTaskId ? teamWorkspaceNodes
+    .map((node) => {
+      const childTaskCount = directChildTaskCounts.get(node.id);
+      return {
+        ...toTaskRelationSummary(withProgressDates(node)),
+        ...(childTaskCount ? { childTaskCount } : {}),
+      };
+    }) : [];
+  const selectedDiagnosisTasks = teamWorkspaceNodes
     .filter((node): node is TaskNode => node.kind === "task")
     .map((node) => {
       const period = taskPeriodOverrides[node.id];
@@ -720,12 +771,12 @@ function App() {
       const recorded = taskActivityStore[node.id] ?? [];
       const recordedIds = new Set(recorded.map((item) => item.id));
       return {
-        context: buildTaskDiagnosisContext(node.id, {
+        context: buildTaskDiagnosisContext(node.id, projectTaskCollaboration(activeTeamId, node.id, {
           ...detail,
           goal: getTaskDefinitionGoal(teamWorkspaceNodes, node),
           completionCriteria: node.completionCriteria ?? [],
           activities: [...(taskActivityStore[node.id] ?? []), ...detail.activities.filter((item) => !recordedIds.has(item.id))],
-        }, window.localStorage),
+        }), window.localStorage),
         decisionConflicts: taskDetailMocks[node.id as TaskDetailId]?.diagnosis?.decisionConflicts
           ?? getTeamTaskDiagnosisSnapshot(node)?.decisionConflicts,
         dependsOnTaskIds: node.dependsOnTaskIds,
@@ -735,7 +786,7 @@ function App() {
         status: node.status,
         title: node.name,
       };
-    }) : [];
+    });
   const selectedDependencyTaskIds = selectedTreeTask?.kind === "task" ? selectedTreeTask.dependsOnTaskIds ?? [] : [];
   const selectedDependencyTasks = teamWorkspaceNodes
     .filter((node): node is TaskNode => node.kind === "task" && selectedDependencyTaskIds.includes(node.id))
@@ -794,37 +845,14 @@ function App() {
     changeTaskFields(taskId, { labels }, "tags-change", "修改任务标签", [{ label: "标签", before: tagsValue(task.labels ?? []), after: tagsValue(labels) }]);
   };
 
+  // A freshly invited person may be persisted before this render's members update.
+  const memberActivityLabel = (id: string) => getTeamPeople(loadPersonalCenterState().teams.find(team => team.id === activeTeamId), collaborationMembers).find(member => member.id === id)?.name ?? id;
+
   const changeOwner = (ownerIds: string[]) => {
     const task = getSelectedTask();
     if (!task) return;
     const ownerId = ownerIds[0] ?? "";
-    changeTaskFields(task.id, { ownerId }, "owner-change", ownerId ? "修改任务负责人" : "清空任务负责人", [{ label: "负责人", before: task.ownerId || null, after: ownerId || null }]);
-  };
-
-  const changeOwnerProposal = (ownerId?: string) => {
-    const task = getSelectedTask();
-    if (!task) return;
-    const previous = selectedLegacyTask?.proposedOwnerId ?? taskOwnerProposals[task.id] ?? task.proposedOwnerId;
-    const activity = createTaskChangeActivity({ author: currentUserName, type: "owner-proposal", message: ownerId ? "发起负责人变更邀请（待接受）" : "撤回负责人变更邀请", changes: [{
-      label: "负责人变更邀请",
-      before: previous ? `${previous}（待接受）` : null,
-      after: ownerId ? `${ownerId}（待接受）` : null,
-    }] });
-    if (!activity) return;
-    setTaskOwnerProposals((current) => {
-      const next = { ...current };
-      if (ownerId) next[task.id] = ownerId;
-      else delete next[task.id];
-      return next;
-    });
-    const next = workspaceNodesRef.current.map(node => node.id === task.id ? { ...task, proposedOwnerId: ownerId } : node);
-    workspaceNodesRef.current = next;
-    setWorkspaceNodes(next);
-    if (selectedLegacyTask) updateLegacyTaskSnapshot(task.id, {
-      ownerAssignmentStatus: ownerId ? "pending-acceptance" : "confirmed",
-      proposedOwnerId: ownerId,
-    });
-    appendActivityForTask(task.id, activity);
+    changeTaskFields(task.id, { ownerId }, "owner-change", ownerId ? "修改任务负责人" : "清空任务负责人", [{ label: "负责人", before: task.ownerId ? memberActivityLabel(task.ownerId) : null, after: ownerId ? memberActivityLabel(ownerId) : null }]);
   };
 
   const changeParticipants = (participants: string[]) => {
@@ -836,18 +864,20 @@ function App() {
     const removed = previous.filter((id) => !next.includes(id));
     if (!added.length && !removed.length) return;
     const changes: TaskActivityChange[] = [
-      ...added.map((id) => ({ label: "新增参与人（待接受）", before: null, after: id })),
-      ...removed.map((id) => ({ label: "移除参与人", before: id, after: null })),
+      ...added.map((id) => ({ label: "新增参与人", before: null, after: memberActivityLabel(id) })),
+      ...removed.map((id) => ({ label: "移除参与人", before: memberActivityLabel(id), after: null })),
     ];
     changeTaskFields(task.id, selectedLegacyTask ? {} : { participantIds: next }, "participants-change", "更新任务参与人", changes);
     if (selectedLegacyTask) updateLegacyTaskSnapshot(task.id, { participants: next });
-    const statuses: ParticipantInvitationStatuses = Object.fromEntries(next.map((id) => [id, added.includes(id) ? "pending" : selectedParticipantInvitationStatus[id] ?? "pending"]));
+    const statuses: ParticipantInvitationStatuses = Object.fromEntries(next.map((id) => [id, "accepted"]));
     setTaskParticipantInvitationOverrides((current) => ({ ...current, [task.id]: statuses }));
   };
 
   const changeTaskPeriod = (range: TaskDateRange | null) => {
     const task = getSelectedTask();
     if (!task) return;
+    const scheduleError = taskScheduleError(range?.end, task.createdAt, range?.start);
+    if (scheduleError) throw new Error(scheduleError);
     const previousStart = taskDateValue(selectedTaskPeriodOverride === undefined ? task.plannedStartOn ?? selectedLegacyTask?.plannedStartOn : selectedTaskPeriodOverride?.start);
     const previousEnd = taskDateValue(selectedTaskPeriodOverride === undefined ? task.plannedEndOn ?? selectedLegacyTask?.plannedEndOn ?? task.dueAt ?? selectedTaskDetail?.due : selectedTaskPeriodOverride?.end);
     const nextStart = range?.start || null;
@@ -871,12 +901,23 @@ function App() {
       ...(period !== undefined ? { plannedStartOn: period?.start, plannedEndOn: period?.end, dueAt: period ? formatPeriodLabel(period.start, period.end) : "—" } : {}),
     };
   });
-  const effectiveAiProposals = {
-    ...taskOwnerProposals,
-    ...Object.fromEntries(Object.values(legacyTaskSnapshots).filter(task => task.proposedOwnerId).map(task => [task.id, task.proposedOwnerId!])),
-  };
-  const selectedAiAdjustmentContext = selectedTaskId ? createSavedTaskAiContext(effectiveAiNodes(teamWorkspaceNodes), selectedTaskId, collaborationMembers, currentUserId, effectiveAiProposals) : null;
-  const selectedEffortTasks = selectedTaskId ? getWorkspaceEffortLeaves(teamWorkspaceNodes, selectedTaskId) : [];
+  const selectedAiAdjustmentContext = selectedTaskId ? createSavedTaskAiContext(effectiveAiNodes(teamWorkspaceNodes), selectedTaskId, collaborationMembers, currentUserId) : null;
+  // Resolve the same saved dates used by the task's deadline field, including legacy labels.
+  // Empty dates are explicit so the progress view cannot substitute fixture scheduling dates.
+  function withProgressDates(task: TaskNode): TaskNode {
+    const period = taskPeriodOverrides[task.id];
+    const legacy = legacyTaskSnapshots[task.id];
+    return {...task,
+      plannedStartOn: period !== undefined ? period?.start ?? "" : task.plannedStartOn ?? legacy?.plannedStartOn ?? "",
+      plannedEndOn: period !== undefined ? period?.end ?? "" : taskDateValue(task.plannedEndOn ?? legacy?.plannedEndOn ?? task.dueAt) ?? "",
+    };
+  }
+  const selectedEffortTasks = selectedTaskId ? getWorkspaceEffortLeaves(teamWorkspaceNodes, selectedTaskId).map(task => {
+    const estimate = createdProjectProgressDemo.estimates[task.id];
+    const canUseDemoEstimate = !task.effortEstimate || task.effortEstimate.basis === "unknown"
+      || task.effortEstimate.basis === "mock" && task.effortEstimate.minutes === null;
+    return withProgressDates(estimate && canUseDemoEstimate ? { ...task, effortEstimate: estimate } : task);
+  }) : [];
   const selectedCompletedEffortMinutes = selectedTaskId ? getTaskAcceptedEffortMinutes(selectedTaskId) : {};
 
   const reanalyzePersonalWorkbench = async () => {
@@ -896,8 +937,7 @@ function App() {
 
   const personalWorkbenchModel = useMemo(() => {
     const tasks = effectiveAiNodes(teamWorkspaceNodes)
-      .filter((node): node is TaskNode => node.kind === "task")
-      .map(task => ({ ...task, proposedOwnerId: legacyTaskSnapshots[task.id]?.proposedOwnerId ?? taskOwnerProposals[task.id] ?? task.proposedOwnerId }));
+      .filter((node): node is TaskNode => node.kind === "task");
     const seeds = new Map(taskDetailSeedNodes.map(task => [task.id, task]));
     const detailsByTaskId = Object.fromEntries(tasks.map(task => {
       const base = taskDetailMocks[task.id as TaskDetailId] ?? getTeamTaskDetailFixture(task) ?? createWorkspaceTaskDetail(seeds.get(task.id) ?? task);
@@ -911,34 +951,8 @@ function App() {
       tasks, currentUserId, asOf: workbenchAsOf, detailsByTaskId,
       recordedActivitiesByTaskId: taskActivityStore,
     });
-  }, [teamWorkspaceNodes, legacyTaskSnapshots, taskPeriodOverrides, taskOwnerProposals, taskDetailSeedNodes, taskActivityStore, workbenchAsOf]);
+  }, [teamWorkspaceNodes, legacyTaskSnapshots, taskPeriodOverrides, taskDetailSeedNodes, taskActivityStore, workbenchAsOf]);
   const workbenchAiConnectionRequest = useMemo(() => buildPersonalWorkbenchAiConnectionRequest(personalWorkbenchModel), [personalWorkbenchModel]);
-
-  const saveTaskEffort = (estimate: TaskEffortEstimate, expectedSignature: string) => {
-    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
-    if (!selectedTaskId) throw new Error("请先选择任务。");
-    const next = applySavedTaskEffort(workspaceNodesRef.current, selectedTaskId, estimate, expectedSignature, currentUserName);
-    if (!next.activity) return;
-    const nextActivities = appendTaskActivity(taskActivityStore, selectedTaskId, next.activity);
-    const nextSeeds = taskDetailSeedNodesRef.current.some(node => node.id === selectedTaskId)
-      ? taskDetailSeedNodesRef.current : [...taskDetailSeedNodesRef.current, { ...next.original }];
-    try {
-      commitTaskAiStorage(localStorage, [
-        [workspaceNodesStorageKey, JSON.stringify(next.nodes)],
-        [taskActivityStorageKey, JSON.stringify(nextActivities)],
-        [taskDetailSeedsStorageKey, JSON.stringify(nextSeeds)],
-      ]);
-    } catch (caught) {
-      try { recoverTaskAiStorage(localStorage); }
-      catch (error) { setTaskStorageRecoveryError(error instanceof Error ? error.message : "本地记录需要恢复。"); }
-      throw caught;
-    }
-    workspaceNodesRef.current = next.nodes;
-    taskDetailSeedNodesRef.current = nextSeeds;
-    setWorkspaceNodes(next.nodes);
-    setTaskActivityStore(nextActivities);
-    setTaskDetailSeedNodes(nextSeeds);
-  };
 
   const persistTaskDefinition = (next: ReturnType<typeof applyCurrentTaskCriteria>) => {
     if (!next.activity) return;
@@ -988,7 +1002,7 @@ function App() {
     if (!selectedTaskId) throw new Error("请先选择要调整的任务。");
     const currentNodes = workspaceNodesRef.current;
     const effectiveNodes = effectiveAiNodes(currentNodes);
-    const context = createSavedTaskAiContext(effectiveNodes, selectedTaskId, collaborationMembers, currentUserId, effectiveAiProposals);
+    const context = createSavedTaskAiContext(effectiveNodes, selectedTaskId, collaborationMembers, currentUserId);
     if (!context) throw new Error("任务已不存在，请返回列表。");
     const next = applySavedTaskAiAdjustment(currentNodes, context, proposal, { author: currentUserName, effectiveNodes });
     if (!next.affectedIds.length) return;
@@ -999,12 +1013,10 @@ function App() {
       const original = currentNodes.find((node): node is TaskNode => node.kind === "task" && node.id === id);
       if (original && !nextSeeds.some(seed => seed.id === id)) nextSeeds.push({ ...original });
     }
-    const nextProposals = { ...taskOwnerProposals };
     const nextPeriods = { ...taskPeriodOverrides };
     const nextLegacy = { ...legacyTaskSnapshots };
     let legacyChanged = false;
     for (const { taskId, patch } of proposal.updates) {
-      if (patch.ownerId) nextProposals[taskId] = patch.ownerId;
       const node = next.nodes.find((item): item is TaskNode => item.kind === "task" && item.id === taskId)!;
       if (patch.endDate !== undefined || patch.startDate !== undefined) {
         delete nextPeriods[taskId];
@@ -1014,7 +1026,7 @@ function App() {
           ...nextLegacy[taskId],
           ...(patch.title !== undefined ? { title: node.name } : {}),
           ...(patch.goal !== undefined ? { goal: node.goal ?? "" } : {}),
-          ...(patch.ownerId ? { proposedOwnerId: patch.ownerId, ownerAssignmentStatus: "pending-acceptance" as const } : {}),
+          ...(patch.ownerId ? { ownerId: patch.ownerId, proposedOwnerId: undefined, ownerAssignmentStatus: "confirmed" as const } : {}),
           ...(patch.endDate !== undefined || patch.startDate !== undefined ? { plannedStartOn: node.plannedStartOn, plannedEndOn: node.plannedEndOn } : {}),
         };
         legacyChanged = true;
@@ -1024,7 +1036,7 @@ function App() {
       [workspaceNodesStorageKey, JSON.stringify(next.nodes)],
       [taskActivityStorageKey, JSON.stringify(nextActivities)],
       [taskDetailSeedsStorageKey, JSON.stringify(nextSeeds)],
-      [taskOwnerProposalsStorageKey, JSON.stringify(nextProposals)],
+      [taskOwnerProposalsStorageKey, JSON.stringify({})],
       ...(legacyChanged ? [["agentdoor-created-tasks", JSON.stringify(nextLegacy)] as [string, string]] : []),
     ];
     try { commitTaskAiStorage(localStorage, writes); }
@@ -1038,19 +1050,28 @@ function App() {
     setWorkspaceNodes(next.nodes);
     setTaskActivityStore(nextActivities);
     setTaskDetailSeedNodes(nextSeeds);
-    setTaskOwnerProposals(nextProposals);
+    setTaskOwnerProposals({});
     setTaskPeriodOverrides(nextPeriods);
     if (legacyChanged) { setLegacyTaskSnapshots(nextLegacy); setLegacyTaskSnapshotsDirty(true); }
   };
 
   return (
+    <MockDataProvider tasks={additionalMockTasks}><MemberInvitationProvider ref={memberInvitationsRef} state={personalCenterState} onStateChange={setPersonalCenterState} teamId={activeTeamId} members={collaborationMembers}>
     <PersonDirectoryProvider members={collaborationMembers}>
     <PersonalTagsProvider tags={tagDefinitions} onChange={savePersonalTags}>
     <div className="app-shell task-workspace-shell">
       <WorkspaceTopbar
         activeTeamId={activeTeamId}
+        onConnectAi={() => setGlobalAiConnectionOpen(true)}
+        onSignOut={workspaceSession ? signOutWorkspace : undefined}
+        showDemoNotifications={!workspaceSession}
+        onOpenNotificationTask={(taskId) => {
+          setTaskQuery("");
+          setTaskFilters(createInitialTaskListFilters(currentUserId));
+          setTaskAttentionTarget(null);
+          openTask(taskId, false);
+        }}
         onOpenPersonalCenter={(module) => openPersonalCenter(module)}
-        onOpenTaskInsight={(taskId) => { setTaskAttentionTarget({ kind: "insight", targetId: "latest" }); openTask(taskId); }}
         onTeamChange={changeActiveTeam}
         teams={personalCenterState.teams}
         theme={theme}
@@ -1075,12 +1096,13 @@ function App() {
             onManageTags={() => { setActiveSection("settings"); focusPrimaryHeadingAfterNavigation(); }}
             onQueryChange={setTaskQuery}
             onTaskSelect={(task) => openTask(task.id)}
-            onShowWorkbench={() => showPrimarySection("home")}
+            onShowWorkbench={() => showPrimarySection("tasks")}
             query={taskQuery}
             selectedTaskId={selectedTaskId}
             showingCreation={activeSection === "conversation"}
             showingWorkbench={activeSection === "home"}
             tagDefinitions={tagDefinitions}
+            teamId={activeTeamId}
             workbench={<PersonalWorkbench
               analysisError={workbenchAnalysisError}
               analyzing={workbenchAnalyzing}
@@ -1098,6 +1120,7 @@ function App() {
               active={activeSection === "conversation"}
               creationParent={creationParentContext}
               currentUserId={currentUserId}
+              teamId={activeTeamId}
               existingTasks={taskCreationExistingTasks}
               key={conversationRevision}
               members={collaborationMembers}
@@ -1111,35 +1134,43 @@ function App() {
         >
           {selectedTaskId && selectedTaskDetail ? (
           <TaskDetail
-            key={selectedTaskId}
+            key={`${activeTeamId}:${selectedTaskId}`}
+            currentUserId={currentUserId}
+            teamId={activeTeamId}
             aiAdjustmentContext={selectedAiAdjustmentContext}
             completedMinutesByTaskId={selectedCompletedEffortMinutes}
             effortTasks={selectedEffortTasks}
+            progressComparisonsByTaskId={progressComparisons}
+            onRepredict={() => refreshTaskPrediction(selectedTaskId)}
+            progressTask={selectedTreeTask?.kind === "task" ? withProgressDates(selectedTreeTask) : undefined}
             recordedActivities={taskActivityStore[selectedTaskId] ?? []}
-            onTaskEffortChange={saveTaskEffort}
             childTasks={selectedChildTasks}
             dependencyTasks={selectedDependencyTasks}
             dependencyTaskIds={selectedDependencyTaskIds}
             availableDependencyTasks={availableDependencyTasks}
             onTaskDependenciesSave={saveTaskDependencies}
-            diagnosisTasks={selectedDiagnosisTasks}
             currentUser={currentUserName}
             initialAttentionTarget={taskAttentionTarget}
-            initialProposedOwnerId={selectedLegacyTask?.proposedOwnerId ?? taskOwnerProposals[selectedTaskId] ?? (selectedTreeTask?.kind === "task" ? selectedTreeTask.proposedOwnerId : undefined)}
             members={collaborationMembers}
+            onFileSaved={() => touchTask(selectedTaskId)}
             onActivityAppend={(activity) => appendActivityForTask(selectedTaskId, activity)}
             onAiAdjustmentApply={applyTaskAiAdjustment}
             onCreateSubtask={startNewSubtaskConversation}
             onDeleteSubtask={requestDeleteSubtask}
             onSubtaskCriteriaSave={saveSubtaskCriteria}
+            onTaskCriterionConfirm={(index, confirmed, expected) => {
+              if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+              if (!selectedTaskId) throw new Error("No task selected");
+              persistTaskDefinition(confirmTaskCriterion(workspaceNodesRef.current, selectedTaskId, expected, index, confirmed, currentUserName));
+            }}
             onTaskCriteriaSave={saveTaskCriteria}
             onInitialAttentionTargetHandled={() => setTaskAttentionTarget(null)}
             onInviteMembers={(returnFocus) => openMemberInviteDialog(returnFocus)}
             onOpenRelatedTask={openTask}
-            onOwnerProposalChange={changeOwnerProposal}
             onOwnerChange={changeOwner}
             onParticipantsChange={changeParticipants}
             parentTask={selectedParentTask ? toTaskRelationSummary(selectedParentTask) : undefined}
+            onBackToList={showTaskList}
             pathItems={selectedTaskPath}
             onPathSelect={(nodeId) => {
               const node = teamWorkspaceNodes.find((item) => item.id === nodeId);
@@ -1170,7 +1201,7 @@ function App() {
         </TaskWorkspace>
 
         {activeSection === "ai" ? (
-          <AiConnectionPage />
+          <AiConnectionPage onBack={showTaskList} />
         ) : activeSection === "settings" ? (
           <TagManagementPage
             tags={tagDefinitions}
@@ -1180,16 +1211,17 @@ function App() {
         ) : null}
 
       </main>
-      <Dialog onOpenChange={(open) => { setMemberInviteOpen(open); if (!open) setMemberInviteFeedback(""); }} open={memberInviteOpen}>
-        <DialogContent className="member-invite-dialog" finalFocus={() => memberInviteReturnFocus.current?.isConnected ? memberInviteReturnFocus.current : false} initialFocus={memberInviteCopyButton}>
-          <DialogTitle>邀请成员</DialogTitle>
-          <DialogDescription>邀请更多同事参与进来</DialogDescription>
-          <label className="member-invite-address"><Input aria-label="邀请地址" readOnly value={activeTeamInviteLink} /></label>
-          <div className="member-invite-actions"><span aria-live="polite">{memberInviteFeedback}</span><Button aria-label="复制邀请地址" disabled={!activeTeamInviteLink} onClick={() => void copyMemberInviteLink()} ref={memberInviteCopyButton} type="button">复制</Button></div>
+      <Dialog onOpenChange={setGlobalAiConnectionOpen} open={globalAiConnectionOpen}>
+        <DialogContent className="global-ai-guide-dialog" finalFocus={() => document.getElementById("workspace-ai-trigger") ?? false}>
+          <header className="global-ai-guide-header">
+            <DialogTitle>{ui("连接 AI")}</DialogTitle>
+            <DialogDescription>{ui("安装并登录 TaskDoor CLI，在本地工具中继续工作。")}</DialogDescription>
+          </header>
+          <div className="global-ai-guide-body"><AiConnectionPage embedded /></div>
         </DialogContent>
       </Dialog>
       <Dialog onOpenChange={(open) => { if (!open) { setSubtaskDeleteTarget(null); setSubtaskDeleteError(""); } }} open={Boolean(subtaskDeleteTarget)}>
-        <DialogContent className="sm:max-w-md" finalFocus={() => subtaskDeleteReturnFocus.current?.isConnected ? subtaskDeleteReturnFocus.current : document.getElementById("task-detail-tab-subtasks") ?? false} initialFocus={subtaskDeleteCancel}>
+        <DialogContent className="sm:max-w-md" finalFocus={() => subtaskDeleteReturnFocus.current?.isConnected ? subtaskDeleteReturnFocus.current : document.getElementById(`task-subtasks-${selectedTaskId}`) ?? false} initialFocus={subtaskDeleteCancel}>
           <DialogTitle>删除子任务？</DialogTitle>
           <DialogDescription>{subtaskDeletion.preview
             ? `「${subtaskDeletion.preview.task.name}」${subtaskDeletion.preview.descendantCount > 0 ? `及其 ${subtaskDeletion.preview.descendantCount} 个下级任务` : ""}将被永久删除，无法撤销。`
@@ -1199,7 +1231,7 @@ function App() {
           {(subtaskDeleteError || subtaskDeletion.error) && <p className="task-file-dialog-error" role="alert">{subtaskDeleteError || subtaskDeletion.error}</p>}
           <DialogFooter>
             <Button onClick={() => { setSubtaskDeleteTarget(null); setSubtaskDeleteError(""); }} ref={subtaskDeleteCancel} type="button" variant="outline">取消</Button>
-            <Button disabled={!subtaskDeletion.preview || Boolean(taskStorageRecoveryError)} onClick={confirmDeleteSubtask} type="button" variant="destructive">{subtaskDeletion.preview?.descendantCount ? `删除子任务及 ${subtaskDeletion.preview.descendantCount} 个下级任务` : "删除子任务"}</Button>
+            <Button disabled={!subtaskDeletion.preview || Boolean(taskStorageRecoveryError)} onClick={confirmDeleteSubtask} type="button" variant="destructive">确认删除</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1214,7 +1246,7 @@ function App() {
           {(taskDeleteError || taskDeletion.error) && <p className="task-file-dialog-error" role="alert">{taskDeleteError || taskDeletion.error}</p>}
           <DialogFooter>
             <Button onClick={() => { setTaskDeleteTarget(null); setTaskDeleteError(""); }} ref={taskDeleteCancel} type="button" variant="outline">取消</Button>
-            <Button disabled={!taskDeletion.preview || Boolean(taskStorageRecoveryError)} onClick={confirmDeleteTask} type="button" variant="destructive">{taskDeletion.preview?.descendantCount ? `删除任务及 ${taskDeletion.preview.descendantCount} 个下级任务` : "删除任务"}</Button>
+            <Button disabled={!taskDeletion.preview || Boolean(taskStorageRecoveryError)} onClick={confirmDeleteTask} type="button" variant="destructive">确认删除</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1229,6 +1261,7 @@ function App() {
     </div>
     </PersonalTagsProvider>
     </PersonDirectoryProvider>
+    </MemberInvitationProvider></MockDataProvider>
   );
 }
 

@@ -65,8 +65,27 @@ test("混合活动、旧 summary 和文件不能冒充明确传入的本地讨�
     files: [{ id: "old-file", kind: "file", name: "全部已验收.md", parentId: null, updatedAt: "今天", content: "已全部完成" }],
   } }));
   assert.equal(model.asOf, undefined);
-  assert.match(groupText(model, "delivery"), /尚未记录已完成内容/);
+  assert.match(groupText(model, "delivery"), /已关联 1 份任务文件，交付完成情况待核对/);
   assert.doesNotMatch(allText(model), /已经验收|没有风险|未核验的混合活动|全部已验收|已全部完成/);
+});
+
+test("待开始已有文件时提供核对入口，不断言没有产出，也不按文件数推算进度", () => {
+  const value = input({ task: { ...emptyTask, files: [
+    { id: "draft", kind: "file", name: "行动项草稿.md", parentId: null, updatedAt: "今天", content: "已有草稿，部分确认待回复" },
+    { id: "folder", kind: "folder", name: "资料", parentId: null, updatedAt: "今天" },
+    { id: "archived", kind: "file", name: "旧稿.md", parentId: null, updatedAt: "昨天", archived: true },
+  ], completionCriteria: ["行动项的责任与期限已确认"] } });
+  const before = structuredClone(value);
+  const model = getTaskSituationModel(value);
+  assert.match(model.summary, /待开始/);
+  assert.match(groupText(model, "delivery"), /已关联 1 份任务文件，交付完成情况待核对/);
+  assert.deepEqual(groupItems(model, "delivery")[0].reference, { kind: "file", id: "draft", label: "查看任务文件" });
+  assert.match(groupText(model, "next"), /对照已有文件与完成标准/);
+  assert.doesNotMatch(allText(model), /尚未记录交付进展|尚未记录已完成内容|\d+%|已验收/);
+  assert.equal(model.asOf, undefined);
+  assert.deepEqual(value, before);
+  value.task.files = value.task.files.filter(file => file.id !== "draft");
+  assert.match(groupText(getTaskSituationModel(value), "delivery"), /尚未记录已完成内容/);
 });
 
 test("最新有效本地发言按实际时间引用原文，不把声明升级为验收", () => {

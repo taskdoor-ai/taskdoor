@@ -8,21 +8,22 @@ const members = [
   { id: "content", name: "林洁", email: "content@example.com", role: "内容策划", dynamicResponsibility: "卖点提炼、短视频脚本与素材交付" },
 ];
 
-test("成员匹配度按当前任务与责任范围的命中生成，且高匹配成员排在前面", () => {
+test("成员推荐度按责任直接命中生成三档，且高推荐成员排在前面", () => {
   const recommendations = createTaskMemberRecommendations({
     members,
     taskText: "筛选达人并确认商务合作，完成建联、报价与排期。",
   });
 
-  assert.ok(recommendations.business.score > recommendations.live.score);
-  assert.ok(recommendations.business.score > recommendations.content.score);
+  assert.equal(recommendations.business.level, "high");
+  assert.equal(recommendations.live.level, "medium");
+  assert.equal(recommendations.content.level, "low");
   assert.match(recommendations.business.reason, /达人|筛选|建联|商务|合作/);
   assert.deepEqual(sortMembersByRecommendation(members, recommendations).map(member => member.id), ["business", "live", "content"]);
 });
 
-test("没有直接命中时保留可解释的低匹配结果，不伪造高分", () => {
+test("没有直接命中时保留可解释的低推荐结果，不伪造中档", () => {
   const recommendations = createTaskMemberRecommendations({ members, taskText: "整理会议室门禁记录" });
 
-  assert.ok(Object.values(recommendations).every(item => item.score < 70));
+  assert.ok(Object.values(recommendations).every(item => item.level === "low"));
   assert.ok(Object.values(recommendations).every(item => item.reason.includes("缺少直接命中")));
 });

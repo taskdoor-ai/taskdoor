@@ -1,8 +1,12 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { beforeEach } from "node:test";
+
+// Historical fixtures run at their authored creation date.
+beforeEach(t => t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") }));
 import { workspaceRootId, type WorkspaceNode } from "../src/data/workspaceNodes.ts";
 import type { TaskPlanDraft } from "../src/lib/taskAssistantProtocol.ts";
 import { createWorkspaceTasksFromDraft, WorkspaceTaskCreationError } from "../src/lib/workspaceTaskCreation.ts";
+import * as workspaceCreation from "../src/lib/workspaceTaskCreation.ts";
 
 const task = (title: string, overrides = {}) => ({
   endDate: "2026-09-03",
@@ -13,6 +17,48 @@ const task = (title: string, overrides = {}) => ({
   startDate: "2026-09-01",
   title,
   ...overrides,
+});
+
+test("手动入口保存空白任务，负责人留空并默认把创建者加入参与人", () => {
+  assert.equal(typeof workspaceCreation.commitManualWorkspaceTask, "function");
+  const existing: WorkspaceNode[] = [{ id: "existing", kind: "task", name: "原任务", parentId: workspaceRootId, teamId: "other", ownerId: "other", status: "已完成", goal: "原目标", updatedAt: "今天" }];
+  const data = new Map([["agentdoor-workspace-nodes", JSON.stringify(existing)]]);
+  const storage = { getItem: (key: string) => data.get(key) ?? null, setItem: (key: string, value: string) => { data.set(key, value); }, removeItem: (key: string) => { data.delete(key); } };
+  const result = workspaceCreation.commitManualWorkspaceTask(storage, existing, { currentUserId: "me", teamId: "team", idForIndex: () => "manual" });
+  assert.equal(result.createdNodes.length, 1);
+  const created = result.createdNodes[0];
+  assert.equal(created.name, "未命名任务");
+  assert.equal(created.ownerId, "");
+  assert.equal(created.proposedOwnerId, undefined);
+  assert.deepEqual(created.participantIds, ["me"]);
+  assert.deepEqual(created.labels ?? [], []);
+  assert.deepEqual(created.executionTips, []);
+  assert.equal(created.plannedStartOn, undefined);
+  assert.ok(Number.isFinite(Date.parse(created.createdAt ?? "")));
+  assert.equal(created.teamId, "team");
+  assert.equal(created.createdBy, "me");
+  assert.equal(created.createdFrom, "task-editor");
+  assert.equal(created.status, "待开始");
+  assert.equal(created.goal, "");
+  assert.deepEqual(created.completionCriteria, []);
+  assert.equal(created.parentTaskId, undefined);
+  assert.equal(created.plannedEndOn, undefined);
+  assert.deepEqual(JSON.parse(data.get("agentdoor-workspace-nodes")!), result.nodes);
+  assert.deepEqual(result.nodes[0], existing[0]);
+  assert.equal(existing.length, 1);
+});
+
+test("手动入口保存失败时不留下新任务或改变原记录", () => {
+  assert.equal(typeof workspaceCreation.commitManualWorkspaceTask, "function");
+  const before = "[]";
+  const data = new Map([["agentdoor-workspace-nodes", before]]);
+  const storage = { getItem: (key: string) => data.get(key) ?? null, setItem: (key: string, value: string) => {
+    if (key === "agentdoor-workspace-nodes" && value !== before) throw new Error("存储空间不足");
+    data.set(key, value);
+  }, removeItem: (key: string) => { data.delete(key); } };
+  assert.throws(() => workspaceCreation.commitManualWorkspaceTask(storage, [], { currentUserId: "me", teamId: "team" }), /回滚|保存/);
+  assert.equal(data.get("agentdoor-workspace-nodes"), before);
+  assert.equal(data.size, 1);
 });
 
 test("复杂草案创建主任务和全部子任务，并把合法依赖索引转换为真实 ID", () => {
@@ -84,13 +130,15 @@ test("单任务草案会追加一个可持久化的真实任务节点", () => {
 
   assert.equal(result.mainTaskId, "created-main");
   assert.equal(result.createdNodes.length, 1);
+  assert.ok(Number.isFinite(Date.parse(result.createdNodes[0].updatedAt)));
   assert.equal(result.nodes.length, 2);
   assert.deepEqual(result.createdNodes[0], {
     id: "created-main",
     kind: "task",
     name: "发布新品",
     parentId: workspaceRootId,
-    updatedAt: "刚刚",
+    updatedAt: result.createdNodes[0].updatedAt,
+    createdAt: result.createdNodes[0].updatedAt,
     ownerId: "周岚",
     participantIds: ["林墨"],
     status: "待开始",

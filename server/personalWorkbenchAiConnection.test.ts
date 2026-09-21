@@ -18,7 +18,7 @@ const task = (input: Partial<TaskNode> & Pick<TaskNode, "id" | "name">): TaskNod
   };
 };
 
-test("我的工作连接只带入当前用户正式负责的完整任务列表", () => {
+test("我的工作连接带入当前用户负责的完整任务列表并迁移旧提议", () => {
   const model = buildPersonalWorkbenchModel({
     asOf: "2026-09-01T10:00:00+08:00",
     currentUserId: "me-id",
@@ -35,37 +35,34 @@ test("我的工作连接只带入当前用户正式负责的完整任务列表",
   const request = buildPersonalWorkbenchAiConnectionRequest(model);
   assert.equal(request.workObject.kind, "任务列表");
   assert.equal(request.workObject.title, "我的任务列表");
-  assert.match(request.workObject.meta ?? "", /共 3 项正式负责的任务/);
+  assert.match(request.workObject.meta ?? "", /共 4 项负责的任务/);
   const listItems = request.context.filter((item) => item.label === "任务");
-  assert.equal(listItems.length, 3);
+  assert.equal(listItems.length, 4);
   const exported = listItems.map((item) => item.value).join("\n\n");
   for (const value of ["当前执行任务", "active", "已完成任务", "completed", "已取消任务", "cancelled", "状态："]) {
     assert.match(exported, new RegExp(value));
   }
-  for (const excluded of ["仅参与的任务", "待接受负责人提议", "其他成员任务", "participant", "proposal", "other-id"]) {
+  for (const excluded of ["仅参与的任务", "其他成员任务", "participant", "other-id"]) {
     assert.doesNotMatch(exported, new RegExp(excluded));
   }
   assert.doesNotMatch(exported, /当前情况|任务类型|截止|记录时效|优先原因|下一步建议|讨论|文件正文/);
   assert.match(request.context[0].value, /不受左侧搜索、状态或标签筛选影响/);
   assert.match(request.context[0].value, /每项只含 Task ID、名称和真实状态/);
-  assert.match(request.context[0].value, /不带入其他成员任务、待接受负责人提议、排序建议、讨论、文件正文或任务详情/);
-  assert.deepEqual(request.contextPreview?.items, [{
-    id: "owned-tasks",
-    label: "我的任务列表",
-    title: "我的任务列表",
-    detail: "共 3 项正式负责的任务 · 每项包含 Task ID、名称、状态 · 数据快照 2026-09-01T10:00:00+08:00",
-  }]);
+  assert.match(request.context[0].value, /不带入其他成员任务、排序建议、讨论、文件正文或任务详情/);
+  const preview = request.contextPreview!.items;
+  for (const item of model.ownedTasks) assert.ok(preview.some(row => row.value === item.title && row.meta === item.status));
+  assert.doesNotMatch(JSON.stringify(preview), /Task ID|预期目标|期望 AI 的结果/);
 });
 
-test("没有正式负责任务时保留空任务列表，不生成占位任务", () => {
+test("只有旧负责人提议时迁移为一项负责任务", () => {
   const model = buildPersonalWorkbenchModel({
     asOf: "2026-09-01",
     currentUserId: "me-id",
     tasks: [task({ id: "proposal", name: "待接受负责人提议", ownerId: "other-id", proposedOwnerId: "me-id" })],
   });
   const request = buildPersonalWorkbenchAiConnectionRequest(model);
-  assert.match(request.workObject.meta ?? "", /共 0 项正式负责的任务/);
-  assert.match(request.contextPreview?.items[0].detail ?? "", /共 0 项正式负责的任务/);
-  assert.deepEqual(request.context.map((item) => item.label), ["来源与范围"]);
-  assert.doesNotMatch(JSON.stringify(request), /待接受负责人提议（proposal）|任务 ID：proposal/);
+  assert.match(request.workObject.meta ?? "", /共 1 项负责的任务/);
+  assert.match(request.contextPreview?.items[0].value ?? "", /待接受负责人提议/);
+  assert.deepEqual(request.context.map((item) => item.label), ["来源与范围", "任务"]);
+  assert.match(JSON.stringify(request), /任务 ID：proposal/);
 });

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 import { ChevronRightIcon, CheckIcon } from "lucide-react"
 
 // Action menus share the same quiet popup and plain-text option language as
-// the shadcn Select chosen for AgentDoor.
+// the shadcn Select chosen for TaskDoor.
 
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />

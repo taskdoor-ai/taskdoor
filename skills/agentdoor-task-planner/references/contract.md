@@ -28,7 +28,7 @@
 - summary 是一段结果摘要；reasoningSummary 是最多四条可核查的短理由，不是内部逐步推理。
 - plan 中 goal 仅在主层出现，含 text、basis（explicit/inferred/confirmed）、evidence。
 - mainTask 和 subtasks 使用同一任务字段：稳定 clientId、title、acceptanceCriteria、tips、ownerRecommendation、schedule、estimate、dependsOnClientIds。
-- ownerRecommendation 含 memberId（可null）、basis（explicit/recommended/unassigned）、reason；**永远表示候选**。正式 Task 的唯一 Owner 与接受流程另行处理。
+- ownerRecommendation 含 memberId（可null）、basis（explicit/recommended/unassigned）、reason；**在规划输出中永远表示候选**。创建用户确认且服务端成功写入后，该成员直接成为正式 Task Owner，不再经过接收方二次接受。
 - schedule 含 startOn/dueOn（ISO日期或null）、originalText、basis（explicit/recommended/unknown）、assumptions。不编造具体日期，模型建议必须可编辑。
 - estimate 含 ewdHours（非负或null）、basis（user/model/unknown）、reason、confirmed。估算未确认可审阅，但不得用于正式工时完成率。
 - duplicateCheck 含 status（not_checked/completed/partial/unavailable）、scopeTeamIds、matches、coverageNote。匹配只含可见 taskId/title/reason，不拿“模型相似度99%”当确证。
@@ -42,7 +42,7 @@
 4. 相对时间、用户硬期限存在歧义时问；没有硬期限时允许 dueOn=null 并提示“尚未建议期限”，不强迫所有任务都填日期。真实日期、start≤due、依赖排期可行性要独立验证。
 5. 查重未完成或存在候选相似任务时，默认 needs_clarification。用户确认继续新建后，可在服务端记录绑定草稿revision、查重状态与候选集合的风险确认，再允许 ready；模型不能自己编造这个确认。此包示例不包含已豁免场景。
 6. 修改需求、作用域或候选集合后，旧查重结果和风险确认失效；成员授权撤回、草稿变更也需要再校验。避免两人并发提交时只依赖早先的查重快照。
-7. UI保留草稿、提示待补；提交服务独立检查 principal、ACL、confirmedRevision、任务版本、Owner接受/有效性、幂等键与原子事务。readyForConfirmation不应被直接映射成“已创建”。
+7. UI保留草稿、提示待补；提交服务独立检查 principal、ACL、confirmedRevision、任务版本、Owner成员有效性、幂等键与原子事务。readyForConfirmation不应被直接映射成“已创建”。
 
 ## 与旧协议迁移
 

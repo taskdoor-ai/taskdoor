@@ -2,6 +2,7 @@
 .creation-task-list { display: grid; padding: 0; gap: var(--ad-space-3); }
 .creation-task-row { position: relative; display: block; padding: 0; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--task-card-background, var(--ad-surface)); box-shadow: 0 1px 3px color-mix(in srgb, var(--ad-ink) 3%, transparent); transition: border-color .16s, box-shadow .16s; }
 .creation-task-row:hover { border-color: var(--ad-border-strong); box-shadow: 0 3px 10px color-mix(in srgb, var(--ad-ink) 5%, transparent); }
+.creation-subtask-card.is-expandable { cursor: pointer; }
 .creation-task-row:focus-within, .creation-task-row.is-expanded { border-color: color-mix(in srgb, var(--ad-route) 45%, var(--ad-border)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ad-route) 6%, transparent); }
 .creation-task-row .ad-accordion-item { border: 0; overflow: visible; }
 .creation-task-summary { display: grid; grid-template-columns: var(--ad-space-10) minmax(0, 1fr) var(--creation-owner-width) var(--creation-action-width); align-items: center; column-gap: var(--creation-column-gap); row-gap: var(--ad-space-3); padding: var(--ad-space-5) var(--creation-row-padding); }

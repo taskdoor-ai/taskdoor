@@ -1,0 +1,143 @@
+{
+  "revision": "225eeeb6f076c8f726a2e47f2c7b389b9e49b400",
+  "runtime": "v24.19.0",
+  "archiveChecks": [
+    {
+      "kind": "zip",
+      "layer": "web",
+      "files": 7,
+      "byteHashes": "all match"
+    },
+    {
+      "kind": "zip",
+      "layer": "worker",
+      "files": 7,
+      "byteHashes": "all match"
+    },
+    {
+      "kind": "tgz",
+      "layer": "web",
+      "files": 7,
+      "byteHashes": "all match"
+    },
+    {
+      "kind": "tgz",
+      "layer": "worker",
+      "files": 7,
+      "byteHashes": "all match"
+    }
+  ],
+  "clientChecks": [
+    {
+      "tool": "skills@1.5.10",
+      "requested": "1.0.0",
+      "actual": "1.0.0",
+      "targets": {
+        "Claude Code": ".claude/skills/brand-proof",
+        "Codex": ".agents/skills/brand-proof",
+        "Cursor": ".agents/skills/brand-proof"
+      },
+      "assetHashes": "all match"
+    },
+    {
+      "tool": "skills@1.5.10",
+      "requested": "latest",
+      "actual": "1.1.0",
+      "targets": {
+        "Claude Code": ".claude/skills/brand-proof",
+        "Codex": ".agents/skills/brand-proof",
+        "Cursor": ".agents/skills/brand-proof"
+      },
+      "assetHashes": "all match"
+    },
+    {
+      "tool": "skills@1.5.10",
+      "requested": "1.0.0",
+      "actual": "1.0.0",
+      "targets": {
+        "Claude Code": ".claude/skills/brand-proof",
+        "Codex": ".agents/skills/brand-proof",
+        "Cursor": ".agents/skills/brand-proof"
+      },
+      "assetHashes": "all match"
+    }
+  ],
+  "httpRequests": [
+    {
+      "path": "/team-a/brand-proof.git/info/refs",
+      "authenticated": false,
+      "allowed": false
+    },
+    {
+      "path": "/team-a/brand-proof.git/info/refs",
+      "authenticated": false,
+      "allowed": false
+    },
+    {
+      "path": "/team-a/brand-proof.git/info/refs",
+      "authenticated": true,
+      "allowed": true
+    },
+    {
+      "path": "/team-a/brand-proof.git/git-upload-pack",
+      "authenticated": true,
+      "allowed": true
+    },
+    {
+      "path": "/team-a/brand-proof.git/git-upload-pack",
+      "authenticated": true,
+      "allowed": true
+    },
+    {
+      "path": "/team-a/brand-proof.git/info/refs",
+      "authenticated": false,
+      "allowed": false
+    },
+    {
+      "path": "/team-a/brand-proof.git/info/refs",
+      "authenticated": true,
+      "allowed": true
+    },
+    {
+      "path": "/team-a/brand-proof.git/git-upload-pack",
+      "authenticated": true,
+      "allowed": true
+    },
+    {
+      "path": "/team-a/brand-proof.git/git-upload-pack",
+      "authenticated": true,
+      "allowed": true
+    },
+    {
+      "path": "/team-a/brand-proof.git/info/refs",
+      "authenticated": false,
+      "allowed": false
+    },
+    {
+      "path": "/team-a/brand-proof.git/info/refs",
+      "authenticated": true,
+      "allowed": true
+    },
+    {
+      "path": "/team-a/brand-proof.git/git-upload-pack",
+      "authenticated": true,
+      "allowed": true
+    },
+    {
+      "path": "/team-a/brand-proof.git/git-upload-pack",
+      "authenticated": true,
+      "allowed": true
+    }
+  ],
+  "versionImmutability": "passed",
+  "unauthenticatedDownload": "HTTP 401",
+  "workspace": "/private/tmp/skillhub-verification/skilly/verification-runtime/run-1789374644126",
+  "scriptModes": {
+    "zip": "100644",
+    "tgz": "100755"
+  },
+  "authorizationTests": {
+    "passed": 22,
+    "failed": 0
+  }
+}

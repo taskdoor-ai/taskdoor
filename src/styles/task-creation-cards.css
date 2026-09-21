@@ -1,12 +1,42 @@
 .creation-subtasks.creation-subtasks-cards { margin-top: var(--ad-space-6); padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .creation-subtasks-cards > .creation-subtasks-heading { padding: 0 0 var(--ad-space-3); }
 .creation-subtasks-cards > .creation-task-list { padding: 0; }
+.creation-task-tree, .creation-tree-children { margin: 0; padding: 0; list-style: none; }
+.creation-task-tree { display: grid; gap: var(--ad-space-2); }
+.creation-tree-node { min-width: 0; }
+.creation-tree-toggle { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; gap: var(--ad-space-1); min-height: var(--creation-summary-height); padding: 0 var(--ad-space-2); border: 1px solid var(--ad-border); border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); white-space: nowrap; cursor: pointer; }
+.creation-tree-toggle > svg { width: 1em; height: 1em; flex-shrink: 0; }
+.creation-tree-toggle[aria-expanded="false"]:hover { border-color: var(--ad-border-strong); }
+.creation-tree-toggle:focus-visible { outline: 2px solid var(--ad-route); outline-offset: 2px; }
+.creation-tree-toggle[aria-expanded="true"] { background: var(--ad-route-soft); border-color: var(--ad-route); }
+.creation-tree-toggle[aria-expanded="true"]:hover { border-color: var(--ad-route); }
+.creation-tree-children { display: grid; gap: var(--ad-space-2); margin: var(--ad-space-2) 0 0 20px; padding-left: 12px; border-left: 1px solid var(--ad-border); }
+.creation-tree-children[hidden] { display: none; }
+.creation-tree-children > .creation-tree-node { position: relative; }
+.creation-tree-children > .creation-tree-node::before { content: ""; position: absolute; width: 12px; top: 34px; left: -12px; border-top: 1px solid var(--ad-border); }
+.creation-task-tree .creation-task-row { min-width: 0; background: var(--ad-surface); }
+.creation-task-tree .creation-task-summary { grid-template-columns: var(--ad-space-10) minmax(0, 1fr) var(--creation-owner-width) 224px; padding-block: var(--ad-space-3); }
+.creation-task-tree .creation-subtask-card .task-detail-title-row { padding-right: 300px; }
+.creation-task-tree .creation-subtask-card.is-expanded .creation-task-summary { padding: 0; }
+@media (max-width: 720px) {
+  .creation-task-tree .creation-task-summary { grid-template-columns: 32px minmax(0, 1fr) auto; }
+  .creation-task-tree .creation-task-summary > .creation-subtask-header-actions { grid-column: 3; grid-row: 2; }
+  .creation-task-tree .creation-task-summary .creation-row-owner { grid-column: 1 / 3; }
+  .creation-task-tree .creation-subtask-card .task-detail-title-row { padding-right: 0; }
+  .creation-task-tree .creation-subtask-card.is-expanded .creation-task-summary { position: static; justify-content: flex-end; padding: var(--ad-space-3) var(--creation-row-padding) 0; }
+}
+@media (max-width: 640px) {
+  .creation-tree-toggle { height: 44px; }
+  .creation-tree-children { margin-left: 12px; padding-left: 7px; }
+  .creation-tree-children > .creation-tree-node::before { left: -7px; width: 7px; }
+  .creation-task-tree { --creation-row-padding: var(--ad-space-3); }
+}
 .creation-heading { --creation-heading-action-space: 112px; }
-.creation-member-match-basis { display: grid; grid-template-columns: 68px minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); margin: 0 var(--creation-row-padding, var(--ad-space-6)); padding: var(--ad-space-4) 0; border-top: 1px solid var(--ad-border-soft); }
+.creation-member-match-basis { display: grid; grid-template-columns: var(--ad-task-field-label-width, 10rem) minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); margin: 0 var(--creation-row-padding, var(--ad-space-6)); padding: var(--ad-space-4) 0; border-top: 1px solid var(--ad-border-soft); }
 .creation-member-match-basis > .task-detail-field-label { padding-top: 0; line-height: 1.7; }
 .creation-member-match-basis > div { display: grid; min-width: 0; gap: var(--ad-space-1); }
 .creation-member-match-basis p { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.7; overflow-wrap: anywhere; }
-.creation-subtask-dependency-field { display: grid; grid-template-columns: 68px minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); min-width: 0; }
+.creation-subtask-dependency-field { display: grid; grid-template-columns: var(--ad-task-field-label-width, 10rem) minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); min-width: 0; }
 .creation-subtask-dependency-field > .task-detail-field-label { padding-top: 6px; }
 .creation-heading .task-effort-cost { align-items: baseline; }
 .creation-heading .task-effort-cost > .task-effort-field-label, .creation-heading .task-effort-cost-value { font-size: var(--ad-text-body-sm); font-weight: 400; line-height: 1.5; }
@@ -19,6 +49,7 @@
 .task-detail-properties:is(.creation-heading-properties, .creation-subtask-metadata) > .task-detail-property { max-width: 100%; flex-wrap: nowrap; }
 .task-detail-properties:is(.creation-heading-properties, .creation-subtask-metadata) > .task-detail-property-separator { display: block; flex: 0 0 1px; align-self: center; width: 1px; height: var(--ad-space-6); background: var(--ad-border-soft); pointer-events: none; }
 .task-detail-properties:is(.creation-heading-properties, .creation-subtask-metadata) > .task-detail-title-tags { max-width: 100%; min-height: var(--ad-control-height-sm); margin-left: 0; }
+.creation-property-label { flex-shrink: 0; margin-right: var(--ad-space-1); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); font-weight: 400; }
 @media (max-width: 840px) {
   .creation-heading > .creation-member-match-basis { margin-inline: var(--ad-space-5); }
   .creation-heading > .task-ai-detail-tools { right: var(--ad-space-5); }
@@ -39,4 +70,8 @@
 @media (max-width: 720px), (pointer: coarse) {
   .creation-heading .task-effort-cost-summary { align-items: center; }
   .creation-heading .task-effort-info { align-self: auto; }
+}
+
+@container task-creation-pane (max-width: 640px) {
+  .creation-subtask-dependency-field, .creation-member-match-basis, .task-execution-tips-field { grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-1); }
 }

@@ -1,0 +1,19 @@
+.task-fixed-scroll-thumb {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  z-index: 2;
+  width: 6px;
+  border-radius: 999px;
+  background: rgb(128 128 128 / 42%);
+  opacity: .82;
+  cursor: grab;
+  touch-action: none;
+  transition: background-color 120ms ease, opacity 120ms ease;
+}
+.task-fixed-scroll-thumb:hover,
+.task-fixed-scroll-thumb[data-dragging="true"] { background: rgb(112 112 112 / 62%); opacity: 1; }
+.task-fixed-scroll-thumb[data-dragging="true"] { cursor: grabbing; }
+@media (prefers-reduced-motion: reduce) {
+  .task-fixed-scroll-thumb { transition: none; }
+}

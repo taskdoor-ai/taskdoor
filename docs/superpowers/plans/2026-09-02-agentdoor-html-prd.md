@@ -1,4 +1,4 @@
-# AgentDoor HTML PRD Implementation Plan
+# TaskDoor HTML PRD Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -38,7 +38,7 @@ Expected: 因 `public/agentdoor-prd.html` 尚不存在而失败。
 
 - [ ] **Step 2: 建立视觉系统**
 
-复用 AgentDoor 的蓝色路由色、白色内容面和灰色边界。使用连续“流程轨道”作为唯一视觉签名；其余区域采用标题、分隔线、紧凑表格和少量浅色提示块，不做卡片墙。
+复用 TaskDoor 的蓝色路由色、白色内容面和灰色边界。使用连续“流程轨道”作为唯一视觉签名；其余区域采用标题、分隔线、紧凑表格和少量浅色提示块，不做卡片墙。
 
 - [ ] **Step 3: 写入细化内容**
 

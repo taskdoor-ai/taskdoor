@@ -163,18 +163,19 @@ test("文案清理不替换用户提供的Mock和示例内容", () => {
   assert.equal(next.changes[0].after, "Mock 示例数据核对");
 });
 
-test("主目标候选不改子任务记录，明确继承语义", () => {
+test("主目标候选只修改当前任务，不改子任务初始目标", () => {
   const source = freezeDeep(context());
   const next = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "目标改为让新客户理解产品价值"));
   assert.deepEqual(next.updates, [{ taskId: "main", patch: { goal: "让新客户理解产品价值" } }]);
-  assert.match(next.summary, /继承/);
   assert.equal(source.subtasks[0].goal, source.task.goal);
 });
 
-test("继承目标不可在当前任务或单子任务范围重写", () => {
+test("初始带入的目标可以在当前任务或单子任务范围独立改写", () => {
   const source = context();
-  error(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-a" }, "目标改为其他业务目标"), /继承/);
-  error(buildTaskAiAdjustment(context({ task: task({ goalInherited: true }) }), { kind: "task" }, "目标改为其他目标"), /继承/);
+  const child = proposal(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-a" }, "目标改为其他业务目标"));
+  assert.deepEqual(child.updates, [{ taskId: "child-a", patch: { goal: "其他业务目标" } }]);
+  const own = proposal(buildTaskAiAdjustment(context({ task: task({ goalInherited: true }) }), { kind: "task" }, "目标改为其他目标"));
+  assert.deepEqual(own.updates, [{ taskId: "main", patch: { goal: "其他目标" } }]);
 });
 
 test("单子任务通过稳定 ID 定位，重排后只改指定项", () => {
@@ -311,43 +312,43 @@ test("姓名重名不猜成员，但精确唯一 ID 仍可使用", () => {
   }
 });
 
-test("已保存任务的人选仅为待接受提议，不变更正式 Owner 或参与人", () => {
+test("已保存任务的负责人修改形成待应用候选，应用后直接生效", () => {
   const source = freezeDeep(context({ mode: "saved" }));
   const next = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "负责人改为陈默"));
   assert.deepEqual(next.updates, [{ taskId: "main", patch: { ownerId: "member-b" } }]);
   assert.equal(next.changes.length, 1);
-  assert.match(next.changes[0].after!, /陈默.*待接受/);
-  assert.match(next.summary, /正式负责人.*不变/);
+  assert.equal(next.changes[0].after, "陈默");
+  assert.match(next.summary, /尚未应用.*直接生效/);
   assert.equal(source.task.ownerId, "member-a");
   assert.deepEqual(source.task.participantIds, ["member-b", "member-c"]);
 });
 
-test("已保存任务请求已有相同提议时没有变化", () => {
-  const source = context({ mode: "saved", task: task({ proposedOwnerId: "member-b" }) });
+test("已保存任务请求当前负责人时没有变化", () => {
+  const source = context({ mode: "saved", task: task({ ownerId: "member-b" }) });
   const next = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "负责人改为陈默"));
   assert.deepEqual(next.changes, []);
   assert.deepEqual(next.updates, []);
-  assert.match(next.summary, /待接受/);
+  assert.match(next.summary, /保持原样/);
 });
 
-test("已保存任务请求当前正式 Owner 不隐式撤销另一项待接受提议", () => {
+test("旧提议字段不影响当前正式负责人无变化判断", () => {
   const source = context({ mode: "saved", task: task({ proposedOwnerId: "member-b" }) });
   const next = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "负责人改为周岚"));
   assert.deepEqual(next.changes, []);
   assert.deepEqual(next.updates, []);
-  assert.match(next.summary, /待接受.*保留/);
+  assert.match(next.summary, /保持原样/);
   assert.equal(source.task.proposedOwnerId, "member-b");
 });
 
-test("已保存任务拒绝清空负责人，不伪造无人接受的提议", () => {
+test("已保存任务拒绝清空负责人", () => {
   error(buildTaskAiAdjustment(context({ mode: "saved" }), { kind: "task" }, "负责人改为待定"), /具体成员|清空/);
 });
 
-test("已有提议改为另一候选时，差异呈现原提议与新待接受人选", () => {
+test("旧提议字段不覆盖负责人修改候选的正式前后值", () => {
   const source = context({ mode: "saved", task: task({ proposedOwnerId: "member-b" }) });
   const next = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "负责人改为林洁"));
-  assert.match(next.changes[0].before!, /陈默.*待接受/);
-  assert.match(next.changes[0].after!, /林洁.*待接受/);
+  assert.equal(next.changes[0].before, "周岚");
+  assert.equal(next.changes[0].after, "林洁");
   assert.equal(next.updates[0].patch.ownerId, "member-c");
 });
 
@@ -385,26 +386,32 @@ test("日期格式与真实日历都校验，不把非法日期滚入下个月",
   assert.equal(next.updates[0].patch.endDate, "2028-02-29");
 });
 
-test("结束日期不能早于目标任务的开始日期", () => {
-  error(buildTaskAiAdjustment(context(), { kind: "task" }, "截止时间改为2026-08-31"), /开始/);
-  const source = context();
+test("创建草稿不比较开始与截止，已保存任务保留既有日期规则", () => {
+  const draft = proposal(buildTaskAiCreationAdjustment(context(), "截止时间改为2026-08-31"));
+  assert.deepEqual(draft.updates, [{ taskId: "main", patch: { endDate: "2026-08-31" } }]);
+  error(buildTaskAiAdjustment(context({ mode: "saved" }), { kind: "task" }, "截止时间改为2026-08-31"), /开始/);
+  const source = context({ mode: "saved" });
   source.subtasks[0].startDate = "2026-09-09";
   error(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-a" }, "截止时间改为2026-09-08"), /开始/);
 });
 
 test("目标任务开始日期失效时拒绝基于它生成新排期", () => {
-  const source = context({ task: task({ startDate: "2026-02-30" }) });
+  const source = context({ mode: "saved", task: task({ startDate: "2026-02-30" }) });
   error(buildTaskAiAdjustment(source, { kind: "task" }, "截止时间改为2026-10-02"), /开始.*日期|日期.*无效/);
 });
 
-test("主截止早于子截止须回到子任务模块，不自动重排或改子项", () => {
-  const source = freezeDeep(context());
+test("Mock 创建只修改指定截止日期，不检查或重排子任务；已保存任务保留规则", () => {
+  const draft = proposal(buildTaskAiCreationAdjustment(context(), "截止时间改为2026-09-15"));
+  assert.deepEqual(draft.updates, [{ taskId: "main", patch: { endDate: "2026-09-15" } }]);
+  const source = freezeDeep(context({ mode: "saved" }));
   error(buildTaskAiAdjustment(source, { kind: "task" }, "截止时间改为2026-09-15"), /子任务模块/);
 });
 
-test("子截止不得超出已定主截止，未定主截止不强行补日期", () => {
-  error(buildTaskAiAdjustment(context(), { kind: "subtask", taskId: "child-a" }, "截止时间改为2026-10-01"), /主任务.*截止/);
-  const source = context({ task: task({ endDate: "", endDateLabel: "" }) });
+test("Mock 子任务允许超出主截止，已保存任务保留规则，未定主截止不补日期", () => {
+  const draft = proposal(buildTaskAiCreationAdjustment(context(), "子任务「确认场地」：截止时间改为2026-10-01"));
+  assert.deepEqual(draft.updates, [{ taskId: "child-a", patch: { endDate: "2026-10-01" } }]);
+  error(buildTaskAiAdjustment(context({ mode: "saved" }), { kind: "subtask", taskId: "child-a" }, "截止时间改为2026-10-01"), /主任务.*截止/);
+  const source = context({ mode: "saved", task: task({ endDate: "", endDateLabel: "" }) });
   const next = proposal(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-a" }, "截止时间改为2026-10-01"));
   assert.deepEqual(next.updates, [{ taskId: "child-a", patch: { endDate: "2026-10-01" } }]);
 });
@@ -500,7 +507,7 @@ test("模块显式新增子任务，使用新稳定 ID、继承目标、人选�
   assert.match(child.id, /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
   assert.equal(child.title, "完成媒体资料包");
   assert.equal(child.goal, source.task.goal);
-  assert.equal(child.goalInherited, true);
+  assert.equal(child.goalInherited, false);
   assert.deepEqual(child.completionCriteria, ["提供事实清单，附来源", "确认素材可公开使用"]);
   assert.deepEqual(child.executionTips, []);
   assert.equal(child.ownerId, "");

@@ -1,3 +1,6 @@
+import { useGlobalUi } from "../i18n/globalUi";
+import { useI18n } from "../i18n/I18nProvider";
+import { mockTagName } from "../i18n/mockContent";
 import { Building2, CircleDollarSign, Flag, FolderKanban, Layers3, Package, ShieldAlert, ShoppingBag, Sparkles, Tag, Users, Wrench, X, type LucideIcon } from "lucide-react";
 import type { TagColorName, TagDefinition, TagIconName } from "../data/tagGroups";
 
@@ -20,6 +23,9 @@ export function getTagIcon(name: TagIconName) { return tagIconOptions.find((item
 // Source-adapted from the icon + label anatomy of:
 // https://21st.dev/@arihantcodes_1f7b8c4d/components/status-badge
 export function TagBadge({ onRemove, size = "md", tag }: { onRemove?: () => void; size?: "xs" | "sm" | "md"; tag: TagDefinition }) {
+  const ui = useGlobalUi();
+  const { locale } = useI18n();
+  const displayName = mockTagName(locale, tag.id, tag.name);
   const Icon = getTagIcon(tag.icon);
-  return <span className="ad-tag-badge" data-color={tag.color} data-size={size}><Icon aria-hidden="true" /><span>{tag.name}</span>{onRemove && <button className="ad-tag-badge-remove" aria-label={`移除标签 ${tag.name}`} onClick={onRemove} type="button"><X /></button>}</span>;
+  return <span className="ad-tag-badge" data-color={tag.color} data-size={size}><Icon aria-hidden="true" /><span>{displayName}</span>{onRemove && <button className="ad-tag-badge-remove" aria-label={`${locale === "en" ? "Remove tag" : ui("移除标签")} ${displayName}`} onClick={onRemove} type="button"><X /></button>}</span>;
 }

@@ -2,6 +2,7 @@ import type { CreationPlanningResult } from "./taskCreationPlanning";
 import type { TaskAiAdjustmentApplicationStatus, TaskAiAdjustmentChange, TaskAiAdjustmentProgress } from "./taskAiAdjustmentTypes";
 
 export type CreationFeedbackStep = { label: string; detail: string; basis: string };
+export const CREATION_PLANNING_STEP_LABELS = ["分析任务", "目标与计划", "成员推荐", "动态规划"] as const;
 
 /** A snapshot of this draft's local demonstration, never a model reasoning trace. */
 export type CreationProcess = {
@@ -114,21 +115,21 @@ export function getCreationFeedback(result: CreationPlanningResult): CreationFee
   ];
   return [
     {
-      label: "分析任务", detail: "梳理需求中的目标、交付边界与待确认约束。",
+      label: CREATION_PLANNING_STEP_LABELS[0], detail: "梳理需求中的目标、交付边界与待确认约束。",
       basis: "当前输入与已有资料；未检索历史任务。",
     },
     {
-      label: "目标与计划", detail: result.form.subtasks.length
+      label: CREATION_PLANNING_STEP_LABELS[1], detail: result.form.subtasks.length
         ? "按可独立验收的交付拆分，整理目标、完成标准、执行建议与预估人类投入。"
         : "保留一项交付，不额外拆分；整理完成标准、执行建议与预估人类投入。",
       basis: "按约定 AI／工具方式预估；不含等待，未知投入仍待确认。",
     },
     {
-      label: "成员推荐", detail: "对照成员职责，整理负责人和参与人的候选建议。",
+      label: CREATION_PLANNING_STEP_LABELS[2], detail: "对照成员职责，整理负责人和参与人的候选建议。",
       basis: "成员资料；人选未接受，实际忙闲待确认。",
     },
     {
-      label: "动态规划", detail: "整理候选前置依赖与期限依据，标出需要你核对的安排。",
+      label: CREATION_PLANNING_STEP_LABELS[3], detail: "整理候选前置依赖与期限依据，标出需要你核对的安排。",
       basis: "候选交付关系与日期；缺少期限依据的保留待确认。",
     },
   ];

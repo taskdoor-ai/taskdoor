@@ -1,0 +1,21 @@
+.language-switcher { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+.language-switcher select { font: inherit; color: inherit; background: var(--background, transparent); border: 1px solid var(--border, #888); border-radius: 6px; min-height: 32px; padding: 4px 6px; }
+@media (max-width: 600px) { .language-switcher > span { display: none; } .language-switcher select { min-height: 44px; max-width: 100px; } }
+
+.language-menu-trigger { min-height: 36px; padding: 8px 12px; gap: 10px; }
+.language-menu-trigger small { margin-left: auto; font-size: 12px; color: var(--muted-foreground); }
+.language-menu-trigger > svg:last-child { margin-left: 0; }
+.language-menu-content { min-width: 180px; }
+
+.language-menu-content { min-width: 250px; max-width: calc(100vw - 24px); }
+.language-menu-content .language-auto-translate { min-height:36px; padding-left:36px; padding-right:12px; }
+.language-auto-translate [data-slot="dropdown-menu-checkbox-item-indicator"] { left:10px; right:auto; width:16px; height:16px; border:1.5px solid var(--ad-ink-tertiary); border-radius:4px; }
+.language-auto-translate[aria-checked="true"] [data-slot="dropdown-menu-checkbox-item-indicator"] { background:var(--ad-route); border-color:var(--ad-route); color:white; }
+.language-auto-translate [data-slot="dropdown-menu-checkbox-item-indicator"] svg { width:12px; height:12px; }
+.content-translation-control { display:inline-flex; flex-wrap:wrap; align-items:center; gap:3px; font-size:12px; color:var(--ad-ink-tertiary); }
+.content-translation-control button { border:0; padding:2px 0; background:transparent; color:var(--ad-route); font:inherit; cursor:pointer; }
+.content-translation-control button:focus-visible,.task-reading-menu:focus-visible { outline:2px solid var(--ad-focus); outline-offset:3px; border-radius:4px; }
+.content-translation-unavailable,.content-editing-original { font-size:12px; color:var(--ad-ink-tertiary); }
+.task-reading-menu { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; margin-left:8px; border:0; border-radius:6px; color:var(--ad-ink-tertiary); background:transparent; cursor:pointer; }
+.task-reading-menu:hover { background:var(--ad-surface-quiet); }
+@media (max-width:760px) { .task-reading-menu { width:44px; height:44px; } .content-translation-control button { min-height:32px; } }

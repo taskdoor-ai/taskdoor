@@ -3,6 +3,7 @@ import test from "node:test";
 
 import { creatorCommerceMembers, creatorCommercePrompt, creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
 import { taskCreationScenarios } from "../src/data/taskCreationScenarios.ts";
+import { nestedTaskCreationPrompt } from "../src/lib/nestedTaskCreationScenario.ts";
 import { workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
 import { advanceTaskCreationScenario, startTaskCreationScenario } from "../src/lib/taskCreationScenario.ts";
 
@@ -36,12 +37,13 @@ const assertDraftUsesContextCandidates = (draft: ReturnType<typeof getDraft>) =>
 };
 
 test("代表性任务创建入口使用唯一 ID 并保持约定顺序", () => {
-  assert.equal(taskCreationScenarios.length, 6);
+  assert.equal(taskCreationScenarios.length, 7);
   assert.deepEqual(
     taskCreationScenarios.map(({ id, label, prompt }) => ({ id, label, prompt })),
     [
       { id: "single-task", label: "单任务 · 无子任务", prompt: "整理下周例会纪要" },
       { id: "complex-plan", label: "复杂项目 · 共 8 个任务", prompt: creatorCommercePrompt },
+      { id: "nested-plan", label: "多层级项目 · 4 层任务", prompt: nestedTaskCreationPrompt },
       { id: "clarify-requirement", label: "需求不明确 · 引导创建", prompt: "帮我策划一个活动" },
       { id: "similar-task", label: "发现相似任务 · 创建前确认", prompt: "整理新品发布复盘" },
       { id: "existing-parent", label: "关联已有任务 · 创建子任务", prompt: "准备新品发布会的媒体邀请名单" },

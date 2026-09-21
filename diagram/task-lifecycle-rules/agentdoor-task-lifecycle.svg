@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2240 1260" role="img" aria-labelledby="diagram-title diagram-description">
-<title id="diagram-title">AgentDoor 任务生命周期与对应规则</title>
+<title id="diagram-title">TaskDoor 任务生命周期与对应规则</title>
 <desc id="diagram-description">上方七个节点从左到右为明确需求与查重、拆分任务、匹配人员、估算投入、确认创建、任务状态分析、验收与完成。下方七列与各节点一一对应。第六步包含任务状态、下一步建议和进度。底部区分任务维度的 AI 诊断和燃起图、个人维度的任务优先级。</desc>
 <defs>
   <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#21304a" stroke-width="0.65" opacity="0.42"/></pattern>
@@ -28,7 +28,7 @@
 <rect width="2240" height="1260" fill="url(#background)"/>
 <rect width="2240" height="1260" fill="url(#grid)"/>
 
-<text x="74" y="59" class="eyebrow">AGENTDOOR  /  产品规则总图</text>
+<text x="74" y="59" class="eyebrow">TaskDoor  /  产品规则总图</text>
 <text x="74" y="123" class="title">一条任务主线，每一步都有对应规则</text>
 <text x="74" y="169" class="subtitle">上方看流程，下方看规则；创建步骤与持续管理分开表达。</text>
 <text x="2144" y="61" class="rule-foot" text-anchor="end">依据当前 PRD · 规则设计稿</text>

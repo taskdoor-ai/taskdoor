@@ -4,6 +4,7 @@ import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { getEffortScopeKey, type TaskEffortEstimate, type TaskEffortTask } from "../src/lib/taskEffort.ts";
+import { getTaskProgressComparisonExample } from "../src/data/taskProgressComparisonExamples.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -38,10 +39,10 @@ test("只读成本汇总有效的系统候选和已确认结果，不显示编�
   assert.doesNotMatch(text, /综合考虑|历史任务|实际耗时/u, "解释收进提示，不常驻正文");
 });
 
-test("手工和 Mock 记录不能成为当前系统成本", async () => {
+test("已确认手工估算纳入已估部分，Mock缺口仍不冒充总成本", async () => {
   const { text } = await render([task({ basis: "manual", confirmed: true, minutes: 666660 }), task({ basis: "mock" })]);
-  assert.equal(text, "预计投入暂无法估算");
-  assert.doesNotMatch(text, /11111|1\.5|0 人天/u);
+  assert.equal(text, "预计投入已估部分约 1388.88 人天");
+  assert.doesNotMatch(text, /11111|0 人天/u);
 });
 
 test("未知和排除记录仍保留在覆盖范围，不能把有效部分冒充总成本", async () => {
@@ -81,17 +82,18 @@ test("合计超出安全整数范围时不渲染不可靠数值或中断详情",
   assert.equal(text, "预计投入暂无法估算");
 });
 
-test("创建工时分布同时展示条形图、预计工时与占比", async () => {
+test("创建工时分布用简洁数值展示条形图、预计工时与占比", async () => {
   const { TaskEffortCost } = await import("../src/components/TaskEffortCost.tsx");
   const tasks = [{ ...task({ minutes: 120 }), id: "a", title: "资料整理" }, { ...task({ minutes: 1080 }), id: "b", title: "方案验证" }];
   const before = structuredClone(tasks);
   const html = renderToStaticMarkup(createElement(TaskEffortCost, { tasks, mode: "creation", showDistribution: true }));
   assert.match(html, /约 2.5 人天/);
   assert.match(html, /子任务工时分布/);
-  assert.match(html, /工时占比 10%/);
-  assert.match(html, /工时占比 90%/);
-  assert.match(html, /占总投入 10%/);
-  assert.match(html, /占总投入 90%/);
+  assert.match(html, /aria-label="预计投入 0.25 人天，工时占比 10%"/);
+  assert.match(html, /aria-label="预计投入 2.25 人天，工时占比 90%"/);
+  assert.match(html, />0.25 人天<\/span> · <span class="task-effort-distribution-share">10%<\/span>/);
+  assert.match(html, />2.25 人天<\/span> · <span class="task-effort-distribution-share">90%<\/span>/);
+  assert.doesNotMatch(html, />预计 [^<]*人天|>占总投入 /);
   assert.equal([...html.matchAll(/role="meter"/gu)].length, 2);
   assert.match(html, /aria-label="资料整理工时占比"[^>]*aria-valuenow="10"/);
   assert.match(html, /aria-label="方案验证工时占比"[^>]*aria-valuenow="90"/);
@@ -124,13 +126,12 @@ test("详情没有验收记录时保留灰色空进度条，但不补完成百�
     showDistribution: true,
   }));
 
-  assert.match(html, /子任务投入与进度/);
+  assert.match(html, /子任务进度/);
   assert.doesNotMatch(html, /预计共 1 人天/);
-  assert.match(html, /预计 0.75 人天/);
-  assert.match(html, /占总投入 75%/);
-  assert.match(html, /进度未知/);
-  assert.equal([...html.matchAll(/class="task-effort-distribution-track"/gu)].length, 2);
-  assert.match(html, /aria-label="资料整理完成进度：进度未知" class="task-effort-distribution-track" role="img"><\/div>/u);
+  assert.doesNotMatch(html, /投入与依据|预计 0.75 人天|占总投入 75%/);
+  assert.match(html, /待评估/);
+  assert.equal([...html.matchAll(/class="task-progress-actual-track"/gu)].length, 2);
+  assert.match(html, /aria-label="资料整理完成进度：待评估 —[^"]*" class="task-progress-actual-track" role="img"><\/div>/u);
   assert.doesNotMatch(html, /aria-valuenow|style="width:/u);
   assert.doesNotMatch(html, /暂无验收记录|role="progressbar"|已完成 0%/u);
 });
@@ -142,9 +143,9 @@ test("详情的条宽只按自身完成度计算，不能再乘投入占比", as
     tasks, completedMinutesByTaskId: { a: 360, b: 0 }, onOpenTask: () => {}, presentation: "summary", showDistribution: true,
   }));
   assert.doesNotMatch(html, /预计共 5 人天/);
-  assert.match(html, /占总投入 25%/);
-  assert.match(html, /已完成 60%/);
-  assert.match(html, /已完成 0%/);
+  assert.doesNotMatch(html, /投入与依据|占总投入 25%/);
+  assert.match(html, /task-completion-progress-value">60%/);
+  assert.match(html, /task-completion-progress-value">0%/);
   assert.match(html, /aria-label="制作素材完成进度"[^>]*aria-valuenow="60"/);
   assert.match(html, /style="width:60%"/);
   assert.doesNotMatch(html, /style="width:(25|15)%"|<i\b/);
@@ -161,7 +162,7 @@ test("未知、非法、过期和零分母不伪装成完成度", async () => {
       completedMinutesByTaskId: { a: completed }, presentation: "summary", showDistribution: true,
     }));
     assert.match(html, /资料整理/);
-    assert.match(html, /class="task-effort-distribution-track" role="img"><\/div>/u);
+    assert.match(html, /class="task-progress-actual-track" role="img"><\/div>/u);
     assert.doesNotMatch(html, /role="progressbar"|已完成 (0|100)%|NaN|Infinity/);
   }
   for (const effortTask of [task({ minutes: 0 }), { ...task(), goal: "范围已改变" }, {}]) {
@@ -170,8 +171,43 @@ test("未知、非法、过期和零分母不伪装成完成度", async () => {
       completedMinutesByTaskId: { a: 0 }, presentation: "summary", showDistribution: true,
     }));
     assert.match(html, /待核对任务/);
-    assert.match(html, /class="task-effort-distribution-track" role="img"><\/div>/u);
+    assert.match(html, /class="task-progress-actual-track" role="img"><\/div>/u);
     assert.doesNotMatch(html, /role="progressbar"|已完成 0%|占总投入/);
+  }
+});
+
+test("子任务各自显示实际与同一时点预期，预期不覆盖原完成记录", async () => {
+  const { TaskEffortCost } = await import("../src/components/TaskEffortCost.tsx");
+  const comparison = getTaskProgressComparisonExample("weekly-retro-decisions")!;
+  const props = {
+    tasks: [{...task({minutes:120}),id:"a",title:"核对结论"}],
+    completedMinutesByTaskId: {a:60},
+    progressComparisonsByTaskId: {a:comparison},
+    comparisonAsOf: "2026-09-13",
+    presentation: "summary" as const, showDistribution:true,
+  };
+  const html = renderToStaticMarkup(createElement(TaskEffortCost,props));
+  assert.match(html,/task-completion-progress-value">50%/); // The separate child's demo actual is 100%; retain caller's record.
+  assert.match(html,/aria-label="核对结论完成进度"[^>]*aria-valuenow="50"/);
+  assert.match(html,/class="task-progress-expected-label"[^>]*>计划应完成 85%/);
+  assert.match(html,/class="task-progress-pace-marker"[^>]*style="left:85%"/);
+  assert.doesNotMatch(html,/计划进度待更新/);
+  const unknown = renderToStaticMarkup(createElement(TaskEffortCost,{...props,completedMinutesByTaskId:{}}));
+  assert.match(unknown,/待评估/);
+  assert.match(unknown,/计划应完成 85%/);
+  assert.doesNotMatch(unknown,/role="progressbar"|task-progress-race-gap/);
+  const zero = structuredClone(comparison); zero.expected.points.forEach(point=>point.completedMinutes=0);
+  assert.match(renderToStaticMarkup(createElement(TaskEffortCost,{...props,progressComparisonsByTaskId:{a:zero}})),/计划应完成 0%/);
+  for (const update of [
+    {progressComparisonsByTaskId:{}},
+    {comparisonAsOf:"2026-09-14"},
+    {tasks:[{...task({minutes:240}),id:"a",title:"核对结论"}]},
+    {progressComparisonsByTaskId:{a:{...comparison,expected:{...comparison.expected,scopeVersion:"old"}}}},
+    {tasks:[{...props.tasks[0],goal:"范围改变"}]},
+  ]) {
+    const changed = renderToStaticMarkup(createElement(TaskEffortCost,{...props,...update}));
+    assert.match(changed,/计划进度待更新/);
+    assert.doesNotMatch(changed,/task-progress-pace-marker|task-progress-expected-label/);
   }
 });
 

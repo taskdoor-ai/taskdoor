@@ -57,12 +57,12 @@ test("明确投入数字只产生未确认候选，不覆盖已确认人工估�
   assert.deepEqual(context, original);
 });
 
-test("已保存任务上下文保留估算，单独打开子任务仍采用当前继承目标", () => {
+test("已保存任务上下文保留估算，单独打开子任务采用自身目标", () => {
   const base = nodes();
   base.push({ ...(base[0] as TaskNode), id: "child", parentTaskId: "task", goal: "旧目标" });
   const context = createSavedTaskAiContext(base, "child", members, "self")!;
   assert.deepEqual(context.task.effortEstimate, effort());
-  assert.equal(context.task.goal, "对齐后续行动");
+  assert.equal(context.task.goal, "旧目标");
   (base[1] as TaskNode).effortEstimate!.reason = "新的人工依据";
   assert.notEqual(getTaskAiContextSignature(createSavedTaskAiContext(base, "child", members, "self")!), getTaskAiContextSignature(context));
   assert.deepEqual(context.task.effortEstimate, effort());
@@ -102,7 +102,7 @@ test("明确改为待估算生成未知候选，缺少方式和依据的数字�
   assert.match(numeric.summary, /补充.*工作方式.*估算依据/);
 });
 
-test("投入候选只有明确应用后才写入草稿或已保存节点，活动记录真实差异", () => {
+test("投入修改只支持创建草稿，已创建任务拒绝工时修改", () => {
   const draft = form();
   const draftContext = createDraftTaskAiContext(draft, members, "self");
   const draftProposal = proposal(draftContext, "预计投入改为2小时");
@@ -111,14 +111,10 @@ test("投入候选只有明确应用后才写入草稿或已保存节点，活�
   assert.deepEqual(draft.mainTask.effortEstimate, effort());
   const saved = nodes();
   const savedContext = createSavedTaskAiContext(saved, "task", members, "self")!;
-  const savedProposal = proposal(savedContext, "预计投入改为2小时");
-  const updated = applySavedTaskAiAdjustment(saved, savedContext, savedProposal, { author: "我" });
-  assert.deepEqual((updated.nodes[0] as TaskNode).effortEstimate, savedProposal.updates[0].patch.effortEstimate);
+  const result = buildTaskAiAdjustment(savedContext, { kind: "task" }, "预计投入改为2小时");
+  assert.ok("error" in result);
+  assert.match(result.error, /仅支持在创建/);
   assert.deepEqual((saved[0] as TaskNode).effortEstimate, effort());
-  assert.equal((updated.nodes[0] as TaskNode).status, "待开始");
-  assert.equal((updated.nodes[0] as TaskNode).ownerId, "self");
-  assert.equal(updated.activities.task[0].changes?.[0].label, "预计投入（EWD）");
-  assert.match(updated.activities.task[0].changes?.[0].after ?? "", /未确认/);
 });
 
 test("组合投入指令不能藏进名称或完成标准，非法数字和失效版本无候选", () => {
@@ -137,8 +133,8 @@ test("成员可选协作资料进入快照但不参与臆测，旧的仅姓名�
     const changed = structuredClone(context);
     changed.members[0].availability = "资料已过期，待核对";
     assert.notEqual(getTaskAiContextSignature(changed), getTaskAiContextSignature(context));
-    const effortProposal = proposal(context, "预计投入改为2小时");
-    assert.equal(effortProposal.updates[0].patch.effortEstimate!.reason, effort().reason);
+    if (context.mode === "saved") assert.ok("error" in buildTaskAiAdjustment(context, { kind: "task" }, "预计投入改为2小时"));
+    else assert.equal(proposal(context, "预计投入改为2小时").updates[0].patch.effortEstimate!.reason, effort().reason);
   }
   assert.deepEqual(createDraftTaskAiContext(form(), members, "self").members, members);
 });
@@ -173,7 +169,7 @@ test("只改其他字段不会丢失详情有效快照中的估算元数据", ()
   assert.deepEqual(updated.activities.task[0].changes?.map(change => change.label), ["任务名称"]);
 });
 
-test("标准和继承目标调整保留原估算记录，并因范围变化显示待复核", () => {
+test("自身范围调整需复核，父目标调整保留子任务范围与估算", () => {
   for (const instruction of ["完成标准改为：行动负责人逐项核对", "执行建议改为：先确认行动截止日", "目标改为让行动安排形成共识"]) {
     const base = form();
     base.mainTask.effortEstimate!.scopeKey = getEffortScopeKey(base.mainTask, base.mainTask.effortEstimate!.workMethod);
@@ -189,7 +185,7 @@ test("标准和继承目标调整保留原估算记录，并因范围变化显�
   const context = createSavedTaskAiContext(saved, "task", members, "self")!;
   const updated = applySavedTaskAiAdjustment(saved, context, proposal(context, "目标改为统一行动口径"), { author: "我" });
   const childContext = createSavedTaskAiContext(updated.nodes, "child", members, "self")!;
-  assert.equal(getTaskEffortState(childContext.task), "stale");
+  assert.equal(getTaskEffortState(childContext.task), "confirmed");
   assert.deepEqual(childContext.task.effortEstimate, child.effortEstimate);
 });
 
@@ -210,21 +206,17 @@ test("投入候选不可篡改确认、方式、依据或新增项估算，旧�
   assert.throws(() => applyDraftTaskAiAdjustment(base, context, added), /预览|不一致/);
   const saved = nodes();
   const savedContext = createSavedTaskAiContext(saved, "task", members, "self")!;
-  const savedProposal = proposal(savedContext, "预计投入改为2小时");
+  const savedProposal = proposal(savedContext, "任务名称改为新版纪要");
   (saved[0] as TaskNode).effortEstimate!.confirmed = false;
   assert.throws(() => applySavedTaskAiAdjustment(saved, savedContext, savedProposal, { author: "我" }), /变化|重新/);
 });
 
-test("同值投入不撤销已有确认或制造活动，零投入与未知保持区别", () => {
-  const base = nodes();
-  const task = base[0] as TaskNode;
-  task.effortEstimate!.scopeKey = getEffortScopeKey(task, task.effortEstimate!.workMethod);
-  const context = createSavedTaskAiContext(base, "task", members, "self")!;
+test("创建草稿同值投入保留确认，零投入与未知保持区别", () => {
+  const base = form();
+  base.mainTask.effortEstimate!.scopeKey = getEffortScopeKey(base.mainTask, base.mainTask.effortEstimate!.workMethod);
+  const context = createDraftTaskAiContext(base, members, "self");
   const unchanged = proposal(context, "预计投入改为1小时");
   assert.deepEqual(unchanged.updates, []);
-  const saved = applySavedTaskAiAdjustment(base, context, unchanged, { author: "我" });
-  assert.equal(saved.nodes, base);
-  assert.deepEqual(saved.activities, {});
   const zero = proposal(context, "预计投入改为0小时").updates[0].patch.effortEstimate!;
   assert.equal(zero.minutes, 0);
   assert.equal(getTaskEffortState({ ...context.task, effortEstimate: zero }), "proposed");

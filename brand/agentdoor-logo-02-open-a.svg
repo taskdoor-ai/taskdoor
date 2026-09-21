@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
-  <title id="title">Agentdoor Ajar</title><desc id="desc">A minimal door shown deliberately ajar.</desc>
+  <title id="title">TaskDoor Ajar</title><desc id="desc">A minimal door shown deliberately ajar.</desc>
   <path d="M25 82V19h45v63" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
   <path d="m42 27 28-8v63l-28-10Z" fill="#1268D6"/>
   <circle cx="62" cy="52" r="2.5" fill="white"/>

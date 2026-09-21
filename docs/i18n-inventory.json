@@ -1,0 +1,1190 @@
+{
+  "note": "Inventory only: includes comments, fixtures, prompts, and legacy domain values. Human classification is required; this is not translation coverage.",
+  "files": [
+    {
+      "file": "src/data/workspaceNodes.ts",
+      "chineseLines": 269,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/teamTaskDetailFixtures.ts",
+      "chineseLines": 235,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/taskDetailMocks.ts",
+      "chineseLines": 127,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/taskProgressExamples.ts",
+      "chineseLines": 117,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/personalWorkbench.ts",
+      "chineseLines": 113,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/creatorPoolTaskExamples.ts",
+      "chineseLines": 110,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/memberProfiles.ts",
+      "chineseLines": 110,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/lib/taskAiAdjustment.ts",
+      "chineseLines": 105,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/extendedTeamTaskFixtures.ts",
+      "chineseLines": 105,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/teamWorkspaceScenarios.ts",
+      "chineseLines": 101,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationConversation.tsx",
+      "chineseLines": 91,
+      "fixedLocaleReferences": 10
+    },
+    {
+      "file": "src/data/expandedTeamTaskBacklog.ts",
+      "chineseLines": 91,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/scenario-profiles.ts",
+      "chineseLines": 90,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskSituation.ts",
+      "chineseLines": 87,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/industry-seeds.ts",
+      "chineseLines": 87,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/scenario-catalog.ts",
+      "chineseLines": 87,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/mockTaskDiagnosis.ts",
+      "chineseLines": 79,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/creatorCommerceScenario.ts",
+      "chineseLines": 74,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/mockTaskAssistant.ts",
+      "chineseLines": 71,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/PersonalCenterPage.tsx",
+      "chineseLines": 69,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/expandedTaskDiagnosisExamples.ts",
+      "chineseLines": 68,
+      "fixedLocaleReferences": 4
+    },
+    {
+      "file": "src/test-lab/TestLabApp.tsx",
+      "chineseLines": 67,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/lib/taskCollaboration.ts",
+      "chineseLines": 62,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/library-names.ts",
+      "chineseLines": 62,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCreationScenario.ts",
+      "chineseLines": 57,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/data/resultTaskDecisionExamples.ts",
+      "chineseLines": 57,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/test-lab/editors.tsx",
+      "chineseLines": 54,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskOverviewWorkspace.tsx",
+      "chineseLines": 52,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/lib/taskCreationPlanning.ts",
+      "chineseLines": 52,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskDetail.tsx",
+      "chineseLines": 51,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/components/TaskAiAdjustmentPopover.tsx",
+      "chineseLines": 46,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationPage.tsx",
+      "chineseLines": 46,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/data/taskSituationExamples.ts",
+      "chineseLines": 45,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/workspaceScenarioReset.ts",
+      "chineseLines": 43,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/taskAssistant.ts",
+      "chineseLines": 43,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/AiConnectionDialog.tsx",
+      "chineseLines": 42,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/OnboardingExperience.tsx",
+      "chineseLines": 42,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/resultTaskDiagnosis.ts",
+      "chineseLines": 41,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCreationForm.ts",
+      "chineseLines": 41,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/unassignedTaskFixtures.ts",
+      "chineseLines": 41,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/task-files/TaskFileExplorer.tsx",
+      "chineseLines": 38,
+      "fixedLocaleReferences": 2
+    },
+    {
+      "file": "src/components/TaskEffortField.tsx",
+      "chineseLines": 37,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskOverview.ts",
+      "chineseLines": 36,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskDiagnosis.ts",
+      "chineseLines": 35,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskListFilterPanel.tsx",
+      "chineseLines": 34,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/scenario-verification.ts",
+      "chineseLines": 33,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskFileEditing.ts",
+      "chineseLines": 32,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/test-lab/views.tsx",
+      "chineseLines": 32,
+      "fixedLocaleReferences": 5
+    },
+    {
+      "file": "server/test-lab/online-seeds.ts",
+      "chineseLines": 32,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskBurnUpSparkline.tsx",
+      "chineseLines": 29,
+      "fixedLocaleReferences": 2
+    },
+    {
+      "file": "src/lib/taskDiscussionAi.ts",
+      "chineseLines": 29,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/taskProgressDemoFixtures.ts",
+      "chineseLines": 29,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationLinearSections.tsx",
+      "chineseLines": 28,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskActivityLog.tsx",
+      "chineseLines": 27,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationSubtaskEditor.tsx",
+      "chineseLines": 27,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/createdProjectProgressDemo.ts",
+      "chineseLines": 26,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/PersonalInfoDialog.tsx",
+      "chineseLines": 25,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCreationProgress.ts",
+      "chineseLines": 25,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/taskHeadingExamples.ts",
+      "chineseLines": 25,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationLinearPage.tsx",
+      "chineseLines": 24,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/lib/expandedTaskDiagnosis.ts",
+      "chineseLines": 24,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/nestedTaskCreationScenario.ts",
+      "chineseLines": 23,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/schema.ts",
+      "chineseLines": 23,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/AiConnectionPage.tsx",
+      "chineseLines": 22,
+      "fixedLocaleReferences": 2
+    },
+    {
+      "file": "src/components/TaskProgressOverview.tsx",
+      "chineseLines": 22,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/discussion/DiscussionMessages.tsx",
+      "chineseLines": 22,
+      "fixedLocaleReferences": 2
+    },
+    {
+      "file": "src/lib/onboardingPreview.ts",
+      "chineseLines": 22,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskAiConnection.ts",
+      "chineseLines": 22,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskProgressComparison.tsx",
+      "chineseLines": 21,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/workspaceSubtaskEditing.ts",
+      "chineseLines": 21,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/taskProgressComparisonExamples.ts",
+      "chineseLines": 21,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/runner.ts",
+      "chineseLines": 21,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "mcp/server.ts",
+      "chineseLines": 21,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationPlanEditor.tsx",
+      "chineseLines": 20,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/seeds.ts",
+      "chineseLines": 20,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/PersonalWorkbench.tsx",
+      "chineseLines": 19,
+      "fixedLocaleReferences": 2
+    },
+    {
+      "file": "src/components/TaskEffortCost.tsx",
+      "chineseLines": 19,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/discussion/DiscussionComposer.tsx",
+      "chineseLines": 19,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskBurnUp.ts",
+      "chineseLines": 19,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCriteriaEditor.tsx",
+      "chineseLines": 18,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/task-files/TaskFileViewer.tsx",
+      "chineseLines": 18,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCollaborationSchedule.ts",
+      "chineseLines": 17,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/test-lab/model.ts",
+      "chineseLines": 17,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/PersonAvatar.tsx",
+      "chineseLines": 16,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskDependenciesField.tsx",
+      "chineseLines": 16,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskDiagnosisReport.tsx",
+      "chineseLines": 16,
+      "fixedLocaleReferences": 2
+    },
+    {
+      "file": "src/components/TaskDueDatePicker.tsx",
+      "chineseLines": 16,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskIcon.tsx",
+      "chineseLines": 16,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskEffort.ts",
+      "chineseLines": 16,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/lib/taskProgressDisplay.ts",
+      "chineseLines": 16,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/localAgentConnection.ts",
+      "chineseLines": 16,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/plugin.ts",
+      "chineseLines": 16,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/validation.ts",
+      "chineseLines": 16,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCollaborationSchedule.tsx",
+      "chineseLines": 15,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/taskListFilters.ts",
+      "chineseLines": 15,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/responsibilityAssignment.ts",
+      "chineseLines": 15,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TagManagementPage.tsx",
+      "chineseLines": 14,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationHistory.tsx",
+      "chineseLines": 14,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskDependencies.ts",
+      "chineseLines": 14,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/teamInvitations.ts",
+      "chineseLines": 14,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/test-lab/markdown.tsx",
+      "chineseLines": 14,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/MemberInvitations.tsx",
+      "chineseLines": 13,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskBurnUpTiming.tsx",
+      "chineseLines": 13,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationProcess.tsx",
+      "chineseLines": 13,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/personalWorkbenchAiConnection.ts",
+      "chineseLines": 13,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskAiAdjustmentStorage.ts",
+      "chineseLines": 13,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskListPresentation.ts",
+      "chineseLines": 13,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/data/legacyTaskSnapshots.ts",
+      "chineseLines": 13,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/test-lab/management.tsx",
+      "chineseLines": 13,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/components/PersonPicker.tsx",
+      "chineseLines": 12,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationExistingTaskCard.tsx",
+      "chineseLines": 12,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskMemberMatchBasis.tsx",
+      "chineseLines": 12,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCreationEffort.ts",
+      "chineseLines": 12,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "mcp/task-card.ts",
+      "chineseLines": 12,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/AiConnectionButton.tsx",
+      "chineseLines": 11,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskDateRangePicker.tsx",
+      "chineseLines": 11,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskEffortEditing.ts",
+      "chineseLines": 11,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskFileTree.ts",
+      "chineseLines": 11,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/test-lab/case-context.tsx",
+      "chineseLines": 11,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/test-lab/workflow-views.tsx",
+      "chineseLines": 11,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/model.ts",
+      "chineseLines": 11,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskProgressAiRecord.tsx",
+      "chineseLines": 10,
+      "fixedLocaleReferences": 2
+    },
+    {
+      "file": "src/components/TaskSubtaskCreateForm.tsx",
+      "chineseLines": 10,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskWorkloadSummary.tsx",
+      "chineseLines": 10,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/WorkspaceList.tsx",
+      "chineseLines": 10,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/lib/taskAiAdjustmentAdapters.ts",
+      "chineseLines": 10,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/residentDeletionDemo.ts",
+      "chineseLines": 10,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/test-lab/verification.tsx",
+      "chineseLines": 10,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/context.ts",
+      "chineseLines": 10,
+      "fixedLocaleReferences": 2
+    },
+    {
+      "file": "src/components/CliConnectionDialog.tsx",
+      "chineseLines": 9,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/GlobalNotifications.tsx",
+      "chineseLines": 9,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TagBadge.tsx",
+      "chineseLines": 9,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskStatusBadge.tsx",
+      "chineseLines": 9,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/WorkspaceDirectoryView.tsx",
+      "chineseLines": 9,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/task-files/FileDiscussionPanel.tsx",
+      "chineseLines": 9,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/task-files/TaskFileDialogs.tsx",
+      "chineseLines": 9,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/discussionUploads.ts",
+      "chineseLines": 9,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskProgressPrediction.ts",
+      "chineseLines": 9,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/AiToolSortableList.tsx",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/AnimatedAgentChatInput.tsx",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskDependencyPicker.tsx",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskProgressStage.tsx",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/task-files/TaskFileTree.tsx",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskBoard.ts",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCriteriaEditing.ts",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/taskProgressDemo.ts",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/library.ts",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/skills.ts",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/store.ts",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/workflows.ts",
+      "chineseLines": 8,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationSessionList.tsx",
+      "chineseLines": 7,
+      "fixedLocaleReferences": 2
+    },
+    {
+      "file": "src/components/TaskRelationsSection.tsx",
+      "chineseLines": 7,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskEffortEdits.ts",
+      "chineseLines": 7,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskMemberRecommendations.ts",
+      "chineseLines": 7,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskWorkspaceProjection.ts",
+      "chineseLines": 7,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/creatorCommerceDiagnosisExamples.ts",
+      "chineseLines": 7,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/notificationExamples.ts",
+      "chineseLines": 7,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/taskCreationScenarios.ts",
+      "chineseLines": 7,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/InputBar.tsx",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TagPicker.tsx",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskDetailStickySummary.tsx",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskSubtaskList.tsx",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/WorkspaceTaskBoard.tsx",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/discussion/DiscussionFileMenu.tsx",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/task-files/TaskFileHistory.tsx",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/lib/responsibilityProposals.ts",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskActivity.ts",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskAiAdjustmentProgress.ts",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskProgressAssessment.ts",
+      "chineseLines": 6,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/AIMessage.tsx",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/MemberSelector.tsx",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCurrentSituation.tsx",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskDetailFields.tsx",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskEffortEditor.tsx",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskProgressRefresh.tsx",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/ui/ai-agent-response.tsx",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/localAgentConnection.ts",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/onboardingWorkspace.ts",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/personalAvatar.ts",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/personalTags.ts",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCreationLinearStages.ts",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCreationSubtaskEditing.ts",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskListProjection.ts",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/lib/taskTimeRange.ts",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/workspaceTaskCreation.ts",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/weeklyRetroDetailDemo.ts",
+      "chineseLines": 5,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/MentionComposer.tsx",
+      "chineseLines": 4,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskAppearancePicker.tsx",
+      "chineseLines": 4,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCompletionCriteria.tsx",
+      "chineseLines": 4,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCriteriaFields.tsx",
+      "chineseLines": 4,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskTagList.tsx",
+      "chineseLines": 4,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/useTaskCollaboration.ts",
+      "chineseLines": 4,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/test-lab/markdown-files.ts",
+      "chineseLines": 4,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/test-lab/workflows.ts",
+      "chineseLines": 4,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/AppearancePicker.tsx",
+      "chineseLines": 3,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskDiscussion.tsx",
+      "chineseLines": 3,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskExecutionTipsField.tsx",
+      "chineseLines": 3,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCreationPreview.ts",
+      "chineseLines": 3,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskSchedule.ts",
+      "chineseLines": 3,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/lib/taskWorkloadProjection.ts",
+      "chineseLines": 3,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/taskProgressEvidenceDetails.ts",
+      "chineseLines": 3,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskActivityFileLink.tsx",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskAiWorking.tsx",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskProgressTrack.tsx",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/task-files/LexicalFileDocument.tsx",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/ui/toast.tsx",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCreationHierarchy.ts",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskCreationSessions.ts",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskRelationProjection.ts",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskStatusDemoMigration.ts",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/teamMemberResponsibility.ts",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/workspaceTaskUpdates.ts",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/data/taskProgressHistory.ts",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/test-lab/client.ts",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/test-lab/types.ts",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "server/test-lab/assertions.ts",
+      "chineseLines": 2,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/LanguageSwitcher.tsx",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 4
+    },
+    {
+      "file": "src/components/PersonalTags.tsx",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TagAppearancePicker.tsx",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskCreationChoiceCards.tsx",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskWorkspace.tsx",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskWorkspaceList.tsx",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/components/TeamLogo.tsx",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/personDirectoryModel.ts",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/personProfileCardModel.ts",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/ui/dialog.tsx",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/ui/sheet.tsx",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/ui/verification-code-input.tsx",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskDecisionEvidence.ts",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskDiagnosisContext.ts",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskEffortBaseline.ts",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskEffortDistribution.ts",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskFileSearch.ts",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/lib/taskProgressComparison.ts",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 1
+    },
+    {
+      "file": "src/lib/workspaceSession.ts",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/test-lab/visibility.ts",
+      "chineseLines": 1,
+      "fixedLocaleReferences": 0
+    },
+    {
+      "file": "src/components/TaskBurnUpNode.tsx",
+      "chineseLines": 0,
+      "fixedLocaleReferences": 2
+    }
+  ]
+}

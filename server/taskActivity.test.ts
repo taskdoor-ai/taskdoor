@@ -55,11 +55,24 @@ test("讨论投影只呈现人类正文，保留原 ID、正文、文件与引�
   assert.equal(JSON.stringify(source), before);
 });
 
-test("多层人类回复归入最初线程，回复按时间正序且不依赖输入顺序", () => {
+test("多层人类回复归入最初线程，回复按时间倒序且不依赖输入顺序", () => {
   const root = activity("root", "member-post", { createdAt: "2026-08-31T01:00:00Z" });
   const first = activity("first", "member-reply", { replyToActivityId: root.id, createdAt: "2026-08-31T02:00:00Z" });
   const second = activity("second", "member-reply", { replyToActivityId: first.id, createdAt: "2026-08-31T03:00:00Z" });
-  assert.deepEqual(getTaskDiscussionThreads([second, first, root]), [{ activity: root, replies: [first, second] }]);
+  assert.deepEqual(getTaskDiscussionThreads([second, first, root]), [{ activity: root, replies: [second, first] }]);
+});
+
+test("同一时间的回复维持输入顺序，排序不改变主帖顺序或源数组", () => {
+  const olderRoot = activity("older-root", "member-post", { createdAt: "2026-08-30T01:00:00Z" });
+  const root = activity("root", "member-post", { createdAt: "2026-08-31T01:00:00Z" });
+  const first = activity("first", "member-reply", { replyToActivityId: olderRoot.id, createdAt: "2026-09-01T01:00:00Z" });
+  const second = activity("second", "member-reply", { replyToActivityId: olderRoot.id, createdAt: first.createdAt });
+  const source = [olderRoot, first, root, second];
+  const before = [...source];
+  const threads = getTaskDiscussionThreads(source);
+  assert.deepEqual(threads.map(thread => thread.activity.id), [root.id, olderRoot.id]);
+  assert.deepEqual(threads[1].replies, [first, second]);
+  assert.deepEqual(source, before);
 });
 
 test("回复旧 AI 和变更记录的人类内容独立成帖，来源只作为上下文", () => {
@@ -97,25 +110,25 @@ test("循环、自引用和进入循环的回复不死循环且所有人类内�
   assert.deepEqual(visibleIds.slice().sort(), ["a", "b", "child", "self"]);
 });
 
-test("最近有回复的线程排在前面，未知时间的条目维持稳定顺序", () => {
+test("讨论按根帖发布时间排序，回复旧帖不顶起，未知时间保持稳定顺序", () => {
   const old = activity("old", "member-post", { createdAt: "2026-08-30T01:00:00Z" });
   const recent = activity("recent", "member-post", { createdAt: "2026-08-31T01:00:00Z" });
   const reply = activity("reply", "member-reply", { replyToActivityId: old.id, createdAt: "2026-08-31T02:00:00Z" });
   const unknownA = activity("unknown-a");
   const unknownB = activity("unknown-b");
   const threads = getTaskDiscussionThreads([unknownA, recent, unknownB, old, reply]);
-  assert.deepEqual(threads.map((thread) => thread.activity.id), ["old", "recent", "unknown-a", "unknown-b"]);
+  assert.deepEqual(threads.map((thread) => thread.activity.id), ["recent", "old", "unknown-a", "unknown-b"]);
 });
 
-test("无时间戳历史回复保留输入顺序，真实新回复仍在历史之后正序展示", () => {
+test("无时间戳历史回复保留输入顺序，真实新回复优先展示", () => {
   const root = activity("root");
   const unknownA = activity("unknown-a", "member-reply", { replyToActivityId: root.id });
   const known = activity("known", "member-reply", { replyToActivityId: root.id, createdAt: "2026-08-31T02:00:00Z" });
   const unknownB = activity("unknown-b", "member-reply", { replyToActivityId: root.id });
-  assert.deepEqual(getTaskDiscussionThreads([root, unknownA, known, unknownB])[0].replies, [unknownA, unknownB, known]);
+  assert.deepEqual(getTaskDiscussionThreads([root, unknownA, known, unknownB])[0].replies, [known, unknownA, unknownB]);
 });
 
-test("有真实回复的讨论线程优先于旧刚刚文案，即使刷新时已跨日", () => {
+test("历史讨论根帖保持自身顺序，不被新回复顶起", () => {
   const legacy = activity("legacy-latest", "member-post", { time: "刚刚" });
   const oldThread = activity("old-thread", "member-post", { time: "2 天前" });
   const reply = activity("real-reply", "member-reply", {
@@ -124,8 +137,8 @@ test("有真实回复的讨论线程优先于旧刚刚文案，即使刷新时�
     time: "2026-08-20 09:00:00",
   });
   const threads = getTaskDiscussionThreads([legacy, oldThread, reply]);
-  assert.deepEqual(threads.map((thread) => thread.activity.id), ["old-thread", "legacy-latest"]);
-  assert.equal(threads[0].replies[0], reply);
+  assert.deepEqual(threads.map((thread) => thread.activity.id), ["legacy-latest", "old-thread"]);
+  assert.equal(threads.find(thread => thread.activity.id === oldThread.id)?.replies[0], reply);
 });
 
 test("含真实时间的线程只按真实发言排名，旧刚刚回复不能抬高线程", () => {
@@ -135,14 +148,14 @@ test("含真实时间的线程只按真实发言排名，旧刚刚回复不能�
   assert.deepEqual(getTaskDiscussionThreads([old, newer, legacyReply]).map((thread) => thread.activity.id), ["newer-recorded", "old-recorded"]);
 });
 
-test("历史回复与真实回复分层正序，旧相对文案不会跨天后移动到最新回复后", () => {
+test("历史回复与真实回复分层倒序，旧相对文案不会跨天后移到真实回复之前", () => {
   const root = activity("root");
   const legacyFirst = activity("legacy-first", "member-reply", { replyToActivityId: root.id, time: "2 小时前" });
   const legacyLast = activity("legacy-last", "member-reply", { replyToActivityId: root.id, time: "刚刚" });
   const first = activity("recorded-first", "member-reply", { replyToActivityId: root.id, createdAt: "2026-08-20T01:00:00Z" });
   const last = activity("recorded-last", "member-reply", { replyToActivityId: root.id, createdAt: "2026-08-21T01:00:00Z" });
   const threads = getTaskDiscussionThreads([root, last, legacyLast, first, legacyFirst]);
-  assert.deepEqual(threads[0].replies, [legacyFirst, legacyLast, first, last]);
+  assert.deepEqual(threads[0].replies, [last, first, legacyLast, legacyFirst]);
 });
 
 test("变更时间线只包含真正变更和提交，使用来源前缀避免 ID 碰撞", () => {

@@ -6,7 +6,7 @@
 
 **Architecture:** Add a focused scenario definition/transition module keyed by `scenarioId`. The conversation component owns only the active scenario session and renders transition results as messages, choice cards, existing-task summaries, or a normal task draft. Extend workspace task context and creation callbacks so “view existing” and “create as subtask” act on real workspace nodes.
 
-**Tech Stack:** React 19, TypeScript, Zod, Node test runner, Vite, existing AgentDoor task fixtures and workspace projection.
+**Tech Stack:** React 19, TypeScript, Zod, Node test runner, Vite, existing TaskDoor task fixtures and workspace projection.
 
 ---
 

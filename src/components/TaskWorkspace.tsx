@@ -1,10 +1,12 @@
+import { useMockText } from "../i18n/MockDataProvider";
+import { useI18n } from "../i18n/I18nProvider";
 import { PanelLeft } from "lucide-react";
-import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, type ReactNode } from "react";
 import type { PersonOption, TagDefinition } from "../data/sharedTypes";
 import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes";
-import { buildTaskListProjection, isTaskInPersonalIndex } from "../lib/taskListProjection";
+import { buildTaskListProjection, buildTaskScopeCounts } from "../lib/taskListProjection";
 import { TaskWorkspaceList } from "./TaskWorkspaceList";
-import type { TaskListFilters } from "./taskListFilters";
+import { normalizeTaskWorkspaceFilters, type TaskListFilters } from "./taskListFilters";
 
 type TaskWorkspaceProps = {
   children?: ReactNode;
@@ -26,33 +28,54 @@ type TaskWorkspaceProps = {
   showingCreation?: boolean;
   showingWorkbench: boolean;
   tagDefinitions: TagDefinition[];
+  teamId?: string;
   workbench: ReactNode;
 };
 
-export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onShowWorkbench, query, selectedTaskId, showingCreation = false, showingWorkbench, tagDefinitions, workbench }: TaskWorkspaceProps) {
-  const personalFilters = useMemo(() => ({ ...filters, owner: currentUserId, tag: "all" }), [currentUserId, filters]);
-  const projectionFilters = useMemo(() => ({ ...personalFilters, owner: "all" }), [personalFilters]);
+export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onShowWorkbench, query, selectedTaskId, showingCreation = false, showingWorkbench, tagDefinitions, teamId }: TaskWorkspaceProps) {
+  const { t } = useI18n();
+  const mock = useMockText();
+  const projectionFilters = useMemo(() => normalizeTaskWorkspaceFilters(filters), [filters]);
   const projection = useMemo(() => buildTaskListProjection(
-    nodes.filter((node) => node.kind === "task" && isTaskInPersonalIndex(node, currentUserId)),
+    nodes,
     query,
     projectionFilters,
     tagDefinitions,
-  ), [nodes, currentUserId, query, projectionFilters, tagDefinitions]);
+    currentUserId,
+    task => mock.field(task.id, "title", task.name),
+  ), [nodes, currentUserId, query, projectionFilters, tagDefinitions, mock]);
+  const scopeCounts = useMemo(() => buildTaskScopeCounts(
+    nodes,
+    query,
+    projectionFilters,
+    tagDefinitions,
+    currentUserId,
+    task => mock.field(task.id, "title", task.name),
+  ), [nodes, currentUserId, query, projectionFilters, tagDefinitions, mock]);
   const detailRef = useRef<HTMLElement>(null);
   const hasDetail = Boolean(children);
-  const outsideFilter = hasDetail && !projection.visibleTasks.some((task) => task.id === selectedTaskId);
-  const outsidePersonalList = outsideFilter && !projection.allTasks.some((task) => task.id === selectedTaskId);
+  const selectedTaskIsVisible = projection.visibleTasks.some((task) => task.id === selectedTaskId);
+  const outsideFilter = hasDetail && !selectedTaskIsVisible;
+  const outsideAvailableList = outsideFilter && !projection.allTasks.some((task) => task.id === selectedTaskId);
+  const firstTask = projection.visibleTasks[0];
+
+  useLayoutEffect(() => {
+    if (hidden || showingWorkbench || showingCreation || !firstTask) return;
+    if (selectedTaskId && selectedTaskIsVisible) return;
+    // 桌面进入工作区或切换任务范围后选中首项；窄屏保留列表与详情之间的返回操作。
+    if (window.matchMedia("(min-width: 901px)").matches) onTaskSelect(firstTask);
+  }, [firstTask, hidden, onTaskSelect, selectedTaskId, selectedTaskIsVisible, showingCreation, showingWorkbench]);
 
   useEffect(() => {
     // Only the detail changes position; the mounted task list keeps its own scroll.
     if (detailRef.current) detailRef.current.scrollTop = 0;
   }, [selectedTaskId]);
 
-  return <section aria-label="任务工作区" className="task-workspace" data-mobile-pane={showingWorkbench || showingCreation || hasDetail ? "detail" : "list"} hidden={hidden}>
-    <aside aria-label="任务列表" className="task-workspace-master">
+  return <section aria-label={t('tasks.workspace')} className="task-workspace" data-detail-open={hasDetail && !showingWorkbench && !showingCreation} data-mobile-pane={showingWorkbench || showingCreation || hasDetail ? "detail" : "list"} hidden={hidden}>
+    <aside aria-label={t('tasks.list')} className="task-workspace-master">
       <TaskWorkspaceList
         currentUserId={currentUserId}
-        filters={personalFilters}
+        filters={projectionFilters}
         members={members}
         onCreateTask={onCreateTask}
         onDeleteTask={onDeleteTask}
@@ -65,21 +88,22 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
         query={query}
         selectedTaskId={showingCreation ? null : selectedTaskId}
         showingWorkbench={showingWorkbench}
+        scopeCounts={scopeCounts}
+        teamId={teamId}
       />
     </aside>
-    <section aria-label="今日建议面板" className="task-workspace-workbench" hidden={!showingWorkbench}>{workbench}</section>
-    <section aria-label="任务详情面板" className="task-workspace-detail" hidden={showingWorkbench || showingCreation} ref={detailRef} tabIndex={-1}>
+    <section aria-label={t('tasks.detail')} className="task-workspace-detail" hidden={showingWorkbench || showingCreation} ref={detailRef} tabIndex={-1}>
       <div className="task-workspace-detail-content">
         {hasDetail ? <>
-          {outsideFilter && <p className="task-workspace-filter-note" role="status">{outsidePersonalList ? "当前任务不在我的任务列表中，可继续查看原详情。" : "当前任务不在搜索或筛选结果中，筛选条件已保留。"}</p>}
+          {outsideFilter && !outsideAvailableList && <p className="task-workspace-filter-note" role="status">{t('tasks.outsideFilter')}</p>}
           {children}
         </> : <div className="task-workspace-empty">
           <PanelLeft aria-hidden="true" size={28} strokeWidth={1.5} />
-          <h2>选择任务，查看详情</h2>
-          <p>从左侧列表选择任务，在这里查看目标、讨论和进展。</p>
+          <h2>{projection.allTasks.length ? t('tasks.select') : t('tasks.start')}</h2>
+          <p>{projection.allTasks.length ? t('tasks.selectHint') : t('tasks.startHint')}</p>
         </div>}
       </div>
     </section>
-    <section aria-label="新建任务面板" className="task-workspace-creation" hidden={!showingCreation}>{creation}</section>
+    <section aria-label={t('tasks.creation')} className="task-workspace-creation" hidden={!showingCreation}>{creation}</section>
   </section>;
 }

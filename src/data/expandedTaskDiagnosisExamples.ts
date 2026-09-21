@@ -45,17 +45,17 @@ const examples: Record<string, ContentExample> = {
   },
   "weekly-retro-decisions": {
     scope: "复盘事项 D04", basisName: "本周事项确认台账.xlsx", currentName: "复盘纪要决定清单.xlsx",
-    rows: [["决定状态", "待确认", "已通过"], ["事项", "直播间设备租赁", "直播间设备租赁"], ["适用周期", "下周", "下周"]],
-    author: "陈默", note: "D04 的确认台账与纪要清单已分别上传，待确认项应继续留在复盘核对范围内。",
+    rows: [["决定状态", "已通过", "已通过"], ["事项", "直播间设备租赁", "直播间设备租赁"], ["适用周期", "9/21–9/25", "9/21–9/25"]],
+    author: "陈默", note: "9/14 12:00 已逐条核对决定和依据，D04 的确认台账与纪要清单已统一，确认完成。",
   },
   "weekly-retro-open-issues": {
     scope: "未解决问题 Q07", basisName: "问题责任边界表.xlsx", currentName: "复盘问题跟进清单.xlsx",
-    rows: [["确认人", "陈默", "周岚"], ["影响范围", "达人合同附件", "达人合同附件"], ["下次核对", "2026-09-04 10:00", "2026-09-04 10:00"]],
+    rows: [["确认人", "陈默", "周岚"], ["影响范围", "达人合同附件", "达人合同附件"], ["下次核对", "2026-09-15 10:00", "2026-09-15 10:00"]],
     author: "陈默", note: "Q07 的影响范围已收敛到合同附件，责任边界表和跟进清单需要使用同一个确认人。",
   },
   "weekly-retro-actions": {
     scope: "行动项 A03", basisName: "下周行动承诺表.xlsx", currentName: "行动项执行排期.xlsx",
-    rows: [["交付日期", "2026-09-07", "2026-09-05"], ["负责人", "林洁", "林洁"], ["交付物", "三版封面源文件", "三版封面源文件"]],
+    rows: [["交付日期", "2026-09-18", "2026-09-17"], ["负责人", "林洁", "林洁"], ["交付物", "三版封面源文件", "三版封面源文件"]],
     author: "林洁", note: "封面行动项的承诺表和执行排期已补齐，源文件与裁切图作为同一份交付核对。",
   },
   "ccx-serum-creator-longlist": {
@@ -129,16 +129,18 @@ export function withExpandedTaskDiagnosisExample(task: TaskNode, detail: TaskDet
   const spec = Object.hasOwn(examples, task.id) ? examples[task.id] : undefined;
   if (!spec || task.teamId !== "creator-commerce" || (task.createdFrom && !isBuiltInUnassigned(task))) return detail;
   if (detail.files.some((file) => file.id === `${task.id}-diagnosis-current`)) return detail;
+  const createdAt = task.id.startsWith("weekly-retro-") ? (task.id === "weekly-retro-decisions" ? "2026-09-14T12:00:00+08:00" : "2026-09-14T17:00:00+08:00") : "2026-09-02T18:20:00+08:00";
+  const time = `${createdAt.slice(0, 10)} ${createdAt.slice(11, 16)}`;
   const file = (role: "basis" | "current", name: string, valueIndex: 1 | 2): TaskFileNode => ({
     id: `${task.id}-diagnosis-${role}`, name, kind: "file", parentId: null, format: "XLSX", version: 1,
-    updatedAt: "2026-09-02 18:20",
+    updatedAt: time,
     previewData: { kind: "table", sheets: [{ name: "当前适用内容", columns: ["对象", "核对项", "取值", "状态"], rows: spec.rows.map((row) => [spec.scope, row[0], row[valueIndex], "当前"]) }] },
   });
   const added = [...(spec.basisName ? [file("basis", spec.basisName, 1)] : []), file("current", spec.currentName, 2)];
   return {
     ...detail,
     files: [...detail.files, ...added],
-    activities: [...detail.activities, { id: `${task.id}-diagnosis-context-post-1`, author: spec.author, message: spec.note, type: "member-post", createdAt: "2026-09-02T18:20:00+08:00", time: "2026-09-02 18:20", file: spec.currentName }],
-    commits: [...detail.commits, { id: `${task.id}-diagnosis-context-commit-1`, author: spec.author, message: `补入${spec.scope}的核对资料。`, files: added.map((file) => file.name), createdAt: "2026-09-02T18:20:00+08:00", time: "2026-09-02 18:20" }],
+    activities: [...detail.activities, { id: `${task.id}-diagnosis-context-post-1`, author: spec.author, message: spec.note, type: "member-post", createdAt, time, file: spec.currentName }],
+    commits: [...detail.commits, { id: `${task.id}-diagnosis-context-commit-1`, author: spec.author, message: `补入${spec.scope}的核对资料。`, files: added.map((file) => file.name), createdAt, time }],
   };
 }

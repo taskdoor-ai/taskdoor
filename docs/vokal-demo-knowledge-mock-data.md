@@ -1,24 +1,24 @@
-# AgentDoor 人与 Agent 协作演示：知识图谱 Mock 数据
+# TaskDoor 人与 Agent 协作演示：知识图谱 Mock 数据
 
 > 用途：为 Vokal 演示构建“人—Agent—任务—成果—Handoff—决策”的知识关系。以下每个二级标题应创建为一篇独立的 Knowledge Base 文章。
 
-## 演示项目：AgentDoor 人与 Agent 协作产品定义
+## 演示项目：TaskDoor 人与 Agent 协作产品定义
 
-项目目标是定义 AgentDoor 如何支持真实团队中的人与 Agent 协作。人类发起人 bubu 是项目 Owner 和最终决策者。项目使用频道 `#agentdoor-product-definition` 作为协作空间，以《AgentDoor Product Definition - Human and Agent Collaboration》作为共享基线。
+项目目标是定义 TaskDoor 如何支持真实团队中的人与 Agent 协作。人类发起人 bubu 是项目 Owner 和最终决策者。项目使用频道 `#agentdoor-product-definition` 作为协作空间，以《TaskDoor Product Definition - Human and Agent Collaboration》作为共享基线。
 
 项目流程为：bubu 委派竞品研究给竞品分析师；竞品分析师把竞品证据包正式 Handoff 给商业咨询师；商业咨询师把商业判断正式 Handoff 给业务架构师；业务架构师把业务架构方案正式 Handoff 给产品经理；产品经理提交产品决策简报给 bubu 审批。任何 Agent 都不能代替 bubu 做最终产品决策。
 
 ## 人类角色：bubu（产品发起人和最终决策者）
 
-bubu 是“AgentDoor 人与 Agent 协作产品定义”项目的 Owner。bubu 负责确定研究目标、批准共享上下文、处理权限例外、审查产品决策简报，并决定是否进入下一阶段。
+bubu 是“TaskDoor 人与 Agent 协作产品定义”项目的 Owner。bubu 负责确定研究目标、批准共享上下文、处理权限例外、审查产品决策简报，并决定是否进入下一阶段。
 
 bubu 可以停止或重新启动 Agent 工作，可以要求补充证据，也可以拒绝某次 Handoff。竞品分析师、商业咨询师、业务架构师和产品经理都向 bubu 保持可观察状态，但只有产品经理负责把最终方案提交给 bubu。
 
 ## 第一棒：竞品分析师与竞品证据包
 
-竞品分析师执行“人与 Agent 协作场景”的竞品研究。输入包括《AgentDoor Product Definition - Human and Agent Collaboration》、Vokal 实测记录和竞品官方资料。
+竞品分析师执行“人与 Agent 协作场景”的竞品研究。输入包括《TaskDoor Product Definition - Human and Agent Collaboration》、Vokal 实测记录和竞品官方资料。
 
-竞品分析师的产物是“竞品证据包”。证据包包含已验证事实、产品推断、待验证问题、来源位置、协作机制对比和 AgentDoor 产品启示。完成后，竞品分析师通过正式 Handoff 把竞品证据包交给商业咨询师。普通 @mention 不能替代正式 Handoff。
+竞品分析师的产物是“竞品证据包”。证据包包含已验证事实、产品推断、待验证问题、来源位置、协作机制对比和 TaskDoor 产品启示。完成后，竞品分析师通过正式 Handoff 把竞品证据包交给商业咨询师。普通 @mention 不能替代正式 Handoff。
 
 ## 第二棒：商业咨询师与商业判断
 

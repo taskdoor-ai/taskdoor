@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import test from "node:test";
+import test, { beforeEach } from "node:test";
+beforeEach(t => t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") }));
 import * as creationForm from "../src/lib/taskCreationForm.ts";
 import type { CreationForm, CreationTask } from "../src/lib/taskCreationForm.ts";
 import { syncCreationSubtaskEdit } from "../src/lib/taskCreationSubtaskEditing.ts";
@@ -51,20 +52,20 @@ test("整对象同步名称、多条标准、人选、日期、依赖和建议�
   assert.deepEqual(next.subtasks[0].dependsOnClientIds, ["second"]);
 });
 
-test("同步合并到最新表单，保留其他任务的更新与重排，并继承当前主任务目标", () => {
+test("同步合并到最新表单，保留其他任务的更新与重排，并保留本次目标输入", () => {
   const source = form();
   const expected = structuredClone(source.subtasks[0]);
   const latest: CreationForm = {
     ...source, request: "后来完善的需求", mainTask: { ...source.mainTask, goal: "  更新后的共同目标  " },
     subtasks: [{ ...source.subtasks[1], title: "其他任务的新名称" }, source.subtasks[0]],
   };
-  const next = syncCreationSubtaskEdit(latest, { ...expected, title: "当前编辑的名称", goal: "不能覆盖继承目标" }, expected, members);
+  const next = syncCreationSubtaskEdit(latest, { ...expected, title: "当前编辑的名称", goal: "子任务独立目标" }, expected, members);
   assert.equal(next.mainTask, latest.mainTask);
   assert.equal(next.subtasks[0], latest.subtasks[0]);
   assert.equal(next.request, latest.request);
   assert.equal(next.subtasks[1].clientId, expected.clientId);
   assert.equal(next.subtasks[1].title, "当前编辑的名称");
-  assert.equal(next.subtasks[1].goal, "  更新后的共同目标  ");
+  assert.equal(next.subtasks[1].goal, "子任务独立目标");
 });
 
 test("局部同步不被其他尚未填写名称和标准的任务阻断", () => {
@@ -108,20 +109,20 @@ test("每次同步的结果可作为下一次输入的快照，但旧快照不�
   assert.throws(() => syncCreationSubtaskEdit(latest, { ...firstExpected, title: "旧输入" }, firstExpected, members), /更新|最新/);
 });
 
-test("主目标正在编辑为空时子任务继续同步，最终创建仍拦截空目标", () => {
+test("主目标正在编辑为空时不覆盖子任务目标，最终创建仍拦截空主目标", () => {
   const source = form();
   source.mainTask.goal = " \n ";
   const expected = structuredClone(source.subtasks[0]);
   const next = syncCreationSubtaskEdit(source, { ...expected, title: "新名称" }, expected, members);
-  assert.equal(next.subtasks[0].goal, " \n ");
+  assert.equal(next.subtasks[0].goal, expected.goal);
   assert.equal(creationForm.validateCreationForm(next, members), "请补充任务目标。");
 });
 
-test("关联父任务时继承当前候选目标而不是编辑草稿或主表单目标", () => {
+test("关联父任务时仍保留子任务自己的目标编辑", () => {
   const source: CreationForm = { ...form(), decision: "attach", candidate: { id: "parent", goal: "  当前父任务目标  " } };
   const expected = structuredClone(source.subtasks[0]);
   const next = syncCreationSubtaskEdit(source, { ...expected, goal: "旧目标" }, expected, members);
-  assert.equal(next.subtasks[0].goal, "  当前父任务目标  ");
+  assert.equal(next.subtasks[0].goal, "旧目标");
   assert.equal(next.candidate, source.candidate);
 });
 
@@ -170,14 +171,13 @@ test("同步时重新验证负责人和参与人仍在当前成员列表", () =>
   assert.throws(() => syncCreationSubtaskEdit(source, expected, expected, [{ id: "lin" }]), /负责人/);
 });
 
-test("同步允许负责人待定和不设截止时间，不创建额外排程规则", () => {
+test("同步允许负责人待定和不设截止时间，但拒绝过去截止日期", () => {
   const source = form();
   const expected = structuredClone(source.subtasks[0]);
   const next = syncCreationSubtaskEdit(source, { ...expected, ownerId: "", participantIds: [], startDate: "", endDate: "" }, expected, []);
   assert.equal(next.subtasks[0].ownerId, "");
   assert.equal(next.subtasks[0].endDate, "");
-  const past = syncCreationSubtaskEdit(source, { ...expected, endDate: "2020-01-01" }, expected, members);
-  assert.equal(past.subtasks[0].endDate, "2020-01-01");
+  assert.throws(() => syncCreationSubtaskEdit(source, { ...expected, endDate: "2020-01-01" }, expected, members), /截止.*创建/);
 });
 
 test("同步拒绝不存在的日期、非法格式和颠倒的开始截止时间", () => {

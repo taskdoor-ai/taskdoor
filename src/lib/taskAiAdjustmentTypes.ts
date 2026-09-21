@@ -12,6 +12,7 @@ export type TaskAiEditableTask = {
   ownerId: string;
   proposedOwnerId?: string;
   participantIds: string[];
+  createdAt?: string;
   startDate: string;
   endDate: string;
   endDateLabel?: string;
