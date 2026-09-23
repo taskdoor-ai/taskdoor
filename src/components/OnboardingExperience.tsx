@@ -1,15 +1,16 @@
+import { GoogleAuthPreview } from "./GoogleAuthPreview";
 import googleIcon from "@lobehub/icons-static-svg/icons/google-color.svg";
 import { useI18n } from "../i18n/I18nProvider";
 import { onboardingTranslator, localizeOnboardingMessage } from "../i18n/onboardingMessages";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { ArrowLeft, ArrowRight, Building2, Check, CircleAlert, Eye, EyeOff, Link2, LoaderCircle, Mail, Plus, UsersRound } from "lucide-react";
+import { ArrowLeft, Building2, Check, CircleAlert, Eye, EyeOff, LoaderCircle, Mail } from "lucide-react";
 import { BrandMark } from "./BrandMark";
 import { TeamFlowIllustration } from "./TeamFlowIllustration";
 import { WorkspaceLoading } from "./WorkspaceLoading";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { VerificationCodeInput } from "./ui/verification-code-input";
-import { createOnboardingPreview, digestPreviewPassword, getPreviewCodeResendDelay, getPreviewInvitation, previewInviteLink, restoreOnboardingPreview, transitionOnboarding, type AuthMode, type OnboardingAction, type OnboardingState } from "../lib/onboardingPreview";
+import { simplifyOnboardingEntry, createOnboardingPreview, digestPreviewPassword, getPreviewCodeResendDelay, getPreviewInvitation,  restoreOnboardingPreview, transitionOnboarding, type AuthMode, type OnboardingAction, type OnboardingState } from "../lib/onboardingPreview";
 import { loadPersonalCenterDirectory, savePersonalCenterDirectory } from "../data/memberProfiles";
 import { acceptTeamEmailInvitation, resolveTeamEmailInvitation } from "../lib/teamInvitations";
 import "../styles/onboarding.css";
@@ -27,9 +28,10 @@ function initialState() {
     if (saved) state = { ...saved, inviteToken: token || saved.inviteToken };
   } catch { /* Keep forms usable when browser storage is unavailable. */ }
   if (path !== "/onboarding" && (state.authMode !== mode || state.verified)) state = transitionOnboarding(state, { type: "auth-mode", mode });
+  if (state.authMode === "register" && state.step === "code") state = transitionOnboarding(state, { type: "edit-email" });
   const invitation = getPreviewInvitation(state.inviteToken, loadPersonalCenterDirectory());
   if (!state.email && invitation?.email) state = { ...state, email: invitation.email };
-  return state;
+  return simplifyOnboardingEntry(state);
 }
 function Brand() {
   const { locale } = useI18n();
@@ -55,15 +57,13 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   const { locale } = useI18n();
   const t = onboardingTranslator(locale);
   const [state, setState] = useState<OnboardingState>(initialState);
-  const [email, setEmail] = useState(state.email);
+  const [email, setEmail] = useState(() => state.step === "email" && ["login", "register"].includes(state.authMode) ? "" : state.email);
   const [name, setName] = useState(state.name);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [code, setCode] = useState("");
-  const [teamName, setTeamName] = useState("");
-  const [inviteLink, setInviteLink] = useState("");
   const [busy, setBusy] = useState("");
-  const [googleNotice, setGoogleNotice] = useState(false);
+  const [googlePreview, setGooglePreview] = useState(false);
   const [localError, setLocalError] = useState("");
   const [clock, setClock] = useState(Date.now());
   const [storageNotice, setStorageNotice] = useState("");
@@ -102,7 +102,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   }, [state, activeTeam?.name, authScreen, registration, forgot, debug, locale]);
   useEffect(() => {
     setLocalError("");
-    setGoogleNotice(false);
+    setGooglePreview(false);
     setPassword("");
     setShowPassword(false);
     setCode("");
@@ -117,11 +117,11 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     if (state.error) surface.current?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
   }, [state.error]);
   useEffect(() => {
-    if (state.step !== "code") return;
+    if (state.step !== "code" && !state.registrationCode) return;
     setClock(Date.now());
     const timer = setInterval(() => setClock(Date.now()), 1000);
     return () => clearInterval(timer);
-  }, [state.step, state.codeExpiresAt]);
+  }, [state.step, state.codeExpiresAt, state.registrationCode]);
 
   const enterWorkspace = async () => {
     if (enteringWorkspace.current) return;
@@ -136,7 +136,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   }, [state]);
 
   const change = (action: OnboardingAction) => {
-    if (!pending.current) setState(previous => transitionOnboarding(previous, action, loadPersonalCenterDirectory()));
+    if (!pending.current) setState(previous => simplifyOnboardingEntry(transitionOnboarding(previous, action, loadPersonalCenterDirectory())));
   };
   const clearError = () => { setLocalError(""); if (state.error) change({ type: "clear-error" }); };
   const perform = async (action: OnboardingAction | (() => Promise<OnboardingAction>), label: string) => {
@@ -148,9 +148,9 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
       const resolved = typeof action === "function" ? await action() : action;
       if (mounted.current) {
         const personalState = loadPersonalCenterDirectory();
-        const next = transitionOnboarding(state, resolved, personalState);
+        const next = simplifyOnboardingEntry(transitionOnboarding(state, resolved, personalState));
         if (resolved.type === "accept-invite" && next.step === "workspace" && !next.error && resolveTeamEmailInvitation(personalState, state.inviteToken)) {
-          const joined = acceptTeamEmailInvitation(personalState, state.inviteToken, state);
+          const joined = acceptTeamEmailInvitation(personalState, state.inviteToken, next);
           if (!savePersonalCenterDirectory(joined)) throw new Error("加入状态未能保存，请检查浏览器存储后重试。");
         }
         setState(next);
@@ -164,20 +164,22 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     if (!password) { setLocalError("请输入密码。"); surface.current?.querySelector<HTMLElement>("#account-password")?.focus(); return; }
     void perform(async () => {
       const passwordDigest = await digestPreviewPassword(password, email);
-      return registration ? { type: "register", name, email, passwordDigest, passwordLength: password.length, now: Date.now() } : { type: "login", email, passwordDigest };
-    }, registration ? "正在创建账号…" : "正在登录…");
+      return registration ? { type: "complete-registration", name: "", email, passwordDigest, passwordLength: password.length, code, now: Date.now() } : { type: "login", email, passwordDigest };
+    }, registration ? "正在验证并创建账号…" : "正在登录…");
   };
   const switchAccount = () => { change({ type: "switch-account" }); setEmail(""); setName(""); };
-  const invalid = (field: string) => ({ "aria-invalid": state.errorField === field || undefined, "aria-describedby": state.errorField === field ? "onboarding-error" : undefined });
+  const errorField = state.error ? state.errorField : ["请输入密码。", "密码至少需要 8 位。"].includes(localError) ? "password" : "";
+  const invalid = (field: string) => ({ "aria-invalid": errorField === field || undefined, "aria-describedby": errorField === field ? "onboarding-error" : undefined });
   const error = localizeOnboardingMessage(locale, state.error || localError);
   const errorBlock = error ? <p className="onboarding-error" id="onboarding-error" role="alert"><CircleAlert aria-hidden="true" /><span>{error}</span></p> : null;
   const submitButton = (label: string, incomplete = false) => <Button className="onboarding-primary" type="submit" disabled={Boolean(busy) || incomplete}>{busy ? <><LoaderCircle aria-hidden="true" className="onboarding-spinner" />{localizeOnboardingMessage(locale, busy)}</> : label}</Button>;
   const back = (action: OnboardingAction, label = t("返回")) => <button className="onboarding-back" disabled={Boolean(busy)} onClick={() => change(action)}><ArrowLeft aria-hidden="true" />{label}</button>;
   const account = <div className="onboarding-account"><span><Mail aria-hidden="true" /><span>{state.email}</span></span><button onClick={switchAccount}>{t("退出登录")}</button></div>;
+  const profileField = !state.name ? <div className="onboarding-field"><label className="onboarding-input-label" htmlFor="account-name">{t("姓名")}</label><Input id="account-name" name="name" autoComplete="name" placeholder={t("你的称呼")} maxLength={40} value={name} disabled={Boolean(busy)} {...invalid("name")} onChange={event => { setName(event.target.value); clearError(); }} />{errorField === "name" && errorBlock}</div> : null;
   const passwordField = (reset = false) => <div className="onboarding-field">
     <label className="onboarding-input-label" htmlFor="account-password">{reset ? t("新密码") : t("密码")}</label>
-    <div className="onboarding-password"><Input id="account-password" name="password" type={showPassword ? "text" : "password"} autoComplete={registration || reset ? "new-password" : "current-password"} placeholder={registration || reset ? t("设置密码（至少 8 位）") : t("密码")} value={password} disabled={Boolean(busy)} {...invalid("password")} onChange={event => { setPassword(event.target.value); clearError(); }} /><button type="button" aria-label={showPassword ? t("隐藏密码") : t("显示密码")} aria-pressed={showPassword} disabled={Boolean(busy)} onClick={() => setShowPassword(value => !value)}>{showPassword ? <EyeOff /> : <Eye />}</button></div>
-    {(registration || reset) && <p className="onboarding-field-hint onboarding-password-hint">{t("建议包含字母和数字。")}</p>}
+    <div className="onboarding-password"><Input id="account-password" name="password" type={showPassword ? "text" : "password"} autoComplete={registration || reset ? "new-password" : "current-password"} placeholder={registration || reset ? t("密码（至少 8 位）") : t("密码")} value={password} disabled={Boolean(busy)} {...invalid("password")} onBlur={() => { if ((registration || reset) && password && password.length < 8) setLocalError("密码至少需要 8 位。"); }} onChange={event => { setPassword(event.target.value); clearError(); }} /><button type="button" aria-label={showPassword ? t("隐藏密码") : t("显示密码")} aria-pressed={showPassword} disabled={Boolean(busy)} onClick={() => setShowPassword(value => !value)}>{showPassword ? <EyeOff /> : <Eye />}</button></div>
+    {errorField === "password" && errorBlock}
   </div>;
 
   if (state.step === "workspace") return <WorkspaceLoading teamName={activeTeam?.name} error={localizeOnboardingMessage(locale, localError)} onRetry={() => void enterWorkspace()} />;
@@ -195,22 +197,42 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     <main className="onboarding-main"><div className="onboarding-flow">
       <div className="onboarding-form-brand"><Brand /></div>
       <section className="onboarding-card" data-step={state.step} aria-busy={Boolean(busy)}>
-        {state.step === "email" && <>
+        {googlePreview && <GoogleAuthPreview onCancel={() => {
+          setGooglePreview(false);
+          requestAnimationFrame(() => surface.current?.querySelector<HTMLElement>(".onboarding-google")?.focus());
+        }} onComplete={identity => {
+          const next = simplifyOnboardingEntry(transitionOnboarding(state, { type: "google-preview-complete", ...identity }, loadPersonalCenterDirectory()));
+          if (next.error) return localizeOnboardingMessage(locale, next.error);
+          setEmail(next.email); setName(next.name); setState(next); setGooglePreview(false);
+          return "";
+        }} />}
+        {!googlePreview && state.step === "email" && <>
           {forgot && <a className="onboarding-back" href={href("login")}><ArrowLeft aria-hidden="true" />{t("返回登录")}</a>}
           <Heading title={registration ? invitation ? t("注册并加入团队") : t("创建你的账号") : forgot ? t("忘记密码？") : t("欢迎回来")} description={registration ? invitation ? t("完成注册后，即可加入「{team}」", { team: invitation.team.name }) : t("开启与团队一起工作的全新方式") : forgot ? t("输入注册邮箱，验证后即可设置新密码") : t("登录 TaskDoor，继续你的工作")} />
           {state.inviteToken && invitation && <TeamInvitationCard invitation={invitation} />}
           {state.notice && <p className="onboarding-success" role="status"><Check aria-hidden="true" />{localizeOnboardingMessage(locale, state.notice)}</p>}
           {!forgot && <div className="onboarding-social">
-            <Button type="button" variant="outline" className="onboarding-google" disabled={Boolean(busy)} onClick={() => setGoogleNotice(true)} aria-describedby={googleNotice ? "google-login-notice" : undefined}>
+            <Button type="button" variant="outline" className="onboarding-google" disabled={Boolean(busy)} onClick={() => { setGooglePreview(true); requestAnimationFrame(() => surface.current?.querySelector<HTMLElement>(".google-preview h1")?.focus()); }}>
               <img src={googleIcon} alt="" aria-hidden="true" width={20} height={20} />{t("使用 Google 继续")}
             </Button>
-            {googleNotice && <p id="google-login-notice" className="onboarding-field-hint" role="status">{t("Google 登录暂不可用，请使用邮箱继续。")}</p>}
             <div className="onboarding-auth-divider"><span>{t("或使用邮箱")}</span></div>
           </div>}
           <form className="onboarding-form" noValidate onSubmit={submitAuth}>
-            {registration && <div className="onboarding-field"><label className="onboarding-input-label" htmlFor="account-name">{t("姓名")}</label><Input id="account-name" name="name" autoComplete="name" placeholder={t("你的姓名")} maxLength={40} value={name} disabled={Boolean(busy)} {...invalid("name")} onChange={event => { setName(event.target.value); clearError(); }} /></div>}
-            <div className="onboarding-field"><label className="onboarding-input-label" htmlFor="account-email">{t("邮箱")}</label><Input id="account-email" name="email" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" spellCheck={false} placeholder={t("邮箱地址")} maxLength={254} value={email} disabled={Boolean(busy)} {...invalid("email")} onChange={event => { setEmail(event.target.value); clearError(); }} /></div>
-            {!forgot && passwordField()}{errorBlock}{submitButton(registration ? invitation ? t("注册并继续") : t("创建账号") : forgot ? t("继续") : t("登录"))}
+
+            <div className="onboarding-field"><label className="onboarding-input-label" htmlFor="account-email">{t("邮箱")}</label><Input id="account-email" name={forgot ? "email" : "username"} type="email" inputMode="email" autoComplete={forgot ? "email" : "username"} autoCapitalize="none" spellCheck={false} placeholder={t("邮箱地址")} maxLength={254} value={email} disabled={Boolean(busy)} {...invalid("email")} onChange={event => { setEmail(event.target.value); if (registration) { setCode(""); change({ type: "edit-email" }); } clearError(); }} />{errorField === "email" && errorBlock}</div>
+            {!forgot && passwordField()}
+            {registration && <div className="onboarding-field">
+              <label className="onboarding-input-label" htmlFor="registration-code">{t("验证码")}</label>
+              <div className="onboarding-registration-code">
+                <Input id="registration-code" name="code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder={t("邮箱验证码")} value={code} disabled={Boolean(busy)} {...invalid("code")} onChange={event => { setCode(event.target.value.replace(/\D/g, "").slice(0, 6)); clearError(); }} />
+                <Button type="button" variant="outline" disabled={Boolean(busy) || countdown > 0 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())} onClick={() => {
+                  setCode("111111");
+                  void perform({ type: "request-registration-code", email, code: "111111", now: Date.now() }, "正在发送…");
+                }}>{countdown > 0 ? t("{seconds} 秒后重新获取", { seconds: countdown }) : state.registrationCode ? t("重新获取") : t("发送验证码")}</Button>
+              </div>
+              {errorField === "code" && errorBlock}
+            </div>}
+            {!["name", "email", "password", "code"].includes(errorField) && errorBlock}{submitButton(registration ? t("验证并创建账号") : forgot ? t("继续") : t("登录"), registration && (!email.trim() || password.length < 8 || code.length !== 6))}
           </form>
           {!registration && !forgot && <p className="onboarding-forgot-link"><a href={href("forgot")}>{t("忘记密码？")}</a></p>}
           {!forgot && <p className="onboarding-auth-switch">{registration ? t("已有账号？") : t("还没有账号？")}<a className="onboarding-link" href={href(registration ? "login" : "register")}>{registration ? t("登录") : t("注册")}</a></p>}
@@ -226,28 +248,14 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
         </>}
         {state.step === "reset-password" && <>
           <Heading title={t("设置新密码")} description={t("使用新密码登录你的 TaskDoor 账号。")} />
-          <form className="onboarding-form" noValidate onSubmit={event => { event.preventDefault(); void perform(async () => ({ type: "reset-password", passwordDigest: await digestPreviewPassword(password, state.email), passwordLength: password.length }), "正在更新…"); }}>{passwordField(true)}{errorBlock}{submitButton(t("更新密码"))}</form>
+          <form className="onboarding-form" noValidate onSubmit={event => { event.preventDefault(); void perform(async () => ({ type: "reset-password", passwordDigest: await digestPreviewPassword(password, state.email), passwordLength: password.length }), "正在更新…"); }}>{passwordField(true)}{errorField !== "password" && errorBlock}{submitButton(t("更新密码"))}</form>
           <p className="onboarding-auth-switch"><a className="onboarding-link" href={href("login")}>{t("返回登录")}</a></p>
         </>}
-        {state.step === "choose" && <>
-          <Heading title={t("设置你的团队")} description={t("创建一个团队，或加入同事已有的团队。")} />
-          {state.teams.length > 0 && <div className="onboarding-existing-teams">{state.teams.map(team => <button key={team.id} onClick={() => change({ type: "enter-team", teamId: team.id })}>{team.name}<ArrowRight /></button>)}</div>}
-          <div className="onboarding-options"><button onClick={() => change({ type: "choose", step: "create" })}><span className="onboarding-option-icon"><Plus /></span><span><strong>{t("创建团队")}</strong><small>{t("建立团队，邀请同事一起协作")}</small></span><ArrowRight /></button><button onClick={() => change({ type: "choose", step: "join" })}><span className="onboarding-option-icon"><UsersRound /></span><span><strong>{t("加入团队")}</strong><small>{t("使用同事分享的邀请链接")}</small></span><ArrowRight /></button></div>{account}
-        </>}
-        {state.step === "create" && <>
-          {state.teams.length > 0 && back({ type: "choose", step: "choose" })}
-          <Heading title={state.teams.length ? t("创建新团队") : t("创建你的团队")} description={state.teams.length ? t("给新团队起个名字，之后可以随时修改。") : t("{name}，欢迎加入。先创建团队，和伙伴一起开始工作。", { name: state.name })} />
-          <form className="onboarding-form" noValidate onSubmit={event => { event.preventDefault(); void perform({ type: "create-team", name: teamName }, "正在创建…"); }}><div className="onboarding-field"><label htmlFor="team-name">{t("团队名称")}</label><Input id="team-name" placeholder={t("例如：星河设计")} maxLength={40} value={teamName} disabled={Boolean(busy)} {...invalid("team")} onChange={event => { setTeamName(event.target.value); clearError(); }} /><p className="onboarding-field-hint">{t("你将成为团队管理员，创建后可邀请其他成员。")}</p></div>{errorBlock}{submitButton(t("创建团队并继续"))}</form>
-          {account}
-        </>}
-        {state.step === "join" && <>
-          {back({ type: "choose", step: "choose" }, state.teams.length ? t("返回") : t("返回创建团队"))}<Heading title={t("加入已有团队")} description={t("粘贴同事或团队管理员分享的邀请链接。")} />
-          <form className="onboarding-form" noValidate onSubmit={event => { event.preventDefault(); void perform({ type: "inspect-invite", link: inviteLink }, "正在查找…"); }}><div className="onboarding-field"><label htmlFor="invite-link">{t("邀请链接")}</label><Input id="invite-link" type="url" placeholder="https://…" autoCapitalize="none" spellCheck={false} value={inviteLink} disabled={Boolean(busy)} {...invalid("invite")} onChange={event => { setInviteLink(event.target.value); clearError(); }} /></div>{errorBlock}{submitButton(t("查看邀请"))}</form><p className="onboarding-field-hint onboarding-join-hint">{t("还没有邀请链接？请联系你的团队管理员。")}</p>{debug && <p className="onboarding-debug"><button onClick={() => setInviteLink(previewInviteLink)}>{t("填入示例邀请")}</button></p>}{account}
-        </>}
         {state.step === "invite" && <>
-          {back({ type: "choose", step: "choose" })}<Heading title={inviteProblem || (alreadyMember ? t("你已在这个团队中") : t("加入「{team}」", { team: invitation?.team.name ?? "" }))} description={inviteProblem ? (invitation?.email && invitation.email !== state.email ? t("这份邀请发给了 {email}。", { email: invitation.email }) : t("请联系团队管理员，获取新的邀请链接。")) : t("确认团队信息，加入后即可开始协作。")} />
+          <Heading title={inviteProblem || (alreadyMember ? t("你已在这个团队中") : t("加入「{team}」", { team: invitation?.team.name ?? "" }))} description={inviteProblem ? (invitation?.email && invitation.email !== state.email ? t("这份邀请发给了 {email}。", { email: invitation.email }) : t("请联系团队管理员，获取新的邀请链接。")) : t("确认团队信息，加入后即可开始协作。")} />
           {invitation && <TeamInvitationCard invitation={invitation} />}
-          {errorBlock}{inviteProblem ? <div className="onboarding-invite-recovery">{invitation?.email && invitation.email !== state.email && <Button className="onboarding-primary" onClick={switchAccount}>{t("切换账号")}</Button>}<Button variant="outline" className="onboarding-primary" onClick={() => change({ type: "choose", step: "join" })}>{t("使用其他邀请链接")}</Button></div> : <Button className="onboarding-primary" disabled={Boolean(busy)} onClick={() => void perform({ type: "accept-invite" }, "正在加入…")}>{localizeOnboardingMessage(locale, busy) || (alreadyMember ? t("进入团队") : t("立即加入"))}</Button>}{account}
+          {!inviteProblem && profileField}
+          {(inviteProblem || errorField !== "name") && errorBlock}{inviteProblem ? <div className="onboarding-invite-recovery">{invitation?.email && invitation.email !== state.email && <Button className="onboarding-primary" onClick={switchAccount}>{t("切换账号")}</Button>}</div> : <Button className="onboarding-primary" disabled={Boolean(busy)} onClick={() => void perform({ type: "accept-invite", profileName: name }, "正在加入…")}>{localizeOnboardingMessage(locale, busy) || (alreadyMember ? t("进入团队") : t("立即加入"))}</Button>}{account}
         </>}
       </section>
       {storageNotice && <p className="onboarding-storage-notice" role="status">{localizeOnboardingMessage(locale, storageNotice)}</p>}

@@ -1,7 +1,7 @@
 {
   "status": "offline_design",
-  "version": "2026-09-08.1",
-  "rulesSource": "docs/product-v2/PRD-AgentDoor-协作任务全流程.md",
+  "version": "2026-09-23.3",
+  "rulesSource": "docs/prd/modules",
   "skills": [
     {
       "id": "agentdoor-responsibility-advisor",
@@ -15,12 +15,14 @@
         "### 7.9 人员责任分析 Skill"
       ],
       "references": [
-        "skills/agentdoor-responsibility-advisor/references/output-contract.md"
-      ]
+        "skills/agentdoor-responsibility-advisor/references/output-contract.md",
+        "skills/agentdoor-responsibility-advisor/examples/decision-pairs.md"
+      ],
+      "internal": true
     },
     {
       "id": "agentdoor-task-planner",
-      "title": "创建任务与动态规划",
+      "title": "创建任务",
       "entry": "skills/agentdoor-task-planner/SKILL.md",
       "outputVersion": "agentdoor.task-plan.v0.2",
       "dependsOn": [
@@ -43,16 +45,17 @@
         "skills/agentdoor-task-planner/references/planning-v0.2.md",
         "skills/agentdoor-task-planner/references/context-and-replanning.md",
         "skills/agentdoor-task-planner/references/current-product-alignment.md",
-        "skills/agentdoor-task-planner/references/planning-v0.2.schema.json"
-      ]
+        "skills/agentdoor-task-planner/references/planning-v0.2.schema.json",
+        "skills/agentdoor-task-planner/examples/decision-pairs.md"
+      ],
+      "internal": false
     },
     {
       "id": "agentdoor-task-status-analyzer",
-      "title": "任务状态分析",
+      "title": "任务分析",
       "entry": "skills/agentdoor-task-status-analyzer/SKILL.md",
       "outputVersion": "agentdoor.task-status-analysis.v0.1",
       "dependsOn": [
-        "agentdoor-task-diagnostician",
         "agentdoor-ewd-progress"
       ],
       "rulesFile": "skills/agentdoor-task-status-analyzer/references/product-rules.md",
@@ -62,8 +65,12 @@
         "### 7.4 任务状态分析 Skill"
       ],
       "references": [
-        "skills/agentdoor-task-status-analyzer/references/output-contract.md"
-      ]
+        "skills/agentdoor-task-status-analyzer/references/output-contract.md",
+        "skills/agentdoor-task-status-analyzer/examples/decision-pairs.md",
+        "skills/agentdoor-task-status-analyzer/references/problem-analysis.md",
+        "skills/agentdoor-task-status-analyzer/examples/problem-analysis.md"
+      ],
+      "internal": false
     },
     {
       "id": "agentdoor-task-diagnostician",
@@ -77,8 +84,10 @@
         "### 7.5 任务诊断 Skill"
       ],
       "references": [
-        "skills/agentdoor-task-diagnostician/references/output-contract.md"
-      ]
+        "skills/agentdoor-task-diagnostician/references/output-contract.md",
+        "skills/agentdoor-task-diagnostician/examples/decision-pairs.md"
+      ],
+      "internal": true
     },
     {
       "id": "agentdoor-personal-priority",
@@ -95,8 +104,10 @@
         "### 7.6 我的工作推荐 Skill"
       ],
       "references": [
-        "skills/agentdoor-personal-priority/references/output-contract.md"
-      ]
+        "skills/agentdoor-personal-priority/references/output-contract.md",
+        "skills/agentdoor-personal-priority/examples/decision-pairs.md"
+      ],
+      "internal": true
     },
     {
       "id": "agentdoor-ewd-progress",
@@ -111,14 +122,17 @@
         "### 7.7 EWD 工时评估＋进度"
       ],
       "references": [
-        "skills/agentdoor-ewd-progress/references/output-contract.md"
-      ]
+        "skills/agentdoor-ewd-progress/references/output-contract.md",
+        "skills/agentdoor-ewd-progress/examples/decision-pairs.md"
+      ],
+      "internal": true
     }
   ],
   "sharedFiles": [
     "skills/shared/evidence-and-updates.md",
     "skills/shared/product-rules.md",
-    "skills/shared/assistant-path-rules.md"
+    "skills/shared/assistant-path-rules.md",
+    "skills/shared/current-prd-contract.md"
   ],
   "ruleSnapshots": [
     {

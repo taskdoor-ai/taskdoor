@@ -1,0 +1,3 @@
+import React from 'react';
+export function pageSlice<T>(items:T[],page:number,size:number){const pages=Math.max(1,Math.ceil(items.length/size));const current=Math.min(Math.max(1,page),pages);return {items:items.slice((current-1)*size,current*size),current,pages};}
+export function Pagination({page,pages,total,onChange}:{page:number;pages:number;total:number;onChange:(page:number)=>void}){return <nav className="lab-pagination" aria-label="分页"><span>共 {total} 条</span><button type="button" disabled={page<=1} onClick={()=>onChange(page-1)}>上一页</button><span>{page} / {pages} 页</span><button type="button" disabled={page>=pages} onClick={()=>onChange(page+1)}>下一页</button></nav>;}

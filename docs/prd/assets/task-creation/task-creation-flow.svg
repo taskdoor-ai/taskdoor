@@ -1,98 +1,161 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
-  <title id="title">任务创建与规划流程</title>
-  <desc id="desc">从用户输入工作意图开始，信息充分时跳过补问，否则经过必要补问，再形成候选草稿、用户编辑和校验；最终确认后通过服务端鉴权、资源版本及幂等校验，写入正式任务并生成活动记录。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">从需求到任务方案</title>
+  <desc id="desc">任务规划包含分析任务、目标与计划、成员推荐、动态规划四个主步骤。需求澄清、已有任务关系和单任务或多任务判断在对应步骤内部处理，之后由用户审阅并确认创建。</desc>
   <defs>
-    <marker id="arrow" markerHeight="8" markerWidth="8" orient="auto" refX="7" refY="4">
-      <path d="M0 0 8 4 0 8Z" fill="#6b7280"/>
-    </marker>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#1e293b" stroke-width="0.6"/>
+    </pattern>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="6" flood-color="#172033" flood-opacity="0.08" stdDeviation="8"/>
+      <feDropShadow dx="0" dy="7" flood-color="#020617" flood-opacity="0.32" stdDeviation="8"/>
     </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#64748b"/>
+    </marker>
+    <marker id="arrow-cyan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#22d3ee"/>
+    </marker>
+    <style>
+      text { font-family: "JetBrains Mono", "Noto Sans SC", "PingFang SC", sans-serif; }
+      .title { fill: #f8fafc; font-size: 30px; font-weight: 750; }
+      .subtitle { fill: #94a3b8; font-size: 14px; }
+      .stage { fill: rgba(15,23,42,.82); stroke: #334155; stroke-width: 1.4; }
+      .stage-title { fill: #f8fafc; font-size: 20px; font-weight: 700; }
+      .stage-sub { fill: #94a3b8; font-size: 12px; }
+      .step-number { fill: #f8fafc; font-size: 14px; font-weight: 750; text-anchor: middle; }
+      .node-title { fill: #f8fafc; font-size: 14px; font-weight: 650; text-anchor: middle; }
+      .node-sub { fill: #94a3b8; font-size: 11px; text-anchor: middle; }
+      .branch-label { fill: #cbd5e1; font-size: 12px; font-weight: 650; }
+      .branch-note { fill: #94a3b8; font-size: 11px; }
+      .main { fill: none; stroke: #22d3ee; stroke-width: 2.4; marker-end: url(#arrow-cyan); }
+      .flow { fill: none; stroke: #64748b; stroke-width: 1.8; marker-end: url(#arrow); }
+    </style>
   </defs>
-  <rect width="960" height="600" rx="32" fill="#f6f7fb"/>
-  <text x="68" y="72" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="#20283a">从意图到正式任务</text>
-  <text x="68" y="104" font-family="system-ui, sans-serif" font-size="16" fill="#667085">草稿阶段可随时修改；最终确认前没有正式写入。</text>
 
-  <g fill="none" stroke="#6b7280" stroke-linecap="round" stroke-width="3" marker-end="url(#arrow)">
-    <path d="M234 190H272"/>
-    <path d="M450 190H488"/>
-    <path d="M234 224C264 282 458 282 488 224"/>
-    <path d="M666 190H704"/>
-    <path d="M793 246V314"/>
-    <path d="M704 370H666"/>
-    <path d="M488 370H450"/>
-    <path d="M272 370H234"/>
-  </g>
-  <rect x="304" y="254" width="152" height="28" rx="14" fill="#ffffff" stroke="#cfd8e8"/>
-  <text x="380" y="273" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="650" fill="#53607b">信息充分 · 跳过补问</text>
+  <rect width="1440" height="900" rx="28" fill="#0f172a"/>
+  <rect width="1440" height="900" rx="28" fill="url(#grid)" opacity=".75"/>
+  <text class="title" x="42" y="54">从需求到任务方案</text>
+  <text class="subtitle" x="42" y="82">四个规划步骤构成主路径；需求澄清、已有任务关系、单任务或多任务判断均在对应步骤内处理。</text>
 
-  <g filter="url(#shadow)" font-family="system-ui, sans-serif">
-    <g>
-      <rect x="56" y="136" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
-      <circle cx="88" cy="168" r="14" fill="#e8efff"/>
-      <text x="88" y="173" text-anchor="middle" font-size="14" font-weight="700" fill="#4169e1">1</text>
-      <text x="112" y="174" font-size="20" font-weight="700" fill="#273047">输入意图</text>
-      <text x="76" y="211" font-size="15" fill="#667085">手工填写或自然语言描述</text>
-    </g>
-    <g>
-      <rect x="272" y="136" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
-      <circle cx="304" cy="168" r="14" fill="#fff1d8"/>
-      <text x="304" y="173" text-anchor="middle" font-size="14" font-weight="700" fill="#b76a12">2</text>
-      <text x="328" y="174" font-size="20" font-weight="700" fill="#273047">必要补问</text>
-      <text x="292" y="204" font-size="15" fill="#667085">只确认会改变目标、</text>
-      <text x="292" y="225" font-size="15" fill="#667085">交付或结构的缺口</text>
-    </g>
-    <g>
-      <rect x="488" y="136" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
-      <circle cx="520" cy="168" r="14" fill="#efeaff"/>
-      <text x="520" y="173" text-anchor="middle" font-size="14" font-weight="700" fill="#7048d7">3</text>
-      <text x="544" y="174" font-size="20" font-weight="700" fill="#273047">候选草稿</text>
-      <text x="508" y="204" font-size="15" fill="#667085">简单任务或父子结构</text>
-      <text x="508" y="225" font-size="15" fill="#667085">关系均为待确认建议</text>
-    </g>
-    <g>
-      <rect x="704" y="136" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
-      <circle cx="736" cy="168" r="14" fill="#e6f6f1"/>
-      <text x="736" y="173" text-anchor="middle" font-size="14" font-weight="700" fill="#168263">4</text>
-      <text x="760" y="174" font-size="20" font-weight="700" fill="#273047">用户编辑</text>
-      <text x="724" y="204" font-size="15" fill="#667085">修改字段、人员、日期、</text>
-      <text x="724" y="225" font-size="15" fill="#667085">投入、子任务与依赖</text>
-    </g>
-    <g>
-      <rect x="704" y="316" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
-      <circle cx="736" cy="348" r="14" fill="#ffe9e7"/>
-      <text x="736" y="353" text-anchor="middle" font-size="14" font-weight="700" fill="#bd4b43">5</text>
-      <text x="760" y="354" font-size="20" font-weight="700" fill="#273047">统一校验</text>
-      <text x="724" y="384" font-size="15" fill="#667085">权限、版本、字段、关系</text>
-      <text x="724" y="405" font-size="15" fill="#667085">有问题就保留草稿返回</text>
-    </g>
-    <g>
-      <rect x="488" y="316" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
-      <circle cx="520" cy="348" r="14" fill="#e8efff"/>
-      <text x="520" y="353" text-anchor="middle" font-size="14" font-weight="700" fill="#4169e1">6</text>
-      <text x="544" y="354" font-size="20" font-weight="700" fill="#273047">最终确认后</text>
-      <text x="508" y="384" font-size="14" fill="#667085">服务端鉴权 + 资源版本</text>
-      <text x="508" y="405" font-size="14" fill="#667085">幂等校验通过才继续写入</text>
-    </g>
-    <g>
-      <rect x="272" y="316" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
-      <circle cx="304" cy="348" r="14" fill="#e6f6f1"/>
-      <text x="304" y="353" text-anchor="middle" font-size="14" font-weight="700" fill="#168263">7</text>
-      <text x="328" y="354" font-size="20" font-weight="700" fill="#273047">原子写入</text>
-      <text x="292" y="384" font-size="15" fill="#667085">正式任务、父子与依赖</text>
-      <text x="292" y="405" font-size="15" fill="#667085">不留下半套结果</text>
-    </g>
-    <g>
-      <rect x="56" y="316" width="178" height="108" rx="18" fill="#ffffff" stroke="#d8deea"/>
-      <circle cx="88" cy="348" r="14" fill="#efeaff"/>
-      <text x="88" y="353" text-anchor="middle" font-size="14" font-weight="700" fill="#7048d7">8</text>
-      <text x="112" y="354" font-size="20" font-weight="700" fill="#273047">回执与活动</text>
-      <text x="76" y="384" font-size="15" fill="#667085">返回 ID、版本与实际数量</text>
-      <text x="76" y="405" font-size="15" fill="#667085">创建事实可审计、可重读</text>
-    </g>
-  </g>
+  <!-- Main path behind cards -->
+  <path class="main" d="M350 410H385"/>
+  <path class="main" d="M695 410H730"/>
+  <path class="main" d="M1040 410H1075"/>
+  <path class="main" d="M1238 670V714"/>
 
-  <rect x="56" y="474" width="826" height="70" rx="16" fill="#eef2ff" stroke="#cfd8ff"/>
-  <text x="82" y="504" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#3446a8">正式写入边界</text>
-  <text x="82" y="530" font-family="system-ui, sans-serif" font-size="15" fill="#53607b">AI 建议、人员选择和草稿编辑都不是正式业务事实；用户确认且服务端校验成功后才产生任务。</text>
+  <!-- Stage 1 -->
+  <g filter="url(#shadow)"><rect class="stage" x="40" y="120" width="310" height="550" rx="18"/></g>
+  <circle cx="72" cy="158" r="18" fill="#083344" stroke="#22d3ee" stroke-width="2"/>
+  <text class="step-number" x="72" y="163">1</text>
+  <text class="stage-title" x="103" y="157">分析任务</text>
+  <text class="stage-sub" x="64" y="184">理解需求，并处理必要的确认分支</text>
+
+  <rect x="64" y="220" width="262" height="78" rx="10" fill="#0f172a"/>
+  <rect x="64" y="220" width="262" height="78" rx="10" fill="rgba(8,51,68,.58)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text class="node-title" x="195" y="251">提取任务要点</text>
+  <text class="node-sub" x="195" y="273">目标 · 交付 · 限制</text>
+
+  <rect x="64" y="326" width="262" height="176" rx="12" fill="rgba(120,53,15,.22)" stroke="#fbbf24" stroke-width="1.3" stroke-dasharray="6 4"/>
+  <text x="84" y="354" fill="#fbbf24" font-size="11" font-weight="700">阶段内分支</text>
+  <text class="branch-label" x="84" y="386">信息不足</text>
+  <text class="branch-note" x="84" y="409">补问影响方案的关键内容</text>
+  <line x1="84" y1="430" x2="306" y2="430" stroke="#475569"/>
+  <text class="branch-label" x="84" y="461">发现已有任务候选</text>
+  <text class="branch-note" x="84" y="484">确认重复任务或父任务关系</text>
+
+  <rect x="64" y="536" width="262" height="86" rx="22" fill="#0f172a"/>
+  <rect x="64" y="536" width="262" height="86" rx="22" fill="rgba(6,78,59,.52)" stroke="#34d399" stroke-width="1.6"/>
+  <text class="node-title" x="195" y="570">形成分析结果</text>
+  <text class="node-sub" x="195" y="593">需求要点与任务关系已明确</text>
+
+  <!-- Stage 2 -->
+  <g filter="url(#shadow)"><rect class="stage" x="385" y="120" width="310" height="550" rx="18"/></g>
+  <circle cx="417" cy="158" r="18" fill="#3b1d78" stroke="#a78bfa" stroke-width="2"/>
+  <text class="step-number" x="417" y="163">2</text>
+  <text class="stage-title" x="448" y="157">目标与计划</text>
+  <text class="stage-sub" x="409" y="184">决定任务结构，生成可核对的计划</text>
+
+  <rect x="409" y="220" width="262" height="78" rx="10" fill="#0f172a"/>
+  <rect x="409" y="220" width="262" height="78" rx="10" fill="rgba(76,29,149,.5)" stroke="#a78bfa" stroke-width="1.5"/>
+  <text class="node-title" x="540" y="251">判断是否需要拆解</text>
+  <text class="node-sub" x="540" y="273">单一交付，还是可独立交付与分工</text>
+
+  <rect x="409" y="326" width="122" height="102" rx="10" fill="rgba(30,41,59,.72)" stroke="#94a3b8" stroke-width="1.2"/>
+  <text class="node-title" x="470" y="364">单任务</text>
+  <text class="node-sub" x="470" y="389">一个目标</text>
+  <text class="node-sub" x="470" y="408">一组完成标准</text>
+  <rect x="549" y="326" width="122" height="102" rx="10" fill="rgba(30,41,59,.72)" stroke="#94a3b8" stroke-width="1.2"/>
+  <text class="node-title" x="610" y="364">多任务</text>
+  <text class="node-sub" x="610" y="389">主任务与子任务</text>
+  <text class="node-sub" x="610" y="408">整条路径最多四层</text>
+
+  <rect x="409" y="462" width="262" height="160" rx="12" fill="#0f172a"/>
+  <rect x="409" y="462" width="262" height="160" rx="12" fill="rgba(8,51,68,.42)" stroke="#22d3ee" stroke-width="1.4"/>
+  <text class="node-title" x="540" y="493">生成任务结构与字段</text>
+  <text class="node-sub" x="540" y="521">名称 · 目标 · 完成标准</text>
+  <text class="node-sub" x="540" y="545">父子关系 · 前置依赖</text>
+  <text class="node-sub" x="540" y="569">截止日期 · 预计投入</text>
+  <text class="node-sub" x="540" y="596">每个任务拥有独立内容</text>
+
+  <!-- Stage 3 -->
+  <g filter="url(#shadow)"><rect class="stage" x="730" y="120" width="310" height="550" rx="18"/></g>
+  <circle cx="762" cy="158" r="18" fill="#064e3b" stroke="#34d399" stroke-width="2"/>
+  <text class="step-number" x="762" y="163">3</text>
+  <text class="stage-title" x="793" y="157">成员推荐</text>
+  <text class="stage-sub" x="754" y="184">按任务要求匹配团队成员责任域</text>
+
+  <rect x="754" y="220" width="262" height="90" rx="10" fill="#0f172a"/>
+  <rect x="754" y="220" width="262" height="90" rx="10" fill="rgba(6,78,59,.5)" stroke="#34d399" stroke-width="1.5"/>
+  <text class="node-title" x="885" y="252">逐个任务匹配责任域</text>
+  <text class="node-sub" x="885" y="276">结合目标、完成标准与所需工作</text>
+
+  <rect x="754" y="342" width="262" height="160" rx="12" fill="rgba(30,41,59,.72)" stroke="#94a3b8" stroke-width="1.2"/>
+  <text class="branch-label" x="778" y="374">有合适成员</text>
+  <text class="branch-note" x="778" y="397">推荐负责人和参与者</text>
+  <line x1="778" y1="421" x2="992" y2="421" stroke="#475569"/>
+  <text class="branch-label" x="778" y="453">没有合适成员</text>
+  <text class="branch-note" x="778" y="476">保持未分配，或邀请团队外人员</text>
+
+  <rect x="754" y="536" width="262" height="86" rx="22" fill="#0f172a"/>
+  <rect x="754" y="536" width="262" height="86" rx="22" fill="rgba(6,78,59,.52)" stroke="#34d399" stroke-width="1.6"/>
+  <text class="node-title" x="885" y="570">形成成员建议</text>
+  <text class="node-sub" x="885" y="593">用户可调整，最终以用户选择为准</text>
+
+  <!-- Stage 4 -->
+  <g filter="url(#shadow)"><rect class="stage" x="1075" y="120" width="325" height="550" rx="18"/></g>
+  <circle cx="1107" cy="158" r="18" fill="#1e3a8a" stroke="#60a5fa" stroke-width="2"/>
+  <text class="step-number" x="1107" y="163">4</text>
+  <text class="stage-title" x="1138" y="157">动态规划</text>
+  <text class="stage-sub" x="1099" y="184">补齐依赖、日期与需要用户确认的安排</text>
+
+  <rect x="1099" y="220" width="277" height="90" rx="10" fill="#0f172a"/>
+  <rect x="1099" y="220" width="277" height="90" rx="10" fill="rgba(59,130,246,.34)" stroke="#60a5fa" stroke-width="1.5"/>
+  <text class="node-title" x="1238" y="252">整理依赖与日期</text>
+  <text class="node-sub" x="1238" y="276">不确定的依据保留为待确认</text>
+
+  <rect x="1099" y="350" width="277" height="126" rx="12" fill="rgba(120,53,15,.22)" stroke="#fbbf24" stroke-width="1.3" stroke-dasharray="6 4"/>
+  <text x="1122" y="382" fill="#fbbf24" font-size="11" font-weight="700">需要核对</text>
+  <text class="branch-label" x="1122" y="414">前置依赖是否成立</text>
+  <text class="branch-label" x="1122" y="444">截止日期与投入是否合理</text>
+
+  <rect x="1099" y="536" width="277" height="86" rx="22" fill="#0f172a"/>
+  <rect x="1099" y="536" width="277" height="86" rx="22" fill="rgba(59,130,246,.34)" stroke="#60a5fa" stroke-width="1.6"/>
+  <text class="node-title" x="1238" y="570">生成可审阅方案</text>
+  <text class="node-sub" x="1238" y="593">汇总任务结构、字段与人员</text>
+
+  <!-- Review and creation -->
+  <rect x="40" y="714" width="1360" height="142" rx="18" fill="rgba(15,23,42,.9)" stroke="#334155" stroke-width="1.4"/>
+  <text x="68" y="749" fill="#f8fafc" font-size="18" font-weight="700">用户审阅与确认创建</text>
+  <text x="68" y="773" fill="#94a3b8" font-size="11">四个规划步骤完成后进入审阅；用户确认前不创建正式任务。</text>
+
+  <rect x="422" y="736" width="220" height="76" rx="10" fill="rgba(8,51,68,.45)" stroke="#22d3ee" stroke-width="1.3"/>
+  <text class="node-title" x="532" y="766">编辑任务方案</text>
+  <text class="node-sub" x="532" y="790">结构 · 字段 · 人员</text>
+  <path class="flow" d="M642 774H706"/>
+  <rect x="716" y="736" width="220" height="76" rx="10" fill="rgba(76,29,149,.42)" stroke="#a78bfa" stroke-width="1.3"/>
+  <text class="node-title" x="826" y="766">确认整份方案</text>
+  <text class="node-sub" x="826" y="790">触发提交前校验</text>
+  <path class="flow" d="M936 774H1000"/>
+  <rect x="1010" y="736" width="260" height="76" rx="10" fill="rgba(6,78,59,.5)" stroke="#34d399" stroke-width="1.4"/>
+  <text class="node-title" x="1140" y="766">校验并统一创建</text>
+  <text class="node-sub" x="1140" y="790">成功进入任务；失败保留方案</text>
 </svg>

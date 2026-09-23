@@ -15,8 +15,10 @@ type BaseNode = {
 
 export type FolderNode = BaseNode & { kind: "folder" };
 
-export type TaskIconTone = "neutral" | "blue" | "cyan" | "green" | "amber" | "red" | "purple" | "pink";
-export type TaskIconName = "list-todo" | "clipboard-check" | "target" | "flag" | "briefcase" | "file-check" | "chart" | "sparkles";
+export const taskIconToneValues = ["neutral", "blue", "cyan", "green", "amber", "red", "purple", "pink", "teal", "orange", "indigo", "slate", "ocean", "jade", "olive", "apricot", "lilac", "rose"] as const;
+export type TaskIconTone = typeof taskIconToneValues[number];
+export const taskIconNameValues = ["list-todo", "clipboard-check", "target", "flag", "briefcase", "file-check", "chart", "sparkles", "megaphone", "shopping-bag", "gift", "store", "pen-tool", "palette", "camera", "video", "mic", "file-text", "presentation", "book-open", "code", "bug", "database", "globe", "users", "message-square", "calendar-days", "handshake", "rocket", "lightbulb", "shield-check", "package"] as const;
+export type TaskIconName = typeof taskIconNameValues[number];
 type WorkspaceTaskStatus = "待开始" | "进行中" | "待审核" | "已阻塞" | "已完成" | "已取消";
 
 export type TaskNode = BaseNode & {
@@ -587,8 +589,8 @@ export const workspaceNodes: WorkspaceNode[] = workspaceNodeSeeds.map((node) => 
 }));
 
 const taskStatuses = new Set<WorkspaceTaskStatus>(["待开始", "进行中", "待审核", "已阻塞", "已完成", "已取消"]);
-const taskIconNames = new Set<TaskIconName>(["list-todo", "clipboard-check", "target", "flag", "briefcase", "file-check", "chart", "sparkles"]);
-const taskIconTones = new Set<TaskIconTone>(["neutral", "blue", "cyan", "green", "amber", "red", "purple", "pink"]);
+const taskIconNames = new Set<TaskIconName>(taskIconNameValues);
+const taskIconTones = new Set<TaskIconTone>(taskIconToneValues);
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
 const asOptionalString = (value: unknown) => typeof value === "string" && value.trim() ? value : undefined;
 const asStringList = (value: unknown) => Array.isArray(value)

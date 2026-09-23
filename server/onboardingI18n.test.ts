@@ -31,7 +31,7 @@ test('validation can change languages without changing persisted auth state', ()
 test('registration and team creation preserve user names across localized display', () => {
   const pending = transitionOnboarding(createOnboardingPreview(), { type: 'register', name: '林晓', email: 'lin@example.com', passwordDigest: 'a'.repeat(64), passwordLength: 10, now: 1000 });
   const verified = transitionOnboarding(pending, { type: 'verify-code', code: '123456', now: 2000 });
-  const workspace = transitionOnboarding(verified, { type: 'create-team', name: '星河设计 {team}' });
+  const workspace = transitionOnboarding(transitionOnboarding(verified, { type: 'choose', step: 'create' }), { type: 'create-team', name: '星河设计 {team}' });
   const team = workspace.teams[0];
   assert.equal(workspace.name, '林晓');
   assert.equal(team.name, '星河设计 {team}');

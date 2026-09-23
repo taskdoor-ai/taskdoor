@@ -254,7 +254,7 @@ export function AiConnectionDialog({ onClose, request, returnFocus, transferActi
           <header><strong>{ui("选择要使用的工具")}</strong><small>{ui("未连接也可选择并尝试打开。")}</small></header>
           <div className="ai-agent-options horizontal">
             {preferences.order.map(id => agents.find(agent => agent.id === id)!).map((agent) => <button aria-pressed={selectedAgent === agent.id} className={selectedAgent === agent.id ? "selected" : ""} disabled={launching} key={agent.id} onClick={() => { setSelectedAgent(agent.id); setResult(null); }} type="button">
-              <span className={`ai-agent-mark ${agent.tone}`}><img alt="" src={agentIconUrls[agent.id]} /></span>
+              <span className={`ai-agent-mark ${agent.tone}`}><img alt="" data-agent-icon={agent.id} src={agentIconUrls[agent.id]} /></span>
               <span><strong>{agent.name}</strong>
                 {/* Discovery and launch attempts do not establish an acknowledged Agent connection. */}
                 <span className="ai-agent-connection-status" title={ui("尚未与此工具建立连接")}><span aria-hidden="true" className="ai-agent-connection-dot" />{ui("未连接")}</span>

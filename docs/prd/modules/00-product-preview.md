@@ -1,30 +1,43 @@
 ---
 module_id: "product-preview"
-title: "产品全貌预览"
+title: "产品界面预览"
+group: "产品概览"
 version: "1.1"
 status: "review"
-last_change: "PRD-0018"
+last_change: "PRD-0057"
 summary: "以英文界面截图快速浏览产品全貌。"
 presentation: "gallery"
 ---
 
-# 产品全貌预览
+# 产品界面预览
 
 ## 1. 目的
 
-快速预览当前演示产品；生成页以分类、缩略图和大图展示截图，每张大图下方提供一句场景说明，来源留在源文件。
+按场景浏览产品界面与操作流程。
 
 ## 2. 范围和边界
 
-复用已登记的英文运行截图，保留截图内产品文案，保留分类与切换导航，并用简短图注说明当前场景与步骤。不以截图证明生产服务能力。
+涵盖账号、团队、任务创建、协作与工具连接的主要界面。
 
 ## 3. 详细功能设计
 
 ### 团队与账号
 
+![登录页：Google 入口与邮箱密码登录。](../assets/account-identity/login-empty-en.jpg)
 
+*FIG-PREVIEW-018 · 登录页：Google 入口与邮箱密码登录。*
 
+![受邀登录：核对团队与加入身份，登录后继续加入。](../assets/team-onboarding/join-team-login-en.png)
 
+*FIG-PREVIEW-050 · 受邀登录：核对团队与加入身份，登录后继续加入。*
+
+![注册入口：Google 或邮箱。](../assets/account-identity/signup-current-en.png)
+
+*FIG-PREVIEW-019 · 注册入口：选择 Google 或邮箱。*
+
+![未注册用户通过邀请加入。](../assets/team-onboarding/join-team-signup-en.png)
+
+*FIG-PREVIEW-051 · 受邀注册：保留团队与身份，已有账号可切换登录。*
 
 ![个人信息 Profile：头像、姓名与邮箱。](../assets/workspace-navigation/profile-en.jpg)
 
@@ -42,21 +55,25 @@ presentation: "gallery"
 
 *FIG-PREVIEW-023 · 成员列表下半页：完整团队分工与角色。*
 
-![成员邀请表单：姓名选填、邮箱与角色；未发送邀请。](../assets/member-collaboration/invite-en.png)
-
-*FIG-PREVIEW-016 · 成员邀请表单：姓名选填、邮箱与角色；未发送邀请。*
-
 ![个人设置与团队设置的导航入口。](../assets/workspace-navigation/settings-en.png)
 
 *FIG-PREVIEW-017 · 个人设置与团队设置的导航入口。*
 
 ### 创建规划
 
-![选择示例后的需求输入](../assets/task-creation/single-input-en.jpg)
+![创建页：输入任务需求。](../assets/task-creation/create-en.png)
+
+*FIG-PREVIEW-002 · 创建页：输入任务需求。*
+
+![深色创建页：顶部导航与正文使用统一底色。](../assets/task-creation/create-dark-en.jpg)
+
+*FIG-PREVIEW-052 · 深色创建页：顶部导航与正文使用统一底色。*
+
+![输入会议纪要需求](../assets/task-creation/single-input-en.jpg)
 
 *FIG-PREVIEW-027 · 单任务 · 1/2：输入会议纪要需求。*
 
-![单任务草稿与确认创建入口](../assets/task-creation/single-review-en.jpg)
+![单任务待确认方案与确认创建入口](../assets/task-creation/single-review-en.jpg)
 
 *FIG-PREVIEW-003 · 单任务 · 2/2：审阅目标、完成标准与人员，准备确认创建。*
 
@@ -72,9 +89,9 @@ presentation: "gallery"
 
 *FIG-PREVIEW-030 · 引导补问 · 3/4：选择需要交付的内容。*
 
-![补问后的草稿：目标和完成标准承接已确认回答](../assets/task-creation/clarify-review-en.jpg)
+![补问后的方案：目标和完成标准承接已确认回答](../assets/task-creation/clarify-review-en.jpg)
 
-*FIG-PREVIEW-031 · 引导补问 · 4/4：审阅由回答形成的任务草稿。*
+*FIG-PREVIEW-031 · 引导补问 · 4/4：审阅由回答形成的待确认方案。*
 
 ![复杂项目原始需求](../assets/task-creation/complex-input-en.jpg)
 
@@ -96,7 +113,7 @@ presentation: "gallery"
 
 *FIG-PREVIEW-036 · 多层级任务 · 1/5：输入分层拆解需求。*
 
-![多层项目的主任务草稿](../assets/task-creation/nested-review-en.jpg)
+![多层项目的主待确认方案](../assets/task-creation/nested-review-en.jpg)
 
 *FIG-PREVIEW-004 · 多层级任务 · 2/5：审阅主任务与人员安排。*
 
@@ -120,7 +137,7 @@ presentation: "gallery"
 
 *FIG-PREVIEW-038 · 相似任务 · 2/3：核对已有任务，选择查看或独立规划。*
 
-![选择独立规划后形成的新任务草稿](../assets/task-creation/similar-review-en.jpg)
+![选择独立规划后形成的新待确认方案](../assets/task-creation/similar-review-en.jpg)
 
 *FIG-PREVIEW-039 · 相似任务 · 3/3：审阅独立规划的新任务。*
 
@@ -132,7 +149,7 @@ presentation: "gallery"
 
 *FIG-PREVIEW-041 · 已有父任务 · 2/3：核对父任务范围与现有子任务。*
 
-![确认归属后的子任务草稿与父任务路径](../assets/task-creation/parent-review-en.jpg)
+![确认归属后的子待确认方案与父任务路径](../assets/task-creation/parent-review-en.jpg)
 
 *FIG-PREVIEW-042 · 已有父任务 · 3/3：审阅新子任务，确认父任务归属。*
 
@@ -144,10 +161,6 @@ presentation: "gallery"
 
 *FIG-PREVIEW-044 · 未匹配负责人 · 2/3：保留未分配状态，提供成员邀请入口。*
 
-![从创建方案打开的成员邀请表单](../assets/task-creation/unassigned-invite-en.jpg)
-
-*FIG-PREVIEW-045 · 未匹配负责人 · 3/3：打开邀请表单，尚未发送。*
-
 ### 任务协作
 
 ![overview](../assets/task-detail/overview-current-en.jpg)
@@ -158,13 +171,13 @@ presentation: "gallery"
 
 *FIG-PREVIEW-046 · 完成标准 · 1/3：查看 AI 分段进度与当前人工确认数。*
 
-![完成标准 · 2/3：人工确认第二条，确认数变为 2/3；提示支持撤销。](../assets/task-detail/criteria-confirmed-en.jpg)
+![完成标准 · 2/3：人工确认第二条，确认数变为 2/3；悬停可查看 AI 分析与撤销操作。](../assets/task-detail/criteria-confirmed-en.jpg)
 
-*FIG-PREVIEW-047 · 完成标准 · 2/3：人工确认第二条，确认数变为 2/3；提示支持撤销。*
+*FIG-PREVIEW-047 · 完成标准 · 2/3：人工确认第二条，确认数变为 2/3；悬停可查看 AI 分析与撤销操作。*
 
-![完成标准 · 3/3：撤销后恢复 1/3；提示区分 AI 评估与人工确认。](../assets/task-detail/criteria-undo-en.jpg)
+![完成标准 · 步骤 3：撤销后恢复 1/3；提示区分 AI 评估与人工确认。](../assets/task-detail/criteria-undo-en.jpg)
 
-*FIG-PREVIEW-048 · 完成标准 · 3/3：撤销后恢复 1/3；提示区分 AI 评估与人工确认。*
+*FIG-PREVIEW-048 · 完成标准 · 步骤 3：撤销后恢复 1/3；提示区分 AI 评估与人工确认。*
 
 ![常显搜索、范围、状态与高级筛选面板。](../assets/task-list/filters-en.png)
 
@@ -204,18 +217,22 @@ presentation: "gallery"
 
 ### 连接 AI
 
-![连接 AI 弹窗：工具选择与 TaskDoor CLI 安装登录说明。](../assets/cli-connection/connect-ai-en.jpg)
+![任务内 AI 工具菜单：Codex 为最近使用的工具，也可切换其他工具。](../assets/cli-connection/task-ai-tool-menu-en.jpg)
 
-*FIG-PREVIEW-024 · 连接 AI 弹窗：工具选择与 TaskDoor CLI 安装登录说明。*
+*FIG-PREVIEW-053 · 任务内 AI 工具菜单：选择 Codex、Claude Code、WorkBuddy 或 Cursor。*
 
-![连接 AI 下半页：任务命令示例，属于拟定语法。](../assets/cli-connection/connect-ai-examples-en.jpg)
+![全局连接 AI 指南：选择工具并查看 TaskDoor CLI 安装登录说明。](../assets/cli-connection/connect-ai-en.jpg)
 
-*FIG-PREVIEW-025 · 连接 AI 下半页：任务命令示例，属于拟定语法。*
+*FIG-PREVIEW-024 · 全局连接 AI 指南：Codex 与其他工具的 CLI 安装登录说明。*
+
+![连接 AI 下半页：任务命令示例。](../assets/cli-connection/connect-ai-examples-en.jpg)
+
+*FIG-PREVIEW-025 · 连接 AI 下半页：任务命令示例。*
 
 ![连接 AI 底部：文件上传、活动回复与删除命令示例。](../assets/cli-connection/connect-ai-bottom-en.jpg)
 
 *FIG-PREVIEW-026 · 连接 AI 底部：文件上传、活动回复与删除命令示例。*
 
-## 4. 验收标准
+## 4. 功能验收标准
 
 按分类切换缩略图，点击缩略图、顶部前后按钮或大图左右两侧的箭头查看完整大图，支持左右方向键。仅显示必要导航与当前图片说明，不展开长篇正文；打印时展开全部截图。

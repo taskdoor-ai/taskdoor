@@ -2370,5 +2370,33 @@
   "criterionConfirmationUndone": {
     "zh": "已撤销确认",
     "en": "Confirmation undone"
+  },
+  "taskDeleteTitle": {
+    "zh": "删除任务？",
+    "en": "Delete task?"
+  },
+  "taskDeleteIrreversible": {
+    "zh": "删除后无法恢复。",
+    "en": "This cannot be undone."
+  },
+  "taskDeleteDescendants": {
+    "zh": "同时删除 {count} 个子任务",
+    "en": "Also delete {count} subtasks"
+  },
+  "taskDeleteDependencies": {
+    "zh": "将解除 {count} 个其他任务对这些任务的依赖。",
+    "en": "Dependencies from {count} other tasks will be removed."
+  },
+  "taskDeleteAction": {
+    "zh": "删除",
+    "en": "Delete"
+  },
+  "taskDeleteNamedTitle": {
+    "zh": "删除「{name}」任务？",
+    "en": "Delete “{name}”?"
+  },
+  "taskDeleteConsequences": {
+    "zh": "该任务及所有子任务的数据将被永久删除，无法恢复。",
+    "en": "This task, all subtasks, and their data will be permanently deleted. This cannot be undone."
   }
 }

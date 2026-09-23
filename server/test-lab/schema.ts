@@ -16,7 +16,7 @@ const eventSchema=z.discriminatedUnion('type',[
 ]);
 const checkFields={id,label:text,path:z.string().max(300).refine(p=>!/(?:__proto__|constructor|prototype)/.test(p),'不支持该路径'),operator:z.enum(['exists','equals','contains','not_contains','length','gte','lte']),expected:z.json()};
 export const verificationSchema=z.object({rulesVersion:z.literal(1).optional(),objective:text,preconditions:lines,expectedResults:z.array(z.object({stepId:id,criteria:lines}).strict()).max(10),fixtureChecks:z.array(z.object({...checkFields,subject:z.enum(['task','evidence','member']),subjectId:id}).strict()).max(100)}).strict();
-export const caseSchema=z.object({id,name:z.string().trim().min(1).max(300),category:text,teamId:id,actorId:id,description:text,archived:z.boolean(),enabled:z.boolean(),version,verification:verificationSchema.optional(),
+export const caseSchema=z.object({creationContext:z.literal("fresh").optional(),id,name:z.string().trim().min(1).max(300),category:text,teamId:id,actorId:id,description:text,archived:z.boolean(),enabled:z.boolean(),version,verification:verificationSchema.optional(),
   steps:z.array(z.object({id,prompt:z.string().trim().min(1).max(20000),skillId:z.enum(skillIds),skillVersionId:id.nullable().optional(),evaluatedAt:z.string().datetime({offset:true}).optional(),taskId:id.nullable(),usePreviousOutput:z.boolean(),events:z.array(eventSchema).max(50)}).strict()).min(1).max(10),
   assertions:z.array(z.object({id,label:text,stepId:id,path:z.string().max(300).refine(p=>!/(?:__proto__|constructor|prototype)/.test(p),'不支持该路径'),operator:z.enum(['exists','equals','contains','not_contains','length','gte','lte']),expected:z.json()}).strict()).max(100),
   reviewChecklist:lines,legacyInput:z.record(z.string(),z.unknown()).optional(),legacyExpected:z.unknown().optional(),origin:z.string().max(300).optional(),
@@ -63,6 +63,6 @@ export function validateRelations(teams:LabTeam[],cases:LabCase[]){
   }
 }
 
-export const skillVersionInputSchema=z.object({skillId:z.enum(skillIds),label:z.string().trim().min(1).max(80),notes:z.string().max(2000),snapshot:z.string().trim().min(1).max(300000)}).strict();
+export const skillVersionInputSchema=z.object({skillId:z.enum(skillIds),label:z.string().trim().min(1).max(80),notes:z.string().max(2000),baseVersionId:id.nullable().optional(),snapshot:z.string().trim().min(1).max(300000)}).strict();
 export const modelIdSchema=z.string().trim().min(1).max(160).regex(/^[a-zA-Z0-9_.:/-]+$/, '请输入模型服务支持的模型 ID');
-export const runSelectionSchema=z.object({model:modelIdSchema.optional(),actorId:id.optional(),workflowId:id.optional()}).strict();
+export const runSelectionSchema=z.object({models:z.array(modelIdSchema).min(1).max(5).refine(v=>new Set(v).size===v.length,"模型不能重复").optional(),model:modelIdSchema.optional(),actorId:id.optional(),workflowId:id.optional()}).strict().refine(v=>!(v.model&&v.models),'model 与 models 只能选择一种');

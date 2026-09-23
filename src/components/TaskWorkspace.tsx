@@ -60,14 +60,13 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
   const firstTask = projection.visibleTasks[0];
 
   useLayoutEffect(() => {
-    if (hidden || showingWorkbench || showingCreation || !firstTask) return;
-    if (selectedTaskId && selectedTaskIsVisible) return;
-    // 桌面进入工作区或切换任务范围后选中首项；窄屏保留列表与详情之间的返回操作。
+    if (hidden || showingWorkbench || showingCreation || !firstTask || hasDetail) return;
+    // 桌面首次进入且尚无可显示详情时选中首项；筛选外的已打开详情继续保留。
     if (window.matchMedia("(min-width: 901px)").matches) onTaskSelect(firstTask);
-  }, [firstTask, hidden, onTaskSelect, selectedTaskId, selectedTaskIsVisible, showingCreation, showingWorkbench]);
+  }, [firstTask, hasDetail, hidden, onTaskSelect, showingCreation, showingWorkbench]);
 
   useEffect(() => {
-    // Only the detail changes position; the mounted task list keeps its own scroll.
+    // Reset detail reading position; the list independently reveals its selected row.
     if (detailRef.current) detailRef.current.scrollTop = 0;
   }, [selectedTaskId]);
 

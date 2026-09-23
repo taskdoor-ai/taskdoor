@@ -21,7 +21,8 @@
 .task-detail-split .task-detail-path em { font-size: 11px; font-weight: 500; line-height: 16px; }
 .task-detail-split .task-detail-title-row { align-items: center; gap: 12px; }
 .task-detail-split .task-detail-title-row > .task-appearance-trigger { justify-items: start; }
-.task-detail-split .task-detail-title-row .task-icon.lg { width: 36px; height: 36px; border-radius: var(--ad-radius-control); }
+.task-detail-split .task-detail-title-row .task-icon.lg { width: 44px; height: 44px; border-radius: var(--ad-radius-card); }
+.task-detail-split .task-detail-title-row .task-icon.lg svg { width: 24px; height: 24px; }
 .task-detail-split .task-detail-title-row h1 { min-width: 0; flex: 1; margin: 0; }
 .task-detail-split .task-detail-title-input { min-height: 36px; max-height: 104px; font-size: 24px; line-height: 1.4; font-weight: 650; }
 .task-detail-split .task-detail-title-input[data-slot="textarea"] { display: block; margin: 0; padding: 0; }
@@ -184,13 +185,13 @@
 .task-progress-stage { display: inline-flex; min-width: 0; align-items: center; gap: 10px; line-height: 20px; }
 .task-progress-stage-heading { margin-right: 4px; color: var(--ad-ink); font-size: 13px; font-weight: 600; white-space: nowrap; }
 .task-progress-stage-label { color: var(--ad-ink-secondary); font-size: 13px; font-weight: 400; white-space: nowrap; }
-.task-progress-stage[data-size="regular"][data-progress-state="available"] .task-progress-stage-label { padding: 1px 7px; border-radius: 5px; background: color-mix(in srgb, #4f7df3 9%, var(--ad-surface)); color: var(--ad-route-ink); font-size: 12px; font-weight: 500; }
+.task-progress-stage[data-size="regular"][data-progress-state="available"] .task-progress-stage-label { padding: 1px 7px; border-radius: 5px; background: color-mix(in srgb, var(--ad-route) 9%, var(--ad-surface)); color: var(--ad-route-ink); font-size: 12px; font-weight: 500; }
 .task-progress-stage-track { display: inline-grid; flex: 0 0 auto; grid-template-columns: repeat(4, 18px); gap: 3px; align-items: center; }
 .task-progress-stage[data-size="regular"] .task-progress-stage-track { grid-template-columns: repeat(4, 22px); }
 .task-progress-stage-step { position: relative; appearance: none; min-width: 0; height: 16px; padding: 0; border: 0; background: transparent; cursor: help; }
 .task-progress-stage-step::before { position: absolute; inset: 50% 0 auto; height: 5px; border-radius: 2px; background: var(--ad-border-soft); content: ""; transform: translateY(-50%); }
-.task-progress-stage-step[data-filled="true"]::before { background: #4f7df3; }
-.task-progress-stage-step:hover::before { box-shadow: 0 0 0 2px color-mix(in srgb, #4f7df3 18%, transparent); }
+.task-progress-stage-step[data-filled="true"]::before { background: var(--ad-route); }
+.task-progress-stage-step:hover::before { box-shadow: 0 0 0 2px color-mix(in srgb, var(--ad-route) 18%, transparent); }
 .task-progress-stage-step:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 .task-progress-stage-tip-positioner { z-index: 120; }
 .task-progress-stage-tip { padding: 6px 9px; border-radius: 6px; background: var(--ad-ink); color: var(--ad-surface); box-shadow: var(--ad-shadow-float); font-size: 12px; font-weight: 500; line-height: 18px; white-space: nowrap; }

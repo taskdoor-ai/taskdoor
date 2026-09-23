@@ -9,21 +9,21 @@
 
 <text x="42" y="150" class="label">创建团队</text>
 <rect x="211" y="112" width="357" height="72" rx="8" class="node"/>
-<text x="389" y="142" class="body" text-anchor="middle">输入名称（1–40 字）</text>
+<text x="389" y="142" class="body" text-anchor="middle">填写称呼与团队名称（1–40 字）</text>
 <text x="389" y="168" class="small" text-anchor="middle">创建团队与管理员成员关系</text>
 <path d="M149 147 H196" class="line"/>
 
 <text x="42" y="265" class="label">通用邀请链接</text>
 <rect x="211" y="221" width="357" height="86" rx="8" class="node"/>
 <text x="389" y="252" class="body" text-anchor="middle">直接打开，或在团队进入页粘贴链接</text>
-<text x="389" y="279" class="small" text-anchor="middle">核对团队 → 主动确认 → 以成员身份加入</text>
+<text x="389" y="279" class="small" text-anchor="middle">核对团队并补称呼 → 确认 → 以成员身份加入</text>
 <text x="389" y="299" class="small" text-anchor="middle">可多人使用；重新生成后旧链接失效</text>
 <path d="M166 261 H196" class="line"/>
 
 <text x="42" y="386" class="label">邮箱定向邀请</text>
 <rect x="211" y="340" width="357" height="90" rx="8" class="node"/>
 <text x="389" y="372" class="body" text-anchor="middle">链接保留 token、受邀邮箱与指定角色</text>
-<text x="389" y="399" class="small" text-anchor="middle">邮箱一致且邀请有效 → 接受邀请</text>
+<text x="389" y="399" class="small" text-anchor="middle">邮箱一致且邀请有效 → 补称呼并接受邀请</text>
 <text x="389" y="420" class="small" text-anchor="middle">拒绝不建立成员关系</text>
 <path d="M166 382 H196" class="line"/>
 

@@ -9,7 +9,7 @@
     "build:toast": "node scripts/build-shared-toast.mjs",
     "prebuild": "npm run build:toast",
     "test": "tsx --test server/*.test.ts",
-    "test:lab": "node --import tsx --test server/testLabStore.test.ts server/testLabRunner.test.ts server/testLabHttp.test.ts server/testLabValidation.test.ts server/testLabUi.test.ts server/testLabManagement.test.ts server/testLabMarkdown.test.ts server/testLabSkillBundles.test.ts server/testLabScenarioCatalog.test.ts server/testLabWorkflows.test.ts server/testLabWorkflowReports.test.mjs",
+    "test:lab": "node --import tsx --test server/testLabStore.test.ts server/testLabRunner.test.ts server/testLabComparison.test.ts server/testLabCategories.test.ts server/testLabSkillPackage.test.ts server/testLabFreshCreation.test.ts server/testLabRunCenter.test.ts server/testLabHttp.test.ts server/testLabValidation.test.ts server/testLabUi.test.ts server/testLabManagement.test.ts server/testLabMarkdown.test.ts server/testLabSkillBundles.test.ts server/testLabScenarioCatalog.test.ts server/testLabWorkflows.test.ts server/testLabWorkflowReports.test.mjs",
     "build": "tsc -b && vite build",
     "design:check": "node scripts/design-check.mjs",
     "build:mcp": "vite build --config mcp/vite.config.ts && tsc -p mcp/tsconfig.json",

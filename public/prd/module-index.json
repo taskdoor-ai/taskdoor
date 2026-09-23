@@ -1,10 +1,11 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-09-21T10:12:14.681Z",
+  "generatedAt": "2026-09-23T16:50:32.719Z",
   "modules": [
     {
       "moduleId": "product-preview",
-      "title": "产品全貌预览",
+      "title": "产品界面预览",
+      "group": "产品概览",
       "summary": "以英文界面截图快速浏览产品全貌。",
       "source": "docs/prd/modules/00-product-preview.md",
       "url": "./index.html#product-preview",
@@ -12,7 +13,8 @@
     },
     {
       "moduleId": "product-lifecycle",
-      "title": "产品目标与生命周期",
+      "title": "产品目标与核心流程",
+      "group": "产品概览",
       "summary": "创建任务 → 任务协作 → 完成任务。",
       "source": "docs/prd/modules/01-product-lifecycle.md",
       "url": "./index.html#product-lifecycle",
@@ -31,13 +33,14 @@
         },
         {
           "id": "product-lifecycle-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "account-identity",
-      "title": "账号与身份",
+      "title": "账号与个人资料",
+      "group": "账号与团队",
       "summary": "注册登录、恢复访问和维护个人资料。",
       "source": "docs/prd/modules/02-account-identity.md",
       "url": "./index.html#account-identity",
@@ -56,13 +59,14 @@
         },
         {
           "id": "account-identity-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "team-onboarding",
-      "title": "首次进入与团队建立",
+      "title": "团队管理",
+      "group": "账号与团队",
       "summary": "创建团队或接受邀请，进入工作区。",
       "source": "docs/prd/modules/03-team-onboarding.md",
       "url": "./index.html#team-onboarding",
@@ -81,13 +85,14 @@
         },
         {
           "id": "team-onboarding-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "workspace-navigation",
-      "title": "工作区与全局导航",
+      "title": "工作区与导航",
+      "group": "账号与团队",
       "summary": "通过顶栏进入团队、通知、连接 AI 和设置。",
       "source": "docs/prd/modules/04-workspace-navigation.md",
       "url": "./index.html#workspace-navigation",
@@ -106,38 +111,40 @@
         },
         {
           "id": "workspace-navigation-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
-      "moduleId": "cli-connection",
-      "title": "TaskDoor CLI 连接",
-      "summary": "把任务上下文带到本地工具中继续工作。",
-      "source": "docs/prd/modules/05-cli-connection.md",
-      "url": "./index.html#cli-connection",
+      "moduleId": "member-collaboration",
+      "title": "成员、邀请与任务分工",
+      "group": "账号与团队",
+      "summary": "邮箱定向邀请加入团队，任务选人保存后生效，按责任域推荐人员。",
+      "source": "docs/prd/modules/09-member-collaboration.md",
+      "url": "./index.html#member-collaboration",
       "sections": [
         {
-          "id": "cli-connection-purpose",
+          "id": "member-collaboration-purpose",
           "title": "1. 目的"
         },
         {
-          "id": "cli-connection-boundary",
+          "id": "member-collaboration-boundary",
           "title": "2. 范围和边界"
         },
         {
-          "id": "cli-connection-detail",
+          "id": "member-collaboration-detail",
           "title": "3. 详细功能设计"
         },
         {
-          "id": "cli-connection-acceptance",
-          "title": "4. 验收标准"
+          "id": "member-collaboration-acceptance",
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "task-list",
       "title": "任务列表",
+      "group": "任务管理",
       "summary": "通过搜索、筛选和置顶找到任务。",
       "source": "docs/prd/modules/06-task-list.md",
       "url": "./index.html#task-list",
@@ -156,14 +163,15 @@
         },
         {
           "id": "task-list-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "task-creation",
-      "title": "任务创建与规划",
-      "summary": "参考历史任务拆解需求、识别责任并分配人员。",
+      "title": "任务创建",
+      "group": "任务管理",
+      "summary": "通过对话生成待确认方案，支持最多四层任务及按责任域推荐人员。",
       "source": "docs/prd/modules/07-task-creation.md",
       "url": "./index.html#task-creation",
       "sections": [
@@ -181,13 +189,14 @@
         },
         {
           "id": "task-creation-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "task-detail",
-      "title": "任务详情与维护",
+      "title": "任务详情",
+      "group": "任务管理",
       "summary": "围绕概览、讨论、文件、活动维护任务。",
       "source": "docs/prd/modules/08-task-detail.md",
       "url": "./index.html#task-detail",
@@ -206,89 +215,15 @@
         },
         {
           "id": "task-detail-acceptance",
-          "title": "4. 验收标准"
-        }
-      ]
-    },
-    {
-      "moduleId": "member-collaboration",
-      "title": "团队成员与协作邀请",
-      "summary": "邀请成员，分别确认团队身份与任务责任。",
-      "source": "docs/prd/modules/09-member-collaboration.md",
-      "url": "./index.html#member-collaboration",
-      "sections": [
-        {
-          "id": "member-collaboration-purpose",
-          "title": "1. 目的"
-        },
-        {
-          "id": "member-collaboration-boundary",
-          "title": "2. 范围和边界"
-        },
-        {
-          "id": "member-collaboration-detail",
-          "title": "3. 详细功能设计"
-        },
-        {
-          "id": "member-collaboration-acceptance",
-          "title": "4. 验收标准"
-        }
-      ]
-    },
-    {
-      "moduleId": "discussion-notifications-activity",
-      "title": "讨论、通知与活动记录",
-      "summary": "交流进展、处理提醒、追溯变更。",
-      "source": "docs/prd/modules/10-discussion-notifications-activity.md",
-      "url": "./index.html#discussion-notifications-activity",
-      "sections": [
-        {
-          "id": "discussion-notifications-activity-purpose",
-          "title": "1. 目的"
-        },
-        {
-          "id": "discussion-notifications-activity-boundary",
-          "title": "2. 范围和边界"
-        },
-        {
-          "id": "discussion-notifications-activity-detail",
-          "title": "3. 详细功能设计"
-        },
-        {
-          "id": "discussion-notifications-activity-acceptance",
-          "title": "4. 验收标准"
-        }
-      ]
-    },
-    {
-      "moduleId": "files-local-commits",
-      "title": "文件与本地提交闭环",
-      "summary": "管理任务文件，核对后提交成果。",
-      "source": "docs/prd/modules/11-files-local-commits.md",
-      "url": "./index.html#files-local-commits",
-      "sections": [
-        {
-          "id": "files-local-commits-purpose",
-          "title": "1. 目的"
-        },
-        {
-          "id": "files-local-commits-boundary",
-          "title": "2. 范围和边界"
-        },
-        {
-          "id": "files-local-commits-detail",
-          "title": "3. 详细功能设计"
-        },
-        {
-          "id": "files-local-commits-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "task-progress-completion",
-      "title": "任务推进与结果收口",
-      "summary": "参考 AI 分析推进任务，由人确认结果。",
+      "title": "任务进度与完成",
+      "group": "任务管理",
+      "summary": "分别展示任务整体进度和单条完成标准评估，由 AI 提供分析并由用户独立确认。",
       "source": "docs/prd/modules/12-task-progress-completion.md",
       "url": "./index.html#task-progress-completion",
       "sections": [
@@ -306,14 +241,93 @@
         },
         {
           "id": "task-progress-completion-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "discussion-notifications-activity",
+      "title": "讨论、通知与活动",
+      "group": "协作与连接",
+      "summary": "通过讨论协作、通知处理提醒，并在活动中追溯变更。",
+      "source": "docs/prd/modules/10-discussion-notifications-activity.md",
+      "url": "./index.html#discussion-notifications-activity",
+      "sections": [
+        {
+          "id": "discussion-notifications-activity-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "discussion-notifications-activity-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "discussion-notifications-activity-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "discussion-notifications-activity-acceptance",
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "files-local-commits",
+      "title": "文件与成果提交",
+      "group": "协作与连接",
+      "summary": "管理任务文件及版本，并核对后提交成果。",
+      "source": "docs/prd/modules/11-files-local-commits.md",
+      "url": "./index.html#files-local-commits",
+      "sections": [
+        {
+          "id": "files-local-commits-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "files-local-commits-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "files-local-commits-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "files-local-commits-acceptance",
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "cli-connection",
+      "title": "Agent 与 CLI 连接",
+      "group": "协作与连接",
+      "summary": "把任务上下文带到本地工具中继续工作。",
+      "source": "docs/prd/modules/05-cli-connection.md",
+      "url": "./index.html#cli-connection",
+      "sections": [
+        {
+          "id": "cli-connection-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "cli-connection-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "cli-connection-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "cli-connection-acceptance",
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "deletion-recovery-retention",
-      "title": "删除、恢复与数据保留",
-      "summary": "删除前核对影响，明确可恢复范围。",
+      "title": "删除与数据保留",
+      "group": "系统规则",
+      "summary": "负责人确认删除任务分支，文件区分删除与解除关联，本期不提供恢复。",
       "source": "docs/prd/modules/13-deletion-recovery-retention.md",
       "url": "./index.html#deletion-recovery-retention",
       "sections": [
@@ -331,14 +345,15 @@
         },
         {
           "id": "deletion-recovery-retention-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "membership-account-exit",
-      "title": "个人与团队生命周期结束",
-      "summary": "结束会话或成员关系，保留协作历史。",
+      "title": "成员退出与账号停用",
+      "group": "系统规则",
+      "summary": "退出不删任务，成员离开后清空当前人员关系并保留协作历史。",
       "source": "docs/prd/modules/14-membership-account-exit.md",
       "url": "./index.html#membership-account-exit",
       "sections": [
@@ -356,14 +371,15 @@
         },
         {
           "id": "membership-account-exit-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "permissions-errors-nfr",
-      "title": "统一权限、异常与非功能要求",
-      "summary": "统一权限、保存反馈和基本可用性。",
+      "title": "权限、异常与质量要求",
+      "group": "系统规则",
+      "summary": "统一术语、任务成员权限、最新写入规则及 Web／CLI 一致性。",
       "source": "docs/prd/modules/15-permissions-errors-nfr.md",
       "url": "./index.html#permissions-errors-nfr",
       "sections": [
@@ -381,13 +397,14 @@
         },
         {
           "id": "permissions-errors-nfr-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     },
     {
       "moduleId": "internationalization",
-      "title": "海外优先与多语言",
+      "title": "语言、翻译与时区",
+      "group": "系统规则",
       "summary": "默认英文，支持简体中文，保留业务原文。",
       "source": "docs/prd/modules/02-internationalization.md",
       "url": "./index.html#internationalization",
@@ -406,7 +423,7 @@
         },
         {
           "id": "internationalization-acceptance",
-          "title": "4. 验收标准"
+          "title": "4. 功能验收标准"
         }
       ]
     }

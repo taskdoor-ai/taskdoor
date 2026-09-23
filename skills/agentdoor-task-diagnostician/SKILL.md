@@ -7,6 +7,10 @@ description: 当用户核对任务为什么无法继续，或需要检查当前�
 
 只识别两类问题：**执行阻塞、决策冲突**。说明受影响的工作、具体依据和可采取的行动。
 
+## 当前产品版本与示例
+
+先读取 [当前 PRD 契约](../shared/current-prd-contract.md)，它替代旧快照中相冲突的业务语义；保留既有输出协议。遇到拆分、未知、版本修订或责任边界时，参考 [few-shot 正反例](examples/decision-pairs.md)。示例不是当前输入，不能复制其中的来源、人员、数值或结论。
+
 ## 规则依据
 
 业务依据为 PRD **6.6、7.5**，见[产品规则](references/product-rules.md)。先读取[共用规则](../shared/product-rules.md)及[证据与更新契约](../shared/evidence-and-updates.md)；输出按[字段契约](references/output-contract.md)组织。

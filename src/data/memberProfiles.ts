@@ -70,6 +70,7 @@ export type TeamMembership = {
 };
 
 export type TeamResponsibilityProfile = {
+  createdBy?: string;
   id: string;
   name: string;
   role: string;

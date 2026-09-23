@@ -94,10 +94,10 @@ export function AiToolSortableList({ order, onCommit, onBusyChange }: Props) {
     <span className="sr-only" id={instructionId}>拖动调整顺序。键盘按空格或回车拾取，用上下方向键移动，再次按空格或回车放下，Escape 取消。</span>
     <ul aria-label="AI 工具排序" className="ai-tool-sort-list" onLostPointerCapture={() => finish(false)} onPointerCancel={() => finish(false)} onPointerMove={move} onPointerUp={event => { if (session.current?.pointerId === event.pointerId) { event.preventDefault(); finish(isInside(event)); } }} ref={list}>
       {(draft ?? order).map((agent, index) => <li className={active === agent ? ghost ? "is-drag-placeholder" : "is-keyboard-picked" : ""} key={agent}>
-        <div className="ai-tool-menu-sort-row"><img alt="" draggable={false} src={agentIconUrls[agent]} /><span>{aiToolName(agent)}</span>{index === 0 && <small>默认</small>}</div>
+        <div className="ai-tool-menu-sort-row"><img alt="" draggable={false} data-agent-icon={agent} src={agentIconUrls[agent]} /><span>{aiToolName(agent)}</span>{index === 0 && <small>默认</small>}</div>
         <button aria-describedby={instructionId} aria-label={`拖动排序 ${aiToolName(agent)}`} aria-pressed={active === agent} className="ai-tool-drag-handle" onClick={event => { event.preventDefault(); event.stopPropagation(); }} onKeyDown={event => key(agent, event)} onPointerDown={event => pick(agent, event)} ref={element => { if (element) handles.current.set(agent, element); else handles.current.delete(agent); }} type="button"><GripVertical aria-hidden="true" size={16} /></button>
       </li>)}
-      {ghost && active && <li aria-hidden="true" className={`ai-tool-drag-ghost${ghost.outside ? " is-outside" : ""}`} style={{ transform: `translateY(${ghost.y}px)` }}><div className="ai-tool-menu-sort-row"><img alt="" src={agentIconUrls[active]} /><span>{aiToolName(active)}</span></div><GripVertical size={16} /></li>}
+      {ghost && active && <li aria-hidden="true" className={`ai-tool-drag-ghost${ghost.outside ? " is-outside" : ""}`} style={{ transform: `translateY(${ghost.y}px)` }}><div className="ai-tool-menu-sort-row"><img alt="" data-agent-icon={active} src={agentIconUrls[active]} /><span>{aiToolName(active)}</span></div><GripVertical size={16} /></li>}
     </ul>
     <span aria-live="polite" className="sr-only">{announcement}</span>
   </>;

@@ -5,9 +5,10 @@ import { createHash } from 'node:crypto';
 import type { SkillId,LabSkill, LabState } from '../../src/test-lab/types.ts';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const registry=JSON.parse(readFileSync(resolve(root,'skills/registry.json'),'utf8'));
-export const labSkills:LabSkill[]=registry.skills.map((s:any)=>({id:s.id,title:s.title,outputVersion:s.outputVersion}));
+export const labSkills:LabSkill[]=registry.skills.filter((s:any)=>!s.internal).map((s:any)=>({id:s.id,title:s.title,outputVersion:s.outputVersion}));
 export const hash=(value:string)=>createHash('sha256').update(value).digest('hex');
 export function loadSkill(id:SkillId, savedSnapshot?:string){
+  const registry=JSON.parse(readFileSync(resolve(root,'skills/registry.json'),'utf8'));
   const entry=registry.skills.find((s:any)=>s.id===id);if(!entry)throw new Error('未知 Skill');
   function workspaceSnapshot(){
     const files=new Set<string>();

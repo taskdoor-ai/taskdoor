@@ -1,3 +1,4 @@
+import { MAX_TEAM_MEMBERS, occupiedTeamSeats } from "./teamLimits";
 import type { PersonalCenterState, TeamAccessRole, TeamMembership, TeamResponsibilityProfile } from "../data/memberProfiles";
 import type { PersonOption } from "../data/sharedTypes";
 
@@ -53,6 +54,8 @@ export function createTeamEmailInvitation(state: PersonalCenterState, input: {
     return { state, membership: existing, person: personFromMembership(existing, known) };
   }
   const now = input.now ?? Date.now();
+  const alreadyReserved = existing?.status === "invited" && (!existing.emailInvitation || existing.emailInvitation.expiresAt > now);
+  if (!alreadyReserved && occupiedTeamSeats(team, now) >= MAX_TEAM_MEMBERS) throw new Error("团队人数已达 50 人上限");
   const id = existing?.id ?? `${team.id}-invite-${crypto.randomUUID()}`;
   const membership: TeamMembership = {
     ...existing, id, email, name: existing?.name ?? (name || undefined), memberId: existing?.memberId ?? known?.id ?? id,
@@ -84,6 +87,8 @@ export function acceptTeamEmailInvitation(state: PersonalCenterState, token: str
   if (normalizeInvitationEmail(identity.email) !== invitation.email) throw new Error("当前邮箱与受邀邮箱不符，请切换账号");
   if (invitation.status === "expired") throw new Error("邀请已过期，请联系管理员重新邀请");
   if (invitation.membership.status === "active") return state;
+  const team = state.teams.find(team => team.id === invitation.team.id)!;
+  if (occupiedTeamSeats(team, now) > MAX_TEAM_MEMBERS) throw new Error("团队人数已达 50 人上限");
   return { ...state, teams: state.teams.map(team => team.id === invitation.team.id ? {
     ...team, memberships: team.memberships.map(member => member.id === invitation.membership.id
       ? { ...member, status: "active", name: identity.name.trim(), responsibility: member.responsibility ?? "" } : member),

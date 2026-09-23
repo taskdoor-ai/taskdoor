@@ -1,3 +1,4 @@
+import { MAX_TEAM_MEMBERS, occupiedTeamSeats } from "../lib/teamLimits";
 import { useI18n } from "../i18n/I18nProvider";
 import { mockTeamName } from "../i18n/mockContent";
 import { useModuleCopy } from "../i18n/moduleMessages";
@@ -104,8 +105,11 @@ function MemberInvitationForm({ request, state, teamId, onClose }: { request: In
   const [role, setRole] = useState<TeamAccessRole>("member");
   const [error, setError] = useState("");
   const submitting = useRef(false);
+  const { locale } = useI18n();
   const normalizedEmail = normalizeInvitationEmail(email);
   const existing = state.teams.find(team => team.id === teamId)?.memberships.find(member => member.email.toLowerCase() === normalizedEmail);
+  const selectedTeam = state.teams.find(team => team.id === teamId);
+  const atCapacity = !existing && Boolean(selectedTeam && occupiedTeamSeats(selectedTeam) >= MAX_TEAM_MEMBERS);
   return <form className="member-invitation-form" noValidate onSubmit={event => {
     event.preventDefault();
     if (submitting.current || !invitations.canInvite || (existing && !request.onInvited)) return;
@@ -120,10 +124,11 @@ function MemberInvitationForm({ request, state, teamId, onClose }: { request: In
   }}>
     <label><span>{m('invitationName')}<small>{m('optional')}</small></span><Input aria-label={m('invitationName')} autoFocus={!request.name} autoComplete="off" maxLength={100} placeholder={m('teammateName')} value={name} onChange={event => { setName(event.target.value); setError(""); }} /></label>
     <label><span>{m('email')}</span><Input aria-label={m('email')} autoFocus={Boolean(request.name)} autoComplete="off" required type="email" placeholder="name@company.com" value={email} onChange={event => { setEmail(event.target.value); setError(""); }} aria-invalid={Boolean(error)} /></label>
-    {request.allowRoleSelection && <label><span>{m('role')}</span><Select value={role} onValueChange={value => setRole(value as TeamAccessRole)}><SelectTrigger aria-label={m('invitationRole')}><SelectValue>{role === "admin" ? m('administrator') : m('member')}</SelectValue></SelectTrigger><SelectContent alignItemWithTrigger={false}><SelectItem value="member">{m('member')}</SelectItem><SelectItem value="admin">{m('administrator')}</SelectItem></SelectContent></Select></label>}
+    {request.allowRoleSelection !== false && <label><span>{m('role')}</span><Select value={role} onValueChange={value => setRole(value as TeamAccessRole)}><SelectTrigger aria-label={m('invitationRole')}><SelectValue>{role === "admin" ? m('administrator') : m('member')}</SelectValue></SelectTrigger><SelectContent alignItemWithTrigger={false}><SelectItem value="member">{m('member')}</SelectItem><SelectItem value="admin">{m('administrator')}</SelectItem></SelectContent></Select></label>}
+    {atCapacity && <p role="status">{locale === "en" ? "Team limit reached: 50 members, including pending invitations." : "团队人数已达 50 人上限（含待接受邀请）。"}</p>}
     {existing && <p role="status">{request.onInvited ? m('existingMemberAvailable') : m('alreadyMember')}</p>}
     {!invitations.canInvite && <p role="status">{m('onlyAdminsInvite')}</p>}
     {error && <p role="alert">{m.text(error)}</p>}
-    <footer><Button type="button" variant="ghost" onClick={() => onClose()}>{m('cancel')}</Button><Button type="submit" disabled={!invitations.canInvite || !normalizedEmail || Boolean(existing && !request.onInvited)}>{existing && request.onInvited ? m('useExistingMember') : m('sendInvitation')}</Button></footer>
+    <footer><Button type="button" variant="ghost" onClick={() => onClose()}>{m('cancel')}</Button><Button type="submit" disabled={atCapacity || !invitations.canInvite || !normalizedEmail || Boolean(existing && !request.onInvited)}>{existing && request.onInvited ? m('useExistingMember') : m('sendInvitation')}</Button></footer>
   </form>;
 }

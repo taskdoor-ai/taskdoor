@@ -2,6 +2,21 @@ import type { Locale } from "./core";
 
 /** UI copy and legacy transition messages. Stored business values remain untouched. */
 export const onboardingEn = {
+  "Google 验证未完成，请重试。": "Google verification was not completed. Please try again.",
+  "该邮箱已有账号，请先使用原方式登录，再确认绑定 Google。": "This email already has an account. Sign in with your original method before linking Google.",
+  "你还没有加入任何团队": "You haven’t joined a team yet",
+  "设置你的称呼和团队信息，开始一起工作。": "Set up your name and team to start working together.",
+  "你的称呼": "Your name",
+  "密码（至少 8 位）": "Password (at least 8 characters)",
+  "邮箱验证码": "Email verification code",
+  "发送验证码": "Send code",
+  "正在发送…": "Sending…",
+  "验证并创建账号": "Verify and create account",
+  "正在验证并创建账号…": "Verifying and creating account…",
+  "请先获取当前邮箱的验证码。": "Request a code for this email first.",
+  "验证码已过期，请重新获取。": "This code has expired. Request a new code.",
+  "验证码不正确，请重试。": "Incorrect verification code. Please try again.",
+  "本地演示，未发送邮件。{email} 的验证码：{code}（10 分钟有效）": "Local preview, no email sent. Code for {email}: {code} (valid for 10 minutes)",
   "使用 Google 继续": "Continue with Google",
   "或使用邮箱": "or continue with email",
   "Google 登录暂不可用，请使用邮箱继续。": "Google sign-in is currently unavailable. Please continue with email.",

@@ -1,3 +1,8 @@
+import { migrateFreshCreation } from "./fresh-creation.ts";
+import { validatePackage } from "../../src/test-lab/skill-package.ts";
+import { addDecompositionCases } from "./decomposition-seeds.ts";
+import { addCoverageCases } from "./coverage-seeds.ts";
+import { addBenchmarkCases } from "./benchmark-seeds.ts";
 import { industrySeed, cleanLabLabel } from './industry-seeds.ts';
 import { existsSync, readFileSync, mkdirSync, writeFileSync, renameSync } from 'node:fs';
 import { dirname } from 'node:path';
@@ -52,6 +57,10 @@ function migrateState(raw:any,seed:LabState,hasFile:boolean):{state:LabState;cha
     state.libraryNamesVersion=1;changed=true;
   }
   changed=enrichScenarioCatalog(state.teams,state.cases)||changed;
+  changed=addBenchmarkCases(state)||changed;
+  changed=addCoverageCases(state)||changed;
+  changed=addDecompositionCases(state)||changed;
+  changed=migrateFreshCreation(state)||changed;
   for(const item of state?.cases??[])for(const step of item?.steps??[])for(const event of step?.events??[])if(event?.type==='evidence')changed=migrateTeam({tasks:[],evidence:[event.evidence]})||changed;
   for(const run of state?.runs??[]){
     changed=migrateTeam(run.teamSnapshot)||changed;
@@ -71,10 +80,12 @@ export function createLabStore(path:string, seed:LabState){
     get:()=>structuredClone(state),
     addSkillVersion(expectedRevision:number,input:z.input<typeof skillVersionInputSchema>){
       checkRevision(expectedRevision);const value=skillVersionInputSchema.parse(input);
+      const files=validatePackage(value.snapshot,value.skillId).map(f=>({...f,hash:hash(f.content)}));
       const versions=state.skillVersions??[];
+      if(value.baseVersionId&&!versions.some(v=>v.id===value.baseVersionId&&v.skillId===value.skillId))throw new Error('基于的版本不属于当前 Skill');
       if(versions.length>=100)throw new Error('最多保留 100 个 Skill 版本');
       if(versions.some(v=>v.skillId===value.skillId&&v.label===value.label))throw new Error('该 Skill 已有同名版本，请使用新的版本名称');
-      const version={...value,id:randomUUID(),hash:hash(value.snapshot),createdAt:new Date().toISOString()};
+      const version={...value,files,id:randomUUID(),hash:hash(value.snapshot),createdAt:new Date().toISOString()};
       persist({...state,revision:state.revision+1,skillVersions:[...versions,version]});return structuredClone(state);
     },
     setSkillDefault(expectedRevision:number,skillId:SkillId,versionId:string|null){
@@ -82,6 +93,18 @@ export function createLabStore(path:string, seed:LabState){
       if(versionId&&!state.skillVersions?.some(v=>v.id===versionId&&v.skillId===skillId))throw new Error('默认版本必须属于当前 Skill');
       const defaults={...state.skillDefaults};if(versionId)defaults[skillId]=versionId;else delete defaults[skillId];
       persist({...state,revision:state.revision+1,skillDefaults:defaults});return structuredClone(state);
+    },
+    saveCategory(expectedRevision:number,input:{name:string;description:string;previousName?:string}){
+      checkRevision(expectedRevision);
+      const value=z.object({name:z.string().trim().min(1).max(80),description:z.string().trim().max(1000),previousName:z.string().min(1).max(20000).optional()}).strict().parse(input);
+      const names=new Set([...(state.categories??[]).map(c=>c.name),...state.cases.map(c=>c.category)]);
+      if(value.previousName&&!names.has(value.previousName))throw new Error('原分类不存在，请刷新后重试');
+      if(value.name!==value.previousName&&names.has(value.name))throw new Error('该分类已存在，请选择编辑');
+      if(!value.previousName&&(state.categories?.length??0)>=100)throw new Error('最多保存 100 个自定义分类');
+      const categories=(state.categories??[]).filter(c=>c.name!==value.previousName);
+      categories.push({name:value.name,description:value.description});
+      const cases=state.cases.map(c=>value.previousName&&c.category===value.previousName&&value.name!==value.previousName?{...c,category:value.name,version:c.version+1}:c);
+      persist({...state,revision:state.revision+1,categories,cases});return structuredClone(state);
     },
     saveModels(expectedRevision:number,models:string[]){
       checkRevision(expectedRevision);const parsed=z.array(modelIdSchema).max(40).parse(models);

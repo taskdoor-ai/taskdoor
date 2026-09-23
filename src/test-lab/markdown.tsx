@@ -1,3 +1,4 @@
+import { serializePackage, validatePackage } from "./skill-package";
 import React, { useId, useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -45,7 +46,20 @@ export function DocumentView({ content, filename = '文档.md', onEdit, onOpenLi
 }
 
 export function SkillDocuments({ snapshot, selectedFile, onSelectFile, onChange, disabled, onEdit }: { snapshot: string; selectedFile: number; onSelectFile: (index: number) => void; onChange?: (snapshot: string) => void; disabled?: boolean; onEdit?: () => void }) {
+  const [newPath,setNewPath]=useState('');
+  const [fileError,setFileError]=useState('');
   const documents = splitSkillDocuments(snapshot);
+  const entry=documents.find(f=>/^skills\/[^/]+\/SKILL.md$/.test(f.path));
+  const skillId=entry?.path.split('/')[1];
+  function addFile(){
+    try{
+      if(!skillId)throw new Error('旧单文档版本请从工作区版本新建多文件包');
+      const path=`skills/${skillId}/${newPath.trim()}`;
+      const files=[...documents,{path,content:path.endsWith('.json')?'{}\n':'# 新文档\n'}];
+      const next=serializePackage(files);validatePackage(next,skillId);
+      onChange?.(next);onSelectFile(files.length-1);setNewPath('');setFileError('');
+    }catch(e){setFileError(e instanceof Error?e.message:'无法添加文件');}
+  }
   const index = Math.min(selectedFile, documents.length - 1);
   const document = documents[index];
   const id = useId();
@@ -60,6 +74,7 @@ export function SkillDocuments({ snapshot, selectedFile, onSelectFile, onChange,
   };
   return <section className="lab-skill-documents">
     <div className="lab-document-picker"><label htmlFor={id}>文件 <small>{documents.length} 份</small></label><select id={id} value={index} disabled={disabled} onChange={e => onSelectFile(Number(e.target.value))}>{documents.map((item, i) => <option key={i} value={i}>{item.path}</option>)}</select></div>
+    {onChange&&<><div className="lab-actions"><input aria-label="新文件路径" placeholder="references/few-shot.md" disabled={disabled} value={newPath} onChange={e=>setNewPath(e.target.value)}/><button type="button" disabled={disabled||!newPath.trim()} onClick={addFile}>新增文件</button><button type="button" disabled={disabled||document.path.endsWith('SKILL.md')} onClick={()=>{onChange(serializePackage(documents.filter((_,i)=>i!==index)));onSelectFile(0);}}>从草稿移除此文件</button></div><p className="lab-muted">文件路径相对当前 Skill 目录；脚本仅保存为文本，不在模型运行时执行。移除后请同步调整文档引用，保存才产生新版本。</p>{fileError&&<p role="alert">{fileError}</p>}</>}
     {onChange ? <MarkdownEditor key={document.path} label="文档正文" value={document.content} onChange={content => onChange(replaceSkillDocument(snapshot, index, content))} disabled={disabled} maxLength={300000} markdown={isMarkdownName(document.path)} /> : <DocumentView key={document.path} content={document.content} filename={document.path} onEdit={onEdit} onOpenLink={openReference} />}
   </section>;
 }

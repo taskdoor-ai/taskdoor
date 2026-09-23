@@ -82,7 +82,7 @@ test("从通知或父子关系打开本人筛选外任务时保留搜索、解�
   const html = await renderWorkspace({ query: "发布", selectedTaskId: "second", children: createElement("h1", {}, "整理调研记录详情") });
   assert.equal((html.match(/data-task-id=/g) ?? []).length, 1);
   assert.match(html, /整理调研记录详情/);
-  assert.match(html, /role="status">当前任务不在搜索或筛选结果中，筛选条件已保留。/);
+  assert.match(html, /role="status">This task is outside the search or filter results\. Your filters are preserved\./);
   assert.doesNotMatch(html, /aria-current="page"/);
 });
 
@@ -119,7 +119,7 @@ test("个人索引同时应用状态及标签多选，第二标签匹配不复�
   assert.doesNotMatch(html, /aria-label="制作中的任务"/);
   assert.match(html, /aria-label="未打标签中的任务"/);
   assert.match(html, /筛选前未发送的讨论草稿/);
-  assert.match(html, /当前任务不在搜索或筛选结果中，筛选条件已保留。/);
+  assert.match(html, /This task is outside the search or filter results\. Your filters are preserved\./);
   assert.equal(JSON.stringify({ nodes, filters, tagDefinitions }), snapshot);
 });
 
@@ -130,7 +130,7 @@ test("仅筛未打标签仍能打开原详情，空筛选不影响我的工作�
   assert.deepEqual([...untaggedOnly.matchAll(/data-task-id="([^"]+)"/g)].map((match) => match[1]), ["second"]);
   assert.match(untaggedOnly, /aria-label="未打标签中的任务"/);
   assert.match(untaggedOnly, /保留的原详情草稿/);
-  assert.match(untaggedOnly, /当前任务不在搜索或筛选结果中，筛选条件已保留。/);
+  assert.match(untaggedOnly, /This task is outside the search or filter results\. Your filters are preserved\./);
 
   const home = await renderWorkspace({ filters: { ...filters, tags: ["不存在"], includeUntagged: false }, showingWorkbench: true, selectedTaskId: first.id, children: detail });
   assert.doesNotMatch(home, /data-task-id=/);
@@ -173,7 +173,7 @@ test("通知或前置仍可打开别人原详情，不展示个人列表范围�
   assert.equal((html.match(/data-task-id=/g) ?? []).length, 1);
   assert.match(html, /他人的前置交付原详情/);
   assert.doesNotMatch(html, /当前任务不在我的任务列表中|task-workspace-filter-note/);
-  assert.doesNotMatch(html, /筛选条件已保留|data-task-id="outside"|aria-current="page"/);
+  assert.doesNotMatch(html, /Your filters are preserved|data-task-id="outside"|aria-current="page"/);
 });
 
 test("没有本人任务时使用个人空态，不把其他成员任务当作被筛选隐藏", async () => {

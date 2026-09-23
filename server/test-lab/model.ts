@@ -10,7 +10,7 @@ export async function callModel(options:ModelOptions,instructions:string,input:u
   const timeout=setTimeout(abort,options.timeoutMs);
   try{
     const response=await transport(endpoint,{method:'POST',redirect:'error',headers:{'Content-Type':'application/json',Authorization:`Bearer ${options.apiKey}`},signal:controller.signal,
-      body:JSON.stringify({model:options.model,instructions,input:[{role:'user',content:JSON.stringify(input)}],max_output_tokens:options.maxOutputTokens,reasoning:{effort:'medium'},store:false,text:{format:{type:'json_object'},verbosity:'low'}})});
+      body:JSON.stringify({model:options.model,instructions,input:[{role:'user',content:'请按约定的结构返回 JSON。\n'+JSON.stringify(input)}],max_output_tokens:options.maxOutputTokens,reasoning:{effort:'medium'},store:false,text:{format:{type:'json_object'},verbosity:'low'}})});
     if([401,403].includes(response.status))throw new Error('模型服务认证失败，请检查服务端 Key 与模型权限');
     if(response.status===429)throw new Error('模型服务限流或额度不足；本次没有自动重试');
     if(!response.ok)throw new Error(`模型服务返回 HTTP ${response.status}；已隐藏上游错误正文`);

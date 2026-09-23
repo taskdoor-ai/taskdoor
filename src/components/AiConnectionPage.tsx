@@ -10,6 +10,7 @@ import { CodeBlock, CodeBlockCode, CodeBlockGroup } from "./ui/code-block";
 import { RippleBackground } from "./ui/interactive-ripple-background";
 import { GlowCard } from "./ui/spotlight-card";
 import { agentIconUrls } from "../data/agentIcons";
+import { aiToolName } from "../lib/aiTools";
 
 const setupCommand = "npm i -g @taskdoor/cli\ntaskdoor login";
 const agents = ["ChatGPT", "Claude Code", "WorkBuddy", "Cursor"] as const;
@@ -49,6 +50,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
   const [copied, setCopied] = useState(false);
   const [copiedScenario, setCopiedScenario] = useState<string | null>(null);
   const selectedConnection = connectionHistory[agent];
+  const agentName = aiToolName(agent);
   const copyCommand = async () => {
     await navigator.clipboard.writeText(setupCommand);
     setCopied(true);
@@ -64,10 +66,10 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
     {!embedded && <RippleBackground />}
     {!embedded && onBack && <Button className="connect-v2-back" onClick={onBack} type="button" variant="ghost"><ArrowLeft aria-hidden="true" size={16} />{ui("返回")}</Button>}
     <header className="connect-v2-hero">
-      <div className="connect-v2-logo-pair" aria-label={ui("TaskDoor 连接 {0}", {0: agent})}>
+      <div className="connect-v2-logo-pair" aria-label={ui("TaskDoor 连接 {0}", {0: agentName})}>
         <span className="connect-v2-agentdoor-logo"><BrandMark /></span>
         <span className="connect-v2-product-logo">
-          <img alt={`${agent} Logo`} src={agentIcons[agent]} />
+          <img alt={`${agentName} Logo`} data-agent-icon={agent} src={agentIcons[agent]} />
         </span>
       </div>
       <p>TaskDoor for local agents</p>
@@ -79,7 +81,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
       <Tabs.Root onValueChange={(value) => setAgent(value as typeof agent)} value={agent}>
         <Tabs.List aria-label={ui("选择 Agent")} className="connect-v2-tabs">
           {agents.map((item) => <Tabs.Trigger key={item} value={item}>
-            <img alt="" src={agentIcons[item]} /><span>{item}</span>
+            <img alt="" data-agent-icon={item} src={agentIcons[item]} /><span>{aiToolName(item)}</span>
             {connectionHistory[item] && <i aria-label={ui("已连接")} className="connect-v2-tab-connected" title={ui("已连接")} />}
           </Tabs.Trigger>)}
         </Tabs.List>
@@ -101,8 +103,8 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
       <div className="connect-v2-permission">
         <p><Check size={13} />{ui("登录完成后选择团队工作空间；你决定同步哪些成果，所有操作遵循当前用户权限。")}</p>
         {selectedConnection && Number.isFinite(Date.parse(selectedConnection))
-          ? <p className="connect-v2-last-connected"><i aria-hidden="true" />{ui("最近连接")}{agent} · {formatConnectionTime(selectedConnection, locale)}</p>
-          : <p className="connect-v2-last-connected is-disconnected"><i aria-hidden="true" />{agent}{ui("· 未连接")}</p>}
+          ? <p className="connect-v2-last-connected"><i aria-hidden="true" />{ui("最近连接")}{agentName} · {formatConnectionTime(selectedConnection, locale)}</p>
+          : <p className="connect-v2-last-connected is-disconnected"><i aria-hidden="true" />{agentName}{ui("· 未连接")}</p>}
       </div>
     </section>
 
