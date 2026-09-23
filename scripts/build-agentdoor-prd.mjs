@@ -9,6 +9,7 @@ const outputRoot = path.join(projectRoot, "public/prd");
 const requiredMetadata = [
   "module_id",
   "title",
+  "group",
   "version",
   "status",
   "last_change",
@@ -18,7 +19,7 @@ const expectedHeadings = [
   "1. 目的",
   "2. 范围和边界",
   "3. 详细功能设计",
-  "4. 验收标准",
+  "4. 功能验收标准",
 ];
 const sectionSuffixes = ["purpose", "boundary", "detail", "acceptance"];
 
@@ -52,7 +53,7 @@ export function validateModule(module) {
   }
 
   const headings = [...module.body.matchAll(/^## (.+)$/gm)].map(
-    (match) => match[1],
+    (match) => match[1] === "4. 验收标准" ? "4. 功能验收标准" : match[1],
   );
   if (JSON.stringify(headings) !== JSON.stringify(expectedHeadings)) {
     throw new Error(`${module.filePath}: invalid module headings`);
@@ -116,6 +117,8 @@ function renderMarkdown(source) {
       continue;
     }
     if (line.includes("|") && isTableDivider(lines[index + 1] ?? "")) {
+      const firstHeader = line.trim().replace(/^\||\|$/g, "").split("|")[0]?.trim() ?? "";
+      const tableClass = firstHeader.endsWith("步骤") ? ' class="step-table"' : "";
       const rows = [`<thead><tr>${tableCells(line, "th")}</tr></thead>`];
       index += 2;
       const bodyRows = [];
@@ -124,7 +127,7 @@ function renderMarkdown(source) {
         index += 1;
       }
       rows.push(`<tbody>${bodyRows.join("")}</tbody>`);
-      html.push(`<table>${rows.join("")}</table>`);
+      html.push(`<table${tableClass}>${rows.join("")}</table>`);
       continue;
     }
     if (/^[-*]\s+/.test(line)) {
@@ -176,7 +179,7 @@ function plainText(markdown) {
 
 function moduleLinks(indexBody) {
   return [...indexBody.matchAll(/\[[^\]]+\]\((modules\/[^)]+\.md)\)/g)].map(
-    (match) => match[1],
+    (match) => match[1] === "4. 验收标准" ? "4. 功能验收标准" : match[1],
   );
 }
 
@@ -235,7 +238,9 @@ async function inlineFigures(body, modulePath) {
 }
 
 function wrapTables(html) {
-  return html.replaceAll("<table>", '<div class="table-wrap"><table>').replaceAll("</table>", "</table></div>");
+  return html
+    .replace(/<table\b[^>]*>/g, (tableTag) => `<div class="table-wrap">${tableTag}`)
+    .replaceAll("</table>", "</table></div>");
 }
 
 function sectionIndex(module) {
@@ -247,11 +252,23 @@ function sectionIndex(module) {
 }
 
 function renderShell({ title, version, modules, changelogHtml, generatedAt }) {
-  const navigation = modules
-    .map(
-      (module, index) =>
-        `<a class="nav-link${index === 0 ? " is-active" : ""}" href="#${module.metadata.module_id}" data-module-link="${module.metadata.module_id}"><span>${String(index + 1).padStart(2, "0")}</span>${escapeHtml(module.metadata.title)}</a>`,
-    )
+  const navigationGroups = [];
+  modules.forEach((module, index) => {
+    const name = module.metadata.group || "文档";
+    const lastGroup = navigationGroups.at(-1);
+    const group = lastGroup?.name === name
+      ? lastGroup
+      : (() => {
+          const created = { name, links: [] };
+          navigationGroups.push(created);
+          return created;
+        })();
+    group.links.push(
+      `<a class="nav-link${index === 0 ? " is-active" : ""}" href="#${module.metadata.module_id}" data-module-link="${module.metadata.module_id}"><span>${String(index + 1).padStart(2, "0")}</span>${escapeHtml(module.metadata.title)}</a>`,
+    );
+  });
+  const navigation = navigationGroups
+    .map(({ name, links }) => `<section class="nav-group"><div class="nav-group-title">${escapeHtml(name)}</div>${links.join("")}</section>`)
     .join("");
   const articles = modules
     .map(
@@ -275,7 +292,7 @@ function renderShell({ title, version, modules, changelogHtml, generatedAt }) {
   <meta name="description" content="TaskDoor 产品需求文档">
   <title>${escapeHtml(title)}</title>
   <style>
-    :root{color-scheme:light;--ink:#222838;--muted:#687286;--line:#e3e6ed;--soft:#f5f6f9;--accent:#5b5ee6;--accent-soft:#eeeeff;--paper:#fff;--sidebar:290px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);padding:32px 24px;background:#fafafd;border-right:1px solid var(--line);overflow:auto;z-index:10}.brand{display:flex;align-items:center;gap:10px;margin-bottom:22px;font-size:17px;font-weight:760}.brand-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--ink);color:#fff}.search-wrap{position:relative;display:block}.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none}#prd-search{display:block;width:100%;height:42px;padding:0 12px 0 40px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);font:inherit;outline:none}#prd-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.search-count{min-height:24px;margin:7px 2px 18px;color:var(--muted);font-size:13px}.nav-label{margin:18px 8px 8px;color:#9aa1af;font-size:11px;font-weight:750;letter-spacing:.12em}.nav-link{display:flex;gap:10px;align-items:center;margin:3px 0;padding:9px 10px;border-radius:9px;color:#4b5568;text-decoration:none}.nav-link span{color:#a1a8b5;font-size:12px}.nav-link:hover,.nav-link.is-active{background:var(--accent-soft);color:#4245bd}.sidebar-actions{display:grid;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}button,.sidebar-actions a{border:0;background:none;color:inherit;font:inherit;cursor:pointer}.sidebar-actions a,.sidebar-actions button{padding:8px 10px;border-radius:8px;text-align:left;text-decoration:none}.sidebar-actions a:hover,.sidebar-actions button:hover{background:var(--soft)}.page{margin-left:var(--sidebar)}.document-header{padding:74px clamp(28px,7vw,100px) 56px;border-bottom:1px solid var(--line);background:linear-gradient(140deg,#fbfbff 0%,#fff 60%)}.document-header h1{max-width:760px;margin:10px 0 12px;font-size:clamp(38px,6vw,66px);line-height:1.08;letter-spacing:-.045em}.document-header p{max-width:650px;margin:0;color:var(--muted);font-size:18px}.meta{color:var(--accent);font-size:13px;font-weight:720;letter-spacing:.08em;text-transform:uppercase}.content{width:min(900px,calc(100% - 56px));margin:0 auto;padding:18px 0 100px}article{padding:72px 0 40px;border-bottom:1px solid var(--line);scroll-margin-top:22px}article[hidden]{display:none}.module-header{display:flex;justify-content:space-between;gap:28px;align-items:flex-start;margin-bottom:44px}.module-header h1{margin:5px 0 5px;font-size:38px;line-height:1.2}.eyebrow{margin:0;color:var(--accent);font-size:12px;font-weight:750;letter-spacing:.09em;text-transform:uppercase}.summary{margin:0;color:var(--muted);font-size:18px}.copy-link{flex:none;margin-top:25px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;color:var(--muted)}.copy-link:hover{border-color:#bfc4d0;color:var(--ink)}h2{margin:54px 0 16px;font-size:27px;line-height:1.3;scroll-margin-top:24px}h3{margin:36px 0 12px;font-size:21px;scroll-margin-top:24px}p{margin:12px 0}strong{font-weight:720}ul,ol{padding-left:24px}li+li{margin-top:7px}figure{margin:32px 0;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--soft)}figure img{display:block;width:100%;height:auto;border-radius:10px}figcaption{padding:11px 5px 3px;color:var(--muted);font-size:14px}.table-wrap{margin:22px 0;overflow-x:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;min-width:720px;border-collapse:collapse;font-size:14px}th,td{padding:13px 15px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:var(--soft);font-weight:720}tr:last-child td{border-bottom:0}.changelog{padding:70px 0}.changelog>h1{font-size:34px}.empty{display:none;padding:70px 0;text-align:center;color:var(--muted)}.empty.is-visible{display:block}.mobile-bar{display:none}.toast{position:fixed;right:22px;bottom:22px;padding:10px 15px;border-radius:9px;background:var(--ink);color:#fff;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}.toast.is-visible{opacity:1;transform:none}
+    :root{color-scheme:light;--ink:#222838;--muted:#687286;--line:#e3e6ed;--soft:#f5f6f9;--accent:#5b5ee6;--accent-soft:#eeeeff;--paper:#fff;--sidebar:290px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);padding:32px 24px;background:#fafafd;border-right:1px solid var(--line);overflow:auto;z-index:10}.brand{display:flex;align-items:center;gap:10px;margin-bottom:22px;font-size:17px;font-weight:760}.brand-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--ink);color:#fff}.search-wrap{position:relative;display:block}.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none}#prd-search{display:block;width:100%;height:42px;padding:0 12px 0 40px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);font:inherit;outline:none}#prd-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.search-count{min-height:24px;margin:7px 2px 14px;color:var(--muted);font-size:13px}.nav-group+.nav-group{margin-top:16px}.nav-group-title{margin:0 10px 6px;color:#9299a8;font-size:11px;font-weight:760;letter-spacing:.08em}.nav-link{display:flex;gap:10px;align-items:center;margin:3px 0;padding:8px 10px;border-radius:9px;color:#4b5568;text-decoration:none}.nav-link span{color:#a1a8b5;font-size:12px}.nav-link:hover,.nav-link.is-active{background:var(--accent-soft);color:#4245bd}.sidebar-actions{display:grid;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}button,.sidebar-actions a{border:0;background:none;color:inherit;font:inherit;cursor:pointer}.sidebar-actions a,.sidebar-actions button{padding:8px 10px;border-radius:8px;text-align:left;text-decoration:none}.sidebar-actions a:hover,.sidebar-actions button:hover{background:var(--soft)}.page{margin-left:var(--sidebar)}.document-header{padding:74px clamp(28px,7vw,100px) 56px;border-bottom:1px solid var(--line);background:linear-gradient(140deg,#fbfbff 0%,#fff 60%)}.document-header h1{max-width:760px;margin:10px 0 12px;font-size:clamp(38px,6vw,66px);line-height:1.08;letter-spacing:-.045em}.document-header p{max-width:650px;margin:0;color:var(--muted);font-size:18px}.meta{color:var(--accent);font-size:13px;font-weight:720;letter-spacing:.08em;text-transform:uppercase}.content{width:min(900px,calc(100% - 56px));margin:0 auto;padding:18px 0 100px}article{padding:72px 0 40px;border-bottom:1px solid var(--line);scroll-margin-top:22px}article[hidden]{display:none}.module-header{display:flex;justify-content:space-between;gap:28px;align-items:flex-start;margin-bottom:44px}.module-header h1{margin:5px 0 5px;font-size:38px;line-height:1.2}.eyebrow{margin:0;color:var(--accent);font-size:12px;font-weight:750;letter-spacing:.09em;text-transform:uppercase}.summary{margin:0;color:var(--muted);font-size:18px}.copy-link{flex:none;margin-top:25px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;color:var(--muted)}.copy-link:hover{border-color:#bfc4d0;color:var(--ink)}h2{margin:54px 0 16px;font-size:27px;line-height:1.3;scroll-margin-top:24px}h3{margin:36px 0 12px;font-size:21px;scroll-margin-top:24px}p{margin:12px 0}strong{font-weight:720}ul,ol{padding-left:24px}li+li{margin-top:7px}figure{margin:32px 0;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--soft)}figure img{display:block;width:100%;height:auto;border-radius:10px}figcaption{padding:11px 5px 3px;color:var(--muted);font-size:14px}.table-wrap{max-width:100%;margin:22px 0;overflow-x:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;min-width:720px;border-collapse:collapse;font-size:14px}th,td{padding:13px 15px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:var(--soft);font-weight:720}tr:last-child td{border-bottom:0}.step-table{table-layout:fixed;min-width:680px}.step-table th,.step-table td{overflow-wrap:anywhere;word-break:break-word}.step-table th:first-child,.step-table td:first-child{width:160px}.changelog{padding:70px 0}.changelog>h1{font-size:34px}.empty{display:none;padding:70px 0;text-align:center;color:var(--muted)}.empty.is-visible{display:block}.mobile-bar{display:none}.toast{position:fixed;right:22px;bottom:22px;padding:10px 15px;border-radius:9px;background:var(--ink);color:#fff;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}.toast.is-visible{opacity:1;transform:none}
     .preview-gallery{padding-top:32px}.preview-gallery figure{padding:0;margin:0 0 28px;overflow:hidden;background:#fff;border-radius:12px}.preview-gallery figure img{border-radius:0}
     .gallery-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}.gallery-groups,.gallery-paging{display:flex;gap:6px;align-items:center}.gallery-controls button{padding:7px 12px;border-radius:8px;color:var(--muted)}.gallery-controls button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:650}.gallery-controls button:disabled{opacity:.3;cursor:default}.gallery-counter{font-size:12px;color:var(--muted);min-width:45px;text-align:center}.gallery-thumbs{display:flex;gap:10px;overflow-x:auto;padding:5px 3px 12px;margin-top:14px}.gallery-thumb{flex:0 0 128px;padding:3px;border:2px solid transparent;border-radius:8px;opacity:.65;transition:opacity .15s,border-color .15s}.gallery-thumb img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;border-radius:4px}.gallery-thumb[aria-pressed="true"]{border-color:var(--accent);opacity:1}.gallery-thumb:hover{opacity:1}.preview-gallery button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.preview-gallery.is-interactive figure{margin:0}.preview-gallery figure[hidden],.gallery-thumb[hidden]{display:none}@media print{.gallery-controls,.gallery-thumbs{display:none!important}.preview-gallery figure[hidden]{display:block!important}.preview-gallery.is-interactive figure{margin-bottom:28px}}
     .preview-gallery .gallery-caption{padding:12px 16px;margin:0;min-height:48px;background:#fafbfe;border-top:1px solid var(--line);font-size:14px;line-height:1.6;color:#59647b}
@@ -289,13 +306,12 @@ function renderShell({ title, version, modules, changelogHtml, generatedAt }) {
     <div class="brand"><span class="brand-mark">T</span>TaskDoor PRD</div>
     <label class="search-wrap"><svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input id="prd-search" type="search" aria-label="搜索模块或需求" placeholder="搜索模块或需求" autocomplete="off"></label>
     <div id="search-count" class="search-count">${modules.length} 个模块</div>
-    <div class="nav-label">模块</div>
     <nav>${navigation}</nav>
     <div class="sidebar-actions"><a href="#changelog">需求变更日志</a><button id="print-prd" type="button">打印 / 导出 PDF</button></div>
   </aside>
   <div class="mobile-bar"><strong>TaskDoor PRD</strong><button id="toggle-nav" type="button" aria-expanded="false">目录</button></div>
   <main class="page">
-    <header class="document-header"><div class="meta">Version ${escapeHtml(version)} · ${escapeHtml(generatedAt.slice(0,10))}</div><h1>${escapeHtml(title)}</h1><p>供团队成员开发与验收使用：功能流程、页面示例与验收标准。</p></header>
+    <header class="document-header"><div class="meta">Version ${escapeHtml(version)} · ${escapeHtml(generatedAt.slice(0,10))}</div><h1>${escapeHtml(title)}</h1><p>供团队成员开发与验收使用：功能流程、页面示例与功能验收标准。</p></header>
     <div class="content"><div id="empty-state" class="empty">没有找到匹配的模块，请更换关键词。</div>${articles}<section id="changelog" class="changelog">${changelogHtml}</section></div>
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite">链接已复制</div>
@@ -368,6 +384,26 @@ export async function build() {
     modules.push(module);
   }
 
+  // Resolve source-relative links for the standalone generated reading page.
+  const moduleTargets = new Map(modules.map((module) => [module.filePath, module.metadata.module_id]));
+  const referenceOutputs = new Map();
+  for (const module of modules) {
+    const references = [...module.html.matchAll(/href="([^"#]+\.md)"/g)];
+    for (const [, reference] of references) {
+      const target = path.resolve(path.dirname(module.filePath), reference);
+      const moduleId = moduleTargets.get(target);
+      if (moduleId) {
+        module.html = module.html.replaceAll(`href="${reference}"`, `href="#${moduleId}"`);
+      } else if (target.startsWith(`${path.join(prdRoot, "references")}${path.sep}`)) {
+        const filename = `${path.basename(target, ".md")}.html`;
+        const source = await readFile(target, "utf8");
+        const title = source.match(/^# (.+)$/m)?.[1] || path.basename(target, ".md");
+        referenceOutputs.set(filename, { source, title });
+        module.html = module.html.replaceAll(`href="${reference}"`, `href="./references/${filename}"`);
+      }
+    }
+  }
+
   const changelogSource = await readFile(path.join(prdRoot, "CHANGELOG.md"), "utf8");
   for (const module of modules) {
     const changePattern = new RegExp(
@@ -390,6 +426,7 @@ export async function build() {
     modules: modules.map((module) => ({
       moduleId: module.metadata.module_id,
       title: module.metadata.title,
+      group: module.metadata.group,
       summary: module.metadata.summary,
       source: path.posix.join("docs/prd", module.relativePath),
       url: `./index.html#${module.metadata.module_id}`,
@@ -405,6 +442,19 @@ export async function build() {
       `${JSON.stringify(moduleIndex, null, 2)}\n`,
     ),
   ]);
+  if (referenceOutputs.size) {
+    await mkdir(path.join(outputRoot, "references"), { recursive: true });
+    for (const [filename, { source, title: referenceTitle }] of referenceOutputs) {
+      const referenceModule = {
+        metadata: { module_id: "reference", title: referenceTitle, version, summary: "功能校验参考" },
+        body: source,
+        html: '<p><a href="../index.html#account-identity">返回账号与个人资料模块</a></p>' + wrapTables(renderMarkdown(source)),
+      };
+      await writeFile(path.join(outputRoot, "references", filename), renderShell({
+        title: referenceTitle, version, modules: [referenceModule], changelogHtml: "", generatedAt,
+      }));
+    }
+  }
   console.log(`Built ${modules.length} PRD module(s) in public/prd/`);
 }
 

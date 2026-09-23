@@ -1,3 +1,4 @@
+import { mockWorkspaceEmail } from "./lib/mockWorkspaceAccount";
 import { applyCriterionReviewMocks } from "./data/taskCriterionReviewMocks";
 import { confirmTaskCriterion } from "./lib/taskCriterionReview";
 import { buildCreatedMockCatalog } from "./i18n/createdMockCatalog";
@@ -60,7 +61,8 @@ import { buildPersonalWorkbenchModel } from "./lib/personalWorkbench";
 import { buildPersonalWorkbenchAiConnectionRequest } from "./lib/personalWorkbenchAiConnection";
 import { Button } from "./components/ui/button";
 import { toast } from "./components/ui/toast";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from "./components/ui/dialog";
+import { TaskDeleteDialog } from "./components/TaskDeleteDialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./components/ui/dialog";
 import { Input } from "./components/ui/input";
 
 import { readWorkspaceSession, saveWorkspaceSession, signOutWorkspace } from "./lib/workspaceSession";
@@ -166,6 +168,7 @@ function App() {
   const ui = useGlobalUi();
   const [workspaceSession] = useState(readWorkspaceSession);
   const currentUserId = workspaceSession?.userId ?? "周岚";
+  const showDemoData = !workspaceSession || workspaceSession.email === mockWorkspaceEmail;
   const [, refreshCollaboration] = useState(0);
   useEffect(() => {
     const refresh = () => refreshCollaboration(value => value + 1);
@@ -242,11 +245,11 @@ function App() {
   };
   const [personalTagLoadError, setPersonalTagLoadError] = useState("");
   const [tagDefinitions, setTagDefinitions] = useState<TagDefinition[]>(() => {
-    try { return loadPersonalTags(localStorage, currentUserId, workspaceSession ? [] : initialScenarioState.tags); }
-    catch { return workspaceSession ? [] : initialScenarioState.tags; }
+    try { return loadPersonalTags(localStorage, currentUserId, showDemoData ? initialScenarioState.tags : []); }
+    catch { return showDemoData ? initialScenarioState.tags : []; }
   });
   useEffect(() => {
-    try { loadPersonalTags(localStorage, currentUserId, workspaceSession ? [] : initialScenarioState.tags); }
+    try { loadPersonalTags(localStorage, currentUserId, showDemoData ? initialScenarioState.tags : []); }
     catch { setPersonalTagLoadError("个人标签无法读取，暂时显示初始列表。请刷新后重试，原记录已保留。"); }
   }, [initialScenarioState]);
   const savePersonalTags = (tags: TagDefinition[]) => {
@@ -300,7 +303,6 @@ function App() {
   const [subtaskDeleteError, setSubtaskDeleteError] = useState("");
   const deletingSubtask = useRef(false);
   const subtaskDeleteReturnFocus = useRef<HTMLElement | null>(null);
-  const subtaskDeleteCancel = useRef<HTMLButtonElement>(null);
   const subtaskDeletion = useMemo(() => {
     if (!subtaskDeleteTarget) return { preview: null, error: "" };
     try { return { preview: getSubtaskDeletionPreview(workspaceNodes, subtaskDeleteTarget.parentTaskId, subtaskDeleteTarget.taskId), error: "" }; }
@@ -309,7 +311,6 @@ function App() {
   const [taskDeleteTarget, setTaskDeleteTarget] = useState<{ taskId: string; signature: string } | null>(null);
   const [taskDeleteError, setTaskDeleteError] = useState("");
   const deletingTask = useRef(false);
-  const taskDeleteCancel = useRef<HTMLButtonElement>(null);
   const taskDeletion = useMemo(() => {
     if (!taskDeleteTarget) return { preview: null, error: "" };
     try { return { preview: getTaskDeletionPreview(workspaceNodes, taskDeleteTarget.taskId), error: "" }; }
@@ -1063,8 +1064,8 @@ function App() {
       <WorkspaceTopbar
         activeTeamId={activeTeamId}
         onConnectAi={() => setGlobalAiConnectionOpen(true)}
-        onSignOut={workspaceSession ? signOutWorkspace : undefined}
-        showDemoNotifications={!workspaceSession}
+        onSignOut={signOutWorkspace}
+        showDemoNotifications={showDemoData}
         onOpenNotificationTask={(taskId) => {
           setTaskQuery("");
           setTaskFilters(createInitialTaskListFilters(currentUserId));
@@ -1220,36 +1221,24 @@ function App() {
           <div className="global-ai-guide-body"><AiConnectionPage embedded /></div>
         </DialogContent>
       </Dialog>
-      <Dialog onOpenChange={(open) => { if (!open) { setSubtaskDeleteTarget(null); setSubtaskDeleteError(""); } }} open={Boolean(subtaskDeleteTarget)}>
-        <DialogContent className="sm:max-w-md" finalFocus={() => subtaskDeleteReturnFocus.current?.isConnected ? subtaskDeleteReturnFocus.current : document.getElementById(`task-subtasks-${selectedTaskId}`) ?? false} initialFocus={subtaskDeleteCancel}>
-          <DialogTitle>删除子任务？</DialogTitle>
-          <DialogDescription>{subtaskDeletion.preview
-            ? `「${subtaskDeletion.preview.task.name}」${subtaskDeletion.preview.descendantCount > 0 ? `及其 ${subtaskDeletion.preview.descendantCount} 个下级任务` : ""}将被永久删除，无法撤销。`
-            : "当前子任务暂不可删除，请核对提示后重试。"}</DialogDescription>
-          {subtaskDeletion.preview && <p>这些任务的本地讨论、文件修改及未保存的文件草稿也会移除。</p>}
-          {Boolean(subtaskDeletion.preview?.dependencyTasks.length) && <p>另有 {subtaskDeletion.preview!.dependencyTasks.length} 个任务引用了这些前置任务。删除后将移除对应依赖，其他任务本身保留。</p>}
-          {(subtaskDeleteError || subtaskDeletion.error) && <p className="task-file-dialog-error" role="alert">{subtaskDeleteError || subtaskDeletion.error}</p>}
-          <DialogFooter>
-            <Button onClick={() => { setSubtaskDeleteTarget(null); setSubtaskDeleteError(""); }} ref={subtaskDeleteCancel} type="button" variant="outline">取消</Button>
-            <Button disabled={!subtaskDeletion.preview || Boolean(taskStorageRecoveryError)} onClick={confirmDeleteSubtask} type="button" variant="destructive">确认删除</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      <Dialog onOpenChange={(open) => { if (!open) { setTaskDeleteTarget(null); setTaskDeleteError(""); } }} open={Boolean(taskDeleteTarget)}>
-        <DialogContent className="sm:max-w-md" finalFocus={() => document.getElementById("task-workspace-list-heading") ?? false} initialFocus={taskDeleteCancel}>
-          <DialogTitle>删除任务？</DialogTitle>
-          <DialogDescription>{taskDeletion.preview
-            ? `「${taskDeletion.preview.task.name}」${taskDeletion.preview.descendantCount > 0 ? `及其 ${taskDeletion.preview.descendantCount} 个下级任务` : ""}将被永久删除，无法撤销。`
-            : "当前任务暂不可删除，请核对提示后重试。"}</DialogDescription>
-          {taskDeletion.preview && <p>这些任务的本地讨论、文件修改及未保存的文件草稿也会移除。</p>}
-          {Boolean(taskDeletion.preview?.dependencyTasks.length) && <p>另有 {taskDeletion.preview!.dependencyTasks.length} 个任务引用了这些前置任务。删除后将移除对应依赖，其他任务本身保留。</p>}
-          {(taskDeleteError || taskDeletion.error) && <p className="task-file-dialog-error" role="alert">{taskDeleteError || taskDeletion.error}</p>}
-          <DialogFooter>
-            <Button onClick={() => { setTaskDeleteTarget(null); setTaskDeleteError(""); }} ref={taskDeleteCancel} type="button" variant="outline">取消</Button>
-            <Button disabled={!taskDeletion.preview || Boolean(taskStorageRecoveryError)} onClick={confirmDeleteTask} type="button" variant="destructive">确认删除</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <TaskDeleteDialog
+        open={Boolean(subtaskDeleteTarget)}
+        preview={subtaskDeletion.preview}
+        error={subtaskDeleteError || subtaskDeletion.error}
+        disabled={Boolean(taskStorageRecoveryError)}
+        onClose={() => { setSubtaskDeleteTarget(null); setSubtaskDeleteError(""); }}
+        onConfirm={confirmDeleteSubtask}
+        finalFocus={() => subtaskDeleteReturnFocus.current?.isConnected ? subtaskDeleteReturnFocus.current : document.getElementById(`task-subtasks-${selectedTaskId}`) ?? false}
+      />
+      <TaskDeleteDialog
+        open={Boolean(taskDeleteTarget)}
+        preview={taskDeletion.preview}
+        error={taskDeleteError || taskDeletion.error}
+        disabled={Boolean(taskStorageRecoveryError)}
+        onClose={() => { setTaskDeleteTarget(null); setTaskDeleteError(""); }}
+        onConfirm={confirmDeleteTask}
+        finalFocus={() => document.getElementById("task-workspace-list-heading") ?? false}
+      />
       {workbenchAiConnectionOpen && (
         <AiConnectionDialog
           onClose={() => setWorkbenchAiConnectionOpen(false)}

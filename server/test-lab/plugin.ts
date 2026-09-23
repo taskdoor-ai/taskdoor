@@ -1,3 +1,4 @@
+import { MAX_BATCH_CASES } from "../../src/test-lab/run-limits.ts";
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { resolve } from 'node:path';
 import type { IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'node:http';
@@ -37,7 +38,7 @@ export function testLabPlugin():Plugin{
     const options={apiKey:env.PPIO_API_KEY,endpoint,model:env.PPIO_MODEL||'pa/gpt-5.5-pro',maxOutputTokens:bounded(env.TEST_LAB_MAX_OUTPUT_TOKENS,8000,512,32000),timeoutMs:bounded(env.TEST_LAB_TIMEOUT_MS,180000,1000,600000)};
     const store=createLabStore(resolve(viteConfig.root,'data/test-lab/state.json'),seedLab());
     const runner=createRunner(store,options);const csrfToken=randomBytes(32).toString('hex');
-    const config={configured:!!options.apiKey,model:options.model,endpoint,maxBatchSize:5,maxOutputTokens:options.maxOutputTokens,timeoutMs:options.timeoutMs,storage:'本机 data/test-lab/state.json（独立沙箱）'};
+    const config={configured:!!options.apiKey,model:options.model,endpoint,maxBatchSize:MAX_BATCH_CASES,maxOutputTokens:options.maxOutputTokens,timeoutMs:options.timeoutMs,storage:'本机 data/test-lab/state.json（独立沙箱）'};
     server.httpServer?.once('close',()=>runner.close());
     server.middlewares.use(async(req:IncomingMessage,res:ServerResponse,next:()=>void)=>{
       if(req.url==='/test-lab'||req.url==='/test-lab/'){res.writeHead(302,{Location:'/test-lab.html'});res.end();return;}
@@ -52,6 +53,7 @@ export function testLabPlugin():Plugin{
         if(req.method==='GET'&&path.startsWith('/skills/')){const id=z.enum(skillIds).parse(path.slice('/skills/'.length));send(res,200,loadSkill(id));return;}
         if(req.method==='POST'&&path==='/skill-versions'){const value=z.object({expectedRevision:z.number().int(),version:skillVersionInputSchema}).strict().parse(await body(req));send(res,200,store.addSkillVersion(value.expectedRevision,value.version));return;}
         if(req.method==='PUT'&&path==='/skill-default'){const value=z.object({expectedRevision:z.number().int(),skillId:z.enum(skillIds),versionId:z.string().nullable()}).strict().parse(await body(req));send(res,200,store.setSkillDefault(value.expectedRevision,value.skillId,value.versionId));return;}
+        if(req.method==='PUT'&&path==='/categories'){const value=z.object({expectedRevision:z.number().int(),category:z.object({name:z.string(),description:z.string(),previousName:z.string().optional()}).strict()}).strict().parse(await body(req));send(res,200,store.saveCategory(value.expectedRevision,value.category));return;}
         if(req.method==='PUT'&&path==='/models'){const value=z.object({expectedRevision:z.number().int(),models:z.array(z.string())}).strict().parse(await body(req));send(res,200,store.saveModels(value.expectedRevision,value.models));return;}
         if(req.method==='GET'&&path==='/model-catalog'){
           if(!options.apiKey)throw new Error('请先配置服务端 API Key');
@@ -61,7 +63,7 @@ export function testLabPlugin():Plugin{
         }
         if(req.method==='GET'&&path==='/view'){const team=store.get().teams.find(t=>t.id===url.searchParams.get('teamId'));if(!team)throw new Error('团队不存在');send(res,200,buildView(team,url.searchParams.get('actorId')??''));return;}
         if(req.method==='PUT'&&path==='/state'){const value=editableSchema.parse(await body(req));send(res,200,store.save(value.expectedRevision,value.teams,value.cases as LabCase[]));return;}
-        if(req.method==='POST'&&path==='/runs'){const value=z.object({caseIds:z.array(z.string()).min(1).max(5),requestId:z.string().min(1).max(100),selection:runSelectionSchema.optional()}).strict().parse(await body(req));send(res,202,runner.enqueue(value.caseIds,value.requestId,value.selection));return;}
+        if(req.method==='POST'&&path==='/runs'){const value=z.object({caseIds:z.array(z.string()).min(1).max(MAX_BATCH_CASES),requestId:z.string().min(1).max(100),selection:runSelectionSchema.optional()}).strict().parse(await body(req));send(res,202,runner.enqueue(value.caseIds,value.requestId,value.selection));return;}
         if(req.method==='POST'&&path==='/library/import'){await body(req);send(res,200,importLibrary(store));return;}
         const match=path.match(/^\/runs\/([^/]+)\/(cancel|review)$/);
         if(req.method==='POST'&&match){const value=await body(req);if(match[2]==='cancel')send(res,200,runner.cancel(match[1]));else{const review=z.object({verdict:z.enum(['passed','failed']),note:z.string().min(1).max(5000)}).strict().parse(value);send(res,200,runner.review(match[1],review.verdict,review.note));}return;}

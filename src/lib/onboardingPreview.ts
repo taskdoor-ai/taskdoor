@@ -1,3 +1,4 @@
+import { mockWorkspaceEmail, mockWorkspacePasswordDigest, mockWorkspaceTeams } from "./mockWorkspaceAccount";
 /** Interactive design preview only; this is not an authentication or authorization backend. */
 import type { PersonalCenterState } from "../data/memberProfiles";
 import { resolveTeamEmailInvitation } from "./teamInvitations";
@@ -5,8 +6,10 @@ export type AuthMode = "login" | "register" | "forgot";
 export type OnboardingStep = "email" | "code" | "reset-password" | "choose" | "create" | "join" | "invite" | "workspace";
 export type PreviewScenario = "new" | "invited" | "returning" | "expired";
 export type PreviewTeam = { id: string; name: string; role: "admin" | "member" };
-type PreviewAccount = { name: string; passwordDigest: string; teams: PreviewTeam[]; activeTeamId: string };
+type PreviewAccount = { googleSubject?: string; name: string; passwordDigest: string; teams: PreviewTeam[]; activeTeamId: string };
 export type OnboardingState = {
+  mockAccessVersion?: number;
+  registrationCode?: string;
   version: number;
   step: OnboardingStep; authMode: AuthMode; scenario: PreviewScenario;
   email: string; name: string; verified: boolean; codeExpiresAt: number;
@@ -14,6 +17,9 @@ export type OnboardingState = {
   error: string; errorField: string; notice: string; accounts: Record<string, PreviewAccount>;
 };
 export type OnboardingAction =
+  | { type: "google-preview-complete"; email: string; name: string; subject: string }
+  | { type: "request-registration-code"; email: string; code: string; now: number }
+  | { type: "complete-registration"; name: string; email: string; passwordDigest: string; passwordLength: number; code: string; now: number }
   | { type: "auth-mode"; mode: AuthMode }
   | { type: "login"; email: string; passwordDigest: string }
   | { type: "register"; name: string; email: string; passwordDigest: string; passwordLength: number; now: number }
@@ -22,9 +28,9 @@ export type OnboardingAction =
   | { type: "send-code"; now: number }
   | { type: "verify-code"; code: string; now: number }
   | { type: "choose"; step: "choose" | "create" | "join" }
-  | { type: "create-team"; name: string }
+  | { type: "create-team"; name: string; profileName?: string }
   | { type: "inspect-invite"; link: string }
-  | { type: "accept-invite" }
+  | { type: "accept-invite"; profileName?: string }
   | { type: "enter-team"; teamId: string }
   | { type: "switch-account" }
   | { type: "edit-email" }
@@ -38,6 +44,7 @@ const demoPasswordDigest = "37d97c1274f4b23c362c0d2d1c1f33a4e175e981d0bed32f3117
 const validEmail = (value: string) => value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const validDigest = (value: unknown): value is string => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 const normalizeEmail = (value: string) => value.trim().toLowerCase();
+const defaultAccountName = (name: string, email: string) => name.trim() || email.split("@")[0].slice(0, 40);
 
 // Avoid storing raw passwords in the preview's session storage. This local digest is not server authentication.
 export async function digestPreviewPassword(password: string, email: string): Promise<string> {
@@ -48,8 +55,8 @@ export async function digestPreviewPassword(password: string, email: string): Pr
 }
 
 export function getPreviewCodeResendDelay(state: OnboardingState, now: number): number {
-  if (state.step !== "code" || !state.codeExpiresAt) return 0;
-  return Math.min(30, Math.max(0, Math.ceil((state.codeExpiresAt - 570000 - now) / 1000)));
+  if ((state.step !== "code" && !state.registrationCode) || !state.codeExpiresAt) return 0;
+  return Math.min(60, Math.max(0, Math.ceil((state.codeExpiresAt - 540000 - now) / 1000)));
 }
 export function getPreviewInvitation(token: string, personalState?: PersonalCenterState) {
   const local = personalState ? resolveTeamEmailInvitation(personalState, token) : null;
@@ -64,17 +71,25 @@ export function getPreviewInvitation(token: string, personalState?: PersonalCent
 }
 export function createOnboardingPreview(scenario: PreviewScenario = "new", inviteToken = ""): OnboardingState {
   return {
-    version: previewVersion, scenario, step: "email", authMode: "login", email: scenario === "returning" ? previewDemoEmail : "", name: "",
+    mockAccessVersion: 1, version: previewVersion, scenario, step: "email", authMode: "login", email: scenario === "returning" ? previewDemoEmail : "", name: "",
     verified: false, codeExpiresAt: 0, pendingPasswordDigest: "",
     inviteToken: inviteToken || (scenario === "invited" ? "demo-valid" : scenario === "expired" ? "demo-expired" : ""),
     teams: [], activeTeamId: "", error: "", errorField: "", notice: "",
-    accounts: { [previewDemoEmail]: { name: "周岚", passwordDigest: demoPasswordDigest, teams: [], activeTeamId: "" } },
+    accounts: { [mockWorkspaceEmail]: { name: "周岚", passwordDigest: mockWorkspacePasswordDigest, teams: mockWorkspaceTeams.map(team => ({ ...team })), activeTeamId: mockWorkspaceTeams[0].id }, [previewDemoEmail]: { name: "周岚", passwordDigest: demoPasswordDigest, teams: [], activeTeamId: "" } },
   };
 }
-function landing(state: OnboardingState): OnboardingStep {
-  return state.inviteToken ? "invite" : state.teams.length ? "workspace" : "create";
+function landing(state: OnboardingState, newlyRegistered = false): OnboardingStep {
+  return state.inviteToken ? "invite" : state.teams.length ? "workspace" : newlyRegistered ? "create" : "choose";
 }
 function upgradeLegacyPreview(state: OnboardingState): OnboardingState {
+  if (state.mockAccessVersion !== 1) {
+    const previous = state.accounts[mockWorkspaceEmail];
+    const teams = [...mockWorkspaceTeams.map(team => ({ ...team })), ...(previous?.teams ?? []).filter(team => !mockWorkspaceTeams.some(mock => mock.id === team.id))];
+    state = { ...state, mockAccessVersion: 1, accounts: { ...state.accounts, [mockWorkspaceEmail]: {
+      ...previous, name: previous?.name || "周岚", passwordDigest: mockWorkspacePasswordDigest, teams, activeTeamId: mockWorkspaceTeams[0].id,
+    } } };
+    if (state.verified && state.email === mockWorkspaceEmail) state = { ...state, teams, activeTeamId: mockWorkspaceTeams[0].id };
+  }
   if (state.version === previewVersion) return state;
   // One-time migration: the demo account now represents a newly registered user.
   // Keep other preview accounts and all teams created after this migration.
@@ -97,21 +112,51 @@ export function transitionOnboarding(state: OnboardingState, action: OnboardingA
   if (action.type === "clear-error") return { ...state, error: "", errorField: "" };
   if (action.type === "switch-account") return { ...createOnboardingPreview("new", state.inviteToken), accounts: state.accounts };
   if (action.type === "auth-mode") return { ...createOnboardingPreview("new", state.inviteToken), authMode: action.mode, email: state.email, accounts: state.accounts };
-  if (action.type === "edit-email") return { ...state, step: "email", verified: false, codeExpiresAt: 0, pendingPasswordDigest: "", ...clean };
+  if (action.type === "edit-email") return { ...state, registrationCode: undefined, step: "email", verified: false, codeExpiresAt: 0, pendingPasswordDigest: "", ...clean };
+  if (action.type === "google-preview-complete") {
+    // Local visual demo only. Never accepts a real Google token or makes a network request.
+    if (state.step !== "email" || state.verified) return state;
+    const email = normalizeEmail(action.email);
+    if (!validEmail(email) || !action.subject.startsWith("demo-")) return fail("Google 验证未完成，请重试。");
+    const account = state.accounts[email];
+    if (account && account.googleSubject !== action.subject) return fail("该邮箱已有账号，请先使用原方式登录，再确认绑定 Google。");
+    const profile = account ?? { name: defaultAccountName(action.name, email), passwordDigest: "", googleSubject: action.subject, teams: [], activeTeamId: "" };
+    const next: OnboardingState = { ...state, email, name: profile.name, teams: profile.teams, activeTeamId: profile.activeTeamId,
+      authMode: account ? "login" : "register", verified: true, pendingPasswordDigest: "", registrationCode: undefined, codeExpiresAt: 0,
+      accounts: { ...state.accounts, [email]: profile }, ...clean };
+    return { ...next, step: landing(next, !account) };
+  }
+  if (action.type === "request-registration-code") {
+    if (state.step !== "email" || state.authMode !== "register" || state.verified) return state;
+    const email = normalizeEmail(action.email);
+    if (!validEmail(email)) return fail("请输入有效的邮箱地址。", "email");
+    if (state.accounts[email]) return fail("该邮箱已注册，请直接登录。", "email");
+    if (getPreviewCodeResendDelay(state, action.now) > 0) return state;
+    return { ...state, email, registrationCode: "111111", codeExpiresAt: action.now + 600000, ...clean };
+  }
+  if (action.type === "complete-registration") {
+    if (state.step !== "email" || state.authMode !== "register" || state.verified) return state;
+    // Visual Mock only: no delivery, code matching, expiry or email binding.
+    // Reuse account validation and the existing local account creation transaction.
+    const prepared = transitionOnboarding(state, { ...action, type: "register" }, personalState);
+    if (prepared.error || prepared.step !== "code") return prepared;
+    const next = transitionOnboarding(prepared, { type: "verify-code", code: "111111", now: action.now }, personalState);
+    return { ...next, registrationCode: undefined };
+  }
   if (action.type === "login") {
     if (state.step !== "email" || state.verified) return state;
     const email = normalizeEmail(action.email);
     if (!validEmail(email)) return fail("请输入有效的邮箱地址。", "email");
     const account = state.accounts[email];
-    if (!account || account.passwordDigest !== action.passwordDigest) return fail("邮箱或密码不正确，请重试。", "password");
-    const nextState: OnboardingState = { ...state, name: account.name, teams: account.teams, activeTeamId: account.activeTeamId, email, verified: true, pendingPasswordDigest: "", ...clean };
+    if (!account || !validDigest(action.passwordDigest) || account.passwordDigest !== action.passwordDigest) return fail("邮箱或密码不正确，请重试。", "password");
+    const nextState: OnboardingState = { ...state, name: defaultAccountName(account.name, email), teams: account.teams, activeTeamId: account.activeTeamId, email, verified: true, pendingPasswordDigest: "", ...clean };
     return { ...nextState, step: landing(nextState) };
   }
   if (action.type === "register") {
     if (state.step !== "email" || state.verified) return state;
-    const name = action.name.trim();
     const email = normalizeEmail(action.email);
-    if (!name || name.length > 40) return fail("请输入 1–40 个字的姓名。", "name");
+    const name = defaultAccountName(action.name, email);
+    if (name.length > 40) return fail("请输入 1–40 个字的姓名。", "name");
     if (!validEmail(email)) return fail("请输入有效的邮箱地址。", "email");
     if (action.passwordLength < 8 || !validDigest(action.passwordDigest)) return fail("密码至少需要 8 位。", "password");
     if (state.accounts[email]) return fail("该邮箱已注册，请直接登录。", "email");
@@ -134,15 +179,20 @@ export function transitionOnboarding(state: OnboardingState, action: OnboardingA
     if (state.authMode === "forgot") return state.accounts[state.email] ? { ...state, step: "reset-password", codeExpiresAt: 0, ...clean } : fail("无法验证此邮箱，请检查邮箱后重试。", "code");
     if (state.authMode !== "register" || !validDigest(state.pendingPasswordDigest)) return state;
     const next: OnboardingState = { ...state, verified: true, codeExpiresAt: 0, pendingPasswordDigest: "", accounts: { ...state.accounts, [state.email]: { name: state.name, passwordDigest: state.pendingPasswordDigest, teams: [], activeTeamId: "" } }, ...clean };
-    return { ...next, step: landing(next) };
+    return { ...next, step: landing(next, true) };
   }
   if (action.type === "reset-password") {
     if (state.step !== "reset-password" || state.authMode !== "forgot" || !state.accounts[state.email]) return state;
     if (action.passwordLength < 8 || !validDigest(action.passwordDigest)) return fail("密码至少需要 8 位。", "password");
     return { ...state, step: "email", authMode: "login", verified: false, accounts: { ...state.accounts, [state.email]: { ...state.accounts[state.email], passwordDigest: action.passwordDigest } }, ...clean, notice: "密码已更新，请重新登录。" };
   }
-  if (!state.verified || !state.name) return state;
-  if (action.type === "choose") return { ...state, step: action.step === "choose" && !state.teams.length ? "create" : action.step, ...clean };
+  if (!state.verified) return state;
+  if (action.type === "create-team" || action.type === "accept-invite") {
+    const profileName = state.name || action.profileName?.trim() || "";
+    if (!profileName || profileName.length > 40) return fail("请输入 1–40 个字的姓名。", "name");
+    state = { ...state, name: profileName };
+  }
+  if (action.type === "choose") return { ...state, step: action.step, ...clean };
   if (action.type === "create-team") {
     if (state.step !== "create") return state;
     const name = action.name.trim();
@@ -187,10 +237,25 @@ export function restoreOnboardingPreview(raw: string | null): OnboardingState | 
       || [state.email, state.name, state.inviteToken, state.activeTeamId, state.error, state.errorField, state.notice, state.pendingPasswordDigest].some(value => typeof value !== "string")
       || typeof state.verified !== "boolean" || !Number.isFinite(state.codeExpiresAt) || !isTeamList(state.teams)
       || !state.accounts || typeof state.accounts !== "object" || Array.isArray(state.accounts)
-      || Object.values(state.accounts).some(account => !account || typeof account.name !== "string" || typeof account.activeTeamId !== "string" || !validDigest(account.passwordDigest) || !isTeamList(account.teams))) return null;
-    if (!["email", "code", "reset-password"].includes(state.step) && (!state.verified || !state.name)) return null;
+      || Object.values(state.accounts).some(account => !account || typeof account.name !== "string" || typeof account.activeTeamId !== "string" || !(validDigest(account.passwordDigest) || (account.passwordDigest === "" && typeof account.googleSubject === "string" && account.googleSubject.startsWith("demo-"))) || !isTeamList(account.teams))) return null;
+    if (!["email", "code", "reset-password"].includes(state.step) && !state.verified) return null;
+    if (state.step === "workspace" && !state.name) return null;
     if (state.step === "reset-password" && (state.authMode !== "forgot" || !state.accounts[state.email])) return null;
     if (state.step === "workspace" && !state.teams.some(team => team.id === state.activeTeamId)) return null;
-    return upgradeLegacyPreview(state);
+    const restored = upgradeLegacyPreview(state);
+    if (restored.verified && restored.authMode === "register" && !restored.name && !restored.teams.length && restored.step === "choose") return { ...restored, step: landing(restored, true) };
+    return restored;
   } catch { return null; }
+}
+
+/** Skip legacy team setup screens in the current sign-in experience. */
+export function simplifyOnboardingEntry(state: OnboardingState): OnboardingState {
+  if (!state.verified || state.error) return state;
+  const name = defaultAccountName(state.name, state.email);
+  if (state.inviteToken) return rememberAccount({ ...state, name, step: "invite" });
+  const teams: PreviewTeam[] = state.teams.length ? state.teams : [{
+    id: `personal-${encodeURIComponent(state.email)}`, name, role: "admin",
+  }];
+  const activeTeamId = teams.some(team => team.id === state.activeTeamId) ? state.activeTeamId : teams[0].id;
+  return rememberAccount({ ...state, name, teams, activeTeamId, step: "workspace" });
 }

@@ -75,14 +75,14 @@ export function AiConnectionButton({ contextLabel, onConnect, compact = false, d
       title={defaultTool ? u("openAi", { context: contextLabel, tool: aiToolName(defaultTool) }) : u("connectAi", { context: contextLabel })}
       type="button"
     >
-      {defaultTool ? (launching ? <LoaderCircle aria-hidden="true" className="ai-tool-shortcut-spinner" size={18} /> : <img alt="" src={agentIconUrls[defaultTool]} />) : <span aria-hidden="true" className="local-agent-trigger-mark"><SquareTerminal size={15} strokeWidth={1.7} /></span>}
+      {defaultTool ? (launching ? <LoaderCircle aria-hidden="true" className="ai-tool-shortcut-spinner" size={18} /> : <img alt="" data-agent-icon={defaultTool} src={agentIconUrls[defaultTool]} />) : <span aria-hidden="true" className="local-agent-trigger-mark"><SquareTerminal size={15} strokeWidth={1.7} /></span>}
     </button>
     {defaultTool && <Popover open={open} onOpenChange={next => { setOpen(next); if (next) handingFocusToDialog.current = false; }}>
       <PopoverTrigger aria-label={u("switchAi", { context: contextLabel })} className="ai-tool-shortcut-menu-trigger" disabled={disabled || launching} type="button"><ChevronDown aria-hidden="true" size={14} /></PopoverTrigger>
       <PopoverContent aria-label={ui("AI 工具")} align="end" className="ai-tool-shortcut-menu" finalFocus={() => handingFocusToDialog.current ? false : mainButton.current}>
         <header><span>{ui("在 AI 工具中打开")}</span></header>
         <ul>{preferences.order.map((agent, index) => <li key={agent}>
-          <button className="ai-tool-menu-launch" onClick={() => void launch(agent)} type="button"><img alt="" src={agentIconUrls[agent]} /><span>{aiToolName(agent)}</span>{index === 0 && <small>{ui("最近使用")}</small>}</button>
+          <button className="ai-tool-menu-launch" onClick={() => void launch(agent)} type="button"><img alt="" data-agent-icon={agent} src={agentIconUrls[agent]} /><span>{aiToolName(agent)}</span>{index === 0 && <small>{ui("最近使用")}</small>}</button>
         </li>)}</ul>
       </PopoverContent>
     </Popover>}

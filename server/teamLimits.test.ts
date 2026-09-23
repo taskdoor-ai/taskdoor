@@ -1,0 +1,32 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { initialPersonalCenterState } from '../src/data/memberProfiles';
+import { createTeamEmailInvitation, acceptTeamEmailInvitation } from '../src/lib/teamInvitations';
+import { countCreatedTeams, occupiedTeamSeats, prepareCreatedTeam } from '../src/lib/teamLimits';
+const identity={userId:'周岚',email:'zhoulan@agentdoor.local',name:'周岚'};
+test('tenth created team succeeds, eleventh fails, invited admins do not consume creation quota',()=>{
+ const directory=structuredClone(initialPersonalCenterState);
+ assert.equal(countCreatedTeams(directory.teams,identity),4);
+ for (let i=4;i<9;i++) directory.teams=prepareCreatedTeam(directory,identity,`Team ${i+1}`).directory.teams;
+ const result=prepareCreatedTeam(directory,identity,'  Tenth  ');
+ assert.equal(result.team.name,'Tenth');
+ assert.equal(result.team.createdBy,identity.userId);
+ assert.equal(result.team.memberships.length,1);
+ assert.throws(()=>prepareCreatedTeam(result.directory,identity,'Eleventh'),/10/);
+ result.team.createdBy='another-user';
+ assert.equal(countCreatedTeams(result.directory.teams,identity),9);
+ assert.throws(()=>prepareCreatedTeam(directory,identity,'  '),/名称/);
+});
+test('active and pending seats share 50 quota; expired invitations release seats',()=>{
+ const state=structuredClone(initialPersonalCenterState),team=state.teams[0], now=1000;
+ team.memberships=Array.from({length:49},(_,i)=>({...team.memberships[0],id:`m${i}`,memberId:`u${i}`,email:i?`u${i}@example.com`:state.profile.email}));
+ const result=createTeamEmailInvitation(state,{teamId:team.id,email:'last@example.com',now});
+ assert.equal(occupiedTeamSeats(result.state.teams[0],now),50);
+ assert.throws(()=>createTeamEmailInvitation(result.state,{teamId:team.id,email:'overflow@example.com',now}),/50/);
+ assert.equal(createTeamEmailInvitation(result.state,{teamId:team.id,email:'last@example.com',now}).state,result.state);
+ const expired=now+7*86400000+1;
+ assert.equal(occupiedTeamSeats(result.state.teams[0],expired),49);
+ assert.doesNotThrow(()=>createTeamEmailInvitation(result.state,{teamId:team.id,email:'next@example.com',now:expired}));
+ const accepted=acceptTeamEmailInvitation(result.state,result.membership.emailInvitation!.token,{email:'last@example.com',name:'Last',verified:true},now);
+ assert.equal(occupiedTeamSeats(accepted.teams[0],now),50);
+});

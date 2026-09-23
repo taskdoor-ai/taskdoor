@@ -1,9 +1,7 @@
-import { creationScenarioEnglish } from "../i18n/creationMock";
 import { useCreationI18n } from "../i18n/creationMessages";
-import { ArrowLeft, ArrowRight, Check, ChevronRight, GitBranch, Layers3, Lightbulb, PanelLeftOpen, RotateCcw, Sparkles, UserPlus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ChevronRight, GitBranch, Layers3, Lightbulb, PanelLeftOpen, Sparkles, UserPlus } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { taskCreationScenarios, type TaskCreationScenarioId } from "../data/taskCreationScenarios";
 import type { TagDefinition } from "../data/tagGroups";
 import type { ExistingTaskCandidate } from "../lib/taskCreationScenario";
 import type { TaskPlanDraft } from "../lib/taskAssistantProtocol";
@@ -118,7 +116,6 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
   const completedSession = useRef<CreationResult | undefined>(undefined);
   const historyId = useId();
   const historyToggle = useRef<HTMLButtonElement>(null);
-  const scenarioSessionIds = useRef(new Map<string, string>());
   const saveSession = useCallback((session: CreationSession) => {
     const next = upsertCreationSession(sessionsRef.current, session);
     if (next === sessionsRef.current) return;
@@ -157,7 +154,6 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
   const aiReturnFocus = useRef<HTMLElement | null>(null);
   const adjustmentStop = useRef<{ id: string; stop: () => void } | null>(null);
   const latestAiTaskId = useRef<string | null>(null);
-  const drafts = useRef(new Map<string, CreationWorkspaceDraft>());
   const creating = useRef(false);
   const planningRun = useRef(0);
   const planningAbort = useRef<AbortController | null>(null);
@@ -253,27 +249,12 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     setAiOpen(false); setAiScope(null);
     onDraftStart?.();
   };
-  const openScenario = (id: TaskCreationScenarioId | "custom") => {
-    if (busy || adjustmentRunning) return;
-    if (hasUnsavedSubtasks) { setError(unsavedMessage); return; }
-    if (workspace.request.trim()) {
-      drafts.current.set(workspace.scenarioId ?? "custom", workspace);
-      scenarioSessionIds.current.set(workspace.scenarioId ?? "custom", sessionId);
-    }
-    const scenario = taskCreationScenarios.find(item => item.id === id);
-    setSessionId(scenarioSessionIds.current.get(id) ?? crypto.randomUUID());
-    completedSession.current = undefined;
-    setWorkspace(drafts.current.get(id) ?? { ...emptyWorkspaceDraft(), request: scenario ? locale === "en" ? creationScenarioEnglish[scenario.id].prompt : scenario.prompt : "", scenarioId: scenario?.id });
-    clearTransientState();
-    requestRef.current?.focus();
-  };
   const startAnother = () => {
     if (busy || adjustmentRunning) return;
     if (hasUnsavedSubtasks) { setError(unsavedMessage); return; }
     setWorkspace(emptyWorkspaceDraft());
     setCreationParent(initialParent ?? null);
     setSessionId(crypto.randomUUID()); completedSession.current = undefined;
-    drafts.current.clear(); scenarioSessionIds.current.clear();
     clearTransientState();
     setHistoryOpen(false);
     focusedStage.current = "";
@@ -291,7 +272,6 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     const restored = restoreCreationSession(session);
     clearTransientState();
     for (const key of Object.keys(aiDraftSession[0])) aiDraftSession[1]({ type: "discard", key });
-    drafts.current.clear(); scenarioSessionIds.current.clear();
     completedSession.current = undefined;
     planningRun.current = Math.max(planningRun.current, ...restored.workspace.processes.map(process => typeof process.id === "number" ? process.id : 0));
     setSessionId(restored.id); setWorkspace(restored.workspace);
@@ -439,21 +419,13 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
         : form.decision === "attach" && form.candidate
           ? onCreateSubtask(form.candidate.id, plan)
           : onCreateTaskPlan(plan);
-      drafts.current.delete(workspace.scenarioId ?? "custom"); setError("");
+      setError("");
       completedSession.current = created;
       saveSession({ id: sessionId, updatedAt: Date.now(), workspace, clarificationStep, parent: creationParent, created });
       onOpenTask(created.mainTaskId);
     } catch (caught) { setError(caught instanceof Error ? caught.message : c("creationFailedYourPlanWasPreservedPlease")); creating.current = false; }
   };
 
-  const scenarioPicker = <div aria-label={c("quickStart")} className="animated-agent-suggestions">
-    {taskCreationScenarios.map(scenario => {
-      const selected = workspace.scenarioId === scenario.id && workspace.request.trim() === (locale === "en" ? creationScenarioEnglish[scenario.id].prompt : scenario.prompt);
-      return <button aria-pressed={selected} disabled={busy || adjustmentRunning} key={scenario.id} onClick={() => openScenario(scenario.id)} type="button">
-        <Sparkles aria-hidden="true" />{locale === "en" ? creationScenarioEnglish[scenario.id].label : scenario.label}
-      </button>;
-    })}
-  </div>;
   const aiAdjustmentAction = !showDescribe
     ? <motion.div className="creation-ai-adjust-action" layoutId="creation-ai-composer" transition={{ duration: reducedMotion ? 0 : .22, ease: "easeInOut" }}>
       <TaskAiAdjustButton disabled={!form || planning?.stage !== "review" || busy || adjustmentRunning || hasUnsavedSubtasks || aiOpen} label={c("askAiToAdjustThePlan")} onClick={anchor => openAiAdjustment(aiScope ?? { kind: "task" }, anchor)} />
@@ -482,7 +454,6 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
       </nav>
       <div className="creation-page-actions">
         {historyError && !historyOpen && <span className="creation-session-save-warning" role="status">{localize(historyError)}</span>}
-        {workspace.scenarioId && drafts.current.has("custom") && <button className="creation-example-trigger" disabled={busy || adjustmentRunning} onClick={() => openScenario("custom")} type="button"><RotateCcw size={13} />{c("backToMyRequest")}</button>}
         {aiAdjustmentAction}
       </div>
     </div>
@@ -513,7 +484,6 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
           {error && <p className="creation-stage-error" role="alert">{localize(error)}</p>}
           {creationAssistantRow}
         </div>
-        {scenarioPicker}
       </div></div> : <>
         {creationAssistantRow}
         {displayStage === "clarify" && planning?.stage === "clarify" && currentClarificationQuestion && <section className="task-detail-hero-card creation-clarify-panel">

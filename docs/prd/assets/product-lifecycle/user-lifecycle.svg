@@ -1,29 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 450" role="img" aria-labelledby="title desc">
-<title id="title">创建任务、任务协作、完成任务</title>
-<desc id="desc">登录注册并创建或加入团队后，参考历史任务拆解和分配人员；本地 Agent 工作、回填任务上下文、邀请成员接续协作，最后人工确认完成。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 600" role="img" aria-labelledby="title desc">
+<title id="title">创建任务、两层任务协作、完成任务</title>
+<desc id="desc">创建任务后形成共享任务上下文。成员与本地 Agent 执行和审阅工作，成员与其他协作者讨论、分工和接续，两类协作均读取任务上下文并回填成果与进展，按需交替或并行。成果达到完成标准后人工确认完成。</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#6b8c80"/></marker></defs>
-<style>text{font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;fill:#23363c}.heading{font-size:25px;font-weight:650}.label{font-size:20px;font-weight:600}.body{font-size:16px}.small{font-size:14px;fill:#53666c}.line{stroke:#6b8c80;stroke-width:2;fill:none;marker-end:url(#arrow)}</style>
-<rect width="960" height="450" fill="#fbfcfa"/>
-<text x="40" y="48" class="heading">创建任务 → 任务协作 → 完成任务</text>
-<text x="40" y="84" class="body">前置：登录／注册 → 创建／加入团队</text>
-<rect x="40" y="120" width="252" height="186" rx="12" fill="#e8f2ee"/>
-<text x="62" y="158" class="label">01 创建任务</text>
-<text x="62" y="194" class="body">输入目标，参考历史任务</text>
-<text x="62" y="224" class="body">拆解步骤，识别人员责任</text>
-<text x="62" y="254" class="body">建议分配，审阅后创建</text>
-<path d="M298 208H324" class="line"/>
-<rect x="336" y="120" width="288" height="186" rx="12" fill="#e8f2ee"/>
-<text x="358" y="158" class="label">02 任务协作</text>
-<text x="358" y="194" class="body">连接本地 Agent 工作</text>
-<text x="358" y="224" class="body">回填产出物与需协作的内容</text>
-<text x="358" y="254" class="body">邀请成员，共享任务上下文</text>
-<path d="M630 208H656" class="line"/>
-<rect x="668" y="120" width="252" height="186" rx="12" fill="#e8f2ee"/>
-<text x="690" y="158" class="label">03 完成任务</text>
-<text x="690" y="194" class="body">核对成果与完成标准</text>
-<text x="690" y="224" class="body">人工确认完成</text>
-<text x="690" y="254" class="body">保留上下文与协作记录</text>
-<path d="M588 314V348H372V314" class="line"/>
-<text x="480" y="380" text-anchor="middle" class="body">成员基于更新后的上下文连接本地 Agent，继续工作</text>
-<text x="480" y="410" text-anchor="middle" class="small">工作 → 回填 → 接续协作，按需重复</text>
+<style>text{font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;fill:#23363c}.heading{font-size:25px;font-weight:650}.label{font-size:20px;font-weight:600}.body{font-size:16px}.small{font-size:14px;fill:#53666c}.line{stroke:#6b8c80;stroke-width:2;fill:none;marker-end:url(#arrow)}.both{marker-start:url(#arrow)}</style>
+<rect width="1120" height="600" fill="#fbfcfa"/>
+<text x="32" y="48" class="heading">创建任务 → 任务协作 → 完成任务</text>
+<text x="32" y="82" class="body">前置：登录／注册 → 创建／加入团队</text>
+
+<rect x="24" y="184" width="212" height="194" rx="12" fill="#e8f2ee"/>
+<text x="44" y="220" class="label">01 创建任务</text>
+<text x="44" y="258" class="body">输入目标，参考历史任务</text>
+<text x="44" y="288" class="body">拆解步骤，建议人员分工</text>
+<text x="44" y="318" class="body">审阅调整后确认创建</text>
+<path d="M242 270H278" class="line"/>
+
+<rect x="284" y="120" width="552" height="426" rx="16" fill="#f1f6f3" stroke="#d6e4dc"/>
+<text x="308" y="156" class="label">02 任务协作</text>
+<rect x="308" y="180" width="504" height="112" rx="10" fill="#dcece3"/>
+<text x="560" y="212" text-anchor="middle" class="label">共享任务上下文</text>
+<text x="560" y="242" text-anchor="middle" class="body">目标、完成标准、拆解与分工</text>
+<text x="560" y="268" text-anchor="middle" class="body">产出物、讨论、进展 · 按成员权限访问</text>
+
+<path d="M430 302V352" class="line both"/>
+<path d="M690 302V352" class="line both"/>
+<text x="560" y="331" text-anchor="middle" class="small">读取上下文 ↕ 回填成果与进展</text>
+
+<rect x="308" y="364" width="242" height="130" rx="10" fill="#e8f2ee" stroke="#cfdfd5"/>
+<text x="429" y="399" text-anchor="middle" class="body" font-weight="650">人与自己的本地 Agent</text>
+<text x="429" y="430" text-anchor="middle" class="body">沟通需求、执行工作</text>
+<text x="429" y="458" text-anchor="middle" class="body">审阅结果、调整与回填</text>
+<rect x="570" y="364" width="242" height="130" rx="10" fill="#e8f2ee" stroke="#cfdfd5"/>
+<text x="691" y="399" text-anchor="middle" class="body" font-weight="650">人与其他协作者</text>
+<text x="691" y="430" text-anchor="middle" class="body">围绕任务讨论、分工与反馈</text>
+<text x="691" y="458" text-anchor="middle" class="body">接续推进，按需使用本地 Agent</text>
+<text x="560" y="526" text-anchor="middle" class="small">两类协作按需交替或并行，持续更新同一任务上下文</text>
+
+<path d="M842 270H878" class="line"/>
+<rect x="884" y="184" width="212" height="194" rx="12" fill="#e8f2ee"/>
+<text x="904" y="220" class="label">03 完成任务</text>
+<text x="904" y="258" class="body">核对成果与完成标准</text>
+<text x="904" y="288" class="body">人工确认完成</text>
+<text x="904" y="318" class="body">保留上下文与协作记录</text>
+<text x="560" y="580" text-anchor="middle" class="small">成员可直接参与任务协作；连接 Agent 不代表已开展或完成工作</text>
 </svg>

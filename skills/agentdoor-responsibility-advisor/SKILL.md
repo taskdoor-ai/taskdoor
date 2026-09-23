@@ -7,6 +7,10 @@ description: 当用户核对或调整自己在当前团队的责任，或本人�
 
 识别本人实际承担的工作，将“我的责任”校准为有范围、有依据的责任说明，供后续成员推荐使用。
 
+## 当前产品版本与示例
+
+先读取 [当前 PRD 契约](../shared/current-prd-contract.md)，它替代旧快照中相冲突的业务语义；保留既有输出协议。遇到拆分、未知、版本修订或责任边界时，参考 [few-shot 正反例](examples/decision-pairs.md)。示例不是当前输入，不能复制其中的来源、人员、数值或结论。
+
 ## 规则依据
 
 业务依据为 PRD **2.5、7.9**，见[产品规则](references/product-rules.md)。先读取[共用规则](../shared/product-rules.md)及[证据与更新契约](../shared/evidence-and-updates.md)；输出按[字段契约](references/output-contract.md)组织。

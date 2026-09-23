@@ -21,12 +21,12 @@ export function TaskAppearancePicker({ iconName = "list-todo", onChange, tone = 
     <PopoverContent align="start" aria-label={u('chooseAppearance')} className="task-appearance-popover" collisionPadding={16}>
       <header><strong>{u('taskAppearance')}</strong><small>{u('autoSave')}</small></header>
       <AppearancePicker
-        color={tone} icon={iconName} iconColumns={4} colorColumns={4}
+        color={tone} icon={iconName} iconColumns={8} colorColumns={4}
         iconOptions={taskIconOptions}
-        colorOptions={taskIconToneOptions.map(option => ({ ...option, color: option.value === "neutral" ? "gray" : option.value }))}
+        colorOptions={taskIconToneOptions.map(option => ({ ...option, color: option.value }))}
         onIconChange={nextIcon => onChange({ iconName: nextIcon, iconTone: tone })}
         onColorChange={nextTone => onChange({ iconName, iconTone: nextTone })}
-        preview={<TaskIcon iconName={iconName} size="lg" tone={tone} />} previewNote={u('appearanceNote')}
+        preview={<TaskIcon iconName={iconName} size="lg" tone={tone} />} showHints={false}
       />
     </PopoverContent>
   </Popover>;

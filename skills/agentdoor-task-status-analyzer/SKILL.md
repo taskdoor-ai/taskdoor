@@ -3,19 +3,23 @@ name: agentdoor-task-status-analyzer
 description: 当用户询问任务当前情况、下一步、完成度或燃起图，或目标、标准、交付、讨论及确认变化后需要更新情况说明时使用。
 ---
 
-# 任务状态分析
+# 任务分析
 
 按“当前情况、下一步建议、进度”回答任务现在怎样，以及接下来可以做什么。
+
+## 当前产品版本与示例
+
+先读取 [当前 PRD 契约](../shared/current-prd-contract.md)，它替代旧快照中相冲突的业务语义；保留既有输出协议。遇到拆分、未知、版本修订或责任边界时，参考 [few-shot 正反例](examples/decision-pairs.md)。示例不是当前输入，不能复制其中的来源、人员、数值或结论。
 
 ## 规则依据
 
 业务依据为 PRD **6.2、6.3、7.4**，见[产品规则](references/product-rules.md)。先读取[共用规则](../shared/product-rules.md)及[证据与更新契约](../shared/evidence-and-updates.md)；输出按[字段契约](references/output-contract.md)组织。
 
-输出协议：`agentdoor.task-status-analysis.v0.1`。规则版本：`TASK-STATUS-2026-09-08-v2`。
+输出协议：`agentdoor.task-status-analysis.v0.1`。规则版本：`TASK-ANALYSIS-2026-09-23-v3`。
 
 ## 适用范围
 
-分析当前任务及与本次问题有关的子任务、讨论和交付。需要识别问题时复用[任务诊断](../agentdoor-task-diagnostician/SKILL.md)，需要计算进度时复用 [EWD](../agentdoor-ewd-progress/SKILL.md) 的 `progress`、`trend` 模式。同一输入版本的有效结果直接引用，不重复计算。
+分析当前任务及与本次问题有关的子任务、讨论和交付。问题识别是本 Skill 内部环节，按[问题核对规则](references/problem-analysis.md)核对冲突、真实阻塞与正常等待，并直接组织到当前总结和下一步建议，不再调用独立诊断 Skill。需要计算进度时读取内部 [EWD 计算规则](../agentdoor-ewd-progress/references/output-contract.md) 的 `progress`、`trend` 模式。同一输入版本的有效结果直接引用，不重复计算。
 
 本 Skill 产生分析与行动建议；任务修改由后续受控流程完成。分析可以进入助手的变更预览，但不能把分析文字当成已执行操作；助手路径的适用边界见[已确认的路径补充](../shared/assistant-path-rules.md)。
 
@@ -56,3 +60,5 @@ description: 当用户询问任务当前情况、下一步、完成度或燃起�
 任务 v4 仍在进行中，讨论说“做完了”，当前文件却缺少风险预案；旧 v3 进度为 100%。应说明已提交主体内容、仍缺风险预案并建议补齐核对；当前进度无法重算时为 `null`，正式状态保持进行中。
 
 提交前检查：三部分齐全；摘要有具体依据；下一步针对当前缺口；进度来源与版本一致；未知未写成零或完成。
+
+问题识别的 few-shot 见[问题核对示例](examples/problem-analysis.md)。统一输出 currentSituation、nextActions、progress；内部核对不另外返回诊断 Skill 的包络或 diagnoses 顶层字段。

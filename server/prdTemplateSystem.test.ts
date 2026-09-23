@@ -22,7 +22,7 @@ test("PRD 模块模板仅固定四个一级内容区块", async () => {
     "## 1. 目的",
     "## 2. 范围和边界",
     "## 3. 详细功能设计",
-    "## 4. 验收标准",
+    "## 4. 功能验收标准",
   ]);
 });
 
@@ -46,26 +46,18 @@ test("PRD 索引提供模块顺序和入口", async () => {
   assert.match(index, /templates\/module-template\.md/);
 });
 
-test("任务列表示例遵循模板并连续描述关键交互", async () => {
-  const module = await readProjectFile("docs/prd/modules/01-task-list.md");
-
+test("当前任务列表模块使用正式正文和功能验收标准", async () => {
+  const module = await readProjectFile("docs/prd/modules/06-task-list.md");
   assert.deepEqual(h2Headings(module), [
     "## 1. 目的",
     "## 2. 范围和边界",
     "## 3. 详细功能设计",
-    "## 4. 验收标准",
+    "## 4. 功能验收标准",
   ]);
-  assert.match(module, /^### 3\.1 页面结构$/m);
-  assert.match(module, /^### 3\.2 搜索与筛选区$/m);
-  assert.match(module, /^### 3\.3 任务列表区$/m);
-  assert.match(module, /^### 3\.4 置顶区$/m);
-  assert.match(module, /展示内容/);
-  assert.match(module, /可用操作/);
-  assert.match(module, /操作步骤与结果/);
-  assert.match(module, /分页或加载/);
-  assert.match(module, /键盘/);
-  assert.match(module, /!\[[^\]]+\]\([^)]*task-list-pinned\.svg\)/);
-  assert.match(module, /FIG-LIST-001/);
+  assert.match(module, /我负责／我参与/);
+  assert.match(module, /置顶仅影响本人/);
+  assert.match(module, /!\[[^\]]+\]\([^)]*filters-en\.png\)/);
+  assert.match(module, /FIG-LIST-002/);
 });
 
 test("构建脚本生成连续 HTML 和 AI 模块索引", () => {
@@ -86,14 +78,21 @@ test("构建脚本生成连续 HTML 和 AI 模块索引", () => {
   );
 
   assert.match(html, /<article[^>]+data-module-id="task-list"/);
-  assert.match(html, /<figure[^>]+id="fig-list-001"/);
+  assert.match(html, /<figure[^>]+id="fig-list-002"/);
   assert.match(html, /id="prd-search"/);
+  assert.match(html, /href="#task-creation"/);
+  assert.match(html, /href="\.\/references\/account-validation\.html"/);
+  const accountReference = readFileSync(new URL("../public/prd/references/account-validation.html", import.meta.url), "utf8");
+  assert.match(accountReference, /10 分钟/);
+
   assert.match(html, /@media\s+print/);
   assert.match(html, /@media\s+\(max-width:\s*760px\)/);
   assert.match(html, /data:image\/svg\+xml;base64,/);
-  assert.equal(index.modules[0].moduleId, "task-list");
+  assert.equal(index.modules[0].moduleId, "product-preview");
+  const taskList = index.modules.find((module: { moduleId: string }) => module.moduleId === "task-list");
+  assert.ok(taskList);
   assert.ok(
-    index.modules[0].sections.some(
+    taskList.sections.some(
       (section: { id: string }) => section.id === "task-list-detail",
     ),
   );

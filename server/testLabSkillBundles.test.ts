@@ -5,7 +5,7 @@ import { loadSkill, labSkills } from './test-lab/skills.ts';
 import { validateOutput } from './test-lab/validation.ts';
 import { splitSkillDocuments } from '../src/test-lab/markdown-files.ts';
 
-test('六类 Skill 的实际运行包包含 PRD 共用规则与完整输出契约', () => {
+test('两个入口 Skill 的实际运行包包含 PRD 共用规则与完整输出契约', () => {
   for (const skill of labSkills) {
     const files = splitSkillDocuments(loadSkill(skill.id).snapshot).map(file => file.path);
     assert.equal(new Set(files).size, files.length, `${skill.id} 重复加载资料`);
@@ -23,7 +23,7 @@ test('规划和状态分析加载依赖 Skill 的契约，保存的旧版本保�
   for (const snapshot of [planner.snapshot, status.snapshot]) {
     assert.ok(snapshot.includes('--- FILE: skills/agentdoor-ewd-progress/references/output-contract.md ---'));
   }
-  assert.ok(status.snapshot.includes('--- FILE: skills/agentdoor-task-diagnostician/references/output-contract.md ---'));
+  assert.ok(status.snapshot.includes('--- FILE: skills/agentdoor-task-status-analyzer/references/problem-analysis.md ---'));
   const old = '# 已保存的旧规则\n仅使用本版本内容。';
   const restored = loadSkill('agentdoor-task-planner', old);
   assert.equal(restored.snapshot, old);

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1030" viewBox="0 0 1400 1030" role="img" aria-labelledby="title desc"><title id="title">注册、登录与受邀加入流程</title><desc id="desc">受邀加入按是否已有账号分支：无账号先注册、设置个人名称；已有账号先登录。两条路径汇合到加入确认。</desc><defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#718096"/></marker></defs><rect width="1400" height="1030" rx="20" fill="#f7f8fa"/>
+<text x="700" y="45" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="27" fill="#263444">注册、登录与受邀加入流程</text>
+<text x="100" y="114" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="22" fill="#263444">注册</text>
+<rect x="190" y="77" width="290" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="335.0" y="106" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">邮箱注册 / Google 新账号</text>
+<text x="335.0" y="130" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">完成身份验证</text>
+<rect x="570" y="77" width="320" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="730.0" y="106" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">设置个人名称 + 团队名称</text>
+<rect x="980" y="77" width="330" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="1145.0" y="106" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">创建团队并进入工作区</text>
+<path d="M480 112H570" fill="none" stroke="#718096" stroke-width="2" marker-end="url(#a)"/>
+<path d="M890 112H980" fill="none" stroke="#718096" stroke-width="2" marker-end="url(#a)"/>
+<text x="100" y="219" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="22" fill="#263444">账号登录</text>
+<rect x="190" y="182" width="290" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="335.0" y="211" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">已有账号验证身份</text>
+<text x="335.0" y="235" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">邮箱密码 / 已绑定 Google</text>
+<rect x="570" y="182" width="320" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="730.0" y="211" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">直接进入原团队工作区</text>
+<text x="730.0" y="235" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">保留个人资料与团队信息</text>
+<path d="M480 217H570" fill="none" stroke="#718096" stroke-width="2" marker-end="url(#a)"/>
+<text x="1145" y="215" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="17" fill="#263444">无团队：显示无团队状态</text>
+<path d="M50 290H1350" stroke="#dce2e8"/>
+<text x="140" y="342" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="22" fill="#263444">受邀加入团队</text>
+<rect x="550" y="313" width="300" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="700.0" y="342" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">打开定向邀请链接</text>
+<text x="700.0" y="366" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">展示受邀团队与邮箱</text>
+<path d="M700 383V420" fill="none" stroke="#718096" stroke-width="2" marker-end="url(#a)"/>
+<path d="M700 420.0L830.0 465L700 510.0L570.0 465Z" fill="#e9f4ed" stroke="#8daf99"/>
+<text x="700" y="471" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">是否已有账号？</text>
+<path d="M570 465H350V560" fill="none" stroke="#718096" stroke-width="2" marker-end="url(#a)"/>
+<text x="420" y="445" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">没有账号 → 注册</text>
+<path d="M830 465H1050V560" fill="none" stroke="#718096" stroke-width="2" marker-end="url(#a)"/>
+<text x="980" y="445" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">已有账号 → 登录</text>
+<rect x="175" y="560" width="350" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="350.0" y="589" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">通过邀请注册新账号</text>
+<text x="350.0" y="613" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">使用受邀邮箱：邮箱验证码 / Google</text>
+<rect x="875" y="560" width="350" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="1050.0" y="589" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">登录已有账号</text>
+<text x="1050.0" y="613" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">已有有效会话时跳过登录</text>
+<path d="M350 630V675" fill="none" stroke="#718096" stroke-width="2" marker-end="url(#a)"/>
+<rect x="175" y="675" width="350" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="350.0" y="704" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">设置个人名称</text>
+<text x="350.0" y="728" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">不填写团队名称，不创建个人团队</text>
+<path d="M350 745V795H550" fill="none" stroke="#718096" stroke-width="2" marker-end="url(#a)"/>
+<path d="M1050 630V795H850" fill="none" stroke="#718096" stroke-width="2" marker-end="url(#a)"/>
+<rect x="550" y="760" width="300" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="700.0" y="789" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">确认加入受邀团队</text>
+<text x="700.0" y="813" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">核对账号邮箱与邀请一致</text>
+<path d="M700 830V865" fill="none" stroke="#718096" stroke-width="2" marker-end="url(#a)"/>
+<rect x="550" y="865" width="300" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
+<text x="700.0" y="894" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">进入受邀团队工作区</text>
+<text x="700" y="993" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="17" fill="#263444">注册、登录及 Google 返回全程保留邀请；注册成功本身不等于已加入团队。</text>
+</svg>

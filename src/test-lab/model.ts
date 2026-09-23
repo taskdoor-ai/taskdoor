@@ -18,7 +18,7 @@ export const displayIndustry = (industry: string) => industryLabels[industry] ||
 export const newTask = (createdById: string | null = null): LabTask => ({ id: uid(), title: "新任务", goal: "", status: "待开始", createdById, ownerId: null, participantIds: [], parentId: null, dependsOnTaskIds: [], acceptanceCriteria: [], executionTips: [], estimatedMinutes: null, dueAt: null, tags: [], visibility: "team", version: 1 });
 export const newTeam = (): LabTeam => ({ id: uid(), name: "新团队", industry: "", description: "", archived: false, members: [], tasks: [], evidence: [] });
 export const newStep = (): LabStep => ({ id: uid(), prompt: "", skillId: skillIds[0], taskId: null, usePreviousOutput: false, events: [] });
-export const newCase = (team?: LabTeam): LabCase => ({ id: uid(), name: "新用例", category: "自定义", teamId: team?.id || "", actorId: team?.members[0]?.id || "", description: "", archived: false, enabled: true, version: 1, steps: [newStep()], assertions: [], reviewChecklist: [] });
+export const newCase = (team?: LabTeam): LabCase => ({ creationContext:"fresh", id: uid(), name: "新用例", category: "自定义", teamId: team?.id || "", actorId: team?.members[0]?.id || "", description: "", archived: false, enabled: true, version: 1, steps: [newStep()], assertions: [], reviewChecklist: [] });
 export function copyTeam(source: LabTeam): LabTeam {
   const copied = structuredClone(source);
   const ids = new Map([source.id, ...source.members.map((item) => item.id), ...source.tasks.map((item) => item.id), ...source.evidence.map((item) => item.id)].map((id) => [id, uid()]));

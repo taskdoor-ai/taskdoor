@@ -7,6 +7,10 @@ description: 当需要根据任务名称、目标和完成标准估算人工投�
 
 先形成可核对的人工工作明细，再估算每项 EWD；执行中逐项核对完成内容，按 EWD 权重计算完成度并记录趋势。
 
+## 当前产品版本与示例
+
+先读取 [当前 PRD 契约](../shared/current-prd-contract.md)，它替代旧快照中相冲突的业务语义；保留既有输出协议。遇到拆分、未知、版本修订或责任边界时，参考 [few-shot 正反例](examples/decision-pairs.md)。示例不是当前输入，不能复制其中的来源、人员、数值或结论。
+
 ## 规则依据
 
 业务依据为 PRD **3.8、6.3、7.7**，见[产品规则](references/product-rules.md)。先读取[共用规则](../shared/product-rules.md)及[证据与更新契约](../shared/evidence-and-updates.md)；输出按[字段与计算契约](references/output-contract.md)组织。

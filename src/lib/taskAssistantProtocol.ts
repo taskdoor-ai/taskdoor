@@ -1,10 +1,10 @@
 import { z } from "zod";
-import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
+import { taskIconNameValues, taskIconToneValues } from "../data/workspaceNodes";
 import { effortEstimateSchema } from "./taskEffort";
 
 const dateValueSchema = z.union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)]);
-const taskIconNameSchema = z.enum(["list-todo", "clipboard-check", "target", "flag", "briefcase", "file-check", "chart", "sparkles"] satisfies [TaskIconName, ...TaskIconName[]]);
-const taskIconToneSchema = z.enum(["neutral", "blue", "cyan", "green", "amber", "red", "purple", "pink"] satisfies [TaskIconTone, ...TaskIconTone[]]);
+const taskIconNameSchema = z.enum(taskIconNameValues);
+const taskIconToneSchema = z.enum(taskIconToneValues);
 
 export const taskDraftSchema = z.object({
   parentSubtaskIndex: z.number().int().nonnegative().optional(),

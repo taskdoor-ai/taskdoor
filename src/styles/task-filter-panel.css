@@ -1,6 +1,6 @@
 /* Searchable filter categories with a second pane for values. */
 .task-workspace-list-options { position: relative; overflow: visible; }
-.task-filter-count { position: absolute; top: -5px; right: -5px; display: grid; place-items: center; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: var(--ad-route-ink); color: #fff; box-shadow: 0 0 0 2px var(--ad-surface); font-size: 10px; font-weight: 600; line-height: 1; pointer-events: none; }
+.task-filter-count { position: absolute; top: -5px; right: -5px; display: grid; place-items: center; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: var(--ad-route); color: var(--ad-action-ink); box-shadow: 0 0 0 2px var(--ad-surface); font-size: 10px; font-weight: 600; line-height: 1; pointer-events: none; }
 .task-filter-menu {
   --task-filter-menu-height: min(480px, var(--available-height, calc(100dvh - 100px)));
   width: 280px;

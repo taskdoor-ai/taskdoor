@@ -1,17 +1,18 @@
 ---
 module_id: "membership-account-exit"
-title: "个人与团队生命周期结束"
+title: "成员退出与账号停用"
+group: "系统规则"
 version: "1.0"
 status: "review"
-last_change: "PRD-0016"
-summary: "结束会话或成员关系，保留协作历史。"
+last_change: "PRD-0034"
+summary: "退出不删任务，成员离开后清空当前人员关系并保留协作历史。"
 lifecycle_stage: "结束会话、成员关系或账号"
 pages: "账户菜单, 团队切换, 团队成员, 个人设置, 账号停用"
-objects: "session, team_membership, team_role, task_acl, task_assignment, cli_device_authorization, account"
-operations: "logout, switch_team, leave_team, remove_member, transfer_responsibility, recover_assignment, revoke_device, deactivate_account"
+objects: "session, team_membership, task_assignment, cli_device_authorization, account"
+operations: "logout, switch_team, leave_team, remove_member, revoke_device, deactivate_account"
 ---
 
-# 个人与团队生命周期结束
+# 成员退出与账号停用
 
 ## 1. 目的
 
@@ -19,22 +20,36 @@ operations: "logout, switch_team, leave_team, remove_member, transfer_responsibi
 
 ## 2. 范围和边界
 
-登录退出、切换团队、离开和停用分别处理；当前仅有本地退出与团队移除。
+支持退出登录、切换团队、离开团队、管理员移除成员及账号停用；本期不设计任务责任交接、接手审批或交接阻断。
 
 ## 3. 详细功能设计
 
 ### 3.1 日常退出
 
-退出登录结束当前会话；切换团队只改变工作上下文，不删除任务。
+退出登录结束当前会话；切换团队只改变工作上下文，不删除任务。未确认的创建方案按创建模块的退出规则丢弃，不能带入另一个团队。
 
-### 3.2 离开与停用目标
+### 3.2 成员离开与停用
 
-交接任务与唯一管理员身份 → 确认离开／停用 → 撤权；讨论、文件、活动保留贡献者归属。
+#### 关系清理
 
-![成员或账号退出前先检查责任和管理员约束，再撤销会话与设备授权](../assets/account-exit/membership-exit-flow.svg)
+- 离开或被移出团队后，清空该成员在本团队任务中的**负责人**位置，从参与者集合移除，取消未生效的待加入任务选择，任务本身保留。
+- 无需先交接，不自动指定其他人。
+- 账号停用在其所有团队执行同样关系清理。
+- 历史讨论、文件与活动保留发生时的贡献者记录，不冒充当前有效成员。
 
-*FIG-EXIT-001 · 上线目标流程：离开团队、管理员移除和账号停用共享责任检查，但分别终止 Membership 或 Account；阻断项不会被自动跳过。*
+#### 访问撤销
 
-## 4. 验收标准
+- 撤销对应团队访问和 CLI 授权范围，账号停用撤销全部会话和设备授权。
+- 团队切换不等于撤权。
+- **通知**按模块 10 汇总，剩余任务成员可重新设置人员。
+- 若没有任何任务成员，保留原任务记录和空人员关系，本期不追加交接或责任恢复流程。
 
-不留下无人处理的责任或无管理员团队；正式跨端撤权与账号停用仍待接入。
+#### 管理员限制
+
+任务交接不作为离开条件；唯一团队管理员退出仍需先在团队管理中保留另一名管理员，避免无人管理。这是团队管理约束，不引入逐任务交接流程。
+
+## 4. 功能验收标准
+
+- 负责人离开后原任务保留、负责人为空；离开者不再列为参与者，不要求另一个人接手才可清理任务关系。
+- 移除一个团队的成员关系不影响其他团队；账号停用才撤销全部团队访问。
+- 旧通知、旧 CLI 凭据不能继续读取已失权团队内容；历史贡献者归属不被删除或替换为其他成员。

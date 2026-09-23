@@ -25,17 +25,17 @@ test("注册验证后创建账号，姓名与密码凭据保留，再进入团�
   assert.equal(state.accounts["lin@example.com"].passwordDigest, digest);
 });
 
-test("演示账号模拟新用户，登录后直接创建团队，也能选择加入", () => {
+test("演示账号模拟新用户，登录后显示无团队状态，可选择创建或加入", () => {
   const initial = createOnboardingPreview();
   const account = initial.accounts[previewDemoEmail];
   const signedIn = transitionOnboarding(initial, { type: "login", email: previewDemoEmail, passwordDigest: account.passwordDigest });
-  assert.equal(signedIn.step, "create");
+  assert.equal(signedIn.step, "choose");
   assert.deepEqual(signedIn.teams, []);
   assert.equal(signedIn.activeTeamId, "");
   const joining = transitionOnboarding(signedIn, { type: "choose", step: "join" });
   assert.equal(joining.step, "join");
   assert.equal(joining.teams.length, 0);
-  assert.equal(transitionOnboarding(joining, { type: "choose", step: "choose" }).step, "create");
+  assert.equal(transitionOnboarding(joining, { type: "choose", step: "choose" }).step, "choose");
 });
 
 test("旧预览中的演示团队只迁移一次，不影响其他账号及新建团队", () => {
@@ -43,10 +43,10 @@ test("旧预览中的演示团队只迁移一次，不影响其他账号及新�
   const legacyTeam = { id: "ark", name: "方舟产品团队", role: "member" as const };
   const legacy = { ...registered, version: undefined, step: "workspace", email: previewDemoEmail, name: "周岚", teams: [legacyTeam], activeTeamId: "ark", accounts: { ...registered.accounts, [previewDemoEmail]: { ...registered.accounts[previewDemoEmail], teams: [legacyTeam], activeTeamId: "ark" } } };
   const migrated = restoreOnboardingPreview(JSON.stringify(legacy))!;
-  assert.equal(migrated.step, "create");
+  assert.equal(migrated.step, "choose");
   assert.deepEqual(migrated.teams, []);
   assert.equal(migrated.accounts["lin@example.com"].name, "林晓");
-  const created = transitionOnboarding(migrated, { type: "create-team", name: "周岚的新团队" });
+  const created = transitionOnboarding(transitionOnboarding(migrated, { type: "choose", step: "create" }), { type: "create-team", name: "周岚的新团队" });
   const restored = restoreOnboardingPreview(JSON.stringify(created))!;
   assert.equal(restored.step, "workspace");
   assert.equal(restored.teams[0].name, "周岚的新团队");
@@ -80,9 +80,9 @@ test("注册接受任意六位数字且不受过期限制，刷新和重发保�
     assert.match(checked.error, /6 位数字/);
   }
   const restored = restoreOnboardingPreview(JSON.stringify(state))!;
-  assert.equal(getPreviewCodeResendDelay(restored, 2000), 29);
-  assert.equal(getPreviewCodeResendDelay(restored, 31000), 0);
-  const resent = transitionOnboarding(restored, { type: "send-code", now: 31000 });
+  assert.equal(getPreviewCodeResendDelay(restored, 2000), 59);
+  assert.equal(getPreviewCodeResendDelay(restored, 61000), 0);
+  const resent = transitionOnboarding(restored, { type: "send-code", now: 61000 });
   assert.equal(resent.pendingPasswordDigest, digest);
   assert.equal(resent.name, "林晓");
 });
@@ -120,8 +120,8 @@ test("未登录不能建团队；创建者是管理员，重新登录恢复团�
 });
 
 test("不同账号创建的第一个团队使用不同 ID，避免任务互相串入", () => {
-  const first = transitionOnboarding(verified(), { type: "create-team", name: "第一团队" });
-  const other = transitionOnboarding(verified(), { type: "create-team", name: "第二团队" });
+  const first = transitionOnboarding(transitionOnboarding(verified(), { type: "choose", step: "create" }), { type: "create-team", name: "第一团队" });
+  const other = transitionOnboarding(transitionOnboarding(verified(), { type: "choose", step: "create" }), { type: "create-team", name: "第二团队" });
   assert.notEqual(first.activeTeamId, other.activeTeamId);
 });
 

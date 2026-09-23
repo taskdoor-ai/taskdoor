@@ -223,6 +223,6 @@ test("App创建入口与两种删除入口独立接线，存储提交成功后�
   assert.ok(remove.includes('kind: "subtasks"'));
   const listRemove = app.slice(app.indexOf("const confirmDeleteTask ="), app.indexOf("const selectedTreeTask ="));
   assert.ok(listRemove.indexOf("commitTaskAiStorage") < listRemove.indexOf("clearTaskFileDraftSessions"));
-  assert.match(app, /删除子任务/);
-  assert.match(app, /删除任务/);
+  assert.match(app, /preview=\{subtaskDeletion.preview\}/);
+  assert.match(app, /preview=\{taskDeletion.preview\}/);
 });

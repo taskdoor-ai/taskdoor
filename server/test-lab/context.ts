@@ -2,6 +2,9 @@ import type { LabTeam, LabCase, LabStep, LabStepResult } from '../../src/test-la
 import { buildView } from '../../src/test-lab/visibility.ts';
 export { buildView } from '../../src/test-lab/visibility.ts';
 export function buildModelInput(team:LabTeam,c:LabCase,step:LabStep,runId:string,previous:LabStepResult[]){
+  const fresh=step.skillId==='agentdoor-task-planner'&&c.creationContext==='fresh';
+  if(fresh)team={...team,tasks:[],evidence:[]};
+  if(fresh)step={...step,taskId:null};
   const view=buildView(team,c.actorId);if(step.taskId&&!view.team.tasks.some(t=>t.id===step.taskId))throw new Error('当前人员无权查看用例目标任务');
   const time=step.evaluatedAt?new Date(step.evaluatedAt).toISOString():new Date().toISOString(); const v={...view.team,evidence:view.team.evidence.map(({attachment:_attachment,...record})=>record)};
   const history=v.evidence.filter(e=>e.kind==='活动').map(e=>({id:e.id,taskId:e.taskId,occurredAt:e.createdAt,type:'task_activity',summary:e.content,sourceRefs:e.relatedEvidenceIds??[]}));
@@ -15,13 +18,13 @@ export function buildModelInput(team:LabTeam,c:LabCase,step:LabStep,runId:string
   };
   if(step.skillId!=='agentdoor-task-planner')return base;
   const statuses={'待开始':'open','进行中':'in_progress','已阻塞':'blocked','已完成':'completed','已取消':'cancelled'};
-  return {...base,authorizedTeamIds:[team.id],revision:c.version,currentTaskId:step.taskId,confirmedFields:[],
+  return {...base,...(fresh?{creationMode:'fresh',constraints:['本次只做基础创建与拆解，团队任务为空；无需查阅历史任务、文件或讨论，不因缺少历史资料要求补读。']}:{ }),authorizedTeamIds:[team.id],revision:c.version,currentTaskId:step.taskId,confirmedFields:[],
     members:v.members.map(m=>({...m,boundaries:[],evidence:[{id:m.id,title:`${m.name}责任说明`,text:m.responsibilities.join('；')}]})),
     context:{snapshotId:`${runId}:${step.id}:snapshot`,asOf:time,acl:{status:'verified',scopeTeamIds:[team.id]},coverage:{tasks:'complete',subtasks:'complete',discussions:'complete',history:history.length?'partial':'not_requested',files:'complete'},
       tasks:v.tasks.map(t=>({...t,status:statuses[t.status],updatedAt:time,dueOn:t.dueAt,sourceRefs:[t.id]})),
       discussions:v.evidence.filter(e=>e.kind==='讨论'||e.kind==='确认').map(e=>({id:e.id,taskId:e.taskId,authorId:e.authorId,createdAt:e.createdAt||time,kind:e.kind==='确认'?'decision':'report',text:e.content,replyTo:e.replyToId,sourceRefs:e.relatedEvidenceIds??[]})),history,files:v.evidence.filter(e=>e.kind==='文件').map(e=>({id:e.id,taskId:e.taskId,title:e.title,fileName:e.title,version:e.version,linkedTaskIds:[e.taskId],content:e.content,authorId:e.authorId,createdAt:e.createdAt||null,supersedesId:e.supersedesId})),stakeholders:[],
       sourceRefs:[...v.tasks.map(t=>({id:t.id,title:t.title,text:`目标：${t.goal}；完成标准：${t.acceptanceCriteria.join('；')}`})),...v.evidence.map(e=>({id:e.id,title:e.title,text:e.content}))]},
-    duplicateSearch:{status:'completed',scopeTeamIds:[team.id],matches:v.tasks.map(t=>({taskId:t.id,title:t.title,reason:'当前授权沙箱任务候选，请按实际交付结果核对'})),coverageNote:'已枚举当前模拟视角可见的全部沙箱任务；不包含其他团队或生产数据。'},
+    duplicateSearch:{status:'completed',scopeTeamIds:[team.id],matches:v.tasks.map(t=>({taskId:t.id,title:t.title,reason:'当前授权沙箱任务候选，请按实际交付结果核对'})),coverageNote:fresh?'本次为基础创建测试，任务沙箱为空；不查询历史任务、讨论、文件或活动。':'已枚举当前模拟视角可见的全部沙箱任务；不包含其他团队或生产数据。'},
   };
 }
 export function applyEvents(team:LabTeam,step:LabStep):LabTeam{

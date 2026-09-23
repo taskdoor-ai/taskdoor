@@ -3,7 +3,7 @@ import React, { useState, type ReactNode } from "react";
 import { lines, newStep, newTask, uid } from "./model";
 import { MarkdownEditor } from "./markdown";
 import { evidenceDownload, isMarkdownEvidence, updateEvidenceContent } from "./markdown-files";
-import { skillIds, taskStatuses, type Json, type LabAssertion, type LabCase, type LabEvidence, type LabEvent, type LabMember, type LabState, type LabSkill, type LabTask, type LabTeam } from "./types";
+import { selectableSkillIds, taskStatuses, type Json, type LabAssertion, type LabCase, type LabEvidence, type LabEvent, type LabMember, type LabState, type LabSkill, type LabTask, type LabTeam } from "./types";
 
 export function Field({ label, children, hint }: { label: string; children: ReactNode; hint?: string }) {
   return <label className="lab-field"><span>{label}</span>{children}{hint && <small>{hint}</small>}</label>;
@@ -72,12 +72,12 @@ export function TeamEditorFields({ value, onChange }: { value: LabTeam; onChange
 
 function localDateTime(value: string) { const date = new Date(value); return Number.isNaN(date.getTime()) ? "" : new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16); }
 
-export function CaseEditorFields({ value, teams, skills, versions = [], defaults = {}, onChange }: { value: LabCase; teams: LabTeam[]; skills: LabSkill[]; versions?:LabState["skillVersions"]; defaults?:LabState["skillDefaults"]; onChange: (value: LabCase) => void }) {
+export function CaseEditorFields({ value, categories = [], teams, skills, versions = [], defaults = {}, onChange }: { value: LabCase; categories?:string[]; teams: LabTeam[]; skills: LabSkill[]; versions?:LabState["skillVersions"]; defaults?:LabState["skillDefaults"]; onChange: (value: LabCase) => void }) {
   const set = (patch: Partial<LabCase>) => onChange({ ...value, ...patch });
   const team = teams.find((item) => item.id === value.teamId);
-  const skillOptions = skills.length ? skills : skillIds.map((id) => ({ id, title: id, outputVersion: "" }));
+  const skillOptions = skills.length ? skills : selectableSkillIds.map((id) => ({ id, title: id, outputVersion: "" }));
   return <>
-    <div className="lab-form-grid"><Text label="用例名称" value={value.name} required onChange={(name) => set({ name })} /><Text label="分类" value={value.category} onChange={(category) => set({ category })} />
+    <div className="lab-form-grid"><Text label="用例名称" value={value.name} required onChange={(name) => set({ name })} /><Field label="测试分类" hint="选择已有分类，或输入新分类名称；分类说明可在管理分类中维护。"><input list="lab-case-categories" value={value.category} maxLength={80} onChange={e=>set({category:e.target.value})}/><datalist id="lab-case-categories">{categories.map(c=><option key={c} value={c}/>)}</datalist></Field>
       <Field label="所属团队"><select required value={value.teamId} onChange={(event) => { const selected = teams.find((item) => item.id === event.target.value); set({ teamId: event.target.value, actorId: selected?.members[0]?.id || "", steps: value.steps.map((step) => ({ ...step, taskId: null, events: [] })) }); }}><option value="">请选择团队</option>{teams.filter((item) => !item.archived || item.id === value.teamId).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field>
       <Field label="执行成员视角"><select required value={value.actorId} onChange={(event) => set({ actorId: event.target.value })}><option value="">请选择成员</option>{team?.members.map((member) => <option key={member.id} value={member.id}>{member.name} · {member.role}</option>)}</select></Field>
     </div>
@@ -85,7 +85,7 @@ export function CaseEditorFields({ value, teams, skills, versions = [], defaults
     <label className="lab-check"><input type="checkbox" checked={value.enabled} onChange={(event) => set({ enabled: event.target.checked })} />启用此用例</label>
     <section className="lab-editor-section"><header><h3>执行步骤</h3><button type="button" onClick={() => set({ steps: [...value.steps, newStep()] })}>＋ 添加步骤</button></header>
       {value.steps.map((step, index) => { const update = (patch: Partial<typeof step>) => set({ steps: value.steps.map((item) => item.id === step.id ? { ...item, ...patch } : item) }); return <fieldset key={step.id} className="lab-form-card"><legend>步骤 {index + 1}</legend>
-        <div className="lab-form-grid"><Field label="测试技能"><select value={step.skillId} onChange={(event) => update({ skillId: event.target.value as typeof step.skillId, skillVersionId: undefined })}>{skillOptions.map((skill) => <option key={skill.id} value={skill.id}>{skill.title}</option>)}</select></Field>
+        <div className="lab-form-grid"><Field label="测试技能"><select value={step.skillId} onChange={(event) => update({ skillId: event.target.value as typeof step.skillId, skillVersionId: undefined })}>{!skillOptions.some(skill=>skill.id===step.skillId)&&<option value={step.skillId} disabled>历史用例规则（保留原版本）</option>}{skillOptions.map((skill) => <option key={skill.id} value={skill.id}>{skill.title}</option>)}</select></Field>
           <Field label="Skill 版本"><select value={step.skillVersionId===null?"workspace":step.skillVersionId||"default"} onChange={e=>update({skillVersionId:e.target.value==="default"?undefined:e.target.value==="workspace"?null:e.target.value})}><option value="default">跟随默认 · {versions.find(v=>v.id===defaults[step.skillId])?.label||"工作区版本"}</option><option value="workspace">固定使用工作区版本</option>{versions.filter(v=>v.skillId===step.skillId).map(v=><option key={v.id} value={v.id}>{v.label}</option>)}</select></Field><Field label="目标任务"><select value={step.taskId || ""} onChange={(event) => update({ taskId: event.target.value || null })}><option value="">全部可见任务 / 规划新任务</option>{team?.tasks.map((task) => <option key={task.id} value={task.id}>{task.title}</option>)}</select></Field></div>
         <Text label="步骤输入" multiline required value={step.prompt} onChange={(prompt) => update({ prompt })} />
         <Field label="判断时间（留空使用运行时间）"><input type="datetime-local" value={step.evaluatedAt?localDateTime(step.evaluatedAt):""} onChange={e=>update({evaluatedAt:e.target.value?new Date(e.target.value).toISOString():undefined})}/><small>固定时间可重复核对期限与优先级；不改变实际运行时间。</small></Field>

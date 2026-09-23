@@ -120,6 +120,19 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
     () => partitionPinnedTasks(projection.visibleTasks, pinnedTaskIds),
     [pinnedTaskIds, projection.visibleTasks],
   );
+  const visibleOrder = [...pinnedTasks, ...unpinnedTasks].map(task => task.id).join("\n");
+  useEffect(() => {
+    const container = rowsRef.current;
+    if (!container || !selectedTaskId || showingWorkbench) return;
+    const row = Array.from(container.querySelectorAll<HTMLElement>("[data-task-id]"))
+      .find(element => element.dataset.taskId === selectedTaskId)?.closest("li");
+    if (!row || container.clientHeight === 0) return;
+    const viewport = container.getBoundingClientRect();
+    const bounds = row.getBoundingClientRect();
+    // Scroll only the list, leaving detail focus and page position intact.
+    if (bounds.top < viewport.top) container.scrollTop += bounds.top - viewport.top;
+    else if (bounds.bottom > viewport.bottom) container.scrollTop += bounds.bottom - viewport.bottom;
+  }, [selectedTaskId, visibleOrder, showingWorkbench, query, filterKey]);
   const tags = useMemo(() => {
     const byName = new Map<string, TagDefinition>();
     for (const { tag } of projection.tagFacets) if (!byName.has(tag.name)) byName.set(tag.name, tag);

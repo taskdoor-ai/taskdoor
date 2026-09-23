@@ -1,3 +1,4 @@
+import { MAX_BATCH_CASES, MAX_QUEUED_RUNS } from "../../src/test-lab/run-limits.ts";
 import { randomUUID } from 'node:crypto';
 import type { LabRun, LabStepResult, LabRunSelection } from '../../src/test-lab/types.ts';
 import type { LabStore } from './store.ts';
@@ -53,9 +54,10 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
   return {
     enqueue(caseIds:string[],requestId:string,selection:LabRunSelection={}){
       const selected=runSelectionSchema.parse(selection);
-      if(!requestId||requestId.length>100||!Array.isArray(caseIds)||!caseIds.length||caseIds.length>5||new Set(caseIds).size!==caseIds.length)throw new Error('每批请选择 1–5 个不同用例，并提供有效请求标识');
+      const models=selected.models??[selected.model||options.model];
+      if(!requestId||requestId.length>100||!Array.isArray(caseIds)||!caseIds.length||caseIds.length>MAX_BATCH_CASES||new Set(caseIds).size!==caseIds.length)throw new Error(`每批请选择 1–${MAX_BATCH_CASES} 个不同用例，并提供有效请求标识`);
       const state=store.get();const existing=state.runs.filter(r=>r.requestId===requestId);
-      if(existing.length){if(JSON.stringify(existing.map(r=>r.caseId))!==JSON.stringify(caseIds)||JSON.stringify(existing[0].selection??{})!==JSON.stringify(selected))throw new Error('同一请求标识不能用于不同用例');return existing;}
+      if(existing.length){if(JSON.stringify([...new Set(existing.map(r=>r.caseId))])!==JSON.stringify(caseIds)||JSON.stringify(existing[0].selection??{})!==JSON.stringify(selected))throw new Error('同一请求标识不能用于不同用例');return existing;}
       if(selected.workflowId){
         const checked=preflightWorkflow(state,selected.workflowId);
         if(JSON.stringify(checked.workflow.caseIds)!==JSON.stringify(caseIds))throw new Error('用例列表与测试流程不一致');
@@ -63,13 +65,18 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
         if(!checked.ready)throw new Error(`流程预检未通过：${checked.cases.flatMap(c=>c.checks.filter(check=>check.status==='failed').map(check=>`${c.name}：${check.label}`)).slice(0,2).join('；')}`);
       }
       if(!options.apiKey)throw new Error('未配置服务端 PPIO API Key');
-      if(state.runs.filter(r=>r.status==='queued'||r.status==='running').length+caseIds.length>5)throw new Error('运行队列最多 5 个用例，请等待或取消已有运行');
-      const cases=caseIds.map(id=>{const c=state.cases.find(c=>c.id===id);if(!c||c.archived||!c.enabled)throw new Error('用例不存在、已归档或待审核启用');const team=state.teams.find(t=>t.id===c.teamId);if(!team||team.archived)throw new Error('用例团队不存在或已归档');const executionCase={...c,actorId:selected.actorId||c.actorId};const view=buildView(team,executionCase.actorId);if(c.steps.some(s=>s.taskId&&!view.team.tasks.some(t=>t.id===s.taskId)))throw new Error('当前人员无权查看用例目标任务');return {c:executionCase,team};});
-      if(cases.reduce((n,{c})=>n+c.steps.length,0)>20)throw new Error('一批最多 20 个步骤，避免意外 API 用量');
+      const capacity=MAX_QUEUED_RUNS;
+      if(state.runs.filter(r=>r.status==='queued'||r.status==='running').length+caseIds.length*models.length>capacity)throw new Error(`运行队列最多 ${capacity} 个用例与模型组合，请等待或取消已有运行`);
+      const evaluatedAt=new Date().toISOString();
+      const cases=caseIds.map(id=>{const c=state.cases.find(c=>c.id===id);if(!c||c.archived||!c.enabled)throw new Error('用例不存在、已归档或待审核启用');const team=state.teams.find(t=>t.id===c.teamId);if(!team||team.archived)throw new Error('用例团队不存在或已归档');const executionCase={...c,steps:c.steps.map(s=>({...s,evaluatedAt:s.evaluatedAt||evaluatedAt})),actorId:selected.actorId||c.actorId};const view=buildView(team,executionCase.actorId);if(c.steps.some(s=>s.taskId&&!view.team.tasks.some(t=>t.id===s.taskId)))throw new Error('当前人员无权查看用例目标任务');return {c:executionCase,team};});
+      for(const {c,team} of cases)for(const rule of c.verification?.fixtureChecks??[]){
+        const collection=rule.subject==='task'?team.tasks:rule.subject==='member'?team.members:team.evidence;
+        if(evaluateAssertions(collection.find(item=>item.id===rule.subjectId),[{...rule,stepId:'preflight'}])[0].status!=='passed')throw new Error(`用例前置条件未满足：${c.name} / ${rule.label}；尚未调用模型`);
+      }
       const frozen=cases.map(({c})=>c.steps.map(s=>resolveSkill(state,s.skillId,s.skillVersionId)));
-      const batchId=randomUUID();const runs:LabRun[]=cases.map(({c,team})=>({id:randomUUID(),batchId,requestId,caseId:c.id,caseName:c.name,actorId:c.actorId,teamId:c.teamId,status:'queued',createdAt:new Date().toISOString(),startedAt:null,finishedAt:null,model:selected.model||options.model,selection:selected,endpoint:options.endpoint,caseSnapshot:structuredClone(c),teamSnapshot:structuredClone(team),steps:[],error:null,review:null}));
+      const batchId=randomUUID();const runs:LabRun[]=models.flatMap(model=>cases.map(({c,team})=>({id:randomUUID(),batchId,requestId,caseId:c.id,caseName:c.name,actorId:c.actorId,teamId:c.teamId,status:'queued',createdAt:new Date().toISOString(),startedAt:null,finishedAt:null,model,selection:selected,endpoint:options.endpoint,caseSnapshot:structuredClone(c),teamSnapshot:structuredClone(team),steps:[],error:null,review:null})));
       store.updateRuns(all=>{all.push(...runs);});
-      runs.forEach((r,i)=>{snapshots.set(r.id,frozen[i]);queue.push(r.id);});start();return runs;
+      runs.forEach((r,i)=>{snapshots.set(r.id,frozen[i%cases.length]);queue.push(r.id);});start();return runs;
     },
     cancel(id:string){const r=get(id);if(r.status==='queued'){update(id,r=>{r.status='cancelled';r.finishedAt=new Date().toISOString();r.error='已在发出 API 请求前取消';});snapshots.delete(id);}else if(r.status==='running')controllers.get(id)?.abort();return get(id);},
     review(id:string,verdict:'passed'|'failed',note:string){const r=get(id);if(r.status==='running'||r.status==='queued')throw new Error('请等待运行结束再评审');if(!['passed','failed'].includes(verdict)||!note.trim()||note.length>5000)throw new Error('请选择评审结论并填写依据（最多 5000 字）');update(id,r=>{r.review={verdict,note,at:new Date().toISOString()};});return get(id);},
