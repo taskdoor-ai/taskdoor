@@ -35,6 +35,12 @@ TaskDoor 希望形成一条连续闭环：
   → AI 提供分析，用户确认完成
 ```
 
+## TaskDoor 协作架构
+
+![TaskDoor 协作架构：从任务创建与规划，到人与本地 Agent 在任务公共空间协作，再到团队资产沉淀和 AI 分析](docs/prd/assets/product-lifecycle/taskdoor-collaboration-architecture.png)
+
+任务从规划进入公共空间，成员与各自的本地 Agent 基于同一份任务上下文协作；讨论、文件、进展和交付成果持续沉淀为团队资产，再为后续任务拆解、周期预估、进度分析和推进建议提供依据。
+
 ## 产品如何工作
 
 ### 1. 从需求创建任务
