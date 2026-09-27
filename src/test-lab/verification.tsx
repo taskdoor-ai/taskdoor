@@ -7,7 +7,7 @@ export function VerificationSummary({item}:{item:LabCase}) {
   return <section className="lab-detail-section lab-verification"><h3>验证目标</h3><p>{plan.objective}</p>
     <details><summary>初始条件 · {plan.fixtureChecks.length} 项自动预检</summary><ul>{plan.preconditions.map((text,i)=><li key={i}>{text}</li>)}</ul></details>
     <h4>目标结果</h4>{item.steps.map((step,index)=><div key={step.id} className="lab-expected-step"><strong>步骤 {index+1}</strong><ul>{plan.expectedResults.find(r=>r.stepId===step.id)?.criteria.map((text,i)=><li key={i}>{text}</li>)}</ul></div>)}
-    <p className="lab-muted">流程自动核对结构、引用与已配置断言；语义、责任边界等仍按人工核对项确认。预期结果不会发送给模型。</p>
+    <p className="lab-muted">流程自动核对结构、引用与已配置断言；语义、责任边界等仍按人工核对项确认。预期结果不会发送给被测模型；使用 Jev 核对时会发送给 Jev。</p>
   </section>;
 }
 

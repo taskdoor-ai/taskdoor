@@ -252,3 +252,8 @@
 .google-preview-cancel { justify-self: start; margin: 0; }
 .google-preview-retry { justify-self: center; font-size: 12px; }
 .google-preview button:focus-visible { outline: 2px solid #4285f4; outline-offset: 4px; }
+
+.onboarding-auth { position:relative; }
+.onboarding-language { position:absolute; top:20px; right:28px; z-index:2; }
+.onboarding-language .language-switcher { color:var(--ad-ink-secondary); }
+@media(max-width:600px) { .onboarding-language {top:12px; right:16px;} .onboarding-auth .onboarding-main {padding-top:72px;} }

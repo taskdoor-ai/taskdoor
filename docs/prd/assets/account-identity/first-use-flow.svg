@@ -3,7 +3,7 @@
 <text x="100" y="114" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="22" fill="#263444">注册</text>
 <rect x="190" y="77" width="290" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
 <text x="335.0" y="106" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">邮箱注册 / Google 新账号</text>
-<text x="335.0" y="130" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">完成身份验证</text>
+<text x="335.0" y="130" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">完成身份验证及 TaskDoor 密码设置</text>
 <rect x="570" y="77" width="320" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
 <text x="730.0" y="106" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">设置个人名称 + 团队名称</text>
 <rect x="980" y="77" width="330" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
@@ -13,7 +13,7 @@
 <text x="100" y="219" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="22" fill="#263444">账号登录</text>
 <rect x="190" y="182" width="290" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
 <text x="335.0" y="211" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">已有账号验证身份</text>
-<text x="335.0" y="235" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">邮箱密码 / 已绑定 Google</text>
+<text x="335.0" y="235" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">邮箱密码 / Google（未设密码先补设）</text>
 <rect x="570" y="182" width="320" height="70" rx="10" fill="white" stroke="#cbd5e1"/>
 <text x="730.0" y="211" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="18" fill="#263444">直接进入原团队工作区</text>
 <text x="730.0" y="235" text-anchor="middle" font-family="Arial, PingFang SC, sans-serif" font-size="15" fill="#263444">保留个人资料与团队信息</text>

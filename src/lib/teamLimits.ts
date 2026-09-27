@@ -5,7 +5,7 @@ type Creator = { userId: string; email: string; name: string };
 export function countCreatedTeams(teams: TeamResponsibilityProfile[], identity: Pick<Creator, 'userId' | 'email'>) {
   return teams.filter(team => team.createdBy ? team.createdBy === identity.userId : (() => {
     // Legacy teams predate creator metadata: retain the original first administrator.
-    const creator = team.memberships.find(member => member.role === 'admin');
+    const creator = team.memberships.find(member => ['owner', 'admin'].includes(member.role));
     return creator?.memberId === identity.userId || creator?.email.toLowerCase() === identity.email.toLowerCase();
   })()).length;
 }
@@ -18,8 +18,8 @@ export function prepareCreatedTeam(directory: PersonalCenterState, identity: Cre
   if (countCreatedTeams(directory.teams, identity) >= MAX_CREATED_TEAMS) throw new Error(`最多可创建 ${MAX_CREATED_TEAMS} 个团队`);
   const id = `preview-team-${crypto.randomUUID()}`;
   const team: TeamResponsibilityProfile = {
-    id, name, createdBy: identity.userId, role: '管理员', coverage: '', missingSources: '', lastSyncedAt: '刚刚', inviteToken: crypto.randomUUID(),
-    memberships: [{ id: `${id}:${identity.userId}`, memberId: identity.userId, email: identity.email, name: identity.name, role: 'admin', status: 'active', responsibility: '' }],
+    id, name, createdBy: identity.userId, role: '拥有者', coverage: '', missingSources: '', lastSyncedAt: '刚刚', inviteToken: crypto.randomUUID(),
+    memberships: [{ id: `${id}:${identity.userId}`, memberId: identity.userId, email: identity.email, name: identity.name, role: 'owner', status: 'active', responsibility: '' }],
     responsibilityDocument: { content: '', updatedAt: new Date().toISOString(), updatedBy: identity.name, revisionId: crypto.randomUUID() }, observedClaims: [],
   };
   return { team, directory: { ...directory, teams: [...directory.teams, team] } };

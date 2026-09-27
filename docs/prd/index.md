@@ -37,7 +37,7 @@ status: "draft"
 ## 系统规则
 
 - [删除与数据保留](modules/13-deletion-recovery-retention.md)
-- [成员退出与账号停用](modules/14-membership-account-exit.md)
+- [成员退出与移除](modules/14-membership-account-exit.md)
 - [权限、异常与质量要求](modules/15-permissions-errors-nfr.md)
 - [语言、翻译与时区](modules/02-internationalization.md)
 

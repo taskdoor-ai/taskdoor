@@ -9,7 +9,7 @@ export const workspaceProfileKey = (userId: string) => `agentdoor-account-profil
 export function readWorkspaceSession(): WorkspaceSession | null {
   try {
     const value = JSON.parse(sessionStorage.getItem(workspaceSessionKey) ?? "null");
-    return value && [value.userId, value.email, value.name, value.activeTeamId].every(item => typeof item === "string" && item.trim()) ? value : null;
+    return value && [value.userId, value.email, value.name].every(item => typeof item === "string" && item.trim()) && typeof value.activeTeamId === "string" ? value : null;
   } catch { return null; }
 }
 

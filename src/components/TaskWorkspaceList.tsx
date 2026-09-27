@@ -29,6 +29,7 @@ export type TaskWorkspaceListProps = {
   onCreateTask: () => void;
   onFiltersChange: (filters: TaskListFilters) => void;
   onManageTags: () => void;
+  onOpenRecycleBin?: () => void;
   onDeleteTask: (task: TaskNode) => void;
   onTaskSelect: (task: TaskNode) => void;
   onQueryChange: (query: string) => void;
@@ -75,7 +76,7 @@ function TaskRowTitle({ title }: { title: string }) {
   </span>;
 }
 
-export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onCreateTask, onDeleteTask, onFiltersChange, onManageTags, onTaskSelect, onQueryChange, query, scopeCounts, selectedTaskId, showingWorkbench, teamId }: TaskWorkspaceListProps) {
+export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onCreateTask, onDeleteTask, onOpenRecycleBin, onFiltersChange, onManageTags, onTaskSelect, onQueryChange, query, scopeCounts, selectedTaskId, showingWorkbench, teamId }: TaskWorkspaceListProps) {
   const { t, locale } = useI18n();
   const mock = useMockText();
   const statusText = (status: string) => status in statusMessageKey ? t(statusMessageKey[status as keyof typeof statusMessageKey]) : status;
@@ -180,7 +181,7 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
       <DropdownMenu>
         <DropdownMenuTrigger aria-label={t('list.moreLabel', { name: mock.field(task.id, "title", task.name) })} className="task-workspace-row-menu-trigger" title={t('list.more')} type="button"><MoreHorizontal aria-hidden="true" size={16} /></DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="task-workspace-row-menu" sideOffset={4}>
-          <DropdownMenuItem variant="destructive" onClick={() => onDeleteTask(task)}><Trash2 aria-hidden="true" size={15} />{t('list.delete')}</DropdownMenuItem>
+          <DropdownMenuItem disabled={task.ownerId !== currentUserId} variant="destructive" onClick={() => onDeleteTask(task)}><Trash2 aria-hidden="true" size={15} />{t('list.delete')}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </li>;
@@ -246,6 +247,12 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
       </> : <div className="task-workspace-list-empty" role="status"><strong>{!projection.allTasks.length ? t('list.empty') : t('list.noMatch')}</strong><p>{projection.allTasks.length ? t('list.searchHint') : t('list.startHint')}</p>{projection.allTasks.length ? <Button onClick={() => { onQueryChange(""); changeFilters(clearedTaskListConditions); }} size="sm" variant="outline">{t('list.viewAll')}</Button> : <Button onClick={onCreateTask} size="sm" variant="outline"><Plus aria-hidden="true" />{t('list.new')}</Button>}</div>}
     </div>
     <FixedScrollThumb scrollRef={rowsRef} />
+    {onOpenRecycleBin && <footer className="task-list-bottom-actions">
+      <button className="task-list-recycle-trigger" onClick={onOpenRecycleBin} type="button">
+        <Trash2 aria-hidden="true" size={16} />
+        <span>{locale === 'zh-CN' ? '回收站' : 'Recycle bin'}</span>
+      </button>
+    </footer>}
 
   </section>;
 }

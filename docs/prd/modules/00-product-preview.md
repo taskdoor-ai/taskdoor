@@ -4,7 +4,7 @@ title: "产品界面预览"
 group: "产品概览"
 version: "1.1"
 status: "review"
-last_change: "PRD-0057"
+last_change: "PRD-0066"
 summary: "以英文界面截图快速浏览产品全貌。"
 presentation: "gallery"
 ---
@@ -23,17 +23,11 @@ presentation: "gallery"
 
 ### 团队与账号
 
-![登录页：Google 入口与邮箱密码登录。](../assets/account-identity/login-empty-en.jpg)
-
-*FIG-PREVIEW-018 · 登录页：Google 入口与邮箱密码登录。*
 
 ![受邀登录：核对团队与加入身份，登录后继续加入。](../assets/team-onboarding/join-team-login-en.png)
 
 *FIG-PREVIEW-050 · 受邀登录：核对团队与加入身份，登录后继续加入。*
 
-![注册入口：Google 或邮箱。](../assets/account-identity/signup-current-en.png)
-
-*FIG-PREVIEW-019 · 注册入口：选择 Google 或邮箱。*
 
 ![未注册用户通过邀请加入。](../assets/team-onboarding/join-team-signup-en.png)
 
@@ -42,18 +36,6 @@ presentation: "gallery"
 ![个人信息 Profile：头像、姓名与邮箱。](../assets/workspace-navigation/profile-en.jpg)
 
 *FIG-PREVIEW-020 · 个人信息 Profile：头像、姓名与邮箱。*
-
-![团队信息 Team information：团队标识、名称与管理入口。](../assets/workspace-navigation/team-information-en.jpg)
-
-*FIG-PREVIEW-021 · 团队信息 Team information：团队标识、名称与管理入口。*
-
-![成员管理：邀请入口、成员职责与角色。](../assets/member-collaboration/members-en.jpg)
-
-*FIG-PREVIEW-022 · 成员管理：邀请入口、成员职责与角色。*
-
-![成员列表下半页：完整团队分工与角色。](../assets/member-collaboration/members-bottom-en.jpg)
-
-*FIG-PREVIEW-023 · 成员列表下半页：完整团队分工与角色。*
 
 ![个人设置与团队设置的导航入口。](../assets/workspace-navigation/settings-en.png)
 

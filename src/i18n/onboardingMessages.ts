@@ -2,6 +2,10 @@ import type { Locale } from "./core";
 
 /** UI copy and legacy transition messages. Stored business values remain untouched. */
 export const onboardingEn = {
+  "设置密码": "Set your password",
+  "为你的 TaskDoor 账号设置密码，以后也可以使用邮箱和密码登录。": "Set a TaskDoor password so you can also sign in with your email and password.",
+  "保存并继续": "Save and continue",
+  "正在保存…": "Saving…",
   "Google 验证未完成，请重试。": "Google verification was not completed. Please try again.",
   "该邮箱已有账号，请先使用原方式登录，再确认绑定 Google。": "This email already has an account. Sign in with your original method before linking Google.",
   "你还没有加入任何团队": "You haven’t joined a team yet",

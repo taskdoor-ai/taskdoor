@@ -6,28 +6,28 @@
     {
       "id": "fig-auth-002",
       "moduleId": "account-identity",
-      "page": "当前登录页：Google 入口与邮箱密码登录。",
-      "state": "English，1280×720；普通登录入口，邮箱与密码为空；未提交登录。",
+      "page": "登录页与语言入口",
+      "state": "简体中文，1280×720；2026-09-27 主工作区当前运行页面实拍。表单为空，未提交登录。",
       "type": "current-page",
       "source": "http://127.0.0.1:5173/login",
-      "path": "assets/account-identity/login-empty-en.jpg",
-      "capturedAt": "2026-09-23",
+      "path": "assets/account-identity/login-language-zh.png",
+      "capturedAt": "2026-09-27",
       "status": "captured",
-      "locale": "en",
-      "updatedAt": "2026-09-23"
+      "locale": "zh-CN",
+      "updatedAt": "2026-09-27"
     },
     {
       "id": "fig-auth-003",
       "moduleId": "account-identity",
-      "page": "注册页：Google 与邮箱注册入口。",
-      "state": "当前主工作区实拍，入口视口；仅验证入口与邀请保留，未提交注册、登录或加入。Google 未接入 OAuth。",
+      "page": "注册页与语言入口",
+      "state": "简体中文，1280×720；2026-09-27 主工作区当前运行页面实拍。表单为空，未发送验证码或提交注册。",
       "type": "current-page",
       "source": "http://127.0.0.1:5173/signup",
-      "path": "assets/account-identity/signup-current-en.png",
-      "capturedAt": "2026-09-23",
+      "path": "assets/account-identity/signup-language-zh.png",
+      "capturedAt": "2026-09-27",
       "status": "captured",
-      "locale": "en",
-      "updatedAt": "2026-09-23"
+      "locale": "zh-CN",
+      "updatedAt": "2026-09-27"
     },
     {
       "id": "fig-work-003",
@@ -1253,9 +1253,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/workspace-navigation/team-information-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-09-24",
+      "editorialNote": "PRD-0058：团队设置增加所有权转让及删除确认，旧图撤出当前正文及预览，待采集当前运行页。"
     },
     {
       "id": "fig-preview-021",
@@ -1267,10 +1268,11 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/workspace-navigation/team-information-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-work-005",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-09-24",
+      "editorialNote": "PRD-0058：团队设置增加所有权转让及删除确认，旧图撤出当前正文及预览，待采集当前运行页。"
     },
     {
       "id": "fig-member-003",
@@ -1282,9 +1284,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/member-collaboration/members-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-09-24",
+      "editorialNote": "PRD-0058：成员角色及操作已变更，旧截图撤出正文及预览，待从当前主工作区重新采集。"
     },
     {
       "id": "fig-preview-022",
@@ -1296,10 +1299,11 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/member-collaboration/members-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-member-003",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-09-24",
+      "editorialNote": "PRD-0058：成员角色及操作已变更，旧截图撤出正文及预览，待从当前主工作区重新采集。"
     },
     {
       "id": "fig-member-004",
@@ -1311,9 +1315,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/member-collaboration/members-bottom-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-09-24",
+      "editorialNote": "PRD-0058：成员角色及操作已变更，旧截图撤出正文及预览，待从当前主工作区重新采集。"
     },
     {
       "id": "fig-preview-023",
@@ -1325,10 +1330,11 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/member-collaboration/members-bottom-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-member-004",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-09-24",
+      "editorialNote": "PRD-0058：成员角色及操作已变更，旧截图撤出正文及预览，待从当前主工作区重新采集。"
     },
     {
       "id": "fig-cli-005",
@@ -2112,17 +2118,17 @@
       "locale": "en",
       "capturedAt": "2026-09-23",
       "updatedAt": "2026-09-23",
-      "state": "PRD-0033 已替换暂不可用提示，此图仅保留历史，不再作为当前界面。"
+      "state": "PRD-0066：认证页新增语言入口、Google 后增加密码设置；需重新采集。"
     },
     {
       "id": "fig-auth-005",
       "moduleId": "account-identity",
       "path": "assets/account-identity/google-choose-en.png",
       "page": "Google 本地演示：选择账号",
-      "state": "English，1280×720；PRD-0036 当前主工作区实拍，移除 Local demo，选择账号直接登录；非真实 Google OAuth。",
+      "state": "PRD-0066：认证页新增语言入口、Google 后增加密码设置；需重新采集。",
       "source": "http://127.0.0.1:5173/login",
       "type": "current-page",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "capturedAt": "2026-09-23",
       "updatedAt": "2026-09-23",
@@ -2133,10 +2139,10 @@
       "moduleId": "account-identity",
       "path": "assets/account-identity/google-consent-en.png",
       "page": "Google 本地演示：确认身份信息",
-      "state": "PRD-0035 简化进入流程，旧图含团队设置步骤，待更新。",
+      "state": "PRD-0066：认证页新增语言入口、Google 后增加密码设置；需重新采集。",
       "source": "http://127.0.0.1:5173/signup?invite=demo-valid",
       "type": "current-page",
-      "status": "superseded",
+      "status": "pending",
       "locale": "en",
       "capturedAt": "2026-09-23",
       "updatedAt": "2026-09-23",
@@ -2172,24 +2178,24 @@
       "id": "fig-auth-008",
       "moduleId": "account-identity",
       "page": "忘记密码：填写账号邮箱。",
-      "state": "English，1280×720；当前主工作区运行页面。仅采集表单，未输入或提交新密码；身份验证沿用本地示例流程。",
+      "state": "PRD-0066：认证页新增语言入口、Google 后增加密码设置；需重新采集。",
       "type": "current-page",
       "source": "http://127.0.0.1:5173/forgot-password",
       "path": "assets/account-identity/forgot-password-en.png",
       "capturedAt": "2026-09-23",
-      "status": "captured",
+      "status": "pending",
       "locale": "en"
     },
     {
       "id": "fig-auth-009",
       "moduleId": "account-identity",
       "page": "设置新密码：邮箱验证后设置 TaskDoor 登录密码。",
-      "state": "English，1280×720；当前主工作区运行页面。仅采集表单，未输入或提交新密码；身份验证沿用本地示例流程。",
+      "state": "PRD-0066：认证页新增语言入口、Google 后增加密码设置；需重新采集。",
       "type": "current-page",
       "source": "http://127.0.0.1:5173/forgot-password",
       "path": "assets/account-identity/reset-password-en.png",
       "capturedAt": "2026-09-23",
-      "status": "captured",
+      "status": "pending",
       "locale": "en"
     },
     {
@@ -2217,6 +2223,169 @@
       "status": "captured",
       "locale": "en",
       "updatedAt": "2026-09-23"
+    },
+    {
+      "id": "fig-delete-001",
+      "moduleId": "deletion-recovery-retention",
+      "page": "回收站列表：主任务分支与单独删除的子任务分别列为记录。",
+      "type": "current-page",
+      "source": "http://localhost:5173/",
+      "status": "captured",
+      "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。4 条回收记录：两个主任务分支分别包含 11 和 12 个子任务；两条为单独删除的子任务。",
+      "path": "assets/deletion-recovery-retention/recycle-bin-records-zh.png",
+      "capturedAt": "2026-09-27",
+      "updatedAt": "2026-09-27",
+      "locale": "zh-CN",
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+    },
+    {
+      "id": "fig-int-002",
+      "moduleId": "internationalization",
+      "page": "认证页语言菜单",
+      "state": "简体中文，1280×720；2026-09-27 主工作区当前运行页面实拍。展开中英文菜单，表单为空。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/login",
+      "path": "assets/internationalization/auth-language-menu-zh.png",
+      "capturedAt": "2026-09-27",
+      "status": "captured",
+      "locale": "zh-CN",
+      "updatedAt": "2026-09-27"
+    },
+    {
+      "id": "fig-delete-002",
+      "moduleId": "deletion-recovery-retention",
+      "page": "任务回收站空态",
+      "state": "简体中文，1280×720；2026-09-27 主工作区当前运行页面实拍。当前团队无回收记录，未执行删除或恢复；有记录、多选与恢复确认仍待采集。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/deletion-recovery-retention/recycle-bin-empty-zh.png",
+      "capturedAt": "2026-09-27",
+      "status": "captured",
+      "locale": "zh-CN",
+      "updatedAt": "2026-09-27"
+    },
+    {
+      "id": "fig-exit-001",
+      "moduleId": "membership-account-exit",
+      "page": "负责的任务交接",
+      "state": "简体中文，1280×720；2026-09-27 主工作区当前运行页面实拍。陈默负责的 12 项、参与的 15 项；未指定、未提交移除。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/membership-account-exit/handoff-owned-zh.png",
+      "capturedAt": "2026-09-27",
+      "status": "captured",
+      "locale": "zh-CN",
+      "updatedAt": "2026-09-27"
+    },
+    {
+      "id": "fig-exit-002",
+      "moduleId": "membership-account-exit",
+      "page": "交接批量成员选择",
+      "state": "简体中文，1280×720；2026-09-27 主工作区当前运行页面实拍。本页全选后展开批量成员选择；未选接手人、未提交移除，随后取消。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/membership-account-exit/handoff-batch-picker-zh.png",
+      "capturedAt": "2026-09-27",
+      "status": "captured",
+      "locale": "zh-CN",
+      "updatedAt": "2026-09-27"
+    },
+    {
+      "id": "fig-exit-003",
+      "moduleId": "membership-account-exit",
+      "page": "参与的任务交接",
+      "state": "简体中文，1280×720；2026-09-27 主工作区当前运行页面实拍。参与任务共 15 项；全量进度 0/27，未提交移除。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/membership-account-exit/handoff-participating-zh.png",
+      "capturedAt": "2026-09-27",
+      "status": "captured",
+      "locale": "zh-CN",
+      "updatedAt": "2026-09-27"
+    },
+    {
+      "id": "fig-delete-003",
+      "moduleId": "deletion-recovery-retention",
+      "page": "删除主任务：展开确认本次一并移入回收站的子任务层级。",
+      "type": "current-page",
+      "source": "http://localhost:5173/",
+      "path": "assets/deletion-recovery-retention/delete-parent-branch-zh.png",
+      "capturedAt": "2026-09-27",
+      "updatedAt": "2026-09-27",
+      "locale": "zh-CN",
+      "status": "captured",
+      "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。新品发布会筹备删除确认，展开 11 个子任务；截图后确认移入回收站。",
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+    },
+    {
+      "id": "fig-delete-004",
+      "moduleId": "deletion-recovery-retention",
+      "page": "单独删除子任务：确认将当前子任务移入回收站。",
+      "type": "current-page",
+      "source": "http://localhost:5173/",
+      "path": "assets/deletion-recovery-retention/delete-subtask-zh.png",
+      "capturedAt": "2026-09-27",
+      "updatedAt": "2026-09-27",
+      "locale": "zh-CN",
+      "status": "captured",
+      "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。核对库存与开播安排为筹备秋季新品达人专场的子任务；截图后单独移入回收站，父任务仍保留。",
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+    },
+    {
+      "id": "fig-delete-005",
+      "moduleId": "deletion-recovery-retention",
+      "page": "展开主任务分支：核对包含的子任务名称与层级。",
+      "type": "current-page",
+      "source": "http://localhost:5173/",
+      "path": "assets/deletion-recovery-retention/recycle-bin-branch-expanded-zh.png",
+      "capturedAt": "2026-09-27",
+      "updatedAt": "2026-09-27",
+      "locale": "zh-CN",
+      "status": "captured",
+      "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。展开完成秋季抗老精华首发闭环的 12 个子任务，按层级展示。",
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+    },
+    {
+      "id": "fig-delete-006",
+      "moduleId": "deletion-recovery-retention",
+      "page": "本页多选：同时选择主任务分支和单独删除的子任务。",
+      "type": "current-page",
+      "source": "http://localhost:5173/",
+      "path": "assets/deletion-recovery-retention/recycle-bin-multiselect-zh.png",
+      "capturedAt": "2026-09-27",
+      "updatedAt": "2026-09-27",
+      "locale": "zh-CN",
+      "status": "captured",
+      "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。选中一个含 12 个子任务的主任务分支及一个独立子任务，表头恢复／彻底删除入口显示。",
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+    },
+    {
+      "id": "fig-delete-007",
+      "moduleId": "deletion-recovery-retention",
+      "page": "恢复确认：汇总所选分支及子任务的总数。",
+      "type": "current-page",
+      "source": "http://localhost:5173/",
+      "path": "assets/deletion-recovery-retention/recycle-bin-restore-confirm-zh.png",
+      "capturedAt": "2026-09-27",
+      "updatedAt": "2026-09-27",
+      "locale": "zh-CN",
+      "status": "captured",
+      "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。恢复确认显示共 14 个任务；仅采集确认弹窗，随后取消，未提交恢复。",
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+    },
+    {
+      "id": "fig-delete-008",
+      "moduleId": "deletion-recovery-retention",
+      "page": "彻底删除确认：展示任务总数与不可恢复提示。",
+      "type": "current-page",
+      "source": "http://localhost:5173/",
+      "path": "assets/deletion-recovery-retention/recycle-bin-purge-confirm-zh.png",
+      "capturedAt": "2026-09-27",
+      "updatedAt": "2026-09-27",
+      "locale": "zh-CN",
+      "status": "captured",
+      "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。彻底删除确认显示共 14 个任务及不可恢复提示；随后取消，未提交彻底删除。",
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
     }
   ]
 }

@@ -1,3 +1,4 @@
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { GoogleAuthPreview } from "./GoogleAuthPreview";
 import googleIcon from "@lobehub/icons-static-svg/icons/google-color.svg";
 import { useI18n } from "../i18n/I18nProvider";
@@ -79,7 +80,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   const inviteProblem = !invitation ? t("这份邀请无法使用") : invitation.status === "expired" ? t("这份邀请已过期") : invitation.status === "revoked" ? t("这份邀请已撤销") : invitation.email && invitation.email !== state.email ? t("请使用受邀邮箱加入") : "";
   const registration = state.authMode === "register";
   const forgot = state.authMode === "forgot";
-  const authScreen = ["email", "code", "reset-password"].includes(state.step);
+  const authScreen = ["email", "code", "google-password", "reset-password"].includes(state.step);
   const href = (mode: AuthMode) => {
     const params = new URLSearchParams();
     if (state.inviteToken) params.set("invite", state.inviteToken);
@@ -92,7 +93,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     return () => { mounted.current = false; };
   }, []);
   useEffect(() => {
-    document.title = `${state.step === "workspace" ? activeTeam?.name : !authScreen ? t("设置团队") : registration ? t("注册") : forgot ? t("重置密码") : t("登录")} · TaskDoor`;
+    document.title = `${state.step === "google-password" ? t("设置密码") : state.step === "workspace" ? activeTeam?.name : !authScreen ? t("设置团队") : registration ? t("注册") : forgot ? t("重置密码") : t("登录")} · TaskDoor`;
     const params = new URLSearchParams();
     if (state.inviteToken) params.set("invite", state.inviteToken);
     if (debug) params.set("preview", "1");
@@ -185,6 +186,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   if (state.step === "workspace") return <WorkspaceLoading teamName={activeTeam?.name} error={localizeOnboardingMessage(locale, localError)} onRetry={() => void enterWorkspace()} />;
 
   return <div className="onboarding-page onboarding-auth" ref={surface}>
+    <div className="onboarding-language"><LanguageSwitcher /></div>
     <aside className="onboarding-story" aria-labelledby="onboarding-story-title">
       <div className="onboarding-story-inner">
         <div className="onboarding-art-scene" aria-hidden="true">
@@ -245,6 +247,13 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
             <div className="onboarding-code-help"><span>{t("输入任意 6 位数字即可")}</span><button type="button" disabled={countdown > 0 || Boolean(busy)} onClick={() => { setCode(""); change({ type: "send-code", now: Date.now() }); }}>{countdown > 0 ? t("{seconds} 秒后重新获取", { seconds: countdown }) : t("重新获取")}</button></div>
             {errorBlock}{submitButton(forgot ? t("验证并继续") : t("验证邮箱"), code.length !== 6)}
           </form>
+        </>}
+        {state.step === "google-password" && <>
+          <Heading title={t("设置密码")} description={<>{t("为你的 TaskDoor 账号设置密码，以后也可以使用邮箱和密码登录。")}<strong className="onboarding-email-address">{state.email}</strong></>} />
+          <form className="onboarding-form" noValidate onSubmit={event => { event.preventDefault(); void perform(async () => ({ type: "set-google-password", passwordDigest: await digestPreviewPassword(password, state.email), passwordLength: password.length }), "正在保存…"); }}>
+            {passwordField(true)}{errorField !== "password" && errorBlock}{submitButton(t("保存并继续"), password.length < 8)}
+          </form>
+          <p className="onboarding-auth-switch"><button className="onboarding-link" disabled={Boolean(busy)} onClick={switchAccount}>{t("切换账号")}</button></p>
         </>}
         {state.step === "reset-password" && <>
           <Heading title={t("设置新密码")} description={t("使用新密码登录你的 TaskDoor 账号。")} />

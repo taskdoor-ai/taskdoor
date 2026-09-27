@@ -1,3 +1,4 @@
+import { normalizeTeamOwnership } from "../lib/teamMembershipLifecycle";
 import { readWorkspaceSession, workspaceProfileKey } from "../lib/workspaceSession";
 
 export type ResponsibilityEvidence = {
@@ -55,7 +56,7 @@ export type ResponsibilityDocument = {
   revisionId: string;
 };
 
-export type TeamAccessRole = "admin" | "member";
+export type TeamAccessRole = "owner" | "admin" | "member";
 
 export type TeamMembership = {
   name?: string;
@@ -439,7 +440,7 @@ const isMembership = (value: unknown): value is TeamMembership => {
   if (!value || typeof value !== "object") return false;
   const membership = value as Partial<TeamMembership>;
   return isText(membership.id) && isText(membership.email)
-    && ["admin", "member"].includes(membership.role ?? "")
+    && ["owner", "admin", "member"].includes(membership.role ?? "")
     && ["active", "invited"].includes(membership.status ?? "")
     && (membership.memberId === undefined || isText(membership.memberId))
     && (membership.invitedAt === undefined || isText(membership.invitedAt))
@@ -462,10 +463,10 @@ export function isPersonalCenterState(value: unknown): value is PersonalCenterSt
   const profile = state.profile;
   if (!profile || !isText(profile.name) || !isText(profile.email) || !isText(profile.title) || !isText(profile.timezone) || typeof profile.bio !== "string") return false;
   if (profile.avatarDataUrl !== undefined && (typeof profile.avatarDataUrl !== "string" || !profile.avatarDataUrl.startsWith("data:image/"))) return false;
-  return Array.isArray(state.teams) && state.teams.length > 0 && state.teams.every((team) => isTeamCore(team)
+  return Array.isArray(state.teams) && state.teams.every((team) => isTeamCore(team)
     && isText(team.inviteToken)
     && Array.isArray(team.memberships) && team.memberships.length > 0 && team.memberships.every(isMembership)
-    && team.memberships.some((membership) => membership.status === "active" && membership.role === "admin"));
+    && team.memberships.some((membership) => membership.status === "active" && ["owner", "admin"].includes(membership.role)));
 }
 
 function withLegacyProposalMetadata(state: PersonalCenterState): PersonalCenterState {
@@ -567,7 +568,7 @@ function migrateLegacyState(value: unknown): PersonalCenterState | null {
   return isPersonalCenterState(migrated) ? migrateV4State(migrated) : null;
 }
 
-export function loadPersonalCenterDirectory(): PersonalCenterState {
+function readPersonalCenterDirectory(): PersonalCenterState {
   let stored: string | null;
   let legacyV5Stored: string | null;
   let legacyV4Stored: string | null;
@@ -634,6 +635,11 @@ export function loadPersonalCenterDirectory(): PersonalCenterState {
   }
 }
 
+export function loadPersonalCenterDirectory(): PersonalCenterState {
+  const state = readPersonalCenterDirectory();
+  return { ...state, teams: state.teams.map(normalizeTeamOwnership) };
+}
+
 export function savePersonalCenterDirectory(state: PersonalCenterState): boolean {
   try {
     localStorage.setItem(personalCenterStorageKey, JSON.stringify(state));
@@ -647,19 +653,23 @@ export function savePersonalCenterDirectory(state: PersonalCenterState): boolean
 export function loadPersonalCenterState(): PersonalCenterState {
   const directory = loadPersonalCenterDirectory();
   const session = readWorkspaceSession();
-  if (!session) return directory;
+  if (!session) return { ...directory, teams: directory.teams.filter(team => team.memberships.some(member => member.status === "active" && member.memberId === "周岚")) };
   let profile: PersonalCenterState["profile"] = { name: session.name, email: session.email, title: "成员", timezone: "Asia/Shanghai", bio: "" };
   try {
     const stored = JSON.parse(localStorage.getItem(workspaceProfileKey(session.userId)) ?? "null");
     if (stored && isText(stored.name) && isText(stored.email) && isText(stored.title) && isText(stored.timezone) && typeof stored.bio === "string") profile = stored;
   } catch { /* Use the signed-in identity when no profile has been saved. */ }
   const teams = directory.teams.filter(team => team.memberships.some(member => member.status === "active" && member.memberId === session.userId));
-  return { profile, teams: teams.map(team => ({ ...team, role: team.memberships.find(member => member.memberId === session.userId)?.role === "admin" ? "管理员" : "成员" })) };
+  return { profile, teams: teams.map(team => ({ ...team, role: ({ owner: "拥有者", admin: "管理员", member: "成员" })[team.memberships.find(member => member.memberId === session.userId)?.role ?? "member"] })) };
 }
 
 export function savePersonalCenterState(state: PersonalCenterState): boolean {
   const session = readWorkspaceSession();
-  if (!session) return savePersonalCenterDirectory(state);
+  if (!session) {
+    const directory = loadPersonalCenterDirectory();
+    const ownIds = new Set(directory.teams.filter(team => team.memberships.some(member => member.status === "active" && member.memberId === "周岚")).map(team => team.id));
+    return savePersonalCenterDirectory({ ...state, teams: [...directory.teams.filter(team => !ownIds.has(team.id)), ...state.teams] });
+  }
   const directory = loadPersonalCenterDirectory();
   const ownIds = new Set(directory.teams.filter(team => team.memberships.some(member => member.status === "active" && member.memberId === session.userId)).map(team => team.id));
   const teams = directory.teams.filter(team => !ownIds.has(team.id));

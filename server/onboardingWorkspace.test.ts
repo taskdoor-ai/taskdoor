@@ -12,13 +12,13 @@ const register = (email = "new-owner@example.com", inviteToken = "") => {
   return transitionOnboarding(pending, { type: "verify-code", code: "111111", now: 2000 });
 };
 
-test("创建团队衔接工作区：新成员是管理员，任务为空且演示团队保留", () => {
+test("创建团队衔接工作区：新成员是拥有者，任务为空且演示团队保留", () => {
   const created = transitionOnboarding(register(), { type: "create-team", name: "新的设计团队" });
   const result = prepareOnboardingWorkspace(created, initialPersonalCenterState);
   assert.equal(result.session.activeTeamId, created.activeTeamId);
   const team = result.directory.teams.find(team => team.id === created.activeTeamId)!;
   assert.equal(team.name, "新的设计团队");
-  assert.deepEqual(team.memberships.map(member => [member.memberId, member.role, member.status]), [[result.session.userId, "admin", "active"]]);
+  assert.deepEqual(team.memberships.map(member => [member.memberId, member.role, member.status]), [[result.session.userId, "owner", "active"]]);
   assert.equal(getTeamWorkspaceNodes(team.id).filter(node => node.kind === "task").length, 0);
   assert.equal(result.directory.teams.length, initialPersonalCenterState.teams.length + 1);
   assert.ok(isPersonalCenterState(result.directory));

@@ -1,3 +1,4 @@
+import { createJevReviewer } from './jev.ts';
 import { MAX_BATCH_CASES } from "../../src/test-lab/run-limits.ts";
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { resolve } from 'node:path';
@@ -37,8 +38,10 @@ export function testLabPlugin():Plugin{
     const parsed=new URL(endpoint);if(parsed.protocol!=='https:'||parsed.username||parsed.password||parsed.search||parsed.hash)throw new Error('PPIO_BASE_URL 需为无凭据的 HTTPS API 根地址');
     const options={apiKey:env.PPIO_API_KEY,endpoint,model:env.PPIO_MODEL||'pa/gpt-5.5-pro',maxOutputTokens:bounded(env.TEST_LAB_MAX_OUTPUT_TOKENS,8000,512,32000),timeoutMs:bounded(env.TEST_LAB_TIMEOUT_MS,180000,1000,600000)};
     const store=createLabStore(resolve(viteConfig.root,'data/test-lab/state.json'),seedLab());
+    const jevOptions={apiKey:env.TYPESAFE_API_KEY,model:env.TYPESAFE_MODEL||'jev-1.13.0',timeoutMs:30000};
+    const reviewWithJev=createJevReviewer(store,jevOptions);
     const runner=createRunner(store,options);const csrfToken=randomBytes(32).toString('hex');
-    const config={configured:!!options.apiKey,model:options.model,endpoint,maxBatchSize:MAX_BATCH_CASES,maxOutputTokens:options.maxOutputTokens,timeoutMs:options.timeoutMs,storage:'本机 data/test-lab/state.json（独立沙箱）'};
+    const config={jev:{configured:!!jevOptions.apiKey,model:jevOptions.model},configured:!!options.apiKey,model:options.model,endpoint,maxBatchSize:MAX_BATCH_CASES,maxOutputTokens:options.maxOutputTokens,timeoutMs:options.timeoutMs,storage:'本机 data/test-lab/state.json（独立沙箱）'};
     server.httpServer?.once('close',()=>runner.close());
     server.middlewares.use(async(req:IncomingMessage,res:ServerResponse,next:()=>void)=>{
       if(req.url==='/test-lab'||req.url==='/test-lab/'){res.writeHead(302,{Location:'/test-lab.html'});res.end();return;}
@@ -65,6 +68,8 @@ export function testLabPlugin():Plugin{
         if(req.method==='PUT'&&path==='/state'){const value=editableSchema.parse(await body(req));send(res,200,store.save(value.expectedRevision,value.teams,value.cases as LabCase[]));return;}
         if(req.method==='POST'&&path==='/runs'){const value=z.object({caseIds:z.array(z.string()).min(1).max(MAX_BATCH_CASES),requestId:z.string().min(1).max(100),selection:runSelectionSchema.optional()}).strict().parse(await body(req));send(res,202,runner.enqueue(value.caseIds,value.requestId,value.selection));return;}
         if(req.method==='POST'&&path==='/library/import'){await body(req);send(res,200,importLibrary(store));return;}
+        const jevMatch=path.match(/^\/runs\/([^/]+)\/jev-review$/);
+        if(req.method==='POST'&&jevMatch){z.object({}).strict().parse(await body(req));send(res,200,await reviewWithJev(decodeURIComponent(jevMatch[1])));return;}
         const match=path.match(/^\/runs\/([^/]+)\/(cancel|review)$/);
         if(req.method==='POST'&&match){const value=await body(req);if(match[2]==='cancel')send(res,200,runner.cancel(match[1]));else{const review=z.object({verdict:z.enum(['passed','failed']),note:z.string().min(1).max(5000)}).strict().parse(value);send(res,200,runner.review(match[1],review.verdict,review.note));}return;}
         send(res,404,{error:'测试接口不存在'});

@@ -19,6 +19,7 @@ type TaskWorkspaceProps = {
   onCreateTask: () => void;
   onFiltersChange: (filters: TaskListFilters) => void;
   onManageTags: () => void;
+  onOpenRecycleBin?: () => void;
   onDeleteTask: (task: TaskNode) => void;
   onQueryChange: (query: string) => void;
   onTaskSelect: (task: TaskNode) => void;
@@ -32,7 +33,7 @@ type TaskWorkspaceProps = {
   workbench: ReactNode;
 };
 
-export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onShowWorkbench, query, selectedTaskId, showingCreation = false, showingWorkbench, tagDefinitions, teamId }: TaskWorkspaceProps) {
+export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onOpenRecycleBin, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onShowWorkbench, query, selectedTaskId, showingCreation = false, showingWorkbench, tagDefinitions, teamId }: TaskWorkspaceProps) {
   const { t } = useI18n();
   const mock = useMockText();
   const projectionFilters = useMemo(() => normalizeTaskWorkspaceFilters(filters), [filters]);
@@ -78,6 +79,7 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
         members={members}
         onCreateTask={onCreateTask}
         onDeleteTask={onDeleteTask}
+        onOpenRecycleBin={onOpenRecycleBin}
         onFiltersChange={onFiltersChange}
         onManageTags={onManageTags}
         onQueryChange={onQueryChange}

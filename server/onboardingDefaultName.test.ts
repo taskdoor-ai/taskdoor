@@ -16,7 +16,7 @@ test('email login prefers the saved name', () => {
 test('normal entry skips team forms and reuses the personal workspace', async () => {
  const { simplifyOnboardingEntry } = await import('../src/lib/onboardingPreview');
  const loggedIn = transitionOnboarding(createOnboardingPreview(),{type:'google-preview-complete',email:'alex@example.com',name:'Alex',subject:'demo-alex'});
- const next = simplifyOnboardingEntry(loggedIn);
+ const next = simplifyOnboardingEntry(transitionOnboarding(loggedIn,{type:"set-google-password",passwordDigest:"a".repeat(64),passwordLength:8}));
  assert.equal(next.step,'workspace');
  assert.equal(next.teams.length,1);
  assert.equal(next.teams[0].role,'admin');
@@ -26,7 +26,8 @@ test('normal entry skips team forms and reuses the personal workspace', async ()
 });
 test('invitation entry keeps separate confirmation without creating a personal team', async () => {
  const { simplifyOnboardingEntry } = await import('../src/lib/onboardingPreview');
- const next = simplifyOnboardingEntry(transitionOnboarding(createOnboardingPreview('invited'),{type:'google-preview-complete',email:'alex@example.com',name:'Alex',subject:'demo-alex'}));
+ const pending = transitionOnboarding(createOnboardingPreview('invited'),{type:'google-preview-complete',email:'alex@example.com',name:'Alex',subject:'demo-alex'});
+ const next = simplifyOnboardingEntry(transitionOnboarding(pending,{type:'set-google-password',passwordDigest:'a'.repeat(64),passwordLength:8}));
  assert.equal(next.step,'invite');
  assert.equal(next.teams.length,0);
 });

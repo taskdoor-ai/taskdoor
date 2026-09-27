@@ -8,11 +8,12 @@ test('成员列表提供单独编辑入口，历史快照保持只读', async ()
   const { TeamDetails } = await import('../src/test-lab/views.tsx');
   const { seedLab } = await import('./test-lab/seeds.ts');
   const team = seedLab().teams[0];
-  const editable = renderToStaticMarkup(createElement(TeamDetails, { team, onEditResponsibility: () => {} }));
-  assert.match(editable, /编辑林洁的责任/);
-  assert.equal((editable.match(/>编辑责任<\/button>/g) || []).length, team.members.length);
+  const editable = renderToStaticMarkup(createElement(TeamDetails, { team, onEditMember: () => {} }));
+  assert.match(editable, /编辑林洁/);
+  assert.equal((editable.match(/>编辑<\/button>/g) || []).length, team.members.length);
   const readonly = renderToStaticMarkup(createElement(TeamDetails, { team }));
-  assert.doesNotMatch(readonly, /编辑责任/);
+  assert.doesNotMatch(readonly, /aria-label="编辑/);
+  assert.doesNotMatch(editable, /切换视角|编辑人员|编辑责任/);
 });
 
 test('单成员责任表单不混入任务和其他成员字段', async () => {
@@ -70,7 +71,7 @@ test("工作台入口隔离，首屏展示真实状态且不提供密钥输入",
   const { TestLabApp } = await import("../src/test-lab/TestLabApp.tsx");
   const initial = { state: { version: 1 as const, revision: 0, teams: [], cases: [], runs: [] }, config: { configured: false, model: "test-model", endpoint: "https://api.example.test/v1", maxBatchSize: 4, maxOutputTokens: 1000, timeoutMs: 10000, storage: "isolated" }, csrfToken: "private-csrf", skills: [] };
   const html = renderToStaticMarkup(createElement(TestLabApp, { initial }));
-  assert.match(html, /团队沙箱/);
+  assert.match(html, /测试团队/);
   assert.match(html, /用例库/);
   assert.match(html, /运行报告/);
   assert.match(html, /模型与 API/);

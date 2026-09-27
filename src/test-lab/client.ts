@@ -29,6 +29,7 @@ export function createLabClient(csrfToken = "", fetcher: typeof fetch = fetch) {
     saveModels: (expectedRevision:number,models:string[]) => request<LabState>("/models", "PUT", {expectedRevision,models}),
     modelCatalog: () => request<{models:string[]}>("/model-catalog"),
     cancel: (id: string) => request<LabRun>(`/runs/${encodeURIComponent(id)}/cancel`, "POST", {}),
+    jevReview: (id:string) => request<LabRun>(`/runs/${encodeURIComponent(id)}/jev-review`, "POST", {}),
     review: (id: string, verdict: "passed" | "failed", note: string) => request<LabRun>(`/runs/${encodeURIComponent(id)}/review`, "POST", { verdict, note }),
     importLibrary: () => request<{ state: LabState; imported: number }>("/library/import", "POST", {}),
   };

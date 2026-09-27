@@ -224,3 +224,5 @@
 @media (prefers-reduced-motion: reduce) {
   .responsibility-proposal-evidence > summary svg, .responsibility-add-evidence-cue svg { transition: none; }
 }
+
+.team-name-readonly { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); }

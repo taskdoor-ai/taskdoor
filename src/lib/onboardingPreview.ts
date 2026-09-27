@@ -3,7 +3,7 @@ import { mockWorkspaceEmail, mockWorkspacePasswordDigest, mockWorkspaceTeams } f
 import type { PersonalCenterState } from "../data/memberProfiles";
 import { resolveTeamEmailInvitation } from "./teamInvitations";
 export type AuthMode = "login" | "register" | "forgot";
-export type OnboardingStep = "email" | "code" | "reset-password" | "choose" | "create" | "join" | "invite" | "workspace";
+export type OnboardingStep = "email" | "code" | "google-password" | "reset-password" | "choose" | "create" | "join" | "invite" | "workspace";
 export type PreviewScenario = "new" | "invited" | "returning" | "expired";
 export type PreviewTeam = { id: string; name: string; role: "admin" | "member" };
 type PreviewAccount = { googleSubject?: string; name: string; passwordDigest: string; teams: PreviewTeam[]; activeTeamId: string };
@@ -17,6 +17,7 @@ export type OnboardingState = {
   error: string; errorField: string; notice: string; accounts: Record<string, PreviewAccount>;
 };
 export type OnboardingAction =
+  | { type: "set-google-password"; passwordDigest: string; passwordLength: number }
   | { type: "google-preview-complete"; email: string; name: string; subject: string }
   | { type: "request-registration-code"; email: string; code: string; now: number }
   | { type: "complete-registration"; name: string; email: string; passwordDigest: string; passwordLength: number; code: string; now: number }
@@ -63,7 +64,7 @@ export function getPreviewInvitation(token: string, personalState?: PersonalCent
   if (local) return local;
   const sharedTeam = token ? personalState?.teams.find(team => team.inviteToken === token) : undefined;
   if (sharedTeam) {
-    const owner = sharedTeam.memberships.find(member => member.status === "active" && member.role === "admin");
+    const owner = sharedTeam.memberships.find(member => member.status === "active" && ["owner", "admin"].includes(member.role));
     return { team: { id: sharedTeam.id, name: sharedTeam.name, role: "member" as const }, inviter: owner?.name || owner?.memberId || "团队管理员", status: "valid", email: "" };
   }
   if (!["demo-valid", "demo-expired", "demo-revoked", "demo-targeted"].includes(token)) return null;
@@ -124,7 +125,14 @@ export function transitionOnboarding(state: OnboardingState, action: OnboardingA
     const next: OnboardingState = { ...state, email, name: profile.name, teams: profile.teams, activeTeamId: profile.activeTeamId,
       authMode: account ? "login" : "register", verified: true, pendingPasswordDigest: "", registrationCode: undefined, codeExpiresAt: 0,
       accounts: { ...state.accounts, [email]: profile }, ...clean };
-    return { ...next, step: landing(next, !account) };
+    return validDigest(profile.passwordDigest) ? { ...next, step: landing(next, !account) } : { ...next, verified: false, step: "google-password" };
+  }
+  if (action.type === "set-google-password") {
+    const account = state.accounts[state.email];
+    if (state.step !== "google-password" || !account?.googleSubject || account.passwordDigest) return state;
+    if (action.passwordLength < 8 || !validDigest(action.passwordDigest)) return fail("密码至少需要 8 位。", "password");
+    const next = { ...state, verified: true, accounts: { ...state.accounts, [state.email]: { ...account, passwordDigest: action.passwordDigest } }, ...clean };
+    return { ...next, step: landing(next, state.authMode === "register") };
   }
   if (action.type === "request-registration-code") {
     if (state.step !== "email" || state.authMode !== "register" || state.verified) return state;
@@ -232,17 +240,19 @@ export function restoreOnboardingPreview(raw: string | null): OnboardingState | 
   if (!raw) return null;
   try {
     const state = JSON.parse(raw) as OnboardingState;
-    if (!state || (state.version !== undefined && state.version !== previewVersion) || !["email", "code", "reset-password", "choose", "create", "join", "invite", "workspace"].includes(state.step)
+    if (!state || (state.version !== undefined && state.version !== previewVersion) || !["email", "code", "google-password", "reset-password", "choose", "create", "join", "invite", "workspace"].includes(state.step)
       || !["login", "register", "forgot"].includes(state.authMode) || !["new", "invited", "returning", "expired"].includes(state.scenario)
       || [state.email, state.name, state.inviteToken, state.activeTeamId, state.error, state.errorField, state.notice, state.pendingPasswordDigest].some(value => typeof value !== "string")
       || typeof state.verified !== "boolean" || !Number.isFinite(state.codeExpiresAt) || !isTeamList(state.teams)
       || !state.accounts || typeof state.accounts !== "object" || Array.isArray(state.accounts)
       || Object.values(state.accounts).some(account => !account || typeof account.name !== "string" || typeof account.activeTeamId !== "string" || !(validDigest(account.passwordDigest) || (account.passwordDigest === "" && typeof account.googleSubject === "string" && account.googleSubject.startsWith("demo-"))) || !isTeamList(account.teams))) return null;
-    if (!["email", "code", "reset-password"].includes(state.step) && !state.verified) return null;
+    if (!["email", "code", "google-password", "reset-password"].includes(state.step) && !state.verified) return null;
     if (state.step === "workspace" && !state.name) return null;
     if (state.step === "reset-password" && (state.authMode !== "forgot" || !state.accounts[state.email])) return null;
-    if (state.step === "workspace" && !state.teams.some(team => team.id === state.activeTeamId)) return null;
+    if (state.step === "workspace" && (state.teams.length > 0 || state.activeTeamId !== "") && !state.teams.some(team => team.id === state.activeTeamId)) return null;
+    if (state.step === "google-password" && (!state.accounts[state.email]?.googleSubject || state.accounts[state.email].passwordDigest)) return null;
     const restored = upgradeLegacyPreview(state);
+    if (restored.verified && restored.accounts[restored.email]?.googleSubject && !restored.accounts[restored.email].passwordDigest) return { ...restored, verified: false, step: "google-password" };
     if (restored.verified && restored.authMode === "register" && !restored.name && !restored.teams.length && restored.step === "choose") return { ...restored, step: landing(restored, true) };
     return restored;
   } catch { return null; }
@@ -251,6 +261,7 @@ export function restoreOnboardingPreview(raw: string | null): OnboardingState | 
 /** Skip legacy team setup screens in the current sign-in experience. */
 export function simplifyOnboardingEntry(state: OnboardingState): OnboardingState {
   if (!state.verified || state.error) return state;
+  if (state.accounts[state.email]?.googleSubject && !validDigest(state.accounts[state.email].passwordDigest)) return { ...state, verified: false, step: "google-password" };
   const name = defaultAccountName(state.name, state.email);
   if (state.inviteToken) return rememberAccount({ ...state, name, step: "invite" });
   const teams: PreviewTeam[] = state.teams.length ? state.teams : [{

@@ -1,3 +1,9 @@
+import { TaskRecycleBinDialog } from "./components/TaskRecycleBinDialog";
+import { RECYCLE_BIN_KEY, readRecycleBin, recycleTask, changeRecycledTasks, type RecycledTask } from "./lib/taskRecycleBin";
+import { TeamLifecycleProvider, type TeamLifecycleAction } from "./components/TeamLifecycle";
+import { CreateTeamDialog } from "./components/CreateTeamDialog";
+import { commitTeamLifecycle } from "./lib/teamLifecycleStorage";
+import { useI18n } from "./i18n/I18nProvider";
 import { mockWorkspaceEmail } from "./lib/mockWorkspaceAccount";
 import { applyCriterionReviewMocks } from "./data/taskCriterionReviewMocks";
 import { confirmTaskCriterion } from "./lib/taskCriterionReview";
@@ -39,7 +45,7 @@ import { legacyTaskSources, loadLatestLegacyTaskSnapshot, loadLegacyTaskSnapshot
 import type { TaskPlanDraft } from "./lib/taskAssistantProtocol";
 import { appendTaskActivity, createTaskChangeActivity, parseTaskActivityStore, type TaskActivityStore } from "./lib/taskActivity";
 import { createWorkspaceTasksFromDraft } from "./lib/workspaceTaskCreation";
-import { deleteWorkspaceSubtask, deleteWorkspaceTask, getSubtaskDeletionPreview, getSubtaskDeletionWrites, getTaskDeletionPreview, getTaskDeletionWrites } from "./lib/workspaceSubtaskEditing";
+import { getSubtaskDeletionPreview, getTaskDeletionPreview, getTaskDeletionWrites } from "./lib/workspaceSubtaskEditing";
 import { clearTaskFileDraftSessions } from "./lib/taskFileDrafts";
 import { commitWorkspaceScenarioReset, resolveWorkspaceScenarioReset } from "./lib/workspaceScenarioReset";
 import { migrateProgressDemoFixtures } from "./lib/taskProgressDemoMigration";
@@ -166,6 +172,8 @@ const taskDateValue = (value?: string): string | null => {
 
 function App() {
   const ui = useGlobalUi();
+  const { locale } = useI18n();
+  const [createEmptyTeamOpen, setCreateEmptyTeamOpen] = useState(false);
   const [workspaceSession] = useState(readWorkspaceSession);
   const currentUserId = workspaceSession?.userId ?? "周岚";
   const showDemoData = !workspaceSession || workspaceSession.email === mockWorkspaceEmail;
@@ -545,6 +553,77 @@ function App() {
     };
   };
 
+  const [recycleOpen, setRecycleOpen] = useState(false);
+  const [recycleEntries, setRecycleEntries] = useState<RecycledTask[]>([]);
+  const [recycleError, setRecycleError] = useState("");
+  const currentDeletionState = () => {
+    const stored = localStorage.getItem(workspaceNodesStorageKey);
+    if (stored && JSON.stringify(JSON.parse(stored)) !== JSON.stringify(workspaceNodesRef.current)) {
+      const fresh = JSON.parse(stored) as WorkspaceNode[];
+      workspaceNodesRef.current = fresh; setWorkspaceNodes(fresh);
+      throw new Error("任务已在其他页面更新，请核对后重试。");
+    }
+    return {
+      nodes: workspaceNodesRef.current,
+      activities: parseTaskActivityStore(JSON.parse(localStorage.getItem(taskActivityStorageKey) ?? '{}')),
+      detailSeeds: taskDetailSeedNodesRef.current, ownerProposals: taskOwnerProposals,
+      participantInvitations: taskParticipantInvitationOverrides, periodOverrides: taskPeriodOverrides,
+      legacySnapshots: legacyTaskSnapshots, latestLegacySnapshot: latestLegacyTask,
+    };
+  };
+  const refreshRecycleBin = () => {
+    try { setRecycleEntries(readRecycleBin(localStorage)); setRecycleError(""); }
+    catch (error) { setRecycleError(error instanceof Error ? error.message : "回收站读取失败，请重试。"); }
+  };
+  useEffect(() => {
+    if (taskStorageRecoveryError) return;
+    const cleanExpired = () => {
+      try {
+        const entries = readRecycleBin(localStorage);
+        const retained = entries.filter(e => e.expiresAt > Date.now());
+        if (retained.length !== entries.length) commitTaskAiStorage(localStorage, [[RECYCLE_BIN_KEY, JSON.stringify(retained)]]);
+        setRecycleEntries(retained);
+      } catch (error) { setRecycleError(error instanceof Error ? error.message : "回收站读取失败。"); }
+    };
+    cleanExpired();
+    const timer = window.setInterval(cleanExpired, 60_000);
+    window.addEventListener('storage', cleanExpired);
+    return () => { window.clearInterval(timer); window.removeEventListener('storage', cleanExpired); };
+  }, [taskStorageRecoveryError]);
+  const recycleCurrentTask = (taskId: string, signature: string) => {
+    const team = loadPersonalCenterState().teams.find(t => t.id === activeTeamId);
+    if (!team) throw new Error("团队已不存在。");
+    const result = recycleTask(currentDeletionState(), taskId, signature, team, currentUserId, currentUserName, localStorage);
+    try { commitTaskAiStorage(localStorage, [...getTaskDeletionWrites(result.next), [RECYCLE_BIN_KEY, JSON.stringify(result.entries)]]); }
+    catch (caught) {
+      try { recoverTaskAiStorage(localStorage); }
+      catch (error) { setTaskStorageRecoveryError(error instanceof Error ? error.message : "本地记录需要恢复。"); }
+      throw caught;
+    }
+    setRecycleEntries(result.entries);
+    return result.next;
+  };
+  const commitRecycleChange = (ids: string[], action: 'restore' | 'purge', replacement: string) => {
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    const team = loadPersonalCenterState().teams.find(t => t.id === activeTeamId);
+    if (!team) throw new Error("团队已不存在。");
+    const result = changeRecycledTasks(currentDeletionState(), readRecycleBin(localStorage), ids, action, team, currentUserId, replacement);
+    try { commitTaskAiStorage(localStorage, [
+      ...(action === 'restore' ? getTaskDeletionWrites({ ...result.next, deletedTaskIds: [], returnTaskId: null }) : []),
+      ...result.fileWrites, [RECYCLE_BIN_KEY, JSON.stringify(result.entries)],
+    ]); } catch (caught) {
+      try { recoverTaskAiStorage(localStorage); }
+      catch (error) { setTaskStorageRecoveryError(error instanceof Error ? error.message : "本地记录需要恢复。"); }
+      throw caught;
+    }
+    const next = result.next;
+    workspaceNodesRef.current = next.nodes; taskDetailSeedNodesRef.current = next.detailSeeds;
+    setWorkspaceNodes(next.nodes); setTaskActivityStore(next.activities); setTaskDetailSeedNodes(next.detailSeeds);
+    setTaskOwnerProposals(next.ownerProposals); setTaskParticipantInvitationOverrides(next.participantInvitations);
+    setTaskPeriodOverrides(next.periodOverrides); setLegacyTaskSnapshots(next.legacySnapshots);
+    setLatestLegacyTask(next.latestLegacySnapshot); setLegacyTaskSnapshotsDirty(true); setRecycleEntries(result.entries);
+  };
+
   const requestDeleteSubtask = (taskId: string, returnFocus?: HTMLElement | null) => {
     if (!selectedTaskId) return;
     subtaskDeleteReturnFocus.current = returnFocus ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
@@ -564,17 +643,7 @@ function App() {
     if (taskStorageRecoveryError) { setSubtaskDeleteError(taskStorageRecoveryError); return; }
     deletingSubtask.current = true;
     try {
-      const next = deleteWorkspaceSubtask({
-        nodes: workspaceNodesRef.current, activities: taskActivityStore, detailSeeds: taskDetailSeedNodesRef.current,
-        ownerProposals: taskOwnerProposals, participantInvitations: taskParticipantInvitationOverrides,
-        periodOverrides: taskPeriodOverrides, legacySnapshots: legacyTaskSnapshots, latestLegacySnapshot: latestLegacyTask,
-      }, subtaskDeleteTarget.parentTaskId, subtaskDeleteTarget.taskId, subtaskDeleteTarget.signature, currentUserName);
-      try { commitTaskAiStorage(localStorage, getSubtaskDeletionWrites(next)); }
-      catch (caught) {
-        try { recoverTaskAiStorage(localStorage); }
-        catch (error) { setTaskStorageRecoveryError(error instanceof Error ? error.message : "本地记录需要恢复，请暂时停止编辑。"); }
-        throw caught;
-      }
+      const next = { ...recycleCurrentTask(subtaskDeleteTarget.taskId, subtaskDeleteTarget.signature), parentTaskId: subtaskDeleteTarget.parentTaskId };
       clearTaskFileDraftSessions(next.deletedTaskIds);
       workspaceNodesRef.current = next.nodes;
       taskDetailSeedNodesRef.current = next.detailSeeds;
@@ -618,17 +687,7 @@ function App() {
     if (taskStorageRecoveryError) { setTaskDeleteError(taskStorageRecoveryError); return; }
     deletingTask.current = true;
     try {
-      const next = deleteWorkspaceTask({
-        nodes: workspaceNodesRef.current, activities: taskActivityStore, detailSeeds: taskDetailSeedNodesRef.current,
-        ownerProposals: taskOwnerProposals, participantInvitations: taskParticipantInvitationOverrides,
-        periodOverrides: taskPeriodOverrides, legacySnapshots: legacyTaskSnapshots, latestLegacySnapshot: latestLegacyTask,
-      }, taskDeleteTarget.taskId, taskDeleteTarget.signature, currentUserName);
-      try { commitTaskAiStorage(localStorage, getTaskDeletionWrites(next)); }
-      catch (caught) {
-        try { recoverTaskAiStorage(localStorage); }
-        catch (error) { setTaskStorageRecoveryError(error instanceof Error ? error.message : "本地记录需要恢复，请暂时停止编辑。"); }
-        throw caught;
-      }
+      const next = recycleCurrentTask(taskDeleteTarget.taskId, taskDeleteTarget.signature);
       clearTaskFileDraftSessions(next.deletedTaskIds);
       workspaceNodesRef.current = next.nodes;
       taskDetailSeedNodesRef.current = next.detailSeeds;
@@ -1056,10 +1115,49 @@ function App() {
     if (legacyChanged) { setLegacyTaskSnapshots(nextLegacy); setLegacyTaskSnapshotsDirty(true); }
   };
 
+  const commitMembershipAction = (action: TeamLifecycleAction) => {
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    const current = localStorage.getItem(workspaceNodesStorageKey);
+    if (current && JSON.stringify(JSON.parse(current)) !== JSON.stringify(workspaceNodesRef.current)) {
+      const fresh = JSON.parse(current) as WorkspaceNode[];
+      workspaceNodesRef.current = fresh;
+      setWorkspaceNodes(fresh);
+      throw new Error("任务已在其他页面更新，请核对最新清单后重试。");
+    }
+    let result;
+    try { result = commitTeamLifecycle({ storage: localStorage, teamId: activeTeamId, actorId: currentUserId, actorName: currentUserName, nodes: workspaceNodesRef.current, activities: parseTaskActivityStore(JSON.parse(localStorage.getItem(taskActivityStorageKey) ?? "{}")), seeds: taskDetailSeedNodesRef.current, action }); }
+    catch (caught) {
+      setPersonalCenterState(loadPersonalCenterState());
+      try { recoverTaskAiStorage(localStorage); }
+      catch (failure) { setTaskStorageRecoveryError(failure instanceof Error ? failure.message : "本地记录需要恢复，请重试。"); }
+      throw caught;
+    }
+    workspaceNodesRef.current = result.nodes;
+    taskDetailSeedNodesRef.current = result.seeds;
+    setWorkspaceNodes(result.nodes); setTaskActivityStore(result.activities); setTaskDetailSeedNodes(result.seeds);
+    setTaskOwnerProposals(JSON.parse(localStorage.getItem(taskOwnerProposalsStorageKey) ?? "{}"));
+    setTaskParticipantInvitationOverrides(JSON.parse(localStorage.getItem(taskParticipantInvitationsStorageKey) ?? "{}"));
+    setLegacyTaskSnapshots(loadLegacyTaskSnapshots()); setLatestLegacyTask(loadLatestLegacyTaskSnapshot());
+    clearTaskFileDraftSessions(result.deletedIds);
+    const nextState = loadPersonalCenterState();
+    setPersonalCenterState(nextState);
+    window.dispatchEvent(new Event(personalCenterChangedEvent));
+    window.dispatchEvent(new Event("agentdoor-handoff-notifications-changed"));
+    if (action.kind === "delete" || (action.kind === "exit" && action.memberId === currentUserId)) {
+      setPersonalInfoOpen(false); setSelectedTaskId(null);
+      setActiveTeamId(nextState.teams[0]?.id ?? "");
+      resetCreationSessionForTeamChange();
+      if (workspaceSession) saveWorkspaceSession({ ...workspaceSession, activeTeamId: nextState.teams[0]?.id ?? "" });
+    }
+  };
+
+  if (!personalCenterState.teams.length) return <div className="app-shell"><main className="team-empty-workspace"><h1>{locale === "en" ? "No team yet" : "你还没有加入团队"}</h1><p>{locale === "en" ? "Create a team, or ask a teammate for an invitation link." : "创建一个新团队，或通过同事提供的邀请链接加入。"}</p><Button onClick={() => setCreateEmptyTeamOpen(true)}>{locale === "en" ? "Create team" : "创建团队"}</Button><Button variant="ghost" onClick={signOutWorkspace}>{locale === "en" ? "Sign out" : "退出登录"}</Button><CreateTeamDialog open={createEmptyTeamOpen} onOpenChange={setCreateEmptyTeamOpen} /></main></div>;
+
   return (
     <MockDataProvider tasks={additionalMockTasks}><MemberInvitationProvider ref={memberInvitationsRef} state={personalCenterState} onStateChange={setPersonalCenterState} teamId={activeTeamId} members={collaborationMembers}>
     <PersonDirectoryProvider members={collaborationMembers}>
     <PersonalTagsProvider tags={tagDefinitions} onChange={savePersonalTags}>
+    <TeamLifecycleProvider team={personalCenterState.teams.find(t => t.id === activeTeamId)} nodes={workspaceNodes} members={collaborationMembers} actorId={currentUserId} onCommit={commitMembershipAction}>
     <div className="app-shell task-workspace-shell">
       <WorkspaceTopbar
         activeTeamId={activeTeamId}
@@ -1081,7 +1179,7 @@ function App() {
         userProfile={personalCenterState.profile}
       />
 
-      <PersonalCenterModal activeModule={personalCenterModule} activeTeamId={activeTeamId} members={collaborationMembers} onActiveTeamChange={changeActiveTeam} onModuleChange={setPersonalCenterModule} onOpenChange={changePersonalInfoOpen} onOpenEvidence={openTask} onStateChange={setPersonalCenterState} open={personalInfoOpen} state={personalCenterState} />
+      <PersonalCenterModal key={activeTeamId} activeModule={personalCenterModule} activeTeamId={activeTeamId} members={collaborationMembers} onActiveTeamChange={changeActiveTeam} onModuleChange={setPersonalCenterModule} onOpenChange={changePersonalInfoOpen} onOpenEvidence={openTask} onStateChange={setPersonalCenterState} open={personalInfoOpen} state={personalCenterState} />
 
       <main className="main-content">
         {personalTagLoadError && <p role="alert">{personalTagLoadError}</p>}
@@ -1093,6 +1191,7 @@ function App() {
             nodes={teamWorkspaceNodes}
             onCreateTask={startNewTaskConversation}
             onDeleteTask={requestDeleteTask}
+              onOpenRecycleBin={() => { refreshRecycleBin(); setRecycleOpen(true); }}
             onFiltersChange={setTaskFilters}
             onManageTags={() => { setActiveSection("settings"); focusPrimaryHeadingAfterNavigation(); }}
             onQueryChange={setTaskQuery}
@@ -1221,6 +1320,7 @@ function App() {
           <div className="global-ai-guide-body"><AiConnectionPage embedded /></div>
         </DialogContent>
       </Dialog>
+      <TaskRecycleBinDialog open={recycleOpen} onClose={() => setRecycleOpen(false)} entries={recycleEntries} error={recycleError} onRefresh={refreshRecycleBin} team={personalCenterState.teams.find(t => t.id === activeTeamId)} actorId={currentUserId} members={collaborationMembers} nodes={workspaceNodes} onCommit={commitRecycleChange} />
       <TaskDeleteDialog
         open={Boolean(subtaskDeleteTarget)}
         preview={subtaskDeletion.preview}
@@ -1248,6 +1348,7 @@ function App() {
       )}
       {taskStorageRecoveryError && <Dialog open><DialogContent showCloseButton={false}><DialogTitle>先恢复本地任务记录</DialogTitle><DialogDescription>{taskStorageRecoveryError}</DialogDescription><p>当前未保存的输入已保留。恢复完成前，暂时停止其他编辑。</p><Button onClick={() => { try { recoverTaskAiStorage(localStorage); setTaskStorageRecoveryError(""); } catch (error) { setTaskStorageRecoveryError(error instanceof Error ? error.message : "恢复尚未完成，请检查浏览器存储后重试。"); } }} type="button">重试恢复</Button></DialogContent></Dialog>}
     </div>
+    </TeamLifecycleProvider>
     </PersonalTagsProvider>
     </PersonDirectoryProvider>
     </MemberInvitationProvider></MockDataProvider>

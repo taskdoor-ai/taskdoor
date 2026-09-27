@@ -1,6 +1,6 @@
 import { useGlobalUi } from '../i18n/globalUi';
-import { Languages } from "lucide-react";
-import { DropdownMenuCheckboxItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "./ui/dropdown-menu";
+import { Languages, Globe2, ChevronDown } from "lucide-react";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "./ui/dropdown-menu";
 import { useI18n } from '../i18n/I18nProvider';
 import '../styles/language-switcher.css';
 export function LanguageSwitcher({ menu = false }: { menu?: boolean }) {
@@ -17,11 +17,15 @@ export function LanguageSwitcher({ menu = false }: { menu?: boolean }) {
       <DropdownMenuCheckboxItem className="language-auto-translate" checked={autoTranslate} onCheckedChange={setAutoTranslate}>{ui('自动翻译协作内容')}</DropdownMenuCheckboxItem>
     </DropdownMenuSubContent>
   </DropdownMenuSub>;
-  return <label className="language-switcher">
-    <span>{t('language.label')}</span>
-    <select aria-label={t('language.label')} value={locale} onChange={(event) => setLocale(event.target.value === 'zh-CN' ? 'zh-CN' : 'en')}>
-      <option lang="en" value="en">English</option>
-      <option lang="zh-CN" value="zh-CN">简体中文</option>
-    </select>
-  </label>;
+  return <DropdownMenu>
+    <DropdownMenuTrigger className="language-switcher" aria-label={`${t('language.label')}: ${locale === 'en' ? 'English' : '简体中文'}`}>
+      <Globe2 aria-hidden="true" size={16} /><span>{locale === 'en' ? 'English' : '简体中文'}</span><ChevronDown aria-hidden="true" size={13} />
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end" sideOffset={6} className="language-switcher-menu" aria-label={t('language.label')}>
+      <DropdownMenuRadioGroup value={locale} onValueChange={value => setLocale(value === 'zh-CN' ? 'zh-CN' : 'en')}>
+        <DropdownMenuRadioItem closeOnClick lang="en" value="en">English</DropdownMenuRadioItem>
+        <DropdownMenuRadioItem closeOnClick lang="zh-CN" value="zh-CN">简体中文</DropdownMenuRadioItem>
+      </DropdownMenuRadioGroup>
+    </DropdownMenuContent>
+  </DropdownMenu>;
 }

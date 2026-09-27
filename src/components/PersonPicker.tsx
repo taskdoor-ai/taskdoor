@@ -44,7 +44,7 @@ type PersonPickerCommonProps = {
   };
   showTriggerProfilePreview?: boolean;
   triggerLabel?: string;
-  triggerVariant?: "action" | "add" | "filter" | "identity" | "member" | "mention";
+  triggerVariant?: "action" | "add" | "filter" | "identity" | "member" | "mention" | "select";
   unassignedDescription?: string;
   unassignedLabel?: string;
 };
@@ -189,18 +189,18 @@ export function PersonPicker(props: PersonPickerProps) {
           "person-picker-trigger inline-flex items-center justify-center gap-(--ad-space-2) rounded-(--ad-radius-control) border border-transparent bg-transparent font-sans text-(length:--ad-text-caption) font-semibold text-(--ad-route-ink) outline-none transition-[background-color,border-color,box-shadow] hover:border-(--ad-border) hover:bg-(--ad-surface) focus-visible:ring-2 focus-visible:ring-(--ad-focus) focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
           size === "touch" ? "min-h-(--ad-control-touch-min)" : "min-h-(--ad-control-height-sm)",
           (triggerVariant === "add" || triggerVariant === "member") && "person-picker-trigger-avatar",
-          triggerVariant === "action" ? "px-(--ad-space-2)" : triggerVariant === "add" ? "person-picker-trigger-add flex-col gap-(--ad-space-1) px-0 text-(--ad-ink-secondary)" : triggerVariant === "member" ? "person-picker-trigger-member flex-col gap-(--ad-space-1) px-0 text-(--ad-ink-secondary)" : triggerVariant === "filter" ? "person-picker-trigger-filter justify-start px-(--ad-space-3) text-left text-(--ad-ink)" : "person-picker-trigger-identity justify-start px-0 text-left text-(--ad-ink)",
+          triggerVariant === "action" ? "px-(--ad-space-2)" : triggerVariant === "add" ? "person-picker-trigger-add flex-col gap-(--ad-space-1) px-0 text-(--ad-ink-secondary)" : triggerVariant === "member" ? "person-picker-trigger-member flex-col gap-(--ad-space-1) px-0 text-(--ad-ink-secondary)" : (triggerVariant === "filter" || triggerVariant === "select") ? "person-picker-trigger-filter justify-start px-(--ad-space-3) text-left text-(--ad-ink)" : "person-picker-trigger-identity justify-start px-0 text-left text-(--ad-ink)",
           className,
         )}
         disabled={disabled}
         ref={triggerRef}
       >
-        {triggerVariant === "mention" ? <AtSign aria-hidden="true" size={16} /> : triggerVariant === "filter" ? (
+        {triggerVariant === "mention" ? <AtSign aria-hidden="true" size={16} /> : (triggerVariant === "filter" || triggerVariant === "select") ? (
           <>
-            {selectedPerson?.id === scopeOption?.id
+            {scopeOption && selectedPerson?.id === scopeOption.id
               ? <span className="person-picker-filter-scope-icon grid shrink-0 place-items-center rounded-full bg-(--ad-surface-subtle) text-(--ad-ink-tertiary)"><UsersRound aria-hidden="true" size={14} /></span>
-              : <PersonAvatar name={selectedPerson?.name ?? d('notSelected')} profile={selectedPerson} profilePreviewFocusable={false} showProfilePreview={showTriggerProfilePreview} size="xs" />}
-            <strong className="min-w-0 flex-1 truncate text-(length:--ad-text-body-sm) font-medium">{selectedPerson ? mockPersonName(locale, selectedPerson.id, selectedPerson.name) : d('selectMember')}</strong>
+              : (selectedPerson || triggerVariant === "filter") && <PersonAvatar name={selectedPerson?.name ?? d('notSelected')} profile={selectedPerson} profilePreviewFocusable={false} showProfilePreview={showTriggerProfilePreview} size="xs" />}
+            <strong className={cn("min-w-0 flex-1 truncate text-(length:--ad-text-body-sm) font-medium", triggerVariant === "select" && !selectedPerson && "text-(--ad-ink-tertiary) font-normal")}>{selectedPerson ? mockPersonName(locale, selectedPerson.id, selectedPerson.name) : d('selectMember')}</strong>
           </>
         ) : triggerVariant === "identity" ? (
           <>

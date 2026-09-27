@@ -1,3 +1,5 @@
+import { canEditTeamInformation } from "../lib/teamMembershipLifecycle";
+import { TeamMemberActions, TeamOwnershipSettings } from "./TeamLifecycle";
 import { useI18n } from "../i18n/I18nProvider";
 import { mockTeamName, mockPersonName } from "../i18n/mockContent";
 import { settingsMockText } from "../i18n/settingsMock";
@@ -32,19 +34,15 @@ export function TeamInformationPanel({ activeTeamId, onActiveTeamChange, onState
   const { locale } = useI18n();
   const selectedTeam = state.teams.find((team) => team.id === activeTeamId) ?? state.teams[0];
   const [nameDraft, setNameDraft] = useState(selectedTeam.name);
-  const [dangerAction, setDangerAction] = useState<"delete" | "leave" | null>(null);
-  const currentMembership = selectedTeam.memberships.find((membership) => membership.memberId === currentWorkspaceUserId() || membership.email === state.profile.email);
-  const canDelete = currentMembership?.status === "active" && currentMembership.role === "admin";
-  const hasFallbackTeam = state.teams.length > 1;
+  const canManage = canEditTeamInformation(selectedTeam, currentWorkspaceUserId());
 
   useEffect(() => {
     setNameDraft(selectedTeam.name);
-    setDangerAction(null);
   }, [selectedTeam.id, selectedTeam.name]);
 
   const saveTeamInformation = () => {
     const name = nameDraft.trim();
-    if (!name) return;
+    if (!name || !canEditTeamInformation(selectedTeam, currentWorkspaceUserId())) return;
     const next = { ...state, teams: state.teams.map((team) => team.id === selectedTeam.id ? { ...team, name } : team) };
     if (!savePersonalCenterState(next)) {
       toast.error(m('couldNotSaveTheTeamNameThe'));
@@ -54,49 +52,20 @@ export function TeamInformationPanel({ activeTeamId, onActiveTeamChange, onState
     toast.success(m('teamInformationSaved'));
   };
 
-  const removeTeam = () => {
-    if (!dangerAction) return;
-    if (!hasFallbackTeam) {
-      toast.error(m('atLeastOneTeamMustRemain'));
-      setDangerAction(null);
-      return;
-    }
-    if (dangerAction === "delete" && !canDelete) {
-      toast.error(m('onlyTeamAdministratorsCanDeleteATeam'));
-      setDangerAction(null);
-      return;
-    }
-    const teams = state.teams.filter((team) => team.id !== selectedTeam.id);
-    const next = { ...state, teams };
-    if (!savePersonalCenterState(next)) {
-      toast.error(dangerAction === "delete" ? m('couldNotDeleteTheTeamTheTeam') : m('couldNotLeaveTheTeamYouAre'));
-      setDangerAction(null);
-      return;
-    }
-    onStateChange(next);
-    onActiveTeamChange(teams[0].id);
-    setDangerAction(null);
-  };
-
   return <section aria-labelledby="team-information-title" className="personal-team-panel">
     <div className="responsibility-toolbar"><div><h2 id="team-information-title">{m('general')}</h2></div></div>
     <div className="team-general-settings">
       <section aria-labelledby="team-logo-label"><h3 id="team-logo-label">{m('teamLogo')}</h3><TeamLogo name={selectedTeam.name} size="xl" teamId={selectedTeam.id} /></section>
-      <label><span>{m('teamName')}</span><Input aria-label={m('teamName')} onChange={(event) => { setNameDraft(event.target.value); }} value={mockTeamName(locale, selectedTeam.id, nameDraft)} /></label>
-      <div className="team-general-actions"><Button disabled={!nameDraft.trim() || nameDraft.trim() === selectedTeam.name} onClick={saveTeamInformation} type="button">{m('saveTeamInformation')}</Button></div>
-      <section className="team-danger-setting"><div><h3>{m('leaveTeam')}</h3><p>{m('leaveThisTeamYouCanRejoinIf')}</p></div><Button disabled={!hasFallbackTeam} onClick={() => setDangerAction("leave")} type="button" variant="destructive">{m('leaveTeam')}</Button></section>
-      <section className="team-danger-setting"><div><h3>{m('deleteTeam')}</h3><p>{m('permanentlyDeleteThisTeamAndItsData')}</p></div><Button disabled={!canDelete || !hasFallbackTeam} onClick={() => setDangerAction("delete")} type="button" variant="destructive">{m('deleteTeam')}</Button></section>
+      {canManage ? <>
+        <label className="team-name-field"><span>{m('teamName')}</span><Input aria-label={m('teamName')} onChange={event => setNameDraft(event.target.value)} value={mockTeamName(locale, selectedTeam.id, nameDraft)} /></label>
+        <div className="team-general-actions"><Button disabled={!nameDraft.trim() || nameDraft.trim() === selectedTeam.name} onClick={saveTeamInformation} type="button">{m('saveTeamInformation')}</Button></div>
+      </> : <section aria-labelledby="team-name-label"><h3 id="team-name-label">{m('teamName')}</h3><p className="team-name-readonly">{mockTeamName(locale, selectedTeam.id, selectedTeam.name)}</p></section>}
+      <TeamOwnershipSettings />
     </div>
-    <AlertDialog onOpenChange={(open) => { if (!open) setDangerAction(null); }} open={Boolean(dangerAction)}>
-      <AlertDialogContent>
-        <AlertDialogHeader><AlertDialogTitle>{dangerAction === "delete" ? m("deleteTeamQuestion", { team: mockTeamName(locale, selectedTeam.id, selectedTeam.name) }) : m("leaveTeamQuestion", { team: mockTeamName(locale, selectedTeam.id, selectedTeam.name) })}</AlertDialogTitle><AlertDialogDescription>{dangerAction === "delete" ? m('teamInformationInvitationsAndResponsibilitiesWillBe') : m('afterConfirmationYouWillSwitchToAnother')}</AlertDialogDescription></AlertDialogHeader>
-        <AlertDialogFooter><AlertDialogCancel size="touch">{m('cancel')}</AlertDialogCancel><AlertDialogAction onClick={removeTeam} size="touch" variant="destructive">{dangerAction === "delete" ? m('confirmTeamDeletion') : m('confirmLeavingTeam')}</AlertDialogAction></AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   </section>;
 }
 
-const accessRoleLabel: Record<TeamAccessRole, string> = { admin: "管理员", member: "成员" };
+const accessRoleLabel: Record<TeamAccessRole, string> = { owner: "拥有者", admin: "管理员", member: "成员" };
 
 export function TeamMembersPanel({ activeTeamId, members, onStateChange, state }: TeamContextProps & { members: Member[]; onStateChange: (state: PersonalCenterState) => void }) {
   const m = useModuleCopy();
@@ -106,7 +75,7 @@ export function TeamMembersPanel({ activeTeamId, members, onStateChange, state }
   const [editingMembershipId, setEditingMembershipId] = useState<string | null>(null);
   const [responsibilityDraft, setResponsibilityDraft] = useState("");
   const currentMembership = selectedTeam.memberships.find((membership) => membership.memberId === currentWorkspaceUserId() || membership.email === state.profile.email);
-  const canManage = currentMembership?.status === "active" && currentMembership.role === "admin";
+  const canManage = currentMembership?.status === "active" && ["owner", "admin"].includes(currentMembership.role);
   const inviteLink = getTeamInviteLink(selectedTeam);
 
   useEffect(() => {
@@ -172,18 +141,6 @@ export function TeamMembersPanel({ activeTeamId, members, onStateChange, state }
     commitTeam({ ...selectedTeam, inviteToken: token }, m('aNewInvitationLinkWasGeneratedThe'));
   };
 
-  const changeRole = (membershipId: string, role: TeamAccessRole) => {
-    if (!canManage) return;
-    const membership = selectedTeam.memberships.find((item) => item.id === membershipId);
-    if (!membership || membership.role === role) return;
-    const activeAdminCount = selectedTeam.memberships.filter((item) => item.status === "active" && item.role === "admin").length;
-    if (membership.status === "active" && membership.role === "admin" && role === "member" && activeAdminCount === 1) {
-      toast.error(m('theTeamMustHaveAtLeastOne'));
-      return;
-    }
-    commitTeam({ ...selectedTeam, memberships: selectedTeam.memberships.map((item) => item.id === membershipId ? { ...item, role } : item) }, m("roleAssigned", { email: membership.email, role: m.text(accessRoleLabel[role]) }));
-  };
-
   return <section aria-labelledby="team-members-title" className="team-members-panel">
     <div className="responsibility-toolbar"><div><h2 id="team-members-title">{m('members')}</h2></div></div>
     <section className="team-invite-link"><h3>{m('invitationLink')}</h3><div><Input aria-label={m('invitationLink')} readOnly value={inviteLink} /><Button aria-label={m('copyInvitationLink')} onClick={copyInviteLink} size="icon" type="button" variant="ghost"><Copy aria-hidden="true" /></Button></div><p>{m('multiplePeopleCanUseThisLinkYou')}<button disabled={!canManage} onClick={regenerateInviteLink} type="button"><RefreshCw aria-hidden="true" />{m('regenerateLink')}</button>.</p></section>
@@ -197,7 +154,7 @@ export function TeamMembersPanel({ activeTeamId, members, onStateChange, state }
       const responsibility = resolveTeamMemberResponsibility(membership, member);
       const memberLabel = member?.name ?? membership.email;
       const isEditingResponsibility = editingMembershipId === membership.id;
-      return <li key={membership.id}><div>{membership.status === "active" ? <PersonAvatar name={member?.name ?? membership.email} personId={member?.id ?? membership.memberId} profile={member} size="md" /> : <span className="team-invited-avatar"><Mail aria-hidden="true" /></span>}<span><strong>{membership.status === "active" && member ? <PersonName name={member.name} profile={member} /> : membership.name || m('noNameSet')}{isCurrentUser && <em>{m('you')}</em>}{membership.status === "invited" && <em className="invited">{m('invited')}</em>}</strong><small>{membership.email}</small></span></div><div className="team-member-responsibility">{isEditingResponsibility ? <div className="team-member-responsibility-editor"><Input aria-label={m("memberResponsibility", { name: memberLabel })} autoFocus onChange={(event) => setResponsibilityDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveMemberResponsibility(membership.id); if (event.key === "Escape") cancelResponsibilityEdit(membership.id); }} value={responsibilityDraft} /><div><Button onClick={() => cancelResponsibilityEdit(membership.id)} size="sm" type="button" variant="ghost">{m('cancel')}</Button><Button onClick={() => saveMemberResponsibility(membership.id)} size="sm" type="button">{m('save')}</Button></div></div> : <><p className="team-member-responsibility-text" title={m.text(membership.responsibility === undefined ? settingsMockText(locale, membership.memberId ?? "", responsibility) : responsibility)}>{m.text(membership.responsibility === undefined ? settingsMockText(locale, membership.memberId ?? "", responsibility) : responsibility)}</p>{membership.status === "invited" && canManage && invitations && <div className="member-invited-actions"><Button size="sm" variant="ghost" onClick={() => { try { invitations.invite(membership.email, membership.role, true); } catch (caught) { toast.error(caught instanceof Error ? caught.message : m('couldNotResendTheInvitation')); } }}>{m('resendInvitation')}</Button></div>}{canManage && membership.status === "active" ? <Button aria-label={m("editMemberResponsibility", { name: member?.name ?? membership.email })} className="team-member-responsibility-edit" id={`edit-member-responsibility-${membership.id}`} onClick={() => beginResponsibilityEdit(membership.id, responsibility)} size="icon-sm" title={m('editResponsibilities')} type="button" variant="ghost"><Pencil aria-hidden="true" /></Button> : null}</>}</div><TeamSelect disabled={!canManage} onValueChange={(value) => changeRole(membership.id, String(value) as TeamAccessRole)} value={membership.role}><SelectTrigger aria-label={m("changeMemberRole", { name: member?.name ?? membership.email })} className="team-member-role-select" size="sm"><SelectValue>{m.text(accessRoleLabel[membership.role])}</SelectValue></SelectTrigger><SelectContent align="end" alignItemWithTrigger={false}><SelectItem value="admin">{m('administrator')}</SelectItem><SelectItem value="member">{m('member')}</SelectItem></SelectContent></TeamSelect></li>;
+      return <li key={membership.id}><div>{membership.status === "active" ? <PersonAvatar name={member?.name ?? membership.email} personId={member?.id ?? membership.memberId} profile={member} size="md" /> : <span className="team-invited-avatar"><Mail aria-hidden="true" /></span>}<span><strong>{membership.status === "active" && member ? <PersonName name={member.name} profile={member} /> : membership.name || m('noNameSet')}{isCurrentUser && <em>{m('you')}</em>}{membership.status === "invited" && <em className="invited">{m('invited')}</em>}</strong><small>{membership.email}</small></span></div><div className="team-member-responsibility">{isEditingResponsibility ? <div className="team-member-responsibility-editor"><Input aria-label={m("memberResponsibility", { name: memberLabel })} autoFocus onChange={(event) => setResponsibilityDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveMemberResponsibility(membership.id); if (event.key === "Escape") cancelResponsibilityEdit(membership.id); }} value={responsibilityDraft} /><div><Button onClick={() => cancelResponsibilityEdit(membership.id)} size="sm" type="button" variant="ghost">{m('cancel')}</Button><Button onClick={() => saveMemberResponsibility(membership.id)} size="sm" type="button">{m('save')}</Button></div></div> : <><p className="team-member-responsibility-text" title={m.text(membership.responsibility === undefined ? settingsMockText(locale, membership.memberId ?? "", responsibility) : responsibility)}>{m.text(membership.responsibility === undefined ? settingsMockText(locale, membership.memberId ?? "", responsibility) : responsibility)}</p>{membership.status === "invited" && canManage && invitations && <div className="member-invited-actions"><Button size="sm" variant="ghost" onClick={() => { try { invitations.invite(membership.email, membership.role, true); } catch (caught) { toast.error(caught instanceof Error ? caught.message : m('couldNotResendTheInvitation')); } }}>{m('resendInvitation')}</Button></div>}{canManage && membership.status === "active" ? <Button aria-label={m("editMemberResponsibility", { name: member?.name ?? membership.email })} className="team-member-responsibility-edit" id={`edit-member-responsibility-${membership.id}`} onClick={() => beginResponsibilityEdit(membership.id, responsibility)} size="icon-sm" title={m('editResponsibilities')} type="button" variant="ghost"><Pencil aria-hidden="true" /></Button> : null}</>}</div><div className="team-member-role-actions"><span className={`team-member-role-badge ${membership.role}`}>{locale === "en" ? ({ owner: "Owner", admin: "Administrator", member: "Member" })[membership.role] : accessRoleLabel[membership.role]}</span><TeamMemberActions membership={membership} /></div></li>;
     })}</ul></div>
   </section>;
 }

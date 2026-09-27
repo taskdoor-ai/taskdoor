@@ -2,7 +2,7 @@ import { taskDetailMocks } from "./taskDetailMocks";
 
 export type WorkspaceNotification = {
   id: string;
-  kind: "invitation" | "member-joined" | "mention";
+  kind: "invitation" | "member-joined" | "mention" | "handoff";
   content: string;
   people?: { id: string; name: string }[];
   task?: { id: string; title: string };
@@ -12,6 +12,7 @@ export type WorkspaceNotification = {
 };
 
 export const notificationTypeLabels: Record<WorkspaceNotification["kind"], string> = {
+  handoff: "任务交接",
   invitation: "协作邀请",
   "member-joined": "成员加入",
   mention: "讨论提及",

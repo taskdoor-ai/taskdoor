@@ -33,7 +33,7 @@ export function WorkspaceTopbar({ activeTeamId, onConnectAi, onOpenPersonalCente
         <TeamSwitcher activeTeamId={activeTeamId} onTeamChange={onTeamChange} teams={teams} variant="topbar" />
       </div>
       <div className="workspace-topbar-actions">
-        <GlobalNotifications key={activeTeamId} onOpenTask={onOpenNotificationTask} placement="topbar" showDemoNotifications={showDemoNotifications && activeTeamId === "creator-commerce"} />
+        <GlobalNotifications teamId={activeTeamId} userId={userId} key={activeTeamId} onOpenTask={onOpenNotificationTask} placement="topbar" showDemoNotifications={showDemoNotifications && activeTeamId === "creator-commerce"} />
         <button aria-haspopup="dialog" className="workspace-ai-trigger" id="workspace-ai-trigger" onClick={onConnectAi} title={t('ai.guide')} type="button">
           <span className="workspace-ai-trigger-label"><Sparkles aria-hidden="true" size={14} strokeWidth={1.8} /><span>{t('ai.connect')}</span></span>
         </button>

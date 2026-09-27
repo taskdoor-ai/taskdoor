@@ -1,0 +1,11 @@
+.task-branch-disclosure { min-width:0; margin-top:4px; font-size:12px; color:var(--muted-foreground); }
+.task-branch-disclosure > summary { display:flex; align-items:center; gap:4px; width:fit-content; padding:4px 0; cursor:pointer; list-style:none; }
+.task-branch-disclosure > summary::-webkit-details-marker { display:none; }
+.task-branch-disclosure > summary > svg { flex-shrink:0; }
+.task-branch-disclosure[open] > summary > svg { transform:rotate(90deg); }
+.task-branch-disclosure > summary:hover { color:var(--foreground); }
+.task-branch-disclosure > summary:focus-visible,.task-branch-disclosure-list:focus-visible { outline:2px solid var(--ring); outline-offset:2px; border-radius:4px; }
+.task-branch-disclosure-list { max-height:220px; overflow:auto; overscroll-behavior:contain; margin-top:6px; padding:2px 4px 4px; color:var(--foreground); }
+.task-branch-disclosure-list ul { list-style:none; margin:0; padding:0; }
+.task-branch-disclosure-list ul ul { margin-left:5px; padding-left:14px; border-left:1px solid var(--border); }
+.task-branch-disclosure-list li > span { display:block; padding:5px 0; overflow-wrap:anywhere; line-height:1.5; }

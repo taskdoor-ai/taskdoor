@@ -496,3 +496,11 @@
 .task-list-active-filters .task-selected-status { border:0; background:transparent; padding:2px; gap:3px; border-radius:5px; color:var(--ad-ink-tertiary); }
 .task-selected-status .task-status-badge.sm { height:20px; min-height:20px; padding:0 5px; border-radius:4px; font-size:var(--ad-text-caption); line-height:1.5; }
 .task-selected-status .task-status-badge.sm svg { width:12px; height:12px; }
+
+/* Keep recovery reachable independently of the scrolling task list. */
+.task-list-bottom-actions { flex:0 0 auto; padding:8px 14px; border-top:1px solid var(--ad-border-soft); }
+.task-list-recycle-trigger { display:inline-flex; align-items:center; gap:8px; min-height:36px; padding:8px; border:0; border-radius:6px; background:transparent; color:var(--ad-ink-secondary); font:inherit; font-size:13px; cursor:pointer; }
+.task-list-recycle-trigger:hover { background:var(--ad-surface-subtle); color:var(--ad-ink); }
+.task-list-recycle-trigger:focus-visible { outline:2px solid var(--ad-focus); outline-offset:2px; }
+.task-list-recycle-trigger > svg { flex-shrink:0; }
+@media (max-width:900px), (pointer:coarse) { .task-list-recycle-trigger { min-height:44px; } }

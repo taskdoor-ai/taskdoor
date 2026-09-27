@@ -15,7 +15,7 @@ export function getInvitationDraft(query: string) {
 
 export function canInviteTeamMembers(state: PersonalCenterState, teamId: string) {
   return Boolean(state.teams.find(team => team.id === teamId)?.memberships.some(member =>
-    member.email.toLowerCase() === state.profile.email.toLowerCase() && member.status === "active" && member.role === "admin"));
+    member.email.toLowerCase() === state.profile.email.toLowerCase() && member.status === "active" && ["owner", "admin"].includes(member.role)));
 }
 
 function personFromMembership(membership: TeamMembership, known?: PersonOption): PersonOption {
@@ -29,7 +29,7 @@ function personFromMembership(membership: TeamMembership, known?: PersonOption):
 
 export function getTeamPeople(team: TeamResponsibilityProfile | undefined, known: PersonOption[]): PersonOption[] {
   if (!team) return known;
-  const people = new Map(known.map(person => [person.id, person]));
+  const people = new Map<string, PersonOption>();
   for (const membership of team.memberships) {
     const existing = known.find(person => person.id === membership.memberId || person.email.toLowerCase() === membership.email.toLowerCase());
     const person = personFromMembership(membership, existing);
@@ -48,6 +48,8 @@ export function createTeamEmailInvitation(state: PersonalCenterState, input: {
   if (name && name.length > 100) throw new Error("名称不能超过 100 个字符");
   const team = state.teams.find(team => team.id === input.teamId);
   if (!team || !canInviteTeamMembers(state, team.id)) throw new Error("只有团队管理员可以邀请新成员");
+  const actor = team.memberships.find(member => member.email.toLowerCase() === state.profile.email.toLowerCase() && member.status === "active");
+  if (input.role === "owner" || (input.role === "admin" && actor?.role !== "owner")) throw new Error("只有拥有者可以邀请管理员，拥有者身份须通过转让获得");
   const existing = team.memberships.find(member => member.email.toLowerCase() === email);
   const known = input.members?.find(member => member.email.toLowerCase() === email);
   if (existing && (existing.status === "active" || (existing.emailInvitation && !input.renew))) {
@@ -72,7 +74,7 @@ export function resolveTeamEmailInvitation(state: PersonalCenterState, token: st
   for (const team of state.teams) {
     const membership = team.memberships.find(member => member.emailInvitation?.token === token);
     if (membership?.emailInvitation) return {
-      team: { id: team.id, name: team.name, role: membership.role },
+      team: { id: team.id, name: team.name, role: membership.role === "owner" ? "admin" as const : membership.role },
       inviter: membership.emailInvitation.inviter, email: membership.email, membership,
       status: membership.status === "invited" && now >= membership.emailInvitation.expiresAt ? "expired" as const : "valid" as const,
     };

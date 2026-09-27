@@ -4,7 +4,7 @@ title: "账号与个人资料"
 group: "账号与团队"
 version: "1.1"
 status: "review"
-last_change: "PRD-0049"
+last_change: "PRD-0071"
 summary: "注册登录、恢复访问和维护个人资料。"
 lifecycle_stage: "账号访问"
 pages: "注册页, 登录页, 找回密码页, 个人信息设置"
@@ -36,23 +36,17 @@ operations: "register, verify_email, login, request_password_reset, reset_passwo
 
 **验证码规则**：6 位数字，**10 分钟有效**，**60 秒后可重发**。更换邮箱或重发成功后，旧码失效；验证码只能使用一次。错误次数及其他校验见[账号校验细则](../references/account-validation.md)。
 
-![注册页：可选择 Google 或邮箱注册。](../assets/account-identity/signup-current-en.png)
-
-*FIG-AUTH-003 · 注册入口。*
 
 #### Google 注册
 
 1. 点击“使用 Google 继续”，选择 Google 账号。
-2. 通过 Google 身份验证后，首次使用时创建账号。
+2. 通过 Google 身份验证后，设置至少 8 位的 **TaskDoor 密码**，保存成功后完成注册。
 3. 进入首次设置：Google 姓名预填，可修改；没有姓名时由用户填写。
 
-**无需设置 TaskDoor 密码。**之后如需用邮箱＋密码登录，通过 3.5“忘记密码”设置密码。
+Google 验证成功后的邮箱只读。密码设置完成前不能进入团队或接受邀请；设置失败保留输入并可重试。设置的是 TaskDoor 密码，不是 Google 密码。
 
 取消认证不创建账号；认证失败可重试。
 
-![选择 Google 账号后继续。](../assets/account-identity/google-choose-en.png)
-
-*FIG-AUTH-005 · Google 账号选择。*
 
 #### 注册后的首次设置
 
@@ -60,17 +54,24 @@ operations: "register, verify_email, login, request_password_reset, reset_passwo
 - **通过邀请注册**：设置个人名称，确认加入受邀团队。
 - 详细规则见[团队管理](03-team-onboarding.md)。
 
+登录、注册与密码设置页面均可切换 English／简体中文，规则归[语言、翻译与时区](02-internationalization.md)。
+
+![注册页：填写邮箱、密码和验证码，右上角可切换语言。](../assets/account-identity/signup-language-zh.png)
+
+*FIG-AUTH-003 · 注册页：填写邮箱、密码和验证码，右上角可切换语言。*
+
 ### 3.2 登录已有账号
 
 1. 选择 Google 登录，或输入邮箱和 TaskDoor 密码。
 2. 验证成功后进入原团队；携带邀请时继续确认加入。
 3. 没有团队时显示无团队状态，可创建团队或通过邀请加入。
 
-**尚未设置密码的 Google 用户**：继续使用 Google，或通过“忘记密码”设置 TaskDoor 密码后再登录。
+**尚未设置密码的 Google 用户**：Google 验证成功后先补设 TaskDoor 密码，再继续原团队或邀请流程。已有密码的账号不重复设置，之后可使用 Google 或邮箱＋密码登录同一账号。
 
-![登录页：Google 入口与邮箱密码登录。](../assets/account-identity/login-empty-en.jpg)
 
-*FIG-AUTH-002 · 登录页。*
+![登录页：Google 与邮箱密码入口，右上角可切换语言。](../assets/account-identity/login-language-zh.png)
+
+*FIG-AUTH-002 · 登录页：Google 与邮箱密码入口，右上角可切换语言。*
 
 ### 3.3 注册、登录与受邀进入流程
 
@@ -87,20 +88,14 @@ operations: "register, verify_email, login, request_password_reset, reset_passwo
 
 ### 3.5 忘记密码
 
-**用途**：已有密码的用户重设密码；Google 注册用户首次设置 TaskDoor 密码。
+**用途**：已有密码的用户重设 TaskDoor 密码。
 
 1. 在登录页点击“忘记密码”，输入账号邮箱。
 2. 获取邮件验证码并完成验证。
 3. 设置 TaskDoor 密码，成功后返回登录页。
 4. 使用同一邮箱和新密码登录原账号。
 
-![忘记密码：填写账号邮箱，继续验证身份。](../assets/account-identity/forgot-password-en.png)
 
-*FIG-AUTH-008 · 填写账号邮箱。*
-
-![设置新密码：邮箱验证通过后设置 TaskDoor 登录密码。](../assets/account-identity/reset-password-en.png)
-
-*FIG-AUTH-009 · 验证通过后设置新密码。*
 
 **限制与异常**
 
@@ -128,13 +123,17 @@ operations: "register, verify_email, login, request_password_reset, reset_passwo
 - 资料更新不改变邮箱、登录方式、绑定或成员关系；服务端与 CLI 同样限制邮箱修改。
 - 退出登录只结束会话，保留团队和任务。
 
+### 3.7 账号停用
+
+账号停用前须在各团队完成拥有者转让和[未完成任务交接](14-membership-account-exit.md)，成功后撤销全部会话和设备授权；不能借停用绕过交接。
+
 ## 4. 功能验收标准
 
 - **注册**：有效验证码只创建一个账号；无效、过期、已使用的验证码不能创建账号。
 - **表单初始值**：打开普通登录或注册页面时，邮箱、密码和验证码均为空，不显示示例账号或其他账号信息。
 - **首次设置**：邮箱和 Google 新用户均进入设置；中断后再次登录可继续。
 - **登录**：已有用户进入原账号；认证取消或失败时原数据不变。
-- **首次设置密码**：Google 用户通过“忘记密码”验证邮箱、设置密码后，可用邮箱密码登录；Google 登录仍有效，账号、团队和任务不变。
+- **Google 密码设置**：新用户及未设密码的旧用户在 Google 验证后先设密码；空密码、短密码或保存失败不能进入团队。已有密码不重复设置，两种登录方式进入同一账号。
 - **重复注册**：已注册邮箱进入登录或密码恢复流程，不创建第二个账号。
 - **邀请**：注册、登录、Google 返回和密码恢复均保留原邀请；邮箱不符不能加入。
 - **个人资料**：名称、头像保存后保留；邮箱在界面、资料接口及 CLI 中均不可修改。
