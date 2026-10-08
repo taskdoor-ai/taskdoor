@@ -10,7 +10,7 @@
 ## 搜索过程
 
 - 21st.dev 查询与分类：查询 icon picker、color picker、popover，并查看 Popular 分类入口；可用结果以 Color Picker 与 Base Popover 为主，未发现同时满足“小规模图标集 + 规范预设色”的成熟单组件。
-- 官方/组件库查询：检查 shadcn/ui Popover 与 Toggle Group 的单选模式，以及本项目现有 `src/components/ui/popover.tsx`。
+- 官方/组件库查询：检查 shadcn/ui Popover 与 Toggle Group 的单选模式，以及本项目现有 `src/shared/ui/popover.tsx`。
 - GitHub / 官方查询：检查 Lucide React 官方文档的独立导入、TypeScript 与无障碍能力。
 
 ## 候选

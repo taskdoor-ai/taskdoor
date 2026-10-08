@@ -61,7 +61,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：会议明确待办＋工程范围扩展。**M-API 直接要求整理任务创建真实 API；F-VERIFY 要求真实模型、迁移与线上流程单独验证。
 
-  **为什么跟进：**当前[创建逻辑仍是场景 Mock](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/lib/taskCreationPlanning.ts:42)，[Vite 未挂载旧模型代理](/Users/yxzuji/Documents/ChatGPT/agentdoor2/vite.config.ts:6)。先对账才能知道该接入什么、缺谁提供。把清单扩到身份、文件和会话，是我为核验老板文件的完整协作能力补出的工程范围，**不是会议原待办逐项列出的 API**。
+  **为什么跟进：**当前[创建逻辑仍是场景 Mock](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/ai/mock/lib/taskCreationPlanning.ts:42)，[Vite 未挂载旧模型代理](/Users/yxzuji/Documents/ChatGPT/agentdoor2/vite.config.ts:6)。先对账才能知道该接入什么、缺谁提供。把清单扩到身份、文件和会话，是我为核验老板文件的完整协作能力补出的工程范围，**不是会议原待办逐项列出的 API**。
 
   **优先级：**P0。**当前状态：**未开始；已有差距审计，真实接口、部署和联调状态仍需对账。
 
@@ -127,7 +127,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：会议功能方向＋老板文件当前能力主张。**M-CREATE 明确自然语言创建／编辑／查询、拆分依赖与权限内查重；M-SKILL、F-PLAN 支持目标、人选和动态规划能力。
 
-  **为什么跟进：**[当前解析](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/lib/taskCreationPlanning.ts:42) 只匹配五个示例，不能据此认为自由需求和跨成员查重已可用。服务端权限过滤、协议适配和确定性校验是实现这些要求的工程建议。呈现沿用 D-147 的任务式页面，这是对会议“对话承载”的后续具体调整，不恢复旧聊天入口。
+  **为什么跟进：**[当前解析](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/ai/mock/lib/taskCreationPlanning.ts:42) 只匹配五个示例，不能据此认为自由需求和跨成员查重已可用。服务端权限过滤、协议适配和确定性校验是实现这些要求的工程建议。呈现沿用 D-147 的任务式页面，这是对会议“对话承载”的后续具体调整，不恢复旧聊天入口。
 
   **优先级：**P1。**当前状态：**已有原型待验证；五场景 Mock 可试用，真实模型及服务接入未完成。
 
@@ -143,7 +143,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：老板文件安全目标下的工程推导，非会议直接待办。**F-WRITE 明确权限、当前版本和幂等检查；M-API 为确认真实对接边界提供依据，但没有指定统一 React／MCP 的架构。
 
-  **为什么跟进：**[浏览器创建写 localStorage](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/App.tsx:309)，[MCP 写独立 JSON 文件](/Users/yxzuji/Documents/ChatGPT/agentdoor2/mcp/server.ts:15)，目前无法保证另一客户端看见同一任务及其最新版本。统一命令和数据源是我提出的最小一致性方案；若 G01 找到可复用的既有服务，优先适配，不据此新建第二套平台。草稿 revision、事务及数据接续方式同属工程设计。
+  **为什么跟进：**[浏览器创建写 localStorage](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/app/App.tsx:310)，[MCP 写独立 JSON 文件](/Users/yxzuji/Documents/ChatGPT/agentdoor2/mcp/server.ts:15)，目前无法保证另一客户端看见同一任务及其最新版本。统一命令和数据源是我提出的最小一致性方案；若 G01 找到可复用的既有服务，优先适配，不据此新建第二套平台。草稿 revision、事务及数据接续方式同属工程设计。
 
   **优先级：**P1。**当前状态：**已有原型待验证；已有本地创建、差异预览与存储恢复，统一服务和跨端写入未完成。
 
@@ -159,7 +159,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：老板文件能力主张＋未来建议＋会议方向。**F-WRITE 明确文件版本、差异、归因和活动；F-PLAN 提及独立验收，F-QUALITY 建议成功标准检查；M-DETAIL 要求讨论与系统动态分离，M-EWD 要求可信地评估工作量完成。
 
-  **为什么跟进：**[文件列表仍使用组件内状态](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/components/task-files/TaskFileExplorer.tsx:10)，[上传按钮标为演示](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/components/task-files/TaskFileExplorer.tsx:49)，不足以支持可追溯诊断或完成计量。版本化标准、精确证据绑定和确认失效规则是我补出的落地方案，**原文没有规定这套数据结构，更没有要求新增审批或勾选验收流程**。
+  **为什么跟进：**[文件列表仍使用组件内状态](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/features/tasks/files/components/TaskFileExplorer.tsx:10)，[上传按钮标为演示](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/features/tasks/files/components/TaskFileExplorer.tsx:49)，不足以支持可追溯诊断或完成计量。版本化标准、精确证据绑定和确认失效规则是我补出的落地方案，**原文没有规定这套数据结构，更没有要求新增审批或勾选验收流程**。
 
   **优先级：**P1。**当前状态：**已有原型待验证；标准文本、文件预览和活动分区已有，真实证据链未完成。
 
@@ -175,7 +175,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：会议明确能力方向＋老板文件当前能力主张。**M-REPORT 要求回传规范、连接校验与心跳；F-SESSION、F-WRITE 描述个人 Agent 会话、所有人授权和成果安全写回。
 
-  **为什么跟进：**[当前连接组件](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/components/AiConnectionDialog.tsx:123) 复制上下文或唤起客户端后用定时器置为连接，不能证明真实握手、执行报告及成果回写。先做一个客户端是我提出的最小范围；事件序号、重试和撤权校验是工程拆分。会议接入方向不等于现在获准恢复被隐藏的入口。
+  **为什么跟进：**[当前连接组件](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/features/ai-connection/components/AiConnectionDialog.tsx:123) 复制上下文或唤起客户端后用定时器置为连接，不能证明真实握手、执行报告及成果回写。先做一个客户端是我提出的最小范围；事件序号、重试和撤权校验是工程拆分。会议接入方向不等于现在获准恢复被隐藏的入口。
 
   **优先级：**P1。**当前状态：**待确认；当前未形成完整 Work Session／Agent 授权／回传链路，接入入口仍隐藏。
 
@@ -191,7 +191,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：会议明确待办＋老板文件未来推荐。**M-DETAIL 直接要求洞察升级为独立 Tab 或同级模块；风险识别、标准检查、摘要的组合来自 F-QUALITY，不能都称为会议原定功能。
 
-  **为什么跟进：**当前[详情页签](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/components/TaskDetail.tsx:289) 没有诊断模块，历史建议也不能提供基于当前证据的执行分析。把上述能力组合成任务诊断，可回答“卡在哪里、缺什么、下一步做什么”。**原文件建议每日协作摘要，本方案先收窄为按需生成**；没有覆盖定时生成或按收件人聚合通知，具体入口仍待确认。
+  **为什么跟进：**当前[详情页签](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/features/tasks/components/TaskDetail.tsx:286) 没有诊断模块，历史建议也不能提供基于当前证据的执行分析。把上述能力组合成任务诊断，可回答“卡在哪里、缺什么、下一步做什么”。**原文件建议每日协作摘要，本方案先收窄为按需生成**；没有覆盖定时生成或按收件人聚合通知，具体入口仍待确认。
 
   **优先级：**P1。**当前状态：**待确认；当前没有开放的真实诊断闭环，旧洞察组件和历史 AI 建议不能算已完成。
 
@@ -207,7 +207,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：会议减法方向＋项目设计规则的具体转译。**M-DETAIL 要求降低前置依赖的显性呈现；项目设计规则 D07 将其细化为只在实际阻塞时提示“等待 X”。老板文件的跨任务依赖检测是另一项能力。
 
-  **为什么跟进：**[现有显示条件](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/components/TaskDetail.tsx:349) 只判断有无依赖，已满足前置也会占用头部。按阻塞状态控制是降低认知负担的局部建议，**不是会议逐字指定的判断条件**；面包屑表达归属，不能拿它代替真实依赖信息。
+  **为什么跟进：**[现有显示条件](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/features/tasks/components/TaskDetail.tsx:346) 只判断有无依赖，已满足前置也会占用头部。按阻塞状态控制是降低认知负担的局部建议，**不是会议逐字指定的判断条件**；面包屑表达归属，不能拿它代替真实依赖信息。
 
   **优先级：**局部修正；可在 P1 主线旁推进，排期未定。**当前状态：**已有原型待验证；现有条件只判断有无依赖，尚未按实际阻塞控制。
 
@@ -227,7 +227,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：会议个人方向＋本轮联合要求下的数据前置。**M-PERSON、U-ANALYSIS要求本人应推进什么以及重要／紧急、工时分析；U-JOINT要求与任务成本、EWD一起设计，F-SCHEDULE提供未来容量建议。字段与窗口规则由06按U-PM提出，不是原文已有清单。
 
-  **为什么跟进：**现有[成员来源](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/App.tsx:165) 为场景数据，[推荐规则](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/lib/responsibilityAssignment.ts:24) 依赖职责关键词和可用性文字，不是可信的个人容量记录。没有本人剩余投入和可用窗口，就不能回答截止前能否完成。工作日历、分人投入及父子去重都是我提出的数据设计，不能声称会议已经定了人时算法。
+  **为什么跟进：**现有[成员来源](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/app/App.tsx:166) 为场景数据，[推荐规则](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/ai/mock/lib/responsibilityAssignment.ts:24) 依赖职责关键词和可用性文字，不是可信的个人容量记录。没有本人剩余投入和可用窗口，就不能回答截止前能否完成。工作日历、分人投入及父子去重都是我提出的数据设计，不能声称会议已经定了人时算法。
 
   **优先级：**P2；共享数据可随EWD基础并行。**当前状态：**联合设计已补充，数据接入未开始。
 
@@ -243,7 +243,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：会议分析范围＋本轮明确要求＋老板未来机会。**M-PERSON、U-ANALYSIS、U-JOINT直接要求本人优先级/紧急程度；F-SCHEDULE提供Workspace优先级方向，范围依会议收窄为本人。U-PM要求方法支撑，06据此区分目标价值、资源约束与行动选择，不声称PMP有统一打分公式。
 
-  **为什么跟进：**当前任务索引和本地任务字段尚不能给出有证据的个人行动建议，见[现行任务数据](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/data/workspaceNodes.ts:15)。需要回答“为什么现在先做这件事”，而非只显示任务数量。轻量行动列表、不设伪精确总分和保留人工调序是我的产品方案；**会议未规定 Dashboard 布局，老板文件也没有要求新建个人 Dashboard**。
+  **为什么跟进：**当前任务索引和本地任务字段尚不能给出有证据的个人行动建议，见[现行任务数据](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/ai/mock/data/workspaceNodes.ts:15)。需要回答“为什么现在先做这件事”，而非只显示任务数量。轻量行动列表、不设伪精确总分和保留人工调序是我的产品方案；**会议未规定 Dashboard 布局，老板文件也没有要求新建个人 Dashboard**。
 
   **优先级：**P2。**当前状态：**联合规则已形成提案，具体分档与入口待确认，未实施；Dashboard不在当前开放范围。
 
@@ -259,7 +259,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：用户本轮明确要求，不是原会议既定模块。**U-JOINT直接要求“任务下成本分析”与EWD一起分析；U-PM要求方法支撑。M-EWD提供人时基础，F-SCHEDULE的偏差复盘可复用结果，但老板文件没有指定完整成本功能。人时优先、金额可选和历史归属规则是06的设计提案。
 
-  **为什么跟进：**[当前Task类型](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/data/workspaceNodes.ts:15)没有实际/剩余投入与费用记录，EWD曲线不能回答已经花了多少或还需多少。直接用当前叶子汇总成本会在取消/重挂时丢失已投入，因此需共享工时事实并单独保留历史归属；不是再建一套EWD或完整财务系统。
+  **为什么跟进：**[当前Task类型](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/ai/mock/data/workspaceNodes.ts:15)没有实际/剩余投入与费用记录，EWD曲线不能回答已经花了多少或还需多少。直接用当前叶子汇总成本会在取消/重挂时丢失已投入，因此需共享工时事实并单独保留历史归属；不是再建一套EWD或完整财务系统。
 
   **优先级：**P2联合能力；最小人时读数可随EWD试点并行。**当前状态：**详细设计已形成，口径/入口待确认，未实施。
 
@@ -275,7 +275,7 @@ P0及各G项的具体优先级、依赖、拆分粒度、技术字段和验收�
 
   **依据：老板文件未来机会，非会议明确待办。**F-SCHEDULE 直接提出“容量感知的成员推荐”“计划偏差复盘”；与用户工时分析问题相关，但不据此改写为会议已要求本轮实现。
 
-  **为什么跟进：**只有积累可信历史，才能解释计划偏差并改善后续推荐；[当前 Burn up 只投影传入快照](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/lib/taskBurnUp.ts:88)，不提供这类历史依据，因此列为后续候选。原文件说的是“预计与实际工期、返工和阻塞原因”；进一步区分范围、等待、实际人时与剩余人时，是本轮方案的扩展，不能把工期直接当人类工时。
+  **为什么跟进：**只有积累可信历史，才能解释计划偏差并改善后续推荐；[当前 Burn up 只投影传入快照](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/features/tasks/lib/task-burn-up.ts:72)，不提供这类历史依据，因此列为后续候选。原文件说的是“预计与实际工期、返工和阻塞原因”；进一步区分范围、等待、实际人时与剩余人时，是本轮方案的扩展，不能把工期直接当人类工时。
 
   **优先级：**P2。**当前状态：**未开始；需先积累可信历史，现有示例曲线不能作为复盘依据。
 

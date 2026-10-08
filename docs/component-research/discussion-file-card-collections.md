@@ -6,7 +6,7 @@
 
 - 指定组件：[21st.dev / File Card Collections](https://21st.dev/@urmauur/components/file-card-collections)。
 - 作者说明：[File Card Collections](https://www.urmauur.com/interfaces/file-card-collections)。
-- 实际源码：[作者 shadcn registry](https://urmauur.com/r/file-card.json)，源路径 `components/ui/file-card/index.tsx`。本轮读取 registry 后适配到 `src/components/ui/file-card-collections.tsx`，保留作者和来源注释。没有运行远程脚本，registry 未声明额外依赖；继续使用现有 React、Tailwind 和 cn。
+- 实际源码：[作者 shadcn registry](https://urmauur.com/r/file-card.json)，源路径 `components/ui/file-card/index.tsx`。本轮读取 registry 后适配到 `src/shared/ui/file-card-collections.tsx`，保留作者和来源注释。没有运行远程脚本，registry 未声明额外依赖；继续使用现有 React、Tailwind 和 cn。
 - 安装方式由作者提供为 `npx shadcn@latest add https://urmauur.com/r/file-card.json`；本项目采用源码适配，避免覆盖现有共享配置。
 
 ## 保留与适配

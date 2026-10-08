@@ -33,10 +33,10 @@
 | 能力 | 已发现证据／状态 | 上线前还需对接或验证 |
 | --- | --- | --- |
 | 模型任务解析 | `server/taskAssistant.ts` 保留 POST `/api/task-assistant` 插件定义与 Responses 风格上游调用；当前 `vite.config.ts` 未挂载插件，前端未调用 | 真实运行时接入、生产部署与鉴权、租户上下文、限流、可观测性；当前不能视为可用 API |
-| 草稿请求响应校验 | `src/lib/taskAssistantProtocol.ts`：Zod、mainTask/subtasks、索引依赖、人员推荐 | 新契约版本适配；达成标准、Tips、EWD、查重覆盖、稳定ID及语义校验 |
+| 草稿请求响应校验 | `src/features/tasks/lib/task-assistant-protocol.ts`：Zod、mainTask/subtasks、索引依赖、人员推荐 | 新契约版本适配；达成标准、Tips、EWD、查重覆盖、稳定ID及语义校验 |
 | 当前任务/成员上下文 | 现有 request 接收 existingTasks（最多80）和 members（最多60） | 服务端根据会话与 ACL 装配，不能信任浏览器传来的 currentUserId/成员列表作为授权依据；截断必须返回coverage |
 | 模型上下文上游 | `server/taskAssistant.ts` 中上游 URL 与调用实现 | 密钥不进客户端；错误响应脱敏；不能据此认定业务 API 已齐全 |
-| 原型节点创建 | `src/lib/workspaceTaskCreation.ts` 返回内存 nodes；`src/App.tsx` 存在 localStorage 持久化代码 | 不是组织级事务API；统一稳定ID、权限、并发、幂等与跨端持久化 |
+| 原型节点创建 | `src/features/tasks/lib/workspace-task-creation.ts` 返回内存 nodes；`src/app/App.tsx` 存在 localStorage 持久化代码 | 不是组织级事务API；统一稳定ID、权限、并发、幂等与跨端持久化 |
 | 独立 MCP 草稿/创建 | `mcp/server.ts` 有 `agentdoor_prepare_task` / `agentdoor_create_task`，内存草稿和文件存储 | 与React数据源尚不能视为统一；真实成员ID、鉴权、确认凭据、原子性、重启/并发幂等、日期默认需审查 |
 | 用户身份/组织团队权限 | 本轮未确认生产 API | principal、teamId、可见/可创建/可指派权限及撤销行为 |
 | 成员目录与职责 | 本地数据与协议字段存在；未确认生产 API | ID、职责证据、本人公开且会过期的协作窗口；不使用在线活动推算容量 |

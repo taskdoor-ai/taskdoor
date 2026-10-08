@@ -80,7 +80,7 @@ PMP 是认证名称；本方案采用的是 PMI 的项目管理知识与方法�
 | Owner 跟进项目 | 交付有没有跟上新增范围，百分比为何变化 | 范围／已验收两条线与变更事件 |
 | 本人安排工作 | 自己还有多少投入、截止前是否来得及 | 后续分人剩余人时与工作窗口；不直接使用总 EWD |
 
-现有 [TaskNode](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/data/workspaceNodes.ts:15) 已按 D-153 增加可选的本地估算，保存分钟值、工作方式、依据、范围绑定、确认状态和递增版本；它不等于生产估算历史账本，也不包含验收事件。[Burn up 模型](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/lib/taskBurnUp.ts:88) 仍只投影传入快照，不能从当前估算倒造历史；[现有小图](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/components/TaskBurnUpSparkline.tsx:17) 已有双线、空态、示例标识与数据表。后续主要工作是补齐生产数据、规则和接入，不是重新选择图表库。
+现有 [TaskNode](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/ai/mock/data/workspaceNodes.ts:15) 已按 D-153 增加可选的本地估算，保存分钟值、工作方式、依据、范围绑定、确认状态和递增版本；它不等于生产估算历史账本，也不包含验收事件。[Burn up 模型](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/features/tasks/lib/task-burn-up.ts:72) 仍只投影传入快照，不能从当前估算倒造历史；[现有小图](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/features/tasks/components/TaskBurnUpSparkline.tsx:18) 已有双线、空态、示例标识与数据表。后续主要工作是补齐生产数据、规则和接入，不是重新选择图表库。
 
 **2．EWD 定义的取舍：先统一量什么**
 
@@ -584,11 +584,11 @@ F_life = A_life + R_life               [覆盖完整才可计算]
 
 | 能力 | 当前可复用证据 | 联合方案需要补齐 |
 | --- | --- | --- |
-| Task与责任 | [TaskNode](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/data/workspaceNodes.ts:15)已有目标、标准、人员、日期和依赖 | 真实身份/权限、责任接受、目标影响依据、硬/软日期与时区 |
-| EWD与趋势 | [Burn up模型](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/lib/taskBurnUp.ts:88)已有快照投影 | 确认估算、正式结果事实、范围历史与服务端聚合；不是重造图表 |
-| 本人窗口 | [成员类型](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/data/sharedTypes.ts:2)只有可用性/当前工作文字 | 有来源的工作日历、明确占用、分人剩余及承诺，不用Fixture或在线状态猜测 |
-| 任务成本 | [当前Task字段](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/data/workspaceNodes.ts:15)没有正式投入/费用记录 | 人时记录与历史分配；金额阶段才加费用、币种和费率权限 |
-| 服务一致性 | [创建仍写浏览器](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/App.tsx:309) | 共用正式数据与版本；中文活动文本不能充当成本账本 |
+| Task与责任 | [TaskNode](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/ai/mock/data/workspaceNodes.ts:15)已有目标、标准、人员、日期和依赖 | 真实身份/权限、责任接受、目标影响依据、硬/软日期与时区 |
+| EWD与趋势 | [Burn up模型](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/features/tasks/lib/task-burn-up.ts:72)已有快照投影 | 确认估算、正式结果事实、范围历史与服务端聚合；不是重造图表 |
+| 本人窗口 | [成员类型](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/shared/model/task-model.ts:157)只有可用性/当前工作文字 | 有来源的工作日历、明确占用、分人剩余及承诺，不用Fixture或在线状态猜测 |
+| 任务成本 | [当前Task字段](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/ai/mock/data/workspaceNodes.ts:15)没有正式投入/费用记录 | 人时记录与历史分配；金额阶段才加费用、币种和费率权限 |
+| 服务一致性 | [创建仍写浏览器](/Users/yxzuji/Documents/ChatGPT/agentdoor2/src/app/App.tsx:310) | 共用正式数据与版本；中文活动文本不能充当成本账本 |
 
 第10节事实对象继续复用；最少新增的候选数据含义如下，不修改现有Schema、不新增顶层业务任务种类：
 
