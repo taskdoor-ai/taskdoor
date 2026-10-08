@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { createWorkspaceTasksFromDraft } from '../src/lib/workspaceTaskCreation.ts';
-import { createCreationForm, validateCreationForm } from '../src/lib/taskCreationForm.ts';
-import { creatorCommerceMembers } from '../src/data/creatorCommerceScenario.ts';
-import { TaskWorkloadSummary } from '../src/components/TaskWorkloadSummary.tsx';
-import { getTaskProgressDisplay } from '../src/lib/taskProgressDisplay.ts';
+import { createWorkspaceTasksFromDraft } from '../src/features/tasks/lib/workspace-task-creation.ts';
+import { createCreationForm, validateCreationForm } from '../src/features/tasks/lib/task-creation-form.ts';
+import { creatorCommerceMembers } from '../src/ai/mock/data/creatorCommerceScenario.ts';
+import { TaskWorkloadSummary } from '../src/features/tasks/components/TaskWorkloadSummary.tsx';
+import { getTaskProgressDisplay } from '../src/features/tasks/lib/task-progress-display.ts';
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 const task = {title:'交付方案',goal:'确认方案',completionCriteria:['方案已确认'],ownerId:'',participantIds:[],labels:[],startDate:'',endDate:''};
 
@@ -51,8 +51,8 @@ test('已有错误截止保留原始数据，投影显式报错且不生成倒�
 });
 
 test('AI 调整沿用真实创建日期，历史合法截止不受今天日期影响', async () => {
-  const {createSavedTaskAiContext, applySavedTaskAiAdjustment} = await import('../src/lib/taskAiAdjustmentAdapters.ts');
-  const {buildTaskAiAdjustment} = await import('../src/lib/taskAiAdjustment.ts');
+  const {createSavedTaskAiContext, applySavedTaskAiAdjustment} = await import('../src/features/tasks/lib/task-ai-adjustment-adapters.ts');
+  const {buildTaskAiAdjustment} = await import('../src/ai/mock/lib/taskAiAdjustment.ts');
   const nodes = [{id:'date-test',kind:'task' as const,parentId:'root',name:'日期测试',goal:'检查日期',ownerId:'',status:'待开始' as const,updatedAt:'2026-09-20',createdAt:'2026-09-10T01:00:00Z',plannedEndOn:'2026-09-20',completionCriteria:['完成检查']}];
   const context=createSavedTaskAiContext(nodes,'date-test',[],'self')!;
   const invalid=buildTaskAiAdjustment(context,{kind:'task'},'截止时间改为2026-09-09');

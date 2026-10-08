@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { partitionPinnedTasks, pinnedTaskStorageKey, readPinnedTaskIds, togglePinnedTaskId, writePinnedTaskIds } from "../src/lib/taskPins.ts";
+import { partitionPinnedTasks, pinnedTaskStorageKey, readPinnedTaskIds, togglePinnedTaskId, writePinnedTaskIds } from "../src/features/tasks/lib/task-pins.ts";
 
 function memoryStorage(seed: Record<string, string> = {}) {
   const values = new Map(Object.entries(seed));

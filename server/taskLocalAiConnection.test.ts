@@ -7,10 +7,10 @@ import { transformSync } from "esbuild";
 const readSource = (path: string) => readFileSync(fileURLToPath(new URL(`../${path}`, import.meta.url)), "utf8");
 
 test("任务头部以文字按钮连接 AI，讨论继续使用同一个连接弹窗", () => {
-  const source = readSource("src/components/TaskDetail.tsx");
+  const source = readSource("src/features/tasks/components/TaskDetail.tsx");
 
   assert.match(source, /<AiConnectionButton contextLabel="当前任务" key=\{taskId\} onConnect=\{openTaskAiConnection\}/);
-  const button = readSource("src/components/AiConnectionButton.tsx");
+  const button = readSource("src/features/ai-connection/components/AiConnectionButton.tsx");
   assert.match(button, /连接 AI/);
   assert.match(button, /attempt\.current\?\.abort\(\)/);
   assert.match(button, /if \(disabled \|\| attempt\.current/);
@@ -27,12 +27,12 @@ test("任务头部以文字按钮连接 AI，讨论继续使用同一个连接�
   assert.equal(source.match(/<AiConnectionDialog\b/g)?.length, 1);
   assert.match(source, /aiConnectionRequest\?\.taskId === taskId/);
   assert.match(source, /returnFocus=\{aiConnectionTrigger.current\}/);
-  assert.match(readSource("src/App.tsx"), /parentTask=\{selectedParentTask \? toTaskRelationSummary\(selectedParentTask\) : undefined\}/);
+  assert.match(readSource("src/app/App.tsx"), /parentTask=\{selectedParentTask \? toTaskRelationSummary\(selectedParentTask\) : undefined\}/);
 });
 
 // Exercise the real event handlers and context builder without mounting unrelated UI.
 function handler(name: string, bindings: Record<string, unknown>): (...args: unknown[]) => unknown {
-  const source = readSource("src/components/TaskDetail.tsx");
+  const source = readSource("src/features/tasks/components/TaskDetail.tsx");
   const start = source.indexOf(`  const ${name} =`);
   assert.ok(start >= 0, `缺少 ${name} 回调`);
   const end = source.indexOf("\n  };", start);
@@ -42,7 +42,7 @@ function handler(name: string, bindings: Record<string, unknown>): (...args: unk
 }
 
 test("任务连接读取当前字段与人员状态，只打开预览、不调用调整或写入", async () => {
-  const moduleUrl = new URL("../src/lib/taskAiConnection.ts", import.meta.url);
+  const moduleUrl = new URL("../src/features/tasks/lib/task-ai-connection.ts", import.meta.url);
   assert.ok(existsSync(moduleUrl), "任务连接需要独立的上下文构建器");
   const { buildTaskAiConnectionRequest } = await import(moduleUrl.href);
   const task = { title: "旧名称", goal: "旧目标", owner: "旧负责人", participants: ["旧参与人"], status: "待开始", due: "旧截止", summary: "不可导出的旧摘要", activities: [], files: [], commits: [], completionCriteria: ["真实完成标准"] };
@@ -79,9 +79,9 @@ test("关闭共享连接弹窗只清除连接请求，不清除讨论或其他�
 });
 
 test("连接弹窗复用真实工具 Logo 并保持简约上下文", () => {
-  const source = readSource("src/components/AiConnectionDialog.tsx");
+  const source = readSource("src/features/ai-connection/components/AiConnectionDialog.tsx");
 
-  const catalog = readSource("src/lib/aiTools.ts");
+  const catalog = readSource("src/features/ai-connection/lib/ai-tools.ts");
   for (const tool of ["ChatGPT", "Claude Code", "WorkBuddy", "Cursor"]) assert.match(catalog, new RegExp(tool));
   assert.match(source, /agentIconUrls/);
   assert.match(source, /仅带入你当前有权查看的信息，不会获得额外权限/);
@@ -90,7 +90,7 @@ test("连接弹窗复用真实工具 Logo 并保持简约上下文", () => {
 
 
 test("讨论连接使用当前任务字段及最新附件快照，预览与复制范围一致", async () => {
-  const { buildDiscussionAiRequest } = await import("../src/lib/taskDiscussionAi.ts");
+  const { buildDiscussionAiRequest } = await import("../src/features/tasks/discussion/lib/task-discussion-ai.ts");
   const task = { title: "旧名称", goal: "旧目标", owner: "旧负责人", participants: ["旧参与人"], status: "待开始", due: "旧截止", summary: "", activities: [], files: [], commits: [], completionCriteria: ["完成标准"] };
   const activity = { id: "root", author: "周岚", type: "member-post", message: "当前动态", time: "今天", attachmentRefs: [{ fileId: "latest-file", name: "新上传文件.pdf", version: 1 }] };
   const requests: Array<{ taskId: string; request: unknown }> = [];

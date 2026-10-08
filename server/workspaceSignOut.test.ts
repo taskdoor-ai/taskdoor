@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { signOutWorkspace, workspaceSessionKey, onboardingStorageKey } from '../src/lib/workspaceSession';
-import { createOnboardingPreview, transitionOnboarding, restoreOnboardingPreview } from '../src/lib/onboardingPreview';
+import { signOutWorkspace, workspaceSessionKey, onboardingStorageKey } from '../src/shared/lib/workspace-session';
+import { createOnboardingPreview, transitionOnboarding, restoreOnboardingPreview } from '../src/features/auth/lib/onboarding-preview';
 
 test('logout clears authentication, keeps accounts and teams, and navigates to login', () => {
   const storage = new Map<string,string>();

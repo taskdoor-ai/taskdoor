@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { aiToolIds } from "../src/lib/aiTools.ts";
-import { createAiToolPreferenceStore, defaultAiTool, parseAiToolPreferences } from "../src/lib/aiToolPreferences.ts";
+import { aiToolIds } from "../src/features/ai-connection/lib/ai-tools.ts";
+import { createAiToolPreferenceStore, defaultAiTool, parseAiToolPreferences } from "../src/features/ai-connection/lib/ai-tool-preferences.ts";
 
 function storage() {
   let value: string | null = null;

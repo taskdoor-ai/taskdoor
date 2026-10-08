@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { applyCriterionReviewMocks, criterionDemoEvidence } from '../src/data/taskCriterionReviewMocks';
-import { allTeamWorkspaceNodes } from '../src/data/teamWorkspaceScenarios';
-import { normalizeWorkspaceNodes, type TaskNode } from '../src/data/workspaceNodes';
-import { confirmTaskCriterion, criterionPercent } from '../src/lib/taskCriterionReview';
+import { applyCriterionReviewMocks, criterionDemoEvidence } from '../src/ai/mock/data/taskCriterionReviewMocks';
+import { allTeamWorkspaceNodes } from '../src/ai/mock/data/teamWorkspaceScenarios';
+import { normalizeWorkspaceNodes } from '../src/ai/mock/data/workspaceNodes';
+import { type TaskNode } from '../src/shared/model/task-model';
+import { confirmTaskCriterion, criterionPercent } from '../src/features/tasks/lib/task-criterion-review';
 const fixtures = allTeamWorkspaceNodes.filter((n): n is TaskNode => n.kind === 'task' && Boolean(n.criterionReviews));
 test('authored examples cover partial, AI-complete, human-confirmed and unknown without changing task progress', () => {
   assert.equal(fixtures.length,232);

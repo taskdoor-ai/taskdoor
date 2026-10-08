@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { initialPersonalCenterState, isPersonalCenterState, loadPersonalCenterState, personalCenterStorageKey, savePersonalCenterState, type PersonalCenterState } from "../src/data/memberProfiles";
-import * as proposals from "../src/lib/responsibilityProposals";
+import { initialPersonalCenterState, isPersonalCenterState, loadPersonalCenterState, personalCenterStorageKey, savePersonalCenterState, type PersonalCenterState } from "../src/ai/mock/data/memberProfiles";
+import * as proposals from "../src/ai/mock/lib/responsibilityProposals";
 
 const now = "2026-09-10T08:00:00.000Z";
 const createState = () => structuredClone(initialPersonalCenterState);

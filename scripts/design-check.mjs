@@ -19,12 +19,16 @@ function countMatches(source, pattern, predicate = () => true) {
   return [...source.matchAll(pattern)].filter((match) => predicate(match)).length;
 }
 
-const srcFiles = (await walk(path.join(root, "src"))).filter((file) => /\.(?:css|js|jsx|ts|tsx)$/.test(file));
+// The token sheet is where raw values belong; it lived outside src/ (styles/) until the four-layer move.
+const tokenSheet = path.join(root, "src", "shared", "styles", "tokens.css");
+const srcFiles = (await walk(path.join(root, "src"))).filter((file) => /\.(?:css|js|jsx|ts|tsx)$/.test(file) && file !== tokenSheet);
 const records = await Promise.all(srcFiles.map(async (file) => ({ file, source: await readFile(file, "utf8") })));
 const cssRecords = records.filter(({ file }) => file.endsWith(".css"));
 const scriptRecords = records.filter(({ file }) => /\.(?:js|jsx|ts|tsx)$/.test(file));
-const outsideUiRecords = scriptRecords.filter(({ file }) => !file.includes(`${path.sep}components${path.sep}ui${path.sep}`));
-const globalStyles = cssRecords.find(({ file }) => file === path.join(root, "src", "styles.css"));
+// The shadcn primitives are the kebab-case files in shared/ui (and its motion-confetti-utils folder).
+const isUiPrimitive = (file) => file.includes(`${path.sep}shared${path.sep}ui${path.sep}`) && /^[a-z]/.test(path.basename(file));
+const outsideUiRecords = scriptRecords.filter(({ file }) => !isUiPrimitive(file));
+const globalStyles = cssRecords.find(({ file }) => file === path.join(root, "src", "shared", "styles", "pm-global.css"));
 
 const metrics = {
   microFontDeclarations: cssRecords.reduce((total, { source }) => total + countMatches(source, /font-size\s*:\s*(\d+(?:\.\d+)?)px/gi, (match) => Number(match[1]) < 12), 0),

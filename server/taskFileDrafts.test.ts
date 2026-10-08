@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskFileExplorer } from "../src/components/task-files/TaskFileExplorer.tsx";
-import * as draftStore from "../src/lib/taskFileDrafts.ts";
-import type { TaskFileDraft } from "../src/lib/taskFileDrafts.ts";
+import { TaskFileExplorer } from "../src/features/tasks/files/components/TaskFileExplorer.tsx";
+import * as draftStore from "../src/features/tasks/files/lib/task-file-drafts.ts";
+import type { TaskFileDraft } from "../src/features/tasks/files/lib/task-file-drafts.ts";
 
 type Drafts = Record<string, TaskFileDraft>;
 

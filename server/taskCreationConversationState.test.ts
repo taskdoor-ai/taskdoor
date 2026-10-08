@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { workspaceRootId, type WorkspaceNode } from "../src/data/workspaceNodes.ts";
-import { buildTaskCreationConversationRecord, restoreTaskCreationConversationState } from "../src/lib/taskCreationConversationState.ts";
-import type { TaskPlanDraft } from "../src/lib/taskAssistantProtocol.ts";
-import { createWorkspaceTasksFromDraft, WorkspaceTaskCreationError } from "../src/lib/workspaceTaskCreation.ts";
+import { workspaceRootId, type WorkspaceNode } from "../src/shared/model/task-model.ts";
+import { buildTaskCreationConversationRecord, restoreTaskCreationConversationState } from "../src/features/tasks/lib/task-creation-conversation-state.ts";
+import type { TaskPlanDraft } from "../src/features/tasks/lib/task-assistant-protocol.ts";
+import { createWorkspaceTasksFromDraft, WorkspaceTaskCreationError } from "../src/features/tasks/lib/workspace-task-creation.ts";
 
 const draft: TaskPlanDraft = {
   mainTask: { endDate: "", goal: "完成交付", labels: [], ownerId: "周岚", participantIds: [], startDate: "", title: "追加子任务" },

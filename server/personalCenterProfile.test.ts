@@ -3,13 +3,13 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { PersonAvatar } from "../src/components/PersonAvatar";
-import { initialPersonalCenterState, isPersonalCenterState } from "../src/data/memberProfiles";
-import { validatePersonalAvatarFile } from "../src/lib/personalAvatar";
+import { PersonAvatar } from "../src/shared/ui/PersonAvatar";
+import { initialPersonalCenterState, isPersonalCenterState } from "../src/ai/mock/data/memberProfiles";
+import { validatePersonalAvatarFile } from "../src/features/me/lib/personal-avatar";
 
-const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-const dialogSource = readFileSync(new URL("../src/components/PersonalInfoDialog.tsx", import.meta.url), "utf8");
-const stylesheetSource = readFileSync(new URL("../src/styles/personal-center.css", import.meta.url), "utf8");
+const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
+const dialogSource = readFileSync(new URL("../src/app/workspace/components/PersonalInfoDialog.tsx", import.meta.url), "utf8");
+const stylesheetSource = readFileSync(new URL("../src/shared/styles/personal-center.css", import.meta.url), "utf8");
 
 test("personal center state accepts an optional local avatar data URL", () => {
   const state = structuredClone(initialPersonalCenterState) as unknown as Record<string, any>;
@@ -75,7 +75,7 @@ test("personal information is a compact avatar, name, and editable email layout"
 });
 
 test("email validation and save keep the current member email consistent across teams", async () => {
-  const profiles = await import("../src/data/memberProfiles");
+  const profiles = await import("../src/ai/mock/data/memberProfiles");
   assert.equal(typeof profiles.isValidProfileEmail, "function");
   assert.equal(typeof profiles.applyPersonalProfileDraft, "function");
   const { applyPersonalProfileDraft, isValidProfileEmail } = profiles;

@@ -3,9 +3,9 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskCreationHistory } from "../src/components/TaskCreationHistory.tsx";
-import { TaskCreationProcess, TaskCreationProcessView } from "../src/components/TaskCreationProcess.tsx";
-import type { CreationProcess } from "../src/lib/taskCreationProgress.ts";
+import { TaskCreationHistory } from "../src/features/tasks/components/TaskCreationHistory.tsx";
+import { TaskCreationProcess, TaskCreationProcessView } from "../src/features/tasks/components/TaskCreationProcess.tsx";
+import type { CreationProcess } from "../src/features/tasks/lib/task-creation-progress.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -88,9 +88,9 @@ test("同一对话轮次先展示用户与思考 loading，完成后在过程后
 });
 
 test("正文与历史复用同一生成过程组件，历史不再维护第二套思考卡", () => {
-  const historySource = readFileSync(new URL("../src/components/TaskCreationHistory.tsx", import.meta.url), "utf8");
-  const processSource = readFileSync(new URL("../src/components/TaskCreationProcess.tsx", import.meta.url), "utf8");
-  assert.match(historySource, /import \{ TaskCreationProcessView \} from "\.\/TaskCreationProcess"/);
+  const historySource = readFileSync(new URL("../src/features/tasks/components/TaskCreationHistory.tsx", import.meta.url), "utf8");
+  const processSource = readFileSync(new URL("../src/features/tasks/components/TaskCreationProcess.tsx", import.meta.url), "utf8");
+  assert.match(historySource, /import \{ TaskCreationProcessView \} from "@\/features\/tasks\/components\/TaskCreationProcess"/);
   assert.match(historySource, /<TaskCreationProcessView[^>]*process=\{process\}/);
   assert.doesNotMatch(historySource, /getCreationProcessStepState|TaskCreationThinking|task-creation-history-thinking/);
   assert.match(processSource, /return <TaskCreationProcessView onCancel=\{onCancel\} process=\{current\} \/>/);
@@ -212,7 +212,7 @@ test("连续调整保留旧轮回复与差异，不把内部字段当作可见�
 });
 
 test("紧凑浮层把头部和输入固定在历史滚动区之外", () => {
-  const css = readFileSync(new URL("../src/styles/task-ai-adjustment.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/features/tasks/styles/task-ai-adjustment.css", import.meta.url), "utf8");
   assert.match(css, /\.task-ai-adjust-conversation-header \{[^}]*flex-shrink: 0/);
   assert.match(css, /\.task-ai-adjust-popover\.is-compact \.task-ai-adjust-body \{[^}]*flex: 1;[^}]*padding: 0/);
   assert.match(css, /\.task-ai-adjust-body \{[^}]*overflow-y: auto/);

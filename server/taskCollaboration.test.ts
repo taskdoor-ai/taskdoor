@@ -1,14 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskFileNode } from "../src/data/taskDetailMocks.ts";
-import { getTaskDiscussionThreads } from "../src/lib/taskActivity.ts";
+import type { TaskFileNode } from "../src/shared/model/task-model.ts";
+import { getTaskDiscussionThreads } from "../src/features/tasks/lib/task-activity.ts";
 import {
   TASK_COLLABORATION_STORAGE_PREFIX,
   createCollaborationSnapshot, loadCollaboration, saveCollaboration,
   postCollaborationMessage, updateCollaborationMessage, deleteCollaborationMessage,
   setFileThreadResolved, replaceCollaborationFiles, mergeCollaborationMessages,
   type CollaborationMessage, type FileDiscussionThread,
-} from "../src/lib/taskCollaboration.ts";
+} from "../src/features/tasks/lib/task-collaboration.ts";
 
 const now = "2026-09-14T09:00:00.000Z";
 const file: TaskFileNode = { id: "file-a", kind: "file", name: "方案.md", parentId: "folder-a", updatedAt: now, content: "第一段\n需要确认的正文\n第三段", version: 3 };

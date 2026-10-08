@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createTaskFileRevision, saveTaskFileEdit } from "../src/lib/taskFileEditing.ts";
-import { taskDetailMocks } from "../src/data/taskDetailMocks.ts";
-import { getTaskDiagnosisReport } from "../src/lib/taskDiagnosis.ts";
+import { createTaskFileRevision, saveTaskFileEdit } from "../src/features/tasks/files/lib/task-file-editing.ts";
+import { taskDetailMocks } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { getTaskDiagnosisReport } from "../src/features/tasks/lib/task-diagnosis.ts";
 
-const module = await import("../src/lib/taskDiagnosisContext.ts").catch(() => null);
+const module = await import("../src/features/tasks/files/lib/task-diagnosis-context.ts").catch(() => null);
 class MemoryStorage {
   records = new Map<string, string>();
   getItem(key: string) { return this.records.get(key) ?? null; }

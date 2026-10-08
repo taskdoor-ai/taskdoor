@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { creatorCommerceMembers, creatorCommercePrompt, creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
-import { taskCreationScenarios } from "../src/data/taskCreationScenarios.ts";
-import { nestedTaskCreationPrompt } from "../src/lib/nestedTaskCreationScenario.ts";
-import { workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
-import { advanceTaskCreationScenario, startTaskCreationScenario } from "../src/lib/taskCreationScenario.ts";
+import { creatorCommerceMembers, creatorCommercePrompt, creatorCommerceTags } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { taskCreationScenarios } from "../src/ai/mock/data/taskCreationScenarios.ts";
+import { nestedTaskCreationPrompt } from "../src/ai/mock/lib/nestedTaskCreationScenario.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
+import { advanceTaskCreationScenario, startTaskCreationScenario } from "../src/ai/mock/lib/taskCreationScenario.ts";
 
 const scenarioContext = {
   currentDate: "2026-08-28",

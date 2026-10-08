@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
 test("AI 帮你改入口的默认可见名与无障碍名一致", async () => {
-  const path = "../src/components/TaskAiAdjustmentPopover.tsx";
+  const path = "../src/features/tasks/components/TaskAiAdjustmentPopover.tsx";
   const { TaskAiAdjustButton } = await import(path);
   const html = renderToStaticMarkup(createElement(TaskAiAdjustButton, { onClick: () => undefined }));
   assert.ok(html.includes('aria-label="AI 帮你改"'), "默认入口必须有清晰可访问名称");
@@ -16,7 +16,7 @@ test("AI 帮你改入口的默认可见名与无障碍名一致", async () => {
 });
 
 test("AI 帮你改入口仍可带具体范围及禁用状态", async () => {
-  const path = "../src/components/TaskAiAdjustmentPopover.tsx";
+  const path = "../src/features/tasks/components/TaskAiAdjustmentPopover.tsx";
   const { TaskAiAdjustButton } = await import(path);
   const html = renderToStaticMarkup(createElement(TaskAiAdjustButton, { label: "AI 帮你改子任务 1", disabled: true, onClick: () => undefined }));
   assert.ok(html.includes('aria-label="AI 帮你改子任务 1"'));

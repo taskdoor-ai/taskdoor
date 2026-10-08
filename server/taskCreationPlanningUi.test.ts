@@ -3,9 +3,9 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskAiWorking } from "../src/components/TaskAiWorking.tsx";
-import { TaskCreationProcess } from "../src/components/TaskCreationProcess.tsx";
-import type { CreationProcess } from "../src/lib/taskCreationProgress.ts";
+import { TaskAiWorking } from "../src/features/tasks/components/TaskAiWorking.tsx";
+import { TaskCreationProcess } from "../src/features/tasks/components/TaskCreationProcess.tsx";
+import type { CreationProcess } from "../src/features/tasks/lib/task-creation-progress.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 const read = (path: string) => readFileSync(new URL(`../src/${path}`, import.meta.url), "utf8");
@@ -34,19 +34,19 @@ test("原轻反馈组件保持单步，新建的展开过程不改变其他调�
     assert.match(html, /整理当前候选，生成后由你确认/);
     assert.doesNotMatch(html, /<ol|\saria-current=|aria-valuenow|data-state=|已展示|后续步骤|task-ai-working-basis|task-ai-staged-working/);
   }
-  const component = read("components/TaskAiWorking.tsx");
+  const component = read("features/tasks/components/TaskAiWorking.tsx");
   assert.doesNotMatch(component, /\b(?:steps|activeStep|basis)\b|<ol|aria-current|已展示|后续步骤/);
 });
 
 test("停止按钮在当前状态更新时保持同一个组件位置，不被动态key重建", () => {
-  const component = read("components/TaskAiWorking.tsx");
+  const component = read("features/tasks/components/TaskAiWorking.tsx");
   assert.doesNotMatch(component, /key=\{(?:activeStep|label)\}/);
   assert.match(component, /autoFocus/);
   assert.match(component, /onClick=\{onCancel\}/);
 });
 
 test("初始生成呈现受页面播放控制的步骤，并把过程快照保留在当前草稿", () => {
-  const page = read("components/TaskCreationPage.tsx");
+  const page = read("features/tasks/components/TaskCreationPage.tsx");
   assert.match(page, /getCreationDisplayStage\(planning/);
   assert.match(page, /displayStage === "planning"/);
   assert.match(page, /processes: CreationProcess\[\]/);
@@ -124,8 +124,8 @@ test("完成、停止和失败后的过程不再留在正文，只进入右侧�
     const html = renderToStaticMarkup(createElement(TaskCreationProcess, { processes: [{ ...processFixture, status }] }));
     assert.equal(html, "");
   }
-  assert.match(read("components/TaskCreationProcess.tsx"), /if \(!current \|\| current\.status !== "running"\) return null/);
-  assert.match(read("components/TaskCreationProcess.tsx"), /return <TaskCreationProcessView onCancel=\{onCancel\} process=\{current\} \/>/);
+  assert.match(read("features/tasks/components/TaskCreationProcess.tsx"), /if \(!current \|\| current\.status !== "running"\) return null/);
+  assert.match(read("features/tasks/components/TaskCreationProcess.tsx"), /return <TaskCreationProcessView onCancel=\{onCancel\} process=\{current\} \/>/);
 });
 
 test("补充信息再生成时正文只展示最新运行轮，保留旧快照且不另开计时或调用AI", () => {
@@ -141,7 +141,7 @@ test("补充信息再生成时正文只展示最新运行轮，保留旧快照�
   assert.doesNotMatch(html, /原始需求|整理周报|补充后的需求/);
   assert.match(html, /可核对目标/);
   assert.deepEqual(processes, before, "只改变呈现，不清除或改写历史过程数据");
-  const component = read("components/TaskCreationProcess.tsx");
+  const component = read("features/tasks/components/TaskCreationProcess.tsx");
   assert.doesNotMatch(component, /setTimeout|setInterval|playMockAiSteps|fetch\(|已工作.*秒|Thought for|Thinking/);
   assert.match(component, /agent-workflow-trace-toggle/);
   assert.match(component, /agent-workflow-trace-content/);
@@ -155,12 +155,12 @@ test("关系选择只进入本次对话历史，不顶掉主页面最新生成�
   };
   const html = renderToStaticMarkup(createElement(TaskCreationProcess, { processes: [generated, relationship] }));
   assert.equal(html, "");
-  assert.match(read("components/TaskCreationProcess.tsx"), /find\(process => process\.kind !== "relationship"\)/);
+  assert.match(read("features/tasks/components/TaskCreationProcess.tsx"), /find\(process => process\.kind !== "relationship"\)/);
 });
 
 test("调整过程只进入右侧历史，AI入口独立于正文生成过程", () => {
-  const page = read("components/TaskCreationPage.tsx");
-  const process = read("components/TaskCreationProcess.tsx");
+  const page = read("features/tasks/components/TaskCreationPage.tsx");
+  const process = read("features/tasks/components/TaskCreationProcess.tsx");
   assert.match(page, /workspace\.processes\.filter\(process => process\.status === "running" && process\.kind !== "adjustment"\)/);
   assert.match(page, /creation-page-actions[\s\S]*?\{aiAdjustmentAction\}/);
   assert.equal((page.match(/<TaskAiAdjustButton\b/g) ?? []).length, 1);
@@ -168,7 +168,7 @@ test("调整过程只进入右侧历史，AI入口独立于正文生成过程", 
 });
 
 test("发起后输入区收口为右上角 AI 按钮，方案未完成时保持禁用", () => {
-  const page = read("components/TaskCreationPage.tsx");
+  const page = read("features/tasks/components/TaskCreationPage.tsx");
   assert.match(page, /LayoutGroup/);
   assert.equal((page.match(/layoutId="creation-ai-composer"/g) ?? []).length, 2, "输入区和顶部按钮应共享收口动画标识");
   assert.match(page, /const aiAdjustmentAction = !showDescribe\s*\?\s*<motion\.div[\s\S]*?<TaskAiAdjustButton/);
@@ -177,14 +177,14 @@ test("发起后输入区收口为右上角 AI 按钮，方案未完成时保持�
 });
 
 test("展开过程保留创建专属三秒切换，不缩短当前状态的阅读时间", () => {
-  const progress = read("lib/taskCreationProgress.ts");
+  const progress = read("features/tasks/lib/task-creation-progress.ts");
   assert.match(progress, /export const CREATION_MOCK_STEP_MS = 3000;/);
 });
 
 test("轻反馈复用活动指示器与Button，触屏保持可操作", () => {
-  const component = read("components/TaskAiWorking.tsx");
-  const css = read("styles/task-ai-adjustment.css");
-  const creationCss = read("styles/task-creation-page.css");
+  const component = read("features/tasks/components/TaskAiWorking.tsx");
+  const css = read("features/tasks/styles/task-ai-adjustment.css");
+  const creationCss = read("features/tasks/styles/task-creation-page.css");
   assert.match(component, /AgentActivityIndicator/);
   assert.match(component, /Button/);
   assert.match(css, /\.task-ai-working/);

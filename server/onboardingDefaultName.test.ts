@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createOnboardingPreview, transitionOnboarding } from '../src/lib/onboardingPreview';
+import { createOnboardingPreview, transitionOnboarding } from '../src/features/auth/lib/onboarding-preview';
 test('email registration uses email prefix when no name is provided', () => {
  const initial = transitionOnboarding(createOnboardingPreview('invited'), {type:'auth-mode', mode:'register'});
  const next = transitionOnboarding(initial,{type:'complete-registration',name:'',email:'alex.morgan@example.com',passwordDigest:'a'.repeat(64),passwordLength:8,code:'111111',now:1000});
@@ -14,7 +14,7 @@ test('email login prefers the saved name', () => {
 });
 
 test('normal entry skips team forms and reuses the personal workspace', async () => {
- const { simplifyOnboardingEntry } = await import('../src/lib/onboardingPreview');
+ const { simplifyOnboardingEntry } = await import('../src/features/auth/lib/onboarding-preview');
  const loggedIn = transitionOnboarding(createOnboardingPreview(),{type:'google-preview-complete',email:'alex@example.com',name:'Alex',subject:'demo-alex'});
  const next = simplifyOnboardingEntry(transitionOnboarding(loggedIn,{type:"set-google-password",passwordDigest:"a".repeat(64),passwordLength:8}));
  assert.equal(next.step,'workspace');
@@ -25,7 +25,7 @@ test('normal entry skips team forms and reuses the personal workspace', async ()
  assert.equal(relogin.activeTeamId,next.activeTeamId);
 });
 test('invitation entry keeps separate confirmation without creating a personal team', async () => {
- const { simplifyOnboardingEntry } = await import('../src/lib/onboardingPreview');
+ const { simplifyOnboardingEntry } = await import('../src/features/auth/lib/onboarding-preview');
  const pending = transitionOnboarding(createOnboardingPreview('invited'),{type:'google-preview-complete',email:'alex@example.com',name:'Alex',subject:'demo-alex'});
  const next = simplifyOnboardingEntry(transitionOnboarding(pending,{type:'set-google-password',passwordDigest:'a'.repeat(64),passwordLength:8}));
  assert.equal(next.step,'invite');

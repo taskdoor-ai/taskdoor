@@ -1,0 +1,17 @@
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import React from "react";
+import { X } from "lucide-react";
+import type { TaskFileRevision } from "@/features/tasks/files/lib/task-file-editing";
+import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
+
+export function TaskFileHistory({ revisions, version, onClose }: { revisions: TaskFileRevision[]; version: number; onClose: () => void }) {
+  const ui = useGlobalUi();
+  return <aside aria-label={ui("文件版本记录")} className="task-file-history" onKeyDown={event => { if (event.key === "Escape") { event.stopPropagation(); onClose(); } }}>
+    <header><strong>{ui("版本记录")}</strong><button aria-label={ui("关闭版本记录")} onClick={onClose} type="button"><X size={16} /></button></header>
+    <p className="task-file-history-note">{ui("当前 v")}{version}{ui("· 仅记录本浏览器中的保存，不代表云端审计。")}</p>
+    {revisions.length ? <ol>{[...revisions].reverse().map((revision, index) => <li key={revision.id}><details open={index === 0}>
+      <summary><span className="task-file-history-author"><PersonAvatar name={revision.author} personId={revision.author} showProfilePreview={false} size="xs" /><PersonName name={revision.author} personId={revision.author} showProfilePreview={false} /><strong>v{revision.version}</strong></span><time dateTime={revision.createdAt}>{new Date(revision.createdAt).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}</time><span>{revision.changes.length}{ui("处修改 · 查看差异")}</span></summary>
+      <div className="task-file-history-changes">{revision.changes.map((change, i) => <div className="task-file-history-change" key={i}><strong>{change.location}</strong><div data-change="before"><small>{ui("修改前 · v")}{revision.baseVersion}</small><pre>{change.before || ui("（空）")}</pre></div><div data-change="after"><small>{ui("修改后 · v")}{revision.version}</small><pre>{change.after || ui("（空）")}</pre></div></div>)}</div>
+    </details></li>)}</ol> : <div className="task-file-history-empty"><strong>{ui("还没有修改记录")}</strong><p>{ui("保存正文后，可在这里查看修改人、时间、位置和前后内容。既有 v")}{version}{ui("的历史未接入。")}</p></div>}
+  </aside>;
+}

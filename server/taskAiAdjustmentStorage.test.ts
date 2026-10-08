@@ -4,7 +4,7 @@ import {
   commitTaskAiStorage,
   recoverTaskAiStorage,
   TASK_AI_JOURNAL_KEY,
-} from "../src/lib/taskAiAdjustmentStorage.ts";
+} from "../src/features/tasks/lib/task-ai-adjustment-storage.ts";
 
 type Mutation = { kind: "set" | "remove"; key: string; value?: string };
 

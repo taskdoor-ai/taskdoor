@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getTaskTimeRangeLabel } from "../src/lib/taskTimeRange.ts";
+import { getTaskTimeRangeLabel } from "../src/features/tasks/lib/task-time-range.ts";
 
 test("任务列表将开始和结束时间展示为只读范围", () => {
   assert.equal(getTaskTimeRangeLabel({ plannedStartOn: "2026-08-30", plannedEndOn: "2026-09-02" }), "8 月 30 日 – 9 月 2 日");

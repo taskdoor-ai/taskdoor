@@ -3,14 +3,14 @@ import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import type { CreationForm, CreationTask } from "../src/lib/taskCreationForm";
+import type { CreationForm, CreationTask } from "../src/features/tasks/lib/task-creation-form";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 const read = (file: string) => readFileSync(new URL(`../src/${file}`, import.meta.url), "utf8");
 const task = (title: string): CreationTask => ({ clientId: "child-1", title, goal: "共享主目标", completionCriteria: ["交付已核对的名单", "名单有联系方式"], executionTips: [], ownerId: "", participantIds: [], labels: [], startDate: "", endDate: "", dependsOnClientIds: [] });
 
 test("创建子任务摘要只显示名称、负责人和展开入口，标准、预计投入与匹配依据不重复展示", async () => {
-  const componentPath = "../src/components/TaskCreationSubtaskEditor.tsx";
+  const componentPath = "../src/features/tasks/components/TaskCreationSubtaskEditor.tsx";
   const { TaskCreationSubtaskEditor } = await import(componentPath);
   for (const title of ["整理嘉宾名单", ""]) {
     const child = task(title);
@@ -30,18 +30,18 @@ test("创建子任务摘要只显示名称、负责人和展开入口，标准�
 });
 
 test("子任务列表工具栏在独立卡片之外，不保留外围大框与表格列头", () => {
-  const plan = read("components/TaskCreationPlanEditor.tsx");
+  const plan = read("features/tasks/components/TaskCreationPlanEditor.tsx");
   assert.ok(plan.includes('className="creation-subtasks creation-subtasks-cards"'));
   assert.ok(!plan.includes("creation-list-head") && !plan.includes("任务与完成标准"));
   assert.ok(plan.indexOf('className="creation-subtasks-heading"') < plan.indexOf('className="creation-task-list"'));
-  assert.ok(existsSync(new URL("../src/styles/task-creation-cards.css", import.meta.url)));
-  const css = read("styles/task-creation-cards.css");
+  assert.ok(existsSync(new URL("../src/features/tasks/styles/task-creation-cards.css", import.meta.url)));
+  const css = read("features/tasks/styles/task-creation-cards.css");
   assert.ok(/\.creation-subtasks\.creation-subtasks-cards\s*\{[^}]*border: 0;[^}]*background: transparent;/.test(css));
-  assert.ok(plan.includes('import "../styles/task-creation-cards.css"'));
+  assert.ok(plan.includes('import "@/features/tasks/styles/task-creation-cards.css"'));
 });
 
 test("展开复用主任务heading布局且仅一份名称，底部复用紧凑属性行", () => {
-  const source = read("components/TaskCreationSubtaskEditor.tsx");
+  const source = read("features/tasks/components/TaskCreationSubtaskEditor.tsx");
   const heading = source.slice(source.indexOf("<TaskDetailFields"), source.indexOf("{stale &&"));
   assert.ok(heading.includes('variant="heading"'));
   assert.ok(heading.includes("icon={taskIcon}"));
@@ -59,14 +59,14 @@ test("展开复用主任务heading布局且仅一份名称，底部复用紧凑�
 });
 
 test("创建方案的主任务与子任务均不展示匹配依据行", () => {
-  const plan = read("components/TaskCreationPlanEditor.tsx");
-  const child = read("components/TaskCreationSubtaskEditor.tsx");
+  const plan = read("features/tasks/components/TaskCreationPlanEditor.tsx");
+  const child = read("features/tasks/components/TaskCreationSubtaskEditor.tsx");
   assert.doesNotMatch(plan, /TaskMemberMatchBasis|匹配依据/);
   assert.doesNotMatch(child, /TaskMemberMatchBasis|匹配依据/);
 });
 
 test("右侧展开触发器保持稳定，已同步输入可直接收起，异常输入仍受保护", () => {
-  const source = read("components/TaskCreationSubtaskEditor.tsx");
+  const source = read("features/tasks/components/TaskCreationSubtaskEditor.tsx");
   assert.equal((source.match(/<AccordionTrigger/g) ?? []).length, 1);
   assert.ok(source.includes('className="creation-subtask-header-actions"'));
   assert.ok(source.includes("onAiAdjust(trigger.current)"));
@@ -77,6 +77,6 @@ test("右侧展开触发器保持稳定，已同步输入可直接收起，异�
   assert.ok(source.includes("dirtyCallback.current(dirty || effortDirty)"), "收起不能绕过未同步输入和工时编辑保护");
   assert.ok(!source.includes("onSave="));
   assert.ok(source.includes("dependsOnClientIds.filter(item => item !== id)"));
-  const css = read("styles/task-creation-subtask.css");
+  const css = read("features/tasks/styles/task-creation-subtask.css");
   assert.ok(css.includes("prefers-reduced-motion: reduce"));
 });

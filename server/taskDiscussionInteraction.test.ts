@@ -4,12 +4,12 @@ import test from "node:test";
 import React, { Children, createElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { SmartTextbox, type Segment } from "@tigerabrodioss/fude";
-import { TaskDiscussion } from "../src/components/TaskDiscussion.tsx";
-import { DiscussionMessages, ReplyReference } from "../src/components/discussion/DiscussionMessages.tsx";
-import { DiscussionComposer } from "../src/components/discussion/DiscussionComposer.tsx";
-import { MentionComposer } from "../src/components/MentionComposer.tsx";
-import { getTaskDiscussionThreads } from "../src/lib/taskActivity.ts";
-import type { TaskActivityMock } from "../src/data/taskDetailMocks.ts";
+import { TaskDiscussion } from "../src/features/tasks/components/TaskDiscussion.tsx";
+import { DiscussionMessages, ReplyReference } from "../src/features/tasks/discussion/components/DiscussionMessages.tsx";
+import { DiscussionComposer } from "../src/features/tasks/discussion/components/DiscussionComposer.tsx";
+import { MentionComposer } from "../src/features/tasks/discussion/components/MentionComposer.tsx";
+import { getTaskDiscussionThreads } from "../src/features/tasks/lib/task-activity.ts";
+import type { TaskActivityMock } from "../src/shared/model/task-model.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -199,15 +199,15 @@ test("稳定定位锚点只包住原消息，不将回复串和回复编辑器�
 });
 
 test("普通鼠标焦点不画整条讨论粗环，保留原消息的键盘 focus-visible", () => {
-  const css = read("styles/task-records.css");
+  const css = read("features/tasks/styles/task-records.css");
   assert.doesNotMatch(css, /\.task-discussion-thread:focus\b|\.task-discussion-replies\s*>\s*li:focus\b/);
   assert.match(css, /\.task-discussion-record:focus-visible/);
   assert.match(css, /\.task-discussion-record:focus:not\(:focus-visible\)/);
 });
 
 test("来源定位使用独立浅底，1800ms结束且换目标与卸载时清除旧计时器", () => {
-  const source = read("components/TaskDiscussion.tsx");
-  const css = read("styles/task-records.css");
+  const source = read("features/tasks/components/TaskDiscussion.tsx");
+  const css = read("features/tasks/styles/task-records.css");
   assert.match(source, /attentionTarget\??:/);
   assert.match(source, /window\.setTimeout\([\s\S]*?1800\)/);
   assert.match(source, /return \(\) => window\.clearTimeout\(timer\)/);
@@ -216,8 +216,8 @@ test("来源定位使用独立浅底，1800ms结束且换目标与卸载时清�
 });
 
 test("编辑器真正实现可选自动聚焦，共享 AI 按钮避开普通按钮覆盖且手机可达", () => {
-  const composer = read("components/MentionComposer.tsx");
-  const css = read("styles/task-records.css");
+  const composer = read("features/tasks/discussion/components/MentionComposer.tsx");
+  const css = read("features/tasks/styles/task-records.css");
   assert.match(composer, /if \(!autoFocus\) return/);
   assert.match(composer, /querySelector<HTMLElement>\("\.mention-composer-input"\)\?\.focus\(\{ preventScroll: true \}\)/);
   assert.match(composer, /\}, \[autoFocus\]\)/);
@@ -227,7 +227,7 @@ test("编辑器真正实现可选自动聚焦，共享 AI 按钮避开普通按�
 });
 
 test("主讨论头部为作者时间保留可收缩空间，连接 AI 在右侧独立排列", () => {
-  const css = read("styles/task-records.css");
+  const css = read("features/tasks/styles/task-records.css");
   assert.match(css, /\.task-discussion-record\s*>\s*\.task-discussion-thread-header[^}]*flex-wrap: nowrap/);
   assert.match(css, /\.task-discussion-meta[^}]*min-width: 0/);
   assert.match(css, /\.task-discussion-thread-header\s*>\s*\.task-discussion-ai-trigger[^}]*margin-left: auto/);

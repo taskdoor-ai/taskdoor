@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creatorCommerceMembers, creatorCommercePrompt, creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
-import { createMockTaskAssistantResponse, createMockTaskAssistantResponseForDraft, requestMockTaskAssistant } from "../src/lib/mockTaskAssistant.ts";
-import type { TaskAssistantRequest } from "../src/lib/taskAssistantProtocol.ts";
+import { creatorCommerceMembers, creatorCommercePrompt, creatorCommerceTags } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { createMockTaskAssistantResponse, createMockTaskAssistantResponseForDraft, requestMockTaskAssistant } from "../src/ai/mock/lib/mockTaskAssistant.ts";
+import type { TaskAssistantRequest } from "../src/features/tasks/lib/task-assistant-protocol.ts";
 
 const creatorSubtaskTitles = [
   "筛选达人并确认商务合作",

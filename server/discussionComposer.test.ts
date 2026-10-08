@@ -5,11 +5,11 @@ import React, { Children, createElement, isValidElement, type ReactElement, type
 import { renderToStaticMarkup } from "react-dom/server";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { $createParagraphNode, $createTextNode, $getRoot, createEditor, type EditorState } from "lexical";
-import { DiscussionComposer, isDiscussionSubmitShortcut, type DiscussionComposerProps } from "../src/components/discussion/DiscussionComposer.tsx";
-import { $createMentionNode, $isMentionNode, MentionNode } from "../src/components/discussion/MentionNode.ts";
-import { DISCUSSION_UPLOAD_MAX_BYTES, isDiscussionImage, prepareDiscussionUpload } from "../src/lib/discussionUploads.ts";
-import type { DiscussionDraft } from "../src/lib/taskCollaboration.ts";
-import type { TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import { DiscussionComposer, isDiscussionSubmitShortcut, type DiscussionComposerProps } from "../src/features/tasks/discussion/components/DiscussionComposer.tsx";
+import { $createMentionNode, $isMentionNode, MentionNode } from "../src/features/tasks/discussion/components/mention-node.ts";
+import { DISCUSSION_UPLOAD_MAX_BYTES, isDiscussionImage, prepareDiscussionUpload } from "../src/features/tasks/files/lib/discussion-uploads.ts";
+import type { DiscussionDraft } from "../src/features/tasks/lib/task-collaboration.ts";
+import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 type Element = ReactElement<Record<string, any>>;

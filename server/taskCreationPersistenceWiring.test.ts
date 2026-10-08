@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-const conversationSource = readFileSync(new URL("../src/components/TaskCreationConversation.tsx", import.meta.url), "utf8");
+const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
+const conversationSource = readFileSync(new URL("../src/features/tasks/components/TaskCreationConversation.tsx", import.meta.url), "utf8");
 
 test("App 持久化真实创建结果且不再映射预览任务 ID", () => {
   assert.match(appSource, /createWorkspaceTasksFromDraft\(workspaceNodesRef\.current, prepared\.draft, \{ parentTaskId, currentUserId, teamId: activeTeamId \}\)/);

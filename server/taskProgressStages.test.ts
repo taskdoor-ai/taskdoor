@@ -3,11 +3,11 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskProgressComparison } from "../src/components/TaskProgressComparison.tsx";
-import { TaskWorkloadSummary } from "../src/components/TaskWorkloadSummary.tsx";
-import { TaskSubtaskList } from "../src/components/TaskSubtaskList.tsx";
-import { taskProgressComparisonExamples } from "../src/data/taskProgressComparisonExamples.ts";
-import { getEffortScopeKey } from "../src/lib/taskEffort.ts";
+import { TaskProgressComparison } from "../src/features/tasks/components/TaskProgressComparison.tsx";
+import { TaskWorkloadSummary } from "../src/features/tasks/components/TaskWorkloadSummary.tsx";
+import { TaskSubtaskList } from "../src/features/tasks/components/TaskSubtaskList.tsx";
+import { taskProgressComparisonExamples } from "../src/ai/mock/data/taskProgressComparisonExamples.ts";
+import { getEffortScopeKey } from "../src/features/tasks/lib/task-effort.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 const series = taskProgressComparisonExamples.find(item => item.id === "behind")!;
@@ -40,7 +40,7 @@ test("四个进度格无论是否点亮都提供对应档位名称", () => {
 });
 
 test("进度格提供清晰的悬浮提示和键盘焦点样式", () => {
-  const css = readFileSync(new URL("../src/styles/task-detail-split.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/features/tasks/styles/task-detail-split.css", import.meta.url), "utf8");
   assert.match(css, /\.task-progress-stage-step\s*\{[^}]*height:\s*16px/s);
   assert.match(css, /\.task-progress-stage-step::before/);
   assert.match(css, /\.task-progress-stage-step:focus-visible/);

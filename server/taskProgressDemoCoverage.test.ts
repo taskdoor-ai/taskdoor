@@ -1,10 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { allTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { getTaskProgressDemoExample, getTaskProgressDemoEvidence } from "../src/data/taskProgressDemo.ts";
-import { getTaskProgressComparison } from "../src/lib/taskProgressComparison.ts";
-import { getTaskProgressDisplay } from "../src/lib/taskProgressDisplay.ts";
-import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
+import { allTeamWorkspaceNodes } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { getTaskProgressDemoExample, getTaskProgressDemoEvidence } from "../src/ai/mock/data/taskProgressDemo.ts";
+import { getTaskProgressComparison } from "../src/features/tasks/lib/task-progress-comparison.ts";
+import { getTaskProgressDisplay } from "../src/features/tasks/lib/task-progress-display.ts";
+import { createWorkspaceTaskDetail } from "../src/ai/mock/data/taskDetailMocks.ts";
 
 const tasks=allTeamWorkspaceNodes.filter(task=>task.kind === "task");
 const unknown=["unassigned-live-backup-plan","unassigned-attribution-dictionary","platform-daily-production-triage","supply-daily-shortage-standup"];

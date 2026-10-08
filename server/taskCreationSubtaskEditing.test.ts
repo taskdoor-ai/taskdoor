@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import test, { beforeEach } from "node:test";
 beforeEach(t => t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") }));
-import * as creationForm from "../src/lib/taskCreationForm.ts";
-import type { CreationForm, CreationTask } from "../src/lib/taskCreationForm.ts";
-import { syncCreationSubtaskEdit } from "../src/lib/taskCreationSubtaskEditing.ts";
+import * as creationForm from "../src/features/tasks/lib/task-creation-form.ts";
+import type { CreationForm, CreationTask } from "../src/features/tasks/lib/task-creation-form.ts";
+import { syncCreationSubtaskEdit } from "../src/features/tasks/lib/task-creation-subtask-editing.ts";
 
 const members = [{ id: "self" }, { id: "lin" }, { id: "chen" }];
 const task = (clientId: string, patch: Partial<CreationTask> = {}): CreationTask => ({
@@ -23,8 +23,8 @@ test("完整子任务编辑复用独立的单任务校验", () => {
 });
 
 test("完整子任务编辑提供不写持久层的同步函数", async () => {
-  assert.ok(existsSync(new URL("../src/lib/taskCreationSubtaskEditing.ts", import.meta.url)), "应提供完整子任务草稿同步模块");
-  const editing = await import("../src/lib/taskCreationSubtaskEditing.ts");
+  assert.ok(existsSync(new URL("../src/features/tasks/lib/task-creation-subtask-editing.ts", import.meta.url)), "应提供完整子任务草稿同步模块");
+  const editing = await import("../src/features/tasks/lib/task-creation-subtask-editing.ts");
   assert.equal(typeof editing.syncCreationSubtaskEdit, "function");
 });
 

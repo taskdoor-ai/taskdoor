@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
-import type { Theme } from "../src/components/ThemeToggle";
+import type { Theme } from "../src/shared/ui/ThemeToggle";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
-const { ThemeToggle } = await import("../src/components/ThemeToggle");
-const { DropdownMenuItem } = await import("../src/components/ui/dropdown-menu");
+const { ThemeToggle } = await import("../src/shared/ui/ThemeToggle");
+const { DropdownMenuItem } = await import("../src/shared/ui/dropdown-menu");
 
 const getThemeToggleParts = (theme: Theme, onToggle: () => void = () => undefined) => {
   const element = ThemeToggle({ onToggle, theme });

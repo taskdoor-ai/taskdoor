@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { initialPersonalCenterState } from '../src/data/memberProfiles';
-import type { TaskNode } from '../src/data/workspaceNodes';
-import { canEditTeamInformation, normalizeTeamOwnership, canRemoveTeamMember, getHandoffTasks, handoffSignature, prepareMemberExit, transferTeamOwnership, changeTeamRole } from '../src/lib/teamMembershipLifecycle';
+import { initialPersonalCenterState } from '../src/ai/mock/data/memberProfiles';
+import type { TaskNode } from '../src/shared/model/task-model';
+import { canEditTeamInformation, normalizeTeamOwnership, canRemoveTeamMember, getHandoffTasks, handoffSignature, prepareMemberExit, transferTeamOwnership, changeTeamRole } from '../src/features/members/lib/team-membership-lifecycle';
 const base = () => normalizeTeamOwnership(structuredClone(initialPersonalCenterState.teams[0]));
 const task = (id: string, extra: Partial<TaskNode> = {}): TaskNode => ({ id, kind: 'task', teamId: base().id, name: id, parentId: null, ownerId: '陈默', participantIds: ['周岚'], status: '进行中', updatedAt: '', ...extra });
 const input = () => { const team = base(); const nodes = [task('parent'), task('child', { parentTaskId: 'parent', ownerId: '周岚', participantIds: ['陈默'] }), task('done', { status: '已完成' }), task('other', { teamId: 'other' })]; return { team, nodes, actorId: '周岚', memberId: '陈默', replacements: { parent: '周岚', child: '周岚' }, expectedSignature: handoffSignature(team, nodes, '陈默') }; };
@@ -13,8 +13,8 @@ test('missing or ineligible successor and stale task scope reject entire exit', 
 test('self exit allowed after ownership transfer; terminal history is unchanged', () => { const source = input(); source.team = transferTeamOwnership(source.team, '周岚', '陈默'); const replacements = { parent: '陈默', child: '陈默' }; const result = prepareMemberExit({ ...source, memberId: '周岚', replacements, expectedSignature: handoffSignature(source.team, source.nodes, '周岚') }); assert.equal(result.team.memberships.some(m => m.memberId === '周岚'), false); assert.equal((result.nodes[1] as TaskNode).ownerId, '陈默'); });
 
 test('recoverable save rolls back membership and assignments when one write fails', async () => {
-  const { commitTeamLifecycle } = await import('../src/lib/teamLifecycleStorage');
-  const { personalCenterStorageKey } = await import('../src/data/memberProfiles');
+  const { commitTeamLifecycle } = await import('../src/features/members/lib/team-lifecycle-storage');
+  const { personalCenterStorageKey } = await import('../src/ai/mock/data/memberProfiles');
   const source = input(); const directory = { ...structuredClone(initialPersonalCenterState), teams: [source.team] };
   const values = new Map<string, string>([[personalCenterStorageKey, JSON.stringify(directory)], ['agentdoor-workspace-nodes', JSON.stringify(source.nodes)]]);
   const before = new Map(values); let fail = true;
@@ -26,7 +26,7 @@ test('recoverable save rolls back membership and assignments when one write fail
   assert.equal(JSON.parse(values.get('agentdoor-handoff-notifications')!).length, 1);
 });
 test('only owner can delete last team; unrelated team and records survive', async () => {
-  const { commitTeamLifecycle } = await import('../src/lib/teamLifecycleStorage');
+  const { commitTeamLifecycle } = await import('../src/features/members/lib/team-lifecycle-storage');
   const source = input(); const values = new Map<string, string>();
   const storage = { getItem: (k: string) => values.get(k) ?? null, setItem: (k: string, v: string) => { values.set(k, v); }, removeItem: (k: string) => { values.delete(k); } } as Storage;
   const args = { storage, directory: { ...structuredClone(initialPersonalCenterState), teams: [source.team] }, teamId: source.team.id, actorId: '陈默', actorName: '陈默', nodes: source.nodes, activities: {}, seeds: source.nodes, action: { kind: 'delete' as const, name: source.team.name } };
@@ -36,7 +36,7 @@ test('only owner can delete last team; unrelated team and records survive', asyn
 });
 
 test('removed people are not reintroduced from demo directory; admin cannot invite admin', async () => {
-  const { getTeamPeople, createTeamEmailInvitation } = await import('../src/lib/teamInvitations');
+  const { getTeamPeople, createTeamEmailInvitation } = await import('../src/features/members/lib/team-invitations');
   const team = base();
   const removed = { ...team, memberships: team.memberships.filter(m => m.memberId !== '陈默') };
   assert.equal(getTeamPeople(removed, [{ id: '陈默', name: '陈默', email: 'chenmo@agentdoor.local', role: '成员' }]).some(m => m.id === '陈默'), false);
@@ -47,8 +47,8 @@ test('removed people are not reintroduced from demo directory; admin cannot invi
   assert.equal(createTeamEmailInvitation(directory, { teamId: team.id, email: 'new@example.com', role: 'admin' }).membership.role, 'admin');
 });
 test('stale login preview cannot recreate deleted team or removed membership', async () => {
-  const { reconcileOnboardingMemberships } = await import('../src/lib/onboardingWorkspace');
-  const { createOnboardingPreview } = await import('../src/lib/onboardingPreview');
+  const { reconcileOnboardingMemberships } = await import('../src/features/auth/lib/onboarding-workspace');
+  const { createOnboardingPreview } = await import('../src/features/auth/lib/onboarding-preview');
   const team = base(); const state = { ...createOnboardingPreview(), verified: true, step: 'workspace' as const, email: 'chenmo@agentdoor.local', teams: [{ id: team.id, name: team.name, role: 'member' as const }], activeTeamId: team.id };
   const directory = { ...structuredClone(initialPersonalCenterState), teams: [{ ...team, memberships: team.memberships.filter(m => m.memberId !== '陈默') }] };
   assert.deepEqual(reconcileOnboardingMemberships(state, directory, [{ id: 'exit', kind: 'exit', teamId: team.id, actorId: '周岚', memberId: '陈默', memberEmail: state.email, at: '' }]).teams, []);

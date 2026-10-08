@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { runAgentdoorReanalysis } from "../src/lib/agentdoorReanalysis.ts";
+import { runAgentdoorReanalysis } from "../src/ai/mock/lib/agentdoorReanalysis.ts";
 
 test("TaskDoor 等待调度完成后只执行一次重新分析", async () => {
   const order: string[] = [];

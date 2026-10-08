@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
 
 test("任务列表与详情挂载在同一个常驻工作区，切任务不重建列表", () => {
   const workspaceStart = appSource.indexOf("<TaskWorkspace\n");
@@ -53,17 +53,17 @@ test("导航只聚焦可见区域的标题，不把焦点交给隐藏列表或�
 });
 
 test("任务工作区移除看板状态和渲染分支，原详情仍常驻", () => {
-  const source = readFileSync(new URL("../src/components/TaskWorkspace.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskWorkspace.tsx", import.meta.url), "utf8");
   assert.ok(!/TaskWorkspaceView|taskWorkspaceView|setTaskWorkspaceView|onViewChange/.test(appSource), "App 不应保留看板切换状态");
   assert.ok(!/WorkspaceTaskBoard|showingBoard|onShowBoard|onViewChange|TaskWorkspaceView/.test(source), "工作区不应提供看板分支");
   assert.match(source, /className="task-workspace-detail" hidden=\{showingWorkbench \|\| showingCreation\}/);
   const content = source.slice(source.indexOf('className="task-workspace-detail-content"'));
   assert.match(content, /\{children\}/);
-  const css = readFileSync(new URL("../src/styles/task-workspace.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/features/tasks/styles/task-workspace.css", import.meta.url), "utf8");
   assert.doesNotMatch(css, /task-workspace-board/);
 });
 
 test("常驻详情跟随外部状态变更，但不重置讨论或其他字段草稿", () => {
-  const detail = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
+  const detail = readFileSync(new URL("../src/features/tasks/components/TaskDetail.tsx", import.meta.url), "utf8");
   assert.ok(/useEffect\(\(\) => \{\s*setCurrentStatus\(task.status\);\s*\}, \[task.status\]\)/.test(detail), "同一 Task 更新后详情状态应随权威值更新");
 });

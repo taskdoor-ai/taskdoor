@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/data/taskDetailMocks.ts";
-import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
-import { getTaskDiagnosisReport } from "../src/lib/taskDiagnosis.ts";
-import { getTaskFileContent } from "../src/lib/taskFileEditing.ts";
+import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { teamWorkspaceScenarios } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
+import { getTaskDiagnosisReport } from "../src/features/tasks/lib/task-diagnosis.ts";
+import { getTaskFileContent } from "../src/features/tasks/files/lib/task-file-editing.ts";
 
 const nodes = teamWorkspaceScenarios.flatMap((scenario) => scenario.nodes).filter((node): node is TaskNode => node.kind === "task");
 const cases = [

@@ -1,14 +1,14 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
-import { globalUiText } from '../src/i18n/globalUi';
-import { progressText } from '../src/i18n/progressCopy';
-import { workbenchPriorityReason } from '../src/i18n/workbenchCopy';
-import { priorityReasonFor, type PersonalWorkbenchItem } from '../src/lib/personalWorkbench';
+import { globalUiText } from '../src/shared/i18n/global-ui';
+import { progressText } from '../src/shared/i18n/progress-copy';
+import { workbenchPriorityReason } from '../src/ai/mock/prototype/workbench-copy';
+import { priorityReasonFor, type PersonalWorkbenchItem } from '../src/ai/mock/lib/personalWorkbench';
 
 test('local editing and dependency validation errors have English display copy', () => {
-  for (const file of ['taskDependencies', 'taskFileTree', 'taskEffortEditing', 'taskFileEditing', 'taskCriteriaEditing']) {
-    const source = readFileSync(new URL(`../src/lib/${file}.ts`, import.meta.url), 'utf8');
+  for (const file of ['tasks/lib/task-dependencies', 'tasks/files/lib/task-file-tree', 'tasks/lib/task-effort-editing', 'tasks/files/lib/task-file-editing', 'tasks/lib/task-criteria-editing']) {
+    const source = readFileSync(new URL(`../src/features/${file}.ts`, import.meta.url), 'utf8');
     const errors = [...source.matchAll(/(?:throw new Error\(|return )"([^"\n]*[\u3400-\u9fff][^"\n]*)"/g)].map(match => match[1]);
     assert.ok(errors.length, file);
     for (const error of errors) {

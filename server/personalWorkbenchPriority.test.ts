@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import * as workbench from "../src/lib/personalWorkbench.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
-import { createManualEffortEstimate } from "../src/lib/taskEffort.ts";
+import * as workbench from "../src/ai/mock/lib/personalWorkbench.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
+import { createManualEffortEstimate } from "../src/features/tasks/lib/task-effort.ts";
 
 const task = (id: string, patch: Partial<TaskNode> = {}): TaskNode => ({
   id, kind: "task", name: id, parentId: null, ownerId: "me", status: "进行中", updatedAt: "今天", ...patch,

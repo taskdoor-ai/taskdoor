@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { allTeamWorkspaceNodes } from '../src/data/teamWorkspaceScenarios.ts';
-import { getTaskProgressDemoExample, getTaskProgressDemoEvidence } from '../src/data/taskProgressDemo.ts';
-import { getTaskProgressComparison, getTaskProgressChart } from '../src/lib/taskProgressComparison.ts';
-import { TaskProgressComparison } from '../src/components/TaskProgressComparison.tsx';
+import { allTeamWorkspaceNodes } from '../src/ai/mock/data/teamWorkspaceScenarios.ts';
+import { getTaskProgressDemoExample, getTaskProgressDemoEvidence } from '../src/ai/mock/data/taskProgressDemo.ts';
+import { getTaskProgressComparison, getTaskProgressChart } from '../src/features/tasks/lib/task-progress-comparison.ts';
+import { TaskProgressComparison } from '../src/features/tasks/components/TaskProgressComparison.tsx';
 (globalThis as typeof globalThis & { React: typeof React }).React=React;
 
 test('常规 Demo 均具备历史总量线，单次观察仅保留指定样例',()=>{

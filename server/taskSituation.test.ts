@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskRelationSummary } from "../src/components/TaskRelationsSection";
-import type { TaskActivityMock, TaskDetailMock } from "../src/data/taskDetailMocks.ts";
-import { defaultTaskSituationSummary, getTaskSituationModel, type TaskSituationInput, type TaskSituationModel } from "../src/lib/taskSituation.ts";
+import type { TaskRelationSummary } from "../src/features/tasks/components/TaskRelationsSection";
+import type { TaskActivityMock, TaskDetailContent } from "../src/shared/model/task-model.ts";
+import { defaultTaskSituationSummary, getTaskSituationModel, type TaskSituationInput, type TaskSituationModel } from "../src/features/tasks/lib/task-situation.ts";
 
-const emptyTask: TaskDetailMock = {
+const emptyTask: TaskDetailContent = {
   title: "核对交付文件", goal: "形成可交付结果", owner: "李明", status: "待开始", due: "—",
   participants: [], files: [], activities: [], commits: [], summary: "", completionCriteria: [],
 };

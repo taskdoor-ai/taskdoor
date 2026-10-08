@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createPersonDirectory, findPersonProfile, resolvePersonProfile } from "../src/components/personDirectoryModel.ts";
-import type { PersonOption } from "../src/data/sharedTypes.ts";
+import { createPersonDirectory, findPersonProfile, resolvePersonProfile } from "../src/shared/ui/person-directory-model.ts";
+import type { PersonOption } from "../src/shared/model/task-model.ts";
 
 const member = (id: string, name: string): PersonOption => ({
   email: `${id}@agentdoor.local`,

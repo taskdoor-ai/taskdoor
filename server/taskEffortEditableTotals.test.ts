@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createManualEffortEstimate } from '../src/lib/taskEffort.ts';
-import { getTaskEffortEditSignature } from '../src/lib/taskEffortEditing.ts';
-import { distributeTaskEffortTotal, applyTaskEffortEdits, applyCreationEffortEdits } from '../src/lib/taskEffortEdits.ts';
-import { newCreationTask } from '../src/lib/taskCreationForm.ts';
+import { createManualEffortEstimate } from '../src/features/tasks/lib/task-effort.ts';
+import { getTaskEffortEditSignature } from '../src/features/tasks/lib/task-effort-editing.ts';
+import { distributeTaskEffortTotal, applyTaskEffortEdits, applyCreationEffortEdits } from '../src/features/tasks/lib/task-effort-edits.ts';
+import { newCreationTask } from '../src/features/tasks/lib/task-creation-form.ts';
 const scope={goal:'交付结果',completionCriteria:['核对通过'],executionTips:[]};
 const task=(id:string,minutes:number)=>({...scope,id,title:id,effortEstimate:createManualEffortEstimate(scope,{minutes,workMethod:'人工核对',reason:'用户估算'})});
 

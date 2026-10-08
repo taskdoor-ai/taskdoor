@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
-import { taskPlanDraftSchema } from "../src/lib/taskAssistantProtocol.ts";
-import { createWorkspaceTasksFromDraft } from "../src/lib/workspaceTaskCreation.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
+import { taskPlanDraftSchema } from "../src/features/tasks/lib/task-assistant-protocol.ts";
+import { createWorkspaceTasksFromDraft } from "../src/features/tasks/lib/workspace-task-creation.ts";
 
 test("任务创建后负责人和参与人直接生效，不生成待接受流程", () => {
   const draft = taskPlanDraftSchema.parse({
@@ -51,11 +51,11 @@ test("读取旧的负责人提议时直接转为正式负责人", () => {
 });
 
 test("当前任务界面与 AI 上下文不再展示负责人或参与人的待接受状态", () => {
-  const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-  const detail = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
-  const workbench = readFileSync(new URL("../src/components/PersonalWorkbench.tsx", import.meta.url), "utf8");
-  const taskContext = readFileSync(new URL("../src/lib/taskAiConnection.ts", import.meta.url), "utf8");
-  const discussionContext = readFileSync(new URL("../src/lib/taskDiscussionAi.ts", import.meta.url), "utf8");
+  const app = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
+  const detail = readFileSync(new URL("../src/features/tasks/components/TaskDetail.tsx", import.meta.url), "utf8");
+  const workbench = readFileSync(new URL("../src/ai/mock/prototype/components/PersonalWorkbench.tsx", import.meta.url), "utf8");
+  const taskContext = readFileSync(new URL("../src/features/tasks/lib/task-ai-connection.ts", import.meta.url), "utf8");
+  const discussionContext = readFileSync(new URL("../src/features/tasks/discussion/lib/task-discussion-ai.ts", import.meta.url), "utf8");
 
   assert.doesNotMatch(app, /onOwnerProposalChange=|发起负责人变更邀请|新增参与人（待接受）/);
   assert.doesNotMatch(detail, /initialProposedOwnerId|onOwnerProposalChange|pendingOwnerId|ownerInvitationStatus/);

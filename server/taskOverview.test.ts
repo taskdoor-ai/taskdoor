@@ -13,7 +13,7 @@ import {
   getVisibleDependencyEdges,
   isCanvasRelationshipActive,
   type OverviewTask,
-} from "../src/lib/taskOverview.ts";
+} from "../src/features/tasks/lib/task-overview.ts";
 
 const tasks: OverviewTask[] = [
   { dependsOnTaskIds: [], id: "research", owner: "陈默", status: "已完成" },

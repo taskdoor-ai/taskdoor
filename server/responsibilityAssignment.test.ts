@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creatorCommerceMembers } from "../src/data/creatorCommerceScenario.ts";
-import { assignTaskByResponsibility } from "../src/lib/responsibilityAssignment.ts";
+import { creatorCommerceMembers } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { assignTaskByResponsibility } from "../src/ai/mock/lib/responsibilityAssignment.ts";
 
 test("assigns creator outreach to the member responsible for creator business", () => {
   const result = assignTaskByResponsibility(

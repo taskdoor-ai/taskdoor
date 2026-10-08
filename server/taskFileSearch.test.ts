@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskFileNode } from "../src/data/taskDetailMocks.ts";
-import { searchTaskFiles } from "../src/lib/taskFileSearch.ts";
+import type { TaskFileNode } from "../src/shared/model/task-model.ts";
+import { searchTaskFiles } from "../src/features/tasks/files/lib/task-file-search.ts";
 
 const node = (id: string, name: string, parentId: string | null, kind: "file" | "folder" = "file"): TaskFileNode => ({ id, name, parentId, kind, updatedAt: "2026-09-15", version: 3 });
 const files = [node("a", "交付成果", null, "folder"), node("b", "九月", "a", "folder"), node("c", "华东", "b", "folder"), node("d", "证据与记录", null, "folder"), node("one", "预算.xlsx", "c"), node("two", "预算.xlsx", "d"), node("root", "README.md", null)];

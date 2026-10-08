@@ -3,9 +3,9 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskCurrentSituation } from "../src/components/TaskCurrentSituation.tsx";
-import { TaskBurnUpSparkline } from "../src/components/TaskBurnUpSparkline.tsx";
-import type { TaskSituationModel } from "../src/lib/taskSituation.ts";
+import { TaskCurrentSituation } from "../src/features/tasks/components/TaskCurrentSituation.tsx";
+import { TaskBurnUpSparkline } from "../src/features/tasks/components/TaskBurnUpSparkline.tsx";
+import type { TaskSituationModel } from "../src/features/tasks/lib/task-situation.ts";
 
 const model: TaskSituationModel = {
   source: "recorded", freshness: "current", asOf: "2026-08-31T09:00:00+08:00", summary: "交付仍需核对结果证据。",
@@ -81,7 +81,7 @@ test("无历史的当前任务仍保留右侧完成度与燃起图", () => {
 });
 
 test("完成进度与燃起图在同一列上下排列", () => {
-  const css = readFileSync(new URL("../src/styles/task-situation.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/features/tasks/styles/task-situation.css", import.meta.url), "utf8");
   assert.match(css, /\.task-situation\[data-has-trend="true"\] \.task-situation-layout \{ grid-template-columns: minmax\(0, 2\.15fr\) minmax\(240px, 1fr\); \}/);
   assert.match(css, /\.task-situation-trend \.task-burnup \{[^}]*grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(css, /\.task-situation-trend \.task-burnup-visual \{[^}]*border-top:/);

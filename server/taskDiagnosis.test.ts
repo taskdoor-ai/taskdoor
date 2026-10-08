@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/data/taskDetailMocks.ts";
-import { getTeamTaskDiagnosisSnapshot } from "../src/data/teamTaskDetailFixtures.ts";
-import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import { creatorCommerceMainTaskId, workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
-import { getTaskDiagnosisDescendants, getTaskDiagnosisReport } from "../src/lib/taskDiagnosis.ts";
+import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { getTeamTaskDiagnosisSnapshot } from "../src/ai/mock/data/teamTaskDetailFixtures.ts";
+import { teamWorkspaceScenarios } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { creatorCommerceMainTaskId, workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
+import { getTaskDiagnosisDescendants, getTaskDiagnosisReport } from "../src/features/tasks/lib/task-diagnosis.ts";
 
 test("未完成的前置任务形成参考提醒，不直接判定当前任务不能推进", () => {
   const report = getTaskDiagnosisReport({

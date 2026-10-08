@@ -99,7 +99,7 @@
 
 ## 6. 治理方式
 
-- `styles/agentdoor-tokens.css` 是 Token 的唯一实现来源。
+- `src/shared/styles/tokens.css` 是 Token 的唯一实现来源。
 - `docs/agentdoor-design-system.md` 是人可读的唯一通用设计说明。
 - 新增通用组件时必须先复用现有语义 Token。
 - 确实缺少语义层级时，应先说明跨模块使用场景，再扩展 Token。

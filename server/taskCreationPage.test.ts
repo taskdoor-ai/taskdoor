@@ -3,20 +3,20 @@ import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
 test("创建入口挂载新表单，旧对话仅留作归档", () => {
-  const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+  const app = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
   assert.match(app, /<TaskCreationExperience/);
   assert.doesNotMatch(app, /<TaskCreationConversation/);
   assert.doesNotMatch(app, /initialProposedOwnerId|onOwnerProposalChange=/, "当前创建流程不再恢复任务内待接受负责人");
 });
 
 test("任务创建体验只挂载统一对话页", () => {
-  const source = readFileSync(new URL("../src/components/TaskCreationExperience.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskCreationExperience.tsx", import.meta.url), "utf8");
   assert.match(source, /<TaskCreationPage/);
   assert.doesNotMatch(source, /TaskCreationLinearPage|当前方式|分步方式|role="tablist"/);
 });
 
 test("点击新建进入需求工作区，AI 生成前不初始化空白任务编辑器", () => {
-  const source = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(source, /createCreationForm\(/, "不得从空白任务开始手工创建");
   assert.match(source, /planning: null/);
   assert.match(source, /creation-request-panel/);
@@ -39,7 +39,7 @@ test("新表单使用共享 21st 适配控件，完成标准及稳定依赖可�
 });
 
 test("AI 补问、关系确认与修订均为候选阶段，不在这些环节创建任务", () => {
-  const source = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
   for (const name of ["CreationPlanningQuestion", "resolveCreationRelationship", "applyDraftTaskAiAdjustment", "TaskAiAdjustmentPopover"]) assert.ok(source.includes(name), name);
   assert.match(source, /setAiScope\(null\)/);
   assert.match(source, /planning\.stage !== "review"/);
@@ -48,7 +48,7 @@ test("AI 补问、关系确认与修订均为候选阶段，不在这些环节�
 });
 
 test("阶段切换定位到新内容，原需求不变时重新规划保留已补充答案", () => {
-  const source = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
   assert.match(source, /onAnimationComplete=\{focusStage\}/);
   assert.match(source, /scrollIntoView/);
   assert.match(source, /planningRequest === workspace\.request\.trim\(\)/);
@@ -56,8 +56,8 @@ test("阶段切换定位到新内容，原需求不变时重新规划保留已�
 });
 
 test("补问选项只更新答案，由底部按钮确认前进并支持返回上一步", () => {
-  const source = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
-  const styles = readFileSync(new URL("../src/styles/task-creation-page.css", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const styles = readFileSync(new URL("../src/features/tasks/styles/task-creation-page.css", import.meta.url), "utf8");
   assert.match(source, /const \[clarificationStep, setClarificationStep\] = useState\(0\)/);
   assert.match(source, /planning\.questions\[clarificationStep\]/, "页面每次只读取当前一题");
   assert.match(source, /（\{clarificationStep \+ 1\}\/\{planning\.questions\.length\}）/);
@@ -91,26 +91,26 @@ test("补问选项只更新答案，由底部按钮确认前进并支持返回�
 });
 
 test("根路径返回新建任务，关系决策按钮同高", () => {
-  const source = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
   assert.match(source, /<button aria-label="返回新建任务" onClick=\{startAnother\} type="button">任务<\/button>/);
   const actions = source.match(/<div className="creation-decision-actions">[\s\S]*?<\/div>/)?.[0] ?? "";
   assert.equal((actions.match(/size="lg"/g) ?? []).length, 2, "两个关系决策按钮必须使用同一高度");
 });
 
 test("选择作为子任务后只在页面顶部显示完整路径", () => {
-  const page = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
-  const editor = readFileSync(new URL("../src/components/TaskCreationPlanEditor.tsx", import.meta.url), "utf8");
+  const page = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const editor = readFileSync(new URL("../src/features/tasks/components/TaskCreationPlanEditor.tsx", import.meta.url), "utf8");
   assert.match(page, /form\?\.decision === "attach" && form\.candidate[\s\S]*form\.candidate\.name \?\? form\.candidate\.title[\s\S]*<em aria-current="page">新建任务<\/em>/, "顶部路径应为任务、主任务、新建任务");
   assert.doesNotMatch(editor, /creation-parent|取消关联|继承主任务目标/, "任务卡片内不再重复展示关系路径");
 });
 
 test("相同内容的调整只提示无需修改，不增加一次空预览确认", () => {
-  const source = readFileSync(new URL("../src/components/TaskAiAdjustmentPopover.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskAiAdjustmentPopover.tsx", import.meta.url), "utf8");
   assert.match(source, /if \(!result\.proposal\.changes\.length\) \{[\s\S]*?await waitForPreviewPaint\(controller\.signal\)[\s\S]*?setNotice\(result\.proposal\.summary\);\s*publishProgress\([\s\S]*?status: "completed"[\s\S]*?applicationStatus: "no_change"[\s\S]*?\);\s*return;\s*\}/);
 });
 
 test("创建页把同一页面状态中的全部轮次交给对话浮层，并保存每轮用户可见回复", () => {
-  const source = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
   assert.match(source, /<TaskAiAdjustmentPopover[\s\S]*?history=\{workspace\.processes\}[\s\S]*?onProgressChange=\{updateAdjustmentProgress\}[\s\S]*?\/>/);
   assert.match(source, /responseSummary: getCreationResponseSummary\(next\)/);
   assert.match(source, /recordCreationAdjustmentProgress\(current\.processes, progress\)/);
@@ -127,24 +127,24 @@ test("创建页把同一页面状态中的全部轮次交给对话浮层，并�
 });
 
 test("候选过期或应用失败只更新应用状态，不把已经完成的预览步骤倒写成失败", () => {
-  const source = readFileSync(new URL("../src/components/TaskAiAdjustmentPopover.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskAiAdjustmentPopover.tsx", import.meta.url), "utf8");
   assert.match(source, /stale && !applying\.current\) finishProgress\("completed",[\s\S]*?applicationStatus: "expired"/);
   assert.match(source, /修改尚未保存[\s\S]*?finishProgress\("completed", message,[\s\S]*?applicationStatus: "pending"/);
 });
 
 function creationSource() {
-  const page = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
-  const editor = new URL("../src/components/TaskCreationPlanEditor.tsx", import.meta.url);
-  const subtaskEditor = new URL("../src/components/TaskCreationSubtaskEditor.tsx", import.meta.url);
-  const editableText = new URL("../src/components/TaskCreationEditableText.tsx", import.meta.url);
-  const fields = new URL("../src/components/TaskDetailFields.tsx", import.meta.url);
-  const memberSelector = new URL("../src/components/MemberSelector.tsx", import.meta.url);
+  const page = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const editor = new URL("../src/features/tasks/components/TaskCreationPlanEditor.tsx", import.meta.url);
+  const subtaskEditor = new URL("../src/features/tasks/components/TaskCreationSubtaskEditor.tsx", import.meta.url);
+  const editableText = new URL("../src/features/tasks/components/TaskCreationEditableText.tsx", import.meta.url);
+  const fields = new URL("../src/features/tasks/components/TaskDetailFields.tsx", import.meta.url);
+  const memberSelector = new URL("../src/features/members/components/MemberSelector.tsx", import.meta.url);
   return page + [editor, subtaskEditor, editableText, fields, memberSelector].map(file => existsSync(file) ? readFileSync(file, "utf8") : "").join("");
 }
 
 test("新表单创建成功直接打开任务详情，写入失败保留草稿且不伪报成功", () => {
-  const source = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
-  const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const app = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
   assert.match(source, /if \(creating\.current\) return/);
   assert.match(source, /creating\.current = true/);
   assert.match(source, /creationParent[\s\S]*?onCreateSubtask\(creationParent\.parentTaskId, plan\)[\s\S]*?form\.decision === "attach"[\s\S]*?onCreateSubtask\(form\.candidate\.id, plan\)[\s\S]*?onCreateTaskPlan\(plan\)/);

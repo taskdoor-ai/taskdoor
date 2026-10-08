@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { taskUpdatedTime, taskUpdatedLabel, taskDueLabel } from "../src/lib/taskListPresentation.ts";
-import { buildTaskListProjection } from "../src/lib/taskListProjection.ts";
-import { createInitialTaskListFilters } from "../src/components/taskListFilters.ts";
-import { normalizeWorkspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
-import type { TaskListFilters } from "../src/components/taskListFilters.ts";
+import { taskUpdatedTime, taskUpdatedLabel, taskDueLabel } from "../src/features/tasks/lib/task-list-presentation.ts";
+import { buildTaskListProjection } from "../src/features/tasks/lib/task-list-projection.ts";
+import { createInitialTaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
+import type { TaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
 const node = (id: string, patch: Partial<TaskNode> = {}): TaskNode => ({ id, kind: "task", parentId: null, name: id, ownerId: "me", status: "进行中", updatedAt: "2026-09-01T09:00:00Z", ...patch });
 test("关系视图按正式负责人和参与人筛选，旧负责人提议迁移为正式负责", () => {
   const nodes = normalizeWorkspaceNodes([node("owned"), node("participating", { ownerId: "other", participantIds: ["me"] }), node("both", { participantIds: ["me"] }), node("proposed", { ownerId: "", proposedOwnerId: "me", createdBy: "me" }), node("other", { ownerId: "other" })])

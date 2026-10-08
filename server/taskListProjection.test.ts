@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import test from "node:test";
-import { getTaskStatusFilters, getTaskTagFilters, taskMatchesListFilters, type TaskListFilters } from "../src/components/taskListFilters.ts";
-import type { TagDefinition } from "../src/data/sharedTypes.ts";
-import type { TaskNode, WorkspaceNode } from "../src/data/workspaceNodes.ts";
-import { buildPersonalTaskTagGroups, isTaskInPersonalIndex } from "../src/lib/taskListProjection.ts";
+import { getTaskStatusFilters, getTaskTagFilters, taskMatchesListFilters, type TaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
+import type { TagDefinition, TaskNode, WorkspaceNode } from "../src/shared/model/task-model.ts";
+
+import { buildPersonalTaskTagGroups, isTaskInPersonalIndex } from "../src/features/tasks/lib/task-list-projection.ts";
 
 const tags: TagDefinition[] = [
   { id: "a", name: "制作", icon: "tag", color: "blue" },
@@ -25,8 +25,8 @@ test("个人索引保留本人创建的未分配任务，但不把它算给其�
 });
 
 async function project(nodes: WorkspaceNode[], query = "", filters = allFilters, definitions = tags) {
-  assert.ok(existsSync(new URL("../src/lib/taskListProjection.ts", import.meta.url)), "应提供任务列表与标签数量的共享纯投影");
-  const { buildTaskListProjection } = await import("../src/lib/taskListProjection.ts");
+  assert.ok(existsSync(new URL("../src/features/tasks/lib/task-list-projection.ts", import.meta.url)), "应提供任务列表与标签数量的共享纯投影");
+  const { buildTaskListProjection } = await import("../src/features/tasks/lib/task-list-projection.ts");
   return buildTaskListProjection(nodes, query, filters, definitions);
 }
 
@@ -69,7 +69,7 @@ test("搜索、负责人和状态同时约束结果与标签计数", async () =>
 });
 
 test("任务范围胶囊数量沿用其他筛选，并忽略当前任务范围", async () => {
-  const projectionModule = await import("../src/lib/taskListProjection.ts");
+  const projectionModule = await import("../src/features/tasks/lib/task-list-projection.ts");
   assert.equal(typeof projectionModule.buildTaskScopeCounts, "function");
   const nodes = [
     task("owned", { name: "Launch owned", labels: ["制作"] }),

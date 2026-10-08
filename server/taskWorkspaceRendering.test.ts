@@ -4,8 +4,8 @@ import { register } from "node:module";
 import test from "node:test";
 import React, { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
-import type { TaskListFilters } from "../src/components/taskListFilters.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
+import type { TaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 register(`data:text/javascript,${encodeURIComponent(`
@@ -36,7 +36,7 @@ const props = {
 };
 
 async function renderWorkspace(patch: Partial<typeof props> = {}) {
-  const { TaskWorkspace } = await import(new URL("../src/components/TaskWorkspace.tsx", import.meta.url).href);
+  const { TaskWorkspace } = await import(new URL("../src/features/tasks/components/TaskWorkspace.tsx", import.meta.url).href);
   return renderToStaticMarkup(createElement(TaskWorkspace, { ...props, ...patch }));
 }
 
@@ -224,7 +224,7 @@ test("创建替换右侧面板，列表、原详情和创建草稿保持挂载�
 });
 
 test("两栏独立滚动，窄屏只显示一个面板且详情按容器宽度重排", () => {
-  const css = readFileSync(new URL("../src/styles/task-workspace.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/features/tasks/styles/task-workspace.css", import.meta.url), "utf8");
   assert.match(css, /grid-template-columns: 320px minmax\(0, 1fr\)/);
   assert.match(css, /\.task-workspace\[hidden\] \{ display: none; \}/);
   assert.match(css, /\.task-workspace-detail \{[^}]*overflow: auto;[^}]*container: task-detail-pane \/ inline-size;/s);

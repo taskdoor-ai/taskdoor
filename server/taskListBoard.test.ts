@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { createInitialTaskListFilters } from "../src/components/taskListFilters.ts";
-import { groupTasksByBoardStatus, taskBoardStatusOrder, taskBoardStatusTone } from "../src/lib/taskBoard.ts";
+import { createInitialTaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
+import { groupTasksByBoardStatus, taskBoardStatusOrder, taskBoardStatusTone } from "../src/features/tasks/lib/task-board.ts";
 
 const tasks = [
   { id: "done", status: "已完成" as const },
@@ -36,7 +36,7 @@ test("任务列表初始条件展示团队全部任务", () => {
 });
 
 test("共享人员选择器提供范围选项与紧凑筛选触发器", () => {
-  const source = readFileSync(new URL("../src/components/PersonPicker.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/members/components/PersonPicker.tsx", import.meta.url), "utf8");
   assert.match(source, /scopeOption/);
   assert.match(source, /triggerVariant === "filter"/);
   assert.match(source, /UsersRound/);
@@ -45,10 +45,10 @@ test("共享人员选择器提供范围选项与紧凑筛选触发器", () => {
 });
 
 test("任务筛选控件共享同一字体、字号和高度标尺", () => {
-  const tokens = readFileSync(new URL("../styles/agentdoor-tokens.css", import.meta.url), "utf8");
-  const input = readFileSync(new URL("../src/components/ui/input.tsx", import.meta.url), "utf8");
-  const select = readFileSync(new URL("../src/components/ui/select.tsx", import.meta.url), "utf8");
-  const styles = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
+  const tokens = readFileSync(new URL("../src/shared/styles/tokens.css", import.meta.url), "utf8");
+  const input = readFileSync(new URL("../src/shared/ui/input.tsx", import.meta.url), "utf8");
+  const select = readFileSync(new URL("../src/shared/ui/select.tsx", import.meta.url), "utf8");
+  const styles = readFileSync(new URL("../src/shared/styles/pm-global.css", import.meta.url), "utf8");
   assert.match(tokens, /--ad-font-sans:\s*"Geist Variable"/);
   assert.match(tokens, /--ad-text-body-sm:\s*14px/);
   assert.match(tokens, /\[data-slot="input"\],[\s\S]*\[data-slot="select-trigger"\],[\s\S]*font-size:\s*var\(--ad-text-body-sm\)/);
@@ -58,8 +58,8 @@ test("任务筛选控件共享同一字体、字号和高度标尺", () => {
 });
 
 test("任务列表提供列表与看板投影并复用同一筛选结果", () => {
-  const listSource = readFileSync(new URL("../src/components/WorkspaceList.tsx", import.meta.url), "utf8");
-  const boardSource = readFileSync(new URL("../src/components/WorkspaceTaskBoard.tsx", import.meta.url), "utf8");
+  const listSource = readFileSync(new URL("../src/features/workspaces/components/WorkspaceList.tsx", import.meta.url), "utf8");
+  const boardSource = readFileSync(new URL("../src/features/tasks/components/WorkspaceTaskBoard.tsx", import.meta.url), "utf8");
   assert.match(listSource, /type WorkspaceListView = "board" \| "list"/);
   assert.match(listSource, /<WorkspaceTaskBoard/);
   assert.match(listSource, /tasks={visibleNodes}/);
@@ -72,7 +72,7 @@ test("任务列表提供列表与看板投影并复用同一筛选结果", () =>
 });
 
 test("任务看板拥有共享视觉、横向滚动和可见焦点", () => {
-  const styles = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
+  const styles = readFileSync(new URL("../src/shared/styles/pm-global.css", import.meta.url), "utf8");
   assert.match(styles, /\.workspace-task-view-switch/);
   assert.match(styles, /\.workspace-task-board/);
   assert.match(styles, /\.workspace-task-board\s*\{[^}]*overflow-x:\s*auto/s);
@@ -81,6 +81,6 @@ test("任务看板拥有共享视觉、横向滚动和可见焦点", () => {
 });
 
 test("看板移动菜单的标签与状态项位于同一个 Base UI 菜单分组，打开时不缺少上下文", () => {
-  const source = readFileSync(new URL("../src/components/WorkspaceTaskBoard.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/WorkspaceTaskBoard.tsx", import.meta.url), "utf8");
   assert.ok(/<DropdownMenuGroup>\s*<DropdownMenuLabel>移动到<\/DropdownMenuLabel>[\s\S]*?taskBoardStatusOrder\.map\([\s\S]*?<\/DropdownMenuGroup>/.test(source), "GroupLabel 必须放在菜单 Group 内，不能直接挂在 Popup 下");
 });

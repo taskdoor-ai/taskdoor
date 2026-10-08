@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskSubtaskList } from "../src/components/TaskSubtaskList.tsx";
+import { TaskSubtaskList } from "../src/features/tasks/components/TaskSubtaskList.tsx";
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
 test("新子任务列表只展示名称与正式负责人，不展开完成标准", () => {

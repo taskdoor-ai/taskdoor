@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getLinearCreationStages } from "../src/lib/taskCreationLinearStages.ts";
-import type { CreationForm } from "../src/lib/taskCreationForm.ts";
+import { getLinearCreationStages } from "../src/features/tasks/lib/task-creation-linear-stages.ts";
+import type { CreationForm } from "../src/features/tasks/lib/task-creation-form.ts";
 
 const form = (subtaskCount: number): CreationForm => ({
   request: "推进新品发布",

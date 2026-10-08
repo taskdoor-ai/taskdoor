@@ -1,19 +1,19 @@
-import createdProgress from '../src/i18n/mock/createdProgress.json';
-import createdTasks from '../src/i18n/mock/createdTasks.json';
+import createdProgress from '../src/ai/mock/i18n/mock/createdProgress.json';
+import createdTasks from '../src/ai/mock/i18n/mock/createdTasks.json';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import records from '../src/data/taskProgressDemoRecords.json';
-import copies from '../src/i18n/mock/progressRecords.json';
-import catalog from '../src/i18n/mock/progressCopy.json';
-import { mockRecordText, mockTaskCatalog } from '../src/i18n/mockContent';
-import { progressText } from '../src/i18n/progressCopy';
-import { layoutBurnUpDateAxis } from '../src/components/TaskBurnUpTiming';
-import { TaskProgressComparison } from '../src/components/TaskProgressComparison';
-import { MockTaskProvider } from '../src/i18n/MockDataProvider';
-import { getTaskProgressDemoExample } from '../src/data/taskProgressDemo';
-import { getTaskProgressDisplay } from '../src/lib/taskProgressDisplay';
+import records from '../src/ai/mock/data/taskProgressDemoRecords.json';
+import copies from '../src/ai/mock/i18n/mock/progressRecords.json';
+import catalog from '../src/shared/i18n/progress-copy.json';
+import { mockRecordText, mockTaskCatalog } from '../src/ai/mock/i18n/mockContent';
+import { progressText } from '../src/shared/i18n/progress-copy';
+import { layoutBurnUpDateAxis } from '../src/features/tasks/components/TaskBurnUpTiming';
+import { TaskProgressComparison } from '../src/features/tasks/components/TaskProgressComparison';
+import { MockTaskProvider } from '../src/ai/mock/i18n/MockDataProvider';
+import { getTaskProgressDemoExample } from '../src/ai/mock/data/taskProgressDemo';
+import { getTaskProgressDisplay } from '../src/features/tasks/lib/task-progress-display';
 (globalThis as typeof globalThis & {React: typeof React}).React = React;
 
 test('all seeded progress evidence has English copies and preserves edits', () => {

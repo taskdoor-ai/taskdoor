@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import test from "node:test";
-import { taskAssistantRequestSchema, taskAssistantResponseSchema, taskPlanDraftSchema } from "../src/lib/taskAssistantProtocol.ts";
-import { createWorkspaceTasksFromDraft } from "../src/lib/workspaceTaskCreation.ts";
-import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { taskAssistantRequestSchema, taskAssistantResponseSchema, taskPlanDraftSchema } from "../src/features/tasks/lib/task-assistant-protocol.ts";
+import { createWorkspaceTasksFromDraft } from "../src/features/tasks/lib/workspace-task-creation.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 
 const scope = { goal: "形成可复核的结论", completionCriteria: ["完成核对"], executionTips: ["使用 AI 起草，再逐项人工复核"] };
 const workMethod = "AI 起草，人工核对和确认";
@@ -11,12 +11,13 @@ const reason = "包含输入准备、核对与最终确认，不含无人值守�
 const draftFields = { ...scope, title: "交付结论", ownerId: "周岚", participantIds: [], labels: [], startDate: "", endDate: "" };
 
 async function effort() {
-  assert.ok(existsSync(new URL("../src/lib/taskEffort.ts", import.meta.url)), "需要实现可核对的 EWD 估算核心");
-  return import("../src/lib/taskEffort.ts");
+  assert.ok(existsSync(new URL("../src/features/tasks/lib/task-effort.ts", import.meta.url)), "需要实现可核对的 EWD 估算核心");
+  return import("../src/features/tasks/lib/task-effort.ts");
 }
 
 test("估算契约区分未知和零，拒绝无效分钟及版本", async () => {
-  const { effortEstimateSchema, getEffortScopeKey } = await effort();
+  const { getEffortScopeKey } = await effort();
+  const { effortEstimateSchema } = await import("../src/shared/model/task-effort.ts");
   const base = { minutes: 90, workMethod, reason, basis: "manual", confirmed: true, scopeKey: getEffortScopeKey(scope, workMethod), version: 1 };
   for (const minutes of [null, 0, 90, Number.MAX_SAFE_INTEGER]) assert.equal(effortEstimateSchema.parse({ ...base, minutes }).minutes, minutes);
   for (const minutes of [-1, 1.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1, "90"]) assert.equal(effortEstimateSchema.safeParse({ ...base, minutes }).success, false);

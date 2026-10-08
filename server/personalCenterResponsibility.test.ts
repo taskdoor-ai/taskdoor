@@ -1,16 +1,16 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { initialPersonalCenterState, loadPersonalCenterState } from "../src/data/memberProfiles";
-import { applyResponsibilityProposal, rebaseResponsibilityUpdateProposal, splitResponsibilityContent } from "../src/lib/responsibilityProposals";
+import { initialPersonalCenterState, loadPersonalCenterState } from "../src/ai/mock/data/memberProfiles";
+import { applyResponsibilityProposal, rebaseResponsibilityUpdateProposal, splitResponsibilityContent } from "../src/ai/mock/lib/responsibilityProposals";
 
-const componentSource = readFileSync(new URL("../src/components/PersonalCenterPage.tsx", import.meta.url), "utf8");
-const dialogSource = readFileSync(new URL("../src/components/PersonalInfoDialog.tsx", import.meta.url), "utf8");
-const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-const buttonSource = readFileSync(new URL("../src/components/ui/button.tsx", import.meta.url), "utf8");
-const selectComponentSource = readFileSync(new URL("../src/components/ui/select.tsx", import.meta.url), "utf8");
-const stylesheetSource = readFileSync(new URL("../src/styles/personal-center.css", import.meta.url), "utf8");
-const toastStylesheetSource = readFileSync(new URL("../src/styles/toast.css", import.meta.url), "utf8");
+const componentSource = readFileSync(new URL("../src/features/members/components/PersonalCenterPage.tsx", import.meta.url), "utf8");
+const dialogSource = readFileSync(new URL("../src/app/workspace/components/PersonalInfoDialog.tsx", import.meta.url), "utf8");
+const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
+const buttonSource = readFileSync(new URL("../src/shared/ui/button.tsx", import.meta.url), "utf8");
+const selectComponentSource = readFileSync(new URL("../src/shared/ui/select.tsx", import.meta.url), "utf8");
+const stylesheetSource = readFileSync(new URL("../src/shared/styles/personal-center.css", import.meta.url), "utf8");
+const toastStylesheetSource = readFileSync(new URL("../src/shared/styles/toast.css", import.meta.url), "utf8");
 
 test("members table lets team admins edit one active member responsibility at a time", () => {
   assert.match(

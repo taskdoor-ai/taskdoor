@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { contentReading } from '../src/i18n/contentReading';
-import { mockRecordText } from '../src/i18n/mockContent';
-import demo from '../src/i18n/mock/readingDemo.json';
+import { contentReading } from '../src/ai/mock/i18n/contentReading';
+import { mockRecordText } from '../src/ai/mock/i18n/mockContent';
+import demo from '../src/ai/mock/i18n/mock/readingDemo.json';
 
 test('reading switches without overwriting source; disabled and same-language states stay quiet', () => {
   assert.deepEqual(contentReading('原文', 'Translation', 'en', true, false), {text:'Translation', state:'translated'});

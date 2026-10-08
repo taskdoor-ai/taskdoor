@@ -1,0 +1,14 @@
+/* The global stylesheet entry, processed by Tailwind. It reproduces, line for line, the old
+   src/styles.css: its own @imports, then its body (now pm-global, theme, base, pm-global-tail).
+   Do not reorder: the demo's own CSS is not in a layer, so @import order is the cascade. */
+@import "tailwindcss";
+@import "@/shared/styles/tokens.css";
+@import "@/features/tasks/styles/task-burnup-node.css";
+@import "@/features/ai-connection/styles/local-agent-connection.css";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@/shared/styles/pm-global.css";
+@import "@/shared/styles/theme.css";
+@import "@/shared/styles/base.css";
+@import "@/shared/styles/pm-global-tail.css";

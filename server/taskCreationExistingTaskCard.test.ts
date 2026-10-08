@@ -4,8 +4,8 @@ import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { TaskCreationExistingTaskCard } from "../src/components/TaskCreationExistingTaskCard.tsx";
-import { creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
+import { TaskCreationExistingTaskCard } from "../src/features/tasks/components/TaskCreationExistingTaskCard.tsx";
+import { creatorCommerceTags } from "../src/ai/mock/data/creatorCommerceScenario.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -36,7 +36,7 @@ test("相似任务卡完整呈现已有任务快照且保持只读", () => {
 });
 
 test("任务标签与状态负责人日期合并在同一信息行", () => {
-  const source = readFileSync(new URL("../src/components/TaskCreationExistingTaskCard.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskCreationExistingTaskCard.tsx", import.meta.url), "utf8");
   assert.match(source, /<div aria-label="已有任务信息" className="task-creation-existing-task-meta">[\s\S]*?<span aria-label="任务标签" className="task-creation-existing-task-tags">[\s\S]*?<\/span>[\s\S]*?<\/div>/);
 });
 

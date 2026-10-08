@@ -1,16 +1,16 @@
 import test, { mock } from "node:test";
 import assert from "node:assert/strict";
-import { creatorCommerceMembers } from "../src/data/creatorCommerceScenario.ts";
-import { getCreatedProjectProgressDemo, withCreatedProjectProgressDetail } from "../src/data/createdProjectProgressDemo.ts";
-import { createCreatorCommerceScenarioDraft } from "../src/lib/mockTaskAssistant.ts";
-import { createWorkspaceTasksFromDraft } from "../src/lib/workspaceTaskCreation.ts";
-import { getTaskProgressDisplay } from "../src/lib/taskProgressDisplay.ts";
-import { getTaskProgressChart, getTaskProgressComparison } from "../src/lib/taskProgressComparison.ts";
-import { getTaskEffortDistribution } from "../src/lib/taskEffortDistribution.ts";
-import { getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
-import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
-import type { TaskAssistantRequest } from "../src/lib/taskAssistantProtocol.ts";
-import { getTaskWorkloadProjection } from "../src/lib/taskWorkloadProjection.ts";
+import { creatorCommerceMembers } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { getCreatedProjectProgressDemo, withCreatedProjectProgressDetail } from "../src/ai/mock/data/createdProjectProgressDemo.ts";
+import { createCreatorCommerceScenarioDraft } from "../src/ai/mock/lib/mockTaskAssistant.ts";
+import { createWorkspaceTasksFromDraft } from "../src/features/tasks/lib/workspace-task-creation.ts";
+import { getTaskProgressDisplay } from "../src/features/tasks/lib/task-progress-display.ts";
+import { getTaskProgressChart, getTaskProgressComparison } from "../src/features/tasks/lib/task-progress-comparison.ts";
+import { getTaskEffortDistribution } from "../src/features/tasks/lib/task-effort-distribution.ts";
+import { getWorkspaceEffortLeaves } from "../src/features/tasks/lib/task-effort-editing.ts";
+import { createWorkspaceTaskDetail } from "../src/ai/mock/data/taskDetailMocks.ts";
+import type { TaskAssistantRequest } from "../src/features/tasks/lib/task-assistant-protocol.ts";
+import { getTaskWorkloadProjection } from "../src/features/tasks/lib/task-workload-projection.ts";
 
 const family = () => {
   mock.timers.enable({apis:["Date"], now:new Date("2026-09-01T09:00:00+08:00")});

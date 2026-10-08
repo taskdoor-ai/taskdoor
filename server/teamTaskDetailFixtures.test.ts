@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 import {
   TEAM_DETAIL_FIXTURE_PROVENANCE,
   TEAM_DETAIL_SCOPE_TASK_IDS,
@@ -11,10 +11,10 @@ import {
   type TeamEvidenceActivityMock,
   type TeamEvidenceFileNode,
   type TeamTaskDetailFixture,
-} from "../src/data/teamTaskDetailFixtures.ts";
-import { getTaskDiscussionThreads, getTaskChangeItems } from "../src/lib/taskActivity.ts";
-import { getTaskFileContent } from "../src/lib/taskFileEditing.ts";
-import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
+} from "../src/ai/mock/data/teamTaskDetailFixtures.ts";
+import { getTaskDiscussionThreads, getTaskChangeItems } from "../src/features/tasks/lib/task-activity.ts";
+import { getTaskFileContent } from "../src/features/tasks/files/lib/task-file-editing.ts";
+import { teamWorkspaceScenarios } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
 
 const expectedDomains = Object.keys(TEAM_DETAIL_TASK_IDS) as Array<keyof typeof TEAM_DETAIL_TASK_IDS>;
 

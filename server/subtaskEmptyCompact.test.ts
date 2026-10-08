@@ -4,10 +4,10 @@ import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {readFileSync} from 'node:fs';
 import postcss from 'postcss';
-import {TaskSubtaskList} from '../src/components/TaskSubtaskList.tsx';
+import {TaskSubtaskList} from '../src/features/tasks/components/TaskSubtaskList.tsx';
 (globalThis as typeof globalThis & {React:typeof React}).React=React;
 test('subtask empty box has natural compact height and retains its dashed border and message',()=>{
- const css=postcss.parse(readFileSync(new URL('../src/styles.css',import.meta.url),'utf8'));
+ const css=postcss.parse(readFileSync(new URL('../src/shared/styles/pm-global.css',import.meta.url),'utf8'));
  const rules:postcss.Rule[]=[];
  css.walkRules(rule=>{if(rule.selector.includes('.task-subtask-list-empty'))rules.push(rule);});
  assert.equal(rules.length,1);

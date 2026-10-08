@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const source = readFileSync(new URL("../styles/agentdoor-tokens.css", import.meta.url), "utf8");
+const source = readFileSync(new URL("../src/shared/styles/tokens.css", import.meta.url), "utf8");
 const declarations = (selector: string) => {
   const start = source.indexOf(`${selector} {`);
   assert.ok(start >= 0, `Missing theme ${selector}`);

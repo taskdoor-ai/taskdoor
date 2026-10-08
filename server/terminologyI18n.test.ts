@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { detailEn, detailZh } from '../src/i18n/detailMessages';
-import { creationEn, creationZh } from '../src/i18n/creationMessages';
-import { moduleEn, moduleZh, moduleText } from '../src/i18n/moduleMessages';
-import { en, zh } from '../src/i18n/messages';
-import { remainingEn, remainingZh } from '../src/i18n/remainingMessages';
-import { globalUiText } from '../src/i18n/globalUi';
-import { recommendationReason } from '../src/i18n/recommendationCopy';
+import { detailEn, detailZh } from '../src/shared/i18n/detail-messages';
+import { creationEn, creationZh } from '../src/shared/i18n/creation-messages';
+import { moduleEn, moduleZh, moduleText } from '../src/shared/i18n/module-messages';
+import { en, zh } from '../src/shared/i18n/messages';
+import { remainingEn, remainingZh } from '../src/shared/i18n/remaining-messages';
+import { globalUiText } from '../src/shared/i18n/global-ui';
+import { recommendationReason } from '../src/ai/mock/i18n/recommendationCopy';
 
 test('task terminology is consistent across creation, details and selectors', () => {
   assert.equal(detailEn.criteria, 'Acceptance criteria');

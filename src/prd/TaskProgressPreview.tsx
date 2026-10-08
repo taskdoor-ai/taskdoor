@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import "../styles.css";
-import "../styles/task-workspace.css";
-import "../styles/task-heading.css";
-import "../styles/task-situation.css";
-import "../styles/task-effort.css";
-import "../styles/task-progress-comparison.css";
+import "../app/styles/global.css";
+import "../features/tasks/styles/task-workspace.css";
+import "../features/tasks/styles/task-heading.css";
+import "../features/tasks/styles/task-situation.css";
+import "../features/tasks/styles/task-effort.css";
+import "../features/tasks/styles/task-progress-comparison.css";
 import "./progress-preview.css";
 import { ProgressScenarioCatalog } from "./ProgressScenarioCatalog";
 import { ProgressComponentModel } from "./ProgressComponentModel";

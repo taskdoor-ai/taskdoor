@@ -4,11 +4,11 @@ import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {readFileSync} from 'node:fs';
 import postcss from 'postcss';
-import {TaskSubtaskList} from '../src/components/TaskSubtaskList.tsx';
+import {TaskSubtaskList} from '../src/features/tasks/components/TaskSubtaskList.tsx';
 (globalThis as typeof globalThis & {React:typeof React}).React=React;
 test('only an empty subtask section hides its inherited solid bottom border without changing layout',()=>{
- const base=postcss.parse(readFileSync(new URL('../src/styles.css',import.meta.url),'utf8'));
- const split=postcss.parse(readFileSync(new URL('../src/styles/task-detail-split.css',import.meta.url),'utf8'));
+ const base=postcss.parse(readFileSync(new URL('../src/shared/styles/pm-global.css',import.meta.url),'utf8'));
+ const split=postcss.parse(readFileSync(new URL('../src/features/tasks/styles/task-detail-split.css',import.meta.url),'utf8'));
  const rule=(root:postcss.Root,selector:string)=>{const result:Record<string,string>={};root.walkRules(r=>{if(r.selector===selector)r.walkDecls(d=>{result[d.prop]=d.value;});});return result;};
  assert.match(rule(base,'.task-detail-section')['border-bottom'],/1px solid/);
  const emptyRule=rule(split,'.task-detail-split .task-subtask-list-section:has(> .task-subtask-list-empty)');

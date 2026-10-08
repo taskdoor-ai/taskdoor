@@ -4,12 +4,12 @@ import { readFileSync } from "node:fs";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import postcss from "postcss";
-import { TaskProgressComparison } from "../src/components/TaskProgressComparison.tsx";
-import { taskProgressComparisonExamples } from "../src/data/taskProgressComparisonExamples.ts";
+import { TaskProgressComparison } from "../src/features/tasks/components/TaskProgressComparison.tsx";
+import { taskProgressComparisonExamples } from "../src/ai/mock/data/taskProgressComparisonExamples.ts";
 (globalThis as typeof globalThis & {React:typeof React}).React=React;
 
 test("AI分析标题到进度只保留紧凑的正常流间距，不叠加上下留白",()=>{
-  const css=postcss.parse(readFileSync(new URL("../src/styles/task-detail-split.css",import.meta.url),"utf8"));
+  const css=postcss.parse(readFileSync(new URL("../src/features/tasks/styles/task-detail-split.css",import.meta.url),"utf8"));
   const style:Record<string,string>={};
   css.walkRules(rule=>{if(rule.selector===".task-detail-split .task-detail-progress-section")rule.walkDecls(decl=>{style[decl.prop]=decl.value;});});
   const margin=parseFloat(style["margin-top"]??"0"),padding=parseFloat(style["padding-top"]??"0");

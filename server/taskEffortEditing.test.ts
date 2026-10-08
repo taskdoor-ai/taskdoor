@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
-import { createManualEffortEstimate, summarizeTaskEffort } from "../src/lib/taskEffort.ts";
-import { applySavedTaskEffort, getTaskEffortEditSignature, getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
+import { createManualEffortEstimate, summarizeTaskEffort } from "../src/features/tasks/lib/task-effort.ts";
+import { applySavedTaskEffort, getTaskEffortEditSignature, getWorkspaceEffortLeaves } from "../src/features/tasks/lib/task-effort-editing.ts";
 
 const task = (id: string, parentTaskId?: string): TaskNode => ({ id, kind: "task", name: id, parentId: null, updatedAt: "刚刚", ownerId: "周岚", status: "待开始", goal: "确认行动", completionCriteria: ["行动项与负责人已核对"], executionTips: [], parentTaskId });
 const estimate = (node: TaskNode, minutes: number) => createManualEffortEstimate(node, { minutes, workMethod: "AI 整理，人工核对", reason: "按校对和沟通的人工合计" });

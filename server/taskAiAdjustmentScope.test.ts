@@ -2,13 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import React, { Children, createElement, isValidElement, useState, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { AnimatedAgentChatInput } from "../src/components/AnimatedAgentChatInput.tsx";
-import { TaskAiAdjustmentPopover, useTaskAiAdjustmentDrafts } from "../src/components/TaskAiAdjustmentPopover.tsx";
-import { TaskCreationHistory } from "../src/components/TaskCreationHistory.tsx";
-import { buildTaskAiAdjustment, buildTaskAiCreationAdjustment } from "../src/lib/taskAiAdjustment.ts";
-import { emptyTaskAiAdjustmentDraft, getTaskAiAdjustmentDraftKey, taskAiAdjustmentDraftReducer } from "../src/lib/taskAiAdjustmentDrafts.ts";
-import type { TaskAiAdjustmentContext, TaskAiAdjustmentProgress, TaskAiAdjustmentScope, TaskAiEditableTask } from "../src/lib/taskAiAdjustmentTypes.ts";
-import type { CreationProcess } from "../src/lib/taskCreationProgress.ts";
+import { AnimatedAgentChatInput } from "../src/features/tasks/components/AnimatedAgentChatInput.tsx";
+import { TaskAiAdjustmentPopover, useTaskAiAdjustmentDrafts } from "../src/features/tasks/components/TaskAiAdjustmentPopover.tsx";
+import { TaskCreationHistory } from "../src/features/tasks/components/TaskCreationHistory.tsx";
+import { buildTaskAiAdjustment, buildTaskAiCreationAdjustment } from "../src/ai/mock/lib/taskAiAdjustment.ts";
+import { emptyTaskAiAdjustmentDraft, getTaskAiAdjustmentDraftKey, taskAiAdjustmentDraftReducer } from "../src/features/tasks/lib/task-ai-adjustment-drafts.ts";
+import type { TaskAiAdjustmentContext, TaskAiAdjustmentProgress, TaskAiAdjustmentScope, TaskAiEditableTask } from "../src/features/tasks/lib/task-ai-adjustment-types.ts";
+import type { CreationProcess } from "../src/features/tasks/lib/task-creation-progress.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 

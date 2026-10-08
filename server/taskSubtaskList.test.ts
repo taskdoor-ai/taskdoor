@@ -2,16 +2,16 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import React, { Children, createElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskSubtaskList } from "../src/components/TaskSubtaskList.tsx";
-import { TaskProgressOverview } from "../src/components/TaskProgressOverview.tsx";
-import { TaskProgressComparison } from "../src/components/TaskProgressComparison.tsx";
-import { getTaskProgressDemoExample } from "../src/data/taskProgressDemo.ts";
-import { taskProgressComparisonExamples } from "../src/data/taskProgressComparisonExamples.ts";
-import { allTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
-import { getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
-import { toTaskRelationSummary } from "../src/lib/taskRelationProjection.ts";
-import { PersonDirectoryProvider } from "../src/components/PersonDirectory.tsx";
+import { TaskSubtaskList } from "../src/features/tasks/components/TaskSubtaskList.tsx";
+import { TaskProgressOverview } from "../src/features/tasks/components/TaskProgressOverview.tsx";
+import { TaskProgressComparison } from "../src/features/tasks/components/TaskProgressComparison.tsx";
+import { getTaskProgressDemoExample } from "../src/ai/mock/data/taskProgressDemo.ts";
+import { taskProgressComparisonExamples } from "../src/ai/mock/data/taskProgressComparisonExamples.ts";
+import { allTeamWorkspaceNodes } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
+import { getWorkspaceEffortLeaves } from "../src/features/tasks/lib/task-effort-editing.ts";
+import { toTaskRelationSummary } from "../src/features/tasks/lib/task-relation-projection.ts";
+import { PersonDirectoryProvider } from "../src/shared/ui/PersonDirectory.tsx";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 

@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { clearedTaskListConditions, createInitialTaskListFilters, normalizeTaskWorkspaceFilters, taskMatchesListFilters, type TaskListFilters } from "../src/components/taskListFilters.ts";
-import { buildTaskListProjection } from "../src/lib/taskListProjection.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import { clearedTaskListConditions, createInitialTaskListFilters, normalizeTaskWorkspaceFilters, taskMatchesListFilters, type TaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
+import { buildTaskListProjection } from "../src/features/tasks/lib/task-list-projection.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 
 const filters: TaskListFilters = { view: "all", owner: "all", status: "all", tag: "all" };
 const task = (id: string, patch: Partial<TaskNode> = {}): TaskNode => ({

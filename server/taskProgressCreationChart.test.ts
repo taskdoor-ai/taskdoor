@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
-import {getTaskProgressDemoExample} from '../src/data/taskProgressDemo.ts';
-import {getTaskProgressDisplay} from '../src/lib/taskProgressDisplay.ts';
-import {getTaskProgressChart,getTaskProgressComparison} from '../src/lib/taskProgressComparison.ts';
-import {TaskProgressComparison} from '../src/components/TaskProgressComparison.tsx';
-import {normalizeWorkspaceNodes,workspaceNodes} from '../src/data/workspaceNodes.ts';
+import {getTaskProgressDemoExample} from '../src/ai/mock/data/taskProgressDemo.ts';
+import {getTaskProgressDisplay} from '../src/features/tasks/lib/task-progress-display.ts';
+import {getTaskProgressChart,getTaskProgressComparison} from '../src/features/tasks/lib/task-progress-comparison.ts';
+import {TaskProgressComparison} from '../src/features/tasks/components/TaskProgressComparison.tsx';
+import {normalizeWorkspaceNodes,workspaceNodes} from '../src/ai/mock/data/workspaceNodes.ts';
 (globalThis as typeof globalThis & {React:typeof React}).React=React;
 
 test('单次进度记录也从创建日显示初始总量，截止与预测不能截掉创建段',()=>{

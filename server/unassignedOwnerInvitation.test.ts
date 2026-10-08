@@ -9,7 +9,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 const read = (path: string) => readFileSync(new URL(`../src/${path}`, import.meta.url), "utf8");
 
 test("负责人和参与人空状态只显示统一圆形图标，不展示暂不分配或虚线外圈", async () => {
-  const { MemberSelector } = await import(new URL("../src/components/MemberSelector.tsx", import.meta.url).href);
+  const { MemberSelector } = await import(new URL("../src/features/members/components/MemberSelector.tsx", import.meta.url).href);
   const owner = renderToStaticMarkup(createElement(MemberSelector, {
     allowUnassigned: true,
     hideHeader: true,
@@ -39,8 +39,8 @@ test("负责人和参与人空状态只显示统一圆形图标，不展示暂�
 });
 
 test("负责人和参与人共用暂不分配与邀请区域，多选清空仍遵守最少人数限制", () => {
-  const picker = read("components/PersonPicker.tsx");
-  const selector = read("components/MemberSelector.tsx");
+  const picker = read("features/members/components/PersonPicker.tsx");
+  const selector = read("features/members/components/MemberSelector.tsx");
 
   assert.match(selector, /allowUnassigned = true/);
   assert.equal((selector.match(/allowUnassigned=\{allowUnassigned && min === 0\}/g) ?? []).length, 3);
@@ -50,10 +50,10 @@ test("负责人和参与人共用暂不分配与邀请区域，多选清空仍�
 });
 
 test("创建方案保留未分配提示，人员列表与确认区域复用邀请入口", () => {
-  const page = read("components/TaskCreationPage.tsx");
-  const plan = read("components/TaskCreationPlanEditor.tsx");
-  const subtask = read("components/TaskCreationSubtaskEditor.tsx");
-  const app = read("App.tsx");
+  const page = read("features/tasks/components/TaskCreationPage.tsx");
+  const plan = read("features/tasks/components/TaskCreationPlanEditor.tsx");
+  const subtask = read("features/tasks/components/TaskCreationSubtaskEditor.tsx");
+  const app = read("app/App.tsx");
 
   assert.match(page, /unassignedTaskCount/);
   assert.match(page, /个任务暂不分配负责人，可先创建/);
@@ -65,8 +65,8 @@ test("创建方案保留未分配提示，人员列表与确认区域复用邀�
 });
 
 test("搜索下方的暂不分配选项使用单行邀请说明和立即邀请入口", () => {
-  const picker = read("components/PersonPicker.tsx");
-  const detail = read("components/TaskDetail.tsx");
+  const picker = read("features/members/components/PersonPicker.tsx");
+  const detail = read("features/tasks/components/TaskDetail.tsx");
 
   assert.match(picker, /unassignedLabel = "暂不分配"/);
   assert.match(picker, /unassignedDescription = "没找到合适的人，邀请更多同事进来协作"/);
@@ -81,10 +81,10 @@ test("搜索下方的暂不分配选项使用单行邀请说明和立即邀请�
 });
 
 test("团队邀请链接保留在设置，人员邀请入口复用名称和邮箱弹窗", async () => {
-  const app = read("App.tsx");
-  const form = read("components/MemberInvitations.tsx");
-  const settings = read("components/PersonalCenterPage.tsx");
-  const profiles = await import(new URL("../src/data/memberProfiles.ts", import.meta.url).href);
+  const app = read("app/App.tsx");
+  const form = read("features/members/components/MemberInvitations.tsx");
+  const settings = read("features/members/components/PersonalCenterPage.tsx");
+  const profiles = await import(new URL("../src/ai/mock/data/memberProfiles.ts", import.meta.url).href);
   assert.equal(profiles.getTeamInviteLink({ id: "creator-commerce", inviteToken: "abc123" }), "https://agentdoor.local/t/creator-commerce/join/abc123");
   assert.match(app, /memberInvitationsRef.current\?\.openInvite/);
   assert.match(settings, /invitations\?\.openInvite/);
@@ -96,7 +96,7 @@ test("团队邀请链接保留在设置，人员邀请入口复用名称和邮�
 });
 
 test("系统剪贴板不可用时，邀请地址复制会回退到页面内复制", async () => {
-  const { copyTextToClipboard } = await import(new URL("../src/lib/clipboard.ts", import.meta.url).href);
+  const { copyTextToClipboard } = await import(new URL("../src/shared/lib/clipboard.ts", import.meta.url).href);
   const calls: string[] = [];
 
   await copyTextToClipboard("https://agentdoor.local/invite", {
@@ -112,9 +112,9 @@ test("系统剪贴板不可用时，邀请地址复制会回退到页面内复�
 
 test("负责人未分配文案不再混用暂未分配", () => {
   const sources = [
-    read("components/PersonPicker.tsx"),
-    read("components/TaskCreationPage.tsx"),
-    read("lib/mockTaskAssistant.ts"),
+    read("features/members/components/PersonPicker.tsx"),
+    read("features/tasks/components/TaskCreationPage.tsx"),
+    read("ai/mock/lib/mockTaskAssistant.ts"),
     read("../server/taskAssistant.ts"),
   ].join("\n");
 
@@ -122,7 +122,7 @@ test("负责人未分配文案不再混用暂未分配", () => {
 });
 
 test("负责人保存后直接作为正式负责人展示，不显示任务内邀请状态", () => {
-  const detail = read("components/TaskDetail.tsx");
+  const detail = read("features/tasks/components/TaskDetail.tsx");
 
   assert.match(detail, /const displayedOwnerId = confirmedOwnerId/);
   assert.match(detail, /selected=\{displayedOwnerId \? \[displayedOwnerId\] : \[\]\}/);
@@ -130,7 +130,7 @@ test("负责人保存后直接作为正式负责人展示，不显示任务内�
 });
 
 test("人员弹窗只为未选择成员展示推荐度星芒，选中后只保留勾选", () => {
-  const picker = read("components/PersonPicker.tsx");
+  const picker = read("features/members/components/PersonPicker.tsx");
 
   assert.match(picker, /memberRecommendations/);
   assert.doesNotMatch(picker, /person-picker-match-score|recommendation\.score|\{recommendation\.score\}%/);
@@ -143,8 +143,8 @@ test("人员弹窗只为未选择成员展示推荐度星芒，选中后只保�
 });
 
 test("人员弹窗加宽并让邀请说明与操作保持一行", () => {
-  const tokens = read("../styles/agentdoor-tokens.css");
-  const styles = read("styles.css");
+  const tokens = read("shared/styles/tokens.css");
+  const styles = read("shared/styles/pm-global.css");
 
   assert.match(tokens, /--ad-person-picker-width:\s*420px/);
   assert.match(styles, /\.person-picker-invite-row small\s*\{[^}]*white-space:\s*nowrap/s);
@@ -152,8 +152,8 @@ test("人员弹窗加宽并让邀请说明与操作保持一行", () => {
 });
 
 test("人员推荐度使用同一紫色语义的深、中、浅三档", async () => {
-  const { getMemberRecommendationLabel } = await import(new URL("../src/components/PersonPicker.tsx", import.meta.url).href);
-  const styles = read("styles.css");
+  const { getMemberRecommendationLabel } = await import(new URL("../src/features/members/components/PersonPicker.tsx", import.meta.url).href);
+  const styles = read("shared/styles/pm-global.css");
 
   assert.equal(getMemberRecommendationLabel("high"), "推荐度较高");
   assert.equal(getMemberRecommendationLabel("medium"), "推荐度适中");

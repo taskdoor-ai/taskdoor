@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildTaskAiAdjustment, buildTaskAiCreationAdjustment, getTaskAiContextSignature } from "../src/lib/taskAiAdjustment.ts";
+import { buildTaskAiAdjustment, buildTaskAiCreationAdjustment, getTaskAiContextSignature } from "../src/ai/mock/lib/taskAiAdjustment.ts";
 import type {
   TaskAiAdjustmentContext,
   TaskAiAdjustmentProposal,
   TaskAiAdjustmentResult,
   TaskAiAdjustmentScope,
   TaskAiEditableTask,
-} from "../src/lib/taskAiAdjustmentTypes.ts";
+} from "../src/features/tasks/lib/task-ai-adjustment-types.ts";
 
 const task = (overrides: Partial<TaskAiEditableTask> = {}): TaskAiEditableTask => ({
   id: "main", title: "发布会筹备", goal: "让客户了解新品的实际用途",

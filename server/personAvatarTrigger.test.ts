@@ -3,8 +3,8 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { PersonAvatar, PersonName } from "../src/components/PersonAvatar.tsx";
-import type { PersonOption } from "../src/data/sharedTypes.ts";
+import { PersonAvatar, PersonName } from "../src/shared/ui/PersonAvatar.tsx";
+import type { PersonOption } from "../src/shared/model/task-model.ts";
 
 const profile: PersonOption = {
   email: "chenmo@agentdoor.local",
@@ -37,7 +37,7 @@ test("a rendered person name is also a profile preview trigger", () => {
 });
 
 test("a non-focusable avatar preview never binds itself to the surrounding canvas card", () => {
-  const source = readFileSync(new URL("../src/components/PersonAvatar.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/shared/ui/PersonAvatar.tsx", import.meta.url), "utf8");
 
   assert.doesNotMatch(source, /closest<HTMLElement>\("button, a\[href\], \[tabindex\]"\)/);
   assert.doesNotMatch(source, /focusOwner\.addEventListener\("focus"/);

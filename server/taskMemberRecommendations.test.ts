@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createTaskMemberRecommendations, sortMembersByRecommendation } from "../src/lib/taskMemberRecommendations.ts";
+import { createTaskMemberRecommendations, sortMembersByRecommendation } from "../src/ai/mock/lib/taskMemberRecommendations.ts";
 
 const members = [
   { id: "live", name: "高远", email: "live@example.com", role: "直播运营", dynamicResponsibility: "直播排期、场控、彩排与上线执行" },

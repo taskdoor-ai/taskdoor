@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import copy from '../src/i18n/globalUiMessages.json';
-import { globalUiText } from '../src/i18n/globalUi';
-import { notificationCopy } from '../src/i18n/notificationCopy';
-import { notificationExamples } from '../src/data/notificationExamples';
-import { aiTransferMessage } from '../src/i18n/aiTransferCopy';
-import { taskContextValue } from '../src/i18n/aiContextCopy';
-import { buildTaskAiConnectionRequest } from '../src/lib/taskAiConnection';
-import { taskDetailMocks } from '../src/data/taskDetailMocks';
+import copy from '../src/shared/i18n/globalUiMessages.json';
+import { globalUiText } from '../src/shared/i18n/global-ui';
+import { notificationCopy } from '../src/ai/mock/prototype/notification-copy';
+import { notificationExamples } from '../src/ai/mock/data/notificationExamples';
+import { aiTransferMessage } from '../src/features/ai-connection/i18n/ai-transfer-copy';
+import { taskContextValue } from '../src/shared/i18n/ai-context-copy';
+import { buildTaskAiConnectionRequest } from '../src/features/tasks/lib/task-ai-connection';
+import { taskDetailMocks } from '../src/ai/mock/data/taskDetailMocks';
 
 test('system copy preserves Chinese and interpolation parameters and never translates unknown text', () => {
   for (const {zh, en} of Object.values(copy)) {

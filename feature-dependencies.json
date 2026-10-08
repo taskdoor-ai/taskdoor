@@ -1,0 +1,24 @@
+{
+  "$comment": "TaskDoor ADR-0014 §2.2, same format as apps/web: the only directions in which one feature may import another, each edge with a reason. scripts/structure-check.mjs rejects every other direction and keeps the edge count from growing; the one cycle (members <-> tasks) is a named exception there (KNOWN_CYCLES).",
+  "ai-connection": {},
+  "auth": {
+    "members": "sign-up and onboarding read team invitations and the local team store (team-invitations, team-lifecycle-storage, team-limits)"
+  },
+  "me": {},
+  "members": {
+    "tasks": "deleting a team clears its tasks' local state (team-lifecycle-storage: recycle bin, activity, AI drafts, file drafts, collaboration); a known cycle"
+  },
+  "notifications": {
+    "members": "notifications read the local team store (team-lifecycle-storage)"
+  },
+  "tasks": {
+    "ai-connection": "task detail and discussion connect an AI tool (AiConnectionDialog, AiConnectionButton)",
+    "me": "task tags are picked from the person's tag catalogue (TagPicker)",
+    "members": "owners, participants and mentions are picked with MemberSelector / PersonPicker"
+  },
+  "workspaces": {
+    "auth": "creating a team reuses the onboarding preview (CreateTeamDialog)",
+    "members": "team creation limits and the person picker in the workspace list",
+    "tasks": "the workspace list and directory show tasks (WorkspaceTaskBoard, TaskIcon, task-list-filters, task-time-range)"
+  }
+}

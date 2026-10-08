@@ -6,11 +6,11 @@ const readSource = (path: string) => {
   const url = new URL(`../${path}`, import.meta.url);
   return existsSync(url) ? readFileSync(url, "utf8") : "";
 };
-const detail = readSource("src/components/TaskDetail.tsx");
-const discussion = readSource("src/components/TaskDiscussion.tsx");
-const messages = readSource("src/components/discussion/DiscussionMessages.tsx");
-const activity = readSource("src/components/TaskActivityLog.tsx");
-const app = readSource("src/App.tsx");
+const detail = readSource("src/features/tasks/components/TaskDetail.tsx");
+const discussion = readSource("src/features/tasks/components/TaskDiscussion.tsx");
+const messages = readSource("src/features/tasks/discussion/components/DiscussionMessages.tsx");
+const activity = readSource("src/features/tasks/components/TaskActivityLog.tsx");
+const app = readSource("src/app/App.tsx");
 
 test("讨论与活动使用独立组件，概览不再进入详情", () => {
   assert.match(detail, /<TaskDiscussion/);
@@ -67,14 +67,14 @@ test("名称与目标失焦时合并保存，避免逐字写日志", () => {
 });
 
 test("文件评论保存路径独立于任务讨论，右侧使用实际选中文件", () => {
-  const explorer = readSource("src/components/task-files/TaskFileExplorer.tsx");
+  const explorer = readSource("src/features/tasks/files/components/TaskFileExplorer.tsx");
   assert.match(explorer, /FileDiscussionPanel/);
   assert.match(detail, /onPost: \(draft, thread, replyToId\) => postDiscussion\(draft, replyToId, thread\)/);
   assert.doesNotMatch(detail, /publishSelectionActivity/);
 });
 
 test("文件跳转聚焦实际预览锚点，在移动端也不误报记录缺失", () => {
-  const explorer = readSource("src/components/task-files/TaskFileExplorer.tsx");
+  const explorer = readSource("src/features/tasks/files/components/TaskFileExplorer.tsx");
   assert.ok(explorer.includes('`task-file-preview-${selected.id}`'), "预览区提供实际选中文件的定位锚点");
   assert.ok(explorer.includes("tabIndex={-1}"), "预览区可以接受程序化焦点");
   assert.ok(detail.includes('`task-file-preview-${initialAttentionTarget.targetId}`'), "通知应落到预览区而非不存在的ID");

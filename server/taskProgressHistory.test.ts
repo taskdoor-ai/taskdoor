@@ -2,10 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { getTaskProgressDemoExample } from "../src/data/taskProgressDemo.ts";
-import { getTaskProgressComparison } from "../src/lib/taskProgressComparison.ts";
-import { TaskProgressComparison } from "../src/components/TaskProgressComparison.tsx";
-import { rollupProgressHistory } from "../src/data/taskProgressHistory.ts";
+import { getTaskProgressDemoExample } from "../src/ai/mock/data/taskProgressDemo.ts";
+import { getTaskProgressComparison } from "../src/features/tasks/lib/task-progress-comparison.ts";
+import { TaskProgressComparison } from "../src/features/tasks/components/TaskProgressComparison.tsx";
+import { rollupProgressHistory } from "../src/ai/mock/data/taskProgressHistory.ts";
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
 test("父任务只汇总自身子任务记录，不拼接通用演示历史", () => {

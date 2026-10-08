@@ -4,11 +4,11 @@ import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {readFileSync} from 'node:fs';
 import postcss from 'postcss';
-import {taskProgressComparisonExamples} from '../src/data/taskProgressComparisonExamples.ts';
-import {getTaskProgressDisplay} from '../src/lib/taskProgressDisplay.ts';
-import {getTaskProgressComparison,getTaskProgressChart} from '../src/lib/taskProgressComparison.ts';
-import {layoutBurnUpDateAxis} from '../src/components/TaskBurnUpTiming.tsx';
-import {TaskProgressComparison} from '../src/components/TaskProgressComparison.tsx';
+import {taskProgressComparisonExamples} from '../src/ai/mock/data/taskProgressComparisonExamples.ts';
+import {getTaskProgressDisplay} from '../src/features/tasks/lib/task-progress-display.ts';
+import {getTaskProgressComparison,getTaskProgressChart} from '../src/features/tasks/lib/task-progress-comparison.ts';
+import {layoutBurnUpDateAxis} from '../src/features/tasks/components/TaskBurnUpTiming.tsx';
+import {TaskProgressComparison} from '../src/features/tasks/components/TaskProgressComparison.tsx';
 (globalThis as typeof globalThis & {React:typeof React}).React=React;
 const series=taskProgressComparisonExamples.find(s=>s.id==='behind')!;
 test('edge dates and captions stay centered on their line and node, inside the SVG at narrow and wide sizes',()=>{
@@ -38,7 +38,7 @@ test('edge dates and captions stay centered on their line and node, inside the S
  }
 });
 test('detailed burnup fills available document width without a fixed small cap',()=>{
- const css=postcss.parse(readFileSync(new URL('../src/styles/task-detail-split.css',import.meta.url),'utf8'));
+ const css=postcss.parse(readFileSync(new URL('../src/features/tasks/styles/task-detail-split.css',import.meta.url),'utf8'));
  const rule=css.nodes.find(n=>n.type==='rule'&&n.selector==='.task-detail-split .task-progress-history > .task-burnup-visual')!;
  const decls=Object.fromEntries((rule as postcss.Rule).nodes.filter(n=>n.type==='decl').map(n=>[(n as postcss.Declaration).prop,(n as postcss.Declaration).value]));
  assert.equal(decls.width,'100%');assert.equal(decls['max-width'],'none');assert.equal(decls['min-width'],'0');

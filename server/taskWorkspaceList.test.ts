@@ -4,9 +4,9 @@ import { register } from "node:module";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
-import type { TaskListProjection } from "../src/lib/taskListProjection.ts";
-import { clearedTaskListConditions, type TaskListFilters } from "../src/components/taskListFilters.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
+import type { TaskListProjection } from "../src/features/tasks/lib/task-list-projection.ts";
+import { clearedTaskListConditions, type TaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 register(`data:text/javascript,${encodeURIComponent(`
@@ -41,8 +41,8 @@ const baseProps = {
 };
 
 async function renderList(patch: Partial<typeof baseProps> = {}) {
-  assert.ok(existsSync(new URL("../src/components/TaskWorkspaceList.tsx", import.meta.url)), "应提供两栏工作区的紧凑任务列表");
-  const { TaskWorkspaceList } = await import(new URL("../src/components/TaskWorkspaceList.tsx", import.meta.url).href);
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url)), "应提供两栏工作区的紧凑任务列表");
+  const { TaskWorkspaceList } = await import(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url).href);
   return renderToStaticMarkup(createElement(TaskWorkspaceList, { ...baseProps, ...patch }));
 }
 
@@ -111,7 +111,7 @@ test("推荐页不错误高亮某个任务，空筛选保留恢复入口", async
 });
 
 test("置顶任务进入顶部独立分组且不重复，行级图钉可取消或新增置顶", () => {
-  const source = readFileSync(new URL("../src/components/TaskWorkspaceList.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url), "utf8");
   assert.match(source, /partitionPinnedTasks\(projection\.visibleTasks, pinnedTaskIds\)/);
   assert.match(source, /className="task-workspace-pinned"/);
   assert.match(source, />置顶<\/h2>/);
@@ -122,8 +122,8 @@ test("置顶任务进入顶部独立分组且不重复，行级图钉可取消�
 });
 
 test("桌面任务图钉仅在行悬浮时显示，已置顶与键盘聚焦都不常驻", () => {
-  const source = readFileSync(new URL("../src/components/TaskWorkspaceList.tsx", import.meta.url), "utf8");
-  const styles = readFileSync(new URL("../src/styles/task-workspace-list.css", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url), "utf8");
+  const styles = readFileSync(new URL("../src/features/tasks/styles/task-workspace-list.css", import.meta.url), "utf8");
   assert.match(styles, /\.task-workspace-row-entry:hover\s+\.task-workspace-row-pin[^}]*opacity:\s*1/s);
   assert.doesNotMatch(styles, /\.task-workspace-row-entry:focus-within\s+\.task-workspace-row-pin[^}]*opacity:\s*1/s);
   assert.match(styles, /\.task-workspace-row-pin\[data-pinned\][^}]*color:\s*var\(--ad-route-ink\)/s);
@@ -134,7 +134,7 @@ test("桌面任务图钉仅在行悬浮时显示，已置顶与键盘聚焦都�
 
 test("任务范围并入外部快捷筛选栏，搜索框只承载关键词", async () => {
   const html = await renderList();
-  const styles = readFileSync(new URL("../src/styles/task-workspace-list.css", import.meta.url), "utf8");
+  const styles = readFileSync(new URL("../src/features/tasks/styles/task-workspace-list.css", import.meta.url), "utf8");
   const searchStart = html.indexOf('class="task-search-field"');
   const toolbarStart = html.indexOf('class="task-list-results-toolbar"');
   const scopeStart = html.indexOf('aria-label="任务范围：全部任务"');
@@ -174,7 +174,7 @@ test("多条件筛选统一入口，保留状态与排序快捷操作", async ()
 });
 
 test("清除全部筛选置于已选条件栏右侧，不占用顶部或独立底栏", () => {
-  const source = readFileSync(new URL("../src/components/TaskListFilterPanel.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskListFilterPanel.tsx", import.meta.url), "utf8");
   const selectionStart = source.indexOf('className="task-filter-selection"');
   const selectionEnd = source.indexOf("\n      </div>}", selectionStart);
   assert.ok(selectionStart >= 0 && selectionEnd > selectionStart);
@@ -195,7 +195,7 @@ test("收起筛选器后仅统计可见条件，旧人员条件不占用数量�
 });
 
 test("普通列表默认展示团队全部，旧个人范围不再隐藏任务", async () => {
-  const { TaskWorkspace } = await import("../src/components/TaskWorkspace.tsx");
+  const { TaskWorkspace } = await import("../src/features/tasks/components/TaskWorkspace.tsx");
   const nodes = [
     task("owned", { name: "发布 A", participantIds: ["me"], labels: ["制作"] }),
     task("done", { name: "发布 B", status: "已完成", labels: ["制作"] }),
@@ -216,7 +216,7 @@ test("普通列表默认展示团队全部，旧个人范围不再隐藏任务",
 });
 
 test("工作区保留明确的参与人我与状态条件，清除后恢复全部", async () => {
-  const { TaskWorkspace } = await import("../src/components/TaskWorkspace.tsx");
+  const { TaskWorkspace } = await import("../src/features/tasks/components/TaskWorkspace.tsx");
   const nodes = [task("owned"), task("participating", { ownerId: "other", participantIds: ["me"] }), task("done", { ownerId: "other", participantIds: ["me"], status: "已完成" }), task("unassigned", { ownerId: "", createdBy: "me" })];
   const render = (filters: TaskListFilters) => renderToStaticMarkup(createElement(TaskWorkspace, { ...baseProps, filters, nodes, tagDefinitions: tags, hidden: false, workbench: null }));
   const selected: TaskListFilters = { ...baseProps.filters, view: "owned", participantIsMe: true, completion: "open" };
@@ -232,7 +232,7 @@ test("工作区保留明确的参与人我与状态条件，清除后恢复全�
 
 
 test("任务范围快捷切换结果，不重复计入高级筛选，状态仍可组合", async () => {
-  const { TaskWorkspace } = await import("../src/components/TaskWorkspace.tsx");
+  const { TaskWorkspace } = await import("../src/features/tasks/components/TaskWorkspace.tsx");
   const nodes = [task("owned"), task("participating", { ownerId: "other", participantIds: ["me"] }), task("done", { ownerId: "other", participantIds: ["me"], status: "已完成" })];
   const render = (scope: TaskListFilters["scope"], statuses: string[] = []) => renderToStaticMarkup(createElement(TaskWorkspace, { ...baseProps, filters: { ...baseProps.filters, scope, statuses }, nodes, tagDefinitions: tags, hidden: false, workbench: null }));
   const all = render("all");

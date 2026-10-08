@@ -8,8 +8,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 const source = (file: string) => readFileSync(new URL(`../src/${file}`, import.meta.url), "utf8");
 const loadFields = async () => {
-  assert.ok(existsSync(new URL("../src/components/TaskCriteriaFields.tsx", import.meta.url)), "应提供可复用的行内完成标准字段");
-  return (await import("../src/components/TaskCriteriaFields.tsx")).TaskCriteriaFields;
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskCriteriaFields.tsx", import.meta.url)), "应提供可复用的行内完成标准字段");
+  return (await import("../src/features/tasks/components/TaskCriteriaFields.tsx")).TaskCriteriaFields;
 };
 
 test("空标准显示一个可输入的单行，不允许删除最后一行", async () => {
@@ -59,10 +59,10 @@ test("保存期间同时禁用输入、新增和删除，未禁用时可以编�
 });
 
 test("自动增高输入复用单行组件，并直接转发 disabled", () => {
-  assert.ok(existsSync(new URL("../src/components/TaskCriteriaFields.tsx", import.meta.url)), "应存在共享字段组件");
-  const fields = source("components/TaskCriteriaFields.tsx");
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskCriteriaFields.tsx", import.meta.url)), "应存在共享字段组件");
+  const fields = source("features/tasks/components/TaskCriteriaFields.tsx");
   assert.ok(fields.includes("TaskCreationEditableText"));
-  const editable = source("components/TaskCreationEditableText.tsx");
+  const editable = source("features/tasks/components/TaskCreationEditableText.tsx");
   assert.ok(editable.includes("disabled?: boolean"));
   assert.ok(editable.includes("disabled={disabled}"));
   assert.ok(editable.includes("rows={1}"));
@@ -71,8 +71,8 @@ test("自动增高输入复用单行组件，并直接转发 disabled", () => {
 });
 
 test("新增与删除后聚焦相邻输入，并清理尚未执行的聚焦帧", () => {
-  assert.ok(existsSync(new URL("../src/components/TaskCriteriaFields.tsx", import.meta.url)));
-  const fields = source("components/TaskCriteriaFields.tsx");
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskCriteriaFields.tsx", import.meta.url)));
+  const fields = source("features/tasks/components/TaskCriteriaFields.tsx");
   assert.ok(fields.includes("requestAnimationFrame"));
   assert.ok(fields.includes("cancelAnimationFrame"));
   assert.ok(fields.includes('querySelectorAll("textarea")'));
@@ -82,7 +82,7 @@ test("新增与删除后聚焦相邻输入，并清理尚未执行的聚焦帧",
 });
 
 test("已保存子任务接入共用字段，保留原保存、取消、只读和冲突保护", () => {
-  const editor = source("components/TaskCriteriaEditor.tsx");
+  const editor = source("features/tasks/components/TaskCriteriaEditor.tsx");
   assert.ok(editor.includes("<TaskCriteriaFields"), "详情编辑区应复用行内字段");
   assert.ok(editor.includes('className="task-criteria-editor-panel"'), "外层面板不能占用共享字段的样式类");
   assert.ok(editor.includes("values={values}"));
@@ -102,8 +102,8 @@ test("已保存子任务接入共用字段，保留原保存、取消、只读�
 });
 
 test("共享字段样式独立于创建页面，并包含键盘焦点与移动端触控规则", () => {
-  assert.ok(existsSync(new URL("../src/styles/task-criteria-fields.css", import.meta.url)), "应有独立的共用字段样式");
-  const css = source("styles/task-criteria-fields.css");
+  assert.ok(existsSync(new URL("../src/features/tasks/styles/task-criteria-fields.css", import.meta.url)), "应有独立的共用字段样式");
+  const css = source("features/tasks/styles/task-criteria-fields.css");
   assert.ok(css.includes('.task-criteria-fields .task-criteria-field-input[data-slot="textarea"]'));
   assert.ok(css.includes("border: 1px solid transparent"));
   assert.ok(css.includes("resize: none"));
@@ -111,16 +111,16 @@ test("共享字段样式独立于创建页面，并包含键盘焦点与移动�
   assert.ok(css.includes("--ad-control-touch-min"));
   assert.ok(css.includes("prefers-reduced-motion"));
   assert.ok(!css.includes(".creation-heading"), "详情样式不依赖创建页头部");
-  const fields = source("components/TaskCriteriaFields.tsx");
+  const fields = source("features/tasks/components/TaskCriteriaFields.tsx");
   assert.ok(!/import\s+["'][^"']+\.css["']/.test(fields), "样式由入口统一加载");
-  const editorCss = source("styles/task-criteria-editor.css");
+  const editorCss = source("features/tasks/styles/task-criteria-editor.css");
   assert.ok(!/\.task-criteria-fields\s*\{/.test(editorCss), "外层面板样式应使用独立类名");
   assert.ok(!editorCss.includes("min-height: 64px"));
   assert.ok(editorCss.includes(".task-criteria-actions"), "保留原来的保存取消区域样式");
 });
 
 test("详情头部逐行字段占满内容列，不再套用整体编辑器的双列布局", () => {
-  const css = source("styles/task-criteria-editor.css");
+  const css = source("features/tasks/styles/task-criteria-editor.css");
   const headingRule = css.match(/\.task-criteria-editor\[data-variant="heading"\]\s*\{([^}]+)\}/)?.[1] ?? "";
   assert.match(headingRule, /display:\s*block/);
   assert.doesNotMatch(headingRule, /grid-template-columns/);

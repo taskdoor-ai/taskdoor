@@ -1,13 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { allTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { getTaskProgressDemoExample } from "../src/data/taskProgressDemo.ts";
-import { recalculateTaskProgressPrediction, progressPredictionInputKey, readProgressPredictions } from "../src/lib/taskProgressPrediction.ts";
-import { getTaskProgressDisplay } from "../src/lib/taskProgressDisplay.ts";
-import { getTaskProgressComparison, getTaskProgressChart } from "../src/lib/taskProgressComparison.ts";
-import { updateWorkspaceTaskStatus } from "../src/lib/workspaceTaskUpdates.ts";
-import { getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
-import { rollupProgressForecast, rollupProgressHistory } from "../src/data/taskProgressHistory.ts";
+import { allTeamWorkspaceNodes } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { getTaskProgressDemoExample } from "../src/ai/mock/data/taskProgressDemo.ts";
+import { recalculateTaskProgressPrediction, progressPredictionInputKey, readProgressPredictions } from "../src/ai/mock/lib/taskProgressPrediction.ts";
+import { getTaskProgressDisplay } from "../src/features/tasks/lib/task-progress-display.ts";
+import { getTaskProgressComparison, getTaskProgressChart } from "../src/features/tasks/lib/task-progress-comparison.ts";
+import { updateWorkspaceTaskStatus } from "../src/features/tasks/lib/workspace-task-updates.ts";
+import { getWorkspaceEffortLeaves } from "../src/features/tasks/lib/task-effort-editing.ts";
+import { rollupProgressForecast, rollupProgressHistory } from "../src/ai/mock/data/taskProgressHistory.ts";
 
 const id = "ccx-double11-assortment-gate";
 test("完成后重开立即恢复原 AI 预测，手动核对成功且不伪造新交付", () => {

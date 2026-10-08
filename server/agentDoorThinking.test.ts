@@ -2,27 +2,27 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const componentSource = readFileSync(new URL("../src/components/TaskCreationConversation.tsx", import.meta.url), "utf8");
-const choiceCardsSource = readFileSync(new URL("../src/components/TaskCreationChoiceCards.tsx", import.meta.url), "utf8");
-const scenarioSource = readFileSync(new URL("../src/data/taskCreationScenarios.ts", import.meta.url), "utf8");
-const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-const dependencyPickerSource = readFileSync(new URL("../src/components/TaskDependencyPicker.tsx", import.meta.url), "utf8");
-const memberSelectorSource = readFileSync(new URL("../src/components/MemberSelector.tsx", import.meta.url), "utf8");
-const personPickerSource = readFileSync(new URL("../src/components/PersonPicker.tsx", import.meta.url), "utf8");
-const mockAssistantSource = readFileSync(new URL("../src/lib/mockTaskAssistant.ts", import.meta.url), "utf8");
-const protocolSource = readFileSync(new URL("../src/lib/taskAssistantProtocol.ts", import.meta.url), "utf8");
-const personAvatarSource = readFileSync(new URL("../src/components/PersonAvatar.tsx", import.meta.url), "utf8");
-const taskDueDatePickerSource = readFileSync(new URL("../src/components/TaskDueDatePicker.tsx", import.meta.url), "utf8");
-const taskDateRangePickerSource = readFileSync(new URL("../src/components/TaskDateRangePicker.tsx", import.meta.url), "utf8");
-const workflowSource = readFileSync(new URL("../src/components/ui/ai-agent-response.tsx", import.meta.url), "utf8");
-const confettiSource = readFileSync(new URL("../src/components/ui/motion-confetti.tsx", import.meta.url), "utf8");
-const workspaceListSource = readFileSync(new URL("../src/components/WorkspaceList.tsx", import.meta.url), "utf8");
-const workspaceDirectorySource = readFileSync(new URL("../src/components/WorkspaceDirectoryView.tsx", import.meta.url), "utf8");
-const taskDetailSource = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
-const stylesheetSource = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
+const componentSource = readFileSync(new URL("../src/features/tasks/components/TaskCreationConversation.tsx", import.meta.url), "utf8");
+const choiceCardsSource = readFileSync(new URL("../src/features/tasks/components/TaskCreationChoiceCards.tsx", import.meta.url), "utf8");
+const scenarioSource = readFileSync(new URL("../src/ai/mock/data/taskCreationScenarios.ts", import.meta.url), "utf8");
+const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
+const dependencyPickerSource = readFileSync(new URL("../src/features/tasks/components/TaskDependencyPicker.tsx", import.meta.url), "utf8");
+const memberSelectorSource = readFileSync(new URL("../src/features/members/components/MemberSelector.tsx", import.meta.url), "utf8");
+const personPickerSource = readFileSync(new URL("../src/features/members/components/PersonPicker.tsx", import.meta.url), "utf8");
+const mockAssistantSource = readFileSync(new URL("../src/ai/mock/lib/mockTaskAssistant.ts", import.meta.url), "utf8");
+const protocolSource = readFileSync(new URL("../src/features/tasks/lib/task-assistant-protocol.ts", import.meta.url), "utf8");
+const personAvatarSource = readFileSync(new URL("../src/shared/ui/PersonAvatar.tsx", import.meta.url), "utf8");
+const taskDueDatePickerSource = readFileSync(new URL("../src/features/tasks/components/TaskDueDatePicker.tsx", import.meta.url), "utf8");
+const taskDateRangePickerSource = readFileSync(new URL("../src/features/tasks/components/TaskDateRangePicker.tsx", import.meta.url), "utf8");
+const workflowSource = readFileSync(new URL("../src/shared/ui/ai-agent-response.tsx", import.meta.url), "utf8");
+const confettiSource = readFileSync(new URL("../src/shared/ui/motion-confetti.tsx", import.meta.url), "utf8");
+const workspaceListSource = readFileSync(new URL("../src/features/workspaces/components/WorkspaceList.tsx", import.meta.url), "utf8");
+const workspaceDirectorySource = readFileSync(new URL("../src/features/workspaces/components/WorkspaceDirectoryView.tsx", import.meta.url), "utf8");
+const taskDetailSource = readFileSync(new URL("../src/features/tasks/components/TaskDetail.tsx", import.meta.url), "utf8");
+const stylesheetSource = readFileSync(new URL("../src/shared/styles/pm-global.css", import.meta.url), "utf8");
 
 test("loading directly renders the 21st-style AgentWorkflow component", () => {
-  assert.match(componentSource, /import \{ AgentWorkflow, type AgentPhase, type ToolDefinition \} from "\.\/ui\/ai-agent-response"/);
+  assert.match(componentSource, /import \{ AgentWorkflow, type AgentPhase, type ToolDefinition \} from "@\/shared\/ui\/ai-agent-response"/);
   assert.match(componentSource, /const taskCreationWorkflowFor = \(/);
   assert.match(componentSource, /!isAnalyzing && output && message\.role === "assistant" && index === messages\.length - 1 && <AgentWorkflow completed phases=\{taskCreationWorkflow\} tools=\{taskCreationTools\} workingLabel="TaskDoor 正在工作…" \/>/);
   assert.match(componentSource, /\{isAnalyzing && <AgentWorkflow phases=\{taskCreationWorkflow\} tools=\{taskCreationTools\} workingLabel="TaskDoor 正在工作…" \/>\}/);
@@ -192,7 +192,7 @@ test("task draft defaults to a compact decision surface", () => {
 });
 
 test("task creation celebrates once before the button becomes a detail link", () => {
-  assert.match(componentSource, /import \{ Confetti \} from "\.\/ui\/motion-confetti"/);
+  assert.match(componentSource, /import \{ Confetti \} from "@\/shared\/ui\/motion-confetti"/);
   assert.match(componentSource, /<Confetti[^]*celebrate=\{!createdPlan\}[^]*onClick=\{confirmCreate\}/);
   assert.doesNotMatch(componentSource, /confettiBurst|confirmButtonRef|getBoundingClientRect/);
   assert.doesNotMatch(componentSource, /className="task-creation-receipt"/);

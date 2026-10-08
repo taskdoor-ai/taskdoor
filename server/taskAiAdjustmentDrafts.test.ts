@@ -5,8 +5,8 @@ import {
   getTaskAiAdjustmentDraftKey,
   taskAiAdjustmentDraftReducer,
   type TaskAiAdjustmentDrafts,
-} from "../src/lib/taskAiAdjustmentDrafts.ts";
-import type { TaskAiAdjustmentProposal, TaskAiAdjustmentScope } from "../src/lib/taskAiAdjustmentTypes.ts";
+} from "../src/features/tasks/lib/task-ai-adjustment-drafts.ts";
+import type { TaskAiAdjustmentProposal, TaskAiAdjustmentScope } from "../src/features/tasks/lib/task-ai-adjustment-types.ts";
 
 const proposal: TaskAiAdjustmentProposal = {
   baseSignature: "task-version-1",

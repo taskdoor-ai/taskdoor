@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskNode, WorkspaceNode } from "../src/data/workspaceNodes";
-import { applyCurrentTaskCriteria, applySavedTaskCriteria, validateTaskCriteria } from "../src/lib/taskCriteriaEditing";
+import type { TaskNode, WorkspaceNode } from "../src/shared/model/task-model";
+import { applyCurrentTaskCriteria, applySavedTaskCriteria, validateTaskCriteria } from "../src/features/tasks/lib/task-criteria-editing";
 
 const parent: TaskNode = { id: "parent", kind: "task", name: "主任务", parentId: null, ownerId: "owner", status: "进行中", updatedAt: "昨天" };
 const child: TaskNode = { ...parent, id: "child", parentTaskId: "parent", name: "子任务", completionCriteria: ["原标准"], goal: "共享目标", dependsOnTaskIds: ["other"], participantIds: ["member"] };
