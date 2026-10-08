@@ -45,7 +45,7 @@ test("共享人员选择器提供范围选项与紧凑筛选触发器", () => {
 });
 
 test("任务筛选控件共享同一字体、字号和高度标尺", () => {
-  const tokens = readFileSync(new URL("../styles/agentdoor-tokens.css", import.meta.url), "utf8");
+  const tokens = readFileSync(new URL("../src/shared/styles/tokens.css", import.meta.url), "utf8");
   const input = readFileSync(new URL("../src/shared/ui/input.tsx", import.meta.url), "utf8");
   const select = readFileSync(new URL("../src/shared/ui/select.tsx", import.meta.url), "utf8");
   const styles = readFileSync(new URL("../src/shared/styles/pm-global.css", import.meta.url), "utf8");

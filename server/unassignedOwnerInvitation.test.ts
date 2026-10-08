@@ -143,7 +143,7 @@ test("人员弹窗只为未选择成员展示推荐度星芒，选中后只保�
 });
 
 test("人员弹窗加宽并让邀请说明与操作保持一行", () => {
-  const tokens = read("../styles/agentdoor-tokens.css");
+  const tokens = read("shared/styles/tokens.css");
   const styles = read("shared/styles/pm-global.css");
 
   assert.match(tokens, /--ad-person-picker-width:\s*420px/);

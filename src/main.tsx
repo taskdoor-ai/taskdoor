@@ -4,7 +4,7 @@ import { lazy, startTransition, StrictMode, Suspense, useCallback, useState } fr
 import { createRoot } from "react-dom/client";
 import { WorkspaceLoading } from "@/shared/ui/WorkspaceLoading";
 import { ToastProvider } from "@/shared/ui/toast";
-import "@/shared/styles/pm-global.css";
+import "@/app/styles/global.css";
 import "@/shared/styles/toast.css";
 import "@/features/tasks/styles/task-detail-fields.css";
 import "@/features/tasks/styles/task-dependencies.css";

@@ -1,18 +1,13 @@
 {
   "$reasons": {
     "ai-mock-outside-ai": "demo 数据源：demo 没有后端，夹具（ai/mock）就是产品的数据源，组件直接 import；apps/web 经 ai/index.ts 门面访问（新写的代码，不在本线范围）。",
-    "shared-imports-upper-layer": "demo 数据源：shared 的文案与小件直接读演示夹具（ai/mock/i18n、ai/mock/data）或 auth 的预览数据；apps/web 已把这些移到 feature 侧或经 ai/index.ts。pm-global.css 的两条 @import 见 $fileReasons。",
-    "parent-relative-import": "pm-global.css 引用根目录 styles/ 下的 tokens 表，DR-005 把它搬进 shared/styles/tokens.css。"
-  },
-  "$fileReasons": {
-    "src/shared/styles/pm-global.css": "DR-005 归零：全局样式表拆分并把 @import 收进 app/styles/global.css"
+    "shared-imports-upper-layer": "demo 数据源：shared 的文案与小件直接读演示夹具（ai/mock/i18n、ai/mock/data）或 auth 的预览数据；apps/web 已把这些移到 feature 侧或经 ai/index.ts。"
   },
   "shared-imports-upper-layer": {
     "src/shared/i18n/ai-context-copy.ts": 1,
     "src/shared/i18n/I18nProvider.tsx": 1,
     "src/shared/i18n/progress-copy.ts": 1,
     "src/shared/lib/workspace-session.ts": 1,
-    "src/shared/styles/pm-global.css": 2,
     "src/shared/ui/AppearancePicker.tsx": 1,
     "src/shared/ui/PersonAvatar.tsx": 2,
     "src/shared/ui/TagBadge.tsx": 2,
@@ -92,9 +87,7 @@
     "src/shared/ui/PersonAvatar.tsx": 2,
     "src/shared/ui/TagBadge.tsx": 2
   },
-  "parent-relative-import": {
-    "src/shared/styles/pm-global.css": 1
-  },
+  "parent-relative-import": {},
   "feature-edge-not-declared": {},
   "app-imported-outside-main": {},
   "file-name": {}

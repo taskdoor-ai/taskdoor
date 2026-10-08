@@ -354,7 +354,7 @@ test("画布支持拖拽视野但不允许拖动节点改关系", () => {
 });
 
 test("概览卡片状态颜色复用正式任务状态 token", () => {
-  const tokenSource = readSource("styles/agentdoor-tokens.css");
+  const tokenSource = readSource("src/shared/styles/tokens.css");
   const styleSource = readSource("src/shared/styles/pm-global.css");
 
   for (const tone of ["neutral", "progress", "review", "warning", "success", "failed"]) {

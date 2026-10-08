@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import "../shared/styles/pm-global.css";
+import "../app/styles/global.css";
 import "../features/tasks/styles/task-workspace.css";
 import "../features/tasks/styles/task-heading.css";
 import "../features/tasks/styles/task-situation.css";

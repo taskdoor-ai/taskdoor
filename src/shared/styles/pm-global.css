@@ -1,11 +1,3 @@
-@import "tailwindcss";
-@import "../../../styles/agentdoor-tokens.css";
-@import "@/features/tasks/styles/task-burnup-node.css";
-@import "@/features/ai-connection/styles/local-agent-connection.css";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
-
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* 21st.dev composition: Motion Primitives Code Block + Aceternity Glowing Effect cards. */
@@ -7504,35 +7496,3 @@ button:disabled {
   .ui-pointer, .workbench-v2 .workbench-metric-card, .workbench-ai-action, .workbench-kanban-card { transition: none; }
   .workbench-v2 .workbench-metric-card:hover, .workbench-ai-action:hover, .workbench-kanban-card:hover { transform: none; }
 }
-
-@theme inline { --font-heading: var(--font-sans); --font-sans: 'Geist Variable', sans-serif; --color-sidebar-ring: var(--sidebar-ring); --color-sidebar-border: var(--sidebar-border); --color-sidebar-accent-foreground: var(--sidebar-accent-foreground); --color-sidebar-accent: var(--sidebar-accent); --color-sidebar-primary-foreground: var(--sidebar-primary-foreground); --color-sidebar-primary: var(--sidebar-primary); --color-sidebar-foreground: var(--sidebar-foreground); --color-sidebar: var(--sidebar); --color-chart-5: var(--chart-5); --color-chart-4: var(--chart-4); --color-chart-3: var(--chart-3); --color-chart-2: var(--chart-2); --color-chart-1: var(--chart-1); --color-ring: var(--ring); --color-input: var(--input); --color-border: var(--border); --color-destructive: var(--destructive); --color-accent-foreground: var(--accent-foreground); --color-accent: var(--accent); --color-muted-foreground: var(--muted-foreground); --color-muted: var(--muted); --color-secondary-foreground: var(--secondary-foreground); --color-secondary: var(--secondary); --color-primary-foreground: var(--primary-foreground); --color-primary: var(--primary); --color-popover-foreground: var(--popover-foreground); --color-popover: var(--popover); --color-card-foreground: var(--card-foreground); --color-card: var(--card); --color-foreground: var(--foreground); --color-background: var(--background); --radius-sm: calc(var(--radius) * 0.6); --radius-md: calc(var(--radius) * 0.8); --radius-lg: var(--radius); --radius-xl: calc(var(--radius) * 1.4); --radius-2xl: calc(var(--radius) * 1.8); --radius-3xl: calc(var(--radius) * 2.2); --radius-4xl: calc(var(--radius) * 2.6); }
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50; }
-  body {
-    @apply bg-background text-foreground; }
-  html {
-    @apply font-sans; } }
-
-/* Keep the library palette while matching all shared avatar sizes. */
-.person-avatar-initials { position: absolute; inset: 0; z-index: 1; overflow: hidden; border-radius: 50%; }
-.person-avatar-initials > div { width: 100%; height: 100%; }
-.person-avatar-initials p { font-family: inherit; font-size: calc(var(--person-avatar-size) * .37); font-weight: 600; }
-
-.task-icon[data-tone="neutral"] { background: var(--ad-surface); }
-
-[data-theme="dark"] .task-status-badge { box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 20%, transparent); }
-
-/* External monochrome SVG images cannot inherit the button text color. */
-[data-theme="dark"] img[data-agent-icon="ChatGPT"],
-[data-theme="dark"] img[data-agent-icon="Cursor"] { filter: invert(1); }
-
-/* Team creation stays outside the scrolling team list. */
-.team-switcher-menu[data-slot="dropdown-menu-content"] { overflow: hidden; }
-.team-switcher-list { min-height: 0; overflow-y: auto; }
-.team-switcher-current, .team-switcher-create { flex-shrink: 0; }
-.team-switcher-create { display: flex; gap: 10px; min-height: 44px; margin-top: 8px; border-top: 1px solid var(--ad-border); border-radius: 0; }
-.create-team-dialog form { display: grid; gap: 12px; }
-.create-team-dialog footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
-.create-team-dialog [role="alert"] { color: var(--ad-danger, #b42318); }

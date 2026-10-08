@@ -88,7 +88,7 @@ test("顶栏铃铛保持 44px 点击区域，数字角标为清晰的 20px 通�
   assert.match(badge, /font-size:\s*11px/);
   assert.match(badge, /font-variant-numeric:\s*tabular-nums/);
   assert.match(cssRule(".notification-trigger-topbar .notification-trigger-count"), /border-color:\s*var\(--ad-surface\)/);
-  const tokens = readFileSync(new URL("../styles/agentdoor-tokens.css", import.meta.url), "utf8");
+  const tokens = readFileSync(new URL("../src/shared/styles/tokens.css", import.meta.url), "utf8");
   assert.match(tokens, /--ad-control-touch-min:\s*44px/);
   assert.match(tokens, /--ad-notification-badge:\s*#d92d3e/);
 });

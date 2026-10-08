@@ -225,7 +225,7 @@ A change cannot be considered complete when any of the following is true:
 
 用户要求按钮、Checkbox 和开关更年轻、减少深色重量。本次统一为冷白表面、蓝灰文字与边框、明亮蓝色主动作；主按钮的 hover / active 保持同一蓝色，不再压到深海军蓝。普通控件圆角统一为 10px，阴影降低不透明度。主按钮仍保留实色与白字，禁用态使用专用浅底灰字。
 
-Checkbox 使用浅蓝选中底与蓝色勾选标记；Switch 使用浅色轨道，开启时由蓝色圆点和位置同时表达状态。两者的尺寸、边界、标记、底色和焦点均通过 `styles/agentdoor-tokens.css` 中的 `--ad-checkbox-*`、`--ad-switch-*` 与 `--ad-focus-*` 控制，页面仅控制布局。
+Checkbox 使用浅蓝选中底与蓝色勾选标记；Switch 使用浅色轨道，开启时由蓝色圆点和位置同时表达状态。两者的尺寸、边界、标记、底色和焦点均通过 `src/shared/styles/tokens.css` 中的 `--ad-checkbox-*`、`--ad-switch-*` 与 `--ad-focus-*` 控制，页面仅控制布局。
 
 shadcn / Tailwind 的 `--primary`、`--background`、`--muted`、`--border` 等映射到同一套 `--ad-*`，深色主题由应用现有 `data-theme` 驱动，退出独立灰黑默认色板。关键正文、按钮、提示正文含 hover 状态的文字对比度至少 4.5:1，选中标记与焦点至少 3:1；减弱动效偏好继续生效。
 
