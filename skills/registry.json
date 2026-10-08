@@ -132,7 +132,8 @@
     "skills/shared/evidence-and-updates.md",
     "skills/shared/product-rules.md",
     "skills/shared/assistant-path-rules.md",
-    "skills/shared/current-prd-contract.md"
+    "skills/shared/current-prd-contract.md",
+    "skills/shared/production-mcp-contract.md"
   ],
   "ruleSnapshots": [
     {

@@ -32,6 +32,8 @@ test('队列同键幂等，失败原文保留，不自动重试和改变原团�
   const store=createLabStore(join(mkdtempSync(join(tmpdir(),'lab-run-')),'state.json'),seedLab());
   const before=store.get().teams;let calls=0;
   const runner=createRunner(store,config,async()=>{calls++;return {rawOutput:'这不是 JSON',usage:{inputTokens:1,outputTokens:2,totalTokens:3}};});
+  assert.throws(()=>runner.enqueue(['case-effort'],'wrong-skill',{skillId:'agentdoor-task-planner'}),/Skill 不匹配/);
+  assert.equal(store.get().runs.length,0);assert.equal(calls,0);
   const runs=runner.enqueue(['case-effort'],'same-key');
   assert.equal(runner.enqueue(['case-effort'],'same-key')[0].id,runs[0].id);
   assert.throws(()=>runner.enqueue(['case-create'],'same-key'),/不同/);
@@ -45,4 +47,19 @@ test('排队取消不会调用上游，活动取消会结束本地状态',async(
   const runs=runner.enqueue(['case-effort','case-diagnosis'],'batch-cancel');
   await new Promise(resolve=>setTimeout(resolve,20));runner.cancel(runs[1].id);runner.cancel(runs[0].id);await runner.idle();
   assert.equal(calls,1);assert.ok(store.get().runs.every(r=>r.status==='cancelled'));
+});
+
+test('真实模式持久化工具记录，不执行沙箱生成与旧断言',async()=>{
+ const seed=seedLab();const c=seed.cases.find(c=>c.id==='case-create')!;
+ c.id='mcp-new-case';c.enabled=true;c.archived=false;c.origin='manual';
+ c.steps=[{id:'real-step',skillId:'agentdoor-task-planner',prompt:'创建真实测试任务',taskId:null,usePreviousOutput:false,events:[]}];c.assertions=[];delete c.contextMode;delete c.workload;c.verification=undefined;c.reviewChecklist=['真实创建且回读'];
+ const store=createLabStore(join(mkdtempSync(join(tmpdir(),'lab-mcp-')),'state.json'),seed);
+ const current=store.get();const team=current.teams.find(t=>!t.archived)!;c.teamId=team.id;c.actorId=team.members[0].id;store.save(current.revision,current.teams,[...current.cases.filter(item=>item.id!==c.id),c]);
+ const runner=createRunner(store,config,async()=>{throw Error('不应调用沙箱生成');},undefined,undefined,{url:'https://example.com/mcp',token:'test',workspaceId:'real-workspace'},async(_mcp,_options,instructions,prompt,_id,_signal,onTrace)=>{
+  assert.equal(prompt,'创建真实测试任务');assert.ok(instructions.includes('真实执行契约'));
+  onTrace!([{name:'create_task',arguments:{workspaceId:'real-workspace'},result:null,at:new Date().toISOString(),status:'pending'}],[]);
+  const persisted=store.get().runs[0].steps[0];assert.equal(persisted.mcp?.toolTrace.length,1);assert.equal(persisted.input&&JSON.stringify(persisted.input).includes('real-workspace'),true);
+  onTrace!([] ,['real-id']);return {rawOutput:'{"createdTaskIds":["real-id"],"tasks":[{"id":"real-id","title":"真实测试任务"}]}',usage:{inputTokens:1,outputTokens:1,totalTokens:2}};
+ });
+ runner.enqueue(['mcp-new-case'],'real-run',{executionMode:'mcp'});await runner.idle();const run=store.get().runs[0];assert.equal(run.steps.length,1);assert.equal(run.steps[0].structure,'passed');assert.deepEqual(run.steps[0].mcp?.createdTaskIds,['real-id']);assert.equal(run.status,'needs_review');
 });

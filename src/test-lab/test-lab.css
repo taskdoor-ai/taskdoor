@@ -314,3 +314,19 @@ pre { max-width: 100%; max-height: 480px; margin: 12px 0 0; padding: 13px; overf
 .lab-provider-list li small{display:block;font-size:12px;color:#718096;margin-top:4px}
 .lab-provider-list li button{flex-shrink:0}
 .lab-provider-list li button[aria-pressed=true]{color:#1765de;background:#edf4ff}
+
+.lab-live-progress { border: 1px solid var(--lab-border, #dce2e8); border-radius: 10px; padding: 18px; margin: 18px 0; background: var(--lab-panel, #fff); }
+.lab-live-progress progress { width: 100%; height: 8px; accent-color: #286dc9; }
+.lab-live-current { border-top: 1px solid #e5e7eb; padding: 14px 0; }
+.lab-live-current small { display: block; color: #667085; margin-bottom: 10px; }
+.lab-live-prompt { white-space: pre-wrap; overflow-wrap: anywhere; }
+.lab-live-results > div { padding: 8px 0; }
+.lab-live-results span { display: block; color: #667085; font-size: 12px; margin-top: 4px; }
+
+.lab-evaluation-link { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; margin: 0 0 16px; }
+.lab-evaluation-link a { color: #1769db; font-weight: 600; }
+.lab-evaluation-link small { color: #667085; }
+
+.lab-promptfoo-frame{display:block;width:100%;height:76vh;min-height:600px;border:1px solid var(--lab-border,#dfe5ed);border-radius:12px;background:white}
+.lab-native-review{margin-top:20px}.lab-native-review>summary{cursor:pointer;padding:16px;font-weight:600}
+.lab-file-import{display:inline-flex;padding:8px 12px;border:1px solid #dfe5ed;border-radius:6px;cursor:pointer;font-size:13px;background:white}.lab-file-import input{position:absolute;width:1px;height:1px;opacity:0}.lab-file-import:focus-within{outline:2px solid #2563eb}.lab-skill-file-tree{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}.lab-skill-file-tree button{display:flex;align-items:center;gap:8px;padding:8px 10px;max-width:100%;text-align:left}.lab-skill-file-tree button[aria-current=true]{border-color:#2563eb;background:#eff6ff;color:#1d4ed8}.lab-skill-file-tree span{font-size:10px;color:#64748b}.lab-skill-file-tree code{font-size:12px;overflow-wrap:anywhere}

@@ -157,17 +157,32 @@
               "resolution": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["kind", "newScope", "changeIds", "evidenceRefs"],
+                "required": [
+                  "kind",
+                  "newScope",
+                  "changeIds",
+                  "evidenceRefs"
+                ],
                 "properties": {
-                  "kind": {"const": "propose_uncovered_scope"},
-                  "newScope": {"type": "string", "minLength": 1},
+                  "kind": {
+                    "const": "propose_uncovered_scope"
+                  },
+                  "newScope": {
+                    "type": "string",
+                    "minLength": 1
+                  },
                   "changeIds": {
                     "type": "array",
-                    "items": {"type": "string", "minLength": 1},
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
                     "minItems": 1,
                     "uniqueItems": true
                   },
-                  "evidenceRefs": {"$ref": "#/$defs/refs"}
+                  "evidenceRefs": {
+                    "$ref": "#/$defs/refs"
+                  }
                 }
               }
             }
@@ -382,16 +397,12 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "startOn",
             "dueOn",
             "basis",
             "assumptions",
             "evidenceRefs"
           ],
           "properties": {
-            "startOn": {
-              "$ref": "#/$defs/date"
-            },
             "dueOn": {
               "$ref": "#/$defs/date"
             },

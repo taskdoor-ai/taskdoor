@@ -9,13 +9,13 @@ import { createLabClient, LabApiError } from "./client";
 import { CaseEditorFields, Field, TeamEditorFields, MemberResponsibilityFields, TaskCreateFields, TaskEditorFields, MemberEditorFields, MarkdownFileFields } from "./editors";
 import { copyCase, copyTeam, displayIndustry, downloadJson, isActiveRun, newCase, newTask, newTeam, uid } from "./model";
 import { CaseDetails, ConfigDetails, Empty, TeamDetails } from "./views";
-import { SkillManager, ModelSettings, RunSetup } from "./management";
+import { SkillManager, ModelSettings, ModelPerformance, RunSetup } from "./management";
 import { maxActiveTeamLimit, type LabWorkflow, type LabRunSelection, type LabBootstrap, type LabCase, type LabState, type LabTask, type LabTeam, type LabView } from "./types";
 
 type Page = "teams" | "cases" | "runs" | "settings" | "skills";
 type Editor = { type: "file"; value:LabTeam; evidenceId:string; revision:number } | { type: "task-detail"; value:LabTeam; taskId:string; revision:number } | { type:"member"; value:LabTeam; memberId:string; revision:number } | { type: "team"; value: LabTeam; revision: number } | { type: "responsibility"; value: LabTeam; memberId: string; revision: number } | { type: "task"; teamId:string; value:LabTask; revision:number } | { type: "case"; value: LabCase; revision: number } | { type: "import"; revision: number };
 type Confirmation = { title: string; description: string; action: () => Promise<void>; label: string };
-const pageNames = { teams: "测试团队", cases: "用例库", runs: "测试运行", skills: "Skill 管理", settings: "模型与 API" };
+const pageNames = { teams: "测试团队", cases: "用例库", runs: "测试运行", skills: "Skill 文件包", settings: "模型管理" };
 const pageDescriptions = { skills: "管理 Skill 内容与版本，为用例固定规则并比较运行结果。", teams: "按团队管理成员责任、任务及任务下的文件和讨论，模拟不同人员视角。", cases: "每个用例归属一个团队，并以该团队成员的视角重复运行。", runs: "先选择团队、用例和模型创建测试；按批次查看结果，再深入每条用例的分析。", settings: "检查服务端连接配置与运行边界。" };
 const errorMessage = (error: unknown) => error instanceof Error ? error.message : "操作失败，请重试。";
 const queryValue=(name:string)=>typeof window==="undefined"?"":new URLSearchParams(window.location.search).get(name)||"";
@@ -23,7 +23,7 @@ const replaceById = <T extends { id: string }>(items: T[], item: T) => items.som
 
 export function TestLabApp({ initial }: { initial?: LabBootstrap }) {
   const [bootstrap, setBootstrap] = useState<LabBootstrap | null>(initial || null);
-  const [page, setPage] = useState<Page>(()=>{const page=queryValue("page");return ["teams","skills","cases","runs","settings"].includes(page)?page as Page:"teams";});
+  const [page, setPage] = useState<Page>(()=>{const page=queryValue("page");return ["teams","skills","cases","runs","settings"].includes(page)?page as Page:"runs";});
   const [selectedTeamId, setSelectedTeamId] = useState(queryValue("team")||initial?.state.teams[0]?.id || "");
   const [selectedCaseId, setSelectedCaseId] = useState(queryValue("case")||initial?.state.cases[0]?.id || "");
   const [selectedRunId, setSelectedRunId] = useState(queryValue("run")||initial?.state.runs[0]?.id || "");
@@ -85,7 +85,7 @@ export function TestLabApp({ initial }: { initial?: LabBootstrap }) {
 
   const activeRunIds = state?.runs.filter((run) => isActiveRun(run.status)).map((run) => run.id).join(",") || "";
   useEffect(() => {
-    if (!activeRunIds) return;
+    if (!activeRunIds && page !== "runs") return;
     let stopped = false;
     let timer: ReturnType<typeof setTimeout>;
     const poll = async () => {
@@ -99,9 +99,9 @@ export function TestLabApp({ initial }: { initial?: LabBootstrap }) {
       } catch (err) { if (!stopped) setError(`运行状态刷新失败：${errorMessage(err)}。稍后会重试。`); }
       if (!stopped) timer = setTimeout(poll, 2000);
     };
-    timer = setTimeout(poll, 2000);
+    timer = setTimeout(poll, 0);
     return () => { stopped = true; clearTimeout(timer); };
-  }, [activeRunIds, client]);
+  }, [activeRunIds, client, page]);
 
   const selectedTeam = state?.teams.find((item) => item.id === selectedTeamId);
   useEffect(() => {
@@ -196,8 +196,8 @@ export function TestLabApp({ initial }: { initial?: LabBootstrap }) {
   const selectedCase = libraryPaged.items.find((item) => item.id === selectedCaseId)||libraryPaged.items[0];
 
   return <div className="lab-app">
-    <aside className="lab-sidebar"><a className="lab-brand" href="/test-lab.html"><span className="lab-brand-symbol">t</span><span>TaskDoor<small>测试工作台</small></span></a><span className="lab-environment"><span /> 隔离测试环境</span>
-      <nav aria-label="测试工作台导航">{([{ id: "skills", icon: Layers3 }, { id: "teams", icon: UsersRound }, { id: "cases", icon: BookOpen }, { id: "runs", icon: FileCheck2 }, { id: "settings", icon: Settings2 }] as const).map(({ id, icon: Icon }) => <button key={id} className={page === id ? "is-active" : ""} aria-label={pageNames[id]} title={pageNames[id]} aria-current={page === id ? "page" : undefined} onClick={() => {setLaunchSeed(undefined);navigate(id);}}><Icon size={17} /><span>{pageNames[id]}</span>{state && id !== "settings" && <small>{id==="teams"?activeTeamCount:id==="skills"?bootstrap.skills.length:id==="runs"?groupRuns(state.runs).length:state[id].length}</small>}</button>)}</nav>
+    <aside className="lab-sidebar"><a className="lab-brand" href={import.meta.env.VITE_TASKDOOR_UNIFIED ? "/?page=runs" : "/test-lab.html?page=runs"}><span className="lab-brand-symbol">t</span><span>TaskDoor<small>Skill 评测平台</small></span></a><span className="lab-environment"><span /> 隔离测试环境</span>
+      <nav aria-label="测试工作台导航">{([{ id: "runs", icon: FileCheck2 }, { id: "skills", icon: Layers3 }, { id: "teams", icon: UsersRound }, { id: "cases", icon: BookOpen }, { id: "settings", icon: Settings2 }] as const).map(({ id, icon: Icon }) => <button key={id} className={page === id ? "is-active" : ""} aria-label={pageNames[id]} title={pageNames[id]} aria-current={page === id ? "page" : undefined} onClick={() => {setLaunchSeed(undefined);navigate(id);}}><Icon size={17} /><span>{pageNames[id]}</span>{state && id !== "settings" && <small>{id==="teams"?activeTeamCount:id==="skills"?bootstrap.skills.length:id==="runs"?groupRuns(state.runs).length:state[id].length}</small>}</button>)}</nav>
       <div className="lab-sidebar-footer"><Beaker size={17} /><p>模型按需运行 · 独立数据<br /><small>不会写入业务工作区</small></p><a href="/">返回 TaskDoor <ChevronRight size={13} /></a></div>
     </aside>
     <main className="lab-main"><header className="lab-page-heading"><div><p className="lab-breadcrumb">测试工作台 <ChevronRight size={13} /> {pageNames[page]}</p><h1>{pageNames[page]}</h1><p>{pageDescriptions[page]}</p></div><button title="刷新服务端数据" className="lab-icon-button" disabled={loading || busy} onClick={() => void refresh()}><RefreshCw size={16} className={loading ? "lab-spinning" : ""} /><span>刷新</span></button></header>
@@ -205,7 +205,7 @@ export function TestLabApp({ initial }: { initial?: LabBootstrap }) {
       {notice && <div role="status" className="lab-alert lab-alert-success">{notice}</div>}
       {!bootstrap && (loading ? <Empty title="正在加载测试工作台">从独立测试服务读取团队、用例与报告…</Empty> : <Empty title="工作台暂时不可用">请确认测试服务已启动，然后点击刷新重试。</Empty>)}
       {bootstrap && state && <>
-        {page === "runs" ? <RunCenter key={launchSeed?.id??"runs"} seed={launchSeed} bootstrap={bootstrap} client={client} onRefresh={refresh}/> : page === "skills" ? <SkillManager bootstrap={bootstrap} client={client} onSave={applyState} onDraftChange={setSkillDirty}/> : page === "settings" ? <><ModelSettings bootstrap={bootstrap} client={client} onSave={applyState}/><ConfigDetails config={bootstrap.config} /></> : <>
+        {page === "runs" ? <RunCenter key={launchSeed?.id??"runs"} seed={launchSeed} bootstrap={bootstrap} client={client} onRefresh={refresh}/> : page === "skills" ? <SkillManager bootstrap={bootstrap} client={client} onSave={applyState} onDraftChange={setSkillDirty}/> : page === "settings" ? <><ModelPerformance bootstrap={bootstrap}/><ModelSettings bootstrap={bootstrap} client={client} onSave={applyState}/><details><summary>服务连接与运行设置</summary><ConfigDetails config={bootstrap.config} /></details></> : <>
           {page==="cases"?<div className="lab-library-tools">
             <div className="lab-library-heading"><input type="search" aria-label="搜索用例库" placeholder="搜索用例名称或描述" value={search} onChange={e=>setSearch(e.target.value)}/><div className="lab-actions"><button aria-expanded={filtersOpen} onClick={()=>setFiltersOpen(!filtersOpen)}>筛选{[capability,caseTeamId,category,showArchived,coreOnly].filter(Boolean).length>0&&`（${[capability,caseTeamId,category,showArchived,coreOnly].filter(Boolean).length}）`}</button><button onClick={()=>downloadJson("test-cases.json",{teams:state.teams.filter(t=>cases.some(c=>c.teamId===t.id)),cases})}>导出</button><button className="lab-primary" onClick={()=>setEditor({type:"case",value:{...newCase(state.teams.find(t=>t.id===caseTeamId)||state.teams.find(t=>!t.archived)),category:category||"自定义"},revision:state.revision})}>＋ 新增用例</button></div></div>
             {filtersOpen&&<div className="lab-library-filters"><FilterSelect label="用例团队筛选" value={caseTeamId} onChange={setCaseTeamId} options={[{value:"",label:"全部团队"},...state.teams.filter(t=>showArchived||!t.archived).map(t=>({value:t.id,label:t.name}))]}/><FilterSelect label="测试能力筛选" value={capability} onChange={setCapability} options={[{value:"",label:"全部测试类型"},...bootstrap.skills.map(s=>({value:s.id,label:s.title}))]}/><FilterSelect label="用例分类筛选" value={category} onChange={setCategory} options={[{value:"",label:"全部分类"},...categoryList(state).map(c=>({value:c,label:c}))]}/><label className="lab-check"><input type="checkbox" checked={showArchived} onChange={e=>setShowArchived(e.target.checked)}/>显示归档</label><label className="lab-check"><input type="checkbox" checked={coreOnly} onChange={e=>setCoreOnly(e.target.checked)}/>仅验收用例</label><button onClick={()=>{setCaseTeamId("");setCapability("");setCategory("");setShowArchived(false);setCoreOnly(false);}}>重置</button></div>}
@@ -230,7 +230,7 @@ export function TestLabApp({ initial }: { initial?: LabBootstrap }) {
             {page === "cases" && (selectedCase ? <><div className="lab-detail-heading"><div><small>{selectedCase.category}</small><h2>{selectedCase.name}</h2></div><div className="lab-actions"><button onClick={() => setEditor({ type: "case", value: structuredClone(selectedCase), revision: state.revision })}>编辑</button><button onClick={() => setEditor({ type: "case", value: copyCase(selectedCase), revision: state.revision })}>复制</button><button onClick={() => archiveCase(selectedCase)}>{selectedCase.archived ? "恢复" : "归档"}</button></div></div><CaseDetails item={selectedCase} versions={state.skillVersions} defaults={state.skillDefaults} team={state.teams.find((team) => team.id === selectedCase.teamId)} skills={bootstrap.skills} onEditFile={(evidenceId)=>{const team=state.teams.find(t=>t.id===selectedCase.teamId);if(team)setEditor({type:"file",value:structuredClone(team),evidenceId,revision:state.revision});}} /></> : <Empty title="选择一个用例">查看步骤、自动断言与人工核对项。</Empty>)}
           </section></div>
         </>}
-        <footer className="lab-page-footer"><span>独立测试数据 · 修订 {state.revision}</span><span>{activeRunIds ? "活动运行自动刷新中" : "没有活动运行，轮询已暂停"}</span></footer>
+        <footer className="lab-page-footer"><span>独立测试数据 · 修订 {state.revision}</span><span>{(activeRunIds || page === "runs") ? "运行状态自动刷新中" : "没有活动运行，轮询已暂停"}</span></footer>
       </>}
     </main>
     {categoriesOpen&&state&&<Modal title="测试分类" onClose={()=>setCategoriesOpen(false)}><CategoryManager state={state} client={client} onSave={next=>{applyState(next);setCategory(next.categories?.at(-1)?.name||"");setCoreOnly(false);setCaseTeamId("");setCapability("");setSearch("");setSelectedCases([]);}}/></Modal>}

@@ -57,7 +57,8 @@ test('选中的模型、人员与 Skill 版本进入真实调用参数，排队�
 
 test('无权访问目标任务的人员在入队前被拒绝且没有模型调用', () => {
   const store = makeStore(); const state = store.get();
-  state.cases[0].steps[0].taskId = 'private';
+  const restrictedCase=state.cases.find(c=>c.id==='case-create')!;
+  restrictedCase.archived=false;restrictedCase.enabled=true;restrictedCase.steps[0].taskId='private';
   store.save(state.revision, state.teams, state.cases);
   const runner = createRunner(store, options, async () => { throw new Error('不应调用'); });
   assert.throws(() => runner.enqueue(['case-create'], 'denied', { actorId: 'lin' }), /无权/);
@@ -92,7 +93,7 @@ test('固定版本不受默认切换影响，常用模型可持久化且拒绝�
   assert.throws(()=>store.saveModels(state.revision,['model-c']),/版本/);
   let instructions='';
   const runner=createRunner(store,options,async (_options,prompt)=>{instructions=prompt;return {rawOutput:'{}',usage:{inputTokens:0,outputTokens:0,totalTokens:0}};});
-  runner.enqueue(['case-effort'],'pinned');await runner.idle();
+  runner.enqueue(['case-effort'],'pinned',{model:'model-a'});await runner.idle();
   assert.match(instructions,/PINNED_CONTENT/);assert.doesNotMatch(instructions,/DEFAULT_CONTENT/);
 });
 

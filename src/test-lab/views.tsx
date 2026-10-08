@@ -1,3 +1,4 @@
+import { LiveProgress } from './live-progress';
 import { JevReview } from "./jev-review";
 import { AcceptanceDiff } from "./comparison";
 import { VerificationSummary } from "./verification";
@@ -50,7 +51,7 @@ export function RunDetails({ run, onReview, busy, jevConfig, onJevReview }: { je
   const hasUsage = run.steps.length > 0 && run.steps.every((step) => step.usage.totalTokens !== null);
   return <>
     <dl className="lab-facts"><div><dt>执行人员</dt><dd>{run.teamSnapshot.members.find(m=>m.id===run.actorId)?.name||run.actorId}</dd></div><div><dt>运行状态</dt><dd>{runLabels[run.status]}</dd></div><div><dt>模型</dt><dd>{run.model || "未提供"}</dd></div><div><dt>创建时间</dt><dd>{new Date(run.createdAt).toLocaleString("zh-CN")}</dd></div><div><dt>模型调用耗时</dt><dd>{run.steps.length ? `${(elapsed / 1000).toFixed(1)} 秒` : "等待结果"}</dd></div><div><dt>Total Tokens</dt><dd>{hasUsage ? run.steps.reduce((sum, step) => sum + (step.usage.totalTokens || 0), 0).toLocaleString() : "未提供 / 等待结果"}</dd></div><div><dt>用例版本</dt><dd>v{run.caseSnapshot.version}</dd></div></dl>
-    <AcceptanceDiff run={run}/><JevReview run={run} config={jevConfig} busy={busy} onReview={onJevReview}/>{run.error && <p role="alert" className="lab-alert lab-alert-error">{run.error}</p>}
+    {isActiveRun(run.status)&&<LiveProgress runs={[run]}/>}<AcceptanceDiff run={run}/><JevReview run={run} config={jevConfig} busy={busy} onReview={onJevReview}/>{run.error && <p role="alert" className="lab-alert lab-alert-error">{run.error}</p>}
     {!run.steps.length && <Empty title={isActiveRun(run.status) ? "等待模型返回" : "没有步骤结果"}>运行报告保留本次快照；活动运行每 2 秒刷新。</Empty>}
     {run.steps.map((step, index) => <section className="lab-detail-section" key={step.stepId}><h3>步骤 {index + 1} <small>{step.skillId}</small></h3><div className="lab-step-meta"><span>结构检查：{step.structure === "passed" ? "通过" : step.structure === "failed" ? "失败" : "未判定"}</span><span>{(step.durationMs / 1000).toFixed(1)} 秒</span><span>输入 {step.usage.inputTokens ?? "未知"} / 输出 {step.usage.outputTokens ?? "未知"} Tokens</span></div>
       {step.error && <p className="lab-alert lab-alert-error">{step.error}</p>}{step.structureErrors.length > 0 && <TextList items={step.structureErrors} />}

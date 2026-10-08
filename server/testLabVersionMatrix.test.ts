@@ -1,0 +1,23 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtempSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join,resolve} from 'node:path';
+import {createLabStore} from './test-lab/store.ts';
+import {seedLab} from './test-lab/seeds.ts';
+import {createRunner} from './test-lab/runner.ts';
+import {createPromptfooEngine} from './test-lab/evaluation-engine.ts';
+test('真实 Promptfoo 调度双版本双模型，快照对应版本且幂等不重复',async()=>{
+ const dir=mkdtempSync(join(tmpdir(),'version-matrix-'));const store=createLabStore(join(dir,'state.json'),seedLab());
+ for(const label of ['v1','v2'])store.addSkillVersion(store.get().revision,{skillId:'agentdoor-task-planner',label,notes:'',snapshot:`SKILL_${label}`});
+ const ids=store.get().skillVersions!.map(v=>v.id);const calls:string[]=[];
+ const runner=createRunner(store,{apiKey:'test-only',model:'a',endpoint:'https://example.invalid/responses',maxOutputTokens:100,timeoutMs:1000},async(options,instructions)=>{calls.push(options.model+':'+instructions);return {rawOutput:'{}',usage:{inputTokens:1,outputTokens:1,totalTokens:2}};},createPromptfooEngine(resolve('.'),join(dir,'promptfoo')));
+ const selection={skillId:'agentdoor-task-planner' as const,skillVersionIds:ids,models:['a','b']};
+ assert.throws(()=>runner.enqueue(['case-effort'],'invalid',{...selection,skillVersionIds:[ids[0],ids[0]]}));
+ assert.throws(()=>runner.enqueue(['case-effort'],'missing',{...selection,skillVersionIds:['missing']}));
+ const runs=runner.enqueue(['case-effort'],'matrix',selection);assert.equal(runs.length,4);assert.equal(runner.enqueue(['case-effort'],'matrix',selection)[0].id,runs[0].id);
+ await runner.idle();assert.equal(calls.length,4);assert.equal(new Set(calls).size,4);
+ const saved=store.get().runs;assert.equal(new Set(saved.map(r=>r.model+':'+r.skillVersionId)).size,4);
+ assert.ok(saved.every(r=>r.evaluation?.id&&r.steps[0].skillVersionId===r.skillVersionId&&r.steps[0].skillSnapshot===`SKILL_v${r.skillVersionNumber}`));
+ runner.close();
+});

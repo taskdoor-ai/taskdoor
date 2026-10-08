@@ -22,13 +22,13 @@ NEW_FIELDS = {
 }
 MISSING = object()
 CONFIRMED_ALIASES = {
-    "ownerId": "ownerRecommendation.memberId", "dueOn": "schedule.dueOn", "startOn": "schedule.startOn",
+    "ownerId": "ownerRecommendation.memberId", "dueOn": "schedule.dueOn",
 }
 CONFIRMED_PATHS = NEW_FIELDS | {
-    "goal", "tips", "ownerId", "dueOn", "startOn", "status", "parentId",
+    "goal", "tips", "ownerId", "dueOn", "status", "parentId",
     "goal.text", "goal.basis", "goal.evidenceRefs",
     "ownerRecommendation.memberId", "ownerRecommendation.basis", "ownerRecommendation.reason", "ownerRecommendation.evidenceRefs",
-    "schedule.startOn", "schedule.dueOn", "schedule.basis", "schedule.assumptions", "schedule.evidenceRefs",
+    "schedule.dueOn", "schedule.basis", "schedule.assumptions", "schedule.evidenceRefs",
     "estimate.ewdHours", "estimate.basis", "estimate.assumptions", "estimate.evidenceRefs",
 }
 
@@ -195,7 +195,7 @@ def _input_errors(data):
             if field in item:
                 object_value(item[field], f"{prefix}.{field}")
         if isinstance(item.get("schedule"), dict):
-            for field in ("startOn", "dueOn"):
+            for field in ("dueOn",):
                 if field in item and field in item["schedule"] and item[field] != item["schedule"][field]:
                     errors.append(f"{prefix}.{field}: flat and nested dates disagree; normalize the snapshot")
     task_ids = {item["id"] for item in tasks}
@@ -280,7 +280,7 @@ def _date(value, path, errors):
 
 def _task_schedule(task):
     nested = task.get("schedule") or {}
-    return {key: task.get(key, nested.get(key)) for key in ("startOn", "dueOn")}
+    return {key: task.get(key, nested.get(key)) for key in ("dueOn",)}
 
 
 def validate(input_data, output):
@@ -493,7 +493,7 @@ def validate(input_data, output):
         if len(set(participants)) != len(participants) or not set(participants) <= member_ids:
             errors.append(f"{prefix}: participants must be distinct visible members")
         schedule = fields.get("schedule")
-        if schedule and schedule["basis"] == "unknown" and any(schedule[key] is not None for key in ("startOn", "dueOn")):
+        if schedule and schedule["basis"] == "unknown" and any(schedule[key] is not None for key in ("dueOn",)):
             errors.append(f"{prefix}: unknown schedule cannot contain dates")
         estimate = fields.get("estimate")
         if estimate:
@@ -514,7 +514,7 @@ def validate(input_data, output):
                     errors.append(f"{prefix}: confirmed field {field} cannot change")
         graph[target].update(deepcopy(fields))
         if schedule:
-            graph[target].update({key: schedule[key] for key in ("startOn", "dueOn")})
+            graph[target].update({key: schedule[key] for key in ("dueOn",)})
 
     if root not in graph:
         errors.append("rootTaskId: must resolve to an existing or newly proposed task")
@@ -564,8 +564,6 @@ def validate(input_data, output):
         if target not in graph:
             continue
         schedule = dates[target]
-        if schedule["startOn"] and schedule["dueOn"] and schedule["startOn"] > schedule["dueOn"]:
-            errors.append(f"task {target}: startOn is after dueOn")
         if "estimate" in change["fields"] and change["fields"]["estimate"]["ewdHours"] is not None and any(task.get("parentId") == target for task in graph.values()):
             errors.append(f"task {target}: parent effort cannot duplicate child estimates")
     edges = {}
@@ -581,8 +579,8 @@ def validate(input_data, output):
             if graph[dep].get("status") == "cancelled":
                 errors.append(f"task {task_id}: cancelled dependency {dep}")
             if task_id in targets or dep in targets:
-                available, start, due = dates[dep]["dueOn"], dates[task_id]["startOn"], dates[task_id]["dueOn"]
-                if graph[dep].get("status") != "completed" and available and ((start and available > start) or (due and available > due)):
+                available, due = dates[dep]["dueOn"], dates[task_id]["dueOn"]
+                if graph[dep].get("status") != "completed" and available and (due and available > due):
                     errors.append(f"task {task_id}: schedule conflicts with dependency {dep}")
         for parent in ancestors[task_id]:
             if task_id in targets or parent in targets:

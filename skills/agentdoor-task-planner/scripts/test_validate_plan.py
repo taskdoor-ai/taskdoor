@@ -30,7 +30,7 @@ def fields(root=False):
         "title": "可核对的交付", "acceptanceCriteria": ["提交清单并核对全部条目"],
         "ownerRecommendation": {"memberId": None, "basis": "unassigned", "reason": "职责待核对", "evidenceRefs": ["req"]},
         "participantRecommendations": [],
-        "schedule": {"startOn": None, "dueOn": None, "basis": "unknown", "assumptions": [], "evidenceRefs": ["req"]},
+        "schedule": {"dueOn": None, "basis": "unknown", "assumptions": [], "evidenceRefs": ["req"]},
         "estimate": {"ewdHours": None, "basis": "unknown", "assumptions": [], "evidenceRefs": ["req"]},
         "dependsOnTaskIds": [],
     }
@@ -259,7 +259,7 @@ class ValidatorTests(unittest.TestCase):
             ("title", "a", {"title": "changed"}),
             ("acceptanceCriteria", ["原有标准"], {"acceptanceCriteria": ["新标准"]}),
             ("ownerId", "m1", {"ownerRecommendation": {"memberId": "m2", "basis": "recommended", "reason": "待确认提议", "evidenceRefs": ["m2"]}}),
-            ("dueOn", "2026-09-10", {"schedule": {"startOn": None, "dueOn": "2026-09-11", "basis": "recommended", "assumptions": [], "evidenceRefs": ["req"]}}),
+            ("dueOn", "2026-09-10", {"schedule": {"dueOn": "2026-09-11", "basis": "recommended", "assumptions": [], "evidenceRefs": ["req"]}}),
         ]
         for field, value, patch in samples:
             given, bad = deepcopy(data), deepcopy(result)
@@ -281,7 +281,9 @@ class ValidatorTests(unittest.TestCase):
             change = bad["proposal"]["changes"][0]
             if mutation in {"invalid-date", "reversed", "late-prerequisite"}:
                 start, due = {"invalid-date": (None, "2026-02-30"), "reversed": ("2026-09-12", "2026-09-10"), "late-prerequisite": (None, "2026-09-25")}[mutation]
-                change["fields"]["schedule"] = {"startOn": start, "dueOn": due, "basis": "recommended", "assumptions": [], "evidenceRefs": ["req"]}
+                change["fields"]["schedule"] = {"dueOn": due, "basis": "recommended", "assumptions": [], "evidenceRefs": ["req"]}
+                if mutation == "reversed":
+                    change["fields"]["schedule"]["startOn"] = start
             elif mutation == "cancelled":
                 given["context"]["tasks"][1]["status"] = "cancelled"
             elif mutation == "double-effort":

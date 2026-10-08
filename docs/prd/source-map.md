@@ -1,5 +1,9 @@
 # PRD 来源映射
 
+## PRD-0072：任务排期仅保留截止日期（2026-09-30）
+
+当前协议证据：`skills/agentdoor-task-planner/references/planning-v0.2.schema.json` 的 schedule 仅含 dueOn、basis、assumptions、evidenceRefs；`planning-v0.2.md`、Skill 入口及 Python 校验器同步截止日期语义。`server/test-lab/skills.ts` 在当前调用指令中明确日期规则，旧 Skill 快照原文保持；`server/testLabDeadlineOnly.test.ts` 验证截止可为空、拒绝 startOn 及历史快照调用约束。
+
 ## 2026-09-27：主任务与子任务删除场景截图
 
 用户要求补充有数据的回收站及主任务／子任务删除截图。使用主工作区当前 Vite 服务的 `http://localhost:5173/` 独立浏览器源，以内置示例数据通过实际界面删除两条主任务分支（新品发布会筹备，含 11 个子任务；完成秋季抗老精华首发闭环，含 12 个子任务）和两条独立子任务（核对库存与开播安排、确认下周行动项与负责人），生成 4 条回收记录。与原有 `127.0.0.1` 工作区存储隔离，未改动原有任务。

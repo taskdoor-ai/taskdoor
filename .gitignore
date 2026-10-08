@@ -15,3 +15,12 @@ vite.config.d.ts
 .DS_Store
 test-results/
 tmp/
+
+# Reproducible Promptfoo frontend checkout; customizations live in tools/evaluation/fork
+tools/evaluation/upstream/
+
+tools/evaluation/ui-dist/
+
+data/mcp-evaluations/
+
+data/mcp-debug/

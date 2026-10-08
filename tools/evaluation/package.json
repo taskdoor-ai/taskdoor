@@ -1,0 +1,6 @@
+{
+  "name": "taskdoor-evaluation",
+  "private": true,
+  "type": "module",
+  "dependencies": { "promptfoo": "0.123.1" }
+}

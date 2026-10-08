@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "types": [
+      "vite/client"
+    ],
+    "paths": {
+      "@app/*": [
+        "../upstream/src/app/src/*"
+      ],
+      "@taskdoor/*": [
+        "../../../src/test-lab/*"
+      ],
+      "react": [
+        "../upstream/src/app/node_modules/@types/react"
+      ],
+      "react/*": [
+        "../upstream/src/app/node_modules/@types/react/*"
+      ],
+      "react-router-dom": [
+        "../upstream/src/app/node_modules/react-router-dom"
+      ],
+      "lucide-react": [
+        "../upstream/src/app/node_modules/lucide-react"
+      ],
+      "*": [
+        "../upstream/src/app/node_modules/*"
+      ]
+    }
+  },
+  "include": [
+    "extensions/**/*.tsx"
+  ]
+}

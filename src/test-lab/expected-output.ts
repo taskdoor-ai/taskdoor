@@ -1,0 +1,2 @@
+import type {LabCase} from './types';
+export function expectedOutputFor(c:LabCase){return c.expectedOutput??{version:1 as const,checks:[...(c.verification?.expectedResults.flatMap(e=>e.criteria.map(criterion=>({stepId:e.stepId,subject:'场景结果',criterion,expected:null})))??[]),...c.reviewChecklist.map(criterion=>({stepId:null,subject:'整体验收',criterion,expected:null}))].map((check,i)=>({id:`check-${i+1}`,...check}))};}

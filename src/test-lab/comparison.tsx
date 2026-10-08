@@ -1,3 +1,4 @@
+import { LiveProgress } from './live-progress';
 import { OutputSummary } from "./output-summary";
 import React from 'react';
 import type { LabRun } from './types';
@@ -19,13 +20,14 @@ export function ComparisonReport({runs,onOpenRun}:{runs:LabRun[];onOpenRun:(id:s
   const models=[...new Set(runs.map(r=>r.model))];
   const cases=[...new Map(runs.map(r=>[r.caseId,r.caseSnapshot])).values()];
   return <section className="lab-comparison" aria-label="模型横向对比"><div className="lab-detail-heading"><div><h2>模型横向对比</h2><p className="lab-muted">同批 {cases.length} 个用例 · {models.length} 个模型 · {new Date(runs[0].createdAt).toLocaleString('zh-CN')}</p></div><button onClick={()=>downloadJson(`comparison-${runs[0].batchId}.json`,{batchId:runs[0].batchId,metrics:runs.map(r=>({runId:r.id,model:r.model,caseId:r.caseId,...scoreRun(r)})),runs})}>导出对比</button></div>
+    <LiveProgress runs={runs} onOpenRun={onOpenRun}/>
     <p className="lab-muted">执行完成率 = 返回有效 JSON 的步骤 / 计划步骤；自动达标率要求全部结构与断言通过；最终验收还需完成人工语义核对。失败、未执行与待核对均不计为验收通过。断言达成率包含未执行项。</p>
-    <div className="lab-table-scroll"><table className="lab-comparison-table"><thead><tr><th>模型</th><th>执行完成率</th><th>断言达成率</th><th>自动达标用例</th><th>最终验收</th><th>调用耗时 / Tokens</th></tr></thead><tbody>{models.map(model=>{
+    <div className="lab-table-scroll"><table className="lab-comparison-table"><thead><tr><th>模型</th><th>执行完成率</th><th>断言达成率</th><th>自动达标用例</th><th>最终验收</th><th>已结束调用耗时 / Tokens</th></tr></thead><tbody>{models.map(model=>{
       const group=runs.filter(r=>r.model===model),scores=group.map(scoreRun);
       const steps=group.flatMap(r=>r.steps),tokens=steps.length&&steps.every(s=>s.usage.totalTokens!==null)?steps.reduce((n,s)=>n+(s.usage.totalTokens??0),0):null;
-      return <tr key={model}><th>{model}</th><td>{ratio(scores.reduce((n,s)=>n+s.completed,0),scores.reduce((n,s)=>n+s.planned,0))}</td><td>{ratio(scores.reduce((n,s)=>n+s.passed,0),scores.reduce((n,s)=>n+s.assertions,0))}</td><td>{ratio(scores.filter(s=>s.automatic).length,group.length)}</td><td>{ratio(scores.filter(s=>s.accepted).length,group.length)}</td><td>{(steps.reduce((n,s)=>n+s.durationMs,0)/1000).toFixed(1)} 秒 / {tokens??'未知'}</td></tr>;
+      return <tr key={model}><th>{model}</th><td>{ratio(scores.reduce((n,s)=>n+s.completed,0),scores.reduce((n,s)=>n+s.planned,0))}</td><td>{ratio(scores.reduce((n,s)=>n+s.passed,0),scores.reduce((n,s)=>n+s.assertions,0))}</td><td>{ratio(scores.filter(s=>s.automatic).length,group.length)}</td><td>{ratio(scores.filter(s=>s.accepted).length,group.length)}</td><td>{steps.length?`${(steps.reduce((n,s)=>n+s.durationMs,0)/1000).toFixed(1)} 秒`:'尚无已结束调用'} / {tokens??'未知'}</td></tr>;
     })}</tbody></table></div>
-    <div className="lab-table-scroll"><table className="lab-comparison-table"><thead><tr><th>用例 / 预期目标</th>{models.map(m=><th key={m}>{m}</th>)}</tr></thead><tbody>{cases.map(c=><tr key={c.id}><th>{c.name}<small>{c.verification?.objective||c.description}</small></th>{models.map(m=>{const run=runs.find(r=>r.model===m&&r.caseId===c.id);if(!run)return <td key={m}>未执行</td>;const score=scoreRun(run);return <td key={m}><button onClick={()=>onOpenRun(run.id)}>{runLabels[run.status]} · 查看实际输出</button><small>断言 {score.passed}/{score.assertions} · {score.accepted?'验收通过':'尚未验收通过'}</small></td>;})}</tr>)}</tbody></table></div>
+    <div className="lab-table-scroll"><table className="lab-comparison-table"><thead><tr><th>用例 / 预期目标</th>{models.map(m=><th key={m}>{m}</th>)}</tr></thead><tbody>{cases.map(c=><tr key={c.id}><th>{c.name}<small>{c.verification?.objective||c.description}</small></th>{models.map(m=>{const run=runs.find(r=>r.model===m&&r.caseId===c.id);if(!run)return <td key={m}>未执行</td>;const score=scoreRun(run);return <td key={m}><button onClick={()=>onOpenRun(run.id)}>{runLabels[run.status]} · 查看实际输出</button><small>断言 {score.passed}/{score.assertions} · {score.accepted?'验收通过':'尚未验收通过'}</small>{run.error&&<small className="lab-alert-error">{run.error}</small>}</td>;})}</tr>)}</tbody></table></div>
   </section>;
 }
 export function AcceptanceDiff({run}:{run:LabRun}) {

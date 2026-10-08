@@ -73,7 +73,7 @@ def project_fixture(source, output, *, commit=False, episode="X"):
             row = tasks[identifier]
             row.update(deepcopy(change["fields"]))
             if "schedule" in change["fields"]:
-                row.update({key: change["fields"]["schedule"][key] for key in ("startOn", "dueOn")})
+                row.update({key: change["fields"]["schedule"][key] for key in ("dueOn",)})
             row["version"] += 1
             row["updatedAt"] = projected["context"]["asOf"]
         projected["currentTaskId"] = proposal["rootTaskId"]

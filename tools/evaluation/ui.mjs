@@ -1,0 +1,11 @@
+import {spawn,spawnSync} from 'node:child_process';
+import {existsSync} from 'node:fs';
+import {homedir} from 'node:os';
+import {resolve,dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const here=dirname(fileURLToPath(import.meta.url));
+const cwd=resolve(here,'upstream/src/app');
+const node=[process.env.EVALUATION_NODE,process.execPath,resolve(homedir(),'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node')].filter(Boolean).find(p=>{if(!existsSync(p))return false;const n=spawnSync(p,['--version'],{encoding:'utf8'}).stdout.slice(1).split('.').map(Number);return n[0]>22||n[0]===22&&n[1]>=22;});
+if(!node||!existsSync(resolve(cwd,'node_modules/vite/bin/vite.js')))throw new Error('请先准备 Promptfoo 定制前端并安装依赖，参见 tools/evaluation/README.md');
+const child=spawn(node,[resolve(cwd,'node_modules/vite/bin/vite.js'),...(process.argv.includes('--build')?['build']:process.argv.includes('--preview')?['preview','--port','15501']:[]),'--config','vite.config.mjs'],{cwd,stdio:'inherit',env:{...process.env,PROMPTFOO_DISABLE_TELEMETRY:'1'}});
+child.on('exit',code=>process.exit(code??1));

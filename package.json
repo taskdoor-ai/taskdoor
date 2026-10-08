@@ -17,7 +17,12 @@
     "mcp:http": "node dist-mcp/server.js --http",
     "preview": "vite preview",
     "typecheck:lab": "tsc -p tsconfig.test-lab.json",
-    "lab:workflow": "node scripts/run-test-lab-workflow.mjs"
+    "lab:workflow": "node scripts/run-test-lab-workflow.mjs",
+    "eval:view": "node tools/evaluation/cli.mjs view -p 15500 -n",
+    "eval:import": "node tools/evaluation/import.mjs",
+    "eval:ui": "node tools/evaluation/ui.mjs",
+    "eval:ui:build": "node tools/evaluation/ui.mjs --build",
+    "eval:mcp": "node --import tsx tools/evaluation/run-mcp.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

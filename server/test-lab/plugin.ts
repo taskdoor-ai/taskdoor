@@ -1,3 +1,6 @@
+import {createMcpTokenConfig} from './mcp-config.ts';
+import {createMcpDebugger} from './mcp-debug.ts';
+import {evaluateWithFallback,JUDGE_MODELS} from './judge-fallback.ts';
 import { createJevReviewer } from './jev.ts';
 import { MAX_BATCH_CASES } from "../../src/test-lab/run-limits.ts";
 import { randomBytes, timingSafeEqual } from 'node:crypto';
@@ -7,6 +10,7 @@ import { loadEnv, type Plugin, type ResolvedConfig } from 'vite';
 import { z, ZodError } from 'zod';
 import { createLabStore } from './store.ts';
 import { seedLab } from './seeds.ts';
+import { createPromptfooEngine } from './evaluation-engine.ts';
 import { createRunner } from './runner.ts';
 import { labSkills, loadSkill } from './skills.ts';
 import { buildView } from './context.ts';
@@ -36,12 +40,16 @@ export function testLabPlugin():Plugin{
     const env={...loadEnv(viteConfig.mode,viteConfig.root,''),...process.env};
     const endpoint=env.PPIO_BASE_URL?`${env.PPIO_BASE_URL.replace(/\/$/,'').replace(/\/responses$/,'')}/responses`:'https://api.ppinfra.com/openai/v1/responses';
     const parsed=new URL(endpoint);if(parsed.protocol!=='https:'||parsed.username||parsed.password||parsed.search||parsed.hash)throw new Error('PPIO_BASE_URL 需为无凭据的 HTTPS API 根地址');
-    const options={apiKey:env.PPIO_API_KEY,endpoint,model:env.PPIO_MODEL||'pa/gpt-5.5-pro',maxOutputTokens:bounded(env.TEST_LAB_MAX_OUTPUT_TOKENS,8000,512,32000),timeoutMs:bounded(env.TEST_LAB_TIMEOUT_MS,180000,1000,600000)};
+    const options={apiKey:env.PPIO_API_KEY,endpoint,model:env.PPIO_MODEL||'pa/gpt-5.5-pro',maxOutputTokens:bounded(env.TEST_LAB_MAX_OUTPUT_TOKENS,16000,512,32000),timeoutMs:bounded(env.TEST_LAB_TIMEOUT_MS,600000,1000,600000)};
     const store=createLabStore(resolve(viteConfig.root,'data/test-lab/state.json'),seedLab());
-    const jevOptions={apiKey:env.TYPESAFE_API_KEY,model:env.TYPESAFE_MODEL||'jev-1.13.0',timeoutMs:30000};
-    const reviewWithJev=createJevReviewer(store,jevOptions);
-    const runner=createRunner(store,options);const csrfToken=randomBytes(32).toString('hex');
-    const config={jev:{configured:!!jevOptions.apiKey,model:jevOptions.model},configured:!!options.apiKey,model:options.model,endpoint,maxBatchSize:MAX_BATCH_CASES,maxOutputTokens:options.maxOutputTokens,timeoutMs:options.timeoutMs,storage:'本机 data/test-lab/state.json（独立沙箱）'};
+    const jevOptions={apiKey:env.TYPESAFE_API_KEY,model:env.TYPESAFE_MODEL||'jev-1.13.0',timeoutMs:bounded(env.TEST_LAB_JUDGE_TIMEOUT_MS,120000,1000,600000)};
+    const judgeOptions={...options,model:env.TEST_LAB_JUDGE_MODEL||JUDGE_MODELS[0],maxOutputTokens:8000};
+    const reviewWithJev=createJevReviewer(store,jevOptions,fetch,run=>evaluateWithFallback(run,jevOptions,judgeOptions));
+    const mcpTokens=createMcpTokenConfig(resolve(viteConfig.root,'data/mcp-debug/config.json'),{url:env.TASKDOOR_MCP_URL||'',token:env.TASKDOOR_MCP_TOKEN||'',workspaceId:env.TASKDOOR_MCP_WORKSPACE_ID||''});
+    const mcp=mcpTokens.current();let mcpRequests=0;
+    let mcpDebug=createMcpDebugger(mcp,resolve(viteConfig.root,'data/mcp-debug'));
+    const runner=createRunner(store,options,undefined,createPromptfooEngine(viteConfig.root),{model:jevOptions.model,models:JUDGE_MODELS,configured:!!options.apiKey||!!jevOptions.apiKey,review:reviewWithJev},mcp);const csrfToken=randomBytes(32).toString('hex');
+    const config={mcp:{configured:!!mcp.url&&!!mcp.token&&!!mcp.workspaceId,workspaceId:mcp.workspaceId},jev:{configured:!!options.apiKey||!!jevOptions.apiKey,model:jevOptions.apiKey?jevOptions.model:judgeOptions.model,models:[...(jevOptions.apiKey?[jevOptions.model]:[]),...(options.apiKey?JUDGE_MODELS:[])],fallbackModel:judgeOptions.model},configured:!!options.apiKey,model:options.model,endpoint,maxBatchSize:MAX_BATCH_CASES,maxOutputTokens:options.maxOutputTokens,timeoutMs:options.timeoutMs,storage:'本机 data/test-lab/state.json（独立沙箱）'};
     server.httpServer?.once('close',()=>runner.close());
     server.middlewares.use(async(req:IncomingMessage,res:ServerResponse,next:()=>void)=>{
       if(req.url==='/test-lab'||req.url==='/test-lab/'){res.writeHead(302,{Location:'/test-lab.html'});res.end();return;}
@@ -49,7 +57,13 @@ export function testLabPlugin():Plugin{
       try{guardRequest(req.method??'GET',req.headers,req.socket.remoteAddress??'',csrfToken);}catch(e){send(res,403,{error:(e as Error).message});return;}
       try{
         const url=new URL(req.url,'http://localhost'),path=url.pathname.replace('/api/test-lab','');
-        if(req.method==='GET'&&path==='/bootstrap'){send(res,200,{state:store.get(),config,skills:labSkills,csrfToken});return;}
+        if(req.method==='GET'&&path==='/mcp'){send(res,200,{...mcpDebug.status(),tokenConfigured:!!mcp.token,tokenSource:mcpTokens.source()});return;}
+        if(req.method==='GET'&&path==='/mcp/tools'){mcpRequests++;try{send(res,200,await mcpDebug.list());}finally{mcpRequests--;}return;}
+        if(req.method==='PUT'&&path==='/mcp/config'){const v=z.object({token:z.string().max(4096).optional(),useDefault:z.boolean().optional()}).strict().parse(await body(req));if(mcpRequests||store.get().runs.some(r=>r.selection?.executionMode==='mcp'&&['queued','running'].includes(r.status)))throw Error('MCP 请求或评测正在进行，请结束后再切换 Token');Object.assign(mcp,mcpTokens.save(v.token,v.useDefault));mcpDebug=createMcpDebugger(mcp,resolve(viteConfig.root,'data/mcp-debug'));config.mcp.configured=!!mcp.url&&!!mcp.token&&!!mcp.workspaceId;send(res,200,{...mcpDebug.status(),tokenConfigured:!!mcp.token,tokenSource:mcpTokens.source()});return;}
+        if(req.method==='POST'&&path==='/mcp/call'){const v=z.object({requestId:z.uuid(),name:z.string().min(1).max(200),arguments:z.record(z.string(),z.unknown())}).strict().parse(await body(req));mcpRequests++;try{send(res,200,await mcpDebug.call(v.requestId,v.name,v.arguments));}finally{mcpRequests--;}return;}
+        if(req.method==='GET'&&path==='/bootstrap'){send(res,200,{state:store.getBootstrapState(url.searchParams.get('batch')??undefined,url.searchParams.get('result')??undefined),config,skills:labSkills,csrfToken});return;}
+        if(req.method==='GET'&&path==='/runs'){const requestId=z.string().min(1).max(100).parse(url.searchParams.get('requestId'));send(res,200,store.getRuns(r=>r.requestId===requestId));return;}
+        if(req.method==='POST'&&path==='/runs/resume-unstarted'){const value=z.object({batchId:z.uuid()}).strict().parse(await body(req));send(res,202,runner.resumeUnstarted(value.batchId));return;}
         if(req.method==='GET'&&path==='/workflows'){send(res,200,buildWorkflows(store.get()));return;}
         if(req.method==='POST'&&path==='/workflows/check'){const value=z.object({workflowId:z.string().min(1).max(160)}).strict().parse(await body(req));send(res,200,preflightWorkflow(store.get(),value.workflowId));return;}
         if(req.method==='GET'&&path==='/workflow-report'){const batchId=url.searchParams.get('batchId');if(!batchId)throw new Error('请提供批次 ID');const runs=store.get().runs.filter(r=>r.batchId===batchId);if(!runs.length)throw new Error('运行批次不存在');send(res,200,summarizeWorkflow(runs));return;}
@@ -57,7 +71,7 @@ export function testLabPlugin():Plugin{
         if(req.method==='POST'&&path==='/skill-versions'){const value=z.object({expectedRevision:z.number().int(),version:skillVersionInputSchema}).strict().parse(await body(req));send(res,200,store.addSkillVersion(value.expectedRevision,value.version));return;}
         if(req.method==='PUT'&&path==='/skill-default'){const value=z.object({expectedRevision:z.number().int(),skillId:z.enum(skillIds),versionId:z.string().nullable()}).strict().parse(await body(req));send(res,200,store.setSkillDefault(value.expectedRevision,value.skillId,value.versionId));return;}
         if(req.method==='PUT'&&path==='/categories'){const value=z.object({expectedRevision:z.number().int(),category:z.object({name:z.string(),description:z.string(),previousName:z.string().optional()}).strict()}).strict().parse(await body(req));send(res,200,store.saveCategory(value.expectedRevision,value.category));return;}
-        if(req.method==='PUT'&&path==='/models'){const value=z.object({expectedRevision:z.number().int(),models:z.array(z.string())}).strict().parse(await body(req));send(res,200,store.saveModels(value.expectedRevision,value.models));return;}
+        if(req.method==='PUT'&&path==='/models'){const value=z.object({expectedRevision:z.number().int(),models:z.array(z.string()),judgeEnabled:z.boolean().optional()}).strict().parse(await body(req));send(res,200,store.saveModels(value.expectedRevision,value.models,value.judgeEnabled));return;}
         if(req.method==='GET'&&path==='/model-catalog'){
           if(!options.apiKey)throw new Error('请先配置服务端 API Key');
           let response:Response;try{response=await fetch(endpoint.replace(/\/responses$/,'/models'),{headers:{Authorization:`Bearer ${options.apiKey}`},signal:AbortSignal.timeout(15000),redirect:'error'});}catch{throw new Error('无法读取模型目录，请稍后重试或手动填写模型 ID');}
@@ -66,10 +80,10 @@ export function testLabPlugin():Plugin{
         }
         if(req.method==='GET'&&path==='/view'){const team=store.get().teams.find(t=>t.id===url.searchParams.get('teamId'));if(!team)throw new Error('团队不存在');send(res,200,buildView(team,url.searchParams.get('actorId')??''));return;}
         if(req.method==='PUT'&&path==='/state'){const value=editableSchema.parse(await body(req));send(res,200,store.save(value.expectedRevision,value.teams,value.cases as LabCase[]));return;}
-        if(req.method==='POST'&&path==='/runs'){const value=z.object({caseIds:z.array(z.string()).min(1).max(MAX_BATCH_CASES),requestId:z.string().min(1).max(100),selection:runSelectionSchema.optional()}).strict().parse(await body(req));send(res,202,runner.enqueue(value.caseIds,value.requestId,value.selection));return;}
+        if(req.method==='POST'&&path==='/runs'){const value=z.object({caseIds:z.array(z.string()).min(1).max(MAX_BATCH_CASES),requestId:z.string().min(1).max(100),selection:runSelectionSchema.optional()}).strict().parse(await body(req));if(value.selection?.executionMode!=='mcp')throw Error('新评测只支持真实 MCP 创建，请选择真实创建用例');send(res,202,runner.enqueue(value.caseIds,value.requestId,value.selection));return;}
         if(req.method==='POST'&&path==='/library/import'){await body(req);send(res,200,importLibrary(store));return;}
         const jevMatch=path.match(/^\/runs\/([^/]+)\/jev-review$/);
-        if(req.method==='POST'&&jevMatch){z.object({}).strict().parse(await body(req));send(res,200,await reviewWithJev(decodeURIComponent(jevMatch[1])));return;}
+        if(req.method==='POST'&&jevMatch){z.object({}).strict().parse(await body(req));if(!store.get().judgeEnabled)throw new Error('Jev 判断模型未启用，请到模型管理开启');send(res,200,await reviewWithJev(decodeURIComponent(jevMatch[1])));return;}
         const match=path.match(/^\/runs\/([^/]+)\/(cancel|review)$/);
         if(req.method==='POST'&&match){const value=await body(req);if(match[2]==='cancel')send(res,200,runner.cancel(match[1]));else{const review=z.object({verdict:z.enum(['passed','failed']),note:z.string().min(1).max(5000)}).strict().parse(value);send(res,200,runner.review(match[1],review.verdict,review.note));}return;}
         send(res,404,{error:'测试接口不存在'});
