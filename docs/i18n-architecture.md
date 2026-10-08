@@ -6,10 +6,10 @@
 
 | 层 | 责任 | 当前落点 |
 | --- | --- | --- |
-| 表达层 | 语义键、完整句、插值、可访问文案 | `src/i18n/messages.ts` |
-| 会话层 | 当前语言、设备偏好、跨标签同步、HTML lang | `src/i18n/I18nProvider.tsx` |
-| 格式层 | 数字、复数、日历日期、指定时区的时间点 | `src/i18n/core.ts` |
-| 业务层 | 稳定 ID、原文内容、AI 语言参数、团队时区 | 中文状态暂由 `src/i18n/taskStatus.ts` 兼容；其余迁移见 PRD |
+| 表达层 | 语义键、完整句、插值、可访问文案 | `src/shared/i18n/messages.ts` |
+| 会话层 | 当前语言、设备偏好、跨标签同步、HTML lang | `src/shared/i18n/I18nProvider.tsx` |
+| 格式层 | 数字、复数、日历日期、指定时区的时间点 | `src/shared/i18n/core.ts` |
+| 业务层 | 稳定 ID、原文内容、AI 语言参数、团队时区 | 中文状态暂由 `src/shared/i18n/task-status.ts` 兼容；其余迁移见 PRD |
 
 当前使用 React Context 与浏览器 Intl，无新增运行时依赖。目录保持英文键类型和中文 Record 类型约束；后续词条增长时按 account、tasks、discussion、files 拆分模块，保留统一调用接口。当前插值器只处理文本占位符，不支持 ICU 富文本或任意复数语法；需要复杂消息时替换适配层，不在组件里堆条件表达式。
 

@@ -12,7 +12,7 @@
 - 邀请成功提示只显示「邀请已发送，等待对方加入」和关闭按钮；重发只显示一条「邀请已重新发送，旧链接已失效」。两者均不提供「查看邮件」，按普通提示 4 秒自动消失（2026-09-15 修订）。文件删除后的「撤销」保持原恢复操作；带上下文的操作在离开对应任务或切换团队后移除，避免操作旧对象。
 - 输入校验、草稿冲突、加载及需要持续处理的错误留在相关字段／区域，不用会自动消失的 Toast 替代。界面显示正式运行文案。
 
-组件入口为 `src/components/ui/toast.tsx` 的 `ToastProvider` 和 `toast.success / error / info / dismiss`，应用根节点只挂一份 Provider；定时器、暂停、播报、焦点和关闭沿用已安装的 Base UI Toast。样式统一在 `src/styles/toast.css`，功能页不得重新定义位置或自建通知定时器。PRD 与静态参考页通过 `src/prd/StandaloneToast.tsx` 复用同一组件，运行 `npm run build:toast` 更新静态产物（dev/build 前自动执行），不另写一套 Toast。
+组件入口为 `src/shared/ui/toast.tsx` 的 `ToastProvider` 和 `toast.success / error / info / dismiss`，应用根节点只挂一份 Provider；定时器、暂停、播报、焦点和关闭沿用已安装的 Base UI Toast。样式统一在 `src/shared/styles/toast.css`，功能页不得重新定义位置或自建通知定时器。PRD 与静态参考页通过 `src/prd/StandaloneToast.tsx` 复用同一组件，运行 `npm run build:toast` 更新静态产物（dev/build 前自动执行），不另写一套 Toast。
 
 ### 有效性地图
 
@@ -135,7 +135,7 @@ External discovery is required only when full preparation is triggered **and** t
 
 Use the relevant entries in this order; do not exhaust every source when the local foundation or an authoritative implementation already settles the choice:
 
-1. **TaskDoor foundation:** inventory existing `src/components/ui`, product components, Token variants, and the closest relevant current screen.
+1. **TaskDoor foundation:** inventory existing `src/shared/ui`, product components, Token variants, and the closest relevant current screen.
 2. **21st.dev first pass:** search the exact interaction noun and related category; inspect Popular as well as visually relevant results. Record usage counts when available, dependencies, source code, and installation method. A high count is a useful adoption signal, not proof of product fit.
 3. **Accessible foundation:** check shadcn/ui and its registry, Base UI, React Aria, or Radix for behavior-heavy controls. Prefer these for Dialog, Combobox, Select, Menu, Tooltip, Calendar, focus management, and keyboard behavior.
 4. **Application patterns:** check maintained collections such as Origin UI and Tremor for forms, settings, filters, tables, pagination, dashboard, and enterprise application compositions.

@@ -9,7 +9,7 @@
 | 层级 | 来源 | 主要用途 | 选择信号 |
 | --- | --- | --- | --- |
 | 社区发现 | [21st.dev](https://21st.dev/community/components?tab=home) | 快速发现有视觉完成度的 React 组件、布局和交互 | Popular/使用量、源码、依赖、作者、同类候选 |
-| 本项目基础 | `src/components/ui`、shadcn/ui | Button、Dialog、Menu、Select、Table 等共享组件 | 已接入、主题一致、复用成本最低 |
+| 本项目基础 | `src/shared/ui`、shadcn/ui | Button、Dialog、Menu、Select、Table 等共享组件 | 已接入、主题一致、复用成本最低 |
 | 无障碍行为 | [Base UI](https://base-ui.com/)、[React Aria](https://react-spectrum.adobe.com/react-aria/)、[Radix UI](https://www.radix-ui.com/) | Combobox、Dialog、Popover、焦点和键盘行为 | ARIA/WCAG、边界状态、维护团队 |
 | 应用组件 | [Origin UI](https://originui.com/)、[Tremor](https://www.tremor.so/) | 设置、筛选、表格、分页、数据与企业应用布局 | 框架兼容、可复制、许可、维护状态 |
 | 动效组件 | [Motion Primitives](https://motion-primitives.com/) | 有明确交互价值的过渡、反馈和状态变化 | reduced-motion、依赖、性能、使用范围 |
