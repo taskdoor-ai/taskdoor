@@ -81,7 +81,13 @@ AI 分析用于辅助判断，不会自动替用户修改正式状态或确认�
 ```text
 taskdoor/
 ├── src/                         # TaskDoor React / TypeScript 产品界面
-│   └── test-lab/                # 自动化测试工作台前端
+│   ├── main.tsx                 # 入口与样式 import（顺序即级联）
+│   ├── app/                     # 应用壳：App.tsx、工作区外框、样式入口 global.css
+│   ├── shared/                  # 跨领域的 ui、lib、i18n、model、styles
+│   ├── features/                # 业务领域：tasks、members、workspaces、auth、me、notifications、ai-connection
+│   ├── ai/mock/                 # 演示数据与模拟 AI
+│   ├── test-lab/                # 自动化测试工作台前端
+│   └── prd/                     # PRD 预览与独立构建的组件样例
 ├── server/                      # 本地服务、测试及工作台 API
 │   └── test-lab/                # 用例、运行器、断言、模型调用与本地存储
 ├── mcp/                         # TaskDoor MCP 服务和任务卡片
