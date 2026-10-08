@@ -9,7 +9,7 @@ import { DiscussionComposer, isDiscussionSubmitShortcut, type DiscussionComposer
 import { $createMentionNode, $isMentionNode, MentionNode } from "../src/components/discussion/MentionNode.ts";
 import { DISCUSSION_UPLOAD_MAX_BYTES, isDiscussionImage, prepareDiscussionUpload } from "../src/lib/discussionUploads.ts";
 import type { DiscussionDraft } from "../src/lib/taskCollaboration.ts";
-import type { TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 type Element = ReactElement<Record<string, any>>;

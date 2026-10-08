@@ -1,5 +1,6 @@
 import { AlertTriangle, GitCompareArrows, LoaderCircle, RefreshCw, Stethoscope } from "lucide-react";
-import type { TaskDiagnosisEvidence, TaskDiagnosisFinding, TaskDiagnosisReport as TaskDiagnosisReportModel } from "../lib/taskDiagnosis";
+import type { TaskDiagnosisReport as TaskDiagnosisReportModel } from "../lib/taskDiagnosis";
+import type { TaskDiagnosisEvidence, TaskDiagnosisFinding } from "@/shared/model/task-diagnosis";
 import { Button } from "./ui/button";
 
 type TaskDiagnosisReportProps = {

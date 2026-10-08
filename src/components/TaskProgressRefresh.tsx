@@ -1,4 +1,4 @@
-import { useProgressCopy } from "../i18n/progressCopy";
+import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { useRef, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { toast } from "./ui/toast";

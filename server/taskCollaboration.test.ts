@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 import { getTaskDiscussionThreads } from "../src/lib/taskActivity.ts";
 import {
   TASK_COLLABORATION_STORAGE_PREFIX,

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import test from "node:test";
-import type { TaskActivityMock, TaskDetailMock, TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import type { TaskActivityMock, TaskDetailContent, TaskFileNode } from "../src/shared/model/task-model.ts";
 
 const moduleUrl = new URL("../src/lib/taskDiscussionAi.ts", import.meta.url);
 async function build(input: Record<string, unknown>) {
@@ -15,8 +15,8 @@ const reply: TaskActivityMock = { id: "reply-a", author: "周岚", type: "member
 const sibling: TaskActivityMock = { ...reply, id: "reply-b", message: "另一条相关回复" };
 const unrelated: TaskActivityMock = { ...root, id: "discussion-other", message: "另一个讨论串的内容", file: "不相关文件.md" };
 const file: TaskFileNode = { id: "file-a", kind: "file", parentId: null, name: "核对表.xlsx", version: 3, updatedAt: "今天", content: "不应自动打包整份文件正文" };
-const task: TaskDetailMock = { title: "香氛礼盒达人带货收尾", goal: "确认合作状态与资源优先级", owner: "周岚", participants: [], status: "进行中", due: "未设置", summary: "不能作为实时事实带出旧摘要", completionCriteria: ["核对合作状态"], activities: [root, reply, sibling, unrelated], files: [file, { ...file, id: "other-file", name: "不相关文件.md" }], commits: [] };
-const input = (target: Record<string, string>, overrides: Partial<TaskDetailMock> = {}) => ({ taskId: "task-a", task: { ...task, ...overrides }, target, currentUser: "周岚" });
+const task: TaskDetailContent = { title: "香氛礼盒达人带货收尾", goal: "确认合作状态与资源优先级", owner: "周岚", participants: [], status: "进行中", due: "未设置", summary: "不能作为实时事实带出旧摘要", completionCriteria: ["核对合作状态"], activities: [root, reply, sibling, unrelated], files: [file, { ...file, id: "other-file", name: "不相关文件.md" }], commits: [] };
+const input = (target: Record<string, string>, overrides: Partial<TaskDetailContent> = {}) => ({ taskId: "task-a", task: { ...task, ...overrides }, target, currentUser: "周岚" });
 const textOf = (request: unknown) => JSON.stringify(request);
 const contextValue = (request: { context: Array<{ label: string; value: string }> }, label: string) => request.context.find(item => item.label === label)?.value ?? "";
 

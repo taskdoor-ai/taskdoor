@@ -4,7 +4,7 @@ import { activityMessage, activityChangeValue } from "../i18n/activityDisplay";
 import { useModuleCopy } from "../i18n/moduleMessages";
 import { ArrowRight, FileText, History, ListChecks, MessageSquareText } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import type { TaskActivityMock, TaskActivityType, TaskCommitMock, TaskFileNode } from "../data/taskDetailMocks";
+import type { TaskActivityMock, TaskActivityType, TaskCommitMock, TaskFileNode } from "@/shared/model/task-model";
 import { getTaskActivityCategory, getTaskActivityItems, type TaskActivityCategory } from "../lib/taskActivity";
 import { useResponsiveControlSize } from "../lib/useResponsiveControlSize";
 import { PersonName } from "./PersonAvatar";

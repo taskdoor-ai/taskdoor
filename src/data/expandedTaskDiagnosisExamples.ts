@@ -1,5 +1,5 @@
-import type { TaskDetailMock, TaskFileNode } from "./taskDetailMocks";
-import type { TaskNode } from "./workspaceNodes";
+import type { TaskDetailContent, TaskFileNode, TaskNode } from "@/shared/model/task-model";
+
 
 type ContentExample = {
   scope: string;
@@ -125,7 +125,7 @@ function isBuiltInUnassigned(task: TaskNode): boolean {
     && task.createdFrom === "task-editor" && task.createdBy === "周岚" && task.createdAt === "2026-09-02T18:00:00+08:00";
 }
 
-export function withExpandedTaskDiagnosisExample(task: TaskNode, detail: TaskDetailMock): TaskDetailMock {
+export function withExpandedTaskDiagnosisExample(task: TaskNode, detail: TaskDetailContent): TaskDetailContent {
   const spec = Object.hasOwn(examples, task.id) ? examples[task.id] : undefined;
   if (!spec || task.teamId !== "creator-commerce" || (task.createdFrom && !isBuiltInUnassigned(task))) return detail;
   if (detail.files.some((file) => file.id === `${task.id}-diagnosis-current`)) return detail;

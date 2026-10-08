@@ -1,10 +1,10 @@
 import type { AiConnectionRequest } from "../components/AiConnectionDialog";
 import type { TaskRelationSummary } from "../components/TaskRelationsSection";
-import type { TaskDetailMock } from "../data/taskDetailMocks";
+import type { TaskDetailContent } from "@/shared/model/task-model";
 
 export type TaskAiConnectionInput = {
   taskId: string;
-  task: TaskDetailMock;
+  task: TaskDetailContent;
   currentUser: string;
   due?: string;
   tags?: string[];

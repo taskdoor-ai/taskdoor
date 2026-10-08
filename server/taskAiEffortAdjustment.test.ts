@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskNode, WorkspaceNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode, WorkspaceNode } from "../src/shared/model/task-model.ts";
 import { applyDraftTaskAiAdjustment, applySavedTaskAiAdjustment, createDraftTaskAiContext, createSavedTaskAiContext } from "../src/lib/taskAiAdjustmentAdapters.ts";
 import { buildTaskAiAdjustment, getTaskAiContextSignature } from "../src/lib/taskAiAdjustment.ts";
 import type { TaskAiAdjustmentContext, TaskAiAdjustmentScope } from "../src/lib/taskAiAdjustmentTypes.ts";

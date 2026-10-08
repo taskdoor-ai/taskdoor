@@ -1,6 +1,7 @@
-import type { TaskNode, WorkspaceNode } from "./workspaceNodes";
-import type { TaskDetailMock } from "./taskDetailMocks";
-import { getEffortScopeKey, type TaskEffortEstimate } from "../lib/taskEffort";
+import type { TaskNode, WorkspaceNode, TaskDetailContent } from "@/shared/model/task-model";
+
+import { getEffortScopeKey } from "../lib/taskEffort";
+import { type TaskEffortEstimate } from "@/shared/model/task-effort";
 import type { TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
 import { rollupProgressHistory, rollupProgressForecast } from "./taskProgressHistory";
 import { getTaskDefinitionGoal } from "../lib/taskGoal";
@@ -114,7 +115,7 @@ export function getCreatedProjectProgressDemo(seeds: readonly WorkspaceNode[], c
 }
 
 /** Add the authored observation without changing saved task definitions, statuses, or history. */
-export function withCreatedProjectProgressDetail(detail: TaskDetailMock, taskId: string, demo: CreatedProjectProgressDemo): TaskDetailMock {
+export function withCreatedProjectProgressDetail(detail: TaskDetailContent, taskId: string, demo: CreatedProjectProgressDemo): TaskDetailContent {
   const series = demo.comparisons[taskId];
   if (!series) return detail;
   const id = `${taskId}-sun-protection-progress-v1`;

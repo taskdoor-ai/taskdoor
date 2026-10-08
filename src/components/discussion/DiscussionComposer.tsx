@@ -11,7 +11,7 @@ import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
 import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getNodeByKey, $getRoot, $getSelection, $isRangeSelection, $isTextNode, $setSelection, BEFORE_INPUT_COMMAND, CLEAR_HISTORY_COMMAND, COMMAND_PRIORITY_HIGH, INPUT_COMMAND, KEY_DOWN_COMMAND, PASTE_COMMAND, type EditorState, type LexicalEditor, type RangeSelection, type SerializedEditorState } from "lexical";
 import { FolderOpen, LoaderCircle, Paperclip, RotateCcw, Send, Sparkles, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type DragEvent, type ReactNode } from "react";
-import type { TaskFileNode } from "../../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 import type { DiscussionDraft } from "../../lib/taskCollaboration";
 import { DISCUSSION_UPLOAD_MAX_FILES, isDiscussionImage, prepareDiscussionUpload, readDiscussionBlob } from "../../lib/discussionUploads";
 import { usePersonOptions } from "../PersonDirectory";

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { initialPersonalCenterState } from '../src/data/memberProfiles';
-import type { TaskNode } from '../src/data/workspaceNodes';
+import type { TaskNode } from '../src/shared/model/task-model';
 import { canEditTeamInformation, normalizeTeamOwnership, canRemoveTeamMember, getHandoffTasks, handoffSignature, prepareMemberExit, transferTeamOwnership, changeTeamRole } from '../src/lib/teamMembershipLifecycle';
 const base = () => normalizeTeamOwnership(structuredClone(initialPersonalCenterState.teams[0]));
 const task = (id: string, extra: Partial<TaskNode> = {}): TaskNode => ({ id, kind: 'task', teamId: base().id, name: id, parentId: null, ownerId: '陈默', participantIds: ['周岚'], status: '进行中', updatedAt: '', ...extra });

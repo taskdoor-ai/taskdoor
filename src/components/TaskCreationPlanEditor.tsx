@@ -3,7 +3,7 @@ import { ListTree, ListTodo, Plus } from "lucide-react";
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { findTagByName, type TagDefinition } from "../data/tagGroups";
 import { syncCreationSubtaskEdit } from "../lib/taskCreationSubtaskEditing";
-import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
+import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 import { newCreationTask, removeCreationSubtask, type CreationForm, type CreationTask } from "../lib/taskCreationForm";
 import { getCreationEffortLeaves } from "../lib/taskCreationEffort";
 import { getCreationDescendantIds, getCreationHierarchyDepth } from "../lib/taskCreationHierarchy";

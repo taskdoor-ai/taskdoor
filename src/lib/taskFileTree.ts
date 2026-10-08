@@ -1,4 +1,4 @@
-import type { TaskFileNode } from "../data/taskDetailMocks.ts";
+import type { TaskFileNode } from "@/shared/model/task-model.ts";
 
 export type TaskFilePreviewKind = "markdown" | "text" | "table" | "pdf" | "image" | "document" | "unknown";
 export type FolderDeletePolicy = "move-contents" | "archive";

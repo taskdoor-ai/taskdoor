@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Search, Trash2 } from 'lucide-react';
 import type { TeamResponsibilityProfile } from '../data/memberProfiles';
-import type { PersonOption } from '../data/sharedTypes';
-import type { WorkspaceNode } from '../data/workspaceNodes';
+import type { PersonOption, WorkspaceNode } from '@/shared/model/task-model';
+
 import { canManageRecycledTask, type RecycledTask } from '../lib/taskRecycleBin';
 import { useI18n } from '../i18n/I18nProvider';
 import { useMockText } from '../i18n/MockDataProvider';

@@ -1,8 +1,6 @@
-import { useMockText } from './MockDataProvider';
-import { mockPersonName } from './mockContent';
-import catalog from './mock/progressCopy.json';
-import { useI18n } from './I18nProvider';
-import type { Locale } from './core';
+import { mockPersonName } from '@/i18n/mockContent';
+import catalog from '@/i18n/mock/progressCopy.json';
+import type { Locale } from '@/i18n/core';
 
 const entries = Object.values(catalog);
 const exact = new Map(entries.map(entry => [entry.zh, entry.en]));
@@ -34,9 +32,4 @@ export function progressText(locale: Locale, value: string, depth = 0, localize:
   }
   const amount = value.match(/^([+−\-\d.,]+) 人天$/);
   return amount ? `${amount[1]} person-days` : value;
-}
-export function useProgressCopy() {
-  const { locale } = useI18n();
-  const mock = useMockText();
-  return (value: string) => progressText(locale, value, 0, mock.text);
 }

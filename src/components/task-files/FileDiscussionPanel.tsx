@@ -1,7 +1,7 @@
 import { useGlobalUi } from "../../i18n/globalUi";
 import { Check, MessageCircle, RotateCcw, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import type { TaskFileNode } from "../../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 import { getVisibleFileDiscussionThreads, type CollaborationMessage, type DiscussionDraft, type FileDiscussionThread } from "../../lib/taskCollaboration";
 import { DiscussionComposer } from "../discussion/DiscussionComposer";
 import { DiscussionMessages } from "../discussion/DiscussionMessages";

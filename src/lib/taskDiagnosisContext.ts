@@ -1,5 +1,5 @@
-import type { TaskDetailMock, TaskFileNode } from "../data/taskDetailMocks";
-import type { TaskDiagnosisContext } from "./taskDiagnosis";
+import type { TaskDetailContent, TaskFileNode } from "@/shared/model/task-model";
+import type { TaskDiagnosisContext } from "@/shared/model/task-diagnosis";
 import { applyTaskFileEdit, getTaskFileContent, readTaskFileEdits } from "./taskFileEditing";
 
 export type TaskDiagnosisFileSnapshot = { files: TaskFileNode[]; unavailableFileCount: number };
@@ -33,7 +33,7 @@ export function readTaskDiagnosisFiles(
 
 export function buildTaskDiagnosisContext(
   taskId: string,
-  task: Pick<TaskDetailMock, "goal" | "completionCriteria" | "activities" | "commits" | "files">,
+  task: Pick<TaskDetailContent, "goal" | "completionCriteria" | "activities" | "commits" | "files">,
   storage?: Pick<Storage, "getItem">,
 ): TaskDiagnosisContext {
   return {

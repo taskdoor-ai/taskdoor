@@ -1,7 +1,6 @@
-import type { CriterionReview } from "../lib/taskCriterionReview";
-import { workspaceNodes, type TaskIconName, type TaskIconTone, type TaskNode } from "./workspaceNodes.ts";
-import type { TaskBurnUpSeries } from "../lib/taskBurnUp";
-import type { TaskDiagnosisSnapshot } from "../lib/taskDiagnosis";
+import { workspaceNodes } from "./workspaceNodes.ts";
+import type { TaskActivityMock, TaskDetailContent, TaskDetailId, TaskFileNode, TaskNode } from "@/shared/model/task-model";
+import type { TaskDiagnosisSnapshot } from "@/shared/model/task-diagnosis";
 import { getTaskProgressBurnUp, getTaskProgressEvents } from "./taskProgressExamples";
 import { getCreatorCommerceDiagnosisExample } from "./creatorCommerceDiagnosisExamples";
 import { getCreatorPoolTaskExample } from "./creatorPoolTaskExamples";
@@ -11,99 +10,7 @@ import { getMockContextDiagnosis } from "../lib/mockTaskDiagnosis";
 import { getWeeklyRetroDetailDemo } from "./weeklyRetroDetailDemo";
 import { withDemoProgressEvidence } from "./taskProgressEvidenceDetails";
 
-type TaskStatus = TaskNode["status"];
-
 const inferFileFormat = (name: string) => name.split(".").pop()?.toUpperCase() ?? "FILE";
-
-export type TaskDetailId = "fragrance-creator-wrapup" | "fragrance-creator-business" | "fragrance-content" | "fragrance-live" | "fragrance-product" | "fragrance-growth" | "fragrance-data" | "fragrance-compliance" | "fragrance-final-decision";
-
-export type TaskFileNode = {
-  blobId?: string;
-  sizeBytes?: number;
-  originalName?: string;
-  archived?: boolean;
-  content?: string;
-  format?: string;
-  iconName?: string;
-  id: string;
-  kind: "folder" | "file";
-  mimeType?: string;
-  name: string;
-  parentId: string | null;
-  previewData?:
-    | { kind: "table"; sheets: Array<{ name: string; columns: string[]; rows: string[][] }> }
-    | { kind: "image"; alt: string; src: string; width?: number; height?: number }
-    | { kind: "pdf"; pages: string[] }
-    | { kind: "markdown" | "text" | "document"; text: string };
-  sizeLabel?: string;
-  updatedAt: string;
-  version?: number;
-};
-
-export type TaskActivityType =
-  | "member-post"
-  | "member-reply"
-  | "ai-insight"
-  | "status-change"
-  | "schedule-change"
-  | "participant-added"
-  | "title-change"
-  | "goal-change"
-  | "owner-change"
-  | "owner-proposal"
-  | "participants-change"
-  | "tags-change"
-  | "appearance-change"
-  | "task-definition-change";
-
-export type TaskActivityChange = {
-  label: string;
-  before: string | null;
-  after: string | null;
-};
-
-export type TaskActivityMock = {
-  author: string;
-  changes?: TaskActivityChange[];
-  createdAt?: string;
-  file?: string;
-  id: string;
-  insightType?: "协作重点" | "状态一致性" | "证据缺口" | "验收风险";
-  message: string;
-  replyToActivityId?: string;
-  time: string;
-  type: TaskActivityType;
-};
-
-export type TaskCommitMock = {
-  author: string;
-  createdAt?: string;
-  files: string[];
-  id: string;
-  message: string;
-  time: string;
-};
-
-export type TaskDetailMock = {
-  burnUp?: TaskBurnUpSeries;
-  completionCriteria?: string[];
-  criterionReviews?: CriterionReview[];
-  executionTips?: string[];
-  activities: TaskActivityMock[];
-  commits: TaskCommitMock[];
-  due: string;
-  diagnosis?: TaskDiagnosisSnapshot;
-  files: TaskFileNode[];
-  goal: string;
-  iconName?: TaskIconName;
-  iconTone?: TaskIconTone;
-  owner: string;
-  participantInvitationStatus?: Record<string, "accepted" | "pending">;
-  participants: string[];
-  status: TaskStatus;
-  summary: string;
-  title: string;
-};
 
 const commonFiles = (prefix: string, names: [string, string, string]): TaskFileNode[] => [
   { id: `${prefix}-requirements`, kind: "folder", name: "需求与规则", parentId: null, updatedAt: "2 天前" },
@@ -182,7 +89,7 @@ const withScenarioExtraFiles = (prefix: string, files: TaskFileNode[], extraFile
 ];
 
 // 演示活动和文件提交使用固定时间；不随页面刷新或任务 updatedAt 改写事件发生时刻。
-const makeTask = (overrides: Partial<TaskDetailMock> & Pick<TaskDetailMock, "goal" | "owner" | "title">): TaskDetailMock => ({
+const makeTask = (overrides: Partial<TaskDetailContent> & Pick<TaskDetailContent, "goal" | "owner" | "title">): TaskDetailContent => ({
   activities: [
     { id: "activity-human", author: overrides.owner, message: "已补充当前进展和需要共同确认的问题。", createdAt: "2026-09-01T09:52:00+08:00", time: "2026-09-01 09:52", type: "member-post" },
     { id: "activity-ai", author: "TaskDoor AI", message: "已根据最新文件整理任务摘要和风险提示。", createdAt: "2026-09-01T09:46:00+08:00", time: "2026-09-01 09:46", type: "ai-insight" },
@@ -215,7 +122,7 @@ const participantByOwner: Record<string, string[]> = {
   "苏禾": ["韩序", "陈默"],
 };
 
-function withResultDecisions(task: TaskNode, detail: TaskDetailMock): TaskDetailMock {
+function withResultDecisions(task: TaskNode, detail: TaskDetailContent): TaskDetailContent {
   const enriched = withExpandedTaskDiagnosisExample(task, withDemoProgressEvidence(task, withResultTaskDecisionExample(task, detail)));
   if (enriched === detail) return detail;
   // 旧的无上下文调用也使用同一批原始记录生成快照；页面每次仍按当前可读正文重新核对。
@@ -230,7 +137,7 @@ function withResultDecisions(task: TaskNode, detail: TaskDetailMock): TaskDetail
   })) } };
 }
 
-export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailMock {
+export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailContent {
   const weekly = getWeeklyRetroDetailDemo(task);
   if (weekly) return withResultDecisions(task, weekly);
   if (task.createdFrom === "task-planner" || task.createdFrom === "task-editor") return withResultDecisions(task, {
@@ -307,7 +214,7 @@ const getScenarioTask = (id: TaskDetailId) => {
   return task;
 };
 
-const createScenarioTaskDetail = (id: TaskDetailId, spec: ScenarioDetailSpec): TaskDetailMock => {
+const createScenarioTaskDetail = (id: TaskDetailId, spec: ScenarioDetailSpec): TaskDetailContent => {
   const task = getScenarioTask(id);
   const participants = spec.participants ?? task.participantIds ?? participantByOwner[task.ownerId] ?? [];
   const [ruleFile, evidenceFile, resultFile] = spec.fileNames;
@@ -350,7 +257,7 @@ const createScenarioTaskDetail = (id: TaskDetailId, spec: ScenarioDetailSpec): T
   }));
 };
 
-export const taskDetailMocks: Record<TaskDetailId, TaskDetailMock> = {
+export const taskDetailMocks: Record<TaskDetailId, TaskDetailContent> = {
   "fragrance-creator-wrapup": createScenarioTaskDetail("fragrance-creator-wrapup", {
     activityAuthor: "陈默",
     activityMessage: "已汇总第二批达人合作状态，等待周岚确认最终目标与资源优先级。",

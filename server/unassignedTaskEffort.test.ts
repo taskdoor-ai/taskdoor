@@ -8,7 +8,7 @@ import { createManualEffortEstimate, getTaskEffortState } from "../src/lib/taskE
 import { getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
 import { getTaskProgressAssessment } from "../src/lib/taskProgressAssessment.ts";
 import { commitWorkspaceScenarioReset, creatorCommerceScenarioVersion, resolveWorkspaceScenarioReset } from "../src/lib/workspaceScenarioReset.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 
 const legacyTasks = () => unassignedTaskFixtures.map(({ effortEstimate: _estimate, ...task }) => task);
 const migrate = (nodes: unknown) => resolveWorkspaceScenarioReset({ storedVersion: "multi-team-v17-unassigned-tasks", storedWorkspaceNodes: nodes, storedTags: [] });

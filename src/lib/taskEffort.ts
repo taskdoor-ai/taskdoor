@@ -1,6 +1,4 @@
-import { z } from "zod";
-
-const minuteSchema = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
+import { effortEstimateSchema, minuteSchema, type TaskEffortEstimate } from "@/shared/model/task-effort";
 
 /** Product display convention only; it does not describe a person's daily availability. */
 export const MINUTES_PER_PERSON_DAY = 480;
@@ -17,18 +15,6 @@ export function formatEffortPersonDays(minutes: number | null, locale: "zh-CN" |
   return formatPersonDays(minutes === null ? null : minutes / MINUTES_PER_PERSON_DAY, locale);
 }
 
-/** Expected total human input under the stated AI/tool method; excludes waiting and unattended runs. */
-export const effortEstimateSchema = z.object({
-  minutes: minuteSchema,
-  workMethod: z.string(),
-  basis: z.enum(["manual", "mock", "model", "unknown"]),
-  reason: z.string(),
-  confirmed: z.boolean(),
-  scopeKey: z.string(),
-  version: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
-});
-
-export type TaskEffortEstimate = z.infer<typeof effortEstimateSchema>;
 export type TaskEffortScope = { goal?: string; completionCriteria?: string[]; executionTips?: string[] };
 export type TaskEffortTask = TaskEffortScope & { effortEstimate?: TaskEffortEstimate };
 export type TaskEffortState = "unknown" | "proposed" | "confirmed" | "stale";

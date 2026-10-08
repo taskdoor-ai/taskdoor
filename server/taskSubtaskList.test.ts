@@ -8,7 +8,7 @@ import { TaskProgressComparison } from "../src/components/TaskProgressComparison
 import { getTaskProgressDemoExample } from "../src/data/taskProgressDemo.ts";
 import { taskProgressComparisonExamples } from "../src/data/taskProgressComparisonExamples.ts";
 import { allTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 import { getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
 import { toTaskRelationSummary } from "../src/lib/taskRelationProjection.ts";
 import { PersonDirectoryProvider } from "../src/components/PersonDirectory.tsx";

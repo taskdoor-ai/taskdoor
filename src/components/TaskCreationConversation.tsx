@@ -2,7 +2,7 @@ import { AlertTriangle, ArrowRight, CheckCircle2, GitBranch, History, ListTree, 
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { taskCreationScenarios, type TaskCreationScenarioDefinition } from "../data/taskCreationScenarios";
 import type { TagDefinition } from "../data/tagGroups";
-import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
+import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 import { createMockTaskAssistantResponse, createMockTaskAssistantResponseForDraft, requestMockTaskAssistant } from "../lib/mockTaskAssistant";
 import { persistConversationList } from "../lib/privateConversationPersistence";
 import { buildTaskCreationConversationRecord, restoreTaskCreationConversationState } from "../lib/taskCreationConversationState";

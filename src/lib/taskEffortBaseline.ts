@@ -1,8 +1,8 @@
 import { getTaskEffortState, type TaskEffortTask } from "./taskEffort";
-import { getTaskBurnUpModel, type TaskBurnUpSeries } from "./taskBurnUp";
+import { getTaskBurnUpModel } from "./taskBurnUp";
+import { type TaskBurnUpSeries } from "@/shared/model/task-burn-up";
+import type { TaskEffortBaseline } from "@/shared/model/task-effort";
 
-/** Saved with creation; later estimates must not rewrite this first observation. */
-export type TaskEffortBaseline = { at: string; minutes: number; scopeKey: string; version: number };
 export type TaskWithEffortBaseline = TaskEffortTask & { createdAt?: string; effortBaseline?: TaskEffortBaseline };
 
 export const isValidTaskEffortBaseline = (value: unknown): value is TaskEffortBaseline => value !== null && typeof value === "object"

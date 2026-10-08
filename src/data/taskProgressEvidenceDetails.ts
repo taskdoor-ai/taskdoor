@@ -1,9 +1,9 @@
 import records from "./taskProgressDemoRecords.json";
-import type { TaskDetailMock } from "./taskDetailMocks";
-import type { TaskNode } from "./workspaceNodes";
+import type { TaskDetailContent, TaskNode } from "@/shared/model/task-model";
+
 
 /** Attach the same authored evidence used by the Demo prediction to its task detail. */
-export function withDemoProgressEvidence(task: TaskNode, detail: TaskDetailMock): TaskDetailMock {
+export function withDemoProgressEvidence(task: TaskNode, detail: TaskDetailContent): TaskDetailContent {
   if (!Object.hasOwn(records,task.id) || task.teamId === undefined) return detail;
   const record=records[task.id as keyof typeof records];
   const id=`${task.id}-progress-evidence-v1`;

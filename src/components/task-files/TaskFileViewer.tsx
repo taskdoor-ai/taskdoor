@@ -2,7 +2,7 @@ import { useGlobalUi } from "../../i18n/globalUi";
 import { useDetailCopy } from "../../i18n/detailMessages";
 import { Download, FileQuestion, Image as ImageIcon } from "lucide-react";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import type { TaskFileNode } from "../../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 import { getTaskFileContent, type TaskFileContent } from "../../lib/taskFileEditing";
 import { getPreviewKind } from "../../lib/taskFileTree";
 import { readDiscussionBlob } from "../../lib/discussionUploads";

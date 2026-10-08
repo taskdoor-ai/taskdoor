@@ -1,5 +1,5 @@
 import records from "./taskProgressDemoRecords.json";
-import type { TaskNode, WorkspaceNode } from "./workspaceNodes";
+import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 import type { TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
 
 type FixtureFields = Pick<TaskNode, "plannedStartOn" | "plannedEndOn" | "dueAt" | "status" | "completedAt" | "updatedAt">;

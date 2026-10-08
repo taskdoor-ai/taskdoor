@@ -4,7 +4,7 @@ import { register } from "node:module";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 import type { TaskListProjection } from "../src/lib/taskListProjection.ts";
 import { clearedTaskListConditions, type TaskListFilters } from "../src/components/taskListFilters.ts";
 

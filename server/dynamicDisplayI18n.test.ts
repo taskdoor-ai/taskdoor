@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import { globalUiText } from '../src/i18n/globalUi';
-import { progressText } from '../src/i18n/progressCopy';
+import { progressText } from '../src/shared/i18n/progress-copy';
 import { workbenchPriorityReason } from '../src/i18n/workbenchCopy';
 import { priorityReasonFor, type PersonalWorkbenchItem } from '../src/lib/personalWorkbench';
 

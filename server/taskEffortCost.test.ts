@@ -3,7 +3,8 @@ import { existsSync } from "node:fs";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { getEffortScopeKey, type TaskEffortEstimate, type TaskEffortTask } from "../src/lib/taskEffort.ts";
+import { getEffortScopeKey, type TaskEffortTask } from "../src/lib/taskEffort.ts";
+import { type TaskEffortEstimate } from "../src/shared/model/task-effort.ts";
 import { getTaskProgressComparisonExample } from "../src/data/taskProgressComparisonExamples.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;

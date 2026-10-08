@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { Check, Loader2, Undo2 } from 'lucide-react';
 import { useGlobalUi } from '../i18n/globalUi';
-import { useProgressCopy } from '../i18n/progressCopy';
+import { useProgressCopy } from '@/features/tasks/i18n/progress-copy';
 import { toast } from './ui/toast';
 import { criterionStage, type CriterionReview } from '../lib/taskCriterionReview';
 

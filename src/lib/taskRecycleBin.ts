@@ -1,6 +1,6 @@
 import { appendTaskActivity, createTaskChangeActivity } from './taskActivity';
 import type { TeamResponsibilityProfile } from '../data/memberProfiles';
-import type { TaskNode } from '../data/workspaceNodes';
+import type { TaskNode } from '@/shared/model/task-model';
 import { TASK_FILE_EDITS_STORAGE_PREFIX } from './taskFileEditing';
 import { deleteWorkspaceTask, getTaskDeletionPreview, type SubtaskWorkspaceState } from './workspaceSubtaskEditing';
 

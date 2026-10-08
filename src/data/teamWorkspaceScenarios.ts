@@ -1,16 +1,8 @@
 import { applyCriterionReviewMocks } from "./taskCriterionReviewMocks";
 import { withProgressDemoCreation } from "./taskProgressDemoFixtures";
 import { creatorCommerceMembers, creatorCommerceTags } from "./creatorCommerceScenario";
-import type { PersonOption, TagDefinition, TagColorName, TagIconName } from "./sharedTypes";
-import {
-  creatorCommerceMainTaskId,
-  workspaceNodes as creatorCommerceWorkspaceNodes,
-  workspaceRootId,
-  type TaskIconName,
-  type TaskIconTone,
-  type TaskNode,
-  type WorkspaceNode,
-} from "./workspaceNodes";
+import { type PersonOption, type TagDefinition, type TagColorName, type TagIconName, workspaceRootId, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
+import { creatorCommerceMainTaskId, workspaceNodes as creatorCommerceWorkspaceNodes } from "./workspaceNodes";
 import { getEffortScopeKey, getTaskEffortState } from "../lib/taskEffort";
 import { getTaskDefinitionGoal } from "../lib/taskGoal";
 import { platformAdditionNodes, supplyOperationsAdditionNodes } from "./expandedTeamTaskBacklog";

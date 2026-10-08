@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import * as workbench from "../src/lib/personalWorkbench.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 import { createManualEffortEstimate } from "../src/lib/taskEffort.ts";
 
 const task = (id: string, patch: Partial<TaskNode> = {}): TaskNode => ({

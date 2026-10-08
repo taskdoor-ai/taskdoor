@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getTaskBurnUpModel, type TaskBurnUpPoint, type TaskBurnUpSeries } from "../src/lib/taskBurnUp.ts";
+import { getTaskBurnUpModel } from "../src/lib/taskBurnUp.ts";
+import { type TaskBurnUpPoint, type TaskBurnUpSeries } from "../src/shared/model/task-burn-up.ts";
 import { getTaskHeadingExample } from "../src/data/taskHeadingExamples.ts";
 
 const point = (overrides: Partial<TaskBurnUpPoint> = {}): TaskBurnUpPoint => ({

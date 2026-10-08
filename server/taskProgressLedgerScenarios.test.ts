@@ -11,7 +11,7 @@ import {
 } from "../src/data/taskProgressExamples.ts";
 import { getTaskBurnUpModel } from "../src/lib/taskBurnUp.ts";
 import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 
 const byDay = (parentTaskId: string) => new Map(
   getTaskProgressBurnUp(parentTaskId)!.points.map((point) => [point.at, point]),

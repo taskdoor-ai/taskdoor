@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { TaskFileExplorer } from "../src/components/task-files/TaskFileExplorer.tsx";
 import { TaskFileViewer, type TaskFileTextSelection } from "../src/components/task-files/TaskFileViewer.tsx";
 import { LexicalFileDocument } from "../src/components/task-files/LexicalFileDocument.tsx";
-import type { TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 import { FileDiscussionPanel, type FileDiscussionCollaboration } from "../src/components/task-files/FileDiscussionPanel.tsx";
 import { getVisibleFileDiscussionThreads } from "../src/lib/taskCollaboration.ts";
 

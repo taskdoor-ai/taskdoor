@@ -1,11 +1,12 @@
-import { useProgressCopy } from "../i18n/progressCopy";
+import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { taskCalendarDate } from "../lib/taskSchedule";
 import { useBurnUpWidth } from "../lib/useBurnUpWidth";
 import { TaskProgressHistory } from "./TaskProgressHistory";
 import React, { useId, useState } from "react";
 import { Tooltip } from "@base-ui/react/tooltip";
 import { Info } from "lucide-react";
-import { getTaskBurnUpModel, type TaskBurnUpSeries } from "../lib/taskBurnUp";
+import { getTaskBurnUpModel } from "../lib/taskBurnUp";
+import { type TaskBurnUpSeries } from "@/shared/model/task-burn-up";
 import { getTaskProgressAssessment, type TaskProgressAssessment } from "../lib/taskProgressAssessment";
 import { formatPersonDays, MINUTES_PER_PERSON_DAY } from "../lib/taskEffort";
 import type { TaskProgressDisplay } from "../lib/taskProgressDisplay";

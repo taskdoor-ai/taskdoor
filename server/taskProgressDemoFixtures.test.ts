@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { allTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { normalizeWorkspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
 import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
 import { getTaskProgressDemoExample } from "../src/data/taskProgressDemo.ts";
 import { progressDemoRevisions } from "../src/data/taskProgressDemoFixtures.ts";

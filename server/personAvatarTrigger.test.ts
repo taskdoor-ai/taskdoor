@@ -4,7 +4,7 @@ import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { PersonAvatar, PersonName } from "../src/components/PersonAvatar.tsx";
-import type { PersonOption } from "../src/data/sharedTypes.ts";
+import type { PersonOption } from "../src/shared/model/task-model.ts";
 
 const profile: PersonOption = {
   email: "chenmo@agentdoor.local",

@@ -1,4 +1,4 @@
-import { useProgressCopy } from "../i18n/progressCopy";
+import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { useDetailCopy } from "../i18n/detailMessages";
 import { Tooltip } from "@base-ui/react/tooltip";
 import React, { type ReactNode } from "react";

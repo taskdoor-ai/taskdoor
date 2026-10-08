@@ -1,6 +1,6 @@
 import type { LegacyTaskSnapshot } from "../data/legacyTaskSnapshots";
-import type { TaskActivityMock } from "../data/taskDetailMocks";
-import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes";
+import type { TaskActivityMock, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
+
 import { appendTaskActivity, createTaskChangeActivity, type TaskActivityStore } from "./taskActivity";
 import { getTaskDefinitionGoal } from "./taskAiAdjustmentAdapters";
 import { validateTaskCriteria } from "./taskCriteriaEditing";

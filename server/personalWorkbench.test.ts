@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createWorkspaceTaskDetail, taskDetailMocks, type TaskDetailId, type TaskDetailMock } from "../src/data/taskDetailMocks.ts";
+import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/data/taskDetailMocks.ts";
+import { type TaskDetailId, type TaskDetailContent, type TaskNode } from "../src/shared/model/task-model.ts";
 import { getTaskProgressEvents } from "../src/data/taskProgressExamples.ts";
 import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import { workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { workspaceNodes } from "../src/data/workspaceNodes.ts";
 import {
   buildPersonalWorkbenchItems,
   buildPersonalWorkbenchModel,
@@ -15,7 +16,7 @@ const asOf = "2026-08-31T12:00:00+08:00";
 function task(id: string, overrides: Partial<TaskNode> = {}): TaskNode {
   return { id, kind: "task", name: id, parentId: "root", ownerId: "me", status: "进行中", updatedAt: "时间未知", goal: "形成明确结果", ...overrides };
 }
-function detail(node: TaskNode, overrides: Partial<TaskDetailMock> = {}): TaskDetailMock {
+function detail(node: TaskNode, overrides: Partial<TaskDetailContent> = {}): TaskDetailContent {
   return {
     title: node.name, goal: node.goal ?? "", owner: node.ownerId, status: node.status,
     due: node.dueAt ?? "—", participants: node.participantIds ?? [], summary: "", files: [], activities: [], commits: [],

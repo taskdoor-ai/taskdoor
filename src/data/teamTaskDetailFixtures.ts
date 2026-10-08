@@ -1,12 +1,7 @@
-import type {
-  TaskActivityMock,
-  TaskCommitMock,
-  TaskDetailMock,
-  TaskFileNode,
-} from "./taskDetailMocks.ts";
-import type { TaskNode } from "./workspaceNodes.ts";
+import type { TaskActivityMock, TaskCommitMock, TaskDetailContent, TaskFileNode, TaskNode } from "@/shared/model/task-model.ts";
+
 import { getTaskProgressBurnUp } from "./taskProgressExamples.ts";
-import type { TaskDiagnosisConflictInput, TaskDiagnosisSnapshot } from "../lib/taskDiagnosis.ts";
+import type { TaskDiagnosisConflictInput, TaskDiagnosisSnapshot } from "@/shared/model/task-diagnosis.ts";
 import { getCreatorCommerceDiagnosisExample } from "./creatorCommerceDiagnosisExamples";
 
 /**
@@ -48,7 +43,7 @@ export type TeamEvidenceActivityMock = TaskActivityMock & {
   basis: "member-report" | "file-diff" | "system-event" | "cross-evidence-check";
 };
 
-export type TeamTaskDetailFixture = TaskDetailMock & {
+export type TeamTaskDetailFixture = TaskDetailContent & {
   datasetMeta: {
     provenance: typeof TEAM_DETAIL_FIXTURE_PROVENANCE;
     domain: TeamDetailDomain;

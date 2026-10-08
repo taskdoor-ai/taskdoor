@@ -1,5 +1,5 @@
-import type { TaskActivityMock } from "../data/taskDetailMocks";
-import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes";
+import type { TaskActivityMock, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
+
 import { createTaskChangeActivity } from "./taskActivity";
 
 export function validateTaskCriteria(values: string[]): string[] {

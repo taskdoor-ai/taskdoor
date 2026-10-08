@@ -1,6 +1,6 @@
 import { RECYCLE_BIN_KEY, readRecycleBin } from './taskRecycleBin';
 import { loadPersonalCenterDirectory, personalCenterStorageKey, type PersonalCenterState } from '../data/memberProfiles';
-import type { TaskNode, WorkspaceNode } from '../data/workspaceNodes';
+import type { TaskNode, WorkspaceNode } from '@/shared/model/task-model';
 import type { TeamLifecycleAction } from '../components/TeamLifecycle';
 import { activeMembership, changeTeamRole, prepareMemberExit, transferTeamOwnership } from './teamMembershipLifecycle';
 import { appendTaskActivity, createTaskChangeActivity, type TaskActivityStore } from './taskActivity';

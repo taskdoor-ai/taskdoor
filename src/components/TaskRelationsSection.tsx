@@ -1,6 +1,6 @@
 import { useMockText } from "../i18n/MockDataProvider";
 import { useGlobalUi } from "../i18n/globalUi";
-import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
+import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 import { CheckCircle2, CircleDashed, CornerDownRight, Link2 } from "lucide-react";
 import { PersonAvatar, PersonName } from "./PersonAvatar";
 import { TaskIcon } from "./TaskIcon";

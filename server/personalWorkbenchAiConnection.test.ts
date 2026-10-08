@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 import { buildPersonalWorkbenchModel } from "../src/lib/personalWorkbench.ts";
 import { buildPersonalWorkbenchAiConnectionRequest } from "../src/lib/personalWorkbenchAiConnection.ts";
 

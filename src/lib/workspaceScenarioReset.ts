@@ -1,5 +1,6 @@
 import { normalizeTags, type TagDefinition } from "../data/tagGroups.ts";
-import { normalizeWorkspaceNodes, workspaceNodes, type TaskNode, type WorkspaceNode } from "../data/workspaceNodes.ts";
+import { normalizeWorkspaceNodes, workspaceNodes } from "../data/workspaceNodes.ts";
+import { type TaskNode, type WorkspaceNode } from "@/shared/model/task-model.ts";
 import { allTeamWorkspaceNodes, multiTeamTags, teamWorkspaceExpansionNodes } from "../data/teamWorkspaceScenarios.ts";
 import { getEffortScopeKey } from "./taskEffort.ts";
 import { getTaskDefinitionGoal } from "./taskGoal.ts";

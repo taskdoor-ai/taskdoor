@@ -5,7 +5,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { TaskFileViewer } from "../src/components/task-files/TaskFileViewer.tsx";
 import { TaskFileExplorer } from "../src/components/task-files/TaskFileExplorer.tsx";
-import type { TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 import { createTaskFileRevision } from "../src/lib/taskFileEditing.ts";
 import { TaskFileHistory } from "../src/components/task-files/TaskFileHistory.tsx";
 

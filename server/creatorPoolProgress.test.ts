@@ -3,7 +3,7 @@ import test from "node:test";
 import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
 import { getTaskAcceptedEffortMinutes, getTaskProgressBurnUp, getTaskProgressEvents } from "../src/data/taskProgressExamples.ts";
 import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 
 const rootId = "ccx-creator-pool-governance";
 const groups = ["ccx-creator-pool-data-track", "ccx-creator-pool-decision-track"];

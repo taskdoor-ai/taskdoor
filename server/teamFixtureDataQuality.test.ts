@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { multiTeamTags, teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 
 const tasksOf = (nodes: typeof teamWorkspaceScenarios[number]["nodes"]) =>
   nodes.filter((node): node is TaskNode => node.kind === "task");

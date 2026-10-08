@@ -3,7 +3,7 @@ import test, { beforeEach } from "node:test";
 
 // Historical fixtures run at their authored creation date.
 beforeEach(t => t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") }));
-import type { TaskNode, WorkspaceNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode, WorkspaceNode } from "../src/shared/model/task-model.ts";
 import { createDraftTaskAiContext, applyDraftTaskAiAdjustment, createSavedTaskAiContext, applySavedTaskAiAdjustment, commitTaskAiStorage } from "../src/lib/taskAiAdjustmentAdapters.ts";
 import { buildTaskAiAdjustment } from "../src/lib/taskAiAdjustment.ts";
 import type { TaskAiAdjustmentContext, TaskAiAdjustmentScope } from "../src/lib/taskAiAdjustmentTypes.ts";

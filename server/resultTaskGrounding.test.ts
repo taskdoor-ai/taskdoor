@@ -5,7 +5,7 @@ import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
 import { getTaskDefinitionGoal } from "../src/lib/taskAiAdjustmentAdapters.ts";
 import { getTaskDiagnosisReport } from "../src/lib/taskDiagnosis.ts";
 import { getTaskFileContent } from "../src/lib/taskFileEditing.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 
 const nodes = teamWorkspaceScenarios.flatMap((team) => team.nodes).filter((node): node is TaskNode => node.kind === "task");
 const ids = ["fragrance-final-decision", "ccx-serum-contract-close", "ccx-serum-asset-batch", "ccx-serum-price-stock", "ccx-serum-budget-gate", "ccx-october-studio-calendar", "ccx-weekly-settlement"];

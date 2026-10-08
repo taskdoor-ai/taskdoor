@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 import { searchTaskFiles } from "../src/lib/taskFileSearch.ts";
 
 const node = (id: string, name: string, parentId: string | null, kind: "file" | "folder" = "file"): TaskFileNode => ({ id, name, parentId, kind, updatedAt: "2026-09-15", version: 3 });

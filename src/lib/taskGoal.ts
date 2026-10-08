@@ -1,4 +1,4 @@
-import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes";
+import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
 /** Creation copies the parent goal once. Only legacy records without a goal need a fallback. */
 export function getTaskDefinitionGoal(nodes: WorkspaceNode[], task: TaskNode): string {

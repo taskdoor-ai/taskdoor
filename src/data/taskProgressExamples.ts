@@ -1,4 +1,4 @@
-import type { TaskBurnUpSeries } from "../lib/taskBurnUp";
+import type { TaskBurnUpSeries } from "@/shared/model/task-burn-up";
 
 export type TaskProgressEventKind = "scope-added" | "accepted" | "estimate-revised" | "reopened" | "scope-removed";
 

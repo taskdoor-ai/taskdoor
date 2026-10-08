@@ -1,5 +1,5 @@
 import { allTeamWorkspaceNodes } from "./teamWorkspaceScenarios";
-import type { WorkspaceNode } from "./workspaceNodes";
+import type { WorkspaceNode } from "@/shared/model/task-model";
 import { progressDate } from "../lib/taskProgressDisplay";
 import { getWeeklyRetroProgressDemo } from "./taskProgressDemoFixtures";
 import records from "./taskProgressDemoRecords.json";

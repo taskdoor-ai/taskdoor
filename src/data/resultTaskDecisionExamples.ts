@@ -1,5 +1,5 @@
-import type { TaskDetailMock, TaskFileNode } from "./taskDetailMocks";
-import type { TaskNode } from "./workspaceNodes";
+import type { TaskDetailContent, TaskFileNode, TaskNode } from "@/shared/model/task-model";
+
 
 type ResultExample = {
   rule: string;
@@ -96,7 +96,7 @@ const examples: Record<string, ResultExample> = {
   },
 };
 
-export function withResultTaskDecisionExample(task: TaskNode, detail: TaskDetailMock): TaskDetailMock {
+export function withResultTaskDecisionExample(task: TaskNode, detail: TaskDetailContent): TaskDetailContent {
   const spec = Object.hasOwn(examples, task.id) ? examples[task.id] : undefined;
   if (!spec || task.teamId !== "creator-commerce" || task.createdFrom === "task-editor" || task.createdFrom === "task-planner") return detail;
   // 保留原文件 ID 和成果名称；只把通用占位正文换成本任务内容。

@@ -1,4 +1,4 @@
-import type { TaskNode } from "../data/workspaceNodes.ts";
+import type { TaskNode } from "@/shared/model/task-model.ts";
 
 const normalizeTaskTime = (value?: string) => {
   const normalized = value?.trim();

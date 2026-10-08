@@ -1,6 +1,6 @@
 import { taskMatchesListFilters, type TaskListFilters } from "../components/taskListFilters.ts";
-import type { TagDefinition } from "../data/sharedTypes.ts";
-import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes.ts";
+import type { TagDefinition, TaskNode, WorkspaceNode } from "@/shared/model/task-model.ts";
+
 import { compareTaskUpdates } from "./taskListPresentation.ts";
 import { taskBoardStatusOrder } from "./taskBoard.ts";
 

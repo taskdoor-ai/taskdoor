@@ -1,4 +1,4 @@
-import type { TaskActivityChange, TaskActivityMock, TaskActivityType, TaskCommitMock } from "../data/taskDetailMocks.ts";
+import type { TaskActivityChange, TaskActivityMock, TaskActivityType, TaskCommitMock } from "@/shared/model/task-model.ts";
 
 export type TaskActivityStore = Record<string, TaskActivityMock[]>;
 export type TaskDiscussionThread = { activity: TaskActivityMock; replies: TaskActivityMock[]; context?: TaskActivityMock };

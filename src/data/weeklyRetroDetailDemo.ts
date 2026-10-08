@@ -1,9 +1,9 @@
-import type { TaskNode } from "./workspaceNodes";
-import type { TaskDetailMock } from "./taskDetailMocks";
+import type { TaskNode, TaskDetailContent } from "@/shared/model/task-model";
+
 import { getWeeklyRetroProgressDemo, progressDemoObservedAt } from "./taskProgressDemoFixtures";
 
 /** The written evidence and progress snapshot describe the same fixed review. */
-export function getWeeklyRetroDetailDemo(task: TaskNode): TaskDetailMock | undefined {
+export function getWeeklyRetroDetailDemo(task: TaskNode): TaskDetailContent | undefined {
   const series = getWeeklyRetroProgressDemo(task.id);
   if (!series || task.createdFrom) return undefined;
   const basis = series.explanation;

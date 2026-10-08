@@ -1,4 +1,4 @@
-import type { TaskActivityMock, TaskFileNode } from "../data/taskDetailMocks.ts";
+import type { TaskActivityMock, TaskFileNode } from "@/shared/model/task-model.ts";
 import { parseTaskActivityStore } from "./taskActivity.ts";
 
 export type AttachmentRef = { fileId: string; version: number; name: string };

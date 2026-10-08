@@ -6,8 +6,9 @@ import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { I18nProvider } from "../src/i18n/I18nProvider";
 import { buildPersonalWorkbenchModel } from "../src/lib/personalWorkbench.ts";
-import { createWorkspaceTaskDetail, type TaskDetailMock } from "../src/data/taskDetailMocks.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
+import { type TaskDetailContent, type TaskNode } from "../src/shared/model/task-model.ts";
+
 import { createManualEffortEstimate } from "../src/lib/taskEffort.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
@@ -35,7 +36,7 @@ const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8
 const aiConnectionDialogSource = readFileSync(new URL("../src/components/AiConnectionDialog.tsx", import.meta.url), "utf8");
 const render = async (
   tasks: TaskNode[],
-  detailsByTaskId?: Record<string, TaskDetailMock>,
+  detailsByTaskId?: Record<string, TaskDetailContent>,
   asOf = "2026-08-31",
   analysis: { analyzing?: boolean; analysisError?: string } = {},
 ) => {

@@ -1,4 +1,4 @@
-import type { PersonOption } from "../data/sharedTypes";
+import type { PersonOption } from "@/shared/model/task-model";
 import type { TaskMemberRecommendations } from "../lib/taskMemberRecommendations";
 
 type Props = {

@@ -1,7 +1,7 @@
 import type { TaskRelationSummary } from "../components/TaskRelationsSection";
-import type { TaskActivityMock, TaskDetailMock } from "../data/taskDetailMocks";
+import { type TaskActivityMock, type TaskDetailContent, type TaskNode } from "@/shared/model/task-model";
 import { getTaskProgressEvents } from "../data/taskProgressExamples";
-import { workspaceNodes, type TaskNode } from "../data/workspaceNodes";
+import { workspaceNodes } from "../data/workspaceNodes";
 import { summarizeTaskEffort } from "./taskEffort";
 import { getWorkspaceEffortLeaves } from "./taskEffortEditing";
 import { getTaskSituationModel, type TaskSituationReference } from "./taskSituation";
@@ -92,7 +92,7 @@ export type PersonalWorkbenchInput = {
   tasks: TaskNode[];
   currentUserId: string;
   asOf: string;
-  detailsByTaskId?: Record<string, TaskDetailMock>;
+  detailsByTaskId?: Record<string, TaskDetailContent>;
   /** 与任务详情共用的可信本地记录；不能用混合历史 activities 代替。 */
   recordedActivitiesByTaskId?: Record<string, TaskActivityMock[]>;
 };
@@ -174,7 +174,7 @@ function relation(task: TaskNode): TaskRelationSummary {
   };
 }
 
-function detailFor(task: TaskNode, byId: Map<string, TaskNode>, supplied?: TaskDetailMock): TaskDetailMock {
+function detailFor(task: TaskNode, byId: Map<string, TaskNode>, supplied?: TaskDetailContent): TaskDetailContent {
   let root = task;
   const visited = new Set<string>();
   while (root.parentTaskId && !visited.has(root.id)) {

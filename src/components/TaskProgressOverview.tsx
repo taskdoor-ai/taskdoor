@@ -1,4 +1,4 @@
-import { useProgressCopy } from "../i18n/progressCopy";
+import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import React from "react";
 import { formatPersonDays } from "../lib/taskEffort";
 import type { TaskProgressDisplay } from "../lib/taskProgressDisplay";

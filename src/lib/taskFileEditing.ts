@@ -1,4 +1,4 @@
-import type { TaskFileNode } from "../data/taskDetailMocks.ts";
+import type { TaskFileNode } from "@/shared/model/task-model.ts";
 import { getPreviewKind } from "./taskFileTree.ts";
 
 export type TaskFileContent =

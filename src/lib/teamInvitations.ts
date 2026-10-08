@@ -1,6 +1,6 @@
 import { MAX_TEAM_MEMBERS, occupiedTeamSeats } from "./teamLimits";
 import type { PersonalCenterState, TeamAccessRole, TeamMembership, TeamResponsibilityProfile } from "../data/memberProfiles";
-import type { PersonOption } from "../data/sharedTypes";
+import type { PersonOption } from "@/shared/model/task-model";
 
 /** Local invitation prototype. Delivery remains explicitly marked as preview. */
 export function normalizeInvitationEmail(value: string): string | null {

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskActivityMock, TaskActivityType, TaskCommitMock } from "../src/data/taskDetailMocks.ts";
+import type { TaskActivityMock, TaskActivityType, TaskCommitMock } from "../src/shared/model/task-model.ts";
 import {
   appendTaskActivity,
   createTaskChangeActivity,

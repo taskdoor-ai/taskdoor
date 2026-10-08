@@ -1,6 +1,6 @@
 import { getEffortScopeKey, getTaskEffortState } from "../lib/taskEffort";
 import type { TeamId } from "./teamWorkspaceScenarios";
-import type { TaskNode } from "./workspaceNodes";
+import type { TaskNode } from "@/shared/model/task-model";
 
 type ExpandedTeamId = Extract<TeamId, "platform" | "supply-operations">;
 type AdditionSeed = Omit<TaskNode, "effortEstimate" | "kind" | "parentId" | "teamId" | "updatedAt"> & {

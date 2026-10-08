@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { confirmTaskCriterion, criterionPercent, criterionReview, criterionStage } from '../src/lib/taskCriterionReview';
 import { applyCurrentTaskCriteria } from '../src/lib/taskCriteriaEditing';
-import { normalizeWorkspaceNodes, type TaskNode } from '../src/data/workspaceNodes';
+import { normalizeWorkspaceNodes } from '../src/data/workspaceNodes';
+import { type TaskNode } from '../src/shared/model/task-model';
 const task = { kind: 'task', id: 'review-test', completionCriteria: ['A', 'B'], status: '待开始', ownerId: 'tester', name: 'Review test', parentId: null, updatedAt: '2026-09-21T00:00:00Z' } as TaskNode;
 test('confirmation is independent of AI, records author, survives serialization, and can be undone', () => {
   const result = confirmTaskCriterion([task], task.id, ['A','B'], 0, true, 'Tester');

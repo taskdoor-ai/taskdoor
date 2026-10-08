@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
-import { normalizeWorkspaceNodes, workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { normalizeWorkspaceNodes, workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
 import { appendTaskActivity, createTaskChangeActivity, parseTaskActivityStore } from "../src/lib/taskActivity.ts";
 
 const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");

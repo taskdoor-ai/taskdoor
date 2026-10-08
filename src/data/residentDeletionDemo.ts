@@ -1,4 +1,4 @@
-import type {TaskNode} from "./workspaceNodes";
+import type {TaskNode} from "@/shared/model/task-model";
 import {getEffortScopeKey} from "../lib/taskEffort";
 
 export const residentDeletionDemoRootId = "demo-autumn-creator-event";

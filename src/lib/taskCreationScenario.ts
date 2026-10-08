@@ -1,7 +1,7 @@
 import { normalizePersonalTagNames } from "./personalTags.ts";
 import { createNestedTaskCreationDraft } from "./nestedTaskCreationScenario";
 import type { TaskCreationScenarioId } from "../data/taskCreationScenarios";
-import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
+import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 import { createCreatorCommerceScenarioDraft } from "./mockTaskAssistant";
 import { assignTaskByResponsibility } from "./responsibilityAssignment";
 import type { TaskAssistantRequest, TaskPlanDraft } from "./taskAssistantProtocol";

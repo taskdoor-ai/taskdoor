@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { normalizeWorkspaceNodes, type TaskNode, type WorkspaceNode } from "../src/data/workspaceNodes.ts";
+import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode, type WorkspaceNode } from "../src/shared/model/task-model.ts";
 import { applySavedTaskAiAdjustment, createSavedTaskAiContext, getTaskDefinitionGoal } from "../src/lib/taskAiAdjustmentAdapters.ts";
 import { buildTaskAiAdjustment } from "../src/lib/taskAiAdjustment.ts";
 import { newCreationTask, toTaskPlanDraft, type CreationForm } from "../src/lib/taskCreationForm.ts";

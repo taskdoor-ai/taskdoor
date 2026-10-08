@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { getTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { normalizeWorkspaceNodes, workspaceRootId, type TaskNode, type WorkspaceNode } from "../src/data/workspaceNodes.ts";
+import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { workspaceRootId, type TaskNode, type WorkspaceNode } from "../src/shared/model/task-model.ts";
 
 const task = (id: string, teamId: string, extra: Partial<TaskNode> = {}): TaskNode => ({
   id,

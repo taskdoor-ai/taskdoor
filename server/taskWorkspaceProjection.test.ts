@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creatorCommerceMainTaskId, workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { creatorCommerceMainTaskId, workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
 import { getTaskOverviewProjection } from "../src/lib/taskWorkspaceProjection.ts";
 import { getVisibleDependencyEdges } from "../src/lib/taskOverview.ts";
 

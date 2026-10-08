@@ -1,5 +1,5 @@
 import { createContext, type ReactNode, useContext, useMemo } from "react";
-import type { PersonOption } from "../data/sharedTypes";
+import type { PersonOption } from "@/shared/model/task-model";
 import { createPersonDirectory, findPersonProfile, resolvePersonProfile, type PersonDirectory } from "./personDirectoryModel";
 
 const emptyDirectory = createPersonDirectory([]);

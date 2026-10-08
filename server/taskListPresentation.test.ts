@@ -3,7 +3,8 @@ import test from "node:test";
 import { taskUpdatedTime, taskUpdatedLabel, taskDueLabel } from "../src/lib/taskListPresentation.ts";
 import { buildTaskListProjection } from "../src/lib/taskListProjection.ts";
 import { createInitialTaskListFilters } from "../src/components/taskListFilters.ts";
-import { normalizeWorkspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
 import type { TaskListFilters } from "../src/components/taskListFilters.ts";
 const node = (id: string, patch: Partial<TaskNode> = {}): TaskNode => ({ id, kind: "task", parentId: null, name: id, ownerId: "me", status: "进行中", updatedAt: "2026-09-01T09:00:00Z", ...patch });
 test("关系视图按正式负责人和参与人筛选，旧负责人提议迁移为正式负责", () => {

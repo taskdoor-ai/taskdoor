@@ -6,7 +6,7 @@ import { useMockText } from "../../i18n/MockDataProvider";
 import type { AiShortcutAttempt, AiTransferResult } from "../AiConnectionDialog";
 import { FileText, Quote, X } from "lucide-react";
 import React, { useEffect, useId, useRef, useState } from "react";
-import type { TaskFileNode } from "../../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 import type { CollaborationMessage, DiscussionDraft } from "../../lib/taskCollaboration";
 import type { DiscussionAiTarget } from "../../lib/taskDiscussionAi";
 import { PersonAvatar, PersonName } from "../PersonAvatar";

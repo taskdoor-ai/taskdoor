@@ -1,4 +1,4 @@
-import type { WorkspaceNode } from '../data/workspaceNodes';
+import type { WorkspaceNode } from '@/shared/model/task-model';
 import { createTaskChangeActivity } from './taskActivity';
 export type CriterionReview = {
   text: string;

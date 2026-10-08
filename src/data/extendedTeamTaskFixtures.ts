@@ -1,6 +1,6 @@
 import { getEffortScopeKey } from "../lib/taskEffort";
-import type { TaskNode } from "./workspaceNodes";
-import { workspaceRootId } from "./workspaceNodes";
+import { type TaskNode, workspaceRootId } from "@/shared/model/task-model";
+
 
 export type ExtendedAdditionTeamId = "creator-commerce" | "customer-success";
 

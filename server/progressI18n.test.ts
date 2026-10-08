@@ -8,7 +8,7 @@ import records from '../src/data/taskProgressDemoRecords.json';
 import copies from '../src/i18n/mock/progressRecords.json';
 import catalog from '../src/i18n/mock/progressCopy.json';
 import { mockRecordText, mockTaskCatalog } from '../src/i18n/mockContent';
-import { progressText } from '../src/i18n/progressCopy';
+import { progressText } from '../src/shared/i18n/progress-copy';
 import { layoutBurnUpDateAxis } from '../src/components/TaskBurnUpTiming';
 import { TaskProgressComparison } from '../src/components/TaskProgressComparison';
 import { MockTaskProvider } from '../src/i18n/MockDataProvider';

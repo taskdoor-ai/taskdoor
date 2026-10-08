@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { workspaceRootId, type WorkspaceNode } from "../src/data/workspaceNodes.ts";
+import { workspaceRootId, type WorkspaceNode } from "../src/shared/model/task-model.ts";
 import { buildTaskCreationConversationRecord, restoreTaskCreationConversationState } from "../src/lib/taskCreationConversationState.ts";
 import type { TaskPlanDraft } from "../src/lib/taskAssistantProtocol.ts";
 import { createWorkspaceTasksFromDraft, WorkspaceTaskCreationError } from "../src/lib/workspaceTaskCreation.ts";

@@ -1,4 +1,4 @@
-import type { TaskFileNode } from "../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 
 export const DISCUSSION_UPLOAD_MAX_BYTES = 20 * 1024 * 1024;
 export const DISCUSSION_UPLOAD_MAX_FILES = 10;

@@ -1,4 +1,4 @@
-import type { TaskEffortEstimate } from "./taskEffort";
+import type { TaskEffortEstimate } from "@/shared/model/task-effort";
 
 /** Shared local-Mock candidate contract. Nothing in this module writes tasks. */
 export type TaskAiEditableTask = {

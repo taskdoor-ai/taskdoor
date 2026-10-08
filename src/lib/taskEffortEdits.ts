@@ -1,4 +1,5 @@
-import { createManualEffortEstimate, getTaskEffortState, type TaskEffortEstimate, type TaskEffortTask } from './taskEffort';
+import { createManualEffortEstimate, getTaskEffortState, type TaskEffortTask } from './taskEffort';
+import { type TaskEffortEstimate } from '@/shared/model/task-effort';
 import { getTaskEffortEditSignature } from './taskEffortEditing';
 import { getCreationEffortLeaves } from './taskCreationEffort';
 import type { CreationForm } from './taskCreationForm';

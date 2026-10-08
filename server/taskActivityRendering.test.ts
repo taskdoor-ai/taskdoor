@@ -5,7 +5,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { TaskActivityLog } from "../src/components/TaskActivityLog.tsx";
 import { TaskDiscussion } from "../src/components/TaskDiscussion.tsx";
-import type { TaskActivityMock, TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import type { TaskActivityMock, TaskFileNode } from "../src/shared/model/task-model.ts";
 
 const base: TaskActivityMock = { id: "status", type: "status-change", author: "周岚", message: "更新任务状态", time: "2026-08-31 10:30:00", createdAt: "2026-08-31T02:30:00Z", changes: [{ label: "状态", before: "进行中", after: "已阻塞" }] };
 const readStyle = () => readFileSync(new URL("../src/styles/task-records.css", import.meta.url), "utf8");

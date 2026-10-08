@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
-import { normalizeWorkspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
 import { updateWorkspaceTaskStatus } from "../src/lib/workspaceTaskUpdates.ts";
 
 const task = (id: string, patch: Partial<TaskNode> = {}): TaskNode => ({ id, kind: "task", name: id, ownerId: "周岚", parentId: "root", updatedAt: "今天", status: "待开始", teamId: "team-a", ...patch });

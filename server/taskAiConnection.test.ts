@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 import test from "node:test";
 import type { AiConnectionRequest } from "../src/components/AiConnectionDialog.tsx";
 import type { TaskRelationSummary } from "../src/components/TaskRelationsSection.tsx";
-import type { TaskActivityMock, TaskDetailMock, TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import type { TaskActivityMock, TaskDetailContent, TaskFileNode } from "../src/shared/model/task-model.ts";
 
 const moduleUrl = new URL("../src/lib/taskAiConnection.ts", import.meta.url);
 async function build(input: Record<string, unknown>): Promise<AiConnectionRequest> {
@@ -15,12 +15,12 @@ async function build(input: Record<string, unknown>): Promise<AiConnectionReques
 const discussion: TaskActivityMock = { id: "discussion-1", author: "member-author", type: "member-post", message: "保留原文：请核对合作状态。\n第二行也不改。", file: "核对表.xlsx", time: "今天 09:00", createdAt: "2026-09-01T01:00:00Z" };
 const reply: TaskActivityMock = { id: "reply-1", author: "member-reply", type: "member-reply", message: "预算仍待确认。", replyToActivityId: discussion.id, time: "6 分钟前" };
 const file: TaskFileNode = { id: "file-1", kind: "file", parentId: "folder-1", name: "核对表.xlsx", format: "XLSX", version: 3, updatedAt: "今天", sizeLabel: "10 KB", content: "不得导出的文件完整正文", previewData: { kind: "text", text: "不得导出的预览数据" } };
-const task: TaskDetailMock = {
+const task: TaskDetailContent = {
   title: " 当前标题原文 ", goal: " 当前目标原文\n不扩大范围。 ", owner: "member-owner", participants: ["member-accepted", "member-pending", "member-unknown"],
   participantInvitationStatus: { "member-accepted": "accepted", "member-pending": "pending" }, status: "进行中", due: "9 月 8 日", summary: "旧 AI 摘要不得作为当前事实",
   completionCriteria: [" 标准第一项 ", "标准第二项"], executionTips: ["执行建议原文"], activities: [discussion, reply], files: [file], commits: [],
 };
-const input = (overrides: Partial<TaskDetailMock> = {}) => ({ taskId: "current-task", task: { ...task, ...overrides }, currentUser: "current-user" });
+const input = (overrides: Partial<TaskDetailContent> = {}) => ({ taskId: "current-task", task: { ...task, ...overrides }, currentUser: "current-user" });
 const contextValue = (request: AiConnectionRequest, label: string) => request.context.find(item => item.label === label)?.value ?? "";
 const textOf = (request: AiConnectionRequest) => JSON.stringify(request);
 const relation = (id: string, overrides: Partial<TaskRelationSummary> = {}): TaskRelationSummary => ({ id, title: `${id} 标题`, goal: `${id} 目标`, status: "待开始", owner: `${id}-owner`, dueAt: "2026-09-09", ...overrides });

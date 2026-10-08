@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskNode, WorkspaceNode } from "../src/data/workspaceNodes";
+import type { TaskNode, WorkspaceNode } from "../src/shared/model/task-model";
 import { applyCurrentTaskCriteria, applySavedTaskCriteria, validateTaskCriteria } from "../src/lib/taskCriteriaEditing";
 
 const parent: TaskNode = { id: "parent", kind: "task", name: "主任务", parentId: null, ownerId: "owner", status: "进行中", updatedAt: "昨天" };

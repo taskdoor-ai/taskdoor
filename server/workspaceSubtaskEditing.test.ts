@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
-import { normalizeWorkspaceNodes, workspaceRootId, type TaskNode, type WorkspaceNode } from "../src/data/workspaceNodes.ts";
+import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { workspaceRootId, type TaskNode, type WorkspaceNode } from "../src/shared/model/task-model.ts";
 import { getEffortScopeKey, getTaskEffortState } from "../src/lib/taskEffort.ts";
 import { commitTaskAiStorage, TASK_AI_JOURNAL_KEY } from "../src/lib/taskAiAdjustmentStorage.ts";
 

@@ -4,8 +4,9 @@ import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/data/taskDeta
 import { getTaskDefinitionGoal } from "../src/lib/taskAiAdjustmentAdapters.ts";
 import { getTeamTaskDetailFixture } from "../src/data/teamTaskDetailFixtures.ts";
 import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
-import { getTaskDiagnosisDescendants, getTaskDiagnosisReport, type TaskDiagnosisTask } from "../src/lib/taskDiagnosis.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
+import { getTaskDiagnosisDescendants, getTaskDiagnosisReport } from "../src/lib/taskDiagnosis.ts";
+import { type TaskDiagnosisTask } from "../src/shared/model/task-diagnosis.ts";
 
 const nodes = teamWorkspaceScenarios.flatMap((scenario) => scenario.nodes).filter((node): node is TaskNode => node.kind === "task");
 function fixture(id: string) {

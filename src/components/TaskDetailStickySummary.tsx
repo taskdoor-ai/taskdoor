@@ -1,6 +1,6 @@
 import { CalendarDays, ChevronUp } from "lucide-react";
 import { type RefObject, useEffect, useLayoutEffect, useRef } from "react";
-import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
+import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 import { PersonAvatar, PersonName } from "./PersonAvatar";
 import { TaskIcon } from "./TaskIcon";
 import { TaskStatusBadge, type TaskStatus } from "./TaskStatusBadge";

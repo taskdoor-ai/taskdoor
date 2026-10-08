@@ -34,11 +34,12 @@ import { PersonalTagsProvider } from "./components/PersonalTags";
 import { getPersonalTagStorageKey, loadPersonalTags, preparePersonalTaskTags } from "./lib/personalTags";
 import { PersonalCenterModal, type PersonalCenterModule } from "./components/PersonalInfoDialog";
 import { createInitialTaskListFilters, type TaskListFilters } from "./components/taskListFilters";
-import { createWorkspaceTaskDetail, taskDetailMocks, type TaskActivityChange, type TaskActivityMock, type TaskActivityType, type TaskDetailId, type TaskDetailMock } from "./data/taskDetailMocks";
+import { createWorkspaceTaskDetail, taskDetailMocks } from "./data/taskDetailMocks";
+import { type TaskActivityChange, type TaskActivityMock, type TaskActivityType, type TaskDetailId, type TaskDetailContent, workspaceRootId, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
 import { getTeamTaskDiagnosisSnapshot, getTeamTaskDetailFixture } from "./data/teamTaskDetailFixtures";
 import { getTaskAcceptedEffortMinutes } from "./data/taskProgressExamples";
 import { initialTags, type TagDefinition } from "./data/tagGroups";
-import { normalizeWorkspaceNodes, workspaceRootId, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode } from "./data/workspaceNodes";
+import { normalizeWorkspaceNodes } from "./data/workspaceNodes";
 import { loadPersonalCenterState, personalCenterChangedEvent, personalCenterStorageKey, type PersonalCenterState } from "./data/memberProfiles";
 import { allTeamWorkspaceNodes as initialWorkspaceNodes, getTeamMembers, getTeamWorkspaceNodes, getTeamWorkspaceScenario } from "./data/teamWorkspaceScenarios";
 import { legacyTaskSources, loadLatestLegacyTaskSnapshot, loadLegacyTaskSnapshots, persistLegacyTaskSnapshots, type LegacyTaskSnapshot } from "./data/legacyTaskSnapshots";
@@ -755,7 +756,7 @@ function App() {
   const selectedLegacyTask = selectedTaskId ? legacyTaskSnapshots[selectedTaskId] : undefined;
   // 示例原文只使用首次快照；当前字段编辑不能重写已有事件、提交或文件名称。
   const selectedTaskSeedNode = taskDetailSeedNodes.find((node) => node.id === selectedTaskId);
-  const customTaskDetail: TaskDetailMock | undefined = selectedTaskId && selectedTreeTask?.kind === "task" && !selectedTaskMock ? !selectedLegacyTask ? createWorkspaceTaskDetail(selectedTaskSeedNode ?? selectedTreeTask) : {
+  const customTaskDetail: TaskDetailContent | undefined = selectedTaskId && selectedTreeTask?.kind === "task" && !selectedTaskMock ? !selectedLegacyTask ? createWorkspaceTaskDetail(selectedTaskSeedNode ?? selectedTreeTask) : {
     activities: [{ id: `${selectedTaskId}-created`, author: "TaskDoor AI", message: "此任务来自已停用的旧创建流程；原有文件、成员与父子任务关系已保留。", time: "历史记录", type: "ai-insight" }],
     commits: [],
     due: selectedLegacyTask.plannedStartOn && selectedLegacyTask.plannedEndOn ? formatPeriodLabel(selectedLegacyTask.plannedStartOn, selectedLegacyTask.plannedEndOn) : selectedTreeTask.dueAt ?? "—",
@@ -782,7 +783,7 @@ function App() {
     title: selectedTreeTask.name,
   } : undefined;
   const rawTaskDetailBase = customTaskDetail ?? selectedTaskMock;
-  const selectedTaskDetailBase: TaskDetailMock | undefined = rawTaskDetailBase && selectedTaskId
+  const selectedTaskDetailBase: TaskDetailContent | undefined = rawTaskDetailBase && selectedTaskId
     ? withCreatedProjectProgressDetail(rawTaskDetailBase, selectedTaskId, createdProjectProgressDemo) : rawTaskDetailBase;
   const selectedTaskPeriodOverride = selectedTaskId ? taskPeriodOverrides[selectedTaskId] : undefined;
   const selectedParticipants = selectedTaskDetailBase && selectedTreeTask?.kind === "task"

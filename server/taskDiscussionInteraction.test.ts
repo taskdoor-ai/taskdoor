@@ -9,7 +9,7 @@ import { DiscussionMessages, ReplyReference } from "../src/components/discussion
 import { DiscussionComposer } from "../src/components/discussion/DiscussionComposer.tsx";
 import { MentionComposer } from "../src/components/MentionComposer.tsx";
 import { getTaskDiscussionThreads } from "../src/lib/taskActivity.ts";
-import type { TaskActivityMock } from "../src/data/taskDetailMocks.ts";
+import type { TaskActivityMock } from "../src/shared/model/task-model.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 

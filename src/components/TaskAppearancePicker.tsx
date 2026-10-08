@@ -1,6 +1,6 @@
 import { useRemainingCopy } from "../i18n/remainingMessages";
 import { useDetailCopy } from "../i18n/detailMessages";
-import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
+import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 import { TaskIcon, taskIconOptions, taskIconToneOptions } from "./TaskIcon";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { AppearancePicker } from "./AppearancePicker";

@@ -1,6 +1,6 @@
 import { CalendarClock, ChevronDown, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
-import type { PersonOption } from "../data/sharedTypes";
+import type { PersonOption } from "@/shared/model/task-model";
 import { describeTaskCollaborationSchedule, type CollaborationScheduleCandidate, type CollaborationSchedulePerson, type CollaborationScheduleTask } from "../lib/taskCollaborationSchedule";
 import { PersonAvatar } from "./PersonAvatar";
 import { Button } from "./ui/button";

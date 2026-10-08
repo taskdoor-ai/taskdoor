@@ -1,6 +1,6 @@
 import { getTaskProgressDisplay, type TaskProgressContext } from "./taskProgressDisplay";
 import { rollupProgressForecast } from "../data/taskProgressHistory";
-import type { TaskBurnUpSeries } from "./taskBurnUp";
+import type { TaskBurnUpSeries } from "@/shared/model/task-burn-up";
 import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "./taskEffortDistribution";
 import { getTaskProgressAssessment } from "./taskProgressAssessment";
 import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "./taskProgressComparison";

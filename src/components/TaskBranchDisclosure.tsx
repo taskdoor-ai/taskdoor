@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
-import type { TaskNode } from '../data/workspaceNodes';
+import type { TaskNode } from '@/shared/model/task-model';
 import { useI18n } from '../i18n/I18nProvider';
 import { useMockText } from '../i18n/MockDataProvider';
 import '../styles/task-branch-disclosure.css';

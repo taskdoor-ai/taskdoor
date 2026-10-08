@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { allTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
 import { taskStatusOptions } from "../src/components/TaskStatusBadge.tsx";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 import { migrateTaskStatusDemoFixtures } from "../src/lib/taskStatusDemoMigration.ts";
 
 test("所有内置 Mock 任务只使用产品支持的五种状态", () => {

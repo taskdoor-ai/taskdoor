@@ -1,5 +1,5 @@
 import type { TeamMembership, TeamResponsibilityProfile } from '../data/memberProfiles';
-import type { TaskNode, WorkspaceNode } from '../data/workspaceNodes';
+import type { TaskNode, WorkspaceNode } from '@/shared/model/task-model';
 
 /** Upgrade legacy roles without changing a transferred owner or the original creator. */
 export function normalizeTeamOwnership(team: TeamResponsibilityProfile): TeamResponsibilityProfile {

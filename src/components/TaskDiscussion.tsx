@@ -3,7 +3,7 @@ import { useDetailCopy } from "../i18n/detailMessages";
 import type { AiShortcutAttempt, AiTransferResult } from "./AiConnectionDialog";
 import { MessageSquare } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import type { TaskFileNode } from "../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 import type { CollaborationMessage, DiscussionDraft } from "../lib/taskCollaboration";
 import { getTaskDiscussionThreads } from "../lib/taskActivity";
 import type { DiscussionAiTarget } from "../lib/taskDiscussionAi";

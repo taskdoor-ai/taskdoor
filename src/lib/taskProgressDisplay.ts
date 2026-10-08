@@ -1,5 +1,5 @@
 import { taskCalendarDate, taskScheduleError } from "./taskSchedule";
-import type { TaskNode } from "../data/workspaceNodes";
+import type { TaskNode } from "@/shared/model/task-model";
 import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "./taskProgressComparison";
 
 export type TaskProgressContext = Partial<Pick<TaskNode, "status" | "plannedStartOn" | "plannedEndOn" | "createdAt" | "effortBaseline" | "effortEstimate" | "goal" | "completionCriteria" | "executionTips">> & {

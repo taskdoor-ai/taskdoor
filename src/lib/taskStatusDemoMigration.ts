@@ -1,5 +1,5 @@
 import { allTeamWorkspaceNodes } from "../data/teamWorkspaceScenarios";
-import type { WorkspaceNode } from "../data/workspaceNodes";
+import type { WorkspaceNode } from "@/shared/model/task-model";
 
 const fixtureTeams = new Map(allTeamWorkspaceNodes
   .filter(node => node.kind === "task")

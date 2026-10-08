@@ -3,7 +3,7 @@ import { useDetailCopy } from "../../i18n/detailMessages";
 import { useMockText } from "../../i18n/MockDataProvider";
 import { ChevronDown, ChevronRight, File, FileText, FileType2, Folder, FolderOpen, Image, MoreHorizontal, NotebookTabs, Pencil, RotateCcw, Sheet, Trash2, MoveRight } from "lucide-react";
 import React, { type KeyboardEvent } from "react";
-import type { TaskFileNode } from "../../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 import { getDefaultFileIcon, sortTaskFileNodes } from "../../lib/taskFileTree";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 

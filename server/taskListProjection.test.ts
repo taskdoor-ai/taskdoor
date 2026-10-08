@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import test from "node:test";
 import { getTaskStatusFilters, getTaskTagFilters, taskMatchesListFilters, type TaskListFilters } from "../src/components/taskListFilters.ts";
-import type { TagDefinition } from "../src/data/sharedTypes.ts";
-import type { TaskNode, WorkspaceNode } from "../src/data/workspaceNodes.ts";
+import type { TagDefinition, TaskNode, WorkspaceNode } from "../src/shared/model/task-model.ts";
+
 import { buildPersonalTaskTagGroups, isTaskInPersonalIndex } from "../src/lib/taskListProjection.ts";
 
 const tags: TagDefinition[] = [

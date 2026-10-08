@@ -3,10 +3,8 @@ import { useGlobalUi } from "../i18n/globalUi";
 import { useDetailCopy } from "../i18n/detailMessages";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
-import {
-  createManualEffortEstimate, formatEffortPersonDays, getTaskEffortState, MINUTES_PER_PERSON_DAY,
-  summarizeTaskEffort, type TaskEffortEstimate, type TaskEffortTask,
-} from "../lib/taskEffort";
+import { createManualEffortEstimate, formatEffortPersonDays, getTaskEffortState, MINUTES_PER_PERSON_DAY, summarizeTaskEffort, type TaskEffortTask } from "../lib/taskEffort";
+import { type TaskEffortEstimate } from "@/shared/model/task-effort";
 import { getTaskEffortEditSignature } from "../lib/taskEffortEditing";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";

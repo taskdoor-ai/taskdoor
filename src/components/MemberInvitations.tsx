@@ -4,7 +4,7 @@ import { mockTeamName } from "../i18n/mockContent";
 import { useModuleCopy } from "../i18n/moduleMessages";
 import { createContext, useContext, useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from "react";
 import { savePersonalCenterState, type PersonalCenterState, type TeamAccessRole } from "../data/memberProfiles";
-import type { PersonOption } from "../data/sharedTypes";
+import type { PersonOption } from "@/shared/model/task-model";
 import { canInviteTeamMembers, createTeamEmailInvitation, normalizeInvitationEmail } from "../lib/teamInvitations";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";

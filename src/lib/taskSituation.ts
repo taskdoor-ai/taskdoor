@@ -1,7 +1,7 @@
 import type { TaskProgressDisplay } from "./taskProgressDisplay";
 import type { TaskEffortDistribution } from "./taskEffortDistribution";
 import type { TaskRelationSummary } from "../components/TaskRelationsSection";
-import type { TaskActivityMock, TaskDetailMock } from "../data/taskDetailMocks";
+import type { TaskActivityMock, TaskDetailContent } from "@/shared/model/task-model";
 
 export type TaskSituationReference = {
   kind: "task" | "file" | "activity" | "subtasks" | "criteria" | "details" | "discussion";
@@ -25,7 +25,7 @@ export type TaskSituationModel = {
 };
 export type TaskSituationInput = {
   taskId: string;
-  task: TaskDetailMock;
+  task: TaskDetailContent;
   /** Same validated projection shown in the progress chart; no ID-based copy fallback. */
   progress?: TaskProgressDisplay;
   progressScopeState?: TaskEffortDistribution["state"];
@@ -40,7 +40,7 @@ export type TaskSituationInput = {
 };
 
 export type DefaultTaskSituationSummaryInput = {
-  status: TaskDetailMock["status"];
+  status: TaskDetailContent["status"];
   completedChildCount: number;
   remainingChildCount: number;
   cancelledChildCount: number;

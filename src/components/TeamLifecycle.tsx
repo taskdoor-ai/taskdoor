@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { ArrowRightLeft, Check, ChevronLeft, ChevronRight, Crown, MoreHorizontal, Search } from 'lucide-react';
 import type { TeamMembership, TeamResponsibilityProfile } from '../data/memberProfiles';
-import type { TaskNode, WorkspaceNode } from '../data/workspaceNodes';
+import type { TaskNode, WorkspaceNode } from '@/shared/model/task-model';
 import type { Member } from './MemberSelector';
 import { PersonPicker } from './PersonPicker';
 import { activeMembership, canRemoveTeamMember, getHandoffTasks, handoffSignature } from '../lib/teamMembershipLifecycle';

@@ -3,7 +3,7 @@ import { useDetailCopy } from "../../i18n/detailMessages";
 import { useMockText } from "../../i18n/MockDataProvider";
 import { ArrowLeft, File, FolderPlus, History, MessageCircle, MoreHorizontal, MoveRight, Pencil, Save, Search, Upload, X } from "lucide-react";
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
-import type { TaskFileNode } from "../../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 import { readTaskDiagnosisFiles, type TaskDiagnosisFileSnapshot } from "../../lib/taskDiagnosisContext";
 import { applyTaskFileEdit, createTaskFileRevision, getTaskFileContent, getTaskFileLastUpdate, readTaskFileEdits, saveTaskFileEdit, type TaskFileContent, type TaskFileEditRecord } from "../../lib/taskFileEditing";
 import { getTaskFileDrafts, syncTaskFileDraftWarning, updateTaskFileDrafts, type TaskFileDraft } from "../../lib/taskFileDrafts";

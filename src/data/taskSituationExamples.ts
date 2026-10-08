@@ -1,14 +1,15 @@
 import type { TaskRelationSummary } from "../components/TaskRelationsSection";
 import type { TaskSituationGroup } from "../lib/taskSituation";
-import { createWorkspaceTaskDetail, taskDetailMocks, type TaskDetailId, type TaskDetailMock } from "./taskDetailMocks";
-import { workspaceNodes, type TaskNode } from "./workspaceNodes";
+import { createWorkspaceTaskDetail, taskDetailMocks } from "./taskDetailMocks";
+import { type TaskDetailId, type TaskDetailContent, type TaskNode } from "@/shared/model/task-model";
+import { workspaceNodes } from "./workspaceNodes";
 
 export type TaskSituationExample = {
   asOf: string;
   summary: string;
   groups: TaskSituationGroup[];
   baseline: {
-    task: TaskDetailMock;
+    task: TaskDetailContent;
     taskGoals: string[];
     childTasks: TaskRelationSummary[];
     dependencyTasks: TaskRelationSummary[];

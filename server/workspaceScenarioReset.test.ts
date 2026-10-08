@@ -3,7 +3,8 @@ import test from "node:test";
 import { creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
 import type { TagDefinition } from "../src/data/tagGroups.ts";
 import { allTeamWorkspaceNodes, multiTeamTags, teamWorkspaceExpansionNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
 import { getEffortScopeKey, getTaskEffortState } from "../src/lib/taskEffort.ts";
 import { getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
 import {

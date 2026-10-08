@@ -1,4 +1,4 @@
-import type { TaskNode } from '../data/workspaceNodes';
+import type { TaskNode } from '@/shared/model/task-model';
 import copies from './mock/createdTasks.json';
 import savedCopies from './mock/savedCreationTasks.json';
 import type { MockTaskCopy } from './mockContent';

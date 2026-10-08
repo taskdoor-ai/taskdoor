@@ -1,62 +1,10 @@
-import { parseCriterionReviews, type CriterionReview } from "../lib/taskCriterionReview";
-import { effortEstimateSchema, getEffortScopeKey, type TaskEffortEstimate } from "../lib/taskEffort";
+import { parseCriterionReviews } from "../lib/taskCriterionReview";
+import { getEffortScopeKey } from "../lib/taskEffort";
+import { effortEstimateSchema, type TaskEffortEstimate } from "@/shared/model/task-effort";
+import { taskIconNameValues, taskIconToneValues, workspaceRootId, type FileNode, type FolderNode, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode, type WorkspaceTaskStatus } from "@/shared/model/task-model";
 import { applyProgressDemoFixture, getProgressDemoCreatedAt } from "./taskProgressDemoFixtures";
-import {isValidTaskEffortBaseline, type TaskEffortBaseline} from "../lib/taskEffortBaseline";
+import {isValidTaskEffortBaseline} from "../lib/taskEffortBaseline";
 
-type BaseNode = {
-  id: string;
-  kind: "folder" | "task" | "file";
-  name: string;
-  parentId: string | null;
-  /** Local fixture projection only. Production authorization must remain server-side. */
-  teamId?: string;
-  updatedAt: string;
-};
-
-export type FolderNode = BaseNode & { kind: "folder" };
-
-export const taskIconToneValues = ["neutral", "blue", "cyan", "green", "amber", "red", "purple", "pink", "teal", "orange", "indigo", "slate", "ocean", "jade", "olive", "apricot", "lilac", "rose"] as const;
-export type TaskIconTone = typeof taskIconToneValues[number];
-export const taskIconNameValues = ["list-todo", "clipboard-check", "target", "flag", "briefcase", "file-check", "chart", "sparkles", "megaphone", "shopping-bag", "gift", "store", "pen-tool", "palette", "camera", "video", "mic", "file-text", "presentation", "book-open", "code", "bug", "database", "globe", "users", "message-square", "calendar-days", "handshake", "rocket", "lightbulb", "shield-check", "package"] as const;
-export type TaskIconName = typeof taskIconNameValues[number];
-type WorkspaceTaskStatus = "待开始" | "进行中" | "待审核" | "已阻塞" | "已完成" | "已取消";
-
-export type TaskNode = BaseNode & {
-  kind: "task";
-  completionCriteria?: string[];
-  criterionReviews?: CriterionReview[];
-  executionTips?: string[];
-  effortEstimate?: TaskEffortEstimate;
-  effortBaseline?: TaskEffortBaseline;
-  proposedOwnerId?: string;
-  createdFrom?: "task-planner" | "task-editor";
-  createdBy?: string;
-  createdAt?: string;
-  completedAt?: string;
-  progressReopenedAt?: string;
-  dependsOnTaskIds?: string[];
-  ownerId: string;
-  participantIds?: string[];
-  parentTaskId?: string;
-  plannedEndOn?: string;
-  plannedStartOn?: string;
-  status: WorkspaceTaskStatus;
-  goal?: string;
-  dueAt?: string;
-  iconName?: TaskIconName;
-  iconTone?: TaskIconTone;
-  labels?: string[];
-};
-
-export type FileNode = BaseNode & {
-  kind: "file";
-  fileType: string;
-  size?: string;
-};
-
-export type WorkspaceNode = FolderNode | TaskNode | FileNode;
-
-export const workspaceRootId = "workspace-root";
 export const creatorCommerceCampaignId = "fragrance-campaign";
 export const creatorCommerceMainTaskId = "fragrance-creator-wrapup";
 

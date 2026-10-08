@@ -1,6 +1,8 @@
 import type { TaskEffortDistributionInput } from "./taskEffortDistribution";
-import { effortEstimateSchema, getTaskEffortState } from "./taskEffort";
-import { getTaskBurnUpModel, type TaskBurnUpSeries } from "./taskBurnUp";
+import { getTaskEffortState } from "./taskEffort";
+import { effortEstimateSchema } from "@/shared/model/task-effort";
+import { getTaskBurnUpModel } from "./taskBurnUp";
+import { type TaskBurnUpSeries } from "@/shared/model/task-burn-up";
 import { getTaskEffortBaselineSeries } from "./taskEffortBaseline";
 
 export type TaskProgressAssessmentState = "zero" | "single" | "partial" | "ready" | "stale" | "unavailable" | "invalid";

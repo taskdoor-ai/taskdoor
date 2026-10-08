@@ -9,9 +9,9 @@ import { MockTaskProvider, useMockText } from "../i18n/MockDataProvider";
 import { taskCalendarDate } from "../lib/taskSchedule";
 import { ArrowLeft, Check, ChevronRight, Plus, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
-import { type TaskActivityMock, type TaskDetailMock, type TaskFileNode } from "../data/taskDetailMocks";
+import { type TaskActivityMock, type TaskDetailContent, type TaskFileNode, type TaskIconName, type TaskIconTone } from "@/shared/model/task-model";
 import { type TagDefinition } from "../data/tagGroups";
-import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
+
 import { getTaskDetailTabForTarget, getTaskInsightSource, isDiscussionActivity } from "../lib/taskActivity";
 import type { TaskAiAdjustmentContext, TaskAiAdjustmentProposal, TaskAiAdjustmentScope } from "../lib/taskAiAdjustmentTypes";
 import { buildDiscussionAiRequest, type DiscussionAiTarget } from "../lib/taskDiscussionAi";
@@ -115,7 +115,7 @@ type TaskDetailProps = {
   progressTask?: TaskProgressContext;
   tagDefinitions?: TagDefinition[];
   tags?: string[];
-  task: TaskDetailMock;
+  task: TaskDetailContent;
   taskId: string;
 };
 

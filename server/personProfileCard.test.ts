@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createPersonProfileCardModel } from "../src/components/personProfileCardModel.ts";
-import type { PersonOption } from "../src/data/sharedTypes.ts";
+import type { PersonOption } from "../src/shared/model/task-model.ts";
 
 const profile: PersonOption = {
   dynamicResponsibility: "达人筛选、建联、佣金谈判、排期与合作确认",

@@ -1,4 +1,4 @@
-import type { TaskDiagnosisEvidence, TaskDiagnosisFinding, TaskDiagnosisTask } from "./taskDiagnosis";
+import type { TaskDiagnosisEvidence, TaskDiagnosisFinding, TaskDiagnosisTask } from "@/shared/model/task-diagnosis";
 
 type RecordRow = { evidence: TaskDiagnosisEvidence; cells: Record<string, string> };
 export const resultTaskDiagnosisIds = new Set([

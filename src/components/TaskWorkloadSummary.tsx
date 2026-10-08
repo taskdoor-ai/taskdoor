@@ -1,5 +1,5 @@
 import { useI18n } from "../i18n/I18nProvider";
-import { useProgressCopy } from "../i18n/progressCopy";
+import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { useGlobalUi } from "../i18n/globalUi";
 import React from "react";
 import { getTaskProgressDisplay, type TaskProgressContext } from "../lib/taskProgressDisplay";
@@ -7,7 +7,7 @@ import { TaskProgressOverview } from "./TaskProgressOverview";
 import { TaskProgressStage } from "./TaskProgressStage";
 import { TaskProgressRefresh } from "./TaskProgressRefresh";
 import { getTaskWorkloadProjection } from "../lib/taskWorkloadProjection";
-import type { TaskBurnUpSeries } from "../lib/taskBurnUp";
+import type { TaskBurnUpSeries } from "@/shared/model/task-burn-up";
 import { formatEffortPersonDays } from "../lib/taskEffort";
 import { type TaskEffortDistributionInput } from "../lib/taskEffortDistribution";
 import { TaskBurnUpSparkline } from "./TaskBurnUpSparkline";

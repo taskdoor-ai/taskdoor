@@ -4,7 +4,7 @@ import { canManageRecycledTask, RECYCLE_BIN_KEY, RETENTION_MS, recycleTask, chan
 import { getTaskDeletionPreview, getTaskDeletionWrites, type SubtaskWorkspaceState } from '../src/lib/workspaceSubtaskEditing.ts';
 import { commitTaskAiStorage } from '../src/lib/taskAiAdjustmentStorage.ts';
 import type { TeamResponsibilityProfile } from '../src/data/memberProfiles.ts';
-import type { TaskNode } from '../src/data/workspaceNodes.ts';
+import type { TaskNode } from '../src/shared/model/task-model.ts';
 const task = (id: string, props: Partial<TaskNode> = {}): TaskNode => ({ id, name:id, kind:'task', teamId:'team', parentId:'workspace-root', ownerId:'owner', status:'进行中', updatedAt:'昨天', ...props });
 const team = { id:'team', memberships:[{memberId:'team-owner',status:'active',role:'owner'}, {memberId:'owner', status:'active',role:'member'}, {memberId:'admin',status:'active',role:'admin'}, {memberId:'other',status:'active',role:'member'}] } as TeamResponsibilityProfile;
 const state = (): SubtaskWorkspaceState => ({ nodes:[task('parent'),task('root',{parentTaskId:'parent'}),task('child',{parentTaskId:'root',ownerId:'former',participantIds:['other','former']})], activities:{root:[]},detailSeeds:[],ownerProposals:{},participantInvitations:{},periodOverrides:{root:{start:'2026-09-01',end:'2026-09-02'}},legacySnapshots:{},latestLegacySnapshot:null });

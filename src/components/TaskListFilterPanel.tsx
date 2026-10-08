@@ -4,7 +4,7 @@ import { mockTagName } from "../i18n/mockContent";
 import { useRemainingCopy } from "../i18n/remainingMessages";
 import { ArrowLeft, CalendarDays, CalendarPlus, Check, ChevronRight, CircleDashed, Inbox, ListFilter, Search, Tag, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import type { TagDefinition } from "../data/sharedTypes";
+import type { TagDefinition } from "@/shared/model/task-model";
 import { getTaskScopeFilter, getTaskStatusFilters, getTaskTagFilters, taskDateFilterLabel, taskScopeLabels, type TaskListDateFilter, type TaskListFilters } from "./taskListFilters";
 import { getTagIcon } from "./TagBadge";
 import { taskStatusDefinition, type TaskStatus } from "./TaskStatusBadge";

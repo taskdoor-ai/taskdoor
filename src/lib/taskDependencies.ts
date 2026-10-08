@@ -1,4 +1,4 @@
-import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes";
+import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 import { createTaskChangeActivity } from "./taskActivity";
 
 type DependencyTask = { id: string; parentTaskId?: string; dependsOnTaskIds?: string[] };

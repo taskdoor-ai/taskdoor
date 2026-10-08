@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 
 // A missing implementation is an explicit failing assertion during the first TDD run.
 const editing = await import("../src/lib/taskFileEditing.ts").catch((error: unknown) => {

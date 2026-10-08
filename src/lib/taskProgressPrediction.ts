@@ -1,4 +1,4 @@
-import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes";
+import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 import { rollupProgressForecast, rollupProgressHistory } from "../data/taskProgressHistory";
 import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "./taskProgressComparison";
 import { getTaskProgressDisplay } from "./taskProgressDisplay";

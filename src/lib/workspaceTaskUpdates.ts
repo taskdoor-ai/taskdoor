@@ -1,4 +1,4 @@
-import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes";
+import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
 export function updateWorkspaceTaskStatus(
   nodes: WorkspaceNode[],

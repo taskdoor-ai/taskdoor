@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import type { PersonOption } from "../src/data/sharedTypes.ts";
+import type { PersonOption } from "../src/shared/model/task-model.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 

@@ -4,7 +4,7 @@ import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { TaskWorkloadSummary } from "../src/components/TaskWorkloadSummary.tsx";
-import type { TaskBurnUpSeries } from "../src/lib/taskBurnUp.ts";
+import type { TaskBurnUpSeries } from "../src/shared/model/task-burn-up.ts";
 import { getEffortScopeKey } from "../src/lib/taskEffort.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;

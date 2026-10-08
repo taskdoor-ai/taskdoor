@@ -31,6 +31,9 @@ const SKIPPED = new Set(["test-lab", "prd", "assets"].map((name) => path.join(sr
 const KNOWN_CYCLES = {};
 // The number of edges in feature-dependencies.json when it was set. It may only fall.
 const MAX_FEATURE_EDGES = 0;
+// While src/ is being moved into the layers, a feature may be declared before its directory exists.
+// Set to true once every declared feature has a directory: then the two lists must be equal.
+const REQUIRE_EVERY_FEATURE_DIRECTORY = false;
 // Lower bounds: below these the scan has stopped reading the tree, and "no violations" means nothing.
 const MIN_FILES = 100;
 const MIN_SPECIFIERS = 500;
@@ -128,10 +131,15 @@ for (const file of files) {
 const graphProblems = [];
 const edges = Object.entries(graph).flatMap(([from, to]) => Object.keys(to).map((name) => [from, name]));
 const featuresDir = path.join(src, "features");
+let featureNote = "";
 if (existsSync(featuresDir)) {
   const directories = readdirSync(featuresDir, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
   const declared = Object.keys(graph).sort();
-  if (directories.join() !== declared.join()) graphProblems.push(`feature-dependencies.json 的 feature（${declared.join(", ")}）与 src/features 下的目录（${directories.join(", ")}）不一致`);
+  const undeclared = directories.filter((name) => !declared.includes(name));
+  const missing = declared.filter((name) => !directories.includes(name));
+  if (undeclared.length) graphProblems.push(`src/features 下的目录没有登记在 feature-dependencies.json：${undeclared.join(", ")}`);
+  if (missing.length && REQUIRE_EVERY_FEATURE_DIRECTORY) graphProblems.push(`feature-dependencies.json 登记的 feature 没有目录：${missing.join(", ")}`);
+  else if (missing.length) featureNote = `  已登记、目录尚未建立的 feature：${missing.join(", ")}`;
 }
 for (const [from, to] of edges) {
   if (!(to in graph)) graphProblems.push(`边 ${from} -> ${to} 指向未登记的 feature`);
@@ -179,6 +187,7 @@ const total = (rule) => Object.values(counts[rule]).reduce((sum, n) => sum + n, 
 console.log("TaskDoor structure check");
 console.log(`  扫描文件 ${files.length}，import 说明符 ${specifierCount}，feature 边 ${edges.length}`);
 for (const rule of Object.keys(RULES)) console.log(`  ${rule}: ${total(rule)}（棘轮 ${Object.values(baseline[rule] ?? {}).reduce((sum, n) => sum + n, 0)}）`);
+if (featureNote) console.log(featureNote);
 
 let failed = false;
 if (files.length < MIN_FILES || specifierCount < MIN_SPECIFIERS) {

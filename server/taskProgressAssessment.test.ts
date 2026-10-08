@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getEffortScopeKey, type TaskEffortEstimate } from "../src/lib/taskEffort.ts";
+import { getEffortScopeKey } from "../src/lib/taskEffort.ts";
+import { type TaskEffortEstimate } from "../src/shared/model/task-effort.ts";
 import type { TaskEffortDistributionInput } from "../src/lib/taskEffortDistribution.ts";
 import { getTaskProgressAssessment } from "../src/lib/taskProgressAssessment.ts";
 

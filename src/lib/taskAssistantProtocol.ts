@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { taskIconNameValues, taskIconToneValues } from "../data/workspaceNodes";
-import { effortEstimateSchema } from "./taskEffort";
+import { taskIconNameValues, taskIconToneValues } from "@/shared/model/task-model";
+import { effortEstimateSchema } from "@/shared/model/task-effort";
 
 const dateValueSchema = z.union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)]);
 const taskIconNameSchema = z.enum(taskIconNameValues);

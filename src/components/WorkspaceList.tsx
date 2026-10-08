@@ -1,8 +1,8 @@
 import { LayoutDashboard, List, Plus, Search, Tags } from "lucide-react";
 import { useState } from "react";
 import { type TagDefinition } from "../data/tagGroups";
-import type { PersonOption } from "../data/sharedTypes";
-import { type TaskNode, type WorkspaceNode } from "../data/workspaceNodes";
+import { type PersonOption, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
+
 import { PersonPicker } from "./PersonPicker";
 import { WorkspaceDirectoryView } from "./WorkspaceDirectoryView";
 import { WorkspaceTaskBoard } from "./WorkspaceTaskBoard";

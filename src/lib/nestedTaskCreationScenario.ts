@@ -1,7 +1,7 @@
 import type { ScenarioContext } from "./taskCreationScenario";
 import type { TaskPlanDraft } from "./taskAssistantProtocol";
 import { assignTaskByResponsibility } from "./responsibilityAssignment";
-import type { TaskIconName, TaskIconTone, TaskNode, WorkspaceNode } from "../data/workspaceNodes";
+import type { TaskIconName, TaskIconTone, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
 const nestedTaskVisuals: Record<string, { iconName: TaskIconName; iconTone: TaskIconTone; parentTitle?: string }> = {
   "新品达人带货项目": { iconName: "target", iconTone: "blue" },

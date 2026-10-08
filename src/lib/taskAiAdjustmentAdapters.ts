@@ -1,6 +1,6 @@
 import { taskScheduleError } from "./taskSchedule";
-import type { TaskActivityMock } from "../data/taskDetailMocks";
-import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes";
+import type { TaskActivityMock, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
+
 import { createTaskChangeActivity } from "./taskActivity";
 import { buildTaskAiAdjustment, getTaskAiContextSignature } from "./taskAiAdjustment";
 import type { TaskAiAdjustmentContext, TaskAiAdjustmentProposal, TaskAiEditableTask } from "./taskAiAdjustmentTypes";

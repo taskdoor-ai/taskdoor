@@ -1,6 +1,7 @@
 import { allTeamWorkspaceNodes } from "../data/teamWorkspaceScenarios";
 import { progressDemoRevisions } from "../data/taskProgressDemoFixtures";
-import { normalizeWorkspaceNodes, type TaskNode, type WorkspaceNode } from "../data/workspaceNodes";
+import { normalizeWorkspaceNodes } from "../data/workspaceNodes";
+import { type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
 import type { TaskActivityStore } from "./taskActivity";
 import { getEffortScopeKey } from "./taskEffort";
 

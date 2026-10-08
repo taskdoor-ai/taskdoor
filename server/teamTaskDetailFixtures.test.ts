@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 import {
   TEAM_DETAIL_FIXTURE_PROVENANCE,
   TEAM_DETAIL_SCOPE_TASK_IDS,

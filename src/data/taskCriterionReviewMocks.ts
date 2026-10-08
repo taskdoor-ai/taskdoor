@@ -1,5 +1,5 @@
 import fixtures from './taskCriterionReviewMocks.json';
-import type { TaskNode, WorkspaceNode } from './workspaceNodes';
+import type { TaskNode, WorkspaceNode } from '@/shared/model/task-model';
 import type { CriterionReview } from '../lib/taskCriterionReview';
 
 type DemoReview = CriterionReview & { evidenceEn: string };

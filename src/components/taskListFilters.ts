@@ -1,4 +1,4 @@
-import type { TaskNode } from "../data/workspaceNodes";
+import type { TaskNode } from "@/shared/model/task-model";
 import { taskUpdatedTime } from "../lib/taskListPresentation.ts";
 
 export const taskDateFilterLabels = {

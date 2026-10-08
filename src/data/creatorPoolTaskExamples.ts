@@ -1,5 +1,5 @@
-import type { TaskActivityMock, TaskDetailMock, TaskFileNode } from "./taskDetailMocks";
-import type { TaskNode } from "./workspaceNodes";
+import type { TaskActivityMock, TaskDetailContent, TaskFileNode, TaskNode } from "@/shared/model/task-model";
+
 import { getTaskProgressEvents } from "./taskProgressExamples";
 
 type PoolPost = { at: string; author: string; message: string };
@@ -180,7 +180,7 @@ function groupExample(task: TaskNode): PoolExample | undefined {
   };
 }
 
-export function getCreatorPoolTaskExample(task: TaskNode): Pick<TaskDetailMock, "activities" | "files" | "commits" | "summary"> | undefined {
+export function getCreatorPoolTaskExample(task: TaskNode): Pick<TaskDetailContent, "activities" | "files" | "commits" | "summary"> | undefined {
   if (task.teamId !== "creator-commerce" || task.createdFrom) return undefined;
   const spec = Object.hasOwn(examples, task.id) ? examples[task.id] : groupExample(task);
   if (!spec) return undefined;

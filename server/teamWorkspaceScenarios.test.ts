@@ -10,7 +10,8 @@ import {
 } from "../src/data/teamWorkspaceScenarios.ts";
 import { getTaskEffortState } from "../src/lib/taskEffort.ts";
 import { getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
-import { normalizeWorkspaceNodes, workspaceRootId, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { workspaceRootId, type TaskNode } from "../src/shared/model/task-model.ts";
 import { initialPersonalCenterState, isPersonalCenterState } from "../src/data/memberProfiles.ts";
 
 const expectedLeafIds: Record<string, string[]> = {

@@ -1,4 +1,4 @@
-import type { TaskFileNode } from "../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 import { sortTaskFileNodes } from "./taskFileTree";
 
 export type TaskFileSearchResult = { file: TaskFileNode; folderPath: string };

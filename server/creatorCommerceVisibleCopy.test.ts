@@ -5,7 +5,8 @@ import { fileURLToPath } from "node:url";
 import { creatorCommerceMembers } from "../src/data/creatorCommerceScenario.ts";
 import { initialPersonalCenterState, loadPersonalCenterState } from "../src/data/memberProfiles.ts";
 import { taskDetailMocks } from "../src/data/taskDetailMocks.ts";
-import { workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
 import { buildPersonalWorkbenchItems, buildPersonalWorkbenchModel } from "../src/lib/personalWorkbench.ts";
 
 const sourcePath = (relativePath: string) => fileURLToPath(new URL(`../${relativePath}`, import.meta.url));

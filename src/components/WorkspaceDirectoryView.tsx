@@ -1,7 +1,7 @@
 import { CalendarDays, ChevronLeft, ChevronRight, CornerDownRight, ListTree } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 import { findTagByName, type TagDefinition } from "../data/tagGroups";
-import { type TaskNode } from "../data/workspaceNodes";
+import { type TaskNode } from "@/shared/model/task-model";
 import { getTaskTimeRangeLabel } from "../lib/taskTimeRange";
 import { PersonAvatar, PersonName } from "./PersonAvatar";
 import { TagBadge } from "./TagBadge";

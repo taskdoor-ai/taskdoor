@@ -1,5 +1,5 @@
 import { Megaphone, ShoppingBag, Gift, Store, PenTool, Palette, Camera, Video, Mic, FileText, Presentation, BookOpen, Code, Bug, Database, Globe, Users, MessageSquare, CalendarDays, Handshake, Rocket, Lightbulb, ShieldCheck, Package, BriefcaseBusiness, ChartNoAxesColumnIncreasing, ClipboardCheck, FileCheck2, Flag, ListTodo, Sparkles, Target, type LucideIcon } from "lucide-react";
-import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
+import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 
 export const taskIconOptions: Array<{ icon: LucideIcon; label: string; value: TaskIconName }> = [
   { icon: ListTodo, label: "任务清单", value: "list-todo" },

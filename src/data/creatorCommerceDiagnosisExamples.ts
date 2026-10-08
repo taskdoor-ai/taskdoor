@@ -1,6 +1,6 @@
-import type { TaskDiagnosisSnapshot } from "../lib/taskDiagnosis";
-import type { TaskActivityMock } from "./taskDetailMocks";
-import type { TaskNode } from "./workspaceNodes";
+import type { TaskDiagnosisSnapshot } from "@/shared/model/task-diagnosis";
+import type { TaskActivityMock, TaskNode } from "@/shared/model/task-model";
+
 
 type DiagnosisExampleSpec = {
   facts: [

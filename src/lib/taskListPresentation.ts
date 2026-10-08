@@ -1,4 +1,4 @@
-import type { TaskNode } from "../data/workspaceNodes";
+import type { TaskNode } from "@/shared/model/task-model";
 
 // Old demo labels have no absolute timestamp. Anchor them once per session, not on each render.
 const legacyReference = new Date();

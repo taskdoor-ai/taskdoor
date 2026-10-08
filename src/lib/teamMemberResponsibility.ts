@@ -1,5 +1,5 @@
 import type { PersonalCenterState, TeamMembership } from "../data/memberProfiles";
-import type { PersonOption } from "../data/sharedTypes";
+import type { PersonOption } from "@/shared/model/task-model";
 
 export function resolveTeamMemberResponsibility(membership: Pick<TeamMembership, "responsibility">, member?: Pick<PersonOption, "dynamicResponsibility">) {
   if (membership.responsibility !== undefined) return membership.responsibility.trim() || "未填写责任";

@@ -3,7 +3,8 @@ import test from "node:test";
 import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/data/taskDetailMocks.ts";
 import { getTeamTaskDiagnosisSnapshot } from "../src/data/teamTaskDetailFixtures.ts";
 import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import { creatorCommerceMainTaskId, workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { creatorCommerceMainTaskId, workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
 import { getTaskDiagnosisDescendants, getTaskDiagnosisReport } from "../src/lib/taskDiagnosis.ts";
 
 test("未完成的前置任务形成参考提醒，不直接判定当前任务不能推进", () => {

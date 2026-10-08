@@ -3,7 +3,7 @@ import { useCreationI18n } from "../i18n/creationMessages";
 import { Plus, Trash2, UserRound, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { findTagByName, type TagDefinition } from "../data/tagGroups";
-import type { TaskIconName, TaskIconTone } from "../data/workspaceNodes";
+import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 import { hasValidCreationDependencies, type CreationForm, type CreationTask } from "../lib/taskCreationForm";
 import { createTaskMemberRecommendations } from "../lib/taskMemberRecommendations";
 import { MemberSelector, type Member } from "./MemberSelector";

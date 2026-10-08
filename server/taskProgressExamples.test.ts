@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createWorkspaceTaskDetail, taskDetailMocks, type TaskDetailId } from "../src/data/taskDetailMocks.ts";
+import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/data/taskDetailMocks.ts";
+import { type TaskDetailId, type TaskNode } from "../src/shared/model/task-model.ts";
 import { getTaskHeadingExample } from "../src/data/taskHeadingExamples.ts";
 import { getTaskAcceptedEffortMinutes, getTaskProgressBurnUp, getTaskProgressEvents } from "../src/data/taskProgressExamples.ts";
-import { workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { workspaceNodes } from "../src/data/workspaceNodes.ts";
 import { getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
 
 const parentId = "fragrance-creator-wrapup";

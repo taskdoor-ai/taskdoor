@@ -1,5 +1,5 @@
 import type { AiConnectionRequest } from "../components/AiConnectionDialog";
-import type { TaskActivityMock, TaskDetailMock } from "../data/taskDetailMocks";
+import type { TaskActivityMock, TaskDetailContent } from "@/shared/model/task-model";
 import type { CollaborationMessage } from "./taskCollaboration";
 import { getTaskDiscussionThreads, isDiscussionActivity } from "./taskActivity";
 
@@ -9,7 +9,7 @@ export type DiscussionAiTarget =
 
 type DiscussionAiInput = {
   taskId: string;
-  task: Omit<TaskDetailMock, "activities"> & { activities: CollaborationMessage[] };
+  task: Omit<TaskDetailContent, "activities"> & { activities: CollaborationMessage[] };
   tags?: string[];
   target: DiscussionAiTarget;
   currentUser: string;

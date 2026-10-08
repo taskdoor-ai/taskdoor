@@ -1,4 +1,4 @@
-import type { PersonOption, TagDefinition } from "./sharedTypes";
+import type { PersonOption, TagDefinition } from "@/shared/model/task-model";
 
 /** 达人带货场景的协作成员，设置页和任务助手共用这一份 Fixture。 */
 export const creatorCommerceMembers: PersonOption[] = [

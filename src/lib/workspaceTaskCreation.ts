@@ -1,7 +1,7 @@
 import { taskScheduleError } from "./taskSchedule";
-import { workspaceRootId, type TaskNode, type WorkspaceNode } from "../data/workspaceNodes";
+import { workspaceRootId, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
 import type { TaskDraft, TaskPlanDraft } from "./taskAssistantProtocol";
-import { effortEstimateSchema, type TaskEffortEstimate } from "./taskEffort";
+import { effortEstimateSchema, type TaskEffortEstimate } from "@/shared/model/task-effort";
 import { commitTaskAiStorage } from "./taskAiAdjustmentStorage";
 import { createTaskEffortBaseline } from "./taskEffortBaseline";
 import { defaultCreationParticipantIds } from "./taskCreationParticipants";

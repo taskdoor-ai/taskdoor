@@ -1,7 +1,7 @@
 import { useRemainingCopy } from "../i18n/remainingMessages";
 import { Check, type LucideIcon } from "lucide-react";
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
-import type { TaskIconTone } from "../data/workspaceNodes";
+import type { TaskIconTone } from "@/shared/model/task-model";
 import type { TagColorName } from "../data/tagGroups";
 
 type Props<Icon extends string, Color extends string> = {

@@ -1,7 +1,7 @@
 import { useGlobalUi } from "../../i18n/globalUi";
 import { Check, Search, X } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
-import type { TaskFileNode } from "../../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 import { sortTaskFileNodes } from "../../lib/taskFileTree";
 import { searchTaskFiles } from "../../lib/taskFileSearch";
 import { TaskFileNodeIcon } from "../task-files/TaskFileTree";

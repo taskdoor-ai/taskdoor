@@ -6,8 +6,8 @@ import { statusMessageKey } from "../i18n/taskStatus";
 import { ArrowDownUp, ChevronDown, CircleDashed, ListFilter, MoreHorizontal, Pin, Plus, Search, Trash2, UserRound, X } from "lucide-react";
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { PersonOption, TagDefinition } from "../data/sharedTypes";
-import type { TaskNode } from "../data/workspaceNodes";
+import type { PersonOption, TagDefinition, TaskNode } from "@/shared/model/task-model";
+
 import type { TaskListProjection } from "../lib/taskListProjection";
 import { taskUpdatedLabel, taskUpdatedTime } from "../lib/taskListPresentation";
 import { partitionPinnedTasks, pinnedTaskStorageKey, readPinnedTaskIds, togglePinnedTaskId, writePinnedTaskIds } from "../lib/taskPins";

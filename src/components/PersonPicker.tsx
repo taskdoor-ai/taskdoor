@@ -11,10 +11,10 @@ import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react
 import { cn } from "@/lib/utils";
 import { sortMembersByRecommendation, type TaskMemberRecommendationLevel, type TaskMemberRecommendations } from "../lib/taskMemberRecommendations";
 import { PersonAvatar, PersonName, type PersonInvitationStatus } from "./PersonAvatar";
-import type { PersonOption } from "../data/sharedTypes";
+import type { PersonOption } from "@/shared/model/task-model";
 import { useMemberInvitations } from "./MemberInvitations";
 import { getInvitationDraft } from "../lib/teamInvitations";
-export type { PersonOption } from "../data/sharedTypes";
+export type { PersonOption } from "@/shared/model/task-model";
 
 type PersonPickerCommonProps = {
   allowInvitations?: boolean;

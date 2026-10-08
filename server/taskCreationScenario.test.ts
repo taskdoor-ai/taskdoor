@@ -4,7 +4,8 @@ import test from "node:test";
 import { creatorCommerceMembers, creatorCommercePrompt, creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
 import { taskCreationScenarios } from "../src/data/taskCreationScenarios.ts";
 import { nestedTaskCreationPrompt } from "../src/lib/nestedTaskCreationScenario.ts";
-import { workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
+import { workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
 import { advanceTaskCreationScenario, startTaskCreationScenario } from "../src/lib/taskCreationScenario.ts";
 
 const scenarioContext = {

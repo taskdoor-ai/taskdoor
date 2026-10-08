@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { TaskDetailMock, TaskFileNode } from "../data/taskDetailMocks";
+import type { TaskDetailContent, TaskFileNode } from "@/shared/model/task-model";
 import { applyTaskFileEdit, readTaskFileEdits } from "./taskFileEditing";
 import { createCollaborationSnapshot, loadCollaboration, mergeCollaborationMessages, saveCollaboration, TASK_COLLABORATION_STORAGE_PREFIX, type CollaborationSnapshot } from "./taskCollaboration";
 
@@ -12,7 +12,7 @@ function withSavedFiles(snapshot: CollaborationSnapshot, taskId: string): Collab
 }
 
 /** Read-only projection for the task context. Corruption is surfaced by the editing view. */
-export function projectTaskCollaboration(teamId: string, taskId: string, detail: TaskDetailMock): TaskDetailMock {
+export function projectTaskCollaboration(teamId: string, taskId: string, detail: TaskDetailContent): TaskDetailContent {
   if (typeof window === "undefined") return detail;
   try {
     const saved = withSavedFiles(loadCollaboration(window.localStorage, collaborationScope(teamId, taskId), detail.files), taskId);

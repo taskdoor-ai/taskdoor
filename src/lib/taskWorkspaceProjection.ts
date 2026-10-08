@@ -1,4 +1,4 @@
-import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes.ts";
+import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model.ts";
 
 export type TaskOverviewProjection = {
   countLabel: "子任务" | "相关任务";

@@ -1,4 +1,4 @@
-import type { TaskDiagnosisEvidence } from "./taskDiagnosis";
+import type { TaskDiagnosisEvidence } from "@/shared/model/task-diagnosis";
 
 /** 讨论、活动只能补充背景，不能替代冲突的文件或任务要求。 */
 export function hasTaskDecisionBasis(evidence: TaskDiagnosisEvidence[]): boolean {

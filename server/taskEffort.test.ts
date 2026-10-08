@@ -16,7 +16,8 @@ async function effort() {
 }
 
 test("估算契约区分未知和零，拒绝无效分钟及版本", async () => {
-  const { effortEstimateSchema, getEffortScopeKey } = await effort();
+  const { getEffortScopeKey } = await effort();
+  const { effortEstimateSchema } = await import("../src/shared/model/task-effort.ts");
   const base = { minutes: 90, workMethod, reason, basis: "manual", confirmed: true, scopeKey: getEffortScopeKey(scope, workMethod), version: 1 };
   for (const minutes of [null, 0, 90, Number.MAX_SAFE_INTEGER]) assert.equal(effortEstimateSchema.parse({ ...base, minutes }).minutes, minutes);
   for (const minutes of [-1, 1.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1, "90"]) assert.equal(effortEstimateSchema.safeParse({ ...base, minutes }).success, false);

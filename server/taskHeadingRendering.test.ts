@@ -4,8 +4,9 @@ import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/data/taskDetailMocks.ts";
-import { workspaceNodes, type TaskNode } from "../src/data/workspaceNodes.ts";
-import type { TaskBurnUpSeries } from "../src/lib/taskBurnUp.ts";
+import { workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { type TaskNode } from "../src/shared/model/task-model.ts";
+import type { TaskBurnUpSeries } from "../src/shared/model/task-burn-up.ts";
 
 async function renderTrend(series?: TaskBurnUpSeries) {
   assert.ok(existsSync(new URL("../src/components/TaskBurnUpSparkline.tsx", import.meta.url)), "头部应提供可读数的小型燃起趋势");

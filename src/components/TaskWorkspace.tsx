@@ -2,8 +2,8 @@ import { useMockText } from "../i18n/MockDataProvider";
 import { useI18n } from "../i18n/I18nProvider";
 import { PanelLeft } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, type ReactNode } from "react";
-import type { PersonOption, TagDefinition } from "../data/sharedTypes";
-import type { TaskNode, WorkspaceNode } from "../data/workspaceNodes";
+import type { PersonOption, TagDefinition, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
+
 import { buildTaskListProjection, buildTaskScopeCounts } from "../lib/taskListProjection";
 import { TaskWorkspaceList } from "./TaskWorkspaceList";
 import { normalizeTaskWorkspaceFilters, type TaskListFilters } from "./taskListFilters";

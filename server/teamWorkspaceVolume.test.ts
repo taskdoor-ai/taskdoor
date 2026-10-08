@@ -7,7 +7,7 @@ import {
 import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
 import { getTeamTaskDetailFixture } from "../src/data/teamTaskDetailFixtures.ts";
 import { getTaskEffortState } from "../src/lib/taskEffort.ts";
-import type { TaskNode } from "../src/data/workspaceNodes.ts";
+import type { TaskNode } from "../src/shared/model/task-model.ts";
 import { getTaskSituationExample } from "../src/data/taskSituationExamples.ts";
 
 const tasksOf = (nodes: typeof teamWorkspaceScenarios[number]["nodes"]) =>

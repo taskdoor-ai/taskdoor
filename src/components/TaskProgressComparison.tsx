@@ -1,4 +1,4 @@
-import { useProgressCopy } from "../i18n/progressCopy";
+import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { useBurnUpWidth } from "../lib/useBurnUpWidth";
 import { TaskProgressHistory } from "./TaskProgressHistory";
 import React, { useId } from "react";

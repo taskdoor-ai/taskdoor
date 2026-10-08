@@ -2,7 +2,7 @@ import { taskCreationDay, taskScheduleError } from "./taskSchedule";
 import { taskCreationScenarios, type TaskCreationScenarioId } from "../data/taskCreationScenarios";
 import { advanceTaskCreationScenario, startTaskCreationScenario, type ExistingTaskCandidate, type ScenarioContext } from "./taskCreationScenario";
 import type { TaskDraft, TaskPlanDraft } from "./taskAssistantProtocol";
-import { effortEstimateSchema } from "./taskEffort";
+import { effortEstimateSchema } from "@/shared/model/task-effort";
 import { reconcileCreationEffort } from "./taskCreationEffort";
 import { defaultCreationParticipantIds } from "./taskCreationParticipants";
 import { creationHierarchyError, getCreationDescendantIds } from "./taskCreationHierarchy";

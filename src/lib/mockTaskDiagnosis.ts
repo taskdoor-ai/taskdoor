@@ -1,4 +1,4 @@
-import type { TaskDiagnosisEvidence, TaskDiagnosisFinding, TaskDiagnosisTask } from "./taskDiagnosis";
+import type { TaskDiagnosisEvidence, TaskDiagnosisFinding, TaskDiagnosisTask } from "@/shared/model/task-diagnosis";
 import { getTaskActivityItems } from "./taskActivity";
 import { getTaskFileContent } from "./taskFileEditing";
 import { getResultTaskDiagnosis, resultTaskDiagnosisIds } from "./resultTaskDiagnosis";

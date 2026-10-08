@@ -13,7 +13,7 @@ import {
   setNodeIcon,
   sortTaskFileNodes,
 } from "../src/lib/taskFileTree.ts";
-import type { TaskFileNode } from "../src/data/taskDetailMocks.ts";
+import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 
 const nodes: TaskFileNode[] = [
   { id: "root", kind: "folder", name: "项目", parentId: null, updatedAt: "今天" },

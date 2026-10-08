@@ -1,7 +1,7 @@
 import { CalendarDays, Clock3, GripVertical, MoreHorizontal, UsersRound } from "lucide-react";
 import { useState, type DragEvent } from "react";
 import type { TagDefinition } from "../data/tagGroups";
-import type { TaskNode } from "../data/workspaceNodes";
+import type { TaskNode } from "@/shared/model/task-model";
 import { taskBoardStatusOrder, taskBoardStatusTone, type TaskBoardStatus } from "../lib/taskBoard";
 import { getTaskTimeRangeLabel } from "../lib/taskTimeRange";
 import { PersonAvatar } from "./PersonAvatar";

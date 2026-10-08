@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getEffortScopeKey, type TaskEffortEstimate } from "../src/lib/taskEffort.ts";
+import { getEffortScopeKey } from "../src/lib/taskEffort.ts";
+import { type TaskEffortEstimate } from "../src/shared/model/task-effort.ts";
 import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "../src/lib/taskEffortDistribution.ts";
 
 const scope = { goal: "交付可复核结果", completionCriteria: ["核对结果与原始资料"], executionTips: ["先检查原始资料"] };

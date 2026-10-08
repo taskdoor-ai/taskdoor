@@ -9,7 +9,7 @@ import { mockPersonName } from "../i18n/mockContent";
 import { PreviewCard } from "@base-ui/react/preview-card";
 import React, { type ComponentPropsWithoutRef, type CSSProperties, forwardRef, type ReactElement, useEffect, useRef, useState } from "react";
 import { ClipboardCheck, Mail, Phone, UserRound, X } from "lucide-react";
-import type { PersonOption } from "../data/sharedTypes";
+import type { PersonOption } from "@/shared/model/task-model";
 import { useResolvedPersonProfile } from "./PersonDirectory";
 import { createPersonProfileCardModel } from "./personProfileCardModel";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";

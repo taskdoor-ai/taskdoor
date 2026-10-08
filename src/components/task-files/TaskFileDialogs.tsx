@@ -1,7 +1,7 @@
 import { useGlobalUi } from "../../i18n/globalUi";
 import { File, FileText, FileType2, Folder, Image, NotebookTabs, Sheet } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import type { TaskFileNode } from "../../data/taskDetailMocks";
+import type { TaskFileNode } from "@/shared/model/task-model";
 import { getDescendantIds, getNodePath, sortTaskFileNodes, type FolderDeletePolicy } from "../../lib/taskFileTree";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
