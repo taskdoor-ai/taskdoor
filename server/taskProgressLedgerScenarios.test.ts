@@ -8,9 +8,9 @@ import {
   validateTaskProgressScenario,
   type TaskProgressEvent,
   type TaskProgressScenario,
-} from "../src/data/taskProgressExamples.ts";
-import { getTaskBurnUpModel } from "../src/lib/taskBurnUp.ts";
-import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
+} from "../src/ai/mock/data/taskProgressExamples.ts";
+import { getTaskBurnUpModel } from "../src/features/tasks/lib/task-burn-up.ts";
+import { teamWorkspaceScenarios } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
 import type { TaskNode } from "../src/shared/model/task-model.ts";
 
 const byDay = (parentTaskId: string) => new Map(

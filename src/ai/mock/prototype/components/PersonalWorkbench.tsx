@@ -1,17 +1,17 @@
-import { useI18n } from "../i18n/I18nProvider";
-import { useMockText } from "../i18n/MockDataProvider";
-import { workbenchPriorityReason } from "../i18n/workbenchCopy";
-import { useGlobalUi } from "../i18n/globalUi";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
+import { workbenchPriorityReason } from "@/ai/mock/prototype/workbench-copy";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useMemo } from "react";
 import { ArrowLeft, ArrowRight, ChevronDown, ClipboardCheck, LoaderCircle, RefreshCw, Sparkles } from "lucide-react";
-import { Button } from "./ui/button";
-import { TaskIcon } from "./TaskIcon";
+import { Button } from "@/shared/ui/button";
+import { TaskIcon } from "@/features/tasks/components/TaskIcon";
 import {
   buildPersonalWorkbenchItems, buildPersonalWorkbenchPriorities,
   type PersonalWorkbenchModel,
   type PersonalWorkbenchPriority,
-} from "../lib/personalWorkbench";
-import "../styles/personal-workbench.css";
+} from "@/ai/mock/lib/personalWorkbench";
+import "@/ai/mock/prototype/styles/personal-workbench.css";
 
 type PersonalWorkbenchProps = {
   analysisError?: string;

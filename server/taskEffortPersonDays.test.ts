@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import * as effort from "../src/lib/taskEffort.ts";
+import * as effort from "../src/features/tasks/lib/task-effort.ts";
 
 test("预计投入统一按 480 分钟一人天显示，缺失和微量投入不变成零", () => {
   assert.equal(typeof effort.formatEffortPersonDays, "function");

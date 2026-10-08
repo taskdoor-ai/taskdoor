@@ -1,10 +1,10 @@
-import { useGlobalUi } from "../../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { File, FileText, FileType2, Folder, Image, NotebookTabs, Sheet } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import { getDescendantIds, getNodePath, sortTaskFileNodes, type FolderDeletePolicy } from "../../lib/taskFileTree";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { getDescendantIds, getNodePath, sortTaskFileNodes, type FolderDeletePolicy } from "@/features/tasks/files/lib/task-file-tree";
+import { Button } from "@/shared/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
 
 export type TaskFileDialogState = { type: "create"; parentId: string | null } | { type: "rename" | "move" | "delete" | "icon"; nodeId: string } | null;
 const iconOptions = [{ name: "Folder", label: "文件夹", Icon: Folder }, { name: "File", label: "文件", Icon: File }, { name: "FileText", label: "文档", Icon: FileText }, { name: "FileType2", label: "文本", Icon: FileType2 }, { name: "Sheet", label: "表格", Icon: Sheet }, { name: "Image", label: "图片", Icon: Image }, { name: "NotebookTabs", label: "笔记", Icon: NotebookTabs }];

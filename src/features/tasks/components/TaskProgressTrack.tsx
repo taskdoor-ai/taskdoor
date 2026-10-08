@@ -1,4 +1,4 @@
-import { useGlobalUi } from "../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import React from "react";
 
 const percent = (ratio: number) => `${Number((ratio * 100).toFixed(1))}%`;

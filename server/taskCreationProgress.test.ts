@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creatorCommerceMembers, creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
-import { taskCreationScenarios, type TaskCreationScenarioId } from "../src/data/taskCreationScenarios.ts";
-import { workspaceNodes } from "../src/data/workspaceNodes.ts";
-import { planTaskCreation } from "../src/lib/taskCreationPlanning.ts";
-import { createCreationRelationshipProcess, getCreationDisplayStage, getCreationFeedback, getCreationProcessStepState, getCreationResponseSummary, markLatestCreationDecisionResolved, recordCreationAdjustmentProgress, type CreationProcess } from "../src/lib/taskCreationProgress.ts";
-import type { TaskAiAdjustmentProgress } from "../src/lib/taskAiAdjustmentTypes.ts";
-import * as creationProgress from "../src/lib/taskCreationProgress.ts";
-import type { ScenarioContext } from "../src/lib/taskCreationScenario.ts";
+import { creatorCommerceMembers, creatorCommerceTags } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { taskCreationScenarios, type TaskCreationScenarioId } from "../src/ai/mock/data/taskCreationScenarios.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
+import { planTaskCreation } from "../src/ai/mock/lib/taskCreationPlanning.ts";
+import { createCreationRelationshipProcess, getCreationDisplayStage, getCreationFeedback, getCreationProcessStepState, getCreationResponseSummary, markLatestCreationDecisionResolved, recordCreationAdjustmentProgress, type CreationProcess } from "../src/features/tasks/lib/task-creation-progress.ts";
+import type { TaskAiAdjustmentProgress } from "../src/features/tasks/lib/task-ai-adjustment-types.ts";
+import * as creationProgress from "../src/features/tasks/lib/task-creation-progress.ts";
+import type { ScenarioContext } from "../src/ai/mock/lib/taskCreationScenario.ts";
 
 const context: ScenarioContext = {
   currentDate: "2026-08-31", currentUserId: "周岚", members: creatorCommerceMembers,

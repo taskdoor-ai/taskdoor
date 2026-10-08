@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode, type WorkspaceNode } from "../src/shared/model/task-model.ts";
-import { applySavedTaskAiAdjustment, createSavedTaskAiContext, getTaskDefinitionGoal } from "../src/lib/taskAiAdjustmentAdapters.ts";
-import { buildTaskAiAdjustment } from "../src/lib/taskAiAdjustment.ts";
-import { newCreationTask, toTaskPlanDraft, type CreationForm } from "../src/lib/taskCreationForm.ts";
-import { reconcileCreationEffort } from "../src/lib/taskCreationEffort.ts";
-import { createWorkspaceTasksFromDraft } from "../src/lib/workspaceTaskCreation.ts";
-import { addWorkspaceSubtask } from "../src/lib/workspaceSubtaskEditing.ts";
+import { applySavedTaskAiAdjustment, createSavedTaskAiContext, getTaskDefinitionGoal } from "../src/features/tasks/lib/task-ai-adjustment-adapters.ts";
+import { buildTaskAiAdjustment } from "../src/ai/mock/lib/taskAiAdjustment.ts";
+import { newCreationTask, toTaskPlanDraft, type CreationForm } from "../src/features/tasks/lib/task-creation-form.ts";
+import { reconcileCreationEffort } from "../src/features/tasks/lib/task-creation-effort.ts";
+import { createWorkspaceTasksFromDraft } from "../src/features/tasks/lib/workspace-task-creation.ts";
+import { addWorkspaceSubtask } from "../src/features/tasks/lib/workspace-subtask-editing.ts";
 
 const root: TaskNode = { id: "root", kind: "task", name: "主任务", parentId: null, goal: "原主目标", ownerId: "self", status: "待开始", updatedAt: "昨天" };
 const child: TaskNode = { ...root, id: "child", name: "子任务", parentTaskId: "root", goal: "子任务初始目标" };

@@ -3,9 +3,9 @@ import { existsSync } from "node:fs";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { getEffortScopeKey, type TaskEffortTask } from "../src/lib/taskEffort.ts";
+import { getEffortScopeKey, type TaskEffortTask } from "../src/features/tasks/lib/task-effort.ts";
 import { type TaskEffortEstimate } from "../src/shared/model/task-effort.ts";
-import { getTaskProgressComparisonExample } from "../src/data/taskProgressComparisonExamples.ts";
+import { getTaskProgressComparisonExample } from "../src/ai/mock/data/taskProgressComparisonExamples.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -23,8 +23,8 @@ function task(estimate: Partial<TaskEffortEstimate> = {}): TaskEffortTask {
 }
 
 async function render(tasks: TaskEffortTask[]) {
-  assert.ok(existsSync(new URL("../src/components/TaskEffortCost.tsx", import.meta.url)), "应提供独立的只读预计投入组件");
-  const { TaskEffortCost } = await import("../src/components/TaskEffortCost.tsx");
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskEffortCost.tsx", import.meta.url)), "应提供独立的只读预计投入组件");
+  const { TaskEffortCost } = await import("../src/features/tasks/components/TaskEffortCost.tsx");
   const html = renderToStaticMarkup(createElement(TaskEffortCost, { tasks }));
   return { html, text: html.replace(/<[^>]+>/gu, "") };
 }
@@ -84,7 +84,7 @@ test("合计超出安全整数范围时不渲染不可靠数值或中断详情",
 });
 
 test("创建工时分布用简洁数值展示条形图、预计工时与占比", async () => {
-  const { TaskEffortCost } = await import("../src/components/TaskEffortCost.tsx");
+  const { TaskEffortCost } = await import("../src/features/tasks/components/TaskEffortCost.tsx");
   const tasks = [{ ...task({ minutes: 120 }), id: "a", title: "资料整理" }, { ...task({ minutes: 1080 }), id: "b", title: "方案验证" }];
   const before = structuredClone(tasks);
   const html = renderToStaticMarkup(createElement(TaskEffortCost, { tasks, mode: "creation", showDistribution: true }));
@@ -118,7 +118,7 @@ test("创建工时分布用简洁数值展示条形图、预计工时与占比",
 });
 
 test("详情没有验收记录时保留灰色空进度条，但不补完成百分比", async () => {
-  const { TaskEffortCost } = await import("../src/components/TaskEffortCost.tsx");
+  const { TaskEffortCost } = await import("../src/features/tasks/components/TaskEffortCost.tsx");
   const tasks = [{ ...task({ minutes: 120 }), id: "a", title: "资料整理" }, { ...task({ minutes: 360 }), id: "b", title: "方案验证" }];
   const html = renderToStaticMarkup(createElement(TaskEffortCost, {
     tasks,
@@ -138,7 +138,7 @@ test("详情没有验收记录时保留灰色空进度条，但不补完成百�
 });
 
 test("详情的条宽只按自身完成度计算，不能再乘投入占比", async () => {
-  const { TaskEffortCost } = await import("../src/components/TaskEffortCost.tsx");
+  const { TaskEffortCost } = await import("../src/features/tasks/components/TaskEffortCost.tsx");
   const tasks = [{ ...task({ minutes: 600 }), id: "a", title: "制作素材" }, { ...task({ minutes: 1800 }), id: "b", title: "活动执行" }];
   const html = renderToStaticMarkup(createElement(TaskEffortCost, {
     tasks, completedMinutesByTaskId: { a: 360, b: 0 }, onOpenTask: () => {}, presentation: "summary", showDistribution: true,
@@ -156,7 +156,7 @@ test("详情的条宽只按自身完成度计算，不能再乘投入占比", as
 });
 
 test("未知、非法、过期和零分母不伪装成完成度", async () => {
-  const { TaskEffortCost } = await import("../src/components/TaskEffortCost.tsx");
+  const { TaskEffortCost } = await import("../src/features/tasks/components/TaskEffortCost.tsx");
   for (const completed of [null, NaN, Infinity, -1, 121]) {
     const html = renderToStaticMarkup(createElement(TaskEffortCost, {
       tasks: [{ ...task({ minutes: 120 }), id: "a", title: "资料整理" }],
@@ -178,7 +178,7 @@ test("未知、非法、过期和零分母不伪装成完成度", async () => {
 });
 
 test("子任务各自显示实际与同一时点预期，预期不覆盖原完成记录", async () => {
-  const { TaskEffortCost } = await import("../src/components/TaskEffortCost.tsx");
+  const { TaskEffortCost } = await import("../src/features/tasks/components/TaskEffortCost.tsx");
   const comparison = getTaskProgressComparisonExample("weekly-retro-decisions")!;
   const props = {
     tasks: [{...task({minutes:120}),id:"a",title:"核对结论"}],
@@ -213,7 +213,7 @@ test("子任务各自显示实际与同一时点预期，预期不覆盖原完�
 });
 
 test("相同成本保留原序，零投入先于未知与过期记录且缺估不产生色阶占比", async () => {
-  const { TaskEffortCost } = await import("../src/components/TaskEffortCost.tsx");
+  const { TaskEffortCost } = await import("../src/features/tasks/components/TaskEffortCost.tsx");
   const tasks = [
     { id: "missing-a", title: "尚未估算甲" },
     { ...task({ minutes: 60 }), id: "low", title: "一小时甲" },
@@ -237,7 +237,7 @@ test("相同成本保留原序，零投入先于未知与过期记录且缺估�
 });
 
 test("创建候选保持工时读数，移除演示估算标记", async () => {
-  const { TaskEffortCost } = await import("../src/components/TaskEffortCost.tsx");
+  const { TaskEffortCost } = await import("../src/features/tasks/components/TaskEffortCost.tsx");
   const html = renderToStaticMarkup(createElement(TaskEffortCost, { tasks: [task({ basis: "mock" })], mode: "creation" }));
   assert.match(html, /约 0.19 人天/);
   assert.doesNotMatch(html, /演示估算|模型已完成估算/);

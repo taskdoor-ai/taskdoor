@@ -1,4 +1,4 @@
-import type { TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
+import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 type ScenarioSeed = { id: string; label: string; actual: number[]; expected: number[]; explanation: string; notes?: Record<number, string> };
 

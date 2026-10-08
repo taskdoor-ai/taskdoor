@@ -1,10 +1,10 @@
-import { useMockText } from "../i18n/MockDataProvider";
-import { useGlobalUi } from "../i18n/globalUi";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 import { CheckCircle2, CircleDashed, CornerDownRight, Link2 } from "lucide-react";
-import { PersonAvatar, PersonName } from "./PersonAvatar";
-import { TaskIcon } from "./TaskIcon";
-import { TaskStatusBadge, type TaskStatus } from "./TaskStatusBadge";
+import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
+import { TaskIcon } from "@/features/tasks/components/TaskIcon";
+import { TaskStatusBadge, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
 
 export type TaskRelationSummary = {
   childTaskCount?: number;

@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creatorCommerceMembers } from "../src/data/creatorCommerceScenario.ts";
-import { taskCreationScenarios } from "../src/data/taskCreationScenarios.ts";
-import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { creatorCommerceMembers } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { taskCreationScenarios } from "../src/ai/mock/data/taskCreationScenarios.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode } from "../src/shared/model/task-model.ts";
-import type { TaskPlanDraft } from "../src/lib/taskAssistantProtocol.ts";
-import { createCreationForm, newCreationTask, toTaskPlanDraft, withCreationParticipantDefaults } from "../src/lib/taskCreationForm.ts";
-import { planTaskCreation, reviseCreationPlan } from "../src/lib/taskCreationPlanning.ts";
-import { createWorkspaceTasksFromDraft } from "../src/lib/workspaceTaskCreation.ts";
+import type { TaskPlanDraft } from "../src/features/tasks/lib/task-assistant-protocol.ts";
+import { createCreationForm, newCreationTask, toTaskPlanDraft, withCreationParticipantDefaults } from "../src/features/tasks/lib/task-creation-form.ts";
+import { planTaskCreation, reviseCreationPlan } from "../src/ai/mock/lib/taskCreationPlanning.ts";
+import { createWorkspaceTasksFromDraft } from "../src/features/tasks/lib/workspace-task-creation.ts";
 
 const creator = "周岚";
 const context = { currentUserId: creator, currentDate: "2026-09-16", members: creatorCommerceMembers, tags: [] };

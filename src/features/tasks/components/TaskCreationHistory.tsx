@@ -1,8 +1,8 @@
-import { useCreationI18n } from "../i18n/creationMessages";
-import { useGlobalUi } from "../i18n/globalUi";
+import { useCreationI18n } from "@/shared/i18n/creation-messages";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { ChevronDown } from "lucide-react";
-import type { CreationProcess } from "../lib/taskCreationProgress";
-import { TaskCreationProcessView } from "./TaskCreationProcess";
+import type { CreationProcess } from "@/features/tasks/lib/task-creation-progress";
+import { TaskCreationProcessView } from "@/features/tasks/components/TaskCreationProcess";
 
 function userTurn(process: CreationProcess) {
   const answers = [

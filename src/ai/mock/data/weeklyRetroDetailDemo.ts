@@ -1,6 +1,6 @@
 import type { TaskNode, TaskDetailContent } from "@/shared/model/task-model";
 
-import { getWeeklyRetroProgressDemo, progressDemoObservedAt } from "./taskProgressDemoFixtures";
+import { getWeeklyRetroProgressDemo, progressDemoObservedAt } from "@/ai/mock/data/taskProgressDemoFixtures";
 
 /** The written evidence and progress snapshot describe the same fixed review. */
 export function getWeeklyRetroDetailDemo(task: TaskNode): TaskDetailContent | undefined {

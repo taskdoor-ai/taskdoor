@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creatorCommerceMainTaskId, workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { creatorCommerceMainTaskId, workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode } from "../src/shared/model/task-model.ts";
-import { getTaskOverviewProjection } from "../src/lib/taskWorkspaceProjection.ts";
-import { getVisibleDependencyEdges } from "../src/lib/taskOverview.ts";
+import { getTaskOverviewProjection } from "../src/features/tasks/lib/task-workspace-projection.ts";
+import { getVisibleDependencyEdges } from "../src/features/tasks/lib/task-overview.ts";
 
 const toOverviewTasks = (tasks: TaskNode[]) => tasks.map((task) => ({ ...task, owner: task.ownerId }));
 

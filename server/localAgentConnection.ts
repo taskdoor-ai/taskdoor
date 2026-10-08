@@ -5,7 +5,7 @@ import { homedir } from "node:os";
 import { delimiter, isAbsolute, join } from "node:path";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
-import { localAgentIds, type LocalAgentCheck, type LocalAgentId, type LocalAgentProbe } from "../src/lib/localAgentConnection";
+import { localAgentIds, type LocalAgentCheck, type LocalAgentId, type LocalAgentProbe } from "../src/features/ai-connection/lib/local-agent-connection";
 
 const tools: Record<LocalAgentId, { scheme: string; command: string | null }> = {
   ChatGPT: { scheme: "codex", command: "codex" },

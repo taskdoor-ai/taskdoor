@@ -1,7 +1,7 @@
-import type { CreationForm, CreationTask } from "./taskCreationForm";
-import { getEffortScopeKey } from "./taskEffort";
+import type { CreationForm, CreationTask } from "@/features/tasks/lib/task-creation-form";
+import { getEffortScopeKey } from "@/features/tasks/lib/task-effort";
 import { type TaskEffortEstimate } from "@/shared/model/task-effort";
-import { getCreationBranchLeaves } from "./taskCreationHierarchy";
+import { getCreationBranchLeaves } from "@/features/tasks/lib/task-creation-hierarchy";
 
 /** Only the leaf scope is added; a coordinator's parent estimate is never added again. */
 export function getCreationEffortLeaves(form: CreationForm): CreationTask[] {

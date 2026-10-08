@@ -1,13 +1,13 @@
-import { useGlobalUi } from "../../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { Check, Search, X } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import { sortTaskFileNodes } from "../../lib/taskFileTree";
-import { searchTaskFiles } from "../../lib/taskFileSearch";
-import { TaskFileNodeIcon } from "../task-files/TaskFileTree";
-import { Button } from "../ui/button";
-import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from "../ui/dropdown-menu";
-import { Input } from "../ui/input";
+import { sortTaskFileNodes } from "@/features/tasks/files/lib/task-file-tree";
+import { searchTaskFiles } from "@/features/tasks/files/lib/task-file-search";
+import { TaskFileNodeIcon } from "@/features/tasks/files/components/TaskFileTree";
+import { Button } from "@/shared/ui/button";
+import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from "@/shared/ui/dropdown-menu";
+import { Input } from "@/shared/ui/input";
 
 /** Browse the same folder hierarchy as the task's file list. Only files can be attached. */
 export function DiscussionFileMenu({ files, selectedIds, onSelect, parentId = null }: {

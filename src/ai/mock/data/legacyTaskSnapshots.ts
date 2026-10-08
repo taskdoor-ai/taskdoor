@@ -1,4 +1,4 @@
-import type { TaskStatus } from "../components/TaskStatusBadge";
+import type { TaskStatus } from "@/shared/ui/TaskStatusBadge";
 
 export type LegacyTaskSnapshot = {
   childTaskIds?: string[];

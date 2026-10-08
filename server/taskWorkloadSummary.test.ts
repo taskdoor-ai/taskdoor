@@ -3,9 +3,9 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskWorkloadSummary } from "../src/components/TaskWorkloadSummary.tsx";
+import { TaskWorkloadSummary } from "../src/features/tasks/components/TaskWorkloadSummary.tsx";
 import type { TaskBurnUpSeries } from "../src/shared/model/task-burn-up.ts";
-import { getEffortScopeKey } from "../src/lib/taskEffort.ts";
+import { getEffortScopeKey } from "../src/features/tasks/lib/task-effort.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -111,7 +111,7 @@ test("只有创建估算而没有进展时隐藏燃起图", () => {
 });
 
 test("子任务工时分布摘要在进度条下保持一行", () => {
-  const styles = readFileSync(new URL("../src/styles/task-effort.css", import.meta.url), "utf8");
+  const styles = readFileSync(new URL("../src/features/tasks/styles/task-effort.css", import.meta.url), "utf8");
   assert.match(styles, /task-effort-cost\[data-presentation="summary"\] \.task-effort-distribution-heading\s*\{[^}]*flex-wrap:\s*nowrap/);
   assert.match(styles, /task-effort-cost\[data-presentation="summary"\] \.task-effort-distribution-heading-end\s*\{[^}]*width:\s*auto/);
   assert.match(styles, /task-effort-cost\[data-presentation="summary"\] \.task-effort-distribution-name\s*\{[^}]*color:\s*var\(--ad-ink\)[^}]*font-weight:\s*600/);
@@ -120,7 +120,7 @@ test("子任务工时分布摘要在进度条下保持一行", () => {
 test("完成进度提供可聚焦的说明入口，并区分预测与用户确认", () => {
   const html = renderToStaticMarkup(createElement(TaskWorkloadSummary, { series }));
   assert.match(html, /<button[^>]*aria-label="完成进度说明"/);
-  const source = readFileSync(new URL("../src/components/TaskBurnUpSparkline.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskBurnUpSparkline.tsx", import.meta.url), "utf8");
   assert.match(source, /完成进度＝AI 预测完成量/);
   assert.match(source, /用户确认/);
 });
@@ -181,7 +181,7 @@ test("状态与验收账本冲突时只提示核对，不恢复重复状态卡",
 });
 
 test("详情始终接入当前任务完成度，不受子任务数量或空账本控制", () => {
-  const source = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskDetail.tsx", import.meta.url), "utf8");
   assert.match(source, /<TaskEffortCost tasks=\{effortTasks\}/);
   assert.doesNotMatch(source, /TaskEffortEditor|onTaskEffortChange|onTaskEffortBatchChange/);
   assert.doesNotMatch(source, /const hasProgressSummary|childTasks\.length > 0 && burnUp/);

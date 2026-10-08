@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { multiTeamTags, teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
+import { multiTeamTags, teamWorkspaceScenarios } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
 import type { TaskNode } from "../src/shared/model/task-model.ts";
 
 const tasksOf = (nodes: typeof teamWorkspaceScenarios[number]["nodes"]) =>

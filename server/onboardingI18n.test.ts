@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
-import { localizeOnboardingMessage, onboardingEn, onboardingTranslator, onboardingZh } from '../src/i18n/onboardingMessages.ts';
-import { createOnboardingPreview, restoreOnboardingPreview, transitionOnboarding } from '../src/lib/onboardingPreview.ts';
+import { localizeOnboardingMessage, onboardingEn, onboardingTranslator, onboardingZh } from '../src/features/auth/i18n/onboarding-messages.ts';
+import { createOnboardingPreview, restoreOnboardingPreview, transitionOnboarding } from '../src/features/auth/lib/onboarding-preview.ts';
 
 test('auth catalogs preserve placeholders and cover every transition error and notice', () => {
   for (const [key, english] of Object.entries(onboardingEn)) {
@@ -11,7 +11,7 @@ test('auth catalogs preserve placeholders and cover every transition error and n
     assert.deepEqual(english.match(/\{\w+\}/g)?.sort() ?? [], key.match(/\{\w+\}/g)?.sort() ?? []);
     assert.equal(onboardingZh[key as keyof typeof onboardingEn], key);
   }
-  const source = readFileSync(new URL('../src/lib/onboardingPreview.ts', import.meta.url), 'utf8');
+  const source = readFileSync(new URL('../src/features/auth/lib/onboarding-preview.ts', import.meta.url), 'utf8');
   for (const match of source.matchAll(/(?:fail\(|notice: )"([^"]+)"/g)) {
     assert.ok(Object.hasOwn(onboardingEn, match[1]), `Untranslated transition message: ${match[1]}`);
   }

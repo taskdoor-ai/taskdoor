@@ -1,4 +1,4 @@
-import { useGlobalUi } from "../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { ArrowUp, Paperclip, Sparkles, Square, X } from "lucide-react";
 import { memo, useCallback, useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent, type RefObject } from "react";
 

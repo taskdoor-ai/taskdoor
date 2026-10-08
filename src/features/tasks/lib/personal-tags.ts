@@ -1,5 +1,5 @@
-import { normalizeTags, type TagDefinition } from "../data/tagGroups.ts";
-import type { TaskPlanDraft } from "./taskAssistantProtocol.ts";
+import { normalizeTags, type TagDefinition } from "@/ai/mock/data/tagGroups.ts";
+import type { TaskPlanDraft } from "@/features/tasks/lib/task-assistant-protocol.ts";
 
 export const getPersonalTagStorageKey = (userId: string) => `agentdoor-personal-tags:${encodeURIComponent(userId)}`;
 

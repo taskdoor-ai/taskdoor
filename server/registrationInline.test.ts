@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createOnboardingPreview, transitionOnboarding, getPreviewCodeResendDelay, restoreOnboardingPreview } from "../src/lib/onboardingPreview.ts";
+import { createOnboardingPreview, transitionOnboarding, getPreviewCodeResendDelay, restoreOnboardingPreview } from "../src/features/auth/lib/onboarding-preview.ts";
 const initial = () => transitionOnboarding(createOnboardingPreview("invited"), { type: "auth-mode", mode: "register" });
 const send = (state = initial(), now = 1000, code = "123456") => transitionOnboarding(state, { type: "request-registration-code", email: "lin@example.com", code, now });
 const submit = (state: ReturnType<typeof initial>, code = "123456", now = 2000, email = "lin@example.com") => transitionOnboarding(state, { type: "complete-registration", name: "林晓", email, passwordDigest: "a".repeat(64), passwordLength: 10, code, now });

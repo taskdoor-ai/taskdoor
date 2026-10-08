@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {taskProgressComparisonExamples} from '../src/data/taskProgressComparisonExamples.ts';
-import {getTaskProgressComparison,getTaskProgressChart} from '../src/lib/taskProgressComparison.ts';
-import {getTaskProgressDisplay} from '../src/lib/taskProgressDisplay.ts';
-import {layoutBurnUpDateAxis} from '../src/components/TaskBurnUpTiming.tsx';
+import {taskProgressComparisonExamples} from '../src/ai/mock/data/taskProgressComparisonExamples.ts';
+import {getTaskProgressComparison,getTaskProgressChart} from '../src/features/tasks/lib/task-progress-comparison.ts';
+import {getTaskProgressDisplay} from '../src/features/tasks/lib/task-progress-display.ts';
+import {layoutBurnUpDateAxis} from '../src/features/tasks/components/TaskBurnUpTiming.tsx';
 const series=taskProgressComparisonExamples.find(s=>s.id==='behind')!;
 test('measured chart canvas holds SVG typography below 13 physical pixels at 700px without narrowing the chart',()=>{
  const display=getTaskProgressDisplay({series}),model=getTaskProgressComparison(series)!;
@@ -22,7 +22,7 @@ test('measured chart canvas holds SVG typography below 13 physical pixels at 700
 
 
 test('container observer follows resize and ignores zero hidden widths, then disconnects',async()=>{
- const {observeBurnUpWidth}=await import('../src/lib/useBurnUpWidth.ts');
+ const {observeBurnUpWidth}=await import('../src/shared/lib/useBurnUpWidth.ts');
  const descriptor=Object.getOwnPropertyDescriptor(globalThis,'ResizeObserver');
  let notify=()=>{},disconnected=false,observed:unknown,width=700;
  Object.defineProperty(globalThis,'ResizeObserver',{configurable:true,value:class {constructor(callback:()=>void){notify=callback;}observe(element:unknown){observed=element;}disconnect(){disconnected=true;}}});
@@ -37,7 +37,7 @@ test('container observer follows resize and ignores zero hidden widths, then dis
 });
 
 test('recorded history canvas uses the same physical type scale and centered date bounds',async()=>{
- const {getTaskBurnUpModel}=await import('../src/lib/taskBurnUp.ts');
+ const {getTaskBurnUpModel}=await import('../src/features/tasks/lib/task-burn-up.ts');
  const display=getTaskProgressDisplay({series});
  const recorded={source:'recorded' as const,points:[{at:'2026-09-07',scopeHours:8,completedHours:2,estimatedLeafCount:1,totalLeafCount:1},{at:'2026-09-14',scopeHours:8,completedHours:4,estimatedLeafCount:1,totalLeafCount:1}]};
  const chart=getTaskBurnUpModel(recorded,{width:700,height:52,includeDates:['2026-09-21']});

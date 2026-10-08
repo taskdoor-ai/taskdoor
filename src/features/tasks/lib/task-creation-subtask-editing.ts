@@ -1,4 +1,4 @@
-import { hasValidCreationDependencies, validateCreationTask, type CreationForm, type CreationTask } from "./taskCreationForm";
+import { hasValidCreationDependencies, validateCreationTask, type CreationForm, type CreationTask } from "@/features/tasks/lib/task-creation-form";
 
 /** Merge one input change into the latest plan; final creation checks text completeness. */
 export function syncCreationSubtaskEdit(

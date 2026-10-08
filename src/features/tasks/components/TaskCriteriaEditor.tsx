@@ -1,11 +1,11 @@
 import type { ComponentProps } from "react";
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useEffect, useId, useRef, useState } from "react";
-import { validateTaskCriteria } from "../lib/taskCriteriaEditing";
-import { TaskAiAdjustButton } from "./TaskAiAdjustmentPopover";
-import { TaskCriteriaFields } from "./TaskCriteriaFields";
-import { Button } from "./ui/button";
+import { validateTaskCriteria } from "@/features/tasks/lib/task-criteria-editing";
+import { TaskAiAdjustButton } from "@/features/tasks/components/TaskAiAdjustmentPopover";
+import { TaskCriteriaFields } from "@/features/tasks/components/TaskCriteriaFields";
+import { Button } from "@/shared/ui/button";
 
 type Props = {
   renderMark?: ComponentProps<typeof TaskCriteriaFields>["renderMark"];

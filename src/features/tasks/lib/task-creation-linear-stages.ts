@@ -1,4 +1,4 @@
-import type { CreationForm } from "./taskCreationForm";
+import type { CreationForm } from "@/features/tasks/lib/task-creation-form";
 
 export type LinearCreationStage = {
   id: "goal" | "people" | "split" | "plan" | `subtask:${string}`;

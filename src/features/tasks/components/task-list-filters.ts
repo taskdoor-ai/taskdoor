@@ -1,5 +1,5 @@
 import type { TaskNode } from "@/shared/model/task-model";
-import { taskUpdatedTime } from "../lib/taskListPresentation.ts";
+import { taskUpdatedTime } from "@/features/tasks/lib/task-list-presentation.ts";
 
 export const taskDateFilterLabels = {
   today: "今天", "this-week": "本周", "next-7-days": "未来 7 天", "past-7-days": "最近 7 天",

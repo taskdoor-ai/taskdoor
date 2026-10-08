@@ -1,11 +1,11 @@
-import { useI18n } from "../i18n/I18nProvider";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useRef } from "react";
-import { useGlobalUi } from "../i18n/globalUi";
-import { useMockText } from "../i18n/MockDataProvider";
-import type { TaskDeletionPreview } from "../lib/workspaceSubtaskEditing";
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "./ui/alert-dialog";
-import { TaskBranchDisclosure } from "./TaskBranchDisclosure";
-import { Button } from "./ui/button";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
+import type { TaskDeletionPreview } from "@/features/tasks/lib/workspace-subtask-editing";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/shared/ui/alert-dialog";
+import { TaskBranchDisclosure } from "@/features/tasks/components/TaskBranchDisclosure";
+import { Button } from "@/shared/ui/button";
 
 type Props = {
   open: boolean;

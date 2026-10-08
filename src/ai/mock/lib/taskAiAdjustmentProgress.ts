@@ -1,4 +1,4 @@
-import type { TaskAiAdjustmentProgress, TaskAiAdjustmentProposal } from "./taskAiAdjustmentTypes";
+import type { TaskAiAdjustmentProgress, TaskAiAdjustmentProposal } from "@/features/tasks/lib/task-ai-adjustment-types";
 
 /** Explain only the submitted instruction and the actual candidate's observable differences. */
 export function getTaskAiAdjustmentSteps(instruction: string, proposal?: TaskAiAdjustmentProposal): TaskAiAdjustmentProgress["steps"] {

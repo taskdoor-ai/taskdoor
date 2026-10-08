@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createPersonProfileCardModel } from "../src/components/personProfileCardModel.ts";
+import { createPersonProfileCardModel } from "../src/shared/ui/person-profile-card-model.ts";
 import type { PersonOption } from "../src/shared/model/task-model.ts";
 
 const profile: PersonOption = {

@@ -1,19 +1,19 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { ArrowRightLeft, Check, ChevronLeft, ChevronRight, Crown, MoreHorizontal, Search } from 'lucide-react';
-import type { TeamMembership, TeamResponsibilityProfile } from '../data/memberProfiles';
+import type { TeamMembership, TeamResponsibilityProfile } from '@/ai/mock/data/memberProfiles';
 import type { TaskNode, WorkspaceNode } from '@/shared/model/task-model';
-import type { Member } from './MemberSelector';
-import { PersonPicker } from './PersonPicker';
-import { activeMembership, canRemoveTeamMember, getHandoffTasks, handoffSignature } from '../lib/teamMembershipLifecycle';
-import { useI18n } from '../i18n/I18nProvider';
-import { mockPersonName, mockTaskField, mockTeamName } from '../i18n/mockContent';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from './ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
-import { toast } from './ui/toast';
-import '../styles/team-lifecycle.css';
+import type { Member } from '@/features/members/components/MemberSelector';
+import { PersonPicker } from '@/features/members/components/PersonPicker';
+import { activeMembership, canRemoveTeamMember, getHandoffTasks, handoffSignature } from '@/features/members/lib/team-membership-lifecycle';
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import { mockPersonName, mockTaskField, mockTeamName } from '@/ai/mock/i18n/mockContent';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/shared/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { toast } from '@/shared/ui/toast';
+import '@/features/members/styles/team-lifecycle.css';
 
 export type TeamLifecycleAction =
   | { kind: 'exit'; memberId: string; replacements: Record<string, string>; signature: string; note: string }

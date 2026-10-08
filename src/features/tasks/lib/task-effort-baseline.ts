@@ -1,5 +1,5 @@
-import { getTaskEffortState, type TaskEffortTask } from "./taskEffort";
-import { getTaskBurnUpModel } from "./taskBurnUp";
+import { getTaskEffortState, type TaskEffortTask } from "@/features/tasks/lib/task-effort";
+import { getTaskBurnUpModel } from "@/features/tasks/lib/task-burn-up";
 import { type TaskBurnUpSeries } from "@/shared/model/task-burn-up";
 import type { TaskEffortBaseline } from "@/shared/model/task-effort";
 

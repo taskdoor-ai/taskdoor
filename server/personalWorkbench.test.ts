@@ -1,16 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/data/taskDetailMocks.ts";
+import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/ai/mock/data/taskDetailMocks.ts";
 import { type TaskDetailId, type TaskDetailContent, type TaskNode } from "../src/shared/model/task-model.ts";
-import { getTaskProgressEvents } from "../src/data/taskProgressExamples.ts";
-import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import { workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { getTaskProgressEvents } from "../src/ai/mock/data/taskProgressExamples.ts";
+import { teamWorkspaceScenarios } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import {
   buildPersonalWorkbenchItems,
   buildPersonalWorkbenchModel,
   type PersonalWorkbenchAttention,
   type PersonalWorkbenchInput,
-} from "../src/lib/personalWorkbench.ts";
+} from "../src/ai/mock/lib/personalWorkbench.ts";
 
 const asOf = "2026-08-31T12:00:00+08:00";
 function task(id: string, overrides: Partial<TaskNode> = {}): TaskNode {

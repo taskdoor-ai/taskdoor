@@ -1,17 +1,17 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
-import { taskCalendarDate } from "../lib/taskSchedule";
-import { useBurnUpWidth } from "../lib/useBurnUpWidth";
-import { TaskProgressHistory } from "./TaskProgressHistory";
+import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
+import { useBurnUpWidth } from "@/shared/lib/useBurnUpWidth";
+import { TaskProgressHistory } from "@/features/tasks/components/TaskProgressHistory";
 import React, { useId, useState } from "react";
 import { Tooltip } from "@base-ui/react/tooltip";
 import { Info } from "lucide-react";
-import { getTaskBurnUpModel } from "../lib/taskBurnUp";
+import { getTaskBurnUpModel } from "@/features/tasks/lib/task-burn-up";
 import { type TaskBurnUpSeries } from "@/shared/model/task-burn-up";
-import { getTaskProgressAssessment, type TaskProgressAssessment } from "../lib/taskProgressAssessment";
-import { formatPersonDays, MINUTES_PER_PERSON_DAY } from "../lib/taskEffort";
-import type { TaskProgressDisplay } from "../lib/taskProgressDisplay";
-import { layoutBurnUpDateAxis, TaskBurnUpDateAxis, TaskBurnUpHeading, TaskBurnUpTimeDelta, TaskBurnUpTiming } from "./TaskBurnUpTiming";
-import { TaskBurnUpNode } from "./TaskBurnUpNode";
+import { getTaskProgressAssessment, type TaskProgressAssessment } from "@/features/tasks/lib/task-progress-assessment";
+import { formatPersonDays, MINUTES_PER_PERSON_DAY } from "@/features/tasks/lib/task-effort";
+import type { TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import { layoutBurnUpDateAxis, TaskBurnUpDateAxis, TaskBurnUpHeading, TaskBurnUpTimeDelta, TaskBurnUpTiming } from "@/features/tasks/components/TaskBurnUpTiming";
+import { TaskBurnUpNode } from "@/features/tasks/components/TaskBurnUpNode";
 
 function personDays(value: number | null) {
   return value === null ? "未知" : formatPersonDays(value / (MINUTES_PER_PERSON_DAY / 60)).replace(/ 人天$/u, "");

@@ -1,6 +1,6 @@
 import type { TaskActivityMock, TaskDetailContent, TaskFileNode, TaskNode } from "@/shared/model/task-model";
 
-import { getTaskProgressEvents } from "./taskProgressExamples";
+import { getTaskProgressEvents } from "@/ai/mock/data/taskProgressExamples";
 
 type PoolPost = { at: string; author: string; message: string };
 type PoolExample = {

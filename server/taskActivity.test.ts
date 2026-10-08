@@ -13,7 +13,7 @@ import {
   isDiscussionActivity,
   parseTaskActivityStore,
   type TaskActivityStore,
-} from "../src/lib/taskActivity.ts";
+} from "../src/features/tasks/lib/task-activity.ts";
 
 const activity = (id: string, type: TaskActivityType = "member-post", overrides: Partial<TaskActivityMock> = {}): TaskActivityMock => ({
   id,

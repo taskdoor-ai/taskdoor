@@ -1,13 +1,13 @@
 import React from "react";
 import { Info, RefreshCw } from "lucide-react";
 import cases from "../../docs/product-v2/progress-scenarios.json";
-import { TaskProgressComparison } from "../components/TaskProgressComparison";
-import { TaskEffortCost } from "../components/TaskEffortCost";
+import { TaskProgressComparison } from "../features/tasks/components/TaskProgressComparison";
+import { TaskEffortCost } from "../features/tasks/components/TaskEffortCost";
 import { scenarioPresentation, scenarioChildren } from "./progressScenarioFixtures";
-import { TaskBurnUpSparkline } from "../components/TaskBurnUpSparkline";
-import { TaskProgressOverview } from "../components/TaskProgressOverview";
-import { getTaskEffortBaselineSeries } from "../lib/taskEffortBaseline";
-import { getTaskProgressAssessment } from "../lib/taskProgressAssessment";
+import { TaskBurnUpSparkline } from "../features/tasks/components/TaskBurnUpSparkline";
+import { TaskProgressOverview } from "../features/tasks/components/TaskProgressOverview";
+import { getTaskEffortBaselineSeries } from "../features/tasks/lib/task-effort-baseline";
+import { getTaskProgressAssessment } from "../features/tasks/lib/task-progress-assessment";
 
 type Scenario = (typeof cases)[number];
 

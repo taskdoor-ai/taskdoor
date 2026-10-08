@@ -8,17 +8,17 @@ import { renderToStaticMarkup } from "react-dom/server";
 const read = (file: string) => readFileSync(new URL(`../src/${file}`, import.meta.url), "utf8");
 
 test("任务头卡与展开子任务复用完整字段组件，而非另做标准表单", () => {
-  assert.ok(existsSync(new URL("../src/components/TaskDetailFields.tsx", import.meta.url)));
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskDetailFields.tsx", import.meta.url)));
   for (const file of ["TaskCreationPlanEditor", "TaskCreationSubtaskEditor"]) {
-    const source = read(`components/${file}.tsx`);
+    const source = read(`features/tasks/components/${file}.tsx`);
     assert.match(source, /<TaskDetailFields/);
     assert.doesNotMatch(source, /function CriteriaEditor|creation-subtask-criterion|padStart\(2/);
   }
-  assert.match(read("components/TaskDetailFields.tsx"), /<TaskCriteriaFields/);
+  assert.match(read("features/tasks/components/TaskDetailFields.tsx"), /<TaskCriteriaFields/);
 });
 
 test("通用详情保留主任务头部结构，目标仅在调用方提供时显示", async () => {
-  const { TaskDetailFields } = await import("../src/components/TaskDetailFields.tsx");
+  const { TaskDetailFields } = await import("../src/features/tasks/components/TaskDetailFields.tsx");
   const value = { title: "整理项目纪要", completionCriteria: ["纪要包含行动项", "行动项有负责人"], executionTips: [] };
   const labels = { name: "任务名称", criteria: "主任务完成标准" };
   const heading = renderToStaticMarkup(createElement(TaskDetailFields, {
@@ -34,7 +34,7 @@ test("通用详情保留主任务头部结构，目标仅在调用方提供时�
 });
 
 test("单任务不渲染空子任务面板，但保留主动添加分工入口", () => {
-  const source = read("components/TaskCreationPlanEditor.tsx");
+  const source = read("features/tasks/components/TaskCreationPlanEditor.tsx");
   assert.match(source, /form\.subtasks\.length > 0 && <section/);
   assert.match(source, /creation-add-subtask-inline/);
   assert.doesNotMatch(source, /creation-no-subtasks|一个清晰的交付，不必拆分/);
@@ -42,7 +42,7 @@ test("单任务不渲染空子任务面板，但保留主动添加分工入口",
 });
 
 test("默认调用方不展示执行建议或空占位", async () => {
-  const { TaskDetailFields } = await import("../src/components/TaskDetailFields.tsx");
+  const { TaskDetailFields } = await import("../src/features/tasks/components/TaskDetailFields.tsx");
   const labels = { name: "任务名称", criteria: "任务完成标准" };
   for (const variant of ["heading", "embedded"] as const) {
     for (const executionTips of [[], [""], [" ", "\n\t"], ["先核对原始资料"]]) {
@@ -57,7 +57,7 @@ test("默认调用方不展示执行建议或空占位", async () => {
 });
 
 test("创建任务按需恢复执行建议，位于完成标准与预计投入之间", async () => {
-  const { TaskDetailFields } = await import("../src/components/TaskDetailFields.tsx");
+  const { TaskDetailFields } = await import("../src/features/tasks/components/TaskDetailFields.tsx");
   for (const variant of ["heading", "embedded"] as const) {
     const html = renderToStaticMarkup(createElement(TaskDetailFields, {
       value: { title: "整理纪要", completionCriteria: ["行动项已核对"], executionTips: ["先核对原始资料", "再记录未决问题"] },
@@ -71,13 +71,13 @@ test("创建任务按需恢复执行建议，位于完成标准与预计投入�
     assert.ok(html.indexOf('aria-label="执行建议"') < html.indexOf("预计投入"));
   }
   for (const file of ["TaskCreationPlanEditor", "TaskCreationSubtaskEditor"]) {
-    assert.match(read(`components/${file}.tsx`), /<TaskDetailFields[^]*?showExecutionTips/);
+    assert.match(read(`features/tasks/components/${file}.tsx`), /<TaskDetailFields[^]*?showExecutionTips/);
   }
-  assert.equal((read("components/TaskCreationLinearSections.tsx").match(/<TaskExecutionTipsField/g) ?? []).length, 2);
+  assert.equal((read("features/tasks/components/TaskCreationLinearSections.tsx").match(/<TaskExecutionTipsField/g) ?? []).length, 2);
 });
 
 test("执行建议支持空白补充与禁用，展示不会改写原始任务数据", async () => {
-  const { TaskDetailFields } = await import("../src/components/TaskDetailFields.tsx");
+  const { TaskDetailFields } = await import("../src/features/tasks/components/TaskDetailFields.tsx");
   const executionTips = ["", "  核对参会人的后续行动  ", ""];
   const before = [...executionTips];
   const html = renderToStaticMarkup(createElement(TaskDetailFields, {
@@ -94,7 +94,7 @@ test("执行建议支持空白补充与禁用，展示不会改写原始任务�
 });
 
 test("前置依赖在完成标准和执行建议之后、预计投入之前展示", async () => {
-  const { TaskDetailFields } = await import("../src/components/TaskDetailFields.tsx");
+  const { TaskDetailFields } = await import("../src/features/tasks/components/TaskDetailFields.tsx");
   const html = renderToStaticMarkup(createElement(TaskDetailFields, {
     value: { title: "直播彩排", completionCriteria: ["完成完整彩排"], executionTips: ["核对直播设备"] },
     labels: { name: "名称", criteria: "完成标准" }, showExecutionTips: true, onChange: () => undefined,
@@ -106,7 +106,7 @@ test("前置依赖在完成标准和执行建议之后、预计投入之前展�
 });
 
 test("执行建议多行编辑与清空写回数组，禁用时不触发修改", async () => {
-  const { TaskExecutionTipsField } = await import("../src/components/TaskExecutionTipsField.tsx");
+  const { TaskExecutionTipsField } = await import("../src/features/tasks/components/TaskExecutionTipsField.tsx");
   const changes: string[][] = [];
   const field = TaskExecutionTipsField({ values: ["原建议"], onChange: values => changes.push(values) });
   const editor = field.props.children[1];

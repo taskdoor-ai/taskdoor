@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getEffortScopeKey } from "../src/lib/taskEffort.ts";
+import { getEffortScopeKey } from "../src/features/tasks/lib/task-effort.ts";
 import { type TaskEffortEstimate } from "../src/shared/model/task-effort.ts";
-import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "../src/lib/taskEffortDistribution.ts";
+import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "../src/features/tasks/lib/task-effort-distribution.ts";
 
 const scope = { goal: "交付可复核结果", completionCriteria: ["核对结果与原始资料"], executionTips: ["先检查原始资料"] };
 const workMethod = "工具辅助整理，人工核对";

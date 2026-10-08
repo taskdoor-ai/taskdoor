@@ -1,5 +1,5 @@
 import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
-import type { TaskRelationSummary } from "../components/TaskRelationsSection";
+import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
 
 export const getDirectChildTaskCounts = (nodes: readonly WorkspaceNode[]) => {
   const counts = new Map<string, number>();

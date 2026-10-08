@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { TaskCriterionIndicator } from '../src/components/TaskCriterionIndicator';
+import { TaskCriterionIndicator } from '../src/features/tasks/components/TaskCriterionIndicator';
 const review = {text:'A',analysis:{percent:70,evidence:'Demo',observedAt:'2026-09-14T17:30:00+08:00'}};
 test('confirmation uses the orbit button and its tooltip explains the AI assessment', () => {
   const html=renderToStaticMarkup(createElement(TaskCriterionIndicator,{index:0,review,onConfirm:()=>{}}));

@@ -1,7 +1,7 @@
-import { useI18n } from './I18nProvider';
-import messages from './globalUiMessages.json';
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import messages from '@/shared/i18n/globalUiMessages.json';
 const englishBySource = new Map(Object.values(messages).map(copy => [copy.zh, copy.en]));
-import type { Locale } from './core';
+import type { Locale } from '@/shared/i18n/core';
 
 /** Explicit system copy only. Never pass arbitrary user-authored content here. */
 export function globalUiText(locale: Locale, source: string, values: Record<string, string | number> = {}) {

@@ -1,8 +1,8 @@
-import { appendTaskActivity, createTaskChangeActivity } from './taskActivity';
-import type { TeamResponsibilityProfile } from '../data/memberProfiles';
+import { appendTaskActivity, createTaskChangeActivity } from '@/features/tasks/lib/task-activity';
+import type { TeamResponsibilityProfile } from '@/ai/mock/data/memberProfiles';
 import type { TaskNode } from '@/shared/model/task-model';
-import { TASK_FILE_EDITS_STORAGE_PREFIX } from './taskFileEditing';
-import { deleteWorkspaceTask, getTaskDeletionPreview, type SubtaskWorkspaceState } from './workspaceSubtaskEditing';
+import { TASK_FILE_EDITS_STORAGE_PREFIX } from '@/features/tasks/files/lib/task-file-editing';
+import { deleteWorkspaceTask, getTaskDeletionPreview, type SubtaskWorkspaceState } from '@/features/tasks/lib/workspace-subtask-editing';
 
 export const RECYCLE_BIN_KEY = 'agentdoor-task-recycle-bin';
 export const RETENTION_MS = 30 * 86400000;

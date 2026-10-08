@@ -1,7 +1,7 @@
-import { useGlobalUi } from "../i18n/globalUi";
-import { useI18n } from "../i18n/I18nProvider";
-import { useDetailCopy } from "../i18n/detailMessages";
-import { taskCreationDay, taskScheduleError } from "../lib/taskSchedule";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { taskCreationDay, taskScheduleError } from "@/features/tasks/lib/task-schedule";
 import { CalendarIcon, ChevronLeft, ChevronRight, InfinityIcon } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";

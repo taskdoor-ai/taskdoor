@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createOnboardingPreview, getPreviewCodeResendDelay, previewDemoEmail, restoreOnboardingPreview, transitionOnboarding, type PreviewScenario } from "../src/lib/onboardingPreview.ts";
+import { createOnboardingPreview, getPreviewCodeResendDelay, previewDemoEmail, restoreOnboardingPreview, transitionOnboarding, type PreviewScenario } from "../src/features/auth/lib/onboarding-preview.ts";
 
 const digest = "a".repeat(64);
 const otherDigest = "b".repeat(64);

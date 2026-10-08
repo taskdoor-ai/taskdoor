@@ -1,4 +1,4 @@
-import { getEffortScopeKey } from "../lib/taskEffort";
+import { getEffortScopeKey } from "@/features/tasks/lib/task-effort";
 import { type TaskNode, workspaceRootId } from "@/shared/model/task-model";
 
 

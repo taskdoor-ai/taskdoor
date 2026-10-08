@@ -1,6 +1,6 @@
 import type { TaskActivityMock, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
-import { createTaskChangeActivity } from "./taskActivity";
+import { createTaskChangeActivity } from "@/features/tasks/lib/task-activity";
 
 export function validateTaskCriteria(values: string[]): string[] {
   if (!values.length) throw new Error("请至少填写一条完成标准。");

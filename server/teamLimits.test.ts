@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { initialPersonalCenterState } from '../src/data/memberProfiles';
-import { createTeamEmailInvitation, acceptTeamEmailInvitation } from '../src/lib/teamInvitations';
-import { countCreatedTeams, occupiedTeamSeats, prepareCreatedTeam } from '../src/lib/teamLimits';
+import { initialPersonalCenterState } from '../src/ai/mock/data/memberProfiles';
+import { createTeamEmailInvitation, acceptTeamEmailInvitation } from '../src/features/members/lib/team-invitations';
+import { countCreatedTeams, occupiedTeamSeats, prepareCreatedTeam } from '../src/features/members/lib/team-limits';
 const identity={userId:'周岚',email:'zhoulan@agentdoor.local',name:'周岚'};
 test('tenth created team succeeds, eleventh fails, invited admins do not consume creation quota',()=>{
  const directory=structuredClone(initialPersonalCenterState);

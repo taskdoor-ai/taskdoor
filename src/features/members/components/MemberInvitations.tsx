@@ -1,16 +1,16 @@
-import { MAX_TEAM_MEMBERS, occupiedTeamSeats } from "../lib/teamLimits";
-import { useI18n } from "../i18n/I18nProvider";
-import { mockTeamName } from "../i18n/mockContent";
-import { useModuleCopy } from "../i18n/moduleMessages";
+import { MAX_TEAM_MEMBERS, occupiedTeamSeats } from "@/features/members/lib/team-limits";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { mockTeamName } from "@/ai/mock/i18n/mockContent";
+import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { createContext, useContext, useEffect, useImperativeHandle, useRef, useState, type ReactNode, type Ref } from "react";
-import { savePersonalCenterState, type PersonalCenterState, type TeamAccessRole } from "../data/memberProfiles";
+import { savePersonalCenterState, type PersonalCenterState, type TeamAccessRole } from "@/ai/mock/data/memberProfiles";
 import type { PersonOption } from "@/shared/model/task-model";
-import { canInviteTeamMembers, createTeamEmailInvitation, normalizeInvitationEmail } from "../lib/teamInvitations";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
-import { toast } from "./ui/toast";
+import { canInviteTeamMembers, createTeamEmailInvitation, normalizeInvitationEmail } from "@/features/members/lib/team-invitations";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shared/ui/dialog";
+import { toast } from "@/shared/ui/toast";
 
 type InviteRequest = {
   name?: string;

@@ -3,7 +3,7 @@
 // Registry: https://urmauur.com/r/file-card.json (retrieved 2026-09-15).
 // Preserves the format previews and color badges; adds real previews, compact sizing
 // and accessible in-card actions. This registry declares no extra dependencies.
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import type { ReactNode } from "react";
 
 export type FileCardFormat =

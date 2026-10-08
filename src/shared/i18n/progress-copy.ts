@@ -1,6 +1,6 @@
-import { mockPersonName } from '@/i18n/mockContent';
-import catalog from '@/i18n/mock/progressCopy.json';
-import type { Locale } from '@/i18n/core';
+import { mockPersonName } from '@/ai/mock/i18n/mockContent';
+import catalog from '@/shared/i18n/progress-copy.json';
+import type { Locale } from '@/shared/i18n/core';
 
 const entries = Object.values(catalog);
 const exact = new Map(entries.map(entry => [entry.zh, entry.en]));

@@ -3,8 +3,8 @@ import test from "node:test";
 import React, { Children, createElement, isValidElement, type ReactNode, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { SmartTextbox, getPlainText, type Segment } from "@tigerabrodioss/fude";
-import { MentionComposer } from "../src/components/MentionComposer.tsx";
-import { PersonPicker } from "../src/components/PersonPicker.tsx";
+import { MentionComposer } from "../src/features/tasks/discussion/components/MentionComposer.tsx";
+import { PersonPicker } from "../src/features/members/components/PersonPicker.tsx";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 type Element = ReactElement<Record<string, any>>;
@@ -51,7 +51,7 @@ test("选人插入带@的提及并保留草稿，不自动发送", () => {
 });
 
 test("句中提及只替换触发范围，保留换行、后文和已有提及", async () => {
-  const { replaceMentionRange } = await import("../src/lib/mentionComposer.ts");
+  const { replaceMentionRange } = await import("../src/features/tasks/discussion/lib/mention-composer.ts");
   const existing = { id: "existing", label: "@林洁", searchValue: "@林洁" };
   const selected = { id: "chosen", label: "@陈默", searchValue: "@陈默" };
   const original: Segment[] = [{ type: "mention", item: existing }, { type: "text", value: " 请核对\n@后续内容" }];

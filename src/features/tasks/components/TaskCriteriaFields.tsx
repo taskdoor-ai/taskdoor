@@ -1,9 +1,9 @@
-import { useMockText } from "../i18n/MockDataProvider";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import type { ReactNode } from "react";
 import { Plus, X } from "lucide-react";
 import { useEffect, useId, useRef } from "react";
-import { TaskCreationEditableText } from "./TaskCreationEditableText";
+import { TaskCreationEditableText } from "@/features/tasks/components/TaskCreationEditableText";
 
 type Props = {
   renderMark?: (index: number, value: string, canConfirm?: boolean) => ReactNode;

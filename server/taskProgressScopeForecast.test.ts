@@ -2,10 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import React from "react";
 import {renderToStaticMarkup} from "react-dom/server";
-import {getTaskProgressDemoExample} from "../src/data/taskProgressDemo.ts";
-import {getTaskProgressChart, getTaskProgressComparison} from "../src/lib/taskProgressComparison.ts";
-import {rollupProgressForecast} from "../src/data/taskProgressHistory.ts";
-import {TaskProgressComparison} from "../src/components/TaskProgressComparison.tsx";
+import {getTaskProgressDemoExample} from "../src/ai/mock/data/taskProgressDemo.ts";
+import {getTaskProgressChart, getTaskProgressComparison} from "../src/features/tasks/lib/task-progress-comparison.ts";
+import {rollupProgressForecast} from "../src/ai/mock/data/taskProgressHistory.ts";
+import {TaskProgressComparison} from "../src/features/tasks/components/TaskProgressComparison.tsx";
 (globalThis as typeof globalThis & {React:typeof React}).React=React;
 const stock=()=>getTaskProgressDemoExample("unassigned-gift-stock-check")!;
 const withGrowth=()=>{

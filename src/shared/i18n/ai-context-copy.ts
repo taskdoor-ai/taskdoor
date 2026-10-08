@@ -1,6 +1,6 @@
-import { mockPersonName, mockRecordText } from './mockContent';
-import { globalUiText } from './globalUi';
-import type { Locale } from './core';
+import { mockPersonName, mockRecordText } from '@/ai/mock/i18n/mockContent';
+import { globalUiText } from '@/shared/i18n/global-ui';
+import type { Locale } from '@/shared/i18n/core';
 
 export function taskContextValue(locale: Locale, taskId: string, label: string, value: string, localize = (text: string) => mockRecordText(locale, taskId, text)) {
   if (label === '负责人' || label === '参与人') return value.split(/[、\n]/)

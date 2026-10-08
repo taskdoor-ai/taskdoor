@@ -1,4 +1,4 @@
-import type { TeamMembership, TeamResponsibilityProfile } from '../data/memberProfiles';
+import type { TeamMembership, TeamResponsibilityProfile } from '@/ai/mock/data/memberProfiles';
 import type { TaskNode, WorkspaceNode } from '@/shared/model/task-model';
 
 /** Upgrade legacy roles without changing a transferred owner or the original creator. */

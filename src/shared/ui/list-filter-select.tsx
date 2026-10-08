@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import { Select as SelectRoot, SelectContent, SelectTrigger, SelectValue } from "./select";
+import { cn } from "@/shared/lib/utils";
+import { Select as SelectRoot, SelectContent, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
 type ListFilterSelectProps = {
   align?: "center" | "end" | "start";

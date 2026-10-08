@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { allTeamWorkspaceNodes } from '../src/data/teamWorkspaceScenarios';
-import { mockTaskCatalog, mockTaskField, mockRecordText, mockTeamName, mockPersonName, mockTagName } from '../src/i18n/mockContent';
-import { buildTaskListProjection, buildTaskScopeCounts } from '../src/lib/taskListProjection';
-import { createInitialTaskListFilters } from '../src/components/taskListFilters';
+import { allTeamWorkspaceNodes } from '../src/ai/mock/data/teamWorkspaceScenarios';
+import { mockTaskCatalog, mockTaskField, mockRecordText, mockTeamName, mockPersonName, mockTagName } from '../src/ai/mock/i18n/mockContent';
+import { buildTaskListProjection, buildTaskScopeCounts } from '../src/features/tasks/lib/task-list-projection';
+import { createInitialTaskListFilters } from '../src/features/tasks/components/task-list-filters';
 
 test('every built-in task has aligned English title and goal without changing the model', () => {
   const before = JSON.stringify(allTeamWorkspaceNodes);
@@ -45,8 +45,8 @@ test('team, person and tag display aliases do not affect renamed or custom recor
 });
 
 test('all seeded completion criteria are translated only within their original task', async () => {
-  const { default: baselines } = await import('../src/i18n/mock/taskCriteria.json');
-  const { default: translations } = await import('../src/i18n/mock/criteria.json');
+  const { default: baselines } = await import('../src/ai/mock/i18n/mock/taskCriteria.json');
+  const { default: translations } = await import('../src/ai/mock/i18n/mock/criteria.json');
   const original = new Set<string>();
   for (const [id, values] of Object.entries(baselines)) {
     for (const value of values) {
@@ -64,7 +64,7 @@ test('all seeded completion criteria are translated only within their original t
 });
 
 test('core seeded discussion translations preserve record identity and edited text', async () => {
-  const { default: records } = await import('../src/i18n/mock/coreRecords.json');
+  const { default: records } = await import('../src/ai/mock/i18n/mock/coreRecords.json');
   for (const [id, rows] of Object.entries(records)) {
     for (const row of rows) {
       assert.equal(mockRecordText('en', id, row.text), row.en);
@@ -75,8 +75,8 @@ test('core seeded discussion translations preserve record identity and edited te
 });
 
 test('saved creation demo translations do not depend on estimates, dates or completion status', async () => {
-  const { buildCreatedMockCatalog } = await import('../src/i18n/createdMockCatalog');
-  const { default: copies } = await import('../src/i18n/mock/createdTasks.json');
+  const { buildCreatedMockCatalog } = await import('../src/ai/mock/i18n/createdMockCatalog');
+  const { default: copies } = await import('../src/ai/mock/i18n/mock/createdTasks.json');
   const nodes = copies.map((copy, index) => ({
     id: `saved-${index}`, kind: 'task' as const, name: copy.title.zh, goal: copy.goal.zh,
     teamId: 'creator-commerce', parentId: null, ownerId: '', status: '已完成' as const,
@@ -96,7 +96,7 @@ test('saved creation demo translations do not depend on estimates, dates or comp
 });
 
 test('untitled editor placeholders translate without replacing custom titles', async () => {
-  const { buildCreatedMockCatalog } = await import('../src/i18n/createdMockCatalog');
+  const { buildCreatedMockCatalog } = await import('../src/ai/mock/i18n/createdMockCatalog');
   const task = { id: 'empty-editor-task', kind: 'task' as const, name: '未命名任务', goal: '', parentId: null, ownerId: '', status: '待开始' as const, updatedAt: '', createdFrom: 'task-editor' as const };
   const catalog = buildCreatedMockCatalog([task]);
   assert.equal(mockTaskField('en', task.id, 'title', task.name, catalog), 'Untitled task');
@@ -105,7 +105,7 @@ test('untitled editor placeholders translate without replacing custom titles', a
 });
 
 test('filter labels localize status and date ranges without changing stored filters', async () => {
-  const { filterDateLabel, filterStatusLabel } = await import('../src/i18n/filterDisplay');
+  const { filterDateLabel, filterStatusLabel } = await import('../src/features/tasks/i18n/filter-display');
   const filter = { preset: 'custom' as const, from: '2026-09-01', to: '2026-09-20' };
   assert.equal(filterDateLabel('en', filter), '2026-09-01 to 2026-09-20');
   assert.equal(filterDateLabel('zh-CN', filter), '2026-09-01 至 2026-09-20');
@@ -115,8 +115,8 @@ test('filter labels localize status and date ranges without changing stored filt
 });
 
 test('saved single and nested planner examples localize independently of their current tree', async () => {
-  const { buildCreatedMockCatalog } = await import('../src/i18n/createdMockCatalog');
-  const { default: copies } = await import('../src/i18n/mock/savedCreationTasks.json');
+  const { buildCreatedMockCatalog } = await import('../src/ai/mock/i18n/createdMockCatalog');
+  const { default: copies } = await import('../src/ai/mock/i18n/mock/savedCreationTasks.json');
   for (const [index, copy] of copies.entries()) {
     const node = { id: `planner-${index}`, kind: 'task' as const, name: copy.title.zh, goal: copy.goal.zh, parentId: null, ownerId: '', status: '待开始' as const, updatedAt: '', createdFrom: 'task-planner' as const };
     const before = JSON.stringify(node);

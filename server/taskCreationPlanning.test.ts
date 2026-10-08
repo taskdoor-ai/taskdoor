@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creatorCommerceMembers, creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
-import { taskCreationScenarios, type TaskCreationScenarioId } from "../src/data/taskCreationScenarios.ts";
-import { workspaceNodes } from "../src/data/workspaceNodes.ts";
-import { hasValidCreationDependencies, toTaskPlanDraft, validateCreationForm, type CreationForm } from "../src/lib/taskCreationForm.ts";
-import { planTaskCreation, resolveCreationRelationship, reviseCreationPlan } from "../src/lib/taskCreationPlanning.ts";
-import type { ScenarioContext } from "../src/lib/taskCreationScenario.ts";
+import { creatorCommerceMembers, creatorCommerceTags } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { taskCreationScenarios, type TaskCreationScenarioId } from "../src/ai/mock/data/taskCreationScenarios.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
+import { hasValidCreationDependencies, toTaskPlanDraft, validateCreationForm, type CreationForm } from "../src/features/tasks/lib/task-creation-form.ts";
+import { planTaskCreation, resolveCreationRelationship, reviseCreationPlan } from "../src/ai/mock/lib/taskCreationPlanning.ts";
+import type { ScenarioContext } from "../src/ai/mock/lib/taskCreationScenario.ts";
 
 const context: ScenarioContext = {
   currentDate: "2026-08-31",

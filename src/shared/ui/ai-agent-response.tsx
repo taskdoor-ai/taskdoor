@@ -1,8 +1,8 @@
-import { useGlobalUi } from "../../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import type { LucideIcon } from "lucide-react";
 import { BrainCircuit, Check, ChevronDown, LoaderCircle, Search, Terminal, Wrench } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 export type ToolDefinition = {
   icon?: LucideIcon;

@@ -1,4 +1,4 @@
-import { taskCreationDay, taskScheduleError } from "./taskSchedule";
+import { taskCreationDay, taskScheduleError } from "@/features/tasks/lib/task-schedule";
 import type {
   TaskAiAdjustmentChange,
   TaskAiAdjustmentContext,
@@ -7,8 +7,8 @@ import type {
   TaskAiAdjustmentScope,
   TaskAiEditableFields,
   TaskAiEditableTask,
-} from "./taskAiAdjustmentTypes.ts";
-import { formatEffortPersonDays, getEffortScopeKey, parseEffortHours, parseEffortPersonDays } from "./taskEffort";
+} from "@/features/tasks/lib/task-ai-adjustment-types.ts";
+import { formatEffortPersonDays, getEffortScopeKey, parseEffortHours, parseEffortPersonDays } from "@/features/tasks/lib/task-effort";
 
 const formatError = "每次请明确一个要调整的字段；组合要求、自由拆分和删除任务暂不支持。原文与任务保持不变，可在输入框中补充具体要求。";
 const listError = "请提供非空内容；多条完成标准或执行建议请用中文分号「；」分隔，每条都须有正文。原文与任务保持不变。";

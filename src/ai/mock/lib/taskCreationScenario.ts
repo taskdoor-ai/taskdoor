@@ -1,10 +1,10 @@
-import { normalizePersonalTagNames } from "./personalTags.ts";
-import { createNestedTaskCreationDraft } from "./nestedTaskCreationScenario";
-import type { TaskCreationScenarioId } from "../data/taskCreationScenarios";
+import { normalizePersonalTagNames } from "@/features/tasks/lib/personal-tags.ts";
+import { createNestedTaskCreationDraft } from "@/ai/mock/lib/nestedTaskCreationScenario";
+import type { TaskCreationScenarioId } from "@/ai/mock/data/taskCreationScenarios";
 import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
-import { createCreatorCommerceScenarioDraft } from "./mockTaskAssistant";
-import { assignTaskByResponsibility } from "./responsibilityAssignment";
-import type { TaskAssistantRequest, TaskPlanDraft } from "./taskAssistantProtocol";
+import { createCreatorCommerceScenarioDraft } from "@/ai/mock/lib/mockTaskAssistant";
+import { assignTaskByResponsibility } from "@/ai/mock/lib/responsibilityAssignment";
+import type { TaskAssistantRequest, TaskPlanDraft } from "@/features/tasks/lib/task-assistant-protocol";
 
 export type ScenarioChoice = {
   id: string;

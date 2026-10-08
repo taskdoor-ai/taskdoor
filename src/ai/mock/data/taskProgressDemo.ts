@@ -1,10 +1,10 @@
-import { allTeamWorkspaceNodes } from "./teamWorkspaceScenarios";
+import { allTeamWorkspaceNodes } from "@/ai/mock/data/teamWorkspaceScenarios";
 import type { WorkspaceNode } from "@/shared/model/task-model";
-import { progressDate } from "../lib/taskProgressDisplay";
-import { getWeeklyRetroProgressDemo } from "./taskProgressDemoFixtures";
-import records from "./taskProgressDemoRecords.json";
-import { rollupProgressHistory, rollupProgressForecast } from "./taskProgressHistory";
-import type { TaskProgressComparisonSeries, ProgressForecastPoint, ProgressScopeForecastPoint, ProgressWorkloadSnapshot } from "../lib/taskProgressComparison";
+import { progressDate } from "@/features/tasks/lib/task-progress-display";
+import { getWeeklyRetroProgressDemo } from "@/ai/mock/data/taskProgressDemoFixtures";
+import records from "@/ai/mock/data/taskProgressDemoRecords.json";
+import { rollupProgressHistory, rollupProgressForecast } from "@/ai/mock/data/taskProgressHistory";
+import type { TaskProgressComparisonSeries, ProgressForecastPoint, ProgressScopeForecastPoint, ProgressWorkloadSnapshot } from "@/features/tasks/lib/task-progress-comparison";
 
 // Capture fixture dates once. Live deadline edits never rebase an old AI prediction.
 const fixtureDate = (value?: string) => {

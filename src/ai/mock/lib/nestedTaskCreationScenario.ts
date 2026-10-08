@@ -1,6 +1,6 @@
-import type { ScenarioContext } from "./taskCreationScenario";
-import type { TaskPlanDraft } from "./taskAssistantProtocol";
-import { assignTaskByResponsibility } from "./responsibilityAssignment";
+import type { ScenarioContext } from "@/ai/mock/lib/taskCreationScenario";
+import type { TaskPlanDraft } from "@/features/tasks/lib/task-assistant-protocol";
+import { assignTaskByResponsibility } from "@/ai/mock/lib/responsibilityAssignment";
 import type { TaskIconName, TaskIconTone, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
 const nestedTaskVisuals: Record<string, { iconName: TaskIconName; iconTone: TaskIconTone; parentTitle?: string }> = {

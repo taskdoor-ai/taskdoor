@@ -1,13 +1,13 @@
 import { CalendarDays, ChevronLeft, ChevronRight, CornerDownRight, ListTree } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
-import { findTagByName, type TagDefinition } from "../data/tagGroups";
+import { findTagByName, type TagDefinition } from "@/ai/mock/data/tagGroups";
 import { type TaskNode } from "@/shared/model/task-model";
-import { getTaskTimeRangeLabel } from "../lib/taskTimeRange";
-import { PersonAvatar, PersonName } from "./PersonAvatar";
-import { TagBadge } from "./TagBadge";
-import { TaskStatusBadge } from "./TaskStatusBadge";
-import { TaskIcon } from "./TaskIcon";
-import { Button } from "./ui/button";
+import { getTaskTimeRangeLabel } from "@/features/tasks/lib/task-time-range";
+import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
+import { TagBadge } from "@/shared/ui/TagBadge";
+import { TaskStatusBadge } from "@/shared/ui/TaskStatusBadge";
+import { TaskIcon } from "@/features/tasks/components/TaskIcon";
+import { Button } from "@/shared/ui/button";
 
 type WorkspaceDirectoryViewProps = {
   allTasks: TaskNode[];

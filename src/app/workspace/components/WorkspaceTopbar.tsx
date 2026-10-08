@@ -1,14 +1,14 @@
-import { mockPersonName } from '../i18n/mockContent';
-import { LanguageSwitcher } from "./LanguageSwitcher";
-import { useI18n } from "../i18n/I18nProvider";
+import { mockPersonName } from '@/ai/mock/i18n/mockContent';
+import { LanguageSwitcher } from "@/shared/ui/LanguageSwitcher";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { LogOut, Settings2, Sparkles } from "lucide-react";
-import { GlobalNotifications } from "./GlobalNotifications";
-import { PersonAvatar } from "./PersonAvatar";
-import type { PersonalCenterModule } from "./PersonalInfoDialog";
-import { TeamSwitcher, type SwitchableTeam } from "./TeamSwitcher";
-import { ThemeToggle } from "./ThemeToggle";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import "../styles/workspace-shell.css";
+import { GlobalNotifications } from "@/features/notifications/components/GlobalNotifications";
+import { PersonAvatar } from "@/shared/ui/PersonAvatar";
+import type { PersonalCenterModule } from "@/app/workspace/components/PersonalInfoDialog";
+import { TeamSwitcher, type SwitchableTeam } from "@/app/workspace/components/TeamSwitcher";
+import { ThemeToggle } from "@/shared/ui/ThemeToggle";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
+import "@/app/workspace/styles/workspace-shell.css";
 
 type WorkspaceTopbarProps = {
   activeTeamId: string;

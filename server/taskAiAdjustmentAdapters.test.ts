@@ -4,10 +4,10 @@ import test, { beforeEach } from "node:test";
 // Historical fixtures run at their authored creation date.
 beforeEach(t => t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") }));
 import type { TaskNode, WorkspaceNode } from "../src/shared/model/task-model.ts";
-import { createDraftTaskAiContext, applyDraftTaskAiAdjustment, createSavedTaskAiContext, applySavedTaskAiAdjustment, commitTaskAiStorage } from "../src/lib/taskAiAdjustmentAdapters.ts";
-import { buildTaskAiAdjustment } from "../src/lib/taskAiAdjustment.ts";
-import type { TaskAiAdjustmentContext, TaskAiAdjustmentScope } from "../src/lib/taskAiAdjustmentTypes.ts";
-import { newCreationTask, type CreationForm } from "../src/lib/taskCreationForm.ts";
+import { createDraftTaskAiContext, applyDraftTaskAiAdjustment, createSavedTaskAiContext, applySavedTaskAiAdjustment, commitTaskAiStorage } from "../src/features/tasks/lib/task-ai-adjustment-adapters.ts";
+import { buildTaskAiAdjustment } from "../src/ai/mock/lib/taskAiAdjustment.ts";
+import type { TaskAiAdjustmentContext, TaskAiAdjustmentScope } from "../src/features/tasks/lib/task-ai-adjustment-types.ts";
+import { newCreationTask, type CreationForm } from "../src/features/tasks/lib/task-creation-form.ts";
 
 const members = [{ id: "self", name: "我" }, { id: "lin", name: "林洁" }];
 const form = (): CreationForm => ({

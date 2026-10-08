@@ -1,4 +1,4 @@
-import type { PersonalCenterState, TeamMembership } from "../data/memberProfiles";
+import type { PersonalCenterState, TeamMembership } from "@/ai/mock/data/memberProfiles";
 import type { PersonOption } from "@/shared/model/task-model";
 
 export function resolveTeamMemberResponsibility(membership: Pick<TeamMembership, "responsibility">, member?: Pick<PersonOption, "dynamicResponsibility">) {

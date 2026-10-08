@@ -1,5 +1,5 @@
 import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
-import { createTaskChangeActivity } from "./taskActivity";
+import { createTaskChangeActivity } from "@/features/tasks/lib/task-activity";
 
 type DependencyTask = { id: string; parentTaskId?: string; dependsOnTaskIds?: string[] };
 const unique = (ids: readonly string[]) => [...new Set(ids)];

@@ -1,8 +1,8 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { Tooltip } from "@base-ui/react/tooltip";
 import React, { type ReactNode } from "react";
-import type { TaskProgressDisplay } from "../lib/taskProgressDisplay";
+import type { TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
 
 const stageNames = ["少量完成", "部分完成", "大部分完成", "接近完成"] as const;
 

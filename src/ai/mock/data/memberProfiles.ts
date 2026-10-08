@@ -1,5 +1,5 @@
-import { normalizeTeamOwnership } from "../lib/teamMembershipLifecycle";
-import { readWorkspaceSession, workspaceProfileKey } from "../lib/workspaceSession";
+import { normalizeTeamOwnership } from "@/features/members/lib/team-membership-lifecycle";
+import { readWorkspaceSession, workspaceProfileKey } from "@/shared/lib/workspace-session";
 
 export type ResponsibilityEvidence = {
   id: string;

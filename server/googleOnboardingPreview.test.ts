@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createOnboardingPreview, transitionOnboarding, restoreOnboardingPreview, simplifyOnboardingEntry } from '../src/lib/onboardingPreview';
+import { createOnboardingPreview, transitionOnboarding, restoreOnboardingPreview, simplifyOnboardingEntry } from '../src/features/auth/lib/onboarding-preview';
 const auth = { type: 'google-preview-complete', email: 'alex@example.com', name: 'Alex Morgan', subject: 'demo-alex' } as const;
 const password = {type:'set-google-password',passwordDigest:'a'.repeat(64),passwordLength:8} as const;
 test('Google first use requires password and survives refresh without granting workspace access', () => {

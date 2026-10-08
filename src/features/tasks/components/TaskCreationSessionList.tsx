@@ -1,8 +1,8 @@
-import { useCreationI18n } from "../i18n/creationMessages";
+import { useCreationI18n } from "@/shared/i18n/creation-messages";
 import { Fragment } from "react";
 import { History, PanelLeftClose, Plus } from "lucide-react";
-import type { CreationSession } from "../lib/taskCreationSessions";
-import { Button } from "./ui/button";
+import type { CreationSession } from "@/features/tasks/lib/task-creation-sessions";
+import { Button } from "@/shared/ui/button";
 
 export function TaskCreationSessionList({ id, sessions, selectedId, disabled, error, onClose, onNew, onSelect }: {
   id: string;

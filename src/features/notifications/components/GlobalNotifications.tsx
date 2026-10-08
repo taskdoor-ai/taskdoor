@@ -1,14 +1,14 @@
-import { handoffNotificationKey, readHandoffNotifications, type HandoffNotification } from "../lib/teamLifecycleStorage";
-import { useI18n } from '../i18n/I18nProvider';
-import { notificationCopy } from '../i18n/notificationCopy';
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { handoffNotificationKey, readHandoffNotifications, type HandoffNotification } from "@/features/members/lib/team-lifecycle-storage";
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import { notificationCopy } from '@/ai/mock/prototype/notification-copy';
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { PersonName } from "./PersonAvatar";
+import { PersonName } from "@/shared/ui/PersonAvatar";
 import { Bell, Broom, Check, Filter, Inbox } from "lucide-react";
-import { notificationExamples, notificationTypeLabels, type WorkspaceNotification } from "../data/notificationExamples";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
-import "@/styles/notifications.css";
+import { notificationExamples, notificationTypeLabels, type WorkspaceNotification } from "@/ai/mock/data/notificationExamples";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/shared/ui/sheet";
+import "@/features/notifications/styles/notifications.css";
 
 type NotificationReadFilter = "all" | "unread" | "read";
 const readFilterLabels: Record<NotificationReadFilter, string> = { all: "全部", read: "已读", unread: "未读" };

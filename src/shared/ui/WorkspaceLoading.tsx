@@ -1,8 +1,8 @@
-import { useI18n } from "../i18n/I18nProvider";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { LoaderCircle } from "lucide-react";
-import { BrandMark } from "./BrandMark";
-import { Button } from "./ui/button";
-import "../styles/workspace-loading.css";
+import { BrandMark } from "@/shared/ui/BrandMark";
+import { Button } from "@/shared/ui/button";
+import "@/shared/styles/workspace-loading.css";
 
 type WorkspaceLoadingProps = {
   teamName?: string;

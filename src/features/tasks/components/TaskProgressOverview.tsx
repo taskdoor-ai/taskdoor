@@ -1,9 +1,9 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import React from "react";
-import { formatPersonDays } from "../lib/taskEffort";
-import type { TaskProgressDisplay } from "../lib/taskProgressDisplay";
-import { getTaskProgressComparison } from "../lib/taskProgressComparison";
-import { TaskPredictionMarker, TaskProgressTrack } from "./TaskProgressTrack";
+import { formatPersonDays } from "@/features/tasks/lib/task-effort";
+import type { TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import { getTaskProgressComparison } from "@/features/tasks/lib/task-progress-comparison";
+import { TaskPredictionMarker, TaskProgressTrack } from "@/features/tasks/components/TaskProgressTrack";
 
 const percent = (ratio: number | null) => ratio === null ? "—" : `${Number((ratio * 100).toFixed(1))}%`;
 const shortDate = (date: string | null) => date ? `${Number(date.slice(5,7))}/${Number(date.slice(8,10))}` : "—";

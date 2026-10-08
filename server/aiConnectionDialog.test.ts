@@ -4,7 +4,7 @@ import { register } from "node:module";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import type { AiConnectionRequest } from "../src/components/AiConnectionDialog.tsx";
+import type { AiConnectionRequest } from "../src/features/ai-connection/components/AiConnectionDialog.tsx";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 register(`data:text/javascript,${encodeURIComponent(`
@@ -14,7 +14,7 @@ register(`data:text/javascript,${encodeURIComponent(`
   }
 `)}`, import.meta.url);
 
-const moduleUrl = new URL("../src/components/AiConnectionDialog.tsx", import.meta.url).href;
+const moduleUrl = new URL("../src/features/ai-connection/components/AiConnectionDialog.tsx", import.meta.url).href;
 const readSource = (path: string) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const request: AiConnectionRequest = {
   title: "处理讨论",
@@ -163,14 +163,14 @@ test("复制尚未结束时关闭弹窗，不在关闭后继续唤起外部工�
 });
 
 test("弹窗使用现有模态原语管理关闭与焦点，不用定时器冒充握手", () => {
-  const source = readSource("src/components/AiConnectionDialog.tsx");
+  const source = readSource("src/features/ai-connection/components/AiConnectionDialog.tsx");
   for (const expected of [/@base-ui\/react\/dialog/, /<DialogPrimitive.Root[^>]*modal/, /initialFocus=/, /finalFocus=/, /<DialogPrimitive.Backdrop/, /aria-live="polite"/, /选择要使用的工具/]) assert.ok(expected.test(source), `缺少模态能力：${expected}`);
   assert.ok(!/setTimeout|仅展示这台设备可连接的工具|将获得这个任务的相关上下文并开始工作|onConnect\(selectedAgent\)/.test(source));
   for (const removed of ["适合继续分析、整理判断与生成回复", "适合结合代码与任务上下文继续实现", "复制上下文后，在工具中粘贴继续处理", "适合在当前代码工作区继续分析与实现", "agent.note"]) assert.ok(!source.includes(removed), `工具名称下方说明应移除：${removed}`);
 });
 
 test("上下文预览允许长文本换行和弹窗内部滚动，窄屏按钮可换行", () => {
-  const styles = readSource("src/styles.css");
+  const styles = readSource("src/shared/styles/pm-global.css");
   assert.ok(/\.ai-connect-context-text\s*\{[^}]*white-space:\s*pre-wrap[^}]*overflow-wrap:\s*anywhere/.test(styles));
   assert.ok(/\.ai-connect-body\.compact\s*\{[^}]*overflow:\s*auto/.test(styles));
   assert.ok(/\.ai-connect-footer\s*\{[^}]*flex-wrap:\s*wrap/.test(styles));
@@ -178,7 +178,7 @@ test("上下文预览允许长文本换行和弹窗内部滚动，窄屏按钮�
 
 test("快捷使用和弹窗共享传输边界：仅成功尝试记忆，始终使用本次最新上下文", async () => {
   const module = await import(moduleUrl);
-  const { createAiToolPreferenceStore, defaultAiTool } = await import("../src/lib/aiToolPreferences.ts");
+  const { createAiToolPreferenceStore, defaultAiTool } = await import("../src/features/ai-connection/lib/ai-tool-preferences.ts");
   const store = createAiToolPreferenceStore();
   const controller = new AbortController();
   for (const outcome of ["copy-failed", "open-failed", "open-attempted"]) {
@@ -196,7 +196,7 @@ test("快捷使用和弹窗共享传输边界：仅成功尝试记忆，始终�
 
 test("快捷复制在取消或换任务后完成，不唤起也不记忆", async () => {
   const module = await import(moduleUrl);
-  const { createAiToolPreferenceStore } = await import("../src/lib/aiToolPreferences.ts");
+  const { createAiToolPreferenceStore } = await import("../src/features/ai-connection/lib/ai-tool-preferences.ts");
   const store = createAiToolPreferenceStore();
   const controller = new AbortController();
   let copied!: () => void;
@@ -214,7 +214,7 @@ test("快捷复制在取消或换任务后完成，不唤起也不记忆", async
 
 test("讨论连接预览展示当前动态、相关回复及附件，复制内容保持同一范围", async () => {
   const module = await import(moduleUrl);
-  const { buildDiscussionAiRequest } = await import("../src/lib/taskDiscussionAi.ts");
+  const { buildDiscussionAiRequest } = await import("../src/features/tasks/discussion/lib/task-discussion-ai.ts");
   const request = buildDiscussionAiRequest({ taskId: "task", currentUser: "周岚", target: { kind: "reply", activityId: "reply" }, task: {
     title: "当前任务", goal: "任务目标", status: "进行中", owner: "周岚", participants: [], due: "2026-09-30", summary: "", commits: [], files: [],
     activities: [

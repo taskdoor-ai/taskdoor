@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { clampCanvasZoom, getCanvasPanPosition, getFitCanvasZoom, stepCanvasZoom } from "../src/lib/taskCanvasViewport.ts";
+import { clampCanvasZoom, getCanvasPanPosition, getFitCanvasZoom, stepCanvasZoom } from "../src/features/tasks/lib/task-canvas-viewport.ts";
 
 test("画布缩放始终限制在可读范围内", () => {
   assert.equal(clampCanvasZoom(0.2), 0.45);

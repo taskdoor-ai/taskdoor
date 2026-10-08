@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { getTaskAiAdjustmentSteps } from "../src/lib/taskAiAdjustmentProgress.ts";
-import type { TaskAiAdjustmentProposal } from "../src/lib/taskAiAdjustmentTypes.ts";
+import { getTaskAiAdjustmentSteps } from "../src/ai/mock/lib/taskAiAdjustmentProgress.ts";
+import type { TaskAiAdjustmentProposal } from "../src/features/tasks/lib/task-ai-adjustment-types.ts";
 
-const source = () => readFileSync(new URL("../src/components/TaskAiAdjustmentPopover.tsx", import.meta.url), "utf8");
+const source = () => readFileSync(new URL("../src/features/tasks/components/TaskAiAdjustmentPopover.tsx", import.meta.url), "utf8");
 const section = (start: string, end: string) => {
   const text = source();
   const from = text.indexOf(start);
@@ -16,8 +16,8 @@ const section = (start: string, end: string) => {
 
 test("AI调整在原输入框下复用两段轻量处理反馈，不创建四阶段日志", () => {
   const text = source();
-  assert.match(text, /import \{ TaskAiWorking \} from "\.\/TaskAiWorking"/);
-  assert.match(text, /import \{ playMockAiSteps \} from "\.\.\/lib\/taskAiFeedback"/);
+  assert.match(text, /import \{ TaskAiWorking \} from "@\/features\/tasks\/components\/TaskAiWorking"/);
+  assert.match(text, /import \{ playMockAiSteps \} from "@\/ai\/mock\/lib\/taskAiFeedback"/);
   assert.match(text, /理解调整要求/);
   assert.match(text, /整理修改预览/);
   assert.match(text, /playMockAiSteps\(2,/);
@@ -70,7 +70,7 @@ test("停止和收起只取消计算保留输入，不走丢弃当前草稿逻�
 test("创建态复用新建任务输入框，处理中切换同一发送按钮为停止", () => {
   const text = source();
   const textarea = text.split("\n").find(line => line.includes("<Textarea")) ?? "";
-  assert.match(text, /import \{ AnimatedAgentChatInput \} from "\.\/AnimatedAgentChatInput"/);
+  assert.match(text, /import \{ AnimatedAgentChatInput \} from "@\/features\/tasks\/components\/AnimatedAgentChatInput"/);
   assert.match(text, /<AnimatedAgentChatInput[\s\S]*?allowAttachments=\{false\}[\s\S]*?clearOnSend=\{false\}[\s\S]*?onChange=\{changeInstruction\}[\s\S]*?onSend=\{\(\) => \{ void preview\(\); \}\}[\s\S]*?onStop=\{stopPreview\}[\s\S]*?status=\{isPreviewing \? "analyzing" : "ready"\}[\s\S]*?value=\{instruction\}/);
   assert.match(text, /hint="Enter 发送 · Shift \+ Enter 换行"/);
   assert.match(textarea, /disabled=\{saving \|\| isPreviewing\}/);

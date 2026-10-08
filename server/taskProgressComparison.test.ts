@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { getTaskProgressChart, getTaskProgressComparison, type TaskProgressComparisonSeries } from "../src/lib/taskProgressComparison.ts";
-import { TaskWorkloadSummary } from "../src/components/TaskWorkloadSummary.tsx";
-import { TaskProgressComparison } from "../src/components/TaskProgressComparison.tsx";
-import { getTaskProgressComparisonExample, taskProgressComparisonExamples } from "../src/data/taskProgressComparisonExamples.ts";
-import { getEffortScopeKey } from "../src/lib/taskEffort.ts";
+import { getTaskProgressChart, getTaskProgressComparison, type TaskProgressComparisonSeries } from "../src/features/tasks/lib/task-progress-comparison.ts";
+import { TaskWorkloadSummary } from "../src/features/tasks/components/TaskWorkloadSummary.tsx";
+import { TaskProgressComparison } from "../src/features/tasks/components/TaskProgressComparison.tsx";
+import { getTaskProgressComparisonExample, taskProgressComparisonExamples } from "../src/ai/mock/data/taskProgressComparisonExamples.ts";
+import { getEffortScopeKey } from "../src/features/tasks/lib/task-effort.ts";
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 const sample = (id = "behind") => structuredClone(taskProgressComparisonExamples.find(item => item.id === id)!);
 

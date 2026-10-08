@@ -1,6 +1,6 @@
-import { notificationExamples, type WorkspaceNotification } from '../data/notificationExamples';
-import { mockTaskField, mockPersonName } from './mockContent';
-import type { Locale } from './core';
+import { notificationExamples, type WorkspaceNotification } from '@/ai/mock/data/notificationExamples';
+import { mockTaskField, mockPersonName } from '@/ai/mock/i18n/mockContent';
+import type { Locale } from '@/shared/i18n/core';
 
 export function notificationCopy(locale: Locale, item: WorkspaceNotification): WorkspaceNotification {
   const original = notificationExamples.find(value => value.id === item.id);

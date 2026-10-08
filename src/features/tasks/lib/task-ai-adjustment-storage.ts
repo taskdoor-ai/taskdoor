@@ -1,4 +1,4 @@
-import { compressStorageText, decompressStorageText } from "./taskStorageCompression";
+import { compressStorageText, decompressStorageText } from "@/features/tasks/lib/task-storage-compression";
 
 type TaskAiStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 

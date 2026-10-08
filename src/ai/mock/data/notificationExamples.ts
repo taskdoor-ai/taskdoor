@@ -1,4 +1,4 @@
-import { taskDetailMocks } from "./taskDetailMocks";
+import { taskDetailMocks } from "@/ai/mock/data/taskDetailMocks";
 
 export type WorkspaceNotification = {
   id: string;

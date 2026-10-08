@@ -1,6 +1,6 @@
-import records from "./taskProgressDemoRecords.json";
+import records from "@/ai/mock/data/taskProgressDemoRecords.json";
 import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
-import type { TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
+import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 type FixtureFields = Pick<TaskNode, "plannedStartOn" | "plannedEndOn" | "dueAt" | "status" | "completedAt" | "updatedAt">;
 type FixtureRevision = { before: Partial<FixtureFields>; after: Partial<FixtureFields>; group: string };

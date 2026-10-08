@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { TaskNode, WorkspaceNode } from "../src/shared/model/task-model.ts";
-import { applyDraftTaskAiAdjustment, applySavedTaskAiAdjustment, createDraftTaskAiContext, createSavedTaskAiContext } from "../src/lib/taskAiAdjustmentAdapters.ts";
-import { buildTaskAiAdjustment, getTaskAiContextSignature } from "../src/lib/taskAiAdjustment.ts";
-import type { TaskAiAdjustmentContext, TaskAiAdjustmentScope } from "../src/lib/taskAiAdjustmentTypes.ts";
-import { newCreationTask, type CreationForm } from "../src/lib/taskCreationForm.ts";
-import { getEffortScopeKey, getTaskEffortState } from "../src/lib/taskEffort.ts";
+import { applyDraftTaskAiAdjustment, applySavedTaskAiAdjustment, createDraftTaskAiContext, createSavedTaskAiContext } from "../src/features/tasks/lib/task-ai-adjustment-adapters.ts";
+import { buildTaskAiAdjustment, getTaskAiContextSignature } from "../src/ai/mock/lib/taskAiAdjustment.ts";
+import type { TaskAiAdjustmentContext, TaskAiAdjustmentScope } from "../src/features/tasks/lib/task-ai-adjustment-types.ts";
+import { newCreationTask, type CreationForm } from "../src/features/tasks/lib/task-creation-form.ts";
+import { getEffortScopeKey, getTaskEffortState } from "../src/features/tasks/lib/task-effort.ts";
 
 const members = [{ id: "self", name: "我" }];
 const effort = () => ({ minutes: 60, workMethod: "AI 整理材料，人工核对", basis: "manual" as const, reason: "整理半小时、核对半小时", confirmed: true, scopeKey: "original-scope", version: 1 });

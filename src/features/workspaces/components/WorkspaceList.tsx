@@ -1,16 +1,16 @@
 import { LayoutDashboard, List, Plus, Search, Tags } from "lucide-react";
 import { useState } from "react";
-import { type TagDefinition } from "../data/tagGroups";
+import { type TagDefinition } from "@/ai/mock/data/tagGroups";
 import { type PersonOption, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
 
-import { PersonPicker } from "./PersonPicker";
-import { WorkspaceDirectoryView } from "./WorkspaceDirectoryView";
-import { WorkspaceTaskBoard } from "./WorkspaceTaskBoard";
-import { taskMatchesListFilters, type TaskListFilters } from "./taskListFilters";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { ListFilterSelect } from "./ui/list-filter-select";
-import { SelectItem } from "./ui/select";
+import { PersonPicker } from "@/features/members/components/PersonPicker";
+import { WorkspaceDirectoryView } from "@/features/workspaces/components/WorkspaceDirectoryView";
+import { WorkspaceTaskBoard } from "@/features/tasks/components/WorkspaceTaskBoard";
+import { taskMatchesListFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { ListFilterSelect } from "@/shared/ui/list-filter-select";
+import { SelectItem } from "@/shared/ui/select";
 
 type WorkspaceListView = "board" | "list";
 

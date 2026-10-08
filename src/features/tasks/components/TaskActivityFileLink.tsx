@@ -1,5 +1,5 @@
-import { useMockText } from "../i18n/MockDataProvider";
-import { useModuleCopy } from "../i18n/moduleMessages";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
+import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { FileText } from "lucide-react";
 import React from "react";
 

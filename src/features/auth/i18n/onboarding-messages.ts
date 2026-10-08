@@ -1,4 +1,4 @@
-import type { Locale } from "./core";
+import type { Locale } from "@/shared/i18n/core";
 
 /** UI copy and legacy transition messages. Stored business values remain untouched. */
 export const onboardingEn = {

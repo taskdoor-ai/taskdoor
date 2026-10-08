@@ -1,9 +1,9 @@
-import { useCreationI18n } from "../i18n/creationMessages";
+import { useCreationI18n } from "@/shared/i18n/creation-messages";
 import { Check, ChevronDown, CirclePause, CircleAlert, LoaderCircle } from "lucide-react";
 import { useId, useState } from "react";
-import { getCreationProcessStepState, type CreationProcess } from "../lib/taskCreationProgress";
-import { AgentActivityIndicator } from "./ui/ai-agent-response";
-import { Button } from "./ui/button";
+import { getCreationProcessStepState, type CreationProcess } from "@/features/tasks/lib/task-creation-progress";
+import { AgentActivityIndicator } from "@/shared/ui/ai-agent-response";
+import { Button } from "@/shared/ui/button";
 
 type DisclosureState = {
   processId: CreationProcess["id"];

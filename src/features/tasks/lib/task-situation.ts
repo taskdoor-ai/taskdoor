@@ -1,6 +1,6 @@
-import type { TaskProgressDisplay } from "./taskProgressDisplay";
-import type { TaskEffortDistribution } from "./taskEffortDistribution";
-import type { TaskRelationSummary } from "../components/TaskRelationsSection";
+import type { TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import type { TaskEffortDistribution } from "@/features/tasks/lib/task-effort-distribution";
+import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
 import type { TaskActivityMock, TaskDetailContent } from "@/shared/model/task-model";
 
 export type TaskSituationReference = {

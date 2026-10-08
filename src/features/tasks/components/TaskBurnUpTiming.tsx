@@ -1,6 +1,6 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import React from "react";
-import type { TaskProgressDisplay } from "../lib/taskProgressDisplay";
+import type { TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
 
 const shortDate=(date:string)=>`${Number(date.slice(5,7))}/${Number(date.slice(8,10))}`;
 

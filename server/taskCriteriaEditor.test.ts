@@ -8,8 +8,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 const read = (file: string) => readFileSync(new URL(`../src/${file}`, import.meta.url), "utf8");
 test("完成标准默认完整可读，编辑表单按需打开", async () => {
-  assert.ok(existsSync(new URL("../src/components/TaskCriteriaEditor.tsx", import.meta.url)), "应有共享完成标准编辑器");
-  const { TaskCriteriaEditor } = await import("../src/components/TaskCriteriaEditor.tsx");
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskCriteriaEditor.tsx", import.meta.url)), "应有共享完成标准编辑器");
+  const { TaskCriteriaEditor } = await import("../src/features/tasks/components/TaskCriteriaEditor.tsx");
   const html = renderToStaticMarkup(createElement(TaskCriteriaEditor, { criteria: ["首条标准", "第二条标准", "第三条标准"], label: "测试子任务", onSave: () => undefined }));
   assert.match(html, /<li>首条标准<\/li><li>第二条标准<\/li><li>第三条标准<\/li>/);
   assert.match(html, /Total: 3 items/);
@@ -20,8 +20,8 @@ test("完成标准默认完整可读，编辑表单按需打开", async () => {
 });
 
 test("空标准提供明确编辑入口，只读时不伪造可保存能力", async () => {
-  assert.ok(existsSync(new URL("../src/components/TaskCriteriaEditor.tsx", import.meta.url)));
-  const { TaskCriteriaEditor } = await import("../src/components/TaskCriteriaEditor.tsx");
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskCriteriaEditor.tsx", import.meta.url)));
+  const { TaskCriteriaEditor } = await import("../src/features/tasks/components/TaskCriteriaEditor.tsx");
   const empty = renderToStaticMarkup(createElement(TaskCriteriaEditor, { criteria: [], label: "新任务", onSave: () => undefined }));
   assert.match(empty, /No acceptance criteria yet/);
   assert.match(empty, /aria-label="Edit 新任务: Acceptance criteria"/);
@@ -31,7 +31,7 @@ test("空标准提供明确编辑入口，只读时不伪造可保存能力", as
 });
 
 test("详情头部完成标准直接逐行编辑，并与创建页共用添加一行交互", async () => {
-  const { TaskCompletionCriteria } = await import("../src/components/TaskCompletionCriteria.tsx");
+  const { TaskCompletionCriteria } = await import("../src/features/tasks/components/TaskCompletionCriteria.tsx");
   const empty = renderToStaticMarkup(createElement(TaskCompletionCriteria, { criteria: [], label: "收尾任务", onSave: () => undefined }));
   assert.equal((empty.match(/<textarea\b/g) ?? []).length, 0);
   assert.doesNotMatch(empty, /task-criteria-field-mark|达到什么条件，才算完成/);
@@ -49,18 +49,18 @@ test("详情头部完成标准直接逐行编辑，并与创建页共用添加�
 });
 
 test("创建子任务即时同步，列表不展开标准，进入详情后仍可编辑", () => {
-  assert.ok(read("components/TaskCreationPlanEditor.tsx").includes("<TaskCreationSubtaskEditor"));
-  assert.ok(read("components/TaskCreationPlanEditor.tsx").includes("syncCreationSubtaskEdit"));
-  assert.ok(!read("components/TaskSubtaskList.tsx").includes("TaskCriteriaEditor"));
-  assert.ok(read("components/TaskDetail.tsx").includes("<TaskCompletionCriteria"));
-  assert.ok(read("components/TaskDetail.tsx").includes("onTaskCriteriaSave"));
-  const app = read("App.tsx");
+  assert.ok(read("features/tasks/components/TaskCreationPlanEditor.tsx").includes("<TaskCreationSubtaskEditor"));
+  assert.ok(read("features/tasks/components/TaskCreationPlanEditor.tsx").includes("syncCreationSubtaskEdit"));
+  assert.ok(!read("features/tasks/components/TaskSubtaskList.tsx").includes("TaskCriteriaEditor"));
+  assert.ok(read("features/tasks/components/TaskDetail.tsx").includes("<TaskCompletionCriteria"));
+  assert.ok(read("features/tasks/components/TaskDetail.tsx").includes("onTaskCriteriaSave"));
+  const app = read("app/App.tsx");
   assert.ok(app.includes("applySavedTaskCriteria"));
   assert.ok(app.includes("onTaskCriteriaSave={saveTaskCriteria}"));
 });
 
 test("创建最终确认不能忽略未能同步的输入", () => {
-  const page = read("components/TaskCreationPage.tsx");
+  const page = read("features/tasks/components/TaskCreationPage.tsx");
   assert.ok(page.includes("hasUnsavedSubtasks"));
   assert.ok(page.includes("onSubtaskDirtyChange"));
   assert.ok(page.includes("setError(unsavedMessage)"));

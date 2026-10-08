@@ -1,5 +1,5 @@
-import { useI18n } from "../../i18n/I18nProvider";
-import { onboardingTranslator } from "../../i18n/onboardingMessages";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { onboardingTranslator } from "@/features/auth/i18n/onboarding-messages";
 import { OTPField } from "@base-ui/react/otp-field";
 
 type VerificationCodeInputProps = {

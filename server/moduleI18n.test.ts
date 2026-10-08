@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { moduleEn, moduleZh, moduleText } from '../src/i18n/moduleMessages';
-import { activityChangeValue, activityMessage } from '../src/i18n/activityDisplay';
-import { settingsMockText } from '../src/i18n/settingsMock';
-import { mockRecordText, mockTaskCatalog } from '../src/i18n/mockContent';
-import settings from '../src/i18n/mock/settings.json';
+import { moduleEn, moduleZh, moduleText } from '../src/shared/i18n/module-messages';
+import { activityChangeValue, activityMessage } from '../src/features/tasks/i18n/activity-display';
+import { settingsMockText } from '../src/ai/mock/i18n/settingsMock';
+import { mockRecordText, mockTaskCatalog } from '../src/ai/mock/i18n/mockContent';
+import settings from '../src/ai/mock/i18n/mock/settings.json';
 
 test('settings and activity catalogs have matching keys and interpolation parameters', () => {
   assert.deepEqual(Object.keys(moduleEn).sort(), Object.keys(moduleZh).sort());

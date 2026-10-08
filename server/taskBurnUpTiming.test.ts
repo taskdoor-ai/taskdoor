@@ -2,12 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { taskProgressComparisonExamples } from "../src/data/taskProgressComparisonExamples.ts";
-import { TaskProgressComparison } from "../src/components/TaskProgressComparison.tsx";
-import { getTaskProgressChart, getTaskProgressComparison } from "../src/lib/taskProgressComparison.ts";
-import { layoutBurnUpDateAxis, TaskBurnUpDateAxis } from "../src/components/TaskBurnUpTiming.tsx";
-import { getTaskProgressDisplay } from "../src/lib/taskProgressDisplay.ts";
-import { getTaskProgressDemoExample } from "../src/data/taskProgressDemo.ts";
+import { taskProgressComparisonExamples } from "../src/ai/mock/data/taskProgressComparisonExamples.ts";
+import { TaskProgressComparison } from "../src/features/tasks/components/TaskProgressComparison.tsx";
+import { getTaskProgressChart, getTaskProgressComparison } from "../src/features/tasks/lib/task-progress-comparison.ts";
+import { layoutBurnUpDateAxis, TaskBurnUpDateAxis } from "../src/features/tasks/components/TaskBurnUpTiming.tsx";
+import { getTaskProgressDisplay } from "../src/features/tasks/lib/task-progress-display.ts";
+import { getTaskProgressDemoExample } from "../src/ai/mock/data/taskProgressDemo.ts";
 (globalThis as typeof globalThis & {React:typeof React}).React=React;
 const sample=(id:string)=>structuredClone(taskProgressComparisonExamples.find(item=>item.id === id)!);
 
@@ -143,8 +143,8 @@ test("已确认、无预测、无截止保持时间来源，不能保留虚假�
 });
 
 test("已有工作量记录也在图内标截止日期，扩展横轴不生成未来历史", async()=>{
-  const {getTaskBurnUpModel}=await import("../src/lib/taskBurnUp.ts");
-  const {TaskWorkloadSummary}=await import("../src/components/TaskWorkloadSummary.tsx");
+  const {getTaskBurnUpModel}=await import("../src/features/tasks/lib/task-burn-up.ts");
+  const {TaskWorkloadSummary}=await import("../src/features/tasks/components/TaskWorkloadSummary.tsx");
   const series={source:"recorded" as const,points:[
     {at:"2026-09-10",scopeHours:8,completedHours:2,estimatedLeafCount:1,totalLeafCount:1},
     {at:"2026-09-13",scopeHours:10,completedHours:4,estimatedLeafCount:1,totalLeafCount:1},

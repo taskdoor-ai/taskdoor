@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getPersonalTagStorageKey, loadPersonalTags, preparePersonalTaskTags } from "../src/lib/personalTags.ts";
-import type { TagDefinition } from "../src/data/tagGroups.ts";
-import type { TaskPlanDraft } from "../src/lib/taskAssistantProtocol.ts";
-import { commitTaskAiStorage } from "../src/lib/taskAiAdjustmentStorage.ts";
+import { getPersonalTagStorageKey, loadPersonalTags, preparePersonalTaskTags } from "../src/features/tasks/lib/personal-tags.ts";
+import type { TagDefinition } from "../src/ai/mock/data/tagGroups.ts";
+import type { TaskPlanDraft } from "../src/features/tasks/lib/task-assistant-protocol.ts";
+import { commitTaskAiStorage } from "../src/features/tasks/lib/task-ai-adjustment-storage.ts";
 
 const existing: TagDefinition[] = [{ id: "client", name: "客户沟通", icon: "users", color: "blue" }];
 const task = { title: "跟进客户", goal: "确认结果", ownerId: "", participantIds: [], startDate: "", endDate: "", labels: ["客户沟通", " 新标签 ", "新标签", ""] };

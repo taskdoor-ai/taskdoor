@@ -1,9 +1,9 @@
-import { useMockText } from '../i18n/MockDataProvider';
-import { useDetailCopy } from '../i18n/detailMessages';
-import { useGlobalUi } from '../i18n/globalUi';
-import { criterionReview, type CriterionReview } from '../lib/taskCriterionReview';
-import { TaskCriteriaEditor } from './TaskCriteriaEditor';
-import { TaskCriterionIndicator } from './TaskCriterionIndicator';
+import { useMockText } from '@/ai/mock/i18n/MockDataProvider';
+import { useDetailCopy } from '@/shared/i18n/detail-messages';
+import { useGlobalUi } from '@/shared/i18n/global-ui';
+import { criterionReview, type CriterionReview } from '@/features/tasks/lib/task-criterion-review';
+import { TaskCriteriaEditor } from '@/features/tasks/components/TaskCriteriaEditor';
+import { TaskCriterionIndicator } from '@/features/tasks/components/TaskCriterionIndicator';
 
 type TaskCompletionCriteriaProps = {
   criteria?: string[];

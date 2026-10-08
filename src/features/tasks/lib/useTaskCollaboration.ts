@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { TaskDetailContent, TaskFileNode } from "@/shared/model/task-model";
-import { applyTaskFileEdit, readTaskFileEdits } from "./taskFileEditing";
-import { createCollaborationSnapshot, loadCollaboration, mergeCollaborationMessages, saveCollaboration, TASK_COLLABORATION_STORAGE_PREFIX, type CollaborationSnapshot } from "./taskCollaboration";
+import { applyTaskFileEdit, readTaskFileEdits } from "@/features/tasks/files/lib/task-file-editing";
+import { createCollaborationSnapshot, loadCollaboration, mergeCollaborationMessages, saveCollaboration, TASK_COLLABORATION_STORAGE_PREFIX, type CollaborationSnapshot } from "@/features/tasks/lib/task-collaboration";
 
 export const COLLABORATION_CHANGED = "agentdoor-collaboration-change";
 export const collaborationScope = (teamId: string, taskId: string) => JSON.stringify([teamId, taskId]);

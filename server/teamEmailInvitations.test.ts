@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { initialPersonalCenterState, isPersonalCenterState } from "../src/data/memberProfiles.ts";
-import { acceptTeamEmailInvitation, createTeamEmailInvitation, getInvitationDraft, getTeamPeople, invitationEmailTemplate, normalizeInvitationEmail, resolveTeamEmailInvitation } from "../src/lib/teamInvitations.ts";
-import { createOnboardingPreview, getPreviewInvitation, transitionOnboarding } from "../src/lib/onboardingPreview.ts";
+import { initialPersonalCenterState, isPersonalCenterState } from "../src/ai/mock/data/memberProfiles.ts";
+import { acceptTeamEmailInvitation, createTeamEmailInvitation, getInvitationDraft, getTeamPeople, invitationEmailTemplate, normalizeInvitationEmail, resolveTeamEmailInvitation } from "../src/features/members/lib/team-invitations.ts";
+import { createOnboardingPreview, getPreviewInvitation, transitionOnboarding } from "../src/features/auth/lib/onboarding-preview.ts";
 
 const initial = () => structuredClone(initialPersonalCenterState);
 const teamId = initialPersonalCenterState.teams[0].id;

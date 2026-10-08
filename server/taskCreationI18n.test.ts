@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { taskCreationScenarios } from '../src/data/taskCreationScenarios.ts';
-import { creationScenarioEnglish } from '../src/i18n/creationMock.ts';
-import { creationEn, creationZh, localizeCreationMessage } from '../src/i18n/creationMessages.ts';
-import { planTaskCreation } from '../src/lib/taskCreationPlanning.ts';
-import { getEffortScopeKey } from '../src/lib/taskEffort.ts';
-import { getCreationEffortLeaves } from '../src/lib/taskCreationEffort.ts';
-import { toTaskPlanDraft, validateCreationForm } from '../src/lib/taskCreationForm.ts';
-import { getCreationFeedback } from '../src/lib/taskCreationProgress.ts';
+import { taskCreationScenarios } from '../src/ai/mock/data/taskCreationScenarios.ts';
+import { creationScenarioEnglish } from '../src/ai/mock/i18n/creationMock.ts';
+import { creationEn, creationZh, localizeCreationMessage } from '../src/shared/i18n/creation-messages.ts';
+import { planTaskCreation } from '../src/ai/mock/lib/taskCreationPlanning.ts';
+import { getEffortScopeKey } from '../src/features/tasks/lib/task-effort.ts';
+import { getCreationEffortLeaves } from '../src/features/tasks/lib/task-creation-effort.ts';
+import { toTaskPlanDraft, validateCreationForm } from '../src/features/tasks/lib/task-creation-form.ts';
+import { getCreationFeedback } from '../src/features/tasks/lib/task-creation-progress.ts';
 const context = { currentDate: '2026-09-20', currentUserId: 'me', members: [{ id: 'me', name: '林晓' }], tags: [], existingTasks: [{ id: 'weekly-retro-notes', name: '团队自己的复盘' }, { id: 'product-launch-planning', name: '团队自己的发布会' }] };
 
 test('all supported creation scenarios generate English content with valid effort scopes and stable relationships', () => {

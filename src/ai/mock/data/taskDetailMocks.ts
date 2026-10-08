@@ -1,14 +1,14 @@
-import { workspaceNodes } from "./workspaceNodes.ts";
+import { workspaceNodes } from "@/ai/mock/data/workspaceNodes.ts";
 import type { TaskActivityMock, TaskDetailContent, TaskDetailId, TaskFileNode, TaskNode } from "@/shared/model/task-model";
 import type { TaskDiagnosisSnapshot } from "@/shared/model/task-diagnosis";
-import { getTaskProgressBurnUp, getTaskProgressEvents } from "./taskProgressExamples";
-import { getCreatorCommerceDiagnosisExample } from "./creatorCommerceDiagnosisExamples";
-import { getCreatorPoolTaskExample } from "./creatorPoolTaskExamples";
-import { withResultTaskDecisionExample } from "./resultTaskDecisionExamples";
-import { withExpandedTaskDiagnosisExample } from "./expandedTaskDiagnosisExamples";
-import { getMockContextDiagnosis } from "../lib/mockTaskDiagnosis";
-import { getWeeklyRetroDetailDemo } from "./weeklyRetroDetailDemo";
-import { withDemoProgressEvidence } from "./taskProgressEvidenceDetails";
+import { getTaskProgressBurnUp, getTaskProgressEvents } from "@/ai/mock/data/taskProgressExamples";
+import { getCreatorCommerceDiagnosisExample } from "@/ai/mock/data/creatorCommerceDiagnosisExamples";
+import { getCreatorPoolTaskExample } from "@/ai/mock/data/creatorPoolTaskExamples";
+import { withResultTaskDecisionExample } from "@/ai/mock/data/resultTaskDecisionExamples";
+import { withExpandedTaskDiagnosisExample } from "@/ai/mock/data/expandedTaskDiagnosisExamples";
+import { getMockContextDiagnosis } from "@/ai/mock/lib/mockTaskDiagnosis";
+import { getWeeklyRetroDetailDemo } from "@/ai/mock/data/weeklyRetroDetailDemo";
+import { withDemoProgressEvidence } from "@/ai/mock/data/taskProgressEvidenceDetails";
 
 const inferFileFormat = (name: string) => name.split(".").pop()?.toUpperCase() ?? "FILE";
 

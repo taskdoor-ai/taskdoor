@@ -1,5 +1,5 @@
-import { useI18n } from "./I18nProvider";
-import type { Locale } from "./core";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import type { Locale } from "@/shared/i18n/core";
 export const creationEn = {
   "suggestedOptions": " suggested options",
   "custom": "Custom",

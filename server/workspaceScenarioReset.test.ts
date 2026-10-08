@@ -1,17 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
-import type { TagDefinition } from "../src/data/tagGroups.ts";
-import { allTeamWorkspaceNodes, multiTeamTags, teamWorkspaceExpansionNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { creatorCommerceTags } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import type { TagDefinition } from "../src/ai/mock/data/tagGroups.ts";
+import { allTeamWorkspaceNodes, multiTeamTags, teamWorkspaceExpansionNodes } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode } from "../src/shared/model/task-model.ts";
-import { getEffortScopeKey, getTaskEffortState } from "../src/lib/taskEffort.ts";
-import { getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
+import { getEffortScopeKey, getTaskEffortState } from "../src/features/tasks/lib/task-effort.ts";
+import { getWorkspaceEffortLeaves } from "../src/features/tasks/lib/task-effort-editing.ts";
 import {
   commitWorkspaceScenarioReset,
   creatorCommerceScenarioVersion,
   resolveWorkspaceScenarioReset,
-} from "../src/lib/workspaceScenarioReset.ts";
+} from "../src/ai/mock/lib/workspaceScenarioReset.ts";
 
 const legacyWorkspace = [
   { id: "workspace-root", kind: "folder", name: "任务", parentId: null, updatedAt: "今天" },

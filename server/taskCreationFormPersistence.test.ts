@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createWorkspaceTasksFromDraft } from "../src/lib/workspaceTaskCreation.ts";
-import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
-import { taskPlanDraftSchema } from "../src/lib/taskAssistantProtocol.ts";
-import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { createWorkspaceTasksFromDraft } from "../src/features/tasks/lib/workspace-task-creation.ts";
+import { createWorkspaceTaskDetail } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { taskPlanDraftSchema } from "../src/features/tasks/lib/task-assistant-protocol.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 
 test("完成标准、执行建议和正式负责人随新任务保存，详情不编造文件和讨论", () => {
   const draft = taskPlanDraftSchema.parse({ mainTask: { title: "测试交付", goal: "明确结果", completionCriteria: ["交付经确认的结果"], executionTips: ["先核对范围"], ownerId: "林洁", participantIds: [], labels: [], startDate: "", endDate: "" }, subtasks: [] });

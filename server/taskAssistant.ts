@@ -1,8 +1,8 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
 import { z } from "zod";
-import { taskAssistantRequestSchema, taskAssistantResponseSchema, type TaskAssistantApiError, type TaskAssistantMember, type TaskAssistantRequest, type TaskAssistantResponse } from "../src/lib/taskAssistantProtocol.ts";
-import { normalizePersonalTagNames } from "../src/lib/personalTags.ts";
+import { taskAssistantRequestSchema, taskAssistantResponseSchema, type TaskAssistantApiError, type TaskAssistantMember, type TaskAssistantRequest, type TaskAssistantResponse } from "../src/features/tasks/lib/task-assistant-protocol.ts";
+import { normalizePersonalTagNames } from "../src/features/tasks/lib/personal-tags.ts";
 
 const ppioBaseUrl = "https://api.ppinfra.com/openai/v1/responses";
 const requestBodyLimit = 256 * 1024;

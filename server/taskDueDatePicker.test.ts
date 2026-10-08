@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskDueDatePicker } from "../src/components/TaskDueDatePicker.tsx";
+import { TaskDueDatePicker } from "../src/features/tasks/components/TaskDueDatePicker.tsx";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -22,7 +22,7 @@ test("已有固定日期保持日期值及可访问名称", () => {
 });
 
 test("截止类型使用互斥选项，并监听浮层内容尺寸变化", () => {
-  const source = readFileSync(new URL("../src/components/TaskDueDatePicker.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskDueDatePicker.tsx", import.meta.url), "utf8");
   assert.match(source, /type="radio"/);
   assert.match(source, /指定日期/);
   assert.match(source, /不设截止时间/);
@@ -31,7 +31,7 @@ test("截止类型使用互斥选项，并监听浮层内容尺寸变化", () =>
 });
 
 test("日期修改不靠重新挂载同步，避免应用后卸载键盘焦点入口", () => {
-  const read = (file: string) => readFileSync(new URL(`../src/components/${file}`, import.meta.url), "utf8");
+  const read = (file: string) => readFileSync(new URL(`../src/features/tasks/components/${file}`, import.meta.url), "utf8");
   assert.match(read("TaskDueDatePicker.tsx"), /setValue\(initialValue\)[\s\S]*?\[initialValue\]/);
   assert.doesNotMatch(read("TaskCreationPlanEditor.tsx"), /<TaskDueDatePicker[^>]*key=/);
   assert.match(read("TaskDetail.tsx"), /<TaskDueDatePicker[^]*?key=\{taskId\} label="截止时间"/);

@@ -1,4 +1,4 @@
-import {getTaskEffortInitialBaseline, type TaskWithEffortBaseline} from "./taskEffortBaseline";
+import {getTaskEffortInitialBaseline, type TaskWithEffortBaseline} from "@/features/tasks/lib/task-effort-baseline";
 
 export type ProgressWorkloadSnapshot = {
   at: string;

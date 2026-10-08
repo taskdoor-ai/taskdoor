@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { initialPersonalCenterState, isPersonalCenterState } from "../src/data/memberProfiles";
-import { resolveTeamMemberResponsibility, updateTeamMemberResponsibility } from "../src/lib/teamMemberResponsibility";
+import { initialPersonalCenterState, isPersonalCenterState } from "../src/ai/mock/data/memberProfiles";
+import { resolveTeamMemberResponsibility, updateTeamMemberResponsibility } from "../src/features/members/lib/team-member-responsibility";
 
 test("personal center state accepts an optional team-scoped member responsibility", () => {
   const state = structuredClone(initialPersonalCenterState) as unknown as Record<string, any>;

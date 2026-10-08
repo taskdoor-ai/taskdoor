@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { workspaceNodes } from "../src/data/workspaceNodes.ts";
-import { updateWorkspaceTaskStatus } from "../src/lib/workspaceTaskUpdates.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
+import { updateWorkspaceTaskStatus } from "../src/features/tasks/lib/workspace-task-updates.ts";
 
 test("从概览修改状态只更新目标任务并记录最新时间", () => {
   const targetId = "fragrance-growth";

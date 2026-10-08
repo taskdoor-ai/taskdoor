@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 import test from "node:test";
 import type { TaskActivityMock, TaskDetailContent, TaskFileNode } from "../src/shared/model/task-model.ts";
 
-const moduleUrl = new URL("../src/lib/taskDiscussionAi.ts", import.meta.url);
+const moduleUrl = new URL("../src/features/tasks/discussion/lib/task-discussion-ai.ts", import.meta.url);
 async function build(input: Record<string, unknown>) {
   assert.ok(existsSync(moduleUrl), "讨论连接 AI 应提供独立、可测试的最小上下文构建器");
   const { buildDiscussionAiRequest } = await import(moduleUrl.href);

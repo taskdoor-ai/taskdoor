@@ -1,26 +1,26 @@
-import { useCreationI18n } from "../i18n/creationMessages";
+import { useCreationI18n } from "@/shared/i18n/creation-messages";
 import { ListTree, ListTodo, Plus } from "lucide-react";
 import { useMemo, useRef, useState, type ReactNode } from "react";
-import { findTagByName, type TagDefinition } from "../data/tagGroups";
-import { syncCreationSubtaskEdit } from "../lib/taskCreationSubtaskEditing";
+import { findTagByName, type TagDefinition } from "@/ai/mock/data/tagGroups";
+import { syncCreationSubtaskEdit } from "@/features/tasks/lib/task-creation-subtask-editing";
 import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
-import { newCreationTask, removeCreationSubtask, type CreationForm, type CreationTask } from "../lib/taskCreationForm";
-import { getCreationEffortLeaves } from "../lib/taskCreationEffort";
-import { getCreationDescendantIds, getCreationHierarchyDepth } from "../lib/taskCreationHierarchy";
-import { createTaskMemberRecommendations } from "../lib/taskMemberRecommendations";
-import type { TaskAiAdjustmentScope } from "../lib/taskAiAdjustmentTypes";
-import { MemberSelector, type Member } from "./MemberSelector";
-import { TaskDueDatePicker } from "./TaskDueDatePicker";
-import { TaskIcon } from "./TaskIcon";
-import { TagBadge } from "./TagBadge";
-import { TagPicker } from "./TagPicker";
-import { TaskAiAdjustButton } from "./TaskAiAdjustmentPopover";
-import { TaskCreationSubtaskEditor } from "./TaskCreationSubtaskEditor";
-import { TaskDetailFields } from "./TaskDetailFields";
-import { TaskEffortEditor } from "./TaskEffortEditor";
-import { applyCreationEffortEdits } from "../lib/taskEffortEdits";
-import { Button } from "./ui/button";
-import "../styles/task-creation-cards.css";
+import { newCreationTask, removeCreationSubtask, type CreationForm, type CreationTask } from "@/features/tasks/lib/task-creation-form";
+import { getCreationEffortLeaves } from "@/features/tasks/lib/task-creation-effort";
+import { getCreationDescendantIds, getCreationHierarchyDepth } from "@/features/tasks/lib/task-creation-hierarchy";
+import { createTaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecommendations";
+import type { TaskAiAdjustmentScope } from "@/features/tasks/lib/task-ai-adjustment-types";
+import { MemberSelector, type Member } from "@/features/members/components/MemberSelector";
+import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
+import { TaskIcon } from "@/features/tasks/components/TaskIcon";
+import { TagBadge } from "@/shared/ui/TagBadge";
+import { TagPicker } from "@/features/me/components/TagPicker";
+import { TaskAiAdjustButton } from "@/features/tasks/components/TaskAiAdjustmentPopover";
+import { TaskCreationSubtaskEditor } from "@/features/tasks/components/TaskCreationSubtaskEditor";
+import { TaskDetailFields } from "@/features/tasks/components/TaskDetailFields";
+import { TaskEffortEditor } from "@/features/tasks/components/TaskEffortEditor";
+import { applyCreationEffortEdits } from "@/features/tasks/lib/task-effort-edits";
+import { Button } from "@/shared/ui/button";
+import "@/features/tasks/styles/task-creation-cards.css";
 
 const visual: Array<{ iconName: TaskIconName; tone: TaskIconTone }> = [
   { iconName: "briefcase", tone: "pink" }, { iconName: "sparkles", tone: "purple" }, { iconName: "flag", tone: "red" },

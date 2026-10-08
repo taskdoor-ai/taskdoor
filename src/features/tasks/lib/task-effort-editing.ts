@@ -1,7 +1,7 @@
 import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
-import { createTaskChangeActivity } from "./taskActivity";
-import { getTaskDefinitionGoal } from "./taskGoal";
-import { createManualEffortEstimate, formatEffortPersonDays, getTaskEffortState, type TaskEffortTask } from "./taskEffort";
+import { createTaskChangeActivity } from "@/features/tasks/lib/task-activity";
+import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-goal";
+import { createManualEffortEstimate, formatEffortPersonDays, getTaskEffortState, type TaskEffortTask } from "@/features/tasks/lib/task-effort";
 import { effortEstimateSchema, type TaskEffortEstimate } from "@/shared/model/task-effort";
 
 /** Compare the editable scope and estimate, not unrelated dates, people or appearance. */

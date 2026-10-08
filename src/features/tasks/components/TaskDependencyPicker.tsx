@@ -1,5 +1,5 @@
 import { Check, GitBranch, Plus, X } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 export type TaskDependencyOption = {
   disabled?: boolean;

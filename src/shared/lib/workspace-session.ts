@@ -1,4 +1,4 @@
-import { restoreOnboardingPreview, transitionOnboarding } from "./onboardingPreview";
+import { restoreOnboardingPreview, transitionOnboarding } from "@/features/auth/lib/onboarding-preview";
 /** Browser-local prototype identity; not server authentication. */
 export type WorkspaceSession = { userId: string; email: string; name: string; activeTeamId: string };
 export const workspaceSignedOutKey = "agentdoor-workspace-signed-out";

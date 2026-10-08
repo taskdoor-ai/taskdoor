@@ -1,9 +1,9 @@
-import { readTeamLifecycleHistory, type TeamLifecycleRecord } from "./teamLifecycleStorage";
-import { countCreatedTeams, MAX_CREATED_TEAMS, MAX_TEAM_MEMBERS, occupiedTeamSeats } from "./teamLimits";
-import { mockWorkspaceEmail, mockWorkspaceUserId } from "./mockWorkspaceAccount";
-import { loadPersonalCenterDirectory, savePersonalCenterDirectory, type PersonalCenterState, type TeamMembership, type TeamResponsibilityProfile } from "../data/memberProfiles";
-import type { OnboardingState } from "./onboardingPreview";
-import { onboardingStorageKey, saveWorkspaceSession, type WorkspaceSession } from "./workspaceSession";
+import { readTeamLifecycleHistory, type TeamLifecycleRecord } from "@/features/members/lib/team-lifecycle-storage";
+import { countCreatedTeams, MAX_CREATED_TEAMS, MAX_TEAM_MEMBERS, occupiedTeamSeats } from "@/features/members/lib/team-limits";
+import { mockWorkspaceEmail, mockWorkspaceUserId } from "@/ai/mock/lib/mockWorkspaceAccount";
+import { loadPersonalCenterDirectory, savePersonalCenterDirectory, type PersonalCenterState, type TeamMembership, type TeamResponsibilityProfile } from "@/ai/mock/data/memberProfiles";
+import type { OnboardingState } from "@/features/auth/lib/onboarding-preview";
+import { onboardingStorageKey, saveWorkspaceSession, type WorkspaceSession } from "@/shared/lib/workspace-session";
 
 export function prepareOnboardingWorkspace(state: OnboardingState, directory: PersonalCenterState) {
   if (!state.verified || state.step !== "workspace" || !state.teams.some(team => team.id === state.activeTeamId)) throw new Error("请先创建或确认加入团队。");

@@ -1,4 +1,4 @@
-import { creatorCommerceMainTaskId } from "../data/workspaceNodes.ts";
+import { creatorCommerceMainTaskId } from "@/ai/mock/data/workspaceNodes.ts";
 
 const representativeTaskIds = {
   compliance: "fragrance-compliance",

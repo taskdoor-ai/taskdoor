@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/data/taskDetailMocks.ts";
-import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import { getTaskDefinitionGoal } from "../src/lib/taskAiAdjustmentAdapters.ts";
-import { getTaskDiagnosisReport } from "../src/lib/taskDiagnosis.ts";
-import { getTaskFileContent } from "../src/lib/taskFileEditing.ts";
+import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { teamWorkspaceScenarios } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { getTaskDefinitionGoal } from "../src/features/tasks/lib/task-ai-adjustment-adapters.ts";
+import { getTaskDiagnosisReport } from "../src/features/tasks/lib/task-diagnosis.ts";
+import { getTaskFileContent } from "../src/features/tasks/files/lib/task-file-editing.ts";
 import type { TaskNode } from "../src/shared/model/task-model.ts";
 
 const nodes = teamWorkspaceScenarios.flatMap((team) => team.nodes).filter((node): node is TaskNode => node.kind === "task");

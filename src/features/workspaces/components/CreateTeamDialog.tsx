@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
-import { useI18n } from '../i18n/I18nProvider';
-import { loadPersonalCenterDirectory, savePersonalCenterDirectory } from '../data/memberProfiles';
-import { countCreatedTeams, MAX_CREATED_TEAMS, prepareCreatedTeam } from '../lib/teamLimits';
-import { readWorkspaceSession, saveWorkspaceSession, onboardingStorageKey } from '../lib/workspaceSession';
-import { restoreOnboardingPreview } from '../lib/onboardingPreview';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import { loadPersonalCenterDirectory, savePersonalCenterDirectory } from '@/ai/mock/data/memberProfiles';
+import { countCreatedTeams, MAX_CREATED_TEAMS, prepareCreatedTeam } from '@/features/members/lib/team-limits';
+import { readWorkspaceSession, saveWorkspaceSession, onboardingStorageKey } from '@/shared/lib/workspace-session';
+import { restoreOnboardingPreview } from '@/features/auth/lib/onboarding-preview';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
+import { Dialog, DialogContent, DialogTitle } from '@/shared/ui/dialog';
 export function CreateTeamDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const { locale } = useI18n();
   const en = locale === 'en';

@@ -1,8 +1,8 @@
 import type { TaskActivityMock, TaskCommitMock, TaskDetailContent, TaskFileNode, TaskNode } from "@/shared/model/task-model.ts";
 
-import { getTaskProgressBurnUp } from "./taskProgressExamples.ts";
+import { getTaskProgressBurnUp } from "@/ai/mock/data/taskProgressExamples.ts";
 import type { TaskDiagnosisConflictInput, TaskDiagnosisSnapshot } from "@/shared/model/task-diagnosis.ts";
-import { getCreatorCommerceDiagnosisExample } from "./creatorCommerceDiagnosisExamples";
+import { getCreatorCommerceDiagnosisExample } from "@/ai/mock/data/creatorCommerceDiagnosisExamples";
 
 /**
  * 本文件只包含合成演示数据。人物、企业、批次、客户、事故和文件均为虚构，

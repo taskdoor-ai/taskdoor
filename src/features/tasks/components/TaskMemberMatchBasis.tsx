@@ -1,5 +1,5 @@
 import type { PersonOption } from "@/shared/model/task-model";
-import type { TaskMemberRecommendations } from "../lib/taskMemberRecommendations";
+import type { TaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecommendations";
 
 type Props = {
   label?: string;

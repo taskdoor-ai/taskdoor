@@ -1,5 +1,5 @@
 import type { TaskFileNode } from "@/shared/model/task-model";
-import { sortTaskFileNodes } from "./taskFileTree";
+import { sortTaskFileNodes } from "@/features/tasks/files/lib/task-file-tree";
 
 export type TaskFileSearchResult = { file: TaskFileNode; folderPath: string };
 

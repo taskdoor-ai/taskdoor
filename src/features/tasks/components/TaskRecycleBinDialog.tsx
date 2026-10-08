@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Search, Trash2 } from 'lucide-react';
-import type { TeamResponsibilityProfile } from '../data/memberProfiles';
+import type { TeamResponsibilityProfile } from '@/ai/mock/data/memberProfiles';
 import type { PersonOption, WorkspaceNode } from '@/shared/model/task-model';
 
-import { canManageRecycledTask, type RecycledTask } from '../lib/taskRecycleBin';
-import { useI18n } from '../i18n/I18nProvider';
-import { useMockText } from '../i18n/MockDataProvider';
-import { TaskBranchDisclosure } from './TaskBranchDisclosure';
-import { PersonAvatar } from './PersonAvatar';
-import { PersonPicker } from './PersonPicker';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+import { canManageRecycledTask, type RecycledTask } from '@/features/tasks/lib/task-recycle-bin';
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import { useMockText } from '@/ai/mock/i18n/MockDataProvider';
+import { TaskBranchDisclosure } from '@/features/tasks/components/TaskBranchDisclosure';
+import { PersonAvatar } from '@/shared/ui/PersonAvatar';
+import { PersonPicker } from '@/features/members/components/PersonPicker';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import { Check, Minus } from 'lucide-react';
 function Checkbox({ checked, ...props }: Omit<BaseCheckbox.Root.Props, 'checked'> & { checked?: boolean | 'indeterminate' }) { return <BaseCheckbox.Root {...props} checked={checked === true} indeterminate={checked === 'indeterminate'} className="recycle-checkbox"><BaseCheckbox.Indicator>{checked === 'indeterminate' ? <Minus size={12}/> : <Check size={12}/>}</BaseCheckbox.Indicator></BaseCheckbox.Root>; }
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter } from './ui/alert-dialog';
-import '../styles/task-recycle-bin.css';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/shared/ui/dialog';
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter } from '@/shared/ui/alert-dialog';
+import '@/features/tasks/styles/task-recycle-bin.css';
 
 type Props = { open: boolean; onClose: () => void; entries: RecycledTask[]; error: string; onRefresh: () => void;
   team?: TeamResponsibilityProfile; actorId: string; members: PersonOption[]; nodes: WorkspaceNode[];

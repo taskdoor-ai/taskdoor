@@ -1,14 +1,14 @@
-import { useI18n } from "../i18n/I18nProvider";
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
-import { createManualEffortEstimate, formatEffortPersonDays, getTaskEffortState, MINUTES_PER_PERSON_DAY, summarizeTaskEffort, type TaskEffortTask } from "../lib/taskEffort";
+import { createManualEffortEstimate, formatEffortPersonDays, getTaskEffortState, MINUTES_PER_PERSON_DAY, summarizeTaskEffort, type TaskEffortTask } from "@/features/tasks/lib/task-effort";
 import { type TaskEffortEstimate } from "@/shared/model/task-effort";
-import { getTaskEffortEditSignature } from "../lib/taskEffortEditing";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { getTaskEffortEditSignature } from "@/features/tasks/lib/task-effort-editing";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 export type TaskEffortFieldProps = {
   task: TaskEffortTask;

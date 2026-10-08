@@ -1,14 +1,14 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
-import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
-import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { createWorkspaceTaskDetail } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { workspaceRootId, type TaskNode, type WorkspaceNode } from "../src/shared/model/task-model.ts";
-import { getEffortScopeKey, getTaskEffortState } from "../src/lib/taskEffort.ts";
-import { commitTaskAiStorage, TASK_AI_JOURNAL_KEY } from "../src/lib/taskAiAdjustmentStorage.ts";
+import { getEffortScopeKey, getTaskEffortState } from "../src/features/tasks/lib/task-effort.ts";
+import { commitTaskAiStorage, TASK_AI_JOURNAL_KEY } from "../src/features/tasks/lib/task-ai-adjustment-storage.ts";
 
-const moduleUrl = new URL("../src/lib/workspaceSubtaskEditing.ts", import.meta.url);
-const editing = existsSync(moduleUrl) ? await import("../src/lib/workspaceSubtaskEditing.ts") : null;
+const moduleUrl = new URL("../src/features/tasks/lib/workspace-subtask-editing.ts", import.meta.url);
+const editing = existsSync(moduleUrl) ? await import("../src/features/tasks/lib/workspace-subtask-editing.ts") : null;
 const model = () => { assert.ok(editing, "需要提供可测试的子任务维护逻辑"); return editing; };
 const task = (id: string, overrides: Partial<TaskNode> = {}): TaskNode => ({
   id, kind: "task", name: id, parentId: workspaceRootId, ownerId: "周岚", status: "进行中", updatedAt: "昨天", ...overrides,
@@ -215,7 +215,7 @@ test("删除的多键保存失败会全部回滚，成功后刷新没有孤儿�
 });
 
 test("App创建入口与两种删除入口独立接线，存储提交成功后才清理文件草稿", () => {
-  const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+  const app = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
   assert.match(app, /onCreateSubtask=\{startNewSubtaskConversation\}/);
   assert.match(app, /onDeleteSubtask=\{requestDeleteSubtask\}/);
   assert.match(app, /onDeleteTask=\{requestDeleteTask\}/);

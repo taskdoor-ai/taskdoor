@@ -1,6 +1,6 @@
 import type { TaskDetailContent, TaskFileNode } from "@/shared/model/task-model";
 import type { TaskDiagnosisContext } from "@/shared/model/task-diagnosis";
-import { applyTaskFileEdit, getTaskFileContent, readTaskFileEdits } from "./taskFileEditing";
+import { applyTaskFileEdit, getTaskFileContent, readTaskFileEdits } from "@/features/tasks/files/lib/task-file-editing";
 
 export type TaskDiagnosisFileSnapshot = { files: TaskFileNode[]; unavailableFileCount: number };
 

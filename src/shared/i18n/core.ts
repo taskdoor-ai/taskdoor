@@ -1,4 +1,4 @@
-import { en, zh, type MessageKey } from './messages';
+import { en, zh, type MessageKey } from '@/shared/i18n/messages';
 export type Locale = 'en' | 'zh-CN';
 export const DEFAULT_LOCALE: Locale = 'en';
 export const LOCALE_STORAGE_KEY = 'agentdoor.locale';

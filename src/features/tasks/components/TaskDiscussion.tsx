@@ -1,15 +1,15 @@
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
-import type { AiShortcutAttempt, AiTransferResult } from "./AiConnectionDialog";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
 import { MessageSquare } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import type { CollaborationMessage, DiscussionDraft } from "../lib/taskCollaboration";
-import { getTaskDiscussionThreads } from "../lib/taskActivity";
-import type { DiscussionAiTarget } from "../lib/taskDiscussionAi";
-import { PersonAvatar } from "./PersonAvatar";
-import { DiscussionComposer } from "./discussion/DiscussionComposer";
-import { DiscussionMessages } from "./discussion/DiscussionMessages";
+import type { CollaborationMessage, DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
+import { getTaskDiscussionThreads } from "@/features/tasks/lib/task-activity";
+import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
+import { PersonAvatar } from "@/shared/ui/PersonAvatar";
+import { DiscussionComposer } from "@/features/tasks/discussion/components/DiscussionComposer";
+import { DiscussionMessages } from "@/features/tasks/discussion/components/DiscussionMessages";
 
 type TaskDiscussionProps = {
   activities: CollaborationMessage[];

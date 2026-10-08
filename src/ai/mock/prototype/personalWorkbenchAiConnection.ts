@@ -1,5 +1,5 @@
-import type { AiConnectionRequest } from "../components/AiConnectionDialog";
-import type { PersonalWorkbenchModel, PersonalWorkbenchTask } from "./personalWorkbench";
+import type { AiConnectionRequest } from "@/features/ai-connection/components/AiConnectionDialog";
+import type { PersonalWorkbenchModel, PersonalWorkbenchTask } from "@/ai/mock/lib/personalWorkbench";
 
 function taskListItem(task: PersonalWorkbenchTask, index: number): AiConnectionRequest["context"][number] {
   return {

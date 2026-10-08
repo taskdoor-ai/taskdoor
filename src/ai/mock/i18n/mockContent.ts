@@ -1,12 +1,12 @@
-import readingDemo from './mock/readingDemo.json';
-import createdProgress from './mock/createdProgress.json';
-import progressRecords from './mock/progressRecords.json';
-import tasks from './mock/tasks.json';
-import criteria from './mock/criteria.json';
-import taskCriteria from './mock/taskCriteria.json';
-import coreRecords from './mock/coreRecords.json';
-import fileNames from './mock/fileNames.json';
-import type { Locale } from './core';
+import readingDemo from '@/ai/mock/i18n/mock/readingDemo.json';
+import createdProgress from '@/ai/mock/i18n/mock/createdProgress.json';
+import progressRecords from '@/ai/mock/i18n/mock/progressRecords.json';
+import tasks from '@/ai/mock/i18n/mock/tasks.json';
+import criteria from '@/ai/mock/i18n/mock/criteria.json';
+import taskCriteria from '@/ai/mock/i18n/mock/taskCriteria.json';
+import coreRecords from '@/ai/mock/i18n/mock/coreRecords.json';
+import fileNames from '@/ai/mock/i18n/mock/fileNames.json';
+import type { Locale } from '@/shared/i18n/core';
 export type MockTaskCopy = { title: { zh: string; en: string }; goal: { zh: string; en: string }; records?: Readonly<Record<string, string | undefined>> };
 export const mockTaskCatalog: Readonly<Record<string, MockTaskCopy>> = tasks;
 /** Exact baseline matches only. IDs, stored fields and edited text remain untouched. */

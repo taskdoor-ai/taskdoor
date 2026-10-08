@@ -1,5 +1,5 @@
 import type { TaskBurnUpSeries } from "@/shared/model/task-burn-up";
-import { getTaskProgressBurnUp } from "./taskProgressExamples";
+import { getTaskProgressBurnUp } from "@/ai/mock/data/taskProgressExamples";
 
 export type TaskHeadingExample = {
   completionCriteria: string[];

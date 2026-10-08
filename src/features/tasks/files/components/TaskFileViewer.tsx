@@ -1,13 +1,13 @@
-import { useGlobalUi } from "../../i18n/globalUi";
-import { useDetailCopy } from "../../i18n/detailMessages";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { Download, FileQuestion, Image as ImageIcon } from "lucide-react";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import { getTaskFileContent, type TaskFileContent } from "../../lib/taskFileEditing";
-import { getPreviewKind } from "../../lib/taskFileTree";
-import { readDiscussionBlob } from "../../lib/discussionUploads";
-import type { FileDiscussionThread } from "../../lib/taskCollaboration";
-import { LexicalFileDocument } from "./LexicalFileDocument";
+import { getTaskFileContent, type TaskFileContent } from "@/features/tasks/files/lib/task-file-editing";
+import { getPreviewKind } from "@/features/tasks/files/lib/task-file-tree";
+import { readDiscussionBlob } from "@/features/tasks/files/lib/discussion-uploads";
+import type { FileDiscussionThread } from "@/features/tasks/lib/task-collaboration";
+import { LexicalFileDocument } from "@/features/tasks/files/components/LexicalFileDocument";
 
 export type TaskFileTextSelection = { text: string; location: string; documentText?: string; selectionStart?: number; selectionEnd?: number; pageIndex?: number; rect: { left: number; bottom: number } };
 type ViewerProps = {

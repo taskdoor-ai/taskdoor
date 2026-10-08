@@ -1,8 +1,8 @@
-import { useGlobalUi } from "../i18n/globalUi";
-import { useI18n } from "../i18n/I18nProvider";
-import { mockTagName } from "../i18n/mockContent";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { mockTagName } from "@/ai/mock/i18n/mockContent";
 import { Building2, CircleDollarSign, Flag, FolderKanban, Layers3, Package, ShieldAlert, ShoppingBag, Sparkles, Tag, Users, Wrench, X, type LucideIcon } from "lucide-react";
-import type { TagColorName, TagDefinition, TagIconName } from "../data/tagGroups";
+import type { TagColorName, TagDefinition, TagIconName } from "@/ai/mock/data/tagGroups";
 
 export const tagIconOptions: Array<{ name: TagIconName; label: string; icon: LucideIcon }> = [
   { name: "tag", label: "标签", icon: Tag }, { name: "folder", label: "项目", icon: FolderKanban },

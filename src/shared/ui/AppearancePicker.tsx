@@ -1,8 +1,8 @@
-import { useRemainingCopy } from "../i18n/remainingMessages";
+import { useRemainingCopy } from "@/shared/i18n/remaining-messages";
 import { Check, type LucideIcon } from "lucide-react";
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
 import type { TaskIconTone } from "@/shared/model/task-model";
-import type { TagColorName } from "../data/tagGroups";
+import type { TagColorName } from "@/ai/mock/data/tagGroups";
 
 type Props<Icon extends string, Color extends string> = {
   icon: Icon;

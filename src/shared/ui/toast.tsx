@@ -1,4 +1,4 @@
-import { useModuleCopy } from "../../i18n/moduleMessages";
+import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { type ReactNode } from "react";
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
 import { CircleCheck, CircleAlert, Info, X } from "lucide-react";

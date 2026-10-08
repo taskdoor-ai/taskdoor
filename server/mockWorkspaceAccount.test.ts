@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createOnboardingPreview, transitionOnboarding, restoreOnboardingPreview } from '../src/lib/onboardingPreview';
-import { prepareOnboardingWorkspace } from '../src/lib/onboardingWorkspace';
-import { initialPersonalCenterState } from '../src/data/memberProfiles';
+import { createOnboardingPreview, transitionOnboarding, restoreOnboardingPreview } from '../src/features/auth/lib/onboarding-preview';
+import { prepareOnboardingWorkspace } from '../src/features/auth/lib/onboarding-workspace';
+import { initialPersonalCenterState } from '../src/ai/mock/data/memberProfiles';
 const email = 'bjfwww@gmail.com';
 test('designated preview account opens all existing example teams without duplicating members', () => {
  const state = createOnboardingPreview();

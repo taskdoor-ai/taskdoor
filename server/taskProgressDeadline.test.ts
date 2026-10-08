@@ -2,10 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { getTaskProgressDemoExample } from "../src/data/taskProgressDemo.ts";
-import { getTaskProgressDisplay } from "../src/lib/taskProgressDisplay.ts";
-import { TaskProgressComparison } from "../src/components/TaskProgressComparison.tsx";
-import { TaskProgressOverview } from "../src/components/TaskProgressOverview.tsx";
+import { getTaskProgressDemoExample } from "../src/ai/mock/data/taskProgressDemo.ts";
+import { getTaskProgressDisplay } from "../src/features/tasks/lib/task-progress-display.ts";
+import { TaskProgressComparison } from "../src/features/tasks/components/TaskProgressComparison.tsx";
+import { TaskProgressOverview } from "../src/features/tasks/components/TaskProgressOverview.tsx";
 import { scenarioPresentation } from "../src/prd/progressScenarioFixtures.ts";
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 

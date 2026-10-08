@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { TaskCreationPage } from "./TaskCreationPage";
+import { TaskCreationPage } from "@/features/tasks/components/TaskCreationPage";
 
 type TaskCreationExperienceProps = ComponentProps<typeof TaskCreationPage>;
 

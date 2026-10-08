@@ -12,7 +12,7 @@ import {
   restoreDefaultIcon,
   setNodeIcon,
   sortTaskFileNodes,
-} from "../src/lib/taskFileTree.ts";
+} from "../src/features/tasks/files/lib/task-file-tree.ts";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 
 const nodes: TaskFileNode[] = [

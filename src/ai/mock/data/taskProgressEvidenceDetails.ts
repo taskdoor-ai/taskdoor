@@ -1,4 +1,4 @@
-import records from "./taskProgressDemoRecords.json";
+import records from "@/ai/mock/data/taskProgressDemoRecords.json";
 import type { TaskDetailContent, TaskNode } from "@/shared/model/task-model";
 
 

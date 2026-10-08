@@ -1,6 +1,6 @@
-import { taskCalendarDate, taskScheduleError } from "./taskSchedule";
+import { taskCalendarDate, taskScheduleError } from "@/features/tasks/lib/task-schedule";
 import type { TaskNode } from "@/shared/model/task-model";
-import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "./taskProgressComparison";
+import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 export type TaskProgressContext = Partial<Pick<TaskNode, "status" | "plannedStartOn" | "plannedEndOn" | "createdAt" | "effortBaseline" | "effortEstimate" | "goal" | "completionCriteria" | "executionTips">> & {
   completedAt?: string;

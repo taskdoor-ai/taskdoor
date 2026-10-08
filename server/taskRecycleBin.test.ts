@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canManageRecycledTask, RECYCLE_BIN_KEY, RETENTION_MS, recycleTask, changeRecycledTasks, readRecycleBin } from '../src/lib/taskRecycleBin.ts';
-import { getTaskDeletionPreview, getTaskDeletionWrites, type SubtaskWorkspaceState } from '../src/lib/workspaceSubtaskEditing.ts';
-import { commitTaskAiStorage } from '../src/lib/taskAiAdjustmentStorage.ts';
-import type { TeamResponsibilityProfile } from '../src/data/memberProfiles.ts';
+import { canManageRecycledTask, RECYCLE_BIN_KEY, RETENTION_MS, recycleTask, changeRecycledTasks, readRecycleBin } from '../src/features/tasks/lib/task-recycle-bin.ts';
+import { getTaskDeletionPreview, getTaskDeletionWrites, type SubtaskWorkspaceState } from '../src/features/tasks/lib/workspace-subtask-editing.ts';
+import { commitTaskAiStorage } from '../src/features/tasks/lib/task-ai-adjustment-storage.ts';
+import type { TeamResponsibilityProfile } from '../src/ai/mock/data/memberProfiles.ts';
 import type { TaskNode } from '../src/shared/model/task-model.ts';
 const task = (id: string, props: Partial<TaskNode> = {}): TaskNode => ({ id, name:id, kind:'task', teamId:'team', parentId:'workspace-root', ownerId:'owner', status:'进行中', updatedAt:'昨天', ...props });
 const team = { id:'team', memberships:[{memberId:'team-owner',status:'active',role:'owner'}, {memberId:'owner', status:'active',role:'member'}, {memberId:'admin',status:'active',role:'admin'}, {memberId:'other',status:'active',role:'member'}] } as TeamResponsibilityProfile;

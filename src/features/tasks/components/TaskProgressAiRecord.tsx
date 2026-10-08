@@ -1,5 +1,5 @@
 import React from "react";
-import type { TaskProgressDisplay } from "../lib/taskProgressDisplay";
+import type { TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
 
 const formatTime = (value: string) => new Intl.DateTimeFormat("zh-CN", {
   timeZone:"Asia/Shanghai", month:"numeric", day:"numeric",

@@ -1,18 +1,18 @@
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
-import { useMockText } from "../i18n/MockDataProvider";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { ChevronRight, ListTree } from "lucide-react";
-import { getTaskProgressDisplay } from "../lib/taskProgressDisplay";
-import { getTaskProgressDemoExample } from "../data/taskProgressDemo";
-import type { TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
-import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "../lib/taskEffortDistribution";
-import { TaskStatusBadge } from "./TaskStatusBadge";
-import { TaskProgressStage } from "./TaskProgressStage";
-import { TaskProgressOverview } from "./TaskProgressOverview";
-import { PersonAvatar, PersonName } from "./PersonAvatar";
-import { useResolvedPersonProfile } from "./PersonDirectory";
-import type { TaskRelationSummary } from "./TaskRelationsSection";
-import { TaskIcon } from "./TaskIcon";
+import { getTaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import { getTaskProgressDemoExample } from "@/ai/mock/data/taskProgressDemo";
+import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
+import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "@/features/tasks/lib/task-effort-distribution";
+import { TaskStatusBadge } from "@/shared/ui/TaskStatusBadge";
+import { TaskProgressStage } from "@/features/tasks/components/TaskProgressStage";
+import { TaskProgressOverview } from "@/features/tasks/components/TaskProgressOverview";
+import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
+import { useResolvedPersonProfile } from "@/shared/ui/PersonDirectory";
+import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
+import { TaskIcon } from "@/features/tasks/components/TaskIcon";
 
 function SubtaskOwner({ owner }: Pick<TaskRelationSummary, "owner">) {
   const d = useDetailCopy();

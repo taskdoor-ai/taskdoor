@@ -2,10 +2,10 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createElement } from 'react';
-import { en, zh } from '../src/i18n/messages';
-import { normalizeLocale, translate, formatCalendarDate, formatInstant, formatTaskCount } from '../src/i18n/core';
-import { I18nProvider } from '../src/i18n/I18nProvider';
-import { statusMessageKey } from '../src/i18n/taskStatus';
+import { en, zh } from '../src/shared/i18n/messages';
+import { normalizeLocale, translate, formatCalendarDate, formatInstant, formatTaskCount } from '../src/shared/i18n/core';
+import { I18nProvider } from '../src/shared/i18n/I18nProvider';
+import { statusMessageKey } from '../src/shared/i18n/task-status';
 
 test('English is default and unsupported or corrupt preferences fall back safely', () => {
   for (const input of [null, undefined, '', 'fr', {}, 'en-US']) assert.equal(normalizeLocale(input), 'en');

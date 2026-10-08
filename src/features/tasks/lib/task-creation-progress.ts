@@ -1,5 +1,5 @@
-import type { CreationPlanningResult } from "./taskCreationPlanning";
-import type { TaskAiAdjustmentApplicationStatus, TaskAiAdjustmentChange, TaskAiAdjustmentProgress } from "./taskAiAdjustmentTypes";
+import type { CreationPlanningResult } from "@/ai/mock/lib/taskCreationPlanning";
+import type { TaskAiAdjustmentApplicationStatus, TaskAiAdjustmentChange, TaskAiAdjustmentProgress } from "@/features/tasks/lib/task-ai-adjustment-types";
 
 export type CreationFeedbackStep = { label: string; detail: string; basis: string };
 export const CREATION_PLANNING_STEP_LABELS = ["分析任务", "目标与计划", "成员推荐", "动态规划"] as const;

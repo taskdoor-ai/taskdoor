@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getTaskBurnUpModel } from "../src/lib/taskBurnUp.ts";
+import { getTaskBurnUpModel } from "../src/features/tasks/lib/task-burn-up.ts";
 import { type TaskBurnUpPoint, type TaskBurnUpSeries } from "../src/shared/model/task-burn-up.ts";
-import { getTaskHeadingExample } from "../src/data/taskHeadingExamples.ts";
+import { getTaskHeadingExample } from "../src/ai/mock/data/taskHeadingExamples.ts";
 
 const point = (overrides: Partial<TaskBurnUpPoint> = {}): TaskBurnUpPoint => ({
   at: "2026-08-25",

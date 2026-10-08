@@ -1,5 +1,5 @@
-import { useMockText } from '@/i18n/MockDataProvider';
-import { useI18n } from '@/i18n/I18nProvider';
+import { useMockText } from '@/ai/mock/i18n/MockDataProvider';
+import { useI18n } from '@/shared/i18n/I18nProvider';
 import { progressText } from '@/shared/i18n/progress-copy';
 
 export function useProgressCopy() {

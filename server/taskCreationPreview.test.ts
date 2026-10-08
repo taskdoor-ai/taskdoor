@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getCreationPreviewTaskId } from "../src/lib/taskCreationPreview.ts";
+import { getCreationPreviewTaskId } from "../src/features/tasks/lib/task-creation-preview.ts";
 
 test("对话创建预览会落到不同的代表性本地任务而不生成重复目录数据", () => {
   assert.equal(getCreationPreviewTaskId({ title: "新品防晒衣抖音达人筛选", subtaskCount: 2 }), "fragrance-creator-business");

@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { taskDraftSchema, taskPlanDraftSchema } from "./taskAssistantProtocol";
-import type { TaskCreationScenarioId } from "../data/taskCreationScenarios";
-import type { CreationPlanningResult } from "./taskCreationPlanning";
-import type { CreationProcess } from "./taskCreationProgress";
+import { taskDraftSchema, taskPlanDraftSchema } from "@/features/tasks/lib/task-assistant-protocol";
+import type { TaskCreationScenarioId } from "@/ai/mock/data/taskCreationScenarios";
+import type { CreationPlanningResult } from "@/ai/mock/lib/taskCreationPlanning";
+import type { CreationProcess } from "@/features/tasks/lib/task-creation-progress";
 
 export type TaskCreationParentContext = { parentTaskId: string; pathItems: Array<{ id: string; label: string }> };
 export type CreationWorkspaceDraft = {

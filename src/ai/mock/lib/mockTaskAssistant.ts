@@ -1,6 +1,6 @@
-import { normalizePersonalTagNames } from "./personalTags.ts";
-import { assignTaskByResponsibility, type ResponsibilityAssignment, type ResponsibilityDomain } from "./responsibilityAssignment.ts";
-import { taskAssistantResponseSchema, type TaskAssistantRequest, type TaskAssistantResponse, type TaskDraft, type TaskPlanDraft } from "./taskAssistantProtocol.ts";
+import { normalizePersonalTagNames } from "@/features/tasks/lib/personal-tags.ts";
+import { assignTaskByResponsibility, type ResponsibilityAssignment, type ResponsibilityDomain } from "@/ai/mock/lib/responsibilityAssignment.ts";
+import { taskAssistantResponseSchema, type TaskAssistantRequest, type TaskAssistantResponse, type TaskDraft, type TaskPlanDraft } from "@/features/tasks/lib/task-assistant-protocol.ts";
 
 const addDays = (date: string, days: number) => {
   const next = new Date(`${date}T00:00:00Z`);

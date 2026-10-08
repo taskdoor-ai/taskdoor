@@ -1,7 +1,7 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { useRef, useState } from "react";
 import { RefreshCw } from "lucide-react";
-import { toast } from "./ui/toast";
+import { toast } from "@/shared/ui/toast";
 
 export function TaskProgressRefresh({ onRepredict, scope = "progress" }: { onRepredict: () => Promise<void>; scope?: "progress" | "task" }) {
   const p = useProgressCopy();

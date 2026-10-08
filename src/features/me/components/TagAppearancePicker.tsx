@@ -1,7 +1,7 @@
-import { useGlobalUi } from "../i18n/globalUi";
-import type { TagColorName, TagDefinition, TagIconName } from "../data/tagGroups";
-import { TagBadge, tagColorOptions, tagIconOptions } from "./TagBadge";
-import { AppearancePicker } from "./AppearancePicker";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import type { TagColorName, TagDefinition, TagIconName } from "@/ai/mock/data/tagGroups";
+import { TagBadge, tagColorOptions, tagIconOptions } from "@/shared/ui/TagBadge";
+import { AppearancePicker } from "@/shared/ui/AppearancePicker";
 
 type Props = {
   color: TagColorName;

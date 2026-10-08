@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { createManualEffortEstimate, formatEffortMinutes, parseEffortHours } from "../src/lib/taskEffort.ts";
+import { createManualEffortEstimate, formatEffortMinutes, parseEffortHours } from "../src/features/tasks/lib/task-effort.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 const scope = { goal: "形成结论", completionCriteria: ["核对结论"], executionTips: ["AI起草，人工复核"] };
@@ -12,8 +12,8 @@ const task = { ...scope, effortEstimate: estimate };
 const visible = (html: string) => html.replace(/<[^>]+>/g, "");
 
 async function components() {
-  assert.ok(existsSync(new URL("../src/components/TaskEffortField.tsx", import.meta.url)), "需要共享的 EWD 编辑与读数控件");
-  return import("../src/components/TaskEffortField.tsx");
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskEffortField.tsx", import.meta.url)), "需要共享的 EWD 编辑与读数控件");
+  return import("../src/features/tasks/components/TaskEffortField.tsx");
 }
 
 test("展示工时保留分钟精度，不输出冗长循环小数", () => {
@@ -66,7 +66,7 @@ test("所有预估入口统一移除演示注释，保留来源与确认状态",
   const manual = visible(renderToStaticMarkup(createElement(TaskEffortValue, { task })));
   assert.match(manual, /已确认.*手工预估/);
   assert.deepEqual(mockTask, before, "隐藏注释不得修改工时、来源、版本或确认状态");
-  const source = readFileSync(new URL("../src/components/TaskEffortField.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskEffortField.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(source, /showDemoAnnotations|示例数据/);
 });
 
@@ -149,7 +149,7 @@ test("人天计数器保留未知与零的区别，禁用时不能加减", async
 });
 
 test("有子任务的总投入只读，只有一个子任务也不能编辑", async () => {
-  const { TaskEffortEditor } = await import("../src/components/TaskEffortEditor.tsx");
+  const { TaskEffortEditor } = await import("../src/features/tasks/components/TaskEffortEditor.tsx");
   const tasks = [{ ...task, id: "one" }, { ...task, id: "two" }];
   for (const items of [tasks, tasks.slice(0, 1)]) {
     const html = renderToStaticMarkup(createElement(TaskEffortEditor, { tasks: items, hasSubtasks: true, label: "主任务", onChange: () => assert.fail("合计不能触发修改") }));
@@ -160,7 +160,7 @@ test("有子任务的总投入只读，只有一个子任务也不能编辑", as
 });
 
 test("无子任务时保留计数器，合计缺少估算时不伪装成零", async () => {
-  const { TaskEffortEditor } = await import("../src/components/TaskEffortEditor.tsx");
+  const { TaskEffortEditor } = await import("../src/features/tasks/components/TaskEffortEditor.tsx");
   const html = renderToStaticMarkup(createElement(TaskEffortEditor, { tasks: [{ ...task, id: "one" }], hasSubtasks: false, onChange: () => undefined }));
   assert.match(html, /role="spinbutton"/);
   assert.doesNotMatch(html, /子任务合计/);

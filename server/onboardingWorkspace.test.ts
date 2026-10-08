@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { initialPersonalCenterState, isPersonalCenterState, loadPersonalCenterState, loadPersonalCenterDirectory, savePersonalCenterState, savePersonalCenterDirectory } from "../src/data/memberProfiles.ts";
-import { getTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { createOnboardingPreview, transitionOnboarding } from "../src/lib/onboardingPreview.ts";
-import { enterOnboardingWorkspace, prepareOnboardingWorkspace } from "../src/lib/onboardingWorkspace.ts";
-import { readWorkspaceSession, workspaceSessionKey } from "../src/lib/workspaceSession.ts";
-import { commitManualWorkspaceTask } from "../src/lib/workspaceTaskCreation.ts";
+import { initialPersonalCenterState, isPersonalCenterState, loadPersonalCenterState, loadPersonalCenterDirectory, savePersonalCenterState, savePersonalCenterDirectory } from "../src/ai/mock/data/memberProfiles.ts";
+import { getTeamWorkspaceNodes } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { createOnboardingPreview, transitionOnboarding } from "../src/features/auth/lib/onboarding-preview.ts";
+import { enterOnboardingWorkspace, prepareOnboardingWorkspace } from "../src/features/auth/lib/onboarding-workspace.ts";
+import { readWorkspaceSession, workspaceSessionKey } from "../src/shared/lib/workspace-session.ts";
+import { commitManualWorkspaceTask } from "../src/features/tasks/lib/workspace-task-creation.ts";
 
 const register = (email = "new-owner@example.com", inviteToken = "") => {
   const pending = transitionOnboarding(createOnboardingPreview("new", inviteToken), { type: "register", email, name: "新成员", passwordDigest: "a".repeat(64), passwordLength: 10, now: 1000 });

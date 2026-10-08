@@ -2,23 +2,23 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { creatorCommerceMembers } from "../src/data/creatorCommerceScenario.ts";
-import { initialPersonalCenterState, loadPersonalCenterState } from "../src/data/memberProfiles.ts";
-import { taskDetailMocks } from "../src/data/taskDetailMocks.ts";
-import { workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { creatorCommerceMembers } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { initialPersonalCenterState, loadPersonalCenterState } from "../src/ai/mock/data/memberProfiles.ts";
+import { taskDetailMocks } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode } from "../src/shared/model/task-model.ts";
-import { buildPersonalWorkbenchItems, buildPersonalWorkbenchModel } from "../src/lib/personalWorkbench.ts";
+import { buildPersonalWorkbenchItems, buildPersonalWorkbenchModel } from "../src/ai/mock/lib/personalWorkbench.ts";
 
 const sourcePath = (relativePath: string) => fileURLToPath(new URL(`../${relativePath}`, import.meta.url));
 const readSource = (relativePath: string) => readFileSync(sourcePath(relativePath), "utf8");
 const activeCopyFiles = [
-  "src/App.tsx",
-  "src/components/PersonalWorkbench.tsx",
-  "src/components/GlobalNotifications.tsx",
-  "src/components/WorkspaceList.tsx",
-  "src/components/TaskCreationConversation.tsx",
-  "src/data/taskDetailMocks.ts",
-  "src/data/memberProfiles.ts",
+  "src/app/App.tsx",
+  "src/ai/mock/prototype/components/PersonalWorkbench.tsx",
+  "src/features/notifications/components/GlobalNotifications.tsx",
+  "src/features/workspaces/components/WorkspaceList.tsx",
+  "src/features/tasks/components/TaskCreationConversation.tsx",
+  "src/ai/mock/data/taskDetailMocks.ts",
+  "src/ai/mock/data/memberProfiles.ts",
 ] as const;
 const legacyBusinessWords = /(零售|门店|退款|撤单|灰度|优惠券|发票|会员|开票|审计|对账)|(?:^|[^a-z])POS(?:[^a-z]|$)/i;
 const functionBody = (source: string, start: string, end: string) => {
@@ -76,17 +76,17 @@ test("当前活跃页面与 Mock 详情不再出现旧零售业务文案", () =>
 
 test("工作台、通知与任务入口覆盖达人带货的关键协作环节", () => {
   const visibleCopy = [
-    readSource("src/components/PersonalWorkbench.tsx"),
-    readSource("src/components/GlobalNotifications.tsx"),
-    readSource("src/components/WorkspaceList.tsx"),
-    readSource("src/components/TaskCreationConversation.tsx"),
+    readSource("src/ai/mock/prototype/components/PersonalWorkbench.tsx"),
+    readSource("src/features/notifications/components/GlobalNotifications.tsx"),
+    readSource("src/features/workspaces/components/WorkspaceList.tsx"),
+    readSource("src/features/tasks/components/TaskCreationConversation.tsx"),
   ].join("\n");
 
   for (const keyword of ["达人", "直播", "投流", "合规"]) assert.match(visibleCopy, new RegExp(keyword));
 });
 
 test("工作台从团队任务数据生成独立的追加投放决策行动，并按稳定任务 ID 导航", () => {
-  const source = readSource("src/components/PersonalWorkbench.tsx");
+  const source = readSource("src/ai/mock/prototype/components/PersonalWorkbench.tsx");
   const tasks = workspaceNodes.filter((node): node is TaskNode => node.kind === "task");
   const work = buildPersonalWorkbenchItems(buildPersonalWorkbenchModel({
     tasks,
@@ -142,8 +142,8 @@ test("已保存的旧个人中心基准会迁移到达人带货运营团队", ()
 });
 
 test("任务对话由场景定义启动并用紧凑卡片呈现一次性选择", () => {
-  const source = readSource("src/components/TaskCreationConversation.tsx");
-  const choiceSource = readSource("src/components/TaskCreationChoiceCards.tsx");
+  const source = readSource("src/features/tasks/components/TaskCreationConversation.tsx");
+  const choiceSource = readSource("src/features/tasks/components/TaskCreationChoiceCards.tsx");
 
   assert.match(source, /taskCreationScenarios\.map/);
   assert.match(source, /handleScenarioStart\(suggestion\)/);
@@ -161,9 +161,9 @@ test("任务对话由场景定义启动并用紧凑卡片呈现一次性选择",
 });
 
 test("已有任务使用只读任务卡与动作组，对话态共用底部输入区", () => {
-  const source = readSource("src/components/TaskCreationConversation.tsx");
-  const choiceSource = readSource("src/components/TaskCreationChoiceCards.tsx");
-  const styles = readSource("src/styles.css");
+  const source = readSource("src/features/tasks/components/TaskCreationConversation.tsx");
+  const choiceSource = readSource("src/features/tasks/components/TaskCreationChoiceCards.tsx");
+  const styles = readSource("src/shared/styles/pm-global.css");
 
   assert.match(source, /TaskCreationExistingTaskCard/);
   assert.match(source, /scenarioCandidate/);
@@ -177,8 +177,8 @@ test("已有任务使用只读任务卡与动作组，对话态共用底部输�
 });
 
 test("新建对话首屏居中，快捷提问排在唯一输入框下方", () => {
-  const source = readSource("src/components/TaskCreationConversation.tsx");
-  const styles = readSource("src/styles.css");
+  const source = readSource("src/features/tasks/components/TaskCreationConversation.tsx");
+  const styles = readSource("src/shared/styles/pm-global.css");
   const composerIndex = source.indexOf('<div className="task-conversation-composer">{composer}</div>');
   const suggestionsIndex = source.indexOf('aria-label="任务快捷指令"');
 
@@ -190,8 +190,8 @@ test("新建对话首屏居中，快捷提问排在唯一输入框下方", () =>
 });
 
 test("快捷场景先展示分析过程再呈现问题或任务结果", () => {
-  const source = readSource("src/components/TaskCreationConversation.tsx");
-  const inputSource = readSource("src/components/AnimatedAgentChatInput.tsx");
+  const source = readSource("src/features/tasks/components/TaskCreationConversation.tsx");
+  const inputSource = readSource("src/features/tasks/components/AnimatedAgentChatInput.tsx");
   const analyzeScenario = functionBody(source, "const analyzeScenarioTransition =", "const retryCurrentAnalysis =");
   const retryScenario = functionBody(source, "const retryCurrentAnalysis =", "const handleScenarioStart =");
   const startScenario = functionBody(source, "const handleScenarioStart =", "const handleScenarioChoice =");
@@ -223,7 +223,7 @@ test("快捷场景先展示分析过程再呈现问题或任务结果", () => {
 });
 
 test("切换场景会清空旧会话临时状态，已提交与历史选择卡不再重复呈现", () => {
-  const source = readSource("src/components/TaskCreationConversation.tsx");
+  const source = readSource("src/features/tasks/components/TaskCreationConversation.tsx");
   const startScenario = functionBody(source, "const handleScenarioStart =", "const handleScenarioChoice =");
   const openHistory = functionBody(source, "const openConversation =", "const startNewConversation =");
   const historyChoiceCard = functionBody(source, "{messages.map((message, index)", "{isAnalyzing &&");
@@ -250,14 +250,14 @@ test("切换场景会清空旧会话临时状态，已提交与历史选择卡�
 });
 
 test("全局通知提供邀请协助、成员加入和讨论提及三类示例", () => {
-  const source = readSource("src/data/notificationExamples.ts");
+  const source = readSource("src/ai/mock/data/notificationExamples.ts");
   for (const kind of ["invitation", "member-joined", "mention"]) assert.ok(source.includes(`kind: "${kind}"`));
-  assert.doesNotMatch(readSource("src/components/GlobalNotifications.tsx"), /respondToInvitation|>接受<|>拒绝</);
+  assert.doesNotMatch(readSource("src/features/notifications/components/GlobalNotifications.tsx"), /respondToInvitation|>接受<|>拒绝</);
 });
 
 test("任务详情顶部状态始终允许手动更新当前任务", () => {
-  const appSource = readSource("src/App.tsx");
-  const detailSource = readSource("src/components/TaskDetail.tsx");
+  const appSource = readSource("src/app/App.tsx");
+  const detailSource = readSource("src/features/tasks/components/TaskDetail.tsx");
 
   assert.doesNotMatch(appSource, /selectedTaskId === "coupon-fix"/);
   assert.match(appSource, /onTaskStatusChange=\{selectedTreeTask\?\.kind === "task" \?/);
@@ -266,8 +266,8 @@ test("任务详情顶部状态始终允许手动更新当前任务", () => {
 });
 
 test("任务详情移除概览接线并由独立讨论承载协作", () => {
-  const appSource = readSource("src/App.tsx");
-  const detailSource = readSource("src/components/TaskDetail.tsx");
+  const appSource = readSource("src/app/App.tsx");
+  const detailSource = readSource("src/features/tasks/components/TaskDetail.tsx");
 
   assert.doesNotMatch(appSource, /overviewRole=|overviewCurrentTaskId=/);
   assert.doesNotMatch(detailSource, /TaskOverviewWorkspace|task-detail-panel-overview/);
@@ -276,22 +276,22 @@ test("任务详情移除概览接线并由独立讨论承载协作", () => {
 });
 
 test("子任务概览直接进入任务推进分析而主任务保留协作态势", () => {
-  const overviewSource = readSource("src/components/TaskOverviewWorkspace.tsx");
+  const overviewSource = readSource("src/features/tasks/components/TaskOverviewWorkspace.tsx");
 
   assert.doesNotMatch(overviewSource, /当前推进判断|推进条件|建议下一步/);
   assert.match(overviewSource, /role !== "subtask"/);
 });
 
 test("子任务洞察只从当前任务候选集中生成", () => {
-  const overviewSource = readSource("src/components/TaskOverviewWorkspace.tsx");
+  const overviewSource = readSource("src/features/tasks/components/TaskOverviewWorkspace.tsx");
 
   assert.match(overviewSource, /getOverviewInsightCandidateIds\(/);
   assert.match(overviewSource, /insightCandidateTasks\.find/);
 });
 
 test("标签与状态仅在详情顶部交换而画布节点保持简洁", () => {
-  const detailSource = readSource("src/components/TaskDetail.tsx");
-  const overviewSource = readSource("src/components/TaskOverviewWorkspace.tsx");
+  const detailSource = readSource("src/features/tasks/components/TaskDetail.tsx");
+  const overviewSource = readSource("src/features/tasks/components/TaskOverviewWorkspace.tsx");
 
   assert.match(detailSource, /className="task-detail-title-tags"/);
   assert.match(detailSource, /className="[^"]*\btask-detail-status-field\b[^"]*"/);
@@ -300,14 +300,14 @@ test("标签与状态仅在详情顶部交换而画布节点保持简洁", () =>
 });
 
 test("画布中被弱化的卡片仍可点击并直接切换聚焦", () => {
-  const overviewSource = readSource("src/components/TaskOverviewWorkspace.tsx");
+  const overviewSource = readSource("src/features/tasks/components/TaskOverviewWorkspace.tsx");
 
   assert.doesNotMatch(overviewSource, /<OverviewTaskCard disabled=\{muted\}/);
   assert.match(overviewSource, /onOpen=\{\(\) => setFocusedTaskId\(task\.id\)\}/);
 });
 
 test("画布聚焦后无关节点仅降低透明度并保留可切换提示", () => {
-  const styleSource = readSource("src/styles.css");
+  const styleSource = readSource("src/shared/styles/pm-global.css");
 
   assert.match(styleSource, /\.task-overview-canvas-node\.is-muted \{[^}]*opacity: \.58;/s);
   assert.doesNotMatch(styleSource, /\.task-overview-canvas-node \{[^}]*animation:[^;}]*\sboth;/s);
@@ -321,7 +321,7 @@ test("画布聚焦后无关节点仅降低透明度并保留可切换提示", ()
 });
 
 test("画布中的真实依赖统一使用清晰的实心方向箭头", () => {
-  const overviewSource = readSource("src/components/TaskOverviewWorkspace.tsx");
+  const overviewSource = readSource("src/features/tasks/components/TaskOverviewWorkspace.tsx");
 
   assert.match(overviewSource, /markerUnits="userSpaceOnUse"/);
   assert.match(overviewSource, /viewBox="0 0 10 10"/);
@@ -330,7 +330,7 @@ test("画布中的真实依赖统一使用清晰的实心方向箭头", () => {
 });
 
 test("画布有效关系使用两个错峰粒子平稳流转", () => {
-  const overviewSource = readSource("src/components/TaskOverviewWorkspace.tsx");
+  const overviewSource = readSource("src/features/tasks/components/TaskOverviewWorkspace.tsx");
 
   assert.match(overviewSource, /const canvasFlowDotOffsets = \[0, 0\.5\] as const;/);
   assert.match(overviewSource, /const canvasFlowDuration = 2\.2;/);
@@ -340,8 +340,8 @@ test("画布有效关系使用两个错峰粒子平稳流转", () => {
 });
 
 test("画布支持拖拽视野但不允许拖动节点改关系", () => {
-  const overviewSource = readSource("src/components/TaskOverviewWorkspace.tsx");
-  const styleSource = readSource("src/styles.css");
+  const overviewSource = readSource("src/features/tasks/components/TaskOverviewWorkspace.tsx");
+  const styleSource = readSource("src/shared/styles/pm-global.css");
 
   assert.match(overviewSource, /onPointerDown=\{beginCanvasPan\}/);
   assert.match(overviewSource, /onPointerMove=\{moveCanvasPan\}/);
@@ -355,7 +355,7 @@ test("画布支持拖拽视野但不允许拖动节点改关系", () => {
 
 test("概览卡片状态颜色复用正式任务状态 token", () => {
   const tokenSource = readSource("styles/agentdoor-tokens.css");
-  const styleSource = readSource("src/styles.css");
+  const styleSource = readSource("src/shared/styles/pm-global.css");
 
   for (const tone of ["neutral", "progress", "review", "warning", "success", "failed"]) {
     assert.match(tokenSource, new RegExp(`--ad-task-status-${tone}:`));
@@ -367,7 +367,7 @@ test("概览卡片状态颜色复用正式任务状态 token", () => {
 });
 
 test("AI 洞察列表卡片只保留类型事项与操作入口", () => {
-  const overviewSource = readSource("src/components/TaskOverviewWorkspace.tsx");
+  const overviewSource = readSource("src/features/tasks/components/TaskOverviewWorkspace.tsx");
   const insightCards = overviewSource.slice(
     overviewSource.indexOf('<div className="task-overview-insight-cards">'),
     overviewSource.indexOf("</section>", overviewSource.indexOf('<div className="task-overview-insight-cards">')),
@@ -381,8 +381,8 @@ test("AI 洞察列表卡片只保留类型事项与操作入口", () => {
 });
 
 test("AI 洞察一条一张卡片且操作区与标题形成层级", () => {
-  const overviewSource = readSource("src/components/TaskOverviewWorkspace.tsx");
-  const styleSource = readSource("src/styles.css");
+  const overviewSource = readSource("src/features/tasks/components/TaskOverviewWorkspace.tsx");
+  const styleSource = readSource("src/shared/styles/pm-global.css");
 
   assert.equal(overviewSource.match(/className="task-overview-insight-actions"/g)?.length, 1);
   assert.equal(overviewSource.match(/<TaskOverviewInsightsPanel /g)?.length, 2);
@@ -423,7 +423,7 @@ test("无 retail 团队的合法 v3 数据仍刷新场景资料并保留其他�
 });
 
 test("任务详情在讨论后保留子任务、文件和活动页签", () => {
-  const detailSource = readSource("src/components/TaskDetail.tsx");
+  const detailSource = readSource("src/features/tasks/components/TaskDetail.tsx");
   assert.match(detailSource, /type TaskDetailTab = "discussion" \| "subtasks" \| "files" \| "activity"/);
   assert.match(detailSource, /\{ count: childTasks\.length, id: "subtasks", label: "子任务" \}/);
   assert.match(detailSource, /<TaskSubtaskList [^\n]*onOpenTask=\{onOpenRelatedTask\} tasks=\{childTasks\} \/>/);

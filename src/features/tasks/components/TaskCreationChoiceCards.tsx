@@ -1,5 +1,5 @@
 import { ChevronRight } from "lucide-react";
-import type { ScenarioChoice } from "../lib/taskCreationScenario";
+import type { ScenarioChoice } from "@/ai/mock/lib/taskCreationScenario";
 
 type TaskCreationChoiceCardsProps = {
   choices: ScenarioChoice[];

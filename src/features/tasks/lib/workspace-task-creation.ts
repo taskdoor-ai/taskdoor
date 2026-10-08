@@ -1,12 +1,12 @@
-import { taskScheduleError } from "./taskSchedule";
+import { taskScheduleError } from "@/features/tasks/lib/task-schedule";
 import { workspaceRootId, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
-import type { TaskDraft, TaskPlanDraft } from "./taskAssistantProtocol";
+import type { TaskDraft, TaskPlanDraft } from "@/features/tasks/lib/task-assistant-protocol";
 import { effortEstimateSchema, type TaskEffortEstimate } from "@/shared/model/task-effort";
-import { commitTaskAiStorage } from "./taskAiAdjustmentStorage";
-import { createTaskEffortBaseline } from "./taskEffortBaseline";
-import { defaultCreationParticipantIds } from "./taskCreationParticipants";
-import { getTaskDefinitionGoal } from "./taskGoal";
-import { validateDraftHierarchy } from "./taskCreationHierarchy";
+import { commitTaskAiStorage } from "@/features/tasks/lib/task-ai-adjustment-storage";
+import { createTaskEffortBaseline } from "@/features/tasks/lib/task-effort-baseline";
+import { defaultCreationParticipantIds } from "@/features/tasks/lib/task-creation-participants";
+import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-goal";
+import { validateDraftHierarchy } from "@/features/tasks/lib/task-creation-hierarchy";
 
 export type WorkspaceTaskCreationOptions = {
   currentUserId?: string;

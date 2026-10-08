@@ -1,6 +1,6 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import React, { useId, type ReactNode } from "react";
-import type { TaskSituationModel, TaskSituationReference } from "../lib/taskSituation";
+import type { TaskSituationModel, TaskSituationReference } from "@/features/tasks/lib/task-situation";
 
 type TaskCurrentSituationProps = {
   hasBurnUp?: boolean;

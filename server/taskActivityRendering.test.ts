@@ -3,12 +3,12 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskActivityLog } from "../src/components/TaskActivityLog.tsx";
-import { TaskDiscussion } from "../src/components/TaskDiscussion.tsx";
+import { TaskActivityLog } from "../src/features/tasks/components/TaskActivityLog.tsx";
+import { TaskDiscussion } from "../src/features/tasks/components/TaskDiscussion.tsx";
 import type { TaskActivityMock, TaskFileNode } from "../src/shared/model/task-model.ts";
 
 const base: TaskActivityMock = { id: "status", type: "status-change", author: "周岚", message: "更新任务状态", time: "2026-08-31 10:30:00", createdAt: "2026-08-31T02:30:00Z", changes: [{ label: "状态", before: "进行中", after: "已阻塞" }] };
-const readStyle = () => readFileSync(new URL("../src/styles/task-records.css", import.meta.url), "utf8");
+const readStyle = () => readFileSync(new URL("../src/features/tasks/styles/task-records.css", import.meta.url), "utf8");
 
 test("任务活动固定渲染任务信息、讨论与文件三类胶囊和筛选", () => {
   const html = renderToStaticMarkup(createElement(TaskActivityLog, {
@@ -28,7 +28,7 @@ test("任务活动固定渲染任务信息、讨论与文件三类胶囊和筛�
   assert.match(html, /data-slot="select-value"[^>]*>全部活动<\/span>/);
   assert.match(html, /workspace-filter-control/);
   assert.doesNotMatch(html, /<select[^>]*aria-label="活动类型"/);
-  const source = readFileSync(new URL("../src/components/TaskActivityLog.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskActivityLog.tsx", import.meta.url), "utf8");
   assert.match(source, /<ListFilterSelect\b/);
   for (const [value, label] of [["all", "全部活动"], ["task", "任务信息"], ["discussion", "讨论"], ["file", "文件"]]) {
     assert.ok(source.includes(`<SelectItem value="${value}">${label}</SelectItem>`));

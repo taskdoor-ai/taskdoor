@@ -1,5 +1,5 @@
 import type { WorkspaceNode } from '@/shared/model/task-model';
-import { createTaskChangeActivity } from './taskActivity';
+import { createTaskChangeActivity } from '@/features/tasks/lib/task-activity';
 export type CriterionReview = {
   text: string;
   analysis?: { percent: number | null; evidence: string; observedAt: string };

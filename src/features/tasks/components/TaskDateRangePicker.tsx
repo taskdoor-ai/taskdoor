@@ -1,5 +1,5 @@
-import { useI18n } from '../i18n/I18nProvider';
-import { useGlobalUi } from "../i18n/globalUi";
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";

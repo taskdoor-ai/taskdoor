@@ -1,6 +1,6 @@
-import { useGlobalUi } from '../i18n/globalUi';
+import { useGlobalUi } from '@/shared/i18n/global-ui';
 import { useEffect, useRef, useState } from "react";
-import { Textarea } from "./ui/input";
+import { Textarea } from "@/shared/ui/input";
 
 type Props = {
   label: string;

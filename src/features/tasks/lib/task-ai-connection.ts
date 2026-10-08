@@ -1,5 +1,5 @@
-import type { AiConnectionRequest } from "../components/AiConnectionDialog";
-import type { TaskRelationSummary } from "../components/TaskRelationsSection";
+import type { AiConnectionRequest } from "@/features/ai-connection/components/AiConnectionDialog";
+import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
 import type { TaskDetailContent } from "@/shared/model/task-model";
 
 export type TaskAiConnectionInput = {

@@ -1,4 +1,4 @@
-import type { TaskFileContent } from "./taskFileEditing";
+import type { TaskFileContent } from "@/features/tasks/files/lib/task-file-editing";
 
 export type TaskFileDraft = { content: TaskFileContent; baseVersion: number };
 

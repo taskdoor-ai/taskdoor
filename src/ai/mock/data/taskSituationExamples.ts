@@ -1,8 +1,8 @@
-import type { TaskRelationSummary } from "../components/TaskRelationsSection";
-import type { TaskSituationGroup } from "../lib/taskSituation";
-import { createWorkspaceTaskDetail, taskDetailMocks } from "./taskDetailMocks";
+import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
+import type { TaskSituationGroup } from "@/features/tasks/lib/task-situation";
+import { createWorkspaceTaskDetail, taskDetailMocks } from "@/ai/mock/data/taskDetailMocks";
 import { type TaskDetailId, type TaskDetailContent, type TaskNode } from "@/shared/model/task-model";
-import { workspaceNodes } from "./workspaceNodes";
+import { workspaceNodes } from "@/ai/mock/data/workspaceNodes";
 
 export type TaskSituationExample = {
   asOf: string;

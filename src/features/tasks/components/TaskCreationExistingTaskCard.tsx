@@ -1,13 +1,13 @@
-import { mockPersonName } from "../i18n/mockContent";
-import { useCreationI18n } from "../i18n/creationMessages";
-import type { TagDefinition } from "../data/tagGroups";
-import type { ExistingTaskCandidate } from "../lib/taskCreationScenario";
+import { mockPersonName } from "@/ai/mock/i18n/mockContent";
+import { useCreationI18n } from "@/shared/i18n/creation-messages";
+import type { TagDefinition } from "@/ai/mock/data/tagGroups";
+import type { ExistingTaskCandidate } from "@/ai/mock/lib/taskCreationScenario";
 import { CalendarDays, GitBranch, Link2 } from "lucide-react";
 import React from "react";
-import { PersonAvatar } from "./PersonAvatar";
-import { TagBadge } from "./TagBadge";
-import { TaskIcon } from "./TaskIcon";
-import { TaskStatusBadge, taskStatusOptions, type TaskStatus } from "./TaskStatusBadge";
+import { PersonAvatar } from "@/shared/ui/PersonAvatar";
+import { TagBadge } from "@/shared/ui/TagBadge";
+import { TaskIcon } from "@/features/tasks/components/TaskIcon";
+import { TaskStatusBadge, taskStatusOptions, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
 
 type TaskCreationExistingTaskCardProps = {
   kind: "similar" | "parent";

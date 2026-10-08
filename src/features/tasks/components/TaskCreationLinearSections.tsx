@@ -1,18 +1,18 @@
 import { ChevronDown, Plus, Trash2, UserRound } from "lucide-react";
-import type { TagDefinition } from "../data/tagGroups";
-import { findTagByName } from "../data/tagGroups";
-import { getLinearCreationStages } from "../lib/taskCreationLinearStages";
-import { hasValidCreationDependencies, newCreationTask, removeCreationSubtask, type CreationForm, type CreationTask } from "../lib/taskCreationForm";
-import { MemberSelector, type Member } from "./MemberSelector";
-import { TagBadge } from "./TagBadge";
-import { TagPicker } from "./TagPicker";
-import { TaskCreationEditableText } from "./TaskCreationEditableText";
-import { TaskCriteriaFields } from "./TaskCriteriaFields";
-import { TaskExecutionTipsField } from "./TaskExecutionTipsField";
-import { TaskDueDatePicker } from "./TaskDueDatePicker";
-import { TaskEffortField } from "./TaskEffortField";
-import { Button } from "./ui/button";
-import "../styles/task-creation-linear.css";
+import type { TagDefinition } from "@/ai/mock/data/tagGroups";
+import { findTagByName } from "@/ai/mock/data/tagGroups";
+import { getLinearCreationStages } from "@/features/tasks/lib/task-creation-linear-stages";
+import { hasValidCreationDependencies, newCreationTask, removeCreationSubtask, type CreationForm, type CreationTask } from "@/features/tasks/lib/task-creation-form";
+import { MemberSelector, type Member } from "@/features/members/components/MemberSelector";
+import { TagBadge } from "@/shared/ui/TagBadge";
+import { TagPicker } from "@/features/me/components/TagPicker";
+import { TaskCreationEditableText } from "@/features/tasks/components/TaskCreationEditableText";
+import { TaskCriteriaFields } from "@/features/tasks/components/TaskCriteriaFields";
+import { TaskExecutionTipsField } from "@/features/tasks/components/TaskExecutionTipsField";
+import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
+import { TaskEffortField } from "@/features/tasks/components/TaskEffortField";
+import { Button } from "@/shared/ui/button";
+import "@/features/tasks/styles/task-creation-linear.css";
 
 type Props = {
   form: CreationForm;

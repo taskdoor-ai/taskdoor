@@ -1,14 +1,14 @@
-import { useI18n } from "../i18n/I18nProvider";
-import { useGlobalUi } from "../i18n/globalUi";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { Tooltip } from "@base-ui/react/tooltip";
 import { ChevronDown, Info } from "lucide-react";
 import { useId, useState, type ComponentProps } from "react";
-import { formatEffortPersonDays } from "../lib/taskEffort";
-import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "../lib/taskEffortDistribution";
-import { type TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
-import { TaskProgressOverview } from "./TaskProgressOverview";
-import { getTaskProgressDisplay } from "../lib/taskProgressDisplay";
-import { TaskStatusBadge } from "./TaskStatusBadge";
+import { formatEffortPersonDays } from "@/features/tasks/lib/task-effort";
+import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "@/features/tasks/lib/task-effort-distribution";
+import { type TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
+import { TaskProgressOverview } from "@/features/tasks/components/TaskProgressOverview";
+import { getTaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import { TaskStatusBadge } from "@/shared/ui/TaskStatusBadge";
 
 
 function shareLabel(share: number) {

@@ -3,12 +3,12 @@ import test from "node:test";
 import {
   teamWorkspaceScenarios,
   validateTeamWorkspaceScenarios,
-} from "../src/data/teamWorkspaceScenarios.ts";
-import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
-import { getTeamTaskDetailFixture } from "../src/data/teamTaskDetailFixtures.ts";
-import { getTaskEffortState } from "../src/lib/taskEffort.ts";
+} from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { createWorkspaceTaskDetail } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { getTeamTaskDetailFixture } from "../src/ai/mock/data/teamTaskDetailFixtures.ts";
+import { getTaskEffortState } from "../src/features/tasks/lib/task-effort.ts";
 import type { TaskNode } from "../src/shared/model/task-model.ts";
-import { getTaskSituationExample } from "../src/data/taskSituationExamples.ts";
+import { getTaskSituationExample } from "../src/ai/mock/data/taskSituationExamples.ts";
 
 const tasksOf = (nodes: typeof teamWorkspaceScenarios[number]["nodes"]) =>
   nodes.filter((node): node is TaskNode => node.kind === "task");

@@ -15,16 +15,16 @@ register(`data:text/javascript,${encodeURIComponent(`
   }
 `)}`, import.meta.url);
 
-const notificationSource = readFileSync(new URL("../src/components/GlobalNotifications.tsx", import.meta.url), "utf8");
-const styles = readFileSync(new URL("../src/styles/notifications.css", import.meta.url), "utf8");
+const notificationSource = readFileSync(new URL("../src/features/notifications/components/GlobalNotifications.tsx", import.meta.url), "utf8");
+const styles = readFileSync(new URL("../src/features/notifications/styles/notifications.css", import.meta.url), "utf8");
 
 async function renderNotifications(placement?: "rail" | "topbar") {
-  const { GlobalNotifications } = await import(new URL("../src/components/GlobalNotifications.tsx", import.meta.url).href);
+  const { GlobalNotifications } = await import(new URL("../src/features/notifications/components/GlobalNotifications.tsx", import.meta.url).href);
   return renderToStaticMarkup(createElement(GlobalNotifications, { placement }));
 }
 
 async function sheetElements(props: Record<string, unknown> = {}) {
-  const { SheetContent } = await import(new URL("../src/components/ui/sheet.tsx", import.meta.url).href);
+  const { SheetContent } = await import(new URL("../src/shared/ui/sheet.tsx", import.meta.url).href);
   const portal = SheetContent(props);
   return Children.toArray(portal.props.children) as ReactElement<Record<string, unknown>>[];
 }
@@ -129,8 +129,8 @@ test("点击通知普通区域只标记已读，不跳转或关闭面板", () =>
 });
 
 test("三类通知仅展示类型、完整文案和时间，不要求成员来源", async () => {
-  const { notificationExamples, notificationTypeLabels } = await import("../src/data/notificationExamples.ts");
-  const { NotificationItem } = await import("../src/components/GlobalNotifications.tsx");
+  const { notificationExamples, notificationTypeLabels } = await import("../src/ai/mock/data/notificationExamples.ts");
+  const { NotificationItem } = await import("../src/features/notifications/components/GlobalNotifications.tsx");
   assert.deepEqual(notificationExamples.map(item => item.kind).sort(), ["invitation", "member-joined", "mention"]);
   for (const [index, item] of notificationExamples.entries()) {
     const html = renderToStaticMarkup(createElement(NotificationItem, { item, onRead() {} }));
@@ -150,7 +150,7 @@ test("三类通知仅展示类型、完整文案和时间，不要求成员来�
 });
 
 test("非演示团队不注入内置通知，空列表无未读角标", async () => {
-  const { GlobalNotifications } = await import("../src/components/GlobalNotifications.tsx");
+  const { GlobalNotifications } = await import("../src/features/notifications/components/GlobalNotifications.tsx");
   const html = renderToStaticMarkup(createElement(GlobalNotifications, { showDemoNotifications: false }));
   assert.match(html, /通知，0 项未读/);
   assert.doesNotMatch(html, /notification-trigger-count/);
@@ -158,8 +158,8 @@ test("非演示团队不注入内置通知，空列表无未读角标", async ()
 
 
 test("任务名称独立显示为链接，协作邀请类型统一命名", async () => {
-  const { notificationExamples, notificationTypeLabels } = await import("../src/data/notificationExamples.ts");
-  const { NotificationItem } = await import("../src/components/GlobalNotifications.tsx");
+  const { notificationExamples, notificationTypeLabels } = await import("../src/ai/mock/data/notificationExamples.ts");
+  const { NotificationItem } = await import("../src/features/notifications/components/GlobalNotifications.tsx");
   assert.equal(notificationTypeLabels.invitation, "协作邀请");
   for (const item of notificationExamples) {
     const html = renderToStaticMarkup(createElement(NotificationItem, { item, onRead() {}, onOpenTask() {} }));

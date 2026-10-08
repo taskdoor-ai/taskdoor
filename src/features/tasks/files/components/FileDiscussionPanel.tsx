@@ -1,10 +1,10 @@
-import { useGlobalUi } from "../../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { Check, MessageCircle, RotateCcw, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import { getVisibleFileDiscussionThreads, type CollaborationMessage, type DiscussionDraft, type FileDiscussionThread } from "../../lib/taskCollaboration";
-import { DiscussionComposer } from "../discussion/DiscussionComposer";
-import { DiscussionMessages } from "../discussion/DiscussionMessages";
+import { getVisibleFileDiscussionThreads, type CollaborationMessage, type DiscussionDraft, type FileDiscussionThread } from "@/features/tasks/lib/task-collaboration";
+import { DiscussionComposer } from "@/features/tasks/discussion/components/DiscussionComposer";
+import { DiscussionMessages } from "@/features/tasks/discussion/components/DiscussionMessages";
 
 export type FileDiscussionCollaboration = {
   threads: FileDiscussionThread[]; messages: CollaborationMessage[]; people: string[];

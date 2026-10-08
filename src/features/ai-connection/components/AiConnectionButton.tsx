@@ -1,16 +1,16 @@
-import { useI18n } from '../i18n/I18nProvider';
-import { aiTransferMessage } from '../i18n/aiTransferCopy';
-import { useGlobalUi } from "../i18n/globalUi";
-import { useRemainingCopy } from "../i18n/remainingMessages";
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import { aiTransferMessage } from '@/features/ai-connection/i18n/ai-transfer-copy';
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useRemainingCopy } from "@/shared/i18n/remaining-messages";
 import { ChevronDown, LoaderCircle, SquareTerminal, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { agentIconUrls } from "../data/agentIcons";
-import { aiToolName, type AiTool } from "../lib/aiTools";
-import { aiToolPreferences, defaultAiTool, isAiToolPreview, type AiToolPreferenceStore } from "../lib/aiToolPreferences";
-import { useAiToolPreferences } from "../lib/useAiToolPreferences";
-import type { AiConnectionHandler } from "./AiConnectionDialog";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { toast } from "./ui/toast";
+import { agentIconUrls } from "@/features/ai-connection/agent-icons";
+import { aiToolName, type AiTool } from "@/features/ai-connection/lib/ai-tools";
+import { aiToolPreferences, defaultAiTool, isAiToolPreview, type AiToolPreferenceStore } from "@/features/ai-connection/lib/ai-tool-preferences";
+import { useAiToolPreferences } from "@/features/ai-connection/lib/useAiToolPreferences";
+import type { AiConnectionHandler } from "@/features/ai-connection/components/AiConnectionDialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { toast } from "@/shared/ui/toast";
 
 type Props = {
   contextLabel: string;

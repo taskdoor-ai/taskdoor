@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import test from "node:test";
-import type { AiConnectionRequest } from "../src/components/AiConnectionDialog.tsx";
-import type { TaskRelationSummary } from "../src/components/TaskRelationsSection.tsx";
+import type { AiConnectionRequest } from "../src/features/ai-connection/components/AiConnectionDialog.tsx";
+import type { TaskRelationSummary } from "../src/features/tasks/components/TaskRelationsSection.tsx";
 import type { TaskActivityMock, TaskDetailContent, TaskFileNode } from "../src/shared/model/task-model.ts";
 
-const moduleUrl = new URL("../src/lib/taskAiConnection.ts", import.meta.url);
+const moduleUrl = new URL("../src/features/tasks/lib/task-ai-connection.ts", import.meta.url);
 async function build(input: Record<string, unknown>): Promise<AiConnectionRequest> {
   assert.ok(existsSync(moduleUrl), "任务头部连接 AI 应提供独立、纯函数的任务上下文构建器");
   const { buildTaskAiConnectionRequest } = await import(moduleUrl.href);

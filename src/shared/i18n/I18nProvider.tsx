@@ -1,7 +1,7 @@
-import { AUTO_TRANSLATE_KEY } from './contentReading';
+import { AUTO_TRANSLATE_KEY } from '@/ai/mock/i18n/contentReading';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { DEFAULT_LOCALE, LOCALE_STORAGE_KEY, normalizeLocale, translate, type Locale } from './core';
-import type { MessageKey } from './messages';
+import { DEFAULT_LOCALE, LOCALE_STORAGE_KEY, normalizeLocale, translate, type Locale } from '@/shared/i18n/core';
+import type { MessageKey } from '@/shared/i18n/messages';
 function readLocale(): Locale {
   try { return normalizeLocale(window.localStorage.getItem(LOCALE_STORAGE_KEY)); }
   catch { return DEFAULT_LOCALE; }

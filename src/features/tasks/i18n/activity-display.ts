@@ -1,6 +1,6 @@
-import type { Locale } from './core';
-import { filterStatusLabel } from './filterDisplay';
-import { moduleText } from './moduleMessages';
+import type { Locale } from '@/shared/i18n/core';
+import { filterStatusLabel } from '@/features/tasks/i18n/filter-display';
+import { moduleText } from '@/shared/i18n/module-messages';
 
 /** Only system-generated event copy is interpreted; discussion bodies stay user content. */
 export function activityMessage(locale: Locale, type: string, value: string) {

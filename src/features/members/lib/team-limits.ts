@@ -1,4 +1,4 @@
-import type { PersonalCenterState, TeamResponsibilityProfile } from '../data/memberProfiles';
+import type { PersonalCenterState, TeamResponsibilityProfile } from '@/ai/mock/data/memberProfiles';
 export const MAX_CREATED_TEAMS = 10;
 export const MAX_TEAM_MEMBERS = 50;
 type Creator = { userId: string; email: string; name: string };

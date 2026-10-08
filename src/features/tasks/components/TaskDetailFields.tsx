@@ -1,8 +1,8 @@
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useId, type ReactNode } from "react";
-import { TaskCreationEditableText as EditableText } from "./TaskCreationEditableText";
-import { TaskCriteriaFields } from "./TaskCriteriaFields";
-import { TaskExecutionTipsField } from "./TaskExecutionTipsField";
+import { TaskCreationEditableText as EditableText } from "@/features/tasks/components/TaskCreationEditableText";
+import { TaskCriteriaFields } from "@/features/tasks/components/TaskCriteriaFields";
+import { TaskExecutionTipsField } from "@/features/tasks/components/TaskExecutionTipsField";
 
 type TaskFieldValues = {
   title: string;

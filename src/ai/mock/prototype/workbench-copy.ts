@@ -1,5 +1,5 @@
-import { priorityReasonFor, type PersonalWorkbenchItem } from '../lib/personalWorkbench';
-import type { Locale } from './core';
+import { priorityReasonFor, type PersonalWorkbenchItem } from '@/ai/mock/lib/personalWorkbench';
+import type { Locale } from '@/shared/i18n/core';
 
 /** Compose system guidance from facts; never translate arbitrary user criteria. */
 export function workbenchPriorityReason(locale: Locale, item: PersonalWorkbenchItem, mockText: (text: string) => string = text => text): string {

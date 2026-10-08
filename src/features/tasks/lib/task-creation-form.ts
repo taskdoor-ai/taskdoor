@@ -1,11 +1,11 @@
-import { taskCreationDay, taskScheduleError } from "./taskSchedule";
-import { taskCreationScenarios, type TaskCreationScenarioId } from "../data/taskCreationScenarios";
-import { advanceTaskCreationScenario, startTaskCreationScenario, type ExistingTaskCandidate, type ScenarioContext } from "./taskCreationScenario";
-import type { TaskDraft, TaskPlanDraft } from "./taskAssistantProtocol";
+import { taskCreationDay, taskScheduleError } from "@/features/tasks/lib/task-schedule";
+import { taskCreationScenarios, type TaskCreationScenarioId } from "@/ai/mock/data/taskCreationScenarios";
+import { advanceTaskCreationScenario, startTaskCreationScenario, type ExistingTaskCandidate, type ScenarioContext } from "@/ai/mock/lib/taskCreationScenario";
+import type { TaskDraft, TaskPlanDraft } from "@/features/tasks/lib/task-assistant-protocol";
 import { effortEstimateSchema } from "@/shared/model/task-effort";
-import { reconcileCreationEffort } from "./taskCreationEffort";
-import { defaultCreationParticipantIds } from "./taskCreationParticipants";
-import { creationHierarchyError, getCreationDescendantIds } from "./taskCreationHierarchy";
+import { reconcileCreationEffort } from "@/features/tasks/lib/task-creation-effort";
+import { defaultCreationParticipantIds } from "@/features/tasks/lib/task-creation-participants";
+import { creationHierarchyError, getCreationDescendantIds } from "@/features/tasks/lib/task-creation-hierarchy";
 
 export type CreationTask = Omit<TaskDraft, "parentSubtaskIndex"> & { clientId: string; parentClientId?: string; completionCriteria: string[]; executionTips: string[]; dependsOnClientIds: string[] };
 export type CreationForm = {

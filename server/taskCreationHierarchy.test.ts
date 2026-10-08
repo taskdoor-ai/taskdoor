@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creatorCommerceMembers } from "../src/data/creatorCommerceScenario.ts";
-import { taskCreationScenarios } from "../src/data/taskCreationScenarios.ts";
-import { planTaskCreation } from "../src/lib/taskCreationPlanning.ts";
-import { removeCreationSubtask, toTaskPlanDraft, validateCreationForm, type CreationForm } from "../src/lib/taskCreationForm.ts";
-import { getCreationEffortLeaves } from "../src/lib/taskCreationEffort.ts";
-import { summarizeTaskEffort } from "../src/lib/taskEffort.ts";
-import { taskPlanDraftSchema } from "../src/lib/taskAssistantProtocol.ts";
-import { createWorkspaceTasksFromDraft } from "../src/lib/workspaceTaskCreation.ts";
-import { parseCreationSessions } from "../src/lib/taskCreationSessions.ts";
-import { migrateNestedTaskVisuals } from "../src/lib/nestedTaskCreationScenario.ts";
+import { creatorCommerceMembers } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { taskCreationScenarios } from "../src/ai/mock/data/taskCreationScenarios.ts";
+import { planTaskCreation } from "../src/ai/mock/lib/taskCreationPlanning.ts";
+import { removeCreationSubtask, toTaskPlanDraft, validateCreationForm, type CreationForm } from "../src/features/tasks/lib/task-creation-form.ts";
+import { getCreationEffortLeaves } from "../src/features/tasks/lib/task-creation-effort.ts";
+import { summarizeTaskEffort } from "../src/features/tasks/lib/task-effort.ts";
+import { taskPlanDraftSchema } from "../src/features/tasks/lib/task-assistant-protocol.ts";
+import { createWorkspaceTasksFromDraft } from "../src/features/tasks/lib/workspace-task-creation.ts";
+import { parseCreationSessions } from "../src/features/tasks/lib/task-creation-sessions.ts";
+import { migrateNestedTaskVisuals } from "../src/ai/mock/lib/nestedTaskCreationScenario.ts";
 
 const context = { currentDate: "2026-09-20", currentUserId: "周岚", members: creatorCommerceMembers, tags: [] };
 function plan(): CreationForm {

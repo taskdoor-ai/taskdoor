@@ -8,15 +8,15 @@ import type { PersonOption } from "../src/shared/model/task-model.ts";
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
 const load = async () => {
-  assert.ok(existsSync(new URL("../src/lib/taskCollaborationSchedule.ts", import.meta.url)), "应提供只读排期依据函数");
-  return (await import("../src/lib/taskCollaborationSchedule.ts")).describeTaskCollaborationSchedule;
+  assert.ok(existsSync(new URL("../src/features/tasks/lib/task-collaboration-schedule.ts", import.meta.url)), "应提供只读排期依据函数");
+  return (await import("../src/features/tasks/lib/task-collaboration-schedule.ts")).describeTaskCollaborationSchedule;
 };
 const member = (id: string, overrides: Partial<PersonOption> = {}): PersonOption => ({ id, name: id, email: `${id}@example.test`, role: "内容策划", ...overrides });
 const task = { clientId: "current", title: "交付直播脚本", ownerId: "林洁", participantIds: ["苏禾"], startDate: "2026-09-01", endDate: "2026-09-10", dependsOnClientIds: [] as string[] };
 const candidate = (clientId: string, overrides = {}) => ({ clientId, title: clientId, ownerId: "林洁", participantIds: [] as string[], startDate: "2026-09-01", endDate: "2026-09-05", ...overrides });
 
 test("排期依据统一采用成员资料文案，保留待确认信息和用户原文", async () => {
-  const component = readFileSync(new URL("../src/components/TaskCollaborationSchedule.tsx", import.meta.url), "utf8");
+  const component = readFileSync(new URL("../src/features/tasks/components/TaskCollaborationSchedule.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(component, /showDemoAnnotations|示例资料/);
   assert.match(component, /report\.sourceLabel/);
   assert.match(component, /实际忙闲未知，排期待成员确认/);
@@ -168,8 +168,8 @@ test("计算只读，不改变任务、成员或同方案候选数据", async ()
 });
 
 test("默认只呈现排期依据入口，禁用态不可触发浮层", async () => {
-  assert.ok(existsSync(new URL("../src/components/TaskCollaborationSchedule.tsx", import.meta.url)), "应有按需排期依据浮层");
-  const { TaskCollaborationSchedule } = await import("../src/components/TaskCollaborationSchedule.tsx");
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskCollaborationSchedule.tsx", import.meta.url)), "应有按需排期依据浮层");
+  const { TaskCollaborationSchedule } = await import("../src/features/tasks/components/TaskCollaborationSchedule.tsx");
   const props = { task, members: [member("林洁")] };
   const html = renderToStaticMarkup(createElement(TaskCollaborationSchedule, props));
   assert.match(html, /排期依据/);
@@ -181,8 +181,8 @@ test("默认只呈现排期依据入口，禁用态不可触发浮层", async ()
 });
 
 test("浮层复用既有控件、提供关闭与未知提示，不新增指派或日历请求", () => {
-  assert.ok(existsSync(new URL("../src/components/TaskCollaborationSchedule.tsx", import.meta.url)));
-  const component = readFileSync(new URL("../src/components/TaskCollaborationSchedule.tsx", import.meta.url), "utf8");
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskCollaborationSchedule.tsx", import.meta.url)));
+  const component = readFileSync(new URL("../src/features/tasks/components/TaskCollaborationSchedule.tsx", import.meta.url), "utf8");
   assert.ok(component.includes("PopoverClose"));
   assert.ok(component.includes("PersonAvatar"));
   assert.ok(component.includes("showProfilePreview={false}"));
@@ -192,7 +192,7 @@ test("浮层复用既有控件、提供关闭与未知提示，不新增指派�
   assert.ok(component.includes("disabled={disabled}"));
   assert.ok(/className="task-schedule-body"[^>]*tabIndex=\{0\}/.test(component), "长浮层的滚动正文可获得键盘焦点");
   assert.ok(!/fetch\(|onAssign|onDateChange|availabilityStatus/.test(component));
-  const css = readFileSync(new URL("../src/styles/task-collaboration-schedule.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/features/tasks/styles/task-collaboration-schedule.css", import.meta.url), "utf8");
   assert.ok(css.includes("max-height"));
   assert.ok(css.includes("overflow-y: auto"));
   assert.ok(css.includes(":focus-visible"));

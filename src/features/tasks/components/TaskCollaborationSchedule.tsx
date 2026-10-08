@@ -1,10 +1,10 @@
 import { CalendarClock, ChevronDown, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import type { PersonOption } from "@/shared/model/task-model";
-import { describeTaskCollaborationSchedule, type CollaborationScheduleCandidate, type CollaborationSchedulePerson, type CollaborationScheduleTask } from "../lib/taskCollaborationSchedule";
-import { PersonAvatar } from "./PersonAvatar";
-import { Button } from "./ui/button";
-import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { describeTaskCollaborationSchedule, type CollaborationScheduleCandidate, type CollaborationSchedulePerson, type CollaborationScheduleTask } from "@/features/tasks/lib/task-collaboration-schedule";
+import { PersonAvatar } from "@/shared/ui/PersonAvatar";
+import { Button } from "@/shared/ui/button";
+import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 type Props = {
   task: CollaborationScheduleTask;

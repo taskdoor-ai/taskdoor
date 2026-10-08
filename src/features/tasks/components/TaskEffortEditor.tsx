@@ -1,9 +1,9 @@
-import { useI18n } from "../i18n/I18nProvider";
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
-import { formatEffortPersonDays, summarizeTaskEffort } from '../lib/taskEffort';
-import type { EditableEffortTask, TaskEffortEdit } from '../lib/taskEffortEdits';
-import { TaskEffortField } from './TaskEffortField';
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { formatEffortPersonDays, summarizeTaskEffort } from '@/features/tasks/lib/task-effort';
+import type { EditableEffortTask, TaskEffortEdit } from '@/features/tasks/lib/task-effort-edits';
+import { TaskEffortField } from '@/features/tasks/components/TaskEffortField';
 
 /** Parent effort is read-only, including parents with just one leaf. */
 export function TaskEffortEditor({tasks,hasSubtasks,label='任务',disabled=false,onChange,onDirtyChange}: {

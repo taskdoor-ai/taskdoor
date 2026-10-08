@@ -1,4 +1,4 @@
-import { useGlobalUi } from "../../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import React, { useEffect, useMemo } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -12,8 +12,8 @@ import { LinkNode } from "@lexical/link";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { $isMarkNode, $unwrapMarkNode, $wrapSelectionInMarkNode, MarkNode } from "@lexical/mark";
 import { $createParagraphNode, $createRangeSelection, $createTextNode, $getNearestNodeFromDOMNode, $getRoot, $isElementNode, $isTextNode, $nodesOfType, $setSelection, type LexicalNode, type TextNode } from "lexical";
-import type { FileDiscussionThread } from "../../lib/taskCollaboration";
-import type { TaskFileTextSelection } from "./TaskFileViewer";
+import type { FileDiscussionThread } from "@/features/tasks/lib/task-collaboration";
+import type { TaskFileTextSelection } from "@/features/tasks/files/components/TaskFileViewer";
 
 type Props = { text: string; markdown?: boolean; pageIndex?: number; version?: number; threads?: FileDiscussionThread[]; activeThreadId?: string | null; onThreadSelect?: (id: string) => void; onSelection?: (selection: TaskFileTextSelection | null) => void };
 

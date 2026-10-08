@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { transformSync } from "esbuild";
 
-const source = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
+const source = readFileSync(new URL("../src/features/tasks/components/TaskDetail.tsx", import.meta.url), "utf8");
 
 // Run the actual component callback bodies with their explicit dependencies, without a DOM or CSS loader.
 function handler(name: string, bindings: Record<string, unknown>): (...args: unknown[]) => unknown {
@@ -42,7 +42,7 @@ test("现状来源仅接入明确保存的活动，当前显示名不改写负�
   assert.equal(captured[0].ownerName, "新显示名");
   assert.equal((captured[0].task as { owner: string }).owner, "user-123");
   assert.deepEqual(captured[0].recordedActivities, [local, stored]);
-  const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+  const app = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
   assert.ok(app.includes("recordedActivities={taskActivityStore[selectedTaskId] ?? []}"));
 });
 

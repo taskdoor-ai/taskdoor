@@ -3,11 +3,11 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskFileViewer } from "../src/components/task-files/TaskFileViewer.tsx";
-import { TaskFileExplorer } from "../src/components/task-files/TaskFileExplorer.tsx";
+import { TaskFileViewer } from "../src/features/tasks/files/components/TaskFileViewer.tsx";
+import { TaskFileExplorer } from "../src/features/tasks/files/components/TaskFileExplorer.tsx";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
-import { createTaskFileRevision } from "../src/lib/taskFileEditing.ts";
-import { TaskFileHistory } from "../src/components/task-files/TaskFileHistory.tsx";
+import { createTaskFileRevision } from "../src/features/tasks/files/lib/task-file-editing.ts";
+import { TaskFileHistory } from "../src/features/tasks/files/components/TaskFileHistory.tsx";
 
 const file: TaskFileNode = { id: "document", kind: "file", parentId: null, name: "决策.md", version: 4, updatedAt: "昨天", content: "# 决策\n\n## 当前结论\n\n等待确认。" };
 
@@ -38,7 +38,7 @@ test("文件默认只读，服务端初始紧凑态只保留路径与更多操�
 });
 
 test("紧凑态将查看版本与编辑收入菜单，宽面板恢复直接操作", () => {
-  const source = readFileSync(new URL("../src/components/task-files/TaskFileExplorer.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/files/components/TaskFileExplorer.tsx", import.meta.url), "utf8");
   assert.match(source, /getBoundingClientRect\(\)\.width < 720/);
   assert.match(source, /!isEditing && !compactToolbar/);
   assert.match(source, /DropdownMenuTrigger aria-label="更多文件操作"/);
@@ -50,7 +50,7 @@ test("紧凑态将查看版本与编辑收入菜单，宽面板恢复直接操�
 });
 
 test("紧凑态可从菜单编辑，编辑态保存保持有文字的主动作", () => {
-  const source = readFileSync(new URL("../src/components/task-files/TaskFileExplorer.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/files/components/TaskFileExplorer.tsx", import.meta.url), "utf8");
   const edit = source.match(/compactToolbar && currentContent[\s\S]*?<DropdownMenuItem aria-label="编辑文件"[\s\S]*?<\/DropdownMenuItem>/)?.[0];
   const buttons = source.match(/<Button\b[\s\S]*?<\/Button>/g) ?? [];
   const save = buttons.find(button => button.includes('aria-label="保存文件"'));
@@ -79,7 +79,7 @@ test("最近更新信息收到更多操作菜单，不再占用顶部路径", ()
   try {
     const html = renderToStaticMarkup(createElement(TaskFileExplorer, { taskId: "saved-update", currentUser: "周岚", files: [file], onSelectText: () => undefined }));
     assert.doesNotMatch(html, /task-file-last-update|陈默于|更新人未记录|原更新时间/);
-    const source = readFileSync(new URL("../src/components/task-files/TaskFileExplorer.tsx", import.meta.url), "utf8");
+    const source = readFileSync(new URL("../src/features/tasks/files/components/TaskFileExplorer.tsx", import.meta.url), "utf8");
     assert.match(source, /DropdownMenuLabel aria-label="最近更新"/);
     assert.doesNotMatch(html, /<textarea/);
   } finally {
@@ -124,15 +124,15 @@ test("PDF 允许编辑已有提取正文，但明确不是原 PDF 排版编辑",
 });
 
 test("左侧选中项没有蓝色竖边，保留键盘焦点提示", () => {
-  const css = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/shared/styles/pm-global.css", import.meta.url), "utf8");
   const active = css.match(/\.task-file-explorer-row\.active\s*\{([^}]+)\}/)?.[1] ?? "";
   assert.doesNotMatch(active, /box-shadow:\s*inset|border-left/);
   assert.match(css, /\.task-file-explorer-row:focus-visible/);
 });
 
 test("文件列表圆角与左侧任务列表共用同一控件圆角", () => {
-  const taskCss = readFileSync(new URL("../src/styles/task-workspace-list.css", import.meta.url), "utf8");
-  const fileCss = readFileSync(new URL("../src/styles/task-file-editor.css", import.meta.url), "utf8");
+  const taskCss = readFileSync(new URL("../src/features/tasks/styles/task-workspace-list.css", import.meta.url), "utf8");
+  const fileCss = readFileSync(new URL("../src/features/tasks/styles/task-file-editor.css", import.meta.url), "utf8");
   const radius = (css: string, selector: RegExp) => css.match(selector)?.[1].match(/border-radius:\s*([^;]+);/)?.[1];
   const taskRadius = radius(taskCss, /\.task-workspace-row\s*\{([^}]+)\}/);
   assert.ok(taskRadius);

@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import test, { beforeEach } from "node:test";
 beforeEach(t => t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") }));
-import { creatorCommerceMembers } from "../src/data/creatorCommerceScenario.ts";
-import { taskCreationScenarios } from "../src/data/taskCreationScenarios.ts";
-import { workspaceNodes } from "../src/data/workspaceNodes.ts";
-import { newCreationTask, removeCreationSubtask, toTaskPlanDraft, validateCreationForm } from "../src/lib/taskCreationForm.ts";
-import { getCreationEffortLeaves, reconcileCreationEffort, withMockCreationEffort } from "../src/lib/taskCreationEffort.ts";
-import { planTaskCreation } from "../src/lib/taskCreationPlanning.ts";
-import { createManualEffortEstimate, getTaskEffortState, summarizeTaskEffort } from "../src/lib/taskEffort.ts";
+import { creatorCommerceMembers } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { taskCreationScenarios } from "../src/ai/mock/data/taskCreationScenarios.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
+import { newCreationTask, removeCreationSubtask, toTaskPlanDraft, validateCreationForm } from "../src/features/tasks/lib/task-creation-form.ts";
+import { getCreationEffortLeaves, reconcileCreationEffort, withMockCreationEffort } from "../src/features/tasks/lib/task-creation-effort.ts";
+import { planTaskCreation } from "../src/ai/mock/lib/taskCreationPlanning.ts";
+import { createManualEffortEstimate, getTaskEffortState, summarizeTaskEffort } from "../src/features/tasks/lib/task-effort.ts";
 
 const context = { currentDate: "2026-08-31", currentUserId: "周岚", members: creatorCommerceMembers, tags: [], existingTasks: workspaceNodes.filter(node => node.kind === "task") };
 const plan = (id: "single-task" | "complex-plan" | "existing-parent" | "similar-task") => {

@@ -3,14 +3,14 @@ import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/data/taskDetailMocks.ts";
-import { workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { createWorkspaceTaskDetail, taskDetailMocks } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode } from "../src/shared/model/task-model.ts";
 import type { TaskBurnUpSeries } from "../src/shared/model/task-burn-up.ts";
 
 async function renderTrend(series?: TaskBurnUpSeries) {
-  assert.ok(existsSync(new URL("../src/components/TaskBurnUpSparkline.tsx", import.meta.url)), "头部应提供可读数的小型燃起趋势");
-  const { TaskBurnUpSparkline } = await import("../src/components/TaskBurnUpSparkline.tsx");
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskBurnUpSparkline.tsx", import.meta.url)), "头部应提供可读数的小型燃起趋势");
+  const { TaskBurnUpSparkline } = await import("../src/features/tasks/components/TaskBurnUpSparkline.tsx");
   return renderToStaticMarkup(createElement(TaskBurnUpSparkline, { series }));
 }
 
@@ -45,7 +45,7 @@ test("移除明细后燃起图节点仍可读取日期和人天数值", async ()
 });
 
 test("燃起图两项图例固定同一行，文字和线型标记不被压缩换行", () => {
-  const css = readFileSync(new URL("../src/styles/task-heading.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/features/tasks/styles/task-heading.css", import.meta.url), "utf8");
   const legend = css.match(/\.task-burnup-legend\s*\{([^}]+)\}/)?.[1] ?? "";
   const label = css.match(/\.task-burnup-legend\s*>\s*span\s*\{([^}]+)\}/)?.[1] ?? "";
   assert.match(legend, /flex-wrap:\s*nowrap/);
@@ -123,8 +123,8 @@ test("极限完成度的可访问数值和条宽不被展示精度取整成零�
 });
 
 test("完成标准全部直接可读，详情头部不再展示执行建议", async () => {
-  assert.ok(existsSync(new URL("../src/components/TaskCompletionCriteria.tsx", import.meta.url)), "头部应提供独立的完成标准摘要");
-  const { TaskCompletionCriteria } = await import("../src/components/TaskCompletionCriteria.tsx");
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskCompletionCriteria.tsx", import.meta.url)), "头部应提供独立的完成标准摘要");
+  const { TaskCompletionCriteria } = await import("../src/features/tasks/components/TaskCompletionCriteria.tsx");
   const html = renderToStaticMarkup(createElement(TaskCompletionCriteria, { criteria: ["确认交付范围", "提供验证证据", "由负责人复核结果"], source: "recorded" }));
   assert.match(html, /完成标准/);
   assert.match(html, /确认交付范围/);
@@ -136,7 +136,7 @@ test("完成标准全部直接可读，详情头部不再展示执行建议", as
 });
 
 test("头部只读取当前完成标准，缺失或显式清空不回填示例，并保留编辑完成后记活动", () => {
-  const detail = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
+  const detail = readFileSync(new URL("../src/features/tasks/components/TaskDetail.tsx", import.meta.url), "utf8");
   assert.match(detail, /<TaskCompletionCriteria/);
   assert.match(detail, /task\.completionCriteria\s*\?\?\s*\[\]/);
   assert.match(detail, /<TaskCompletionCriteria[^>]*source="recorded"/);
@@ -146,14 +146,14 @@ test("头部只读取当前完成标准，缺失或显式清空不回填示例�
   assert.match(detail, /onBlur=\{\(\) => [^\n]*onTaskGoalChange/);
   assert.doesNotMatch(detail, /onChange=\{[^\n]*onTaskTitleChange/);
   assert.ok(detail.indexOf("<TaskCompletionCriteria") < detail.indexOf('className="task-detail-properties"'));
-  const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+  const app = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
   assert.match(app, /completionCriteria:\s*selectedTreeTask\.completionCriteria\s*,/, "完成标准直接来自当前任务，缺失也不从详情 Mock 回填");
   assert.doesNotMatch(app, /completionCriteria:\s*selectedTreeTask\.completionCriteria\s*\?\?/);
   assert.ok(/executionTips: selectedTreeTask\.executionTips \?\? selectedTaskDetailBase\.executionTips/.test(app), "最新执行建议须传给任务详情");
 });
 
 test("详情消费当前任务评估，子任务只影响范围汇总而不控制展示", () => {
-  const detail = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
+  const detail = readFileSync(new URL("../src/features/tasks/components/TaskDetail.tsx", import.meta.url), "utf8");
   assert.match(detail, /const burnUp = task\.burnUp;/);
   assert.doesNotMatch(detail, /getTaskHeadingExample|getTaskProgressEvents|headingExample|progressEvents/);
   assert.doesNotMatch(detail, /childTasks\.length > 0 && burnUp|hasProgressSummary/);

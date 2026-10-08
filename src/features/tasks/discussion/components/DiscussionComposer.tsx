@@ -1,5 +1,5 @@
-import { useGlobalUi } from "../../i18n/globalUi";
-import { useDetailCopy } from "../../i18n/detailMessages";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer, type InitialConfigType } from "@lexical/react/LexicalComposer";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -12,15 +12,15 @@ import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getNodeBy
 import { FolderOpen, LoaderCircle, Paperclip, RotateCcw, Send, Sparkles, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type DragEvent, type ReactNode } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import type { DiscussionDraft } from "../../lib/taskCollaboration";
-import { DISCUSSION_UPLOAD_MAX_FILES, isDiscussionImage, prepareDiscussionUpload, readDiscussionBlob } from "../../lib/discussionUploads";
-import { usePersonOptions } from "../PersonDirectory";
-import { PersonPicker, type PersonOption } from "../PersonPicker";
-import { Button } from "../ui/button";
-import { FileCard, resolveFileCardFormat } from "../ui/file-card-collections";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { DiscussionFileMenu } from "./DiscussionFileMenu";
-import { $createMentionNode, $isMentionNode, MentionNode } from "./MentionNode";
+import type { DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
+import { DISCUSSION_UPLOAD_MAX_FILES, isDiscussionImage, prepareDiscussionUpload, readDiscussionBlob } from "@/features/tasks/files/lib/discussion-uploads";
+import { usePersonOptions } from "@/shared/ui/PersonDirectory";
+import { PersonPicker, type PersonOption } from "@/features/members/components/PersonPicker";
+import { Button } from "@/shared/ui/button";
+import { FileCard, resolveFileCardFormat } from "@/shared/ui/file-card-collections";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
+import { DiscussionFileMenu } from "@/features/tasks/discussion/components/DiscussionFileMenu";
+import { $createMentionNode, $isMentionNode, MentionNode } from "@/features/tasks/discussion/components/mention-node";
 
 export type DiscussionComposerProps = {
   actionLabel?: string;

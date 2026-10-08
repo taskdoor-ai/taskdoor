@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creatorCommerceMembers, creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
+import { creatorCommerceMembers, creatorCommerceTags } from "../src/ai/mock/data/creatorCommerceScenario.ts";
 
 test("creator commerce fixture contains exactly eight unique members", () => {
   assert.equal(creatorCommerceMembers.length, 8);

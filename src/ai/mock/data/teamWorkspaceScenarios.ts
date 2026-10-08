@@ -1,14 +1,14 @@
-import { applyCriterionReviewMocks } from "./taskCriterionReviewMocks";
-import { withProgressDemoCreation } from "./taskProgressDemoFixtures";
-import { creatorCommerceMembers, creatorCommerceTags } from "./creatorCommerceScenario";
+import { applyCriterionReviewMocks } from "@/ai/mock/data/taskCriterionReviewMocks";
+import { withProgressDemoCreation } from "@/ai/mock/data/taskProgressDemoFixtures";
+import { creatorCommerceMembers, creatorCommerceTags } from "@/ai/mock/data/creatorCommerceScenario";
 import { type PersonOption, type TagDefinition, type TagColorName, type TagIconName, workspaceRootId, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
-import { creatorCommerceMainTaskId, workspaceNodes as creatorCommerceWorkspaceNodes } from "./workspaceNodes";
-import { getEffortScopeKey, getTaskEffortState } from "../lib/taskEffort";
-import { getTaskDefinitionGoal } from "../lib/taskGoal";
-import { platformAdditionNodes, supplyOperationsAdditionNodes } from "./expandedTeamTaskBacklog";
-import { creatorCommerceAdditionNodes, customerSuccessAdditionNodes } from "./extendedTeamTaskFixtures";
-import { unassignedTaskFixtures } from "./unassignedTaskFixtures";
-import {residentDeletionDemoTasks} from "./residentDeletionDemo";
+import { creatorCommerceMainTaskId, workspaceNodes as creatorCommerceWorkspaceNodes } from "@/ai/mock/data/workspaceNodes";
+import { getEffortScopeKey, getTaskEffortState } from "@/features/tasks/lib/task-effort";
+import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-goal";
+import { platformAdditionNodes, supplyOperationsAdditionNodes } from "@/ai/mock/data/expandedTeamTaskBacklog";
+import { creatorCommerceAdditionNodes, customerSuccessAdditionNodes } from "@/ai/mock/data/extendedTeamTaskFixtures";
+import { unassignedTaskFixtures } from "@/ai/mock/data/unassignedTaskFixtures";
+import {residentDeletionDemoTasks} from "@/ai/mock/data/residentDeletionDemo";
 
 export const teamIds = ["creator-commerce", "platform", "supply-operations", "customer-success"] as const;
 export type TeamId = (typeof teamIds)[number];

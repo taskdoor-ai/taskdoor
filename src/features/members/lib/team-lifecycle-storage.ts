@@ -1,12 +1,12 @@
-import { RECYCLE_BIN_KEY, readRecycleBin } from './taskRecycleBin';
-import { loadPersonalCenterDirectory, personalCenterStorageKey, type PersonalCenterState } from '../data/memberProfiles';
+import { RECYCLE_BIN_KEY, readRecycleBin } from '@/features/tasks/lib/task-recycle-bin';
+import { loadPersonalCenterDirectory, personalCenterStorageKey, type PersonalCenterState } from '@/ai/mock/data/memberProfiles';
 import type { TaskNode, WorkspaceNode } from '@/shared/model/task-model';
-import type { TeamLifecycleAction } from '../components/TeamLifecycle';
-import { activeMembership, changeTeamRole, prepareMemberExit, transferTeamOwnership } from './teamMembershipLifecycle';
-import { appendTaskActivity, createTaskChangeActivity, type TaskActivityStore } from './taskActivity';
-import { commitTaskAiStorage } from './taskAiAdjustmentStorage';
-import { TASK_FILE_EDITS_STORAGE_PREFIX } from './taskFileEditing';
-import { TASK_COLLABORATION_STORAGE_PREFIX } from './taskCollaboration';
+import type { TeamLifecycleAction } from '@/features/members/components/TeamLifecycle';
+import { activeMembership, changeTeamRole, prepareMemberExit, transferTeamOwnership } from '@/features/members/lib/team-membership-lifecycle';
+import { appendTaskActivity, createTaskChangeActivity, type TaskActivityStore } from '@/features/tasks/lib/task-activity';
+import { commitTaskAiStorage } from '@/features/tasks/lib/task-ai-adjustment-storage';
+import { TASK_FILE_EDITS_STORAGE_PREFIX } from '@/features/tasks/files/lib/task-file-editing';
+import { TASK_COLLABORATION_STORAGE_PREFIX } from '@/features/tasks/lib/task-collaboration';
 
 export const teamLifecycleHistoryKey = 'agentdoor-team-lifecycle-history';
 export type TeamLifecycleRecord = { id: string; teamId: string; kind: TeamLifecycleAction['kind']; actorId: string; memberId?: string; memberEmail?: string; successorId?: string; role?: "admin" | "member"; at: string; note?: string; assignments?: Array<{ taskId: string; memberId: string }> };

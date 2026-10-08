@@ -1,8 +1,8 @@
 import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
-import { rollupProgressForecast, rollupProgressHistory } from "../data/taskProgressHistory";
-import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "./taskProgressComparison";
-import { getTaskProgressDisplay } from "./taskProgressDisplay";
-import { getTaskEffortState } from "./taskEffort";
+import { rollupProgressForecast, rollupProgressHistory } from "@/ai/mock/data/taskProgressHistory";
+import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
+import { getTaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import { getTaskEffortState } from "@/features/tasks/lib/task-effort";
 
 export type ProgressPredictionRecord = { inputKey: string; checkedAt: string; series: TaskProgressComparisonSeries };
 export type ProgressPredictionStore = Record<string, ProgressPredictionRecord>;

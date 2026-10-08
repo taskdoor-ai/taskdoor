@@ -1,10 +1,10 @@
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
-import { findTagByName, type TagDefinition } from "../data/tagGroups";
-import { TagBadge } from "./TagBadge";
-import { TagPicker } from "./TagPicker";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { findTagByName, type TagDefinition } from "@/ai/mock/data/tagGroups";
+import { TagBadge } from "@/shared/ui/TagBadge";
+import { TagPicker } from "@/features/me/components/TagPicker";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 type Props = {
   onChange?: (names: string[]) => void;

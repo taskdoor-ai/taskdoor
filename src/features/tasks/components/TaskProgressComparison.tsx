@@ -1,15 +1,15 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
-import { useBurnUpWidth } from "../lib/useBurnUpWidth";
-import { TaskProgressHistory } from "./TaskProgressHistory";
+import { useBurnUpWidth } from "@/shared/lib/useBurnUpWidth";
+import { TaskProgressHistory } from "@/features/tasks/components/TaskProgressHistory";
 import React, { useId } from "react";
 import { Info } from "lucide-react";
-import { formatPersonDays } from "../lib/taskEffort";
-import { getTaskProgressChart, getTaskProgressComparison, type TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
-import { TaskProgressOverview } from "./TaskProgressOverview";
-import { TaskProgressStage } from "./TaskProgressStage";
-import { TaskBurnUpNode } from "./TaskBurnUpNode";
-import { layoutBurnUpDateAxis, TaskBurnUpDateAxis, TaskBurnUpHeading, TaskBurnUpTimeDelta, TaskBurnUpTiming } from "./TaskBurnUpTiming";
-import { getTaskProgressDisplay, type TaskProgressContext, type TaskProgressDisplay } from "../lib/taskProgressDisplay";
+import { formatPersonDays } from "@/features/tasks/lib/task-effort";
+import { getTaskProgressChart, getTaskProgressComparison, type TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
+import { TaskProgressOverview } from "@/features/tasks/components/TaskProgressOverview";
+import { TaskProgressStage } from "@/features/tasks/components/TaskProgressStage";
+import { TaskBurnUpNode } from "@/features/tasks/components/TaskBurnUpNode";
+import { layoutBurnUpDateAxis, TaskBurnUpDateAxis, TaskBurnUpHeading, TaskBurnUpTimeDelta, TaskBurnUpTiming } from "@/features/tasks/components/TaskBurnUpTiming";
+import { getTaskProgressDisplay, type TaskProgressContext, type TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
 
 const shortDate = (date: string | null) => date ? `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}` : "—";
 const days = (minutes: number) => formatPersonDays(minutes / 480);

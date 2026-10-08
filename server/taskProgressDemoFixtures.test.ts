@@ -1,14 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { allTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { allTeamWorkspaceNodes } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode } from "../src/shared/model/task-model.ts";
-import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
-import { getTaskProgressDemoExample } from "../src/data/taskProgressDemo.ts";
-import { progressDemoRevisions } from "../src/data/taskProgressDemoFixtures.ts";
-import { getTaskProgressComparison } from "../src/lib/taskProgressComparison.ts";
-import { getTaskProgressDisplay } from "../src/lib/taskProgressDisplay.ts";
-import { migrateProgressDemoFixtures } from "../src/lib/taskProgressDemoMigration.ts";
+import { createWorkspaceTaskDetail } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { getTaskProgressDemoExample } from "../src/ai/mock/data/taskProgressDemo.ts";
+import { progressDemoRevisions } from "../src/ai/mock/data/taskProgressDemoFixtures.ts";
+import { getTaskProgressComparison } from "../src/features/tasks/lib/task-progress-comparison.ts";
+import { getTaskProgressDisplay } from "../src/features/tasks/lib/task-progress-display.ts";
+import { migrateProgressDemoFixtures } from "../src/ai/mock/lib/taskProgressDemoMigration.ts";
 
 const task = (id: string) => structuredClone(allTeamWorkspaceNodes.find(node => node.id === id) as TaskNode);
 const oldNodes = () => normalizeWorkspaceNodes(allTeamWorkspaceNodes.map(node => progressDemoRevisions[node.id]

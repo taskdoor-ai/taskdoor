@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { getTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { getTeamWorkspaceNodes } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { workspaceRootId, type TaskNode, type WorkspaceNode } from "../src/shared/model/task-model.ts";
 
 const task = (id: string, teamId: string, extra: Partial<TaskNode> = {}): TaskNode => ({
@@ -67,7 +67,7 @@ test("本地数据归一会切断跨团队父子、目录、文件与依赖关�
 });
 
 test("App 的所有跨团队入口都会结束旧创建会话，避免旧草案按新 teamId 保存", () => {
-  const source = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
   assert.match(source, /const resetCreationSessionForTeamChange = \(\) => \{[\s\S]*setCreationSessionOpen\(false\);[\s\S]*creationSessionCompleted\.current = false;[\s\S]*setConversationRevision/s);
   assert.match(source, /const changeActiveTeam = [\s\S]*?resetCreationSessionForTeamChange\(\);[\s\S]*?setActiveTeamId\(teamId\)/s);
   assert.match(source, /if \(taskTeamId !== activeTeamId[\s\S]*?resetCreationSessionForTeamChange\(\);[\s\S]*?setActiveTeamId\(taskTeamId\)/s);

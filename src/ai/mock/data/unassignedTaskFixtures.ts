@@ -1,7 +1,7 @@
 import { workspaceRootId, type TaskNode } from "@/shared/model/task-model";
-import { getEffortScopeKey } from "../lib/taskEffort";
+import { getEffortScopeKey } from "@/features/tasks/lib/task-effort";
 import { type TaskEffortEstimate } from "@/shared/model/task-effort";
-import { applyProgressDemoFixture } from "./taskProgressDemoFixtures";
+import { applyProgressDemoFixture } from "@/ai/mock/data/taskProgressDemoFixtures";
 
 // 模拟周岚已创建、尚未找到负责人的任务，复用个人列表的待确认入口。
 const seeds: (Omit<TaskNode, "kind" | "parentId" | "ownerId" | "status" | "updatedAt"> & {

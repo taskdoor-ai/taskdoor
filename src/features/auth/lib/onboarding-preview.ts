@@ -1,7 +1,7 @@
-import { mockWorkspaceEmail, mockWorkspacePasswordDigest, mockWorkspaceTeams } from "./mockWorkspaceAccount";
+import { mockWorkspaceEmail, mockWorkspacePasswordDigest, mockWorkspaceTeams } from "@/ai/mock/lib/mockWorkspaceAccount";
 /** Interactive design preview only; this is not an authentication or authorization backend. */
-import type { PersonalCenterState } from "../data/memberProfiles";
-import { resolveTeamEmailInvitation } from "./teamInvitations";
+import type { PersonalCenterState } from "@/ai/mock/data/memberProfiles";
+import { resolveTeamEmailInvitation } from "@/features/members/lib/team-invitations";
 export type AuthMode = "login" | "register" | "forgot";
 export type OnboardingStep = "email" | "code" | "google-password" | "reset-password" | "choose" | "create" | "join" | "invite" | "workspace";
 export type PreviewScenario = "new" | "invited" | "returning" | "expired";

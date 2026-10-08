@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
-import { useI18n } from './I18nProvider';
-import { mockTaskField, mockRecordText, type MockTaskCopy } from './mockContent';
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import { mockTaskField, mockRecordText, type MockTaskCopy } from '@/ai/mock/i18n/mockContent';
 const AdditionalMockContext = createContext<Readonly<Record<string, MockTaskCopy>>>({});
 export const CurrentTaskContext = createContext('');
 export function MockDataProvider({ tasks, children }: { tasks: Readonly<Record<string, MockTaskCopy>>; children: ReactNode }) {

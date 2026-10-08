@@ -1,8 +1,8 @@
-import type { Locale } from './core';
-import type { CreationPlanningResult } from '../lib/taskCreationPlanning';
-import type { CreationForm, CreationTask } from '../lib/taskCreationForm';
-import type { TaskCreationScenarioId } from '../data/taskCreationScenarios';
-import { getEffortScopeKey } from '../lib/taskEffort';
+import type { Locale } from '@/shared/i18n/core';
+import type { CreationPlanningResult } from '@/ai/mock/lib/taskCreationPlanning';
+import type { CreationForm, CreationTask } from '@/features/tasks/lib/task-creation-form';
+import type { TaskCreationScenarioId } from '@/ai/mock/data/taskCreationScenarios';
+import { getEffortScopeKey } from '@/features/tasks/lib/task-effort';
 
 export const creationScenarioEnglish: Record<TaskCreationScenarioId, { label: string; prompt: string }> = {
   'single-task': { label: 'Single task · no subtasks', prompt: 'Prepare the minutes for next week’s team meeting' },

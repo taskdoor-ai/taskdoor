@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, CircleAlert } from "lucide-react";
 import googleIcon from "@lobehub/icons-static-svg/icons/google-color.svg";
-import { useI18n } from "../i18n/I18nProvider";
-import { Button } from "./ui/button";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { Button } from "@/shared/ui/button";
 
 export type GooglePreviewIdentity = { name: string; email: string; subject: string };
 const identities: GooglePreviewIdentity[] = [

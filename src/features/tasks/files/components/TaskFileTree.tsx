@@ -1,11 +1,11 @@
-import { useGlobalUi } from "../../i18n/globalUi";
-import { useDetailCopy } from "../../i18n/detailMessages";
-import { useMockText } from "../../i18n/MockDataProvider";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { ChevronDown, ChevronRight, File, FileText, FileType2, Folder, FolderOpen, Image, MoreHorizontal, NotebookTabs, Pencil, RotateCcw, Sheet, Trash2, MoveRight } from "lucide-react";
 import React, { type KeyboardEvent } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import { getDefaultFileIcon, sortTaskFileNodes } from "../../lib/taskFileTree";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { getDefaultFileIcon, sortTaskFileNodes } from "@/features/tasks/files/lib/task-file-tree";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
 
 export type TaskFileAction = { type: "rename" | "move" | "delete" | "change-icon" | "restore-icon"; nodeId: string };
 

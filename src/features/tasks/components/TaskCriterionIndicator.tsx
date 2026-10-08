@@ -1,9 +1,9 @@
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { Check, Loader2, Undo2 } from 'lucide-react';
-import { useGlobalUi } from '../i18n/globalUi';
+import { useGlobalUi } from '@/shared/i18n/global-ui';
 import { useProgressCopy } from '@/features/tasks/i18n/progress-copy';
-import { toast } from './ui/toast';
-import { criterionStage, type CriterionReview } from '../lib/taskCriterionReview';
+import { toast } from '@/shared/ui/toast';
+import { criterionStage, type CriterionReview } from '@/features/tasks/lib/task-criterion-review';
 
 const stages = ['未形成结果', '少量完成', '部分完成', '大部分完成', '接近完成'];
 export function TaskCriterionIndicator({ index, review, onConfirm }: { index: number; review?: CriterionReview; onConfirm?: (confirmed: boolean) => void | Promise<void> }) {

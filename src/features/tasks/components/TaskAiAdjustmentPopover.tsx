@@ -1,19 +1,19 @@
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { ArrowRight, ArrowUp, Check, ChevronDown, GitBranch, Layers3, LoaderCircle, Sparkles, Target, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useId, useReducer, useRef, useState } from "react";
-import { buildTaskAiAdjustment, buildTaskAiCreationAdjustment, getTaskAiContextSignature } from "../lib/taskAiAdjustment";
-import { playMockAiSteps } from "../lib/taskAiFeedback";
-import { getTaskAiAdjustmentSteps } from "../lib/taskAiAdjustmentProgress";
-import { emptyTaskAiAdjustmentDraft, getTaskAiAdjustmentDraftKey, taskAiAdjustmentDraftReducer, type TaskAiAdjustmentDraft } from "../lib/taskAiAdjustmentDrafts";
-import type { TaskAiAdjustmentContext, TaskAiAdjustmentProgress, TaskAiAdjustmentProposal, TaskAiAdjustmentScope } from "../lib/taskAiAdjustmentTypes";
-import type { CreationProcess } from "../lib/taskCreationProgress";
-import { AnimatedAgentChatInput } from "./AnimatedAgentChatInput";
-import { TaskAiWorking } from "./TaskAiWorking";
-import { TaskCreationHistory } from "./TaskCreationHistory";
-import { Button } from "./ui/button";
-import { Popover, PopoverContent } from "./ui/popover";
-import { Textarea } from "./ui/input";
+import { buildTaskAiAdjustment, buildTaskAiCreationAdjustment, getTaskAiContextSignature } from "@/ai/mock/lib/taskAiAdjustment";
+import { playMockAiSteps } from "@/ai/mock/lib/taskAiFeedback";
+import { getTaskAiAdjustmentSteps } from "@/ai/mock/lib/taskAiAdjustmentProgress";
+import { emptyTaskAiAdjustmentDraft, getTaskAiAdjustmentDraftKey, taskAiAdjustmentDraftReducer, type TaskAiAdjustmentDraft } from "@/features/tasks/lib/task-ai-adjustment-drafts";
+import type { TaskAiAdjustmentContext, TaskAiAdjustmentProgress, TaskAiAdjustmentProposal, TaskAiAdjustmentScope } from "@/features/tasks/lib/task-ai-adjustment-types";
+import type { CreationProcess } from "@/features/tasks/lib/task-creation-progress";
+import { AnimatedAgentChatInput } from "@/features/tasks/components/AnimatedAgentChatInput";
+import { TaskAiWorking } from "@/features/tasks/components/TaskAiWorking";
+import { TaskCreationHistory } from "@/features/tasks/components/TaskCreationHistory";
+import { Button } from "@/shared/ui/button";
+import { Popover, PopoverContent } from "@/shared/ui/popover";
+import { Textarea } from "@/shared/ui/input";
 
 // Two animation frames guarantee that the running turn is painted once before a
 // synchronous validation/no-change result replaces it. Abort keeps that pause

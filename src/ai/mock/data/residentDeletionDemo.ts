@@ -1,5 +1,5 @@
 import type {TaskNode} from "@/shared/model/task-model";
-import {getEffortScopeKey} from "../lib/taskEffort";
+import {getEffortScopeKey} from "@/features/tasks/lib/task-effort";
 
 export const residentDeletionDemoRootId = "demo-autumn-creator-event";
 const goal = "完成秋季新品达人专场的合作确认、内容准备和开播检查。";

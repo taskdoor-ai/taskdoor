@@ -7,12 +7,12 @@ import {
   multiTeamTags,
   teamWorkspaceScenarios,
   validateTeamWorkspaceScenarios,
-} from "../src/data/teamWorkspaceScenarios.ts";
-import { getTaskEffortState } from "../src/lib/taskEffort.ts";
-import { getWorkspaceEffortLeaves } from "../src/lib/taskEffortEditing.ts";
-import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+} from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { getTaskEffortState } from "../src/features/tasks/lib/task-effort.ts";
+import { getWorkspaceEffortLeaves } from "../src/features/tasks/lib/task-effort-editing.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { workspaceRootId, type TaskNode } from "../src/shared/model/task-model.ts";
-import { initialPersonalCenterState, isPersonalCenterState } from "../src/data/memberProfiles.ts";
+import { initialPersonalCenterState, isPersonalCenterState } from "../src/ai/mock/data/memberProfiles.ts";
 
 const expectedLeafIds: Record<string, string[]> = {
   platform: ["platform-api-contract", "platform-ios-review", "platform-android-staged", "platform-observability-alerts", "platform-support-runbook", "platform-security-gate"],

@@ -1,8 +1,8 @@
-import { createManualEffortEstimate, getTaskEffortState, type TaskEffortTask } from './taskEffort';
+import { createManualEffortEstimate, getTaskEffortState, type TaskEffortTask } from '@/features/tasks/lib/task-effort';
 import { type TaskEffortEstimate } from '@/shared/model/task-effort';
-import { getTaskEffortEditSignature } from './taskEffortEditing';
-import { getCreationEffortLeaves } from './taskCreationEffort';
-import type { CreationForm } from './taskCreationForm';
+import { getTaskEffortEditSignature } from '@/features/tasks/lib/task-effort-editing';
+import { getCreationEffortLeaves } from '@/features/tasks/lib/task-creation-effort';
+import type { CreationForm } from '@/features/tasks/lib/task-creation-form';
 
 export type TaskEffortEdit = { taskId: string; estimate: TaskEffortEstimate; expectedSignature: string };
 export type EditableEffortTask = TaskEffortTask & { id: string; title?: string };

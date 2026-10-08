@@ -1,8 +1,8 @@
-import { useGlobalUi } from "../../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import React from "react";
 import { X } from "lucide-react";
-import type { TaskFileRevision } from "../../lib/taskFileEditing";
-import { PersonAvatar, PersonName } from "../PersonAvatar";
+import type { TaskFileRevision } from "@/features/tasks/files/lib/task-file-editing";
+import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
 
 export function TaskFileHistory({ revisions, version, onClose }: { revisions: TaskFileRevision[]; version: number; onClose: () => void }) {
   const ui = useGlobalUi();

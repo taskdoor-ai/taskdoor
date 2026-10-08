@@ -2,12 +2,12 @@
 
 import * as React from "react"
 import { XIcon } from "lucide-react"
-import { useModuleCopy } from "../../i18n/moduleMessages"
-import { dialogStyles } from "./dialog-styles"
+import { useModuleCopy } from "@/shared/i18n/module-messages"
+import { dialogStyles } from "@/shared/ui/dialog-styles"
 import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog"
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/shared/lib/utils"
+import { Button } from "@/shared/ui/button"
 
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />

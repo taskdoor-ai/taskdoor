@@ -3,7 +3,7 @@ import test from "node:test";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 
 // A missing implementation is an explicit failing assertion during the first TDD run.
-const editing = await import("../src/lib/taskFileEditing.ts").catch((error: unknown) => {
+const editing = await import("../src/features/tasks/files/lib/task-file-editing.ts").catch((error: unknown) => {
   if (error && typeof error === "object" && "code" in error && error.code === "ERR_MODULE_NOT_FOUND") return null;
   throw error;
 });

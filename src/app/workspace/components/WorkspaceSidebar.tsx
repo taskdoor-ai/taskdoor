@@ -1,10 +1,10 @@
-import { useI18n } from "../i18n/I18nProvider";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { ListTodo, Moon, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { PersonAvatar } from "./PersonAvatar";
-import { TeamSwitcher, type SwitchableTeam } from "./TeamSwitcher";
-import type { PersonalCenterModule } from "./PersonalInfoDialog";
-import { GlobalNotifications } from "./GlobalNotifications";
+import { PersonAvatar } from "@/shared/ui/PersonAvatar";
+import { TeamSwitcher, type SwitchableTeam } from "@/app/workspace/components/TeamSwitcher";
+import type { PersonalCenterModule } from "@/app/workspace/components/PersonalInfoDialog";
+import { GlobalNotifications } from "@/features/notifications/components/GlobalNotifications";
 
 export type PrimarySection = "conversation" | "home" | "tasks" | "ai" | "settings";
 

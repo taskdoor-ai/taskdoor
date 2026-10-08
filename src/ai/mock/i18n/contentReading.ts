@@ -1,4 +1,4 @@
-import type { Locale } from './core';
+import type { Locale } from '@/shared/i18n/core';
 
 export const AUTO_TRANSLATE_KEY = 'taskdoor.content-auto-translate.v1';
 export function contentReading(source: string, candidate: string, locale: Locale, enabled: boolean, original: boolean) {

@@ -1,16 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { allTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { normalizeWorkspaceNodes } from "../src/data/workspaceNodes.ts";
+import { allTeamWorkspaceNodes } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode, type WorkspaceNode } from "../src/shared/model/task-model.ts";
-import { getTaskProgressDemoExample } from "../src/data/taskProgressDemo.ts";
-import { getTaskProgressComparisonExample } from "../src/data/taskProgressComparisonExamples.ts";
-import { progressDemoRevisions } from "../src/data/taskProgressDemoFixtures.ts";
-import { getTaskDefinitionGoal } from "../src/lib/taskGoal.ts";
-import { getEffortScopeKey, getTaskEffortState } from "../src/lib/taskEffort.ts";
-import { getTaskProgressDisplay } from "../src/lib/taskProgressDisplay.ts";
-import { migrateProgressDemoFixtures } from "../src/lib/taskProgressDemoMigration.ts";
-import { creatorCommerceScenarioVersion, resolveWorkspaceScenarioReset } from "../src/lib/workspaceScenarioReset.ts";
+import { getTaskProgressDemoExample } from "../src/ai/mock/data/taskProgressDemo.ts";
+import { getTaskProgressComparisonExample } from "../src/ai/mock/data/taskProgressComparisonExamples.ts";
+import { progressDemoRevisions } from "../src/ai/mock/data/taskProgressDemoFixtures.ts";
+import { getTaskDefinitionGoal } from "../src/features/tasks/lib/task-goal.ts";
+import { getEffortScopeKey, getTaskEffortState } from "../src/features/tasks/lib/task-effort.ts";
+import { getTaskProgressDisplay } from "../src/features/tasks/lib/task-progress-display.ts";
+import { migrateProgressDemoFixtures } from "../src/ai/mock/lib/taskProgressDemoMigration.ts";
+import { creatorCommerceScenarioVersion, resolveWorkspaceScenarioReset } from "../src/ai/mock/lib/workspaceScenarioReset.ts";
 
 const tasks = allTeamWorkspaceNodes.filter((node): node is TaskNode => node.kind === "task");
 const legacyNodes = () => normalizeWorkspaceNodes(allTeamWorkspaceNodes.map(node => {

@@ -1,5 +1,5 @@
-import { useI18n } from "../i18n/I18nProvider";
-import { statusMessageKey } from "../i18n/taskStatus";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { statusMessageKey } from "@/shared/i18n/task-status";
 import {
   ChevronDown,
   CircleCheck,
@@ -11,7 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
 
 export type TaskStatus = "待开始" | "进行中" | "待审核" | "已阻塞" | "已完成" | "已取消";
 

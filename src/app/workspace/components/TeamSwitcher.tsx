@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { CreateTeamDialog } from "./CreateTeamDialog";
-import { mockTeamName } from "../i18n/mockContent";
-import { useI18n } from "../i18n/I18nProvider";
+import { CreateTeamDialog } from "@/features/workspaces/components/CreateTeamDialog";
+import { mockTeamName } from "@/ai/mock/i18n/mockContent";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { Check, ChevronDown, Plus } from "lucide-react";
 import {
   DropdownMenu,
@@ -11,8 +11,8 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { TeamLogo } from "./TeamLogo";
+} from "@/shared/ui/dropdown-menu";
+import { TeamLogo } from "@/shared/ui/TeamLogo";
 
 export type SwitchableTeam = {
   id: string;

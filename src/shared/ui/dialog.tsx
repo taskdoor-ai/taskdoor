@@ -1,13 +1,13 @@
 "use client"
 
-import { useModuleCopy } from "../../i18n/moduleMessages"
+import { useModuleCopy } from "@/shared/i18n/module-messages"
 import * as React from "react"
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/shared/lib/utils"
+import { Button } from "@/shared/ui/button"
 import { XIcon } from "lucide-react"
-import { dialogStyles } from "./dialog-styles"
+import { dialogStyles } from "@/shared/ui/dialog-styles"
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />

@@ -1,11 +1,11 @@
-import { normalizeTags, type TagDefinition } from "../data/tagGroups.ts";
-import { normalizeWorkspaceNodes, workspaceNodes } from "../data/workspaceNodes.ts";
+import { normalizeTags, type TagDefinition } from "@/ai/mock/data/tagGroups.ts";
+import { normalizeWorkspaceNodes, workspaceNodes } from "@/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode, type WorkspaceNode } from "@/shared/model/task-model.ts";
-import { allTeamWorkspaceNodes, multiTeamTags, teamWorkspaceExpansionNodes } from "../data/teamWorkspaceScenarios.ts";
-import { getEffortScopeKey } from "./taskEffort.ts";
-import { getTaskDefinitionGoal } from "./taskGoal.ts";
-import { unassignedTaskFixtures } from "../data/unassignedTaskFixtures.ts";
-import {residentDeletionDemoTasks} from "../data/residentDeletionDemo.ts";
+import { allTeamWorkspaceNodes, multiTeamTags, teamWorkspaceExpansionNodes } from "@/ai/mock/data/teamWorkspaceScenarios.ts";
+import { getEffortScopeKey } from "@/features/tasks/lib/task-effort.ts";
+import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-goal.ts";
+import { unassignedTaskFixtures } from "@/ai/mock/data/unassignedTaskFixtures.ts";
+import {residentDeletionDemoTasks} from "@/ai/mock/data/residentDeletionDemo.ts";
 
 /** Kept under the historical export name because existing storage callers import it. */
 const productLaunchNestedSubtasksVersion = "multi-team-v20-product-launch-nested-subtasks";

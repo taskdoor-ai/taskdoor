@@ -4,12 +4,12 @@ import { register } from "node:module";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { I18nProvider } from "../src/i18n/I18nProvider";
-import { buildPersonalWorkbenchModel } from "../src/lib/personalWorkbench.ts";
-import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
+import { I18nProvider } from "../src/shared/i18n/I18nProvider";
+import { buildPersonalWorkbenchModel } from "../src/ai/mock/lib/personalWorkbench.ts";
+import { createWorkspaceTaskDetail } from "../src/ai/mock/data/taskDetailMocks.ts";
 import { type TaskDetailContent, type TaskNode } from "../src/shared/model/task-model.ts";
 
-import { createManualEffortEstimate } from "../src/lib/taskEffort.ts";
+import { createManualEffortEstimate } from "../src/features/tasks/lib/task-effort.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 register(`data:text/javascript,${encodeURIComponent(`
@@ -31,16 +31,16 @@ const owned: TaskNode = {
     minutes: 45, workMethod: "AI 汇总记录，由负责人核对结论", reason: "按一次完整核对与修订估算",
   }),
 };
-const workbenchCss = readFileSync(new URL("../src/styles/personal-workbench.css", import.meta.url), "utf8");
-const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-const aiConnectionDialogSource = readFileSync(new URL("../src/components/AiConnectionDialog.tsx", import.meta.url), "utf8");
+const workbenchCss = readFileSync(new URL("../src/ai/mock/prototype/styles/personal-workbench.css", import.meta.url), "utf8");
+const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
+const aiConnectionDialogSource = readFileSync(new URL("../src/features/ai-connection/components/AiConnectionDialog.tsx", import.meta.url), "utf8");
 const render = async (
   tasks: TaskNode[],
   detailsByTaskId?: Record<string, TaskDetailContent>,
   asOf = "2026-08-31",
   analysis: { analyzing?: boolean; analysisError?: string } = {},
 ) => {
-  const { PersonalWorkbench } = await import(new URL("../src/components/PersonalWorkbench.tsx", import.meta.url).href);
+  const { PersonalWorkbench } = await import(new URL("../src/ai/mock/prototype/components/PersonalWorkbench.tsx", import.meta.url).href);
   const originalWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
   Object.defineProperty(globalThis, "window", { configurable: true, value: { localStorage: { getItem: () => "zh-CN" } } });
   try { return renderToStaticMarkup(createElement(I18nProvider, { children: createElement(PersonalWorkbench, {
@@ -254,7 +254,7 @@ test("我的工作连接 AI 继续复用共享弹层", async () => {
   const html = await render([owned]);
   const connectAi = button(html, /^连接 AI$/);
   assert.match(connectAi.attributes, /aria-haspopup="dialog"/);
-  assert.match(appSource, /import \{ AiConnectionDialog \} from "\.\/components\/AiConnectionDialog"/);
+  assert.match(appSource, /import \{ AiConnectionDialog \} from "@\/features\/ai-connection\/components\/AiConnectionDialog"/);
   assert.match(appSource, /onConnectAi=\{\(trigger\) => \{ workbenchAiConnectionTrigger\.current = trigger; setWorkbenchAiConnectionOpen\(true\); \}\}/);
   assert.match(appSource, /<AiConnectionDialog[\s\S]*?request=\{workbenchAiConnectionRequest\}[\s\S]*?returnFocus=\{workbenchAiConnectionTrigger\.current\}/);
   for (const product of ["ChatGPT", "Claude Code", "CodeBuddy", "Cursor"]) assert.match(aiConnectionDialogSource, new RegExp(product));

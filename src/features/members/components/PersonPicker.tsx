@@ -1,19 +1,19 @@
-import { useI18n } from "../i18n/I18nProvider";
-import { mockPersonName } from "../i18n/mockContent";
-import { settingsMockText } from "../i18n/settingsMock";
-import { recommendationReason } from "../i18n/recommendationCopy";
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { mockPersonName } from "@/ai/mock/i18n/mockContent";
+import { settingsMockText } from "@/ai/mock/i18n/settingsMock";
+import { recommendationReason } from "@/ai/mock/i18n/recommendationCopy";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { Combobox } from "@base-ui/react/combobox";
 import { Tooltip } from "@base-ui/react/tooltip";
 import { AtSign, Check, ChevronDown, Plus, Search, Sparkles, UserPlus, UserRoundX, UsersRound } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
-import { cn } from "@/lib/utils";
-import { sortMembersByRecommendation, type TaskMemberRecommendationLevel, type TaskMemberRecommendations } from "../lib/taskMemberRecommendations";
-import { PersonAvatar, PersonName, type PersonInvitationStatus } from "./PersonAvatar";
+import { cn } from "@/shared/lib/utils";
+import { sortMembersByRecommendation, type TaskMemberRecommendationLevel, type TaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecommendations";
+import { PersonAvatar, PersonName, type PersonInvitationStatus } from "@/shared/ui/PersonAvatar";
 import type { PersonOption } from "@/shared/model/task-model";
-import { useMemberInvitations } from "./MemberInvitations";
-import { getInvitationDraft } from "../lib/teamInvitations";
+import { useMemberInvitations } from "@/features/members/components/MemberInvitations";
+import { getInvitationDraft } from "@/features/members/lib/team-invitations";
 export type { PersonOption } from "@/shared/model/task-model";
 
 type PersonPickerCommonProps = {

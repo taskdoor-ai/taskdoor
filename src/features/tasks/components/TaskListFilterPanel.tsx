@@ -1,16 +1,16 @@
-import { useI18n } from "../i18n/I18nProvider";
-import { filterDateLabel, filterStatusLabel } from "../i18n/filterDisplay";
-import { mockTagName } from "../i18n/mockContent";
-import { useRemainingCopy } from "../i18n/remainingMessages";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { filterDateLabel, filterStatusLabel } from "@/features/tasks/i18n/filter-display";
+import { mockTagName } from "@/ai/mock/i18n/mockContent";
+import { useRemainingCopy } from "@/shared/i18n/remaining-messages";
 import { ArrowLeft, CalendarDays, CalendarPlus, Check, ChevronRight, CircleDashed, Inbox, ListFilter, Search, Tag, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import type { TagDefinition } from "@/shared/model/task-model";
-import { getTaskScopeFilter, getTaskStatusFilters, getTaskTagFilters, taskDateFilterLabel, taskScopeLabels, type TaskListDateFilter, type TaskListFilters } from "./taskListFilters";
-import { getTagIcon } from "./TagBadge";
-import { taskStatusDefinition, type TaskStatus } from "./TaskStatusBadge";
-import { Button } from "./ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Input } from "./ui/input";
+import { getTaskScopeFilter, getTaskStatusFilters, getTaskTagFilters, taskDateFilterLabel, taskScopeLabels, type TaskListDateFilter, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
+import { getTagIcon } from "@/shared/ui/TagBadge";
+import { taskStatusDefinition, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
+import { Button } from "@/shared/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { Input } from "@/shared/ui/input";
 
 const filterCategories = [
   { id: "statuses", label: "状态", icon: CircleDashed },

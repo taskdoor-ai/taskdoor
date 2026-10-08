@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { TaskNode } from "../src/shared/model/task-model.ts";
-import { buildPersonalWorkbenchModel } from "../src/lib/personalWorkbench.ts";
-import { buildPersonalWorkbenchAiConnectionRequest } from "../src/lib/personalWorkbenchAiConnection.ts";
+import { buildPersonalWorkbenchModel } from "../src/ai/mock/lib/personalWorkbench.ts";
+import { buildPersonalWorkbenchAiConnectionRequest } from "../src/ai/mock/prototype/personalWorkbenchAiConnection.ts";
 
 const task = (input: Partial<TaskNode> & Pick<TaskNode, "id" | "name">): TaskNode => {
   const { id, name, ...patch } = input;

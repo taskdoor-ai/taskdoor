@@ -1,8 +1,8 @@
-import { useGlobalUi } from '../i18n/globalUi';
+import { useGlobalUi } from '@/shared/i18n/global-ui';
 import { Languages, Globe2, ChevronDown } from "lucide-react";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "./ui/dropdown-menu";
-import { useI18n } from '../i18n/I18nProvider';
-import '../styles/language-switcher.css';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/shared/ui/dropdown-menu";
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import '@/shared/styles/language-switcher.css';
 export function LanguageSwitcher({ menu = false }: { menu?: boolean }) {
   const ui = useGlobalUi();
   const { locale, setLocale, t, autoTranslate, setAutoTranslate } = useI18n();

@@ -1,5 +1,5 @@
-import type { CreationForm, CreationTask } from "./taskCreationForm";
-import type { TaskDraft } from "./taskAssistantProtocol";
+import type { CreationForm, CreationTask } from "@/features/tasks/lib/task-creation-form";
+import type { TaskDraft } from "@/features/tasks/lib/task-assistant-protocol";
 
 /** Missing parent means a direct child of the main task. */
 export function validateDraftHierarchy(tasks: TaskDraft[]): void {

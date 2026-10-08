@@ -1,7 +1,7 @@
 import { Input as InputPrimitive } from "@base-ui/react/input"
 import type * as React from "react"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/shared/lib/utils"
 
 function Input({ className, leadingIcon, ...props }: React.ComponentProps<typeof InputPrimitive> & { leadingIcon?: React.ReactNode }) {
   const input = <InputPrimitive data-slot="input" className={cn("h-(--ad-control-height-md) w-full rounded-(--ad-radius-control) border border-(--ad-border) bg-(--ad-surface) px-(--ad-space-3) font-sans text-(length:--ad-text-body-sm) font-normal text-(--ad-ink) outline-none transition-[border-color] placeholder:text-(--ad-ink-tertiary) focus-visible:border-(--ad-focus) focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:bg-(--ad-surface-subtle) disabled:text-(--ad-ink-tertiary)", className)} {...props} />

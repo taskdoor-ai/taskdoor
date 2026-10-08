@@ -1,16 +1,16 @@
 import { ArrowRight, Check, ChevronRight, GitBranch, LoaderCircle, Plus, RotateCcw, Sparkles, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { TagDefinition } from "../data/tagGroups";
-import type { ExistingTaskCandidate } from "../lib/taskCreationScenario";
-import type { TaskPlanDraft } from "../lib/taskAssistantProtocol";
-import { toTaskPlanDraft, validateCreationForm, type CreationForm } from "../lib/taskCreationForm";
-import { getLinearCreationStages } from "../lib/taskCreationLinearStages";
-import { planTaskCreation, resolveCreationRelationship, type CreationPlanningResult } from "../lib/taskCreationPlanning";
-import { AnimatedAgentChatInput } from "./AnimatedAgentChatInput";
-import type { Member } from "./MemberSelector";
-import { TaskCreationLinearSections } from "./TaskCreationLinearSections";
-import { Button } from "./ui/button";
-import { Textarea } from "./ui/input";
+import type { TagDefinition } from "@/ai/mock/data/tagGroups";
+import type { ExistingTaskCandidate } from "@/ai/mock/lib/taskCreationScenario";
+import type { TaskPlanDraft } from "@/features/tasks/lib/task-assistant-protocol";
+import { toTaskPlanDraft, validateCreationForm, type CreationForm } from "@/features/tasks/lib/task-creation-form";
+import { getLinearCreationStages } from "@/features/tasks/lib/task-creation-linear-stages";
+import { planTaskCreation, resolveCreationRelationship, type CreationPlanningResult } from "@/ai/mock/lib/taskCreationPlanning";
+import { AnimatedAgentChatInput } from "@/features/tasks/components/AnimatedAgentChatInput";
+import type { Member } from "@/features/members/components/MemberSelector";
+import { TaskCreationLinearSections } from "@/features/tasks/components/TaskCreationLinearSections";
+import { Button } from "@/shared/ui/button";
+import { Textarea } from "@/shared/ui/input";
 
 type CreationResult = { createdCount: number; mainTaskId: string; taskTitles: string[] };
 

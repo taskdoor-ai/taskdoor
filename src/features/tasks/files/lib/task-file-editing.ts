@@ -1,5 +1,5 @@
 import type { TaskFileNode } from "@/shared/model/task-model.ts";
-import { getPreviewKind } from "./taskFileTree.ts";
+import { getPreviewKind } from "@/features/tasks/files/lib/task-file-tree.ts";
 
 export type TaskFileContent =
   | { kind: "text"; text: string }

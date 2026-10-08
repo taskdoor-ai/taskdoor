@@ -1,15 +1,15 @@
-import { useI18n } from '../i18n/I18nProvider';
-import { useMockText } from '../i18n/MockDataProvider';
-import { taskContextValue } from '../i18n/aiContextCopy';
-import { aiTransferMessage } from '../i18n/aiTransferCopy';
-import { useGlobalUi } from "../i18n/globalUi";
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import { useMockText } from '@/ai/mock/i18n/MockDataProvider';
+import { taskContextValue } from '@/shared/i18n/ai-context-copy';
+import { aiTransferMessage } from '@/features/ai-connection/i18n/ai-transfer-copy';
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { ArrowRight, Check, ClipboardList, LockKeyhole, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { agentIconUrls } from "../data/agentIcons";
-import { aiTools, aiToolName, type AiTool } from "../lib/aiTools";
-import { aiToolPreferences, defaultAiTool, isAiToolPreview, type AiToolPreferenceStore } from "../lib/aiToolPreferences";
-import { useAiToolPreferences } from "../lib/useAiToolPreferences";
+import { agentIconUrls } from "@/features/ai-connection/agent-icons";
+import { aiTools, aiToolName, type AiTool } from "@/features/ai-connection/lib/ai-tools";
+import { aiToolPreferences, defaultAiTool, isAiToolPreview, type AiToolPreferenceStore } from "@/features/ai-connection/lib/ai-tool-preferences";
+import { useAiToolPreferences } from "@/features/ai-connection/lib/useAiToolPreferences";
 
 export type AiConnectionRequest = {
   taskId?: string;

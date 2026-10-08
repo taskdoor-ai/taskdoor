@@ -1,9 +1,9 @@
 import type { TaskDiagnosisEvidence, TaskDiagnosisFinding, TaskDiagnosisTask } from "@/shared/model/task-diagnosis";
-import { getTaskActivityItems } from "./taskActivity";
-import { getTaskFileContent } from "./taskFileEditing";
-import { getResultTaskDiagnosis, resultTaskDiagnosisIds } from "./resultTaskDiagnosis";
-import { hasTaskDecisionBasis } from "./taskDecisionEvidence";
-import { getExpandedTaskDiagnosis } from "./expandedTaskDiagnosis";
+import { getTaskActivityItems } from "@/features/tasks/lib/task-activity";
+import { getTaskFileContent } from "@/features/tasks/files/lib/task-file-editing";
+import { getResultTaskDiagnosis, resultTaskDiagnosisIds } from "@/ai/mock/lib/resultTaskDiagnosis";
+import { hasTaskDecisionBasis } from "@/features/tasks/lib/task-decision-evidence";
+import { getExpandedTaskDiagnosis } from "@/ai/mock/lib/expandedTaskDiagnosis";
 
 type EvidenceSelector = {
   kind: TaskDiagnosisEvidence["kind"];

@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
 import type { TaskNode } from '@/shared/model/task-model';
-import { useI18n } from '../i18n/I18nProvider';
-import { useMockText } from '../i18n/MockDataProvider';
-import '../styles/task-branch-disclosure.css';
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import { useMockText } from '@/ai/mock/i18n/MockDataProvider';
+import '@/features/tasks/styles/task-branch-disclosure.css';
 
 /** Read-only branch scope shared by deletion previews and recycled records. */
 export function TaskBranchDisclosure({ tasks, rootId, deleting = false }: {

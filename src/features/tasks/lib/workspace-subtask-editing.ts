@@ -1,11 +1,11 @@
-import type { LegacyTaskSnapshot } from "../data/legacyTaskSnapshots";
+import type { LegacyTaskSnapshot } from "@/ai/mock/data/legacyTaskSnapshots";
 import type { TaskActivityMock, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
-import { appendTaskActivity, createTaskChangeActivity, type TaskActivityStore } from "./taskActivity";
-import { getTaskDefinitionGoal } from "./taskAiAdjustmentAdapters";
-import { validateTaskCriteria } from "./taskCriteriaEditing";
-import { TASK_FILE_EDITS_STORAGE_PREFIX } from "./taskFileEditing";
-import { createWorkspaceTasksFromDraft } from "./workspaceTaskCreation";
+import { appendTaskActivity, createTaskChangeActivity, type TaskActivityStore } from "@/features/tasks/lib/task-activity";
+import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-ai-adjustment-adapters";
+import { validateTaskCriteria } from "@/features/tasks/lib/task-criteria-editing";
+import { TASK_FILE_EDITS_STORAGE_PREFIX } from "@/features/tasks/files/lib/task-file-editing";
+import { createWorkspaceTasksFromDraft } from "@/features/tasks/lib/workspace-task-creation";
 
 export type NewSubtaskDraft = { title: string; completionCriteria: string[] };
 

@@ -3,11 +3,11 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskDiagnosisReport } from "../src/components/TaskDiagnosisReport.tsx";
-import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
-import { teamWorkspaceScenarios } from "../src/data/teamWorkspaceScenarios.ts";
-import { getTaskDefinitionGoal } from "../src/lib/taskAiAdjustmentAdapters.ts";
-import { getTaskDiagnosisReport } from "../src/lib/taskDiagnosis.ts";
+import { TaskDiagnosisReport } from "../src/features/tasks/components/TaskDiagnosisReport.tsx";
+import { createWorkspaceTaskDetail } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { teamWorkspaceScenarios } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { getTaskDefinitionGoal } from "../src/features/tasks/lib/task-ai-adjustment-adapters.ts";
+import { getTaskDiagnosisReport } from "../src/features/tasks/lib/task-diagnosis.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -59,7 +59,7 @@ test("诊断图标颜色按类型固定为执行阻塞红色、决策冲突黄�
     }],
   });
   const html = renderToStaticMarkup(createElement(TaskDiagnosisReport, { report }));
-  const css = readFileSync(new URL("../src/styles/task-diagnosis.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/features/tasks/styles/task-diagnosis.css", import.meta.url), "utf8");
 
   assert.equal(report.findings.every((finding) => finding.severity === "review"), true, "颜色不能依赖 severity 区分");
   assert.match(html, /data-type="execution-blocker"/);
@@ -70,7 +70,7 @@ test("诊断图标颜色按类型固定为执行阻塞红色、决策冲突黄�
 });
 
 test("任务详情只保留讨论、子任务、文件和活动页签并支持键盘切换", () => {
-  const source = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../src/features/tasks/components/TaskDetail.tsx", import.meta.url), "utf8");
 
   assert.match(source, /type TaskDetailTab = "discussion" \| "subtasks" \| "files" \| "activity"/);
   assert.match(source, /id: "discussion", label: "讨论"[^]*?id: "subtasks", label: "子任务"[^]*?id: "files", label: "文件"[^]*?id: "activity", label: "活动"/);
@@ -175,8 +175,8 @@ test("文件活动不冒充讨论，且来源和原文按文本安全展示", ()
 });
 
 test("助手继续使用可见任务的诊断快照，任务详情不再接入独立诊断面板", () => {
-  const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-  const detailSource = readFileSync(new URL("../src/components/TaskDetail.tsx", import.meta.url), "utf8");
+  const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
+  const detailSource = readFileSync(new URL("../src/features/tasks/components/TaskDetail.tsx", import.meta.url), "utf8");
 
   assert.match(appSource, /taskEvidence:\s*selectedDiagnosisTasks\.map/);
   assert.match(appSource, /parentTaskId:\s*node\.parentTaskId/);
@@ -199,7 +199,7 @@ test("说明条只展示检索范围和更新时间，有读取缺口时保持�
   assert.match(coverage, /更新时间：未记录/);
   assert.doesNotMatch(coverage, /已检查|本地示例规则|未能读取|已完成核对|未用于判断/);
   assert.doesNotMatch(html, /data-incomplete/);
-  const css = readFileSync(new URL("../src/styles/task-diagnosis.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/features/tasks/styles/task-diagnosis.css", import.meta.url), "utf8");
   assert.doesNotMatch(css, /\.task-diagnosis-coverage\[data-incomplete/);
   assert.match(css, /\.task-diagnosis-coverage\s*\{[^}]*color: var\(--ad-ink-tertiary\)/);
 });

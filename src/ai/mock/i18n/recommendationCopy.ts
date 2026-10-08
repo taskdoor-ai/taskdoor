@@ -1,7 +1,7 @@
 import type { PersonOption } from '@/shared/model/task-model';
-import type { Locale } from './core';
-import { globalUiText } from './globalUi';
-import { mockPersonName } from './mockContent';
+import type { Locale } from '@/shared/i18n/core';
+import { globalUiText } from '@/shared/i18n/global-ui';
+import { mockPersonName } from '@/ai/mock/i18n/mockContent';
 
 const keywords: Record<string, string> = {
   达人: 'creators', 筛选: 'selection', 建联: 'outreach', 商务: 'partnerships', 佣金: 'commission',

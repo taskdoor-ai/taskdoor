@@ -1,9 +1,9 @@
-import { parseCriterionReviews } from "../lib/taskCriterionReview";
-import { getEffortScopeKey } from "../lib/taskEffort";
+import { parseCriterionReviews } from "@/features/tasks/lib/task-criterion-review";
+import { getEffortScopeKey } from "@/features/tasks/lib/task-effort";
 import { effortEstimateSchema, type TaskEffortEstimate } from "@/shared/model/task-effort";
 import { taskIconNameValues, taskIconToneValues, workspaceRootId, type FileNode, type FolderNode, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode, type WorkspaceTaskStatus } from "@/shared/model/task-model";
-import { applyProgressDemoFixture, getProgressDemoCreatedAt } from "./taskProgressDemoFixtures";
-import {isValidTaskEffortBaseline} from "../lib/taskEffortBaseline";
+import { applyProgressDemoFixture, getProgressDemoCreatedAt } from "@/ai/mock/data/taskProgressDemoFixtures";
+import {isValidTaskEffortBaseline} from "@/features/tasks/lib/task-effort-baseline";
 
 export const creatorCommerceCampaignId = "fragrance-campaign";
 export const creatorCommerceMainTaskId = "fragrance-creator-wrapup";

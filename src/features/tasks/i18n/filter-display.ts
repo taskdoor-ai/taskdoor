@@ -1,6 +1,6 @@
-import { translate, type Locale } from './core';
-import { statusMessageKey } from './taskStatus';
-import { taskDateFilterLabel, type TaskListDateFilter } from '../components/taskListFilters';
+import { translate, type Locale } from '@/shared/i18n/core';
+import { statusMessageKey } from '@/shared/i18n/task-status';
+import { taskDateFilterLabel, type TaskListDateFilter } from '@/features/tasks/components/task-list-filters';
 export function filterStatusLabel(locale: Locale, status: string) {
   const key = statusMessageKey[status as keyof typeof statusMessageKey];
   return key ? translate(locale, key) : status;

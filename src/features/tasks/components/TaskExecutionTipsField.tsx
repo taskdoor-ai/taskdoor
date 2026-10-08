@@ -1,5 +1,5 @@
-import { useDetailCopy } from "../i18n/detailMessages";
-import { TaskCreationEditableText } from "./TaskCreationEditableText";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { TaskCreationEditableText } from "@/features/tasks/components/TaskCreationEditableText";
 
 type Props = {
   values: string[];

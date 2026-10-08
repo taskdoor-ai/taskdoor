@@ -1,19 +1,19 @@
-import { useI18n } from '../../i18n/I18nProvider';
-import { contentReading } from '../../i18n/contentReading';
-import { useGlobalUi } from "../../i18n/globalUi";
-import { useDetailCopy } from "../../i18n/detailMessages";
-import { useMockText } from "../../i18n/MockDataProvider";
-import type { AiShortcutAttempt, AiTransferResult } from "../AiConnectionDialog";
+import { useI18n } from '@/shared/i18n/I18nProvider';
+import { contentReading } from '@/ai/mock/i18n/contentReading';
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
+import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
 import { FileText, Quote, X } from "lucide-react";
 import React, { useEffect, useId, useRef, useState } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import type { CollaborationMessage, DiscussionDraft } from "../../lib/taskCollaboration";
-import type { DiscussionAiTarget } from "../../lib/taskDiscussionAi";
-import { PersonAvatar, PersonName } from "../PersonAvatar";
-import { usePersonOptions } from "../PersonDirectory";
-import { AiConnectionButton } from "../AiConnectionButton";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { DiscussionComposer } from "./DiscussionComposer";
+import type { CollaborationMessage, DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
+import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
+import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
+import { usePersonOptions } from "@/shared/ui/PersonDirectory";
+import { AiConnectionButton } from "@/features/ai-connection/components/AiConnectionButton";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { DiscussionComposer } from "@/features/tasks/discussion/components/DiscussionComposer";
 
 type Props = {
   messages: CollaborationMessage[];

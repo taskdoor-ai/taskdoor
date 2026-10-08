@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getTaskProgressDisplay } from "../src/lib/taskProgressDisplay.ts";
-import { getTaskProgressComparisonExample } from "../src/data/taskProgressComparisonExamples.ts";
-import { getTaskProgressDemoExample } from "../src/data/taskProgressDemo.ts";
-import { updateWorkspaceTaskStatus } from "../src/lib/workspaceTaskUpdates.ts";
-import { workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { getTaskProgressDisplay } from "../src/features/tasks/lib/task-progress-display.ts";
+import { getTaskProgressComparisonExample } from "../src/ai/mock/data/taskProgressComparisonExamples.ts";
+import { getTaskProgressDemoExample } from "../src/ai/mock/data/taskProgressDemo.ts";
+import { updateWorkspaceTaskStatus } from "../src/features/tasks/lib/workspace-task-updates.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode } from "../src/shared/model/task-model.ts";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskWorkloadSummary } from "../src/components/TaskWorkloadSummary.tsx";
-import { getEffortScopeKey } from "../src/lib/taskEffort.ts";
+import { TaskWorkloadSummary } from "../src/features/tasks/components/TaskWorkloadSummary.tsx";
+import { getEffortScopeKey } from "../src/features/tasks/lib/task-effort.ts";
 (globalThis as typeof globalThis & {React:typeof React}).React=React;
 
 const series = getTaskProgressComparisonExample("unassigned-short-video-covers")!;

@@ -1,10 +1,10 @@
 import type { ComponentProps } from "react";
-import type { TaskProgressOverview } from "../components/TaskProgressOverview";
-import { taskProgressComparisonExamples } from "../data/taskProgressComparisonExamples";
-import { getTaskProgressDisplay, type TaskProgressContext } from "../lib/taskProgressDisplay";
-import { getEffortScopeKey } from "../lib/taskEffort";
-import type { TaskEffortDistributionInput } from "../lib/taskEffortDistribution";
-import type { TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
+import type { TaskProgressOverview } from "../features/tasks/components/TaskProgressOverview";
+import { taskProgressComparisonExamples } from "../ai/mock/data/taskProgressComparisonExamples";
+import { getTaskProgressDisplay, type TaskProgressContext } from "../features/tasks/lib/task-progress-display";
+import { getEffortScopeKey } from "../features/tasks/lib/task-effort";
+import type { TaskEffortDistributionInput } from "../features/tasks/lib/task-effort-distribution";
+import type { TaskProgressComparisonSeries } from "../features/tasks/lib/task-progress-comparison";
 
 // PRD fixtures and copy are isolated from the Demo's actual data and default presentation.
 export function scenarioPresentation(fixture: string) {

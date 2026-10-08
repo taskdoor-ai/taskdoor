@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { unassignedTaskFixtures } from "../src/data/unassignedTaskFixtures.ts";
-import { allTeamWorkspaceNodes, getTeamWorkspaceNodes } from "../src/data/teamWorkspaceScenarios.ts";
-import { isTaskInPersonalIndex } from "../src/lib/taskListProjection.ts";
-import { commitWorkspaceScenarioReset, creatorCommerceScenarioVersion, resolveWorkspaceScenarioReset } from "../src/lib/workspaceScenarioReset.ts";
+import { unassignedTaskFixtures } from "../src/ai/mock/data/unassignedTaskFixtures.ts";
+import { allTeamWorkspaceNodes, getTeamWorkspaceNodes } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
+import { isTaskInPersonalIndex } from "../src/features/tasks/lib/task-list-projection.ts";
+import { commitWorkspaceScenarioReset, creatorCommerceScenarioVersion, resolveWorkspaceScenarioReset } from "../src/ai/mock/lib/workspaceScenarioReset.ts";
 
 test("五个待分配任务可以从周岚的个人列表进入，且只属于达人带货团队", () => {
   assert.equal(unassignedTaskFixtures.length, 5);

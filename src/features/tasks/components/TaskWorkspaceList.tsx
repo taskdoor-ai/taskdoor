@@ -1,25 +1,25 @@
-import { mockPersonName } from '../i18n/mockContent';
-import { useMockText } from "../i18n/MockDataProvider";
-import { useI18n } from "../i18n/I18nProvider";
-import { formatTaskCount } from "../i18n/core";
-import { statusMessageKey } from "../i18n/taskStatus";
+import { mockPersonName } from '@/ai/mock/i18n/mockContent';
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { formatTaskCount } from "@/shared/i18n/core";
+import { statusMessageKey } from "@/shared/i18n/task-status";
 import { ArrowDownUp, ChevronDown, CircleDashed, ListFilter, MoreHorizontal, Pin, Plus, Search, Trash2, UserRound, X } from "lucide-react";
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { PersonOption, TagDefinition, TaskNode } from "@/shared/model/task-model";
 
-import type { TaskListProjection } from "../lib/taskListProjection";
-import { taskUpdatedLabel, taskUpdatedTime } from "../lib/taskListPresentation";
-import { partitionPinnedTasks, pinnedTaskStorageKey, readPinnedTaskIds, togglePinnedTaskId, writePinnedTaskIds } from "../lib/taskPins";
-import { useResponsiveControlSize } from "../lib/useResponsiveControlSize";
-import { clearedTaskListConditions, getTaskStatusFilters, getTaskTagFilters, normalizeTaskWorkspaceFilters,  type TaskListFilters } from "./taskListFilters";
-import { taskFilterSummaries, TaskListFilterPanel } from "./TaskListFilterPanel";
-import { taskStatusDefinition, taskStatusOptions, type TaskStatus } from "./TaskStatusBadge";
-import { PersonAvatar } from "./PersonAvatar";
-import { FixedScrollThumb } from "./FixedScrollThumb";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import type { TaskListProjection } from "@/features/tasks/lib/task-list-projection";
+import { taskUpdatedLabel, taskUpdatedTime } from "@/features/tasks/lib/task-list-presentation";
+import { partitionPinnedTasks, pinnedTaskStorageKey, readPinnedTaskIds, togglePinnedTaskId, writePinnedTaskIds } from "@/features/tasks/lib/task-pins";
+import { useResponsiveControlSize } from "@/shared/lib/useResponsiveControlSize";
+import { clearedTaskListConditions, getTaskStatusFilters, getTaskTagFilters, normalizeTaskWorkspaceFilters,  type TaskListFilters } from "@/features/tasks/components/task-list-filters";
+import { taskFilterSummaries, TaskListFilterPanel } from "@/features/tasks/components/TaskListFilterPanel";
+import { taskStatusDefinition, taskStatusOptions, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
+import { PersonAvatar } from "@/shared/ui/PersonAvatar";
+import { FixedScrollThumb } from "@/shared/ui/FixedScrollThumb";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
 
 export type TaskWorkspaceListProps = {
   projection: TaskListProjection;

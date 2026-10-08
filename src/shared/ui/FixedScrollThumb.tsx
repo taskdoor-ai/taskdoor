@@ -1,5 +1,5 @@
 import { type CSSProperties, type PointerEvent as ReactPointerEvent, type RefObject, useLayoutEffect, useRef, useState } from "react";
-import "../styles/fixed-scroll-thumb.css";
+import "@/shared/styles/fixed-scroll-thumb.css";
 
 type ScrollThumbMetrics = {
   height: number;

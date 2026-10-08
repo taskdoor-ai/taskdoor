@@ -1,4 +1,4 @@
-import { allTeamWorkspaceNodes } from "../data/teamWorkspaceScenarios";
+import { allTeamWorkspaceNodes } from "@/ai/mock/data/teamWorkspaceScenarios";
 import type { WorkspaceNode } from "@/shared/model/task-model";
 
 const fixtureTeams = new Map(allTeamWorkspaceNodes

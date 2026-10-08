@@ -1,12 +1,12 @@
-import { useMockText } from "../i18n/MockDataProvider";
-import { useI18n } from "../i18n/I18nProvider";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { PanelLeft } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, type ReactNode } from "react";
 import type { PersonOption, TagDefinition, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
-import { buildTaskListProjection, buildTaskScopeCounts } from "../lib/taskListProjection";
-import { TaskWorkspaceList } from "./TaskWorkspaceList";
-import { normalizeTaskWorkspaceFilters, type TaskListFilters } from "./taskListFilters";
+import { buildTaskListProjection, buildTaskScopeCounts } from "@/features/tasks/lib/task-list-projection";
+import { TaskWorkspaceList } from "@/features/tasks/components/TaskWorkspaceList";
+import { normalizeTaskWorkspaceFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
 
 type TaskWorkspaceProps = {
   children?: ReactNode;

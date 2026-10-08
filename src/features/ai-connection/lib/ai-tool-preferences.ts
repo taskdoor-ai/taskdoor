@@ -1,4 +1,4 @@
-import { aiToolIds, isAiTool, type AiTool } from "./aiTools";
+import { aiToolIds, isAiTool, type AiTool } from "@/features/ai-connection/lib/ai-tools";
 
 export const aiToolPreferenceKey = "agentdoor:ai-tool-shortcuts:v1";
 export type AiToolPreferences = { version: 1; order: AiTool[]; used: AiTool[] };

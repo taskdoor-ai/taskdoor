@@ -7,7 +7,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { animate, motion } from "motion/react";
-import "./motion-confetti-utils/index.css";
+import "@/shared/ui/motion-confetti-utils/index.css";
 
 const colors = ["#26ccff", "#a25afd", "#ff5e7e", "#88ff5a", "#fcff42", "#ffa62d", "#ff36ff"];
 const shapes = ["circle", "rect", "rect", "strip", "strip"] as const;

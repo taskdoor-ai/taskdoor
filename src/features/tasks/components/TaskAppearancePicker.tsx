@@ -1,9 +1,9 @@
-import { useRemainingCopy } from "../i18n/remainingMessages";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useRemainingCopy } from "@/shared/i18n/remaining-messages";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
-import { TaskIcon, taskIconOptions, taskIconToneOptions } from "./TaskIcon";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { AppearancePicker } from "./AppearancePicker";
+import { TaskIcon, taskIconOptions, taskIconToneOptions } from "@/features/tasks/components/TaskIcon";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { AppearancePicker } from "@/shared/ui/AppearancePicker";
 
 type TaskAppearancePickerProps = {
   iconName?: TaskIconName;

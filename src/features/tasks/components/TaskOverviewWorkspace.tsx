@@ -1,17 +1,17 @@
 import { Activity, ArrowRight, Bot, LayoutDashboard, Maximize2, Minus, Plus, Workflow } from "lucide-react";
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 import { type CSSProperties, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import { canvasZoomMax, canvasZoomMin, getCanvasPanPosition, getFitCanvasZoom, stepCanvasZoom } from "../lib/taskCanvasViewport";
-import { taskBoardStatusOrder, taskBoardStatusTone } from "../lib/taskBoard";
-import { filterOverviewTasks, getCanvasTaskPresentation, getCyclicTaskIds, getDependencyLevelByTaskId, getIncompleteDependencyIds, getMostRecentlyUpdatedTask, getOverviewInsightCandidateIds, getVisibleDependencyEdges, isCanvasRelationshipActive } from "../lib/taskOverview";
-import type { TaskOverviewRole } from "../lib/taskWorkspaceProjection";
-import { useResponsiveControlSize } from "../lib/useResponsiveControlSize";
-import { PersonAvatar } from "./PersonAvatar";
-import type { TaskRelationSummary } from "./TaskRelationsSection";
-import { taskStatusOptions } from "./TaskStatusBadge";
-import { Button } from "./ui/button";
-import { ListFilterSelect } from "./ui/list-filter-select";
-import { SelectItem } from "./ui/select";
+import { canvasZoomMax, canvasZoomMin, getCanvasPanPosition, getFitCanvasZoom, stepCanvasZoom } from "@/features/tasks/lib/task-canvas-viewport";
+import { taskBoardStatusOrder, taskBoardStatusTone } from "@/features/tasks/lib/task-board";
+import { filterOverviewTasks, getCanvasTaskPresentation, getCyclicTaskIds, getDependencyLevelByTaskId, getIncompleteDependencyIds, getMostRecentlyUpdatedTask, getOverviewInsightCandidateIds, getVisibleDependencyEdges, isCanvasRelationshipActive } from "@/features/tasks/lib/task-overview";
+import type { TaskOverviewRole } from "@/features/tasks/lib/task-workspace-projection";
+import { useResponsiveControlSize } from "@/shared/lib/useResponsiveControlSize";
+import { PersonAvatar } from "@/shared/ui/PersonAvatar";
+import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
+import { taskStatusOptions } from "@/shared/ui/TaskStatusBadge";
+import { Button } from "@/shared/ui/button";
+import { ListFilterSelect } from "@/shared/ui/list-filter-select";
+import { SelectItem } from "@/shared/ui/select";
 
 type OverviewView = "board" | "canvas";
 

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { WorkspaceNode } from "../src/shared/model/task-model.ts";
-import { getDirectChildTaskCounts } from "../src/lib/taskRelationProjection.ts";
+import { getDirectChildTaskCounts } from "../src/features/tasks/lib/task-relation-projection.ts";
 
 const task = (id: string, parentTaskId?: string): WorkspaceNode => ({
   id,

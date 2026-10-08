@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { taskAssistantResponseSchema } from "../src/lib/taskAssistantProtocol.ts";
+import { taskAssistantResponseSchema } from "../src/features/tasks/lib/task-assistant-protocol.ts";
 import { extractJsonText, normalizeAssistantResponse, sanitizeMembers } from "./taskAssistant.ts";
 
 const validPayload = {

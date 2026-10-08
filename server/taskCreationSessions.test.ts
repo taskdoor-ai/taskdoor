@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { creationHistoryKey, parseCreationSessions, restoreCreationSession, upsertCreationSession, type CreationSession, type CreationWorkspaceDraft } from "../src/lib/taskCreationSessions.ts";
-import { taskCreationScenarios } from "../src/data/taskCreationScenarios.ts";
-import { creatorCommerceMembers, creatorCommerceTags } from "../src/data/creatorCommerceScenario.ts";
-import { workspaceNodes } from "../src/data/workspaceNodes.ts";
-import { planTaskCreation } from "../src/lib/taskCreationPlanning.ts";
+import { creationHistoryKey, parseCreationSessions, restoreCreationSession, upsertCreationSession, type CreationSession, type CreationWorkspaceDraft } from "../src/features/tasks/lib/task-creation-sessions.ts";
+import { taskCreationScenarios } from "../src/ai/mock/data/taskCreationScenarios.ts";
+import { creatorCommerceMembers, creatorCommerceTags } from "../src/ai/mock/data/creatorCommerceScenario.ts";
+import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
+import { planTaskCreation } from "../src/ai/mock/lib/taskCreationPlanning.ts";
 
 const draft = (request = "整理发布材料"): CreationWorkspaceDraft => ({ request, planning: null, answers: {}, processes: [], editingBrief: false });
 const record = (id: string, updatedAt: number): CreationSession => ({ id, updatedAt, workspace: draft(), clarificationStep: 0, parent: null });

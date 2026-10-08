@@ -1,7 +1,7 @@
-import type { AiConnectionRequest } from "../components/AiConnectionDialog";
+import type { AiConnectionRequest } from "@/features/ai-connection/components/AiConnectionDialog";
 import type { TaskActivityMock, TaskDetailContent } from "@/shared/model/task-model";
-import type { CollaborationMessage } from "./taskCollaboration";
-import { getTaskDiscussionThreads, isDiscussionActivity } from "./taskActivity";
+import type { CollaborationMessage } from "@/features/tasks/lib/task-collaboration";
+import { getTaskDiscussionThreads, isDiscussionActivity } from "@/features/tasks/lib/task-activity";
 
 export type DiscussionAiTarget =
   | { kind: "discussion" | "reply"; activityId: string }

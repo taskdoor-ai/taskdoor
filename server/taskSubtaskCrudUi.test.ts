@@ -3,8 +3,8 @@ import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import React, { Children, createElement, isValidElement, useState, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskCriteriaFields } from "../src/components/TaskCriteriaFields.tsx";
-import { Input } from "../src/components/ui/input.tsx";
+import { TaskCriteriaFields } from "../src/features/tasks/components/TaskCriteriaFields.tsx";
+import { Input } from "../src/shared/ui/input.tsx";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 type Element = ReactElement<Record<string, any>>;
@@ -25,8 +25,8 @@ function capture(render: () => ReactNode, interact?: (tree: ReactNode) => void) 
   return tree;
 }
 async function formComponent() {
-  assert.ok(existsSync(new URL("../src/components/TaskSubtaskCreateForm.tsx", import.meta.url)), "需要按需展开的子任务新建表单");
-  return (await import("../src/components/TaskSubtaskCreateForm.tsx")).TaskSubtaskCreateForm;
+  assert.ok(existsSync(new URL("../src/features/tasks/components/TaskSubtaskCreateForm.tsx", import.meta.url)), "需要按需展开的子任务新建表单");
+  return (await import("../src/features/tasks/components/TaskSubtaskCreateForm.tsx")).TaskSubtaskCreateForm;
 }
 const titleInput = (tree: ReactNode) => elements(tree, node => node.type === Input)[0];
 const criteria = (tree: ReactNode) => elements(tree, node => node.type === TaskCriteriaFields)[0];
@@ -35,7 +35,7 @@ const submit = (tree: ReactNode) => form(tree).props.onSubmit({ preventDefault()
 const props = { id: "new-subtask", open: true, onCreate: () => undefined, onCancel: () => undefined };
 
 test("子任务页只提供跳转式新增入口", () => {
-  const source = read("components/TaskDetail.tsx");
+  const source = read("features/tasks/components/TaskDetail.tsx");
   assert.match(source, /onCreateSubtask\?: \(\) => void/);
   assert.match(source, /onDeleteSubtask\?:/);
   assert.match(source, />新增子任务<|\/>新增子任务</);
@@ -140,14 +140,14 @@ test("保存失败保留输入并显示错误，不关闭表单", async () => {
 });
 
 test("新增操作沿用语义 Token 并保留窄屏 44px 操作目标", () => {
-  assert.ok(existsSync(new URL("../src/styles/task-subtask-editing.css", import.meta.url)));
-  const css = read("styles/task-subtask-editing.css");
+  assert.ok(existsSync(new URL("../src/features/tasks/styles/task-subtask-editing.css", import.meta.url)));
+  const css = read("features/tasks/styles/task-subtask-editing.css");
   assert.match(css, /--ad-control-touch-min/);
   assert.match(css, /focus-visible/);
   assert.match(css, /prefers-reduced-motion/);
 });
 
 test("跳转式新增不携带内嵌表单的展开状态", () => {
-  const detail = read("components/TaskDetail.tsx");
+  const detail = read("features/tasks/components/TaskDetail.tsx");
   assert.doesNotMatch(detail, /aria-controls=\{subtaskCreateId\}|aria-expanded=\{subtaskCreateOpen\}/);
 });

@@ -1,8 +1,8 @@
-import { useGlobalUi } from "../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { createContext, useContext, useRef, useState, type ReactNode } from "react";
-import type { TagDefinition } from "../data/tagGroups";
-import { TagManagementPage } from "./TagManagementPage";
-import { Dialog, DialogContent, DialogDescription } from "./ui/dialog";
+import type { TagDefinition } from "@/ai/mock/data/tagGroups";
+import { TagManagementPage } from "@/features/me/components/TagManagementPage";
+import { Dialog, DialogContent, DialogDescription } from "@/shared/ui/dialog";
 
 type PersonalTagsContextValue = {
   tags: TagDefinition[];

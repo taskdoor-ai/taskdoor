@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getEffortScopeKey } from "../src/lib/taskEffort.ts";
+import { getEffortScopeKey } from "../src/features/tasks/lib/task-effort.ts";
 import { type TaskEffortEstimate } from "../src/shared/model/task-effort.ts";
-import type { TaskEffortDistributionInput } from "../src/lib/taskEffortDistribution.ts";
-import { getTaskProgressAssessment } from "../src/lib/taskProgressAssessment.ts";
+import type { TaskEffortDistributionInput } from "../src/features/tasks/lib/task-effort-distribution.ts";
+import { getTaskProgressAssessment } from "../src/features/tasks/lib/task-progress-assessment.ts";
 
 const scope = { goal: "交付可核对结果", completionCriteria: ["结果通过核对"], executionTips: [] };
 const method = "AI 整理，人工核对";

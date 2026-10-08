@@ -1,9 +1,9 @@
-import { allTeamWorkspaceNodes } from "../data/teamWorkspaceScenarios";
-import { progressDemoRevisions } from "../data/taskProgressDemoFixtures";
-import { normalizeWorkspaceNodes } from "../data/workspaceNodes";
+import { allTeamWorkspaceNodes } from "@/ai/mock/data/teamWorkspaceScenarios";
+import { progressDemoRevisions } from "@/ai/mock/data/taskProgressDemoFixtures";
+import { normalizeWorkspaceNodes } from "@/ai/mock/data/workspaceNodes";
 import { type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
-import type { TaskActivityStore } from "./taskActivity";
-import { getEffortScopeKey } from "./taskEffort";
+import type { TaskActivityStore } from "@/features/tasks/lib/task-activity";
+import { getEffortScopeKey } from "@/features/tasks/lib/task-effort";
 
 const protectedFields = ["name", "parentId", "parentTaskId", "teamId", "ownerId", "participantIds", "goal", "completionCriteria", "criterionReviews", "executionTips", "effortEstimate", "effortBaseline", "createdAt", "createdBy", "createdFrom", "completedAt", "progressReopenedAt"] as const;
 

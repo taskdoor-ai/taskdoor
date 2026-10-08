@@ -1,7 +1,7 @@
 import type { TaskNode } from '@/shared/model/task-model';
-import copies from './mock/createdTasks.json';
-import savedCopies from './mock/savedCreationTasks.json';
-import type { MockTaskCopy } from './mockContent';
+import copies from '@/ai/mock/i18n/mock/createdTasks.json';
+import savedCopies from '@/ai/mock/i18n/mock/savedCreationTasks.json';
+import type { MockTaskCopy } from '@/ai/mock/i18n/mockContent';
 
 /** Recognize the saved demo by its original definition, independently of progress eligibility. */
 export function buildCreatedMockCatalog(seeds: readonly TaskNode[]): Record<string, MockTaskCopy> {

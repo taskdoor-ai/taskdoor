@@ -1,5 +1,5 @@
 import type { TagColorName, TagDefinition, TagIconName } from "@/shared/model/task-model";
-import { multiTeamTags } from "./teamWorkspaceScenarios.ts";
+import { multiTeamTags } from "@/ai/mock/data/teamWorkspaceScenarios.ts";
 export type { TagColorName, TagDefinition, TagIconName } from "@/shared/model/task-model";
 
 const tag = (id: string, name: string, icon: TagIconName, color: TagColorName): TagDefinition => ({ id, name, icon, color });

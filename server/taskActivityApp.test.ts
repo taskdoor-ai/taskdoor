@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { createWorkspaceTaskDetail } from "../src/data/taskDetailMocks.ts";
-import { normalizeWorkspaceNodes, workspaceNodes } from "../src/data/workspaceNodes.ts";
+import { createWorkspaceTaskDetail } from "../src/ai/mock/data/taskDetailMocks.ts";
+import { normalizeWorkspaceNodes, workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode } from "../src/shared/model/task-model.ts";
-import { appendTaskActivity, createTaskChangeActivity, parseTaskActivityStore } from "../src/lib/taskActivity.ts";
+import { appendTaskActivity, createTaskChangeActivity, parseTaskActivityStore } from "../src/features/tasks/lib/task-activity.ts";
 
-const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+const app = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
 
 test("本地任务记录使用独立存储并保留原始示例记录", () => {
   assert.match(app, /taskActivityStorageKey = "agentdoor-task-activity"/);

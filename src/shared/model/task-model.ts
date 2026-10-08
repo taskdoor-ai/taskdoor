@@ -1,4 +1,4 @@
-import type { CriterionReview } from "@/lib/taskCriterionReview";
+import type { CriterionReview } from "@/features/tasks/lib/task-criterion-review";
 import type { TaskBurnUpSeries } from "@/shared/model/task-burn-up";
 import type { TaskDiagnosisSnapshot } from "@/shared/model/task-diagnosis";
 import type { TaskEffortBaseline, TaskEffortEstimate } from "@/shared/model/task-effort";

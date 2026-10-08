@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const read = (file: string) => readFileSync(new URL(`../src/styles/${file}`, import.meta.url), "utf8");
+const read = (file: string) => readFileSync(new URL(`../src/features/tasks/styles/${file}`, import.meta.url), "utf8");
 const declarations = (css: string, selector: string) => {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const rule = css.match(new RegExp(`${escaped}\\s*\\{([^}]+)\\}`));

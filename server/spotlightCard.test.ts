@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import React from "react";
-import { GlowCard } from "../src/components/ui/spotlight-card.tsx";
+import { GlowCard } from "../src/shared/ui/spotlight-card.tsx";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 

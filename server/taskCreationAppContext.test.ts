@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-const pageSource = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
-const conversationSource = readFileSync(new URL("../src/components/TaskCreationConversation.tsx", import.meta.url), "utf8");
+const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
+const pageSource = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+const conversationSource = readFileSync(new URL("../src/features/tasks/components/TaskCreationConversation.tsx", import.meta.url), "utf8");
 
 test("App 向任务创建页传入真实任务 ID、完整字段与直属子任务名称", () => {
   assert.match(appSource, /teamWorkspaceNodes = useMemo\(\(\) => getTeamWorkspaceNodes\(activeTeamId, workspaceNodes\)/);

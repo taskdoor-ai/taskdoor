@@ -1,16 +1,16 @@
-import { useMockText } from "../i18n/MockDataProvider";
-import { useI18n } from "../i18n/I18nProvider";
-import { activityMessage, activityChangeValue } from "../i18n/activityDisplay";
-import { useModuleCopy } from "../i18n/moduleMessages";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { activityMessage, activityChangeValue } from "@/features/tasks/i18n/activity-display";
+import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { ArrowRight, FileText, History, ListChecks, MessageSquareText } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import type { TaskActivityMock, TaskActivityType, TaskCommitMock, TaskFileNode } from "@/shared/model/task-model";
-import { getTaskActivityCategory, getTaskActivityItems, type TaskActivityCategory } from "../lib/taskActivity";
-import { useResponsiveControlSize } from "../lib/useResponsiveControlSize";
-import { PersonName } from "./PersonAvatar";
-import { TaskActivityFileLink } from "./TaskActivityFileLink";
-import { ListFilterSelect } from "./ui/list-filter-select";
-import { SelectItem } from "./ui/select";
+import { getTaskActivityCategory, getTaskActivityItems, type TaskActivityCategory } from "@/features/tasks/lib/task-activity";
+import { useResponsiveControlSize } from "@/shared/lib/useResponsiveControlSize";
+import { PersonName } from "@/shared/ui/PersonAvatar";
+import { TaskActivityFileLink } from "@/features/tasks/components/TaskActivityFileLink";
+import { ListFilterSelect } from "@/shared/ui/list-filter-select";
+import { SelectItem } from "@/shared/ui/select";
 
 type TaskInformationType = Exclude<TaskActivityType, "member-post" | "member-reply" | "ai-insight">;
 type ActivityFilter = "all" | TaskActivityCategory;

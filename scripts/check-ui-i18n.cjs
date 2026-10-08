@@ -15,12 +15,12 @@ function collect(file) {
     if (dependency && /\.tsx?$/.test(dependency)) collect(dependency);
   }
 }
-collect('src/App.tsx');
+collect('src/app/App.tsx');
 const failures = [];
-const translatedSources = new Set(Object.values(JSON.parse(fs.readFileSync("src/i18n/globalUiMessages.json", "utf8"))).map(copy => copy.zh));
+const translatedSources = new Set(Object.values(JSON.parse(fs.readFileSync("src/shared/i18n/globalUiMessages.json", "utf8"))).map(copy => copy.zh));
 let components = 0;
 for (const file of seen) {
-  if (!file.startsWith('src/components/') || !file.endsWith('.tsx')) continue;
+  if (!(/\/components\//.test(file) || file.startsWith('src/shared/ui/')) || !file.endsWith('.tsx')) continue;
   components++;
   const ast = parser.parse(fs.readFileSync(file, 'utf8'), { sourceType: 'module', plugins: ['typescript', 'jsx'] });
   function visit(node, parent) {

@@ -1,7 +1,7 @@
 import { GripVertical } from "lucide-react";
 import { type KeyboardEvent, type PointerEvent, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-import { agentIconUrls } from "../data/agentIcons";
-import { aiToolName, type AiTool } from "../lib/aiTools";
+import { agentIconUrls } from "@/features/ai-connection/agent-icons";
+import { aiToolName, type AiTool } from "@/features/ai-connection/lib/ai-tools";
 
 type Props = { order: AiTool[]; onCommit: (order: AiTool[]) => void; onBusyChange: (busy: boolean) => void };
 type DragSession = { agent: AiTool; order: AiTool[]; pointerId?: number; offsetY: number };

@@ -1,18 +1,18 @@
 import AvvvatarsModule from "avvvatars-react";
-import { personInitials } from "../lib/personInitials";
-import { settingsMockText } from "../i18n/settingsMock";
-import { useModuleCopy } from "../i18n/moduleMessages";
-import { useGlobalUi } from "../i18n/globalUi";
-import { useRemainingCopy } from "../i18n/remainingMessages";
-import { useI18n } from "../i18n/I18nProvider";
-import { mockPersonName } from "../i18n/mockContent";
+import { personInitials } from "@/shared/lib/person-initials";
+import { settingsMockText } from "@/ai/mock/i18n/settingsMock";
+import { useModuleCopy } from "@/shared/i18n/module-messages";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useRemainingCopy } from "@/shared/i18n/remaining-messages";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { mockPersonName } from "@/ai/mock/i18n/mockContent";
 import { PreviewCard } from "@base-ui/react/preview-card";
 import React, { type ComponentPropsWithoutRef, type CSSProperties, forwardRef, type ReactElement, useEffect, useRef, useState } from "react";
 import { ClipboardCheck, Mail, Phone, UserRound, X } from "lucide-react";
 import type { PersonOption } from "@/shared/model/task-model";
-import { useResolvedPersonProfile } from "./PersonDirectory";
-import { createPersonProfileCardModel } from "./personProfileCardModel";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { useResolvedPersonProfile } from "@/shared/ui/PersonDirectory";
+import { createPersonProfileCardModel } from "@/shared/ui/person-profile-card-model";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 export type PersonInvitationStatus = "accepted" | "pending";
 

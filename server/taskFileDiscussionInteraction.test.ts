@@ -2,12 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import React, { Children, createElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { TaskFileExplorer } from "../src/components/task-files/TaskFileExplorer.tsx";
-import { TaskFileViewer, type TaskFileTextSelection } from "../src/components/task-files/TaskFileViewer.tsx";
-import { LexicalFileDocument } from "../src/components/task-files/LexicalFileDocument.tsx";
+import { TaskFileExplorer } from "../src/features/tasks/files/components/TaskFileExplorer.tsx";
+import { TaskFileViewer, type TaskFileTextSelection } from "../src/features/tasks/files/components/TaskFileViewer.tsx";
+import { LexicalFileDocument } from "../src/features/tasks/files/components/LexicalFileDocument.tsx";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
-import { FileDiscussionPanel, type FileDiscussionCollaboration } from "../src/components/task-files/FileDiscussionPanel.tsx";
-import { getVisibleFileDiscussionThreads } from "../src/lib/taskCollaboration.ts";
+import { FileDiscussionPanel, type FileDiscussionCollaboration } from "../src/features/tasks/files/components/FileDiscussionPanel.tsx";
+import { getVisibleFileDiscussionThreads } from "../src/features/tasks/lib/task-collaboration.ts";
 
 type Element = ReactElement<Record<string, any>>;
 function elements(tree: ReactNode, match: (element: Element) => boolean): Element[] {

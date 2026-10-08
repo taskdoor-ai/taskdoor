@@ -1,19 +1,19 @@
-import { useI18n } from "../i18n/I18nProvider";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
-import { useGlobalUi } from "../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import React from "react";
-import { getTaskProgressDisplay, type TaskProgressContext } from "../lib/taskProgressDisplay";
-import { TaskProgressOverview } from "./TaskProgressOverview";
-import { TaskProgressStage } from "./TaskProgressStage";
-import { TaskProgressRefresh } from "./TaskProgressRefresh";
-import { getTaskWorkloadProjection } from "../lib/taskWorkloadProjection";
+import { getTaskProgressDisplay, type TaskProgressContext } from "@/features/tasks/lib/task-progress-display";
+import { TaskProgressOverview } from "@/features/tasks/components/TaskProgressOverview";
+import { TaskProgressStage } from "@/features/tasks/components/TaskProgressStage";
+import { TaskProgressRefresh } from "@/features/tasks/components/TaskProgressRefresh";
+import { getTaskWorkloadProjection } from "@/features/tasks/lib/task-workload-projection";
 import type { TaskBurnUpSeries } from "@/shared/model/task-burn-up";
-import { formatEffortPersonDays } from "../lib/taskEffort";
-import { type TaskEffortDistributionInput } from "../lib/taskEffortDistribution";
-import { TaskBurnUpSparkline } from "./TaskBurnUpSparkline";
-import { TaskEffortCost } from "./TaskEffortCost";
-import { TaskProgressComparison } from "./TaskProgressComparison";
-import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
+import { formatEffortPersonDays } from "@/features/tasks/lib/task-effort";
+import { type TaskEffortDistributionInput } from "@/features/tasks/lib/task-effort-distribution";
+import { TaskBurnUpSparkline } from "@/features/tasks/components/TaskBurnUpSparkline";
+import { TaskEffortCost } from "@/features/tasks/components/TaskEffortCost";
+import { TaskProgressComparison } from "@/features/tasks/components/TaskProgressComparison";
+import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 /** Recorded progress takes precedence; selected demo tasks may show an isolated pace comparison. */
 export function TaskWorkloadSummary({ compact = false, progressTask, comparison, completedMinutesByTaskId, progressComparisonsByTaskId, effortTasks = [], hasSubtasks = effortTasks.length > 1, onOpenTask, onRepredict, needsReview = false, series }: {

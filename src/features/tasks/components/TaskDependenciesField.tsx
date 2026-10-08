@@ -1,16 +1,16 @@
-import { useMockText } from "../i18n/MockDataProvider";
-import { useI18n } from "../i18n/I18nProvider";
-import { statusMessageKey } from "../i18n/taskStatus";
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { statusMessageKey } from "@/shared/i18n/task-status";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useState } from "react";
 import { Link2, Plus, X } from "lucide-react";
-import type { TaskRelationSummary } from "./TaskRelationsSection";
-import { getTaskDependencyIssue, sameTaskDependencies } from "../lib/taskDependencies";
-import { TaskStatusBadge } from "./TaskStatusBadge";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
+import { getTaskDependencyIssue, sameTaskDependencies } from "@/features/tasks/lib/task-dependencies";
+import { TaskStatusBadge } from "@/shared/ui/TaskStatusBadge";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 type Props = {
   taskId: string;

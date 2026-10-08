@@ -1,8 +1,8 @@
-import { taskMatchesListFilters, type TaskListFilters } from "../components/taskListFilters.ts";
+import { taskMatchesListFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters.ts";
 import type { TagDefinition, TaskNode, WorkspaceNode } from "@/shared/model/task-model.ts";
 
-import { compareTaskUpdates } from "./taskListPresentation.ts";
-import { taskBoardStatusOrder } from "./taskBoard.ts";
+import { compareTaskUpdates } from "@/features/tasks/lib/task-list-presentation.ts";
+import { taskBoardStatusOrder } from "@/features/tasks/lib/task-board.ts";
 
 export type TaskListProjection = {
   allTasks: TaskNode[];

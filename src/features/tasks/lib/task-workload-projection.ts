@@ -1,9 +1,9 @@
-import { getTaskProgressDisplay, type TaskProgressContext } from "./taskProgressDisplay";
-import { rollupProgressForecast } from "../data/taskProgressHistory";
+import { getTaskProgressDisplay, type TaskProgressContext } from "@/features/tasks/lib/task-progress-display";
+import { rollupProgressForecast } from "@/ai/mock/data/taskProgressHistory";
 import type { TaskBurnUpSeries } from "@/shared/model/task-burn-up";
-import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "./taskEffortDistribution";
-import { getTaskProgressAssessment } from "./taskProgressAssessment";
-import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "./taskProgressComparison";
+import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "@/features/tasks/lib/task-effort-distribution";
+import { getTaskProgressAssessment } from "@/features/tasks/lib/task-progress-assessment";
+import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 /** Shared evidence projection for the progress chart and the current-situation analysis. */
 export function getTaskWorkloadProjection({ comparison, progressTask, completedMinutesByTaskId, progressComparisonsByTaskId, effortTasks = [], hasSubtasks = effortTasks.length > 1, series }: {

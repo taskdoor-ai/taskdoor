@@ -1,10 +1,10 @@
-import type { TaskRelationSummary } from "../components/TaskRelationsSection";
+import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
 import { type TaskActivityMock, type TaskDetailContent, type TaskNode } from "@/shared/model/task-model";
-import { getTaskProgressEvents } from "../data/taskProgressExamples";
-import { workspaceNodes } from "../data/workspaceNodes";
-import { summarizeTaskEffort } from "./taskEffort";
-import { getWorkspaceEffortLeaves } from "./taskEffortEditing";
-import { getTaskSituationModel, type TaskSituationReference } from "./taskSituation";
+import { getTaskProgressEvents } from "@/ai/mock/data/taskProgressExamples";
+import { workspaceNodes } from "@/ai/mock/data/workspaceNodes";
+import { summarizeTaskEffort } from "@/features/tasks/lib/task-effort";
+import { getWorkspaceEffortLeaves } from "@/features/tasks/lib/task-effort-editing";
+import { getTaskSituationModel, type TaskSituationReference } from "@/features/tasks/lib/task-situation";
 
 export type PersonalWorkbenchEvidence = TaskSituationReference & { taskId: string };
 export type PersonalWorkbenchRole = "coordination" | "execution";

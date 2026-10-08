@@ -1,10 +1,10 @@
 import { Send, Sparkles, X } from "lucide-react";
 import { SmartTextbox, getPlainText, type MentionItem, type Segment } from "@tigerabrodioss/fude";
 import React, { useEffect, useRef, useState } from "react";
-import { readComposerSelection, replaceMentionRange, type ComposerSelection } from "../lib/mentionComposer";
-import { usePersonOptions } from "./PersonDirectory";
-import { PersonPicker } from "./PersonPicker";
-import { Button } from "./ui/button";
+import { readComposerSelection, replaceMentionRange, type ComposerSelection } from "@/features/tasks/discussion/lib/mention-composer";
+import { usePersonOptions } from "@/shared/ui/PersonDirectory";
+import { PersonPicker } from "@/features/members/components/PersonPicker";
+import { Button } from "@/shared/ui/button";
 
 type MentionComposerProps = {
   actionLabel?: string;

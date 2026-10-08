@@ -1,12 +1,12 @@
 import { CalendarDays, Clock3, GripVertical, MoreHorizontal, UsersRound } from "lucide-react";
 import { useState, type DragEvent } from "react";
-import type { TagDefinition } from "../data/tagGroups";
+import type { TagDefinition } from "@/ai/mock/data/tagGroups";
 import type { TaskNode } from "@/shared/model/task-model";
-import { taskBoardStatusOrder, taskBoardStatusTone, type TaskBoardStatus } from "../lib/taskBoard";
-import { getTaskTimeRangeLabel } from "../lib/taskTimeRange";
-import { PersonAvatar } from "./PersonAvatar";
-import { TagBadge } from "./TagBadge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { taskBoardStatusOrder, taskBoardStatusTone, type TaskBoardStatus } from "@/features/tasks/lib/task-board";
+import { getTaskTimeRangeLabel } from "@/features/tasks/lib/task-time-range";
+import { PersonAvatar } from "@/shared/ui/PersonAvatar";
+import { TagBadge } from "@/shared/ui/TagBadge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
 
 type WorkspaceTaskBoardProps = {
   onTaskSelect: (task: TaskNode) => void;

@@ -1,11 +1,11 @@
-import { useGlobalUi } from "../i18n/globalUi";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { Check, Plus, Settings2 } from "lucide-react";
 import { useRef, useState } from "react";
-import type { TagDefinition } from "../data/tagGroups";
-import { TagBadge } from "./TagBadge";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { usePersonalTags } from "./PersonalTags";
+import type { TagDefinition } from "@/ai/mock/data/tagGroups";
+import { TagBadge } from "@/shared/ui/TagBadge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { usePersonalTags } from "@/features/me/components/PersonalTags";
 
 type Props = {
   tags: TagDefinition[];

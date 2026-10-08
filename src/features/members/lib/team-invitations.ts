@@ -1,5 +1,5 @@
-import { MAX_TEAM_MEMBERS, occupiedTeamSeats } from "./teamLimits";
-import type { PersonalCenterState, TeamAccessRole, TeamMembership, TeamResponsibilityProfile } from "../data/memberProfiles";
+import { MAX_TEAM_MEMBERS, occupiedTeamSeats } from "@/features/members/lib/team-limits";
+import type { PersonalCenterState, TeamAccessRole, TeamMembership, TeamResponsibilityProfile } from "@/ai/mock/data/memberProfiles";
 import type { PersonOption } from "@/shared/model/task-model";
 
 /** Local invitation prototype. Delivery remains explicitly marked as preview. */

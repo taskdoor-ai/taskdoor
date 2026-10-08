@@ -1,6 +1,6 @@
-import type { TaskProgressContext } from "./taskProgressDisplay";
-import type { TaskWithEffortBaseline } from "./taskEffortBaseline";
-import { getTaskEffortState, summarizeTaskEffort, type TaskEffortTask } from "./taskEffort";
+import type { TaskProgressContext } from "@/features/tasks/lib/task-progress-display";
+import type { TaskWithEffortBaseline } from "@/features/tasks/lib/task-effort-baseline";
+import { getTaskEffortState, summarizeTaskEffort, type TaskEffortTask } from "@/features/tasks/lib/task-effort";
 import { effortEstimateSchema, type TaskEffortEstimate } from "@/shared/model/task-effort";
 
 export type TaskEffortDistributionInput = TaskWithEffortBaseline & TaskProgressContext & {

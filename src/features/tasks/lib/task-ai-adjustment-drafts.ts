@@ -1,4 +1,4 @@
-import type { TaskAiAdjustmentProposal, TaskAiAdjustmentScope } from "./taskAiAdjustmentTypes";
+import type { TaskAiAdjustmentProposal, TaskAiAdjustmentScope } from "@/features/tasks/lib/task-ai-adjustment-types";
 
 export type TaskAiAdjustmentDraft = {
   instruction: string;

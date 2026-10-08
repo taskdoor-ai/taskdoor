@@ -1,10 +1,10 @@
 import type { TaskNode, WorkspaceNode, TaskDetailContent } from "@/shared/model/task-model";
 
-import { getEffortScopeKey } from "../lib/taskEffort";
+import { getEffortScopeKey } from "@/features/tasks/lib/task-effort";
 import { type TaskEffortEstimate } from "@/shared/model/task-effort";
-import type { TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
-import { rollupProgressHistory, rollupProgressForecast } from "./taskProgressHistory";
-import { getTaskDefinitionGoal } from "../lib/taskGoal";
+import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
+import { rollupProgressHistory, rollupProgressForecast } from "@/ai/mock/data/taskProgressHistory";
+import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-goal";
 
 const title = "新品防晒衣抖音达人带货项目";
 const goal = "统筹新品防晒衣抖音达人带货项目，以 9 月 15 日上线和 GMV 50 万为目标，协调达人、内容、直播、商品、投流、数据和合规交付。";

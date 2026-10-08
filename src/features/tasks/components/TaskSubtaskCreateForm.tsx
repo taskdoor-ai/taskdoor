@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { getNewSubtaskDraftError, type NewSubtaskDraft } from "../lib/workspaceSubtaskEditing";
-import { TaskCriteriaFields } from "./TaskCriteriaFields";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { getNewSubtaskDraftError, type NewSubtaskDraft } from "@/features/tasks/lib/workspace-subtask-editing";
+import { TaskCriteriaFields } from "@/features/tasks/components/TaskCriteriaFields";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
 
 type Props = {
   id: string;

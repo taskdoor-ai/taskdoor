@@ -1,5 +1,5 @@
-import { getEffortScopeKey, getTaskEffortState } from "../lib/taskEffort";
-import type { TeamId } from "./teamWorkspaceScenarios";
+import { getEffortScopeKey, getTaskEffortState } from "@/features/tasks/lib/task-effort";
+import type { TeamId } from "@/ai/mock/data/teamWorkspaceScenarios";
 import type { TaskNode } from "@/shared/model/task-model";
 
 type ExpandedTeamId = Extract<TeamId, "platform" | "supply-operations">;

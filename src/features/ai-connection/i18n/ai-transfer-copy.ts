@@ -1,5 +1,5 @@
-import type { Locale } from './core';
-import type { AiTransferResult } from '../components/AiConnectionDialog';
+import type { Locale } from '@/shared/i18n/core';
+import type { AiTransferResult } from '@/features/ai-connection/components/AiConnectionDialog';
 export function aiTransferMessage(locale: Locale, result: AiTransferResult, tool: string) {
   if (locale !== 'en') return result.message;
   switch (result.status) {

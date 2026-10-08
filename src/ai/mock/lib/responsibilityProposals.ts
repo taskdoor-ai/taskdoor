@@ -1,4 +1,4 @@
-import type { PersonalCenterState, ResponsibilityClaim, ResponsibilityDocument } from "../data/memberProfiles";
+import type { PersonalCenterState, ResponsibilityClaim, ResponsibilityDocument } from "@/ai/mock/data/memberProfiles";
 
 export const splitResponsibilityContent = (value: string) => value
   .split(/\n\s*\n/)

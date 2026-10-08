@@ -1,4 +1,4 @@
-import { getTaskProgressComparison, type ProgressForecastTrend, type ProgressScopeForecastPoint, type ProgressWorkloadSnapshot, type TaskProgressComparisonSeries } from "../lib/taskProgressComparison";
+import { getTaskProgressComparison, type ProgressForecastTrend, type ProgressScopeForecastPoint, type ProgressWorkloadSnapshot, type TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 /** Roll up saved observations only after every child has a known first record. */
 export function rollupProgressHistory(children: readonly TaskProgressComparisonSeries[], prefix: string): ProgressWorkloadSnapshot[] {

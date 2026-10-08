@@ -1,10 +1,10 @@
-import { useI18n } from "../i18n/I18nProvider";
-import { mockPersonName } from "../i18n/mockContent";
-import { useDetailCopy } from "../i18n/detailMessages";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { mockPersonName } from "@/ai/mock/i18n/mockContent";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { X } from "lucide-react";
-import type { TaskMemberRecommendations } from "../lib/taskMemberRecommendations";
-import { PersonAvatar, PersonAvatarGroup, PersonName, PersonOverflowList, type PersonInvitationStatus } from "./PersonAvatar";
-import { PersonPicker, type PersonOption } from "./PersonPicker";
+import type { TaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecommendations";
+import { PersonAvatar, PersonAvatarGroup, PersonName, PersonOverflowList, type PersonInvitationStatus } from "@/shared/ui/PersonAvatar";
+import { PersonPicker, type PersonOption } from "@/features/members/components/PersonPicker";
 
 export type Member = PersonOption;
 

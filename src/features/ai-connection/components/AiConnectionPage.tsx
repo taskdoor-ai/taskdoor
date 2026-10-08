@@ -1,16 +1,16 @@
-import { useI18n } from "../i18n/I18nProvider";
-import type { Locale } from "../i18n/core";
-import { useGlobalUi } from "../i18n/globalUi";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import type { Locale } from "@/shared/i18n/core";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import * as Tabs from "@radix-ui/react-tabs";
 import { ArrowLeft, Check, Clipboard, ListTodo, MessageSquare, Pencil, Plus, Trash2, Upload } from "lucide-react";
 import { useState } from "react";
-import { BrandMark } from "./BrandMark";
-import { Button } from "./ui/button";
-import { CodeBlock, CodeBlockCode, CodeBlockGroup } from "./ui/code-block";
-import { RippleBackground } from "./ui/interactive-ripple-background";
-import { GlowCard } from "./ui/spotlight-card";
-import { agentIconUrls } from "../data/agentIcons";
-import { aiToolName } from "../lib/aiTools";
+import { BrandMark } from "@/shared/ui/BrandMark";
+import { Button } from "@/shared/ui/button";
+import { CodeBlock, CodeBlockCode, CodeBlockGroup } from "@/shared/ui/code-block";
+import { RippleBackground } from "@/shared/ui/interactive-ripple-background";
+import { GlowCard } from "@/shared/ui/spotlight-card";
+import { agentIconUrls } from "@/features/ai-connection/agent-icons";
+import { aiToolName } from "@/features/ai-connection/lib/ai-tools";
 
 const setupCommand = "npm i -g @taskdoor/cli\ntaskdoor login";
 const agents = ["ChatGPT", "Claude Code", "WorkBuddy", "Cursor"] as const;

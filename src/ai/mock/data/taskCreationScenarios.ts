@@ -1,5 +1,5 @@
-import { creatorCommercePrompt } from "./creatorCommerceScenario";
-import { nestedTaskCreationPrompt } from "../lib/nestedTaskCreationScenario";
+import { creatorCommercePrompt } from "@/ai/mock/data/creatorCommerceScenario";
+import { nestedTaskCreationPrompt } from "@/ai/mock/lib/nestedTaskCreationScenario";
 
 export type TaskCreationScenarioId =
   | "single-task"

@@ -1,12 +1,12 @@
-import { useGlobalUi } from "../i18n/globalUi";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { ChevronRight, Plus, Tag, Tags, Trash2 } from "lucide-react";
 import { useState } from "react";
-import type { TagColorName, TagDefinition, TagIconName } from "../data/tagGroups";
-import { TagAppearancePicker } from "./TagAppearancePicker";
-import { TagBadge } from "./TagBadge";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "./ui/alert-dialog";
-import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
+import type { TagColorName, TagDefinition, TagIconName } from "@/ai/mock/data/tagGroups";
+import { TagAppearancePicker } from "@/features/me/components/TagAppearancePicker";
+import { TagBadge } from "@/shared/ui/TagBadge";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/shared/ui/alert-dialog";
+import { Button } from "@/shared/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
 
 type Props = {
   tags: TagDefinition[];

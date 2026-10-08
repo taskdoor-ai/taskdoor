@@ -1,9 +1,9 @@
-import type { TaskEffortDistributionInput } from "./taskEffortDistribution";
-import { getTaskEffortState } from "./taskEffort";
+import type { TaskEffortDistributionInput } from "@/features/tasks/lib/task-effort-distribution";
+import { getTaskEffortState } from "@/features/tasks/lib/task-effort";
 import { effortEstimateSchema } from "@/shared/model/task-effort";
-import { getTaskBurnUpModel } from "./taskBurnUp";
+import { getTaskBurnUpModel } from "@/features/tasks/lib/task-burn-up";
 import { type TaskBurnUpSeries } from "@/shared/model/task-burn-up";
-import { getTaskEffortBaselineSeries } from "./taskEffortBaseline";
+import { getTaskEffortBaselineSeries } from "@/features/tasks/lib/task-effort-baseline";
 
 export type TaskProgressAssessmentState = "zero" | "single" | "partial" | "ready" | "stale" | "unavailable" | "invalid";
 

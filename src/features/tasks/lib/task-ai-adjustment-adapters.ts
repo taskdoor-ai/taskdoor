@@ -1,12 +1,12 @@
-import { taskScheduleError } from "./taskSchedule";
+import { taskScheduleError } from "@/features/tasks/lib/task-schedule";
 import type { TaskActivityMock, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
-import { createTaskChangeActivity } from "./taskActivity";
-import { buildTaskAiAdjustment, getTaskAiContextSignature } from "./taskAiAdjustment";
-import type { TaskAiAdjustmentContext, TaskAiAdjustmentProposal, TaskAiEditableTask } from "./taskAiAdjustmentTypes";
-import type { CreationForm, CreationTask } from "./taskCreationForm";
-import { getTaskDefinitionGoal } from "./taskGoal";
-export { getTaskDefinitionGoal } from "./taskGoal";
+import { createTaskChangeActivity } from "@/features/tasks/lib/task-activity";
+import { buildTaskAiAdjustment, getTaskAiContextSignature } from "@/ai/mock/lib/taskAiAdjustment";
+import type { TaskAiAdjustmentContext, TaskAiAdjustmentProposal, TaskAiEditableTask } from "@/features/tasks/lib/task-ai-adjustment-types";
+import type { CreationForm, CreationTask } from "@/features/tasks/lib/task-creation-form";
+import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-goal";
+export { getTaskDefinitionGoal } from "@/features/tasks/lib/task-goal";
 
 type Members = TaskAiAdjustmentContext["members"];
 const clone = <T,>(value: T): T => structuredClone(value);
@@ -170,4 +170,4 @@ export function applySavedTaskAiAdjustment(nodes: WorkspaceNode[], context: Task
   return { nodes: nextNodes, activities, affectedIds: [...new Set([...proposal.updates.map(item => item.taskId), ...proposal.additions.map(item => item.id), ...groups.keys()])] };
 }
 
-export { commitTaskAiStorage } from "./taskAiAdjustmentStorage";
+export { commitTaskAiStorage } from "@/features/tasks/lib/task-ai-adjustment-storage";

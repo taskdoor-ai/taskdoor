@@ -1,6 +1,6 @@
-import { useGlobalUi } from "../i18n/globalUi";
-import { AgentActivityIndicator } from "./ui/ai-agent-response";
-import { Button } from "./ui/button";
+import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { AgentActivityIndicator } from "@/shared/ui/ai-agent-response";
+import { Button } from "@/shared/ui/button";
 
 /** One transient feedback surface for initial planning and contextual AI edits. */
 export function TaskAiWorking({ label, detail, onCancel, cancelLabel = "停止 AI 处理" }: {

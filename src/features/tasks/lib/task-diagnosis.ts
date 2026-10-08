@@ -1,6 +1,6 @@
 import type { TaskDiagnosisConflictInput, TaskDiagnosisFinding, TaskDiagnosisTask } from "@/shared/model/task-diagnosis";
-import { getMockContextDiagnosis } from "./mockTaskDiagnosis";
-import { hasTaskDecisionBasis } from "./taskDecisionEvidence";
+import { getMockContextDiagnosis } from "@/ai/mock/lib/mockTaskDiagnosis";
+import { hasTaskDecisionBasis } from "@/features/tasks/lib/task-decision-evidence";
 
 export type TaskDiagnosisReport = {
   checkedAt?: string;

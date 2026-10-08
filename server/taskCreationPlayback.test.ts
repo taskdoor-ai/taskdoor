@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { playMockAiSteps } from "../src/lib/taskAiFeedback.ts";
-import * as creationProgress from "../src/lib/taskCreationProgress.ts";
+import { playMockAiSteps } from "../src/ai/mock/lib/taskAiFeedback.ts";
+import * as creationProgress from "../src/features/tasks/lib/task-creation-progress.ts";
 
 test("Mock 演示按顺序展示阶段，最后一个阶段展示完才允许发布候选", async () => {
   const steps: number[] = [];
@@ -115,7 +115,7 @@ test("取消旧一轮后新一轮可以完成，旧结果不覆盖新结果", as
 });
 
 test("创建页保留取消、卸载与重复提交保护，仅在演示完成后发布方案", () => {
-  const page = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const page = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
   assert.match(page, /planningAbort\.current \|\| busy/);
   assert.match(page, /planningAbort\.current\?\.abort\(\)/);
   assert.match(page, /if \(!completed \|\| run !== planningRun\.current\) return/);
@@ -125,7 +125,7 @@ test("创建页保留取消、卸载与重复提交保护，仅在演示完成�
 });
 
 test("停止或同阶段失败后等待输入恢复可编辑再归还焦点，新一轮不会继承旧焦点请求", () => {
-  const page = readFileSync(new URL("../src/components/TaskCreationPage.tsx", import.meta.url), "utf8");
+  const page = readFileSync(new URL("../src/features/tasks/components/TaskCreationPage.tsx", import.meta.url), "utf8");
   assert.match(page, /if \(busy \|\| !restorePlanningFocus\.current\) return/);
   assert.match(page, /requestAnimationFrame\(\(\) => \{\s*stageRef\.current\?\.querySelector<HTMLTextAreaElement>\("textarea:not\(:disabled\)"\)\?\.focus/);
   assert.match(page, /return \(\) => cancelAnimationFrame\(frame\)/);

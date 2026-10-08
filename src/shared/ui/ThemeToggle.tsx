@@ -1,6 +1,6 @@
-import { useI18n } from "../i18n/I18nProvider";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { Moon, Sun } from "lucide-react";
-import { DropdownMenuItem } from "./ui/dropdown-menu";
+import { DropdownMenuItem } from "@/shared/ui/dropdown-menu";
 
 export type Theme = "light" | "dark";
 

@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/shared/lib/utils"
 import { ChevronRightIcon, CheckIcon } from "lucide-react"
 
 // Action menus share the same quiet popup and plain-text option language as

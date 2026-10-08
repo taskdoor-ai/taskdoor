@@ -1,10 +1,10 @@
-import { creationScenarioEnglish, localizeFreshCreationPlan } from "../i18n/creationMock";
-import type { Locale } from "../i18n/core";
-import { taskCreationScenarios, type TaskCreationScenarioId } from "../data/taskCreationScenarios";
-import { assignTaskByResponsibility } from "./responsibilityAssignment";
-import { createCreationForm, validateCreationForm, withCreationParticipantDefaults, type CreationForm } from "./taskCreationForm";
-import { withMockCreationEffort } from "./taskCreationEffort";
-import { advanceTaskCreationScenario, startTaskCreationScenario, type ExistingTaskCandidate, type ScenarioContext } from "./taskCreationScenario";
+import { creationScenarioEnglish, localizeFreshCreationPlan } from "@/ai/mock/i18n/creationMock";
+import type { Locale } from "@/shared/i18n/core";
+import { taskCreationScenarios, type TaskCreationScenarioId } from "@/ai/mock/data/taskCreationScenarios";
+import { assignTaskByResponsibility } from "@/ai/mock/lib/responsibilityAssignment";
+import { createCreationForm, validateCreationForm, withCreationParticipantDefaults, type CreationForm } from "@/features/tasks/lib/task-creation-form";
+import { withMockCreationEffort } from "@/features/tasks/lib/task-creation-effort";
+import { advanceTaskCreationScenario, startTaskCreationScenario, type ExistingTaskCandidate, type ScenarioContext } from "@/ai/mock/lib/taskCreationScenario";
 
 export type CreationPlanningQuestion = {
   field: "goal" | "deliverable";

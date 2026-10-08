@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
-const appSource = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
-const tagManagementSource = readFileSync(new URL("../src/components/TagManagementPage.tsx", import.meta.url), "utf8");
-const themeToggleSource = readFileSync(new URL("../src/components/ThemeToggle.tsx", import.meta.url), "utf8");
+const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
+const tagManagementSource = readFileSync(new URL("../src/features/me/components/TagManagementPage.tsx", import.meta.url), "utf8");
+const themeToggleSource = readFileSync(new URL("../src/shared/ui/ThemeToggle.tsx", import.meta.url), "utf8");
 
-const readTopbar = () => readFileSync(new URL("../src/components/WorkspaceTopbar.tsx", import.meta.url), "utf8");
+const readTopbar = () => readFileSync(new URL("../src/app/workspace/components/WorkspaceTopbar.tsx", import.meta.url), "utf8");
 
 test("默认进入个人工作台且不预选任务详情", () => {
   assert.ok(/\[activeSection, setActiveSection\] = useState<PrimarySection>\("home"\)/.test(appSource), "初始区块应为个人工作台");
@@ -31,7 +31,7 @@ test("顶栏只保留团队与必要工具，推荐入口留在任务索引内",
   assert.match(topbarSource, /id="workspace-ai-trigger" onClick=\{onConnectAi\}/);
   assert.match(appSource, /<AiConnectionPage embedded/);
   assert.doesNotMatch(topbarSource, /<nav\b|onSectionChange|activeSection|primaryItems|新建对话|注意力地图/);
-  const taskList = readFileSync(new URL("../src/components/TaskWorkspaceList.tsx", import.meta.url), "utf8");
+  const taskList = readFileSync(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url), "utf8");
   const header = taskList.match(/<header\b[\s\S]*?<\/header>/)?.[0];
   assert.ok(header, "个人入口保留可聚焦标题");
   assert.match(header, /onClick=\{onShowWorkbench\}[^>]*>推荐<\/button>/);
@@ -55,7 +55,7 @@ test("主题切换归入账户菜单并位于设置上方，顶栏不再保留�
 });
 
 test("账户菜单主题项沿用菜单触摸区域和图标尺寸，移除独立入口样式", () => {
-  const styles = readFileSync(new URL("../src/styles/workspace-shell.css", import.meta.url), "utf8");
+  const styles = readFileSync(new URL("../src/app/workspace/styles/workspace-shell.css", import.meta.url), "utf8");
   assert.match(styles, /\.workspace-account-trigger\s*\{[\s\S]*?width:\s*var\(--ad-control-touch-min\);[\s\S]*?height:\s*var\(--ad-control-touch-min\);/);
   assert.match(styles, /\.workspace-account-trigger:focus-visible\s*\{[\s\S]*?outline:\s*2px solid var\(--ad-focus\);/);
   assert.match(styles, /\.workspace-account-menu \[data-slot="dropdown-menu-item"\]\s*\{[\s\S]*?min-height:\s*var\(--ad-control-touch-min\);/);
@@ -109,7 +109,7 @@ test("回到我的工作不重置筛选、已选详情或未完成创建草稿",
 
 test("全局连接保留 AI 指南，我的工作复用共享产品弹层且不记录伪连接", () => {
   for (const component of ["AiConnectionPage", "AiConnectionDialog"]) {
-    assert.ok(existsSync(new URL(`../src/components/${component}.tsx`, import.meta.url)));
+    assert.ok(existsSync(new URL(`../src/features/ai-connection/components/${component}.tsx`, import.meta.url)));
   }
   assert.match(appSource, /<AiConnectionDialog[\s\S]*?request=\{workbenchAiConnectionRequest\}/);
   assert.match(appSource, /onConnectAi=\{\(\) => setGlobalAiConnectionOpen\(true\)\}/);
