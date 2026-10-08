@@ -19,7 +19,9 @@ function countMatches(source, pattern, predicate = () => true) {
   return [...source.matchAll(pattern)].filter((match) => predicate(match)).length;
 }
 
-const srcFiles = (await walk(path.join(root, "src"))).filter((file) => /\.(?:css|js|jsx|ts|tsx)$/.test(file));
+// The token sheet is where raw values belong; it lived outside src/ (styles/) until the four-layer move.
+const tokenSheet = path.join(root, "src", "shared", "styles", "tokens.css");
+const srcFiles = (await walk(path.join(root, "src"))).filter((file) => /\.(?:css|js|jsx|ts|tsx)$/.test(file) && file !== tokenSheet);
 const records = await Promise.all(srcFiles.map(async (file) => ({ file, source: await readFile(file, "utf8") })));
 const cssRecords = records.filter(({ file }) => file.endsWith(".css"));
 const scriptRecords = records.filter(({ file }) => /\.(?:js|jsx|ts|tsx)$/.test(file));
