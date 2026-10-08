@@ -1,7 +1,8 @@
 import { useMockText } from '@/ai/mock/i18n/MockDataProvider';
 import { useDetailCopy } from '@/shared/i18n/detail-messages';
 import { useGlobalUi } from '@/shared/i18n/global-ui';
-import { criterionReview, type CriterionReview } from '@/features/tasks/lib/task-criterion-review';
+import { criterionReview } from '@/features/tasks/lib/task-criterion-review';
+import type { CriterionReview } from '@/shared/model/criterion-review';
 import { TaskCriteriaEditor } from '@/features/tasks/components/TaskCriteriaEditor';
 import { TaskCriterionIndicator } from '@/features/tasks/components/TaskCriterionIndicator';
 

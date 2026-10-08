@@ -16,24 +16,26 @@ import { fileURLToPath } from "node:url";
 //   6. File names under features/ and shared/{lib,i18n,model}: .ts modules kebab-case,
 //      .tsx components PascalCase, hooks useX.
 //
-// Violations that exist today are counted per file in scripts/structure-baseline.json. A file may
-// not go above its count, and a count that has gone down must be lowered in the baseline too, so
-// the ratchet only ever moves down.
+// Named exceptions are counted per file in scripts/structure-exceptions.json, each rule with the
+// reason it is allowed ("$reasons", "$fileReasons"). A file may not go above its count, and a count
+// that has gone down must be lowered there too, so the exceptions only ever shrink.
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const src = path.join(root, "src");
-const baselinePath = path.join(root, "scripts", "structure-baseline.json");
+const baselinePath = path.join(root, "scripts", "structure-exceptions.json");
 const graphPath = path.join(root, "feature-dependencies.json");
 const SKIPPED = new Set(["test-lab", "prd", "assets"].map((name) => path.join(src, name)));
 
 // Feature pairs that import each other in PM code and are left for PM to resolve. Each entry is
 // "a<->b" with a reason; the cycle check ignores exactly these pairs.
-const KNOWN_CYCLES = {};
+const KNOWN_CYCLES = {
+  "members<->tasks": "members/lib/team-lifecycle-storage clears a deleted team's local task state (recycle bin, activity, AI drafts, file drafts, collaboration); tasks pick owners and participants with the members' MemberSelector / PersonPicker. Left for PM: the demo keeps team deletion next to the team store.",
+};
 // The number of edges in feature-dependencies.json when it was set. It may only fall.
-const MAX_FEATURE_EDGES = 0;
+const MAX_FEATURE_EDGES = 9;
 // While src/ is being moved into the layers, a feature may be declared before its directory exists.
 // Set to true once every declared feature has a directory: then the two lists must be equal.
-const REQUIRE_EVERY_FEATURE_DIRECTORY = false;
+const REQUIRE_EVERY_FEATURE_DIRECTORY = true;
 // Lower bounds: below these the scan has stopped reading the tree, and "no violations" means nothing.
 const MIN_FILES = 100;
 const MIN_SPECIFIERS = 500;
@@ -170,6 +172,8 @@ if (process.argv.includes("--print-counts")) {
 
 let baseline = {};
 if (existsSync(baselinePath)) baseline = JSON.parse(readFileSync(baselinePath, "utf8"));
+const reasons = baseline.$reasons ?? {};
+const fileReasons = baseline.$fileReasons ?? {};
 
 const regressions = [];
 const improvements = [];
@@ -186,7 +190,14 @@ for (const rule of Object.keys(RULES)) {
 const total = (rule) => Object.values(counts[rule]).reduce((sum, n) => sum + n, 0);
 console.log("TaskDoor structure check");
 console.log(`  扫描文件 ${files.length}，import 说明符 ${specifierCount}，feature 边 ${edges.length}`);
-for (const rule of Object.keys(RULES)) console.log(`  ${rule}: ${total(rule)}（棘轮 ${Object.values(baseline[rule] ?? {}).reduce((sum, n) => sum + n, 0)}）`);
+for (const rule of Object.keys(RULES)) console.log(`  ${rule}: ${total(rule)}（例外 ${Object.values(baseline[rule] ?? {}).reduce((sum, n) => sum + n, 0)}）`);
+for (const [pair, why] of Object.entries(KNOWN_CYCLES)) console.log(`  已登记的环 ${pair}：${why}`);
+const listed = Object.keys(RULES).filter((rule) => Object.keys(baseline[rule] ?? {}).length);
+if (listed.length) console.log("\n具名例外（scripts/structure-exceptions.json，只减不增）：");
+for (const rule of listed) {
+  console.log(`  ${rule}：${reasons[rule] ?? "（缺理由）"}`);
+  for (const [file, n] of Object.entries(baseline[rule])) console.log(`    ${file} ${n}${fileReasons[file] ? `（${fileReasons[file]}）` : ""}`);
+}
 if (featureNote) console.log(featureNote);
 
 let failed = false;
@@ -207,12 +218,17 @@ if (regressions.length) {
   failed = true;
 }
 if (improvements.length) {
-  console.error("\n违反已减少，请同步降低 scripts/structure-baseline.json（棘轮只减不增）：");
+  console.error("\n违反已减少，请同步降低 scripts/structure-exceptions.json（例外只减不增）：");
   for (const { rule, file, was, now } of improvements) console.error(`- ${rule}：${file} ${was} → ${now}`);
   failed = true;
 }
+const unexplained = listed.filter((rule) => !reasons[rule]);
+if (unexplained.length) {
+  console.error(`\n例外缺少理由：${unexplained.join(", ")}`);
+  failed = true;
+}
 if (failed) {
-  console.error("\n目录约定见 TaskDoor ADR-0014；不要通过抬高棘轮绕过检查。");
+  console.error("\n目录约定见 TaskDoor ADR-0014；不要通过放宽例外绕过检查。");
   process.exit(1);
 }
 console.log("\n✓ 没有新增结构违反");

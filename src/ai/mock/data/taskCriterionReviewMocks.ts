@@ -1,6 +1,6 @@
 import fixtures from '@/ai/mock/data/taskCriterionReviewMocks.json';
 import type { TaskNode, WorkspaceNode } from '@/shared/model/task-model';
-import type { CriterionReview } from '@/features/tasks/lib/task-criterion-review';
+import type { CriterionReview } from '@/shared/model/criterion-review';
 
 type DemoReview = CriterionReview & { evidenceEn: string };
 type Fixture = { name: string; goal: string; reviews: DemoReview[] };
