@@ -14,7 +14,7 @@ export function LanguageSwitcher({ menu = false }: { menu?: boolean }) {
         <DropdownMenuRadioItem closeOnClick lang="zh-CN" value="zh-CN">简体中文</DropdownMenuRadioItem>
       </DropdownMenuRadioGroup>
       <DropdownMenuSeparator />
-      <DropdownMenuCheckboxItem className="language-auto-translate" checked={autoTranslate} onCheckedChange={setAutoTranslate}>{ui('自动翻译协作内容')}</DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem className="language-auto-translate" checked={autoTranslate} onCheckedChange={setAutoTranslate}>{ui('自动翻译讨论内容')}</DropdownMenuCheckboxItem>
     </DropdownMenuSubContent>
   </DropdownMenuSub>;
   return <DropdownMenu>

@@ -1,6 +1,4 @@
 import { useGlobalUi } from '@/shared/i18n/global-ui';
-import { MoreHorizontal } from "lucide-react";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/shared/ui/dropdown-menu";
 import "@/features/tasks/styles/task-criterion-review.css";
 import { useI18n } from '@/shared/i18n/I18nProvider';
 import { mockTagName, mockPersonName } from '@/ai/mock/i18n/mockContent';
@@ -177,7 +175,7 @@ export function TaskDetail({
   taskId,
 }: TaskDetailProps) {
   const ui = useGlobalUi();
-  const { locale, autoTranslate, originalTasks, toggleTaskOriginal } = useI18n();
+  const { locale } = useI18n();
   const [editingOriginal, setEditingOriginal] = useState<"title" | "goal" | null>(null);
   const d = useDetailCopy();
   const completionCriteria = task.completionCriteria ?? [];
@@ -531,7 +529,7 @@ export function TaskDetail({
             <div className="task-detail-title-row">
               {onTaskAppearanceChange ? <TaskAppearancePicker iconName={task.iconName} onChange={onTaskAppearanceChange} tone={task.iconTone} /> : <TaskIcon iconName={task.iconName} size="lg" tone={task.iconTone} />}
               <h1><Textarea readOnly={!onTaskTitleChange} aria-label={d('name')} className="task-detail-title-input" onFocus={() => setEditingOriginal("title")} onBlur={() => { setEditingOriginal(null); if (currentTitle !== task.title) onTaskTitleChange?.(currentTitle); }} onChange={(event) => setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " "))} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} rows={1} value={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>
-              <div className="task-ai-detail-tools"><AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} /><DropdownMenu><DropdownMenuTrigger aria-label={ui('任务阅读选项')} className="task-reading-menu"><MoreHorizontal size={18} /></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem disabled={!autoTranslate} onClick={() => toggleTaskOriginal(taskId)}>{originalTasks.has(taskId) ? ui('显示任务译文') : ui('查看任务原文')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
+              <div className="task-ai-detail-tools"><AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} /></div>
             </div>
       {editingOriginal && <small className="content-editing-original">{ui("正在编辑原文")}</small>}
       <div aria-label={d('properties')} className="task-detail-primary-properties">

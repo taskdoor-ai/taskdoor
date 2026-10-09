@@ -2320,8 +2320,8 @@
     "en": "Confirmed by a person · Click to undo"
   },
   "autoTranslateContent": {
-    "zh": "自动翻译协作内容",
-    "en": "Auto-translate content"
+    "zh": "自动翻译讨论内容",
+    "en": "Auto-translate discussions"
   },
   "contentTranslated": {
     "zh": "已翻译",
@@ -2350,18 +2350,6 @@
   "editingOriginalContent": {
     "zh": "正在编辑原文",
     "en": "Editing original"
-  },
-  "taskReadingOptions": {
-    "zh": "任务阅读选项",
-    "en": "Task reading options"
-  },
-  "viewTaskOriginal": {
-    "zh": "查看任务原文",
-    "en": "View task original"
-  },
-  "showTaskTranslation": {
-    "zh": "显示任务译文",
-    "en": "Show task translation"
   },
   "aiConnectionGuideDescription": {
     "zh": "安装并登录 TaskDoor CLI，在本地工具中继续工作。",

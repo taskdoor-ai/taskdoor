@@ -1,5 +1,9 @@
 # PRD 来源映射
 
+## PRD-0076：自动翻译仅作用于讨论（2026-10-09）
+
+`TaskDetail.tsx` 移除标题右侧的任务阅读选项菜单；`I18nProvider.tsx` 删除 `originalTasks` 与 `toggleTaskOriginal`，`MockDataProvider.tsx` 的任务标题、目标和记录文字不再读取 `autoTranslate`；`DiscussionMessages.tsx` 的回复引用摘要改由 `autoTranslate` 决定是否显示译文；账户菜单开关文案改为“自动翻译讨论内容／Auto-translate discussions”；对应样式 `.task-reading-menu` 与三条界面文案一并删除。讨论消息的原文／译文切换（`DiscussionMessages.tsx`）和账户菜单的“自动翻译协作内容”保留。
+
 ## PRD-0074：连接 AI 与正式项目对齐（2026-10-09）
 
 依据正式项目 `apps/web` 的 `features/credentials/components/AiConnectionPage.tsx`，`src/features/ai-connection/components/AiConnectionPage.tsx` 改为安装提示词、“在 {工具} 中打开”及结果提示，常用命令同步为 CLI v0.1 命令，去掉演示连接回执；`AiConnectionDialog.tsx` 新增 `copyAndOpenPrompt`，`ai-tools.ts` 新增 `aiToolPromptLink` 并将显示名称改为 ChatGPT、Claude；英文文案取自正式项目 `globalUiMessages.json`。正式项目的已授权设备区仅在真实账号下显示，PM 演示不展示。`server/connectAiPrompt.test.ts` 覆盖名称、唤起链接、复制失败不唤起与唤起失败提示。

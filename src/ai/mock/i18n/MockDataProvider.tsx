@@ -10,12 +10,13 @@ export function MockTaskProvider({ taskId, children }: { taskId: string; childre
   return <CurrentTaskContext.Provider value={taskId}>{children}</CurrentTaskContext.Provider>;
 }
 export function useMockText() {
-  const { locale, autoTranslate, originalTasks } = useI18n();
+  const { locale } = useI18n();
   const additional = useContext(AdditionalMockContext);
   const currentId = useContext(CurrentTaskContext);
   return useMemo(() => ({
-    field: (id: string, field: 'title' | 'goal', value: string) => !autoTranslate || originalTasks.has(id) ? value : mockTaskField(locale, id, field, value, additional),
+    // Demo task content follows the interface language; the auto-translate switch only governs discussions.
+    field: (id: string, field: 'title' | 'goal', value: string) => mockTaskField(locale, id, field, value, additional),
     originalRecord: (value: string, id = currentId) => mockRecordText(locale, id, value, additional),
-    text: (value: string, id = currentId) => !autoTranslate || originalTasks.has(id) ? value : mockRecordText(locale, id, value, additional),
-  }), [locale, additional, currentId, autoTranslate, originalTasks]);
+    text: (value: string, id = currentId) => mockRecordText(locale, id, value, additional),
+  }), [locale, additional, currentId]);
 }
