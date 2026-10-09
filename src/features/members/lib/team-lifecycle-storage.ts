@@ -1,5 +1,5 @@
-import { RECYCLE_BIN_KEY, readRecycleBin } from '@/features/tasks/lib/task-recycle-bin';
-import { loadPersonalCenterDirectory, personalCenterStorageKey, type PersonalCenterState } from '@/ai/mock/data/memberProfiles';
+import { RECYCLE_BIN_KEY, RETENTION_MS, readRecycleBin, type RecycledTask } from '@/features/tasks/lib/task-recycle-bin';
+import { loadPersonalCenterDirectory, personalCenterStorageKey, type PersonalCenterState, type TeamResponsibilityProfile } from '@/ai/mock/data/memberProfiles';
 import type { TaskNode, WorkspaceNode } from '@/shared/model/task-model';
 import type { TeamLifecycleAction } from '@/features/members/components/TeamLifecycle';
 import { activeMembership, changeTeamRole, prepareMemberExit, transferTeamOwnership } from '@/features/members/lib/team-membership-lifecycle';
@@ -9,13 +9,27 @@ import { TASK_FILE_EDITS_STORAGE_PREFIX } from '@/features/tasks/files/lib/task-
 import { TASK_COLLABORATION_STORAGE_PREFIX } from '@/features/tasks/lib/task-collaboration';
 
 export const teamLifecycleHistoryKey = 'agentdoor-team-lifecycle-history';
-export type TeamLifecycleRecord = { id: string; teamId: string; kind: TeamLifecycleAction['kind']; actorId: string; memberId?: string; memberEmail?: string; successorId?: string; role?: "admin" | "member"; at: string; note?: string; assignments?: Array<{ taskId: string; memberId: string }> };
+export type TeamLifecycleRecord = { id: string; teamId: string; kind: TeamLifecycleAction['kind'] | 'restore'; actorId: string; memberId?: string; memberEmail?: string; successorId?: string; role?: "admin" | "member"; at: string; note?: string; assignments?: Array<{ taskId: string; memberId: string }> };
 export const handoffNotificationKey = 'agentdoor-handoff-notifications';
 export type HandoffNotification = { id: string; teamId: string; recipientId: string; taskIds: string[]; fromName: string; read: boolean; at: string };
 export function readHandoffNotifications(storage: Pick<Storage, 'getItem'>): HandoffNotification[] {
   const value = JSON.parse(storage.getItem(handoffNotificationKey) ?? '[]');
   if (!Array.isArray(value)) throw new Error('无法读取交接通知，请重试。');
   return value;
+}
+export const deletedTeamsKey = 'agentdoor-deleted-teams';
+const overlayKeys = ['agentdoor-task-owner-proposals', 'agentdoor-task-participant-invitations', 'agentdoor-created-tasks'] as const;
+/** A deleted team keeps everything removed from the workspace so the owner can restore it within the retention window. */
+export type DeletedTeam = {
+  team: TeamResponsibilityProfile; deletedBy: string; deletedAt: number; expiresAt: number;
+  nodes: WorkspaceNode[]; seeds: TaskNode[]; activities: TaskActivityStore; notifications: HandoffNotification[]; recycleBin: RecycledTask[];
+  overlays: Record<string, Record<string, unknown>>; storedValues: Record<string, string>;
+};
+/** Entries past their retention window are treated as permanently deleted. */
+export function readDeletedTeams(storage: Pick<Storage, 'getItem'>, now = Date.now()): DeletedTeam[] {
+  const value = JSON.parse(storage.getItem(deletedTeamsKey) ?? '[]');
+  if (!Array.isArray(value) || value.some(entry => !entry?.team || typeof entry.team.id !== 'string' || !Array.isArray(entry.team.memberships) || !Number.isFinite(entry.expiresAt) || !Number.isFinite(entry.deletedAt) || !Array.isArray(entry.nodes) || !Array.isArray(entry.seeds))) throw new Error('无法读取已删除团队，请重试。');
+  return (value as DeletedTeam[]).filter(entry => entry.expiresAt > now);
 }
 export function readTeamLifecycleHistory(storage: Pick<Storage, 'getItem'>): TeamLifecycleRecord[] {
   const value = JSON.parse(storage.getItem(teamLifecycleHistoryKey) ?? '[]');
@@ -72,26 +86,67 @@ export function commitTeamLifecycle(input: { storage: Storage; directory?: Perso
   else if (action.kind === 'role') { nextTeam = changeTeamRole(team, actorId, action.memberId, action.role); record.memberId = action.memberId; record.role = action.role; }
   else {
     if (activeMembership(team, actorId)?.role !== 'owner' || action.name !== team.name) throw new Error('仅拥有者可以在确认团队名称后删除团队。');
-    writes.push([RECYCLE_BIN_KEY, JSON.stringify(readRecycleBin(storage).filter(entry => entry.teamId !== teamId))]);
+    const recycleBin = readRecycleBin(storage);
     deletedIds = nodes.filter(n => n.kind === 'task' && n.teamId === teamId).map(n => n.id);
     const ids = new Set(deletedIds);
+    const now = Date.parse(record.at);
+    const entry: DeletedTeam = {
+      team, deletedBy: actorId, deletedAt: now, expiresAt: now + RETENTION_MS,
+      nodes: nodes.filter(n => n.teamId === teamId), seeds: seeds.filter(n => n.teamId === teamId || ids.has(n.id)),
+      activities: Object.fromEntries(Object.entries(activities).filter(([id]) => ids.has(id))),
+      notifications: notifications.filter(n => n.teamId === teamId), recycleBin: recycleBin.filter(e => e.teamId === teamId), overlays: {}, storedValues: {},
+    };
+    writes.push([RECYCLE_BIN_KEY, JSON.stringify(recycleBin.filter(e => e.teamId !== teamId))]);
     nodes = nodes.filter(n => n.teamId !== teamId); seeds = seeds.filter(n => n.teamId !== teamId && !ids.has(n.id));
     activities = Object.fromEntries(Object.entries(activities).filter(([id]) => !ids.has(id)));
     notifications = notifications.filter(n => n.teamId !== teamId);
-    for (const key of ['agentdoor-task-owner-proposals', 'agentdoor-task-participant-invitations', 'agentdoor-created-tasks']) {
+    for (const key of overlayKeys) {
       const value = JSON.parse(storage.getItem(key) ?? '{}');
+      entry.overlays[key] = Object.fromEntries(Object.entries(value).filter(([id]) => ids.has(id)));
       writes.push([key, JSON.stringify(Object.fromEntries(Object.entries(value).filter(([id]) => !ids.has(id))))]);
     }
     const latest = JSON.parse(storage.getItem('agentdoor-created-task') ?? 'null');
     if (latest && ids.has(latest.id)) writes.push(['agentdoor-created-task', 'null']);
     for (const id of deletedIds) {
-      writes.push([`${TASK_FILE_EDITS_STORAGE_PREFIX}${encodeURIComponent(id)}`, '{}']);
-      writes.push([`${TASK_COLLABORATION_STORAGE_PREFIX}${encodeURIComponent(JSON.stringify([teamId, id]))}`, 'null']);
+      for (const [key, empty] of [[`${TASK_FILE_EDITS_STORAGE_PREFIX}${encodeURIComponent(id)}`, '{}'], [`${TASK_COLLABORATION_STORAGE_PREFIX}${encodeURIComponent(JSON.stringify([teamId, id]))}`, 'null']]) {
+        const stored = storage.getItem(key);
+        if (stored !== null) entry.storedValues[key] = stored;
+        writes.push([key, empty]);
+      }
     }
+    writes.push([deletedTeamsKey, JSON.stringify([...readDeletedTeams(storage, now).filter(e => e.team.id !== teamId), entry])]);
   }
   const nextDirectory = { ...directory, teams: action.kind === 'delete' ? directory.teams.filter(t => t.id !== teamId) : directory.teams.map(t => t.id === teamId ? nextTeam : t) };
   writes.push([personalCenterStorageKey, JSON.stringify(nextDirectory)], [teamLifecycleHistoryKey, JSON.stringify([...history, record])], [handoffNotificationKey, JSON.stringify(notifications)]);
   if (action.kind === 'exit' || action.kind === 'delete') writes.push(['agentdoor-workspace-nodes', JSON.stringify(nodes)], ['agentdoor-task-activity', JSON.stringify(activities)], ['agentdoor-task-detail-seeds', JSON.stringify(seeds)]);
   commitTaskAiStorage(storage, writes);
   return { directory: nextDirectory, nodes, activities, seeds, deletedIds };
+}
+
+/** Restores a deleted team with its tasks and records; only its owner can do this within the retention window. */
+export function restoreDeletedTeam(input: { storage: Storage; directory?: PersonalCenterState; teamId: string; actorId: string; nodes: WorkspaceNode[]; activities: TaskActivityStore; seeds: TaskNode[]; now?: number }) {
+  const { storage, teamId, actorId, now = Date.now() } = input;
+  const directory = input.directory ?? loadPersonalCenterDirectory();
+  const deleted = readDeletedTeams(storage, now);
+  const entry = deleted.find(e => e.team.id === teamId);
+  if (!entry) throw new Error('团队已超过 30 天保留期或已被恢复，请刷新。');
+  if (activeMembership(entry.team, actorId)?.role !== 'owner') throw new Error('仅团队拥有者可以恢复团队。');
+  if (directory.teams.some(t => t.id === teamId)) throw new Error('团队已恢复，请刷新。');
+  const nodes = [...input.nodes, ...entry.nodes];
+  const seeds = [...input.seeds, ...entry.seeds];
+  const activities = { ...input.activities, ...entry.activities };
+  const record: TeamLifecycleRecord = { id: crypto.randomUUID(), teamId, actorId, kind: 'restore', at: new Date(now).toISOString() };
+  const nextDirectory = { ...directory, teams: [...directory.teams, entry.team] };
+  const writes: Array<[string, string]> = [
+    [personalCenterStorageKey, JSON.stringify(nextDirectory)],
+    [teamLifecycleHistoryKey, JSON.stringify([...readTeamLifecycleHistory(storage), record])],
+    [handoffNotificationKey, JSON.stringify([...readHandoffNotifications(storage), ...entry.notifications])],
+    [RECYCLE_BIN_KEY, JSON.stringify([...readRecycleBin(storage), ...entry.recycleBin])],
+    [deletedTeamsKey, JSON.stringify(deleted.filter(e => e !== entry))],
+    ['agentdoor-workspace-nodes', JSON.stringify(nodes)], ['agentdoor-task-activity', JSON.stringify(activities)], ['agentdoor-task-detail-seeds', JSON.stringify(seeds)],
+    ...overlayKeys.map((key): [string, string] => [key, JSON.stringify({ ...JSON.parse(storage.getItem(key) ?? '{}'), ...entry.overlays[key] })]),
+    ...Object.entries(entry.storedValues),
+  ];
+  commitTaskAiStorage(storage, writes);
+  return { directory: nextDirectory, nodes, activities, seeds };
 }

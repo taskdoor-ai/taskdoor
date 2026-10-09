@@ -1,11 +1,12 @@
 import { useI18n } from "@/shared/i18n/I18nProvider";
-import { mockPersonName } from "@/ai/mock/i18n/mockContent";
+import { mockPersonName, mockTeamName } from "@/ai/mock/i18n/mockContent";
 import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { currentWorkspaceUserId } from "@/shared/lib/workspace-session";
-import { Building2, ImagePlus, ListChecks, UserRound, UsersRound } from "lucide-react";
+import { Building2, ImagePlus, Layers, ListChecks, UserRound, UsersRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { applyPersonalProfileDraft, isValidProfileEmail, savePersonalCenterState, type PersonalCenterState } from "@/ai/mock/data/memberProfiles";
 import { PersonalResponsibilityPanel, TeamInformationPanel, TeamMembersPanel } from "@/features/members/components/PersonalCenterPage";
+import { MyTeamsPanel } from "@/features/members/components/MyTeamsPanel";
 import type { Member } from "@/features/members/components/MemberSelector";
 import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
 import { Button } from "@/shared/ui/button";
@@ -16,10 +17,10 @@ import { Input } from "@/shared/ui/input";
 import { createPersonalAvatarDataUrl } from "@/features/me/lib/personal-avatar";
 import { applyAutomaticResponsibilityUpdates } from "@/ai/mock/lib/responsibilityProposals";
 
-export type PersonalCenterModule = "profile" | "team" | "members" | "responsibility";
+export type PersonalCenterModule = "profile" | "myTeams" | "team" | "members" | "responsibility";
 type PendingResponsibilityAction = { run: () => void };
 
-export function PersonalCenterModal({ activeModule, activeTeamId, members, onActiveTeamChange, onModuleChange, onOpenChange, onOpenEvidence, onStateChange, open, state }: { activeModule: PersonalCenterModule; activeTeamId: string; members: Member[]; onActiveTeamChange: (teamId: string) => void; onModuleChange: (module: PersonalCenterModule) => void; onOpenChange: (open: boolean) => void; onOpenEvidence: (taskId: string) => void; onStateChange: (state: PersonalCenterState) => void; open: boolean; state: PersonalCenterState }) {
+export function PersonalCenterModal({ activeModule, activeTeamId, members, onActiveTeamChange, onModuleChange, onOpenChange, onOpenEvidence, onRestoreTeam, onStateChange, open, state }: { onRestoreTeam: (teamId: string) => void; activeModule: PersonalCenterModule; activeTeamId: string; members: Member[]; onActiveTeamChange: (teamId: string) => void; onModuleChange: (module: PersonalCenterModule) => void; onOpenChange: (open: boolean) => void; onOpenEvidence: (taskId: string) => void; onStateChange: (state: PersonalCenterState) => void; open: boolean; state: PersonalCenterState }) {
   const m = useModuleCopy();
   const { locale } = useI18n();
   const [draft, setDraft] = useState(state.profile);
@@ -137,6 +138,7 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, onAct
               <span>{m('personalSettings')}</span>
               <button aria-current={activeModule === "profile" ? "page" : undefined} className="personal-center-nav-action" onClick={() => changeModule("profile")} type="button"><UserRound aria-hidden="true" /><span>{m('profile')}</span></button>
               <button aria-current={activeModule === "responsibility" ? "page" : undefined} className="personal-center-nav-action" onClick={() => changeModule("responsibility")} ref={responsibilityModuleRef} type="button"><ListChecks aria-hidden="true" /><span>{m('myResponsibilities')}</span></button>
+              <button aria-current={activeModule === "myTeams" ? "page" : undefined} className="personal-center-nav-action" onClick={() => changeModule("myTeams")} type="button"><Layers aria-hidden="true" /><span>{m('myTeams')}</span></button>
             </div>
             <div className="personal-center-nav-group">
               <span>{m('teamSettings')}</span>
@@ -145,7 +147,7 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, onAct
             </div>
           </nav>
         </aside>
-        <section aria-labelledby={activeModule === "profile" ? "personal-center-panel-title" : activeModule === "team" ? "team-information-title" : activeModule === "members" ? "team-members-title" : "personal-responsibility-title"} className="personal-center-module-content">
+        <section aria-labelledby={activeModule === "profile" ? "personal-center-panel-title" : activeModule === "myTeams" ? "my-teams-title" : activeModule === "team" ? "team-information-title" : activeModule === "members" ? "team-members-title" : "personal-responsibility-title"} className="personal-center-module-content">
           {activeModule === "profile" ? <div className="personal-profile-panel">
             <header><small>{m('sharedProfile')}</small><h2 id="personal-center-panel-title">{m('profile')}</h2><p>{m('yourTeamsUseThisProfileToIdentify')}</p></header>
             <div className="personal-edit-fields">
@@ -163,7 +165,7 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, onAct
               {saveError && <p aria-live="polite" className="personal-edit-error" role="alert">{m.text(saveError)}</p>}
             </div>
             <div className="personal-profile-actions"><span aria-live="polite">{avatarBusy ? m('processingAvatar') : ""}</span><Button disabled={!profileValid || avatarBusy} onClick={save} type="button">{m('saveProfile')}</Button></div>
-          </div> : activeModule === "team" ? <TeamInformationPanel activeTeamId={activeTeamId} onActiveTeamChange={onActiveTeamChange} onStateChange={onStateChange} state={state} /> : activeModule === "members" ? <TeamMembersPanel activeTeamId={activeTeamId} members={members} onActiveTeamChange={onActiveTeamChange} onStateChange={onStateChange} state={state} /> : <PersonalResponsibilityPanel activeTeamId={activeTeamId} onActiveTeamChange={onActiveTeamChange} onDirtyChange={setResponsibilityDirty} onOpenEvidence={onOpenEvidence} onRequestContextChange={requestResponsibilityAction} onStateChange={onStateChange} state={state} />}
+          </div> : activeModule === "myTeams" ? <MyTeamsPanel actorId={currentWorkspaceUserId()} onRestore={onRestoreTeam} state={state} teamName={(team) => mockTeamName(locale, team.id, team.name)} /> : activeModule === "team" ? <TeamInformationPanel activeTeamId={activeTeamId} onActiveTeamChange={onActiveTeamChange} onStateChange={onStateChange} state={state} /> : activeModule === "members" ? <TeamMembersPanel activeTeamId={activeTeamId} members={members} onActiveTeamChange={onActiveTeamChange} onStateChange={onStateChange} state={state} /> : <PersonalResponsibilityPanel activeTeamId={activeTeamId} onActiveTeamChange={onActiveTeamChange} onDirtyChange={setResponsibilityDirty} onOpenEvidence={onOpenEvidence} onRequestContextChange={requestResponsibilityAction} onStateChange={onStateChange} state={state} />}
           {autoUpdateError && <div><p className="personal-edit-error" role="alert">{m.text(autoUpdateError)}</p><Button onClick={() => setAutoUpdateAttempt((attempt) => attempt + 1)} size="sm" type="button" variant="link">{m('retryAutomaticUpdate')}</Button></div>}
         </section>
       </div>
