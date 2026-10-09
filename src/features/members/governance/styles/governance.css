@@ -1,0 +1,17 @@
+/* Team tasks and audit log reuse the members table; these are the production app's additions. */
+.team-members-tabs { justify-content: flex-start; gap: var(--ad-space-2); }
+.task-trash-reason { display: grid; gap: 6px; color: var(--ad-ink-secondary); font-size: var(--ad-text-label); }
+.restore-skipped { margin: 0; padding-left: var(--ad-space-5); color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); }
+.governance-row-actions { flex-wrap: nowrap; justify-self: end; }
+.audit-log-actor { min-width: var(--ad-select-compact-min); justify-self: end; padding: 0 var(--ad-space-3); color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); white-space: nowrap; }
+/* A long task title wraps inside its column instead of running into the next one. */
+.governance-tasks-panel .team-member-list li > div > .creation-dependency-option { min-width: 0; }
+.governance-tasks-panel .team-member-list li > div span { display: grid; min-width: 0; gap: var(--ad-space-1); }
+.governance-tasks-panel .team-member-list li strong { flex-wrap: wrap; white-space: normal; overflow-wrap: anywhere; }
+/* The audit log has a fourth column: the task an event came from. */
+.audit-log-panel .team-member-list-head, .audit-log-panel .team-member-list li { grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) minmax(150px, .8fr) minmax(110px, .5fr); }
+.audit-log-panel .team-member-list li > .audit-log-task { min-width: 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-body-sm); }
+.audit-log-task button { overflow: hidden; max-width: 100%; padding: 0; border: 0; background: none; color: var(--ad-route-ink); cursor: pointer; font: inherit; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.audit-log-task button:hover { text-decoration: underline; }
+.audit-log-task button:focus-visible { border-radius: var(--ad-radius-control); outline: 2px solid var(--ad-route); outline-offset: 2px; }
+.audit-log-task-gone { color: var(--ad-ink-tertiary); }

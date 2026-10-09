@@ -1,6 +1,7 @@
 {
   "$comment": "TaskDoor ADR-0014 §2.2, same format as apps/web: the only directions in which one feature may import another, each edge with a reason. scripts/structure-check.mjs rejects every other direction and keeps the edge count from growing; the one cycle (members <-> tasks) is a named exception there (KNOWN_CYCLES).",
   "ai-connection": {},
+  "credentials": {},
   "auth": {
     "members": "sign-up and onboarding read team invitations and the local team store (team-invitations, team-lifecycle-storage, team-limits)"
   },
