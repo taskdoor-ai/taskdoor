@@ -4,7 +4,7 @@ title: "Agent 与 CLI 连接"
 group: "协作与连接"
 version: "1.1"
 status: "review"
-last_change: "PRD-0057"
+last_change: "PRD-0074"
 summary: "把任务上下文带到本地工具中继续工作。"
 lifecycle_stage: "连接本地工具"
 pages: "连接 AI 页面, 全局连接弹窗, 任务连接弹窗, 讨论连接弹窗, 已连接设备"
@@ -24,17 +24,20 @@ operations: "login, authorize, revoke, bind_task_context, read_task, create_task
 
 ## 3. 详细功能设计
 
-**命令设计预留**：待 CLI／MCP 整体结构确定后，再补充各命令的参数、返回结果与异常处理；现有示例不作为最终命令定义。
+**命令设计预留**：连接 AI 页面的常用命令只列出 CLI 已提供的账号与登录状态、工作空间、任务列表与详情、无浏览器设备登录和退出登录命令；其余业务能力的命令参数、返回结果与异常处理待 CLI／MCP 整体结构确定后补充。
 
 ### 3.1 连接流程
 
-1. 在任务中选择 **Codex、Claude Code、WorkBuddy 或 Cursor**；主按钮打开最近使用的工具，下拉菜单用于切换。
-2. 通过顶部“连接 AI”查看安装说明，安装 TaskDoor CLI 并登录。
+1. 在任务中选择 **ChatGPT、Claude、WorkBuddy 或 Cursor**；主按钮打开最近使用的工具，下拉菜单用于切换。
+2. 通过顶部“连接 AI”选择工具，把安装提示词发给该工具，由它按 TaskDoor 的 CLI 安装文档为用户安装并登录 TaskDoor CLI；登录时在浏览器中确认。
 3. 核对带入的任务上下文，在所选工具中继续工作。
 
-![任务内 AI 工具菜单：Codex 为最近使用的工具，也可切换其他工具。](../assets/cli-connection/task-ai-tool-menu-en.jpg)
+#### 连接 AI 页面
 
-*FIG-CLI-005 · 任务内 AI 工具菜单：选择 Codex、Claude Code、WorkBuddy 或 Cursor。*
+- 每个工具使用同一条安装提示词，内容指向当前部署的 CLI 安装文档；可直接复制，或点击“在 {工具} 中打开”。
+- “在 {工具} 中打开”先复制提示词，再尝试唤起该工具并带入提示词，不代为发送。结果如实提示：复制失败时不尝试打开；浏览器未能打开时提示手动粘贴；已尝试打开时说明无法确认客户端是否启动。
+- 登录只授权用户本人账号，按其在各工作空间的权限访问；工作空间在后续命令中指定，工作空间参数不改变登录授权。
+- TaskDoor 看不到用户本机的客户端，没有连接回执时不显示“已连接”或“未连接”。
 
 ### 3.2 能力与权限
 
@@ -52,20 +55,21 @@ operations: "login, authorize, revoke, bind_task_context, read_task, create_task
 
 *FIG-CLI-001 · 目标流程：用户在浏览器确认授权，CLI 领取设备凭据；后续每次 API 调用仍重新校验权限。*
 
-![全局连接 AI 指南：选择工具并查看 TaskDoor CLI 安装登录说明。](../assets/cli-connection/connect-ai-en.jpg)
+![全局连接 AI 指南：选择工具，复制安装提示词或在该工具中打开。](../assets/cli-connection/connect-ai-en.jpg)
 
-*FIG-CLI-002 · 全局连接 AI 指南：Codex 与其他工具的 CLI 安装登录说明。*
+*FIG-CLI-002 · 全局连接 AI 指南：选择工具，复制安装提示词或在该工具中打开。*
 
-![连接 AI 下半页：任务命令示例。](../assets/cli-connection/connect-ai-examples-en.jpg)
+![连接 AI 下半页：账号、工作空间与任务查看常用命令。](../assets/cli-connection/connect-ai-examples-en.jpg)
 
-*FIG-CLI-003 · 连接 AI 下半页：任务命令示例。*
+*FIG-CLI-003 · 连接 AI 下半页：账号、工作空间与任务查看常用命令。*
 
-![连接 AI 底部：文件上传、活动回复与删除命令示例。](../assets/cli-connection/connect-ai-bottom-en.jpg)
+![连接 AI 底部：任务详情、无浏览器设备登录与退出登录命令。](../assets/cli-connection/connect-ai-bottom-en.jpg)
 
-*FIG-CLI-004 · 连接 AI 底部：文件上传、活动回复与删除命令示例。*
+*FIG-CLI-004 · 连接 AI 底部：任务详情、无浏览器设备登录与退出登录命令。*
 
 ## 4. 功能验收标准
 
 - 同一用户在 Web 可操作的业务均有 CLI 路径，普通参与者从两端均不能删除任务，负责人可确认后删除。
 - CLI 与 Web 修改同一字段以后成功保存者为准，不影响其他字段；两端重读同一任务与文件版本。
 - 删除未确认或范围变化时不能执行；撤销设备或团队权限后旧凭据不能继续读写。
+- 连接 AI 页面“在 {工具} 中打开”复制失败时不唤起工具；唤起成功或失败均如实提示，没有连接回执时不显示连接状态。
