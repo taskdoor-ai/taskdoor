@@ -6,6 +6,12 @@
 
 FIG-WORK-003（同复用 FIG-PREVIEW-017）、新增 FIG-CLI-006、FIG-TEAM-007、FIG-TEAM-008 于 2026-10-09 从主工作区 Vite 服务 `http://localhost:5181/` 采集，English，裁切缩放至 1280×720；团队任务与审计记录截图为协作平台团队。
 
+## PRD-0074：连接 AI 与正式项目对齐（2026-10-09）
+
+依据正式项目 `apps/web` 的 `features/credentials/components/AiConnectionPage.tsx`，`src/features/ai-connection/components/AiConnectionPage.tsx` 改为安装提示词、“在 {工具} 中打开”及结果提示，常用命令同步为 CLI v0.1 命令，去掉演示连接回执；`AiConnectionDialog.tsx` 新增 `copyAndOpenPrompt`，`ai-tools.ts` 新增 `aiToolPromptLink` 并将显示名称改为 ChatGPT、Claude；英文文案取自正式项目 `globalUiMessages.json`。正式项目的已授权设备区仅在真实账号下显示，PM 演示不展示。`server/connectAiPrompt.test.ts` 覆盖名称、唤起链接、复制失败不唤起与唤起失败提示。
+
+FIG-CLI-002 至 004（同复用 FIG-PREVIEW-024 至 026）于 2026-10-09 从主工作区 Vite 服务 `http://localhost:5181/` 重新采集，English，裁切缩放至 1280×720。FIG-CLI-005／FIG-PREVIEW-053 显示旧工具名，标记 pending 并撤出正文。
+
 ## PRD-0073：团队删除可恢复与我的团队（2026-10-09）
 
 `team-lifecycle-storage.ts` 删除团队时将团队、任务节点、详情种子、活动、交接通知、团队回收站、任务分配覆盖及任务文件／讨论存储移入 `agentdoor-deleted-teams`，保留 30 天；`readDeletedTeams` 读取时排除过期记录，`restoreDeletedTeam` 校验有效拥有者、期限和重复恢复后经恢复日志一次写回，并追加 restore 操作记录。`MyTeamsPanel.tsx` 在个人设置和无团队页展示团队列表、角色、加入时间、成员人数及删除倒计时；`PersonalInfoDialog.tsx` 新增入口，`TeamLifecycle.tsx` 更新删除说明。`memberProfiles.ts` 的成员关系新增可选 `joinedAt`，创建团队、接受邀请和登录加入时写入。

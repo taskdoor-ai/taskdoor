@@ -2,12 +2,13 @@ import { useI18n } from '@/shared/i18n/I18nProvider';
 import { useMockText } from '@/ai/mock/i18n/MockDataProvider';
 import { taskContextValue } from '@/shared/i18n/ai-context-copy';
 import { aiTransferMessage } from '@/features/ai-connection/i18n/ai-transfer-copy';
-import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { globalUiText, useGlobalUi } from "@/shared/i18n/global-ui";
+import type { Locale } from "@/shared/i18n/core";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { ArrowRight, Check, ClipboardList, LockKeyhole, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { agentIconUrls } from "@/features/ai-connection/agent-icons";
-import { aiTools, aiToolName, type AiTool } from "@/features/ai-connection/lib/ai-tools";
+import { aiTools, aiToolName, aiToolPromptLink, type AiTool } from "@/features/ai-connection/lib/ai-tools";
 import { aiToolPreferences, defaultAiTool, isAiToolPreview, type AiToolPreferenceStore } from "@/features/ai-connection/lib/ai-tool-preferences";
 import { useAiToolPreferences } from "@/features/ai-connection/lib/useAiToolPreferences";
 
@@ -93,7 +94,7 @@ export type AiTransferActions = { copyText: (text: string) => Promise<boolean>; 
 
 export type AiShortcutAttempt = { agent: AiTool; signal: AbortSignal };
 export type AiConnectionHandler = (trigger: HTMLElement, shortcut?: AiShortcutAttempt) => void | Promise<AiTransferResult | void>;
-const browserTransferActions: Omit<AiTransferActions, "signal"> = {
+export const browserTransferActions: Omit<AiTransferActions, "signal"> = {
   copyText,
   openUrl: (url) => { window.location.href = url; },
 };
@@ -126,6 +127,21 @@ export async function copyAndOpenAiContext(request: AiConnectionRequest, agent: 
     return { status: "open-attempted", message: `已复制上下文，并已尝试打开 ${agentName}。无法确认客户端是否已启动或接单；${agent === "WorkBuddy" ? "请在 WorkBuddy 中粘贴上下文继续工作。" : "若未自动带入，请在工具中粘贴。"}` };
   } catch {
     return { status: "open-failed", message: `已复制上下文，但浏览器未能打开 ${agentName}。请手动打开工具并粘贴，或重试。` };
+  }
+}
+
+/** Copies a prompt, then asks the client to open with it; says which of the two happened. */
+export async function copyAndOpenPrompt(prompt: string, agent: AiTool, actions: AiTransferActions = browserTransferActions, locale: Locale = "zh-CN"): Promise<AiTransferResult> {
+  const say = (source: string, values?: Record<string, string>) => globalUiText(locale, source, values);
+  let copied = false;
+  try { copied = await actions.copyText(prompt); } catch { /* Report a retryable clipboard failure below. */ }
+  if (!copied) return { status: "copy-failed", message: say("复制失败，尚未尝试打开工具。请允许剪贴板访问后重试。") };
+  const tool = aiToolName(agent);
+  try {
+    actions.openUrl(aiToolPromptLink(agent, prompt));
+    return { status: "open-attempted", message: say("已复制，并已尝试打开 {tool}。无法确认客户端是否已启动或接单；{next}", { tool, next: say("若未自动带入，请在工具中粘贴。") }) };
+  } catch {
+    return { status: "open-failed", message: say("已复制，但浏览器未能打开 {tool}。请手动打开工具并粘贴，或重试。", { tool }) };
   }
 }
 

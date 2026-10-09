@@ -4,7 +4,7 @@ title: "产品界面预览"
 group: "产品概览"
 version: "1.1"
 status: "review"
-last_change: "PRD-0066"
+last_change: "PRD-0074"
 summary: "以英文界面截图快速浏览产品全貌。"
 presentation: "gallery"
 ---
@@ -199,21 +199,17 @@ presentation: "gallery"
 
 ### 连接 AI
 
-![任务内 AI 工具菜单：Codex 为最近使用的工具，也可切换其他工具。](../assets/cli-connection/task-ai-tool-menu-en.jpg)
+![全局连接 AI 指南：选择工具，复制安装提示词或在该工具中打开。](../assets/cli-connection/connect-ai-en.jpg)
 
-*FIG-PREVIEW-053 · 任务内 AI 工具菜单：选择 Codex、Claude Code、WorkBuddy 或 Cursor。*
+*FIG-PREVIEW-024 · 全局连接 AI 指南：选择工具，复制安装提示词或在该工具中打开。*
 
-![全局连接 AI 指南：选择工具并查看 TaskDoor CLI 安装登录说明。](../assets/cli-connection/connect-ai-en.jpg)
+![连接 AI 下半页：账号、工作空间与任务查看常用命令。](../assets/cli-connection/connect-ai-examples-en.jpg)
 
-*FIG-PREVIEW-024 · 全局连接 AI 指南：Codex 与其他工具的 CLI 安装登录说明。*
+*FIG-PREVIEW-025 · 连接 AI 下半页：账号、工作空间与任务查看常用命令。*
 
-![连接 AI 下半页：任务命令示例。](../assets/cli-connection/connect-ai-examples-en.jpg)
+![连接 AI 底部：任务详情、无浏览器设备登录与退出登录命令。](../assets/cli-connection/connect-ai-bottom-en.jpg)
 
-*FIG-PREVIEW-025 · 连接 AI 下半页：任务命令示例。*
-
-![连接 AI 底部：文件上传、活动回复与删除命令示例。](../assets/cli-connection/connect-ai-bottom-en.jpg)
-
-*FIG-PREVIEW-026 · 连接 AI 底部：文件上传、活动回复与删除命令示例。*
+*FIG-PREVIEW-026 · 连接 AI 底部：任务详情、无浏览器设备登录与退出登录命令。*
 
 ## 4. 功能验收标准
 

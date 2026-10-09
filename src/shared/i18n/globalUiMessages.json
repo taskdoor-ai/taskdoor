@@ -2398,5 +2398,109 @@
   "taskDeleteConsequences": {
     "zh": "该任务及所有子任务的数据将被永久删除，无法恢复。",
     "en": "This task, all subtasks, and their data will be permanently deleted. This cannot be undone."
+  },
+  "aiConnectEyebrow": {
+    "zh": "TaskDoor for local agents",
+    "en": "TaskDoor for local agents"
+  },
+  "listFilter01": {
+    "zh": "今天",
+    "en": "Today"
+  },
+  "cliTaskDetails": {
+    "zh": "任务详情",
+    "en": "Task details"
+  },
+  "cliWorkspacesBody": {
+    "zh": "列出你所在的工作空间，并设置后续命令默认使用的空间。",
+    "en": "List the workspaces you belong to and set the default for later commands."
+  },
+  "cliListTasksBody": {
+    "zh": "列出指定工作空间中你可以看到的任务。",
+    "en": "List the tasks you can see in a workspace."
+  },
+  "connectOpenInTool": {
+    "zh": "在 {tool} 中打开",
+    "en": "Open in {tool}"
+  },
+  "cliDeviceSignInBody": {
+    "zh": "在服务器或远程终端登录：用另一台设备的浏览器确认验证码。",
+    "en": "Sign in from a remote terminal; confirm the code on another device."
+  },
+  "connectCopyPrompt": {
+    "zh": "复制提示词",
+    "en": "Copy the prompt"
+  },
+  "cliWorkspaces": {
+    "zh": "工作空间",
+    "en": "Workspaces"
+  },
+  "cliWorkspaceArgumentOnlyTargets": {
+    "zh": "工作空间参数只指定操作目标，不改变登录授权。",
+    "en": "A workspace argument only picks where a command acts; it does not change your sign-in."
+  },
+  "aiConnectOpenFailed": {
+    "zh": "已复制，但浏览器未能打开 {tool}。请手动打开工具并粘贴，或重试。",
+    "en": "Copied, but the browser could not open {tool}. Open the tool yourself and paste it, or try again."
+  },
+  "aiConnectOpenAttempted": {
+    "zh": "已复制，并已尝试打开 {tool}。无法确认客户端是否已启动或接单；{next}",
+    "en": "Copied, and {tool} was asked to open. Whether it started or picked this up cannot be confirmed; {next}"
+  },
+  "cliCommonCommands": {
+    "zh": "常用命令",
+    "en": "Common commands"
+  },
+  "connectSendThisTo": {
+    "zh": "把这段话发给 {tool}",
+    "en": "Send this to {tool}"
+  },
+  "connectPromptCopied": {
+    "zh": "提示词已复制",
+    "en": "Prompt copied"
+  },
+  "cliSignOutBody": {
+    "zh": "撤销本设备的授权，并清除本机保存的凭证。",
+    "en": "Revoke this device and remove the credentials saved on this machine."
+  },
+  "cliDeviceSignIn": {
+    "zh": "无浏览器的设备登录",
+    "en": "Sign in without a browser"
+  },
+  "cliAccountAndSignInStatusBody": {
+    "zh": "查看本机保存的登录状态，并向 TaskDoor 在线确认当前账号。",
+    "en": "Check the sign-in saved here and confirm your account online."
+  },
+  "cliSignInAuthorizesYourAccountOnly": {
+    "zh": "登录只授权你的账号，按你本人在各工作空间的权限访问；工作空间在后续命令中指定。",
+    "en": "Signing in authorizes your account only and acts with your own permissions in each workspace; choose a workspace in later commands."
+  },
+  "connectApproveInBrowser": {
+    "zh": "登录时在浏览器中确认即可",
+    "en": "Approve in your browser when it signs in"
+  },
+  "aiConnectPasteIfNeeded": {
+    "zh": "若未自动带入，请在工具中粘贴。",
+    "en": "If it was not brought in automatically, paste it in the tool."
+  },
+  "connectLetToolSetUpCli": {
+    "zh": "让 {tool} 为你安装并登录 TaskDoor CLI",
+    "en": "Let {tool} install and sign in to the TaskDoor CLI"
+  },
+  "connectSetupPrompt": {
+    "zh": "请阅读 {origin}/documents/cli-setup.md 文档，按照步骤为我安装并配置 TaskDoor CLI。",
+    "en": "Read {origin}/documents/cli-setup.md and follow its steps to install and configure the TaskDoor CLI for me."
+  },
+  "cliTaskDetailsBody": {
+    "zh": "读取一个任务的完整信息。",
+    "en": "Read everything about one task."
+  },
+  "cliAccountAndSignInStatus": {
+    "zh": "账号与登录状态",
+    "en": "Account and sign-in status"
+  },
+  "inviteLogOut": {
+    "zh": "退出登录",
+    "en": "Log out"
   }
 }
