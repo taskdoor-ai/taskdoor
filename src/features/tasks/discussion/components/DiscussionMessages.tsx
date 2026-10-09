@@ -56,8 +56,8 @@ function messageTimestamp(message: CollaborationMessage) {
   return { dateTime: date.toISOString(), label: `${part("year")}-${part("month")}-${part("day")} ${part("hour")}:${part("minute")}` };
 }
 
-function messageSummary(message: CollaborationMessage, mock: ReturnType<typeof useMockText>, ui: ReturnType<typeof useGlobalUi>) {
-  const body = (message.updatedAt ? message.message : mock.text(message.message)).replace(/\s+/g, " ").trim();
+function messageSummary(message: CollaborationMessage, mock: ReturnType<typeof useMockText>, ui: ReturnType<typeof useGlobalUi>, translate: boolean) {
+  const body = (message.updatedAt || !translate ? message.message : mock.text(message.message)).replace(/\s+/g, " ").trim();
   const attachmentNames = message.attachmentRefs?.map(ref => mock.text(ref.name)).join(", ") || (message.file ? mock.text(message.file) : "");
   const summary = body || (attachmentNames ? ui("附件：{0}", {0: attachmentNames}) : ui("（无文字内容）"));
   return summary.length > 160 ? `${summary.slice(0, 160)}…` : summary;
@@ -65,9 +65,10 @@ function messageSummary(message: CollaborationMessage, mock: ReturnType<typeof u
 
 function ReplyContext({ message }: { message: CollaborationMessage | undefined }) {
   const mock = useMockText();
+  const { autoTranslate } = useI18n();
   const ui = useGlobalUi();
   const d = useDetailCopy();
-  return <>{d('reply')}{message && <><PersonName name={message.author} personId={message.author} />：</>}{!message ? d('originalMissing') : message.deletedAt ? d('originalDeleted') : messageSummary(message, mock, ui)}</>;
+  return <>{d('reply')}{message && <><PersonName name={message.author} personId={message.author} />：</>}{!message ? d('originalMissing') : message.deletedAt ? d('originalDeleted') : messageSummary(message, mock, ui, autoTranslate)}</>;
 }
 
 export function ReplyReference({ message, onLocate }: { message: CollaborationMessage | undefined; onLocate: (id: string) => void }) {

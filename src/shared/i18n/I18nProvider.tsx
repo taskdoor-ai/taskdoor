@@ -13,14 +13,11 @@ const I18nContext = createContext({
   locale: DEFAULT_LOCALE,
   autoTranslate: true,
   setAutoTranslate: (_enabled: boolean) => {},
-  originalTasks: new Set<string>(),
-  toggleTaskOriginal: (_id: string) => {},
   setLocale: (_locale: Locale) => {},
   t: (key: MessageKey, values?: Record<string, string | number>) => translate(DEFAULT_LOCALE, key, values),
 });
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [autoTranslate, updateAutoTranslate] = useState(readAutoTranslate);
-  const [originalTasks, setOriginalTasks] = useState<Set<string>>(() => new Set());
   const [locale, updateLocale] = useState<Locale>(readLocale);
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -35,19 +32,18 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('storage', sync);
   }, []);
   const value = useMemo(() => ({
-    locale, autoTranslate, originalTasks,
+    locale, autoTranslate,
     setAutoTranslate: (enabled: boolean) => {
       updateAutoTranslate(enabled);
       try { window.localStorage.setItem(AUTO_TRANSLATE_KEY, String(enabled)); } catch { /* Session preference remains usable. */ }
     },
-    toggleTaskOriginal: (id: string) => setOriginalTasks(previous => { const next = new Set(previous); if (next.has(id)) next.delete(id); else next.add(id); return next; }),
     setLocale: (next: Locale) => {
       const normalized = normalizeLocale(next);
       updateLocale(normalized);
       try { window.localStorage.setItem(LOCALE_STORAGE_KEY, normalized); } catch { /* Session still works when storage is unavailable. */ }
     },
     t: (key: MessageKey, values?: Record<string, string | number>) => translate(locale, key, values),
-  }), [locale, autoTranslate, originalTasks]);
+  }), [locale, autoTranslate]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 export const useI18n = () => useContext(I18nContext);

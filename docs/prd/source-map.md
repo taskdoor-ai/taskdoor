@@ -1,5 +1,9 @@
 # PRD 来源映射
 
+## PRD-0076：自动翻译仅作用于讨论（2026-10-09）
+
+`TaskDetail.tsx` 移除标题右侧的任务阅读选项菜单；`I18nProvider.tsx` 删除 `originalTasks` 与 `toggleTaskOriginal`，`MockDataProvider.tsx` 的任务标题、目标和记录文字不再读取 `autoTranslate`；`DiscussionMessages.tsx` 的回复引用摘要改由 `autoTranslate` 决定是否显示译文；账户菜单开关文案改为“自动翻译讨论内容／Auto-translate discussions”；对应样式 `.task-reading-menu` 与三条界面文案一并删除。讨论消息的原文／译文切换（`DiscussionMessages.tsx`）和账户菜单的“自动翻译协作内容”保留。
+
 ## PRD-0075：访问令牌、团队任务与审计记录（2026-10-09）
 
 依据正式项目 `apps/web` 的 `features/credentials/components/AccessTokensPanel.tsx`、`TokenExpiryPicker.tsx` 与 `features/governance/components/GovernanceTasksPanel.tsx`、`AuditLogPanel.tsx` 移植：`src/features/credentials/`（令牌面板、到期日期选择、`lib/pat.ts`、`access-tokens.css`）和 `src/features/members/governance/`（团队任务、审计记录、`lib/governance.ts`）；中英文文案取自正式项目 `messages.ts`，经 `shared/i18n/catalog.ts` 读取。`src/ai/settings-demo.ts` 代替正式项目接口，由当前团队的演示任务与回收站生成团队任务行，并提供演示令牌与审计事件。`PersonalInfoDialog.tsx` 接入导航，团队任务与审计记录仅对拥有者和管理员显示。`server/settingsGovernance.test.ts` 覆盖分类、汇总、批量归档结果、演示数据与令牌格式。
