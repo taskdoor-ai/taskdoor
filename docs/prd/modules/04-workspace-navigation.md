@@ -4,10 +4,10 @@ title: "工作区与导航"
 group: "账号与团队"
 version: "1.0"
 status: "review"
-last_change: "PRD-0073"
+last_change: "PRD-0075"
 summary: "通过顶栏进入团队、通知、连接 AI 和设置。"
 lifecycle_stage: "进入工作区"
-pages: "工作区, 我的工作, 通知中心, 个人中心, 个人信息设置, 我的责任, 我的团队, 团队设置"
+pages: "工作区, 我的工作, 通知中心, 个人中心, 个人信息设置, 我的责任, 我的团队, 访问令牌, 团队设置, 团队任务, 审计记录"
 objects: "workspace_session, team, notification, responsibility_document, responsibility_proposal"
 operations: "enter_workspace, switch_team, navigate, open_notification, open_profile, read_responsibility, edit_responsibility, add_responsibility, update_responsibility, delete_responsibility, ignore_responsibility_proposal"
 ---
@@ -30,8 +30,8 @@ operations: "enter_workspace, switch_team, navigate, open_notification, open_pro
 
 ### 3.2 个人与团队设置
 
-- **个人设置**：个人信息、我的责任与我的团队；我的团队的列表与已删除团队恢复见[删除与数据保留](13-deletion-recovery-retention.md) 3.4；只读邮箱及维护规则见[账号与个人资料](02-account-identity.md) 3.6。
-- **团队设置**：团队信息、成员管理、团队时区及拥有者专属的所有权转让与删除入口；日期规则见[语言、翻译与时区](02-internationalization.md)。
+- **个人设置**：个人信息、我的责任、我的团队与访问令牌；访问令牌见[Agent 与 CLI 连接](05-cli-connection.md) 3.3；我的团队的列表与已删除团队恢复见[删除与数据保留](13-deletion-recovery-retention.md) 3.4；只读邮箱及维护规则见[账号与个人资料](02-account-identity.md) 3.6。
+- **团队设置**：团队信息、成员管理、团队时区及拥有者专属的所有权转让与删除入口；拥有者和管理员另有团队任务与审计记录，见[团队管理](03-team-onboarding.md) 3.6；日期规则见[语言、翻译与时区](02-internationalization.md)。
 
 ![顶部全局入口、任务索引、内容区域及团队设置权限的工作区信息架构目标示意](../assets/workspace-navigation/workspace-map.svg)
 

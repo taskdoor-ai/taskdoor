@@ -4,12 +4,12 @@ title: "Agent 与 CLI 连接"
 group: "协作与连接"
 version: "1.1"
 status: "review"
-last_change: "PRD-0057"
+last_change: "PRD-0075"
 summary: "把任务上下文带到本地工具中继续工作。"
 lifecycle_stage: "连接本地工具"
-pages: "连接 AI 页面, 全局连接弹窗, 任务连接弹窗, 讨论连接弹窗, 已连接设备"
-objects: "device_authorization, agent_principal, task_context"
-operations: "login, authorize, revoke, bind_task_context, read_task, create_task, update_task, delete_task"
+pages: "连接 AI 页面, 全局连接弹窗, 任务连接弹窗, 讨论连接弹窗, 已连接设备, 访问令牌"
+objects: "device_authorization, agent_principal, task_context, personal_access_token"
+operations: "login, authorize, revoke, create_access_token, delete_access_token, bind_task_context, read_task, create_task, update_task, delete_task"
 ---
 
 # Agent 与 CLI 连接
@@ -64,8 +64,39 @@ operations: "login, authorize, revoke, bind_task_context, read_task, create_task
 
 *FIG-CLI-004 · 连接 AI 底部：文件上传、活动回复与删除命令示例。*
 
+### 3.3 访问令牌
+
+用户在个人设置的“访问令牌”中管理自己的个人访问令牌，供工具通过 Open API 或 MCP 代表本人操作。令牌属于账号，不属于某个团队；只有本人能看到自己的令牌。
+
+#### 创建流程
+
+1. 点击新建令牌，填写名称（最多 120 个字符）。
+2. 选择有效期：30、90 或 365 天，或在日历中指定日期，默认 90 天，最长 365 天，令牌在所选日期当天结束前有效。
+3. 勾选允许的操作范围（读写任务、发表评论、读写文件、读写成员、读取审计事件、读写账号设置、读取通知等），至少选一项。
+4. 选择团队范围：所有团队（含以后加入的），或指定团队（最多 50 个，团队较多时改为搜索挑选）。
+5. 只指定了一个团队时，可以进一步限定到该团队的部分任务（最多 100 个）；指定多个团队时不能限定任务，换选团队会清空已选任务。
+6. 创建前要求用户最近验证过登录；超时则先重新登录，回来后继续原来的创建，不丢失已填内容。
+7. 创建成功后令牌值只显示一次，可复制；关闭后无法再次查看，丢失只能删除后重建。
+
+#### 列表与删除
+
+- 每个令牌展示名称、状态（有效、已撤销、已过期）、操作范围、团队范围、任务范围、创建日期、到期日期和最近使用时间；从未使用时如实显示。
+- 指定的团队全部被删除或退出时，显示为没有可访问的团队，不再列出任务范围。
+- 删除前二次确认；删除后立即失效，正在使用的连接随即无法访问，不可撤回。
+
+#### 规则
+
+- 令牌的权限永远不超过持有者本人在各团队的权限，操作范围、团队和任务只会进一步收窄。
+- 团队关闭个人访问令牌时，不出现在可选团队中。
+
+![访问令牌列表：有效、限定任务和已过期的令牌。](../assets/cli-connection/access-tokens-en.jpg)
+
+*FIG-CLI-006 · 访问令牌列表：有效、限定任务和已过期的令牌。*
+
 ## 4. 功能验收标准
 
 - 同一用户在 Web 可操作的业务均有 CLI 路径，普通参与者从两端均不能删除任务，负责人可确认后删除。
 - CLI 与 Web 修改同一字段以后成功保存者为准，不影响其他字段；两端重读同一任务与文件版本。
 - 删除未确认或范围变化时不能执行；撤销设备或团队权限后旧凭据不能继续读写。
+- 访问令牌只对本人可见；名称为空、未选操作范围、指定团队时未选团队、限定任务时未选任务或有效期超过 365 天时不能创建；令牌值只在创建成功时显示一次；删除后立即失效。
+- 指定多个团队时不能限定任务；换选团队会清空已选任务。
