@@ -2,7 +2,8 @@ import { TaskRecycleBinDialog } from "@/features/tasks/components/TaskRecycleBin
 import { RECYCLE_BIN_KEY, readRecycleBin, recycleTask, changeRecycledTasks, type RecycledTask } from "@/features/tasks/lib/task-recycle-bin";
 import { TeamLifecycleProvider, type TeamLifecycleAction } from "@/features/members/components/TeamLifecycle";
 import { CreateTeamDialog } from "@/features/workspaces/components/CreateTeamDialog";
-import { commitTeamLifecycle } from "@/features/members/lib/team-lifecycle-storage";
+import { commitTeamLifecycle, restoreDeletedTeam } from "@/features/members/lib/team-lifecycle-storage";
+import { hasRestorableTeams, MyTeamsPanel } from "@/features/members/components/MyTeamsPanel";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockWorkspaceEmail } from "@/ai/mock/lib/mockWorkspaceAccount";
 import { applyCriterionReviewMocks } from "@/ai/mock/data/taskCriterionReviewMocks";
@@ -1116,7 +1117,7 @@ function App() {
     if (legacyChanged) { setLegacyTaskSnapshots(nextLegacy); setLegacyTaskSnapshotsDirty(true); }
   };
 
-  const commitMembershipAction = (action: TeamLifecycleAction) => {
+  const commitTeamStorage = <T extends { nodes: WorkspaceNode[]; activities: TaskActivityStore; seeds: TaskNode[] },>(commit: (input: { nodes: WorkspaceNode[]; activities: TaskActivityStore; seeds: TaskNode[] }) => T): T => {
     if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
     const current = localStorage.getItem(workspaceNodesStorageKey);
     if (current && JSON.stringify(JSON.parse(current)) !== JSON.stringify(workspaceNodesRef.current)) {
@@ -1125,8 +1126,8 @@ function App() {
       setWorkspaceNodes(fresh);
       throw new Error("任务已在其他页面更新，请核对最新清单后重试。");
     }
-    let result;
-    try { result = commitTeamLifecycle({ storage: localStorage, teamId: activeTeamId, actorId: currentUserId, actorName: currentUserName, nodes: workspaceNodesRef.current, activities: parseTaskActivityStore(JSON.parse(localStorage.getItem(taskActivityStorageKey) ?? "{}")), seeds: taskDetailSeedNodesRef.current, action }); }
+    let result: T;
+    try { result = commit({ nodes: workspaceNodesRef.current, activities: parseTaskActivityStore(JSON.parse(localStorage.getItem(taskActivityStorageKey) ?? "{}")), seeds: taskDetailSeedNodesRef.current }); }
     catch (caught) {
       setPersonalCenterState(loadPersonalCenterState());
       try { recoverTaskAiStorage(localStorage); }
@@ -1139,11 +1140,16 @@ function App() {
     setTaskOwnerProposals(JSON.parse(localStorage.getItem(taskOwnerProposalsStorageKey) ?? "{}"));
     setTaskParticipantInvitationOverrides(JSON.parse(localStorage.getItem(taskParticipantInvitationsStorageKey) ?? "{}"));
     setLegacyTaskSnapshots(loadLegacyTaskSnapshots()); setLatestLegacyTask(loadLatestLegacyTaskSnapshot());
-    clearTaskFileDraftSessions(result.deletedIds);
-    const nextState = loadPersonalCenterState();
-    setPersonalCenterState(nextState);
+    setPersonalCenterState(loadPersonalCenterState());
     window.dispatchEvent(new Event(personalCenterChangedEvent));
     window.dispatchEvent(new Event("agentdoor-handoff-notifications-changed"));
+    return result;
+  };
+
+  const commitMembershipAction = (action: TeamLifecycleAction) => {
+    const result = commitTeamStorage((input) => commitTeamLifecycle({ storage: localStorage, teamId: activeTeamId, actorId: currentUserId, actorName: currentUserName, ...input, action }));
+    clearTaskFileDraftSessions(result.deletedIds);
+    const nextState = loadPersonalCenterState();
     if (action.kind === "delete" || (action.kind === "exit" && action.memberId === currentUserId)) {
       setPersonalInfoOpen(false); setSelectedTaskId(null);
       setActiveTeamId(nextState.teams[0]?.id ?? "");
@@ -1152,7 +1158,15 @@ function App() {
     }
   };
 
-  if (!personalCenterState.teams.length) return <div className="app-shell"><main className="team-empty-workspace"><h1>{locale === "en" ? "No team yet" : "你还没有加入团队"}</h1><p>{locale === "en" ? "Create a team, or ask a teammate for an invitation link." : "创建一个新团队，或通过同事提供的邀请链接加入。"}</p><Button onClick={() => setCreateEmptyTeamOpen(true)}>{locale === "en" ? "Create team" : "创建团队"}</Button><Button variant="ghost" onClick={signOutWorkspace}>{locale === "en" ? "Sign out" : "退出登录"}</Button><CreateTeamDialog open={createEmptyTeamOpen} onOpenChange={setCreateEmptyTeamOpen} /></main></div>;
+  const restoreTeam = (teamId: string) => {
+    commitTeamStorage((input) => restoreDeletedTeam({ storage: localStorage, teamId, actorId: currentUserId, ...input }));
+    if (!activeTeamId) {
+      setActiveTeamId(teamId);
+      if (workspaceSession) saveWorkspaceSession({ ...workspaceSession, activeTeamId: teamId });
+    }
+  };
+
+  if (!personalCenterState.teams.length) return <div className="app-shell"><main className="team-empty-workspace"><h1>{locale === "en" ? "No team yet" : "你还没有加入团队"}</h1><p>{locale === "en" ? "Create a team, or ask a teammate for an invitation link." : "创建一个新团队，或通过同事提供的邀请链接加入。"}</p><Button onClick={() => setCreateEmptyTeamOpen(true)}>{locale === "en" ? "Create team" : "创建团队"}</Button><Button variant="ghost" onClick={signOutWorkspace}>{locale === "en" ? "Sign out" : "退出登录"}</Button>{hasRestorableTeams(currentUserId) && <MyTeamsPanel actorId={currentUserId} onRestore={restoreTeam} state={personalCenterState} />}<CreateTeamDialog open={createEmptyTeamOpen} onOpenChange={setCreateEmptyTeamOpen} /></main></div>;
 
   return (
     <MockDataProvider tasks={additionalMockTasks}><MemberInvitationProvider ref={memberInvitationsRef} state={personalCenterState} onStateChange={setPersonalCenterState} teamId={activeTeamId} members={collaborationMembers}>
@@ -1180,7 +1194,7 @@ function App() {
         userProfile={personalCenterState.profile}
       />
 
-      <PersonalCenterModal key={activeTeamId} activeModule={personalCenterModule} activeTeamId={activeTeamId} members={collaborationMembers} onActiveTeamChange={changeActiveTeam} onModuleChange={setPersonalCenterModule} onOpenChange={changePersonalInfoOpen} onOpenEvidence={openTask} onStateChange={setPersonalCenterState} open={personalInfoOpen} state={personalCenterState} />
+      <PersonalCenterModal key={activeTeamId} activeModule={personalCenterModule} activeTeamId={activeTeamId} members={collaborationMembers} onActiveTeamChange={changeActiveTeam} onModuleChange={setPersonalCenterModule} onOpenChange={changePersonalInfoOpen} onOpenEvidence={openTask} onRestoreTeam={restoreTeam} onStateChange={setPersonalCenterState} open={personalInfoOpen} state={personalCenterState} />
 
       <main className="main-content">
         {personalTagLoadError && <p role="alert">{personalTagLoadError}</p>}

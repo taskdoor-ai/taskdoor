@@ -35,6 +35,28 @@ test('only owner can delete last team; unrelated team and records survive', asyn
   assert.equal(result.directory.teams.length, 0); assert.deepEqual(result.nodes, [source.nodes[3]]);
 });
 
+test('deleted team is kept 30 days; only its owner can restore tasks and records, expired teams are gone', async () => {
+  const { commitTeamLifecycle, readDeletedTeams, restoreDeletedTeam, readTeamLifecycleHistory } = await import('../src/features/members/lib/team-lifecycle-storage');
+  const source = input(); const values = new Map<string, string>([['agentdoor-task-owner-proposals', JSON.stringify({ parent: '周岚', other: '周岚' })]]);
+  const storage = { getItem: (k: string) => values.get(k) ?? null, setItem: (k: string, v: string) => { values.set(k, v); }, removeItem: (k: string) => { values.delete(k); } } as Storage;
+  const activities = { parent: [{ id: 'a1' }] } as never;
+  const deleted = commitTeamLifecycle({ storage, directory: { ...structuredClone(initialPersonalCenterState), teams: [source.team] }, teamId: source.team.id, actorId: '周岚', actorName: '周岚', nodes: source.nodes, activities, seeds: source.nodes, action: { kind: 'delete', name: source.team.name } });
+  assert.deepEqual(JSON.parse(values.get('agentdoor-task-owner-proposals')!), { other: '周岚' });
+  const [entry] = readDeletedTeams(storage);
+  assert.equal(entry.team.id, source.team.id); assert.equal(entry.expiresAt - entry.deletedAt, 30 * 86400000);
+  const args = { storage, directory: deleted.directory, teamId: source.team.id, nodes: deleted.nodes, activities: deleted.activities, seeds: deleted.seeds };
+  assert.throws(() => restoreDeletedTeam({ ...args, actorId: '陈默' }), /仅团队拥有者/);
+  assert.throws(() => restoreDeletedTeam({ ...args, actorId: '周岚', now: entry.expiresAt }), /30 天/);
+  const restored = restoreDeletedTeam({ ...args, actorId: '周岚', now: entry.expiresAt - 1 });
+  assert.deepEqual(restored.directory.teams.map(t => t.id), [source.team.id]);
+  assert.deepEqual(new Set(restored.nodes.map(n => n.id)), new Set(source.nodes.map(n => n.id)));
+  assert.deepEqual(restored.activities, activities);
+  assert.deepEqual(JSON.parse(values.get('agentdoor-task-owner-proposals')!), { other: '周岚', parent: '周岚' });
+  assert.deepEqual(readDeletedTeams(storage), []);
+  assert.equal(readTeamLifecycleHistory(storage).at(-1)?.kind, 'restore');
+  assert.throws(() => restoreDeletedTeam({ ...args, directory: restored.directory, actorId: '周岚' }));
+});
+
 test('removed people are not reintroduced from demo directory; admin cannot invite admin', async () => {
   const { getTeamPeople, createTeamEmailInvitation } = await import('../src/features/members/lib/team-invitations');
   const team = base();

@@ -33,14 +33,14 @@
       "id": "fig-work-003",
       "moduleId": "workspace-navigation",
       "page": "个人设置与团队设置的导航入口。",
-      "state": "English，1280×720；当前主工作区运行页面，姓名首字母头像；业务原文保留。",
+      "state": "English，1280×720；当前主工作区运行页面，个人设置含 Profile、My responsibilities、My teams，姓名首字母头像；业务原文保留。",
       "type": "current-page",
-      "source": "http://127.0.0.1:5173/",
+      "source": "http://localhost:5181/",
       "path": "assets/workspace-navigation/settings-en.png",
-      "capturedAt": "2026-09-22",
+      "capturedAt": "2026-10-09",
       "status": "captured",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09"
     },
     {
       "id": "fig-list-002",
@@ -1175,14 +1175,14 @@
       "page": "个人设置与团队设置的导航入口。",
       "state": "English，1280×720；当前主工作区运行页面，姓名首字母头像；业务原文保留。",
       "type": "current-page",
-      "source": "http://127.0.0.1:5173/",
+      "source": "http://localhost:5181/",
       "path": "assets/workspace-navigation/settings-en.png",
-      "capturedAt": "2026-09-22",
+      "capturedAt": "2026-10-09",
       "status": "captured",
       "locale": "en",
       "figureId": "FIG-PREVIEW-017",
       "reusedFrom": "fig-work-003",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09"
     },
     {
       "id": "fig-preview-018",

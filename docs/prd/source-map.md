@@ -1,5 +1,11 @@
 # PRD 来源映射
 
+## PRD-0073：团队删除可恢复与我的团队（2026-10-09）
+
+`team-lifecycle-storage.ts` 删除团队时将团队、任务节点、详情种子、活动、交接通知、团队回收站、任务分配覆盖及任务文件／讨论存储移入 `agentdoor-deleted-teams`，保留 30 天；`readDeletedTeams` 读取时排除过期记录，`restoreDeletedTeam` 校验有效拥有者、期限和重复恢复后经恢复日志一次写回，并追加 restore 操作记录。`MyTeamsPanel.tsx` 在个人设置和无团队页展示团队列表、角色、加入时间、成员人数及删除倒计时；`PersonalInfoDialog.tsx` 新增入口，`TeamLifecycle.tsx` 更新删除说明。`memberProfiles.ts` 的成员关系新增可选 `joinedAt`，创建团队、接受邀请和登录加入时写入。
+
+FIG-WORK-003（同复用 FIG-PREVIEW-017）`settings-en.png` 于 2026-10-09 从主工作区 Vite 服务 `http://localhost:5181/` 重新采集，English，裁切缩放至 1280×720，显示新增的 My teams 入口。
+
 ## PRD-0072：任务排期仅保留截止日期（2026-09-30）
 
 当前协议证据：`skills/agentdoor-task-planner/references/planning-v0.2.schema.json` 的 schedule 仅含 dueOn、basis、assumptions、evidenceRefs；`planning-v0.2.md`、Skill 入口及 Python 校验器同步截止日期语义。`server/test-lab/skills.ts` 在当前调用指令中明确日期规则，旧 Skill 快照原文保持；`server/testLabDeadlineOnly.test.ts` 验证截止可为空、拒绝 startOn 及历史快照调用约束。
