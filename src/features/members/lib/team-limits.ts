@@ -19,7 +19,7 @@ export function prepareCreatedTeam(directory: PersonalCenterState, identity: Cre
   const id = `preview-team-${crypto.randomUUID()}`;
   const team: TeamResponsibilityProfile = {
     id, name, createdBy: identity.userId, role: '拥有者', coverage: '', missingSources: '', lastSyncedAt: '刚刚', inviteToken: crypto.randomUUID(),
-    memberships: [{ id: `${id}:${identity.userId}`, memberId: identity.userId, email: identity.email, name: identity.name, role: 'owner', status: 'active', responsibility: '' }],
+    memberships: [{ id: `${id}:${identity.userId}`, memberId: identity.userId, email: identity.email, name: identity.name, role: 'owner', status: 'active', responsibility: '', joinedAt: new Date().toISOString() }],
     responsibilityDocument: { content: '', updatedAt: new Date().toISOString(), updatedBy: identity.name, revisionId: crypto.randomUUID() }, observedClaims: [],
   };
   return { team, directory: { ...directory, teams: [...directory.teams, team] } };

@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-10-08T12:12:13.179Z",
+  "generatedAt": "2026-10-09T08:37:14.334Z",
   "modules": [
     {
       "moduleId": "product-preview",
@@ -327,7 +327,7 @@
       "moduleId": "deletion-recovery-retention",
       "title": "删除与数据保留",
       "group": "系统规则",
-      "summary": "任务分支进入回收站保留 30 天，可恢复或彻底删除；文件和团队删除不可恢复。",
+      "summary": "任务分支进入回收站、删除的团队保留 30 天，期间可恢复；文件删除不可恢复。",
       "source": "docs/prd/modules/13-deletion-recovery-retention.md",
       "url": "./index.html#deletion-recovery-retention",
       "sections": [

@@ -64,6 +64,7 @@ export type TeamMembership = {
   email: string;
   id: string;
   invitedAt?: string;
+  joinedAt?: string;
   memberId?: string;
   responsibility?: string;
   role: TeamAccessRole;
@@ -176,8 +177,26 @@ const customerSuccessMemberships: TeamMembership[] = [
 
 const teamSettingsFixture = (teamId: string) => ({
   inviteToken: teamId === "creator-commerce" ? "creator-commerce-6kfuzvtc" : teamId === "platform" ? "platform-4nq7h2ks" : teamId === "supply-operations" ? "supply-operations-8p3m5r2x" : teamId === "customer-success" ? "customer-success-2w9d6k4q" : `${teamId}-invite`,
-  memberships: (teamId === "creator-commerce" ? creatorCommerceMemberships : teamId === "platform" ? platformMemberships : teamId === "supply-operations" ? supplyOperationsMemberships : teamId === "customer-success" ? customerSuccessMemberships : []).map((membership) => ({ ...membership })),
+  memberships: (teamId === "creator-commerce" ? creatorCommerceMemberships : teamId === "platform" ? platformMemberships : teamId === "supply-operations" ? supplyOperationsMemberships : teamId === "customer-success" ? customerSuccessMemberships : []).map((membership, index) => ({
+    ...membership,
+    // Demo join dates: the first administrator founded the team, colleagues joined a week apart.
+    joinedAt: fixtureTeamFoundedAt[teamId] ? new Date(Date.parse(fixtureTeamFoundedAt[teamId]) + index * 7 * 86400000).toISOString() : undefined,
+  })),
 });
+
+const fixtureTeamFoundedAt: Record<string, string> = {
+  "creator-commerce": "2025-11-03T09:00:00+08:00",
+  platform: "2026-01-12T09:00:00+08:00",
+  "supply-operations": "2026-03-02T09:00:00+08:00",
+  "customer-success": "2026-05-18T09:00:00+08:00",
+};
+
+/** Saved demo directories predate join dates; fill them from the fixture without touching real memberships. */
+function withFixtureJoinDates(team: TeamResponsibilityProfile): TeamResponsibilityProfile {
+  if (team.memberships.every((membership) => membership.joinedAt || membership.status !== "active")) return team;
+  const fixture = new Map(teamSettingsFixture(team.id).memberships.map((membership) => [membership.id, membership.joinedAt]));
+  return { ...team, memberships: team.memberships.map((membership) => membership.joinedAt || membership.status !== "active" || !fixture.get(membership.id) ? membership : { ...membership, joinedAt: fixture.get(membership.id) }) };
+}
 
 export const initialPersonalCenterState: PersonalCenterState = {
   profile: {
@@ -444,6 +463,7 @@ const isMembership = (value: unknown): value is TeamMembership => {
     && ["active", "invited"].includes(membership.status ?? "")
     && (membership.memberId === undefined || isText(membership.memberId))
     && (membership.invitedAt === undefined || isText(membership.invitedAt))
+    && (membership.joinedAt === undefined || isText(membership.joinedAt))
     && (membership.name === undefined || isText(membership.name))
     && (membership.emailInvitation === undefined || (isText(membership.emailInvitation.token)
       && isText(membership.emailInvitation.inviter) && Number.isFinite(membership.emailInvitation.createdAt)
@@ -637,7 +657,7 @@ function readPersonalCenterDirectory(): PersonalCenterState {
 
 export function loadPersonalCenterDirectory(): PersonalCenterState {
   const state = readPersonalCenterDirectory();
-  return { ...state, teams: state.teams.map(normalizeTeamOwnership) };
+  return { ...state, teams: state.teams.map((team) => withFixtureJoinDates(normalizeTeamOwnership(team))) };
 }
 
 export function savePersonalCenterDirectory(state: PersonalCenterState): boolean {

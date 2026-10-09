@@ -4,7 +4,7 @@ title: "团队管理"
 group: "账号与团队"
 version: "1.0"
 status: "review"
-last_change: "PRD-0064"
+last_change: "PRD-0073"
 summary: "创建团队或接受邀请，进入工作区。"
 lifecycle_stage: "团队激活"
 pages: "团队进入页, 团队设置页, 团队邀请确认页"
@@ -117,7 +117,7 @@ operations: "create_team, read_team, update_team, inspect_invitation_link, accep
 - 拥有者可在团队设置将所有权转让给另一名有效成员。确认后接手人成为唯一拥有者，原拥有者成为管理员；转让不改变任务分工。
 - 拥有者不能被其他成员移除；本人离开前先转让所有权，再按[成员退出](14-membership-account-exit.md)办理任务交接。
 - 无有效转让对象时先邀请成员加入。提交时重新校验身份和成员资格；失败保留选择，团队仍保留原拥有者。
-- 删除团队仅限拥有者，流程和结果见[删除与数据保留](13-deletion-recovery-retention.md)。
+- 删除与恢复团队仅限拥有者，删除后保留 30 天；流程和结果见[删除与数据保留](13-deletion-recovery-retention.md)。
 
 ## 4. 功能验收标准
 

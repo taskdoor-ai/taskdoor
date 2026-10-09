@@ -93,7 +93,7 @@ export function acceptTeamEmailInvitation(state: PersonalCenterState, token: str
   if (occupiedTeamSeats(team, now) > MAX_TEAM_MEMBERS) throw new Error("团队人数已达 50 人上限");
   return { ...state, teams: state.teams.map(team => team.id === invitation.team.id ? {
     ...team, memberships: team.memberships.map(member => member.id === invitation.membership.id
-      ? { ...member, status: "active", name: identity.name.trim(), responsibility: member.responsibility ?? "" } : member),
+      ? { ...member, status: "active", name: identity.name.trim(), responsibility: member.responsibility ?? "", joinedAt: new Date(now).toISOString() } : member),
   } : team) };
 }
 

@@ -17,7 +17,7 @@ export function prepareOnboardingWorkspace(state: OnboardingState, directory: Pe
     const member = existing?.memberships.find(item => item.email.toLowerCase() === state.email || (state.email === mockWorkspaceEmail && item.memberId === mockWorkspaceUserId));
     if (!existing && preview.role === "admin" && countCreatedTeams(teams, session) >= MAX_CREATED_TEAMS) throw new Error(`最多可创建 ${MAX_CREATED_TEAMS} 个团队`);
     if (existing && !member && occupiedTeamSeats(existing) >= MAX_TEAM_MEMBERS) throw new Error("团队人数已达 50 人上限");
-    const membership: TeamMembership = { ...member, id: member?.id ?? `${preview.id}:${userId}`, memberId: userId, email: state.email, name: state.name, role: member?.role ?? (!existing && preview.role === "admin" ? "owner" : preview.role), status: "active", responsibility: member?.responsibility ?? "" };
+    const membership: TeamMembership = { ...member, id: member?.id ?? `${preview.id}:${userId}`, memberId: userId, email: state.email, name: state.name, role: member?.role ?? (!existing && preview.role === "admin" ? "owner" : preview.role), status: "active", responsibility: member?.responsibility ?? "", joinedAt: member?.status === "active" ? member.joinedAt : new Date().toISOString() };
     const team: TeamResponsibilityProfile = existing ? {
       ...existing,
       memberships: member ? existing.memberships.map(item => item.id === member.id ? membership : item) : [...existing.memberships, membership],
