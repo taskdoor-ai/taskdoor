@@ -557,6 +557,11 @@ function App() {
 
   const [recycleOpen, setRecycleOpen] = useState(false);
   const [recycleEntries, setRecycleEntries] = useState<RecycledTask[]>([]);
+  // Team tasks in settings show the recycle bin too; read it when settings open.
+  const recycleBinForSettings = useMemo(() => {
+    if (!personalInfoOpen) return [];
+    try { return readRecycleBin(localStorage); } catch { return []; }
+  }, [personalInfoOpen, recycleEntries]);
   const [recycleError, setRecycleError] = useState("");
   const currentDeletionState = () => {
     const stored = localStorage.getItem(workspaceNodesStorageKey);
@@ -1194,7 +1199,7 @@ function App() {
         userProfile={personalCenterState.profile}
       />
 
-      <PersonalCenterModal key={activeTeamId} activeModule={personalCenterModule} activeTeamId={activeTeamId} members={collaborationMembers} onActiveTeamChange={changeActiveTeam} onModuleChange={setPersonalCenterModule} onOpenChange={changePersonalInfoOpen} onOpenEvidence={openTask} onRestoreTeam={restoreTeam} onStateChange={setPersonalCenterState} open={personalInfoOpen} state={personalCenterState} />
+      <PersonalCenterModal key={activeTeamId} activeModule={personalCenterModule} activeTeamId={activeTeamId} members={collaborationMembers} onActiveTeamChange={changeActiveTeam} onModuleChange={setPersonalCenterModule} onOpenChange={changePersonalInfoOpen} nodes={workspaceNodes} onOpenEvidence={openTask} onRestoreTeam={restoreTeam} onStateChange={setPersonalCenterState} open={personalInfoOpen} recycleBin={recycleBinForSettings} state={personalCenterState} />
 
       <main className="main-content">
         {personalTagLoadError && <p role="alert">{personalTagLoadError}</p>}

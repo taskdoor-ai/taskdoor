@@ -44,17 +44,20 @@ function DialogOverlay({
 function DialogContent({
   className,
   overlayClassName,
+  overlayForceRender = false,
   children,
   showCloseButton = true,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
   overlayClassName?: string
+  /** A dialog opened from inside another one draws its own overlay too. */
+  overlayForceRender?: boolean
 }) {
   const m = useModuleCopy();
   return (
     <DialogPortal>
-      <DialogOverlay className={overlayClassName} />
+      <DialogOverlay className={overlayClassName} forceRender={overlayForceRender} />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(

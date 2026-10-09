@@ -4,6 +4,7 @@
 
 | 变更 ID | 日期 | 版本 | 影响模块 | 类型 | 变更内容 | 原因与影响 | 相关链接 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| PRD-0075 | 2026-10-09 | 1.1 | Agent 与 CLI 连接、团队管理、工作区与导航、权限 | 访问令牌、团队任务与审计记录 | 个人设置新增访问令牌：创建（名称、有效期、操作范围、团队与任务范围）、令牌值只显示一次、列表与删除；团队设置为拥有者和管理员新增团队任务（汇总、五个分类、批量归档、指定负责人、加入任务、恢复，均需填写原因）与审计记录（按操作人和动作筛选，来自任务的记录链接到该任务）。 | 用户要求 PM 演示与正式项目设置页一致；补齐个人凭据管理和团队治理入口，不扩大成员权限。 | [Agent 与 CLI 连接](modules/05-cli-connection.md)、[团队管理](modules/03-team-onboarding.md)、[工作区与导航](modules/04-workspace-navigation.md)、[权限](modules/15-permissions-errors-nfr.md) |
 | PRD-0074 | 2026-10-09 | 1.1 | Agent 与 CLI 连接、产品预览 | 连接 AI 与正式项目对齐 | 连接 AI 改为把安装提示词发给所选工具，由其安装并登录 TaskDoor CLI，可一键复制并在工具中打开；常用命令改为 CLI 已提供的账号、工作空间、任务读取、设备登录与退出命令；无连接回执时不显示连接状态；工具名称改为 ChatGPT、Claude、WorkBuddy、Cursor。 | 用户要求 PM 演示与正式项目的连接 AI 设计一致；不改变 CLI 目标能力与权限规则，任务内 AI 菜单截图待重新采集。 | [Agent 与 CLI 连接](modules/05-cli-connection.md)、[产品预览](modules/00-product-preview.md) |
 | PRD-0073 | 2026-10-09 | 1.1 | 删除与数据保留、团队管理、工作区与导航、权限 | 团队删除可恢复 | 删除团队改为保留 30 天，期间拥有者可在个人设置新增的“我的团队”中恢复，超过 30 天永久删除；“我的团队”列出本人加入的团队、角色、加入时间与成员人数，已删除团队显示剩余天数。 | 用户要求误删团队可找回，并集中查看所加入的团队；替代团队删除不可恢复的规则，其他成员只能查看不能恢复。 | [删除与保留](modules/13-deletion-recovery-retention.md)、[团队管理](modules/03-team-onboarding.md)、[工作区与导航](modules/04-workspace-navigation.md)、[权限](modules/15-permissions-errors-nfr.md) |
 | PRD-0072 | 2026-09-30 | 1.1 | 任务创建 | 日期契约统一 | 任务排期仅保留截止日期，规划 JSON 的 schedule 移除 startOn，同步生成指令与校验器；系统创建时间独立保留。 | 用户明确只需截止时间；消除输出协议与现有创建页面的不一致，不改写历史运行与 Skill 快照。 | [任务创建](modules/07-task-creation.md)、[来源映射](source-map.md)、[实现矩阵](current-implementation-matrix.md) |
