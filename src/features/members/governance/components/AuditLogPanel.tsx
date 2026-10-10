@@ -1,6 +1,6 @@
 import { GovernancePagination, GOVERNANCE_PAGE_SIZE } from '@/features/members/governance/components/GovernancePagination'
 import { useState } from 'react'
-import { PersonAvatar } from '@/shared/ui/PersonAvatar'
+import { MemberListIdentity } from '@/features/members/components/MemberListIdentity'
 import { Bot } from 'lucide-react'
 import {
   auditActions,
@@ -130,9 +130,8 @@ export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEv
                 </div>
                 <span className="audit-log-actor">
                   {event.actorType === 'SYSTEM'
-                    ? <span aria-hidden="true" className="audit-log-system-avatar"><Bot size={14} /></span>
-                    : <PersonAvatar name={actorName(event)} personId={event.actorId} showProfilePreview={members.some(member => member.id === event.actorId)} size="xs" />}
-                  <span>{actorName(event)}</span>
+                    ? <span className="member-list-identity"><span aria-hidden="true" className="audit-log-system-avatar"><Bot size={16} /></span><span>{actorName(event)}</span></span>
+                    : <MemberListIdentity name={actorName(event)} personId={event.actorId} profile={members.find(member => member.id === event.actorId)} showProfilePreview={members.some(member => member.id === event.actorId)} />}
                 </span>
               </li>
             ))}

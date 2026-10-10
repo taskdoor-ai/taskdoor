@@ -1,6 +1,6 @@
 import { GovernancePagination, GOVERNANCE_PAGE_SIZE } from '@/features/members/governance/components/GovernancePagination'
 import { useMemo, useState } from 'react'
-import { PersonAvatar } from '@/shared/ui/PersonAvatar'
+import { MemberListIdentity } from '@/features/members/components/MemberListIdentity'
 import { TaskStatusBadge, taskStatusDefinition, type TaskStatus } from '@/shared/ui/TaskStatusBadge'
 import {
   governanceViews,
@@ -53,8 +53,7 @@ export function GovernanceTasksPanel({
   const [owning, setOwning] = useState<GovernanceTask | null>(null)
   const [joining, setJoining] = useState<GovernanceTask | null>(null)
   const [restoring, setRestoring] = useState<GovernanceTask | null>(null)
-  const live = useMemo(() => all.filter(row => !row.deletedAt), [all])
-  const rows = rowsOf(view, live, now)
+  const rows = useMemo(() => rowsOf(view, all, now), [view, all, now])
   const pageCount = Math.max(1, Math.ceil(rows.length / GOVERNANCE_PAGE_SIZE))
   const currentPage = Math.min(page, pageCount)
   const visibleRows = rows.slice((currentPage - 1) * GOVERNANCE_PAGE_SIZE, currentPage * GOVERNANCE_PAGE_SIZE)
@@ -82,7 +81,7 @@ export function GovernanceTasksPanel({
         <strong>{t('governance.total', { count: String(rows.length) })}</strong>
       </div>
       <div aria-label={t('governance.views')} className="team-members-summary team-members-tabs" role="tablist">
-        {governanceViews.filter((value) => value !== 'trash').map((value) => (
+        {governanceViews.map((value) => (
           <Button
             aria-selected={view === value}
             key={value}
@@ -141,8 +140,9 @@ export function GovernanceTasksPanel({
                     <time dateTime={deleted ? row.deletedAt! : row.lastActivityAt}>{when.format(new Date(deleted ? row.deletedAt! : row.lastActivityAt))}</time>
                   </div>
                   <div className="governance-task-owner">
-                    {row.ownerMemberId && <PersonAvatar name={nameOf(row.ownerMemberId) ?? t('members.former')} personId={row.ownerMemberId} size="xs" />}
-                    <span>{row.ownerMemberId ? nameOf(row.ownerMemberId) ?? t('members.former') : t('governance.noOwner')}</span>
+                    {row.ownerMemberId
+                      ? <MemberListIdentity name={nameOf(row.ownerMemberId) ?? t('members.former')} personId={row.ownerMemberId} profile={members.find(member => member.id === row.ownerMemberId)} />
+                      : <span>{t('governance.noOwner')}</span>}
                   </div>
                   <div className="member-invited-actions governance-row-actions">
                     {deleted ? (

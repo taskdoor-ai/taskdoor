@@ -61,5 +61,10 @@
 .governance-tasks-panel > .team-members-summary:not(.team-members-tabs) { margin-top: var(--ad-space-5); padding-bottom: 0; }
 .governance-tasks-panel > .team-members-tabs { margin-top: var(--ad-space-2); padding-bottom: var(--ad-space-2); }
 
-.governance-tasks-panel .team-member-list-head span:last-child { text-align: center; }
+.governance-tasks-panel .team-member-list-head span:last-child { justify-self: stretch; text-align: center; }
 .governance-tasks-panel .governance-row-actions { justify-self: stretch; justify-content: center; }
+.governance-tasks-panel .governance-row-actions > [data-slot="button"] { font-size: var(--ad-text-caption); font-weight: 400; line-height: 1.5; }
+
+.member-list-identity { display: inline-flex; min-width: 0; align-items: center; gap: var(--ad-space-2); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); font-weight: 400; }
+.member-list-identity > .person-name-trigger { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.audit-log-system-avatar { width: 24px; height: 24px; }
