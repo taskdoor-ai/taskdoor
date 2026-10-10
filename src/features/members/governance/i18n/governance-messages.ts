@@ -6,7 +6,7 @@ export const governanceMessages = {
   "trash.governanceTitle": { en: "Restore “{title}”?", zh: "恢复「{title}」？" },
   "trash.governanceBody": { en: "It has no active owner, so restoring it is your decision as an administrator and is recorded with your reason. It goes back where it was, with everything deleted along with it.", zh: "它没有在职的负责人，恢复由你以管理员身份决定，并连同原因一起记录。它会回到原处，连同一起被删除的内容。" },
   "trash.governanceConfirm": { en: "Restore", zh: "恢复" },
-  "trash.restore": { en: "Restore {title}", zh: "恢复 {title}" },
+  "trash.restore": { en: "Restore", zh: "恢复" },
   "common.retry": { en: "Try again", zh: "重新尝试" },
   "governance.title": { en: "Team tasks", zh: "团队任务" },
   "governance.note": { en: "The number, activity and owners of all the team’s tasks. Task content is not shown here.", zh: "查看团队所有任务的数量、活动和负责人；任务内容不在此显示。" },

@@ -68,10 +68,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/team-onboarding/team-tasks-zh.jpg",
       "capturedAt": "2026-10-10",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
       "updatedAt": "2026-10-10",
-      "editorialNote": "替换过期截图；证明当前前端展示，不作为生产 API 能力验证。"
+      "editorialNote": "PRD-0100：恢复回收站分类后旧截图失效，撤下正文，待重新采集。"
     },
     {
       "id": "fig-team-008",
