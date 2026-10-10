@@ -193,6 +193,7 @@ function withStableHeadings(body, moduleId) {
       h2Index += 1;
       return `<h2 id="${moduleId}-${suffix}">${escapeHtml(title)}</h2>`;
     })
+    .replace(/^#### (.+)$/gm, (_, title) => `<h4 id="${moduleId}-${escapeHtml(title)}">${escapeHtml(title)}</h4>`)
     .replace(/^### (\d+)\.(\d+) (.+)$/gm, (_, major, minor, title) => {
       const id = `${moduleId}-section-${major}-${minor}`;
       return `<h3 id="${id}">${major}.${minor} ${escapeHtml(title)}</h3>`;
@@ -251,7 +252,7 @@ function sectionIndex(module) {
   }));
 }
 
-function renderShell({ title, version, modules, changelogHtml, generatedAt }) {
+function renderShell({ title, version, modules, changelogHtml, generatedAt, shortcuts = [] }) {
   const navigationGroups = [];
   modules.forEach((module, index) => {
     const name = module.metadata.group || "文档";
@@ -267,6 +268,10 @@ function renderShell({ title, version, modules, changelogHtml, generatedAt }) {
       `<a class="nav-link${index === 0 ? " is-active" : ""}" href="#${module.metadata.module_id}" data-module-link="${module.metadata.module_id}"><span>${String(index + 1).padStart(2, "0")}</span>${escapeHtml(module.metadata.title)}</a>`,
     );
   });
+  const accountGroup = navigationGroups.find(group => group.name === "账号与团队");
+  if (accountGroup) for (const { label, target } of shortcuts) {
+    accountGroup.links.push(`<a class="nav-link nav-shortcut" href="#${escapeHtml(target)}"><span>·</span>${escapeHtml(label)}</a>`);
+  }
   const navigation = navigationGroups
     .map(({ name, links }) => `<section class="nav-group"><div class="nav-group-title">${escapeHtml(name)}</div>${links.join("")}</section>`)
     .join("");
@@ -419,7 +424,12 @@ export async function build() {
   const generatedAt = new Date().toISOString();
   const title = index.metadata.title || "TaskDoor 产品需求文档";
   const version = index.metadata.version || "0.1";
-  const html = renderShell({ title, version, modules, changelogHtml, generatedAt });
+  const shortcutsSource = index.body.split("## 设置快捷入口")[1]?.split("\n## ")[0] || "";
+  const shortcuts = [...shortcutsSource.matchAll(/\[([^\]]+)\]\(#([^)]+)\)/g)].map((match) => ({ label: match[1], target: match[2] }));
+  for (const shortcut of shortcuts) {
+    if (!modules.some(module => module.html.includes(`id="${shortcut.target}"`))) throw new Error(`Missing shortcut target: ${shortcut.target}`);
+  }
+  const html = renderShell({ title, version, modules, changelogHtml, generatedAt, shortcuts });
   const moduleIndex = {
     version: "1.0",
     generatedAt,

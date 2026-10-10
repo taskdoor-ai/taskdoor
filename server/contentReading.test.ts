@@ -26,3 +26,26 @@ test('local demo translations match exact source and task, preserving custom edi
   assert.match(Object.values(demo['ccx-serum-budget-gate'])[2], /CNY 5,000/);
   assert.match(Object.values(demo['ccx-serum-budget-gate'])[2], /without waiting for the owner/);
 });
+
+test('task content stays original in every language', async () => {
+  const { mockTaskField, mockTaskCatalog } = await import('../src/ai/mock/i18n/mockContent');
+  const [id, copy] = Object.entries(mockTaskCatalog)[0];
+  assert.equal(mockTaskField('en', id, 'title', copy.title.zh), copy.title.zh);
+  assert.equal(mockTaskField('en', id, 'goal', copy.goal.zh), copy.goal.zh);
+});
+
+test('discussion translation entries are reused across reloads and isolated by source and language', async () => {
+  const { createDiscussionTranslationEntries } = await import('../src/ai/mock/i18n/discussion-translation-entries');
+  const saved = new Map<string, string>();
+  const storage = { getItem: (key: string) => saved.get(key) ?? null, setItem: (key: string, value: string) => { saved.set(key, value); } };
+  let calls = 0;
+  const lookup = () => { calls++; return 'Translation'; };
+  const entries = createDiscussionTranslationEntries(storage);
+  assert.equal(entries.read('task', '原文', 'en', lookup), 'Translation');
+  assert.equal(entries.read('task', '原文', 'en', lookup), 'Translation');
+  assert.equal(createDiscussionTranslationEntries(storage).read('task', '原文', 'en', lookup), 'Translation');
+  assert.equal(calls, 1);
+  entries.read('task', '修改后的原文', 'en', lookup);
+  entries.read('task', '原文', 'zh-CN', lookup);
+  assert.equal(calls, 3);
+});

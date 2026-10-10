@@ -1,4 +1,7 @@
+import { GovernancePagination, GOVERNANCE_PAGE_SIZE } from '@/features/members/governance/components/GovernancePagination'
 import { useState } from 'react'
+import { PersonAvatar } from '@/shared/ui/PersonAvatar'
+import { Bot } from 'lucide-react'
 import {
   auditActions,
   filterAuditEvents,
@@ -27,12 +30,16 @@ const GOVERNANCE = 'governance'
 export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEvent[]; members: PersonOption[]; onOpenTask: (taskId: string) => void }) {
   const { locale } = useI18n()
   const t = useCatalog(governanceMessages)
+  const [page, setPage] = useState(1)
   const [actor, setActor] = useState<string>(ANY)
   const [action, setAction] = useState<string>(ANY)
   const shown = filterAuditEvents(events, {
     ...(actor !== ANY ? { actorId: actor } : {}),
     ...(action === GOVERNANCE ? { actions: governanceWrites } : action !== ANY ? { actions: [action] } : {}),
   })
+  const pageCount = Math.max(1, Math.ceil(shown.length / GOVERNANCE_PAGE_SIZE))
+  const currentPage = Math.min(page, pageCount)
+  const visibleEvents = shown.slice((currentPage - 1) * GOVERNANCE_PAGE_SIZE, currentPage * GOVERNANCE_PAGE_SIZE)
   const when = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' })
   const actorName = (event: AuditEvent) =>
     event.actorType === 'SYSTEM'
@@ -51,7 +58,7 @@ export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEv
       <p role="note">{t('audit.note')}</p>
       <div className="team-members-summary team-members-tabs">
         <strong>{t('audit.filter.actor')}</strong>
-        <Select onValueChange={(value) => setActor(String(value))} value={actor}>
+        <Select onValueChange={(value) => { setActor(String(value)); setPage(1) }} value={actor}>
           <SelectTrigger aria-label={t('audit.filter.actor')} size="sm">
             <SelectValue>
               {actor === ANY ? t('audit.filter.anyone') : (members.find((person) => person.id === actor)?.name ?? t('members.former'))}
@@ -67,7 +74,7 @@ export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEv
           </SelectContent>
         </Select>
         <strong>{t('audit.filter.action')}</strong>
-        <Select onValueChange={(value) => setAction(String(value))} value={action}>
+        <Select onValueChange={(value) => { setAction(String(value)); setPage(1) }} value={action}>
           <SelectTrigger aria-label={t('audit.filter.action')} size="sm">
             <SelectValue>
               {action === ANY ? t('audit.filter.anyAction') : action === GOVERNANCE ? t('audit.filter.governanceWrites') : actionLabel(action)}
@@ -95,7 +102,7 @@ export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEv
             <span>{t('audit.column.actor')}</span>
           </div>
           <ul aria-label={t('audit.list')} className="team-member-list">
-            {shown.map((event) => (
+            {visibleEvents.map((event) => (
               <li key={event.id}>
                 <div>
                   <span>
@@ -121,12 +128,18 @@ export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEv
                     <time dateTime={event.occurredAt}>{when.format(new Date(event.occurredAt))}</time>
                   </p>
                 </div>
-                <span className="audit-log-actor">{actorName(event)}</span>
+                <span className="audit-log-actor">
+                  {event.actorType === 'SYSTEM'
+                    ? <span aria-hidden="true" className="audit-log-system-avatar"><Bot size={14} /></span>
+                    : <PersonAvatar name={actorName(event)} personId={event.actorId} showProfilePreview={members.some(member => member.id === event.actorId)} size="xs" />}
+                  <span>{actorName(event)}</span>
+                </span>
               </li>
             ))}
           </ul>
         </div>
       )}
+      {shown.length > 0 && <GovernancePagination label={t('audit.pagination')} page={currentPage} total={pageCount} onChange={setPage} />}
     </section>
   )
 }

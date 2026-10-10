@@ -10,9 +10,8 @@ import type { Locale } from '@/shared/i18n/core';
 export type MockTaskCopy = { title: { zh: string; en: string }; goal: { zh: string; en: string }; records?: Readonly<Record<string, string | undefined>> };
 export const mockTaskCatalog: Readonly<Record<string, MockTaskCopy>> = tasks;
 /** Exact baseline matches only. IDs, stored fields and edited text remain untouched. */
-export function mockTaskField(locale: Locale, id: string, field: 'title' | 'goal', value: string, additional: Readonly<Record<string, MockTaskCopy>> = {}) {
-  const copy = (mockTaskCatalog[id] ?? additional[id])?.[field];
-  return locale === 'en' && copy && value === copy.zh ? copy.en : value;
+export function mockTaskField(_locale: Locale, _id: string, _field: 'title' | 'goal', value: string, _additional: Readonly<Record<string, MockTaskCopy>> = {}) {
+  return value;
 }
 export const mockTeamNames: Record<string, [string, string]> = {
   'creator-commerce': ['达人带货运营团队', 'Creator Commerce'],

@@ -1,13 +1,11 @@
+import { GovernancePagination, GOVERNANCE_PAGE_SIZE } from '@/features/members/governance/components/GovernancePagination'
 import { useMemo, useState } from 'react'
+import { PersonAvatar } from '@/shared/ui/PersonAvatar'
+import { TaskStatusBadge, taskStatusDefinition, type TaskStatus } from '@/shared/ui/TaskStatusBadge'
 import {
-  archiveRows,
   governanceViews,
   MAX_GOVERNANCE_REASON,
-  outcomeLine,
   rowsOf,
-  summarize,
-  tallyOutcomes,
-  type GovernanceOutcome,
   type GovernanceTask,
   type GovernanceView,
 } from '@/features/members/governance/lib/governance'
@@ -32,14 +30,9 @@ import { Textarea } from '@/shared/ui/input'
 import { toast } from '@/shared/ui/toast'
 import '@/features/members/governance/styles/governance.css'
 
-type MessageKey = keyof typeof governanceMessages
 
-/**
- * "Team tasks" in team settings (W3-015), for the team's Owner and administrators, drawn as the
- * production app draws it: the members panel's summary line, tabs and table, a checkbox per row
- * for bulk archiving, and a reason dialog for each action. In the PM demo every action changes
- * this page only; the tasks themselves are untouched.
- */
+
+/** Team task metadata with filters, pagination, and reason-based management actions. */
 export function GovernanceTasksPanel({
   rows: initialRows,
   asOf,
@@ -55,16 +48,16 @@ export function GovernanceTasksPanel({
   const t = useCatalog(governanceMessages)
   const now = Date.parse(asOf)
   const [all, setAll] = useState(initialRows)
-  const [archived, setArchived] = useState<ReadonlySet<string>>(new Set())
+  const [page, setPage] = useState(1)
   const [view, setView] = useState<GovernanceView>('all')
-  const [selected, setSelected] = useState<ReadonlySet<string>>(new Set())
-  const [archiving, setArchiving] = useState<GovernanceTask[] | null>(null)
   const [owning, setOwning] = useState<GovernanceTask | null>(null)
   const [joining, setJoining] = useState<GovernanceTask | null>(null)
   const [restoring, setRestoring] = useState<GovernanceTask | null>(null)
-  const live = useMemo(() => all.filter((row) => !archived.has(row.id)), [all, archived])
+  const live = useMemo(() => all.filter(row => !row.deletedAt), [all])
   const rows = rowsOf(view, live, now)
-  const counts = summarize(live, now)
+  const pageCount = Math.max(1, Math.ceil(rows.length / GOVERNANCE_PAGE_SIZE))
+  const currentPage = Math.min(page, pageCount)
+  const visibleRows = rows.slice((currentPage - 1) * GOVERNANCE_PAGE_SIZE, currentPage * GOVERNANCE_PAGE_SIZE)
   const when = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' })
   const statusText = (status: string) =>
     status in statusMessageKey ? tc(statusMessageKey[status as keyof typeof statusMessageKey]) : status
@@ -72,21 +65,10 @@ export function GovernanceTasksPanel({
 
   const changeView = (next: GovernanceView) => {
     setView(next)
-    setSelected(new Set())
+    setPage(1)
   }
-  const toggle = (id: string) =>
-    setSelected((current) => {
-      const next = new Set(current)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
   const update = (id: string, change: Partial<GovernanceTask>) =>
     setAll((current) => current.map((row) => (row.id === id ? { ...row, ...change } : row)))
-  const ownerName = (row: GovernanceTask) =>
-    row.ownerMemberId
-      ? t('governance.ownerLine', { name: nameOf(row.ownerMemberId) ?? t('members.former') })
-      : t('governance.noOwner')
 
   return (
     <section aria-labelledby="governance-tasks-title" className="team-members-panel governance-tasks-panel">
@@ -97,15 +79,10 @@ export function GovernanceTasksPanel({
       </div>
       <p role="note">{t('governance.note')}</p>
       <div className="team-members-summary">
-        <strong>{t('governance.total', { count: String(counts.total) })}</strong>
-        <span>
-          {t('governance.summary.unowned', { count: String(counts.unowned) })}
-          {' · '}
-          {t('governance.summary.stale', { count: String(counts.stale) })}
-        </span>
+        <strong>{t('governance.total', { count: String(rows.length) })}</strong>
       </div>
       <div aria-label={t('governance.views')} className="team-members-summary team-members-tabs" role="tablist">
-        {governanceViews.map((value) => (
+        {governanceViews.filter((value) => value !== 'trash').map((value) => (
           <Button
             aria-selected={view === value}
             key={value}
@@ -119,40 +96,19 @@ export function GovernanceTasksPanel({
           </Button>
         ))}
       </div>
-      {selected.size > 0 && (
-        // Archive is the only bulk action: there is no bulk delete (W3-055).
-        <div className="team-members-summary">
-          <strong>
-            {selected.size === 1
-              ? t('governance.selected.one')
-              : t('governance.selected', { count: String(selected.size) })}
-          </strong>
-          <div className="member-invited-actions">
-            <Button onClick={() => setSelected(new Set())} size="sm" type="button" variant="ghost">
-              {t('governance.clearSelection')}
-            </Button>
-            <Button
-              onClick={() => setArchiving(rows.filter((row) => selected.has(row.id)))}
-              size="sm"
-              type="button"
-              variant="outline"
-            >
-              {t('governance.archive')}
-            </Button>
-          </div>
-        </div>
-      )}
       {rows.length === 0 ? (
         <p role="status">{t(`governance.empty.${view}`)}</p>
       ) : (
         <div className="team-member-table">
           <div aria-hidden="true" className="team-member-list-head">
             <span>{t('governance.column.task')}</span>
-            <span>{t('governance.column.stateOwner')}</span>
+            <span>{t('governance.column.state')}</span>
+            <span>{t(view === 'trash' ? 'governance.column.deleted' : 'governance.column.activity')}</span>
+            <span>{t('governance.column.owner')}</span>
             <span>{t('governance.column.actions')}</span>
           </div>
           <ul aria-label={t('governance.list')} className="team-member-list">
-            {rows.map((row) => {
+            {visibleRows.map((row) => {
               const deleted = Boolean(row.deletedAt)
               const name = (
                 <span>
@@ -169,37 +125,24 @@ export function GovernanceTasksPanel({
                       ? row.subtreeSize === 2
                         ? t('governance.subtasks.one')
                         : t('governance.subtasks', { count: String(row.subtreeSize - 1) })
-                      : t('governance.subtasks.none')}
+                      : null}
                   </small>
                 </span>
               )
               return (
                 <li key={row.id}>
                   <div>
-                    {deleted ? (
-                      name
-                    ) : (
-                      <label className="creation-dependency-option">
-                        <input
-                          aria-label={t('governance.select', { title: row.title })}
-                          checked={selected.has(row.id)}
-                          onChange={() => toggle(row.id)}
-                          type="checkbox"
-                        />
-                        {name}
-                      </label>
-                    )}
+                    {name}
                   </div>
-                  <div className="team-member-responsibility">
-                    <p className="team-member-responsibility-text">
-                      {statusText(row.status)}
-                      {' · '}
-                      {deleted
-                        ? t('governance.deleted', { date: when.format(new Date(row.deletedAt!)) })
-                        : t('governance.lastActivity', { date: when.format(new Date(row.lastActivityAt)) })}
-                      <br />
-                      {ownerName(row)}
-                    </p>
+                  <div className="governance-task-state">
+                    {Object.hasOwn(taskStatusDefinition, row.status) ? <TaskStatusBadge size="sm" value={row.status as TaskStatus} /> : <span>{statusText(row.status)}</span>}
+                  </div>
+                  <div className="governance-task-date">
+                    <time dateTime={deleted ? row.deletedAt! : row.lastActivityAt}>{when.format(new Date(deleted ? row.deletedAt! : row.lastActivityAt))}</time>
+                  </div>
+                  <div className="governance-task-owner">
+                    {row.ownerMemberId && <PersonAvatar name={nameOf(row.ownerMemberId) ?? t('members.former')} personId={row.ownerMemberId} size="xs" />}
+                    <span>{row.ownerMemberId ? nameOf(row.ownerMemberId) ?? t('members.former') : t('governance.noOwner')}</span>
                   </div>
                   <div className="member-invited-actions governance-row-actions">
                     {deleted ? (
@@ -225,17 +168,7 @@ export function GovernanceTasksPanel({
           </ul>
         </div>
       )}
-      {archiving && (
-        <BulkArchiveDialog
-          onClose={() => setArchiving(null)}
-          onDone={(applied) => {
-            setSelected(new Set())
-            setArchived((current) => new Set([...current, ...applied]))
-          }}
-          rows={archiving}
-          archived={archived}
-        />
-      )}
+      {rows.length > 0 && <GovernancePagination label={t('governance.pagination')} page={currentPage} total={pageCount} onChange={setPage} />}
       {owning && (
         <ReasonDialog
           body={t('governance.owner.body')}
@@ -333,102 +266,6 @@ function ReasonDialog({
           >
             {confirm}
           </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  )
-}
-
-/** Archiving the chosen tasks: the reason dialog, then how many were archived, and why each other one was not. */
-function BulkArchiveDialog({
-  rows,
-  archived,
-  onClose,
-  onDone,
-}: {
-  rows: GovernanceTask[]
-  archived: ReadonlySet<string>
-  onClose: () => void
-  onDone: (applied: string[]) => void
-}) {
-  const t = useCatalog(governanceMessages)
-  const [reason, setReason] = useState('')
-  const [outcomes, setOutcomes] = useState<GovernanceOutcome[] | null>(null)
-  const total = rows.reduce((sum, row) => sum + row.subtreeSize, 0)
-  const titleOf = new Map(rows.map((row) => [row.id, row.title]))
-  const run = () => {
-    const result = archiveRows(rows, rows.map((row) => row.id), archived)
-    setOutcomes(result)
-    onDone(result.filter((item) => item.outcome === 'APPLIED').map((item) => item.taskId))
-  }
-  const tally = outcomes ? tallyOutcomes(outcomes) : null
-  return (
-    <AlertDialog onOpenChange={(open) => !open && onClose()} open>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>
-            {tally
-              ? t('governance.result', { applied: String(tally.applied), failed: String(tally.failed.length) })
-              : rows.length === 1
-                ? t('governance.archive.title.one')
-                : t('governance.archive.title', { count: String(rows.length) })}
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            {tally
-              ? tally.already === 0
-                ? ''
-                : tally.already === 1
-                  ? t('governance.result.already.one')
-                  : t('governance.result.already', { count: String(tally.already) })
-              : total === 1
-                ? t('governance.archive.body.one')
-                : t('governance.archive.body', { total: String(total) })}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        {tally ? (
-          tally.failed.length > 0 && (
-            <ul aria-label={t('governance.result.failedList')} className="restore-skipped">
-              {tally.failed.map((item) => {
-                const line = outcomeLine(item)
-                return (
-                  <li key={item.taskId}>
-                    {titleOf.get(item.taskId) ?? item.taskId.slice(0, 8)}
-                    {' · '}
-                    {t(line.key as MessageKey, line.code ? { code: line.code } : {})}
-                  </li>
-                )
-              })}
-            </ul>
-          )
-        ) : (
-          <label className="task-trash-reason">
-            <span>{t('governance.reason')}</span>
-            <Textarea
-              maxLength={MAX_GOVERNANCE_REASON}
-              onChange={(event) => setReason(event.target.value)}
-              placeholder={t('governance.reasonPlaceholder')}
-              required
-              rows={3}
-              value={reason}
-            />
-          </label>
-        )}
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={onClose} size="touch">
-            {tally ? t('governance.close') : t('criteria.cancel')}
-          </AlertDialogCancel>
-          {!tally && (
-            <AlertDialogAction
-              disabled={!reason.trim()}
-              onClick={(event) => {
-                event.preventDefault()
-                run()
-              }}
-              size="touch"
-            >
-              {t('governance.archive')}
-            </AlertDialogAction>
-          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

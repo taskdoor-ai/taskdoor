@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-10-09T11:00:28.500Z",
+  "generatedAt": "2026-10-10T02:38:00.743Z",
   "modules": [
     {
       "moduleId": "product-preview",
@@ -137,6 +137,214 @@
         },
         {
           "id": "member-collaboration-acceptance",
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "personal-profile",
+      "title": "个人信息",
+      "group": "设置",
+      "summary": "账号资料跨团队共享，邮箱只读。",
+      "source": "docs/prd/modules/18-personal-profile.md",
+      "url": "./index.html#personal-profile",
+      "sections": [
+        {
+          "id": "personal-profile-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "personal-profile-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "personal-profile-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "personal-profile-acceptance",
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "my-responsibility",
+      "title": "我的职责",
+      "group": "设置",
+      "summary": "按当前团队维护职责说明。",
+      "source": "docs/prd/modules/19-my-responsibility.md",
+      "url": "./index.html#my-responsibility",
+      "sections": [
+        {
+          "id": "my-responsibility-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "my-responsibility-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "my-responsibility-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "my-responsibility-acceptance",
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "my-teams",
+      "title": "我的团队",
+      "group": "设置",
+      "summary": "查看已加入团队、当前团队与恢复入口。",
+      "source": "docs/prd/modules/20-my-teams.md",
+      "url": "./index.html#my-teams",
+      "sections": [
+        {
+          "id": "my-teams-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "my-teams-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "my-teams-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "my-teams-acceptance",
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "access-tokens",
+      "title": "访问令牌",
+      "group": "设置",
+      "summary": "管理用于 MCP 与 API 的个人访问令牌。",
+      "source": "docs/prd/modules/21-access-tokens.md",
+      "url": "./index.html#access-tokens",
+      "sections": [
+        {
+          "id": "access-tokens-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "access-tokens-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "access-tokens-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "access-tokens-acceptance",
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "team-information",
+      "title": "团队信息",
+      "group": "设置",
+      "summary": "维护团队标志、名称和所有权。",
+      "source": "docs/prd/modules/22-team-information.md",
+      "url": "./index.html#team-information",
+      "sections": [
+        {
+          "id": "team-information-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "team-information-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "team-information-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "team-information-acceptance",
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "team-members",
+      "title": "成员",
+      "group": "设置",
+      "summary": "查看与管理当前团队成员。",
+      "source": "docs/prd/modules/23-team-members.md",
+      "url": "./index.html#team-members",
+      "sections": [
+        {
+          "id": "team-members-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "team-members-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "team-members-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "team-members-acceptance",
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "team-tasks",
+      "title": "团队任务",
+      "group": "设置",
+      "summary": "查看任务元数据并按权限加入或指定负责人。",
+      "source": "docs/prd/modules/24-team-tasks.md",
+      "url": "./index.html#team-tasks",
+      "sections": [
+        {
+          "id": "team-tasks-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "team-tasks-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "team-tasks-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "team-tasks-acceptance",
+          "title": "4. 功能验收标准"
+        }
+      ]
+    },
+    {
+      "moduleId": "behavior-log",
+      "title": "行为日志",
+      "group": "设置",
+      "summary": "筛选并查看团队重要操作记录。",
+      "source": "docs/prd/modules/25-behavior-log.md",
+      "url": "./index.html#behavior-log",
+      "sections": [
+        {
+          "id": "behavior-log-purpose",
+          "title": "1. 目的"
+        },
+        {
+          "id": "behavior-log-boundary",
+          "title": "2. 范围和边界"
+        },
+        {
+          "id": "behavior-log-detail",
+          "title": "3. 详细功能设计"
+        },
+        {
+          "id": "behavior-log-acceptance",
           "title": "4. 功能验收标准"
         }
       ]
@@ -299,9 +507,9 @@
     },
     {
       "moduleId": "cli-connection",
-      "title": "Agent 与 CLI 连接",
+      "title": "Agent 与 CLI、MCP 连接",
       "group": "协作与连接",
-      "summary": "把任务上下文带到本地工具中继续工作。",
+      "summary": "通过 CLI 或 MCP 连接 AI 工具，带入任务上下文并按本人权限协作。",
       "source": "docs/prd/modules/05-cli-connection.md",
       "url": "./index.html#cli-connection",
       "sections": [

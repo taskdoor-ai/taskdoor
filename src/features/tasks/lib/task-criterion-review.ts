@@ -1,3 +1,4 @@
+import { taskProgressPercent } from '@/features/tasks/lib/task-progress-percent';
 import type { WorkspaceNode } from '@/shared/model/task-model';
 import { createTaskChangeActivity } from '@/features/tasks/lib/task-activity';
 import type { CriterionReview } from '@/shared/model/criterion-review';
@@ -39,5 +40,6 @@ export function parseCriterionReviews(value: unknown, criteria: string[]): Crite
 /** Same coarse thresholds as the task progress display; 100 never implies human confirmation. */
 export function criterionStage(review?: CriterionReview): number | null {
   const percent = criterionPercent(review);
-  return percent === null ? null : percent === 0 ? 0 : percent < 25 ? 1 : percent < 50 ? 2 : percent < 90 ? 3 : 4;
+  const displayPercent = taskProgressPercent(percent);
+  return displayPercent === null ? null : displayPercent / 25;
 }

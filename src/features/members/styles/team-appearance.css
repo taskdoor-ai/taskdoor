@@ -1,0 +1,16 @@
+.team-appearance-trigger { position: relative; display: grid; overflow: hidden; padding: 0; border: 0; border-radius: 30%; background: transparent; cursor: pointer; }
+.team-appearance-trigger:hover > .team-logo,
+.team-appearance-trigger[aria-expanded="true"] > .team-logo { box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 22%, transparent); }
+.team-appearance-trigger:focus-visible { outline: 2px solid var(--ad-route); outline-offset: var(--ad-space-1); }
+
+
+.team-avatar-preview { position: relative; width: fit-content; }
+.team-appearance-trigger > .team-logo { border-radius: inherit; }
+.team-avatar-edit-overlay { position: absolute; inset: 0; display: grid; place-items: center; background: rgb(0 0 0 / 32%); color: white; transition: background var(--ad-duration-fast) var(--ad-ease); }
+.team-avatar-edit-overlay svg { width: var(--ad-control-icon-lg); height: var(--ad-control-icon-lg); stroke-width: 1.8; }
+.team-appearance-trigger:hover .team-avatar-edit-overlay,
+.team-appearance-trigger[aria-expanded="true"] .team-avatar-edit-overlay { filter: brightness(.92); }
+.team-appearance-trigger:disabled { cursor: wait; opacity: .72; }
+
+.team-appearance-trigger:hover .avatar-edit-overlay,
+.team-appearance-trigger:focus-visible .avatar-edit-overlay { opacity: 1; }

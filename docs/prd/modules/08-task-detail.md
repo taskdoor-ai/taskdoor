@@ -4,7 +4,7 @@ title: "任务详情"
 group: "任务管理"
 version: "1.1"
 status: "review"
-last_change: "PRD-0034"
+last_change: "PRD-0093"
 summary: "围绕概览、讨论、文件、活动维护任务。"
 lifecycle_stage: "维护任务"
 pages: "任务详情"
@@ -27,6 +27,8 @@ operations: "read, update, change_status, change_owner, add_subtask, edit_relati
 
 ### 3.1 概览 Overview
 
+任务标题保持单行，超出可用宽度时以省略号展示，可查看完整标题；编辑时保持单行并支持横向查看完整内容，按 Enter 结束编辑，中文输入法组合输入不触发提交。
+
 查看和编辑目标、完成标准、子任务、依赖与标签，参考 AI 分析推进任务。
 
 #### 完成标准与人工确认
@@ -37,25 +39,10 @@ operations: "read, update, change_status, change_owner, add_subtask, edit_relati
 - 新增条目未确认，删除条目不把旧确认转移给其他条目。
 - 保存**失败**保留原状态。
 
-![概览 Overview英文界面](../assets/task-detail/overview-current-en.jpg)
 
-*FIG-DETAIL-002 · 概览 Overview；示例记录保留原文。*
 
-![完成标准 · 1/3：查看 AI 分段进度与当前人工确认数。](../assets/task-detail/criteria-before-en.jpg)
 
-*FIG-DETAIL-010 · 完成标准 · 1/3：查看 AI 分段进度与当前人工确认数。*
 
-![完成标准 · 2/3：人工确认第二条，确认数变为 2/3；悬停可查看 AI 分析与撤销操作。](../assets/task-detail/criteria-confirmed-en.jpg)
-
-*FIG-DETAIL-011 · 完成标准 · 2/3：人工确认第二条，确认数变为 2/3；悬停可查看 AI 分析与撤销操作。*
-
-![完成标准 · 步骤 3：撤销后恢复 1/3；提示区分 AI 评估与人工确认。](../assets/task-detail/criteria-undo-en.jpg)
-
-*FIG-DETAIL-012 · 完成标准 · 步骤 3：撤销后恢复 1/3；提示区分 AI 评估与人工确认。*
-
-![展开 AI 分析](../assets/task-detail/overview-analysis-en.jpg)
-
-*FIG-DETAIL-006 · 概览下移①：分档进度、累计完成工作量与预计完成时间。*
 
 ![当前情况与下一步](../assets/task-detail/overview-situation-en.jpg)
 
@@ -65,9 +52,6 @@ operations: "read, update, change_status, change_owner, add_subtask, edit_relati
 
 *FIG-DETAIL-008 · 概览下移③：子任务的负责人、状态与下级任务数，点击进入下一层。*
 
-![展开子任务：查看 AI 进度梯度、计划完成时间与预测完成时间。](../assets/task-detail/subtask-analysis-expanded-en.jpg)
-
-*FIG-DETAIL-013 · 展开子任务：查看 AI 进度梯度、计划完成时间与预测完成时间。*
 
 ![依赖与标签](../assets/task-detail/overview-relations-en.jpg)
 

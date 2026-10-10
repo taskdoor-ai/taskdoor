@@ -11,7 +11,12 @@ export function normalizeTeamOwnership(team: TeamResponsibilityProfile): TeamRes
 }
 export const activeMembership = (team: TeamResponsibilityProfile, memberId: string) => team.memberships.find(m => m.memberId === memberId && m.status === 'active');
 export function canEditTeamInformation(team: TeamResponsibilityProfile, actorId: string) {
-  return activeMembership(team, actorId)?.role === 'owner';
+  const role = activeMembership(team, actorId)?.role;
+  return role === 'owner' || role === 'admin';
+}
+export function canEditTeamAppearance(team: TeamResponsibilityProfile, actorId: string) {
+  const role = activeMembership(team, actorId)?.role;
+  return role === 'owner' || role === 'admin';
 }
 export function canRemoveTeamMember(team: TeamResponsibilityProfile, actorId: string, memberId: string) {
   const actor = activeMembership(team, actorId), member = activeMembership(team, memberId);

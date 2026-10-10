@@ -37,9 +37,6 @@ presentation: "gallery"
 
 *FIG-PREVIEW-020 · 个人信息 Profile：头像、姓名与邮箱。*
 
-![个人设置与团队设置的导航入口。](../assets/workspace-navigation/settings-en.png)
-
-*FIG-PREVIEW-017 · 个人设置与团队设置的导航入口。*
 
 ### 创建规划
 
@@ -145,29 +142,14 @@ presentation: "gallery"
 
 ### 任务协作
 
-![overview](../assets/task-detail/overview-current-en.jpg)
 
-*FIG-PREVIEW-001 · 任务概览：查看目标、完成标准与子任务。*
 
-![完成标准 · 1/3：查看 AI 分段进度与当前人工确认数。](../assets/task-detail/criteria-before-en.jpg)
 
-*FIG-PREVIEW-046 · 完成标准 · 1/3：查看 AI 分段进度与当前人工确认数。*
-
-![完成标准 · 2/3：人工确认第二条，确认数变为 2/3；悬停可查看 AI 分析与撤销操作。](../assets/task-detail/criteria-confirmed-en.jpg)
-
-*FIG-PREVIEW-047 · 完成标准 · 2/3：人工确认第二条，确认数变为 2/3；悬停可查看 AI 分析与撤销操作。*
-
-![完成标准 · 步骤 3：撤销后恢复 1/3；提示区分 AI 评估与人工确认。](../assets/task-detail/criteria-undo-en.jpg)
-
-*FIG-PREVIEW-048 · 完成标准 · 步骤 3：撤销后恢复 1/3；提示区分 AI 评估与人工确认。*
 
 ![常显搜索、范围、状态与高级筛选面板。](../assets/task-list/filters-en.png)
 
 *FIG-PREVIEW-015 · 常显搜索、范围、状态与高级筛选面板。*
 
-![展开 AI 分析](../assets/task-detail/overview-analysis-en.jpg)
-
-*FIG-PREVIEW-008 · AI 分析 · 1/2：展开进度梯度、累计完成工作量与预计完成时间。*
 
 ![当前情况与下一步](../assets/task-detail/overview-situation-en.jpg)
 
@@ -177,9 +159,6 @@ presentation: "gallery"
 
 *FIG-PREVIEW-010 · 子任务及下级数量*
 
-![展开子任务：查看 AI 进度梯度、计划完成时间与预测完成时间。](../assets/task-detail/subtask-analysis-expanded-en.jpg)
-
-*FIG-PREVIEW-049 · 展开子任务：查看 AI 进度梯度、计划完成时间与预测完成时间。*
 
 ![依赖与标签](../assets/task-detail/overview-relations-en.jpg)
 
@@ -199,17 +178,8 @@ presentation: "gallery"
 
 ### 连接 AI
 
-![全局连接 AI 指南：选择工具，复制安装提示词或在该工具中打开。](../assets/cli-connection/connect-ai-en.jpg)
 
-*FIG-PREVIEW-024 · 全局连接 AI 指南：选择工具，复制安装提示词或在该工具中打开。*
 
-![连接 AI 下半页：账号、工作空间与任务查看常用命令。](../assets/cli-connection/connect-ai-examples-en.jpg)
-
-*FIG-PREVIEW-025 · 连接 AI 下半页：账号、工作空间与任务查看常用命令。*
-
-![连接 AI 底部：任务详情、无浏览器设备登录与退出登录命令。](../assets/cli-connection/connect-ai-bottom-en.jpg)
-
-*FIG-PREVIEW-026 · 连接 AI 底部：任务详情、无浏览器设备登录与退出登录命令。*
 
 ## 4. 功能验收标准
 

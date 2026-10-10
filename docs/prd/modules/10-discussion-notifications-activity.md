@@ -4,7 +4,7 @@ title: "讨论、通知与活动"
 group: "协作与连接"
 version: "1.0"
 status: "review"
-last_change: "PRD-0058"
+last_change: "PRD-0077"
 summary: "通过讨论协作、通知处理提醒，并在活动中追溯变更。"
 lifecycle_stage: "围绕任务协作"
 pages: "任务讨论, 文件讨论, 通知中心, 任务活动"
@@ -30,6 +30,7 @@ operations: "post_message, reply, edit_own_message, delete_own_message, mention,
 - 讨论作者可编辑或删除自己的发言，其他成员不能改写他人发言。
 - 删除原消息后保留回复结构与“原消息已删除”提示，不提供恢复。
 - 文件引用固定当时版本，按[文件与成果提交](11-files-local-commits.md)查看。
+- 消息阅读与词条复用遵循[语言、翻译与时区](02-internationalization.md#33-自动翻译讨论内容)，原文用于编辑和引用。
 
 @ 只选择有权读取该任务的团队成员，不因提及扩大权限。活动是只读变更记录，不能由用户或 Agent 随意编辑删除。
 

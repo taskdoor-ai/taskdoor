@@ -76,3 +76,31 @@
 .ai-tool-shortcut-menu .ai-tool-drag-ghost { position: absolute; top: 0; left: 0; width: 100%; padding-right: 10px; z-index: 2; background: var(--ad-surface); border: 1px solid var(--ad-route-ink); box-shadow: 0 6px 16px color-mix(in srgb, var(--ad-ink) 14%, transparent); pointer-events: none; color: var(--ad-ink-secondary); }
 .ai-tool-shortcut-menu .ai-tool-drag-ghost.is-outside { opacity: .5; }
 @media (pointer: coarse) { .ai-tool-shortcut-menu .ai-tool-drag-handle { width: 44px; height: 44px; } .ai-tool-menu-sort-row { height: 44px; } }
+
+
+.connect-v2 .connect-method-shell { max-width: 900px; margin: 28px auto 0; overflow: hidden; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--ad-surface); }
+.connect-v2 .connect-method-tabs { display: flex; width: 100%; margin: 0; padding: 0 24px; gap: 28px; border-bottom: 1px solid var(--ad-border); background: var(--ad-surface-subtle); box-sizing: border-box; }
+.connect-v2 .connect-method-tabs button { position: relative; min-width: 0; min-height: 48px; padding: 12px 8px; border-radius: 0; font-size: var(--ad-text-body-sm); color: var(--ad-ink-secondary); }
+.connect-v2 .connect-method-tabs button[data-state="active"] { background: transparent; color: var(--ad-route); font-weight: 600; box-shadow: none; }
+.connect-v2 .connect-method-tabs button[data-state="active"]::after { position: absolute; right: 8px; bottom: 0; left: 8px; height: 2px; border-radius: 2px; background: var(--ad-route); content: ""; }
+.connect-v2 .connect-method-tabs button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -4px; }
+.connect-v2 .connect-method-shell > [role="tabpanel"] { min-width: 0; }
+.connect-v2 .connect-method-shell > [role="tabpanel"] > .connect-v2-console { margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+.connect-v2 .connect-method-shell .connect-v2-scenes { padding: 0 24px 24px; }
+.mcp-connection-panel { min-width: 0; padding: 24px; color: var(--ad-ink); }
+.mcp-template-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; }
+.mcp-template-heading > div { min-width: 0; }
+.mcp-template-heading > button { flex-shrink: 0; }
+.mcp-template-heading h3 { margin: 0 0 6px; font-size: var(--ad-text-body); font-weight: 600; }
+.mcp-connection-panel p { margin: 0; font-size: var(--ad-text-body-sm); line-height: 1.6; color: var(--ad-ink-secondary); }
+.mcp-template-code { max-width: 100%; box-sizing: border-box; margin: 0; padding: 20px 24px; overflow-x: auto; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-control); background: var(--ad-surface-subtle); color: var(--ad-ink); font-size: var(--ad-text-body-sm); line-height: 1.65; }
+.mcp-connection-panel .mcp-token-hint { margin-top: 12px; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.mcp-connection-panel .mcp-copy-status { margin-top: 4px; font-size: var(--ad-text-caption); }
+@media (max-width: 600px) { .mcp-connection-panel { padding: 16px; } .mcp-template-heading { align-items: flex-start; flex-wrap: wrap; } .mcp-template-code { padding: 16px; font-size: var(--ad-text-caption); } }
+
+.connect-token-link { margin-left: 8px; color: var(--ad-route); white-space: nowrap; text-decoration: none; }
+.connect-token-link:hover { text-decoration: underline; }
+.connect-token-link:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
+
+.connect-v2-permission.connect-v2-permission-mcp { justify-content: flex-start; gap: 12px; flex-wrap: wrap; }
+.connect-v2-permission-mcp .connect-token-link { margin-left: 0; font-size: inherit; }

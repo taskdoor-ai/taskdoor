@@ -4,6 +4,7 @@ import type { TaskNode, WorkspaceNode } from '@/shared/model/task-model';
 import type { TeamLifecycleAction } from '@/features/members/components/TeamLifecycle';
 import { activeMembership, changeTeamRole, prepareMemberExit, transferTeamOwnership } from '@/features/members/lib/team-membership-lifecycle';
 import { appendTaskActivity, createTaskChangeActivity, type TaskActivityStore } from '@/features/tasks/lib/task-activity';
+import { compressStorageGzip, decompressStorageGzip, decompressStorageText } from '@/features/tasks/lib/task-storage-compression';
 import { commitTaskAiStorage } from '@/features/tasks/lib/task-ai-adjustment-storage';
 import { TASK_FILE_EDITS_STORAGE_PREFIX } from '@/features/tasks/files/lib/task-file-editing';
 import { TASK_COLLABORATION_STORAGE_PREFIX } from '@/features/tasks/lib/task-collaboration';
@@ -27,9 +28,17 @@ export type DeletedTeam = {
 };
 /** Entries past their retention window are treated as permanently deleted. */
 export function readDeletedTeams(storage: Pick<Storage, 'getItem'>, now = Date.now()): DeletedTeam[] {
-  const value = JSON.parse(storage.getItem(deletedTeamsKey) ?? '[]');
+  let value = JSON.parse(storage.getItem(deletedTeamsKey) ?? '[]');
+  if (typeof value?.payload === 'string' && (value.encoding === 'lzw-utf8' || value.encoding === 'gzip-base64')) value = JSON.parse(value.encoding === 'gzip-base64' ? decompressStorageGzip(value.payload) : decompressStorageText(value.payload));
   if (!Array.isArray(value) || value.some(entry => !entry?.team || typeof entry.team.id !== 'string' || !Array.isArray(entry.team.memberships) || !Number.isFinite(entry.expiresAt) || !Number.isFinite(entry.deletedAt) || !Array.isArray(entry.nodes) || !Array.isArray(entry.seeds))) throw new Error('无法读取已删除团队，请重试。');
   return (value as DeletedTeam[]).filter(entry => entry.expiresAt > now);
+}
+/** Retention snapshots can be large; compress them before duplicating them in the recovery journal. */
+function serializeDeletedTeams(entries: DeletedTeam[]): string {
+  const raw = JSON.stringify(entries);
+  if (raw.length < 16384) return raw;
+  const compressed = JSON.stringify({ encoding: 'gzip-base64', payload: compressStorageGzip(raw) });
+  return compressed.length < raw.length ? compressed : raw;
 }
 export function readTeamLifecycleHistory(storage: Pick<Storage, 'getItem'>): TeamLifecycleRecord[] {
   const value = JSON.parse(storage.getItem(teamLifecycleHistoryKey) ?? '[]');
@@ -114,7 +123,7 @@ export function commitTeamLifecycle(input: { storage: Storage; directory?: Perso
         writes.push([key, empty]);
       }
     }
-    writes.push([deletedTeamsKey, JSON.stringify([...readDeletedTeams(storage, now).filter(e => e.team.id !== teamId), entry])]);
+    writes.push([deletedTeamsKey, serializeDeletedTeams([...readDeletedTeams(storage, now).filter(e => e.team.id !== teamId), entry])]);
   }
   const nextDirectory = { ...directory, teams: action.kind === 'delete' ? directory.teams.filter(t => t.id !== teamId) : directory.teams.map(t => t.id === teamId ? nextTeam : t) };
   writes.push([personalCenterStorageKey, JSON.stringify(nextDirectory)], [teamLifecycleHistoryKey, JSON.stringify([...history, record])], [handoffNotificationKey, JSON.stringify(notifications)]);
@@ -142,7 +151,7 @@ export function restoreDeletedTeam(input: { storage: Storage; directory?: Person
     [teamLifecycleHistoryKey, JSON.stringify([...readTeamLifecycleHistory(storage), record])],
     [handoffNotificationKey, JSON.stringify([...readHandoffNotifications(storage), ...entry.notifications])],
     [RECYCLE_BIN_KEY, JSON.stringify([...readRecycleBin(storage), ...entry.recycleBin])],
-    [deletedTeamsKey, JSON.stringify(deleted.filter(e => e !== entry))],
+    [deletedTeamsKey, serializeDeletedTeams(deleted.filter(e => e !== entry))],
     ['agentdoor-workspace-nodes', JSON.stringify(nodes)], ['agentdoor-task-activity', JSON.stringify(activities)], ['agentdoor-task-detail-seeds', JSON.stringify(seeds)],
     ...overlayKeys.map((key): [string, string] => [key, JSON.stringify({ ...JSON.parse(storage.getItem(key) ?? '{}'), ...entry.overlays[key] })]),
     ...Object.entries(entry.storedValues),

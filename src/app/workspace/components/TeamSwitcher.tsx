@@ -1,3 +1,4 @@
+import type { TeamAppearance } from "@/shared/model/team-appearance";
 import { useState } from "react";
 import { CreateTeamDialog } from "@/features/workspaces/components/CreateTeamDialog";
 import { mockTeamName } from "@/ai/mock/i18n/mockContent";
@@ -15,6 +16,7 @@ import {
 import { TeamLogo } from "@/shared/ui/TeamLogo";
 
 export type SwitchableTeam = {
+  appearance?: TeamAppearance;
   id: string;
   name: string;
   role: string;
@@ -40,19 +42,19 @@ export function TeamSwitcher({ activeTeamId, compact = false, onTeamChange, team
       className={`team-switcher-trigger ${compact ? "compact" : ""} ${variant === "topbar" ? "team-switcher-trigger-topbar" : ""}`}
       title={compact || variant === "topbar" ? mockTeamName(locale, activeTeam.id, activeTeam.name) : undefined}
     >
-      <TeamLogo name={mockTeamName(locale, activeTeam.id, activeTeam.name)} size={variant === "topbar" ? "md" : "lg"} teamId={activeTeam.id} />
+      <TeamLogo name={mockTeamName(locale, activeTeam.id, activeTeam.name)} size={variant === "topbar" ? "md" : "lg"} appearance={activeTeam.appearance} teamId={activeTeam.id} />
       {!compact && <span className="team-switcher-trigger-copy"><strong>{mockTeamName(locale, activeTeam.id, activeTeam.name)}</strong>{variant !== "topbar" && <small>{t('team.current')}</small>}</span>}
       {variant === "topbar" && <ChevronDown aria-hidden="true" className="team-switcher-chevron" />}
     </DropdownMenuTrigger>
     <DropdownMenuContent align="start" className="team-switcher-menu" side={compact ? "right" : "bottom"} sideOffset={8}>
       <div className="team-switcher-current">
-        <TeamLogo name={mockTeamName(locale, activeTeam.id, activeTeam.name)} teamId={activeTeam.id} />
+        <TeamLogo name={mockTeamName(locale, activeTeam.id, activeTeam.name)} appearance={activeTeam.appearance} teamId={activeTeam.id} />
         <strong>{mockTeamName(locale, activeTeam.id, activeTeam.name)}</strong>
       </div>
       <DropdownMenuRadioGroup className="team-switcher-list" onValueChange={(value) => onTeamChange(String(value))} value={activeTeam.id}>
         <DropdownMenuLabel className="team-switcher-label">{t('team.switch')}</DropdownMenuLabel>
         {teams.map((team) => <DropdownMenuRadioItem className="team-switcher-option" key={team.id} value={team.id}>
-          <TeamLogo name={mockTeamName(locale, team.id, team.name)} size="md" teamId={team.id} />
+          <TeamLogo name={mockTeamName(locale, team.id, team.name)} size="md" appearance={team.appearance} teamId={team.id} />
           <strong className="team-switcher-option-name">{mockTeamName(locale, team.id, team.name)}</strong>
           {team.id === activeTeam.id && <Check aria-hidden="true" className="team-switcher-option-check" />}
         </DropdownMenuRadioItem>)}

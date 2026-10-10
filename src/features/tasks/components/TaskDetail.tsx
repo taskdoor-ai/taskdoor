@@ -43,7 +43,7 @@ import { TaskSubtaskList } from "@/features/tasks/components/TaskSubtaskList";
 import { TaskDependenciesField } from "@/features/tasks/components/TaskDependenciesField";
 import { FixedScrollThumb } from "@/shared/ui/FixedScrollThumb";
 import { TaskAiAdjustmentPopover, useTaskAiAdjustmentDrafts } from "@/features/tasks/components/TaskAiAdjustmentPopover";
-import { Textarea } from "@/shared/ui/input";
+import { Input, Textarea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { TaskFileExplorer } from "@/features/tasks/files/components/TaskFileExplorer";
 import { deleteCollaborationMessage, mergeCollaborationMessages, postCollaborationMessage, replaceCollaborationFiles, setFileThreadResolved, updateCollaborationMessage, type CollaborationMessage, type DiscussionDraft, type FileDiscussionThread } from "@/features/tasks/lib/task-collaboration";
@@ -528,7 +528,7 @@ export function TaskDetail({
       </span>)}</nav> : null}</div>
             <div className="task-detail-title-row">
               {onTaskAppearanceChange ? <TaskAppearancePicker iconName={task.iconName} onChange={onTaskAppearanceChange} tone={task.iconTone} /> : <TaskIcon iconName={task.iconName} size="lg" tone={task.iconTone} />}
-              <h1><Textarea readOnly={!onTaskTitleChange} aria-label={d('name')} className="task-detail-title-input" onFocus={() => setEditingOriginal("title")} onBlur={() => { setEditingOriginal(null); if (currentTitle !== task.title) onTaskTitleChange?.(currentTitle); }} onChange={(event) => setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " "))} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} rows={1} value={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>
+              <h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} className="task-detail-title-input" onFocus={() => setEditingOriginal("title")} onBlur={() => { setEditingOriginal(null); if (currentTitle !== task.title) onTaskTitleChange?.(currentTitle); }} onChange={(event) => setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " "))} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>
               <div className="task-ai-detail-tools"><AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} /></div>
             </div>
       {editingOriginal && <small className="content-editing-original">{ui("正在编辑原文")}</small>}

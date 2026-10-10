@@ -38,51 +38,55 @@
       "source": "http://localhost:5181/",
       "path": "assets/workspace-navigation/settings-en.png",
       "capturedAt": "2026-10-09",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-10-09"
+      "updatedAt": "2026-10-10",
+      "editorialNote": "PRD-0093：设置、连接或团队卡片已更新，旧截图撤下，待主工作区重新采集。"
     },
     {
       "id": "fig-cli-006",
       "figureId": "FIG-CLI-006",
-      "moduleId": "cli-connection",
-      "page": "访问令牌列表：有效、限定任务和已过期的令牌。",
-      "state": "English，1280×720；个人设置访问令牌页，三条演示令牌（全部团队、限定两项任务、已过期）。",
+      "moduleId": "access-tokens",
+      "page": "访问令牌：查看操作和访问范围，并打开 API 文档。",
+      "state": "简体中文，1440×722；当前主工作区运行页面实拍。个人令牌列表与 API 文档入口；未创建、删除或读取令牌值。",
       "type": "current-page",
-      "source": "http://localhost:5181/",
-      "path": "assets/cli-connection/access-tokens-en.jpg",
-      "capturedAt": "2026-10-09",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/cli-connection/access-tokens-zh.jpg",
+      "capturedAt": "2026-10-10",
       "status": "captured",
-      "locale": "en",
-      "updatedAt": "2026-10-09"
+      "locale": "zh-CN",
+      "updatedAt": "2026-10-10",
+      "editorialNote": "替换过期截图；证明当前前端展示，不作为生产 API 能力验证。"
     },
     {
       "id": "fig-team-007",
       "figureId": "FIG-TEAM-007",
-      "moduleId": "team-onboarding",
-      "page": "团队任务：汇总、分类标签与可勾选的任务列表。",
-      "state": "English，1280×720；协作平台团队，全部标签，17 个顶层任务。",
+      "moduleId": "team-tasks",
+      "page": "团队任务：按分类查看任务状态、最近活动和负责人。",
+      "state": "简体中文，1440×722；当前主工作区运行页面实拍。全部分类，30 项，第 1 / 3 页；没有勾选和归档操作。",
       "type": "current-page",
-      "source": "http://localhost:5181/",
-      "path": "assets/team-onboarding/team-tasks-en.jpg",
-      "capturedAt": "2026-10-09",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/team-onboarding/team-tasks-zh.jpg",
+      "capturedAt": "2026-10-10",
       "status": "captured",
-      "locale": "en",
-      "updatedAt": "2026-10-09"
+      "locale": "zh-CN",
+      "updatedAt": "2026-10-10",
+      "editorialNote": "替换过期截图；证明当前前端展示，不作为生产 API 能力验证。"
     },
     {
       "id": "fig-team-008",
       "figureId": "FIG-TEAM-008",
-      "moduleId": "team-onboarding",
-      "page": "审计记录：按操作人和动作筛选的团队操作列表，来自任务的记录链接到该任务。",
-      "state": "English，1280×720；协作平台团队，未筛选，含 Task 列：任务记录显示任务链接，无关任务的记录显示“—”，治理动作带标记。",
+      "moduleId": "behavior-log",
+      "page": "行为日志：筛选并查看重要操作及关联任务。",
+      "state": "简体中文，1440×722；当前主工作区运行页面实拍。所有操作人与动作，第 1 / 3 页；仅查看，未执行写操作。",
       "type": "current-page",
-      "source": "http://localhost:5181/",
-      "path": "assets/team-onboarding/audit-log-en.jpg",
-      "capturedAt": "2026-10-09",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/team-onboarding/behavior-log-zh.jpg",
+      "capturedAt": "2026-10-10",
       "status": "captured",
-      "locale": "en",
-      "updatedAt": "2026-10-09"
+      "locale": "zh-CN",
+      "updatedAt": "2026-10-10",
+      "editorialNote": "替换过期截图；证明当前前端展示，不作为生产 API 能力验证。"
     },
     {
       "id": "fig-list-002",
@@ -269,14 +273,14 @@
       "id": "fig-int-001",
       "moduleId": "internationalization",
       "page": "账户菜单的 English 语言选择。",
-      "state": "English，1280×720；当前主工作区运行页面，姓名首字母头像；业务原文保留。",
+      "state": "PRD-0077：自动翻译范围改为讨论区，旧语言菜单文案失效，待主工作区重新采集。",
       "type": "current-page",
       "source": "http://127.0.0.1:5173/",
       "path": "assets/internationalization/language-en.png",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09"
     },
     {
       "id": "team-entry-flow",
@@ -342,11 +346,12 @@
       "sourceUrl": "http://127.0.0.1:5174/",
       "path": "assets/task-detail/overview-analysis-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-detail-006",
       "caption": "任务整体进度：四段阶段与燃起图。",
-      "updatedAt": "2026-09-24"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-progress-002",
@@ -376,11 +381,12 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/criteria-before-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-detail-010",
       "caption": "单条完成标准：查看 AI 阶段并人工确认。",
-      "updatedAt": "2026-09-24"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-progress-004",
@@ -393,11 +399,12 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/criteria-confirmed-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-detail-011",
       "caption": "单条完成标准：已人工确认并可撤销。",
-      "updatedAt": "2026-09-24"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "discussion-activity-flow",
@@ -803,9 +810,10 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/overview-current-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-detail-003-current",
@@ -895,9 +903,10 @@
       "sourceUrl": "http://127.0.0.1:5174/",
       "path": "assets/task-detail/overview-analysis-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-detail-007",
@@ -955,11 +964,12 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/overview-current-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-detail-002-current",
       "caption": "任务概览：查看目标、完成标准与子任务。",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-preview-002",
@@ -1077,10 +1087,11 @@
       "sourceUrl": "http://127.0.0.1:5174/",
       "path": "assets/task-detail/overview-analysis-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-detail-006",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-preview-009",
@@ -1419,9 +1430,10 @@
       "source": "http://localhost:5181/",
       "path": "assets/cli-connection/connect-ai-en.jpg",
       "capturedAt": "2026-10-09",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-10-09"
+      "updatedAt": "2026-10-10",
+      "editorialNote": "PRD-0093：设置、连接或团队卡片已更新，旧截图撤下，待主工作区重新采集。"
     },
     {
       "id": "fig-preview-024",
@@ -1448,9 +1460,10 @@
       "source": "http://localhost:5181/",
       "path": "assets/cli-connection/connect-ai-examples-en.jpg",
       "capturedAt": "2026-10-09",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-10-09"
+      "updatedAt": "2026-10-10",
+      "editorialNote": "PRD-0093：设置、连接或团队卡片已更新，旧截图撤下，待主工作区重新采集。"
     },
     {
       "id": "fig-preview-025",
@@ -1477,9 +1490,10 @@
       "source": "http://localhost:5181/",
       "path": "assets/cli-connection/connect-ai-bottom-en.jpg",
       "capturedAt": "2026-10-09",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-10-09"
+      "updatedAt": "2026-10-10",
+      "editorialNote": "PRD-0093：设置、连接或团队卡片已更新，旧截图撤下，待主工作区重新采集。"
     },
     {
       "id": "fig-preview-026",
@@ -1946,9 +1960,10 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/criteria-before-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-preview-046",
@@ -1961,11 +1976,12 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/criteria-before-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-detail-010",
       "caption": "完成标准 · 1/3：查看 AI 分段进度与当前人工确认数。",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-detail-011",
@@ -1978,9 +1994,10 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/criteria-confirmed-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-preview-047",
@@ -1993,11 +2010,12 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/criteria-confirmed-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-detail-011",
       "caption": "完成标准 · 2/3：人工确认第二条，确认数变为 2/3；提示支持撤销。",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-detail-012",
@@ -2010,9 +2028,10 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/criteria-undo-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-preview-048",
@@ -2025,11 +2044,12 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/criteria-undo-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-detail-012",
       "caption": "完成标准 · 3/3：撤销后恢复 1/3；提示区分 AI 评估与人工确认。",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-detail-013",
@@ -2042,9 +2062,10 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/subtask-analysis-expanded-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-preview-049",
@@ -2057,11 +2078,12 @@
       "sourceUrl": "http://127.0.0.1:5173/",
       "path": "assets/task-detail/subtask-analysis-expanded-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-detail-013",
       "caption": "展开子任务：查看 AI 进度梯度、计划完成时间与预测完成时间。",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-09",
+      "editorialNote": "PRD-0078：阶段名称改为分档百分比，旧截图撤下待重新采集。"
     },
     {
       "id": "fig-team-002",
@@ -2430,6 +2452,171 @@
       "status": "captured",
       "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。彻底删除确认显示共 14 个任务及不可恢复提示；随后取消，未提交彻底删除。",
       "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+    },
+    {
+      "id": "fig-delete-009",
+      "moduleId": "my-teams",
+      "page": "我的团队：识别当前团队，查看已删除团队的剩余保留天数与恢复入口。",
+      "state": "简体中文，1440×722；当前主工作区运行页面实拍。五个团队卡片，当前团队标识及企业客户成功团队的剩 30 天恢复入口；未提交恢复。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/deletion-recovery-retention/my-teams-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "替换过期截图；证明当前前端展示，不作为生产 API 能力验证。",
+      "figureId": "FIG-DELETE-009"
+    },
+    {
+      "id": "fig-profile-001",
+      "figureId": "FIG-PROFILE-001",
+      "moduleId": "personal-profile",
+      "page": "个人信息：维护头像和姓名，邮箱只读。",
+      "state": "2026-10-10 主工作区当前页面实拍，简体中文；仅打开页面或确认表单，未提交创建、删除、恢复及资料修改。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/personal-profile/profile-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+    },
+    {
+      "id": "fig-resp-001",
+      "figureId": "FIG-RESP-001",
+      "moduleId": "my-responsibility",
+      "page": "我的职责：查看当前团队职责说明。",
+      "state": "2026-10-10 主工作区当前页面实拍，简体中文；仅打开页面或确认表单，未提交创建、删除、恢复及资料修改。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/my-responsibility/responsibility-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+    },
+    {
+      "id": "fig-teaminfo-001",
+      "figureId": "FIG-TEAMINFO-001",
+      "moduleId": "team-information",
+      "page": "团队信息：查看团队标志、名称与离开团队入口。",
+      "state": "2026-10-10 主工作区当前页面实拍，简体中文；仅打开页面或确认表单，未提交创建、删除、恢复及资料修改。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/team-information/team-information-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+    },
+    {
+      "id": "fig-members-001",
+      "figureId": "FIG-MEMBERS-001",
+      "moduleId": "team-members",
+      "page": "成员：查看团队成员、职责与角色。",
+      "state": "2026-10-10 主工作区当前页面实拍，简体中文；仅打开页面或确认表单，未提交创建、删除、恢复及资料修改。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/team-members/members-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+    },
+    {
+      "id": "fig-token-001",
+      "figureId": "FIG-TOKEN-001",
+      "moduleId": "access-tokens",
+      "page": "创建令牌：填写名称并选择有效期和操作范围。",
+      "state": "2026-10-10 主工作区当前页面实拍，简体中文；仅打开页面或确认表单，未提交创建、删除、恢复及资料修改。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/access-tokens/create-token-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+    },
+    {
+      "id": "fig-token-002",
+      "figureId": "FIG-TOKEN-002",
+      "moduleId": "access-tokens",
+      "page": "创建令牌：查看工作空间与任务范围。",
+      "state": "2026-10-10 主工作区当前页面实拍，简体中文；仅打开页面或确认表单，未提交创建、删除、恢复及资料修改。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/access-tokens/create-token-scope-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+    },
+    {
+      "id": "fig-token-003",
+      "figureId": "FIG-TOKEN-003",
+      "moduleId": "access-tokens",
+      "page": "删除令牌：确认立即失效及不可撤回的影响。",
+      "state": "2026-10-10 主工作区当前页面实拍，简体中文；仅打开页面或确认表单，未提交创建、删除、恢复及资料修改。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/access-tokens/delete-token-confirm-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+    },
+    {
+      "id": "fig-myteams-001",
+      "figureId": "FIG-MYTEAMS-001",
+      "moduleId": "my-teams",
+      "page": "恢复团队：确认原成员恢复访问的影响。",
+      "state": "2026-10-10 主工作区当前页面实拍，简体中文；仅打开页面或确认表单，未提交创建、删除、恢复及资料修改。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/my-teams/restore-team-confirm-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+    },
+    {
+      "id": "fig-cli-007",
+      "figureId": "FIG-CLI-007",
+      "moduleId": "cli-connection",
+      "page": "CLI 连接：选择 AI 工具并使用安装提示词。",
+      "state": "主工作区当前连接 AI 弹窗，简体中文，ChatGPT 产品选项；未复制提示词、唤起客户端或执行安装。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/cli-connection/cli-guide-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "运行界面展示证据；WorkBuddy 标志当前加载失败，不证明客户端连接成功。"
+    },
+    {
+      "id": "fig-cli-008",
+      "figureId": "FIG-CLI-008",
+      "moduleId": "cli-connection",
+      "page": "MCP 连接：使用安装 Skill 提示词，并进入访问令牌管理。",
+      "state": "主工作区当前连接 AI 弹窗，简体中文，ChatGPT 产品选项；未复制提示词、唤起客户端或执行安装。",
+      "type": "current-page",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/cli-connection/mcp-guide-zh.jpg",
+      "capturedAt": "2026-10-10",
+      "updatedAt": "2026-10-10",
+      "status": "captured",
+      "locale": "zh-CN",
+      "editorialNote": "运行界面展示证据；WorkBuddy 标志当前加载失败，不证明客户端连接成功。"
     }
   ]
 }

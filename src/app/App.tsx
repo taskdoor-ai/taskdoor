@@ -273,8 +273,8 @@ function App() {
   useEffect(() => {
     if (workspaceSession && activeTeamId) saveWorkspaceSession({ ...workspaceSession, activeTeamId });
   }, [activeTeamId, workspaceSession]);
-  const [personalInfoOpen, setPersonalInfoOpen] = useState(false);
-  const [personalCenterModule, setPersonalCenterModule] = useState<PersonalCenterModule>("profile");
+  const [personalInfoOpen, setPersonalInfoOpen] = useState(() => new URLSearchParams(window.location.search).get("settings") === "tokens");
+  const [personalCenterModule, setPersonalCenterModule] = useState<PersonalCenterModule>(() => new URLSearchParams(window.location.search).get("settings") === "tokens" ? "tokens" : "profile");
   const personalCenterReturnFocus = useRef<HTMLElement | null>(null);
   const memberInvitationsRef = useRef<MemberInvitationHandle>(null);
   const currentUserName = personalCenterState.profile.name;
@@ -1335,7 +1335,7 @@ function App() {
         <DialogContent className="global-ai-guide-dialog" finalFocus={() => document.getElementById("workspace-ai-trigger") ?? false}>
           <header className="global-ai-guide-header">
             <DialogTitle>{ui("连接 AI")}</DialogTitle>
-            <DialogDescription>{ui("安装并登录 TaskDoor CLI，在本地工具中继续工作。")}</DialogDescription>
+            <DialogDescription>{(locale === "en" ? "Connect via CLI or MCP to work with TaskDoor in your AI tools." : "通过 CLI 或 MCP，让 AI 工具与 TaskDoor 协作。")}</DialogDescription>
           </header>
           <div className="global-ai-guide-body"><AiConnectionPage embedded /></div>
         </DialogContent>

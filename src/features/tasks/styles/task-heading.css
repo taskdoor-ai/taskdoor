@@ -29,6 +29,8 @@
 .task-detail-title-row { display: grid; grid-template-columns: var(--ad-control-touch-min) minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); }
 .task-detail-title-row h1 { min-width: 0; margin: 0; color: var(--ad-ink); font-size: var(--ad-text-title-2); font-weight: 680; letter-spacing: -.025em; line-height: 1.4; }
 .task-detail-title-input[data-slot="textarea"] { min-height: var(--ad-control-height-lg); height: auto; margin-left: calc(var(--ad-space-2) * -1); padding: var(--ad-space-1) var(--ad-space-2); resize: none; border-color: transparent; background: transparent; color: inherit; font-size: inherit; font-weight: inherit; letter-spacing: inherit; line-height: inherit; field-sizing: content; }
+.task-detail-title-input[data-slot="input"] { display: block; min-width: 0; height: var(--ad-control-height-lg); margin-left: calc(var(--ad-space-2) * -1); padding: var(--ad-space-1) var(--ad-space-2); border-color: transparent; background: transparent; color: inherit; font-size: inherit; font-weight: inherit; letter-spacing: inherit; line-height: inherit; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.task-detail-title-input[data-slot="input"]:focus { text-overflow: clip; }
 .task-detail-description { display: grid; min-width: 0; gap: var(--ad-space-3); margin-top: var(--ad-space-3); margin-left: calc(var(--ad-control-touch-min) + var(--ad-space-3)); }
 .task-detail-goal-field, .task-detail-completion { display: grid; min-width: 0; grid-template-columns: var(--ad-task-field-label-width, 10rem) minmax(0, 1fr); align-items: baseline; gap: var(--ad-space-3); }
 /* Multi-row editors must align from the top, not contribute a nested grid baseline. */

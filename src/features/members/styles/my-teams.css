@@ -1,17 +1,30 @@
 .my-teams-hint { margin: var(--ad-space-2) 0 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.5; }
-.my-teams-list { display: grid; margin: var(--ad-space-6) 0 0; padding: 0; list-style: none; border-top: 1px solid var(--ad-border); }
-.my-team-row { display: flex; min-height: calc(var(--ad-control-height-lg) + var(--ad-space-6)); align-items: center; gap: var(--ad-space-4); padding: var(--ad-space-3) 0; border-bottom: 1px solid var(--ad-border); }
+.my-teams-list { display: grid; margin: var(--ad-space-6) 0 0; padding: 0; list-style: none; grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-4); }
+.my-team-row { display: flex; min-height: calc(var(--ad-control-height-lg) + var(--ad-space-6)); align-items: center; gap: var(--ad-space-4); padding: var(--ad-space-5); border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--ad-surface); flex-wrap: nowrap; }
 .my-team-copy { display: grid; min-width: 0; flex: 1; gap: var(--ad-space-1); }
 .my-team-copy strong { overflow: hidden; font-size: var(--ad-text-body-sm); font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.my-team-copy small { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.my-team-copy small { display: flex; flex-wrap: wrap; gap: var(--ad-space-1) var(--ad-space-3); line-height: 1.6; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
 .my-team-row.is-deleted .my-team-copy strong { color: var(--ad-ink-secondary); }
-.my-team-deleted { display: flex; flex-shrink: 0; align-items: center; gap: var(--ad-space-3); }
-.my-team-countdown { color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); font-variant-numeric: tabular-nums; }
+.my-team-deleted { display: flex; flex-shrink: 0; align-items: center; justify-content: flex-end; gap: var(--ad-space-3); }
+.my-team-countdown { color: var(--ad-danger); font-size: var(--ad-text-caption); font-variant-numeric: tabular-nums; }
 .my-team-owner-only { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
 .my-teams-empty { margin-top: var(--ad-space-6); color: var(--ad-ink-tertiary); font-size: var(--ad-text-body-sm); }
 .team-empty-workspace .my-teams-panel { width: min(560px, 100%); margin-top: var(--ad-space-8); text-align: left; }
 @media (max-width: 600px) {
-  .my-team-row { flex-wrap: wrap; }
-  .my-team-deleted { width: 100%; justify-content: space-between; padding-left: calc(var(--ad-space-4) + 32px); }
+  .my-team-row { gap: var(--ad-space-2); }
+  .my-team-deleted { flex-direction: column; gap: var(--ad-space-1); }
+  .my-team-copy small { gap: 2px 6px; }
   .my-team-deleted [data-slot="button"] { min-height: var(--ad-control-touch-min); }
 }
+
+.my-team-heading { display: flex; align-items: center; gap: var(--ad-space-2); min-width: 0; }
+.my-team-heading strong { flex: 1; color: var(--ad-ink); }
+.my-team-role { display: inline-flex; align-items: center; justify-content: center; align-self: center; text-align: center; flex-shrink: 0; padding: 2px 8px; border-radius: var(--ad-radius-tag); background: var(--ad-surface-subtle); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.5; }
+.my-team-row.is-deleted { background: var(--ad-surface); }
+.team-empty-workspace .my-teams-list { grid-template-columns: 1fr; }
+@media (max-width: 800px) { .my-teams-list { grid-template-columns: 1fr; } }
+
+.my-team-meta-divider { color: var(--ad-border); }
+
+.my-team-heading strong { flex: 0 1 auto; }
+.my-team-current { flex-shrink: 0; padding: 2px 8px; border-radius: var(--ad-radius-tag); background: var(--ad-surface-subtle); color: var(--ad-route); font-size: var(--ad-text-caption); line-height: 1.5; }

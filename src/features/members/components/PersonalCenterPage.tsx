@@ -1,4 +1,6 @@
-import { canEditTeamInformation } from "@/features/members/lib/team-membership-lifecycle";
+import type { TeamAppearance } from "@/shared/model/team-appearance";
+import { TeamAppearancePicker } from "@/features/members/components/TeamAppearancePicker";
+import { canEditTeamInformation, canEditTeamAppearance } from "@/features/members/lib/team-membership-lifecycle";
 import { TeamMemberActions, TeamOwnershipSettings } from "@/features/members/components/TeamLifecycle";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockTeamName, mockPersonName } from "@/ai/mock/i18n/mockContent";
@@ -35,6 +37,7 @@ export function TeamInformationPanel({ activeTeamId, onActiveTeamChange, onState
   const selectedTeam = state.teams.find((team) => team.id === activeTeamId) ?? state.teams[0];
   const [nameDraft, setNameDraft] = useState(selectedTeam.name);
   const canManage = canEditTeamInformation(selectedTeam, currentWorkspaceUserId());
+  const canEditAppearance = canEditTeamAppearance(selectedTeam, currentWorkspaceUserId());
 
   useEffect(() => {
     setNameDraft(selectedTeam.name);
@@ -52,10 +55,20 @@ export function TeamInformationPanel({ activeTeamId, onActiveTeamChange, onState
     toast.success(m('teamInformationSaved'));
   };
 
+  const saveTeamAppearance = (appearance: TeamAppearance) => {
+    if (!canEditTeamAppearance(selectedTeam, currentWorkspaceUserId())) return;
+    const next = { ...state, teams: state.teams.map(team => team.id === selectedTeam.id ? { ...team, appearance } : team) };
+    if (!savePersonalCenterState(next)) {
+      toast.error(m('couldNotSaveTheTeamLogo'));
+      return;
+    }
+    onStateChange(next);
+  };
+
   return <section aria-labelledby="team-information-title" className="personal-team-panel">
     <div className="responsibility-toolbar"><div><h2 id="team-information-title">{m('general')}</h2></div></div>
     <div className="team-general-settings">
-      <section aria-labelledby="team-logo-label"><h3 id="team-logo-label">{m('teamLogo')}</h3><TeamLogo name={selectedTeam.name} size="xl" teamId={selectedTeam.id} /></section>
+      <section aria-labelledby="team-logo-label"><h3 id="team-logo-label">{m('teamLogo')}</h3>{canEditAppearance ? <TeamAppearancePicker key={selectedTeam.id} name={selectedTeam.name} teamId={selectedTeam.id} appearance={selectedTeam.appearance} onChange={saveTeamAppearance} /> : <TeamLogo name={selectedTeam.name} size="xl" teamId={selectedTeam.id} appearance={selectedTeam.appearance} />}</section>
       {canManage ? <>
         <label className="team-name-field"><span>{m('teamName')}</span><Input aria-label={m('teamName')} onChange={event => setNameDraft(event.target.value)} value={mockTeamName(locale, selectedTeam.id, nameDraft)} /></label>
         <div className="team-general-actions"><Button disabled={!nameDraft.trim() || nameDraft.trim() === selectedTeam.name} onClick={saveTeamInformation} type="button">{m('saveTeamInformation')}</Button></div>
@@ -327,7 +340,7 @@ export function PersonalResponsibilityPanel({ activeTeamId, onActiveTeamChange, 
   return <div className="personal-responsibility-panel">
     <section aria-labelledby="personal-responsibility-title">
       <div className="responsibility-toolbar">
-        <div><small>{m('personalSettings')}</small><h2 id="personal-responsibility-title">{m('myResponsibilities')}</h2><p>{m('viewAndMaintainYourResponsibilitiesInThe')}</p></div>
+        <div><h2 id="personal-responsibility-title">{m('myResponsibilities')}</h2><p>{m('viewAndMaintainYourResponsibilitiesInThe')}</p></div>
         <div className="responsibility-toolbar-actions">
           <div className="responsibility-team-control">
             <span>{m('currentTeam')}</span>

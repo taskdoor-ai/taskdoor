@@ -17,7 +17,7 @@
 .linear-creation-request p { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
 .linear-creation-interruption { width: min(100%, 860px); margin: 0 auto; padding: var(--ad-space-7) 0; border-bottom: 1px solid var(--ad-border-soft); }
 .linear-creation-interruption > header { display: flex; gap: var(--ad-space-3); margin-bottom: var(--ad-space-5); }
-.linear-creation-interruption > header > span { color: var(--ad-route); font: 600 var(--ad-text-caption) var(--ad-font-mono); }
+.linear-creation-interruption > header > span { color: var(--ad-route); font: 600 var(--ad-text-caption) var(--ad-font-sans); }
 .linear-creation-interruption h2 { margin: 0; font-size: var(--ad-text-title-sm); }
 .linear-creation-interruption header small { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
 .linear-creation-questions { display: grid; gap: var(--ad-space-5); margin: 0 0 var(--ad-space-5) calc(var(--ad-space-6) + var(--ad-space-1)); }

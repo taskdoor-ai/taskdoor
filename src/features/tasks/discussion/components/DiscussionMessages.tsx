@@ -57,7 +57,7 @@ function messageTimestamp(message: CollaborationMessage) {
 }
 
 function messageSummary(message: CollaborationMessage, mock: ReturnType<typeof useMockText>, ui: ReturnType<typeof useGlobalUi>, translate: boolean) {
-  const body = (message.updatedAt || !translate ? message.message : mock.text(message.message)).replace(/\s+/g, " ").trim();
+  const body = (message.updatedAt || !translate ? message.message : mock.discussionTranslation(message.message)).replace(/\s+/g, " ").trim();
   const attachmentNames = message.attachmentRefs?.map(ref => mock.text(ref.name)).join(", ") || (message.file ? mock.text(message.file) : "");
   const summary = body || (attachmentNames ? ui("附件：{0}", {0: attachmentNames}) : ui("（无文字内容）"));
   return summary.length > 160 ? `${summary.slice(0, 160)}…` : summary;
@@ -143,7 +143,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
       const attachments = refs.map(ref => files.find(file => file.id === ref.fileId && !file.archived)).filter((file): file is TaskFileNode => Boolean(file));
       const timestamp = messageTimestamp(message);
       const readingKey = JSON.stringify([message.id, message.updatedAt, message.message, locale]);
-      const candidate = message.updatedAt ? message.message : mock.originalRecord(message.message);
+      const candidate = mock.discussionTranslation(message.message);
       const reading = contentReading(message.message, candidate, locale, autoTranslate, originalMessages.has(readingKey));
       const toggleOriginal = () => setOriginalMessages(previous => { const next = new Set(previous); if (next.has(readingKey)) next.delete(readingKey); else next.add(readingKey); return next; });
       return <li className={isReply ? "discussion-message is-reply" : "discussion-message"} key={message.id}>

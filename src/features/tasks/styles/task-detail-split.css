@@ -25,7 +25,7 @@
 .task-detail-split .task-detail-title-row .task-icon.lg svg { width: 24px; height: 24px; }
 .task-detail-split .task-detail-title-row h1 { min-width: 0; flex: 1; margin: 0; }
 .task-detail-split .task-detail-title-input { min-height: 36px; max-height: 104px; font-size: 24px; line-height: 1.4; font-weight: 650; }
-.task-detail-split .task-detail-title-input[data-slot="textarea"] { display: block; margin: 0; padding: 0; }
+.task-detail-split .task-detail-title-input[data-slot="textarea"], .task-detail-split .task-detail-title-input[data-slot="input"] { display: block; height: 36px; min-height: 36px; max-height: 36px; margin: 0; padding: 0; }
 .task-detail-split .task-ai-detail-tools { padding-top: 3px; }
 .task-detail-primary-properties { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; margin: 12px 0 0; }
 .task-detail-primary-properties .task-detail-property { display: flex; flex: 0 0 auto; flex-direction: row; align-items: center; gap: 10px; min-height: 32px; max-width: 100%; }

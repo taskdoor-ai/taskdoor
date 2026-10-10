@@ -45,6 +45,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
   const ui = useGlobalUi();
   const { locale } = useI18n();
   const Heading = embedded ? "h2" : "h1";
+  const [method, setMethod] = useState("cli");
   const [agent, setAgent] = useState<Agent>("ChatGPT");
   const [copied, setCopied] = useState(false);
   const [result, setResult] = useState<AiTransferResult | null>(null);
@@ -53,7 +54,11 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
   const agentName = aiToolName(agent);
   // The prompt and the commands point at this deployment, wherever it is served from.
   const origin = window.location.origin;
-  const prompt = ui("请阅读 {origin}/documents/cli-setup.md 文档，按照步骤为我安装并配置 TaskDoor CLI。", { origin });
+  const tokenPageUrl = new URL(window.location.pathname, origin);
+  tokenPageUrl.searchParams.set("settings", "tokens");
+  const prompt = method === "mcp"
+    ? (locale === "en" ? `Read ${origin}/documents/skills/taskdoor-mcp/SKILL.md and help me configure TaskDoor MCP. Ask me to enter my own access token securely in the client configuration.` : `请阅读 ${origin}/documents/skills/taskdoor-mcp/SKILL.md 安装 skill，按照步骤为我配置 TaskDoor MCP，并引导我在客户端配置中自行填入访问令牌。`)
+    : ui("请阅读 {origin}/documents/cli-setup.md 文档，按照步骤为我安装并配置 TaskDoor CLI。", { origin });
   const copyPrompt = async () => {
     if (!(await browserTransferActions.copyText(prompt))) return;
     setCopied(true);
@@ -81,6 +86,12 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
       <span>{ui("一条命令连接当前工作目录。需要协作时，再把成果、进展和关键背景同步给团队。")}</span>
     </header>
 
+    <Tabs.Root className="connect-method-shell" value={method} onValueChange={(value) => { setMethod(value); setCopied(false); setResult(null); }}>
+      <Tabs.List aria-label={locale === "en" ? "Connection method" : "连接方式"} className="connect-v2-tabs connect-method-tabs">
+        <Tabs.Trigger value="cli">CLI</Tabs.Trigger>
+        <Tabs.Trigger value="mcp">MCP</Tabs.Trigger>
+      </Tabs.List>
+      <Tabs.Content value={method}>
     <section className="connect-v2-console" aria-label={ui("连接本地 Agent")}>
       <Tabs.Root onValueChange={(value) => { setAgent(value as typeof agent); setResult(null); }} value={agent}>
         <Tabs.List aria-label={ui("选择 Agent")} className="connect-v2-tabs">
@@ -91,7 +102,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
         </Tabs.List>
       </Tabs.Root>
       <div className="connect-v2-console-copy">
-        <div><small>{ui("把这段话发给 {tool}", { tool: agentName })}</small><strong>{ui("让 {tool} 为你安装并登录 TaskDoor CLI", { tool: agentName })}</strong></div>
+        <div><small>{ui("把这段话发给 {tool}", { tool: agentName })}</small><strong>{method === "mcp" ? (locale === "en" ? `Let ${agentName} configure TaskDoor MCP` : `让 ${agentName} 为你配置 TaskDoor MCP`) : ui("让 {tool} 为你安装并登录 TaskDoor CLI", { tool: agentName })}</strong></div>
         <Button onClick={openInAgent} type="button">{ui("在 {tool} 中打开", { tool: agentName })}</Button>
       </div>
       <CodeBlock>
@@ -101,19 +112,19 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
           <button aria-label={copied ? ui("提示词已复制") : ui("复制提示词")} onClick={copyPrompt} type="button">{copied ? <Check size={17} /> : <Clipboard size={17} />}</button>
         </div>
       </CodeBlock>
-      <div className="connect-v2-permission">
+      <div className={`connect-v2-permission${method === "mcp" ? " connect-v2-permission-mcp" : ""}`}>
         {/* After Open in {tool}, this line says what happened instead. */}
         <p aria-live="polite" className={result ? undefined : "shrink-0"} data-status={result?.status} role="status">
-          {result ? result.message : <><Check size={13} />{ui("登录时在浏览器中确认即可")}</>}
+          {result ? result.message : <>{(method === "mcp" ? (locale === "en" ? "Enter your access token in the client configuration" : "在客户端配置中自行填入访问令牌") : ui("登录时在浏览器中确认即可"))}</>}
         </p>
-        <p><Check size={13} />{ui("登录只授权你的账号，按你本人在各工作空间的权限访问；工作空间在后续命令中指定。")}</p>
+        {method === "mcp" ? <a className="connect-token-link" href={tokenPageUrl.href} target="_blank" rel="noopener noreferrer">{locale === "en" ? "Manage access tokens →" : "管理访问令牌 →"}</a> : <p>{ui("登录只授权你的账号，按你本人在各工作空间的权限访问；工作空间在后续命令中指定。")}</p>}
         {selectedConnection && Number.isFinite(Date.parse(selectedConnection))
           ? <p className="connect-v2-last-connected"><i aria-hidden="true" />{ui("最近连接")}{agentName} · {formatConnectionTime(selectedConnection, locale, ui("今天"))}</p>
           : null}
       </div>
     </section>
 
-    <section className="connect-v2-scenes">
+    {method === "cli" && <section className="connect-v2-scenes">
       <header><h2>{ui("常用命令")}</h2><span>{ui("工作空间参数只指定操作目标，不改变登录授权。")}</span></header>
       <div className="connect-v2-bento">
         {scenarios.map(({ icon: Icon, title, description, commands, tone }) => <GlowCard className={tone} key={title} size="md">
@@ -134,6 +145,8 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
           </div>
         </GlowCard>)}
       </div>
-    </section>
+    </section>}
+      </Tabs.Content>
+    </Tabs.Root>
   </section>;
 }

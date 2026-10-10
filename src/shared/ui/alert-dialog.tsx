@@ -45,16 +45,21 @@ function AlertDialogContent({
   className,
   size = "default",
   showCloseButton = true,
+  onClose,
+  closeDisabled = false,
   children,
   ...props
 }: AlertDialogPrimitive.Popup.Props & {
   size?: "default" | "sm"
   showCloseButton?: boolean
+  onClose?: () => void
+  closeDisabled?: boolean
 }) {
   const m = useModuleCopy();
   return (
     <AlertDialogPortal>
-      <AlertDialogOverlay />
+      {/* Nested confirmations need a backdrop above the underlying dialog. */}
+      <AlertDialogOverlay forceRender className="bg-black/30" />
       <AlertDialogPrimitive.Popup
         data-slot="alert-dialog-content"
         data-size={size}
@@ -65,7 +70,10 @@ function AlertDialogContent({
         {...props}
       >
         {children}
-        {showCloseButton && <AlertDialogPrimitive.Close
+        {showCloseButton && onClose ? <Button
+          variant="ghost" size="icon-sm" className={dialogStyles.close}
+          disabled={closeDisabled} onClick={onClose} aria-label={m("close")}
+        ><XIcon aria-hidden="true" /></Button> : showCloseButton && <AlertDialogPrimitive.Close
           data-slot="alert-dialog-close"
           render={<Button variant="ghost" size="icon-sm" className={dialogStyles.close} />}
         >

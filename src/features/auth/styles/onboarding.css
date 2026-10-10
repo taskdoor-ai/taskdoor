@@ -66,7 +66,7 @@
 .onboarding-back svg { width: 14px; height: 14px; }
 .onboarding-email-address { display: block; margin-top: 3px; color: var(--ad-ink); font-weight: 500; }
 .onboarding-code-field { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
-.onboarding-code-digit { width: 100%; min-width: 0; height: 52px; padding: 0; border: 1px solid var(--ad-border); border-radius: 12px; outline: none; background: var(--ad-surface); color: var(--ad-ink); caret-color: var(--ad-route); font-family: var(--ad-font-mono); font-size: 22px; text-align: center; transition: border-color 120ms, box-shadow 120ms; }
+.onboarding-code-digit { width: 100%; min-width: 0; height: 52px; padding: 0; border: 1px solid var(--ad-border); border-radius: 12px; outline: none; background: var(--ad-surface); color: var(--ad-ink); caret-color: var(--ad-route); font-family: var(--ad-font-sans); font-size: 22px; text-align: center; transition: border-color 120ms, box-shadow 120ms; }
 .onboarding-code-digit::placeholder { color: var(--ad-border-strong); }
 .onboarding-code-digit:focus::placeholder { color: transparent; }
 .onboarding-code-digit[data-filled] { border-color: var(--ad-border-strong); }

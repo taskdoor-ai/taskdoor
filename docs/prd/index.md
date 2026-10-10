@@ -21,6 +21,17 @@ status: "draft"
 - [工作区与导航](modules/04-workspace-navigation.md)
 - [成员、邀请与任务分工](modules/09-member-collaboration.md)
 
+## 设置
+
+- [个人信息](modules/18-personal-profile.md)
+- [我的职责](modules/19-my-responsibility.md)
+- [我的团队](modules/20-my-teams.md)
+- [访问令牌](modules/21-access-tokens.md)
+- [团队信息](modules/22-team-information.md)
+- [成员](modules/23-team-members.md)
+- [团队任务](modules/24-team-tasks.md)
+- [行为日志](modules/25-behavior-log.md)
+
 ## 任务管理
 
 - [任务列表](modules/06-task-list.md)
@@ -32,7 +43,7 @@ status: "draft"
 
 - [讨论、通知与活动](modules/10-discussion-notifications-activity.md)
 - [文件与成果提交](modules/11-files-local-commits.md)
-- [Agent 与 CLI 连接](modules/05-cli-connection.md)
+- [Agent 与 CLI、MCP 连接](modules/05-cli-connection.md)
 
 ## 系统规则
 

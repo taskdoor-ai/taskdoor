@@ -33,7 +33,7 @@ test('AI must have valid quantitative evidence; 100 percent does not constitute 
 });
 
 test('criterion stages share task progress thresholds without treating the highest stage as confirmation', () => {
-  for (const [percent, expected] of [[0,0],[10,1],[25,2],[49,2],[50,3],[89,3],[90,4],[100,4]]) {
+  for (const [percent, expected] of [[0,0],[10,1],[25,1],[49,2],[50,2],[71.2,3],[89,3],[90,3],[99,3],[100,4]]) {
     const review = { text:'A', analysis:{percent,evidence:'Evidence',observedAt:'2026-09-21T00:00:00Z'} };
     assert.equal(criterionStage(review),expected);
     assert.equal(criterionReview('A',review)?.confirmation,undefined);

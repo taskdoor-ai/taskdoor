@@ -1,3 +1,4 @@
+import type { TeamAppearance } from "@/shared/model/team-appearance";
 import { normalizeTeamOwnership } from "@/features/members/lib/team-membership-lifecycle";
 import { readWorkspaceSession, workspaceProfileKey } from "@/shared/lib/workspace-session";
 
@@ -72,6 +73,7 @@ export type TeamMembership = {
 };
 
 export type TeamResponsibilityProfile = {
+  appearance?: TeamAppearance;
   createdBy?: string;
   id: string;
   name: string;

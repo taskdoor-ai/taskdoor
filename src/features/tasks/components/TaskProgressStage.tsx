@@ -1,10 +1,10 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
-import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { taskProgressPercent } from "@/features/tasks/lib/task-progress-percent";
 import { Tooltip } from "@base-ui/react/tooltip";
 import React, { type ReactNode } from "react";
 import type { TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
 
-const stageNames = ["少量完成", "部分完成", "大部分完成", "接近完成"] as const;
+const steps = [1, 2, 3, 4] as const;
 
 /** A coarse view of the existing evidence; it never writes a task status or chart value. */
 export function TaskProgressStage({ model, compact = false, label = "完成进度", action, unavailableLabel = "未形成结果" }: {
@@ -15,13 +15,12 @@ export function TaskProgressStage({ model, compact = false, label = "完成进�
   unavailableLabel?: string;
 }) {
   const p = useProgressCopy();
-  const d = useDetailCopy();
   const { ratio, sourceLabel } = model;
   const available = ratio !== null && Number.isFinite(ratio) && ratio >= 0 && ratio <= 1;
-  const confirmed = available && sourceLabel === "用户确认";
   // Zero is evidenced but has no filled segment; never infer confirmation from 100%.
-  const stage = !available ? null : ratio === 0 ? 0 : ratio < .25 ? 1 : ratio < .5 ? 2 : ratio < .9 ? 3 : 4;
-  const name = confirmed ? p("已完成") : stage === null ? unavailableLabel : stage === 0 ? d('noResult') : stageNames[stage - 1];
+  const percent = taskProgressPercent(available ? ratio * 100 : null);
+  const stage = percent === null ? null : percent / 25;
+  const name = percent === null ? unavailableLabel : `${percent}%`;
   const source = sourceLabel === "子任务汇总" ? "AI 预测" : sourceLabel;
   return <div className="task-progress-stage-row">
     <div className="task-progress-stage" data-size={compact ? "compact" : "regular"}
@@ -29,10 +28,9 @@ export function TaskProgressStage({ model, compact = false, label = "完成进�
       role="group" aria-label={`${p(label)}: ${p(name)}${available ? `; ${p(source)}` : p("；尚无可用进度依据")}`}>
       {!compact && <span aria-hidden="true" className="task-progress-stage-heading">{p("进度")}</span>}
       <span className="task-progress-stage-track">
-        {stageNames.map((stageName, index) => {
-          const step = index + 1;
-          const tooltip = p(stageName);
-          return <Tooltip.Root key={stageName}>
+        {steps.map(step => {
+          const tooltip = `${step * 25}%`;
+          return <Tooltip.Root key={step}>
             <Tooltip.Trigger aria-label={tooltip} className="task-progress-stage-step" closeOnClick={false}
               data-filled={step <= (stage ?? 0)} delay={150} type="button" />
             <Tooltip.Portal>

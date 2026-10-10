@@ -116,7 +116,7 @@
 .creation-subtasks-heading > div { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ad-space-2); }
 .creation-subtasks-heading > div > svg { color: var(--ad-route); }
 .creation-subtasks-heading h2 { margin: 0; font-size: var(--ad-text-title-sm); font-weight: 600; }
-.creation-count { display: grid; place-items: center; min-width: var(--ad-space-5); height: var(--ad-space-5); border-radius: var(--ad-radius-tag); background: var(--ad-route-soft); color: var(--ad-route); font: 500 var(--ad-text-caption) var(--ad-font-mono); }
+.creation-count { display: grid; place-items: center; min-width: var(--ad-space-5); height: var(--ad-space-5); border-radius: var(--ad-radius-tag); background: var(--ad-route-soft); color: var(--ad-route); font: 500 var(--ad-text-caption) var(--ad-font-sans); }
 .creation-subtasks-heading small { margin-left: var(--ad-space-2); font-size: var(--ad-text-caption); color: var(--ad-ink-tertiary); }
 .creation-add-subtask-inline[data-slot="button"] { margin-top: var(--ad-space-3); color: var(--ad-ink-tertiary); }
 .creation-add-subtask-inline[data-slot="button"]:hover { color: var(--ad-route); }

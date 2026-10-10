@@ -2,7 +2,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockPersonName, mockTeamName } from "@/ai/mock/i18n/mockContent";
 import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { currentWorkspaceUserId } from "@/shared/lib/workspace-session";
-import { Building2, ClipboardList, ImagePlus, KeyRound, Layers, ListChecks, ScrollText, UserRound, UsersRound } from "lucide-react";
+import { Building2, ClipboardList, X, Pencil, KeyRound, Layers, ListChecks, ScrollText, UserRound, UsersRound } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { applyPersonalProfileDraft, isValidProfileEmail, savePersonalCenterState, type PersonalCenterState } from "@/ai/mock/data/memberProfiles";
 import { PersonalResponsibilityPanel, TeamInformationPanel, TeamMembersPanel } from "@/features/members/components/PersonalCenterPage";
@@ -140,7 +140,8 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
   };
 
   return <Modal onOpenChange={changeOpen} open={open}>
-    <DialogContent className="personal-center-dialog">
+    <DialogContent className="personal-center-dialog" showCloseButton={false}>
+      <Button aria-label={m('close')} className="personal-center-close" onClick={() => changeOpen(false)} size="icon-sm" type="button" variant="ghost"><X aria-hidden="true" /></Button>
       <DialogHeader className="personal-center-dialog-header"><DialogTitle>{m('settings')}</DialogTitle><DialogDescription className="sr-only">{m('viewYourProfileAndCurrentTeamInformation')}</DialogDescription></DialogHeader>
       <div className="personal-center-dialog-body">
         <aside aria-label={m('settingsNavigation')} className="personal-center-module-nav">
@@ -166,14 +167,14 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
         </aside>
         <section aria-labelledby={activeModule === "profile" ? "personal-center-panel-title" : activeModule === "myTeams" ? "my-teams-title" : activeModule === "tokens" ? "access-tokens-title" : activeModule === "governance" ? "governance-tasks-title" : activeModule === "audit" ? "audit-log-title" : activeModule === "team" ? "team-information-title" : activeModule === "members" ? "team-members-title" : "personal-responsibility-title"} className="personal-center-module-content">
           {activeModule === "profile" ? <div className="personal-profile-panel">
-            <header><small>{m('sharedProfile')}</small><h2 id="personal-center-panel-title">{m('profile')}</h2><p>{m('yourTeamsUseThisProfileToIdentify')}</p></header>
+            <header><h2 id="personal-center-panel-title">{m('profile')}</h2><p>{m('yourTeamsUseThisProfileToIdentify')}</p></header>
             <div className="personal-edit-fields">
               <section aria-label={m('avatar')} className="personal-avatar-setting">
                 <div className="personal-avatar-preview">
                   <button aria-label={m('chooseAnAvatarImage')} className="personal-avatar-choice" disabled={avatarBusy} onClick={() => avatarInputRef.current?.click()} type="button">
                     <PersonAvatar avatarUrl={draft.avatarDataUrl} className="personal-avatar-image" name={draft.name || state.profile.name} showProfilePreview={false} size="xl" />
+                    <span aria-hidden="true" className="avatar-edit-overlay personal-avatar-edit-overlay"><Pencil /></span>
                   </button>
-                  <Button aria-label={m('changeAvatar')} className="personal-avatar-edit" disabled={avatarBusy} onClick={() => avatarInputRef.current?.click()} size="icon-xs" title={m('changeAvatar')} type="button" variant="outline"><ImagePlus aria-hidden="true" /></Button>
                   <input accept="image/jpeg,image/png,image/webp" aria-label={m('chooseALocalAvatarImage')} className="sr-only" onChange={(event) => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ""; void changeAvatar(file); }} ref={avatarInputRef} type="file" />
                 </div>
               </section>
@@ -182,7 +183,7 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
               {saveError && <p aria-live="polite" className="personal-edit-error" role="alert">{m.text(saveError)}</p>}
             </div>
             <div className="personal-profile-actions"><span aria-live="polite">{avatarBusy ? m('processingAvatar') : ""}</span><Button disabled={!profileValid || avatarBusy} onClick={save} type="button">{m('saveProfile')}</Button></div>
-          </div> : activeModule === "myTeams" ? <MyTeamsPanel actorId={currentWorkspaceUserId()} onRestore={onRestoreTeam} state={state} teamName={(team) => mockTeamName(locale, team.id, team.name)} /> : activeModule === "tokens" ? <AccessTokensPanel initialTokens={demoAccessTokens(nodes)} tasksOf={(teamId) => demoTokenTasks(nodes, teamId, locale)} workspaces={state.teams.map((team) => ({ id: team.id, name: mockTeamName(locale, team.id, team.name) }))} />
+          </div> : activeModule === "myTeams" ? <MyTeamsPanel activeTeamId={activeTeamId} actorId={currentWorkspaceUserId()} onRestore={onRestoreTeam} state={state} teamName={(team) => mockTeamName(locale, team.id, team.name)} /> : activeModule === "tokens" ? <AccessTokensPanel initialTokens={demoAccessTokens(nodes)} tasksOf={(teamId) => demoTokenTasks(nodes, teamId, locale)} workspaces={state.teams.map((team) => ({ id: team.id, name: mockTeamName(locale, team.id, team.name) }))} />
             : activeModule === "governance" || activeModule === "audit" ? (activeTeam && governance ? activeModule === "governance"
               ? <GovernanceTasksPanel asOf={governance.asOf} key={activeTeam.id} members={teamPeople} rows={governance.rows} />
               : <AuditLogPanel events={demoAuditEvents(activeTeam, nodes, locale)} key={activeTeam.id} members={teamPeople} onOpenTask={onOpenEvidence} /> : null)

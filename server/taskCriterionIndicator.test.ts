@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createElement } from 'react';
+import React, { createElement } from 'react';
+(globalThis as typeof globalThis & { React: typeof React }).React = React;
 import { renderToStaticMarkup } from 'react-dom/server';
 import { TaskCriterionIndicator } from '../src/features/tasks/components/TaskCriterionIndicator';
 const review = {text:'A',analysis:{percent:70,evidence:'Demo',observedAt:'2026-09-14T17:30:00+08:00'}};
@@ -11,7 +12,7 @@ test('confirmation uses the orbit button and its tooltip explains the AI assessm
   assert.doesNotMatch(html,/criterion-confirm-feedback/);
 
   assert.match(html,/criterion-touch-confirm/);
-  assert.match(html,/AI assessment: Mostly complete/);
+  assert.match(html,/AI assessment: 75%/);
   assert.match(html,/Click to confirm as met/);
 });
 test('confirmed criteria expose undo and read-only criteria disable confirmation',()=>{

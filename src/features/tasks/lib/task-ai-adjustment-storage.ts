@@ -1,4 +1,4 @@
-import { compressStorageText, decompressStorageText } from "@/features/tasks/lib/task-storage-compression";
+import { compressStorageGzip, decompressStorageGzip, decompressStorageText } from "@/features/tasks/lib/task-storage-compression";
 
 type TaskAiStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
@@ -36,8 +36,8 @@ function parseJournal(raw: string): TaskAiJournal {
     let value: unknown = JSON.parse(raw);
     if (value && typeof value === "object" && "version" in value && value.version === 2) {
       const envelope = value as { encoding?: unknown; payload?: unknown; state?: unknown };
-      if (envelope.encoding !== "lzw-utf8" || typeof envelope.payload !== "string") throw new Error(message);
-      value = JSON.parse(decompressStorageText(envelope.payload));
+      if (!["lzw-utf8", "gzip-base64"].includes(String(envelope.encoding)) || typeof envelope.payload !== "string") throw new Error(message);
+      value = JSON.parse(envelope.encoding === "gzip-base64" ? decompressStorageGzip(envelope.payload) : decompressStorageText(envelope.payload));
       if (!value || typeof value !== "object" || !("state" in value) || value.state !== envelope.state) throw new Error(message);
     }
     if (!value || typeof value !== "object") throw new Error(message);
@@ -175,6 +175,6 @@ export function commitTaskAiStorage(storage: TaskAiStorage, writes: Array<[strin
 function serializeJournal(journal: TaskAiJournal): string {
   const raw = JSON.stringify(journal);
   if (raw.length < 16384) return raw;
-  const compressed = JSON.stringify({ version: 2, state: journal.state, encoding: "lzw-utf8", payload: compressStorageText(raw) });
+  const compressed = JSON.stringify({ version: 2, state: journal.state, encoding: "gzip-base64", payload: compressStorageGzip(raw) });
   return compressed.length < raw.length ? compressed : raw;
 }

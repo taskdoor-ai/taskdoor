@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Check, KeyRound, Plus, Search, ShieldCheck } from 'lucide-react'
+import { Check, KeyRound, Plus, Search, ShieldCheck, Trash2 } from 'lucide-react'
 import {
   credentialScopes,
   dayFromToday,
@@ -69,20 +69,20 @@ function TokenWorkspaceLine({
   workspaces: WorkspaceSummary[]
 }) {
   const t = useCatalog(tokenMessages)
-  if (reach.mode === 'ALL') return <p>{t('tokens.workspacesAll')}</p>
+  if (reach.mode === 'ALL') return <span>{t('tokens.workspacesAll')}</span>
   const names = reach.workspaceIds.flatMap((id) => {
     const found = workspaces.find((workspace) => workspace.id === id)
     return found ? [found.name] : []
   })
-  if (!names.length) return <p>{t('tokens.workspacesGone')}</p>
+  if (!names.length) return <span>{t('tokens.workspacesGone')}</span>
   const separator = t('tokens.workspaceSeparator')
   const shown = names.slice(0, NAMED_WORKSPACES).join(separator)
   const rest = names.length - NAMED_WORKSPACES
   return (
-    <p title={names.join(separator)}>
-      {t('tokens.workspacesLimitedTo')} {shown}
+    <span title={names.join(separator)}>
+      {shown}
       {rest > 0 ? ` ${t('tokens.workspacesMore', { rest, total: names.length })}` : ''}
-    </p>
+    </span>
   )
 }
 
@@ -228,7 +228,7 @@ export function AccessTokensPanel({
       <div className="access-token-heading">
         <div>
           <h2 id="access-tokens-title">{t('tokens.title')}</h2>
-          <p>{t('tokens.lead')}</p>
+          <p>{t('tokens.lead')} <a className="access-token-api-link" href="https://sand.taskdoor.com/documents/openapi/v1" target="_blank" rel="noopener noreferrer">{locale === 'en' ? 'API documentation' : 'API 文档'}</a></p>
         </div>
         <Button
           type="button"
@@ -279,39 +279,42 @@ export function AccessTokensPanel({
                       {t(`tokens.status.${token.status}`)}
                     </span>
                   </div>
-                  <p>{token.scopes.map((scope) => t(`tokens.scope.${scope}`)).join(' · ')}</p>
-                  <TokenWorkspaceLine reach={token.workspaces} workspaces={workspaces} />
-                  {/* A token with no workspace left reaches no task either: no line says otherwise. */}
-                  {reachesAny(token.workspaces, workspaces) && (
-                    <p>
-                      {token.taskIds.length && token.taskWorkspaceId ? (
-                        <>
-                          {t('tokens.limitedTo')}{' '}
-                          {token.taskIds.map((id) => taskTitle(token.taskWorkspaceId!, id)).join(', ')}
-                        </>
-                      ) : (
-                        t('tokens.tasksAll')
-                      )}
-                    </p>
-                  )}
+                  <dl className="access-token-range-list">
+                    <div>
+                      <dt>{t('tokens.range.tools')}</dt>
+                      <dd>{token.scopes.map((scope) => t(`tokens.scope.${scope}`)).join(' · ')}</dd>
+                    </div>
+                    <div>
+                      <dt>{t('tokens.range.workspaces')}</dt>
+                      <dd><TokenWorkspaceLine reach={token.workspaces} workspaces={workspaces} /></dd>
+                    </div>
+                    {reachesAny(token.workspaces, workspaces) && <div>
+                      <dt>{t('tokens.range.tasks')}</dt>
+                      <dd>{token.taskIds.length && token.taskWorkspaceId
+                        ? token.taskIds.map((id) => taskTitle(token.taskWorkspaceId!, id)).join(t('tokens.workspaceSeparator'))
+                        : t('tokens.tasksAll')}</dd>
+                    </div>}
+                  </dl>
                   <small>
-                    {t('tokens.created', { date: dates.format(new Date(token.createdAt)) })} ·{' '}
-                    {t('tokens.expiresOn', { date: dates.format(new Date(token.expiresAt)) })} ·{' '}
+                    <strong>{t('tokens.createdLabel')}</strong> {dates.format(new Date(token.createdAt))} ·{' '}
+                    <strong>{t('tokens.expiresLabel')}</strong> {dates.format(new Date(token.expiresAt))} ·{' '}
                     {token.lastUsedAt
-                      ? t('tokens.lastUsed', { date: times.format(new Date(token.lastUsedAt)) })
+                      ? <><strong>{t('tokens.lastUsedLabel')}</strong> {times.format(new Date(token.lastUsedAt))}</>
                       : t('tokens.neverUsed')}
                   </small>
                 </div>
               </div>
               <Button
                 aria-label={t('tokens.delete', { name: token.name })}
+                className="access-token-delete"
+                title={t('tokens.deleteShort')}
                 disabled={busy}
                 onClick={() => setDeleting(token)}
-                size="sm"
+                size="icon-sm"
                 type="button"
                 variant="ghost"
               >
-                {t('tokens.deleteShort')}
+                <Trash2 aria-hidden="true" />
               </Button>
             </li>
           ))}
@@ -388,7 +391,7 @@ export function AccessTokensPanel({
                       value={name}
                     />
                   </label>
-                  <fieldset className="access-token-section">
+                  <fieldset className="access-token-section access-token-expiry-section">
                     <legend>{t('tokens.expires')}</legend>
                     <TokenExpiryPicker value={expiry} onChange={setExpiry} />
                     {tooFar && <small role="alert">{t('tokens.tooFar')}</small>}
@@ -666,7 +669,7 @@ export function AccessTokensPanel({
       </Dialog>
       {deleting && (
         <AlertDialog onOpenChange={(open) => !open && !busy && setDeleting(null)} open>
-          <AlertDialogContent>
+          <AlertDialogContent closeDisabled={busy} onClose={() => setDeleting(null)}>
             <AlertDialogHeader>
               <AlertDialogTitle>
                 {t('tokens.deleteTitle', { name: deleting.name })}

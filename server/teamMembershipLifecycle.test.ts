@@ -77,13 +77,35 @@ test('stale login preview cannot recreate deleted team or removed membership', a
   assert.deepEqual(reconcileOnboardingMemberships(state, { ...directory, teams: [] }, [{ id: 'delete', kind: 'delete', teamId: team.id, actorId: '周岚', at: '' }]).teams, []);
 });
 
-test('team information is editable only by the active owner, including after transfer', () => {
+test('team information is editable by active owners and admins, including after transfer', () => {
   const team = changeTeamRole(base(), '周岚', '陈默', 'admin');
   assert.equal(canEditTeamInformation(team, '周岚'), true);
-  for (const id of ['陈默', '林洁', 'outsider']) assert.equal(canEditTeamInformation(team, id), false);
+  assert.equal(canEditTeamInformation(team, '陈默'), true);
+  for (const id of ['林洁', 'outsider']) assert.equal(canEditTeamInformation(team, id), false);
   const transferred = transferTeamOwnership(team, '周岚', '陈默');
-  assert.equal(canEditTeamInformation(transferred, '周岚'), false);
+  assert.equal(canEditTeamInformation(transferred, '周岚'), true);
   assert.equal(canEditTeamInformation(transferred, '陈默'), true);
   const inactive = { ...team, memberships: team.memberships.map(m => m.memberId === '周岚' ? { ...m, status: 'invited' as const } : m) };
   assert.equal(canEditTeamInformation(inactive, '周岚'), false);
+});
+
+test('large team retention snapshots fit a bounded store and restore without data loss', async () => {
+  const { commitTeamLifecycle, readDeletedTeams, restoreDeletedTeam } = await import('../src/features/members/lib/team-lifecycle-storage');
+  const source = input();
+  source.nodes[0].goal = '团队任务的完整讨论及结果依据。'.repeat(12000);
+  const values = new Map<string, string>();
+  const storage = {
+    getItem: (key: string) => values.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      // Models a store that cannot accept the uncompressed duplicate snapshot.
+      if (key === 'agentdoor-deleted-teams' && value.length > 60000) throw new DOMException('Full', 'QuotaExceededError');
+      values.set(key, value);
+    },
+    removeItem: (key: string) => { values.delete(key); },
+  } as Storage;
+  const result = commitTeamLifecycle({ storage, directory: { ...structuredClone(initialPersonalCenterState), teams: [source.team] }, teamId: source.team.id, actorId: '周岚', actorName: '周岚', nodes: source.nodes, seeds: source.nodes, activities: {}, action: { kind: 'delete', name: source.team.name } });
+  assert.equal(JSON.parse(values.get('agentdoor-deleted-teams')!).encoding, 'gzip-base64');
+  assert.equal(readDeletedTeams(storage)[0].nodes[0].goal, source.nodes[0].goal);
+  const restored = restoreDeletedTeam({ storage, directory: result.directory, teamId: source.team.id, actorId: '周岚', nodes: result.nodes, seeds: result.seeds, activities: result.activities });
+  assert.equal(restored.nodes.find(node => node.id === source.nodes[0].id)?.goal, source.nodes[0].goal);
 });

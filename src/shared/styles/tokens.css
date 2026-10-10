@@ -374,6 +374,8 @@ body {
   background: var(--ad-canvas);
   color: var(--ad-ink);
   font-family: var(--ad-font-sans);
+  /* Keep dates, times, quantities and percentages on the same digit forms. */
+  font-variant-numeric: lining-nums tabular-nums;
   font-size: var(--ad-text-body);
   line-height: 1.6;
   text-rendering: optimizeLegibility;

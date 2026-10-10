@@ -1,3 +1,5 @@
+import { gzipSync, gunzipSync, strToU8, strFromU8 } from 'fflate';
+
 /** Lossless UTF-8 LZW for large recovery snapshots; no task data is discarded. */
 export function compressStorageText(text: string): string {
   const bytes = new TextEncoder().encode(text);
@@ -43,4 +45,15 @@ export function decompressStorageText(payload: string): string {
   }
   const bytes = Uint8Array.from(chunks.join(''), char => char.charCodeAt(0));
   return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+}
+
+/** Gzip is more compact for large retention snapshots and recovery journals. */
+export function compressStorageGzip(text: string): string {
+  const bytes = gzipSync(strToU8(text));
+  let binary = '';
+  for (let offset = 0; offset < bytes.length; offset += 4096) binary += String.fromCharCode(...bytes.subarray(offset, offset + 4096));
+  return btoa(binary);
+}
+export function decompressStorageGzip(payload: string): string {
+  return strFromU8(gunzipSync(Uint8Array.from(atob(payload), char => char.charCodeAt(0))));
 }

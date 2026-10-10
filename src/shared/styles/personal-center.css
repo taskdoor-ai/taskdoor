@@ -20,7 +20,7 @@
 .personal-profile-panel .personal-edit-fields { grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-6); margin-top: var(--ad-space-8); }
 .personal-avatar-setting { display: grid; justify-items: start; }
 .personal-avatar-preview { position: relative; width: var(--ad-person-profile-avatar-size); height: var(--ad-person-profile-avatar-size); }
-.personal-avatar-choice { display: block; width: 100%; height: 100%; padding: 0; border: 0; border-radius: var(--ad-radius-pill); background: transparent; cursor: pointer; }
+.personal-avatar-choice { position: relative; overflow: hidden; display: block; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
 .personal-avatar-choice:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
 .personal-avatar-choice:disabled { cursor: wait; opacity: .72; }
 .personal-avatar-edit { position: absolute; z-index: 2; right: 0; bottom: 0; border-color: var(--ad-border-strong); border-radius: var(--ad-radius-pill); background: var(--ad-surface); box-shadow: var(--ad-shadow-float); }
@@ -226,3 +226,30 @@
 }
 
 .team-name-readonly { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); }
+
+.personal-avatar-choice .person-avatar > img,
+.personal-avatar-choice .person-avatar-fallback { border: 0; border-radius: 50%; }
+.avatar-edit-overlay { position: absolute; z-index: 2; opacity: 0; pointer-events: none; inset: 0; display: grid; place-items: center; color: white; transition: opacity var(--ad-duration-fast) var(--ad-ease); }
+.avatar-edit-overlay svg { width: var(--ad-control-icon-lg); height: var(--ad-control-icon-lg); stroke-width: 1.8; }
+.personal-avatar-edit-overlay { background: color-mix(in srgb, var(--ad-tag-purple-ink) 80%, transparent); }
+.personal-avatar-choice:hover .avatar-edit-overlay { filter: brightness(.92); }
+
+.personal-avatar-choice:hover .avatar-edit-overlay,
+.personal-avatar-choice:focus-visible .avatar-edit-overlay { opacity: 1; }
+
+/* Settings pages share a single heading hierarchy. */
+.personal-profile-panel > header h2,
+.personal-center-module-content .responsibility-toolbar h2,
+.personal-center-module-content .access-token-heading h2 { margin: 0; color: var(--ad-ink); font-size: var(--ad-text-title-2); font-weight: 700; letter-spacing: -.02em; line-height: 1.4; }
+.personal-profile-panel > header p,
+.personal-center-module-content .responsibility-toolbar p,
+.personal-center-module-content .access-token-heading p { margin: var(--ad-space-2) 0 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); font-weight: 400; line-height: 1.6; }
+
+.personal-center-dialog { width: min(1120px, calc(100vw - var(--ad-space-8))); max-width: 1120px; height: min(700px, calc(100dvh - var(--ad-space-8))); max-height: 700px; }
+.personal-center-close { position: absolute; top: 12px; right: 12px; z-index: 1; }
+
+.personal-center-dialog-header { min-height: 64px; box-sizing: border-box; justify-content: center; padding: 16px var(--ad-space-8); }
+.personal-center-dialog-header [data-slot="dialog-title"] { font-size: var(--ad-text-title-3); line-height: 1.4; }
+.personal-center-close { top: 16px; }
+
+#team-logo-label { font-weight: 700; }

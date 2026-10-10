@@ -1,15 +1,12 @@
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { Check, Loader2, Undo2 } from 'lucide-react';
 import { useGlobalUi } from '@/shared/i18n/global-ui';
-import { useProgressCopy } from '@/features/tasks/i18n/progress-copy';
 import { toast } from '@/shared/ui/toast';
 import { criterionStage } from '@/features/tasks/lib/task-criterion-review';
 import type { CriterionReview } from '@/shared/model/criterion-review';
 
-const stages = ['未形成结果', '少量完成', '部分完成', '大部分完成', '接近完成'];
 export function TaskCriterionIndicator({ index, review, onConfirm }: { index: number; review?: CriterionReview; onConfirm?: (confirmed: boolean) => void | Promise<void> }) {
   const ui = useGlobalUi();
-  const p = useProgressCopy();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
   const [celebrating, setCelebrating] = useState(false);
@@ -26,8 +23,8 @@ export function TaskCriterionIndicator({ index, review, onConfirm }: { index: nu
     const timer = setTimeout(() => setCelebrating(false), 420);
     return () => clearTimeout(timer);
   }, [Boolean(confirmation)]);
-  const aiLabel = stage === null ? ui('AI 暂无评估') : `AI · ${p(stages[stage])}`;
-  const assessmentHint = stage === null ? ui('AI 暂无评估') : ui('AI 分析：{stage}', { stage: p(stages[stage]) });
+  const aiLabel = stage === null ? ui('AI 暂无评估') : `AI · ${`${stage * 25}%`}`;
+  const assessmentHint = stage === null ? ui('AI 暂无评估') : ui('AI 分析：{stage}', { stage: `${stage * 25}%` });
   const actionLabel = confirmation ? ui('撤销确认') : ui('确认达成');
   const toggleConfirmation = async () => {
     if (!onConfirm || saving.current) return;
@@ -46,7 +43,7 @@ export function TaskCriterionIndicator({ index, review, onConfirm }: { index: nu
         <span className="criterion-orbit-center">{pending ? <Loader2 size={13} className="criterion-saving" /> : confirmation ? <Check size={13} strokeWidth={2.4} /> : index + 1}</span>
         {!pending && onConfirm && <span className="criterion-orbit-hover" aria-hidden="true">{confirmation ? <Undo2 size={13} /> : <Check size={13} strokeWidth={2.4} />}</span>}
       </button>
-      <span className="criterion-orbit-tip" id={tipId} role="tooltip"><strong>{assessmentHint}</strong>{confirmation ? <span>{onConfirm ? ui('已人工确认 · 点击撤销') : ui('已人工确认')}</span> : onConfirm && <span>{ui('点击人工确认达成')}</span>}</span>
+      <span className="criterion-orbit-tip" id={tipId} role="tooltip"><strong>{assessmentHint}</strong>{stage !== null && review?.analysis?.evidence && <span>{review.analysis.evidence}</span>}{confirmation ? <span>{onConfirm ? ui('已人工确认 · 点击撤销') : ui('已人工确认')}</span> : onConfirm && <span>{ui('点击人工确认达成')}</span>}</span>
     </span>
     <div className="criterion-assessment">
       {onConfirm && <button type="button" className="criterion-touch-confirm" disabled={pending} onClick={() => void toggleConfirmation()}>{pending ? <Loader2 size={12} className="criterion-saving" /> : confirmation ? <Undo2 size={12} /> : <Check size={12} />}{actionLabel}</button>}

@@ -15,7 +15,9 @@
 .team-switcher-menu[data-slot="dropdown-menu-content"] { overflow: hidden; }
 .team-switcher-list { min-height: 0; overflow-y: auto; }
 .team-switcher-current, .team-switcher-create { flex-shrink: 0; }
-.team-switcher-create { display: flex; gap: 10px; min-height: 44px; margin-top: 8px; border-top: 1px solid var(--ad-border); border-radius: 0; }
+.team-switcher-create[data-slot="dropdown-menu-item"] { display: flex; gap: var(--ad-space-3); min-height: 44px; margin-top: var(--ad-space-3); padding: var(--ad-space-2); border: 0; border-radius: var(--ad-radius-control); color: var(--ad-ink-secondary); background: transparent; }
+.team-switcher-create::before { content: ""; position: absolute; top: calc(-1 * var(--ad-space-2)); left: 0; right: 0; height: 1px; background: var(--ad-border); pointer-events: none; }
+.team-switcher-create[data-slot="dropdown-menu-item"]:hover, .team-switcher-create[data-slot="dropdown-menu-item"]:focus, .team-switcher-create[data-highlighted] { background: var(--ad-surface-subtle); color: var(--ad-ink); }
 .create-team-dialog form { display: grid; gap: 12px; }
 .create-team-dialog footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
 .create-team-dialog [role="alert"] { color: var(--ad-danger, #b42318); }

@@ -1,5 +1,89 @@
 # PRD 来源映射
 
+## PRD-0095：设置快捷导航
+
+快捷入口由 `docs/prd/index.md` 维护，`scripts/build-agentdoor-prd.mjs` 生成至账号与团队分组，并校验正文锚点存在。四个入口引用现有章节，不新增重复模块。
+
+
+## PRD-0093：10 月 9—10 日需求与实现核对
+
+- 已覆盖：团队删除保留 30 天及拥有者恢复（PRD-0073／0090）、我的团队当前标识（0092）、团队任务筛选总数与分页、无回收站及无归档（0080—0083／0091）、行为日志分页与头像（0081／0089）、MCP 安装 Skill 和访问令牌新标签页入口（0087—0089）、任务与讨论精简上下文、目标和完成标准（0084—0085）、讨论翻译范围与进度百分比分档（0077—0078）。
+- 补充证据：`TeamAppearancePicker.tsx` 与 `shared/lib/avatar-image.ts` 支撑团队图片上传、格式及 2 MB 校验；`TeamLogo.tsx` 和 `TeamSwitcher.tsx` 读取团队标志。`TaskDetail.tsx` 使用单行 Input，`task-heading.css` 提供省略号与编辑时横向显示。
+- 权限差异：当前 `canEditTeamInformation` 与 `canEditTeamAppearance` 允许 owner 和 admin，正式模块 03／15 仍仅允许拥有者；未发现本轮直接授权扩大管理员权限，因此保留需求并记录待修复差异。
+- 验证边界：本轮只核对文档与当前代码，不据此宣称生产端到期永久清理、MCP 客户端实际连接或跨端保存已验证。测试实验室及评测工具变动属于研发工具，不新增为用户产品能力；存储压缩与图标模块上提是实现细节。
+- 纯视觉调整由 Git 保留：设置标题字重、卡片布局与分隔、角色位置、到期红色提示、嵌套确认遮罩、关闭按钮、菜单 hover 及列表间距。过期截图改为待采集并从正文撤下，不生成替代截图。
+
+
+## PRD-0092：我的团队当前标识
+
+`PersonalInfoDialog.tsx` 将 activeTeamId 传给 `MyTeamsPanel.tsx`，仅未删除且 ID 匹配的团队展示当前团队标签；无团队状态不传入活动 ID。前端类型检查通过，截图待采集。
+
+
+## PRD-0091：团队任务移除归档
+
+`GovernanceTasksPanel.tsx` 移除归档入口、批量选择状态及归档弹窗，任务名称直接展示；`governance.css` 将操作表头与行内按钮统一居中。前端类型检查通过。FIG-TEAM-007 保持待采集，不以旧截图证明当前界面。
+
+
+## PRD-0090：恢复团队二次确认
+
+`src/features/members/components/MyTeamsPanel.tsx` 使用共享确认弹窗；点击恢复仅选择目标，确认后才调用恢复，取消与关闭清除目标。提交期间禁止重复操作，失败保留确认目标。前端类型检查通过，本次未验证生产恢复接口。卡片布局旧截图待重新采集。
+
+
+## PRD-0089：设置需求补充
+
+本次依据用户确认补齐模块 03、05、13。行为日志头像及团队任务负责人、分页和筛选数量由 `AuditLogPanel.tsx`、`GovernanceTasksPanel.tsx` 支撑；个人访问令牌与 API 文档入口由 `AccessTokensPanel.tsx` 支撑，MCP 安装引导由 `AiConnectionPage.tsx` 和 `public/documents/skills/taskdoor-mcp/SKILL.md` 支撑。团队 30 天保留规则沿用 PRD-0073；生产环境到期永久清理与客户端 MCP 实际连接未在本次验证，不能由页面展示推定已完成。现有待采集截图状态保持，本次未新增截图证据。
+
+
+## PRD-0088：新标签页访问令牌
+
+`AiConnectionPage.tsx` 提供新标签页链接，`App.tsx` 识别 settings=tokens 直接打开访问令牌模块；不在 URL 中传入令牌。
+
+
+## PRD-0087：统一 MCP 安装引导
+
+`AiConnectionPage.tsx` 的两种连接方式共用产品选择与提示词传输，MCP 指向 `public/documents/skills/taskdoor-mcp/SKILL.md`；不要求用户把令牌提交到聊天。独立 MCP 配置组件已移除，旧 PRD-0086 证据由本项替代。
+
+
+## PRD-0086：MCP 连接入口
+
+`AiConnectionPage.tsx` 提供 CLI／MCP 切换，`McpConnectionPanel.tsx` 提供配置复制与一次性令牌说明。MCP 地址支持 VITE_TASKDOOR_MCP_URL 配置，当前默认沿用仓库沙箱地址。访问令牌副标题已接入用户提供的 API 文档地址 `https://sand.taskdoor.com/documents/openapi/v1`，新标签页打开。未验证客户端连接回执。
+
+
+## PRD-0085：任务目标与完成标准
+
+任务、讨论上下文均带入当前目标和逐项编号的完成标准，空值省略；同一字段投影供预览和传输使用。证据：`src/features/tasks/lib/task-ai-connection.ts`、`src/features/tasks/discussion/lib/task-discussion-ai.ts`、`server/aiContextCompact.test.ts`。
+
+
+## PRD-0084：精简 AI 上下文（2026-10-10）
+
+任务与讨论构建器只导出定位字段，讨论摘录限制 180 字；共享传输载荷保留 taskId。证据：`src/features/tasks/lib/task-ai-connection.ts`、`src/features/tasks/discussion/lib/task-discussion-ai.ts`、`src/features/ai-connection/components/AiConnectionDialog.tsx`、`server/aiContextCompact.test.ts`。客户端启动与 CLI 登录仍由原连接流程处理，传入 ID 不证明已读取最新详情。
+
+
+## PRD-0083：团队任务分类
+
+团队任务不显示回收站分类，列表继续排除已删除任务；任务工作区的回收站入口与权限保持原有规则。证据：`src/features/members/governance/components/GovernanceTasksPanel.tsx`、`src/features/members/governance/lib/governance.ts`。
+
+
+## PRD-0082：团队任务筛选数量（2026-10-09）
+
+`GovernanceTasksPanel.tsx` 的数量直接读取分类筛选后的 `rows.length`，与分页使用同一结果集，删除右侧汇总；未知数据仍由上层加载状态处理，空结果显示 0。FIG-TEAM-007 仍待重新采集。
+
+
+## PRD-0081：设置列表统一与行为日志分页（2026-10-09）
+
+两页共用 `GovernancePagination.tsx` 与表格样式，每页 10 项。行为日志从完整筛选结果切片，筛选变化回到首页；团队任务跨页选择保持。FIG-TEAM-007/008 仍待重新采集。
+
+
+## PRD-0080：团队任务分页与活动列（2026-10-09）
+
+`GovernanceTasksPanel.tsx` 依据筛选后的任务集按每页 10 项切片，最近活动独立成列；页码限制在有效范围内，跨页选择保留，批量归档从完整筛选集读取选中项。FIG-TEAM-007 仍待重新采集。
+
+
+## PRD-0079：行为日志与团队任务 UI（2026-10-09）
+
+`AuditLogPanel.tsx` 使用动作、任务、时间、操作人四列表格，关联任务沿用原跳转；`GovernanceTasksPanel.tsx` 复用 `TaskStatusBadge` 与负责人头像；`governance.css` 使用现有设计变量调整密度与窄屏布局。界面中英文及设置导航统一为行为日志／Activity log。
+
+
 ## PRD-0076：自动翻译仅作用于讨论（2026-10-09）
 
 `TaskDetail.tsx` 移除标题右侧的任务阅读选项菜单；`I18nProvider.tsx` 删除 `originalTasks` 与 `toggleTaskOriginal`，`MockDataProvider.tsx` 的任务标题、目标和记录文字不再读取 `autoTranslate`；`DiscussionMessages.tsx` 的回复引用摘要改由 `autoTranslate` 决定是否显示译文；账户菜单开关文案改为“自动翻译讨论内容／Auto-translate discussions”；对应样式 `.task-reading-menu` 与三条界面文案一并删除。讨论消息的原文／译文切换（`DiscussionMessages.tsx`）和账户菜单的“自动翻译协作内容”保留。
@@ -484,3 +568,53 @@ FIG-MEMBER-003、004、FIG-WORK-005 及产品预览同源图片撤出当前正�
 ### 2026-09-23 账号模块阅读顺序调整
 
 按用户要求先展示注册说明和既有注册截图，再展示已有账号登录，流程总览移至登录之后、受邀说明之前，取消 3.0 编号。复用现有图片与规则，未改变功能或实现状态，属于阅读编排调整，不新增语义变更 ID。
+
+
+## PRD-0077：讨论区翻译与词条复用
+
+2026-10-09 用户明确自动翻译仅限讨论区、记录词条复用，并要求同步 PRD。本节替代 PRD-0017 关于整任务阅读入口的当前规则，历史记录保留用于追溯。
+
+| 来源 | 核验范围 |
+| --- | --- |
+| `src/ai/mock/i18n/MockDataProvider.tsx`、`mockContent.ts`；`src/features/tasks/components/TaskDetail.tsx`；`src/shared/i18n/I18nProvider.tsx` | 任务字段和普通业务文本保持原文；移除任务阅读菜单及整任务原文切换状态 |
+| `src/ai/mock/i18n/discussion-translation-entries.ts`；`src/features/tasks/discussion/components/DiscussionMessages.tsx` | 讨论正文独立读取译文；按任务、精确原文、目标语言记录词条，设备持久化并跨刷新复用 |
+| `src/shared/ui/LanguageSwitcher.tsx`、`src/shared/i18n/globalUiMessages.json` | 偏好名称明确为“自动翻译讨论内容” |
+| `server/contentReading.test.ts` | 5 项定向测试通过：任务原文、阅读状态、无译文保留原文、词条跨刷新复用及原文／语言隔离 |
+| 主工作区 `http://127.0.0.1:5173/`，2026-10-09 English 界面 | 浏览器验证 GMV 任务标题、目标和完成标准为中文原文，无整任务阅读入口；讨论正文仍显示译文与逐条原文入口 |
+
+应用类型检查和结构检查通过。语言菜单 FIG-INT-001 的旧文案截图失效，已从正文移除并标记待重新采集；本轮未新增截图资产。
+
+
+### 2026-10-09 团队删除与恢复修复验证
+
+主工作区复现团队删除保存失败及回滚：大体积保留记录和恢复日志占用浏览器存储。`team-lifecycle-storage.ts` 与 `task-ai-adjustment-storage.ts` 改用 gzip 无损压缩大快照，兼容读取原 JSON 和旧 LZW 日志；未改变拥有者权限和 30 天保留规则。删除确认文案保留名称和页面入口两侧的「」。浏览器实测删除协作平台团队成功，“我的团队”出现剩 30 天与恢复按钮，随后恢复成功；验证团队已恢复。FIG-DELETE-009 记录实际已删除状态，来源为主工作区 http://127.0.0.1:5173/。44 项删除、恢复及恢复日志定向测试通过，包含容量限制下的大快照完整恢复；应用类型检查通过。本轮为既有能力修复与截图补齐，不新增语义变更 ID 或发布版本。
+
+
+## PRD-0078：MCP 任务分析与分档百分比
+
+依据项目 2026-10-08 已核验的 `skills/shared/production-mcp-contract.md` 及标准返回契约，任务分析新增 `references/mcp-analysis.md`，读取 `criteria.version/items[].id/text`，保持人工确认独立；当前会话未连接正式 MCP，无线上读写验证。`task-progress-percent.ts` 统一整体与标准的分档，`TaskProgressStage.tsx` 和 `TaskCriterionIndicator.tsx` 展示百分比；燃起图仍使用原始完成量。相关定向验证覆盖数值边界、未知、100% AI 与人工确认分离以及图表保持。旧概览、标准和展开子任务截图标 pending 并撤下，不新增截图或发布版本。
+
+
+## 2026-10-10 设置页面截图补齐
+
+从主工作区当前运行页面 `http://127.0.0.1:5173/` 通过设置导航实际打开并采集团队任务（FIG-TEAM-007）、行为日志（FIG-TEAM-008）、访问令牌（FIG-CLI-006）、我的团队（FIG-DELETE-009）。截图已重新登记为 current-page，替换旧 pending 记录并放回对应功能正文；未创建或删除令牌，未提交团队恢复，不代表生产 API 验证。本次仅更新界面证据，产品规则不变，不新增语义变更 ID。
+
+
+## PRD-0096 讨论上下文修正
+
+`task-discussion-ai.ts` 导出当前记录的自身 ID 作为讨论 ID，不再输出回复 ID；当前正文及未发送草稿不截断。定向验证见 `server/aiContextCompact.test.ts`，未带入其他记录或已删除内容。已有设置截图不受影响。
+
+
+## PRD-0097 设置分组
+
+依据 PersonalInfoDialog 设置导航，将个人信息、我的职责、我的团队、访问令牌、团队信息、成员、团队任务、行为日志拆成设置分组的八个正式模块。现有规则及四张 current-page 截图迁移，原模块保留跨领域流程引用。团队信息管理员编辑等既有实现差异继续有效，本次不改变产品权限；其余页面尚未补采截图。
+
+
+## 2026-10-10 设置截图补充
+
+新增个人信息、我的职责、团队信息、成员四个 current-page 截图及令牌创建表单两张、删除确认和团队恢复确认截图。均从主工作区实际设置导航采集，未提交写操作。职责页当前显示自动更新开启，其自动应用文案与正式需求的确认后写入存在差异；团队信息截图身份为管理员，当前可编辑，与拥有者独占编辑目标仍有差异。保留目标，不以截图覆盖权限和职责确认规则。本次为截图证据补充，无新语义变更编号。
+
+
+## 2026-10-10 CLI 与 MCP 引导截图
+
+FIG-CLI-007、FIG-CLI-008 为主工作区当前连接 AI 弹窗实拍，分别展示 CLI 安装与 MCP Skill 配置提示词、产品选择和令牌入口。未执行复制、客户端唤起或安装；WorkBuddy 标志当前加载失败。仅补充截图证据，不新增语义变更 ID。
