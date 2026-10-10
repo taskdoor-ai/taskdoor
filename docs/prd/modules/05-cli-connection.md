@@ -4,7 +4,7 @@ title: "Agent 与 CLI、MCP 连接"
 group: "协作与连接"
 version: "1.1"
 status: "review"
-last_change: "PRD-0097"
+last_change: "PRD-0098"
 summary: "通过 CLI 或 MCP 连接 AI 工具，带入任务上下文并按本人权限协作。"
 lifecycle_stage: "连接本地工具"
 pages: "连接 AI 页面, 全局连接弹窗, 任务连接弹窗, 讨论连接弹窗, 已连接设备, 访问令牌"
@@ -20,7 +20,7 @@ operations: "login, authorize, revoke, create_access_token, delete_access_token,
 
 ## 2. 范围和边界
 
-支持 CLI 安装与登录授权、MCP 配置与个人访问令牌认证，以及任务上下文读取与业务操作；两种连接方式共享连接 AI 入口，沿用本人及凭据权限。
+支持 CLI 安装与登录授权、MCP 配置与浏览器授权或个人访问令牌认证，以及任务上下文读取与业务操作；两种连接方式共享连接 AI 入口，沿用本人及凭据权限。
 
 ## 3. 详细功能设计
 
@@ -38,15 +38,13 @@ operations: "login, authorize, revoke, create_access_token, delete_access_token,
 
 #### MCP 连接
 
-连接 AI 提供 CLI 与 MCP 两种方式，共用产品选择、安装配置提示词、复制及在工具中打开的布局。MCP 提示词指向当前部署的 `documents/skills/taskdoor-mcp/SKILL.md`，由所选工具按指南协助配置，并引导用户自行在客户端填入访问令牌；页面不展示真实令牌。指南提供服务地址、Bearer 认证和配置模板，令牌仅在创建时显示一次，未保存时需重新创建。连接成功需以客户端真实结果为准。
+连接 AI 提供 CLI 与 MCP 两种方式，共用产品选择、安装配置提示词、复制及在工具中打开的布局。MCP 提示词指向当前部署的 `documents/skills/taskdoor-mcp/SKILL.md`，由所选工具按指南协助配置。支持浏览器 OAuth 授权的客户端优先通过浏览器登录授权；不支持时可使用个人访问令牌，由用户在客户端自行填入。指南使用连接页提供的服务地址，不固定部署域名。页面不展示真实令牌，连接成功以客户端实际结果为准。
 
 MCP 令牌提示提供“管理访问令牌”入口，在新标签页直接打开个人设置的访问令牌页面，保留原连接页面。
 
 访问令牌页面说明 MCP 与 API 用途，并提供正式 API 文档入口。
 
-![MCP 连接：使用安装 Skill 提示词，并进入访问令牌管理。](../assets/cli-connection/mcp-guide-zh.jpg)
 
-*FIG-CLI-008 · MCP 连接：使用安装 Skill 提示词，并进入访问令牌管理。*
 
 #### 任务与讨论上下文
 

@@ -2614,9 +2614,9 @@
       "path": "assets/cli-connection/mcp-guide-zh.jpg",
       "capturedAt": "2026-10-10",
       "updatedAt": "2026-10-10",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "editorialNote": "运行界面展示证据；WorkBuddy 标志当前加载失败，不证明客户端连接成功。"
+      "editorialNote": "PRD-0098 更新为 OAuth 与令牌两种认证引导；旧截图待重新采集。"
     }
   ]
 }

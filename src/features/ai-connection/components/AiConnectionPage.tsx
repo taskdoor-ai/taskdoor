@@ -57,7 +57,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
   const tokenPageUrl = new URL(window.location.pathname, origin);
   tokenPageUrl.searchParams.set("settings", "tokens");
   const prompt = method === "mcp"
-    ? (locale === "en" ? `Read ${origin}/documents/skills/taskdoor-mcp/SKILL.md and help me configure TaskDoor MCP. Ask me to enter my own access token securely in the client configuration.` : `请阅读 ${origin}/documents/skills/taskdoor-mcp/SKILL.md 安装 skill，按照步骤为我配置 TaskDoor MCP，并引导我在客户端配置中自行填入访问令牌。`)
+    ? (locale === "en" ? `Read ${origin}/documents/skills/taskdoor-mcp/SKILL.md and help me configure TaskDoor MCP. Choose browser authorization or an access token according to client support.` : `请阅读 ${origin}/documents/skills/taskdoor-mcp/SKILL.md 安装 skill，按照步骤为我配置 TaskDoor MCP，并按客户端支持情况选择浏览器授权或填入访问令牌。`)
     : ui("请阅读 {origin}/documents/cli-setup.md 文档，按照步骤为我安装并配置 TaskDoor CLI。", { origin });
   const copyPrompt = async () => {
     if (!(await browserTransferActions.copyText(prompt))) return;
@@ -115,7 +115,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
       <div className={`connect-v2-permission${method === "mcp" ? " connect-v2-permission-mcp" : ""}`}>
         {/* After Open in {tool}, this line says what happened instead. */}
         <p aria-live="polite" className={result ? undefined : "shrink-0"} data-status={result?.status} role="status">
-          {result ? result.message : <>{(method === "mcp" ? (locale === "en" ? "Enter your access token in the client configuration" : "在客户端配置中自行填入访问令牌") : ui("登录时在浏览器中确认即可"))}</>}
+          {result ? result.message : <>{(method === "mcp" ? (locale === "en" ? "Use browser authorization; enter an access token if the client does not support it" : "支持浏览器授权；客户端不支持时可使用访问令牌") : ui("登录时在浏览器中确认即可"))}</>}
         </p>
         {method === "mcp" ? <a className="connect-token-link" href={tokenPageUrl.href} target="_blank" rel="noopener noreferrer">{locale === "en" ? "Manage access tokens →" : "管理访问令牌 →"}</a> : <p>{ui("登录只授权你的账号，按你本人在各工作空间的权限访问；工作空间在后续命令中指定。")}</p>}
         {selectedConnection && Number.isFinite(Date.parse(selectedConnection))
