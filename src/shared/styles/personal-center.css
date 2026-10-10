@@ -21,8 +21,7 @@
 .personal-avatar-setting { display: grid; justify-items: start; }
 .personal-avatar-preview { position: relative; width: var(--ad-person-profile-avatar-size); height: var(--ad-person-profile-avatar-size); }
 .personal-avatar-choice { position: relative; overflow: hidden; display: block; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
-.personal-avatar-choice:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
-.personal-avatar-choice:disabled { cursor: wait; opacity: .72; }
+.personal-avatar-choice[aria-busy="true"] { cursor: wait; opacity: .72; }
 .personal-avatar-edit { position: absolute; z-index: 2; right: 0; bottom: 0; border-color: var(--ad-border-strong); border-radius: var(--ad-radius-pill); background: var(--ad-surface); box-shadow: var(--ad-shadow-float); }
 .personal-profile-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--ad-space-4); margin-top: var(--ad-space-8); padding-top: var(--ad-space-5); }
 .personal-profile-actions > span { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
@@ -229,13 +228,16 @@
 
 .personal-avatar-choice .person-avatar > img,
 .personal-avatar-choice .person-avatar-fallback { border: 0; border-radius: 50%; }
-.avatar-edit-overlay { position: absolute; z-index: 2; opacity: 0; pointer-events: none; inset: 0; display: grid; place-items: center; color: white; transition: opacity var(--ad-duration-fast) var(--ad-ease); }
+.avatar-edit-overlay { position: absolute; z-index: 2; opacity: 0; inset: 0; display: flex; align-items: center; justify-content: center; gap: var(--ad-space-1); color: white; cursor: pointer; transition: opacity var(--ad-duration-fast) var(--ad-ease); }
+.avatar-edit-overlay > button { display: grid; place-items: center; width: calc(var(--ad-control-icon-lg) + var(--ad-space-3)); height: calc(var(--ad-control-icon-lg) + var(--ad-space-3)); padding: 0; border: 0; border-radius: var(--ad-radius-pill); background: transparent; color: inherit; cursor: pointer; transition: background var(--ad-duration-fast) var(--ad-ease); }
+.avatar-edit-overlay > button:hover { background: rgb(255 255 255 / 20%); }
+.avatar-edit-overlay > button:focus-visible { outline: 2px solid white; outline-offset: 0; }
+.avatar-edit-overlay > button:disabled { cursor: wait; }
 .avatar-edit-overlay svg { width: var(--ad-control-icon-lg); height: var(--ad-control-icon-lg); stroke-width: 1.8; }
 .personal-avatar-edit-overlay { background: color-mix(in srgb, var(--ad-tag-purple-ink) 80%, transparent); }
-.personal-avatar-choice:hover .avatar-edit-overlay { filter: brightness(.92); }
 
 .personal-avatar-choice:hover .avatar-edit-overlay,
-.personal-avatar-choice:focus-visible .avatar-edit-overlay { opacity: 1; }
+.personal-avatar-choice:focus-within .avatar-edit-overlay { opacity: 1; }
 
 /* Settings pages share a single heading hierarchy. */
 .personal-profile-panel > header h2,

@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import { Pencil } from "lucide-react";
 import { createPersonalAvatarDataUrl } from "@/shared/lib/avatar-image";
 import type { TeamAppearance } from "@/shared/model/team-appearance";
 import { useModuleCopy } from "@/shared/i18n/module-messages";
+import { AvatarEditActions } from "@/shared/ui/AvatarEditActions";
 import { TeamLogo, defaultTeamAppearance } from "@/shared/ui/TeamLogo";
 import "@/features/members/styles/team-appearance.css";
 
@@ -29,10 +29,10 @@ export function TeamAppearancePicker({ teamId, name, appearance, onChange }: Pro
   };
   return <>
     <div className="team-avatar-preview">
-    <button aria-label={m('chooseALocalAvatarImage')} className="team-appearance-trigger" disabled={busy} onClick={() => inputRef.current?.click()} type="button">
+    <div aria-busy={busy} className="team-appearance-trigger">
       <TeamLogo name={name} teamId={teamId} appearance={current} size="xl" />
-      <span aria-hidden="true" className="avatar-edit-overlay team-avatar-edit-overlay" style={{ background: `color-mix(in srgb, var(--ad-tag-${current.iconTone === "neutral" ? "gray" : current.iconTone}-ink) 80%, transparent)` }}><Pencil /></span>
-    </button>
+      <AvatarEditActions className="team-avatar-edit-overlay" disabled={busy} onEdit={() => inputRef.current?.click()} onRemove={current.avatarDataUrl ? () => { setError(""); onChange({ iconTone: current.iconTone }); } : undefined} style={{ background: `color-mix(in srgb, var(--ad-tag-${current.iconTone === "neutral" ? "gray" : current.iconTone}-ink) 80%, transparent)` }} />
+    </div>
     </div>
       <input accept="image/jpeg,image/png,image/webp" aria-label={m('chooseALocalAvatarImage')} className="sr-only" ref={inputRef} type="file" onChange={event => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ""; void upload(file); }} />
       {busy && <p role="status">{m('processingAvatar')}</p>}

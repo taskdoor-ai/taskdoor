@@ -2,7 +2,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockPersonName, mockTeamName } from "@/ai/mock/i18n/mockContent";
 import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { currentWorkspaceUserId } from "@/shared/lib/workspace-session";
-import { Building2, ClipboardList, X, Pencil, KeyRound, Layers, ListChecks, ScrollText, UserRound, UsersRound } from "lucide-react";
+import { Building2, ClipboardList, X, KeyRound, Layers, ListChecks, ScrollText, UserRound, UsersRound } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { applyPersonalProfileDraft, isValidProfileEmail, savePersonalCenterState, type PersonalCenterState } from "@/ai/mock/data/memberProfiles";
 import { PersonalResponsibilityPanel, TeamInformationPanel, TeamMembersPanel } from "@/features/members/components/PersonalCenterPage";
@@ -20,6 +20,7 @@ import { Button } from "@/shared/ui/button";
 import { toast } from "@/shared/ui/toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/shared/ui/alert-dialog";
 import { Dialog as Modal, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
+import { AvatarEditActions } from "@/shared/ui/AvatarEditActions";
 import { Input } from "@/shared/ui/input";
 import { createPersonalAvatarDataUrl } from "@/features/me/lib/personal-avatar";
 import { applyAutomaticResponsibilityUpdates } from "@/ai/mock/lib/responsibilityProposals";
@@ -171,10 +172,10 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
             <div className="personal-edit-fields">
               <section aria-label={m('avatar')} className="personal-avatar-setting">
                 <div className="personal-avatar-preview">
-                  <button aria-label={m('chooseAnAvatarImage')} className="personal-avatar-choice" disabled={avatarBusy} onClick={() => avatarInputRef.current?.click()} type="button">
+                  <div aria-busy={avatarBusy} className="personal-avatar-choice">
                     <PersonAvatar avatarUrl={draft.avatarDataUrl} className="personal-avatar-image" name={draft.name || state.profile.name} showProfilePreview={false} size="xl" />
-                    <span aria-hidden="true" className="avatar-edit-overlay personal-avatar-edit-overlay"><Pencil /></span>
-                  </button>
+                    <AvatarEditActions className="personal-avatar-edit-overlay" disabled={avatarBusy} onEdit={() => avatarInputRef.current?.click()} onRemove={draft.avatarDataUrl ? () => { setSaveError(""); setDraft(({ avatarDataUrl: _removed, ...current }) => current); } : undefined} />
+                  </div>
                   <input accept="image/jpeg,image/png,image/webp" aria-label={m('chooseALocalAvatarImage')} className="sr-only" onChange={(event) => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ""; void changeAvatar(file); }} ref={avatarInputRef} type="file" />
                 </div>
               </section>

@@ -631,3 +631,7 @@ FIG-CLI-007、FIG-CLI-008 为主工作区当前连接 AI 弹窗实拍，分别�
 ## 2026-10-10 MCP 双认证（PRD-0098）
 
 页面与安装 Skill 已支持浏览器 OAuth 授权为主、令牌为备选的引导；实际 OAuth 服务能力来自正式项目 Issue #28 的说明，PM Demo 不实现授权服务。FIG-CLI-008 的旧提示词截图撤下，待重新采集。全局字体沿用 9080860 已推送的调整，用户确认正式项目同步移植。
+
+## 2026-10-10 头像删除（PRD-0099）
+
+`shared/ui/AvatarEditActions.tsx` 提供悬停层的编辑与删除按钮，仅在已上传图片时出现删除。`PersonalInfoDialog.tsx` 删除草稿中的 `avatarDataUrl`，随“保存资料”生效；`TeamAppearancePicker.tsx` 删除后立即保存不含图片的团队外观。浏览器在本地开发服务验证两处上传、悬停双按钮与删除恢复首字母；现有截图不含悬停状态，无需重新采集。
