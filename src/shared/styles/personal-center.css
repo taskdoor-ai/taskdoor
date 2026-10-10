@@ -60,7 +60,7 @@
 .team-member-table { overflow: hidden; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); }
 .team-member-list-head, .team-member-list li { display: grid; min-width: 0; grid-template-columns: minmax(220px, .9fr) minmax(240px, 1.15fr) minmax(150px, .38fr); gap: var(--ad-space-6); align-items: center; }
 .team-member-list-head { padding: var(--ad-space-4); background: var(--ad-surface-quiet); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); font-weight: 650; }
-.team-member-list-head span:last-child { width: var(--ad-select-compact-min); justify-self: end; text-align: left; }
+.team-member-list-head span:last-child { justify-self: start; text-align: left; }
 .team-member-list { margin: 0; padding: 0; list-style: none; }
 .team-member-list li { padding: var(--ad-space-4); }
 .team-member-list li + li { border-top: 1px solid var(--ad-border); }
