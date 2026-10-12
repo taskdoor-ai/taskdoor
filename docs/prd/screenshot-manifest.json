@@ -101,7 +101,7 @@
       "status": "pending",
       "locale": "zh-CN",
       "updatedAt": "2026-10-10",
-      "editorialNote": "PRD-0099：恢复回收站分类后旧截图失效，撤下正文，待重新采集。"
+      "editorialNote": "PRD-0099（本地恢复记录）：恢复回收站分类后旧截图失效，撤下正文，待重新采集。 PRD-0100（origin/main 对应记录）：恢复回收站分类后旧截图失效，撤下正文，待重新采集。"
     },
     {
       "id": "fig-team-008",

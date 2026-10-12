@@ -24,3 +24,7 @@ tools/evaluation/ui-dist/
 data/mcp-evaluations/
 
 data/mcp-debug/
+
+# Built by scripts/build-shared-toast.mjs on predev/prebuild
+public/shared/agentdoor-toast.js
+public/shared/agentdoor-toast.css
