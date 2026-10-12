@@ -40,12 +40,6 @@ export function createNestedTaskCreationDraft(context: ScenarioContext): TaskPla
       task("完成上线执行", "按确认排期完成发布并及时处理现场问题。", "完成发布检查与上线值守，留存执行记录。", "发布前完成链接和优惠测试，按检查清单逐项放行；值守期间记录异常、处理人和恢复时间。", 6),
       task("交付效果复盘", "明确活动效果与下一轮需要改进的行动。", "交付核对后的销售数据、效果分析与后续行动。", "统一退款和归因口径后核对销售与投流数据，比较各达人和内容表现，将问题转化为有负责人和期限的行动项。", 6),
     ],
-    dependencies: [
-      { subtaskIndex: 4, dependsOnSubtaskIndexes: [3] },
-      { subtaskIndex: 5, dependsOnSubtaskIndexes: [4] },
-      { subtaskIndex: 7, dependsOnSubtaskIndexes: [0, 4, 5] },
-      { subtaskIndex: 8, dependsOnSubtaskIndexes: [7] },
-    ],
   };
 }
 

@@ -53,10 +53,10 @@ test('无效人员引用、依赖环、自身父任务和未知状态均拒绝�
 
 test('实体版本由服务端增加，用户自报版本不能伪装成新版本',()=>{
   const store=createLabStore(join(mkdtempSync(join(tmpdir(),'lab-version-')),'state.json'),seedLab());
-  const state=store.get();state.teams[0].members[0].responsibilities=['新的明确责任'];state.teams[0].members[0].version=900;
+  const state=store.get();const memberVersion=state.teams[0].members[0].version;const taskVersion=state.teams[0].tasks[0].version;state.teams[0].members[0].responsibilities=['新的明确责任'];state.teams[0].members[0].version=900;
   state.teams[0].tasks[0].version=900;
   const saved=store.save(state.revision,state.teams,state.cases);
-  assert.equal(saved.teams[0].members[0].version,2);assert.equal(saved.teams[0].tasks[0].version,1);
+  assert.equal(saved.teams[0].members[0].version,memberVersion+1);assert.equal(saved.teams[0].tasks[0].version,taskVersion);
 });
 
 test('旧测试数据补齐任务创建人及任务级文件讨论字段',()=>{

@@ -55,7 +55,7 @@ test("任意需求不伪造目标、完成标准或负责人，也不套用营�
   assert.equal(form.subtasks.length, 0);
 });
 
-test("稳定依赖在改名、删除和重排后仍指向同一任务，提交才转换索引", () => {
+test("旧依赖在改名和重排后保留兼容，删除时清理引用，提交不再输出", () => {
   const form = createCreationForm("", context, "complex-plan");
   const target = form.subtasks[0];
   const dependent = form.subtasks[2];
@@ -63,22 +63,23 @@ test("稳定依赖在改名、删除和重排后仍指向同一任务，提交�
   target.title = "新名称";
   form.subtasks.reverse();
   const plan = toTaskPlanDraft(form);
-  assert.deepEqual(plan.dependencies?.find(d => d.subtaskIndex === 4)?.dependsOnSubtaskIndexes, [6]);
+  assert.equal(plan.dependencies, undefined);
+  assert.deepEqual(dependent.dependsOnClientIds, [target.clientId]);
   const next = removeCreationSubtask(form, target.clientId);
   assert.ok(next.subtasks.every(t => !t.dependsOnClientIds.includes(target.clientId)));
   assert.equal(form.subtasks.length, 7);
   assert.ok(plan.subtasks.every(t => t.goal === plan.mainTask.goal));
 });
 
-test("拒绝自环、循环、悬空引用、空完成标准及失效的候选成员", () => {
+test("旧自环、循环和悬空引用不妨碍创建，空完成标准及失效成员仍拒绝", () => {
   const form = createCreationForm("", context, "complex-plan");
   form.subtasks[0].dependsOnClientIds = [form.subtasks[0].clientId];
-  assert.match(validateCreationForm(form, context.members)!, /依赖/);
+  assert.equal(validateCreationForm(form, context.members), null);
   form.subtasks[0].dependsOnClientIds = [form.subtasks[2].clientId];
   form.subtasks[2].dependsOnClientIds = [form.subtasks[0].clientId];
-  assert.match(validateCreationForm(form, context.members)!, /依赖/);
+  assert.equal(validateCreationForm(form, context.members), null);
   form.subtasks[0].dependsOnClientIds = ["missing"];
-  assert.match(validateCreationForm(form, context.members)!, /依赖/);
+  assert.equal(validateCreationForm(form, context.members), null);
   form.subtasks.forEach(t => { t.dependsOnClientIds = []; });
   form.subtasks[1].completionCriteria = [" "];
   assert.match(validateCreationForm(form, context.members)!, /完成标准/);

@@ -1,13 +1,10 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
+import { formatDisplayDate, formatDisplayDateTime } from "@/shared/lib/date-time";
 import React, { useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 function nodeDate(value: string) {
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value.replaceAll("-", "/");
-  return new Intl.DateTimeFormat("zh-CN", {
-    year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit",
-    hourCycle: "h23", timeZone: "Asia/Shanghai",
-  }).format(new Date(value));
+  return formatDisplayDateTime(value, { year: "always" }) ?? formatDisplayDate(value, { year: "always" }) ?? "—";
 }
 
 /** SVG hit target with an HTML tooltip that stays readable at every chart scale. */

@@ -7,6 +7,7 @@ import { mockTeamName, mockPersonName } from "@/ai/mock/i18n/mockContent";
 import { settingsMockText } from "@/ai/mock/i18n/settingsMock";
 import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { currentWorkspaceUserId } from "@/shared/lib/workspace-session";
+import { formatLegacyDateLabel } from "@/shared/lib/date-time";
 import { ArrowRight, ChevronDown, Copy, EyeOff, FileCheck2, Mail, Pencil, Plus, RefreshCw, Sparkles, UserPlus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { getTeamInviteLink, savePersonalCenterState, type PersonalCenterState, type ResponsibilityClaim, type ResponsibilityDocument, type TeamAccessRole } from "@/ai/mock/data/memberProfiles";
@@ -387,7 +388,7 @@ function ResponsibilityStatementList({ autoUpdate, claims, dirty, document, draf
       <p className="sr-only" id="responsibility-auto-update-description">{m('whenEnabledAiResponsibilitySuggestionsForThe')}</p>
       <Textarea aria-label={m('responsibilityDescription')} id="responsibility-document-editor" onChange={(event) => onChangeDraft(event.target.value)} placeholder={m('describeYourResponsibilitiesInTheCurrentTeam')} rows={8} value={settingsMockText(locale, document.revisionId, draft)} variant="responsibility" />
       <div className="responsibility-document-editor-footer">
-        <span>{m("lastUpdated", { name: mockPersonName(locale, document.updatedBy, document.updatedBy), time: m.text(document.updatedAt) })}</span>
+        <span title={formatLegacyDateLabel(document.updatedAt, locale, { year: "always" })}>{m("lastUpdated", { name: mockPersonName(locale, document.updatedBy, document.updatedBy), time: formatLegacyDateLabel(document.updatedAt, locale) })}</span>
         <div className="responsibility-document-editor-actions">
           <Button disabled={!dirty} onClick={onCancel} size="sm" type="button" variant="ghost">{m('cancel')}</Button>
           <Button disabled={!dirty} onClick={onSave} size="sm" type="button">{m('save')}</Button>

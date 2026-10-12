@@ -1,3 +1,4 @@
+import { relativeTaskTime } from "@/features/tasks/lib/relative-time";
 import { useI18n } from '@/shared/i18n/I18nProvider';
 import { contentReading } from '@/ai/mock/i18n/contentReading';
 import { useGlobalUi } from "@/shared/i18n/global-ui";
@@ -41,19 +42,10 @@ function MessageText({ message, text }: { message: CollaborationMessage; text: s
   return <>{text.split(pattern).map((part, index) => names.has(part) ? <span className="discussion-saved-mention" key={index}>@<PersonName name={part.slice(1)} personId={names.get(part)!} /></span> : part)}</>;
 }
 
-const messageTimeFormatter = new Intl.DateTimeFormat("zh-CN", {
-  timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit",
-  hour: "2-digit", minute: "2-digit", hourCycle: "h23",
-});
-
-function messageTimestamp(message: CollaborationMessage) {
-  // Legacy records may contain an absolute label; never infer a date from "刚刚" or "N 分钟前".
+function messageTimestamp(message: CollaborationMessage, locale: string, now: number) {
   const recorded = message.createdAt ?? (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2})?$/.test(message.time) ? `${message.time.replace(" ", "T")}+08:00` : "");
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/.test(recorded) || !Number.isFinite(Date.parse(recorded))) return null;
-  const date = new Date(recorded);
-  const parts = messageTimeFormatter.formatToParts(date);
-  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find(item => item.type === type)!.value;
-  return { dateTime: date.toISOString(), label: `${part("year")}-${part("month")}-${part("day")} ${part("hour")}:${part("minute")}` };
+  const formatted = relativeTaskTime(recorded, locale, now);
+  return formatted ? { ...formatted, dateTime: new Date(recorded).toISOString() } : null;
 }
 
 function messageSummary(message: CollaborationMessage, mock: ReturnType<typeof useMockText>, ui: ReturnType<typeof useGlobalUi>, translate: boolean) {
@@ -93,6 +85,9 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const { locale, autoTranslate } = useI18n();
+  const [, refreshClock] = useState(0);
+  const now = Date.now();
+  useEffect(() => { const timer = window.setInterval(() => refreshClock(tick => tick + 1), 60_000); return () => window.clearInterval(timer); }, []);
   const [originalMessages, setOriginalMessages] = useState<Set<string>>(() => new Set());
   const [reply, setReply] = useState<{ id: string; quoted: boolean } | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
@@ -141,7 +136,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
       const refs = message.attachmentRefs ?? [];
       const legacyFile = !refs.length && message.file ? files.find(file => file.kind === "file" && !file.archived && file.name === message.file) : undefined;
       const attachments = refs.map(ref => files.find(file => file.id === ref.fileId && !file.archived)).filter((file): file is TaskFileNode => Boolean(file));
-      const timestamp = messageTimestamp(message);
+      const timestamp = messageTimestamp(message, locale, now);
       const readingKey = JSON.stringify([message.id, message.updatedAt, message.message, locale]);
       const candidate = mock.discussionTranslation(message.message);
       const reading = contentReading(message.message, candidate, locale, autoTranslate, originalMessages.has(readingKey));
@@ -166,7 +161,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
           </>}
           <div className="discussion-message-footer">
             {(timestamp || message.updatedAt || reading.state !== "same" || (!isReply && !compact && replyControls)) && <div className="discussion-message-meta">
-              {timestamp && <time dateTime={timestamp.dateTime}>{timestamp.label}</time>}
+              {timestamp && <time tabIndex={0} title={timestamp.full} aria-label={timestamp.full} dateTime={timestamp.dateTime}>{timestamp.label}</time>}
               {editing !== message.id && (reading.state === 'translated' || reading.state === 'original') && <span className="content-translation-control"><span>{reading.state === 'translated' ? ui('已翻译') : ui('原文')}</span><span aria-hidden="true"> · </span><button type="button" aria-label={reading.state === 'translated' ? ui('查看原文') : ui('显示译文')} onClick={toggleOriginal}>{reading.state === 'translated' ? ui('查看原文') : ui('显示译文')}</button></span>}
               {editing !== message.id && reading.state === 'unavailable' && <small className="content-translation-unavailable" title={ui('本地演示尚无此内容的译文，原文已保留。')}>{ui('暂无译文')}</small>}
               {editing === message.id && <small>{ui('正在编辑原文')}</small>}

@@ -83,18 +83,19 @@ test("父级协调与本人叶子分别承担行动，标签及父子不造成�
 
 test("父子同Owner的同一阻塞只安排给本人叶子，父级保留整体协调动作", () => {
   const parent = task("parent");
-  const child = task("child", { parentTaskId: parent.id, dependsOnTaskIds: ["prerequisite"] });
+  const child = task("child", { parentTaskId: parent.id, status: "已阻塞", dependsOnTaskIds: ["prerequisite"] });
   const prerequisite = task("prerequisite", { ownerId: "other", status: "待开始" });
   const model = buildPersonalWorkbenchModel({ tasks: [parent, child, prerequisite], currentUserId: "me", asOf });
   const parentAction = model.actions.find((item) => item.taskId === "parent")!;
   const childAction = model.actions.find((item) => item.taskId === "child")!;
-  assert.match(childAction.action, /先核对「prerequisite」/);
-  assert.equal(childAction.focus, "dependency");
-  assert.notEqual(parentAction.focus, "dependency", "父级整体协调不能沿用已分给本人叶子的阻塞标签");
+  assert.match(childAction.action, /核对阻塞原因/);
+  assert.equal(childAction.focus, "blocked");
+  assert.notEqual(parentAction.focus, "blocked", "父级整体协调不能沿用已分给本人叶子的阻塞标签");
   assert.doesNotMatch(parentAction.action, /先核对「prerequisite」/);
   assert.match(parentAction.action, /整体交付边界与整合结果/);
-  assert.equal(model.actions.filter((item) => item.reason.includes("前置「prerequisite」")).length, 1);
-  assert.ok(!model.attention.some((item) => item.id === "child:dependency"));
+  assert.equal(model.actions.filter((item) => item.focus === "blocked").length, 1);
+  assert.doesNotMatch(JSON.stringify(model.actions), /prerequisite|前置|依赖/);
+  assert.ok(!model.attention.some((item) => item.id === "child:blocked"));
 });
 
 test("父级统筹递归覆盖深层阻塞，最近的本人责任节点负责，循环关系不死循环", () => {
@@ -167,7 +168,7 @@ test("自建任务的缺年份/相对日期保持未知，明确计划日期按�
   assert.equal(afterShanghaiMidnight.actions[0].dueState, "today");
 });
 
-test("按逾期、今天、已知依赖组织行动，阻塞不建议直接执行或验收", () => {
+test("按逾期和今日截止组织行动，旧前置不覆盖结果核对", () => {
   const dependency = task("dependency", { name: "前置交付", status: "待开始", ownerId: "other" });
   const tasks = [
     task("upcoming", { plannedEndOn: "2026-09-05" }),
@@ -177,9 +178,10 @@ test("按逾期、今天、已知依赖组织行动，阻塞不建议直接执�
   ];
   const model = buildPersonalWorkbenchModel({ tasks, currentUserId: "me", asOf });
   assert.deepEqual(model.actions.map((item) => item.taskId), ["overdue", "today", "upcoming"]);
-  assert.match(model.actions[1].action, /先核对「前置交付」的交付条件/);
-  assert.match(model.actions[1].reason, /待开始/);
-  assert.equal(model.actions[1].focus, "dependency", "今日截止也不能覆盖行动所依据的前置问题语义");
+  assert.match(model.actions[1].action, /完成标准|核对结果/);
+  assert.match(model.actions[1].reason, /完成标准/);
+  assert.equal(model.actions[1].focus, "evidence");
+  assert.doesNotMatch(JSON.stringify(model.actions), /前置交付|dependency|依赖/);
   assert.doesNotMatch(model.actions[1].action, /请验收|立即执行|可直接推进/);
   assert.ok(!model.attention.some((item) => item.id === "today:dependency"), "行动理由已有的同一问题不在关注区再复制");
 });
@@ -240,35 +242,34 @@ test("建议句只将本人Owner替换为你，保留建议语气、具体动作
   assert.deepEqual(tasks, before);
 });
 
-test("不可查看的依赖只显示资料缺口，不泄露ID、名称或推断正常", () => {
+test("不可查看的旧前置不制造资料缺口或新行动", () => {
   const node = task("visible", { dependsOnTaskIds: ["secret-project-id"], plannedEndOn: "2026-08-31" });
   const model = buildPersonalWorkbenchModel({ tasks: [node], currentUserId: "me", asOf });
-  assert.match(model.actions[0].reason, /资料当前不可用/);
-  assert.match(model.actions[0].action, /先核对前置资料/);
-  assert.equal(model.actions[0].focus, "unknown");
-  assert.doesNotMatch(JSON.stringify(model), /secret-project-id|无风险|依赖已满足/);
+  const { dependsOnTaskIds: _legacy, ...withoutLegacy } = node;
+  assert.deepEqual(model, buildPersonalWorkbenchModel({ tasks: [withoutLegacy], currentUserId: "me", asOf }));
+  assert.doesNotMatch(JSON.stringify(model), /secret-project-id|前置|依赖|missing-dependency/);
   assert.equal(model.actions[0].evidence?.taskId, node.id);
 });
 
-test("依赖已完成不再报阻塞，已完成任务的依赖冲突仍可核对但不恢复执行", () => {
+test("旧前置完成状态变化不生成阻塞或完成冲突", () => {
   const dependency = task("dependency", { ownerId: "other", status: "已完成" });
   const active = task("active", { dependsOnTaskIds: [dependency.id] });
-  const good = buildPersonalWorkbenchModel({ tasks: [dependency, active], currentUserId: "me", asOf });
-  assert.doesNotMatch(good.actions[0].reason, /前置「/);
-  assert.notEqual(good.actions[0].focus, "dependency", "前置已完成后不保留旧阻塞提示");
   const completed = task("completed", { status: "已完成", dependsOnTaskIds: [dependency.id] });
+  const before = buildPersonalWorkbenchModel({ tasks: [dependency, active, completed], currentUserId: "me", asOf });
   dependency.status = "进行中";
-  const conflict = buildPersonalWorkbenchModel({ tasks: [dependency, completed], currentUserId: "me", asOf });
-  assert.equal(conflict.actions.length, 0);
-  assert.ok(conflict.attention.some((item) => item.kind === "status-conflict"));
-  assert.match(conflict.attention[0].text, /标记已完成，但前置/);
+  const changed = buildPersonalWorkbenchModel({ tasks: [dependency, active, completed], currentUserId: "me", asOf });
+  assert.deepEqual(changed.actions, before.actions);
+  assert.deepEqual(changed.attention, before.attention);
+  assert.deepEqual(changed.counts, before.counts);
+  assert.doesNotMatch(JSON.stringify(changed.actions), /前置|依赖/);
 });
 
 test("首页摘要只使用当前任务和子项事实，混合历史不恢复预制判断", () => {
   const input = fixture();
   const current = buildPersonalWorkbenchModel(input);
   assert.equal(current.ownedTasks.find((item) => item.taskId === "fragrance-final-decision")?.freshness, "missing");
-  assert.match(current.ownedTasks.find((item) => item.taskId === "fragrance-final-decision")!.summary, /尚未记录交付进展/);
+  assert.match(current.ownedTasks.find((item) => item.taskId === "fragrance-final-decision")!.summary, /任务进行中/);
+  assert.doesNotMatch(current.ownedTasks.find((item) => item.taskId === "fragrance-final-decision")!.summary, /已验收|已经交付|已完成/);
   input.tasks.find((node) => node.id === "fragrance-final-decision")!.name = "核对新的投入边界";
   input.tasks.find((node) => node.id === "fragrance-live")!.status = "已完成";
   input.detailsByTaskId!["fragrance-final-decision"].activities.push({ id: "new-comment", author: "周岚", type: "member-post", time: "刚刚", createdAt: "2026-08-31T10:00:00+08:00", message: "补充了新的投入边界版本" });
@@ -310,7 +311,8 @@ test("计划日期改变立即反映，缺交付记录仍保持未知而不沿�
   const item = model.ownedTasks.find((row) => row.taskId === "weekly-retro-notes")!;
   assert.equal(item.freshness, "missing");
   assert.equal(item.dueLabel, "9 月 2 日");
-  assert.match(item.summary, /尚未记录交付进展/);
+  assert.match(item.summary, /任务进行中/);
+  assert.doesNotMatch(item.summary, /已验收|已经交付|已完成/);
   assert.doesNotMatch(item.summary, /纪要正文|复盘成员|过期|示例/);
 });
 
@@ -391,23 +393,13 @@ test("个人处理入口按任务合并剩余关注，不复制任务行、不�
   assert.deepEqual(model, before, "消费投影不能修改原分析、责任统计或来源");
 });
 
-test("已完成任务的前置冲突成为核对事项，不恢复执行、不计入到期处理或本人推进量", () => {
+test("已完成任务仅有旧前置关系时不生成跟进事项或恢复执行", () => {
   const prerequisite = task("prerequisite", { ownerId: "other", status: "进行中" });
   const completed = task("completed", { status: "已完成", plannedEndOn: "2026-08-30", dependsOnTaskIds: [prerequisite.id] });
   const model = buildPersonalWorkbenchModel({ tasks: [completed, prerequisite], currentUserId: "me", asOf });
   const before = structuredClone(model);
-  const projected = buildPersonalWorkbenchItems(model);
-  assert.equal(projected.items.length, 1);
-  const [item] = projected.items;
-  assert.equal(item.taskId, "completed");
-  assert.equal(item.status, "已完成");
-  assert.equal(item.role, "execution", "任务的原责任类型保留，isFollowUp区分核对与执行");
-  assert.equal(item.isFollowUp, true);
-  assert.equal(item.actionLabel, "核对完成边界");
-  assert.equal(item.reason, model.attention[0].text);
-  assert.deepEqual(item.evidence, model.attention[0].evidence);
-  assert.equal(item.evidence?.taskId, "prerequisite");
-  assert.doesNotMatch(item.action, /继续推进|恢复执行|重新打开|已恢复/);
+  assert.deepEqual(buildPersonalWorkbenchItems(model).items, []);
+  assert.deepEqual(model.attention, []);
   assert.equal(model.counts.active, 0);
   assert.equal(model.counts.executing, 0);
   assert.equal(model.counts.owned, 1);
@@ -470,15 +462,16 @@ test("同一跟进任务的多项问题只生成一行，严重冲突作主依�
   assert.equal(item.isFollowUp, true);
 });
 
-test("同一任务的期限、前置与结果依据合并成一个建议动作", () => {
+test("同一任务的期限与结果依据形成一个动作，旧前置不参与", () => {
   const prerequisite = task("prerequisite", { ownerId: "other", status: "待开始" });
   const review = task("review", { status: "待审核", plannedEndOn: "2026-08-31", dependsOnTaskIds: [prerequisite.id] });
   const model = buildPersonalWorkbenchModel({ tasks: [review, prerequisite], currentUserId: "me", asOf });
   const projected = buildPersonalWorkbenchItems(model);
   assert.equal(projected.items.length, 1);
   const [item] = projected.items;
-  assert.equal(item.focus, "dependency");
-  assert.equal(item.actionLabel, "核对前置交付");
+  assert.equal(item.focus, "evidence");
+  assert.equal(item.actionLabel, "核对完成依据");
+  assert.doesNotMatch(item.reason, /前置|依赖/);
   assert.doesNotMatch(item.actionLabel, /已阻塞|不合格|已验收/);
   assert.equal(model.counts.owned, 1);
 });

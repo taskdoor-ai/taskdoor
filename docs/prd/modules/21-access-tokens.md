@@ -50,14 +50,6 @@ operations: "read_settings"
 - 团队关闭个人访问令牌时，不出现在可选团队中。
 
 
-![访问令牌：查看操作和访问范围，并打开 API 文档。](../assets/cli-connection/access-tokens-zh.jpg)
-
-*FIG-CLI-006 · 访问令牌：查看操作和访问范围，并打开 API 文档。*
-
-![创建令牌：填写名称并选择有效期和操作范围。](../assets/access-tokens/create-token-zh.jpg)
-
-*FIG-TOKEN-001 · 创建令牌：填写名称并选择有效期和操作范围。*
-
 ![创建令牌：查看工作空间与任务范围。](../assets/access-tokens/create-token-scope-zh.jpg)
 
 *FIG-TOKEN-002 · 创建令牌：查看工作空间与任务范围。*

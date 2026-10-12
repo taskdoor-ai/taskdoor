@@ -96,3 +96,18 @@ test("负责人未分配不会被服务端归一化为创建阻断", () => {
   assert.equal(normalized.draft.mainTask.ownerId, "");
   assert.equal(normalized.readyToCreate, true);
 });
+
+test("兼容旧 AI 响应时不再保留前置依赖，任务与子任务内容保留", () => {
+  const response = taskAssistantResponseSchema.parse({ ...validPayload, draft: {
+    ...validPayload.draft,
+    subtasks: [validPayload.draft.mainTask, { ...validPayload.draft.mainTask, title: "复核结果" }],
+    dependencies: [{ subtaskIndex: 1, dependsOnSubtaskIndexes: [0] }],
+  } });
+  const normalized = normalizeAssistantResponse(response, {
+    currentDate: "2026-10-13", currentUserId: "周岚", draft: response.draft,
+    existingTasks: [], members: [], messages: [{ content: "更新计划", role: "user" }], tags: [], timezone: "Asia/Shanghai",
+  });
+  assert.deepEqual(normalized.draft.dependencies, []);
+  assert.equal(normalized.draft.subtasks[1].title, "复核结果");
+  assert.deepEqual(response.draft.dependencies, [{ subtaskIndex: 1, dependsOnSubtaskIndexes: [0] }]);
+});

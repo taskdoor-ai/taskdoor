@@ -21,7 +21,7 @@
 .task-situation[data-has-trend="true"] .task-situation-layout { grid-template-columns: minmax(0, 2.15fr) minmax(240px, 1fr); }
 .task-situation-content { display: flex; min-width: 0; flex-direction: column; gap: var(--ad-space-5); }
 .task-situation-column { min-width: 0; align-content: start; }
-.task-situation-summary { max-width: 72ch; margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); font-weight: 400; line-height: 1.7; overflow-wrap: anywhere; }
+.task-situation-summary { max-width: none; margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); font-weight: 400; line-height: 1.7; overflow-wrap: anywhere; }
 .task-situation-notice { margin: var(--ad-space-2) 0 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.6; }
 .task-situation-stale { color: var(--ad-warning-ink, var(--ad-ink-secondary)); }
 .task-situation-list { display: grid; min-width: 0; gap: var(--ad-space-3); margin: 0; padding: 0 0 0 1.5em; list-style: decimal outside; }

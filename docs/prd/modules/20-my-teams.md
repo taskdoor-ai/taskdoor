@@ -30,10 +30,6 @@ operations: "read_settings"
 
 删除后仍在保留期内的团队排在列表末尾，原有效成员均可看到，并显示剩余保留天数；剩余不足 1 天时显示“今天到期”。超过 30 天的团队不再出现，也不能恢复。
 
-![我的团队：识别当前团队，查看已删除团队的剩余保留天数与恢复入口。](../assets/deletion-recovery-retention/my-teams-zh.jpg)
-
-*FIG-DELETE-009 · 我的团队：识别当前团队，查看已删除团队的剩余保留天数与恢复入口。*
-
 
 恢复的确认、权限及结果见[删除与数据保留](13-deletion-recovery-retention.md)。
 

@@ -84,7 +84,7 @@ test("手工新增未分配任务刷新后仍存在且不回填演示文件", ()
   assert.deepEqual(createWorkspaceTaskDetail(restored).files, []);
 });
 
-test("删除预览统计全部后代和受影响的外部依赖，不混入兄弟任务", () => {
+test("删除预览统计全部后代，并识别需要静默清理的旧引用", () => {
   const preview = model().getSubtaskDeletionPreview(nodes, parent.id, child.id);
   assert.deepEqual(preview.deletedTaskIds, [child.id, grandchild.id]);
   assert.equal(preview.descendantCount, 1);
@@ -93,7 +93,7 @@ test("删除预览统计全部后代和受影响的外部依赖，不混入兄�
   assert.equal(preview.parent.id, parent.id);
 });
 
-test("级联删除清理节点与当前依赖，保留其他状态并记录真实变更", () => {
+test("级联删除静默清理旧引用，保留其他状态并只记录真实父子变更", () => {
   const current = state();
   const before = structuredClone(current);
   const preview = model().getSubtaskDeletionPreview(nodes, parent.id, child.id);
@@ -103,8 +103,8 @@ test("级联删除清理节点与当前依赖，保留其他状态并记录真�
   assert.equal(result.nodes.find(node => node.id === other.id), other);
   assert.equal(result.activities[parent.id][0].author, "编辑者");
   assert.match(result.activities[parent.id][0].message, /删除子任务/);
-  assert.equal(result.activities[sibling.id][0].changes?.[0].before, "待删除子任务、other");
-  assert.equal(result.activities[sibling.id][0].changes?.[0].after, "other");
+  assert.deepEqual(result.activities[sibling.id], current.activities[sibling.id]);
+  assert.equal(result.nodes.find(node => node.id === sibling.id)?.updatedAt, sibling.updatedAt);
   assert.equal(result.activities.child, undefined);
   assert.deepEqual(result.detailSeeds.map(node => node.id), [parent.id, sibling.id]);
   assert.deepEqual(result.ownerProposals, { other: "陈默" });
@@ -145,13 +145,15 @@ test("从左侧删除子任务后返回仍存在的父任务，并拒绝过期�
   assert.throws(() => model().deleteWorkspaceTask(changed, child.id, preview.signature, "编辑者"), /变化|重新.*确认/);
 });
 
-test("删除范围或依赖变化后必须重新确认，不允许用旧预览扩大删除", () => {
+test("删除范围变化必须重新确认，旧引用变化不扩大范围也不阻断删除", () => {
   const current = state();
   const preview = model().getSubtaskDeletionPreview(nodes, parent.id, child.id);
   const changed = { ...current, nodes: [...nodes, task("new-descendant", { parentTaskId: grandchild.id })] };
   assert.throws(() => model().deleteWorkspaceSubtask(changed, parent.id, child.id, preview.signature, "编辑者"), /变化|重新.*确认/);
   const linked = { ...current, nodes: nodes.map(node => node.id === other.id ? { ...other, dependsOnTaskIds: [child.id] } : node) };
-  assert.throws(() => model().deleteWorkspaceSubtask(linked, parent.id, child.id, preview.signature, "编辑者"), /变化|重新.*确认/);
+  const result = model().deleteWorkspaceSubtask(linked, parent.id, child.id, preview.signature, "编辑者");
+  assert.deepEqual((result.nodes.find(node => node.id === other.id) as TaskNode).dependsOnTaskIds, []);
+  assert.equal(result.activities[other.id], undefined);
 });
 
 test("拒绝删除非直属、缺失任务和包含父任务的坏循环", () => {

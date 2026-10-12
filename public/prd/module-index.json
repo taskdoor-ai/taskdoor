@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-10-10T08:34:48.952Z",
+  "generatedAt": "2026-10-12T19:33:57.861Z",
   "modules": [
     {
       "moduleId": "product-preview",
@@ -93,7 +93,7 @@
       "moduleId": "workspace-navigation",
       "title": "工作区与导航",
       "group": "账号与团队",
-      "summary": "通过顶栏进入团队、通知、连接 AI 和设置。",
+      "summary": "通过顶栏切换团队、新建任务、查看通知、连接 AI 和设置。",
       "source": "docs/prd/modules/04-workspace-navigation.md",
       "url": "./index.html#workspace-navigation",
       "sections": [
@@ -405,7 +405,7 @@
       "moduleId": "task-detail",
       "title": "任务详情",
       "group": "任务管理",
-      "summary": "围绕概览、讨论、文件、活动维护任务。",
+      "summary": "围绕概览、讨论、文件、活动、分析维护任务。",
       "source": "docs/prd/modules/08-task-detail.md",
       "url": "./index.html#task-detail",
       "sections": [
@@ -509,7 +509,7 @@
       "moduleId": "cli-connection",
       "title": "Agent 与 CLI、MCP 连接",
       "group": "协作与连接",
-      "summary": "通过 CLI 或 MCP 连接 AI 工具，带入任务上下文并按本人权限协作。",
+      "summary": "按运行环境与操作范围选择 CLI 或 MCP，带入任务上下文并按本人权限协作；API 接入由个人访问令牌管理承接。",
       "source": "docs/prd/modules/05-cli-connection.md",
       "url": "./index.html#cli-connection",
       "sections": [

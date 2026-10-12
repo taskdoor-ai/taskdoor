@@ -83,8 +83,19 @@
 .task-filter-back { display: none; }
 .task-filter-date-range { display: grid; gap: 10px; margin-top: 6px; padding: 14px 8px 6px; border-top: 1px solid var(--ad-border-soft); }
 .task-filter-date-range strong { color: var(--ad-ink-secondary); font-size: 11px; font-weight: 500; }
-.task-filter-date-range label { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; align-items: center; color: var(--ad-ink-tertiary); font-size: 12px; }
-.task-filter-date-range [data-slot="input"] { min-width: 0; height: 32px; font-size: 12px; }
+.task-filter-date-range .task-due-date-picker { gap: 5px; }
+.task-filter-date-range .task-due-date-label { font-size: 12px; font-weight: 400; }
+.task-filter-date-range .task-due-date-field { height: 32px; padding: 0 8px; }
+.task-filter-date-range .task-date-segments { font-size: 12px; }
+/* The embedded picker belongs to the filter's DOM and scroll area. */
+.task-filter-date-range .task-due-date-popover.is-inline { position: static; z-index: auto; width: 100%; max-width: none; max-height: none; padding: 8px; overflow: visible; box-shadow: none; }
+.task-filter-date-range .task-due-date-shortcuts { display: none; }
+.task-filter-date-range .task-due-date-modes { grid-template-columns: 1fr 1fr; }
+.task-filter-date-range .task-due-date-modes > label { display: flex; min-width: 0; gap: 4px; font-size: 11px; }
+.task-filter-date-range .task-range-calendar-heading strong { color: var(--ad-ink); font-size: 12px; }
+.task-filter-date-range .task-range-calendar-footer { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+.task-filter-date-range .task-range-calendar-footer > div { justify-content: flex-end; }
+.task-filter-date-range .task-range-calendar-footer button { padding-inline: 8px; }
 .task-filter-date-range [data-slot="button"] { justify-self: end; }
 .task-filter-condition-chip { display: inline-flex; align-items: center; flex: 0 1 auto; gap: 4px; width: fit-content; min-width: 0; max-width: 100%; min-height: 30px; padding: 3px 4px 3px 10px; border-radius: 6px; background: color-mix(in srgb, var(--ad-ink) 5%, var(--ad-surface)); color: var(--ad-ink-secondary); font-size: 12px; line-height: 20px; }
 .task-filter-chip-field { flex-shrink: 0; color: var(--ad-ink-tertiary); font-size: 11px; white-space: nowrap; }
@@ -111,7 +122,8 @@
   .task-filter-back { min-width: 36px; }
   .task-filter-chip-remove { flex-basis: 44px; min-height: 44px; }
   .task-filter-selection { max-height: min(166px, 32dvh); }
-  .task-filter-menu-search [data-slot="input"], .task-filter-date-range [data-slot="input"] { min-height: 40px; font-size: 16px; }
+  .task-filter-menu-search [data-slot="input"] { min-height: 40px; font-size: 16px; }
+  .task-filter-date-range .task-due-date-field { min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .task-filter-menu { transition: none; }

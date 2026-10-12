@@ -47,10 +47,6 @@ export function TeamSwitcher({ activeTeamId, compact = false, onTeamChange, team
       {variant === "topbar" && <ChevronDown aria-hidden="true" className="team-switcher-chevron" />}
     </DropdownMenuTrigger>
     <DropdownMenuContent align="start" className="team-switcher-menu" side={compact ? "right" : "bottom"} sideOffset={8}>
-      <div className="team-switcher-current">
-        <TeamLogo name={mockTeamName(locale, activeTeam.id, activeTeam.name)} appearance={activeTeam.appearance} teamId={activeTeam.id} />
-        <strong>{mockTeamName(locale, activeTeam.id, activeTeam.name)}</strong>
-      </div>
       <DropdownMenuRadioGroup className="team-switcher-list" onValueChange={(value) => onTeamChange(String(value))} value={activeTeam.id}>
         <DropdownMenuLabel className="team-switcher-label">{t('team.switch')}</DropdownMenuLabel>
         {teams.map((team) => <DropdownMenuRadioItem className="team-switcher-option" key={team.id} value={team.id}>

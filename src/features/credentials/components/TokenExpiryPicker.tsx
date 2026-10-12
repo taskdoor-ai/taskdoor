@@ -4,6 +4,7 @@ import { dayFromToday, MAX_TOKEN_DAYS } from '@/features/credentials/lib/pat'
 import { tokenMessages } from '@/features/credentials/i18n/token-messages'
 import { useCatalog } from '@/shared/i18n/catalog'
 import { useI18n } from '@/shared/i18n/I18nProvider'
+import { formatDisplayDate, formatDisplayMonth } from '@/shared/lib/date-time'
 import { Button } from '@/shared/ui/button'
 
 const localDate = (value: string) => {
@@ -36,13 +37,11 @@ export function TokenExpiryPicker({
   )
   const min = dayFromToday(0)
   const max = dayFromToday(MAX_TOKEN_DAYS)
-  const monthLabel = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(
-    month,
-  )
+  const monthLabel = formatDisplayMonth(month)
   useEffect(() => {
     if (!focusDate || !calendarOpen) return
     calendarRef.current
-      ?.querySelector<HTMLButtonElement>(`button[aria-label="${focusDate}"]`)
+      ?.querySelector<HTMLButtonElement>(`button[data-date="${focusDate}"]`)
       ?.focus()
     setFocusDate(null)
   }, [focusDate, calendarOpen, month])
@@ -99,9 +98,9 @@ export function TokenExpiryPicker({
           {t('tokens.customDate')}
         </Button>
       </div>
-      <span className="token-expiry-value">
+      <span className="token-expiry-value" title={formatDisplayDate(value, { year: 'always' }) ?? undefined}>
         {t('tokens.expiresOn', {
-          date: new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(localDate(value)),
+          date: formatDisplayDate(value) ?? value,
         })}
       </span>
       {calendarOpen && (
@@ -148,7 +147,8 @@ export function TokenExpiryPicker({
                   key={date}
                   type="button"
                   disabled={date < min || date > max}
-                  aria-label={date}
+                  aria-label={formatDisplayDate(date, { year: 'always' }) ?? date}
+                  data-date={date}
                   aria-pressed={date === value}
                   className={day.getMonth() !== month.getMonth() ? 'outside' : ''}
                   onKeyDown={(event) => {

@@ -4,7 +4,8 @@ import { effortEstimateSchema } from "@/shared/model/task-effort";
 
 const dateValueSchema = z.union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)]);
 const taskIconNameSchema = z.enum(taskIconNameValues);
-const taskIconToneSchema = z.enum(taskIconToneValues);
+const hexTaskIconToneSchema = z.string().regex(/^#[0-9a-f]{6}$/i) as z.ZodType<`#${string}`>;
+const taskIconToneSchema = z.union([z.enum(taskIconToneValues), hexTaskIconToneSchema]);
 
 export const taskDraftSchema = z.object({
   parentSubtaskIndex: z.number().int().nonnegative().optional(),

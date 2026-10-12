@@ -1,3 +1,6 @@
+import { normalizeTaskStatus } from "@/shared/model/task-model";
+import "@/features/tasks/styles/task-ai-adjustment.css";
+import { applyAutomaticWorkspaceTags, manualTaskTags } from "@/ai/task-auto-tags";
 import { TaskRecycleBinDialog } from "@/features/tasks/components/TaskRecycleBinDialog";
 import { RECYCLE_BIN_KEY, readRecycleBin, recycleTask, changeRecycledTasks, type RecycledTask } from "@/features/tasks/lib/task-recycle-bin";
 import { TeamLifecycleProvider, type TeamLifecycleAction } from "@/features/members/components/TeamLifecycle";
@@ -57,11 +60,9 @@ import { getCreatedProjectProgressDemo, withCreatedProjectProgressDetail } from 
 import { updateWorkspaceTaskStatus } from "@/features/tasks/lib/workspace-task-updates";
 import { getTaskProgressDemoExample } from "@/ai/mock/data/taskProgressDemo";
 import { progressPredictionInputKey, progressPredictionStorageKey, readProgressPredictions, recalculateTaskProgressPrediction } from "@/ai/mock/lib/taskProgressPrediction";
-import { applySavedTaskAiAdjustment, createSavedTaskAiContext, getTaskDefinitionGoal } from "@/features/tasks/lib/task-ai-adjustment-adapters";
+import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-ai-adjustment-adapters";
 import { commitTaskAiStorage, recoverTaskAiStorage } from "@/features/tasks/lib/task-ai-adjustment-storage";
-import type { TaskAiAdjustmentProposal } from "@/features/tasks/lib/task-ai-adjustment-types";
 import { applyCurrentTaskCriteria, applySavedTaskCriteria } from "@/features/tasks/lib/task-criteria-editing";
-import { applyTaskDependencies } from "@/features/tasks/lib/task-dependencies";
 import { getWorkspaceEffortLeaves } from "@/features/tasks/lib/task-effort-editing";
 import { runAgentdoorReanalysis } from "@/ai/mock/lib/agentdoorReanalysis";
 import { buildTaskDiagnosisContext } from "@/features/tasks/files/lib/task-diagnosis-context";
@@ -199,9 +200,9 @@ function App() {
     const nodes = migratedNodes.map((node): WorkspaceNode => {
       if (node.kind !== "task") return node;
       const ownerId = storedOwnerAssignments[node.id] || node.proposedOwnerId || node.ownerId;
-      if (ownerId !== node.ownerId || node.proposedOwnerId) assignmentsMigrated = true;
+      if (ownerId !== node.ownerId || node.proposedOwnerId || node.status === "待开始") assignmentsMigrated = true;
       const { proposedOwnerId: _legacyProposal, ...task } = node;
-      return { ...task, ownerId };
+      return { ...task, ownerId, status: normalizeTaskStatus(task.status) };
     });
     return { ...scenario, workspaceNodes: nodes, didMigrate: scenario.didMigrate || migratedNodes !== scenario.workspaceNodes || assignmentsMigrated };
   });
@@ -239,6 +240,9 @@ function App() {
       .filter(([id, result]) => result.inputKey === progressPredictionInputKey(workspaceNodes, id))
       .map(([id, result]) => [id, result.series])),
   }), [createdProjectProgressDemo, progressPredictions, workspaceNodes]);
+  const statusProgressComparisons = useMemo(() => Object.fromEntries(workspaceNodes
+    .filter((node): node is TaskNode => node.kind === "task")
+    .map(task => [task.id, getTaskProgressDemoExample(task.id, progressComparisons[task.id])])), [workspaceNodes, progressComparisons]);
   const refreshTaskPrediction = async (taskId: string) => {
     const nodes = workspaceNodesRef.current;
     const task = nodes.find(node => node.kind === "task" && node.id === taskId);
@@ -459,7 +463,7 @@ function App() {
 
   useEffect(() => {
     if (taskStorageRecoveryError) return;
-    const withCriterionMocks = applyCriterionReviewMocks(workspaceNodes);
+    const withCriterionMocks = applyAutomaticWorkspaceTags(applyCriterionReviewMocks(workspaceNodes));
     workspaceNodesRef.current = withCriterionMocks;
     if (withCriterionMocks !== workspaceNodes) setWorkspaceNodes(withCriterionMocks);
     persistStoredValue(workspaceNodesStorageKey, withCriterionMocks);
@@ -846,7 +850,6 @@ function App() {
         }), window.localStorage),
         decisionConflicts: taskDetailMocks[node.id as TaskDetailId]?.diagnosis?.decisionConflicts
           ?? getTeamTaskDiagnosisSnapshot(node)?.decisionConflicts,
-        dependsOnTaskIds: node.dependsOnTaskIds,
         dueAt: period === null ? undefined : period ? formatPeriodLabel(period.start, period.end) : node.dueAt,
         id: node.id,
         parentTaskId: node.parentTaskId,
@@ -854,13 +857,6 @@ function App() {
         title: node.name,
       };
     });
-  const selectedDependencyTaskIds = selectedTreeTask?.kind === "task" ? selectedTreeTask.dependsOnTaskIds ?? [] : [];
-  const selectedDependencyTasks = teamWorkspaceNodes
-    .filter((node): node is TaskNode => node.kind === "task" && selectedDependencyTaskIds.includes(node.id))
-    .map(toTaskRelationSummary);
-  const availableDependencyTasks = teamWorkspaceNodes
-    .filter((node): node is TaskNode => node.kind === "task")
-    .map(toTaskRelationSummary);
   const taskCreationExistingTasks = teamWorkspaceNodes
     .filter((node): node is TaskNode => node.kind === "task")
     .map(({ id, name, ownerId, status, goal, dueAt, labels, parentTaskId, plannedStartOn, plannedEndOn, iconName, iconTone, updatedAt }) => ({
@@ -897,10 +893,9 @@ function App() {
   const changeTaskAppearance = (appearance: { iconName: TaskIconName; iconTone: TaskIconTone }) => {
     const task = getSelectedTask();
     if (!task) return;
-    const iconLabel = (value: TaskIconName) => taskIconOptions.find((option) => option.value === value)?.label ?? value;
     const toneLabel = (value: TaskIconTone) => taskIconToneOptions.find((option) => option.value === value)?.label ?? value;
-    changeTaskFields(task.id, appearance, "appearance-change", "修改任务外观", [
-      { label: "图标", before: iconLabel(task.iconName ?? "list-todo"), after: iconLabel(appearance.iconName) },
+    changeTaskFields(task.id, appearance, "appearance-change", "修改任务图标与颜色", [
+      { label: "图标", before: taskIconOptions.find(option => option.value === task.iconName)?.label ?? "任务清单", after: taskIconOptions.find(option => option.value === appearance.iconName)?.label ?? appearance.iconName },
       { label: "背景色", before: toneLabel(task.iconTone ?? "neutral"), after: toneLabel(appearance.iconTone) },
     ]);
   };
@@ -909,7 +904,7 @@ function App() {
     const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId);
     if (!task) return;
     const tagsValue = (values: string[]) => [...new Set(values)].sort().join("、") || null;
-    changeTaskFields(taskId, { labels }, "tags-change", "修改任务标签", [{ label: "标签", before: tagsValue(task.labels ?? []), after: tagsValue(labels) }]);
+    changeTaskFields(taskId, manualTaskTags(task, labels), "tags-change", "修改任务标签", [{ label: "标签", before: tagsValue(task.labels ?? []), after: tagsValue(labels) }]);
   };
 
   // A freshly invited person may be persisted before this render's members update.
@@ -968,7 +963,6 @@ function App() {
       ...(period !== undefined ? { plannedStartOn: period?.start, plannedEndOn: period?.end, dueAt: period ? formatPeriodLabel(period.start, period.end) : "—" } : {}),
     };
   });
-  const selectedAiAdjustmentContext = selectedTaskId ? createSavedTaskAiContext(effectiveAiNodes(teamWorkspaceNodes), selectedTaskId, collaborationMembers, currentUserId) : null;
   // Resolve the same saved dates used by the task's deadline field, including legacy labels.
   // Empty dates are explicit so the progress view cannot substitute fixture scheduling dates.
   function withProgressDates(task: TaskNode): TaskNode {
@@ -1057,71 +1051,6 @@ function App() {
     persistTaskDefinition(applyCurrentTaskCriteria(workspaceNodesRef.current, selectedTaskId, expected, values, currentUserName));
   };
 
-  const saveTaskDependencies = (values: string[], expected: string[]) => {
-    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
-    if (!selectedTaskId) throw new Error("请先选择任务。");
-    const visibleIds = getTeamWorkspaceNodes(activeTeamId, workspaceNodesRef.current).filter(node => node.kind === "task").map(node => node.id);
-    persistTaskDefinition(applyTaskDependencies(workspaceNodesRef.current, selectedTaskId, expected, values, currentUserName, visibleIds));
-  };
-
-  const applyTaskAiAdjustment = (proposal: TaskAiAdjustmentProposal) => {
-    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
-    if (!selectedTaskId) throw new Error("请先选择要调整的任务。");
-    const currentNodes = workspaceNodesRef.current;
-    const effectiveNodes = effectiveAiNodes(currentNodes);
-    const context = createSavedTaskAiContext(effectiveNodes, selectedTaskId, collaborationMembers, currentUserId);
-    if (!context) throw new Error("任务已不存在，请返回列表。");
-    const next = applySavedTaskAiAdjustment(currentNodes, context, proposal, { author: currentUserName, effectiveNodes });
-    if (!next.affectedIds.length) return;
-    let nextActivities = taskActivityStore;
-    for (const [taskId, activities] of Object.entries(next.activities)) for (const activity of activities) nextActivities = appendTaskActivity(nextActivities, taskId, activity);
-    const nextSeeds = [...taskDetailSeedNodesRef.current];
-    for (const id of next.affectedIds) {
-      const original = currentNodes.find((node): node is TaskNode => node.kind === "task" && node.id === id);
-      if (original && !nextSeeds.some(seed => seed.id === id)) nextSeeds.push({ ...original });
-    }
-    const nextPeriods = { ...taskPeriodOverrides };
-    const nextLegacy = { ...legacyTaskSnapshots };
-    let legacyChanged = false;
-    for (const { taskId, patch } of proposal.updates) {
-      const node = next.nodes.find((item): item is TaskNode => item.kind === "task" && item.id === taskId)!;
-      if (patch.endDate !== undefined || patch.startDate !== undefined) {
-        delete nextPeriods[taskId];
-      }
-      if (nextLegacy[taskId]) {
-        nextLegacy[taskId] = {
-          ...nextLegacy[taskId],
-          ...(patch.title !== undefined ? { title: node.name } : {}),
-          ...(patch.goal !== undefined ? { goal: node.goal ?? "" } : {}),
-          ...(patch.ownerId ? { ownerId: patch.ownerId, proposedOwnerId: undefined, ownerAssignmentStatus: "confirmed" as const } : {}),
-          ...(patch.endDate !== undefined || patch.startDate !== undefined ? { plannedStartOn: node.plannedStartOn, plannedEndOn: node.plannedEndOn } : {}),
-        };
-        legacyChanged = true;
-      }
-    }
-    const writes: Array<[string, string]> = [
-      [workspaceNodesStorageKey, JSON.stringify(next.nodes)],
-      [taskActivityStorageKey, JSON.stringify(nextActivities)],
-      [taskDetailSeedsStorageKey, JSON.stringify(nextSeeds)],
-      [taskOwnerProposalsStorageKey, JSON.stringify({})],
-      ...(legacyChanged ? [["agentdoor-created-tasks", JSON.stringify(nextLegacy)] as [string, string]] : []),
-    ];
-    try { commitTaskAiStorage(localStorage, writes); }
-    catch (caught) {
-      try { recoverTaskAiStorage(localStorage); }
-      catch (recoveryError) { setTaskStorageRecoveryError(recoveryError instanceof Error ? recoveryError.message : "本地记录需要恢复，暂时停止编辑。"); }
-      throw caught;
-    }
-    workspaceNodesRef.current = next.nodes;
-    taskDetailSeedNodesRef.current = nextSeeds;
-    setWorkspaceNodes(next.nodes);
-    setTaskActivityStore(nextActivities);
-    setTaskDetailSeedNodes(nextSeeds);
-    setTaskOwnerProposals({});
-    setTaskPeriodOverrides(nextPeriods);
-    if (legacyChanged) { setLegacyTaskSnapshots(nextLegacy); setLegacyTaskSnapshotsDirty(true); }
-  };
-
   const commitTeamStorage = <T extends { nodes: WorkspaceNode[]; activities: TaskActivityStore; seeds: TaskNode[] },>(commit: (input: { nodes: WorkspaceNode[]; activities: TaskActivityStore; seeds: TaskNode[] }) => T): T => {
     if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
     const current = localStorage.getItem(workspaceNodesStorageKey);
@@ -1182,6 +1111,7 @@ function App() {
       <WorkspaceTopbar
         activeTeamId={activeTeamId}
         onConnectAi={() => setGlobalAiConnectionOpen(true)}
+        onCreateTask={startNewTaskConversation}
         onSignOut={signOutWorkspace}
         showDemoNotifications={showDemoData}
         onOpenNotificationTask={(taskId) => {
@@ -1204,6 +1134,7 @@ function App() {
       <main className="main-content">
         {personalTagLoadError && <p role="alert">{personalTagLoadError}</p>}
         <TaskWorkspace
+            progressComparisonsByTaskId={statusProgressComparisons}
             currentUserId={currentUserId}
             filters={taskFilters}
             hidden={activeSection !== "home" && activeSection !== "tasks" && activeSection !== "conversation"}
@@ -1211,6 +1142,7 @@ function App() {
             nodes={teamWorkspaceNodes}
             onCreateTask={startNewTaskConversation}
             onDeleteTask={requestDeleteTask}
+            onTaskStatusChange={changeTaskStatus}
               onOpenRecycleBin={() => { refreshRecycleBin(); setRecycleOpen(true); }}
             onFiltersChange={setTaskFilters}
             onManageTags={() => { setActiveSection("settings"); focusPrimaryHeadingAfterNavigation(); }}
@@ -1257,7 +1189,6 @@ function App() {
             key={`${activeTeamId}:${selectedTaskId}`}
             currentUserId={currentUserId}
             teamId={activeTeamId}
-            aiAdjustmentContext={selectedAiAdjustmentContext}
             completedMinutesByTaskId={selectedCompletedEffortMinutes}
             effortTasks={selectedEffortTasks}
             progressComparisonsByTaskId={progressComparisons}
@@ -1265,16 +1196,11 @@ function App() {
             progressTask={selectedTreeTask?.kind === "task" ? withProgressDates(selectedTreeTask) : undefined}
             recordedActivities={taskActivityStore[selectedTaskId] ?? []}
             childTasks={selectedChildTasks}
-            dependencyTasks={selectedDependencyTasks}
-            dependencyTaskIds={selectedDependencyTaskIds}
-            availableDependencyTasks={availableDependencyTasks}
-            onTaskDependenciesSave={saveTaskDependencies}
             currentUser={currentUserName}
             initialAttentionTarget={taskAttentionTarget}
             members={collaborationMembers}
             onFileSaved={() => touchTask(selectedTaskId)}
             onActivityAppend={(activity) => appendActivityForTask(selectedTaskId, activity)}
-            onAiAdjustmentApply={applyTaskAiAdjustment}
             onCreateSubtask={startNewSubtaskConversation}
             onDeleteSubtask={requestDeleteSubtask}
             onSubtaskCriteriaSave={saveSubtaskCriteria}
@@ -1335,7 +1261,7 @@ function App() {
         <DialogContent className="global-ai-guide-dialog" finalFocus={() => document.getElementById("workspace-ai-trigger") ?? false}>
           <header className="global-ai-guide-header">
             <DialogTitle>{ui("连接 AI")}</DialogTitle>
-            <DialogDescription>{(locale === "en" ? "Connect via CLI or MCP to work with TaskDoor in your AI tools." : "通过 CLI 或 MCP，让 AI 工具与 TaskDoor 协作。")}</DialogDescription>
+            <DialogDescription>{(locale === "en" ? "Connect via CLI or MCP to work with TaskDoor." : "通过 CLI 或 MCP，让 AI 工具与 TaskDoor 协作。")}</DialogDescription>
           </header>
           <div className="global-ai-guide-body"><AiConnectionPage embedded /></div>
         </DialogContent>

@@ -83,6 +83,32 @@ test("任务范围胶囊数量沿用其他筛选，并忽略当前任务范围",
   assert.deepEqual(projectionModule.buildTaskScopeCounts(nodes, "Launch", filters, tags, ""), { all: 3, owned: 0, participating: 0 });
 });
 
+test("状态菜单数量保留范围、翻译搜索、标签与日期，忽略当前状态并归一历史状态", async () => {
+  const { buildTaskListProjection } = await import("../src/features/tasks/lib/task-list-projection.ts");
+  const candidate = (id: string, patch: Partial<TaskNode> = {}) => task(id, { labels: ["制作"], plannedEndOn: "2026-09-15", ...patch });
+  const done = candidate("done", { status: "已完成" });
+  const nodes = [
+    candidate("active"), done, { ...done, status: "进行中" as const },
+    candidate("legacy", { status: "待开始" }), candidate("blocked", { status: "已阻塞" }),
+    candidate("cancelled", { status: "已取消" }), candidate("other-owner", { ownerId: "other" }),
+    candidate("other-tag", { labels: ["发布"] }), candidate("other-date", { plannedEndOn: "2026-10-01" }),
+    candidate("other-query"),
+  ];
+  const filters: TaskListFilters = { ...allFilters, scope: "owned", status: "进行中", statuses: ["已完成"], completion: "done", tags: ["制作"], deadline: { preset: "custom", from: "2026-09-01", to: "2026-09-30" } };
+  const displayName = (item: TaskNode) => item.id === "other-query" ? "Weekly notes" : `Launch ${item.id}`;
+  const result = buildTaskListProjection(nodes, "LAUNCH", filters, tags, "me", displayName);
+  assert.deepEqual(result.visibleTasks.map(item => item.id), ["done"]);
+  assert.deepEqual(result.statusCounts, { all: 5, byStatus: { "进行中": 2, "已完成": 1, "已阻塞": 1, "已取消": 1 } });
+  const anotherSelection = buildTaskListProjection(nodes, "LAUNCH", { ...filters, status: "all", statuses: ["已取消", "进行中"], completion: "all" }, tags, "me", displayName);
+  assert.deepEqual(anotherSelection.statusCounts, result.statusCounts);
+});
+
+test("状态菜单数量在当前查询没有候选任务时为零，不借用全局总数", async () => {
+  const result = await project([task("only", { status: "已完成" })], "missing", { ...allFilters, statuses: ["已完成"] });
+  assert.equal(result.statusCounts.all, 0);
+  assert.deepEqual(result.statusCounts.byStatus, {});
+});
+
 test("无标签和未知标签任务仍能从全部标签找到，不建立虚拟领域标签", async () => {
   const result = await project([task("absent"), task("empty", { labels: [] }), task("unknown", { labels: ["旧标签"] })]);
   assert.equal(result.allTagsCount, 3);

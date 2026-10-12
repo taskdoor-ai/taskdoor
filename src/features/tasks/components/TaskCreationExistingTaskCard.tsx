@@ -1,12 +1,13 @@
+import { normalizeTaskStatus } from "@/shared/model/task-model";
 import { mockPersonName } from "@/ai/mock/i18n/mockContent";
 import { useCreationI18n } from "@/shared/i18n/creation-messages";
+import { formatLegacyDateLabel } from "@/shared/lib/date-time";
 import type { TagDefinition } from "@/ai/mock/data/tagGroups";
 import type { ExistingTaskCandidate } from "@/ai/mock/lib/taskCreationScenario";
 import { CalendarDays, GitBranch, Link2 } from "lucide-react";
 import React from "react";
 import { PersonAvatar } from "@/shared/ui/PersonAvatar";
 import { TagBadge } from "@/shared/ui/TagBadge";
-import { TaskIcon } from "@/features/tasks/components/TaskIcon";
 import { TaskStatusBadge, taskStatusOptions, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
 
 type TaskCreationExistingTaskCardProps = {
@@ -25,10 +26,10 @@ export function TaskCreationExistingTaskCard({ kind, ownerName, reason, tags, ta
   const taskTags = (task.labels ?? []).map((label) => tags.find((tag) => tag.name === label)).filter((tag): tag is TagDefinition => Boolean(tag));
   const unresolvedLabels = (task.labels ?? []).filter((label) => !taskTags.some((tag) => tag.name === label));
   const schedule = task.plannedStartOn && task.plannedEndOn
-    ? c("to", { v0: task.plannedStartOn, v1: task.plannedEndOn })
-    : task.plannedEndOn ?? task.dueAt ?? task.endDate;
-  const knownStatus = task.status && taskStatusOptions.includes(task.status as TaskStatus)
-    ? task.status as TaskStatus
+    ? c("to", { v0: formatLegacyDateLabel(task.plannedStartOn, locale), v1: formatLegacyDateLabel(task.plannedEndOn, locale) })
+    : formatLegacyDateLabel(task.plannedEndOn ?? task.dueAt ?? task.endDate ?? "", locale);
+  const knownStatus = task.status && taskStatusOptions.includes(normalizeTaskStatus(task.status as TaskStatus))
+    ? normalizeTaskStatus(task.status as TaskStatus)
     : null;
   const childTaskNames = task.childTaskNames ?? [];
 
@@ -39,7 +40,6 @@ export function TaskCreationExistingTaskCard({ kind, ownerName, reason, tags, ta
     </header>
 
     <div className="task-creation-existing-task-main">
-      <TaskIcon iconName={task.iconName} size="lg" tone={task.iconTone} />
       <div className="task-creation-existing-task-copy">
         <h3>{title}</h3>
         {task.goal && <p>{task.goal}</p>}

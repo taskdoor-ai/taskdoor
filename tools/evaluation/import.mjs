@@ -1,9 +1,10 @@
-import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {writeFileSync,mkdirSync} from 'node:fs';
+import {readPersistedLabState} from '../../server/test-lab/run-state.mjs';
 import {resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 import {toPromptfoo} from './bridge.mjs';
 import {invoke,root} from './cli.mjs';
-const state=JSON.parse(readFileSync(resolve(root,'data/test-lab/state.json'),'utf8'));
+const state=readPersistedLabState(resolve(root,'data/test-lab/state.json'));
 const batch=process.argv[2]??state.runs.at(-1)?.batchId;
 const runs=state.runs.filter(r=>r.batchId===batch);
 const data=toPromptfoo(runs);

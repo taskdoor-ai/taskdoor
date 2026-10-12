@@ -1,4 +1,5 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
+import { formatDisplayDate } from "@/shared/lib/date-time";
 import { useBurnUpWidth } from "@/shared/lib/useBurnUpWidth";
 import { TaskProgressHistory } from "@/features/tasks/components/TaskProgressHistory";
 import React, { useId } from "react";
@@ -11,7 +12,7 @@ import { TaskBurnUpNode } from "@/features/tasks/components/TaskBurnUpNode";
 import { layoutBurnUpDateAxis, TaskBurnUpDateAxis, TaskBurnUpHeading, TaskBurnUpTimeDelta, TaskBurnUpTiming } from "@/features/tasks/components/TaskBurnUpTiming";
 import { getTaskProgressDisplay, type TaskProgressContext, type TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
 
-const shortDate = (date: string | null) => date ? `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}` : "—";
+const shortDate = (date: string | null) => date ? formatDisplayDate(date) ?? "—" : "—";
 const days = (minutes: number) => formatPersonDays(minutes / 480);
 const signedWork = (minutes: number) => `${minutes > 0 ? "+" : minutes < 0 ? "−" : ""}${days(Math.abs(minutes))}`;
 

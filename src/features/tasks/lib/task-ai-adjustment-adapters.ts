@@ -24,7 +24,7 @@ function creationTaskContext(task: CreationTask, parentTaskId?: string): TaskAiE
     id: task.clientId, title: task.title, goal: task.goal, goalInherited: false, parentTaskId,
     completionCriteria: [...task.completionCriteria], executionTips: [...task.executionTips],
     ownerId: task.ownerId, participantIds: [...task.participantIds],
-    startDate: task.startDate, endDate: task.endDate, dependsOnTaskIds: [...task.dependsOnClientIds],
+    startDate: task.startDate, endDate: task.endDate, dependsOnTaskIds: [],
     ...(task.effortEstimate ? { effortEstimate: clone(task.effortEstimate) } : {}),
   };
 }
@@ -70,13 +70,13 @@ export function applyDraftTaskAiAdjustment(form: CreationForm, context: TaskAiAd
   const update = (task: CreationTask): CreationTask => {
     const patch = proposal.updates.find(item => item.taskId === task.clientId)?.patch;
     if (!patch) return task;
-    const { dependsOnTaskIds, ...fields } = clone(patch);
-    return { ...task, ...fields, ...(dependsOnTaskIds ? { dependsOnClientIds: dependsOnTaskIds } : {}) };
+    const { dependsOnTaskIds: _legacy, ...fields } = clone(patch);
+    return { ...task, ...fields };
   };
   const additions = proposal.additions.map((task): CreationTask => ({
     clientId: task.id, title: task.title, goal: task.goal, completionCriteria: [...task.completionCriteria],
     executionTips: [...task.executionTips], ownerId: task.ownerId, participantIds: [...task.participantIds],
-    startDate: task.startDate, endDate: task.endDate, labels: [], dependsOnClientIds: [...task.dependsOnTaskIds],
+    startDate: task.startDate, endDate: task.endDate, labels: [], dependsOnClientIds: [],
   }));
   return { ...form, mainTask: update(form.mainTask), subtasks: [...form.subtasks.map(update), ...additions] };
 }
@@ -92,13 +92,13 @@ export function createSavedTaskAiContext(nodes: WorkspaceNode[], taskId: string,
     ownerId: task.ownerId, proposedOwnerId: ownerProposals[task.id] ?? task.proposedOwnerId,
     participantIds: [...(task.participantIds ?? [])], startDate: task.plannedStartOn ?? "",
     endDate: task.plannedEndOn ?? "", endDateLabel: task.dueAt,
-    dependsOnTaskIds: [...(task.dependsOnTaskIds ?? [])],
+    dependsOnTaskIds: [],
     ...(task.effortEstimate ? { effortEstimate: clone(task.effortEstimate) } : {}),
   });
   return {
     mode: "saved", currentUserId, task: convert(main), subtasks: tasks.filter(task => task.parentTaskId === taskId).map(convert),
     members: memberSnapshots(members), canAddSubtasks: true,
-    dependencyTasks: tasks.map(({ id, name, dependsOnTaskIds, parentTaskId, plannedEndOn }) => ({ id, title: name, dependsOnTaskIds: [...(dependsOnTaskIds ?? [])], parentTaskId, endDate: plannedEndOn })),
+    dependencyTasks: tasks.map(({ id, name, parentTaskId, plannedEndOn }) => ({ id, title: name, dependsOnTaskIds: [], parentTaskId, endDate: plannedEndOn })),
   };
 }
 
@@ -124,7 +124,6 @@ export function applySavedTaskAiAdjustment(nodes: WorkspaceNode[], context: Task
     if (patch.completionCriteria !== undefined) next.completionCriteria = [...patch.completionCriteria];
     if (patch.executionTips !== undefined) next.executionTips = [...patch.executionTips];
     if (patch.effortEstimate !== undefined) next.effortEstimate = clone(patch.effortEstimate);
-    if (patch.dependsOnTaskIds !== undefined) next.dependsOnTaskIds = [...patch.dependsOnTaskIds];
     if (patch.ownerId !== undefined) {
       next.ownerId = patch.ownerId;
       delete next.proposedOwnerId;
@@ -147,7 +146,7 @@ export function applySavedTaskAiAdjustment(nodes: WorkspaceNode[], context: Task
     id: task.id, kind: "task", parentId: main.parentId, parentTaskId: main.id, name: task.title,
     ...(main.teamId ? { teamId: main.teamId } : {}),
     goal: context.task.goal, completionCriteria: [...task.completionCriteria], executionTips: [...task.executionTips],
-    ownerId: task.ownerId, participantIds: [...task.participantIds].filter(id => id !== task.ownerId), status: "待开始", dependsOnTaskIds: [...task.dependsOnTaskIds],
+    ownerId: task.ownerId, participantIds: [...task.participantIds].filter(id => id !== task.ownerId), status: "进行中",
     createdFrom: "task-planner", createdBy: context.currentUserId, createdAt: now.toISOString(),
     iconName: "list-todo", iconTone: "blue", updatedAt: new Date().toISOString(),
   });

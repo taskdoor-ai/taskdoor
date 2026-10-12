@@ -2,6 +2,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { workbenchPriorityReason } from "@/ai/mock/prototype/workbench-copy";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { formatDisplayDate, formatDisplayDateTime } from "@/shared/lib/date-time";
 import { useMemo } from "react";
 import { ArrowLeft, ArrowRight, ChevronDown, ClipboardCheck, LoaderCircle, RefreshCw, Sparkles } from "lucide-react";
 import { Button } from "@/shared/ui/button";
@@ -25,14 +26,8 @@ type PersonalWorkbenchProps = {
   onReanalyze: () => void;
 };
 
-function displayDate(value: string, locale: string, withTime = false) {
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return "时间待核对";
-  return new Intl.DateTimeFormat(locale, {
-    timeZone: "Asia/Shanghai", month: "long", day: "numeric",
-    ...(withTime && value.includes("T") ? { hour: "2-digit", minute: "2-digit", hour12: false } as const : {}),
-    ...(!withTime ? { weekday: "long" } as const : {}),
-  }).format(date);
+function displayDate(value: string) {
+  return formatDisplayDateTime(value) ?? formatDisplayDate(value) ?? "时间待核对";
 }
 
 export function PersonalWorkbench({ analysisError = "", analyzing = false, currentUserName, hidden = false, model, onConnectAi, onOpenTask, onOpenTaskList, onReanalyze }: PersonalWorkbenchProps) {
@@ -75,7 +70,7 @@ export function PersonalWorkbench({ analysisError = "", analyzing = false, curre
         <details className="personal-workbench-analysis-rules">
           <summary><span>{ui("AI 分析规则")}</span><ChevronDown aria-hidden="true" size={14} /></summary>
           <div className="personal-workbench-analysis-rules-body">
-            <p><strong>{ui("排序")}</strong><span>{ui("当前顺序综合任务状态、期限、依赖、完成标准，以及你有权查看的讨论、动态和文件；先处理阻塞、临期或需要核对的事项，同档沿用原顺序。")}</span></p>
+            <p><strong>{ui("排序")}</strong><span>{ui("当前顺序综合任务状态、期限、完成标准，以及你有权查看的讨论、动态和文件；先处理阻塞、临期或需要核对的事项，同档沿用原顺序。")}</span></p>
             <p><strong>{ui("范围")}</strong><span>{ui("仅包含你负责且仍需处理的任务，以及已结束但记录尚未收口的核对事项；左侧筛选不影响，同一任务只出现一次，建议不会自动修改任务。")}</span></p>
           </div>
         </details>
@@ -84,7 +79,7 @@ export function PersonalWorkbench({ analysisError = "", analyzing = false, curre
             {analyzing ? <LoaderCircle aria-hidden="true" className="animate-spin motion-reduce:animate-none" /> : <RefreshCw aria-hidden="true" />}
             {analyzing ? ui("分析中") : ui("重新分析")}
           </Button>
-          <time className="personal-workbench-updated-at" dateTime={Number.isFinite(new Date(model.asOf).getTime()) ? model.asOf : undefined}>{ui("更新于")} {ui(displayDate(model.asOf, locale, true))}</time>
+          <time className="personal-workbench-updated-at" dateTime={Number.isFinite(new Date(model.asOf).getTime()) ? model.asOf : undefined} title={formatDisplayDateTime(model.asOf, { year: "always" }) ?? formatDisplayDate(model.asOf, { year: "always" }) ?? undefined}>{ui("更新于")} {ui(displayDate(model.asOf))}</time>
         </div>
         {analysisError && <p className="personal-workbench-analysis-error" role="alert">{ui(analysisError)}</p>}
       </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { LabConfig, LabRun } from './types';
 import { isActiveRun } from './model';
+import { LabDateLabel } from '@/test-lab/date-label';
 
 const labels={met:'符合',unmet:'不符合',insufficient:'信息不足'};
 const percent=(value:number)=>`${(value*100).toFixed(1)}%`;
@@ -14,7 +15,7 @@ export function JevReview({run,config,busy,onReview}:{run:LabRun;config?:LabConf
     {!hasCriteria&&<p className="lab-muted">该运行快照没有预期结果或人工核对项，请补充用例并重新运行。</p>}
     {!history.length&&<p className="lab-muted">尚未进行 Jev 核对 · {config?.model??'未配置模型'}</p>}
     {[...history].reverse().map((review,index)=><details key={review.id} open={index===0} className="lab-json-detail">
-      <summary>{index===0?'最近核对':'历史核对'} · {new Date(review.at).toLocaleString('zh-CN')} · {review.model}</summary>
+      <summary>{index===0?'最近核对':'历史核对'} · <LabDateLabel value={review.at} /> · {review.model}</summary>
       <p className="lab-muted">{(review.durationMs/1000).toFixed(1)} 秒 · 输入 {review.usage?.input_tokens??'未调用'} / 输出 {review.usage?.output_tokens??'未调用'} Tokens。置信度低于 80% 时提示人工核对；此阈值为试用值，尚未经本用例库校准。</p>
       <div className="lab-table-scroll"><table className="lab-comparison-table"><thead><tr><th>核对项</th><th>判断</th><th>置信度</th><th>选项概率</th></tr></thead><tbody>{review.items.map(item=><tr key={item.id}>
         <th><small>{item.stepId?`步骤 ${run.caseSnapshot.steps.findIndex(s=>s.id===item.stepId)+1}`:'整次运行'}</small>{item.label}</th>

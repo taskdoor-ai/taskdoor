@@ -5,29 +5,31 @@ import { loadSkill, labSkills } from './test-lab/skills.ts';
 import { validateOutput } from './test-lab/validation.ts';
 import { splitSkillDocuments } from '../src/test-lab/markdown-files.ts';
 
-test('两个入口 Skill 的实际运行包包含 PRD 共用规则与完整输出契约', () => {
+test('生产创建入口使用独立生产资料，分析入口保留共用规则与输出契约', () => {
   for (const skill of labSkills) {
     const files = splitSkillDocuments(loadSkill(skill.id).snapshot).map(file => file.path);
     assert.equal(new Set(files).size, files.length, `${skill.id} 重复加载资料`);
-    assert.ok(files.includes('skills/shared/product-rules.md'), skill.id);
-    assert.ok(files.includes('skills/shared/assistant-path-rules.md'), skill.id);
     if (skill.id !== 'agentdoor-task-planner') {
+      assert.ok(files.includes('skills/shared/product-rules.md'), skill.id);
+      assert.ok(files.includes('skills/shared/assistant-path-rules.md'), skill.id);
       assert.ok(files.includes(`skills/${skill.id}/references/output-contract.md`), skill.id);
+    } else {
+      assert.ok(files.includes('skills/agentdoor-task-planner/references/task-preview.schema.json'));
+      assert.ok(!files.includes('skills/agentdoor-task-planner/references/planning-v0.2.md'));
     }
   }
 });
 
-test('规划和状态分析加载依赖 Skill 的契约，保存的旧版本保持原文', () => {
+test('创建不加载进度分析依赖，状态分析保留依赖，旧版本保持原文', () => {
   const planner = loadSkill('agentdoor-task-planner');
   const status = loadSkill('agentdoor-task-status-analyzer');
-  for (const snapshot of [planner.snapshot, status.snapshot]) {
-    assert.ok(snapshot.includes('--- FILE: skills/agentdoor-ewd-progress/references/output-contract.md ---'));
-  }
+  assert.ok(!planner.snapshot.includes('--- FILE: skills/agentdoor-ewd-progress/references/output-contract.md ---'));
+  assert.ok(status.snapshot.includes('--- FILE: skills/agentdoor-ewd-progress/references/output-contract.md ---'));
   assert.ok(status.snapshot.includes('--- FILE: skills/agentdoor-task-status-analyzer/references/problem-analysis.md ---'));
   const old = '# 已保存的旧规则\n仅使用本版本内容。';
   const restored = loadSkill('agentdoor-task-planner', old);
   assert.equal(restored.snapshot, old);
-  assert.ok(restored.instructions.endsWith(old));
+  assert.ok(restored.instructions.includes(old));
   assert.ok(!restored.instructions.includes('EWD-2026-09-08-v10'));
 });
 

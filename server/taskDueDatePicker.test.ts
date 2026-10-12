@@ -16,7 +16,7 @@ test("空日期明确显示不设截止时间，不使用含糊的未设置或�
 
 test("已有固定日期保持日期值及可访问名称", () => {
   const html = renderToStaticMarkup(createElement(TaskDueDatePicker, { initialValue: "2026-09-20", label: "截止时间" }));
-  assert.match(html, /aria-label="截止时间：2026-09-20"/);
+  assert.match(html, /aria-label="截止时间：Sep 20, 2026"/);
   assert.match(html, /aria-expanded="false"/);
   assert.doesNotMatch(html, /<strong>不设截止时间<\/strong>/);
 });

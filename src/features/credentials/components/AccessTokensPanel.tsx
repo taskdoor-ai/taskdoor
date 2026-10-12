@@ -19,6 +19,7 @@ import {
 import { tokenMessages } from '@/features/credentials/i18n/token-messages'
 import { useI18n } from '@/shared/i18n/I18nProvider'
 import { useCatalog } from '@/shared/i18n/catalog'
+import { formatDisplayDate, formatDisplayDateTime } from '@/shared/lib/date-time'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -109,8 +110,6 @@ export function AccessTokensPanel({
 }) {
   const { locale } = useI18n()
   const t = useCatalog(tokenMessages)
-  const dates = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' })
-  const times = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' })
   const [all, setAll] = useState(initialTokens)
   const [name, setName] = useState('')
   const [scopes, setScopes] = useState<CredentialScope[]>(['tasks:read'])
@@ -296,10 +295,10 @@ export function AccessTokensPanel({
                     </div>}
                   </dl>
                   <small>
-                    <strong>{t('tokens.createdLabel')}</strong> {dates.format(new Date(token.createdAt))} ·{' '}
-                    <strong>{t('tokens.expiresLabel')}</strong> {dates.format(new Date(token.expiresAt))} ·{' '}
+                    <strong>{t('tokens.createdLabel')}</strong> <time dateTime={token.createdAt} title={formatDisplayDateTime(token.createdAt, { year: 'always' }) ?? formatDisplayDate(token.createdAt, { year: 'always' }) ?? undefined}>{formatDisplayDate(token.createdAt) ?? '—'}</time> ·{' '}
+                    <strong>{t('tokens.expiresLabel')}</strong> <time dateTime={token.expiresAt} title={formatDisplayDateTime(token.expiresAt, { year: 'always' }) ?? formatDisplayDate(token.expiresAt, { year: 'always' }) ?? undefined}>{formatDisplayDate(token.expiresAt) ?? '—'}</time> ·{' '}
                     {token.lastUsedAt
-                      ? <><strong>{t('tokens.lastUsedLabel')}</strong> {times.format(new Date(token.lastUsedAt))}</>
+                      ? <><strong>{t('tokens.lastUsedLabel')}</strong> <time dateTime={token.lastUsedAt} title={formatDisplayDateTime(token.lastUsedAt, { year: 'always' }) ?? undefined}>{formatDisplayDateTime(token.lastUsedAt) ?? '—'}</time></>
                       : t('tokens.neverUsed')}
                   </small>
                 </div>

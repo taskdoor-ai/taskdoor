@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { activeMembership } from '@/features/members/lib/team-membership-lifecycle';
 import { readDeletedTeams, type DeletedTeam } from '@/features/members/lib/team-lifecycle-storage';
 import { useI18n } from '@/shared/i18n/I18nProvider';
+import { formatDisplayDate, formatDisplayDateTime } from '@/shared/lib/date-time';
 import { Button } from '@/shared/ui/button';
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/shared/ui/alert-dialog';
 import { TeamLogo } from '@/shared/ui/TeamLogo';
@@ -23,7 +24,7 @@ export function MyTeamsPanel({ state, actorId, activeTeamId, onRestore, teamName
     try { return { teams: readDeletedTeams(localStorage, now).filter(entry => activeMembership(entry.team, actorId)), error: '' }; }
     catch (failure) { return { teams: [] as DeletedTeam[], error: failure instanceof Error ? failure.message : '无法读取已删除团队，请重试。' }; }
   }, [actorId, now, state.teams]);
-  const dateLabel = (value?: string) => value ? new Date(value).toLocaleDateString(en ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
+  const dateLabel = (value?: string) => value ? formatDisplayDate(value) ?? '—' : '—';
   const restore = (teamId: string) => {
     if (busyId) return;
     setBusyId(teamId);
@@ -40,7 +41,7 @@ export function MyTeamsPanel({ state, actorId, activeTeamId, onRestore, teamName
       <TeamLogo name={team.name} size="md" teamId={team.id} />
       <div className="my-team-copy">
         <div className="my-team-heading"><strong title={teamName(team)}>{teamName(team)}</strong>{!entry && team.id === activeTeamId && <span className="my-team-current">{en ? 'Current team' : '当前团队'}</span>}</div>
-        <small><span>{en ? `Joined ${dateLabel(membership?.joinedAt)}` : `${dateLabel(membership?.joinedAt)} 加入`}</span><span aria-hidden="true" className="my-team-meta-divider">|</span><span>{en ? `${memberCount} members` : `${memberCount} 名成员`}</span></small>
+        <small><span>{en ? 'Joined ' : ''}<time dateTime={membership?.joinedAt} title={membership?.joinedAt ? formatDisplayDateTime(membership.joinedAt, { year: 'always' }) ?? formatDisplayDate(membership.joinedAt, { year: 'always' }) ?? undefined : undefined}>{dateLabel(membership?.joinedAt)}</time>{en ? '' : ' 加入'}</span><span aria-hidden="true" className="my-team-meta-divider">|</span><span>{en ? `${memberCount} members` : `${memberCount} 名成员`}</span></small>
       </div>
       {entry && <div className="my-team-deleted">
         <span className="my-team-countdown">{remaining < DAY_MS ? (en ? 'Deleted · expires today' : '已删除 · 今天到期') : (en ? `Deleted · ${Math.ceil(remaining / DAY_MS)} days left` : `已删除 · 剩 ${Math.ceil(remaining / DAY_MS)} 天`)}</span>

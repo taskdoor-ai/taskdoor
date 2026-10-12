@@ -1,6 +1,4 @@
 import { useI18n } from "@/shared/i18n/I18nProvider";
-import { LoaderCircle } from "lucide-react";
-import { BrandMark } from "@/shared/ui/BrandMark";
 import { Button } from "@/shared/ui/button";
 import "@/shared/styles/workspace-loading.css";
 
@@ -15,13 +13,15 @@ export function WorkspaceLoading({ teamName, error, onRetry, openingApp = false 
   const { t } = useI18n();
   return <main aria-busy={!error} aria-labelledby="workspace-loading-title" className="workspace-loading">
     <div className="workspace-loading-content">
-      <div className="workspace-loading-brand"><BrandMark /><span>TaskDoor</span></div>
-      <h1 id="workspace-loading-title">{error ? t('loading.error') : openingApp ? t('loading.app') : t('loading.workspace')}</h1>
-      {teamName && <p className="workspace-loading-team">{teamName}</p>}
       {error ? <>
+        <h1 id="workspace-loading-title">{t('loading.error')}</h1>
+        {teamName && <p className="workspace-loading-team">{teamName}</p>}
         <p className="workspace-loading-error" role="alert">{error}</p>
         {onRetry && <Button className="workspace-loading-retry" onClick={onRetry} variant="outline">{t('common.retry')}</Button>}
-      </> : <p aria-live="polite" className="workspace-loading-status" role="status"><LoaderCircle aria-hidden="true" /><span>{openingApp ? t('loading.page') : t('loading.team')}</span></p>}
+      </> : <>
+        <p aria-live="polite" className="workspace-loading-status" id="workspace-loading-title" role="status"><span className="workspace-loading-shimmer">{openingApp ? t('loading.page') : t('loading.team')}</span></p>
+        {teamName && <p className="workspace-loading-team">{teamName}</p>}
+      </>}
     </div>
   </main>;
 }

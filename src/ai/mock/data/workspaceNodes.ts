@@ -1,7 +1,7 @@
 import { parseCriterionReviews } from "@/features/tasks/lib/task-criterion-review";
 import { getEffortScopeKey } from "@/features/tasks/lib/task-effort";
 import { effortEstimateSchema, type TaskEffortEstimate } from "@/shared/model/task-effort";
-import { taskIconNameValues, taskIconToneValues, workspaceRootId, type FileNode, type FolderNode, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode, type WorkspaceTaskStatus } from "@/shared/model/task-model";
+import { normalizeTaskStatus, taskIconNameValues, taskIconToneValues, workspaceRootId, type FileNode, type FolderNode, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode, type WorkspaceTaskStatus } from "@/shared/model/task-model";
 import { applyProgressDemoFixture, getProgressDemoCreatedAt } from "@/ai/mock/data/taskProgressDemoFixtures";
 import {isValidTaskEffortBaseline} from "@/features/tasks/lib/task-effort-baseline";
 
@@ -595,7 +595,7 @@ const normalizeTaskNode = (value: unknown): TaskNode | null => {
   const iconName = typeof value.iconName === "string" && taskIconNames.has(value.iconName as TaskIconName)
     ? value.iconName as TaskIconName
     : undefined;
-  const iconTone = typeof value.iconTone === "string" && taskIconTones.has(value.iconTone as TaskIconTone)
+  const iconTone = typeof value.iconTone === "string" && (taskIconTones.has(value.iconTone as TaskIconTone) || /^#[0-9a-f]{6}$/i.test(value.iconTone))
     ? value.iconTone as TaskIconTone
     : undefined;
   const ownerId = legacyProposedOwnerId ?? value.ownerId;
@@ -606,7 +606,7 @@ const normalizeTaskNode = (value: unknown): TaskNode | null => {
     ownerId,
     parentId: typeof value.parentId === "string" && value.parentId.trim() ? value.parentId : workspaceRootId,
     teamId: asOptionalString(value.teamId) ?? "creator-commerce",
-    status: value.status as WorkspaceTaskStatus,
+    status: normalizeTaskStatus(value.status as WorkspaceTaskStatus),
     updatedAt: value.updatedAt,
     ...(asOptionalString(value.completedAt) ? { completedAt: value.completedAt as string } : {}),
     ...(asOptionalString(value.progressReopenedAt) ? { progressReopenedAt: value.progressReopenedAt as string } : {}),

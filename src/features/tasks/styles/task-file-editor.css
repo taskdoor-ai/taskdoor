@@ -98,3 +98,5 @@
   .task-file-document { font-size: var(--ad-text-body-sm); }
   .task-file-action-button, .task-file-toolbar-more, .task-file-history > header button, .task-file-selection-toolbar button { min-width: 44px; min-height: 44px; }
 }
+
+@media (min-width: 761px) { .task-file-explorer { grid-template-columns: clamp(180px, var(--task-sidebar-width, 232px), 45%) minmax(0, 1fr); } }

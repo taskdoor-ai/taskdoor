@@ -1,6 +1,6 @@
 /** Compatibility adapter: translate labels, never mutate existing persisted status values. */
 export const statusMessageKey = {
-  '待开始': 'status.notStarted',
+  '待开始': 'status.inProgress',
   '进行中': 'status.inProgress',
   '待审核': 'status.inReview',
   '已阻塞': 'status.blocked',

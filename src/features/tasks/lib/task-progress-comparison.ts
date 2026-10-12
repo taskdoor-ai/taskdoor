@@ -27,8 +27,8 @@ export type ProgressForecastTrend = {
 };
 /** Fixed demo records; amounts and versions are retained at the time of each observation. */
 export type TaskProgressComparisonSeries = {
-  source: "example";
-  scenario: string;
+  source: "example" | "recorded";
+  scenario?: string;
   asOf: string;
   explanation: string;
   workload: ProgressWorkloadSnapshot[];
@@ -70,7 +70,7 @@ const numberAt = (points: {at: string; completedMinutes: number}[], at: string) 
 };
 
 export function getTaskProgressComparison(series?: TaskProgressComparisonSeries) {
-  if (!series || series.source !== "example" || dateValue(series.asOf) === null || !Array.isArray(series.workload) || !series.workload.length) return null;
+  if (!series || !["example", "recorded"].includes(series.source) || dateValue(series.asOf) === null || !Array.isArray(series.workload) || !series.workload.length) return null;
   const history = series.workload;
   if (history.some((p, i) => dateValue(p.at) === null || !validMinutes(p.scopeMinutes) || !validMinutes(p.completedMinutes)
     || p.completedMinutes > p.scopeMinutes || !p.scopeVersion

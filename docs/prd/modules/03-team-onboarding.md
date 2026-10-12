@@ -57,10 +57,6 @@ operations: "create_team, read_team, update_team, inspect_invitation_link, accep
 - 名称为去除首尾空白后的 1–60 字符；保存失败保留输入，不切换团队。
 - 重复点击不重复创建；已有团队和资料保持不变。
 
-![团队菜单底部的创建团队入口。](../assets/team-onboarding/create-team-entry-en.png)
-
-*FIG-TEAM-005 · 团队菜单底部的创建团队入口。*
-
 ![填写团队名称并创建。](../assets/team-onboarding/create-team-form-en.png)
 
 *FIG-TEAM-006 · 填写团队名称并创建。*

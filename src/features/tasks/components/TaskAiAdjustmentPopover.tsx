@@ -1,5 +1,7 @@
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { activityChangeValue } from "@/features/tasks/i18n/activity-display";
 import { ArrowRight, ArrowUp, Check, ChevronDown, GitBranch, Layers3, LoaderCircle, Sparkles, Target, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useId, useReducer, useRef, useState } from "react";
 import { buildTaskAiAdjustment, buildTaskAiCreationAdjustment, getTaskAiContextSignature } from "@/ai/mock/lib/taskAiAdjustment";
@@ -71,6 +73,7 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const compact = compactCreation && context.mode === "draft";
+  const { locale } = useI18n();
   const scope: TaskAiAdjustmentScope = compact ? { kind: "task" } : requestedScope;
   const [drafts, dispatch] = draftSession;
   const draftKey = getTaskAiAdjustmentDraftKey(context.mode, context.task.id, scope);
@@ -424,10 +427,10 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
         {compactNotice && <p className="task-ai-adjust-notice task-ai-adjust-conversation-state" role="status">{compactNotice}</p>}
         {!isPreviewing && proposal && <section aria-label={ui("待应用的调整")} className="task-ai-adjust-preview" ref={previewRef} tabIndex={-1}>
           <header><span><Check aria-hidden="true" size={15} />{ui("本次修改")}</span><small>{additions.length ? ui("新增 {0} 个子任务", {0: additions.length}) : ui("{0} 处变化", {0: fieldChanges.length})}</small></header>
-          {additions.map(task => <article aria-label={ui("新增子任务：{0}", {0: task.title})} className="task-ai-adjust-addition" key={task.id}><h3><GitBranch aria-hidden="true" size={15} />{task.title}</h3><dl>{proposal.changes.filter(change => change.taskId === task.id && change.label !== "新增子任务").map(change => <div key={change.label}><dt>{change.label}</dt><dd>{change.after || d('notSet')}</dd></div>)}</dl></article>)}
+          {additions.map(task => <article aria-label={ui("新增子任务：{0}", {0: task.title})} className="task-ai-adjust-addition" key={task.id}><h3><GitBranch aria-hidden="true" size={15} />{task.title}</h3><dl>{proposal.changes.filter(change => change.taskId === task.id && change.label !== "新增子任务").map(change => <div key={change.label}><dt>{change.label}</dt><dd>{activityChangeValue(locale, change.label, change.after) || d('notSet')}</dd></div>)}</dl></article>)}
           <ul>{fieldChanges.map((change, index) => <li key={`${change.taskId}:${change.label}:${index}`}>
             <div className="task-ai-adjust-field"><strong>{change.label}</strong>{(compact || scope.kind === "subtasks") && <span>{change.taskTitle}</span>}</div>
-            <div className="task-ai-adjust-diff"><div className="task-ai-adjust-before"><small>{ui("修改前")}</small><p>{change.before || d('notSet')}</p></div><ArrowRight aria-hidden="true" size={14} /><div className="task-ai-adjust-after"><small>{ui("修改后")}</small><p>{change.after || d('notSet')}</p></div></div>
+            <div className="task-ai-adjust-diff"><div className="task-ai-adjust-before"><small>{ui("修改前")}</small><p>{activityChangeValue(locale, change.label, change.before) || d('notSet')}</p></div><ArrowRight aria-hidden="true" size={14} /><div className="task-ai-adjust-after"><small>{ui("修改后")}</small><p>{activityChangeValue(locale, change.label, change.after) || d('notSet')}</p></div></div>
           </li>)}</ul>
           {!compact && <p className="task-ai-adjust-summary">{proposal.summary}</p>}
           {stale && <p className="task-ai-adjust-error" role="alert">{ui("内容已变化，当前预览已过期。请重新预览，避免覆盖最新修改。")}</p>}

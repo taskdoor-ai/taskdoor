@@ -19,10 +19,15 @@ type BaseNode = {
 export type FolderNode = BaseNode & { kind: "folder" };
 
 export const taskIconToneValues = ["neutral", "blue", "cyan", "green", "amber", "red", "purple", "pink", "teal", "orange", "indigo", "slate", "ocean", "jade", "olive", "apricot", "lilac", "rose"] as const;
-export type TaskIconTone = typeof taskIconToneValues[number];
+export type TaskIconTone = typeof taskIconToneValues[number] | `#${string}`;
 export const taskIconNameValues = ["list-todo", "clipboard-check", "target", "flag", "briefcase", "file-check", "chart", "sparkles", "megaphone", "shopping-bag", "gift", "store", "pen-tool", "palette", "camera", "video", "mic", "file-text", "presentation", "book-open", "code", "bug", "database", "globe", "users", "message-square", "calendar-days", "handshake", "rocket", "lightbulb", "shield-check", "package"] as const;
 export type TaskIconName = typeof taskIconNameValues[number];
 export type WorkspaceTaskStatus = "待开始" | "进行中" | "待审核" | "已阻塞" | "已完成" | "已取消";
+
+/** Read legacy records without retaining the removed product state. */
+export function normalizeTaskStatus(status: WorkspaceTaskStatus): Exclude<WorkspaceTaskStatus, "待开始"> {
+  return status === "待开始" ? "进行中" : status;
+}
 
 export type TaskNode = BaseNode & {
   kind: "task";
@@ -49,6 +54,7 @@ export type TaskNode = BaseNode & {
   iconName?: TaskIconName;
   iconTone?: TaskIconTone;
   labels?: string[];
+  automaticTags?: { signature: string; generated: string[]; removed: string[] };
 };
 
 export type FileNode = BaseNode & {

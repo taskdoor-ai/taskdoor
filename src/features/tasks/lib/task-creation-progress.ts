@@ -129,8 +129,8 @@ export function getCreationFeedback(result: CreationPlanningResult): CreationFee
       basis: "成员资料；人选未接受，实际忙闲待确认。",
     },
     {
-      label: CREATION_PLANNING_STEP_LABELS[3], detail: "整理候选前置依赖与期限依据，标出需要你核对的安排。",
-      basis: "候选交付关系与日期；缺少期限依据的保留待确认。",
+      label: CREATION_PLANNING_STEP_LABELS[3], detail: "整理期限依据，标出需要你核对的安排。",
+      basis: "当前任务日期；缺少期限依据的保留待确认。",
     },
   ];
 }

@@ -4,7 +4,7 @@ title: "产品界面预览"
 group: "产品概览"
 version: "1.1"
 status: "review"
-last_change: "PRD-0074"
+last_change: "PRD-0103"
 summary: "以英文界面截图快速浏览产品全貌。"
 presentation: "gallery"
 ---
@@ -40,105 +40,30 @@ presentation: "gallery"
 
 ### 创建规划
 
-![创建页：输入任务需求。](../assets/task-creation/create-en.png)
 
-*FIG-PREVIEW-002 · 创建页：输入任务需求。*
 
-![深色创建页：顶部导航与正文使用统一底色。](../assets/task-creation/create-dark-en.jpg)
 
-*FIG-PREVIEW-052 · 深色创建页：顶部导航与正文使用统一底色。*
 
-![输入会议纪要需求](../assets/task-creation/single-input-en.jpg)
 
-*FIG-PREVIEW-027 · 单任务 · 1/2：输入会议纪要需求。*
 
-![单任务待确认方案与确认创建入口](../assets/task-creation/single-review-en.jpg)
 
-*FIG-PREVIEW-003 · 单任务 · 2/2：审阅目标、完成标准与人员，准备确认创建。*
 
-![需求不清楚示例：从一句活动需求开始。](../assets/task-creation/clarify-input-en.jpg)
 
-*FIG-PREVIEW-028 · 引导补问 · 1/4：输入尚不明确的活动需求。*
 
-![第 1 步：确认活动要达到的目标](../assets/task-creation/clarify-goal-en.jpg)
 
-*FIG-PREVIEW-029 · 引导补问 · 2/4：确认活动目标。*
 
-![第 2 步：选择需要交付的内容](../assets/task-creation/clarify-deliverables-en.jpg)
 
-*FIG-PREVIEW-030 · 引导补问 · 3/4：选择需要交付的内容。*
 
-![补问后的方案：目标和完成标准承接已确认回答](../assets/task-creation/clarify-review-en.jpg)
 
-*FIG-PREVIEW-031 · 引导补问 · 4/4：审阅由回答形成的待确认方案。*
 
-![复杂项目原始需求](../assets/task-creation/complex-input-en.jpg)
 
-*FIG-PREVIEW-032 · 复杂项目 · 1/4：输入完整项目需求。*
 
-![主任务目标、完成标准与预计投入](../assets/task-creation/complex-review-en.jpg)
 
-*FIG-PREVIEW-033 · 复杂项目 · 2/4：审阅主任务目标、完成标准与投入。*
 
-![复杂项目子任务上半页：商务、内容、发布与履约分工。](../assets/task-creation/complex-subtasks-top-en.jpg)
 
-*FIG-PREVIEW-034 · 复杂项目 · 3/4：查看商务、内容、发布与履约分工。*
 
-![子任务分工与整份方案的确认入口](../assets/task-creation/complex-subtasks-en.jpg)
 
-*FIG-PREVIEW-035 · 复杂项目 · 4/4：查看广告、分析与合规分工，准备统一创建。*
 
-![多层级示例的完整原始需求。](../assets/task-creation/nested-input-en.jpg)
-
-*FIG-PREVIEW-036 · 多层级任务 · 1/5：输入分层拆解需求。*
-
-![多层项目的主待确认方案](../assets/task-creation/nested-review-en.jpg)
-
-*FIG-PREVIEW-004 · 多层级任务 · 2/5：审阅主任务与人员安排。*
-
-![展开后的四层结构：主任务加三级子任务，共 10 个任务](../assets/task-creation/nested-tree-en.jpg)
-
-*FIG-PREVIEW-005 · 多层级任务 · 3/5：展开内容制作、脚本规划与具体交付。*
-
-![层级下半段与完整任务数量](../assets/task-creation/nested-tree-bottom-en.jpg)
-
-*FIG-PREVIEW-006 · 多层级任务 · 4/5：查看视频、发布与复盘分支，共 10 个任务。*
-
-![展开末级任务核对交付内容与人员](../assets/task-creation/nested-leaf-detail-en.jpg)
-
-*FIG-PREVIEW-007 · 多层级任务 · 5/5：展开末级任务，核对交付要求与责任。*
-
-![相似任务示例的原始需求。](../assets/task-creation/similar-input-en.jpg)
-
-*FIG-PREVIEW-037 · 相似任务 · 1/3：输入新品发布复盘需求。*
-
-![只读候选任务与查看、独立规划入口；已有任务正文保留原语言](../assets/task-creation/similar-decision-en.jpg)
-
-*FIG-PREVIEW-038 · 相似任务 · 2/3：核对已有任务，选择查看或独立规划。*
-
-![选择独立规划后形成的新待确认方案](../assets/task-creation/similar-review-en.jpg)
-
-*FIG-PREVIEW-039 · 相似任务 · 3/3：审阅独立规划的新任务。*
-
-![已有父任务示例的原始需求。](../assets/task-creation/parent-input-en.jpg)
-
-*FIG-PREVIEW-040 · 已有父任务 · 1/3：输入媒体邀请需求。*
-
-![父任务候选及已有子任务；已有任务名称和正文保留原语言](../assets/task-creation/parent-decision-en.jpg)
-
-*FIG-PREVIEW-041 · 已有父任务 · 2/3：核对父任务范围与现有子任务。*
-
-![确认归属后的子待确认方案与父任务路径](../assets/task-creation/parent-review-en.jpg)
-
-*FIG-PREVIEW-042 · 已有父任务 · 3/3：审阅新子任务，确认父任务归属。*
-
-![未匹配负责人示例的原始需求。](../assets/task-creation/unassigned-input-en.jpg)
-
-*FIG-PREVIEW-043 · 未匹配负责人 · 1/3：输入办公室无线网络部署需求。*
-
-![未分配负责人提示与 Invite members 入口](../assets/task-creation/unassigned-review-en.jpg)
-
-*FIG-PREVIEW-044 · 未匹配负责人 · 2/3：保留未分配状态，提供成员邀请入口。*
 
 ### 任务协作
 
@@ -146,35 +71,14 @@ presentation: "gallery"
 
 
 
-![常显搜索、范围、状态与高级筛选面板。](../assets/task-list/filters-en.png)
-
-*FIG-PREVIEW-015 · 常显搜索、范围、状态与高级筛选面板。*
 
 
-![当前情况与下一步](../assets/task-detail/overview-situation-en.jpg)
-
-*FIG-PREVIEW-009 · AI 分析 · 2/2：查看当前情况与下一步建议。*
-
-![子任务及下级数量](../assets/task-detail/overview-subtasks-en.jpg)
-
-*FIG-PREVIEW-010 · 子任务及下级数量*
 
 
-![依赖与标签](../assets/task-detail/overview-relations-en.jpg)
 
-*FIG-PREVIEW-011 · 依赖与标签*
 
-![discussion](../assets/task-detail/discussion-current-en.jpg)
 
-*FIG-PREVIEW-012 · 任务讨论：交流进展、回复成员并查看附件。*
 
-![files](../assets/task-detail/files-current-en.jpg)
-
-*FIG-PREVIEW-013 · 任务文件：从文件树选择资料并预览正文。*
-
-![activity](../assets/task-detail/activity-current-en.jpg)
-
-*FIG-PREVIEW-014 · 任务活动：按时间查看任务变更记录。*
 
 ### 连接 AI
 

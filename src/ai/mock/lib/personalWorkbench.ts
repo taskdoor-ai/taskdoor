@@ -15,8 +15,6 @@ export type PersonalWorkbenchEffort = {
 };
 type PersonalWorkbenchPriorityContext = {
   completionCriterion?: string;
-  pendingDependencyCount: number;
-  missingDependencyCount: number;
   childCount: number;
   completedChildCount: number;
   remainingChildCount: number;
@@ -50,7 +48,7 @@ export type PersonalWorkbenchAttention = {
   id: string;
   taskId: string;
   title: string;
-  kind: "blocked" | "dependency" | "evidence" | "unknown" | "status-conflict";
+  kind: "blocked" | "evidence" | "unknown" | "status-conflict";
   relatedStatus?: TaskNode["status"];
   text: string;
   source: "example" | "recorded";
@@ -100,7 +98,6 @@ export type PersonalWorkbenchInput = {
 const exampleDay = "2026-08-31";
 const exampleNodes = new Map(workspaceNodes.filter((node): node is TaskNode => node.kind === "task").map((node) => [node.id, structuredClone(node)]));
 const isActive = (task: Pick<TaskNode, "status">) => task.status !== "已完成" && task.status !== "已取消";
-const unique = (ids: string[] = []) => [...new Set(ids)];
 const validDay = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value)
   && Number.isFinite(Date.parse(`${value}T12:00:00Z`))
   && new Date(`${value}T12:00:00Z`).toISOString().slice(0, 10) === value;
@@ -170,7 +167,6 @@ function relation(task: TaskNode): TaskRelationSummary {
   return {
     id: task.id, title: task.name, owner: task.ownerId, goal: task.goal ?? "", status: task.status,
     dueAt: task.dueAt ?? "未设置截止时间", completionCriteria: task.completionCriteria,
-    dependsOnTaskIds: task.dependsOnTaskIds,
   };
 }
 
@@ -204,35 +200,14 @@ const evidenceFor = (taskId: string, reference?: TaskSituationReference): Person
   : undefined;
 
 type Issue = PersonalWorkbenchAttention & { action?: string; weight: number };
-function dependencyIssues(task: TaskNode, byId: Map<string, TaskNode>): Issue[] {
-  const ids = unique(task.dependsOnTaskIds);
-  const missing = ids.some((id) => !byId.has(id));
-  const pending = ids.map((id) => byId.get(id)).filter((dependency): dependency is TaskNode => Boolean(dependency && dependency.status !== "已完成"));
-  const base = { taskId: task.id, title: task.name, source: sourceFor(task) };
-  const issues: Issue[] = [];
-  if (missing) issues.push({
-    ...base, id: `${task.id}:missing-dependency`, kind: "unknown", weight: 0,
-    text: "部分前置任务的资料当前不可用，依赖是否满足仍待核对。",
-    action: "先核对前置资料与交付条件，再判断可以推进的部分。", evidence: taskEvidence(task),
-  });
-  if (pending.length) {
-    const dependency = pending[0];
-    issues.push({
-      ...base, id: `${task.id}:dependency`, kind: task.status === "已完成" ? "status-conflict" : "dependency", weight: 1,
-      text: task.status === "已完成"
-        ? `任务标记已完成，但前置「${dependency.name}」仍为${dependency.status}；需核对依赖与交付范围。`
-        : `前置「${dependency.name}」为${dependency.status}，相关产出尚需核对。`,
-      action: `先核对「${dependency.name}」的交付条件，再确认本任务可推进的范围。`,
-      relatedStatus: dependency.status,
-      evidence: { ...taskEvidence(dependency), label: "查看前置任务" },
-    });
-  }
-  if (task.status === "已阻塞" && !pending.length && !missing) issues.push({
-    ...base, id: `${task.id}:blocked`, kind: "blocked", weight: 2,
+function taskIssues(task: TaskNode): Issue[] {
+  if (task.status !== "已阻塞") return [];
+  return [{
+    taskId: task.id, title: task.name, source: sourceFor(task),
+    id: `${task.id}:blocked`, kind: "blocked", weight: 2,
     text: "当前标记已阻塞，具体阻塞原因与解除条件仍需核对。",
     action: "核对阻塞原因、解除条件与需要谁处理。", evidence: taskEvidence(task),
-  });
-  return issues;
+  }];
 }
 
 function collectChanges(input: PersonalWorkbenchInput, owned: TaskNode[], byId: Map<string, TaskNode>, clock: Clock): PersonalWorkbenchChange[] {
@@ -359,17 +334,15 @@ export function buildPersonalWorkbenchModel(input: PersonalWorkbenchInput): Pers
     if (cached) return cached;
     const children = childrenById.get(task.id) ?? [];
     const descendants = descendantsOf(task.id);
-    const dependencies = unique(task.dependsOnTaskIds).map((id) => byId.get(id)).filter((dependency): dependency is TaskNode => Boolean(dependency));
     const detail = detailFor(task, byId, input.detailsByTaskId?.[task.id]);
     let situation = getTaskSituationModel({
       taskId: task.id, task: detail, childTasks: children.map(relation),
-      dependencyTaskIds: task.dependsOnTaskIds ?? [], dependencyTasks: dependencies.map(relation),
       recordedActivities: input.recordedActivitiesByTaskId?.[task.id] ?? [],
     });
     // 当前详情示例只有一层；新增更深范围不能沿用其固定结论。
     if (situation.source === "example" && situation.freshness === "current" && descendants.length > children.length) situation = {
       ...situation, freshness: "stale", asOf: undefined, groups: [],
-      summary: "下级范围已增加层级，当前交付与依赖需按完整范围重新核对。",
+      summary: "下级范围已增加层级，当前交付需按完整范围重新核对。",
     };
     const due = dueFor(task, clock);
     const projection: PersonalWorkbenchTask = {
@@ -379,8 +352,6 @@ export function buildPersonalWorkbenchModel(input: PersonalWorkbenchInput): Pers
       effort: effortFor(tasks, task),
       priorityContext: {
         completionCriterion: detail.completionCriteria?.find(criterion => criterion.trim())?.trim(),
-        pendingDependencyCount: dependencies.filter(dependency => dependency.status !== "已完成").length,
-        missingDependencyCount: unique(task.dependsOnTaskIds).length - dependencies.length,
         childCount: children.length,
         completedChildCount: children.filter(child => child.status === "已完成").length,
         remainingChildCount: children.filter(isActive).length,
@@ -395,9 +366,9 @@ export function buildPersonalWorkbenchModel(input: PersonalWorkbenchInput): Pers
     const { children, descendants, due, projection, situation } = contextFor(task);
     ownedTasks.push(projection);
     if (task.status === "已取消") return;
-    const issues = dependencyIssues(task, byId);
+    const issues = taskIssues(task);
     if (children.length) {
-      for (const child of descendants) if (child.status !== "已取消") issues.push(...dependencyIssues(child, byId));
+      for (const child of descendants) if (child.status !== "已取消") issues.push(...taskIssues(child));
       for (const scope of [task, ...descendants]) if (scope.status === "已完成" && descendantsOf(scope.id).some(isActive)) issues.unshift({
         id: `${scope.id}:children-status`, taskId: scope.id, title: scope.name, kind: "status-conflict", weight: 0,
         text: "父任务标记已完成，但仍有下级任务未收口，需要核对整体完成边界。", source: sourceFor(scope),
@@ -421,7 +392,7 @@ export function buildPersonalWorkbenchModel(input: PersonalWorkbenchInput): Pers
     issues.sort((left, right) => left.weight - right.weight);
     for (const issue of issues) allIssues.set(issue.id, issue);
     if (!isActive(task)) return;
-    // 直属责任优先于协调范围：前置待核对时，不能用具体示例建议越过已知阻塞。
+    // 直属责任优先于协调范围：已标记阻塞时，不能用具体示例建议越过已知问题。
     const eligibleIssues = issues.filter((issue) => nearestOwnedId(issue.taskId) === task.id && !usedInAction.has(issue.id));
     const direct = eligibleIssues.find((issue) => issue.taskId === task.id && issue.weight < 5);
     const issue = direct ?? eligibleIssues[0];
@@ -475,7 +446,7 @@ export function buildPersonalWorkbenchModel(input: PersonalWorkbenchInput): Pers
         ? "你负责的任务均标记已结束，但状态与交付边界仍有待核对的问题。"
         : "你负责的任务目前均标记已结束，可回看结果与近期变化。"
         : "当前可见任务中，尚无你正式负责的任务。",
-    notice: `${clock.day ? "按逾期、今日截止、依赖与待核对情况组织行动，顺序是建议。" : "分析日期不可用，仅显示当前任务与依赖事实。"}原始记录日期保持固定，分析时点以当前数据快照为准；未接入实时 AI 或个人日历，不推算负荷。`,
+    notice: `${clock.day ? "按逾期、今日截止、阻塞与待核对情况组织行动，顺序是建议。" : "分析日期不可用，仅显示当前任务记录。"}原始记录日期保持固定，分析时点以当前数据快照为准；未接入实时 AI 或个人日历，不推算负荷。`,
     counts, actions: orderedActions, attention, taskSnapshots: tasks.map((task) => contextFor(task).projection), ownedTasks, awaitingAcceptance,
     recentChanges: collectChanges(input, owned, byId, clock),
   };
@@ -501,7 +472,7 @@ export type PersonalWorkbenchPriority = {
 };
 
 /**
- * Agent 在内部综合当前可见的时间、阻塞、依赖、交付核对与信息新鲜度信号。
+ * Agent 在内部综合当前可见的时间、阻塞、交付核对与信息新鲜度信号。
  * 分值只用于排序；交给界面的只有详情同源的当前状态总结、优先原因和安全的预计投入结论。
  */
 function agentPriorityScore(item: PersonalWorkbenchItem): number {
@@ -509,7 +480,7 @@ function agentPriorityScore(item: PersonalWorkbenchItem): number {
     overdue: 400, today: 300, upcoming: 20, unknown: 35, none: 0,
   };
   const focusScore: Record<NonNullable<PersonalWorkbenchItem["focus"]>, number> = {
-    blocked: 110, "status-conflict": 100, dependency: 80, evidence: 60, unknown: 50,
+    blocked: 110, "status-conflict": 100, evidence: 60, unknown: 50,
   };
   let score = dueScore[item.dueState];
   if (item.focus) score += focusScore[item.focus];
@@ -526,15 +497,10 @@ export function priorityReasonFor(item: PersonalWorkbenchItem): string {
   const timePressure = item.dueState === "overdue" ? `已超过承诺时间${date}`
     : item.dueState === "today" ? `今天到期${date}`
       : item.dueState === "upcoming" && item.dueLabel ? `计划于 ${item.dueLabel}截止` : "";
-  const dependencies = [
-    context?.pendingDependencyCount ? `${context.pendingDependencyCount} 项前置交付尚未完成` : "",
-    context?.missingDependencyCount ? `${context.missingDependencyCount} 项前置资料不可用，交付条件待核对` : "",
-  ].filter(Boolean).join("；");
-  const risk = item.focus === "status-conflict" ? "任务状态与依赖或下级交付记录不一致，需核对完成边界"
-    : dependencies || (item.focus === "blocked" ? "当前标记已阻塞，需明确解除条件与所需支持"
-      : item.focus === "dependency" ? "下级任务的前置交付尚未完成，需先核对依赖条件"
-        : item.focus === "evidence" || item.status === "待审核" ? "交付结果待核对，需确认是否满足完成标准"
-          : item.focus === "unknown" ? "当前记录有信息缺口，需先补齐判断依据" : "");
+  const risk = item.focus === "status-conflict" ? "任务状态与下级交付记录不一致，需核对完成边界"
+    : item.focus === "blocked" ? "当前标记已阻塞，需明确解除条件与所需支持"
+      : item.focus === "evidence" || item.status === "待审核" ? "交付结果待核对，需确认是否满足完成标准"
+        : item.focus === "unknown" ? "当前记录有信息缺口，需先补齐判断依据" : "";
   const sentences = [timePressure, risk].filter(Boolean).join("，");
   const parts = sentences ? [`${sentences}。`] : [];
   if (context?.childCount) {
@@ -573,7 +539,6 @@ export function buildPersonalWorkbenchPriorities(items: PersonalWorkbenchItem[],
 
 function workbenchActionLabel(item: Pick<PersonalWorkbenchItem, "focus" | "status" | "role" | "isFollowUp">): string {
   if (item.focus === "blocked") return item.isFollowUp ? "核对阻塞记录" : "协调解除阻塞";
-  if (item.focus === "dependency") return "核对前置交付";
   if (item.focus === "evidence") return "核对完成依据";
   if (item.focus === "status-conflict") return "核对完成边界";
   if (item.focus === "unknown") return "核对任务信息";
@@ -583,13 +548,12 @@ function workbenchActionLabel(item: Pick<PersonalWorkbenchItem, "focus" | "statu
 
 const followUpActions: Record<PersonalWorkbenchAttention["kind"], string> = {
   blocked: "核对当前阻塞记录，协调所需交付或决定。",
-  dependency: "核对前置产出与交付条件，确认需要跟进的范围。",
   evidence: "对照完成标准核对现有交付与依据，确认仍需补充的信息。",
   "status-conflict": "核对任务状态与完成边界，确认现有记录是否一致。",
   unknown: "核对当前记录中的信息缺口，确认判断下一步所需的依据。",
 };
 const attentionOrder: Record<PersonalWorkbenchAttention["kind"], number> = {
-  "status-conflict": 0, blocked: 1, dependency: 2, evidence: 3, unknown: 4,
+  "status-conflict": 0, blocked: 1, evidence: 3, unknown: 4,
 };
 
 /**

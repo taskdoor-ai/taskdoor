@@ -38,7 +38,7 @@ test("手动入口保存空白任务，负责人留空并默认把创建者加�
   assert.equal(created.teamId, "team");
   assert.equal(created.createdBy, "me");
   assert.equal(created.createdFrom, "task-editor");
-  assert.equal(created.status, "待开始");
+  assert.equal(created.status, "进行中");
   assert.equal(created.goal, "");
   assert.deepEqual(created.completionCriteria, []);
   assert.equal(created.parentTaskId, undefined);
@@ -61,7 +61,7 @@ test("手动入口保存失败时不留下新任务或改变原记录", () => {
   assert.equal(data.size, 1);
 });
 
-test("复杂草案创建主任务和全部子任务，并把合法依赖索引转换为真实 ID", () => {
+test("复杂草案创建主任务和全部子任务，旧依赖索引不再写入", () => {
   const nodes: WorkspaceNode[] = [{ id: workspaceRootId, kind: "folder", name: "任务", parentId: null, updatedAt: "刚刚" }];
   const draft: TaskPlanDraft = {
     mainTask: task("整合发布", { iconName: "target", iconTone: "purple" }),
@@ -82,10 +82,10 @@ test("复杂草案创建主任务和全部子任务，并把合法依赖索引�
     assert.equal(child.parentTaskId, "new-0");
     assert.equal(child.parentId, workspaceRootId);
   }
-  assert.deepEqual(result.createdNodes[3].dependsOnTaskIds, ["new-1", "new-2"]);
+  assert.ok(result.createdNodes.every(task => task.dependsOnTaskIds === undefined));
 });
 
-test("固定父任务创建保留方案中的下级任务和依赖", () => {
+test("固定父任务创建保留方案中的下级任务，忽略旧依赖", () => {
   const nodes: WorkspaceNode[] = [
     { id: workspaceRootId, kind: "folder", name: "任务", parentId: null, updatedAt: "刚刚" },
     { id: "folder", kind: "folder", name: "项目", parentId: workspaceRootId, updatedAt: "今天" },
@@ -107,7 +107,7 @@ test("固定父任务创建保留方案中的下级任务和依赖", () => {
   assert.equal(result.createdNodes[0].plannedStartOn, "2026-09-02");
   assert.equal(result.createdNodes[0].plannedEndOn, "2026-09-18");
   assert.deepEqual(result.createdNodes.slice(1).map(({ parentTaskId }) => parentTaskId), ["child-0", "child-0"]);
-  assert.deepEqual(result.createdNodes[2].dependsOnTaskIds, ["child-1"]);
+  assert.ok(result.createdNodes.every(task => task.dependsOnTaskIds === undefined));
 });
 
 test("父任务不存在时返回可识别错误且不生成错误节点", () => {

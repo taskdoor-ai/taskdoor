@@ -1,5 +1,6 @@
 import { useCreationI18n } from "@/shared/i18n/creation-messages";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { activityChangeValue } from "@/features/tasks/i18n/activity-display";
 import { ChevronDown } from "lucide-react";
 import type { CreationProcess } from "@/features/tasks/lib/task-creation-progress";
 import { TaskCreationProcessView } from "@/features/tasks/components/TaskCreationProcess";
@@ -28,7 +29,7 @@ export function TaskCreationHistory({ processes, hideLatestPendingChanges = fals
   onStopLatest?: () => void;
 }) {
   const ui = useGlobalUi();
-  const { localize } = useCreationI18n();
+  const { locale, localize } = useCreationI18n();
   const latest = processes.at(-1);
   const latestStep = latest?.steps[latest.activeStep];
   const liveStatus = latest?.status === "running"
@@ -53,7 +54,7 @@ export function TaskCreationHistory({ processes, hideLatestPendingChanges = fals
               <summary>{ui("查看本轮差异")}<span>{process.changes.length}{ui("处")}</span><ChevronDown aria-hidden="true" size={13} /></summary>
               <ul>{process.changes.map((change, changeIndex) => <li key={`${process.id}:${change.taskId}:${change.label}:${changeIndex}`}>
                 <strong>{change.taskTitle} · {ui(localize(change.label))}</strong>
-                <div><span><small>{ui("修改前")}</small>{change.before || ui("未设置")}</span><span><small>{ui("修改后")}</small>{change.after || ui("未设置")}</span></div>
+                <div><span><small>{ui("修改前")}</small>{activityChangeValue(locale, change.label, change.before) || ui("未设置")}</span><span><small>{ui("修改后")}</small>{activityChangeValue(locale, change.label, change.after) || ui("未设置")}</span></div>
               </li>)}</ul>
             </details> : null}
           </div>}

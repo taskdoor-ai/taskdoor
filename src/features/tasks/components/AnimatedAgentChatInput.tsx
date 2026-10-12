@@ -8,6 +8,8 @@ type AnimatedAgentChatInputProps = {
   autoFocus?: boolean;
   allowAttachments?: boolean;
   clearOnSend?: boolean;
+  hidePlaceholderOnFocus?: boolean;
+  hintAfterInput?: boolean;
   disabled?: boolean;
   hint?: string;
   inputRef?: RefObject<HTMLTextAreaElement | null>;
@@ -29,6 +31,8 @@ export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
   autoFocus = true,
   allowAttachments = true,
   clearOnSend = true,
+  hidePlaceholderOnFocus = false,
+  hintAfterInput = false,
   disabled = false,
   hint = "Enter 发送 · Shift + Enter 换行",
   inputRef,
@@ -42,6 +46,7 @@ export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
   value: controlledValue,
 }: AnimatedAgentChatInputProps) {
   const ui = useGlobalUi();
+  const [focused, setFocused] = useState(false);
   const [attachments, setAttachments] = useState<LocalAttachment[]>([]);
   const [internalValue, setInternalValue] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
@@ -96,13 +101,13 @@ export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
   return <div className="animated-agent-chat" data-state={isAnalyzing ? "analyzing" : disabled ? "disabled" : "ready"}>
     <div className="animated-agent-chat-shell" onClick={() => textareaRef.current?.focus()}>
       {allowAttachments && attachments.length > 0 && <div className="animated-agent-attachments">{attachments.map((attachment) => <span key={attachment.id}><Paperclip aria-hidden="true" /><em>{attachment.name}</em><button aria-label={ui("移除 {0}", {0: attachment.name})} onClick={(event) => { event.stopPropagation(); setAttachments((current) => current.filter((item) => item.id !== attachment.id)); }} type="button"><X /></button></span>)}</div>}
-      <textarea aria-label={ui(ariaLabel)} disabled={isAnalyzing || disabled} onChange={(event) => setValue(event.target.value)} onKeyDown={handleKeyDown} placeholder={ui(placeholder)} ref={textareaRef} rows={1} value={value} />
+      <textarea aria-label={ui(ariaLabel)} disabled={isAnalyzing || disabled} onChange={(event) => setValue(event.target.value)} onKeyDown={handleKeyDown} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} placeholder={hidePlaceholderOnFocus && focused ? "" : ui(placeholder)} ref={textareaRef} rows={1} value={value} />
       <footer>
         {allowAttachments && <div className="animated-agent-tools">
           <input hidden multiple onChange={handleFiles} ref={fileRef} type="file" />
           <button aria-label={ui("添加参考资料")} disabled={isAnalyzing || disabled} onClick={(event) => { event.stopPropagation(); fileRef.current?.click(); }} title={ui("添加参考资料")} type="button"><Paperclip /></button>
         </div>}
-        <span>{ui(hint)}</span>
+        <span>{(!hintAfterInput || value.trim()) && ui(hint)}</span>
         <button aria-label={isAnalyzing ? ui("停止处理") : sendLabel} className="animated-agent-send" disabled={disabled || (!canSend && !isAnalyzing)} onClick={(event) => { event.stopPropagation(); if (isAnalyzing) onStop?.(); else submit(); }} ref={actionRef} type="button">{isAnalyzing ? <Square fill="currentColor" /> : <ArrowUp />}</button>
       </footer>
     </div>

@@ -17,11 +17,10 @@ test("任务看板按统一状态顺序分组并跳过空列", () => {
     status: group.status,
     tone: group.tone,
   })), [
-    { ids: ["todo"], status: "待开始", tone: "not-started" },
-    { ids: ["doing", "doing-2"], status: "进行中", tone: "in-progress" },
+    { ids: ["todo", "doing", "doing-2"], status: "进行中", tone: "in-progress" },
     { ids: ["done"], status: "已完成", tone: "completed" },
   ]);
-  assert.deepEqual(taskBoardStatusOrder, ["待开始", "进行中", "待审核", "已阻塞", "已完成", "已取消"]);
+  assert.deepEqual(taskBoardStatusOrder, ["进行中", "待审核", "已阻塞", "已完成", "已取消"]);
   assert.equal(taskBoardStatusTone["已阻塞"], "blocked");
 });
 

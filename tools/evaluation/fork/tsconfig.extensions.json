@@ -27,6 +27,8 @@
       "react": [
         "../upstream/src/app/node_modules/@types/react"
       ],
+      "react-dom": ["../upstream/src/app/node_modules/@types/react-dom"],
+      "react-dom/*": ["../upstream/src/app/node_modules/@types/react-dom/*"],
       "react/*": [
         "../upstream/src/app/node_modules/@types/react/*"
       ],
@@ -38,6 +40,10 @@
       ],
       "*": [
         "../upstream/src/app/node_modules/*"
+      ],
+      "@/*": ["../../../src/*"],
+      "@/test-lab/*": [
+        "../../../src/test-lab/*"
       ]
     }
   },

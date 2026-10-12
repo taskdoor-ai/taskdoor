@@ -6,7 +6,10 @@ import { taskBoardStatusOrder, taskBoardStatusTone } from "@/features/tasks/lib/
 import { filterOverviewTasks, getCanvasTaskPresentation, getCyclicTaskIds, getDependencyLevelByTaskId, getIncompleteDependencyIds, getMostRecentlyUpdatedTask, getOverviewInsightCandidateIds, getVisibleDependencyEdges, isCanvasRelationshipActive } from "@/features/tasks/lib/task-overview";
 import type { TaskOverviewRole } from "@/features/tasks/lib/task-workspace-projection";
 import { useResponsiveControlSize } from "@/shared/lib/useResponsiveControlSize";
+import { formatLegacyDateLabel } from "@/shared/lib/date-time";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { PersonAvatar } from "@/shared/ui/PersonAvatar";
+import { PersonFilterSelect } from "@/features/members/components/PersonFilterSelect";
 import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
 import { taskStatusOptions } from "@/shared/ui/TaskStatusBadge";
 import { Button } from "@/shared/ui/button";
@@ -117,6 +120,7 @@ function OverviewTaskCard({ disabled = false, id, onOpen, selected = false, task
   tasks: TaskRelationSummary[];
   variant: "board" | "canvas";
 }) {
+  const { locale } = useI18n();
   const upstream = (task.dependsOnTaskIds ?? []).map((id) => tasks.find((item) => item.id === id)?.title).filter(Boolean);
   const downstream = tasks.filter((item) => item.dependsOnTaskIds?.includes(task.id)).map((item) => item.title);
   return <button
@@ -132,7 +136,7 @@ function OverviewTaskCard({ disabled = false, id, onOpen, selected = false, task
     </span>
     <span className="task-overview-task-card-meta">
       <span className={`task-overview-status-dot tone-${taskBoardStatusTone[task.status]}`} aria-hidden="true" /><small>{task.status}</small>
-      <small>{task.dueAt}</small>
+      <small>{formatLegacyDateLabel(task.plannedEndOn ?? task.dueAt, locale)}</small>
       <span className="task-overview-card-owner" title={`负责人：${task.owner}`}><PersonAvatar name={task.owner} personId={task.owner} profilePreviewFocusable={false} size="xs" /><span className="sr-only">负责人：{task.owner}</span></span>
     </span>
     <DependencyNote task={task} tasks={tasks} />
@@ -154,6 +158,7 @@ export function TaskOverviewWorkspace({
   role,
   taskCountLabel = "子任务",
 }: TaskOverviewWorkspaceProps) {
+  const { locale } = useI18n();
   const [view, setView] = useState<OverviewView>(role === "subtask" ? "canvas" : "board");
   const [ownerFilter, setOwnerFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -311,8 +316,8 @@ export function TaskOverviewWorkspace({
       <div className="task-overview-collaboration-grid task-standalone-content-grid">
           <section aria-labelledby="task-standalone-activity-heading" className="task-overview-analysis task-standalone-activity-dashboard">
             <header className="task-overview-analysis-header"><div><h2 id="task-standalone-activity-heading">执行动态</h2><p>查看当前任务最近发生的关键变化。</p></div><Button onClick={onOpenActivity} size={actionSize} variant="ghost" type="button">查看全部活动<ArrowRight data-icon="inline-end" /></Button></header>
-            <div className="task-standalone-activity-totals"><span><strong><AnimatedNumber value={activityCount} /></strong><small>条任务动态</small></span><span><strong><AnimatedNumber value={fileCount} /></strong><small>个相关文件</small></span><span><strong>{standaloneTask.updatedAt ?? "暂无"}</strong><small>最近更新</small></span></div>
-            {visibleActivities.length ? <ol>{visibleActivities.map((activity) => <li key={`${activity.type}:${activity.time}:${activity.message}`}><i aria-hidden="true" /><span><strong>{activity.message}</strong><small>{activity.author} · {activity.time}</small></span></li>)}</ol> : <div className="task-standalone-activity-empty">还没有可展示的任务动态。</div>}
+            <div className="task-standalone-activity-totals"><span><strong><AnimatedNumber value={activityCount} /></strong><small>条任务动态</small></span><span><strong><AnimatedNumber value={fileCount} /></strong><small>个相关文件</small></span><span><strong>{standaloneTask.updatedAt ? formatLegacyDateLabel(standaloneTask.updatedAt, locale) : "暂无"}</strong><small>最近更新</small></span></div>
+            {visibleActivities.length ? <ol>{visibleActivities.map((activity) => <li key={`${activity.type}:${activity.time}:${activity.message}`}><i aria-hidden="true" /><span><strong>{activity.message}</strong><small>{activity.author} · {formatLegacyDateLabel(activity.time, locale)}</small></span></li>)}</ol> : <div className="task-standalone-activity-empty">还没有可展示的任务动态。</div>}
           </section>
 
         <TaskOverviewInsightsPanel actionSize={actionSize} items={[{ actions: [{ label: "查看依据", onClick: onOpenInsightEvidence, primary: true }, { label: "查看活动", onClick: onOpenActivity }], message: insight?.message ?? "当前没有需要特别关注的任务风险。", tone: insight ? insightTone : "unknown", type: insight?.type ?? "任务观察" }]} />
@@ -339,8 +344,8 @@ export function TaskOverviewWorkspace({
             {statusCounts.map((item) => <li key={item.status}><i className={`tone-${taskBoardStatusTone[item.status]}`} /><span>{item.status}</span><strong><AnimatedNumber value={item.value} /></strong></li>)}
           </ul>
         </article>
-        <article><small>最早到期任务</small><strong>{earliestTask?.title ?? "暂无到期任务"}</strong><span>{earliestTask ? `${earliestTask.dueAt} · 负责人 ${earliestTask.owner}` : "到期时间均为空"}</span></article>
-        <article><small>最近更新</small><strong>{recentTask?.title ?? `暂无${taskCountLabel}`}</strong><span>{recentTask ? `${recentTask.updatedAt ?? "暂无更新时间"} · ${recentTask.status}` : "—"}</span></article>
+        <article><small>最早到期任务</small><strong>{earliestTask?.title ?? "暂无到期任务"}</strong><span>{earliestTask ? `${formatLegacyDateLabel(earliestTask.plannedEndOn ?? earliestTask.dueAt ?? "", locale)} · 负责人 ${earliestTask.owner}` : "到期时间均为空"}</span></article>
+        <article><small>最近更新</small><strong>{recentTask?.title ?? `暂无${taskCountLabel}`}</strong><span>{recentTask ? `${recentTask.updatedAt ? formatLegacyDateLabel(recentTask.updatedAt, locale) : "暂无更新时间"} · ${recentTask.status}` : "—"}</span></article>
       </div>
     </section>}
 
@@ -356,9 +361,7 @@ export function TaskOverviewWorkspace({
         <div className="task-overview-analysis-toolbar">
           <span>{filteredTasks.length} / {overviewTasks.length} 个{taskCountLabel}</span>
           <div>
-            <ListFilterSelect ariaLabel="按负责人筛选任务" label={ownerFilter === "all" ? "负责人" : ownerFilter} onChange={setOwnerFilter} size={controlSize} value={ownerFilter}>
-              <SelectItem value="all">不限负责人</SelectItem>{owners.map((owner) => <SelectItem key={owner} value={owner}>{owner}</SelectItem>)}
-            </ListFilterSelect>
+            <PersonFilterSelect ariaLabel="按负责人筛选任务" members={owners.map(owner => ({ id: owner, name: owner, email: "", role: "" }))} onChange={setOwnerFilter} scopeOption={{ id: "all", label: "全部人员" }} size={controlSize} value={ownerFilter} />
             <ListFilterSelect ariaLabel="按状态筛选任务" label={statusFilter === "all" ? "状态" : statusFilter} onChange={setStatusFilter} size={controlSize} value={statusFilter}>
               <SelectItem value="all">不限状态</SelectItem>{taskStatusOptions.map((status) => <SelectItem key={status} value={status}>{status}</SelectItem>)}
             </ListFilterSelect>

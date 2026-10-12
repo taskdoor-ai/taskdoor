@@ -1,5 +1,5 @@
 import { taskMatchesListFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters.ts";
-import type { TagDefinition, TaskNode, WorkspaceNode } from "@/shared/model/task-model.ts";
+import { normalizeTaskStatus, type TagDefinition, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model.ts";
 
 import { compareTaskUpdates } from "@/features/tasks/lib/task-list-presentation.ts";
 import { taskBoardStatusOrder } from "@/features/tasks/lib/task-board.ts";
@@ -11,6 +11,7 @@ export type TaskListProjection = {
   allTagsCount: number;
   untaggedCount?: number;
   statuses: TaskNode["status"][];
+  statusCounts: { all: number; byStatus: Partial<Record<TaskNode["status"], number>> };
 };
 
 export type TaskScopeCounts = { all: number; owned: number; participating: number };
@@ -94,6 +95,14 @@ export function buildTaskListProjection(
     .filter((task) => taskMatchesListFilters(task, queryFor(task), filters, currentUserId))
     .sort((a, b) => compareTaskUpdates(a, b, filters.sort === "created"));
   const presentStatuses = new Set(allTasks.map((task) => task.status));
+  // Status counts describe the available choices, before applying this dimension.
+  const statusFilters: TaskListFilters = { ...filters, status: "all", statuses: [], completion: "all" };
+  const statusTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), statusFilters, currentUserId));
+  const byStatus: TaskListProjection["statusCounts"]["byStatus"] = {};
+  for (const task of statusTasks) {
+    const status = normalizeTaskStatus(task.status);
+    byStatus[status] = (byStatus[status] ?? 0) + 1;
+  }
 
   return {
     allTasks,
@@ -102,6 +111,7 @@ export function buildTaskListProjection(
     allTagsCount: scopedTasks.length,
     untaggedCount: scopedTasks.filter((task) => !task.labels?.some((label) => label.trim().length > 0)).length,
     statuses: taskBoardStatusOrder.filter((status) => presentStatuses.has(status)),
+    statusCounts: { all: statusTasks.length, byStatus },
   };
 }
 

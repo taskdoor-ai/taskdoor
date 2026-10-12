@@ -15,13 +15,13 @@
 .creation-tree-children > .creation-tree-node { position: relative; }
 .creation-tree-children > .creation-tree-node::before { content: ""; position: absolute; width: 12px; top: 34px; left: -12px; border-top: 1px solid var(--ad-border); }
 .creation-task-tree .creation-task-row { min-width: 0; background: var(--ad-surface); }
-.creation-task-tree .creation-task-summary { grid-template-columns: var(--ad-space-10) minmax(0, 1fr) var(--creation-owner-width) 224px; padding-block: var(--ad-space-3); }
+.creation-task-tree .creation-task-summary { grid-template-columns: minmax(0, 1fr) var(--creation-owner-width) 224px; padding-block: var(--ad-space-3); }
 .creation-task-tree .creation-subtask-card .task-detail-title-row { padding-right: 300px; }
 .creation-task-tree .creation-subtask-card.is-expanded .creation-task-summary { padding: 0; }
 @media (max-width: 720px) {
-  .creation-task-tree .creation-task-summary { grid-template-columns: 32px minmax(0, 1fr) auto; }
-  .creation-task-tree .creation-task-summary > .creation-subtask-header-actions { grid-column: 3; grid-row: 2; }
-  .creation-task-tree .creation-task-summary .creation-row-owner { grid-column: 1 / 3; }
+  .creation-task-tree .creation-task-summary { grid-template-columns: minmax(0, 1fr) auto; }
+  .creation-task-tree .creation-task-summary > .creation-subtask-header-actions { grid-column: 2; grid-row: 2; }
+  .creation-task-tree .creation-task-summary .creation-row-owner { grid-column: 1; }
   .creation-task-tree .creation-subtask-card .task-detail-title-row { padding-right: 0; }
   .creation-task-tree .creation-subtask-card.is-expanded .creation-task-summary { position: static; justify-content: flex-end; padding: var(--ad-space-3) var(--creation-row-padding) 0; }
 }
@@ -74,4 +74,136 @@
 
 @container task-creation-pane (max-width: 640px) {
   .creation-subtask-dependency-field, .creation-member-match-basis, .task-execution-tips-field { grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-1); }
+}
+
+.creation-editable-plan .task-detail-title-row { display: block; }
+.creation-editable-plan .task-detail-description { margin-left: 0; padding-left: 0; }
+.creation-editable-plan .task-detail-goal-field, .creation-editable-plan .task-detail-completion { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+.creation-editable-plan .task-detail-properties { display: flex; flex-direction: column; align-items: stretch; gap: 18px; }
+.creation-editable-plan .task-detail-property { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.creation-editable-plan .task-detail-property-separator { display: none; }
+.creation-editable-plan .task-detail-heading-main { display: block; padding-inline: var(--ad-space-5); }
+.creation-subtask-card .creation-task-summary { grid-template-columns: minmax(0, 1fr) auto auto; }
+
+/* Stacked review fields need distinct headings above their editable content. */
+.creation-editable-plan .task-detail-field-label,
+.creation-editable-plan .task-detail-property > small {
+  color: var(--ad-ink);
+  font-weight: 600;
+}
+.creation-editable-plan .task-detail-goal-input,
+.creation-editable-plan .task-criteria-field-input {
+  color: var(--ad-ink-secondary);
+  font-weight: 400;
+}
+
+.creation-editable-plan .member-selector-person.is-single > span { transition: transform var(--ad-duration) var(--ad-ease); }
+.creation-editable-plan .member-selector-person.is-single:hover > span,
+.creation-editable-plan .member-selector-person.is-single:focus-within > span { transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) {
+  .creation-editable-plan .member-selector-person.is-single > span { transition: none; }
+}
+
+.creation-editable-plan .task-detail-title-row h1,
+.creation-editable-plan .task-detail-title-input {
+  color: var(--ad-ink-secondary);
+  font-size: var(--ad-text-body-sm);
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: normal;
+}
+
+.creation-editable-plan .task-detail-title-input[data-slot="textarea"] {
+  padding-block: calc((var(--ad-control-height-lg) - 1.7em) / 2 - 1px);
+}
+
+.creation-editable-plan .task-criteria-field-mark {
+  font-family: var(--ad-font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ad-ink-secondary);
+}
+.creation-editable-plan .task-due-date-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ad-space-2);
+}
+.creation-editable-plan .task-due-date-label {
+  color: var(--ad-ink);
+  font-weight: 600;
+}
+
+.creation-editable-plan .task-detail-properties.creation-heading-properties { align-items: flex-start; gap: 16px; }
+.creation-editable-plan .creation-heading-properties > .task-detail-property,
+.creation-editable-plan .creation-heading-properties > .task-due-date-picker { width: auto; flex: none; align-self: flex-start; align-items: flex-start; margin: 0; padding-block: 0; }
+.creation-editable-plan .creation-heading-properties > .task-due-date-picker > .task-due-date-label { color: var(--ad-ink); font-weight: 600; }
+.creation-editable-plan .member-selector-person.is-single > span { width: 28px; height: 28px; }
+.creation-editable-plan .member-selector-stacked-row > .person-picker-trigger { width: 28px; min-width: 28px; height: 28px; min-height: 28px; padding: 0; }
+
+.creation-editable-plan .task-detail-properties.creation-heading-properties {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: start;
+  column-gap: 32px;
+  row-gap: 20px;
+}
+.creation-editable-plan .creation-heading-properties > .task-due-date-picker {
+  grid-column: 1 / -1;
+}
+@media (max-width: 480px) {
+  .creation-editable-plan .task-detail-properties.creation-heading-properties { column-gap: 20px; }
+}
+
+.creation-editable-plan .member-selector .person-avatar,
+.creation-editable-plan .member-selector .person-avatar-group { --person-avatar-size: 32px !important; }
+.creation-editable-plan .member-selector-person.is-single > span { width: 32px; height: 32px; }
+.creation-editable-plan .member-selector-stacked-row > .person-picker-trigger { width: 32px; min-width: 32px; height: 32px; min-height: 32px; }
+
+.creation-editable-plan .task-criteria-field-mark { font-size: 14px; font-weight: 500; }
+.creation-editable-plan .task-detail-properties.creation-heading-properties {
+  display: flex; flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 24px 40px;
+}
+.creation-editable-plan .task-detail-properties.creation-heading-properties > .task-detail-property-separator { display: none; }
+.creation-editable-plan .creation-heading-properties > .task-due-date-picker { grid-column: auto; }
+
+.creation-editable-plan .task-detail-properties.creation-heading-properties {
+  display: grid;
+  grid-template-columns: minmax(100px, .55fr) minmax(200px, 1.85fr) minmax(160px, 1fr);
+  column-gap: 32px;
+  align-items: start;
+  padding-block: 16px;
+}
+.creation-editable-plan .creation-heading-properties > .task-detail-property,
+.creation-editable-plan .creation-heading-properties > .task-due-date-picker { gap: 10px; }
+.creation-editable-plan .creation-heading-properties > .task-detail-property > small,
+.creation-editable-plan .creation-heading-properties > .task-due-date-picker > small { line-height: 20px; margin: 0; padding: 0; }
+.creation-editable-plan .creation-heading-properties .member-selector,
+.creation-editable-plan .creation-heading-properties .member-selector-stacked-row {
+  min-height: 40px; display: flex; align-items: center;
+}
+.creation-editable-plan .creation-heading-properties .task-due-date-field { min-height: 40px; display: flex; align-items: center; }
+@media (max-width: 600px) {
+  .creation-editable-plan .task-detail-properties.creation-heading-properties { grid-template-columns: max-content minmax(0, 1fr); gap: 20px 28px; }
+  .creation-editable-plan .creation-heading-properties > .task-due-date-picker { grid-column: 1 / -1; }
+}
+
+.creation-editable-plan .task-detail-properties.creation-subtask-metadata {
+  display: grid;
+  grid-template-columns: minmax(100px, .55fr) minmax(200px, 1.85fr) minmax(160px, 1fr);
+  gap: 24px 32px;
+  align-items: start;
+  padding-block: 16px;
+}
+.creation-editable-plan .creation-subtask-metadata > .task-detail-property-separator { display: none; }
+.creation-editable-plan .creation-subtask-metadata > .task-detail-property,
+.creation-editable-plan .creation-subtask-metadata > .task-due-date-picker { width: auto; margin: 0; align-self: start; align-items: flex-start; gap: 10px; }
+.creation-editable-plan .creation-subtask-metadata > .task-due-date-picker { display: flex; flex-direction: column; }
+.creation-editable-plan .creation-subtask-metadata .task-due-date-field { min-height: 40px; display: flex; align-items: center; }
+.creation-editable-plan .creation-subtask-metadata small { margin: 0; padding: 0; line-height: 20px; color: var(--ad-ink); font-weight: 600; }
+.creation-editable-plan .creation-subtask-metadata .member-selector-stacked-row { min-height: 40px; align-items: center; }
+@media (max-width: 600px) {
+  .creation-editable-plan .task-detail-properties.creation-subtask-metadata { grid-template-columns: max-content minmax(0, 1fr); gap: 20px 28px; }
+  .creation-editable-plan .creation-subtask-metadata > .task-due-date-picker { grid-column: 1 / -1; }
 }

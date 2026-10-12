@@ -104,3 +104,7 @@
 
 .connect-v2-permission.connect-v2-permission-mcp { justify-content: flex-start; gap: 12px; flex-wrap: wrap; }
 .connect-v2-permission-mcp .connect-token-link { margin-left: 0; font-size: inherit; }
+
+/* Brief guidance keeps the original product connection layout. */
+.connect-setup-intro { margin: 0; padding: 16px 24px 0; color: var(--ad-ink-secondary); font-size: 12px; line-height: 1.7; }
+@media (max-width: 540px) { .connect-v2 .connect-method-tabs { gap: 16px; padding: 0 16px; } .connect-setup-intro { padding-left: 16px; padding-right: 16px; } }

@@ -1,6 +1,6 @@
 import type {LabRun} from './types';
 export function batchProgress(runs:LabRun[]){
- const pendingJudge=(r:LabRun)=>!!r.selection?.judgeModel&&!['cancelled','interrupted'].includes(r.status)&&!['completed','failed'].includes(r.judgeStatus??'');
+ const pendingJudge=(r:LabRun)=>!!r.selection?.judgeModel&&!['cancelled','interrupted'].includes(r.status)&&!['completed','failed','skipped'].includes(r.judgeStatus??'');
  const queued=runs.filter(r=>r.status==='queued').length;
  const running=runs.filter(r=>r.status==='running').length;
  const judging=runs.filter(r=>!['queued','running'].includes(r.status)&&pendingJudge(r)).length;

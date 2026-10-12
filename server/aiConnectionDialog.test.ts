@@ -38,6 +38,7 @@ const previewRequest: AiConnectionRequest = {
 
 test("只显示当前任务的一张卡片，直接呈现指定七项信息", async () => {
   const module = await import(moduleUrl);
+  const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
   const items = [
     ...previewRequest.contextPreview!.items,
     { id: "criteria", label: "完成标准", value: "关键决定已逐项确认" },
@@ -50,16 +51,43 @@ test("只显示当前任务的一张卡片，直接呈现指定七项信息", as
     { id: "tips", label: "执行建议", value: "先核对外部意见" },
     { id: "parent", label: "主任务", value: "其他主任务" },
   ];
-  const html = renderToStaticMarkup(createElement(module.AiConnectionContextPreview, { request: { ...previewRequest, workObject: { ...previewRequest.workObject, kind: "任务" }, contextPreview: { items } } }));
+  const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(module.AiConnectionContextPreview, { request: { ...previewRequest, workObject: { ...previewRequest.workObject, kind: "任务" }, contextPreview: { items } } }) }));
   for (const label of ["任务名称", "任务目标", "完成标准", "负责人", "截止时间", "标签"]) {
-    assert.ok(html.includes(items.find(item => item.label === label)!.value), `缺少实际信息：${label}`);
+    if (label === "截止时间") assert.match(html, /Sep 30(?:, 2026)?/);
+    else assert.ok(html.includes(items.find(item => item.label === label)!.value), `缺少实际信息：${label}`);
   }
+  assert.doesNotMatch(html, />2026-09-30</);
   assert.equal((html.match(/<article\b/g) ?? []).length, 1);
   assert.match(html, /陈默、林洁、高远、许宁/);
   assert.doesNotMatch(html, /已接受|待接受|接受状态未提供/);
   assert.doesNotMatch(html, /主任务|讨论内容|进行中|发起人|执行建议|更多任务信息|ai-connect-discussion-card|ai-connect-parent-card|<details|JSON|预期目标|期望 AI 的结果/);
   assert.ok(!html.includes(request.workObject.content!));
   assert.match(html, /仅带入你当前有权查看的信息，不会获得额外权限/);
+});
+
+test("AI 预览日期和消息元信息遵守统一格式，原文与带入提示词保留原始内容", async () => {
+  const module = await import(moduleUrl);
+  const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
+  const datedRequest: AiConnectionRequest = {
+    ...request,
+    workObject: { ...request.workObject, kind: "讨论", content: "请按 2026-09-30 17:30 完成" },
+    context: [{ label: "截止时间", value: "2026-09-30" }],
+    contextPreview: { items: [
+      { id: "due", label: "截止时间", value: "2026-09-30" },
+      { id: "discussion", label: "讨论", value: "原文保持 2026-09-30 17:30", meta: "陈默 · 2026-08-31 17:30" },
+    ] },
+  };
+  const prompt = module.buildContextPrompt(datedRequest);
+  for (const locale of ["zh-CN", "en"] as const) {
+    const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: locale, children: createElement(module.AiConnectionContextPreview, { request: datedRequest }) }));
+    assert.match(html, /Sep 30(?:, 2026)?/);
+    assert.match(html, /陈默 · Aug 31(?:, 2026)?, 5:30 PM/);
+    assert.match(html, /原文保持 2026-09-30 17:30/);
+    assert.doesNotMatch(html, /陈默 · 2026-08-31 17:30/);
+    assert.equal(module.buildContextPrompt(datedRequest), prompt);
+  }
+  assert.match(prompt, /2026-09-30/);
+  assert.match(prompt, /请按 2026-09-30 17:30 完成/);
 });
 
 test("没有专属预览时卡片仍保留原始值、缺失信息与完整长正文", async () => {

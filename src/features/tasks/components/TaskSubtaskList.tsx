@@ -12,7 +12,6 @@ import { TaskProgressOverview } from "@/features/tasks/components/TaskProgressOv
 import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
 import { useResolvedPersonProfile } from "@/shared/ui/PersonDirectory";
 import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
-import { TaskIcon } from "@/features/tasks/components/TaskIcon";
 
 function SubtaskOwner({ owner }: Pick<TaskRelationSummary, "owner">) {
   const d = useDetailCopy();
@@ -45,13 +44,12 @@ export function TaskSubtaskList({ onOpenTask, tasks, effortTasks = [], completed
     const progress = getTaskProgressDisplay({ series, task: { ...task, ...effort, status: task.status },
       scopeMinutes: scope?.minutes, completedMinutes: series ? undefined : completedMinutesByTaskId?.[task.id] });
     return <details className="task-subtask-list-item" data-tone={task.iconTone ?? "neutral"} key={task.id}><summary aria-label={ui("子任务详情：{0}", {0: task.title})} className="task-subtask-list-row">
-      <TaskIcon iconName={task.iconName} tone={task.iconTone} />
       <button aria-label={ui("打开子任务：{0}", {0: task.title})} className="task-subtask-title" data-task-id={task.id} disabled={!onOpenTask} onClick={() => onOpenTask?.(task.id)} type="button">
         <span>{mock.field(task.id, "title", task.title)}</span>
         {Boolean(task.childTaskCount && task.childTaskCount > 0) && <small aria-label={ui("{0} 个直接子任务", {0: task.childTaskCount ?? 0})} className="task-subtask-title-count"><ListTree aria-hidden="true" size={15} /><span>{ui("子任务(")}{task.childTaskCount})</span></small>}
       </button>
       <SubtaskOwner owner={task.owner} />
-      <TaskStatusBadge size="sm" value={task.status}/>
+      <TaskStatusBadge size="sm" value={task.status} progressRatio={progress.aiAssessment?.ratio ?? progress.ratio}/>
       <ChevronRight aria-hidden="true" className="task-subtask-disclosure-icon" size={16}/>
     </summary>
       <div className="task-subtask-list-progress">

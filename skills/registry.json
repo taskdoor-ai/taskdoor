@@ -5,7 +5,7 @@
   "skills": [
     {
       "id": "agentdoor-responsibility-advisor",
-      "title": "人员责任分析",
+      "title": "人员责任更新",
       "entry": "skills/agentdoor-responsibility-advisor/SKILL.md",
       "outputVersion": "agentdoor.responsibility-advice.v0.1",
       "dependsOn": [],
@@ -16,18 +16,29 @@
       ],
       "references": [
         "skills/agentdoor-responsibility-advisor/references/output-contract.md",
-        "skills/agentdoor-responsibility-advisor/examples/decision-pairs.md"
+        "skills/agentdoor-responsibility-advisor/examples/decision-pairs.md",
+        "skills/agentdoor-responsibility-advisor/references/daily-analysis.md"
       ],
-      "internal": true
+      "internal": false
+    },
+    {
+      "id": "agentdoor-member-matcher",
+      "title": "人员匹配分析",
+      "entry": "skills/agentdoor-member-matcher/SKILL.md",
+      "outputVersion": "agentdoor.member-match.v0.1",
+      "dependsOn": [],
+      "rulesFile": "skills/agentdoor-task-planner/references/product-rules.md",
+      "references": [
+        "skills/agentdoor-member-matcher/references/output-contract.md"
+      ],
+      "internal": false
     },
     {
       "id": "agentdoor-task-planner",
-      "title": "创建任务",
+      "title": "创建与规划任务",
       "entry": "skills/agentdoor-task-planner/SKILL.md",
-      "outputVersion": "agentdoor.task-plan.v0.2",
-      "dependsOn": [
-        "agentdoor-ewd-progress"
-      ],
+      "outputVersion": "taskdoor.task-preview.v1",
+      "dependsOn": [],
       "rulesFile": "skills/agentdoor-task-planner/references/product-rules.md",
       "ruleSections": [
         "### 3.1 创建流程",
@@ -42,17 +53,17 @@
         "### 7.3 创建任务 Skill"
       ],
       "references": [
-        "skills/agentdoor-task-planner/references/planning-v0.2.md",
-        "skills/agentdoor-task-planner/references/context-and-replanning.md",
-        "skills/agentdoor-task-planner/references/current-product-alignment.md",
-        "skills/agentdoor-task-planner/references/planning-v0.2.schema.json",
-        "skills/agentdoor-task-planner/examples/decision-pairs.md"
+        "skills/agentdoor-task-planner/references/task-planning.md",
+        "skills/agentdoor-task-planner/references/task-preview.md",
+        "skills/agentdoor-task-planner/references/task-preview.schema.json",
+        "skills/agentdoor-task-planner/references/production-runtime.json"
       ],
-      "internal": false
+      "internal": false,
+      "distributionName": "taskdoor-create-task"
     },
     {
       "id": "agentdoor-task-status-analyzer",
-      "title": "任务分析",
+      "title": "任务进度分析",
       "entry": "skills/agentdoor-task-status-analyzer/SKILL.md",
       "outputVersion": "agentdoor.task-status-analysis.v0.1",
       "dependsOn": [
@@ -66,9 +77,12 @@
       ],
       "references": [
         "skills/agentdoor-task-status-analyzer/references/output-contract.md",
+        "skills/agentdoor-task-status-analyzer/references/mcp-analysis.md",
+        "skills/agentdoor-task-status-analyzer/references/evidence-scenarios.md",
         "skills/agentdoor-task-status-analyzer/examples/decision-pairs.md",
         "skills/agentdoor-task-status-analyzer/references/problem-analysis.md",
-        "skills/agentdoor-task-status-analyzer/examples/problem-analysis.md"
+        "skills/agentdoor-task-status-analyzer/examples/problem-analysis.md",
+        "skills/agentdoor-task-status-analyzer/references/production-progress-contract.md"
       ],
       "internal": false
     },

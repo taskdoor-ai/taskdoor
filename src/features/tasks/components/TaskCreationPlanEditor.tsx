@@ -3,7 +3,7 @@ import { ListTree, ListTodo, Plus } from "lucide-react";
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { findTagByName, type TagDefinition } from "@/ai/mock/data/tagGroups";
 import { syncCreationSubtaskEdit } from "@/features/tasks/lib/task-creation-subtask-editing";
-import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
+import type { TaskIconTone } from "@/shared/model/task-model";
 import { newCreationTask, removeCreationSubtask, type CreationForm, type CreationTask } from "@/features/tasks/lib/task-creation-form";
 import { getCreationEffortLeaves } from "@/features/tasks/lib/task-creation-effort";
 import { getCreationDescendantIds, getCreationHierarchyDepth } from "@/features/tasks/lib/task-creation-hierarchy";
@@ -11,7 +11,6 @@ import { createTaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecomme
 import type { TaskAiAdjustmentScope } from "@/features/tasks/lib/task-ai-adjustment-types";
 import { MemberSelector, type Member } from "@/features/members/components/MemberSelector";
 import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
-import { TaskIcon } from "@/features/tasks/components/TaskIcon";
 import { TagBadge } from "@/shared/ui/TagBadge";
 import { TagPicker } from "@/features/me/components/TagPicker";
 import { TaskAiAdjustButton } from "@/features/tasks/components/TaskAiAdjustmentPopover";
@@ -22,23 +21,22 @@ import { applyCreationEffortEdits } from "@/features/tasks/lib/task-effort-edits
 import { Button } from "@/shared/ui/button";
 import "@/features/tasks/styles/task-creation-cards.css";
 
-const visual: Array<{ iconName: TaskIconName; tone: TaskIconTone }> = [
-  { iconName: "briefcase", tone: "pink" }, { iconName: "sparkles", tone: "purple" }, { iconName: "flag", tone: "red" },
-  { iconName: "list-todo", tone: "cyan" }, { iconName: "target", tone: "amber" }, { iconName: "chart", tone: "blue" }, { iconName: "file-check", tone: "green" },
-];
+const subtaskTones: TaskIconTone[] = ["pink", "purple", "red", "cyan", "amber", "blue", "green"];
 
 type Props = {
   form: CreationForm;
   members: Member[];
   tags: TagDefinition[];
   disabled?: boolean;
+  showSubtasks?: boolean;
+  subtaskLoading?: ReactNode;
   onChange: (form: CreationForm) => void;
   onAiAdjust?: (scope: TaskAiAdjustmentScope, returnFocus?: HTMLElement | null) => void;
   onInviteMembers?: (returnFocus?: HTMLElement | null) => void;
   onSubtaskDirtyChange?: (taskId: string, dirty: boolean) => void;
 };
 
-export function TaskCreationPlanEditor({ form, members, tags, disabled = false, onChange, onAiAdjust, onInviteMembers, onSubtaskDirtyChange }: Props) {
+export function TaskCreationPlanEditor({ form, members, tags, subtaskLoading, showSubtasks = false, disabled = false, onChange, onAiAdjust, onInviteMembers, onSubtaskDirtyChange }: Props) {
   const { c, locale, localize } = useCreationI18n();
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
   const nested = form.subtasks.some(task => task.parentClientId);
@@ -53,10 +51,10 @@ export function TaskCreationPlanEditor({ form, members, tags, disabled = false, 
   const updateMain = (task: CreationTask) => update({ ...form, mainTask: task });
   const renderTask = (task: CreationTask): ReactNode => {
     const index = form.subtasks.findIndex(item => item.clientId === task.clientId);
-    const fallback = visual[index % visual.length];
+    const fallbackTone = subtaskTones[index % subtaskTones.length];
     const children = form.subtasks.filter(item => item.parentClientId === task.clientId);
     const isCollapsed = collapsed.has(task.clientId);
-    const editor = <TaskCreationSubtaskEditor disabled={disabled} form={form} iconName={task.iconName ?? fallback.iconName} index={index} members={members} tags={tags} task={task} tone={task.iconTone ?? fallback.tone}
+    const editor = <TaskCreationSubtaskEditor disabled={disabled} form={form} index={index} members={members} tags={tags} task={task} tone={task.iconTone ?? fallbackTone}
       childCount={children.length} hierarchical={nested} descendantCount={getCreationDescendantIds(form, task.clientId).size}
       branchControl={children.length > 0 ? <button aria-controls={`creation-children-${task.clientId}`} aria-expanded={!isCollapsed} aria-label={c("childTasksOf", { v0: isCollapsed ? c("expand") : c("collapse"), v1: task.title })} className="creation-tree-toggle" onClick={() => setCollapsed(current => {
         const next = new Set(current); if (next.has(task.clientId)) next.delete(task.clientId); else next.add(task.clientId); return next;
@@ -83,31 +81,32 @@ export function TaskCreationPlanEditor({ form, members, tags, disabled = false, 
             {onAiAdjust && <div className="task-ai-detail-tools"><TaskAiAdjustButton disabled={disabled} label={c("askAiToAdjustTaskDetails")} onClick={anchor => onAiAdjust({ kind: "task" }, anchor)} /></div>}
             <div className="task-detail-heading-main">
               <div className="task-detail-heading-copy">
-                <TaskDetailFields disabled={disabled} icon={<TaskIcon iconName={form.mainTask.iconName ?? "target"} size="lg" tone={form.mainTask.iconTone ?? "blue"} />}
-                  labels={{ name: c("taskName"), criteria: c("mainTaskCompletionCriteria") }} onChange={patch => updateMain({ ...form.mainTask, ...patch })} showExecutionTips value={form.mainTask} variant="heading"
+                <TaskDetailFields showNameLabel disabled={disabled}
+                  labels={{ name: c("taskName"), criteria: c("mainTaskCompletionCriteria") }} onChange={patch => updateMain({ ...form.mainTask, ...patch })} value={form.mainTask} variant="heading"
                   description={{ label: c("goal"), inputLabel: c("taskGoal"), value: form.mainTask.goal, onChange: goal => updateMain({ ...form.mainTask, goal }) }}
-                  effort={<TaskEffortEditor hasSubtasks={form.subtasks.length > 0} disabled={disabled} label={c("mainTask")} tasks={getCreationEffortLeaves(form).map(task => ({ ...task, id: task.clientId }))} onDirtyChange={dirty => onSubtaskDirtyChange?.(form.mainTask.clientId, dirty)} onChange={edits => { if (disabled) throw new Error(c("thisPlanCannotBeEditedRightNowLabel")); update(applyCreationEffortEdits(latestForm.current, edits)); }} />}
+
                 />
               </div>
             </div>
             <div aria-label={c("taskProperties")} className="task-detail-properties creation-heading-properties">
-              <div className="task-detail-property"><small>{c("owner")}</small><MemberSelector allowUnassigned hideHeader hideSelectedName label={c("owner")} max={1} memberRecommendations={memberRecommendations} members={members} min={0} onChange={selected => { const ownerId = selected[0] ?? ""; updateMain({ ...form.mainTask, ownerId, participantIds: form.mainTask.participantIds.filter(id => id !== ownerId) }); }} onInviteMembers={onInviteMembers} selected={form.mainTask.ownerId ? [form.mainTask.ownerId] : []} showInvitationStatus={false} showTriggerProfilePreview={false} /></div>
+              <div className="task-detail-property"><small>{c("owner")}</small><MemberSelector avatarSize="sm" allowUnassigned hideHeader hideSelectedName label={c("owner")} max={1} memberRecommendations={memberRecommendations} members={members} min={0} onChange={selected => { const ownerId = selected[0] ?? ""; updateMain({ ...form.mainTask, ownerId, participantIds: form.mainTask.participantIds.filter(id => id !== ownerId) }); }} onInviteMembers={onInviteMembers} selected={form.mainTask.ownerId ? [form.mainTask.ownerId] : []} showInvitationStatus={false} showTriggerProfilePreview={false} /></div>
               <span aria-hidden="true" className="task-detail-property-separator" />
-              <div className="task-detail-property"><small>{c("participants")}</small><MemberSelector displayMax={4} hideHeader hideSelectedName label={c("participants")} memberRecommendations={memberRecommendations} members={members.filter(m => m.id !== form.mainTask.ownerId)} onChange={participantIds => updateMain({ ...form.mainTask, participantIds })} onInviteMembers={onInviteMembers} selected={form.mainTask.participantIds} showInvitationStatus={false} stacked /></div>
+              <div className="task-detail-property"><small>{c("participants")}</small><MemberSelector avatarSize="sm" displayMax={4} hideHeader hideSelectedName label={c("participants")} memberRecommendations={memberRecommendations} members={members.filter(m => m.id !== form.mainTask.ownerId)} onChange={participantIds => updateMain({ ...form.mainTask, participantIds })} onInviteMembers={onInviteMembers} selected={form.mainTask.participantIds} showInvitationStatus={false} stacked /></div>
               <span aria-hidden="true" className="task-detail-property-separator" />
               <TaskDueDatePicker initialValue={form.mainTask.endDate} label={c("dueDate")} onChange={endDate => updateMain({ ...form.mainTask, endDate, startDate: "" })} />
               <span aria-hidden="true" className="task-detail-property-separator" />
-              <div aria-label={c("taskTags")} className="task-detail-title-tags"><small className="creation-property-label">{c("tags")}</small>{form.mainTask.labels.map(name => <TagBadge key={name} onRemove={disabled ? undefined : () => updateMain({ ...form.mainTask, labels: form.mainTask.labels.filter(item => item !== name) })} size="sm" tag={findTagByName(tags, name) ?? { id: name, name, color: "gray", icon: "tag" }} />)}<TagPicker onChange={labels => updateMain({ ...form.mainTask, labels })} selected={form.mainTask.labels} tags={tags} /></div>
+
             </div>
           </header>
-          {form.subtasks.length > 0 && <section aria-label={c("subtaskPlan")} className="creation-subtasks creation-subtasks-cards">
+          {subtaskLoading && <section className="creation-subtasks creation-subtasks-cards" aria-label={c("subtaskPlan")}><header className="creation-subtasks-heading"><div><ListTodo size={19} /><h2>{c("subtasksLabel97")}</h2></div></header>{subtaskLoading}</section>}
+          {!subtaskLoading && showSubtasks && form.subtasks.length > 0 && <section aria-label={c("subtaskPlan")} className="creation-subtasks creation-subtasks-cards">
             <header className="creation-subtasks-heading"><div><ListTodo size={19} /><h2>{c("subtasksLabel97")}</h2><span className="creation-count">{form.subtasks.length}</span><small>{nested ? c("allLevelsSubtaskLevels", { v0: depth - 1 }) : c("togetherAchieveTheMainTaskGoal")}</small></div><div>{nested && <>
               <Button onClick={() => setCollapsed(new Set())} size="sm" type="button" variant="ghost">{c("expandAll")}</Button>
               <Button onClick={() => setCollapsed(new Set(form.subtasks.filter(task => form.subtasks.some(item => item.parentClientId === task.clientId)).map(task => task.clientId)))} size="sm" type="button" variant="ghost">{c("collapseAll")}</Button>
             </>}{onAiAdjust && <TaskAiAdjustButton disabled={disabled} label={c("askAiToAdjustSubtasks")} onClick={anchor => onAiAdjust({ kind: "subtasks" }, anchor)} />}<Button onClick={() => update({ ...form, subtasks: [...form.subtasks, newCreationTask()] })} size="sm" type="button" variant="ghost"><Plus size={14} />{c("addSubtask")}</Button></div></header>
             {nested ? <ul aria-label={c("subtaskHierarchy")} className="creation-task-tree">{form.subtasks.filter(task => !task.parentClientId).map(renderTask)}</ul> : <div className="creation-task-list">{form.subtasks.map(renderTask)}</div>}
           </section>}
-          {!form.subtasks.length && form.decision !== "attach" && <Button className="creation-add-subtask-inline" disabled={disabled} onClick={() => update({ ...form, subtasks: [newCreationTask()] })} size="sm" type="button" variant="ghost"><Plus size={14} />{c("addSubtask")}</Button>}
+          {!subtaskLoading && showSubtasks && !form.subtasks.length && form.decision !== "attach" && <Button className="creation-add-subtask-inline" disabled={disabled} onClick={() => update({ ...form, subtasks: [newCreationTask()] })} size="sm" type="button" variant="ghost"><Plus size={14} />{c("addSubtask")}</Button>}
         </fieldset>
   );
 }

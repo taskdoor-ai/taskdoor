@@ -1,23 +1,28 @@
+import {selectCaseContext} from '../../src/test-lab/case-input-context.ts';
 import type { LabTeam, LabCase, LabStep, LabStepResult } from '../../src/test-lab/types.ts';
 import { buildView } from '../../src/test-lab/visibility.ts';
 export { buildView } from '../../src/test-lab/visibility.ts';
 export function buildModelInput(team:LabTeam,c:LabCase,step:LabStep,runId:string,previous:LabStepResult[]){
   const tasksOnly=c.contextMode==='team_tasks';
-  if(tasksOnly)team={...team,evidence:[]};
-  const fresh=step.skillId==='agentdoor-task-planner'&&c.creationContext==='fresh';
-  if(fresh)team={...team,tasks:[],evidence:[]};
-  if(fresh)step={...step,taskId:null};
+  const selected=selectCaseContext(team,c,step);team=selected.team;step=selected.step;
+  const fresh=step.skillId==='agentdoor-task-planner';
   const view=buildView(team,c.actorId);if(step.taskId&&!view.team.tasks.some(t=>t.id===step.taskId))throw new Error('当前人员无权查看用例目标任务');
-  const time=step.evaluatedAt?new Date(step.evaluatedAt).toISOString():new Date().toISOString(); const v={...view.team,evidence:view.team.evidence.map(({attachment:_attachment,...record})=>record)};
+  const time=step.evaluatedAt?new Date(step.evaluatedAt).toISOString():new Date().toISOString(); const v={...view.team,evidence:view.team.evidence.map(({attachment:_attachment,...record})=>record.readState==='unavailable'?{...record,content:''}:record)};
   const history=v.evidence.filter(e=>e.kind==='活动').map(e=>({id:e.id,taskId:e.taskId,occurredAt:e.createdAt,type:'task_activity',summary:e.content,sourceRefs:e.relatedEvidenceIds??[]}));
   const currentUser=v.members.find(m=>m.id===c.actorId)!;
-  const base={requestId:`${runId}:${step.id}`,message:step.prompt,principalId:c.actorId,currentUserId:c.actorId,teamId:team.id,currentDate:new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(time)),evaluatedAt:time,timezone:'Asia/Shanghai',taskId:step.taskId,
-    simulation:true,capabilities:{write:false,tools:[]},coverage:{tasks:{state:'complete',scope:'当前人员有权查看的任务'},evidence:{state:tasksOnly?'not_read':'complete',scope:tasksOnly?'本例仅提供任务，不加载讨论、文件或历史成果':'当前人员可见的文件、讨论、交付、确认与活动'},history:{state:history.length?'partial':'not_read',scope:history.length?'已提供工作台活动记录；未读取其他业务历史':'未加载其他历史'}},history,
+  const base={requestId:`${runId}:${step.id}`,message:step.prompt.trim()||'依据当前快照执行所选Skill的分析，返回规定结构；不修改业务数据。',principalId:c.actorId,currentUserId:c.actorId,teamId:team.id,currentDate:new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(time)),evaluatedAt:time,timezone:'Asia/Shanghai',taskId:step.taskId,
+    simulation:true,capabilities:{write:false,tools:[]},coverage:{tasks:{state:'complete',scope:'当前人员有权查看的任务'},evidence:{state:tasksOnly?'not_read':v.evidence.some(e=>e.readState==='unavailable')?'partial':'complete',scope:tasksOnly?'本例仅提供任务，不加载讨论、文件或历史成果':'当前人员可见的文件、讨论、交付、确认与活动'},history:{state:history.length?'partial':'not_read',scope:history.length?'已提供工作台活动记录；未读取其他业务历史':'未查询额外活动历史；已读取文件内的历史工作量、保存计划与执行安排仍是有效证据，不受此覆盖标记影响'}},history,
     inputVersions:{team:team.id,tasks:Object.fromEntries(v.tasks.map(t=>[t.id,t.version])),responsibilities:Object.fromEntries(v.members.map(m=>[m.id,m.version])),evidence:Object.fromEntries(v.evidence.map(e=>[e.id,e.version]))},
     currentResponsibility:{memberId:currentUser.id,version:currentUser.version,responsibilities:currentUser.responsibilities},
     members:v.members,tasks:v.tasks,evidence:v.evidence,sources:[...v.tasks.map(t=>({ref:t.id,version:t.version,subjectId:t.id,teamId:team.id,content:t,effectiveAt:null,validity:'current'})),...v.members.map(m=>({ref:m.id,version:m.version,subjectId:m.id,teamId:team.id,content:m,effectiveAt:null,validity:'current'})),...v.evidence.map(e=>({ref:e.id,version:e.version,subjectId:e.taskId,teamId:team.id,content:e.content,effectiveAt:null,validity:'current'}))],
     previousOutputs:step.usePreviousOutput?previous.map(p=>({stepId:p.stepId,output:p.output})):[],
   };
+  if(['agentdoor-responsibility-advisor','agentdoor-member-matcher'].includes(step.skillId))return {...base,mode:'analyze',candidateMemberIds:[c.actorId],responsibilityVersion:currentUser.version,peopleContext:{workspaceId:team.id,memberId:c.actorId,responsibilityVersion:currentUser.version,formalResponsibilities:currentUser.responsibilities,historyTaskIds:v.tasks.filter(t=>t.id!==step.taskId).map(t=>t.id),candidateMemberIds:[c.actorId],authorization:{state:'not_verified',reason:'本地可见性不代表生产参与授权'}}};
+  if(step.skillId==='agentdoor-task-status-analyzer')return {...base,analysisContext:{schemaVersion:'taskdoor.analysis-context.v1',workspaceId:team.id,transport:'local-fixture',
+    tasks:v.tasks.map(t=>({id:t.id,workspaceId:team.id,parentTaskId:t.parentId,title:t.title,goal:t.goal,status:t.status,ownerMemberId:t.ownerId,dueDate:t.dueAt,version:t.version,executionTips:t.executionTips,effortEstimate:t.estimatedMinutes===null?null:{minutes:t.estimatedMinutes},criteria:t.criteria??{taskId:t.id,version:null,items:t.acceptanceCriteria.map(text=>({id:null,text}))},dependencies:t.dependsOnTaskIds})),
+    comments:v.evidence.filter(e=>e.kind==='讨论'||e.kind==='确认').map(e=>({id:e.id,taskId:e.taskId,authorMemberId:e.authorId,body:e.content,version:e.version,createdAt:e.createdAt,replyToId:e.replyToId??null})),
+    files:v.evidence.filter(e=>e.kind==='文件'||e.kind==='交付').map(e=>({id:e.id,taskId:e.taskId,name:e.title,version:e.version,text:e.readState==='unavailable'?null:e.content,readState:e.readState??'read',supersedesId:e.supersedesId??null})),
+    activities:history,coverage:base.coverage,inputVersions:base.inputVersions}};
   if(step.skillId!=='agentdoor-task-planner')return base;
   const statuses={'待开始':'open','进行中':'in_progress','已阻塞':'blocked','已完成':'completed','已取消':'cancelled'};
   return {...base,...(fresh?{creationMode:'fresh',constraints:['本次只做基础创建与拆解，团队任务为空；无需查阅历史任务、文件或讨论，不因缺少历史资料要求补读。']}:{ }),authorizedTeamIds:[team.id],revision:c.version,currentTaskId:step.taskId,confirmedFields:[],

@@ -1,8 +1,10 @@
 import { AlertTriangle, ArrowRight, CheckCircle2, GitBranch, History, ListTree, PanelLeftClose, PanelLeftOpen, Plus, RotateCcw, Sparkles, Target, UserRoundCheck, X } from "lucide-react";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { formatDisplayDate, formatDisplayDateTime, formatDisplayTime } from "@/shared/lib/date-time";
 import { taskCreationScenarios, type TaskCreationScenarioDefinition } from "@/ai/mock/data/taskCreationScenarios";
 import type { TagDefinition } from "@/ai/mock/data/tagGroups";
-import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
+import type { TaskIconTone } from "@/shared/model/task-model";
 import { createMockTaskAssistantResponse, createMockTaskAssistantResponseForDraft, requestMockTaskAssistant } from "@/ai/mock/lib/mockTaskAssistant";
 import { persistConversationList } from "@/features/tasks/lib/private-conversation-persistence";
 import { buildTaskCreationConversationRecord, restoreTaskCreationConversationState } from "@/features/tasks/lib/task-creation-conversation-state";
@@ -19,7 +21,6 @@ import { TaskDependencyPicker, type TaskDependencyOption } from "@/features/task
 import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
 import { TaskCreationChoiceCards } from "@/features/tasks/components/TaskCreationChoiceCards";
 import { TaskCreationExistingTaskCard } from "@/features/tasks/components/TaskCreationExistingTaskCard";
-import { TaskIcon } from "@/features/tasks/components/TaskIcon";
 import { AgentWorkflow, type AgentPhase, type ToolDefinition } from "@/shared/ui/ai-agent-response";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/shared/ui/accordion";
 import { Confetti } from "@/shared/ui/motion-confetti";
@@ -117,7 +118,7 @@ const taskCreationWorkflowFor = ({ members, request, response, subtaskCount }: T
   const targetDetails = draft
     ? [
       { text: `任务目标：${concise(draft.mainTask.goal)}` },
-      { text: draft.mainTask.endDate ? `截止时间：${draft.mainTask.endDate}` : "截止时间：当前未设置" },
+      { text: draft.mainTask.endDate ? `截止时间：${formatDisplayDate(draft.mainTask.endDate) ?? "—"}` : "截止时间：当前未设置" },
     ]
     : [{ text: `正在提取：${concise(latestRequest)}` }];
   const selectedMembers = response?.peopleRecommendations
@@ -191,20 +192,18 @@ const taskCreationTools: Record<string, ToolDefinition> = {
   "people-match": { icon: UserRoundCheck, iconClassName: "agent-workflow-icon-team", label: "匹配合适人员", name: "people-match" },
   "task-structure": { icon: ListTree, iconClassName: "agent-workflow-icon-structure", label: "生成任务结构", name: "task-structure" },
 };
-const messageTimeFormatter = new Intl.DateTimeFormat("zh-CN", { hour: "2-digit", hour12: false, minute: "2-digit" });
 
-type TaskVisual = { iconName: TaskIconName; iconTone: TaskIconTone };
+type TaskVisual = { iconTone: TaskIconTone };
 const subtaskVisuals: TaskVisual[] = [
-  { iconName: "briefcase", iconTone: "pink" },
-  { iconName: "sparkles", iconTone: "purple" },
-  { iconName: "flag", iconTone: "red" },
-  { iconName: "list-todo", iconTone: "cyan" },
-  { iconName: "target", iconTone: "amber" },
-  { iconName: "chart", iconTone: "blue" },
-  { iconName: "file-check", iconTone: "green" },
+  { iconTone: "pink" },
+  { iconTone: "purple" },
+  { iconTone: "red" },
+  { iconTone: "cyan" },
+  { iconTone: "amber" },
+  { iconTone: "blue" },
+  { iconTone: "green" },
 ];
 const taskVisualFor = (task: TaskDraft, index = 0, isMainTask = false): TaskVisual => ({
-  iconName: task.iconName ?? (isMainTask ? "target" : subtaskVisuals[index % subtaskVisuals.length].iconName),
   iconTone: task.iconTone ?? (isMainTask ? "blue" : subtaskVisuals[index % subtaskVisuals.length].iconTone),
 });
 
@@ -299,7 +298,6 @@ function TaskPlanPanel({ draft, memberById, members, onChange, onClose, tags }: 
         </div>
         <div className="task-plan-panel-summary">
             <div className="task-plan-panel-main-identity">
-              <TaskIcon iconName={mainVisual.iconName} size="lg" tone={mainVisual.iconTone} />
               <div>
                 <Input aria-label="任务名称" className="task-plan-panel-title-input" onChange={(event) => updateMainTask({ title: event.target.value })} placeholder="待补充任务名称" value={draft.mainTask.title} />
                 <Textarea aria-label="任务目标" className="task-plan-panel-goal-input" onChange={(event) => updateMainTask({ goal: event.target.value })} placeholder="补充清晰目标，明确任务需要达成的结果。" rows={2} value={draft.mainTask.goal} />
@@ -344,7 +342,6 @@ function TaskPlanPanel({ draft, memberById, members, onChange, onClose, tags }: 
                 .filter((option) => option.index !== index);
               return <AccordionItem className="task-subtask" data-tone={taskVisual.iconTone} key={`subtask-${index}`} value={`subtask-${index}`}>
                 <AccordionTrigger className="task-subtask-trigger">
-                  <TaskIcon iconName={taskVisual.iconName} size="lg" tone={taskVisual.iconTone} />
                   <span className="task-subtask-copy">
                     <strong>{task.title || "待补充子任务名称"}</strong>
                     <small>{task.goal || "补充这个子任务的交付目标"}</small>
@@ -384,6 +381,7 @@ function TaskPlanPanel({ draft, memberById, members, onChange, onClose, tags }: 
 }
 
 export function TaskCreationConversation({ currentUserId, existingTasks, members, onCreateSubtask, onCreateTaskPlan, onOpenTask, tags }: TaskCreationConversationProps) {
+  const { locale } = useI18n();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [conversations, setConversations] = useState<PrivateConversation[]>(() => loadPrivateConversations(currentUserId));
   const conversationsRef = useRef(conversations);
@@ -767,7 +765,7 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
 
   const taskOutputCard = output ? <article aria-labelledby="task-assistant-output-title" className={`task-assistant-output${createdPlan ? " is-created" : ""}`} data-tone={taskVisualFor(output.draft.mainTask, 0, true).iconTone}>
       <button aria-label={`${createdPlan ? "打开" : "查看"}任务详情：${output.draft.mainTask.title || "待补充任务名称"}`} className="task-assistant-card-hit-area" onClick={() => createdPlan ? onOpenTask(createdPlan.mainTaskId) : setIsDetailOpen(true)} type="button" />
-      <header className="task-assistant-output-header"><TaskIcon iconName={taskVisualFor(output.draft.mainTask, 0, true).iconName} size="lg" tone={taskVisualFor(output.draft.mainTask, 0, true).iconTone} /><div><h2 id="task-assistant-output-title">{output.draft.mainTask.title || "待补充任务名称"}</h2></div></header>
+      <header className="task-assistant-output-header"><div><h2 id="task-assistant-output-title">{output.draft.mainTask.title || "待补充任务名称"}</h2></div></header>
       <div className="task-assistant-output-summary">
         <div aria-label="任务概览" className="task-assistant-output-facts">
           <div className="task-assistant-output-owner"><small>负责人</small><MemberSelector allowUnassigned hideHeader hideSelectedName label="负责人" max={1} members={members} min={0} onChange={([ownerId = ""]) => updateDraft({ ...output.draft, mainTask: { ...output.draft.mainTask, ownerId, participantIds: output.draft.mainTask.participantIds.filter((id) => id !== ownerId) } })} selected={outputMainOwner ? [outputMainOwner.id] : []} showInvitationStatus={false} /></div>
@@ -791,12 +789,12 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
       <Button className="task-conversation-new" onClick={startNewConversation} size="sm" type="button" variant="outline"><Plus aria-hidden="true" data-icon="inline-start" />新对话</Button>
       <div className="task-conversation-history-list">
         {conversations.length ? conversations.map((conversation, index) => {
-          const currentDay = new Date(conversation.updatedAt).toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" });
-          const previousDay = index > 0 ? new Date(conversations[index - 1].updatedAt).toLocaleDateString("zh-CN", { month: "numeric", day: "numeric" }) : null;
+          const currentDay = formatDisplayDate(conversation.updatedAt) ?? "—";
+          const previousDay = index > 0 ? formatDisplayDate(conversations[index - 1].updatedAt) : null;
           const isToday = new Date(conversation.updatedAt).toDateString() === new Date().toDateString();
           return <Fragment key={conversation.id}>
-            {currentDay !== previousDay && <small className="task-conversation-history-group">{isToday ? "今天" : currentDay}</small>}
-            <button aria-current={activeConversationId === conversation.id ? "page" : undefined} className="task-conversation-history-item" onClick={() => openConversation(conversation)} type="button"><strong>{conversation.title}</strong><span>{conversation.createdPlan ? `创建了 ${conversation.createdPlan.createdCount} 个任务` : "未创建任务"} · {new Date(conversation.updatedAt).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}</span></button>
+            {currentDay !== previousDay && <small className="task-conversation-history-group">{isToday ? locale === "en" ? "Today" : "今天" : currentDay}</small>}
+            <button aria-current={activeConversationId === conversation.id ? "page" : undefined} className="task-conversation-history-item" onClick={() => openConversation(conversation)} type="button"><strong>{conversation.title}</strong><span>{conversation.createdPlan ? `创建了 ${conversation.createdPlan.createdCount} 个任务` : "未创建任务"} · <time dateTime={conversation.updatedAt} title={formatDisplayDateTime(conversation.updatedAt, { year: "always" }) ?? undefined}>{formatDisplayTime(conversation.updatedAt) ?? "—"}</time></span></button>
           </Fragment>;
         }) : <div className="task-conversation-history-empty"><History aria-hidden="true" /><strong>还没有历史对话</strong><span>发送第一条消息后，会自动保存在这里。</span></div>}
       </div>
@@ -820,7 +818,7 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
               {!isAnalyzing && output && message.role === "assistant" && index === messages.length - 1 && <AgentWorkflow completed phases={taskCreationWorkflow} tools={taskCreationTools} workingLabel="TaskDoor 正在工作…" />}
               {message === outputMessage && taskOutputCard}
               <div className="task-conversation-turn" data-from={message.role}>
-                <AIMessage copyText={message.role === "assistant" ? message.content : undefined} from={message.role} onRetry={message.role === "assistant" && !message.scenarioChoices && index === messages.length - 1 ? () => void requestAssistant(messages.filter((item) => item.role === "user" || item.id !== message.id)) : undefined} timestamp={messageTimeFormatter.format(new Date(message.createdAt))}>{message.content}</AIMessage>
+                <AIMessage copyText={message.role === "assistant" ? message.content : undefined} from={message.role} onRetry={message.role === "assistant" && !message.scenarioChoices && index === messages.length - 1 ? () => void requestAssistant(messages.filter((item) => item.role === "user" || item.id !== message.id)) : undefined} timestamp={formatDisplayDateTime(message.createdAt) ?? "—"}>{message.content}</AIMessage>
                 {message.scenarioCandidate && <div className="task-creation-existing-task-panel">
                   <TaskCreationExistingTaskCard kind={message.scenarioCandidate.kind} ownerName={memberById[message.scenarioCandidate.task.ownerId ?? ""]?.name} reason={message.scenarioCandidate.reason} tags={tags} task={message.scenarioCandidate.task} />
                   {showScenarioChoices && <TaskCreationChoiceCards choices={message.scenarioChoices ?? []} disabled={isAnalyzing} onSelect={(choice) => handleScenarioChoice(message.id, choice)} variant="actions" />}

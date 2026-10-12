@@ -1,17 +1,23 @@
+import { normalizeTaskStatus } from "@/shared/model/task-model";
+import { TaskCompletionIndicator } from "@/features/tasks/components/TaskCompletionIndicator";
+import { TaskDetailTabLabel, describeTaskDetailTab } from "@/features/tasks/components/TaskDetailTabLabel";
+import { getTaskContentIndicators } from "@/features/tasks/lib/task-content-indicators";
+import { TaskSidebarToggle } from "@/features/tasks/components/TaskSidebarToggle";
 import { useGlobalUi } from '@/shared/i18n/global-ui';
 import "@/features/tasks/styles/task-criterion-review.css";
+import "@/features/tasks/styles/task-ai-adjustment.css";
 import { useI18n } from '@/shared/i18n/I18nProvider';
+import { formatDisplayDateTime, formatLegacyDateLabel } from '@/shared/lib/date-time';
 import { mockTagName, mockPersonName } from '@/ai/mock/i18n/mockContent';
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { MockTaskProvider, useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
-import { ArrowLeft, Check, ChevronRight, Plus, X } from "lucide-react";
+import { ArrowLeft, ChevronRight, Plus, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { type TaskActivityMock, type TaskDetailContent, type TaskFileNode, type TaskIconName, type TaskIconTone } from "@/shared/model/task-model";
 import { type TagDefinition } from "@/ai/mock/data/tagGroups";
 
 import { getTaskDetailTabForTarget, getTaskInsightSource, isDiscussionActivity } from "@/features/tasks/lib/task-activity";
-import type { TaskAiAdjustmentContext, TaskAiAdjustmentProposal, TaskAiAdjustmentScope } from "@/features/tasks/lib/task-ai-adjustment-types";
 import { buildDiscussionAiRequest, type DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
 import { buildTaskAiConnectionRequest } from "@/features/tasks/lib/task-ai-connection";
 import type { TaskEffortDistributionInput } from "@/features/tasks/lib/task-effort-distribution";
@@ -30,19 +36,16 @@ import { AiConnectionButton } from "@/features/ai-connection/components/AiConnec
 import { TaskTagList } from "@/features/tasks/components/TaskTagList";
 import { TaskActivityFileLink } from "@/features/tasks/components/TaskActivityFileLink";
 import { TaskActivityLog } from "@/features/tasks/components/TaskActivityLog";
-import { TaskAppearancePicker } from "@/features/tasks/components/TaskAppearancePicker";
 import { TaskCompletionCriteria } from "@/features/tasks/components/TaskCompletionCriteria";
 import { TaskCurrentSituation } from "@/features/tasks/components/TaskCurrentSituation";
 import type { TaskDateRange } from "@/features/tasks/components/TaskDateRangePicker";
 import { TaskDiscussion } from "@/features/tasks/components/TaskDiscussion";
 import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
-import { TaskIcon } from "@/features/tasks/components/TaskIcon";
 import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
 import { TaskStatusBadge, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
 import { TaskSubtaskList } from "@/features/tasks/components/TaskSubtaskList";
-import { TaskDependenciesField } from "@/features/tasks/components/TaskDependenciesField";
 import { FixedScrollThumb } from "@/shared/ui/FixedScrollThumb";
-import { TaskAiAdjustmentPopover, useTaskAiAdjustmentDrafts } from "@/features/tasks/components/TaskAiAdjustmentPopover";
+import { toast } from "@/shared/ui/toast";
 import { Input, Textarea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { TaskFileExplorer } from "@/features/tasks/files/components/TaskFileExplorer";
@@ -57,16 +60,16 @@ import "@/features/tasks/styles/task-situation.css";
 import "@/features/tasks/styles/task-effort.css";
 import "@/features/tasks/styles/task-subtask-editing.css";
 import "@/features/tasks/styles/task-detail-split.css";
+import "@/features/tasks/styles/task-discussion-feed.css";
 
 export type TaskAttentionTarget = {
   kind: "activity" | "commit" | "file" | "insight" | "criteria" | "subtasks" | "details" | "discussion";
   targetId: string;
 };
 
-type TaskDetailTab = "information" | "discussion" | "files" | "activity";
+type TaskDetailTab = "information" | "ai" | "discussion" | "files" | "activity";
 
 type TaskDetailProps = {
-  aiAdjustmentContext?: TaskAiAdjustmentContext | null;
   completedMinutesByTaskId?: Readonly<Record<string, number | null>>;
   effortTasks?: TaskEffortDistributionInput[];
   progressComparisonsByTaskId?: Readonly<Record<string, TaskProgressComparisonSeries | undefined>>;
@@ -75,10 +78,6 @@ type TaskDetailProps = {
   onTaskCriteriaSave?: (values: string[], expected: string[]) => void | Promise<void>;
   childTasks?: TaskRelationSummary[];
   parentTask?: TaskRelationSummary;
-  dependencyTasks?: TaskRelationSummary[];
-  dependencyTaskIds?: string[];
-  availableDependencyTasks?: TaskRelationSummary[];
-  onTaskDependenciesSave?: (values: string[], expected: string[]) => void | Promise<void>;
   currentUser?: string;
   currentUserId?: string;
   teamId?: string;
@@ -86,7 +85,6 @@ type TaskDetailProps = {
   members: Member[];
   onFileSaved?: () => void;
   onActivityAppend?: (activity: TaskActivityMock) => void;
-  onAiAdjustmentApply?: (proposal: TaskAiAdjustmentProposal) => void | Promise<void>;
   onSubtaskCriteriaSave?: (taskId: string, values: string[], expected: string[]) => void | Promise<void>;
   onCreateSubtask?: () => void;
   onDeleteSubtask?: (taskId: string, returnFocus?: HTMLElement | null) => void;
@@ -129,23 +127,17 @@ function toDateInputValue(value: string): string {
 }
 
 export function TaskDetail({
-  aiAdjustmentContext,
   completedMinutesByTaskId,
   effortTasks = [],
   progressComparisonsByTaskId = {},
   recordedActivities = [],
   childTasks = [],
-  dependencyTasks = [],
-  dependencyTaskIds,
-  availableDependencyTasks,
-  onTaskDependenciesSave,
   currentUser = "周岚",
   currentUserId = currentUser,
   teamId = "demo",
   initialAttentionTarget = null,
   members,
   onFileSaved,
-  onAiAdjustmentApply,
   onSubtaskCriteriaSave,
   onTaskCriteriaSave,
   onTaskCriterionConfirm,
@@ -161,7 +153,6 @@ export function TaskDetail({
   onTagsChange,
   onTaskGoalChange,
   onTaskTitleChange,
-  onTaskAppearanceChange,
   onTaskPeriodChange,
   onTaskStatusChange,
   onRepredict,
@@ -179,7 +170,6 @@ export function TaskDetail({
   const [editingOriginal, setEditingOriginal] = useState<"title" | "goal" | null>(null);
   const d = useDetailCopy();
   const completionCriteria = task.completionCriteria ?? [];
-  const currentDependencyIds = dependencyTaskIds ?? dependencyTasks.map(item => item.id);
   const burnUp = task.burnUp;
   const progressAssessment = getTaskProgressAssessment(burnUp, effortTasks);
   const hasBurnUp = progressAssessment.hasTrend;
@@ -188,6 +178,10 @@ export function TaskDetail({
   const taskFiles = collaboration.snapshot.files;
   const firstFile = taskFiles.find(node => node.kind === "file" && !node.archived);
   const allMessages = useMemo(() => mergeCollaborationMessages(task.activities, collaboration.snapshot.messages), [task.activities, collaboration.snapshot.messages]);
+  const contentIndicators = getTaskContentIndicators({
+    messages: allMessages, files: taskFiles,
+    enabled: !collaboration.error,
+  });
   const activities = useMemo(() => allMessages.filter(message => !message.fileThreadId), [allMessages]);
   const localActivities = collaboration.snapshot.messages.filter(message => !message.fileThreadId && !message.deletedAt);
   const initialTab = getTaskDetailTabForTarget(activities, initialAttentionTarget);
@@ -196,7 +190,8 @@ export function TaskDetail({
   const setActiveTab = (tab: TaskDetailTab | "subtasks") => setDetailTab(tab === "subtasks" ? "information" : tab);
   const [currentOwner, setCurrentOwner] = useState([task.owner]);
   const [currentParticipants, setCurrentParticipants] = useState(task.participants);
-  const [currentStatus, setCurrentStatus] = useState(task.status);
+  const [currentStatus, setCurrentStatus] = useState(normalizeTaskStatus(task.status));
+  const previousIncompleteStatus = useRef<TaskStatus>(task.status === "已完成" ? "进行中" : normalizeTaskStatus(task.status));
   const progressNeedsReview = currentStatus === "已完成" && progressAssessment.progressRatio !== null && progressAssessment.progressRatio < 1;
   const [selectedFileId, setSelectedFileId] = useState(initialAttentionTarget?.kind === "file" ? initialAttentionTarget.targetId : firstFile?.id ?? "");
   const [selectedFileVersion, setSelectedFileVersion] = useState<number>();
@@ -209,11 +204,6 @@ export function TaskDetail({
   const aiConnectionTrigger = useRef<HTMLElement | null>(null);
   const [currentTitle, setCurrentTitle] = useState(task.title);
   const [currentGoal, setCurrentGoal] = useState(task.goal);
-  const [aiScope, setAiScope] = useState<TaskAiAdjustmentScope | null>(null);
-  const [aiOpen, setAiOpen] = useState(false);
-  const aiDraftSession = useTaskAiAdjustmentDrafts();
-  const [aiNotice, setAiNotice] = useState("");
-  const aiReturnFocus = useRef<HTMLElement | null>(null);
   const documentScrollRef = useRef<HTMLElement>(null);
 
   useEffect(() => { setCurrentTitle(task.title); }, [task.title]);
@@ -224,20 +214,12 @@ export function TaskDetail({
     setCurrentParticipants(task.participants);
   }, [participantSignature]);
 
-  const openAiAdjustment = (scope: TaskAiAdjustmentScope, returnFocus?: HTMLElement | null) => {
-    if (!aiAdjustmentContext || !onAiAdjustmentApply) return;
-    aiReturnFocus.current = returnFocus ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
-    setAiScope(scope); setAiOpen(true); setAiNotice("");
-  };
-  const applyAiAdjustment = async (proposal: TaskAiAdjustmentProposal) => {
-    if (!onAiAdjustmentApply) throw new Error(d('aiUnavailable'));
-    await onAiAdjustmentApply(proposal);
-    setAiNotice(d('savedActivity'));
-  };
+  useEffect(() => { previousIncompleteStatus.current = task.status === "已完成" ? "进行中" : normalizeTaskStatus(task.status); }, [taskId]);
 
   useEffect(() => {
-    setCurrentStatus(task.status);
-  }, [task.status]);
+    setCurrentStatus(normalizeTaskStatus(task.status));
+    if (task.status !== "已完成") previousIncompleteStatus.current = normalizeTaskStatus(task.status);
+  }, [task.status, taskId]);
 
   const confirmedOwnerId = currentOwner[0] ?? task.owner;
   const displayedOwnerId = confirmedOwnerId;
@@ -249,6 +231,22 @@ export function TaskDetail({
   const leafProgressComparisons = Object.fromEntries(effortTasks.filter(task => task.id).map(task => [task.id!, getTaskProgressDemoExample(task.id!, progressComparisonsByTaskId[task.id!])]));
   const workloadProjection = getTaskWorkloadProjection({ progressTask: { ...progressTask, status: currentStatus }, comparison: progressComparison,
     effortTasks, hasSubtasks: childTasks.length > 0, series: burnUp, completedMinutesByTaskId, progressComparisonsByTaskId: leafProgressComparisons });
+  const taskAiProjection = getTaskWorkloadProjection({ progressTask: { ...progressTask, status: undefined, completedAt: undefined }, comparison: progressComparison,
+    effortTasks, hasSubtasks: childTasks.length > 0, series: burnUp, completedMinutesByTaskId, progressComparisonsByTaskId: leafProgressComparisons });
+  const taskAiProgressRatio = taskAiProjection.display.aiAssessment?.ratio ?? taskAiProjection.display.ratio;
+  const taskAiProgressEvidence = taskAiProjection.display.aiAssessment
+    ? taskAiProjection.display.aiAssessment.basis
+    : taskAiProjection.display.historySeries?.workload.at(-1)?.note ?? taskAiProjection.assessment.burnUp.latest?.note;
+  // A name, status, or estimate alone does not establish execution progress.
+  const hasAnalysisEvidence = taskAiProjection.display.ratio !== null;
+  const visibleTab = activeTab === "ai" && !hasAnalysisEvidence ? "information" : activeTab;
+  useEffect(() => {
+    if (hasAnalysisEvidence || activeTab !== "ai") return;
+    setDetailTab("information");
+    if (document.activeElement === document.body || document.activeElement?.id === "task-detail-tab-ai") {
+      document.getElementById("task-detail-tab-information")?.focus({ preventScroll: true });
+    }
+  }, [activeTab, hasAnalysisEvidence]);
   const situation = getTaskSituationModel({
     progress: workloadProjection.display,
     progressScopeState: workloadProjection.effort.state,
@@ -256,8 +254,6 @@ export function TaskDetail({
     task: { ...task, files: taskFiles, activities, status: currentStatus, owner: confirmedOwnerId },
     ownerName: confirmedOwnerId ? members.find(member => member.id === confirmedOwnerId)?.name.trim() || d('owner') : "",
     childTasks,
-    dependencyTasks,
-    dependencyTaskIds,
     recordedActivities: [...localActivities, ...recordedActivities],
   });
 
@@ -370,9 +366,20 @@ export function TaskDetail({
   };
 
   const changeStatus = (value: TaskStatus) => {
-    if (!onTaskStatusChange) return;
-    setCurrentStatus(value);
-    onTaskStatusChange(value);
+    if (!onTaskStatusChange) return false;
+    try {
+      onTaskStatusChange(value);
+      setCurrentStatus(normalizeTaskStatus(value));
+      return true;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : d("statusSaveFailed"));
+      return false;
+    }
+  };
+
+  const setTaskCompleted = (completed: boolean) => {
+    if (completed && currentStatus !== "已完成") previousIncompleteStatus.current = currentStatus;
+    return changeStatus(completed ? "已完成" : previousIncompleteStatus.current);
   };
 
   const postDiscussion = (draft: DiscussionDraft, replyToActivityId?: string, thread?: FileDiscussionThread) => {
@@ -434,7 +441,6 @@ export function TaskDetail({
         window.setTimeout(() => document.getElementById("task-detail-tab-activity")?.focus(), 0);
       } else if (reference.id && onOpenRelatedTask && (
         childTasks.some(item => item.id === reference.id)
-        || dependencyTasks.some(item => item.id === reference.id)
         || pathItems?.some(item => item.id === reference.id)
       )) onOpenRelatedTask(reference.id);
       else setAttentionMessage(d('taskUnavailable'));
@@ -495,11 +501,12 @@ export function TaskDetail({
     }, 0);
   };
 
-  const tabs: Array<{ id: TaskDetailTab; label: string }> = [
+  const tabs: Array<{ id: TaskDetailTab; label: string; count?: number | null }> = [
     { id: "information", label: d("basicInformation") },
-    { id: "discussion", label: d('discussion') },
-    { id: "files", label: d('files') },
+    { id: "discussion", label: d('discussion'), count: contentIndicators.discussionCount },
+    { id: "files", label: d('files'), count: contentIndicators.fileCount },
     { id: "activity", label: d('activity') },
+    ...(hasAnalysisEvidence ? [{ id: "ai" as const, label: d('analysisTab') }] : []),
   ];
 
   const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, currentTab: TaskDetailTab) => {
@@ -521,19 +528,19 @@ export function TaskDetail({
   };
 
   return <MockTaskProvider taskId={taskId}><section className="task-detail-view task-detail-split">
-    <header className="task-detail-header" data-tone={task.iconTone ?? "neutral"}>
-      <div className="task-detail-kicker">{onBackToList && <Button aria-label={d('backToList')} className="task-detail-back-to-list" onClick={onBackToList} size="icon-sm" type="button" variant="ghost"><ArrowLeft size={17}/></Button>}{pathItems?.length ? <nav aria-label={d('path')} className="task-detail-path">{pathItems.map((item, index) => <span key={item.id}>
+    <header className="task-detail-header">
+      <div className="task-detail-kicker"><TaskSidebarToggle />{onBackToList && <Button aria-label={d('backToList')} className="task-detail-back-to-list" onClick={onBackToList} size="icon-sm" type="button" variant="ghost"><ArrowLeft size={17}/></Button>}{pathItems?.length ? <nav aria-label={d('path')} className="task-detail-path">{pathItems.map((item, index) => <span key={item.id}>
         {index > 0 && <ChevronRight aria-hidden="true" size={12} />}
         {index < pathItems.length - 1 ? <button onClick={() => onPathSelect?.(item.id)} type="button">{item.label === "任务" ? d("task") : mock.field(item.id, "title", item.label)}</button> : <em aria-current="page">{item.label === "任务" ? d("task") : mock.field(item.id, "title", item.label)}</em>}
       </span>)}</nav> : null}</div>
             <div className="task-detail-title-row">
-              {onTaskAppearanceChange ? <TaskAppearancePicker iconName={task.iconName} onChange={onTaskAppearanceChange} tone={task.iconTone} /> : <TaskIcon iconName={task.iconName} size="lg" tone={task.iconTone} />}
+              <TaskCompletionIndicator key={taskId} status={currentStatus} completed={currentStatus === "已完成"} progressRatio={taskAiProgressRatio} evidence={taskAiProgressEvidence} onToggle={onTaskStatusChange ? () => setTaskCompleted(currentStatus !== "已完成") : undefined} />
               <h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} className="task-detail-title-input" onFocus={() => setEditingOriginal("title")} onBlur={() => { setEditingOriginal(null); if (currentTitle !== task.title) onTaskTitleChange?.(currentTitle); }} onChange={(event) => setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " "))} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>
               <div className="task-ai-detail-tools"><AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} /></div>
             </div>
       {editingOriginal && <small className="content-editing-original">{ui("正在编辑原文")}</small>}
       <div aria-label={d('properties')} className="task-detail-primary-properties">
-        <div className="task-detail-property task-detail-status-field"><small>{d('status')}</small><TaskStatusBadge editable={Boolean(onTaskStatusChange)} onChange={changeStatus} size="sm" value={currentStatus} /></div>
+        <div className="task-detail-property task-detail-status-field"><small>{d('status')}</small><TaskStatusBadge editable={Boolean(onTaskStatusChange)} onChange={changeStatus} size="sm" value={currentStatus} progressRatio={taskAiProgressRatio} /></div>
         <div aria-label={`${d("owner")}: ${displayedOwnerName}`} className="task-detail-property" role="group" title={displayedOwnerName}><small>{d('owner')}</small><MemberSelector avatarSize="sm" allowUnassigned={!displayedOwnerId} disabled={!onOwnerChange} hideHeader hideSelectedName={Boolean(displayedOwnerId)} label={d('owner')} max={1} memberRecommendations={memberRecommendations} members={members} min={0} onChange={changeOwner} onInviteMembers={onInviteMembers} selected={displayedOwnerId ? [displayedOwnerId] : []} /></div>
         <div className="task-detail-property task-detail-participants"><small>{d('participants')}</small><MemberSelector avatarSize="sm" displayMax={4} hideHeader hideSelectedName label={d('participants')} memberRecommendations={memberRecommendations} members={participantMembers} disabled={!onParticipantsChange} onChange={changeParticipants} onInviteMembers={onInviteMembers} selected={currentParticipants} stacked /></div>
         <TaskDueDatePicker minDate={taskCalendarDate(progressTask?.createdAt) ?? ""} initialValue={plannedEndOn ?? toDateInputValue(task.due)} key={`due-${taskId}`} label={d('dueDate')} onChange={(endDate) => onTaskPeriodChange?.(endDate ? { end: endDate, start: "" } : null)} />
@@ -541,48 +548,43 @@ export function TaskDetail({
     </header>
     <div className="task-detail-columns">
     <div aria-label={d('taskCollaboration')} className="task-detail-body" id="task-detail-collaboration">
-    {aiNotice && <p className="task-ai-inline-notice" role="status"><Check aria-hidden="true" size={14} />{aiNotice}<button aria-label={d('dismissUpdate')} onClick={() => setAiNotice("")} type="button"><X size={13} /></button></p>}
 
     <div className="task-detail-collaboration-header">
-      <div aria-label={d('details')} className="task-detail-tabs" role="tablist">{tabs.map(({ id, label }) => <button
+      <div aria-label={d('details')} className="task-detail-tabs" role="tablist">{tabs.map(({ id, label, count }) => <button
       aria-controls={`task-detail-panel-${id}`}
-      aria-selected={activeTab === id}
-      className={activeTab === id ? "active" : ""}
+      aria-label={describeTaskDetailTab(label, count ?? null, locale)}
+      aria-selected={visibleTab === id}
+      className={visibleTab === id ? "active" : ""}
       id={`task-detail-tab-${id}`}
       key={id}
       onClick={() => setActiveTab(id)}
       onKeyDown={(event) => handleTabKeyDown(event, id)}
       role="tab"
-      tabIndex={activeTab === id ? 0 : -1}
+      tabIndex={visibleTab === id ? 0 : -1}
+      title={describeTaskDetailTab(label, count ?? null, locale)}
       type="button"
-    ><span>{label}</span></button>)}</div>
+    ><TaskDetailTabLabel label={label} count={count ?? null} /></button>)}</div>
     </div>
 
     {collaboration.error && <p className="task-attention-message" role="alert">{collaboration.error}<button onClick={collaboration.reload} type="button">{d('reload')}</button></p>}
     {attentionMessage && <p className="task-attention-message" role="status">{attentionMessage}</p>}
     {sourceRecord && <aside aria-label={d('suggestionSource')} className="task-source-record" id="task-source-record" tabIndex={-1}>
-      <header><strong>{d('previousSuggestion')}</strong><time dateTime={Number.isFinite(Date.parse(sourceRecord.createdAt ?? "")) ? sourceRecord.createdAt : undefined}>{!Number.isFinite(Date.parse(sourceRecord.createdAt ?? "")) && d('originalTime')}{sourceRecord.time}</time><button aria-label={d('closeSource')} onClick={() => setSourceRecord(null)} type="button"><X size={15} /></button></header>
+      <header><strong>{d('previousSuggestion')}</strong><time dateTime={Number.isFinite(Date.parse(sourceRecord.createdAt ?? "")) ? sourceRecord.createdAt : undefined} title={sourceRecord.createdAt ? formatDisplayDateTime(sourceRecord.createdAt, { year: "always" }) ?? undefined : undefined}>{!Number.isFinite(Date.parse(sourceRecord.createdAt ?? "")) && d('originalTime')}{formatDisplayDateTime(sourceRecord.createdAt ?? "") ?? formatLegacyDateLabel(sourceRecord.time, locale)}</time><button aria-label={d('closeSource')} onClick={() => setSourceRecord(null)} type="button"><X size={15} /></button></header>
       <p>{sourceRecord.message}</p><small>{d('sourceHint')}</small>
       {sourceRecord.file && <TaskActivityFileLink fileId={taskFiles.find((file) => file.kind === "file" && !file.archived && file.name === sourceRecord.file)?.id} fileName={sourceRecord.file} onOpen={openFile} />}
     </aside>}
 
-    <div aria-labelledby="task-detail-tab-information" className="task-detail-document-pane" hidden={activeTab !== "information"} id="task-detail-panel-information" role="tabpanel" tabIndex={-1}>
+    <div aria-labelledby="task-detail-tab-information" className="task-detail-document-pane" hidden={visibleTab !== "information"} id="task-detail-panel-information" role="tabpanel" tabIndex={-1}>
       <section aria-label={d('goalAndExecution')} className="task-detail-document" id="task-detail-document" ref={documentScrollRef} tabIndex={-1}>
         <div aria-label={d('information')} className="task-detail-brief" id={`task-heading-${taskId}`} tabIndex={-1}>
             <div className="task-detail-description">
               <div className="task-detail-goal-field"><span className="task-detail-field-label">{d('goal')}</span><Textarea aria-label={d('taskGoal')} className="task-detail-goal-input" onFocus={() => setEditingOriginal("goal")} onBlur={() => { setEditingOriginal(null); if (currentGoal !== task.goal) onTaskGoalChange?.(currentGoal); }} onChange={(event) => setCurrentGoal(event.target.value)} placeholder={onTaskGoalChange ? d('addGoal') : d('noGoal')} readOnly={!onTaskGoalChange} rows={1} value={editingOriginal === "goal" ? currentGoal : mock.field(taskId, "goal", currentGoal)} /></div>
               <div aria-label={d('criteria')} id={`task-criteria-${taskId}`} key={`criteria-${taskId}`} tabIndex={-1}>
-                <TaskCompletionCriteria key={taskId} reviews={task.criterionReviews} onConfirm={onTaskCriterionConfirm} criteria={completionCriteria} onSave={onTaskCriteriaSave} source="recorded" />
+                <TaskCompletionCriteria completed={currentStatus === "已完成"} onTaskComplete={onTaskStatusChange ? setTaskCompleted : undefined} key={taskId} reviews={task.criterionReviews} onConfirm={onTaskCriterionConfirm} criteria={completionCriteria} onSave={onTaskCriteriaSave} source="recorded" />
               </div>
             </div>
         </div>
-        <details className="task-detail-ai-analysis" key={`ai-analysis-${taskId}`}><summary><span>{d('analysis')}</span></summary>
-          {onRepredict && <div className="task-detail-analysis-action"><TaskProgressRefresh key={taskId} scope="task" onRepredict={refreshAnalysis}/></div>}
-          <section aria-label={d('progress')} className="task-detail-progress-section">
-          <TaskWorkloadSummary compact progressTask={{...progressTask,status:currentStatus}} comparison={progressComparison} completedMinutesByTaskId={completedMinutesByTaskId} progressComparisonsByTaskId={leafProgressComparisons} key={taskId} effortTasks={effortTasks} hasSubtasks={childTasks.length > 0} onOpenTask={onOpenRelatedTask} needsReview={progressNeedsReview} series={burnUp} />
-          </section>
-          <TaskCurrentSituation hasBurnUp={hasBurnUp} key={`situation-${taskId}`} model={situation} onOpenReference={openSituationReference}/>
-        </details>
+
       <section aria-labelledby={`task-subtasks-heading-${taskId}`} className="task-detail-section task-subtask-list-section first-section" id={`task-subtasks-${taskId}`} tabIndex={-1}>
       <div className="task-section-heading task-ai-module-heading task-subtask-heading">
         <div><h2 id={`task-subtasks-heading-${taskId}`}>{d('subtasks')}</h2></div>
@@ -593,10 +595,6 @@ export function TaskDetail({
       <TaskSubtaskList progressComparisonsByTaskId={progressComparisonsByTaskId} effortTasks={effortTasks} completedMinutesByTaskId={completedMinutesByTaskId} onOpenTask={onOpenRelatedTask} tasks={childTasks} />
     </section>
 
-        {(currentDependencyIds.length > 0 || onTaskDependenciesSave) && <section aria-labelledby={`task-dependencies-heading-${taskId}`} className="task-detail-section task-detail-dependencies-section" key={`dependency-details-${taskId}`}>
-          <div className="task-section-heading"><h2 id={`task-dependencies-heading-${taskId}`}>{d('dependencies')}</h2>{currentDependencyIds.length > 0 && <small>{currentDependencyIds.length}</small>}</div>
-          <TaskDependenciesField dependencyIds={currentDependencyIds} onOpenTask={onOpenRelatedTask} onSave={onTaskDependenciesSave} taskId={taskId} tasks={availableDependencyTasks ?? dependencyTasks} />
-        </section>}
         {(tags.length > 0 || onTagsChange) && <section aria-labelledby={`task-tags-heading-${taskId}`} className="task-detail-section task-detail-tags-section">
           <div className="task-section-heading"><h2 id={`task-tags-heading-${taskId}`}>{d('tags')}</h2></div>
           <TaskTagList key={`tags-${taskId}`} onChange={onTagsChange} selected={tags} tags={tagDefinitions} />
@@ -604,6 +602,16 @@ export function TaskDetail({
       </section>
       <FixedScrollThumb scrollRef={documentScrollRef} topInset={52} />
     </div>
+
+    {hasAnalysisEvidence && <section aria-labelledby="task-detail-tab-ai" className="task-detail-ai-panel" hidden={visibleTab !== "ai"} id="task-detail-panel-ai" role="tabpanel">
+        <div className="task-detail-ai-analysis" key={`ai-analysis-${taskId}`}>
+          <section aria-label={d('progress')} className="task-detail-progress-section">
+          <TaskWorkloadSummary compact headingAction={onRepredict ? <div className="task-detail-analysis-action">
+            <TaskProgressRefresh key={taskId} scope="task" onRepredict={refreshAnalysis}/>
+          </div> : undefined} progressTask={{...progressTask,status:currentStatus}} comparison={progressComparison} completedMinutesByTaskId={completedMinutesByTaskId} progressComparisonsByTaskId={leafProgressComparisons} key={taskId} effortTasks={effortTasks} hasSubtasks={childTasks.length > 0} onOpenTask={onOpenRelatedTask} needsReview={progressNeedsReview} series={burnUp} />
+          </section>
+          <TaskCurrentSituation hasBurnUp={hasBurnUp} key={`situation-${taskId}`} model={situation} onOpenReference={openSituationReference}/>
+        </div>    </section>}
 
     <section aria-labelledby="task-detail-tab-discussion" className="task-detail-section task-discussion-panel first-section" hidden={activeTab !== "discussion"} id="task-detail-panel-discussion" role="tabpanel" tabIndex={-1}>
       <TaskDiscussion activities={activities} attentionTarget={discussionAttention} currentUser={currentUserId} currentUserName={currentUser} draftKey={collaboration.scopeKey} files={taskFiles} key={taskId} onConnectAi={openDiscussionAi} onOpenFile={openFile} onPost={postDiscussion} onEdit={editDiscussion} onDelete={deleteDiscussion} people={activityPeople} />
@@ -626,7 +634,6 @@ export function TaskDetail({
     </div>
     </div>
 
-    {aiScope && aiAdjustmentContext && onAiAdjustmentApply && <TaskAiAdjustmentPopover anchor={aiReturnFocus.current} context={aiAdjustmentContext} draftSession={aiDraftSession} onApply={applyAiAdjustment} onOpenChange={setAiOpen} open={aiOpen} scope={aiScope} />}
     {aiConnectionRequest?.taskId === taskId && <AiConnectionDialog onClose={closeAiConnection} request={aiConnectionRequest.request} returnFocus={aiConnectionTrigger.current} />}
   </section></MockTaskProvider>;
 }

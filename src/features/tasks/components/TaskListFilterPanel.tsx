@@ -11,6 +11,7 @@ import { taskStatusDefinition, type TaskStatus } from "@/shared/ui/TaskStatusBad
 import { Button } from "@/shared/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Input } from "@/shared/ui/input";
+import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
 
 const filterCategories = [
   { id: "statuses", label: "状态", icon: CircleDashed },
@@ -75,8 +76,8 @@ function DateFilterChoices({ field, value, onChange }: { field: "deadline" | "cr
     </div>
     <form className="task-filter-date-range" onSubmit={event => { event.preventDefault(); onChange({ preset: "custom", ...(from ? { from } : {}), ...(to ? { to } : {}) }); }}>
       <strong>{u('customDates')}</strong>
-      <label>{u('from')}<Input aria-label={u('startDate')} onInput={event => setFrom(event.currentTarget.value)} type="date" value={from} /></label>
-      <label>{u('to')}<Input aria-label={u('endDate')} onInput={event => setTo(event.currentTarget.value)} type="date" value={to} /></label>
+      <TaskDueDatePicker emptyLabel={u('anyDate')} initialValue={from} label={u('startDate')} minDate="" onChange={setFrom} presentation="inline" />
+      <TaskDueDatePicker emptyLabel={u('anyDate')} initialValue={to} label={u('endDate')} minDate="" onChange={setTo} presentation="inline" />
       <Button disabled={!from && !to} size="sm" type="submit" variant="outline">{u('applyDates')}</Button>
     </form>
   </>;

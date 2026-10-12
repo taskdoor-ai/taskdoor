@@ -9,6 +9,7 @@ import { Tooltip } from "@base-ui/react/tooltip";
 import { AtSign, Check, ChevronDown, Plus, Search, Sparkles, UserPlus, UserRoundX, UsersRound } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
 import { cn } from "@/shared/lib/utils";
+import { selectTriggerClassName } from "@/shared/ui/select";
 import { sortMembersByRecommendation, type TaskMemberRecommendationLevel, type TaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecommendations";
 import { PersonAvatar, PersonName, type PersonInvitationStatus } from "@/shared/ui/PersonAvatar";
 import type { PersonOption } from "@/shared/model/task-model";
@@ -34,17 +35,17 @@ type PersonPickerCommonProps = {
   memberRecommendations?: TaskMemberRecommendations;
   onInviteMembers?: (returnFocus?: HTMLElement | null) => void;
   searchPlaceholder?: string;
-  size?: "sm" | "touch";
+  size?: "default" | "sm" | "touch";
   selfId?: string;
   selfOptionLabel?: string;
   scopeOption?: {
-    description: string;
+    description?: string;
     id: string;
     label: string;
   };
   showTriggerProfilePreview?: boolean;
   triggerLabel?: string;
-  triggerVariant?: "action" | "add" | "filter" | "identity" | "member" | "mention" | "select";
+  triggerVariant?: "action" | "add" | "identity" | "member" | "mention" | "select";
   unassignedDescription?: string;
   unassignedLabel?: string;
 };
@@ -77,7 +78,9 @@ export function PersonPicker(props: PersonPickerProps) {
   const ui = useGlobalUi();
   const { locale } = useI18n();
   const d = useDetailCopy();
-  const { allowUnassigned = false, align = "start", ariaLabel, className, disabled = false, emptyLabel = d('noMatchingMembers'), hideSelectedName = false, invitationStatus, memberRecommendations = {}, members, menuLabel = d('selectMember'), onInviteMembers, scopeOption, searchPlaceholder = d('searchMembers'), selfId, selfOptionLabel = d('assignToMe'), showTriggerProfilePreview = true, size = "sm", triggerLabel = d('change'), triggerVariant = "action", unassignedDescription = props.allowInvitations === false ? d('leaveUnassigned') : d('inviteTeammate'), unassignedLabel = d('unassigned') } = props;
+  const { allowUnassigned = false, align = "start", ariaLabel, className, disabled = false, emptyLabel = d('noMatchingMembers'), hideSelectedName = false, invitationStatus, memberRecommendations = {}, members, menuLabel = d('selectMember'), onInviteMembers, scopeOption, searchPlaceholder = d('searchMembers'), selfId, selfOptionLabel = d('assignToMe'), showTriggerProfilePreview = true, triggerLabel = d('change'), triggerVariant = "action", unassignedDescription = props.allowInvitations === false ? d('leaveUnassigned') : d('inviteTeammate'), unassignedLabel = d('unassigned') } = props;
+  const isSelectTrigger = triggerVariant === "select";
+  const size = props.size ?? (isSelectTrigger ? "default" : "sm");
   const [internalOpen, setOpen] = useState(false);
   const open = props.open ?? internalOpen;
   const [query, setQuery] = useState("");
@@ -94,7 +97,7 @@ export function PersonPicker(props: PersonPickerProps) {
   const canUnassign = allowUnassigned && (!props.multiple || !props.min);
   const sortedMembers = useMemo(() => sortMembersByRecommendation(members, memberRecommendations), [memberRecommendations, members]);
   const unassignedPerson = useMemo<PersonOption>(() => ({ email: "", id: unassignedPersonId, name: unassignedLabel, role: unassignedDescription }), [unassignedDescription, unassignedLabel]);
-  const scopePerson = useMemo<PersonOption | null>(() => scopeOption ? ({ email: "", id: scopeOption.id, name: scopeOption.label, role: scopeOption.description }) : null, [scopeOption]);
+  const scopePerson = useMemo<PersonOption | null>(() => scopeOption ? ({ email: "", id: scopeOption.id, name: scopeOption.label, role: scopeOption.description ?? "" }) : null, [scopeOption]);
   const availablePeople = useMemo(() => [
     ...(scopePerson ? [scopePerson] : []),
     ...sortedMembers,
@@ -108,7 +111,7 @@ export function PersonPicker(props: PersonPickerProps) {
   const selectedInternalIds = selectedPeople.map((person) => person.id);
   const matchesQuery = (person: PersonOption, keyword: string) => `${person.name} ${mockPersonName(locale, person.id, person.name)} ${person.role} ${settingsMockText(locale, person.id, person.dynamicResponsibility ?? "")} ${person.dynamicResponsibility ?? ""} ${person.email}`.toLocaleLowerCase().includes(keyword.trim().toLocaleLowerCase());
   const allowInvitations = props.allowInvitations !== false;
-  const inviteCandidate = Boolean(allowInvitations && invitations && triggerVariant !== "filter" && triggerVariant !== "mention"
+  const inviteCandidate = Boolean(allowInvitations && invitations && triggerVariant !== "mention"
     && query.trim() && !availablePeople.some(person => matchesQuery(person, query)));
   const inviteAtMaximum = multiple && Boolean(props.max && selectedIds.length >= props.max);
   const openInvitation = (selectAfterInvite: boolean) => {
@@ -185,22 +188,22 @@ export function PersonPicker(props: PersonPickerProps) {
       <Combobox.Trigger
         aria-label={ariaLabel}
         data-hide-name={hideSelectedName || undefined}
+        data-size={size}
         className={cn(
-          "person-picker-trigger inline-flex items-center justify-center gap-(--ad-space-2) rounded-(--ad-radius-control) border border-transparent bg-transparent font-sans text-(length:--ad-text-caption) font-semibold text-(--ad-route-ink) outline-none transition-[background-color,border-color,box-shadow] hover:border-(--ad-border) hover:bg-(--ad-surface) focus-visible:ring-2 focus-visible:ring-(--ad-focus) focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-          size === "touch" ? "min-h-(--ad-control-touch-min)" : "min-h-(--ad-control-height-sm)",
+          "person-picker-trigger",
+          isSelectTrigger ? cn(selectTriggerClassName, "workspace-filter-control person-picker-trigger-select text-(--ad-ink)") : "inline-flex items-center justify-center gap-(--ad-space-2) rounded-(--ad-radius-control) border border-transparent bg-transparent font-sans text-(length:--ad-text-caption) font-semibold text-(--ad-route-ink) outline-none transition-[background-color,border-color,box-shadow] hover:border-(--ad-border) hover:bg-(--ad-surface) focus-visible:ring-2 focus-visible:ring-(--ad-focus) focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          !isSelectTrigger && (size === "touch" ? "min-h-(--ad-control-touch-min)" : "min-h-(--ad-control-height-sm)"),
           (triggerVariant === "add" || triggerVariant === "member") && "person-picker-trigger-avatar",
-          triggerVariant === "action" ? "px-(--ad-space-2)" : triggerVariant === "add" ? "person-picker-trigger-add flex-col gap-(--ad-space-1) px-0 text-(--ad-ink-secondary)" : triggerVariant === "member" ? "person-picker-trigger-member flex-col gap-(--ad-space-1) px-0 text-(--ad-ink-secondary)" : (triggerVariant === "filter" || triggerVariant === "select") ? "person-picker-trigger-filter justify-start px-(--ad-space-3) text-left text-(--ad-ink)" : "person-picker-trigger-identity justify-start px-0 text-left text-(--ad-ink)",
+          triggerVariant === "action" ? "px-(--ad-space-2)" : triggerVariant === "add" ? "person-picker-trigger-add flex-col gap-(--ad-space-1) px-0 text-(--ad-ink-secondary)" : triggerVariant === "member" ? "person-picker-trigger-member flex-col gap-(--ad-space-1) px-0 text-(--ad-ink-secondary)" : !isSelectTrigger && "person-picker-trigger-identity justify-start px-0 text-left text-(--ad-ink)",
           className,
         )}
         disabled={disabled}
         ref={triggerRef}
       >
-        {triggerVariant === "mention" ? <AtSign aria-hidden="true" size={16} /> : (triggerVariant === "filter" || triggerVariant === "select") ? (
+        {triggerVariant === "mention" ? <AtSign aria-hidden="true" size={16} /> : (triggerVariant === "select") ? (
           <>
-            {scopeOption && selectedPerson?.id === scopeOption.id
-              ? <span className="person-picker-filter-scope-icon grid shrink-0 place-items-center rounded-full bg-(--ad-surface-subtle) text-(--ad-ink-tertiary)"><UsersRound aria-hidden="true" size={14} /></span>
-              : (selectedPerson || triggerVariant === "filter") && <PersonAvatar name={selectedPerson?.name ?? d('notSelected')} profile={selectedPerson} profilePreviewFocusable={false} showProfilePreview={showTriggerProfilePreview} size="xs" />}
-            <strong className={cn("min-w-0 flex-1 truncate text-(length:--ad-text-body-sm) font-medium", triggerVariant === "select" && !selectedPerson && "text-(--ad-ink-tertiary) font-normal")}>{selectedPerson ? mockPersonName(locale, selectedPerson.id, selectedPerson.name) : d('selectMember')}</strong>
+            {selectedPerson && selectedPerson.id !== scopeOption?.id && <PersonAvatar name={selectedPerson.name} profile={selectedPerson} profilePreviewFocusable={false} showProfilePreview={showTriggerProfilePreview} size="xs" />}
+            <span className={cn("person-picker-filter-label min-w-0 flex-1 truncate text-left", triggerVariant === "select" && !selectedPerson && "text-(--ad-ink-tertiary)")}>{selectedPerson ? selectedPerson.id === scopeOption?.id ? selectedPerson.name : mockPersonName(locale, selectedPerson.id, selectedPerson.name) : d('selectMember')}</span>
           </>
         ) : triggerVariant === "identity" ? (
           <>
@@ -212,7 +215,7 @@ export function PersonPicker(props: PersonPickerProps) {
         ) : triggerVariant === "member" ? <>{selectedPerson?.id === unassignedPersonId
           ? <span className="person-picker-empty-icon grid size-(--ad-control-height-md) place-items-center rounded-full bg-(--ad-surface-subtle) text-(--ad-ink-tertiary)"><UserRoundX aria-hidden="true" size={16} /></span>
           : <PersonAvatar invitationStatus={invitationStatus} name={selectedPerson?.name ?? d('notSelected')} profile={selectedPerson} profilePreviewFocusable={false} showProfilePreview={showTriggerProfilePreview} size="md" />}{!hideSelectedName && selectedPerson?.id !== unassignedPersonId && <strong className="max-w-(--ad-person-name-max) truncate text-(length:--ad-text-caption) font-semibold"><PersonName name={selectedPerson ? mockPersonName(locale, selectedPerson.id, selectedPerson.name) : d('selectMember')} profile={selectedPerson} /></strong>}</> : triggerVariant === "add" ? <><span className="person-picker-empty-icon grid size-(--ad-control-height-md) place-items-center rounded-full bg-(--ad-surface-subtle) text-(--ad-ink-tertiary)">{canUnassign && isUnassigned ? <UserRoundX aria-hidden="true" size={16} /> : <Plus aria-hidden="true" size={16} />}</span>{!hideSelectedName && !(canUnassign && isUnassigned) && <strong className="text-(length:--ad-text-caption) font-semibold">{d('append')}</strong>}</> : <span>{triggerLabel}</span>}
-        {triggerVariant !== "add" && triggerVariant !== "member" && triggerVariant !== "mention" && <Combobox.Icon className="grid size-(--ad-control-icon-sm) shrink-0 place-items-center text-(--ad-ink-tertiary)"><ChevronDown aria-hidden="true" size={16} /></Combobox.Icon>}
+        {triggerVariant !== "add" && triggerVariant !== "member" && triggerVariant !== "mention" && <Combobox.Icon className="grid size-(--ad-control-icon-sm) shrink-0 place-items-center text-muted-foreground"><ChevronDown aria-hidden="true" size={16} /></Combobox.Icon>}
       </Combobox.Trigger>
 
       <Combobox.Portal>
@@ -250,8 +253,8 @@ export function PersonPicker(props: PersonPickerProps) {
                   <Combobox.Item className="person-picker-option grid min-h-(--ad-control-touch-min) cursor-default grid-cols-[var(--ad-control-height-md)_minmax(0,1fr)_auto] items-center gap-(--ad-space-3) rounded-(--ad-radius-control) px-(--ad-space-3) py-(--ad-space-2) outline-none transition-colors data-disabled:opacity-40 data-highlighted:bg-(--ad-surface-subtle) data-selected:bg-(--ad-route-soft)" disabled={(atMaximum && !selected) || atMinimum} key={person.id} value={person}>
                     {isScope
                       ? <span className="grid size-(--ad-control-height-md) place-items-center rounded-full bg-(--ad-surface-subtle) text-(--ad-ink-tertiary)"><UsersRound aria-hidden="true" size={16} /></span>
-                      : <PersonAvatar name={person.name} profile={person} profilePreviewFocusable={false} size="md" />}
-                    <span className="min-w-0"><strong className="block truncate text-(length:--ad-text-body-sm) font-semibold text-(--ad-ink)">{isScope ? person.name : isSelf ? selfOptionLabel : <PersonName name={person.name} profile={person} />}</strong>{isScope && <small className="person-picker-option-description mt-(--ad-space-1) block text-(length:--ad-text-caption) text-(--ad-ink-tertiary)">{person.role}</small>}</span>
+                      : <PersonAvatar name={person.name} profile={person} profilePreviewFocusable={false} showProfilePreview size="md" />}
+                    <span className="min-w-0"><strong className="block truncate text-(length:--ad-text-body-sm) font-semibold text-(--ad-ink)">{isScope ? person.name : isSelf ? selfOptionLabel : <PersonName name={person.name} profile={person} showProfilePreview />}</strong>{isScope && person.role && <small className="person-picker-option-description mt-(--ad-space-1) block text-(length:--ad-text-caption) text-(--ad-ink-tertiary)">{person.role}</small>}</span>
                     <span className="person-picker-option-end">
                       {recommendation && <Tooltip.Root><Tooltip.Trigger aria-label={`${mockPersonName(locale, person.id, person.name)}: ${ui(getMemberRecommendationLabel(recommendation.level))}`} className="person-picker-ai-reason" closeOnClick={false} data-recommendation-level={recommendation.level} delay={150} onClick={(event) => { event.preventDefault(); event.stopPropagation(); }} onPointerDown={(event) => { event.preventDefault(); event.stopPropagation(); }} type="button"><Sparkles aria-hidden="true" size={14} /></Tooltip.Trigger><Tooltip.Portal><Tooltip.Positioner className="person-picker-ai-tip-positioner" collisionPadding={12} side="top" sideOffset={6}><Tooltip.Popup className="person-picker-ai-tip" role="tooltip">{ui(getMemberRecommendationLabel(recommendation.level))}: {recommendationReason(locale, person, recommendation.reason)}</Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal></Tooltip.Root>}
                       <Combobox.ItemIndicator className="grid size-(--ad-control-icon-sm) place-items-center text-(--ad-route-ink)"><Check aria-hidden="true" size={16} /></Combobox.ItemIndicator>

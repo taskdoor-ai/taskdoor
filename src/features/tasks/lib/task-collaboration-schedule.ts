@@ -1,4 +1,5 @@
 import type { PersonOption } from "@/shared/model/task-model";
+import { formatDisplayDate } from "@/shared/lib/date-time";
 
 export type CollaborationScheduleTask = {
   clientId?: string;
@@ -7,6 +8,7 @@ export type CollaborationScheduleTask = {
   participantIds: string[];
   startDate: string;
   endDate: string;
+  /** @deprecated Historical input only; predecessor links do not determine scheduling. */
   dependsOnClientIds?: string[];
 };
 
@@ -40,13 +42,14 @@ export type CollaborationScheduleDependency = {
 };
 
 export type TaskCollaborationScheduleReport = {
-  status: "pending" | "review-dependencies";
-  statusLabel: "排期待确认" | "需核对前置时间";
+  status: "pending";
+  statusLabel: "排期待确认";
   sourceLabel: string;
   dateLabel: string;
   dateNotes: string[];
   owner: CollaborationSchedulePerson | null;
   participants: CollaborationSchedulePerson[];
+  /** @deprecated Retained for compatibility; current reports always return an empty list. */
   dependencies: CollaborationScheduleDependency[];
   limitations: string[];
 };
@@ -85,35 +88,17 @@ export function describeTaskCollaborationSchedule(task: CollaborationScheduleTas
   if (task.startDate && !validStart) dateNotes.push("开始日期无效，需核对。");
   if (task.endDate && !validEnd) dateNotes.push("截止日期无效，需核对。");
   if (validStart && validEnd && task.startDate > task.endDate) dateNotes.push("本任务开始日期晚于截止日期，需核对。");
-  if (validStart && !task.endDate) dateNotes.push(`计划开始：${task.startDate}`);
-
-  const dependencies = [...new Set(task.dependsOnClientIds ?? [])].filter(Boolean).map((clientId): CollaborationScheduleDependency => {
-    const predecessor = candidates.get(clientId);
-    const title = providedText(predecessor?.title) ?? "前置任务资料未知";
-    const base = { clientId, title, needsReview: false };
-    if (!predecessor) return { ...base, deadlineLabel: "交付时间未知", message: "前置任务不在当前方案中，交付时间未知，请核对依赖。" };
-    if (!predecessor.endDate) return { ...base, deadlineLabel: "不设固定时间", message: `前置任务「${title}」未设固定截止时间，需确认交付安排。` };
-    if (!validDate(predecessor.endDate)) return { ...base, deadlineLabel: "截止时间待核对", message: `前置任务「${title}」截止日期无效，需核对。` };
-    // Only compare stated deadlines. A start date alone does not prove the task cannot begin in parallel.
-    const needsReview = validEnd && predecessor.endDate > task.endDate;
-    return {
-      ...base,
-      needsReview,
-      deadlineLabel: `截止 ${predecessor.endDate}`,
-      message: needsReview ? `前置任务「${title}」截止晚于本任务，需核对交付时间。` : `前置任务「${title}」的交付衔接仍待确认。`,
-    };
-  });
-  const needsReview = dependencies.some(dependency => dependency.needsReview);
+  if (validStart && !task.endDate) dateNotes.push(`计划开始：${formatDisplayDate(task.startDate) ?? "—"}`);
 
   return {
-    status: needsReview ? "review-dependencies" : "pending",
-    statusLabel: needsReview ? "需核对前置时间" : "排期待确认",
+    status: "pending",
+    statusLabel: "排期待确认",
     sourceLabel: "成员资料 · 更新时间未提供",
-    dateLabel: !task.endDate ? "不设固定时间" : !validEnd ? "截止时间待核对" : validStart ? `${task.startDate} 至 ${task.endDate}` : `${task.endDate} 截止`,
+    dateLabel: !task.endDate ? "不设固定时间" : !validEnd ? "截止时间待核对" : validStart ? `${formatDisplayDate(task.startDate) ?? "—"} 至 ${formatDisplayDate(task.endDate) ?? "—"}` : `${formatDisplayDate(task.endDate) ?? "—"} 截止`,
     dateNotes,
     owner: task.ownerId ? person(task.ownerId) : null,
     participants: [...new Set(task.participantIds)].filter(id => id && id !== task.ownerId).map(person),
-    dependencies,
+    dependencies: [],
     limitations: ["人员分配在任务保存后直接生效，但不代表成员已承诺具体排期。", "缺少可用工作时段，未核对真实日历。"],
   };
 }

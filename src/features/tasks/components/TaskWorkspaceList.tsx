@@ -3,18 +3,20 @@ import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { formatTaskCount } from "@/shared/i18n/core";
 import { statusMessageKey } from "@/shared/i18n/task-status";
-import { ArrowDownUp, ChevronDown, CircleDashed, ListFilter, MoreHorizontal, Pin, Plus, Search, Trash2, UserRound, X } from "lucide-react";
+import { Check, ArrowDownUp, ChevronDown, CircleDashed, ListFilter, MoreHorizontal, Pin, Plus, Search, Trash2, UserRound, X } from "lucide-react";
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { PersonOption, TagDefinition, TaskNode } from "@/shared/model/task-model";
 
 import type { TaskListProjection } from "@/features/tasks/lib/task-list-projection";
-import { taskUpdatedLabel, taskUpdatedTime } from "@/features/tasks/lib/task-list-presentation";
+import { taskUpdatedLabel } from "@/features/tasks/lib/task-list-presentation";
 import { partitionPinnedTasks, pinnedTaskStorageKey, readPinnedTaskIds, togglePinnedTaskId, writePinnedTaskIds } from "@/features/tasks/lib/task-pins";
 import { useResponsiveControlSize } from "@/shared/lib/useResponsiveControlSize";
 import { clearedTaskListConditions, getTaskStatusFilters, getTaskTagFilters, normalizeTaskWorkspaceFilters,  type TaskListFilters } from "@/features/tasks/components/task-list-filters";
 import { taskFilterSummaries, TaskListFilterPanel } from "@/features/tasks/components/TaskListFilterPanel";
-import { taskStatusDefinition, taskStatusOptions, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
+import { TaskStatusIcon, taskStatusDefinition, taskStatusOptions, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
+import { getTaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 import { PersonAvatar } from "@/shared/ui/PersonAvatar";
 import { FixedScrollThumb } from "@/shared/ui/FixedScrollThumb";
 import { Button } from "@/shared/ui/button";
@@ -22,6 +24,7 @@ import { Input } from "@/shared/ui/input";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
 
 export type TaskWorkspaceListProps = {
+  progressComparisonsByTaskId?: Readonly<Record<string, TaskProgressComparisonSeries | undefined>>;
   projection: TaskListProjection;
   currentUserId: string;
   filters: TaskListFilters;
@@ -31,6 +34,7 @@ export type TaskWorkspaceListProps = {
   onManageTags: () => void;
   onOpenRecycleBin?: () => void;
   onDeleteTask: (task: TaskNode) => void;
+  onTaskStatusChange: (taskId: string, status: TaskStatus) => void;
   onTaskSelect: (task: TaskNode) => void;
   onQueryChange: (query: string) => void;
   query: string;
@@ -76,7 +80,7 @@ function TaskRowTitle({ title }: { title: string }) {
   </span>;
 }
 
-export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onCreateTask, onDeleteTask, onOpenRecycleBin, onFiltersChange, onManageTags, onTaskSelect, onQueryChange, query, scopeCounts, selectedTaskId, showingWorkbench, teamId }: TaskWorkspaceListProps) {
+export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onCreateTask, onDeleteTask, onTaskStatusChange, onOpenRecycleBin, onFiltersChange, onManageTags, onTaskSelect, onQueryChange, query, scopeCounts, selectedTaskId, showingWorkbench, teamId, progressComparisonsByTaskId }: TaskWorkspaceListProps) {
   const { t, locale } = useI18n();
   const mock = useMockText();
   const statusText = (status: string) => status in statusMessageKey ? t(statusMessageKey[status as keyof typeof statusMessageKey]) : status;
@@ -160,17 +164,16 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
     const owner = members.find(member => member.id === task.ownerId);
     const ownerName = task.ownerId ? mockPersonName(locale, task.ownerId, owner?.name ?? task.ownerId) : t('list.unassigned');
     const statusDefinition = taskStatusDefinition[task.status];
-    const StatusIcon = statusDefinition.icon;
+    const progress = getTaskProgressDisplay({ series: progressComparisonsByTaskId?.[task.id], task: { ...task, status: undefined, completedAt: undefined } });
+    const progressRatio = progress.aiAssessment?.ratio ?? progress.ratio;
     const timeField = filters.sort === "created" ? t('list.createdAt') : t('list.updatedAt');
     const timestampValue = filters.sort === "created" ? task.createdAt ?? "" : task.updatedAt;
-    const timestamp = taskUpdatedTime(timestampValue);
-    const timeLabel = locale === 'zh-CN' ? taskUpdatedLabel(timestampValue, now).label
-      : timestamp === null ? t('list.timeUnknown') : new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(timestamp);
+    const timeLabel = taskUpdatedLabel(timestampValue, now, now, locale).label;
     const isPinned = pinnedTaskIds.includes(task.id);
     const pinAction = isPinned ? t('list.unpin') : t('list.pin');
     return <li className="task-workspace-row-entry" data-has-owner={showOwner || undefined} data-selected={!showingWorkbench && selectedTaskId === task.id || undefined} key={task.id}>
       <button aria-current={!showingWorkbench && selectedTaskId === task.id ? "page" : undefined} aria-label={t('list.open', { name: mock.field(task.id, "title", task.name) })} aria-describedby={`task-row-description-${task.id}`} className="task-workspace-row" data-task-id={task.id} onClick={() => onTaskSelect(task)} type="button">
-        <span aria-label={t('list.statusLabel', { status: statusText(task.status) })} className="task-list-row-status" data-tone={statusDefinition.tone} role="img" title={statusText(task.status)}><StatusIcon aria-hidden="true" size={14} strokeWidth={2.6} /></span>
+        <span aria-label={t('list.statusLabel', { status: statusText(task.status) })} className="task-list-row-status" data-tone={statusDefinition.tone} role="img" title={statusText(task.status)}><TaskStatusIcon status={task.status} progressRatio={progressRatio} size={16} /></span>
         <TaskRowTitle title={mock.field(task.id, "title", task.name)} />
         <span className="sr-only" id={`task-row-description-${task.id}`}>{t('list.statusLabel', { status: statusText(task.status) })}{showOwner ? ` · ${t('list.ownerLabel', { name: ownerName })}` : ""}{` · ${timeField}: ${timeLabel}`}</span>
       </button>
@@ -181,6 +184,7 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
       <DropdownMenu>
         <DropdownMenuTrigger aria-label={t('list.moreLabel', { name: mock.field(task.id, "title", task.name) })} className="task-workspace-row-menu-trigger" title={t('list.more')} type="button"><MoreHorizontal aria-hidden="true" size={16} /></DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="task-workspace-row-menu" sideOffset={4}>
+          <DropdownMenuItem disabled={task.status === "已完成" || (task.ownerId !== currentUserId && !task.participantIds?.includes(currentUserId))} onClick={() => onTaskStatusChange(task.id, "已完成")}><Check aria-hidden="true" size={15} />{locale === "en" ? "Mark complete" : "标记完成"}</DropdownMenuItem>
           <DropdownMenuItem disabled={task.ownerId !== currentUserId} variant="destructive" onClick={() => onDeleteTask(task)}><Trash2 aria-hidden="true" size={15} />{t('list.delete')}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -188,21 +192,19 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
   };
 
   return <section aria-label={t('list.nav')} className="task-workspace-list task-list-refresh">
-    <header className="task-list-titlebar">
-      <div><h1 id="task-workspace-list-heading" tabIndex={-1}>{t('nav.tasks')}</h1></div>
-      <div className="task-list-titlebar-actions">
-        <Button aria-label={t('list.new')} onClick={onCreateTask} size={controlSize === "touch" ? "icon-touch" : "icon"} title={t('list.new')} variant="outline"><Plus aria-hidden="true" /></Button>
-      </div>
-    </header>
+    <h1 className="sr-only" id="task-workspace-list-heading" tabIndex={-1}>{t('nav.tasks')}</h1>
     <div className="task-workspace-list-search">
       <div className="task-search-slot">
         <div className="task-search-field" role="search">
           <Search aria-hidden="true" size={14} />
-          <Input aria-label={t('list.search')} className="task-workspace-search" onChange={event => onQueryChange(event.target.value)} onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); onQueryChange(""); } }} placeholder={t('list.input')} value={query} />
-          {query.length > 0 && <button aria-label={t('list.clearSearch')} className="task-search-clear" onClick={() => onQueryChange("")} title={t('list.clearSearch')} type="button"><X aria-hidden="true" size={14} /></button>}
+          <Input aria-label={t('list.search')} className="task-workspace-search" onChange={event => onQueryChange(event.target.value)} onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); onQueryChange(""); } }} placeholder={locale === 'en' ? 'Search' : '搜索'} value={query} />
+          <div className="task-search-actions">
+            {query.length > 0 && <button aria-label={t('list.clearSearch')} className="task-search-clear" onClick={() => onQueryChange("")} title={t('list.clearSearch')} type="button"><X aria-hidden="true" size={14} /></button>}
+            <TaskListFilterPanel filters={normalizedFilters} onChange={changeFilters} onManageTags={onManageTags} onReset={resetFilters} statuses={statuses} tags={tags} touch={controlSize === "touch"} />
+          </div>
         </div>
       </div>
-      <TaskListFilterPanel filters={normalizedFilters} onChange={changeFilters} onManageTags={onManageTags} onReset={resetFilters} statuses={statuses} tags={tags} touch={controlSize === "touch"} />
+      <Button aria-label={t('list.new')} className="task-workspace-new-task task-workspace-create-button" onClick={onCreateTask} size={controlSize === "touch" ? "icon-touch" : "icon-sm"} title={t('list.new')} type="button" variant="outline"><Plus aria-hidden="true" strokeWidth={1.8} /></Button>
     </div>
     <div className="task-list-results-toolbar">
       <div aria-label={t('list.quickFilters')} className="task-list-quick-filters" role="group">
@@ -217,11 +219,11 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
         <DropdownMenu>
           <DropdownMenuTrigger aria-label={t('list.filterLabel', { status: statusDescription })} className="task-list-status-trigger" data-filtered={!allStatuses || undefined} title={t('list.statusLabel', { status: statusDescription })} type="button"><span>{statusLabel}</span><ChevronDown aria-hidden="true" size={12} /></DropdownMenuTrigger>
           <DropdownMenuContent align="start" aria-label={t('list.statusFilter')} aria-description={t('list.statusHint')} className="task-list-status-menu">
-            <DropdownMenuCheckboxItem checked={allStatuses} closeOnClick onCheckedChange={() => changeFilters({ completion: "all", statuses: [] })}><span className="task-list-row-status"><ListFilter aria-hidden="true" size={14} /></span>{t('list.allStatuses')}</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem checked={allStatuses} closeOnClick onCheckedChange={() => changeFilters({ completion: "all", statuses: [] })}><span className="task-list-row-status"><ListFilter aria-hidden="true" size={14} /></span><span className="task-list-status-label">{t('list.allStatuses')}</span><span className="task-list-status-count">{projection.statusCounts.all}</span></DropdownMenuCheckboxItem>
             {statuses.map(status => {
               const definition = taskStatusDefinition[status as TaskStatus];
               const StatusIcon = definition?.icon ?? CircleDashed;
-              return <DropdownMenuCheckboxItem checked={selectedStatuses.includes(status)} closeOnClick={false} key={status} onCheckedChange={() => toggleStatus(status)}><span className="task-list-row-status" data-tone={definition?.tone}><StatusIcon aria-hidden="true" size={14} /></span>{statusText(status)}</DropdownMenuCheckboxItem>;
+              return <DropdownMenuCheckboxItem checked={selectedStatuses.includes(status)} closeOnClick={false} key={status} onCheckedChange={() => toggleStatus(status)}><span className="task-list-row-status" data-tone={definition?.tone}><StatusIcon aria-hidden="true" size={14} /></span><span className="task-list-status-label">{statusText(status)}</span><span className="task-list-status-count">{projection.statusCounts.byStatus[status as TaskStatus] ?? 0}</span></DropdownMenuCheckboxItem>;
             })}
           </DropdownMenuContent>
         </DropdownMenu>

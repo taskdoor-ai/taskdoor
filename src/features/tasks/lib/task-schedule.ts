@@ -1,3 +1,5 @@
+import { formatDisplayDate } from "@/shared/lib/date-time";
+
 /** Dates in the task workspace use the same Shanghai calendar day as creation. */
 export function taskCalendarDate(value?: string | null): string | null {
   if (!value) return null;
@@ -13,7 +15,7 @@ export function taskScheduleError(end?: string | null, createdAt?: string | null
   if (!end) return null;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(end) || !taskCalendarDate(end)) return '截止日期无效，请选择有效日期。';
   const created = taskCalendarDate(createdAt);
-  if (created && end < created) return `截止时间不能早于创建日期（${created}）。`;
+  if (created && end < created) return `截止时间不能早于创建日期（${formatDisplayDate(created, { year: "always" }) ?? "—"}）。`;
   const plannedStart = taskCalendarDate(start);
   if (plannedStart && end < plannedStart) return '截止时间不能早于计划开始日期。';
   return null;
