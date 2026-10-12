@@ -883,6 +883,14 @@
     "zh": "下载文件",
     "en": "Download file"
   },
+  "download": {
+    "zh": "下载",
+    "en": "Download"
+  },
+  "fullScreen": {
+    "zh": "全屏",
+    "en": "Full screen"
+  },
   "loadingAttachment": {
     "zh": "正在读取附件…",
     "en": "Loading attachment…"
