@@ -97,7 +97,7 @@ export const governanceMessages = {
   "audit.list": { en: "Activity events", zh: "行为记录" },
   "audit.filter.actor": { en: "Who", zh: "操作人" },
   "audit.filter.action": { en: "Action", zh: "动作" },
-  "audit.filter.anyone": { en: "Anyone", zh: "所有人" },
+  "audit.filter.anyone": { en: "All people", zh: "全部人员" },
   "audit.filter.anyAction": { en: "Any action", zh: "所有动作" },
   "audit.filter.governanceWrites": { en: "Governance actions", zh: "治理操作" },
   "audit.system": { en: "TaskDoor", zh: "TaskDoor" },

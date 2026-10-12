@@ -2,51 +2,59 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { statusMessageKey } from "@/shared/i18n/task-status";
 import {
   ChevronDown,
-  CircleCheck,
-  CircleDashed,
-  CircleX,
-  Clock5,
   ScanSearch,
   TriangleAlert,
-  type LucideIcon,
+  type LucideProps,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
+import { normalizeTaskStatus } from "@/shared/model/task-model";
+import { TaskProgressIcon } from "@/shared/ui/TaskProgressIcon";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
 
 export type TaskStatus = "待开始" | "进行中" | "待审核" | "已阻塞" | "已完成" | "已取消";
 
 type StatusDefinition = {
   description: string;
-  icon: LucideIcon;
+  icon: ComponentType<LucideProps>;
   tone: "neutral" | "progress" | "review" | "warning" | "success" | "failed";
 };
 
-// Legacy 待审核 remains readable; new choices use the five product states.
-export const taskStatusOptions: TaskStatus[] = ["待开始", "进行中", "已阻塞", "已完成", "已取消"];
+// Legacy values remain readable; new choices use the four product states.
+export const taskStatusOptions: TaskStatus[] = ["进行中", "已阻塞", "已完成", "已取消"];
+// Status filters have no task assessment; show every segment at full strength.
+const ProgressIcon = (props: LucideProps) => <TaskProgressIcon {...props} ratio={1} />;
+const CompletedIcon = (props: LucideProps) => <TaskProgressIcon {...props} completed />;
+const CancelledIcon = (props: LucideProps) => <TaskProgressIcon {...props} cancelled />;
 
 export const taskStatusDefinition: Record<TaskStatus, StatusDefinition> = {
-  "待开始": { description: "任务已建立，尚未开始推进", icon: Clock5, tone: "neutral" },
-  "进行中": { description: "协作者正在推进任务", icon: CircleDashed, tone: "progress" },
+  "待开始": { description: "协作者正在推进任务", icon: ProgressIcon, tone: "progress" },
+  "进行中": { description: "协作者正在推进任务", icon: ProgressIcon, tone: "progress" },
   "待审核": { description: "成果已提交，等待确认", icon: ScanSearch, tone: "review" },
   "已阻塞": { description: "存在阻塞，需要先处理", icon: TriangleAlert, tone: "warning" },
-  "已完成": { description: "任务目标已达成，结果已确认", icon: CircleCheck, tone: "success" },
-  "已取消": { description: "任务已停止推进", icon: CircleX, tone: "failed" },
+  "已完成": { description: "任务目标已达成，结果已确认", icon: CompletedIcon, tone: "success" },
+  "已取消": { description: "任务已停止推进", icon: CancelledIcon, tone: "neutral" },
 };
+
+export function TaskStatusIcon({ status, progressRatio, ...props }: LucideProps & { status: TaskStatus; progressRatio?: number | null }) {
+  if (status === "已阻塞") return <TriangleAlert aria-hidden="true" {...props} />;
+  return <TaskProgressIcon {...props} ratio={progressRatio} completed={status === "已完成"} cancelled={status === "已取消"} />;
+}
 
 type TaskStatusBadgeProps = {
   editable?: boolean;
   onChange?: (status: TaskStatus) => void;
   size?: "sm" | "md";
   value: TaskStatus;
+  progressRatio?: number | null;
 };
 
-export function TaskStatusBadge({ editable = false, onChange, size = "md", value }: TaskStatusBadgeProps) {
+export function TaskStatusBadge({ editable = false, onChange, size = "md", value: savedValue, progressRatio, }: TaskStatusBadgeProps) {
+  const value = normalizeTaskStatus(savedValue);
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const definition = taskStatusDefinition[value];
-  const Icon = definition.icon;
   const badgeContent = <>
-    <Icon aria-hidden="true" strokeWidth={2.6} />
+    <TaskStatusIcon status={value} progressRatio={progressRatio} />
     <span>{t(statusMessageKey[value])}</span>
     {editable && <ChevronDown aria-hidden="true" className="task-status-chevron" strokeWidth={2} />}
   </>;
@@ -65,9 +73,8 @@ export function TaskStatusBadge({ editable = false, onChange, size = "md", value
           }}>
             {taskStatusOptions.map((status) => {
               const option = taskStatusDefinition[status];
-              const OptionIcon = option.icon;
               return <DropdownMenuRadioItem key={status} value={status}>
-                <OptionIcon aria-hidden="true" className={`task-status-menu-icon ${option.tone}`} strokeWidth={2.3} />
+                <TaskStatusIcon status={status} progressRatio={value === "已完成" && status === "进行中" ? 1 : progressRatio} aria-hidden="true" className={`task-status-menu-icon ${option.tone}`} />
                 <span>{t(statusMessageKey[status])}</span>
               </DropdownMenuRadioItem>;
             })}

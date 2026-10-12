@@ -4,7 +4,7 @@ title: "删除与数据保留"
 group: "系统规则"
 version: "1.0"
 status: "review"
-last_change: "PRD-0097"
+last_change: "PRD-0147"
 summary: "任务分支进入回收站、删除的团队保留 30 天，期间可恢复；文件删除不可恢复。"
 lifecycle_stage: "删除与数据保留"
 pages: "任务详情, 任务回收站, 文件详情, 删除影响确认, 我的团队"
@@ -66,23 +66,12 @@ operations: "preview_delete, recycle_task, restore_task, purge_task, preview_del
 - 支持名称搜索、分页、单项和批量操作。批量操作只处理**当前页已勾选记录**；翻页或搜索后清除勾选。当前页勾选至少两项时才展示表头的“恢复”和“彻底删除”；零项或一项时隐藏，单项沿用行内操作。
 - 恢复前显示包含子任务的任务总数，整支恢复原状态、目标、完成标准、讨论、活动及有效文件引用，不自动重开已完成任务。
 - 原父任务仍存在时回到原位置；不存在时明确提示恢复为顶层任务。恢复不突破四层限制，不覆盖同标识现有任务。
-- 原负责人已离开时，必须为其任务选择本团队有效成员作为新负责人；离开的参与者不重新加入。已删除文件不复活，外部任务已移除的依赖不自动补回。
+- 原负责人已离开时，必须为其任务选择本团队有效成员作为新负责人；离开的参与者不重新加入。已删除文件不复活。
 - 彻底删除前二次确认包含子任务的总数及不可恢复后果；到期清理不延长原保留期。已过期或已处理记录不能重复恢复。
 - 提交重新检查成员资格、权限、期限和任务冲突；整批保存失败不修改任何记录并保留当前选择。加载失败不能显示为空，提供重试；无权限明确说明，空列表与无搜索结果分别表达。
 
 #### 回收站界面
 
-![回收站列表：主任务分支与单独删除的子任务分别列为记录。](../assets/deletion-recovery-retention/recycle-bin-records-zh.png)
-
-*FIG-DELETE-001 · 回收站列表：主任务分支与单独删除的子任务分别列为记录。*
-
-![展开主任务分支：核对包含的子任务名称与层级。](../assets/deletion-recovery-retention/recycle-bin-branch-expanded-zh.png)
-
-*FIG-DELETE-005 · 展开主任务分支：核对包含的子任务名称与层级。*
-
-![本页多选：同时选择主任务分支和单独删除的子任务。](../assets/deletion-recovery-retention/recycle-bin-multiselect-zh.png)
-
-*FIG-DELETE-006 · 本页多选：同时选择主任务分支和单独删除的子任务。*
 
 ![恢复确认：汇总所选分支及子任务的总数。](../assets/deletion-recovery-retention/recycle-bin-restore-confirm-zh.png)
 

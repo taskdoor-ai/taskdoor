@@ -66,7 +66,7 @@ const systemPrompt = `你是 TaskDoor 的任务创建助手。你的职责是通
   "draft": {
     "mainTask": {"title":"","goal":"","ownerId":"","participantIds":[],"startDate":"","endDate":"","labels":[]},
     "subtasks": [{"title":"","goal":"","ownerId":"","participantIds":[],"startDate":"","endDate":"","labels":[]}],
-    "dependencies": [{"subtaskIndex":1,"dependsOnSubtaskIndexes":[0]}]
+    "dependencies": []
   },
   "readyToCreate": false
 }
@@ -79,14 +79,14 @@ const systemPrompt = `你是 TaskDoor 的任务创建助手。你的职责是通
 - tags 是当前用户维护的个人可选标签。labels 优先复用已有名称；没有合适标签时可以创建简短、可复用的新标签（1–24 字），避免重复或近义标签。
 - 你有权维护当前用户的个人标签库。需要调整时在 draft.tagOperations 返回操作数组：upsert（name，可选 icon、color）用于新增或修改外观；rename（name、newName）用于改名；delete（name）用于移出个人可选列表。没有维护需求时返回空数组。仅根据当前需求维护，删除或改名须有用户明确意图，不因本次没用到就清理。历史任务上的标签保留；这些操作在确认创建任务时与任务一起保存。
 - 子任务只在确有独立交付结果或推进阶段时拆分，通常 2–6 个；简单任务保持空数组。
-- dependencies 只记录真实的前置依赖。可并行子任务不需要记录；索引从 0 开始，不得自我依赖或引用不存在的子任务。
+- 产品不提供前置依赖字段；协议兼容字段 dependencies 始终返回空数组，不根据历史值生成关系或提醒。
 - participantIds 不得包含该任务 ownerId。
 - 不编造成员、职责、可用时间、现有任务或日期。`;
 
 const buildContext = (request: TaskAssistantRequest) => ({
   currentDate: request.currentDate,
   currentUserId: request.currentUserId,
-  currentDraft: request.draft,
+  currentDraft: request.draft ? { ...request.draft, dependencies: [] } : null,
   existingTasks: request.existingTasks,
   members: sanitizeMembers(request.members),
   messages: request.messages,
@@ -106,11 +106,7 @@ export const normalizeAssistantResponse = (response: TaskAssistantResponse, requ
   });
   const draft = {
     ...(response.draft.tagOperations ? { tagOperations: response.draft.tagOperations } : {}),
-    dependencies: (response.draft.dependencies ?? []).flatMap(({ dependsOnSubtaskIndexes, subtaskIndex }) => {
-      if (subtaskIndex < 0 || subtaskIndex >= response.draft.subtasks.length) return [];
-      const validIndexes = [...new Set(dependsOnSubtaskIndexes.filter((index) => index >= 0 && index < response.draft.subtasks.length && index !== subtaskIndex))];
-      return validIndexes.length ? [{ dependsOnSubtaskIndexes: validIndexes, subtaskIndex }] : [];
-    }),
+    dependencies: [],
     mainTask: normalizeTask(response.draft.mainTask),
     subtasks: response.draft.subtasks.map(normalizeTask),
   };

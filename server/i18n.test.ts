@@ -28,7 +28,8 @@ test('English pluralization handles zero, one, and many', () => {
   assert.equal(formatTaskCount('zh-CN', 1), '1 个任务');
 });
 test('calendar dates remain stable and reject normalized invalid dates', () => {
-  assert.equal(formatCalendarDate('en', '2026-09-20'), 'Sep 20, 2026');
+  assert.equal(formatCalendarDate('en', '2026-09-20', { year: 'numeric' }), 'Sep 20, 2026');
+  assert.equal(formatCalendarDate('zh-CN', '2026-09-20', { year: 'numeric' }), 'Sep 20, 2026');
   assert.throws(() => formatCalendarDate('en', '2026-02-30'), RangeError);
   assert.throws(() => formatCalendarDate('en', '2026-09-20T00:00:00Z'), RangeError);
   assert.match(formatInstant('en', new Date('2026-09-20T01:00:00Z'), 'America/Los_Angeles'), /Sep 19/);

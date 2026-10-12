@@ -65,12 +65,7 @@ test("first creator-commerce turn builds seven subtasks assigned by responsibili
     result.draft.subtasks.map((task) => task.labels),
     [["达人商务"], ["内容制作"], ["直播执行"], ["商品运营"], ["投流增长"], ["数据复盘"], ["合规审核"]],
   );
-  assert.deepEqual(result.draft.dependencies, [
-    { subtaskIndex: 2, dependsOnSubtaskIndexes: [0, 1, 3, 6] },
-    { subtaskIndex: 4, dependsOnSubtaskIndexes: [0, 1] },
-    { subtaskIndex: 5, dependsOnSubtaskIndexes: [2, 4] },
-    { subtaskIndex: 6, dependsOnSubtaskIndexes: [0, 1] },
-  ]);
+  assert.deepEqual(result.draft.dependencies, []);
   assert.equal(result.peopleRecommendations.length, 8);
   assert.ok(result.peopleRecommendations.every((item) => /责任命中/.test(item.reason)));
 });
@@ -296,17 +291,18 @@ test("a missing coordination owner creates a main-task responsibility gap", () =
   assert.equal(result.qualityAssessment.scope.level, "needs-attention");
 });
 
-test("dates remain valid when the current date is after this year's September 15", () => {
+test("过期演示日期保留待定，不自动顺延到下一年", () => {
   const result = createMockTaskAssistantResponse({ ...baseRequest(), currentDate: "2026-10-01" });
 
-  assert.equal(result.draft.mainTask.endDate, "2027-09-15");
-  assert.ok([result.draft.mainTask, ...result.draft.subtasks].every((task) => task.endDate >= task.startDate));
+  assert.equal(result.draft.mainTask.endDate, "");
+  assert.ok(result.draft.subtasks.every(task => task.startDate === "" && task.endDate === ""));
+  assert.ok([result.draft.mainTask, ...result.draft.subtasks].every(task => !task.endDate || !task.startDate || task.endDate >= task.startDate));
 });
 
 test("staged subtask dates remain valid when starting immediately before September 15", () => {
   const result = createMockTaskAssistantResponse({ ...baseRequest(), currentDate: "2026-09-14" });
 
-  assert.equal(result.draft.mainTask.endDate, "2027-09-15");
+  assert.equal(result.draft.mainTask.endDate, "2026-09-15");
   assert.ok([result.draft.mainTask, ...result.draft.subtasks].every((task) => task.endDate >= task.startDate));
 });
 
@@ -343,11 +339,11 @@ test("generic input stays on the generic mock path", () => {
   assert.match(result.assistantMessage, /无需拆分.*可以创建/);
 });
 
-test("quick mocks cover serial, cross-functional and parallel task structures", () => {
+test("quick mocks retain task structures without generating dependency edges", () => {
   const serial = createMockTaskAssistantResponse(baseRequest([{ content: "筛选适合新品防晒衣的抖音达人", role: "user" }]));
   assert.equal(serial.draft.mainTask.title, "新品防晒衣抖音达人筛选");
   assert.equal(serial.draft.subtasks.length, 2);
-  assert.deepEqual(serial.draft.dependencies, [{ subtaskIndex: 1, dependsOnSubtaskIndexes: [0] }]);
+  assert.deepEqual(serial.draft.dependencies, []);
   assert.deepEqual(serial.peopleRecommendations.map((item) => item.memberId), ["陈默"]);
   assert.ok(serial.peopleRecommendations.some((item) => item.memberId === "陈默" && /责任命中/.test(item.reason)));
   assert.notEqual(serial.draft.mainTask.title, "新品防晒衣抖音达人带货项目");
@@ -355,7 +351,7 @@ test("quick mocks cover serial, cross-functional and parallel task structures", 
   const crossFunctional = createMockTaskAssistantResponse(baseRequest([{ content: "拆分直播、投流与数据复盘计划", role: "user" }]));
   assert.equal(crossFunctional.draft.subtasks.length, 3);
   assert.deepEqual(crossFunctional.draft.subtasks.map((task) => task.ownerId), ["高远", "许宁", "韩序"]);
-  assert.deepEqual(crossFunctional.draft.dependencies, [{ subtaskIndex: 2, dependsOnSubtaskIndexes: [0, 1] }]);
+  assert.deepEqual(crossFunctional.draft.dependencies, []);
   assert.deepEqual(crossFunctional.peopleRecommendations.map((item) => item.memberId), ["韩序", "高远", "许宁"]);
 
   const parallel = createMockTaskAssistantResponse(baseRequest([{ content: "检查素材宣称与达人合同合规", role: "user" }]));
@@ -363,6 +359,16 @@ test("quick mocks cover serial, cross-functional and parallel task structures", 
   assert.deepEqual(parallel.draft.dependencies, []);
   assert.deepEqual(parallel.draft.subtasks.map((task) => task.ownerId), ["林洁", "苏禾"]);
   assert.deepEqual(parallel.peopleRecommendations.map((item) => item.memberId), ["苏禾", "林洁"]);
+});
+
+test("重规划与场景响应忽略旧草稿依赖，不覆盖子任务内容", () => {
+  const request = baseRequest();
+  const draft = { ...createMockTaskAssistantResponse(request).draft, dependencies: [{ subtaskIndex: 1, dependsOnSubtaskIndexes: [0] }] };
+  for (const response of [createMockTaskAssistantResponse({ ...request, draft }), createMockTaskAssistantResponseForDraft(request, draft)]) {
+    assert.deepEqual(response.draft.dependencies, []);
+    assert.equal(response.draft.subtasks[1].title, draft.subtasks[1].title);
+  }
+  assert.equal(draft.dependencies.length, 1);
 });
 
 test("all five shortcuts return request-specific structures and explain every selected owner", () => {

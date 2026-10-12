@@ -1,4 +1,7 @@
+import { SidebarResizeHandle, useSidebarWidth } from "@/features/tasks/components/SidebarResizeHandle";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { formatDisplayDateTime, formatLegacyDateLabel } from "@/shared/lib/date-time";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { ArrowLeft, File, FolderPlus, History, MessageCircle, MoreHorizontal, MoveRight, Pencil, Save, Search, Upload, X } from "lucide-react";
@@ -30,6 +33,8 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
   collaboration?: FileDiscussionCollaboration;
 }) {
   const ui = useGlobalUi();
+  const { locale } = useI18n();
+  const sidebar = useSidebarWidth("taskdoor-file-tree-width", 232, 180, 420);
   const d = useDetailCopy();
   const mock = useMockText();
   const [loaded] = useState<{ files: TaskFileNode[]; records: Record<string, TaskFileEditRecord>; error: string; fileErrors: Record<string, string> }>(() => {
@@ -241,7 +246,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
   const path = selected ? getNodePath(files, selected.id) : [];
   const folderChildren = selected?.kind === "folder" ? files.filter(node => node.parentId === selected.id && !node.archived) : [];
 
-  return <div className="task-file-explorer" data-mobile-view={mobilePreview ? "preview" : "tree"} onDragOver={event => { if (event.dataTransfer.types.includes("Files")) event.preventDefault(); }} onDrop={event => { if (event.defaultPrevented || !event.dataTransfer.files.length) return; event.preventDefault(); void uploadFiles(Array.from(event.dataTransfer.files)); }} onKeyDown={event => {
+  return <div className="task-file-explorer" style={sidebar.style} data-mobile-view={mobilePreview ? "preview" : "tree"} onDragOver={event => { if (event.dataTransfer.types.includes("Files")) event.preventDefault(); }} onDrop={event => { if (event.defaultPrevented || !event.dataTransfer.files.length) return; event.preventDefault(); void uploadFiles(Array.from(event.dataTransfer.files)); }} onKeyDown={event => {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") { event.preventDefault(); save(); }
     if (event.key === "Escape") setSelection(null);
   }}>
@@ -250,6 +255,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
       {uploading && <p className="task-file-upload-status" role="status">{ui("正在上传文件…")}</p>}
       <label className="task-file-explorer-search"><Search size={14} /><input onChange={event => setQuery(event.target.value)} placeholder={ui("搜索当前任务文件")} value={query} />{query && <button aria-label={ui("清除搜索")} onClick={() => setQuery("")} type="button"><X size={12} /></button>}</label>
       <div className="task-file-explorer-tree-scroll">{visibleFiles.length ? <TaskFileTree expandedIds={query ? new Set(visibleFiles.filter(node => node.kind === "folder").map(node => node.id)) : expandedIds} nodes={visibleFiles} onAction={openAction} onExpandedChange={setExpandedIds} onSelect={selectNode} selectedId={selectedId} /> : <div className="task-file-explorer-no-results">{ui("没有匹配的文件")}<button onClick={() => setQuery("")} type="button">{ui("清除搜索")}</button></div>}</div>
+      <SidebarResizeHandle kind="files" width={sidebar.width} onChange={sidebar.change} min={180} max={420} />
     </aside>
     <main aria-label={selected ? ui("文件编辑：{0}", {0: selected.name}) : ui("文件编辑")} className="task-file-explorer-preview" data-toolbar-compact={compactToolbar} id={selected ? `task-file-preview-${selected.id}` : undefined} ref={previewRef} tabIndex={-1}>
       {selected ? <>
@@ -271,7 +277,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
             <DropdownMenu><DropdownMenuTrigger aria-label={ui("更多文件操作")} className="task-file-toolbar-more"><MoreHorizontal size={17} /></DropdownMenuTrigger><DropdownMenuContent align="end" className="task-file-toolbar-menu"><DropdownMenuGroup>
               {selected.kind === "file" && lastUpdate?.updatedAt.trim() && <DropdownMenuLabel aria-label={ui("最近更新")} className="task-file-menu-meta">
                 {lastUpdate.author && <><PersonName name={lastUpdate.author} personId={lastUpdate.author} showProfilePreview={false} /><span>{ui("于")}</span></>}
-                {lastUpdate.isExact ? <time dateTime={lastUpdate.updatedAt} title={new Date(lastUpdate.updatedAt).toLocaleString("zh-CN")}>{new Date(lastUpdate.updatedAt).toLocaleString("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}</time> : <span>{lastUpdate.updatedAt}</span>}
+                {lastUpdate.isExact ? <time dateTime={lastUpdate.updatedAt} title={formatDisplayDateTime(lastUpdate.updatedAt, { year: "always" }) ?? undefined}>{formatDisplayDateTime(lastUpdate.updatedAt) ?? "—"}</time> : <span>{formatLegacyDateLabel(lastUpdate.updatedAt, locale)}</span>}
                 <span>{ui("更新")}</span>
               </DropdownMenuLabel>}
               {selected.kind === "file" && <>

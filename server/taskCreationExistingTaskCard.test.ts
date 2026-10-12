@@ -29,7 +29,7 @@ test("相似任务卡完整呈现已有任务快照且保持只读", () => {
     task: baseTask,
   }));
 
-  for (const copy of ["相似任务", "只读", "整理本周团队复盘纪要", "进行中", "周岚", "9 月 1 日", "内容制作", "汇总关键决定", "复盘结果与后续行动"]) {
+  for (const copy of ["相似任务", "只读", "整理本周团队复盘纪要", "进行中", "周岚", "Sep 1", "内容制作", "汇总关键决定", "复盘结果与后续行动"]) {
     assert.match(html, new RegExp(copy));
   }
   assert.doesNotMatch(html, /<(?:button|a)\b/);

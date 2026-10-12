@@ -1,6 +1,7 @@
 import { GovernancePagination, GOVERNANCE_PAGE_SIZE } from '@/features/members/governance/components/GovernancePagination'
 import { useState } from 'react'
 import { MemberListIdentity } from '@/features/members/components/MemberListIdentity'
+import { PersonFilterSelect } from '@/features/members/components/PersonFilterSelect'
 import { Bot } from 'lucide-react'
 import {
   auditActions,
@@ -11,10 +12,12 @@ import {
   type AuditEvent,
 } from '@/features/members/governance/lib/governance'
 import { governanceMessages } from '@/features/members/governance/i18n/governance-messages'
-import { useI18n } from '@/shared/i18n/I18nProvider'
 import { useCatalog } from '@/shared/i18n/catalog'
+import { formatDisplayDateTime } from '@/shared/lib/date-time'
+import { useResponsiveControlSize } from '@/shared/lib/useResponsiveControlSize'
 import type { PersonOption } from '@/shared/model/task-model'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
+import { ListFilterSelect } from '@/shared/ui/list-filter-select'
+import { SelectItem } from '@/shared/ui/select'
 import '@/features/members/governance/styles/governance.css'
 
 type MessageKey = keyof typeof governanceMessages
@@ -28,8 +31,8 @@ const GOVERNANCE = 'governance'
  * shows a fixed set of the team's recent events.
  */
 export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEvent[]; members: PersonOption[]; onOpenTask: (taskId: string) => void }) {
-  const { locale } = useI18n()
   const t = useCatalog(governanceMessages)
+  const controlSize = useResponsiveControlSize()
   const [page, setPage] = useState(1)
   const [actor, setActor] = useState<string>(ANY)
   const [action, setAction] = useState<string>(ANY)
@@ -40,7 +43,6 @@ export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEv
   const pageCount = Math.max(1, Math.ceil(shown.length / GOVERNANCE_PAGE_SIZE))
   const currentPage = Math.min(page, pageCount)
   const visibleEvents = shown.slice((currentPage - 1) * GOVERNANCE_PAGE_SIZE, currentPage * GOVERNANCE_PAGE_SIZE)
-  const when = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' })
   const actorName = (event: AuditEvent) =>
     event.actorType === 'SYSTEM'
       ? t('audit.system')
@@ -58,38 +60,32 @@ export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEv
       <p role="note">{t('audit.note')}</p>
       <div className="team-members-summary team-members-tabs">
         <strong>{t('audit.filter.actor')}</strong>
-        <Select onValueChange={(value) => { setActor(String(value)); setPage(1) }} value={actor}>
-          <SelectTrigger aria-label={t('audit.filter.actor')} size="sm">
-            <SelectValue>
-              {actor === ANY ? t('audit.filter.anyone') : (members.find((person) => person.id === actor)?.name ?? t('members.former'))}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent align="start" alignItemWithTrigger={false}>
-            <SelectItem value={ANY}>{t('audit.filter.anyone')}</SelectItem>
-            {members.map((person) => (
-              <SelectItem key={person.id} value={person.id}>
-                {person.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <PersonFilterSelect
+          ariaLabel={t('audit.filter.actor')}
+          members={members}
+          menuLabel={t('audit.filter.actor')}
+          onChange={(value) => { setActor(value); setPage(1) }}
+          scopeOption={{ id: ANY, label: t('audit.filter.anyone') }}
+          size={controlSize}
+          value={actor}
+        />
         <strong>{t('audit.filter.action')}</strong>
-        <Select onValueChange={(value) => { setAction(String(value)); setPage(1) }} value={action}>
-          <SelectTrigger aria-label={t('audit.filter.action')} size="sm">
-            <SelectValue>
-              {action === ANY ? t('audit.filter.anyAction') : action === GOVERNANCE ? t('audit.filter.governanceWrites') : actionLabel(action)}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent align="start" alignItemWithTrigger={false}>
-            <SelectItem value={ANY}>{t('audit.filter.anyAction')}</SelectItem>
-            <SelectItem value={GOVERNANCE}>{t('audit.filter.governanceWrites')}</SelectItem>
-            {auditActions.map((value) => (
-              <SelectItem key={value} value={value}>
-                {actionLabel(value)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <ListFilterSelect
+          align="start"
+          ariaLabel={t('audit.filter.action')}
+          label={action === ANY ? t('audit.filter.anyAction') : action === GOVERNANCE ? t('audit.filter.governanceWrites') : actionLabel(action)}
+          onChange={(value) => { setAction(value); setPage(1) }}
+          size={controlSize}
+          value={action}
+        >
+          <SelectItem value={ANY}>{t('audit.filter.anyAction')}</SelectItem>
+          <SelectItem value={GOVERNANCE}>{t('audit.filter.governanceWrites')}</SelectItem>
+          {auditActions.map((value) => (
+            <SelectItem key={value} value={value}>
+              {actionLabel(value)}
+            </SelectItem>
+          ))}
+        </ListFilterSelect>
       </div>
       {shown.length === 0 ? (
         <p role="status">{t('audit.empty')}</p>
@@ -125,7 +121,7 @@ export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEv
                 </div>
                 <div className="team-member-responsibility">
                   <p className="team-member-responsibility-text">
-                    <time dateTime={event.occurredAt}>{when.format(new Date(event.occurredAt))}</time>
+                    <time dateTime={event.occurredAt} title={formatDisplayDateTime(event.occurredAt, { year: 'always' }) ?? undefined}>{formatDisplayDateTime(event.occurredAt) ?? '—'}</time>
                   </p>
                 </div>
                 <span className="audit-log-actor">

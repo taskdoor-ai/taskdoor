@@ -65,7 +65,7 @@ const toTaskNode = (draft: TaskDraft, id: string, parentId: string, parentTaskId
   updatedAt: new Date().toISOString(),
   ownerId: draft.ownerId,
   participantIds: [...draft.participantIds],
-  status: "待开始",
+  status: "进行中",
   goal: draft.goal,
   ...(draft.completionCriteria ? { completionCriteria: [...draft.completionCriteria] } : {}),
   ...(draft.executionTips ? { executionTips: [...draft.executionTips] } : {}),
@@ -117,14 +117,8 @@ export function createWorkspaceTasksFromDraft(
     const child = draft.subtasks.length ? invalidateSplitEffort(childNode) : childNode;
     const subtasks = draft.subtasks.map((task, index) => {
       const taskId = ids[index + 1];
-      const dependsOnTaskIds = [...new Set((draft.dependencies ?? [])
-        .filter((dependency) => dependency.subtaskIndex === index)
-        .flatMap((dependency) => dependency.dependsOnSubtaskIndexes)
-        .filter((dependencyIndex) => dependencyIndex >= 0 && dependencyIndex < draft.subtasks.length && dependencyIndex !== index)
-        .map((dependencyIndex) => ids[dependencyIndex + 1]))];
       return {
         ...toTaskNode(task, taskId, child.parentId ?? workspaceRootId, task.parentSubtaskIndex === undefined ? child.id : ids[task.parentSubtaskIndex + 1], child.teamId),
-        ...(dependsOnTaskIds.length ? { dependsOnTaskIds } : {}),
       };
     });
     const wasLeaf = !nodes.some(node => node.kind === "task" && node.parentTaskId === parent.id);
@@ -140,14 +134,8 @@ export function createWorkspaceTasksFromDraft(
   const main = draft.subtasks.length ? invalidateSplitEffort(mainNode) : mainNode;
   const subtasks = draft.subtasks.map((task, index) => {
     const taskId = ids[index + 1];
-    const dependsOnTaskIds = [...new Set((draft.dependencies ?? [])
-      .filter((dependency) => dependency.subtaskIndex === index)
-      .flatMap((dependency) => dependency.dependsOnSubtaskIndexes)
-      .filter((dependencyIndex) => dependencyIndex >= 0 && dependencyIndex < draft.subtasks.length && dependencyIndex !== index)
-      .map((dependencyIndex) => ids[dependencyIndex + 1]))];
     return {
       ...toTaskNode(task, taskId, main.parentId ?? workspaceRootId, task.parentSubtaskIndex === undefined ? main.id : ids[task.parentSubtaskIndex + 1], main.teamId),
-      ...(dependsOnTaskIds.length ? { dependsOnTaskIds } : {}),
     };
   });
   const createdNodes = [main, ...subtasks].map(task => prepareNewTask(subtasks.some(item => item.parentTaskId === task.id) ? invalidateSplitEffort(task) : task));

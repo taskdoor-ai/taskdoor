@@ -13,19 +13,23 @@ description: 当用户询问任务当前情况、下一步、完成度或燃起�
 
 ## 当前产品版本与示例
 
-先读取 [当前 PRD 契约](../shared/current-prd-contract.md)，它替代旧快照中相冲突的业务语义；保留既有输出协议。遇到拆分、未知、版本修订或责任边界时，参考 [few-shot 正反例](examples/decision-pairs.md)。示例不是当前输入，不能复制其中的来源、人员、数值或结论。
+先读取 [当前 PRD 契约](../shared/current-prd-contract.md)，它替代旧快照中相冲突的业务语义；当前分析输出按字段契约包含整体进度与逐条完成标准评估。遇到拆分、未知、版本修订或责任边界时，参考 [few-shot 正反例](examples/decision-pairs.md)。示例不是当前输入，不能复制其中的来源、人员、数值或结论。
 
 ## 规则依据
 
 业务依据为 PRD **6.2、6.3、7.4**，见[产品规则](references/product-rules.md)。先读取[共用规则](../shared/product-rules.md)及[证据与更新契约](../shared/evidence-and-updates.md)；输出按[字段契约](references/output-contract.md)组织。
 
-输出协议：`agentdoor.task-status-analysis.v0.1`。规则版本：`TASK-ANALYSIS-2026-09-23-v3`。
+输出协议：`agentdoor.task-status-analysis.v0.1`。规则版本：`TASK-ANALYSIS-2026-10-11-v7`。
 
 ## 适用范围
 
 分析当前任务及与本次问题有关的子任务、讨论和交付。问题识别是本 Skill 内部环节，按[问题核对规则](references/problem-analysis.md)核对冲突、真实阻塞与正常等待，并直接组织到当前总结和下一步建议，不再调用独立诊断 Skill。需要计算进度时读取内部 [EWD 计算规则](../agentdoor-ewd-progress/references/output-contract.md) 的 `progress`、`trend` 模式。同一输入版本的有效结果直接引用，不重复计算。
 
 本 Skill 产生分析与行动建议；任务修改由后续受控流程完成。分析可以进入助手的变更预览，但不能把分析文字当成已执行操作；助手路径的适用边界见[已确认的路径补充](../shared/assistant-path-rules.md)。
+
+## MCP 字段适配
+
+正式环境必须读取 [MCP 任务分析与完成标准](references/mcp-analysis.md)，按真实任务、标准、正文证据和版本组织分析；不能将本地字段直接发送到生产工具。当前没有分析回写工具时，仅返回分析结果，不宣称已保存。
 
 ## 输入要求
 
@@ -39,18 +43,21 @@ description: 当用户询问任务当前情况、下一步、完成度或燃起�
 
 ## 执行流程
 
-1. **核对版本。** 固定任务、标准、文件和确认的有效版本，区分正式字段、讨论报告、内容核对与历史结果。新发言不自动替代正式状态或确认。
+1. **核对版本。** 优先读取 `analysisContext` 的统一字段；离线兼容字段不覆盖其中的标准 ID、独立版本或读取状态。完整回显包络 `inputVersions`，不能自行删减未引用的输入版本。 固定任务、标准、文件和确认的有效版本，区分正式字段、讨论报告、内容核对与历史结果。新发言不自动替代正式状态或确认。
 2. **说明当前情况。** 先写当前已有结果，再写未满足的完成标准、待核对事项和近期实质变化。引用具体内容和版本，不用“总体顺利”等空泛判断代替事实。
 3. **确定下一步。** 有当前决策冲突先核对双方要求；有确证执行阻塞先推动缺失交付或确认替代；否则补齐尚未满足的结果。给出最直接可执行的行动，有依据时注明处理人。
-4. **引用进度。** 使用同一当前输入版本下的 EWD 总量、已完成量、待确认量和完成度。已有有效结果原样引用；自行应用 EWD 规则时标明为本次计算，不能伪造调用记录。
-5. **解释燃起图。** 基于真实历史点解释总量与完成量之间的差距；分别说明新增完成、范围增减和重估。只有一个时点或没有历史时，不推断收敛趋势。
-6. **返回可继续处理的分析。** 三部分分别给出结果与未知项。一个部分不可用不阻止展示其他已知事实；整体有必要缺口时返回 `partial`。
+4. **逐条核对标准。** 按 `criteria.items[].id/text` 与独立 `criteria.version` 返回 `criterionAssessments`，包含 0/25/50/75/100 或 null 的 AI 评估、依据和剩余缺口；人工确认原样保留且不由 AI 推导。
+5. **引用进度。** 使用同一当前输入版本下的 EWD 总量、已完成量、待确认量和完成度。已有有效结果原样引用；自行应用 EWD 规则时标明为本次计算，不能伪造调用记录。
+6. **解释燃起图。** 先读取[正式项目燃起图接入契约](references/production-progress-contract.md)，区分记录完成量、计划量、未来预测、用户确认完成日期与计划差值；有足够正式上下文时返回 `progress.comparison` 提案。 基于真实历史点解释总量与完成量之间的差距；分别说明新增完成、范围增减和重估。只有一个时点或没有历史时，不推断收敛趋势。
+7. **返回可继续处理的分析。** 三部分分别给出结果与未知项。一个部分不可用不阻止展示其他已知事实；整体有必要缺口时返回 `partial`。
 
 ## 输出要求
 
 - `currentSituation`：一句摘要、已核对结果、未满足结果、待核对项、近期变化及证据。
-- `nextActions`：具体行动、建议处理人、对应诊断类型及原因；未知处理人为 `null`。
-- `progress`：当前有效性、EWD 结果来源或本次计算说明、版本、数值和趋势。
+- `nextActions`：具体行动、建议处理人、对应诊断类型及原因。补齐任务交付默认由当前有效负责人推进，`actorId` 使用输入任务的负责人 ID；有明确职责或讨论分工依据时可建议对应协作者。不能仅因未点名每项工作而把已知负责人留空。确实无负责人或无权判断的特殊行动，才使用 `null` 并说明待明确的分工。
+- 人工确认是用户的独立决定，不能要求把尚未完成的标准提前确认。没有人工确认不等于缺少交付；先补齐和核对具体成果，已核对完成的标准可提示用户选择是否确认，不把确认写回当作本地分析行动。
+- `progress`：当前有效性、EWD 结果来源或本次计算说明、版本、原始数值、`displayPercent` 分档百分比和趋势。
+- `criteriaVersion / criterionAssessments`：标准的独立版本、逐条 AI 分档百分比、依据、已达成内容和剩余缺口；不把确认条数当作整体工作量比例。
 - `formalStatus` 原样保留；`formalStatusUnchanged=true`、`writeReceipt=null`。
 
 具体字段见[输出契约](references/output-contract.md)。不得用时间流逝、子任务数量、上传次数或讨论活跃度另算百分比；不得把旧版 100% 填入当前进度。文件内容完成度不等于正式验收，状态“已完成”也不自动证明验收通过。
@@ -59,6 +66,10 @@ description: 当用户询问任务当前情况、下一步、完成度或燃起�
 
 目标、标准、交付、反馈或确认变化时复核受影响部分。引用的诊断与进度必须分别核对版本；来源失效时标记过期或未知，不拼接成一份“当前”结论。刷新不制造新进展。
 
+## 丰富证据与本地评测
+
+读取 [证据场景与统一输入](references/evidence-scenarios.md)。按目标任务、相关子任务及正文明确涉及的材料限定读取范围，不沿历史前置依赖字段扩展查询或生成提示；测试预期答案不属于业务证据。文件正文失败、旧版替代、多人冲突和人工确认必须分别判断，不能用文件数量、发言多数或最后发言决定完成度。
+
 ## 场景核对
 
 任务 v4 仍在进行中，讨论说“做完了”，当前文件却缺少风险预案；旧 v3 进度为 100%。应说明已提交主体内容、仍缺风险预案并建议补齐核对；当前进度无法重算时为 `null`，正式状态保持进行中。
@@ -66,3 +77,29 @@ description: 当用户询问任务当前情况、下一步、完成度或燃起�
 提交前检查：三部分齐全；摘要有具体依据；下一步针对当前缺口；进度来源与版本一致；未知未写成零或完成。
 
 问题识别的 few-shot 见[问题核对示例](examples/problem-analysis.md)。统一输出 currentSituation、nextActions、progress；内部核对不另外返回诊断 Skill 的包络或 diagnoses 顶层字段。
+
+## 当前必填结构检查
+
+新分析必须返回 result.criteriaVersion、result.criterionAssessments（覆盖全部当前可读标准），以及 progress.displayPercent、totalEwdMinutes、completedEwdMinutes、comparison。未知保留 null 或空数组并说明，不能省略字段。每条评估都返回 criterionId、text、criteriaVersion、state、percent、completedContent、remainingContent、pendingChecks、reason、evidenceRefs。旧示例未包含这些新增字段仅供历史阅读，不能作为当前生成模板。规则版本使用 TASK-ANALYSIS-2026-10-11-v7。
+
+### 燃起图必须使用的字段形状
+
+`progress.comparison` 为 null 或以下精确结构（分钟数与日期均来自业务记录；缺失的可选项省略）。不得换用 dueDate/predictedCompletionDate 或将 workload 改成汇总对象。日期差由前端程序计算。
+
+```json
+{
+  "asOf": "YYYY-MM-DD",
+  "explanation": "历史与预测的证据依据",
+  "workload": [{"at":"YYYY-MM-DD","scopeMinutes":240,"completedMinutes":120,"scopeVersion":"scope-1"}],
+  "creation": {"at":"YYYY-MM-DD","scopeMinutes":240},
+  "expected": {"scopeVersion":"scope-1","points":[{"at":"YYYY-MM-DD","completedMinutes":120}]},
+  "forecastTrend": {"asOf":"YYYY-MM-DD","scopeVersion":"scope-1","startMinutes":120,"points":[{"at":"YYYY-MM-DD","completedMinutes":240,"note":"已落实的交付与复核安排"}]},
+  "timing": {"startOn":"YYYY-MM-DD","dueOn":"YYYY-MM-DD","forecastOn":"YYYY-MM-DD","scopeVersion":"scope-1","basis":"预测依据"}
+}
+```
+
+示例数字只说明类型，不是默认值。workload 必须保留所有已读取的真实历史点。expected 是已保存计划曲线，不能用预测替代。forecastTrend 是未来预测曲线。没有人工确认日期时省略 timing.completedOn；不能返回 AI 推导的完成日。没有已保存计划时 expected.points=[]，scopeVersion 使用当前范围版本；没有可靠预测安排时省略 forecastTrend 并设 forecastOn=null。不要把未确认当作零工作量。
+
+### 历史覆盖与已读文件
+
+`coverage.history` 仅说明额外活动历史的查询覆盖，不否定已读文件中的真实历史。文件提供同一范围版本的工作量观察、已保存计划与已落实执行安排时，应保留这些记录，生成 comparison 及有据预测节点；不得因为未查询其他历史而丢弃。每个已落实的交付/复核节点均用于增量完成量预测，不能只保留最后完成日。未知额外历史明确说明，用户确认仍独立。

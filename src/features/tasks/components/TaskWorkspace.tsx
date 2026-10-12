@@ -1,3 +1,7 @@
+import { SidebarResizeHandle } from "@/features/tasks/components/SidebarResizeHandle";
+import { TaskSidebarToggle } from "@/features/tasks/components/TaskSidebarToggle";
+import { TaskSidebarContext } from "@/features/tasks/lib/task-sidebar-context";
+import { useTaskSidebar } from "@/features/tasks/lib/useTaskSidebar";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { PanelLeft } from "lucide-react";
@@ -7,8 +11,10 @@ import type { PersonOption, TagDefinition, TaskNode, WorkspaceNode } from "@/sha
 import { buildTaskListProjection, buildTaskScopeCounts } from "@/features/tasks/lib/task-list-projection";
 import { TaskWorkspaceList } from "@/features/tasks/components/TaskWorkspaceList";
 import { normalizeTaskWorkspaceFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
+import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 type TaskWorkspaceProps = {
+  progressComparisonsByTaskId?: Readonly<Record<string, TaskProgressComparisonSeries | undefined>>;
   children?: ReactNode;
   creation?: ReactNode;
   currentUserId: string;
@@ -21,6 +27,7 @@ type TaskWorkspaceProps = {
   onManageTags: () => void;
   onOpenRecycleBin?: () => void;
   onDeleteTask: (task: TaskNode) => void;
+  onTaskStatusChange: (taskId: string, status: TaskNode["status"]) => void;
   onQueryChange: (query: string) => void;
   onTaskSelect: (task: TaskNode) => void;
   onShowWorkbench: () => void;
@@ -33,8 +40,9 @@ type TaskWorkspaceProps = {
   workbench: ReactNode;
 };
 
-export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onOpenRecycleBin, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onShowWorkbench, query, selectedTaskId, showingCreation = false, showingWorkbench, tagDefinitions, teamId }: TaskWorkspaceProps) {
+export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onTaskStatusChange, onOpenRecycleBin, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onShowWorkbench, query, selectedTaskId, showingCreation = false, showingWorkbench, tagDefinitions, teamId, progressComparisonsByTaskId }: TaskWorkspaceProps) {
   const { t } = useI18n();
+  const sidebar = useTaskSidebar();
   const mock = useMockText();
   const projectionFilters = useMemo(() => normalizeTaskWorkspaceFilters(filters), [filters]);
   const projection = useMemo(() => buildTaskListProjection(
@@ -71,14 +79,17 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
     if (detailRef.current) detailRef.current.scrollTop = 0;
   }, [selectedTaskId]);
 
-  return <section aria-label={t('tasks.workspace')} className="task-workspace" data-detail-open={hasDetail && !showingWorkbench && !showingCreation} data-mobile-pane={showingWorkbench || showingCreation || hasDetail ? "detail" : "list"} hidden={hidden}>
-    <aside aria-label={t('tasks.list')} className="task-workspace-master">
+  return <TaskSidebarContext.Provider value={sidebar.controls}><section aria-label={t('tasks.workspace')} className="task-workspace" style={sidebar.style} ref={sidebar.workspaceRef} data-sidebar-collapsed={sidebar.collapsed} data-detail-open={hasDetail && !showingWorkbench && !showingCreation} data-mobile-pane={showingWorkbench || showingCreation || hasDetail ? "detail" : "list"} hidden={hidden}>
+    <aside aria-label={t('tasks.list')} aria-hidden={sidebar.desktop && sidebar.collapsed || undefined} inert={sidebar.desktop && sidebar.collapsed} className="task-workspace-master" id={sidebar.sidebarId} ref={sidebar.sidebarRef}>
+      <div className="task-workspace-master-content">
       <TaskWorkspaceList
+        progressComparisonsByTaskId={progressComparisonsByTaskId}
         currentUserId={currentUserId}
         filters={projectionFilters}
         members={members}
         onCreateTask={onCreateTask}
         onDeleteTask={onDeleteTask}
+        onTaskStatusChange={onTaskStatusChange}
         onOpenRecycleBin={onOpenRecycleBin}
         onFiltersChange={onFiltersChange}
         onManageTags={onManageTags}
@@ -92,9 +103,12 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
         scopeCounts={scopeCounts}
         teamId={teamId}
       />
+      </div>
+      <SidebarResizeHandle kind="tasks" width={sidebar.width} onChange={sidebar.changeWidth} onResizePreview={sidebar.previewResize} onResizeCommit={sidebar.commitResize} onResizeCancel={sidebar.cancelResize} onResizingChange={sidebar.setResizing} min={260} max={sidebar.maxWidth} />
     </aside>
     <section aria-label={t('tasks.detail')} className="task-workspace-detail" hidden={showingWorkbench || showingCreation} ref={detailRef} tabIndex={-1}>
       <div className="task-workspace-detail-content">
+        {!hasDetail && <div className="task-workspace-empty-toggle"><TaskSidebarToggle /></div>}
         {hasDetail ? <>
           {outsideFilter && !outsideAvailableList && <p className="task-workspace-filter-note" role="status">{t('tasks.outsideFilter')}</p>}
           {children}
@@ -106,5 +120,5 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
       </div>
     </section>
     <section aria-label={t('tasks.creation')} className="task-workspace-creation" hidden={!showingCreation}>{creation}</section>
-  </section>;
+  </section></TaskSidebarContext.Provider>;
 }

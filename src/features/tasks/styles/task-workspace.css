@@ -3,12 +3,17 @@
 }
 
 .task-workspace {
+  --task-sidebar-motion: 220ms cubic-bezier(.4, 0, .2, 1);
   display: grid;
   height: calc(100dvh - var(--ad-workspace-topbar-height, var(--ad-space-16)));
   min-height: 0;
-  grid-template-columns: 350px minmax(0, 1fr);
+  grid-template-columns: var(--task-sidebar-width, 350px) minmax(0, 1fr);
   background: var(--ad-surface);
+  transition: grid-template-columns var(--task-sidebar-motion);
 }
+
+.task-workspace[data-sidebar-collapsed="true"] { grid-template-columns: 0px minmax(0, 1fr); }
+.task-workspace[data-sidebar-resizing="true"] { transition: none; }
 
 .task-workspace[hidden] { display: none; }
 
@@ -18,9 +23,32 @@
 .task-workspace-master {
   min-width: 0;
   min-height: 0;
-  border-right: 1px solid var(--ad-border-soft);
+  overflow: visible;
+  container-type: inline-size;
   background: var(--ad-surface);
 }
+
+.task-workspace-master-content {
+  width: var(--task-sidebar-content-width, 350px);
+  height: 100%;
+  overflow: clip;
+  border-right: 1px solid var(--ad-border-soft);
+  /* Follow the actual animated content width, so drag release restores the
+     saved width without a separate jump before the sidebar slides away. */
+  transform: translateX(min(0px, calc(100cqw - 100%)));
+  transition: width var(--task-sidebar-motion);
+}
+.task-workspace[data-sidebar-resizing="true"] .task-workspace-master-content { transition: none; }
+.task-workspace-detail, .task-workspace-creation { grid-column: 2; }
+
+.task-workspace-sidebar-toggle-wrap { position: relative; display: inline-flex; flex: 0 0 auto; }
+.task-workspace-sidebar-toggle { color: var(--ad-ink-tertiary); transition: color 120ms ease, background-color 120ms ease; }
+.task-workspace-sidebar-toggle[aria-expanded="true"] { background: transparent; color: var(--ad-ink-tertiary); }
+.task-workspace-sidebar-toggle:hover, .task-workspace-sidebar-toggle[aria-expanded="true"]:hover { background: var(--ad-surface-subtle); color: var(--ad-ink); }
+.task-workspace-sidebar-tooltip { position: absolute; top: calc(100% + 6px); left: 0; z-index: 40; width: max-content; max-width: 200px; padding: 6px 9px; border: 1px solid var(--ad-border-soft); border-radius: var(--ad-radius-control); background: var(--ad-surface); color: var(--ad-ink-secondary); box-shadow: var(--ad-shadow-float); font-size: var(--ad-text-caption); line-height: 1.5; white-space: nowrap; pointer-events: none; opacity: 0; visibility: hidden; }
+.task-workspace-sidebar-toggle-wrap:hover > .task-workspace-sidebar-tooltip, .task-workspace-sidebar-toggle-wrap:has(:focus-visible) > .task-workspace-sidebar-tooltip { opacity: 1; visibility: visible; transition: opacity 120ms ease 400ms, visibility 0s linear 400ms; }
+.task-workspace-empty-toggle { width: min(calc(100% - var(--ad-space-12)), 1120px); margin: var(--ad-space-3) auto 0; }
+.task-workspace .creation-page-top > .task-workspace-sidebar-toggle-wrap { margin-right: calc(-1 * var(--ad-space-2)); }
 
 .task-workspace-detail {
   min-width: 0;
@@ -127,8 +155,11 @@
 }
 
 @media (max-width: 900px) {
-  .task-workspace { grid-template-columns: minmax(0, 1fr); }
+  .task-workspace, .task-workspace[data-sidebar-collapsed="true"] { grid-template-columns: minmax(0, 1fr); transition: none; }
   .task-workspace-master { border-right: 0; }
+  .task-workspace-master-content { width: 100%; border-right: 0; transform: none; transition: none; }
+  .task-workspace-detail, .task-workspace-creation { grid-column: 1; }
+  .task-workspace-sidebar-toggle-wrap { display: none; }
   .task-workspace[data-mobile-pane="detail"] > .task-workspace-master,
   .task-workspace[data-mobile-pane="list"] > .task-workspace-detail,
   .task-workspace[data-mobile-pane="list"] > .task-workspace-creation { display: none; }
@@ -137,3 +168,15 @@
   .task-workspace-detail .task-detail-path button,
   .task-workspace-creation .task-detail-path button { min-height: var(--ad-control-touch-min); }
 }
+
+.task-workspace-master, .task-file-explorer-sidebar { position: relative; }
+.task-sidebar-resizer { position: absolute; top: 0; bottom: 0; right: -4px; width: 8px; z-index: 12; cursor: col-resize; touch-action: none; }
+.task-sidebar-resizer::after { content: ""; position: absolute; inset-block: 0; left: 50%; width: 1px; background: transparent; transition: background 120ms ease; }
+.task-sidebar-resizer:hover::after { background: color-mix(in srgb, var(--ad-ink) 22%, var(--ad-surface)); }
+.task-sidebar-resizer:focus-visible::after { background: var(--ad-border-strong); }
+.task-sidebar-resizer:focus-visible { outline: none; }
+.task-workspace-master > .task-sidebar-resizer { right: -6px; width: 12px; }
+@media (pointer: coarse) { .task-workspace-sidebar-toggle { min-width: var(--ad-control-touch-min); min-height: var(--ad-control-touch-min); } }
+@media (prefers-reduced-motion: reduce) { .task-workspace, .task-workspace-master-content { transition: none; } .task-workspace-sidebar-tooltip { transition: none !important; } }
+@media (max-width: 900px) { .task-workspace-master > .task-sidebar-resizer { display: none; } }
+@media (max-width: 760px) { .task-file-explorer-sidebar > .task-sidebar-resizer { display: none; } }

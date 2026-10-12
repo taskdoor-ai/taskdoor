@@ -93,9 +93,6 @@ export function createCreationForm(request: string, context: ScenarioContext, sc
     plan.subtasks.forEach((task, index) => {
       if (task.parentSubtaskIndex !== undefined) form.subtasks[index].parentClientId = form.subtasks[task.parentSubtaskIndex].clientId;
     });
-    for (const dependency of plan.dependencies ?? []) {
-      form.subtasks[dependency.subtaskIndex].dependsOnClientIds = dependency.dependsOnSubtaskIndexes.map(index => form.subtasks[index].clientId);
-    }
     return withCreationParticipantDefaults(form, context.currentUserId);
   }
   form.mainTask = newCreationTask({ ...plan.mainTask, completionCriteria: mainCriteria[matched] ?? [""], executionTips: [mainExecutionTips[matched] ?? "先确认交付范围，再核对关键结论和后续行动。"] });
@@ -104,25 +101,7 @@ export function createCreationForm(request: string, context: ScenarioContext, sc
     form.mainTask.ownerId = "";
   }
   form.subtasks = plan.subtasks.map((task, index) => newCreationTask({ ...task, goal: form.mainTask.goal, completionCriteria: [complexCriteria[index] ?? ""], executionTips: [complexExecutionTips[index] ?? "先核对任务所需输入，按交付顺序推进，并在完成后记录核验结果。"] }));
-  for (const dependency of plan.dependencies ?? []) {
-    const task = form.subtasks[dependency.subtaskIndex];
-    if (task) task.dependsOnClientIds = dependency.dependsOnSubtaskIndexes.map(index => form.subtasks[index]?.clientId).filter(Boolean);
-  }
   return withCreationParticipantDefaults(form, context.currentUserId);
-}
-
-export function hasValidCreationDependencies(tasks: CreationTask[]): boolean {
-  const graph = new Map(tasks.map(t => [t.clientId, t.dependsOnClientIds]));
-  if (graph.size !== tasks.length) return false;
-  const visiting = new Set<string>(), visited = new Set<string>();
-  const visit = (id: string): boolean => {
-    if (visiting.has(id) || !graph.has(id)) return false;
-    if (visited.has(id)) return true;
-    visiting.add(id);
-    if (!graph.get(id)!.every(visit)) return false;
-    visiting.delete(id); visited.add(id); return true;
-  };
-  return tasks.every(task => visit(task.clientId));
 }
 
 export function validateCreationTask(task: CreationTask, members: Array<{ id: string }>, label = "任务"): string | null {
@@ -153,7 +132,6 @@ export function validateCreationForm(form: CreationForm, members: Array<{ id: st
     const error = validateCreationTask(task, members, index === 0 ? "任务" : `子任务 ${index}`);
     if (error) return error;
   }
-  if (!hasValidCreationDependencies(form.subtasks)) return "前置依赖存在循环或失效引用，请调整后再创建。";
   return null;
 }
 
@@ -171,6 +149,5 @@ export function toTaskPlanDraft(form: CreationForm): TaskPlanDraft {
   return {
     ...(form.tagOperations ? { tagOperations: form.tagOperations } : {}),
     mainTask: task(form.mainTask), subtasks: form.subtasks.map(task),
-    dependencies: form.subtasks.map((t, subtaskIndex) => ({ subtaskIndex, dependsOnSubtaskIndexes: t.dependsOnClientIds.map(id => form.subtasks.findIndex(s => s.clientId === id)) })).filter(d => d.dependsOnSubtaskIndexes.length),
   };
 }

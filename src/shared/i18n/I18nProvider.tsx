@@ -16,9 +16,9 @@ const I18nContext = createContext({
   setLocale: (_locale: Locale) => {},
   t: (key: MessageKey, values?: Record<string, string | number>) => translate(DEFAULT_LOCALE, key, values),
 });
-export function I18nProvider({ children }: { children: ReactNode }) {
+export function I18nProvider({ children, initialLocale }: { children: ReactNode; initialLocale?: Locale }) {
   const [autoTranslate, updateAutoTranslate] = useState(readAutoTranslate);
-  const [locale, updateLocale] = useState<Locale>(readLocale);
+  const [locale, updateLocale] = useState<Locale>(() => initialLocale ?? readLocale());
   useEffect(() => {
     document.documentElement.lang = locale;
     if (window.location.pathname === '/') document.title = translate(locale, 'app.title');

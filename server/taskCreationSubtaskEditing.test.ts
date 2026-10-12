@@ -28,7 +28,7 @@ test("完整子任务编辑提供不写持久层的同步函数", async () => {
   assert.equal(typeof editing.syncCreationSubtaskEdit, "function");
 });
 
-test("整对象同步名称、多条标准、人选、日期、依赖和建议，并保留原字段", () => {
+test("整对象同步名称、多条标准、人选、日期和建议，忽略新增依赖并保留原字段", () => {
   const source = form();
   const original = structuredClone(source);
   const expected = structuredClone(source.subtasks[0]);
@@ -40,7 +40,7 @@ test("整对象同步名称、多条标准、人选、日期、依赖和建议�
   const input = structuredClone(edited);
   const next = syncCreationSubtaskEdit(source, edited, expected, members);
   assert.notEqual(next, source);
-  assert.deepEqual(next.subtasks[0], edited, "输入中的空白和空行原样进入草稿");
+  assert.deepEqual(next.subtasks[0], { ...edited, dependsOnClientIds: [] }, "输入中的空白和空行原样进入草稿，依赖不能重新写入");
   assert.equal(next.subtasks[0].endDate, "", "不补默认日期");
   assert.deepEqual(source, original);
   assert.deepEqual(edited, input);
@@ -49,7 +49,7 @@ test("整对象同步名称、多条标准、人选、日期、依赖和建议�
   edited.dependsOnClientIds.push("later");
   assert.deepEqual(next.subtasks[0].participantIds, ["self", "lin"]);
   assert.deepEqual(next.subtasks[0].labels, ["发布准备"]);
-  assert.deepEqual(next.subtasks[0].dependsOnClientIds, ["second"]);
+  assert.deepEqual(next.subtasks[0].dependsOnClientIds, []);
 });
 
 test("同步合并到最新表单，保留其他任务的更新与重排，并保留本次目标输入", () => {
@@ -84,7 +84,7 @@ test("同一任务任意字段被其他操作更新时拒绝整对象覆盖", ()
   const patches: Partial<CreationTask>[] = [
     { title: "AI 新名称" }, { goal: "更新的继承目标" }, { ownerId: "chen" }, { participantIds: ["chen"] },
     { completionCriteria: ["AI 新标准"] }, { executionTips: ["AI 新建议"] }, { startDate: "2026-09-01" },
-    { endDate: "" }, { dependsOnClientIds: ["second"] }, { labels: ["新标签"] }, { iconName: "target" }, { iconTone: "blue" },
+    { endDate: "" }, { labels: ["新标签"] }, { iconName: "target" }, { iconTone: "blue" },
     { effortEstimate: { minutes: null, workMethod: "", basis: "unknown", reason: "", confirmed: false, scopeKey: "", version: 1 } },
   ];
   for (const patch of patches) {
@@ -187,20 +187,23 @@ test("同步拒绝不存在的日期、非法格式和颠倒的开始截止时�
   for (const patch of dates) assert.throws(() => syncCreationSubtaskEdit(source, { ...expected, title: "", ...patch }, expected, members), /日期/);
 });
 
-test("同步拒绝自环及当前全图形成的循环依赖", () => {
+test("旧自环或循环依赖不阻断普通编辑，也不能新增依赖", () => {
   const source = form();
+  source.subtasks[0].dependsOnClientIds = ["first"];
   const expected = structuredClone(source.subtasks[0]);
-  assert.throws(() => syncCreationSubtaskEdit(source, { ...expected, dependsOnClientIds: ["first"] }, expected, members), /依赖/);
   source.subtasks[1] = { ...source.subtasks[1], dependsOnClientIds: ["first"] };
-  assert.throws(() => syncCreationSubtaskEdit(source, { ...expected, dependsOnClientIds: ["second"] }, expected, members), /循环|依赖/);
+  const next = syncCreationSubtaskEdit(source, { ...expected, title: "更新名称", dependsOnClientIds: ["second"] }, expected, members);
+  assert.equal(next.subtasks[0].title, "更新名称");
+  assert.deepEqual(next.subtasks[0].dependsOnClientIds, ["first"]);
 });
 
-test("同步拒绝失效依赖和重复的稳定标识", () => {
+test("同步忽略新增的失效依赖，但仍拒绝重复的稳定标识", () => {
   const source = form();
   const expected = structuredClone(source.subtasks[0]);
-  assert.throws(() => syncCreationSubtaskEdit(source, { ...expected, title: "", dependsOnClientIds: ["missing"] }, expected, members), /依赖/);
+  const next = syncCreationSubtaskEdit(source, { ...expected, title: "", dependsOnClientIds: ["missing"] }, expected, members);
+  assert.deepEqual(next.subtasks[0].dependsOnClientIds, []);
   const duplicate = { ...source, subtasks: [...source.subtasks, structuredClone(source.subtasks[1])] };
-  assert.throws(() => syncCreationSubtaskEdit(duplicate, expected, expected, members), /依赖/);
+  assert.throws(() => syncCreationSubtaskEdit(duplicate, expected, expected, members), /重复.*标识/);
 });
 
 test("输入不完整不跳过估算校验，也不为旧草稿补造估算", () => {
@@ -214,20 +217,23 @@ test("输入不完整不跳过估算校验，也不为旧草稿补造估算", ()
   assert.equal(next.subtasks[0].effortEstimate, undefined);
 });
 
-test("编辑中前置任务已被删除时不能同步悬空引用", () => {
+test("编辑中旧关联任务已被删除时，同步不能复活悬空引用", () => {
   const source = form();
   const expected = structuredClone(source.subtasks[0]);
   const latest = creationForm.removeCreationSubtask(source, "second");
-  assert.throws(() => syncCreationSubtaskEdit(latest, { ...expected, dependsOnClientIds: ["second"] }, expected, members), /失效|依赖/);
+  const next = syncCreationSubtaskEdit(latest, { ...expected, dependsOnClientIds: ["second"] }, expected, members);
+  assert.deepEqual(next.subtasks[0].dependsOnClientIds, []);
 });
 
-test("删除前置任务清理已同步引用后，旧的关联草稿也不可覆盖最新对象", () => {
+test("删除旧关联任务清理引用后，普通编辑可继续但不能恢复旧引用", () => {
   const source = form();
   source.subtasks[0].dependsOnClientIds = ["second"];
   const expected = structuredClone(source.subtasks[0]);
   const latest = creationForm.removeCreationSubtask(source, "second");
   assert.deepEqual(latest.subtasks[0].dependsOnClientIds, []);
-  assert.throws(() => syncCreationSubtaskEdit(latest, { ...expected, title: "旧名称" }, expected, members), /更新|变化|最新/);
+  const next = syncCreationSubtaskEdit(latest, { ...expected, title: "新名称" }, expected, members);
+  assert.equal(next.subtasks[0].title, "新名称");
+  assert.deepEqual(next.subtasks[0].dependsOnClientIds, []);
 });
 
 test("单任务最终校验保留缺少字段文案并指出空白标准行", () => {

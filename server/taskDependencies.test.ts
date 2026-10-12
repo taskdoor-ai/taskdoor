@@ -58,14 +58,14 @@ test("前置未完成不禁止开始或完成当前任务", () => {
   }
 });
 
-test("详情接入依赖编辑且复用事务保存，创建选择器不再宣称强制执行", () => {
+test("详情与 App 不再接入前置依赖维护，父子任务和标准编辑仍保留", () => {
   const read = (path: string) => readFileSync(new URL(`../src/${path}`, import.meta.url), "utf8");
   const detail = read("features/tasks/components/TaskDetail.tsx");
-  assert.match(detail, /<TaskDependenciesField/);
-  assert.ok(detail.indexOf("<TaskCompletionCriteria") < detail.indexOf("<TaskDependenciesField"));
+  assert.doesNotMatch(detail, /TaskDependenciesField|dependencyTaskIds|onTaskDependenciesSave/);
+  assert.match(detail, /<TaskCompletionCriteria/);
+  assert.match(detail, /<TaskSubtaskList/);
   const app = read("app/App.tsx");
-  assert.match(app, /onTaskDependenciesSave=\{saveTaskDependencies\}/);
-  assert.match(app, /persistTaskDefinition\(applyTaskDependencies/);
+  assert.doesNotMatch(app, /saveTaskDependencies|applyTaskDependencies|selectedDependencyTasks/);
   assert.match(app.slice(app.indexOf("const persistTaskDefinition"), app.indexOf("const saveSubtaskCriteria")), /commitTaskAiStorage/);
   assert.doesNotMatch(read("features/tasks/components/TaskDependencyPicker.tsx"), /所选任务完成后，当前任务才能开始/);
 });

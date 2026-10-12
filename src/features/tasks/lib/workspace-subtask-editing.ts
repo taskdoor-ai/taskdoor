@@ -65,7 +65,7 @@ export type TaskDeletionPreview = {
   signature: string;
 };
 
-/** Build the exact task tree and external dependency impact shown before deletion. */
+/** Build the exact task tree; old references are retained only for silent cleanup. */
 export function getTaskDeletionPreview(nodes: WorkspaceNode[], taskId: string): TaskDeletionPreview {
   const tasks = nodes.filter((node): node is TaskNode => node.kind === "task");
   const byId = new Map(tasks.map(task => [task.id, task]));
@@ -87,7 +87,6 @@ export function getTaskDeletionPreview(nodes: WorkspaceNode[], taskId: string): 
   const signature = JSON.stringify({
     taskId,
     tasks: deletedTasks.map(item => [item.id, item.parentTaskId, item.name]).sort((a, b) => a[0]!.localeCompare(b[0]!)),
-    dependencies: dependencyTasks.map(item => [item.id, item.name, item.dependsOnTaskIds] as const).sort((a, b) => a[0].localeCompare(b[0])),
   });
   return { parent, task, deletedTasks, deletedTaskIds: [...deletedIds], descendantCount: deletedTasks.length - 1, dependencyTasks, signature };
 }
@@ -128,11 +127,9 @@ export function deleteWorkspaceTask(
   state: SubtaskWorkspaceState, taskId: string, expectedSignature: string, author: string,
 ): TaskDeletionResult {
   const preview = getTaskDeletionPreview(state.nodes, taskId);
-  if (preview.signature !== expectedSignature) throw new Error("任务或依赖范围已有变化，请核对最新提示后重新确认删除。");
+  if (preview.signature !== expectedSignature) throw new Error("任务范围已有变化，请核对最新提示后重新确认删除。");
   const deletedIds = new Set(preview.deletedTaskIds);
   const dependencyIds = new Set(preview.dependencyTasks.map(task => task.id));
-  const taskNames = new Map(state.nodes.filter(node => node.kind === "task").map(node => [node.id, node.name]));
-  const dependencyLabel = (ids: string[]) => ids.map(id => taskNames.get(id) ?? id).join("、") || null;
   let activities = withoutTasks(state.activities, deletedIds);
   if (preview.parent) {
     const parentActivity = createTaskChangeActivity({
@@ -141,24 +138,17 @@ export function deleteWorkspaceTask(
     });
     if (parentActivity) activities = appendTaskActivity(activities, preview.parent.id, parentActivity);
   }
-  for (const task of preview.dependencyTasks) {
-    const activity = createTaskChangeActivity({
-      author, type: "task-definition-change", message: "移除已删除任务的前置依赖",
-      changes: [{ label: "前置依赖", before: dependencyLabel(task.dependsOnTaskIds ?? []), after: dependencyLabel((task.dependsOnTaskIds ?? []).filter(id => !deletedIds.has(id))) }],
-    });
-    if (activity) activities = appendTaskActivity(activities, task.id, activity);
-  }
   const nodes = state.nodes.filter(node => !deletedIds.has(node.id)).map((node): WorkspaceNode => {
     const isParent = node.kind === "task" && node.id === preview.parent?.id;
     if (node.kind !== "task" || (!isParent && !dependencyIds.has(node.id))) return node;
     return {
-      ...node, updatedAt: "刚刚",
+      ...node, ...(isParent ? { updatedAt: new Date().toISOString() } : {}),
       ...(dependencyIds.has(node.id) ? { dependsOnTaskIds: node.dependsOnTaskIds!.filter(id => !deletedIds.has(id)) } : {}),
       ...(isParent && node.effortEstimate ? { effortEstimate: { ...node.effortEstimate, confirmed: false, scopeKey: "needs-review:subtasks" } } : {}),
     };
   });
   const detailSeeds = state.detailSeeds.filter(task => !deletedIds.has(task.id));
-  for (const original of [...(preview.parent ? [preview.parent] : []), ...preview.dependencyTasks]) if (!detailSeeds.some(task => task.id === original.id)) detailSeeds.push({ ...original });
+  if (preview.parent && !detailSeeds.some(task => task.id === preview.parent!.id)) detailSeeds.push({ ...preview.parent });
   const cleanLegacy = (task: LegacyTaskSnapshot): LegacyTaskSnapshot => task.childTaskIds?.some(id => deletedIds.has(id))
     ? { ...task, childTaskIds: task.childTaskIds.filter(id => !deletedIds.has(id)) } : task;
   return {
@@ -177,7 +167,7 @@ export function deleteWorkspaceSubtask(
   state: SubtaskWorkspaceState, parentTaskId: string, taskId: string, expectedSignature: string, author: string,
 ): SubtaskDeletionResult {
   const preview = getSubtaskDeletionPreview(state.nodes, parentTaskId, taskId);
-  if (preview.signature !== expectedSignature) throw new Error("子任务或依赖范围已有变化，请核对最新提示后重新确认删除。");
+  if (preview.signature !== expectedSignature) throw new Error("子任务范围已有变化，请核对最新提示后重新确认删除。");
   const result = deleteWorkspaceTask(state, taskId, expectedSignature, author);
   return { ...result, parentTaskId };
 }

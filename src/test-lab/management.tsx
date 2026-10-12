@@ -10,6 +10,7 @@ import { Empty } from './views';
 import { SkillDocuments } from './markdown';
 import { downloadJson } from './model';
 import type { LabBootstrap, LabRunSelection, LabState, SkillId } from './types';
+import { LabDateLabel } from '@/test-lab/date-label';
 
 type Client = ReturnType<typeof createLabClient>;
 const message = (e:unknown) => e instanceof Error ? e.message : '操作失败，请重试';
@@ -46,7 +47,7 @@ export function SkillManager({ bootstrap, client, onSave, onDraftChange }: { boo
         {draft.snapshot.length>300000&&<p role="alert" className="lab-alert lab-alert-error">完整 Skill 超过 300,000 字符，请精简后保存。</p>}
         {discard&&<div className="lab-alert lab-discard" role="alert"><span>文档修改尚未保存，确定放弃？</span><button type="button" onClick={()=>setDiscard(false)}>继续编辑</button><button type="button" onClick={stopEditing}>放弃修改</button></div>}
         <div className="lab-actions lab-document-save"><small>{dirty?'有未保存的修改':'保存时创建新版本'}</small><button type="button" onClick={()=>downloadJson(`${skillId}-draft.json`,{skillId,...draft})}>导出草稿</button><button type="button" disabled={busy} onClick={()=>dirty?setDiscard(true):stopEditing()}>取消编辑</button><button className="lab-primary" disabled={busy||draft.snapshot.length>300000} type="submit">{busy?'保存中…':'保存新版本'}</button></div>
-      </form>:loading?<Empty title="正在读取工作区 Skill"/>:current?<><dl className="lab-facts"><div><dt>当前默认</dt><dd>{versions.find(v=>v.id===defaultId)?.label??'工作区版本'}</dd></div><div><dt>保存时间</dt><dd>{version?new Date(version.createdAt).toLocaleString('zh-CN'):'随工作区文件更新'}</dd></div><div><dt>内容校验值</dt><dd><code>{current.hash}</code></dd></div><div><dt>变更说明</dt><dd>{version?.notes||'项目中的当前规则与引用资料'}</dd></div></dl><SkillDocuments snapshot={current.snapshot} selectedFile={selectedFile} onSelectFile={setSelectedFile} onEdit={startEditing}/></>:<Empty title="版本暂时不可用">切换 Skill 后重新读取。</Empty>}
+      </form>:loading?<Empty title="正在读取工作区 Skill"/>:current?<><dl className="lab-facts"><div><dt>当前默认</dt><dd>{versions.find(v=>v.id===defaultId)?.label??'工作区版本'}</dd></div><div><dt>保存时间</dt><dd>{version?<LabDateLabel value={version.createdAt} />:'随工作区文件更新'}</dd></div><div><dt>内容校验值</dt><dd><code>{current.hash}</code></dd></div><div><dt>变更说明</dt><dd>{version?.notes||'项目中的当前规则与引用资料'}</dd></div></dl><SkillDocuments snapshot={current.snapshot} selectedFile={selectedFile} onSelectFile={setSelectedFile} onEdit={startEditing}/></>:<Empty title="版本暂时不可用">切换 Skill 后重新读取。</Empty>}
     </section></div>;
 }
 

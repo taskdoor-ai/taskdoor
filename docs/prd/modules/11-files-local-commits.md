@@ -4,7 +4,7 @@ title: "文件与成果提交"
 group: "协作与连接"
 version: "1.0"
 status: "review"
-last_change: "PRD-0056"
+last_change: "PRD-0148"
 summary: "管理任务文件及版本，并核对后提交成果。"
 lifecycle_stage: "上传文件并提交结果"
 pages: "任务文件, 文件详情, 文件删除影响确认, 提交方案, TaskDoor CLI"
@@ -37,9 +37,10 @@ operations: "create_folder, prepare_upload, upload_bytes, complete_upload, add_f
 - 文件版本可查看其在当前用户有权任务中的引用位置，不暴露无权任务。
 - 删除文件或解除关联的影响归[删除与数据保留](13-deletion-recovery-retention.md)。
 
-![任务文件：从文件树选择资料并预览内容。](../assets/task-detail/files-current-en.jpg)
 
-*FIG-FILES-001 · 任务文件：从文件树选择资料并预览内容。*
+文件树侧栏支持拖动边缘和键盘调整宽度并保留本设备偏好。打开或取消文件选择后保留页面内容及讨论草稿，可继续操作；上传失败保留原文件并提供错误反馈。
+
+文件页签的累计数量遵循[任务详情的页签数量规则](08-task-detail.md#页签数量)。
 
 ### 3.2 回填产出与正式提交
 

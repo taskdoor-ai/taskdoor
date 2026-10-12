@@ -2,7 +2,7 @@ import { ChevronDown, Plus, Trash2, UserRound } from "lucide-react";
 import type { TagDefinition } from "@/ai/mock/data/tagGroups";
 import { findTagByName } from "@/ai/mock/data/tagGroups";
 import { getLinearCreationStages } from "@/features/tasks/lib/task-creation-linear-stages";
-import { hasValidCreationDependencies, newCreationTask, removeCreationSubtask, type CreationForm, type CreationTask } from "@/features/tasks/lib/task-creation-form";
+import { newCreationTask, removeCreationSubtask, type CreationForm, type CreationTask } from "@/features/tasks/lib/task-creation-form";
 import { MemberSelector, type Member } from "@/features/members/components/MemberSelector";
 import { TagBadge } from "@/shared/ui/TagBadge";
 import { TagPicker } from "@/features/me/components/TagPicker";
@@ -33,26 +33,6 @@ function recommendationBasis(member?: Member) {
   return member.dynamicResponsibility || member.currentWork?.[0] || member.role || "基于当前团队责任范围建议。";
 }
 
-function DependencyFields({ disabled, form, task, updateTask }: {
-  disabled: boolean;
-  form: CreationForm;
-  task: CreationTask;
-  updateTask: ContentProps["updateTask"];
-}) {
-  const candidates = form.subtasks.filter(candidate => candidate.clientId !== task.clientId);
-  if (!candidates.length) return <span className="linear-creation-muted">无可选前置任务</span>;
-  return <div className="linear-creation-dependency-options">{candidates.map(candidate => {
-    const checked = task.dependsOnClientIds.includes(candidate.clientId);
-    const nextIds = checked ? task.dependsOnClientIds.filter(id => id !== candidate.clientId) : [...task.dependsOnClientIds, candidate.clientId];
-    const nextTasks = form.subtasks.map(item => item.clientId === task.clientId ? { ...item, dependsOnClientIds: nextIds } : item);
-    const createsCycle = !checked && !hasValidCreationDependencies(nextTasks);
-    return <label key={candidate.clientId}>
-      <input checked={checked} className="linear-creation-dependency-checkbox" disabled={disabled || createsCycle} onChange={() => updateTask(task.clientId, { dependsOnClientIds: nextIds })} type="checkbox" />
-      <span>{candidate.title || "未命名子任务"}{createsCycle && <small>会形成循环依赖</small>}</span>
-    </label>;
-  })}</div>;
-}
-
 function LinearSubtask({ disabled = false, form, members, onChange, onInviteMembers, tags, task, updateTask }: ContentProps & { task: CreationTask }) {
   const index = form.subtasks.findIndex(item => item.clientId === task.clientId);
   const owner = members.find(member => member.id === task.ownerId);
@@ -76,7 +56,6 @@ function LinearSubtask({ disabled = false, form, members, onChange, onInviteMemb
       </div>
       <div className="linear-creation-property-row"><small>标签</small><div className="linear-creation-tags">{task.labels.map(name => <TagBadge key={name} onRemove={disabled ? undefined : () => updateTask(task.clientId, { labels: task.labels.filter(item => item !== name) })} size="sm" tag={findTagByName(tags, name) ?? { id: name, name, color: "gray", icon: "tag" }} />)}<TagPicker onChange={labels => updateTask(task.clientId, { labels })} selected={task.labels} tags={tags} /></div></div>
       <div className="linear-creation-property-row"><TaskEffortField disabled={disabled} label={`子任务 ${index + 1}`} task={task} onChange={effortEstimate => updateTask(task.clientId, { effortEstimate })} /></div>
-      <div className="linear-creation-property-row"><small>前置依赖</small><DependencyFields disabled={disabled} form={form} task={task} updateTask={updateTask} /></div>
       <footer><span>人选仍待成员接受，排期需共同确认。</span><Button disabled={disabled} onClick={() => onChange(removeCreationSubtask(form, task.clientId))} size="sm" type="button" variant="ghost"><Trash2 aria-hidden="true" size={14} />移除子任务</Button></footer>
     </div>
   </details>;

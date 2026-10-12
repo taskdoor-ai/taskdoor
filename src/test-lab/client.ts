@@ -1,4 +1,4 @@
-import type { McpDebugStatus,McpDebugCall,McpTool, LabBootstrap, LabRun, LabState, LabView, LabRunSelection, LabSkillVersion, SkillId, LabPreflight } from "./types";
+import type { McpDebugStatus,McpDebugCall,McpTool, LabBootstrap, LabRun, LabState, LabCase, LabView, LabRunSelection, LabSkillVersion, SkillId, LabPreflight } from "./types";
 
 export class LabApiError extends Error {
   constructor(message: string, public status: number) { super(message); this.name = "LabApiError"; }
@@ -23,6 +23,8 @@ export function createLabClient(csrfToken = "", fetcher: typeof fetch = fetch) {
     mcpCall:(requestId:string,name:string,args:Record<string,unknown>)=>request<McpDebugCall>('/mcp/call','POST',{requestId,name,arguments:args}),
     bootstrap: (query?:{batch?:string;result?:string}) => request<LabBootstrap>("/bootstrap"+(query?'?'+new URLSearchParams(query):'')),
     checkWorkflow: (workflowId:string) => request<LabPreflight>("/workflows/check", "POST", {workflowId}),
+    saveCase:(expectedRevision:number,item:LabCase)=>request<LabState>("/case","PUT",{expectedRevision,item}),
+    deleteCase:(expectedRevision:number,deleteId:string)=>request<LabState>("/case","PUT",{expectedRevision,deleteId}),
     saveState: (input: Pick<LabState, "teams" | "cases"> & { expectedRevision: number }) => request<LabState>("/state", "PUT", input),
     view: (teamId: string, actorId: string) => request<LabView>(`/view?${new URLSearchParams({ teamId, actorId })}`),
     run: async(caseIds: string[], requestId: string, selection?: LabRunSelection) => {
@@ -40,6 +42,7 @@ export function createLabClient(csrfToken = "", fetcher: typeof fetch = fetch) {
     setSkillDefault: (expectedRevision:number,skillId:SkillId,versionId:string|null) => request<LabState>("/skill-default", "PUT", {expectedRevision,skillId,versionId}),
     saveCategory: (expectedRevision:number,category:{name:string;description:string;previousName?:string}) => request<LabState>("/categories", "PUT", {expectedRevision,category}),
     saveModels: (expectedRevision:number,models:string[],judgeEnabled?:boolean) => request<LabState>("/models", "PUT", {expectedRevision,models,...(judgeEnabled===undefined?{}:{judgeEnabled})}),
+    syncModelCatalog: (expectedRevision:number) => request<{state:LabState;models:string[];removedModels:string[]}>("/model-catalog/sync", "POST", {expectedRevision}),
     modelCatalog: () => request<{models:string[]}>("/model-catalog"),
     cancel: (id: string) => request<LabRun>(`/runs/${encodeURIComponent(id)}/cancel`, "POST", {}),
     jevReview: (id:string) => request<LabRun>(`/runs/${encodeURIComponent(id)}/jev-review`, "POST", {}),

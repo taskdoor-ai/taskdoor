@@ -47,9 +47,6 @@ summary: "使用概览、讨论、文件、活动四个 Tab 组织任务详情�
 
 ### 英文界面截图
 
-![英文任务概览与完成标准](../assets/task-detail/overview-en.png)
-
-*FIG-TD-001 · 当前页面截图：三条完成标准中一条已人工确认，另两条用分段圆环表示 AI 分析梯度，不显示百分比。采集于 2026-09-21，主工作区当前运行页面，1280 × 720。*
 
 ![英文完成标准 AI 分析依据](../assets/task-detail/criterion-evidence-en.png)
 

@@ -11,15 +11,10 @@ export function workbenchPriorityReason(locale: Locale, item: PersonalWorkbenchI
   if (item.dueState === 'overdue') parts.push(`Past the due date${date}.`);
   else if (item.dueState === 'today') parts.push(`Due today${date}.`);
   else if (item.dueState === 'upcoming' && item.dueLabel) parts.push(`Due ${dueLabel}.`);
-  const dependencies = [
-    context?.pendingDependencyCount ? `${context.pendingDependencyCount} dependent deliverables are incomplete` : '',
-    context?.missingDependencyCount ? `${context.missingDependencyCount} dependency records are unavailable; review delivery requirements` : '',
-  ].filter(Boolean).join('; ');
-  const risk = item.focus === 'status-conflict' ? 'The task status conflicts with dependency or subtask records. Review what is complete'
-    : dependencies || (item.focus === 'blocked' ? 'Marked as blocked. Clarify what is needed to unblock the task'
-      : item.focus === 'dependency' ? 'Subtask dependencies are incomplete. Review the requirements'
-        : item.focus === 'evidence' || item.status === '待审核' ? 'Review the deliverables against the acceptance criteria'
-          : item.focus === 'unknown' ? 'Some information is missing. Gather the evidence needed to assess this task' : '');
+  const risk = item.focus === 'status-conflict' ? 'The task status conflicts with subtask records. Review what is complete'
+    : item.focus === 'blocked' ? 'Marked as blocked. Clarify what is needed to unblock the task'
+      : item.focus === 'evidence' || item.status === '待审核' ? 'Review the deliverables against the acceptance criteria'
+        : item.focus === 'unknown' ? 'Some information is missing. Gather the evidence needed to assess this task' : '';
   if (risk) parts.push(`${risk}.`);
   if (context?.childCount) parts.push(`Direct subtasks: ${context.childCount} total; ${context.completedChildCount} marked complete; ${context.remainingChildCount} awaiting wrap-up${context.cancelledChildCount ? `; ${context.cancelledChildCount} canceled` : ''}. Review the overall delivery.`);
   if (context?.completionCriterion) {

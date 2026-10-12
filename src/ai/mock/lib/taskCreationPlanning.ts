@@ -120,7 +120,7 @@ function planTaskCreationOriginal(
   };
   return {
     stage: "review", form,
-    summary: `${form.subtasks.length ? `已整理为 1 个主任务和 ${form.subtasks.length} 个子任务候选，完成标准与前置依赖可编辑。` : "已整理为一个任务候选，无需继续拆分；可核对目标与完成标准。"}负责人仅为职责建议，未知人选及期限保留待定。${boundary}`,
+    summary: `${form.subtasks.length ? `已整理为 1 个主任务和 ${form.subtasks.length} 个子任务候选，目标与完成标准可编辑。` : "已整理为一个任务候选，无需继续拆分；可核对目标与完成标准。"}负责人仅为职责建议，未知人选及期限保留待定。${boundary}`,
   };
 }
 

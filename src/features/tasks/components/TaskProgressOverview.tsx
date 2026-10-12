@@ -1,4 +1,5 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
+import { formatDisplayDate } from "@/shared/lib/date-time";
 import React from "react";
 import { formatPersonDays } from "@/features/tasks/lib/task-effort";
 import type { TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
@@ -6,7 +7,7 @@ import { getTaskProgressComparison } from "@/features/tasks/lib/task-progress-co
 import { TaskPredictionMarker, TaskProgressTrack } from "@/features/tasks/components/TaskProgressTrack";
 
 const percent = (ratio: number | null) => ratio === null ? "—" : `${Number((ratio * 100).toFixed(1))}%`;
-const shortDate = (date: string | null) => date ? `${Number(date.slice(5,7))}/${Number(date.slice(8,10))}` : "—";
+const shortDate = (date: string | null) => date ? formatDisplayDate(date) ?? "—" : "—";
 const days = (minutes: number) => formatPersonDays(minutes / 480);
 
 /** The same work scale and date scale are used by a task and its compact children. */
@@ -21,10 +22,10 @@ export function TaskProgressOverview({model, compact = false, label = "完成进
   const p = useProgressCopy();
   // Keep the exact rollup source in calculation details; the summary names the prediction.
   const visibleSource = model.sourceLabel === "子任务汇总" ? p("AI 预测") : model.sourceLabel;
-  const workDescription=p(`${model.sourceLabel}${model.ratio === null ? "" : ` ${percent(model.ratio)}`}；${model.currentMinutes === null ? "完成量未知" : `完成量 ${days(model.currentMinutes)}`}；${model.total === null ? "总量未知" : `总量 ${days(model.total)}`}。截至 ${model.asOf}。${model.sourceLabel === "用户确认" ? "来自用户完成声明。" : "预测不代表用户确认。"}`);
-  const finishDescription = model.completedOn ? p(`用户确认完成：${model.completedOn}`)
-    : model.forecastOn ? p(`AI 预测完成：${model.forecastOn}`) : p("完工预测：尚无");
-  const timeDescription=p(`用户设置的计划完成日期：${model.dueOn ?? "未设置"}；${finishDescription}；观测日期 ${model.asOf}。日期差按当前截止日期计算；修改截止不改变 AI 预测日期。`);
+  const workDescription=p(`${model.sourceLabel}${model.ratio === null ? "" : ` ${percent(model.ratio)}`}；${model.currentMinutes === null ? "完成量未知" : `完成量 ${days(model.currentMinutes)}`}；${model.total === null ? "总量未知" : `总量 ${days(model.total)}`}。截至 ${shortDate(model.asOf)}。${model.sourceLabel === "用户确认" ? "来自用户完成声明。" : "预测不代表用户确认。"}`);
+  const finishDescription = model.completedOn ? p(`用户确认完成：${shortDate(model.completedOn)}`)
+    : model.forecastOn ? p(`AI 预测完成：${shortDate(model.forecastOn)}`) : p("完工预测：尚无");
+  const timeDescription=p(`用户设置的计划完成日期：${model.dueOn ? shortDate(model.dueOn) : "未设置"}；${finishDescription}；观测日期 ${shortDate(model.asOf)}。日期差按当前截止日期计算；修改截止不改变 AI 预测日期。`);
   const history = getTaskProgressComparison(model.historySeries);
   const createdOn = model.startOn ?? history?.creation?.day ?? history?.history[0]?.at ?? null;
   const hasDates=Boolean(createdOn || model.dueOn || model.finishOn);
@@ -88,7 +89,7 @@ export function TaskProgressOverview({model, compact = false, label = "完成进
                 </div>
                 <span className="task-progress-schedule-label" data-kind={has("forecast") ? "forecast" : has("completed") ? "completed" : undefined}>
                   <span className="task-progress-schedule-types">{stop.labels.map((item,i)=><React.Fragment key={item.kind}>{i>0 && <span aria-hidden="true" className="task-progress-schedule-separator">｜</span>}<span data-kind={item.kind}>{p(item.label)}</span></React.Fragment>)}</span>
-                  <time dateTime={stop.date}>{shortDate(stop.date)}</time>
+                  <time dateTime={stop.date} title={formatDisplayDate(stop.date, { year: "always" }) ?? undefined}>{shortDate(stop.date)}</time>
                   {scheduleDifferenceLabel && model.deltaDays === 0 && has("plan") && <span className="task-progress-schedule-delta" data-coincident="true" data-relation={model.timeTone}>{scheduleDifferenceLabel}</span>}
                 </span>
               </div>

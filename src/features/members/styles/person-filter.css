@@ -1,0 +1,19 @@
+.person-filter-trigger .person-avatar { flex: 0 0 auto; }
+.person-filter-popup { display: flex; width: 240px; max-width: calc(100vw - 24px); max-height: var(--available-height); flex-direction: column; overflow: hidden; border-radius: var(--ad-radius-control); background: var(--ad-surface); color: var(--ad-ink); box-shadow: var(--ad-shadow-float); outline: 1px solid var(--ad-border); }
+.person-filter-search { display: flex; min-height: 36px; flex: 0 0 auto; align-items: center; gap: var(--ad-space-2); padding: 0 var(--ad-space-3); border-bottom: 1px solid var(--ad-border-soft); color: var(--ad-ink-tertiary); }
+.person-filter-search > svg { flex: 0 0 auto; }
+.person-filter-input { width: 100%; min-width: 0; height: 36px; padding: 0; border: 0; background: transparent; color: var(--ad-ink); font: inherit; font-size: var(--ad-text-caption); outline: none; box-shadow: none; }
+.person-filter-input::placeholder { color: var(--ad-ink-tertiary); }
+.person-filter-list { min-height: 0; max-height: 240px; overflow-y: auto; padding: var(--ad-space-1); }
+.person-filter-list:empty, .person-filter-empty:empty { padding: 0; }
+.person-filter-option { display: grid; min-height: 36px; grid-template-columns: 22px minmax(0, 1fr) 16px; align-items: center; gap: var(--ad-space-2); padding: var(--ad-space-1) var(--ad-space-2); border-radius: var(--ad-radius-control); font-size: var(--ad-text-body-sm); font-weight: 400; outline: none; cursor: default; }
+.person-filter-option[data-highlighted] { background: var(--ad-surface-subtle); }
+.person-filter-option[data-selected] { background: var(--ad-route-soft); }
+.person-filter-option-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.person-filter-scope-icon { display: grid; width: 22px; height: 22px; place-items: center; color: var(--ad-ink-tertiary); }
+.person-filter-check { display: grid; place-items: center; color: var(--ad-route-ink); }
+.person-filter-empty { padding: var(--ad-space-3); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+@media (max-width: 760px) {
+  .person-filter-option, .person-filter-search, .person-filter-input { min-height: var(--ad-control-touch-min); }
+  .person-filter-input { font-size: var(--ad-text-body-sm); }
+}

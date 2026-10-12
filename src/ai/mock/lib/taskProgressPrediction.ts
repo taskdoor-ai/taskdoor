@@ -8,6 +8,19 @@ export type ProgressPredictionRecord = { inputKey: string; checkedAt: string; se
 export type ProgressPredictionStore = Record<string, ProgressPredictionRecord>;
 export const progressPredictionStorageKey = "agentdoor-progress-predictions-v1";
 
+/** Old status aliases and removed dependency fields do not invalidate saved evidence. */
+export function normalizeProgressPredictionInputKey(key: string): string {
+  try {
+    const tasks = JSON.parse(key);
+    if (!Array.isArray(tasks)) return key;
+    return JSON.stringify(tasks.map(task => {
+      if (!task || typeof task !== "object") return task;
+      const { dependsOnTaskIds: _legacy, ...current } = task;
+      return current.status === "待开始" ? { ...current, status: "进行中" } : current;
+    }));
+  } catch { return key; }
+}
+
 export function progressPredictionInputKey(nodes: readonly WorkspaceNode[], taskId: string): string {
   const ids = new Set([taskId]);
   let previousSize = 0;
@@ -19,7 +32,7 @@ export function progressPredictionInputKey(nodes: readonly WorkspaceNode[], task
   return JSON.stringify(nodes.filter((node): node is TaskNode => node.kind === "task" && ids.has(node.id)).map(task => ({
     id: task.id, parentTaskId: task.parentTaskId, status: task.status, completedAt: task.completedAt,
     progressReopenedAt: task.progressReopenedAt, goal: task.goal, completionCriteria: task.completionCriteria,
-    effortEstimate: task.effortEstimate, dependsOnTaskIds: task.dependsOnTaskIds,
+    effortEstimate: task.effortEstimate,
   })).sort((a,b) => a.id.localeCompare(b.id)));
 }
 
@@ -29,7 +42,7 @@ export function readProgressPredictions(value: unknown): ProgressPredictionStore
   for (const [id, item] of Object.entries(value)) {
     try {
       if (item && typeof item.inputKey === "string" && typeof item.checkedAt === "string"
-        && Number.isFinite(Date.parse(item.checkedAt)) && getTaskProgressComparison(item.series)) result[id] = item;
+        && Number.isFinite(Date.parse(item.checkedAt)) && getTaskProgressComparison(item.series)) result[id] = { ...item, inputKey: normalizeProgressPredictionInputKey(item.inputKey) };
     } catch { /* A malformed saved result must not hide the original evidence. */ }
   }
   return result;

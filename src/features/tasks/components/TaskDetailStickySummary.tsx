@@ -4,6 +4,8 @@ import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
 import { TaskIcon } from "@/features/tasks/components/TaskIcon";
 import { TaskStatusBadge, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
+import { useI18n } from "@/shared/i18n/I18nProvider";
+import { formatLegacyDateLabel } from "@/shared/lib/date-time";
 
 type TaskDetailStickySummaryProps = {
   titleRef: RefObject<HTMLDivElement | null>;
@@ -21,6 +23,8 @@ type TaskDetailStickySummaryProps = {
 };
 
 export function TaskDetailStickySummary({ titleRef, headerRef, collapsed, onCollapsedChange, taskId, title, ownerId, ownerPending, status, due, iconName, iconTone }: TaskDetailStickySummaryProps) {
+  const { locale } = useI18n();
+  const displayedDue = due ? formatLegacyDateLabel(due, locale) : "未设置";
   const summaryRef = useRef<HTMLElement>(null);
   const previousCollapsed = useRef(false);
   const collapsePosition = useRef({ scrollTop: 0, headerHeight: 0 });
@@ -122,7 +126,7 @@ export function TaskDetailStickySummary({ titleRef, headerRef, collapsed, onColl
         <span aria-label="负责人" className="task-detail-sticky-owner">
           {ownerId ? <><PersonAvatar name={ownerId} personId={ownerId} showProfilePreview={false} size="xs" /><PersonName name={ownerId} personId={ownerId} showProfilePreview={false} />{ownerPending && <small>待接受</small>}</> : <span>未分配</span>}
         </span>
-        <span aria-label={`截止时间：${due || "未设置"}`} className="task-detail-sticky-due"><CalendarDays aria-hidden="true" size={14} /><span>{due || "未设置"}</span></span>
+        <span aria-label={`截止时间：${displayedDue}`} className="task-detail-sticky-due"><CalendarDays aria-hidden="true" size={14} /><span>{displayedDue}</span></span>
       </div>
       <TaskStatusBadge size="sm" value={status} />
     </aside>

@@ -1,5 +1,7 @@
+import { normalizeTaskStatus, type WorkspaceTaskStatus } from "@/shared/model/task-model";
 import type { TaskNode } from "@/shared/model/task-model";
 import { taskUpdatedTime } from "@/features/tasks/lib/task-list-presentation.ts";
+import { formatDisplayDate } from "@/shared/lib/date-time";
 
 export const taskDateFilterLabels = {
   today: "今天", "this-week": "本周", "next-7-days": "未来 7 天", "past-7-days": "最近 7 天",
@@ -49,7 +51,7 @@ function uniqueSelections(values: string[]): string[] {
 
 /** 数组条件覆盖旧单选字段；空数组表示该维度不限。 */
 export function getTaskStatusFilters(filters: TaskListFilters): string[] {
-  return uniqueSelections(filters.statuses ?? (filters.status === "all" ? [] : [filters.status]));
+  return uniqueSelections((filters.statuses ?? (filters.status === "all" ? [] : [filters.status])).map(status => normalizeTaskStatus(status as WorkspaceTaskStatus)));
 }
 
 /** Only unambiguous former “me” selections migrate; removed legacy views stay removed. */
@@ -66,7 +68,7 @@ export function normalizeTaskWorkspaceFilters(filters: TaskListFilters): TaskLis
   const statuses = filters.statuses !== undefined || filters.status !== "all"
     ? getTaskStatusFilters(filters)
     : filters.completion === "done" ? ["已完成"]
-      : filters.completion === "open" ? ["待开始", "进行中", "已阻塞"]
+      : filters.completion === "open" ? ["进行中", "已阻塞"]
         : [];
   return { ...filters, scope: getTaskScopeFilter(filters), view: "all", owner: "all", completion: "all", status: "all", statuses,
     ownerIds: [], participantIds: [], creatorIds: [], ownerIsMe: false, participantIsMe: false,
@@ -79,8 +81,8 @@ export function getTaskTagFilters(filters: TaskListFilters): string[] {
 
 export function taskDateFilterLabel(filter: TaskListDateFilter): string {
   if (filter.preset !== "custom") return taskDateFilterLabels[filter.preset];
-  if (filter.from && filter.to) return `${filter.from} 至 ${filter.to}`;
-  return filter.from ? `${filter.from} 起` : `${filter.to} 及以前`;
+  if (filter.from && filter.to) return `${formatDisplayDate(filter.from) ?? "—"} 至 ${formatDisplayDate(filter.to) ?? "—"}`;
+  return filter.from ? `${formatDisplayDate(filter.from) ?? "—"} 起` : `${filter.to ? formatDisplayDate(filter.to) ?? "—" : "—"} 及以前`;
 }
 
 function matchesPeople(values: string[], selections: string[] = [], includeEmpty = false, currentUserSelection?: string): boolean {
@@ -140,7 +142,7 @@ export function taskMatchesListFilters(task: TaskNode, query: string, filters: T
   return task.name.toLowerCase().includes(query.trim().toLowerCase())
     && (filters.completion !== "open" || !["已完成", "已取消"].includes(task.status))
     && (filters.completion !== "done" || task.status === "已完成")
-    && (statuses.length === 0 || statuses.includes(task.status))
+    && (statuses.length === 0 || statuses.includes(normalizeTaskStatus(task.status)))
     && matchesView
     && matchesTags
     && (scope !== undefined || (

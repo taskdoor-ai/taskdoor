@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Megaphone, ShoppingBag, Gift, Store, PenTool, Palette, Camera, Video, Mic, FileText, Presentation, BookOpen, Code, Bug, Database, Globe, Users, MessageSquare, CalendarDays, Handshake, Rocket, Lightbulb, ShieldCheck, Package, BriefcaseBusiness, ChartNoAxesColumnIncreasing, ClipboardCheck, FileCheck2, Flag, ListTodo, Sparkles, Target, type LucideIcon } from "lucide-react";
 import type { TaskIconName, TaskIconTone } from "@/shared/model/task-model";
 
@@ -46,3 +47,8 @@ export const taskIconToneOptions: Array<{ label: string; value: TaskIconTone }> 
   { label: "关注粉", value: "pink" },
   { label: "草木绿", value: "olive" },
 ];
+
+export function customTaskToneStyle(tone?: TaskIconTone): CSSProperties | undefined {
+  if (!tone || !/^#[0-9a-f]{6}$/i.test(tone)) return undefined;
+  return { "--task-accent-ink": tone, "--task-accent-bg": `color-mix(in srgb, ${tone} 12%, var(--ad-surface))` } as CSSProperties;
+}

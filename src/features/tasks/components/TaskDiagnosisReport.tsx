@@ -2,6 +2,7 @@ import { AlertTriangle, GitCompareArrows, LoaderCircle, RefreshCw, Stethoscope }
 import type { TaskDiagnosisReport as TaskDiagnosisReportModel } from "@/features/tasks/lib/task-diagnosis";
 import type { TaskDiagnosisEvidence, TaskDiagnosisFinding } from "@/shared/model/task-diagnosis";
 import { Button } from "@/shared/ui/button";
+import { formatDisplayDate, formatDisplayDateTime } from "@/shared/lib/date-time";
 
 type TaskDiagnosisReportProps = {
   analysisError?: string;
@@ -29,19 +30,12 @@ function evidenceSource(evidence: TaskDiagnosisEvidence, subject: TaskDiagnosisF
 function coverageSummary(report: TaskDiagnosisReportModel): string {
   const childCount = Math.max(0, report.coverage.checkedTaskCount - 1);
   const scope = childCount ? `当前任务及 ${childCount} 个子任务` : "当前任务";
-  const sources = report.coverage.contextTaskCount ? "目标、完成标准、可读文件、讨论、活动与可见依赖" : "可见依赖与已提供依据";
+  const sources = report.coverage.contextTaskCount ? "目标、完成标准、可读文件、讨论与活动" : "已提供依据";
   return `检索范围：${scope}的${sources}`;
 }
 
 function checkedAtLabel(value?: string): string | null {
-  if (!value || !Number.isFinite(Date.parse(value))) return null;
-  const parts = new Intl.DateTimeFormat("zh-CN", {
-    timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit",
-    hour: "2-digit", minute: "2-digit", hourCycle: "h23",
-  }).formatToParts(new Date(value));
-  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value;
-  const [year, month, day, hour, minute] = [part("year"), part("month"), part("day"), part("hour"), part("minute")];
-  return year && month && day && hour && minute ? `${year}-${month}-${day} ${hour}:${minute}` : null;
+  return value ? formatDisplayDateTime(value) ?? formatDisplayDate(value) : null;
 }
 
 function DiagnosisFinding({ finding }: { finding: TaskDiagnosisFinding }) {
@@ -103,7 +97,7 @@ export function TaskDiagnosisReport({ analysisError = "", analyzing = false, onR
     {analysisError && <p className="task-diagnosis-analysis-error" role="alert">{analysisError}</p>}
     <p className="task-diagnosis-coverage">
       <span>{coverageSummary(report)}</span>
-      <span className="task-diagnosis-updated-at">更新时间：{checkedAt ? <time dateTime={report.checkedAt}>{checkedAt}</time> : "未记录"}</span>
+      <span className="task-diagnosis-updated-at">更新时间：{checkedAt ? <time dateTime={report.checkedAt} title={report.checkedAt ? formatDisplayDateTime(report.checkedAt, { year: "always" }) ?? formatDisplayDate(report.checkedAt, { year: "always" }) ?? undefined : undefined}>{checkedAt}</time> : "未记录"}</span>
     </p>
     {report.findings.length
       ? <div className="task-diagnosis-findings">{descendantGroups.length ? <>

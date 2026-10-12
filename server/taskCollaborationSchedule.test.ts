@@ -106,34 +106,26 @@ test("没有当前任务稳定 ID 时不按重名猜测其他负责项", async (
   assert.equal(report.owner?.otherTasks, null);
 });
 
-test("只提示真实前置项的有效截止倒置，不称绝对冲突", async () => {
+test("历史前置日期倒置不改变排期结论或生成交付核对", async () => {
   const describe = await load();
-  const report = describe({ ...task, dependsOnClientIds: ["late", "late", "early"] }, [member("林洁")], [
-    candidate("late", { title: "确认脚本方向", endDate: "2026-09-11" }),
-    candidate("early", { title: "整理产品资料", endDate: "2026-09-02" }),
-    candidate("unrelated", { endDate: "2026-09-30" }),
-  ]);
-  assert.equal(report.status, "review-dependencies");
-  assert.equal(report.statusLabel, "需核对前置时间");
-  assert.equal(report.dependencies.length, 2);
-  assert.equal(report.dependencies[0].needsReview, true);
-  assert.equal(report.dependencies[0].message, "前置任务「确认脚本方向」截止晚于本任务，需核对交付时间。");
-  assert.equal(report.dependencies[1].needsReview, false);
-  assert.doesNotMatch(JSON.stringify(report.dependencies), /unrelated|冲突|无法完成|必须延期/);
+  const members = [member("林洁")];
+  const candidates = [candidate("late", { title: "确认脚本方向", endDate: "2026-09-11" }), candidate("early", { title: "整理产品资料", endDate: "2026-09-02" })];
+  const baseline = describe(task, members, candidates);
+  const legacy = describe({ ...task, dependsOnClientIds: ["late", "late", "early", "missing"] }, members, candidates);
+  assert.deepEqual(legacy, baseline);
+  assert.equal(legacy.status, "pending");
+  assert.equal(legacy.statusLabel, "排期待确认");
+  assert.deepEqual(legacy.dependencies, []);
+  assert.doesNotMatch(JSON.stringify(legacy), /前置|依赖|需核对前置时间/);
 });
 
-test("相同截止不推断已衔接，缺失前置和日期不伪造有效排期", async () => {
+test("相同截止、缺失日期和未知历史前置不制造衔接提示", async () => {
   const describe = await load();
-  const report = describe({ ...task, dependsOnClientIds: ["same", "no-date", "missing"] }, [], [
-    candidate("same", { endDate: task.endDate }),
-    candidate("no-date", { endDate: "" }),
-  ]);
+  const candidates = [candidate("same", { endDate: task.endDate }), candidate("no-date", { endDate: "" })];
+  const report = describe({ ...task, dependsOnClientIds: ["same", "no-date", "missing"] }, [], candidates);
+  assert.deepEqual(report, describe(task, [], candidates));
+  assert.deepEqual(report.dependencies, []);
   assert.equal(report.status, "pending");
-  assert.equal(report.dependencies[0].needsReview, false);
-  assert.match(report.dependencies[0].message, /衔接仍待确认/);
-  assert.match(report.dependencies[1].message, /未设固定截止/);
-  assert.equal(report.dependencies[2].title, "前置任务资料未知");
-  assert.match(report.dependencies[2].message, /不在当前方案/);
 });
 
 test("无固定截止有明确类型，非法日期不参加先后比较", async () => {
@@ -147,15 +139,16 @@ test("无固定截止有明确类型，非法日期不参加先后比较", async
   assert.ok(invalid.dateNotes.includes("截止日期无效，需核对。"));
   const invalidDependency = describe({ ...task, dependsOnClientIds: ["invalid"] }, [], [candidate("invalid", { endDate: "2026-13-01" })]);
   assert.equal(invalidDependency.status, "pending");
-  assert.match(invalidDependency.dependencies[0].message, /截止日期无效/);
+  assert.deepEqual(invalidDependency.dependencies, []);
+  assert.deepEqual(invalidDependency.dateNotes, []);
 });
 
-test("日期跨年正确比较，任务本身日期倒置仅提示核对", async () => {
+test("只核对任务本身跨年日期倒置，不比较历史前置日期", async () => {
   const describe = await load();
   const report = describe({ ...task, startDate: "2027-01-03", endDate: "2027-01-01", dependsOnClientIds: ["previous-year"] }, [], [candidate("previous-year", { endDate: "2026-12-31" })]);
   assert.equal(report.status, "pending");
   assert.ok(report.dateNotes.includes("本任务开始日期晚于截止日期，需核对。"));
-  assert.equal(report.dependencies[0].needsReview, false);
+  assert.deepEqual(report.dependencies, []);
 });
 
 test("计算只读，不改变任务、成员或同方案候选数据", async () => {

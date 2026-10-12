@@ -8,8 +8,22 @@ import {loadSkill,labSkills,resolveSkill,hash} from './test-lab/skills.ts';
 import {createLabStore} from './test-lab/store.ts';
 import {seedLab} from './test-lab/seeds.ts';
 const id='agentdoor-task-planner';
-test('工作区两个入口包包含当前规则、示例和完整依赖，可逐文件校验',()=>{
- for(const skill of labSkills){const pack=loadSkill(skill.id);const files=validatePackage(pack.snapshot,skill.id);assert.ok(files.some(f=>f.path===`skills/${skill.id}/examples/decision-pairs.md`));assert.ok(files.some(f=>f.path==='skills/shared/current-prd-contract.md'));assert.equal(new Set(files.map(f=>f.path)).size,files.length);assert.equal(hash(pack.snapshot),pack.hash);}
+test('生产创建包可独立安装，分析包保留完整依赖，可逐文件校验',()=>{
+ for(const skill of labSkills){const pack=loadSkill(skill.id);const files=validatePackage(pack.snapshot,skill.id);
+  if(skill.id===id){
+   assert.ok(files.every(f=>f.path.startsWith(`skills/${id}/`)));
+   const manifest=JSON.parse(files.find(f=>f.path.endsWith('/production-runtime.json'))!.content);
+   assert.deepEqual(new Set(files.map(f=>f.path)),new Set([...manifest.files,`skills/${id}/references/production-runtime.json`]));
+   for(const file of files.filter(f=>f.path.endsWith('.md')))for(const match of file.content.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)){
+    if(/^[a-z]+:/.test(match[1]))continue;
+    const path=new URL(match[1],`file:///${file.path}`).pathname.slice(1);
+    assert.ok(files.some(f=>f.path===path),`不可独立读取的引用：${path}`);
+   }
+  }else{
+   assert.ok(files.some(f=>f.path===`skills/${skill.id}/examples/decision-pairs.md`));assert.ok(files.some(f=>f.path==='skills/shared/current-prd-contract.md'));
+  }
+  assert.equal(new Set(files.map(f=>f.path)).size,files.length);assert.equal(hash(pack.snapshot),pack.hash);
+ }
 });
 test('保存包拒绝路径穿越、重复文件、缺少入口和损坏JSON',()=>{
  const entry={path:`skills/${id}/SKILL.md`,content:'# test'};

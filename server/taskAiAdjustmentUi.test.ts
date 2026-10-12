@@ -4,15 +4,15 @@ import test from "node:test";
 
 const read = (name: string) => readFileSync(new URL(`../src/${name}`, import.meta.url), "utf8");
 
-test("创建和详情共享上下文AI浮层，不保留居中弹窗或底部继续调整", () => {
+test("创建保留上下文 AI 浮层，详情分析不再提供辅助修改", () => {
   const page = read("features/tasks/components/TaskCreationPage.tsx");
   const detail = read("features/tasks/components/TaskDetail.tsx");
   assert.match(page, /<TaskAiAdjustmentPopover/);
-  assert.match(detail, /<TaskAiAdjustmentPopover/);
+  assert.doesNotMatch(detail, /<TaskAiAdjustmentPopover/);
   assert.doesNotMatch(page + detail, /<TaskAiAdjustmentDialog/);
   assert.doesNotMatch(page, /creation-revision-panel|继续调整/);
   assert.match(page, /applyDraftTaskAiAdjustment/);
-  assert.match(detail, /onAiAdjustmentApply/);
+  assert.doesNotMatch(detail, /onAiAdjustmentApply/);
 });
 
 test("创建保留逐项调整，已有任务的子任务列表去掉 AI 调整入口", () => {
@@ -73,7 +73,7 @@ test("AI浮层保持非模态，创建态固定右侧而详情态继续使用锚
   assert.match(source, /收起 AI 帮你改/);
   assert.match(source, /type: "discard"/);
   assert.doesNotMatch(source, /<Dialog|<.*Backdrop|aria-modal="true"/);
-  for (const file of ["features/tasks/components/TaskCreationPage.tsx", "features/tasks/components/TaskDetail.tsx"]) {
+  for (const file of ["features/tasks/components/TaskCreationPage.tsx"]) {
     const page = read(file);
     assert.match(page, file.includes("TaskCreationPage") ? /open=\{aiOpen && active\}/ : /open=\{aiOpen\}/);
     assert.match(page, /onOpenChange=\{setAiOpen\}/);
@@ -93,7 +93,7 @@ test("浮层复用基础Popover，支持焦点恢复、可见范围和移动滚�
 });
 
 test("AI草稿由页面持有，切换示例暂时卸载浮层不清空同一任务的输入", () => {
-  for (const file of ["features/tasks/components/TaskCreationPage.tsx", "features/tasks/components/TaskDetail.tsx"]) {
+  for (const file of ["features/tasks/components/TaskCreationPage.tsx"]) {
     const page = read(file);
     assert.match(page, /const aiDraftSession = useTaskAiAdjustmentDrafts\(\)/);
     assert.match(page, /draftSession=\{aiDraftSession\}/);
@@ -109,21 +109,6 @@ test("详情锚点浮层保留 Tab 边界收起，创建固定面板允许自然
   assert.match(popover, /element.tabIndex >= 0/);
   assert.match(popover, /element.matches\(":disabled"\)/);
   assert.match(popover, /event.shiftKey \? controls\[0\] : controls.at\(-1\)/);
-});
-
-test("详情保存更新同一任务而不调用创建流程，记录日志并同步显示", () => {
-  const app = read("app/App.tsx");
-  const start = app.indexOf("const applyTaskAiAdjustment =");
-  assert.ok(start > -1);
-  const handler = app.slice(start, app.indexOf("return (", start));
-  assert.match(handler, /applySavedTaskAiAdjustment/);
-  assert.match(handler, /commitTaskAiStorage/);
-  assert.ok(handler.indexOf("commitTaskAiStorage") < handler.indexOf("setWorkspaceNodes("));
-  assert.doesNotMatch(handler, /createTaskPlanFromConversation|createWorkspaceTasksFromDraft/);
-  const detail = read("features/tasks/components/TaskDetail.tsx");
-  assert.match(detail, /setCurrentTitle\(task.title\)/);
-  assert.match(detail, /setCurrentGoal\(task.goal\)/);
-  assert.doesNotMatch(detail, /setPendingOwnerId|initialProposedOwnerId/);
 });
 
 test("详情负责人修改直接更新正式负责人，不保留提议状态", () => {

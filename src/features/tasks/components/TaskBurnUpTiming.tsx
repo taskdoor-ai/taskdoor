@@ -1,8 +1,9 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
+import { formatDisplayDate } from "@/shared/lib/date-time";
 import React from "react";
 import type { TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
 
-const shortDate=(date:string)=>`${Number(date.slice(5,7))}/${Number(date.slice(8,10))}`;
+const shortDate=(date:string)=>formatDisplayDate(date) ?? "—";
 
 export function TaskBurnUpHeading() {
   const p = useProgressCopy();
@@ -100,6 +101,7 @@ export function TaskBurnUpDateAxis({ layout, y }: { layout: ReturnType<typeof la
       const titles = item.entries.filter(entry => entry.label);
       const rowY = y + item.row * layout.rowHeight;
       return <g key={item.date} data-date={item.date} data-kind={kind}>
+        <title>{formatDisplayDate(item.date, { year: "always" }) ?? "—"}</title>
         <text className="task-progress-chart-axis-date" x={item.labelX} y={rowY + layout.fontSize * 1.65} textAnchor={item.anchor} fontSize={layout.fontSize}>{shortDate(item.date)}</text>
         {titles.length > 0 && item.captionRows.map((row, rowIndex) => <text key={rowIndex} className="task-progress-chart-axis-caption" x={item.labelX} y={rowY + layout.fontSize * (3 + rowIndex * 1.4)} textAnchor={item.anchor} fontSize={layout.fontSize}>
           {row.map((entry, index) => <React.Fragment key={entry.kind}>{index > 0 && <tspan className="task-progress-chart-axis-separator">｜</tspan>}<tspan data-kind={entry.kind}>{entry.label}</tspan></React.Fragment>)}
@@ -131,7 +133,7 @@ export function TaskBurnUpTiming({model, showStatus = model.deltaDays === null, 
             {index>0 && <span className="task-progress-chart-date-separator" aria-hidden="true">｜</span>}
             <span className={item.kind === "forecast" ? "task-ai-prediction-label" : undefined} data-kind={item.kind}>{item.label}</span>
           </React.Fragment>)}</span>
-          <time className={kind === "forecast" ? "task-ai-prediction-label" : undefined} dateTime={date}>{shortDate(date)}</time>
+          <time className={kind === "forecast" ? "task-ai-prediction-label" : undefined} dateTime={date} title={formatDisplayDate(date, { year: "always" }) ?? undefined}>{shortDate(date)}</time>
         </div>;
       })}
     </div>}

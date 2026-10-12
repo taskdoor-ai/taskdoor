@@ -878,5 +878,13 @@
   "scheduleValidation2": {
     "zh": "截止时间不能早于计划开始日期。",
     "en": "The due date cannot be before the planned start date."
+  },
+  "basicallyComplete": {
+    "zh": "基本完成",
+    "en": "Mostly complete"
+  },
+  "assessmentUnavailable": {
+    "zh": "暂无评估",
+    "en": "Not assessed"
   }
 }

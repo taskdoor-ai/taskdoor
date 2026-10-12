@@ -9,7 +9,7 @@ function elapsed(start?:string|null,end?:string|null):number|null {
 export function runTiming(run:LabRun){
   const generationMs=elapsed(run.startedAt,run.finishedAt);
   const judgeMs=elapsed(run.judgeStartedAt,run.judgeFinishedAt);
-  const judged=!!run.selection?.judgeModel;
+  const judged=!!run.selection?.judgeModel&&run.judgeStatus!=='skipped';
   return {generationMs,judgeMs,totalMs:judged?elapsed(run.startedAt,run.judgeFinishedAt):generationMs};
 }
 export function formatDuration(ms:number|null){

@@ -3,13 +3,14 @@ import type { LabCase, LabTeam } from './types';
 import { buildView } from './visibility';
 import { DocumentView } from './markdown';
 import { evidenceDownload, isMarkdownEvidence } from './markdown-files';
+import { LabDateLabel } from '@/test-lab/date-label';
 
 export function CaseContext({ item, team, onEditFile }: { item: LabCase; team: LabTeam; onEditFile?:(id:string)=>void }) {
   const [search, setSearch] = useState('');
   const [kind, setKind] = useState('all');
   const [range, setRange] = useState(item.steps.some(s => s.taskId) ? 'target' : 'all');
   const [openId, setOpenId] = useState<string | null>(null);
-  const recordTime = (value:string) => value && !Number.isNaN(new Date(value).getTime()) ? new Date(value).toLocaleString('zh-CN') : '时间未记录';
+  const recordTime = (value:string) => <LabDateLabel value={value} />;
   useEffect(()=>{if(openId)document.getElementById(`lab-context-${openId}`)?.scrollIntoView({block:'nearest'});},[openId]);
   const visible = useMemo(() => buildView(team, item.actorId).team, [team, item.actorId]);
   const targetIds = new Set(item.steps.flatMap(step => step.taskId ? [step.taskId] : []));

@@ -3,7 +3,7 @@ import test from "node:test";
 import { creatorCommerceMembers, creatorCommerceTags } from "../src/ai/mock/data/creatorCommerceScenario.ts";
 import { taskCreationScenarios, type TaskCreationScenarioId } from "../src/ai/mock/data/taskCreationScenarios.ts";
 import { workspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
-import { hasValidCreationDependencies, toTaskPlanDraft, validateCreationForm, type CreationForm } from "../src/features/tasks/lib/task-creation-form.ts";
+import { toTaskPlanDraft, validateCreationForm, type CreationForm } from "../src/features/tasks/lib/task-creation-form.ts";
 import { planTaskCreation, resolveCreationRelationship, reviseCreationPlan } from "../src/ai/mock/lib/taskCreationPlanning.ts";
 import type { ScenarioContext } from "../src/ai/mock/lib/taskCreationScenario.ts";
 
@@ -91,7 +91,8 @@ test("轻任务保留一层任务和执行建议，不添加同名子任务", ()
   assert.equal(form.mainTask.endDate, "");
 });
 
-test("复杂示例复用已有七项拆分、完成标准、人选和稳定依赖", () => {
+test("复杂示例复用已有七项拆分、完成标准和人选，不再导入依赖", t => {
+  t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") });
   const form = formFor("complex-plan");
   const tasks = [form.mainTask, ...form.subtasks];
   assert.equal(form.subtasks.length, 7);
@@ -102,8 +103,8 @@ test("复杂示例复用已有七项拆分、完成标准、人选和稳定依�
     assert.equal(task.goal, form.mainTask.goal);
     assert.equal(task.endDate, "2026-09-15");
   }
-  assert.deepEqual(form.subtasks[2].dependsOnClientIds, [0, 1, 3, 6].map(index => form.subtasks[index].clientId));
-  assert.equal(hasValidCreationDependencies(form.subtasks), true);
+  assert.ok(tasks.every(task => task.dependsOnClientIds.length === 0));
+  assert.equal(toTaskPlanDraft(form).dependencies, undefined);
   assert.equal(validateCreationForm(form, context.members), null);
 });
 

@@ -1,17 +1,27 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { register } from "node:module";
 import test from "node:test";
 import React, { Children, createElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { SmartTextbox, type Segment } from "@tigerabrodioss/fude";
-import { TaskDiscussion } from "../src/features/tasks/components/TaskDiscussion.tsx";
-import { DiscussionMessages, ReplyReference } from "../src/features/tasks/discussion/components/DiscussionMessages.tsx";
-import { DiscussionComposer } from "../src/features/tasks/discussion/components/DiscussionComposer.tsx";
-import { MentionComposer } from "../src/features/tasks/discussion/components/MentionComposer.tsx";
 import { getTaskDiscussionThreads } from "../src/features/tasks/lib/task-activity.ts";
 import type { TaskActivityMock } from "../src/shared/model/task-model.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
+register(`data:text/javascript,${encodeURIComponent(`
+  export async function load(url, context, nextLoad) {
+    if (url.endsWith(".svg")) return { format: "module", source: "export default " + JSON.stringify(url), shortCircuit: true };
+    return nextLoad(url, context);
+  }
+`)}`, import.meta.url);
+const { TaskDiscussion } = await import("../src/features/tasks/components/TaskDiscussion.tsx");
+const { DiscussionMessages, ReplyReference } = await import("../src/features/tasks/discussion/components/DiscussionMessages.tsx");
+const { DiscussionComposer } = await import("../src/features/tasks/discussion/components/DiscussionComposer.tsx");
+const { MentionComposer } = await import("../src/features/tasks/discussion/components/MentionComposer.tsx");
+const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
+const { AiConnectionButton } = await import("../src/features/ai-connection/components/AiConnectionButton.tsx");
+const renderChinese = (tree: ReactNode) => renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: tree }));
 
 type Element = ReactElement<Record<string, any>>;
 
@@ -34,7 +44,7 @@ function capture(render: () => ReactNode, initialize?: (tree: ReactNode) => void
     initialize?.(tree);
     return tree;
   }
-  const html = renderToStaticMarkup(createElement(Capture));
+  const html = renderChinese(createElement(Capture));
   return { html, tree };
 }
 
@@ -45,26 +55,32 @@ const read = (file: string) => readFileSync(new URL(`../src/${file}`, import.met
 
 const messageProps = { messages: [root, reply], allMessages: [root, reply], currentUser: "林洁", files: [], people: [], draftKey: "test", onOpenFile: () => undefined, onPost: () => undefined };
 
-test("任务讨论显示统一附件入口和普通回复，隐藏消息引用并隔离文件评论", () => {
-  const html = renderToStaticMarkup(createElement(TaskDiscussion, { ...props, activities: [root, { ...reply, quote: { messageId: root.id, author: root.author, text: "旧引用摘录" } }, { ...root, id: "file-only", fileThreadId: "file-thread", message: "仅在文件中显示" }] }));
+test("任务讨论显示统一附件入口和逐条回复，常驻直接父消息摘要并隔离文件评论", () => {
+  const html = renderChinese(createElement(TaskDiscussion, { ...props, activities: [root, { ...reply, quote: { messageId: root.id, author: root.author, text: "旧引用摘录" } }, { ...root, id: "file-only", fileThreadId: "file-thread", message: "仅在文件中显示" }] }));
   assert.match(html, /contentEditable="true"/i);
   assert.match(html, /aria-label="添加附件"/);
   assert.doesNotMatch(html, /aria-label="本地上传"|aria-label="从文件列表选择"/);
-  assert.match(html, /discussion-reference-icon/);
+  assert.match(html, /task-discussion-feed-reference/);
   assert.doesNotMatch(html, /引用<\/button>|discussion-inline-quote|旧引用摘录/);
-  assert.equal(html.split(root.message).length - 1, 1, "已发布回复不常驻原文摘要");
+  assert.match(html, /aria-label="查看引用内容"/);
+  const replyMarkup = html.match(/id="task-activity-specific-reply"[\s\S]*?<\/li>/)?.[0];
+  assert.ok(replyMarkup);
+  assert.match(replyMarkup, /我已确认范围/);
+  assert.doesNotMatch(replyMarkup, /请核对交付范围/, "回复行不常驻父消息摘要");
+  assert.equal((html.match(/class="task-discussion-feed-message"/g) ?? []).length, 2, "主消息和回复平铺为独立行");
   assert.doesNotMatch(html, /仅在文件中显示/);
+  assert.doesNotMatch(html, /回复列表|查看\s*\d+\s*条回复|收起回复|task-discussion-thread-bar/);
 });
 
 test("主讨论 AI 入口只传递当前串和触发器，不提交发言", () => {
   const calls: unknown[][] = [];
   let posts = 0;
   const { tree } = capture(() => DiscussionMessages({ ...messageProps, onPost: () => { posts++; }, onConnectAi: (...args) => { calls.push(args); } }));
-  const buttons = elements(tree, node => node.props.title === "连接 AI");
+  const buttons = elements(tree, node => node.type === AiConnectionButton);
   assert.equal(buttons.length, 1);
   const trigger = {} as HTMLElement;
-  buttons[0].props.onClick({ currentTarget: trigger });
-  assert.deepEqual(calls, [[{ kind: "discussion", activityId: root.id }, trigger]]);
+  buttons[0].props.onConnect(trigger);
+  assert.deepEqual(calls, [[{ kind: "discussion", activityId: root.id }, trigger, undefined]]);
   assert.equal(posts, 0);
 });
 
@@ -102,13 +118,13 @@ test("消息附件点击使用稳定文件 ID 与发布版本，已删除评论�
 test("删除根评论后保留其他回复且不留下空讨论组，全部删除显示空态", () => {
   const deleted = { ...root, deletedAt: "2026-09-16T01:22:00Z" };
   const activities = [deleted, reply, { ...deleted, id: "empty-deleted-thread" }];
-  const html = renderToStaticMarkup(createElement(TaskDiscussion, { ...props, activities }));
+  const html = renderChinese(createElement(TaskDiscussion, { ...props, activities }));
   assert.doesNotMatch(html, /这条评论已删除|task-activity-root-discussion|task-activity-empty-deleted-thread|请核对交付范围/);
   assert.match(html, /我已确认范围/);
-  assert.equal((html.match(/class="task-discussion-group"/g) ?? []).length, 1);
-  const empty = renderToStaticMarkup(createElement(TaskDiscussion, { ...props, activities: [deleted] }));
+  assert.equal((html.match(/class="task-discussion-feed-message"/g) ?? []).length, 1);
+  const empty = renderChinese(createElement(TaskDiscussion, { ...props, activities: [deleted] }));
   assert.match(empty, /还没有讨论/);
-  assert.doesNotMatch(empty, /task-discussion-group/);
+  assert.doesNotMatch(empty, /task-discussion-feed-message/);
 });
 
 test("删除评论不占折叠配额，回复对象不跳转已删除原文或展示旧引用", () => {
@@ -116,7 +132,7 @@ test("删除评论不占折叠配额，回复对象不跳转已删除原文或�
   const replies = Array.from({ length: 5 }, (_, index) => ({ ...reply, id: `reply-${index}`, quote: { messageId: root.id, author: root.author, text: "已删除的敏感摘录" } }));
   const messages = [deleted, ...replies];
   const { tree, html } = capture(() => DiscussionMessages({ ...messageProps, messages, allMessages: messages }));
-  assert.match(html, /展开 5 条回复/);
+  assert.match(html, /回复列表 \(5\)/);
   assert.doesNotMatch(html, /敏感摘录|原消息暂不可用/);
   assert.match(html, /回复原文不可用/);
   assert.equal(recordIds(tree).length, 0);
@@ -128,7 +144,8 @@ test("时间显示保存的日期时分且位于内容附件下方，旧相对�
     { ...root, createdAt: "2026-09-14T02:03:00Z", time: "刚刚", file: "核对记录.docx", updatedAt: "2026-09-14T03:04:00Z" },
     { ...reply, time: "6 分钟前" },
   ] }));
-  assert.match(html, /dateTime="2026-09-14T02:03:00\.000Z">2026-09-14 10:03<\/time>/i);
+  assert.match(html, /dateTime="2026-09-14T02:03:00\.000Z"/i);
+  assert.equal(elements(tree, item => item.type === "time")[0].props.title, new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short", hour12: true }).format(new Date("2026-09-14T02:03:00Z")));
   assert.doesNotMatch(html, /原时间|刚刚|6 分钟前|2026-09-14 11:04/);
   assert.equal(elements(tree, item => item.type === "time").length, 1);
   for (const header of elements(tree, item => item.type === "header")) {
@@ -136,8 +153,8 @@ test("时间显示保存的日期时分且位于内容附件下方，旧相对�
   }
   assert.ok(html.indexOf("核对记录.docx") < html.indexOf("discussion-message-meta"));
   assert.ok(html.indexOf("discussion-message-meta") < html.indexOf("task-discussion-actions"));
-  const legacy = renderToStaticMarkup(createElement(DiscussionMessages, { ...messageProps, messages: [{ ...root, time: "2026-09-01 10:06" }] }));
-  assert.match(legacy, /dateTime="2026-09-01T02:06:00\.000Z">2026-09-01 10:06<\/time>/i);
+  const legacy = renderChinese(createElement(DiscussionMessages, { ...messageProps, messages: [{ ...root, time: "2026-09-01 10:06" }] }));
+  assert.match(legacy, /dateTime="2026-09-01T02:06:00\.000Z"/i);
 });
 
 test("编辑器 AI 入口读取当前纯文本，反复打开不清空草稿、不触发提交或取消", () => {
@@ -212,6 +229,7 @@ test("来源定位使用独立浅底，1800ms结束且换目标与卸载时清�
   assert.match(source, /window\.setTimeout\([\s\S]*?1800\)/);
   assert.match(source, /return \(\) => window\.clearTimeout\(timer\)/);
   assert.match(source, /attentionTarget\?\.id, attentionTarget\?\.sequence/);
+  assert.match(source, /\[highlightedActivityId, highlightSequence\]/);
   assert.match(css, /\.task-discussion-record\.is-attention[^}]*background:/);
 });
 
@@ -243,7 +261,7 @@ test("回复初始收起，单一入口展开全部并保持原顺序", () => {
   const messages = [root, ...getTaskDiscussionThreads([root, ...replySeries])[0].replies];
   const initial = capture(() => DiscussionMessages({ ...messageProps, messages, allMessages: messages }));
   assert.deepEqual(recordIds(initial.tree), [`task-activity-${root.id}`]);
-  assert.match(initial.html, /展开 5 条回复/);
+  assert.match(initial.html, /回复列表 \(5\)/);
   assert.doesNotMatch(initial.html, /收起回复|展开全部/);
   let opened = false;
   const expanded = capture(() => DiscussionMessages({ ...messageProps, messages, allMessages: messages }), tree => {
@@ -300,7 +318,7 @@ for (const mode of ["回复", "编辑"]) test(`收起回复隐藏整串但保留
   assert.deepEqual(recordIds(tree), [`task-activity-${root.id}`]);
   const composer = elements(tree, item => item.type === DiscussionComposer)[0];
   assert.equal(composer.props.draftKey, `test:${mode === "回复" ? "reply" : "edit"}:series-0`);
-  assert.match(html, /展开 5 条回复/);
+  assert.match(html, /回复列表 \(5\)/);
   assert.doesNotMatch(html, /收起回复|已保留正在编辑或回复的内容/);
   if (mode === "回复") {
     assert.match(html, /discussion-composer-context/);
@@ -318,7 +336,7 @@ test("每个有回复的动态均可隐藏全部回复，再展开全部，主�
       else if (step === 1) { step++; elements(tree, item => item.props.className === "discussion-collapse")[0].props.onClick({ currentTarget: { focus() {} } }); }
     });
     assert.deepEqual(recordIds(result.tree), [`task-activity-${root.id}`]);
-    assert.match(result.html, new RegExp(`展开 ${count} 条回复`));
+    assert.match(result.html, new RegExp(`回复列表 \\(${count}\\)`));
     assert.equal(elements(result.tree, item => item.props.className === "discussion-replies-controls")[0].props.children.props["aria-expanded"], false);
     step = 0;
     const reopened = capture(() => DiscussionMessages({ ...messageProps, messages, allMessages: messages }), tree => {
@@ -363,5 +381,5 @@ test("任务回复控制紧跟主消息时间，无时间仍可操作，删除�
   const deleted = { ...root, deletedAt: "2026-09-16T01:22:00Z" };
   const { html, tree } = capture(() => DiscussionMessages({ ...messageProps, messages: [deleted, reply] }));
   assert.deepEqual(recordIds(tree), []);
-  assert.match(html, /展开 1 条回复/);
+  assert.match(html, /回复列表 \(1\)/);
 });

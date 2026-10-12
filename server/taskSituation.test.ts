@@ -219,7 +219,7 @@ test("子任务改名和改状态立即替换父任务中的旧事实", () => {
   assert.doesNotMatch(allText(model), /旧名称|已阻塞|旧示例/);
 });
 
-test("父子完成矛盾、子项阻塞与已完成子项的未完成前置均保留", () => {
+test("父子完成矛盾和真实子项阻塞保留，已完成子项旧前置不生成矛盾", () => {
   const children = [
     { ...relation("done", "已完成", "结果核对"), dependsOnTaskIds: ["blocked"] },
     relation("blocked", "已阻塞", "资料交付"),
@@ -228,10 +228,10 @@ test("父子完成矛盾、子项阻塞与已完成子项的未完成前置均�
   const attention = groupText(model, "attention");
   assert.match(attention, /父任务标记已完成.*子任务「资料交付」.*尚未收口/);
   assert.match(attention, /资料交付.*已阻塞/);
-  assert.match(attention, /结果核对.*已完成.*前置仍未完成/);
+  assert.doesNotMatch(attention, /结果核对.*前置|前置仍未完成|依赖/);
 });
 
-test("多个前置、阻塞和完成矛盾各有独立任务入口，下一步仍只给优先处理建议", () => {
+test("旧前置关系不影响真实子任务阻塞入口和下一步", () => {
   const value = input({
     task: { ...emptyTask, status: "进行中" },
     dependencyTasks: [relation("external-one", "进行中", "外部交付一"), relation("external-two", "已取消", "外部交付二"), relation("external-done", "已完成")],
@@ -244,18 +244,19 @@ test("多个前置、阻塞和完成矛盾各有独立任务入口，下一步�
   const before = structuredClone(value);
   const model = getTaskSituationModel(value);
   const attention = groupItems(model, "attention");
-  assert.deepEqual(attention.map(item => item.reference?.id), ["external-one", "external-two", "blocked-one", "blocked-two", "done-one", "done-two"]);
+  assert.deepEqual(attention.map(item => item.reference?.id), ["blocked-one", "blocked-two"]);
   assert.ok(attention.every(item => item.reference?.kind === "task"));
   assert.ok(attention.every(item => item.text.includes([...value.dependencyTasks!, ...value.childTasks].find(task => task.id === item.reference!.id)!.title)));
   assert.doesNotMatch(groupText(model, "attention"), /另有|external-done/);
   assert.equal(groupItems(model, "next").length, 1);
-  assert.equal(groupItems(model, "next")[0].reference?.id, "external-one");
-  assert.match(groupText(model, "next"), /^建议李明.*外部交付一/);
+  assert.equal(groupItems(model, "next")[0].reference?.id, "blocked-one");
+  assert.match(groupText(model, "next"), /^建议李明.*阻塞交付一/);
+  assert.doesNotMatch(allText(model), /前置|依赖|外部交付|结果一.*前置/);
   assert.deepEqual(value, before);
 
   value.dependencyTaskIds = [];
   const withoutExternal = getTaskSituationModel(value);
-  assert.deepEqual(groupItems(withoutExternal, "attention").map(item => item.reference?.id), ["blocked-one", "blocked-two", "done-one", "done-two"]);
+  assert.deepEqual(groupItems(withoutExternal, "attention").map(item => item.reference?.id), ["blocked-one", "blocked-two"]);
   assert.equal(groupItems(withoutExternal, "next")[0].reference?.id, "blocked-one");
 });
 
@@ -274,27 +275,22 @@ test("父任务完成或取消但子任务仍未收口时，逐项定位实际�
   }
 });
 
-test("已完成但前置未完成只提示矛盾，不自动修改输入", () => {
+test("已完成任务忽略旧前置关系，不制造完成矛盾或改写输入", () => {
   const value = input({ task: { ...emptyTask, status: "已完成" }, dependencyTaskIds: ["prerequisite"], dependencyTasks: [relation("prerequisite", "进行中", "前置报告")] });
   const before = structuredClone(value);
   const model = getTaskSituationModel(value);
-  assert.match(groupText(model, "attention"), /本任务标记已完成.*前置「前置报告」仍为进行中/);
-  assert.match(groupText(model, "next"), /^建议李明.*前置/);
+  assert.deepEqual(model, getTaskSituationModel({ ...value, dependencyTaskIds: undefined, dependencyTasks: undefined }));
+  assert.doesNotMatch(allText(model), /前置|依赖|前置报告/);
   assert.deepEqual(value, before);
 });
 
-test("显式移除依赖后不再显示，缺失依赖资料不能生成假引用", () => {
-  const value = input({ taskId: "fragrance-live", dependencyTaskIds: [], dependencyTasks: [relation("old", "已阻塞", "不再依赖的任务")] });
-  assert.doesNotMatch(allText(getTaskSituationModel(value)), /不再依赖的任务|前置任务/);
-  value.dependencyTaskIds = ["not-provided", "not-provided"];
-  value.dependencyTasks = [];
-  const model = getTaskSituationModel(value);
-  assert.equal(model.freshness, "missing");
-  assert.match(groupText(model, "attention"), /1项前置任务.*未提供/);
-  assert.doesNotMatch(JSON.stringify(model.groups), /not-provided/);
-  assert.ok(!model.groups.some(group => group.items.some(item => item.reference?.kind === "task")));
-  assert.equal(groupItems(model, "attention")[0].reference?.kind, "details");
-  assert.equal(groupItems(model, "next")[0].reference?.kind, "details");
+test("未知或重复旧前置 ID 不制造资料缺口、来源或新鲜度变化", () => {
+  const value = input({ recordedActivities: [post()] });
+  const baseline = getTaskSituationModel(value);
+  const legacy = getTaskSituationModel({ ...value, dependencyTaskIds: ["not-provided", "not-provided"], dependencyTasks: [relation("old", "已阻塞", "旧前置任务")] });
+  assert.deepEqual(legacy, baseline);
+  assert.equal(legacy.freshness, "current");
+  assert.doesNotMatch(JSON.stringify(legacy), /not-provided|旧前置任务|前置|依赖/);
 });
 
 test("缺信息和一般行动使用当前任务信息或讨论入口，不制造来源ID", () => {
@@ -311,20 +307,20 @@ test("缺信息和一般行动使用当前任务信息或讨论入口，不制�
   assert.deepEqual(groupItems(ongoing, "delivery"), [{ text: "尚未记录已完成内容。" }]);
 });
 
-test("只有显式提供的依赖参与判断，省略 ID 时可使用提供的依赖对象", () => {
-  const model = getTaskSituationModel(input({ taskId: "fragrance-live", dependencyTasks: [relation("actual", "待开始", "实际前置")] }));
-  assert.match(groupText(model, "attention"), /实际前置.*待开始/);
-  assert.doesNotMatch(allText(model), /终审短视频|香氛|林洁/);
+test("仅传历史前置对象也不影响当前情况", () => {
+  const value = input({ taskId: "fragrance-live" });
+  const model = getTaskSituationModel({ ...value, dependencyTasks: [relation("actual", "待开始", "实际前置")] });
+  assert.deepEqual(model, getTaskSituationModel(value));
+  assert.doesNotMatch(allText(model), /实际前置|前置|依赖/);
 });
 
-test("父任务外部依赖、缺资料和内部矛盾不会互相截掉", () => {
+test("旧前置不影响父子状态矛盾和真实阻塞", () => {
   const model = getTaskSituationModel(input({
     task: { ...emptyTask, status: "已完成" }, childTasks: [relation("child", "已阻塞", "内部交付")],
     dependencyTaskIds: ["external", "missing"], dependencyTasks: [relation("external", "进行中", "外部交付")],
   }));
   const text = groupText(model, "attention");
-  assert.match(text, /1项前置任务.*未提供/);
-  assert.match(text, /外部交付.*进行中/);
+  assert.doesNotMatch(text, /前置|依赖|外部交付|missing/);
   assert.match(text, /父任务标记已完成/);
   assert.match(text, /内部交付.*已阻塞/);
 });

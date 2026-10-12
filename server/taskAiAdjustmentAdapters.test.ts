@@ -110,12 +110,14 @@ test("保存前发现字段变化或任务移走，拒绝过期候选", () => {
   assert.throws(() => applySavedTaskAiAdjustment(base.filter(node => node.id !== "task"), context, planned, { author: "我" }), /不存在|变化|重新/);
 });
 
-test("单子任务修改前置依赖使用实际ID，名称修改不破坏引用", () => {
-  const base = nodes(); base.push({ id: "other", kind: "task", parentId: "root", parentTaskId: "task", name: "现场彩排", goal: "按期上线", ownerId: "", completionCriteria: ["通过"], status: "待开始", updatedAt: "今天" });
+test("单子任务不能修改前置依赖，普通名称修改保留历史引用", () => {
+  const base = nodes(); base.push({ id: "other", kind: "task", parentId: "root", parentTaskId: "task", name: "现场彩排", goal: "按期上线", ownerId: "", completionCriteria: ["通过"], status: "待开始", updatedAt: "今天", dependsOnTaskIds: ["child"] });
   const context = createSavedTaskAiContext(base, "task", members, "self")!;
-  const next = applySavedTaskAiAdjustment(base, context, proposal(context, "前置依赖改为「确认场地」", { kind: "subtask", taskId: "other" }), { author: "我" });
+  assert.ok("error" in buildTaskAiAdjustment(context, { kind: "subtask", taskId: "other" }, "前置依赖改为「确认场地」"));
+  const next = applySavedTaskAiAdjustment(base, context, proposal(context, "任务名称改为新版彩排", { kind: "subtask", taskId: "other" }), { author: "我" });
   assert.deepEqual((next.nodes.at(-1) as TaskNode).dependsOnTaskIds, ["child"]);
-  assert.equal(next.activities.other[0].changes?.[0].after, "确认场地");
+  assert.equal(next.activities.other[0].changes?.[0].after, "新版彩排");
+  assert.ok(next.activities.other[0].changes?.every(change => change.label !== "前置依赖"));
 });
 
 test("本地成组保存失败回滚此前成功的键，不删除其他数据", () => {

@@ -44,7 +44,19 @@ npm run eval:import -- <批次ID>
 
 历史导入不调用模型，每次导入为独立快照，按用例步骤 × 模型对齐，与新原生执行分开。不要通过历史快照的重新运行功能发起测试。
 
-数据保存在 `data/test-lab/state.json` 和 `data/test-lab/promptfoo`；历史导入文件在 `data/test-lab/promptfoo-imports`，均不进入 Git。执行器官方包独立安装；前端基于固定上游提交维护补丁，见下文。查看器通过 `local-only.mjs` 限定本机监听，禁用遥测和更新检查。
+配置与历史检查点保存在 `data/test-lab/state.json`，运行更新按条原子保存到 `data/test-lab/state.json.runs/`，原生报告保存在 `data/test-lab/promptfoo`；历史导入文件在 `data/test-lab/promptfoo-imports`，均不进入 Git。执行器官方包独立安装；前端基于固定上游提交维护补丁，见下文。查看器通过 `local-only.mjs` 限定本机监听，禁用遥测和更新检查。
+
+## 任务方案预览的验证顺序
+
+新建评测使用 v11 起的预览 Skill。先选择“完整信息一次创建”“三个独立物料”“按职责选择文案负责人”，验证基础信息、拆解和分工，再扩展其他用例及模型。用例输入保留自然语言；应用一次提供当前成员、已确认职责、当前用户身份、日期与时区，不发送整个历史工作区，也不在每轮调用 MCP 读取成员。
+
+每组只请求模型生成 `taskdoor.task-preview.v1` JSON，不调用任务写入工具。自动检查冻结包的 Schema，以及成员引用、临时 ID 唯一性、有效日期和依赖无环；AI 验收判断交付边界、内容与分工质量。活跃创建用例的验收标准迁移为方案生成与业务分工标准，保留自然语言输入并增加用例版本；其他 Skill、归档用例和旧运行不覆盖，历史直接创建报告仍按原快照展示。旧直接创建 Skill 不能在预览模式下运行。
+
+生产流程是“方案生成 → 用户预览与编辑 → 确认最终编辑版本 → 应用服务执行 MCP”。本评测验证前面的方案生成能力；`ready` 不是确认或写入回执。实际创建属于执行服务的独立集成验证，不能用模型方案宣称已创建真实任务。
+
+生成全局最多并发两组，AI 验收独立排队；两个批次共享生成容量。生成或结构检查失败时直接显示原因，跳过后续步骤和 AI 判断，批次计为已结束。只有结构通过的方案进入业务判断；未启用判断时保留待验收。失败不会自动修复或重试，报告保留实际请求、原文、校验原因、耗时与用量。
+
+内容团队新增四条连续用例：修改截止日期、调整参与者、删除交付项、确认方案。第二步通过 `previousPlan` 接收第一步实际输出，用户输入仍是自然语言。验收检查未变字段和临时 ID 是否保留、父级范围和依赖是否同步。确认步骤仍只生成方案，真实创建由生产应用在用户确认后单独执行。
 
 ## 最小验证
 
@@ -96,3 +108,5 @@ npm run eval:ui:build
 MCP 调试页复用官方 MCP Inspector 的 SchemaForm，固定源码版本 `0d2bc1d91ce177ea8d497ee3efe91bcc59e40a1c`。源码及上游授权声明保存在 `fork/extensions/inspector`，本地适配说明见该目录 README。依赖固定在 fork/package.json 与 package-lock.json；prepare/customize 会复制组件，不依赖开发时下载。表单使用真实 tools/list 的 inputSchema，调用仍由现有服务端 SDK 执行，Token 不进入浏览器。
 
 MCP 响应使用 `@uiw/react-json-view` 展示只读 JSON 树。优先展示 structuredContent；仅一个 text 块且可解析时展示解析后的 JSON，否则保留文本或完整内容块。原始回执始终可展开，避免遗漏协议信息。
+
+任务方案生成的 DeepSeek V4 默认关闭额外推理（`reasoning.effort=none`），保留完整输出预算、字段与验收。服务端可用 `TEST_LAB_PREVIEW_REASONING_EFFORT=low`（也支持 `high` / `max`）切回推理模式；其他模型、真实执行及验收判断不受该开关影响。步骤记录保留实际生成设置，便于对比速度与结果。发送提示时只压缩 Schema 和 JSON 示例的排版空白，冻结 Skill 原文及业务规则保持完整。

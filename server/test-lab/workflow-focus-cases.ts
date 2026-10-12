@@ -26,7 +26,7 @@ export function curateWorkflowFocusCases(state:LabState){
   const definitions:Scenario[] = [];
   const add = (key:string, category:string, name:string, input:string, ...checks:string[]) => definitions.push({key, category, title:name, input:input+assignment, checks});
   add('create', '创建流程', '从需求创建任务', `帮我建一个任务：${brief}。`, '成功创建任务，返回任务名称和可打开的任务编号。', '回读确认目标、完成标准和负责人已保存。');
-  add('complete', '创建流程', '完整信息一次创建', `帮我建一个任务：${brief}。截止2026年12月31日。建议先核对需求，再整理交付记录，预计用45分钟人工核对，依据是一份资料的一轮检查。`, '一次创建请求落成任务，基础信息完整，回读与输入一致。', '截止日期为2026-12-31；执行建议两条；预计投入45分钟，并保留方法与依据。');
+  add('complete', '创建流程', '完整信息一次创建', `帮我建一个任务：${brief}。截止2026年12月31日。做的时候按这两条建议来：先核对需求；再整理交付记录。预计用45分钟人工核对，依据是一份资料的一轮检查。`, '一次创建请求落成任务，基础信息完整，回读与输入一致。', '截止日期为2026-12-31；执行建议两条；预计投入45分钟，并保留方法与依据。');
   const deliverables = leaves.slice(0,3);
   if(deliverables.length >= 2){
    const requirements = deliverables.map(t => `“${t.title}”：${t.goal || t.title}，完成时要满足${t.acceptanceCriteria.join('、') || '交付完整成果'}`).join('；');
@@ -59,6 +59,12 @@ export function curateWorkflowFocusCases(state:LabState){
    state.cases.push(item);
   }
   migrated.add(team.id);changed = true;
+ }
+ // Clarify only untouched generated fixtures. User edits and saved run snapshots remain intact.
+ for(const item of state.cases){
+  if(item.origin!=='workflow-focus-v1'||item.version!==1||!item.id.endsWith('-complete'))continue;
+  const step=item.steps[0];const old='建议先核对需求，再整理交付记录，预计用45分钟';
+  if(step?.prompt.includes(old)){step.prompt=step.prompt.replace(old,'做的时候按这两条建议来：先核对需求；再整理交付记录。预计用45分钟');item.version++;changed=true;}
  }
  if(changed)state.workflowFocusTeamIds = [...migrated];
  return changed;

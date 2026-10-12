@@ -16,7 +16,8 @@ test("讨论与活动使用独立组件，概览不再进入详情", () => {
   assert.match(detail, /<TaskDiscussion/);
   assert.match(detail, /<TaskActivityLog/);
   assert.doesNotMatch(detail, /TaskOverviewWorkspace|id: "overview"|setActiveTab\("overview"\)/);
-  assert.match(discussion, /getTaskDiscussionThreads/);
+  assert.match(discussion, /buildDiscussionFeed/);
+  assert.doesNotMatch(discussion, /getTaskDiscussionThreads|onViewThread|replyCount|threadRootByMessageId/);
   assert.match(activity, /getTaskActivityItems/);
   assert.doesNotMatch(activity, /MentionComposer|发送回复|发布动态/);
 });
@@ -42,7 +43,7 @@ test("活动按真实前后值呈现，不用讨论卡片伪装变更", () => {
 test("活动保留记录入口，讨论摘要可返回原讨论", () => {
   assert.match(detail, /<TaskActivityLog[\s\S]*?onOpenDiscussion=/);
   assert.match(activity, /onOpenDiscussion/);
-  assert.match(activity, /查看讨论/);
+  assert.match(activity, /className="task-change-object" onClick=\{\(\) => onOpenDiscussion\(item\.activity\.id\)\}/);
 });
 
 test("没有精确时间的旧变更不展示旧相对时间或额外历史分区", () => {
@@ -62,8 +63,8 @@ test("记录在 App 按任务保存并接入同一个状态变更入口", () => 
 test("名称与目标失焦时合并保存，避免逐字写日志", () => {
   assert.match(detail, /onBlur=\{\(\) => [^\n]*onTaskTitleChange/);
   assert.match(detail, /onBlur=\{\(\) => [^\n]*onTaskGoalChange/);
-  assert.doesNotMatch(detail, /onChange=\{[^\n]*onTaskTitleChange/);
-  assert.doesNotMatch(detail, /onChange=\{[^\n]*onTaskGoalChange/);
+  assert.doesNotMatch(detail, /onChange=\{[^}]*onTaskTitleChange/);
+  assert.doesNotMatch(detail, /onChange=\{[^}]*onTaskGoalChange/);
 });
 
 test("文件评论保存路径独立于任务讨论，右侧使用实际选中文件", () => {

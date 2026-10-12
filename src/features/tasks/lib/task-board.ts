@@ -1,6 +1,7 @@
+import { normalizeTaskStatus } from "@/shared/model/task-model";
 export type TaskBoardStatus = "待开始" | "进行中" | "待审核" | "已阻塞" | "已完成" | "已取消";
 
-export const taskBoardStatusOrder: TaskBoardStatus[] = ["待开始", "进行中", "待审核", "已阻塞", "已完成", "已取消"];
+export const taskBoardStatusOrder: TaskBoardStatus[] = ["进行中", "待审核", "已阻塞", "已完成", "已取消"];
 
 export const taskBoardStatusTone: Record<TaskBoardStatus, string> = {
   已取消: "cancelled",
@@ -15,7 +16,7 @@ export function groupTasksByBoardStatus<T extends { status: TaskBoardStatus }>(t
   return taskBoardStatusOrder
     .map((status) => ({
       status,
-      tasks: tasks.filter((task) => task.status === status),
+      tasks: tasks.filter((task) => normalizeTaskStatus(task.status) === status),
       tone: taskBoardStatusTone[status],
     }))
     .filter((group) => group.tasks.length > 0);

@@ -16,8 +16,9 @@ import { TaskProgressComparison } from "@/features/tasks/components/TaskProgress
 import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 /** Recorded progress takes precedence; selected demo tasks may show an isolated pace comparison. */
-export function TaskWorkloadSummary({ compact = false, progressTask, comparison, completedMinutesByTaskId, progressComparisonsByTaskId, effortTasks = [], hasSubtasks = effortTasks.length > 1, onOpenTask, onRepredict, needsReview = false, series }: {
+export function TaskWorkloadSummary({ compact = false, progressTask, comparison, completedMinutesByTaskId, progressComparisonsByTaskId, effortTasks = [], hasSubtasks = effortTasks.length > 1, onOpenTask, onRepredict, headingAction, needsReview = false, series }: {
   compact?: boolean;
+  headingAction?: React.ReactNode;
   comparison?: TaskProgressComparisonSeries;
   progressTask?: TaskProgressContext;
   completedMinutesByTaskId?: Readonly<Record<string, number | null>>;
@@ -34,8 +35,8 @@ export function TaskWorkloadSummary({ compact = false, progressTask, comparison,
   const p = useProgressCopy();
   const projection = getTaskWorkloadProjection({comparison,progressTask,completedMinutesByTaskId,progressComparisonsByTaskId,effortTasks,hasSubtasks,series});
   const { assessment, mode, effort, aggregate, comparison:summaryComparison, display:fallbackDisplay } = projection;
-  const predictionAction = onRepredict && progressTask?.status !== "已完成" && progressTask?.status !== "已取消"
-    ? <TaskProgressRefresh onRepredict={onRepredict}/> : undefined;
+  const predictionAction = headingAction ?? (onRepredict && progressTask?.status !== "已完成" && progressTask?.status !== "已取消"
+    ? <TaskProgressRefresh onRepredict={onRepredict}/> : undefined);
   const effortDays = formatEffortPersonDays(effort.knownMinutes, locale);
   const effortSummary = effort.state === "available" ? ui("预计投入 {0}", {0: effortDays})
     : effort.state === "partial" ? ui("已估部分 {0}", {0: effortDays})

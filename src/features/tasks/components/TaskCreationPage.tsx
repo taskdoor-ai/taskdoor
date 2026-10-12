@@ -1,3 +1,5 @@
+import { mainTaskReview, simplifyCreationReview, splitCreationReview } from "@/features/tasks/lib/task-creation-review";
+import { TaskSidebarToggle } from "@/features/tasks/components/TaskSidebarToggle";
 import { useCreationI18n } from "@/shared/i18n/creation-messages";
 import { ArrowLeft, ArrowRight, Check, ChevronRight, GitBranch, Layers3, Lightbulb, PanelLeftOpen, Sparkles, UserPlus } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
@@ -102,6 +104,20 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
   const context = { currentUserId, existingTasks, members, tags: tags.map(t => t.name), currentDate: new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai" }).format(new Date()) };
   const [creationParent, setCreationParent] = useState(initialParent ?? null);
   const [workspace, setWorkspace] = useState<CreationWorkspaceDraft>(emptyWorkspaceDraft);
+  const [splitRequested, setSplitRequested] = useState(false);
+  const [splitThinking, setSplitThinking] = useState(false);
+  const [splitStep, setSplitStep] = useState(0);
+  const splitRun = useRef(0);
+  const splitLoadingRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!splitThinking) return;
+    const frame = requestAnimationFrame(() => {
+      splitLoadingRef.current?.scrollIntoView({ block: "center", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [splitThinking]);
+  useEffect(() => () => { splitRun.current += 1; }, []);
+  const suggestedSubtasks = useRef<CreationForm["subtasks"]>([]);
   const [clarificationStep, setClarificationStep] = useState(0);
   const storageKey = creationHistoryKey(currentUserId, teamId);
   const [loadedHistory] = useState(() => {
@@ -252,6 +268,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
   const startAnother = () => {
     if (busy || adjustmentRunning) return;
     if (hasUnsavedSubtasks) { setError(unsavedMessage); return; }
+    setSplitRequested(false); suggestedSubtasks.current = [];
     setWorkspace(emptyWorkspaceDraft());
     setCreationParent(initialParent ?? null);
     setSessionId(crypto.randomUUID()); completedSession.current = undefined;
@@ -281,7 +298,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
   };
   const updateForm = (next: CreationForm) => {
     if (busy || adjustmentRunning || planning?.stage !== "review") return;
-    setWorkspace(current => ({ ...current, planning: { stage: "review", form: reconcileCreationEffort(planning.form, withCreationParticipantDefaults(next, currentUserId, planning.form)), summary: planning.summary } }));
+    setWorkspace(current => ({ ...current, planning: { stage: "review", form: simplifyCreationReview(withCreationParticipantDefaults(next, currentUserId, planning.form)), summary: planning.summary } }));
     setAdjustmentNotice(""); setError("");
   };
   const generatePlan = async (answers?: CreationWorkspaceDraft["answers"]) => {
@@ -294,10 +311,15 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     const effectiveAnswers = answers ?? (planningRequest === workspace.request.trim() ? workspace.answers : {});
     setBusy(true); setError(""); setPlanningNotice("");
     try {
-      const next = normalizePlanningForFixedParent(
+      let next = normalizePlanningForFixedParent(
         planTaskCreation(workspace.request, context, { scenarioId: workspace.scenarioId, answers: effectiveAnswers, locale }),
         creationParent,
       );
+      if (next.stage === "review" || next.stage === "decision") {
+        suggestedSubtasks.current = next.form.subtasks;
+        setSplitRequested(false);
+        next = { ...next, form: mainTaskReview(next.form) };
+      }
       const feedback = getCreationFeedback(next);
       const title = answers ? c("planWithAdditionalDetails") : workspace.processes.length ? c("regenerate") : c("initialGeneration");
       const startedAt = Date.now();
@@ -372,7 +394,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     if ("error" in next) { setError(next.error); return; }
     setWorkspace(current => ({
       ...current,
-      planning: { stage: "review", ...next, form: reconcileCreationEffort(form, next.form) },
+      planning: { stage: "review", ...next, form: mainTaskReview(next.form) },
       processes: [...markLatestCreationDecisionResolved(current.processes), createCreationRelationshipProcess(
         `relationship:${current.processes.length + 1}`,
         decision,
@@ -394,7 +416,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
       throw new Error(c("theParentTaskNoLongerExistsConfirm"));
     }
     const next = withCreationParticipantDefaults(applyDraftTaskAiAdjustment(planning.form, aiContext, proposal), currentUserId, planning.form);
-    setWorkspace(current => ({ ...current, planning: { stage: "review", form: reconcileCreationEffort(planning.form, next), summary: planning.summary } }));
+    setWorkspace(current => ({ ...current, planning: { stage: "review", form: simplifyCreationReview(next), summary: planning.summary } }));
     setAdjustmentNotice(c("changesAppliedToTheDraftTasksWill")); setError("");
   };
   const submit = () => {
@@ -413,7 +435,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     }
     creating.current = true;
     try {
-      const plan = toTaskPlanDraft(form);
+      const plan = toTaskPlanDraft(simplifyCreationReview(form));
       const created = creationParent
         ? onCreateSubtask(creationParent.parentTaskId, plan)
         : form.decision === "attach" && form.candidate
@@ -441,6 +463,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     {CREATION_HISTORY_ENABLED && historyOpen && <TaskCreationSessionList disabled={busy || adjustmentRunning || hasUnsavedSubtasks} error={localize(historyError)} id={historyId} onClose={closeHistory} onNew={startAnother} onSelect={openSession} selectedId={sessionId} sessions={sessions} />}
     <div className="creation-session-content"><LayoutGroup id="task-creation-ai-composer"><section className={`task-detail-view task-creation-page${showDescribe ? " creation-start-page" : ""}`} ref={pageRef}>
     <div className="creation-page-top">
+      <TaskSidebarToggle />
       {CREATION_HISTORY_ENABLED && <Button aria-controls={historyOpen ? historyId : undefined} aria-expanded={historyOpen} aria-label={historyOpen ? c("hideHistory") : c("showHistory")} className="creation-session-toggle" onClick={() => historyOpen ? closeHistory() : setHistoryOpen(true)} ref={historyToggle} size="icon-sm" title={historyOpen ? c("hideHistory") : c("showHistory")} type="button" variant="ghost"><PanelLeftOpen aria-hidden="true" /></Button>}
       <nav aria-label={c("taskPath")} className="task-detail-path">
         {creationParent ? creationParent.pathItems.map((item, index) => <span key={item.id}>
@@ -460,7 +483,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     <AnimatePresence mode="wait"><motion.div animate={{ opacity: 1, y: 0 }} aria-label={stageLabel} className={`creation-sheet${showDescribe ? " task-conversation-page is-starting" : ""}`} initial={reducedMotion ? false : { opacity: 0, y: 8 }} key={stageKey} onAnimationComplete={focusStage} ref={stageRef} role="region" tabIndex={-1} transition={{ duration: reducedMotion ? 0 : .18 }}>
       {!showDescribe && planningNotice && <p className="creation-planning-notice" role="status">{localize(planningNotice)}</p>}
       {showDescribe ? <div className="task-conversation-workspace"><div className="task-conversation-column">
-        <section className="task-conversation-start"><header><h1>{c("whatWouldYouLikeToWorkOn")}</h1><p>{c("agentdoorHelpsYouClarifyGoalsBreakDown")}</p></header></section>
+        <section className="task-conversation-start"><header><h1>{c("whatWouldYouLikeToWorkOn")}</h1></header></section>
         <div className="task-conversation-composer creation-request-panel">
           <motion.div className="creation-request-composer-transition" layoutId="creation-ai-composer" transition={{ duration: reducedMotion ? 0 : .22, ease: "easeInOut" }}>
             <AnimatedAgentChatInput
@@ -473,7 +496,8 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
               inputRef={requestRef}
               onChange={request => { setWorkspace(current => ({ ...current, request })); setError(""); }}
               onSend={() => { void generatePlan(); }}
-              placeholder={c("tellAgentdoorWhatYouWantToWork")}
+              hidePlaceholderOnFocus hintAfterInput
+              placeholder={locale === "en" ? "Share your basic task idea, whatever comes to mind" : "输入任务的基本想法，想到什么说什么"}
               sendLabel={form ? c("startAgain") : c("start")}
               value={workspace.request}
             />
@@ -500,14 +524,29 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
           {error && <p className="creation-stage-error" role="alert">{localize(error)}</p>}
         </section>}
         {displayStage === "review" && form && <>
-          <TaskCreationPlanEditor disabled={busy || adjustmentRunning} form={form} members={members} tags={tags} onChange={updateForm} onInviteMembers={onInviteMembers} onSubtaskDirtyChange={onSubtaskDirtyChange} />
+          <TaskCreationPlanEditor subtaskLoading={splitThinking ? <div ref={splitLoadingRef}><TaskCreationProcess onCancel={() => { splitRun.current += 1; setSplitThinking(false); }} processes={[{ id: "subtask-breakdown", title: "拆解子任务", request: form.mainTask.goal, answers: {}, activeStep: splitStep, status: "running", steps: [
+            { label: "分析任务", detail: "核对当前主任务的目标、完成标准与交付边界。", basis: "当前审阅的主任务信息。" },
+            { label: "拆解子任务", detail: "整理可以独立交付的子任务与分工。", basis: "目标与完成标准。" },
+            { label: "整理方案", detail: "核对子任务层级、人员与依赖，准备可编辑方案。", basis: "候选拆解方案；缺少依据的安排保留待确认。" },
+          ] }]} /></div> : undefined} showSubtasks={splitRequested} disabled={busy || adjustmentRunning || splitThinking} form={form} members={members} tags={tags} onChange={updateForm} onInviteMembers={onInviteMembers} onSubtaskDirtyChange={onSubtaskDirtyChange} />
           {hasUnsavedSubtasks && <p className="creation-error" role="status">{unsavedMessage}</p>}
           {adjustmentNotice && <p className="task-ai-inline-notice" role="status"><Check size={14} />{localize(adjustmentNotice)}</p>}
           <footer className="creation-confirm-bar">
-            <div className="creation-confirm-copy"><span className="creation-confirm-icon"><Layers3 /></span><div><strong>{getCreationHierarchyDepth(form) > 2 ? c("tasksInTotal", { v0: form.subtasks.length + 1 }) : form.subtasks.length ? c("1MainTask") + form.subtasks.length + c("subtasks") : form.decision === "attach" ? c("1Subtask") : c("1Task")}</strong><span>{getCreationHierarchyDepth(form) > 2 ? c("1MainTaskSubtasksAcrossAllLevels", { v0: form.subtasks.length }) : unassignedTaskCount ? c("tasksHaveNoOwnerYetYouCan", { v0: unassignedTaskCount }) : c("confirmToAddTasksToYourList")}</span></div></div>
             <div className="creation-confirm-actions">
               {unassignedTaskCount > 0 && onInviteMembers && <Button disabled={busy || adjustmentRunning} onClick={event => onInviteMembers(event.currentTarget)} size="lg" type="button" variant="outline"><UserPlus size={17} />{c("inviteMembers")}</Button>}
-              <Button className="creation-primary" disabled={Boolean(validation || aiOpen || busy || adjustmentRunning || hasUnsavedSubtasks)} onClick={submit} size="lg" type="button">{c("confirmCreation")}<Check size={17} /></Button>
+              {!splitRequested && form.decision !== "attach" && <Button disabled={Boolean(validation || busy || adjustmentRunning || splitThinking)} onClick={async () => {
+                const run = ++splitRun.current;
+                setSplitStep(0); setSplitThinking(true);
+                for (let step = 0; step < 3; step += 1) {
+                  if (run !== splitRun.current) return;
+                  setSplitStep(step);
+                  await new Promise(resolve => window.setTimeout(resolve, 700));
+                }
+                if (run !== splitRun.current) return;
+                const next = splitCreationReview({ ...form, subtasks: suggestedSubtasks.current });
+                updateForm(next); setSplitRequested(true); setSplitThinking(false);
+              }} size="lg" type="button" variant="outline">{locale === "en" ? "Continue to subtasks" : "继续拆解子任务"}<ArrowRight size={16} /></Button>}
+              <Button className="creation-primary" disabled={Boolean(validation || aiOpen || busy || adjustmentRunning || splitThinking || hasUnsavedSubtasks)} onClick={submit} size="lg" type="button">{locale === "en" ? "Create task" : "创建任务"}<Check size={17} /></Button>
             </div>
             {(error || validation) && <p className="creation-validation" role={error ? "alert" : "status"}>{localize(error || validation)}</p>}
           </footer>

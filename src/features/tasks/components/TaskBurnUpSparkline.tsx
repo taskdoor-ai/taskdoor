@@ -1,5 +1,6 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
+import { formatDisplayDate } from "@/shared/lib/date-time";
 import { useBurnUpWidth } from "@/shared/lib/useBurnUpWidth";
 import { TaskProgressHistory } from "@/features/tasks/components/TaskProgressHistory";
 import React, { useId, useState } from "react";
@@ -24,7 +25,7 @@ function progressLabel(ratio: number) {
 }
 
 function shortDate(value: string) {
-  return new Intl.DateTimeFormat("zh-CN", { month: "2-digit", day: "2-digit", timeZone: "Asia/Shanghai" }).format(new Date(value));
+  return formatDisplayDate(value) ?? "—";
 }
 
 export function TaskBurnUpSparkline({ compact = false, assessment, breakdown, effortSummary, needsReview = false, series, progress, timing }: { compact?: boolean; assessment?: TaskProgressAssessment; breakdown?: React.ReactNode; effortSummary?: string; needsReview?: boolean; series?: TaskBurnUpSeries; progress?: React.ReactNode; timing?: TaskProgressDisplay }) {

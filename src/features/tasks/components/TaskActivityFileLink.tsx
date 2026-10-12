@@ -16,6 +16,7 @@ export function TaskActivityFileLink({ fileId, fileName, onOpen }: {
     className="task-record-file-link"
     disabled={!fileId}
     onClick={() => { if (fileId) onOpen(fileId); }}
+    title={displayName}
     type="button"
   ><FileText aria-hidden="true" size={14} /><span>{displayName}</span>{!fileId && <small>{m('unavailable')}</small>}</button>;
 }

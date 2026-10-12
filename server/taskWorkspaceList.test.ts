@@ -21,7 +21,7 @@ const task = (id: string, patch: Partial<TaskNode> = {}): TaskNode => ({
 });
 const tags = [{ id: "a", name: "制作", icon: "tag" as const, color: "blue" as const }];
 const tasks = [task("first", { goal: "不应挤进左侧的长目标", plannedEndOn: "2026-09-10", labels: ["制作"] }), task("second", { plannedStartOn: "2026-09-01" })];
-const projection: TaskListProjection = { allTasks: tasks, visibleTasks: tasks, tagFacets: [{ tag: tags[0], count: 1 }], allTagsCount: 2, statuses: ["进行中"] };
+const projection: TaskListProjection = { allTasks: tasks, visibleTasks: tasks, tagFacets: [{ tag: tags[0], count: 1 }], allTagsCount: 2, statuses: ["进行中"], statusCounts: { all: 2, byStatus: { "进行中": 2 } } };
 const baseProps = {
   currentUserId: "me",
   filters: { owner: "me", status: "all", tag: "all" } as TaskListFilters,
@@ -49,7 +49,8 @@ async function renderList(patch: Partial<typeof baseProps> = {}) {
 test("明确筛选本人负责时省略重复负责人，其余条件显示负责人", async () => {
   const html = await renderList({ filters: { ...baseProps.filters, ownerIsMe: true } });
   assert.match(html, />任务<\/h1>/);
-  assert.match(html, /aria-label="新建任务"/);
+  assert.match(html, /<h1 class="sr-only" id="task-workspace-list-heading"/);
+  assert.doesNotMatch(html, /task-list-titlebar|aria-label="新建任务"/);
   assert.doesNotMatch(html, /aria-label="展开搜索任务"/);
   assert.match(html, /aria-label="搜索任务列表"/);
   assert.doesNotMatch(html, />推荐<\/button>/);

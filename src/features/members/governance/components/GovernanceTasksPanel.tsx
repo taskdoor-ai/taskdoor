@@ -13,6 +13,7 @@ import { governanceMessages } from '@/features/members/governance/i18n/governanc
 import { MemberSelector } from '@/features/members/components/MemberSelector'
 import { useI18n } from '@/shared/i18n/I18nProvider'
 import { useCatalog } from '@/shared/i18n/catalog'
+import { formatDisplayDate, formatDisplayDateTime } from '@/shared/lib/date-time'
 import { statusMessageKey } from '@/shared/i18n/task-status'
 import type { PersonOption } from '@/shared/model/task-model'
 import {
@@ -44,7 +45,7 @@ export function GovernanceTasksPanel({
   /** The team's members, named in the viewer's language. */
   members: PersonOption[]
 }) {
-  const { locale, t: tc } = useI18n()
+  const { t: tc } = useI18n()
   const t = useCatalog(governanceMessages)
   const now = Date.parse(asOf)
   const [all, setAll] = useState(initialRows)
@@ -57,7 +58,6 @@ export function GovernanceTasksPanel({
   const pageCount = Math.max(1, Math.ceil(rows.length / GOVERNANCE_PAGE_SIZE))
   const currentPage = Math.min(page, pageCount)
   const visibleRows = rows.slice((currentPage - 1) * GOVERNANCE_PAGE_SIZE, currentPage * GOVERNANCE_PAGE_SIZE)
-  const when = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' })
   const statusText = (status: string) =>
     status in statusMessageKey ? tc(statusMessageKey[status as keyof typeof statusMessageKey]) : status
   const nameOf = (id: string) => members.find((member) => member.id === id)?.name
@@ -137,7 +137,7 @@ export function GovernanceTasksPanel({
                     {Object.hasOwn(taskStatusDefinition, row.status) ? <TaskStatusBadge size="sm" value={row.status as TaskStatus} /> : <span>{statusText(row.status)}</span>}
                   </div>
                   <div className="governance-task-date">
-                    <time dateTime={deleted ? row.deletedAt! : row.lastActivityAt}>{when.format(new Date(deleted ? row.deletedAt! : row.lastActivityAt))}</time>
+                    <time dateTime={deleted ? row.deletedAt! : row.lastActivityAt} title={formatDisplayDateTime(deleted ? row.deletedAt! : row.lastActivityAt, { year: 'always' }) ?? formatDisplayDate(deleted ? row.deletedAt! : row.lastActivityAt, { year: 'always' }) ?? undefined}>{formatDisplayDate(deleted ? row.deletedAt! : row.lastActivityAt) ?? '—'}</time>
                   </div>
                   <div className="governance-task-owner">
                     {row.ownerMemberId

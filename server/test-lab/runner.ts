@@ -1,3 +1,8 @@
+import {memberResponseSchema} from './member-response-schema.ts';
+import {analysisResponseSchema} from './analysis-response-schema.ts';
+import {buildPreviewInput,buildTaskPreviewResponseSchema} from './task-preview.ts';
+import {generateTaskPreview} from './preview-generation.ts';
+import {previewCaseForEvaluation,isTaskPreviewCase} from '../../src/test-lab/task-preview-case.ts';
 import {mcpConfigForCase} from './mcp-member-context.ts';
 import {executeMcpEvaluation,type McpConfig} from './mcp-execution.ts';
 import { MAX_BATCH_CASES, MAX_QUEUED_RUNS } from "../../src/test-lab/run-limits.ts";
@@ -5,7 +10,7 @@ import { randomUUID } from 'node:crypto';
 import type { LabRun, LabStepResult, LabRunSelection } from '../../src/test-lab/types.ts';
 import type { LabStore } from './store.ts';
 import { buildModelInput, applyEvents, buildView } from './context.ts';
-import { callModel, ModelResponseError, type ModelOptions, type ModelCall } from './model.ts';
+import { callModel, modelEndpoint, supportsPreviewSchema, ModelResponseError, type ModelOptions, type ModelCall } from './model.ts';
 import { hash, resolveSkill } from './skills.ts';
 import { validateOutput } from './validation.ts';
 import { evaluateAssertions } from './assertions.ts';
@@ -18,12 +23,17 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
   const snapshots=new Map<string,ReturnType<typeof resolveSkill>[]>();
   const controllers=new Map<string,AbortController>();
   let worker:Promise<void>|null=null;
+  let wake:(()=>void)|undefined;
+  const judging=new Set<Promise<void>>();
+  const generationSlots=createSlots(2),judgeSlots=createSlots(1);
   if(store.get().runs.some(r=>r.status==='running'||r.status==='queued'))store.updateRuns(runs=>{for(const r of runs)if(r.status==='running'||r.status==='queued'){r.status='interrupted';r.finishedAt=new Date().toISOString();r.error='本地服务已重启，未自动重试；上游已发生的用量可能仍计费。';}});
   if(store.get().runs.some(r=>r.judgeStatus==='running'))store.updateRuns(runs=>{for(const r of runs)if(r.judgeStatus==='running'){r.judgeStatus='failed';r.judgeError='服务已重启，判断中断；未自动重试。';}});
   const get=(id:string)=>{const run=store.getRun(id);if(!run)throw new Error('运行记录不存在');return run;};
   const update=(id:string,fn:(r:LabRun)=>void)=>{store.updateRun(id,fn);};
   async function execute(id:string){
-    const run=get(id);if(run.status!=='queued')return;
+    if(get(id).status!=='queued')return;
+    const releaseGeneration=await generationSlots();
+    const run=get(id);if(run.status!=='queued'){releaseGeneration();return;}
     const controller=new AbortController();controllers.set(id,controller);
     update(id,r=>{r.status='running';r.startedAt=new Date().toISOString();});
     let sandbox=structuredClone(run.teamSnapshot);
@@ -33,7 +43,19 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
         const skill=snapshots.get(id)![index];const started=Date.now();
         const result:LabStepResult={stepId:step.id,skillId:step.skillId,input:null,output:null,rawOutput:'',error:null,assertions:[],structure:'unknown',structureErrors:[],durationMs:0,usage:{inputTokens:null,outputTokens:null,totalTokens:null},skillVersionId:skill.versionId,skillVersionLabel:skill.versionLabel,skillHash:skill.hash,promptHash:'',skillSnapshot:skill.snapshot,before:structuredClone(sandbox),after:structuredClone(sandbox)};
         try{
-          if(run.selection?.executionMode==='mcp'){
+          if(skill.outputMode==='preview'){
+            if(run.selection?.executionMode!=='preview')throw Error('任务方案 Skill 必须使用预览评测，不能直接创建任务');
+            const input=buildPreviewInput(run.teamSnapshot,run.caseSnapshot,id,step,step.usePreviousOutput?get(id).steps.at(-1)?.output:undefined);
+            result.input=input;result.promptHash=hash(skill.instructions+'\n'+JSON.stringify(input));
+            const outputSchema=supportsPreviewSchema(run.model)?buildTaskPreviewResponseSchema(skill.previewSchema,input):undefined;
+            const requestOptions={...options,model:run.model,outputSchema,...(/^deepseek[/-](?:deepseek-)?v4/i.test(run.model)?{reasoningEffort:options.previewReasoningEffort??'none' as const}:{})};
+            result.modelSettings={maxOutputTokens:requestOptions.maxOutputTokens,responseFormat:outputSchema?'json_schema':'json_object',...(outputSchema?{outputSchemaHash:hash(JSON.stringify(outputSchema))}:{}),...(requestOptions.reasoningEffort?{reasoningEffort:requestOptions.reasoningEffort}:{})};
+            const response=await generateTaskPreview(requestOptions,skill.instructions,input,skill.previewSchema,controller.signal,modelCall);
+            result.rawOutput=response.rawOutput;result.usage=response.usage;result.output=response.output;result.error=response.error;result.previewAttempts=response.attempts;
+            if(controller.signal.aborted)throw Error('运行已取消');
+            result.structureErrors=response.structureErrors;
+            result.structure=result.error||result.structureErrors.length?'failed':'passed';
+          }else if(run.selection?.executionMode==='mcp'){
             const instructions=skill.productionInstructions;result.skillSnapshot=instructions;result.skillHash=hash(instructions);
             const executionConfig=mcpConfigForCase(mcp!,run.teamSnapshot,run.caseSnapshot);
             result.input={executionMode:'mcp',workspaceId:mcp!.workspaceId,request:step.prompt,...(executionConfig.memberContext?{memberContext:executionConfig.memberContext}:{})};result.promptHash=hash(instructions+'\n'+JSON.stringify(result.input));
@@ -46,7 +68,9 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
           }else{
           sandbox=applyEvents(sandbox,step);result.after=structuredClone(sandbox);
           const input=buildModelInput(sandbox,run.caseSnapshot,step,id,get(id).steps);result.input=input;result.promptHash=hash(skill.instructions+'\n'+JSON.stringify(input));
-          const response=await modelCall({...options,model:run.model},skill.instructions,input,controller.signal);result.rawOutput=response.rawOutput;result.usage=response.usage;
+          const outputSchema=step.skillId==='agentdoor-task-status-analyzer'&&skill.snapshot.includes('TASK-ANALYSIS-2026-10-11-v7')&&supportsPreviewSchema(run.model)?analysisResponseSchema(input):step.skillId==='agentdoor-member-matcher'&&skill.snapshot.includes('MEMBER-MATCH-2026-10-11-v2')&&supportsPreviewSchema(run.model)?memberResponseSchema({candidateMemberIds:"candidateMemberIds" in input?input.candidateMemberIds:undefined}):undefined;
+          result.modelSettings={maxOutputTokens:options.maxOutputTokens,responseFormat:outputSchema?'json_schema':'json_object',...(outputSchema?{outputSchemaHash:hash(JSON.stringify(outputSchema))}:{})};
+          const response=await modelCall({...options,model:run.model,outputSchema},skill.instructions,input,controller.signal);result.rawOutput=response.rawOutput;result.usage=response.usage;
           if(controller.signal.aborted)throw new Error('运行已取消');
           try{result.output=JSON.parse(response.rawOutput);}catch{throw new Error('模型输出不是有效 JSON；原文已保留，未自动修复或重试');}
           result.structureErrors=validateOutput(step.skillId,result.output,input);result.structure=result.structureErrors.length?'failed':'passed';
@@ -65,23 +89,50 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
         else r.status=r.caseSnapshot.reviewChecklist.length||!r.caseSnapshot.assertions.length||r.steps.some(s=>s.assertions.some(a=>a.status==='unknown'))?'needs_review':'passed';
       });
     }catch(error){update(id,r=>{if(r.status==='interrupted')return;r.status=controller.signal.aborted?'cancelled':'failed';r.error=error instanceof Error?error.message:'运行异常';r.finishedAt=new Date().toISOString();});}
-    finally{controllers.delete(id);snapshots.delete(id);}
+    finally{controllers.delete(id);snapshots.delete(id);releaseGeneration();}
+    const completed=get(id);
+    if(completed.selection?.executionMode==='preview'&&completed.selection.judgeModel&&completed.status==='failed'){
+      update(id,r=>{r.judgeStatus='skipped';r.judgeSkipReason='生成或结构检查未通过，未调用判断模型；具体原因见运行结论。';});
+      return;
+    }
     if(run.selection?.judgeModel&&judge&&!['cancelled','interrupted'].includes(get(id).status)){
-      update(id,r=>{r.judgeStatus='running';r.judgeStartedAt=new Date().toISOString();});
-      try{await judge.review(id);update(id,r=>{r.judgeStatus='completed';r.judgeFinishedAt=new Date().toISOString();});}
-      catch(error){update(id,r=>{r.judgeStatus='failed';r.judgeFinishedAt=new Date().toISOString();r.judgeError=error instanceof Error?error.message:'判断模型调用失败';});}
+      update(id,r=>{r.judgeStatus='running';});
+      const job=(async()=>{
+        const releaseJudge=await judgeSlots();
+        update(id,r=>{r.judgeStartedAt=new Date().toISOString();});
+        try{await judge.review(id);update(id,r=>{r.judgeStatus='completed';r.judgeFinishedAt=new Date().toISOString();});}
+        catch(error){update(id,r=>{r.judgeStatus='failed';r.judgeFinishedAt=new Date().toISOString();r.judgeError=error instanceof Error?error.message:'判断模型调用失败';});}
+        finally{releaseJudge();}
+      })();
+      judging.add(job);void job.finally(()=>{judging.delete(job);wake?.();});
     }
   }
   // Let the HTTP acceptance response flush before starting any engine/model work.
-  const start=()=>{if(worker)return;worker=new Promise<void>(resolve=>setImmediate(resolve)).then(async()=>{while(queue.length){
-      if(!engine){await execute(queue.shift()!);continue;}
-      const batchId=get(queue[0]).batchId;
-      const ids=queue.filter(id=>get(id).batchId===batchId);
-      queue.splice(0,ids.length);
-      const active:Promise<void>[]=[];
-      try{await engine.run(ids.map(get),async id=>{const task=execute(id);active.push(task);await task;return get(id);},(evalId,completed)=>{store.updateBatch(batchId,r=>{r.evaluation={engine:'promptfoo',id:evalId,completed:completed??r.evaluation?.completed};});});}
-      catch(error){for(const id of ids)update(id,r=>{r.evaluationError=error instanceof Error?error.message:'评测引擎失败';if(r.status==='queued'||r.status==='running'){controllers.get(id)?.abort();r.status='interrupted';r.finishedAt=new Date().toISOString();r.error=r.evaluationError;}});await Promise.allSettled(active);for(const id of ids)snapshots.delete(id);}
-    }}).finally(()=>{worker=null;if(queue.length)start();});};
+  const start=()=>{
+    wake?.();if(worker)return;
+    worker=new Promise<void>(resolve=>setImmediate(resolve)).then(async()=>{
+      const batches=new Set<Promise<void>>();
+      const dispatch=(batchId:string,ids:string[])=>{
+        const active:Promise<void>[]=[];
+        const job=(async()=>{
+          try{await engine!.run(ids.map(get),async id=>{const task=execute(id);active.push(task);await task;return get(id);},(evalId,completed)=>{store.updateBatch(batchId,r=>{r.evaluation={engine:'promptfoo',id:evalId,completed:completed??r.evaluation?.completed};});});}
+          catch(error){for(const id of ids)update(id,r=>{r.evaluationError=error instanceof Error?error.message:'评测引擎失败';if(r.status==='queued'||r.status==='running'){controllers.get(id)?.abort();r.status='interrupted';r.finishedAt=new Date().toISOString();r.error=r.evaluationError;}});await Promise.allSettled(active);for(const id of ids)snapshots.delete(id);}
+        })();
+        batches.add(job);void job.finally(()=>{batches.delete(job);wake?.();});
+      };
+      while(queue.length||batches.size||judging.size){
+        if(!engine&&queue.length){await execute(queue.shift()!);continue;}
+        // Two batch workers share two generation slots; neither waits for an entire old batch.
+        while(engine&&queue.length&&batches.size<2){
+          const batchId=get(queue[0]).batchId;const ids=queue.filter(id=>get(id).batchId===batchId);
+          const selected=new Set(ids);for(let i=queue.length-1;i>=0;i--)if(selected.has(queue[i]))queue.splice(i,1);
+          dispatch(batchId,ids);
+        }
+        if(batches.size||judging.size)await new Promise<void>(resolve=>{wake=resolve;});
+        wake=undefined;
+      }
+    }).finally(()=>{worker=null;if(queue.length)start();});
+  };
   return {
     enqueue(caseIds:string[],requestId:string,selection:LabRunSelection={}){
       const selected=runSelectionSchema.parse(selection);
@@ -104,7 +155,8 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
       if(store.getRuns(r=>r.status==='queued'||r.status==='running').length+caseIds.length*models.length*versionIds.length>capacity)throw new Error(`运行队列最多 ${capacity} 个用例与模型组合，请等待或取消已有运行`);
       engine?.check();
       const evaluatedAt=new Date().toISOString();
-      const cases=versionIds.flatMap(versionId=>caseIds.map(id=>{const c=state.cases.find(c=>c.id===id);if(!c||c.archived||!c.enabled)throw new Error('用例不存在、已归档或待审核启用');const team=state.teams.find(t=>t.id===c.teamId);if(!team||team.archived)throw new Error('用例团队不存在或已归档');if(selected.skillId&&(!c.steps.length||c.steps.some(s=>s.skillId!==selected.skillId)))throw new Error('用例与所选 Skill 不匹配，请选择该 Skill 对应的测试用例');const executionCase={...c,steps:c.steps.map(s=>({...s,...(selected.skillId?{skillVersionId:versionId}:{}),evaluatedAt:s.evaluatedAt||evaluatedAt})),actorId:selected.actorId||c.actorId};const view=buildView(team,executionCase.actorId);if(c.steps.some(s=>s.taskId&&!view.team.tasks.some(t=>t.id===s.taskId)))throw new Error('当前人员无权查看用例目标任务');return {c:executionCase,team};}));
+      const cases=versionIds.flatMap(versionId=>caseIds.map(id=>{const c=state.cases.find(c=>c.id===id);if(!c||c.archived||!c.enabled)throw new Error('用例不存在、已归档或待审核启用');const libraryTeam=state.teams.find(t=>t.id===c.teamId);const team=c.dataSnapshot??libraryTeam;if(!libraryTeam||libraryTeam.archived||!team||team.archived)throw new Error('用例团队不存在或已归档');if(selected.skillId&&(!c.steps.length||c.steps.some(s=>s.skillId!==selected.skillId)))throw new Error('用例与所选 Skill 不匹配，请选择该 Skill 对应的测试用例');const sourceCase=selected.executionMode==='preview'?previewCaseForEvaluation(c):c;const executionCase={...sourceCase,steps:c.steps.map(s=>({...s,...(selected.skillId?{skillVersionId:versionId}:{}),evaluatedAt:s.evaluatedAt||evaluatedAt})),actorId:selected.actorId||c.actorId};const view=buildView(team,executionCase.actorId);if(c.steps.some(s=>s.taskId&&!view.team.tasks.some(t=>t.id===s.taskId)))throw new Error('当前人员无权查看用例目标任务');return {c:executionCase,team};}));
+      if(selected.executionMode==='preview'&&cases.some(({c})=>!isTaskPreviewCase(c)))throw Error('方案评测只支持任务需求及方案修改，不执行真实任务事件或旧协议断言');
       if(selected.executionMode==='mcp'&&cases.some(({c})=>c.steps.length!==1||c.steps.some(s=>s.skillId!=='agentdoor-task-planner'||s.taskId||s.events.length||s.usePreviousOutput)||c.assertions.length||(c.verification?.fixtureChecks.length??0)>0||c.workload||c.contextMode))throw Error('真实 MCP 评测请使用单步骤任务创建用例：不引用沙箱任务、事件、负荷、前序输出或 JSON 路径断言；验收条件按真实回执填写');
       for(const {c,team} of cases)for(const rule of c.verification?.fixtureChecks??[]){
         const collection=rule.subject==='task'?team.tasks:rule.subject==='member'?team.members:team.evidence;
@@ -113,7 +165,9 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
       if(selected.judgeModel&&cases.some(({c})=>!c.expectedOutput?.checks.length&&!c.reviewChecklist.some(item=>item.trim())&&!c.verification?.expectedResults.some(item=>item.criteria.some(text=>text.trim()))))throw new Error('使用判断模型的用例必须填写人工验收条件或预期结果');
       if(selected.executionMode==='mcp')for(const {c,team} of cases)mcpConfigForCase(mcp!,team,c);
       const frozen=cases.map(({c})=>c.steps.map(s=>resolveSkill(state,s.skillId,s.skillVersionId)));
-      const batchId=randomUUID();const runs:LabRun[]=models.flatMap(model=>cases.map(({c,team})=>({id:randomUUID(),batchId,requestId,caseId:c.id,caseName:c.name,actorId:c.actorId,teamId:c.teamId,status:'queued',createdAt:new Date().toISOString(),startedAt:null,finishedAt:null,model,skillVersionId:c.steps[0]?.skillVersionId??undefined,skillVersionNumber:state.skillVersions?.find(v=>v.id===c.steps[0]?.skillVersionId)?.versionNumber,selection:selected,endpoint:options.endpoint,caseSnapshot:structuredClone(c),teamSnapshot:structuredClone(team),steps:[],error:null,review:null})));
+      if(frozen.flat().some(skill=>(skill.outputMode==='preview')!==(selected.executionMode==='preview')))throw Error('所选 Skill 版本与评测方式不一致；任务方案预览请选择 v11 或之后的预览版本，旧版本不能直接用于预览');
+      if(selected.executionMode==='mcp'&&cases.some(({c})=>c.previewCriteriaVersion===1))throw Error('这些用例验证任务方案，请使用预览评测，不执行 MCP 创建');
+      const batchId=randomUUID();const runs:LabRun[]=models.flatMap(model=>cases.map(({c,team})=>({id:randomUUID(),batchId,requestId,caseId:c.id,caseName:c.name,actorId:c.actorId,teamId:c.teamId,status:'queued',createdAt:new Date().toISOString(),startedAt:null,finishedAt:null,model,skillVersionId:c.steps[0]?.skillVersionId??undefined,skillVersionNumber:state.skillVersions?.find(v=>v.id===c.steps[0]?.skillVersionId)?.versionNumber,selection:selected,endpoint:modelEndpoint({...options,model}),caseSnapshot:structuredClone(c),teamSnapshot:structuredClone(team),steps:[],error:null,review:null})));
       store.appendRuns(runs);
       runs.forEach((r,i)=>{snapshots.set(r.id,frozen[i%cases.length]);queue.push(r.id);});start();return runs;
     },
@@ -132,6 +186,16 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
     },
     review(id:string,verdict:'passed'|'failed',note:string){const r=get(id);if(r.status==='running'||r.status==='queued')throw new Error('请等待运行结束再评审');if(!['passed','failed'].includes(verdict)||!note.trim()||note.length>5000)throw new Error('请选择评审结论并填写依据（最多 5000 字）');update(id,r=>{r.review={verdict,note,at:new Date().toISOString()};});return get(id);},
     async idle(){while(worker)await worker;},
-    close(){engine?.close();for(const controller of controllers.values())controller.abort();for(const id of queue){if(get(id).status==='queued')update(id,r=>{r.status='interrupted';r.finishedAt=new Date().toISOString();r.error='服务关闭，未发出 API 请求';});}queue.length=0;},
+    close(){engine?.close();for(const controller of controllers.values())controller.abort();for(const {id} of store.getRuns(r=>r.status==='queued')){if(get(id).status==='queued')update(id,r=>{r.status='interrupted';r.finishedAt=new Date().toISOString();r.error='服务关闭，未发出 API 请求';});}queue.length=0;},
+  };
+}
+
+// FIFO waiters provide fairness across batch workers. Release generation before judging.
+function createSlots(limit:number){
+  let active=0;const waiting:(()=>void)[]=[];
+  return async()=>{
+    if(active>=limit)await new Promise<void>(resolve=>waiting.push(resolve));else active++;
+    let released=false;
+    return ()=>{if(released)return;released=true;const next=waiting.shift();if(next)next();else active--;};
   };
 }

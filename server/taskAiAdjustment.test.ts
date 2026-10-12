@@ -84,7 +84,7 @@ test("创建统一输入不猜测不存在或同名的子任务，复杂要求�
   error(buildTaskAiCreationAdjustment(context({ mode: "saved" }), "任务名称改为不应发生的修改"), /仅用于创建草稿/);
 });
 
-test("上下文指纹稳定，覆盖字段、成员、依赖图、模式与权限变化", () => {
+test("上下文指纹稳定，覆盖字段、成员、层级、模式与权限变化，但忽略旧依赖", () => {
   const source = context();
   const signature = getTaskAiContextSignature(source);
   assert.equal(signature, getTaskAiContextSignature(structuredClone(source)));
@@ -93,7 +93,7 @@ test("上下文指纹稳定，覆盖字段、成员、依赖图、模式与权�
     (next: TaskAiAdjustmentContext) => { next.task.proposedOwnerId = "member-c"; },
     (next: TaskAiAdjustmentContext) => { next.subtasks.reverse(); },
     (next: TaskAiAdjustmentContext) => { next.members.pop(); },
-    (next: TaskAiAdjustmentContext) => { next.dependencyTasks[0].dependsOnTaskIds = ["child-a"]; },
+    (next: TaskAiAdjustmentContext) => { next.dependencyTasks[0].parentTaskId = "child-a"; },
     (next: TaskAiAdjustmentContext) => { next.mode = "saved"; },
     (next: TaskAiAdjustmentContext) => { next.canAddSubtasks = false; },
     (next: TaskAiAdjustmentContext) => { next.currentUserId = "member-c"; },
@@ -102,6 +102,11 @@ test("上下文指纹稳定，覆盖字段、成员、依赖图、模式与权�
     alter(next);
     assert.notEqual(getTaskAiContextSignature(next), signature);
   }
+  const legacy = structuredClone(source);
+  legacy.task.dependsOnTaskIds = ["missing"];
+  legacy.subtasks[0].dependsOnTaskIds = ["child-b"];
+  legacy.dependencyTasks[0].dependsOnTaskIds = ["child-a"];
+  assert.equal(getTaskAiContextSignature(legacy), signature);
 });
 
 test("任务范围仅给当前主项白名单 patch，保留输入原文与具体前后值", () => {
@@ -271,7 +276,7 @@ test("内容相同与重复完成标准均返回空差异且无 patch", () => {
   for (const instruction of [
     "任务名称改为发布会筹备", "目标改为让客户了解新品的实际用途", "完成标准改为：提交完整活动方案",
     "增加完成标准：提交完整活动方案", "执行建议改为：先确认场地容量", "负责人改为周岚",
-    "截止时间改为2026-09-30", "前置依赖改为无",
+    "截止时间改为2026-09-30",
   ]) {
     const next = proposal(buildTaskAiAdjustment(context(), { kind: "task" }, instruction));
     assert.deepEqual(next.changes, [], instruction);
@@ -416,85 +421,30 @@ test("Mock 子任务允许超出主截止，已保存任务保留规则，未定
   assert.deepEqual(next.updates, [{ taskId: "child-a", patch: { endDate: "2026-10-01" } }]);
 });
 
-test("创建草稿只允许兄弟子任务依赖，并用稳定 ID 存储", () => {
-  const source = context();
-  source.subtasks.reverse();
-  const next = proposal(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-b" }, "前置依赖改为「确认场地」"));
-  assert.deepEqual(next.updates, [{ taskId: "child-b", patch: { dependsOnTaskIds: ["child-a"] } }]);
-  assert.equal(next.changes[0].before, "无");
-  assert.equal(next.changes[0].after, "确认场地");
-  error(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-b" }, "前置依赖改为「产品说明已确认」"), /兄弟子任务/);
-  error(buildTaskAiAdjustment(source, { kind: "task" }, "前置依赖改为「产品说明已确认」"), /主任务|兄弟子任务/);
-});
-
-test("父子归属不是可自动转化的依赖，子项不能依赖当前父项", () => {
-  error(buildTaskAiAdjustment(context({ mode: "saved" }), { kind: "subtask", taskId: "child-a" }, "前置依赖改为「发布会筹备」"), /归属|父|上级/);
-});
-
-test("已保存任务可精确引用真实外部前置任务，多个名称以顿号分隔", () => {
-  const source = context({ mode: "saved" });
-  source.dependencyTasks.push({ id: "external-b", title: "预算批准", dependsOnTaskIds: [] });
-  const next = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "前置依赖改为「产品说明已确认」、「预算批准」"));
-  assert.deepEqual(next.updates[0].patch, { dependsOnTaskIds: ["external", "external-b"] });
-  assert.equal(next.changes[0].after, "产品说明已确认、预算批准");
-});
-
-test("依赖必须完整精确引用唯一任务，不接受缺失、重名或重复项", () => {
-  const source = context({ mode: "saved" });
-  for (const input of ["产品说明已确认", "「产品说明」", "「不存在」", "「产品说明已确认」、「产品说明已确认」"]) {
-    error(buildTaskAiAdjustment(source, { kind: "task" }, `前置依赖改为${input}`), /依赖|任务|标题/);
+test("创建草稿和已保存任务都不能添加、替换或清空前置依赖", () => {
+  for (const mode of ["draft", "saved"] as const) {
+    const source = context({ mode });
+    for (const instruction of ["前置依赖改为无", "前置依赖改为「确认场地」", "前置依赖改为「产品说明已确认」、「预算批准」"]) {
+      for (const scope of [{ kind: "task" }, { kind: "subtask", taskId: "child-b" }] as const) {
+        error(buildTaskAiAdjustment(source, scope, instruction));
+      }
+    }
   }
-  source.dependencyTasks.push({ id: "namesake", title: "产品说明已确认", dependsOnTaskIds: [] });
-  error(buildTaskAiAdjustment(source, { kind: "task" }, "前置依赖改为「产品说明已确认」"), /同名|多个/);
 });
 
-test("自依赖和兄弟任务间循环均被拒绝", () => {
-  const source = context();
-  error(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-a" }, "前置依赖改为「确认场地」"), /自己|自身|自依赖/);
+test("无关历史自环、循环或悬空依赖不阻断普通字段调整", () => {
+  const source = context({ mode: "saved" });
+  source.task.dependsOnTaskIds = ["gone"];
+  source.subtasks[0].dependsOnTaskIds = ["child-a", "child-b"];
   source.subtasks[1].dependsOnTaskIds = ["child-a"];
-  error(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-a" }, "前置依赖改为「准备物料」"), /循环/);
-});
-
-test("循环校验遍历完整图，不只检查当前模块的一跳关系", () => {
-  const source = context({ mode: "saved" });
-  source.dependencyTasks = [
-    { id: "external", title: "产品说明已确认", dependsOnTaskIds: ["intermediate"] },
-    { id: "intermediate", title: "远端中间交付", dependsOnTaskIds: ["child-b"] },
-    { id: "main", title: "过期主名称", dependsOnTaskIds: [] },
-    { id: "child-b", title: "过期子名称", dependsOnTaskIds: [] },
-  ];
-  error(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-b" }, "前置依赖改为「产品说明已确认」"), /循环/);
-});
-
-test("当前任务与子项真实字段覆盖全图中的旧副本，不制造名称歧义", () => {
-  const source = context({ mode: "saved" });
-  source.dependencyTasks.push({ id: "child-a", title: "旧名称", dependsOnTaskIds: [] });
-  const next = proposal(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-b" }, "前置依赖改为「确认场地」"));
-  assert.deepEqual(next.updates[0].patch.dependsOnTaskIds, ["child-a"]);
-  error(buildTaskAiAdjustment(source, { kind: "subtask", taskId: "child-b" }, "前置依赖改为「旧名称」"), /找到|不存在|标题/);
-});
-
-test("无关历史坏边不阻止局部修正，但不能新增循环", () => {
-  const source = context({ mode: "saved" });
   source.dependencyTasks.push(
     { id: "old-a", title: "旧任务A", dependsOnTaskIds: ["old-b", "gone"] },
     { id: "old-b", title: "旧任务B", dependsOnTaskIds: ["old-a"] },
   );
-  const next = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "前置依赖改为「产品说明已确认」"));
-  assert.deepEqual(next.updates[0].patch.dependsOnTaskIds, ["external"]);
-  source.task.dependsOnTaskIds = ["gone"];
-  const clear = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "前置依赖改为无"));
-  assert.deepEqual(clear.updates[0].patch.dependsOnTaskIds, []);
-  assert.match(clear.changes[0].before!, /gone/);
-});
-
-test("相同依赖集合仅更换枚举顺序不生成无意义修改", () => {
-  const source = context({ mode: "saved" });
-  source.dependencyTasks.push({ id: "external-b", title: "预算批准", dependsOnTaskIds: [] });
-  source.task.dependsOnTaskIds = ["external", "external-b"];
-  const next = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "前置依赖改为「预算批准」、「产品说明已确认」"));
-  assert.deepEqual(next.changes, []);
-  assert.deepEqual(next.updates, []);
+  const next = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "任务名称改为新的发布计划"));
+  assert.deepEqual(next.updates, [{ taskId: "main", patch: { title: "新的发布计划" } }]);
+  assert.ok(next.changes.every(change => change.label !== "前置依赖"));
+  assert.deepEqual(source.task.dependsOnTaskIds, ["gone"]);
 });
 
 test("模块显式新增子任务，使用新稳定 ID、继承目标、人选日期待定", () => {
@@ -568,9 +518,6 @@ test("第二条改成或设置为等未知近义要求不能被吞进首字段�
 
 test("引号内的精确任务标题可含字段指令字样，不误当成第二条命令", () => {
   const source = context({ mode: "saved" });
-  source.dependencyTasks[0].title = "验证负责人改为待定，保留提示";
-  const next = proposal(buildTaskAiAdjustment(source, { kind: "task" }, "前置依赖改为「验证负责人改为待定，保留提示」"));
-  assert.deepEqual(next.updates[0].patch.dependsOnTaskIds, ["external"]);
   source.subtasks[0].title = "验证负责人改为待定";
   const renamed = proposal(buildTaskAiAdjustment(source, { kind: "subtasks" }, "子任务「验证负责人改为待定」：任务名称改为负责人选择校验"));
   assert.deepEqual(renamed.updates, [{ taskId: "child-a", patch: { title: "负责人选择校验" } }]);
@@ -591,17 +538,18 @@ test("额外的负责人或期限字段不能被当成新增任务的完成标�
   error(buildTaskAiAdjustment(context(), { kind: "task" }, "任务名称改为新名称；目标：提高转化"));
 });
 
-test("独立打开深层任务时识别真实祖先和后代，不拒绝兄弟依赖", () => {
+test("独立打开深层任务时继续识别真实祖先和后代的截止约束", () => {
   const source = context({ mode: "saved", task: task({ parentTaskId: "parent" }), subtasks: [] });
   source.dependencyTasks.push(
     { id: "parent", title: "直属主任务", parentTaskId: "grandparent", dependsOnTaskIds: [] },
-    { id: "grandparent", title: "顶层项目", dependsOnTaskIds: [] },
+    { id: "grandparent", title: "顶层项目", endDate: "2026-09-25", dependsOnTaskIds: [] },
     { id: "nested", title: "下一级任务", parentTaskId: "main", dependsOnTaskIds: [] },
-    { id: "leaf", title: "叶子任务", parentTaskId: "nested", dependsOnTaskIds: [] },
-    { id: "sibling", title: "同级准备", parentTaskId: "parent", dependsOnTaskIds: [] },
+    { id: "leaf", title: "叶子任务", parentTaskId: "nested", endDate: "2026-09-20", dependsOnTaskIds: [] },
+    { id: "sibling", title: "同级准备", parentTaskId: "parent", endDate: "2026-09-30", dependsOnTaskIds: [] },
   );
-  for (const name of ["直属主任务", "顶层项目", "下一级任务", "叶子任务"]) error(buildTaskAiAdjustment(source, { kind: "task" }, `前置依赖改为「${name}」`), /父子|祖先|后代/);
-  assert.deepEqual(proposal(buildTaskAiAdjustment(source, { kind: "task" }, "前置依赖改为「同级准备」")).updates[0].patch.dependsOnTaskIds, ["sibling"]);
+  error(buildTaskAiAdjustment(source, { kind: "task" }, "截止时间改为2026-09-26"), /主任务.*截止/);
+  error(buildTaskAiAdjustment(source, { kind: "task" }, "截止时间改为2026-09-19"), /子任务.*截止/);
+  assert.deepEqual(proposal(buildTaskAiAdjustment(source, { kind: "task" }, "截止时间改为2026-09-24")).updates[0].patch, { endDate: "2026-09-24" });
 });
 
 test("中间层日期未知时继续读取祖先，缺失祖先与历史层级环不死循环", () => {

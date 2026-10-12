@@ -28,15 +28,14 @@ test("相同状态的推荐原因带出各自期限与交付标准，并随任�
   assert.doesNotMatch(reasons().get("contract")!, /授权渠道与合同附件一致/);
 });
 
-test("依赖原因说明未完成数量和本任务交付，不暴露关联任务名称或猜测不可见状态", () => {
+test("推荐原因仅使用本任务交付标准，旧前置数量与状态不参与", () => {
   const result = workbench.buildPersonalWorkbenchPriorities(itemsFor([
     task("release", { dependsOnTaskIds: ["dep-a", "dep-b", "missing"], completionCriteria: ["发布范围与最终确认单一致"] }),
     task("dep-a", { ownerId: "another", name: "私有前置 A" }),
     task("dep-b", { ownerId: "another", name: "私有前置 B", status: "待审核" }),
   ]));
   const reason = result[0].item.priorityReason;
-  assert.match(reason, /2 项前置交付尚未完成/);
-  assert.match(reason, /1 项前置.*(?:不可用|未提供|待核对)/);
+  assert.doesNotMatch(reason, /前置|依赖|未完成数量|资料不可用/);
   assert.match(reason, /核对.*发布范围与最终确认单一致/);
   assert.doesNotMatch(reason, /私有前置|dep-a|dep-b|missing|3 项前置交付尚未完成/);
 });
@@ -53,7 +52,7 @@ test("统筹原因使用直属子任务实际状态，取消不算待收口，�
   assert.doesNotMatch(result[0].item.priorityReason, /已验收|2 项待收口/);
 });
 
-test("Agent 综合已授权任务信号算分，组合风险可以改变同档原始顺序", () => {
+test("旧前置不改变同档任务的推荐分数和原始顺序", () => {
   const items = itemsFor([
     task("overdue-plain", { plannedEndOn: "2026-08-30", completionCriteria: ["交付结果可核对"] }),
     task("overdue-dependent", { plannedEndOn: "2026-08-30", dependsOnTaskIds: ["dependency"], completionCriteria: ["交付结果可核对"] }),
@@ -65,13 +64,13 @@ test("Agent 综合已授权任务信号算分，组合风险可以改变同档�
   const priorities = workbench.buildPersonalWorkbenchPriorities(items);
 
   assert.deepEqual(priorities.map((entry) => [entry.item.taskId, entry.rank]), [
-    ["overdue-dependent", 1], ["overdue-plain", 2], ["today", 3], ["later", 4],
+    ["overdue-plain", 1], ["overdue-dependent", 2], ["today", 3], ["later", 4],
   ]);
   assert.deepEqual(Object.keys(priorities[0]).sort(), ["item", "rank"], "前端只接收排好序的结论，不接收分数或评分因子");
   assert.deepEqual(Object.keys(priorities[0].item).sort(), ["effort", "iconName", "iconTone", "priorityReason", "summary", "taskId", "title"]);
   assert.match(priorities[0].item.summary, /任务进行中/);
   assert.match(priorities[0].item.priorityReason, /已超过承诺时间/);
-  assert.match(priorities[0].item.priorityReason, /前置交付/);
+  assert.doesNotMatch(JSON.stringify(priorities), /前置|依赖/);
   assert.deepEqual(priorities[0].item.effort, { value: "待估算" });
   assert.doesNotMatch(JSON.stringify(priorities), /secret|score|评分|权重|置信度/);
   assert.deepEqual(items, before, "算分排序不能修改任务记录");

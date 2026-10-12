@@ -1,6 +1,17 @@
+import {addComplexSkillCases} from './complex-skill-cases.ts';
+import {addExpandedSkillCases} from './expanded-skill-cases.ts';
+import {addAnalysisTimingCases} from './analysis-timing-cases.ts';
+import {updatePeopleAnalysisReferences} from './people-analysis-reference.ts';
+import {updateTaskAnalysisExpectations} from './task-analysis-expectations.ts';
+import {buildAnalysisDataFixtures} from './analysis-data-fixtures.ts';
+import {addPeopleAnalysisCases} from './people-analysis-cases.ts';
+import {addTaskAnalysisCases} from './task-analysis-cases.ts';
+import {updatePreviewCaseLibrary,updatePreviewAssignmentCriteria} from './preview-case-library.ts';
+import {readPersistedLabState} from './run-state.mjs';
 import {addPlanningCoreCases} from './planning-core-cases.ts';
 import {curateWorkflowFocusCases} from './workflow-focus-cases.ts';
 import {updateContentTeamRoster} from './content-team-roster.ts';
+import {updateContentTeamJageCases} from './content-team-jage.ts';
 import {addLiveMcpCases} from './mcp-cases.ts';
 import {migrateCreationExpectations} from './creation-expectations.ts';
 import {initialCaseTags} from '../../src/test-lab/case-tags.ts';
@@ -14,7 +25,7 @@ import { industrySeed, cleanLabLabel } from './industry-seeds.ts';
 import { existsSync, readFileSync, mkdirSync, writeFileSync, renameSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
 import { z } from 'zod';
 import { skillIds, type SkillId } from '../../src/test-lab/types.ts';
 import { hash } from './skills.ts';
@@ -89,20 +100,59 @@ function migrateState(raw:any,seed:LabState,hasFile:boolean):{state:LabState;cha
     changed=true;
   }
   changed=curateWorkflowFocusCases(state)||changed;
-  for(const c of state.cases)if(c.tags===undefined){c.tags=initialCaseTags(c);changed=true;}
+  changed=updateContentTeamJageCases(state)||changed;
+  changed=updatePreviewCaseLibrary(state)||changed;
+  changed=updatePreviewAssignmentCriteria(state)||changed;
   for(const item of state?.cases??[])for(const step of item?.steps??[])for(const event of step?.events??[])if(event?.type==='evidence')changed=migrateTeam({tasks:[],evidence:[event.evidence]})||changed;
   for(const run of state?.runs??[]){
     changed=migrateTeam(run.teamSnapshot)||changed;
     for(const step of run?.steps??[]){changed=migrateTeam(step.before)||changed;changed=migrateTeam(step.after)||changed;}
   }
+  changed=addTaskAnalysisCases(state)||changed;
+  changed=addPeopleAnalysisCases(state)||changed;
+  changed=buildAnalysisDataFixtures(state)||changed;
+  for(const team of state.teams){
+    const syntheticIds=new Set(team.members.filter((m:any)=>m.id.startsWith('people-test-')).map((m:any)=>m.id));
+    if(!syntheticIds.size)continue;
+    // 迁移旧库：先保留依赖这些成员的用例快照，再清理公共团队。
+    for(const c of state.cases.filter((c:LabCase)=>c.teamId===team.id&&!c.dataSnapshot)){
+      if(syntheticIds.has(c.actorId)||c.steps.some((step:any)=>step.taskId?.startsWith('people-test-'))){c.dataSnapshot=structuredClone(team);c.version++;}
+    }
+    const taskIds=new Set(team.tasks.filter((t:any)=>t.id.startsWith('people-test-')||syntheticIds.has(t.ownerId)||t.participantIds.some((id:string)=>syntheticIds.has(id))).map((t:any)=>t.id));
+    team.evidence=team.evidence.filter((e:any)=>!taskIds.has(e.taskId)&&!syntheticIds.has(e.authorId));
+    team.tasks=team.tasks.filter((t:any)=>!taskIds.has(t.id));
+    team.members=team.members.filter((m:any)=>!syntheticIds.has(m.id));changed=true;
+  }
+
+  // 已下线的独立评测不再出现在用例库；历史运行快照仍可查阅。
+  const retiredSkills=new Set(['agentdoor-personal-priority','agentdoor-task-diagnostician','agentdoor-ewd-progress']);
+  const activeCases=state.cases.filter((c:LabCase)=>!c.steps.some(step=>retiredSkills.has(step.skillId)));
+  if(activeCases.length!==state.cases.length){state.cases=activeCases;changed=true;}
+  changed=addAnalysisTimingCases(state)||changed;
+  changed=addExpandedSkillCases(state)||changed;
+  changed=addComplexSkillCases(state)||changed;
+  for(const c of state.cases)if(c.tags===undefined){c.tags=initialCaseTags(c);changed=true;}
+  changed=updateTaskAnalysisExpectations(state)||changed;
+  changed=updatePeopleAnalysisReferences(state)||changed;
   return {state,changed};
 }
 export function createLabStore(path:string, seed:LabState){
-  const hasFile=existsSync(path);const migrated=migrateState(hasFile?JSON.parse(readFileSync(path,'utf8')):structuredClone(seed),seed,hasFile);
+  const hasFile=existsSync(path);const raw=hasFile?readPersistedLabState(path):structuredClone(seed);
+  const journal=path+'.runs';
+  const migrated=migrateState(raw,seed,hasFile);
   let state:LabState=migrated.state;
   if(state.version!==1||!Array.isArray(state.runs))throw new Error('测试数据版本不支持，请保留文件并检查数据');
   editableSchema.parse({expectedRevision:state.revision,teams:state.teams,cases:state.cases});validateRelations(state.teams,state.cases);
-  const persist=(next:LabState)=>{mkdirSync(dirname(path),{recursive:true});const temp=`${path}.${process.pid}.tmp`;writeFileSync(temp,JSON.stringify(next,null,2),{mode:0o600});renameSync(temp,path);state=next;};
+  const persist=(next:LabState)=>{mkdirSync(dirname(path),{recursive:true});const temp=`${path}.${process.pid}.tmp`;writeFileSync(temp,JSON.stringify(next),{mode:0o600});renameSync(temp,path);state=next;};
+  const persistRuns=(runs:LabRun[],append=false)=>{
+    const revision=state.revision+1;mkdirSync(journal,{recursive:true});
+    for(const run of runs){
+      const file=`${journal}/${createHash('sha256').update(run.id).digest('hex')}.json`;
+      const temp=`${file}.${process.pid}.tmp`;writeFileSync(temp,JSON.stringify({revision,run}),{mode:0o600});renameSync(temp,file);
+    }
+    const changed=new Map(runs.map(run=>[run.id,run]));
+    state={...state,revision,runs:append?[...state.runs,...runs]:state.runs.map(run=>changed.get(run.id)??run)};
+  };
   const checkRevision=(revision:number)=>{if(revision!==state.revision)throw new Error('数据版本已更新，请刷新后重新保存，当前草稿仍保留');};
   if(!hasFile)persist(state);else if(migrated.changed)persist({...state,revision:state.revision+1});
   return {
@@ -120,14 +170,14 @@ export function createLabStore(path:string, seed:LabState){
     updateRun(id:string,change:(run:LabRun)=>void){
       const before=state.runs.find(r=>r.id===id);if(!before)throw Error('运行记录不存在');
       const run=structuredClone(before);change(run);
-      persist({...state,revision:state.revision+1,runs:state.runs.map(r=>r.id===id?run:r)});
+      persistRuns([run]);
       return structuredClone(run);
     },
     updateBatch(batchId:string,change:(run:LabRun)=>void){
-      const runs=state.runs.map(r=>{if(r.batchId!==batchId)return r;const run=structuredClone(r);change(run);return run;});
-      persist({...state,revision:state.revision+1,runs});
+      const runs=state.runs.filter(r=>r.batchId===batchId).map(r=>{const run=structuredClone(r);change(run);return run;});
+      if(runs.length)persistRuns(runs);
     },
-    appendRuns(runs:LabRun[]){persist({...state,revision:state.revision+1,runs:[...state.runs,...structuredClone(runs)]});},
+    appendRuns(runs:LabRun[]){if(runs.length)persistRuns(structuredClone(runs),true);},
     addSkillVersion(expectedRevision:number,input:z.input<typeof skillVersionInputSchema>){
       checkRevision(expectedRevision);const value=skillVersionInputSchema.parse(input);
       const files=validatePackage(value.snapshot,value.skillId).map(f=>({...f,hash:hash(f.content)}));
@@ -158,14 +208,27 @@ export function createLabStore(path:string, seed:LabState){
     },
     saveModels(expectedRevision:number,models:string[],judgeEnabled?:boolean){
       checkRevision(expectedRevision);const parsed=z.array(modelIdSchema).max(500).parse(models);
+      if(state.modelCatalogSyncedAt&&parsed.some(model=>!state.modelCatalog?.includes(model)))throw new Error('型号不在已同步的可用目录中，请先同步模型目录再启用');
       persist({...state,revision:state.revision+1,models:[...new Set(parsed)],modelCatalog:[...new Set([...(state.modelCatalog??[]),...(state.models??[]),...parsed])],...(judgeEnabled===undefined?{}:{judgeEnabled})});return structuredClone(state);
+    },
+    syncModelCatalog(expectedRevision:number,models:string[]){
+      checkRevision(expectedRevision);const catalog=[...new Set(z.array(modelIdSchema).min(1).max(5000).parse(models))].sort();
+      const removedModels=(state.models??[]).filter(model=>!catalog.includes(model));
+      persist({...state,revision:state.revision+1,modelCatalog:catalog,modelCatalogSyncedAt:new Date().toISOString(),models:(state.models??[]).filter(model=>catalog.includes(model))});
+      return {models:catalog,removedModels};
     },
     save(expectedRevision:number,teams:LabTeam[],cases:LabCase[]){
       if(expectedRevision!==state.revision)throw new Error('数据版本已更新，请刷新后重新保存，当前草稿仍保留');
+      if(cases.some(c=>c.steps.some(s=>['agentdoor-personal-priority','agentdoor-task-diagnostician','agentdoor-ewd-progress'].includes(s.skillId))))throw new Error('该独立 Skill 已下线，请使用任务分析、人员责任分析或人员匹配分析');
       const parsed=editableSchema.parse({expectedRevision,teams,cases});validateRelations(parsed.teams,parsed.cases as LabCase[]);
       for(const item of parsed.cases)for(const step of item.steps)if(step.skillVersionId&&!state.skillVersions?.some(v=>v.id===step.skillVersionId&&v.skillId===step.skillId))throw new Error('用例引用的 Skill 版本不存在或不匹配');
       const versioned=<T extends {id:string;version:number}>(next:T[],old:T[])=>next.map(item=>{const before=old.find(o=>o.id===item.id);const unchanged=before&&isDeepStrictEqual({...item,version:0},{...before,version:0});return {...item,version:before?(unchanged?before.version:before.version+1):1};});
       for(const team of parsed.teams){const before=state.teams.find(t=>t.id===team.id);if(before){team.members=versioned(team.members,before.members);team.tasks=versioned(team.tasks,before.tasks);team.evidence=versioned(team.evidence,before.evidence);}}
+      for(const item of parsed.cases){const before=state.cases.find(c=>c.id===item.id)?.dataSnapshot;if(item.dataSnapshot&&before){
+        item.dataSnapshot.members=versioned(item.dataSnapshot.members,before.members);item.dataSnapshot.evidence=versioned(item.dataSnapshot.evidence,before.evidence);
+        for(const task of item.dataSnapshot.tasks){const previous=before.tasks.find(t=>t.id===task.id)?.criteria;if(task.criteria&&previous&&!isDeepStrictEqual(task.criteria.items,previous.items))task.criteria.version=previous.version+1;}
+        item.dataSnapshot.tasks=versioned(item.dataSnapshot.tasks,before.tasks);
+      }}
       parsed.cases=versioned(parsed.cases,state.cases);
       persist({...state,revision:state.revision+1,teams:structuredClone(parsed.teams),cases:structuredClone(parsed.cases) as LabCase[]});return structuredClone(state);
     },

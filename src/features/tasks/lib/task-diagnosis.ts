@@ -1,6 +1,7 @@
 import type { TaskDiagnosisConflictInput, TaskDiagnosisFinding, TaskDiagnosisTask } from "@/shared/model/task-diagnosis";
 import { getMockContextDiagnosis } from "@/ai/mock/lib/mockTaskDiagnosis";
 import { hasTaskDecisionBasis } from "@/features/tasks/lib/task-decision-evidence";
+import { formatLegacyDateLabel } from "@/shared/lib/date-time";
 
 export type TaskDiagnosisReport = {
   checkedAt?: string;
@@ -8,9 +9,7 @@ export type TaskDiagnosisReport = {
     contextTaskCount?: number;
     unavailableFileCount?: number;
     checkedTaskCount: number;
-    missingDependencyCount: number;
     note: string;
-    visibleDependencyCount: number;
   };
   findings: TaskDiagnosisFinding[];
   rootTaskId: string;
@@ -22,7 +21,9 @@ export type TaskDiagnosisInput = {
   /** @deprecated 兼容旧调用；新调用应传入全部后代任务。 */
   childTasks?: TaskDiagnosisTask[];
   decisionConflicts?: TaskDiagnosisConflictInput[];
+  /** @deprecated Historical input only; current diagnosis ignores predecessor links. */
   dependencyTaskIds?: string[];
+  /** @deprecated Historical input only; current diagnosis ignores predecessor links. */
   dependencyTasks?: TaskDiagnosisTask[];
   task: TaskDiagnosisTask;
 };
@@ -43,20 +44,8 @@ export function getTaskDiagnosisDescendants<T extends { id: string; parentTaskId
   return descendants;
 }
 
-function taskNames(tasks: TaskDiagnosisTask[]): string {
-  return tasks.map((item) => `「${item.title}」`).join("、");
-}
-
 function taskStateFact(task: TaskDiagnosisTask, prefix = ""): string {
-  return `${prefix}「${task.title}」当前为${task.status}${task.dueAt ? `，截止 ${task.dueAt}` : ""}。`;
-}
-
-function dateOrder(value?: string): number | null {
-  if (!value) return null;
-  const iso = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (iso) return Number(iso[2]) * 100 + Number(iso[3]);
-  const chinese = value.match(/(\d+)\s*月\s*(\d+)\s*日/);
-  return chinese ? Number(chinese[1]) * 100 + Number(chinese[2]) : null;
+  return `${prefix}「${task.title}」当前为${task.status}${task.dueAt ? `，截止 ${formatLegacyDateLabel(task.dueAt)}` : ""}。`;
 }
 
 function findingSubject(task: TaskDiagnosisTask, rootTaskId: string, tasksById: Map<string, TaskDiagnosisTask>): TaskDiagnosisFinding["subject"] {
@@ -72,70 +61,6 @@ function findingSubject(task: TaskDiagnosisTask, rootTaskId: string, tasksById: 
     parentId = parent.parentTaskId;
   }
   return { id: task.id, path, title: task.title };
-}
-
-function executionBlocker(consumer: TaskDiagnosisTask, incomplete: TaskDiagnosisTask[], subject: TaskDiagnosisFinding["subject"]): TaskDiagnosisFinding {
-  const consumerDate = dateOrder(consumer.dueAt);
-  const lateDependency = consumerDate === null ? undefined : incomplete.find((item) => {
-    const dependencyDate = dateOrder(item.dueAt);
-    return dependencyDate !== null && dependencyDate > consumerDate;
-  });
-  const primary = lateDependency ?? incomplete[0];
-  const additional = incomplete.length > 1 ? `，另有 ${incomplete.length - 1} 项前置尚未完成` : "";
-  return {
-      conclusion: lateDependency
-        ? `前置任务「${primary.title}」当前${primary.status}，计划于 ${primary.dueAt} 完成，晚于「${consumer.title}」的 ${consumer.dueAt} 截止${additional}。`
-        : `「${consumer.title}」依赖「${primary.title}」，该前置任务仍处于${primary.status}状态${additional}。`,
-      evidence: [
-        {
-          kind: "task",
-          id: consumer.id,
-          source: consumer.title,
-          fact: `「${consumer.title}」依赖${taskNames(incomplete)}${lateDependency ? `，当前截止 ${consumer.dueAt}` : ""}。`,
-        },
-        ...incomplete.map((item) => ({ kind: "task" as const, id: item.id, source: item.title, fact: taskStateFact(item) })),
-      ],
-      id: `execution-blocker:${consumer.id}`,
-      impact: lateDependency
-        ? "前置交付晚于后续截止，可能影响依赖该结果的部分，建议核对排期。"
-        : "前置任务尚未标记完成，可能影响依赖该结果的部分，不代表当前任务不能推进。",
-      recommendation: lateDependency
-        ? "建议确认前置与后续任务的时间顺序，核对可并行推进的范围；依赖可按实际情况调整。"
-        : "建议核对前置结果和可并行推进的范围；依赖仅作参考，可按实际情况调整。",
-      severity: "review",
-      subject,
-      title: lateDependency
-        ? `前置「${primary.title}」交付晚于当前任务截止，建议核对排期`
-        : incomplete.length > 1
-          ? `${incomplete.length} 项前置任务尚未完成，建议核对`
-          : `前置「${primary.title}」尚未完成，建议核对`,
-      type: "execution-blocker",
-  };
-}
-
-function completedWithIncompleteDependency(consumer: TaskDiagnosisTask, incomplete: TaskDiagnosisTask[], subject: TaskDiagnosisFinding["subject"]): TaskDiagnosisFinding {
-  const primary = incomplete[0];
-  return {
-    conclusion: `「${consumer.title}」已标记为已完成，但前置「${primary.title}」仍处于${primary.status}状态${incomplete.length > 1 ? `，另有 ${incomplete.length - 1} 项前置尚未完成` : ""}。`,
-    evidence: [
-      {
-        kind: "task",
-        id: consumer.id,
-        source: consumer.title,
-        fact: `「${consumer.title}」已标记为已完成，同时仍依赖${taskNames(incomplete)}。`,
-      },
-      ...incomplete.map((item) => ({ kind: "task" as const, id: item.id, source: item.title, fact: taskStateFact(item) })),
-    ],
-    id: `decision-conflict:completion-dependency:${consumer.id}`,
-    impact: "完成结论与前置任务记录不一致，成员无法据此确认执行链路已经闭合。",
-    recommendation: "先核对前置任务是否已经交付；若仍需该前置结果，应重新确认当前任务的完成状态。",
-    severity: "review",
-    subject,
-    title: incomplete.length > 1
-      ? `「${consumer.title}」已完成，但仍有 ${incomplete.length} 项前置未完成`
-      : `「${consumer.title}」已完成，但前置「${primary.title}」仍未完成`,
-    type: "decision-conflict",
-  };
 }
 
 function completedWithUnfinishedDescendants(
@@ -162,34 +87,16 @@ function completedWithUnfinishedDescendants(
   };
 }
 
-export function getTaskDiagnosisReport({ checkedAt, descendantTasks, childTasks = [], decisionConflicts = [], dependencyTaskIds = [], dependencyTasks = [], task }: TaskDiagnosisInput): TaskDiagnosisReport {
+export function getTaskDiagnosisReport({ checkedAt, descendantTasks, childTasks = [], decisionConflicts = [], task }: TaskDiagnosisInput): TaskDiagnosisReport {
   const scopedDescendants = descendantTasks ?? childTasks.map((item) => ({ ...item, parentTaskId: item.parentTaskId ?? task.id }));
   const rootTask: TaskDiagnosisTask = { ...task, decisionConflicts };
   const scopeTasks = [rootTask, ...scopedDescendants.filter((item) => item.id !== task.id)];
-  const visibleTasks = new Map([...scopeTasks, ...dependencyTasks].map((item) => [item.id, item]));
   const scopeTasksById = new Map(scopeTasks.map((item) => [item.id, item]));
-  const missingDependencyIds = new Set<string>();
-  const visibleDependencyIds = new Set<string>();
   const findings: TaskDiagnosisFinding[] = [];
 
   for (const consumer of scopeTasks) {
     if (consumer.status === "已取消") continue;
     const subject = findingSubject(consumer, task.id, scopeTasksById);
-    const ids = consumer.id === task.id ? dependencyTaskIds : consumer.dependsOnTaskIds ?? [];
-    const incomplete: TaskDiagnosisTask[] = [];
-    for (const id of ids) {
-      const dependency = visibleTasks.get(id);
-      if (!dependency) {
-        missingDependencyIds.add(id);
-        continue;
-      }
-      visibleDependencyIds.add(id);
-      if (dependency.id !== consumer.id && dependency.status !== "已完成" && dependency.status !== "已取消") incomplete.push(dependency);
-    }
-    if (incomplete.length) findings.push(consumer.status === "已完成"
-      ? completedWithIncompleteDependency(consumer, incomplete, subject)
-      : executionBlocker(consumer, incomplete, subject));
-
     if (consumer.status === "已完成") {
       const unfinishedDescendants = getTaskDiagnosisDescendants(scopedDescendants, consumer.id).filter((item) => item.status !== "已完成" && item.status !== "已取消");
       if (unfinishedDescendants.length) findings.push(completedWithUnfinishedDescendants(consumer, unfinishedDescendants, subject, consumer.id === task.id));
@@ -209,18 +116,13 @@ export function getTaskDiagnosisReport({ checkedAt, descendantTasks, childTasks 
     }
   }
 
-  const missingDependencyCount = missingDependencyIds.size;
   return {
     ...(checkedAt ? { checkedAt } : {}),
     coverage: {
       contextTaskCount: scopeTasks.filter((item) => item.context).length,
       unavailableFileCount: scopeTasks.reduce((sum, item) => sum + (item.context?.unavailableFileCount ?? 0), 0),
       checkedTaskCount: scopeTasks.length,
-      missingDependencyCount,
-      note: missingDependencyCount
-        ? `另有 ${missingDependencyCount} 项依赖不可见或已不存在，本次未完成核对。`
-        : "当前任务范围内的可见依赖已完成核对。",
-      visibleDependencyCount: visibleDependencyIds.size,
+      note: "当前任务及下级任务的可见记录已完成核对。",
     },
     findings,
     rootTaskId: task.id,

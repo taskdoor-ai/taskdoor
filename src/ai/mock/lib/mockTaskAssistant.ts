@@ -18,15 +18,7 @@ const creatorCommerceSubtaskSeeds = [
   { title: "完成素材宣称与合同合规审核", goal: "审核广告法、素材宣称、达人合同和平台规则。", label: "合规审核", domain: "compliance", gapLabel: "合规", iconName: "file-check", iconTone: "green" },
 ] as const;
 
-const creatorCommerceDependencies: NonNullable<TaskPlanDraft["dependencies"]> = [
-  { subtaskIndex: 2, dependsOnSubtaskIndexes: [0, 1, 3, 6] },
-  { subtaskIndex: 4, dependsOnSubtaskIndexes: [0, 1] },
-  { subtaskIndex: 5, dependsOnSubtaskIndexes: [2, 4] },
-  { subtaskIndex: 6, dependsOnSubtaskIndexes: [0, 1] },
-];
-
 type RepresentativeScenario = {
-  dependencies: NonNullable<TaskPlanDraft["dependencies"]>;
   goal: string;
   iconName: NonNullable<TaskDraft["iconName"]>;
   iconTone: NonNullable<TaskDraft["iconTone"]>;
@@ -44,7 +36,6 @@ type RepresentativeScenario = {
 
 const representativeScenarios: RepresentativeScenario[] = [
   {
-    dependencies: [{ subtaskIndex: 1, dependsOnSubtaskIndexes: [0] }],
     goal: "形成可直接进入商务建联的抖音达人候选名单，并保留清晰的筛选依据。",
     iconName: "briefcase",
     iconTone: "pink",
@@ -57,7 +48,6 @@ const representativeScenarios: RepresentativeScenario[] = [
     title: "新品防晒衣抖音达人筛选",
   },
   {
-    dependencies: [{ subtaskIndex: 2, dependsOnSubtaskIndexes: [0, 1] }],
     goal: "让直播执行、投流策略和数据复盘在一个可协作的计划中衔接。",
     iconName: "target",
     iconTone: "amber",
@@ -71,7 +61,6 @@ const representativeScenarios: RepresentativeScenario[] = [
     title: "直播、投流与数据复盘协作计划",
   },
   {
-    dependencies: [],
     goal: "并行准备待审材料并完成素材宣称、达人合同和平台规则检查。",
     iconName: "file-check",
     iconTone: "green",
@@ -188,26 +177,13 @@ const createCreatorCommerceDraft = (request: TaskAssistantRequest) => {
     .filter((ownerId) => ownerId && ownerId !== mainTask.ownerId))];
   return {
     assignments: [{ assignment: mainAssignment, gapLabel: "统筹", task: mainTask }, ...assignedSubtasks],
-    draft: { dependencies: creatorCommerceDependencies, mainTask, subtasks: assignedSubtasks.map(({ task }) => task) },
+    draft: { mainTask, subtasks: assignedSubtasks.map(({ task }) => task) },
   };
 };
 
 /** Reuse the canonical creator-commerce plan without exposing its assignment metadata. */
 export const createCreatorCommerceScenarioDraft = (request: TaskAssistantRequest): TaskPlanDraft =>
   createCreatorCommerceDraft(request).draft;
-
-const normalizeDependencies = (
-  dependencies: TaskPlanDraft["dependencies"],
-  subtaskCount: number,
-): NonNullable<TaskPlanDraft["dependencies"]> => {
-  const bySubtask = new Map<number, number[]>();
-  (dependencies ?? []).forEach(({ dependsOnSubtaskIndexes, subtaskIndex }) => {
-    if (subtaskIndex < 0 || subtaskIndex >= subtaskCount) return;
-    const validDependencies = [...new Set(dependsOnSubtaskIndexes.filter((index) => index >= 0 && index < subtaskCount && index !== subtaskIndex))];
-    if (validDependencies.length) bySubtask.set(subtaskIndex, validDependencies);
-  });
-  return [...bySubtask.entries()].map(([subtaskIndex, dependsOnSubtaskIndexes]) => ({ dependsOnSubtaskIndexes, subtaskIndex }));
-};
 
 const normalizeTaskDraft = (
   task: TaskDraft,
@@ -233,7 +209,6 @@ const mergeAndNormalizeCreatorDraft = (
   context: DraftNormalizationContext,
 ): TaskPlanDraft => {
   if (!incoming) return {
-    dependencies: normalizeDependencies(generated.dependencies, generated.subtasks.length),
     mainTask: normalizeTaskDraft(generated.mainTask, context),
     subtasks: generated.subtasks.map((task) => normalizeTaskDraft(task, context)),
   };
@@ -250,7 +225,6 @@ const mergeAndNormalizeCreatorDraft = (
   });
   return {
     ...(incoming.tagOperations ? { tagOperations: incoming.tagOperations } : {}),
-    dependencies: normalizeDependencies(incoming.dependencies ?? generated.dependencies, subtasks.length),
     mainTask,
     subtasks,
   };
@@ -292,14 +266,12 @@ const createGenericDraft = (request: TaskAssistantRequest): TaskPlanDraft => {
   if (request.draft) {
     return {
       ...(request.draft.tagOperations ? { tagOperations: request.draft.tagOperations } : {}),
-      dependencies: normalizeDependencies(request.draft.dependencies, request.draft.subtasks.length),
-      mainTask: normalizeTaskDraft(request.draft.mainTask, context),
+        mainTask: normalizeTaskDraft(request.draft.mainTask, context),
       subtasks: request.draft.subtasks.map((task) => normalizeTaskDraft(task, context)),
     };
   }
   const title = genericTitle(request);
   return {
-    dependencies: [],
     mainTask: normalizeTaskDraft({
       title,
       goal: `完成“${title}”，形成可供团队确认和复用的交付物。`,
@@ -338,7 +310,6 @@ const createRepresentativeDraft = (request: TaskAssistantRequest): TaskPlanDraft
   const mainAssignment = assignTaskByResponsibility(scenario, request.members);
   const mainOwnerId = mainAssignment.ownerId || fallbackOwnerId;
   return {
-    dependencies: scenario.dependencies,
     mainTask: normalizeTaskDraft({
       endDate: addDays(request.currentDate, 4),
       goal: scenario.goal,
@@ -426,6 +397,7 @@ export const createMockTaskAssistantResponseForDraft = (
   draft: TaskPlanDraft,
   assistantMessage?: string,
 ): TaskAssistantResponse => {
+  draft = { ...draft, dependencies: [] };
   const normalizationContext: DraftNormalizationContext = {
     allowedLabels: new Set(request.tags),
     validMemberIds: new Set(request.members.map((member) => member.id)),
@@ -441,7 +413,7 @@ export const createMockTaskAssistantResponseForDraft = (
         ? `已按交付关系整理为 ${draft.subtasks.length} 个子任务，现在可以创建，也可以点击卡片调整。`
         : "已整理为一个无需拆分的任务，现在可以创建，也可以点击卡片调整。"
       : `已更新任务草案，请修正：${clarificationPrompt || "任务名称、目标或到期时间是否准确？"}`),
-    draft,
+    draft: { ...draft, dependencies: [] },
     missingInformation,
     peopleRecommendations: recommendationsForDraft(draft, request),
     qualityAssessment: {
@@ -488,7 +460,7 @@ export const createMockTaskAssistantResponse = (request: TaskAssistantRequest): 
         : isFollowUp
           ? "任务方案已更新，可以直接创建，也可以点击卡片继续调整。"
           : "已按团队责任整理好任务方案，可以直接创建，也可以点击卡片调整。",
-    draft,
+    draft: { ...draft, dependencies: [] },
     missingInformation,
     peopleRecommendations: uniqueRecommendations(generated.assignments, draft, request),
     qualityAssessment: {

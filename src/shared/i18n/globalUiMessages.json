@@ -192,8 +192,8 @@
     "en": "Sort"
   },
   "tasksArePrioritizedUsingStatusDeadlinesDependenciesCompletion": {
-    "zh": "当前顺序综合任务状态、期限、依赖、完成标准，以及你有权查看的讨论、动态和文件；先处理阻塞、临期或需要核对的事项，同档沿用原顺序。",
-    "en": "Tasks are prioritized using status, deadlines, dependencies, acceptance criteria and accessible discussions, activity and files. Blocked, due-soon and review items come first; ties retain their original order."
+    "zh": "当前顺序综合任务状态、期限、完成标准，以及你有权查看的讨论、动态和文件；先处理阻塞、临期或需要核对的事项，同档沿用原顺序。",
+    "en": "Tasks are prioritized using status, deadlines, acceptance criteria and accessible discussions, activity and files. Blocked, due-soon and review items come first; ties retain their original order."
   },
   "scope": {
     "zh": "范围",
@@ -2490,5 +2490,37 @@
   "inviteLogOut": {
     "zh": "退出登录",
     "en": "Log out"
+  },
+  "taskOverallMarkComplete": {
+    "zh": "标记任务完成",
+    "en": "Mark task complete"
+  },
+  "taskOverallMarkCompleteAria": {
+    "zh": "标记整个任务完成",
+    "en": "Mark the entire task complete"
+  },
+  "taskOverallCompleted": {
+    "zh": "任务已完成",
+    "en": "Task completed"
+  },
+  "taskOverallUndoComplete": {
+    "zh": "撤销任务完成",
+    "en": "Undo task completion"
+  },
+  "taskOverallCompleteHint": {
+    "zh": "点击标记整个任务完成，保留标准确认记录",
+    "en": "Mark the task complete; keep individual criterion confirmations"
+  },
+  "taskOverallUndoHint": {
+    "zh": "点击撤销任务完成，保留标准确认记录",
+    "en": "Undo task completion; keep individual criterion confirmations"
+  },
+  "taskOverallAiAssessment": {
+    "zh": "AI 评估",
+    "en": "AI assessment"
+  },
+  "taskOverallMarkCompleteShort": {
+    "zh": "标记完成",
+    "en": "Mark complete"
   }
 }

@@ -35,6 +35,16 @@ const Avvvatars = typeof AvvvatarsModule === "function"
   : (AvvvatarsModule as unknown as { default: typeof AvvvatarsModule }).default;
 
 const sizeMap = { xs: 22, sm: 28, md: 36, lg: 48 };
+
+/** Keep searchable person labels consistent with the names rendered by the identity UI. */
+export function usePersonLabels() {
+  const { locale } = useI18n();
+  return {
+    name: (person: PersonOption) => mockPersonName(locale, person.id, person.name),
+    searchText: (person: PersonOption) => `${person.name} ${mockPersonName(locale, person.id, person.name)} ${person.role} ${person.dynamicResponsibility ?? ""} ${settingsMockText(locale, person.id, person.dynamicResponsibility ?? "")} ${person.email}`,
+  };
+}
+
 type PersonAvatarVisualProps = Pick<PersonAvatarProps, "avatarUrl" | "className" | "invitationStatus" | "name" | "size" | "status"> & Omit<ComponentPropsWithoutRef<"span">, "children" | "className" | "title"> & {
   identity?: string;
   pendingMembership?: boolean;

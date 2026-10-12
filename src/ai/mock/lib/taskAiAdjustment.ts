@@ -15,7 +15,12 @@ const listError = "请提供非空内容；多条完成标准或执行建议请�
 
 /** Snapshot comparison only, not a security token or a persistence operation. */
 export function getTaskAiContextSignature(context: TaskAiAdjustmentContext): string {
-  return JSON.stringify(context);
+  const withoutLegacyDependencies = <T extends { dependsOnTaskIds?: string[] }>({ dependsOnTaskIds: _legacy, ...task }: T) => task;
+  return JSON.stringify({ ...context,
+    task: withoutLegacyDependencies(context.task),
+    subtasks: context.subtasks.map(withoutLegacyDependencies),
+    dependencyTasks: context.dependencyTasks.map(withoutLegacyDependencies),
+  });
 }
 
 /** The creation composer shares one input; only an explicit prefix changes its target. */
@@ -28,9 +33,6 @@ export function buildTaskAiCreationAdjustment(context: TaskAiAdjustmentContext, 
 
 const sameList = (left: string[], right: string[]) => left.length === right.length
   && left.every((value, index) => value === right[index]);
-
-const sameIds = (left: string[], right: string[]) => left.length === right.length
-  && new Set(left).size === left.length && right.every(id => left.includes(id));
 
 function validDate(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/u.test(value)) return false;
@@ -91,13 +93,14 @@ function memberLabel(context: TaskAiAdjustmentContext, id: string): string {
     ? `${member.name}（${member.id}）` : member.name;
 }
 
-type DependencyTask = TaskAiAdjustmentContext["dependencyTasks"][number];
+type ContextTask = Omit<TaskAiAdjustmentContext["dependencyTasks"][number], "dependsOnTaskIds">;
 
-function dependencyGraph(context: TaskAiAdjustmentContext): Map<string, DependencyTask> | string {
-  const graph = new Map<string, DependencyTask>();
+function hierarchyGraph(context: TaskAiAdjustmentContext): Map<string, ContextTask> | string {
+  const graph = new Map<string, ContextTask>();
   for (const item of context.dependencyTasks) {
-    if (!item.id || graph.has(item.id)) return "依赖任务图存在缺失或重复的稳定 ID，请刷新任务上下文；原文与任务保持不变。";
-    graph.set(item.id, item);
+    if (!item.id || graph.has(item.id)) return "任务上下文存在缺失或重复的稳定 ID，请刷新任务上下文；原文与任务保持不变。";
+    const { dependsOnTaskIds: _legacy, ...task } = item;
+    graph.set(item.id, task);
   }
   // The opened task and its children are the latest snapshot. Do not treat their
   // stale copies in the full graph as separate candidates or use old edges.
@@ -107,26 +110,13 @@ function dependencyGraph(context: TaskAiAdjustmentContext): Map<string, Dependen
   return graph;
 }
 
-function isAncestor(graph: Map<string, DependencyTask>, ancestorId: string, taskId: string): boolean {
+function isAncestor(graph: Map<string, ContextTask>, ancestorId: string, taskId: string): boolean {
   const visited = new Set([taskId]);
   let parentId = graph.get(taskId)?.parentTaskId;
   while (parentId && !visited.has(parentId)) {
     if (parentId === ancestorId) return true;
     visited.add(parentId);
     parentId = graph.get(parentId)?.parentTaskId;
-  }
-  return false;
-}
-
-function canReach(graph: Map<string, DependencyTask>, from: string, target: string): boolean {
-  const queue = [from];
-  const visited = new Set<string>();
-  while (queue.length) {
-    const id = queue.pop()!;
-    if (id === target) return true;
-    if (visited.has(id)) continue;
-    visited.add(id);
-    queue.push(...(graph.get(id)?.dependsOnTaskIds ?? []));
   }
   return false;
 }
@@ -138,7 +128,7 @@ function validateDeadline(context: TaskAiAdjustmentContext, target: TaskAiEditab
   if (target.startDate && !validDate(target.startDate)) return "当前任务的开始日期无效，请先核对开始日期；原文与任务保持不变。";
   if (date && target.startDate && date < target.startDate) return "截止日期不能早于当前任务的开始日期；原文与任务保持不变。";
   if (!date) return null;
-  const graph = dependencyGraph(context);
+  const graph = hierarchyGraph(context);
   if (typeof graph === "string") return graph;
   for (const child of graph.values()) {
     if (isAncestor(graph, target.id, child.id)) {
@@ -164,7 +154,7 @@ function validateDeadline(context: TaskAiAdjustmentContext, target: TaskAiEditab
 /**
  * Canonical syntax: 任务名称改为X / 目标改为X / 增加完成标准：X /
  * 完成标准改为：A；B / 执行建议改为：A；B / 负责人改为姓名或ID /
- * 截止时间改为YYYY-MM-DD或待定 / 前置依赖改为「精确标题」、「另一标题」或无 /
+ * 截止时间改为YYYY-MM-DD或待定 /
  * 预计投入改为2小时或待估算（仅叶子任务；数字候选不会自动确认）。
  * Lists split on the Chinese semicolon only; commas are ordinary content.
  * A subtasks scope requires 子任务「精确名称」：<one command>, or
@@ -191,6 +181,20 @@ export function buildTaskAiAdjustment(
       : "内容没有变化，当前任务与候选保持原样。"),
   } });
 
+  if (scope.kind === "subtasks" && /^(?:请)?(?:拆解|分解|拆分)(?:当前任务|任务|为子任务|子任务)?[。！!]?$/u.test(instruction.trim())) {
+    if (!context.canAddSubtasks) return { error: "当前层级不能继续新增子任务。" };
+    const criteria = context.task.completionCriteria.map(item => item.trim()).filter(Boolean);
+    if (!criteria.length) return { error: "请先填写可核对的完成标准，再分解子任务。" };
+    for (const criterion of criteria) {
+      const title = criterion.replace(/[。；]+$/u, "");
+      if (context.subtasks.some(task => task.completionCriteria.includes(criterion))) continue;
+      const child: TaskAiEditableTask = { id: globalThis.crypto.randomUUID(), title, goal: `交付可核对的结果：${title}`, parentTaskId: context.task.id, completionCriteria: [criterion], executionTips: [], ownerId: "", participantIds: [context.currentUserId], startDate: "", endDate: "", dependsOnTaskIds: [] };
+      additions.push(child);
+      changes.push({ taskId: child.id, taskTitle: title, label: "新增子任务", before: null, after: `${title}\n完成标准：${criterion}` });
+    }
+    return result(additions.length ? "按当前完成标准整理分解候选，人员及日期待确认；确认后才保存。" : "已有子任务已覆盖当前完成标准，没有重复新增。");
+  }
+
   let text = instruction.trim();
   if (!text || hasCombinedInstructions(text)) return { error: formatError };
   let target: TaskAiEditableTask | undefined = context.task;
@@ -213,7 +217,7 @@ export function buildTaskAiAdjustment(
       additions.push(child);
       const addedFields = [
         ["新增子任务", title], ["目标（创建时带入）", child.goal || "待定"],
-        ["完成标准", criteria.join("\n")], ["负责人", "待定"], ["截止时间", "待定"], ["前置依赖", "无"],
+        ["完成标准", criteria.join("\n")], ["负责人", "待定"], ["截止时间", "待定"],
       ];
       for (const [label, after] of addedFields) changes.push({ taskId: child.id, taskTitle: child.title, label, before: null, after });
       if (!context.subtasks.length && context.task.effortEstimate) {
@@ -221,7 +225,7 @@ export function buildTaskAiAdjustment(
         updates.push({ taskId: context.task.id, patch: { effortEstimate: { ...context.task.effortEstimate, confirmed: false, scopeKey: "needs-review:split" } } });
         changes.push({ taskId: context.task.id, taskTitle: context.task.title, label: "预计投入口径", before: "按当前任务估算", after: "改由子任务汇总；原父项估算保留待复核" });
       }
-      return result("已整理新增子任务候选，初始目标带入主目标，创建后可独立修改；人选与日期待定，没有自动添加依赖，尚未创建或指派任务。");
+      return result("已整理新增子任务候选，初始目标带入主目标，创建后可独立修改；人选与日期待定，尚未创建或指派任务。");
     }
     const selector = /^子任务「([^「」]+)」[ \t]*[：:][ \t]*(.+)$/u.exec(text);
     if (!selector) return { error: "子任务模块需要指定唯一任务，格式为「子任务「精确名称」：单条调整要求」；不会自动选择第一项，自由拆分暂不支持。原文与任务保持不变。" };
@@ -245,7 +249,7 @@ export function buildTaskAiAdjustment(
       : "当前完成标准已经包含可核对结果与追溯信息，没有生成重复修改。");
   }
 
-  const match = /^(任务名称改为|目标改为|负责人改为|截止时间改为|前置依赖改为|预计投入改为)[ \t]*[：:]?[ \t]*(.+)$/u.exec(text)
+  const match = /^(任务名称改为|目标改为|负责人改为|截止时间改为|预计投入改为)[ \t]*[：:]?[ \t]*(.+)$/u.exec(text)
     ?? /^(增加完成标准|完成标准改为|执行建议改为)[ \t]*[：:][ \t]*(.+)$/u.exec(text);
   if (!match) return { error: formatError };
   const [, operation, rawValue] = match;
@@ -282,7 +286,7 @@ export function buildTaskAiAdjustment(
     }
   } else if (operation === "预计投入改为") {
     if (context.mode === "saved") return { error: "预计投入仅支持在创建任务时修改，已创建任务暂不支持修改。" };
-    const graph = dependencyGraph(context);
+    const graph = hierarchyGraph(context);
     if (typeof graph === "string") return { error: graph };
     if ([...graph.values()].some(task => task.parentTaskId === target.id)) return { error: "当前任务已有子任务，预计投入应由叶子任务汇总。请展开子任务逐项调整，避免父子重复计量；原文与估算保持不变。" };
     const clear = value === "待估算";
@@ -336,41 +340,6 @@ export function buildTaskAiAdjustment(
       if (invalid) return { error: invalid };
       patch.endDate = endDate;
       describe("截止时间", target.endDate || label || "待定", endDate || "待定");
-    }
-  } else if (operation === "前置依赖改为") {
-    const graph = dependencyGraph(context);
-    if (typeof graph === "string") return { error: graph };
-    let ids: string[] = [];
-    if (value !== "无") {
-      if (!/^「[^「」]+」(?:[ \t]*、[ \t]*「[^「」]+」)*$/u.test(value)) return { error: "前置依赖请使用「精确标题」，多个任务以顿号「、」分隔，或明确写「无」；原文与任务保持不变。" };
-      const titles = Array.from(value.matchAll(/「([^「」]+)」/gu), entry => entry[1]);
-      for (const title of titles) {
-        const matches = [...graph.values()].filter(item => item.title === title);
-        if (matches.length !== 1) return { error: matches.length
-          ? `存在多个标题为「${title}」的同名任务，不能确定唯一前置依赖；原文与任务保持不变。`
-          : `未找到精确标题为「${title}」的前置任务，不能新增悬空依赖；原文与任务保持不变。` };
-        const id = matches[0].id;
-        if (id === target.id) return { error: "任务不能依赖自身；原文与任务保持不变。" };
-        if (isAncestor(graph, id, target.id) || isAncestor(graph, target.id, id)) {
-          return { error: "父子任务的归属关系不是前置依赖，不能把祖先或后代任务设为前置依赖；原文与任务保持不变。" };
-        }
-        if (context.mode === "draft" && (target.id === context.task.id || !context.subtasks.some(child => child.id === id))) {
-          return { error: "创建草稿的前置依赖只允许兄弟子任务，主任务与外部任务不进入子任务依赖；原文与任务保持不变。" };
-        }
-        if (ids.includes(id)) return { error: "同一前置依赖重复出现，请每个任务只写一次；原文与任务保持不变。" };
-        ids.push(id);
-      }
-    }
-    if (!sameIds(target.dependsOnTaskIds, ids)) {
-      graph.set(target.id, { ...target, dependsOnTaskIds: ids });
-      // A new cycle must contain a newly added edge. Traverse the full graph for
-      // those edges; unrelated historical cycles/missing references are preserved.
-      for (const id of ids.filter(id => !target.dependsOnTaskIds.includes(id))) {
-        if (canReach(graph, id, target.id)) return { error: "这个前置依赖会形成任务循环，请重新核对前置关系；原文与任务保持不变。" };
-      }
-      const names = (list: string[]) => list.map(id => graph.get(id)?.title ?? `${id}（任务已不可用）`).join("、") || "无";
-      patch.dependsOnTaskIds = ids;
-      describe("前置依赖", names(target.dependsOnTaskIds), names(ids));
     }
   }
 

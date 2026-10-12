@@ -3,6 +3,7 @@ import { useI18n } from '@/shared/i18n/I18nProvider';
 import { notificationCopy } from '@/ai/mock/prototype/notification-copy';
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { formatDisplayDateTime, formatLegacyDateLabel, formatRelativeDateTime } from "@/shared/lib/date-time";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PersonName } from "@/shared/ui/PersonAvatar";
 import { Bell, Broom, Check, Filter, Inbox } from "lucide-react";
@@ -30,6 +31,13 @@ export function GlobalNotifications({ placement = "rail", showDemoNotifications 
   const [activeFilter, setActiveFilter] = useState<NotificationReadFilter>("all");
   const [filterOpen, setFilterOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [, refreshClock] = useState(0);
+  useEffect(() => {
+    if (!sheetOpen) return;
+    const timer = window.setInterval(() => refreshClock(value => value + 1), 60_000);
+    return () => window.clearInterval(timer);
+  }, [sheetOpen]);
+  const now = Date.now();
 
   const [handoffs, setHandoffs] = useState<HandoffNotification[]>([]);
   const [handoffError, setHandoffError] = useState("");
@@ -40,7 +48,7 @@ export function GlobalNotifications({ placement = "rail", showDemoNotifications 
     window.addEventListener("storage", sync);
     return () => { window.removeEventListener("agentdoor-handoff-notifications-changed", reload); window.removeEventListener("storage", sync); };
   }, [teamId, userId, locale]);
-  const handoffItems: WorkspaceNotification[] = handoffs.map(n => ({ id: n.id, kind: "handoff", content: locale === "en" ? `You have taken over ${n.taskIds.length} unfinished tasks. Open a task to see the handoff in its activity. Open task` : `你已接手 ${n.taskIds.length} 项未完成任务，可在任务活动中查看交接说明。查看任务`, createdAt: n.at, time: new Date(n.at).toLocaleString(locale === "en" ? "en-US" : "zh-CN"), read: n.read, task: n.taskIds.length ? { id: n.taskIds[0], title: locale === "en" ? "Open task" : "查看任务" } : undefined }));
+  const handoffItems: WorkspaceNotification[] = handoffs.map(n => ({ id: n.id, kind: "handoff", content: locale === "en" ? `You have taken over ${n.taskIds.length} unfinished tasks. Open a task to see the handoff in its activity. Open task` : `你已接手 ${n.taskIds.length} 项未完成任务，可在任务活动中查看交接说明。查看任务`, createdAt: n.at, time: formatDisplayDateTime(n.at) ?? "—", read: n.read, task: n.taskIds.length ? { id: n.taskIds[0], title: locale === "en" ? "Open task" : "查看任务" } : undefined }));
   const allItems = [...handoffItems, ...items];
   const persistHandoffRead = (id?: string) => { try { const next = readHandoffNotifications(localStorage).map(n => n.teamId === teamId && n.recipientId === userId && (!id || n.id === id) ? { ...n, read: true } : n); localStorage.setItem(handoffNotificationKey, JSON.stringify(next)); setHandoffs(next.filter(n => n.teamId === teamId && n.recipientId === userId)); } catch { setHandoffError(locale === "en" ? "Could not save read status. Please retry." : "已读状态保存失败，请重试。"); } };
 
@@ -96,17 +104,18 @@ export function GlobalNotifications({ placement = "rail", showDemoNotifications 
       <div className="notification-list-view">
         {handoffError && <p role="alert">{handoffError}</p>}
         {visibleItems.length > 0 ? <div className="notification-list">
-          {visibleItems.map(item => <NotificationItem item={item} key={item.id} onOpenTask={onOpenTask} onRead={() => markRead(item)} />)}
+          {visibleItems.map(item => <NotificationItem item={item} key={item.id} now={now} onOpenTask={onOpenTask} onRead={() => markRead(item)} />)}
         </div> : <div className="notification-empty"><Inbox aria-hidden="true" /><h2>{ui("没有通知：{filter}", { filter: ui(readFilterLabels[activeFilter]) })}</h2><p>{activeFilter === "unread" ? ui("你已经读完了当前所有通知。") : ui("符合当前筛选条件的通知会出现在这里。")}</p></div>}
       </div>
     </SheetContent>
   </Sheet>;
 }
 
-export function NotificationItem({ item, onRead, onOpenTask }: { item: WorkspaceNotification; onRead: () => void; onOpenTask?: (taskId: string) => void }) {
+export function NotificationItem({ item, onRead, onOpenTask, now = Date.now() }: { item: WorkspaceNotification; onRead: () => void; onOpenTask?: (taskId: string) => void; now?: number }) {
   const ui = useGlobalUi();
   const { locale } = useI18n();
   item = notificationCopy(locale, item);
+  const timestamp = formatRelativeDateTime(item.createdAt, locale, now);
   const task = item.task;
   const labels = [...(item.people ?? []).map(person => `@${person.name}`), ...(task ? [task.title] : [])];
   const parts = labels.length ? item.content.split(new RegExp(`(${labels.map(label => label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g")) : [item.content];
@@ -121,6 +130,6 @@ export function NotificationItem({ item, onRead, onOpenTask }: { item: Workspace
         return part;
       })}</span>
     </span>
-    <time dateTime={item.createdAt}>{item.time}</time>
+    <time aria-label={timestamp?.full} dateTime={timestamp ? new Date(item.createdAt).toISOString() : undefined} tabIndex={timestamp ? 0 : undefined} title={timestamp?.full}>{timestamp?.label ?? formatLegacyDateLabel(item.time, locale, { now })}</time>
   </div>;
 }

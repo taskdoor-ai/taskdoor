@@ -3,6 +3,7 @@ import { OutputSummary } from "./output-summary";
 import React from 'react';
 import type { LabRun } from './types';
 import { downloadJson, runLabels } from './model';
+import { LabDateLabel } from '@/test-lab/date-label';
 
 export function scoreRun(run:LabRun) {
   const planned=run.caseSnapshot.steps.length;
@@ -19,7 +20,7 @@ export function ComparisonReport({runs,onOpenRun}:{runs:LabRun[];onOpenRun:(id:s
   if(!runs.length)return null;
   const models=[...new Set(runs.map(r=>r.model))];
   const cases=[...new Map(runs.map(r=>[r.caseId,r.caseSnapshot])).values()];
-  return <section className="lab-comparison" aria-label="模型横向对比"><div className="lab-detail-heading"><div><h2>模型横向对比</h2><p className="lab-muted">同批 {cases.length} 个用例 · {models.length} 个模型 · {new Date(runs[0].createdAt).toLocaleString('zh-CN')}</p></div><button onClick={()=>downloadJson(`comparison-${runs[0].batchId}.json`,{batchId:runs[0].batchId,metrics:runs.map(r=>({runId:r.id,model:r.model,caseId:r.caseId,...scoreRun(r)})),runs})}>导出对比</button></div>
+  return <section className="lab-comparison" aria-label="模型横向对比"><div className="lab-detail-heading"><div><h2>模型横向对比</h2><p className="lab-muted">同批 {cases.length} 个用例 · {models.length} 个模型 · <LabDateLabel value={runs[0].createdAt} /></p></div><button onClick={()=>downloadJson(`comparison-${runs[0].batchId}.json`,{batchId:runs[0].batchId,metrics:runs.map(r=>({runId:r.id,model:r.model,caseId:r.caseId,...scoreRun(r)})),runs})}>导出对比</button></div>
     <LiveProgress runs={runs} onOpenRun={onOpenRun}/>
     <p className="lab-muted">执行完成率 = 返回有效 JSON 的步骤 / 计划步骤；自动达标率要求全部结构与断言通过；最终验收还需完成人工语义核对。失败、未执行与待核对均不计为验收通过。断言达成率包含未执行项。</p>
     <div className="lab-table-scroll"><table className="lab-comparison-table"><thead><tr><th>模型</th><th>执行完成率</th><th>断言达成率</th><th>自动达标用例</th><th>最终验收</th><th>已结束调用耗时 / Tokens</th></tr></thead><tbody>{models.map(model=>{

@@ -4,6 +4,7 @@ import { taskContextValue } from '@/shared/i18n/ai-context-copy';
 import { aiTransferMessage } from '@/features/ai-connection/i18n/ai-transfer-copy';
 import { globalUiText, useGlobalUi } from "@/shared/i18n/global-ui";
 import type { Locale } from "@/shared/i18n/core";
+import { formatSystemDateText } from "@/shared/lib/date-time";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { ArrowRight, Check, ClipboardList, LockKeyhole, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -206,6 +207,7 @@ function ContextTaskCard({ items, fallbackTitle, taskId = "" }: { items: Context
 
 export function AiConnectionContextPreview({ request }: { request: AiConnectionRequest }) {
   const ui = useGlobalUi();
+  const { locale } = useI18n();
   const items: ContextPreviewItem[] = request.contextPreview?.items ?? [
     ...(request.workObject.kind === "任务" ? [
       { id: "task", label: "任务名称", value: request.workObject.title },
@@ -221,7 +223,7 @@ export function AiConnectionContextPreview({ request }: { request: AiConnectionR
       <header className="ai-connect-context-heading"><h3>{ui("带入的信息")}</h3></header>
       <div className="ai-connect-context-cards">
         {request.workObject.kind === "任务列表" ? items.map(item => <article className="ai-connect-context-card ai-connect-task-card" key={item.id}>
-          <header className="ai-connect-card-header"><ClipboardList aria-hidden="true" size={16} /><h4>{item.value}</h4>{item.meta && <span className="ai-connect-card-status">{item.meta}</span>}</header>
+          <header className="ai-connect-card-header"><ClipboardList aria-hidden="true" size={16} /><h4>{item.value}</h4>{item.meta && <span className="ai-connect-card-status">{formatSystemDateText(item.meta, locale)}</span>}</header>
         </article>) : <ContextTaskCard fallbackTitle={request.workObject.title} items={items} taskId={request.taskId} />}
       </div>
     </section>
@@ -230,7 +232,7 @@ export function AiConnectionContextPreview({ request }: { request: AiConnectionR
       <div className="ai-connect-context-cards">
         {discussionItems.map(item => <article className="ai-connect-context-card" key={item.id}>
           <header className="ai-connect-card-header"><h4>{ui(item.label)}</h4></header>
-          {item.meta && <small className="ai-connect-context-meta">{item.meta}</small>}
+          {item.meta && <small className="ai-connect-context-meta">{formatSystemDateText(item.meta, locale)}</small>}
           <ContextCardText text={item.value} />
         </article>)}
       </div>
