@@ -1,6 +1,8 @@
 import { SidebarResizeHandle } from "@/features/tasks/components/SidebarResizeHandle";
 import { TaskSidebarToggle } from "@/features/tasks/components/TaskSidebarToggle";
 import { TaskSidebarContext } from "@/features/tasks/lib/task-sidebar-context";
+import { taskResultSelection } from "@/features/tasks/lib/task-result-selection";
+import { partitionPinnedTasks, pinnedTaskStorageKey, readPinnedTaskIds } from "@/features/tasks/lib/task-pins";
 import { useTaskSidebar } from "@/features/tasks/lib/useTaskSidebar";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { useI18n } from "@/shared/i18n/I18nProvider";
@@ -30,6 +32,7 @@ type TaskWorkspaceProps = {
   onTaskStatusChange: (taskId: string, status: TaskNode["status"]) => void;
   onQueryChange: (query: string) => void;
   onTaskSelect: (task: TaskNode) => void;
+  onClearTaskSelection?: () => void;
   onShowWorkbench: () => void;
   query: string;
   selectedTaskId: string | null;
@@ -40,7 +43,7 @@ type TaskWorkspaceProps = {
   workbench: ReactNode;
 };
 
-export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onTaskStatusChange, onOpenRecycleBin, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onShowWorkbench, query, selectedTaskId, showingCreation = false, showingWorkbench, tagDefinitions, teamId, progressComparisonsByTaskId }: TaskWorkspaceProps) {
+export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onTaskStatusChange, onOpenRecycleBin, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onClearTaskSelection, onShowWorkbench, query, selectedTaskId, showingCreation = false, showingWorkbench, tagDefinitions, teamId, progressComparisonsByTaskId }: TaskWorkspaceProps) {
   const { t } = useI18n();
   const sidebar = useTaskSidebar();
   const mock = useMockText();
@@ -64,15 +67,28 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
   const detailRef = useRef<HTMLElement>(null);
   const hasDetail = Boolean(children);
   const selectedTaskIsVisible = projection.visibleTasks.some((task) => task.id === selectedTaskId);
-  const outsideFilter = hasDetail && !selectedTaskIsVisible;
-  const outsideAvailableList = outsideFilter && !projection.allTasks.some((task) => task.id === selectedTaskId);
-  const firstTask = projection.visibleTasks[0];
+  const selectionContext = useRef({ teamId, scope: projectionFilters.scope });
 
   useLayoutEffect(() => {
-    if (hidden || showingWorkbench || showingCreation || !firstTask || hasDetail) return;
-    // 桌面首次进入且尚无可显示详情时选中首项；筛选外的已打开详情继续保留。
-    if (window.matchMedia("(min-width: 901px)").matches) onTaskSelect(firstTask);
-  }, [firstTask, hasDetail, hidden, onTaskSelect, showingCreation, showingWorkbench]);
+    if (hidden || showingWorkbench || showingCreation) return;
+    const previous = selectionContext.current;
+    const next = { teamId, scope: projectionFilters.scope };
+    selectionContext.current = next;
+    const scopeChanged = previous.teamId !== teamId || previous.scope !== next.scope;
+    // Keep the existing mobile list pane until the user opens a task.
+    if (!hasDetail && !window.matchMedia("(min-width: 901px)").matches) return;
+    // The first result follows the displayed order, including the pinned section.
+    const pinScope = teamId ?? projection.allTasks[0]?.teamId ?? "default";
+    let pinnedTaskIds: string[] = [];
+    try { pinnedTaskIds = readPinnedTaskIds(window.localStorage, pinnedTaskStorageKey(currentUserId, pinScope)); }
+    catch { /* Match the list's fallback when device preferences are unavailable. */ }
+    const { pinned, unpinned } = partitionPinnedTasks(projection.visibleTasks, pinnedTaskIds);
+    const visibleTasks = [...pinned, ...unpinned];
+    const id = taskResultSelection(visibleTasks.map(task => task.id), selectedTaskId, scopeChanged);
+    if (id === selectedTaskId) return;
+    if (!id) onClearTaskSelection?.();
+    else { const task = projection.visibleTasks.find(task => task.id === id); if (task) onTaskSelect(task); }
+  }, [projection.visibleTasks, projection.allTasks, currentUserId, hasDetail, hidden, onTaskSelect, onClearTaskSelection, showingCreation, showingWorkbench, selectedTaskId, teamId, projectionFilters, query]);
 
   useEffect(() => {
     // Reset detail reading position; the list independently reveals its selected row.
@@ -109,8 +125,7 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
     <section aria-label={t('tasks.detail')} className="task-workspace-detail" hidden={showingWorkbench || showingCreation} ref={detailRef} tabIndex={-1}>
       <div className="task-workspace-detail-content">
         {!hasDetail && <div className="task-workspace-empty-toggle"><TaskSidebarToggle /></div>}
-        {hasDetail ? <>
-          {outsideFilter && !outsideAvailableList && <p className="task-workspace-filter-note" role="status">{t('tasks.outsideFilter')}</p>}
+        {hasDetail && selectedTaskIsVisible ? <>
           {children}
         </> : <div className="task-workspace-empty">
           <PanelLeft aria-hidden="true" size={28} strokeWidth={1.5} />

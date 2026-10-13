@@ -1144,6 +1144,7 @@ function App() {
             onDeleteTask={requestDeleteTask}
             onTaskStatusChange={changeTaskStatus}
               onOpenRecycleBin={() => { refreshRecycleBin(); setRecycleOpen(true); }}
+            onClearTaskSelection={() => setSelectedTaskId(null)}
             onFiltersChange={setTaskFilters}
             onManageTags={() => { setActiveSection("settings"); focusPrimaryHeadingAfterNavigation(); }}
             onQueryChange={setTaskQuery}
