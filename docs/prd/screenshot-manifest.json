@@ -2793,7 +2793,7 @@
       "id": "fig-cli-009",
       "moduleId": "cli-connection",
       "page": "连接 AI 弹窗",
-      "state": "PRD-0150：CLI／ChatGPT 选中，底部浏览器确认提示及普通文字帮助中心可见，无帮助中心跳转。保留 CLI 使用场景、API 说明、个人访问令牌及安装配置操作。1280×720 简体中文，弹窗已滚动到底部；未执行授权。",
+      "state": "CLI／ChatGPT 选中，底部显示浏览器登录确认提示，不显示帮助中心文字或入口。保留 CLI 使用场景、API 说明、个人访问令牌及安装配置操作。1280×720 简体中文，弹窗已滚动到底部；未执行授权。",
       "type": "current-page",
       "source": "http://127.0.0.1:5173/",
       "path": "assets/cli-connection/connection-options-zh.png",
@@ -2801,7 +2801,7 @@
       "status": "captured",
       "locale": "zh-CN",
       "updatedAt": "2026-10-13",
-      "editorialNote": "PRD-0150：主工作区当前 In-app Browser 1280×720 实拍，已目视核验底部帮助中心为普通灰色文字。DOM 为 SPAN、无 href，底部链接数量为 0。旧 connection-options-zh.jpg 保留历史。仅证明本地页面显示与链接移除，不作为生产接口能力或授权成功证据。"
+      "editorialNote": "主工作区当前 In-app Browser 1280×720 实拍，已目视核验底部帮助中心文字已删除，当前 DOM 中该文字不存在。旧 connection-options-zh.jpg 保留历史。仅证明本地页面显示，不作为生产接口能力或授权成功证据。"
     },
     {
       "id": "fig-collab-006",
@@ -2871,7 +2871,7 @@
       "figureId": "FIG-CLI-011",
       "moduleId": "cli-connection",
       "page": "连接 AI / MCP 使用场景与授权方式",
-      "state": "简体中文，1280×720，弹窗已滚动到底部；MCP／ChatGPT 选中，介绍以“MCP精选常用工具”开头，先说明能力范围及减少上下文负担，再说明 AI 对话使用场景，最后说明授权方式。底部浏览器确认提示和普通文字帮助中心可见，无帮助中心跳转。个人访问令牌及配置操作保留。未执行授权、令牌操作或客户端唤起。",
+      "state": "简体中文，1280×720，弹窗已滚动到底部；MCP／ChatGPT 选中，介绍以“MCP精选常用工具”开头，先说明能力范围及减少上下文负担，再说明 AI 对话使用场景，最后说明授权方式。底部显示浏览器登录确认提示，不显示帮助中心文字或入口。个人访问令牌及配置操作保留。未执行授权、令牌操作或客户端唤起。",
       "type": "current-page",
       "source": "http://127.0.0.1:5173/",
       "path": "assets/cli-connection/mcp-selection-guide-zh.png",
@@ -2879,7 +2879,7 @@
       "status": "captured",
       "locale": "zh-CN",
       "updatedAt": "2026-10-13",
-      "editorialNote": "主工作区当前 In-app Browser 1280×720 实拍，已目视核验介绍与用户定稿一致，顺序为精选工具定位、AI 对话场景、授权方式。当前 DOM 已显示用户原文，重复 CLI 选择提示已移除。纯文案调整，不新增变更日志，沿用 PRD-0150。未重测窄屏或英文运行态；旧 mcp-authorization-zh.jpg 保留历史。仅证明本地文案与入口显示，不作为生产接口能力或授权成功证据。"
+      "editorialNote": "主工作区当前 In-app Browser 1280×720 实拍，已目视核验帮助中心文字已删除，当前 DOM 中该文字不存在，介绍与用户定稿一致。纯文案删除，不新增变更日志，沿用 PRD-0150。未重测窄屏或英文运行态；旧 mcp-authorization-zh.jpg 保留历史。仅证明本地文案与入口显示，不作为生产接口能力或授权成功证据。"
     }
   ]
 }
