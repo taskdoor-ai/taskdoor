@@ -4,7 +4,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { formatDisplayDateTime, formatLegacyDateLabel } from "@/shared/lib/date-time";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
-import { ArrowLeft, File, FolderPlus, History, MessageCircle, MoreHorizontal, MoveRight, Pencil, Save, Search, Upload, X } from "lucide-react";
+import { ArrowLeft, Download, File, FolderPlus, History, MessageCircle, MoreHorizontal, MoveRight, Pencil, Save, Search, Upload, X } from "lucide-react";
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
 import { readTaskDiagnosisFiles, type TaskDiagnosisFileSnapshot } from "@/features/tasks/files/lib/task-diagnosis-context";
@@ -19,7 +19,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { TaskFileDialogs, type TaskFileDialogState } from "@/features/tasks/files/components/TaskFileDialogs";
 import { TaskFileHistory } from "@/features/tasks/files/components/TaskFileHistory";
 import { type TaskFileAction, TaskFileNodeIcon, TaskFileTree } from "@/features/tasks/files/components/TaskFileTree";
-import { TaskFileViewer, type TaskFileTextSelection } from "@/features/tasks/files/components/TaskFileViewer";
+import { canDownload, downloadTaskFile, TaskFileViewer, type TaskFileTextSelection } from "@/features/tasks/files/components/TaskFileViewer";
+import FullscreenButton from "@/features/tasks/files/components/FullscreenButton";
 import { prepareDiscussionUpload, DISCUSSION_UPLOAD_MAX_FILES } from "@/features/tasks/files/lib/discussion-uploads";
 import { getVisibleFileDiscussionThreads, type FileDiscussionThread } from "@/features/tasks/lib/task-collaboration";
 import { FileDiscussionPanel, type FileDiscussionCollaboration } from "@/features/tasks/files/components/FileDiscussionPanel";
@@ -66,6 +67,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
   const [editingFileId, setEditingFileId] = useState<string | null>(null);
   const uploadInput = useRef<HTMLInputElement>(null);
   const previewRef = useRef<HTMLElement>(null);
+  const viewerRef = useRef<HTMLDivElement>(null);
   const [uploading, setUploading] = useState(false);
   const [compactToolbar, setCompactToolbar] = useState(true);
   const [discussionOpen, setDiscussionOpen] = useState(false);
@@ -269,6 +271,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
             {selected.kind === "file" && <>
               {isEditing && <span aria-live="polite" className="task-file-save-state">{dirty ? ui("未保存") : ui("编辑中")}</span>}
               {currentContent && !loadError && isEditing && <><Button className="task-file-action-button" onClick={discard} size="sm" variant="ghost">{d('cancel')}</Button><Button aria-label={ui("保存文件")} className="task-file-action-button task-file-save-button" onClick={save} size="sm" variant="default"><Save size={16} />{d('save')}</Button></>}
+              {!isEditing && !loadError && <FullscreenButton kind={getPreviewKind(selected.name, selected.mimeType)} onSelection={setSelection} target={viewerRef} />}
               {!isEditing && !compactToolbar && <>
                 <Button aria-label={ui("查看版本记录")} className="task-file-action-button" onClick={() => { setShowHistory(true); setSelection(null); }} size="sm" variant="ghost"><History size={16} />{ui("版本")}</Button>
                 {currentContent && !loadError && <Button aria-label={d('editFile')} className="task-file-action-button" onClick={() => { setEditingFileId(selected.id); setSelection(null); setError(""); }} size="sm" variant="ghost"><Pencil size={16} />{dirty ? ui("继续编辑") : d('edit')}</Button>}
@@ -286,6 +289,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
                 {compactToolbar && currentContent && !loadError && !isEditing && <DropdownMenuItem aria-label={d('editFile')} onClick={() => { setEditingFileId(selected.id); setSelection(null); setError(""); }}><Pencil size={14} />{dirty ? ui("继续编辑") : d('edit')}</DropdownMenuItem>}
                 <DropdownMenuSeparator />
               </>}
+              {selected.kind === "file" && canDownload(selected) && <DropdownMenuItem onClick={async () => setError(ui(await downloadTaskFile(selected)))}><Download size={14} />{ui("下载")}</DropdownMenuItem>}
               <DropdownMenuItem onClick={() => setDialog({ type: "move", nodeId: selected.id })}><MoveRight size={14} />{ui("移动到")}</DropdownMenuItem>
             </DropdownMenuGroup></DropdownMenuContent></DropdownMenu>
             </div>
@@ -295,7 +299,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
         {pendingDiscussion && <div className="task-file-comment-save-prompt" role="status"><span>{ui("正文有未保存的修改，保存后可围绕这一版内容评论。")}</span><Button onClick={() => beginDiscussion(pendingDiscussion.quote, true)} size="sm">{ui("保存文件并评论")}</Button><Button onClick={() => setPendingDiscussion(null)} size="sm" variant="ghost">{ui("取消评论")}</Button></div>}
         {selected.kind === "file" && referenceVersion != null && referenceVersion !== (selected.version ?? 1) && <p className="task-file-reference-version" role="status">{ui("附件引用 v")}{referenceVersion}{ui("；当前显示 v")}{selected.version ?? 1}{ui("。历史引用保持原版本，可在版本记录中核对修改。")}</p>}
         {selected.kind === "file" ? <div className="task-file-editor-body" data-discussion-open={Boolean(discussionOpen && collaboration)}>
-          <div className="task-file-explorer-viewer" onScroll={() => setSelection(null)}><TaskFileViewer activeThreadId={activeThreadId} draft={isEditing ? currentDraft?.content ?? currentContent : currentContent} file={selected} key={selected.id} onChange={isEditing ? changeContent : undefined} onSelection={setSelection} onThreadSelect={locateThread} threads={fileThreads} /></div>
+          <div className="task-file-explorer-viewer" onScroll={() => setSelection(null)} ref={viewerRef}><TaskFileViewer activeThreadId={activeThreadId} draft={isEditing ? currentDraft?.content ?? currentContent : currentContent} file={selected} key={selected.id} onChange={isEditing ? changeContent : undefined} onSelection={setSelection} onThreadSelect={locateThread} threads={fileThreads} /></div>
           {discussionOpen && collaboration && <FileDiscussionPanel activeThreadId={activeThreadId} collaboration={collaboration} draftThread={draftThread} file={selected} files={files} key={selected.id} onCancelDraft={() => setDiscussionOpen(false)} onClose={() => setDiscussionOpen(false)} onDraftSaved={id => { setDraftThreads(current => { const next = { ...current }; delete next[selected.id]; return next; }); setActiveThreadId(id); }} onLocate={locateThread} onNewThread={() => beginDiscussion()} onOpenFile={selectNode} taskId={taskId} />}
         </div> : <div className="task-file-folder-summary"><div><TaskFileNodeIcon expanded node={selected} /><strong>{selected.name}</strong><span>{folderChildren.length}{ui("个直接子项")}</span></div>{folderChildren.length ? <ul>{folderChildren.map(child => <li key={child.id}><button onClick={() => selectNode(child.id)} type="button"><TaskFileNodeIcon node={child} /><span>{child.name}</span><small>{child.kind === "file" ? `v${child.version ?? 1}` : ui("{0} 项", {0: files.filter(node => node.parentId === child.id && !node.archived).length})}</small></button></li>)}</ul> : <p>{ui("这个文件夹还是空的。可以在左侧创建子文件夹。")}</p>}</div>}
       </> : <div className="task-file-empty"><File size={30} /><strong>{ui("选择一个文件或文件夹")}</strong><span>{ui("从左侧浏览当前任务的文件结构。")}</span></div>}

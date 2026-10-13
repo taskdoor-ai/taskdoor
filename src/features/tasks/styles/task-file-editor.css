@@ -24,6 +24,10 @@
 .task-file-editor-path button:hover { color: var(--ad-ink); }
 .task-file-editor-actions { display: flex; flex: 0 0 auto; min-width: 0; margin-left: auto; align-items: center; justify-content: flex-end; gap: var(--ad-space-2); }
 .task-file-editor-controls { display: flex; flex: 0 0 auto; align-items: center; gap: var(--ad-space-1); }
+.task-file-explorer-viewer:fullscreen { overflow: auto; background: var(--ad-canvas); }
+.task-file-explorer-viewer:fullscreen .task-file-viewer-image { min-height: calc(100dvh - 120px); }
+.task-file-explorer-viewer:fullscreen .task-file-viewer-image img { max-height: calc(100dvh - 120px); }
+.task-file-explorer-viewer:fullscreen .task-file-original-pdf { height: calc(100dvh - 120px); }
 .task-file-save-state { display: inline-flex; align-items: center; gap: var(--ad-space-1); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); white-space: nowrap; }
 .task-file-toolbar-more, .task-file-history > header button { display: inline-flex; min-width: var(--ad-control-height-sm); height: var(--ad-control-height-sm); align-items: center; justify-content: center; gap: var(--ad-space-1); padding: var(--ad-space-1); border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-secondary); font: inherit; font-size: var(--ad-text-caption); cursor: pointer; }
 .task-file-toolbar-more:hover { background: var(--ad-surface-subtle); color: var(--ad-ink); }

@@ -39,21 +39,30 @@ function useFileUrl(file: TaskFileNode) {
   return { ...state, retry: () => setAttempt(value => value + 1) };
 }
 
+/** A file's text is downloaded as it reads; other files by their kept bytes. */
+const downloadsText = (file: TaskFileNode) => getTaskFileContent(file)?.kind === "text" && ["markdown", "text"].includes(getPreviewKind(file.name, file.mimeType));
+
+/** Whether a file has anything to download: its bytes, or text it reads as. */
+export const canDownload = (file: TaskFileNode) => Boolean(file.blobId) || downloadsText(file);
+
+/** Saves the file under its name; answers the line to show when it could not, "" when it did. */
+export async function downloadTaskFile(file: TaskFileNode): Promise<string> {
+  try {
+    const content = getTaskFileContent(file);
+    const blob = content?.kind === "text" && downloadsText(file) ? new Blob([content.text], { type: file.mimeType || "text/plain;charset=utf-8" }) : await readDiscussionBlob(file.blobId!);
+    if (!blob) return "附件原文件无法读取，请重新上传。";
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a"); anchor.href = url; anchor.download = file.name; anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    return "";
+  } catch (failure) { return failure instanceof Error ? failure.message : "下载失败，请重试。"; }
+}
+
 export function TaskFileDownload({ file }: { file: TaskFileNode }) {
   const ui = useGlobalUi();
   const [error, setError] = useState("");
-  const content = getTaskFileContent(file);
-  const textDownload = content?.kind === "text" && ["markdown", "text"].includes(getPreviewKind(file.name, file.mimeType));
-  if (!file.blobId && !textDownload) return null;
-  return <><button aria-label={ui("下载文件")} className="task-file-download-button" title={ui("下载文件")} type="button" onClick={async () => {
-    try {
-      const blob = textDownload ? new Blob([content.text], { type: file.mimeType || "text/plain;charset=utf-8" }) : await readDiscussionBlob(file.blobId!);
-      if (!blob) throw new Error(ui("附件原文件无法读取，请重新上传。"));
-      const url = URL.createObjectURL(blob);
-      const anchor = document.createElement("a"); anchor.href = url; anchor.download = file.name; anchor.click();
-      window.setTimeout(() => URL.revokeObjectURL(url), 1000); setError("");
-    } catch (failure) { setError(failure instanceof Error ? failure.message : ui("下载失败，请重试。")); }
-  }}><Download size={16} /></button>{error && <span className="task-file-save-error" role="alert">{ui(error)}</span>}</>;
+  if (!canDownload(file)) return null;
+  return <><button aria-label={ui("下载文件")} className="task-file-download-button" title={ui("下载文件")} type="button" onClick={async () => setError(await downloadTaskFile(file))}><Download size={16} /></button>{error && <span className="task-file-save-error" role="alert">{ui(error)}</span>}</>;
 }
 
 function OriginalFilePreview({ file }: { file: TaskFileNode }) {
