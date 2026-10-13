@@ -1,5 +1,5 @@
-/** Changed search/filter context starts at the first result; other updates retain selection. */
-export function taskResultSelection(ids: readonly string[], current: string | null, contextChanged: boolean): string | null {
+/** Retain the current matching task; otherwise fall back to the first displayed result. */
+export function taskResultSelection(ids: readonly string[], current: string | null): string | null {
   if (!ids.length) return null;
-  return contextChanged || !current || !ids.includes(current) ? ids[0] : current;
+  return current && ids.includes(current) ? current : ids[0];
 }
