@@ -92,6 +92,7 @@ test("AI 预览日期和消息元信息遵守统一格式，原文与带入提�
 
 test("没有专属预览时卡片仍保留原始值、缺失信息与完整长正文", async () => {
   const module = await import(moduleUrl);
+  const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
   const content = "完整原文\n".repeat(200);
   const fallbackRequest = {
     ...request,
@@ -103,7 +104,7 @@ test("没有专属预览时卡片仍保留原始值、缺失信息与完整长�
       { label: "空字段", value: " " },
     ],
   };
-  const html = renderToStaticMarkup(createElement(module.AiConnectionContextPreview, { request: fallbackRequest }));
+  const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(module.AiConnectionContextPreview, { request: fallbackRequest }) }));
   for (const value of [content, "负责人", "未提供"]) assert.ok(html.includes(value));
   assert.doesNotMatch(html, /内部范围与传输边界说明|空字段|预期目标|期望 AI 的结果|<pre/);
 });
@@ -240,8 +241,9 @@ test("快捷复制在取消或换任务后完成，不唤起也不记忆", async
 });
 
 
-test("讨论连接预览展示当前动态、相关回复及附件，复制内容保持同一范围", async () => {
+test("回复连接预览展示当前消息、直接原消息及所属附件，复制内容保持同一范围", async () => {
   const module = await import(moduleUrl);
+  const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
   const { buildDiscussionAiRequest } = await import("../src/features/tasks/discussion/lib/task-discussion-ai.ts");
   const request = buildDiscussionAiRequest({ taskId: "task", currentUser: "周岚", target: { kind: "reply", activityId: "reply" }, task: {
     title: "当前任务", goal: "任务目标", status: "进行中", owner: "周岚", participants: [], due: "2026-09-30", summary: "", commits: [], files: [],
@@ -252,8 +254,10 @@ test("讨论连接预览展示当前动态、相关回复及附件，复制内�
     ],
   } });
   assert.ok(request);
-  const html = renderToStaticMarkup(createElement(module.AiConnectionContextPreview, { request }));
-  assert.match(html, /当前动态及 1 条回复/);
+  const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(module.AiConnectionContextPreview, { request }) }));
+  assert.match(html, /当前消息/);
+  assert.match(html, /被回复原消息/);
+  assert.match(html, /附件 ID：file，附件名称：相关资料.pdf/);
   let copied = "";
   await module.copyAndOpenAiContext(request, "Cursor", { copyText: async value => { copied = value; return true; }, openUrl: () => {} });
   for (const value of ["当前任务", "任务目标", "选中主动态正文", "相关回复正文", "相关资料.pdf"]) {

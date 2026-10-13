@@ -9,7 +9,7 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
 import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getNodeByKey, $getRoot, $getSelection, $isRangeSelection, $isTextNode, $setSelection, BEFORE_INPUT_COMMAND, CLEAR_HISTORY_COMMAND, COMMAND_PRIORITY_HIGH, INPUT_COMMAND, KEY_DOWN_COMMAND, PASTE_COMMAND, type EditorState, type LexicalEditor, type RangeSelection, type SerializedEditorState } from "lexical";
-import { FolderOpen, LoaderCircle, Paperclip, RotateCcw, Send, Sparkles, X } from "lucide-react";
+import { FolderOpen, LoaderCircle, Paperclip, RotateCcw, Send, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type DragEvent, type ReactNode } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
 import type { DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
@@ -29,7 +29,6 @@ export type DiscussionComposerProps = {
   allowQuote?: boolean;
   showShortcutHint?: boolean;
   onCancel?: () => void;
-  onConnectAi?: (draft: string, trigger: HTMLElement) => void;
   onSubmit: (draft: DiscussionDraft) => void | Promise<void>;
   people: string[];
   files: TaskFileNode[];
@@ -150,7 +149,7 @@ export function DiscussionComposer(props: DiscussionComposerProps) {
   return <ComposerSessionView key={props.draftKey ?? "unkeyed-discussion"} {...props} />;
 }
 
-function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onConnectAi, onSubmit, people, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, disabled = false }: DiscussionComposerProps) {
+function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onSubmit, people, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, disabled = false }: DiscussionComposerProps) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const members = usePersonOptions(people);
@@ -352,7 +351,6 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-        {onConnectAi && <Button aria-label={ui("连接 AI：当前回复草稿")} className="discussion-composer-ai-trigger" disabled={unavailable} onClick={event => onConnectAi(sessionRef.current.draft.body, event.currentTarget)} size="icon-sm" title={d('connectAi')} type="button" variant="ai"><Sparkles aria-hidden="true" size={15} /></Button>}
       </div>
       <span className="discussion-composer-actions">{showShortcutHint && <span className="discussion-composer-hint" id={hintId}>Enter ↵ · ⌘/Ctrl+Enter {actionLabel}</span>}{onCancel && <button className="discussion-composer-cancel" disabled={unavailable} onClick={onCancel} type="button">{d('cancel')}</button>}<button aria-label={actionLabel} className="discussion-composer-submit" disabled={!canSubmit} onClick={() => { void submit(); }} type="button"><span>{submitting ? d('posting') : actionLabel}</span>{submitting ? <LoaderCircle aria-hidden="true" className="discussion-composer-spinner" size={14} /> : <Send aria-hidden="true" size={14} />}</button></span>
     </footer>

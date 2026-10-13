@@ -185,7 +185,7 @@ test("主消息和多层回复按最新优先平铺，不提供同串入口或�
   assert.equal(elements(tree, item => item.type === DiscussionComposer).length, 1);
 });
 
-test("回复具体消息复用底部输入区，草稿 AI 和发布都带该消息 ID", async () => {
+test("回复具体消息复用底部输入区，输入内容不提供 AI 带入，发布仍带该消息 ID", async () => {
   const posts: unknown[][] = [], ai: unknown[][] = [];
   let started = false;
   const { tree, html } = capture(() => TaskDiscussion({ ...props, onPost: (...args) => { posts.push(args); }, onConnectAi: (...args) => { ai.push(args); } }), tree => {
@@ -200,9 +200,9 @@ test("回复具体消息复用底部输入区，草稿 AI 和发布都带该消�
   assert.equal(elements(tree, item => item.type === DiscussionComposer).length, 1);
   assert.match(html, /task-discussion-reply-context/);
   assert.match(html, /nested 的内容/);
-  const trigger = {} as HTMLElement;
-  input.props.onConnectAi("未发布的草稿", trigger);
-  assert.deepEqual(ai, [[{ kind: "reply-draft", activityId: nested.id, draft: "未发布的草稿" }, trigger]]);
+  assert.equal(input.props.onConnectAi, undefined);
+  assert.doesNotMatch(html, /连接 AI：当前回复草稿|discussion-composer-ai-trigger/);
+  assert.deepEqual(ai, []);
   assert.deepEqual(posts, []);
   await input.props.onSubmit(draft);
   assert.deepEqual(posts, [[draft, nested.id]]);

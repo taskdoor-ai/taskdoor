@@ -1,23 +1,21 @@
-import { Send, Sparkles, X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import { SmartTextbox, getPlainText, type MentionItem, type Segment } from "@tigerabrodioss/fude";
 import React, { useEffect, useRef, useState } from "react";
 import { readComposerSelection, replaceMentionRange, type ComposerSelection } from "@/features/tasks/discussion/lib/mention-composer";
 import { usePersonOptions } from "@/shared/ui/PersonDirectory";
 import { PersonPicker } from "@/features/members/components/PersonPicker";
-import { Button } from "@/shared/ui/button";
 
 type MentionComposerProps = {
   actionLabel?: string;
   autoFocus?: boolean;
   compact?: boolean;
   onCancel?: () => void;
-  onConnectAi?: (draft: string, trigger: HTMLElement) => void;
   onSubmit: (message: string, mentions: string[]) => void;
   people: string[];
   placeholder?: string;
 };
 
-export function MentionComposer({ actionLabel = "发送", autoFocus = false, compact = false, onCancel, onConnectAi, onSubmit, people, placeholder = "输入消息，使用 @ 提及协作者…" }: MentionComposerProps) {
+export function MentionComposer({ actionLabel = "发送", autoFocus = false, compact = false, onCancel, onSubmit, people, placeholder = "输入消息，使用 @ 提及协作者…" }: MentionComposerProps) {
   const composerRef = useRef<HTMLDivElement>(null);
   const [segments, setSegments] = useState<Segment[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -136,7 +134,6 @@ export function MentionComposer({ actionLabel = "发送", autoFocus = false, com
           returnFocusRef.current = details?.reason !== "outside-press" && details?.reason !== "focus-out";
           setPickerOpen(open);
         }} open={pickerOpen} triggerVariant="mention" value="" />
-        {onConnectAi && <span className="mention-composer-ai-entry"><Button aria-label="连接 AI：当前回复草稿" className="mention-composer-ai-trigger" onClick={(event) => onConnectAi(plainText, event.currentTarget)} size="icon-sm" title="连接 AI" type="button" variant="ai"><Sparkles aria-hidden="true" size={15} /></Button></span>}
       </div>
       <span>{onCancel && <button className="mention-composer-cancel" onClick={onCancel} type="button">取消</button>}<button aria-label={actionLabel} className="mention-composer-submit" disabled={!plainText} onClick={() => submit()} type="button"><span>{actionLabel}</span><Send size={13} /></button></span>
     </footer>

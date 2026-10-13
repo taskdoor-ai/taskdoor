@@ -123,7 +123,7 @@ export function TaskDiscussion({ activities, attentionTarget, currentUser, curre
           </button>
           <button aria-label={d('cancelReply')} className="task-discussion-reply-cancel" onClick={cancelContext} type="button"><X aria-hidden="true" size={15} /></button>
         </div>}
-        <DiscussionComposer actionLabel={replyId ? d('reply') : d('post')} allowQuote={false} autoFocus={Boolean(mode)} disabled={Boolean(mode && !targetAvailable)} draftKey={composerKey} files={files} onConnectAi={onConnectAi && replyId ? (draft, trigger) => { void onConnectAi({ kind: "reply-draft", activityId: replyId, draft }, trigger); } : undefined} onSubmit={submit} people={people} placeholder={replyId ? d('replyHint') : d('composerHint')} />
+        <DiscussionComposer actionLabel={replyId ? d('reply') : d('post')} allowQuote={false} autoFocus={Boolean(mode)} disabled={Boolean(mode && !targetAvailable)} draftKey={composerKey} files={files} onSubmit={submit} people={people} placeholder={replyId ? d('replyHint') : d('composerHint')} />
       </div>
     </div>
   </div>;

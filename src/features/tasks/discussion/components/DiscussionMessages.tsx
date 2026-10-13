@@ -177,7 +177,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
           </div>
           {reply?.id === message.id && <div className="task-discussion-reply-compose">
             <div className="discussion-composer-context"><span><ReplyContext message={message} /></span><button aria-label={d('cancelReply')} onClick={() => setReply(null)} title={d('cancelReply')} type="button"><X aria-hidden="true" size={14} /></button></div>
-            <DiscussionComposer actionLabel={d('reply')} allowQuote={allowQuote} autoFocus compact showShortcutHint={false} draftKey={`${draftKey}:reply:${message.id}`} files={files} onCancel={() => setReply(null)} onConnectAi={onConnectAi ? (draft, trigger) => onConnectAi({ kind: "reply-draft", activityId: message.id, draft }, trigger) : undefined} onSubmit={async draft => { await onPost({ ...draft, quote: allowQuote && reply.quoted ? { messageId: message.id, text: message.message.slice(0, 300), author: message.author } : undefined }, message.id); setVisibility("expanded"); setReply(null); }} people={people} placeholder={d('replyHint')} />
+            <DiscussionComposer actionLabel={d('reply')} allowQuote={allowQuote} autoFocus compact showShortcutHint={false} draftKey={`${draftKey}:reply:${message.id}`} files={files} onCancel={() => setReply(null)} onSubmit={async draft => { await onPost({ ...draft, quote: allowQuote && reply.quoted ? { messageId: message.id, text: message.message.slice(0, 300), author: message.author } : undefined }, message.id); setVisibility("expanded"); setReply(null); }} people={people} placeholder={d('replyHint')} />
           </div>}
         </div>
       </li>;

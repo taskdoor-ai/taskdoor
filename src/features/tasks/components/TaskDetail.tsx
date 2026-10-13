@@ -270,7 +270,7 @@ export function TaskDetail({
     if (request.contextPreview) request.contextPreview.items = request.contextPreview.items.map(item => item.label === "标签"
       ? { ...item, value: tags.map(name => { const tag = tagDefinitions.find(tag => tag.name === name); return tag ? mockTagName(locale, tag.id, name) : name; }).join(locale === "en" ? ", " : "、") }
       : item);
-    if (shortcut) return launchAiContext(request, shortcut.agent, shortcut.signal);
+    if (shortcut) return launchAiContext(request, shortcut.agent, shortcut.signal, undefined, undefined, locale);
     aiConnectionTrigger.current = trigger;
     setAiConnectionRequest({ taskId, request });
   };
@@ -280,7 +280,7 @@ export function TaskDetail({
       task: { ...task, activities, files: taskFiles, title: currentTitle, goal: currentGoal, status: currentStatus, owner: confirmedOwnerId, participants: currentParticipants, due: plannedEndOn ?? task.due },
     });
     if (!request) { setAttentionMessage(d('replyUnavailable')); return; }
-    if (shortcut) return launchAiContext(request, shortcut.agent, shortcut.signal);
+    if (shortcut) return launchAiContext(request, shortcut.agent, shortcut.signal, undefined, undefined, locale);
     aiConnectionTrigger.current = trigger;
     setAiConnectionRequest({ taskId, request });
   };
