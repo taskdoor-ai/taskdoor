@@ -2793,15 +2793,15 @@
       "id": "fig-cli-009",
       "moduleId": "cli-connection",
       "page": "连接 AI 弹窗",
-      "state": "PRD-0139 文案润色：默认 CLI，前半说明本地 Agent、脚本编排和批量操作及安装执行条件；后半明确 API 用于与其他业务系统集成或通过自动化平台调用 TaskDoor，与 CLI 能力范围一致，保留个人访问令牌入口。1280×900 简体中文；未执行授权。",
+      "state": "PRD-0150：CLI／ChatGPT 选中，底部浏览器确认提示及普通文字帮助中心可见，无帮助中心跳转。保留 CLI 使用场景、API 说明、个人访问令牌及安装配置操作。1280×720 简体中文，弹窗已滚动到底部；未执行授权。",
       "type": "current-page",
-      "source": "http://localhost:5173/",
-      "path": "assets/cli-connection/connection-options-zh.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/cli-connection/connection-options-zh.png",
       "capturedAt": "2026-10-13",
       "status": "captured",
       "locale": "zh-CN",
       "updatedAt": "2026-10-13",
-      "editorialNote": "2026-10-13：API 场景说明改用业务系统集成及自动化平台调用，属于既有用途措辞润色，不新增语义日志；主工作区当前页面重新采集。只证明本地文案与布局，不作为生产接口能力或授权服务证据。 本轮刷新底部帮助中心入口，与 MCP 保持一致；当前画面重新采集。"
+      "editorialNote": "PRD-0150：主工作区当前 In-app Browser 1280×720 实拍，已目视核验底部帮助中心为普通灰色文字。DOM 为 SPAN、无 href，底部链接数量为 0。旧 connection-options-zh.jpg 保留历史。仅证明本地页面显示与链接移除，不作为生产接口能力或授权成功证据。"
     },
     {
       "id": "fig-collab-006",
@@ -2870,16 +2870,16 @@
       "id": "fig-cli-011",
       "figureId": "FIG-CLI-011",
       "moduleId": "cli-connection",
-      "page": "连接 AI / MCP 场景与接入引导",
-      "state": "简体中文，1280×900；MCP 分支说明在 AI 客户端对话中查询和处理 TaskDoor 任务，支持授权登录或个人访问令牌访问；顶部同段令牌入口，底部浏览器确认提示和帮助中心。未执行授权或客户端唤起。",
+      "page": "连接 AI / MCP 使用场景与授权方式",
+      "state": "简体中文，1280×720，弹窗已滚动到底部；MCP／ChatGPT 选中，介绍以“MCP精选常用工具”开头，先说明能力范围及减少上下文负担，再说明 AI 对话使用场景，最后说明授权方式。底部浏览器确认提示和普通文字帮助中心可见，无帮助中心跳转。个人访问令牌及配置操作保留。未执行授权、令牌操作或客户端唤起。",
       "type": "current-page",
-      "source": "http://localhost:5173/",
-      "path": "assets/cli-connection/mcp-authorization-zh.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "path": "assets/cli-connection/mcp-selection-guide-zh.png",
       "capturedAt": "2026-10-13",
       "status": "captured",
       "locale": "zh-CN",
       "updatedAt": "2026-10-13",
-      "editorialNote": "主工作区当前运行页面实拍。说明和令牌入口同为 12px，CLI/MCP 令牌入口指向同一设置页，底部保留浏览器确认及帮助入口。非语义文案与布局修正，不新增变更日志；仅证明本地页面，不作为生产接口能力或授权成功证据。"
+      "editorialNote": "主工作区当前 In-app Browser 1280×720 实拍，已目视核验介绍与用户定稿一致，顺序为精选工具定位、AI 对话场景、授权方式。当前 DOM 已显示用户原文，重复 CLI 选择提示已移除。纯文案调整，不新增变更日志，沿用 PRD-0150。未重测窄屏或英文运行态；旧 mcp-authorization-zh.jpg 保留历史。仅证明本地文案与入口显示，不作为生产接口能力或授权成功证据。"
     }
   ]
 }

@@ -75,7 +75,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
         {say("如需与其他业务系统集成，或通过自动化平台调用 TaskDoor，可使用 API，能力范围与 CLI 一致。获取接入凭据，请前往", "Use the API to integrate TaskDoor with other business systems or call it from automation platforms. It provides the same capabilities as CLI. For access credentials, go to")}
         <a className="connect-token-link" href={tokenPageUrl.href} target="_blank" rel="noopener noreferrer">{say("个人访问令牌", "Personal access tokens")} →</a>
       </> : <>
-        {say("MCP 适合支持 MCP 的 AI 客户端，在对话中查询和处理 TaskDoor 任务。支持授权登录，也可通过个人访问令牌访问。", "Use MCP with a compatible AI client to find and manage TaskDoor tasks in a conversation. Sign in through authorization or use a personal access token.")}
+        {say("MCP精选常用工具，能力范围小于 CLI，以减少上下文负担，让 AI 调用更聚焦。适合在 AI 对话中查任务、看进展、更新信息。支持授权登录，也可通过个人访问令牌访问。", "MCP provides a curated set of commonly used tools, with fewer capabilities than CLI to reduce context overhead and keep AI tool calls focused. It is suited to finding tasks, checking progress and updating information in an AI conversation. Sign in through authorization or use a personal access token.")}
         <a className="connect-token-link" href={tokenPageUrl.href} target="_blank" rel="noopener noreferrer">{say("个人访问令牌", "Personal access tokens")} →</a>
       </>}</p>
     <section className="connect-v2-console" aria-label={method === "mcp" ? say("配置 MCP 客户端", "Configure MCP client") : ui("连接本地 Agent")}>
@@ -101,7 +101,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
       <div className={`connect-v2-permission${method === "mcp" ? " connect-v2-permission-mcp" : ""}`}>
         {/* After Open in {tool}, this line says what happened instead. */}
         <p aria-live="polite" className={result ? undefined : "shrink-0"} data-status={result?.status} role="status">
-          {result ? result.message : <>{ui("登录时在浏览器中确认即可")} <a className="connect-token-link" href="https://sand.taskdoor.com/documents/openapi/v1" target="_blank" rel="noopener noreferrer">{locale === "en" ? "Help center" : "帮助中心"}</a></>}
+          {result ? result.message : <>{ui("登录时在浏览器中确认即可")} <span>{locale === "en" ? "Help center" : "帮助中心"}</span></>}
         </p>
         {method === "cli" && <p>{ui("登录只授权你的账号，按你本人在各工作空间的权限访问；工作空间在后续命令中指定。")}</p>}
         {selectedConnection && connectionTime
