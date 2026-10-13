@@ -1148,7 +1148,7 @@ function App() {
             onFiltersChange={setTaskFilters}
             onManageTags={() => { setActiveSection("settings"); focusPrimaryHeadingAfterNavigation(); }}
             onQueryChange={setTaskQuery}
-            onTaskSelect={(task) => openTask(task.id)}
+            onTaskSelect={(task, focusHeading = true) => openTask(task.id, focusHeading)}
             onShowWorkbench={() => showPrimarySection("tasks")}
             query={taskQuery}
             selectedTaskId={selectedTaskId}

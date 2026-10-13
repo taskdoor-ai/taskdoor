@@ -12,7 +12,7 @@ import type { PersonOption, TagDefinition, TaskNode, WorkspaceNode } from "@/sha
 
 import { buildTaskListProjection, buildTaskScopeCounts } from "@/features/tasks/lib/task-list-projection";
 import { TaskWorkspaceList } from "@/features/tasks/components/TaskWorkspaceList";
-import { normalizeTaskWorkspaceFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
+import { getTaskTagFilters, normalizeTaskWorkspaceFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
 import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 type TaskWorkspaceProps = {
@@ -31,7 +31,7 @@ type TaskWorkspaceProps = {
   onDeleteTask: (task: TaskNode) => void;
   onTaskStatusChange: (taskId: string, status: TaskNode["status"]) => void;
   onQueryChange: (query: string) => void;
-  onTaskSelect: (task: TaskNode) => void;
+  onTaskSelect: (task: TaskNode, focusHeading?: boolean) => void;
   onClearTaskSelection?: () => void;
   onShowWorkbench: () => void;
   query: string;
@@ -67,14 +67,23 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
   const detailRef = useRef<HTMLElement>(null);
   const hasDetail = Boolean(children);
   const selectedTaskIsVisible = projection.visibleTasks.some((task) => task.id === selectedTaskId);
-  const selectionContext = useRef({ teamId, scope: projectionFilters.scope });
+  const filterSignature = JSON.stringify({
+    scope: projectionFilters.scope,
+    statuses: projectionFilters.statuses,
+    tags: getTaskTagFilters(projectionFilters),
+    includeUntagged: Boolean(projectionFilters.includeUntagged),
+    deadline: projectionFilters.deadline,
+    created: projectionFilters.created,
+  });
+  const selectionContext = useRef({ teamId, currentUserId, filters: filterSignature, query });
 
   useLayoutEffect(() => {
     if (hidden || showingWorkbench || showingCreation) return;
     const previous = selectionContext.current;
-    const next = { teamId, scope: projectionFilters.scope };
+    const next = { teamId, currentUserId, filters: filterSignature, query };
     selectionContext.current = next;
-    const scopeChanged = previous.teamId !== teamId || previous.scope !== next.scope;
+    const contextChanged = previous.teamId !== teamId || previous.currentUserId !== currentUserId
+      || previous.filters !== filterSignature || previous.query !== query;
     // Keep the existing mobile list pane until the user opens a task.
     if (!hasDetail && !window.matchMedia("(min-width: 901px)").matches) return;
     // The first result follows the displayed order, including the pinned section.
@@ -84,11 +93,11 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
     catch { /* Match the list's fallback when device preferences are unavailable. */ }
     const { pinned, unpinned } = partitionPinnedTasks(projection.visibleTasks, pinnedTaskIds);
     const visibleTasks = [...pinned, ...unpinned];
-    const id = taskResultSelection(visibleTasks.map(task => task.id), selectedTaskId, scopeChanged);
+    const id = taskResultSelection(visibleTasks.map(task => task.id), selectedTaskId, contextChanged);
     if (id === selectedTaskId) return;
     if (!id) onClearTaskSelection?.();
-    else { const task = projection.visibleTasks.find(task => task.id === id); if (task) onTaskSelect(task); }
-  }, [projection.visibleTasks, projection.allTasks, currentUserId, hasDetail, hidden, onTaskSelect, onClearTaskSelection, showingCreation, showingWorkbench, selectedTaskId, teamId, projectionFilters, query]);
+    else { const task = projection.visibleTasks.find(task => task.id === id); if (task) onTaskSelect(task, false); }
+  }, [projection.visibleTasks, projection.allTasks, currentUserId, hasDetail, hidden, onTaskSelect, onClearTaskSelection, showingCreation, showingWorkbench, selectedTaskId, teamId, filterSignature, query]);
 
   useEffect(() => {
     // Reset detail reading position; the list independently reveals its selected row.

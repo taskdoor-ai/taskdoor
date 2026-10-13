@@ -4,6 +4,7 @@
 
 | 变更 ID | 日期 | 版本 | 影响模块 | 类型 | 变更内容 | 原因与影响 | 相关链接 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| PRD-0160 | 2026-10-13 | 1.1 | 任务列表 | 搜索与筛选变化统一选择首条 | 修改搜索、任务范围、状态、标签或日期条件后统一打开新结果第一条，置顶优先；无结果清空详情。自动更新保留搜索或筛选控件焦点；仅任务数据刷新或排序变化时保留仍匹配的手动选择，窄屏列表筛选仍停留列表。 | 用户明确要求修改搜索筛选条件后展示第一条，否则空状态，替代 PRD-0159 的筛选变化保留当前任务分支；同时精简两处空状态说明。仅调整 NAV-1，不实施其他 P0，不发布新版本，历史日志保留。 | [任务列表](modules/06-task-list.md)、[交互基线](../task-design-kit/11-task-workspace-detail-interaction-baseline.md)、[实现矩阵](current-implementation-matrix.md) |
 | PRD-0159 | 2026-10-13 | 1.1 | 任务列表 | 筛选后列表与详情同步 | 切换任务范围展示结果第一条；其他筛选保留仍匹配的当前任务，不匹配改为第一条；无结果清空详情，不保留范围外详情横幅。 | 筛选变化后旧详情与列表结果不一致；统一选择与显示的结果集，替代 PRD-0052 的范围外详情保留规则，不发布新版本。 | [任务列表](modules/06-task-list.md)、[实现矩阵](current-implementation-matrix.md) |
 | PRD-0150 | 2026-10-13 | 1.1 | Agent 与 CLI、MCP 连接 | 移除帮助中心跳转 | CLI 与 MCP 底部“帮助中心”保留普通文字，移除链接地址与导航行为。 | 用户要求先去掉两处帮助中心的跳转地址；保留浏览器登录提示、个人访问令牌及安装配置入口。 | [连接规则](modules/05-cli-connection.md)、[实现矩阵](current-implementation-matrix.md) |
 | PRD-0149 | 2026-10-13 | 1.1 | 讨论、任务进度与完成、权限 | 移除任务消息编辑 | 主任务讨论的主消息与回复发布后不提供编辑入口，移除残余空更多菜单；本人删除与回复文字字号一致。分析触发和权限说明区分任务讨论与文件内讨论。 | 用户要求去掉主任务讨论仍存在的更多菜单编辑入口；仅替代主任务消息编辑能力，保留文件内讨论、文件正文编辑及消息回复、引用、删除和连接 AI。 | [讨论](modules/10-discussion-notifications-activity.md)、[分析触发](modules/12-task-progress-completion.md#32-重新分析触发条件)、[权限](modules/15-permissions-errors-nfr.md#32-默认权限)、[交互基线](../task-design-kit/11-task-workspace-detail-interaction-baseline.md)、[实现矩阵](current-implementation-matrix.md) |
