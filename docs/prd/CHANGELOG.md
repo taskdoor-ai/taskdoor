@@ -4,6 +4,7 @@
 
 | 变更 ID | 日期 | 版本 | 影响模块 | 类型 | 变更内容 | 原因与影响 | 相关链接 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| PRD-0151 | 2026-10-13 | 1.1 | 讨论、通知与活动 | @ 提及邮件 | 有效 @ 默认同时发送站内通知与邮件；限定接收人、邮件内容、来源定位、按渠道去重及投递失败边界。 | 用户确认讨论 @ 需要邮件提醒，替代仅团队邀请发邮件的约定；普通讨论与无 @ 回复仍只发站内通知，真实投递由正式项目跟进。 | [通知规则](modules/10-discussion-notifications-activity.md#32-通知事件与接收人)、[实现矩阵](current-implementation-matrix.md) |
 | PRD-0150 | 2026-10-13 | 1.1 | Agent 与 CLI、MCP 连接 | 移除帮助中心跳转 | CLI 与 MCP 底部“帮助中心”保留普通文字，移除链接地址与导航行为。 | 用户要求先去掉两处帮助中心的跳转地址；保留浏览器登录提示、个人访问令牌及安装配置入口。 | [连接规则](modules/05-cli-connection.md)、[实现矩阵](current-implementation-matrix.md) |
 | PRD-0149 | 2026-10-13 | 1.1 | 讨论、任务进度与完成、权限 | 移除任务消息编辑 | 主任务讨论的主消息与回复发布后不提供编辑入口，移除残余空更多菜单；本人删除与回复文字字号一致。分析触发和权限说明区分任务讨论与文件内讨论。 | 用户要求去掉主任务讨论仍存在的更多菜单编辑入口；仅替代主任务消息编辑能力，保留文件内讨论、文件正文编辑及消息回复、引用、删除和连接 AI。 | [讨论](modules/10-discussion-notifications-activity.md)、[分析触发](modules/12-task-progress-completion.md#32-重新分析触发条件)、[权限](modules/15-permissions-errors-nfr.md#32-默认权限)、[交互基线](../task-design-kit/11-task-workspace-detail-interaction-baseline.md)、[实现矩阵](current-implementation-matrix.md) |
 | PRD-0148 | 2026-10-13 | 1.1 | 任务详情、讨论、文件 | 页签累计数量 | 讨论与文件页签显示各自有效总数，0 至 99 显示实际值，超过 99 显示 99+ 并提供实际数量提示；搜索及筛选不改变总数。 | 用户要求从页签判断讨论和文件的内容规模；讨论仅统计有效任务主消息及回复，文件仅统计有效文件，不把文件讨论、活动、草稿、文件夹或版本混入累计数。 | [任务详情](modules/08-task-detail.md#页签数量)、[讨论](modules/10-discussion-notifications-activity.md)、[文件](modules/11-files-local-commits.md)、[实现矩阵](current-implementation-matrix.md) |
