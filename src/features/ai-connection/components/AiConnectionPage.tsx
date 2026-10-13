@@ -101,7 +101,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
       <div className={`connect-v2-permission${method === "mcp" ? " connect-v2-permission-mcp" : ""}`}>
         {/* After Open in {tool}, this line says what happened instead. */}
         <p aria-live="polite" className={result ? undefined : "shrink-0"} data-status={result?.status} role="status">
-          {result ? result.message : <>{ui("登录时在浏览器中确认即可")} <span>{locale === "en" ? "Help center" : "帮助中心"}</span></>}
+          {result ? result.message : ui("登录时在浏览器中确认即可")}
         </p>
         {method === "cli" && <p>{ui("登录只授权你的账号，按你本人在各工作空间的权限访问；工作空间在后续命令中指定。")}</p>}
         {selectedConnection && connectionTime
