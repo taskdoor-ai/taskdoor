@@ -46,7 +46,7 @@ test('当前方案用例标准只迁移一次，用户输入、其他 Skill、�
 
 test('修改步骤接收上一轮真实方案，只生成两次、不执行 MCP，并在结构通过后判断一次',async()=>{
   const store=makeStore();let calls=0,judges=0,mcpCalls=0;let previous:any;
-  const example=JSON.parse(readFileSync(new URL('../skills/agentdoor-task-planner/references/task-preview.md',import.meta.url),'utf8').match(/```json\n([\s\S]*?)\n```/)![1]);
+  const example=[...readFileSync(new URL('../skills/agentdoor-task-planner/references/task-preview.md',import.meta.url),'utf8').matchAll(/```json\n([\s\S]*?)\n```/g)].map(match=>JSON.parse(match[1])).find(plan=>plan.tasks?.[0]?.children?.length);
   const runner=createRunner(store,options,async(_o,_s,raw)=>{
     const input=raw as any;calls++;
     if(calls===2){assert.deepEqual(input.previousPlan,previous);assert.match(input.userRequest,/文案改为/);}

@@ -68,7 +68,7 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
           }else{
           sandbox=applyEvents(sandbox,step);result.after=structuredClone(sandbox);
           const input=buildModelInput(sandbox,run.caseSnapshot,step,id,get(id).steps);result.input=input;result.promptHash=hash(skill.instructions+'\n'+JSON.stringify(input));
-          const outputSchema=step.skillId==='agentdoor-task-status-analyzer'&&skill.snapshot.includes('TASK-ANALYSIS-2026-10-11-v7')&&supportsPreviewSchema(run.model)?analysisResponseSchema(input):step.skillId==='agentdoor-member-matcher'&&skill.snapshot.includes('MEMBER-MATCH-2026-10-11-v2')&&supportsPreviewSchema(run.model)?memberResponseSchema({candidateMemberIds:"candidateMemberIds" in input?input.candidateMemberIds:undefined}):undefined;
+          const outputSchema=step.skillId==='agentdoor-task-status-analyzer'&&/TASK-ANALYSIS-(2026-10-11-v7|2026-10-14-v[89])/.test(skill.snapshot)&&supportsPreviewSchema(run.model)?analysisResponseSchema(input):step.skillId==='agentdoor-member-matcher'&&skill.snapshot.includes('MEMBER-MATCH-2026-10-11-v2')&&supportsPreviewSchema(run.model)?memberResponseSchema({candidateMemberIds:"candidateMemberIds" in input?input.candidateMemberIds:undefined}):undefined;
           result.modelSettings={maxOutputTokens:options.maxOutputTokens,responseFormat:outputSchema?'json_schema':'json_object',...(outputSchema?{outputSchemaHash:hash(JSON.stringify(outputSchema))}:{})};
           const response=await modelCall({...options,model:run.model,outputSchema},skill.instructions,input,controller.signal);result.rawOutput=response.rawOutput;result.usage=response.usage;
           if(controller.signal.aborted)throw new Error('运行已取消');

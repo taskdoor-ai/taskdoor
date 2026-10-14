@@ -73,7 +73,6 @@
         "dueDate",
         "executionTips",
         "effortEstimate",
-        "dependsOnClientIds",
         "children"
       ],
       "properties": {
@@ -193,16 +192,6 @@
               }
             }
           ]
-        },
-        "dependsOnClientIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 160
-          },
-          "uniqueItems": true,
-          "maxItems": 100
         },
         "children": {
           "type": "array",
