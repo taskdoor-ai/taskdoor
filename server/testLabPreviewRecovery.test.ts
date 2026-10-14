@@ -7,7 +7,7 @@ import {validateTaskPreview} from './test-lab/task-preview.ts';
 import {readFileSync} from 'node:fs';
 const schema=loadSkill('agentdoor-task-planner').previewSchema;
 const doc=readFileSync(new URL('../skills/agentdoor-task-planner/references/task-preview.md',import.meta.url),'utf8');
-const example=JSON.parse(doc.match(/```json\n([\s\S]*?)\n```/)![1]);
+const example=[...doc.matchAll(/```json\n([\s\S]*?)\n```/g)].map(match=>JSON.parse(match[1])).find(plan=>plan.tasks?.[0]?.children?.length);
 const input={requestId:example.requestId,userRequest:'生成文案和海报',currentDate:'2026-10-09',timezone:'Asia/Shanghai',currentMemberId:'member-lead',members:['member-lead','member-writer','member-designer'].map(id=>({id,name:id,responsibilities:[]}))};
 const options={apiKey:'test',endpoint:'https://example.com/responses',model:'deepseek/deepseek-v4.1-flash',maxOutputTokens:16000,timeoutMs:1000};
 const response=(output:unknown)=>({rawOutput:JSON.stringify(output),usage:{inputTokens:10,outputTokens:20,totalTokens:30}});

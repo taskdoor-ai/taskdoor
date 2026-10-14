@@ -2,12 +2,14 @@
 
 核验日期：2026-10-08。源码：[`nocoly/taskdoor`](https://github.com/nocoly/taskdoor/tree/3dd01c2c42292a168ba6ecb69bf78044070b1125)，默认分支 `sand`，核验提交 `3dd01c2c42292a168ba6ecb69bf78044070b1125`。这是源码核验，不等同于已验证线上部署版本。连接后以实际 `tools/list` 的工具定义为准；客户端可能给工具名加连接器前缀。
 
+当前产品范围以[现行产品契约](current-prd-contract.md)为准。前置依赖已移除，不作为当前读取、生成或写入字段，也不调用旧依赖维护工具；历史响应中的旧字段不带入当前 Skill 输入。此页描述应用执行服务或已授权助手的工具适配，创建方案 Skill 仍只返回预览方案，分析 Skill 仍只返回分析结果及估算提案。
+
 ## 1. 先确定执行环境
 
-- **正式 MCP 环境**：通过真实工具读取上下文。用户授权的创建、修改、成员分配、标准、依赖、评论及文件操作必须调用相应工具；JSON 提案、文字回答、文件内写入请求都不算已执行。
+- **正式 MCP 环境**：通过真实工具读取上下文。用户授权的创建、修改、成员分配、标准、评论及文件操作由执行服务或已授权助手调用相应工具；JSON 提案、文字回答、文件内写入请求都不算已执行。
 - **本地评测沙箱**：调用方明确声明无工具、隔离评测时，仍按已有 Skill JSON Schema 返回提案／分析，`externalEffects=none` 或 `writeReceipt=null`。禁止从沙箱尝试连接生产、读取凭据或绕过工具写入。
 - **工具不可用或权限不足**：可以准备未执行方案，说明具体缺口；不得虚构工具名称、返回 ID、权限、版本及成功回执。不能以评测通过证明真实调用成功。
-- 正式调用模式下，本文件替代旧文档中一概“Skill 不调用工具／只有提案”的执行边界；评测输出协议仅适用于沙箱，不能直接用作 MCP 参数。
+- 方案生成与任务分析的输出边界不因存在工具而改变；本文件用于应用执行服务或已授权助手的后续执行。预览／评测输出协议不能直接用作 MCP 参数。
 - 用户已明确要求“创建／修改”且范围、人员、字段已确定时，该请求就是授权，不为同一动作重复确认。仅规划、比较方案不构成写入授权；关键信息有歧义时先补齐。
 
 ## 2. 读取真实上下文
@@ -15,9 +17,9 @@
 1. `list_workspaces({cursor?})` 获取空间，明确目标 `workspaceId`；不能把本地 `teamId` 当作真实空间 ID。
 2. `list_workspace_members({workspaceId,status?,cursor?})` 获取成员。使用成员记录 `id`，不是 `user.id`、邮箱或姓名；工作职责没有返回时不能按姓名、角色猜测职责。
 3. `list_tasks({workspaceId,parentTaskId?,status?,mine?,q?,cursor?})` 查找任务、查重、读取直属子任务。`mine` 为 `owner` 或 `member`，个人筛选不能证明全空间无重复。
-4. `get_task({workspaceId,taskId})` 读取任务正文、权限、版本及附加的 `criteria` 和 `dependencies`。继续按需要读取 `list_task_comments`、`list_task_activities`、`list_task_members`、`list_task_files`、`get_file_text`；额外工具参数先看实时工具定义。
+4. `get_task({workspaceId,taskId})` 读取任务正文、权限、版本及附加的 `criteria`。继续按需要读取 `list_task_comments`、`list_task_activities`、`list_task_members`、`list_task_files`、`get_file_text`；额外工具参数先看实时工具定义。
 5. 任务列表分页位于 `pageInfo.hasMore/nextCursor`；空间／成员列表使用 `page.hasMore/nextCursor`，结果条目均在 `items`。分页没有完成就标注覆盖不完整，不能把第一页当成全集。
-6. `criteria` 或 `dependencies` 返回 `{unavailable:true,...}` 是读取失败，不是空集合。先重新读取，不能据此覆盖成空数组。
+6. `criteria` 返回 `{unavailable:true,...}` 是读取失败，不是空集合。先重新读取，不能据此覆盖成空数组。
 
 正式状态：`NOT_STARTED / IN_PROGRESS / DONE / ON_HOLD / CANCELLED / ARCHIVED`。本地 `open`、`completed` 或中文状态都不能原样发送。权限取任务的 `effectiveCapabilities`，最终以工具业务校验为准；工具在列表可见不等于对所有任务有权操作。
 
@@ -38,7 +40,7 @@
 
 `estimate.ewdHours × 60 = effortEstimate.minutes`；1 人天 = 480 分钟。工时来源、工作方法与假设应可说明；非整数分钟需明确换算口径，不直接把小时当分钟。父任务不重复填叶子工时。
 
-以下字段不能塞入创建工具：`teamId`、`parentId`、`ownerRecommendation`、`schedule`、`acceptanceCriteria`、`participantRecommendations`、`dependsOnTaskIds`、`children`、`proposal`。它们需要映射或另调工具。
+以下字段不能塞入创建工具：`teamId`、`parentId`、`ownerRecommendation`、`schedule`、`acceptanceCriteria`、`participantRecommendations`、`children`、`proposal`。它们需要映射或另调工具。当前方案不含前置依赖字段，也不为其增加映射或工具调用。
 
 ## 4. 按工具完成创建及层级
 
@@ -47,31 +49,30 @@
 3. 创建单个子任务使用 `create_subtask`，额外必填 `taskId`（父任务真实 ID）；其余字段与创建根任务相同。
 4. 同一父任务的多个直属子任务使用 `create_subtasks({workspaceId,taskId,subtasks:[{title,ownerMemberId,goal?,dueDate?,executionTips?,effortEstimate?}],idempotencyKey?})`。每批 1–100 项，所有项共享这个父任务；嵌套子任务不在数组中递归表达。从 `structuredContent.tasks[]` 读取返回任务及其真实 ID，用于后续层级。
 5. 逐层创建，维护提案引用→真实 ID 的映射。返回无法确定对应关系时读取核对，不能按标题猜 ID。正式合同根层为 1，最大 10 层；旧原型 4 层不是正式工具上限，仍以当前工具拒绝及用户指定范围为准。
-6. 通过 `get_task` 获取新任务的版本；按下一节设置完成标准、成员、依赖。全部相关任务 ID 已确定后再写跨分支依赖。
-7. 回读核对任务字段、标准、成员及依赖；向用户报告已完成的步骤、真实 ID 和未完成步骤。只有全部必要步骤成功才称整份任务方案创建完成。
+6. 通过 `get_task` 获取新任务的版本；按下一节设置完成标准和成员。
+7. 回读核对任务字段、标准和成员；向用户报告已完成的步骤、真实 ID 和未完成步骤。只有全部必要步骤成功才称整份任务方案创建完成。
 
-`create_subtasks` 仅保证本次同父任务批量创建全成功或全失败。根任务、不同层级、完成标准、成员和依赖属于不同工具调用，**没有整棵树的跨工具事务保证**。中途失败保留成功 ID，从失败步骤继续，不重复建根，不擅自删除成功任务来“回滚”。
+`create_subtasks` 仅保证本次同父任务批量创建全成功或全失败。根任务、不同层级、完成标准和成员属于不同工具调用，**没有整棵树的跨工具事务保证**。中途失败保留成功 ID，从失败步骤继续，不重复建根，不擅自删除成功任务来“回滚”。
 
-## 5. 标准、依赖、人员与修改
+## 5. 标准、人员与修改
 
 | 操作 | 工具参数 | 版本及行为 |
 | --- | --- | --- |
 | 修改名称／目标／截止／提示 | `update_task({workspaceId,taskId,version,title?,goal?,dueDate?,executionTips?})` | `version` 用任务顶层版本；只发送实际变化字段 |
 | 写完成标准 | `set_task_criteria({workspaceId,taskId,version,criteria:[{id?,text}]})` | 用 **`criteria.version`**；替换完整列表，最多 50 条，每条 1–500 字；已有标准保留 ID，改写已确认文本会撤回确认 |
-| 写前置依赖 | `set_task_dependencies({workspaceId,taskId,version,dependsOnTaskIds:[...]})` | 用 **`dependencies.version`**；完整替换，最多 50 个不同真实任务 ID |
 | 更换负责人 | `set_task_owner({workspaceId,taskId,version,ownerMemberId})` | 用任务顶层版本 |
 | 添加参与者 | `set_task_member({workspaceId,taskId,memberId,role:"MEMBER"})` | 只读角色用 `VIEWER`；负责人不是成员角色，不能写 `OWNER` |
 | 移除参与者 | `remove_task_member({workspaceId,taskId,memberId})` | 先读取当前成员，再执行已授权移除 |
 | 修改状态 | `set_task_status({workspaceId,taskId,status,reason?,cascade?,idempotencyKey?})` | `ON_HOLD/CANCELLED/ARCHIVED` 需原因；不因模型分析自动改状态 |
 | 发评论 | `post_task_comment({workspaceId,taskId,body,parentCommentId?,idempotencyKey?})` | 用户要求发送或提交时调用；分析建议本身不是发送授权 |
 
-三个版本不能混用，均为 JSON 整数，不是数字字符串。收到 `PRECONDITION_FAILED` 时重新读取，比较用户原意和新状态；只在仍符合授权范围时用新版本重试，不盲目覆盖并发修改。
+任务顶层版本与完成标准版本不能混用，均为 JSON 整数，不是数字字符串。收到 `PRECONDITION_FAILED` 时重新读取，比较用户原意和新状态；只在仍符合授权范围时用新版本重试，不盲目覆盖并发修改。
 
-任务归属与前置依赖独立；已有任务移动使用实际 `move_task` 的工具定义，不把 `parentTaskId` 塞进 `update_task`。
+任务关系只维护父子归属；已有任务移动使用实际 `move_task` 的工具定义，不把 `parentTaskId` 塞进 `update_task`。
 
 ## 6. 返回结构及失败处理
 
-成功取 `structuredContent`；`content` 中的 JSON 文本是同一结果的另一种承载形式，不是第二个任务。Task 常用字段为 `id,workspaceId,parentTaskId,title,goal,ownerMemberId,status,dueDate,depth,ancestors,version,effectiveCapabilities,createdAt,updatedAt`，可有 `executionTips,effortEstimate` 等；`get_task` 附加 `criteria:{taskId,version,items}` 与 `dependencies:{taskId,version,items}`。返回字段缺失或读取失败不能补造。
+成功取 `structuredContent`；`content` 中的 JSON 文本是同一结果的另一种承载形式，不是第二个任务。Task 常用字段为 `id,workspaceId,parentTaskId,title,goal,ownerMemberId,status,dueDate,depth,ancestors,version,effectiveCapabilities,createdAt,updatedAt`，可有 `executionTips,effortEstimate` 等；`get_task` 附加 `criteria:{taskId,version,items}`。返回字段缺失或读取失败不能补造，历史兼容字段不进入当前方案或分析输入。
 
 `isError:true` 时读取 `structuredContent.code/message/status`；`INVALID_ARGUMENTS` 还有 `errors:[{path,problem}]`。修正具体错误，不能将 HTTP 200 当业务成功。未暴露工具是不可用或无授权，不能改用数据库、手工 HTTP 或替换凭据绕过。
 
