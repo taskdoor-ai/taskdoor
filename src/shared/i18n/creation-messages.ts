@@ -1,6 +1,11 @@
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import type { Locale } from "@/shared/i18n/core";
 export const creationEn = {
+  "leaveCreationTitle": "Leave task creation?",
+  "leaveCreationDescription": "Your input and preview plan have not been saved as tasks. Leaving will discard them and they cannot be recovered.",
+  "continueEditing": "Continue editing",
+  "discardAndLeave": "Discard and leave",
+  "discardCreationFailed": "Could not discard this session. Your plan is preserved; please try again.",
   "suggestedOptions": " suggested options",
   "custom": "Custom",
   "previous": "Previous",
@@ -40,6 +45,7 @@ export const creationEn = {
   "showHistory": "Show history",
   "taskPath": "Task path",
   "backToNewTask": "Back to new task",
+  "backToTaskList": "Back to task list",
   "tasks": "Tasks",
   "openParentTask": "Open parent task: {v0}",
   "newTask": "New task",
@@ -227,6 +233,11 @@ export const creationEn = {
 } as const;
 export type CreationMessageKey = keyof typeof creationEn;
 export const creationZh: Record<CreationMessageKey, string> = {
+  "leaveCreationTitle": "离开任务创建？",
+  "leaveCreationDescription": "当前输入和预览方案尚未保存为任务。离开后将丢失，无法恢复。",
+  "continueEditing": "继续编辑",
+  "discardAndLeave": "丢弃并离开",
+  "discardCreationFailed": "无法清理本次未保存方案，请重试。方案已保留。",
   "suggestedOptions": "的建议选项",
   "custom": "自定义",
   "previous": "上一步",
@@ -266,6 +277,7 @@ export const creationZh: Record<CreationMessageKey, string> = {
   "showHistory": "展开历史对话",
   "taskPath": "任务路径",
   "backToNewTask": "返回新建任务",
+  "backToTaskList": "返回任务列表",
   "tasks": "任务",
   "openParentTask": "打开主任务：{v0}",
   "newTask": "新建任务",

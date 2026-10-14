@@ -1,8 +1,11 @@
+@import "@/features/tasks/styles/task-file-history.css";
+
 .task-files-panel[hidden] { display: none; }
 .task-files-panel.first-section { padding-top: 0; }
 .task-files-panel .task-file-explorer { margin-top: 0; }
 .task-file-explorer { border: 0; border-radius: 0; box-shadow: none; min-height: 640px; }
 .task-file-explorer-sidebar { background: var(--ad-surface); padding-top: var(--ad-space-2); }
+.task-file-search-input[data-slot="input"] { font-size: var(--ad-text-caption); }
 .task-file-explorer-sidebar > header > button { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-secondary); cursor: pointer; }
 .task-file-explorer-row { min-height: var(--ad-control-height-lg); grid-template-columns: 16px 17px minmax(0, 1fr) auto 28px; padding-right: var(--ad-space-2); border-radius: var(--ad-radius-control); }
 .task-file-explorer-row::before { display: none; }
@@ -103,4 +106,22 @@
   .task-file-action-button, .task-file-toolbar-more, .task-file-history > header button, .task-file-selection-toolbar button { min-width: 44px; min-height: 44px; }
 }
 
-@media (min-width: 761px) { .task-file-explorer { grid-template-columns: clamp(180px, var(--task-sidebar-width, 232px), 45%) minmax(0, 1fr); } }
+@media (min-width: 761px) { .task-file-explorer { grid-template-columns: clamp(180px, var(--task-sidebar-width, 200px), 420px) minmax(0, 1fr); } }
+
+
+/* Only layout remains here; file controls use the shared shadcn components. */
+.task-file-explorer-sidebar { display: flex; flex-direction: column; padding-top: 0; }
+.task-file-explorer-tree-scroll { flex: 1; }
+.task-file-explorer-preview { container-type: inline-size; container-name: task-file-preview; }
+.task-file-editor-toolbar { flex-shrink: 0; }
+.task-file-editor-path > svg { flex: 0 0 12px; }
+.task-file-editor-path > button:first-child { flex-shrink: 0; }
+.task-file-directory-more { grid-column: auto; opacity: 1; pointer-events: auto; }
+.task-file-upload-dropzone[data-dragging="true"] { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.task-file-drop-overlay { position: absolute; z-index: 40; inset: 8px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; border: 2px dashed var(--ad-route); border-radius: var(--ad-radius-card); background: color-mix(in srgb, var(--ad-surface) 96%, transparent); color: var(--ad-route-ink); pointer-events: none; }
+.task-file-drop-overlay > span { max-width: 80%; overflow-wrap: anywhere; text-align: center; }
+@container task-file-preview (max-width: 560px) { .task-file-directory [data-file-column="updated"] { display: none; } }
+@media (max-width: 900px) {
+  .task-file-directory-actions [data-slot="button"] { min-height: var(--ad-control-touch-min); }
+  .task-file-directory-more { width: var(--ad-control-touch-min); height: var(--ad-control-touch-min); min-height: var(--ad-control-touch-min); }
+}

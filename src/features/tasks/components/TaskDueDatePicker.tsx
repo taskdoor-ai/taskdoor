@@ -2,7 +2,8 @@ import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { formatDisplayDate, formatDisplayMonth } from "@/shared/lib/date-time";
-import { taskCreationDay, taskScheduleError } from "@/features/tasks/lib/task-schedule";
+import { taskCalendarDate, taskCreationDay, taskScheduleError } from "@/features/tasks/lib/task-schedule";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { CalendarIcon, ChevronLeft, ChevronRight, InfinityIcon } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -34,7 +35,10 @@ function SegmentedDate({ value }: { value: string }) {
 }
 
 // Single-date adaptation of jolbol1's 21st.dev Date Range Picker anatomy.
-export function TaskDueDatePicker({ initialValue = "", label = "截止时间", minDate = taskCreationDay(), emptyLabel, presentation = "portal", onChange }: TaskDueDatePickerProps) {
+export function TaskDueDatePicker({ initialValue = "", label = "截止时间", minDate: configuredMinDate, emptyLabel, presentation = "portal", onChange }: TaskDueDatePickerProps) {
+  const timeZone = useTeamTimeZone();
+  const today = taskCalendarDate(new Date().toISOString(), timeZone);
+  const minDate = configuredMinDate ?? today ?? "";
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const { locale } = useI18n();
@@ -50,7 +54,7 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", m
   const pickerId = useId();
   const [popoverPosition, setPopoverPosition] = useState<{ left: number; top: number } | null>(null);
   const [visibleMonth, setVisibleMonth] = useState(() => {
-    const date = initialValue ? fromValue(initialValue) : new Date();
+    const date = fromValue(initialValue || today || "");
     return new Date(date.getFullYear(), date.getMonth(), 1);
   });
   const rootRef = useRef<HTMLDivElement>(null);
@@ -132,7 +136,7 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", m
     setSaveError("");
     setDraft(value);
     setMode(value ? "date" : "none");
-    const date = value ? fromValue(value) : new Date();
+    const date = fromValue(value || taskCreationDay(new Date(), timeZone));
     setVisibleMonth(new Date(date.getFullYear(), date.getMonth(), 1));
     setOpen((current) => !current);
   };
@@ -150,13 +154,15 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", m
     } catch (error) { setSaveError(error instanceof Error ? error.message : d('saveFailed')); }
   };
 
+  if (!today) return <div className="task-due-date-picker"><small className="task-due-date-label">{label}</small><span>{value ? <SegmentedDate value={value} /> : noDateLabel}</span><p className="task-schedule-error" role="alert">{locale === "en" ? "The team timezone is invalid. Date changes are unavailable." : "团队时区无效，暂时无法修改日期。"}</p></div>;
+
   const calendar = <div aria-label={ui("设置{0}", {0: label})} className={`task-due-date-popover${inline ? " is-inline" : ""}`} id={pickerId} ref={popoverRef} role="dialog" style={inline ? undefined : {
       left: popoverPosition?.left ?? 0,
       top: popoverPosition?.top ?? 0,
       visibility: popoverPosition ? "visible" : "hidden",
     }}>
       <div className="task-due-date-shortcuts">{[1, 3, 7, 10, 30].map(count => {
-        const date = fromValue(taskCreationDay()); date.setDate(date.getDate() + count);
+        const date = fromValue(taskCreationDay(new Date(), timeZone)); date.setDate(date.getDate() + count);
         const deadline = toValue(date);
         return <button type="button" key={count} title={formatDisplayDate(deadline, { year: "always" }) ?? undefined} aria-label={`${locale === "en" ? `${count} days` : `${count} 天`} · ${formatDisplayDate(deadline, { year: "always" }) ?? "—"}`} onClick={() => { setMode("date"); setDraft(deadline); setVisibleMonth(new Date(date.getFullYear(), date.getMonth(), 1)); }}>{locale === "en" ? `${count} days` : `${count} 天`}</button>;
       })}</div>

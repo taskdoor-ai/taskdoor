@@ -12,8 +12,16 @@ import {previewCaseForEvaluation} from '../src/test-lab/task-preview-case.ts';
 
 const skill=loadSkill('agentdoor-task-planner');
 const doc=readFileSync(new URL('../skills/agentdoor-task-planner/references/task-preview.md',import.meta.url),'utf8');
-const example=JSON.parse(doc.match(/```json\n([\s\S]*?)\n```/)![1]);
+const examples=[...doc.matchAll(/```json\n([\s\S]*?)\n```/g)].map(match=>JSON.parse(match[1]));
+const example=examples.find(plan=>plan.tasks?.[0]?.children?.length);
 const input:PreviewInput={requestId:example.requestId,userRequest:'安排文案和海报',currentDate:'2026-10-09',timezone:'Asia/Shanghai',currentMemberId:'member-lead',members:['member-lead','member-writer','member-designer'].map(id=>({id,name:id,responsibilities:[]}))};
+
+test('当前主任务方案无需旧前置依赖字段即可完成业务校验',()=>{
+  const main=examples.find(plan=>plan.tasks?.[0]?.children?.length===0);
+  assert.deepEqual(validateTaskPreview(skill.previewSchema,main,{...input,requestId:main.requestId}),[]);
+  const old=structuredClone(main);old.tasks[0].dependsOnClientIds=[];
+  assert.match(validateTaskPreview(skill.previewSchema,old,input).join('\n'),/不允许字段.*dependsOnClientIds/);
+});
 
 test('冻结生产预览包不再注入写入契约，旧快照仍可辨别',()=>{
   assert.equal(skill.outputMode,'preview');
@@ -32,12 +40,14 @@ test('可编辑嵌套示例符合冻结 Schema，用户修改字段后仍是有�
   assert.equal(edited.tasks[0].clientId,example.tasks[0].clientId);
 });
 
-test('拒绝不存在的成员、重复 ID、无效日期和循环依赖',()=>{
+test('拒绝不存在的成员、重复 ID、无效日期和已移除的依赖字段',()=>{
   const bad=structuredClone(example),root=bad.tasks[0],children=root.children;
   root.ownerMemberId='not-a-member';root.dueDate='2026-02-30';
-  children[0].dependsOnClientIds=[children[1].clientId];children[1].dependsOnClientIds=[children[0].clientId];
   const errors=validateTaskPreview(skill.previewSchema,bad,input).join('\n');
-  assert.match(errors,/负责人不在/);assert.match(errors,/日期无效/);assert.match(errors,/循环/);
+  assert.match(errors,/负责人不在/);assert.match(errors,/日期无效/);
+  children[0].dependsOnClientIds=[];
+  assert.match(validateTaskPreview(skill.previewSchema,bad,input).join('\n'),/不允许字段.*dependsOnClientIds/);
+  delete children[0].dependsOnClientIds;
   children[1].clientId=children[0].clientId;
   assert.match(validateTaskPreview(skill.previewSchema,bad,input).join('\n'),/ID 重复/);
 });
@@ -76,7 +86,7 @@ test('预览评测只调用一次模型，即使用户说确认也不触发 MCP�
     assert.ok(!('tasks' in i));assert.ok(!('evidence' in i));assert.equal(i.members.length,team.members.length);
     assert.ok(!instructions.includes('本次为真实 MCP 执行'));
     const plan=structuredClone(example);plan.requestId=i.requestId;
-    plan.tasks=[{...plan.tasks[0],ownerMemberId:i.currentMemberId,participants:[],children:[],dependsOnClientIds:[]}];
+    plan.tasks=[{...plan.tasks[0],ownerMemberId:i.currentMemberId,participants:[],children:[]}];
     return {rawOutput:JSON.stringify(plan),usage:{inputTokens:1,outputTokens:1,totalTokens:2}};
   },undefined,undefined,{url:'https://example.com/mcp',token:'test',workspaceId:'test'},async()=>{mcpCalls++;throw Error('不应写入');});
   assert.throws(()=>runner.enqueue([c.id],'cannot-create',{executionMode:'mcp'}),/版本与评测方式不一致/);

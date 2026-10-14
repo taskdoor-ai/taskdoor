@@ -53,15 +53,21 @@ export async function evaluateWithJev(run:LabRun,options:JevOptions,transport:ty
 
 export function createJevReviewer(store:LabStore,options:JevOptions,transport:typeof fetch=fetch,evaluator:(run:LabRun)=>Promise<LabJevReview>=run=>evaluateWithJev(run,options,transport)){
   const pending=new Set<string>();
-  return async(runId:string)=>{
+  return async(runId:string,judgeModel?:string)=>{
     if(pending.has(runId))throw new Error('该运行正在进行 Jev 核对，请稍候');
     const run=store.getRun(runId);
     if(!run)throw new Error('测试运行不存在');
+    if(['queued','running'].includes(run.status))throw new Error('请等待生成结束后再判断');
     if((run.jevReviews?.length??0)>=20)throw new Error('该运行已保存 20 次 Jev 核对，请导出记录后使用新的测试运行');
     pending.add(runId);
+    store.updateRun(runId,current=>{current.judgeStatus='running';current.judgeStartedAt=new Date().toISOString();delete current.judgeError;delete current.judgeFinishedAt;delete current.judgeSkipReason;});
     try {
-      const review=await evaluator(run);
-      return store.updateRun(runId,current=>{current.jevReviews=[...(current.jevReviews??[]),review];});
+      const selected=judgeModel?{...run,selection:{...run.selection,judgeModel}}:run;
+      const review=await evaluator(selected);
+      return store.updateRun(runId,current=>{current.jevReviews=[...(current.jevReviews??[]),review];current.judgeStatus='completed';current.judgeFinishedAt=new Date().toISOString();});
+    }catch(error){
+      store.updateRun(runId,current=>{current.judgeStatus='failed';current.judgeFinishedAt=new Date().toISOString();current.judgeError=error instanceof Error?error.message:'判断模型调用失败';});
+      throw error;
     }finally{pending.delete(runId);}
   };
 }

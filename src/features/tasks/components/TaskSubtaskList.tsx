@@ -3,6 +3,7 @@ import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { ChevronRight, ListTree } from "lucide-react";
 import { getTaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { getTaskProgressDemoExample } from "@/ai/mock/data/taskProgressDemo";
 import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "@/features/tasks/lib/task-effort-distribution";
@@ -32,6 +33,7 @@ export function TaskSubtaskList({ onOpenTask, tasks, effortTasks = [], completed
   progressComparisonsByTaskId?: Readonly<Record<string, TaskProgressComparisonSeries | undefined>>;
 }) {
   const ui = useGlobalUi();
+  const timeZone = useTeamTimeZone();
   const d = useDetailCopy();
   const mock = useMockText();
   if (!tasks.length) return <div className="task-subtask-list-empty">{d('noSubtasks')}</div>;
@@ -41,7 +43,7 @@ export function TaskSubtaskList({ onOpenTask, tasks, effortTasks = [], completed
     const series = getTaskProgressDemoExample(task.id, progressComparisonsByTaskId?.[task.id]);
     const effort = effortTasks.find(item => item.id === task.id);
     const scope = distribution.rows.find(row => row.id === task.id);
-    const progress = getTaskProgressDisplay({ series, task: { ...task, ...effort, status: task.status },
+    const progress = getTaskProgressDisplay({ timeZone, series, task: { ...task, ...effort, status: task.status },
       scopeMinutes: scope?.minutes, completedMinutes: series ? undefined : completedMinutesByTaskId?.[task.id] });
     return <details className="task-subtask-list-item" data-tone={task.iconTone ?? "neutral"} key={task.id}><summary aria-label={ui("子任务详情：{0}", {0: task.title})} className="task-subtask-list-row">
       <button aria-label={ui("打开子任务：{0}", {0: task.title})} className="task-subtask-title" data-task-id={task.id} disabled={!onOpenTask} onClick={() => onOpenTask?.(task.id)} type="button">

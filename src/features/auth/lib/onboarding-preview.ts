@@ -2,10 +2,11 @@ import { mockWorkspaceEmail, mockWorkspacePasswordDigest, mockWorkspaceTeams } f
 /** Interactive design preview only; this is not an authentication or authorization backend. */
 import type { PersonalCenterState } from "@/ai/mock/data/memberProfiles";
 import { resolveTeamEmailInvitation } from "@/features/members/lib/team-invitations";
+import { detectBrowserTimeZone } from "@/shared/lib/team-time-zone";
 export type AuthMode = "login" | "register" | "forgot";
 export type OnboardingStep = "email" | "code" | "google-password" | "reset-password" | "choose" | "create" | "join" | "invite" | "workspace";
 export type PreviewScenario = "new" | "invited" | "returning" | "expired";
-export type PreviewTeam = { id: string; name: string; role: "admin" | "member" };
+export type PreviewTeam = { id: string; name: string; role: "admin" | "member"; timezone?: string };
 type PreviewAccount = { googleSubject?: string; name: string; passwordDigest: string; teams: PreviewTeam[]; activeTeamId: string };
 export type OnboardingState = {
   mockAccessVersion?: number;
@@ -205,8 +206,10 @@ export function transitionOnboarding(state: OnboardingState, action: OnboardingA
     if (state.step !== "create") return state;
     const name = action.name.trim();
     if (!name || name.length > 40) return fail("请输入 1–40 个字的团队名称。", "team");
-    const team: PreviewTeam = { id: `preview-team-${crypto.randomUUID()}`, name, role: "admin" };
-    return rememberAccount({ ...state, step: "workspace", teams: [...state.teams, team], activeTeamId: team.id, inviteToken: "", ...clean });
+    const { timeZone, fallback } = detectBrowserTimeZone();
+    const team: PreviewTeam = { id: `preview-team-${crypto.randomUUID()}`, name, role: "admin", timezone: timeZone };
+    return rememberAccount({ ...state, step: "workspace", teams: [...state.teams, team], activeTeamId: team.id, inviteToken: "", ...clean,
+      ...(fallback ? { notice: "无法识别设备时区，团队已采用 UTC。" } : {}) });
   }
   if (action.type === "inspect-invite") {
     try {

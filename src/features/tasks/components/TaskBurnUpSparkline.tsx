@@ -1,5 +1,6 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { formatDisplayDate } from "@/shared/lib/date-time";
 import { useBurnUpWidth } from "@/shared/lib/useBurnUpWidth";
 import { TaskProgressHistory } from "@/features/tasks/components/TaskProgressHistory";
@@ -30,6 +31,7 @@ function shortDate(value: string) {
 
 export function TaskBurnUpSparkline({ compact = false, assessment, breakdown, effortSummary, needsReview = false, series, progress, timing }: { compact?: boolean; assessment?: TaskProgressAssessment; breakdown?: React.ReactNode; effortSummary?: string; needsReview?: boolean; series?: TaskBurnUpSeries; progress?: React.ReactNode; timing?: TaskProgressDisplay }) {
   const p = useProgressCopy();
+  const timeZone = useTeamTimeZone();
   const canvas = useBurnUpWidth(196);
   const resolved = assessment ?? getTaskProgressAssessment(series, []);
   const sourceModel = resolved.burnUp;
@@ -46,8 +48,8 @@ export function TaskBurnUpSparkline({ compact = false, assessment, breakdown, ef
   const { coverage } = model;
   const hasCoordinates = resolved.hasTrend;
   const dateAxis = hasCoordinates && timing && model.latest ? layoutBurnUpDateAxis({ translate: p,
-    model: timing, start: new Date(plotStart).toISOString().slice(0, 10), end: new Date(plotEnd).toISOString().slice(0, 10), asOf: taskCalendarDate(model.latest.at)!,
-    historyStartOn: taskCalendarDate(model.points[0]?.at) ?? undefined,
+    model: timing, start: new Date(plotStart).toISOString().slice(0, 10), end: new Date(plotEnd).toISOString().slice(0, 10), asOf: taskCalendarDate(model.latest.at, timeZone)!,
+    historyStartOn: taskCalendarDate(model.points[0]?.at, timeZone) ?? undefined,
     startX: 4, endX: model.width - 4, asOfX: referenceX(model.latest.at), dueX: timing.dueOn ? referenceX(timing.dueOn) : null, finishX: timing.finishOn ? referenceX(timing.finishOn) : null, fontSize: 13,
   }) : undefined;
   const incompleteEstimate = Boolean(coverage && !coverage.isComplete) || (resolved.state === "partial" && !coverage);

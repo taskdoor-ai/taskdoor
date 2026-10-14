@@ -8,6 +8,7 @@ import { getTaskEffortDistribution, type TaskEffortDistributionInput } from "@/f
 import { type TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 import { TaskProgressOverview } from "@/features/tasks/components/TaskProgressOverview";
 import { getTaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { TaskStatusBadge } from "@/shared/ui/TaskStatusBadge";
 
 
@@ -32,6 +33,7 @@ export function TaskEffortCost({ tasks, completedMinutesByTaskId, progressCompar
   progressPresentationByTaskId?: Readonly<Record<string, ComponentProps<typeof TaskProgressOverview>>>;
 }) {
   const ui = useGlobalUi();
+  const timeZone = useTeamTimeZone();
   const { locale } = useI18n();
   const effortLabel = (minutes: number) => formatEffortPersonDays(minutes, locale);
   const [tipOpen, setTipOpen] = useState(false);
@@ -90,7 +92,7 @@ export function TaskEffortCost({ tasks, completedMinutesByTaskId, progressCompar
             ? completedMinutesByTaskId[row.id] : null;
           const task = tasks.find(task => task.id === row.id || task.clientId === row.id);
           const comparison = progressComparisonsByTaskId?.[row.id];
-          const progress = progressPresentationByTaskId?.[row.id]?.model ?? getTaskProgressDisplay({series:comparison,task,scopeMinutes:row.minutes,
+          const progress = progressPresentationByTaskId?.[row.id]?.model ?? getTaskProgressDisplay({timeZone,series:comparison,task,scopeMinutes:row.minutes,
             completedMinutes: comparison && task?.status ? undefined : completedMinutes,
             expectedAsOf:comparisonAsOf});
           const canOpen = isSummary && onOpenTask && tasks.some(task => task.id?.trim() === row.id);

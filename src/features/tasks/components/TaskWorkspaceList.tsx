@@ -16,6 +16,7 @@ import { clearedTaskListConditions, getTaskStatusFilters, getTaskTagFilters, nor
 import { taskFilterSummaries, TaskListFilterPanel } from "@/features/tasks/components/TaskListFilterPanel";
 import { TaskStatusIcon, taskStatusDefinition, taskStatusOptions, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
 import { getTaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 import { PersonAvatar } from "@/shared/ui/PersonAvatar";
 import { FixedScrollThumb } from "@/shared/ui/FixedScrollThumb";
@@ -82,6 +83,7 @@ function TaskRowTitle({ title }: { title: string }) {
 
 export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onCreateTask, onDeleteTask, onTaskStatusChange, onOpenRecycleBin, onFiltersChange, onManageTags, onTaskSelect, onQueryChange, query, scopeCounts, selectedTaskId, showingWorkbench, teamId, progressComparisonsByTaskId }: TaskWorkspaceListProps) {
   const { t, locale } = useI18n();
+  const timeZone = useTeamTimeZone();
   const mock = useMockText();
   const statusText = (status: string) => status in statusMessageKey ? t(statusMessageKey[status as keyof typeof statusMessageKey]) : status;
   const rowsRef = useRef<HTMLDivElement>(null);
@@ -164,7 +166,7 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
     const owner = members.find(member => member.id === task.ownerId);
     const ownerName = task.ownerId ? mockPersonName(locale, task.ownerId, owner?.name ?? task.ownerId) : t('list.unassigned');
     const statusDefinition = taskStatusDefinition[task.status];
-    const progress = getTaskProgressDisplay({ series: progressComparisonsByTaskId?.[task.id], task: { ...task, status: undefined, completedAt: undefined } });
+    const progress = getTaskProgressDisplay({ timeZone, series: progressComparisonsByTaskId?.[task.id], task: { ...task, status: undefined, completedAt: undefined } });
     const progressRatio = progress.aiAssessment?.ratio ?? progress.ratio;
     const timeField = filters.sort === "created" ? t('list.createdAt') : t('list.updatedAt');
     const timestampValue = filters.sort === "created" ? task.createdAt ?? "" : task.updatedAt;

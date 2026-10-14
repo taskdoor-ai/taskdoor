@@ -1,4 +1,5 @@
 import type { PersonalCenterState, TeamResponsibilityProfile } from '@/ai/mock/data/memberProfiles';
+import { detectBrowserTimeZone } from '@/shared/lib/team-time-zone';
 export const MAX_CREATED_TEAMS = 10;
 export const MAX_TEAM_MEMBERS = 50;
 type Creator = { userId: string; email: string; name: string };
@@ -17,10 +18,11 @@ export function prepareCreatedTeam(directory: PersonalCenterState, identity: Cre
   if (!name || name.length > 60) throw new Error('团队名称需要 1–60 个字符');
   if (countCreatedTeams(directory.teams, identity) >= MAX_CREATED_TEAMS) throw new Error(`最多可创建 ${MAX_CREATED_TEAMS} 个团队`);
   const id = `preview-team-${crypto.randomUUID()}`;
+  const { timeZone, fallback: timezoneFallback } = detectBrowserTimeZone();
   const team: TeamResponsibilityProfile = {
-    id, name, createdBy: identity.userId, role: '拥有者', coverage: '', missingSources: '', lastSyncedAt: '刚刚', inviteToken: crypto.randomUUID(),
+    id, name, timezone: timeZone, createdBy: identity.userId, role: '拥有者', coverage: '', missingSources: '', lastSyncedAt: '刚刚', inviteToken: crypto.randomUUID(),
     memberships: [{ id: `${id}:${identity.userId}`, memberId: identity.userId, email: identity.email, name: identity.name, role: 'owner', status: 'active', responsibility: '', joinedAt: new Date().toISOString() }],
     responsibilityDocument: { content: '', updatedAt: new Date().toISOString(), updatedBy: identity.name, revisionId: crypto.randomUUID() }, observedClaims: [],
   };
-  return { team, directory: { ...directory, teams: [...directory.teams, team] } };
+  return { team, directory: { ...directory, teams: [...directory.teams, team] }, timezoneFallback };
 }

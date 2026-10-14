@@ -28,6 +28,17 @@
 .task-detail-split .task-detail-title-row h1 { min-width: 0; flex: 1; margin: 0; }
 .task-detail-split .task-detail-title-input { min-height: 36px; max-height: 104px; font-size: 24px; line-height: 1.4; font-weight: 650; }
 .task-detail-split .task-detail-title-input[data-slot="textarea"], .task-detail-split .task-detail-title-input[data-slot="input"] { display: block; height: 36px; min-height: 36px; max-height: 36px; margin: 0; padding: 0; }
+.task-detail-title-content, .task-detail-goal-editor { display: flex; align-items: center; min-width: 0; gap: 12px; }
+.task-detail-title-content h1, .task-detail-goal-editor > textarea { flex: 1; min-width: 0; }
+.task-detail-goal-content { min-width: 0; }
+.task-detail-goal-editor { align-items: flex-start; }
+.task-field-save-feedback { display: inline-flex; align-items: center; justify-content: flex-end; flex: 0 0 64px; gap: 4px; min-height: 26px; color: var(--ad-tag-green-ink); font-size: 12px; font-weight: 400; line-height: 18px; white-space: nowrap; opacity: 0; pointer-events: none; }
+.task-field-save-feedback[data-visible="true"] { opacity: 1; }
+.task-field-save-feedback[data-status="saving"] { color: var(--ad-ink-tertiary); }
+.task-field-save-feedback[data-status="saved"] { animation: task-field-saved 2.2s ease forwards; }
+.task-field-save-error { margin: 4px 0 0; color: var(--ad-tag-red-ink); font-size: 12px; font-weight: 400; line-height: 18px; }
+@keyframes task-field-saved { 0% { opacity: 0; } 5%, 91% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .task-field-save-feedback[data-status="saved"] { animation: none; } }
 .task-detail-split .task-ai-detail-tools { padding-top: 3px; }
 .task-detail-primary-properties { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; margin: 12px 0 0; }
 .task-detail-primary-properties .task-detail-property { display: flex; flex: 0 0 auto; flex-direction: row; align-items: center; gap: 10px; min-height: 32px; max-width: 100%; }
@@ -151,7 +162,7 @@
 .task-detail-primary-properties .member-selector-person.is-single > span { flex: 0 0 28px; width: 28px; height: 28px; }
 .task-detail-split .task-detail-body { container: task-collaboration-pane / inline-size; }
 .task-detail-split .task-detail-body > .task-files-panel { padding: 0; overflow: hidden; }
-.task-detail-split .task-file-explorer { height: 100%; min-height: 0; margin: 0; grid-template-columns: 200px minmax(0, 1fr); }
+.task-detail-split .task-file-explorer { height: 100%; min-height: 0; margin: 0; }
 .task-detail-split .task-file-explorer-sidebar,
 .task-detail-split .task-file-explorer-preview { min-height: 0; }
 .task-detail-split .task-file-explorer-viewer { min-height: 0; overflow: auto; }

@@ -85,14 +85,6 @@ export function getNodePath(nodes: TaskFileNode[], nodeId: string): TaskFileNode
   return path;
 }
 
-export function setNodeIcon(nodes: TaskFileNode[], nodeId: string, iconName: string): TaskFileNode[] {
-  return nodes.map((node) => node.id === nodeId ? { ...node, iconName } : node);
-}
-
-export function restoreDefaultIcon(nodes: TaskFileNode[], nodeId: string): TaskFileNode[] {
-  return nodes.map((node) => { if (node.id !== nodeId) return node; const { iconName: _, ...rest } = node; return rest; });
-}
-
 export function getSelectionAfterRemoval(nodes: TaskFileNode[], selectedId: string, removedIds: string[]): string | null {
   const selected = nodes.find((node) => node.id === selectedId);
   if (!selected || !removedIds.includes(selectedId)) return selectedId;

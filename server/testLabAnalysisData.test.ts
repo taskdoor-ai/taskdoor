@@ -12,10 +12,13 @@ test('28个分析用例独立快照合法，空说明不妨碍分析',()=>{
  editableSchema.parse({expectedRevision:state.revision,teams:state.teams,cases:state.cases});validateRelations(state.teams,state.cases);
  for(const c of cases){assert.equal(c.steps[0].prompt,'');const input=buildModelInput(c.dataSnapshot!,c,c.steps[0],'data-run',[]);assert.ok(input.message);assert.ok(input.evidence.length);assert.equal('assertions' in input,false);assert.equal('expectedOutput' in input,false);}
 });
-test('任务层级和前置分开，子任务正文绑定对象，旧测试答案不进输入',()=>{
+test('任务层级保留，已移除依赖字段不进输入，发布条件仍由正文表达',()=>{
  const state=fixtures();const c=state.cases.find(c=>c.id==='case-analysis-data-dependency')!;const input=buildModelInput(c.dataSnapshot!,c,c.steps[0],'hierarchy',[]) as any;
  assert.equal(input.analysisContext.tasks.length,4);assert.equal(input.analysisContext.tasks.filter((t:any)=>t.parentTaskId===c.steps[0].taskId).length,2);
- const root=input.analysisContext.tasks.find((t:any)=>t.id===c.steps[0].taskId);assert.equal(root.dependencies.length,1);
+ const root=input.analysisContext.tasks.find((t:any)=>t.id===c.steps[0].taskId);
+ assert.equal(Object.hasOwn(input.analysisContext,'dependencies'),false);
+ for(const task of input.analysisContext.tasks){assert.equal(Object.hasOwn(task,'dependencies'),false);assert.equal(Object.hasOwn(task,'dependsOnTaskIds'),false);}
+ assert.ok(input.evidence.some((item:any)=>item.content.includes('审批尚未通过，只影响发布')));
  assert.equal(input.analysisContext.files.find((f:any)=>f.name==='script.md').taskId,root.id+'-script');
  assert.equal(JSON.stringify(input).includes('整体独立工作完成一半'),false);
 });

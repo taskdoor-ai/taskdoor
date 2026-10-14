@@ -1,5 +1,7 @@
 # 产品规则快照
 
+> 历史来源，仅用于追溯。当前输入、输出及业务语义以[当前 PRD 契约](../../shared/current-prd-contract.md)和本 Skill 的输出契约为准；下方旧依赖、展示与确认规则不指导当前估算和进度计算。
+
 由 scripts/sync-agentdoor-skill-rules.mjs 按 registry.json 中的章节生成。规则变更先修改对应产品文档，再同步本文件；不要独立改写快照。
 
 来源：docs/product-v2/PRD-AgentDoor-协作任务全流程.md

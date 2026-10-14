@@ -164,7 +164,6 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
               {timestamp && <time tabIndex={0} title={timestamp.full} aria-label={timestamp.full} dateTime={timestamp.dateTime}>{timestamp.label}</time>}
               {editing !== message.id && (reading.state === 'translated' || reading.state === 'original') && <span className="content-translation-control"><span>{reading.state === 'translated' ? ui('已翻译') : ui('原文')}</span><span aria-hidden="true"> · </span><button type="button" aria-label={reading.state === 'translated' ? ui('查看原文') : ui('显示译文')} onClick={toggleOriginal}>{reading.state === 'translated' ? ui('查看原文') : ui('显示译文')}</button></span>}
               {editing !== message.id && reading.state === 'unavailable' && <small className="content-translation-unavailable" title={ui('本地演示尚无此内容的译文，原文已保留。')}>{ui('暂无译文')}</small>}
-              {editing === message.id && <small>{ui('正在编辑原文')}</small>}
               {message.updatedAt && <small>{d('edited')}</small>}
               {!isReply && !compact && replyControls}
             </div>}

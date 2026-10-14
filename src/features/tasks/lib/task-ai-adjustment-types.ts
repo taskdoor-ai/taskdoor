@@ -26,6 +26,7 @@ export type TaskAiAdjustmentScope =
   | { kind: "subtask"; taskId: string };
 
 export type TaskAiAdjustmentContext = {
+  timeZone?: string;
   mode: "draft" | "saved";
   currentUserId: string;
   task: TaskAiEditableTask;

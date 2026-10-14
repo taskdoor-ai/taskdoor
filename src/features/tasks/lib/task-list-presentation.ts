@@ -1,5 +1,7 @@
 import type { TaskNode } from "@/shared/model/task-model";
 import { formatDisplayDate, formatLegacyDateLabel, formatRelativeDateTime } from "@/shared/lib/date-time";
+import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
+import { LEGACY_TEAM_TIME_ZONE } from "@/shared/lib/team-time-zone";
 
 // Old demo labels have no absolute timestamp. Anchor them once per session, not on each render.
 const legacyReference = new Date();
@@ -49,14 +51,15 @@ export function taskUpdatedLabel(value: string, now = new Date(), reference = le
     dateTime: dateOnly ? text : new Date(timestamp).toISOString(),
   };
 }
-export function taskDueLabel(task: TaskNode, now = new Date()): { label: string; overdue: boolean } | null {
+export function taskDueLabel(task: TaskNode, now = new Date(), timeZone = LEGACY_TEAM_TIME_ZONE): { label: string; overdue: boolean } | null {
   if (task.status === "已完成" || task.status === "已取消") return null;
   const value = task.plannedEndOn;
   if (value && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    const date = new Date(`${value}T00:00:00`);
-    if (!Number.isNaN(date.getTime()) && date.getFullYear() === Number(value.slice(0, 4)) && date.getMonth() + 1 === Number(value.slice(5, 7)) && date.getDate() === Number(value.slice(8, 10))) {
-      const day = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
-      const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    const savedDay = taskCalendarDate(value, timeZone);
+    const todayDay = taskCalendarDate(now.toISOString(), timeZone);
+    if (savedDay && todayDay) {
+      const day = Date.parse(`${savedDay}T00:00:00Z`);
+      const today = Date.parse(`${todayDay}T00:00:00Z`);
       const diff = (day - today) / 86400000;
       return { label: diff < 0 ? `逾期 ${-diff} 天` : diff === 0 ? "今天截止" : diff === 1 ? "明天截止" : `${formatDisplayDate(value, { now: now.getTime() }) ?? "—"}截止`, overdue: diff < 0 };
     }

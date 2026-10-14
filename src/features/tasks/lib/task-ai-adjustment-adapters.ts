@@ -29,14 +29,14 @@ function creationTaskContext(task: CreationTask, parentTaskId?: string): TaskAiE
   };
 }
 
-export function createDraftTaskAiContext(form: CreationForm, members: Members, currentUserId: string): TaskAiAdjustmentContext {
+export function createDraftTaskAiContext(form: CreationForm, members: Members, currentUserId: string, timeZone?: string): TaskAiAdjustmentContext {
   const parent = form.decision === "attach" ? form.candidate : undefined;
   const task = creationTaskContext(form.mainTask, parent?.id);
   const subtasks = form.subtasks.map(item => creationTaskContext(item, item.parentClientId ?? task.id));
   const dependencyTasks: TaskAiAdjustmentContext["dependencyTasks"] = [task, ...subtasks].map(({ id, title, dependsOnTaskIds, parentTaskId, endDate }) => ({ id, title, dependsOnTaskIds, parentTaskId, endDate }));
   if (parent) dependencyTasks.push({ id: parent.id, title: parent.name ?? parent.title ?? "主任务", dependsOnTaskIds: [], parentTaskId: parent.parentTaskId, endDate: parent.plannedEndOn ?? parent.endDate });
   return {
-    mode: "draft", currentUserId, task, subtasks, members: memberSnapshots(members),
+    mode: "draft", currentUserId, timeZone, task, subtasks, members: memberSnapshots(members),
     dependencyTasks,
     canAddSubtasks: form.decision !== "attach",
   };
@@ -64,7 +64,7 @@ function assertCurrentProposal(context: TaskAiAdjustmentContext, proposal: TaskA
 }
 
 export function applyDraftTaskAiAdjustment(form: CreationForm, context: TaskAiAdjustmentContext, proposal: TaskAiAdjustmentProposal): CreationForm {
-  const current = createDraftTaskAiContext(form, context.members, context.currentUserId);
+  const current = createDraftTaskAiContext(form, context.members, context.currentUserId, context.timeZone);
   assertCurrentProposal(current, proposal);
   if (!proposal.changes.length) return form;
   const update = (task: CreationTask): CreationTask => {
@@ -81,7 +81,7 @@ export function applyDraftTaskAiAdjustment(form: CreationForm, context: TaskAiAd
   return { ...form, mainTask: update(form.mainTask), subtasks: [...form.subtasks.map(update), ...additions] };
 }
 
-export function createSavedTaskAiContext(nodes: WorkspaceNode[], taskId: string, members: Members, currentUserId: string, ownerProposals: Record<string, string> = {}): TaskAiAdjustmentContext | null {
+export function createSavedTaskAiContext(nodes: WorkspaceNode[], taskId: string, members: Members, currentUserId: string, ownerProposals: Record<string, string> = {}, timeZone?: string): TaskAiAdjustmentContext | null {
   const tasks = nodes.filter((node): node is TaskNode => node.kind === "task");
   const main = tasks.find(task => task.id === taskId);
   if (!main) return null;
@@ -96,7 +96,7 @@ export function createSavedTaskAiContext(nodes: WorkspaceNode[], taskId: string,
     ...(task.effortEstimate ? { effortEstimate: clone(task.effortEstimate) } : {}),
   });
   return {
-    mode: "saved", currentUserId, task: convert(main), subtasks: tasks.filter(task => task.parentTaskId === taskId).map(convert),
+    mode: "saved", currentUserId, timeZone, task: convert(main), subtasks: tasks.filter(task => task.parentTaskId === taskId).map(convert),
     members: memberSnapshots(members), canAddSubtasks: true,
     dependencyTasks: tasks.map(({ id, name, parentTaskId, plannedEndOn }) => ({ id, title: name, dependsOnTaskIds: [], parentTaskId, endDate: plannedEndOn })),
   };
@@ -104,7 +104,7 @@ export function createSavedTaskAiContext(nodes: WorkspaceNode[], taskId: string,
 
 export function applySavedTaskAiAdjustment(nodes: WorkspaceNode[], context: TaskAiAdjustmentContext, proposal: TaskAiAdjustmentProposal, options: { author: string; now?: Date; effectiveNodes?: WorkspaceNode[] }): { nodes: WorkspaceNode[]; activities: Record<string, TaskActivityMock[]>; affectedIds: string[] } {
   const ownerProposals = Object.fromEntries([context.task, ...context.subtasks].filter(task => task.proposedOwnerId).map(task => [task.id, task.proposedOwnerId!]));
-  const current = createSavedTaskAiContext(options.effectiveNodes ?? nodes, context.task.id, context.members, context.currentUserId, ownerProposals);
+  const current = createSavedTaskAiContext(options.effectiveNodes ?? nodes, context.task.id, context.members, context.currentUserId, ownerProposals, context.timeZone);
   if (!current) throw new Error("当前任务已不存在，请返回任务列表。");
   if (getTaskAiContextSignature(current) !== getTaskAiContextSignature(context)) throw new Error(staleMessage);
   assertCurrentProposal(current, proposal);
@@ -137,7 +137,7 @@ export function applySavedTaskAiAdjustment(nodes: WorkspaceNode[], context: Task
       next.dueAt = patch.endDate ? `${Number(patch.endDate.slice(5, 7))} 月 ${Number(patch.endDate.slice(8, 10))} 日` : "—";
     }
     if (patch.endDate !== undefined || patch.startDate !== undefined) {
-      const error = taskScheduleError(next.plannedEndOn, node.createdAt, next.plannedStartOn);
+      const error = taskScheduleError(next.plannedEndOn, node.createdAt, next.plannedStartOn, context.timeZone);
       if (error) throw new Error(error);
     }
     return next;

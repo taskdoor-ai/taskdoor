@@ -9,6 +9,7 @@ import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-goal";
 import { validateDraftHierarchy } from "@/features/tasks/lib/task-creation-hierarchy";
 
 export type WorkspaceTaskCreationOptions = {
+  timeZone?: string;
   currentUserId?: string;
   /** The creation form has shown the defaults and the user has reviewed its participants. */
   participantsReviewed?: boolean;
@@ -88,7 +89,7 @@ export function createWorkspaceTasksFromDraft(
   validateDraftHierarchy(draft.subtasks);
   const createdAt = new Date().toISOString();
   for (const task of [draft.mainTask, ...draft.subtasks]) {
-    const error = taskScheduleError(task.endDate, createdAt, task.startDate);
+    const error = taskScheduleError(task.endDate, createdAt, task.startDate, options.timeZone);
     if (error) throw new Error(`「${task.title}」${error}`);
   }
   const usedIds = new Set(nodes.map(({ id }) => id));

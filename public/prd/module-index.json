@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-10-13T09:31:12.720Z",
+  "generatedAt": "2026-10-14T16:35:44.074Z",
   "modules": [
     {
       "moduleId": "product-preview",
@@ -379,7 +379,7 @@
       "moduleId": "task-creation",
       "title": "任务创建",
       "group": "任务管理",
-      "summary": "通过对话生成待确认方案，支持最多四层任务及按责任域推荐人员。",
+      "summary": "通过对话生成待确认方案，按团队层级配额组织子任务并推荐人员。",
       "source": "docs/prd/modules/07-task-creation.md",
       "url": "./index.html#task-creation",
       "sections": [

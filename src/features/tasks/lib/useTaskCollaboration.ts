@@ -40,13 +40,13 @@ export function useTaskCollaboration(teamId: string, taskId: string, seedFiles: 
     window.addEventListener("storage", sync);
     return () => window.removeEventListener("storage", sync);
   }, [scopeKey]);
-  const commit = (change: (current: CollaborationSnapshot) => CollaborationSnapshot) => {
+  const commit = (change: (current: CollaborationSnapshot) => CollaborationSnapshot, persist?: (current: CollaborationSnapshot, next: CollaborationSnapshot) => CollaborationSnapshot) => {
     if (blocked.current) throw new Error(error || "请先重新读取协作记录。");
     try {
       const current = snapshotRef.current;
       const next = change(current);
       if (next === current) return;
-      const saved = saveCollaboration(window.localStorage, scopeKey, current.revision, next);
+      const saved = persist ? persist(current, next) : saveCollaboration(window.localStorage, scopeKey, current.revision, next);
       snapshotRef.current = saved;
       setSnapshot(saved);
       setError("");

@@ -82,22 +82,24 @@ export function buildTaskListProjection(
   tagDefinitions: TagDefinition[],
   currentUserId = filters.owner,
   displayName?: (task: TaskNode) => string,
+  timeZone?: string,
 ): TaskListProjection {
   const tasksById = new Map<string, TaskNode>();
   for (const node of nodes) {
     if (node.kind === "task" && !tasksById.has(node.id)) tasksById.set(node.id, node);
   }
   const allTasks = [...tasksById.values()];
+  const now = new Date();
   const queryFor = (task: TaskNode) => displayName?.(task).toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()) ? "" : query;
   const scopeFilters = { ...filters, tag: "all", tags: [], includeUntagged: false };
-  const scopedTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), scopeFilters, currentUserId));
+  const scopedTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), scopeFilters, currentUserId, now, timeZone));
   const visibleTasks = scopedTasks
-    .filter((task) => taskMatchesListFilters(task, queryFor(task), filters, currentUserId))
+    .filter((task) => taskMatchesListFilters(task, queryFor(task), filters, currentUserId, now, timeZone))
     .sort((a, b) => compareTaskUpdates(a, b, filters.sort === "created"));
   const presentStatuses = new Set(allTasks.map((task) => task.status));
   // Status counts describe the available choices, before applying this dimension.
   const statusFilters: TaskListFilters = { ...filters, status: "all", statuses: [], completion: "all" };
-  const statusTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), statusFilters, currentUserId));
+  const statusTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), statusFilters, currentUserId, now, timeZone));
   const byStatus: TaskListProjection["statusCounts"]["byStatus"] = {};
   for (const task of statusTasks) {
     const status = normalizeTaskStatus(task.status);
@@ -123,6 +125,7 @@ export function buildTaskScopeCounts(
   tagDefinitions: TagDefinition[],
   currentUserId: string,
   displayName?: (task: TaskNode) => string,
+  timeZone?: string,
 ): TaskScopeCounts {
   const count = (scope: "all" | "owned" | "participating") => buildTaskListProjection(
     nodes,
@@ -131,6 +134,7 @@ export function buildTaskScopeCounts(
     tagDefinitions,
     currentUserId,
     displayName,
+    timeZone,
   ).visibleTasks.length;
   const all = count("all");
   if (!currentUserId.trim()) return { all, owned: 0, participating: 0 };

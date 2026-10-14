@@ -14,9 +14,13 @@ import { confirmTaskCriterion } from "@/features/tasks/lib/task-criterion-review
 import { buildCreatedMockCatalog } from "@/ai/mock/i18n/createdMockCatalog";
 import { MockDataProvider } from "@/ai/mock/i18n/MockDataProvider";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
-import { taskScheduleError } from "@/features/tasks/lib/task-schedule";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { taskCalendarDate, taskScheduleError } from "@/features/tasks/lib/task-schedule";
+import { getTeamTimeZone, isValidTimeZone } from "@/shared/lib/team-time-zone";
+import { TeamTimeZoneContext } from "@/shared/lib/useTeamTimeZone";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TaskCreationExperience } from "@/features/tasks/components/TaskCreationExperience";
+import { TaskCreationDiscardDialog } from "@/features/tasks/components/TaskCreationDiscardDialog";
+import type { CreationExitController } from "@/features/tasks/lib/task-creation-exit";
 import type { TaskCreationParentContext } from "@/features/tasks/components/TaskCreationPage";
 import type { PrimarySection } from "@/app/workspace/components/WorkspaceSidebar";
 import { WorkspaceTopbar } from "@/app/workspace/components/WorkspaceTopbar";
@@ -29,6 +33,8 @@ import { PersonalWorkbench } from "@/ai/mock/prototype/components/PersonalWorkbe
 import { AiConnectionDialog } from "@/features/ai-connection/components/AiConnectionDialog";
 import { TaskDetail, type TaskAttentionTarget } from "@/features/tasks/components/TaskDetail";
 import { COLLABORATION_CHANGED, projectTaskCollaboration } from "@/features/tasks/lib/useTaskCollaboration";
+import { publishTaskDiscussion } from "@/features/tasks/lib/task-mention-publishing";
+import type { CollaborationMessage, CollaborationSnapshot } from "@/features/tasks/lib/task-collaboration";
 import { getDirectChildTaskCounts, toTaskRelationSummary } from "@/features/tasks/lib/task-relation-projection";
 import type { TaskDateRange } from "@/features/tasks/components/TaskDateRangePicker";
 import { taskIconOptions, taskIconToneOptions } from "@/features/tasks/components/TaskIcon";
@@ -63,6 +69,7 @@ import { progressPredictionInputKey, progressPredictionStorageKey, readProgressP
 import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-ai-adjustment-adapters";
 import { commitTaskAiStorage, recoverTaskAiStorage } from "@/features/tasks/lib/task-ai-adjustment-storage";
 import { applyCurrentTaskCriteria, applySavedTaskCriteria } from "@/features/tasks/lib/task-criteria-editing";
+import { applyCurrentTaskTextField } from "@/features/tasks/lib/task-text-editing";
 import { getWorkspaceEffortLeaves } from "@/features/tasks/lib/task-effort-editing";
 import { runAgentdoorReanalysis } from "@/ai/mock/lib/agentdoorReanalysis";
 import { buildTaskDiagnosisContext } from "@/features/tasks/files/lib/task-diagnosis-context";
@@ -162,16 +169,7 @@ const formatPeriodLabel = (startDate: string, endDate: string) => !startDate || 
   ? formatDateLabel(endDate)
   : `${formatDateLabel(startDate)} — ${formatDateLabel(endDate)}`;
 
-const taskDateValue = (value?: string): string | null => {
-  if (!value || value === "—" || value.includes("未设置") || value.includes("待排期")) return null;
-  const iso = value.match(/^(\d{4}-\d{2}-\d{2})/);
-  if (iso) return iso[1];
-  const date = new Date();
-  const monthDay = value.match(/(\d+)\s*月\s*(\d+)\s*日/);
-  if (monthDay) return `${date.getFullYear()}-${monthDay[1].padStart(2, "0")}-${monthDay[2].padStart(2, "0")}`;
-  if (value.includes("今天")) return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-  return value;
-};
+const taskDateValue = taskCalendarDate;
 
 function App() {
   const ui = useGlobalUi();
@@ -248,7 +246,7 @@ function App() {
     const task = nodes.find(node => node.kind === "task" && node.id === taskId);
     if (!task || task.kind !== "task" || task.status === "已完成" || task.status === "已取消") throw new Error("任务状态已变化，当前无需预测。");
     const inputKey = progressPredictionInputKey(nodes, taskId);
-    const result = await runAgentdoorReanalysis({ analyze: () => recalculateTaskProgressPrediction({ nodes, taskId,
+    const result = await runAgentdoorReanalysis({ analyze: () => recalculateTaskProgressPrediction({ nodes, taskId, timeZone: activeTeamTimeZone,
       getSeries: id => createdProjectProgressDemo.comparisons[id] ?? getTaskProgressDemoExample(id),
     }) });
     if (progressPredictionInputKey(workspaceNodesRef.current, taskId) !== inputKey) throw new Error("任务已更新，已保留最新状态，请重新分析。");
@@ -274,6 +272,8 @@ function App() {
   };
   const [personalCenterState, setPersonalCenterState] = useState<PersonalCenterState>(() => loadPersonalCenterState());
   const [activeTeamId, setActiveTeamId] = useState(() => personalCenterState.teams.find(team => team.id === workspaceSession?.activeTeamId)?.id ?? personalCenterState.teams[0]?.id ?? "");
+  const activeTeamTimeZone = getTeamTimeZone(personalCenterState.teams.find(team => team.id === activeTeamId));
+  const validTeamTimeZone = isValidTimeZone(activeTeamTimeZone);
   useEffect(() => {
     if (workspaceSession && activeTeamId) saveWorkspaceSession({ ...workspaceSession, activeTeamId });
   }, [activeTeamId, workspaceSession]);
@@ -301,6 +301,13 @@ function App() {
   const [creationSessionOpen, setCreationSessionOpen] = useState(false);
   const [creationParentContext, setCreationParentContext] = useState<TaskCreationParentContext | null>(null);
   const creationSessionCompleted = useRef(false);
+  const creationExitController = useRef<CreationExitController | null>(null);
+  const creationExitReturnFocus = useRef<HTMLElement | null>(null);
+  const [pendingCreationExit, setPendingCreationExit] = useState<{ run: () => void } | null>(null);
+  const [creationExitError, setCreationExitError] = useState("");
+  const registerCreationExit = useCallback((controller: CreationExitController | null) => {
+    creationExitController.current = controller;
+  }, []);
   const [workbenchAsOf, setWorkbenchAsOf] = useState(() => getTeamWorkspaceScenario(activeTeamId)?.asOf ?? new Date().toISOString());
   const [workbenchAnalyzing, setWorkbenchAnalyzing] = useState(false);
   const [workbenchAnalysisError, setWorkbenchAnalysisError] = useState("");
@@ -353,33 +360,66 @@ function App() {
   };
 
   const resetCreationSessionForTeamChange = () => {
+    creationExitController.current = null;
     setCreationSessionOpen(false);
     setCreationParentContext(null);
     creationSessionCompleted.current = false;
     setConversationRevision((revision) => revision + 1);
   };
 
+  const requestCreationExit = (run: () => void) => {
+    if (activeSection === "conversation" && creationSessionOpen) {
+      if (!creationSessionCompleted.current && creationExitController.current?.hasUnsavedChanges()) {
+        creationExitReturnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        setCreationExitError("");
+        setPendingCreationExit({ run });
+        return;
+      }
+      resetCreationSessionForTeamChange();
+    }
+    run();
+  };
+  const cancelCreationExit = () => { setPendingCreationExit(null); setCreationExitError(""); };
+  const confirmCreationExit = () => {
+    if (!pendingCreationExit) return;
+    try {
+      creationExitController.current?.discard();
+      resetCreationSessionForTeamChange();
+    } catch (caught) {
+      setCreationExitError(caught instanceof Error ? caught.message : "无法清理本次未保存方案，请重试。");
+      return;
+    }
+    const run = pendingCreationExit.run;
+    creationExitReturnFocus.current = null;
+    setPendingCreationExit(null); setCreationExitError("");
+    run();
+  };
+
   const changeActiveTeam = (teamId: string) => {
     if (!personalCenterState.teams.some((team) => team.id === teamId) || teamId === activeTeamId) return;
-    resetCreationSessionForTeamChange();
-    setActiveTeamId(teamId);
-    setSelectedTaskId(null);
-    setTaskAttentionTarget(null);
-    setTaskQuery("");
-    setTaskFilters(createInitialTaskListFilters(currentUserId));
-    setActiveSection("tasks");
-    setWorkbenchAnalysisError("");
-    setWorkbenchAsOf(getTeamWorkspaceScenario(teamId)?.asOf ?? new Date().toISOString());
+    requestCreationExit(() => {
+      resetCreationSessionForTeamChange();
+      setActiveTeamId(teamId);
+      setSelectedTaskId(null);
+      setTaskAttentionTarget(null);
+      setTaskQuery("");
+      setTaskFilters(createInitialTaskListFilters(currentUserId));
+      setActiveSection("tasks");
+      setWorkbenchAnalysisError("");
+      setWorkbenchAsOf(getTeamWorkspaceScenario(teamId)?.asOf ?? new Date().toISOString());
+    });
   };
 
   const showTaskList = () => {
-    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
-    setSelectedTaskId(null);
-    setActiveSection("tasks");
-    focusPrimaryHeadingAfterNavigation("list");
+    requestCreationExit(() => {
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+      setSelectedTaskId(null);
+      setActiveSection("tasks");
+      focusPrimaryHeadingAfterNavigation("list");
+    });
   };
 
-  const openTask = (taskId: string, focusHeading = true) => {
+  const navigateToTask = (taskId: string, focusHeading = true) => {
     const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId);
     if (!task) return;
     setPersonalInfoOpen(false);
@@ -392,23 +432,36 @@ function App() {
     setActiveSection("tasks");
     if (focusHeading) focusPrimaryHeadingAfterNavigation("detail");
   };
+  const openTask = (taskId: string, focusHeading = true) => {
+    if (!workspaceNodesRef.current.some(node => node.kind === "task" && node.id === taskId)) return;
+    requestCreationExit(() => navigateToTask(taskId, focusHeading));
+  };
 
   const startNewTaskConversation = () => {
-    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
-    if (!creationSessionOpen || creationSessionCompleted.current || creationParentContext) {
-      setConversationRevision((revision) => revision + 1);
-      setCreationSessionOpen(true);
-      creationSessionCompleted.current = false;
+    if (!validTeamTimeZone) { toast.error(locale === "en" ? "The team timezone is invalid. Task creation is unavailable." : "团队时区无效，暂时无法创建任务。"); return; }
+    if (activeSection === "conversation" && creationSessionOpen && !creationSessionCompleted.current && !creationParentContext) {
+      focusPrimaryHeadingAfterNavigation("creation");
+      return;
     }
-    setCreationParentContext(null);
-    setActiveSection("conversation");
-    focusPrimaryHeadingAfterNavigation("creation");
+    requestCreationExit(() => {
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+      if (!creationSessionOpen || creationSessionCompleted.current || creationParentContext) {
+        setConversationRevision((revision) => revision + 1);
+        setCreationSessionOpen(true);
+        creationSessionCompleted.current = false;
+      }
+      setCreationParentContext(null);
+      setActiveSection("conversation");
+      focusPrimaryHeadingAfterNavigation("creation");
+    });
   };
 
   const showPrimarySection = (section: "home" | "tasks") => {
-    setActiveSection(section);
-    setTaskAttentionTarget(null);
-    focusPrimaryHeadingAfterNavigation(section === "tasks" ? selectedTaskId ? "detail" : "list" : "home");
+    requestCreationExit(() => {
+      setActiveSection(section);
+      setTaskAttentionTarget(null);
+      focusPrimaryHeadingAfterNavigation(section === "tasks" ? selectedTaskId ? "detail" : "list" : "home");
+    });
   };
 
   const workbenchInputRefs = useRef({
@@ -534,9 +587,10 @@ function App() {
   };
 
   const createTaskPlanFromConversation = (draft: TaskPlanDraft, parentTaskId?: string) => {
+    if (!validTeamTimeZone) throw new Error(locale === "en" ? "The team timezone is invalid. Your input has been kept." : "团队时区无效，无法创建任务。输入已保留。");
     if (personalTagLoadError || taskStorageRecoveryError) throw new Error(personalTagLoadError || taskStorageRecoveryError);
     const prepared = preparePersonalTaskTags(tagDefinitions, draft);
-    const result = createWorkspaceTasksFromDraft(workspaceNodesRef.current, prepared.draft, { parentTaskId, currentUserId, teamId: activeTeamId, participantsReviewed: true });
+    const result = createWorkspaceTasksFromDraft(workspaceNodesRef.current, prepared.draft, { parentTaskId, currentUserId, teamId: activeTeamId, timeZone: activeTeamTimeZone, participantsReviewed: true });
     // Save new tasks and the caller's personal catalog as one recoverable write.
     try {
       commitTaskAiStorage(localStorage, [
@@ -734,29 +788,28 @@ function App() {
     : undefined;
   const selectedTaskPath = selectedTreeTask?.kind === "task" ? getTaskPathItems(teamWorkspaceNodes, selectedTreeTask) : [];
   const startNewSubtaskConversation = () => {
+    if (!validTeamTimeZone) { toast.error(locale === "en" ? "The team timezone is invalid. Task creation is unavailable." : "团队时区无效，暂时无法创建任务。"); return; }
     const selectedTask = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === selectedTaskId);
     if (!selectedTask) return;
-    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
-    setCreationParentContext({
-      parentTaskId: selectedTask.id,
-      pathItems: getTaskPathItems(workspaceNodesRef.current, selectedTask),
+    requestCreationExit(() => {
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+      setCreationParentContext({
+        parentTaskId: selectedTask.id,
+        pathItems: getTaskPathItems(workspaceNodesRef.current, selectedTask),
     });
     setConversationRevision((revision) => revision + 1);
     setCreationSessionOpen(true);
     creationSessionCompleted.current = false;
     setActiveSection("conversation");
     focusPrimaryHeadingAfterNavigation("creation");
+    });
   };
   const closeTaskCreation = () => {
     const parentTaskId = creationParentContext?.parentTaskId;
-    setCreationSessionOpen(false);
-    setCreationParentContext(null);
     if (parentTaskId && workspaceNodesRef.current.some(node => node.kind === "task" && node.id === parentTaskId)) openTask(parentTaskId);
     else showTaskList();
   };
   const selectCreationPath = (nodeId: string) => {
-    setCreationSessionOpen(false);
-    setCreationParentContext(null);
     if (nodeId === workspaceRootId) showTaskList();
     else openTask(nodeId);
   };
@@ -881,13 +934,15 @@ function App() {
   const getSelectedTask = () => workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === selectedTaskId);
 
   const changeTaskTitle = (name: string) => {
-    const task = getSelectedTask();
-    if (task) changeTaskFields(task.id, { name }, "title-change", "修改任务名称", [{ label: "任务名称", before: task.name || null, after: name || null }]);
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    if (!selectedTaskId) throw new Error("请先选择任务。");
+    persistTaskDefinition(applyCurrentTaskTextField(workspaceNodesRef.current, selectedTaskId, "name", name, currentUserName));
   };
 
   const changeTaskGoal = (goal: string) => {
-    const task = getSelectedTask();
-    if (task) changeTaskFields(task.id, { goal }, "goal-change", "修改任务目标", [{ label: "任务目标", before: task.goal ?? selectedTaskDetail?.goal ?? null, after: goal || null }]);
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    if (!selectedTaskId) throw new Error("请先选择任务。");
+    persistTaskDefinition(applyCurrentTaskTextField(workspaceNodesRef.current, selectedTaskId, "goal", goal, currentUserName, selectedTaskDetail?.goal));
   };
 
   const changeTaskAppearance = (appearance: { iconName: TaskIconName; iconTone: TaskIconTone }) => {
@@ -935,13 +990,40 @@ function App() {
     setTaskParticipantInvitationOverrides((current) => ({ ...current, [task.id]: statuses }));
   };
 
+  const saveTaskDiscussion = (current: CollaborationSnapshot, next: CollaborationSnapshot, message: CollaborationMessage) => {
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    if (!selectedTaskId) throw new Error("请先选择任务。");
+    const team = loadPersonalCenterState().teams.find(item => item.id === activeTeamId);
+    if (!team) throw new Error("当前团队已不存在，输入已保留。");
+    try {
+      const saved = publishTaskDiscussion({ storage: localStorage, teamId: activeTeamId, taskId: selectedTaskId,
+        scopeKey: JSON.stringify([activeTeamId, selectedTaskId]), actorId: currentUserId, actorName: currentUserName,
+        members: getTeamPeople(team, collaborationMembers).filter(member => member.membershipStatus === "active"),
+        nodes: workspaceNodesRef.current, seeds: taskDetailSeedNodesRef.current, seedParticipants: selectedTaskDetail?.participants ?? [],
+        legacySnapshots: loadLegacyTaskSnapshots(), latestLegacySnapshot: loadLatestLegacyTaskSnapshot(), current, next, message });
+      workspaceNodesRef.current = saved.nodes;
+      taskDetailSeedNodesRef.current = saved.seeds;
+      setWorkspaceNodes(saved.nodes);
+      setTaskDetailSeedNodes(saved.seeds);
+      setTaskActivityStore(saved.activities);
+      setLegacyTaskSnapshots(saved.legacySnapshots);
+      setLatestLegacyTask(saved.latestLegacySnapshot);
+      setTaskParticipantInvitationOverrides(saved.participantInvitations);
+      return saved.snapshot;
+    } catch (failure) {
+      try { recoverTaskAiStorage(localStorage); }
+      catch (recoveryError) { setTaskStorageRecoveryError(recoveryError instanceof Error ? recoveryError.message : "本地记录需要恢复。"); }
+      throw failure;
+    }
+  };
+
   const changeTaskPeriod = (range: TaskDateRange | null) => {
     const task = getSelectedTask();
     if (!task) return;
-    const scheduleError = taskScheduleError(range?.end, task.createdAt, range?.start);
+    const scheduleError = taskScheduleError(range?.end, task.createdAt, range?.start, activeTeamTimeZone);
     if (scheduleError) throw new Error(scheduleError);
-    const previousStart = taskDateValue(selectedTaskPeriodOverride === undefined ? task.plannedStartOn ?? selectedLegacyTask?.plannedStartOn : selectedTaskPeriodOverride?.start);
-    const previousEnd = taskDateValue(selectedTaskPeriodOverride === undefined ? task.plannedEndOn ?? selectedLegacyTask?.plannedEndOn ?? task.dueAt ?? selectedTaskDetail?.due : selectedTaskPeriodOverride?.end);
+    const previousStart = taskDateValue(selectedTaskPeriodOverride === undefined ? task.plannedStartOn ?? selectedLegacyTask?.plannedStartOn : selectedTaskPeriodOverride?.start, activeTeamTimeZone);
+    const previousEnd = taskDateValue(selectedTaskPeriodOverride === undefined ? task.plannedEndOn ?? selectedLegacyTask?.plannedEndOn ?? task.dueAt ?? selectedTaskDetail?.due : selectedTaskPeriodOverride?.end, activeTeamTimeZone);
     const nextStart = range?.start || null;
     const nextEnd = range?.end || null;
     if (previousStart === nextStart && previousEnd === nextEnd) return;
@@ -970,7 +1052,7 @@ function App() {
     const legacy = legacyTaskSnapshots[task.id];
     return {...task,
       plannedStartOn: period !== undefined ? period?.start ?? "" : task.plannedStartOn ?? legacy?.plannedStartOn ?? "",
-      plannedEndOn: period !== undefined ? period?.end ?? "" : taskDateValue(task.plannedEndOn ?? legacy?.plannedEndOn ?? task.dueAt) ?? "",
+      plannedEndOn: period !== undefined ? period?.end ?? "" : taskDateValue(task.plannedEndOn ?? legacy?.plannedEndOn ?? task.dueAt, activeTeamTimeZone) ?? "",
     };
   }
   const selectedEffortTasks = selectedTaskId ? getWorkspaceEffortLeaves(teamWorkspaceNodes, selectedTaskId).map(task => {
@@ -1103,22 +1185,25 @@ function App() {
   if (!personalCenterState.teams.length) return <div className="app-shell"><main className="team-empty-workspace"><h1>{locale === "en" ? "No team yet" : "你还没有加入团队"}</h1><p>{locale === "en" ? "Create a team, or ask a teammate for an invitation link." : "创建一个新团队，或通过同事提供的邀请链接加入。"}</p><Button onClick={() => setCreateEmptyTeamOpen(true)}>{locale === "en" ? "Create team" : "创建团队"}</Button><Button variant="ghost" onClick={signOutWorkspace}>{locale === "en" ? "Sign out" : "退出登录"}</Button>{hasRestorableTeams(currentUserId) && <MyTeamsPanel actorId={currentUserId} onRestore={restoreTeam} state={personalCenterState} />}<CreateTeamDialog open={createEmptyTeamOpen} onOpenChange={setCreateEmptyTeamOpen} /></main></div>;
 
   return (
-    <MockDataProvider tasks={additionalMockTasks}><MemberInvitationProvider ref={memberInvitationsRef} state={personalCenterState} onStateChange={setPersonalCenterState} teamId={activeTeamId} members={collaborationMembers}>
+    <TeamTimeZoneContext.Provider value={activeTeamTimeZone}><MockDataProvider tasks={additionalMockTasks}><MemberInvitationProvider ref={memberInvitationsRef} state={personalCenterState} onStateChange={setPersonalCenterState} teamId={activeTeamId} members={collaborationMembers}>
     <PersonDirectoryProvider members={collaborationMembers}>
     <PersonalTagsProvider tags={tagDefinitions} onChange={savePersonalTags}>
     <TeamLifecycleProvider team={personalCenterState.teams.find(t => t.id === activeTeamId)} nodes={workspaceNodes} members={collaborationMembers} actorId={currentUserId} onCommit={commitMembershipAction}>
     <div className="app-shell task-workspace-shell">
+      {!validTeamTimeZone && <p role="alert">{locale === "en" ? "The team timezone is invalid. Date filters are not applied and date changes are unavailable; saved tasks are kept." : "团队时区无效，日期筛选条件暂未应用，也无法修改日期；已有任务和输入已保留。"}</p>}
       <WorkspaceTopbar
         activeTeamId={activeTeamId}
         onConnectAi={() => setGlobalAiConnectionOpen(true)}
         onCreateTask={startNewTaskConversation}
-        onSignOut={signOutWorkspace}
+        onSignOut={() => requestCreationExit(signOutWorkspace)}
         showDemoNotifications={showDemoData}
         onOpenNotificationTask={(taskId) => {
-          setTaskQuery("");
-          setTaskFilters(createInitialTaskListFilters(currentUserId));
-          setTaskAttentionTarget(null);
-          openTask(taskId, false);
+          requestCreationExit(() => {
+            setTaskQuery("");
+            setTaskFilters(createInitialTaskListFilters(currentUserId));
+            setTaskAttentionTarget(null);
+            navigateToTask(taskId, false);
+          });
         }}
         onOpenPersonalCenter={(module) => openPersonalCenter(module)}
         onTeamChange={changeActiveTeam}
@@ -1144,10 +1229,11 @@ function App() {
             onDeleteTask={requestDeleteTask}
             onTaskStatusChange={changeTaskStatus}
               onOpenRecycleBin={() => { refreshRecycleBin(); setRecycleOpen(true); }}
+            onClearTaskSelection={() => setSelectedTaskId(null)}
             onFiltersChange={setTaskFilters}
-            onManageTags={() => { setActiveSection("settings"); focusPrimaryHeadingAfterNavigation(); }}
+            onManageTags={() => requestCreationExit(() => { setActiveSection("settings"); focusPrimaryHeadingAfterNavigation(); })}
             onQueryChange={setTaskQuery}
-            onTaskSelect={(task) => openTask(task.id)}
+            onTaskSelect={(task, focusHeading = true) => openTask(task.id, focusHeading)}
             onShowWorkbench={() => showPrimarySection("tasks")}
             query={taskQuery}
             selectedTaskId={selectedTaskId}
@@ -1162,13 +1248,14 @@ function App() {
               hidden={activeSection !== "home"}
               model={personalWorkbenchModel}
               onConnectAi={(trigger) => { workbenchAiConnectionTrigger.current = trigger; setWorkbenchAiConnectionOpen(true); }}
-              onOpenTask={(taskId) => { setTaskAttentionTarget(null); openTask(taskId); }}
+              onOpenTask={(taskId) => requestCreationExit(() => { setTaskAttentionTarget(null); navigateToTask(taskId); })}
               onOpenTaskList={showTaskList}
               onReanalyze={() => void reanalyzePersonalWorkbench()}
             />}
             creation={creationSessionOpen ? <TaskCreationExperience
               onCancel={closeTaskCreation}
               onDraftStart={() => { creationSessionCompleted.current = false; }}
+              onExitControllerChange={registerCreationExit}
               active={activeSection === "conversation"}
               creationParent={creationParentContext}
               currentUserId={currentUserId}
@@ -1215,6 +1302,7 @@ function App() {
             onOpenRelatedTask={openTask}
             onOwnerChange={changeOwner}
             onParticipantsChange={changeParticipants}
+            onDiscussionSave={saveTaskDiscussion}
             parentTask={selectedParentTask ? toTaskRelationSummary(selectedParentTask) : undefined}
             onBackToList={showTaskList}
             pathItems={selectedTaskPath}
@@ -1257,6 +1345,13 @@ function App() {
         ) : null}
 
       </main>
+      <TaskCreationDiscardDialog
+        open={Boolean(pendingCreationExit)}
+        error={creationExitError}
+        onCancel={cancelCreationExit}
+        onDiscard={confirmCreationExit}
+        finalFocus={() => creationExitReturnFocus.current?.isConnected ? creationExitReturnFocus.current : false}
+      />
       <Dialog onOpenChange={setGlobalAiConnectionOpen} open={globalAiConnectionOpen}>
         <DialogContent className="global-ai-guide-dialog" finalFocus={() => document.getElementById("workspace-ai-trigger") ?? false}>
           <header className="global-ai-guide-header">
@@ -1297,7 +1392,7 @@ function App() {
     </TeamLifecycleProvider>
     </PersonalTagsProvider>
     </PersonDirectoryProvider>
-    </MemberInvitationProvider></MockDataProvider>
+    </MemberInvitationProvider></MockDataProvider></TeamTimeZoneContext.Provider>
   );
 }
 

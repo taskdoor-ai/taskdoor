@@ -8,6 +8,8 @@ import type { TagDefinition } from "@/ai/mock/data/tagGroups";
 import type { ExistingTaskCandidate } from "@/ai/mock/lib/taskCreationScenario";
 import type { TaskPlanDraft } from "@/features/tasks/lib/task-assistant-protocol";
 import { toTaskPlanDraft, validateCreationForm, withCreationParticipantDefaults, type CreationForm } from "@/features/tasks/lib/task-creation-form";
+import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { reconcileCreationEffort } from "@/features/tasks/lib/task-creation-effort";
 import { getCreationHierarchyDepth } from "@/features/tasks/lib/task-creation-hierarchy";
 import { planTaskCreation, resolveCreationRelationship, type CreationPlanningQuestion, type CreationPlanningResult } from "@/ai/mock/lib/taskCreationPlanning";
@@ -22,6 +24,7 @@ import { TaskCreationPlanEditor } from "@/features/tasks/components/TaskCreation
 import { TaskCreationProcess } from "@/features/tasks/components/TaskCreationProcess";
 import { TaskCreationSessionList } from "@/features/tasks/components/TaskCreationSessionList";
 import { creationHistoryKey, parseCreationSessions, restoreCreationSession, upsertCreationSession, type CreationSession, type CreationWorkspaceDraft, type TaskCreationParentContext } from "@/features/tasks/lib/task-creation-sessions";
+import { discardCreationSession, hasUnsubmittedCreation, type CreationExitController } from "@/features/tasks/lib/task-creation-exit";
 import { TaskAiAdjustButton, TaskAiAdjustmentPopover, useTaskAiAdjustmentDrafts } from "@/features/tasks/components/TaskAiAdjustmentPopover";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/input";
@@ -32,7 +35,7 @@ import "@/features/tasks/styles/task-criteria-editor.css";
 import "@/features/tasks/styles/task-creation-subtask.css";
 import "@/features/tasks/styles/task-creation-sessions.css";
 
-// Temporarily hide planning history while preserving saved drafts.
+// Only confirmed creation is recorded; unsubmitted sessions remain in this page.
 const CREATION_HISTORY_ENABLED = false;
 
 type CreationResult = { createdCount: number; mainTaskId: string; taskTitles: string[] };
@@ -50,6 +53,7 @@ type Props = {
   onOpenTask: (taskId: string) => void;
   onCancel: () => void;
   onDraftStart?: () => void;
+  onExitControllerChange?: (controller: CreationExitController | null) => void;
   onInviteMembers?: (returnFocus?: HTMLElement | null) => void;
   onPathSelect?: (nodeId: string) => void;
 };
@@ -99,9 +103,12 @@ function ClarificationStep({ question, answer, disabled, finalStep, onAnswer, on
   </form>;
 }
 
-export function TaskCreationPage({ active = true, creationParent: initialParent, currentUserId, teamId = "default", existingTasks, members, tags, onCreateTaskPlan, onCreateSubtask, onOpenTask, onCancel, onDraftStart, onInviteMembers, onPathSelect }: Props) {
+export function TaskCreationPage({ active = true, creationParent: initialParent, currentUserId, teamId = "default", existingTasks, members, tags, onCreateTaskPlan, onCreateSubtask, onOpenTask, onCancel, onDraftStart, onExitControllerChange, onInviteMembers, onPathSelect }: Props) {
   const { c, locale, localize } = useCreationI18n();
-  const context = { currentUserId, existingTasks, members, tags: tags.map(t => t.name), currentDate: new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai" }).format(new Date()) };
+  const timeZone = useTeamTimeZone();
+  const currentDate = taskCalendarDate(new Date().toISOString(), timeZone);
+  const timezoneError = !currentDate ? (locale === "en" ? "The team timezone is invalid. Your input has been kept." : "团队时区无效，无法确定创建日期。输入已保留。") : "";
+  const context = { currentUserId, existingTasks, members, tags: tags.map(t => t.name), currentDate: currentDate ?? "", timezone: timeZone };
   const [creationParent, setCreationParent] = useState(initialParent ?? null);
   const [workspace, setWorkspace] = useState<CreationWorkspaceDraft>(emptyWorkspaceDraft);
   const [splitRequested, setSplitRequested] = useState(false);
@@ -130,6 +137,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
   const [historyOpen, setHistoryOpen] = useState(false);
   const [sessionId, setSessionId] = useState<string>(() => crypto.randomUUID());
   const completedSession = useRef<CreationResult | undefined>(undefined);
+  const discardedSession = useRef(false);
   const historyId = useId();
   const historyToggle = useRef<HTMLButtonElement>(null);
   const saveSession = useCallback((session: CreationSession) => {
@@ -142,7 +150,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     catch { setHistoryError(c("historyCouldNotBeSavedKeepThis")); }
   }, [storageKey, loadedHistory.error]);
   useEffect(() => {
-    if (completedSession.current) return;
+    if (!CREATION_HISTORY_ENABLED || completedSession.current || discardedSession.current) return;
     saveSession({ id: sessionId, updatedAt: Date.now(), workspace, clarificationStep, parent: creationParent });
   }, [workspace, clarificationStep, creationParent, sessionId, saveSession]);
   const closeHistory = () => { setHistoryOpen(false); requestAnimationFrame(() => historyToggle.current?.focus()); };
@@ -182,13 +190,48 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
   const planning = workspace.planning;
   const currentClarificationQuestion = planning?.stage === "clarify" ? planning.questions[clarificationStep] : undefined;
   const form = planning && (planning.stage === "review" || planning.stage === "decision") ? planning.form : null;
-  const aiContext = form ? createDraftTaskAiContext(form, members, currentUserId) : null;
+  const aiContext = form ? createDraftTaskAiContext(form, members, currentUserId, timeZone) : null;
   latestAiTaskId.current = aiContext?.task.id ?? null;
   const latestProcess = workspace.processes.at(-1);
   const adjustmentRunning = latestProcess?.kind === "adjustment" && latestProcess.status === "running";
+  const latestExitState = useRef({ workspace, pendingEdits: hasUnsavedSubtasks });
+  latestExitState.current = { workspace, pendingEdits: hasUnsavedSubtasks || Object.keys(aiDraftSession[0]).length > 0 };
+  const hasUnsavedChanges = useCallback(() => hasUnsubmittedCreation({
+    ...latestExitState.current, completed: Boolean(completedSession.current), discarded: discardedSession.current,
+  }), []);
+  const discardSession = useCallback(() => {
+    // Storage cleanup must succeed before the caller navigates or destroys the draft.
+    if (sessionsRef.current.some(session => session.id === sessionId && !session.created)) {
+      discardCreationSession(localStorage, storageKey, sessionId);
+    }
+    discardedSession.current = true;
+    planningRun.current += 1;
+    planningAbort.current?.abort(); planningAbort.current = null;
+    splitRun.current += 1;
+    adjustmentStop.current?.stop(); adjustmentStop.current = null;
+    latestAiTaskId.current = null;
+    for (const key of Object.keys(aiDraftSession[0])) aiDraftSession[1]({ type: "discard", key });
+    setAiOpen(false); setAiScope(null);
+    setBusy(false); setSplitThinking(false);
+    setDirtySubtasks({}); setWorkspace(emptyWorkspaceDraft());
+  }, [storageKey, sessionId, aiDraftSession]);
+  useEffect(() => {
+    onExitControllerChange?.({ hasUnsavedChanges, discard: discardSession });
+    return () => onExitControllerChange?.(null);
+  }, [onExitControllerChange, hasUnsavedChanges, discardSession]);
+  useEffect(() => {
+    if (!active) return;
+    const warnBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!hasUnsavedChanges()) return;
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warnBeforeUnload);
+    return () => window.removeEventListener("beforeunload", warnBeforeUnload);
+  }, [active, hasUnsavedChanges]);
   const displayStage = getCreationDisplayStage(planning, { busy, editingBrief: workspace.editingBrief });
   const showDescribe = displayStage === "describe";
-  const validation = form ? validateCreationForm(form, members) : null;
+  const validation = timezoneError || (form ? validateCreationForm(form, members, timeZone) : null);
   const unassignedTaskCount = form ? [form.mainTask, ...form.subtasks].filter((task) => !task.ownerId).length : 0;
   const stageKey = displayStage === "review" ? form?.mainTask.clientId ?? "review" : displayStage;
   const stageLabel = showDescribe ? c("describeYourRequest") : displayStage === "planning" ? c("organizingYourRequest") : displayStage === "clarify" ? c("clarifyKeyDetails") : displayStage === "decision" ? c("confirmTaskRelationship") : c("taskPlanDetails");
@@ -272,6 +315,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     setWorkspace(emptyWorkspaceDraft());
     setCreationParent(initialParent ?? null);
     setSessionId(crypto.randomUUID()); completedSession.current = undefined;
+    discardedSession.current = false;
     clearTransientState();
     setHistoryOpen(false);
     focusedStage.current = "";
@@ -290,6 +334,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     clearTransientState();
     for (const key of Object.keys(aiDraftSession[0])) aiDraftSession[1]({ type: "discard", key });
     completedSession.current = undefined;
+    discardedSession.current = false;
     planningRun.current = Math.max(planningRun.current, ...restored.workspace.processes.map(process => typeof process.id === "number" ? process.id : 0));
     setSessionId(restored.id); setWorkspace(restored.workspace);
     setCreationParent(restored.parent); setClarificationStep(restored.clarificationStep);
@@ -302,6 +347,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     setAdjustmentNotice(""); setError("");
   };
   const generatePlan = async (answers?: CreationWorkspaceDraft["answers"]) => {
+    if (timezoneError) { setError(timezoneError); return; }
     if (planningAbort.current || busy || !workspace.request.trim()) return;
     const run = ++planningRun.current;
     const controller = new AbortController();
@@ -424,7 +470,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     if (hasUnsavedSubtasks) { setError(unsavedMessage); return; }
     if (!planning || planning.stage !== "review" || aiOpen || busy || adjustmentRunning) return;
     const form = planning.form;
-    const invalid = validateCreationForm(form, members);
+    const invalid = validateCreationForm(form, members, timeZone);
     if (invalid) { setError(invalid); return; }
     if (creationParent && !existingTasks.some(task => task.id === creationParent.parentTaskId)) {
       setError(c("theParentTaskNoLongerExistsYour")); return;
@@ -470,7 +516,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
           {index > 0 && <ChevronRight aria-hidden="true" size={12} />}
           <button onClick={() => onPathSelect?.(item.id)} type="button">{item.label}</button>
         </span>) : <>
-          <span><button aria-label={c("backToNewTask")} onClick={startAnother} type="button">{c("tasks")}</button></span>
+          <span><button aria-label={c("backToTaskList")} onClick={onCancel} type="button">{c("tasks")}</button></span>
           {form?.decision === "attach" && form.candidate && <span><ChevronRight aria-hidden="true" size={12} /><button aria-label={c("openParentTask", { v0: form.candidate.name ?? form.candidate.title })} onClick={() => onOpenTask(form.candidate!.id)} type="button">{form.candidate.name ?? form.candidate.title}</button></span>}
         </>}
         <span><ChevronRight aria-hidden="true" size={12} /><em aria-current="page">{c("newTask")}</em></span>
@@ -480,7 +526,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
         {aiAdjustmentAction}
       </div>
     </div>
-    <AnimatePresence mode="wait"><motion.div animate={{ opacity: 1, y: 0 }} aria-label={stageLabel} className={`creation-sheet${showDescribe ? " task-conversation-page is-starting" : ""}`} initial={reducedMotion ? false : { opacity: 0, y: 8 }} key={stageKey} onAnimationComplete={focusStage} ref={stageRef} role="region" tabIndex={-1} transition={{ duration: reducedMotion ? 0 : .18 }}>
+    <AnimatePresence mode="wait"><motion.div animate={{ opacity: 1, y: 0 }} aria-label={stageLabel} className={`creation-sheet${showDescribe ? " task-conversation-page is-starting" : ""}`} data-stage={displayStage} initial={reducedMotion ? false : { opacity: 0, y: 8 }} key={stageKey} onAnimationComplete={focusStage} ref={stageRef} role="region" tabIndex={-1} transition={{ duration: reducedMotion ? 0 : .18 }}>
       {!showDescribe && planningNotice && <p className="creation-planning-notice" role="status">{localize(planningNotice)}</p>}
       {showDescribe ? <div className="task-conversation-workspace"><div className="task-conversation-column">
         <section className="task-conversation-start"><header><h1>{c("whatWouldYouLikeToWorkOn")}</h1></header></section>
@@ -491,7 +537,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
               ariaLabel={c("taskRequest")}
               autoFocus={active}
               clearOnSend={false}
-              disabled={busy}
+              disabled={busy || Boolean(timezoneError)}
               hint={c("enterToStartShiftEnterForA")}
               inputRef={requestRef}
               onChange={request => { setWorkspace(current => ({ ...current, request })); setError(""); }}

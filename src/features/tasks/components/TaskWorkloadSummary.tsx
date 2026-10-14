@@ -7,6 +7,7 @@ import { TaskProgressOverview } from "@/features/tasks/components/TaskProgressOv
 import { TaskProgressStage } from "@/features/tasks/components/TaskProgressStage";
 import { TaskProgressRefresh } from "@/features/tasks/components/TaskProgressRefresh";
 import { getTaskWorkloadProjection } from "@/features/tasks/lib/task-workload-projection";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import type { TaskBurnUpSeries } from "@/shared/model/task-burn-up";
 import { formatEffortPersonDays } from "@/features/tasks/lib/task-effort";
 import { type TaskEffortDistributionInput } from "@/features/tasks/lib/task-effort-distribution";
@@ -31,9 +32,10 @@ export function TaskWorkloadSummary({ compact = false, progressTask, comparison,
   series?: TaskBurnUpSeries;
 }) {
   const ui = useGlobalUi();
+  const timeZone = useTeamTimeZone();
   const { locale } = useI18n();
   const p = useProgressCopy();
-  const projection = getTaskWorkloadProjection({comparison,progressTask,completedMinutesByTaskId,progressComparisonsByTaskId,effortTasks,hasSubtasks,series});
+  const projection = getTaskWorkloadProjection({timeZone,comparison,progressTask,completedMinutesByTaskId,progressComparisonsByTaskId,effortTasks,hasSubtasks,series});
   const { assessment, mode, effort, aggregate, comparison:summaryComparison, display:fallbackDisplay } = projection;
   const predictionAction = headingAction ?? (onRepredict && progressTask?.status !== "已完成" && progressTask?.status !== "已取消"
     ? <TaskProgressRefresh onRepredict={onRepredict}/> : undefined);
@@ -53,7 +55,7 @@ export function TaskWorkloadSummary({ compact = false, progressTask, comparison,
     tasks={effortTasks}
   /> : null;
   // Estimates (including the creation baseline) are not progress history.
-  const comparisonModel = series?.source !== "recorded" ? getTaskProgressComparison(summaryComparison) : null;
+  const comparisonModel = series?.source !== "recorded" ? getTaskProgressComparison(summaryComparison, timeZone) : null;
   const hasProgress = comparisonModel
     ? comparisonModel.history.some(point => point.completedMinutes > 0)
     : assessment.burnUp.points.some(point => point.completedHours !== null && point.completedHours > 0);
@@ -69,6 +71,7 @@ export function TaskWorkloadSummary({ compact = false, progressTask, comparison,
   // Standalone history has no task model; adapt its existing ratio only for the summary.
   // Keep fallbackDisplay unchanged because it also supplies the burn-up date markers.
   const stageDisplay = compact && !progressTask ? getTaskProgressDisplay({
+    timeZone,
     scopeMinutes:assessment.scopeHours === null ? null : assessment.scopeHours * 60,
     completedMinutes:assessment.progressRatio === null || assessment.completedHours === null ? null : assessment.completedHours * 60,
   }) : fallbackDisplay;

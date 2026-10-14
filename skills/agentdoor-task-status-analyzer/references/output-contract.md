@@ -13,6 +13,7 @@
 | nextActions[].diagnosisType | `execution_blockage`、`decision_conflict`，或无诊断关联时 null |
 | progress.state | `current`、`unknown`、`stale`；当前部分可计算仍可为 current，缺口单独说明 |
 | progress.ewdResultRef / inputVersions | 输入中已有 EWD 结果的引用及其版本；本次直接计算没有已存引用时为 null，reason 说明来源 |
+| progress.estimate | 可选；null 或完整复用 [EWD 输出契约](../../agentdoor-ewd-progress/references/output-contract.md) 的 `result.estimate` 对象，仅在本次补估或必要重估时返回；不是已保存估算或 MCP 写入参数 |
 | progress.totalEwdMinutes / completedEwdMinutes / completionPercent | 直接取当前有效 EWD 的数值；不可计算为 null，不自行补值 |
 | progress.knownCompletedEwdMinutes / unconfirmedEwdMinutes | 可选的部分完成量与待确认量，来自同一个 EWD 结果 |
 | progress.trend / reason | 有真实历史时取 EWD trend 对象，否则 null；说明计算来源、缺口或过期原因 |
@@ -23,9 +24,28 @@
 
 任一必要部分不可用，包络 status=partial。旧结果可另作历史说明，不得填入当前 progress 数值。confirmedResults 指内容已核对，不等于正式验收通过。
 
+## 正文与证据引用
+
+以下规则适用于 `currentSituation.summary`、`confirmedResults / unmetResults / pendingChecks / recentChanges` 中每项的 `text`，以及 `nextActions` 中的 `action / reason`。正文先说明已核对的结果、当前缺口与具体下一步，只用普通文本；合法 JSON 字符串中也必须遵守这些约束。
+
+- 不生成 Markdown 或 HTML 超链接、裸来源 URL、脚注编号、来源 ID／版本／锚点等引用标记，也不附加“点击查看文件依据”“查看来源”“跳转到讨论”等入口提示。需要核对材料时，直接说清要核对的内容，不用来源跳转代替结论或行动。
+- `evidenceRefs` 独立保留实际读过且有权使用的来源 ID，来源版本仍由输入版本和证据记录绑定。正文提到材料时可用自然名称；不能因为正文不展示引用就删除证据字段、改为空数组或丢失版本，也不能据此要求界面生成来源按钮。
+- 不在当前情况或下一步建议中另附“完成标准依据”或“来源清单”。`criterionAssessments` 仍按原字段返回，供概览中的完成标准评估使用，不拼成分析正文的第三个区块。
+- 网址、路径或版本本身确为任务需要核对的业务事实时，可作为普通文本说明；不能把用于溯源的定位信息当作额外跳转入口。
+
+例如，已读设计稿的来源为 `file-logo`：当前情况写“已提交第一版 logo，品牌名称仍需补齐。”，下一步写“补齐品牌名称，并核对图形和文字的清晰度。”，各自的 `evidenceRefs` 引用 `file-logo`。不要写 `已提交第一版 logo。[查看设计稿](https://example.com/logo)`，也不要追加“点击查看文件依据”或依据清单。示例 ID 与网址只说明格式，不进入真实输出。
+
+## 估算与进度的衔接
+
+- 当前估算与内部明细有效时直接复用，`progress.estimate` 省略或为 null。缺估算或明细，或目标、标准、实际工作条件使其失效时，先用 EWD `estimate` 模式生成当前范围的估算，再按同一明细核对完成量；缺关键信息仍返回部分估算与未知项，不把缺估算一律视为永久不可计算。
+- 本次返回的 `progress.estimate` 保留 EWD 的明细、三点估算、计算规则版本、依据与未知项，不另造一套总量算法。新内部明细使用 EWD 候选 ID，不代表创建了子任务；分析数值使用同一份估算及内容证据，不能只凭总分钟推导完成量。
+- 本次估算没有已存 EWD 引用时，`ewdResultRef=null`，`reason` 说明本次补估或重估及当前数量来源。完整回显本次 `inputVersions`，不能自己生成保存回执或冒充已持久化的估算版本。
+- 应用在保存前核对权限与输入版本，分配当前估算版本并保存为 AI 估算；AI 结果不产生人工确认，也不覆盖人工已确认估算。EWD 的 `estimate.basis` 表示计算依据，不能被当作人工确认状态。创建基线仅来自创建时记录，本次提案不修改它或既有历史。
+- 当前输入、输出与本次示例不带已取消的前置依赖字段或关系边，不保留空兼容字段。所需材料、确认和交接顺序保留为业务正文。
+
 ## result 示例
 
-输入条件：任务 v4 正式状态进行中；当前文件缺少风险预案；当前估算未提供，旧版进度不能复用。
+输入条件：任务 v4 正式状态进行中；当前文件缺少风险预案，其规模与核验条件也未明确，无法补齐有效估算；旧版进度不能复用。
 
 ```json
 {
@@ -43,7 +63,7 @@
   "nextActions": [{"action": "补齐风险预案并核对当前完成标准。", "actorId": null, "diagnosisType": null, "reason": "当前文件尚未覆盖全部标准。", "evidenceRefs": ["task-plan", "file-plan"]}],
   "criteriaVersion": null,
   "criterionAssessments": [],
-  "progress": {"displayPercent": null, "state": "unknown", "ewdResultRef": null, "inputVersions": {"task": 4}, "totalEwdMinutes": null, "completedEwdMinutes": null, "completionPercent": null, "trend": null, "reason": "未提供当前有效估算与明细核对，不能沿用旧版百分比。"},
+  "progress": {"displayPercent": null, "state": "unknown", "ewdResultRef": null, "inputVersions": {"task": 4}, "estimate": null, "totalEwdMinutes": null, "completedEwdMinutes": null, "completionPercent": null, "trend": null, "comparison": null, "reason": "风险预案的规模与核验条件未知，尚不能补齐有效估算；不能沿用旧版百分比。"},
   "formalStatusUnchanged": true
 }
 ```

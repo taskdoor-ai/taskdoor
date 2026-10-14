@@ -3,6 +3,8 @@ import { TaskCompletionIndicator } from "@/features/tasks/components/TaskComplet
 import { TaskDetailTabLabel, describeTaskDetailTab } from "@/features/tasks/components/TaskDetailTabLabel";
 import { getTaskContentIndicators } from "@/features/tasks/lib/task-content-indicators";
 import { TaskSidebarToggle } from "@/features/tasks/components/TaskSidebarToggle";
+import { TaskFieldSaveFeedback } from "@/features/tasks/components/TaskFieldSaveFeedback";
+import { useTaskTextSaveFeedback } from "@/features/tasks/lib/useTaskTextSaveFeedback";
 import { useGlobalUi } from '@/shared/i18n/global-ui';
 import "@/features/tasks/styles/task-criterion-review.css";
 import "@/features/tasks/styles/task-ai-adjustment.css";
@@ -12,6 +14,7 @@ import { mockTagName, mockPersonName } from '@/ai/mock/i18n/mockContent';
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { MockTaskProvider, useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { ArrowLeft, ChevronRight, Plus, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { type TaskActivityMock, type TaskDetailContent, type TaskFileNode, type TaskIconName, type TaskIconTone } from "@/shared/model/task-model";
@@ -49,7 +52,7 @@ import { toast } from "@/shared/ui/toast";
 import { Input, Textarea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { TaskFileExplorer } from "@/features/tasks/files/components/TaskFileExplorer";
-import { deleteCollaborationMessage, mergeCollaborationMessages, postCollaborationMessage, replaceCollaborationFiles, setFileThreadResolved, updateCollaborationMessage, type CollaborationMessage, type DiscussionDraft, type FileDiscussionThread } from "@/features/tasks/lib/task-collaboration";
+import { deleteCollaborationMessage, mergeCollaborationMessages, postCollaborationMessage, replaceCollaborationFiles, setFileThreadResolved, updateCollaborationMessage, type CollaborationMessage, type CollaborationSnapshot, type DiscussionDraft, type FileDiscussionThread } from "@/features/tasks/lib/task-collaboration";
 import { useTaskCollaboration } from "@/features/tasks/lib/useTaskCollaboration";
 import "@/features/tasks/styles/task-records.css";
 import "@/features/tasks/styles/discussion-messages.css";
@@ -93,11 +96,12 @@ type TaskDetailProps = {
   onOpenRelatedTask?: (taskId: string) => void;
   onOwnerChange?: (owner: string[]) => void;
   onParticipantsChange?: (participants: string[]) => void;
+  onDiscussionSave?: (current: CollaborationSnapshot, next: CollaborationSnapshot, message: CollaborationMessage) => CollaborationSnapshot;
   onPathSelect?: (nodeId: string) => void;
   onBackToList?: () => void;
   onTagsChange?: (tags: string[]) => void;
-  onTaskGoalChange?: (goal: string) => void;
-  onTaskTitleChange?: (title: string) => void;
+  onTaskGoalChange?: (goal: string) => void | Promise<void>;
+  onTaskTitleChange?: (title: string) => void | Promise<void>;
   onTaskAppearanceChange?: (appearance: { iconName: TaskIconName; iconTone: TaskIconTone }) => void;
   onTaskPeriodChange?: (range: TaskDateRange | null) => void;
   onTaskStatusChange?: (status: TaskStatus) => void;
@@ -148,6 +152,7 @@ export function TaskDetail({
   onOpenRelatedTask,
   onOwnerChange,
   onParticipantsChange,
+  onDiscussionSave,
   onPathSelect,
   onBackToList,
   onTagsChange,
@@ -167,6 +172,7 @@ export function TaskDetail({
 }: TaskDetailProps) {
   const ui = useGlobalUi();
   const { locale } = useI18n();
+  const timeZone = useTeamTimeZone();
   const [editingOriginal, setEditingOriginal] = useState<"title" | "goal" | null>(null);
   const d = useDetailCopy();
   const completionCriteria = task.completionCriteria ?? [];
@@ -175,6 +181,7 @@ export function TaskDetail({
   const hasBurnUp = progressAssessment.hasTrend;
   const mock = useMockText();
   const collaboration = useTaskCollaboration(teamId, taskId, task.files);
+  const pendingDiscussionRef = useRef<{ signature: string; message: CollaborationMessage } | null>(null);
   const taskFiles = collaboration.snapshot.files;
   const firstFile = taskFiles.find(node => node.kind === "file" && !node.archived);
   const allMessages = useMemo(() => mergeCollaborationMessages(task.activities, collaboration.snapshot.messages), [task.activities, collaboration.snapshot.messages]);
@@ -204,6 +211,8 @@ export function TaskDetail({
   const aiConnectionTrigger = useRef<HTMLElement | null>(null);
   const [currentTitle, setCurrentTitle] = useState(task.title);
   const [currentGoal, setCurrentGoal] = useState(task.goal);
+  const titleSave = useTaskTextSaveFeedback(`${teamId}:${taskId}`);
+  const goalSave = useTaskTextSaveFeedback(`${teamId}:${taskId}`);
   const documentScrollRef = useRef<HTMLElement>(null);
 
   useEffect(() => { setCurrentTitle(task.title); }, [task.title]);
@@ -229,9 +238,9 @@ export function TaskDetail({
   const activityPeople = members.filter(member => member.membershipStatus !== "invited").map(member => member.id);
   const progressComparison = getTaskProgressDemoExample(taskId, progressComparisonsByTaskId[taskId]);
   const leafProgressComparisons = Object.fromEntries(effortTasks.filter(task => task.id).map(task => [task.id!, getTaskProgressDemoExample(task.id!, progressComparisonsByTaskId[task.id!])]));
-  const workloadProjection = getTaskWorkloadProjection({ progressTask: { ...progressTask, status: currentStatus }, comparison: progressComparison,
+  const workloadProjection = getTaskWorkloadProjection({ timeZone, progressTask: { ...progressTask, status: currentStatus }, comparison: progressComparison,
     effortTasks, hasSubtasks: childTasks.length > 0, series: burnUp, completedMinutesByTaskId, progressComparisonsByTaskId: leafProgressComparisons });
-  const taskAiProjection = getTaskWorkloadProjection({ progressTask: { ...progressTask, status: undefined, completedAt: undefined }, comparison: progressComparison,
+  const taskAiProjection = getTaskWorkloadProjection({ timeZone, progressTask: { ...progressTask, status: undefined, completedAt: undefined }, comparison: progressComparison,
     effortTasks, hasSubtasks: childTasks.length > 0, series: burnUp, completedMinutesByTaskId, progressComparisonsByTaskId: leafProgressComparisons });
   const taskAiProgressRatio = taskAiProjection.display.aiAssessment?.ratio ?? taskAiProjection.display.ratio;
   const taskAiProgressEvidence = taskAiProjection.display.aiAssessment
@@ -383,14 +392,17 @@ export function TaskDetail({
   };
 
   const postDiscussion = (draft: DiscussionDraft, replyToActivityId?: string, thread?: FileDiscussionThread) => {
+    const signature = JSON.stringify({ draft, replyToActivityId, thread });
     const now = new Date();
-    const message: CollaborationMessage = {
+    const message: CollaborationMessage = pendingDiscussionRef.current?.signature === signature ? pendingDiscussionRef.current.message : {
       id: crypto.randomUUID(), author: currentUserId, createdAt: now.toISOString(), message: draft.body.trim(),
       time: now.toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }),
       type: replyToActivityId ? "member-reply" : "member-post", replyToActivityId,
       mentionedPrincipalIds: draft.mentions, quote: draft.quote, fileThreadId: thread?.id,
     };
-    collaboration.commit(snapshot => postCollaborationMessage(snapshot, { message, attachments: draft.attachments, thread, contextMessages: allMessages, visiblePeople: members.filter(member => member.membershipStatus !== "invited") }));
+    pendingDiscussionRef.current = { signature, message };
+    collaboration.commit(snapshot => postCollaborationMessage(snapshot, { message, attachments: draft.attachments, thread, contextMessages: allMessages, visiblePeople: members.filter(member => member.membershipStatus !== "invited") }), onDiscussionSave ? (current, next) => onDiscussionSave(current, next, message) : undefined);
+    pendingDiscussionRef.current = null;
   };
   const ownActor = (message: CollaborationMessage) => {
     if (message.author !== currentUserId && message.author !== currentUser) throw new Error(d('authorOnly'));
@@ -535,15 +547,15 @@ export function TaskDetail({
       </span>)}</nav> : null}</div>
             <div className="task-detail-title-row">
               <TaskCompletionIndicator key={taskId} status={currentStatus} completed={currentStatus === "已完成"} progressRatio={taskAiProgressRatio} evidence={taskAiProgressEvidence} onToggle={onTaskStatusChange ? () => setTaskCompleted(currentStatus !== "已完成") : undefined} />
-              <h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} className="task-detail-title-input" onFocus={() => setEditingOriginal("title")} onBlur={() => { setEditingOriginal(null); if (currentTitle !== task.title) onTaskTitleChange?.(currentTitle); }} onChange={(event) => setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " "))} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>
+              <div className="task-detail-title-content"><h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} aria-describedby={titleSave.status === "error" ? `task-title-save-error-${taskId}` : undefined} className="task-detail-title-input" onFocus={() => { titleSave.clear(); setEditingOriginal("title"); }} onBlur={() => { setEditingOriginal(null); void titleSave.save(currentTitle, task.title, onTaskTitleChange); }} onChange={(event) => { titleSave.clear(); setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " ")); }} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1><TaskFieldSaveFeedback status={titleSave.status} /></div>
               <div className="task-ai-detail-tools"><AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} /></div>
             </div>
-      {editingOriginal && <small className="content-editing-original">{ui("正在编辑原文")}</small>}
+      {titleSave.status === "error" && <p className="task-field-save-error" id={`task-title-save-error-${taskId}`} role="alert">{d("fieldSaveFailed")}</p>}
       <div aria-label={d('properties')} className="task-detail-primary-properties">
         <div className="task-detail-property task-detail-status-field"><small>{d('status')}</small><TaskStatusBadge editable={Boolean(onTaskStatusChange)} onChange={changeStatus} size="sm" value={currentStatus} progressRatio={taskAiProgressRatio} /></div>
         <div aria-label={`${d("owner")}: ${displayedOwnerName}`} className="task-detail-property" role="group" title={displayedOwnerName}><small>{d('owner')}</small><MemberSelector avatarSize="sm" allowUnassigned={!displayedOwnerId} disabled={!onOwnerChange} hideHeader hideSelectedName={Boolean(displayedOwnerId)} label={d('owner')} max={1} memberRecommendations={memberRecommendations} members={members} min={0} onChange={changeOwner} onInviteMembers={onInviteMembers} selected={displayedOwnerId ? [displayedOwnerId] : []} /></div>
         <div className="task-detail-property task-detail-participants"><small>{d('participants')}</small><MemberSelector avatarSize="sm" displayMax={4} hideHeader hideSelectedName label={d('participants')} memberRecommendations={memberRecommendations} members={participantMembers} disabled={!onParticipantsChange} onChange={changeParticipants} onInviteMembers={onInviteMembers} selected={currentParticipants} stacked /></div>
-        <TaskDueDatePicker minDate={taskCalendarDate(progressTask?.createdAt) ?? ""} initialValue={plannedEndOn ?? toDateInputValue(task.due)} key={`due-${taskId}`} label={d('dueDate')} onChange={(endDate) => onTaskPeriodChange?.(endDate ? { end: endDate, start: "" } : null)} />
+        <TaskDueDatePicker minDate={taskCalendarDate(progressTask?.createdAt, timeZone) ?? ""} initialValue={plannedEndOn ?? toDateInputValue(task.due)} key={`due-${taskId}`} label={d('dueDate')} onChange={(endDate) => onTaskPeriodChange?.(endDate ? { end: endDate, start: "" } : null)} />
       </div>
     </header>
     <div className="task-detail-columns">
@@ -578,7 +590,7 @@ export function TaskDetail({
       <section aria-label={d('goalAndExecution')} className="task-detail-document" id="task-detail-document" ref={documentScrollRef} tabIndex={-1}>
         <div aria-label={d('information')} className="task-detail-brief" id={`task-heading-${taskId}`} tabIndex={-1}>
             <div className="task-detail-description">
-              <div className="task-detail-goal-field"><span className="task-detail-field-label">{d('goal')}</span><Textarea aria-label={d('taskGoal')} className="task-detail-goal-input" onFocus={() => setEditingOriginal("goal")} onBlur={() => { setEditingOriginal(null); if (currentGoal !== task.goal) onTaskGoalChange?.(currentGoal); }} onChange={(event) => setCurrentGoal(event.target.value)} placeholder={onTaskGoalChange ? d('addGoal') : d('noGoal')} readOnly={!onTaskGoalChange} rows={1} value={editingOriginal === "goal" ? currentGoal : mock.field(taskId, "goal", currentGoal)} /></div>
+              <div className="task-detail-goal-field"><span className="task-detail-field-label">{d('goal')}</span><div className="task-detail-goal-content"><div className="task-detail-goal-editor"><Textarea aria-label={d('taskGoal')} aria-describedby={goalSave.status === "error" ? `task-goal-save-error-${taskId}` : undefined} className="task-detail-goal-input" onFocus={() => { goalSave.clear(); setEditingOriginal("goal"); }} onBlur={() => { setEditingOriginal(null); void goalSave.save(currentGoal, task.goal, onTaskGoalChange); }} onChange={(event) => { goalSave.clear(); setCurrentGoal(event.target.value); }} placeholder={onTaskGoalChange ? d('addGoal') : d('noGoal')} readOnly={!onTaskGoalChange} rows={1} value={editingOriginal === "goal" || goalSave.status === "error" ? currentGoal : mock.field(taskId, "goal", currentGoal)} /><TaskFieldSaveFeedback status={goalSave.status} /></div>{goalSave.status === "error" && <p className="task-field-save-error" id={`task-goal-save-error-${taskId}`} role="alert">{d("fieldSaveFailed")}</p>}</div></div>
               <div aria-label={d('criteria')} id={`task-criteria-${taskId}`} key={`criteria-${taskId}`} tabIndex={-1}>
                 <TaskCompletionCriteria completed={currentStatus === "已完成"} onTaskComplete={onTaskStatusChange ? setTaskCompleted : undefined} key={taskId} reviews={task.criterionReviews} onConfirm={onTaskCriterionConfirm} criteria={completionCriteria} onSave={onTaskCriteriaSave} source="recorded" />
               </div>

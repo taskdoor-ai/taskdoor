@@ -1,6 +1,6 @@
 .creation-subtasks { --creation-owner-width: 132px; --creation-action-width: 80px; --creation-summary-height: var(--ad-control-height-sm); --creation-control-height: var(--ad-control-touch-min); --creation-row-padding: var(--ad-space-6); --creation-column-gap: var(--ad-space-4); }
 .creation-task-list { display: grid; padding: 0; gap: var(--ad-space-3); }
-.creation-task-row { position: relative; display: block; padding: 0; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--task-card-background, var(--ad-surface)); box-shadow: 0 1px 3px color-mix(in srgb, var(--ad-ink) 3%, transparent); transition: border-color .16s, box-shadow .16s; }
+.creation-task-row { position: relative; display: block; padding: 0; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--ad-surface); box-shadow: 0 1px 3px color-mix(in srgb, var(--ad-ink) 3%, transparent); transition: border-color .16s, box-shadow .16s; }
 .creation-task-row:hover { border-color: var(--ad-border-strong); box-shadow: 0 3px 10px color-mix(in srgb, var(--ad-ink) 5%, transparent); }
 .creation-subtask-card.is-expandable { cursor: pointer; }
 .creation-task-row:focus-within, .creation-task-row.is-expanded { border-color: color-mix(in srgb, var(--ad-route) 45%, var(--ad-border)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ad-route) 6%, transparent); }

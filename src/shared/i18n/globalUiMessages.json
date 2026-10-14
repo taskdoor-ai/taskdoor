@@ -2654,5 +2654,237 @@
   "aiPackagePermissionBoundary": {
     "zh": "区分事实与推断。不自动发布、不自动写回；沿用用户权限。",
     "en": "Distinguish facts from inferences. Do not publish or write back automatically; keep the user’s existing permissions."
+  },
+  "fileDirectoryVersionContent": {
+    "zh": "版本 / 内容",
+    "en": "Version / contents"
+  },
+  "fileDirectoryEmpty": {
+    "zh": "这个文件夹还是空的",
+    "en": "This folder is empty"
+  },
+  "fileDirectoryEmptyHint": {
+    "zh": "上传文件，或新建文件夹整理任务资料。",
+    "en": "Upload files or create a folder to organize task materials."
+  },
+  "fileDirectoryAll": {
+    "zh": "查看全部任务文件",
+    "en": "View all task files"
+  },
+  "fileDirectoryList": {
+    "zh": "任务文件列表",
+    "en": "Task file list"
+  },
+  "fileDirectoryNone": {
+    "zh": "暂无文件",
+    "en": "No files yet"
+  },
+  "fileUploadDestination": {
+    "zh": "上传到：{0}",
+    "en": "Upload to: {0}"
+  },
+  "fileUploadDropHint": {
+    "zh": "点击选择或拖入文件",
+    "en": "Choose files or drag them here"
+  },
+  "fileUploadLimits": {
+    "zh": "每次最多 {0} 个文件，单个不超过 20 MiB",
+    "en": "Up to {0} files at a time, 20 MiB per file"
+  },
+  "fileUploadChoose": {
+    "zh": "选择文件",
+    "en": "Choose files"
+  },
+  "fileUploadDrop": {
+    "zh": "松开以上传文件",
+    "en": "Drop to upload files"
+  },
+  "fileUploadProgress": {
+    "zh": "正在上传 {0}/{1} 个文件",
+    "en": "Uploading {0} of {1} files"
+  },
+  "fileUploadComplete": {
+    "zh": "已上传 {0} 个文件",
+    "en": "Uploaded {0} files"
+  },
+  "fileUploadUnavailable": {
+    "zh": "上传位置已不可用，请重新选择文件夹。",
+    "en": "The upload location is no longer available. Choose another folder."
+  },
+  "fileHistoryCurrent": {
+    "zh": "当前 v{0}",
+    "en": "Current v{0}"
+  },
+  "fileHistoryCurrentVersion": {
+    "zh": "当前版本",
+    "en": "Current version"
+  },
+  "fileHistoryChangeCount": {
+    "zh": "{0} 处修改",
+    "en": "{0} changes"
+  },
+  "fileHistoryEmptyHint": {
+    "zh": "编辑并保存后会显示在这里。",
+    "en": "Edits will appear here after you save."
+  },
+  "fileHistoryStorage": {
+    "zh": "记录保存在当前浏览器",
+    "en": "History is saved in this browser"
+  },
+  "fileActionCopy0": {
+    "zh": "选择目的地",
+    "en": "Choose a destination"
+  },
+  "fileActionCopy1": {
+    "zh": "当前",
+    "en": "Current"
+  },
+  "fileActionCopy2": {
+    "zh": "请选择其他位置。",
+    "en": "Choose a different location."
+  },
+  "fileActionCopy3": {
+    "zh": "没有其他可移动的位置。",
+    "en": "No other locations are available."
+  },
+  "fileActionCopy4": {
+    "zh": "文件夹包含 {0} 个直接子项。",
+    "en": "This folder contains {0} items."
+  },
+  "fileActionCopy5": {
+    "zh": "文件夹",
+    "en": "Folder"
+  },
+  "fileActionCopy6": {
+    "zh": "文件",
+    "en": "File"
+  },
+  "fileActionCopy7": {
+    "zh": "文档",
+    "en": "Document"
+  },
+  "fileActionCopy8": {
+    "zh": "文本",
+    "en": "Text"
+  },
+  "fileActionCopy9": {
+    "zh": "表格",
+    "en": "Spreadsheet"
+  },
+  "fileActionCopy10": {
+    "zh": "图片",
+    "en": "Image"
+  },
+  "fileActionCopy11": {
+    "zh": "笔记",
+    "en": "Notebook"
+  },
+  "fileActionCopy12": {
+    "zh": "书籍",
+    "en": "Book"
+  },
+  "fileActionCopy13": {
+    "zh": "代码文件",
+    "en": "Code file"
+  },
+  "fileActionCopy14": {
+    "zh": "代码",
+    "en": "Code"
+  },
+  "fileActionCopy15": {
+    "zh": "演示",
+    "en": "Presentation"
+  },
+  "fileActionCopy16": {
+    "zh": "图表",
+    "en": "Chart"
+  },
+  "fileActionCopy17": {
+    "zh": "相机",
+    "en": "Camera"
+  },
+  "fileActionCopy18": {
+    "zh": "视频",
+    "en": "Video"
+  },
+  "fileActionCopy19": {
+    "zh": "音频",
+    "en": "Audio"
+  },
+  "fileActionCopy20": {
+    "zh": "链接",
+    "en": "Link"
+  },
+  "fileActionCopy21": {
+    "zh": "网页",
+    "en": "Web page"
+  },
+  "fileActionCopy22": {
+    "zh": "归档",
+    "en": "Archive"
+  },
+  "fileActionCopy23": {
+    "zh": "工作",
+    "en": "Work"
+  },
+  "fileActionCopy24": {
+    "zh": "清单",
+    "en": "Checklist"
+  },
+  "fileActionCopy25": {
+    "zh": "完成事项",
+    "en": "Completed items"
+  },
+  "fileActionCopy26": {
+    "zh": "想法",
+    "en": "Idea"
+  },
+  "fileActionCopy27": {
+    "zh": "旗帜",
+    "en": "Flag"
+  },
+  "fileActionCopy28": {
+    "zh": "收藏",
+    "en": "Star"
+  },
+  "fileDirectoryNewFolder": {
+    "zh": "新建文件夹",
+    "en": "New folder"
+  },
+  "fileUploadDropTitle": {
+    "zh": "拖入文件，或选择上传",
+    "en": "Drop files here or choose files to upload"
+  },
+  "fileUploadProgressLabel": {
+    "zh": "上传进度",
+    "en": "Upload progress"
+  },
+  "fileHistory": {
+    "zh": "文件历史",
+    "en": "File history"
+  },
+  "fileUpdateHistory": {
+    "zh": "更新历史",
+    "en": "Update history"
+  },
+  "selectFileRevision": {
+    "zh": "选择一个版本",
+    "en": "Select a version"
+  },
+  "selectFileRevisionDetail": {
+    "zh": "选择右侧记录查看差异。",
+    "en": "Select a record on the right to compare changes."
+  },
+  "loadingFileRevisionDiff": {
+    "zh": "正在加载差异",
+    "en": "Loading changes"
+  },
+  "partialFileRevision": {
+    "zh": "此版本仅保留修改片段。",
+    "en": "Only the changed excerpts are available for this version."
+  },
+  "showUnchangedFileLines": {
+    "zh": "展开 {0} 行未修改内容",
+    "en": "Show {0} unchanged lines"
   }
 }

@@ -17,7 +17,7 @@ import { createRunner } from './runner.ts';
 import { labSkills, loadSkill } from './skills.ts';
 import { buildView } from './context.ts';
 import { importLibrary } from './library.ts';
-import { editableSchema, runSelectionSchema, skillVersionInputSchema, teamSchema, caseSchema } from './schema.ts';
+import { editableSchema, runSelectionSchema, skillVersionInputSchema, teamSchema, caseSchema, modelIdSchema } from './schema.ts';
 import { skillIds, type LabCase } from '../../src/test-lab/types.ts';
 import { buildWorkflows, summarizeWorkflow } from '../../src/test-lab/workflows.ts';
 import { preflightWorkflow } from './workflows.ts';
@@ -98,7 +98,7 @@ export function testLabPlugin():Plugin{
         if(req.method==='POST'&&path==='/runs'){const value=z.object({caseIds:z.array(z.string()).min(1).max(MAX_BATCH_CASES),requestId:z.string().min(1).max(100),selection:runSelectionSchema.optional()}).strict().parse(await body(req));if(!['preview','mcp'].includes(value.selection?.executionMode??'')&&!(value.selection?.executionMode==='proposal'&&['agentdoor-task-status-analyzer','agentdoor-responsibility-advisor','agentdoor-member-matcher'].includes(value.selection.skillId??'')))throw Error('请选择任务方案预览或任务分析评测');const state=store.getLibrary();if(state.modelCatalogSyncedAt){const selected=[...(value.selection?.models??[value.selection?.model||options.model]),...(value.selection?.judgeModel&&value.selection.judgeModel!==jevOptions.model?[value.selection.judgeModel]:[])];const unavailable=selected.filter(model=>!state.modelCatalog?.includes(model));if(unavailable.length)throw Error('所选型号不在可用目录中，请刷新页面并重新选择：'+unavailable.join('、'));}send(res,202,runner.enqueue(value.caseIds,value.requestId,value.selection));return;}
         if(req.method==='POST'&&path==='/library/import'){await body(req);send(res,200,importLibrary(store));return;}
         const jevMatch=path.match(/^\/runs\/([^/]+)\/jev-review$/);
-        if(req.method==='POST'&&jevMatch){z.object({}).strict().parse(await body(req));if(!store.get().judgeEnabled)throw new Error('Jev 判断模型未启用，请到模型管理开启');send(res,200,await reviewWithJev(decodeURIComponent(jevMatch[1])));return;}
+        if(req.method==='POST'&&jevMatch){const value=z.object({judgeModel:modelIdSchema.optional()}).strict().parse(await body(req));const state=store.getLibrary();if(!state.judgeEnabled)throw new Error('Jev 判断模型未启用，请到模型管理开启');const available=config.jev.models.filter(model=>model===jevOptions.model||!state.modelCatalogSyncedAt||state.modelCatalog?.includes(model));if(value.judgeModel&&!available.includes(value.judgeModel))throw new Error('未配置或未启用该判断模型');send(res,200,await reviewWithJev(decodeURIComponent(jevMatch[1]),value.judgeModel));return;}
         const match=path.match(/^\/runs\/([^/]+)\/(cancel|review)$/);
         if(req.method==='POST'&&match){const value=await body(req);if(match[2]==='cancel')send(res,200,runner.cancel(match[1]));else{const review=z.object({verdict:z.enum(['passed','failed']),note:z.string().min(1).max(5000)}).strict().parse(value);send(res,200,runner.review(match[1],review.verdict,review.note));}return;}
         send(res,404,{error:'测试接口不存在'});

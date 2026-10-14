@@ -11,6 +11,7 @@ import { TaskProgressStage } from "@/features/tasks/components/TaskProgressStage
 import { TaskBurnUpNode } from "@/features/tasks/components/TaskBurnUpNode";
 import { layoutBurnUpDateAxis, TaskBurnUpDateAxis, TaskBurnUpHeading, TaskBurnUpTimeDelta, TaskBurnUpTiming } from "@/features/tasks/components/TaskBurnUpTiming";
 import { getTaskProgressDisplay, type TaskProgressContext, type TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 
 const shortDate = (date: string | null) => date ? formatDisplayDate(date) ?? "—" : "—";
 const days = (minutes: number) => formatPersonDays(minutes / 480);
@@ -35,18 +36,19 @@ export function TaskProgressComparison({ compact = false, series, currentScopeMi
   };
 }) {
   const p = useProgressCopy();
+  const timeZone = useTeamTimeZone();
   const id = useId();
   const canvas = useBurnUpWidth(320);
-  const sourceModel = getTaskProgressComparison(series);
+  const sourceModel = getTaskProgressComparison(series, timeZone);
   if (!sourceModel) return null;
   const scopeChanged = currentScopeMinutes != null && currentScopeMinutes !== sourceModel.latest.scopeMinutes;
-  const display = presentation?.display ?? getTaskProgressDisplay({series,task:progressTask,scopeMinutes:currentScopeMinutes,completedMinutes,sourceLabel:completionSource});
-  const historyModel = getTaskProgressComparison(display.historySeries) ?? sourceModel;
+  const display = presentation?.display ?? getTaskProgressDisplay({timeZone,series,task:progressTask,scopeMinutes:currentScopeMinutes,completedMinutes,sourceLabel:completionSource});
+  const historyModel = getTaskProgressComparison(display.historySeries, timeZone) ?? sourceModel;
   const historicalOnly = display.ratio === null && currentScopeMinutes !== undefined
     && historyModel.history.some(point => point.completedMinutes > 0);
   const baseModel = scopeChanged ? {...sourceModel, expectedRatio:null, expectedMinutes:null, deltaMinutes:null, deltaPoints:null, forecastOn:null, finishOn:sourceModel.completedOn, deltaDays:null, relation:"unknown" as const} : historyModel;
   const model = {...baseModel, startOn:display.startOn, forecastOn:display.forecastOn, finishOn:display.finishOn, dueOn:display.dueOn, completedOn:display.completedOn, deltaDays:display.deltaDays};
-  const chart = getTaskProgressChart(model,progressTask,{width:canvas.width,projectScope:!display.cancelled && display.sourceLabel!=="用户确认"
+  const chart = getTaskProgressChart(model,progressTask,{timeZone,width:canvas.width,projectScope:!display.cancelled && display.sourceLabel!=="用户确认"
     && !scopeChanged && display.total===model.latest.scopeMinutes && presentation?.historyLabel!=="上次记录"});
   const latestRow = chart.rows.at(-1)!;
   const totalsOverlap = latestRow.scopeMinutes === latestRow.completedMinutes;

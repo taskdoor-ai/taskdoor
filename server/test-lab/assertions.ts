@@ -15,9 +15,10 @@ export function readPath(value:unknown,path:string):unknown {
 export function evaluateAssertions(output:unknown,assertions:LabAssertion[]):AssertionResult[]{
   return assertions.map(a=>{
     const actual=readPath(output,a.path);let pass=false;
-    if(a.operator!=='exists'&&actual===undefined)return {...a,status:'unknown',actual:null,message:'路径不存在，无法判定'};
+    if(!['exists','nullish'].includes(a.operator)&&actual===undefined)return {...a,status:'unknown',actual:null,message:'路径不存在，无法判定'};
     switch(a.operator){
       case 'exists':pass=a.expected===false?actual===undefined:actual!==undefined;break;
+      case 'nullish':pass=typeof a.expected==='boolean'&&(a.expected?actual==null:actual!=null);break;
       case 'equals':pass=isDeepStrictEqual(actual,a.expected);break;
       case 'contains':pass=typeof actual==='string'&&typeof a.expected==='string'?actual.includes(a.expected):Array.isArray(actual)&&actual.some(v=>isDeepStrictEqual(v,a.expected));break;
       case 'not_contains':pass=typeof actual==='string'&&typeof a.expected==='string'?!actual.includes(a.expected):Array.isArray(actual)&&!actual.some(v=>isDeepStrictEqual(v,a.expected));break;

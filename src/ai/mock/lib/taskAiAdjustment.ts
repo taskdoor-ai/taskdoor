@@ -1,4 +1,4 @@
-import { taskCreationDay, taskScheduleError } from "@/features/tasks/lib/task-schedule";
+import { taskCalendarDate, taskScheduleError } from "@/features/tasks/lib/task-schedule";
 import type {
   TaskAiAdjustmentChange,
   TaskAiAdjustmentContext,
@@ -122,7 +122,7 @@ function isAncestor(graph: Map<string, ContextTask>, ancestorId: string, taskId:
 }
 
 function validateDeadline(context: TaskAiAdjustmentContext, target: TaskAiEditableTask, date: string): string | null {
-  const error = taskScheduleError(date, context.mode === "draft" ? taskCreationDay() : target.createdAt, target.startDate);
+  const error = taskScheduleError(date, context.mode === "draft" ? taskCalendarDate(new Date().toISOString(), context.timeZone) : target.createdAt, target.startDate, context.timeZone);
   if (error) return error;
   if (context.mode === "draft") return null;
   if (target.startDate && !validDate(target.startDate)) return "当前任务的开始日期无效，请先核对开始日期；原文与任务保持不变。";

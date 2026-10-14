@@ -24,6 +24,8 @@ import { TaskCreationExistingTaskCard } from "@/features/tasks/components/TaskCr
 import { AgentWorkflow, type AgentPhase, type ToolDefinition } from "@/shared/ui/ai-agent-response";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/shared/ui/accordion";
 import { Confetti } from "@/shared/ui/motion-confetti";
+import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 
 export type TaskCreationResult = {
   createdCount: number;
@@ -381,6 +383,8 @@ function TaskPlanPanel({ draft, memberById, members, onChange, onClose, tags }: 
 }
 
 export function TaskCreationConversation({ currentUserId, existingTasks, members, onCreateSubtask, onCreateTaskPlan, onOpenTask, tags }: TaskCreationConversationProps) {
+  const timeZone = useTeamTimeZone();
+  const currentDate = taskCalendarDate(new Date().toISOString(), timeZone) ?? "";
   const { locale } = useI18n();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [conversations, setConversations] = useState<PrivateConversation[]>(() => loadPrivateConversations(currentUserId));
@@ -477,7 +481,8 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
 
   const memberById = useMemo(() => Object.fromEntries(members.map((member) => [member.id, member])), [members]);
   const scenarioContext = useMemo<ScenarioContext>(() => ({
-    currentDate: new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Shanghai" }),
+    currentDate,
+    timezone: timeZone,
     currentUserId,
     existingTasks,
     members,
@@ -505,14 +510,14 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
     setError(null);
     try {
       const request: TaskAssistantRequest = {
-        currentDate: new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Shanghai" }),
+        currentDate,
         currentUserId,
         draft: output?.draft ?? null,
         existingTasks,
         members: members.map(({ availability, currentWork, dynamicResponsibility, id, name, recentActivity, role }) => ({ availability: availability ?? "", currentWork: currentWork ?? [], dynamicResponsibility: dynamicResponsibility ?? "", id, name, recentActivity: recentActivity ?? "", role })),
         messages: nextMessages.map(({ content, role }) => ({ content, role })),
         tags: tags.map((tag) => tag.name),
-        timezone: "Asia/Shanghai",
+        timezone: timeZone,
       };
       setWorkflowRequest(request);
       setWorkflowPreview(createMockTaskAssistantResponse(request));
@@ -565,7 +570,7 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
         members: members.map(({ availability, currentWork, dynamicResponsibility, id, name, recentActivity, role }) => ({ availability: availability ?? "", currentWork: currentWork ?? [], dynamicResponsibility: dynamicResponsibility ?? "", id, name, recentActivity: recentActivity ?? "", role })),
         messages: baseMessages.filter(({ role }) => role === "user").map(({ content, role }) => ({ content, role })),
         tags: scenarioContext.tags,
-        timezone: "Asia/Shanghai",
+        timezone: timeZone,
       };
       const nextOutput = createMockTaskAssistantResponseForDraft(request, transition.draft, transition.message);
       setWorkflowRequest(request);
@@ -585,7 +590,7 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
         members: members.map(({ availability, currentWork, dynamicResponsibility, id, name, recentActivity, role }) => ({ availability: availability ?? "", currentWork: currentWork ?? [], dynamicResponsibility: dynamicResponsibility ?? "", id, name, recentActivity: recentActivity ?? "", role })),
         messages: baseMessages.filter(({ role }) => role === "user").map(({ content, role }) => ({ content, role })),
         tags: scenarioContext.tags,
-        timezone: "Asia/Shanghai",
+        timezone: timeZone,
       };
       const nextOutput = createMockTaskAssistantResponseForDraft(request, transition.draft, transition.message);
       setWorkflowRequest(request);
@@ -625,7 +630,7 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
       members: members.map(({ availability, currentWork, dynamicResponsibility, id, name, recentActivity, role }) => ({ availability: availability ?? "", currentWork: currentWork ?? [], dynamicResponsibility: dynamicResponsibility ?? "", id, name, recentActivity: recentActivity ?? "", role })),
       messages: baseMessages.map(({ content, role }) => ({ content, role })),
       tags: scenarioContext.tags,
-      timezone: "Asia/Shanghai",
+      timezone: timeZone,
     };
     const preview = transition.type === "draft" || transition.type === "create-subtask"
       ? createMockTaskAssistantResponseForDraft(request, transition.draft, transition.message)
@@ -703,6 +708,7 @@ export function TaskCreationConversation({ currentUserId, existingTasks, members
   };
 
   const handleSend = (content: string) => {
+    if (!currentDate) { setError({ code: "UPSTREAM", message: locale === "en" ? "The team timezone is invalid. Your input has been kept." : "团队时区无效，无法确定创建日期。输入已保留。" }); return; }
     if (isAnalyzing || pendingScenarioAnalysisRef.current) return;
     const conversationId = activeConversationId ?? crypto.randomUUID();
     if (!activeConversationId) setActiveConversationId(conversationId);

@@ -179,8 +179,8 @@ export function createCollaborationSnapshot(seedFiles: TaskFileNode[]): Collabor
 export function loadCollaboration(storage: Pick<CollaborationStorage, "getItem">, scopeKey: string, seedFiles: TaskFileNode[]): CollaborationSnapshot {
   return readStored(storage, scopeKey) ?? createCollaborationSnapshot(seedFiles);
 }
-/** One synchronous storage write owns both message and files. Publish returned state only after success. */
-export function saveCollaboration(storage: CollaborationStorage, scopeKey: string, expectedRevision: number, next: CollaborationSnapshot): CollaborationSnapshot {
+/** The optional transaction writer confirms its own writes before returning. Publish only after durable success. */
+export function saveCollaboration(storage: CollaborationStorage, scopeKey: string, expectedRevision: number, next: CollaborationSnapshot, persist?: (key: string, serialized: string) => void): CollaborationSnapshot {
   const checked = parseSnapshot(next);
   const current = readStored(storage, scopeKey);
   const serialized = JSON.stringify(checked);
@@ -188,8 +188,11 @@ export function saveCollaboration(storage: CollaborationStorage, scopeKey: strin
   if (current?.revision === checked.revision && JSON.stringify(current) === serialized) return current;
   if ((current?.revision ?? 0) !== expectedRevision) throw new Error("协作记录已变化，请重新载入最新记录后重试。");
   try {
-    storage.setItem(storageKey(scopeKey), serialized);
-    if (storage.getItem(storageKey(scopeKey)) !== serialized) throw new Error("保存后的记录校验失败。");
+    if (persist) persist(storageKey(scopeKey), serialized);
+    else {
+      storage.setItem(storageKey(scopeKey), serialized);
+      if (storage.getItem(storageKey(scopeKey)) !== serialized) throw new Error("保存后的记录校验失败。");
+    }
   } catch (cause) { throw new Error("协作记录未确认保存，请保留输入和附件后重试。", { cause }); }
   return checked;
 }

@@ -1,8 +1,21 @@
 import {stableJson} from './stable-json.ts';
 import {createHash} from 'node:crypto';
-import type {LabState,Json} from '../../src/test-lab/types.ts';
+import type {LabAssertion,LabCase,LabState,LabTeam,Json} from '../../src/test-lab/types.ts';
 import {applyEvents} from './context.ts';
 import {selectCaseContext} from '../../src/test-lab/case-input-context.ts';
+
+export function taskAnalysisReferenceFingerprint(c:LabCase,source:LabTeam){
+ return createHash('sha256').update(stableJson({source,steps:c.steps.filter(s=>s.skillId==='agentdoor-task-status-analyzer'),assertions:c.assertions,revision:5})).digest('hex').slice(0,12);
+}
+
+/** Bounds describe allowed display grades, not an unknown or one fixed answer. */
+export function criterionPercentExpectation(assertions:LabAssertion[],stepId:string,index:number):{percent:Json}|{allowedPercents:number[]}|undefined{
+ const matches=assertions.filter(a=>a.stepId===stepId&&a.path===`result.criterionAssessments.${index}.percent`);
+ const exact=matches.find(a=>a.operator==='equals');if(exact)return {percent:exact.expected};
+ const bounds=matches.filter(a=>(a.operator==='gte'||a.operator==='lte')&&typeof a.expected==='number');
+ if(!bounds.length)return undefined;
+ return {allowedPercents:[0,25,50,75,100].filter(value=>bounds.every(a=>a.operator==='gte'?value>=Number(a.expected):value<=Number(a.expected)))};
+}
 
 /** Authored fixture reference answers, frozen before execution; never model-generated or model inputs. */
 export function updateTaskAnalysisReferences(state:LabState){
@@ -11,7 +24,7 @@ export function updateTaskAnalysisReferences(state:LabState){
   const steps=c.steps.filter(s=>s.skillId==='agentdoor-task-status-analyzer');
   if(!steps.length)continue;
   const source=c.dataSnapshot??state.teams.find(t=>t.id===c.teamId);if(!source)continue;
-  const fingerprint=createHash('sha256').update(stableJson({source,steps,assertions:c.assertions,revision:5})).digest('hex').slice(0,12);
+  const fingerprint=taskAnalysisReferenceFingerprint(c,source);
   if(c.expectedOutput?.checks.some(x=>x.id.startsWith(`analysis-reference-v2-${fingerprint}-`)))continue;
   let snapshot=structuredClone(source);
   const checks=steps.flatMap(step=>{
@@ -24,15 +37,17 @@ export function updateTaskAnalysisReferences(state:LabState){
    const synthetic=(c.id.startsWith('case-analysis-test-')||c.id.startsWith('case-analysis-timing-'));const hierarchy=c.id.startsWith('case-analysis-data-');
    const ewd=view.evidence.some(e=>e.id.endsWith('ewd-content-check'));
    const grade=ref('result.progress.displayPercent');const raw=ref('result.progress.completionPercent');
-   const percent=grade?.expected??(ewd?75:hierarchy?50:null);
-   const original=raw?.expected??(ewd?Number((552/720*100).toFixed(4)):hierarchy?50:null);
+   const percent=grade?grade.expected:ewd?75:hierarchy?50:undefined;
+   // Display 0 and 100 uniquely identify raw endpoints; a middle grade does not.
+   const original=raw?raw.expected:ewd?Number((552/720*100).toFixed(4)):hierarchy?50:percent===0||percent===100?percent:undefined;
    const criteria=task.acceptanceCriteria.map((text,i)=>{
-    const a=ref(`result.criterionAssessments.${i}.percent`);
-    const value=a?a.expected:c.id==='case-status'?50:hierarchy?(i===0?100:0):ewd?[100,75,50][i]??null:null;
-    return {完成标准:text,AI参考完成度:value,用户确认:task.criteria?.items[i]?.confirmation??'未提供确认记录',依据:c.id==='case-status'?'正文已有产品介绍与口播，但缺活动标题、优惠金额、行动引导，且无产品信息完整核对记录；参考50%表示部分交付，不能确认完成或据此计算整体工时比例。':synthetic?(value===100?'当前交付正文明确覆盖该项，并有核对记录。':value===0?'当前正文明确记载未执行或未交付。':'缺少可读取的交付正文，无法核对。'):hierarchy?(i===0?'子任务脚本480字且商品卖点已复核。':'海报子任务讨论明确尚未执行。'):ewd?'对应明细内容核对为100%、80%、40%，分别映射到100%、75%、50%档。':'目前未建立充分的逐条内容核对，参考完成度保留未知。'};
+    const expected=criterionPercentExpectation(c.assertions,step.id,i);
+    const allowed=expected&&'allowedPercents' in expected?expected.allowedPercents:undefined;
+    const value=expected&&'percent' in expected?expected.percent:c.id==='case-status'?50:hierarchy?(i===0?100:0):ewd?[100,75,50][i]??null:null;
+    return {完成标准:text,...(allowed?{允许AI参考完成度:allowed}:{AI参考完成度:value}),用户确认:task.criteria?.items[i]?.confirmation??'未提供确认记录',依据:allowed?(text==='报名页中英文案与成功提示均已核对。'?'中文页面及中文成功提示已有核对记录；英文文案、英文成功提示与中英文一致性核对仍缺失。复合标准有部分成果，不归零，不要求固定50%。':'按当前相关证据核对已有成果及剩余缺口，完成度须在允许分档中，不要求固定数值。'):c.id==='case-status'?'正文已有产品介绍与口播，但缺活动标题、优惠金额、行动引导，且无产品信息完整核对记录；参考50%表示部分交付，不能确认完成或据此计算整体工时比例。':synthetic?(value===100?'当前交付正文明确覆盖该项，并有核对记录。':value===0?'当前正文明确记载未执行或未交付。':'缺少可读取的交付正文，无法核对。'):hierarchy?(i===0?'子任务脚本480字且商品卖点已复核。':'海报子任务讨论明确尚未执行。'):ewd?'对应明细内容核对为100%、80%、40%，分别映射到100%、75%、50%档。':'目前未建立充分的逐条内容核对，参考完成度保留未知。'};
    });
-   const done=criteria.filter(x=>x.AI参考完成度===100).map(x=>x.完成标准);
-   const gaps=criteria.filter(x=>x.AI参考完成度!==100).map(x=>x.完成标准);
+   const done=criteria.filter(x=>'AI参考完成度' in x&&x.AI参考完成度===100).map(x=>x.完成标准);
+   const gaps=criteria.filter(x=>!('AI参考完成度' in x)||x.AI参考完成度!==100).map(x=>x.完成标准);
    const authored={
     'claim-conflict':'讨论声称全部完成，但正文只覆盖规则与页面；通知、预案未执行，以正文为准。',
     'new-scope':'原四项已交付，新增英文文案及成功提示没有交付或估算，原240分钟不能作为完整新范围分母。正式已完成状态保留。',
@@ -50,7 +65,9 @@ export function updateTaskAnalysisReferences(state:LabState){
    const history=view.evidence.find(e=>e.id.endsWith('ewd-history'));
    let points:Json=[];if(history&&history.readState!=='unavailable'){try{points=JSON.parse(history.content).points??[];}catch{}}
    const check=(suffix:string,subject:string,expected:Json)=>({id:`analysis-reference-v2-${fingerprint}-${step.id}-${suffix}`,stepId:step.id,subject,criterion:`对照本用例第${step.id}轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。`,expected});
-   return [check('progress','参考整体进度',{展示完成度:percent,原始完成度:original,计算依据:ewd?'120×100% + 480×80% + 120×40% = 552分钟；552/720≈76.67%，展示75%。':hierarchy?'脚本60分钟已完成、海报60分钟未执行：60/120=50%；不加父级120分钟。':key==='weighted'?authored[key]:synthetic&&percent!==null?`四项独立工作各60分钟，完整交付对应${original}%工作量。`:'当前只有总估算或不完整新范围，不能据此计算完成量。',证据:refs}),check('criteria','参考逐条完成度',criteria as unknown as Json),check('situation','参考情况与下一步',{当前情况:summary,已完成:done,剩余或待核对:gaps,下一步建议:action,建议处理人:view.members.find(m=>m.id===task.ownerId)?.name??null,特殊预期:scenario}),check('trend','参考燃起图与日期',c.expectedOutput?.checks.find(x=>x.subject==='排期参考'&&x.stepId===step.id)?.expected??{历史节点:points,计划截止:task.dueAt,预计完成:null,确认完成:null,计划日期差:null,依据:history?'只保留输入中真实历史点；范围从960降为720时完成量仍240，随后完成量增至552。未提供有效未来交付安排或独立确认完成日期，预测与差值未知。':'未提供历史工作量观察或有效未来交付安排；不产生历史曲线、预测日期或提前延期数值。'})];
+   const newScopePartial=criteria.some(row=>row.完成标准==='报名页中英文案与成功提示均已核对。'&&'允许AI参考完成度' in row&&row.允许AI参考完成度.join(',')==='25,50,75');
+   const progressReference:Json=newScopePartial?{计算依据:'旧240分钟只覆盖原四项；当前范围条件足够时先补估新增英文工作，再用不重叠的明细计算整体工作量。新增英文工作尚未形成结果，不能借中文既有成果增加该增量的完成量；不强制整体进度未知或某个固定百分比。',证据:refs}:{...(percent!==undefined?{展示完成度:percent}:{}),...(original!==undefined?{原始完成度:original}:{原始比例规则:'未预设精确原始比例；按独立明细及交付证据计算，不能从展示分档倒算，也不将未设值解释成业务未知。'}),计算依据:ewd?'120×100% + 480×80% + 120×40% = 552分钟；552/720≈76.67%，展示75%。':hierarchy?'脚本60分钟已完成、海报60分钟未执行：60/120=50%；不加父级120分钟。':key==='weighted'?authored[key]:synthetic&&typeof original==='number'?`四项独立工作各60分钟，完整交付对应${original}%工作量。`:original===null?'当前交付或范围证据不足，无法核对完成量。':'参考未设精确数值，按本轮可读范围、独立工作投入和交付证据核对。',证据:refs};
+   return [check('progress','参考整体进度',progressReference),check('criteria','参考逐条完成度',criteria as unknown as Json),check('situation','参考情况与下一步',{当前情况:summary,已完成:done,剩余或待核对:gaps,下一步建议:action,建议处理人:view.members.find(m=>m.id===task.ownerId)?.name??null,特殊预期:scenario}),check('trend','参考燃起图与日期',c.expectedOutput?.checks.find(x=>x.subject==='排期参考'&&x.stepId===step.id)?.expected??{历史节点:points,计划截止:task.dueAt,预计完成:null,确认完成:null,计划日期差:null,依据:history?'只保留输入中真实历史点；范围从960降为720时完成量仍240，随后完成量增至552。未提供有效未来交付安排或独立确认完成日期，预测与差值未知。':'未提供历史工作量观察或有效未来交付安排；不产生历史曲线、预测日期或提前延期数值。'})];
   });
   if(checks.length){c.expectedOutput={version:1,checks:[...checks,...(c.expectedOutput?.checks??[]).filter(x=>!/^analysis-reference-v[12]-/.test(x.id))]};c.version++;changed=true;}
  }

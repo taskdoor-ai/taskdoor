@@ -14,6 +14,7 @@ import { callModel, modelEndpoint, supportsPreviewSchema, ModelResponseError, ty
 import { hash, resolveSkill } from './skills.ts';
 import { validateOutput } from './validation.ts';
 import { evaluateAssertions } from './assertions.ts';
+import { evaluateStrictAnalysisRelations } from './strict-analysis-cases.ts';
 import { runSelectionSchema } from './schema.ts';
 import type { EvaluationEngine } from './evaluation-engine.ts';
 import { preflightWorkflow } from './workflows.ts';
@@ -68,13 +69,13 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
           }else{
           sandbox=applyEvents(sandbox,step);result.after=structuredClone(sandbox);
           const input=buildModelInput(sandbox,run.caseSnapshot,step,id,get(id).steps);result.input=input;result.promptHash=hash(skill.instructions+'\n'+JSON.stringify(input));
-          const outputSchema=step.skillId==='agentdoor-task-status-analyzer'&&skill.snapshot.includes('TASK-ANALYSIS-2026-10-11-v7')&&supportsPreviewSchema(run.model)?analysisResponseSchema(input):step.skillId==='agentdoor-member-matcher'&&skill.snapshot.includes('MEMBER-MATCH-2026-10-11-v2')&&supportsPreviewSchema(run.model)?memberResponseSchema({candidateMemberIds:"candidateMemberIds" in input?input.candidateMemberIds:undefined}):undefined;
+          const outputSchema=step.skillId==='agentdoor-task-status-analyzer'&&/TASK-ANALYSIS-(2026-10-11-v7|2026-10-14-v(?:8|9|10))/.test(skill.snapshot)&&supportsPreviewSchema(run.model)?analysisResponseSchema(input):step.skillId==='agentdoor-member-matcher'&&skill.snapshot.includes('MEMBER-MATCH-2026-10-11-v2')&&supportsPreviewSchema(run.model)?memberResponseSchema({candidateMemberIds:"candidateMemberIds" in input?input.candidateMemberIds:undefined}):undefined;
           result.modelSettings={maxOutputTokens:options.maxOutputTokens,responseFormat:outputSchema?'json_schema':'json_object',...(outputSchema?{outputSchemaHash:hash(JSON.stringify(outputSchema))}:{})};
           const response=await modelCall({...options,model:run.model,outputSchema},skill.instructions,input,controller.signal);result.rawOutput=response.rawOutput;result.usage=response.usage;
           if(controller.signal.aborted)throw new Error('运行已取消');
           try{result.output=JSON.parse(response.rawOutput);}catch{throw new Error('模型输出不是有效 JSON；原文已保留，未自动修复或重试');}
           result.structureErrors=validateOutput(step.skillId,result.output,input);result.structure=result.structureErrors.length?'failed':'passed';
-          result.assertions=evaluateAssertions(result.output,run.caseSnapshot.assertions.filter(a=>a.stepId===step.id));
+          result.assertions=[...evaluateAssertions(result.output,run.caseSnapshot.assertions.filter(a=>a.stepId===step.id)),...evaluateStrictAnalysisRelations(run.caseSnapshot,step.id,result.output)];
           }
         }catch(error){if(error instanceof ModelResponseError){result.rawOutput=error.response.rawOutput;result.usage=error.response.usage;}result.error=error instanceof Error?error.message:'运行失败';result.structure='failed';}
         result.durationMs=Date.now()-started;

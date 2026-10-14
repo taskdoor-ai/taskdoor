@@ -10,13 +10,15 @@ type ToastOptions = {
   onClose?: () => void;
 };
 type ToastTone = "success" | "error" | "info";
+const DEFAULT_TOAST_TIMEOUT = 2500;
+const EXTENDED_TOAST_TIMEOUT = 5000;
 const manager = ToastPrimitive.createToastManager();
 
 function show(message: string, type: ToastTone, options: ToastOptions = {}) {
   const id = options.id ?? `${type}:${message}`;
   return manager.add({
     id, title: message, type, description: options.description,
-    timeout: options.action ? 8000 : type === "error" ? 6000 : 4000,
+    timeout: options.action || options.description || type === "error" ? EXTENDED_TOAST_TIMEOUT : DEFAULT_TOAST_TIMEOUT,
     priority: type === "error" ? "high" : "low",
     onClose: options.onClose,
     actionProps: options.action ? {
@@ -39,7 +41,7 @@ export const toast = {
 
 /** Mount once per application, outside route and dialog lifecycles. */
 export function ToastProvider({ children }: { children?: ReactNode }) {
-  return <ToastPrimitive.Provider toastManager={manager} limit={3} timeout={4000}>
+  return <ToastPrimitive.Provider toastManager={manager} limit={3} timeout={DEFAULT_TOAST_TIMEOUT}>
     {children}
     <ToastViewport />
   </ToastPrimitive.Provider>;

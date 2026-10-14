@@ -1,4 +1,51 @@
-import type { LabCase, LabEvidence, LabState, LabStep, LabTask } from '../../src/test-lab/types.ts';
+import type { LabAssertion, LabCase, LabEvidence, LabState, LabStep, LabTask } from '../../src/test-lab/types.ts';
+import {taskAnalysisReferenceFingerprint} from './task-analysis-reference.ts';
+
+const bilingualCriterion='报名页中英文案与成功提示均已核对。';
+const bilingualPartialBasis='中文页面及中文成功提示已有核对记录；英文文案、英文成功提示与中英文一致性核对仍缺失。复合标准有部分成果，不归零，不要求固定50%。';
+
+function newScopePartialAssertions(stepId:string):LabAssertion[]{
+  const path='result.criterionAssessments.4.percent';
+  return [
+    {id:`${stepId}-criterion-4-minimum`,label:'双语复合标准已有中文成果',stepId,path,operator:'gte',expected:25},
+    {id:`${stepId}-criterion-4-maximum`,label:'双语复合标准仍缺英文与一致性核对',stepId,path,operator:'lte',expected:75},
+  ];
+}
+
+function newScopePartialEvidenceCheck(stepId:string):NonNullable<LabCase['expectedOutput']>['checks'][number]{
+  return {id:`new-scope-partial-evidence-${stepId}`,stepId,subject:'新增范围部分成果与计量',
+    criterion:'保留复合标准的中文既有成果；AI完成度只允许有证据的25/50/75，不强求固定50。说明英文文案、英文成功提示及中英文一致性核对的缺口。原四项已完成工作量只计一次；新增英文增量工作尚未形成结果，其已完成EWD为0，不以既有中文成果算作英文增量完成。不得更改正式已完成状态、人工确认或历史。',
+    expected:{允许AI参考完成度:[25,50,75],已有成果:'中文页面与中文成功提示核对记录',剩余缺口:['英文文案','英文成功提示','中英文一致性核对'],新增英文工作已完成EwdMinutes:0,不重复计量:'原四项及中文既有工作只计算一次'}};
+}
+
+/** Explicit, pure retest clone. Never migrates edited cases or rewrites a frozen run. */
+export function createNewScopeAnalysisRetestCase(source:LabCase,newId:string):LabCase{
+  if(!newId.trim()||newId===source.id)throw Error('复测必须使用新的用例ID');
+  if(!source.dataSnapshot)throw Error('复测需要冻结业务快照');
+  const step=source.steps[0];const task=source.dataSnapshot.tasks.find(t=>t.id===step?.taskId);
+  if(source.steps.length!==1||step?.skillId!=='agentdoor-task-status-analyzer'||task?.acceptanceCriteria[4]!==bilingualCriterion||task.criteria?.items[4].text!==bilingualCriterion)throw Error('只修复指定双语复合标准，不修改其它用例');
+  const path='result.criterionAssessments.4.percent';
+  if(!source.assertions.some(a=>a.stepId===step.id&&a.path===path))throw Error('未找到待修复的复合标准断言');
+  const copy=structuredClone(source);
+  copy.id=newId;copy.name=`${source.name} · 修正复测`;copy.origin='manual';copy.version=1;
+  copy.assertions=[...copy.assertions.filter(a=>!(a.stepId===step.id&&a.path===path)),...newScopePartialAssertions(step.id)];
+  for(const check of copy.expectedOutput?.checks??[]){
+    if(check.stepId!==step.id||!Array.isArray(check.expected))continue;
+    const row=check.expected[4];if(!row||typeof row!=='object'||Array.isArray(row))continue;
+    if(check.subject==='参考逐条完成度'){
+      delete row.AI参考完成度;row.允许AI参考完成度=[25,50,75];row.依据=bilingualPartialBasis;
+    }
+    if(check.subject==='逐条标准完成度'){
+      delete row.percent;row.allowedPercents=[25,50,75];
+    }
+  }
+  copy.expectedOutput??={version:1,checks:[]};
+  if(!copy.expectedOutput.checks.some(c=>c.id===`new-scope-partial-evidence-${step.id}`))copy.expectedOutput.checks.push(newScopePartialEvidenceCheck(step.id));
+  // Bind the retained authored references to this new rubric so normal loading is idempotent.
+  const fingerprint=taskAnalysisReferenceFingerprint(copy,copy.dataSnapshot!);
+  for(const check of copy.expectedOutput.checks)check.id=check.id.replace(/^analysis-reference-v2-[a-f0-9]+-/,`analysis-reference-v2-${fingerprint}-`);
+  return copy;
+}
 
 const at = '2026-10-09T10:00:00+08:00';
 const criteria = [
@@ -55,7 +102,7 @@ export function addTaskAnalysisCases(state: LabState): boolean {
       id: taskId, title: `分析测试 · ${definition.name}`, goal: '形成可核对的客户活动报名包。',
       status: newScope ? '已完成' : '进行中', createdById: owner.id, ownerId: owner.id,
       participantIds: reviewer.id === owner.id ? [] : [reviewer.id], parentId: null, dependsOnTaskIds: [],
-      acceptanceCriteria: [...criteria, ...(newScope ? ['报名页中英文案与成功提示均已核对。'] : [])],
+      acceptanceCriteria: [...criteria, ...(newScope ? [bilingualCriterion] : [])],
       executionTips: ['以当前文件正文核对交付，讨论报告不代替正文；同一工作只计算一次。'],
       estimatedMinutes: newScope ? null : 240, dueAt: null, tags: [], visibility: 'team', version: newScope ? 2 : 1,
     };
@@ -94,14 +141,17 @@ export function addTaskAnalysisCases(state: LabState): boolean {
       description: '团队内完整任务、讨论及文件正文用于分析；预期百分比只作为评测答案，不进入模型输入。',
       enabled: true, archived: false, version: 1, origin: 'task-analysis-evidence-v1', steps,
       assertions: steps.flatMap((step, index) => [
-        {id: `${step.id}-percent`, label: '分档完成度与证据预期一致', stepId: step.id, path: 'result.progress.displayPercent', operator: 'equals' as const, expected: expectedByStep[index]},
-        {id: `${step.id}-raw-percent`, label: '原始完成度按当前投入权重计算', stepId: step.id, path: 'result.progress.completionPercent', operator: 'equals' as const, expected: expectedByStep[index]},
+        ...(newScope?[]:[
+          {id: `${step.id}-percent`, label: '分档完成度与证据预期一致', stepId: step.id, path: 'result.progress.displayPercent', operator: 'equals' as const, expected: expectedByStep[index]},
+          {id: `${step.id}-raw-percent`, label: '原始完成度按当前投入权重计算', stepId: step.id, path: 'result.progress.completionPercent', operator: 'equals' as const, expected: expectedByStep[index]},
+        ]),
         {id: `${step.id}-status`, label: '正式状态保持原值', stepId: step.id, path: 'result.formalStatus', operator: 'equals' as const, expected: task.status},
         {id: `${step.id}-receipt`, label: '分析不写业务回执', stepId: step.id, path: 'writeReceipt', operator: 'equals' as const, expected: null},
         {id: `${step.id}-criteria`, label: '逐条标准评估完整', stepId: step.id, path: 'result.criterionAssessments', operator: 'length' as const, expected: task.acceptanceCriteria.length},
-        ...task.acceptanceCriteria.map((_, criterionIndex) => ({id: `${step.id}-criterion-${criterionIndex}`, label: `第${criterionIndex + 1}条标准独立核对`, stepId: step.id, path: `result.criterionAssessments.${criterionIndex}.percent`, operator: 'equals' as const,
-          expected: definition.count === null ? null : criterionIndex < (definition.key === 'incremental' ? index + 2 : definition.count) ? 100 : 0})),
+        ...task.acceptanceCriteria.flatMap((_, criterionIndex):LabAssertion[] => newScope&&criterionIndex===4?newScopePartialAssertions(step.id):[{id: `${step.id}-criterion-${criterionIndex}`, label: `第${criterionIndex + 1}条标准独立核对`, stepId: step.id, path: `result.criterionAssessments.${criterionIndex}.percent`, operator: 'equals' as const,
+          expected: definition.count === null ? null : criterionIndex < (definition.key === 'incremental' ? index + 2 : definition.count) ? 100 : 0}]),
       ]),
+      ...(newScope?{expectedOutput:{version:1 as const,checks:steps.map(step=>newScopePartialEvidenceCheck(step.id))}}:{}),
       reviewChecklist: ['依据引用来自当前可见文件或讨论，不能引用评测答案', '确认数量不等于工作量，AI100%不等于人工确认', '完成声称与正文冲突时指出实际缺口', '新范围或旧文件版本不被描述为当前全范围完成'],
     };
     team.tasks.push(task); team.evidence.push(...records); state.cases.push(testCase); changed = true;

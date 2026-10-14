@@ -1,4 +1,5 @@
 import {getTaskEffortInitialBaseline, type TaskWithEffortBaseline} from "@/features/tasks/lib/task-effort-baseline";
+import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 
 export type ProgressWorkloadSnapshot = {
   at: string;
@@ -54,12 +55,7 @@ const dateValue = (value: unknown): number | null => {
   return Number.isFinite(time) && new Date(time).toISOString().slice(0, 10) === value ? time : null;
 };
 const validMinutes = (n: number) => Number.isSafeInteger(n) && n >= 0;
-const creationDay = (at?: string) => {
-  if (typeof at !== "string" || !at || dateValue(at.slice(0,10)) === null) return null;
-  if (dateValue(at) !== null) return at;
-  return at.includes("T") && Number.isFinite(Date.parse(at))
-    ? new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Shanghai",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date(at)) : null;
-};
+const creationDay = taskCalendarDate;
 const numberAt = (points: {at: string; completedMinutes: number}[], at: string) => {
   const time = dateValue(at)!;
   const next = points.findIndex(p => dateValue(p.at)! >= time);
@@ -69,7 +65,7 @@ const numberAt = (points: {at: string; completedMinutes: number}[], at: string) 
   return left.completedMinutes + (right.completedMinutes - left.completedMinutes) * (time - dateValue(left.at)!) / (dateValue(right.at)! - dateValue(left.at)!);
 };
 
-export function getTaskProgressComparison(series?: TaskProgressComparisonSeries) {
+export function getTaskProgressComparison(series?: TaskProgressComparisonSeries, timeZone?: string) {
   if (!series || !["example", "recorded"].includes(series.source) || dateValue(series.asOf) === null || !Array.isArray(series.workload) || !series.workload.length) return null;
   const history = series.workload;
   if (history.some((p, i) => dateValue(p.at) === null || !validMinutes(p.scopeMinutes) || !validMinutes(p.completedMinutes)
@@ -77,7 +73,7 @@ export function getTaskProgressComparison(series?: TaskProgressComparisonSeries)
     || (i > 0 && (p.at <= history[i-1].at || (p.scopeMinutes !== history[i-1].scopeMinutes && p.scopeVersion === history[i-1].scopeVersion))))) return null;
   const latest = history.at(-1)!;
   if (latest.at !== series.asOf || latest.scopeMinutes <= 0) return null;
-  const createdOn = creationDay(series.creation?.at);
+  const createdOn = creationDay(series.creation?.at, timeZone);
   const creation = createdOn && createdOn <= history[0].at && series.creation && validMinutes(series.creation.scopeMinutes) && series.creation.scopeMinutes > 0
     ? {...series.creation,day:createdOn} : null;
   const points = series.expected?.points;
@@ -126,17 +122,17 @@ export function getTaskProgressComparison(series?: TaskProgressComparisonSeries)
 export type TaskProgressComparisonModel = NonNullable<ReturnType<typeof getTaskProgressComparison>>;
 
 /** History and authored forecast milestones remain separate; a finish date alone never generates a trend. */
-export function getTaskProgressChart(model: TaskProgressComparisonModel, task?: TaskWithEffortBaseline, {projectScope=true, width:requestedWidth=320}: {projectScope?:boolean; width?:number}={}) {
+export function getTaskProgressChart(model: TaskProgressComparisonModel, task?: TaskWithEffortBaseline, {projectScope=true, width:requestedWidth=320, timeZone}: {projectScope?:boolean; width?:number; timeZone?:string}={}) {
   const differenceSpace = model.deltaDays !== null ? 24 : 0;
   const width = Number.isFinite(requestedWidth) && requestedWidth > 53 ? requestedWidth : 320;
   const height = 180 + differenceSpace, startX = 37, endX = width - 16, topY = 12 + differenceSpace, bottomY = 150 + differenceSpace;
   const asOf = model.latest.at;
   const saved = task ? getTaskEffortInitialBaseline(task) : undefined;
-  const actualCreatedOn = creationDay(task?.createdAt);
+  const actualCreatedOn = creationDay(task?.createdAt, timeZone);
   const createdOn = task ? actualCreatedOn : model.creation?.day ?? null;
   const fixtureCreation = !task || actualCreatedOn && actualCreatedOn === model.creation?.day ? model.creation : null;
   const initial = saved && (task?.effortBaseline || !fixtureCreation && saved.minutes === model.history[0].scopeMinutes)
-    ? {at:saved.at,day:creationDay(saved.at),scopeMinutes:saved.minutes} : fixtureCreation;
+    ? {at:saved.at,day:creationDay(saved.at, timeZone),scopeMinutes:saved.minutes} : fixtureCreation;
   const baseline = initial?.day && initial.day <= model.history[0].at && (!createdOn || initial.day >= createdOn) ? initial : null;
   // Scope-only creation evidence must never manufacture a completed-work observation.
   const scopeHistory = model.history.map(point=>({...point,completedMinutes:point.completedMinutes as number | null,isCreation:false,observedAt:point.at}));

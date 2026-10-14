@@ -9,8 +9,6 @@ import {
   getSelectionAfterRemoval,
   moveNode,
   renameNode,
-  restoreDefaultIcon,
-  setNodeIcon,
   sortTaskFileNodes,
 } from "../src/features/tasks/files/lib/task-file-tree.ts";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
@@ -52,11 +50,8 @@ test("deletes non-empty folders with explicit policies", () => {
   assert.equal(archived.find((node) => node.id === "md")?.archived, true);
 });
 
-test("builds paths and restores icon overrides", () => {
+test("builds paths through parent folders", () => {
   assert.deepEqual(getNodePath(nodes, "md").map((node) => node.name), ["项目", "资料", "说明.md"]);
-  const customized = setNodeIcon(nodes, "md", "NotebookTabs");
-  assert.equal(customized.find((node) => node.id === "md")?.iconName, "NotebookTabs");
-  assert.equal(restoreDefaultIcon(customized, "md").find((node) => node.id === "md")?.iconName, undefined);
 });
 
 test("falls back to parent after removing selected node", () => {

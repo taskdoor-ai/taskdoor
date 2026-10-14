@@ -6,7 +6,7 @@
 
 内部全部工作量用分钟，展示人天＝分钟÷480，planner 人时＝分钟÷60。三点估算先统一分钟，再应用 (O+4M+P)/6。计算不提前舍入，展示再舍入。
 
-每个 EWD 明细必须有 `id`、`breakdownItem`、`criteriaRefs`。沿用输入明细 ID；新明细可使用本次输出内唯一的候选 ID，调用方确认后持久化。候选 ID 仅是估算内部标识，不能用作读取证据或假称已保存；progress 必须使用当前估算基线中的同一 ID。
+每个 EWD 明细必须有 `id`、`breakdownItem`、`criteriaRefs`。沿用输入明细 ID；新明细可使用本次输出内唯一的候选 ID，经应用权限与版本校验后保存，不要求用户额外确认隐藏估时。候选 ID 仅是估算内部标识，不创建子任务，不能用作读取证据或假称已保存；progress 使用当前有效估算的同一 ID，本次补估时使用同一次估算的候选 ID。
 
 标准已有 ID 时 criteriaRefs 使用该 ID；输入只有有序标准文本时使用 `{taskId, index, text}`，index 从 0 开始且绑定任务版本，不能伪造正式标准 ID。evidenceRefs 仍只使用输入来源 ID。
 
@@ -28,11 +28,19 @@
 
 八维是检查清单，decision 不是评分；同一工作不能因跨维重复列项。换人或日期变化本身不重估，工作条件实际改变才复核。历史反馈只是部分人或部分范围时不能当成整项实际耗时。
 
+### 创建保存与分析重估
+
+创建 Skill 将初始投入写入既有 `effortEstimate:{minutes,workMethod,reason}`；界面隐藏不清空该结果。应用在创建任务成功时保存 AI 估算与创建基线，估算的人工确认仍为 false，不增加隐藏字段确认步骤。
+
+分析 Skill 可在缺估算、明细不足或范围与实际工作条件改变时请求 `estimate`，并通过可选 `progress.estimate` 原样承载本契约的完整 `result.estimate`；随后按同一组明细执行 `progress`，有历史时执行 `trend`。每个 EWD 模式仍按原结构返回，不将未运行模式伪装为已执行。`estimate.basis` 是平台／团队／历史计算依据，与保存记录中的 AI 来源及人工确认不同。
+
+结果仅是当前输入版本下的提案，应用校验后保存 AI 新版本。不得覆盖人工已确认估算、创建基线或历史快照；创建记录缺失时，新估算仅从当前观察日生效。已有总量不代表完成量为零，也不能产生完工日期。当前输入、输出不含已取消的前置依赖字段或边，业务所需材料与顺序保留为正文。
+
 ## progress 字段
 
 | 字段 | 类型与规则 |
 | --- | --- |
-| taskVersion / estimateVersion / criteriaVersion | 输入有效版本，标准没有单独版本时使用其所属任务版本并说明 |
+| taskVersion / estimateVersion / criteriaVersion | 输入有效版本；本次新估算尚未保存时 estimateVersion 为 null 并说明，不伪造已存版本；标准没有单独版本时使用其所属任务版本并说明 |
 | items | 每项含 id、ewdMinutes、progressPercent、completedEwdMinutes、completedContent、remainingContent、evidenceRefs、confirmationSource |
 | progressPercent | 0–100 或 null；单项完成量=ewdMinutes×progressPercent/100，任一必要值未知则 null |
 | completedContent / remainingContent | 当前内容中的已完成与未完成结果，不能仅写“已上传” |

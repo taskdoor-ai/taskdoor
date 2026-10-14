@@ -11,6 +11,8 @@ import type { Member } from "@/features/members/components/MemberSelector";
 import { TaskCreationLinearSections } from "@/features/tasks/components/TaskCreationLinearSections";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/input";
+import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 
 type CreationResult = { createdCount: number; mainTaskId: string; taskTitles: string[] };
 
@@ -52,6 +54,7 @@ export function TaskCreationLinearPage({
   onInviteMembers,
 }: TaskCreationLinearPageProps) {
   const [workspace, setWorkspace] = useState<LinearWorkspace>(emptyWorkspace);
+  const timeZone = useTeamTimeZone();
   const [error, setError] = useState("");
   const [result, setResult] = useState<CreationResult | null>(null);
   const runRef = useRef(0);
@@ -62,12 +65,13 @@ export function TaskCreationLinearPage({
     existingTasks,
     members,
     tags: tags.map(tag => tag.name),
-    currentDate: new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai" }).format(new Date()),
+    currentDate: taskCalendarDate(new Date().toISOString(), timeZone) ?? "",
+    timezone: timeZone,
   };
   const form = workspace.planning && (workspace.planning.stage === "review" || workspace.planning.stage === "decision") ? workspace.planning.form : null;
   const stages = form ? getLinearCreationStages(form) : [];
   const currentStage = stages[workspace.revealCount];
-  const validation = form ? validateCreationForm(form, members) : null;
+  const validation = form ? validateCreationForm(form, members, timeZone) : null;
 
   useEffect(() => () => { runRef.current += 1; }, []);
   useEffect(() => {
@@ -89,6 +93,7 @@ export function TaskCreationLinearPage({
   };
 
   const generatePlan = async (answers = workspace.answers) => {
+    if (!context.currentDate) { setError("团队时区无效，无法确定创建日期。输入已保留。"); return; }
     if (!workspace.request.trim() || workspace.status === "planning") return;
     setError("");
     setResult(null);
@@ -133,7 +138,7 @@ export function TaskCreationLinearPage({
 
   const submit = () => {
     if (!form || result || creatingRef.current || workspace.status === "planning") return;
-    const invalid = validateCreationForm(form, members);
+    const invalid = validateCreationForm(form, members, timeZone);
     if (invalid) { setError(invalid); return; }
     if (form.decision === "attach" && form.candidate) {
       const parent = existingTasks.find(task => task.id === form.candidate?.id);

@@ -1,0 +1,569 @@
+{
+  "createdAt": "2026-10-14T11:48:20.533Z",
+  "generationModel": "pa/mercury-5.5",
+  "judgmentModel": "qwen/qwen3.7-plus",
+  "batches": [
+    {
+      "kind": "create",
+      "batchId": "5d8876f0-b992-4dc2-b990-553aa4b71446",
+      "runIds": [
+        "a4e64347-3deb-4e58-8cde-15ee37b973d2",
+        "31a5340f-3279-4600-a2c6-14eaf7f408f2",
+        "1f9fe357-b81f-4e7a-8644-4df9fc169b51",
+        "689e4586-e81b-4e97-82ec-b1007cbe9ef4",
+        "5c0348b8-3632-4414-805c-cac485a68506",
+        "cf1daae1-d8cb-4546-8ac1-6ff7ec3538f1",
+        "2b93711e-2238-48dc-a8ca-709cc13fbf05",
+        "efcd3edb-803a-4521-84af-eaba17e5f20d",
+        "baaacffe-69ae-4460-908a-6587f06d98c8",
+        "03b4085a-ff7b-4d8a-bd72-0778366de5b0",
+        "686a4e2f-97f8-49d0-8d4c-01c328e3d6f6",
+        "3fc636ae-b5eb-49d5-b3ed-d9a6e0d17482"
+      ],
+      "caseCount": 12,
+      "url": "http://127.0.0.1:5173/test-lab.html?page=runs&batch=5d8876f0-b992-4dc2-b990-553aa4b71446",
+      "rows": [
+        {
+          "id": "3fc636ae-b5eb-49d5-b3ed-d9a6e0d17482",
+          "caseName": "2026-10-14 回归 · 方案流程 · 确认后仍返回方案",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 7
+          },
+          "unmet": []
+        },
+        {
+          "id": "baaacffe-69ae-4460-908a-6587f06d98c8",
+          "caseName": "2026-10-14 回归 · 任务基础信息 · 保留预计投入",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 6
+          },
+          "unmet": []
+        },
+        {
+          "id": "2b93711e-2238-48dc-a8ca-709cc13fbf05",
+          "caseName": "2026-10-14 回归 · 成员分配 · 保留用户明确选择",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 7
+          },
+          "unmet": []
+        },
+        {
+          "id": "a4e64347-3deb-4e58-8cde-15ee37b973d2",
+          "caseName": "2026-10-14 回归 · 任务拆解 · 一份短脚本不过拆",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 7
+          },
+          "unmet": []
+        },
+        {
+          "id": "5c0348b8-3632-4414-805c-cac485a68506",
+          "caseName": "2026-10-14 回归 · 单项脚本 · 缺少事实不编造",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 8
+          },
+          "unmet": []
+        },
+        {
+          "id": "686a4e2f-97f8-49d0-8d4c-01c328e3d6f6",
+          "caseName": "2026-10-14 回归 · 修改方案 · 删除交付保留剩余范围",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 6
+          },
+          "unmet": []
+        },
+        {
+          "id": "cf1daae1-d8cb-4546-8ac1-6ff7ec3538f1",
+          "caseName": "2026-10-14 回归 · 成员分配 · 按职责选择文案负责人",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 7
+          },
+          "unmet": []
+        },
+        {
+          "id": "1f9fe357-b81f-4e7a-8644-4df9fc169b51",
+          "caseName": "2026-10-14 回归 · 任务拆解 · 不同渠道独立验收",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 6
+          },
+          "unmet": []
+        },
+        {
+          "id": "03b4085a-ff7b-4d8a-bd72-0778366de5b0",
+          "caseName": "2026-10-14 回归 · 修改方案 · 调整日期保留分工",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 6
+          },
+          "unmet": []
+        },
+        {
+          "id": "31a5340f-3279-4600-a2c6-14eaf7f408f2",
+          "caseName": "2026-10-14 回归 · 任务拆解 · 三个独立物料",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 7
+          },
+          "unmet": []
+        },
+        {
+          "id": "efcd3edb-803a-4521-84af-eaba17e5f20d",
+          "caseName": "2026-10-14 回归 · 成员分配 · 单人可以交付",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 6
+          },
+          "unmet": []
+        },
+        {
+          "id": "689e4586-e81b-4e97-82ec-b1007cbe9ef4",
+          "caseName": "2026-10-14 回归 · 任务拆解 · 大量同类交付保持范围",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 7
+          },
+          "unmet": []
+        }
+      ],
+      "counts": {
+        "passed": 12
+      }
+    },
+    {
+      "kind": "analysis",
+      "batchId": "bd766f61-361a-4014-a1f2-8e729ff9c959",
+      "runIds": [
+        "aa84ed19-8f4c-4e8f-8570-e6936177914b",
+        "0a860d1d-954d-4b1a-b55e-e31a5c58d817",
+        "90d02953-a784-4896-b6fb-4f9a15f150dc",
+        "2f98e61d-18be-4117-b4d0-4c6462c5d65a",
+        "0fc7f035-5670-40bd-95dc-add90114f12d",
+        "542bc3ad-1887-40ba-b504-08b8c6686c66",
+        "ebef126d-0dac-4af5-b312-49cd334f0d46",
+        "0276b3e0-bac9-4d5e-8584-1a92e92cd11a",
+        "e8f85e25-520c-4572-8beb-8c661b54aff1",
+        "7eb7a5b0-5325-43f7-984f-94c2beac5460",
+        "9e75c383-4621-4c18-8e93-1a8018fc6384",
+        "899c002c-4794-46e1-bdce-e29319106ad8",
+        "eecd71b8-ee66-4cea-aeea-d089788f34df",
+        "8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+        "219a6a19-6a93-473e-90dd-f1fa86034311",
+        "288e1764-74e6-47d0-b0b7-010235fc3892",
+        "74c21532-5da7-4c93-9684-e1c907effa06",
+        "3b5e5af5-662e-4f54-b185-6294cc972f1b"
+      ],
+      "caseCount": 18,
+      "url": "http://127.0.0.1:5173/test-lab.html?page=runs&batch=bd766f61-361a-4014-a1f2-8e729ff9c959",
+      "rows": [
+        {
+          "id": "90d02953-a784-4896-b6fb-4f9a15f150dc",
+          "caseName": "新规则隔离回归 · 完成声称不能代替正文",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 10
+          },
+          "unmet": []
+        },
+        {
+          "id": "ebef126d-0dac-4af5-b312-49cd334f0d46",
+          "caseName": "新规则隔离回归 · 多人声称与正文冲突",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 10
+          },
+          "unmet": []
+        },
+        {
+          "id": "0276b3e0-bac9-4d5e-8584-1a92e92cd11a",
+          "caseName": "新规则隔离回归 · 人工标准确认与当前内容缺口并存",
+          "generationStatus": "needs_review",
+          "judgeStatus": "failed",
+          "conclusion": {
+            "verdict": "pending",
+            "title": "待判断",
+            "reason": "验收失败：无法连接模型服务（UND_ERR_SOCKET）"
+          },
+          "judgeError": "无法连接模型服务（UND_ERR_SOCKET）",
+          "reviewModel": null,
+          "unmet": []
+        },
+        {
+          "id": "74c21532-5da7-4c93-9684-e1c907effa06",
+          "caseName": "新规则隔离回归 · 范围新增时必要重估并保留初始AI240历史",
+          "generationStatus": "failed",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "failed",
+            "title": "未通过",
+            "reason": "无法连接模型服务（UND_ERR_SOCKET）"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "local": 3
+          },
+          "unmet": []
+        },
+        {
+          "id": "0fc7f035-5670-40bd-95dc-add90114f12d",
+          "caseName": "新规则隔离回归 · 按投入权重计算而非标准条数",
+          "generationStatus": "needs_review",
+          "judgeStatus": "failed",
+          "conclusion": {
+            "verdict": "pending",
+            "title": "待判断",
+            "reason": "验收失败：无法连接模型服务（UND_ERR_SOCKET）"
+          },
+          "judgeError": "无法连接模型服务（UND_ERR_SOCKET）",
+          "reviewModel": null,
+          "unmet": []
+        },
+        {
+          "id": "219a6a19-6a93-473e-90dd-f1fa86034311",
+          "caseName": "新规则隔离回归 · 不可读附件与正文伪造指令",
+          "generationStatus": "failed",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "failed",
+            "title": "未通过",
+            "reason": "无法连接模型服务（UND_ERR_SOCKET）"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "local": 10
+          },
+          "unmet": []
+        },
+        {
+          "id": "e8f85e25-520c-4572-8beb-8c661b54aff1",
+          "caseName": "新规则隔离回归 · 父子工作量去重汇总",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 12
+          },
+          "unmet": []
+        },
+        {
+          "id": "7eb7a5b0-5325-43f7-984f-94c2beac5460",
+          "caseName": "新规则隔离回归 · 发布条件与制作工作分开",
+          "generationStatus": "needs_review",
+          "judgeStatus": "failed",
+          "conclusion": {
+            "verdict": "pending",
+            "title": "待判断",
+            "reason": "验收失败：无法连接模型服务（UND_ERR_SOCKET）"
+          },
+          "judgeError": "无法连接模型服务（UND_ERR_SOCKET）",
+          "reviewModel": null,
+          "unmet": []
+        },
+        {
+          "id": "542bc3ad-1887-40ba-b504-08b8c6686c66",
+          "caseName": "新规则隔离回归 · 新版替代旧版",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 10
+          },
+          "unmet": []
+        },
+        {
+          "id": "8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+          "caseName": "新规则隔离回归 · 新执行安排替代旧预测",
+          "generationStatus": "needs_review",
+          "judgeStatus": "failed",
+          "conclusion": {
+            "verdict": "pending",
+            "title": "待判断",
+            "reason": "验收失败：无法连接模型服务（UND_ERR_SOCKET）"
+          },
+          "judgeError": "无法连接模型服务（UND_ERR_SOCKET）",
+          "reviewModel": null,
+          "unmet": []
+        },
+        {
+          "id": "9e75c383-4621-4c18-8e93-1a8018fc6384",
+          "caseName": "新规则隔离回归 · 有据提前预测与真实历史",
+          "generationStatus": "failed",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "failed",
+            "title": "未通过",
+            "reason": "无法连接模型服务（UND_ERR_SOCKET）"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "local": 11
+          },
+          "unmet": []
+        },
+        {
+          "id": "eecd71b8-ee66-4cea-aeea-d089788f34df",
+          "caseName": "新规则隔离回归 · 有据延期预测与真实历史",
+          "generationStatus": "failed",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "failed",
+            "title": "未通过",
+            "reason": "无法连接模型服务（UND_ERR_SOCKET）"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "local": 11
+          },
+          "unmet": []
+        },
+        {
+          "id": "2f98e61d-18be-4117-b4d0-4c6462c5d65a",
+          "caseName": "新规则隔离回归 · 新增范围必要补估与已完成状态保留",
+          "generationStatus": "failed",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "failed",
+            "title": "未通过",
+            "reason": "实际值未满足断言"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 9
+          },
+          "unmet": [
+            {
+              "criterion": "参考逐条完成度",
+              "note": "参考要求第5项完成度为0，输出中criterionAssessments第5项percent为50，数值不符。"
+            },
+            {
+              "criterion": "逐条标准完成度",
+              "note": "参考要求第5项percent为0，输出中criterionAssessments第5项percent为50，数值不符。"
+            }
+          ]
+        },
+        {
+          "id": "899c002c-4794-46e1-bdce-e29319106ad8",
+          "caseName": "新规则隔离回归 · 有据按期预测与真实历史",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 11
+          },
+          "unmet": []
+        },
+        {
+          "id": "aa84ed19-8f4c-4e8f-8570-e6936177914b",
+          "caseName": "新规则隔离回归 · 有据零进度",
+          "generationStatus": "needs_review",
+          "judgeStatus": "failed",
+          "conclusion": {
+            "verdict": "pending",
+            "title": "待判断",
+            "reason": "验收失败：无法连接模型服务（UND_ERR_SOCKET）"
+          },
+          "judgeError": "无法连接模型服务（UND_ERR_SOCKET）",
+          "reviewModel": null,
+          "unmet": []
+        },
+        {
+          "id": "3b5e5af5-662e-4f54-b185-6294cc972f1b",
+          "caseName": "新规则隔离回归 · 人工已确认240及完整明细有效时复用不覆盖",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 2
+          },
+          "unmet": []
+        },
+        {
+          "id": "288e1764-74e6-47d0-b0b7-010235fc3892",
+          "caseName": "新规则隔离回归 · 明确范围无估算时形成AI补估提案",
+          "generationStatus": "needs_review",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "passed",
+            "title": "通过",
+            "reason": "已满足本次完成标准。"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "model": 2
+          },
+          "unmet": []
+        },
+        {
+          "id": "0a860d1d-954d-4b1a-b55e-e31a5c58d817",
+          "caseName": "新规则隔离回归 · AI全部达成与人工确认分开",
+          "generationStatus": "failed",
+          "judgeStatus": "completed",
+          "conclusion": {
+            "verdict": "failed",
+            "title": "未通过",
+            "reason": "无法连接模型服务（UND_ERR_SOCKET）"
+          },
+          "judgeError": null,
+          "reviewModel": "qwen/qwen3.7-plus",
+          "judgeSourceCounts": {
+            "local": 10
+          },
+          "unmet": []
+        }
+      ],
+      "counts": {
+        "passed": 7,
+        "pending": 5,
+        "failed": 6
+      }
+    }
+  ]
+}
