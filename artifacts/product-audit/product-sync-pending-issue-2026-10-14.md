@@ -1,10 +1,10 @@
-# 待提交 issue：10 月 14–15 日产品同步
+# 已提交 issue #49：10 月 14–15 日产品同步
 
 目标仓库：`nocoly/taskdoor`；记录日期：2026-10-14；整理日期：2026-10-15。
 
-**状态：本地待提交草稿，尚无 issue 编号。** 下列实现与验证状态沿用已有记录；远程状态以标注日期为准，提交前复核。本次仅整理草稿。
+**状态：已于 2026-10-15 提交至 [nocoly/taskdoor issue #49](https://github.com/nocoly/taskdoor/issues/49)。** PM demo 更新见 [PR #13](https://github.com/taskdoor-ai/taskdoor/pull/13)，已在 issue 中 @JageChen 对接三个 Skill。本文件作为本批归档，后续变更新建待提交汇总，不再追加到本文件。
 
-## 建议标题
+## Issue 标题
 
 同步产品修订：Skill 优化与正式接入、协作反馈、创建与文件交互
 

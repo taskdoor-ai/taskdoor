@@ -1,6 +1,6 @@
 # Issue 草稿：创建离开确认、字段保存反馈、@ 参与者与两类分析 Skill 服务接入
 
-目标仓库：`nocoly/taskdoor`。状态：**本批待提交草稿，尚未创建 GitHub issue**。
+目标仓库：`nocoly/taskdoor`。状态：**已合并提交至 [issue #49](https://github.com/nocoly/taskdoor/issues/49)**；本文件保留原始过程记录，当前范围以[本批归档](product-sync-pending-issue-2026-10-14.md)及远程 issue 为准，不再作为待提交入口。
 
 对应 PM demo PR：**待补充本批 PR 链接**。尚无本批 PR，不沿用其他批次链接。
 

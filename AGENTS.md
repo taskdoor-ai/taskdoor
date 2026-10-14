@@ -5,7 +5,7 @@
 - 任何 PRD 的新增、修改、删除、截图、版本发布或生成页更新，必须先完整读取并遵循 `skills/agentdoor-prd-governance/SKILL.md`；按该 Skill 判定、记录并校验变更。
 - 项目搭建与代码变更遵循 `superpowers:using-superpowers` 的技能路由；用户的直接要求与本文件约定优先于 Superpowers 的默认流程。
 - 本项目是 PM demo，正式项目在 `nocoly/taskdoor`。每次新增或改动功能后，先在本地记录 issue 草稿：有该仓库的待提交汇总草稿就追加一条，没有才新建；写清产品变更、实现与验证状态及对应 PR 链接，尚无 PR 时注明待补。默认不创建、更新或评论远程 issue，也不在每次改动后询问是否提交；只有用户明确要求提交时才执行。
-- 当前待提交汇总入口是 `artifacts/product-audit/product-sync-pending-issue-2026-10-14.md`；提交后更新其状态，后续只追加到仍未提交的草稿。
+- 本批汇总 `artifacts/product-audit/product-sync-pending-issue-2026-10-14.md` 已提交为 `nocoly/taskdoor#49`，保留归档；当前暂无待提交汇总。后续改动新建待提交汇总，只追加到仍未提交的草稿。
 - 默认按改动风险执行最小必要验证；只有用户主动明确要求时，才运行全量测试或双重审查。不得因通用实现流程、Skill 或收尾惯例自动执行这两项。
 
 ## 代码结构
