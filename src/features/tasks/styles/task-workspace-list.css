@@ -209,7 +209,7 @@
 .task-workspace-row-menu-trigger:hover,
 .task-workspace-row-menu-trigger[aria-expanded="true"] { background: var(--ad-surface); color: var(--ad-ink); }
 .task-workspace-row-menu-trigger:focus-visible { opacity: 1; pointer-events: auto; outline: 2px solid var(--ad-focus); outline-offset: 1px; }
-.task-workspace-row-menu { min-width: 136px; }
+.task-workspace-row-menu { width: max-content; min-width: 168px; max-width: calc(100vw - 24px); }
 
 @media (hover: none) {
   .task-workspace-row { padding-right: calc((var(--ad-control-touch-min) * 2) + var(--ad-space-3)); }
@@ -511,5 +511,5 @@
 .task-list-recycle-trigger > svg { flex-shrink:0; }
 @media (max-width:900px), (pointer:coarse) { .task-list-recycle-trigger { min-height:44px; } }
 
-.task-workspace-row-menu [role="menuitem"] { gap: 10px; }
+.task-workspace-row-menu [role="menuitem"] { gap: 10px; white-space: nowrap; }
 .task-workspace-row-menu [role="menuitem"] > svg { flex-shrink: 0; }
