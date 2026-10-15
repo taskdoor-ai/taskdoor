@@ -4,9 +4,9 @@
 
 ## 输入字段与读取顺序
 
-1. 定位 `workspaceId`、`taskId`，调用 `get_task`。任务字段使用 `id, workspaceId, parentTaskId, title, goal, status, ownerMemberId, dueDate, version, effectiveCapabilities, createdAt, updatedAt`，可选 `executionTips, effortEstimate`。缺失字段保持未知，不用本地 Mock 补齐。
+1. 定位 `workspaceId`、`taskId`，调用 `get_task`。任务字段使用 `id, workspaceId, parentTaskId, title, goal, status, ownerMemberId, dueDate, version, effectiveCapabilities, createdAt, updatedAt, aiProgressSegment`，可选 `executionTips, effortEstimate`。正式状态只有 `IN_PROGRESS / DONE / ON_HOLD / CANCELLED / ARCHIVED`，不提交已移除的 `NOT_STARTED`。`aiProgressSegment` 仅为已接受分析的 1–4 阶段或 null，不能代替原始进度、当前证据或标准评估；null 不等于 0%。缺失字段保持未知，不用本地 Mock 补齐。
 2. 完成标准读取 `criteria:{taskId,version,items}`，逐条用真实 `id,text` 绑定分析；人工确认如有返回，原样保留 `confirmation:{memberId,confirmedAt}`。`criteria.version` 与任务顶层版本独立。不能根据状态、讨论中的“完成了”或模型的 100% 生成确认事实。
-3. 根据本次分析需要读取 `list_task_comments`、`list_task_activities`、`list_task_files` 与 `get_file_text`；文件列表元数据不能替代正文。证据绑定实际 ID、版本与正文位置。工具参数只能来自实时定义，不猜分页参数。直属子任务用 `list_tasks({workspaceId,parentTaskId:taskId,...})`，按需继续读取下一层；未完成分页不能声称覆盖全部子任务。
+3. 根据本次分析需要读取 `list_task_comments`、`list_task_activities`、`list_task_files` 与 `get_file_text`；文件列表元数据不能替代正文。证据绑定实际 ID、版本与正文位置。工具参数只能来自实时定义，不猜分页参数。直属子任务用 `list_tasks({workspaceId,parentTaskId:taskId,view:"flat",...})`；需要整个后代范围时用 `view:"all"`（不含父任务本身），未完成分页不能声称覆盖全部子任务。`commentCount` 仅详情有，未返回保持未知；普通 Task 不再返回 `fileCount`，不能据缺失计数断言无文件。
 4. 子任务归属只使用 `parentTaskId`，不读取、输出或维护已取消的前置依赖字段与关系边，也不保留空兼容字段。用户明确的所需材料、确认与交接顺序从业务正文核对；材料未到不自动证明实际停工。成员 ID 使用空间成员记录 ID；未知行动处理人为 `null`。
 5. `unavailable:true`、权限不足或读取失败不是空集合。按类型记录覆盖缺口，继续分析已读部分，无法核对的标准为 `unknown`。
 
@@ -24,6 +24,10 @@
 ## 执行边界
 
 当前已核验工具清单未提供 AI 分析、逐条 AI 评估或进度回写工具。上述输出包括估算提案，仍是分析结果，不是 `update_task` 或 `set_task_criteria` 的参数；不借更新标准保存分析，不用评论假装结构化进度保存成功。应用接入时负责保存 AI 估算新版本，不能将它标为人工确认或覆盖人工已确认估算、创建基线和历史。用户明确要求发送分析时，才可按实际评论工具提交文字并核对回执。新增工具后以实时工具定义实现读写映射，不自造名称。
+
+正式产品已有 `taskdoor-analyze-progress` / `taskdoor-refresh-progress` 与任务业务服务的保存链路，使用生产 `taskdoor.task-analysis.v1` 及三份 `taskdoor-analysis-*.schema.json`；本地 `agentdoor.task-status-analysis.v0.1` 包络、`progress.estimate` 与 comparison 不能直接提交给该链路。接入层须按现有生产 Schema 映射，正文保持普通文本、证据引用独立保留，并核对任务、标准和来源版本；未完成映射或未取得保存回执时仍只返回提案。
+
+`set_criterion_confirmation` 是用户确认操作，不是分析保存方式。确认最后一条标准可能自动完成进行中或阻塞中的任务，撤回可能恢复该次自动完成前状态；须按共享契约核对实际回执及回读，不能为了让 AI 进度为 100% 而调用它。MCP 尚无独立“撤销任务完成”工具，评论也不支持结构化 @ 或自动加人。
 
 `set_task_criteria` 仅用于已授权的标准内容修改，使用 `criteria.version` 完整替换并保留已有标准 ID；分析本身不改标准。结果应用前核对当前权限、任务版本、标准版本及证据版本，过期结果标 stale。
 

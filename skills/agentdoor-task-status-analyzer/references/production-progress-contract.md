@@ -1,11 +1,11 @@
 # 正式项目燃起图接入契约
 
-核验仓库：`nocoly/taskdoor`，分支 `sand`，提交 `74c3ac267123a457e027465a32c10a37d833387b`。
-源文件：`apps/web/src/shared/model/task-burn-up.ts`、`apps/web/src/features/tasks/lib/task-progress-comparison.ts`。后续接入重新核对版本，不把本地 demo 当成正式接口。
+核验日期：2026-10-15。核验仓库：`nocoly/taskdoor`，分支 `sand`，提交 `9b43f3405544ff8f7656dd5cb598b09748e1b79e`；本次为源码核验，未进行线上读写。
+源文件：`apps/web/src/shared/model/task-burn-up.ts`、`apps/web/src/features/tasks/lib/task-progress-comparison.ts`、`apps/web/src/features/tasks/ai-progress-trend.ts`、`apps/web/src/features/tasks/lib/ai-trend-burnup.ts`、`apps/web/src/features/tasks/components/TaskAiAnalysisPanel.tsx`。后续接入重新核对版本，不把本地 demo 当成正式接口。
 
 ## 分析输出
 
-`result.progress.comparison` 是以下正式前端数据字段的分析提案，缺少足够上下文时为 null。字段名称与正式项目一致；不输出 `source: example` 或虚构 scenario。它不是 MCP 写入参数。
+`result.progress.comparison` 是以下正式前端数据字段的本地分析提案，缺少足够上下文时为 null。字段名称与正式项目一致；模型不输出 `source: example` 或虚构 scenario。以下是本地提案约束，不代表生产适配器已完整使用这些字段；当前实际接线和差异见“当前接入限制”。它不是 MCP 写入参数。
 
 ```typescript
 type ProgressComparisonProposal = {
@@ -48,7 +48,11 @@ type ProgressComparisonProposal = {
 ## 当前接入限制
 
 正式 TaskBurnUpSeries 支持 source=recorded/example，但历史点使用 scopeHours/completedHours，转换时 minutes/60，并保留 estimatedLeafCount/totalLeafCount；未知覆盖数不伪造。
-正式 TaskProgressComparisonSeries 及 getTaskProgressComparison 当前只接受 source=example，尚不能无改动消费真实分析。生产接入须先扩展正式类型和校验以接受真实来源，再映射本提案；禁止把真实输出标成 example 绕过校验。正式 MCP 当前没有分析回写工具，不能宣称分析已保存到任务。
+正式 TaskProgressComparisonSeries 及 getTaskProgressComparison 的类型和检查仍只接受 `source:'example'`，但生产已经接入真实趋势：`getTaskAiProgressTrend` → `useAiProgressTrend` → `aiTrendBurnUp` → `TaskAiAnalysisPanel` → `TaskProgressComparison`。其中 `ai-trend-burnup.ts` 为兼容原图表，明确生成 `source:'example', scenario:'ai-progress-trend'`。这是现有应用适配实现，不表示模型可以自行给真实输出加示例标记或直接提交本地 comparison。
+
+当前适配器与本地提案存在明确差异：只画最新一段数值已知且服务允许连续连接的历史，早期断点前的记录不进入图表；`scopeVersion` 是显示层生成的 `scope-N`，不是正式范围版本；`expected.points=[]`；`timing.startOn` 优先取任务创建日，否则取首个绘制点日期；没有映射 creation、aiAssessment 或人工确认完成日。不能把这些显示层回退值反向当成真实输入事实，也不能声称全量历史、正式起点和计划曲线均已接通。本地提案保留上述证据与未知项约束；接入服务按正式趋势接口及来源事实映射，另行处理当前适配差异。
+
+正式产品分析链路由 `taskdoor-analyze-progress` / `taskdoor-refresh-progress` 生成生产协议，任务业务服务校验保存，并提供趋势读取。MCP 当前没有分析回写工具，本地 comparison 也不是该生产协议，不能宣称本地提案已保存。两者映射边界见 [MCP 分析适配](mcp-analysis.md#执行边界)。
 
 ## 隔离评测
 
