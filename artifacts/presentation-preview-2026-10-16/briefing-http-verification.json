@@ -1,0 +1,75 @@
+{
+  "endpoint": "http://127.0.0.1:4183/api/task-files/presentation-preview?format=pptx",
+  "source": "public/task-assets/serum-launch/common/serum-launch-briefing.pptx",
+  "sourceBytes": 1970379,
+  "sourceSha256": "39ec50f3e0a2f4d16e7db189d2fc108cfb541b889b9cf2e1d37badf0cf0db690",
+  "before": {
+    "status": 504,
+    "code": "conversion_timeout",
+    "durationSeconds": 49.485275,
+    "conversionTimeoutMs": 45000
+  },
+  "after": {
+    "status": 200,
+    "contentType": "application/pdf",
+    "pdfSignature": true,
+    "pdfBytes": 348381,
+    "pageCount": 8,
+    "durationSeconds": 19.817431,
+    "conversionTimeoutMs": 120000
+  },
+  "processIsolationObserved": {
+    "pid": 64787,
+    "pgid": 64787,
+    "parentPid": 64773
+  },
+  "pages": [
+    {
+      "pageIndex": 0,
+      "textItems": 49,
+      "characters": 64
+    },
+    {
+      "pageIndex": 1,
+      "textItems": 106,
+      "characters": 159
+    },
+    {
+      "pageIndex": 2,
+      "textItems": 130,
+      "characters": 200
+    },
+    {
+      "pageIndex": 3,
+      "textItems": 204,
+      "characters": 223
+    },
+    {
+      "pageIndex": 4,
+      "textItems": 102,
+      "characters": 124
+    },
+    {
+      "pageIndex": 5,
+      "textItems": 73,
+      "characters": 107
+    },
+    {
+      "pageIndex": 6,
+      "textItems": 223,
+      "characters": 246
+    },
+    {
+      "pageIndex": 7,
+      "textItems": 193,
+      "characters": 216
+    }
+  ],
+  "targetedVerification": {
+    "tests": 7,
+    "passed": 7,
+    "typeCheck": "passed",
+    "diffCheck": "passed",
+    "processCancellation": "real child terminated; unrelated process survived"
+  }
+}

@@ -62,6 +62,24 @@
       "distributionName": "taskdoor-create-task"
     },
     {
+      "id": "taskdoor-decompose-task",
+      "title": "子任务拆解",
+      "entry": "skills/taskdoor-decompose-task/SKILL.md",
+      "outputVersion": "taskdoor.subtask-suggestions.v1",
+      "dependsOn": [],
+      "rulesFile": "skills/taskdoor-decompose-task/references/output-contract.md",
+      "references": [
+        "skills/taskdoor-decompose-task/references/output-contract.md",
+        "skills/taskdoor-decompose-task/references/subtask-suggestions.schema.json",
+        "skills/taskdoor-decompose-task/references/goal-and-criteria.md",
+        "skills/taskdoor-decompose-task/references/task-scheduling.md",
+        "skills/taskdoor-decompose-task/references/context-retrieval.md",
+        "skills/taskdoor-decompose-task/references/production-runtime.json"
+      ],
+      "internal": false,
+      "distributionName": "taskdoor-decompose-task"
+    },
+    {
       "id": "agentdoor-task-status-analyzer",
       "title": "任务进度分析",
       "entry": "skills/agentdoor-task-status-analyzer/SKILL.md",

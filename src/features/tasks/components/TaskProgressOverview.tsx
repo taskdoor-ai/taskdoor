@@ -1,3 +1,4 @@
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { formatDisplayDate } from "@/shared/lib/date-time";
 import React from "react";
@@ -7,7 +8,7 @@ import { getTaskProgressComparison } from "@/features/tasks/lib/task-progress-co
 import { TaskPredictionMarker, TaskProgressTrack } from "@/features/tasks/components/TaskProgressTrack";
 
 const percent = (ratio: number | null) => ratio === null ? "—" : `${Number((ratio * 100).toFixed(1))}%`;
-const shortDate = (date: string | null) => date ? formatDisplayDate(date) ?? "—" : "—";
+const shortDate = (date: string | null, locale: string) => date ? formatDisplayDate(date, { locale }) ?? "—" : "—";
 const days = (minutes: number) => formatPersonDays(minutes / 480);
 
 /** The same work scale and date scale are used by a task and its compact children. */
@@ -20,12 +21,13 @@ export function TaskProgressOverview({model, compact = false, label = "完成进
   emptyComparisonLabel?: string | null; emptyExpectedLabel?: string | null; observationLabel?: string;
 }) {
   const p = useProgressCopy();
+  const { locale } = useI18n();
   // Keep the exact rollup source in calculation details; the summary names the prediction.
   const visibleSource = model.sourceLabel === "子任务汇总" ? p("AI 预测") : model.sourceLabel;
-  const workDescription=p(`${model.sourceLabel}${model.ratio === null ? "" : ` ${percent(model.ratio)}`}；${model.currentMinutes === null ? "完成量未知" : `完成量 ${days(model.currentMinutes)}`}；${model.total === null ? "总量未知" : `总量 ${days(model.total)}`}。截至 ${shortDate(model.asOf)}。${model.sourceLabel === "用户确认" ? "来自用户完成声明。" : "预测不代表用户确认。"}`);
-  const finishDescription = model.completedOn ? p(`用户确认完成：${shortDate(model.completedOn)}`)
-    : model.forecastOn ? p(`AI 预测完成：${shortDate(model.forecastOn)}`) : p("完工预测：尚无");
-  const timeDescription=p(`用户设置的计划完成日期：${model.dueOn ? shortDate(model.dueOn) : "未设置"}；${finishDescription}；观测日期 ${shortDate(model.asOf)}。日期差按当前截止日期计算；修改截止不改变 AI 预测日期。`);
+  const workDescription=p(`${model.sourceLabel}${model.ratio === null ? "" : ` ${percent(model.ratio)}`}；${model.currentMinutes === null ? "完成量未知" : `完成量 ${days(model.currentMinutes)}`}；${model.total === null ? "总量未知" : `总量 ${days(model.total)}`}。截至 ${shortDate(model.asOf, locale)}。${model.sourceLabel === "用户确认" ? "来自用户完成声明。" : "预测不代表用户确认。"}`);
+  const finishDescription = model.completedOn ? p(`用户确认完成：${shortDate(model.completedOn, locale)}`)
+    : model.forecastOn ? p(`AI 预测完成：${shortDate(model.forecastOn, locale)}`) : p("完工预测：尚无");
+  const timeDescription=p(`用户设置的计划完成日期：${model.dueOn ? shortDate(model.dueOn, locale) : "未设置"}；${finishDescription}；观测日期 ${shortDate(model.asOf, locale)}。日期差按当前截止日期计算；修改截止不改变 AI 预测日期。`);
   const history = getTaskProgressComparison(model.historySeries);
   const createdOn = model.startOn ?? history?.creation?.day ?? history?.history[0]?.at ?? null;
   const hasDates=Boolean(createdOn || model.dueOn || model.finishOn);
@@ -65,7 +67,7 @@ export function TaskProgressOverview({model, compact = false, label = "完成进
         : <><strong className="task-completion-progress-value">{percent(model.ratio)}</strong><span className={visibleSource.includes(p("AI 预测")) ? "task-ai-prediction-label" : undefined}>{p(visibleSource)}</span></>}</div>
     </div>
     <TaskProgressTrack actualRatio={model.ratio} expectedRatio={null} label={p(label)} actualDescription={workDescription} /></>}
-    {model.scheduleIssue && <p className="task-schedule-error" role="status">{model.scheduleIssue}{p("请重新设置截止时间。")}</p>}
+    {model.scheduleIssue && <p className="task-schedule-error" role="status">{p(model.scheduleIssue)}{p("请重新设置截止时间。")}</p>}
     {showSchedule && <div className="task-progress-schedule" aria-label={p("任务完成时间")} data-relation={model.timeTone}>
       {showScheduleHeading && <div className="task-progress-schedule-heading">{showScheduleLabel && <span>{p("完成时间")}</span>}{model.timeStatus && <span className="task-progress-time-status" data-relation={model.timeTone} title={timeDescription}>{p(model.timeStatus)}</span>}</div>}
       {hasDates ? <div className="task-progress-schedule-chart" role="group" aria-label={p("时间轴：创建、当前日期、计划完成与预计完成日期")} title={timeDescription}>
@@ -82,14 +84,14 @@ export function TaskProgressOverview({model, compact = false, label = "完成进
                 {after && <span aria-hidden="true" className="task-progress-schedule-link" data-kind={after.kind} data-side="after"/>}
                 <div className="task-progress-schedule-node">
                   {has("start") && <span aria-hidden="true" className="task-progress-schedule-start" style={{left:`${anchor}%`}}/>}
-                  {has("now") && <span aria-label={p(`当前观测 ${shortDate(stop.date)}`)} className="task-progress-schedule-now" role="img" style={{left:`${anchor}%`}}/>}
-                  {has("plan") && <span aria-label={p(`计划完成 ${shortDate(stop.date)}，用户设置`)} className="task-progress-schedule-deadline" role="img" style={{left:`${anchor}%`}}/>}
-                  {has("completed") && <span aria-label={p(`用户确认完成 ${shortDate(stop.date)}`)} className="task-progress-completed-marker" role="img" style={{left:`${anchor}%`}}/>}
-                  {has("forecast") && <TaskPredictionMarker position={anchor} label={p(`AI 预测 ${shortDate(stop.date)}`)} description={timeDescription} showLabel={false}/>}
+                  {has("now") && <span aria-label={p(`当前观测 ${shortDate(stop.date, locale)}`)} className="task-progress-schedule-now" role="img" style={{left:`${anchor}%`}}/>}
+                  {has("plan") && <span aria-label={p(`计划完成 ${shortDate(stop.date, locale)}，用户设置`)} className="task-progress-schedule-deadline" role="img" style={{left:`${anchor}%`}}/>}
+                  {has("completed") && <span aria-label={p(`用户确认完成 ${shortDate(stop.date, locale)}`)} className="task-progress-completed-marker" role="img" style={{left:`${anchor}%`}}/>}
+                  {has("forecast") && <TaskPredictionMarker position={anchor} label={p(`AI 预测 ${shortDate(stop.date, locale)}`)} description={timeDescription} showLabel={false}/>}
                 </div>
                 <span className="task-progress-schedule-label" data-kind={has("forecast") ? "forecast" : has("completed") ? "completed" : undefined}>
                   <span className="task-progress-schedule-types">{stop.labels.map((item,i)=><React.Fragment key={item.kind}>{i>0 && <span aria-hidden="true" className="task-progress-schedule-separator">｜</span>}<span data-kind={item.kind}>{p(item.label)}</span></React.Fragment>)}</span>
-                  <time dateTime={stop.date} title={formatDisplayDate(stop.date, { year: "always" }) ?? undefined}>{shortDate(stop.date)}</time>
+                  <time dateTime={stop.date} title={formatDisplayDate(stop.date, { locale, year: "always" }) ?? undefined}>{shortDate(stop.date, locale)}</time>
                   {scheduleDifferenceLabel && model.deltaDays === 0 && has("plan") && <span className="task-progress-schedule-delta" data-coincident="true" data-relation={model.timeTone}>{scheduleDifferenceLabel}</span>}
                 </span>
               </div>

@@ -1,5 +1,6 @@
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import type { Locale } from "@/shared/i18n/core";
+import { formatLegacyDateLabel } from "@/shared/lib/date-time";
 export const creationEn = {
   "leaveCreationTitle": "Leave task creation?",
   "leaveCreationDescription": "Your input and preview plan have not been saved as tasks. Leaving will discard them and they cannot be recovered.",
@@ -482,6 +483,7 @@ export function localizeCreationMessage(locale: Locale, value: string | null | u
       const match = new RegExp(`^${expression}$`).exec(value);
       if (!match) continue;
       const values = Object.fromEntries(names.map((name, index) => [name, match[index + 1]]));
+      if (values.date) values.date = formatLegacyDateLabel(values.date, locale, { year: "always" });
       if (values.label && locale === "en") values.label = values.label.replace(/^任务$/, "task").replace(/^子任务 (\d+)$/, "subtask $1");
       return creationTranslator(locale)(key, values);
     }

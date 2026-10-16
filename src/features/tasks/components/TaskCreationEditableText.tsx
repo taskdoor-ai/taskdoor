@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Textarea } from "@/shared/ui/input";
 
 type Props = {
@@ -18,7 +18,7 @@ export function TaskCreationEditableText({ label, value, displayValue, onChange,
   const [focused, setFocused] = useState(false);
   const shown = focused ? value : displayValue ?? value;
   const ref = useRef<HTMLTextAreaElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = ref.current;
     if (!element) return;
     const resize = () => { element.style.height = "0px"; element.style.height = `${element.scrollHeight + 2}px`; };

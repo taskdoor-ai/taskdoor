@@ -9,6 +9,11 @@ import { withExpandedTaskDiagnosisExample } from "@/ai/mock/data/expandedTaskDia
 import { getMockContextDiagnosis } from "@/ai/mock/lib/mockTaskDiagnosis";
 import { getWeeklyRetroDetailDemo } from "@/ai/mock/data/weeklyRetroDetailDemo";
 import { withDemoProgressEvidence } from "@/ai/mock/data/taskProgressEvidenceDetails";
+import { getSerumLaunchFileAssets } from "@/ai/mock/data/serumLaunchFileAssets";
+import { getSerumLaunchCommonFileAssets } from "@/ai/mock/data/serumLaunchCommonFileAssets";
+import { isNotificationReadTestMode, notificationReadTestActivitiesByTask } from "@/ai/mock/data/notificationReadScenario";
+import { supportedTaskFileFixtures } from "@/ai/mock/lib/taskFilePreviewFixtures";
+export { migrateUnsupportedBuiltinTaskFiles } from "@/ai/mock/lib/taskFilePreviewFixtureMigration";
 
 const inferFileFormat = (name: string) => name.split(".").pop()?.toUpperCase() ?? "FILE";
 
@@ -137,7 +142,7 @@ function withResultDecisions(task: TaskNode, detail: TaskDetailContent): TaskDet
   })) } };
 }
 
-export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailContent {
+function createWorkspaceTaskDetailSource(task: TaskNode, includeUnsupported = false): TaskDetailContent {
   const weekly = getWeeklyRetroDetailDemo(task);
   if (weekly) return withResultDecisions(task, weekly);
   if (task.createdFrom === "task-planner" || task.createdFrom === "task-editor") return withResultDecisions(task, {
@@ -183,7 +188,7 @@ export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailContent {
     completionCriteria: task.completionCriteria,
     executionTips: task.executionTips,
     due: task.dueAt ?? "待排期",
-    files: poolExample?.files ?? commonFiles(task.id, [ruleFile, evidenceFile, resultFile]),
+    files: [...(poolExample?.files ?? commonFiles(task.id, [ruleFile, evidenceFile, resultFile])), ...getSerumLaunchFileAssets(task, includeUnsupported), ...getSerumLaunchCommonFileAssets(task, includeUnsupported)],
     goal: task.goal ?? `完成“${task.name}”的范围确认、方案执行与结果确认。`,
     iconName: task.iconName,
     iconTone: task.iconTone,
@@ -193,6 +198,11 @@ export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailContent {
     status: task.status,
     title: task.name,
   }));
+}
+
+export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailContent {
+  const detail = createWorkspaceTaskDetailSource(task);
+  return { ...detail, files: supportedTaskFileFixtures(detail.files) };
 }
 
 type ScenarioDetailSpec = {
@@ -257,7 +267,7 @@ const createScenarioTaskDetail = (id: TaskDetailId, spec: ScenarioDetailSpec): T
   }));
 };
 
-export const taskDetailMocks: Record<TaskDetailId, TaskDetailContent> = {
+const legacyTaskDetailMocks: Record<TaskDetailId, TaskDetailContent> = {
   "fragrance-creator-wrapup": createScenarioTaskDetail("fragrance-creator-wrapup", {
     activityAuthor: "陈默",
     activityMessage: "已汇总第二批达人合作状态，等待周岚确认最终目标与资源优先级。",
@@ -352,3 +362,18 @@ export const taskDetailMocks: Record<TaskDetailId, TaskDetailContent> = {
       summary: "周岚正在确认追加投放的 GMV 目标、预算边界、资源优先级与最终决策。",
   }),
 };
+
+export const taskDetailMocks = Object.fromEntries(Object.entries(legacyTaskDetailMocks).map(([id, detail]) => [id, { ...detail, files: supportedTaskFileFixtures(detail.files) }])) as Record<TaskDetailId, TaskDetailContent>;
+
+/** Exact pre-retirement nodes are used for matching only, never re-injected. */
+export function getLegacyTaskFileFixtures(task: TaskNode): TaskFileNode[] {
+  return legacyTaskDetailMocks[task.id as TaskDetailId]?.files ?? createWorkspaceTaskDetailSource(task, true).files;
+}
+
+// The test query adds only its own discussion sources; normal fixtures and saved overrides remain intact.
+if (typeof window !== "undefined" && isNotificationReadTestMode(window.location.search, true)) {
+  for (const [taskId, activities] of Object.entries(notificationReadTestActivitiesByTask)) {
+    const detail = taskDetailMocks[taskId as TaskDetailId];
+    if (detail) detail.activities = [...detail.activities, ...activities.map(activity => ({ ...activity }))];
+  }
+}

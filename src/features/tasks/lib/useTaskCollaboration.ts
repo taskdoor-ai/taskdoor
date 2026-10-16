@@ -1,23 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import type { TaskDetailContent, TaskFileNode } from "@/shared/model/task-model";
 import { applyTaskFileEdit, readTaskFileEdits } from "@/features/tasks/files/lib/task-file-editing";
-import { createCollaborationSnapshot, loadCollaboration, mergeCollaborationMessages, saveCollaboration, TASK_COLLABORATION_STORAGE_PREFIX, type CollaborationSnapshot } from "@/features/tasks/lib/task-collaboration";
+import { createCollaborationSnapshot, getTaskFiles, loadCollaboration, mergeCollaborationMessages, saveCollaboration, TASK_COLLABORATION_STORAGE_PREFIX, type CollaborationSnapshot } from "@/features/tasks/lib/task-collaboration";
 
 export const COLLABORATION_CHANGED = "agentdoor-collaboration-change";
 export const collaborationScope = (teamId: string, taskId: string) => JSON.stringify([teamId, taskId]);
 
 function withSavedFiles(snapshot: CollaborationSnapshot, taskId: string): CollaborationSnapshot {
   const records = readTaskFileEdits(window.localStorage, taskId);
-  return { ...snapshot, files: snapshot.files.map(file => records[file.id] ? applyTaskFileEdit(file, records[file.id]) : file) };
+  return { ...snapshot, files: snapshot.files.map(file => !file.attachmentOnly && records[file.id] ? applyTaskFileEdit(file, records[file.id]) : file) };
 }
 
-/** Read-only projection for the task context. Corruption is surfaced by the editing view. */
+/** Projects saved context; the loader durably adds unseen built-in file packs once. */
 export function projectTaskCollaboration(teamId: string, taskId: string, detail: TaskDetailContent): TaskDetailContent {
-  if (typeof window === "undefined") return detail;
+  const projected = { ...detail, files: getTaskFiles(detail.files) };
+  if (typeof window === "undefined") return projected;
   try {
     const saved = withSavedFiles(loadCollaboration(window.localStorage, collaborationScope(teamId, taskId), detail.files), taskId);
-    return { ...detail, files: saved.files, activities: mergeCollaborationMessages(detail.activities, saved.messages).filter(message => !message.fileThreadId && !message.deletedAt) };
-  } catch { return detail; }
+    return { ...detail, files: getTaskFiles(saved.files), activities: mergeCollaborationMessages(detail.activities, saved.messages).filter(message => !message.deletedAt) };
+  } catch { return projected; }
 }
 
 export function useTaskCollaboration(teamId: string, taskId: string, seedFiles: TaskFileNode[]) {

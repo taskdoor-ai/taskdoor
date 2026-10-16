@@ -15,8 +15,8 @@ export function TaskCreationSessionList({ id, sessions, selectedId, disabled, er
   onNew: () => void;
   onSelect: (session: CreationSession) => void;
 }) {
-  const { c, localize } = useCreationI18n();
-  const day = (timestamp: number) => formatDisplayDate(timestamp) ?? "—";
+  const { c, localize, locale } = useCreationI18n();
+  const day = (timestamp: number) => formatDisplayDate(timestamp, { locale }) ?? "—";
   return <aside aria-label={c("conversationHistory")} className="creation-session-sidebar" id={id} onKeyDown={event => { if (event.key === "Escape") { event.stopPropagation(); onClose(); } }}>
     <header><strong>{c("conversationHistory")}</strong><Button aria-label={c("hideHistory")} onClick={onClose} size="icon-sm" title={c("hideHistory")} type="button" variant="ghost"><PanelLeftClose aria-hidden="true" /></Button></header>
     <Button className="creation-session-new" disabled={disabled} onClick={onNew} size="sm" type="button" variant="outline"><Plus aria-hidden="true" />{c("newConversation")}</Button>
@@ -28,7 +28,7 @@ export function TaskCreationSessionList({ id, sessions, selectedId, disabled, er
         return <Fragment key={session.id}>
           {(index === 0 || day(sessions[index - 1].updatedAt) !== day(session.updatedAt)) && <small className="creation-session-date">{day(session.updatedAt) === day(Date.now()) ? c("today") : day(session.updatedAt)}</small>}
           <button aria-current={selectedId === session.id ? "page" : undefined} className="creation-session-item" disabled={disabled} onClick={() => onSelect(session)} title={title} type="button">
-            <strong>{title}</strong><span>{session.created ? c("createdTasks", { v0: session.created.createdCount }) : c("noTasksCreated")} · <time dateTime={new Date(session.updatedAt).toISOString()} title={formatDisplayDateTime(session.updatedAt, { year: "always" }) ?? undefined}>{formatDisplayTime(session.updatedAt) ?? "—"}</time></span>
+            <strong>{title}</strong><span>{session.created ? c("createdTasks", { v0: session.created.createdCount }) : c("noTasksCreated")} · <time dateTime={new Date(session.updatedAt).toISOString()} title={formatDisplayDateTime(session.updatedAt, { locale, year: "always" }) ?? undefined}>{formatDisplayTime(session.updatedAt, { locale }) ?? "—"}</time></span>
           </button>
         </Fragment>;
       }) : !error && <div className="creation-session-empty"><History aria-hidden="true" /><strong>{c("noConversationsYet")}</strong><span>{c("requestsAreSavedHereAutomatically")}</span></div>}

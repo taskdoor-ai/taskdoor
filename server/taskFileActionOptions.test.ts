@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { canMoveTaskFileTo, getTaskFileMoveDestinations } from "../src/features/tasks/files/lib/task-file-action-options.ts";
+import { canMoveTaskFileTo, getTaskFileMoveDestinations, getTaskFileFolderDestinations } from "../src/features/tasks/files/lib/task-file-action-options.ts";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 
 const nodes: TaskFileNode[] = [
@@ -39,4 +39,11 @@ test("归档、不可见目录和不存在的项目不能作为移动目的地",
   for (const target of ["hidden", "hidden-child", "file", "missing"]) assert.equal(canMoveTaskFileTo(nodes, "file", target), false, target);
   assert.deepEqual(getTaskFileMoveDestinations(nodes, "missing"), []);
   assert.equal(canMoveTaskFileTo(nodes, "hidden", "root-a"), false);
+});
+
+test("保存新文件可选择根目录和完整有效层级，不提供归档树或孤立目录", () => {
+  assert.deepEqual(getTaskFileFolderDestinations([...nodes, { id: "orphan", kind: "folder", name: "失效目录", parentId: "missing", updatedAt: "今天" }]).map(({ id, depth }) => ({ id, depth })), [
+    { id: null, depth: 0 }, { id: "root-a", depth: 1 }, { id: "root-b", depth: 1 }, { id: "child", depth: 2 }, { id: "deep", depth: 3 },
+  ]);
+  assert.deepEqual(getTaskFileFolderDestinations([]), [{ id: null, depth: 0 }]);
 });

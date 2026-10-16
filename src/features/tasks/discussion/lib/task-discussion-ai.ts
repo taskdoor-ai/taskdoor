@@ -3,7 +3,7 @@ import type { TaskDetailContent, TaskFileNode } from "@/shared/model/task-model"
 import type { CollaborationMessage } from "@/features/tasks/lib/task-collaboration";
 import { isDiscussionActivity } from "@/features/tasks/lib/task-activity";
 
-export type DiscussionAiTarget = { kind: "discussion" | "reply"; activityId: string };
+export type DiscussionAiTarget = { kind: "discussion" | "reply"; activityId: string; fileThreadId?: string };
 
 type DiscussionAiInput = {
   taskId: string;
@@ -28,12 +28,12 @@ function savedAttachments(activity: CollaborationMessage, files: TaskFileNode[])
 export function buildDiscussionAiRequest({ taskId, task, target }: DiscussionAiInput): AiConnectionRequest | null {
   if (target.kind !== "discussion" && target.kind !== "reply") return null;
   const activity = task.activities.find(item => item.id === target.activityId);
-  if (!activity || activity.deletedAt || activity.fileThreadId || !isDiscussionActivity(activity)) return null;
+  if (!activity || activity.deletedAt || activity.fileThreadId !== target.fileThreadId || !isDiscussionActivity(activity)) return null;
   const isReply = Boolean(activity.replyToActivityId) || activity.type === "member-reply";
   const parent = activity.replyToActivityId && activity.replyToActivityId !== activity.id
     ? task.activities.find(item => item.id === activity.replyToActivityId)
     : undefined;
-  const parentAvailable = Boolean(parent && !parent.deletedAt && !parent.fileThreadId && isDiscussionActivity(parent));
+  const parentAvailable = Boolean(parent && !parent.deletedAt && parent.fileThreadId === activity.fileThreadId && isDiscussionActivity(parent));
   const publishedAt = savedTimestamp(activity);
   const parentPublishedAt = parentAvailable && parent ? savedTimestamp(parent) : undefined;
   const context = [

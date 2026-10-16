@@ -167,3 +167,22 @@ test('消息附件在中英文提示词与预览中按所属消息展示，名�
   }
   assert.deepEqual(buildContextPayload(withAttachments).messageAttachments, withAttachments.messageAttachments);
 });
+
+test('文件批注连接预览显示修订要求，交接原文与意见篮完全一致', () => {
+  const markdown = '# 文件修订意见\n\n文件：策划.md · v1\n\n对应原文：重复文案的第二处\n\n修改意见：  改成产品利益点。\n保留这行。  ';
+  const feedback = {
+    taskId: 'file-review-task', title: '连接 AI', description: '',
+    context: [{ label: '任务名称', value: '发布会交付' }],
+    workObject: { kind: '文件批注', title: '发布会交付', content: markdown },
+    contextPreview: { items: [{ id: 'feedback', label: '修订意见', value: markdown }] },
+  };
+  const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: 'zh-CN', children: createElement(AiConnectionContextPreview, { request: feedback }) }));
+  assert.ok(html.includes('重复文案的第二处'));
+  assert.ok(html.includes('改成产品利益点。'));
+  assert.equal(buildContextPrompt(feedback, 'zh-CN'), markdown);
+  assert.equal(buildContextPrompt(feedback, 'en'), markdown);
+  const renamed = { ...feedback, workObject: { ...feedback.workObject, kind: '文件标注' } };
+  assert.equal(buildContextPrompt(renamed, 'zh-CN'), markdown);
+  const renamedHtml = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: 'zh-CN', children: createElement(AiConnectionContextPreview, { request: renamed }) }));
+  assert.ok(renamedHtml.includes('改成产品利益点。'));
+});

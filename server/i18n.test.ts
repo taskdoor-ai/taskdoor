@@ -29,10 +29,11 @@ test('English pluralization handles zero, one, and many', () => {
 });
 test('calendar dates remain stable and reject normalized invalid dates', () => {
   assert.equal(formatCalendarDate('en', '2026-09-20', { year: 'numeric' }), 'Sep 20, 2026');
-  assert.equal(formatCalendarDate('zh-CN', '2026-09-20', { year: 'numeric' }), 'Sep 20, 2026');
+  assert.equal(formatCalendarDate('zh-CN', '2026-09-20', { year: 'numeric' }), '2026年9月20日');
   assert.throws(() => formatCalendarDate('en', '2026-02-30'), RangeError);
   assert.throws(() => formatCalendarDate('en', '2026-09-20T00:00:00Z'), RangeError);
   assert.match(formatInstant('en', new Date('2026-09-20T01:00:00Z'), 'America/Los_Angeles'), /Sep 19/);
+  assert.equal(formatInstant('zh-CN', new Date('2026-09-20T01:00:00Z'), 'Asia/Shanghai', { year: 'numeric', hour: 'numeric' }), '2026年9月20日 09:00');
 });
 test('status compatibility preserves all existing data values', () => {
   assert.equal(translate('en', statusMessageKey['进行中']), 'In progress');

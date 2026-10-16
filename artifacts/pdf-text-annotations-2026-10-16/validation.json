@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-16",
+  "scope": "PM demo 原版式 PDF 选文标注",
+  "changeId": "PRD-0223",
+  "dependency": "pdfjs-dist@6.4.299",
+  "checks": {
+    "targetedTests": {
+      "passed": 29,
+      "failed": 0,
+      "log": "targeted-tests.log",
+      "assetLoader": "node-assets.mjs"
+    },
+    "appTypecheck": {
+      "passed": true,
+      "finalKeyboardListenerIncluded": true,
+      "log": "typecheck.log"
+    },
+    "structure": {
+      "passed": true,
+      "newExceptions": 0,
+      "log": "structure-check.log"
+    },
+    "viteFrontendBuild": {
+      "passed": true,
+      "finalKeyboardListenerIncluded": true,
+      "log": "frontend-build.log"
+    },
+    "prdBuild": {
+      "status": "passed",
+      "modules": 25,
+      "changeIdPresent": true,
+      "embeddedJpegFigures": [
+        "FIG-FILES-064",
+        "FIG-FILES-066"
+      ],
+      "indexAndManifestJsonValid": true,
+      "log": "prd-build.log"
+    },
+    "scopedDiffCheck": {
+      "status": "passed",
+      "log": "diff-check.log"
+    }
+  },
+  "browser": {
+    "main5173": [
+      "light original-layout reader",
+      "native text selection",
+      "annotation composer and crop",
+      "numbered highlight",
+      "zoom keeps anchor",
+      "page5 to page1 repeated source navigation",
+      "enter and exit fullscreen"
+    ],
+    "native629x804": [
+      "two-line keyboard selection",
+      "two draft highlight rectangles",
+      "composer with full selected crop",
+      "no horizontal document overflow"
+    ],
+    "isolatedBuild4173": [
+      "raw uploaded PDF text annotation without previewData",
+      "scanned page with zero selectable text",
+      "damaged PDF failure and retry",
+      "damaged PDF hides fullscreen"
+    ]
+  },
+  "notVerified": [
+    "encrypted PDF",
+    "external AI handoff",
+    "production persistence and permissions",
+    "cross-device sync"
+  ],
+  "fullTestSuiteRun": false,
+  "doubleReviewRun": false,
+  "remoteIssueChanged": false,
+  "pullRequest": "待补"
+}

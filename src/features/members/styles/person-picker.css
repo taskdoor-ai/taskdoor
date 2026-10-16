@@ -1,0 +1,34 @@
+.person-picker-popup { border-radius: var(--ad-radius-control); }
+.person-picker-popup .person-picker-search { min-height: 40px; flex-shrink: 0; }
+.person-picker-popup .person-picker-search input { height: 40px; }
+.person-picker-popup [role="listbox"] { padding: var(--ad-space-1); overscroll-behavior: contain; }
+.person-picker-popup .person-picker-option { min-height: 40px; grid-template-columns: 28px minmax(0, 1fr) auto; gap: var(--ad-space-2); padding: var(--ad-space-1) var(--ad-space-2); }
+.person-picker-popup .person-picker-option-icon { width: 28px; height: 28px; }
+.person-picker-popup .person-picker-option strong { font-weight: 500; }
+.person-picker-popup .person-picker-unassigned { padding: var(--ad-space-1); }
+.person-picker-popup .person-picker-unassigned-choice { min-height: 40px; grid-template-columns: 28px minmax(0, 1fr) var(--ad-control-icon-sm); gap: var(--ad-space-2); padding: var(--ad-space-1) var(--ad-space-2); }
+.person-picker-popup .person-picker-unassigned-icon { position: static; width: 28px; height: 28px; transform: none; }
+.person-picker-popup .person-picker-unassigned-check { position: static; transform: none; }
+.person-picker-popup .person-picker-unassigned-copy strong { font-weight: 500; }
+.person-picker-footer { flex: 0 0 auto; padding: var(--ad-space-1); border-top: 1px solid var(--ad-border-soft); }
+.person-picker-invite-action { display: flex; width: 100%; min-height: 40px; align-items: center; gap: var(--ad-space-2); padding: var(--ad-space-1) var(--ad-space-2); border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-route-ink); font: inherit; font-size: var(--ad-text-body-sm); text-align: start; cursor: pointer; }
+.person-picker-invite-action > svg { width: 28px; height: 18px; flex: 0 0 28px; }
+.person-picker-invite-action:hover:not(:disabled) { background: var(--ad-surface-subtle); }
+.person-picker-invite-action:disabled { color: var(--ad-ink-tertiary); cursor: default; }
+.person-picker-invite-action:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -2px; }
+
+.person-picker-popup[data-variant="mention"] { width: 260px; border-radius: var(--ad-radius-control); }
+.person-picker-popup[data-variant="mention"] .person-picker-search { min-height: 36px; flex-shrink: 0; padding-inline: var(--ad-space-3); }
+.person-picker-popup[data-variant="mention"] .person-picker-search input { height: 36px; }
+.person-picker-popup[data-variant="mention"] [role="listbox"] { max-height: 224px; padding: var(--ad-space-1); overscroll-behavior: contain; }
+.person-picker-popup[data-variant="mention"] .person-picker-option { min-height: 36px; grid-template-columns: 22px minmax(0, 1fr) auto; gap: var(--ad-space-2); padding: var(--ad-space-1) var(--ad-space-2); }
+.person-picker-popup[data-variant="mention"] .person-picker-option strong { font-weight: 400; }
+@media (max-width: 640px), (pointer: coarse) {
+  .person-picker-popup .person-picker-search { min-height: var(--ad-control-touch-min); }
+  .person-picker-popup .person-picker-search input { height: var(--ad-control-touch-min); }
+  .person-picker-popup .person-picker-option, .person-picker-popup .person-picker-unassigned-choice { min-height: var(--ad-control-touch-min); }
+  .person-picker-invite-action { min-height: var(--ad-control-touch-min); }
+  .person-picker-popup[data-variant="mention"] .person-picker-search { min-height: var(--ad-control-touch-min); }
+  .person-picker-popup[data-variant="mention"] .person-picker-search input { height: var(--ad-control-touch-min); }
+  .person-picker-popup[data-variant="mention"] .person-picker-option { min-height: var(--ad-control-touch-min); }
+}

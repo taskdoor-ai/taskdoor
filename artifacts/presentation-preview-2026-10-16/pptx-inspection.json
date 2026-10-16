@@ -1,0 +1,20 @@
+{
+  "executable": "/Users/yxzuji/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override/soffice",
+  "format": "pptx",
+  "pdfBytes": 37221,
+  "pageCount": 2,
+  "pages": [
+    {
+      "page": 1,
+      "textItems": 7,
+      "excerpt": "01  Local presentation preview  First slide: original layout and selectable text.  TaskDoor local va"
+    },
+    {
+      "page": 2,
+      "textItems": 7,
+      "excerpt": "02  Thumbnail navigation  Second slide: hover the left edge to view real slides.  TaskDoor local val"
+    }
+  ],
+  "elapsedMs": 25931,
+  "network": "macOS sandbox denies network"
+}

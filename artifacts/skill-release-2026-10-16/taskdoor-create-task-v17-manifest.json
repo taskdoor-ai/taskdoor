@@ -1,0 +1,46 @@
+{
+  "skill": "taskdoor-create-task",
+  "version": "2026-10-16-v17",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "bytes": 18962,
+      "sha256": "ac20416874b65444debcb6de0059f4078852cc7ad0893353584b70cfcda63395"
+    },
+    {
+      "path": "references/task-planning.md",
+      "bytes": 14971,
+      "sha256": "d98f5a2ac89e425279c9a43f8cb0cd1d90188ca19e246ba87fb5ff621ea7f9d3"
+    },
+    {
+      "path": "references/management-playbook.md",
+      "bytes": 3121,
+      "sha256": "2677787b48fd46d91134a1737f04991800e1e83d086ab5bda60d4db06f1ce6e1"
+    },
+    {
+      "path": "references/goal-and-criteria.md",
+      "bytes": 13449,
+      "sha256": "d89ceea86dd9d2b839326b95a1c28954c215d351fad6b0520d99c2b383650a62"
+    },
+    {
+      "path": "references/task-scheduling.md",
+      "bytes": 5011,
+      "sha256": "ea4a90c5201bae39be6629f74f92c6b1bca2ffbd6c334d135fb57e723e79097e"
+    },
+    {
+      "path": "references/task-preview.md",
+      "bytes": 17481,
+      "sha256": "80bebafa6542ba2f97e6a6474124b12c95eda951bf71d786730556246c2886b4"
+    },
+    {
+      "path": "references/task-preview.schema.json",
+      "bytes": 7508,
+      "sha256": "3742426ddf277de4f7ed87fe2290023ab3d8e9c830de68a81d248c8cbf74fd2d"
+    }
+  ],
+  "changes": [
+    "v16：目标不能仅为用途前缀加产物质量，要说明具体理解、判断或后续工作能力。",
+    "v17：普通可补制作规格与时间未知的关键外部等待分别处理，有限任务仍给有条件的初始日期建议。"
+  ],
+  "evaluation": "../okr-evaluation-2026-10-16/REPORT.md"
+}

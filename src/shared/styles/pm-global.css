@@ -6072,11 +6072,7 @@ button:disabled {
 .person-picker-unassigned-icon { position: absolute; top: 50%; left: var(--ad-space-3); display: grid; width: var(--ad-control-height-md); height: var(--ad-control-height-md); place-items: center; border-radius: 999px; background: var(--ad-surface-subtle); color: var(--ad-ink-tertiary); transform: translateY(-50%); }
 .person-picker-unassigned-copy { display: flex; min-width: 0; grid-column: 2; flex-direction: column; gap: var(--ad-space-1); }
 .person-picker-unassigned-copy strong { font-size: var(--ad-text-body-sm); font-weight: 650; }
-.person-picker-invite-row { display: flex; min-width: 0; align-items: baseline; gap: var(--ad-space-2); padding: 0 var(--ad-space-3) var(--ad-space-2) calc(var(--ad-space-3) * 2 + var(--ad-control-height-md)); }
-.person-picker-invite-row small { min-width: 0; overflow: hidden; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.45; white-space: nowrap; text-overflow: ellipsis; }
 .person-picker-unassigned-check { position: absolute; top: 50%; right: var(--ad-space-3); color: var(--ad-route-ink); transform: translateY(-50%); }
-.person-picker-invite-link { flex: 0 0 auto; padding: 0; border: 0; background: transparent; color: var(--ad-route); font: inherit; font-size: var(--ad-text-caption); font-weight: 650; line-height: 1.45; white-space: nowrap; cursor: pointer; text-decoration: none; }
-.person-picker-invite-link:focus-visible { border-radius: 2px; outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 .person-picker-option-end { display: flex; min-width: var(--ad-control-icon-sm); align-items: center; justify-content: flex-end; gap: var(--ad-space-1); color: var(--ad-ink-tertiary); }
 .person-picker-ai-reason { display: grid; width: var(--ad-control-icon-sm); height: var(--ad-control-icon-sm); padding: 0; place-items: center; border: 0; border-radius: var(--ad-radius-tag); background: transparent; color: var(--ad-route); cursor: help; }
 .person-picker-ai-reason[data-recommendation-level="high"] { color: var(--ad-route); }

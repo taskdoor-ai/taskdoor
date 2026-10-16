@@ -5,6 +5,7 @@ import { assignTaskByResponsibility } from "@/ai/mock/lib/responsibilityAssignme
 import { createCreationForm, validateCreationForm, withCreationParticipantDefaults, type CreationForm } from "@/features/tasks/lib/task-creation-form";
 import { withMockCreationEffort } from "@/features/tasks/lib/task-creation-effort";
 import { advanceTaskCreationScenario, startTaskCreationScenario, type ExistingTaskCandidate, type ScenarioContext } from "@/ai/mock/lib/taskCreationScenario";
+import { createMockDeadlineExample, withMockCreationDeadline } from "@/ai/mock/lib/taskCreationDeadline";
 
 export type CreationPlanningQuestion = {
   field: "goal" | "deliverable";
@@ -239,8 +240,14 @@ export function reviseCreationPlan(
 
 /** Match only an exact built-in prompt; keep freeform requests and answers intact. */
 export function planTaskCreation(request: string, context: ScenarioContext, options?: { scenarioId?: TaskCreationScenarioId; answers?: { goal?: string; deliverable?: string }; locale?: Locale }): CreationPlanningResult {
+  const locale = options?.locale ?? "zh-CN";
+  const example = options?.scenarioId ? null : createMockDeadlineExample(request, context, locale);
+  if (example) return {
+    stage: "review", form: withMockCreationDeadline(example, context.currentDate, locale),
+    summary: locale === "en" ? "Prepared one editable task. Review the goal, completion criteria and any suggested date; no tasks have been created and duplicate checking is not complete." : "已整理为一个可编辑任务；请核对真实目标、完成标准及日期建议。尚未完成查重，尚未创建任务。",
+  };
   const scenario = taskCreationScenarios.find(item => (item.prompt === request.trim() || creationScenarioEnglish[item.id].prompt === request.trim()) && (!options?.scenarioId || item.id === options.scenarioId));
   const result = planTaskCreationOriginal(scenario?.prompt ?? request, context, options);
-  const localized = localizeFreshCreationPlan(result, options?.locale ?? 'zh-CN', options?.answers);
-  return 'form' in localized ? { ...localized, form: { ...localized.form, request } } : { ...localized, request };
+  const localized = localizeFreshCreationPlan(result, locale, options?.answers);
+  return 'form' in localized ? { ...localized, form: withMockCreationDeadline({ ...localized.form, request }, context.currentDate, locale) } : { ...localized, request };
 }

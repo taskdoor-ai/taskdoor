@@ -128,3 +128,36 @@ test("旧附件名称只在唯一可见文件匹配时补充 ID，缺失或同�
     assert.deepEqual(build({ kind: "discussion", activityId: root.id }, [root], { files })?.messageAttachments?.current, [{ name: root.file }]);
   }
 });
+
+test("文件讨论连接仅带当前已保存消息和同串直接原消息", () => {
+  const fileRoot = { ...root, id: "file-root", fileThreadId: "file-thread", message: "文件原始讨论" };
+  const parent = { ...reply, id: "file-parent", fileThreadId: "file-thread", replyToActivityId: fileRoot.id, message: "文件直接原消息" };
+  const current = { ...reply, id: "file-current", fileThreadId: "file-thread", replyToActivityId: parent.id, message: "当前文件回复" };
+  const other = { ...sibling, fileThreadId: "other-thread", message: "其他文件秘密" };
+  const result = build({ kind: "reply", activityId: current.id, fileThreadId: "file-thread" }, [fileRoot, parent, current, other, unrelated]);
+  assert.ok(result);
+  assert.equal(result.workObject.content, current.message);
+  assert.equal(value(result, "被回复原消息内容"), parent.message);
+  assert.doesNotMatch(JSON.stringify(result), /文件原始讨论|其他文件秘密|另一个讨论/);
+  assert.ok(build({ kind: "discussion", activityId: fileRoot.id, fileThreadId: "file-thread" }, [fileRoot]));
+});
+
+test("文件连接核对所属讨论串，失效或跨范围原消息不泄露内容", () => {
+  const current = { ...reply, id: "file-current", fileThreadId: "file-thread", replyToActivityId: root.id };
+  for (const fileThreadId of [undefined, "other-thread"]) {
+    assert.equal(build({ kind: "reply", activityId: current.id, fileThreadId }, [current]), null);
+  }
+  assert.equal(build({ kind: "reply", activityId: current.id, fileThreadId: current.fileThreadId }, [{ ...current, deletedAt: "2026-10-15" }]), null);
+  for (const parent of [
+    undefined,
+    { ...root, message: "跨范围秘密" },
+    { ...root, fileThreadId: "other-thread", message: "跨范围秘密" },
+    { ...root, fileThreadId: current.fileThreadId, deletedAt: "2026-10-15", message: "已删秘密" },
+  ]) {
+    const result = build({ kind: "reply", activityId: current.id, fileThreadId: current.fileThreadId }, [current, ...(parent ? [parent] : [])]);
+    assert.ok(result);
+    assert.equal(value(result, "被回复原消息 ID"), root.id);
+    assert.equal(value(result, "来源缺口"), "被回复原消息不可用");
+    assert.doesNotMatch(JSON.stringify(result), /秘密/);
+  }
+});

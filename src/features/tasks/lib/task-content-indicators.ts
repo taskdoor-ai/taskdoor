@@ -17,9 +17,9 @@ const uniqueById = <T extends { id: string }>(items: readonly T[]): T[] => [...n
 /** Count loaded task content; an unavailable source must not look like empty content. */
 export function getTaskContentIndicators(input: TaskContentIndicatorInput): TaskContentIndicators {
   if (!input.enabled) return { discussionCount: null, fileCount: null };
-  const discussions = uniqueById(input.messages).filter(message => !message.deletedAt && !message.fileThreadId
+  const discussions = uniqueById(input.messages).filter(message => !message.deletedAt
     && validId(message.author) && typeof message.message === "string"
     && (message.type === "member-post" || message.type === "member-reply"));
-  const files = uniqueById(input.files).filter(file => file.kind === "file" && !file.archived);
+  const files = uniqueById(input.files).filter(file => file.kind === "file" && !file.archived && !file.attachmentOnly);
   return { discussionCount: discussions.length, fileCount: files.length };
 }

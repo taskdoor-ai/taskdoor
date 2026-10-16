@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-10-14T16:35:44.074Z",
+  "generatedAt": "2026-10-16T15:59:41.430Z",
   "modules": [
     {
       "moduleId": "product-preview",
@@ -379,7 +379,7 @@
       "moduleId": "task-creation",
       "title": "任务创建",
       "group": "任务管理",
-      "summary": "通过对话生成待确认方案，按团队层级配额组织子任务并推荐人员。",
+      "summary": "在任务方案与创建对话并排的工作区中渐进生成可编辑任务，经审阅调整后确认创建；已保存任务的拆解独立处理。",
       "source": "docs/prd/modules/07-task-creation.md",
       "url": "./index.html#task-creation",
       "sections": [
@@ -483,7 +483,7 @@
       "moduleId": "files-local-commits",
       "title": "文件与成果提交",
       "group": "协作与连接",
-      "summary": "管理任务文件及版本，并核对后提交成果。",
+      "summary": "管理任务文件及版本，针对内容标注并汇总修订意见，再核对后提交成果。",
       "source": "docs/prd/modules/11-files-local-commits.md",
       "url": "./index.html#files-local-commits",
       "sections": [

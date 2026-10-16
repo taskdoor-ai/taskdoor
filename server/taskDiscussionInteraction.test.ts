@@ -55,8 +55,8 @@ const read = (file: string) => readFileSync(new URL(`../src/${file}`, import.met
 
 const messageProps = { messages: [root, reply], allMessages: [root, reply], currentUser: "林洁", files: [], people: [], draftKey: "test", onOpenFile: () => undefined, onPost: () => undefined };
 
-test("任务讨论显示统一附件入口和逐条回复，原消息按需查看并隔离文件评论", () => {
-  const html = renderChinese(createElement(TaskDiscussion, { ...props, activities: [root, { ...reply, quote: { messageId: root.id, author: root.author, text: "旧引用摘录" } }, { ...root, id: "file-only", fileThreadId: "file-thread", message: "仅在文件中显示" }] }));
+test("任务讨论显示统一附件入口和逐条回复，历史文件评论也在同一消息流", () => {
+  const html = renderChinese(createElement(TaskDiscussion, { ...props, activities: [root, { ...reply, quote: { messageId: root.id, author: root.author, text: "旧引用摘录" } }, { ...root, id: "file-only", fileThreadId: "file-thread", message: "旧文件讨论内容" }] }));
   assert.match(html, /contentEditable="true"/i);
   assert.match(html, /aria-label="添加附件"/);
   assert.doesNotMatch(html, /aria-label="本地上传"|aria-label="从文件列表选择"/);
@@ -67,8 +67,8 @@ test("任务讨论显示统一附件入口和逐条回复，原消息按需查�
   assert.ok(replyMarkup);
   assert.match(replyMarkup, /我已确认范围/);
   assert.doesNotMatch(replyMarkup, /请核对交付范围/, "回复行不常驻父消息摘要");
-  assert.equal((html.match(/class="task-discussion-feed-message"/g) ?? []).length, 2, "主消息和回复平铺为独立行");
-  assert.doesNotMatch(html, /仅在文件中显示/);
+  assert.equal((html.match(/class="task-discussion-feed-message"/g) ?? []).length, 3, "主消息、回复和历史文件消息平铺为独立行");
+  assert.match(html, /旧文件讨论内容/);
   assert.doesNotMatch(html, /回复列表|查看\s*\d+\s*条回复|收起回复|task-discussion-thread-bar/);
 });
 

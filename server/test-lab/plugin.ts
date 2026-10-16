@@ -17,7 +17,7 @@ import { createRunner } from './runner.ts';
 import { labSkills, loadSkill } from './skills.ts';
 import { buildView } from './context.ts';
 import { importLibrary } from './library.ts';
-import { editableSchema, runSelectionSchema, skillVersionInputSchema, teamSchema, caseSchema, modelIdSchema } from './schema.ts';
+import { editableSchema, runSelectionSchema, skillVersionInputSchema, skillVersionNotesInputSchema, teamSchema, caseSchema, modelIdSchema } from './schema.ts';
 import { skillIds, type LabCase } from '../../src/test-lab/types.ts';
 import { buildWorkflows, summarizeWorkflow } from '../../src/test-lab/workflows.ts';
 import { preflightWorkflow } from './workflows.ts';
@@ -71,8 +71,10 @@ export function testLabPlugin():Plugin{
         if(req.method==='POST'&&path==='/workflows/check'){const value=z.object({workflowId:z.string().min(1).max(160)}).strict().parse(await body(req));send(res,200,preflightWorkflow(store.get(),value.workflowId));return;}
         if(req.method==='GET'&&path==='/workflow-report'){const batchId=url.searchParams.get('batchId');if(!batchId)throw new Error('请提供批次 ID');const runs=store.get().runs.filter(r=>r.batchId===batchId);if(!runs.length)throw new Error('运行批次不存在');send(res,200,summarizeWorkflow(runs));return;}
         if(req.method==='GET'&&path.startsWith('/skills/')){const id=z.enum(skillIds).parse(path.slice('/skills/'.length));send(res,200,loadSkill(id));return;}
-        if(req.method==='POST'&&path==='/skill-versions'){const value=z.object({expectedRevision:z.number().int(),version:skillVersionInputSchema}).strict().parse(await body(req));send(res,200,store.addSkillVersion(value.expectedRevision,value.version));return;}
-        if(req.method==='PUT'&&path==='/skill-default'){const value=z.object({expectedRevision:z.number().int(),skillId:z.enum(skillIds),versionId:z.string().nullable()}).strict().parse(await body(req));send(res,200,store.setSkillDefault(value.expectedRevision,value.skillId,value.versionId));return;}
+        if(req.method==='POST'&&path==='/skill-versions'){const value=z.object({expectedRevision:z.number().int(),version:skillVersionInputSchema}).strict().parse(await body(req));send(res,200,store.addSkillVersion(value.expectedRevision,value.version,{summary:true}));return;}
+        const notesMatch=path.match(/^\/skill-versions\/([^/]+)\/notes$/);
+        if(req.method==='PUT'&&notesMatch){const value=skillVersionNotesInputSchema.extend({expectedRevision:z.number().int()}).strict().parse(await body(req));send(res,200,store.updateSkillVersionNotes(value.expectedRevision,decodeURIComponent(notesMatch[1]),{notes:value.notes},{summary:true}));return;}
+        if(req.method==='PUT'&&path==='/skill-default'){const value=z.object({expectedRevision:z.number().int(),skillId:z.enum(skillIds),versionId:z.string().nullable()}).strict().parse(await body(req));send(res,200,store.setSkillDefault(value.expectedRevision,value.skillId,value.versionId,{summary:true}));return;}
         if(req.method==='PUT'&&path==='/categories'){const value=z.object({expectedRevision:z.number().int(),category:z.object({name:z.string(),description:z.string(),previousName:z.string().optional()}).strict()}).strict().parse(await body(req));send(res,200,store.saveCategory(value.expectedRevision,value.category));return;}
         if(req.method==='PUT'&&path==='/models'){const value=z.object({expectedRevision:z.number().int(),models:z.array(z.string()),judgeEnabled:z.boolean().optional()}).strict().parse(await body(req));store.saveModels(value.expectedRevision,value.models,value.judgeEnabled);send(res,200,store.getBootstrapState());return;}
         if(req.method==='GET'&&path==='/model-catalog'){send(res,200,{models:await fetchModelCatalog(endpoint,options.apiKey)});return;}
@@ -86,16 +88,16 @@ export function testLabPlugin():Plugin{
         if(req.method==='PUT'&&path==='/case'){
           const value=z.object({expectedRevision:z.number().int(),item:caseSchema.optional(),deleteId:z.string().optional()}).strict().refine(v=>!!v.item!==!!v.deleteId,'必须指定保存或删除一个用例').parse(await body(req));
           const library=store.getLibrary();const cases=value.deleteId?library.cases.filter(c=>c.id!==value.deleteId):library.cases.some(c=>c.id===value.item!.id)?library.cases.map(c=>c.id===value.item!.id?value.item!:c):[...library.cases,value.item!];
-          store.save(value.expectedRevision,library.teams,cases as LabCase[]);send(res,200,store.getBootstrapState());return;
+          send(res,200,store.save(value.expectedRevision,library.teams,cases as LabCase[],{summary:true}));return;
         }
-        if(req.method==='PUT'&&path==='/state'){const value=editableSchema.parse(await body(req));send(res,200,store.save(value.expectedRevision,value.teams,value.cases as LabCase[]));return;}
+        if(req.method==='PUT'&&path==='/state'){const value=editableSchema.parse(await body(req));send(res,200,store.save(value.expectedRevision,value.teams,value.cases as LabCase[],{summary:true}));return;}
         const teamConfigMatch=path.match(/^\/teams\/([^/]+)\/configuration$/);
         if(req.method==='PUT'&&teamConfigMatch){
           const value=z.object({expectedRevision:z.number().int(),team:teamSchema,caseUpdates:z.array(caseSchema).max(5000)}).strict().parse(await body(req));
           if(value.team.id!==decodeURIComponent(teamConfigMatch[1]))throw Error('团队 ID 不一致');
           send(res,200,saveTeamConfiguration(store,value.expectedRevision,value.team,value.caseUpdates));return;
         }
-        if(req.method==='POST'&&path==='/runs'){const value=z.object({caseIds:z.array(z.string()).min(1).max(MAX_BATCH_CASES),requestId:z.string().min(1).max(100),selection:runSelectionSchema.optional()}).strict().parse(await body(req));if(!['preview','mcp'].includes(value.selection?.executionMode??'')&&!(value.selection?.executionMode==='proposal'&&['agentdoor-task-status-analyzer','agentdoor-responsibility-advisor','agentdoor-member-matcher'].includes(value.selection.skillId??'')))throw Error('请选择任务方案预览或任务分析评测');const state=store.getLibrary();if(state.modelCatalogSyncedAt){const selected=[...(value.selection?.models??[value.selection?.model||options.model]),...(value.selection?.judgeModel&&value.selection.judgeModel!==jevOptions.model?[value.selection.judgeModel]:[])];const unavailable=selected.filter(model=>!state.modelCatalog?.includes(model));if(unavailable.length)throw Error('所选型号不在可用目录中，请刷新页面并重新选择：'+unavailable.join('、'));}send(res,202,runner.enqueue(value.caseIds,value.requestId,value.selection));return;}
+        if(req.method==='POST'&&path==='/runs'){const value=z.object({caseIds:z.array(z.string()).min(1).max(MAX_BATCH_CASES),requestId:z.string().min(1).max(100),selection:runSelectionSchema.optional()}).strict().parse(await body(req));if(!['preview','mcp','subtasks'].includes(value.selection?.executionMode??'')&&!(value.selection?.executionMode==='proposal'&&['agentdoor-task-status-analyzer','agentdoor-responsibility-advisor','agentdoor-member-matcher'].includes(value.selection.skillId??'')))throw Error('请选择任务方案预览或任务分析评测');const state=store.getLibrary();if(state.modelCatalogSyncedAt){const selected=[...(value.selection?.models??[value.selection?.model||options.model]),...(value.selection?.judgeModel&&value.selection.judgeModel!==jevOptions.model?[value.selection.judgeModel]:[])];const unavailable=selected.filter(model=>!state.modelCatalog?.includes(model));if(unavailable.length)throw Error('所选型号不在可用目录中，请刷新页面并重新选择：'+unavailable.join('、'));}send(res,202,runner.enqueue(value.caseIds,value.requestId,value.selection));return;}
         if(req.method==='POST'&&path==='/library/import'){await body(req);send(res,200,importLibrary(store));return;}
         const jevMatch=path.match(/^\/runs\/([^/]+)\/jev-review$/);
         if(req.method==='POST'&&jevMatch){const value=z.object({judgeModel:modelIdSchema.optional()}).strict().parse(await body(req));const state=store.getLibrary();if(!state.judgeEnabled)throw new Error('Jev 判断模型未启用，请到模型管理开启');const available=config.jev.models.filter(model=>model===jevOptions.model||!state.modelCatalogSyncedAt||state.modelCatalog?.includes(model));if(value.judgeModel&&!available.includes(value.judgeModel))throw new Error('未配置或未启用该判断模型');send(res,200,await reviewWithJev(decodeURIComponent(jevMatch[1]),value.judgeModel));return;}

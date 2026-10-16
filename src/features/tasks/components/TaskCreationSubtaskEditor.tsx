@@ -2,19 +2,16 @@ import { mockPersonName } from "@/ai/mock/i18n/mockContent";
 import { useCreationI18n } from "@/shared/i18n/creation-messages";
 import { Trash2, UserRound } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { findTagByName, type TagDefinition } from "@/ai/mock/data/tagGroups";
+import type { TagDefinition } from "@/ai/mock/data/tagGroups";
 import type { TaskIconTone } from "@/shared/model/task-model";
 import { type CreationForm, type CreationTask } from "@/features/tasks/lib/task-creation-form";
+import { getCreationAnnotationTargetKey, type TaskCreationAnnotation, type TaskCreationAnnotationTarget } from "@/features/tasks/lib/task-creation-annotations";
 import { createTaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecommendations";
 import { MemberSelector, type Member } from "@/features/members/components/MemberSelector";
 import { PersonAvatar } from "@/shared/ui/PersonAvatar";
-import { TagPicker } from "@/features/me/components/TagPicker";
-import { TagBadge } from "@/shared/ui/TagBadge";
 import { TaskAiAdjustButton } from "@/features/tasks/components/TaskAiAdjustmentPopover";
+import { TaskCreationAnnotationButton } from "@/features/tasks/components/TaskCreationAnnotationButton";
 import { TaskDetailFields } from "@/features/tasks/components/TaskDetailFields";
-import { TaskEffortField } from "@/features/tasks/components/TaskEffortField";
-import { TaskEffortEditor } from "@/features/tasks/components/TaskEffortEditor";
-import { getCreationBranchLeaves } from "@/features/tasks/lib/task-creation-hierarchy";
 import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/shared/ui/accordion";
 import { Button } from "@/shared/ui/button";
@@ -35,10 +32,12 @@ type Props = {
   onRemove: () => void;
   onDirtyChange: (dirty: boolean) => void;
   onAiAdjust?: (anchor?: HTMLElement | null) => void;
+  annotations?: TaskCreationAnnotation[];
+  onAnnotate?: (target: TaskCreationAnnotationTarget, anchor: HTMLElement) => void;
   onInviteMembers?: (returnFocus?: HTMLElement | null) => void;
 };
 
-export function TaskCreationSubtaskEditor({ task, form, index, members, tags, tone, disabled = false, childCount = 0, hierarchical = false, branchControl, descendantCount = 0, onChange, onRemove, onDirtyChange, onAiAdjust, onInviteMembers }: Props) {
+export function TaskCreationSubtaskEditor({ task, form, index, members, tags, tone, disabled = false, childCount = 0, hierarchical = false, branchControl, descendantCount = 0, onChange, onRemove, onDirtyChange, onAiAdjust, annotations = [], onAnnotate, onInviteMembers }: Props) {
   const { c, locale, localize } = useCreationI18n();
   const [open, setOpen] = useState(false);
   const [effortDirty, setEffortDirty] = useState(false);
@@ -59,6 +58,7 @@ export function TaskCreationSubtaskEditor({ task, form, index, members, tags, to
   const signature = JSON.stringify(task);
   const dirty = JSON.stringify(draft) !== JSON.stringify(baseline);
   const stale = signature !== JSON.stringify(baseline);
+  const annotationTarget: TaskCreationAnnotationTarget = { taskId: task.clientId, field: "task" };
 
   useEffect(() => {
     if (!dirty && stale) { setDraft(structuredClone(task)); setBaseline(structuredClone(task)); }
@@ -78,7 +78,7 @@ export function TaskCreationSubtaskEditor({ task, form, index, members, tags, to
     } catch (caught) { setError(caught instanceof Error ? caught.message : c("changesCouldNotBeSyncedYourInput")); }
   };
 
-  return <article aria-label={label} className={`task-detail-hero-card creation-task-row creation-subtask-card ${open ? "is-expanded" : disabled ? "" : "is-expandable"}`} data-tone={tone} id={`creation-subtask-${task.clientId}`} onClick={event => {
+  return <article aria-label={label} className={`task-detail-hero-card creation-task-row creation-subtask-card ${open ? "is-expanded" : disabled ? "" : "is-expandable"}${onAnnotate ? " has-card-annotation" : ""}`} data-creation-annotation-card={task.clientId} data-tone={tone} id={`creation-subtask-${task.clientId}`} onClick={event => {
     if (open || disabled || event.defaultPrevented) return;
     if (!(event.target instanceof Element) || event.target.closest('button, a, input, textarea, select, [role="button"], [role="combobox"], [contenteditable="true"]')) return;
     trigger.current?.focus({ preventScroll: true });
@@ -99,9 +99,9 @@ export function TaskCreationSubtaskEditor({ task, form, index, members, tags, to
               <span>{ownerName}</span>
             </span></div>
           </>}
-          <div className="creation-subtask-header-actions">
+          <div className="creation-subtask-header-actions" data-annotation-overlay>
             {branchControl}
-            {open && onAiAdjust && <TaskAiAdjustButton disabled={disabled || dirty || stale} label={c("askAiToAdjust", { v0: label })} onClick={() => onAiAdjust(trigger.current)} />}
+            {onAnnotate ? <TaskCreationAnnotationButton count={annotations.filter(annotation => annotation.target.taskId === task.clientId).length} disabled={disabled || dirty || stale || effortDirty} label={task.title || c("untitledSubtask")} onClick={anchor => onAnnotate(annotationTarget, anchor)} targetKey={getCreationAnnotationTargetKey(annotationTarget)} /> : open && onAiAdjust && <TaskAiAdjustButton disabled={disabled || dirty || stale} label={c("askAiToAdjust", { v0: label })} onClick={() => onAiAdjust(trigger.current)} />}
             <AccordionTrigger aria-label={c("fullDetailsOf", { v0: open ? c("collapse") : c("expand"), v1: label })} className="creation-row-expand" disabled={disabled} ref={trigger}>{open ? hierarchical ? c("collapseDetails") : c("collapse") : hierarchical ? c("details") : c("expand")}</AccordionTrigger>
           </div>
         </div>
@@ -126,7 +126,7 @@ export function TaskCreationSubtaskEditor({ task, form, index, members, tags, to
           </div>
           {stale && <div className="creation-subtask-error" role="alert">{c("thisSubtaskWasUpdatedElsewhereYourInput")}<Button onClick={reload} size="sm" type="button" variant="ghost">{c("discardInputAndLoadTheLatestSubtask")}</Button></div>}
           {error && !stale && <div className="creation-subtask-error" role="alert">{localize(error)}<Button disabled={disabled} onClick={() => change(draft)} size="sm" type="button" variant="ghost">{c("retrySync")}</Button></div>}
-          <footer className="creation-subtask-actions"><Button disabled={disabled || dirty} onClick={onRemove} size="sm" type="button" variant="ghost"><Trash2 size={14} />{descendantCount ? c("removeThisTaskAndDescendants", { v0: descendantCount }) : c("removeSubtask")}</Button></footer>
+          <footer className="creation-subtask-actions" data-annotation-overlay><Button disabled={disabled || dirty} onClick={onRemove} size="sm" type="button" variant="ghost"><Trash2 size={14} />{descendantCount ? c("removeThisTaskAndDescendants", { v0: descendantCount }) : c("removeSubtask")}</Button></footer>
         </AccordionContent>
       </AccordionItem>
     </Accordion>

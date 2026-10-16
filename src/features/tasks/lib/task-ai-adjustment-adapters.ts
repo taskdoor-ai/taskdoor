@@ -2,7 +2,7 @@ import { taskScheduleError } from "@/features/tasks/lib/task-schedule";
 import type { TaskActivityMock, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
 import { createTaskChangeActivity } from "@/features/tasks/lib/task-activity";
-import { buildTaskAiAdjustment, getTaskAiContextSignature } from "@/ai/mock/lib/taskAiAdjustment";
+import { buildTaskAiAdjustment, buildTaskAiCreationAnnotationAdjustment, getTaskAiContextSignature } from "@/ai/task-adjustment";
 import type { TaskAiAdjustmentContext, TaskAiAdjustmentProposal, TaskAiEditableTask } from "@/features/tasks/lib/task-ai-adjustment-types";
 import type { CreationForm, CreationTask } from "@/features/tasks/lib/task-creation-form";
 import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-goal";
@@ -38,14 +38,16 @@ export function createDraftTaskAiContext(form: CreationForm, members: Members, c
   return {
     mode: "draft", currentUserId, timeZone, task, subtasks, members: memberSnapshots(members),
     dependencyTasks,
-    canAddSubtasks: form.decision !== "attach",
+    canAddSubtasks: false,
   };
 }
 
 /** A candidate is checked again at the write boundary, including its declared scope. */
 function assertCurrentProposal(context: TaskAiAdjustmentContext, proposal: TaskAiAdjustmentProposal): void {
   if (proposal.baseSignature !== getTaskAiContextSignature(context)) throw new Error(staleMessage);
-  const rebuilt = buildTaskAiAdjustment(context, proposal.scope, proposal.instruction);
+  const rebuilt = proposal.annotations
+    ? buildTaskAiCreationAnnotationAdjustment(context, proposal.annotations, proposal.supplementalInstruction)
+    : buildTaskAiAdjustment(context, proposal.scope, proposal.instruction);
   if ("error" in rebuilt) throw new Error(rebuilt.error);
   const expected = rebuilt.proposal;
   // A new task receives its stable ID at preview time, not again at apply time.

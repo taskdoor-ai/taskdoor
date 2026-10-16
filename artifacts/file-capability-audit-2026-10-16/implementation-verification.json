@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-16",
+  "change": "JSON/XML原文预览、文字标注、源码编辑与当前版本下载",
+  "tests": {
+    "command": "node --import tsx --test server/taskFileSourcePreview.test.ts server/taskFileStructuredUpload.test.ts server/taskFileTree.test.ts server/taskFileCodeAffordances.test.ts server/taskFileAnnotationBundle.test.ts server/taskFileTextAnnotation.test.ts",
+    "passed": 32,
+    "failed": 0
+  },
+  "checks": {
+    "frontend_types": "通过：npx tsc -p tsconfig.app.json --pretty false",
+    "structure": "通过：无新增结构违反",
+    "vite_build": "通过：最终源码hover样式修正后重新构建",
+    "standard_build": "未通过：tsc -b在多份已有server测试类型错误处终止；未修无关测试",
+    "full_suite_run": false,
+    "double_review_run": false
+  },
+  "browser": {
+    "flow_url": "http://127.0.0.1:4183/",
+    "screenshots_url": "http://127.0.0.1:5173/",
+    "viewport": [
+      1280,
+      720
+    ],
+    "real_uploads": [
+      "preview-check.json",
+      "preview-check.xml"
+    ],
+    "preserves_source_whitespace": true,
+    "literal_script_dom_nodes": 0,
+    "json_saved_v2_download_matches": true,
+    "xml_saved_v2_download_matches": true,
+    "json_annotation_quote": "\"title\": \"JSON 预览验证\",",
+    "xml_annotation_quote": "<title>XML 预览验证</title>",
+    "both_mark_clicks_open_correct_feedback": true,
+    "temporary_annotations_cleared": true,
+    "published_to_discussion": false,
+    "sent_to_ai": false,
+    "flow_console_errors": [],
+    "dev_hmr_note": "5173并行热更新曾发生removeChild/createRoot白屏，完整刷新后恢复并完成两图采集。"
+  },
+  "screenshots": [
+    {
+      "path": "supported-json.jpg",
+      "format": "image/jpeg",
+      "viewport": [
+        1280,
+        720
+      ],
+      "state": "5173内置JSON选字、局部截图与意见输入"
+    },
+    {
+      "path": "supported-xml.jpg",
+      "format": "image/jpeg",
+      "viewport": [
+        1280,
+        720
+      ],
+      "state": "5173内置XML源码阅读"
+    }
+  ],
+  "not_in_scope": [
+    "自动格式化",
+    "折叠",
+    "语法校验",
+    "复杂结构树编辑",
+    "生产权限/跨设备存储",
+    "其他格式预览"
+  ]
+}

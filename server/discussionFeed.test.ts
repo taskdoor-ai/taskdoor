@@ -48,14 +48,15 @@ test("删除记录不进入消息流，存活回复保留直接父 ID 且不暴�
   assert.equal(root.message, "root 的内容", "输入记录仍保留给存储层，投影不能删除源数据");
 });
 
-test("文件讨论和非讨论记录不进入消息流，回复旧活动的成员内容仍可见", () => {
+test("历史文件消息统一进入任务讨论，非讨论活动不进入消息流", () => {
   const file = message("file", { fileThreadId: "file-thread" });
   const fileReply = message("file-reply", { type: "member-reply", fileThreadId: file.fileThreadId, replyToActivityId: file.id });
   const activity = message("activity", { type: "status-change" });
   const reply = message("reply", { type: "member-reply", replyToActivityId: activity.id });
   const post = message("post");
   const feed = buildDiscussionFeed([file, activity, fileReply, reply, post]);
-  assert.deepEqual(ids(feed.messages), [reply.id, post.id]);
+  assert.deepEqual(ids(feed.messages), [file.id, fileReply.id, reply.id, post.id]);
+  assert.equal(fileReply.fileThreadId, file.fileThreadId, "历史归属保持，不改写保存记录");
 });
 
 test("完整 time 与 createdAt 共同排序，未知历史顺序稳定，编辑不改变位置", () => {

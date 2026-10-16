@@ -9,6 +9,7 @@ import { buildTaskAiAdjustment, buildTaskAiCreationAdjustment } from "../src/ai/
 import { emptyTaskAiAdjustmentDraft, getTaskAiAdjustmentDraftKey, taskAiAdjustmentDraftReducer } from "../src/features/tasks/lib/task-ai-adjustment-drafts.ts";
 import type { TaskAiAdjustmentContext, TaskAiAdjustmentProgress, TaskAiAdjustmentScope, TaskAiEditableTask } from "../src/features/tasks/lib/task-ai-adjustment-types.ts";
 import type { CreationProcess } from "../src/features/tasks/lib/task-creation-progress.ts";
+import { I18nProvider } from "../src/shared/i18n/I18nProvider.tsx";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -33,7 +34,7 @@ function capture(render: () => ReactNode, interact?: (tree: ReactNode) => void):
     interact?.(tree);
     return null;
   }
-  renderToStaticMarkup(createElement(Capture));
+  renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(Capture) }));
   return tree;
 }
 
@@ -406,33 +407,29 @@ test("应用失败保留已完成预览和待应用候选，不把生成步骤�
   assert.equal(progress[0].responseSummary, result.proposal.summary);
 });
 
-test("创建固定面板不因外部点击或焦点移出关闭，Esc 仍作为明确关闭", () => {
-  const previousNode = Object.getOwnPropertyDescriptor(globalThis, "Node");
-  class FakeNode {}
-  const inside = new FakeNode();
-  const outside = new FakeNode();
-  try {
-    Object.defineProperty(globalThis, "Node", { configurable: true, value: FakeNode });
-    for (const mode of ["draft", "saved"] as const) {
-      const openChanges: boolean[] = [];
-      const tree = capture(() => TaskAiAdjustmentPopover({ ...base, context: { ...context, mode }, compactCreation: true,
-        onOpenChange: open => { openChanges.push(open); },
-      }));
+test("创建侧栏独立于浮层关闭规则，Esc可收起且不响应已处理的子浮层Escape", () => {
+  for (const mode of ["draft", "saved"] as const) {
+    const openChanges: boolean[] = [];
+    const tree = capture(() => TaskAiAdjustmentPopover({ ...base, context: { ...context, mode }, compactCreation: true,
+      onOpenChange: open => { openChanges.push(open); },
+    }));
+    if (mode === "draft") {
+      const sidebar = elements(tree, node => node.props.className?.includes("task-ai-adjust-sidebar"))[0];
+      assert.ok(sidebar);
+      assert.equal(elements(tree, node => node.props.modal === false).length, 0, "创建侧栏不走覆盖式Popover");
+      let prevented = 0;
+      sidebar.props.onKeyDown({ key: "Escape", defaultPrevented: true, preventDefault() { prevented++; } });
+      assert.deepEqual(openChanges, [], "子浮层先消费Escape，侧栏保持");
+      sidebar.props.onKeyDown({ key: "Escape", defaultPrevented: false, preventDefault() { prevented++; } });
+      assert.deepEqual(openChanges, [false]);
+      assert.equal(prevented, 1);
+    } else {
       const popover = elements(tree, node => node.props.modal === false && typeof node.props.onOpenChange === "function")[0];
       let cancelled = 0;
-      const event = (reason: string, target: object, relatedTarget?: object) => popover.props.onOpenChange(false, {
-        reason, event: { target, ...(relatedTarget ? { relatedTarget } : {}) }, cancel() { cancelled++; },
-      });
-      event("outside-press", inside);
-      event("focus-out", outside, inside);
-      assert.equal(cancelled, mode === "draft" ? 2 : 0);
-      assert.equal(openChanges.length, mode === "draft" ? 0 : 2);
-      event("escape-key", inside);
-      assert.equal(openChanges.length, mode === "draft" ? 1 : 3, "创建面板只允许 Esc 等明确关闭，详情浮层保持原行为");
+      for (const reason of ["outside-press", "focus-out", "escape-key"]) popover.props.onOpenChange(false, { reason, cancel() { cancelled++; } });
+      assert.equal(cancelled, 0);
+      assert.deepEqual(openChanges, [false, false, false], "已有任务浮层关闭行为保持");
     }
-  } finally {
-    if (previousNode) Object.defineProperty(globalThis, "Node", previousNode);
-    else Reflect.deleteProperty(globalThis, "Node");
   }
 });
 

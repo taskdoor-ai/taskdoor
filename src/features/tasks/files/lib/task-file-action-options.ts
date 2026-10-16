@@ -3,10 +3,7 @@ import { getDescendantIds, sortTaskFileNodes } from "@/features/tasks/files/lib/
 
 export type TaskFileMoveDestination = { id: string | null; depth: number; node?: TaskFileNode };
 
-export function getTaskFileMoveDestinations(nodes: TaskFileNode[], nodeId: string): TaskFileMoveDestination[] {
-  const node = nodes.find((item) => item.id === nodeId && !item.archived);
-  if (!node) return [];
-  const excluded = new Set([node.id, ...getDescendantIds(nodes, node.id)]);
+export function getTaskFileFolderDestinations(nodes: TaskFileNode[], excluded = new Set<string>()): TaskFileMoveDestination[] {
   const folders = nodes.filter((item) => item.kind === "folder" && !item.archived && !excluded.has(item.id));
   const destinations: TaskFileMoveDestination[] = [{ id: null, depth: 0 }];
   const collect = (parentId: string | null, depth: number) => {
@@ -17,6 +14,12 @@ export function getTaskFileMoveDestinations(nodes: TaskFileNode[], nodeId: strin
   };
   collect(null, 1);
   return destinations;
+}
+
+export function getTaskFileMoveDestinations(nodes: TaskFileNode[], nodeId: string): TaskFileMoveDestination[] {
+  const node = nodes.find((item) => item.id === nodeId && !item.archived);
+  if (!node) return [];
+  return getTaskFileFolderDestinations(nodes, new Set([node.id, ...getDescendantIds(nodes, node.id)]));
 }
 
 export function canMoveTaskFileTo(nodes: TaskFileNode[], nodeId: string, parentId: string | null): boolean {

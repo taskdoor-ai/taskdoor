@@ -1,0 +1,26 @@
+{
+  "closedInitially": true,
+  "noScreenshotVisible": true,
+  "title": "1. 各阶段都有独立退出条件",
+  "mouseAndTextSelection": true,
+  "keyboardToggle": true,
+  "mobileNoOverflow": true,
+  "english": true,
+  "errors": [],
+  "date": "2026-10-15",
+  "changeId": "PRD-0210",
+  "scope": "主工作区当前标注文件生成器真实输出，在空sandbox iframe内验证；源截图由隔离浏览器对受控段落真实采集。",
+  "checks": {
+    "focusedTests": "17/17：标注文件、修订包、网站；新增默认折叠／无图回退／完整原文／短标题／中英文行为检查先失败后通过",
+    "appTypecheck": "passed",
+    "structureCheck": "passed",
+    "prdBuild": "passed, 25 modules",
+    "prdIntegrity": "PRD-0210唯一、模块索引与截图JSON有效、当前图文件存在、相关格式检查通过"
+  },
+  "limits": [
+    "未发布讨论或调用外部AI；只验证材料内原文保留，不声称AI已读取",
+    "复制验证为可选择完整原文，未申请系统剪贴板权限；用户可按正常方式复制",
+    "旧附件为固定快照，不更新；本轮未新增自动保存、全文来源展开或浏览器扩展",
+    "未运行全量测试或双重审查"
+  ]
+}

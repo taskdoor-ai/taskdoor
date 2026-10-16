@@ -133,7 +133,7 @@ export function MentionComposer({ actionLabel = "发送", autoFocus = false, com
           if (open) rememberSelection();
           returnFocusRef.current = details?.reason !== "outside-press" && details?.reason !== "focus-out";
           setPickerOpen(open);
-        }} open={pickerOpen} triggerVariant="mention" value="" />
+        }} open={pickerOpen} popupAnchor={composerRef} triggerVariant="mention" value="" />
       </div>
       <span>{onCancel && <button className="mention-composer-cancel" onClick={onCancel} type="button">取消</button>}<button aria-label={actionLabel} className="mention-composer-submit" disabled={!plainText} onClick={() => submit()} type="button"><span>{actionLabel}</span><Send size={13} /></button></span>
     </footer>

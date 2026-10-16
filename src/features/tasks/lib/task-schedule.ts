@@ -25,12 +25,12 @@ export function taskCreationDay(now = new Date(), timeZone = LEGACY_TEAM_TIME_ZO
   return day;
 }
 
-export function taskScheduleError(end?: string | null, createdAt?: string | null, start?: string | null, timeZone = LEGACY_TEAM_TIME_ZONE): string | null {
+export function taskScheduleError(end?: string | null, createdAt?: string | null, start?: string | null, timeZone = LEGACY_TEAM_TIME_ZONE, locale = "zh-CN"): string | null {
   if (!isValidTimeZone(timeZone)) return "团队时区无效，日期未保存。输入已保留。";
   if (!end) return null;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(end) || !taskCalendarDate(end)) return '截止日期无效，请选择有效日期。';
   const created = taskCalendarDate(createdAt, timeZone);
-  if (created && end < created) return `截止时间不能早于创建日期（${formatDisplayDate(created, { year: "always" }) ?? "—"}）。`;
+  if (created && end < created) return `截止时间不能早于创建日期（${formatDisplayDate(created, { locale, year: "always" }) ?? "—"}）。`;
   const plannedStart = taskCalendarDate(start, timeZone);
   if (plannedStart && end < plannedStart) return '截止时间不能早于计划开始日期。';
   return null;

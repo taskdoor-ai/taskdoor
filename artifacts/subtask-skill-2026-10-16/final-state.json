@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-16T10:01:44.507Z",
+  "changes": [
+    {
+      "caseId": "case-subtask-v1-remaining-visual",
+      "previousVersion": 1,
+      "newVersion": 2,
+      "change": "按正式职责语义核对，不固定首个成员ID"
+    },
+    {
+      "caseId": "case-subtask-v1-reply-and-version",
+      "previousVersion": 1,
+      "newVersion": 2,
+      "change": "按正式职责语义核对，不固定首个成员ID"
+    }
+  ],
+  "historicalRunsVerifiedUnchanged": 8,
+  "beforeHashes": {
+    "e1dcb45f-a3a8-4b7e-bd52-55778f016891": "de8aafeafb5b1a02c6c3d781ad101b6ebae0d82f4f806ea09ca72345a5807d33",
+    "daa532f1-223d-4b4a-8e51-3309f8ed46b3": "aad2f49b88fe6591660e03f85de6d71df24b7b87c6dd0da938601109a4cc09c6",
+    "f96f3e1d-499f-46d3-82c8-0c7f60d5ca58": "8fa675f26d642d3b3393b5e634b5bf8e9755a37e3ea1565a421fa08126b1ec54",
+    "260ef7b9-a87d-47cf-98f2-f7c65ceb16b8": "b27462a529c4972b7abc5e927fd1f392abe8d960857e022c2f3c6c469c3f1c6b",
+    "7332c0d4-5327-4917-9b40-063704367f8b": "973c8a691edfd3d14150af3cca5f865abc3c314bada307c21f2b535726f1c3ee",
+    "c3b86ced-d144-4da0-8ac8-5e60e7d1771a": "1627e4cd1307c2a1850a3e271e8cac8400e8e1ea547ce24efb4e0d10c99e0e59",
+    "d41eadcb-cef7-4dab-93a6-afd8f5aa79c4": "eaa281365de8e72826831e72985c08881c4b724e1809e0c0756cb2d126b93a5f",
+    "76b84d37-45c6-4682-8859-697aea11ac0e": "060b2d970c82d0bc96a55888349bc7025f5b791dd4d51640cd0da78ff5ecdf4d"
+  },
+  "creationDefaultUnchanged": "5b9c72be-3d25-4e56-99cf-677eb3a63738",
+  "subtaskDefault": "b313f0ae-c305-4591-b0b4-b118c98c4394",
+  "noManualReviewWritten": true
+}

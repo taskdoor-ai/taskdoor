@@ -206,7 +206,6 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
           </div>
         </div>
       </div>
-      <Button aria-label={t('list.new')} className="task-workspace-new-task task-workspace-create-button" onClick={onCreateTask} size={controlSize === "touch" ? "icon-touch" : "icon-sm"} title={t('list.new')} type="button" variant="outline"><Plus aria-hidden="true" strokeWidth={1.8} /></Button>
     </div>
     <div className="task-list-results-toolbar">
       <div aria-label={t('list.quickFilters')} className="task-list-quick-filters" role="group">

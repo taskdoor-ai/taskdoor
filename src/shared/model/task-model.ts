@@ -72,7 +72,13 @@ type TaskStatus = TaskNode["status"];
 export type TaskDetailId = "fragrance-creator-wrapup" | "fragrance-creator-business" | "fragrance-content" | "fragrance-live" | "fragrance-product" | "fragrance-growth" | "fragrance-data" | "fragrance-compliance" | "fragrance-final-decision";
 
 export type TaskFileNode = {
+  /** Discussion material retained with messages, outside the task file tree. */
+  attachmentOnly?: true;
+  /** An untouched retired demo source stays readable from its historical references. */
+  retiredBuiltin?: true;
   blobId?: string;
+  /** A built-in attachment bundle may be added once to an older local snapshot. */
+  builtinPackId?: string;
   sizeBytes?: number;
   originalName?: string;
   archived?: boolean;

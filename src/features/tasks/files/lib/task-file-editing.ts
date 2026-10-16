@@ -53,7 +53,7 @@ function parseContent(value: unknown): TaskFileContent {
 export function getTaskFileContent(file: TaskFileNode): TaskFileContent | null {
   if (file.kind !== "file") return null;
   const kind = getPreviewKind(file.name, file.mimeType);
-  if (kind === "image" || kind === "unknown") return null;
+  if (kind === "image" || kind === "presentation" || kind === "unknown") return null;
   if (kind === "pdf") return file.previewData?.kind === "pdf" ? parseContent(file.previewData) : null;
   if (kind === "table") return file.previewData?.kind === "table" ? parseContent(file.previewData) : null;
   if (file.blobId && file.content == null && !(file.previewData && "text" in file.previewData)) return null;

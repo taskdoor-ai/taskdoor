@@ -38,7 +38,7 @@ test("负责人和参与人空状态只显示统一圆形图标，不展示暂�
   assert.doesNotMatch(owner + participants, /暂不分配|暂未分配|border-dashed/);
 });
 
-test("负责人和参与人共用暂不分配与邀请区域，多选清空仍遵守最少人数限制", () => {
+test("负责人和参与人共用暂不分配操作，多选清空仍遵守最少人数限制", () => {
   const picker = read("features/members/components/PersonPicker.tsx");
   const selector = read("features/members/components/MemberSelector.tsx");
 
@@ -64,16 +64,18 @@ test("创建方案保留未分配提示，人员列表与确认区域复用邀�
   assert.doesNotMatch(app, /openPersonalCenter\("members", returnFocus\)/);
 });
 
-test("搜索下方的暂不分配选项使用单行邀请说明和立即邀请入口", () => {
+test("搜索下方仅保留暂不分配操作，邀请成员独立放在列表下方", () => {
   const picker = read("features/members/components/PersonPicker.tsx");
   const detail = read("features/tasks/components/TaskDetail.tsx");
 
-  assert.match(picker, /unassignedLabel = "暂不分配"/);
-  assert.match(picker, /unassignedDescription = "没找到合适的人，邀请更多同事进来协作"/);
+  assert.match(picker, /unassignedLabel = d\('unassigned'\)/);
+  assert.doesNotMatch(picker, /person-picker-invite-row|<small title=\{unassignedDescription\}/);
   assert.match(picker, /person-picker-unassigned/);
-  assert.match(picker, />立即邀请<\/button>/);
+  assert.match(picker, /!inviteCandidate && !isMentionTrigger && allowInvitations && onInviteMembers && <div className="person-picker-footer"/);
+  assert.match(picker, /person-picker-invite-action[^\n]*d\('inviteMembers'\)/);
   assert.ok(picker.indexOf("person-picker-search") < picker.indexOf("person-picker-unassigned"));
   assert.ok(picker.indexOf("person-picker-unassigned") < picker.indexOf("<Combobox.List"));
+  assert.ok(picker.indexOf("</Combobox.List>") < picker.indexOf("person-picker-footer"));
   assert.doesNotMatch(picker, /邀请链接|邀请更多同事参与进来|邀请更多同事加入团队/);
   assert.doesNotMatch(detail, /提议：/);
   assert.doesNotMatch(detail, /task-owner-invite-action/);
@@ -142,13 +144,10 @@ test("人员弹窗只为未选择成员展示推荐度星芒，选中后只保�
   assert.doesNotMatch(picker, /isSelf && selfOptionLabel === "我自己处理" \? `\$\{person\.name\} · \$\{person\.role\}` : person\.role/);
 });
 
-test("人员弹窗加宽并让邀请说明与操作保持一行", () => {
+test("人员弹窗保持320px紧凑宽度", () => {
   const tokens = read("shared/styles/tokens.css");
-  const styles = read("shared/styles/pm-global.css");
 
-  assert.match(tokens, /--ad-person-picker-width:\s*420px/);
-  assert.match(styles, /\.person-picker-invite-row small\s*\{[^}]*white-space:\s*nowrap/s);
-  assert.match(styles, /\.person-picker-invite-row\s*\{[^}]*align-items:\s*baseline/s);
+  assert.match(tokens, /--ad-person-picker-width:\s*320px/);
 });
 
 test("人员推荐度使用同一紫色语义的深、中、浅三档", async () => {

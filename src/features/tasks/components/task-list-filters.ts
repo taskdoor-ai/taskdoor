@@ -82,8 +82,8 @@ export function getTaskTagFilters(filters: TaskListFilters): string[] {
 
 export function taskDateFilterLabel(filter: TaskListDateFilter): string {
   if (filter.preset !== "custom") return taskDateFilterLabels[filter.preset];
-  if (filter.from && filter.to) return `${formatDisplayDate(filter.from) ?? "—"} 至 ${formatDisplayDate(filter.to) ?? "—"}`;
-  return filter.from ? `${formatDisplayDate(filter.from) ?? "—"} 起` : `${filter.to ? formatDisplayDate(filter.to) ?? "—" : "—"} 及以前`;
+  if (filter.from && filter.to) return `${formatDisplayDate(filter.from, { locale: "zh-CN" }) ?? "—"} 至 ${formatDisplayDate(filter.to, { locale: "zh-CN" }) ?? "—"}`;
+  return filter.from ? `${formatDisplayDate(filter.from, { locale: "zh-CN" }) ?? "—"} 起` : `${filter.to ? formatDisplayDate(filter.to, { locale: "zh-CN" }) ?? "—" : "—"} 及以前`;
 }
 
 function matchesPeople(values: string[], selections: string[] = [], includeEmpty = false, currentUserSelection?: string): boolean {

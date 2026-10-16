@@ -1,0 +1,63 @@
+{
+  "source": "artifacts/okr-evaluation-2026-10-16/retest-v17.runs.json",
+  "checkedAt": "2026-10-16T09:05:06.001Z",
+  "passed": 11,
+  "total": 11,
+  "checks": [
+    {
+      "caseId": "creation-outcome-v1-no-metrics-delivery",
+      "label": "结构完成、无真实写入、无人工通过回填",
+      "status": "passed"
+    },
+    {
+      "caseId": "creation-outcome-v1-finite-suggestion",
+      "label": "结构完成、无真实写入、无人工通过回填",
+      "status": "passed"
+    },
+    {
+      "caseId": "creation-outcome-v1-ongoing",
+      "label": "结构完成、无真实写入、无人工通过回填",
+      "status": "passed"
+    },
+    {
+      "caseId": "creation-outcome-v1-external-wait",
+      "label": "结构完成、无真实写入、无人工通过回填",
+      "status": "passed"
+    },
+    {
+      "caseId": "creation-outcome-v1-clear-then-edit",
+      "label": "结构完成、无真实写入、无人工通过回填",
+      "status": "passed"
+    },
+    {
+      "caseId": "workflow-focus-v1-lab-content-criteria",
+      "label": "结构完成、无真实写入、无人工通过回填",
+      "status": "passed"
+    },
+    {
+      "caseId": "creation-outcome-v1-no-metrics-delivery",
+      "label": "有限任务有带假设的初始日期建议",
+      "status": "passed"
+    },
+    {
+      "caseId": "creation-outcome-v1-finite-suggestion",
+      "label": "有限任务有带假设的初始日期建议",
+      "status": "passed"
+    },
+    {
+      "caseId": "creation-outcome-v1-ongoing",
+      "label": "持续或未知关键等待保持空日期",
+      "status": "passed"
+    },
+    {
+      "caseId": "creation-outcome-v1-external-wait",
+      "label": "持续或未知关键等待保持空日期",
+      "status": "passed"
+    },
+    {
+      "caseId": "creation-outcome-v1-clear-then-edit",
+      "label": "人工清空后改名仍留空且不改其他节点字段",
+      "status": "passed"
+    }
+  ]
+}

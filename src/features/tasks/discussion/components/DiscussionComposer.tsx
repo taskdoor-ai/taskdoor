@@ -12,15 +12,18 @@ import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getNodeBy
 import { FolderOpen, LoaderCircle, Paperclip, RotateCcw, Send, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type DragEvent, type ReactNode } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import type { DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
+import { getTaskFiles, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import { DISCUSSION_UPLOAD_MAX_FILES, isDiscussionImage, prepareDiscussionUpload, readDiscussionBlob } from "@/features/tasks/files/lib/discussion-uploads";
+import { TASK_FILE_UPLOAD_ACCEPT, validateTaskFileUploads } from "@/features/tasks/files/lib/task-file-capabilities";
 import { usePersonOptions } from "@/shared/ui/PersonDirectory";
 import { PersonPicker, type PersonOption } from "@/features/members/components/PersonPicker";
 import { Button } from "@/shared/ui/button";
 import { FileCard, resolveFileCardFormat } from "@/shared/ui/file-card-collections";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
+import { DiscussionAttachmentPreview } from "@/features/tasks/discussion/components/DiscussionAttachmentPreview";
 import { DiscussionFileMenu } from "@/features/tasks/discussion/components/DiscussionFileMenu";
 import { $createMentionNode, $isMentionNode, MentionNode } from "@/features/tasks/discussion/components/mention-node";
+import { mergeDiscussionDraft, type DiscussionDraftInsertion } from "@/features/tasks/discussion/lib/discussion-draft-insertion";
 
 export type DiscussionComposerProps = {
   actionLabel?: string;
@@ -35,11 +38,12 @@ export type DiscussionComposerProps = {
   placeholder?: string;
   draftKey?: string;
   initialValue?: DiscussionDraft;
+  draftInsertion?: DiscussionDraftInsertion;
   disabled?: boolean;
 };
 
 type DraftAttachment = { id: string; name: string; status: "uploading" | "ready" | "failed"; node?: TaskFileNode; file?: File; error?: string };
-type ComposerSession = { draft: DiscussionDraft; editorState?: SerializedEditorState; attachments: DraftAttachment[] };
+type ComposerSession = { draft: DiscussionDraft; editorState?: SerializedEditorState; attachments: DraftAttachment[]; appliedInsertionIds: string[]; unrenderedMentions: string[] };
 // Session memory preserves both Lexical mention identities and unsubmitted File objects.
 const draftSessions = new Map<string, ComposerSession>();
 const draftSessionListeners = new Map<string, Set<(session: ComposerSession) => void>>();
@@ -47,7 +51,19 @@ const emptyDraft = (): DiscussionDraft => ({ body: "", mentions: [], attachments
 
 function createSession(initialValue?: DiscussionDraft): ComposerSession {
   const draft = initialValue ?? emptyDraft();
-  return { draft, attachments: draft.attachments.map(node => ({ id: node.id, name: node.name, node, status: "ready" })) };
+  return { draft, attachments: draft.attachments.map(node => ({ id: node.id, name: node.name, node, status: "ready" })), appliedInsertionIds: [], unrenderedMentions: [] };
+}
+
+const DRAFT_INSERTION_TAG = "taskdoor-discussion-draft-insertion";
+
+function DraftInsertionPlugin({ insertion, blocked, onInsert }: { insertion?: DiscussionDraftInsertion; blocked: boolean; onInsert: (editor: LexicalEditor, insertion: DiscussionDraftInsertion) => void }) {
+  const [editor] = useLexicalComposerContext();
+  const insertRef = useRef(onInsert);
+  insertRef.current = onInsert;
+  useEffect(() => {
+    if (insertion && !blocked) insertRef.current(editor, insertion);
+  }, [editor, insertion?.id, blocked]);
+  return null;
 }
 
 function $readEditorDraft(): Pick<DiscussionDraft, "body" | "mentions"> {
@@ -149,10 +165,11 @@ export function DiscussionComposer(props: DiscussionComposerProps) {
   return <ComposerSessionView key={props.draftKey ?? "unkeyed-discussion"} {...props} />;
 }
 
-function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onSubmit, people, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, disabled = false }: DiscussionComposerProps) {
+function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onSubmit, people, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, draftInsertion, disabled = false }: DiscussionComposerProps) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const members = usePersonOptions(people);
+  const [attachmentPreview, setAttachmentPreview] = useState<TaskFileNode | null>(null);
   const [session, setSession] = useState<ComposerSession>(() => (draftKey && draftSessions.get(draftKey)) || createSession(initialValue));
   const sessionRef = useRef(session);
   const mountedRef = useRef(true);
@@ -165,6 +182,7 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
   const attachmentSelectedRef = useRef(false);
   const submittingRef = useRef(false);
   const composingRef = useRef(false);
+  const composerRef = useRef<HTMLDivElement>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -178,7 +196,7 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
     next.draft = { ...next.draft, attachments: next.attachments.flatMap(item => item.status === "ready" && item.node ? [item.node] : []) };
     sessionRef.current = next;
     if (draftKey) {
-      if (next.draft.body || next.draft.quote || next.attachments.length) draftSessions.set(draftKey, next);
+      if (next.draft.body || next.draft.quote || next.attachments.length || next.appliedInsertionIds.length) draftSessions.set(draftKey, next);
       else draftSessions.delete(draftKey);
       draftSessionListeners.get(draftKey)?.forEach(listener => listener(next));
     }
@@ -244,10 +262,33 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
       selectionRef.current = spacer.selectEnd().clone();
     }, { discrete: true });
   };
-  const onEditorChange = (editorState: EditorState) => {
+  const onEditorChange = (editorState: EditorState, _editor?: LexicalEditor, tags?: Set<string>) => {
+    if (tags?.has(DRAFT_INSERTION_TAG)) return;
     const value = editorState.read($readEditorDraft);
-    updateSession(current => ({ ...current, editorState: editorState.toJSON(), draft: { ...current.draft, ...value } }));
+    updateSession(current => ({ ...current, editorState: editorState.toJSON(), draft: { ...current.draft, ...value, mentions: [...new Set([...value.mentions, ...current.unrenderedMentions])] } }));
     if (error) setError("");
+  };
+  const insertDraft = (editor: LexicalEditor, insertion: DiscussionDraftInsertion) => {
+    const current = (draftKey && draftSessions.get(draftKey)) || sessionRef.current;
+    if (current.appliedInsertionIds.includes(insertion.id)) return;
+    const value = editor.getEditorState().read($readEditorDraft);
+    const merged = mergeDiscussionDraft({ ...current.draft, ...value, mentions: [...new Set([...current.draft.mentions, ...value.mentions, ...current.unrenderedMentions])] }, insertion.draft);
+    let unrenderedMentions: string[] = [];
+    editor.update(() => {
+      $initializeDraft(merged, members);
+      $getRoot().selectEnd();
+      const represented = new Set($readEditorDraft().mentions);
+      unrenderedMentions = merged.mentions.filter(id => !represented.has(id));
+    }, { discrete: true, tag: DRAFT_INSERTION_TAG });
+    const attachmentIds = new Set(current.attachments.map(item => item.node?.id ?? item.id));
+    const additions: DraftAttachment[] = merged.attachments.filter(node => !attachmentIds.has(node.id)).map(node => ({ id: node.id, name: node.name, node, status: "ready" }));
+    updateSession(latest => ({ ...latest, draft: merged, editorState: undefined, attachments: [...latest.attachments, ...additions], appliedInsertionIds: [...latest.appliedInsertionIds, insertion.id], unrenderedMentions }));
+    selectionRef.current = null;
+    pickerOpenRef.current = false;
+    setPickerOpen(false);
+    setError("");
+    editor.dispatchCommand(CLEAR_HISTORY_COMMAND, undefined);
+    editor.focus(() => editor.getRootElement()?.focus({ preventScroll: true }));
   };
 
   const uploadAttachment = async (entry: DraftAttachment) => {
@@ -268,6 +309,8 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
     if (disabled || submittingRef.current || !incoming.length) return;
     const available = DISCUSSION_UPLOAD_MAX_FILES - sessionRef.current.attachments.length;
     if (incoming.length > available) { setError(ui("每条评论最多添加 {0} 个附件，请减少选择后重试。", {0: DISCUSSION_UPLOAD_MAX_FILES})); return; }
+    try { validateTaskFileUploads(incoming); }
+    catch (failure) { setError(failure instanceof Error ? failure.message : d('attachmentSaveFailed')); return; }
     const entries: DraftAttachment[] = incoming.map(file => ({ id: `draft-upload-${globalThis.crypto.randomUUID()}`, name: file.name, file, status: "uploading" }));
     setError("");
     updateSession(current => ({ ...current, attachments: [...current.attachments, ...entries] }));
@@ -287,7 +330,8 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
     const editor = editorRef.current;
     if (disabled || submittingRef.current || composingRef.current || editor?.isComposing()) return;
     const current = sessionRef.current;
-    const draft = { ...current.draft, ...(editor?.getEditorState().read($readEditorDraft) ?? {}), attachments: [...current.draft.attachments] };
+    const value = editor?.getEditorState().read($readEditorDraft);
+    const draft = { ...current.draft, ...value, mentions: [...new Set([...(value?.mentions ?? current.draft.mentions), ...current.unrenderedMentions])], attachments: [...current.draft.attachments] };
     if (!draft.body.trim() && !draft.attachments.length) return;
     if (current.attachments.some(item => item.status !== "ready")) { setError(d('waitAttachments')); return; }
     submittingRef.current = true;
@@ -296,11 +340,10 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
     setError("");
     try {
       await onSubmit({ ...draft, body: draft.body.trim(), mentions: [...draft.mentions], ...(allowQuote ? {} : { quote: undefined }) });
-      updateSession(() => createSession());
+      updateSession(latest => ({ ...createSession(), appliedInsertionIds: latest.appliedInsertionIds }));
       selectionRef.current = null;
       editor?.update(() => { $getRoot().clear().append($createParagraphNode()); });
       editor?.dispatchCommand(CLEAR_HISTORY_COMMAND, undefined);
-      if (draftKey) draftSessions.delete(draftKey);
     } catch (caught) {
       if (mountedRef.current) setError(caught instanceof Error ? caught.message : "评论发布失败，草稿已保留，请重试。");
     } finally {
@@ -313,7 +356,7 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
   const canSubmit = !unavailable && Boolean(session.draft.body.trim() || session.draft.attachments.length) && session.attachments.every(item => item.status === "ready");
   const hasFileDrag = (event: DragEvent) => Array.from(event.dataTransfer.types).includes("Files");
 
-  return <div aria-busy={submitting || undefined} className={`discussion-composer${compact ? " compact" : ""}${dragging ? " is-dragging" : ""}`} onPointerDownCapture={rememberSelection} onCompositionStart={() => { composingRef.current = true; }} onCompositionEnd={() => { composingRef.current = false; }} onDragEnter={event => { if (!hasFileDrag(event) || unavailable) return; event.preventDefault(); dragDepth.current++; setDragging(true); }} onDragOver={event => { if (hasFileDrag(event)) { event.preventDefault(); event.dataTransfer.dropEffect = unavailable ? "none" : "copy"; } }} onDragLeave={event => { if (!hasFileDrag(event)) return; dragDepth.current = Math.max(0, dragDepth.current - 1); if (!dragDepth.current) setDragging(false); }} onDrop={event => { if (!hasFileDrag(event)) return; event.preventDefault(); dragDepth.current = 0; setDragging(false); addUploads(Array.from(event.dataTransfer.files)); }}>
+  return <div aria-busy={submitting || undefined} className={`discussion-composer${compact ? " compact" : ""}${dragging ? " is-dragging" : ""}`} ref={composerRef} onPointerDownCapture={rememberSelection} onCompositionStart={() => { composingRef.current = true; }} onCompositionEnd={() => { composingRef.current = false; }} onDragEnter={event => { if (!hasFileDrag(event) || unavailable) return; event.preventDefault(); dragDepth.current++; setDragging(true); }} onDragOver={event => { if (hasFileDrag(event)) { event.preventDefault(); event.dataTransfer.dropEffect = unavailable ? "none" : "copy"; } }} onDragLeave={event => { if (!hasFileDrag(event)) return; dragDepth.current = Math.max(0, dragDepth.current - 1); if (!dragDepth.current) setDragging(false); }} onDrop={event => { if (!hasFileDrag(event)) return; event.preventDefault(); dragDepth.current = 0; setDragging(false); addUploads(Array.from(event.dataTransfer.files)); }}>
     {allowQuote && session.draft.quote && <div className="discussion-composer-quote"><span><strong>{d('quote')}{session.draft.quote.author}</strong><span>{session.draft.quote.text}</span></span><button aria-label={ui("移除引用")} disabled={unavailable} onClick={() => updateSession(current => ({ ...current, draft: { ...current.draft, quote: undefined } }))} type="button"><X aria-hidden="true" size={14} /></button></div>}
     <LexicalComposer initialConfig={initialConfig}>
       <div className="discussion-composer-editor">
@@ -321,6 +364,7 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
       </div>
       <HistoryPlugin />
       <OnChangePlugin ignoreSelectionChange onChange={onEditorChange} />
+      <DraftInsertionPlugin blocked={unavailable} insertion={draftInsertion} onInsert={insertDraft} />
       <EditorBridge disabled={unavailable} onEditor={editor => { editorRef.current = editor; }} onSelectionChange={selection => { if (!pickerOpenRef.current) selectionRef.current = selection; }} onSubmit={() => { void submit(); }} onTypedMention={onTypedMention} onUpload={addUploads} />
       {autoFocus && <AutoFocusPlugin />}
     </LexicalComposer>
@@ -333,12 +377,12 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
           {attachment.status === "failed" && <Button aria-label={ui("重试添加 {0}", {0: attachment.name})} className="discussion-composer-attachment-retry" disabled={unavailable} onClick={() => { void uploadAttachment(attachment); }} size="icon-xs" title={ui("重试")} type="button" variant="ghost"><RotateCcw aria-hidden="true" size={12} /></Button>}
           <Button aria-label={ui("移除附件 {0}", {0: attachment.name})} className="discussion-composer-attachment-remove" disabled={unavailable} onClick={() => removeAttachment(attachment.id)} size="icon-xs" title={d('removeAttachment')} type="button" variant="ghost"><X aria-hidden="true" size={12} /></Button>
         </>} />
-        <span className="discussion-composer-attachment-copy"><strong>{attachment.name}</strong>{attachment.status === "failed" && <small role="alert">{ui(attachment.error ?? "")}</small>}</span>
+        <span className="discussion-composer-attachment-copy">{attachment.status === "ready" && attachment.node ? <button aria-label={ui("查看附件 {0}", {0: attachment.name})} className="discussion-composer-attachment-name" onClick={() => setAttachmentPreview(attachment.node!)} type="button">{attachment.name}</button> : <strong>{attachment.name}</strong>}{attachment.status === "failed" && <small role="alert">{ui(attachment.error ?? "")}</small>}</span>
       </li>;
     })}</ul>}
     <footer className="discussion-composer-footer">
       <div className="discussion-composer-tools">
-        <PersonPicker ariaLabel={d('mention')} className="discussion-composer-person-trigger" disabled={unavailable} finalFocus={restoreEditorFocus} members={members} menuLabel={d('mention')} onChange={choosePerson} onOpenChange={(open, details) => { if (open) rememberSelection(); returnFocusRef.current = details?.reason !== "outside-press" && details?.reason !== "focus-out"; pickerOpenRef.current = open; setPickerOpen(open); }} open={pickerOpen} triggerVariant="mention" value="" />
+        <PersonPicker ariaLabel={d('mention')} className="discussion-composer-person-trigger" disabled={unavailable} finalFocus={restoreEditorFocus} members={members} menuLabel={d('mention')} onChange={choosePerson} onOpenChange={(open, details) => { if (open) rememberSelection(); returnFocusRef.current = details?.reason !== "outside-press" && details?.reason !== "focus-out"; pickerOpenRef.current = open; setPickerOpen(open); }} open={pickerOpen} popupAnchor={composerRef} triggerVariant="mention" value="" />
         <DropdownMenu onOpenChange={open => { if (open) attachmentSelectedRef.current = false; }}>
           <DropdownMenuTrigger aria-label={d('addAttachment')} className="discussion-composer-attachment-source" disabled={unavailable} ref={filePickerTriggerRef} title={d('addAttachment')} type="button"><Paperclip aria-hidden="true" size={16} /><span>{d('attachments')}</span></DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="discussion-composer-attachment-menu" finalFocus={() => { if (attachmentSelectedRef.current) { attachmentSelectedRef.current = false; returnFocusRef.current = true; return restoreEditorFocus(); } return filePickerTriggerRef.current; }} side="top">
@@ -346,15 +390,16 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
               <DropdownMenuItem onClick={() => uploadInputRef.current?.click()}><Paperclip aria-hidden="true" size={16} />{ui("上传本地文件")}</DropdownMenuItem>
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger className="px-3 py-2"><FolderOpen aria-hidden="true" size={16} />{ui("从文件列表选择")}</DropdownMenuSubTrigger>
-                <DropdownMenuSubContent aria-label={d('selectTaskFiles')} className="discussion-composer-file-menu"><DiscussionFileMenu files={files} onSelect={chooseExistingFile} selectedIds={new Set(session.attachments.flatMap(item => item.node ? [item.node.id] : []))} /></DropdownMenuSubContent>
+                <DropdownMenuSubContent aria-label={d('selectTaskFiles')} className="discussion-composer-file-menu"><DiscussionFileMenu files={getTaskFiles(files)} onSelect={chooseExistingFile} selectedIds={new Set(session.attachments.flatMap(item => item.node ? [item.node.id] : []))} /></DropdownMenuSubContent>
               </DropdownMenuSub>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <span className="discussion-composer-actions">{showShortcutHint && <span className="discussion-composer-hint" id={hintId}>Enter ↵ · ⌘/Ctrl+Enter {actionLabel}</span>}{onCancel && <button className="discussion-composer-cancel" disabled={unavailable} onClick={onCancel} type="button">{d('cancel')}</button>}<button aria-label={actionLabel} className="discussion-composer-submit" disabled={!canSubmit} onClick={() => { void submit(); }} type="button"><span>{submitting ? d('posting') : actionLabel}</span>{submitting ? <LoaderCircle aria-hidden="true" className="discussion-composer-spinner" size={14} /> : <Send aria-hidden="true" size={14} />}</button></span>
+      <span className="discussion-composer-actions">{showShortcutHint && <span className="discussion-composer-hint" id={hintId}>Enter ↵ · ⌘/Ctrl+Enter {actionLabel}</span>}{onCancel && <button className="discussion-composer-cancel" disabled={submitting} onClick={onCancel} type="button">{d('cancel')}</button>}<button aria-label={actionLabel} className="discussion-composer-submit" disabled={!canSubmit} onClick={() => { void submit(); }} type="button"><span>{submitting ? d('posting') : actionLabel}</span>{submitting ? <LoaderCircle aria-hidden="true" className="discussion-composer-spinner" size={14} /> : <Send aria-hidden="true" size={14} />}</button></span>
     </footer>
-    <input aria-label={d('uploadSelection')} hidden multiple onChange={event => { addUploads(Array.from(event.currentTarget.files ?? [])); event.currentTarget.value = ""; }} ref={uploadInputRef} type="file" />
+    <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={d('uploadSelection')} hidden multiple onChange={event => { addUploads(Array.from(event.currentTarget.files ?? [])); event.currentTarget.value = ""; }} ref={uploadInputRef} type="file" />
+    <DiscussionAttachmentPreview file={attachmentPreview} onClose={() => setAttachmentPreview(null)} />
     {error && <p className="discussion-composer-error" role="alert">{ui(error)}</p>}
   </div>;
 }

@@ -1,3 +1,4 @@
+import {caseGroupingProblem} from '../../src/test-lab/case-groups.ts';
 import {memberResponseSchema} from './member-response-schema.ts';
 import {analysisResponseSchema} from './analysis-response-schema.ts';
 import {buildPreviewInput,buildTaskPreviewResponseSchema} from './task-preview.ts';
@@ -18,6 +19,9 @@ import { evaluateStrictAnalysisRelations } from './strict-analysis-cases.ts';
 import { runSelectionSchema } from './schema.ts';
 import type { EvaluationEngine } from './evaluation-engine.ts';
 import { preflightWorkflow } from './workflows.ts';
+import {isSubtaskSuggestionsCase} from '../../src/test-lab/subtask-case.ts';
+import {buildSubtaskInput} from './subtask-suggestions.ts';
+import {generateSubtaskSuggestions} from './subtask-generation.ts';
 
 export function createRunner(store:LabStore,options:ModelOptions,modelCall:ModelCall=callModel,engine?:EvaluationEngine,judge?:{model:string;models?:string[];configured:boolean;review:(id:string)=>Promise<LabRun>},mcp?:McpConfig,mcpCall:typeof executeMcpEvaluation=executeMcpEvaluation){
   const queue:string[]=[];
@@ -27,8 +31,8 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
   let wake:(()=>void)|undefined;
   const judging=new Set<Promise<void>>();
   const generationSlots=createSlots(2),judgeSlots=createSlots(1);
-  if(store.get().runs.some(r=>r.status==='running'||r.status==='queued'))store.updateRuns(runs=>{for(const r of runs)if(r.status==='running'||r.status==='queued'){r.status='interrupted';r.finishedAt=new Date().toISOString();r.error='本地服务已重启，未自动重试；上游已发生的用量可能仍计费。';}});
-  if(store.get().runs.some(r=>r.judgeStatus==='running'))store.updateRuns(runs=>{for(const r of runs)if(r.judgeStatus==='running'){r.judgeStatus='failed';r.judgeError='服务已重启，判断中断；未自动重试。';}});
+  if(store.getRuns(r=>r.status==='running'||r.status==='queued').length)store.updateRuns(runs=>{for(const r of runs)if(r.status==='running'||r.status==='queued'){r.status='interrupted';r.finishedAt=new Date().toISOString();r.error='本地服务已重启，未自动重试；上游已发生的用量可能仍计费。';}});
+  if(store.getRuns(r=>r.judgeStatus==='running').length)store.updateRuns(runs=>{for(const r of runs)if(r.judgeStatus==='running'){r.judgeStatus='failed';r.judgeError='服务已重启，判断中断；未自动重试。';}});
   const get=(id:string)=>{const run=store.getRun(id);if(!run)throw new Error('运行记录不存在');return run;};
   const update=(id:string,fn:(r:LabRun)=>void)=>{store.updateRun(id,fn);};
   async function execute(id:string){
@@ -44,7 +48,20 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
         const skill=snapshots.get(id)![index];const started=Date.now();
         const result:LabStepResult={stepId:step.id,skillId:step.skillId,input:null,output:null,rawOutput:'',error:null,assertions:[],structure:'unknown',structureErrors:[],durationMs:0,usage:{inputTokens:null,outputTokens:null,totalTokens:null},skillVersionId:skill.versionId,skillVersionLabel:skill.versionLabel,skillHash:skill.hash,promptHash:'',skillSnapshot:skill.snapshot,before:structuredClone(sandbox),after:structuredClone(sandbox)};
         try{
-          if(skill.outputMode==='preview'){
+          if(skill.outputMode==='subtasks'){
+            if(run.selection?.executionMode!=='subtasks')throw Error('子任务 Skill 只能运行只读一层建议评测');
+            const input=buildSubtaskInput(run.teamSnapshot,run.caseSnapshot,step,`${id}:${step.id}`,step.usePreviousOutput?get(id).steps.at(-1)?.output:undefined);
+            result.input=input;result.promptHash=hash(skill.instructions+'\n'+JSON.stringify(input));
+            // The independent conditional schema is fully checked locally; use JSON mode
+            // until this protocol's if/allOf support is verified for upstream decoders.
+            const requestOptions={...options,model:run.model,outputSchema:undefined,...(/^deepseek[/-](?:deepseek-)?v4/i.test(run.model)?{reasoningEffort:options.previewReasoningEffort??'none' as const}:{})};
+            result.modelSettings={maxOutputTokens:requestOptions.maxOutputTokens,responseFormat:'json_object',...(requestOptions.reasoningEffort?{reasoningEffort:requestOptions.reasoningEffort}:{})};
+            const response=await generateSubtaskSuggestions(requestOptions,skill.instructions,input,skill.previewSchema,controller.signal,modelCall);
+            result.rawOutput=response.rawOutput;result.usage=response.usage;result.output=response.output;result.error=response.error;result.previewAttempts=response.attempts;result.structureErrors=response.structureErrors;
+            if(controller.signal.aborted)throw Error('运行已取消');
+            result.structure=result.error||result.structureErrors.length?'failed':'passed';
+            if(result.structure==='passed')result.assertions=evaluateAssertions(result.output,run.caseSnapshot.assertions.filter(assertion=>assertion.stepId===step.id));
+          }else if(skill.outputMode==='preview'){
             if(run.selection?.executionMode!=='preview')throw Error('任务方案 Skill 必须使用预览评测，不能直接创建任务');
             const input=buildPreviewInput(run.teamSnapshot,run.caseSnapshot,id,step,step.usePreviousOutput?get(id).steps.at(-1)?.output:undefined);
             result.input=input;result.promptHash=hash(skill.instructions+'\n'+JSON.stringify(input));
@@ -92,7 +109,7 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
     }catch(error){update(id,r=>{if(r.status==='interrupted')return;r.status=controller.signal.aborted?'cancelled':'failed';r.error=error instanceof Error?error.message:'运行异常';r.finishedAt=new Date().toISOString();});}
     finally{controllers.delete(id);snapshots.delete(id);releaseGeneration();}
     const completed=get(id);
-    if(completed.selection?.executionMode==='preview'&&completed.selection.judgeModel&&completed.status==='failed'){
+    if(['preview','subtasks'].includes(completed.selection?.executionMode??'')&&completed.selection?.judgeModel&&completed.status==='failed'){
       update(id,r=>{r.judgeStatus='skipped';r.judgeSkipReason='生成或结构检查未通过，未调用判断模型；具体原因见运行结论。';});
       return;
     }
@@ -156,8 +173,9 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
       if(store.getRuns(r=>r.status==='queued'||r.status==='running').length+caseIds.length*models.length*versionIds.length>capacity)throw new Error(`运行队列最多 ${capacity} 个用例与模型组合，请等待或取消已有运行`);
       engine?.check();
       const evaluatedAt=new Date().toISOString();
-      const cases=versionIds.flatMap(versionId=>caseIds.map(id=>{const c=state.cases.find(c=>c.id===id);if(!c||c.archived||!c.enabled)throw new Error('用例不存在、已归档或待审核启用');const libraryTeam=state.teams.find(t=>t.id===c.teamId);const team=c.dataSnapshot??libraryTeam;if(!libraryTeam||libraryTeam.archived||!team||team.archived)throw new Error('用例团队不存在或已归档');if(selected.skillId&&(!c.steps.length||c.steps.some(s=>s.skillId!==selected.skillId)))throw new Error('用例与所选 Skill 不匹配，请选择该 Skill 对应的测试用例');const sourceCase=selected.executionMode==='preview'?previewCaseForEvaluation(c):c;const executionCase={...sourceCase,steps:c.steps.map(s=>({...s,...(selected.skillId?{skillVersionId:versionId}:{}),evaluatedAt:s.evaluatedAt||evaluatedAt})),actorId:selected.actorId||c.actorId};const view=buildView(team,executionCase.actorId);if(c.steps.some(s=>s.taskId&&!view.team.tasks.some(t=>t.id===s.taskId)))throw new Error('当前人员无权查看用例目标任务');return {c:executionCase,team};}));
+      const cases=versionIds.flatMap(versionId=>caseIds.map(id=>{const c=state.cases.find(c=>c.id===id);if(!c||c.archived||!c.enabled)throw new Error('用例不存在、已归档或待审核启用');const groupingProblem=caseGroupingProblem(c);if(groupingProblem)throw new Error('用例需先分组：'+groupingProblem);const libraryTeam=state.teams.find(t=>t.id===c.teamId);const team=c.dataSnapshot??libraryTeam;if(!libraryTeam||libraryTeam.archived||!team||team.archived)throw new Error('用例团队不存在或已归档');if(selected.skillId&&(!c.steps.length||c.steps.some(s=>s.skillId!==selected.skillId)))throw new Error('用例与所选 Skill 不匹配，请选择该 Skill 对应的测试用例');const sourceCase=selected.executionMode==='preview'?previewCaseForEvaluation(c):c;const executionCase={...sourceCase,steps:c.steps.map(s=>({...s,...(selected.skillId?{skillVersionId:versionId}:{}),evaluatedAt:s.evaluatedAt||evaluatedAt})),actorId:selected.actorId||c.actorId};const view=buildView(team,executionCase.actorId);if(c.steps.some(s=>s.taskId&&!view.team.tasks.some(t=>t.id===s.taskId)))throw new Error('当前人员无权查看用例目标任务');return {c:executionCase,team};}));
       if(selected.executionMode==='preview'&&cases.some(({c})=>!isTaskPreviewCase(c)))throw Error('方案评测只支持任务需求及方案修改，不执行真实任务事件或旧协议断言');
+      if(selected.executionMode==='subtasks'&&cases.some(({c})=>!isSubtaskSuggestionsCase(c)))throw Error('子任务评测必须选择已有任务，只读取当前上下文，不执行事件或真实写入');
       if(selected.executionMode==='mcp'&&cases.some(({c})=>c.steps.length!==1||c.steps.some(s=>s.skillId!=='agentdoor-task-planner'||s.taskId||s.events.length||s.usePreviousOutput)||c.assertions.length||(c.verification?.fixtureChecks.length??0)>0||c.workload||c.contextMode))throw Error('真实 MCP 评测请使用单步骤任务创建用例：不引用沙箱任务、事件、负荷、前序输出或 JSON 路径断言；验收条件按真实回执填写');
       for(const {c,team} of cases)for(const rule of c.verification?.fixtureChecks??[]){
         const collection=rule.subject==='task'?team.tasks:rule.subject==='member'?team.members:team.evidence;
@@ -167,6 +185,7 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
       if(selected.executionMode==='mcp')for(const {c,team} of cases)mcpConfigForCase(mcp!,team,c);
       const frozen=cases.map(({c})=>c.steps.map(s=>resolveSkill(state,s.skillId,s.skillVersionId)));
       if(frozen.flat().some(skill=>(skill.outputMode==='preview')!==(selected.executionMode==='preview')))throw Error('所选 Skill 版本与评测方式不一致；任务方案预览请选择 v11 或之后的预览版本，旧版本不能直接用于预览');
+      if(frozen.flat().some(skill=>(skill.outputMode==='subtasks')!==(selected.executionMode==='subtasks')))throw Error('子任务拆解必须选择独立的一层建议 Skill 与只读评测方式');
       if(selected.executionMode==='mcp'&&cases.some(({c})=>c.previewCriteriaVersion===1))throw Error('这些用例验证任务方案，请使用预览评测，不执行 MCP 创建');
       const batchId=randomUUID();const runs:LabRun[]=models.flatMap(model=>cases.map(({c,team})=>({id:randomUUID(),batchId,requestId,caseId:c.id,caseName:c.name,actorId:c.actorId,teamId:c.teamId,status:'queued',createdAt:new Date().toISOString(),startedAt:null,finishedAt:null,model,skillVersionId:c.steps[0]?.skillVersionId??undefined,skillVersionNumber:state.skillVersions?.find(v=>v.id===c.steps[0]?.skillVersionId)?.versionNumber,selection:selected,endpoint:modelEndpoint({...options,model}),caseSnapshot:structuredClone(c),teamSnapshot:structuredClone(team),steps:[],error:null,review:null})));
       store.appendRuns(runs);

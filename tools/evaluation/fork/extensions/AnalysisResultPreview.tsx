@@ -1,4 +1,5 @@
 import PeopleResultPreview from './PeopleResultPreview';
+import SubtaskSuggestionsPreview from './SubtaskSuggestionsPreview';
 import AnalysisWorkloadPreview from './AnalysisWorkloadPreview';
 import type {LabRun} from '@taskdoor/types';
 import AnalysisCaseData from './AnalysisCaseData';
@@ -8,6 +9,7 @@ const list=(v:unknown):any[]=>Array.isArray(v)?v:[];
 const pct=(v:unknown)=>formatActualValue(v,{unit:'percent'});
 const text=(v:unknown)=>typeof v==='string'?v:'';
 export default function AnalysisResultPreview({run}:{run:LabRun}){
+ if(run.steps.some(step=>step.skillId==='taskdoor-decompose-task'))return <SubtaskSuggestionsPreview run={run}/>;
  const steps=run.steps.filter(s=>s.skillId==='agentdoor-task-status-analyzer');if(!steps.length)return <PeopleResultPreview run={run}/>;
  return <details className="analysis-result-preview" open><summary>查看 AI 分析效果 · {steps.length} 轮</summary><div className="analysis-preview-body"><h3>分析前的任务</h3><AnalysisCaseData item={{...run.caseSnapshot,dataSnapshot:run.teamSnapshot}} team={run.teamSnapshot}/><details><summary>展开执行前的参考分析与证据</summary><CaseAcceptance item={run.caseSnapshot}/></details>{steps.map((step,index)=>{
  const output=step.output as any;const result=output?.result;

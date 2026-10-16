@@ -7,14 +7,14 @@ import { getTaskContentIndicators } from "../src/features/tasks/lib/task-content
 const message = (id: string, patch: Partial<CollaborationMessage> = {}): CollaborationMessage => ({ id, author: "成员", type: "member-post", message: "讨论内容", time: "时间未知", ...patch });
 const file = (id: string, patch: Partial<TaskFileNode> = {}): TaskFileNode => ({ id, name: `${id}.md`, kind: "file", parentId: null, updatedAt: "2026-10-13T00:00:00Z", ...patch });
 
-test("主讨论与文件累计数排除文件讨论、系统活动、删除消息、目录和归档文件", () => {
+test("统一讨论累计数包含历史文件消息，排除系统活动与删除消息，文件仍排除目录及归档", () => {
   const result = getTaskContentIndicators({ enabled: true, messages: [
     message("post"), message("reply", { type: "member-reply", replyToActivityId: "post" }),
     message("deleted", { deletedAt: "2026-10-13T01:00:00Z" }), message("system", { type: "status-change" }),
     message("file-reply", { type: "member-reply", fileThreadId: "thread-a" }),
     message(""), message("blank-author", { author: " " }),
-  ], files: [file("f1"), file("folder", { kind: "folder" }), file("archived", { archived: true })] });
-  assert.deepEqual(result, { discussionCount: 2, fileCount: 1 });
+  ], files: [file("f1"), file("discussion-note", { attachmentOnly: true }), file("folder", { kind: "folder" }), file("archived", { archived: true })] });
+  assert.deepEqual(result, { discussionCount: 3, fileCount: 1 });
 });
 
 test("按 ID 去重，采用最新消息及文件记录的删除和归档状态", () => {

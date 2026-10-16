@@ -24,6 +24,7 @@ const schemas={
 };
 const versions:Record<string,string>={'agentdoor-member-matcher':'agentdoor.member-match.v0.1','agentdoor-responsibility-advisor':'agentdoor.responsibility-advice.v0.1','agentdoor-task-status-analyzer':'agentdoor.task-status-analysis.v0.1','agentdoor-task-diagnostician':'agentdoor.task-diagnosis.v0.1','agentdoor-personal-priority':'agentdoor.personal-priority.v0.1','agentdoor-ewd-progress':'agentdoor.ewd-progress.v0.1'};
 export function validateOutput(id:SkillId,output:unknown,input:any):string[]{
+  if(id==='taskdoor-decompose-task')return ['子任务建议必须通过独立只读协议校验，不能使用旧分析或创建协议'];
   const errors:string[]=[];const o=output as any;
   const knownRefs=new Set([input.requestId,...(input.sources??[]).map((s:any)=>s.ref),...(input.context?.sourceRefs??[]).map((s:any)=>s.id),...(input.context?.discussions??[]).map((s:any)=>s.id),...(input.analysisContext?.tasks??input.tasks??[]).flatMap((t:any)=>(t.criteria?.items??[]).map((c:any)=>c.id))]);
   const inspectRefs=(value:unknown)=>{if(!value||typeof value!=='object')return;for(const [key,child] of Object.entries(value)){if(key==='evidenceRefs'&&Array.isArray(child)){for(const ref of child){const id=typeof ref==='string'?ref:ref?.ref;if(typeof id!=='string'||!knownRefs.has(id))errors.push('存在未读取或无权使用的证据引用');}}else inspectRefs(child);}};

@@ -206,3 +206,9 @@
 .creation-sheet > .creation-process-list,
 .creation-sheet > .creation-process { width: 100%; }
 .creation-sheet .creation-process-content { max-width: none; }
+
+/* Keep the page's progress aligned with the breadcrumb and use one text column. */
+.creation-sheet > .creation-process .creation-process-toggle { padding-inline: var(--ad-space-2); }
+.creation-sheet > .creation-process .creation-process-toggle > span { width: 14px; justify-content: center; }
+.creation-sheet > .creation-process .creation-process-content { padding-left: 0; }
+.creation-sheet > .creation-process .agent-workflow-trace-content { padding-left: calc(var(--ad-space-5) - var(--ad-space-2) + 2.5px); }

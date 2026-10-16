@@ -1,3 +1,4 @@
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
@@ -25,12 +26,13 @@ function progressLabel(ratio: number) {
   return `${Number((ratio * 100).toFixed(1))}%`;
 }
 
-function shortDate(value: string) {
-  return formatDisplayDate(value) ?? "—";
+function shortDate(value: string, locale: string) {
+  return formatDisplayDate(value, { locale }) ?? "—";
 }
 
 export function TaskBurnUpSparkline({ compact = false, assessment, breakdown, effortSummary, needsReview = false, series, progress, timing }: { compact?: boolean; assessment?: TaskProgressAssessment; breakdown?: React.ReactNode; effortSummary?: string; needsReview?: boolean; series?: TaskBurnUpSeries; progress?: React.ReactNode; timing?: TaskProgressDisplay }) {
   const p = useProgressCopy();
+  const { locale } = useI18n();
   const timeZone = useTeamTimeZone();
   const canvas = useBurnUpWidth(196);
   const resolved = assessment ?? getTaskProgressAssessment(series, []);
@@ -47,7 +49,7 @@ export function TaskBurnUpSparkline({ compact = false, assessment, breakdown, ef
   const [progressTipOpen, setProgressTipOpen] = useState(false);
   const { coverage } = model;
   const hasCoordinates = resolved.hasTrend;
-  const dateAxis = hasCoordinates && timing && model.latest ? layoutBurnUpDateAxis({ translate: p,
+  const dateAxis = hasCoordinates && timing && model.latest ? layoutBurnUpDateAxis({ locale, translate: p,
     model: timing, start: new Date(plotStart).toISOString().slice(0, 10), end: new Date(plotEnd).toISOString().slice(0, 10), asOf: taskCalendarDate(model.latest.at, timeZone)!,
     historyStartOn: taskCalendarDate(model.points[0]?.at, timeZone) ?? undefined,
     startX: 4, endX: model.width - 4, asOfX: referenceX(model.latest.at), dueX: timing.dueOn ? referenceX(timing.dueOn) : null, finishX: timing.finishOn ? referenceX(timing.finishOn) : null, fontSize: 13,
@@ -127,8 +129,8 @@ export function TaskBurnUpSparkline({ compact = false, assessment, breakdown, ef
             <circle className="task-burnup-scope-point" cx={referenceX(scopeEnd!)} cy={latestPlot.scopeY!} r={1.8}/>
           </TaskBurnUpNode>
         </>}
-        {timing?.dueOn && <line className="task-progress-chart-deadline" x1={referenceX(timing.dueOn)} x2={referenceX(timing.dueOn)} y1={differenceSpace ? -6 : 0} y2={model.height}><title>{p(`计划截止 ${shortDate(timing.dueOn)}`)}</title></line>}
-        {timing?.finishOn && <line className={timing.completedOn ? "task-progress-chart-completed-date" : "task-progress-chart-forecast-date"} x1={referenceX(timing.finishOn)} x2={referenceX(timing.finishOn)} y1={differenceSpace ? -6 : 0} y2={model.height}><title>{`${timing.completedOn ? p("确认完成") : p("AI 预测")} ${shortDate(timing.finishOn)}`}</title></line>}
+        {timing?.dueOn && <line className="task-progress-chart-deadline" x1={referenceX(timing.dueOn)} x2={referenceX(timing.dueOn)} y1={differenceSpace ? -6 : 0} y2={model.height}><title>{p(`计划截止 ${shortDate(timing.dueOn, locale)}`)}</title></line>}
+        {timing?.finishOn && <line className={timing.completedOn ? "task-progress-chart-completed-date" : "task-progress-chart-forecast-date"} x1={referenceX(timing.finishOn)} x2={referenceX(timing.finishOn)} y1={differenceSpace ? -6 : 0} y2={model.height}><title>{`${timing.completedOn ? p("确认完成") : p("AI 预测")} ${shortDate(timing.finishOn, locale)}`}</title></line>}
         {model.points.map((point, index) => {
           const showScope = point.scopeY !== null && (index === 0 || index === model.points.length - 1 || (model.points[index - 1]?.scopeY == null && model.points[index + 1]?.scopeY == null));
           const showCompleted = point.completedY !== null && (index === model.points.length - 1 || (model.points[index - 1]?.completedY == null && model.points[index + 1]?.completedY == null));
@@ -150,7 +152,7 @@ export function TaskBurnUpSparkline({ compact = false, assessment, breakdown, ef
       </svg> : <div className="task-burnup-empty"><span><strong>{emptyTrendTitle}</strong><small>{p(emptyTrendDetail)}</small></span></div>}
       {timing && <TaskBurnUpTiming model={timing} showDates={!hasCoordinates} showStatus={!hasCoordinates || timing.deltaDays === null}/>}
       {model.points.length > 0 && !dateAxis && <div className="task-burnup-footer">
-        {!dateAxis && <span>{shortDate(new Date(plotStart).toISOString())}{plotEnd !== plotStart && ` — ${shortDate(new Date(plotEnd).toISOString())}`}</span>}
+        {!dateAxis && <span>{shortDate(new Date(plotStart).toISOString(), locale)}{plotEnd !== plotStart && ` — ${shortDate(new Date(plotEnd).toISOString(), locale)}`}</span>}
       </div>}
     </div></TaskProgressHistory>
   </section>;

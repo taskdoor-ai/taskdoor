@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-16",
+  "scope": "TaskDoor 本地 PM demo；R10、R11、R12",
+  "prdChange": "PRD-0221",
+  "formalProjectChanged": false,
+  "remoteIssueOrPullRequestCreated": false,
+  "checks": {
+    "focusedTests": {"passed": 41, "failed": 0, "logs": ["review-r10-r11-r12-tests-2026-10-16.log", "review-r10-r11-r12-stability-2026-10-16.log"]},
+    "applicationTypes": {"passed": true, "log": "review-r10-r11-r12-types-2026-10-16.log"},
+    "structure": {"passed": true, "newExceptions": 0, "log": "review-r10-r11-r12-structure-2026-10-16.log"},
+    "viteBuild": {"passed": true, "log": "review-r10-r11-r12-build-2026-10-16.log", "note": "存在现有产物体积提示"},
+    "fullSuiteRun": false,
+    "doubleReviewRun": false
+  },
+  "browser": {
+    "url": "http://127.0.0.1:5173/",
+    "surface": "真实主工作区；Codex 内置浏览器；1280×720",
+    "R11": [
+      "顶层新品发布会筹备：任务路径导航数量0；kicker display:none、height:0",
+      "子任务定稿发布会主视觉：路径仅显示新品发布会筹备／宣传物料制作／当前任务"
+    ],
+    "R12": [
+      "移除林洁后直接显示未分配，无原因或确认弹窗",
+      "修复旧 normalizer 过滤空负责人示例任务的问题，显式空值优先于历史负责人提议",
+      "刷新后76个任务完整保留，目标、标准、参与人、父级、截止时间保持",
+      "验证结束已恢复原负责人林洁；原置顶保留；真实活动日志保留"
+    ],
+    "R10": [
+      "打开通知面板、仅打开来源任务概览，仍有3项未读",
+      "通知跳至fragrance-live实际讨论区后3→2，来源讨论提及已读，成员加入与协作邀请仍未读",
+      "刷新多次后仍保留2项未读",
+      "重复打开已呈现的同讨论区来源导航正常",
+      "修复消息数组引用变化导致的重复回执循环后，通知面板正常响应"
+    ]
+  },
+  "screenshots": [
+    "docs/prd/assets/task-detail/review-top-level-0221-zh.jpg",
+    "docs/prd/assets/task-detail/review-child-path-0221-zh.jpg",
+    "docs/prd/assets/task-detail/review-owner-unassigned-0221-zh.jpg",
+    "docs/prd/assets/discussion-notifications-activity/region-read-0221-zh.jpg"
+  ],
+  "boundaries": [
+    "同区域多条批量筛选、团队与用户隔离、时间截点、未呈现或失效来源以及回执稳定性由定向测试覆盖；未声称真实后端或跨设备验收",
+    "本次因旧校验误过滤的唯一示例节点已在浏览器内备份后，按保留快照与名称／目标变更活动恢复；临时修复代码已删除，没有永久补齐或复活任务的逻辑",
+    "早先额外抽查的unassignedOwnerInvitation.test.ts有4项既有旧文案或邀请域断言未通过；本轮负责人持久化回归7项全部通过，未扩大修改或运行全量测试"
+  ]
+}

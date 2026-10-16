@@ -1,0 +1,48 @@
+{
+  "name": "taskdoor-decompose-task",
+  "version": "2026-10-16-v2",
+  "installedAt": "/Users/yxzuji/.agents/skills/taskdoor-decompose-task",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "bytes": 9622,
+      "sha256": "1fddc3851e9d23a6bf54f95dcc6d1a409c2b4abbc069605c6c3006ef73538262"
+    },
+    {
+      "path": "agents/openai.yaml",
+      "bytes": 344,
+      "sha256": "5d602e01daca3eb758e404103828431ca65ffe55ae0825df1fdc57996b8cc14f"
+    },
+    {
+      "path": "references/context-retrieval.md",
+      "bytes": 12525,
+      "sha256": "c66a6f701ec81668504d99924c0de7e18b8d1c75ba47f86cddaaa9735b8aa43b"
+    },
+    {
+      "path": "references/goal-and-criteria.md",
+      "bytes": 13580,
+      "sha256": "20707c7e108c2e4f1224377015fd6dcc75db0807d15d71156721cf185d48f3a3"
+    },
+    {
+      "path": "references/output-contract.md",
+      "bytes": 8066,
+      "sha256": "1a6c43153971d3fb662cce9408fdd1a0f492da05f41e889e7480c2b0ac62a945"
+    },
+    {
+      "path": "references/production-runtime.json",
+      "bytes": 462,
+      "sha256": "e0d82b8f7f358786d7d6708cf738d14af581421557782b0d82b76933f51a004d"
+    },
+    {
+      "path": "references/subtask-suggestions.schema.json",
+      "bytes": 7741,
+      "sha256": "2fec010c4cb495480625c2c77d40c9a4b997188e85691aeb3248cc711502e2d9"
+    },
+    {
+      "path": "references/task-scheduling.md",
+      "bytes": 5214,
+      "sha256": "a51a3202fcffb63a1fa6623a89e2fd9e05f3ae6e30de5cf2c114ee59560bad02"
+    }
+  ],
+  "scope": "只读分析已保存任务上下文及正式职责，仅建议下一层子任务。"
+}

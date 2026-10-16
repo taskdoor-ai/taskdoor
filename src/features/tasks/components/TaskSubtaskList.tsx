@@ -1,3 +1,4 @@
+import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
@@ -33,6 +34,7 @@ export function TaskSubtaskList({ onOpenTask, tasks, effortTasks = [], completed
   progressComparisonsByTaskId?: Readonly<Record<string, TaskProgressComparisonSeries | undefined>>;
 }) {
   const ui = useGlobalUi();
+  const p = useProgressCopy();
   const timeZone = useTeamTimeZone();
   const d = useDetailCopy();
   const mock = useMockText();
@@ -56,7 +58,7 @@ export function TaskSubtaskList({ onOpenTask, tasks, effortTasks = [], completed
     </summary>
       <div className="task-subtask-list-progress">
         <TaskProgressOverview compact model={progress} showScheduleHeading={false} showScheduleLabel={false} progress={<TaskProgressStage compact model={progress} label={ui("{0} 完成进度", {0: task.title})}/>}/>
-        {progress.scheduleIssue && <p className="task-schedule-error">{progress.scheduleIssue}</p>}
+        {progress.scheduleIssue && <p className="task-schedule-error">{p(progress.scheduleIssue)}</p>}
       </div>
     </details>;
   })}</div>;

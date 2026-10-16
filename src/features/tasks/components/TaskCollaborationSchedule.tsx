@@ -1,3 +1,4 @@
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { CalendarClock, ChevronDown, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import type { PersonOption } from "@/shared/model/task-model";
@@ -30,10 +31,11 @@ function PersonEvidence({ person, members }: { person: CollaborationSchedulePers
 }
 
 export function TaskCollaborationSchedule({ task, members, tasks, disabled = false }: Props) {
+  const { locale } = useI18n();
   const [open, setOpen] = useState(false);
   const titleId = useId();
   const closeButton = useRef<HTMLButtonElement>(null);
-  const report = describeTaskCollaborationSchedule(task, members, tasks);
+  const report = describeTaskCollaborationSchedule(task, members, tasks, locale);
   const taskTitle = task.title.trim() || "未命名任务";
   useEffect(() => { if (disabled) setOpen(false); }, [disabled]);
 

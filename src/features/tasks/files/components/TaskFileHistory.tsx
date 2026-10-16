@@ -1,3 +1,4 @@
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import React, { Suspense, useState } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -15,6 +16,7 @@ import { formatDisplayDateTime } from "@/shared/lib/date-time";
 const TaskFileRevisionDiff = React.lazy(() => import("@/features/tasks/files/components/TaskFileRevisionDiff").then(module => ({ default: module.TaskFileRevisionDiff })));
 
 export function TaskFileHistory({ revisions, version, filePath, onClose }: { revisions: TaskFileRevision[]; version: number; filePath?: string; onClose: () => void }) {
+  const { locale } = useI18n();
   const ui = useGlobalUi();
   const orderedRevisions = [...revisions].sort((a, b) => b.version - a.version);
   const [selectedId, setSelectedId] = useState<string | null>(() => orderedRevisions[0]?.id ?? null);
@@ -41,7 +43,7 @@ export function TaskFileHistory({ revisions, version, filePath, onClose }: { rev
                 <PersonAvatar name={revision.author} personId={revision.author} profilePreviewFocusable={false} showProfilePreview={false} size="sm" />
                 <span className="flex min-w-0 flex-1 flex-col gap-1">
                   <span className="flex min-w-0 items-center gap-2"><PersonName className="min-w-0 flex-1 truncate" name={revision.author} personId={revision.author} showProfilePreview={false} /><Badge variant="outline">v{revision.version}</Badge></span>
-                  <time className="text-xs font-normal text-muted-foreground" dateTime={revision.createdAt} title={formatDisplayDateTime(revision.createdAt, { year: "always" }) ?? undefined}>{formatDisplayDateTime(revision.createdAt) ?? "—"}</time>
+                  <time className="text-xs font-normal text-muted-foreground" dateTime={revision.createdAt} title={formatDisplayDateTime(revision.createdAt, { locale, year: "always" }) ?? undefined}>{formatDisplayDateTime(revision.createdAt, { locale }) ?? "—"}</time>
                   {revision.version === version && <span className="text-xs font-normal text-muted-foreground">{ui("当前版本")}</span>}
                 </span>
               </Button>

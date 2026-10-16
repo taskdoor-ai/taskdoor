@@ -1,3 +1,5 @@
+import type { FileAnnotationExitController } from "@/features/tasks/files/lib/useTaskFileAnnotations";
+import { TaskFileAnnotationDiscardDialog } from "@/features/tasks/files/components/TaskFileAnnotationDiscardDialog";
 import { normalizeTaskStatus } from "@/shared/model/task-model";
 import "@/features/tasks/styles/task-ai-adjustment.css";
 import { applyAutomaticWorkspaceTags, manualTaskTags } from "@/ai/task-auto-tags";
@@ -44,7 +46,7 @@ import { PersonalTagsProvider } from "@/features/me/components/PersonalTags";
 import { getPersonalTagStorageKey, loadPersonalTags, preparePersonalTaskTags } from "@/features/tasks/lib/personal-tags";
 import { PersonalCenterModal, type PersonalCenterModule } from "@/app/workspace/components/PersonalInfoDialog";
 import { createInitialTaskListFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
-import { createWorkspaceTaskDetail, taskDetailMocks } from "@/ai/mock/data/taskDetailMocks";
+import { createWorkspaceTaskDetail, getLegacyTaskFileFixtures, migrateUnsupportedBuiltinTaskFiles, taskDetailMocks } from "@/ai/mock/data/taskDetailMocks";
 import { type TaskActivityChange, type TaskActivityMock, type TaskActivityType, type TaskDetailId, type TaskDetailContent, workspaceRootId, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
 import { getTeamTaskDiagnosisSnapshot, getTeamTaskDetailFixture } from "@/ai/mock/data/teamTaskDetailFixtures";
 import { getTaskAcceptedEffortMinutes } from "@/ai/mock/data/taskProgressExamples";
@@ -80,6 +82,7 @@ import { toast } from "@/shared/ui/toast";
 import { TaskDeleteDialog } from "@/features/tasks/components/TaskDeleteDialog";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shared/ui/dialog";
 import { Input } from "@/shared/ui/input";
+import type { DiscussionReadReceipt } from "@/features/notifications/lib/notification-read-state";
 
 import { readWorkspaceSession, saveWorkspaceSession, signOutWorkspace } from "@/shared/lib/workspace-session";
 
@@ -197,7 +200,7 @@ function App() {
     let assignmentsMigrated = false;
     const nodes = migratedNodes.map((node): WorkspaceNode => {
       if (node.kind !== "task") return node;
-      const ownerId = storedOwnerAssignments[node.id] || node.proposedOwnerId || node.ownerId;
+      const ownerId = node.ownerId === "" ? "" : storedOwnerAssignments[node.id] || node.proposedOwnerId || node.ownerId;
       if (ownerId !== node.ownerId || node.proposedOwnerId || node.status === "待开始") assignmentsMigrated = true;
       const { proposedOwnerId: _legacyProposal, ...task } = node;
       return { ...task, ownerId, status: normalizeTaskStatus(task.status) };
@@ -219,7 +222,11 @@ function App() {
     initialScenarioState.workspaceNodes.forEach((node) => {
       if (node.kind === "task" && !seeds.has(node.id)) seeds.set(node.id, { ...node });
     });
-    return [...seeds.values()];
+    const detailSeeds = [...seeds.values()];
+    if (showDemoData) migrateUnsupportedBuiltinTaskFiles(window.localStorage, detailSeeds.filter(task => task.teamId).map(task => ({
+      taskId: task.id, teamId: task.teamId!, legacyFiles: getTeamTaskDetailFixture(task, true)?.files ?? getLegacyTaskFileFixtures(task),
+    })));
+    return detailSeeds;
   });
   const taskDetailSeedNodesRef = useRef(taskDetailSeedNodes);
   const createdProjectProgressDemo = useMemo(() => {
@@ -301,6 +308,10 @@ function App() {
   const [creationSessionOpen, setCreationSessionOpen] = useState(false);
   const [creationParentContext, setCreationParentContext] = useState<TaskCreationParentContext | null>(null);
   const creationSessionCompleted = useRef(false);
+  const annotationExitController = useRef<FileAnnotationExitController | null>(null);
+  const annotationExitReturnFocus = useRef<HTMLElement | null>(null);
+  const [pendingAnnotationExit, setPendingAnnotationExit] = useState<{ run: () => void } | null>(null);
+  const registerAnnotationExit = useCallback((controller: FileAnnotationExitController | null) => { annotationExitController.current = controller; }, []);
   const creationExitController = useRef<CreationExitController | null>(null);
   const creationExitReturnFocus = useRef<HTMLElement | null>(null);
   const [pendingCreationExit, setPendingCreationExit] = useState<{ run: () => void } | null>(null);
@@ -320,6 +331,15 @@ function App() {
   const [taskOwnerProposals, setTaskOwnerProposals] = useState<Record<string, string>>({});
   const [taskParticipantInvitationOverrides, setTaskParticipantInvitationOverrides] = useState<Record<string, ParticipantInvitationStatuses>>({});
   const [taskAttentionTarget, setTaskAttentionTarget] = useState<TaskAttentionTarget | null>(null);
+  const [discussionReadReceipt, setDiscussionReadReceipt] = useState<DiscussionReadReceipt>();
+  const discussionReadSequence = useRef(0);
+  const recordDiscussionRead = useCallback((taskId: string, activityIds: string[], readThrough: string) => {
+    if (taskId !== selectedTaskId || activeSection !== "tasks") return;
+    setDiscussionReadReceipt({ teamId: activeTeamId, userId: currentUserId, taskId, activityIds, readThrough, sequence: ++discussionReadSequence.current });
+  }, [activeTeamId, currentUserId, selectedTaskId, activeSection]);
+  const finishDiscussionRead = useCallback((sequence: number) => {
+    setDiscussionReadReceipt(current => current?.sequence === sequence ? undefined : current);
+  }, []);
   const [subtaskDeleteTarget, setSubtaskDeleteTarget] = useState<{ taskId: string; parentTaskId: string; signature: string } | null>(null);
   const [subtaskDeleteError, setSubtaskDeleteError] = useState("");
   const deletingSubtask = useRef(false);
@@ -368,6 +388,11 @@ function App() {
   };
 
   const requestCreationExit = (run: () => void) => {
+    if (annotationExitController.current?.hasUnsavedChanges()) {
+      annotationExitReturnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      setPendingAnnotationExit({ run });
+      return;
+    }
     if (activeSection === "conversation" && creationSessionOpen) {
       if (!creationSessionCompleted.current && creationExitController.current?.hasUnsavedChanges()) {
         creationExitReturnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -1020,7 +1045,7 @@ function App() {
   const changeTaskPeriod = (range: TaskDateRange | null) => {
     const task = getSelectedTask();
     if (!task) return;
-    const scheduleError = taskScheduleError(range?.end, task.createdAt, range?.start, activeTeamTimeZone);
+    const scheduleError = taskScheduleError(range?.end, task.createdAt, range?.start, activeTeamTimeZone, locale);
     if (scheduleError) throw new Error(scheduleError);
     const previousStart = taskDateValue(selectedTaskPeriodOverride === undefined ? task.plannedStartOn ?? selectedLegacyTask?.plannedStartOn : selectedTaskPeriodOverride?.start, activeTeamTimeZone);
     const previousEnd = taskDateValue(selectedTaskPeriodOverride === undefined ? task.plannedEndOn ?? selectedLegacyTask?.plannedEndOn ?? task.dueAt ?? selectedTaskDetail?.due : selectedTaskPeriodOverride?.end, activeTeamTimeZone);
@@ -1197,11 +1222,19 @@ function App() {
         onCreateTask={startNewTaskConversation}
         onSignOut={() => requestCreationExit(signOutWorkspace)}
         showDemoNotifications={showDemoData}
-        onOpenNotificationTask={(taskId) => {
+        discussionReadReceipt={discussionReadReceipt}
+        onDiscussionReadHandled={finishDiscussionRead}
+        onOpenNotificationTask={(taskId, target) => {
           requestCreationExit(() => {
+            if (!workspaceNodesRef.current.some(node => node.kind === "task" && node.id === taskId && (node.teamId ?? "creator-commerce") === activeTeamId)) {
+              toast.error(locale === "en" ? "The notification source is unavailable." : "通知来源不可访问。");
+              return;
+            }
             setTaskQuery("");
             setTaskFilters(createInitialTaskListFilters(currentUserId));
-            setTaskAttentionTarget(null);
+            setTaskAttentionTarget(target?.area === "discussion"
+              ? { kind: target.activityId ? "activity" : "discussion", targetId: target.activityId ?? "" }
+              : target?.area === "files" && target.fileId ? { kind: "file", targetId: target.fileId } : null);
             navigateToTask(taskId, false);
           });
         }}
@@ -1229,7 +1262,7 @@ function App() {
             onDeleteTask={requestDeleteTask}
             onTaskStatusChange={changeTaskStatus}
               onOpenRecycleBin={() => { refreshRecycleBin(); setRecycleOpen(true); }}
-            onClearTaskSelection={() => setSelectedTaskId(null)}
+            onClearTaskSelection={() => requestCreationExit(() => setSelectedTaskId(null))}
             onFiltersChange={setTaskFilters}
             onManageTags={() => requestCreationExit(() => { setActiveSection("settings"); focusPrimaryHeadingAfterNavigation(); })}
             onQueryChange={setTaskQuery}
@@ -1273,6 +1306,7 @@ function App() {
         >
           {selectedTaskId && selectedTaskDetail ? (
           <TaskDetail
+            onAnnotationExitControllerChange={registerAnnotationExit}
             key={`${activeTeamId}:${selectedTaskId}`}
             currentUserId={currentUserId}
             teamId={activeTeamId}
@@ -1287,6 +1321,7 @@ function App() {
             initialAttentionTarget={taskAttentionTarget}
             members={collaborationMembers}
             onFileSaved={() => touchTask(selectedTaskId)}
+            onDiscussionRead={recordDiscussionRead}
             onActivityAppend={(activity) => appendActivityForTask(selectedTaskId, activity)}
             onCreateSubtask={startNewSubtaskConversation}
             onDeleteSubtask={requestDeleteSubtask}
@@ -1345,6 +1380,13 @@ function App() {
         ) : null}
 
       </main>
+      <TaskFileAnnotationDiscardDialog open={Boolean(pendingAnnotationExit)} onCancel={() => setPendingAnnotationExit(null)} onDiscard={() => {
+        if (!pendingAnnotationExit) return;
+        const run = pendingAnnotationExit.run;
+        annotationExitController.current?.discard();
+        setPendingAnnotationExit(null);
+        run();
+      }} finalFocus={() => annotationExitReturnFocus.current?.isConnected ? annotationExitReturnFocus.current : false} />
       <TaskCreationDiscardDialog
         open={Boolean(pendingCreationExit)}
         error={creationExitError}

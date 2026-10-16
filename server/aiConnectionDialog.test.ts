@@ -53,7 +53,7 @@ test("只显示当前任务的一张卡片，直接呈现指定七项信息", as
   ];
   const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(module.AiConnectionContextPreview, { request: { ...previewRequest, workObject: { ...previewRequest.workObject, kind: "任务" }, contextPreview: { items } } }) }));
   for (const label of ["任务名称", "任务目标", "完成标准", "负责人", "截止时间", "标签"]) {
-    if (label === "截止时间") assert.match(html, /Sep 30(?:, 2026)?/);
+    if (label === "截止时间") assert.match(html, /9月30日/);
     else assert.ok(html.includes(items.find(item => item.label === label)!.value), `缺少实际信息：${label}`);
   }
   assert.doesNotMatch(html, />2026-09-30</);
@@ -80,8 +80,8 @@ test("AI 预览日期和消息元信息遵守统一格式，原文与带入提�
   const prompt = module.buildContextPrompt(datedRequest);
   for (const locale of ["zh-CN", "en"] as const) {
     const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: locale, children: createElement(module.AiConnectionContextPreview, { request: datedRequest }) }));
-    assert.match(html, /Sep 30(?:, 2026)?/);
-    assert.match(html, /陈默 · Aug 31(?:, 2026)?, 5:30 PM/);
+    assert.match(html, locale === "en" ? /Sep 30(?:, 2026)?/ : /9月30日/);
+    assert.match(html, locale === "en" ? /陈默 · Aug 31(?:, 2026)?, 5:30 PM/ : /陈默 · 8月31日 17:30/);
     assert.match(html, /原文保持 2026-09-30 17:30/);
     assert.doesNotMatch(html, /陈默 · 2026-08-31 17:30/);
     assert.equal(module.buildContextPrompt(datedRequest), prompt);
@@ -265,4 +265,100 @@ test("回复连接预览展示当前消息、直接原消息及所属附件，�
     assert.ok(copied.includes(value), value);
   }
   assert.doesNotMatch(html + copied, /无关动态正文/);
+});
+
+const handoffFile = { name: "TaskDoor-标注.html", mimeType: "text/html" as const, content: "<!doctype html><html><body><h1>图文标注</h1><img src=\"data:image/png;base64,AA==\"></body></html>" };
+const fileRequest = { ...request, workObject: { ...request.workObject, kind: "文件标注", content: "不在文件预览中堆叠的Markdown正文" }, handoffFile };
+const preparedFile = { name: handoffFile.name, mimeType: handoffFile.mimeType, path: "/tmp/taskdoor-ai-handoff-fixture/标注 #1.html", sizeBytes: new TextEncoder().encode(handoffFile.content).byteLength };
+
+test("标注连接预览显示附件名称格式大小，不展开HTML或旧Markdown正文", async () => {
+  const module = await import(moduleUrl);
+  const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
+  for (const locale of ["zh-CN", "en"] as const) {
+    const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: locale, children: createElement(module.AiConnectionContextPreview, { request: fileRequest }) }));
+    assert.match(html, /TaskDoor-标注.html/);
+    assert.match(html, /HTML/);
+    assert.match(html, /[\d.]+ (?:B|KB|KiB)/);
+    assert.doesNotMatch(html, /不在文件预览中堆叠的Markdown正文|data:image|图文标注/);
+    if (locale === "en") assert.doesNotMatch(html, /标注文件|连接时准备/);
+  }
+  assert.equal(module.buildContextPrompt(fileRequest), fileRequest.workObject.content, "纯文本复制不触发文件准备，也不改变已有文本内容");
+});
+
+test("四客户端准备同一HTML文件后才复制真实路径并尝试打开，不宣称已经读取", async () => {
+  const module = await import(moduleUrl);
+  for (const agent of ["ChatGPT", "Claude Code", "WorkBuddy", "Cursor"]) {
+    const steps: string[] = [];
+    let copied = "", opened = "";
+    const result = await module.copyAndOpenAiContext(fileRequest, agent, {
+      prepareFile: async (file: typeof handoffFile) => { assert.deepEqual(file, handoffFile); steps.push("prepare"); return preparedFile; },
+      copyText: async (text: string) => { copied = text; steps.push("copy"); return true; },
+      openUrl: (url: string) => { opened = url; steps.push("open"); },
+    });
+    assert.deepEqual(steps, ["prepare", "copy", "open"]);
+    assert.equal(result.status, "open-attempted");
+    assert.deepEqual(result.handoffFile, preparedFile);
+    assert.ok(copied.includes(preparedFile.path));
+    assert.doesNotMatch(copied, /data:image|不在文件预览中堆叠/);
+    assert.match(result.message, /文件已准备/);
+    assert.match(result.message, /无法确认.*读取/);
+    assert.doesNotMatch(result.message, /已附加|已上传|已读取|连接成功/);
+    if (agent === "Cursor") { assert.equal(new URL(opened).protocol, "cursor:"); assert.ok(decodeURIComponent(new URL(opened).pathname).includes("标注 #1.html")); assert.equal(new URL(opened).hash, ""); }
+    if (agent === "WorkBuddy") assert.match(result.message, /手动附加|粘贴/);
+  }
+});
+
+test("文件准备失败不复制或打开客户端，重试可继续使用相同标注", async () => {
+  const module = await import(moduleUrl);
+  let copied = 0, opened = 0;
+  const actions = { copyText: async () => { copied++; return true; }, openUrl: () => { opened++; } };
+  const failed = await module.copyAndOpenAiContext(fileRequest, "ChatGPT", { ...actions, prepareFile: async () => { throw Error("保存失败"); } });
+  assert.equal(failed.status, "file-failed");
+  assert.match(failed.message, /重试/);
+  assert.equal(copied, 0); assert.equal(opened, 0);
+  const retry = await module.copyAndOpenAiContext(fileRequest, "ChatGPT", { ...actions, prepareFile: async () => preparedFile });
+  assert.equal(retry.status, "open-attempted");
+  assert.equal(copied, 1); assert.equal(opened, 1);
+  assert.equal(fileRequest.handoffFile.content, handoffFile.content);
+});
+
+test("文件准备期间取消后不再复制或打开，也不记忆快捷工具", async () => {
+  const module = await import(moduleUrl);
+  const { createAiToolPreferenceStore } = await import("../src/features/ai-connection/lib/ai-tool-preferences.ts");
+  const store = createAiToolPreferenceStore();
+  const controller = new AbortController();
+  let complete!: (file: typeof preparedFile) => void;
+  let copied = 0, opened = 0;
+  const pending = module.launchAiContext(fileRequest, "Cursor", controller.signal, {
+    prepareFile: (_file: typeof handoffFile, signal?: AbortSignal) => { assert.equal(signal, controller.signal); return new Promise<typeof preparedFile>(resolve => { complete = resolve; }); },
+    copyText: async () => { copied++; return true; }, openUrl: () => { opened++; },
+  }, store);
+  assert.equal(typeof complete, "function", "连接必须先等待文件准备");
+  controller.abort(); complete(preparedFile);
+  assert.equal((await pending).status, "cancelled");
+  assert.equal(copied, 0); assert.equal(opened, 0);
+  assert.deepEqual(store.getSnapshot().used, []);
+});
+
+test("文件已准备后复制或唤起失败保留真实路径，英文同样不声称接收成功", async () => {
+  const module = await import(moduleUrl);
+  const { aiTransferMessage } = await import("../src/features/ai-connection/i18n/ai-transfer-copy.ts");
+  let opened = 0;
+  const copyFailed = await module.copyAndOpenAiContext(fileRequest, "Cursor", {
+    prepareFile: async () => preparedFile, copyText: async () => false, openUrl: () => { opened++; },
+  });
+  assert.equal(copyFailed.status, "copy-failed"); assert.equal(opened, 0);
+  assert.deepEqual(copyFailed.handoffFile, preparedFile);
+  assert.match(aiTransferMessage("en", copyFailed, "Cursor"), /Local file prepared.*Copying.*failed/);
+  const openFailed = await module.copyAndOpenAiContext(fileRequest, "Cursor", {
+    prepareFile: async () => preparedFile, copyText: async () => true, openUrl: () => { throw Error("blocked"); },
+  });
+  assert.equal(openFailed.status, "open-failed");
+  assert.deepEqual(openFailed.handoffFile, preparedFile);
+  assert.match(aiTransferMessage("en", openFailed, "Cursor"), /Local file prepared.*could not be opened/);
+  const success = await module.launchAiContext(fileRequest, "WorkBuddy", new AbortController().signal, {
+    prepareFile: async () => preparedFile, copyText: async () => true, openUrl: () => {},
+  }, undefined, "en");
+  assert.match(success.message, /File reading cannot be confirmed/);
+  assert.match(success.message, /attach.*manually/);
 });

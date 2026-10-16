@@ -1,5 +1,25 @@
+import { snapshotCreationAnnotations } from "@/features/tasks/lib/task-creation-annotations";
 import type { CreationPlanningResult } from "@/ai/mock/lib/taskCreationPlanning";
 import type { TaskAiAdjustmentApplicationStatus, TaskAiAdjustmentChange, TaskAiAdjustmentProgress } from "@/features/tasks/lib/task-ai-adjustment-types";
+import type { TaskCreationAnnotation } from "@/features/tasks/lib/task-creation-annotations";
+import type { CreationForm } from "@/features/tasks/lib/task-creation-form";
+
+export type CreationContentSection = "identity" | "criteria" | "properties";
+
+/** Merge only the newly delivered section. Later blocks cannot replace edited text. */
+export function mergeCreationContentSection(current: CreationForm | null, source: CreationForm, section: CreationContentSection): CreationForm {
+  const sameTask = current?.mainTask.clientId === source.mainTask.clientId;
+  const base: CreationForm = sameTask ? current : {
+    ...source,
+    mainTask: { ...source.mainTask, title: "", goal: "", completionCriteria: [], ownerId: "", participantIds: [], startDate: "", endDate: "", executionTips: [], effortEstimate: undefined },
+    subtasks: [],
+  };
+  const task = source.mainTask;
+  const patch = section === "identity" ? { title: task.title, goal: task.goal }
+    : section === "criteria" ? { completionCriteria: [...task.completionCriteria] }
+      : { ownerId: task.ownerId, participantIds: [...task.participantIds], startDate: task.startDate, endDate: task.endDate, executionTips: [...task.executionTips], effortEstimate: task.effortEstimate };
+  return { ...base, mainTask: { ...base.mainTask, ...patch } };
+}
 
 export type CreationFeedbackStep = { label: string; detail: string; basis: string };
 export const CREATION_PLANNING_STEP_LABELS = ["分析任务", "目标与计划", "成员推荐", "动态规划"] as const;
@@ -10,6 +30,8 @@ export type CreationProcess = {
   kind?: "adjustment" | "relationship";
   title: string;
   request: string;
+  annotations?: TaskCreationAnnotation[];
+  supplementalInstruction?: string;
   answers: { goal?: string; deliverable?: string };
   steps: CreationFeedbackStep[];
   activeStep: number;
@@ -63,6 +85,8 @@ export function recordCreationAdjustmentProgress(processes: CreationProcess[], p
   const previous = processes[index];
   const process: CreationProcess = {
     id, kind: "adjustment", title: "补充需求", request: progress.instruction, answers: {},
+    annotations: progress.annotations ? snapshotCreationAnnotations(progress.annotations) : previous?.annotations,
+    supplementalInstruction: progress.supplementalInstruction ?? previous?.supplementalInstruction,
     steps: progress.steps.map(step => ({ ...step })), activeStep: progress.activeStep,
     status: progress.status, outcome: progress.outcome, responseSummary: progress.responseSummary,
     startedAt: previous?.startedAt ?? (index < 0 ? now : undefined),

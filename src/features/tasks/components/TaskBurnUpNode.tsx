@@ -1,10 +1,11 @@
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { formatDisplayDate, formatDisplayDateTime } from "@/shared/lib/date-time";
 import React, { useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-function nodeDate(value: string) {
-  return formatDisplayDateTime(value, { year: "always" }) ?? formatDisplayDate(value, { year: "always" }) ?? "—";
+function nodeDate(value: string, locale: string) {
+  return formatDisplayDateTime(value, { locale, year: "always" }) ?? formatDisplayDate(value, { locale, year: "always" }) ?? "—";
 }
 
 /** SVG hit target with an HTML tooltip that stays readable at every chart scale. */
@@ -18,6 +19,7 @@ export function TaskBurnUpNode({ x, y, date, lines, kind, radius = 9, children }
   children: React.ReactNode;
 }) {
   const p = useProgressCopy();
+  const { locale } = useI18n();
   const displayLines = lines.map(p);
   const id = useId();
   const target = useRef<SVGCircleElement>(null);
@@ -27,7 +29,7 @@ export function TaskBurnUpNode({ x, y, date, lines, kind, radius = 9, children }
   const [dismissed, setDismissed] = useState(false);
   const [position, setPosition] = useState<{ left: number; top: number } | null>(null);
   const open = (hovered || focused) && !dismissed;
-  const formattedDate = nodeDate(date);
+  const formattedDate = nodeDate(date, locale);
   useLayoutEffect(() => {
     if (!open) return;
     const place = () => {

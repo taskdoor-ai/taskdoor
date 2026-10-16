@@ -1,4 +1,24 @@
 {
+  "notificationReadLoadFailed": {
+    "zh": "通知已读状态读取失败，请重试。",
+    "en": "Could not load notification read status. Please retry."
+  },
+  "notificationReadSaveFailed": {
+    "zh": "已读状态保存失败，请重试。",
+    "en": "Could not save read status. Please retry."
+  },
+  "discussionReplySent": {
+    "zh": "回复已发送",
+    "en": "Reply sent"
+  },
+  "fileImageRegion": {
+    "zh": "图片区域",
+    "en": "Image region"
+  },
+  "selectFileImageRegion": {
+    "zh": "拖动选择图片区域",
+    "en": "Drag to select an image region"
+  },
   "aiTools": {
     "zh": "AI 工具",
     "en": "AI tools"
@@ -891,6 +911,10 @@
     "zh": "全屏",
     "en": "Full screen"
   },
+  "exitFullScreen": {
+    "zh": "退出全屏",
+    "en": "Exit full screen"
+  },
   "loadingAttachment": {
     "zh": "正在读取附件…",
     "en": "Loading attachment…"
@@ -1658,6 +1682,10 @@
   "retryAdding": {
     "zh": "重试添加 {0}",
     "en": "Retry adding {0}"
+  },
+  "previewAttachment": {
+    "zh": "查看附件 {0}",
+    "en": "Preview attachment {0}"
   },
   "removeAttachment": {
     "zh": "移除附件 {0}",
@@ -2690,6 +2718,10 @@
   "fileUploadLimits": {
     "zh": "每次最多 {0} 个文件，单个不超过 20 MiB",
     "en": "Up to {0} files at a time, 20 MiB per file"
+  },
+  "fileUploadSupportedFormats": {
+    "zh": "仅支持可在线预览的文件：{0}",
+    "en": "Previewable files only: {0}"
   },
   "fileUploadChoose": {
     "zh": "选择文件",

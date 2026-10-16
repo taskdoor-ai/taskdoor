@@ -1,5 +1,6 @@
 import type { TaskActivityMock, TaskFileNode } from "@/shared/model/task-model.ts";
 import { parseTaskActivityStore } from "@/features/tasks/lib/task-activity.ts";
+import { isBuiltinTaskAsset } from "@/features/tasks/files/lib/discussion-uploads";
 
 export type AttachmentRef = { fileId: string; version: number; name: string };
 export type MessageQuote = { messageId: string; text: string; author: string };
@@ -27,6 +28,17 @@ export type FileDiscussionThread = {
 };
 export type DiscussionDraft = { body: string; mentions: string[]; attachments: TaskFileNode[]; quote?: MessageQuote };
 
+/** Task file views keep their existing archive handling, without discussion-only material. */
+export function getTaskFiles(files: readonly TaskFileNode[]): TaskFileNode[] {
+  return files.filter(file => !file.attachmentOnly && !file.retiredBuiltin);
+}
+
+/** Dedicated message material is immutable; ordinary files retain their legacy version fallback. */
+export function getDiscussionAttachment(files: readonly TaskFileNode[], ref: AttachmentRef): TaskFileNode | undefined {
+  return files.find(file => file.id === ref.fileId && file.kind === "file" && !file.archived
+    && (!file.attachmentOnly || (file.version ?? 1) === ref.version));
+}
+
 export function getVisibleFileDiscussionThreads(threads: FileDiscussionThread[], messages: CollaborationMessage[]): FileDiscussionThread[] {
   const visibleThreadIds = new Set(messages.filter(message => !message.deletedAt && message.fileThreadId).map(message => message.fileThreadId));
   return threads.filter(thread => visibleThreadIds.has(thread.id));
@@ -42,6 +54,7 @@ export type CollaborationNotification = {
 };
 export type CollaborationSnapshot = {
   revision: number;
+  appliedFilePacks?: string[];
   files: TaskFileNode[];
   messages: CollaborationMessage[];
   threads: FileDiscussionThread[];
@@ -68,12 +81,14 @@ function uniqueRecords<T extends { id: string }>(items: T[], label: string): T[]
 function parseFile(value: unknown): TaskFileNode {
   requireValid(isRecord(value) && isId(value.id) && (value.kind === "file" || value.kind === "folder")
     && isString(value.name) && (value.parentId === null || isId(value.parentId)) && isString(value.updatedAt), "文件信息无效");
-  for (const field of ["content", "format", "iconName", "mimeType", "sizeLabel", "blobId", "originalName"]) {
+  for (const field of ["content", "format", "iconName", "mimeType", "sizeLabel", "blobId", "originalName", "builtinPackId"]) {
     requireValid(value[field] === undefined || isString(value[field]), "文件内容无效");
   }
   requireValid(value.version === undefined || isVersion(value.version), "文件版本无效");
   requireValid(value.sizeBytes === undefined || isRevision(value.sizeBytes), "附件大小无效");
   requireValid(value.archived === undefined || typeof value.archived === "boolean", "文件归档状态无效");
+  requireValid(value.attachmentOnly === undefined || (value.attachmentOnly === true && value.kind === "file"), "讨论附件标识无效");
+  requireValid(value.retiredBuiltin === undefined || (value.retiredBuiltin === true && value.kind === "file"), "退役内置文件标识无效");
   requireValid(value.blob === undefined, "附件应先转换为可保存的数据");
   if (value.previewData !== undefined) {
     const preview = value.previewData;
@@ -152,8 +167,10 @@ function parseNotification(value: unknown): CollaborationNotification {
 }
 function parseSnapshot(value: unknown): CollaborationSnapshot {
   requireValid(isRecord(value) && isRevision(value.revision) && Array.isArray(value.messages) && Array.isArray(value.threads) && Array.isArray(value.notifications), "快照结构无效");
+  requireValid(value.appliedFilePacks === undefined || (isStrings(value.appliedFilePacks) && value.appliedFilePacks.every(isId)), "内建文件包记录无效");
   return {
     revision: value.revision,
+    ...(value.appliedFilePacks === undefined ? {} : { appliedFilePacks: [...new Set(value.appliedFilePacks)] }),
     files: parseFiles(value.files),
     messages: uniqueRecords(value.messages.map(parseMessage), "消息"),
     threads: uniqueRecords(value.threads.map(parseThread), "文件讨论"),
@@ -174,10 +191,37 @@ function readStored(storage: Pick<CollaborationStorage, "getItem">, scopeKey: st
 }
 
 export function createCollaborationSnapshot(seedFiles: TaskFileNode[]): CollaborationSnapshot {
-  return { revision: 0, files: parseFiles(seedFiles), messages: [], threads: [], notifications: [] };
+  const files = parseFiles(seedFiles);
+  const appliedFilePacks = [...new Set(files.flatMap(file => file.builtinPackId ? [file.builtinPackId] : []))];
+  return { revision: 0, files, messages: [], threads: [], notifications: [], ...(appliedFilePacks.length ? { appliedFilePacks } : {}) };
 }
-export function loadCollaboration(storage: Pick<CollaborationStorage, "getItem">, scopeKey: string, seedFiles: TaskFileNode[]): CollaborationSnapshot {
-  return readStored(storage, scopeKey) ?? createCollaborationSnapshot(seedFiles);
+export function loadCollaboration(storage: CollaborationStorage, scopeKey: string, seedFiles: TaskFileNode[]): CollaborationSnapshot {
+  const stored = readStored(storage, scopeKey);
+  if (!stored) return createCollaborationSnapshot(seedFiles);
+  const packedSeeds = parseFiles(seedFiles.filter(file => file.builtinPackId));
+  const newPacks = [...new Set(packedSeeds.flatMap(file => !stored.appliedFilePacks?.includes(file.builtinPackId!) ? [file.builtinPackId!] : []))];
+  const sourceFields = (file: TaskFileNode) => ({ content: file.content, previewData: file.previewData, sizeBytes: file.sizeBytes, sizeLabel: file.sizeLabel });
+  let refreshedOriginal = false;
+  const files = stored.files.map(file => {
+    const seed = packedSeeds.find(item => item.id === file.id);
+    if (!seed || file.kind !== "file" || file.version !== 1 || !isBuiltinTaskAsset(file.blobId)
+      || file.builtinPackId !== seed.builtinPackId || file.blobId !== seed.blobId || !stored.appliedFilePacks?.includes(seed.builtinPackId!)) return file;
+    if (JSON.stringify(sourceFields(file)) === JSON.stringify(sourceFields(seed))) return file;
+    refreshedOriginal = true;
+    // Keep the user's name, location, archive state and history; only the untouched
+    // built-in source representation follows corrections to the original asset.
+    return { ...file, ...sourceFields(seed) };
+  });
+  if (!newPacks.length && !refreshedOriginal) return stored;
+  for (const seed of packedSeeds.filter(file => newPacks.includes(file.builtinPackId!))) {
+    if (files.some(file => file.id === seed.id)) continue;
+    // Do not restore a folder that a user removed; new assets can live at the root.
+    const parentId = files.some(file => file.id === seed.parentId && file.kind === "folder" && !file.archived) ? seed.parentId : null;
+    files.push({ ...seed, parentId });
+  }
+  return saveCollaboration(storage, scopeKey, stored.revision, {
+    ...stored, revision: stored.revision + 1, files, appliedFilePacks: [...(stored.appliedFilePacks ?? []), ...newPacks],
+  });
 }
 /** The optional transaction writer confirms its own writes before returning. Publish only after durable success. */
 export function saveCollaboration(storage: CollaborationStorage, scopeKey: string, expectedRevision: number, next: CollaborationSnapshot, persist?: (key: string, serialized: string) => void): CollaborationSnapshot {
@@ -230,6 +274,8 @@ function attachFiles(snapshot: CollaborationSnapshot, refs: readonly AttachmentR
     if (attachment.kind !== "file") throw new Error("只能把文件添加为附件。");
     const existing = files.find(item => item.id === attachment.id);
     if (existing?.kind === "folder") throw new Error("附件标识与文件夹冲突。");
+    if (attachment.attachmentOnly && existing && !existing.attachmentOnly) throw new Error("讨论附件标识与任务文件冲突，请重新生成后重试。");
+    if (existing?.attachmentOnly && (existing.version ?? 1) !== (attachment.version ?? 1)) throw new Error("讨论附件源版本不一致，请重新生成后重试。");
     const saved = existing ?? attachment;
     if (!existing) {
       if (saved.archived) throw new Error("已归档的文件不能添加为附件。");
@@ -244,6 +290,7 @@ function attachFiles(snapshot: CollaborationSnapshot, refs: readonly AttachmentR
     const source = files.find(item => item.id === ref.fileId && item.kind === "file");
     if (!source) throw new Error("附件文件已删除或不存在，请重新选择。");
     if (source.archived) throw new Error("已归档的文件不能添加为附件。");
+    if (source.attachmentOnly && (source.version ?? 1) !== ref.version) throw new Error("讨论附件源版本不一致，请重新生成后重试。");
   }
   return { files, attachmentRefs };
 }
@@ -325,7 +372,10 @@ export function setFileThreadResolved(snapshot: CollaborationSnapshot, threadId:
   return changed(snapshot, { threads: snapshot.threads.map(item => item.id === threadId ? next : item) });
 }
 export function replaceCollaborationFiles(snapshot: CollaborationSnapshot, files: TaskFileNode[]): CollaborationSnapshot {
-  return changed(snapshot, { files: parseFiles(files) });
+  const retained = new Map(snapshot.files.filter(file => file.attachmentOnly || file.retiredBuiltin).map(file => [file.id, file]));
+  const next = parseFiles(files).map(file => retained.get(file.id) ?? file);
+  const nextIds = new Set(next.map(file => file.id));
+  return changed(snapshot, { files: [...next, ...[...retained.values()].filter(file => !nextIds.has(file.id))] });
 }
 /** Seed history stays visible; local edits/deletions override their original records by ID. */
 export function mergeCollaborationMessages(seed: readonly TaskActivityMock[], overrides: readonly CollaborationMessage[]): CollaborationMessage[] {

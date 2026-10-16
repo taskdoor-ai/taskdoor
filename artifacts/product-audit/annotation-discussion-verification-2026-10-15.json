@@ -1,0 +1,36 @@
+{
+  "source": "http://127.0.0.1:5192/annotation-discussion-qa.html",
+  "kind": "current-component",
+  "desktop": [
+    1440,
+    960
+  ],
+  "mobile": [
+    390,
+    844
+  ],
+  "narrow": [
+    320,
+    744
+  ],
+  "fileDiscussionRemoved": true,
+  "legacyMessagesUnified": true,
+  "mainDraftAndAttachmentPreserved": true,
+  "noAutoPublishOrFileCreation": true,
+  "frozenSourceAttachment": true,
+  "failedSendRetained": true,
+  "mouseDrag": true,
+  "touchDrag": true,
+  "keyboardDrag": true,
+  "mobileBounds": true,
+  "pageErrors": [],
+  "targetedTests": {
+    "passed": 58,
+    "failed": 0,
+    "scope": "56 targeted cases plus 2 changed wiring cases"
+  },
+  "applicationTypecheck": "passed",
+  "structureCheck": "passed-no-new-exceptions",
+  "externalAiLaunched": false,
+  "temporaryHarness": "removed-after-capture"
+}
