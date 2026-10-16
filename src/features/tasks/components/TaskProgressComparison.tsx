@@ -1,3 +1,4 @@
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { formatDisplayDate } from "@/shared/lib/date-time";
 import { useBurnUpWidth } from "@/shared/lib/useBurnUpWidth";
@@ -11,8 +12,9 @@ import { TaskProgressStage } from "@/features/tasks/components/TaskProgressStage
 import { TaskBurnUpNode } from "@/features/tasks/components/TaskBurnUpNode";
 import { layoutBurnUpDateAxis, TaskBurnUpDateAxis, TaskBurnUpHeading, TaskBurnUpTimeDelta, TaskBurnUpTiming } from "@/features/tasks/components/TaskBurnUpTiming";
 import { getTaskProgressDisplay, type TaskProgressContext, type TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 
-const shortDate = (date: string | null) => date ? formatDisplayDate(date) ?? "—" : "—";
+const shortDate = (date: string | null, locale: string) => date ? formatDisplayDate(date, { locale }) ?? "—" : "—";
 const days = (minutes: number) => formatPersonDays(minutes / 480);
 const signedWork = (minutes: number) => `${minutes > 0 ? "+" : minutes < 0 ? "−" : ""}${days(Math.abs(minutes))}`;
 
@@ -35,18 +37,20 @@ export function TaskProgressComparison({ compact = false, series, currentScopeMi
   };
 }) {
   const p = useProgressCopy();
+  const { locale } = useI18n();
+  const timeZone = useTeamTimeZone();
   const id = useId();
   const canvas = useBurnUpWidth(320);
-  const sourceModel = getTaskProgressComparison(series);
+  const sourceModel = getTaskProgressComparison(series, timeZone);
   if (!sourceModel) return null;
   const scopeChanged = currentScopeMinutes != null && currentScopeMinutes !== sourceModel.latest.scopeMinutes;
-  const display = presentation?.display ?? getTaskProgressDisplay({series,task:progressTask,scopeMinutes:currentScopeMinutes,completedMinutes,sourceLabel:completionSource});
-  const historyModel = getTaskProgressComparison(display.historySeries) ?? sourceModel;
+  const display = presentation?.display ?? getTaskProgressDisplay({timeZone,series,task:progressTask,scopeMinutes:currentScopeMinutes,completedMinutes,sourceLabel:completionSource});
+  const historyModel = getTaskProgressComparison(display.historySeries, timeZone) ?? sourceModel;
   const historicalOnly = display.ratio === null && currentScopeMinutes !== undefined
     && historyModel.history.some(point => point.completedMinutes > 0);
   const baseModel = scopeChanged ? {...sourceModel, expectedRatio:null, expectedMinutes:null, deltaMinutes:null, deltaPoints:null, forecastOn:null, finishOn:sourceModel.completedOn, deltaDays:null, relation:"unknown" as const} : historyModel;
   const model = {...baseModel, startOn:display.startOn, forecastOn:display.forecastOn, finishOn:display.finishOn, dueOn:display.dueOn, completedOn:display.completedOn, deltaDays:display.deltaDays};
-  const chart = getTaskProgressChart(model,progressTask,{width:canvas.width,projectScope:!display.cancelled && display.sourceLabel!=="用户确认"
+  const chart = getTaskProgressChart(model,progressTask,{timeZone,width:canvas.width,projectScope:!display.cancelled && display.sourceLabel!=="用户确认"
     && !scopeChanged && display.total===model.latest.scopeMinutes && presentation?.historyLabel!=="上次记录"});
   const latestRow = chart.rows.at(-1)!;
   const totalsOverlap = latestRow.scopeMinutes === latestRow.completedMinutes;
@@ -55,7 +59,7 @@ export function TaskProgressComparison({ compact = false, series, currentScopeMi
     ...chart.forecastRows.filter(p=>p.at===at).map(p=>Math.abs(p.y-y)/2),
     ...chart.scopeForecastRows.filter(p=>p.at===at).map(p=>Math.abs(p.scopeY-y)/2),
   ].filter(distance=>distance>0).map(distance=>Math.max(1,distance)));
-  const dateAxis = layoutBurnUpDateAxis({ translate: p, model: display, ...chart, asOf: model.latest.at, historyStartOn: chart.scopeRows[0]?.at, observationLabel: presentation?.historyLabel ?? (historicalOnly ? p("上次记录") : undefined), fontSize:13 });
+  const dateAxis = layoutBurnUpDateAxis({ locale, translate: p, model: display, ...chart, asOf: model.latest.at, historyStartOn: chart.scopeRows[0]?.at, observationLabel: presentation?.historyLabel ?? (historicalOnly ? p("上次记录") : undefined), fontSize:13 });
   const viewStartX = Math.min(0, dateAxis.labelStartX);
   const viewWidth = Math.max(chart.width, dateAxis.labelEndX) - viewStartX;
   const timeExplanation = model.deltaDays === null ? p("暂无法比较完成日与截止日")
@@ -73,7 +77,7 @@ export function TaskProgressComparison({ compact = false, series, currentScopeMi
     </div>}><div ref={canvas.ref} className="task-burnup-visual" data-column="burnup">
       <TaskBurnUpHeading/>
       {presentation?.historyEmpty ? <><div className="task-burnup-empty" role="status">{p(presentation.historyEmpty)}</div><TaskBurnUpTiming model={display} showStatus/></> : <>
-      <div aria-label={p("燃起图图例，数值单位为人天")} className="task-burnup-legend"><span className="task-progress-legend-scope" title={p(`${shortDate(model.latest.at)} 总工作量 ${days(model.latest.scopeMinutes)}`)}>{p("总工作量")}<strong>{days(model.latest.scopeMinutes).replace(/ 人天$/u, "")}</strong></span><span className="task-progress-legend-actual" title={p(`${shortDate(model.latest.at)} 完成量 ${days(model.latest.completedMinutes)}`)}>{p("完成量")}<strong>{days(model.latest.completedMinutes).replace(/ 人天$/u, "")}</strong></span>{chart.forecastX !== null && <span className="task-progress-legend-expected" data-trend={Boolean(chart.forecastPath)}>{p("AI 预测")}</span>}</div>
+      <div aria-label={p("燃起图图例，数值单位为人天")} className="task-burnup-legend"><span className="task-progress-legend-scope" title={p(`${shortDate(model.latest.at, locale)} 总工作量 ${days(model.latest.scopeMinutes)}`)}>{p("总工作量")}<strong>{days(model.latest.scopeMinutes).replace(/ 人天$/u, "")}</strong></span><span className="task-progress-legend-actual" title={p(`${shortDate(model.latest.at, locale)} 完成量 ${days(model.latest.completedMinutes)}`)}>{p("完成量")}<strong>{days(model.latest.completedMinutes).replace(/ 人天$/u, "")}</strong></span>{chart.forecastX !== null && <span className="task-progress-legend-expected" data-trend={Boolean(chart.forecastPath)}>{p("AI 预测")}</span>}</div>
       <div className="task-progress-chart-interaction">
         <svg aria-label={p("燃起图：总工作量与完成量")} aria-describedby={`${id}-desc`} className="task-burnup-chart task-progress-comparison-chart" role="group" viewBox={`${viewStartX} 0 ${viewWidth} ${chart.bottomY + dateAxis.height}`}>
           <desc id={`${id}-desc`}>{p("总工作量包含初始范围与后续增减，保留各日原始量；完成量来自 AI 预测或用户确认。")}{chart.scopeForecastPath && p("灰色虚线为预计总工作量；无预计范围变化时保持当前总量，有依据的新增按未来节点上升。")}{chart.forecastPath ? p("紫色阶梯虚线为未来交付节点的预测完成量，等待阶段持平，不是已完成记录。") : chart.forecastX !== null ? p("紫色竖虚线仅标记预测完成日，暂无未来完成量节点。") : ""}{p("上方连接线只表示日期差。")}{timeExplanation}。</desc>
@@ -84,9 +88,9 @@ export function TaskProgressComparison({ compact = false, series, currentScopeMi
           <path className="task-progress-actual-path" d={chart.completedPath} fill="none"/>
           {chart.scopeForecastPath && <path className="task-progress-scope-forecast" d={chart.scopeForecastPath} fill="none"/>}
           {chart.forecastPath && <path className="task-progress-forecast-trend" d={chart.forecastPath} fill="none"/>}
-          {chart.dueX !== null && <line className="task-progress-chart-deadline" x1={chart.dueX} x2={chart.dueX} y1={display.deltaDays !== null ? 24 : chart.topY-4} y2={chart.bottomY}><title>{p(`计划截止 ${shortDate(model.dueOn)}`)}</title></line>}
-          {chart.forecastX !== null && <line className="task-progress-chart-forecast-date" x1={chart.forecastX} x2={chart.forecastX} y1={display.deltaDays !== null ? 24 : chart.topY-4} y2={chart.bottomY}><title>{p(`AI 预测完成 ${shortDate(model.forecastOn)}`)}</title></line>}
-          {model.completedOn && chart.finishX !== null && <line className="task-progress-chart-completed-date" x1={chart.finishX} x2={chart.finishX} y1={display.deltaDays !== null ? 24 : chart.topY-4} y2={chart.bottomY}><title>{p(`用户确认完成 ${shortDate(model.completedOn)}`)}</title></line>}
+          {chart.dueX !== null && <line className="task-progress-chart-deadline" x1={chart.dueX} x2={chart.dueX} y1={display.deltaDays !== null ? 24 : chart.topY-4} y2={chart.bottomY}><title>{p(`计划截止 ${shortDate(model.dueOn, locale)}`)}</title></line>}
+          {chart.forecastX !== null && <line className="task-progress-chart-forecast-date" x1={chart.forecastX} x2={chart.forecastX} y1={display.deltaDays !== null ? 24 : chart.topY-4} y2={chart.bottomY}><title>{p(`AI 预测完成 ${shortDate(model.forecastOn, locale)}`)}</title></line>}
+          {model.completedOn && chart.finishX !== null && <line className="task-progress-chart-completed-date" x1={chart.finishX} x2={chart.finishX} y1={display.deltaDays !== null ? 24 : chart.topY-4} y2={chart.bottomY}><title>{p(`用户确认完成 ${shortDate(model.completedOn, locale)}`)}</title></line>}
           {chart.scopeForecastRows.slice(1).filter(point=>point.at!==model.forecastOn && !chart.forecastRows.some(row=>row.at===point.at && row.completedMinutes===point.scopeMinutes)).map(point=><TaskBurnUpNode key={`scope-${point.at}`} kind="scope-forecast" date={point.at} x={point.x} y={point.scopeY} radius={forecastNodeRadius(point.at,point.scopeY)}
             lines={[p(`AI 预测总工作量 ${days(point.scopeMinutes)}`),point.note]}>
             <circle className="task-progress-scope-point" cx={point.x} cy={point.scopeY} r={3}/>

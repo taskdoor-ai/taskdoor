@@ -33,6 +33,9 @@
 
 .notification-list-view { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--ad-space-6) var(--ad-space-6); }
 .notification-list { display: grid; }
+.notification-test-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ad-space-2); padding: var(--ad-space-3) 0; border-bottom: 1px solid var(--ad-border-soft); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); }
+.notification-test-tools button { padding: 6px 8px; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-control); background: var(--ad-surface); color: var(--ad-route); cursor: pointer; font: inherit; }
+.notification-test-tools button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 .notification-item { position: relative; display: grid; width: 100%; min-height: 68px; grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--ad-space-1); padding: var(--ad-space-4) 0; border: 0; border-bottom: 1px solid var(--ad-border-soft); background: transparent; color: var(--ad-ink); cursor: pointer; font-family: var(--ad-font-sans); text-align: left; transition: background-color var(--ad-duration-fast) var(--ad-ease); }
 .notification-item:hover { background: var(--ad-surface-quiet); }
 .notification-item-read:focus-visible { border-radius: var(--ad-radius-control); outline: 2px solid var(--ad-focus); outline-offset: 2px; }

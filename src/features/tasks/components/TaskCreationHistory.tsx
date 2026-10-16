@@ -4,6 +4,7 @@ import { activityChangeValue } from "@/features/tasks/i18n/activity-display";
 import { ChevronDown } from "lucide-react";
 import type { CreationProcess } from "@/features/tasks/lib/task-creation-progress";
 import { TaskCreationProcessView } from "@/features/tasks/components/TaskCreationProcess";
+import { TaskCreationAnnotationBucket } from "@/features/tasks/components/TaskCreationAnnotationBucket";
 
 function userTurn(process: CreationProcess) {
   const answers = [
@@ -16,7 +17,7 @@ function userTurn(process: CreationProcess) {
 
 function fallbackReply(process: CreationProcess) {
   if ((process.applicationStatus === "applied" || process.applicationStatus === "not_applied" || process.applicationStatus === "expired") && process.outcome) return process.outcome;
-  if (process.responseSummary) return process.responseSummary;
+  if (process.responseSummary) return process.annotations?.length ? process.responseSummary.replace(/^已根据 (\d+) 条批注/, "已根据 $1 条标注") : process.responseSummary;
   if (process.outcome) return process.outcome;
   if (process.status === "running") return "正在根据这轮输入整理候选方案。";
   if (process.status === "stopped") return "这轮处理已停止，之前的草稿仍然保留。";
@@ -44,8 +45,12 @@ export function TaskCreationHistory({ processes, hideLatestPendingChanges = fals
         const user = userTurn(process);
         const running = process.status === "running";
         return <li className="task-creation-history-round" key={process.id}>
-          <div aria-label={ui("你的输入")} className="task-creation-history-user" role="group">
-            {user.answers ? <dl>{user.answers.map(answer => <div key={answer.label}><dt>{ui(answer.label)}</dt><dd>{answer.value}</dd></div>)}</dl> : <p>{user.text}</p>}
+          <div aria-label={ui("你的输入")} className={`task-creation-history-user${process.annotations?.length ? " has-annotations" : ""}`} role="group">
+            {process.annotations?.length ? <>
+
+              <div className="creation-annotation-sent-comments"><TaskCreationAnnotationBucket annotations={process.annotations} sent /></div>
+              {process.supplementalInstruction && <p>{process.supplementalInstruction}</p>}
+            </> : user.answers ? <dl>{user.answers.map(answer => <div key={answer.label}><dt>{ui(answer.label)}</dt><dd>{answer.value}</dd></div>)}</dl> : <p>{user.text}</p>}
           </div>
           {process.steps.length > 0 && <TaskCreationProcessView onCancel={running && index === processes.length - 1 ? onStopLatest : undefined} process={process} />}
           {!running && <div aria-label={ui("AI 回复")} className="task-creation-history-ai" role="group">

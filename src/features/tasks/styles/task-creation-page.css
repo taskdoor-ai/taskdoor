@@ -2,6 +2,7 @@
   min-width: 0; padding-top: var(--ad-space-3); scroll-margin-top: 88px;
   color: var(--ad-ink); font-family: var(--ad-font-sans);
 }
+.task-creation-page .task-detail-hero-card { background: var(--ad-surface); }
 .creation-page-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ad-space-4); margin-bottom: var(--ad-space-3); }
 .creation-page-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--ad-space-4); margin-left: auto; }
 .creation-example-trigger { display: inline-flex; align-items: center; gap: var(--ad-space-2); min-height: var(--ad-control-height-sm); padding: var(--ad-space-1) var(--ad-space-2); border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); cursor: pointer; white-space: nowrap; }
@@ -34,6 +35,8 @@
 .creation-stage-heading h1 { margin: 0; font-size: var(--ad-text-title-3); color: var(--ad-ink); font-weight: 620; line-height: 1.5; letter-spacing: -.015em; }
 .creation-stage-heading p { margin: var(--ad-space-1) 0 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-label); line-height: 1.7; }
 .creation-clarify-panel { padding: var(--ad-space-6); }
+.creation-clarify-panel .creation-stage-heading { margin-bottom: var(--ad-space-4); }
+.creation-clarify-panel .creation-questions { gap: var(--ad-space-4); }
 .creation-questions { display: grid; gap: var(--ad-space-5); width: 100%; min-width: 0; }
 .creation-question { min-width: 0; }
 .creation-question > h2 { margin: 0 0 var(--ad-space-3); color: var(--ad-ink); font-size: var(--ad-text-body-sm); font-weight: 600; line-height: 1.6; }
@@ -51,7 +54,7 @@
 .creation-question-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ad-space-3); }
 .creation-stage-note { margin: var(--ad-space-4) 0 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.7; }
 .creation-stage-error { margin: var(--ad-space-3) 0 0; color: var(--ad-danger); font-size: var(--ad-text-label); line-height: 1.7; overflow-wrap: anywhere; }
-.creation-revision-panel { margin-top: var(--ad-space-5); padding: var(--ad-space-4) var(--ad-space-5); border: 1px solid color-mix(in srgb, var(--ad-route) 16%, var(--ad-border)); border-radius: var(--ad-radius-card); background: color-mix(in srgb, var(--ad-route) 3%, var(--ad-surface)); }
+.creation-revision-panel { margin-top: var(--ad-space-5); padding: var(--ad-space-4) var(--ad-space-5); border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--ad-surface); }
 .creation-revision-heading { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ad-space-2); margin-bottom: var(--ad-space-3); color: var(--ad-route); }
 .creation-revision-heading h2 { margin: 0; color: var(--ad-ink); font-size: var(--ad-text-label); font-weight: 550; }
 .creation-revision-heading > span { margin-left: var(--ad-space-1); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
@@ -71,6 +74,11 @@
 .creation-revision-notice { margin: var(--ad-space-3) 0 0; color: var(--ad-route-ink); font-size: var(--ad-text-caption); line-height: 1.7; }
 .creation-confirm-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ad-space-2); }
 .creation-sheet { min-width: 0; scroll-margin-top: 88px; }
+.task-creation-page > .creation-sheet[data-stage="clarify"],
+.task-creation-page > .creation-sheet[data-stage="decision"] { width: min(100%, 720px); }
+.task-creation-page > .creation-sheet[data-stage="planning"],
+.task-creation-page > .creation-sheet[data-stage="clarify"],
+.task-creation-page > .creation-sheet[data-stage="decision"] { margin-inline: 0; }
 .creation-sheet:focus { outline: none; }
 .creation-heading .task-detail-heading-main { grid-template-columns: minmax(0, 1fr); }
 .creation-heading .task-detail-title-row > .task-icon { width: var(--ad-control-touch-min); height: var(--ad-control-touch-min); }
@@ -136,8 +144,8 @@
 .creation-confirm-copy > div { display: grid; gap: var(--ad-space-1); }
 .creation-confirm-copy strong { font-size: var(--ad-text-body-sm); font-weight: 600; }
 .creation-confirm-copy div > span { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
-.creation-primary[data-slot="button"] { min-width: 144px; padding-inline: var(--ad-space-5); border: 1px solid var(--ad-route-hover); background: linear-gradient(180deg, var(--ad-route), var(--ad-route-hover)); color: var(--ad-action-ink); box-shadow: inset 0 1px 0 rgb(255 255 255 / 25%), 0 4px 10px color-mix(in srgb, var(--ad-route) 25%, transparent); }
-.creation-primary[data-slot="button"]:hover:not(:disabled) { background: linear-gradient(180deg, var(--ad-route-hover), var(--ad-route-active)); box-shadow: 0 6px 18px color-mix(in srgb, var(--ad-route) 30%, transparent); }
+.creation-primary[data-slot="button"] { min-width: 144px; padding-inline: var(--ad-space-5); border: 1px solid var(--ad-route-hover); background: var(--ad-route); color: var(--ad-action-ink); box-shadow: none; }
+.creation-primary[data-slot="button"]:hover:not(:disabled) { background: var(--ad-route-hover); }
 .creation-validation { flex-basis: 100%; margin: 0; color: var(--ad-inference); font-size: var(--ad-text-label); }
 .creation-validation[role="alert"] { color: var(--ad-danger); }
 .creation-created-note { flex-basis: 100%; display: flex; align-items: center; gap: var(--ad-space-2); margin: 0; font-size: var(--ad-text-label); color: var(--ad-tag-green-ink); }
@@ -198,3 +206,9 @@
 .creation-sheet > .creation-process-list,
 .creation-sheet > .creation-process { width: 100%; }
 .creation-sheet .creation-process-content { max-width: none; }
+
+/* Keep the page's progress aligned with the breadcrumb and use one text column. */
+.creation-sheet > .creation-process .creation-process-toggle { padding-inline: var(--ad-space-2); }
+.creation-sheet > .creation-process .creation-process-toggle > span { width: 14px; justify-content: center; }
+.creation-sheet > .creation-process .creation-process-content { padding-left: 0; }
+.creation-sheet > .creation-process .agent-workflow-trace-content { padding-left: calc(var(--ad-space-5) - var(--ad-space-2) + 2.5px); }

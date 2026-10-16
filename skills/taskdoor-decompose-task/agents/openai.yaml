@@ -1,0 +1,4 @@
+interface:
+  display_name: "TaskDoor 子任务拆解"
+  short_description: "分析当前任务材料和正式职责，只建议下一层可独立验收的子任务"
+  default_prompt: "使用 $taskdoor-decompose-task 分析当前任务、已有子任务、讨论、文件及已确认团队职责，只建议下一层子任务，供我审阅。"

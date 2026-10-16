@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "kind": "nonsemantic-visual",
+  "newChangeId": false,
+  "lastChange": "PRD-0233",
+  "versionsPreserved": true,
+  "prdBuild": {
+    "status": "passed",
+    "modules": 25
+  },
+  "figures": [
+    "FIG-FILES-085",
+    "FIG-FILES-086"
+  ],
+  "images": "actual JPEG 1280x720, current-page, original bytes preserved",
+  "embedded085MatchesJpeg": true,
+  "currentJsonValid": true,
+  "supportPolicyUnchanged": true,
+  "scopedDiffFormatCheck": "passed",
+  "productTestsRerunByDocumentationAgent": false
+}

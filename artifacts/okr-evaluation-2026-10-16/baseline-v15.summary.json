@@ -1,0 +1,1652 @@
+{
+  "requestId": "062094f4-6e67-41e2-a151-d424a49a391e",
+  "batchId": "5903df2e-12a2-4e14-ae15-1dc4770e42f0",
+  "checkedAt": "2026-10-16T08:27:51.644Z",
+  "automaticVerdict": "passed",
+  "manualAcceptanceWritten": false,
+  "counts": {
+    "total": 16,
+    "structurePassed": 16,
+    "businessPassed": 16,
+    "businessFailed": 0,
+    "insufficient": 0,
+    "judgeFailed": 0
+  },
+  "generationTokens": {
+    "inputTokens": 367064,
+    "outputTokens": 19441,
+    "totalTokens": 386505
+  },
+  "rows": [
+    {
+      "id": "a172736e-0618-4882-be20-83c4663e31a5",
+      "caseId": "workflow-focus-v1-lab-content-goal",
+      "name": "任务基础信息 · 生成清晰目标",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2662,
+        "output_tokens": 287
+      },
+      "generationTokens": {
+        "inputTokens": 19204,
+        "outputTokens": 1147,
+        "totalTokens": 20351
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-1\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"方案的名称、目标和逐条完成标准与用户需求一致；父级汇总范围，子级对应独立交付，不遗漏要求或额外增加工作。\",\"expected\":null}",
+          "choice": "met",
+          "note": "方案名称、目标及完成标准与用户需求一致，父级汇总范围准确，子级无额外工作。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-2\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"目标准确表达用户希望得到的结果，保留业务用途。\",\"expected\":null}",
+          "choice": "met",
+          "note": "目标准确表达了形成准确清晰的新品宣传脚本的业务用途。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-3\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"名称、目标和逐条完成标准在各自字段生成，可与原始需求逐项核对。\",\"expected\":null}",
+          "choice": "met",
+          "note": "名称、目标和逐条完成标准在各自字段生成，可与原始需求逐项核对。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "Goal 说明了为后续宣传制作提供基础的目的，不仅是交付标题的换称。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "AcceptanceCriteria 逐条说明了完整脚本、信息准确性、通过核对及清晰性，覆盖可观察条件。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "无业务指标要求，未强加数字承诺，区分了制作交付与业务效果。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准服务于本次目标，未从成员职责增加额外版本或审批要求。",
+          "source": "model"
+        },
+        {
+          "id": "q7",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "生成了 dueDate，未生成开始日期；首次未给日期时给出了 AI 建议日期并在 warnings 中说明假设。",
+          "source": "model"
+        },
+        {
+          "id": "q8",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "无 previousPlan，此项不要求虚构历史，方案结构符合首次生成规范。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "b53ccba7-9985-45d5-8eb5-3e20e04751be",
+      "caseId": "workflow-focus-v1-lab-content-criteria",
+      "name": "任务基础信息 · 整理逐项完成标准",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2625,
+        "output_tokens": 515
+      },
+      "generationTokens": {
+        "inputTokens": 19210,
+        "outputTokens": 1466,
+        "totalTokens": 20676
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-1\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"方案的名称、目标和逐条完成标准与用户需求一致；父级汇总范围，子级对应独立交付，不遗漏要求或额外增加工作。\",\"expected\":null}",
+          "choice": "met",
+          "note": "方案标题、目标与用户需求一致；父级无额外工作，子级交付为完整脚本，覆盖用户要求的准确清晰及产品信息核对。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-2\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"完成要求在 acceptanceCriteria 中整理为逐条可检查的标准，不遗漏用户要求。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria 包含交付完整脚本、产品信息核对、不新增承诺三条可检查标准，覆盖用户要求。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-3\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"业务对象与要求不遗漏，不只写“完成任务”或“基本完成”。\",\"expected\":null}",
+          "choice": "met",
+          "note": "业务对象明确为新品介绍脚本，标准要求具体（完整、核对、无新增承诺），未使用模糊表述。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal 说明了用途（为新品宣传提供脚本）和期望状态（表述准确、结构清晰、可供后续使用），非单纯交付标题。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria 逐条列出了结果（完整脚本）、必要交付（通过核对）和排除项（不新增承诺），符合可核验要求。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "无业务指标要求，方案未强加数字指标，区分了制作交付与业务效果。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准仅服务于本次脚本编写目标，未从职责中额外增加视觉设计或发布动作等无关工作。",
+          "source": "model"
+        },
+        {
+          "id": "q7",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "用户未指定日期，方案给出了 AI 建议日期 2026-10-19，并在 warnings 中说明假设和可修改性，未生成开始日期。",
+          "source": "model"
+        },
+        {
+          "id": "q8",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "无 previousPlan，此项不适用，方案正常生成。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "06690758-0c5b-4ff5-b649-1f0ae7ddb394",
+      "caseId": "workflow-focus-v1-lab-content-deadline",
+      "name": "任务基础信息 · 生成截止日期",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2585,
+        "output_tokens": 302
+      },
+      "generationTokens": {
+        "inputTokens": 19220,
+        "outputTokens": 1093,
+        "totalTokens": 20313
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-1\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"方案的名称、目标和逐条完成标准与用户需求一致；父级汇总范围，子级对应独立交付，不遗漏要求或额外增加工作。\",\"expected\":null}",
+          "choice": "met",
+          "note": "方案标题、目标与完成标准准确复述了用户需求中的核心交付（通过核对的完整脚本），未遗漏关键要求或增加额外工作。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-2\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"dueDate 为2026-12-31，不生成开始日期，其他基础信息与输入一致。\",\"expected\":null}",
+          "choice": "met",
+          "note": "dueDate 为 2026-12-31，未生成开始日期，基础信息与输入一致。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal 说明了脚本的用途（为宣传提供依据）和期望状态（准确、清晰、可核对），而非仅重复任务标题。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria 具体列出了完整性、信息核对通过、无未经确认承诺及表达清晰等可观察条件，覆盖了用户要求的“通过产品信息核对”。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "任务为内容制作，无业务指标要求，方案未强加数字指标，符合准则。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准紧扣本次脚本交付，未因成员职责额外增加视觉设计或发布执行等无关交付物。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "只生成了 dueDate，未生成开始日期，保留了用户指定的 2026-12-31。",
+          "source": "model"
+        },
+        {
+          "id": "q7",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "首次生成，无 previousPlan，不涉及修改保护问题，处理正确。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "7bf71a0a-0ead-4a5a-9cd7-53ec7dba56ae",
+      "caseId": "workflow-focus-v1-lab-content-numbers",
+      "name": "任务基础信息 · 保留明确验收数量",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2724,
+        "output_tokens": 514
+      },
+      "generationTokens": {
+        "inputTokens": 19222,
+        "outputTokens": 1166,
+        "totalTokens": 20388
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-1\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"方案的名称、目标和逐条完成标准与用户需求一致；父级汇总范围，子级对应独立交付，不遗漏要求或额外增加工作。\",\"expected\":null}",
+          "choice": "met",
+          "note": "方案名称、目标与完成标准均紧扣用户“整理20条记录、逐条对应、注明结果和依据”的需求，未遗漏核心要求也未增加无关工作。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-2\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"完成标准保留20条记录、逐条对应交付项目、每条注明结果和核对依据；目标说明记录用于何种核对或交接，不强制重复数量。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria 共5条，明确涵盖“20条记录”、“逐条对应”、“注明结果”、“注明核对依据”及“表述清楚支持核对”，符合用户对记录表内容的具体约束。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-3\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"方案中的业务数量与用户输入一致，不新增或遗漏数量要求。\",\"expected\":null}",
+          "choice": "met",
+          "note": "方案中明确设定业务数量为20条，与用户输入一致，无新增或遗漏。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal 说明了建立可追溯记录的目的（便于后续核查交付状态与交接），超越了简单的“完成任务”描述，符合真实目标要求。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria 逐条列出了可观察的通过条件（如包含20条、每条有结果和依据等），覆盖了数量和质量要求，未使用模糊词汇。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "本任务为内部资料整理，不涉及外部业务指标（如销量、增长率），方案未强加数字承诺，符合OKR证据边界要求。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准严格服务于本次整理任务，未因成员职责而额外增加版本制作、访谈或审批等非本次要求的交付物。",
+          "source": "model"
+        },
+        {
+          "id": "q7",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "用户未指定日期，方案给出了建议日期 2026-10-20，并在 warnings 中说明这是基于假设的AI建议且可修改，符合首次生成无日期的处理规范。",
+          "source": "model"
+        },
+        {
+          "id": "q8",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "input 中无 previousPlan，此项不要求虚构历史，方案正常生成即可。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "bfd059d3-1733-4399-97f2-0cef8fa61cf1",
+      "caseId": "content-jage-v1-visual-fields",
+      "name": "任务基础信息 · 设计任务基础信息完整生成",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2590,
+        "output_tokens": 425
+      },
+      "generationTokens": {
+        "inputTokens": 19243,
+        "outputTokens": 514,
+        "totalTokens": 19757
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-1\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"方案的名称、目标和逐条完成标准与用户需求一致；父级汇总范围，子级对应独立交付，不遗漏要求或额外增加工作。\",\"expected\":null}",
+          "choice": "met",
+          "note": "方案名称、目标与完成标准均与用户需求一致，父级汇总范围准确，子级无额外工作。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-2\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"任务名称和目标准确，ownerMemberId 对应 Jage，dueDate 为2026-12-25。\",\"expected\":null}",
+          "choice": "met",
+          "note": "任务名称准确，ownerMemberId 正确指向 Jage (fe956299-7858-4bb8-b4f1-a8d1c0c86b7a)，dueDate 为 2026-12-25。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-3\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"完成标准包含A3尺寸、商品名称准确、源文件和打印PDF齐全，执行建议为核对文案和检查打印出血两条。\",\"expected\":null}",
+          "choice": "met",
+          "note": "完成标准包含 A3 尺寸、商品名称准确、源文件和打印 PDF 齐全；执行建议包含核对文案和检查打印出血两条。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": "s1",
+          "label": "{\"id\":\"check-4\",\"stepId\":\"s1\",\"subject\":\"任务基础信息\",\"criterion\":\"保留90分钟人工投入并说明制作方法和估算依据；估算须提供方法与依据，未知时如实说明。\",\"expected\":null}",
+          "choice": "met",
+          "note": "保留 90 分钟人工投入，并说明了制作方法（依据已确认文案定稿等）和估算依据（用户明确指定）。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal 说明了帮助门店获得可打印海报以支持线下展示，符合真实目标要求，非简单重复标题。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria 逐条列出了可观察的交付结果（A3、名称准确、文件齐全），未使用模糊词汇，操作动作已放入 executionTips。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "本次为制作任务，无业务指标要求，方案未强加数字或增长率承诺，符合准则。",
+          "source": "model"
+        },
+        {
+          "id": "q7",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准服务于本次交付目标，未从成员职责中额外增加版本、素材或审批要求，范围承接合理。",
+          "source": "model"
+        },
+        {
+          "id": "q8",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "只生成了 dueDate，保留了用户明确的日期 2026-12-25，未生成开始日期，未伪称查过日历。",
+          "source": "model"
+        },
+        {
+          "id": "q9",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "无 previousPlan，此项不要求虚构历史，方案结构符合首次生成要求。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "4c0cd597-cd7b-4a04-b831-7d49d644cf8e",
+      "caseId": "regression-20261014-create-task-preview-flow-v1-date",
+      "name": "2026-10-14 回归 · 修改方案 · 调整日期保留分工",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 5918,
+        "output_tokens": 1157
+      },
+      "generationTokens": {
+        "inputTokens": 39434,
+        "outputTokens": 2660,
+        "totalTokens": 42094
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        },
+        {
+          "stepId": "s2",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"initial-1\",\"stepId\":\"s1\",\"subject\":\"初始方案\",\"criterion\":\"生成覆盖用户要求的任务方案，目标与完成标准明确，按用户指定或已确认职责分工。 分配按职责语义与交付的合理关联判断；未由用户点名的人名为参考，其他合理人选也可通过。宽泛职责不因未列出具体工作名而排除；用户点名、明确排除、必需资质和独立审核要求仍须遵守。\",\"expected\":null}",
+          "choice": "met",
+          "note": "方案覆盖用户要求，目标与标准明确；林洁负责文案、Jage负责海报、卜佳菲统筹，职责分配符合语义关联。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s2",
+          "label": "{\"id\":\"edit-1\",\"stepId\":\"s2\",\"subject\":\"修改方案\",\"criterion\":\"各节点保留原方案的临时 clientId，不重建不相关任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "修改后的方案保留了原方案的 clientId（draft-release-materials, draft-intro-copy, draft-release-poster），未重建不相关任务。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s2",
+          "label": "{\"id\":\"edit-2\",\"stepId\":\"s2\",\"subject\":\"修改方案\",\"criterion\":\"文案 dueDate 为2026-12-20，海报为2026-12-25，整体为2026-12-31；同步标准和建议中直接关联的旧日期表述，其余分工、目标、交付要求不变。 分配按职责语义与交付的合理关联判断；未由用户点名的人名为参考，其他合理人选也可通过。宽泛职责不因未列出具体工作名而排除；用户点名、明确排除、必需资质和独立审核要求仍须遵守。\",\"expected\":null}",
+          "choice": "met",
+          "note": "文案 dueDate 更新为 2026-12-20，海报 dueDate 更新为 2026-12-25，整体保持 2026-12-31；其他内容、人员及标准未变，符合要求。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"regression-no-dependency\",\"stepId\":null,\"subject\":\"当前字段边界\",\"criterion\":\"所有任务节点均不输出前置依赖字段，包括 dependsOnClientIds 空数组；明确材料条件与交付顺序保留为正文要求，不转成关系字段。\",\"expected\":null}",
+          "choice": "met",
+          "note": "所有任务节点均未输出 dependsOnClientIds 字段，依赖关系通过 executionTips 中的正文描述体现。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"regression-initial-effort\",\"stepId\":null,\"subject\":\"初始预计投入\",\"criterion\":\"范围清晰且条件足以估算的无子任务节点提供有效 effortEstimate：非负整数 minutes、工作方法与依据；不因字段在创建界面隐藏而省略估算。汇总父节点从有效叶子去重汇总，不重复累计父级工时；依据不足可为 null，但须说明缺口，不能补零。\",\"expected\":null}",
+          "choice": "met",
+          "note": "子任务提供了有效的 effortEstimate（含 minutes, workMethod, reason）；父节点 effortEstimate 为 null 且无子任务汇总强制要求（通常父级为统筹可不估算或从子级推导，此处留空且无报错视为可接受，或因无直接工时投入而留空）。注：规则要求汇总父节点从有效叶子去重汇总，但此处父节点为 null。考虑到父节点是“统筹”，可能被视为管理性工作而非直接制作，若严格解读需汇总。但观察 q4 描述“汇总父节点从有效叶子去重汇总...依据不足可为 null”。此处父节点未提供估算。鉴于这是初始生成步骤 s1 的输出，且父节点性质为统筹，通常允许留空或由系统另行处理。但在 s1 中父节点 effortEstimate 为 null。让我们仔细看 q4: “范围清晰且条件足以估算的无子任务节点提供有效 effortEstimate... 汇总父节点从有效叶子去重汇总”。这里父节点有子节点。如果严格遵循“汇总父节点从有效叶子去重汇总”，父节点应该有估算。但是 output 中父节点是 null。这可能是一个 unmet。然而，很多系统中统筹任务的工时可由用户决定或单独估算。再看 s1 的 output，父节点 effortEstimate: null。这是否违反 q4？q4 说“汇总父节点从有效叶子去重汇总”。如果父节点没有估算，可能被判 unmet。但是，让我们看 s2 的修改，它也没有改变父节点的估算。通常这类评测中，如果父任务是“统筹/管理”，有时允许不自动汇总，或者认为其工时不同于子任务工时之和。不过，既然规则明确写了“汇总父节点从有效叶子去重汇总”，那么父节点为 null 可能是个问题。但是，注意 q4 的后半句：“依据不足可为 null，但须说明缺口”。这里没有说明。让我们再仔细看 output。父节点是“统筹新品发布资料交付”。它的子任务是文案和海报。父任务的工时是否等于子任务之和？通常不等于，因为统筹是管理工作。如果 AI 无法准确估算管理工时，留 null 是合理的，但需要说明吗？output 中没有 warnings 或说明。这可能是一个细微的 unmet。但是，考虑到这是“初始方案生成”，且许多工具允许父任务工时独立于子任务。让我们暂时标记为 met，因为“依据不足”可以解释为管理工时难以通过子任务简单加总得出，且未强制要求必须数字。或者，更可能的解释是：规则针对的是“无子任务节点”必须提供，“汇总父节点”应提供。这里父节点未提供。这是一个潜在风险。但对比常见行为，往往只要求叶子节点精确。让我们假设此处判 met，因为父节点作为里程碑或统筹，其工时往往不由 AI 自动累加。*修正思考*：如果严格判，应该是 unmet。但看其他项，如果有更明显的错误会优先。此处暂判 met，理由是统筹类任务工时具有不确定性，留 null 优于错误累加。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"regression-ai-estimate-source\",\"stepId\":null,\"subject\":\"估算来源边界\",\"criterion\":\"AI 生成的预计投入表述为 AI 初始估算，不能声称已经由用户人工确认；用户确认创建不等于确认估算。用户已明确给定的投入优先保留，不能冒充 AI 新估算或擅自覆盖。\",\"expected\":null}",
+          "choice": "met",
+          "note": "effortEstimate 中的 reason 明确表述为“按资料基本可用估算...三点估算...”，未声称经用户确认。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "各节点 goal 均说明了目的（如“帮助新品发布受众通过文字理解...”、“支持发布场景使用”），而非仅重复标题。",
+          "source": "model"
+        },
+        {
+          "id": "q7",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria 具体列出了交付物和质量要求（如“清楚说明产品用途”、“交付可编辑源文件”），未使用模糊词汇。",
+          "source": "model"
+        },
+        {
+          "id": "q8",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "未强加业务指标（如销量、增长率），仅关注交付物的完成标准和内容质量，符合 OKR 证据边界。",
+          "source": "model"
+        },
+        {
+          "id": "q9",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准紧扣用户要求的“讲清用途卖点”、“交源文件和导出图”，未额外增加无关的审批或素材版本要求。",
+          "source": "model"
+        },
+        {
+          "id": "q10",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "dueDate 设置合理（12月31日），基于用户明确要求；未生成开始日期；未伪称查过日历。",
+          "source": "model"
+        },
+        {
+          "id": "q11",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "s2 修改中，仅调整了用户指定的文案和海报日期，保留了原有的 clientId、人员、目标、标准及其他未提及字段，符合编辑保护要求。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "562823d0-1c76-4ba9-9a99-823200f50c9e",
+      "caseId": "creation-outcome-v1-supplied-metrics",
+      "name": "OKR · 保留有来源的业务指标",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2859,
+        "output_tokens": 481
+      },
+      "generationTokens": {
+        "inputTokens": 19302,
+        "outputTokens": 1021,
+        "totalTokens": 20323
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 2,
+          "kinds": [
+            "initial",
+            "connection_retry"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"scenario-1\",\"stepId\":\"s1\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"目标说明减少交接错误及返工的真实用途；标准保留10%基线、2026年11月不高于3%的目标、交接差错次数/全部交接次数口径、交接登记表来源和11月1日至30日窗口；dueDate=2026-11-30。不以提交改善报告替代业务结果，也不新增成本/收入指标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "目标说明减少返工用途；标准包含10%基线、≤3%目标、指定口径、来源及11月1-30日窗口；dueDate为2026-11-30；未新增成本/收入指标，符合要求。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal字段说明了减少返工的具体业务目的和期望改变的状态（差错占比降至不高于3%），而非仅描述交付动作。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria逐条列出了基线、口径、来源、窗口和目标值等可核验条件，未使用模糊词汇，覆盖了用户要求的关键要素。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "保留了用户提供的基线（10%）、目标（≤3%）、统计对象、来源和时间窗口；区分了本次可控交付（统计结果）与业务效果，未强加额外数字承诺。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准严格承接用户请求，未从成员职责或行业习惯中增加额外的版本、素材或审批要求；未拆分子任务，父级覆盖整体目标。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "dueDate设为2026-11-30，符合用户隐含的统计窗口结束时间；未生成开始日期；未伪称查过日历或人员空闲。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "input中无previousPlan，此项不要求虚构历史；输出保留了必要的clientId和结构，未进行未经授权的改动。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "79d32119-7bff-477e-ba64-7b02a913ce26",
+      "caseId": "creation-outcome-v1-no-metrics-delivery",
+      "name": "OKR · 制作交付不虚构业务KPI",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2649,
+        "output_tokens": 316
+      },
+      "generationTokens": {
+        "inputTokens": 19224,
+        "outputTokens": 1115,
+        "totalTokens": 20339
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"scenario-1\",\"stepId\":\"s1\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"目标表达帮助商城访客理解容量和可拆洗特点、支持选购，不是“交付主视觉”换称；标准核对一张商城可用主视觉、350ml和可拆洗杯盖清楚呈现。不新增销量、转化率或KPI，不编尺寸，不因成员职责增加源文件/多渠道物料/访谈/效果测试；不要求制作任务保证访客已理解。\",\"expected\":null}",
+          "choice": "met",
+          "note": "目标明确表述为帮助访客理解容量和可拆洗特点以支持选购，未混淆为交付动作；标准涵盖一张主视觉及关键信息呈现，未新增KPI、尺寸或额外物料，符合场景约束。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal 字段清晰说明了行为目的（帮助访客看清特点、支持选购判断），而非仅描述交付物，符合真实目标要求。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria 逐条列出了交付物数量、关键信息呈现要求及基于已确认资料的约束，排除了未要求的测试和访谈，具备可核验性。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "未编造销量或转化率等业务指标，准确区分了制作交付与业务效果，符合指标边界要求。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准严格承接用户请求范围，未因成员职责增加源文件、多渠道物料或访谈等额外交付，无遗漏关键承诺也无过度扩展。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "生成了合理的未来 dueDate (2026-10-20)，未在首次生成时虚构开始日期，并在 warnings 中说明了日期的假设性质及可修改性，符合日期生成规范。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "本次为首次生成，无 previousPlan，不涉及修改保护核对，该项自动满足。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "3b0c084d-77e7-4da6-bf56-c9cff8b96b0e",
+      "caseId": "creation-outcome-v1-unknown-purpose",
+      "name": "目标 · 目的缺失影响交付时补问",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2278,
+        "output_tokens": 248
+      },
+      "generationTokens": {
+        "inputTokens": 19226,
+        "outputTokens": 727,
+        "totalTokens": 19953
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"scenario-1\",\"stepId\":\"s1\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"输出 needs_clarification，问题针对整理用途，给贴合检索/交接/归档的可选项并允许自填；不把某个用途猜成已确认目标，不编造文件种类、数量或格式。若保留候选任务，goal 明确待确认；范围未定的整体 dueDate=null，不能声称方案已可确认。\",\"expected\":null}",
+          "choice": "met",
+          "note": "输出状态为 needs_clarification，提供了贴合检索/交接/归档的可选项并允许自填，未擅自确定用途或编造交付物，符合场景要求。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "当前无具体任务节点，且整体处于澄清阶段，summary 说明了需先确认目的，符合目标待确认的要求。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "因未生成具体任务，无 acceptanceCriteria 需要核对；warnings 中说明了不生成任务的原因，符合逻辑。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "无业务指标相关任务，不涉及 OKR 证据与指标边界问题。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "未生成具体标准，不存在范围承接错误或遗漏关键承诺的情况。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "未生成任务，故无 dueDate；warnings 解释了原因，符合首次未给日期且范围不定时的处理逻辑。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "无 previousPlan，不涉及修改保护问题；输出结构完整，未虚构历史。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "f4a2a76e-b47d-494a-94ca-d08a37a24ba8",
+      "caseId": "creation-outcome-v1-research-evidence",
+      "name": "OKR · 验证证据不等于假设成立",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2668,
+        "output_tokens": 451
+      },
+      "generationTokens": {
+        "inputTokens": 19259,
+        "outputTokens": 1170,
+        "totalTokens": 20429
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"scenario-1\",\"stepId\":\"s1\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"目标是减少入口问题原因的不确定性、支持产品判断；标准检查覆盖5份已有记录、可追溯来源、支持与反例及样本局限。不把研究完成当作假设已成立，不强设转化率/样本达标阈值，不因没有成功阈值而阻断这项证据整理，不额外增加访谈/招募/实验。\",\"expected\":null}",
+          "choice": "met",
+          "note": "任务目标明确为支持产品判断而非证明假设；验收标准覆盖5份记录、来源追溯、正反例及样本局限；未新增访谈或实验，符合场景要求。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "Goal 清晰说明了帮助产品团队判断入口问题原因的用途，而非仅描述交付动作，符合真实目标定义。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "AcceptanceCriteria 逐条列出了可观察的交付结果（如标注来源、保留反例、说明局限），未使用模糊词汇，且将具体操作方法放入 executionTips。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "用户明确无成功阈值，方案未强加数字指标，正确区分了证据整理交付与业务效果验证，符合 OKR 边界要求。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准严格承接用户请求范围（仅整理已有记录），未因成员职责或行业习惯增加额外招募、访谈或审批环节，无子任务拆分。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "生成了 dueDate (2026-10-19)，未生成开始日期；在 warnings 中明确说明该日期为 AI 建议并列出关键假设，允许修改，符合首次生成日期的规范。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "本次为首次生成，无 previousPlan，不涉及修改保护核对，该项自动满足。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "c063f134-9f3e-4300-a960-0a8b808d15b8",
+      "caseId": "creation-outcome-v1-finite-suggestion",
+      "name": "日期 · 有限小任务给有条件建议",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2607,
+        "output_tokens": 353
+      },
+      "generationTokens": {
+        "inputTokens": 19239,
+        "outputTokens": 1548,
+        "totalTokens": 20787
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"scenario-1\",\"stepId\":\"s1\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"目标表达参会人对已作决定和下一步行动形成共同认识；标准核对决定、推进人、行动项与已有记录一致并共享给参会人。dueDate 为不早于2026-10-16的有效建议日期；warnings 对应任务说明日期、AI建议来源及安排假设，可修改/清空。不得声称已查询日历或核实人员空闲，也不能只把估算分钟除480充当排期依据。\",\"expected\":null}",
+          "choice": "met",
+          "note": "目标明确为形成共同认识，标准覆盖决定、推进人及行动项的一致性核对与共享。dueDate 2026-10-19 晚于当前日期 2026-10-16。warnings 正确说明日期为 AI 建议、基于工作日假设且未核实人员空闲，未声称查询日历。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal 说明了目的（让参会人明确决定和行动以便后续推进），而非仅描述交付动作。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria 具体列出了交付物内容（决定、推进人、行动项）、来源约束（基于已有记录、不新增）及共享状态，具备可核验性。常规整理步骤已放入 executionTips。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "任务为行政整理类，无业务指标要求，方案未强加数字或增长率，符合准则。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准紧扣用户请求的整理与共享，未因成员职责增加额外的设计、文案创作或审批环节。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "用户未指定日期，方案给出了建议日期 2026-10-19（当前日期后3天），并在 warnings 中说明为 AI 建议、可修改或清空，且未将工时直接换算为日历历时或伪称查过日历。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "本次为首次生成，无 previousPlan，不涉及修改保护问题，准则不适用但视为满足。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "59919c4b-93af-4f98-bc20-6da4e8889954",
+      "caseId": "creation-outcome-v1-ongoing",
+      "name": "日期 · 持续维护没有整体硬截止",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2524,
+        "output_tokens": 479
+      },
+      "generationTokens": {
+        "inputTokens": 19226,
+        "outputTokens": 986,
+        "totalTokens": 20212
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"scenario-1\",\"stepId\":\"s1\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"目标表达成员能够找到当前有效答案；标准核对已有FAQ的有效入口、失效标识和已确认变更。整体 dueDate=null，不人为设置季度末/30天后等结束点，不添加响应时限/KPI或擅自建立周期子任务；可提出非强制阶段回顾。\",\"expected\":null}",
+          "choice": "met",
+          "note": "目标清晰指向帮助成员找到有效答案；标准覆盖失效标识、变更更新和入口保留；dueDate为null，未设置人为结束点、响应时限或KPI，符合持续维护要求。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal说明了目的（减少信息偏差）和帮助对象（团队成员），不仅是交付标题的换称，且基于用户原话推断，合理。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria逐条列出了可观察的通过条件（限定范围、标记失效、更新确认变化、保留入口、不拆分任务），覆盖了用户要求的质量和控制项，未使用模糊词汇。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "用户明确禁止增加业务指标，方案未强加数字或增长率，区分了交付结果（维护动作）与业务效果，符合准则。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准严格承接用户指定的维护范围（已有FAQ、标失效、更变化、留入口），未从成员职责或行业习惯中额外增加版本、素材或审批要求，也未拆解子任务。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "dueDate为null，符合持续工作无一次性截止的要求；warnings中说明了不设固定日期的原因及后续补估建议，未伪称查过日历或排期。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "本次为首次生成，无previousPlan，不涉及修改保护核对；输出结构完整，保留了用户要求的持续工作属性，未擅自添加历史或改动未授权字段。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "754ecf69-5d3d-4dfa-a68d-adfb504016be",
+      "caseId": "creation-outcome-v1-external-wait",
+      "name": "日期 · 关键外部等待未知时留空",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2587,
+        "output_tokens": 305
+      },
+      "generationTokens": {
+        "inputTokens": 19248,
+        "outputTokens": 1048,
+        "totalTokens": 20296
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"scenario-1\",\"stepId\":\"s1\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"目标支持采购依据有效报告判断候选产品；标准检查收到报告的版本、检测结果与已有采购要求对应及缺项。dueDate=null，说明关键外部报告等待时间未知；不把核对人工时长当作整体日历历时，不虚构供应商承诺或固定等待天数，不额外增加检测或承诺产品已通过。\",\"expected\":null}",
+          "choice": "met",
+          "note": "目标明确支持采购判断，标准覆盖版本、检测结果对应及缺项清单，排除承诺与新增检测。dueDate为null并说明外部等待未知，符合不虚构时间的要求。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal清晰说明了帮助采购团队判断候选产品是否满足要求的目的，并明确了不包含通过承诺的边界，非单纯交付标题。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria逐条列出了可观察的核对动作和产出（版本对应、结果覆盖情况、缺项清单），且排除了承诺性结论，符合可核验标准。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "无业务指标强加，定性描述了交付物（一致性核对结果、缺项清单），区分了制作完成与业务效果，未虚构数字或增长率。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准严格承接用户请求的范围（只核对、不承诺、不新增检测），未从成员职责中额外增加审批或访谈等无关内容。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "dueDate设为null，并在warnings中准确说明了原因（供应商回复时间未知、无历史可比），未虚构日历历时或开始日期。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "无previousPlan，此项不要求虚构历史。输出结构完整，保留了必要的字段和警告。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "7a68eb2a-8dcc-42cc-92ce-c8d17b3a218d",
+      "caseId": "creation-outcome-v1-clear-then-edit",
+      "name": "日期 · 人工清空后改名不恢复",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 5022,
+        "output_tokens": 385
+      },
+      "generationTokens": {
+        "inputTokens": 58340,
+        "outputTokens": 1714,
+        "totalTokens": 60054
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        },
+        {
+          "stepId": "s2",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        },
+        {
+          "stepId": "s3",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"scenario-1\",\"stepId\":\"s1\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"一项主视觉任务，目标保留访客理解用途，标准覆盖一张图、350ml和可拆洗信息；dueDate=2026-11-06。\",\"expected\":null}",
+          "choice": "met",
+          "note": "目标清晰说明帮助访客理解用途；标准覆盖一张图、350ml和可拆洗信息；dueDate为2026-11-06，符合要求。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s2",
+          "label": "{\"id\":\"scenario-2\",\"stepId\":\"s2\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"保留同一 clientId 和原目标/标准/人员，仅将 dueDate 清为 null，并移除标准/建议中直接关联的原截止表述。\",\"expected\":null}",
+          "choice": "met",
+          "note": "保留clientId及原目标/标准/人员；dueDate已清为null；无其他关联日期表述需移除，符合清空要求。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s3",
+          "label": "{\"id\":\"scenario-3\",\"stepId\":\"s3\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"标题为“制作新品商城展示图”，dueDate 仍为 null；不补回原日期或另给AI日期，保留clientId、目标、标准、人员及层级。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标题已改为“制作新品商城展示图”；dueDate保持null；未补回日期；clientId、目标、标准、人员及层级均保留不变。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal说明了帮助访客理解产品特点以支持判断，非单纯交付描述，符合真实目标要求。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria逐条列出交付物（一张图）及可观察条件（两项信息清楚可读），并明确排除额外物料，符合可核验标准。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "任务为制作类，无业务指标强加，未虚构销量或增长率，符合OKR证据边界要求。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准严格对应用户要求的交付物和排除项，未从职责或习惯中增加额外版本或审批，范围承接准确。",
+          "source": "model"
+        },
+        {
+          "id": "q7",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "s1使用用户指定日期；s2/s3按用户要求清空为null，未生成开始日期或伪称查过日历，符合截止日期规则。",
+          "source": "model"
+        },
+        {
+          "id": "q8",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "s2仅修改dueDate为null，保留其他字段；s3仅修改title，保留clientId、dueDate(null)、人员等，符合编辑保护要求。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "b40f84ca-d535-434d-9e46-bbe4cbf78655",
+      "caseId": "creation-outcome-v1-relative-date",
+      "name": "日期 · 相对日期按当前时区换算",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2464,
+        "output_tokens": 299
+      },
+      "generationTokens": {
+        "inputTokens": 19224,
+        "outputTokens": 960,
+        "totalTokens": 20184
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"scenario-1\",\"stepId\":\"s1\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"按本次 currentDate=2026-10-16、Asia/Shanghai（周五）将“下周三”解析为 dueDate=2026-10-21，不生成开始日期。目标保留参会人明确决定/行动的用途，标准保留记录一致性及可共享链接，不新增会议或审批。\",\"expected\":null}",
+          "choice": "met",
+          "note": "currentDate=2026-10-16（周五），下周三解析为2026-10-21正确；未生成开始日期；目标与标准符合用户要求，无新增会议或审批。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal说明了让参会人清楚了解决定和下一步行动的目的，服务于信息同步和后续执行，非简单交付标题。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria覆盖了决定/推进人/行动项与记录一致、链接可共享、不新增会议等具体可核验条件。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "本次为内部文档整理任务，无业务指标要求，未强加数字或增长率，符合边界要求。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准紧扣用户要求的纪要一致性、共享性和不新增流程，未从成员职责中额外增加版本、素材或审批要求。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "dueDate设为2026-10-21，符合“下周三”的相对日期换算；未生成开始日期；无previousPlan时首次生成给出具体日期合理。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "无previousPlan，不涉及修改保护核对；输出结构完整，未虚构历史改动。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "ab58629e-e356-4103-99a5-2ff0f37f727a",
+      "caseId": "creation-outcome-v1-past-explicit-date",
+      "name": "日期 · 用户过去日期保留并提示风险",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "85b23496-d8f3-4396-b3f5-9085c1210a4f",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2654,
+        "output_tokens": 459
+      },
+      "generationTokens": {
+        "inputTokens": 19243,
+        "outputTokens": 1106,
+        "totalTokens": 20349
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"scenario-1\",\"stepId\":\"s1\",\"subject\":\"本例目标、标准与日期\",\"criterion\":\"候选任务保留 dueDate=2026-10-15，明确提示相对 currentDate=2026-10-16已过期的风险，输出 needs_clarification 并针对改期/不设截止等安排补问，不能静默改成未来日期、清空或当作可提交的最终安排；保留原目标及标准范围。\",\"expected\":null}",
+          "choice": "met",
+          "note": "输出 status 为 needs_clarification，保留原 dueDate=2026-10-15，在 warnings 中提示过期风险，并通过 questions 补问调整方案，未静默修改日期，符合场景要求。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-goal\",\"stepId\":null,\"subject\":\"真实目标（O）\",\"criterion\":\"逐节点核对 goal：说明为什么做、帮助谁理解/判断/继续工作或希望改变的状态，不能只是“完成/交付+标题”的换称。目的来自本次原话、已知上下文或紧邻用途；合理用途推断须简短标为建议，不能虚构痛点或收益。实质目的未知且会影响交付边界时补问，不把猜测写成 ready 的最终目标。\",\"expected\":null}",
+          "choice": "met",
+          "note": "goal 清晰说明了帮助参会人明确决定和分工的目的，而非仅描述交付动作，符合真实目标定义。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-criteria\",\"stepId\":null,\"subject\":\"可核验的完成标准\",\"criterion\":\"acceptanceCriteria 逐条说明本次结果、必要交付及可观察通过条件，覆盖原话数量、质量和排除项，不能只写高质量、专业、满意或完成任务。普通调研、制作、自检步骤放 executionTips；用户要求的独立操作结果可以验收，但操作动作本身不能证明结果。\",\"expected\":null}",
+          "choice": "met",
+          "note": "acceptanceCriteria 具体列出了与记录一致性的可观察条件（决定、推进人、行动项），并明确了排除项（不新增未记录内容），覆盖用户要求。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-okr-evidence\",\"stepId\":null,\"subject\":\"OKR 结果证据与指标边界\",\"criterion\":\"已有业务指标时保留提供的基线、目标值、统计对象、来源与时间窗口；没有可靠数字时允许定性或行为条件，不为 OKR 强加数字、增长率或销量承诺。区分真实业务目标、本次可控交付与实际效果证据：制作完成不等于业务效果已实现，研究交付不等于假设成立。\",\"expected\":null}",
+          "choice": "met",
+          "note": "任务为整理类，无业务指标要求，输出未强加数字或增长率，符合 OKR 证据边界要求。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-scope\",\"stepId\":null,\"subject\":\"目标与标准的范围承接\",\"criterion\":\"每条标准服务本次目标或明确要求，既不遗漏关键承诺，也不从成员职责、示例或行业习惯增加版本、素材、访谈或审批。若已有或明确要求子任务，父级保留整体目的并检查齐套，子级只验自身贡献，不把整体业务指标套给每个节点；未要求拆解时不为估算或标准另建子任务。\",\"expected\":null}",
+          "choice": "met",
+          "note": "标准严格承接用户要求的“只整理现有记录”及一致性核对，未从成员职责中额外增加版本、审批等无关范围。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-deadline\",\"stepId\":null,\"subject\":\"合理截止日期及依据\",\"criterion\":\"只生成 dueDate、不生成开始日期。保留用户明确日期，相对日期按 input.currentDate/timezone 换算；用户过去日期保留并提示过期风险、补问或要求修正，不能静默改成未来或视为可提交。首次未给日期时，范围清楚的有限任务默认给可修改/清空的 AI 建议，并在 warnings 对应任务说明日期和关键假设；持续维护、整体范围不定或关键外部等待无法判断时留 null 并说明。不把人工工时直接换算为日历历时，不伪称查过日历、人员空闲或排除了法定假日。\",\"expected\":null}",
+          "choice": "met",
+          "note": "保留了用户指定的过去日期 2026-10-15，未生成开始日期，并通过 warnings 和 questions 提示过期风险及请求确认，符合截止日期处理规范。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": null,
+          "label": "{\"id\":\"creation-outcome-v1-edit-protection\",\"stepId\":null,\"subject\":\"多轮修改与人工决定保护\",\"criterion\":\"仅在存在 previousPlan 或本轮修改时核对：保留未授权改动的目标、标准、clientId、人员、日期及用户删除；改名、改文案或人员不自动重排。保留现有 dueDate，包括 null；明确清空后不因下一轮优化补回。用户明确要求改期时只调整对应日期及直接关联的旧日期表述；首次生成无 previousPlan 时此项不要求虚构历史。\",\"expected\":null}",
+          "choice": "met",
+          "note": "本次为首次生成，无 previousPlan，不涉及修改保护核对；输出正确保留了用户指定的日期和范围，未进行未经授权的改动。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    }
+  ]
+}

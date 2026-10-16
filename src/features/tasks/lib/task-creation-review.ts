@@ -1,8 +1,23 @@
 import type { CreationForm, CreationTask } from "@/features/tasks/lib/task-creation-form";
+import { getEffortScopeKey, getTaskEffortState } from "@/features/tasks/lib/task-effort";
+
+/** Date changes and explicit clearing make the old suggestion inapplicable. */
+export function getCreationDeadlineNote(task: Pick<CreationTask, "endDate" | "executionTips">): string | undefined {
+  if (!task.endDate) return undefined;
+  return task.executionTips.find(tip => tip.startsWith(`AI 建议截止：${task.endDate}。`) || tip.startsWith(`AI suggested deadline: ${task.endDate}.`));
+}
 
 /** Fields omitted from review must not be silently submitted as user-confirmed facts. */
 export function simplifyCreationReview(form: CreationForm): CreationForm {
-  const simplify = (task: CreationTask): CreationTask => ({ ...task, dependsOnClientIds: [], executionTips: [], labels: [], effortEstimate: undefined });
+  const simplify = (task: CreationTask): CreationTask => {
+    const deadlineNote = getCreationDeadlineNote(task);
+    const next = { ...task, dependsOnClientIds: [], executionTips: deadlineNote ? [deadlineNote] : [], labels: [], effortEstimate: undefined as CreationTask["effortEstimate"] };
+    const state = getTaskEffortState(task);
+    if (task.effortEstimate && (state === "proposed" || state === "confirmed")) {
+      next.effortEstimate = { ...task.effortEstimate, confirmed: false, scopeKey: getEffortScopeKey(next, task.effortEstimate.workMethod) };
+    }
+    return next;
+  };
   return { ...form, tagOperations: undefined, mainTask: { ...simplify(form.mainTask), dependsOnClientIds: [] }, subtasks: form.subtasks.map(simplify) };
 }
 

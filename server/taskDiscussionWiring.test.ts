@@ -28,7 +28,7 @@ test("讨论保留发布、回复、稳定定位和文件引用", () => {
   assert.match(messages, /task-activity-\$\{message\.id\}/);
   assert.match(discussion, /onOpenFile/);
   assert.doesNotMatch(detail, /publishSelectionActivity|发起对话/);
-  assert.match(detail, /fileThreadId: thread\?\.id/);
+  assert.doesNotMatch(detail, /fileThreadId: thread\?\.id/);
   assert.match(detail, /hidden=\{activeTab !== "discussion"\}/);
 });
 
@@ -67,11 +67,12 @@ test("名称与目标失焦时合并保存，避免逐字写日志", () => {
   assert.doesNotMatch(detail, /onChange=\{[^}]*onTaskGoalChange/);
 });
 
-test("文件评论保存路径独立于任务讨论，右侧使用实际选中文件", () => {
+test("文件标注发起任务讨论草稿，文件阅读不再挂载独立讨论", () => {
   const explorer = readSource("src/features/tasks/files/components/TaskFileExplorer.tsx");
-  assert.match(explorer, /FileDiscussionPanel/);
-  assert.match(detail, /onPost: \(draft, thread, replyToId\) => postDiscussion\(draft, replyToId, thread\)/);
-  assert.doesNotMatch(detail, /publishSelectionActivity/);
+  assert.doesNotMatch(explorer, /FileDiscussionPanel|beginDiscussion|discussionCounts/);
+  assert.match(explorer, /onStartDiscussion/);
+  assert.match(detail, /draftInsertion=\{discussionInsertion\}/);
+  assert.match(detail, /setDiscussionInsertion[\s\S]*setActiveTab\("discussion"\)/);
 });
 
 test("文件跳转聚焦实际预览锚点，在移动端也不误报记录缺失", () => {

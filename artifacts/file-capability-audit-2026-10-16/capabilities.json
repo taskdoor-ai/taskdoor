@@ -1,0 +1,414 @@
+{
+  "date": "2026-10-16",
+  "semanticChange": "PRD-0233",
+  "scope": "当前真实可预览格式清单及PDF／PPT页内区域标注已确认目标；本轮新增区域能力待验，历史素材统计不充当当前支持范围。",
+  "status": "scoped_checks_and_desktop_component_flow_passed",
+  "summary": {
+    "groups": 8,
+    "extensions": 16,
+    "editableGroups": 5
+  },
+  "rows": [
+    {
+      "format": "PDF",
+      "extensions": [
+        "pdf"
+      ],
+      "preview": "浅色原版式阅读器；分页、页码、缩放、适宽，页缩略图默认收起",
+      "annotation": "开启标注 → 选字或区域；有字页可主动框选图表，无文字页自动框选 → 填写意见并添加",
+      "editAllowed": false,
+      "edit": "不允许编辑PDF正文或恢复预置文字快照",
+      "download": "当前查看版本的原始PDF；标注不写回原件",
+      "limit": "新上传按实际PDF原件读取；扫描页不提供OCR。旧历史文字摘要只读，不计原版式预览。",
+      "regionStatus": "desktop-component-flow-passed"
+    },
+    {
+      "format": "PPT / PPTX",
+      "extensions": [
+        "ppt",
+        "pptx"
+      ],
+      "preview": "本地转换后的真实静态幻灯片；逐页阅读，缩略图默认收起",
+      "annotation": "转换页可选字或主动切区域框选图表；无文字页自动框选 → 填写意见并添加",
+      "editAllowed": false,
+      "edit": "不允许幻灯片编辑",
+      "download": "当前查看版本的原始PPT／PPTX；不以预览PDF替代",
+      "limit": "不提供动画、放映或原件回写；版式及字体取决于转换结果",
+      "regionStatus": "desktop-component-flow-passed"
+    },
+    {
+      "format": "PNG / JPG / JPEG / GIF / WebP / SVG",
+      "extensions": [
+        "png",
+        "jpg",
+        "jpeg",
+        "gif",
+        "webp",
+        "svg"
+      ],
+      "preview": "图片画面预览，保留完整内容",
+      "annotation": "开启标注 → 拖出矩形区域 → 填写意见；保留区域及局部截图",
+      "editAllowed": false,
+      "edit": "不允许图片内容编辑",
+      "download": "当前查看版本的原始图片；不把标记合成到原件",
+      "limit": "矩形区域标注，不提供GIF／WebP动画时间或帧定位"
+    },
+    {
+      "format": "MD",
+      "extensions": [
+        "md"
+      ],
+      "preview": "Markdown文档阅读",
+      "annotation": "选择正文文字 → 填写意见 → 添加；按准确选区定位",
+      "editAllowed": true,
+      "edit": "允许正文编辑并保存为新版本",
+      "download": "当前查看版本的Markdown文本",
+      "limit": "不包括MDX；不执行组件或脚本"
+    },
+    {
+      "format": "TXT / LOG",
+      "extensions": [
+        "txt",
+        "log"
+      ],
+      "preview": "纯文本阅读，保留原文布局",
+      "annotation": "选择文字 → 填写意见 → 添加；按准确选区定位",
+      "editAllowed": true,
+      "edit": "允许文本编辑并保存为新版本",
+      "download": "当前查看版本文本，保留TXT／LOG原扩展名",
+      "limit": "按文本读取，不执行日志中的命令或内容"
+    },
+    {
+      "format": "HTML / HTM",
+      "extensions": [
+        "html",
+        "htm"
+      ],
+      "preview": "隔离的静态页面预览",
+      "annotation": "指向并选择页面元素／区域 → 填写意见；不提供字符选区标注",
+      "editAllowed": true,
+      "edit": "仅允许HTML源码编辑并保存版本",
+      "download": "当前查看版本HTML源码，保留HTML／HTM扩展名",
+      "limit": "不执行脚本、表单提交或文件内导航；不提供可视化网页编辑"
+    },
+    {
+      "format": "JSON",
+      "extensions": [
+        "json"
+      ],
+      "preview": "等宽源码与行号，保留空白、缩进、空行及换行",
+      "annotation": "选择源码文字 → 填写意见 → 添加；按准确文字选区定位",
+      "editAllowed": true,
+      "edit": "允许整段源码编辑并保存新版本",
+      "download": "当前查看版本JSON源码，UTF-8文本",
+      "limit": "语法不完整仍看原文；未承诺语法校验、结构折叠或自动格式化"
+    },
+    {
+      "format": "XML",
+      "extensions": [
+        "xml"
+      ],
+      "preview": "等宽源码与行号，保留空白、缩进、空行及换行",
+      "annotation": "选择源码文字 → 填写意见 → 添加；按准确文字选区定位",
+      "editAllowed": true,
+      "edit": "允许整段源码编辑并保存新版本",
+      "download": "当前查看版本XML源码，UTF-8文本",
+      "limit": "语法不完整仍看原文；不执行内容、不解析或读取外部实体"
+    }
+  ],
+  "unsupported": [
+    {
+      "format": "DOC / DOCX",
+      "reason": "没有任意上传原件的真实文档预览；预置正文不算支持"
+    },
+    {
+      "format": "XLS / XLSX / CSV / TSV",
+      "reason": "没有当前范围内的真实工作簿／表格上传预览"
+    },
+    {
+      "format": "ICS",
+      "reason": "没有日历事件预览"
+    },
+    {
+      "format": "音频 / 视频",
+      "reason": "没有当前播放器与时间定位标注能力"
+    },
+    {
+      "format": "ZIP / RAR / 7Z 等压缩包",
+      "reason": "没有只读包目录预览"
+    },
+    {
+      "format": "MDX、其他源码及专业格式",
+      "reason": "不在支持清单；不会因text/*或image/*泛分类而自动接收"
+    }
+  ],
+  "anchors": [
+    {
+      "content": "PDF／PPT文字",
+      "action": "选择同页文字并填写意见",
+      "anchor": "固定版本＋页码＋页内文字范围；可跨行，不跨页"
+    },
+    {
+      "content": "PDF／PPT页面区域",
+      "action": "切换区域并框选；无文字页自动区域",
+      "anchor": "固定版本＋页码＋相对页面的归一化矩形＋局部截图；定位回同页区域，缩放适宽不漂移",
+      "status": "desktop-component-flow-passed"
+    },
+    {
+      "content": "MD／TXT／LOG／JSON／XML",
+      "action": "选字并填写意见",
+      "anchor": "固定版本＋原文＋准确文字范围；重复文字按实际位置区分"
+    },
+    {
+      "content": "图片",
+      "action": "矩形框选并填写意见",
+      "anchor": "固定版本＋规范化矩形＋局部截图"
+    },
+    {
+      "content": "HTML／HTM",
+      "action": "选择元素或区域并填写意见",
+      "anchor": "固定版本＋元素／区域位置＋局部截图，不是字符选区"
+    }
+  ],
+  "policies": [
+    "选择与拖入使用同一白名单；同批含不支持文件时整批不添加，指出不支持项，已有文件保持；不以预置正文冒充预览。",
+    "仅MD、TXT／LOG、HTML源码、JSON／XML允许编辑，还须满足权限与版本规则。",
+    "文本下载当前查看的已保存版本；未保存草稿不替代版本下载；下载不产生新版本。",
+    "PDF／PPT／图片下载对应版本原件，临时标注不回写原件。",
+    "标注是当前页面跨文件的临时修改意见，任务讨论是唯一沟通区；发送到讨论先加入草稿附件，明确发送才发布。",
+    "仅退役未改且无编辑记录／草稿、与原模板完全一致的内置不支持样例；用户材料、修改和历史引用保留，不物理删除blob。"
+  ],
+  "currentTaskCleanup": {
+    "status": "implemented-main-task-13-confirmed",
+    "before": 21,
+    "after": 13,
+    "retiredCount": 8,
+    "retiredFormats": [
+      "DOCX",
+      "DOCX",
+      "XLSX",
+      "CSV",
+      "ICS",
+      "MP3",
+      "MP4",
+      "ZIP"
+    ],
+    "boundary": "用户自建／上传、改名／移动／正文／版本变化、草稿均保留；旧讨论仍按原关联读取及下载。"
+  },
+  "verification": {
+    "status": "scoped_checks_and_desktop_component_flow_passed",
+    "semanticChange": "PRD-0233",
+    "record": "../pdf-page-region-2026-10-16/verification.json",
+    "targetedTestCount": 54,
+    "testGroups": {
+      "anchorsAndMaterials": 33,
+      "regionGeometry": 6,
+      "originalTextSelection": 6,
+      "explorerAndPopup": 9
+    },
+    "appTypeScript": "passed",
+    "structureGate": "passed-no-new-violations",
+    "appAndComponentProductionBuild": "passed-with-existing-warnings",
+    "runtime": "current-workspace-build",
+    "surface": "current-component",
+    "url": "http://127.0.0.1:4183/artifacts/pdf-page-region-2026-10-16/validation.html",
+    "limits": [
+      "5173开发依赖优化期间反复整页刷新，浏览器功能验收改用当前同一主工作区生产构建；不以组件页声称完整主任务页面或上传流程验收。",
+      "未实机测试移动端、触屏、键盘完成区域绘制；代码保留pointer事件与Escape取消。",
+      "截图失败提示及原件缺失拒绝路径分别有实现与材料回归，未在真实浏览器强制注入canvas截图失败。",
+      "没有OCR，区域截图不提供图片内文字提取；原PDF/PPT不编辑、不回写标注。",
+      "未实测AI交接、发送到讨论、旧PPT二进制的转换或全部浏览器；PPT/PPTX共用转换后的页面标注实现。",
+      "未运行全量测试或双重审查；标准全量构建的既有server测试类型错误不在本轮处理。"
+    ],
+    "cleanup": "All three temporary annotations and empty text draft cleared through existing controls; no discussion published or AI tool launched; no task file tree persisted.",
+    "previousSupportWhitelistEvidence": "support-whitelist-verification.json",
+    "previousJsonXmlEvidence": "implementation-verification.json",
+    "note": "本轮54项与0232旧54分开，不累加；4183当前工作区真实组件验收，不作为完整主任务/上传流程复测。"
+  },
+  "history": {
+    "note": "以下审计及已通过结果保留原时间范围；本轮新增页内区域标注的状态单独登记。",
+    "previousReport": "history/before-supported-whitelist/index.html",
+    "previousCapabilities": "history/before-supported-whitelist/capabilities.json",
+    "previousReadme": "history/before-supported-whitelist/README.md",
+    "originalMaterialInventory": "inventory.json",
+    "previousUiAudit": "ui-verification.json",
+    "beforePagedRegionCapabilities": "history/before-paged-region-annotations/capabilities.json"
+  },
+  "screenshots": [
+    {
+      "figureId": "FIG-FILES-081",
+      "path": "current-supported-files.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "source": "http://127.0.0.1:5173/",
+      "scope": "文件13与原版式PDF阅读，不证明所有扩展名均实测",
+      "status": "pending",
+      "layoutNote": "含旧底部文字入口；仅保留当轮行为历史，不作新入口当前样式证据。"
+    },
+    {
+      "figureId": "FIG-FILES-082",
+      "path": "current-upload-rejected.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "source": "http://127.0.0.1:5173/",
+      "scope": "混合JSON／DOCX批次拒绝，文件仍13",
+      "status": "pending",
+      "layoutNote": "含旧底部文字入口；仅保留当轮行为历史，不作新入口当前样式证据。"
+    },
+    {
+      "figureId": "FIG-FILES-083",
+      "status": "pending",
+      "scope": "扫描PDF第1/2页意见输入，当前意见待添加、本次数量0",
+      "path": "current-pdf-page-region.jpg",
+      "type": "current-component",
+      "runtime": "current-workspace-build",
+      "source": "http://127.0.0.1:4183/artifacts/pdf-page-region-2026-10-16/validation.html",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "layoutNote": "含旧底部文字入口；仅保留当轮行为历史，不作新入口当前样式证据。"
+    },
+    {
+      "figureId": "FIG-FILES-084",
+      "status": "pending",
+      "scope": "真实PPTX第2/8页数据排版区域意见输入，当前意见待添加、本次数量2",
+      "path": "current-presentation-page-region.jpg",
+      "type": "current-component",
+      "runtime": "current-workspace-build",
+      "source": "http://127.0.0.1:4183/artifacts/pdf-page-region-2026-10-16/validation.html",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "layoutNote": "含旧底部文字入口；仅保留当轮行为历史，不作新入口当前样式证据。"
+    },
+    {
+      "path": "current-pdf-region-fullscreen.jpg",
+      "status": "captured",
+      "type": "current-component",
+      "runtime": "current-workspace-build",
+      "source": "http://127.0.0.1:4183/artifacts/pdf-page-region-2026-10-16/validation.html",
+      "mimeType": "image/jpeg",
+      "width": 1440,
+      "height": 900,
+      "scope": "额外原生全屏区域意见输入；仅报告，不占PRD图号"
+    },
+    {
+      "figureId": "FIG-FILES-085",
+      "path": "current-file-list-expanded.jpg",
+      "status": "captured",
+      "type": "current-page",
+      "runtime": "current-workspace-dev-server",
+      "source": "http://127.0.0.1:5173/",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "scope": "完整主任务文件列表展开，预览工具栏唯一图标，无底部文字footer；PDF第1页"
+    },
+    {
+      "figureId": "FIG-FILES-086",
+      "path": "current-file-list-collapsed.jpg",
+      "status": "captured",
+      "type": "current-page",
+      "runtime": "current-workspace-dev-server",
+      "source": "http://127.0.0.1:5173/",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "scope": "完整主任务文件列表收起，预览工具栏唯一图标，无底部文字footer；PDF第1页"
+    }
+  ],
+  "uploadLimits": {
+    "maxFiles": 10,
+    "maxSizeMiB": 20
+  },
+  "pagedRegionAnnotations": {
+    "status": "desktop-component-flow-passed",
+    "formats": [
+      "pdf",
+      "ppt",
+      "pptx"
+    ],
+    "modes": [
+      "text",
+      "region"
+    ],
+    "pageWithoutText": "automatic-region",
+    "pageWithText": "text-or-manual-region",
+    "anchor": [
+      "file-version",
+      "page-index",
+      "page-normalized-rectangle",
+      "cropped-screenshot"
+    ],
+    "navigation": "return-to-same-page-region-after-page-change-zoom-and-fit",
+    "captureFailure": "show-failure; never fabricate screenshot or claim successful capture",
+    "boundaries": [
+      "no-ocr",
+      "original-not-edited",
+      "same-temporary-cross-file-annotations",
+      "same-discussion-and-AI-handoff"
+    ],
+    "browserFailureInjectionTested": false
+  },
+  "previousSupportWhitelistVerification": {
+    "status": "implemented-scoped-verification-passed",
+    "record": "support-whitelist-verification.json",
+    "testsPassed": 54,
+    "testGroups": {
+      "capabilityAndSource": 25,
+      "fixtureAndOriginal": 16,
+      "teamRelatedSubset": 7,
+      "uiRegression": 6
+    },
+    "appTypeScript": "passed",
+    "structureGate": "passed-no-new-violations",
+    "frontendBundle": "passed-with-existing-warnings",
+    "runtimeOrigin": "http://127.0.0.1:5173/",
+    "runtime": [
+      "主任务13项且均在支持范围",
+      "PDF原件5页、编辑0、标注1、全屏可用、缩略图初始收起",
+      "JSON源码可见、编辑入口1",
+      "真实JSON＋DOCX混合批次整批拒绝，未新增任何一份，仍13项"
+    ],
+    "previousJsonXmlEvidence": "implementation-verification.json",
+    "limits": [
+      "PPT/PPTX依赖本地LibreOffice转换；转换后的文字层决定能否选字标注。",
+      "PDF扫描页没有OCR；PDF/PPT/图片没有原件内容编辑。",
+      "既有历史PDF文本摘要保留只读查看，不计原件版式预览。",
+      "团队夹具的既有诊断冲突断言与当前明确返回空数组的逻辑不一致，该不相关失败保留，未修改诊断逻辑。",
+      "项目级npm run build前轮已因现有server测试类型错误阻断；本轮只验证应用类型检查、结构门及前端打包，不声明全量构建或全量测试通过。"
+    ],
+    "notPerformed": [
+      "full_test_suite",
+      "double_review",
+      "remote_issue",
+      "remote_pr",
+      "production_repository_changes",
+      "physical_asset_or_blob_deletion"
+    ],
+    "note": "未逐一重新上传16种扩展名；保留旧诊断断言失败与项目级build阻断，不声明全量测试或完整构建通过。",
+    "testEvidence": "UI6和构建检查有独立日志；其他3组在验收记录保留精确命令与代理工具输出，没有单独日志，未重复跑。"
+  },
+  "layoutRefresh": {
+    "status": "scoped-desktop-page-verification-passed",
+    "semanticChange": false,
+    "lastSemanticChange": "PRD-0233",
+    "scope": "唯一仅图标开合入口保持在预览工具栏同一DOM位置，仅toolbar吸附、树保持自然滚动；无底部文字footer。",
+    "previousFiguresNowHistorical": [
+      "FIG-FILES-081",
+      "FIG-FILES-082",
+      "FIG-FILES-083",
+      "FIG-FILES-084"
+    ],
+    "plannedFigures": [],
+    "record": "../file-sidebar-icon-toggle-2026-10-16/verification.json",
+    "newFigures": [
+      "FIG-FILES-085",
+      "FIG-FILES-086"
+    ],
+    "testsPassedThisVisualChange": 3,
+    "note": "本轮仅视觉；不把前轮54项当新验收，不声明PDF页码/正文滚动保持。"
+  }
+}

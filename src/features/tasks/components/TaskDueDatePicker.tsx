@@ -2,7 +2,8 @@ import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { formatDisplayDate, formatDisplayMonth } from "@/shared/lib/date-time";
-import { taskCreationDay, taskScheduleError } from "@/features/tasks/lib/task-schedule";
+import { taskCalendarDate, taskCreationDay, taskScheduleError } from "@/features/tasks/lib/task-schedule";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { CalendarIcon, ChevronLeft, ChevronRight, InfinityIcon } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -30,11 +31,15 @@ const calendarDays = (month: Date) => {
 };
 
 function SegmentedDate({ value }: { value: string }) {
-  return <time className="task-date-segments" dateTime={value} title={formatDisplayDate(value, { year: "always" }) ?? undefined}>{formatDisplayDate(value) ?? "—"}</time>;
+  const { locale } = useI18n();
+  return <time className="task-date-segments" dateTime={value} title={formatDisplayDate(value, { locale, year: "always" }) ?? undefined}>{formatDisplayDate(value, { locale }) ?? "—"}</time>;
 }
 
 // Single-date adaptation of jolbol1's 21st.dev Date Range Picker anatomy.
-export function TaskDueDatePicker({ initialValue = "", label = "截止时间", minDate = taskCreationDay(), emptyLabel, presentation = "portal", onChange }: TaskDueDatePickerProps) {
+export function TaskDueDatePicker({ initialValue = "", label = "截止时间", minDate: configuredMinDate, emptyLabel, presentation = "portal", onChange }: TaskDueDatePickerProps) {
+  const timeZone = useTeamTimeZone();
+  const today = taskCalendarDate(new Date().toISOString(), timeZone);
+  const minDate = configuredMinDate ?? today ?? "";
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const { locale } = useI18n();
@@ -45,12 +50,12 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", m
   const [mode, setMode] = useState<"date" | "none">(initialValue ? "date" : "none");
   const [open, setOpen] = useState(false);
   const [saveError, setSaveError] = useState("");
-  const existingError = taskScheduleError(value, minDate);
-  const draftError = mode === "date" ? taskScheduleError(draft, minDate) : null;
+  const existingError = taskScheduleError(value, minDate, undefined, timeZone, locale);
+  const draftError = mode === "date" ? taskScheduleError(draft, minDate, undefined, timeZone, locale) : null;
   const pickerId = useId();
   const [popoverPosition, setPopoverPosition] = useState<{ left: number; top: number } | null>(null);
   const [visibleMonth, setVisibleMonth] = useState(() => {
-    const date = initialValue ? fromValue(initialValue) : new Date();
+    const date = fromValue(initialValue || today || "");
     return new Date(date.getFullYear(), date.getMonth(), 1);
   });
   const rootRef = useRef<HTMLDivElement>(null);
@@ -132,7 +137,7 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", m
     setSaveError("");
     setDraft(value);
     setMode(value ? "date" : "none");
-    const date = value ? fromValue(value) : new Date();
+    const date = fromValue(value || taskCreationDay(new Date(), timeZone));
     setVisibleMonth(new Date(date.getFullYear(), date.getMonth(), 1));
     setOpen((current) => !current);
   };
@@ -150,15 +155,17 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", m
     } catch (error) { setSaveError(error instanceof Error ? error.message : d('saveFailed')); }
   };
 
+  if (!today) return <div className="task-due-date-picker"><small className="task-due-date-label">{label}</small><span>{value ? <SegmentedDate value={value} /> : noDateLabel}</span><p className="task-schedule-error" role="alert">{locale === "en" ? "The team timezone is invalid. Date changes are unavailable." : "团队时区无效，暂时无法修改日期。"}</p></div>;
+
   const calendar = <div aria-label={ui("设置{0}", {0: label})} className={`task-due-date-popover${inline ? " is-inline" : ""}`} id={pickerId} ref={popoverRef} role="dialog" style={inline ? undefined : {
       left: popoverPosition?.left ?? 0,
       top: popoverPosition?.top ?? 0,
       visibility: popoverPosition ? "visible" : "hidden",
     }}>
       <div className="task-due-date-shortcuts">{[1, 3, 7, 10, 30].map(count => {
-        const date = fromValue(taskCreationDay()); date.setDate(date.getDate() + count);
+        const date = fromValue(taskCreationDay(new Date(), timeZone)); date.setDate(date.getDate() + count);
         const deadline = toValue(date);
-        return <button type="button" key={count} title={formatDisplayDate(deadline, { year: "always" }) ?? undefined} aria-label={`${locale === "en" ? `${count} days` : `${count} 天`} · ${formatDisplayDate(deadline, { year: "always" }) ?? "—"}`} onClick={() => { setMode("date"); setDraft(deadline); setVisibleMonth(new Date(date.getFullYear(), date.getMonth(), 1)); }}>{locale === "en" ? `${count} days` : `${count} 天`}</button>;
+        return <button type="button" key={count} title={formatDisplayDate(deadline, { locale, year: "always" }) ?? undefined} aria-label={`${locale === "en" ? `${count} days` : `${count} 天`} · ${formatDisplayDate(deadline, { locale, year: "always" }) ?? "—"}`} onClick={() => { setMode("date"); setDraft(deadline); setVisibleMonth(new Date(date.getFullYear(), date.getMonth(), 1)); }}>{locale === "en" ? `${count} days` : `${count} 天`}</button>;
       })}</div>
       <fieldset className="task-due-date-modes">
         <legend className="sr-only">{inline ? ui("设置{0}", {0: label}) : ui("截止时间类型")}</legend>
@@ -174,7 +181,7 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", m
       {mode === "date" ? <>
       <div className="task-range-calendar-heading">
         <button aria-label={d("previousMonth")} onClick={() => setVisibleMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))} type="button"><ChevronLeft size={14} /></button>
-        <strong>{formatDisplayMonth(visibleMonth) ?? "—"}</strong>
+        <strong>{formatDisplayMonth(visibleMonth, { locale }) ?? "—"}</strong>
         <button aria-label={d("nextMonth")} onClick={() => setVisibleMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))} type="button"><ChevronRight size={14} /></button>
       </div>
       <div className="task-range-calendar-grid">
@@ -183,7 +190,7 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", m
           const dateValue = toValue(date);
           const outside = date.getMonth() !== visibleMonth.getMonth();
           const selected = draft === dateValue;
-          return <button disabled={Boolean(minDate && dateValue < minDate)} aria-label={formatDisplayDate(dateValue, { year: "always" }) ?? "—"} aria-pressed={selected} className={`${outside ? "outside" : ""} ${selected ? "in-range range-edge" : ""}`} key={dateValue} onClick={() => setDraft(dateValue)} type="button"><span>{date.getDate()}</span></button>;
+          return <button disabled={Boolean(minDate && dateValue < minDate)} aria-label={formatDisplayDate(dateValue, { locale, year: "always" }) ?? "—"} aria-pressed={selected} className={`${outside ? "outside" : ""} ${selected ? "in-range range-edge" : ""}`} key={dateValue} onClick={() => setDraft(dateValue)} type="button"><span>{date.getDate()}</span></button>;
         })}
       </div>
       </> : <div className="task-due-date-unlimited">
@@ -192,14 +199,14 @@ export function TaskDueDatePicker({ initialValue = "", label = "截止时间", m
       </div>}
       {(draftError || saveError) && <p className="task-schedule-error" role="alert">{saveError || draftError}</p>}
       <div className="task-range-calendar-footer">
-        <span>{mode === "none" ? noDateLabel : formatDisplayDate(draft) ?? d("chooseDate")}</span>
+        <span>{mode === "none" ? noDateLabel : formatDisplayDate(draft, { locale }) ?? d("chooseDate")}</span>
         <div><button onClick={dismiss} type="button">{d('cancel')}</button><button disabled={mode === "date" && (!draft || Boolean(draftError))} onClick={apply} type="button">{d("confirm")}</button></div>
       </div>
     </div>;
 
   return <div className="task-due-date-picker" onKeyDown={event => { if (inline && open && event.key === "Escape") { event.stopPropagation(); dismiss(); } }} ref={rootRef}>
     <small className="task-due-date-label">{label}</small>
-    <button aria-controls={open ? pickerId : undefined} aria-expanded={open} aria-haspopup="dialog" aria-label={`${label}：${formatDisplayDate(value, { year: "always" }) ?? noDateLabel}`} className="task-due-date-trigger" onClick={toggle} ref={triggerRef} type="button">
+    <button aria-controls={open ? pickerId : undefined} aria-expanded={open} aria-haspopup="dialog" aria-label={`${label}：${formatDisplayDate(value, { locale, year: "always" }) ?? noDateLabel}`} className="task-due-date-trigger" onClick={toggle} ref={triggerRef} type="button">
       <span className={`task-due-date-field ${value ? "" : "empty"}`}>{value ? <SegmentedDate value={value} /> : <strong>{noDateLabel}</strong>}<CalendarIcon size={13} /></span>
     </button>
     {existingError && <span className="task-schedule-error" role="status">{existingError}{ui("请重新设置。")}</span>}

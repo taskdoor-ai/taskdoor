@@ -3,6 +3,7 @@ import type { TaskActivityMock, TaskCommitMock, TaskDetailContent, TaskFileNode,
 import { getTaskProgressBurnUp } from "@/ai/mock/data/taskProgressExamples.ts";
 import type { TaskDiagnosisConflictInput, TaskDiagnosisSnapshot } from "@/shared/model/task-diagnosis.ts";
 import { getCreatorCommerceDiagnosisExample } from "@/ai/mock/data/creatorCommerceDiagnosisExamples";
+import { supportedTaskFileFixtures } from "@/ai/mock/lib/taskFilePreviewFixtures";
 
 /**
  * 本文件只包含合成演示数据。人物、企业、批次、客户、事故和文件均为虚构，
@@ -786,7 +787,7 @@ function createCommits(task: TaskNode, config: DomainConfig, files: TeamEvidence
   ];
 }
 
-export function getTeamTaskDetailFixture(task: TaskNode): TeamTaskDetailFixture | undefined {
+export function getTeamTaskDetailFixture(task: TaskNode, includeUnsupported = false): TeamTaskDetailFixture | undefined {
   const config = domainForTask(task);
   if (!config) return undefined;
   const actors = actorsFor(task);
@@ -810,7 +811,7 @@ export function getTeamTaskDetailFixture(task: TaskNode): TeamTaskDetailFixture 
     diagnosis: getTeamTaskDiagnosisSnapshot(task),
     // 只读取父任务已登记的固定示例事件账本；叶子和无历史任务保持 undefined。
     burnUp: getTaskProgressBurnUp(task.id),
-    files,
+    files: includeUnsupported ? files : supportedTaskFileFixtures(files),
     activities,
     commits,
     datasetMeta: {
@@ -842,6 +843,10 @@ export function validateTeamTaskDetailFixture(detail: TeamTaskDetailFixture): { 
   const commitIds = new Set<string>();
   const taskId = detail.datasetMeta.generatedForTaskId;
   const fixedAt = Date.parse(detail.datasetMeta.fixedAt);
+  // Old activity and commit records keep their original evidence references.
+  const config = domainConfigs.find(item => item.domain === detail.datasetMeta.domain);
+  const historicalFileIds = new Set(["evidence-table", "raw-table", "restricted-doc"].map(suffix => `${taskId}-${suffix}`));
+  const historicalFileNames = new Set(config ? [config.fileNames.evidence, config.fileNames.raw, config.fileNames.restricted] : []);
 
   for (const node of detail.files as TeamEvidenceFileNode[]) {
     if (fileIds.has(node.id)) errors.push(`重复文件 ID：${node.id}`);
@@ -905,8 +910,8 @@ export function validateTeamTaskDetailFixture(detail: TeamTaskDetailFixture): { 
     const activityAt = Date.parse(activity.createdAt ?? "");
     if (!Number.isFinite(activityAt)) errors.push(`活动时间无效：${activity.id}`);
     else if (activityAt > fixedAt) errors.push(`活动时间晚于数据快照：${activity.id}`);
-    if (activity.file && !fileNames.has(activity.file)) errors.push(`活动引用不存在的文件：${activity.id} -> ${activity.file}`);
-    for (const evidenceId of activity.evidenceFileIds) if (evidenceId && !fileIds.has(evidenceId)) errors.push(`活动证据引用不存在：${activity.id} -> ${evidenceId}`);
+    if (activity.file && !fileNames.has(activity.file) && !historicalFileNames.has(activity.file)) errors.push(`活动引用不存在的文件：${activity.id} -> ${activity.file}`);
+    for (const evidenceId of activity.evidenceFileIds) if (evidenceId && !fileIds.has(evidenceId) && !historicalFileIds.has(evidenceId)) errors.push(`活动证据引用不存在：${activity.id} -> ${evidenceId}`);
     for (const change of activity.changes ?? []) if (change.before === change.after) errors.push(`结构化变更没有真实差异：${activity.id} -> ${change.label}`);
     if (activity.type !== "member-reply") continue;
     if (!activity.replyToActivityId || !activityIds.has(activity.replyToActivityId)) {
@@ -934,7 +939,7 @@ export function validateTeamTaskDetailFixture(detail: TeamTaskDetailFixture): { 
     const commitAt = Date.parse(commit.createdAt ?? "");
     if (!Number.isFinite(commitAt)) errors.push(`提交时间无效：${commit.id}`);
     else if (commitAt > fixedAt) errors.push(`提交时间晚于数据快照：${commit.id}`);
-    for (const fileName of commit.files) if (!fileNames.has(fileName)) errors.push(`提交引用不存在的文件：${commit.id} -> ${fileName}`);
+    for (const fileName of commit.files) if (!fileNames.has(fileName) && !historicalFileNames.has(fileName)) errors.push(`提交引用不存在的文件：${commit.id} -> ${fileName}`);
   }
 
   const stats: TeamTaskDetailFixtureStats = {
@@ -945,7 +950,7 @@ export function validateTeamTaskDetailFixture(detail: TeamTaskDetailFixture): { 
     humanDiscussionEntries: detail.activities.filter((activity) => activity.type === "member-post" || activity.type === "member-reply").length,
     structuredChanges: detail.activities.filter((activity) => Boolean(activity.changes?.length)).length,
   };
-  if (stats.files < 9) errors.push(`文件密度不足：${stats.files} < 9`);
+  if (stats.files < 6) errors.push(`文件密度不足：${stats.files} < 6`);
   if (stats.folders < 5) errors.push(`目录密度不足：${stats.folders} < 5`);
   if (stats.activities < 11) errors.push(`活动密度不足：${stats.activities} < 11`);
   if (stats.humanDiscussionEntries < 5) errors.push(`讨论密度不足：${stats.humanDiscussionEntries} < 5`);
@@ -953,7 +958,7 @@ export function validateTeamTaskDetailFixture(detail: TeamTaskDetailFixture): { 
   if (stats.commits < 4) errors.push(`提交密度不足：${stats.commits} < 4`);
   if (!detail.activities.some((activity) => activity.type === "ai-insight")) errors.push("缺少带依据的 AI 洞察");
   if (!detail.files.some((file) => file.previewData?.kind === "pdf")) errors.push("缺少 PDF 正文示例");
-  if (!detail.files.some((file) => file.previewData?.kind === "table")) errors.push("缺少表格正文示例");
+  if (supportedTaskFileFixtures(detail.files).length !== detail.files.length) errors.push("存在不支持预览的任务文件");
   if (!detail.files.some((file) => file.previewData && "text" in file.previewData)) errors.push("缺少文档正文示例");
   return { errors, stats };
 }

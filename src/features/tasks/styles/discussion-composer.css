@@ -47,7 +47,7 @@
 .discussion-composer-attachment { position: relative; display: flex; flex: 0 1 80px; flex-direction: column; align-items: center; gap: var(--ad-space-1); min-width: 0; max-width: 100%; padding: var(--ad-space-1); border-radius: var(--ad-radius-card); background: var(--ad-surface); }
 .discussion-composer-attachment-preview { display: block; width: 100%; height: 56px; object-fit: contain; }
 .discussion-composer-attachment-copy { display: grid; align-self: stretch; gap: var(--ad-space-1); min-width: 0; text-align: center; }
-.discussion-composer-attachment-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ad-text-caption); font-weight: 500; }
+.discussion-composer-attachment-copy strong, .discussion-composer-attachment-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ad-text-caption); font-weight: 500; }
 .discussion-composer-attachment-copy small { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); overflow-wrap: anywhere; }
 .discussion-composer-attachment[data-status="failed"] { background: var(--ad-danger-soft); }
 .discussion-composer-attachment[data-status="failed"] small { color: var(--ad-danger); }
@@ -71,3 +71,6 @@
   .discussion-composer-attachment button::after { position: absolute; inset: -13px; content: ""; }
 }
 @media (prefers-reduced-motion: reduce) { .discussion-composer-spinner { animation: none; } }
+
+.discussion-composer-attachment-name { display: block; min-width: 0; width: 100%; padding: 0; border: 0; border-radius: 2px; background: transparent; color: inherit; text-align: center; }
+.discussion-composer-attachment-name:hover { color: var(--ad-route); text-decoration: underline; }

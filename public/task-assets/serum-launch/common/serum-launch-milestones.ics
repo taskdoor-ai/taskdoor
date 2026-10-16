@@ -1,0 +1,84 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//TaskDoor Local Mock//Serum Launch Milestones 1.0//ZH-CN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:秋季精华首发里程碑（本地 Mock 演示）
+X-WR-TIMEZONE:Asia/Shanghai
+X-WR-CALDESC:观测日2026-09-14，生成日2026-10-16。所有业务数据
+ 均为本地Mock合成演示；四个事件均为全天透明事件。DTST
+ AMP使用UTC演示导出批次标记，不表示业务发生时刻。
+BEGIN:VTIMEZONE
+TZID:Asia/Shanghai
+X-LIC-LOCATION:Asia/Shanghai
+BEGIN:STANDARD
+DTSTART:19700101T000000
+TZOFFSETFROM:+0800
+TZOFFSETTO:+0800
+TZNAME:CST
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:serum-launch-created-20261016@taskdoor.local.invalid
+DTSTAMP:20261016T000000Z
+DTSTART;VALUE=DATE:20260908
+DTEND;VALUE=DATE:20260909
+SUMMARY:[Mock] 秋季精华任务创建
+DESCRIPTION:历史演示创建日。任务负责人周岚。此事件只记
+ 录日期，不补造创建时刻。 所有业务数据均为 TaskDoor 本
+ 地 Mock 合成演示，不代表真实业务实绩、审批结论或功
+ 效证明。 本次仅生成文件，没有发送邀请或写入日历服
+ 务。
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+CATEGORIES:TaskDoor 本地 Mock 合成演示
+SEQUENCE:0
+END:VEVENT
+BEGIN:VEVENT
+UID:serum-launch-observed-20261016@taskdoor.local.invalid
+DTSTAMP:20261016T000000Z
+DTSTART;VALUE=DATE:20260914
+DTEND;VALUE=DATE:20260915
+SUMMARY:[Mock] 秋季精华进展观测
+DESCRIPTION:历史演示观测日。8个末级任务合计4500分钟，完
+ 成3297分钟，73.3%。不是当前实时进展。 所有业务数据均
+ 为 TaskDoor 本地 Mock 合成演示，不代表真实业务实绩、审
+ 批结论或功效证明。 本次仅生成文件，没有发送邀请或
+ 写入日历服务。
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+CATEGORIES:TaskDoor 本地 Mock 合成演示
+SEQUENCE:0
+END:VEVENT
+BEGIN:VEVENT
+UID:serum-launch-forecast-20261016@taskdoor.local.invalid
+DTSTAMP:20261016T000000Z
+DTSTART;VALUE=DATE:20260921
+DTEND;VALUE=DATE:20260922
+SUMMARY:[Mock] 秋季精华 AI 预测完成
+DESCRIPTION:截至2026-09-14快照的历史预测，不是实际完成记
+ 录。任务计划截止为2026-09-30。 所有业务数据均为 TaskDoor
+  本地 Mock 合成演示，不代表真实业务实绩、审批结论或
+ 功效证明。 本次仅生成文件，没有发送邀请或写入日历
+ 服务。
+STATUS:TENTATIVE
+TRANSP:TRANSPARENT
+CATEGORIES:TaskDoor 本地 Mock 合成演示
+SEQUENCE:0
+END:VEVENT
+BEGIN:VEVENT
+UID:serum-launch-planned-20261016@taskdoor.local.invalid
+DTSTAMP:20261016T000000Z
+DTSTART;VALUE=DATE:20260930
+DTEND;VALUE=DATE:20261001
+SUMMARY:[Mock] 秋季精华任务计划截止
+DESCRIPTION:历史计划截止。包含首发后数据与复盘闭环。首
+ 发渠道活动窗口为2026-09-10至2026-09-18。 所有业务数据均
+ 为 TaskDoor 本地 Mock 合成演示，不代表真实业务实绩、审
+ 批结论或功效证明。 本次仅生成文件，没有发送邀请或
+ 写入日历服务。
+STATUS:TENTATIVE
+TRANSP:TRANSPARENT
+CATEGORIES:TaskDoor 本地 Mock 合成演示
+SEQUENCE:0
+END:VEVENT
+END:VCALENDAR

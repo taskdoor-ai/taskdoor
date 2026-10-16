@@ -1,0 +1,128 @@
+{
+  "schema": "taskdoor.mock.task-snapshot.v1",
+  "metadata": {
+    "dataClass": "synthetic-local-mock",
+    "observedOn": "2026-09-14",
+    "generatedOn": "2026-10-16",
+    "timeZone": "Asia/Shanghai",
+    "notice": "所有业务数据均为 TaskDoor 本地 Mock 合成演示，不代表真实业务实绩、审批结论或功效证明。",
+    "observationNote": "生成日仅表示本文件整理日期，不更新或替代观测日的进度。"
+  },
+  "task": {
+    "id": "ccx-serum-launch",
+    "name": "完成秋季抗老精华首发闭环",
+    "owner": "周岚",
+    "createdOn": "2026-09-08",
+    "plannedFinishOn": "2026-09-30",
+    "forecastFinishOn": "2026-09-21",
+    "forecastAsOf": "2026-09-14",
+    "forecastIsActual": false
+  },
+  "progress": {
+    "basis": "当前范围内末级任务的结构化完成量汇总；不重复累计父级任务",
+    "leafTaskCount": 8,
+    "totalEffortMinutes": 4500,
+    "completedEffortMinutes": 3297,
+    "remainingEffortMinutes": 1203,
+    "progressRatio": 0.7326666666666667,
+    "displayPercent": 73.3,
+    "unit": "min",
+    "calculation": "3297 / 4500 × 100，四舍五入到一位小数",
+    "completionConfirmation": "not-provided",
+    "leafLevelDetails": null,
+    "leafLevelDetailsNote": "本导出只有汇总观测，不均摊或虚构单个末级任务的完成量。"
+  },
+  "productPlan": {
+    "specificationMl": 30,
+    "plannedPriceCny": 299,
+    "launchWindow": {
+      "startOn": "2026-09-10",
+      "endOn": "2026-09-18",
+      "timeZone": "Asia/Shanghai"
+    },
+    "dateScopeNote": "首发窗口描述渠道活动期；计划截止描述整个首发闭环任务，包含后续复盘。"
+  },
+  "resources": {
+    "currency": "CNY",
+    "totalBudgetCny": 300000,
+    "budgetStages": [
+      {
+        "id": "cold-start",
+        "name": "冷启",
+        "budgetCny": 60000
+      },
+      {
+        "id": "scale-up",
+        "name": "放量",
+        "budgetCny": 180000
+      },
+      {
+        "id": "follow-up",
+        "name": "追投",
+        "budgetCny": 60000
+      }
+    ],
+    "totalInventoryUnits": 12000,
+    "channels": [
+      {
+        "id": "self-live",
+        "name": "自播",
+        "reservedUnits": 5000
+      },
+      {
+        "id": "creator-live",
+        "name": "达人直播",
+        "reservedUnits": 4500
+      },
+      {
+        "id": "short-video",
+        "name": "短视频",
+        "reservedUnits": 2500
+      }
+    ],
+    "inventoryBasis": "渠道预留库存，不代表实际销售件数",
+    "budgetBasis": "计划额度，不代表实际投放消耗"
+  },
+  "collaboration": {
+    "projectOwner": "周岚",
+    "advertisingOwner": "许宁",
+    "commerceOwner": "梁川",
+    "attributionOwner": "韩序",
+    "creatorAgreements": {
+      "coreCreators": 8,
+      "confirmedCreators": 6,
+      "pendingSignatures": 2,
+      "closureStatus": "open",
+      "note": "确认合作与回签闭环分别记录。"
+    }
+  },
+  "unavailableActuals": {
+    "paidGmvCny": null,
+    "netGmvCny": null,
+    "actualAdvertisingSpendCny": null,
+    "paidRoas": null,
+    "reason": "本地快照未提供实际订单、退款及平台实扣投放账单，不补为零或计划值。"
+  },
+  "handoffActions": [
+    {
+      "owner": "周岚",
+      "action": "核对剩余回签、审核与上线条件，按验收证据更新状态",
+      "status": "pending-verification"
+    },
+    {
+      "owner": "梁川",
+      "action": "复核到手价、三渠道预留量和库存保护",
+      "status": "pending-verification"
+    },
+    {
+      "owner": "许宁",
+      "action": "按冷启、放量、追投额度准备投放计划，保留追加审批依据",
+      "status": "planning"
+    },
+    {
+      "owner": "韩序",
+      "action": "首发后回填同窗口实际订单与消耗，注明退款观察截止日",
+      "status": "actual-data-unavailable"
+    }
+  ]
+}

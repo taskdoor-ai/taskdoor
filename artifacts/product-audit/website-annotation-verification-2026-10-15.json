@@ -1,0 +1,18 @@
+{
+  "embedInteractive": true,
+  "nativeCapture": true,
+  "annotation": true,
+  "liveNoStaleMarkers": true,
+  "locateSnapshot": true,
+  "repeatLocateAfterHidden": true,
+  "savedReport": true,
+  "blockedScreenshotFallback": true,
+  "mobileToolbar": {
+    "x": 36,
+    "y": 513,
+    "width": 318,
+    "height": 79
+  },
+  "mobile": true,
+  "errors": []
+}

@@ -1,0 +1,422 @@
+{
+  "source": {
+    "version": 17,
+    "schemaSha256": "3742426ddf277de4f7ed87fe2290023ab3d8e9c830de68a81d248c8cbf74fd2d",
+    "note": "从已冻结v17保留原Schema与树示例，仅验证历史读取和兼容；不能作为当前创建流程输出。"
+  },
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://taskdoor.com/schemas/task-preview-v1.json",
+    "title": "TaskDoor task preview v1",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "schemaVersion",
+      "requestId",
+      "status",
+      "summary",
+      "tasks",
+      "questions",
+      "warnings",
+      "duplicates",
+      "parentCandidates"
+    ],
+    "properties": {
+      "schemaVersion": {
+        "const": "taskdoor.task-preview.v1"
+      },
+      "requestId": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      },
+      "status": {
+        "enum": [
+          "ready",
+          "needs_clarification"
+        ]
+      },
+      "summary": {
+        "type": "string",
+        "maxLength": 4000
+      },
+      "tasks": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/task"
+        },
+        "maxItems": 100
+      },
+      "questions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "question",
+            "choices",
+            "recommended",
+            "allowCustom",
+            "placeholder"
+          ],
+          "properties": {
+            "question": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "choices": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "minItems": 2,
+              "maxItems": 4,
+              "uniqueItems": true
+            },
+            "recommended": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "allowCustom": {
+              "const": true
+            },
+            "placeholder": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        },
+        "maxItems": 3
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "maxItems": 100
+      },
+      "duplicates": {
+        "type": "array",
+        "maxItems": 5,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "taskId",
+            "relationship",
+            "reason"
+          ],
+          "properties": {
+            "taskId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "relationship": {
+              "enum": [
+                "same_outcome",
+                "overlap",
+                "possible"
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 400
+            }
+          }
+        }
+      },
+      "parentCandidates": {
+        "type": "array",
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "taskId",
+            "reason"
+          ],
+          "properties": {
+            "taskId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 400
+            }
+          }
+        }
+      }
+    },
+    "$defs": {
+      "task": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "clientId",
+          "title",
+          "goal",
+          "acceptanceCriteria",
+          "ownerMemberId",
+          "assignmentReason",
+          "participants",
+          "dueDate",
+          "executionTips",
+          "effortEstimate",
+          "children"
+        ],
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400
+          },
+          "goal": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "maxItems": 100,
+            "minItems": 1
+          },
+          "ownerMemberId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "assignmentReason": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "memberId",
+                "contribution"
+              ],
+              "properties": {
+                "memberId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "contribution": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20000
+                }
+              }
+            },
+            "maxItems": 100
+          },
+          "dueDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "executionTips": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "maxItems": 100
+          },
+          "effortEstimate": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "minutes",
+                  "workMethod",
+                  "reason"
+                ],
+                "properties": {
+                  "minutes": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "workMethod": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000
+                  }
+                }
+              }
+            ]
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/task"
+            },
+            "maxItems": 100
+          }
+        }
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "status": {
+              "const": "ready"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "tasks": {
+              "minItems": 1
+            },
+            "questions": {
+              "maxItems": 0
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "status": {
+              "const": "needs_clarification"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "questions": {
+              "minItems": 1
+            }
+          }
+        }
+      }
+    ]
+  },
+  "example": {
+    "schemaVersion": "taskdoor.task-preview.v1",
+    "requestId": "request-example",
+    "status": "ready",
+    "summary": "准备新品发布资料，文案和海报可以并行。",
+    "tasks": [
+      {
+        "clientId": "draft-root",
+        "title": "准备新品发布资料",
+        "goal": "让新品发布的受众清楚理解产品用途与已确认卖点",
+        "acceptanceCriteria": [
+          "介绍文案包含用途和已确认的核心卖点",
+          "海报源文件与导出图齐全"
+        ],
+        "ownerMemberId": "member-lead",
+        "assignmentReason": "输入职责中承担整体交付统筹",
+        "participants": [],
+        "dueDate": null,
+        "executionTips": [],
+        "effortEstimate": null,
+        "children": [
+          {
+            "clientId": "draft-copy",
+            "title": "编写新品介绍文案",
+            "goal": "帮助读者通过文字理解产品用途和已确认特点",
+            "acceptanceCriteria": [
+              "包含产品用途",
+              "说明已确认的核心卖点"
+            ],
+            "ownerMemberId": "member-writer",
+            "assignmentReason": "输入职责覆盖文案制作",
+            "participants": [],
+            "dueDate": null,
+            "executionTips": [],
+            "effortEstimate": {
+              "minutes": 120,
+              "workMethod": "使用已确认资料与常用制作工具，人工制作并核验交付",
+              "reason": "示例估算假设：资料齐全，制作与修改约90分钟、最终核验约30分钟；不含等待。"
+            },
+            "children": []
+          },
+          {
+            "clientId": "draft-poster",
+            "title": "制作新品发布海报",
+            "goal": "让发布受众通过海报直观看懂已确认的核心卖点",
+            "acceptanceCriteria": [
+              "使用已确认的卖点文案",
+              "交付可编辑源文件和导出图"
+            ],
+            "ownerMemberId": "member-designer",
+            "assignmentReason": "输入职责覆盖视觉设计",
+            "participants": [],
+            "dueDate": null,
+            "executionTips": [],
+            "effortEstimate": {
+              "minutes": 120,
+              "workMethod": "使用已确认资料与常用制作工具，人工制作并核验交付",
+              "reason": "示例估算假设：资料齐全，制作与修改约90分钟、最终核验约30分钟；不含等待。"
+            },
+            "children": []
+          }
+        ]
+      }
+    ],
+    "questions": [],
+    "warnings": [],
+    "duplicates": [],
+    "parentCandidates": []
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "changeId": "PRD-0226",
+  "module": "11-files-local-commits",
+  "date": "2026-10-16",
+  "sourceUrl": "http://127.0.0.1:4183/",
+  "runtime": "current workspace production frontend build with local presentation preview service",
+  "viewport": [
+    1280,
+    720
+  ],
+  "checks": {
+    "targetedTests": {
+      "passed": 29,
+      "failed": 0,
+      "log": "targeted-tests.log"
+    },
+    "conversionTests": {
+      "passed": 8,
+      "failed": 0,
+      "log": "service-tests.log"
+    },
+    "appTypecheck": "passed after final aspect-ratio layout",
+    "serverScopedTypecheck": "passed",
+    "structureCheck": "passed without new exceptions",
+    "frontendBuild": {
+      "passed": true,
+      "durationSeconds": 9.22,
+      "log": "frontend-build.log"
+    },
+    "prdBuild": {
+      "passed": true,
+      "moduleCount": 25,
+      "changeIdPresent": true,
+      "figure069EmbeddedJpeg": true,
+      "log": "prd-build.log"
+    },
+    "scopedDiffCheck": "passed"
+  },
+  "pdf": {
+    "pages": 5,
+    "defaultExpanded": false,
+    "defaultThumbnailCanvases": 0,
+    "hoverExpanded": true,
+    "hoverPinned": false,
+    "widthBefore": 696,
+    "widthAfter": 696,
+    "jumpToPage": 3,
+    "closeReleasesCanvases": true,
+    "keyboardPinAndEscapeFocusReturn": "passed"
+  },
+  "presentation": {
+    "source": "public/task-assets/serum-launch/common/serum-launch-briefing.pptx",
+    "pages": 8,
+    "defaultExpanded": false,
+    "defaultThumbnailCanvases": 0,
+    "hoverExpanded": true,
+    "hoverPinned": false,
+    "widthBefore": 696,
+    "widthAfter": 696,
+    "jumpToPage": 2,
+    "chineseText": "correct after per-job fontconfig",
+    "httpEvidence": "../presentation-preview-2026-10-16/briefing-font-http-verification.json",
+    "finalLayoutScreenshot": "pptx-expanded.jpg",
+    "thumbnailRowHeight": 78.4921875,
+    "thumbnailCanvasSize": [
+      208,
+      116
+    ],
+    "finalBuildJumpRetest": 2,
+    "screenshotPage": 1,
+    "sourceBytes": 1970379
+  },
+  "limits": [
+    "static presentation preview; no animation or native editing",
+    "local converter depends on existing LibreOffice and available fonts",
+    "real touch device not tested",
+    "not a production deployment or AI handoff verification"
+  ],
+  "fullTestSuiteRun": false,
+  "doubleReviewRun": false,
+  "remoteIssueOrPrChanged": false
+}

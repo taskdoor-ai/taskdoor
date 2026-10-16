@@ -16,11 +16,10 @@ export function buildTaskAiConnectionRequest(input: TaskAiConnectionInput): AiCo
   const { taskId, task } = input;
   const context = [
     { label: "任务 ID", value: taskId },
-    { label: "任务目标", value: task.goal },
-    { label: "完成标准", value: (task.completionCriteria ?? []).filter(value => value.trim()).map((value, index) => `${index + 1}. ${value}`).join("\n") },
     { label: "状态", value: task.status },
     { label: "负责人", value: task.owner },
     { label: "截止时间", value: input.due ?? task.due },
+    { label: "任务目标", value: task.goal },
   ].filter(item => item.value?.trim());
   return {
     taskId,

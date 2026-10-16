@@ -2,7 +2,7 @@
 name: agentdoor-task-status-analyzer
 description: 当需要分析任务当前情况、下一步、完成度或燃起图，并在估算缺失或范围变化时补估或重估人工投入时使用。
 metadata:
-  version: "2026-10-14-v9"
+  version: "2026-10-14-v10"
 ---
 
 # 任务分析
@@ -21,7 +21,7 @@ metadata:
 
 业务依据以[当前 PRD 契约](../shared/current-prd-contract.md)和[证据与更新契约](../shared/evidence-and-updates.md)为准；输出按[字段契约](references/output-contract.md)组织。[旧产品规则快照](references/product-rules.md)及[旧共用规则](../shared/product-rules.md)仅用于追溯，不作为当前输入、输出或业务规则。
 
-输出协议：`agentdoor.task-status-analysis.v0.1`。规则版本：`TASK-ANALYSIS-2026-10-14-v9`。
+输出协议：`agentdoor.task-status-analysis.v0.1`。规则版本：`TASK-ANALYSIS-2026-10-14-v10`。
 
 ## 适用范围
 
@@ -49,15 +49,16 @@ metadata:
 ## 执行流程
 
 1. **核对版本。** 优先读取 `analysisContext` 的统一字段；离线兼容字段不覆盖其中的标准 ID、独立版本或读取状态。完整回显包络 `inputVersions`，不能自行删减未引用的输入版本。 固定任务、标准、文件和确认的有效版本，区分正式字段、讨论报告、内容核对与历史结果。新发言不自动替代正式状态或确认。
-2. **说明当前情况。** 先写当前已有结果，再写未满足的完成标准、待核对事项和近期实质变化。引用具体内容和版本，不用“总体顺利”等空泛判断代替事实。
+2. **说明当前情况。** 先写当前已有结果，再写未满足的完成标准、待核对事项和近期实质变化。按读过的内容给出具体判断，来源与版本单独绑定到结构化引用，不拼成正文链接或来源标记；不用“总体顺利”等空泛判断代替事实。
 3. **确定下一步。** 有当前决策冲突先核对双方要求；有确证执行阻塞先推动缺失交付或确认替代；否则补齐尚未满足的结果。给出最直接可执行的行动，有依据时注明处理人。
 4. **逐条核对标准。** 按 `criteria.items[].id/text` 与独立 `criteria.version` 返回 `criterionAssessments`，包含 0/25/50/75/100 或 null 的 AI 评估、依据和剩余缺口；人工确认原样保留且不由 AI 推导。
 5. **核对估算并计算进度。** 先判断当前范围的估算是否有效，必要时补估或重估并通过可选 `progress.estimate` 返回 EWD 估算提案；人工已确认估算不得被本轮模型结果自动替换。仅文件新增或进度变化不代表需要重估，换人或日期变化本身也不重估。再使用同一当前输入版本和同一组 EWD 明细核对总量、已完成量、待确认量和完成度。已有有效结果原样引用；本次估算或计算标明来源，不能伪造调用或保存记录。
 6. **解释燃起图。** 先读取[正式项目燃起图接入契约](references/production-progress-contract.md)，区分创建基线、历史完成量、计划量、未来预测、用户确认完成日期与计划差值。没有已保存工作量历史或正式起点时，`progress.comparison=null`，仍返回有据的当前进度；本轮分析观察与文件、讨论的时间不能充当历史或正式起点。创建基线只读取创建时保存的日期与估算，不用本轮估算回填。分别说明新增完成、范围增减和重估；只有一个时点或没有历史时，不推断收敛趋势。未来预测缺有据的执行与复核安排时保持未知；AI 判断 100% 不产生预测或人工确认完成日期。
-7. **返回可继续处理的分析。** 三部分分别给出结果与未知项。一个部分不可用不阻止展示其他已知事实；整体有必要缺口时返回 `partial`。
+7. **返回可继续处理的分析。** 三部分分别给出结果与未知项。一个部分不可用不阻止返回其他已知事实；整体有必要缺口时返回 `partial`。这些输出字段不决定界面是否展示分析入口或新增区块。
 
 ## 输出要求
 
+- `currentSituation` 与 `nextActions` 的文案只用普通文本；不生成来源链接、跳转提示或额外依据清单，证据引用独立保留。具体字段边界与正反例见[输出契约的正文与证据引用](references/output-contract.md#正文与证据引用)。
 - `currentSituation`：一句摘要、已核对结果、未满足结果、待核对项、近期变化及证据。
 - `nextActions`：具体行动、建议处理人、对应诊断类型及原因。补齐任务交付默认由当前有效负责人推进，`actorId` 使用输入任务的负责人 ID；有明确职责或讨论分工依据时可建议对应协作者。不能仅因未点名每项工作而把已知负责人留空。确实无负责人或无权判断的特殊行动，才使用 `null` 并说明待明确的分工。
 - 人工确认是用户的独立决定，不能要求把尚未完成的标准提前确认。没有人工确认不等于缺少交付；先补齐和核对具体成果，已核对完成的标准可提示用户选择是否确认，不把确认写回当作本地分析行动。
@@ -81,13 +82,13 @@ metadata:
 
 任务 v4 仍在进行中，讨论说“做完了”，当前文件却缺少风险预案；旧 v3 进度为 100%。应说明已提交主体内容、仍缺风险预案并建议补齐核对；当前范围及工作条件足够时先补有效估算，再核对完成量，仍有必要缺口时整体为 `null`。旧 v3 数值不进入当前进度，正式状态保持进行中。
 
-提交前检查：三部分齐全；摘要有具体依据；下一步针对当前缺口；进度来源与版本一致；未知未写成零或完成。
+提交前检查：三部分齐全；摘要有具体依据；下一步针对当前缺口；正文是普通文本，引用未拼入文案；进度来源与版本一致；未知未写成零或完成。
 
 问题识别的 few-shot 见[问题核对示例](examples/problem-analysis.md)。统一输出 currentSituation、nextActions、progress；内部核对不另外返回诊断 Skill 的包络或 diagnoses 顶层字段。
 
 ## 当前必填结构检查
 
-新分析必须返回 result.criteriaVersion、result.criterionAssessments（覆盖全部当前可读标准），以及 progress.displayPercent、totalEwdMinutes、completedEwdMinutes、comparison。未知保留 null 或空数组并说明，不能省略字段。`progress.estimate` 是本次补估或重估时的可选提案字段，形状遵循 EWD 输出契约；未补估时省略或为 null。每条评估都返回 criterionId、text、criteriaVersion、state、percent、completedContent、remainingContent、pendingChecks、reason、evidenceRefs。旧示例未包含这些字段仅供历史阅读，不能作为当前生成模板。规则版本使用 TASK-ANALYSIS-2026-10-14-v9。
+新分析必须返回 result.criteriaVersion、result.criterionAssessments（覆盖全部当前可读标准），以及 progress.displayPercent、totalEwdMinutes、completedEwdMinutes、comparison。未知保留 null 或空数组并说明，不能省略字段。`progress.estimate` 是本次补估或重估时的可选提案字段，形状遵循 EWD 输出契约；未补估时省略或为 null。每条评估都返回 criterionId、text、criteriaVersion、state、percent、completedContent、remainingContent、pendingChecks、reason、evidenceRefs。旧示例未包含这些字段仅供历史阅读，不能作为当前生成模板。规则版本使用 TASK-ANALYSIS-2026-10-14-v10。
 
 ### 燃起图必须使用的字段形状
 

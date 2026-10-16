@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration xmlns="urn:taskdoor:mock:launch-configuration:v1" version="1.0" taskId="ccx-serum-launch">
+  <metadata>
+    <title>秋季精华首发渠道配置</title>
+    <dataClass>synthetic-local-mock</dataClass>
+    <observedOn>2026-09-14</observedOn>
+    <generatedOn>2026-10-16</generatedOn>
+    <timeZone>Asia/Shanghai</timeZone>
+    <notice>所有业务数据均为 TaskDoor 本地 Mock 合成演示，不代表真实业务实绩、审批结论或功效证明。</notice>
+  </metadata>
+  <execution mode="simulation" allowExternalCalls="false" applyToProduction="false"/>
+  <project owner="周岚" advertisingOwner="许宁" commerceOwner="梁川" attributionOwner="韩序"/>
+  <product sku="MOCK-SERUM-30ML" specificationMl="30">
+    <plannedPrice currency="CNY" basis="single-unit-after-promotion">299</plannedPrice>
+    <launchWindow startOn="2026-09-10" endOn="2026-09-18" inclusive="true"/>
+    <taskSchedule createdOn="2026-09-08" forecastFinishOn="2026-09-21" plannedFinishOn="2026-09-30"/>
+    <dateScopeNote>渠道活动窗口与包含复盘的任务截止分别记录。预测依据为观测日快照，不是实际完成日。</dateScopeNote>
+  </product>
+  <inventory totalUnits="12000" basis="reserved-not-sold" unit="piece">
+    <channel id="self-live" name="自播" reservedUnits="5000" commerceOwner="梁川"/>
+    <channel id="creator-live" name="达人直播" reservedUnits="4500" commerceOwner="梁川"/>
+    <channel id="short-video" name="短视频" reservedUnits="2500" commerceOwner="梁川"/>
+    <allocationRule>三渠道预留量合计必须等于总库存。调整渠道额度时保留修改人与依据。</allocationRule>
+  </inventory>
+  <budget totalCny="300000" currency="CNY" basis="plan-not-actual-spend">
+    <stage id="cold-start" name="冷启" limitCny="60000"/>
+    <stage id="scale-up" name="放量" limitCny="180000"/>
+    <stage id="follow-up" name="追投" limitCny="60000"/>
+    <allocationRule>阶段预算合计必须等于预算总额。预算追加须由周岚确认受控版本。</allocationRule>
+  </budget>
+  <creatorAgreements coreCreators="8" confirmedCreators="6" pendingSignatures="2" closureStatus="open">
+    <rule>未取得有效回签的合作不计入已闭环。确认意向与合同回签分别记录。</rule>
+  </creatorAgreements>
+  <releaseChecks defaultState="pending-verification">
+    <check id="approved-content" owner="苏禾" required="true">仅使用通过审核的宣称与授权素材版本。</check>
+    <check id="price-stock" owner="梁川" required="true">商品到手价与渠道库存配置完成核对。</check>
+    <check id="budget-approval" owner="许宁" required="true">当前阶段额度与受控预算版本一致。</check>
+    <check id="attribution-test" owner="韩序" required="true">渠道链接、订单回传与去重测试有记录。</check>
+    <check id="owner-decision" owner="周岚" required="true">未闭环事项有明确处理结论后再确认发布范围。</check>
+  </releaseChecks>
+  <actualData availability="not-provided">
+    <note>不将缺失的订单、退款或平台消耗写为零；计划库存与预算不得充当实际业绩。</note>
+  </actualData>
+</launchConfiguration>

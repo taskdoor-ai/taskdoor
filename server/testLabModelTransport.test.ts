@@ -22,6 +22,19 @@ test('DeepSeek sends the native analysis schema and closes the connection',async
  assert.equal(headers.Connection,'close');
 });
 
+test('连续的 Mercury 分析与 Qwen 判断请求默认关闭空闲连接',async()=>{
+ for(const model of ['pa/mercury-5.5','qwen/qwen3.7-plus']){
+  let calls=0;
+  const transport:typeof fetch=async(_url,init)=>{
+   calls++;
+   assert.equal(new Headers(init?.headers).get('Connection'),'close');
+   return Response.json(model.startsWith('qwen/')?{choices:[{message:{content:'{}'}}]}:{output:[{content:[{type:'output_text',text:'{}'}]}]});
+  };
+  for(let i=0;i<2;i++)await callModel({...options,model},'JSON',{},new AbortController().signal,transport);
+  assert.equal(calls,2);
+ }
+});
+
 test('recorded workload requires a chart without leaking expected fixture answers',async()=>{
  const {analysisResponseSchema}=await import('./test-lab/analysis-response-schema.ts');
  const record={scopeVersion:'v1',workload:[{at:'2026-10-09',scopeMinutes:240,completedMinutes:120,scopeVersion:'v1'}]};

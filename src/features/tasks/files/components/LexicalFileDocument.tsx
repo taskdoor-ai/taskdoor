@@ -14,8 +14,13 @@ import { $isMarkNode, $unwrapMarkNode, $wrapSelectionInMarkNode, MarkNode } from
 import { $createParagraphNode, $createRangeSelection, $createTextNode, $getNearestNodeFromDOMNode, $getRoot, $isElementNode, $isTextNode, $nodesOfType, $setSelection, type LexicalNode, type TextNode } from "lexical";
 import type { FileDiscussionThread } from "@/features/tasks/lib/task-collaboration";
 import type { TaskFileTextSelection } from "@/features/tasks/files/components/TaskFileViewer";
+import type { TaskFileAnnotation } from "@/features/tasks/files/lib/task-file-annotations";
+import { captureFileAnnotationElement } from "@/features/tasks/files/lib/capture-file-annotation";
+import { FileSourceLineNumbers } from "@/features/tasks/files/components/FileSourceLineNumbers";
 
-type Props = { text: string; markdown?: boolean; pageIndex?: number; version?: number; threads?: FileDiscussionThread[]; activeThreadId?: string | null; onThreadSelect?: (id: string) => void; onSelection?: (selection: TaskFileTextSelection | null) => void };
+type Props = { text: string; markdown?: boolean; source?: boolean; pageIndex?: number; version?: number; threads?: FileDiscussionThread[]; activeThreadId?: string | null; annotationMode?: boolean; draftAnchor?: TaskFileAnnotation["anchor"] | null; onThreadSelect?: (id: string, trigger?: HTMLElement) => void; onSelection?: (selection: TaskFileTextSelection | null) => void };
+
+const DRAFT_MARK_ID = "__taskdoor_file_annotation_draft__";
 
 function getOffset(node: TextNode, offset: number) {
   let result = offset;
@@ -30,47 +35,52 @@ function getOffset(node: TextNode, offset: number) {
   return result;
 }
 
-function DocumentPlugin({ text, markdown, pageIndex, version, threads = [], activeThreadId, onThreadSelect, onSelection }: Props) {
+/** Mark only a verified passage; stale or ambiguous source offsets remain unmarked. */
+export function $markDocumentQuote({ quote, documentText: sourceText, selectionStart, selectionEnd }: Pick<FileDiscussionThread, "quote" | "documentText" | "selectionStart" | "selectionEnd">, sourceMarkdown: string, id: string) {
+  const documentText = $getRoot().getTextContent();
+  if (!quote?.trim()) return false;
+  if (sourceText !== documentText) {
+    // Source Markdown may include markup. A unique passage may be mapped in the same source only.
+    if (sourceText !== sourceMarkdown) return false;
+    const match = documentText.indexOf(quote);
+    if (match < 0 || match !== documentText.lastIndexOf(quote)) return false;
+    selectionStart = match;
+    selectionEnd = match + quote.length;
+  }
+  if (selectionStart == null || selectionEnd == null || !Number.isInteger(selectionStart) || !Number.isInteger(selectionEnd) || selectionStart < 0 || selectionEnd <= selectionStart || documentText.slice(selectionStart, selectionEnd) !== quote) return false;
+  const points = $getRoot().getAllTextNodes().map(node => ({ node, start: getOffset(node, 0), end: getOffset(node, node.getTextContentSize()) }));
+  const start = points.find(point => selectionStart! >= point.start && selectionStart! < point.end);
+  const end = [...points].reverse().find(point => selectionEnd! > point.start && selectionEnd! <= point.end);
+  if (!start || !end) return false;
+  const range = $createRangeSelection();
+  range.setTextNodeRange(start.node, selectionStart - start.start, end.node, selectionEnd - end.start);
+  $wrapSelectionInMarkNode(range, false, id);
+  return true;
+}
+
+function DocumentPlugin({ text, markdown, source, pageIndex, version, threads = [], activeThreadId, draftAnchor, onThreadSelect, onSelection }: Props) {
   const [editor] = useLexicalComposerContext();
   useEffect(() => {
     editor.update(() => {
       const root = $getRoot();
       root.clear();
-      if (markdown) $convertFromMarkdownString(text, TRANSFORMERS);
+      if (source) root.append($createParagraphNode().append($createTextNode(text)));
+      else if (markdown) $convertFromMarkdownString(text, TRANSFORMERS);
       else text.split("\n\n").forEach(paragraph => root.append($createParagraphNode().append($createTextNode(paragraph))));
       $setSelection(null);
     }, { discrete: true });
-  }, [editor, text, markdown]);
+  }, [editor, text, markdown, source]);
   useEffect(() => {
     editor.update(() => {
       $nodesOfType(MarkNode).forEach($unwrapMarkNode);
-      const documentText = $getRoot().getTextContent();
       for (const thread of threads) {
         if (!thread.quote || thread.pageIndex !== pageIndex || (version != null && thread.version !== version)) continue;
-        let selectionStart = thread.selectionStart;
-        let selectionEnd = thread.selectionEnd;
-        if (thread.documentText !== documentText) {
-          // A textarea selects the source Markdown. Only map an unambiguous quote in the same saved source.
-          if (thread.documentText !== text) continue;
-          const match = documentText.indexOf(thread.quote);
-          if (match < 0 || match !== documentText.lastIndexOf(thread.quote)) continue;
-          selectionStart = match; selectionEnd = match + thread.quote.length;
-        }
-        if (selectionStart == null || selectionEnd == null || documentText.slice(selectionStart, selectionEnd) !== thread.quote) continue;
-        const nodes = $getRoot().getAllTextNodes();
-        const first = nodes[0];
-        if (!first) continue;
-        const points = nodes.map(node => ({ node, start: getOffset(node, 0), end: getOffset(node, node.getTextContentSize()) }));
-        const start = points.find(point => selectionStart! >= point.start && selectionStart! < point.end);
-        const end = [...points].reverse().find(point => selectionEnd! > point.start && selectionEnd! <= point.end);
-        if (!start || !end) continue;
-        const range = $createRangeSelection();
-        range.setTextNodeRange(start.node, selectionStart - start.start, end.node, selectionEnd - end.start);
-        $wrapSelectionInMarkNode(range, false, thread.id);
+        $markDocumentQuote(thread, text, thread.id);
       }
+      if (draftAnchor?.kind === "text" && draftAnchor.pageIndex === pageIndex) $markDocumentQuote({ quote: draftAnchor.quote ?? "", documentText: draftAnchor.documentText ?? "", selectionStart: draftAnchor.selectionStart, selectionEnd: draftAnchor.selectionEnd }, text, DRAFT_MARK_ID);
       $setSelection(null);
     }, { discrete: true });
-  }, [editor, text, markdown, pageIndex, version, threads]);
+  }, [editor, text, markdown, pageIndex, version, threads, draftAnchor]);
   useEffect(() => {
     editor.read(() => {
       for (const mark of $nodesOfType(MarkNode)) {
@@ -78,10 +88,11 @@ function DocumentPlugin({ text, markdown, pageIndex, version, threads = [], acti
         if (!element) continue;
         const active = Boolean(activeThreadId && mark.getIDs().includes(activeThreadId));
         element.dataset.active = String(active);
-        if (active) element.scrollIntoView({ block: "center", behavior: "smooth" });
+        element.dataset.draft = String(mark.getIDs().includes(DRAFT_MARK_ID));
+        if (active) element.scrollIntoView({ block: "center", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
       }
     });
-  }, [editor, activeThreadId, threads]);
+  }, [editor, activeThreadId, threads, draftAnchor]);
   useEffect(() => {
     const capture = () => {
       const root = editor.getRootElement();
@@ -103,7 +114,7 @@ function DocumentPlugin({ text, markdown, pageIndex, version, threads = [], acti
         const selectionEnd = getOffset(endNode, end.offset);
         const quote = documentText.slice(selectionStart, selectionEnd);
         const rect = domRange.getBoundingClientRect();
-        if (quote.trim()) onSelection?.({ text: quote, documentText, selectionStart, selectionEnd, location: "所选正文", rect: { left: rect.left, bottom: rect.bottom } });
+        if (quote.trim()) onSelection?.({ text: quote, documentText, selectionStart, selectionEnd, location: "所选正文", screenshotPromise: captureFileAnnotationElement(root, rect), rect: { left: rect.left, bottom: rect.bottom } });
       });
     };
     const click = (event: MouseEvent) => {
@@ -112,7 +123,10 @@ function DocumentPlugin({ text, markdown, pageIndex, version, threads = [], acti
       editor.read(() => {
         let node = $getNearestNodeFromDOMNode(target);
         while (node && !$isMarkNode(node)) node = node.getParent();
-        if ($isMarkNode(node)) onThreadSelect?.(node.getIDs()[0]);
+        if ($isMarkNode(node)) {
+          const threadId = node.getIDs().find(id => id !== DRAFT_MARK_ID);
+          if (threadId) onThreadSelect?.(threadId);
+        }
       });
     };
     return editor.registerRootListener((root, previous) => {
@@ -130,5 +144,6 @@ function DocumentPlugin({ text, markdown, pageIndex, version, threads = [], acti
 export function LexicalFileDocument(props: Props) {
   const ui = useGlobalUi();
   const config = useMemo(() => ({ namespace: "AgentDoorFileDocument", editable: false, nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, CodeNode, CodeHighlightNode, MarkNode], theme: { mark: "task-file-discussion-mark", markOverlap: "task-file-discussion-mark-overlap" }, onError(error: Error) { console.error(error); } }), []);
-  return <LexicalComposer initialConfig={config}><article className="task-file-document task-file-lexical-document"><RichTextPlugin contentEditable={<ContentEditable aria-label={ui("文件正文")} role="document" />} ErrorBoundary={LexicalErrorBoundary} placeholder={null} /><DocumentPlugin {...props} /></article></LexicalComposer>;
+  const content = <RichTextPlugin contentEditable={<ContentEditable aria-label={ui("文件正文")} role="document" />} ErrorBoundary={LexicalErrorBoundary} placeholder={null} />;
+  return <LexicalComposer initialConfig={config}><article className={`task-file-document task-file-lexical-document${props.source ? " task-file-source-document" : ""}`} data-annotation-mode={Boolean(props.annotationMode)}>{props.source ? <><FileSourceLineNumbers text={props.text} /><div className="task-file-source-content">{content}</div></> : content}<DocumentPlugin {...props} /></article></LexicalComposer>;
 }

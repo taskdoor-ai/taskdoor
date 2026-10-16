@@ -168,7 +168,8 @@
 .creation-editable-plan .task-detail-properties.creation-heading-properties > .task-detail-property-separator { display: none; }
 .creation-editable-plan .creation-heading-properties > .task-due-date-picker { grid-column: auto; }
 
-.creation-editable-plan .task-detail-properties.creation-heading-properties {
+.creation-editable-plan .task-detail-properties.creation-heading-properties,
+.creation-progressive-skeleton .creation-skeleton-properties {
   display: grid;
   grid-template-columns: minmax(100px, .55fr) minmax(200px, 1.85fr) minmax(160px, 1fr);
   column-gap: 32px;
@@ -185,8 +186,16 @@
 }
 .creation-editable-plan .creation-heading-properties .task-due-date-field { min-height: 40px; display: flex; align-items: center; }
 @media (max-width: 600px) {
-  .creation-editable-plan .task-detail-properties.creation-heading-properties { grid-template-columns: max-content minmax(0, 1fr); gap: 20px 28px; }
-  .creation-editable-plan .creation-heading-properties > .task-due-date-picker { grid-column: 1 / -1; }
+  .creation-editable-plan .task-detail-properties.creation-heading-properties,
+  .creation-progressive-skeleton .creation-skeleton-properties { grid-template-columns: max-content minmax(0, 1fr); gap: 20px 28px; }
+  .creation-editable-plan .creation-heading-properties > .task-due-date-picker,
+  .creation-skeleton-date { grid-column: 1 / -1; }
+}
+@container task-creation-pane (max-width: 600px) {
+  .creation-editable-plan .task-detail-properties.creation-heading-properties,
+  .creation-progressive-skeleton .creation-skeleton-properties { grid-template-columns: max-content minmax(0, 1fr); gap: 20px 28px; }
+  .creation-editable-plan .creation-heading-properties > .task-due-date-picker,
+  .creation-skeleton-date { grid-column: 1 / -1; }
 }
 
 .creation-editable-plan .task-detail-properties.creation-subtask-metadata {

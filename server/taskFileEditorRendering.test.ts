@@ -8,6 +8,7 @@ import { TaskFileExplorer } from "../src/features/tasks/files/components/TaskFil
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 import { createTaskFileRevision } from "../src/features/tasks/files/lib/task-file-editing.ts";
 import { TaskFileHistory } from "../src/features/tasks/files/components/TaskFileHistory.tsx";
+import { I18nProvider } from "../src/shared/i18n/I18nProvider.tsx";
 
 const file: TaskFileNode = { id: "document", kind: "file", parentId: null, name: "决策.md", version: 4, updatedAt: "昨天", content: "# 决策\n\n## 当前结论\n\n等待确认。" };
 
@@ -139,12 +140,21 @@ test("文件列表圆角与左侧任务列表共用同一控件圆角", () => {
   assert.equal(radius(fileCss, /\.task-file-explorer-row\s*\{([^}]+)\}/), taskRadius);
 });
 
-test("历史面板展示修改人、精确位置和真实前后内容，空历史不补造", () => {
+test("历史右栏显示作者、时间和版本，默认选中最新记录，空历史不补造", () => {
   const record = createTaskFileRevision(file, { kind: "text", text: "# 决策\n\n## 当前结论\n\n已经确认。" }, "陈默", "2026-08-31T12:00:00Z")!;
-  const html = renderToStaticMarkup(createElement(TaskFileHistory, { version: record.version, revisions: record.revisions, onClose: () => undefined }));
-  assert.match(visibleText(html), /当前v5/);
-  for (const value of ["陈默", "第 5 行", "等待确认。", "已经确认。", "v5", "2026-08-31T12:00:00Z"]) assert.ok(html.includes(value), value);
-  const empty = renderToStaticMarkup(createElement(TaskFileHistory, { version: 4, revisions: [], onClose: () => undefined }));
+  const older = { ...record.revisions[0], id: "older-revision", version: 4, baseVersion: 3, author: "周岚" };
+  const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(TaskFileHistory, { version: record.version, revisions: [...record.revisions, older], onClose: () => undefined }) }));
+  assert.match(visibleText(html), /当前版本/);
+  for (const value of ["陈默", "v5", "2026-08-31T12:00:00Z"]) assert.ok(html.includes(value), value);
+  assert.match(html, /aria-label="更新历史"/);
+  const selectedTab = html.match(/<button[^>]*role="tab"[^>]*aria-selected="true"[\s\S]*?<\/button>/)?.[0];
+  assert.ok(selectedTab, "有且只有最新版本默认选中");
+  assert.match(selectedTab, /陈默/);
+  assert.match(selectedTab, /v5/);
+  assert.equal((html.match(/aria-selected="true"/g) ?? []).length, 1);
+  assert.doesNotMatch(visibleText(html), /选择一个版本/);
+  assert.match(html, /role="tabpanel"/);
+  const empty = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(TaskFileHistory, { version: 4, revisions: [], onClose: () => undefined }) }));
   assert.match(empty, /还没有(?:本地)?修改记录/);
   assert.doesNotMatch(empty, /修改前 ·/);
 });

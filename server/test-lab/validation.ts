@@ -24,6 +24,7 @@ const schemas={
 };
 const versions:Record<string,string>={'agentdoor-member-matcher':'agentdoor.member-match.v0.1','agentdoor-responsibility-advisor':'agentdoor.responsibility-advice.v0.1','agentdoor-task-status-analyzer':'agentdoor.task-status-analysis.v0.1','agentdoor-task-diagnostician':'agentdoor.task-diagnosis.v0.1','agentdoor-personal-priority':'agentdoor.personal-priority.v0.1','agentdoor-ewd-progress':'agentdoor.ewd-progress.v0.1'};
 export function validateOutput(id:SkillId,output:unknown,input:any):string[]{
+  if(id==='taskdoor-decompose-task')return ['子任务建议必须通过独立只读协议校验，不能使用旧分析或创建协议'];
   const errors:string[]=[];const o=output as any;
   const knownRefs=new Set([input.requestId,...(input.sources??[]).map((s:any)=>s.ref),...(input.context?.sourceRefs??[]).map((s:any)=>s.id),...(input.context?.discussions??[]).map((s:any)=>s.id),...(input.analysisContext?.tasks??input.tasks??[]).flatMap((t:any)=>(t.criteria?.items??[]).map((c:any)=>c.id))]);
   const inspectRefs=(value:unknown)=>{if(!value||typeof value!=='object')return;for(const [key,child] of Object.entries(value)){if(key==='evidenceRefs'&&Array.isArray(child)){for(const ref of child){const id=typeof ref==='string'?ref:ref?.ref;if(typeof id!=='string'||!knownRefs.has(id))errors.push('存在未读取或无权使用的证据引用');}}else inspectRefs(child);}};
@@ -48,9 +49,9 @@ export function validateOutput(id:SkillId,output:unknown,input:any):string[]{
     if(id==='agentdoor-responsibility-advisor'&&r.success&&o.result.responsibilityVersion!==input.responsibilityVersion)errors.push('责任基准版本错误');
     if(id==='agentdoor-task-status-analyzer'&&r.success){
       const result=o.result,p=result.progress;
-      if(/TASK-ANALYSIS-(2026-10-11-v[67]|2026-10-14-v[89])/.test(o.ruleVersion)){for(const key of ['criteriaVersion','criterionAssessments'])if(!(key in result))errors.push('当前任务分析缺少必填字段：'+key);for(const key of ['displayPercent','comparison','totalEwdMinutes','completedEwdMinutes'])if(!(key in p))errors.push('当前进度缺少必填字段：'+key);const task=(input.analysisContext?.tasks??input.tasks??[]).find((t:any)=>t.id===result.taskId);const criteria=task?.criteria?.items??[];if(criteria.length&&(!result.criterionAssessments||result.criterionAssessments.length!==criteria.length))errors.push('逐条评估未完整覆盖当前完成标准');}
+      if(/TASK-ANALYSIS-(2026-10-11-v[67]|2026-10-14-v(?:8|9|10))/.test(o.ruleVersion)){for(const key of ['criteriaVersion','criterionAssessments'])if(!(key in result))errors.push('当前任务分析缺少必填字段：'+key);for(const key of ['displayPercent','comparison','totalEwdMinutes','completedEwdMinutes'])if(!(key in p))errors.push('当前进度缺少必填字段：'+key);const task=(input.analysisContext?.tasks??input.tasks??[]).find((t:any)=>t.id===result.taskId);const criteria=task?.criteria?.items??[];if(criteria.length&&(!result.criterionAssessments||result.criterionAssessments.length!==criteria.length))errors.push('逐条评估未完整覆盖当前完成标准');}
 
-      if(/TASK-ANALYSIS-(2026-10-11-v7|2026-10-14-v[89])/.test(o.ruleVersion)&&p.comparison!==null&&!progressComparison.safeParse(p.comparison).success)errors.push('燃起图比较结构无法被任务详情组件读取：请使用workload数组、asOf、expected.points及timing.startOn/dueOn/forecastOn');
+      if(/TASK-ANALYSIS-(2026-10-11-v7|2026-10-14-v(?:8|9|10))/.test(o.ruleVersion)&&p.comparison!==null&&!progressComparison.safeParse(p.comparison).success)errors.push('燃起图比较结构无法被任务详情组件读取：请使用workload数组、asOf、expected.points及timing.startOn/dueOn/forecastOn');
       if(p.displayPercent!==undefined && p.displayPercent!==(p.state==='current'?taskProgressPercent(p.completionPercent):null))errors.push('展示进度与有效原始进度不一致');
       for(const item of result.criterionAssessments??[]){
         if(item.criteriaVersion!==result.criteriaVersion)errors.push('标准评估版本不一致');

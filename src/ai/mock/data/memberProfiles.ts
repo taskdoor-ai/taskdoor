@@ -73,6 +73,7 @@ export type TeamMembership = {
 };
 
 export type TeamResponsibilityProfile = {
+  timezone?: string;
   appearance?: TeamAppearance;
   createdBy?: string;
   id: string;

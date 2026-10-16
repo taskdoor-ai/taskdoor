@@ -32,7 +32,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
   const [result, setResult] = useState<AiTransferResult | null>(null);
 
   const selectedConnection = connectionHistory[agent];
-  const connectionTime = selectedConnection ? formatDisplayDateTime(selectedConnection) : null;
+  const connectionTime = selectedConnection ? formatDisplayDateTime(selectedConnection, { locale }) : null;
   const agentName = aiToolName(agent);
   // The prompt and the commands point at this deployment, wherever it is served from.
   const origin = window.location.origin;
@@ -105,7 +105,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
         </p>
         {method === "cli" && <p>{ui("登录只授权你的账号，按你本人在各工作空间的权限访问；工作空间在后续命令中指定。")}</p>}
         {selectedConnection && connectionTime
-          ? <p className="connect-v2-last-connected"><i aria-hidden="true" />{ui("最近连接")}{agentName} · <time dateTime={selectedConnection} title={formatDisplayDateTime(selectedConnection, { year: "always" }) ?? undefined}>{connectionTime}</time></p>
+          ? <p className="connect-v2-last-connected"><i aria-hidden="true" />{ui("最近连接")}{agentName} · <time dateTime={selectedConnection} title={formatDisplayDateTime(selectedConnection, { locale, year: "always" }) ?? undefined}>{connectionTime}</time></p>
           : null}
       </div>
     </section>

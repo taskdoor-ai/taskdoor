@@ -224,8 +224,8 @@ export function getTaskSituationModel(input: TaskSituationInput): TaskSituationM
   }
   const hasAmount = progress.currentMinutes !== null && progress.total !== null && progress.total > 0;
   const progressText = hasAmount ? `${progress.sourceLabel}完成度 ${Number((progress.ratio * 100).toFixed(1))}%` : "完成量尚待核对";
-  const finishText = progress.completedOn ? `确认完成日 ${formatDisplayDate(progress.completedOn) ?? "—"}；${progress.timeStatus}。`
-    : progress.forecastOn ? `AI 预测完成日 ${formatDisplayDate(progress.forecastOn) ?? "—"}；${progress.timeStatus}。`
+  const finishText = progress.completedOn ? `确认完成日 ${formatDisplayDate(progress.completedOn, { locale: "zh-CN" }) ?? "—"}；${progress.timeStatus}。`
+    : progress.forecastOn ? `AI 预测完成日 ${formatDisplayDate(progress.forecastOn, { locale: "zh-CN" }) ?? "—"}；${progress.timeStatus}。`
       : task.status === "已取消" ? "已停止完工预测。" : task.status === "已完成" ? "完成日期待核对。" : "";
   // Quote the evidence actually used by the chart. A stale/changed scope cannot reuse an old basis.
   const history = progress.historySeries;
@@ -241,8 +241,8 @@ export function getTaskSituationModel(input: TaskSituationInput): TaskSituationM
       ? `先核对「${remaining[0].title}」的剩余交付及时间，再对照${criterion}确认整体结果。`
       : `对照${criterion}核对整体交付结果与来源。`), reference: remaining.length ? taskReference(remaining[0]) : criteriaReference() };
     else if (task.status === "已完成") next = { text: suggest(`对照${criterion}保留交付确认和原始依据。`), reference: criteriaReference() };
-    else if (progress.deltaDays !== null && progress.deltaDays > 0) next = { text: suggest(`对照${criterion}核对剩余工作与 ${formatDisplayDate(progress.forecastOn ?? progress.completedOn ?? "") ?? "—"} 的时间依据，再协调截止安排。`), reference: criteriaReference() };
-    else next = { text: suggest(`对照${criterion}核对剩余交付${progress.forecastOn ? `，在 ${formatDisplayDate(progress.forecastOn) ?? "—"} 前更新结果与依据` : "，补充下一次核对时间"}。`), reference: criteriaReference() };
+    else if (progress.deltaDays !== null && progress.deltaDays > 0) next = { text: suggest(`对照${criterion}核对剩余工作与 ${formatDisplayDate(progress.forecastOn ?? progress.completedOn ?? "", { locale: "zh-CN" }) ?? "—"} 的时间依据，再协调截止安排。`), reference: criteriaReference() };
+    else next = { text: suggest(`对照${criterion}核对剩余交付${progress.forecastOn ? `，在 ${formatDisplayDate(progress.forecastOn, { locale: "zh-CN" }) ?? "—"} 前更新结果与依据` : "，补充下一次核对时间"}。`), reference: criteriaReference() };
   }
   return { ...model, freshness: "current", asOf: progress.asOf, asOfSource: "progress",
     summary: `「${task.title}」${task.status}；${progressText}。${finishText}`,

@@ -4,12 +4,14 @@ import test from "node:test";
 import React, { Children, createElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { $createParagraphNode, $createTextNode, $getRoot, createEditor, type EditorState } from "lexical";
 import { DiscussionComposer, isDiscussionSubmitShortcut, type DiscussionComposerProps } from "../src/features/tasks/discussion/components/DiscussionComposer.tsx";
 import { $createMentionNode, $isMentionNode, MentionNode } from "../src/features/tasks/discussion/components/mention-node.ts";
 import { DISCUSSION_UPLOAD_MAX_BYTES, isDiscussionImage, prepareDiscussionUpload } from "../src/features/tasks/files/lib/discussion-uploads.ts";
 import type { DiscussionDraft } from "../src/features/tasks/lib/task-collaboration.ts";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
+import { I18nProvider } from "../src/shared/i18n/I18nProvider.tsx";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 type Element = ReactElement<Record<string, any>>;
@@ -46,7 +48,7 @@ function capture(props: Partial<DiscussionComposerProps> = {}, initialEditorStat
     }
     return tree;
   }
-  const html = renderToStaticMarkup(createElement(Capture));
+  const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(Capture) }));
   return { html, tree, submit: () => elements(tree, element => element.props.className === "discussion-composer-submit")[0].props.onClick() };
 }
 
@@ -80,11 +82,11 @@ test("共享编辑器无需 window 即可 SSR，统一附件入口并在发布�
   const { html } = capture();
   assert.match(html, /contentEditable="true" role="textbox"/);
   assert.match(html, /aria-multiline="true"/);
-  assert.match(html, /Enter 换行，⌘\/Ctrl\+Enter 发布/);
+  assert.match(html, /Enter ↵ · ⌘\/Ctrl\+Enter 发布/);
   assert.doesNotMatch(html, /可拖入文件或粘贴图片|最多 10 个附件，单个不超过 20 MiB/);
   assert.match(html, /aria-label="添加附件"/);
   assert.doesNotMatch(html, /aria-label="本地上传"|aria-label="从文件列表选择"/);
-  assert.ok(html.indexOf("Enter 换行") < html.indexOf('class="discussion-composer-submit"'));
+  assert.ok(html.indexOf("Enter ↵") < html.indexOf('class="discussion-composer-submit"'));
 });
 
 test("人员菜单的迟到关闭回调不会覆盖已回到编辑器的光标", () => {
@@ -159,4 +161,37 @@ test("超大文件在读取与存储前失败，图片预览仅识别受支持�
   for (const name of ["照片.PNG", "照片.jpeg", "截图.webp", "动画.gif"]) assert.equal(isDiscussionImage({ name }), true);
   assert.equal(isDiscussionImage({ name: "可执行图像.svg", mimeType: "image/svg+xml" }), false);
   assert.equal(isDiscussionImage({ name: "合同.pdf", mimeType: "application/pdf" }), false);
+});
+
+test("已挂载编辑器带入标注草稿时同步 Lexical，重复 ID 不追加且发布失败保留合并内容", async () => {
+  const draftKey = "discussion-insertion-preserves-main-draft";
+  const attachment: TaskFileNode = { id: "insertion-file", name: "标注来源.md", kind: "file", parentId: null, updatedAt: "今天" };
+  const state = editorState("原草稿 ", [{ id: "person-existing", name: "林洁" }]);
+  capture({ draftKey }, state);
+  const insertion = { id: "annotation-insertion-1", draft: { body: "文件标注内容", mentions: ["person-added"], attachments: [attachment] } };
+  const sent: DiscussionDraft[] = [];
+  const composer = capture({ draftKey, draftInsertion: insertion, onSubmit: draft => { sent.push(draft); throw new Error("保存失败"); } });
+  const plugin = elements(composer.tree, element => typeof element.props.onInsert === "function")[0];
+  const editor = createEditor({ namespace: "discussion-insertion", nodes: [MentionNode], onError: error => { throw error; } });
+  editor.setEditorState(editor.parseEditorState(JSON.stringify(state.toJSON())));
+  let focused = 0;
+  editor.focus = callback => { focused++; callback?.(); };
+  plugin.props.onInsert(editor, insertion);
+  plugin.props.onInsert(editor, insertion);
+  assert.equal(sent.length, 0, "带入不等于发布");
+  assert.equal(focused, 1, "同一个请求只聚焦、带入一次");
+  assert.equal(editor.getEditorState().read(() => $getRoot().getTextContent()), "原草稿 @林洁 \n\n文件标注内容");
+  const reopened = capture({ draftKey, draftInsertion: insertion, onSubmit: draft => { sent.push(draft); throw new Error("保存失败"); } });
+  const config = elements(reopened.tree, element => element.type === LexicalComposer)[0].props.initialConfig;
+  assert.equal(typeof config.editorState, "function", "清理带入前的旧序列化状态");
+  elements(reopened.tree, element => typeof element.props.onInsert === "function")[0].props.onInsert(editor, insertion);
+  assert.equal(focused, 1, "重新挂载主草稿也不重复带入");
+  reopened.submit();
+  await setImmediate();
+  assert.equal(sent.length, 1);
+  assert.deepEqual(sent[0], { body: "原草稿 @林洁 \n\n文件标注内容", mentions: ["person-existing", "person-added"], attachments: [attachment] });
+  const retry: DiscussionDraft[] = [];
+  capture({ draftKey, onSubmit: draft => { retry.push(draft); } }).submit();
+  await setImmediate();
+  assert.deepEqual(retry, sent, "失败后正文、提及与附件全部保留");
 });

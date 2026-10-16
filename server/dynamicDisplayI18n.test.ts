@@ -21,8 +21,9 @@ test('local editing and dependency validation errors have English display copy',
 });
 
 test('schedule validation interpolates dates without leaking system Chinese', () => {
-  assert.equal(progressText('en', '截止时间不能早于创建日期（2026-09-20）。'), 'The due date cannot be before the creation date (2026-09-20).');
+  assert.equal(progressText('en', '截止时间不能早于创建日期（2026-09-20）。'), 'The due date cannot be before the creation date (Sep 20).');
   assert.doesNotMatch(progressText('en', '截止日期无效，请选择有效日期。'), /[\u3400-\u9fff]/u);
+  assert.equal(progressText('en', '用户原文：按2026-09-20交付，9月20日 17:30核对'), '用户原文：按2026-09-20交付，9月20日 17:30核对');
 });
 
 test('workbench guidance keeps facts and custom criteria while localizing system copy', () => {
@@ -36,6 +37,7 @@ test('workbench guidance keeps facts and custom criteria while localizing system
   assert.match(result, /Direct subtasks: 4 total; 1 marked complete; 2 awaiting wrap-up/);
   assert.match(result, /客户自己的验收要求/);
   assert.doesNotMatch(result.replace('客户自己的验收要求', ''), /[\u3400-\u9fff]/u);
-  assert.equal(workbenchPriorityReason('zh-CN', item), priorityReasonFor(item));
+  assert.equal(workbenchPriorityReason('zh-CN', item), priorityReasonFor({ ...item, dueLabel: '9月20日' }));
+  assert.match(workbenchPriorityReason('zh-CN', { ...item, dueLabel: 'Sep 20, 5:30 PM' }), /9月20日 17:30/);
   assert.match(workbenchPriorityReason('en', item, () => 'Approved campaign assets'), /Approved campaign assets/);
 });

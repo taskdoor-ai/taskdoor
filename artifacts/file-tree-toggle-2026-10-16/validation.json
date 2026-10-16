@@ -1,0 +1,65 @@
+{
+  "changeId": "PRD-0222",
+  "date": "2026-10-16",
+  "typecheck": "passed: tsconfig.app.json",
+  "structure": "passed: no new exceptions",
+  "targetedTests": {
+    "passed": 16,
+    "failed": 0,
+    "selectionRegressions": "two failed before implementation, then passed"
+  },
+  "frontendBuild": "passed: Vite, existing chunk size warning",
+  "mainWorkspace": {
+    "url": "http://127.0.0.1:5173/",
+    "viewport": [
+      1280,
+      720
+    ],
+    "initialPreview": "秋季精华首发创意与交付简报.docx",
+    "folderAfterTwoRowClicks": [
+      false,
+      true
+    ],
+    "previewAfterBoth": "task-file-preview-ccx-serum-launch-asset-html",
+    "directoryViewCount": 0
+  },
+  "currentBuildPreview": {
+    "url": "http://127.0.0.1:4173/",
+    "reason": "stable checks during parallel development HMR reloads",
+    "keyboard": {
+      "Enter": false,
+      "Space": true,
+      "ArrowLeft": false,
+      "ArrowRight": true
+    },
+    "keptSameHtmlPreview": true,
+    "searchFolderToggle": "passed",
+    "chevronSingleToggle": "passed",
+    "editingSurvivesFolderToggle": true,
+    "menuKeyboardIsolation": "Tab/Enter/Escape passed, folder and editing state retained",
+    "annotationModeSurvivesFolderToggle": true,
+    "previewSurvivesTabSwitch": true
+  },
+  "nativeCompact": {
+    "viewport": [
+      629,
+      804
+    ],
+    "initialMode": "tree",
+    "folderToggleStaysInTree": true,
+    "fileOpenMode": "preview",
+    "backMode": "tree",
+    "currentFileRetainedAfterBack": true,
+    "sameFileCanReopen": true,
+    "documentScrollWidth": 629
+  },
+  "notExecuted": [
+    "real upload/create/move/delete",
+    "annotation publishing",
+    "AI handoff",
+    "physical touch device",
+    "full test suite",
+    "double review"
+  ],
+  "prdBuild": "passed: 25 modules, PRD-0222, figure 061 embedded JPEG, manifest/index JSON and scoped diff format check"
+}

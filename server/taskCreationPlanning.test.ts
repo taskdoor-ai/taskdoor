@@ -144,12 +144,13 @@ test("没有职责证据时各场景负责人保持待定，不回填创建者�
   }
 });
 
-test("没有期限事实的相似任务候选不自动设置今天，摘要不宣称真实查重已完成", () => {
+test("相似任务候选按有条件建议给日期，不设为今天或宣称真实查重已完成", () => {
   const result = planTaskCreation(promptFor("similar-task"), context);
   assert.equal(result.stage, "decision");
   if (result.stage !== "decision") return;
   assert.equal(result.form.mainTask.startDate, "");
-  assert.equal(result.form.mainTask.endDate, "");
+  assert.equal(result.form.mainTask.endDate, "2026-09-02");
+  assert.ok(result.form.mainTask.executionTips.some(tip => tip.startsWith("AI 建议截止：2026-09-02。") && /假设/.test(tip)));
   assert.match(result.summary, /尚未创建/);
   assert.doesNotMatch(result.summary, /Mock|示例/);
   assert.match(result.summary, /未.*查重|查重.*未/);
@@ -162,7 +163,8 @@ test("规划不修改成员或已有任务上下文", () => {
   assert.deepEqual(context, before);
 });
 
-test("只有明确选择独立创建后才解除关系阻塞，不改已有任务或原候选", () => {
+test("只有明确选择独立创建后才解除关系阻塞，不改已有任务或原候选", t => {
+  t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") });
   for (const id of ["similar-task", "existing-parent"] as const) {
     const form = formFor(id);
     const before = structuredClone(form);

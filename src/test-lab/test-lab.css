@@ -27,6 +27,12 @@ pre { max-width: 100%; max-height: 480px; margin: 12px 0 0; padding: 13px; overf
 .lab-section-heading h3 { margin:0; }
 .lab-version-action { display:flex; align-items:end; flex-wrap:wrap; gap:8px; padding-bottom:15px; }
 .lab-version-editor { border-top:1px solid var(--lab-line); padding-top:22px; margin-top:14px; }
+.lab-skill-version-notes { display:block; white-space:pre-line; overflow-wrap:anywhere; }
+.lab-version-note-action { display:block; margin-top:8px; }
+.lab-version-notes-editor { margin:16px 0; padding:16px 0; border-top:1px solid var(--lab-line); border-bottom:1px solid var(--lab-line); }
+.lab-run-version-notes { margin-top:20px; }
+.lab-run-version-notes > div { padding:10px 0; border-top:1px solid var(--lab-line); }
+.lab-run-version-notes p { margin:6px 0 0; color:var(--lab-muted); font-size:12px; line-height:1.7; }
 .lab-version-editor textarea.lab-code { line-height:1.65; font-family:ui-monospace,monospace; font-size:12px; }
 .lab-run-dialog { max-width:640px; }
 .lab-run-preview { display:grid; gap:12px; padding:16px; margin:18px 0; border:1px solid var(--lab-line); border-radius:8px; background:#f7f9fc; }

@@ -1,0 +1,378 @@
+{
+  "createdAt": "2026-10-14T12:49:02.526Z",
+  "policy": "输入事实先审定；严格程序复核已保存真实输出，无新模型调用，不改历史运行。此前软验收全过不能作为业务正确性结论。",
+  "counts": {
+    "passed": 17,
+    "failed": 2
+  },
+  "rows": [
+    {
+      "originalRunId": "aa84ed19-8f4c-4e8f-8570-e6936177914b",
+      "currentRunId": "aa84ed19-8f4c-4e8f-8570-e6936177914b",
+      "strictCaseId": "strict-20261014-aa84ed19-8f4c-4e8f-8570-e6936177914b",
+      "fixture": "strict-fixture:not-started",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 有据零进度",
+      "verdict": "passed",
+      "checks": 24,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=aa84ed19-8f4c-4e8f-8570-e6936177914b&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "0a860d1d-954d-4b1a-b55e-e31a5c58d817",
+      "currentRunId": "88664b3b-445a-4f37-970f-ba81acef83e2",
+      "strictCaseId": "strict-20261014-0a860d1d-954d-4b1a-b55e-e31a5c58d817",
+      "fixture": "strict-fixture:all-evidence",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · AI全部达成与人工确认分开",
+      "verdict": "failed",
+      "checks": 24,
+      "failures": [
+        {
+          "id": "strict-s1-no-comparison",
+          "label": "no-comparison",
+          "status": "failed",
+          "actual": {
+            "asOf": "2026-10-09",
+            "explanation": "当前范围文件记录四项工作各60分钟、总量240分钟；交付核对记录显示四项标准均无未决项。未查询额外活动历史，因此仅保留当前可读观察点，不推断多时点趋势。",
+            "workload": [
+              {
+                "at": "2026-10-09",
+                "scopeMinutes": 240,
+                "completedMinutes": 240,
+                "scopeVersion": "estimate-baseline-1",
+                "note": "当前文件核对四项工作均完成"
+              }
+            ],
+            "aiAssessment": {
+              "observedAt": "2026-10-09",
+              "completedMinutes": 240,
+              "scopeMinutes": 240,
+              "scopeVersion": "estimate-baseline-1",
+              "basis": "四项完成标准均由当前交付核对记录覆盖"
+            },
+            "expected": {
+              "scopeVersion": "estimate-baseline-1",
+              "points": []
+            },
+            "timing": {
+              "startOn": "2026-10-09",
+              "dueOn": null,
+              "forecastOn": "2026-10-09",
+              "scopeVersion": "estimate-baseline-1",
+              "basis": "当前交付核对记录已覆盖全部工作项；无截止日期，仅给出基于内容完成的预测完成日"
+            }
+          },
+          "expected": null,
+          "message": "实际值未满足断言"
+        },
+        {
+          "id": "strict-relation-s1-no-history",
+          "label": "没有真实历史和正式起点则比较为空",
+          "status": "failed",
+          "actual": {
+            "asOf": "2026-10-09",
+            "explanation": "当前范围文件记录四项工作各60分钟、总量240分钟；交付核对记录显示四项标准均无未决项。未查询额外活动历史，因此仅保留当前可读观察点，不推断多时点趋势。",
+            "workload": [
+              {
+                "at": "2026-10-09",
+                "scopeMinutes": 240,
+                "completedMinutes": 240,
+                "scopeVersion": "estimate-baseline-1",
+                "note": "当前文件核对四项工作均完成"
+              }
+            ],
+            "aiAssessment": {
+              "observedAt": "2026-10-09",
+              "completedMinutes": 240,
+              "scopeMinutes": 240,
+              "scopeVersion": "estimate-baseline-1",
+              "basis": "四项完成标准均由当前交付核对记录覆盖"
+            },
+            "expected": {
+              "scopeVersion": "estimate-baseline-1",
+              "points": []
+            },
+            "timing": {
+              "startOn": "2026-10-09",
+              "dueOn": null,
+              "forecastOn": "2026-10-09",
+              "scopeVersion": "estimate-baseline-1",
+              "basis": "当前交付核对记录已覆盖全部工作项；无截止日期，仅给出基于内容完成的预测完成日"
+            }
+          },
+          "expected": null,
+          "message": "未满足独立业务基准"
+        }
+      ],
+      "runUrl": "http://127.0.0.1:15501/history?result=88664b3b-445a-4f37-970f-ba81acef83e2&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "90d02953-a784-4896-b6fb-4f9a15f150dc",
+      "currentRunId": "90d02953-a784-4896-b6fb-4f9a15f150dc",
+      "strictCaseId": "strict-20261014-90d02953-a784-4896-b6fb-4f9a15f150dc",
+      "fixture": "strict-fixture:unknown",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 完成声称不能代替正文",
+      "verdict": "passed",
+      "checks": 24,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=90d02953-a784-4896-b6fb-4f9a15f150dc&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "2f98e61d-18be-4117-b4d0-4c6462c5d65a",
+      "currentRunId": "37ce6cd7-da7d-4cd0-8a59-652157652405",
+      "strictCaseId": "strict-20261014-2f98e61d-18be-4117-b4d0-4c6462c5d65a",
+      "fixture": "strict-fixture:new-scope",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 新增范围必要补估与已完成状态保留",
+      "verdict": "passed",
+      "checks": 38,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=37ce6cd7-da7d-4cd0-8a59-652157652405&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "0fc7f035-5670-40bd-95dc-add90114f12d",
+      "currentRunId": "0fc7f035-5670-40bd-95dc-add90114f12d",
+      "strictCaseId": "strict-20261014-0fc7f035-5670-40bd-95dc-add90114f12d",
+      "fixture": "strict-fixture:weighted",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 按投入权重计算而非标准条数",
+      "verdict": "failed",
+      "checks": 24,
+      "failures": [
+        {
+          "id": "strict-s1-no-comparison",
+          "label": "no-comparison",
+          "status": "failed",
+          "actual": {
+            "asOf": "2026-10-09",
+            "explanation": "范围文件提供当前四项工作量共240分钟，交付记录仅支持规则核对完成120分钟；没有额外历史点、截止日期或可靠执行安排，因此不生成未来预测曲线。",
+            "workload": [
+              {
+                "at": "2026-10-09",
+                "scopeMinutes": 240,
+                "completedMinutes": 120,
+                "scopeVersion": "analysis-test-weighted-scope@1",
+                "note": "当前范围与交付核对记录的同日观察点。"
+              }
+            ],
+            "expected": {
+              "scopeVersion": "analysis-test-weighted-scope@1",
+              "points": []
+            },
+            "timing": {
+              "startOn": "2026-10-09",
+              "dueOn": null,
+              "forecastOn": null,
+              "scopeVersion": "analysis-test-weighted-scope@1",
+              "basis": "无截止日期和有据执行安排，不能从当前完成比例外推完成日。"
+            }
+          },
+          "expected": null,
+          "message": "实际值未满足断言"
+        },
+        {
+          "id": "strict-relation-s1-no-history",
+          "label": "没有真实历史和正式起点则比较为空",
+          "status": "failed",
+          "actual": {
+            "asOf": "2026-10-09",
+            "explanation": "范围文件提供当前四项工作量共240分钟，交付记录仅支持规则核对完成120分钟；没有额外历史点、截止日期或可靠执行安排，因此不生成未来预测曲线。",
+            "workload": [
+              {
+                "at": "2026-10-09",
+                "scopeMinutes": 240,
+                "completedMinutes": 120,
+                "scopeVersion": "analysis-test-weighted-scope@1",
+                "note": "当前范围与交付核对记录的同日观察点。"
+              }
+            ],
+            "expected": {
+              "scopeVersion": "analysis-test-weighted-scope@1",
+              "points": []
+            },
+            "timing": {
+              "startOn": "2026-10-09",
+              "dueOn": null,
+              "forecastOn": null,
+              "scopeVersion": "analysis-test-weighted-scope@1",
+              "basis": "无截止日期和有据执行安排，不能从当前完成比例外推完成日。"
+            }
+          },
+          "expected": null,
+          "message": "未满足独立业务基准"
+        }
+      ],
+      "runUrl": "http://127.0.0.1:15501/history?result=0fc7f035-5670-40bd-95dc-add90114f12d&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "542bc3ad-1887-40ba-b504-08b8c6686c66",
+      "currentRunId": "542bc3ad-1887-40ba-b504-08b8c6686c66",
+      "strictCaseId": "strict-20261014-542bc3ad-1887-40ba-b504-08b8c6686c66",
+      "fixture": "strict-fixture:superseded",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 新版替代旧版",
+      "verdict": "passed",
+      "checks": 24,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=542bc3ad-1887-40ba-b504-08b8c6686c66&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "ebef126d-0dac-4af5-b312-49cd334f0d46",
+      "currentRunId": "ebef126d-0dac-4af5-b312-49cd334f0d46",
+      "strictCaseId": "strict-20261014-ebef126d-0dac-4af5-b312-49cd334f0d46",
+      "fixture": "strict-fixture:discussion-conflict",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 多人声称与正文冲突",
+      "verdict": "passed",
+      "checks": 24,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=ebef126d-0dac-4af5-b312-49cd334f0d46&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "0276b3e0-bac9-4d5e-8584-1a92e92cd11a",
+      "currentRunId": "0276b3e0-bac9-4d5e-8584-1a92e92cd11a",
+      "strictCaseId": "strict-20261014-0276b3e0-bac9-4d5e-8584-1a92e92cd11a",
+      "fixture": "strict-fixture:confirmed-gap",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 人工标准确认与当前内容缺口并存",
+      "verdict": "passed",
+      "checks": 24,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=0276b3e0-bac9-4d5e-8584-1a92e92cd11a&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "e8f85e25-520c-4572-8beb-8c661b54aff1",
+      "currentRunId": "e8f85e25-520c-4572-8beb-8c661b54aff1",
+      "strictCaseId": "strict-20261014-e8f85e25-520c-4572-8beb-8c661b54aff1",
+      "fixture": "strict-fixture:hierarchy",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 父子工作量去重汇总",
+      "verdict": "passed",
+      "checks": 20,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=e8f85e25-520c-4572-8beb-8c661b54aff1&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "7eb7a5b0-5325-43f7-984f-94c2beac5460",
+      "currentRunId": "7eb7a5b0-5325-43f7-984f-94c2beac5460",
+      "strictCaseId": "strict-20261014-7eb7a5b0-5325-43f7-984f-94c2beac5460",
+      "fixture": "strict-fixture:release-condition",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 发布条件与制作工作分开",
+      "verdict": "passed",
+      "checks": 20,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=7eb7a5b0-5325-43f7-984f-94c2beac5460&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "9e75c383-4621-4c18-8e93-1a8018fc6384",
+      "currentRunId": "2cb532d8-9e5c-4a98-875b-1bd6c5158bfc",
+      "strictCaseId": "strict-20261014-9e75c383-4621-4c18-8e93-1a8018fc6384",
+      "fixture": "strict-fixture:timing-ahead",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 有据提前预测与真实历史",
+      "verdict": "passed",
+      "checks": 59,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=2cb532d8-9e5c-4a98-875b-1bd6c5158bfc&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "899c002c-4794-46e1-bdce-e29319106ad8",
+      "currentRunId": "899c002c-4794-46e1-bdce-e29319106ad8",
+      "strictCaseId": "strict-20261014-899c002c-4794-46e1-bdce-e29319106ad8",
+      "fixture": "strict-fixture:timing-on-time",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 有据按期预测与真实历史",
+      "verdict": "passed",
+      "checks": 59,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=899c002c-4794-46e1-bdce-e29319106ad8&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "eecd71b8-ee66-4cea-aeea-d089788f34df",
+      "currentRunId": "39392505-e0b1-4d41-990e-40589d2791e8",
+      "strictCaseId": "strict-20261014-eecd71b8-ee66-4cea-aeea-d089788f34df",
+      "fixture": "strict-fixture:timing-delayed",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 有据延期预测与真实历史",
+      "verdict": "passed",
+      "checks": 59,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=39392505-e0b1-4d41-990e-40589d2791e8&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+      "currentRunId": "8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+      "strictCaseId": "strict-20261014-8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+      "fixture": "strict-fixture:reschedule",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 新执行安排替代旧预测",
+      "verdict": "passed",
+      "checks": 59,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=8974cd1a-f1d5-4f47-a8ce-8128ce8ec196&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+      "currentRunId": "8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+      "strictCaseId": "strict-20261014-8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+      "fixture": "strict-fixture:reschedule",
+      "stepId": "s2",
+      "name": "新规则隔离回归 · 新执行安排替代旧预测",
+      "verdict": "passed",
+      "checks": 59,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=8974cd1a-f1d5-4f47-a8ce-8128ce8ec196&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "219a6a19-6a93-473e-90dd-f1fa86034311",
+      "currentRunId": "7e838163-0db3-47ce-814f-ff1350071a79",
+      "strictCaseId": "strict-20261014-219a6a19-6a93-473e-90dd-f1fa86034311",
+      "fixture": "strict-fixture:unreadable-injection",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 不可读附件与正文伪造指令",
+      "verdict": "passed",
+      "checks": 24,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=7e838163-0db3-47ce-814f-ff1350071a79&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "288e1764-74e6-47d0-b0b7-010235fc3892",
+      "currentRunId": "288e1764-74e6-47d0-b0b7-010235fc3892",
+      "strictCaseId": "strict-20261014-288e1764-74e6-47d0-b0b7-010235fc3892",
+      "fixture": "strict-fixture:missing-estimate",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 明确范围无估算时形成AI补估提案",
+      "verdict": "passed",
+      "checks": 29,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=288e1764-74e6-47d0-b0b7-010235fc3892&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "74c21532-5da7-4c93-9684-e1c907effa06",
+      "currentRunId": "be61f9c4-6b4e-4554-a553-6b0b3d60fee0",
+      "strictCaseId": "strict-20261014-74c21532-5da7-4c93-9684-e1c907effa06",
+      "fixture": "strict-fixture:ai-estimate-revision",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 范围新增时必要重估并保留初始AI240历史",
+      "verdict": "passed",
+      "checks": 56,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=be61f9c4-6b4e-4554-a553-6b0b3d60fee0&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "3b5e5af5-662e-4f54-b185-6294cc972f1b",
+      "currentRunId": "3b5e5af5-662e-4f54-b185-6294cc972f1b",
+      "strictCaseId": "strict-20261014-3b5e5af5-662e-4f54-b185-6294cc972f1b",
+      "fixture": "strict-fixture:confirmed-estimate-reuse",
+      "stepId": "s1",
+      "name": "新规则隔离回归 · 人工已确认240及完整明细有效时复用不覆盖",
+      "verdict": "passed",
+      "checks": 24,
+      "failures": [],
+      "runUrl": "http://127.0.0.1:15501/history?result=3b5e5af5-662e-4f54-b185-6294cc972f1b&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    }
+  ]
+}

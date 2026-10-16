@@ -74,7 +74,7 @@
 .linear-creation-subtask-owner { display: inline-flex; align-items: center; gap: var(--ad-space-1); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); white-space: nowrap; }
 .linear-creation-subtask-chevron { color: var(--ad-ink-tertiary); transition: transform var(--ad-motion-fast) var(--ad-ease-standard); }
 .linear-creation-subtask[open] .linear-creation-subtask-chevron { transform: rotate(180deg); }
-.linear-creation-subtask-details { display: grid; gap: var(--ad-space-5); margin: 0 var(--ad-space-2) var(--ad-space-5); padding: var(--ad-space-5); border: 1px solid var(--ad-border-soft); border-radius: var(--ad-radius-panel); background: linear-gradient(135deg, color-mix(in srgb, var(--ad-route-soft) 28%, var(--ad-surface)), var(--ad-surface)); }
+.linear-creation-subtask-details { display: grid; gap: var(--ad-space-5); margin: 0 var(--ad-space-2) var(--ad-space-5); padding: var(--ad-space-5); border: 1px solid var(--ad-border-soft); border-radius: var(--ad-radius-panel); background: var(--ad-surface); }
 .linear-creation-properties { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ad-space-5); }
 .linear-creation-properties > div { display: grid; align-content: start; gap: var(--ad-space-2); }
 .linear-creation-property-row { display: grid; grid-template-columns: var(--ad-task-field-label-width, 10rem) minmax(0, 1fr); align-items: start; gap: var(--ad-space-3); }

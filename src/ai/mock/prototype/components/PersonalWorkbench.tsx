@@ -26,8 +26,8 @@ type PersonalWorkbenchProps = {
   onReanalyze: () => void;
 };
 
-function displayDate(value: string) {
-  return formatDisplayDateTime(value) ?? formatDisplayDate(value) ?? "时间待核对";
+function displayDate(value: string, locale: string) {
+  return formatDisplayDateTime(value, { locale }) ?? formatDisplayDate(value, { locale }) ?? "时间待核对";
 }
 
 export function PersonalWorkbench({ analysisError = "", analyzing = false, currentUserName, hidden = false, model, onConnectAi, onOpenTask, onOpenTaskList, onReanalyze }: PersonalWorkbenchProps) {
@@ -79,7 +79,7 @@ export function PersonalWorkbench({ analysisError = "", analyzing = false, curre
             {analyzing ? <LoaderCircle aria-hidden="true" className="animate-spin motion-reduce:animate-none" /> : <RefreshCw aria-hidden="true" />}
             {analyzing ? ui("分析中") : ui("重新分析")}
           </Button>
-          <time className="personal-workbench-updated-at" dateTime={Number.isFinite(new Date(model.asOf).getTime()) ? model.asOf : undefined} title={formatDisplayDateTime(model.asOf, { year: "always" }) ?? formatDisplayDate(model.asOf, { year: "always" }) ?? undefined}>{ui("更新于")} {ui(displayDate(model.asOf))}</time>
+          <time className="personal-workbench-updated-at" dateTime={Number.isFinite(new Date(model.asOf).getTime()) ? model.asOf : undefined} title={formatDisplayDateTime(model.asOf, { locale, year: "always" }) ?? formatDisplayDate(model.asOf, { locale, year: "always" }) ?? undefined}>{ui("更新于")} {ui(displayDate(model.asOf, locale))}</time>
         </div>
         {analysisError && <p className="personal-workbench-analysis-error" role="alert">{ui(analysisError)}</p>}
       </div>

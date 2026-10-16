@@ -40,24 +40,25 @@ test("默认全部，显式完成条件与多标签 OR 筛选一致", () => {
   assert.deepEqual(buildTaskListProjection(nodes, "", { ...filters, completion: "done" }, []).visibleTasks.map(t => t.id), ["done"]);
   assert.deepEqual(buildTaskListProjection(nodes, "", { ...filters, completion: "all", tags: ["A", "B"] }, []).visibleTasks.map(t => t.id), ["active", "done"]);
 });
-test("列表时间使用统一月份缩写、AM/PM与本地化相对时间", () => {
+test("列表时间按界面语言格式化日期时分与相对时间", () => {
   const now = new Date(2026, 8, 17, 12);
   const label = (date: Date) => taskUpdatedLabel(date.toISOString(), now).label;
   assert.equal(label(new Date(2026, 8, 17, 11, 59, 50)), "刚刚");
   assert.equal(label(new Date(2026, 8, 17, 9, 5)), "2小时前");
-  assert.equal(label(new Date(2026, 8, 16, 8, 10)), "昨天 8:10 AM");
-  assert.equal(label(new Date(2026, 8, 15, 18)), "Sep 15, 6:00 PM");
-  assert.equal(label(new Date(2025, 11, 31, 18)), "Dec 31, 2025, 6:00 PM");
+  assert.equal(label(new Date(2026, 8, 16, 8, 10)), "昨天 08:10");
+  assert.equal(label(new Date(2026, 8, 15, 18)), "9月15日 18:00");
+  assert.equal(label(new Date(2025, 11, 31, 18)), "2025年12月31日 18:00");
   const value = new Date(2026, 8, 17, 9, 5, 8).toISOString();
-  assert.deepEqual(taskUpdatedLabel(value, now), { label: "2小时前", title: "Sep 17, 2026, 9:05 AM", dateTime: value });
+  assert.deepEqual(taskUpdatedLabel(value, now), { label: "2小时前", title: "2026年9月17日 09:05", dateTime: value });
   assert.equal(taskUpdatedLabel(value, now, now, "en").label, "2 hours ago");
+  assert.equal(taskUpdatedLabel(new Date(2026, 8, 15, 18).toISOString(), now, now, "en").label, "Sep 15, 6:00 PM");
 });
 test("跨年与未来记录保留真实年份，未来同年记录不显示负相对时间", () => {
   const now = new Date(2027, 0, 1, 0, 5);
   assert.equal(taskUpdatedLabel(new Date(2026, 11, 31, 23, 58).toISOString(), now).label, "7分钟前");
-  assert.equal(taskUpdatedLabel(new Date(2026, 11, 30, 23, 58).toISOString(), now).label, "Dec 30, 2026, 11:58 PM");
-  assert.equal(taskUpdatedLabel(new Date(2027, 0, 1, 0, 10).toISOString(), now).label, "Jan 1, 12:10 AM");
-  assert.equal(taskUpdatedLabel(new Date(2027, 0, 2, 0, 10).toISOString(), now).label, "Jan 2, 12:10 AM");
+  assert.equal(taskUpdatedLabel(new Date(2026, 11, 30, 23, 58).toISOString(), now).label, "2026年12月30日 23:58");
+  assert.equal(taskUpdatedLabel(new Date(2027, 0, 1, 0, 10).toISOString(), now).label, "1月1日 00:10");
+  assert.equal(taskUpdatedLabel(new Date(2027, 0, 2, 0, 10).toISOString(), now).label, "1月2日 00:10");
 });
 test("旧演示时间仅转换文案，不补绝对时间；排序参考和非法值保持", () => {
   const now = new Date(2026, 8, 17, 12);
@@ -66,16 +67,16 @@ test("旧演示时间仅转换文案，不补绝对时间；排序参考和非�
   assert.equal(taskUpdatedTime("导入"), null);
   assert.equal(taskUpdatedLabel("2026-02-30T12:00:00Z", now).label, "时间未知");
   assert.equal(taskUpdatedLabel(" ", now).label, "时间未知");
-  assert.equal(taskUpdatedLabel("今天 09:20", now, now).label, "今天 9:20 AM");
-  assert.equal(taskUpdatedLabel("昨天 18:10", now, now).label, "昨天 6:10 PM");
+  assert.equal(taskUpdatedLabel("今天 09:20", now, now).label, "今天 09:20");
+  assert.equal(taskUpdatedLabel("昨天 18:10", now, now).label, "昨天 18:10");
   assert.equal(taskUpdatedLabel("35 分钟前", now, now).label, "35分钟前");
   assert.equal(taskUpdatedLabel("今天", now, now).label, "今天");
   assert.equal(taskUpdatedLabel("昨天", now, now).label, "昨天");
   assert.equal(taskUpdatedLabel("今天", now, now).dateTime, undefined);
   const dateOnly = taskUpdatedLabel("2026-09-17", now);
-  assert.equal(dateOnly.label, "Sep 17");
+  assert.equal(dateOnly.label, "9月17日");
   assert.equal(dateOnly.dateTime, "2026-09-17");
-  assert.match(dateOnly.title, /Sep 17, 2026.*未记录时分/);
+  assert.match(dateOnly.title, /2026年9月17日.*未记录时分/);
   assert.doesNotMatch(dateOnly.title, /AM|PM/);
   assert.match(taskUpdatedLabel("今天", now, now).title, /未记录绝对时间/);
 });

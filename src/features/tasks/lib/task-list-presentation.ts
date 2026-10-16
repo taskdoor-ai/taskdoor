@@ -1,5 +1,7 @@
 import type { TaskNode } from "@/shared/model/task-model";
 import { formatDisplayDate, formatLegacyDateLabel, formatRelativeDateTime } from "@/shared/lib/date-time";
+import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
+import { LEGACY_TEAM_TIME_ZONE } from "@/shared/lib/team-time-zone";
 
 // Old demo labels have no absolute timestamp. Anchor them once per session, not on each render.
 const legacyReference = new Date();
@@ -41,26 +43,27 @@ export function taskUpdatedLabel(value: string, now = new Date(), reference = le
   const dateOnly = /^(?:\d{4}-\d{2}-\d{2}|今天|昨天|前天)$/.test(text);
   if (!absolute) return { label: formatLegacyDateLabel(text, locale), title: english ? `Historical demo time: ${formatLegacyDateLabel(text, locale)} (no absolute timestamp recorded)` : `历史演示时间：${formatLegacyDateLabel(text, locale)}（未记录绝对时间）` };
   const time = dateOnly ? null : formatRelativeDateTime(text, locale, now.getTime());
-  const label = dateOnly ? formatDisplayDate(text, { now: now.getTime() }) : time?.label;
-  const title = dateOnly ? `${formatDisplayDate(text, { year: "always", now: now.getTime() })}${english ? " (time not recorded)" : "（未记录时分）"}` : time?.full;
+  const label = dateOnly ? formatDisplayDate(text, { locale, now: now.getTime() }) : time?.label;
+  const title = dateOnly ? `${formatDisplayDate(text, { locale, year: "always", now: now.getTime() })}${english ? " (time not recorded)" : "（未记录时分）"}` : time?.full;
   return {
     label: label ?? (english ? "Time unknown" : "时间未知"),
     title: title ?? (english ? "Time not recorded" : "未记录"),
     dateTime: dateOnly ? text : new Date(timestamp).toISOString(),
   };
 }
-export function taskDueLabel(task: TaskNode, now = new Date()): { label: string; overdue: boolean } | null {
+export function taskDueLabel(task: TaskNode, now = new Date(), timeZone = LEGACY_TEAM_TIME_ZONE, locale = "zh-CN"): { label: string; overdue: boolean } | null {
   if (task.status === "已完成" || task.status === "已取消") return null;
   const value = task.plannedEndOn;
   if (value && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    const date = new Date(`${value}T00:00:00`);
-    if (!Number.isNaN(date.getTime()) && date.getFullYear() === Number(value.slice(0, 4)) && date.getMonth() + 1 === Number(value.slice(5, 7)) && date.getDate() === Number(value.slice(8, 10))) {
-      const day = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
-      const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    const savedDay = taskCalendarDate(value, timeZone);
+    const todayDay = taskCalendarDate(now.toISOString(), timeZone);
+    if (savedDay && todayDay) {
+      const day = Date.parse(`${savedDay}T00:00:00Z`);
+      const today = Date.parse(`${todayDay}T00:00:00Z`);
       const diff = (day - today) / 86400000;
-      return { label: diff < 0 ? `逾期 ${-diff} 天` : diff === 0 ? "今天截止" : diff === 1 ? "明天截止" : `${formatDisplayDate(value, { now: now.getTime() }) ?? "—"}截止`, overdue: diff < 0 };
+      return { label: diff < 0 ? `逾期 ${-diff} 天` : diff === 0 ? "今天截止" : diff === 1 ? "明天截止" : `${formatDisplayDate(value, { locale, now: now.getTime() }) ?? "—"}截止`, overdue: diff < 0 };
     }
   }
   // A legacy month/day label is display-only; do not guess a year to declare it overdue.
-  return task.dueAt && !["—", "未设置", "待定"].includes(task.dueAt) ? { label: `${formatLegacyDateLabel(task.dueAt)}截止`, overdue: false } : null;
+  return task.dueAt && !["—", "未设置", "待定"].includes(task.dueAt) ? { label: `${formatLegacyDateLabel(task.dueAt, locale)}截止`, overdue: false } : null;
 }

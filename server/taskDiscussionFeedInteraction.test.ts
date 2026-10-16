@@ -11,6 +11,7 @@ import { relativeTaskTime } from "../src/features/tasks/lib/relative-time.ts";
 register(`data:text/javascript,${encodeURIComponent(`
   export async function load(url, context, nextLoad) {
     if (url.endsWith(".svg")) return { format: "module", source: "export default " + JSON.stringify(url), shortCircuit: true };
+    if (url.endsWith(".css")) return { format: "module", source: "export default {}", shortCircuit: true };
     return nextLoad(url, context);
   }
 `)}`, import.meta.url);
@@ -53,29 +54,29 @@ const composer = (tree: ReactNode) => elements(tree, item => item.type === Discu
 const rowIds = (tree: ReactNode) => rows(tree).map(item => item.props.message.id);
 const draft: DiscussionDraft = { body: "我补充确认", mentions: [], attachments: [] };
 
-test("讨论绝对时间统一使用英文月份缩写和 AM/PM，跨年及完整提示保留年份", () => {
+test("讨论绝对时间跟随语言，跨年及完整提示保留年份", () => {
   const now = new Date(2026, 9, 13, 20).getTime();
   for (const locale of ["zh-CN", "en"]) {
     assert.deepEqual(relativeTaskTime(new Date(2026, 8, 14, 17, 30).toISOString(), locale, now), {
-      label: "Sep 14, 5:30 PM", full: "Sep 14, 2026, 5:30 PM",
+      label: locale === "en" ? "Sep 14, 5:30 PM" : "9月14日 17:30", full: locale === "en" ? "Sep 14, 2026, 5:30 PM" : "2026年9月14日 17:30",
     });
     assert.deepEqual(relativeTaskTime(new Date(2025, 8, 14, 0, 5).toISOString(), locale, now), {
-      label: "Sep 14, 2025, 12:05 AM", full: "Sep 14, 2025, 12:05 AM",
+      label: locale === "en" ? "Sep 14, 2025, 12:05 AM" : "2025年9月14日 00:05", full: locale === "en" ? "Sep 14, 2025, 12:05 AM" : "2025年9月14日 00:05",
     });
-    assert.equal(relativeTaskTime(new Date(2026, 8, 14, 12).toISOString(), locale, now)?.label, "Sep 14, 12:00 PM");
+    assert.equal(relativeTaskTime(new Date(2026, 8, 14, 12).toISOString(), locale, now)?.label, locale === "en" ? "Sep 14, 12:00 PM" : "9月14日 12:00");
     assert.deepEqual(relativeTaskTime(new Date(2027, 0, 1, 9).toISOString(), locale, now), {
-      label: "Jan 1, 2027, 9:00 AM", full: "Jan 1, 2027, 9:00 AM",
+      label: locale === "en" ? "Jan 1, 2027, 9:00 AM" : "2027年1月1日 09:00", full: locale === "en" ? "Jan 1, 2027, 9:00 AM" : "2027年1月1日 09:00",
     });
   }
 });
 
-test("近期相对时间跟随界面语言，昨天使用 AM/PM，未知时间仍不补造", () => {
+test("近期相对时间和昨天时刻跟随界面语言，未知时间仍不补造", () => {
   const now = new Date(2026, 9, 13, 20).getTime();
   const recent = new Date(now - 300_000).toISOString();
   const yesterday = new Date(2026, 9, 12, 17, 30).toISOString();
   assert.equal(relativeTaskTime(recent, "zh-CN", now)?.label, "5分钟前");
   assert.equal(relativeTaskTime(recent, "en", now)?.label, "5 minutes ago");
-  assert.equal(relativeTaskTime(yesterday, "zh-CN", now)?.label, "昨天 5:30 PM");
+  assert.equal(relativeTaskTime(yesterday, "zh-CN", now)?.label, "昨天 17:30");
   assert.equal(relativeTaskTime(yesterday, "en", now)?.label, "Yesterday 5:30 PM");
   assert.equal(relativeTaskTime("invalid", "zh-CN", now), null);
 });
@@ -139,7 +140,7 @@ test("保持挂载的任务讨论新增消息立即显示刚刚，并保留完�
   assert.ok(freshMarkup);
   assert.match(freshMarkup, />刚刚<\/time>/);
   assert.ok(freshMarkup.includes(`dateTime="${fresh.createdAt}"`));
-  const full = new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short", hour12: true }).format(new Date(fresh.createdAt));
+  const full = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(fresh.createdAt));
   assert.ok(freshMarkup.includes(`title="${full}"`));
   assert.ok(freshMarkup.includes(`aria-label="${full}"`));
 });
@@ -164,7 +165,7 @@ test("保持挂载的文件讨论新增回复立即显示刚刚，并保留完�
   assert.ok(freshMarkup);
   assert.match(freshMarkup, />刚刚<\/time>/);
   assert.ok(freshMarkup.includes(`dateTime="${fresh.createdAt}"`));
-  const full = new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short", hour12: true }).format(new Date(fresh.createdAt));
+  const full = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(fresh.createdAt));
   assert.ok(freshMarkup.includes(`title="${full}"`));
   assert.ok(freshMarkup.includes(`aria-label="${full}"`));
 });
@@ -185,7 +186,7 @@ test("主消息和多层回复按最新优先平铺，不提供同串入口或�
   assert.equal(elements(tree, item => item.type === DiscussionComposer).length, 1);
 });
 
-test("回复具体消息复用底部输入区，草稿 AI 和发布都带该消息 ID", async () => {
+test("回复框跟随所点消息展示并隐藏底部输入，发布仍带该消息 ID", async () => {
   const posts: unknown[][] = [], ai: unknown[][] = [];
   let started = false;
   const { tree, html } = capture(() => TaskDiscussion({ ...props, onPost: (...args) => { posts.push(args); }, onConnectAi: (...args) => { ai.push(args); } }), tree => {
@@ -198,31 +199,107 @@ test("回复具体消息复用底部输入区，草稿 AI 和发布都带该消�
   assert.equal(input.props.autoFocus, true);
   assert.equal(input.props.allowQuote, false);
   assert.equal(elements(tree, item => item.type === DiscussionComposer).length, 1);
-  assert.match(html, /task-discussion-reply-context/);
+  assert.equal(elements(row(tree, nested.id).props.children, item => item === input).length, 1, "回复输入框位于所点消息内");
+  for (const item of rows(tree).filter(item => item.props.message.id !== nested.id)) {
+    assert.equal(elements(item.props.children, element => element.type === DiscussionComposer).length, 0, "其他消息不展开输入框");
+  }
+  const inlineReply = elements(tree, item => item.props["data-reply-to"] === nested.id)[0];
+  assert.ok(inlineReply?.props.className.split(" ").includes("task-discussion-inline-reply"));
+  assert.equal(elements(inlineReply.props.children, item => item === input).length, 1);
+  assert.equal(elements(tree, item => item.props.className === "task-discussion-compose").length, 0, "回复时隐藏普通发言输入框和底部占位");
+  assert.doesNotMatch(html, /task-discussion-reply-context/);
+  assert.equal(typeof input.props.onCancel, "function", "沿用输入框内取消入口");
   assert.match(html, /nested 的内容/);
-  const trigger = {} as HTMLElement;
-  input.props.onConnectAi("未发布的草稿", trigger);
-  assert.deepEqual(ai, [[{ kind: "reply-draft", activityId: nested.id, draft: "未发布的草稿" }, trigger]]);
+  assert.equal(input.props.onConnectAi, undefined);
+  assert.doesNotMatch(html, /连接 AI：当前回复草稿|discussion-composer-ai-trigger/);
+  assert.deepEqual(ai, []);
   assert.deepEqual(posts, []);
   await input.props.onSubmit(draft);
   assert.deepEqual(posts, [[draft, nested.id]]);
 });
 
-test("取消具体回复恢复普通发言草稿键并清除回复上下文", async () => {
-  const posts: unknown[][] = [];
+test("消息内回复框排在原消息操作之后，保持原消息内容和回复入口", () => {
+  const replyInput = createElement("div", { "data-reply-editor": true }, "回复草稿");
+  const { tree } = capture(() => TaskDiscussionMessage({
+    message: root, currentUser: props.currentUser, files: [], now: Date.now(),
+    onReply: () => undefined, onLocate: () => undefined, onOpenFile: () => undefined,
+    children: replyInput,
+  }));
+  const record = elements(tree, item => item.props.className === "task-discussion-record")[0];
+  const children = Children.toArray(record.props.children);
+  const footerIndex = children.findIndex(child => isValidElement<Record<string, any>>(child) && child.props.className === "task-discussion-feed-footer");
+  const replyIndex = children.findIndex(child => isValidElement<Record<string, any>>(child) && child.props["data-reply-editor"]);
+  assert.ok(footerIndex >= 0, "保留原消息操作区");
+  assert.ok(replyIndex > footerIndex, "就地回复显示在该消息操作区之后");
+});
+
+test("切换回复对象使用各自草稿键，返回原对象继续使用原草稿作用域", () => {
+  const keys: string[] = [];
   let step = 0;
-  const { tree, html } = capture(() => TaskDiscussion({ ...props, onPost: (...args) => { posts.push(args); } }), tree => {
-    if (step === 0) { step++; row(tree, reply.id).props.onReply(reply); }
-    else if (step === 1) {
-      step++;
-      assert.equal(composer(tree).props.draftKey, `feed-test:reply:${reply.id}`);
-      elements(tree, item => item.props["aria-label"] === "取消回复")[0].props.onClick();
-    }
+  const { tree } = capture(() => TaskDiscussion(props), node => {
+    keys.push(composer(node).props.draftKey);
+    if (step === 0) { step++; row(node, root.id).props.onReply(root); }
+    else if (step === 1) { step++; row(node, nested.id).props.onReply(nested); }
+    else if (step === 2) { step++; row(node, root.id).props.onReply(root); }
   });
-  assert.equal(composer(tree).props.draftKey, "feed-test:new");
-  assert.doesNotMatch(html, /task-discussion-reply-context/);
-  await composer(tree).props.onSubmit(draft);
-  assert.deepEqual(posts, [[draft, undefined]]);
+  assert.deepEqual(keys, ["feed-test:new", `feed-test:reply:${root.id}`, `feed-test:reply:${nested.id}`, `feed-test:reply:${root.id}`]);
+  assert.equal(elements(tree, item => item.type === DiscussionComposer).length, 1);
+  assert.equal(elements(row(tree, root.id).props.children, item => item.type === DiscussionComposer).length, 1);
+  assert.equal(elements(row(tree, nested.id).props.children, item => item.type === DiscussionComposer).length, 0);
+});
+
+test("回复目标删除或消失后保留原草稿键，禁发并以非底部输入提示不可用", async () => {
+  for (const unavailable of ["deleted", "missing"] as const) {
+    let records = activities;
+    let started = false;
+    const posts: unknown[][] = [];
+    const { tree, html } = capture(() => TaskDiscussion({ ...props, activities: records, onPost: (...args) => { posts.push(args); } }), node => {
+      if (started) return;
+      started = true;
+      records = unavailable === "deleted"
+        ? activities.map(item => item.id === reply.id ? { ...item, deletedAt: "2026-10-15T05:00:00Z" } : item)
+        : activities.filter(item => item.id !== reply.id);
+      row(node, reply.id).props.onReply(reply);
+    });
+    const input = composer(tree);
+    assert.equal(input.props.draftKey, `feed-test:reply:${reply.id}`, `${unavailable} 时不能切换到普通发言草稿`);
+    assert.equal(input.props.disabled, true);
+    assert.equal(elements(tree, item => item.type === DiscussionComposer).length, 1);
+    assert.equal(elements(tree, item => item.props.className === "task-discussion-compose").length, 0);
+    assert.equal(rows(tree).flatMap(item => elements(item.props.children, element => element.type === DiscussionComposer)).length, 0, "失效目标的草稿不附到其他消息上");
+    const fallback = elements(tree, item => item.props["data-reply-to"] === reply.id)[0];
+    assert.ok(fallback?.props.className.split(" ").includes("task-discussion-inline-reply"), "保留可取消的非固定回复区");
+    assert.equal(elements(fallback.props.children, item => item === input).length, 1);
+    assert.match(html, /回复原文不可用/);
+    await assert.rejects(input.props.onSubmit(draft), /回复原文不可用/);
+    assert.deepEqual(posts, [], "原回复不可用时不应发布成普通消息");
+  }
+});
+
+test("取消具体回复恢复普通发言草稿键并清除回复上下文", async () => {
+  for (const availability of ["available", "deleted", "missing"] as const) {
+    const posts: unknown[][] = [];
+    let records = activities;
+    let step = 0;
+    const { tree, html } = capture(() => TaskDiscussion({ ...props, activities: records, onPost: (...args) => { posts.push(args); } }), tree => {
+      if (step === 0) {
+        step++;
+        if (availability === "deleted") records = activities.map(item => item.id === reply.id ? { ...item, deletedAt: "2026-10-15T05:00:00Z" } : item);
+        if (availability === "missing") records = activities.filter(item => item.id !== reply.id);
+        row(tree, reply.id).props.onReply(reply);
+      } else if (step === 1) {
+        step++;
+        assert.equal(composer(tree).props.draftKey, `feed-test:reply:${reply.id}`);
+        assert.equal(composer(tree).props.disabled, availability !== "available");
+        composer(tree).props.onCancel();
+      }
+    });
+    assert.equal(composer(tree).props.draftKey, "feed-test:new");
+    assert.equal(elements(tree, item => item.props.className === "task-discussion-compose").length, 1, "取消后恢复普通发言输入框");
+    assert.doesNotMatch(html, /task-discussion-reply-context/);
+    await composer(tree).props.onSubmit(draft);
+    assert.deepEqual(posts, [[draft, undefined]]);
+  }
 });
 
 test("定位同名作者的指定消息不添加高亮，仍保留全部平铺消息", () => {
@@ -274,7 +351,8 @@ test("发布失败保留回复目标和草稿作用域，不回退到普通发�
   await assert.rejects(composer(tree).props.onSubmit(draft), /保存失败/);
   assert.deepEqual(attempts, [reply.id]);
   assert.equal(composer(tree).props.draftKey, `feed-test:reply:${reply.id}`);
-  assert.match(html, /task-discussion-reply-context/);
+  assert.doesNotMatch(html, /task-discussion-reply-context/);
+  assert.equal(typeof composer(tree).props.onCancel, "function", "失败后仍可取消并保留回复草稿");
   assert.equal(composer(tree).props.disabled, false);
 });
 

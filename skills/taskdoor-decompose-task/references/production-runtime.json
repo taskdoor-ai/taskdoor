@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "mode": "subtasks",
+  "files": [
+    "skills/taskdoor-decompose-task/SKILL.md",
+    "skills/taskdoor-decompose-task/references/output-contract.md",
+    "skills/taskdoor-decompose-task/references/subtask-suggestions.schema.json",
+    "skills/taskdoor-decompose-task/references/goal-and-criteria.md",
+    "skills/taskdoor-decompose-task/references/task-scheduling.md",
+    "skills/taskdoor-decompose-task/references/context-retrieval.md"
+  ]
+}

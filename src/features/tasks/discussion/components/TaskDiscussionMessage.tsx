@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { FileText, MessageSquareText } from "lucide-react";
 import { contentReading, useMockText } from "@/ai/discussion-reading";
 import { AiConnectionButton } from "@/features/ai-connection/components/AiConnectionButton";
 import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
 import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
 import { relativeTaskTime } from "@/features/tasks/lib/relative-time";
-import type { CollaborationMessage } from "@/features/tasks/lib/task-collaboration";
+import { getDiscussionAttachment, type CollaborationMessage } from "@/features/tasks/lib/task-collaboration";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useI18n } from "@/shared/i18n/I18nProvider";
@@ -21,6 +21,9 @@ type TaskDiscussionMessageProps = {
   currentUserName?: string;
   files: TaskFileNode[];
   highlighted?: boolean;
+  children?: ReactNode;
+  replyExpanded?: boolean;
+  replyDisabled?: boolean;
   onReply: (message: CollaborationMessage) => void;
   onLocate: (id: string) => void;
   onDelete?: (message: CollaborationMessage) => void;
@@ -45,7 +48,7 @@ function timestampFor(message: CollaborationMessage, locale: string, now: number
   return formatted ? { ...formatted, dateTime: new Date(recorded).toISOString() } : null;
 }
 
-export function TaskDiscussionMessage({ message, parent, currentUser, currentUserName, files, highlighted, onReply, onLocate, onDelete, onOpenFile, onConnectAi, now }: TaskDiscussionMessageProps) {
+export function TaskDiscussionMessage({ message, parent, currentUser, currentUserName, files, highlighted, children, replyExpanded, replyDisabled, onReply, onLocate, onDelete, onOpenFile, onConnectAi, now }: TaskDiscussionMessageProps) {
   const mock = useMockText();
   const d = useDetailCopy();
   const ui = useGlobalUi();
@@ -89,12 +92,12 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
             </Popover>
           </span>}
         </div>
-        {onConnectAi && <AiConnectionButton compact contextLabel={ui("{0}的讨论", { 0: message.author })} onConnect={(trigger, shortcut) => onConnectAi({ kind: isReply ? "reply" : "discussion", activityId: message.id }, trigger, shortcut)} />}
+        {onConnectAi && <AiConnectionButton compact contextLabel={ui("{0}的讨论", { 0: message.author })} onConnect={(trigger, shortcut) => onConnectAi({ kind: isReply ? "reply" : "discussion", activityId: message.id, ...(message.fileThreadId ? { fileThreadId: message.fileThreadId } : {}) }, trigger, shortcut)} />}
       </header>
       {message.message.trim() && <p className="task-discussion-feed-body"><MessageText message={message} text={reading.text} /></p>}
       {(refs.length > 0 || message.file) && <div className="task-discussion-feed-attachments">
         {refs.map(ref => {
-          const file = files.find(file => file.id === ref.fileId && !file.archived);
+          const file = getDiscussionAttachment(files, ref);
           return <button className="task-discussion-feed-file" disabled={!file} key={ref.fileId} onClick={() => onOpenFile(ref.fileId, ref.version)} title={mock.text(ref.name)} type="button"><FileText aria-hidden="true" size={14} /><span>{mock.text(ref.name)}</span><small>{file ? `v${ref.version}` : d("fileRemoved")}</small></button>;
         })}
         {!refs.length && message.file && <button className="task-discussion-feed-file" disabled={!legacyFile} onClick={() => legacyFile && onOpenFile(legacyFile.id)} title={mock.text(message.file)} type="button"><FileText aria-hidden="true" size={14} /><span>{mock.text(message.file)}</span>{!legacyFile && <small>{d("unavailable")}</small>}</button>}
@@ -108,9 +111,10 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
         </div>
         <div className="task-discussion-feed-actions">
           {own && onDelete && <button className="task-discussion-feed-delete" onClick={() => onDelete(message)} type="button">{d("delete")}</button>}
-          <button className="task-discussion-feed-reply" onClick={() => onReply(message)} type="button">{d("reply")}</button>
+          <button aria-expanded={replyExpanded} className="task-discussion-feed-reply" disabled={replyDisabled} onClick={() => onReply(message)} type="button">{d("reply")}</button>
         </div>
       </footer>
+      {children}
     </div>
   </li>;
 }
