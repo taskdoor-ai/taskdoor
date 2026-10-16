@@ -1,4 +1,5 @@
 import type { TaskEffortEstimate } from "@/shared/model/task-effort";
+import type { TaskCreationAnnotation } from "@/features/tasks/lib/task-creation-annotations";
 
 /** Shared local-Mock candidate contract. Nothing in this module writes tasks. */
 export type TaskAiEditableTask = {
@@ -26,6 +27,7 @@ export type TaskAiAdjustmentScope =
   | { kind: "subtask"; taskId: string };
 
 export type TaskAiAdjustmentContext = {
+  timeZone?: string;
   mode: "draft" | "saved";
   currentUserId: string;
   task: TaskAiEditableTask;
@@ -55,6 +57,8 @@ export type TaskAiAdjustmentProposal = {
   additions: TaskAiEditableTask[];
   changes: TaskAiAdjustmentChange[];
   summary: string;
+  annotations?: TaskCreationAnnotation[];
+  supplementalInstruction?: string;
 };
 
 export type TaskAiAdjustmentResult = { proposal: TaskAiAdjustmentProposal } | { error: string };
@@ -66,6 +70,8 @@ export type TaskAiAdjustmentProgress = {
   id: string;
   taskId: string;
   instruction: string;
+  annotations?: TaskCreationAnnotation[];
+  supplementalInstruction?: string;
   steps: Array<{ label: string; detail: string; basis: string }>;
   activeStep: number;
   status: "running" | "completed" | "stopped" | "failed";

@@ -18,5 +18,5 @@
 .content-translation-control { display:inline-flex; flex-wrap:wrap; align-items:center; gap:3px; font-size:12px; color:var(--ad-ink-tertiary); }
 .content-translation-control button { border:0; padding:2px 0; background:transparent; color:var(--ad-route); font:inherit; cursor:pointer; }
 .content-translation-control button:focus-visible { outline:2px solid var(--ad-focus); outline-offset:3px; border-radius:4px; }
-.content-translation-unavailable,.content-editing-original { font-size:12px; color:var(--ad-ink-tertiary); }
+.content-translation-unavailable { font-size:12px; color:var(--ad-ink-tertiary); }
 @media (max-width:760px) { .content-translation-control button { min-height:32px; } }

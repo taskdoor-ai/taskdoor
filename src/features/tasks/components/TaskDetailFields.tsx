@@ -24,10 +24,11 @@ type Props = {
   properties?: ReactNode;
   attributes?: ReactNode;
   effort?: ReactNode;
+  criteriaPlaceholder?: ReactNode;
 };
 
 /** Shared task fields; the caller owns draft/commit behaviour and task relationships. */
-export function TaskDetailFields({ value, labels, onChange, variant = "embedded", disabled = false, showExecutionTips = false, showNameLabel = false, icon, titleAction, description, properties, attributes, effort }: Props) {
+export function TaskDetailFields({ value, labels, onChange, variant = "embedded", disabled = false, showExecutionTips = false, showNameLabel = false, icon, titleAction, description, properties, attributes, effort, criteriaPlaceholder }: Props) {
   const d = useDetailCopy();
   const id = useId();
   const update = (patch: Partial<TaskFieldValues>) => { if (!disabled) onChange(patch); };
@@ -46,8 +47,10 @@ export function TaskDetailFields({ value, labels, onChange, variant = "embedded"
         {description.onChange ? <EditableText className="task-detail-goal-input" disabled={disabled} label={description.inputLabel} onChange={next => { if (!disabled) description.onChange?.(next); }} placeholder={d('goalHint')} value={description.value} /> : <p className="creation-inherited-goal">{description.value}</p>}
       </div>}
       <section aria-label={d('criteria')} className="task-detail-completion creation-completion">
+        {criteriaPlaceholder ?? <>
         <span className="task-detail-field-label">{d('criteria')}</span>
         <TaskCriteriaFields disabled={disabled} idPrefix={`${id}-criterion`} label={labels.criteria} onChange={completionCriteria => update({ completionCriteria })} values={value.completionCriteria} />
+        </>}
       </section>
       {showExecutionTips && <TaskExecutionTipsField disabled={disabled} onChange={executionTips => update({ executionTips })} values={value.executionTips} />}
       {effort}

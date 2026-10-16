@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+<title id="title">秋季精华首发协作流程</title>
+<desc id="desc">本地 Mock 合成演示。按交付、审核、发布、复盘顺序协作；审核未通过时退回交付修订。观测日为 2026 年 9 月 14 日，生成日为 2026 年 10 月 16 日。8 个末级任务汇总完成量为 3297 分钟，总量 4500 分钟，73.3%。流程图不代表各环节已经完成。</desc>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#325847" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#9B7548" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <style>
+    text{font-family:'Arial Unicode MS','PingFang SC',Arial,sans-serif;fill:#203E32}
+    .eyebrow{font-size:15px;letter-spacing:2px;fill:#6B7C70}
+    .label{font-size:16px;fill:#718173}
+    .body{font-size:20px;fill:#4F6255}
+    .small{font-size:17px;fill:#617365}
+    .card-title{font-size:30px;font-weight:600}
+    .owner{font-size:17px;fill:#597360}
+  </style>
+</defs>
+<rect width="1600" height="1120" fill="#F5F3E9"/>
+<rect x="0" y="0" width="1600" height="12" fill="#203E32"/>
+<text x="80" y="75" class="eyebrow">TASKDOOR / LOCAL MOCK / HANDOFF FLOW</text>
+<text x="80" y="145" font-size="50" font-weight="600" letter-spacing="-1">秋季精华首发协作流程</text>
+<text x="80" y="190" font-size="20" fill="#617365">把可编辑的交付物，交给明确的接收人与验收规则。</text>
+<line x1="80" y1="222" x2="1520" y2="222" stroke="#CBD2C3"/>
+<text x="80" y="259" class="label">观测 2026-09-14</text>
+<text x="340" y="259" class="label">生成 2026-10-16</text>
+<text x="600" y="259" class="label">项目负责人 周岚</text>
+<text x="1060" y="259" class="label">本地 Mock 合成演示 · 非真实实绩</text>
+
+<g transform="translate(80 330)">
+  <rect width="330" height="294" rx="12" fill="#FEFDF7" stroke="#CCD4C5"/>
+  <text x="26" y="44" font-size="17" fill="#718173">01</text>
+  <text x="26" y="94" class="card-title">交付</text>
+  <text x="26" y="128" class="owner">林洁 · 梁川 · 许宁</text>
+  <line x1="26" y1="151" x2="304" y2="151" stroke="#DDE2D5"/>
+  <text x="26" y="186" class="body">内容脚本与直播执行表</text>
+  <text x="26" y="220" class="body">商品价格、库存与渠道计划</text>
+  <text x="26" y="268" class="small">接收要求：版本清楚、产物可读</text>
+</g>
+<g transform="translate(450 330)">
+  <rect width="330" height="294" rx="12" fill="#E7EDDF" stroke="#B7C6B0"/>
+  <text x="26" y="44" font-size="17" fill="#718173">02</text>
+  <text x="26" y="94" class="card-title">审核</text>
+  <text x="26" y="128" class="owner">苏禾审核 · 周岚确认范围</text>
+  <line x1="26" y1="151" x2="304" y2="151" stroke="#CCD6C3"/>
+  <text x="26" y="186" class="body">宣称、授权与合同回签</text>
+  <text x="26" y="220" class="body">价格、库存及归因逐项核对</text>
+  <text x="26" y="268" class="small">验收要求：证据齐备、结论可查</text>
+</g>
+<g transform="translate(820 330)">
+  <rect width="330" height="294" rx="12" fill="#FEFDF7" stroke="#CCD4C5"/>
+  <text x="26" y="44" font-size="17" fill="#718173">03</text>
+  <text x="26" y="94" class="card-title">发布</text>
+  <text x="26" y="128" class="owner">高远执行 · 许宁投放</text>
+  <line x1="26" y1="151" x2="304" y2="151" stroke="#DDE2D5"/>
+  <text x="26" y="186" class="body">只使用已审核的内容版本</text>
+  <text x="26" y="220" class="body">留存上线记录与异常处理</text>
+  <text x="26" y="268" class="small">执行要求：在批准范围内发布</text>
+</g>
+<g transform="translate(1190 330)">
+  <rect width="330" height="294" rx="12" fill="#FEFDF7" stroke="#CCD4C5"/>
+  <text x="26" y="44" font-size="17" fill="#718173">04</text>
+  <text x="26" y="94" class="card-title">复盘</text>
+  <text x="26" y="128" class="owner">韩序核数 · 周岚收口</text>
+  <line x1="26" y1="151" x2="304" y2="151" stroke="#DDE2D5"/>
+  <text x="26" y="186" class="body">同窗口核对订单与实际消耗</text>
+  <text x="26" y="220" class="body">记录差异、结论及后续行动</text>
+  <text x="26" y="268" class="small">收口要求：缺失数据继续标明</text>
+</g>
+
+<path d="M 416 477 H 442" stroke="#325847" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M 786 477 H 812" stroke="#325847" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M 1156 477 H 1182" stroke="#325847" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<text x="245" y="313" text-anchor="middle" class="small">形成受控交付版本</text>
+<text x="615" y="313" text-anchor="middle" class="small">通过后才进入发布</text>
+<text x="985" y="313" text-anchor="middle" class="small">执行记录用于回溯</text>
+<text x="1355" y="313" text-anchor="middle" class="small">实际数据与计划分列</text>
+
+<path d="M 615 632 V 681 Q 615 695 601 695 H 259 Q 245 695 245 681 V 632" stroke="#9B7548" stroke-width="2" fill="none" marker-end="url(#return)"/>
+<rect x="303" y="678" width="257" height="34" rx="17" fill="#F5F3E9"/>
+<text x="432" y="701" text-anchor="middle" font-size="17" fill="#916B3E">未通过：退回补证与修订</text>
+
+<rect x="80" y="763" width="1440" height="164" rx="12" fill="#203E32"/>
+<text x="112" y="801" font-size="16" style="fill:#B9C9B9">截至观测日的工作量快照</text>
+<text x="112" y="865" font-size="47" font-weight="600" style="fill:#FBFAF2">73.3%</text>
+<text x="300" y="842" font-size="22" style="fill:#EEF2E9">3,297 / 4,500 分钟</text>
+<text x="300" y="878" font-size="18" style="fill:#BCCDBB">8 个末级任务汇总，父级不重复累计</text>
+<line x1="788" y1="795" x2="788" y2="894" stroke="#4C6656"/>
+<text x="824" y="831" font-size="21" style="fill:#EEF2E9">核心达人 8 名：6 名确认，2 名待回签</text>
+<text x="824" y="872" font-size="18" style="fill:#BCCDBB">完成量与验收确认分别记录，未闭环事项继续保留。</text>
+
+<text x="80" y="982" font-size="18" fill="#5E725F">预算 300,000 元 · 库存 12,000 件 · 30 ml · 计划到手价 299 元</text>
+<text x="80" y="1016" font-size="17" fill="#718173">全部业务内容为合成演示。流程顺序不表示各环节已经验收完成。</text>
+<line x1="80" y1="1050" x2="1520" y2="1050" stroke="#CBD2C3"/>
+<text x="80" y="1083" font-size="14" fill="#718173">秋季抗老精华首发闭环 / 协作交接 / v1.0</text>
+<text x="1520" y="1083" text-anchor="end" font-size="14" fill="#718173">独立矢量文件 · 可缩放 · 无外部资源</text>
+</svg>

@@ -22,6 +22,7 @@ export function prepareOnboardingWorkspace(state: OnboardingState, directory: Pe
       ...existing,
       memberships: member ? existing.memberships.map(item => item.id === member.id ? membership : item) : [...existing.memberships, membership],
     } : {
+      ...(preview.timezone ? { timezone: preview.timezone } : {}),
       createdBy: preview.role === "admin" ? userId : undefined,
       id: preview.id, name: preview.name, role: preview.role === "admin" ? "管理员" : "成员",
       coverage: "尚未填写", missingSources: "暂无任务资料", lastSyncedAt: "刚刚", inviteToken: crypto.randomUUID(),

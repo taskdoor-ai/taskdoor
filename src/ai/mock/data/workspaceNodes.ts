@@ -584,7 +584,7 @@ const normalizeTaskNode = (value: unknown): TaskNode | null => {
   if (typeof value.id !== "string" || !value.id.trim() || value.id === workspaceRootId) return null;
   if (typeof value.name !== "string" || !value.name.trim()) return null;
   const legacyProposedOwnerId = asOptionalString(value.proposedOwnerId);
-  if (typeof value.ownerId !== "string" || (!value.ownerId.trim() && !legacyProposedOwnerId && value.createdFrom !== "task-planner" && value.createdFrom !== "task-editor")) return null;
+  if (typeof value.ownerId !== "string") return null;
   if (typeof value.updatedAt !== "string" || !value.updatedAt.trim()) return null;
   if (typeof value.status !== "string" || !taskStatuses.has(value.status as WorkspaceTaskStatus)) return null;
 
@@ -598,7 +598,8 @@ const normalizeTaskNode = (value: unknown): TaskNode | null => {
   const iconTone = typeof value.iconTone === "string" && (taskIconTones.has(value.iconTone as TaskIconTone) || /^#[0-9a-f]{6}$/i.test(value.iconTone))
     ? value.iconTone as TaskIconTone
     : undefined;
-  const ownerId = legacyProposedOwnerId ?? value.ownerId;
+  // An explicit clear is a current assignment, including for built-in tasks.
+  const ownerId = value.ownerId === "" ? "" : legacyProposedOwnerId ?? value.ownerId;
   return {
     id: value.id,
     kind: "task",

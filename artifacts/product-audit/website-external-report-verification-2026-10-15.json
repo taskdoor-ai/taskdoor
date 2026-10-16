@@ -1,0 +1,63 @@
+{
+  "actualUrl": "https://sand.taskdoor.com/login?returnTo=%2F",
+  "actualWebsiteOpens": true,
+  "actualBody": "和你的团队，一起把工作做好。\nTaskDoor\n欢迎回来\n\n登录 TaskDoor，继续你的工作\n\n使用 Google 继续\n或使用邮箱\n邮箱\n密码\n登录\n\n忘记密码？\n\n还没有账号？\n注册\n\n隐私政策\n服务条款\n简体中文",
+  "nativeExternalCapture": {
+    "width": 1440,
+    "height": 872
+  },
+  "aiStyleMatches": {
+    "background": "linear-gradient(110deg, rgb(255, 255, 255) 40%, rgb(239, 243, 255))",
+    "radius": "10px",
+    "border": "color(srgb 0.758431 0.799216 0.907451)",
+    "shadow": "color(srgb 0.180392 0.227451 0.313726 / 0.05) 0px 1px 3px 0px",
+    "mainWidth": "32px",
+    "mainHeight": "30px",
+    "mainRadius": "9px 0px 0px 9px",
+    "mainBorder": "0px",
+    "icon": "18px",
+    "menuBorder": "1px",
+    "menuWidth": "26px"
+  },
+  "websiteAnnotationReport": true,
+  "reportTitles": [
+    "1. 计划首发窗口",
+    "2. 当前推进判断"
+  ],
+  "reportCommonSourceOnce": true,
+  "reportNoDisclosure": true,
+  "reportCrops": 2,
+  "reportMobile": true,
+  "errors": [],
+  "date": "2026-10-15",
+  "workspace": "/Users/yxzuji/Documents/ChatGPT/agentdoor2",
+  "componentSource": "主工作区当前源码Vite静态构建的TaskFileExplorer隔离组件，浏览器选择器由隔离测试自动选择外部标签页；未注入截图或替换getDisplayMedia。",
+  "siteHeaders": {
+    "status": 200,
+    "x-frame-options": "DENY",
+    "content-security-policy-frame-ancestors": "'none'"
+  },
+  "scope": [
+    "真实sand.taskdoor.com公开登录页在独立标签页打开并原生截取",
+    "固定截图的区域标注及新HTML生成",
+    "同源文件两条文字标注的公共来源、选文标题和精简报告",
+    "桌面1440×960、手机390×844报告无横向溢出",
+    "AI共享组件桌面计算样式一致"
+  ],
+  "limits": [
+    "未登录网站，无生产配置修改、扩展安装或内容保护绕过",
+    "浏览器不返回所选标签页URL，不能自动验证画面来自入口",
+    "未执行讨论发布、真实客户端打开或接收",
+    "手机仅固定视口报告布局，不证明手机浏览器系统截屏权限",
+    "截图仅辅助核对位置，文字与来源锚点仍为依据"
+  ],
+  "checks": {
+    "focusedTests": "16/16：taskFileWebsite、taskFileAnnotationDocument、taskFileAnnotationBundle",
+    "appTypecheck": "passed",
+    "structureCheck": "passed",
+    "componentProductionBuild": "passed",
+    "fullTests": "not run",
+    "doubleReview": "not run"
+  },
+  "harnessCorrection": "初次本地存储偏好注入误在sandbox报告iframe运行，限定顶层窗口后复验零pageerror；未放宽报告沙箱。"
+}

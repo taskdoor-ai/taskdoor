@@ -32,7 +32,8 @@ export async function callModel(options:ModelOptions,instructions:string,input:u
     const format=schema?{type:'json_schema',name:'taskdoor_task_preview',schema,strict:true}:{type:'json_object'};
     const chatFormat=schema?{type:'json_schema',json_schema:{name:'taskdoor_task_preview',schema,strict:true}}:{type:'json_object'};
     const target=new URL(modelEndpoint(options));
-    const response=await transport(target,{method:'POST',redirect:'error',headers:{'Content-Type':'application/json',Authorization:`Bearer ${options.apiKey}`,...((options.freshConnection??/^deepseek\//i.test(options.model))?{Connection:'close'}:{})},signal:controller.signal,
+    // Evaluation requests are independent; do not leave API sockets idle between calls.
+    const response=await transport(target,{method:'POST',redirect:'error',headers:{'Content-Type':'application/json',Authorization:`Bearer ${options.apiKey}`,...((options.freshConnection??true)?{Connection:'close'}:{})},signal:controller.signal,
       body:JSON.stringify(chat?{model:options.model,messages:[{role:'system',content:instructions+'\n只返回有效 JSON，不加 Markdown 代码围栏。'},{role:'user',content:original}],max_tokens:options.maxOutputTokens,...(qwen?{response_format:chatFormat}:{}),...(qwenHybrid?{enable_thinking:false}:{})}:{model:options.model,instructions,input:[{role:'user',content:'请按约定的结构返回完整 JSON。说明保持简洁，不重复输入原文，不省略必填字段、必要任务或证据引用。输出使用 Skill 约定的普通 JSON。\n'+original}],max_output_tokens:options.maxOutputTokens,reasoning:{effort},store:false,text:{format,...(schema?{}:{verbosity:'low'})}})}).catch(error=>{if(error instanceof TypeError)throw new ModelConnectionError((error.cause as {code?:unknown}|undefined)?.code);throw error;});
     if([401,403].includes(response.status))throw new Error('模型服务认证失败，请检查服务端 Key 与模型权限');
     if(response.status===429)throw new Error('模型服务限流或额度不足；本次没有自动重试');

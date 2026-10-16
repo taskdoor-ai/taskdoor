@@ -50,11 +50,12 @@ export function readProgressPredictions(value: unknown): ProgressPredictionStore
 
 /** Recalculate from the Demo's saved observations and current confirmations.
  * A repeated run is allowed to return the same values; it never fabricates new delivery evidence. */
-export function recalculateTaskProgressPrediction({ nodes, taskId, getSeries, checkedAt = new Date().toISOString() }: {
+export function recalculateTaskProgressPrediction({ nodes, taskId, getSeries, checkedAt = new Date().toISOString(), timeZone }: {
   nodes: readonly WorkspaceNode[];
   taskId: string;
   getSeries: (id: string) => TaskProgressComparisonSeries | undefined;
   checkedAt?: string;
+  timeZone?: string;
 }): ProgressPredictionRecord {
   const visiting = new Set<string>();
   const calculate = (id: string): TaskProgressComparisonSeries => {
@@ -64,7 +65,7 @@ export function recalculateTaskProgressPrediction({ nodes, taskId, getSeries, ch
     const base = getSeries(id);
     const children = nodes.filter((node): node is TaskNode => node.kind === "task" && node.parentTaskId === id && node.teamId === task.teamId);
     if (!children.length) {
-      const model = getTaskProgressComparison(base);
+      const model = getTaskProgressComparison(base, timeZone);
       if (!base || !model) throw new Error(["proposed","confirmed"].includes(getTaskEffortState(task))
         ? `「${task.name}」已有总工作量估算，尚缺完成量预测依据。`
         : `「${task.name}」尚无工作量评估依据，请先补充交付记录。`);
@@ -75,7 +76,7 @@ export function recalculateTaskProgressPrediction({ nodes, taskId, getSeries, ch
     }
     const childSeries = children.map(child => {
       const series = calculate(child.id);
-      const display = getTaskProgressDisplay({ series, task: child });
+      const display = getTaskProgressDisplay({ timeZone, series, task: child });
       const result = structuredClone(display.historySeries ?? series);
       result.timing = { ...result.timing, forecastOn: display.forecastOn, completedOn: display.completedOn ?? undefined };
       if (!display.forecastOn) delete result.forecastTrend;
@@ -85,7 +86,7 @@ export function recalculateTaskProgressPrediction({ nodes, taskId, getSeries, ch
     const latest = workload.at(-1);
     if (!latest || !latest.scopeMinutes) throw new Error("子任务工作量尚不完整，暂时无法汇总预测。");
     const forecastTrend = rollupProgressForecast(childSeries, latest);
-    const remaining = childSeries.map(getTaskProgressComparison).filter(model => model && model.latest.completedMinutes < model.latest.scopeMinutes);
+    const remaining = childSeries.map(series => getTaskProgressComparison(series, timeZone)).filter(model => model && model.latest.completedMinutes < model.latest.scopeMinutes);
     const forecastOn = remaining.length && remaining.every(model => model!.forecastOn && model!.forecastOn >= latest.at)
       ? remaining.map(model => model!.forecastOn!).sort().at(-1)! : null;
     visiting.delete(id);
@@ -97,6 +98,6 @@ export function recalculateTaskProgressPrediction({ nodes, taskId, getSeries, ch
         forecastOn, scopeVersion: latest.scopeVersion, basis: "未完成子任务的有效预测取最晚日期，不按截止时间反推。" } };
   };
   const series = calculate(taskId);
-  if (!getTaskProgressComparison(series)) throw new Error("预测结果不完整，已保留原记录，请重试。");
+  if (!getTaskProgressComparison(series, timeZone)) throw new Error("预测结果不完整，已保留原记录，请重试。");
   return { inputKey: progressPredictionInputKey(nodes, taskId), checkedAt, series };
 }

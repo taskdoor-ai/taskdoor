@@ -1,0 +1,42 @@
+{
+  "kind": "local independent agent exercise; no external model API or real task writes",
+  "results": [
+    {
+      "caseId": "caseA",
+      "schemaValid": true,
+      "errors": null,
+      "taskCount": 1,
+      "goal": "帮助新同事理解现行报销要求，并据此准备所需材料。",
+      "dueDate": "2026-10-19",
+      "warnings": [
+        "任务「编写新同事常见报销问题说明」(draft-expense-faq) 的 2026-10-19 为 AI 建议：按周一至周五工作日假设，预留下一工作日内的一段整理与核对窗口；资料齐全，人员实际可用时间及团队工作日历未核实，可修改或清空。"
+      ]
+    },
+    {
+      "caseId": "caseB",
+      "schemaValid": true,
+      "errors": null,
+      "taskCount": 1,
+      "goal": "让团队成员能够按常见问题找到当前有效的答案，持续保持团队答疑资料可用。",
+      "dueDate": null,
+      "warnings": [
+        "该任务为没有整体结束点的长期维护，按要求保留整体截止日期为空；尚未明确问题规模、维护频率或估算周期，无法可靠估算整体人工投入，预计投入暂为空。"
+      ]
+    },
+    {
+      "caseId": "caseC",
+      "schemaValid": true,
+      "errors": null,
+      "taskCount": 1,
+      "goal": "让新员工能依据现行规则准备报销材料",
+      "dueDate": null,
+      "warnings": []
+    }
+  ],
+  "behaviorChecks": {
+    "finiteTaskHasDatedSuggestionWithNodeAndAssumptions": true,
+    "ongoingTaskHasNoForcedDeadlineOrWholeLifetimeEffort": true,
+    "renamePreservesAllOtherTaskFieldsAndClearedDate": true
+  },
+  "semanticObservation": "逐份阅读：目标表达使用价值或有效状态，标准只覆盖输入范围，未新增审批改造、材料制作或业务增长承诺。"
+}

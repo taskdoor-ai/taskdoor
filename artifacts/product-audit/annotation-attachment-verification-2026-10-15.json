@@ -1,0 +1,66 @@
+{
+  "source": "http://127.0.0.1:5192/annotation-discussion-qa.html",
+  "kind": "current-component",
+  "browser": "Browser plugin not available; bundled Playwright Chrome",
+  "desktop": [
+    1440,
+    960
+  ],
+  "mobile": [
+    390,
+    844
+  ],
+  "fileDiscussionRemoved": true,
+  "generateButtonRemoved": true,
+  "independentDiscussionText": true,
+  "ordinaryUploadStyle": true,
+  "draftAndAttachmentsPreserved": true,
+  "failedSendRetained": true,
+  "attachmentOnlyPublished": true,
+  "taskFileCountExcludedBeforeAfterReload": true,
+  "publishedPreviewAndExactDownload": true,
+  "frozenSource": true,
+  "realLocalAiFile": true,
+  "aiClientLaunch": "injected recorder only; external client not launched",
+  "aiReadUnconfirmed": true,
+  "mouseDrag": true,
+  "touchDrag": true,
+  "keyboardDrag": true,
+  "mobileBounds": true,
+  "aiFilePath": "/var/folders/fj/835dg5_11m119vlnf4j4krc80000gn/T/taskdoor-ai-handoff-KJFaTG/标注-周岚-2026-10-15.html",
+  "pageErrors": [],
+  "validation": {
+    "targetedTests": {
+      "passed": 104,
+      "failed": 0
+    },
+    "appTypes": "passed",
+    "structure": "passed; no new exceptions",
+    "fullTestSuite": "not run",
+    "doubleReview": "not run",
+    "prdBuild": "passed; 25 modules; PRD-0205 and figures 043/044/045 present; module index checked"
+  },
+  "screenshots": {
+    "toolbar": "docs/prd/assets/files-local-commits/annotation-attachment-toolbar-zh.png",
+    "draft": "docs/prd/assets/files-local-commits/annotation-attachment-draft-zh.png",
+    "preview": "docs/prd/assets/files-local-commits/annotation-attachment-preview-zh.png",
+    "mobile": "docs/prd/assets/files-local-commits/annotation-attachment-mobile-zh.png"
+  },
+  "consoleHealth": {
+    "scope": "390px current TaskDetail -> ordinary upload -> shared attachment preview -> close",
+    "warnings": [],
+    "errors": []
+  },
+  "activePreview": {
+    "url": "http://127.0.0.1:5173/",
+    "updatedExplorerAndTaskDetailModules": true,
+    "handoffRouteRegistered": true,
+    "routeProbe": "invalid empty POST returned 400; no material generated"
+  },
+  "cleanup": {
+    "temporaryRootQaFilesRemoved": true,
+    "isolated5192ServerStopped": true,
+    "isolatedBrowsersClosed": true,
+    "original5173And5180Preserved": true
+  }
+}

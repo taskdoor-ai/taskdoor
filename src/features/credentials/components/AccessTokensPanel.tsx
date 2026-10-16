@@ -295,10 +295,10 @@ export function AccessTokensPanel({
                     </div>}
                   </dl>
                   <small>
-                    <strong>{t('tokens.createdLabel')}</strong> <time dateTime={token.createdAt} title={formatDisplayDateTime(token.createdAt, { year: 'always' }) ?? formatDisplayDate(token.createdAt, { year: 'always' }) ?? undefined}>{formatDisplayDate(token.createdAt) ?? '—'}</time> ·{' '}
-                    <strong>{t('tokens.expiresLabel')}</strong> <time dateTime={token.expiresAt} title={formatDisplayDateTime(token.expiresAt, { year: 'always' }) ?? formatDisplayDate(token.expiresAt, { year: 'always' }) ?? undefined}>{formatDisplayDate(token.expiresAt) ?? '—'}</time> ·{' '}
+                    <strong>{t('tokens.createdLabel')}</strong> <time dateTime={token.createdAt} title={formatDisplayDateTime(token.createdAt, { locale, year: 'always' }) ?? formatDisplayDate(token.createdAt, { locale, year: 'always' }) ?? undefined}>{formatDisplayDate(token.createdAt, { locale }) ?? '—'}</time> ·{' '}
+                    <strong>{t('tokens.expiresLabel')}</strong> <time dateTime={token.expiresAt} title={formatDisplayDateTime(token.expiresAt, { locale, year: 'always' }) ?? formatDisplayDate(token.expiresAt, { locale, year: 'always' }) ?? undefined}>{formatDisplayDate(token.expiresAt, { locale }) ?? '—'}</time> ·{' '}
                     {token.lastUsedAt
-                      ? <><strong>{t('tokens.lastUsedLabel')}</strong> <time dateTime={token.lastUsedAt} title={formatDisplayDateTime(token.lastUsedAt, { year: 'always' }) ?? undefined}>{formatDisplayDateTime(token.lastUsedAt) ?? '—'}</time></>
+                      ? <><strong>{t('tokens.lastUsedLabel')}</strong> <time dateTime={token.lastUsedAt} title={formatDisplayDateTime(token.lastUsedAt, { locale, year: 'always' }) ?? undefined}>{formatDisplayDateTime(token.lastUsedAt, { locale }) ?? '—'}</time></>
                       : t('tokens.neverUsed')}
                   </small>
                 </div>

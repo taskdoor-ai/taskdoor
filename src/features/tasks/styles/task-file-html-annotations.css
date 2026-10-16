@@ -1,0 +1,102 @@
+.task-file-html-annotations {
+  min-width: 0;
+}
+
+.task-file-html-annotations__preview {
+  position: relative;
+  min-width: 0;
+  background: white;
+}
+
+.task-file-html-annotations__frame {
+  display: block;
+  width: 100%;
+  min-height: 180px;
+  border: 0;
+  background: white;
+}
+
+.task-file-html-annotations__box {
+  position: absolute;
+  z-index: 1;
+  box-sizing: border-box;
+  border: 1.5px solid var(--ad-route);
+  background: color-mix(in srgb, var(--ad-route) 8%, transparent);
+  pointer-events: none;
+}
+
+.task-file-html-annotations__box--active {
+  z-index: 2;
+  border-width: 2px;
+  background: color-mix(in srgb, var(--ad-route) 16%, transparent);
+}
+
+.task-file-html-annotations__box--draft {
+  z-index: 3;
+  border-style: dashed;
+}
+
+.task-file-html-annotations__box--hover {
+  z-index: 4;
+  border-color: var(--ad-route);
+  background: color-mix(in srgb, var(--ad-route) 12%, transparent);
+}
+
+.task-file-html-annotations__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 280px;
+  overflow: hidden;
+  padding: 3px 6px;
+  border-radius: 0 0 4px 0;
+  background: var(--ad-route);
+  color: white;
+  font-size: 11px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-file-html-annotations__number {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  min-width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid white;
+  border-radius: 50%;
+  background: var(--ad-route);
+  color: white;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.task-file-html-annotations__number:focus-visible {
+  outline: 2px solid var(--ad-focus);
+  outline-offset: 2px;
+}
+
+.task-file-html-annotations__loading,
+.task-file-html-annotations__error {
+  padding: var(--ad-space-3);
+  color: var(--ad-ink-tertiary);
+  font-size: var(--ad-text-caption);
+}
+
+.task-file-html-annotations__error button {
+  padding: var(--ad-space-1) var(--ad-space-3);
+  border: 1px solid var(--ad-border);
+  border-radius: var(--ad-radius-control);
+  background: var(--ad-surface);
+  color: var(--ad-ink-secondary);
+  font: inherit;
+  cursor: pointer;
+}

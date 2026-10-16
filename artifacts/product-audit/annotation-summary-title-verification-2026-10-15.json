@@ -1,0 +1,38 @@
+{
+  "transport": "Controlled local API responses only; no external model requests",
+  "onlyTextContext": true,
+  "failureKeepsAnnotations": true,
+  "headings": [
+    "1. 删除阶段退出条件说明",
+    "2. 补齐上线核对责任人"
+  ],
+  "originalRetained": "各阶段都有独立退出条件。任何范围变化需形成新版本；前一阶段的问题不通过放量掩盖。",
+  "mobileNoOverflow": true,
+  "sameSnapshotReused": true,
+  "busyAndExitCancellation": true,
+  "modelCalls": 0,
+  "controlledRequests": 3,
+  "errors": [],
+  "date": "2026-10-15",
+  "changeId": "PRD-0211",
+  "checks": {
+    "focusedTests": "21/21：标题协议／调用、标注文件、修订包、网站",
+    "appTypecheck": "passed",
+    "scopedServerTypecheck": "passed：标题接口及其测试",
+    "structureCheck": "passed",
+    "componentProductionBuild": "passed",
+    "projectNodeTypecheck": "failed：现存其他服务／测试类型错误；新标题相关文件无诊断",
+    "prdBuild": "passed, 25 modules, PRD-0211及索引／截图JSON／格式检查通过"
+  },
+  "liveModelVerification": {
+    "status": "approval-rejected",
+    "destination": "已配置的PPIO模型 pa/mercury-5.5",
+    "reason": "自动审批认为选文和意见可能属于敏感文件，用户未明确授权将具体载荷发送到该模型目的地；未重试或绕过。",
+    "requestsCompleted": 0
+  },
+  "limits": [
+    "浏览器接口为明确受控本地响应，不证明真实模型质量／可用性",
+    "未发布讨论或启动本地AI客户端，代码沿同一已准备快照交接",
+    "原始选文和意见不改写；未运行全量测试或双重审查"
+  ]
+}

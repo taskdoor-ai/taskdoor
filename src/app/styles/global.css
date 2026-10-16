@@ -12,3 +12,4 @@
 @import "@/shared/styles/theme.css";
 @import "@/shared/styles/base.css";
 @import "@/shared/styles/pm-global-tail.css";
+@import "@/features/members/styles/person-picker.css";

@@ -1,0 +1,114 @@
+{
+  "host": "http://127.0.0.1:5180",
+  "timezone": "Asia/Shanghai",
+  "actualUiLanguageSwitch": true,
+  "reports": [
+    {
+      "locale": "zh-CN",
+      "due": {
+        "text": "9月15日",
+        "aria": "截止时间：2026年9月15日"
+      },
+      "panels": {
+        "discussion": {
+          "times": [
+            {
+              "text": "9月14日 17:30",
+              "title": "2026年9月14日 17:30",
+              "dateTime": "2026-09-14T09:30:00.000Z"
+            }
+          ]
+        },
+        "files": {
+          "times": []
+        },
+        "activity": {
+          "times": [
+            {
+              "text": "9月14日 17:30",
+              "title": "2026年9月14日 17:30",
+              "dateTime": "2026-09-14T17:30:00+08:00"
+            },
+            {
+              "text": "9月14日 17:30",
+              "title": "2026年9月14日 17:30",
+              "dateTime": "2026-09-14T17:30:00+08:00"
+            }
+          ]
+        },
+        "ai": {
+          "times": []
+        }
+      },
+      "calendar": "1 天\n3 天\n7 天\n10 天\n30 天\n截止时间类型\n指定日期\n不设截止时间\n2026年9月\n日\n一\n二\n三\n四\n五\n六\n30\n31\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n9月15日\n取消\n确定",
+      "notifications": [
+        {
+          "text": "9月1日 10:00",
+          "title": "2026年9月1日 10:00"
+        },
+        {
+          "text": "8月30日 09:00",
+          "title": "2026年8月30日 09:00"
+        },
+        {
+          "text": "8月29日 09:00",
+          "title": "2026年8月29日 09:00"
+        }
+      ]
+    },
+    {
+      "locale": "en",
+      "due": {
+        "text": "Sep 15",
+        "aria": "Due date：Sep 15, 2026"
+      },
+      "panels": {
+        "discussion": {
+          "times": [
+            {
+              "text": "Sep 14, 5:30 PM",
+              "title": "Sep 14, 2026, 5:30 PM",
+              "dateTime": "2026-09-14T09:30:00.000Z"
+            }
+          ]
+        },
+        "files": {
+          "times": []
+        },
+        "activity": {
+          "times": [
+            {
+              "text": "Sep 14, 5:30 PM",
+              "title": "Sep 14, 2026, 5:30 PM",
+              "dateTime": "2026-09-14T17:30:00+08:00"
+            },
+            {
+              "text": "Sep 14, 5:30 PM",
+              "title": "Sep 14, 2026, 5:30 PM",
+              "dateTime": "2026-09-14T17:30:00+08:00"
+            }
+          ]
+        },
+        "ai": {
+          "times": []
+        }
+      },
+      "calendar": "1 days\n3 days\n7 days\n10 days\n30 days\nDue date type\nSpecific date\nNo due date\nSep 2026\nSu\nMo\nTu\nWe\nTh\nFr\nSa\n30\n31\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\nSep 15\nCancel\nConfirm",
+      "notifications": [
+        {
+          "text": "Sep 1, 10:00 AM",
+          "title": "Sep 1, 2026, 10:00 AM"
+        },
+        {
+          "text": "Aug 30, 9:00 AM",
+          "title": "Aug 30, 2026, 9:00 AM"
+        },
+        {
+          "text": "Aug 29, 9:00 AM",
+          "title": "Aug 29, 2026, 9:00 AM"
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

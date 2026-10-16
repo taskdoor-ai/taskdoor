@@ -1,0 +1,65 @@
+{
+  "session": "3b4eee3c-1e8e-4dfd-88f2-26006532d1ef",
+  "createdAt": "2026-10-14T09:48:45.348Z",
+  "model": "pa/mercury-5.5",
+  "endpoint": "https://api.ppinfra.com/openai/v1/responses",
+  "requests": {
+    "create": "regression-20261014-create-3b4eee3c-1e8e-4dfd-88f2-26006532d1ef",
+    "analysis": "regression-20261014-analysis-3b4eee3c-1e8e-4dfd-88f2-26006532d1ef"
+  },
+  "caseCount": 30,
+  "plannedSteps": 34,
+  "batches": [
+    {
+      "kind": "create",
+      "batchId": "5d8876f0-b992-4dc2-b990-553aa4b71446",
+      "runIds": [
+        "a4e64347-3deb-4e58-8cde-15ee37b973d2",
+        "31a5340f-3279-4600-a2c6-14eaf7f408f2",
+        "1f9fe357-b81f-4e7a-8644-4df9fc169b51",
+        "689e4586-e81b-4e97-82ec-b1007cbe9ef4",
+        "5c0348b8-3632-4414-805c-cac485a68506",
+        "cf1daae1-d8cb-4546-8ac1-6ff7ec3538f1",
+        "2b93711e-2238-48dc-a8ca-709cc13fbf05",
+        "efcd3edb-803a-4521-84af-eaba17e5f20d",
+        "baaacffe-69ae-4460-908a-6587f06d98c8",
+        "03b4085a-ff7b-4d8a-bd72-0778366de5b0",
+        "686a4e2f-97f8-49d0-8d4c-01c328e3d6f6",
+        "3fc636ae-b5eb-49d5-b3ed-d9a6e0d17482"
+      ],
+      "caseCount": 12,
+      "url": "http://127.0.0.1:5173/test-lab.html?page=runs&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "kind": "analysis",
+      "batchId": "bd766f61-361a-4014-a1f2-8e729ff9c959",
+      "runIds": [
+        "aa84ed19-8f4c-4e8f-8570-e6936177914b",
+        "0a860d1d-954d-4b1a-b55e-e31a5c58d817",
+        "90d02953-a784-4896-b6fb-4f9a15f150dc",
+        "2f98e61d-18be-4117-b4d0-4c6462c5d65a",
+        "0fc7f035-5670-40bd-95dc-add90114f12d",
+        "542bc3ad-1887-40ba-b504-08b8c6686c66",
+        "ebef126d-0dac-4af5-b312-49cd334f0d46",
+        "0276b3e0-bac9-4d5e-8584-1a92e92cd11a",
+        "e8f85e25-520c-4572-8beb-8c661b54aff1",
+        "7eb7a5b0-5325-43f7-984f-94c2beac5460",
+        "9e75c383-4621-4c18-8e93-1a8018fc6384",
+        "899c002c-4794-46e1-bdce-e29319106ad8",
+        "eecd71b8-ee66-4cea-aeea-d089788f34df",
+        "8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+        "219a6a19-6a93-473e-90dd-f1fa86034311",
+        "288e1764-74e6-47d0-b0b7-010235fc3892",
+        "74c21532-5da7-4c93-9684-e1c907effa06",
+        "3b5e5af5-662e-4f54-b185-6294cc972f1b"
+      ],
+      "caseCount": 18,
+      "url": "http://127.0.0.1:5173/test-lab.html?page=runs&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    }
+  ],
+  "skillVersions": {
+    "agentdoor-task-planner": "fba06677-f603-4aee-b05c-bd9f140e4ee1",
+    "agentdoor-task-status-analyzer": "b936d3b4-0b8c-4c7a-af21-c89b9b16dfe0"
+  },
+  "importedCases": 30
+}

@@ -12,6 +12,8 @@ import { Button } from "@/shared/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Input } from "@/shared/ui/input";
 import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
+import { isValidTimeZone } from "@/shared/lib/team-time-zone";
 
 const filterCategories = [
   { id: "statuses", label: "状态", icon: CircleDashed },
@@ -64,10 +66,12 @@ function FilterOption({ checked, label, icon, onChange }: { checked: boolean; la
 }
 
 function DateFilterChoices({ field, value, onChange }: { field: "deadline" | "created"; value?: TaskListDateFilter; onChange: (value?: TaskListDateFilter) => void }) {
+  const timeZone = useTeamTimeZone();
   const u = useRemainingCopy();
   const { locale } = useI18n();
   const [from, setFrom] = useState(value?.from ?? "");
   const [to, setTo] = useState(value?.to ?? "");
+  if (!isValidTimeZone(timeZone)) return <p role="alert">{locale === "en" ? "The team timezone is invalid. Date filters are not applied." : "团队时区无效，日期筛选条件暂未应用。"}</p>;
   const presets: TaskListDateFilter["preset"][] = ["today", "this-week", field === "deadline" ? "next-7-days" : "past-7-days", ...(field === "deadline" ? ["overdue" as const] : []), "unknown"];
   return <>
     <div aria-label={u('datePresets')} className="task-filter-date-presets">

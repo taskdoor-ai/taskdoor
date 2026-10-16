@@ -21,6 +21,8 @@
 .task-workspace h1[tabindex="-1"]:focus { outline: none; }
 
 .task-workspace-master {
+  /* Keep the edge resizer above the detail's sticky summary and tabs. */
+  z-index: 21;
   min-width: 0;
   min-height: 0;
   overflow: visible;

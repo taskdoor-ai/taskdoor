@@ -40,9 +40,9 @@ function taskFixture(id: string, index = 0): TaskNode {
   };
 }
 
-function everyFixture(): TeamTaskDetailFixture[] {
+function everyFixture(includeUnsupported = false): TeamTaskDetailFixture[] {
   return expectedDomains.flatMap((domain) => TEAM_DETAIL_TASK_IDS[domain]).map((id, index) => {
-    const detail = getTeamTaskDetailFixture(taskFixture(id, index));
+    const detail = getTeamTaskDetailFixture(taskFixture(id, index), includeUnsupported);
     assert.ok(detail, `约定任务必须生成详情：${id}`);
     return detail;
   });
@@ -56,7 +56,7 @@ test("三类团队的全部约定任务都有高密度合成详情且结构校�
     const result = validateTeamTaskDetailFixture(detail);
     assert.deepEqual(result.errors, [], `${detail.datasetMeta.generatedForTaskId}: ${result.errors.join("；")}`);
     assert.deepEqual(result.stats, {
-      files: 9,
+      files: 6,
       folders: 5,
       activities: 11,
       commits: 4,
@@ -118,7 +118,7 @@ test("平台、制造与客户服务的证据内容不复用空模板，分别�
 
   const allNames = [platform, factory, service].map((detail) => detail.files.filter((file) => file.kind === "file").map((file) => file.name).join("|"));
   assert.equal(new Set(allNames).size, 3);
-  assert.match(allNames[0], /灰度|崩溃|鉴权/);
+  assert.match(allNames[0], /发布|回滚/);
   assert.match(allNames[1], /试产|扭矩|图纸/);
   assert.match(allNames[2], /企业客户|同步|SLA/);
 });
@@ -153,8 +153,8 @@ test("三类团队各有一个可追溯的子任务决策冲突，未命中的�
   ]);
 });
 
-test("文件包含可读文档、PDF 和多工作表内容，并保留版本、权限与任务关联", () => {
-  for (const detail of everyFixture()) {
+test("历史原始夹具保留文档、PDF、多工作表、版本、权限与任务关联", () => {
+  for (const detail of everyFixture(true)) {
     const files = detail.files.filter((node): node is TeamEvidenceFileNode => node.kind === "file");
     const current = files.find((file) => file.supersedesFileId);
     assert.ok(current);

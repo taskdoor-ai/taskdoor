@@ -1,18 +1,31 @@
 import type { TaskFileNode } from "@/shared/model/task-model.ts";
 
-export type TaskFilePreviewKind = "markdown" | "text" | "table" | "pdf" | "image" | "document" | "unknown";
+export type TaskFilePreviewKind = "markdown" | "text" | "json" | "xml" | "html" | "table" | "pdf" | "presentation" | "image" | "document" | "unknown";
 export type FolderDeletePolicy = "move-contents" | "archive";
 
 const ext = (name: string) => name.split(".").pop()?.toLowerCase() ?? "";
 
 export function getPreviewKind(name: string, mimeType = ""): TaskFilePreviewKind {
   const extension = ext(name);
+  const mime = mimeType.toLowerCase().split(";")[0].trim();
+  // Explicit formats win over generic or incorrect MIME labels on uploads.
+  if (["html", "htm"].includes(extension)) return "html";
   if (["md", "mdx"].includes(extension)) return "markdown";
-  if (["txt", "log"].includes(extension) || mimeType.startsWith("text/plain")) return "text";
+  if (["txt", "log"].includes(extension)) return "text";
   if (["xlsx", "xls", "csv", "tsv"].includes(extension)) return "table";
-  if (extension === "pdf" || mimeType === "application/pdf") return "pdf";
-  if (["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(extension) || mimeType.startsWith("image/")) return "image";
+  if (extension === "pdf") return "pdf";
+  if (["ppt", "pptx"].includes(extension)) return "presentation";
+  if (["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(extension)) return "image";
   if (["doc", "docx"].includes(extension)) return "document";
+  if (extension === "json") return "json";
+  if (extension === "xml") return "xml";
+  if (["text/html", "application/xhtml+xml"].includes(mime)) return "html";
+  if (mime === "text/plain") return "text";
+  if (mime === "application/pdf") return "pdf";
+  if (["application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation"].includes(mime)) return "presentation";
+  if (mime.startsWith("image/")) return "image";
+  if (mime === "application/json" || /^application\/[^\s/]+\+json$/.test(mime)) return "json";
+  if (["application/xml", "text/xml"].includes(mime) || /^application\/[^\s/]+\+xml$/.test(mime)) return "xml";
   return "unknown";
 }
 
@@ -22,7 +35,7 @@ export function getDefaultFileIcon(name: string): string {
   if (kind === "image") return "Image";
   if (kind === "pdf") return "FileText";
   if (kind === "markdown") return "NotebookTabs";
-  if (kind === "document" || kind === "text") return "FileType2";
+  if (kind === "document" || kind === "text" || kind === "html") return "FileType2";
   return "File";
 }
 
@@ -85,16 +98,22 @@ export function getNodePath(nodes: TaskFileNode[], nodeId: string): TaskFileNode
   return path;
 }
 
-export function setNodeIcon(nodes: TaskFileNode[], nodeId: string, iconName: string): TaskFileNode[] {
-  return nodes.map((node) => node.id === nodeId ? { ...node, iconName } : node);
-}
-
-export function restoreDefaultIcon(nodes: TaskFileNode[], nodeId: string): TaskFileNode[] {
-  return nodes.map((node) => { if (node.id !== nodeId) return node; const { iconName: _, ...rest } = node; return rest; });
+export function getTaskFilePreviewId(nodes: TaskFileNode[], preferredId?: string | null): string | null {
+  const files: string[] = [];
+  const visited = new Set<string>();
+  const visit = (parentId: string | null) => {
+    for (const node of sortTaskFileNodes(nodes.filter(item => item.parentId === parentId && !item.archived))) {
+      if (visited.has(node.id)) continue;
+      visited.add(node.id);
+      if (node.kind === "folder") visit(node.id);
+      else files.push(node.id);
+    }
+  };
+  visit(null);
+  return preferredId && files.includes(preferredId) ? preferredId : files[0] ?? null;
 }
 
 export function getSelectionAfterRemoval(nodes: TaskFileNode[], selectedId: string, removedIds: string[]): string | null {
-  const selected = nodes.find((node) => node.id === selectedId);
-  if (!selected || !removedIds.includes(selectedId)) return selectedId;
-  return selected.parentId && !removedIds.includes(selected.parentId) ? selected.parentId : null;
+  const removed = new Set(removedIds);
+  return getTaskFilePreviewId(nodes.filter(node => !removed.has(node.id)), selectedId);
 }

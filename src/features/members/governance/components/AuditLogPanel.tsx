@@ -1,3 +1,4 @@
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { GovernancePagination, GOVERNANCE_PAGE_SIZE } from '@/features/members/governance/components/GovernancePagination'
 import { useState } from 'react'
 import { MemberListIdentity } from '@/features/members/components/MemberListIdentity'
@@ -32,6 +33,7 @@ const GOVERNANCE = 'governance'
  */
 export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEvent[]; members: PersonOption[]; onOpenTask: (taskId: string) => void }) {
   const t = useCatalog(governanceMessages)
+  const { locale } = useI18n();
   const controlSize = useResponsiveControlSize()
   const [page, setPage] = useState(1)
   const [actor, setActor] = useState<string>(ANY)
@@ -121,7 +123,7 @@ export function AuditLogPanel({ events, members, onOpenTask }: { events: AuditEv
                 </div>
                 <div className="team-member-responsibility">
                   <p className="team-member-responsibility-text">
-                    <time dateTime={event.occurredAt} title={formatDisplayDateTime(event.occurredAt, { year: 'always' }) ?? undefined}>{formatDisplayDateTime(event.occurredAt) ?? '—'}</time>
+                    <time dateTime={event.occurredAt} title={formatDisplayDateTime(event.occurredAt, { locale, year: 'always' }) ?? undefined}>{formatDisplayDateTime(event.occurredAt, { locale }) ?? '—'}</time>
                   </p>
                 </div>
                 <span className="audit-log-actor">

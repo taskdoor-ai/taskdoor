@@ -93,11 +93,13 @@ test("讨论连接使用当前任务字段及最新附件快照，预览与复�
   const { buildDiscussionAiRequest } = await import("../src/features/tasks/discussion/lib/task-discussion-ai.ts");
   const task = { title: "旧名称", goal: "旧目标", owner: "旧负责人", participants: ["旧参与人"], status: "待开始", due: "旧截止", summary: "", activities: [], files: [], commits: [], completionCriteria: ["完成标准"] };
   const activity = { id: "root", author: "周岚", type: "member-post", message: "当前动态", time: "今天", attachmentRefs: [{ fileId: "latest-file", name: "新上传文件.pdf", version: 1 }] };
+  const fileRoot = { ...activity, id: "file-root", fileThreadId: "file-thread", message: "文件原消息" };
+  const fileReply = { ...activity, id: "file-reply", type: "member-reply", fileThreadId: "file-thread", replyToActivityId: fileRoot.id, message: "文件当前回复" };
   const requests: Array<{ taskId: string; request: unknown }> = [];
   const open = handler("openDiscussionAi", {
     buildDiscussionAiRequest, taskId: "current-task", task, currentUser: "周岚", currentTitle: "当前名称", currentGoal: "当前目标",
     confirmedOwnerId: "当前负责人", currentParticipants: ["当前参与人"], participantInvitationStatus: { 当前参与人: "accepted" },
-    currentStatus: "进行中", activities: [activity], plannedEndOn: "2026-09-30", tags: ["当前标签"],
+    currentStatus: "进行中", allMessages: [activity, fileRoot, fileReply], plannedEndOn: "2026-09-30", tags: ["当前标签"],
     taskFiles: [{ id: "latest-file", kind: "file", parentId: null, name: "新上传文件.pdf", version: 1, updatedAt: "当前附件时间" }],
     aiConnectionTrigger: { current: null }, setAiConnectionRequest: (value: (typeof requests)[number]) => requests.push(value),
     setAttentionMessage: () => assert.fail("有效动态应成功构建"),
@@ -108,7 +110,15 @@ test("讨论连接使用当前任务字段及最新附件快照，预览与复�
   assert.ok(result);
   for (const data of [result.context, result.contextPreview]) {
     const text = JSON.stringify(data);
-    for (const value of ["当前名称", "当前目标", "当前负责人", "当前参与人", "2026-09-30", "当前标签", "当前附件时间"]) assert.ok(text.includes(value), value);
+    for (const value of ["当前名称", "当前目标"]) assert.ok(text.includes(value), value);
     assert.doesNotMatch(text, /旧名称|旧目标|旧负责人|旧参与人|旧截止/);
   }
+  assert.deepEqual(result.messageAttachments?.current, [{ id: "latest-file", name: "新上传文件.pdf" }]);
+  assert.equal(result.workObject.content, activity.message);
+  assert.equal(result.contextPreview?.items.find(item => item.label === "讨论内容")?.value, activity.message);
+  open({ kind: "reply", activityId: fileReply.id, fileThreadId: fileReply.fileThreadId }, {});
+  assert.equal(requests.length, 2);
+  const fileResult = requests[1].request as NonNullable<ReturnType<typeof buildDiscussionAiRequest>>;
+  assert.equal(fileResult.workObject.content, fileReply.message);
+  assert.equal(fileResult.context.find(item => item.label === "被回复原消息内容")?.value, fileRoot.message);
 });

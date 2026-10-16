@@ -15,15 +15,15 @@ export function formatNumber(locale: Locale, value: number, options?: Intl.Numbe
   return new Intl.NumberFormat(locale, options).format(value);
 }
 /** Calendar dates have no timezone. Instants require the caller's explicit timezone. */
-export function formatCalendarDate(_locale: Locale, value: string, options: Intl.DateTimeFormatOptions = {}) {
+export function formatCalendarDate(locale: Locale, value: string, options: Intl.DateTimeFormatOptions = {}) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new RangeError('Expected YYYY-MM-DD');
   const date = new Date(`${value}T00:00:00Z`);
   if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== value) throw new RangeError('Invalid calendar date');
-  return formatDisplayDate(value, { year: options.year ? 'always' : 'auto' })!;
+  return formatDisplayDate(value, { locale, year: options.year ? 'always' : 'auto' })!;
 }
-export function formatInstant(_locale: Locale, value: Date | number, timeZone: string, options: Intl.DateTimeFormatOptions = {}) {
+export function formatInstant(locale: Locale, value: Date | number, timeZone: string, options: Intl.DateTimeFormatOptions = {}) {
   const format = options.timeStyle || options.hour || options.minute ? formatDisplayDateTime : formatDisplayDate;
-  const label = format(value, { timeZone, year: options.year ? 'always' : 'auto' });
+  const label = format(value, { locale, timeZone, year: options.year ? 'always' : 'auto' });
   if (!label) throw new RangeError('Invalid instant');
   return label;
 }

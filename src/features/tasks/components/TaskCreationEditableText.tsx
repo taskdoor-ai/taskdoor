@@ -1,5 +1,4 @@
-import { useGlobalUi } from '@/shared/i18n/global-ui';
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Textarea } from "@/shared/ui/input";
 
 type Props = {
@@ -16,11 +15,10 @@ type Props = {
 
 // Main and subtask fields share the same single-line, content-sized editor.
 export function TaskCreationEditableText({ label, value, displayValue, onChange, className = "", placeholder, autoFocus = false, id, disabled = false }: Props) {
-  const ui = useGlobalUi();
   const [focused, setFocused] = useState(false);
   const shown = focused ? value : displayValue ?? value;
   const ref = useRef<HTMLTextAreaElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = ref.current;
     if (!element) return;
     const resize = () => { element.style.height = "0px"; element.style.height = `${element.scrollHeight + 2}px`; };
@@ -38,5 +36,5 @@ export function TaskCreationEditableText({ label, value, displayValue, onChange,
     if (parent) observer.observe(parent);
     return () => { observer.disconnect(); cancelAnimationFrame(frame); };
   }, [shown]);
-  return <Textarea title={focused && displayValue !== undefined && displayValue !== value ? ui("正在编辑原文") : undefined} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} aria-label={label} autoFocus={autoFocus} className={`creation-edit ${className}`} disabled={disabled} id={id} onChange={event => onChange(event.target.value)} placeholder={placeholder} ref={ref} rows={1} value={shown} />;
+  return <Textarea onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} aria-label={label} autoFocus={autoFocus} className={`creation-edit ${className}`} disabled={disabled} id={id} onChange={event => onChange(event.target.value)} placeholder={placeholder} ref={ref} rows={1} value={shown} />;
 }

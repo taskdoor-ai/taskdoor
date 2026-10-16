@@ -3,6 +3,7 @@ import { LanguageSwitcher } from "@/shared/ui/LanguageSwitcher";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { LogOut, Plus, Settings2, Sparkles } from "lucide-react";
 import { GlobalNotifications } from "@/features/notifications/components/GlobalNotifications";
+import type { DiscussionReadReceipt, NotificationRegionTarget } from "@/features/notifications/lib/notification-read-state";
 import { PersonAvatar } from "@/shared/ui/PersonAvatar";
 import type { PersonalCenterModule } from "@/app/workspace/components/PersonalInfoDialog";
 import { TeamSwitcher, type SwitchableTeam } from "@/app/workspace/components/TeamSwitcher";
@@ -19,7 +20,9 @@ type WorkspaceTopbarProps = {
   onTeamChange: (teamId: string) => void;
   onSignOut?: () => void;
   showDemoNotifications?: boolean;
-  onOpenNotificationTask?: (taskId: string) => void;
+  onOpenNotificationTask?: (taskId: string, target?: NotificationRegionTarget) => void;
+  discussionReadReceipt?: DiscussionReadReceipt;
+  onDiscussionReadHandled?: (sequence: number) => void;
   teams: SwitchableTeam[];
   theme: "light" | "dark";
   toggleTheme: () => void;
@@ -27,7 +30,7 @@ type WorkspaceTopbarProps = {
   userProfile: { name: string };
 };
 
-export function WorkspaceTopbar({ activeTeamId, onConnectAi, onCreateTask, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile }: WorkspaceTopbarProps) {
+export function WorkspaceTopbar({ activeTeamId, onConnectAi, onCreateTask, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionReadReceipt, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile }: WorkspaceTopbarProps) {
   const { t, locale } = useI18n();
   return <header aria-label={t('workspace.toolbar')} className="workspace-topbar">
     <div className="workspace-topbar-inner">
@@ -44,7 +47,7 @@ export function WorkspaceTopbar({ activeTeamId, onConnectAi, onCreateTask, onOpe
           </Button>
         </div>
         <div className="workspace-topbar-utility-actions">
-          <GlobalNotifications teamId={activeTeamId} userId={userId} key={activeTeamId} onOpenTask={onOpenNotificationTask} placement="topbar" showDemoNotifications={showDemoNotifications && activeTeamId === "creator-commerce"} />
+          <GlobalNotifications teamId={activeTeamId} userId={userId} key={`${activeTeamId}:${userId}`} discussionReadReceipt={discussionReadReceipt} onDiscussionReadHandled={onDiscussionReadHandled} onOpenTask={onOpenNotificationTask} placement="topbar" showDemoNotifications={showDemoNotifications && activeTeamId === "creator-commerce"} />
           <DropdownMenu>
             <DropdownMenuTrigger aria-label={t('account.open')} className="workspace-account-trigger" id="workspace-account-trigger" title={`${mockPersonName(locale, userProfile.name, userProfile.name)} · ${t('account.menu')}`}>
               <PersonAvatar name={userProfile.name} personId={userId} profilePreviewFocusable={false} showProfilePreview={false} size="sm" />

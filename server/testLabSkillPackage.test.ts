@@ -10,17 +10,18 @@ import {seedLab} from './test-lab/seeds.ts';
 const id='agentdoor-task-planner';
 test('生产创建包可独立安装，分析包保留完整依赖，可逐文件校验',()=>{
  for(const skill of labSkills){const pack=loadSkill(skill.id);const files=validatePackage(pack.snapshot,skill.id);
-  if(skill.id===id){
-   assert.ok(files.every(f=>f.path.startsWith(`skills/${id}/`)));
+  if(skill.id===id||skill.id==='taskdoor-decompose-task'){
+   assert.ok(files.every(f=>f.path.startsWith(`skills/${skill.id}/`)));
    const manifest=JSON.parse(files.find(f=>f.path.endsWith('/production-runtime.json'))!.content);
-   assert.deepEqual(new Set(files.map(f=>f.path)),new Set([...manifest.files,`skills/${id}/references/production-runtime.json`]));
+   assert.deepEqual(new Set(files.map(f=>f.path)),new Set([...manifest.files,`skills/${skill.id}/references/production-runtime.json`]));
    for(const file of files.filter(f=>f.path.endsWith('.md')))for(const match of file.content.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)){
     if(/^[a-z]+:/.test(match[1]))continue;
     const path=new URL(match[1],`file:///${file.path}`).pathname.slice(1);
     assert.ok(files.some(f=>f.path===path),`不可独立读取的引用：${path}`);
    }
   }else{
-   assert.ok(files.some(f=>f.path===`skills/${skill.id}/examples/decision-pairs.md`));assert.ok(files.some(f=>f.path==='skills/shared/current-prd-contract.md'));
+   const reference=skill.id==='agentdoor-member-matcher'?'references/output-contract.md':'examples/decision-pairs.md';
+   assert.ok(files.some(f=>f.path===`skills/${skill.id}/${reference}`));assert.ok(files.some(f=>f.path==='skills/shared/current-prd-contract.md'));
   }
   assert.equal(new Set(files.map(f=>f.path)).size,files.length);assert.equal(hash(pack.snapshot),pack.hash);
  }
@@ -42,8 +43,8 @@ test('新版本冻结全部文件和来源，修改子文件不改变旧版本�
  assert.throws(()=>store.addSkillVersion(state.revision,{skillId:'agentdoor-task-diagnostician',label:'bad',notes:'',snapshot:'legacy',baseVersionId:first.id}),/不属于/);
 });
 
-test('Skill 库只有创建与分析，分析包含问题核对而不加载独立诊断入口',()=>{
- assert.deepEqual(labSkills.map(s=>s.title),['创建任务','任务分析']);
+test('Skill 库保留已启用能力并独立注册子任务建议，分析不加载独立诊断入口',()=>{
+ assert.deepEqual(labSkills.map(skill=>skill.id).sort(),['agentdoor-responsibility-advisor','agentdoor-member-matcher','agentdoor-task-planner','taskdoor-decompose-task','agentdoor-task-status-analyzer'].sort());
  const pack=loadSkill('agentdoor-task-status-analyzer').snapshot;
  assert.ok(pack.includes('/references/problem-analysis.md'));
  assert.ok(!pack.includes('--- FILE: skills/agentdoor-task-diagnostician/SKILL.md'));

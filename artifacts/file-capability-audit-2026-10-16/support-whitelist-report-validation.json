@@ -1,0 +1,42 @@
+{
+  "changeId": "PRD-0232",
+  "status": "passed",
+  "scope": "报告及PRD静态治理核验，不是产品测试重跑",
+  "groups": 8,
+  "extensions": 16,
+  "editableGroups": 5,
+  "targetedProductTestsRecorded": 54,
+  "reportTableRows": 8,
+  "reportImages": 2,
+  "localLinks": "passed",
+  "manifestAndModuleIndexJson": "valid",
+  "changeIdUnique": true,
+  "versionsPreserved": true,
+  "parallelChangesPreserved": [
+    "PRD-0231",
+    "PRD-0230"
+  ],
+  "embedded081JpegMatchesSource": true,
+  "screenshots": [
+    {
+      "figureId": "FIG-FILES-081",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "84a9c3793bb0ebe621013887097d28a4bb4ccc68451762a7a06fa09685148993"
+    },
+    {
+      "figureId": "FIG-FILES-082",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "e45bcca51d6eb3bea3a0e332cb7a24300dd7b6c413bb346a41e7b2bf035e2df2"
+    }
+  ],
+  "fullTestsRun": false,
+  "doubleReviewRun": false,
+  "prdBuild": {
+    "status": "passed",
+    "modules": 25
+  }
+}

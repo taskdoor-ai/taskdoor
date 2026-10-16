@@ -6,6 +6,7 @@ import { effortEstimateSchema } from "@/shared/model/task-effort";
 import { reconcileCreationEffort } from "@/features/tasks/lib/task-creation-effort";
 import { defaultCreationParticipantIds } from "@/features/tasks/lib/task-creation-participants";
 import { creationHierarchyError, getCreationDescendantIds } from "@/features/tasks/lib/task-creation-hierarchy";
+import { isValidTimeZone, LEGACY_TEAM_TIME_ZONE } from "@/shared/lib/team-time-zone";
 
 export type CreationTask = Omit<TaskDraft, "parentSubtaskIndex"> & { clientId: string; parentClientId?: string; completionCriteria: string[]; executionTips: string[]; dependsOnClientIds: string[] };
 export type CreationForm = {
@@ -104,7 +105,8 @@ export function createCreationForm(request: string, context: ScenarioContext, sc
   return withCreationParticipantDefaults(form, context.currentUserId);
 }
 
-export function validateCreationTask(task: CreationTask, members: Array<{ id: string }>, label = "任务"): string | null {
+export function validateCreationTask(task: CreationTask, members: Array<{ id: string }>, label = "任务", timeZone?: string): string | null {
+  if (!isValidTimeZone(timeZone ?? LEGACY_TEAM_TIME_ZONE)) return "团队时区无效，无法确定创建日期。输入已保留。";
   if (!task.title.trim()) return `请补充${label}名称。`;
   if (!task.completionCriteria.some(c => c.trim())) return `请补充${label}的完成标准。`;
   const emptyCriterion = task.completionCriteria.findIndex(criterion => !criterion.trim());
@@ -117,11 +119,11 @@ export function validateCreationTask(task: CreationTask, members: Array<{ id: st
     const date = new Date(`${value}T12:00:00Z`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== value) return `${label}的日期无效。`;
   }
-  const scheduleError = taskScheduleError(task.endDate, taskCreationDay(), task.startDate);
+  const scheduleError = taskScheduleError(task.endDate, taskCreationDay(new Date(), timeZone), task.startDate, timeZone);
   return scheduleError ? `${label}：${scheduleError}` : null;
 }
 
-export function validateCreationForm(form: CreationForm, members: Array<{ id: string }>): string | null {
+export function validateCreationForm(form: CreationForm, members: Array<{ id: string }>, timeZone?: string): string | null {
   const hierarchyError = creationHierarchyError(form);
   if (hierarchyError) return hierarchyError;
   if (form.decision === "pending") return "请先确认与已有任务的关系。";
@@ -129,7 +131,7 @@ export function validateCreationForm(form: CreationForm, members: Array<{ id: st
   if (!goal?.trim()) return "请补充任务目标。";
   if (form.decision === "attach" && form.subtasks.length) return "关联已有主任务时仅创建当前子任务，请先调整拆分。";
   for (const [index, task] of [form.mainTask, ...form.subtasks].entries()) {
-    const error = validateCreationTask(task, members, index === 0 ? "任务" : `子任务 ${index}`);
+    const error = validateCreationTask(task, members, index === 0 ? "任务" : `子任务 ${index}`, timeZone);
     if (error) return error;
   }
   return null;

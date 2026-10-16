@@ -1,6 +1,7 @@
 import { mockPersonName } from '@/ai/mock/i18n/mockContent';
 import catalog from '@/shared/i18n/progress-copy.json';
 import type { Locale } from '@/shared/i18n/core';
+import { formatLegacyDateLabel } from '@/shared/lib/date-time';
 
 const entries = Object.values(catalog);
 const exact = new Map(entries.map(entry => [entry.zh, entry.en]));
@@ -31,5 +32,5 @@ export function progressText(locale: Locale, value: string, depth = 0, localize:
     return entry.en.replace(/\{(\d+)\}/g, (_, key: string) => args[key] ?? '');
   }
   const amount = value.match(/^([+−\-\d.,]+) 人天$/);
-  return amount ? `${amount[1]} person-days` : value;
+  return amount ? `${amount[1]} person-days` : formatLegacyDateLabel(value, locale);
 }

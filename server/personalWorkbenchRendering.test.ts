@@ -105,7 +105,7 @@ test("我的工作左侧只展示任务图标和名称，并保留任务原有�
   const html = await render([{ ...owned, iconName: "chart", iconTone: "purple" }, { ...owned, id: "other", ownerId: "another", name: "其他人的独立任务" }], undefined, "2026-09-01T09:20:00+08:00");
   assert.match(html, />新的显示姓名，这是今天建议你优先推进的工作<\/h1>/);
   assert.match(html, /aria-label="新的显示姓名的今日建议"/);
-  assert.match(html, /class="personal-workbench-updated-at"[^>]*>更新于 Sep 1, 9:20 AM/);
+  assert.match(html, /class="personal-workbench-updated-at"[^>]*>更新于 9月1日 09:20/);
   assert.match(html, /核对发布结论/);
   assert.doesNotMatch(html, /任务待审核，尚未记录交付进展。/);
   assert.match(html, /class="task-icon sm" data-tone="purple"/);
@@ -152,7 +152,7 @@ test("今日建议提供 TaskDoor 重新分析按钮及加载失败状态", asyn
 
   const failed = await render([owned], undefined, "2026-09-01T09:20:00+08:00", { analysisError: "重新分析失败，当前结果未更新，请重试。" });
   assert.match(failed, /role="alert"[^>]*>重新分析失败，当前结果未更新，请重试。/);
-  assert.match(failed, /更新于 Sep 1, 9:20 AM/);
+  assert.match(failed, /更新于 9月1日 09:20/);
 
   const handler = appSource.match(/const reanalyzePersonalWorkbench = async \(\) => \{[\s\S]*?\n  \};/)?.[0] ?? "";
   assert.ok(handler);

@@ -27,15 +27,16 @@ test('Qwen 避开产生数组内容损坏的严格解码，预览仍返回 JSON 
   return Response.json({choices:[{finish_reason:'stop',message:{content:'{"ownerMemberId":"real-id"}'}}]});
  });
 });
-test('运行 Schema 绑定当前成员 ID 和 requestId，保留递归树、有效空成员目录，不修改 Skill Schema',()=>{
+test('运行 Schema 绑定当前成员 ID 和 requestId，保留单主任务边界、有效空成员目录，不修改 Skill Schema',()=>{
  const build=(preview as any).buildTaskPreviewResponseSchema;assert.equal(typeof build,'function');
  const original=loadSkill('agentdoor-task-planner').previewSchema;const before=structuredClone(original);
  const input={requestId:'current-request',userRequest:'生成任务',currentDate:'2026-10-09',timezone:'Asia/Shanghai',currentMemberId:'real-id',members:[{id:'real-id',name:'tiger huang',responsibilities:[]}]};
  const next=build(original,input);assert.deepEqual(original,before);assert.equal(next.properties.requestId.const,input.requestId);
  const ajv=new Ajv2020({strict:false});const owner=ajv.compile(next.$defs.task.properties.ownerMemberId);assert.equal(owner('real-id'),true);assert.equal(owner('tiger huang'),false);assert.equal(owner('made-up'),false);assert.equal(owner(null),true);
  const participant=ajv.compile(next.$defs.task.properties.participants.items.properties.memberId);assert.equal(participant('real-id'),true);assert.equal(participant('tiger huang'),false);
+ assert.equal(next.properties.tasks.maxItems,1);assert.equal(next.$defs.task.properties.children.maxItems,0);
  assert.equal(next.$defs.task.properties.children.items.$ref,'#/$defs/task');assert.ok(ajv.compile(next));
- const empty=build(original,{...input,members:[]});assert.ok(ajv.compile(empty));assert.equal(empty.$defs.task.properties.participants.maxItems,0);assert.deepEqual(empty.$defs.task.properties.ownerMemberId,{type:'null'});
+ const empty=build(original,{...input,members:[]});assert.ok(ajv.compile(empty));assert.equal(empty.$defs.task.properties.participants.maxItems,0);assert.deepEqual(empty.$defs.task.properties.ownerMemberId,{type:'null'});assert.equal(empty.properties.tasks.maxItems,1);assert.equal(empty.$defs.task.properties.children.maxItems,0);
 });
 test('未点名的客服参考分工允许负责人或参与者实现，用户输入及旧运行快照不变',()=>{
  const store=createLabStore(join(mkdtempSync(join(tmpdir(),'lab-role-contract-')),'state.json'),seedLab());

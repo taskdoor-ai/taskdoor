@@ -1,0 +1,105 @@
+[
+  {
+    "id": "pptx",
+    "filename": "serum-launch-briefing.pptx",
+    "name": "秋季精华首发协同汇报.pptx",
+    "section": "delivery",
+    "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "sizeBytes": 1970379,
+    "sha256": "39ec50f3e0a2f4d16e7db189d2fc108cfb541b889b9cf2e1d37badf0cf0db690"
+  },
+  {
+    "id": "txt",
+    "filename": "serum-launch-handover.txt",
+    "name": "秋季精华首发交接说明.txt",
+    "section": "delivery",
+    "mimeType": "text/plain",
+    "sizeBytes": 4177,
+    "sha256": "bab00949be0f46b0ac22385d984ab883d3cc865ebea24b230522973616cfb92d",
+    "text": "秋季精华首发交接说明\n====================\n\n观测快照：2026-09-14（北京时间）\n文件生成：2026-10-16\n项目负责人：周岚\n数据性质：所有业务数据均为 TaskDoor 本地 Mock 合成演示，不代表真实业务实绩、审批结论或功效证明。\n\n一、先从哪里看\n\n在“完成秋季抗老精华首发闭环”任务的“文件”页签中打开附件。\n先读本说明，再看协作流程图；需要继续整理数据时，使用 JSON 或 XML。\nICS 是可选的本地日历文件。导入前可先预览其中的历史演示里程碑。\n\n二、接手时需要知道的快照\n\n本次观测汇总 8 个末级任务，总工作量 4,500 分钟，已完成量 3,297 分钟，\n剩余 1,203 分钟。完成度为 73.3%（3,297 ÷ 4,500，保留一位小数）。\n父级任务不重复累计工作量。这个完成量不代替人工验收或任务完成确认。\n\n任务创建日：2026-09-08。\nAI 预测完成日：2026-09-21，依据截至 2026-09-14 的快照。\n计划截止日：2026-09-30。\n生成日已经晚于上述日期，本文件仍保留历史观测，不宣称这些事项现已完成。\n\n三、资源口径\n\n商品：30 ml 精华，计划券后到手价 299 元/支。\n首发渠道活动窗口：2026-09-10 至 2026-09-18。\n任务计划截止包含后续复盘，和渠道活动窗口分别记录。\n\n库存计划 12,000 件：自播 5,000 件，达人直播 4,500 件，短视频 2,500 件。\n预算计划 300,000 元：冷启 60,000 元，放量 180,000 元，追投 60,000 元。\n上述库存是预留额度，上述预算是计划额度，不作为实际销售或实际消耗。\n核心达人共 8 名，其中 6 名已确认，2 名仍待回签；未闭环事项继续保留。\n\n四、这组文件分别怎么用\n\n1. 秋季精华首发交接说明.txt\n   供接手者快速了解当前范围、日期与责任；任何常用文本编辑器都能打开。\n\n2. 秋季精华首发任务快照.json\n   保存结构化观测、工作量、预算、库存、责任人及缺失的实际指标。\n   未提供的实际 GMV、投放消耗与 ROAS 使用 null，避免混同为零。\n\n3. 秋季精华首发渠道配置.xml\n   保存三渠道库存、三阶段预算及发布检查规则，便于查看配置结构。\n   模式为 simulation，不包含账号、密钥、执行脚本或外部回调。\n\n4. 秋季精华首发协作流程.svg\n   可缩放矢量图，展示“交付 → 审核 → 发布 → 复盘”及审核退回路径。\n   流程是协作约定，不表示每一环节都已验收完成。\n\n5. 秋季精华首发里程碑.ics\n   包含创建、观测、AI 预测完成、计划截止四个历史演示里程碑。\n   全部为全天、透明事件；AI 预测与计划截止标为暂定。\n   日历默认时区为 Asia/Shanghai。文件没有参与人、组织者或提醒。\n   本次仅生成文件，没有向日历服务写入日程，也没有发送邀请。\n\n五、按责任继续收口\n\n周岚：核对回签、审核结论及上线条件；完成事项须有验收证据。\n梁川：复核到手价、三渠道库存额度与超卖保护。\n许宁：依据阶段预算准备投放计划，追加额度须有明确依据。\n韩序：回填同窗口真实订单与平台消耗，注明退款观察截止日及归因窗口。\n内容与直播交接：林洁提供版本受控的素材，高远仅使用已审核版本，苏禾审核宣称。\n\n不要从附件数量、讨论条数或文件格式推导进度。\n没有实际数据时保留“未提供”，不要把计划、预测或库存货值写成已实现业绩。\n\n六、与原有资料一起使用\n\nHTML 作战总览用于通读首发节奏与责任。\nXLSX 预算工作簿用于继续编辑分配、公式及风险门禁。\nCSV 渠道明细用于按日期和渠道做计划分析。\nPDF 执行手册用于固定版式阅读与交接。\nWord 内容简报用于修改脚本、镜头及直播执行细节。\nPNG 主视觉用于查看虚构商品的视觉方案。\n\n各文件的观测范围和整理日期可能不同，引用前先看文件内部标注。\n本组快照仅表达 2026-09-14 的观测，不覆盖其他文件的历史记录。\n"
+  },
+  {
+    "id": "json",
+    "filename": "serum-launch-snapshot.json",
+    "name": "秋季精华首发任务快照.json",
+    "section": "evidence",
+    "mimeType": "application/json",
+    "sizeBytes": 3876,
+    "sha256": "ea05c37b3db36ec7958e93c72ceb7257daa20e7c86cdbdf48c9a2dd12b760a0c",
+    "text": "{\n  \"schema\": \"taskdoor.mock.task-snapshot.v1\",\n  \"metadata\": {\n    \"dataClass\": \"synthetic-local-mock\",\n    \"observedOn\": \"2026-09-14\",\n    \"generatedOn\": \"2026-10-16\",\n    \"timeZone\": \"Asia/Shanghai\",\n    \"notice\": \"所有业务数据均为 TaskDoor 本地 Mock 合成演示，不代表真实业务实绩、审批结论或功效证明。\",\n    \"observationNote\": \"生成日仅表示本文件整理日期，不更新或替代观测日的进度。\"\n  },\n  \"task\": {\n    \"id\": \"ccx-serum-launch\",\n    \"name\": \"完成秋季抗老精华首发闭环\",\n    \"owner\": \"周岚\",\n    \"createdOn\": \"2026-09-08\",\n    \"plannedFinishOn\": \"2026-09-30\",\n    \"forecastFinishOn\": \"2026-09-21\",\n    \"forecastAsOf\": \"2026-09-14\",\n    \"forecastIsActual\": false\n  },\n  \"progress\": {\n    \"basis\": \"当前范围内末级任务的结构化完成量汇总；不重复累计父级任务\",\n    \"leafTaskCount\": 8,\n    \"totalEffortMinutes\": 4500,\n    \"completedEffortMinutes\": 3297,\n    \"remainingEffortMinutes\": 1203,\n    \"progressRatio\": 0.7326666666666667,\n    \"displayPercent\": 73.3,\n    \"unit\": \"min\",\n    \"calculation\": \"3297 / 4500 × 100，四舍五入到一位小数\",\n    \"completionConfirmation\": \"not-provided\",\n    \"leafLevelDetails\": null,\n    \"leafLevelDetailsNote\": \"本导出只有汇总观测，不均摊或虚构单个末级任务的完成量。\"\n  },\n  \"productPlan\": {\n    \"specificationMl\": 30,\n    \"plannedPriceCny\": 299,\n    \"launchWindow\": {\n      \"startOn\": \"2026-09-10\",\n      \"endOn\": \"2026-09-18\",\n      \"timeZone\": \"Asia/Shanghai\"\n    },\n    \"dateScopeNote\": \"首发窗口描述渠道活动期；计划截止描述整个首发闭环任务，包含后续复盘。\"\n  },\n  \"resources\": {\n    \"currency\": \"CNY\",\n    \"totalBudgetCny\": 300000,\n    \"budgetStages\": [\n      {\n        \"id\": \"cold-start\",\n        \"name\": \"冷启\",\n        \"budgetCny\": 60000\n      },\n      {\n        \"id\": \"scale-up\",\n        \"name\": \"放量\",\n        \"budgetCny\": 180000\n      },\n      {\n        \"id\": \"follow-up\",\n        \"name\": \"追投\",\n        \"budgetCny\": 60000\n      }\n    ],\n    \"totalInventoryUnits\": 12000,\n    \"channels\": [\n      {\n        \"id\": \"self-live\",\n        \"name\": \"自播\",\n        \"reservedUnits\": 5000\n      },\n      {\n        \"id\": \"creator-live\",\n        \"name\": \"达人直播\",\n        \"reservedUnits\": 4500\n      },\n      {\n        \"id\": \"short-video\",\n        \"name\": \"短视频\",\n        \"reservedUnits\": 2500\n      }\n    ],\n    \"inventoryBasis\": \"渠道预留库存，不代表实际销售件数\",\n    \"budgetBasis\": \"计划额度，不代表实际投放消耗\"\n  },\n  \"collaboration\": {\n    \"projectOwner\": \"周岚\",\n    \"advertisingOwner\": \"许宁\",\n    \"commerceOwner\": \"梁川\",\n    \"attributionOwner\": \"韩序\",\n    \"creatorAgreements\": {\n      \"coreCreators\": 8,\n      \"confirmedCreators\": 6,\n      \"pendingSignatures\": 2,\n      \"closureStatus\": \"open\",\n      \"note\": \"确认合作与回签闭环分别记录。\"\n    }\n  },\n  \"unavailableActuals\": {\n    \"paidGmvCny\": null,\n    \"netGmvCny\": null,\n    \"actualAdvertisingSpendCny\": null,\n    \"paidRoas\": null,\n    \"reason\": \"本地快照未提供实际订单、退款及平台实扣投放账单，不补为零或计划值。\"\n  },\n  \"handoffActions\": [\n    {\n      \"owner\": \"周岚\",\n      \"action\": \"核对剩余回签、审核与上线条件，按验收证据更新状态\",\n      \"status\": \"pending-verification\"\n    },\n    {\n      \"owner\": \"梁川\",\n      \"action\": \"复核到手价、三渠道预留量和库存保护\",\n      \"status\": \"pending-verification\"\n    },\n    {\n      \"owner\": \"许宁\",\n      \"action\": \"按冷启、放量、追投额度准备投放计划，保留追加审批依据\",\n      \"status\": \"planning\"\n    },\n    {\n      \"owner\": \"韩序\",\n      \"action\": \"首发后回填同窗口实际订单与消耗，注明退款观察截止日\",\n      \"status\": \"actual-data-unavailable\"\n    }\n  ]\n}\n"
+  },
+  {
+    "id": "xml",
+    "filename": "serum-launch-channels.xml",
+    "name": "秋季精华首发渠道配置.xml",
+    "section": "requirements",
+    "mimeType": "application/xml",
+    "sizeBytes": 3254,
+    "sha256": "dce47faec40097fc909ea4fe909236ff7095197903237abc066f524a78f56ccb",
+    "text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<launchConfiguration xmlns=\"urn:taskdoor:mock:launch-configuration:v1\" version=\"1.0\" taskId=\"ccx-serum-launch\">\n  <metadata>\n    <title>秋季精华首发渠道配置</title>\n    <dataClass>synthetic-local-mock</dataClass>\n    <observedOn>2026-09-14</observedOn>\n    <generatedOn>2026-10-16</generatedOn>\n    <timeZone>Asia/Shanghai</timeZone>\n    <notice>所有业务数据均为 TaskDoor 本地 Mock 合成演示，不代表真实业务实绩、审批结论或功效证明。</notice>\n  </metadata>\n  <execution mode=\"simulation\" allowExternalCalls=\"false\" applyToProduction=\"false\"/>\n  <project owner=\"周岚\" advertisingOwner=\"许宁\" commerceOwner=\"梁川\" attributionOwner=\"韩序\"/>\n  <product sku=\"MOCK-SERUM-30ML\" specificationMl=\"30\">\n    <plannedPrice currency=\"CNY\" basis=\"single-unit-after-promotion\">299</plannedPrice>\n    <launchWindow startOn=\"2026-09-10\" endOn=\"2026-09-18\" inclusive=\"true\"/>\n    <taskSchedule createdOn=\"2026-09-08\" forecastFinishOn=\"2026-09-21\" plannedFinishOn=\"2026-09-30\"/>\n    <dateScopeNote>渠道活动窗口与包含复盘的任务截止分别记录。预测依据为观测日快照，不是实际完成日。</dateScopeNote>\n  </product>\n  <inventory totalUnits=\"12000\" basis=\"reserved-not-sold\" unit=\"piece\">\n    <channel id=\"self-live\" name=\"自播\" reservedUnits=\"5000\" commerceOwner=\"梁川\"/>\n    <channel id=\"creator-live\" name=\"达人直播\" reservedUnits=\"4500\" commerceOwner=\"梁川\"/>\n    <channel id=\"short-video\" name=\"短视频\" reservedUnits=\"2500\" commerceOwner=\"梁川\"/>\n    <allocationRule>三渠道预留量合计必须等于总库存。调整渠道额度时保留修改人与依据。</allocationRule>\n  </inventory>\n  <budget totalCny=\"300000\" currency=\"CNY\" basis=\"plan-not-actual-spend\">\n    <stage id=\"cold-start\" name=\"冷启\" limitCny=\"60000\"/>\n    <stage id=\"scale-up\" name=\"放量\" limitCny=\"180000\"/>\n    <stage id=\"follow-up\" name=\"追投\" limitCny=\"60000\"/>\n    <allocationRule>阶段预算合计必须等于预算总额。预算追加须由周岚确认受控版本。</allocationRule>\n  </budget>\n  <creatorAgreements coreCreators=\"8\" confirmedCreators=\"6\" pendingSignatures=\"2\" closureStatus=\"open\">\n    <rule>未取得有效回签的合作不计入已闭环。确认意向与合同回签分别记录。</rule>\n  </creatorAgreements>\n  <releaseChecks defaultState=\"pending-verification\">\n    <check id=\"approved-content\" owner=\"苏禾\" required=\"true\">仅使用通过审核的宣称与授权素材版本。</check>\n    <check id=\"price-stock\" owner=\"梁川\" required=\"true\">商品到手价与渠道库存配置完成核对。</check>\n    <check id=\"budget-approval\" owner=\"许宁\" required=\"true\">当前阶段额度与受控预算版本一致。</check>\n    <check id=\"attribution-test\" owner=\"韩序\" required=\"true\">渠道链接、订单回传与去重测试有记录。</check>\n    <check id=\"owner-decision\" owner=\"周岚\" required=\"true\">未闭环事项有明确处理结论后再确认发布范围。</check>\n  </releaseChecks>\n  <actualData availability=\"not-provided\">\n    <note>不将缺失的订单、退款或平台消耗写为零；计划库存与预算不得充当实际业绩。</note>\n  </actualData>\n</launchConfiguration>\n"
+  },
+  {
+    "id": "svg",
+    "filename": "serum-launch-workflow.svg",
+    "name": "秋季精华首发协作流程.svg",
+    "section": "delivery",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 7011,
+    "sha256": "be699999925390b51a081f911e5852f87a1f5ec02faddaa0fa658b213ee261dc"
+  },
+  {
+    "id": "ics",
+    "filename": "serum-launch-milestones.ics",
+    "name": "秋季精华首发里程碑.ics",
+    "section": "evidence",
+    "mimeType": "text/calendar",
+    "sizeBytes": 3150,
+    "sha256": "9e53099a41cbac1ecf66ed82d6e1ec169b6e763b9e18e61789fb79429c12c9c8",
+    "text": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//TaskDoor Local Mock//Serum Launch Milestones 1.0//ZH-CN\r\nCALSCALE:GREGORIAN\r\nX-WR-CALNAME:秋季精华首发里程碑（本地 Mock 演示）\r\nX-WR-TIMEZONE:Asia/Shanghai\r\nX-WR-CALDESC:观测日2026-09-14，生成日2026-10-16。所有业务数据\r\n 均为本地Mock合成演示；四个事件均为全天透明事件。DTST\r\n AMP使用UTC演示导出批次标记，不表示业务发生时刻。\r\nBEGIN:VTIMEZONE\r\nTZID:Asia/Shanghai\r\nX-LIC-LOCATION:Asia/Shanghai\r\nBEGIN:STANDARD\r\nDTSTART:19700101T000000\r\nTZOFFSETFROM:+0800\r\nTZOFFSETTO:+0800\r\nTZNAME:CST\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nUID:serum-launch-created-20261016@taskdoor.local.invalid\r\nDTSTAMP:20261016T000000Z\r\nDTSTART;VALUE=DATE:20260908\r\nDTEND;VALUE=DATE:20260909\r\nSUMMARY:[Mock] 秋季精华任务创建\r\nDESCRIPTION:历史演示创建日。任务负责人周岚。此事件只记\r\n 录日期，不补造创建时刻。 所有业务数据均为 TaskDoor 本\r\n 地 Mock 合成演示，不代表真实业务实绩、审批结论或功\r\n 效证明。 本次仅生成文件，没有发送邀请或写入日历服\r\n 务。\r\nSTATUS:CONFIRMED\r\nTRANSP:TRANSPARENT\r\nCATEGORIES:TaskDoor 本地 Mock 合成演示\r\nSEQUENCE:0\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:serum-launch-observed-20261016@taskdoor.local.invalid\r\nDTSTAMP:20261016T000000Z\r\nDTSTART;VALUE=DATE:20260914\r\nDTEND;VALUE=DATE:20260915\r\nSUMMARY:[Mock] 秋季精华进展观测\r\nDESCRIPTION:历史演示观测日。8个末级任务合计4500分钟，完\r\n 成3297分钟，73.3%。不是当前实时进展。 所有业务数据均\r\n 为 TaskDoor 本地 Mock 合成演示，不代表真实业务实绩、审\r\n 批结论或功效证明。 本次仅生成文件，没有发送邀请或\r\n 写入日历服务。\r\nSTATUS:CONFIRMED\r\nTRANSP:TRANSPARENT\r\nCATEGORIES:TaskDoor 本地 Mock 合成演示\r\nSEQUENCE:0\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:serum-launch-forecast-20261016@taskdoor.local.invalid\r\nDTSTAMP:20261016T000000Z\r\nDTSTART;VALUE=DATE:20260921\r\nDTEND;VALUE=DATE:20260922\r\nSUMMARY:[Mock] 秋季精华 AI 预测完成\r\nDESCRIPTION:截至2026-09-14快照的历史预测，不是实际完成记\r\n 录。任务计划截止为2026-09-30。 所有业务数据均为 TaskDoor\r\n  本地 Mock 合成演示，不代表真实业务实绩、审批结论或\r\n 功效证明。 本次仅生成文件，没有发送邀请或写入日历\r\n 服务。\r\nSTATUS:TENTATIVE\r\nTRANSP:TRANSPARENT\r\nCATEGORIES:TaskDoor 本地 Mock 合成演示\r\nSEQUENCE:0\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:serum-launch-planned-20261016@taskdoor.local.invalid\r\nDTSTAMP:20261016T000000Z\r\nDTSTART;VALUE=DATE:20260930\r\nDTEND;VALUE=DATE:20261001\r\nSUMMARY:[Mock] 秋季精华任务计划截止\r\nDESCRIPTION:历史计划截止。包含首发后数据与复盘闭环。首\r\n 发渠道活动窗口为2026-09-10至2026-09-18。 所有业务数据均\r\n 为 TaskDoor 本地 Mock 合成演示，不代表真实业务实绩、审\r\n 批结论或功效证明。 本次仅生成文件，没有发送邀请或\r\n 写入日历服务。\r\nSTATUS:TENTATIVE\r\nTRANSP:TRANSPARENT\r\nCATEGORIES:TaskDoor 本地 Mock 合成演示\r\nSEQUENCE:0\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
+  },
+  {
+    "id": "jpg",
+    "filename": "serum-launch-hero.jpg",
+    "name": "秋季精华首发主视觉.jpg",
+    "section": "delivery",
+    "mimeType": "image/jpeg",
+    "sizeBytes": 414753,
+    "sha256": "422eb34e8643cf7e2325cfc04ce76ed347a161e52743b6e9785f75e718af3272"
+  },
+  {
+    "id": "webp",
+    "filename": "serum-launch-hero.webp",
+    "name": "秋季精华首发主视觉.webp",
+    "section": "delivery",
+    "mimeType": "image/webp",
+    "sizeBytes": 195166,
+    "sha256": "211cda9219da0e265bebc8c6ddd972588f067585609a9f5485ee6747b5f6bafb"
+  },
+  {
+    "id": "mp3",
+    "filename": "serum-launch-brief.mp3",
+    "name": "秋季精华首发任务简报.mp3",
+    "section": "delivery",
+    "mimeType": "audio/mpeg",
+    "sizeBytes": 1002974,
+    "sha256": "a0600dfc09f6718b4d0397820c2c53974897a9f7f3d7cfd0fd21fa24a9aebc46"
+  },
+  {
+    "id": "mp4",
+    "filename": "serum-launch-overview.mp4",
+    "name": "秋季精华首发交付简报.mp4",
+    "section": "delivery",
+    "mimeType": "video/mp4",
+    "sizeBytes": 1445098,
+    "sha256": "6302112844bd61675c80c6d6c784b1de0f505df8aa58ac5ffa9912a24a5c477e"
+  },
+  {
+    "id": "zip",
+    "filename": "serum-launch-delivery.zip",
+    "name": "秋季精华首发完整资料包.zip",
+    "section": "delivery",
+    "mimeType": "application/zip",
+    "sizeBytes": 10564106,
+    "sha256": "dc368c702b4ff1601c04b7b86989c1de4c33309e09c5a8a8c2b19a725456296d"
+  }
+]

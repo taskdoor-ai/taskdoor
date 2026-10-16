@@ -7,8 +7,10 @@ import {validateTaskPreview} from './test-lab/task-preview.ts';
 import {readFileSync} from 'node:fs';
 const schema=loadSkill('agentdoor-task-planner').previewSchema;
 const doc=readFileSync(new URL('../skills/agentdoor-task-planner/references/task-preview.md',import.meta.url),'utf8');
-const example=JSON.parse(doc.match(/```json\n([\s\S]*?)\n```/)![1]);
-const input={requestId:example.requestId,userRequest:'生成文案和海报',currentDate:'2026-10-09',timezone:'Asia/Shanghai',currentMemberId:'member-lead',members:['member-lead','member-writer','member-designer'].map(id=>({id,name:id,responsibilities:[]}))};
+const example=[...doc.matchAll(/```json\n([\s\S]*?)\n```/g)].map(match=>JSON.parse(match[1])).find(plan=>plan.status==='ready'&&plan.tasks?.length===1&&plan.tasks[0].children?.length===0);
+const historical=JSON.parse(readFileSync(new URL('./test-lab/fixtures/task-preview-v17.json',import.meta.url),'utf8'));
+const input={requestId:example.requestId,userRequest:'生成当前新品发布资料包主任务，文案和海报作为完成要求',currentDate:'2026-10-09',timezone:'Asia/Shanghai',currentMemberId:'member-lead',members:['member-lead','member-writer','member-designer'].map(id=>({id,name:id,responsibilities:[]}))};
+const globalInput=input;
 const options={apiKey:'test',endpoint:'https://example.com/responses',model:'deepseek/deepseek-v4.1-flash',maxOutputTokens:16000,timeoutMs:1000};
 const response=(output:unknown)=>({rawOutput:JSON.stringify(output),usage:{inputTokens:10,outputTokens:20,totalTokens:30}});
 const generate=(...args:any[])=>(recovery as any).generateTaskPreview(...args);
@@ -50,7 +52,8 @@ test('完成标准不能仅含标点、序列化任务或泄露的 JSON 分隔�
  const legitimate=structuredClone(example);legitimate.tasks[0].acceptanceCriteria=['交付 UTF-8 JSON 文件，示例 {"name":"产品"}，包含 350ml 容量'];
  assert.deepEqual(validateTaskPreview(schema,legitimate,input),[]);
 });
-test('相同分支重复交付需修正，不误伤不同渠道或不同验收内容',()=>{
+test('历史 v17 树的相同分支重复交付需修正，不误伤不同渠道或验收内容',()=>{
+ const schema=historical.schema,example=historical.example,input={...globalInput,requestId:example.requestId};
  const bad=structuredClone(example);const leaf=bad.tasks[0].children[0];
  bad.tasks[0].children.push({...structuredClone(leaf),clientId:'duplicate-copy'});
  assert.match(validateTaskPreview(schema,bad,input).join('\n'),/重复交付/);
@@ -68,13 +71,13 @@ test('数组损坏会触发一次结构修正，原始内容保留且不会伪�
  });
  assert.equal(calls,2);assert.equal(r.attempts[0].rawOutput,JSON.stringify(bad));assert.equal(r.attempts[1].kind,'structure_repair');assert.deepEqual(r.structureErrors,[]);
 });
-test('连接恢复后修正重复 ID，最多三次并保留每次输出和已报告用量',async()=>{
- let calls=0;const bad=structuredClone(example);bad.tasks[0].children[0].clientId=bad.tasks[0].clientId;
+test('连接恢复后修正非法成员，最多三次并保留每次输出和已报告用量',async()=>{
+ let calls=0;const bad=structuredClone(example);bad.tasks[0].ownerMemberId='not-in-directory';
  const r=await generate(options,'规则',input,schema,new AbortController().signal,async(o:any,_i:string,supplied:any)=>{
   calls++;if(calls===1)throw new model.ModelConnectionError('ECONNRESET');
   assert.equal(o.freshConnection,true);
   if(calls===2)return response(bad);
-  assert.match(supplied.validationErrors.join(),/临时任务 ID 重复/);return response(example);
+  assert.match(supplied.validationErrors.join(),/负责人不在当前成员目录/);return response(example);
  });
  assert.equal(calls,3);assert.deepEqual(r.structureErrors,[]);assert.equal(r.usage.totalTokens,60);
  assert.deepEqual(r.attempts.map((a:any)=>a.kind),['initial','connection_retry','structure_repair']);

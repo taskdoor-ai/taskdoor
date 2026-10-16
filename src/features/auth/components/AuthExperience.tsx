@@ -183,7 +183,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     {errorField === "password" && errorBlock}
   </div>;
 
-  if (state.step === "workspace") return <WorkspaceLoading teamName={activeTeam?.name} error={localizeOnboardingMessage(locale, localError)} onRetry={() => void enterWorkspace()} />;
+  if (state.step === "workspace") return <WorkspaceLoading teamName={activeTeam?.name} error={localizeOnboardingMessage(locale, localError)} notice={localizeOnboardingMessage(locale, state.notice)} onRetry={() => void enterWorkspace()} />;
 
   return <div className="onboarding-page onboarding-auth" ref={surface}>
     <div className="onboarding-language"><LanguageSwitcher /></div>

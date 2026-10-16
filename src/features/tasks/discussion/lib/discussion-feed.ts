@@ -18,7 +18,7 @@ export function buildDiscussionFeed(messages: readonly CollaborationMessage[]): 
   const records: CollaborationMessage[] = [];
   const seenIds = new Set<string>();
   for (const message of messages) {
-    if (message.fileThreadId || (message.type !== "member-post" && message.type !== "member-reply") || seenIds.has(message.id)) continue;
+    if ((message.type !== "member-post" && message.type !== "member-reply") || seenIds.has(message.id)) continue;
     seenIds.add(message.id);
     if (message.deletedAt) continue;
     records.push(message);

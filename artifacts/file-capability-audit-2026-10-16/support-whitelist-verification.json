@@ -1,0 +1,194 @@
+{
+  "date": "2026-10-16",
+  "changeId": "PRD-0232",
+  "workspace": "/Users/yxzuji/Documents/ChatGPT/agentdoor2",
+  "status": "implemented_scoped_verification_passed",
+  "policy": {
+    "extensions": [
+      "pdf",
+      "ppt",
+      "pptx",
+      "png",
+      "jpg",
+      "jpeg",
+      "gif",
+      "webp",
+      "svg",
+      "md",
+      "txt",
+      "log",
+      "html",
+      "htm",
+      "json",
+      "xml"
+    ],
+    "categories": 8,
+    "editableCategories": 5,
+    "editableExtensions": [
+      "md",
+      "txt",
+      "log",
+      "html",
+      "htm",
+      "json",
+      "xml"
+    ],
+    "maxFiles": 10,
+    "maxSizeMiB": 20,
+    "scope": [
+      "task_file_selection",
+      "task_file_drop",
+      "discussion_selection",
+      "discussion_drop",
+      "discussion_paste_upload",
+      "prepareDiscussionUpload_guard"
+    ],
+    "mixedUnsupportedBatch": "reject_before_creating_nodes_or_draft_attachments"
+  },
+  "checks": [
+    {
+      "name": "UI interaction regression",
+      "status": "passed",
+      "tests": 6,
+      "command": "npx tsx --test server/taskFileDiscussionInteraction.test.ts",
+      "log": "support-whitelist-ui-tests.log"
+    },
+    {
+      "name": "capability policy and source upload regression",
+      "status": "passed",
+      "tests": 25,
+      "reportedBy": "office_preview",
+      "command": "npx tsx --test server/taskFileCapabilities.test.ts server/taskFileStructuredUpload.test.ts server/taskFileTree.test.ts server/taskPresentationFiles.test.ts server/taskFileUploadPlacement.test.ts",
+      "evidence": "本轮子代理工具输出，未另存日志；未为补日志重复运行。"
+    },
+    {
+      "name": "fixture migration and original asset regression",
+      "status": "passed",
+      "tests": 16,
+      "reportedBy": "frontend_preview",
+      "command": "node --import tsx --test server/taskFilePreviewFixtureMigration.test.ts server/serumLaunchFiles.test.ts server/serumLaunchCommonFiles.test.ts",
+      "evidence": "本轮子代理工具输出，未另存日志；未为补日志重复运行。"
+    },
+    {
+      "name": "team fixtures related subset",
+      "status": "passed",
+      "tests": 7,
+      "reportedBy": "frontend_preview",
+      "command": "node --import tsx --test --test-name-pattern='高密度|协作树|证据内容|历史原始夹具|校验器|未知团队' server/teamTaskDetailFixtures.test.ts",
+      "evidence": "本轮子代理工具输出，未另存日志；未为补日志重复运行。"
+    },
+    {
+      "name": "app TypeScript",
+      "status": "passed",
+      "command": "npx tsc -p tsconfig.app.json --pretty false",
+      "log": "support-whitelist-typecheck.log"
+    },
+    {
+      "name": "structure gate",
+      "status": "passed_no_new_violations",
+      "command": "npm run structure:check",
+      "log": "support-whitelist-structure.log"
+    },
+    {
+      "name": "frontend production bundle",
+      "status": "passed_with_existing_chunk_and_config_warnings",
+      "command": "npx vite build --logLevel warn",
+      "log": "support-whitelist-build.log"
+    }
+  ],
+  "browser": {
+    "origin": "http://127.0.0.1:5173/",
+    "taskId": "ccx-serum-launch",
+    "taskFileCount": 13,
+    "visibleFiles": [
+      "秋季精华首发交接说明.txt",
+      "秋季精华首发协同汇报.pptx",
+      "秋季精华首发协作流程.svg",
+      "秋季精华首发执行总览.html",
+      "秋季精华首发主视觉.jpg",
+      "秋季精华首发主视觉.png",
+      "秋季精华首发主视觉.webp",
+      "完成秋季抗老精华首发闭环交付确认.md",
+      "秋季精华首发渠道配置.xml",
+      "秋季精华首发执行手册.pdf",
+      "完成秋季抗老精华首发闭环业务规则.pdf",
+      "历史判断记录.md",
+      "秋季精华首发任务快照.json"
+    ],
+    "pdf": {
+      "file": "秋季精华首发执行手册.pdf",
+      "originalPages": 5,
+      "readableOriginalLayout": true,
+      "editButtonCount": 0,
+      "annotationsButtonCount": 1,
+      "fullscreenButtonPresent": true,
+      "thumbnailsInitiallyCollapsed": true
+    },
+    "json": {
+      "file": "秋季精华首发任务快照.json",
+      "sourceDocumentVisible": true,
+      "editButtonCount": 1
+    },
+    "uploadDialogSupportedFormatsHint": true,
+    "fileInputAcceptMatchesPolicy": true,
+    "mixedBatch": {
+      "files": [
+        "preview-check.json",
+        "serum-launch-creative-brief.docx"
+      ],
+      "result": "unsupported_docx_alert_whole_batch_rejected",
+      "countAfter": 13,
+      "noNewRows": true
+    },
+    "screenshots": [
+      "current-supported-files.jpg",
+      "current-upload-rejected.jpg"
+    ],
+    "limitations": [
+      "本轮未重新逐一上传全部16种扩展名；JSON/XML完整上传、标注、编辑和下载保留上轮验证。",
+      "开发服务器期间出现过重新加载与空白页；换用新验收tab后完成上述页面检查，不宣称全程无错。"
+    ]
+  },
+  "migration": {
+    "baselineFiles": 21,
+    "visibleFiles": 13,
+    "retiredUnmodifiedBuiltinFiles": 8,
+    "retiredTypes": [
+      "DOCX",
+      "DOCX",
+      "XLSX",
+      "CSV",
+      "ICS",
+      "MP3",
+      "MP4",
+      "ZIP"
+    ],
+    "preserved": [
+      "user_uploads",
+      "user_edits",
+      "renames",
+      "moves",
+      "version_changes",
+      "saved_edits",
+      "drafts",
+      "original_source_nodes_and_bytes",
+      "stored_historical_references"
+    ],
+    "freshTemplates": "only supported visible nodes; old synthetic activity text may remain without a current corresponding file node"
+  },
+  "limits": [
+    "PPT/PPTX依赖本地LibreOffice转换；转换后的文字层决定能否选字标注。",
+    "PDF扫描页没有OCR；PDF/PPT/图片没有原件内容编辑。",
+    "既有历史PDF文本摘要保留只读查看，不计原件版式预览。",
+    "团队夹具的既有诊断冲突断言与当前明确返回空数组的逻辑不一致，该不相关失败保留，未修改诊断逻辑。",
+    "项目级npm run build前轮已因现有server测试类型错误阻断；本轮只验证应用类型检查、结构门及前端打包，不声明全量构建或全量测试通过。"
+  ],
+  "notPerformed": [
+    "full_test_suite",
+    "double_review",
+    "remote_issue",
+    "remote_pr",
+    "production_repository_changes",
+    "physical_asset_or_blob_deletion"
+  ]
+}

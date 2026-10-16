@@ -1,10 +1,11 @@
+import { motion, useReducedMotion } from "motion/react";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { activityChangeValue } from "@/features/tasks/i18n/activity-display";
-import { ArrowRight, ArrowUp, Check, ChevronDown, GitBranch, Layers3, LoaderCircle, Sparkles, Target, X } from "lucide-react";
+import { ArrowRight, ArrowUp, Check, ChevronDown, GitBranch, Layers3, LoaderCircle, PanelRightClose, Sparkles, Target, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useId, useReducer, useRef, useState } from "react";
-import { buildTaskAiAdjustment, buildTaskAiCreationAdjustment, getTaskAiContextSignature } from "@/ai/mock/lib/taskAiAdjustment";
+import { buildTaskAiAdjustment, buildTaskAiCreationAdjustment, buildTaskAiCreationAnnotationAdjustment, getTaskAiContextSignature } from "@/ai/task-adjustment";
 import { playMockAiSteps } from "@/ai/mock/lib/taskAiFeedback";
 import { getTaskAiAdjustmentSteps } from "@/ai/mock/lib/taskAiAdjustmentProgress";
 import { emptyTaskAiAdjustmentDraft, getTaskAiAdjustmentDraftKey, taskAiAdjustmentDraftReducer, type TaskAiAdjustmentDraft } from "@/features/tasks/lib/task-ai-adjustment-drafts";
@@ -13,6 +14,8 @@ import type { CreationProcess } from "@/features/tasks/lib/task-creation-progres
 import { AnimatedAgentChatInput } from "@/features/tasks/components/AnimatedAgentChatInput";
 import { TaskAiWorking } from "@/features/tasks/components/TaskAiWorking";
 import { TaskCreationHistory } from "@/features/tasks/components/TaskCreationHistory";
+import { TaskCreationAnnotationBucket } from "@/features/tasks/components/TaskCreationAnnotationBucket";
+import { describeCreationAnnotations, snapshotCreationAnnotations, isCreationAnnotationStale, type TaskCreationAnnotation } from "@/features/tasks/lib/task-creation-annotations";
 import { Button } from "@/shared/ui/button";
 import { Popover, PopoverContent } from "@/shared/ui/popover";
 import { Textarea } from "@/shared/ui/input";
@@ -45,9 +48,9 @@ const waitForPreviewPaint = (signal: AbortSignal): Promise<boolean> => new Promi
   });
 });
 
-export function TaskAiAdjustButton({ label = "AI 帮你改", onClick, disabled = false }: { label?: string; onClick: (anchor: HTMLElement) => void; disabled?: boolean }) {
+export function TaskAiAdjustButton({ label = "AI 帮你改", onClick, disabled = false, count = 0 }: { label?: string; onClick: (anchor: HTMLElement) => void; disabled?: boolean; count?: number }) {
   const d = useDetailCopy();
-  return <Button aria-haspopup="dialog" aria-label={label === "AI 帮你改" ? d("adjustWithAi") : label} className="task-ai-adjust-trigger" disabled={disabled} onClick={event => onClick(event.currentTarget)} size="sm" type="button" variant="ai"><Sparkles aria-hidden="true" size={14} />{d('adjustWithAi')}</Button>;
+  return <Button aria-haspopup="dialog" aria-label={label === "AI 帮你改" ? d("adjustWithAi") : label} className="task-ai-adjust-trigger" disabled={disabled} onClick={event => onClick(event.currentTarget)} size="sm" type="button" variant="ai"><Sparkles aria-hidden="true" size={14} />{d('adjustWithAi')}{count > 0 && <span className="creation-annotation-count">{count}</span>}</Button>;
 }
 
 // Keep this session in the page, so temporarily unmounting a popover preserves its drafts.
@@ -67,12 +70,19 @@ type Props = {
   onOpenChange: (open: boolean) => void;
   anchor: HTMLElement | null;
   draftSession: ReturnType<typeof useTaskAiAdjustmentDrafts>;
+  annotations?: TaskCreationAnnotation[];
+  onAnnotationEdit?: (annotation: TaskCreationAnnotation, anchor: HTMLElement) => void;
+  onAnnotationRemove?: (id: string) => void;
+  onAnnotationsApplied?: () => void;
 };
 
-export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compactCreation = false, history, onScopeChange, onProgressChange, onApply, open, onOpenChange, anchor, draftSession }: Props) {
+export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compactCreation = false, history, onScopeChange, onProgressChange, onApply, open, onOpenChange, anchor, draftSession, annotations = [], onAnnotationEdit, onAnnotationRemove, onAnnotationsApplied }: Props) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
+  const reducedMotion = useReducedMotion();
   const compact = compactCreation && context.mode === "draft";
+  const hasAnnotations = compact && annotations.length > 0;
+  const staleAnnotations = hasAnnotations && annotations.some(annotation => isCreationAnnotationStale(context, annotation));
   const { locale } = useI18n();
   const scope: TaskAiAdjustmentScope = compact ? { kind: "task" } : requestedScope;
   const [drafts, dispatch] = draftSession;
@@ -140,6 +150,7 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
   ) => {
     const progress = progressByDraft.current.get(key) ?? (key === draftKey && proposal && progressId ? {
       id: progressId, taskId: context.task.id, instruction: proposal.instruction,
+      annotations: proposal.annotations ? snapshotCreationAnnotations(proposal.annotations) : undefined, supplementalInstruction: proposal.supplementalInstruction,
       steps: getTaskAiAdjustmentSteps(proposal.instruction, proposal), activeStep: 1, status: "completed" as const,
       responseSummary: proposal.summary, changes: proposal.changes.map(change => ({ ...change })), applicationStatus: "pending" as const,
     } : undefined);
@@ -218,14 +229,15 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
     onScopeChange(option.scope);
   };
   const preview = async () => {
-    if (applying.current || previewController.current || !open || !instruction.trim()) return;
+    if (applying.current || previewController.current || !open || (!instruction.trim() && !hasAnnotations) || staleAnnotations) return;
     const controller = new AbortController();
     previewController.current = controller;
     const run = ++previewRun.current;
     const isCurrent = () => run === previewRun.current && !controller.signal.aborted
       && latestPreview.current.open && latestPreview.current.draftKey === draftKey;
     let progress: TaskAiAdjustmentProgress = {
-      id: `${composerId}:${run}`, taskId: context.task.id, instruction,
+      id: `${composerId}:${run}`, taskId: context.task.id, instruction: hasAnnotations ? describeCreationAnnotations(annotations, instruction) : instruction,
+      annotations: hasAnnotations ? snapshotCreationAnnotations(annotations) : undefined, supplementalInstruction: hasAnnotations ? instruction.trim() : undefined,
       steps: getTaskAiAdjustmentSteps(instruction), activeStep: 0, status: "running",
     };
     updateDraft({ error: "", notice: "", proposal: null, progressId: undefined });
@@ -234,7 +246,8 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
     try {
       if (!isCurrent()) return;
       // Calculate against this request's context once. The short delay only demonstrates Mock feedback.
-      const result = compact ? buildTaskAiCreationAdjustment(context, instruction) : buildTaskAiAdjustment(context, scope, instruction);
+      const result = hasAnnotations ? buildTaskAiCreationAnnotationAdjustment(context, annotations, instruction)
+        : compact ? buildTaskAiCreationAdjustment(context, instruction) : buildTaskAiAdjustment(context, scope, instruction);
       if ("error" in result) {
         const painted = await waitForPreviewPaint(controller.signal);
         if (!painted || !isCurrent()) return;
@@ -299,6 +312,7 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
     applying.current = true; setSaving(true); setError("");
     try {
       await onApply(proposal);
+      if (proposal.annotations) onAnnotationsApplied?.();
       finishProgress("completed", context.mode === "draft" ? compact ? "调整已应用到草稿，可以继续提出要求。" : "调整已应用到草稿。" : "修改已保存。", draftKey, false, { applicationStatus: "applied" });
       if (compact) {
         updateDraft({ instruction: "", proposal: null, progressId: undefined, error: "", notice: "已应用到草稿，可以继续告诉我你想怎样调整。" });
@@ -319,6 +333,7 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
     invalidatePreview();
     restoreFocus.current = true;
     onOpenChange(false);
+    if (compact && typeof window !== "undefined") window.requestAnimationFrame(() => { const target = finalFocusTarget(); if (target) target.focus({ preventScroll: true }); });
   };
   const cancel = () => {
     if (applying.current) return;
@@ -357,6 +372,11 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
     const rect = anchor.getBoundingClientRect();
     return rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth ? anchor : false;
   };
+  const continueAnnotating = () => {
+    const target = finalFocusTarget();
+    if (target && window.getComputedStyle(target).visibility !== "hidden") target.focus({ preventScroll: true });
+    else inputRef.current?.focus({ preventScroll: true });
+  };
 
   const composer = <form aria-busy={saving || isPreviewing} id={composerId} onSubmit={event => { event.preventDefault(); void preview(); }}>
     {compact ?
@@ -366,14 +386,16 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
         ariaLabel={ui("继续告诉 TaskDoor 怎样调整任务方案")}
         autoFocus={false}
         clearOnSend={false}
-        disabled={saving}
+        contextContent={hasAnnotations ? <TaskCreationAnnotationBucket annotations={annotations} context={context} disabled={saving || isPreviewing} onEdit={onAnnotationEdit} onRemove={onAnnotationRemove} onContinue={continueAnnotating} reviewing={Boolean(proposal) || isPreviewing} /> : undefined}
+        disabled={saving || staleAnnotations}
+        hasContext={hasAnnotations}
         hint={ui("Enter 发送 · Shift + Enter 换行")}
         inputRef={inputRef}
         onChange={changeInstruction}
         onSend={() => { void preview(); }}
         onStop={stopPreview}
-        placeholder={ui("继续告诉 TaskDoor 你想怎样调整…")}
-        sendLabel={ui("发送修改要求")}
+        placeholder={hasAnnotations ? locale === "en" ? "Add an optional request, or send the annotations together…" : "还可补充要求，也可以直接发送这些标注…" : ui("继续告诉 TaskDoor 你想怎样调整…")}
+        sendLabel={hasAnnotations ? locale === "en" ? `Send ${annotations.length} annotations` : `发送 ${annotations.length} 条标注` : ui("发送修改要求")}
         status={isPreviewing ? "analyzing" : "ready"}
         value={instruction}
       /> : <>
@@ -384,23 +406,13 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
   </form>;
   const proposalActionButtons = <>
     <Button disabled={saving} onClick={cancel} type="button" variant="ghost">{d('cancel')}</Button>
-    {proposal && !stale ? <Button className="task-ai-adjust-primary" disabled={saving} onClick={() => void apply()} type="button">{saving ? <LoaderCircle aria-hidden="true" className="task-ai-adjust-spinner" size={15} /> : <Check aria-hidden="true" size={15} />}{saving ? ui("正在保存") : context.mode === "draft" ? ui("应用到草稿") : d('saveChanges')}</Button> : <Button className="task-ai-adjust-primary" disabled={saving || !instruction.trim()} form={composerId} type="submit">{stale ? ui("重新预览") : ui("预览调整")}<ArrowRight aria-hidden="true" size={15} /></Button>}
+    {proposal && !stale ? <Button className="task-ai-adjust-primary" disabled={saving || staleAnnotations} onClick={() => void apply()} type="button">{saving ? <LoaderCircle aria-hidden="true" className="task-ai-adjust-spinner" size={15} /> : <Check aria-hidden="true" size={15} />}{saving ? ui("正在保存") : context.mode === "draft" ? ui("应用到草稿") : d('saveChanges')}</Button> : <Button className="task-ai-adjust-primary" disabled={saving || staleAnnotations || (!instruction.trim() && !hasAnnotations)} form={composerId} type="submit">{stale ? ui("重新预览") : ui("预览调整")}<ArrowRight aria-hidden="true" size={15} /></Button>}
   </>;
 
-  return <Popover modal={false} onOpenChange={(value, details) => {
-    if (applying.current) { details.cancel(); return; }
-    if (!value && compact && (details.reason === "outside-press" || details.reason === "focus-out")) {
-      details.cancel();
-      return;
-    }
-    if (!value) invalidatePreview();
-    restoreFocus.current = details.reason !== "outside-press" && details.reason !== "focus-out";
-    onOpenChange(value);
-  }} open={open}>
-    <PopoverContent align="end" anchor={anchor} aria-label={ui("AI 帮你改：{0}", {0: target?.title || ui("未命名任务")})} className={`task-ai-adjust-popover${compact ? " is-compact" : ""}`} collisionPadding={8} finalFocus={finalFocusTarget} initialFocus={inputRef} onKeyDownCapture={handleTabBoundary} positionerClassName={compact ? "task-ai-adjust-fixed-positioner" : undefined} positionMethod="fixed" sideOffset={10}>
+  const content = <>
       {compact ? <header className="task-ai-adjust-conversation-header">
         <div><span><Sparkles aria-hidden="true" size={15} /><strong>{ui("本次创建对话")}</strong></span><small>{history?.length ?? 0}{ui("轮")}</small></div>
-        <Button aria-label={ui("收起 AI 帮你改")} className="task-ai-adjust-close" disabled={saving} onClick={dismiss} size="icon-sm" title={ui("收起，保留输入")} type="button" variant="ghost"><X aria-hidden="true" size={16} /></Button>
+        <Button aria-label={ui("收起 AI 帮你改")} className="task-ai-adjust-close" disabled={saving} onClick={dismiss} size="icon-sm" title={ui("收起，保留输入")} type="button" variant="ghost"><PanelRightClose aria-hidden="true" size={18} /></Button>
       </header> : <header className="task-ai-adjust-header">
         {onScopeChange ? <div className="task-ai-adjust-scope-picker">
           <label htmlFor={`${composerId}-scope`}><ScopeIcon aria-hidden="true" size={14} />{ui("调整范围")}</label>
@@ -446,6 +458,23 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
         {proposalActionButtons}
       </footer>}
       {!compact && !isPreviewing && !proposal && instruction && <div className="task-ai-adjust-draft-actions"><span>{ui("收起后可继续编辑")}</span><Button disabled={saving} onClick={cancel} size="sm" type="button" variant="ghost">{d('cancel')}</Button></div>}
+  </>;
+  if (compact) return open ? <motion.aside
+    animate={{ x: 0, opacity: 1 }}
+    aria-label={ui("本次创建对话")}
+    className="task-ai-adjust-popover is-compact task-ai-adjust-sidebar"
+    initial={reducedMotion ? false : { x: "100%", opacity: 0 }}
+    onKeyDown={event => { if (event.key === "Escape" && !event.defaultPrevented && !applying.current) { event.preventDefault(); dismiss(); } }}
+    transition={{ duration: reducedMotion ? 0 : .2, ease: "easeOut" }}
+  >{content}</motion.aside> : null;
+  return <Popover modal={false} onOpenChange={(value, details) => {
+    if (applying.current) { details.cancel(); return; }
+    if (!value) invalidatePreview();
+    restoreFocus.current = details.reason !== "outside-press" && details.reason !== "focus-out";
+    onOpenChange(value);
+  }} open={open}>
+    <PopoverContent align="end" anchor={anchor} aria-label={ui("AI 帮你改：{0}", {0: target?.title || ui("未命名任务")})} className="task-ai-adjust-popover" collisionPadding={8} finalFocus={finalFocusTarget} initialFocus={inputRef} onKeyDownCapture={handleTabBoundary} positionMethod="fixed" sideOffset={10}>
+      {content}
     </PopoverContent>
   </Popover>;
 }

@@ -1,9 +1,10 @@
 import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { formatDisplayDate } from "@/shared/lib/date-time";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import React from "react";
 import type { TaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
 
-const shortDate=(date:string)=>formatDisplayDate(date) ?? "—";
+const shortDate=(date:string, locale: string)=>formatDisplayDate(date, { locale }) ?? "—";
 
 export function TaskBurnUpHeading() {
   const p = useProgressCopy();
@@ -37,9 +38,9 @@ type AxisEntry = { date: string; x: number; kind: "start" | "record" | "plan" | 
 type AxisLabel = { date: string; x: number; entries: AxisEntry[]; labelX: number; anchor: "middle"; left: number; right: number; row: number; captionRows: AxisEntry[][] };
 
 /** Keep every label on its real date x; crowded labels use separate rows. */
-export function layoutBurnUpDateAxis({ model, start, end, asOf, startX, endX, asOfX, dueX, finishX, historyStartOn, observationLabel = "当前", translate = (value: string) => value, fontSize = 11 }: {
+export function layoutBurnUpDateAxis({ model, start, end, asOf, startX, endX, asOfX, dueX, finishX, historyStartOn, observationLabel = "当前", locale = "zh-CN", translate = (value: string) => value, fontSize = 11 }: {
   model: TaskProgressDisplay; start: string; end: string; asOf: string; startX: number; endX: number; asOfX: number;
-  dueX: number | null; finishX: number | null; observationLabel?: string; translate?: (value: string) => string; fontSize?: number;
+  dueX: number | null; finishX: number | null; observationLabel?: string; locale?: string; translate?: (value: string) => string; fontSize?: number;
   historyStartOn?: string | null;
 }) {
   const entries: AxisEntry[] = [];
@@ -59,10 +60,10 @@ export function layoutBurnUpDateAxis({ model, start, end, asOf, startX, endX, as
   const textWidth = (text: string) => Array.from(text).reduce((width, char) => width + (/[^\x00-\x7F]/.test(char) ? fontSize : fontSize * .56), 0);
   const measured = groups.map(group => {
     const x = group.entries[0].x, titles = group.entries.filter(entry => entry.label);
-    const width = Math.max(textWidth(shortDate(group.date)), textWidth(titles.map(entry => entry.label).join("｜")));
+    const width = Math.max(textWidth(shortDate(group.date, locale)), textWidth(titles.map(entry => entry.label).join("｜")));
     const fits = width <= Math.max(fontSize * 8, (endX - startX) / 2);
     const captionRows = !fits && titles.length > 1 ? titles.map(entry => [entry]) : [titles];
-    return { ...group, x, captionRows, width: Math.max(textWidth(shortDate(group.date)), ...captionRows.map(row => textWidth(row.map(entry => entry.label).join("｜")))) };
+    return { ...group, x, captionRows, width: Math.max(textWidth(shortDate(group.date, locale)), ...captionRows.map(row => textWidth(row.map(entry => entry.label).join("｜")))) };
   }).sort((a, b) => a.date.localeCompare(b.date));
   const gap = 4;
   const milestones = measured.filter(group => group.entries.some(isMilestone));
@@ -94,6 +95,7 @@ export function layoutBurnUpDateAxis({ model, start, end, asOf, startX, endX, as
 }
 
 export function TaskBurnUpDateAxis({ layout, y }: { layout: ReturnType<typeof layoutBurnUpDateAxis>; y: number }) {
+  const { locale } = useI18n();
   const p = useProgressCopy();
   return <g aria-label={p("燃起图时间轴")} className="task-progress-chart-date-axis">
     {layout.labels.map(item => {
@@ -101,8 +103,8 @@ export function TaskBurnUpDateAxis({ layout, y }: { layout: ReturnType<typeof la
       const titles = item.entries.filter(entry => entry.label);
       const rowY = y + item.row * layout.rowHeight;
       return <g key={item.date} data-date={item.date} data-kind={kind}>
-        <title>{formatDisplayDate(item.date, { year: "always" }) ?? "—"}</title>
-        <text className="task-progress-chart-axis-date" x={item.labelX} y={rowY + layout.fontSize * 1.65} textAnchor={item.anchor} fontSize={layout.fontSize}>{shortDate(item.date)}</text>
+        <title>{formatDisplayDate(item.date, { locale, year: "always" }) ?? "—"}</title>
+        <text className="task-progress-chart-axis-date" x={item.labelX} y={rowY + layout.fontSize * 1.65} textAnchor={item.anchor} fontSize={layout.fontSize}>{shortDate(item.date, locale)}</text>
         {titles.length > 0 && item.captionRows.map((row, rowIndex) => <text key={rowIndex} className="task-progress-chart-axis-caption" x={item.labelX} y={rowY + layout.fontSize * (3 + rowIndex * 1.4)} textAnchor={item.anchor} fontSize={layout.fontSize}>
           {row.map((entry, index) => <React.Fragment key={entry.kind}>{index > 0 && <tspan className="task-progress-chart-axis-separator">｜</tspan>}<tspan data-kind={entry.kind}>{entry.label}</tspan></React.Fragment>)}
         </text>)}
@@ -113,6 +115,7 @@ export function TaskBurnUpDateAxis({ layout, y }: { layout: ReturnType<typeof la
 
 /** Without a chart, retain known dates in a compact fallback. */
 export function TaskBurnUpTiming({model, showStatus = model.deltaDays === null, showDates = true}:{model:TaskProgressDisplay; showStatus?:boolean; showDates?:boolean}) {
+  const { locale } = useI18n();
   const p = useProgressCopy();
   const entries=[
     {kind:"start",label:p("创建"),date:model.startOn},
@@ -133,7 +136,7 @@ export function TaskBurnUpTiming({model, showStatus = model.deltaDays === null, 
             {index>0 && <span className="task-progress-chart-date-separator" aria-hidden="true">｜</span>}
             <span className={item.kind === "forecast" ? "task-ai-prediction-label" : undefined} data-kind={item.kind}>{item.label}</span>
           </React.Fragment>)}</span>
-          <time className={kind === "forecast" ? "task-ai-prediction-label" : undefined} dateTime={date} title={formatDisplayDate(date, { year: "always" }) ?? undefined}>{shortDate(date)}</time>
+          <time className={kind === "forecast" ? "task-ai-prediction-label" : undefined} dateTime={date} title={formatDisplayDate(date, { locale, year: "always" }) ?? undefined}>{shortDate(date, locale)}</time>
         </div>;
       })}
     </div>}

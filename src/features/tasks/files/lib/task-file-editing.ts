@@ -13,6 +13,8 @@ export type TaskFileRevision = {
   baseVersion: number;
   version: number;
   changes: Array<{ location: string; before: string; after: string }>;
+  beforeContent?: TaskFileContent;
+  afterContent?: TaskFileContent;
 };
 
 export type TaskFileEditRecord = {
@@ -51,7 +53,7 @@ function parseContent(value: unknown): TaskFileContent {
 export function getTaskFileContent(file: TaskFileNode): TaskFileContent | null {
   if (file.kind !== "file") return null;
   const kind = getPreviewKind(file.name, file.mimeType);
-  if (kind === "image" || kind === "unknown") return null;
+  if (kind === "image" || kind === "presentation" || kind === "unknown") return null;
   if (kind === "pdf") return file.previewData?.kind === "pdf" ? parseContent(file.previewData) : null;
   if (kind === "table") return file.previewData?.kind === "table" ? parseContent(file.previewData) : null;
   if (file.blobId && file.content == null && !(file.previewData && "text" in file.previewData)) return null;
@@ -180,13 +182,14 @@ export function createTaskFileRevision(file: TaskFileNode, content: TaskFileCont
     fileId: file.id,
     content: next,
     version,
-    revisions: [{ id: globalThis.crypto.randomUUID(), author, createdAt, baseVersion, version, changes }],
+    revisions: [{ id: globalThis.crypto.randomUUID(), author, createdAt, baseVersion, version, changes, beforeContent: parseContent(before), afterContent: parseContent(next) }],
   };
 }
 
 function parseRecord(value: unknown): TaskFileEditRecord {
   if (!isObject(value) || typeof value.fileId !== "string" || !value.fileId.trim() || !isVersion(value.version)
     || !Array.isArray(value.revisions) || value.revisions.length === 0) throw new Error("文件编辑记录损坏：缺少文件或版本信息。");
+  const content = parseContent(value.content);
   const ids = new Set<string>();
   const versions = new Set<number>();
   const revisions = value.revisions.map((revision): TaskFileRevision => {
@@ -202,10 +205,21 @@ function parseRecord(value: unknown): TaskFileEditRecord {
         || typeof change.before !== "string" || typeof change.after !== "string") throw new Error("文件编辑记录损坏：修改位置或前后值无效。");
       return { location: change.location, before: change.before, after: change.after };
     });
-    return { id: revision.id, author: revision.author, createdAt: revision.createdAt, baseVersion: revision.baseVersion, version: revision.version, changes };
+    const hasBeforeContent = Object.hasOwn(revision, "beforeContent");
+    const hasAfterContent = Object.hasOwn(revision, "afterContent");
+    let snapshots: Pick<TaskFileRevision, "beforeContent" | "afterContent"> | undefined;
+    if (hasBeforeContent || hasAfterContent) {
+      if (!hasBeforeContent || !hasAfterContent) throw new Error("文件编辑记录损坏：历史快照不完整。");
+      const beforeContent = parseContent(revision.beforeContent);
+      const afterContent = parseContent(revision.afterContent);
+      if (beforeContent.kind !== afterContent.kind || afterContent.kind !== content.kind) throw new Error("文件编辑记录损坏：历史快照格式不一致。");
+      if (revision.version === value.version && JSON.stringify(afterContent) !== JSON.stringify(content)) throw new Error("文件编辑记录损坏：当前版本快照与保存正文不一致。");
+      snapshots = { beforeContent, afterContent };
+    }
+    return { id: revision.id, author: revision.author, createdAt: revision.createdAt, baseVersion: revision.baseVersion, version: revision.version, changes, ...snapshots };
   });
   if (!versions.has(value.version)) throw new Error("文件编辑记录损坏：当前版本缺少对应修改记录。");
-  return { fileId: value.fileId, content: parseContent(value.content), version: value.version, revisions };
+  return { fileId: value.fileId, content, version: value.version, revisions };
 }
 
 export function applyTaskFileEdit(file: TaskFileNode, record: TaskFileEditRecord): TaskFileNode {

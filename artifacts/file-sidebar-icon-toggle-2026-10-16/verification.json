@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-16",
+  "kind": "nonsemantic-visual",
+  "lastSemanticChange": "PRD-0233",
+  "newChangeId": false,
+  "status": "scoped-desktop-page-verification-passed",
+  "evidenceSource": "根代理本轮工具输出及真实页面记录整理；文档代理未重复运行产品检查",
+  "browser": {
+    "url": "http://127.0.0.1:5173/",
+    "type": "current-page",
+    "runtime": "current-workspace-dev-server",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "task": "完成秋季抗老精华首发闭环",
+    "fileCount": 13,
+    "file": "秋季精华首发执行手册.pdf",
+    "finalPage": 1,
+    "toggleCount": 1,
+    "toggleSize": {
+      "width": 30,
+      "height": 30
+    },
+    "visibleToggleText": "",
+    "footerCount": 0,
+    "location": "same preview-toolbar DOM position in both states",
+    "keyboard": "Enter collapse -> focus show; Enter expand -> focus hide",
+    "selectedFileUnchanged": true,
+    "expandedFoldersBeforeAfter": [
+      4,
+      4
+    ],
+    "treeScrollBeforeAfter": [
+      86,
+      86
+    ],
+    "widthBeforeAfter": [
+      248,
+      248
+    ],
+    "longTextScrollToggleTop": 182,
+    "sidebarContentPosition": "static",
+    "treeScrollRestored": 0,
+    "expandedScreenshotZoom": "78%",
+    "collapsedScreenshotZoom": "109% fit",
+    "content": "complete task and PDF visible, no error overlay",
+    "console": "保留刷新前11:44:06—11:44:18共5条HMR历史错误/警告；完整刷新恢复后最终检查无新增，不声明全轮无错"
+  },
+  "checks": [
+    {
+      "name": "existing fileSidebarState tests",
+      "tests": 3,
+      "status": "passed",
+      "reportedBy": "root"
+    },
+    {
+      "name": "app TypeScript",
+      "status": "passed",
+      "reportedBy": "root"
+    },
+    {
+      "name": "Vite frontend production build",
+      "status": "passed",
+      "reportedBy": "root"
+    },
+    {
+      "name": "four changed code files diff format check",
+      "status": "passed",
+      "reportedBy": "root"
+    }
+  ],
+  "screenshots": [
+    "../file-capability-audit-2026-10-16/current-file-list-expanded.jpg",
+    "../file-capability-audit-2026-10-16/current-file-list-collapsed.jpg"
+  ],
+  "limits": [
+    "不声明PDF页码或正文滚动位置保持；既有自适宽resize路径观察到3→2，本轮未修改阅读器。",
+    "未重新验证窄屏、触屏或整套预览/标注功能；前轮54项不算本轮新测试。",
+    "未运行全量测试、双重审查、远程操作或正式项目变更。"
+  ]
+}

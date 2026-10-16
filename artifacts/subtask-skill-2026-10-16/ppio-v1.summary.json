@@ -1,0 +1,516 @@
+{
+  "automaticVerdict": "passed",
+  "manualAcceptanceWritten": false,
+  "counts": {
+    "total": 6,
+    "structurePassed": 6,
+    "businessPassed": 6,
+    "businessFailed": 0,
+    "insufficient": 0,
+    "judgeFailed": 0
+  },
+  "generationTokens": {
+    "inputTokens": 102562,
+    "outputTokens": 6348,
+    "totalTokens": 108910
+  },
+  "rows": [
+    {
+      "id": "e1dcb45f-a3a8-4b7e-bd52-55778f016891",
+      "caseId": "case-subtask-v1-remaining-visual",
+      "name": "独立子任务 · 已有文案只补商城图",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "da2a8690-a61b-4333-ab76-b827cf05f860",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 3128,
+        "output_tokens": 529
+      },
+      "generationTokens": {
+        "inputTokens": 14581,
+        "outputTokens": 1164,
+        "totalTokens": 15745
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-remaining-visual-check-1\",\"stepId\":\"s1\",\"subject\":\"建议与实际写入边界\",\"criterion\":\"只返回本次独立 Skill 的 JSON 建议，不输出创建/分配/确认成功回执，不调用外部工具，也不修改父任务、已有子任务或正式职责。\",\"expected\":{\"schemaVersion\":\"taskdoor.subtask-suggestions.v1\",\"externalWrites\":false}}",
+          "choice": "met",
+          "note": "输出为纯JSON结构，schemaVersion正确，无外部工具调用回执或创建/分配成功消息，符合只读建议边界。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-remaining-visual-check-2\",\"stepId\":\"s1\",\"subject\":\"只生成当前下一层\",\"criterion\":\"parentTaskId 为输入当前任务；suggestions 是平铺数组，没有 children、孙任务、额外汇总父任务或依赖边；所有引用属于当前快照，成员引用使用团队成员 id 而非 mcpMemberId、姓名或账号。\",\"expected\":{\"flatSuggestions\":true,\"onlyInputSources\":true,\"onlyEffectiveMemberIds\":true}}",
+          "choice": "met",
+          "note": "parentTaskId匹配输入任务ID；suggestions为平铺数组，无children字段；成员引用使用有效memberId（jage, xu），未使用姓名或mcpMemberId。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-remaining-visual-check-3\",\"stepId\":\"s1\",\"subject\":\"真实目标与可核查标准\",\"criterion\":\"候选目标说明受益者能够理解、判断或继续做什么，不能只把标题改写为交付物；完成标准覆盖本项可证明的结果、质量与已给范围。父业务目标不复制为每项必达承诺，不编造销量、效率、满意度数字，不为像 OKR 而额外发明指标、用户测试、审核或材料。\",\"expected\":{\"goalIsPurpose\":true,\"criteriaAreObservable\":true,\"unprovidedBusinessMetrics\":false}}",
+          "choice": "met",
+          "note": "目标清晰表达帮助访客理解产品特点以支持选购；验收标准具体可核查（一张图、两项信息、不新增承诺）；未编造销量或满意度等未提供的业务指标。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-remaining-visual-check-4\",\"stepId\":\"s1\",\"subject\":\"日期与估算的依据\",\"criterion\":\"以2026-10-16及输入任务日期逐项判断。保留本项明确日期；有限清晰新增交付无日期时给有条件建议并在 warnings 对应任务、日期、假设和可改/可清空；关键外部等待无窗口时留空。不得直接把人工分钟换日历、宣称核实人员日历或机械复制父日期。估算只覆盖新增工作，不重复已有交付。\",\"expected\":{\"currentDate\":\"2026-10-16\",\"calendarClaimWithoutEvidence\":false,\"doNotChangeParentDueDate\":true}}",
+          "choice": "met",
+          "note": "建议日期2026-10-20在父任务截止2026-10-23之前且晚于当前日期；估算150分钟针对新增视觉工作，未重复文案工作；warnings中明确说明日期为假设且未核实日历。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-remaining-visual-check-5\",\"stepId\":\"s1\",\"subject\":\"只补真实缺口\",\"criterion\":\"仅建议一项商城主视觉；coveredByExisting 指向已完成文案子任务并说明覆盖。不得重做文案、把源文件/导出图拆成多个任务，或增加拍摄、投放、发布及素材审批。\",\"expected\":{\"suggestionCount\":1,\"coveredTaskId\":\"subtask-v1-remaining-visual-copy\",\"remainingDeliverable\":\"商城主视觉\"}}",
+          "choice": "met",
+          "note": "仅建议1项商城主视觉任务；coveredByExisting正确指向已完成的文案子任务subtask-v1-remaining-visual-copy；未拆分源文件或增加拍摄/投放等额外任务。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-remaining-visual-check-6\",\"stepId\":\"s1\",\"subject\":\"目标标准与责任承接\",\"criterion\":\"图片目标表达帮助访客理解容量和清洁特点以支持选购，标准检查一张商城图内两项产品信息和范围；普通画幅未给不构成必须补问。按正式视觉职责推荐负责人，职责不要求新增所有常规交付。\",\"expected\":{\"recommendedOwnerMemberId\":\"lin\",\"productFacts\":[\"350ml\",\"可拆洗杯盖\"],\"extraDeliverables\":false}}",
+          "choice": "met",
+          "note": "负责人推荐为jage，符合其视觉设计职责；目标包含350ml和可拆洗杯盖两个产品事实；未要求额外交付物如视频或多尺寸适配。",
+          "source": "model"
+        },
+        {
+          "id": "q6",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-remaining-visual-check-7\",\"stepId\":\"s1\",\"subject\":\"有限交付建议日期\",\"criterion\":\"本项未指定截止，应建议2026-10-16至2026-10-23内的有效日期；warnings 对应具体图片、日期、假设制作前可补商城画幅与制作核对窗口、人员实际空闲未核实及可修改/清空。日期不要求固定为某一天，不能只因父截止存在就无说明地复制。\",\"expected\":{\"suggestedDueDateRequired\":true,\"notBefore\":\"2026-10-16\",\"notAfter\":\"2026-10-23\",\"requiresWarning\":true}}",
+          "choice": "met",
+          "note": "建议日期2026-10-20落在2026-10-16至2026-10-23区间内；warnings中包含具体任务ID、日期、关于画幅补齐和人员空闲的假设及可修改提示。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "daa532f1-223d-4b4a-8e51-3309f8ed46b3",
+      "caseId": "case-subtask-v1-atomic-script",
+      "name": "独立子任务 · 单一脚本不按步骤机械拆分",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "da2a8690-a61b-4333-ab76-b827cf05f860",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2038,
+        "output_tokens": 189
+      },
+      "generationTokens": {
+        "inputTokens": 14289,
+        "outputTokens": 230,
+        "totalTokens": 14519
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-atomic-script-check-1\",\"stepId\":\"s1\",\"subject\":\"建议与实际写入边界\",\"criterion\":\"只返回本次独立 Skill 的 JSON 建议，不输出创建/分配/确认成功回执，不调用外部工具，也不修改父任务、已有子任务或正式职责。\",\"expected\":{\"schemaVersion\":\"taskdoor.subtask-suggestions.v1\",\"externalWrites\":false}}",
+          "choice": "met",
+          "note": "输出仅包含建议JSON，无外部工具调用或写入回执，未修改父任务或职责。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-atomic-script-check-2\",\"stepId\":\"s1\",\"subject\":\"只生成当前下一层\",\"criterion\":\"parentTaskId 为输入当前任务；suggestions 是平铺数组，没有 children、孙任务、额外汇总父任务或依赖边；所有引用属于当前快照，成员引用使用团队成员 id 而非 mcpMemberId、姓名或账号。\",\"expected\":{\"flatSuggestions\":true,\"onlyInputSources\":true,\"onlyEffectiveMemberIds\":true}}",
+          "choice": "met",
+          "note": "parentTaskId匹配输入当前任务ID；suggestions为空数组（平铺）；无children；未引用成员ID。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-atomic-script-check-3\",\"stepId\":\"s1\",\"subject\":\"真实目标与可核查标准\",\"criterion\":\"候选目标说明受益者能够理解、判断或继续做什么，不能只把标题改写为交付物；完成标准覆盖本项可证明的结果、质量与已给范围。父业务目标不复制为每项必达承诺，不编造销量、效率、满意度数字，不为像 OKR 而额外发明指标、用户测试、审核或材料。\",\"expected\":{\"goalIsPurpose\":true,\"criteriaAreObservable\":true,\"unprovidedBusinessMetrics\":false}}",
+          "choice": "met",
+          "note": "status为no_split_needed，无需评估目标与标准的具体内容；未编造业务指标。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-atomic-script-check-4\",\"stepId\":\"s1\",\"subject\":\"日期与估算的依据\",\"criterion\":\"以2026-10-16及输入任务日期逐项判断。保留本项明确日期；有限清晰新增交付无日期时给有条件建议并在 warnings 对应任务、日期、假设和可改/可清空；关键外部等待无窗口时留空。不得直接把人工分钟换日历、宣称核实人员日历或机械复制父日期。估算只覆盖新增工作，不重复已有交付。\",\"expected\":{\"currentDate\":\"2026-10-16\",\"calendarClaimWithoutEvidence\":false,\"doNotChangeParentDueDate\":true}}",
+          "choice": "met",
+          "note": "未进行日期估算或日历声明；尊重父任务无截止日期的现状；未机械复制日期。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-atomic-script-check-5\",\"stepId\":\"s1\",\"subject\":\"单一交付无需继续拆解\",\"criterion\":\"返回 no_split_needed、空 suggestions 和具体理由。不能为凑计划生成调研/起草/自检三项，也不能把父任务改名生成一个重复子任务；不改父目标、标准和日期。\",\"expected\":{\"status\":\"no_split_needed\",\"suggestions\":[],\"ordinaryStepsAreNotTasks\":true}}",
+          "choice": "met",
+          "note": "正确识别为单一交付，返回no_split_needed且suggestions为空；理由指出调研/起草/自检为执行步骤而非独立子任务，符合sources中范围说明。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "f96f3e1d-499f-46d3-82c8-0c7f60d5ca58",
+      "caseId": "case-subtask-v1-reply-and-version",
+      "name": "独立子任务 · 直接回复决定与有效文件版本",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "da2a8690-a61b-4333-ab76-b827cf05f860",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 3321,
+        "output_tokens": 524
+      },
+      "generationTokens": {
+        "inputTokens": 14913,
+        "outputTokens": 883,
+        "totalTokens": 15796
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-reply-and-version-check-1\",\"stepId\":\"s1\",\"subject\":\"建议与实际写入边界\",\"criterion\":\"只返回本次独立 Skill 的 JSON 建议，不输出创建/分配/确认成功回执，不调用外部工具，也不修改父任务、已有子任务或正式职责。\",\"expected\":{\"schemaVersion\":\"taskdoor.subtask-suggestions.v1\",\"externalWrites\":false}}",
+          "choice": "met",
+          "note": "输出为纯JSON建议，schemaVersion正确，无外部写入或工具调用回执。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-reply-and-version-check-2\",\"stepId\":\"s1\",\"subject\":\"只生成当前下一层\",\"criterion\":\"parentTaskId 为输入当前任务；suggestions 是平铺数组，没有 children、孙任务、额外汇总父任务或依赖边；所有引用属于当前快照，成员引用使用团队成员 id 而非 mcpMemberId、姓名或账号。\",\"expected\":{\"flatSuggestions\":true,\"onlyInputSources\":true,\"onlyEffectiveMemberIds\":true}}",
+          "choice": "met",
+          "note": "parentTaskId匹配当前任务，suggestions为平铺数组无children，成员引用使用有效id（jage）。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-reply-and-version-check-3\",\"stepId\":\"s1\",\"subject\":\"真实目标与可核查标准\",\"criterion\":\"候选目标说明受益者能够理解、判断或继续做什么，不能只把标题改写为交付物；完成标准覆盖本项可证明的结果、质量与已给范围。父业务目标不复制为每项必达承诺，不编造销量、效率、满意度数字，不为像 OKR 而额外发明指标、用户测试、审核或材料。\",\"expected\":{\"goalIsPurpose\":true,\"criteriaAreObservable\":true,\"unprovidedBusinessMetrics\":false}}",
+          "choice": "met",
+          "note": "目标清晰指向访客理解与选购，标准包含具体规格（1080x1080）及内容约束，未编造业务指标。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-reply-and-version-check-4\",\"stepId\":\"s1\",\"subject\":\"日期与估算的依据\",\"criterion\":\"以2026-10-16及输入任务日期逐项判断。保留本项明确日期；有限清晰新增交付无日期时给有条件建议并在 warnings 对应任务、日期、假设和可改/可清空；关键外部等待无窗口时留空。不得直接把人工分钟换日历、宣称核实人员日历或机械复制父日期。估算只覆盖新增工作，不重复已有交付。\",\"expected\":{\"currentDate\":\"2026-10-16\",\"calendarClaimWithoutEvidence\":false,\"doNotChangeParentDueDate\":true}}",
+          "choice": "met",
+          "note": "dueDate保留确认回复中的2026-10-21，未机械复制父任务日期，估算仅覆盖新增视觉工作。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-reply-and-version-check-5\",\"stepId\":\"s1\",\"subject\":\"保留回复语境与明确替代关系\",\"criterion\":\"读取直接原消息、已确认回复及v2正文；v2明确 supersedes v1，最终只补一项1080×1080商城图。不能把旧版20%折扣、门店海报、视频带入候选，不能按最新时间或讨论人数自行裁决。\",\"expected\":{\"suggestionCount\":1,\"currentFileId\":\"subtask-v1-reply-and-version-brief-v2\",\"supersededFileId\":\"subtask-v1-reply-and-version-brief-v1\",\"confirmedReplyId\":\"subtask-v1-reply-and-version-confirmed-reply\",\"excluded\":[\"20%折扣\",\"门店海报\",\"视频\"]}}",
+          "choice": "met",
+          "note": "suggestions数量为1，排除v1旧方案元素（折扣、海报、视频），正确引用v2及confirmed-reply作为依据。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-reply-and-version-check-6\",\"stepId\":\"s1\",\"subject\":\"局部目标标准与明确子截止\",\"criterion\":\"图片目标服务访客理解产品并选购，标准包含1080×1080及两项有效产品信息；dueDate 精确保留确认回复的2026-10-21，不复制父2026-10-23，也不把明确日期包装为AI预测。来源引用中至少有当前任务和真正支撑范围/日期的已提供材料，不编引用。\",\"expected\":{\"dueDate\":\"2026-10-21\",\"recommendedOwnerMemberId\":\"lin\",\"sourceEvidenceIds\":[\"subtask-v1-reply-and-version-brief-v2\",\"subtask-v1-reply-and-version-confirmed-reply\"],\"coveredTaskId\":\"subtask-v1-reply-and-version-copy\"}}",
+          "choice": "met",
+          "note": "dueDate精确为2026-10-21，owner为lin职责对应的视觉负责人jage（注：此处需核对q5期望中的recommendedOwnerMemberId为lin还是jage。根据输入members，lin负责文案，jage负责视觉。q5期望写的是lin，但实际任务是视觉，应由jage负责。然而q5的criterion描述是“图片目标...”，期望字段recommendedOwnerMemberId:\"lin\"可能存在测试数据与逻辑的冲突，或者是指文案部分的负责人？不，q5明确说“图片目标”。检查输入members：lin负责文案，jage负责视觉。输出分配给jage是合理的。但q5的expected要求recommendedOwnerMemberId为lin。这是一个矛盾。让我们仔细看q5的criterion：“图片目标服务访客... dueDate精确保留... 来源引用...”。如果expected强制要求lin，而实际逻辑应为jage，则判unmet。但通常视觉由jage负责。再看input.members：lin的职责是“策划并交付宣传脚本...视觉设计由Jage负责”。所以视觉子任务owner应为jage。输出中ownerMemberId为jage。q5的expected中recommendedOwnerMemberId为lin。这看起来是测试用例的expected可能有误，或者我理解错了。等等，q5的id是subtask-reply-and-version-check-6，subject是局部目标标准。让我们再读一遍q5的expected。它要求recommendedOwnerMemberId: ",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "260ef7b9-a87d-47cf-98f2-f7c65ceb16b8",
+      "caseId": "case-subtask-v1-missing-responsibilities",
+      "name": "独立子任务 · 职责缺失保留未分配与未知等待",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "da2a8690-a61b-4333-ab76-b827cf05f860",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2617,
+        "output_tokens": 256
+      },
+      "generationTokens": {
+        "inputTokens": 14314,
+        "outputTokens": 1079,
+        "totalTokens": 15393
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-missing-responsibilities-check-1\",\"stepId\":\"s1\",\"subject\":\"建议与实际写入边界\",\"criterion\":\"只返回本次独立 Skill 的 JSON 建议，不输出创建/分配/确认成功回执，不调用外部工具，也不修改父任务、已有子任务或正式职责。\",\"expected\":{\"schemaVersion\":\"taskdoor.subtask-suggestions.v1\",\"externalWrites\":false}}",
+          "choice": "met",
+          "note": "输出为纯 JSON 建议，无外部工具调用或写入回执，符合边界要求。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-missing-responsibilities-check-2\",\"stepId\":\"s1\",\"subject\":\"只生成当前下一层\",\"criterion\":\"parentTaskId 为输入当前任务；suggestions 是平铺数组，没有 children、孙任务、额外汇总父任务或依赖边；所有引用属于当前快照，成员引用使用团队成员 id 而非 mcpMemberId、姓名或账号。\",\"expected\":{\"flatSuggestions\":true,\"onlyInputSources\":true,\"onlyEffectiveMemberIds\":true}}",
+          "choice": "met",
+          "note": "parentTaskId 正确，suggestions 为平铺数组无 children，成员引用使用有效 id (null/[])，未使用姓名或 mcpMemberId。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-missing-responsibilities-check-3\",\"stepId\":\"s1\",\"subject\":\"真实目标与可核查标准\",\"criterion\":\"候选目标说明受益者能够理解、判断或继续做什么，不能只把标题改写为交付物；完成标准覆盖本项可证明的结果、质量与已给范围。父业务目标不复制为每项必达承诺，不编造销量、效率、满意度数字，不为像 OKR 而额外发明指标、用户测试、审核或材料。\",\"expected\":{\"goalIsPurpose\":true,\"criteriaAreObservable\":true,\"unprovidedBusinessMetrics\":false}}",
+          "choice": "met",
+          "note": "目标清晰指向获取报价供决策，验收标准具体可核查（含税总额、币种等），未编造业务数值或额外指标。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-missing-responsibilities-check-4\",\"stepId\":\"s1\",\"subject\":\"日期与估算的依据\",\"criterion\":\"以2026-10-16及输入任务日期逐项判断。保留本项明确日期；有限清晰新增交付无日期时给有条件建议并在 warnings 对应任务、日期、假设和可改/可清空；关键外部等待无窗口时留空。不得直接把人工分钟换日历、宣称核实人员日历或机械复制父日期。估算只覆盖新增工作，不重复已有交付。\",\"expected\":{\"currentDate\":\"2026-10-16\",\"calendarClaimWithoutEvidence\":false,\"doNotChangeParentDueDate\":true}}",
+          "choice": "met",
+          "note": "dueDate 设为 null 并说明原因，未在 warnings 中机械复制父日期或宣称核实日历，估算留空符合未知情况。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-missing-responsibilities-check-5\",\"stepId\":\"s1\",\"subject\":\"不从角色或自荐伪造分工\",\"criterion\":\"对供应商报价建议 ownerMemberId:null、participants:[]，assignmentReason/contextGaps 说明未取得正式职责；不能默认交父负责人、当前用户、首位成员或讨论自荐者，不能把无职责扩大为没有团队成员。职责缺失本身不阻断范围已清楚的建议。\",\"expected\":{\"ownerMemberId\":null,\"participants\":[],\"missingFormalResponsibilities\":true}}",
+          "choice": "met",
+          "note": "ownerMemberId 为 null，participants 为空，assignmentReason 明确说明未取得正式职责且未依据自荐分配，符合不伪造分工要求。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-missing-responsibilities-check-6\",\"stepId\":\"s1\",\"subject\":\"报价用于判断且不承诺外部结果时间\",\"criterion\":\"只补正式报价，不重做已完成比较表。候选目标是让采购决策人掌握有效成本依据以作判断；标准保留含税总额、币种、数量、有效期与不下单边界。由于关键供应商回复时间未知，dueDate:null，说明具体等待，不编三天内拿到报价或供应商已承诺。\",\"expected\":{\"suggestionCount\":1,\"coveredTaskId\":\"subtask-v1-missing-responsibilities-comparison\",\"dueDate\":null,\"externalWaitUnknown\":true}}",
+          "choice": "met",
+          "note": "仅生成 1 条建议覆盖缺失的报价工作，dueDate 为 null，warnings 和 contextGaps 正确说明外部等待未知，未承诺具体时间。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "7332c0d4-5327-4917-9b40-063704367f8b",
+      "caseId": "case-subtask-v1-partial-children",
+      "name": "独立子任务 · 子任务续页失败不宣称查重完整",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "da2a8690-a61b-4333-ab76-b827cf05f860",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 3238,
+        "output_tokens": 301
+      },
+      "generationTokens": {
+        "inputTokens": 30167,
+        "outputTokens": 2544,
+        "totalTokens": 32711
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 2,
+          "kinds": [
+            "initial",
+            "structure_repair"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-partial-children-check-1\",\"stepId\":\"s1\",\"subject\":\"建议与实际写入边界\",\"criterion\":\"只返回本次独立 Skill 的 JSON 建议，不输出创建/分配/确认成功回执，不调用外部工具，也不修改父任务、已有子任务或正式职责。\",\"expected\":{\"schemaVersion\":\"taskdoor.subtask-suggestions.v1\",\"externalWrites\":false}}",
+          "choice": "met",
+          "note": "输出为纯JSON建议，无外部工具调用、创建回执或修改父任务/已有子任务的行为，符合边界要求。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-partial-children-check-2\",\"stepId\":\"s1\",\"subject\":\"只生成当前下一层\",\"criterion\":\"parentTaskId 为输入当前任务；suggestions 是平铺数组，没有 children、孙任务、额外汇总父任务或依赖边；所有引用属于当前快照，成员引用使用团队成员 id 而非 mcpMemberId、姓名或账号。\",\"expected\":{\"flatSuggestions\":true,\"onlyInputSources\":true,\"onlyEffectiveMemberIds\":true}}",
+          "choice": "met",
+          "note": "parentTaskId匹配当前任务ID；suggestions为平铺数组，无children字段；成员引用使用有效memberId（jage, lin, zhou），未使用姓名或mcpMemberId。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-partial-children-check-3\",\"stepId\":\"s1\",\"subject\":\"真实目标与可核查标准\",\"criterion\":\"候选目标说明受益者能够理解、判断或继续做什么，不能只把标题改写为交付物；完成标准覆盖本项可证明的结果、质量与已给范围。父业务目标不复制为每项必达承诺，不编造销量、效率、满意度数字，不为像 OKR 而额外发明指标、用户测试、审核或材料。\",\"expected\":{\"goalIsPurpose\":true,\"criteriaAreObservable\":true,\"unprovidedBusinessMetrics\":false}}",
+          "choice": "met",
+          "note": "目标清晰指向视觉交付以支持选购判断；验收标准可核查（交付一张图、信息一致、无新增承诺）；未编造销量或效率等业务数值。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-partial-children-check-4\",\"stepId\":\"s1\",\"subject\":\"日期与估算的依据\",\"criterion\":\"以2026-10-16及输入任务日期逐项判断。保留本项明确日期；有限清晰新增交付无日期时给有条件建议并在 warnings 对应任务、日期、假设和可改/可清空；关键外部等待无窗口时留空。不得直接把人工分钟换日历、宣称核实人员日历或机械复制父日期。估算只覆盖新增工作，不重复已有交付。\",\"expected\":{\"currentDate\":\"2026-10-16\",\"calendarClaimWithoutEvidence\":false,\"doNotChangeParentDueDate\":true}}",
+          "choice": "met",
+          "note": "建议日期2026-10-19晚于当前日期2026-10-16；warnings中明确声明日期为AI建议、未核实人员日历且可修改，未机械复制父任务空日期。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-partial-children-check-5\",\"stepId\":\"s1\",\"subject\":\"分页覆盖忠实表达\",\"criterion\":\"status 为 partial 或 needs_clarification，contextGaps 明确直属子任务只读取第一页、续页失败及可能重复。不得 ready、声称所有子任务已读完/无重复，或把未取得续页当没有其他任务。若能建议商城图，必须是有边界的局部候选并保留查重风险；若缺口决定是否新增则补问，不能编造后续任务ID。\",\"expected\":{\"allowedStatuses\":[\"partial\",\"needs_clarification\"],\"forbiddenStatus\":\"ready\",\"existingChildrenCoverage\":\"partial\"}}",
+          "choice": "met",
+          "note": "status为needs_clarification，符合partial读取场景；contextGaps明确指出续页失败及可能重复；未声称ready或完整查重。",
+          "source": "model"
+        },
+        {
+          "id": "q5",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-partial-children-check-6\",\"stepId\":\"s1\",\"subject\":\"有据部分不被不完整读取污染\",\"criterion\":\"保留已完成文案的覆盖事实；只建议本次父范围内的商城图缺口或提出与续页查重有关的业务确认。不重做文案、不增加其他交付。任何候选目标/标准/日期仍遵守共同规则，不能把局部建议说成已经可以完整新增。\",\"expected\":{\"knownCoveredTaskId\":\"subtask-v1-partial-children-copy\",\"fullDeduplicationClaim\":false}}",
+          "choice": "met",
+          "note": "coveredByExisting正确标识已完成文案子任务；建议仅针对缺失的视觉部分；未重做文案；warnings和contextGaps如实反映局部建议性质及查重风险。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    },
+    {
+      "id": "c3b86ced-d144-4da0-8ac8-5e60e7d1771a",
+      "caseId": "case-subtask-v1-depth-limit",
+      "name": "独立子任务 · 真实团队深度配额已用尽",
+      "status": "needs_review",
+      "model": "pa/mercury-5.5",
+      "skillVersionId": "da2a8690-a61b-4333-ab76-b827cf05f860",
+      "structure": "passed",
+      "business": "passed",
+      "judgeStatus": "completed",
+      "judgeModel": "qwen/qwen3.7-plus",
+      "judgeError": null,
+      "judgeTokens": {
+        "input_tokens": 2131,
+        "output_tokens": 191
+      },
+      "generationTokens": {
+        "inputTokens": 14298,
+        "outputTokens": 448,
+        "totalTokens": 14746
+      },
+      "attempts": [
+        {
+          "stepId": "s1",
+          "count": 1,
+          "kinds": [
+            "initial"
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": "q0",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-depth-limit-check-1\",\"stepId\":\"s1\",\"subject\":\"建议与实际写入边界\",\"criterion\":\"只返回本次独立 Skill 的 JSON 建议，不输出创建/分配/确认成功回执，不调用外部工具，也不修改父任务、已有子任务或正式职责。\",\"expected\":{\"schemaVersion\":\"taskdoor.subtask-suggestions.v1\",\"externalWrites\":false}}",
+          "choice": "met",
+          "note": "输出为纯JSON建议，无外部工具调用或创建/分配回执，符合边界要求。",
+          "source": "model"
+        },
+        {
+          "id": "q1",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-depth-limit-check-2\",\"stepId\":\"s1\",\"subject\":\"只生成当前下一层\",\"criterion\":\"parentTaskId 为输入当前任务；suggestions 是平铺数组，没有 children、孙任务、额外汇总父任务或依赖边；所有引用属于当前快照，成员引用使用团队成员 id 而非 mcpMemberId、姓名或账号。\",\"expected\":{\"flatSuggestions\":true,\"onlyInputSources\":true,\"onlyEffectiveMemberIds\":true}}",
+          "choice": "met",
+          "note": "parentTaskId正确，suggestions为空数组（平铺），无children或额外依赖，未引用无效成员ID。",
+          "source": "model"
+        },
+        {
+          "id": "q2",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-depth-limit-check-3\",\"stepId\":\"s1\",\"subject\":\"真实目标与可核查标准\",\"criterion\":\"候选目标说明受益者能够理解、判断或继续做什么，不能只把标题改写为交付物；完成标准覆盖本项可证明的结果、质量与已给范围。父业务目标不复制为每项必达承诺，不编造销量、效率、满意度数字，不为像 OKR 而额外发明指标、用户测试、审核或材料。\",\"expected\":{\"goalIsPurpose\":true,\"criteriaAreObservable\":true,\"unprovidedBusinessMetrics\":false}}",
+          "choice": "met",
+          "note": "status为no_split_needed，无候选目标需核查；summary准确说明原因，未编造业务指标。",
+          "source": "model"
+        },
+        {
+          "id": "q3",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-depth-limit-check-4\",\"stepId\":\"s1\",\"subject\":\"日期与估算的依据\",\"criterion\":\"以2026-10-16及输入任务日期逐项判断。保留本项明确日期；有限清晰新增交付无日期时给有条件建议并在 warnings 对应任务、日期、假设和可改/可清空；关键外部等待无窗口时留空。不得直接把人工分钟换日历、宣称核实人员日历或机械复制父日期。估算只覆盖新增工作，不重复已有交付。\",\"expected\":{\"currentDate\":\"2026-10-16\",\"calendarClaimWithoutEvidence\":false,\"doNotChangeParentDueDate\":true}}",
+          "choice": "met",
+          "note": "无新增子任务，故无日期估算问题；warnings中未宣称核实日历或机械复制日期，符合依据要求。",
+          "source": "model"
+        },
+        {
+          "id": "q4",
+          "stepId": "s1",
+          "label": "{\"id\":\"subtask-depth-limit-check-5\",\"stepId\":\"s1\",\"subject\":\"按输入实际配额限制继续加深\",\"criterion\":\"当前任务深度2，团队 maxTaskDepth:2，返回 no_split_needed 与空 suggestions。明确不能继续新增下一层；不能套默认4/10层、越过配额、建议孙任务、创建新汇总父任务或改动已有层级来规避限制。可以建议在当前任务中继续执行或由用户调整层级，不能声称所有交付已完成。\",\"expected\":{\"status\":\"no_split_needed\",\"currentTaskDepth\":2,\"maxTaskDepth\":2,\"suggestions\":[],\"meansWorkAlreadyDone\":false}}",
+          "choice": "met",
+          "note": "currentTask.depth=2且maxTaskDepth=2，输出status='no_split_needed'且suggestions=[]，严格遵循配额限制，未尝试规避。",
+          "source": "model"
+        }
+      ],
+      "structureErrors": [],
+      "error": null,
+      "manualReview": null
+    }
+  ]
+}
