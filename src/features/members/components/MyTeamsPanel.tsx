@@ -24,7 +24,7 @@ export function MyTeamsPanel({ state, actorId, activeTeamId, onRestore, teamName
     try { return { teams: readDeletedTeams(localStorage, now).filter(entry => activeMembership(entry.team, actorId)), error: '' }; }
     catch (failure) { return { teams: [] as DeletedTeam[], error: failure instanceof Error ? failure.message : '无法读取已删除团队，请重试。' }; }
   }, [actorId, now, state.teams]);
-  const dateLabel = (value?: string) => value ? formatDisplayDate(value) ?? '—' : '—';
+  const dateLabel = (value?: string) => value ? formatDisplayDate(value, { locale }) ?? '—' : '—';
   const restore = (teamId: string) => {
     if (busyId) return;
     setBusyId(teamId);
@@ -41,7 +41,7 @@ export function MyTeamsPanel({ state, actorId, activeTeamId, onRestore, teamName
       <TeamLogo name={team.name} size="md" teamId={team.id} />
       <div className="my-team-copy">
         <div className="my-team-heading"><strong title={teamName(team)}>{teamName(team)}</strong>{!entry && team.id === activeTeamId && <span className="my-team-current">{en ? 'Current team' : '当前团队'}</span>}</div>
-        <small><span>{en ? 'Joined ' : ''}<time dateTime={membership?.joinedAt} title={membership?.joinedAt ? formatDisplayDateTime(membership.joinedAt, { year: 'always' }) ?? formatDisplayDate(membership.joinedAt, { year: 'always' }) ?? undefined : undefined}>{dateLabel(membership?.joinedAt)}</time>{en ? '' : ' 加入'}</span><span aria-hidden="true" className="my-team-meta-divider">|</span><span>{en ? `${memberCount} members` : `${memberCount} 名成员`}</span></small>
+        <small><span>{en ? 'Joined ' : ''}<time dateTime={membership?.joinedAt} title={membership?.joinedAt ? formatDisplayDateTime(membership.joinedAt, { locale, year: 'always' }) ?? formatDisplayDate(membership.joinedAt, { locale, year: 'always' }) ?? undefined : undefined}>{dateLabel(membership?.joinedAt)}</time>{en ? '' : ' 加入'}</span><span aria-hidden="true" className="my-team-meta-divider">|</span><span>{en ? `${memberCount} members` : `${memberCount} 名成员`}</span></small>
       </div>
       {entry && <div className="my-team-deleted">
         <span className="my-team-countdown">{remaining < DAY_MS ? (en ? 'Deleted · expires today' : '已删除 · 今天到期') : (en ? `Deleted · ${Math.ceil(remaining / DAY_MS)} days left` : `已删除 · 剩 ${Math.ceil(remaining / DAY_MS)} 天`)}</span>

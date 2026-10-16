@@ -7,6 +7,14 @@ export function renderOutput(step,run){
  if(!output||typeof output!=='object')return step.rawOutput||step.error||'未返回内容';
  const lines=[];
  if(output.summary)lines.push(safe(output.summary));
+ if(output.schemaVersion==='taskdoor.subtask-suggestions.v1'){
+  const name=id=>run.teamSnapshot?.members?.find(member=>member.id===id)?.name??id??'未分配';
+  lines.push('当前任务下一层建议；尚未创建或分配。');
+  for(const [index,item] of (output.suggestions??[]).entries()){
+   lines.push(`### ${index+1}. ${safe(item.title)}`,`**目标：** ${safe(item.goal)}`,'**完成标准：**',...(item.acceptanceCriteria??[]).map(text=>`- ${safe(text)}`),`**建议负责人：** ${safe(name(item.ownerMemberId))} · **截止：** ${safe(item.dueDate??'不设截止')}`);
+  }
+  if(output.contextGaps?.length)lines.push('**上下文缺口：**',...output.contextGaps.map(text=>`- ${safe(text)}`));
+ }
  const changes=output.proposal?.changes;
  if(Array.isArray(changes))for(const [i,change] of changes.entries()){
   const fields=change.fields??{};

@@ -1,0 +1,422 @@
+[
+  {
+    "id": "planning-core-v1-d-single",
+    "origin": "planning-core-v1",
+    "promptHash": "5c8655892291326b86e62da15894e025400b27ff43de51af468bd40e5b92dbf8"
+  },
+  {
+    "id": "planning-core-v1-d-three",
+    "origin": "planning-core-v1",
+    "promptHash": "8b6d0d9710f9bd15fc4da4e0ada68fa067b5d808b230db443d35ddab43211f74"
+  },
+  {
+    "id": "planning-core-v1-d-channels",
+    "origin": "planning-core-v1",
+    "promptHash": "19009f633795e21c9349f6cd6b546c3241c6da7ad5da936d5654bf5b7c293215"
+  },
+  {
+    "id": "planning-core-v1-d-bundle",
+    "origin": "planning-core-v1",
+    "promptHash": "85adf9cb9f69b8c84890610e313c13bc86fd66299300b3ce540081374e31efb9"
+  },
+  {
+    "id": "planning-core-v1-d-stage",
+    "origin": "planning-core-v1",
+    "promptHash": "227a28acae44f30a8de5913f74c78118da731f402a29010e7fe60f13079ea825"
+  },
+  {
+    "id": "planning-core-v1-d-tree",
+    "origin": "planning-core-v1",
+    "promptHash": "57c4bffdb6b797ccd74bcf0376404f357e069eea2a1762f08bfbfd88cb980c7a"
+  },
+  {
+    "id": "planning-core-v1-d-review",
+    "origin": "planning-core-v1",
+    "promptHash": "7ed726826e6dfcf75342b7a16ac140fcb162d214d815d0543948e674f4244ff4"
+  },
+  {
+    "id": "planning-core-v1-d-reuse",
+    "origin": "planning-core-v1",
+    "promptHash": "a3a988952e00d4ce5e001a0003ee953c3ea2621107cfa745432583dfbfa95406"
+  },
+  {
+    "id": "planning-core-v1-d-delivery",
+    "origin": "planning-core-v1",
+    "promptHash": "d8a784ce22a44cf0564c883543518c95f15168a141dfe95ba49740b03c05c4d4"
+  },
+  {
+    "id": "planning-core-v1-a-writing",
+    "origin": "planning-core-v1",
+    "promptHash": "1d1d91e4b658bdd3e8948206fb8973c64b9b416ca7fd74fd04bec6918496b484"
+  },
+  {
+    "id": "planning-core-v1-a-design",
+    "origin": "planning-core-v1",
+    "promptHash": "93fb22cda8437877d5da6039db84c270473855c17f89d4ffd1daf505fe3ea02c"
+  },
+  {
+    "id": "planning-core-v1-a-check",
+    "origin": "planning-core-v1",
+    "promptHash": "8651beea0b1260abbc3b73e510cc0c4ca355e5ff7c7dace3bd50b2b7114e2047"
+  },
+  {
+    "id": "planning-core-v1-a-budget",
+    "origin": "planning-core-v1",
+    "promptHash": "cdd4c432c730e5398a87a1e5b2b1a5ed1183ed0518249ea5f80cf0637b1fd43e"
+  },
+  {
+    "id": "planning-core-v1-a-ops",
+    "origin": "planning-core-v1",
+    "promptHash": "981ac697ec48db9e452237b2b092c29f4d765b90b2c1159df4b59ac372a1d3bc"
+  },
+  {
+    "id": "planning-core-v1-a-support",
+    "origin": "planning-core-v1",
+    "promptHash": "ae1862531549743ca81cf2fc926288aa946c5cbbb2fd6e84a91e92877c4c61a3"
+  },
+  {
+    "id": "planning-core-v1-a-explicit",
+    "origin": "planning-core-v1",
+    "promptHash": "dac760f86340f9561fb28fec00d43e5f4dd8c756d13a3a1aa0d686aa821a77bb"
+  },
+  {
+    "id": "planning-core-v1-a-no-extra",
+    "origin": "planning-core-v1",
+    "promptHash": "663dd4731693f8d1752f69b7992fdc1d99eb0a8506013cd15d0b5ae798b3574c"
+  },
+  {
+    "id": "planning-core-v1-c-release",
+    "origin": "planning-core-v1",
+    "promptHash": "8a27cce22169e00cb4de0c7d199e41ce12f0807c9d6165c2dea125ba7c0143c1"
+  },
+  {
+    "id": "planning-core-v1-c-consistency",
+    "origin": "planning-core-v1",
+    "promptHash": "d931bafc91860ea07a574388f533d7702be0359c17ce4d3f4366b13a955e2dbb"
+  },
+  {
+    "id": "planning-core-v1-c-two-batches",
+    "origin": "planning-core-v1",
+    "promptHash": "c435fd2f39ee62626f9db503058d103d3a0afb3d7c9e478f7154a92b55f5902c"
+  },
+  {
+    "id": "planning-core-v1-c-channel-review",
+    "origin": "planning-core-v1",
+    "promptHash": "4691c96a484efbaa1a069e71dfd1f6065cb28c5b16a05cc4f9598159e284f3c0"
+  },
+  {
+    "id": "planning-core-v1-c-deadline",
+    "origin": "planning-core-v1",
+    "promptHash": "69e9f33f2b43425903e7951abea895f4007a25e370f57eda313048691d21919f"
+  },
+  {
+    "id": "planning-core-v1-c-independent-check",
+    "origin": "planning-core-v1",
+    "promptHash": "2ac6c6aadd43cd9b7ba5a252ba8410dabf24399534aa8ac4fcd75e6f4f878660"
+  },
+  {
+    "id": "planning-core-v1-c-owner",
+    "origin": "planning-core-v1",
+    "promptHash": "c3bc42e71f08dbb5d170eda5dfaed90be58a66affb189fc60547ca828591b2c9"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-create",
+    "origin": "workflow-focus-v1",
+    "promptHash": "dbc38ec266a333abf3f6f3654ab91b5dd4a569fe20387f9db3151fbe1d6221b7"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-complete",
+    "origin": "workflow-focus-v1",
+    "promptHash": "4570bb06268ce4b2d75e9fffdd31d8df28f6215e6833d61567ee312f45b4f623"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-deliveries",
+    "origin": "workflow-focus-v1",
+    "promptHash": "e52ed3d66d79ac8cd135c93893635e9921a051c5927ab8d469a0e78d6c267617"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-handoff",
+    "origin": "workflow-focus-v1",
+    "promptHash": "c1b0f8fb91a32225cc9434e60617d28d7c72cdcf135451679e832e74925d5819"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-name",
+    "origin": "workflow-focus-v1",
+    "promptHash": "3a77987d771cec970786f2cfded956b1a99434364d4f20629a89898cc615f330"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-goal",
+    "origin": "workflow-focus-v1",
+    "promptHash": "7678e0164455f375fd5776fbcdaf130d0fb2110db8fcac49a44dd62cee2b9ed4"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-criteria",
+    "origin": "workflow-focus-v1",
+    "promptHash": "1aa31c938c5032dc18156f8c697535d6fd9b5096774fa906a6e2313628b82911"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-deadline",
+    "origin": "workflow-focus-v1",
+    "promptHash": "8ccc70f71fbd9d06f4ecdf49eecb974467ea342265132c0091328f4581046699"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-tips",
+    "origin": "workflow-focus-v1",
+    "promptHash": "4ada1ae751ec27ec3845fc37607a5aebed8858cfd3b6a22e4c1953b7b57b5f35"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-effort",
+    "origin": "workflow-focus-v1",
+    "promptHash": "9642e7262f267bfee81d13777c7056e958959df21adfa142e4975ac6838b1221"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-numbers",
+    "origin": "workflow-focus-v1",
+    "promptHash": "ba8ddb58918e4c779e49a0eb624dbc897a34a9b993abcc89a99660ccf4cbac75"
+  },
+  {
+    "id": "workflow-focus-v1-lab-content-all-fields",
+    "origin": "workflow-focus-v1",
+    "promptHash": "250cbcf39b14f301e1d28d70c0d742389279bbf73710529f9cef892a19023c01"
+  },
+  {
+    "id": "content-jage-v1-visual",
+    "origin": "content-jage-v1",
+    "promptHash": "490d7f634a6e2b3a23e0579858e8e6808e4a4bbd45cda6694febba9a696a067c"
+  },
+  {
+    "id": "content-jage-v1-explicit",
+    "origin": "content-jage-v1",
+    "promptHash": "7f29d2a5e5a6c66ddeec7d8da7994d8dfb503330562f1048941e052e219c0b13"
+  },
+  {
+    "id": "content-jage-v1-collaborate",
+    "origin": "content-jage-v1",
+    "promptHash": "99a46f6d552b866ca4a7cabfeb551d5bac515c8e50664ddebd9e287b8d978e51"
+  },
+  {
+    "id": "content-jage-v1-channel-assets",
+    "origin": "content-jage-v1",
+    "promptHash": "8b8430ab523ea5e93f0224239792885be7af89af2c9a3183ce3691e2321bff60"
+  },
+  {
+    "id": "content-jage-v1-four-deliveries",
+    "origin": "content-jage-v1",
+    "promptHash": "18a8ac5fc1f427220a6aafca0d68e551b214878acfa10bec3584b97ae0f6d696"
+  },
+  {
+    "id": "content-jage-v1-copy-to-design",
+    "origin": "content-jage-v1",
+    "promptHash": "e8deb3efcabcfe8bef14677f04d926abc6ea03f9a91fc614b2b7e45fc1a35938"
+  },
+  {
+    "id": "content-jage-v1-visual-review",
+    "origin": "content-jage-v1",
+    "promptHash": "118daa9ec3894de36eab8c68a208a41cfe3f9c69c7a7380c0723d0b62f05df19"
+  },
+  {
+    "id": "content-jage-v1-parallel",
+    "origin": "content-jage-v1",
+    "promptHash": "d05597ee57d6e819f33efd7fe6fc080657c8acaa99c653ee26ec14d71ac2f347"
+  },
+  {
+    "id": "content-jage-v1-visual-fields",
+    "origin": "content-jage-v1",
+    "promptHash": "a15f5f45c1aaf03515441c7ede666bdc8705ad1203e7258a8418563e689eac35"
+  },
+  {
+    "id": "content-jage-v1-visual-package",
+    "origin": "content-jage-v1",
+    "promptHash": "ca6d905b6fb35a241d426a8e98a80b6d19f24060f7ee815d9d9e6ed3cd552100"
+  },
+  {
+    "id": "task-preview-flow-v1-date",
+    "origin": "task-preview-flow-v1",
+    "promptHash": "cb6e529109a76343808c8a7647a582f4e799fa1b34b4277a0eb9fdde0d8746a5"
+  },
+  {
+    "id": "task-preview-flow-v1-participant",
+    "origin": "task-preview-flow-v1",
+    "promptHash": "be1c24a0a7ce46ddaab3ef23de528cddb30c6bb971ac289dac2a5f0c8e8e1dce"
+  },
+  {
+    "id": "task-preview-flow-v1-delete",
+    "origin": "task-preview-flow-v1",
+    "promptHash": "e4900cd01f67ebc903563bfc75d6aae6d28b6557576a07d7e2030e594bf66645"
+  },
+  {
+    "id": "task-preview-flow-v1-confirm",
+    "origin": "task-preview-flow-v1",
+    "promptHash": "7204102e17b9da6ab82d120610468c1003565e67eb650bf022c5417542253959"
+  },
+  {
+    "id": "planning-core-v1-d-single--duration",
+    "origin": "expanded-skills-v1",
+    "promptHash": "7b164cf5da5cf1ee6a94c783922380027e7653d2b8b3ef315984c5e5f7b202b7"
+  },
+  {
+    "id": "planning-core-v1-d-single--fact-boundary",
+    "origin": "expanded-skills-v1",
+    "promptHash": "527a2b29a82ce57687eee414ecf9a97aac218a2036f36db0eeb658dc91ed16ee"
+  },
+  {
+    "id": "planning-core-v1-d-three--budget",
+    "origin": "expanded-skills-v1",
+    "promptHash": "da5f5192b6ae23756b0b97d6f78fb48e966dad8a1aa6eff8479974bbf6ceed1d"
+  },
+  {
+    "id": "planning-core-v1-d-three--format",
+    "origin": "expanded-skills-v1",
+    "promptHash": "01558d02068ec4fdcdbc610ffa89f39713113193b7ae9ba39c47c240a5814bae"
+  },
+  {
+    "id": "planning-core-v1-d-channels--parallel",
+    "origin": "expanded-skills-v1",
+    "promptHash": "ad506cff56cf9cdecfa42daf1230d1d6c1c151b6ccc9fb74dcc44c52d7689f43"
+  },
+  {
+    "id": "planning-core-v1-d-channels--scope",
+    "origin": "expanded-skills-v1",
+    "promptHash": "6936c25a5a34d498dee04dd1a7f8890f5b67e426b9a33d02f961d55d8833dc72"
+  },
+  {
+    "id": "planning-core-v1-d-three--complex-conflict",
+    "origin": "complex-skills-v1",
+    "promptHash": "07942b0b88fc9206b9efbac5f25e7248f921b429478a57c5214b08bdbbc25ac7"
+  },
+  {
+    "id": "planning-core-v1-d-channels--complex-dependency",
+    "origin": "complex-skills-v1",
+    "promptHash": "0abfce9a6b9777ff4d8d583749f4e7ed533a335f0ecf25da21ee02f7c1edd3b4"
+  },
+  {
+    "id": "planning-core-v1-d-single--complex-ambiguous",
+    "origin": "complex-skills-v1",
+    "promptHash": "ab7e5ea4b8e53005b2a3cc3f32b2c16275c453692ec0131e86450b32867e3321"
+  },
+  {
+    "id": "planning-core-v1-d-three--complex-rounding",
+    "origin": "complex-skills-v1",
+    "promptHash": "0e7329f8bee087a22f7e2bd1fce3a1ccf1cbad2b1387a4214d79e40dbcce3c59"
+  },
+  {
+    "id": "planning-core-v1-d-channels--complex-constraints",
+    "origin": "complex-skills-v1",
+    "promptHash": "7e208894f5174c3ee731acb97182a36a38ca2035f7cd8c9b65986b5483c6e3f5"
+  },
+  {
+    "id": "planning-core-v1-d-single--complex-correction",
+    "origin": "complex-skills-v1",
+    "promptHash": "2534a731c13c26ba545e45949c31922e7c38e03301d9f4150c94d6760592ef5a"
+  },
+  {
+    "id": "regression-20261014-create-planning-core-v1-d-single",
+    "origin": "manual",
+    "promptHash": "5c8655892291326b86e62da15894e025400b27ff43de51af468bd40e5b92dbf8"
+  },
+  {
+    "id": "regression-20261014-create-planning-core-v1-d-three",
+    "origin": "manual",
+    "promptHash": "8b6d0d9710f9bd15fc4da4e0ada68fa067b5d808b230db443d35ddab43211f74"
+  },
+  {
+    "id": "regression-20261014-create-planning-core-v1-d-channels",
+    "origin": "manual",
+    "promptHash": "b2e449ffc8a3ba411d2038fb3694404b40b39404d08e89788ba6eddec7df2729"
+  },
+  {
+    "id": "regression-20261014-create-planning-core-v1-d-delivery",
+    "origin": "manual",
+    "promptHash": "d8a784ce22a44cf0564c883543518c95f15168a141dfe95ba49740b03c05c4d4"
+  },
+  {
+    "id": "regression-20261014-create-planning-core-v1-d-single--fact-boundary",
+    "origin": "manual",
+    "promptHash": "527a2b29a82ce57687eee414ecf9a97aac218a2036f36db0eeb658dc91ed16ee"
+  },
+  {
+    "id": "regression-20261014-create-planning-core-v1-a-writing",
+    "origin": "manual",
+    "promptHash": "1d1d91e4b658bdd3e8948206fb8973c64b9b416ca7fd74fd04bec6918496b484"
+  },
+  {
+    "id": "regression-20261014-create-planning-core-v1-a-explicit",
+    "origin": "manual",
+    "promptHash": "dac760f86340f9561fb28fec00d43e5f4dd8c756d13a3a1aa0d686aa821a77bb"
+  },
+  {
+    "id": "regression-20261014-create-planning-core-v1-a-no-extra",
+    "origin": "manual",
+    "promptHash": "663dd4731693f8d1752f69b7992fdc1d99eb0a8506013cd15d0b5ae798b3574c"
+  },
+  {
+    "id": "regression-20261014-create-workflow-focus-v1-lab-content-effort",
+    "origin": "manual",
+    "promptHash": "9642e7262f267bfee81d13777c7056e958959df21adfa142e4975ac6838b1221"
+  },
+  {
+    "id": "regression-20261014-create-task-preview-flow-v1-date",
+    "origin": "manual",
+    "promptHash": "7bd7c2d6620d7251a4478c547517ee26af09aa2c2a4ae2e58972469eb6b67793"
+  },
+  {
+    "id": "regression-20261014-create-task-preview-flow-v1-delete",
+    "origin": "manual",
+    "promptHash": "041974900a5dc5a873df26e457d89d508aebbec8f36e88ebd8f0e57b496e4dbd"
+  },
+  {
+    "id": "regression-20261014-create-task-preview-flow-v1-confirm",
+    "origin": "manual",
+    "promptHash": "7204102e17b9da6ab82d120610468c1003565e67eb650bf022c5417542253959"
+  },
+  {
+    "id": "creation-outcome-v1-supplied-metrics",
+    "origin": "creation-outcome/2026-10-16",
+    "promptHash": "af7a53b23883699c5f58c8977312982551cdd110b7ab1ea4b887046f6f81ee50"
+  },
+  {
+    "id": "creation-outcome-v1-no-metrics-delivery",
+    "origin": "creation-outcome/2026-10-16",
+    "promptHash": "ff297ddbfc3ec0dd8393ce4e966bf35d24eb29f179a427af84e3e7faf3cdf86c"
+  },
+  {
+    "id": "creation-outcome-v1-unknown-purpose",
+    "origin": "creation-outcome/2026-10-16",
+    "promptHash": "ab2178d6398deb8527b3a6991b123f393e9a00c14480643cdafbad488263878c"
+  },
+  {
+    "id": "creation-outcome-v1-research-evidence",
+    "origin": "creation-outcome/2026-10-16",
+    "promptHash": "37dbaa0fedf5454aa41cd7675cb9e87908377f3cc3e3084b50e07e7e779ed49f"
+  },
+  {
+    "id": "creation-outcome-v1-finite-suggestion",
+    "origin": "creation-outcome/2026-10-16",
+    "promptHash": "95d88b642a07cbccc482c4a93740475bebed2ebb1056c1235a4ba6021abc071f"
+  },
+  {
+    "id": "creation-outcome-v1-ongoing",
+    "origin": "creation-outcome/2026-10-16",
+    "promptHash": "fdc001adea8231f9bdf27db89eb2f7fe0956dcca8ddc40dcd1e15c9fe1fe0885"
+  },
+  {
+    "id": "creation-outcome-v1-external-wait",
+    "origin": "creation-outcome/2026-10-16",
+    "promptHash": "9a294e8854b67eae9fcd49846cf94e6d96c2f46b3abbb57b66a230e486671686"
+  },
+  {
+    "id": "creation-outcome-v1-clear-then-edit",
+    "origin": "creation-outcome/2026-10-16",
+    "promptHash": "6a48391ac2bc21aa8d4877d45db0e007e8e73663af899861e8ebcd03eab0b18b"
+  },
+  {
+    "id": "creation-outcome-v1-relative-date",
+    "origin": "creation-outcome/2026-10-16",
+    "promptHash": "42d3a603beaf96a87c40f22b22a9d2eb11c328e799a1359ac15db633da5c0df1"
+  },
+  {
+    "id": "creation-outcome-v1-past-explicit-date",
+    "origin": "creation-outcome/2026-10-16",
+    "promptHash": "d459a1ae76225019137868dd4c291d1139d8ed9d7aae2f3ee862845e60a24136"
+  }
+]

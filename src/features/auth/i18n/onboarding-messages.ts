@@ -2,6 +2,7 @@ import type { Locale } from "@/shared/i18n/core";
 
 /** UI copy and legacy transition messages. Stored business values remain untouched. */
 export const onboardingEn = {
+  "无法识别设备时区，团队已采用 UTC。": "Your device timezone is unavailable. The team is using UTC.",
   "设置密码": "Set your password",
   "为你的 TaskDoor 账号设置密码，以后也可以使用邮箱和密码登录。": "Set a TaskDoor password so you can also sign in with your email and password.",
   "保存并继续": "Save and continue",

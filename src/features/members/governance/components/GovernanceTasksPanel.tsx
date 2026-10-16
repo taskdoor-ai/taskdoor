@@ -45,7 +45,7 @@ export function GovernanceTasksPanel({
   /** The team's members, named in the viewer's language. */
   members: PersonOption[]
 }) {
-  const { t: tc } = useI18n()
+  const { t: tc, locale } = useI18n()
   const t = useCatalog(governanceMessages)
   const now = Date.parse(asOf)
   const [all, setAll] = useState(initialRows)
@@ -137,7 +137,7 @@ export function GovernanceTasksPanel({
                     {Object.hasOwn(taskStatusDefinition, row.status) ? <TaskStatusBadge size="sm" value={row.status as TaskStatus} /> : <span>{statusText(row.status)}</span>}
                   </div>
                   <div className="governance-task-date">
-                    <time dateTime={deleted ? row.deletedAt! : row.lastActivityAt} title={formatDisplayDateTime(deleted ? row.deletedAt! : row.lastActivityAt, { year: 'always' }) ?? formatDisplayDate(deleted ? row.deletedAt! : row.lastActivityAt, { year: 'always' }) ?? undefined}>{formatDisplayDate(deleted ? row.deletedAt! : row.lastActivityAt) ?? '—'}</time>
+                    <time dateTime={deleted ? row.deletedAt! : row.lastActivityAt} title={formatDisplayDateTime(deleted ? row.deletedAt! : row.lastActivityAt, { locale, year: 'always' }) ?? formatDisplayDate(deleted ? row.deletedAt! : row.lastActivityAt, { locale, year: 'always' }) ?? undefined}>{formatDisplayDate(deleted ? row.deletedAt! : row.lastActivityAt, { locale }) ?? '—'}</time>
                   </div>
                   <div className="governance-task-owner">
                     {row.ownerMemberId

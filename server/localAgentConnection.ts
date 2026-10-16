@@ -5,7 +5,8 @@ import { homedir } from "node:os";
 import { delimiter, isAbsolute, join } from "node:path";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
-import { localAgentIds, type LocalAgentCheck, type LocalAgentId, type LocalAgentProbe } from "../src/features/ai-connection/lib/local-agent-connection";
+import { LOCAL_AGENT_HANDOFF_MAX_BYTES, localAgentIds, type LocalAgentCheck, type LocalAgentId, type LocalAgentProbe } from "../src/features/ai-connection/lib/local-agent-connection";
+import { LocalAgentHandoffInputError, prepareLocalAgentHandoff } from "./localAgentHandoff";
 
 const tools: Record<LocalAgentId, { scheme: string; command: string | null }> = {
   ChatGPT: { scheme: "codex", command: "codex" },
@@ -69,7 +70,8 @@ const send = (res: ServerResponse, status: number, payload: unknown) => {
 export function createLocalAgentMiddleware(probe = probeLocalAgent) {
   const pending = new Map<LocalAgentId, Promise<LocalAgentCheck>>();
   return async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
-    if (req.url?.split("?")[0] !== "/api/local-agents/check") return next();
+    const path = req.url?.split("?")[0];
+    if (path !== "/api/local-agents/check" && path !== "/api/local-agents/handoff") return next();
     const host = req.headers.host ?? "";
     if (!["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(req.socket.remoteAddress ?? "")
       || !/^(127\.0\.0\.1|localhost|\[::1\])(?::\d+)?$/.test(host)
@@ -78,6 +80,23 @@ export function createLocalAgentMiddleware(probe = probeLocalAgent) {
       || req.headers["x-agentdoor-local-check"] !== "1") return send(res, 403, { error: "仅允许本机同源检测" });
     if (req.method !== "POST") return send(res, 405, { error: "仅支持 POST" });
     if (!req.headers["content-type"]?.startsWith("application/json")) return send(res, 400, { error: "需要 JSON 请求" });
+    if (path === "/api/local-agents/handoff") {
+      let input: unknown;
+      try {
+        const chunks: Buffer[] = [];
+        let size = 0;
+        for await (const chunk of req) {
+          const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+          size += bytes.byteLength;
+          if (size > LOCAL_AGENT_HANDOFF_MAX_BYTES * 2 + 1024) throw new Error("请求过大");
+          chunks.push(bytes);
+        }
+        input = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+      } catch { return send(res, 400, { error: "需要有效的HTML文件请求。" }); }
+      if (req.aborted) return;
+      try { return send(res, 200, await prepareLocalAgentHandoff(input)); }
+      catch (failure) { return send(res, failure instanceof LocalAgentHandoffInputError ? 400 : 500, { error: failure instanceof LocalAgentHandoffInputError ? failure.message : "文件准备失败，请重试。" }); }
+    }
     let agent: LocalAgentId;
     try {
       let body = "";

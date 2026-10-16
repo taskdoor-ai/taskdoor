@@ -1,4 +1,5 @@
 import {addComplexSkillCases} from './complex-skill-cases.ts';
+import {addSubtaskCases} from './subtask-cases.ts';
 import {addExpandedSkillCases} from './expanded-skill-cases.ts';
 import {addAnalysisTimingCases} from './analysis-timing-cases.ts';
 import {updatePeopleAnalysisReferences} from './people-analysis-reference.ts';
@@ -7,6 +8,7 @@ import {buildAnalysisDataFixtures} from './analysis-data-fixtures.ts';
 import {addPeopleAnalysisCases} from './people-analysis-cases.ts';
 import {addTaskAnalysisCases} from './task-analysis-cases.ts';
 import {updatePreviewCaseLibrary,updatePreviewAssignmentCriteria} from './preview-case-library.ts';
+import {applyCreationOutcomeCriteria,updateCreationOutcomeCriteria} from './creation-outcome-criteria.ts';
 import {readPersistedLabState} from './run-state.mjs';
 import {addPlanningCoreCases} from './planning-core-cases.ts';
 import {curateWorkflowFocusCases} from './workflow-focus-cases.ts';
@@ -30,7 +32,7 @@ import { z } from 'zod';
 import { skillIds, type SkillId } from '../../src/test-lab/types.ts';
 import { hash } from './skills.ts';
 import { type LabState, type LabTeam, type LabCase, type LabRun } from '../../src/test-lab/types.ts';
-import { editableSchema, validateRelations, skillVersionInputSchema, modelIdSchema } from './schema.ts';
+import { editableSchema, validateRelations, skillVersionInputSchema, skillVersionNotesInputSchema, modelIdSchema } from './schema.ts';
 import { defaultActiveTeamIds } from './team-selection.ts';
 import { migrateLibraryNames } from './library-names.ts';
 import { enrichScenarioCatalog } from './scenario-catalog.ts';
@@ -134,6 +136,8 @@ function migrateState(raw:any,seed:LabState,hasFile:boolean):{state:LabState;cha
   for(const c of state.cases)if(c.tags===undefined){c.tags=initialCaseTags(c);changed=true;}
   changed=updateTaskAnalysisExpectations(state)||changed;
   changed=updatePeopleAnalysisReferences(state)||changed;
+  changed=updateCreationOutcomeCriteria(state)||changed;
+  changed=addSubtaskCases(state)||changed;
   return {state,changed};
 }
 export function createLabStore(path:string, seed:LabState){
@@ -154,19 +158,29 @@ export function createLabStore(path:string, seed:LabState){
     state={...state,revision,runs:append?[...state.runs,...runs]:state.runs.map(run=>changed.get(run.id)??run)};
   };
   const checkRevision=(revision:number)=>{if(revision!==state.revision)throw new Error('数据版本已更新，请刷新后重新保存，当前草稿仍保留');};
+  const getBootstrapState=(batchId?:string,runId?:string)=>{
+    const tinyTeam=(team:LabTeam)=>({...team,tasks:[],evidence:[]});
+    const runs=state.runs.map(run=>run.id===runId||run.batchId===batchId?run:{...run,
+      caseSnapshot:{...run.caseSnapshot,dataSnapshot:undefined,legacyInput:undefined,legacyExpected:undefined,
+        steps:run.caseSnapshot.steps.map(step=>({...step,events:[]})),
+        assertions:run.caseSnapshot.assertions.map(assertion=>({...assertion,expected:null})),
+        expectedOutput:run.caseSnapshot.expectedOutput?{...run.caseSnapshot.expectedOutput,checks:run.caseSnapshot.expectedOutput.checks.map(check=>({...check,expected:null}))}:undefined,
+        verification:run.caseSnapshot.verification?{...run.caseSnapshot.verification,fixtureChecks:run.caseSnapshot.verification.fixtureChecks.map(check=>({...check,expected:null}))}:undefined},
+      teamSnapshot:tinyTeam(run.teamSnapshot),
+      steps:run.steps.map(step=>({...step,input:null,output:null,rawOutput:'',skillSnapshot:undefined,mcp:undefined,
+        previewAttempts:step.previewAttempts?.map(attempt=>({...attempt,rawOutput:''})),
+        assertions:step.assertions.map(assertion=>({...assertion,actual:null,expected:null})),
+        before:tinyTeam(step.before),after:tinyTeam(step.after)}))});
+    return structuredClone({...state,runs});
+  };
+  const responseState=(options?:{summary?:boolean})=>options?.summary?getBootstrapState():structuredClone(state);
   if(!hasFile)persist(state);else if(migrated.changed)persist({...state,revision:state.revision+1});
   return {
     get:()=>structuredClone(state),
     getLibrary:()=>structuredClone({...state,runs:[]}),
     getRun:(id:string)=>{const run=state.runs.find(r=>r.id===id);return run?structuredClone(run):undefined;},
     getRuns:(filter:(run:LabRun)=>boolean)=>structuredClone(state.runs.filter(filter)),
-    getBootstrapState:(batchId?:string,runId?:string)=>{
-      const tinyTeam=(team:LabTeam)=>({...team,tasks:[],evidence:[]});
-      const runs=state.runs.map(run=>run.id===runId||run.batchId===batchId?run:{...run,
-        teamSnapshot:tinyTeam(run.teamSnapshot),
-        steps:run.steps.map(step=>({...step,input:null,output:null,rawOutput:'',skillSnapshot:undefined,mcp:undefined,before:tinyTeam(step.before),after:tinyTeam(step.after)}))});
-      return structuredClone({...state,runs});
-    },
+    getBootstrapState,
     updateRun(id:string,change:(run:LabRun)=>void){
       const before=state.runs.find(r=>r.id===id);if(!before)throw Error('运行记录不存在');
       const run=structuredClone(before);change(run);
@@ -178,7 +192,7 @@ export function createLabStore(path:string, seed:LabState){
       if(runs.length)persistRuns(runs);
     },
     appendRuns(runs:LabRun[]){if(runs.length)persistRuns(structuredClone(runs),true);},
-    addSkillVersion(expectedRevision:number,input:z.input<typeof skillVersionInputSchema>){
+    addSkillVersion(expectedRevision:number,input:z.input<typeof skillVersionInputSchema>,options?:{summary?:boolean}){
       checkRevision(expectedRevision);const value=skillVersionInputSchema.parse(input);
       const files=validatePackage(value.snapshot,value.skillId).map(f=>({...f,hash:hash(f.content)}));
       const versions=state.skillVersions??[];
@@ -186,13 +200,22 @@ export function createLabStore(path:string, seed:LabState){
       if(versions.length>=100)throw new Error('最多保留 100 个 Skill 版本');
       if(versions.some(v=>v.skillId===value.skillId&&v.label===value.label))throw new Error('该 Skill 已有同名版本，请使用新的版本名称');
       const version={...value,versionNumber:Math.max(0,...versions.filter(v=>v.skillId===value.skillId).map(v=>v.versionNumber??0))+1,files,id:randomUUID(),hash:hash(value.snapshot),createdAt:new Date().toISOString()};
-      persist({...state,revision:state.revision+1,skillVersions:[...versions,version]});return structuredClone(state);
+      persist({...state,revision:state.revision+1,skillVersions:[...versions,version]});return responseState(options);
     },
-    setSkillDefault(expectedRevision:number,skillId:SkillId,versionId:string|null){
+    updateSkillVersionNotes(expectedRevision:number,versionId:string,input:z.input<typeof skillVersionNotesInputSchema>,options?:{summary?:boolean}){
+      checkRevision(expectedRevision);const {notes}=skillVersionNotesInputSchema.parse(input);
+      const version=state.skillVersions?.find(version=>version.id===versionId);
+      if(!version)throw new Error('Skill 版本不存在，请刷新后重试');
+      if(version.notes===notes)return responseState(options);
+      // Descriptive metadata only. Frozen files, hashes and run snapshots stay intact.
+      persist({...state,revision:state.revision+1,skillVersions:state.skillVersions!.map(item=>item.id===versionId?{...item,notes}:item)});
+      return responseState(options);
+    },
+    setSkillDefault(expectedRevision:number,skillId:SkillId,versionId:string|null,options?:{summary?:boolean}){
       checkRevision(expectedRevision);z.enum(skillIds).parse(skillId);
       if(versionId&&!state.skillVersions?.some(v=>v.id===versionId&&v.skillId===skillId))throw new Error('默认版本必须属于当前 Skill');
       const defaults={...state.skillDefaults};if(versionId)defaults[skillId]=versionId;else delete defaults[skillId];
-      persist({...state,revision:state.revision+1,skillDefaults:defaults});return structuredClone(state);
+      persist({...state,revision:state.revision+1,skillDefaults:defaults});return responseState(options);
     },
     saveCategory(expectedRevision:number,input:{name:string;description:string;previousName?:string}){
       checkRevision(expectedRevision);
@@ -217,10 +240,11 @@ export function createLabStore(path:string, seed:LabState){
       persist({...state,revision:state.revision+1,modelCatalog:catalog,modelCatalogSyncedAt:new Date().toISOString(),models:(state.models??[]).filter(model=>catalog.includes(model))});
       return {models:catalog,removedModels};
     },
-    save(expectedRevision:number,teams:LabTeam[],cases:LabCase[]){
+    save(expectedRevision:number,teams:LabTeam[],cases:LabCase[],options?:{summary?:boolean}){
       if(expectedRevision!==state.revision)throw new Error('数据版本已更新，请刷新后重新保存，当前草稿仍保留');
       if(cases.some(c=>c.steps.some(s=>['agentdoor-personal-priority','agentdoor-task-diagnostician','agentdoor-ewd-progress'].includes(s.skillId))))throw new Error('该独立 Skill 已下线，请使用任务分析、人员责任分析或人员匹配分析');
       const parsed=editableSchema.parse({expectedRevision,teams,cases});validateRelations(parsed.teams,parsed.cases as LabCase[]);
+      parsed.cases=applyCreationOutcomeCriteria(parsed.teams,parsed.cases as LabCase[]);
       for(const item of parsed.cases)for(const step of item.steps)if(step.skillVersionId&&!state.skillVersions?.some(v=>v.id===step.skillVersionId&&v.skillId===step.skillId))throw new Error('用例引用的 Skill 版本不存在或不匹配');
       const versioned=<T extends {id:string;version:number}>(next:T[],old:T[])=>next.map(item=>{const before=old.find(o=>o.id===item.id);const unchanged=before&&isDeepStrictEqual({...item,version:0},{...before,version:0});return {...item,version:before?(unchanged?before.version:before.version+1):1};});
       for(const team of parsed.teams){const before=state.teams.find(t=>t.id===team.id);if(before){team.members=versioned(team.members,before.members);team.tasks=versioned(team.tasks,before.tasks);team.evidence=versioned(team.evidence,before.evidence);}}
@@ -230,7 +254,7 @@ export function createLabStore(path:string, seed:LabState){
         item.dataSnapshot.tasks=versioned(item.dataSnapshot.tasks,before.tasks);
       }}
       parsed.cases=versioned(parsed.cases,state.cases);
-      persist({...state,revision:state.revision+1,teams:structuredClone(parsed.teams),cases:structuredClone(parsed.cases) as LabCase[]});return structuredClone(state);
+      persist({...state,revision:state.revision+1,teams:structuredClone(parsed.teams),cases:structuredClone(parsed.cases) as LabCase[]});return responseState(options);
     },
     updateRuns(change:(runs:LabState['runs'])=>void){const next=structuredClone(state);change(next.runs);next.revision++;persist(next);return structuredClone(state);},
   };

@@ -62,7 +62,7 @@ const validDate = (value: string) => {
 };
 
 /** Read-only evidence from local draft/profile data; never infers capacity from profile prose. */
-export function describeTaskCollaborationSchedule(task: CollaborationScheduleTask, members: PersonOption[], tasks?: CollaborationScheduleCandidate[]): TaskCollaborationScheduleReport {
+export function describeTaskCollaborationSchedule(task: CollaborationScheduleTask, members: PersonOption[], tasks?: CollaborationScheduleCandidate[], locale = "zh-CN"): TaskCollaborationScheduleReport {
   const candidates = new Map<string, CollaborationScheduleCandidate>();
   for (const candidate of tasks ?? []) if (!candidates.has(candidate.clientId)) candidates.set(candidate.clientId, candidate);
   const person = (id: string): CollaborationSchedulePerson => {
@@ -88,13 +88,13 @@ export function describeTaskCollaborationSchedule(task: CollaborationScheduleTas
   if (task.startDate && !validStart) dateNotes.push("开始日期无效，需核对。");
   if (task.endDate && !validEnd) dateNotes.push("截止日期无效，需核对。");
   if (validStart && validEnd && task.startDate > task.endDate) dateNotes.push("本任务开始日期晚于截止日期，需核对。");
-  if (validStart && !task.endDate) dateNotes.push(`计划开始：${formatDisplayDate(task.startDate) ?? "—"}`);
+  if (validStart && !task.endDate) dateNotes.push(`计划开始：${formatDisplayDate(task.startDate, { locale }) ?? "—"}`);
 
   return {
     status: "pending",
     statusLabel: "排期待确认",
     sourceLabel: "成员资料 · 更新时间未提供",
-    dateLabel: !task.endDate ? "不设固定时间" : !validEnd ? "截止时间待核对" : validStart ? `${formatDisplayDate(task.startDate) ?? "—"} 至 ${formatDisplayDate(task.endDate) ?? "—"}` : `${formatDisplayDate(task.endDate) ?? "—"} 截止`,
+    dateLabel: !task.endDate ? "不设固定时间" : !validEnd ? "截止时间待核对" : validStart ? `${formatDisplayDate(task.startDate, { locale }) ?? "—"} 至 ${formatDisplayDate(task.endDate, { locale }) ?? "—"}` : `${formatDisplayDate(task.endDate, { locale }) ?? "—"} 截止`,
     dateNotes,
     owner: task.ownerId ? person(task.ownerId) : null,
     participants: [...new Set(task.participantIds)].filter(id => id && id !== task.ownerId).map(person),

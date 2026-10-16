@@ -6,8 +6,10 @@ import { partitionPinnedTasks, pinnedTaskStorageKey, readPinnedTaskIds } from "@
 import { useTaskSidebar } from "@/features/tasks/lib/useTaskSidebar";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { useI18n } from "@/shared/i18n/I18nProvider";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
+import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 import { PanelLeft } from "lucide-react";
-import { useEffect, useLayoutEffect, useMemo, useRef, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { PersonOption, TagDefinition, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
 import { buildTaskListProjection, buildTaskScopeCounts } from "@/features/tasks/lib/task-list-projection";
@@ -45,6 +47,14 @@ type TaskWorkspaceProps = {
 
 export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onTaskStatusChange, onOpenRecycleBin, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onClearTaskSelection, onShowWorkbench, query, selectedTaskId, showingCreation = false, showingWorkbench, tagDefinitions, teamId, progressComparisonsByTaskId }: TaskWorkspaceProps) {
   const { t } = useI18n();
+  const timeZone = useTeamTimeZone();
+  const [calendarDay, setCalendarDay] = useState(() => taskCalendarDate(new Date().toISOString(), timeZone));
+  useEffect(() => {
+    const updateDay = () => setCalendarDay(taskCalendarDate(new Date().toISOString(), timeZone));
+    updateDay();
+    const timer = window.setInterval(updateDay, 60_000);
+    return () => window.clearInterval(timer);
+  }, [timeZone]);
   const sidebar = useTaskSidebar();
   const mock = useMockText();
   const projectionFilters = useMemo(() => normalizeTaskWorkspaceFilters(filters), [filters]);
@@ -55,7 +65,8 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
     tagDefinitions,
     currentUserId,
     task => mock.field(task.id, "title", task.name),
-  ), [nodes, currentUserId, query, projectionFilters, tagDefinitions, mock]);
+    timeZone,
+  ), [nodes, currentUserId, query, projectionFilters, tagDefinitions, mock, timeZone, calendarDay]);
   const scopeCounts = useMemo(() => buildTaskScopeCounts(
     nodes,
     query,
@@ -63,7 +74,8 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
     tagDefinitions,
     currentUserId,
     task => mock.field(task.id, "title", task.name),
-  ), [nodes, currentUserId, query, projectionFilters, tagDefinitions, mock]);
+    timeZone,
+  ), [nodes, currentUserId, query, projectionFilters, tagDefinitions, mock, timeZone, calendarDay]);
   const detailRef = useRef<HTMLElement>(null);
   const hasDetail = Boolean(children);
   const selectedTaskIsVisible = projection.visibleTasks.some((task) => task.id === selectedTaskId);

@@ -9,12 +9,18 @@ import {createRunner} from './test-lab/runner.ts';
 import {createLabClient} from '../src/test-lab/client.ts';
 
 const options={apiKey:'test',endpoint:'https://example.com/responses',model:'test',maxOutputTokens:1000,timeoutMs:1000};
-const makeStore=()=>createLabStore(join(mkdtempSync(join(tmpdir(),'lab-submit-')),'state.json'),seedLab());
+const queueCaseId='submission-queue-case';
+const makeStore=()=>{
+ const seed=seedLab(),store=createLabStore(join(mkdtempSync(join(tmpdir(),'lab-submit-')),'state.json'),seed),library=store.getLibrary();
+ // Queue behavior uses an isolated active analysis case; the old effort Skill has retired.
+ const fixture={...structuredClone(seed.cases.find(c=>c.id==='case-responsibility')!),id:queueCaseId,origin:'manual',dataSnapshot:structuredClone(seed.teams[0])};
+ store.save(library.revision,library.teams,[...library.cases,fixture]);return store;
+};
 test('先保存排队记录再启动执行；历史查询不走整库复制',async()=>{
  const store=makeStore();let calls=0;const runner=createRunner(store,options,async()=>{calls++;return {rawOutput:'bad-json',usage:{inputTokens:0,outputTokens:0,totalTokens:0}};});
  // New submissions and queue lookups must not copy all previous raw evidence.
  store.get=()=>{throw Error('不应复制全部历史记录');};
- const created=runner.enqueue(['case-effort'],'fast-submit');
+ const created=runner.enqueue([queueCaseId],'fast-submit');
  assert.equal(calls,0);assert.equal(store.getRun(created[0].id)?.status,'queued');
  await Promise.resolve();assert.equal(calls,0,'执行不占用提交响应前的微任务阶段');
  await runner.idle();assert.equal(calls,1);
@@ -27,7 +33,7 @@ test('先保存排队记录再启动执行；历史查询不走整库复制',asy
  assert.deepEqual(store.getRun(complete.id),before);
 });
 test('只恢复服务关闭前尚未发出请求的排队项，不重跑已开始或手动取消项',async()=>{
- const store=makeStore();const library=store.getLibrary();const template=library.cases.find(c=>c.id==='case-effort')!;
+ const store=makeStore();const library=store.getLibrary();const template=library.cases.find(c=>c.id===queueCaseId)!;
  const ids=['recover-a','recover-b','recover-c'];
  store.save(library.revision,library.teams,[...library.cases,...ids.map(id=>({...structuredClone(template),id,origin:'manual',archived:false,enabled:true}))]);
  let calls=0;const runner=createRunner(store,options,async()=>{calls++;return {rawOutput:'bad-json',usage:{inputTokens:0,outputTokens:0,totalTokens:0}};});

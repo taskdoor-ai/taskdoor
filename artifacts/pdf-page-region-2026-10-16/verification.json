@@ -1,0 +1,124 @@
+{
+  "changeId": "PRD-0233",
+  "date": "2026-10-16",
+  "status": "scoped_checks_and_desktop_component_flow_passed",
+  "workspace": "/Users/yxzuji/Documents/ChatGPT/agentdoor2",
+  "checks": [
+    {
+      "name": "page-region anchors, source preview and material export",
+      "tests": 33,
+      "status": "passed",
+      "command": "npx tsx --test server/taskFilePageRegion.test.ts server/taskFilePageRegionPreview.test.ts server/taskFileAnnotations.test.ts server/taskFileAnnotationDocument.test.ts server/taskFileAnnotationBundle.test.ts",
+      "evidence": "本轮office_preview工具输出，未为补日志重复测试"
+    },
+    {
+      "name": "page-region geometry, mode and page filtering",
+      "tests": 6,
+      "status": "passed",
+      "command": "node --import tsx --test server/pdfRegionSelection.test.ts",
+      "evidence": "本轮frontend_preview工具输出，已观察红→绿"
+    },
+    {
+      "name": "original text selection regression",
+      "tests": 6,
+      "status": "passed",
+      "command": "npx tsx --test server/pdfTextSelection.test.ts",
+      "log": "text-selection-regression.log"
+    },
+    {
+      "name": "Explorer and fullscreen/nonfullscreen annotation popup interaction",
+      "tests": 9,
+      "status": "passed",
+      "command": "npx tsx --test server/taskFileDiscussionInteraction.test.ts",
+      "log": "ui-tests.log"
+    },
+    {
+      "name": "app TypeScript",
+      "status": "passed",
+      "command": "npx tsc -p tsconfig.app.json --pretty false",
+      "log": "app-typecheck.log"
+    },
+    {
+      "name": "structure gate",
+      "status": "passed_no_new_violations",
+      "command": "npm run structure:check",
+      "log": "structure-check.log"
+    },
+    {
+      "name": "final app and validation page production build",
+      "status": "passed_with_existing_config_and_chunk_warnings",
+      "command": "npx vite build --config artifacts/pdf-page-region-2026-10-16/vite-region.config.ts --logLevel warn",
+      "log": "frontend-build.log"
+    }
+  ],
+  "targetedTestCount": 54,
+  "browser": {
+    "url": "http://127.0.0.1:4183/artifacts/pdf-page-region-2026-10-16/validation.html",
+    "runtime": "current-workspace-build",
+    "surface": "current-component",
+    "component": "TaskFileExplorer with real TaskPdfViewer and TaskPresentationViewer",
+    "browser": "Codex in-app browser via CUA only",
+    "desktopViewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "nativeFullscreenViewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "identity": "passed",
+    "meaningfulContent": "passed",
+    "frameworkErrorOverlay": "absent",
+    "consoleErrorsAndWarnings": [],
+    "pdf": {
+      "file": "扫描资料.pdf",
+      "sourceFixture": "../../output/pdf/scan-region-validation.pdf",
+      "pages": 2,
+      "extractedTextOnBothPages": "empty_verified_with_pypdf",
+      "defaultModeAfterEnable": "region",
+      "textSelectionButton": "disabled_no_text",
+      "regionCapture": "actual_canvas_crop_visible_in_opinion_popup",
+      "fileVersion": 1,
+      "addedAnnotations": 2,
+      "markersByPage": [
+        1,
+        1
+      ],
+      "normalizedRegionBeforeZoom": "left: 64.0244%; top: 18.0492%; width: 20.935%; height: 28.9973%;",
+      "normalizedRegionAfterZoomAndFit": "left: 64.0244%; top: 18.0492%; width: 20.935%; height: 28.9973%;",
+      "zoom": "103% -> 95% -> fit width 103%",
+      "locate": "from page2 open list and select page1 screenshot: returned to page1",
+      "fullscreen": "page2 region capture, opinion input and add succeeded; popup inside :fullscreen viewer, toolbar visible"
+    },
+    "presentation": {
+      "file": "秋季精华首发协同汇报.pptx",
+      "pages": 8,
+      "selectedPage": 2,
+      "defaultMode": "text_pressed_and_enabled",
+      "regionMode": "explicitly_selected",
+      "regionTarget": "3,297 completed effort and total/remaining effort data layout",
+      "cropAndOpinion": "visible_with_page2_v1",
+      "add": "passed_total_session_annotations3",
+      "switchBackToText": "selected actual task completion heading; text toolbar opened; draft text mark1 and region draft0"
+    },
+    "cleanup": "All three temporary annotations and empty text draft cleared through existing controls; no discussion published or AI tool launched; no task file tree persisted.",
+    "screenshots": [
+      "../file-capability-audit-2026-10-16/current-pdf-page-region.jpg",
+      "../file-capability-audit-2026-10-16/current-presentation-page-region.jpg",
+      "../file-capability-audit-2026-10-16/current-pdf-region-fullscreen.jpg"
+    ]
+  },
+  "resolvedDuringVerification": [
+    "Regular-view popup disappeared because a null fullscreen portal target suppressed mounting; fixed to default body for null and regression added."
+  ],
+  "limits": [
+    "5173开发依赖优化期间反复整页刷新，浏览器功能验收改用当前同一主工作区生产构建；不以组件页声称完整主任务页面或上传流程验收。",
+    "未实机测试移动端、触屏、键盘完成区域绘制；代码保留pointer事件与Escape取消。",
+    "截图失败提示及原件缺失拒绝路径分别有实现与材料回归，未在真实浏览器强制注入canvas截图失败。",
+    "没有OCR，区域截图不提供图片内文字提取；原PDF/PPT不编辑、不回写标注。",
+    "未实测AI交接、发送到讨论、旧PPT二进制的转换或全部浏览器；PPT/PPTX共用转换后的页面标注实现。",
+    "未运行全量测试或双重审查；标准全量构建的既有server测试类型错误不在本轮处理。"
+  ],
+  "productionRepositoryChanged": false,
+  "remoteActions": false
+}

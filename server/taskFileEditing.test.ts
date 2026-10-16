@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
+import type { TaskFileContent } from "../src/features/tasks/files/lib/task-file-editing.ts";
 
 // A missing implementation is an explicit failing assertion during the first TDD run.
 const editing = await import("../src/features/tasks/files/lib/task-file-editing.ts").catch((error: unknown) => {
@@ -8,6 +9,11 @@ const editing = await import("../src/features/tasks/files/lib/task-file-editing.
   throw error;
 });
 function api() { assert.ok(editing, "文件编辑数据模块尚未实现"); return editing; }
+const revisionDiff = await import("../src/features/tasks/files/lib/task-file-revision-diff.ts").catch((error: unknown) => {
+  if (error && typeof error === "object" && "code" in error && error.code === "ERR_MODULE_NOT_FOUND") return null;
+  throw error;
+});
+function comparisonApi() { assert.ok(revisionDiff, "文件版本比较模块尚未实现"); return revisionDiff; }
 
 const now = "2026-08-31T05:30:00.000Z";
 const textFile: TaskFileNode = { id: "notes", kind: "file", name: "说明.md", parentId: null, updatedAt: "昨天", version: 4, content: "第一行\n第二行\n第三行" };
@@ -222,5 +228,119 @@ test("来源最近更新只有有效 ISO 日期时间才标记为精确，不转
   }
   for (const updatedAt of ["2026-99-31T05:30:00Z", "2026-02-30T05:30:00Z", "2026-08-31T25:30:00Z", "not-a-date"]) {
     assert.deepEqual(getTaskFileLastUpdate({ ...textFile, updatedAt }, []), { author: null, updatedAt, isExact: false });
+  }
+});
+
+test("新修订快照保存完整真实前后正文，读写后未修改行仍保留", () => {
+  const record = changedFile();
+  const revision = record.revisions[0];
+  assert.deepEqual(revision.beforeContent, { kind: "text", text: textFile.content });
+  assert.deepEqual(revision.afterContent, record.content);
+  assert.notEqual(revision.afterContent, record.content);
+  const storage = new MemoryStorage();
+  api().saveTaskFileEdit(storage, "snapshots", record, 4);
+  const restored = api().readTaskFileEdits(storage, "snapshots").notes;
+  assert.deepEqual(restored, record);
+  assert.deepEqual(comparisonApi().getTaskFileRevisionComparison(restored.revisions[0]), {
+    mode: "full", contentKind: "text", before: textFile.content,
+    after: "第一行\n修改后的第二行\n第三行",
+  });
+});
+
+test("新修订快照深拷贝 PDF 页与表格行，来源、输入和保存正文互不共享", () => {
+  const samples: Array<{ file: TaskFileNode; next: TaskFileContent }> = [
+    { file: { ...textFile, name: "说明.pdf", previewData: { kind: "pdf", pages: ["原始页", "第二页"] } }, next: { kind: "pdf", pages: ["新页", "第二页"] } },
+    { file: { ...textFile, name: "说明.xlsx", previewData: { kind: "table", sheets: [{ name: "进度", columns: ["事项"], rows: [["原值"]] }] } }, next: { kind: "table", sheets: [{ name: "进度", columns: ["事项"], rows: [["新值"]] }] } },
+  ];
+  for (const { file, next } of samples) {
+    const record = api().createTaskFileRevision(file, next, "真实编辑人", now)!;
+    const before = structuredClone(api().getTaskFileContent(file));
+    const after = structuredClone(next);
+    const revision = record.revisions[0];
+    if (next.kind === "pdf" && file.previewData?.kind === "pdf" && record.content.kind === "pdf") {
+      next.pages[0] = "改输入";
+      file.previewData.pages[0] = "改来源";
+      record.content.pages[0] = "改保存正文";
+    } else if (next.kind === "table" && file.previewData?.kind === "table" && record.content.kind === "table") {
+      next.sheets[0].rows[0][0] = "改输入";
+      file.previewData.sheets[0].columns[0] = "改来源";
+      record.content.sheets[0].rows[0][0] = "改保存正文";
+    } else assert.fail("样本格式不一致");
+    assert.deepEqual(revision.beforeContent, before);
+    assert.deepEqual(revision.afterContent, after);
+    assert.notEqual(revision.beforeContent, revision.afterContent);
+  }
+});
+
+test("旧修订缺少快照仍可读取保存，仅返回真实修改片段且不补造完整旧文件", () => {
+  const record = changedFile();
+  delete record.revisions[0].beforeContent;
+  delete record.revisions[0].afterContent;
+  const storage = new MemoryStorage();
+  api().saveTaskFileEdit(storage, "legacy-snapshots", record, 4);
+  const restored = api().readTaskFileEdits(storage, "legacy-snapshots").notes;
+  assert.deepEqual(restored, record);
+  assert.equal(Object.hasOwn(restored.revisions[0], "beforeContent"), false);
+  assert.equal(Object.hasOwn(restored.revisions[0], "afterContent"), false);
+  const comparison = comparisonApi().getTaskFileRevisionComparison(restored.revisions[0]);
+  assert.deepEqual(comparison, { mode: "partial", changes: record.revisions[0].changes });
+  assert.equal(Object.hasOwn(comparison, "before"), false);
+  assert.equal(Object.hasOwn(comparison, "after"), false);
+  if (comparison.mode === "partial") comparison.changes[0].before = "外部修改";
+  assert.equal(restored.revisions[0].changes[0].before, "第二行");
+  const next = api().createTaskFileRevision(api().applyTaskFileEdit(textFile, restored), { kind: "text", text: "后续真实正文" }, "下一位编辑人", now)!;
+  next.revisions = [...restored.revisions, ...next.revisions];
+  api().saveTaskFileEdit(storage, "legacy-snapshots", next, 5);
+  assert.deepEqual(api().readTaskFileEdits(storage, "legacy-snapshots").notes, next);
+});
+
+test("快照缺失单侧、格式损坏或与保存正文矛盾时保护原始记录并拒绝覆盖", () => {
+  const storage = new MemoryStorage();
+  const record = changedFile();
+  api().saveTaskFileEdit(storage, "invalid-snapshots", record, 4);
+  const key = [...storage.values.keys()][0];
+  const revision = record.revisions[0];
+  const invalidSnapshots = [
+    { ...revision, beforeContent: undefined },
+    { ...revision, afterContent: undefined },
+    { ...revision, beforeContent: { kind: "pdf", pages: ["不一致"] } },
+    { ...revision, beforeContent: { kind: "text", text: null } },
+    { ...revision, afterContent: { kind: "text", text: "与已保存正文矛盾" } },
+    { ...revision, beforeContent: { kind: "table", sheets: [{ name: "损坏", columns: ["列"], rows: [null] }] } },
+  ];
+  for (const invalid of invalidSnapshots) {
+    const raw = JSON.stringify({ notes: { ...record, revisions: [invalid] } });
+    storage.values.set(key, raw);
+    assert.throws(() => api().readTaskFileEdits(storage, "invalid-snapshots"), /损坏/);
+    assert.throws(() => api().saveTaskFileEdit(storage, "invalid-snapshots", record, 4), /损坏/);
+    assert.equal(storage.values.get(key), raw);
+  }
+});
+
+test("PDF 与表格比较转换保留真实页边界、工作表名、列与单元格，快照读写保持", () => {
+  const samples: Array<{ file: TaskFileNode; next: TaskFileContent; before: string; after: string }> = [
+    {
+      file: { ...textFile, name: "规范.pdf", previewData: { kind: "pdf", pages: ["标题\n原值", ""] } },
+      next: { kind: "pdf", pages: ["标题\n新值", ""] },
+      before: "第 1 页\n标题\n原值\n\n第 2 页\n",
+      after: "第 1 页\n标题\n新值\n\n第 2 页\n",
+    },
+    {
+      file: { ...textFile, name: "进度.xlsx", previewData: { kind: "table", sheets: [{ name: "进度", columns: ["事项", "说明"], rows: [["验收", "第一行\n第二行"], ["引用", '原文"引号']] }, { name: "空表", columns: [], rows: [] }] } },
+      next: { kind: "table", sheets: [{ name: "进度", columns: ["事项", "说明"], rows: [["验收", "第一行\n已确认"], ["引用", '原文"引号']] }, { name: "空表", columns: [], rows: [] }] },
+      before: '工作表：进度\n事项\t说明\n验收\t"第一行\n第二行"\n引用\t"原文""引号"\n\n工作表：空表\n',
+      after: '工作表：进度\n事项\t说明\n验收\t"第一行\n已确认"\n引用\t"原文""引号"\n\n工作表：空表\n',
+    },
+  ];
+  for (const { file, next, before, after } of samples) {
+    const record = api().createTaskFileRevision(file, next, "实际作者", now)!;
+    const storage = new MemoryStorage();
+    api().saveTaskFileEdit(storage, "structured-snapshots", record, 4);
+    const first = api().readTaskFileEdits(storage, "structured-snapshots").notes;
+    const second = api().readTaskFileEdits(storage, "structured-snapshots").notes;
+    assert.deepEqual(first, record);
+    assert.notEqual(first.revisions[0].beforeContent, second.revisions[0].beforeContent);
+    assert.notEqual(first.revisions[0].afterContent, first.content);
+    assert.deepEqual(comparisonApi().getTaskFileRevisionComparison(first.revisions[0]), { mode: "full", contentKind: next.kind, before, after });
   }
 });

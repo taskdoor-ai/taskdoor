@@ -1,0 +1,224 @@
+[
+  {
+    "caseId": "caseA",
+    "input": {
+      "currentDate": "2026-10-16",
+      "timezone": "Asia/Shanghai",
+      "locale": "zh-CN",
+      "currentMemberId": "member-ops",
+      "members": [
+        {
+          "id": "member-ops",
+          "name": "周岚",
+          "responsibilities": [
+            "团队运营、流程资料维护和内部协作"
+          ]
+        },
+        {
+          "id": "member-design",
+          "name": "林洁",
+          "responsibilities": [
+            "视觉设计与内容排版"
+          ]
+        }
+      ],
+      "existingTasks": [],
+      "decisions": {},
+      "requestId": "v15-a",
+      "userRequest": "给新同事做一页常见报销问题说明，帮助他按现行规则准备材料，现行制度资料齐全。不改审批流程。"
+    },
+    "output": {
+      "schemaVersion": "taskdoor.task-preview.v1",
+      "requestId": "v15-a",
+      "status": "ready",
+      "summary": "整理一页面向新同事的常见报销问题说明，依据现行制度帮助准备材料，保留现有审批流程。",
+      "tasks": [
+        {
+          "clientId": "draft-expense-faq",
+          "title": "编写新同事常见报销问题说明",
+          "goal": "帮助新同事理解现行报销要求，并据此准备所需材料。",
+          "acceptanceCriteria": [
+            "交付一页面向新同事的常见报销问题说明，包含准备材料时需要了解的问题与对应答案。",
+            "说明中的材料要求和问题答案与现行制度一致，表述清楚，能据此辨认需要准备的材料。",
+            "说明沿用现行审批规则，不改变审批流程。"
+          ],
+          "ownerMemberId": "member-ops",
+          "assignmentReason": "周岚的团队运营和流程资料维护职责与报销说明整理直接相关，建议由其负责。",
+          "participants": [],
+          "dueDate": "2026-10-19",
+          "executionTips": [
+            "从齐全的现行制度资料中提炼与新同事准备报销材料直接相关的常见问题。",
+            "按问题与答案组织一页内容，逐项对照现行制度核对材料要求及流程表述。"
+          ],
+          "effortEstimate": {
+            "minutes": 90,
+            "workMethod": "复用现行制度资料，人工提炼常见问题、编写一页说明并核对调整。",
+            "reason": "资料齐全，范围为一页说明；包含资料提炼、撰写、核对及必要调整，按三点估算汇总约90分钟，不含等待或审批流程改造。"
+          },
+          "children": []
+        }
+      ],
+      "questions": [],
+      "warnings": [
+        "任务「编写新同事常见报销问题说明」(draft-expense-faq) 的 2026-10-19 为 AI 建议：按周一至周五工作日假设，预留下一工作日内的一段整理与核对窗口；资料齐全，人员实际可用时间及团队工作日历未核实，可修改或清空。"
+      ],
+      "duplicates": [],
+      "parentCandidates": []
+    }
+  },
+  {
+    "caseId": "caseB",
+    "input": {
+      "currentDate": "2026-10-16",
+      "timezone": "Asia/Shanghai",
+      "locale": "zh-CN",
+      "currentMemberId": "member-ops",
+      "members": [
+        {
+          "id": "member-ops",
+          "name": "周岚",
+          "responsibilities": [
+            "团队运营、流程资料维护和内部协作"
+          ]
+        },
+        {
+          "id": "member-design",
+          "name": "林洁",
+          "responsibilities": [
+            "视觉设计与内容排版"
+          ]
+        }
+      ],
+      "existingTasks": [],
+      "decisions": {},
+      "requestId": "v15-b",
+      "userRequest": "持续维护团队常见问题，帮助成员找到当前有效答案。这是长期维护，不设置整体结束日。"
+    },
+    "output": {
+      "schemaVersion": "taskdoor.task-preview.v1",
+      "requestId": "v15-b",
+      "status": "ready",
+      "summary": "持续维护团队常见问题及有效答案，不设置整体结束日。",
+      "tasks": [
+        {
+          "clientId": "draft-team-faq",
+          "title": "持续维护团队常见问题",
+          "goal": "让团队成员能够按常见问题找到当前有效的答案，持续保持团队答疑资料可用。",
+          "acceptanceCriteria": [
+            "维护范围内的常见问题与对应答案清楚关联，成员能按问题找到答案。",
+            "答案与当前有效的团队规则或资料一致；已失效的内容及时更新或明确标为失效，避免被当作现行答案。"
+          ],
+          "ownerMemberId": "member-ops",
+          "assignmentReason": "周岚承担团队运营、流程资料维护和内部协作，适合负责团队常见问题的持续维护。",
+          "participants": [],
+          "dueDate": null,
+          "executionTips": [
+            "结合成员反复提出的问题整理答案，并与对应的现行资料核对。",
+            "团队规则或资料变化时，检查受影响的问题答案并更新有效内容。"
+          ],
+          "effortEstimate": null,
+          "children": []
+        }
+      ],
+      "questions": [],
+      "warnings": [
+        "该任务为没有整体结束点的长期维护，按要求保留整体截止日期为空；尚未明确问题规模、维护频率或估算周期，无法可靠估算整体人工投入，预计投入暂为空。"
+      ],
+      "duplicates": [],
+      "parentCandidates": []
+    }
+  },
+  {
+    "caseId": "caseC",
+    "input": {
+      "currentDate": "2026-10-16",
+      "timezone": "Asia/Shanghai",
+      "locale": "zh-CN",
+      "currentMemberId": "member-ops",
+      "members": [
+        {
+          "id": "member-ops",
+          "name": "周岚",
+          "responsibilities": [
+            "团队运营、流程资料维护和内部协作"
+          ]
+        },
+        {
+          "id": "member-design",
+          "name": "林洁",
+          "responsibilities": [
+            "视觉设计与内容排版"
+          ]
+        }
+      ],
+      "existingTasks": [],
+      "decisions": {},
+      "requestId": "v15-c",
+      "userRequest": "把任务名称改成“新员工报销说明”，其余内容保持。",
+      "previousPlan": {
+        "schemaVersion": "taskdoor.task-preview.v1",
+        "requestId": "v15-original",
+        "status": "ready",
+        "summary": "整理新员工报销说明",
+        "tasks": [
+          {
+            "clientId": "draft-expenses",
+            "title": "整理报销说明",
+            "goal": "让新员工能依据现行规则准备报销材料",
+            "acceptanceCriteria": [
+              "一页说明准确呈现现行制度规定的材料与常见问题",
+              "不改变审批流程"
+            ],
+            "ownerMemberId": "member-ops",
+            "assignmentReason": "按团队运营及流程资料职责建议",
+            "participants": [],
+            "dueDate": null,
+            "executionTips": [],
+            "effortEstimate": {
+              "minutes": 90,
+              "workMethod": "整理现行材料并核对说明",
+              "reason": "资料齐全，包含整理与核对，不含等待"
+            },
+            "children": []
+          }
+        ],
+        "questions": [],
+        "warnings": [],
+        "duplicates": [],
+        "parentCandidates": []
+      }
+    },
+    "output": {
+      "schemaVersion": "taskdoor.task-preview.v1",
+      "requestId": "v15-c",
+      "status": "ready",
+      "summary": "整理新员工报销说明",
+      "tasks": [
+        {
+          "clientId": "draft-expenses",
+          "title": "新员工报销说明",
+          "goal": "让新员工能依据现行规则准备报销材料",
+          "acceptanceCriteria": [
+            "一页说明准确呈现现行制度规定的材料与常见问题",
+            "不改变审批流程"
+          ],
+          "ownerMemberId": "member-ops",
+          "assignmentReason": "按团队运营及流程资料职责建议",
+          "participants": [],
+          "dueDate": null,
+          "executionTips": [],
+          "effortEstimate": {
+            "minutes": 90,
+            "workMethod": "整理现行材料并核对说明",
+            "reason": "资料齐全，包含整理与核对，不含等待"
+          },
+          "children": []
+        }
+      ],
+      "questions": [],
+      "warnings": [],
+      "duplicates": [],
+      "parentCandidates": []
+    }
+  }
+]

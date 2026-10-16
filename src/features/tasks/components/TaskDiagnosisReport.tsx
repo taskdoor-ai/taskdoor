@@ -1,3 +1,4 @@
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { AlertTriangle, GitCompareArrows, LoaderCircle, RefreshCw, Stethoscope } from "lucide-react";
 import type { TaskDiagnosisReport as TaskDiagnosisReportModel } from "@/features/tasks/lib/task-diagnosis";
 import type { TaskDiagnosisEvidence, TaskDiagnosisFinding } from "@/shared/model/task-diagnosis";
@@ -34,8 +35,8 @@ function coverageSummary(report: TaskDiagnosisReportModel): string {
   return `检索范围：${scope}的${sources}`;
 }
 
-function checkedAtLabel(value?: string): string | null {
-  return value ? formatDisplayDateTime(value) ?? formatDisplayDate(value) : null;
+function checkedAtLabel(value: string | undefined, locale: string): string | null {
+  return value ? formatDisplayDateTime(value, { locale }) ?? formatDisplayDate(value, { locale }) : null;
 }
 
 function DiagnosisFinding({ finding }: { finding: TaskDiagnosisFinding }) {
@@ -80,7 +81,8 @@ function groupedDescendantFindings(report: TaskDiagnosisReportModel): Array<{ fi
 }
 
 export function TaskDiagnosisReport({ analysisError = "", analyzing = false, onReanalyze, report }: TaskDiagnosisReportProps) {
-  const checkedAt = checkedAtLabel(report.checkedAt);
+  const { locale } = useI18n();
+  const checkedAt = checkedAtLabel(report.checkedAt, locale);
   const currentTaskFindings = report.findings.filter((finding) => finding.subject.id === report.rootTaskId);
   const descendantGroups = groupedDescendantFindings(report);
   return <div aria-busy={analyzing} aria-labelledby="task-diagnosis-heading" className="task-diagnosis-report">
@@ -97,7 +99,7 @@ export function TaskDiagnosisReport({ analysisError = "", analyzing = false, onR
     {analysisError && <p className="task-diagnosis-analysis-error" role="alert">{analysisError}</p>}
     <p className="task-diagnosis-coverage">
       <span>{coverageSummary(report)}</span>
-      <span className="task-diagnosis-updated-at">更新时间：{checkedAt ? <time dateTime={report.checkedAt} title={report.checkedAt ? formatDisplayDateTime(report.checkedAt, { year: "always" }) ?? formatDisplayDate(report.checkedAt, { year: "always" }) ?? undefined : undefined}>{checkedAt}</time> : "未记录"}</span>
+      <span className="task-diagnosis-updated-at">更新时间：{checkedAt ? <time dateTime={report.checkedAt} title={report.checkedAt ? formatDisplayDateTime(report.checkedAt, { locale, year: "always" }) ?? formatDisplayDate(report.checkedAt, { locale, year: "always" }) ?? undefined : undefined}>{checkedAt}</time> : "未记录"}</span>
     </p>
     {report.findings.length
       ? <div className="task-diagnosis-findings">{descendantGroups.length ? <>

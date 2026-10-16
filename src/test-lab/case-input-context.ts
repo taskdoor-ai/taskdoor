@@ -6,6 +6,10 @@ export function selectCaseContext(team:LabTeam,c:LabCase,step:LabStep){
   const fresh=step.skillId==='agentdoor-task-planner';
   if(fresh)team={...team,tasks:[],evidence:[]};
   if(fresh)step={...step,taskId:null};
+  if(step.skillId==='taskdoor-decompose-task'&&step.taskId){
+    const ids=new Set([step.taskId,...team.tasks.filter(task=>task.parentId===step.taskId).map(task=>task.id)]);
+    team={...team,tasks:team.tasks.filter(task=>ids.has(task.id)),evidence:team.evidence.filter(record=>ids.has(record.taskId))};
+  }
   if(step.skillId==='agentdoor-task-status-analyzer'&&step.taskId){
     const ids=new Set([step.taskId]);let changed=true;while(changed){changed=false;for(const t of team.tasks)if(t.parentId&&ids.has(t.parentId)&&!ids.has(t.id)){ids.add(t.id);changed=true;}}
     for(const t of team.tasks.filter(t=>ids.has(t.id)))for(const id of t.dependsOnTaskIds)ids.add(id);

@@ -39,6 +39,7 @@ export function createLabClient(csrfToken = "", fetcher: typeof fetch = fetch) {
     },
     skill: (id: SkillId) => request<{snapshot:string; hash:string}>(`/skills/${id}`),
     addSkillVersion: (expectedRevision:number, version:Pick<LabSkillVersion,"skillId"|"label"|"notes"|"snapshot"|"baseVersionId">) => request<LabState>("/skill-versions", "POST", {expectedRevision,version}),
+    updateSkillVersionNotes:(expectedRevision:number,versionId:string,notes:string)=>request<LabState>(`/skill-versions/${encodeURIComponent(versionId)}/notes`,'PUT',{expectedRevision,notes}),
     setSkillDefault: (expectedRevision:number,skillId:SkillId,versionId:string|null) => request<LabState>("/skill-default", "PUT", {expectedRevision,skillId,versionId}),
     saveCategory: (expectedRevision:number,category:{name:string;description:string;previousName?:string}) => request<LabState>("/categories", "PUT", {expectedRevision,category}),
     saveModels: (expectedRevision:number,models:string[],judgeEnabled?:boolean) => request<LabState>("/models", "PUT", {expectedRevision,models,...(judgeEnabled===undefined?{}:{judgeEnabled})}),

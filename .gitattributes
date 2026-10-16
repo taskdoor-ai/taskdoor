@@ -1,0 +1,5 @@
+# Keep downloadable demo originals byte-for-byte.
+public/task-assets/** -text
+public/task-assets/**/*.pdf binary
+public/task-assets/**/*.ics whitespace=cr-at-eol
+public/task-assets/**/*.csv whitespace=cr-at-eol

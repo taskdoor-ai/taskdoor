@@ -1,0 +1,444 @@
+{
+  "createdAt": "2026-10-14T11:43:38.278Z",
+  "model": "qwen/qwen3.7-plus",
+  "scope": "只复用已保存输出进行判断，不重新生成",
+  "rows": [
+    {
+      "id": "a4e64347-3deb-4e58-8cde-15ee37b973d2",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 任务拆解 · 一份短脚本不过拆",
+      "reviewId": "6b0e02ca-64e3-4016-8c82-fb394f2cadeb",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 2131,
+        "output_tokens": 272
+      },
+      "counts": {
+        "met": 7
+      },
+      "sourceCounts": {
+        "model": 7
+      }
+    },
+    {
+      "id": "31a5340f-3279-4600-a2c6-14eaf7f408f2",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 任务拆解 · 三个独立物料",
+      "reviewId": "30ddf77c-57c4-4550-98f8-ff89c768422a",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 2443,
+        "output_tokens": 288
+      },
+      "counts": {
+        "met": 7
+      },
+      "sourceCounts": {
+        "model": 7
+      }
+    },
+    {
+      "id": "1f9fe357-b81f-4e7a-8644-4df9fc169b51",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 任务拆解 · 不同渠道独立验收",
+      "reviewId": "3d95b091-5861-441b-926a-c26cabac9e9b",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 2826,
+        "output_tokens": 297
+      },
+      "counts": {
+        "met": 6
+      },
+      "sourceCounts": {
+        "model": 6
+      }
+    },
+    {
+      "id": "689e4586-e81b-4e97-82ec-b1007cbe9ef4",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 任务拆解 · 大量同类交付保持范围",
+      "reviewId": "526f1170-9eee-4eb8-9fbc-3534c65f38b7",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 2057,
+        "output_tokens": 460
+      },
+      "counts": {
+        "met": 7
+      },
+      "sourceCounts": {
+        "model": 7
+      }
+    },
+    {
+      "id": "5c0348b8-3632-4414-805c-cac485a68506",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 单项脚本 · 缺少事实不编造",
+      "reviewId": "806f89ad-e28e-48e1-8117-c0f919a6685b",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 2306,
+        "output_tokens": 325
+      },
+      "counts": {
+        "met": 8
+      },
+      "sourceCounts": {
+        "model": 8
+      }
+    },
+    {
+      "id": "cf1daae1-d8cb-4546-8ac1-6ff7ec3538f1",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 成员分配 · 按职责选择文案负责人",
+      "reviewId": "28a612ab-590f-4a7f-beca-53690c9e0cb1",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 2156,
+        "output_tokens": 300
+      },
+      "counts": {
+        "met": 7
+      },
+      "sourceCounts": {
+        "model": 7
+      }
+    },
+    {
+      "id": "2b93711e-2238-48dc-a8ca-709cc13fbf05",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 成员分配 · 保留用户明确选择",
+      "reviewId": "993cd154-b9c2-4772-9287-02d635a3c558",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 2058,
+        "output_tokens": 456
+      },
+      "counts": {
+        "met": 7
+      },
+      "sourceCounts": {
+        "model": 7
+      }
+    },
+    {
+      "id": "efcd3edb-803a-4521-84af-eaba17e5f20d",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 成员分配 · 单人可以交付",
+      "reviewId": "07940d41-8b5a-4875-a375-5c6cf3b3ffd7",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 1956,
+        "output_tokens": 200
+      },
+      "counts": {
+        "met": 6
+      },
+      "sourceCounts": {
+        "model": 6
+      }
+    },
+    {
+      "id": "baaacffe-69ae-4460-908a-6587f06d98c8",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 任务基础信息 · 保留预计投入",
+      "reviewId": "94c55d1a-d096-483a-853d-c67d11400a96",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 1973,
+        "output_tokens": 325
+      },
+      "counts": {
+        "met": 6
+      },
+      "sourceCounts": {
+        "model": 6
+      }
+    },
+    {
+      "id": "03b4085a-ff7b-4d8a-bd72-0778366de5b0",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 修改方案 · 调整日期保留分工",
+      "reviewId": "0b0f5946-f4e8-43df-9f54-3c46495b2336",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 4633,
+        "output_tokens": 290
+      },
+      "counts": {
+        "met": 6
+      },
+      "sourceCounts": {
+        "model": 6
+      }
+    },
+    {
+      "id": "686a4e2f-97f8-49d0-8d4c-01c328e3d6f6",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 修改方案 · 删除交付保留剩余范围",
+      "reviewId": "21a78591-67c1-4cca-8a21-96e9bbb1ee61",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 5291,
+        "output_tokens": 428
+      },
+      "counts": {
+        "met": 6
+      },
+      "sourceCounts": {
+        "model": 6
+      }
+    },
+    {
+      "id": "3fc636ae-b5eb-49d5-b3ed-d9a6e0d17482",
+      "state": "completed",
+      "caseName": "2026-10-14 回归 · 方案流程 · 确认后仍返回方案",
+      "reviewId": "7d6a7e07-722c-41aa-bcdd-a79fda492b67",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 3426,
+        "output_tokens": 226
+      },
+      "counts": {
+        "met": 7
+      },
+      "sourceCounts": {
+        "model": 7
+      }
+    },
+    {
+      "id": "aa84ed19-8f4c-4e8f-8570-e6936177914b",
+      "state": "failed",
+      "error": "无法连接模型服务（UND_ERR_SOCKET）"
+    },
+    {
+      "id": "0a860d1d-954d-4b1a-b55e-e31a5c58d817",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · AI全部达成与人工确认分开",
+      "reviewId": "eb9e38b5-3cc6-4c36-bc3c-76ceb39dfc54",
+      "model": "qwen/qwen3.7-plus",
+      "usage": null,
+      "counts": {
+        "insufficient": 10
+      },
+      "sourceCounts": {
+        "local": 10
+      }
+    },
+    {
+      "id": "90d02953-a784-4896-b6fb-4f9a15f150dc",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 完成声称不能代替正文",
+      "reviewId": "b2a3c1e5-ed7e-4bd1-a958-718f85fa479d",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 11187,
+        "output_tokens": 691
+      },
+      "counts": {
+        "met": 10
+      },
+      "sourceCounts": {
+        "model": 10
+      }
+    },
+    {
+      "id": "2f98e61d-18be-4117-b4d0-4c6462c5d65a",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 新增范围必要补估与已完成状态保留",
+      "reviewId": "1fea8ce8-b50e-46a7-8bfa-8a7c9ebd6ac4",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 15019,
+        "output_tokens": 408
+      },
+      "counts": {
+        "unmet": 2,
+        "met": 7
+      },
+      "sourceCounts": {
+        "model": 9
+      }
+    },
+    {
+      "id": "0fc7f035-5670-40bd-95dc-add90114f12d",
+      "state": "failed",
+      "error": "无法连接模型服务（UND_ERR_SOCKET）"
+    },
+    {
+      "id": "542bc3ad-1887-40ba-b504-08b8c6686c66",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 新版替代旧版",
+      "reviewId": "5050e7e1-6104-46ca-a3e2-c31c67993d99",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 13407,
+        "output_tokens": 353
+      },
+      "counts": {
+        "met": 10
+      },
+      "sourceCounts": {
+        "model": 10
+      }
+    },
+    {
+      "id": "ebef126d-0dac-4af5-b312-49cd334f0d46",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 多人声称与正文冲突",
+      "reviewId": "1bb970fa-638c-4223-ac57-7592ce4c34a2",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 12789,
+        "output_tokens": 380
+      },
+      "counts": {
+        "met": 10
+      },
+      "sourceCounts": {
+        "model": 10
+      }
+    },
+    {
+      "id": "0276b3e0-bac9-4d5e-8584-1a92e92cd11a",
+      "state": "failed",
+      "error": "无法连接模型服务（UND_ERR_SOCKET）"
+    },
+    {
+      "id": "e8f85e25-520c-4572-8beb-8c661b54aff1",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 父子工作量去重汇总",
+      "reviewId": "1eff833f-9f82-453b-84ce-82d84fa383d4",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 11537,
+        "output_tokens": 459
+      },
+      "counts": {
+        "met": 12
+      },
+      "sourceCounts": {
+        "model": 12
+      }
+    },
+    {
+      "id": "7eb7a5b0-5325-43f7-984f-94c2beac5460",
+      "state": "failed",
+      "error": "无法连接模型服务（UND_ERR_SOCKET）"
+    },
+    {
+      "id": "9e75c383-4621-4c18-8e93-1a8018fc6384",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 有据提前预测与真实历史",
+      "reviewId": "fac26da9-bea5-4566-9460-31af20c9f9c9",
+      "model": "qwen/qwen3.7-plus",
+      "usage": null,
+      "counts": {
+        "insufficient": 11
+      },
+      "sourceCounts": {
+        "local": 11
+      }
+    },
+    {
+      "id": "899c002c-4794-46e1-bdce-e29319106ad8",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 有据按期预测与真实历史",
+      "reviewId": "5ef65c94-632c-4546-aba0-1ac394f6611a",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 11142,
+        "output_tokens": 518
+      },
+      "counts": {
+        "met": 11
+      },
+      "sourceCounts": {
+        "model": 11
+      }
+    },
+    {
+      "id": "eecd71b8-ee66-4cea-aeea-d089788f34df",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 有据延期预测与真实历史",
+      "reviewId": "a479bb10-ecc6-4ea2-9c5f-5f26ee9e15f0",
+      "model": "qwen/qwen3.7-plus",
+      "usage": null,
+      "counts": {
+        "insufficient": 11
+      },
+      "sourceCounts": {
+        "local": 11
+      }
+    },
+    {
+      "id": "8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+      "state": "failed",
+      "error": "无法连接模型服务（UND_ERR_SOCKET）"
+    },
+    {
+      "id": "219a6a19-6a93-473e-90dd-f1fa86034311",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 不可读附件与正文伪造指令",
+      "reviewId": "d0f5c51c-1d46-4d08-ac66-b7d919b41e37",
+      "model": "qwen/qwen3.7-plus",
+      "usage": null,
+      "counts": {
+        "insufficient": 10
+      },
+      "sourceCounts": {
+        "local": 10
+      }
+    },
+    {
+      "id": "288e1764-74e6-47d0-b0b7-010235fc3892",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 明确范围无估算时形成AI补估提案",
+      "reviewId": "eab434eb-94d7-40d3-a4f4-8e4daf79fff8",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 8821,
+        "output_tokens": 132
+      },
+      "counts": {
+        "met": 2
+      },
+      "sourceCounts": {
+        "model": 2
+      }
+    },
+    {
+      "id": "74c21532-5da7-4c93-9684-e1c907effa06",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 范围新增时必要重估并保留初始AI240历史",
+      "reviewId": "fc26aa72-292b-4136-9b54-bf72225bae54",
+      "model": "qwen/qwen3.7-plus",
+      "usage": null,
+      "counts": {
+        "insufficient": 3
+      },
+      "sourceCounts": {
+        "local": 3
+      }
+    },
+    {
+      "id": "3b5e5af5-662e-4f54-b185-6294cc972f1b",
+      "state": "completed",
+      "caseName": "新规则隔离回归 · 人工已确认240及完整明细有效时复用不覆盖",
+      "reviewId": "3a9f3b6d-db27-4175-8bb6-10c364be4d8f",
+      "model": "qwen/qwen3.7-plus",
+      "usage": {
+        "input_tokens": 6950,
+        "output_tokens": 119
+      },
+      "counts": {
+        "met": 2
+      },
+      "sourceCounts": {
+        "model": 2
+      }
+    }
+  ],
+  "finishedAt": "2026-10-14T11:44:51.150Z"
+}

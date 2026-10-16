@@ -1,6 +1,6 @@
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { ArrowUp, Paperclip, Sparkles, Square, X } from "lucide-react";
-import { memo, useCallback, useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent, type RefObject } from "react";
+import { memo, useCallback, useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent, type ReactNode, type RefObject } from "react";
 
 type AnimatedAgentChatInputProps = {
   actionRef?: RefObject<HTMLButtonElement | null>;
@@ -11,6 +11,8 @@ type AnimatedAgentChatInputProps = {
   hidePlaceholderOnFocus?: boolean;
   hintAfterInput?: boolean;
   disabled?: boolean;
+  hasContext?: boolean;
+  contextContent?: ReactNode;
   hint?: string;
   inputRef?: RefObject<HTMLTextAreaElement | null>;
   onChange?: (value: string) => void;
@@ -34,6 +36,8 @@ export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
   hidePlaceholderOnFocus = false,
   hintAfterInput = false,
   disabled = false,
+  hasContext = false,
+  contextContent,
   hint = "Enter 发送 · Shift + Enter 换行",
   inputRef,
   onChange,
@@ -55,7 +59,7 @@ export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
   const isAnalyzing = status === "analyzing";
-  const canSend = value.trim().length > 0 && !isAnalyzing && !disabled;
+  const canSend = (value.trim().length > 0 || hasContext) && !isAnalyzing && !disabled;
 
   const setValue = useCallback((next: string) => {
     if (isControlled) onChange?.(next);
@@ -76,13 +80,13 @@ export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
 
   const submit = useCallback((content = value) => {
     const nextContent = content.trim();
-    if (!nextContent || isAnalyzing || disabled) return;
+    if ((!nextContent && !hasContext) || isAnalyzing || disabled) return;
     onSend(nextContent);
     if (clearOnSend) {
       setValue("");
       setAttachments([]);
     }
-  }, [clearOnSend, disabled, isAnalyzing, onSend, setValue, value]);
+  }, [clearOnSend, disabled, hasContext, isAnalyzing, onSend, setValue, value]);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
@@ -100,6 +104,7 @@ export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
 
   return <div className="animated-agent-chat" data-state={isAnalyzing ? "analyzing" : disabled ? "disabled" : "ready"}>
     <div className="animated-agent-chat-shell" onClick={() => textareaRef.current?.focus()}>
+      {contextContent && <div className="animated-agent-input-context" onClick={event => event.stopPropagation()}>{contextContent}</div>}
       {allowAttachments && attachments.length > 0 && <div className="animated-agent-attachments">{attachments.map((attachment) => <span key={attachment.id}><Paperclip aria-hidden="true" /><em>{attachment.name}</em><button aria-label={ui("移除 {0}", {0: attachment.name})} onClick={(event) => { event.stopPropagation(); setAttachments((current) => current.filter((item) => item.id !== attachment.id)); }} type="button"><X /></button></span>)}</div>}
       <textarea aria-label={ui(ariaLabel)} disabled={isAnalyzing || disabled} onChange={(event) => setValue(event.target.value)} onKeyDown={handleKeyDown} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} placeholder={hidePlaceholderOnFocus && focused ? "" : ui(placeholder)} ref={textareaRef} rows={1} value={value} />
       <footer>

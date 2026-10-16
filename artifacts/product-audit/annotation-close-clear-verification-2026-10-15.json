@@ -1,0 +1,11 @@
+{
+  "listCloseRetains": true,
+  "crossFileClear": true,
+  "pendingEditCleared": true,
+  "noRefreshWarning": true,
+  "preparedAttachmentRetained": true,
+  "sourceFilesRetained": true,
+  "composerCleared": true,
+  "newSessionWorks": true,
+  "errors": []
+}

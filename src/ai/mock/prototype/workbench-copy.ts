@@ -1,11 +1,12 @@
 import { priorityReasonFor, type PersonalWorkbenchItem } from '@/ai/mock/lib/personalWorkbench';
 import type { Locale } from '@/shared/i18n/core';
+import { formatLegacyDateLabel } from '@/shared/lib/date-time';
 
 /** Compose system guidance from facts; never translate arbitrary user criteria. */
 export function workbenchPriorityReason(locale: Locale, item: PersonalWorkbenchItem, mockText: (text: string) => string = text => text): string {
-  if (locale !== 'en') return priorityReasonFor(item);
+  const dueLabel = item.dueLabel ? formatLegacyDateLabel(item.dueLabel, locale) : undefined;
+  if (locale !== 'en') return priorityReasonFor({ ...item, dueLabel });
   const context = item.priorityContext;
-  const dueLabel = item.dueLabel?.replace(/^(\d{1,2}) 月 (\d{1,2}) 日/, (_, month: string, day: string) => `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][Number(month) - 1] ?? month} ${day}`);
   const date = dueLabel ? ` (${dueLabel})` : '';
   const parts: string[] = [];
   if (item.dueState === 'overdue') parts.push(`Past the due date${date}.`);

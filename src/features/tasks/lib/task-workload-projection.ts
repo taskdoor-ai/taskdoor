@@ -6,7 +6,8 @@ import { getTaskProgressAssessment } from "@/features/tasks/lib/task-progress-as
 import { getTaskProgressComparison, type TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 /** Shared evidence projection for the progress chart and the current-situation analysis. */
-export function getTaskWorkloadProjection({ comparison, progressTask, completedMinutesByTaskId, progressComparisonsByTaskId, effortTasks = [], hasSubtasks = effortTasks.length > 1, series }: {
+export function getTaskWorkloadProjection({ comparison, progressTask, completedMinutesByTaskId, progressComparisonsByTaskId, effortTasks = [], hasSubtasks = effortTasks.length > 1, series, timeZone }: {
+  timeZone?: string;
   comparison?: TaskProgressComparisonSeries;
   progressTask?: TaskProgressContext;
   completedMinutesByTaskId?: Readonly<Record<string, number | null>>;
@@ -16,9 +17,9 @@ export function getTaskWorkloadProjection({ comparison, progressTask, completedM
   series?: TaskBurnUpSeries;
 }) {
   const assessment = getTaskProgressAssessment(series, effortTasks);
-  const mode: "example" | "detail" = assessment.source === "example" || (series?.source !== "recorded" && getTaskProgressComparison(comparison)) ? "example" : "detail";
+  const mode: "example" | "detail" = assessment.source === "example" || (series?.source !== "recorded" && getTaskProgressComparison(comparison, timeZone)) ? "example" : "detail";
   const effort = getTaskEffortDistribution(effortTasks, mode);
-  const childProgress = hasSubtasks ? effort.rows.map(row => getTaskProgressDisplay({series:progressComparisonsByTaskId?.[row.id],
+  const childProgress = hasSubtasks ? effort.rows.map(row => getTaskProgressDisplay({timeZone, series:progressComparisonsByTaskId?.[row.id],
     task:effortTasks.find(task => task.id === row.id),scopeMinutes:row.minutes,
     completedMinutes:progressComparisonsByTaskId?.[row.id] ? undefined : completedMinutesByTaskId?.[row.id] ?? null,
     expectedAsOf:comparison?.asOf})) : [];
@@ -47,12 +48,12 @@ export function getTaskWorkloadProjection({ comparison, progressTask, completedM
       ? rollupProgressForecast(observations,point) : undefined;
   }
   const recorded = series?.source === "recorded";
-  const fallbackDisplay = getTaskProgressDisplay({task:progressTask,
+  const fallbackDisplay = getTaskProgressDisplay({timeZone, task:progressTask,
     scopeMinutes:recorded && assessment.scopeHours !== null ? assessment.scopeHours * 60 : effort.totalMinutes,
     completedMinutes:recorded ? assessment.completedHours === null ? null : assessment.completedHours * 60 : aggregate ?? null,
     sourceLabel:!recorded && aggregate !== undefined ? "子任务汇总" : undefined});
-  const display = series?.source !== "recorded" && summaryComparison && getTaskProgressComparison(summaryComparison)
-    ? getTaskProgressDisplay({series:summaryComparison,task:progressTask,scopeMinutes:effort.totalMinutes,completedMinutes:aggregate,sourceLabel:aggregate !== undefined ? "子任务汇总" : undefined})
+  const display = series?.source !== "recorded" && summaryComparison && getTaskProgressComparison(summaryComparison, timeZone)
+    ? getTaskProgressDisplay({timeZone,series:summaryComparison,task:progressTask,scopeMinutes:effort.totalMinutes,completedMinutes:aggregate,sourceLabel:aggregate !== undefined ? "子任务汇总" : undefined})
     : fallbackDisplay;
   return { assessment, mode, effort, aggregate, comparison:summaryComparison, display };
 }

@@ -36,7 +36,7 @@ function cssRule(selector: string, source = styles) {
   return match[1];
 }
 
-test("通知以真实时间戳统一月份缩写与 AM/PM，旧 Mock 文案不能覆盖时间", async () => {
+test("通知以真实时间戳和界面语言显示，旧 Mock 文案不能覆盖时间", async () => {
   const { NotificationItem } = await import("../src/features/notifications/components/GlobalNotifications.tsx");
   const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
   const now = new Date(2026, 9, 13, 20).getTime();
@@ -45,15 +45,15 @@ test("通知以真实时间戳统一月份缩写与 AM/PM，旧 Mock 文案不�
   for (const initialLocale of ["zh-CN", "en"] as const) {
     const render = (patch = {}) => renderToStaticMarkup(createElement(I18nProvider, { initialLocale, children: createElement(NotificationItem, { item: { ...item, ...patch }, now, onRead() {} }) }));
     const html = render();
-    assert.match(html, />Sep 14, 5:30 PM<\/time>/);
-    assert.match(html, /title="Sep 14, 2026, 5:30 PM"/);
+    assert.match(html, initialLocale === "en" ? />Sep 14, 5:30 PM<\/time>/ : />9月14日 17:30<\/time>/);
+    assert.match(html, initialLocale === "en" ? /title="Sep 14, 2026, 5:30 PM"/ : /title="2026年9月14日 17:30"/);
     assert.ok(html.includes(`dateTime="${createdAt}"`));
     assert.doesNotMatch(html, />2026-09-14 17:30</);
     const recent = render({ createdAt: new Date(now - 300_000).toISOString(), time: "9/14 17:30" });
     assert.ok(recent.includes(initialLocale === "en" ? ">5 minutes ago</time>" : ">5分钟前</time>"));
     const legacy = render({ createdAt: "invalid", time: "9/14 17:30" });
-    assert.match(legacy, />Sep 14, 5:30 PM<\/time>/);
-    assert.doesNotMatch(legacy, /dateTime=|title="Sep 14, 2026/);
+    assert.match(legacy, initialLocale === "en" ? />Sep 14, 5:30 PM<\/time>/ : />9月14日 17:30<\/time>/);
+    assert.doesNotMatch(legacy, /dateTime=|title="Sep 14, 2026|title="2026年9月14日/);
   }
 });
 

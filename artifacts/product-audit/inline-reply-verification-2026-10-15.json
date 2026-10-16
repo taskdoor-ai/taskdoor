@@ -1,0 +1,108 @@
+{
+  "date": "2026-10-15",
+  "scope": "R14 任务讨论就地回复，本地 PM demo",
+  "implementation": {
+    "inlineReply": true,
+    "bottomComposerHiddenWhileReplying": true,
+    "draftKeyPreservedWhenTargetUnavailable": true,
+    "originalMessageFocusRestoredOnCancel": true,
+    "replySendKeepsReadingPosition": true,
+    "plainPublicationKeepsExistingLatestPosition": true,
+    "sharedRichTextMentionAttachmentComposer": true,
+    "remoteProductionChanged": false
+  },
+  "checks": [
+    {
+      "name": "R14 定向交互及共享编辑器回归",
+      "result": "passed",
+      "tests": 30,
+      "failed": 0,
+      "files": [
+        "server/discussionComposer.test.ts",
+        "server/discussionDraftInsertion.test.ts",
+        "server/taskDiscussionFeedInteraction.test.ts"
+      ],
+      "harness": "命令级 Node loader 忽略 CSS/SVG；不修改项目测试配置",
+      "log": "inline-reply-2026-10-15-tests.log"
+    },
+    {
+      "name": "应用类型检查",
+      "command": "npx tsc -p tsconfig.app.json --pretty false",
+      "result": "passed"
+    },
+    {
+      "name": "应用页面打包",
+      "command": "npx vite build",
+      "result": "passed",
+      "notes": "已有 Vite native loader 与 chunk size 提示；收尾重试曾因并行文件列表改造缺少 TaskFileName 暂时失败，文件写入后最终重试 exit 0，8.31 秒完成",
+      "log": "inline-reply-2026-10-15-build.log"
+    },
+    {
+      "name": "结构门",
+      "command": "npm run structure:check",
+      "result": "passed",
+      "notes": "无新增结构违反"
+    },
+    {
+      "name": "整项目类型检查",
+      "command": "npx tsc -b --pretty false",
+      "result": "failed",
+      "notes": "server 既有测试类型错误，未扩修；不声称完整 npm build 通过"
+    },
+    {
+      "name": "追加原有接线回归",
+      "file": "server/taskDiscussionWiring.test.ts",
+      "result": "one_legacy_assertion_failed",
+      "notes": "活动讨论入口的旧 class 字符串断言不符当前 TaskActivityLog，未涉及本轮实现"
+    }
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5173/",
+    "taskId": "ccx-serum-launch",
+    "runtime": "主工作区当前 Vite 页面，Chrome",
+    "desktop": {
+      "width": 1440,
+      "height": 722,
+      "inlineEditors": 1,
+      "bottomEditors": 0,
+      "focusOnReplyEditor": true
+    },
+    "draftSwitching": {
+      "replyAToBToA": "正文分别恢复；A 附件与 @ 保留",
+      "normalDraft": "取消后恢复；焦点回原回复按钮",
+      "tabSwitching": "概览返回讨论保留对象、正文、附件1个和提及节点1个"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "horizontalOverflow": false,
+      "longReplyLines": 35,
+      "editorClientHeight": 208,
+      "editorScrollHeight": 906,
+      "editorOverflowY": "auto",
+      "sendButtonBottom": 799.390625
+    },
+    "publishedTestMessages": 0,
+    "temporaryDraftsCleared": true,
+    "temporaryViewportReset": true,
+    "realMobileKeyboardTested": false,
+    "finalReload": "并行文件列表改造补齐组件后，5173刷新可进入讨论；就地输入1处、底部0处、焦点contenteditable=true，桌面截图重新保存",
+    "sendFailureAndTargetDeletion": "自动化覆盖；未人为改动用户当前消息数据"
+  },
+  "screenshots": [
+    {
+      "path": "docs/prd/assets/discussion-notifications-activity/inline-reply-desktop-zh.jpg",
+      "kind": "current-page",
+      "width": 1440,
+      "height": 722,
+      "visualCheck": "完整消息下方就地回复，唯一输入框，底部不重复"
+    },
+    {
+      "path": "docs/prd/assets/discussion-notifications-activity/inline-reply-mobile-zh.jpg",
+      "kind": "current-page",
+      "width": 390,
+      "height": 844,
+      "visualCheck": "回复框对齐正文，输入与发送可见，无横向溢出"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "changeId": "PRD-0233",
+  "status": "passed",
+  "scope": "仅本轮生成页、当前JSON、两张正式JPEG与报告静态范围，不是产品测试重跑",
+  "prdBuild": {
+    "status": "passed",
+    "modules": 25
+  },
+  "semanticIdUnique": true,
+  "versionsPreserved": true,
+  "supportGroups": 8,
+  "extensions": 16,
+  "editableGroups": 5,
+  "anchorTypes": 5,
+  "newTargetedTestsRecorded": 54,
+  "previous0232TestsNotAdded": true,
+  "embedded083MatchesJpegBytes": true,
+  "screenshots": [
+    {
+      "figureId": "FIG-FILES-083",
+      "type": "current-component",
+      "runtime": "current-workspace-build",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "9dcaba62be1819e14b577f75c1a7d0fd45ad764900a60cc77624118326c1dd64"
+    },
+    {
+      "figureId": "FIG-FILES-084",
+      "type": "current-component",
+      "runtime": "current-workspace-build",
+      "mimeType": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "db7b05c35a1e01e0301a8a6b24b75acc6f3a85ef2fe727305589a95e0345913b"
+    }
+  ],
+  "fullscreenReportOnly": true,
+  "currentReportRows": 8,
+  "currentReportImages": 4,
+  "newEvidenceLinks": "valid",
+  "fullTestsRun": false,
+  "doubleReviewRun": false
+}

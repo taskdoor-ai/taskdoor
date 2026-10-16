@@ -68,14 +68,15 @@ export function validateTaskPreview(schema:object, output:unknown, input:Preview
   };
   walk(plan.tasks);
   if(nodes.size>500)errors.push('方案任务总数超过 500');
-  for(const [id,task] of nodes)for(const dep of task.dependsOnClientIds){
+  // Older frozen schemas can still be read; current previews omit this field.
+  for(const [id,task] of nodes)for(const dep of task.dependsOnClientIds??[]){
     if(dep===id||!nodes.has(dep))errors.push(`${id} 前置任务不存在或指向自身`);
   }
   const visiting=new Set<string>(),done=new Set<string>();
   const visit=(id:string)=>{
     if(visiting.has(id)){errors.push(`任务前置关系循环：${id}`);return;}
     if(done.has(id)||!nodes.has(id))return;
-    visiting.add(id);nodes.get(id).dependsOnClientIds.forEach(visit);visiting.delete(id);done.add(id);
+    visiting.add(id);nodes.get(id).dependsOnClientIds?.forEach(visit);visiting.delete(id);done.add(id);
   };
   nodes.forEach((_,id)=>visit(id));
   return errors;

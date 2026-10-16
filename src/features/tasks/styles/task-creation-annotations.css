@@ -1,0 +1,67 @@
+.creation-heading > .creation-card-annotation-tools { position: absolute; top: var(--ad-space-5); right: var(--ad-space-5); padding: 0; }
+.creation-heading:has(> .creation-card-annotation-tools) .task-detail-title-row { padding-right: calc(var(--ad-control-touch-min) + var(--ad-space-3)); }
+.creation-editable-plan .creation-subtask-card.has-card-annotation .creation-task-summary > .creation-subtask-header-actions { grid-column: 3; }
+.creation-annotation-trigger-wrap { position: relative; display: inline-flex; flex: 0 0 auto; align-items: center; }
+.creation-annotation-trigger[data-slot="button"] {
+  position: relative;
+  width: var(--ad-control-height-xs);
+  min-width: var(--ad-control-height-xs);
+  height: var(--ad-control-height-xs);
+  padding: 0;
+  gap: var(--ad-space-1);
+  color: var(--ad-ink-tertiary);
+  overflow: visible;
+}
+.creation-annotation-trigger[data-slot="button"] > svg { width: 15px; height: 15px; }
+.creation-annotation-trigger[data-slot="button"]:is(:hover, :focus-visible):not(:disabled) { color: var(--ad-route-ink); background: var(--ad-route-soft); }
+.creation-annotation-trigger[data-slot="button"].has-opinions { color: var(--ad-route-ink); background: var(--ad-route-soft); }
+.creation-annotation-tooltip {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  top: calc(100% + var(--ad-space-1));
+  width: max-content;
+  max-width: min(280px, calc(100vw - 32px));
+  padding: var(--ad-space-2) var(--ad-space-3);
+  border: 1px solid var(--ad-border);
+  border-radius: var(--ad-radius-control);
+  background: var(--ad-surface);
+  color: var(--ad-ink-secondary);
+  box-shadow: var(--ad-shadow-float);
+  font-size: var(--ad-text-caption);
+  font-weight: 400;
+  line-height: 1.5;
+  pointer-events: none;
+  visibility: hidden;
+}
+.creation-annotation-trigger-wrap:has(> .creation-annotation-trigger:not(:disabled)):is(:hover, :focus-within) > .creation-annotation-tooltip { visibility: visible; }
+.creation-card-annotation-tools .creation-annotation-tooltip,
+.creation-subtask-header-actions .creation-annotation-tooltip { left: auto; right: 0; }
+.creation-annotation-composer[data-slot="popover-content"] {
+  display: grid;
+  width: min(360px, calc(100vw - 24px));
+  gap: var(--ad-space-3);
+  padding: var(--ad-space-4);
+}
+.creation-annotation-composer > header,
+.creation-annotation-composer > header > div { display: flex; align-items: center; gap: var(--ad-space-2); min-width: 0; }
+.creation-annotation-composer > header { justify-content: space-between; }
+.creation-annotation-composer > header strong { color: var(--ad-ink); font-size: var(--ad-text-body-sm); font-weight: 600; }
+.creation-annotation-composer > header > div > svg { flex: 0 0 auto; color: var(--ad-route-ink); }
+.creation-annotation-task-name { margin: 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.6; overflow-wrap: anywhere; }
+.creation-annotation-warning { margin: 0; color: var(--ad-inference); font-size: var(--ad-text-caption); line-height: 1.6; }
+.creation-annotation-composer > form { display: grid; gap: var(--ad-space-3); min-width: 0; }
+.creation-annotation-composer > form > textarea { min-height: 96px; resize: vertical; }
+.creation-annotation-composer footer { display: flex; align-items: center; justify-content: space-between; gap: var(--ad-space-3); }
+.creation-annotation-composer footer > span { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.5; }
+@media (max-width: 720px) {
+  .creation-editable-plan .creation-subtask-card.has-card-annotation .creation-task-summary { grid-template-columns: minmax(0, 1fr) auto; }
+  .creation-editable-plan .creation-subtask-card.has-card-annotation .creation-task-summary > .creation-task-copy { grid-column: 1 / -1; }
+  .creation-editable-plan .creation-subtask-card.has-card-annotation .creation-task-summary > .creation-row-owner { grid-column: 1; grid-row: 2; }
+  .creation-editable-plan .creation-subtask-card.has-card-annotation .creation-task-summary > .creation-subtask-header-actions { grid-column: 2; grid-row: 2; }
+  .creation-editable-plan .creation-subtask-card.has-card-annotation.is-expanded .creation-task-summary { position: static; justify-content: flex-end; padding: var(--ad-space-3) var(--creation-row-padding) 0; }
+  .creation-editable-plan .creation-subtask-card.has-card-annotation .task-detail-title-row { padding-right: 0; }
+}
+@media (max-width: 760px), (pointer: coarse) {
+  .creation-annotation-trigger[data-slot="button"] { min-width: var(--ad-control-touch-min); min-height: var(--ad-control-touch-min); }
+}

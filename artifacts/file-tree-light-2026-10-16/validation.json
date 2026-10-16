@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-16",
+  "scope": "文件树视觉密度；非语义调整，沿用 PRD-0220",
+  "typecheck": "passed: npx tsc -p tsconfig.app.json --noEmit",
+  "structure": "passed: npm run structure:check; no new exceptions",
+  "frontendBuild": "passed: npx vite build; existing chunk-size warning",
+  "desktop": {
+    "viewport": [
+      1280,
+      720
+    ],
+    "fileRowBefore": 56,
+    "treeRowAfter": 32,
+    "glyphWidth": 16,
+    "headerHeight": 48,
+    "footerFrameHeight": 44,
+    "existingSidebarWidth": 248,
+    "widthAfterCollapseExpand": 248,
+    "selectionAfterCollapseExpand": "秋季精华首发执行总览.html",
+    "checks": [
+      "folder collapse and expand",
+      "search filter and clear",
+      "ArrowDown selects and previews PNG",
+      "2px focus outline",
+      "Tab enters current row menu",
+      "Enter opens and Escape closes menu",
+      "collapse restores focus to expand button"
+    ]
+  },
+  "compact": {
+    "viewport": [
+      629,
+      804
+    ],
+    "documentScrollWidth": 629,
+    "treeRowHeight": 32,
+    "pointer": "fine",
+    "result": "single-column tree, no horizontal overflow"
+  },
+  "touch": "44px rows and 40px controls preserved in CSS; no physical touch-device test",
+  "fullSuite": "not run per repository instructions",
+  "doubleReview": "not run per repository instructions",
+  "prdBuild": "passed: 25 modules, figures 058/059 embedded JPEG, PRD-0220 retained, manifest and module index parse, scoped diff format check"
+}

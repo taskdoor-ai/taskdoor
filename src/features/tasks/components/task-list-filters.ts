@@ -1,6 +1,7 @@
 import { normalizeTaskStatus, type WorkspaceTaskStatus } from "@/shared/model/task-model";
 import type { TaskNode } from "@/shared/model/task-model";
-import { taskUpdatedTime } from "@/features/tasks/lib/task-list-presentation.ts";
+import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
+import { isValidTimeZone, LEGACY_TEAM_TIME_ZONE } from "@/shared/lib/team-time-zone";
 import { formatDisplayDate } from "@/shared/lib/date-time";
 
 export const taskDateFilterLabels = {
@@ -81,8 +82,8 @@ export function getTaskTagFilters(filters: TaskListFilters): string[] {
 
 export function taskDateFilterLabel(filter: TaskListDateFilter): string {
   if (filter.preset !== "custom") return taskDateFilterLabels[filter.preset];
-  if (filter.from && filter.to) return `${formatDisplayDate(filter.from) ?? "—"} 至 ${formatDisplayDate(filter.to) ?? "—"}`;
-  return filter.from ? `${formatDisplayDate(filter.from) ?? "—"} 起` : `${filter.to ? formatDisplayDate(filter.to) ?? "—" : "—"} 及以前`;
+  if (filter.from && filter.to) return `${formatDisplayDate(filter.from, { locale: "zh-CN" }) ?? "—"} 至 ${formatDisplayDate(filter.to, { locale: "zh-CN" }) ?? "—"}`;
+  return filter.from ? `${formatDisplayDate(filter.from, { locale: "zh-CN" }) ?? "—"} 起` : `${filter.to ? formatDisplayDate(filter.to, { locale: "zh-CN" }) ?? "—" : "—"} 及以前`;
 }
 
 function matchesPeople(values: string[], selections: string[] = [], includeEmpty = false, currentUserSelection?: string): boolean {
@@ -92,17 +93,17 @@ function matchesPeople(values: string[], selections: string[] = [], includeEmpty
     || (includeEmpty && !present.length);
 }
 
-function calendarDay(date: Date): number {
-  return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
-}
-
-function matchesDate(value: string | undefined, filter: TaskListDateFilter | undefined, now: Date): boolean {
+function matchesDate(value: string | undefined, filter: TaskListDateFilter | undefined, now: Date, timeZone: string): boolean {
   if (!filter) return true;
-  const timestamp = taskUpdatedTime(value ?? "", now);
-  if (filter.preset === "unknown") return timestamp === null;
-  if (timestamp === null) return false;
-  const day = calendarDay(new Date(timestamp));
-  const today = calendarDay(now);
+  // Keep the list readable when the saved team clock is invalid; the UI reports
+  // that these conditions are suspended instead of presenting a false empty result.
+  if (!isValidTimeZone(timeZone)) return true;
+  const calendarDate = taskCalendarDate(value, timeZone);
+  if (filter.preset === "unknown") return calendarDate === null;
+  const todayDate = taskCalendarDate(now.toISOString(), timeZone);
+  if (calendarDate === null || todayDate === null) return false;
+  const day = Date.parse(`${calendarDate}T00:00:00Z`);
+  const today = Date.parse(`${todayDate}T00:00:00Z`);
   const delta = (day - today) / 86400000;
   switch (filter.preset) {
     case "today": return delta === 0;
@@ -110,18 +111,19 @@ function matchesDate(value: string | undefined, filter: TaskListDateFilter | und
     case "next-7-days": return delta >= 0 && delta < 7;
     case "past-7-days": return delta <= 0 && delta > -7;
     case "this-week": {
-      const weekday = (now.getDay() + 6) % 7;
+      const weekday = (new Date(today).getUTCDay() + 6) % 7;
       return delta >= -weekday && delta < 7 - weekday;
     }
     case "custom": {
-      const from = filter.from ? taskUpdatedTime(filter.from) : null;
-      const to = filter.to ? taskUpdatedTime(filter.to) : null;
-      return (from === null || day >= calendarDay(new Date(from))) && (to === null || day <= calendarDay(new Date(to)));
+      const from = taskCalendarDate(filter.from, timeZone);
+      const to = taskCalendarDate(filter.to, timeZone);
+      if ((filter.from && from === null) || (filter.to && to === null)) return false;
+      return (from === null || calendarDate >= from) && (to === null || calendarDate <= to);
     }
   }
 }
 
-export function taskMatchesListFilters(task: TaskNode, query: string, filters: TaskListFilters, currentUserId = filters.owner, now = new Date()) {
+export function taskMatchesListFilters(task: TaskNode, query: string, filters: TaskListFilters, currentUserId = filters.owner, now = new Date(), timeZone = LEGACY_TEAM_TIME_ZONE) {
   const statuses = getTaskStatusFilters(filters);
   const tags = getTaskTagFilters(filters);
   const labels = task.labels?.filter((label) => label.trim().length > 0) ?? [];
@@ -149,7 +151,7 @@ export function taskMatchesListFilters(task: TaskNode, query: string, filters: T
       matchesPeople([task.ownerId], filters.ownerIds, filters.includeUnassigned, filters.ownerIsMe ? me : undefined)
       && matchesPeople(task.participantIds ?? [], filters.participantIds, filters.includeNoParticipants, filters.participantIsMe ? me : undefined)
       && matchesPeople([task.createdBy ?? ""], filters.creatorIds, filters.includeUnknownCreator)))
-    && (filters.deadline?.preset !== "overdue" || !["已完成", "已取消"].includes(task.status))
-    && matchesDate(task.plannedEndOn || task.dueAt, filters.deadline, now)
-    && matchesDate(task.createdAt, filters.created, now);
+    && (filters.deadline?.preset !== "overdue" || !isValidTimeZone(timeZone) || !["已完成", "已取消"].includes(task.status))
+    && matchesDate(task.plannedEndOn || task.dueAt, filters.deadline, now, timeZone)
+    && matchesDate(task.createdAt, filters.created, now, timeZone);
 }

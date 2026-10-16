@@ -1,0 +1,20 @@
+{
+  "format": "ppt",
+  "sourceBytes": 463872,
+  "pdfBytes": 37373,
+  "pageCount": 2,
+  "pages": [
+    {
+      "page": 1,
+      "textItems": 7,
+      "excerpt": "01  Local presentation preview  First slide: original layout and selectable text.  TaskDoor local va"
+    },
+    {
+      "page": 2,
+      "textItems": 7,
+      "excerpt": "02  Thumbnail navigation  Second slide: hover the left edge to view real slides.  TaskDoor local val"
+    }
+  ],
+  "elapsedMs": 30237,
+  "network": "macOS sandbox denies network"
+}

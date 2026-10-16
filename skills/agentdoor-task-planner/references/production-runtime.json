@@ -4,6 +4,9 @@
   "files": [
     "skills/agentdoor-task-planner/SKILL.md",
     "skills/agentdoor-task-planner/references/task-planning.md",
+    "skills/agentdoor-task-planner/references/management-playbook.md",
+    "skills/agentdoor-task-planner/references/goal-and-criteria.md",
+    "skills/agentdoor-task-planner/references/task-scheduling.md",
     "skills/agentdoor-task-planner/references/task-preview.md",
     "skills/agentdoor-task-planner/references/task-preview.schema.json"
   ]

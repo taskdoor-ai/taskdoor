@@ -115,7 +115,7 @@ export const zh: Record<MessageKey, string> = {
   "list.createdHint": "按创建时间排序，最新在前",
   "list.updatedHint": "按最近更新时间排序，最新在前",
   "list.sort": "任务排序",
-  "list.pinned": "置顶任务",
+  "list.pinned": "置顶",
   "list.other": "其他任务",
   "list.empty": "还没有任务",
   "list.noMatch": "没有匹配的任务",

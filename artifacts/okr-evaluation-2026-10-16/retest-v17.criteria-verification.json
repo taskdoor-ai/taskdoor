@@ -1,0 +1,41 @@
+{
+  "allFrozenCasesHaveCurrentCriteria": true,
+  "cases": [
+    {
+      "caseId": "creation-outcome-v1-no-metrics-delivery",
+      "version": 5,
+      "strongGoal": true,
+      "strongDate": true
+    },
+    {
+      "caseId": "creation-outcome-v1-finite-suggestion",
+      "version": 5,
+      "strongGoal": true,
+      "strongDate": true
+    },
+    {
+      "caseId": "creation-outcome-v1-ongoing",
+      "version": 5,
+      "strongGoal": true,
+      "strongDate": true
+    },
+    {
+      "caseId": "creation-outcome-v1-external-wait",
+      "version": 5,
+      "strongGoal": true,
+      "strongDate": true
+    },
+    {
+      "caseId": "creation-outcome-v1-clear-then-edit",
+      "version": 5,
+      "strongGoal": true,
+      "strongDate": true
+    },
+    {
+      "caseId": "workflow-focus-v1-lab-content-criteria",
+      "version": 7,
+      "strongGoal": true,
+      "strongDate": true
+    }
+  ]
+}

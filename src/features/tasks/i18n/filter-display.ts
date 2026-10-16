@@ -10,6 +10,6 @@ export function filterDateLabel(locale: Locale, value: TaskListDateFilter) {
   if (locale !== 'en') return taskDateFilterLabel(value);
   const names = { today: 'Today', 'this-week': 'This week', 'next-7-days': 'Next 7 days', 'past-7-days': 'Past 7 days', overdue: 'Overdue', unknown: 'Date unknown', custom: 'Custom dates' };
   if (value.preset !== 'custom') return names[value.preset];
-  if (value.from && value.to) return `${formatDisplayDate(value.from) ?? '—'} to ${formatDisplayDate(value.to) ?? '—'}`;
-  return value.from ? `From ${formatDisplayDate(value.from) ?? '—'}` : `Through ${value.to ? formatDisplayDate(value.to) ?? '—' : '—'}`;
+  if (value.from && value.to) return `${formatDisplayDate(value.from, { locale }) ?? '—'} to ${formatDisplayDate(value.to, { locale }) ?? '—'}`;
+  return value.from ? `From ${formatDisplayDate(value.from, { locale }) ?? '—'}` : `Through ${value.to ? formatDisplayDate(value.to, { locale }) ?? '—' : '—'}`;
 }

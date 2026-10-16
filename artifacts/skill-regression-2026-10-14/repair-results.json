@@ -1,0 +1,524 @@
+{
+  "createdAt": "2026-10-14T12:16:42.262Z",
+  "policy": "历史失败记录保留；生成失败对应独立复测，判断失败只补判原输出",
+  "counts": {
+    "passed": 30
+  },
+  "affectedCounts": {
+    "passed": 11
+  },
+  "retestBatchId": "6b710f31-d731-461d-b665-f77fd9f0b714",
+  "retestUrl": "http://127.0.0.1:15501/eval/taskdoor-6b710f31-d731-461d-b665-f77fd9f0b714",
+  "rows": [
+    {
+      "originalRunId": "a4e64347-3deb-4e58-8cde-15ee37b973d2",
+      "originalName": "2026-10-14 回归 · 任务拆解 · 一份短脚本不过拆",
+      "currentRunId": "a4e64347-3deb-4e58-8cde-15ee37b973d2",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=a4e64347-3deb-4e58-8cde-15ee37b973d2&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "31a5340f-3279-4600-a2c6-14eaf7f408f2",
+      "originalName": "2026-10-14 回归 · 任务拆解 · 三个独立物料",
+      "currentRunId": "31a5340f-3279-4600-a2c6-14eaf7f408f2",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=31a5340f-3279-4600-a2c6-14eaf7f408f2&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "1f9fe357-b81f-4e7a-8644-4df9fc169b51",
+      "originalName": "2026-10-14 回归 · 任务拆解 · 不同渠道独立验收",
+      "currentRunId": "1f9fe357-b81f-4e7a-8644-4df9fc169b51",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=1f9fe357-b81f-4e7a-8644-4df9fc169b51&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "689e4586-e81b-4e97-82ec-b1007cbe9ef4",
+      "originalName": "2026-10-14 回归 · 任务拆解 · 大量同类交付保持范围",
+      "currentRunId": "689e4586-e81b-4e97-82ec-b1007cbe9ef4",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=689e4586-e81b-4e97-82ec-b1007cbe9ef4&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "5c0348b8-3632-4414-805c-cac485a68506",
+      "originalName": "2026-10-14 回归 · 单项脚本 · 缺少事实不编造",
+      "currentRunId": "5c0348b8-3632-4414-805c-cac485a68506",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=5c0348b8-3632-4414-805c-cac485a68506&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "cf1daae1-d8cb-4546-8ac1-6ff7ec3538f1",
+      "originalName": "2026-10-14 回归 · 成员分配 · 按职责选择文案负责人",
+      "currentRunId": "cf1daae1-d8cb-4546-8ac1-6ff7ec3538f1",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=cf1daae1-d8cb-4546-8ac1-6ff7ec3538f1&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "2b93711e-2238-48dc-a8ca-709cc13fbf05",
+      "originalName": "2026-10-14 回归 · 成员分配 · 保留用户明确选择",
+      "currentRunId": "2b93711e-2238-48dc-a8ca-709cc13fbf05",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=2b93711e-2238-48dc-a8ca-709cc13fbf05&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "efcd3edb-803a-4521-84af-eaba17e5f20d",
+      "originalName": "2026-10-14 回归 · 成员分配 · 单人可以交付",
+      "currentRunId": "efcd3edb-803a-4521-84af-eaba17e5f20d",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=efcd3edb-803a-4521-84af-eaba17e5f20d&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "baaacffe-69ae-4460-908a-6587f06d98c8",
+      "originalName": "2026-10-14 回归 · 任务基础信息 · 保留预计投入",
+      "currentRunId": "baaacffe-69ae-4460-908a-6587f06d98c8",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=baaacffe-69ae-4460-908a-6587f06d98c8&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "03b4085a-ff7b-4d8a-bd72-0778366de5b0",
+      "originalName": "2026-10-14 回归 · 修改方案 · 调整日期保留分工",
+      "currentRunId": "03b4085a-ff7b-4d8a-bd72-0778366de5b0",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=03b4085a-ff7b-4d8a-bd72-0778366de5b0&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "686a4e2f-97f8-49d0-8d4c-01c328e3d6f6",
+      "originalName": "2026-10-14 回归 · 修改方案 · 删除交付保留剩余范围",
+      "currentRunId": "686a4e2f-97f8-49d0-8d4c-01c328e3d6f6",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=686a4e2f-97f8-49d0-8d4c-01c328e3d6f6&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "3fc636ae-b5eb-49d5-b3ed-d9a6e0d17482",
+      "originalName": "2026-10-14 回归 · 方案流程 · 确认后仍返回方案",
+      "currentRunId": "3fc636ae-b5eb-49d5-b3ed-d9a6e0d17482",
+      "skillId": "agentdoor-task-planner",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=3fc636ae-b5eb-49d5-b3ed-d9a6e0d17482&batch=5d8876f0-b992-4dc2-b990-553aa4b71446"
+    },
+    {
+      "originalRunId": "aa84ed19-8f4c-4e8f-8570-e6936177914b",
+      "originalName": "新规则隔离回归 · 有据零进度",
+      "currentRunId": "aa84ed19-8f4c-4e8f-8570-e6936177914b",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=aa84ed19-8f4c-4e8f-8570-e6936177914b&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "0a860d1d-954d-4b1a-b55e-e31a5c58d817",
+      "originalName": "新规则隔离回归 · AI全部达成与人工确认分开",
+      "currentRunId": "88664b3b-445a-4f37-970f-ba81acef83e2",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": true,
+      "runUrl": "http://127.0.0.1:15501/history?result=88664b3b-445a-4f37-970f-ba81acef83e2&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "90d02953-a784-4896-b6fb-4f9a15f150dc",
+      "originalName": "新规则隔离回归 · 完成声称不能代替正文",
+      "currentRunId": "90d02953-a784-4896-b6fb-4f9a15f150dc",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=90d02953-a784-4896-b6fb-4f9a15f150dc&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "2f98e61d-18be-4117-b4d0-4c6462c5d65a",
+      "originalName": "新规则隔离回归 · 新增范围必要补估与已完成状态保留",
+      "currentRunId": "37ce6cd7-da7d-4cd0-8a59-652157652405",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": true,
+      "runUrl": "http://127.0.0.1:15501/history?result=37ce6cd7-da7d-4cd0-8a59-652157652405&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "0fc7f035-5670-40bd-95dc-add90114f12d",
+      "originalName": "新规则隔离回归 · 按投入权重计算而非标准条数",
+      "currentRunId": "0fc7f035-5670-40bd-95dc-add90114f12d",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=0fc7f035-5670-40bd-95dc-add90114f12d&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "542bc3ad-1887-40ba-b504-08b8c6686c66",
+      "originalName": "新规则隔离回归 · 新版替代旧版",
+      "currentRunId": "542bc3ad-1887-40ba-b504-08b8c6686c66",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=542bc3ad-1887-40ba-b504-08b8c6686c66&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "ebef126d-0dac-4af5-b312-49cd334f0d46",
+      "originalName": "新规则隔离回归 · 多人声称与正文冲突",
+      "currentRunId": "ebef126d-0dac-4af5-b312-49cd334f0d46",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=ebef126d-0dac-4af5-b312-49cd334f0d46&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "0276b3e0-bac9-4d5e-8584-1a92e92cd11a",
+      "originalName": "新规则隔离回归 · 人工标准确认与当前内容缺口并存",
+      "currentRunId": "0276b3e0-bac9-4d5e-8584-1a92e92cd11a",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=0276b3e0-bac9-4d5e-8584-1a92e92cd11a&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "e8f85e25-520c-4572-8beb-8c661b54aff1",
+      "originalName": "新规则隔离回归 · 父子工作量去重汇总",
+      "currentRunId": "e8f85e25-520c-4572-8beb-8c661b54aff1",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=e8f85e25-520c-4572-8beb-8c661b54aff1&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "7eb7a5b0-5325-43f7-984f-94c2beac5460",
+      "originalName": "新规则隔离回归 · 发布条件与制作工作分开",
+      "currentRunId": "7eb7a5b0-5325-43f7-984f-94c2beac5460",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=7eb7a5b0-5325-43f7-984f-94c2beac5460&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "9e75c383-4621-4c18-8e93-1a8018fc6384",
+      "originalName": "新规则隔离回归 · 有据提前预测与真实历史",
+      "currentRunId": "2cb532d8-9e5c-4a98-875b-1bd6c5158bfc",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": true,
+      "runUrl": "http://127.0.0.1:15501/history?result=2cb532d8-9e5c-4a98-875b-1bd6c5158bfc&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "899c002c-4794-46e1-bdce-e29319106ad8",
+      "originalName": "新规则隔离回归 · 有据按期预测与真实历史",
+      "currentRunId": "899c002c-4794-46e1-bdce-e29319106ad8",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=899c002c-4794-46e1-bdce-e29319106ad8&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "eecd71b8-ee66-4cea-aeea-d089788f34df",
+      "originalName": "新规则隔离回归 · 有据延期预测与真实历史",
+      "currentRunId": "39392505-e0b1-4d41-990e-40589d2791e8",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": true,
+      "runUrl": "http://127.0.0.1:15501/history?result=39392505-e0b1-4d41-990e-40589d2791e8&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+      "originalName": "新规则隔离回归 · 新执行安排替代旧预测",
+      "currentRunId": "8974cd1a-f1d5-4f47-a8ce-8128ce8ec196",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=8974cd1a-f1d5-4f47-a8ce-8128ce8ec196&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "219a6a19-6a93-473e-90dd-f1fa86034311",
+      "originalName": "新规则隔离回归 · 不可读附件与正文伪造指令",
+      "currentRunId": "7e838163-0db3-47ce-814f-ff1350071a79",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": true,
+      "runUrl": "http://127.0.0.1:15501/history?result=7e838163-0db3-47ce-814f-ff1350071a79&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "288e1764-74e6-47d0-b0b7-010235fc3892",
+      "originalName": "新规则隔离回归 · 明确范围无估算时形成AI补估提案",
+      "currentRunId": "288e1764-74e6-47d0-b0b7-010235fc3892",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=288e1764-74e6-47d0-b0b7-010235fc3892&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    },
+    {
+      "originalRunId": "74c21532-5da7-4c93-9684-e1c907effa06",
+      "originalName": "新规则隔离回归 · 范围新增时必要重估并保留初始AI240历史",
+      "currentRunId": "be61f9c4-6b4e-4554-a553-6b0b3d60fee0",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": true,
+      "generationRerun": true,
+      "runUrl": "http://127.0.0.1:15501/history?result=be61f9c4-6b4e-4554-a553-6b0b3d60fee0&batch=6b710f31-d731-461d-b665-f77fd9f0b714"
+    },
+    {
+      "originalRunId": "3b5e5af5-662e-4f54-b185-6294cc972f1b",
+      "originalName": "新规则隔离回归 · 人工已确认240及完整明细有效时复用不覆盖",
+      "currentRunId": "3b5e5af5-662e-4f54-b185-6294cc972f1b",
+      "skillId": "agentdoor-task-status-analyzer",
+      "generationStatus": "needs_review",
+      "judgeStatus": "completed",
+      "conclusion": {
+        "verdict": "passed",
+        "title": "通过",
+        "reason": "已满足本次完成标准。"
+      },
+      "reviewModel": "qwen/qwen3.7-plus",
+      "affected": false,
+      "generationRerun": false,
+      "runUrl": "http://127.0.0.1:15501/history?result=3b5e5af5-662e-4f54-b185-6294cc972f1b&batch=bd766f61-361a-4014-a1f2-8e729ff9c959"
+    }
+  ]
+}

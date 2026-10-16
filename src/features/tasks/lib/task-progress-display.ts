@@ -7,7 +7,8 @@ export type TaskProgressContext = Partial<Pick<TaskNode, "status" | "plannedStar
   progressReopenedAt?: string;
 };
 export const progressDate = taskCalendarDate;
-export function getTaskProgressDisplay({series, task, scopeMinutes, completedMinutes, expectedAsOf, sourceLabel}: {
+export function getTaskProgressDisplay({series, task, scopeMinutes, completedMinutes, expectedAsOf, sourceLabel, timeZone}: {
+  timeZone?: string;
   series?: TaskProgressComparisonSeries;
   task?: TaskProgressContext;
   scopeMinutes?: number | null;
@@ -15,11 +16,12 @@ export function getTaskProgressDisplay({series, task, scopeMinutes, completedMin
   expectedAsOf?: string;
   sourceLabel?: string;
 }) {
+  const calendarDate = (value?: string | null) => progressDate(value, timeZone);
   // A saved confirmation is not an AI assessment. Reopening restores only the
   // independently recorded AI value, with its original observation date.
   const restoreConfirmed = Boolean(task?.progressReopenedAt && task.status !== "已完成" && task.status !== "已取消" && series?.timing.completedOn);
   const priorAi = series?.aiAssessment;
-  const priorDay = progressDate(priorAi?.observedAt);
+  const priorDay = calendarDate(priorAi?.observedAt);
   const canRestoreAi = restoreConfirmed && priorAi && priorDay && series
     && priorAi.scopeVersion === series.workload.at(-1)?.scopeVersion
     && priorAi.scopeMinutes === series.workload.at(-1)?.scopeMinutes
@@ -29,10 +31,10 @@ export function getTaskProgressDisplay({series, task, scopeMinutes, completedMin
       {at:priorDay,scopeMinutes:priorAi.scopeMinutes,completedMinutes:priorAi.completedMinutes,scopeVersion:priorAi.scopeVersion,note:priorAi.basis}],
       timing:{...series.timing,completedOn:undefined}};
   }
-  const originalModel = getTaskProgressComparison(series);
-  const confirmedDate = task?.status === "已完成" || task?.status === "已取消" ? progressDate(task.completedAt) : null;
+  const originalModel = getTaskProgressComparison(series, timeZone);
+  const confirmedDate = task?.status === "已完成" || task?.status === "已取消" ? calendarDate(task.completedAt) : null;
   const savedAssessment = series?.aiAssessment;
-  const aiAssessment = savedAssessment && progressDate(savedAssessment.observedAt)
+  const aiAssessment = savedAssessment && calendarDate(savedAssessment.observedAt)
     && Number.isSafeInteger(savedAssessment.scopeMinutes) && savedAssessment.scopeMinutes > 0
     && Number.isSafeInteger(savedAssessment.completedMinutes) && savedAssessment.completedMinutes >= 0
     && savedAssessment.completedMinutes <= savedAssessment.scopeMinutes && savedAssessment.scopeVersion
@@ -42,7 +44,7 @@ export function getTaskProgressDisplay({series, task, scopeMinutes, completedMin
   if (aiAssessment && confirmationAt) {
     const precise = aiAssessment.observedAt.includes("T") && confirmationAt.includes("T");
     const difference = precise ? Date.parse(aiAssessment.observedAt) - Date.parse(confirmationAt)
-      : Date.parse(progressDate(aiAssessment.observedAt)!) - Date.parse(confirmedDate!);
+      : Date.parse(calendarDate(aiAssessment.observedAt)!) - Date.parse(confirmedDate!);
     if (difference < 0) assessmentTiming="before";
     else if (difference > 0) assessmentTiming="after";
   }
@@ -55,7 +57,7 @@ export function getTaskProgressDisplay({series, task, scopeMinutes, completedMin
     historySeries = {...series,asOf:confirmedDate,workload:confirmedDate > series.asOf ? [...series.workload,point] : [...series.workload.slice(0,-1),point],
       timing:{...series.timing,completedOn:confirmedDate}};
   }
-  const model = getTaskProgressComparison(historySeries);
+  const model = getTaskProgressComparison(historySeries, timeZone);
   const total = scopeMinutes === undefined ? model?.latest.scopeMinutes ?? null : scopeMinutes;
   const scopeValid = typeof total === "number" && Number.isFinite(total) && total > 0;
   const sameScope = model && scopeValid && total === model.latest.scopeMinutes;
@@ -77,13 +79,13 @@ export function getTaskProgressDisplay({series, task, scopeMinutes, completedMin
   const expectedMinutes = expectedRatio === null ? null : expectedRatio * total!;
   const currentMinutes = ratio === null || !scopeValid ? null : ratio * total!;
   const deltaMinutes = currentMinutes === null || expectedMinutes === null ? null : currentMinutes-expectedMinutes;
-  const asOf = progressDate(task?.completedAt) ?? series?.asOf ?? progressDate(new Date().toISOString())!;
+  const asOf = calendarDate(task?.completedAt) ?? series?.asOf ?? calendarDate(new Date().toISOString())!;
   // Task creation is independent of the editable plan and progress observation dates.
-  const startOn = task ? progressDate(task.createdAt) : model?.creation?.day ?? null;
-  const savedDueOn = task?.plannedEndOn !== undefined ? progressDate(task.plannedEndOn) : model?.dueOn ?? null;
+  const startOn = task ? calendarDate(task.createdAt) : model?.creation?.day ?? null;
+  const savedDueOn = task?.plannedEndOn !== undefined ? calendarDate(task.plannedEndOn) : model?.dueOn ?? null;
   const scheduleIssue = taskScheduleError(savedDueOn, startOn);
   const dueOn = scheduleIssue ? null : savedDueOn;
-  const completedOn = task?.status === "已完成" ? progressDate(task.completedAt)
+  const completedOn = task?.status === "已完成" ? calendarDate(task.completedAt)
     : !task?.status && ratio === 1 ? model?.completedOn ?? null : null;
   const cancelled = task?.status === "已取消";
   // The user's deadline is a comparison target, never an input that invalidates an AI forecast.

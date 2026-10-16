@@ -37,7 +37,7 @@ export function TokenExpiryPicker({
   )
   const min = dayFromToday(0)
   const max = dayFromToday(MAX_TOKEN_DAYS)
-  const monthLabel = formatDisplayMonth(month)
+  const monthLabel = formatDisplayMonth(month, { locale })
   useEffect(() => {
     if (!focusDate || !calendarOpen) return
     calendarRef.current
@@ -98,9 +98,9 @@ export function TokenExpiryPicker({
           {t('tokens.customDate')}
         </Button>
       </div>
-      <span className="token-expiry-value" title={formatDisplayDate(value, { year: 'always' }) ?? undefined}>
+      <span className="token-expiry-value" title={formatDisplayDate(value, { locale, year: 'always' }) ?? undefined}>
         {t('tokens.expiresOn', {
-          date: formatDisplayDate(value) ?? value,
+          date: formatDisplayDate(value, { locale }) ?? value,
         })}
       </span>
       {calendarOpen && (
@@ -147,7 +147,7 @@ export function TokenExpiryPicker({
                   key={date}
                   type="button"
                   disabled={date < min || date > max}
-                  aria-label={formatDisplayDate(date, { year: 'always' }) ?? date}
+                  aria-label={formatDisplayDate(date, { locale, year: 'always' }) ?? date}
                   data-date={date}
                   aria-pressed={date === value}
                   className={day.getMonth() !== month.getMonth() ? 'outside' : ''}

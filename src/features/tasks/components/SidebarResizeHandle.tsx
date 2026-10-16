@@ -32,7 +32,7 @@ export function SidebarResizeHandle({ width, onChange, min, max, kind, onResizeP
   const previewFrame = useRef<number | null>(null);
   const previewCallback = useRef(onResizePreview);
   previewCallback.current = onResizePreview;
-  const previewEnabled = kind === "tasks" && Boolean(onResizePreview);
+  const previewEnabled = Boolean(onResizePreview);
   const clearPreviewFrame = () => {
     if (previewFrame.current === null) return;
     cancelAnimationFrame(previewFrame.current);

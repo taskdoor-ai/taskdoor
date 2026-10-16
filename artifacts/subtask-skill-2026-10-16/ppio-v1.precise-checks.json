@@ -1,0 +1,61 @@
+{
+  "scope": "既有6输出按当前v2 Schema关系及场景关键事实检查；不冒充v2重新生成",
+  "rows": [
+    {
+      "caseId": "case-subtask-v1-remaining-visual",
+      "passed": true,
+      "schemaAndRelations": true,
+      "fixtureUnchanged": true,
+      "noMcpWrites": true,
+      "attemptCount": 1,
+      "originalErrors": []
+    },
+    {
+      "caseId": "case-subtask-v1-atomic-script",
+      "passed": true,
+      "schemaAndRelations": true,
+      "fixtureUnchanged": true,
+      "noMcpWrites": true,
+      "attemptCount": 1,
+      "originalErrors": []
+    },
+    {
+      "caseId": "case-subtask-v1-reply-and-version",
+      "passed": true,
+      "schemaAndRelations": true,
+      "fixtureUnchanged": true,
+      "noMcpWrites": true,
+      "attemptCount": 1,
+      "originalErrors": []
+    },
+    {
+      "caseId": "case-subtask-v1-missing-responsibilities",
+      "passed": true,
+      "schemaAndRelations": true,
+      "fixtureUnchanged": true,
+      "noMcpWrites": true,
+      "attemptCount": 1,
+      "originalErrors": []
+    },
+    {
+      "caseId": "case-subtask-v1-partial-children",
+      "passed": true,
+      "schemaAndRelations": true,
+      "fixtureUnchanged": true,
+      "noMcpWrites": true,
+      "attemptCount": 2,
+      "originalErrors": [
+        "存在待答关键问题时必须 needs_clarification"
+      ]
+    },
+    {
+      "caseId": "case-subtask-v1-depth-limit",
+      "passed": true,
+      "schemaAndRelations": true,
+      "fixtureUnchanged": true,
+      "noMcpWrites": true,
+      "attemptCount": 1,
+      "originalErrors": []
+    }
+  ]
+}

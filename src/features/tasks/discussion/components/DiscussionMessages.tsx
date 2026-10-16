@@ -5,7 +5,7 @@ import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
-import { FileText, Quote, X } from "lucide-react";
+import { ChevronDown, FileText, Quote, X } from "lucide-react";
 import React, { useEffect, useId, useRef, useState } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
 import type { CollaborationMessage, DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
@@ -32,6 +32,7 @@ type Props = {
   highlightedId?: string | null;
   compact?: boolean;
   allowQuote?: boolean;
+  expandReplies?: boolean;
 };
 
 function MessageText({ message, text }: { message: CollaborationMessage; text: string }) {
@@ -81,7 +82,7 @@ export function ReplyReference({ message, onLocate }: { message: CollaborationMe
   </Popover>;
 }
 
-export function DiscussionMessages({ messages, allMessages = messages, files, people, currentUser, currentUserName, draftKey, onPost, onEdit, onDelete, onOpenFile, onConnectAi, highlightedId, compact, allowQuote = true }: Props) {
+export function DiscussionMessages({ messages, allMessages = messages, files, people, currentUser, currentUserName, draftKey, onPost, onEdit, onDelete, onOpenFile, onConnectAi, highlightedId, compact, allowQuote = true, expandReplies = false }: Props) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const { locale, autoTranslate } = useI18n();
@@ -92,6 +93,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
   const [reply, setReply] = useState<{ id: string; quoted: boolean } | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [visibility, setVisibility] = useState<"collapsed" | "expanded">("collapsed");
+  useEffect(() => { if (expandReplies) setVisibility("expanded"); }, [expandReplies]);
   const [error, setError] = useState("");
   const [jumpTarget, setJumpTarget] = useState<string | null>(null);
   const listId = useId();
@@ -125,7 +127,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
       <button aria-controls={listId} aria-expanded={visibility === "expanded"} className={visibility === "expanded" ? "discussion-collapse" : "discussion-expand"} onClick={event => {
         event.currentTarget.focus();
         setVisibility(visibility === "expanded" ? "collapsed" : "expanded");
-      }} type="button">{visibility === "expanded" ? d('collapseReplies') : ` ${d("replies")} (${replies.length})`}</button>
+      }} type="button">{compact && <ChevronDown aria-hidden="true" size={13} />}{visibility === "expanded" ? d('collapseReplies') : ` ${d("replies")} (${replies.length})`}</button>
     </div>;
   const mock = useMockText();
   const renderMessage = (message: CollaborationMessage) => {
@@ -142,12 +144,13 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
       const reading = contentReading(message.message, candidate, locale, autoTranslate, originalMessages.has(readingKey));
       const toggleOriginal = () => setOriginalMessages(previous => { const next = new Set(previous); if (next.has(readingKey)) next.delete(readingKey); else next.add(readingKey); return next; });
       return <li className={isReply ? "discussion-message is-reply" : "discussion-message"} key={message.id}>
-        <PersonAvatar name={message.author} personId={message.author} size={compact || isReply ? "xs" : "sm"} />
+        <PersonAvatar name={message.author} personId={message.author} size={isReply ? "xs" : "sm"} />
         <div className={`task-discussion-record${highlightedId === message.id ? " is-attention" : ""}`} id={`task-activity-${message.id}`} tabIndex={-1}>
           <header><span className="discussion-message-authors"><strong><PersonName name={message.author} personId={message.author} /></strong>
+            {compact && message.replyToActivityId && <span className="discussion-message-recipient"><span>{d('reply')}</span>{parent && !parent.deletedAt ? <strong><PersonName name={parent.author} personId={parent.author} /></strong> : <span>{parent?.deletedAt ? d('originalDeleted') : d('originalMissing')}</span>}</span>}
             {message.replyToActivityId && <ReplyReference message={parent} onLocate={jumpTo} />}
           </span>
-            {onConnectAi && !isReply && <AiConnectionButton compact contextLabel={ui("{0}的讨论", {0: message.author})} onConnect={(trigger, shortcut) => onConnectAi({ kind: message.replyToActivityId ? "reply" : "discussion", activityId: message.id }, trigger, shortcut)} />}
+            {onConnectAi && (!isReply || compact) && <AiConnectionButton compact contextLabel={ui("{0}的讨论", {0: message.author})} onConnect={(trigger, shortcut) => onConnectAi({ kind: message.replyToActivityId || message.type === "member-reply" ? "reply" : "discussion", activityId: message.id, ...(message.fileThreadId ? { fileThreadId: message.fileThreadId } : {}) }, trigger, shortcut)} />}
           </header>
           {editing === message.id ? <DiscussionComposer actionLabel={d('save')} allowQuote={allowQuote} autoFocus compact draftKey={`${draftKey}:edit:${message.id}`} files={files} initialValue={{ body: message.message, mentions: message.mentionedPrincipalIds ?? [], attachments, quote: allowQuote && !quoted?.deletedAt ? message.quote : undefined }} onCancel={() => setEditing(null)} onSubmit={async draft => { await onEdit?.(message, { ...draft, quote: allowQuote ? draft.quote : undefined }); setEditing(null); }} people={people} /> : <>
             {allowQuote && message.quote && message.quote.messageId !== message.replyToActivityId && (quoted && !quoted.deletedAt
@@ -164,7 +167,6 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
               {timestamp && <time tabIndex={0} title={timestamp.full} aria-label={timestamp.full} dateTime={timestamp.dateTime}>{timestamp.label}</time>}
               {editing !== message.id && (reading.state === 'translated' || reading.state === 'original') && <span className="content-translation-control"><span>{reading.state === 'translated' ? ui('已翻译') : ui('原文')}</span><span aria-hidden="true"> · </span><button type="button" aria-label={reading.state === 'translated' ? ui('查看原文') : ui('显示译文')} onClick={toggleOriginal}>{reading.state === 'translated' ? ui('查看原文') : ui('显示译文')}</button></span>}
               {editing !== message.id && reading.state === 'unavailable' && <small className="content-translation-unavailable" title={ui('本地演示尚无此内容的译文，原文已保留。')}>{ui('暂无译文')}</small>}
-              {editing === message.id && <small>{ui('正在编辑原文')}</small>}
               {message.updatedAt && <small>{d('edited')}</small>}
               {!isReply && !compact && replyControls}
             </div>}
@@ -177,15 +179,15 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
           </div>
           {reply?.id === message.id && <div className="task-discussion-reply-compose">
             <div className="discussion-composer-context"><span><ReplyContext message={message} /></span><button aria-label={d('cancelReply')} onClick={() => setReply(null)} title={d('cancelReply')} type="button"><X aria-hidden="true" size={14} /></button></div>
-            <DiscussionComposer actionLabel={d('reply')} allowQuote={allowQuote} autoFocus compact showShortcutHint={false} draftKey={`${draftKey}:reply:${message.id}`} files={files} onCancel={() => setReply(null)} onConnectAi={onConnectAi ? (draft, trigger) => onConnectAi({ kind: "reply-draft", activityId: message.id, draft }, trigger) : undefined} onSubmit={async draft => { await onPost({ ...draft, quote: allowQuote && reply.quoted ? { messageId: message.id, text: message.message.slice(0, 300), author: message.author } : undefined }, message.id); setVisibility("expanded"); setReply(null); }} people={people} placeholder={d('replyHint')} />
+            <DiscussionComposer actionLabel={d('reply')} allowQuote={allowQuote} autoFocus compact showShortcutHint={false} draftKey={`${draftKey}:reply:${message.id}`} files={files} onCancel={() => setReply(null)} onSubmit={async draft => { await onPost({ ...draft, quote: allowQuote && reply.quoted ? { messageId: message.id, text: message.message.slice(0, 300), author: message.author } : undefined }, message.id); setVisibility("expanded"); setReply(null); }} people={people} placeholder={d('replyHint')} />
           </div>}
         </div>
       </li>;
   };
   return <div className={`discussion-messages${compact ? " is-compact" : ""}`}>
     {error && <p className="discussion-message-error" role="alert">{error}</p>}
-    {root && <ol aria-label={d('discussionContent')}>{renderMessage(root)}</ol>}
+    {root && <ol aria-label={d('discussionContent')} className="discussion-root">{renderMessage(root)}</ol>}
     {(!root || compact) && replyControls}
-    <ol aria-label={d('replies')} hidden={visibility === "collapsed"} id={listId}>{replies.map(renderMessage)}</ol>
+    <ol aria-label={d('replies')} className="discussion-replies" hidden={visibility === "collapsed"} id={listId}>{replies.map(renderMessage)}</ol>
   </div>;
 }

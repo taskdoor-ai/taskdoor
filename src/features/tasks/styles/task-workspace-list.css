@@ -37,13 +37,11 @@
 .task-workspace-my-work:hover { background: var(--ad-surface-quiet); color: var(--ad-ink); }
 .task-workspace-my-work[aria-current="page"] { background: var(--ad-route-soft); color: var(--ad-route-ink); }
 .task-workspace-my-work:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 0; }
-.task-workspace-new-task { flex: 0 0 auto; width: var(--ad-control-height-md); height: var(--ad-control-height-md); }
-.task-workspace-create-button { box-shadow: none; }
 
 /* 搜索工具在前，推荐入口与标签索引连续排列。 */
 .task-workspace-list-search {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: var(--ad-space-1);
   flex: 0 0 auto;
@@ -209,7 +207,7 @@
 .task-workspace-row-menu-trigger:hover,
 .task-workspace-row-menu-trigger[aria-expanded="true"] { background: var(--ad-surface); color: var(--ad-ink); }
 .task-workspace-row-menu-trigger:focus-visible { opacity: 1; pointer-events: auto; outline: 2px solid var(--ad-focus); outline-offset: 1px; }
-.task-workspace-row-menu { min-width: 136px; }
+.task-workspace-row-menu { width: max-content; min-width: 168px; max-width: calc(100vw - 24px); }
 
 @media (hover: none) {
   .task-workspace-row { padding-right: calc((var(--ad-control-touch-min) * 2) + var(--ad-space-3)); }
@@ -239,8 +237,7 @@
   .task-filter-option,
   .task-filter-popover button,
   .task-filter-popover [data-slot="input"] { min-height: var(--ad-control-touch-min); }
-  .task-workspace-list-options,
-  .task-workspace-new-task { width: var(--ad-control-touch-min); height: var(--ad-control-touch-min); min-width: var(--ad-control-touch-min); }
+  .task-workspace-list-options { width: var(--ad-control-touch-min); height: var(--ad-control-touch-min); min-width: var(--ad-control-touch-min); }
 }
 @media (prefers-reduced-motion: reduce) {
   .task-workspace-row,
@@ -249,7 +246,7 @@
 }
 
 /* Flat personal task index: title, current state/time, then compact multi-tags. */
-.task-list-refresh .task-workspace-list-search { --task-search-control-height:var(--ad-control-height-md); grid-template-columns:minmax(0,1fr) auto; margin:var(--ad-space-4) 18px 8px; gap:8px; }
+.task-list-refresh .task-workspace-list-search { --task-search-control-height:var(--ad-control-height-md); grid-template-columns:minmax(0,1fr); margin:var(--ad-space-4) 18px 8px; gap:8px; }
 .task-list-refresh .task-workspace-list-search .task-workspace-list-options { width:var(--task-search-control-height); height:var(--task-search-control-height); min-height:var(--task-search-control-height); }
 .task-search-slot { display:flex; min-width:0; justify-content:flex-end; }
 .task-search-clear { display:grid; flex:0 0 auto; place-items:center; width:28px; height:28px; padding:0; border-radius:var(--ad-radius-control); color:var(--ad-ink-secondary); cursor:pointer; }
@@ -268,8 +265,6 @@
 .task-list-refresh .task-search-field .task-workspace-list-options[aria-expanded="true"] { --task-filter-trigger-surface:var(--ad-surface-subtle); }
 .task-list-refresh .task-search-field .task-workspace-list-options[data-filter-active] { --task-filter-trigger-surface:var(--ad-route-soft); color:var(--ad-route-ink); }
 .task-search-field .task-filter-count { top:2px; right:2px; min-width:14px; height:14px; padding:0 3px; box-shadow:none; font-size:9px; }
-.task-list-refresh .task-workspace-create-button { width:var(--task-search-control-height); height:var(--task-search-control-height); min-height:var(--task-search-control-height); padding:0; border-color:var(--ad-border); background:var(--ad-surface); color:var(--ad-ink); }
-.task-list-refresh .task-workspace-create-button:hover { border-color:var(--ad-control-border-hover); background:var(--ad-surface-subtle); }
 .task-list-recommend { display:flex; align-items:center; gap:7px; margin:0 16px 8px; padding:8px 7px; border:0; border-radius:6px; background:transparent; color:var(--ad-ink-secondary); font-size:12px; cursor:pointer; text-align:left; }
 .task-list-recommend:hover,.task-list-recommend[aria-current="page"] { background:var(--ad-route-soft); color:var(--ad-route-ink); }
 .task-list-completion { display:flex; gap:22px; padding:0 22px; border-bottom:1px solid var(--ad-border-soft); }
@@ -511,5 +506,5 @@
 .task-list-recycle-trigger > svg { flex-shrink:0; }
 @media (max-width:900px), (pointer:coarse) { .task-list-recycle-trigger { min-height:44px; } }
 
-.task-workspace-row-menu [role="menuitem"] { gap: 10px; }
+.task-workspace-row-menu [role="menuitem"] { gap: 10px; white-space: nowrap; }
 .task-workspace-row-menu [role="menuitem"] > svg { flex-shrink: 0; }

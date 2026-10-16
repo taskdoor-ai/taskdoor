@@ -1,0 +1,38 @@
+{
+  "rows": [
+    {
+      "caseId": "case-subtask-v1-remaining-visual",
+      "status": "ready",
+      "passed": true,
+      "initialOnly": true,
+      "fixtureUnchanged": true,
+      "goal": "帮助商城访客通过视觉清楚理解新品350ml容量与可拆洗杯盖特点，支持选购判断。",
+      "dueDate": "2026-10-20",
+      "owner": "jage",
+      "sourceRefs": [
+        "task:subtask-v1-remaining-visual",
+        "evidence:subtask-v1-remaining-visual-brief",
+        "task:subtask-v1-remaining-visual-copy",
+        "evidence:subtask-v1-remaining-visual-copy-delivery",
+        "responsibility:jage"
+      ]
+    },
+    {
+      "caseId": "case-subtask-v1-partial-children",
+      "status": "needs_clarification",
+      "passed": true,
+      "initialOnly": true,
+      "fixtureUnchanged": true,
+      "goal": "帮助商城访客清楚理解新品350ml容量与可拆洗杯盖特点，支持选购判断。",
+      "dueDate": "2026-10-17",
+      "owner": "jage",
+      "sourceRefs": [
+        "task:subtask-v1-partial-children",
+        "evidence:subtask-v1-partial-children-brief",
+        "evidence:subtask-v1-partial-children-pagination",
+        "responsibility:jage",
+        "responsibility:xu"
+      ]
+    }
+  ]
+}

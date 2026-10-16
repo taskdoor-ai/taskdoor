@@ -44,6 +44,7 @@ export type ScenarioSession = {
 };
 
 export type ScenarioContext = {
+  timezone?: string;
   currentDate: string;
   currentUserId: string;
   existingTasks?: ExistingTaskCandidate[];
@@ -169,7 +170,7 @@ const scenarioDraft = (session: ScenarioSession, context: ScenarioContext): Task
         })),
         messages: [{ content: "新品防晒衣抖音达人带货完整需求", role: "user" }],
         tags: context.tags,
-        timezone: "Asia/Shanghai",
+        timezone: context.timezone ?? "Asia/Shanghai",
       };
       return createCreatorCommerceScenarioDraft(request);
     }

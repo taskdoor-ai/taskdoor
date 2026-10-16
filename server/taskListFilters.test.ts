@@ -82,7 +82,7 @@ test("截止日期范围包含两端，未知日期不会混入确定日期结�
   assert.deepEqual(nodes.filter(item => taskMatchesListFilters(item, "", { ...filters, deadline: { preset: "unknown" } }, "me", now)).map(item => item.id), ["legacy", "invalid"]);
 });
 
-test("相对日期使用本地日历，逾期只匹配尚未结束的任务", () => {
+test("相对日期使用团队日历，逾期只匹配尚未结束的任务", () => {
   assert.equal(taskMatchesListFilters(task("today", { plannedEndOn: "2026-09-17" }), "", { ...filters, deadline: { preset: "today" } }, "me", now), true);
   assert.equal(taskMatchesListFilters(task("yesterday", { plannedEndOn: "2026-09-16" }), "", { ...filters, deadline: { preset: "today" } }, "me", now), false);
   for (const status of ["进行中", "已完成", "已取消"] as const) {
@@ -92,8 +92,8 @@ test("相对日期使用本地日历，逾期只匹配尚未结束的任务", ()
   assert.equal(taskMatchesListFilters(task("monday", { plannedEndOn: "2026-09-21" }), "", { ...filters, deadline: { preset: "this-week" } }, "me", now), false);
 });
 
-test("创建日期按当地日期过滤，缺失创建日期不借用更新时间", () => {
-  const timestamp = new Date(2026, 8, 17, 23, 59).toISOString();
+test("创建日期按团队日期过滤，缺失创建日期不借用更新时间", () => {
+  const timestamp = "2026-09-17T23:59:00+08:00";
   const condition: TaskListFilters = { ...filters, created: { preset: "today" } };
   assert.equal(taskMatchesListFilters(task("created", { createdAt: timestamp }), "", condition, "me", now), true);
   assert.equal(taskMatchesListFilters(task("missing"), "", condition, "me", now), false);

@@ -1,0 +1,390 @@
+{
+  "createdAt": "2026-10-14T11:57:39.549Z",
+  "scope": "同一冻结输入、同一PPIO判断模型，比较连接复用；不修改正式运行记录",
+  "rows": [
+    {
+      "freshConnection": false,
+      "startedAt": "2026-10-14T11:57:39.585Z",
+      "sockets": [
+        {
+          "reused": false,
+          "bytesRead": 0,
+          "bytesWritten": 0
+        }
+      ],
+      "status": "completed",
+      "review": {
+        "id": "5c47f5bb-4547-4fb1-8212-0d7bde219041",
+        "at": "2026-10-14T11:57:48.861Z",
+        "model": "qwen/qwen3.7-plus",
+        "requestedModel": "qwen/qwen3.7-plus",
+        "policyVersion": "evidence-judge-v2",
+        "requestHash": "6e6dffdf1a2f2bdc14bbee76d578fdc0d0c5d7421ea4aba6e9407bb6c11f75e9",
+        "durationMs": 9278,
+        "usage": {
+          "input_tokens": 11947,
+          "output_tokens": 415
+        },
+        "items": [
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-progress\",\"stepId\":\"s1\",\"subject\":\"参考整体进度\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":{\"展示完成度\":0,\"原始完成度\":null,\"计算依据\":\"四项独立工作各60分钟，完整交付对应null%工作量。\",\"证据\":[\"analysis-test-not-started-scope · v1\",\"analysis-test-not-started-delivery · v1\",\"analysis-test-not-started-report · v1\",\"analysis-test-not-started-review · v1\"]}}",
+            "id": "q0",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "输出中progress.displayPercent为0，completionPercent为0，计算依据与参考一致（四项独立工作各60分钟，完整交付对应null%工作量，实际完成0），证据引用正确。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-criteria\",\"stepId\":\"s1\",\"subject\":\"参考逐条完成度\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":[{\"完成标准\":\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"},{\"完成标准\":\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"},{\"完成标准\":\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"},{\"完成标准\":\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"}]}",
+            "id": "q1",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "criterionAssessments中四条标准的percent均为0，理由指出交付记录明确未执行，与参考逐条完成度一致。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-situation\",\"stepId\":\"s1\",\"subject\":\"参考情况与下一步\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":{\"当前情况\":\"本轮 0 项交付有正文支持，4 项待补齐或待核对。\",\"已完成\":[],\"剩余或待核对\":[\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"],\"下一步建议\":\"围绕这些未完成或待核对标准补交并复核：活动规则已核对：时间、对象、报名条件与费用写明且无未决项。；报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。；通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。；应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\",\"建议处理人\":\"林洁\",\"特殊预期\":[]}}",
+            "id": "q2",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "currentSituation.summary指出四项交付均记录为尚未执行，unmetResults列出四项待补齐内容，与参考情况一致；建议处理人lin为任务负责人，符合预期。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-trend\",\"stepId\":\"s1\",\"subject\":\"参考燃起图与日期\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":{\"历史节点\":[],\"计划截止\":null,\"预计完成\":null,\"确认完成\":null,\"计划日期差\":null,\"依据\":\"未提供历史工作量观察或有效未来交付安排；不产生历史曲线、预测日期或提前延期数值。\"}}",
+            "id": "q3",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "progress.trend为null，comparison为null，依据说明无历史工作量观察或有效未来交付安排，与参考燃起图与日期预期一致。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-progress\",\"stepId\":\"s1\",\"subject\":\"整体进度\",\"criterion\":\"核对 progress.state、原始 completionPercent 与展示 displayPercent。展示梯度为0/25/50/75/100；按独立工作投入加权，不能直接用人工确认数量计算。参考值只用于评测；无足够证据的旧用例须判断为未知，不能硬凑百分比。\",\"expected\":{\"displayPercent\":0}}",
+            "id": "q4",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "progress.displayPercent为0，符合展示梯度要求及无交付事实的现状。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-criteria\",\"stepId\":\"s1\",\"subject\":\"逐条标准完成度\",\"criterion\":\"criterionAssessments 必须覆盖当前标准，回显文本、ID及标准版本；每条包含梯度百分比、已完成内容、剩余内容、待核对项、理由与证据引用。人工确认与AI完成度独立。逐条核对以下参考值，不以整体百分比替代每条。\",\"expected\":[{\"index\":1,\"percent\":0,\"text\":\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\"},{\"index\":2,\"percent\":0,\"text\":\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\"},{\"index\":3,\"percent\":0,\"text\":\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\"},{\"index\":4,\"percent\":0,\"text\":\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"}]}",
+            "id": "q5",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "criterionAssessments覆盖全部4条标准，index、text与参考一致，percent均为0，包含理由和证据引用。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-trend\",\"stepId\":\"s1\",\"subject\":\"燃起图数据结构\",\"criterion\":\"核对 progress.trend：有真实历史时 points 按时间排序，每点包含 at、totalEwdMinutes、completedEwdMinutes、unconfirmedEwdMinutes、inputVersions、changeReasons，解释总量与完成量的变化。图表使用原始工作量，不能用展示梯度代替；无历史时 trend=null 或 points=[]，说明历史不足，不编造每日点或预测日期。\",\"expected\":null}",
+            "id": "q6",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "progress.trend为null，符合无历史数据时不编造节点的要求。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-timing\",\"stepId\":\"s1\",\"subject\":\"预计完成与计划差值\",\"criterion\":\"核对 progress.comparison 的 workload、expected、aiAssessment、forecastTrend 与 timing，字段与 nocoly/taskdoor 正式前端一致。dueOn 来自截止记录，forecastOn 需有执行和依赖依据；completedOn 只能来自用户确认，AI100%不产生确认日期。缺少完整范围版本或历史时 comparison=null。finishOn、deltaDays、deltaMinutes、deltaPoints均由前端程序派生，不是AI必须输出的字段。comparison=null且输入确实无历史或有效排期时，应判符合未知处理，不因缺少这些派生字段判资料不足。前端计算完成日为completedOn??forecastOn、日期差为完成日减截止日；正数延期负数提前零按期，缺日期为未知。计划量只来自已保存计划，同版本计算 deltaMinutes/deltaPoints；未提供计划不补零。预测节点有依据、最后在预测日达到届时总量；只有日期不编造节点，不用 source=example 伪装真实分析。\",\"expected\":null}",
+            "id": "q7",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "progress.comparison为null，输入确无历史和排期，符合未知处理规则。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-situation\",\"stepId\":\"s1\",\"subject\":\"当前情况\",\"criterion\":\"currentSituation 包含 summary、confirmedResults、unmetResults、pendingChecks、recentChanges、evidenceRefs；摘要具体说明已交付与缺口。逐项与当前文件正文和讨论比对，处理新版、冲突、权限及读取失败，不把完成声称当交付事实。\",\"expected\":{\"已完成\":[],\"待补齐\":[\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"],\"未知\":[]}}",
+            "id": "q8",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "currentSituation中confirmedResults为空（或仅含范围确认而非交付确认），unmetResults/pendingChecks逻辑上对应待补齐的四项内容，与参考当前情况一致。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-actions\",\"stepId\":\"s1\",\"subject\":\"下一步建议\",\"criterion\":\"nextActions 每项包含 action、actorId、diagnosisType、reason、evidenceRefs。行动必须对应本轮尚未完成或待核对内容，有据时指定负责人，无依据时actorId=null；不重复要求已完成工作，不把前置受阻扩大为全任务阻塞，无待办时允许空数组。\",\"expected\":{\"应围绕这些缺口提出行动\":[\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"]}}",
+            "id": "q9",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "nextActions包含四项行动，分别对应四个未完成标准，actorId指定为lin（负责人）或xu（复核人），有明确责任依据，符合预期。"
+          }
+        ]
+      },
+      "durationMs": 9279
+    },
+    {
+      "freshConnection": false,
+      "startedAt": "2026-10-14T11:57:48.866Z",
+      "sockets": [
+        {
+          "reused": false,
+          "bytesRead": 0,
+          "bytesWritten": 0
+        }
+      ],
+      "status": "completed",
+      "review": {
+        "id": "db467eb1-0e7d-4348-950b-3a03c6f95278",
+        "at": "2026-10-14T11:57:57.559Z",
+        "model": "qwen/qwen3.7-plus",
+        "requestedModel": "qwen/qwen3.7-plus",
+        "policyVersion": "evidence-judge-v2",
+        "requestHash": "6e6dffdf1a2f2bdc14bbee76d578fdc0d0c5d7421ea4aba6e9407bb6c11f75e9",
+        "durationMs": 8693,
+        "usage": {
+          "input_tokens": 11947,
+          "output_tokens": 407
+        },
+        "items": [
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-progress\",\"stepId\":\"s1\",\"subject\":\"参考整体进度\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":{\"展示完成度\":0,\"原始完成度\":null,\"计算依据\":\"四项独立工作各60分钟，完整交付对应null%工作量。\",\"证据\":[\"analysis-test-not-started-scope · v1\",\"analysis-test-not-started-delivery · v1\",\"analysis-test-not-started-report · v1\",\"analysis-test-not-started-review · v1\"]}}",
+            "id": "q0",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "输出中展示完成度displayPercent为0，计算依据与参考一致（四项独立工作各60分钟，未执行对应0%），证据引用覆盖范围与交付记录。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-criteria\",\"stepId\":\"s1\",\"subject\":\"参考逐条完成度\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":[{\"完成标准\":\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"},{\"完成标准\":\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"},{\"完成标准\":\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"},{\"完成标准\":\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"}]}",
+            "id": "q1",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "逐条标准完成度均为0，文本与参考完全一致，依据指出未执行或未交付，符合预期。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-situation\",\"stepId\":\"s1\",\"subject\":\"参考情况与下一步\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":{\"当前情况\":\"本轮 0 项交付有正文支持，4 项待补齐或待核对。\",\"已完成\":[],\"剩余或待核对\":[\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"],\"下一步建议\":\"围绕这些未完成或待核对标准补交并复核：活动规则已核对：时间、对象、报名条件与费用写明且无未决项。；报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。；通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。；应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\",\"建议处理人\":\"林洁\",\"特殊预期\":[]}}",
+            "id": "q2",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "当前情况摘要说明0项交付有支持，4项待补齐；已完成为空，剩余/待核对列表与参考一致；下一步建议围绕缺口提出，处理人指定为林洁（lin），符合预期。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-trend\",\"stepId\":\"s1\",\"subject\":\"参考燃起图与日期\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":{\"历史节点\":[],\"计划截止\":null,\"预计完成\":null,\"确认完成\":null,\"计划日期差\":null,\"依据\":\"未提供历史工作量观察或有效未来交付安排；不产生历史曲线、预测日期或提前延期数值。\"}}",
+            "id": "q3",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "历史节点为空，计划截止、预计完成、确认完成均为null，依据说明无历史工作量观察或有效未来安排，不产生预测，符合预期。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-progress\",\"stepId\":\"s1\",\"subject\":\"整体进度\",\"criterion\":\"核对 progress.state、原始 completionPercent 与展示 displayPercent。展示梯度为0/25/50/75/100；按独立工作投入加权，不能直接用人工确认数量计算。参考值只用于评测；无足够证据的旧用例须判断为未知，不能硬凑百分比。\",\"expected\":{\"displayPercent\":0}}",
+            "id": "q4",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "progress.displayPercent为0，符合梯度规则及无交付事实的现状。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-criteria\",\"stepId\":\"s1\",\"subject\":\"逐条标准完成度\",\"criterion\":\"criterionAssessments 必须覆盖当前标准，回显文本、ID及标准版本；每条包含梯度百分比、已完成内容、剩余内容、待核对项、理由与证据引用。人工确认与AI完成度独立。逐条核对以下参考值，不以整体百分比替代每条。\",\"expected\":[{\"index\":1,\"percent\":0,\"text\":\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\"},{\"index\":2,\"percent\":0,\"text\":\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\"},{\"index\":3,\"percent\":0,\"text\":\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\"},{\"index\":4,\"percent\":0,\"text\":\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"}]}",
+            "id": "q5",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "criterionAssessments覆盖全部4条标准，percent均为0，text与参考一致，包含理由与证据引用。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-trend\",\"stepId\":\"s1\",\"subject\":\"燃起图数据结构\",\"criterion\":\"核对 progress.trend：有真实历史时 points 按时间排序，每点包含 at、totalEwdMinutes、completedEwdMinutes、unconfirmedEwdMinutes、inputVersions、changeReasons，解释总量与完成量的变化。图表使用原始工作量，不能用展示梯度代替；无历史时 trend=null 或 points=[]，说明历史不足，不编造每日点或预测日期。\",\"expected\":null}",
+            "id": "q6",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "progress.trend为null，符合无历史数据时不编造的要求。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-timing\",\"stepId\":\"s1\",\"subject\":\"预计完成与计划差值\",\"criterion\":\"核对 progress.comparison 的 workload、expected、aiAssessment、forecastTrend 与 timing，字段与 nocoly/taskdoor 正式前端一致。dueOn 来自截止记录，forecastOn 需有执行和依赖依据；completedOn 只能来自用户确认，AI100%不产生确认日期。缺少完整范围版本或历史时 comparison=null。finishOn、deltaDays、deltaMinutes、deltaPoints均由前端程序派生，不是AI必须输出的字段。comparison=null且输入确实无历史或有效排期时，应判符合未知处理，不因缺少这些派生字段判资料不足。前端计算完成日为completedOn??forecastOn、日期差为完成日减截止日；正数延期负数提前零按期，缺日期为未知。计划量只来自已保存计划，同版本计算 deltaMinutes/deltaPoints；未提供计划不补零。预测节点有依据、最后在预测日达到届时总量；只有日期不编造节点，不用 source=example 伪装真实分析。\",\"expected\":null}",
+            "id": "q7",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "progress.comparison为null，符合输入无历史或有效排期时的未知处理规则。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-situation\",\"stepId\":\"s1\",\"subject\":\"当前情况\",\"criterion\":\"currentSituation 包含 summary、confirmedResults、unmetResults、pendingChecks、recentChanges、evidenceRefs；摘要具体说明已交付与缺口。逐项与当前文件正文和讨论比对，处理新版、冲突、权限及读取失败，不把完成声称当交付事实。\",\"expected\":{\"已完成\":[],\"待补齐\":[\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"],\"未知\":[]}}",
+            "id": "q8",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "currentSituation中confirmedResults仅包含范围和记录本身，unmetResults对应4项未完成内容，pendingChecks为空，与预期结构及内容一致。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-actions\",\"stepId\":\"s1\",\"subject\":\"下一步建议\",\"criterion\":\"nextActions 每项包含 action、actorId、diagnosisType、reason、evidenceRefs。行动必须对应本轮尚未完成或待核对内容，有据时指定负责人，无依据时actorId=null；不重复要求已完成工作，不把前置受阻扩大为全任务阻塞，无待办时允许空数组。\",\"expected\":{\"应围绕这些缺口提出行动\":[\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"]}}",
+            "id": "q9",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "nextActions包含4项行动，分别对应4个未完成标准，actorId指定为lin（负责人）或xu（参与复核），理由充分，证据引用正确。"
+          }
+        ]
+      },
+      "durationMs": 8693
+    },
+    {
+      "freshConnection": true,
+      "startedAt": "2026-10-14T11:57:57.560Z",
+      "sockets": [
+        {
+          "reused": false,
+          "bytesRead": 0,
+          "bytesWritten": 0
+        }
+      ],
+      "status": "completed",
+      "review": {
+        "id": "8c65f453-3be2-46bc-84c6-a25ff930d7c5",
+        "at": "2026-10-14T11:58:07.935Z",
+        "model": "qwen/qwen3.7-plus",
+        "requestedModel": "qwen/qwen3.7-plus",
+        "policyVersion": "evidence-judge-v2",
+        "requestHash": "6e6dffdf1a2f2bdc14bbee76d578fdc0d0c5d7421ea4aba6e9407bb6c11f75e9",
+        "durationMs": 10375,
+        "usage": {
+          "input_tokens": 11947,
+          "output_tokens": 560
+        },
+        "items": [
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-progress\",\"stepId\":\"s1\",\"subject\":\"参考整体进度\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":{\"展示完成度\":0,\"原始完成度\":null,\"计算依据\":\"四项独立工作各60分钟，完整交付对应null%工作量。\",\"证据\":[\"analysis-test-not-started-scope · v1\",\"analysis-test-not-started-delivery · v1\",\"analysis-test-not-started-report · v1\",\"analysis-test-not-started-review · v1\"]}}",
+            "id": "q0",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "输出展示完成度为0，计算依据与参考一致（四项各60分钟，均未执行），证据引用正确。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-criteria\",\"stepId\":\"s1\",\"subject\":\"参考逐条完成度\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":[{\"完成标准\":\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"},{\"完成标准\":\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"},{\"完成标准\":\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"},{\"完成标准\":\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\",\"AI参考完成度\":0,\"用户确认\":\"未提供确认记录\",\"依据\":\"当前正文明确记载未执行或未交付。\"}]}",
+            "id": "q1",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "四条标准的AI参考完成度均为0，依据均为交付记录明确未执行，与预期完全一致。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-situation\",\"stepId\":\"s1\",\"subject\":\"参考情况与下一步\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":{\"当前情况\":\"本轮 0 项交付有正文支持，4 项待补齐或待核对。\",\"已完成\":[],\"剩余或待核对\":[\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"],\"下一步建议\":\"围绕这些未完成或待核对标准补交并复核：活动规则已核对：时间、对象、报名条件与费用写明且无未决项。；报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。；通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。；应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\",\"建议处理人\":\"林洁\",\"特殊预期\":[]}}",
+            "id": "q2",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "当前情况指出0项交付有支持，4项待补齐；已完成为空；剩余/待核对列表完整包含四项标准；建议处理人为林洁（负责人），符合预期。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-reference-v2-5a45ca6aefcc-s1-trend\",\"stepId\":\"s1\",\"subject\":\"参考燃起图与日期\",\"criterion\":\"对照本用例第s1轮预先核对的参考分析与证据。数值应符合参考；文字允许等义表达；行动处理人允许任务负责人或有正式责任依据的协作者，不强求参考姓名相等。参考是评判依据而非业务事实，矛盾时应指出，不得以参考强迫模型编造。\",\"expected\":{\"历史节点\":[],\"计划截止\":null,\"预计完成\":null,\"确认完成\":null,\"计划日期差\":null,\"依据\":\"未提供历史工作量观察或有效未来交付安排；不产生历史曲线、预测日期或提前延期数值。\"}}",
+            "id": "q3",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "历史节点、计划截止、预计完成等均为null，依据说明无历史或排期，符合预期。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-progress\",\"stepId\":\"s1\",\"subject\":\"整体进度\",\"criterion\":\"核对 progress.state、原始 completionPercent 与展示 displayPercent。展示梯度为0/25/50/75/100；按独立工作投入加权，不能直接用人工确认数量计算。参考值只用于评测；无足够证据的旧用例须判断为未知，不能硬凑百分比。\",\"expected\":{\"displayPercent\":0}}",
+            "id": "q4",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "progress.displayPercent为0，completionPercent为0，符合无交付事实的进度状态。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-criteria\",\"stepId\":\"s1\",\"subject\":\"逐条标准完成度\",\"criterion\":\"criterionAssessments 必须覆盖当前标准，回显文本、ID及标准版本；每条包含梯度百分比、已完成内容、剩余内容、待核对项、理由与证据引用。人工确认与AI完成度独立。逐条核对以下参考值，不以整体百分比替代每条。\",\"expected\":[{\"index\":1,\"percent\":0,\"text\":\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\"},{\"index\":2,\"percent\":0,\"text\":\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\"},{\"index\":3,\"percent\":0,\"text\":\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\"},{\"index\":4,\"percent\":0,\"text\":\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"}]}",
+            "id": "q5",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "criterionAssessments覆盖全部4条标准，每条percent为0，文本与ID匹配，包含理由和证据引用。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-trend\",\"stepId\":\"s1\",\"subject\":\"燃起图数据结构\",\"criterion\":\"核对 progress.trend：有真实历史时 points 按时间排序，每点包含 at、totalEwdMinutes、completedEwdMinutes、unconfirmedEwdMinutes、inputVersions、changeReasons，解释总量与完成量的变化。图表使用原始工作量，不能用展示梯度代替；无历史时 trend=null 或 points=[]，说明历史不足，不编造每日点或预测日期。\",\"expected\":null}",
+            "id": "q6",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "progress.trend为null，符合无历史数据时的处理要求。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-timing\",\"stepId\":\"s1\",\"subject\":\"预计完成与计划差值\",\"criterion\":\"核对 progress.comparison 的 workload、expected、aiAssessment、forecastTrend 与 timing，字段与 nocoly/taskdoor 正式前端一致。dueOn 来自截止记录，forecastOn 需有执行和依赖依据；completedOn 只能来自用户确认，AI100%不产生确认日期。缺少完整范围版本或历史时 comparison=null。finishOn、deltaDays、deltaMinutes、deltaPoints均由前端程序派生，不是AI必须输出的字段。comparison=null且输入确实无历史或有效排期时，应判符合未知处理，不因缺少这些派生字段判资料不足。前端计算完成日为completedOn??forecastOn、日期差为完成日减截止日；正数延期负数提前零按期，缺日期为未知。计划量只来自已保存计划，同版本计算 deltaMinutes/deltaPoints；未提供计划不补零。预测节点有依据、最后在预测日达到届时总量；只有日期不编造节点，不用 source=example 伪装真实分析。\",\"expected\":null}",
+            "id": "q7",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "progress.comparison为null，符合无历史或有效排期时的未知处理要求。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-situation\",\"stepId\":\"s1\",\"subject\":\"当前情况\",\"criterion\":\"currentSituation 包含 summary、confirmedResults、unmetResults、pendingChecks、recentChanges、evidenceRefs；摘要具体说明已交付与缺口。逐项与当前文件正文和讨论比对，处理新版、冲突、权限及读取失败，不把完成声称当交付事实。\",\"expected\":{\"已完成\":[],\"待补齐\":[\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"],\"未知\":[]}}",
+            "id": "q8",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "currentSituation中confirmedResults仅包含范围确认，unmetResults列出四项未完成工作，pendingChecks为空，与预期结构及内容一致。"
+          },
+          {
+            "stepId": "s1",
+            "label": "{\"id\":\"analysis-v5-s1-actions\",\"stepId\":\"s1\",\"subject\":\"下一步建议\",\"criterion\":\"nextActions 每项包含 action、actorId、diagnosisType、reason、evidenceRefs。行动必须对应本轮尚未完成或待核对内容，有据时指定负责人，无依据时actorId=null；不重复要求已完成工作，不把前置受阻扩大为全任务阻塞，无待办时允许空数组。\",\"expected\":{\"应围绕这些缺口提出行动\":[\"活动规则已核对：时间、对象、报名条件与费用写明且无未决项。\",\"报名页面已验证：必填字段、成功提示和重复报名行为均有测试记录。\",\"通知材料已核对：邮件与群公告包含一致的时间、链接、联系人。\",\"应急预案已核对：页面故障、活动延期、联系人缺席的处理方案明确。\"]}}",
+            "id": "q9",
+            "choice": "met",
+            "confidence": null,
+            "probabilities": null,
+            "source": "model",
+            "note": "nextActions包含针对四项未完成工作的具体行动，actorId指定为lin（负责人）或xu（复核人），理由充分，证据引用正确。"
+          }
+        ]
+      },
+      "durationMs": 10375
+    }
+  ]
+}

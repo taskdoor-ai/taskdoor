@@ -46,14 +46,14 @@ test('当前方案用例标准只迁移一次，用户输入、其他 Skill、�
 
 test('修改步骤接收上一轮真实方案，只生成两次、不执行 MCP，并在结构通过后判断一次',async()=>{
   const store=makeStore();let calls=0,judges=0,mcpCalls=0;let previous:any;
-  const example=JSON.parse(readFileSync(new URL('../skills/agentdoor-task-planner/references/task-preview.md',import.meta.url),'utf8').match(/```json\n([\s\S]*?)\n```/)![1]);
+  const example=[...readFileSync(new URL('../skills/agentdoor-task-planner/references/task-preview.md',import.meta.url),'utf8').matchAll(/```json\n([\s\S]*?)\n```/g)].map(match=>JSON.parse(match[1])).find(plan=>plan.status==='ready'&&plan.tasks?.length===1&&plan.tasks[0].children?.length===0);
   const runner=createRunner(store,options,async(_o,_s,raw)=>{
     const input=raw as any;calls++;
-    if(calls===2){assert.deepEqual(input.previousPlan,previous);assert.match(input.userRequest,/文案改为/);}
+    if(calls===2){assert.deepEqual(input.previousPlan,previous);assert.match(input.userRequest,/改为|改成|调整/);}
     else assert.equal(input.previousPlan,undefined);
     const output=structuredClone(calls===1?example:previous);output.requestId=input.requestId;
     const assign=(tasks:any[])=>tasks.forEach(t=>{t.ownerMemberId=input.currentMemberId;t.participants=[];assign(t.children);});assign(output.tasks);
-    if(calls===2)output.tasks[0].children[0].dueDate='2026-12-20';
+    if(calls===2)output.tasks[0].dueDate='2026-12-20';
     previous=output;
     return {rawOutput:JSON.stringify(output),usage:{inputTokens:1,outputTokens:1,totalTokens:2}};
   },undefined,{model:'judge',configured:true,review:async id=>{judges++;return store.getRun(id)!;}},undefined,async()=>{mcpCalls++;throw Error('不应写入');});
@@ -63,6 +63,8 @@ test('修改步骤接收上一轮真实方案，只生成两次、不执行 MCP�
   assert.equal(result.steps.length,2);assert.ok(result.steps.every(s=>s.structure==='passed'));
   assert.equal(result.steps[1].output&&(result.steps[1].output as any).tasks[0].clientId,(result.steps[0].output as any).tasks[0].clientId);
   assert.equal(result.judgeStatus,'completed');
+  for(const step of result.steps){const plan=step.output as any;assert.equal(plan.tasks.length,1);assert.deepEqual(plan.tasks[0].children,[]);}
+  assert.equal((result.steps[1].output as any).tasks[0].dueDate,'2026-12-20');
 });
 
 test('结构修正仍失败时不请求判断模型或下一步骤，完成度结束、总耗时可用',async()=>{

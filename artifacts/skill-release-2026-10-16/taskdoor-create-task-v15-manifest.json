@@ -1,0 +1,46 @@
+{
+  "name": "taskdoor-create-task",
+  "version": "TASK-PREVIEW-2026-10-16-v15",
+  "installedPath": "/Users/yxzuji/.agents/skills/taskdoor-create-task",
+  "base": "Installed production v12; goals/criteria/scheduling merged from project research v14",
+  "schemaPreserved": true,
+  "remotePublished": false,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "bytes": 18555,
+      "sha256": "db0af6a88b48e040f72c088c437543d0e4c2ea055c103742e111fc3e3e424516"
+    },
+    {
+      "path": "references/task-planning.md",
+      "bytes": 14971,
+      "sha256": "d98f5a2ac89e425279c9a43f8cb0cd1d90188ca19e246ba87fb5ff621ea7f9d3"
+    },
+    {
+      "path": "references/task-preview.md",
+      "bytes": 17481,
+      "sha256": "80bebafa6542ba2f97e6a6474124b12c95eda951bf71d786730556246c2886b4"
+    },
+    {
+      "path": "references/task-preview.schema.json",
+      "bytes": 7508,
+      "sha256": "3742426ddf277de4f7ed87fe2290023ab3d8e9c830de68a81d248c8cbf74fd2d"
+    },
+    {
+      "path": "references/goal-and-criteria.md",
+      "bytes": 12576,
+      "sha256": "3fa51af7944567a1dbfe5e7bbb5d394863da3c2cbfab12d71023ef52443f79d0"
+    },
+    {
+      "path": "references/management-playbook.md",
+      "bytes": 3121,
+      "sha256": "2677787b48fd46d91134a1737f04991800e1e83d086ab5bda60d4db06f1ce6e1"
+    },
+    {
+      "path": "references/task-scheduling.md",
+      "bytes": 4385,
+      "sha256": "2a9cd3cfa494ed8f9b4a4804bc9ce7aeaf6abb5bba05e4e71ecb8ee555ef5baf"
+    }
+  ],
+  "archiveSha256": "ac02a450299c4238ff57c5a113a1ac392b9859181af755af30dd09b8df47647a"
+}

@@ -12,8 +12,17 @@ import {previewCaseForEvaluation} from '../src/test-lab/task-preview-case.ts';
 
 const skill=loadSkill('agentdoor-task-planner');
 const doc=readFileSync(new URL('../skills/agentdoor-task-planner/references/task-preview.md',import.meta.url),'utf8');
-const example=JSON.parse(doc.match(/```json\n([\s\S]*?)\n```/)![1]);
-const input:PreviewInput={requestId:example.requestId,userRequest:'安排文案和海报',currentDate:'2026-10-09',timezone:'Asia/Shanghai',currentMemberId:'member-lead',members:['member-lead','member-writer','member-designer'].map(id=>({id,name:id,responsibilities:[]}))};
+const examples=[...doc.matchAll(/```json\n([\s\S]*?)\n```/g)].map(match=>JSON.parse(match[1]));
+const example=examples.find(plan=>plan.status==='ready'&&plan.tasks?.length===1&&plan.tasks[0].children?.length===0);
+const historical=JSON.parse(readFileSync(new URL('./test-lab/fixtures/task-preview-v17.json',import.meta.url),'utf8'));
+const input:PreviewInput={requestId:example.requestId,userRequest:'建立当前新品发布资料包任务，包含文案和海报的完成要求，先不拆子任务',currentDate:'2026-10-09',timezone:'Asia/Shanghai',currentMemberId:'member-lead',members:['member-lead','member-writer','member-designer'].map(id=>({id,name:id,responsibilities:[]}))};
+
+test('当前主任务方案无需旧前置依赖字段即可完成业务校验',()=>{
+  const main=examples.find(plan=>plan.tasks?.[0]?.children?.length===0);
+  assert.deepEqual(validateTaskPreview(skill.previewSchema,main,{...input,requestId:main.requestId}),[]);
+  const old=structuredClone(main);old.tasks[0].dependsOnClientIds=[];
+  assert.match(validateTaskPreview(skill.previewSchema,old,input).join('\n'),/不允许字段.*dependsOnClientIds/);
+});
 
 test('冻结生产预览包不再注入写入契约，旧快照仍可辨别',()=>{
   assert.equal(skill.outputMode,'preview');
@@ -24,22 +33,47 @@ test('冻结生产预览包不再注入写入契约，旧快照仍可辨别',()=
   assert.equal(loadSkill('agentdoor-task-planner','# 历史版本').outputMode,'legacy');
 });
 
-test('可编辑嵌套示例符合冻结 Schema，用户修改字段后仍是有效方案',()=>{
+test('当前单主任务示例可编辑，名称与截止修改不改变临时标识',()=>{
   assert.deepEqual(validateTaskPreview(skill.previewSchema,example,input),[]);
   const edited=structuredClone(example);edited.tasks[0].title='用户编辑的任务';
-  edited.tasks[0].children[0].dueDate='2026-12-26';
+  edited.tasks[0].dueDate='2026-12-26';
   assert.deepEqual(validateTaskPreview(skill.previewSchema,edited,input),[]);
   assert.equal(edited.tasks[0].clientId,example.tasks[0].clientId);
 });
 
-test('拒绝不存在的成员、重复 ID、无效日期和循环依赖',()=>{
-  const bad=structuredClone(example),root=bad.tasks[0],children=root.children;
+test('拒绝不存在的成员、无效日期和已移除的依赖字段',()=>{
+  const bad=structuredClone(example),root=bad.tasks[0];
   root.ownerMemberId='not-a-member';root.dueDate='2026-02-30';
-  children[0].dependsOnClientIds=[children[1].clientId];children[1].dependsOnClientIds=[children[0].clientId];
   const errors=validateTaskPreview(skill.previewSchema,bad,input).join('\n');
-  assert.match(errors,/负责人不在/);assert.match(errors,/日期无效/);assert.match(errors,/循环/);
-  children[1].clientId=children[0].clientId;
-  assert.match(validateTaskPreview(skill.previewSchema,bad,input).join('\n'),/ID 重复/);
+  assert.match(errors,/负责人不在/);assert.match(errors,/日期无效/);
+  root.dependsOnClientIds=[];
+  assert.match(validateTaskPreview(skill.previewSchema,bad,input).join('\n'),/不允许字段.*dependsOnClientIds/);
+});
+
+test('当前创建 Schema 只接受一个主任务，子树和多个根任务均被拒绝',()=>{
+  assert.equal(skill.previewSchema.properties.tasks.maxItems,1);
+  assert.equal(skill.previewSchema.$defs.task.properties.children.maxItems,0);
+  assert.deepEqual(validateTaskPreview(skill.previewSchema,example,input),[]);
+  const subtree=structuredClone(example);subtree.tasks[0].children=[{...structuredClone(subtree.tasks[0]),clientId:'forbidden-child'}];
+  assert.match(validateTaskPreview(skill.previewSchema,subtree,input).join('\n'),/children.*must NOT have more than 0/);
+  const roots=structuredClone(example);roots.tasks.push({...structuredClone(roots.tasks[0]),clientId:'forbidden-root'});
+  assert.match(validateTaskPreview(skill.previewSchema,roots,input).join('\n'),/tasks.*must NOT have more than 1/);
+});
+
+test('冻结 v17 的原 Schema 仍独立读取历史树，并保留重复 ID 校验',()=>{
+  // This minimal test package preserves the actual v17 schema, not its full distribution.
+  const entry='skills/agentdoor-task-planner/SKILL.md',schemaPath='skills/agentdoor-task-planner/references/task-preview.schema.json';
+  const manifest={version:1,mode:'preview',files:[entry,schemaPath]};
+  const snapshot=`\n--- FILE: ${entry} ---\n# 历史Schema读取测试入口\n--- FILE: ${schemaPath} ---\n${JSON.stringify(historical.schema)}\n--- FILE: skills/agentdoor-task-planner/references/production-runtime.json ---\n${JSON.stringify(manifest)}`;
+  const frozen=loadSkill('agentdoor-task-planner',snapshot),before=structuredClone(frozen.previewSchema);
+  const legacyInput={...input,requestId:historical.example.requestId};
+  assert.deepEqual(frozen.previewSchema,historical.schema);
+  assert.deepEqual(validateTaskPreview(frozen.previewSchema,historical.example,legacyInput),[]);
+  const duplicate=structuredClone(historical.example);duplicate.tasks[0].children[1].clientId=duplicate.tasks[0].children[0].clientId;
+  assert.match(validateTaskPreview(frozen.previewSchema,duplicate,legacyInput).join('\n'),/ID 重复/);
+  assert.deepEqual(frozen.previewSchema,before);
+  assert.equal(skill.previewSchema.properties.tasks.maxItems,1);
+  assert.equal(frozen.previewSchema.properties.tasks.maxItems,100);
 });
 
 test('不能附带真实回执或把空方案、待确认问题标为 ready',()=>{
@@ -76,7 +110,7 @@ test('预览评测只调用一次模型，即使用户说确认也不触发 MCP�
     assert.ok(!('tasks' in i));assert.ok(!('evidence' in i));assert.equal(i.members.length,team.members.length);
     assert.ok(!instructions.includes('本次为真实 MCP 执行'));
     const plan=structuredClone(example);plan.requestId=i.requestId;
-    plan.tasks=[{...plan.tasks[0],ownerMemberId:i.currentMemberId,participants:[],children:[],dependsOnClientIds:[]}];
+    plan.tasks=[{...plan.tasks[0],ownerMemberId:i.currentMemberId,participants:[],children:[]}];
     return {rawOutput:JSON.stringify(plan),usage:{inputTokens:1,outputTokens:1,totalTokens:2}};
   },undefined,undefined,{url:'https://example.com/mcp',token:'test',workspaceId:'test'},async()=>{mcpCalls++;throw Error('不应写入');});
   assert.throws(()=>runner.enqueue([c.id],'cannot-create',{executionMode:'mcp'}),/版本与评测方式不一致/);

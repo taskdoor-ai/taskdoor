@@ -55,20 +55,20 @@ const read = (file: string) => readFileSync(new URL(`../src/${file}`, import.met
 
 const messageProps = { messages: [root, reply], allMessages: [root, reply], currentUser: "林洁", files: [], people: [], draftKey: "test", onOpenFile: () => undefined, onPost: () => undefined };
 
-test("任务讨论显示统一附件入口和逐条回复，常驻直接父消息摘要并隔离文件评论", () => {
-  const html = renderChinese(createElement(TaskDiscussion, { ...props, activities: [root, { ...reply, quote: { messageId: root.id, author: root.author, text: "旧引用摘录" } }, { ...root, id: "file-only", fileThreadId: "file-thread", message: "仅在文件中显示" }] }));
+test("任务讨论显示统一附件入口和逐条回复，历史文件评论也在同一消息流", () => {
+  const html = renderChinese(createElement(TaskDiscussion, { ...props, activities: [root, { ...reply, quote: { messageId: root.id, author: root.author, text: "旧引用摘录" } }, { ...root, id: "file-only", fileThreadId: "file-thread", message: "旧文件讨论内容" }] }));
   assert.match(html, /contentEditable="true"/i);
   assert.match(html, /aria-label="添加附件"/);
   assert.doesNotMatch(html, /aria-label="本地上传"|aria-label="从文件列表选择"/);
   assert.match(html, /task-discussion-feed-reference/);
   assert.doesNotMatch(html, /引用<\/button>|discussion-inline-quote|旧引用摘录/);
-  assert.match(html, /aria-label="查看引用内容"/);
+  assert.match(html, /aria-label="定位原消息"/);
   const replyMarkup = html.match(/id="task-activity-specific-reply"[\s\S]*?<\/li>/)?.[0];
   assert.ok(replyMarkup);
   assert.match(replyMarkup, /我已确认范围/);
   assert.doesNotMatch(replyMarkup, /请核对交付范围/, "回复行不常驻父消息摘要");
-  assert.equal((html.match(/class="task-discussion-feed-message"/g) ?? []).length, 2, "主消息和回复平铺为独立行");
-  assert.doesNotMatch(html, /仅在文件中显示/);
+  assert.equal((html.match(/class="task-discussion-feed-message"/g) ?? []).length, 3, "主消息、回复和历史文件消息平铺为独立行");
+  assert.match(html, /旧文件讨论内容/);
   assert.doesNotMatch(html, /回复列表|查看\s*\d+\s*条回复|收起回复|task-discussion-thread-bar/);
 });
 
@@ -84,7 +84,7 @@ test("主讨论 AI 入口只传递当前串和触发器，不提交发言", () =
   assert.equal(posts, 0);
 });
 
-test("针对具体回复再回复时保留该回复 ID，草稿 AI 不发送正文", async () => {
+test("针对具体回复再回复时保留该回复 ID，输入区不提供草稿 AI 带入", async () => {
   const posts: unknown[][] = [], calls: unknown[][] = [];
   let opened = false;
   const { tree } = capture(() => DiscussionMessages({ ...messageProps, allowQuote: false, onPost: (...args) => { posts.push(args); }, onConnectAi: (...args) => { calls.push(args); } }), node => {
@@ -96,9 +96,8 @@ test("针对具体回复再回复时保留该回复 ID，草稿 AI 不发送正�
   const composer = elements(tree, node => node.type === DiscussionComposer)[0];
   assert.equal(composer.props.autoFocus, true);
   assert.equal(composer.props.allowQuote, false);
-  const trigger = {} as HTMLElement;
-  composer.props.onConnectAi("草稿", trigger);
-  assert.deepEqual(calls, [[{ kind: "reply-draft", activityId: reply.id, draft: "草稿" }, trigger]]);
+  assert.equal(composer.props.onConnectAi, undefined);
+  assert.deepEqual(calls, []);
   assert.equal(posts.length, 0);
   await composer.props.onSubmit({ body: "收到", mentions: [], attachments: [] });
   assert.equal(posts[0][1], reply.id);
@@ -157,38 +156,28 @@ test("时间显示保存的日期时分且位于内容附件下方，旧相对�
   assert.match(legacy, /dateTime="2026-09-01T02:06:00\.000Z"/i);
 });
 
-test("编辑器 AI 入口读取当前纯文本，反复打开不清空草稿、不触发提交或取消", () => {
-  const calls: unknown[][] = [];
+test("编辑器有输入时不提供 AI 入口，正文及正常提交取消入口保留", () => {
   let submits = 0;
   let cancels = 0;
   let initialized = false;
-  let connected = false;
   const draft: Segment[] = [{ type: "text", value: "草稿正文" }];
-  const trigger = {} as HTMLElement;
   const { tree, html } = capture(
-    () => MentionComposer({ compact: true, people: [], onSubmit: () => { submits++; }, onCancel: () => { cancels++; }, onConnectAi: (...args) => { calls.push(args); } }),
+    () => MentionComposer({ compact: true, people: [], onSubmit: () => { submits++; }, onCancel: () => { cancels++; } }),
     (node) => {
       if (!initialized) {
         initialized = true;
         elements(node, (item) => item.type === SmartTextbox)[0].props.onChange(draft);
         return;
       }
-      if (connected) return;
-      connected = true;
-      const ai = elements(node, (item) => item.props.title === "连接 AI")[0];
-      assert.ok(ai, "回复编辑区应有连接 AI 入口");
-      ai.props.onClick({ currentTarget: trigger });
-      ai.props.onClick({ currentTarget: trigger });
     },
   );
   const ai = elements(tree, (node) => node.props.title === "连接 AI")[0];
-  assert.ok(ai, "回复编辑区应有连接 AI 入口");
+  assert.equal(ai, undefined);
   const toolbar = elements(tree, (node) => node.props.className === "mention-composer-tools")[0];
   const toolbarChildren = Children.toArray(toolbar.props.children).filter(isValidElement) as Element[];
   assert.equal(toolbarChildren[0].props.ariaLabel, "提及协作者");
-  assert.equal(elements(toolbarChildren[1], (node) => node.props.title === "连接 AI").length, 1);
-  assert.match(html, /aria-label="连接 AI：当前回复草稿"/);
-  assert.deepEqual(calls, [["草稿正文", trigger], ["草稿正文", trigger]]);
+  assert.equal(toolbarChildren.length, 1);
+  assert.doesNotMatch(html, /连接 AI：当前回复草稿/);
   assert.deepEqual(elements(tree, (item) => item.type === SmartTextbox)[0].props.value, draft);
   assert.equal(submits, 0);
   assert.equal(cancels, 0);
