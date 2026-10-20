@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { taskUpdatedTime, taskUpdatedLabel, taskDueLabel } from "../src/features/tasks/lib/task-list-presentation.ts";
 import { buildTaskListProjection } from "../src/features/tasks/lib/task-list-projection.ts";
+import { partitionPinnedTasks } from "../src/features/tasks/lib/task-pins.ts";
+import { taskResultSelection } from "../src/features/tasks/lib/task-result-selection.ts";
 import { createInitialTaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
 import { normalizeWorkspaceNodes } from "../src/ai/mock/data/workspaceNodes.ts";
 import { type TaskNode } from "../src/shared/model/task-model.ts";
@@ -30,6 +32,53 @@ test("创建时间与最近更新时间独立倒序，未知时间置后且不�
   const filters = { owner: "all", status: "all", tag: "all" };
   assert.deepEqual(buildTaskListProjection(nodes, "", filters, []).visibleTasks.map(t => t.id), ["new", "old", "unknown"]);
   assert.deepEqual(buildTaskListProjection(nodes, "", { ...filters, sort: "created" }, []).visibleTasks.map(t => t.id), ["old", "new", "unknown"]);
+});
+test("最近更新将较新的已完成任务置底，两组各按原更新时间排列，取消任务不额外后置", () => {
+  const nodes = [
+    node("done-new", { name: "完成创建页三栏改版", status: "已完成", updatedAt: "2026-10-20T12:00:00Z" }),
+    node("active-old", { name: "讨论附件显示缩略图", updatedAt: "2026-10-18T10:00:00Z" }),
+    node("done-old", { name: "文件树仅展开和收起", status: "已完成", updatedAt: "2026-10-16T10:00:00Z" }),
+    node("active-unknown", { name: "核对历史反馈", updatedAt: "导入" }),
+    node("blocked", { name: "等待需求范围确认", status: "已阻塞", updatedAt: "2026-10-19T09:00:00Z" }),
+    node("cancelled", { name: "撤销旧版文件区方案", status: "已取消", updatedAt: "2026-10-20T11:00:00Z" }),
+  ];
+  const before = JSON.stringify(nodes);
+  const result = buildTaskListProjection(nodes, "", createInitialTaskListFilters("me"), []);
+  assert.deepEqual(result.visibleTasks.map(task => task.id), ["cancelled", "blocked", "active-old", "active-unknown", "done-new", "done-old"]);
+  assert.equal(JSON.stringify(nodes), before);
+});
+test("创建时间排序保持纯时间顺序，任务重开后回到最近更新的未完成组并保留当前选择", () => {
+  const nodes = [
+    node("done", { name: "确认附件缩略图交付", status: "已完成", updatedAt: "2026-10-20T12:00:00Z", createdAt: "2026-10-20T09:00:00Z" }),
+    node("active", { name: "调整文件区方案", updatedAt: "2026-10-19T12:00:00Z", createdAt: "2026-10-19T09:00:00Z" }),
+  ];
+  const filters = createInitialTaskListFilters("me");
+  assert.deepEqual(buildTaskListProjection(nodes, "", { ...filters, sort: "created" }, []).visibleTasks.map(task => task.id), ["done", "active"]);
+  const before = buildTaskListProjection(nodes, "", filters, []).visibleTasks.map(task => task.id);
+  assert.deepEqual(before, ["active", "done"]);
+  assert.equal(taskResultSelection(before, "done"), "done");
+  const reopened = nodes.map(task => task.id === "done" ? { ...task, status: "进行中" as const } : task);
+  const after = buildTaskListProjection(reopened, "", filters, []).visibleTasks.map(task => task.id);
+  assert.deepEqual(after, ["done", "active"]);
+  assert.equal(taskResultSelection(after, "done"), "done");
+});
+test("最近更新的完成后置保持搜索筛选与置顶独立分组", () => {
+  const nodes = [
+    node("pinned-done", { name: "附件缩略图交付", status: "已完成", labels: ["协作"], updatedAt: "2026-10-20T12:00:00Z" }),
+    node("regular-done", { name: "附件预览交付", status: "已完成", labels: ["协作"], updatedAt: "2026-10-20T11:00:00Z" }),
+    node("regular-active", { name: "附件预览改版", labels: ["协作"], updatedAt: "2026-10-19T10:00:00Z" }),
+    node("pinned-active", { name: "附件缩略图改版", labels: ["协作"], updatedAt: "2026-10-18T10:00:00Z" }),
+    node("other-owner", { name: "附件规范", labels: ["协作"], ownerId: "other" }),
+    node("other-tag", { name: "附件整理", labels: ["文件"] }),
+    node("other-query", { name: "文件区改版", labels: ["协作"] }),
+  ];
+  const filters: TaskListFilters = { ...createInitialTaskListFilters("me"), scope: "owned", tags: ["协作"], sort: "recent" };
+  const visible = buildTaskListProjection(nodes, "附件", filters, [], "me").visibleTasks;
+  const { pinned, unpinned } = partitionPinnedTasks(visible, ["pinned-done", "pinned-active"]);
+  assert.deepEqual(pinned.map(task => task.id), ["pinned-active", "pinned-done"]);
+  assert.deepEqual(unpinned.map(task => task.id), ["regular-active", "regular-done"]);
+  assert.deepEqual([...pinned, ...unpinned].map(task => task.id), ["pinned-active", "pinned-done", "regular-active", "regular-done"]);
+  assert.deepEqual(buildTaskListProjection(nodes, "附件", { ...filters, statuses: ["已完成"] }, [], "me").visibleTasks.map(task => task.id), ["pinned-done", "regular-done"]);
 });
 test("默认全部，显式完成条件与多标签 OR 筛选一致", () => {
   const nodes = [node("active", { labels: ["A"] }), node("done", { status: "已完成", labels: ["B"] }), node("cancelled", { status: "已取消" })];

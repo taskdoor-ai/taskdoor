@@ -36,10 +36,6 @@ operations: "leave_team, remove_member, revoke_team_access"
 
 *FIG-EXIT-001 · 负责的任务交接：筛选待交接任务，逐项指定接手人。*
 
-![批量指定接手人：勾选本页任务后，从团队成员中选择。](../assets/membership-account-exit/handoff-batch-picker-zh.png)
-
-*FIG-EXIT-002 · 批量指定接手人：勾选本页任务后，从团队成员中选择。*
-
 ![参与的任务交接：单独核对参与关系，底部汇总全部交接项。](../assets/membership-account-exit/handoff-participating-zh.png)
 
 *FIG-EXIT-003 · 参与的任务交接：单独核对参与关系，底部汇总全部交接项。*

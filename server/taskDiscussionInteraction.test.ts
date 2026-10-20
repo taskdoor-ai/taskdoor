@@ -12,12 +12,15 @@ import type { TaskActivityMock } from "../src/shared/model/task-model.ts";
 register(`data:text/javascript,${encodeURIComponent(`
   export async function load(url, context, nextLoad) {
     if (url.endsWith(".svg")) return { format: "module", source: "export default " + JSON.stringify(url), shortCircuit: true };
+    if (url.endsWith(".css")) return { format: "module", source: "export default {}", shortCircuit: true };
     return nextLoad(url, context);
   }
 `)}`, import.meta.url);
 const { TaskDiscussion } = await import("../src/features/tasks/components/TaskDiscussion.tsx");
 const { DiscussionMessages, ReplyReference } = await import("../src/features/tasks/discussion/components/DiscussionMessages.tsx");
 const { DiscussionComposer } = await import("../src/features/tasks/discussion/components/DiscussionComposer.tsx");
+const { DiscussionAttachmentGallery } = await import("../src/features/tasks/discussion/components/DiscussionAttachmentGallery.tsx");
+const { GridListItem } = await import("react-aria-components");
 const { MentionComposer } = await import("../src/features/tasks/discussion/components/MentionComposer.tsx");
 const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
 const { AiConnectionButton } = await import("../src/features/ai-connection/components/AiConnectionButton.tsx");
@@ -46,6 +49,12 @@ function capture(render: () => ReactNode, initialize?: (tree: ReactNode) => void
   }
   const html = renderChinese(createElement(Capture));
   return { html, tree };
+}
+function attachmentItems(tree: ReactNode) {
+  const gallery = elements(tree, item => item.type === DiscussionAttachmentGallery)[0];
+  assert.ok(gallery, "兼容消息同样接入共享Gallery");
+  const rendered = capture(() => DiscussionAttachmentGallery(gallery.props as Parameters<typeof DiscussionAttachmentGallery>[0]));
+  return elements(rendered.tree, item => item.type === GridListItem);
 }
 
 const root: TaskActivityMock = { id: "root-discussion", author: "陈默", type: "member-post", message: "请核对交付范围", time: "昨天" };
@@ -108,10 +117,20 @@ test("消息附件点击使用稳定文件 ID 与发布版本，已删除评论�
   const opens: unknown[][] = [];
   const file = { id: "file-a", kind: "file" as const, name: "已改名.md", parentId: null, version: 3, updatedAt: "今天" };
   const { tree, html } = capture(() => DiscussionMessages({ ...messageProps, files: [file], messages: [{ ...root, attachmentRefs: [{ fileId: file.id, version: 1, name: "原名.md" }] }, { ...reply, deletedAt: "2026-09-14T01:00:00Z", message: "" }], onOpenFile: (...args) => { opens.push(args); } }));
-  elements(tree, node => node.props.className === "task-record-file-link")[0].props.onClick();
+  attachmentItems(tree)[0].props.onAction();
   assert.deepEqual(opens, [["file-a", 1]]);
   assert.doesNotMatch(html, /这条评论已删除|task-activity-specific-reply/);
   assert.doesNotMatch(html, /我已确认范围/);
+});
+
+test("兼容讨论消息同样展示图片缩略图，继续固定引用版本打开", () => {
+  const opens: unknown[][] = [];
+  const file = { id: "compat-image", kind: "file" as const, name: "讨论截图.png", parentId: null, version: 1, updatedAt: "今天", sizeLabel: "8 KiB", previewData: { kind: "image" as const, alt: "讨论截图", src: "data:image/png;base64,Y29tcGF0" } };
+  const { tree, html } = capture(() => DiscussionMessages({ ...messageProps, files: [file], messages: [{ ...root, attachmentRefs: [{ fileId: file.id, version: 1, name: file.name }] }], onOpenFile: (...args) => { opens.push(args); } }));
+  assert.match(html, /class="task-file-thumbnail-image"/);
+  assert.match(html, /PNG · 8 KiB · v1/);
+  attachmentItems(tree)[0].props.onAction();
+  assert.deepEqual(opens, [[file.id, 1]]);
 });
 
 test("删除根评论后保留其他回复且不留下空讨论组，全部删除显示空态", () => {

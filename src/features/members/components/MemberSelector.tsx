@@ -2,6 +2,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockPersonName } from "@/ai/mock/i18n/mockContent";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { X } from "lucide-react";
+import { useRef } from "react";
 import type { TaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecommendations";
 import { PersonAvatar, PersonAvatarGroup, PersonName, PersonOverflowList, type PersonInvitationStatus } from "@/shared/ui/PersonAvatar";
 import { PersonPicker, type PersonOption } from "@/features/members/components/PersonPicker";
@@ -25,6 +26,7 @@ type MemberSelectorProps = {
   onChange: (selected: string[]) => void;
   onInviteMembers?: (returnFocus?: HTMLElement | null) => void;
   selected: string[];
+  showFullList?: boolean;
   showInvitationStatus?: boolean;
   showTriggerProfilePreview?: boolean;
   stacked?: boolean;
@@ -32,12 +34,13 @@ type MemberSelectorProps = {
 
 // Adapted from 21st.dev Member Selector #9908 by osiris-balonga.
 // Preserves selected-first avatars, add/search, check state and click-away behavior.
-export function MemberSelector({ avatarSize = "md", allowInvitations = true, allowUnassigned = true, disabled = false, displayMax, hideHeader = false, hideSelectedName = false, invitationStatusById = {}, label, max, memberRecommendations, members, min = 0, onChange, onInviteMembers, selected, showInvitationStatus = true, showTriggerProfilePreview = true, stacked = false }: MemberSelectorProps) {
+export function MemberSelector({ avatarSize = "md", allowInvitations = true, allowUnassigned = true, disabled = false, displayMax, hideHeader = false, hideSelectedName = false, invitationStatusById = {}, label, max, memberRecommendations, members, min = 0, onChange, onInviteMembers, selected, showFullList = false, showInvitationStatus = true, showTriggerProfilePreview = true, stacked = false }: MemberSelectorProps) {
   const d = useDetailCopy();
   const { locale } = useI18n();
   const selectedMembers = members.filter((member) => selected.includes(member.id));
   const visibleSelectedMembers = displayMax ? selectedMembers.slice(0, displayMax) : selectedMembers;
   const hiddenSelectedCount = selectedMembers.length - visibleSelectedMembers.length;
+  const stackedRowRef = useRef<HTMLDivElement>(null);
 
   const toggle = (id: string) => {
     if (selected.includes(id)) {
@@ -65,8 +68,8 @@ export function MemberSelector({ avatarSize = "md", allowInvitations = true, all
   if (stacked) {
     return <div className="member-selector member-selector-stacked">
       {!hideHeader && <div className="member-selector-label"><span>{label}</span></div>}
-      <div className="member-selector-stacked-row">
-        {selectedMembers.length > 0 && <PersonAvatarGroup invitationStatusById={showInvitationStatus ? invitationStatusById : {}} maxVisible={displayMax ?? 4} onRemove={disabled || selected.length <= min ? undefined : toggle} people={selectedMembers} removeLabel={label} size={avatarSize} />}
+      <div className="member-selector-stacked-row" ref={stackedRowRef}>
+        {selectedMembers.length > 0 && <PersonAvatarGroup invitationStatusById={showInvitationStatus ? invitationStatusById : {}} maxVisible={displayMax ?? 4} onRemove={disabled || selected.length <= min ? undefined : (id) => { if (showFullList && selectedMembers.length === 1) stackedRowRef.current?.querySelector<HTMLButtonElement>(".person-picker-trigger")?.focus(); toggle(id); }} people={selectedMembers} removeLabel={label} showFullList={showFullList} size={avatarSize} />}
         <PersonPicker allowInvitations={allowInvitations} allowUnassigned={allowUnassigned && min === 0} ariaLabel={`${d("add")} ${label}`} disabled={disabled} hideSelectedName={hideSelectedName} max={max} memberRecommendations={memberRecommendations} members={members} menuLabel={`${d("select")} ${label}`} min={min} multiple onChange={onChange} onInviteMembers={onInviteMembers} triggerVariant="add" value={selected} />
       </div>
     </div>;

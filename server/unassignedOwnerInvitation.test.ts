@@ -64,18 +64,23 @@ test("创建方案保留未分配提示，人员列表与确认区域复用邀�
   assert.doesNotMatch(app, /openPersonalCenter\("members", returnFocus\)/);
 });
 
-test("搜索下方仅保留暂不分配操作，邀请成员独立放在列表下方", () => {
+test("邀请说明作为暂不分配的副标题，立即邀请保持独立操作", () => {
   const picker = read("features/members/components/PersonPicker.tsx");
   const detail = read("features/tasks/components/TaskDetail.tsx");
 
   assert.match(picker, /unassignedLabel = d\('unassigned'\)/);
   assert.doesNotMatch(picker, /person-picker-invite-row|<small title=\{unassignedDescription\}/);
   assert.match(picker, /person-picker-unassigned/);
-  assert.match(picker, /!inviteCandidate && !isMentionTrigger && allowInvitations && onInviteMembers && <div className="person-picker-footer"/);
-  assert.match(picker, /person-picker-invite-action[^\n]*d\('inviteMembers'\)/);
+  assert.match(picker, /const invitationHint = !inviteCandidate && !isMentionTrigger && allowInvitations && onInviteMembers/);
+  assert.match(picker, /aria-describedby=\{invitationHint \? inviteDescriptionId : undefined\}/);
+  assert.match(picker, /<\/button>\s*\{invitationHint\}/);
+  assert.match(picker, /!canUnassign && invitationHint && <div className="person-picker-invite-hint"/);
+  assert.match(picker, /person-picker-invite-copy[^\n]*unassignedDescription/);
+  assert.match(picker, /person-picker-invite-action[^\n]*d\('inviteNow'\)/);
   assert.ok(picker.indexOf("person-picker-search") < picker.indexOf("person-picker-unassigned"));
   assert.ok(picker.indexOf("person-picker-unassigned") < picker.indexOf("<Combobox.List"));
-  assert.ok(picker.indexOf("</Combobox.List>") < picker.indexOf("person-picker-footer"));
+  assert.ok(picker.indexOf("person-picker-unassigned") < picker.indexOf("person-picker-invite-hint"));
+  assert.ok(picker.indexOf("person-picker-invite-hint") < picker.indexOf("<Combobox.List"));
   assert.doesNotMatch(picker, /邀请链接|邀请更多同事参与进来|邀请更多同事加入团队/);
   assert.doesNotMatch(detail, /提议：/);
   assert.doesNotMatch(detail, /task-owner-invite-action/);
@@ -131,34 +136,20 @@ test("负责人保存后直接作为正式负责人展示，不显示任务内�
   assert.doesNotMatch(detail, /pendingOwnerId|ownerInvitationStatus|onOwnerProposalChange/);
 });
 
-test("人员弹窗只为未选择成员展示推荐度星芒，选中后只保留勾选", () => {
+test("人员弹窗保留推荐排序和勾选，移除匹配度标识", () => {
   const picker = read("features/members/components/PersonPicker.tsx");
 
   assert.match(picker, /memberRecommendations/);
   assert.doesNotMatch(picker, /person-picker-match-score|recommendation\.score|\{recommendation\.score\}%/);
-  assert.match(picker, /const recommendation = !selected &&/);
-  assert.match(picker, /data-recommendation-level=\{recommendation\.level\}/);
-  assert.match(picker, /getMemberRecommendationLabel\(recommendation\.level\)/);
-  assert.match(picker, /Sparkles/);
+  assert.match(picker, /sortMembersByRecommendation\(members, memberRecommendations\)/);
+  assert.match(picker, /Combobox.ItemIndicator/);
+  assert.doesNotMatch(picker, /Sparkles|person-picker-ai-reason|data-recommendation-level|recommendationReason/);
   assert.match(picker, /listRef\.current\.scrollTop = 0/);
   assert.doesNotMatch(picker, /isSelf && selfOptionLabel === "我自己处理" \? `\$\{person\.name\} · \$\{person\.role\}` : person\.role/);
 });
 
-test("人员弹窗保持320px紧凑宽度", () => {
+test("人员弹窗使用300px紧凑宽度", () => {
   const tokens = read("shared/styles/tokens.css");
 
-  assert.match(tokens, /--ad-person-picker-width:\s*320px/);
-});
-
-test("人员推荐度使用同一紫色语义的深、中、浅三档", async () => {
-  const { getMemberRecommendationLabel } = await import(new URL("../src/features/members/components/PersonPicker.tsx", import.meta.url).href);
-  const styles = read("shared/styles/pm-global.css");
-
-  assert.equal(getMemberRecommendationLabel("high"), "推荐度较高");
-  assert.equal(getMemberRecommendationLabel("medium"), "推荐度适中");
-  assert.equal(getMemberRecommendationLabel("low"), "推荐度较低");
-  assert.match(styles, /person-picker-ai-reason\[data-recommendation-level="high"\][^{]*\{[^}]*var\(--ad-route\)/s);
-  assert.match(styles, /person-picker-ai-reason\[data-recommendation-level="medium"\][^{]*\{[^}]*color-mix\(in srgb, var\(--ad-route\) 64%, var\(--ad-border-strong\)\)/s);
-  assert.match(styles, /person-picker-ai-reason\[data-recommendation-level="low"\][^{]*\{[^}]*color-mix\(in srgb, var\(--ad-route\) 32%, var\(--ad-border-strong\)\)/s);
-  assert.doesNotMatch(styles, /person-picker-match-score/);
+  assert.match(tokens, /--ad-person-picker-width:\s*300px/);
 });

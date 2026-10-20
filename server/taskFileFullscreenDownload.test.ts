@@ -43,7 +43,7 @@ test("全屏只作用于查看器，入口在文件名右侧、更多操作左�
   const fullscreen = explorer.indexOf("<FullscreenButton");
   assert.ok(fullscreen > explorer.indexOf("task-file-editor-path"), "在文件名之后");
   assert.ok(fullscreen < explorer.indexOf('aria-label={ui("更多文件操作")}'), "在更多操作之前");
-  assert.match(explorer, /\{!isEditing && !loadError && <FullscreenButton [^>]*target=\{viewerRef\}/, "编辑中或读取失败不显示");
+  assert.match(explorer, /\{!isEditing && !loadError && !imageViewerOwnsFullscreen && <FullscreenButton [^>]*target=\{viewerRef\}/, "编辑、读取失败或普通图片已有框架全屏时不重复显示");
   assert.match(button, /requestFullscreen\(\)\.catch\(\(\) => \{\}\)/);
   assert.match(button, /task-file-viewer-unsupported/, "无法预览时不显示");
   assert.match(button, /fullscreenchange/);

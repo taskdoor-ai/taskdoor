@@ -1,11 +1,11 @@
 import { useState, type ReactNode } from "react";
-import { FileText, MessageSquareText } from "lucide-react";
+import { MessageSquareText } from "lucide-react";
 import { contentReading, useMockText } from "@/ai/discussion-reading";
 import { AiConnectionButton } from "@/features/ai-connection/components/AiConnectionButton";
 import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
 import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
 import { relativeTaskTime } from "@/features/tasks/lib/relative-time";
-import { getDiscussionAttachment, type CollaborationMessage } from "@/features/tasks/lib/task-collaboration";
+import type { CollaborationMessage } from "@/features/tasks/lib/task-collaboration";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useI18n } from "@/shared/i18n/I18nProvider";
@@ -13,6 +13,7 @@ import type { TaskFileNode } from "@/shared/model/task-model";
 import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
 import { usePersonOptions } from "@/shared/ui/PersonDirectory";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { DiscussionAttachmentGallery } from "@/features/tasks/discussion/components/DiscussionAttachmentGallery";
 
 type TaskDiscussionMessageProps = {
   message: CollaborationMessage;
@@ -64,8 +65,6 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
   const parentAttachments = parent?.attachmentRefs?.map(ref => mock.text(ref.name)).join(", ") || (parent?.file ? mock.text(parent.file) : "");
   const parentSummary = !parent ? d("originalMissing") : parent.deletedAt ? d("originalDeleted") : (parentBody?.trim() || (parentAttachments ? ui("附件：{0}", { 0: parentAttachments }) : ui("（无文字内容）")));
   const timestamp = timestampFor(message, locale, now);
-  const refs = message.attachmentRefs ?? [];
-  const legacyFile = !refs.length && message.file ? files.find(file => file.kind === "file" && !file.archived && file.name === message.file) : undefined;
   const toggleOriginal = () => setOriginalReadingKey(originalReadingKey === readingKey ? null : readingKey);
 
   return <li className="task-discussion-feed-message">
@@ -95,13 +94,7 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
         {onConnectAi && <AiConnectionButton compact contextLabel={ui("{0}的讨论", { 0: message.author })} onConnect={(trigger, shortcut) => onConnectAi({ kind: isReply ? "reply" : "discussion", activityId: message.id, ...(message.fileThreadId ? { fileThreadId: message.fileThreadId } : {}) }, trigger, shortcut)} />}
       </header>
       {message.message.trim() && <p className="task-discussion-feed-body"><MessageText message={message} text={reading.text} /></p>}
-      {(refs.length > 0 || message.file) && <div className="task-discussion-feed-attachments">
-        {refs.map(ref => {
-          const file = getDiscussionAttachment(files, ref);
-          return <button className="task-discussion-feed-file" disabled={!file} key={ref.fileId} onClick={() => onOpenFile(ref.fileId, ref.version)} title={mock.text(ref.name)} type="button"><FileText aria-hidden="true" size={14} /><span>{mock.text(ref.name)}</span><small>{file ? `v${ref.version}` : d("fileRemoved")}</small></button>;
-        })}
-        {!refs.length && message.file && <button className="task-discussion-feed-file" disabled={!legacyFile} onClick={() => legacyFile && onOpenFile(legacyFile.id)} title={mock.text(message.file)} type="button"><FileText aria-hidden="true" size={14} /><span>{mock.text(message.file)}</span>{!legacyFile && <small>{d("unavailable")}</small>}</button>}
-      </div>}
+      <DiscussionAttachmentGallery attachmentRefs={message.attachmentRefs} files={files} legacyFileName={message.file} onOpenFile={onOpenFile} />
       <footer className="task-discussion-feed-footer">
         <div className="task-discussion-feed-meta">
           {timestamp && <time aria-label={timestamp.full} className="task-discussion-feed-time" dateTime={timestamp.dateTime} tabIndex={0} title={timestamp.full}>{timestamp.label}</time>}

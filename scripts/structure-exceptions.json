@@ -29,7 +29,7 @@
     "src/features/members/components/MemberInvitations.tsx": 2,
     "src/features/members/components/MemberSelector.tsx": 2,
     "src/features/members/components/PersonalCenterPage.tsx": 4,
-    "src/features/members/components/PersonPicker.tsx": 4,
+    "src/features/members/components/PersonPicker.tsx": 3,
     "src/features/members/components/TeamLifecycle.tsx": 2,
     "src/features/members/lib/team-invitations.ts": 1,
     "src/features/members/lib/team-lifecycle-storage.ts": 1,

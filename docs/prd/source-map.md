@@ -1,5 +1,93 @@
 # PRD 来源映射
 
+## 人员选择器字号与对齐视觉同步（2026-10-20，非语义）
+
+本轮仅调整[PersonPicker样式](../../src/features/members/styles/person-picker.css)：姓名与“暂不分配”同为14px、400字重；未分配图标与头像使用同一左列，带邀请说明的两行卡片中图标按整张卡片垂直居中，单行项保持原布局。选人、暂不分配、立即邀请、权限与保存规则均不变，不新增语义变更ID，不改模块last_change／version或语义日志。
+
+[真实运行记录](../../artifacts/person-picker-alignment-2026-10-20/verification.json)来自主5173完整App的「新品发布会筹备」新增参与人：桌面姓名／暂不分配均14px／400，图标与头像中心x=696，图标及两行卡片中心y=250；390px桌面浏览器窄视口body.scrollWidth=390、选项高44，图标与头像中心x=44，图标及卡片中心y=308。文档代理目视核对[完整页面](../../artifacts/person-picker-alignment-2026-10-20/after-desktop.jpg)与[选择器局部](../../artifacts/person-picker-alignment-2026-10-20/after-detail.jpg)。Vite前端构建及限定文件格式检查通过；未改变人员选择、发送邀请或编辑任务，未重测邀请流程，也未运行全量测试或双重审查。
+
+当前成员与创建模块正文没有需要新增的选择器截图；既有“未分配负责人提示”图已pending，不重复处理。现行模块14的交接批量选人图`assets/membership-account-exit/handoff-batch-picker-zh.png`（fig-exit-002）仍含旧较粗姓名，[TeamLifecycle](../../src/features/members/components/TeamLifecycle.tsx)实际复用同一PersonPicker，故该图受本轮样式影响，已转pending并撤出模块14当前正文，原图与当时采集记录保留；本轮不新增截图。本批PRD生成25个模块成功，模块索引及截图清单JSON有效；发布前23项相关定向检查、应用类型、结构门及格式检查通过，未运行全量测试或双重审查。
+
+## 文件预览单行标题视觉同步（2026-10-20，非语义）
+
+本轮仅合并browserMode文件预览中重复的外层标题和内层文件路径显示：[TaskFileExplorer](../../src/features/tasks/files/components/TaskFileExplorer.tsx)在原文件工具栏中使用唯一可访问DialogTitle，并将关闭放在同一工具栏；外层重复header移除。非browserMode保留原路径。长标题单行省略且保留title属性，弹层窄屏不再强制标题／操作分成两行，规则见[文件浏览样式](../../src/features/tasks/styles/task-file-browser.css)。文件、版本、阅读、标注、菜单及关闭保护不变；不新增变更ID，不改模块last_change／version或语义日志。
+
+[本轮验证记录](../../artifacts/file-preview-single-heading-2026-10-20/verification.json)来自主5173完整App的「新品发布会筹备」→文件→image.png：顶部由49px外标题加54px工具栏合并为54px，文件名只出现一次，DialogTitle仅1个且aria-labelledby对应，关闭按钮仅1个。关闭回原文件入口，Enter重开后初始焦点在关闭；更多菜单仍有版本记录、下载和移动，标注进入／退出维持单标题与原区域标注器。390px桌面浏览器窄视口下body.scrollWidth=390、弹层宽378px，标题、操作及关闭同一行；未写入任务、讨论、文件或标注。长标题省略规则由代码支持，不把本次短文件名页面登记为专门长标题实测，也不扩大为真实手机或全部格式复验。
+
+FIG-FILES-090仍含旧两行重复标题，转pending并撤当前正文；原图及当时图片阅读／标注切换验证保留历史。新FIG-FILES-091位于`assets/files-local-commits/image-preview-single-heading-zh.jpg`，为根代理在上述主5173完整App采集的真实页面。文档代理逐图目视并用PIL核实JPEG／1440×778，登记captured current-page并用于文件模块正文。COLLAB-012附件图块及FILES-015确认局部不受影响，既有pending图不重复变更；截图只证明当前静态标题呈现，不证明成功原生全屏、保存或生产权限。
+
+最终应用类型、结构门与Vite前端构建均exit 0；PRD生成页与模块索引已重建，生成页包含FIG-FILES-091及与新图原字节一致的内嵌JPEG，截图清单与模块索引JSON可解析，git diff --check通过。未运行全量测试或双重审查。
+
+## 文件类型图标视觉同步（2026-10-20，非语义）
+
+本轮仅将共享文件类型图标替换为Material Icon Theme 5.39.0的官方SVG；文件识别与支持范围、真实图片缩略图、附件图块、目录整理、固定版本打开、图片查看和标注交互不变。不新增PRD编号，不改模块last_change／version，不改写既有语义日志。
+
+当前代码入口为[TaskFileGlyph](../../src/features/tasks/files/components/TaskFileGlyph.tsx)及[图标样式](../../src/features/tasks/styles/task-file-list.css)。只将12份所需SVG随代码保存，总计4055字节，覆盖文件夹关闭／展开、PDF、JSON、XML、Markdown、HTML、演示文稿、Word、表格、图片和通用文档回退；不加载整套扩展运行时。固定上游来源、原包内路径及SHA-256见[素材说明](../../src/features/tasks/files/assets/material-icon-theme/README.md)、[清单](../../src/features/tasks/files/assets/material-icon-theme/manifest.json)与[完整MIT许可](../../src/features/tasks/files/assets/material-icon-theme/LICENSE)。SVG按上游原字节保留，外层仅控制显示尺寸。
+
+FIG-COLLAB-011及FIG-FILES-087／088包含旧线框图标，转pending并撤出当前正文；原图和当时交互结果保留历史，不能继续作为当前图标呈现。FIG-FILES-090的普通图片阅读画面没有本轮更换的类型图形，保持captured current-page。新FIG-COLLAB-012位于`assets/discussion-notifications-activity/attachment-material-icons-zh.jpg`，由根代理在主5173当前工作区临时真实DiscussionAttachmentGallery组件页采集，fixture为`artifacts/file-icon-refresh-2026-10-20`。文档代理逐图目视并用PIL核实JPEG／1440×778后，登记captured current-component并嵌讨论模块正文；不是完整App，收尾删除临时页面不改变来源分类。画面为真实图片及PDF／JSON／XML／MD／HTML／PPTX／TXT／未知类型共9卡，全部8个图标img实际加载成功、naturalWidth>0且56×56，无旧线框叠字底壳，名称与引用版本保持。不补采新目录图，不把图标替换登记为文件预览能力增加。
+
+本轮[文件能力显示定向](../../server/taskFileCodeAffordances.test.ts)3／3通过，最终应用类型、结构门及Vite前端构建均exit 0；主5173完整App的「新品发布会筹备」文件根目录另核实两个文件夹图标均加载成功且显示为36px，名称和真实图片缩略图保持。证据见[验证记录](../../artifacts/file-icon-refresh-2026-10-20/verification.json)。PRD生成页及模块索引已重建，截图清单与模块索引JSON可解析，生成页含FIG-COLLAB-012及与新图原字节一致的内嵌JPEG，git diff --check通过。未运行全量测试或双重审查，不扩大为全部文件交互或生产验收。
+
+## PRD-0239：讨论附件图块、键盘浏览与普通图片阅读（2026-10-20）
+
+来源为用户以参考图确认的最终附件展示，并明确要求复用成熟开源组件：图片默认只留缩略图，悬停／聚焦读取名称和元信息，其他文件以类型图标与下方名称辨认；触屏信息可达，不新增下载或更多入口。普通图片复用现有大型文件弹层，提供缩放、平移及浏览器允许时的原生全屏；标注／区域定位、固定引用和保存边界保持。本节替代PRD-0238的横向附件卡及普通图片查看呈现，其文件目录浏览、排序和历史记录保持。
+
+- **附件浏览**：[DiscussionAttachmentGallery](../../src/features/tasks/discussion/components/DiscussionAttachmentGallery.tsx)通过React Aria GridList／GridListItem承载真实主消息与兼容消息两个入口，使用layout=grid、selectionMode=none、disabledBehavior=all及onAction；失效项禁用，行内没有额外嵌套打开按钮。[DiscussionAttachmentContent](../../src/features/tasks/discussion/components/DiscussionAttachmentContent.tsx)保留图片／类型区分与旧版本守卫，图像来自[TaskFileThumbnail](../../src/features/tasks/files/components/TaskFileThumbnail.tsx)；[主消息样式](../../src/features/tasks/styles/task-discussion-feed.css)与[兼容消息样式](../../src/features/tasks/styles/discussion-messages.css)提供悬停、聚焦及粗指针／无悬停信息呈现，失败仍可辨认来源。
+- **普通图片**：[TaskImageViewer](../../src/features/tasks/files/components/TaskImageViewer.tsx)使用YARL 3.32.2的Inline、Zoom、Fullscreen官方插件，不再套第二个模态框；[TaskFileViewer](../../src/features/tasks/files/components/TaskFileViewer.tsx)的原Blob路径与无Blob的image预览均接入，URL读取及回收仍归原useFileUrl。usesTaskImageViewer共享分流给[TaskFileExplorer](../../src/features/tasks/files/components/TaskFileExplorer.tsx)，普通图不重复外层全屏；标注模式、当前版本区域标记或区域草稿继续使用原FileImageAnnotations，HTML内图片未替换。单图无切图按钮，无新增下载。
+- **失败反馈**：图片读取失败可重试；原生fullscreenerror仅在事件目标位于本查看器时显示未获全屏许可的轻量status，普通查看继续，成功enterFullscreen或切换资源时清除。仍由官方Fullscreen插件负责进入／退出，没有另造全屏替代层。
+
+[主消息交互](../../server/taskDiscussionFeedInteraction.test.ts)与[兼容消息交互](../../server/taskDiscussionInteraction.test.ts)合计6条Gallery定向用例通过；[文件交互](../../server/taskFileDiscussionInteraction.test.ts)15条通过，覆盖普通图片分流、当前／旧版本区域标注和唯一全屏入口。最终全屏失败反馈补丁及图标样式依赖修正后，集中应用类型、结构门及Vite前端构建均exit 0；未运行全量测试或双重审查，不扩大为完整项目的全部后端构建通过。运行事实见[本轮记录](../../artifacts/attachment-gallery-ui-2026-10-20/verification.json)。
+
+根代理实际在主5173完整App的新品任务8条讨论中，对新image.png附件行按Enter打开大型文件弹层并呈现新图片查看器。同一主App交付成果目录的JPG普通阅读仅有1个全屏按钮；切到文件标注后显示原区域工具、“正在标注0”及原外层全屏，内嵌普通图片查看器退出；结束标注后恢复普通图片查看器，未新增意见、保存或发布。当前主Vite提供的临时真实组件页另验证：ArrowRight到JSON、ArrowLeft回图片、Home到首项、End到最后有效PDF并跳过失效附件；Enter打开json:v1及image:v1，Esc关闭后焦点返回原附件行。图片信息默认opacity=0、聚焦后为1；放大后图变大且缩小按钮可用。390×844桌面浏览器窄视口下body.scrollWidth=390，附件216px单列，图片弹层边界x12至378、y84至760，可正常关闭；不扩大为真机触屏或软键盘验收。
+
+全屏成功未通过本轮UI验收：临时原生探针已确认插件发出requestFullscreen，页面visible、用户activation=true，但原生Promise拒绝TypeError: not granted。此证据说明浏览器未授予请求，不能把普通弹层或按钮存在记为成功全屏；随后根代理已实际确认拒绝后显示“浏览器未允许全屏，可以继续在此查看图片。”，普通图片仍在原处可查看；这验证失败反馈，不登记原生全屏成功。
+
+FIG-COLLAB-010是旧横向HTML附件卡，保持pending并撤正文；FIG-FILES-089仍是旧普通图片查看器，转pending并撤正文，原资产及当时行为结果保留历史。新FIG-COLLAB-011位于`assets/discussion-notifications-activity/attachment-preview-tiles-zh.jpg`，为2026-10-20当前工作区主Vite临时真实组件页截图，属于current-component，非完整App；根代理采集，文档代理逐图目视并核实JPEG／1440×722后登记captured。最终重采图中图片无聚焦边框、默认不显信息，JSON／XML／PDF保留类型和名称，失效附件保持提示。fixture来自`artifacts/attachment-gallery-ui-2026-10-20`，临时页面收尾删除不改变截图来源分类；静态图不证明键盘、全屏、上传发布保存或生产权限。
+
+新FIG-FILES-090为主5173完整App既有秋季精华任务的交付成果JPG大型弹层，路径`assets/files-local-commits/image-lightbox-zh.jpg`；根代理采集，文档代理逐图目视并用PIL核实JPEG／1054×770，登记captured current-page。图片展示当前普通阅读画面、缩放和单一全屏入口，不能由此认定原生全屏成功，亦不以普通阅读截图代证标注切换。未新增COLLAB-012重复登记。
+
+产品和模块版本保持，同一PRD-0239收束本轮最终方案；PRD生成25模块成功，生成页、模块索引、截图清单与格式检查通过。
+
+## PRD-0238：文件主区浏览、讨论附件卡与已完成任务排序（2026-10-20）
+
+来源为用户授权优化当前PM Demo的本轮最终方案：任务文件主区采用List／Grid目录浏览，打开文件使用大型无文件树预览弹层；已发布讨论消息显示真实图片缩略图或明确的类型附件卡；默认／最近更新排序将已完成任务置底，最新创建与个人置顶分组保留各自规则。此节是上述事项的当前证据入口，替代PRD-0222及后续图标精简记录中的文件主区树／正文并列布局与默认首个文件规则；原阅读器、编辑、版本、标注和权限边界继续沿各自规则，历史记录不改写。
+
+- **文件浏览和预览**：[TaskFileBrowser](../../src/features/tasks/files/components/TaskFileBrowser.tsx)提供目录导航、搜索、List／Grid切换、上传及新建文件夹，文件与目录使用原管理菜单；[TaskFileExplorer](../../src/features/tasks/files/components/TaskFileExplorer.tsx)在任务主区启用browserMode，普通进入先浏览根目录，有效明确文件目标打开对应文件及其目录。文件打开复用原预览、编辑、下载、历史和标注引擎，通过[独立样式](../../src/features/tasks/styles/task-file-browser.css)呈现大型弹层，弹层不显示文件树和开合入口。关闭保留当前目录；存在编辑草稿或未交付标注时走现有确认边界，焦点回触发文件或可用目录入口。List／Grid为当前挂载会话状态，不登记为刷新持久偏好。
+- **讨论附件**：[TaskDiscussionMessage](../../src/features/tasks/discussion/components/TaskDiscussionMessage.tsx)与[DiscussionMessages](../../src/features/tasks/discussion/components/DiscussionMessages.tsx)均接入[DiscussionAttachmentContent](../../src/features/tasks/discussion/components/DiscussionAttachmentContent.tsx)，展示缩略图、文件名称、类型、可用大小与引用版本。[TaskFileThumbnail](../../src/features/tasks/files/components/TaskFileThumbnail.tsx)从图片原Blob或已有image预览读取，失败回退类型图形；异步结果按文件／版本隔离并回收对象URL。固定旧引用与当前节点版本不一致时只显示引用名称／类型／版本，不使用当前图片或大小冒充旧材料；点击仍传原文件ID和版本。当前PDF／PPT模型没有现成栅格首屏缓存，使用类型封面，不在列表自动转换；若已有image预览可直接复用。Composer、正文、@、草稿、inline回复、标注附件保存范围和原附件打开／下载流程保持。
+- **任务排序**：[task-list-projection](../../src/features/tasks/lib/task-list-projection.ts)仅在sort不是created时，先将状态为已完成的任务放到其他任务之后，两组内继续使用既有更新时间比较；最新创建仍按原创建时间比较。个人置顶仍独立分组，不因完成后置跨过置顶边界；搜索、筛选、当前匹配选择与重开后的分组规则沿原逻辑。只后置已完成，不将已取消或归档合并为新分组。
+
+讨论附件本轮主消息／标注材料25项和兼容消息附件2项定向通过，最后固定版本保护调整后的3项针对复查通过；[主讨论交互](../../server/taskDiscussionFeedInteraction.test.ts)、[兼容消息交互](../../server/taskDiscussionInteraction.test.ts)与[标注材料保存](../../server/taskDiscussionAttachmentPlacement.test.ts)保留具体用例。兼容文件既有中文Provider下断言英文完整时间的用例失败，不登记整文件／全项目通过。列表代理提供4项目标回归通过、既有25项样例投影为20项非已完成加5项已完成；相关54项中52项通过，另两项旧断言分别涉及拟负责人迁移和待开始状态，未扩修。证据见[列表呈现](../../server/taskListPresentation.test.ts)与[列表投影](../../server/taskListProjection.test.ts)。根代理集中完成[文件交互](../../server/taskFileDiscussionInteraction.test.ts)12／12、应用类型、结构门及Vite前端构建exit0；不扩大为完整项目构建、全量测试或全部格式复验，文档代理不重复运行产品检查。
+
+根代理在主5173完整App实际进入交付成果目录，List／Grid切换正常，10项文件铺满主区；Grid中的JPG、PNG、WebP和SVG为真实图片，其他文件保留明确类型卡。JPG打开大型无树弹层，Esc关闭回原JPG触发按钮且focus恢复；TXT更多菜单打开版本记录嵌套弹层并正常关闭。主讨论既有HTML标注附件卡可打开固定v1。本地9条讨论没有图片消息，因此讨论图片缩略图仅有定向测试与共享组件在文件Grid的图片证据，不记录讨论图片页面实测。搜索“发布会”得到5项，置顶“新品发布会筹备”独立，普通区域3项未完成后1项已完成；最新创建及重开仍以定向检查为据。
+
+最终补充：主5173完整App在390×844浏览器viewport走通List→Grid→JPG弹层→Esc返回，body.scrollWidth为390，弹层边界x6至384、y6至838，关闭入口和工具栏可见；随后已恢复默认viewport。该结果是桌面浏览器窄视口，不扩大为真机触屏或软键盘验收；临时截图仅留`/tmp/phil-file-preview-mobile.jpg`，不新增FIG或PRD资产。MD编辑加入临时段落后关闭触发确认，选择继续查看时内容仍在；再次关闭选择保留草稿，重开后仍在编辑同一段落，草稿保护实际通过。临时内容最终恢复原段，未保存、生成新版本或发布。既有取消按钮的window.confirm自动化交互曾超时，最终恢复原文后正常无确认关闭完成清理，不记录原取消流程通过。未交付标注关闭确认仅有代码及定向检查，本轮未新增标注作页面实测，不扩大原版本／交接验收范围。
+
+FIG-FILES-085／086的树与正文并列画面转pending；逐图目视确认FIG-COLLAB-008仍含旧式已发布附件链接，也转pending。原资产、采集时间及当时的功能结果保留；FIG-FILES-077原生全屏与015局部确认仅保留原未受影响范围。新FIG-FILES-087～089、FIG-COLLAB-010及FIG-LIST-008为2026-10-20主工作区5173完整App、Chrome真实1440×778 JPEG，文档代理逐图目视并核实格式／尺寸，清单标captured current-page；COLLAB-010只呈现HTML类型附件卡。静态图与上述运行交互、代码及测试分别登记，不据静态图证明保存、全屏或生产能力。产品和模块版本保持；模块、基线、日志及最终PRD构建由根代理统一同步，本代理只维护来源、矩阵和截图清单，不操作生成页、远程或issue。
+
+本轮最终治理校验：PRD生成25个模块成功，生成页包含PRD-0238、三项规则与五个新图号，模块索引及截图清单JSON有效，工作区格式检查通过；未运行全量测试或双重审查。
+
+## PRD-0237：完整参与人名单与团队邀请权限（2026-10-20）
+
+来源为用户在本轮逐项确认的最终人员交互：任务详情保留头像摘要，展开查看全部参与人；头像小叉保留，名单行尾增加同一移除操作，只读不提供移除。人员选择保留推荐排序，移除匹配度标识及原因浮层；暂不分配下保留简短邀请说明与独立立即邀请。用户随后明确“立即邀请大家都有权限”，因此所有有效团队成员可邀请和重邀普通成员，仅拥有者可邀请、重邀管理员；角色任免、成员移除、团队信息编辑、通用邀请链接重置和团队删除的原限制不变。替代PRD-0058普通成员邀请权限及原推荐等级／原因展示要求，历史日志与版本保留。
+
+实现证据为[TaskDetail](../../src/features/tasks/components/TaskDetail.tsx)、[MemberSelector](../../src/features/members/components/MemberSelector.tsx)和[PersonAvatar](../../src/shared/ui/PersonAvatar.tsx)：可选完整名单、全部姓名／人数、两处共用移除回调，保留disabled／min及最后一人移除后回到新增入口。[人员样式](../../src/shared/styles/pm-global.css)使名单叉桌面悬停／聚焦显示、触屏常显，图形12px、描边1.6，点击区28px／44px；尺寸仅为当前呈现证据。[PersonPicker](../../src/features/members/components/PersonPicker.tsx)保留推荐排序和勾选，移除星标／原因Tooltip；邀请说明与独立按钮不触发清空选择，[紧凑样式](../../src/features/members/styles/person-picker.css)和[双语文案](../../src/shared/i18n/detail-messages.ts)对应最终呈现。
+
+[team-invitations](../../src/features/members/lib/team-invitations.ts)按有效成员资格授予普通邀请，传入成员ID时按ID确认身份，不受资料邮箱与成员邮箱不一致影响；未传ID的旧调用保留邮箱兼容。创建与重邀均复核请求和已有邀请角色。[MemberInvitations](../../src/features/members/components/MemberInvitations.tsx)共享canInvite／canInviteAdmins，[成员页](../../src/features/members/components/PersonalCenterPage.tsx)入口及普通重邀沿同一资格，仅拥有者可选管理员；原管理操作保持。
+
+根代理本轮提供邀请逻辑14项及团队容量2项定向通过，应用TypeScript和结构门通过。当前主工作区立即邀请enabled=true、rgb(71,99,197)；真实Provider＋Picker＋TeamMembersPanel隔离fixture使用普通成员且资料邮箱与成员邮箱不同，两处入口可用，普通重邀1处／管理员重邀0处，可打开真实表单，实际角色菜单仅“成员”。取消后名单仍打开、原选择保持；focusIsSearch核对未通过，额外重验遇proxy空响应，本轮未修改原焦点逻辑，不写焦点恢复或完整UI流程全过。此前同会话名单、触屏／只读和邀请说明区65px核对保留原范围，不累加为本轮新增数量。未真实发送、验证邮件或生产鉴权，未操作正式项目／远程，未将本次新增权限写入待提交issue。
+
+文档代理目视FIG-DETAIL-023／024／025，均含缺少新名单入口的旧参与人区域，转pending并撤出08／09正文，原资产与原功能验证保留。FIG-MEMBERS-001展示管理员，本次不改变该图入口状态，保留原范围，不据此证明普通成员权限；旧邀请表单维持原superseded／pending。本轮不采新图。08／09／15、基线、日志和矩阵同步，版本保持；文档只执行PRD构建、生成内容和范围格式核验，不重跑产品测试或双重审查。
+
+## PRD-0236：顶层路径间距与失效回复禁用边界（2026-10-20）
+
+来源为用户对照正式项目后明确确认的两项本地调整。模块08保留顶层任务不显示面包屑内容的规则，同时路径区域与标题之间保留11px底部间距；模块10明确回复对象删除、不可用或失去讨论权限时，保留对应草稿及提示，编辑、发送和取消均禁用，不转换为普通发言。此条分别替代PRD-0221的空路径区域完全隐藏、PRD-0218的失效回复仍可取消边界；其他路径导航、有效回复取消及正常发送失败保稿保持。JSON／XML已有全屏支持不受本轮调整影响。
+
+当前代码证据为[详情样式](../../src/features/tasks/styles/task-detail-split.css)的`.task-detail-kicker`保留`display:flex`及`margin-bottom:11px`，移除`.task-detail-kicker:not(:has(.task-detail-path, .task-workspace-sidebar-toggle-wrap))`的`display:none`规则；[讨论编辑器](../../src/features/tasks/discussion/components/DiscussionComposer.tsx)的`unavailable = disabled || submitting`同时控制编辑、发送和取消按钮。[任务讨论](../../src/features/tasks/components/TaskDiscussion.tsx)的`targetAvailable`只检查对象存在及`deletedAt`，在目标删除或消失时保持原回复草稿键、必要提示及禁用状态，不把草稿改挂到普通输入；这不构成权限撤销后禁用链路已实现或已验证的证据。
+
+根代理在主工作区当前浏览器核对顶层空kicker为`display:flex`、高度0且底部间距11px；目标删除／消失时实际取消按钮禁用、有效对象取消后恢复普通草稿的相关回归与结构检查通过。本轮只验证目标删除／消失，权限变化后的禁用链路未作验证。初次直接执行受CSS加载方式影响，使用临时加载适配后相关断言通过；同批文件全屏旧PDF样式断言仍失败，与本次两处改动无关，不写为整批或完整项目测试通过。文档代理未重跑产品测试或页面操作，不将既有JSON／XML支持扩称本轮全屏实测。
+
+FIG-DETAIL-022仍是旧的空路径区域完全隐藏状态，本轮转pending并撤出模块08正文，保留原资产及当时采集描述；不采集新截图，也不改变未受影响的子任务路径图。产品和模块版本保持；模块08／10、交互基线、来源／矩阵及日志同步，旧日志与已提交issue归档不改，不写待提交issue，不发布版本。文档只运行PRD构建、生成内容及范围格式核验。
+
 ## 创建方案骨架与内容平滑衔接（2026-10-16，非语义）
 
 来源为用户对创建页底部骨架切换不顺畅的反馈。本轮修复既有PRD-0225渐进呈现的布局与绘制时序：属性骨架复用实际人员／日期网格、标签和控件占位，完成标准保留同一字段外壳；新增[TaskCreationPlanSurface](../../src/features/tasks/components/TaskCreationPlanSurface.tsx)在生成期间测量自然内容高度，以220ms高度过渡和180ms局部淡入衔接内容块，末块到达后240ms恢复自然高度。已完成方案的人工编辑不延迟；文本在首帧绘制前测高，人员属性尚未到达时不提前显示邀请结果。减少动态效果时关闭上述动画。此项不改变内容到达、停止／重试、人工编辑保护、生成校验、权限或最终确认边界，按纯呈现修复处理，不新增语义日志或版本；模块07正文、version及last_change=PRD-0230保持。

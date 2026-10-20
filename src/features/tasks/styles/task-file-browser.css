@@ -1,0 +1,57 @@
+.task-file-directory-browser { display: block; width: 100%; min-width: 0; padding: 12px 24px 32px; }
+.task-file-browser-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding-block: 4px 12px; }
+.task-file-browser-search { flex: 1 1 160px; max-width: 360px; }
+.task-file-browser-view-switch { display: flex; gap: 2px; margin-left: auto; }
+.task-file-browser-location { display: flex; align-items: center; min-width: 0; gap: 5px; min-height: 42px; padding-block: 4px 10px; color: var(--ad-ink-secondary); }
+.task-file-browser-location > button:not([data-slot]), .task-file-browser-crumb button { border: 0; padding: 4px; border-radius: 4px; background: transparent; cursor: pointer; color: inherit; font-size: 13px; white-space: nowrap; }
+.task-file-browser-location button:hover { background: var(--ad-surface-quiet); }
+.task-file-browser-location button[aria-current] { color: var(--ad-ink); font-weight: 550; }
+.task-file-browser-location button:focus-visible, .task-file-browser-open:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -2px; }
+.task-file-browser-crumb { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.task-file-browser-crumb button { overflow: hidden; text-overflow: ellipsis; }
+.task-file-browser-location > small { flex: 0 0 auto; margin-left: auto; color: var(--ad-ink-tertiary); font-size: 12px; }
+.task-file-browser-items { display: grid; list-style: none; margin: 0; padding: 0; }
+.task-file-browser-item { position: relative; min-width: 0; border-bottom: 1px solid var(--ad-border-soft); border-radius: 6px; }
+.task-file-browser-item:hover, .task-file-browser-item:focus-within { background: var(--ad-surface-quiet); }
+.task-file-browser-open { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 64px; min-width: 0; border: 0; border-radius: inherit; padding: 8px 44px 8px 10px; background: transparent; color: var(--ad-ink); text-align: left; cursor: pointer; }
+.task-file-browser-thumbnail { display: grid; flex: 0 0 44px; width: 44px; height: 46px; place-items: center; overflow: hidden; }
+.task-file-browser-item-label { display: flex; flex: 1; flex-direction: column; min-width: 0; gap: 3px; font-size: 14px; }
+.task-file-browser-item-label > small { overflow: hidden; color: var(--ad-ink-tertiary); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.task-file-browser-meta { flex: 0 0 auto; color: var(--ad-ink-tertiary); font-size: 12px; }
+.task-file-browser-item .task-file-browser-more { position: absolute; top: 50%; right: 4px; display: grid; width: 32px; height: 32px; min-height: 32px; place-items: center; transform: translateY(-50%); opacity: 1; pointer-events: auto; background: transparent; }
+.task-file-browser-items[data-view="grid"] { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+.task-file-browser-items[data-view="grid"] .task-file-browser-item { border: 1px solid var(--ad-border-soft); border-radius: 9px; }
+.task-file-browser-items[data-view="grid"] .task-file-browser-open { flex-direction: column; align-items: stretch; gap: 10px; min-height: 180px; padding: 12px; }
+.task-file-browser-items[data-view="grid"] .task-file-browser-thumbnail { flex: 0 0 112px; width: 100%; height: 112px; border-radius: 5px; background: var(--ad-surface-subtle); }
+.task-file-browser-items[data-view="grid"] .task-file-browser-item-label { padding-right: 16px; font-size: 13px; }
+.task-file-browser-items[data-view="grid"] .task-file-browser-meta { font-size: 11px; }
+.task-file-browser-items[data-view="grid"] .task-file-browser-more { top: auto; bottom: 4px; transform: none; }
+.task-file-browser-empty { min-height: 240px; }
+.task-file-explorer.task-file-browser-shell { display: block; min-height: 360px; height: auto; overflow: visible; }
+.task-file-preview-dialog[data-slot="dialog-content"] { display: flex; flex-direction: column; width: calc(100vw - 48px); max-width: 1440px; height: calc(100dvh - 48px); max-height: none; padding: 0; gap: 0; overflow: hidden; }
+.task-file-preview-dialog .task-file-toolbar-context { flex: 1 1 0; }
+.task-file-preview-dialog .task-file-preview-title { min-width: 0; margin: 0; overflow: hidden; font-size: 14px; font-weight: 550; text-overflow: ellipsis; white-space: nowrap; }
+.task-file-preview-dialog .task-file-explorer-preview { display: flex; flex: 1; width: 100%; min-height: 0; overflow: hidden; }
+.task-file-preview-dialog .task-file-editor-toolbar { position: static; border-bottom: 1px solid var(--ad-border-soft); background: var(--ad-surface); }
+.task-file-preview-dialog .task-file-editor-body { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+.task-file-preview-dialog .task-file-explorer-viewer:not(:fullscreen) { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.task-file-preview-dialog .task-file-explorer-mobile-back { display: none; }
+.task-file-preview-dialog .task-file-annotation-dock { flex-shrink: 0; }
+@media (max-width: 640px) {
+  .task-file-directory-browser { padding: 8px 12px 24px; }
+  .task-file-browser-toolbar { gap: 6px; }
+  .task-file-browser-search { flex-basis: calc(100% - 88px); max-width: none; }
+  .task-file-browser-view-switch { margin-left: 0; }
+  .task-file-browser-toolbar > button { min-height: 40px; }
+  .task-file-browser-location { flex-wrap: wrap; }
+  .task-file-browser-items[data-view="grid"] { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+  .task-file-browser-open { gap: 8px; }
+  .task-file-browser-meta { display: none; }
+  .task-file-browser-items[data-view="grid"] .task-file-browser-meta { display: block; }
+  .task-file-preview-dialog[data-slot="dialog-content"] { width: calc(100vw - 12px); height: calc(100dvh - 12px); border-radius: 8px; }
+  .task-file-preview-dialog .task-file-editor-actions { margin-left: auto; }
+}
+@media (pointer: coarse), (hover: none) {
+  .task-file-browser-item .task-file-browser-more { width: 40px; height: 40px; min-height: 40px; }
+  .task-file-browser-view-switch button { min-width: 40px; min-height: 40px; }
+}

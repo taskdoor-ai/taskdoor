@@ -1,16 +1,14 @@
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockPersonName } from "@/ai/mock/i18n/mockContent";
 import { settingsMockText } from "@/ai/mock/i18n/settingsMock";
-import { recommendationReason } from "@/ai/mock/i18n/recommendationCopy";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { Combobox } from "@base-ui/react/combobox";
-import { Tooltip } from "@base-ui/react/tooltip";
-import { AtSign, Check, ChevronDown, Plus, Search, Sparkles, UserPlus, UserRoundX, UsersRound } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
+import { AtSign, Check, ChevronDown, Plus, Search, UserPlus, UserRoundX, UsersRound } from "lucide-react";
+import { useEffect, useId, useMemo, useRef, useState, type ComponentProps } from "react";
 import { cn } from "@/shared/lib/utils";
 import { selectTriggerClassName } from "@/shared/ui/select";
-import { sortMembersByRecommendation, type TaskMemberRecommendationLevel, type TaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecommendations";
+import { sortMembersByRecommendation, type TaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecommendations";
 import { PersonAvatar, PersonName, type PersonInvitationStatus } from "@/shared/ui/PersonAvatar";
 import type { PersonOption } from "@/shared/model/task-model";
 import { useMemberInvitations } from "@/features/members/components/MemberInvitations";
@@ -69,12 +67,6 @@ type PersonPickerProps = PersonPickerCommonProps & ({
 // Visual anatomy: adapted from 21st.dev Member Selector and shadcn custom Combobox items.
 const unassignedPersonId = "__agentdoor_unassigned__";
 
-export function getMemberRecommendationLabel(level: TaskMemberRecommendationLevel) {
-  if (level === "high") return "推荐度较高";
-  if (level === "medium") return "推荐度适中";
-  return "推荐度较低";
-}
-
 export function PersonPicker(props: PersonPickerProps) {
   const ui = useGlobalUi();
   const { locale } = useI18n();
@@ -94,6 +86,7 @@ export function PersonPicker(props: PersonPickerProps) {
   latestProps.current = props;
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const inviteDescriptionId = useId();
   const multiple = props.multiple === true;
   const isUnassigned = multiple ? props.value.length === 0 : props.value === "";
   const canUnassign = allowUnassigned && (!props.multiple || !props.min);
@@ -156,6 +149,10 @@ export function PersonPicker(props: PersonPickerProps) {
     else props.onChange("");
     closeAndReset(false);
   };
+
+  const invitationHint = !inviteCandidate && !isMentionTrigger && allowInvitations && onInviteMembers ? (
+    <p className="person-picker-invite-copy" id={inviteDescriptionId}><span>{unassignedDescription}</span>{" "}<button className="person-picker-invite-action" disabled={disabled || Boolean(invitations && !invitations.canInvite)} onClick={() => { if (invitations) openInvitation(false); else { closeAndReset(false); onInviteMembers(triggerRef.current); } }} type="button">{d('inviteNow')}</button></p>
+  ) : null;
 
   return (
     <Combobox.Root<PersonOption, boolean>
@@ -229,13 +226,15 @@ export function PersonPicker(props: PersonPickerProps) {
             </div>
             {canUnassign && <div className="person-picker-unassigned">
               <div className="person-picker-unassigned-card" data-selected={isUnassigned || undefined}>
-                <button aria-pressed={isUnassigned} className="person-picker-unassigned-choice" onClick={selectUnassigned} type="button">
+                <button aria-describedby={invitationHint ? inviteDescriptionId : undefined} aria-pressed={isUnassigned} className="person-picker-unassigned-choice" onClick={selectUnassigned} type="button">
                   <span className="person-picker-unassigned-icon"><UserRoundX aria-hidden="true" size={16} /></span>
                   <span className="person-picker-unassigned-copy"><strong>{unassignedLabel}</strong></span>
                   {isUnassigned && <Check aria-hidden="true" className="person-picker-unassigned-check" size={16} />}
                 </button>
+                {invitationHint}
               </div>
             </div>}
+            {!canUnassign && invitationHint && <div className="person-picker-invite-hint">{invitationHint}</div>}
             <Combobox.Empty className="empty:p-0 px-(--ad-space-4) py-(--ad-space-6) text-center text-(length:--ad-text-body-sm) text-(--ad-ink-tertiary)">
               {!inviteCandidate && <span>{emptyLabel}</span>}
             </Combobox.Empty>
@@ -246,7 +245,6 @@ export function PersonPicker(props: PersonPickerProps) {
                 const selected = selectedInternalIds.includes(person.id);
                 const atMaximum = multiple && Boolean(props.max && selectedIds.length >= props.max);
                 const atMinimum = multiple && Boolean(selected && props.min && selectedIds.length <= props.min);
-                const recommendation = !selected && !isScope && person.membershipStatus !== "invited" ? memberRecommendations[person.id] : undefined;
                 return (
                   <Combobox.Item className="person-picker-option grid min-h-(--ad-control-touch-min) cursor-default grid-cols-[var(--ad-control-height-md)_minmax(0,1fr)_auto] items-center gap-(--ad-space-3) rounded-(--ad-radius-control) px-(--ad-space-3) py-(--ad-space-2) outline-none transition-colors data-disabled:opacity-40 data-highlighted:bg-(--ad-surface-subtle) data-selected:bg-(--ad-route-soft)" disabled={(atMaximum && !selected) || atMinimum} key={person.id} value={person}>
                     {isScope
@@ -254,19 +252,15 @@ export function PersonPicker(props: PersonPickerProps) {
                       : <PersonAvatar name={person.name} profile={person} profilePreviewFocusable={false} showProfilePreview={!isMentionTrigger} size={isMentionTrigger ? "xs" : "sm"} />}
                     <span className="min-w-0"><strong className="block truncate text-(length:--ad-text-body-sm) font-semibold text-(--ad-ink)">{isScope ? person.name : isSelf ? selfOptionLabel : <PersonName name={person.name} profile={person} showProfilePreview={!isMentionTrigger} />}</strong>{isScope && person.role && <small className="person-picker-option-description mt-(--ad-space-1) block text-(length:--ad-text-caption) text-(--ad-ink-tertiary)">{person.role}</small>}</span>
                     <span className="person-picker-option-end">
-                      {recommendation && <Tooltip.Root><Tooltip.Trigger aria-label={`${mockPersonName(locale, person.id, person.name)}: ${ui(getMemberRecommendationLabel(recommendation.level))}`} className="person-picker-ai-reason" closeOnClick={false} data-recommendation-level={recommendation.level} delay={150} onClick={(event) => { event.preventDefault(); event.stopPropagation(); }} onPointerDown={(event) => { event.preventDefault(); event.stopPropagation(); }} type="button"><Sparkles aria-hidden="true" size={14} /></Tooltip.Trigger><Tooltip.Portal><Tooltip.Positioner className="person-picker-ai-tip-positioner" collisionPadding={12} side="top" sideOffset={6}><Tooltip.Popup className="person-picker-ai-tip" role="tooltip">{ui(getMemberRecommendationLabel(recommendation.level))}: {recommendationReason(locale, person, recommendation.reason)}</Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal></Tooltip.Root>}
                       <Combobox.ItemIndicator className="grid size-(--ad-control-icon-sm) place-items-center text-(--ad-route-ink)"><Check aria-hidden="true" size={16} /></Combobox.ItemIndicator>
                     </span>
                   </Combobox.Item>
                 );
               }}
             </Combobox.List>
-            {!inviteCandidate && !isMentionTrigger && allowInvitations && onInviteMembers && <div className="person-picker-footer">
-              <button className="person-picker-invite-action" disabled={disabled || Boolean(invitations && !invitations.canInvite)} onClick={() => { if (invitations) openInvitation(false); else { closeAndReset(false); onInviteMembers(triggerRef.current); } }} type="button"><UserPlus aria-hidden="true" size={18} /><span>{d('inviteMembers')}</span></button>
-            </div>}
             {inviteCandidate && <div className="person-picker-email-invite">
               <strong>{emptyLabel}</strong>
-              <p>{!invitations?.canInvite ? d('askAdminInvite') : inviteAtMaximum ? d('memberLimit') : ui("发送邮件邀请对方加入「{0}」，一起协作。", {0: invitations.teamName})}</p>
+              <p>{!invitations?.canInvite ? d('joinTeamToInvite') : inviteAtMaximum ? d('memberLimit') : ui("发送邮件邀请对方加入「{0}」，一起协作。", {0: invitations.teamName})}</p>
               <button disabled={!invitations?.canInvite || inviteAtMaximum} onClick={() => openInvitation(true)} type="button"><UserPlus aria-hidden="true" size={18} /><span>{d('inviteMembers')}</span></button>
             </div>}
           </Combobox.Popup>

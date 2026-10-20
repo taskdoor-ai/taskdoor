@@ -13,9 +13,15 @@ export function getInvitationDraft(query: string) {
   return value.includes("@") ? { name: "", email: value } : { name: value, email: "" };
 }
 
-export function canInviteTeamMembers(state: PersonalCenterState, teamId: string) {
-  return Boolean(state.teams.find(team => team.id === teamId)?.memberships.some(member =>
-    member.email.toLowerCase() === state.profile.email.toLowerCase() && member.status === "active" && ["owner", "admin"].includes(member.role)));
+export function getTeamInvitationActor(state: PersonalCenterState, teamId: string, actorMemberId?: string) {
+  return state.teams.find(team => team.id === teamId)?.memberships.find(member =>
+    member.status === "active" && (actorMemberId !== undefined
+      ? (member.memberId ?? member.id) === actorMemberId
+      : member.email.toLowerCase() === state.profile.email.toLowerCase()));
+}
+
+export function canInviteTeamMembers(state: PersonalCenterState, teamId: string, actorMemberId?: string) {
+  return Boolean(getTeamInvitationActor(state, teamId, actorMemberId));
 }
 
 function personFromMembership(membership: TeamMembership, known?: PersonOption): PersonOption {
@@ -40,21 +46,25 @@ export function getTeamPeople(team: TeamResponsibilityProfile | undefined, known
 }
 
 export function createTeamEmailInvitation(state: PersonalCenterState, input: {
-  teamId: string; email: string; name?: string; role?: TeamAccessRole; now?: number; renew?: boolean; members?: PersonOption[];
+  teamId: string; email: string; name?: string; role?: TeamAccessRole; now?: number; renew?: boolean; members?: PersonOption[]; actorMemberId?: string;
 }) {
   const email = normalizeInvitationEmail(input.email);
   if (!email) throw new Error("请输入有效的邮箱地址");
   const name = input.name?.trim();
   if (name && name.length > 100) throw new Error("名称不能超过 100 个字符");
   const team = state.teams.find(team => team.id === input.teamId);
-  if (!team || !canInviteTeamMembers(state, team.id)) throw new Error("只有团队管理员可以邀请新成员");
-  const actor = team.memberships.find(member => member.email.toLowerCase() === state.profile.email.toLowerCase() && member.status === "active");
-  if (input.role === "owner" || (input.role === "admin" && actor?.role !== "owner")) throw new Error("只有拥有者可以邀请管理员，拥有者身份须通过转让获得");
+  const actor = getTeamInvitationActor(state, input.teamId, input.actorMemberId);
+  if (!team || !actor) throw new Error("只有已加入团队的成员可以邀请新成员");
+  const checkInvitationRole = (role: TeamAccessRole | undefined) => {
+    if (role === "owner" || (role === "admin" && actor.role !== "owner")) throw new Error("只有拥有者可以邀请管理员，拥有者身份须通过转让获得");
+  };
+  checkInvitationRole(input.role);
   const existing = team.memberships.find(member => member.email.toLowerCase() === email);
   const known = input.members?.find(member => member.email.toLowerCase() === email);
   if (existing && (existing.status === "active" || (existing.emailInvitation && !input.renew))) {
     return { state, membership: existing, person: personFromMembership(existing, known) };
   }
+  checkInvitationRole(existing?.role);
   const now = input.now ?? Date.now();
   const alreadyReserved = existing?.status === "invited" && (!existing.emailInvitation || existing.emailInvitation.expiresAt > now);
   if (!alreadyReserved && occupiedTeamSeats(team, now) >= MAX_TEAM_MEMBERS) throw new Error("团队人数已达 50 人上限");

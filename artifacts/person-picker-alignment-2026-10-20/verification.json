@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-20",
+  "scope": "visual only; PersonPicker unassigned typography and icon alignment",
+  "source": "main workspace App on Vite 5173; 新品发布会筹备 → 新增参与人",
+  "code": "src/features/members/styles/person-picker.css",
+  "desktop": {
+    "nameFontSize": "14px",
+    "nameFontWeight": "400",
+    "unassignedFontSize": "14px",
+    "unassignedFontWeight": "400",
+    "iconCenterX": 696,
+    "avatarCenterX": 696,
+    "iconCenterY": 250,
+    "cardCenterY": 250
+  },
+  "narrowViewport": {
+    "width": 390,
+    "bodyScrollWidth": 390,
+    "choiceHeight": 44,
+    "iconCenterX": 44,
+    "avatarCenterX": 44,
+    "iconCenterY": 308,
+    "cardCenterY": 308
+  },
+  "checks": {
+    "viteBuild": "passed",
+    "scopedDiffFormat": "passed"
+  },
+  "screenshots": [
+    "after-desktop.jpg",
+    "after-detail.jpg"
+  ],
+  "dataWrites": "none; no personnel selections changed, invitations sent, or tasks edited",
+  "limits": [
+    "no full tests or double review",
+    "no invitation workflow retest",
+    "local issue draft not changed without confirmation"
+  ]
+}
