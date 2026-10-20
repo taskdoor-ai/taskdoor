@@ -1,12 +1,18 @@
 import assert from "node:assert/strict";
+import { registerHooks } from "node:module";
 import test from "node:test";
 import React, { createElement, createRef } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import FullscreenButton from "../src/features/tasks/files/components/FullscreenButton.tsx";
-import { TaskFileGlyph } from "../src/features/tasks/files/components/TaskFileGlyph.tsx";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
+registerHooks({ load(url, context, nextLoad) {
+  if (url.endsWith(".svg")) return { format: "module", source: `export default ${JSON.stringify(url)}`, shortCircuit: true };
+  if (url.endsWith(".css")) return { format: "module", source: "export default {}", shortCircuit: true };
+  return nextLoad(url, context);
+} });
+const { TaskFileGlyph } = await import("../src/features/tasks/files/components/TaskFileGlyph.tsx");
 
 function renderFullscreen(kind: string, fullscreenEnabled = true): string {
   const previous = Object.getOwnPropertyDescriptor(globalThis, "document");
@@ -26,7 +32,7 @@ for (const kind of ["json", "xml"]) {
   });
 }
 
-test("JSON/XML 文件及无扩展名的对应 MIME 使用源码图标和格式标签", () => {
+test("JSON/XML按扩展名和MIME识别格式", () => {
   const source: TaskFileNode = { id: "code", kind: "file", name: "配置.json", parentId: null, updatedAt: "今天" };
   for (const [name, mimeType, format] of [
     ["配置.json", "application/json", "json"],
@@ -35,9 +41,7 @@ test("JSON/XML 文件及无扩展名的对应 MIME 使用源码图标和格式�
     ["配置", "text/xml; charset=utf-8", "xml"],
   ]) {
     const markup = renderToStaticMarkup(createElement(TaskFileGlyph, { node: { ...source, name, mimeType } }));
-    assert.match(markup, /lucide-file-code/, name);
     assert.ok(markup.includes(`data-format="${format}"`), name);
-    assert.ok(markup.includes(`>${format.toUpperCase()}</span>`), name);
   }
   const svg = renderToStaticMarkup(createElement(TaskFileGlyph, { node: { ...source, name: "图.svg", mimeType: "image/svg+xml" } }));
   assert.match(svg, /data-format="image"/);

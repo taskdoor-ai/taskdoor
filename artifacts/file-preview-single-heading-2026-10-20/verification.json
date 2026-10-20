@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-20",
+  "change": "visual only; browser-mode file preview uses one DialogTitle in the existing toolbar and places close beside file actions",
+  "source": "main workspace App on Vite 5173; 新品发布会筹备 → 文件 → image.png",
+  "before": {
+    "dialogHeadingHeight": 49,
+    "toolbarHeight": 54,
+    "fileNameAppearances": 2
+  },
+  "after": {
+    "desktopToolbarHeight": 54,
+    "visibleFileNameAppearances": 1,
+    "oldHeaderCount": 0,
+    "dialogTitleCount": 1,
+    "dialogAccessibleLabelMatchesTitle": true,
+    "closeButtonCount": 1
+  },
+  "uiChecks": [
+    "close button returns focus to the original file trigger",
+    "Enter on original file trigger reopens preview and initially focuses close",
+    "more menu still contains version history, download, and move",
+    "annotation entry and exit retain a single title and original region annotation viewer",
+    "390px viewport has body scrollWidth 390, dialog width 378; single title, file actions, and close fit in the toolbar"
+  ],
+  "checks": {
+    "applicationTypecheck": "passed",
+    "structure": "passed",
+    "viteBuild": "passed",
+    "prdBuild": "passed; generated page contains FIG-FILES-091 and exact embedded JPEG; manifest and module-index JSON parse",
+    "diffFormat": "passed"
+  },
+  "screenshot": {
+    "path": "docs/prd/assets/files-local-commits/image-preview-single-heading-zh.jpg",
+    "format": "JPEG",
+    "width": 1440,
+    "height": 778,
+    "type": "current-page"
+  },
+  "dataWrites": "none; no file edits, annotations, discussions, or tasks saved",
+  "limits": [
+    "no full tests or double review",
+    "non-browser-mode file explorer not changed"
+  ]
+}

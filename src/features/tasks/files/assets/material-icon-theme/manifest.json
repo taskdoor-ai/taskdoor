@@ -1,0 +1,69 @@
+{
+  "package": "material-icon-theme",
+  "version": "5.39.0",
+  "source": "https://registry.npmjs.org/material-icon-theme/-/material-icon-theme-5.39.0.tgz",
+  "archiveSha256": "73bd2c6bfeea79ec1f7122445b7ff808c46e8b30097a11ae779ff683d7ad1ba4",
+  "license": "MIT",
+  "assets": [
+    {
+      "file": "document.svg",
+      "source": "package/icons/document.svg",
+      "sha256": "64f5da56de591d5f429d2c7f5f5733388b3ce704762631ba0b487a08475f9452"
+    },
+    {
+      "file": "html.svg",
+      "source": "package/icons/html.svg",
+      "sha256": "23e04ad5f1ae9cd16dc79fe52c4290e5bd80f2f7bfe4c0769e7485832b3eb146"
+    },
+    {
+      "file": "image.svg",
+      "source": "package/icons/image.svg",
+      "sha256": "838e1953a3a2ebf5c6a06b662892ba17e1c605c4379a77c61737639e51fb4f0a"
+    },
+    {
+      "file": "json.svg",
+      "source": "package/icons/json.svg",
+      "sha256": "649ad4f4d01cec788959017710bb0c63281a645db8cef389c50008fbd059da03"
+    },
+    {
+      "file": "markdown.svg",
+      "source": "package/icons/markdown.svg",
+      "sha256": "42f95867350ed1f349ab29b3f254405f84ae65e6d42972d74b01442027eddfcd"
+    },
+    {
+      "file": "pdf.svg",
+      "source": "package/icons/pdf.svg",
+      "sha256": "c14c66a3914b894da40778a6dcd00f0daa134426521aaddbd8ccea86ba4f5ffc"
+    },
+    {
+      "file": "powerpoint.svg",
+      "source": "package/icons/powerpoint.svg",
+      "sha256": "40468deea73e07067459c0c3b0bbef0697e93afbc4533e961d1b441f5294871e"
+    },
+    {
+      "file": "table.svg",
+      "source": "package/icons/table.svg",
+      "sha256": "1714898c0d538648edb0f8dd041d97435aa8cbac078c5897f9fa8103b36f029a"
+    },
+    {
+      "file": "word.svg",
+      "source": "package/icons/word.svg",
+      "sha256": "9f12a8d98f292c34f73181c49ce79dd378decfb82f760cd9c4aa9900e2d7b2d6"
+    },
+    {
+      "file": "xml.svg",
+      "source": "package/icons/xml.svg",
+      "sha256": "51bfeb938c24772c0dfeb12ab3e6bab446fbea0410dadf1ec18106d60d52914a"
+    },
+    {
+      "file": "folder.svg",
+      "source": "package/icons/folder.svg",
+      "sha256": "5b8e272caf788ff0e9b6afee97601a9f9c7ad9d381e8d7b1e63ee78368ea1332"
+    },
+    {
+      "file": "folder-open.svg",
+      "source": "package/icons/folder-open.svg",
+      "sha256": "532456ac9460902d6f7f9ffdb015c09a3b8d87c2493504948f9d16a2f66e22b7"
+    }
+  ]
+}

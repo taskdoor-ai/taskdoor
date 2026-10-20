@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-20",
+  "change": "visual only; shared file glyphs replaced with Material Icon Theme 5.39.0 original SVGs",
+  "vendor": {
+    "count": 12,
+    "bytes": 4055,
+    "license": "MIT",
+    "provenance": "src/features/tasks/files/assets/material-icon-theme/README.md"
+  },
+  "componentScreenshot": {
+    "path": "docs/prd/assets/discussion-notifications-activity/attachment-material-icons-zh.jpg",
+    "format": "JPEG",
+    "size": [
+      1440,
+      778
+    ],
+    "source": "current workspace real DiscussionAttachmentGallery component served by main Vite 5173"
+  },
+  "browserChecks": [
+    "8 file icons loaded at 56x56 in 9-card gallery including real image thumbnail",
+    "main App file root displays two new folder icons loaded at 36px and retains labels and real image thumbnail"
+  ],
+  "checks": {
+    "existingFormatTests": "3/3 passed",
+    "applicationTypecheck": "passed",
+    "structure": "passed; no new exceptions",
+    "viteBuild": "passed",
+    "assetHashes": "12/12 match unmodified upstream SVG bytes"
+  },
+  "dataWrites": "none; temporary component page removed",
+  "limits": [
+    "no full tests or double review",
+    "no new icon upload support or file viewing changes"
+  ]
+}

@@ -2915,8 +2915,112 @@
     "zh": "此版本仅保留修改片段。",
     "en": "Only the changed excerpts are available for this version."
   },
+  "viewAllPeople": {
+    "zh": "查看全部{0}（{1}人）",
+    "en": "View all {0} ({1})"
+  },
   "showUnchangedFileLines": {
     "zh": "展开 {0} 行未修改内容",
     "en": "Show {0} unchanged lines"
+  },
+  "fileBrowserDisplayMode": {
+    "zh": "文件显示方式",
+    "en": "File display mode"
+  },
+  "fileBrowserListView": {
+    "zh": "列表视图",
+    "en": "List view"
+  },
+  "fileBrowserThumbnailView": {
+    "zh": "缩略图视图",
+    "en": "Thumbnail view"
+  },
+  "fileBrowserLocation": {
+    "zh": "文件位置",
+    "en": "File location"
+  },
+  "fileBrowserParentFolder": {
+    "zh": "返回上一级文件夹",
+    "en": "Go to parent folder"
+  },
+  "fileBrowserOpenFolder": {
+    "zh": "打开文件夹：{0}",
+    "en": "Open folder: {0}"
+  },
+  "fileBrowserOpenFile": {
+    "zh": "打开文件：{0}",
+    "en": "Open file: {0}"
+  },
+  "fileBrowserSearchHint": {
+    "zh": "试试其他名称，或清除搜索。",
+    "en": "Try another name or clear the search."
+  },
+  "fileBrowserPreview": {
+    "zh": "文件预览",
+    "en": "File preview"
+  },
+  "fileBrowserPreviewDescription": {
+    "zh": "文件预览和编辑",
+    "en": "File preview and editing"
+  },
+  "fileBrowserClosePreview": {
+    "zh": "关闭文件预览",
+    "en": "Close file preview"
+  },
+  "fileBrowserClosePreviewConfirm": {
+    "zh": "关闭文件预览？",
+    "en": "Close file preview?"
+  },
+  "fileBrowserUnsavedAnnotations": {
+    "zh": "本次标注尚未交付，关闭将丢弃标注和标注输入。未保存的文件编辑草稿会保留。",
+    "en": "These annotations have not been handed off. Closing will discard the annotations and annotation input. Unsaved file edits will remain as drafts."
+  },
+  "fileBrowserUnsavedEdits": {
+    "zh": "文件有未保存的修改。关闭后编辑草稿仍保留，重新打开可继续编辑。",
+    "en": "This file has unsaved changes. Your draft will be retained when you close the preview, so you can reopen it to continue editing."
+  },
+  "fileBrowserContinueViewing": {
+    "zh": "继续查看",
+    "en": "Keep viewing"
+  },
+  "fileBrowserDiscardAnnotationsAndClose": {
+    "zh": "丢弃标注并关闭",
+    "en": "Discard annotations and close"
+  },
+  "fileBrowserKeepDraftAndClose": {
+    "zh": "保留草稿并关闭",
+    "en": "Keep draft and close"
+  },
+  "fileBrowserSearch": {
+    "zh": "搜索文件",
+    "en": "Search files"
+  },
+  "imageViewerResourceUnavailable": {
+    "zh": "图片资源不可用。",
+    "en": "The image is unavailable."
+  },
+  "imageViewerLabel": {
+    "zh": "图片查看器",
+    "en": "Image viewer"
+  },
+  "imageViewerZoomIn": {
+    "zh": "放大",
+    "en": "Zoom in"
+  },
+  "imageViewerZoomOut": {
+    "zh": "缩小",
+    "en": "Zoom out"
+  },
+  "imageViewerLoading": {
+    "zh": "正在读取图片…",
+    "en": "Loading image…"
+  },
+  "imageViewerLoadFailed": {
+    "zh": "图片加载失败，请重试。",
+    "en": "The image could not be loaded. Please retry."
+  },
+  "imageViewerFullscreenBlocked": {
+    "zh": "浏览器未允许全屏，可以继续在此查看图片。",
+    "en": "Your browser did not allow full screen. You can continue viewing the image here."
   }
 }

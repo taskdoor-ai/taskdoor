@@ -1,0 +1,16 @@
+.task-image-viewer { position: relative; width: 100%; min-width: 0; height: clamp(280px, 62dvh, 760px); min-height: 220px; background: var(--ad-surface-quiet); }
+.task-image-viewer-lightbox { --yarl__container_background_color: var(--ad-surface-quiet); --yarl__color_button: var(--ad-ink-secondary); --yarl__color_button_active: var(--ad-ink); --yarl__color_button_disabled: var(--ad-ink-tertiary); --yarl__button_filter: none; --yarl__icon_size: 22px; --yarl__button_padding: 9px; --yarl__toolbar_padding: 8px; }
+.task-image-viewer .yarl__toolbar { z-index: 2; gap: 2px; border-radius: 8px; background: color-mix(in srgb, var(--ad-surface) 94%, transparent); box-shadow: var(--ad-shadow-float); }
+.task-image-viewer .yarl__button { border-radius: 6px; }
+.task-image-viewer .yarl__button:hover:not(:disabled) { background: var(--ad-surface-subtle); }
+.task-image-viewer .yarl__button:focus-visible, .task-image-viewer .yarl__container:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -2px; }
+.task-image-viewer .yarl__slide_image { border-radius: 0; }
+.task-image-viewer-status, .task-image-viewer-error { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: calc(100vw - 48px); padding: 16px; color: var(--ad-ink-secondary); font-size: 13px; line-height: 1.5; text-align: center; }
+.task-image-viewer-error { flex-direction: column; white-space: normal; }
+.task-image-viewer-fullscreen-status { position: absolute; z-index: 3; right: 12px; bottom: 12px; left: 12px; width: fit-content; max-width: calc(100% - 24px); margin: 0 auto; padding: 8px 12px; border: 1px solid var(--ad-border-soft); border-radius: 6px; background: var(--ad-surface); color: var(--ad-ink-secondary); font-size: 12px; line-height: 1.5; pointer-events: none; }
+.task-file-preview-dialog .task-file-explorer-viewer:has(> .task-image-viewer):not(:fullscreen) { display: flex; padding: 0; overflow: hidden; }
+.task-file-preview-dialog .task-image-viewer { flex: 1; height: 100%; min-height: 220px; }
+.task-image-viewer .yarl__fullscreen:fullscreen { background: var(--ad-surface-quiet); }
+@media (pointer: coarse), (hover: none) {
+  .task-image-viewer-lightbox { --yarl__button_padding: 11px; }
+}

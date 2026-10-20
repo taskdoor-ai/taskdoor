@@ -20,6 +20,14 @@ const { LexicalFileDocument } = await import("../src/features/tasks/files/compon
 const { DiscussionComposer } = await import("../src/features/tasks/discussion/components/DiscussionComposer.tsx");
 const { TaskFileAnnotationComposer } = await import("../src/features/tasks/files/components/TaskFileAnnotationDialogs.tsx");
 const { PopoverContent } = await import("../src/shared/ui/popover.tsx");
+const { TaskFileBrowser } = await import("../src/features/tasks/files/components/TaskFileBrowser.tsx");
+const { Dialog } = await import("../src/shared/ui/dialog.tsx");
+const { AlertDialog } = await import("../src/shared/ui/alert-dialog.tsx");
+const { getTaskFileDrafts, updateTaskFileDrafts } = await import("../src/features/tasks/files/lib/task-file-drafts.ts");
+const { TaskImageViewer } = await import("../src/features/tasks/files/components/TaskImageViewer.tsx");
+const { FileImageAnnotations } = await import("../src/features/tasks/files/components/FileImageAnnotations.tsx");
+const { createTaskFileAnnotation } = await import("../src/features/tasks/files/lib/task-file-annotations.ts");
+const { default: FullscreenButton } = await import("../src/features/tasks/files/components/FullscreenButton.tsx");
 
 const renderChinese = (tree: ReactNode) => renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: tree }));
 
@@ -148,4 +156,98 @@ test("普通预览的意见浮层使用默认页面容器，不因空全屏目�
   const popup = elements(tree, node => node.type === PopoverContent)[0];
   const portal = PopoverContent(popup.props as Parameters<typeof PopoverContent>[0]);
   assert.equal(portal.props.container, undefined);
+});
+
+test("文件主区初始只浏览目录，选择具体文件才打开对应预览", () => {
+  const folder: TaskFileNode = { id: "materials", kind: "folder", name: "资料", parentId: null, updatedAt: "" };
+  const file = { ...pdf, parentId: folder.id };
+  const another = { ...pdf, id: "other", name: "补充规则.pdf" };
+  const initial = capture(() => TaskFileExplorer({ browserMode: true, files: [folder, file, another], taskId: "browser-files", currentUser: "周岚" }));
+  assert.equal(elements(initial.tree, node => node.type === Dialog)[0].props.open, false);
+  assert.match(initial.html, /task-file-browser-items/);
+  assert.doesNotMatch(initial.html, /class="task-file-explorer-preview"/);
+
+  let opened = false;
+  const selected = capture(() => TaskFileExplorer({ browserMode: true, files: [folder, file, another], taskId: "browser-open", currentUser: "周岚" }), tree => {
+    if (opened) return;
+    opened = true;
+    elements(tree, node => node.type === TaskFileBrowser)[0].props.onOpen(another.id, null);
+  });
+  assert.equal(elements(selected.tree, node => node.type === Dialog)[0].props.open, true);
+  assert.equal(elements(selected.tree, node => node.type === TaskFileViewer)[0].props.file.id, another.id);
+});
+
+test("来源定位直接打开指定文件及版本所在目录", () => {
+  const folder: TaskFileNode = { id: "sources", kind: "folder", name: "来源", parentId: null, updatedAt: "" };
+  const file = { ...pdf, parentId: folder.id };
+  const { tree } = capture(() => TaskFileExplorer({ browserMode: true, files: [folder, file], taskId: "browser-source", focusedFileId: file.id, focusedVersion: 1, currentUser: "周岚" }));
+  assert.equal(elements(tree, node => node.type === Dialog)[0].props.open, true);
+  assert.equal(elements(tree, node => node.type === TaskFileViewer)[0].props.file.id, file.id);
+  assert.equal(elements(tree, node => node.type === TaskFileBrowser)[0].props.directoryId, folder.id);
+});
+
+test("关闭有修改的文件预览先确认，明确关闭后保留原草稿及版本", () => {
+  const taskId = "browser-retain-draft";
+  const file: TaskFileNode = { id: "editable", kind: "file", name: "记录.md", parentId: null, updatedAt: "", version: 3, content: "已保存正文" };
+  const draft = { content: { kind: "text" as const, text: "仍未保存的正文" }, baseVersion: 3 };
+  updateTaskFileDrafts(taskId, { [file.id]: draft });
+  try {
+    let requested = false;
+    const asked = capture(() => TaskFileExplorer({ browserMode: true, files: [file], taskId, focusedFileId: file.id, currentUser: "周岚" }), tree => {
+      if (requested) return;
+      requested = true;
+      elements(tree, node => node.type === Dialog)[0].props.onOpenChange(false);
+    });
+    assert.equal(elements(asked.tree, node => node.type === Dialog)[0].props.open, true);
+    assert.equal(elements(asked.tree, node => node.type === AlertDialog)[0].props.open, true);
+
+    let closeStep = 0;
+    const retained = capture(() => TaskFileExplorer({ browserMode: true, files: [file], taskId, focusedFileId: file.id, currentUser: "周岚" }), tree => {
+      if (closeStep === 0) { closeStep++; elements(tree, node => node.type === Dialog)[0].props.onOpenChange(false); }
+      else if (closeStep === 1) {
+        assert.equal(elements(tree, node => node.type === AlertDialog)[0].props.open, true);
+        closeStep++;
+        elements(tree, node => node.props.children === "保留草稿并关闭")[0].props.onClick();
+      }
+    });
+    assert.equal(elements(retained.tree, node => node.type === Dialog)[0].props.open, false);
+    assert.deepEqual(getTaskFileDrafts(taskId)?.[file.id], draft);
+  } finally { updateTaskFileDrafts(taskId, {}); }
+});
+
+test("普通图片预览进入内嵌图片查看器，原预览URL与替代文字保留", () => {
+  const src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j3ioAAAAASUVORK5CYII=";
+  const file: TaskFileNode = { id: "image-view", kind: "file", name: "主视觉.png", parentId: null, version: 2, updatedAt: "", previewData: { kind: "image", src, alt: "主视觉原图" } };
+  const { tree } = capture(() => TaskFileViewer({ file }));
+  const viewer = elements(tree, node => node.type === TaskImageViewer)[0];
+  assert.equal(viewer.props.src, src);
+  assert.equal(viewer.props.alt, "主视觉原图");
+  assert.equal(elements(tree, node => node.type === FileImageAnnotations).length, 0);
+});
+
+test("图片标注及当前版本区域定位保持原标注器，旧版本标记不拦普通阅读", () => {
+  const file: TaskFileNode = { id: "annotated-image", kind: "file", name: "主视觉.png", parentId: null, version: 2, updatedAt: "", previewData: { kind: "image", src: "data:image/png;base64,AA==", alt: "主视觉" } };
+  const annotation = createTaskFileAnnotation({ taskId: "image-route", file, authorId: "user-a", authorName: "周岚", body: "修改这个区域", anchor: { kind: "region", location: "图片区域", region: { x: .1, y: .2, width: .3, height: .4 } } });
+  const selection = () => {};
+  const editing = capture(() => TaskFileViewer({ file, annotationMode: true, onSelection: selection }));
+  assert.equal(elements(editing.tree, node => node.type === FileImageAnnotations)[0].props.onSelection, selection);
+  const locating = capture(() => TaskFileViewer({ file, annotations: [annotation], activeThreadId: annotation.id }));
+  assert.equal(elements(locating.tree, node => node.type === FileImageAnnotations)[0].props.activeThreadId, annotation.id);
+  const prior = capture(() => TaskFileViewer({ file, annotations: [{ ...annotation, version: 1 }] }));
+  assert.equal(elements(prior.tree, node => node.type === TaskImageViewer).length, 1);
+});
+
+test("普通图片不重复显示外层全屏，开启标注后恢复原全屏入口", () => {
+  const file: TaskFileNode = { id: "fullscreen-image", kind: "file", name: "主视觉.png", parentId: null, version: 1, updatedAt: "", previewData: { kind: "image", src: "data:image/png;base64,AA==", alt: "主视觉" } };
+  const ordinary = capture(() => TaskFileExplorer({ files: [file], taskId: "image-fullscreen-owner", currentUser: "周岚" }));
+  assert.equal(elements(ordinary.tree, node => node.type === FullscreenButton).length, 0);
+  let started = false;
+  const marking = capture(() => TaskFileExplorer({ files: [file], taskId: "image-fullscreen-marking", currentUser: "周岚" }), tree => {
+    if (started) return;
+    started = true;
+    elements(tree, node => node.props["aria-label"] === "文件标注")[0].props.onClick();
+  });
+  assert.equal(elements(marking.tree, node => node.type === FullscreenButton).length, 1);
+  const document = capture(() => TaskFileExplorer({ files: [pdf], taskId: "pdf-fullscreen-unchanged", currentUser: "周岚" }));
+  assert.equal(elements(document.tree, node => node.type === FullscreenButton).length, 1);
 });

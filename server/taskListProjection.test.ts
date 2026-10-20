@@ -287,7 +287,7 @@ test("显式空多选数组表示不限，不回退旧单选条件或排除未�
     task("done", { status: "已完成", labels: ["制作"] }),
     task("none"),
   ], "", { owner: "me", status: "已完成", tag: "制作", statuses: [], tags: [] });
-  assert.deepEqual(result.visibleTasks.map(({ id }) => id), ["doing", "done", "none"]);
+  assert.deepEqual(result.visibleTasks.map(({ id }) => id), ["doing", "none", "done"]);
   assert.equal(result.untaggedCount, 1);
 });
 

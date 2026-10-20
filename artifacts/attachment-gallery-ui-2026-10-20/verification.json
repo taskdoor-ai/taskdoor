@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-20",
+  "libraries": {
+    "react-aria-components": "1.22.1 (existing)",
+    "yet-another-react-lightbox": "3.32.2 (MIT)"
+  },
+  "source": "current main workspace served by Vite 5173",
+  "gallery": {
+    "surface": "temporary real-component page (removed after verification, no task writes)",
+    "desktopViewport": [
+      1440,
+      722
+    ],
+    "arrowRight": "image to json",
+    "arrowLeft": "json to image",
+    "home": "first image",
+    "end": "last enabled PDF, removed attachment skipped",
+    "activation": "Enter opened json:v1 and image:v1",
+    "close": "Esc returned focus to source row",
+    "imageInfo": "opacity 0 at rest, 1 on keyboard focus",
+    "narrowViewport": [
+      390,
+      844
+    ],
+    "narrowBodyWidth": 390,
+    "narrowCardWidth": 216,
+    "narrowDialogBounds": {
+      "left": 12,
+      "right": 378,
+      "top": 84.4,
+      "bottom": 759.6
+    }
+  },
+  "imageViewer": {
+    "mainApp": "JPG from task ccx-serum-launch / 交付成果",
+    "singleFullscreenButton": true,
+    "zoom": "zoom-in enlarged image and enabled zoom-out",
+    "annotation": "entered original region annotator with zero annotations; exit restored YARL",
+    "fullscreenSuccess": "not verified; browser rejected trusted active request with TypeError: not granted",
+    "fullscreenFailureFeedback": "visible and ordinary reading retained"
+  },
+  "targetedTests": {
+    "gallery": 6,
+    "imageRoutingAndFullscreen": 15
+  },
+  "screenshots": [
+    "docs/prd/assets/discussion-notifications-activity/attachment-preview-tiles-zh.jpg",
+    "docs/prd/assets/files-local-commits/image-lightbox-zh.jpg"
+  ],
+  "dataWrites": "no task, message, file version or annotation published; temporary test page and native-request probe removed",
+  "limits": [
+    "single-image viewer; no new multi-image slideshow",
+    "desktop browser narrow viewport, not real touchscreen testing",
+    "no full test suite or double review"
+  ],
+  "finalChecks": {
+    "applicationTypecheck": "passed",
+    "structure": "passed, no new exceptions",
+    "viteBuild": "passed",
+    "prdBuild": "passed, 25 modules",
+    "format": "passed"
+  }
+}

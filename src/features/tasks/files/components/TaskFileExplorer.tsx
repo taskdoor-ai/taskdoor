@@ -27,10 +27,12 @@ import { PersonName } from "@/shared/ui/PersonAvatar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
 import { TaskFileDialogs, type TaskFileDialogState } from "@/features/tasks/files/components/TaskFileDialogs";
+import { TaskFileBrowser } from "@/features/tasks/files/components/TaskFileBrowser";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/shared/ui/alert-dialog";
 import { TaskFileHistory } from "@/features/tasks/files/components/TaskFileHistory";
 import { type TaskFileAction, TaskFileTree } from "@/features/tasks/files/components/TaskFileTree";
 import { placeTaskFileUploads } from "@/features/tasks/files/lib/task-file-upload";
-import { canDownload, downloadTaskFile, TaskFileViewer, type TaskFileTextSelection } from "@/features/tasks/files/components/TaskFileViewer";
+import { canDownload, downloadTaskFile, TaskFileViewer, usesTaskImageViewer, type TaskFileTextSelection } from "@/features/tasks/files/components/TaskFileViewer";
 import FullscreenButton from "@/features/tasks/files/components/FullscreenButton";
 import { prepareDiscussionUpload, DISCUSSION_UPLOAD_MAX_FILES } from "@/features/tasks/files/lib/discussion-uploads";
 import { canEditTaskFile, isSupportedTaskFileUpload, TASK_FILE_UPLOAD_ACCEPT, TASK_FILE_UPLOAD_EXTENSIONS_LABEL, validateTaskFileUploads } from "@/features/tasks/files/lib/task-file-capabilities";
@@ -46,9 +48,9 @@ import { useAnnotationToolbarDrag } from "@/features/tasks/files/lib/useAnnotati
 import { useAnnotationFullscreenContainer } from "@/features/tasks/files/lib/useAnnotationFullscreenContainer";
 import "@/features/tasks/styles/task-file-annotations.css";
 
-export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVersion, focusedSequence, onFilesChange, onNodesChange, onSaved, onAnnotationExitControllerChange, taskId, taskTitle = taskId, taskGoal, currentUser, currentUserId, onStartDiscussion }: {
+export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVersion, focusedSequence, onFilesChange, onNodesChange, onSaved, onAnnotationExitControllerChange, taskId, taskTitle = taskId, taskGoal, currentUser, currentUserId, onStartDiscussion, browserMode = false }: {
   files: TaskFileNode[]; focusedFileId?: string | null; focusedVersion?: number; focusedSequence?: number; taskId: string; currentUser: string;
-  taskTitle?: string; taskGoal?: string;
+  taskTitle?: string; taskGoal?: string; browserMode?: boolean;
   onSaved?: () => void;
   onAnnotationExitControllerChange?: (controller: FileAnnotationExitController | null) => void;
   onNodesChange?: (files: TaskFileNode[]) => void;
@@ -89,6 +91,12 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
   const [mobilePreview, setMobilePreview] = useState(Boolean(focusedFileId));
   const [undo, setUndo] = useState<{ files: TaskFileNode[]; message: string } | null>(null);
   const [showHistory, setShowHistory] = useState(false);
+  const [browserDirectoryId, setBrowserDirectoryId] = useState<string | null>(() => loaded.files.find(node => node.id === focusedFileId && node.kind === "file")?.parentId ?? null);
+  const [previewOpen, setPreviewOpen] = useState(Boolean(focusedFileId));
+  const [confirmPreviewClose, setConfirmPreviewClose] = useState(false);
+  const previewTrigger = useRef<HTMLElement | null>(null);
+  const closePreviewButton = useRef<HTMLButtonElement | null>(null);
+  const continuePreviewButton = useRef<HTMLButtonElement | null>(null);
   const [selection, setSelection] = useState<TaskFileTextSelection | null>(null);
   const [editingFileId, setEditingFileId] = useState<string | null>(null);
   const uploadInput = useRef<HTMLInputElement>(null);
@@ -192,7 +200,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
   const editable = Boolean(selected && canEditTaskFile(selected));
   const isEditing = Boolean(editable && selected && editingFileId === selected.id && currentContent && !loadError);
   const lastUpdate = selected ? getTaskFileLastUpdate(selected, loadError ? [] : revisions) : null;
-  const directoryId = selected?.parentId ?? null;
+  const directoryId = browserMode ? browserDirectoryId : selected?.parentId ?? null;
   const locationLabel = (parentId: string | null) => [ui("任务文件"), ...(parentId ? getNodePath(filesRef.current, parentId).map(node => mock.text(node.name)) : [])].join(" / ");
   const openUpload = () => { setUploadParentId(directoryId); setShowUpload(true); };
   const text = (zh: string, en: string) => locale === "en" ? en : zh;
@@ -231,6 +239,9 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
   useEffect(() => {
     if (!focusedFileId || !files.some(node => node.id === focusedFileId && node.kind === "file" && !node.archived)) return;
     setReferenceVersion(focusedVersion);
+    previewTrigger.current = null;
+    setPreviewOpen(true);
+    setBrowserDirectoryId(files.find(node => node.id === focusedFileId)?.parentId ?? null);
     setSelectedId(focusedFileId); setEditingFileId(null); setShowHistory(false); setMobilePreview(true); setSelection(null); setAnnotationSource(null); setAnnotationMode(false);
     const path = getNodePath(files, focusedFileId);
     setExpandedIds(current => new Set([...current, ...path.filter(node => node.kind === "folder").map(node => node.id)]));
@@ -285,6 +296,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
       const nodes = results.flatMap(result => result.status === "fulfilled" ? [result.value] : []);
       commitFiles(placeTaskFileUploads(filesRef.current, nodes, parentId));
       setSelectedId(nodes[0].id); setMobilePreview(true);
+      if (browserMode) setBrowserDirectoryId(parentId);
       setEditingFileId(null); setShowHistory(false); setSelection(null); setReferenceVersion(undefined);
       if (parentId) setExpandedIds(current => new Set([...current, parentId]));
       toast.success(ui("已上传 {0} 个文件", {0: nodes.length}));
@@ -302,6 +314,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
     if (id !== selectedId) setEditingFileId(null);
     setSelectedId(id); setShowHistory(false); setSelection(null); setActiveThreadId(null); setError(loaded.error);
     setMobilePreview(true);
+    if (browserMode) setPreviewOpen(true);
     if (id) setExpandedIds(current => new Set([...current, ...getNodePath(files, id).filter(node => node.kind === "folder").map(node => node.id)]));
   };
   const changeContent = (content: TaskFileContent) => {
@@ -386,49 +399,32 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
   };
   const path = selected ? getNodePath(files, selected.id) : [];
   const sidebarToggleLabel = sidebar.collapsed ? text("展开文件列表", "Show file list") : text("收起文件列表", "Hide file list");
-  const sidebarToggle = sidebar.desktop && <Button aria-label={sidebarToggleLabel} aria-controls={sidebar.sidebarId} aria-expanded={!sidebar.collapsed} className="task-file-sidebar-toggle" onClick={sidebar.toggle} ref={sidebar.toggleRef} size="icon-sm" title={sidebarToggleLabel} variant="ghost">
+  const sidebarToggle = !browserMode && sidebar.desktop && <Button aria-label={sidebarToggleLabel} aria-controls={sidebar.sidebarId} aria-expanded={!sidebar.collapsed} className="task-file-sidebar-toggle" onClick={sidebar.toggle} ref={sidebar.toggleRef} size="icon-sm" title={sidebarToggleLabel} variant="ghost">
     {sidebar.collapsed ? <PanelLeftOpen aria-hidden="true" size={17} /> : <PanelLeftClose aria-hidden="true" size={17} />}
   </Button>;
 
-  return <div className="task-file-explorer" style={sidebar.style} ref={sidebar.rootRef} data-sidebar-collapsed={sidebar.collapsed} data-sidebar-desktop={sidebar.desktop} data-annotation-mode={annotationMode} data-mobile-view={mobilePreview ? "preview" : "tree"} onDragEnter={event => {
-    if (showUpload || !event.dataTransfer.types.includes("Files")) return;
-    event.preventDefault(); dragDepth.current += 1; setDragging(true);
-  }} onDragLeave={() => { dragDepth.current = Math.max(0, dragDepth.current - 1); if (!dragDepth.current) setDragging(false); }} onDragOver={event => { if (event.dataTransfer.types.includes("Files")) { event.preventDefault(); event.dataTransfer.dropEffect = uploading ? "none" : "copy"; } }} onDrop={event => {
-    setDragging(false); dragDepth.current = 0;
-    if (event.defaultPrevented || !event.dataTransfer.files.length) return;
-    event.preventDefault(); void uploadFiles(Array.from(event.dataTransfer.files));
-  }} onKeyDown={event => {
-    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") { event.preventDefault(); save(); }
-    if (event.key === "Escape") setSelection(null);
-  }}>
-    <aside aria-label={ui("任务文件")} aria-hidden={sidebar.collapsed || undefined} inert={sidebar.collapsed} className="task-file-explorer-sidebar" id={sidebar.sidebarId} ref={sidebar.sidebarRef}>
-      <div className="task-file-explorer-sidebar-content">
-      <div className="task-file-sidebar-topbar">
-        <div className="task-file-sidebar-search"><Input aria-label={ui("搜索当前任务文件")} className="task-file-search-input" leadingIcon={<Search />} onChange={event => setQuery(event.target.value)} placeholder={text("搜索文件", "Search files")} value={query} />{query && <Button aria-label={ui("清除搜索")} className="task-file-search-clear" onClick={() => setQuery("")} size="icon-xs" variant="ghost"><X /></Button>}</div>
-        <DropdownMenu>
-          <DropdownMenuTrigger aria-label={text("添加文件或文件夹", "Add files or folders")} render={<Button className="task-file-add-trigger" size="icon-sm" variant="ghost" />} title={text("添加", "Add")}><Plus aria-hidden="true" /></DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-40">
-            <DropdownMenuItem className="gap-2" onClick={() => setDialog({ type: "create", parentId: directoryId })}><FolderPlus aria-hidden="true" size={16} />{d('newFolder')}</DropdownMenuItem>
-            <DropdownMenuItem className="gap-2" disabled={uploading} onClick={openUpload}><Upload aria-hidden="true" size={16} />{ui("上传文件")}</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={ui("选择上传文件")} hidden multiple onChange={event => void uploadFiles(Array.from(event.target.files ?? []), uploadParentId)} ref={uploadInput} type="file" />
-      </div>
-      <div className="task-file-explorer-tree-scroll">{visibleFiles.some(node => !node.archived) ? <TaskFileTree expandedIds={expandedIds} nodes={visibleFiles} onAction={openAction} onExpandedChange={setExpandedIds} onSelect={selectNode} selectedId={selectedId} /> : <div className="task-file-explorer-no-results">{query ? ui("没有匹配的文件") : ui("暂无文件")}{query && <button onClick={() => setQuery("")} type="button">{ui("清除搜索")}</button>}</div>}</div>
-      </div>
-      {sidebar.desktop && <SidebarResizeHandle kind="files" width={sidebar.width} onChange={sidebar.changeWidth} onResizePreview={sidebar.previewResize} onResizeCommit={sidebar.commitResize} onResizeCancel={sidebar.cancelResize} onResizingChange={sidebar.setResizing} min={180} max={sidebar.maxWidth} />}
-    </aside>
+  const finishPreviewClose = () => {
+    setPreviewOpen(false); setConfirmPreviewClose(false); setSelection(null); setBasketOpen(false);
+  };
+  const requestPreviewClose = () => {
+    if (annotationExit.current.pending || dirty) setConfirmPreviewClose(true);
+    else finishPreviewClose();
+  };
+  const viewerAnnotations = annotationsVisible ? currentAnnotations : [];
+  const viewerDraftAnchor = viewerFile && annotationDraft?.file.id === viewerFile.id && annotationDraft.file.version === viewerFile.version ? annotationDraft.anchor : null;
+  const imageViewerOwnsFullscreen = viewerFile && usesTaskImageViewer(viewerFile, { annotationMode: annotationMode && !isEditing, annotations: viewerAnnotations, draftAnchor: viewerDraftAnchor });
+  const previewPane = (
     <main aria-label={selected ? ui("文件编辑：{0}", {0: selected.name}) : text("文件预览", "File preview")} className="task-file-explorer-preview" id={selected ? `task-file-preview-${selected.id}` : undefined} ref={previewRef} tabIndex={-1}>
         <div className="task-file-editor-toolbar">
           {sidebarToggle}
-          <button aria-label={ui("返回文件结构")} className="task-file-explorer-mobile-back" onClick={() => { setMobilePreview(false); setSelection(null); }} type="button"><ArrowLeft size={16} /></button>
+          {!browserMode && <button aria-label={ui("返回文件结构")} className="task-file-explorer-mobile-back" onClick={() => { setMobilePreview(false); setSelection(null); }} type="button"><ArrowLeft size={16} /></button>}
           <div className="task-file-toolbar-context">
-            <nav aria-label={d('fileLocation')} className="task-file-editor-path">{path.map((node, index) => <React.Fragment key={node.id}>{index > 0 && <ChevronRight aria-hidden="true" size={12} />}<span aria-current={index === path.length - 1 ? "page" : undefined} title={mock.text(node.name)}>{mock.text(node.name)}</span></React.Fragment>)}</nav>
+            {browserMode ? <DialogTitle className="task-file-preview-title" title={selected ? mock.text(selected.name) : undefined}>{selected ? mock.text(selected.name) : ui("文件预览")}</DialogTitle> : <nav aria-label={d('fileLocation')} className="task-file-editor-path">{path.map((node, index) => <React.Fragment key={node.id}>{index > 0 && <ChevronRight aria-hidden="true" size={12} />}<span aria-current={index === path.length - 1 ? "page" : undefined} title={mock.text(node.name)}>{mock.text(node.name)}</span></React.Fragment>)}</nav>}
           </div>
           <div className="task-file-editor-actions">
             <div className="task-file-editor-controls">
             {selected?.kind === "file" && <>
-              {!isEditing && !loadError && <FullscreenButton kind={getPreviewKind(selected.name, selected.mimeType)} onSelection={setSelection} target={viewerRef} />}
+              {!isEditing && !loadError && !imageViewerOwnsFullscreen && <FullscreenButton kind={getPreviewKind(selected.name, selected.mimeType)} onSelection={setSelection} target={viewerRef} />}
               {isEditing && <span aria-live="polite" className="task-file-save-state">{dirty ? ui("未保存") : ui("编辑中")}</span>}
               {currentContent && !loadError && isEditing && <><Button className="task-file-action-button" onClick={discard} size="sm" variant="ghost">{d('cancel')}</Button><Button aria-label={ui("保存文件")} className="task-file-action-button task-file-save-button" onClick={save} size="sm" variant="default"><Save size={16} />{d('save')}</Button></>}
               {!isEditing && <>
@@ -459,6 +455,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
               {selected.kind === "file" && canDownload(selected) && <DropdownMenuItem onClick={async () => setError(ui(await downloadTaskFile(selected)))}><Download size={14} />{ui("下载")}</DropdownMenuItem>}
               <DropdownMenuItem onClick={() => setDialog({ type: "move", nodeId: selected.id })}><MoveRight size={14} />{ui("移动到")}</DropdownMenuItem>
             </DropdownMenuGroup></DropdownMenuContent></DropdownMenu>}
+            {browserMode && <Button aria-label={ui("关闭文件预览")} onClick={requestPreviewClose} ref={closePreviewButton} size="icon-sm" variant="ghost"><X /></Button>}
             </div>
           </div>
         </div>
@@ -467,7 +464,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
         {annotationSource && annotationSource.version !== (selected?.version ?? 1) && <div className="task-file-reference-version" role="status">{text(`正在查看标注对应的 v${annotationSource.version}，最新版本为 v${selected?.version ?? 1}。`, `Viewing the annotated v${annotationSource.version}; the latest version is v${selected?.version ?? 1}.`)}<Button onClick={() => { setAnnotationSource(null); setActiveThreadId(null); setAnnotationMode(true); }} size="xs" variant="ghost">{text("查看最新版本", "View latest")}</Button></div>}
         {selected?.kind === "file" && referenceVersion != null && referenceVersion !== (selected.version ?? 1) && <p className="task-file-reference-version" role="status">{ui("附件引用 v")}{referenceVersion}{ui("；当前显示 v")}{selected.version ?? 1}{ui("。历史引用保持原版本，可在版本记录中核对修改。")}</p>}
         {selected?.kind === "file" && viewerFile ? <div className="task-file-editor-body">
-          <div className="task-file-explorer-viewer" onScroll={() => setSelection(null)} ref={viewerRef}><TaskFileViewer activeThreadId={activeThreadId} annotationFocusSequence={annotationFocusSequence} annotations={annotationsVisible ? currentAnnotations : []} annotationMode={annotationMode && !isEditing} draft={isEditing ? currentDraft?.content ?? currentContent : getTaskFileContent(viewerFile)} draftAnchor={annotationDraft?.file.id === viewerFile.id && annotationDraft.file.version === viewerFile.version ? annotationDraft.anchor : null} file={viewerFile} key={`${viewerFile.id}:${viewerFile.version}:${annotationSource ? "snapshot" : "current"}`} onChange={isEditing ? changeContent : undefined} onSelection={quote => { if (quote && getTaskFileSelectionAnchor(quote).kind === "region") beginAnnotation(quote); else setSelection(quote); }} onThreadSelect={locateThread} threads={previewThreads} /></div>
+          <div className="task-file-explorer-viewer" onScroll={() => setSelection(null)} ref={viewerRef}><TaskFileViewer activeThreadId={activeThreadId} annotationFocusSequence={annotationFocusSequence} annotations={viewerAnnotations} annotationMode={annotationMode && !isEditing} draft={isEditing ? currentDraft?.content ?? currentContent : getTaskFileContent(viewerFile)} draftAnchor={viewerDraftAnchor} file={viewerFile} key={`${viewerFile.id}:${viewerFile.version}:${annotationSource ? "snapshot" : "current"}`} onChange={isEditing ? changeContent : undefined} onSelection={quote => { if (quote && getTaskFileSelectionAnchor(quote).kind === "region") beginAnnotation(quote); else setSelection(quote); }} onThreadSelect={locateThread} threads={previewThreads} /></div>
 
         </div> : <Empty className="flex-1"><EmptyHeader><EmptyMedia variant="icon"><FolderOpen /></EmptyMedia><EmptyTitle>{ui("暂无文件")}</EmptyTitle><EmptyDescription>{ui("上传文件，或新建文件夹整理任务资料。")}</EmptyDescription></EmptyHeader></Empty>}
       {renderAnnotationOverlay(annotationMode && !isEditing && <div className="task-file-annotation-dock"><div aria-label={text("标注工具条", "Annotation toolbar")} className="task-file-annotation-toolbar" data-dragging={toolbarDrag.isDragging} ref={toolbarDrag.toolbarRef} role="toolbar" style={toolbarDrag.style}>
@@ -480,6 +477,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
           const signature = annotationSignature;
           const draft = await prepareAnnotationMaterial();
           if (!draft) return;
+          setPreviewOpen(false);
           onStartDiscussion(draft, published => {
             if (published.attachments.some(file => file.id === draft.attachments[0].id)) setDeliveredSignature(signature);
           });
@@ -502,8 +500,8 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
         <button aria-label={text("退出标注", "Exit annotation mode")} onClick={() => annotationExit.current.discard()} title={text("清空并退出标注", "Clear annotations and exit")} type="button"><X size={17} /></button>
       </div></div>)}
     </main>
-    {dragging && !showUpload && <div className="task-file-drop-overlay"><Upload size={30} /><strong>{uploading ? ui("正在上传文件…") : ui("松开以上传文件")}</strong><span>{locationLabel(directoryId)}</span></div>}
-    <Dialog onOpenChange={setShowUpload} open={showUpload}><DialogContent className="sm:max-w-md"><DialogHeader><DialogTitle>{ui("上传文件")}</DialogTitle><DialogDescription>{ui("上传到：{0}", {0: locationLabel(uploadParentId)})}</DialogDescription></DialogHeader><Empty className="task-file-upload-dropzone border" onDragOver={event => { event.preventDefault(); event.currentTarget.dataset.dragging = "true"; }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) delete event.currentTarget.dataset.dragging; }} onDrop={event => { event.preventDefault(); event.stopPropagation(); delete event.currentTarget.dataset.dragging; void uploadFiles(Array.from(event.dataTransfer.files), uploadParentId); }}><EmptyHeader><EmptyMedia variant="icon"><Upload /></EmptyMedia><EmptyTitle>{ui("拖入文件，或选择上传")}</EmptyTitle><EmptyDescription>{ui("每次最多 {0} 个文件，单个不超过 20 MiB", {0: DISCUSSION_UPLOAD_MAX_FILES})}<br />{ui("仅支持可在线预览的文件：{0}", {0: TASK_FILE_UPLOAD_EXTENSIONS_LABEL})}</EmptyDescription></EmptyHeader><EmptyContent><Button onClick={() => uploadInput.current?.click()} variant="outline">{ui("选择文件")}</Button></EmptyContent></Empty></DialogContent></Dialog>
+  );
+  const previewOverlays = <>
     {renderAnnotationOverlay(selection && selected && !isEditing && <div aria-label={ui("选中文字操作")} className="task-file-selection-toolbar" role="toolbar" style={{ left: Math.max(12, Math.min(window.innerWidth - 240, selection.rect.left)), top: Math.max(12, Math.min(window.innerHeight - 60, selection.rect.bottom - 48)) }}>{!isEditing && <button onMouseDown={event => event.preventDefault()} onClick={() => beginAnnotation(selection)} title={text("标注这段内容", "Annotate this passage")} type="button"><SquareDashedMousePointer aria-hidden="true" size={17} />{text("标注", "Annotate")}</button>}<button aria-label={ui("关闭选区操作")} onClick={() => setSelection(null)} type="button"><X size={14} /></button></div>)}
     <TaskFileAnnotationComposer draft={annotationDraft} onChange={body => setAnnotationDraft(current => current ? { ...current, body } : null)} onClose={() => { setAnnotationDraft(null); setAnnotationMode(false); }} onSubmit={() => {
       if (!annotationDraft) return;
@@ -514,6 +512,52 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
     {ownAnnotations.length > 0 && <TaskFileAnnotationBasket open={basketOpen} onOpenChange={setBasketOpen} handle={basketPopoverHandle} triggerId={basketTriggerId} compact onClose={() => setBasketOpen(false)} annotations={ownAnnotations} actorId={actorId} onPendingEditChange={setPendingAnnotationEdit} onEdit={(id, body) => review.commit(current => updateTaskFileAnnotationBody(current, id, actorId, body))} onRemove={id => { try { review.commit(current => deleteTaskFileAnnotation(current, id, actorId)); if (ownAnnotations.length === 1) setBasketOpen(false); setError(""); } catch (failure) { setError(failure instanceof Error ? failure.message : text("删除标注失败，请重试。", "Could not delete the annotation. Please retry.")); } }} onLocate={locateAnnotation} />}
     {aiRequest && <AiConnectionDialog request={aiRequest} returnFocus={aiTrigger.current} onClose={() => setAiRequest(null)} onTransferResult={result => { if (result.status === "open-attempted") setDeliveredSignature(aiRequestSignature.current); }} />}
     {selected?.kind === "file" && <Dialog onOpenChange={open => { setShowHistory(open); if (!open) setSelection(null); }} open={showHistory}><DialogContent className="task-file-revisions-dialog gap-0 p-0" showCloseButton={false}><DialogTitle className="sr-only">{ui("版本记录")}</DialogTitle><TaskFileHistory filePath={path.map(node => mock.text(node.name)).join(" / ")} key={selected.id} onClose={() => setShowHistory(false)} revisions={revisions} version={selected.version ?? 1} /></DialogContent></Dialog>}
+  </>;
+
+  return <Dialog open={browserMode && previewOpen} onOpenChange={open => { if (!open) requestPreviewClose(); }}>
+  <div className={`task-file-explorer${browserMode ? " task-file-browser-shell" : ""}`} style={sidebar.style} ref={sidebar.rootRef} data-sidebar-collapsed={sidebar.collapsed} data-sidebar-desktop={sidebar.desktop} data-annotation-mode={annotationMode} data-mobile-view={mobilePreview ? "preview" : "tree"} onDragEnter={event => {
+    if (showUpload || !event.dataTransfer.types.includes("Files")) return;
+    event.preventDefault(); dragDepth.current += 1; setDragging(true);
+  }} onDragLeave={() => { dragDepth.current = Math.max(0, dragDepth.current - 1); if (!dragDepth.current) setDragging(false); }} onDragOver={event => { if (event.dataTransfer.types.includes("Files")) { event.preventDefault(); event.dataTransfer.dropEffect = uploading ? "none" : "copy"; } }} onDrop={event => {
+    setDragging(false); dragDepth.current = 0;
+    if (event.defaultPrevented || !event.dataTransfer.files.length) return;
+    event.preventDefault(); void uploadFiles(Array.from(event.dataTransfer.files));
+  }} onKeyDown={event => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") { event.preventDefault(); save(); }
+    if (event.key === "Escape") setSelection(null);
+  }}>
+    {browserMode ? <>
+      <TaskFileBrowser files={files} displayName={mock.text} directoryId={browserDirectoryId} onDirectoryChange={setBrowserDirectoryId} onOpen={(id, trigger) => { previewTrigger.current = trigger; selectNode(id); }} onAction={openAction} onCreateFolder={() => setDialog({ type: "create", parentId: browserDirectoryId })} onUpload={openUpload} uploading={uploading} error={error || loaded.error} />
+      <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={ui("选择上传文件")} hidden multiple onChange={event => void uploadFiles(Array.from(event.target.files ?? []), uploadParentId)} ref={uploadInput} type="file" />
+      {uploading && <div className="flex items-center gap-3 p-4" role="status"><Spinner /><span>{ui("正在上传 {0}/{1} 个文件", {0: uploadProgress.completed, 1: uploadProgress.total})}</span><Progress aria-label={ui("上传进度")} max={uploadProgress.total} value={uploadProgress.completed} /></div>}
+    </> : <aside aria-label={ui("任务文件")} aria-hidden={sidebar.collapsed || undefined} inert={sidebar.collapsed} className="task-file-explorer-sidebar" id={sidebar.sidebarId} ref={sidebar.sidebarRef}>
+      <div className="task-file-explorer-sidebar-content">
+      <div className="task-file-sidebar-topbar">
+        <div className="task-file-sidebar-search"><Input aria-label={ui("搜索当前任务文件")} className="task-file-search-input" leadingIcon={<Search />} onChange={event => setQuery(event.target.value)} placeholder={text("搜索文件", "Search files")} value={query} />{query && <Button aria-label={ui("清除搜索")} className="task-file-search-clear" onClick={() => setQuery("")} size="icon-xs" variant="ghost"><X /></Button>}</div>
+        <DropdownMenu>
+          <DropdownMenuTrigger aria-label={text("添加文件或文件夹", "Add files or folders")} render={<Button className="task-file-add-trigger" size="icon-sm" variant="ghost" />} title={text("添加", "Add")}><Plus aria-hidden="true" /></DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem className="gap-2" onClick={() => setDialog({ type: "create", parentId: directoryId })}><FolderPlus aria-hidden="true" size={16} />{d('newFolder')}</DropdownMenuItem>
+            <DropdownMenuItem className="gap-2" disabled={uploading} onClick={openUpload}><Upload aria-hidden="true" size={16} />{ui("上传文件")}</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={ui("选择上传文件")} hidden multiple onChange={event => void uploadFiles(Array.from(event.target.files ?? []), uploadParentId)} ref={uploadInput} type="file" />
+      </div>
+      <div className="task-file-explorer-tree-scroll">{visibleFiles.some(node => !node.archived) ? <TaskFileTree expandedIds={expandedIds} nodes={visibleFiles} onAction={openAction} onExpandedChange={setExpandedIds} onSelect={selectNode} selectedId={selectedId} /> : <div className="task-file-explorer-no-results">{query ? ui("没有匹配的文件") : ui("暂无文件")}{query && <button onClick={() => setQuery("")} type="button">{ui("清除搜索")}</button>}</div>}</div>
+      </div>
+      {sidebar.desktop && <SidebarResizeHandle kind="files" width={sidebar.width} onChange={sidebar.changeWidth} onResizePreview={sidebar.previewResize} onResizeCommit={sidebar.commitResize} onResizeCancel={sidebar.cancelResize} onResizingChange={sidebar.setResizing} min={180} max={sidebar.maxWidth} />}
+    </aside>}
+    {!browserMode && previewPane}
+    {dragging && !showUpload && <div className="task-file-drop-overlay"><Upload size={30} /><strong>{uploading ? ui("正在上传文件…") : ui("松开以上传文件")}</strong><span>{locationLabel(directoryId)}</span></div>}
+    <Dialog onOpenChange={setShowUpload} open={showUpload}><DialogContent className="sm:max-w-md"><DialogHeader><DialogTitle>{ui("上传文件")}</DialogTitle><DialogDescription>{ui("上传到：{0}", {0: locationLabel(uploadParentId)})}</DialogDescription></DialogHeader><Empty className="task-file-upload-dropzone border" onDragOver={event => { event.preventDefault(); event.currentTarget.dataset.dragging = "true"; }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) delete event.currentTarget.dataset.dragging; }} onDrop={event => { event.preventDefault(); event.stopPropagation(); delete event.currentTarget.dataset.dragging; void uploadFiles(Array.from(event.dataTransfer.files), uploadParentId); }}><EmptyHeader><EmptyMedia variant="icon"><Upload /></EmptyMedia><EmptyTitle>{ui("拖入文件，或选择上传")}</EmptyTitle><EmptyDescription>{ui("每次最多 {0} 个文件，单个不超过 20 MiB", {0: DISCUSSION_UPLOAD_MAX_FILES})}<br />{ui("仅支持可在线预览的文件：{0}", {0: TASK_FILE_UPLOAD_EXTENSIONS_LABEL})}</EmptyDescription></EmptyHeader><EmptyContent><Button onClick={() => uploadInput.current?.click()} variant="outline">{ui("选择文件")}</Button></EmptyContent></Empty></DialogContent></Dialog>
+    {!browserMode && previewOverlays}
     <TaskFileDialogs dialog={dialog} nodes={files} onClose={() => setDialog(null)} onCreate={(parentId, name) => { const result = createFolder(files, parentId, name); commitFiles(result.nodes); setExpandedIds(current => new Set([...current, ...getNodePath(result.nodes, result.folder.id).filter(node => node.kind === "folder").map(node => node.id)])); }} onDelete={deleteNode} onMove={(nodeId, parentId) => { commitFiles(moveNode(files, nodeId, parentId)); if (parentId) setExpandedIds(current => new Set([...current, parentId])); }} onRename={renameFile} />
-  </div>;
+    {browserMode && <DialogContent className="task-file-preview-dialog" showCloseButton={false} initialFocus={closePreviewButton} finalFocus={() => previewTrigger.current?.isConnected ? previewTrigger.current : sidebar.rootRef.current?.querySelector<HTMLButtonElement>(".task-file-browser-location > button:not(:disabled)") ?? false}>
+      <DialogDescription className="sr-only">{ui("文件预览和编辑")}</DialogDescription>
+      {previewPane}
+      {previewOverlays}
+    </DialogContent>}
+    {browserMode && <AlertDialog open={confirmPreviewClose} onOpenChange={open => { if (!open) setConfirmPreviewClose(false); }}><AlertDialogContent showCloseButton={false} initialFocus={continuePreviewButton} finalFocus={closePreviewButton}><AlertDialogHeader><AlertDialogTitle>{ui("关闭文件预览？")}</AlertDialogTitle><AlertDialogDescription>{annotationExit.current.pending ? ui("本次标注尚未交付，关闭将丢弃标注和标注输入。未保存的文件编辑草稿会保留。") : ui("文件有未保存的修改。关闭后编辑草稿仍保留，重新打开可继续编辑。")}</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><Button onClick={() => setConfirmPreviewClose(false)} ref={continuePreviewButton} variant="outline">{ui("继续查看")}</Button><Button onClick={() => { if (annotationExit.current.pending) annotationExit.current.discard(); finishPreviewClose(); }} variant={annotationExit.current.pending ? "destructive" : "default"}>{annotationExit.current.pending ? ui("丢弃标注并关闭") : ui("保留草稿并关闭")}</Button></AlertDialogFooter></AlertDialogContent></AlertDialog>}
+  </div>
+  </Dialog>;
 }

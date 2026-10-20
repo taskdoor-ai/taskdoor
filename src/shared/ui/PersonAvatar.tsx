@@ -8,7 +8,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockPersonName } from "@/ai/mock/i18n/mockContent";
 import { PreviewCard } from "@base-ui/react/preview-card";
 import React, { type ComponentPropsWithoutRef, type CSSProperties, forwardRef, type ReactElement, useEffect, useRef, useState } from "react";
-import { ClipboardCheck, Mail, Phone, UserRound, X } from "lucide-react";
+import { ChevronDown, ClipboardCheck, Mail, Phone, UserRound, X } from "lucide-react";
 import type { PersonOption } from "@/shared/model/task-model";
 import { useResolvedPersonProfile } from "@/shared/ui/PersonDirectory";
 import { createPersonProfileCardModel } from "@/shared/ui/person-profile-card-model";
@@ -208,24 +208,32 @@ export function PersonName({ className = "", prefix = "", name, personId, profil
   return <><PersonProfilePreview onOpenChange={setPreviewOpen} open={previewOpen} profile={resolvedProfile} trigger={label as ReactElement} />{badge}</>;
 }
 
-export function PersonOverflowList({ className = "person-avatar-overflow", invitationStatusById = {}, label = "参与者", people, style }: {
+export function PersonOverflowList({ allPeople, className = "person-avatar-overflow", invitationStatusById = {}, label = "参与者", onRemove, people, style }: {
+  allPeople?: PersonOption[];
   className?: string;
   invitationStatusById?: Record<string, PersonInvitationStatus>;
   label?: string;
+  onRemove?: (personId: string) => void;
   people: PersonOption[];
   style?: CSSProperties;
 }) {
   const ui = useGlobalUi();
+  const u = useRemainingCopy();
   const { locale } = useI18n();
   const [open, setOpen] = useState(false);
+  const listRef = useRef<HTMLUListElement>(null);
+  const listPeople = allPeople ?? people;
+  const listLabel = allPeople ? ui("查看全部{0}（{1}人）", {0: label, 1: listPeople.length}) : ui("更多{0}", {0: label});
 
   return <Popover onOpenChange={setOpen} open={open}>
-    <PopoverTrigger aria-label={ui("另有 {0} 位{1}", {0: people.length, 1: label})} className={className} closeDelay={150} delay={100} onFocus={(event) => { if (event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover style={style} type="button">+{people.length}</PopoverTrigger>
-    <PopoverContent aria-label={ui("更多{0}", {0: label})} className="person-overflow-popover" finalFocus={false} initialFocus={false}>
-      <ul aria-label={ui("收起的{0}", {0: label})} className="person-overflow-list">
-        {people.map((person) => <li key={person.id}>
-          <PersonAvatar invitationStatus={invitationStatusById[person.id]} name={person.name} profile={person} showProfilePreview={false} size="sm" />
-          <span>{mockPersonName(locale, person.id, person.name)}</span>
+    <PopoverTrigger aria-label={allPeople ? listLabel : ui("另有 {0} 位{1}", {0: people.length, 1: label})} className={`${className}${allPeople ? " is-full-list" : ""}`} closeDelay={150} delay={100} onFocus={(event) => { if (!allPeople && event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover={!allPeople} style={style} title={allPeople ? listLabel : undefined} type="button">{people.length > 0 && <span>+{people.length}</span>}{allPeople && <ChevronDown aria-hidden="true" size={14} />}</PopoverTrigger>
+    <PopoverContent aria-label={listLabel} className="person-overflow-popover" collisionPadding={allPeople ? 12 : undefined} data-full-list={allPeople ? "" : undefined} finalFocus={allPeople ? undefined : false} initialFocus={allPeople ? undefined : false}>
+      {allPeople && <div className="person-overflow-heading"><strong>{label}</strong><span>{listPeople.length}</span></div>}
+      <ul aria-label={allPeople ? listLabel : ui("收起的{0}", {0: label})} className="person-overflow-list" ref={listRef} tabIndex={allPeople ? 0 : undefined}>
+        {listPeople.map((person) => <li key={person.id}>
+          <PersonAvatar invitationStatus={invitationStatusById[person.id]} name={person.name} profile={person} profilePreviewFocusable={false} showProfilePreview={false} size="sm" />
+          <span className="person-overflow-name">{mockPersonName(locale, person.id, person.name)}</span>
+          {onRemove && <button aria-label={u("removePerson", { label, name: mockPersonName(locale, person.id, person.name) })} className="person-overflow-remove" onClick={() => { listRef.current?.focus({ preventScroll: true }); onRemove(person.id); }} type="button"><X aria-hidden="true" size={12} strokeWidth={1.6} /></button>}
         </li>)}
       </ul>
     </PopoverContent>
@@ -240,11 +248,12 @@ type PersonAvatarGroupProps = {
   onRemove?: (personId: string) => void;
   people: PersonOption[];
   removeLabel?: string;
+  showFullList?: boolean;
   size?: Exclude<NonNullable<PersonAvatarProps["size"]>, "xl">;
 };
 
 // Adapted from the stacked avatar-group anatomy used by 21st.dev's Hero UI and ReUI components.
-export function PersonAvatarGroup({ className = "", fitAvailable = false, invitationStatusById = {}, onRemove, people, removeLabel = "参与人", maxVisible = people.length, size = "sm" }: PersonAvatarGroupProps) {
+export function PersonAvatarGroup({ className = "", fitAvailable = false, invitationStatusById = {}, onRemove, people, removeLabel = "参与人", maxVisible = people.length, showFullList = false, size = "sm" }: PersonAvatarGroupProps) {
   const u = useRemainingCopy();
   const { locale } = useI18n();
   const groupRef = useRef<HTMLSpanElement>(null);
@@ -296,7 +305,7 @@ export function PersonAvatarGroup({ className = "", fitAvailable = false, invita
         <PersonAvatar invitationStatus={invitationStatusById[person.id]} name={person.name} profile={person} size={size} />
         <button aria-label={u("removePerson", { label: removeLabel, name: mockPersonName(locale, person.id, person.name) })} className="person-avatar-group-remove" onClick={() => onRemove(person.id)} type="button"><X aria-hidden="true" /></button>
       </span> : <PersonAvatar invitationStatus={invitationStatusById[person.id]} key={person.id} name={person.name} profile={person} size={size} />)}
-      {hiddenCount > 0 && <PersonOverflowList invitationStatusById={invitationStatusById} people={people.slice(visiblePeople.length)} style={style} />}
+      {(hiddenCount > 0 || (showFullList && people.length > 0)) && <PersonOverflowList allPeople={showFullList ? people : undefined} invitationStatusById={invitationStatusById} label={removeLabel} onRemove={showFullList ? onRemove : undefined} people={people.slice(visiblePeople.length)} style={style} />}
     </span>
   );
 }

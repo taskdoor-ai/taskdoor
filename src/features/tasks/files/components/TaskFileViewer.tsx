@@ -9,6 +9,7 @@ import { isBuiltinTaskAsset, readDiscussionBlob } from "@/features/tasks/files/l
 import type { FileDiscussionThread } from "@/features/tasks/lib/task-collaboration";
 import { LexicalFileDocument } from "@/features/tasks/files/components/LexicalFileDocument";
 import { FileImageAnnotations } from "@/features/tasks/files/components/FileImageAnnotations";
+import { TaskImageViewer } from "@/features/tasks/files/components/TaskImageViewer";
 import { TaskHtmlAnnotations } from "@/features/tasks/files/components/TaskHtmlAnnotations";
 import type { TaskFileAnnotation } from "@/features/tasks/files/lib/task-file-annotations";
 import { FileSourceLineNumbers } from "@/features/tasks/files/components/FileSourceLineNumbers";
@@ -88,10 +89,15 @@ function OriginalFilePreview({ file, annotationMode, annotations, draftAnchor, a
   const kind = getPreviewKind(file.name, file.mimeType);
   if (loading) return <p role="status">{ui("正在读取附件…")}</p>;
   if (error) return <div className="task-file-viewer-unsupported"><p role="alert">{ui(error)}</p><button onClick={retry} type="button">{ui("重试")}</button></div>;
-  if (url && kind === "image") return <FileImageAnnotations activeThreadId={activeThreadId} alt={file.name} annotationMode={annotationMode} annotations={annotations} imageSrc={file.previewData?.kind === "image" ? file.previewData.src : undefined} onSelection={onSelection} onThreadSelect={onThreadSelect} src={url} version={file.version ?? 1} />;
+  if (url && kind === "image") return usesTaskImageViewer(file, { annotationMode, annotations, draftAnchor }) ? <TaskImageViewer alt={file.name} src={url} /> : <FileImageAnnotations activeThreadId={activeThreadId} alt={file.name} annotationMode={annotationMode} annotations={annotations} imageSrc={file.previewData?.kind === "image" ? file.previewData.src : undefined} onSelection={onSelection} onThreadSelect={onThreadSelect} src={url} version={file.version ?? 1} />;
   if (url && kind === "pdf") return <Suspense fallback={<p role="status">{ui("正在读取附件…")}</p>}><TaskPdfViewer activeThreadId={activeThreadId} annotationMode={annotationMode} annotations={annotations} draftAnchor={draftAnchor} file={file} focusSequence={annotationFocusSequence} onSelection={onSelection} onThreadSelect={onThreadSelect} url={url} /></Suspense>;
   if (url && kind === "presentation") return <Suspense fallback={<p role="status">{ui("正在读取附件…")}</p>}><TaskPresentationViewer activeThreadId={activeThreadId} annotationMode={annotationMode} annotations={annotations} draftAnchor={draftAnchor} file={file} focusSequence={annotationFocusSequence} onSelection={onSelection} onThreadSelect={onThreadSelect} url={url} /></Suspense>;
   return <div className="task-file-viewer-unsupported"><FileQuestion size={32} /><strong>{ui("暂不支持在线预览此格式")}</strong><p>{ui("可以下载原文件查看。")}</p><TaskFileDownload file={file} /></div>;
+}
+
+/** Shared by the reader and its outer toolbar so fullscreen has one owner. */
+export function usesTaskImageViewer(file: TaskFileNode, { annotationMode, annotations, draftAnchor }: Pick<ViewerProps, "annotationMode" | "annotations" | "draftAnchor"> = {}) {
+  return getPreviewKind(file.name, file.mimeType) === "image" && !Boolean(annotationMode || draftAnchor?.kind === "region" || annotations?.some(item => item.fileId === file.id && item.version === (file.version ?? 1) && item.anchor.kind === "region" && item.anchor.region));
 }
 
 function EditableText({ value, onChange, label, className = "", onSelection, location, source = false }: {
@@ -196,7 +202,7 @@ export function TaskFileViewer({ file, draft, onChange, onSelection, onSelectTex
   if (file.blobId) return <OriginalFilePreview activeThreadId={activeThreadId} annotationFocusSequence={annotationFocusSequence} annotationMode={annotationMode} annotations={annotations} draftAnchor={draftAnchor} file={file} onSelection={onSelection} onThreadSelect={onThreadSelect} />;
   if (getPreviewKind(file.name, file.mimeType) === "image") {
     const data = file.previewData?.kind === "image" ? file.previewData : null;
-    return data?.src ? <FileImageAnnotations activeThreadId={activeThreadId} alt={data.alt} annotationMode={annotationMode} annotations={annotations} imageSrc={data.src} onSelection={onSelection} onThreadSelect={onThreadSelect} src={data.src} version={file.version ?? 1} /> : <div className="task-file-viewer-image"><div><ImageIcon size={36} /><strong>{d('noImagePreview')}</strong></div></div>;
+    return data?.src ? usesTaskImageViewer(file, { annotationMode, annotations, draftAnchor }) ? <TaskImageViewer alt={data.alt} src={data.src} /> : <FileImageAnnotations activeThreadId={activeThreadId} alt={data.alt} annotationMode={annotationMode} annotations={annotations} imageSrc={data.src} onSelection={onSelection} onThreadSelect={onThreadSelect} src={data.src} version={file.version ?? 1} /> : <div className="task-file-viewer-image"><div><ImageIcon size={36} /><strong>{d('noImagePreview')}</strong></div></div>;
   }
   return <div className="task-file-viewer-unsupported"><FileQuestion size={32} /><strong>{d('noEditableContent')}</strong><p>{d('unsupportedFormat')}</p></div>;
 }

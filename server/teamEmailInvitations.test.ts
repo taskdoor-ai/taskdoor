@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { initialPersonalCenterState, isPersonalCenterState } from "../src/ai/mock/data/memberProfiles.ts";
-import { acceptTeamEmailInvitation, createTeamEmailInvitation, getInvitationDraft, getTeamPeople, invitationEmailTemplate, normalizeInvitationEmail, resolveTeamEmailInvitation } from "../src/features/members/lib/team-invitations.ts";
+import { acceptTeamEmailInvitation, canInviteTeamMembers, createTeamEmailInvitation, getInvitationDraft, getTeamPeople, invitationEmailTemplate, normalizeInvitationEmail, resolveTeamEmailInvitation } from "../src/features/members/lib/team-invitations.ts";
 import { createOnboardingPreview, getPreviewInvitation, transitionOnboarding } from "../src/features/auth/lib/onboarding-preview.ts";
 
 const initial = () => structuredClone(initialPersonalCenterState);
@@ -32,14 +32,59 @@ test("邀请名称持久化并显示在待加入人员中，重邀不丢失、�
   assert.equal(invite(initial(), "only@example.com", { name: "  " }).person.name, "only@example.com");
 });
 
-test("邮箱邀请规范化、校验及管理员权限，失败时不创建人员", () => {
+test("邮箱邀请规范化及校验，失败时不创建人员", () => {
   assert.equal(normalizeInvitationEmail("  NEW@Example.com  "), "new@example.com");
   for (const email of ["", "陈默", "new@", "a b@example.com", "a@example.com,b@example.com"]) assert.equal(normalizeInvitationEmail(email), null);
   const state = initial();
   assert.throws(() => invite(state, "a@"), /有效.*邮箱/);
-  state.teams[0].memberships[0].role = "member";
-  assert.throws(() => invite(state), /管理员/);
   assert.equal(state.teams[0].memberships.length, initial().teams[0].memberships.length);
+});
+
+test("所有有效团队成员都能邀请普通成员，待加入和非成员不能邀请", () => {
+  for (const role of ["owner", "admin", "member"] as const) {
+    const state = initial();
+    state.teams[0].memberships[0].role = role;
+    assert.equal(canInviteTeamMembers(state, teamId), true);
+    assert.equal(invite(state).membership.role, "member");
+  }
+  const pending = initial();
+  pending.teams[0].memberships[0].status = "invited";
+  assert.equal(canInviteTeamMembers(pending, teamId), false);
+  assert.throws(() => invite(pending), /已加入团队/);
+  const outsider = initial();
+  outsider.profile.email = "outsider@example.com";
+  assert.equal(canInviteTeamMembers(outsider, teamId), false);
+  assert.throws(() => invite(outsider), /已加入团队/);
+});
+
+test("邀请按当前成员 ID 识别身份，资料邮箱变化不影响权限且未知 ID 不回退", () => {
+  const state = initial();
+  const actorMemberId = state.teams[0].memberships[0].memberId!;
+  state.profile.email = "updated@example.com";
+  state.teams[0].memberships[0].role = "member";
+  assert.equal(canInviteTeamMembers(state, teamId, actorMemberId), true);
+  assert.equal(invite(state, "new@example.com", { actorMemberId }).membership.role, "member");
+  const original = initial();
+  assert.equal(canInviteTeamMembers(original, teamId, "unknown-member"), false);
+  assert.throws(() => invite(original, "new@example.com", { actorMemberId: "unknown-member" }), /已加入团队/);
+});
+
+test("仅拥有者能邀请或重邀管理员，所有角色都不能通过邀请分配拥有者", () => {
+  const state = initial();
+  const actor = state.teams[0].memberships[0];
+  actor.role = "owner";
+  const actorMemberId = actor.memberId!;
+  state.profile.email = "updated@example.com";
+  const adminInvite = invite(state, "admin@example.com", { actorMemberId, role: "admin" });
+  assert.equal(adminInvite.membership.role, "admin");
+  for (const role of ["admin", "member"] as const) {
+    const restricted = structuredClone(adminInvite.state);
+    restricted.teams[0].memberships[0].role = role;
+    assert.throws(() => invite(restricted, "other@example.com", { actorMemberId, role: "admin" }), /只有拥有者/);
+    assert.throws(() => invite(restricted, "admin@example.com", { actorMemberId, renew: true }), /只有拥有者/);
+    assert.throws(() => invite(restricted, "owner@example.com", { actorMemberId, role: "owner" }), /拥有者/);
+  }
+  assert.throws(() => invite(state, "owner@example.com", { actorMemberId, role: "owner" }), /拥有者/);
 });
 
 test("生成可选择的待加入人员；刷新所用的持久化校验接受新结构", () => {

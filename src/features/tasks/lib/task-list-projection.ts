@@ -95,7 +95,13 @@ export function buildTaskListProjection(
   const scopedTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), scopeFilters, currentUserId, now, timeZone));
   const visibleTasks = scopedTasks
     .filter((task) => taskMatchesListFilters(task, queryFor(task), filters, currentUserId, now, timeZone))
-    .sort((a, b) => compareTaskUpdates(a, b, filters.sort === "created"));
+    .sort((a, b) => {
+      if (filters.sort !== "created") {
+        const completionOrder = Number(a.status === "已完成") - Number(b.status === "已完成");
+        if (completionOrder) return completionOrder;
+      }
+      return compareTaskUpdates(a, b, filters.sort === "created");
+    });
   const presentStatuses = new Set(allTasks.map((task) => task.status));
   // Status counts describe the available choices, before applying this dimension.
   const statusFilters: TaskListFilters = { ...filters, status: "all", statuses: [], completion: "all" };

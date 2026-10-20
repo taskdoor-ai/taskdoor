@@ -19,6 +19,8 @@ const { TaskDiscussion } = await import("../src/features/tasks/components/TaskDi
 const { TaskDiscussionMessage } = await import("../src/features/tasks/discussion/components/TaskDiscussionMessage.tsx");
 const { DiscussionMessages } = await import("../src/features/tasks/discussion/components/DiscussionMessages.tsx");
 const { DiscussionComposer } = await import("../src/features/tasks/discussion/components/DiscussionComposer.tsx");
+const { DiscussionAttachmentGallery } = await import("../src/features/tasks/discussion/components/DiscussionAttachmentGallery.tsx");
+const { GridList, GridListItem } = await import("react-aria-components");
 const { AiConnectionButton } = await import("../src/features/ai-connection/components/AiConnectionButton.tsx");
 const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
 
@@ -37,6 +39,11 @@ function capture(render: () => ReactNode, initialize?: (tree: ReactNode) => void
   function Capture() { tree = render(); initialize?.(tree); return tree; }
   const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(Capture) }));
   return { tree, html };
+}
+function attachmentGallery(tree: ReactNode) {
+  const gallery = elements(tree, item => item.type === DiscussionAttachmentGallery)[0];
+  assert.ok(gallery, "已发布附件通过共享Gallery呈现");
+  return capture(() => DiscussionAttachmentGallery(gallery.props as Parameters<typeof DiscussionAttachmentGallery>[0]));
 }
 const message = (id: string, hour: number, patch: Partial<CollaborationMessage> = {}): CollaborationMessage => ({
   id, author: "陈默", type: "member-post", message: `${id} 的内容`, time: "时间未知", createdAt: `2026-09-14T0${hour}:00:00Z`, ...patch,
@@ -268,38 +275,34 @@ test("回复目标删除或消失后保留原草稿键，禁发并以非底部�
     assert.equal(elements(tree, item => item.props.className === "task-discussion-compose").length, 0);
     assert.equal(rows(tree).flatMap(item => elements(item.props.children, element => element.type === DiscussionComposer)).length, 0, "失效目标的草稿不附到其他消息上");
     const fallback = elements(tree, item => item.props["data-reply-to"] === reply.id)[0];
-    assert.ok(fallback?.props.className.split(" ").includes("task-discussion-inline-reply"), "保留可取消的非固定回复区");
+    assert.ok(fallback?.props.className.split(" ").includes("task-discussion-inline-reply"), "保留原草稿所在的非固定回复区");
     assert.equal(elements(fallback.props.children, item => item === input).length, 1);
     assert.match(html, /回复原文不可用/);
+    assert.match(html, /class="discussion-composer-cancel" disabled=""/, "目标失效时取消入口也不可用");
     await assert.rejects(input.props.onSubmit(draft), /回复原文不可用/);
     assert.deepEqual(posts, [], "原回复不可用时不应发布成普通消息");
   }
 });
 
-test("取消具体回复恢复普通发言草稿键并清除回复上下文", async () => {
-  for (const availability of ["available", "deleted", "missing"] as const) {
-    const posts: unknown[][] = [];
-    let records = activities;
-    let step = 0;
-    const { tree, html } = capture(() => TaskDiscussion({ ...props, activities: records, onPost: (...args) => { posts.push(args); } }), tree => {
-      if (step === 0) {
-        step++;
-        if (availability === "deleted") records = activities.map(item => item.id === reply.id ? { ...item, deletedAt: "2026-10-15T05:00:00Z" } : item);
-        if (availability === "missing") records = activities.filter(item => item.id !== reply.id);
-        row(tree, reply.id).props.onReply(reply);
-      } else if (step === 1) {
-        step++;
-        assert.equal(composer(tree).props.draftKey, `feed-test:reply:${reply.id}`);
-        assert.equal(composer(tree).props.disabled, availability !== "available");
-        composer(tree).props.onCancel();
-      }
-    });
-    assert.equal(composer(tree).props.draftKey, "feed-test:new");
-    assert.equal(elements(tree, item => item.props.className === "task-discussion-compose").length, 1, "取消后恢复普通发言输入框");
-    assert.doesNotMatch(html, /task-discussion-reply-context/);
-    await composer(tree).props.onSubmit(draft);
-    assert.deepEqual(posts, [[draft, undefined]]);
-  }
+test("取消有效对象的具体回复恢复普通发言草稿键并清除回复上下文", async () => {
+  const posts: unknown[][] = [];
+  let step = 0;
+  const { tree, html } = capture(() => TaskDiscussion({ ...props, onPost: (...args) => { posts.push(args); } }), tree => {
+    if (step === 0) {
+      step++;
+      row(tree, reply.id).props.onReply(reply);
+    } else if (step === 1) {
+      step++;
+      assert.equal(composer(tree).props.draftKey, `feed-test:reply:${reply.id}`);
+      assert.equal(composer(tree).props.disabled, false);
+      composer(tree).props.onCancel();
+    }
+  });
+  assert.equal(composer(tree).props.draftKey, "feed-test:new");
+  assert.equal(elements(tree, item => item.props.className === "task-discussion-compose").length, 1, "取消后恢复普通发言输入框");
+  assert.doesNotMatch(html, /task-discussion-reply-context/);
+  await composer(tree).props.onSubmit(draft);
+  assert.deepEqual(posts, [[draft, undefined]]);
 });
 
 test("定位同名作者的指定消息不添加高亮，仍保留全部平铺消息", () => {
@@ -388,11 +391,56 @@ test("引用悬停预览不展示定位文案，点击图标直接定位并保�
     elements(node, item => item.props.className === "task-discussion-feed-reference")[0].props.onFocus({ currentTarget: { matches: (selector: string) => selector === ":focus-visible" } });
   });
   assert.equal(elements(focusPreview.tree, item => typeof item.props.open === "boolean" && item.props.onOpenChange)[0].props.open, true, "键盘聚焦可打开预览");
-  elements(tree, item => item.props.className === "task-discussion-feed-file")[0].props.onClick();
+  elements(attachmentGallery(tree).tree, item => item.type === GridListItem)[0].props.onAction();
   assert.deepEqual(opens, [[file.id, 1]]);
   assert.match(html, /发布时.pdf/);
   assert.match(html, /v1/);
   assert.doesNotMatch(html, /已改名.pdf/);
+});
+
+test("已发布讨论显示真实图片缩略图和文件信息，旧版引用不冒用当前图片", () => {
+  const source = "data:image/png;base64,cHJldmlldy1jb250ZW50";
+  const file: TaskFileNode = { id: "message-image", kind: "file", name: "首发主视觉.png", parentId: null, updatedAt: "今天", version: 2, sizeLabel: "32 KiB", previewData: { kind: "image", alt: "主视觉", src: source } };
+  const renderMessage = (version: number) => TaskDiscussionMessage({ message: { ...root, attachmentRefs: [{ fileId: file.id, name: file.name, version }] }, files: [file], currentUser: "周岚", now: Date.now(), onReply: () => undefined, onLocate: () => undefined, onOpenFile: () => undefined });
+  const current = capture(() => renderMessage(2)).html;
+  assert.match(current, /class="task-file-thumbnail-image"/);
+  assert.ok(current.includes(`src="${source}"`));
+  assert.match(current, /首发主视觉.png/);
+  assert.match(current, /PNG · 32 KiB · v2/);
+  const historical = capture(() => renderMessage(1)).html;
+  assert.doesNotMatch(historical, /task-file-thumbnail-image|32 KiB/);
+  assert.match(historical, /task-file-glyph/);
+  assert.match(historical, /PNG · v1/);
+});
+
+test("失效讨论附件保留名称类型与不可用提示，且不可打开", () => {
+  const { tree, html } = capture(() => TaskDiscussionMessage({ message: { ...root, attachmentRefs: [{ fileId: "missing-image", name: "标注区域.png", version: 1 }] }, files: [], currentUser: "周岚", now: Date.now(), onReply: () => undefined, onLocate: () => undefined, onOpenFile: () => undefined }));
+  const gallery = attachmentGallery(tree);
+  const grid = elements(gallery.tree, item => item.type === GridList)[0];
+  assert.equal(grid.props.disabledKeys.length, 1);
+  assert.match(gallery.html, /aria-disabled="true"/);
+  assert.match(html, /标注区域.png/);
+  assert.match(html, /PNG · v1/);
+  assert.match(html, /文件已移除/);
+  assert.doesNotMatch(html, /task-file-thumbnail-image/);
+});
+
+test("已发布附件使用React Aria动作网格，行内没有重复按钮且保留旧版引用", () => {
+  const opens: unknown[][] = [];
+  const file: TaskFileNode = { id: "grid-image", kind: "file", name: "当前名称.png", parentId: null, updatedAt: "今天", version: 3, previewData: { kind: "image", alt: "当前图", src: "data:image/png;base64,bmV3" } };
+  const { tree, html } = capture(() => DiscussionAttachmentGallery({ attachmentRefs: [{ fileId: file.id, name: "原名称.png", version: 1 }, { fileId: "missing", name: "已移除.pdf", version: 2 }], files: [file], onOpenFile: (...args) => { opens.push(args); } }));
+  const grid = elements(tree, item => item.type === GridList)[0];
+  assert.equal(grid.props.layout, "grid");
+  assert.equal(grid.props.selectionMode, "none");
+  assert.deepEqual(grid.props.disabledKeys, ["missing:2"]);
+  assert.match(html, /role="grid"/);
+  assert.equal((html.match(/role="row"/g) ?? []).length, 2);
+  assert.equal((html.match(/role="gridcell"/g) ?? []).length, 2);
+  assert.doesNotMatch(html, /<button|task-file-thumbnail-image/);
+  const items = elements(tree, item => item.type === GridListItem);
+  items[0].props.onAction();
+  items[1].props.onAction();
+  assert.deepEqual(opens, [[file.id, 1]], "可用行打开原ID与版本，失效行即使误触发也不打开");
 });
 
 test("删除或缺失原消息仍可预览不可用提示，不暴露旧正文、附件或提供定位", () => {

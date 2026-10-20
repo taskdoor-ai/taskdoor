@@ -5,7 +5,7 @@ import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
-import { ChevronDown, FileText, Quote, X } from "lucide-react";
+import { ChevronDown, Quote, X } from "lucide-react";
 import React, { useEffect, useId, useRef, useState } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
 import type { CollaborationMessage, DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
@@ -15,6 +15,7 @@ import { usePersonOptions } from "@/shared/ui/PersonDirectory";
 import { AiConnectionButton } from "@/features/ai-connection/components/AiConnectionButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { DiscussionComposer } from "@/features/tasks/discussion/components/DiscussionComposer";
+import { DiscussionAttachmentGallery } from "@/features/tasks/discussion/components/DiscussionAttachmentGallery";
 
 type Props = {
   messages: CollaborationMessage[];
@@ -136,7 +137,6 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
       const parent = allMessages.find(item => item.id === message.replyToActivityId);
       const quoted = message.quote ? allMessages.find(item => item.id === message.quote!.messageId) : undefined;
       const refs = message.attachmentRefs ?? [];
-      const legacyFile = !refs.length && message.file ? files.find(file => file.kind === "file" && !file.archived && file.name === message.file) : undefined;
       const attachments = refs.map(ref => files.find(file => file.id === ref.fileId && !file.archived)).filter((file): file is TaskFileNode => Boolean(file));
       const timestamp = messageTimestamp(message, locale, now);
       const readingKey = JSON.stringify([message.id, message.updatedAt, message.message, locale]);
@@ -157,10 +157,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
               ? <button className="discussion-inline-quote" onClick={() => jumpTo(quoted.id)} type="button"><PersonName name={quoted.author} personId={quoted.author} />：{message.quote.text}</button>
               : <div className="discussion-inline-quote is-unavailable">{quoted?.deletedAt ? d('quoteDeleted') : d('quoteUnavailable')}</div>)}
             <p className="task-discussion-message"><MessageText message={message} text={reading.text} /></p>
-            {(refs.length > 0 || message.file) && <div className="discussion-attachments">{refs.map(ref => {
-              const file = files.find(file => file.id === ref.fileId && !file.archived);
-              return <button className="task-record-file-link" disabled={!file} key={ref.fileId} onClick={() => onOpenFile(ref.fileId, ref.version)} type="button"><FileText size={15} /><span>{mock.text(ref.name)}</span><small>{file ? `v${ref.version}` : d('fileRemoved')}</small></button>;
-            })}{!refs.length && message.file && <button className="task-record-file-link" disabled={!legacyFile} onClick={() => legacyFile && onOpenFile(legacyFile.id)} type="button"><FileText size={15} /><span>{mock.text(message.file)}</span>{!legacyFile && <small>{d('unavailable')}</small>}</button>}</div>}
+            <DiscussionAttachmentGallery attachmentRefs={refs} files={files} legacyFileName={message.file} onOpenFile={onOpenFile} variant="thread" />
           </>}
           <div className="discussion-message-footer">
             {(timestamp || message.updatedAt || reading.state !== "same" || (!isReply && !compact && replyControls)) && <div className="discussion-message-meta">
