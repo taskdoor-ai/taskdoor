@@ -6,6 +6,8 @@ import { allTeamWorkspaceNodes } from "../src/ai/mock/data/teamWorkspaceScenario
 import { isSupportedTaskFileUpload } from "../src/features/tasks/files/lib/task-file-capabilities.ts";
 import { getSerumLaunchFileAssets } from "../src/ai/mock/data/serumLaunchFileAssets.ts";
 import { getSerumLaunchCommonFileAssets } from "../src/ai/mock/data/serumLaunchCommonFileAssets.ts";
+import { getSerumLaunchDiscussionFiles, SERUM_LAUNCH_DISCUSSION_PACK_ID } from "../src/ai/mock/data/serumLaunchDiscussionSamples.ts";
+import { getSerumLaunchMediaDiscussionFiles, SERUM_LAUNCH_MEDIA_DISCUSSION_PACK_ID } from "../src/ai/mock/data/serumLaunchMediaDiscussionSamples.ts";
 import { createCollaborationSnapshot, getDiscussionAttachment, getTaskFiles, loadCollaboration, replaceCollaborationFiles, TASK_COLLABORATION_STORAGE_PREFIX } from "../src/features/tasks/lib/task-collaboration.ts";
 import { createTaskFileRevision, saveTaskFileEdit } from "../src/features/tasks/files/lib/task-file-editing.ts";
 import { updateTaskFileDrafts } from "../src/features/tasks/files/lib/task-file-drafts.ts";
@@ -19,11 +21,11 @@ function memoryStorage() {
   return { data, getItem: (name: string) => data.get(name) ?? null, setItem: (name: string, value: string) => { data.set(name, value); } };
 }
 
-test("精华主任务只注入三种原包、七种常用包，任务列表保留十三个可预览文件", () => {
+test("精华主任务保留原素材与常用包，另附11种讨论样例和2种音视频样例", () => {
   assert.equal(getSerumLaunchFileAssets(main).length, 3);
   assert.equal(getSerumLaunchCommonFileAssets(main).length, 7);
   const files = getTaskFiles(fixtures.createWorkspaceTaskDetail(main).files).filter(file => file.kind === "file");
-  assert.equal(files.length, 13);
+  assert.equal(files.length, 26);
   assert.ok(files.every(isSupportedTaskFileUpload));
   assert.equal(files.some(file => file.id === `${main.id}-record`), false);
 });
@@ -36,17 +38,17 @@ test("四个团队的内置任务模板最终出口都不再提供不支持的�
   }
 });
 
-test("未修改的旧主任务持久退役八个示例，重载仍为十三个任务文件且原节点不丢", () => {
+test("未修改的旧主任务持久退役六个不支持示例，追加讨论样例且原音视频节点不丢", () => {
   const legacy = fixtures.getLegacyTaskFileFixtures(main);
   const storage = memoryStorage();
   const before = createCollaborationSnapshot(legacy);
   storage.data.set(key, JSON.stringify(before));
   const report = fixtures.migrateUnsupportedBuiltinTaskFiles(storage, [{ taskId: main.id, teamId: main.teamId!, legacyFiles: legacy }]);
-  assert.equal(report.retiredFileIds.length, 8);
+  assert.equal(report.retiredFileIds.length, 6);
   const saved = loadCollaboration(storage, scope, fixtures.createWorkspaceTaskDetail(main).files);
-  assert.equal(saved.files.length, legacy.length);
-  assert.equal(getTaskFiles(saved.files).filter(file => file.kind === "file").length, 13);
-  assert.deepEqual(saved.appliedFilePacks, before.appliedFilePacks);
+  assert.equal(saved.files.length, legacy.length + getSerumLaunchDiscussionFiles(main).length + getSerumLaunchMediaDiscussionFiles(main).length - 1);
+  assert.equal(getTaskFiles(saved.files).filter(file => file.kind === "file").length, 28);
+  assert.deepEqual(saved.appliedFilePacks, [...before.appliedFilePacks!, SERUM_LAUNCH_DISCUSSION_PACK_ID, SERUM_LAUNCH_MEDIA_DISCUSSION_PACK_ID]);
   assert.deepEqual(loadCollaboration(storage, scope, fixtures.createWorkspaceTaskDetail(main).files), saved);
 });
 
@@ -74,10 +76,10 @@ test("存量迁移只退役完整匹配的内置示例，用户修改、上传�
   const storage = memoryStorage();
   storage.data.set(key, JSON.stringify(before));
   const report = fixtures.migrateUnsupportedBuiltinTaskFiles(storage, [{ taskId: main.id, teamId: main.teamId!, legacyFiles: legacy }]);
-  assert.equal(report.retiredFileIds.length, 5);
+  assert.equal(report.retiredFileIds.length, 3);
   const saved = loadCollaboration(storage, scope, fixtures.createWorkspaceTaskDetail(main).files);
   assert.deepEqual(saved.messages, before.messages);
-  assert.deepEqual(saved.appliedFilePacks, before.appliedFilePacks);
+  assert.deepEqual(saved.appliedFilePacks, [...before.appliedFilePacks!, SERUM_LAUNCH_DISCUSSION_PACK_ID, SERUM_LAUNCH_MEDIA_DISCUSSION_PACK_ID]);
   for (const file of [renamed, moved, edited, uploaded]) assert.deepEqual(saved.files.find(item => item.id === file.id), file);
   assert.equal(saved.files.find(file => file.id === source.id)?.retiredBuiltin, true);
   assert.ok(getDiscussionAttachment(saved.files, before.messages[0].attachmentRefs[0]));
@@ -101,6 +103,6 @@ test("内置示例有本地编辑记录或未提交草稿时不会退役", () =>
     assert.equal(saved.files.find(file => file.id === table.id)?.retiredBuiltin, undefined);
     assert.ok(report.retainedFileIds.includes(doc.id));
     assert.ok(report.retainedFileIds.includes(table.id));
-    assert.equal(report.retiredFileIds.length, 6);
+    assert.equal(report.retiredFileIds.length, 4);
   } finally { updateTaskFileDrafts(main.id, {}); }
 });

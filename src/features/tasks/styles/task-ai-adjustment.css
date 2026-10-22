@@ -78,7 +78,7 @@
 .task-ai-adjust-scope-control > select:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 .task-ai-adjust-scope-control > select:disabled { cursor: not-allowed; opacity: .6; }
 .task-ai-adjust-scope-control > svg { position: absolute; top: 50%; right: var(--ad-space-2); transform: translateY(-50%); color: var(--ad-ink-tertiary); pointer-events: none; }
-.task-ai-adjust-popover textarea[data-slot="textarea"] { min-height: 96px; max-height: 240px; padding: var(--ad-space-2) var(--ad-space-1); resize: vertical; border-color: transparent; border-radius: var(--ad-radius-control); background: transparent; box-shadow: none; color: var(--ad-ink); font-size: var(--ad-text-body-sm); line-height: 1.8; }
+.task-ai-adjust-popover textarea[data-slot="textarea"] { min-height: 96px; max-height: 240px; padding: var(--ad-space-2) var(--ad-space-1); resize: vertical; border-color: transparent; border-radius: var(--ad-radius-input); background: transparent; box-shadow: none; color: var(--ad-ink); font-size: var(--ad-text-body-sm); line-height: 1.8; }
 .task-ai-adjust-popover textarea[data-slot="textarea"]:focus-visible { border-color: transparent; outline: none; box-shadow: none; }
 .task-ai-adjust-popover .task-ai-adjust-conversation-composer textarea[data-slot="textarea"] { min-height: 72px; max-height: 128px; padding: var(--ad-space-2) var(--ad-space-3); resize: none; border-color: var(--ad-border-soft); background: var(--ad-surface-subtle); line-height: 1.65; }
 .task-ai-adjust-popover .task-ai-adjust-conversation-composer textarea[data-slot="textarea"]:focus-visible { border-color: color-mix(in srgb, var(--ad-route) 42%, var(--ad-border)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ad-route) 10%, transparent); }

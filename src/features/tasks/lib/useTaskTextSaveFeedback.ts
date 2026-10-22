@@ -1,16 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { toast } from "@/shared/ui/toast";
 
 export type TaskTextSaveStatus = "idle" | "saving" | "saved" | "error";
 
 /** Feedback belongs to one edit, and cannot outlive a newer edit or the task. */
 export function useTaskTextSaveFeedback(scope: string) {
+  const d = useDetailCopy();
   const [status, setStatus] = useState<TaskTextSaveStatus>("idle");
   const sequence = useRef(0);
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const currentScope = useRef(scope);
+  currentScope.current = scope;
   const cancel = useCallback(() => {
     sequence.current += 1;
-    clearTimeout(timer.current);
-    timer.current = undefined;
   }, []);
   const clear = useCallback(() => {
     cancel();
@@ -26,16 +28,15 @@ export function useTaskTextSaveFeedback(scope: string) {
     clear();
     if (!onSave || value === savedValue) return;
     const request = sequence.current;
+    const requestScope = scope;
     setStatus("saving");
     try {
       await onSave(value);
-      if (request !== sequence.current) return;
-      setStatus("saved");
-      timer.current = setTimeout(() => {
-        if (request === sequence.current) setStatus("idle");
-      }, 2200);
+      if (request !== sequence.current || requestScope !== currentScope.current) return;
+      setStatus("idle");
+      toast.success(d("fieldSaved"));
     } catch {
-      if (request === sequence.current) setStatus("error");
+      if (request === sequence.current && requestScope === currentScope.current) setStatus("error");
     }
   };
 

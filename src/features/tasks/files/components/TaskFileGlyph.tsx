@@ -10,11 +10,17 @@ import powerpointIcon from "@/features/tasks/files/assets/material-icon-theme/po
 import tableIcon from "@/features/tasks/files/assets/material-icon-theme/table.svg";
 import wordIcon from "@/features/tasks/files/assets/material-icon-theme/word.svg";
 import xmlIcon from "@/features/tasks/files/assets/material-icon-theme/xml.svg";
+import audioIcon from "@/features/tasks/files/assets/material-icon-theme/audio.svg";
+import videoIcon from "@/features/tasks/files/assets/material-icon-theme/video.svg";
+import svgIcon from "@/features/tasks/files/assets/material-icon-theme/svg.svg";
+import logIcon from "@/features/tasks/files/assets/material-icon-theme/log.svg";
+import mdxIcon from "@/features/tasks/files/assets/material-icon-theme/mdx.svg";
+import zipIcon from "@/features/tasks/files/assets/material-icon-theme/zip.svg";
 import folderIcon from "@/features/tasks/files/assets/material-icon-theme/folder.svg";
 import folderOpenIcon from "@/features/tasks/files/assets/material-icon-theme/folder-open.svg";
 import "@/features/tasks/styles/task-file-list.css";
 
-type GlyphFormat = "pdf" | "docx" | "xlsx" | "md" | "json" | "xml" | "html" | "ppt" | "text" | "image" | "folder" | "other";
+type GlyphFormat = "pdf" | "docx" | "xlsx" | "md" | "json" | "xml" | "html" | "ppt" | "text" | "image" | "audio" | "video" | "folder" | "other";
 
 function getGlyphFormat(node: TaskFileNode): GlyphFormat {
   if (node.kind === "folder") return "folder";
@@ -26,6 +32,7 @@ function getGlyphFormat(node: TaskFileNode): GlyphFormat {
   if (previewKind === "json" || previewKind === "xml" || previewKind === "html") return previewKind;
   if (previewKind === "presentation") return "ppt";
   if (previewKind === "text") return "text";
+  if (previewKind === "audio" || previewKind === "video") return previewKind;
 
   if (extension === "pdf" || mime === "application/pdf") return "pdf";
   if (["doc", "docx"].includes(extension) || mime === "application/msword" || mime === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
@@ -52,13 +59,28 @@ const fileIcons: Record<Exclude<GlyphFormat, "folder">, string> = {
   ppt: powerpointIcon,
   text: documentIcon,
   image: imageIcon,
+  audio: audioIcon,
+  video: videoIcon,
   other: documentIcon,
+};
+
+const extensionIcons: Record<string, string> = {
+  svg: svgIcon,
+  log: logIcon,
+  mdx: mdxIcon,
+  zip: zipIcon,
+  rar: zipIcon,
+  "7z": zipIcon,
 };
 
 export function TaskFileGlyph({ node, expanded = false, compact = false }: { node: TaskFileNode; expanded?: boolean; compact?: boolean }) {
   const format = getGlyphFormat(node);
-  const source = format === "folder" ? expanded ? folderOpenIcon : folderIcon : fileIcons[format];
-  return <span aria-hidden="true" className="task-file-glyph" data-compact={compact || undefined} data-format={format}>
-    <img alt="" className="task-file-glyph-image" draggable={false} height={36} src={source} width={36} />
+  const dot = node.name.lastIndexOf(".");
+  const extension = dot > 0 ? node.name.slice(dot + 1).toLowerCase() : "";
+  const source = format === "folder"
+    ? expanded ? folderOpenIcon : folderIcon
+    : extensionIcons[extension] ?? fileIcons[format];
+  return <span aria-hidden="true" className="task-file-glyph" data-compact={compact || undefined} data-expanded={format === "folder" && expanded || undefined} data-format={format}>
+    <img alt="" className="task-file-glyph-icon" draggable={false} src={source} />
   </span>;
 }

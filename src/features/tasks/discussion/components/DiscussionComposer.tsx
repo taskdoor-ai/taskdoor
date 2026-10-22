@@ -13,14 +13,14 @@ import { FolderOpen, LoaderCircle, Paperclip, RotateCcw, Send, X } from "lucide-
 import { useEffect, useId, useRef, useState, type DragEvent, type ReactNode } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
 import { getTaskFiles, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
-import { DISCUSSION_UPLOAD_MAX_FILES, isDiscussionImage, prepareDiscussionUpload, readDiscussionBlob } from "@/features/tasks/files/lib/discussion-uploads";
+import { DISCUSSION_UPLOAD_MAX_FILES, isDiscussionImage, prepareDiscussionUpload } from "@/features/tasks/files/lib/discussion-uploads";
 import { TASK_FILE_UPLOAD_ACCEPT, validateTaskFileUploads } from "@/features/tasks/files/lib/task-file-capabilities";
 import { usePersonOptions } from "@/shared/ui/PersonDirectory";
 import { PersonPicker, type PersonOption } from "@/features/members/components/PersonPicker";
 import { Button } from "@/shared/ui/button";
 import { FileCard, resolveFileCardFormat } from "@/shared/ui/file-card-collections";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
-import { DiscussionAttachmentPreview } from "@/features/tasks/discussion/components/DiscussionAttachmentPreview";
+import { TaskFileThumbnail } from "@/features/tasks/files/components/TaskFileThumbnail";
 import { DiscussionFileMenu } from "@/features/tasks/discussion/components/DiscussionFileMenu";
 import { $createMentionNode, $isMentionNode, MentionNode } from "@/features/tasks/discussion/components/mention-node";
 import { mergeDiscussionDraft, type DiscussionDraftInsertion } from "@/features/tasks/discussion/lib/discussion-draft-insertion";
@@ -33,6 +33,7 @@ export type DiscussionComposerProps = {
   showShortcutHint?: boolean;
   onCancel?: () => void;
   onSubmit: (draft: DiscussionDraft) => void | Promise<void>;
+  onPreviewAttachment?: (file: TaskFileNode, trigger: HTMLElement) => void;
   people: string[];
   files: TaskFileNode[];
   placeholder?: string;
@@ -141,35 +142,20 @@ function EditorBridge(props: EditorBridgeProps) {
 }
 
 function AttachmentThumbnail({ attachment, actions }: { attachment: DraftAttachment; actions: ReactNode }) {
-  const [source, setSource] = useState("");
   const node = attachment.node;
-  const image = isDiscussionImage(node ?? { name: attachment.name, mimeType: attachment.file?.type });
-  useEffect(() => {
-    if (!image) return;
-    let active = true;
-    let objectUrl: string | undefined;
-    const load = async () => {
-      const blob = attachment.file ?? (node?.blobId ? await readDiscussionBlob(node.blobId) : null);
-      if (!active) return;
-      if (blob) { objectUrl = URL.createObjectURL(blob); setSource(objectUrl); }
-      else if (node?.previewData?.kind === "image") setSource(node.previewData.src);
-    };
-    void load().catch(() => { /* A preview failure does not discard a ready attachment. */ });
-    return () => { active = false; if (objectUrl) URL.revokeObjectURL(objectUrl); };
-  }, [attachment.file, image, node]);
+  const thumbnailFile: TaskFileNode = node ?? { id: attachment.id, kind: "file", name: attachment.name, mimeType: attachment.file?.type, parentId: null, updatedAt: "", version: 1 };
   const format = attachment.name.match(/\.([^.]+)$/)?.[1] || node?.format || "file";
-  return <FileCard actions={actions} formatFile={resolveFileCardFormat(format, node?.mimeType ?? attachment.file?.type)} formatLabel={format} preview={source ? <img alt="" className="discussion-composer-attachment-preview" onError={() => setSource("")} src={source} /> : undefined} size="compact" />;
+  return <FileCard actions={actions} formatFile={resolveFileCardFormat(format, node?.mimeType ?? attachment.file?.type)} formatLabel={format} preview={<TaskFileThumbnail className="discussion-composer-attachment-preview" file={thumbnailFile} originalBlob={attachment.file} />} size="compact" />;
 }
 
 export function DiscussionComposer(props: DiscussionComposerProps) {
   return <ComposerSessionView key={props.draftKey ?? "unkeyed-discussion"} {...props} />;
 }
 
-function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onSubmit, people, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, draftInsertion, disabled = false }: DiscussionComposerProps) {
+function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onSubmit, onPreviewAttachment, people, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, draftInsertion, disabled = false }: DiscussionComposerProps) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const members = usePersonOptions(people);
-  const [attachmentPreview, setAttachmentPreview] = useState<TaskFileNode | null>(null);
   const [session, setSession] = useState<ComposerSession>(() => (draftKey && draftSessions.get(draftKey)) || createSession(initialValue));
   const sessionRef = useRef(session);
   const mountedRef = useRef(true);
@@ -374,10 +360,10 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
       return <li className="discussion-composer-attachment" data-kind={image ? "image" : "file"} data-status={attachment.status} key={attachment.id} title={attachment.name}>
         <AttachmentThumbnail attachment={attachment} actions={<>
           {attachment.status === "uploading" && <><LoaderCircle aria-hidden="true" className="discussion-composer-spinner" size={12} /><span className="sr-only" role="status">{d('addingAttachment')}</span></>}
-          {attachment.status === "failed" && <Button aria-label={ui("重试添加 {0}", {0: attachment.name})} className="discussion-composer-attachment-retry" disabled={unavailable} onClick={() => { void uploadAttachment(attachment); }} size="icon-xs" title={ui("重试")} type="button" variant="ghost"><RotateCcw aria-hidden="true" size={12} /></Button>}
+          {attachment.status === "failed" && <Button aria-label={ui("重试添加 {0}", {0: attachment.name})} className="discussion-composer-attachment-retry" disabled={unavailable || !attachment.file} onClick={() => { void uploadAttachment(attachment); }} size="icon-xs" title={ui("重试")} type="button" variant="ghost"><RotateCcw aria-hidden="true" size={12} /></Button>}
           <Button aria-label={ui("移除附件 {0}", {0: attachment.name})} className="discussion-composer-attachment-remove" disabled={unavailable} onClick={() => removeAttachment(attachment.id)} size="icon-xs" title={d('removeAttachment')} type="button" variant="ghost"><X aria-hidden="true" size={12} /></Button>
         </>} />
-        <span className="discussion-composer-attachment-copy">{attachment.status === "ready" && attachment.node ? <button aria-label={ui("查看附件 {0}", {0: attachment.name})} className="discussion-composer-attachment-name" onClick={() => setAttachmentPreview(attachment.node!)} type="button">{attachment.name}</button> : <strong>{attachment.name}</strong>}{attachment.status === "failed" && <small role="alert">{ui(attachment.error ?? "")}</small>}</span>
+        <span className="discussion-composer-attachment-copy">{attachment.status === "ready" && attachment.node ? <button aria-label={ui("查看附件 {0}", {0: attachment.name})} className="discussion-composer-attachment-name" disabled={!onPreviewAttachment} onClick={event => onPreviewAttachment?.(attachment.node!, event.currentTarget)} type="button">{attachment.name}</button> : <strong>{attachment.name}</strong>}{attachment.status === "failed" && <small role="alert">{ui(attachment.error ?? "")}</small>}</span>
       </li>;
     })}</ul>}
     <footer className="discussion-composer-footer">
@@ -399,7 +385,6 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
       <span className="discussion-composer-actions">{showShortcutHint && <span className="discussion-composer-hint" id={hintId}>Enter ↵ · ⌘/Ctrl+Enter {actionLabel}</span>}{onCancel && <button className="discussion-composer-cancel" disabled={unavailable} onClick={onCancel} type="button">{d('cancel')}</button>}<button aria-label={actionLabel} className="discussion-composer-submit" disabled={!canSubmit} onClick={() => { void submit(); }} type="button"><span>{submitting ? d('posting') : actionLabel}</span>{submitting ? <LoaderCircle aria-hidden="true" className="discussion-composer-spinner" size={14} /> : <Send aria-hidden="true" size={14} />}</button></span>
     </footer>
     <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={d('uploadSelection')} hidden multiple onChange={event => { addUploads(Array.from(event.currentTarget.files ?? [])); event.currentTarget.value = ""; }} ref={uploadInputRef} type="file" />
-    <DiscussionAttachmentPreview file={attachmentPreview} onClose={() => setAttachmentPreview(null)} />
     {error && <p className="discussion-composer-error" role="alert">{ui(error)}</p>}
   </div>;
 }

@@ -6,6 +6,7 @@ import { validateTaskCriteria } from "@/features/tasks/lib/task-criteria-editing
 import { TaskAiAdjustButton } from "@/features/tasks/components/TaskAiAdjustmentPopover";
 import { TaskCriteriaFields } from "@/features/tasks/components/TaskCriteriaFields";
 import { Button } from "@/shared/ui/button";
+import { toast } from "@/shared/ui/toast";
 
 type Props = {
   renderMark?: ComponentProps<typeof TaskCriteriaFields>["renderMark"];
@@ -30,9 +31,21 @@ export function TaskCriteriaEditor({ renderMark, renderAction, criteria, label, 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const noticeRevision = useRef(0);
+  const clearNotice = () => {
+    noticeRevision.current += 1;
+    setNotice("");
+  };
   const trigger = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const savingRef = useRef(false);
+  const valuesRef = useRef(values);
+  valuesRef.current = values;
+  const pendingCommit = useRef(false);
+  const retryFrame = useRef(0);
+  const saveCallback = useRef<() => Promise<void>>(async () => {});
+  const mounted = useRef(true);
+  const composing = useRef(false);
   const dirtyCallback = useRef(onDirtyChange);
   dirtyCallback.current = onDirtyChange;
   const inputId = useId();
@@ -49,14 +62,17 @@ export function TaskCriteriaEditor({ renderMark, renderAction, criteria, label, 
     if (!dirty && stale) { setBaseline([...criteria]); setValues(criteria.length || inline ? [...criteria] : [""]); }
   }, [sourceSignature, dirty, stale]);
   useEffect(() => { dirtyCallback.current?.((inline || open) && dirty); }, [inline, open, dirty]);
-  useEffect(() => () => dirtyCallback.current?.(false), []);
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; dirtyCallback.current?.(false); cancelAnimationFrame(retryFrame.current); };
+  }, []);
   useEffect(() => {
     if (!open || variant !== "heading") return;
     const frame = requestAnimationFrame(() => panel.current?.querySelector("textarea")?.focus());
     return () => cancelAnimationFrame(frame);
   }, [open, variant]);
 
-  const reload = () => { setBaseline([...criteria]); setValues(criteria.length || inline ? [...criteria] : [""]); setError(""); setNotice(""); };
+  const reload = () => { setBaseline([...criteria]); setValues(criteria.length || inline ? [...criteria] : [""]); setError(""); clearNotice(); };
   const close = () => { reload(); setOpen(false); requestAnimationFrame(() => trigger.current?.focus()); };
   const toggleEditor = () => {
     if (savingRef.current) return;
@@ -65,30 +81,51 @@ export function TaskCriteriaEditor({ renderMark, renderAction, criteria, label, 
     reload(); setOpen(true);
   };
   const save = async () => {
-    if (!onSave || disabled || savingRef.current || stale || (inline && !dirty)) return;
+    if (!onSave || disabled) return;
+    if (savingRef.current || stale) { if (savingRef.current) pendingCommit.current = true; return; }
+    if (inline && !dirty) return;
     setError("");
+    clearNotice();
+    const feedbackRevision = noticeRevision.current;
+    const submitted = JSON.stringify(values);
+    let succeeded = false;
     try {
       const next = validateTaskCriteria(values);
       savingRef.current = true; setSaving(true);
       await onSave(next, [...baseline]);
-      setBaseline(next); setValues(next.length || inline ? next : [""]);
+      if (!mounted.current) return;
+      succeeded = true;
+      const unchanged = JSON.stringify(valuesRef.current) === submitted;
+      setBaseline(next);
+      // Saving confirms this snapshot; later typing belongs to a newer draft.
+      if (unchanged) setValues(next.length || inline ? next : [""]);
       if (!inline) setOpen(false);
-      setNotice(JSON.stringify(next) === JSON.stringify(baseline) ? "" : mode === "draft" ? "完成标准已保存到草稿" : "完成标准已保存");
+      if (unchanged && feedbackRevision === noticeRevision.current && JSON.stringify(next) !== JSON.stringify(baseline)) {
+        if (inline) toast.success(mode === "draft" ? ui("完成标准已保存到草稿") : d("fieldSaved"));
+        else setNotice(mode === "draft" ? "完成标准已保存到草稿" : "完成标准已保存");
+      }
       if (!inline) requestAnimationFrame(() => trigger.current?.focus());
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "保存失败，输入已保留，请重试。");
-    } finally { savingRef.current = false; setSaving(false); }
+      if (mounted.current) setError(caught instanceof Error ? caught.message : "保存失败，输入已保留，请重试。");
+    } finally {
+      savingRef.current = false;
+      const commitAgain = succeeded && pendingCommit.current;
+      pendingCommit.current = false;
+      if (mounted.current) setSaving(false);
+      if (mounted.current && commitAgain) retryFrame.current = requestAnimationFrame(() => {
+        if (mounted.current && !composing.current && !panel.current?.contains(document.activeElement)) void saveCallback.current();
+      });
+    }
   };
+  saveCallback.current = save;
 
-  if (inline && editable) return <div className="task-criteria-editor" data-editing="true" data-variant="heading">
-    <TaskCriteriaFields renderMark={renderMark ? (index, value) => renderMark(index, value, editable && !dirty && !saving && !stale) : undefined} renderAction={!dirty && !saving && !stale ? renderAction : undefined} disabled={saving} idPrefix={inputId} label={`${label}: ${d("criteria")}`} onChange={next => {
-      if (savingRef.current) return;
-      setValues(next); setError(""); setNotice("");
+  if (inline && editable) return <div aria-busy={saving || undefined} className="task-criteria-editor" data-editing="true" data-variant="heading" onFocusCapture={clearNotice} onCompositionStartCapture={() => { composing.current = true; }} onCompositionEndCapture={() => { composing.current = false; }} ref={panel}>
+    <TaskCriteriaFields renderMark={renderMark ? (index, value) => renderMark(index, value, editable && !dirty && !saving && !stale) : undefined} renderAction={!dirty && !saving && !stale ? renderAction : undefined} idPrefix={inputId} label={`${label}: ${d("criteria")}`} onChange={next => {
+      valuesRef.current = next; setValues(next); setError(""); clearNotice();
     }} onCommit={() => { void save(); }} showInitialEmptyRow={false} values={values} />
     {stale && <div className="task-criteria-error" role="alert">{d('criteriaStale')}<Button onClick={reload} size="sm" type="button" variant="ghost">{d('reloadCriteria')}</Button></div>}
     {error && <p className="task-criteria-error" role="alert">{ui(error)}</p>}
-    {saving && <p className="task-criteria-notice" role="status">{d('savingCriteria')}</p>}
-    {!saving && notice && <p className="task-criteria-notice" role="status">{ui(notice)}</p>}
+    <span className="sr-only" role="status">{saving ? d("fieldSaving") : ""}</span>
   </div>;
 
   return <div className="task-criteria-editor" data-editing={open && editable} data-variant={variant}>

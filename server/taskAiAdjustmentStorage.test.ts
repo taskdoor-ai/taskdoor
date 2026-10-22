@@ -5,6 +5,7 @@ import {
   recoverTaskAiStorage,
   TASK_AI_JOURNAL_KEY,
 } from "../src/features/tasks/lib/task-ai-adjustment-storage.ts";
+import { compressStorageGzip, compressStorageText } from "../src/features/tasks/lib/task-storage-compression.ts";
 
 type Mutation = { kind: "set" | "remove"; key: string; value?: string };
 
@@ -96,6 +97,30 @@ test("空写入完全不访问存储，也不干扰既有 journal", () => {
   assert.deepEqual(storage.reads, []);
   assert.deepEqual(storage.mutations, []);
   assert.equal(storage.values.get(TASK_AI_JOURNAL_KEY), "do-not-touch");
+});
+
+test("未变化的快照不重写数据，也不占用恢复记录", () => {
+  const storage = new MemoryStorage(initial);
+  let prepared = "";
+  storage.afterMutation = mutation => {
+    if (mutation.key === TASK_AI_JOURNAL_KEY && mutation.kind === "set" && JSON.parse(mutation.value!).state === "prepared") prepared = mutation.value!;
+  };
+
+  commitTaskAiStorage(storage, [["tasks", writes[0][1]], ["seed", "7"]]);
+
+  assert.equal(storage.values.get("tasks"), writes[0][1]);
+  assert.equal(storage.values.get("seed"), "7");
+  assert.ok(storage.mutations.every(mutation => mutation.key !== "seed"));
+  assert.deepEqual(JSON.parse(prepared).writes.map((entry: { key: string }) => entry.key), ["tasks"]);
+});
+
+test("所有快照均未变化时不产生 journal 或存储写入", () => {
+  const storage = new MemoryStorage(initial);
+
+  commitTaskAiStorage(storage, [["tasks", initial[0][1]], ["seed", "7"]]);
+
+  assert.deepEqual(storage.values, new Map(initial));
+  assert.deepEqual(storage.mutations, []);
 });
 
 test("没有 journal 时恢复不写入或删除任何键", () => {
@@ -348,7 +373,8 @@ test('large task snapshots fit a quota without duplicating full before/after rec
   };
   commitTaskAiStorage(storage,[['tasks',after]]);
   assert.equal(storage.getItem('tasks'),after);
-  assert.equal(JSON.parse(prepared).version,2);
+  assert.equal(JSON.parse(prepared).version,3);
+  assert.equal(JSON.parse(prepared).payload, JSON.parse(committed).payload, "两个持久化阶段复用同一不可变快照");
   const interrupted = new MemoryStorage([['tasks',after],[TASK_AI_JOURNAL_KEY,prepared]]);
   recoverTaskAiStorage(interrupted);
   assert.equal(interrupted.getItem('tasks'),before);
@@ -356,3 +382,178 @@ test('large task snapshots fit a quota without duplicating full before/after rec
   recoverTaskAiStorage(completed);
   assert.equal(completed.getItem('tasks'),after);
 });
+
+function largeSnapshots() {
+  const before = JSON.stringify(Array.from({ length: 400 }, (_, id) => ({ id, text: `场地、流程与宣传物料 ${id} 😀`, confirmed: false })));
+  const after = before.replace('false', 'true');
+  const entries: Array<[string, string]> = [["tasks", before], ["activity", "[]"], ["seed", before], ["unrelated", "keep-me"]];
+  const updates: Array<[string, string]> = [["tasks", after], ["activity", '[{"id":"saved-event"}]'], ["seed", before]];
+  return { entries, updates, final: new Map([...entries, ...updates]) };
+}
+
+function compressedJournal(state: "prepared" | "committed", version: 2 | 3, encoding = "gzip-base64") {
+  const record = JSON.parse(journal(state));
+  const content = JSON.stringify(version === 3 ? record.writes : record);
+  return JSON.stringify({ version, state, encoding, payload: encoding === "lzw-utf8" ? compressStorageText(content) : compressStorageGzip(content) });
+}
+
+for (const encoding of ["gzip-base64", "lzw-utf8"] as const) {
+  for (const state of ["prepared", "committed"] as const) {
+    test(`仍可恢复旧 v2 ${encoding} ${state} 记录`, () => {
+      const raw = compressedJournal(state, 2, encoding);
+      const storage = new MemoryStorage([...finalValues(), [TASK_AI_JOURNAL_KEY, raw]]);
+
+      recoverTaskAiStorage(storage);
+
+      assert.deepEqual(storage.values, state === "prepared" ? new Map(initial) : finalValues());
+    });
+  }
+}
+
+for (const state of ["prepared", "committed"] as const) {
+  test(`v3 ${state} 恢复遵循阶段边界且幂等`, () => {
+    const storage = new MemoryStorage([...(state === "prepared" ? finalValues() : initial), [TASK_AI_JOURNAL_KEY, compressedJournal(state, 3)]]);
+    const expected = state === "prepared" ? new Map(initial) : finalValues();
+
+    recoverTaskAiStorage(storage);
+    assert.deepEqual(storage.values, expected);
+    recoverTaskAiStorage(storage);
+    assert.deepEqual(storage.values, expected);
+  });
+
+  test(`v3 ${state} 恢复不覆盖外部更新`, () => {
+    const raw = compressedJournal(state, 3);
+    const storage = new MemoryStorage([...finalValues(), ["tasks", "external-update"], [TASK_AI_JOURNAL_KEY, raw]]);
+
+    assert.throws(() => recoverTaskAiStorage(storage), /冲突|外部/);
+
+    assert.equal(storage.values.get("tasks"), "external-update");
+    assert.equal(storage.values.get(TASK_AI_JOURNAL_KEY), raw);
+    assert.ok(storage.mutations.every(mutation => mutation.key !== "tasks"));
+  });
+}
+
+test("v3 大快照的每个持久化检查点均可恢复到完整旧值或新值", () => {
+  const fixture = largeSnapshots();
+  const storage = new MemoryStorage(fixture.entries);
+  const checkpoints: Array<Map<string, string>> = [];
+  storage.afterMutation = () => checkpoints.push(new Map(storage.values));
+
+  commitTaskAiStorage(storage, fixture.updates);
+
+  assert.equal(checkpoints.length, 5, "只写两个变化键、两个阶段记录，最后清理");
+  assert.ok(storage.mutations.every(mutation => mutation.key !== "seed"));
+  for (const checkpoint of checkpoints) {
+    const raw = checkpoint.get(TASK_AI_JOURNAL_KEY);
+    if (raw) assert.equal(JSON.parse(raw).version, 3);
+    const expected = raw && JSON.parse(raw).state === "prepared" ? new Map(fixture.entries) : fixture.final;
+    const interrupted = new MemoryStorage(checkpoint);
+    recoverTaskAiStorage(interrupted);
+    assert.deepEqual(interrupted.values, expected);
+    recoverTaskAiStorage(interrupted);
+    assert.deepEqual(interrupted.values, expected);
+  }
+});
+
+for (let failurePoint = 1; failurePoint <= 4; failurePoint += 1) {
+  test(`v3 大快照第 ${failurePoint} 个关键写入失败可完整回滚`, () => {
+    const fixture = largeSnapshots();
+    const storage = new MemoryStorage(fixture.entries);
+    storage.failMutation = (_mutation, index) => index === failurePoint;
+
+    assert.throws(() => commitTaskAiStorage(storage, fixture.updates), /保存|写入|调整/);
+
+    assert.deepEqual(storage.values, new Map(fixture.entries));
+    assert.ok(storage.mutations.every(mutation => !["seed", "unrelated"].includes(mutation.key)));
+  });
+}
+
+test("v3 committed 清理失败仍成功，后续恢复保留已提交快照", () => {
+  const fixture = largeSnapshots();
+  const storage = new MemoryStorage(fixture.entries);
+  storage.failMutation = mutation => mutation.kind === "remove" && mutation.key === TASK_AI_JOURNAL_KEY;
+
+  assert.doesNotThrow(() => commitTaskAiStorage(storage, fixture.updates));
+  const retained = JSON.parse(storage.values.get(TASK_AI_JOURNAL_KEY)!);
+  assert.equal(retained.version, 3);
+  assert.equal(retained.state, "committed");
+  assert.doesNotThrow(() => recoverTaskAiStorage(storage));
+  assert.ok(storage.values.has(TASK_AI_JOURNAL_KEY));
+  storage.failMutation = undefined;
+  recoverTaskAiStorage(storage);
+  assert.deepEqual(storage.values, fixture.final);
+});
+
+test("v3 提交途中外部修改数据时不覆盖外部值并保留恢复记录", () => {
+  const fixture = largeSnapshots();
+  const storage = new MemoryStorage(fixture.entries);
+  storage.afterMutation = mutation => {
+    if (mutation.key === "tasks") storage.values.set("activity", "external-update");
+  };
+
+  assert.throws(() => commitTaskAiStorage(storage, fixture.updates), /恢复未完成|回滚未完成/);
+
+  assert.equal(storage.values.get("activity"), "external-update");
+  assert.equal(JSON.parse(storage.values.get(TASK_AI_JOURNAL_KEY)!).version, 3);
+  assert.ok(storage.mutations.every(mutation => mutation.key !== "activity"));
+});
+
+test("v3 回滚再次失败时保留 prepared，解除故障后可以完整恢复", () => {
+  const fixture = largeSnapshots();
+  const storage = new MemoryStorage(fixture.entries);
+  storage.failMutation = mutation => mutation.kind === "set" && (
+    mutation.key === "activity" || mutation.key === "tasks" && mutation.value === fixture.entries[0][1]
+  );
+
+  assert.throws(() => commitTaskAiStorage(storage, fixture.updates), /恢复未完成|回滚未完成/);
+  const retained = JSON.parse(storage.values.get(TASK_AI_JOURNAL_KEY)!);
+  assert.equal(retained.version, 3);
+  assert.equal(retained.state, "prepared");
+  storage.failMutation = undefined;
+  recoverTaskAiStorage(storage);
+  assert.deepEqual(storage.values, new Map(fixture.entries));
+});
+
+test("v3 提交途中恢复记录被替换时不清理或覆盖外部 journal", () => {
+  const fixture = largeSnapshots();
+  const storage = new MemoryStorage(fixture.entries);
+  let external = "";
+  storage.afterMutation = mutation => {
+    if (mutation.key !== "tasks") return;
+    const envelope = JSON.parse(storage.values.get(TASK_AI_JOURNAL_KEY)!);
+    external = JSON.stringify({ ...envelope, state: "committed" });
+    storage.values.set(TASK_AI_JOURNAL_KEY, external);
+  };
+
+  assert.throws(() => commitTaskAiStorage(storage, fixture.updates), /恢复未完成|回滚未完成/);
+
+  assert.equal(storage.values.get(TASK_AI_JOURNAL_KEY), external);
+  assert.equal(storage.values.get("tasks"), fixture.updates[0][1]);
+  assert.ok(storage.mutations.every(mutation => mutation.key !== TASK_AI_JOURNAL_KEY || mutation.kind === "set" && JSON.parse(mutation.value!).state === "prepared"));
+});
+
+const validV3 = JSON.parse(compressedJournal("prepared", 3));
+const invalidV3: Array<[string, unknown]> = [
+  ["非法阶段", { ...validV3, state: "unknown" }],
+  ["不支持的编码", { ...validV3, encoding: "lzw-utf8" }],
+  ["无字符串 payload", { ...validV3, payload: 42 }],
+  ["损坏压缩内容", { ...validV3, payload: "broken-gzip" }],
+  ["旧对象不能冒充独立快照", { ...validV3, payload: compressStorageGzip(journal("prepared")) }],
+  ["空写集", { ...validV3, payload: compressStorageGzip("[]") }],
+  ["非法旧值", { ...validV3, payload: compressStorageGzip(JSON.stringify([{ key: "tasks", before: 1, after: "new" }])) }],
+  ["非法新值", { ...validV3, payload: compressStorageGzip(JSON.stringify([{ key: "tasks", before: null, after: null }])) }],
+  ["缺失旧值", { ...validV3, payload: compressStorageGzip(JSON.stringify([{ key: "tasks", after: "new" }])) }],
+  ["重复键", { ...validV3, payload: compressStorageGzip(JSON.stringify([{ key: "tasks", before: null, after: "a" }, { key: "tasks", before: null, after: "b" }])) }],
+  ["写入 journal 自身", { ...validV3, payload: compressStorageGzip(JSON.stringify([{ key: TASK_AI_JOURNAL_KEY, before: null, after: "unsafe" }])) }],
+];
+for (const [name, invalid] of invalidV3) {
+  test(`损坏的 v3 记录不修改任何数据：${name}`, () => {
+    const raw = JSON.stringify(invalid);
+    const storage = new MemoryStorage([...initial, [TASK_AI_JOURNAL_KEY, raw]]);
+
+    assert.throws(() => recoverTaskAiStorage(storage), /恢复记录|journal/);
+
+    assert.equal(storage.values.get(TASK_AI_JOURNAL_KEY), raw);
+    assert.deepEqual(storage.mutations, []);
+  });
+}

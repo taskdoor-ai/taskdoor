@@ -1,11 +1,10 @@
 import { mockPersonName } from '@/ai/mock/i18n/mockContent';
-import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { formatTaskCount } from "@/shared/i18n/core";
 import { statusMessageKey } from "@/shared/i18n/task-status";
 import { Check, ArrowDownUp, ChevronDown, CircleDashed, ListFilter, MoreHorizontal, Pin, Plus, Search, Trash2, UserRound, X } from "lucide-react";
 import type { CSSProperties } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { PersonOption, TagDefinition, TaskNode } from "@/shared/model/task-model";
 
 import type { TaskListProjection } from "@/features/tasks/lib/task-list-projection";
@@ -81,10 +80,59 @@ function TaskRowTitle({ title }: { title: string }) {
   </span>;
 }
 
-export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onCreateTask, onDeleteTask, onTaskStatusChange, onOpenRecycleBin, onFiltersChange, onManageTags, onTaskSelect, onQueryChange, query, scopeCounts, selectedTaskId, showingWorkbench, teamId, progressComparisonsByTaskId }: TaskWorkspaceListProps) {
+type TaskRowActions = Pick<TaskWorkspaceListProps, "onTaskSelect" | "onTaskStatusChange" | "onDeleteTask"> & { toggleTaskPin: (taskId: string) => void };
+type TaskWorkspaceRowProps = {
+  task: TaskNode;
+  owner?: PersonOption;
+  series?: TaskProgressComparisonSeries;
+  currentUserId: string;
+  showOwner: boolean;
+  selected: boolean;
+  isPinned: boolean;
+  sort: TaskListFilters["sort"];
+  now: Date;
+  actions: TaskRowActions;
+};
+
+const MemoTaskWorkspaceRow = memo(function TaskWorkspaceRow({ task, owner, series, currentUserId, showOwner, selected, isPinned, sort, now, actions }: TaskWorkspaceRowProps) {
   const { t, locale } = useI18n();
   const timeZone = useTeamTimeZone();
-  const mock = useMockText();
+  const statusText = (status: string) => status in statusMessageKey ? t(statusMessageKey[status as keyof typeof statusMessageKey]) : status;
+  const ownerName = task.ownerId ? mockPersonName(locale, task.ownerId, owner?.name ?? task.ownerId) : t('list.unassigned');
+  const statusDefinition = taskStatusDefinition[task.status];
+  const progress = getTaskProgressDisplay({ timeZone, series, task: { ...task, status: undefined, completedAt: undefined } });
+  const progressRatio = progress.aiAssessment?.ratio ?? progress.ratio;
+  const timeField = sort === "created" ? t('list.createdAt') : t('list.updatedAt');
+  const timestampValue = sort === "created" ? task.createdAt ?? "" : task.updatedAt;
+  const timeLabel = taskUpdatedLabel(timestampValue, now, now, locale).label;
+  const pinAction = isPinned ? t('list.unpin') : t('list.pin');
+  return <li className="task-workspace-row-entry" data-has-owner={showOwner || undefined} data-selected={selected || undefined}>
+    <button aria-current={selected ? "page" : undefined} aria-label={t('list.open', { name: task.name })} aria-describedby={`task-row-description-${task.id}`} className="task-workspace-row" data-task-id={task.id} onClick={() => actions.onTaskSelect(task)} type="button">
+      <span aria-label={t('list.statusLabel', { status: statusText(task.status) })} className="task-list-row-status" data-tone={statusDefinition.tone} role="img" title={statusText(task.status)}><TaskStatusIcon status={task.status} progressRatio={progressRatio} size={16} /></span>
+      <TaskRowTitle title={task.name} />
+      <span className="sr-only" id={`task-row-description-${task.id}`}>{t('list.statusLabel', { status: statusText(task.status) })}{showOwner ? ` · ${t('list.ownerLabel', { name: ownerName })}` : ""}{` · ${timeField}: ${timeLabel}`}</span>
+    </button>
+    {showOwner && <div className="task-list-row-meta">
+      <span aria-label={t('list.ownerLabel', { name: ownerName })} className="task-list-row-owner" data-unassigned={!task.ownerId || undefined} role={task.ownerId ? "group" : "img"} title={task.ownerId ? undefined : t('list.ownerLabel', { name: t('list.unassigned') })}>{task.ownerId ? <PersonAvatar name={ownerName} personId={task.ownerId} profile={owner} size="xs" /> : <UserRound aria-hidden="true" size={16} />}</span>
+    </div>}
+    <button aria-label={`${pinAction}: ${task.name}`} aria-pressed={isPinned} className="task-workspace-row-pin" data-pinned={isPinned || undefined} onClick={() => actions.toggleTaskPin(task.id)} tabIndex={-1} title={pinAction} type="button"><Pin aria-hidden="true" fill={isPinned ? "currentColor" : "none"} size={15} /></button>
+    <DropdownMenu>
+      <DropdownMenuTrigger aria-label={t('list.moreLabel', { name: task.name })} className="task-workspace-row-menu-trigger" title={t('list.more')} type="button"><MoreHorizontal aria-hidden="true" size={16} /></DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="task-workspace-row-menu" sideOffset={4}>
+        <DropdownMenuItem disabled={task.status === "已完成" || (task.ownerId !== currentUserId && !task.participantIds?.includes(currentUserId))} onClick={() => actions.onTaskStatusChange(task.id, "已完成")}><Check aria-hidden="true" size={15} />{locale === "en" ? "Mark complete" : "标记完成"}</DropdownMenuItem>
+        <DropdownMenuItem disabled={task.ownerId !== currentUserId} variant="destructive" onClick={() => actions.onDeleteTask(task)}><Trash2 aria-hidden="true" size={15} />{t('list.delete')}</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </li>;
+}, (before, after) => before.currentUserId === after.currentUserId && before.showOwner === after.showOwner
+  && before.selected === after.selected && before.isPinned === after.isPinned && before.sort === after.sort
+  && before.now === after.now && before.actions === after.actions
+  && JSON.stringify(before.task) === JSON.stringify(after.task)
+  && JSON.stringify(before.series) === JSON.stringify(after.series)
+  && JSON.stringify(before.owner) === JSON.stringify(after.owner));
+
+export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onCreateTask, onDeleteTask, onTaskStatusChange, onOpenRecycleBin, onFiltersChange, onManageTags, onTaskSelect, onQueryChange, query, scopeCounts, selectedTaskId, showingWorkbench, teamId, progressComparisonsByTaskId }: TaskWorkspaceListProps) {
+  const { t, locale } = useI18n();
   const statusText = (status: string) => status in statusMessageKey ? t(statusMessageKey[status as keyof typeof statusMessageKey]) : status;
   const rowsRef = useRef<HTMLDivElement>(null);
   const controlSize = useResponsiveControlSize("(max-width: 900px)");
@@ -162,36 +210,15 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
     try { writePinnedTaskIds(window.localStorage, pinStorageKey, next); }
     catch { /* 浏览器禁用本地存储时，当前会话内仍可正常置顶。 */ }
   };
-  const renderTaskRow = (task: TaskNode) => {
-    const owner = members.find(member => member.id === task.ownerId);
-    const ownerName = task.ownerId ? mockPersonName(locale, task.ownerId, owner?.name ?? task.ownerId) : t('list.unassigned');
-    const statusDefinition = taskStatusDefinition[task.status];
-    const progress = getTaskProgressDisplay({ timeZone, series: progressComparisonsByTaskId?.[task.id], task: { ...task, status: undefined, completedAt: undefined } });
-    const progressRatio = progress.aiAssessment?.ratio ?? progress.ratio;
-    const timeField = filters.sort === "created" ? t('list.createdAt') : t('list.updatedAt');
-    const timestampValue = filters.sort === "created" ? task.createdAt ?? "" : task.updatedAt;
-    const timeLabel = taskUpdatedLabel(timestampValue, now, now, locale).label;
-    const isPinned = pinnedTaskIds.includes(task.id);
-    const pinAction = isPinned ? t('list.unpin') : t('list.pin');
-    return <li className="task-workspace-row-entry" data-has-owner={showOwner || undefined} data-selected={!showingWorkbench && selectedTaskId === task.id || undefined} key={task.id}>
-      <button aria-current={!showingWorkbench && selectedTaskId === task.id ? "page" : undefined} aria-label={t('list.open', { name: mock.field(task.id, "title", task.name) })} aria-describedby={`task-row-description-${task.id}`} className="task-workspace-row" data-task-id={task.id} onClick={() => onTaskSelect(task)} type="button">
-        <span aria-label={t('list.statusLabel', { status: statusText(task.status) })} className="task-list-row-status" data-tone={statusDefinition.tone} role="img" title={statusText(task.status)}><TaskStatusIcon status={task.status} progressRatio={progressRatio} size={16} /></span>
-        <TaskRowTitle title={mock.field(task.id, "title", task.name)} />
-        <span className="sr-only" id={`task-row-description-${task.id}`}>{t('list.statusLabel', { status: statusText(task.status) })}{showOwner ? ` · ${t('list.ownerLabel', { name: ownerName })}` : ""}{` · ${timeField}: ${timeLabel}`}</span>
-      </button>
-      {showOwner && <div className="task-list-row-meta">
-        <span aria-label={t('list.ownerLabel', { name: ownerName })} className="task-list-row-owner" data-unassigned={!task.ownerId || undefined} role={task.ownerId ? "group" : "img"} title={task.ownerId ? undefined : t('list.ownerLabel', { name: t('list.unassigned') })}>{task.ownerId ? <PersonAvatar name={ownerName} personId={task.ownerId} profile={owner} size="xs" /> : <UserRound aria-hidden="true" size={16} />}</span>
-      </div>}
-      <button aria-label={`${pinAction}: ${mock.field(task.id, "title", task.name)}`} aria-pressed={isPinned} className="task-workspace-row-pin" data-pinned={isPinned || undefined} onClick={() => toggleTaskPin(task.id)} tabIndex={-1} title={pinAction} type="button"><Pin aria-hidden="true" fill={isPinned ? "currentColor" : "none"} size={15} /></button>
-      <DropdownMenu>
-        <DropdownMenuTrigger aria-label={t('list.moreLabel', { name: mock.field(task.id, "title", task.name) })} className="task-workspace-row-menu-trigger" title={t('list.more')} type="button"><MoreHorizontal aria-hidden="true" size={16} /></DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="task-workspace-row-menu" sideOffset={4}>
-          <DropdownMenuItem disabled={task.status === "已完成" || (task.ownerId !== currentUserId && !task.participantIds?.includes(currentUserId))} onClick={() => onTaskStatusChange(task.id, "已完成")}><Check aria-hidden="true" size={15} />{locale === "en" ? "Mark complete" : "标记完成"}</DropdownMenuItem>
-          <DropdownMenuItem disabled={task.ownerId !== currentUserId} variant="destructive" onClick={() => onDeleteTask(task)}><Trash2 aria-hidden="true" size={15} />{t('list.delete')}</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </li>;
-  };
+  const rowActionsRef = useRef<TaskRowActions>({ onTaskSelect, onTaskStatusChange, onDeleteTask, toggleTaskPin });
+  useLayoutEffect(() => { rowActionsRef.current = { onTaskSelect, onTaskStatusChange, onDeleteTask, toggleTaskPin }; });
+  const rowActions = useMemo<TaskRowActions>(() => ({
+    onTaskSelect: task => rowActionsRef.current.onTaskSelect(task),
+    onTaskStatusChange: (taskId, status) => rowActionsRef.current.onTaskStatusChange(taskId, status),
+    onDeleteTask: task => rowActionsRef.current.onDeleteTask(task),
+    toggleTaskPin: taskId => rowActionsRef.current.toggleTaskPin(taskId),
+  }), []);
+  const renderTaskRow = (task: TaskNode) => <MemoTaskWorkspaceRow key={task.id} task={task} owner={members.find(member => member.id === task.ownerId)} series={progressComparisonsByTaskId?.[task.id]} currentUserId={currentUserId} showOwner={showOwner} selected={!showingWorkbench && selectedTaskId === task.id} isPinned={pinnedTaskIds.includes(task.id)} sort={filters.sort} now={now} actions={rowActions} />;
 
   return <section aria-label={t('list.nav')} className="task-workspace-list task-list-refresh">
     <h1 className="sr-only" id="task-workspace-list-heading" tabIndex={-1}>{t('nav.tasks')}</h1>

@@ -61,7 +61,7 @@
     "src/features/tasks/components/TaskSubtaskList.tsx": 2,
     "src/features/tasks/components/TaskTagList.tsx": 1,
     "src/features/tasks/components/TaskWorkspace.tsx": 1,
-    "src/features/tasks/components/TaskWorkspaceList.tsx": 2,
+    "src/features/tasks/components/TaskWorkspaceList.tsx": 1,
     "src/features/tasks/components/WorkspaceTaskBoard.tsx": 1,
     "src/features/tasks/discussion/components/DiscussionMessages.tsx": 2,
     "src/features/tasks/files/components/TaskFileExplorer.tsx": 1,

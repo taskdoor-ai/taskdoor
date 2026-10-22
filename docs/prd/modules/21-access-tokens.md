@@ -50,14 +50,6 @@ operations: "read_settings"
 - 团队关闭个人访问令牌时，不出现在可选团队中。
 
 
-![创建令牌：查看工作空间与任务范围。](../assets/access-tokens/create-token-scope-zh.jpg)
-
-*FIG-TOKEN-002 · 创建令牌：查看工作空间与任务范围。*
-
-![删除令牌：确认立即失效及不可撤回的影响。](../assets/access-tokens/delete-token-confirm-zh.jpg)
-
-*FIG-TOKEN-003 · 删除令牌：确认立即失效及不可撤回的影响。*
-
 ## 4. 功能验收标准
 
 - 页面按本人身份展示可访问的数据与操作，无权限时不能执行写入。

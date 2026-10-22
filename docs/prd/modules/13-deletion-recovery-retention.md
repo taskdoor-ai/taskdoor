@@ -50,14 +50,6 @@ operations: "preview_delete, recycle_task, restore_task, purge_task, preview_del
 
 #### 删除界面
 
-![删除主任务：展开确认本次一并移入回收站的子任务层级。](../assets/deletion-recovery-retention/delete-parent-branch-zh.png)
-
-*FIG-DELETE-003 · 删除主任务：展开确认本次一并移入回收站的子任务层级。*
-
-![单独删除子任务：确认将当前子任务移入回收站。](../assets/deletion-recovery-retention/delete-subtask-zh.png)
-
-*FIG-DELETE-004 · 单独删除子任务：确认将当前子任务移入回收站。*
-
 ### 3.2 任务回收站
 
 从左侧任务栏底部的固定入口直接打开当前团队回收站，入口不随任务列表滚动。每条记录展示根任务名称、包含的子任务数量、删除人、删除时间和剩余保留时间，按最近删除排序；不展示父任务路径或已删除任务的正文。点击子任务数量可展开名称与层级，默认收起；子任务仅供核对范围，不单独选择或操作，恢复和彻底删除仍作用于整个分支。
@@ -72,18 +64,6 @@ operations: "preview_delete, recycle_task, restore_task, purge_task, preview_del
 
 #### 回收站界面
 
-
-![恢复确认：汇总所选分支及子任务的总数。](../assets/deletion-recovery-retention/recycle-bin-restore-confirm-zh.png)
-
-*FIG-DELETE-007 · 恢复确认：汇总所选分支及子任务的总数。*
-
-![彻底删除确认：展示任务总数与不可恢复提示。](../assets/deletion-recovery-retention/recycle-bin-purge-confirm-zh.png)
-
-*FIG-DELETE-008 · 彻底删除确认：展示任务总数与不可恢复提示。*
-
-![任务回收站：搜索入口、保留期限与暂无删除记录时的页面。](../assets/deletion-recovery-retention/recycle-bin-empty-zh.png)
-
-*FIG-DELETE-002 · 任务回收站：搜索入口、保留期限与暂无删除记录时的页面。*
 
 ### 3.3 文件与关联
 

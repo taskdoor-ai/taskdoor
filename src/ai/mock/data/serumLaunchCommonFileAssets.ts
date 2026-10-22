@@ -1,3 +1,4 @@
+import { formatFileSize } from "@/shared/lib/file-size";
 import type { TaskFileNode, TaskNode } from "@/shared/model/task-model";
 import metadata from "@/ai/mock/data/serumLaunchCommonAssetMetadata.json";
 import { supportedTaskFileFixtures } from "@/ai/mock/lib/taskFilePreviewFixtures";
@@ -30,12 +31,12 @@ export function getSerumLaunchCommonFileAssets(task: Pick<TaskNode, "id" | "team
     format: entry.filename.split(".").pop()!.toUpperCase(),
     mimeType: entry.mimeType,
     sizeBytes: entry.sizeBytes,
-    sizeLabel: entry.sizeBytes < 1024 ? `${entry.sizeBytes} B`
-      : entry.sizeBytes < 1024 * 1024 ? `${(entry.sizeBytes / 1024).toFixed(1)} KiB`
-        : `${(entry.sizeBytes / (1024 * 1024)).toFixed(1)} MiB`,
+    sizeLabel: formatFileSize(entry.sizeBytes),
     updatedAt: "2026-10-16T15:00:00+08:00",
     version: 1,
     ...(entry.text === undefined ? {} : { content: entry.text, previewData: { kind: "text" as const, text: entry.text } }),
   }));
-  return includeUnsupported ? files : supportedTaskFileFixtures(files);
+  // These two historical fixture packs keep their original membership; media
+  // arrives through a separate incremental discussion pack for existing users.
+  return includeUnsupported ? files : supportedTaskFileFixtures(files).filter(file => file.format !== "MP3" && file.format !== "MP4");
 }

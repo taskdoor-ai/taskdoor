@@ -3,6 +3,7 @@ import { FileWarning, RotateCw } from "lucide-react";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { TaskPdfViewer } from "@/features/tasks/files/components/TaskPdfViewer";
 import { TaskFileDownload } from "@/features/tasks/files/components/TaskFileViewer";
+import { prepareTaskPresentationPreview } from "@/features/tasks/files/lib/task-presentation-preview-cache";
 
 type Props = ComponentProps<typeof TaskPdfViewer>;
 
@@ -19,20 +20,8 @@ export function TaskPresentationViewer({ url, ...props }: Props) {
     setPreview("");
     setError(false);
     void (async () => {
-      const source = await fetch(url, { signal: controller.signal });
-      if (!source.ok) throw new Error("Source unavailable");
-      const bytes = await source.blob();
-      const mime = props.file.mimeType?.toLowerCase().split(";")[0].trim();
-      const format = /\.ppt$/i.test(props.file.name) || mime === "application/vnd.ms-powerpoint" ? "ppt" : "pptx";
-      const response = await fetch(`/api/task-files/presentation-preview?format=${format}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/octet-stream", "X-TaskDoor-Presentation-Preview": "1" },
-        body: bytes,
-        signal: controller.signal,
-      });
-      if (!response.ok || !response.headers.get("content-type")?.startsWith("application/pdf")) throw new Error("Preview unavailable");
-      const pdf = await response.blob();
-      if (!pdf.size || controller.signal.aborted) return;
+      const pdf = await prepareTaskPresentationPreview(props.file, controller.signal);
+      if (controller.signal.aborted) return;
       previewUrl = URL.createObjectURL(pdf);
       setPreview(previewUrl);
     })().catch(() => { if (!controller.signal.aborted) setError(true); });

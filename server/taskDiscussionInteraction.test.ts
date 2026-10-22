@@ -128,7 +128,9 @@ test("兼容讨论消息同样展示图片缩略图，继续固定引用版本�
   const file = { id: "compat-image", kind: "file" as const, name: "讨论截图.png", parentId: null, version: 1, updatedAt: "今天", sizeLabel: "8 KiB", previewData: { kind: "image" as const, alt: "讨论截图", src: "data:image/png;base64,Y29tcGF0" } };
   const { tree, html } = capture(() => DiscussionMessages({ ...messageProps, files: [file], messages: [{ ...root, attachmentRefs: [{ fileId: file.id, version: 1, name: file.name }] }], onOpenFile: (...args) => { opens.push(args); } }));
   assert.match(html, /class="task-file-thumbnail-image"/);
-  assert.match(html, /PNG · 8 KiB · v1/);
+  assert.match(html, /讨论截图.png/);
+  assert.doesNotMatch(html, /讨论截图.png · v1/);
+  assert.doesNotMatch(html, /discussion-attachment-meta|8 KiB/);
   attachmentItems(tree)[0].props.onAction();
   assert.deepEqual(opens, [[file.id, 1]]);
 });
@@ -163,7 +165,7 @@ test("时间显示保存的日期时分且位于内容附件下方，旧相对�
     { ...reply, time: "6 分钟前" },
   ] }));
   assert.match(html, /dateTime="2026-09-14T02:03:00\.000Z"/i);
-  assert.equal(elements(tree, item => item.type === "time")[0].props.title, new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short", hour12: true }).format(new Date("2026-09-14T02:03:00Z")));
+  assert.equal(elements(tree, item => item.type === "time")[0].props.title, new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date("2026-09-14T02:03:00Z")));
   assert.doesNotMatch(html, /原时间|刚刚|6 分钟前|2026-09-14 11:04/);
   assert.equal(elements(tree, item => item.type === "time").length, 1);
   for (const header of elements(tree, item => item.type === "header")) {

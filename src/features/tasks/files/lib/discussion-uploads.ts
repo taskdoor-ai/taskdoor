@@ -1,3 +1,4 @@
+import { formatFileSize } from "@/shared/lib/file-size";
 import type { TaskFileNode } from "@/shared/model/task-model";
 import { getPreviewKind } from "@/features/tasks/files/lib/task-file-tree";
 import { validateTaskFileUploads } from "@/features/tasks/files/lib/task-file-capabilities";
@@ -15,6 +16,7 @@ const builtinAssetPath = /^\/task-assets\/serum-launch\/serum-launch-(?:board\.h
 const builtinCommonAssetPaths = new Set([
   "/task-assets/serum-launch/common/serum-launch-briefing.pptx",
   "/task-assets/serum-launch/common/serum-launch-handover.txt",
+  "/task-assets/serum-launch/common/serum-launch-collaboration.md",
   "/task-assets/serum-launch/common/serum-launch-snapshot.json",
   "/task-assets/serum-launch/common/serum-launch-channels.xml",
   "/task-assets/serum-launch/common/serum-launch-workflow.svg",
@@ -78,6 +80,8 @@ export function isDiscussionImage(file: Pick<TaskFileNode, "name" | "mimeType">)
 function mimeTypeFor(file: File, extension: string): string {
   const previewKind = getPreviewKind(file.name.trim(), file.type);
   if (previewKind === "json" || previewKind === "xml") return `application/${previewKind}`;
+  if (previewKind === "audio") return "audio/mpeg";
+  if (previewKind === "video") return "video/mp4";
   if (extension === "ppt") return "application/vnd.ms-powerpoint";
   if (extension === "pptx") return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
   const known: Record<string, string> = { md: "text/markdown", txt: "text/plain", log: "text/plain", html: "text/html", htm: "text/html", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", webp: "image/webp", pdf: "application/pdf", doc: "application/msword", docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", xls: "application/vnd.ms-excel", xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" };
@@ -86,8 +90,13 @@ function mimeTypeFor(file: File, extension: string): string {
 
 /** Stages the original binary locally. Publishing owns adding this node to a task. */
 export async function prepareDiscussionUpload(file: File): Promise<TaskFileNode> {
+  return stageLocalFileUpload(file, { maxBytes: DISCUSSION_UPLOAD_MAX_BYTES, limitLabel: formatFileSize(DISCUSSION_UPLOAD_MAX_BYTES, { fractionDigits: 2 }), inlineTextMaxBytes: DISCUSSION_UPLOAD_MAX_BYTES });
+}
+
+/** Shared original storage; each caller owns its capacity and bounded text extraction. */
+export async function stageLocalFileUpload(file: File, { maxBytes, limitLabel, inlineTextMaxBytes }: { maxBytes: number; limitLabel: string; inlineTextMaxBytes: number }): Promise<TaskFileNode> {
   validateTaskFileUploads([file]);
-  if (file.size > DISCUSSION_UPLOAD_MAX_BYTES) throw new Error(`「${file.name}」超过单个附件 20 MiB 的限制。`);
+  if (file.size > maxBytes) throw new Error(`「${file.name}」超过单个附件 ${limitLabel} 的限制。`);
   const name = file.name.trim() || "未命名附件";
   const extension = name.split(".").pop()?.toLowerCase() ?? "";
   const blobId = `discussion-blob-${globalThis.crypto.randomUUID()}`;
@@ -100,13 +109,13 @@ export async function prepareDiscussionUpload(file: File): Promise<TaskFileNode>
     format: extension.toUpperCase() || "FILE",
     mimeType: mimeTypeFor(file, extension),
     sizeBytes: file.size,
-    sizeLabel: file.size < 1024 ? `${file.size} B` : file.size < 1024 * 1024 ? `${(file.size / 1024).toFixed(1)} KiB` : `${(file.size / (1024 * 1024)).toFixed(1)} MiB`,
+    sizeLabel: formatFileSize(file.size),
     updatedAt: "刚刚",
     version: 1,
     blobId,
   };
   const previewKind = getPreviewKind(name, node.mimeType);
-  if (previewKind === "markdown" || previewKind === "text" || previewKind === "html" || previewKind === "json" || previewKind === "xml") {
+  if (file.size <= inlineTextMaxBytes && (previewKind === "markdown" || previewKind === "text" || previewKind === "html" || previewKind === "json" || previewKind === "xml")) {
     const content = await file.text();
     node.content = content;
     node.previewData = { kind: extension === "md" ? "markdown" : "text", text: content };

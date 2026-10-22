@@ -1,7 +1,7 @@
 /* Shared label column sized for English task fields. */
 :root { --ad-task-field-label-width: 10rem; }
-.creation-edit { display: block; box-sizing: border-box; width: 100%; min-height: 0; padding: 2px var(--ad-space-1); margin: 0; border: 1px solid transparent; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink); font-family: inherit; font-size: var(--ad-text-body-sm); line-height: 1.65; resize: none; overflow: hidden; transition: background .15s, border-color .15s; }
-.creation-edit:hover:not(:disabled) { background: color-mix(in srgb, var(--ad-surface-subtle) 65%, transparent); }
+.creation-edit { display: block; box-sizing: border-box; width: 100%; min-height: 0; padding: 2px var(--ad-space-1); margin: 0; border: 1px solid transparent; border-radius: var(--ad-radius-input); background: transparent; color: var(--ad-ink); font-family: inherit; font-size: var(--ad-text-body-sm); line-height: 1.65; resize: none; overflow: hidden; transition: background .15s, border-color .15s; }
+.creation-edit:hover:not(:disabled):not(:focus-visible) { border-color: var(--ad-border-soft); background: color-mix(in srgb, var(--ad-surface-subtle) 65%, transparent); }
 .creation-edit:focus-visible { background: var(--ad-surface); border-color: var(--ad-focus); outline: 3px solid color-mix(in srgb, var(--ad-focus) 12%, transparent); outline-offset: 1px; }
 .creation-edit::placeholder { color: var(--ad-ink-tertiary); font-weight: 400; }
 .task-detail-fields { min-width: 0; container: task-fields / inline-size; }

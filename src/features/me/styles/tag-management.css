@@ -146,7 +146,7 @@
 .tag-editor-body { display: grid; min-height: 0; gap: var(--ad-space-5); overflow-y: auto; padding: var(--ad-space-3) var(--ad-space-6) var(--ad-space-5); overscroll-behavior: contain; }
 .tag-editor-primary-fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-3); }
 .tag-editor-field { display: grid; align-content: start; gap: var(--ad-space-2); color: var(--ad-ink-secondary); font-size: var(--ad-text-label); font-weight: 650; }
-.tag-editor-input { width: 100%; height: var(--ad-control-height-md); padding: 0 var(--ad-space-3); border: 1px solid transparent; border-radius: var(--ad-radius-control); outline: 0; background: var(--ad-surface-quiet); color: var(--ad-ink); box-shadow: inset 0 0 0 1px var(--ad-border-soft); font: inherit; font-size: var(--ad-text-body-sm); font-weight: 450; transition: background var(--ad-duration-fast) var(--ad-ease), box-shadow var(--ad-duration-fast) var(--ad-ease); }
+.tag-editor-input { width: 100%; height: var(--ad-control-height-md); padding: 0 var(--ad-space-3); border: 1px solid transparent; border-radius: var(--ad-radius-input); outline: 0; background: var(--ad-surface-quiet); color: var(--ad-ink); box-shadow: inset 0 0 0 1px var(--ad-border-soft); font: inherit; font-size: var(--ad-text-body-sm); font-weight: 450; transition: background var(--ad-duration-fast) var(--ad-ease), box-shadow var(--ad-duration-fast) var(--ad-ease); }
 .tag-editor-input:hover { box-shadow: inset 0 0 0 1px var(--ad-border); }
 .tag-editor-input:focus { background: var(--ad-surface); box-shadow: inset 0 0 0 1px var(--ad-route), 0 0 0 var(--ad-space-1) var(--ad-route-soft); }
 .tag-editor-input[aria-invalid="true"] { box-shadow: inset 0 0 0 1px var(--ad-danger); }

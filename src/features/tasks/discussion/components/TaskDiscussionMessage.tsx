@@ -11,7 +11,7 @@ import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import type { TaskFileNode } from "@/shared/model/task-model";
 import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
-import { usePersonOptions } from "@/shared/ui/PersonDirectory";
+import { DiscussionMarkdown } from "@/features/tasks/discussion/components/DiscussionMarkdown";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { DiscussionAttachmentGallery } from "@/features/tasks/discussion/components/DiscussionAttachmentGallery";
 
@@ -32,16 +32,6 @@ type TaskDiscussionMessageProps = {
   onConnectAi?: (target: DiscussionAiTarget, trigger: HTMLElement, shortcut?: AiShortcutAttempt) => void | Promise<AiTransferResult | void>;
   now: number;
 };
-
-function MessageText({ message, text }: { message: CollaborationMessage; text: string }) {
-  const mentioned = usePersonOptions(message.mentionedPrincipalIds ?? []);
-  const names = new Map(mentioned.flatMap(person => [[`@${person.name}`, person.id], [`@${person.id}`, person.id]]));
-  if (!names.size) return <>{text}</>;
-  const pattern = new RegExp(`(${[...names.keys()].sort((a, b) => b.length - a.length).map(name => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g");
-  return <>{text.split(pattern).map((part, index) => names.has(part)
-    ? <span className="discussion-saved-mention" key={index}>@<PersonName name={part.slice(1)} personId={names.get(part)!} /></span>
-    : part)}</>;
-}
 
 function timestampFor(message: CollaborationMessage, locale: string, now: number) {
   const recorded = message.createdAt ?? (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2})?$/.test(message.time) ? `${message.time.replace(" ", "T")}+08:00` : "");
@@ -93,7 +83,7 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
         </div>
         {onConnectAi && <AiConnectionButton compact contextLabel={ui("{0}的讨论", { 0: message.author })} onConnect={(trigger, shortcut) => onConnectAi({ kind: isReply ? "reply" : "discussion", activityId: message.id, ...(message.fileThreadId ? { fileThreadId: message.fileThreadId } : {}) }, trigger, shortcut)} />}
       </header>
-      {message.message.trim() && <p className="task-discussion-feed-body"><MessageText message={message} text={reading.text} /></p>}
+      {message.message.trim() && <div className="task-discussion-feed-body"><DiscussionMarkdown text={reading.text} mentionedPrincipalIds={message.mentionedPrincipalIds} /></div>}
       <DiscussionAttachmentGallery attachmentRefs={message.attachmentRefs} files={files} legacyFileName={message.file} onOpenFile={onOpenFile} />
       <footer className="task-discussion-feed-footer">
         <div className="task-discussion-feed-meta">

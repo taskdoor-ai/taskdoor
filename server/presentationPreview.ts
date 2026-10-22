@@ -1,3 +1,4 @@
+import { formatFileSize } from "../src/shared/lib/file-size";
 import { spawn } from "node:child_process";
 import { constants } from "node:fs";
 import { access, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
@@ -93,7 +94,7 @@ const runtime: ConversionRuntime = {
 
 function validatePresentation(bytes: Buffer, format: PresentationFormat) {
   if (!bytes.length) throw new PreviewError(400, "empty_file", "演示文稿为空，请重新选择文件。");
-  if (bytes.length > PRESENTATION_PREVIEW_MAX_BYTES) throw new PreviewError(413, "file_too_large", "演示文稿超过20 MiB，请缩小文件后重试。");
+  if (bytes.length > PRESENTATION_PREVIEW_MAX_BYTES) throw new PreviewError(413, "file_too_large", `演示文稿超过 ${formatFileSize(PRESENTATION_PREVIEW_MAX_BYTES, { fractionDigits: 2 })}，请缩小文件后重试。`);
   if (format === "ppt") {
     if (!bytes.subarray(0, 8).equals(Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]))) {
       throw new PreviewError(422, "invalid_presentation", "无法读取此PPT文件，请确认文件未损坏。");
@@ -164,7 +165,7 @@ function readBody(req: IncomingMessage, signal: AbortSignal): Promise<Buffer> {
     const data = (chunk: Buffer | string) => {
       const part = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
       size += part.length;
-      if (size > PRESENTATION_PREVIEW_MAX_BYTES) return fail(new PreviewError(413, "file_too_large", "演示文稿超过20 MiB，请缩小文件后重试。"));
+      if (size > PRESENTATION_PREVIEW_MAX_BYTES) return fail(new PreviewError(413, "file_too_large", `演示文稿超过 ${formatFileSize(PRESENTATION_PREVIEW_MAX_BYTES, { fractionDigits: 2 })}，请缩小文件后重试。`));
       chunks.push(part);
     };
     const end = () => { cleanup(); resolve(Buffer.concat(chunks)); };
@@ -199,7 +200,7 @@ export function createPresentationPreviewMiddleware(convert: typeof convertPrese
     const contentType = req.headers["content-type"]?.split(";")[0].trim().toLowerCase();
     if (!["application/octet-stream", "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation"].includes(contentType ?? "")) return sendError(res, new PreviewError(415, "unsupported_content_type", "需要演示文稿原文件，请重新选择文件。"));
     const contentLength = req.headers["content-length"];
-    if (contentLength && Number(contentLength) > PRESENTATION_PREVIEW_MAX_BYTES) return sendError(res, new PreviewError(413, "file_too_large", "演示文稿超过20 MiB，请缩小文件后重试。"));
+    if (contentLength && Number(contentLength) > PRESENTATION_PREVIEW_MAX_BYTES) return sendError(res, new PreviewError(413, "file_too_large", `演示文稿超过 ${formatFileSize(PRESENTATION_PREVIEW_MAX_BYTES, { fractionDigits: 2 })}，请缩小文件后重试。`));
     if (pending >= MAX_CONCURRENT) return sendError(res, new PreviewError(429, "converter_busy", "正在预览其他演示文稿，请稍后重试。"));
     pending++;
     const controller = new AbortController();

@@ -1,10 +1,25 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { canEditTaskFile, isSupportedTaskFileUpload, TASK_FILE_UPLOAD_ACCEPT, TASK_FILE_UPLOAD_EXTENSIONS_LABEL, validateTaskFileUploads } from "../src/features/tasks/files/lib/task-file-capabilities.ts";
+import { canEditTaskFile, getTaskFileVersionLabel, isSupportedTaskFileUpload, TASK_FILE_UPLOAD_ACCEPT, TASK_FILE_UPLOAD_EXTENSIONS_LABEL, validateTaskFileUploads } from "../src/features/tasks/files/lib/task-file-capabilities.ts";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 
+test("only online-editable document formats display revision numbers, including fixed historical references", () => {
+  for (const extension of ["md", "txt", "log", "html", "htm", "json", "xml"]) {
+    const file = { name: `说明.${extension}`, version: 4 };
+    assert.equal(getTaskFileVersionLabel(file), "v4", extension);
+    assert.equal(getTaskFileVersionLabel(file, 1), "v1", extension);
+  }
+  for (const extension of ["pdf", "ppt", "pptx", "png", "jpg", "jpeg", "gif", "webp", "svg", "mp3", "mp4", "docx", "xlsx", "zip"]) {
+    const file = { name: `文件.${extension}`, version: 7, mimeType: "text/plain" };
+    assert.equal(getTaskFileVersionLabel(file), "", extension);
+    assert.equal(getTaskFileVersionLabel(file, 2), "", extension);
+    assert.equal(file.version, 7, "presentation must not rewrite retained source identities");
+  }
+  assert.equal(getTaskFileVersionLabel({ name: "临时标注.html", attachmentOnly: true, version: 1 }), "");
+});
+
 test("upload policy accepts only the previewable extension allowlist", () => {
-  const supported = ["pdf", "ppt", "pptx", "png", "jpg", "jpeg", "gif", "webp", "svg", "md", "txt", "log", "html", "htm", "json", "xml"];
+  const supported = ["pdf", "ppt", "pptx", "png", "jpg", "jpeg", "gif", "webp", "svg", "md", "txt", "log", "html", "htm", "json", "xml", "mp3", "mp4"];
   for (const extension of supported) {
     assert.equal(isSupportedTaskFileUpload({ name: `文件.${extension.toUpperCase()}`, type: "application/octet-stream" }), true, extension);
     assert.ok(TASK_FILE_UPLOAD_ACCEPT.split(",").includes(`.${extension}`), extension);
@@ -15,7 +30,7 @@ test("upload policy accepts only the previewable extension allowlist", () => {
 });
 
 test("unsupported suffixes cannot bypass the policy with a supported MIME label", () => {
-  for (const extension of ["doc", "docx", "xls", "xlsx", "csv", "tsv", "mdx", "heic", "heif", "tif", "tiff", "avif", "bmp", "ics", "mp3", "mp4", "zip", "data"]) {
+  for (const extension of ["doc", "docx", "xls", "xlsx", "csv", "tsv", "mdx", "heic", "heif", "tif", "tiff", "avif", "bmp", "ics", "wav", "m4a", "webm", "mov", "zip", "data"]) {
     for (const type of ["application/json", "text/plain", "image/png", "application/pdf"]) {
       assert.equal(isSupportedTaskFileUpload({ name: `文件.${extension}`, type }), false, `${extension}: ${type}`);
     }
@@ -23,10 +38,10 @@ test("unsupported suffixes cannot bypass the policy with a supported MIME label"
 });
 
 test("only reliable supported MIME types can identify extensionless files", () => {
-  for (const mimeType of ["application/pdf", "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation", "image/png", "image/jpeg", "image/gif", "image/webp", "image/svg+xml", "text/plain", "text/html", "application/xhtml+xml", " Application/JSON ; charset=UTF-8", "application/ld+json", "text/xml", "application/vnd.taskdoor+xml"]) {
+  for (const mimeType of ["application/pdf", "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation", "image/png", "image/jpeg", "image/gif", "image/webp", "image/svg+xml", "text/plain", "text/html", "application/xhtml+xml", " Application/JSON ; charset=UTF-8", "application/ld+json", "text/xml", "application/vnd.taskdoor+xml", "audio/mpeg", "audio/mp3", "video/mp4"]) {
     assert.equal(isSupportedTaskFileUpload({ name: "原件", mimeType }), true, mimeType);
   }
-  for (const type of ["", "image/heic", "image/tiff", "image/avif", "audio/mpeg", "text/markdown", "application/octet-stream"]) {
+  for (const type of ["", "image/heic", "image/tiff", "image/avif", "audio/wav", "video/webm", "text/markdown", "application/octet-stream"]) {
     assert.equal(isSupportedTaskFileUpload({ name: "原件", type }), false, type);
   }
 });

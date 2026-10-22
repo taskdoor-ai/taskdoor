@@ -1,3 +1,4 @@
+import { formatFileSize } from "@/shared/lib/file-size";
 import { useI18n } from '@/shared/i18n/I18nProvider';
 import { useMockText } from '@/ai/mock/i18n/MockDataProvider';
 import { taskContextValue } from '@/shared/i18n/ai-context-copy';
@@ -300,7 +301,7 @@ export function AiConnectionContextPreview({ request }: { request: AiConnectionR
   const { locale } = useI18n();
   if (request.handoffFile) {
     const size = new TextEncoder().encode(request.handoffFile.content).byteLength;
-    const formattedSize = size < 1024 ? `${size} B` : `${(size / 1024).toFixed(1)} KB`;
+    const formattedSize = formatFileSize(size);
     return <section aria-label={ui("本次带入的上下文")} className="ai-connect-context-preview">
       <section className="ai-connect-context-section">
         <header className="ai-connect-context-heading"><h3>{locale === "en" ? "Annotation file" : "标注文件"}</h3></header>

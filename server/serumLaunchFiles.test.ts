@@ -26,7 +26,7 @@ function memoryStorage() {
 }
 const assetBytes = (name: string) => readFileSync(new URL(`../public/task-assets/serum-launch/${name}`, import.meta.url));
 const json = (name: string) => JSON.parse(assetBytes(name).toString("utf8"));
-const firstPackSeeds = () => createWorkspaceTaskDetail(task).files.filter(file => file.builtinPackId !== SERUM_LAUNCH_COMMON_FILE_PACK_ID);
+const firstPackSeeds = () => createWorkspaceTaskDetail(task).files.filter(file => !file.builtinPackId || file.builtinPackId === SERUM_LAUNCH_FILE_PACK_ID);
 
 test("目标任务只追加三种支持预览的真实素材，其他任务不变", () => {
   assert.equal(pack.length, 3);

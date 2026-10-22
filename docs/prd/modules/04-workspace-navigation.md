@@ -44,11 +44,6 @@ operations: "enter_workspace, switch_team, navigate, open_notification, open_pro
 *FIG-WORK-001 · 工作区导航设计。*
 
 
-![个人信息 Profile：头像、姓名与邮箱。](../assets/workspace-navigation/profile-en.jpg)
-
-*FIG-WORK-004 · 个人信息：头像、姓名与邮箱。*
-
-
 团队切换菜单底部固定显示“创建团队”，团队列表独立滚动。创建流程和数量限制见[团队管理](03-team-onboarding.md)。
 
 ## 4. 功能验收标准

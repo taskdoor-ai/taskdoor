@@ -1,7 +1,7 @@
 import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { type ReactNode } from "react";
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
-import { CircleCheck, CircleAlert, Info, X } from "lucide-react";
+import { Check, CircleCheck, CircleAlert, Info, X } from "lucide-react";
 
 type ToastOptions = {
   id?: string;
@@ -10,7 +10,7 @@ type ToastOptions = {
   onClose?: () => void;
 };
 type ToastTone = "success" | "error" | "info";
-const DEFAULT_TOAST_TIMEOUT = 2500;
+const DEFAULT_TOAST_TIMEOUT = 1500;
 const EXTENDED_TOAST_TIMEOUT = 5000;
 const manager = ToastPrimitive.createToastManager();
 
@@ -53,15 +53,20 @@ function ToastViewport() {
   return <ToastPrimitive.Portal>
     <ToastPrimitive.Viewport className="ad-toast-viewport" aria-label={m("feedbackRegion")}>
       {toasts.map(item => {
+        const compact = item.type !== "error" && !item.description && !item.actionProps;
         const Icon = item.type === "success" ? CircleCheck : item.type === "error" ? CircleAlert : Info;
-        return <ToastPrimitive.Root key={item.id} toast={item} className="ad-toast" swipeDirection="up">
-          <Icon className="ad-toast-icon" aria-hidden="true" size={18} />
+        return <ToastPrimitive.Root key={item.id} toast={item} className="ad-toast" data-compact={compact || undefined} swipeDirection="up">
+          {compact && item.type === "success"
+            ? <span className="ad-toast-icon ad-toast-success-mark" aria-hidden="true"><Check size={11} strokeWidth={3} /></span>
+            : <Icon className="ad-toast-icon" aria-hidden="true" size={compact ? 16 : 18} />}
           <ToastPrimitive.Content className="ad-toast-content">
             <ToastPrimitive.Title className="ad-toast-title" />
             <ToastPrimitive.Description className="ad-toast-description" />
           </ToastPrimitive.Content>
-          <ToastPrimitive.Action className="ad-toast-action" />
-          <ToastPrimitive.Close className="ad-toast-close" aria-label={m("closeFeedback")}><X size={16} aria-hidden="true" /></ToastPrimitive.Close>
+          {!compact && <>
+            <ToastPrimitive.Action className="ad-toast-action" />
+            <ToastPrimitive.Close className="ad-toast-close" aria-label={m("closeFeedback")}><X size={16} aria-hidden="true" /></ToastPrimitive.Close>
+          </>}
         </ToastPrimitive.Root>;
       })}
     </ToastPrimitive.Viewport>

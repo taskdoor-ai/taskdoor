@@ -20,18 +20,17 @@ span.discussion-reply-target { cursor: default; }
 .discussion-inline-quote.is-unavailable { color: var(--ad-ink-tertiary); cursor: default; }
 .discussion-attachments { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .discussion-attachments:focus-visible, .discussion-attachments .task-record-file-link[data-focus-visible] { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
-.discussion-attachments .task-record-file-link { display: block; flex: 0 1 216px; width: 216px; max-width: 100%; height: 160px; min-height: 0; gap: 0; margin: 0; padding: 0; overflow: hidden; border-radius: 8px; }
-.discussion-attachments .task-record-file-link[data-disabled], .discussion-attachments .task-record-file-link[data-disabled]:hover { border-color: var(--ad-border-soft); color: var(--ad-ink-tertiary); cursor: default; }
-.discussion-attachments .discussion-attachment-card { position: relative; display: grid; width: 100%; height: 100%; min-width: 0; grid-template-rows: 96px minmax(0, 1fr); overflow: hidden; }
+.discussion-attachments .task-record-file-link { display: block; flex: 0 1 148px; width: 148px; max-width: calc((100% - 8px) / 2); height: 96px; min-height: 0; gap: 0; margin: 0; padding: 0; overflow: hidden; border-radius: 8px; }
+.discussion-attachments .task-record-file-link[data-disabled], .discussion-attachments .task-record-file-link[data-disabled]:hover { height: 110px; border-color: var(--ad-border-soft); color: var(--ad-ink-tertiary); cursor: default; }
+.discussion-attachments .discussion-attachment-card { position: relative; display: grid; width: 100%; height: 100%; min-width: 0; grid-template-rows: 56px minmax(0, 1fr); overflow: hidden; }
 .discussion-attachments .discussion-attachment-thumbnail { width: 100%; height: 100%; min-height: 0; border-radius: 0; }
-.discussion-attachments .discussion-attachment-info { display: grid; min-width: 0; align-content: center; gap: 2px; padding: 8px 10px; }
+.discussion-attachments .discussion-attachment-info { display: grid; min-width: 0; align-content: center; gap: 2px; padding: 3px 8px; }
 .discussion-attachments .discussion-attachment-name { display: -webkit-box; overflow: hidden; color: var(--ad-ink-secondary); font-size: 12px; line-height: 16px; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-.discussion-attachments .discussion-attachment-meta { min-width: 0; overflow: hidden; color: var(--ad-ink-tertiary); font-size: 10px; line-height: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.discussion-attachments .discussion-attachment-card[data-preview="file"] .task-file-glyph { width: 56px; height: 56px; }
+.discussion-attachments .discussion-attachment-unavailable { color: var(--ad-ink-tertiary); font-size: 10px; line-height: 12px; }
 .discussion-attachments .discussion-attachment-card[data-preview="image"] { display: block; }
 .discussion-attachments .discussion-attachment-card[data-preview="image"] .task-file-thumbnail-image { object-fit: cover; }
-.discussion-attachments .discussion-attachment-card[data-preview="image"] .discussion-attachment-info { position: absolute; inset: auto 0 0; padding-top: 18px; background: linear-gradient(transparent, rgb(15 23 42 / .82) 18px); opacity: 0; transition: opacity 140ms ease; }
-.discussion-attachments .discussion-attachment-card[data-preview="image"] .discussion-attachment-name, .discussion-attachments .discussion-attachment-card[data-preview="image"] .discussion-attachment-meta { color: white; }
+.discussion-attachments .discussion-attachment-card[data-preview="image"] .discussion-attachment-info { position: absolute; inset: auto 0 0; border-top: 1px solid var(--ad-border-soft); background: var(--ad-surface); opacity: 0; transition: opacity 140ms ease; }
+.discussion-attachments .discussion-attachment-card[data-preview="image"] .discussion-attachment-name { color: var(--ad-ink); }
 .discussion-attachments .task-record-file-link:hover .discussion-attachment-card[data-preview="image"] .discussion-attachment-info, .discussion-attachments .task-record-file-link[data-focused] .discussion-attachment-card[data-preview="image"] .discussion-attachment-info, .discussion-attachments .task-record-file-link:focus .discussion-attachment-card[data-preview="image"] .discussion-attachment-info, .discussion-attachments .discussion-attachment-card[data-preview="image"]:not(:has(.task-file-thumbnail-image)) .discussion-attachment-info { opacity: 1; }
 .discussion-saved-mention { color: var(--ad-route-ink); background: var(--ad-route-soft); border-radius: 3px; padding: 1px 2px; }
 .discussion-expand { margin: 10px 0 0 44px; }

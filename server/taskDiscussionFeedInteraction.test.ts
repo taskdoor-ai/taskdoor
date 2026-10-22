@@ -394,11 +394,11 @@ test("引用悬停预览不展示定位文案，点击图标直接定位并保�
   elements(attachmentGallery(tree).tree, item => item.type === GridListItem)[0].props.onAction();
   assert.deepEqual(opens, [[file.id, 1]]);
   assert.match(html, /发布时.pdf/);
-  assert.match(html, /v1/);
+  assert.doesNotMatch(html, /发布时.pdf · v1/);
   assert.doesNotMatch(html, /已改名.pdf/);
 });
 
-test("已发布讨论显示真实图片缩略图和文件信息，旧版引用不冒用当前图片", () => {
+test("已发布讨论只显示真实图片缩略图和名称，旧版引用不冒用当前图片", () => {
   const source = "data:image/png;base64,cHJldmlldy1jb250ZW50";
   const file: TaskFileNode = { id: "message-image", kind: "file", name: "首发主视觉.png", parentId: null, updatedAt: "今天", version: 2, sizeLabel: "32 KiB", previewData: { kind: "image", alt: "主视觉", src: source } };
   const renderMessage = (version: number) => TaskDiscussionMessage({ message: { ...root, attachmentRefs: [{ fileId: file.id, name: file.name, version }] }, files: [file], currentUser: "周岚", now: Date.now(), onReply: () => undefined, onLocate: () => undefined, onOpenFile: () => undefined });
@@ -406,21 +406,22 @@ test("已发布讨论显示真实图片缩略图和文件信息，旧版引用�
   assert.match(current, /class="task-file-thumbnail-image"/);
   assert.ok(current.includes(`src="${source}"`));
   assert.match(current, /首发主视觉.png/);
-  assert.match(current, /PNG · 32 KiB · v2/);
+  assert.doesNotMatch(current, /discussion-attachment-meta|32 KiB/);
+  assert.doesNotMatch(current, /首发主视觉.png · v2/);
   const historical = capture(() => renderMessage(1)).html;
   assert.doesNotMatch(historical, /task-file-thumbnail-image|32 KiB/);
   assert.match(historical, /task-file-glyph/);
-  assert.match(historical, /PNG · v1/);
+  assert.doesNotMatch(historical, /首发主视觉.png · v1/);
 });
 
-test("失效讨论附件保留名称类型与不可用提示，且不可打开", () => {
+test("失效讨论附件保留名称与不可用提示，且不可打开", () => {
   const { tree, html } = capture(() => TaskDiscussionMessage({ message: { ...root, attachmentRefs: [{ fileId: "missing-image", name: "标注区域.png", version: 1 }] }, files: [], currentUser: "周岚", now: Date.now(), onReply: () => undefined, onLocate: () => undefined, onOpenFile: () => undefined }));
   const gallery = attachmentGallery(tree);
   const grid = elements(gallery.tree, item => item.type === GridList)[0];
   assert.equal(grid.props.disabledKeys.length, 1);
   assert.match(gallery.html, /aria-disabled="true"/);
   assert.match(html, /标注区域.png/);
-  assert.match(html, /PNG · v1/);
+  assert.doesNotMatch(html, /标注区域.png · v1/);
   assert.match(html, /文件已移除/);
   assert.doesNotMatch(html, /task-file-thumbnail-image/);
 });

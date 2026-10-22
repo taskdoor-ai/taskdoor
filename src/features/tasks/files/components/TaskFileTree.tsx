@@ -1,3 +1,4 @@
+import { formatFileSize } from "@/shared/lib/file-size";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
@@ -8,6 +9,7 @@ import type { TaskFileNode } from "@/shared/model/task-model";
 import { sortTaskFileNodes } from "@/features/tasks/files/lib/task-file-tree";
 import { getTaskFileNodeIcon } from "@/features/tasks/files/lib/task-file-icons";
 import { TaskFileGlyph } from "@/features/tasks/files/components/TaskFileGlyph";
+import { TaskFileThumbnail } from "@/features/tasks/files/components/TaskFileThumbnail";
 import { TaskFileName } from "@/features/tasks/files/components/TaskFileName";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
@@ -51,16 +53,20 @@ export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex }: {
   </DropdownMenu>;
 }
 
-export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, onSelect, selectedId }: {
+export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, onSelect, selectedId, browser = false, displayName: formatName, allNodes = nodes }: {
   expandedIds: Set<string>;
   nodes: TaskFileNode[];
   onAction: (action: TaskFileAction) => void;
   onExpandedChange: (ids: Set<string>) => void;
-  onSelect: (id: string) => void;
+  onSelect: (id: string, trigger?: HTMLElement) => void;
   selectedId: string | null;
+  browser?: boolean;
+  displayName?: (name: string) => string;
+  allNodes?: TaskFileNode[];
 }) {
   const ui = useGlobalUi();
   const mock = useMockText();
+  const itemRefs = React.useRef(new Map<string, HTMLDivElement>());
   const visible = nodes.filter((node) => !node.archived);
   const childrenByParent = new Map<string | null, TaskFileNode[]>();
   for (const node of sortTaskFileNodes(visible)) {
@@ -77,19 +83,27 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
 
   const renderNode = (node: TaskFileNode): React.ReactElement => {
     const children = childrenByParent.get(node.id) ?? [];
-    const displayName = mock.text(node.name);
+    const displayName = (formatName ?? mock.text)(node.name);
+    const childCount = allNodes.filter(child => child.parentId === node.id && !child.archived).length;
     return <TreeItem
-      className={({ isSelected }) => cn("task-file-explorer-row", isSelected && "active")}
+      className={({ isSelected }) => cn("task-file-explorer-row", (isSelected || browser && node.id === selectedId) && "active")}
       data-node-id={node.id}
       data-node-kind={node.kind}
+      data-file-id={browser ? node.id : undefined}
       hasChildItems={node.kind === "folder"}
       id={node.id}
       key={node.id}
-      onPress={() => {
+      ref={element => { if (element) itemRefs.current.set(node.id, element); else itemRefs.current.delete(node.id); }}
+      onAction={browser ? () => {
+        if (node.kind === "folder") toggleFolder(node.id);
+        else onSelect(node.id, itemRefs.current.get(node.id));
+      } : undefined}
+      onPress={(event) => {
+        if (browser) return;
         if (node.kind === "folder") toggleFolder(node.id);
         // Press also opens the current file again after returning to the
         // narrow-screen tree, even when its selection has not changed.
-        else onSelect(node.id);
+        else onSelect(node.id, event.target as HTMLElement);
       }}
       textValue={displayName}
     >
@@ -100,9 +114,10 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
           preventFocusOnPress
           slot="chevron"
         >{isExpanded ? <ChevronDown aria-hidden="true" size={13} /> : <ChevronRight aria-hidden="true" size={13} />}</AriaButton> : <span aria-hidden="true" className="task-file-explorer-chevron" />}
-        <TaskFileGlyph compact expanded={isExpanded} node={node} />
+        {browser ? node.kind === "file" && <span className="task-file-browser-thumbnail"><TaskFileThumbnail file={node} /></span> : <TaskFileGlyph compact expanded={isExpanded} node={node} />}
         <TaskFileName className="task-file-explorer-name" name={displayName} />
-        {node.kind === "folder" && children.length > 0 && <small>{children.length}</small>}
+        {node.kind === "folder" && (browser || children.length > 0) && <small aria-label={ui("{0} 项", { 0: childCount })}>{childCount}</small>}
+        {browser && node.kind === "file" && <small>{formatFileSize(node.sizeBytes, { fallback: node.sizeLabel })}</small>}
         <TaskFileNodeMenu node={node} onAction={onAction} tabIndex={isFocused ? 0 : -1} />
       </>}</TreeItemContent>
       {children.map(renderNode)}
@@ -111,19 +126,20 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
 
   return <Tree
     aria-label={ui("任务文件结构")}
-    className="task-file-explorer-tree"
-    disallowEmptySelection
+    className={cn("task-file-explorer-tree", browser && "task-file-browser-items")}
+    disallowEmptySelection={!browser}
     expandedKeys={expandedIds}
     keyboardNavigationBehavior="tab"
     onExpandedChange={(keys) => onExpandedChange(new Set([...keys].map(String)))}
     onSelectionChange={(keys) => {
+      if (browser) return;
       if (keys === "all") return;
       const key = keys.values().next().value;
       // Arrow navigation may focus a folder without replacing the open file.
       if (key !== undefined && visible.some((node) => node.id === String(key) && node.kind === "file")) onSelect(String(key));
     }}
-    selectedKeys={selectedId ? [selectedId] : []}
+    selectedKeys={!browser && selectedId ? [selectedId] : []}
     selectionBehavior="replace"
-    selectionMode="single"
+    selectionMode={browser ? "none" : "single"}
   >{(childrenByParent.get(null) ?? []).map(renderNode)}</Tree>;
 }

@@ -32,14 +32,6 @@ operations: "leave_team, remove_member, revoke_team_access"
 4. 全部指定后，确认交接并离开或移除；提交期间禁止重复点击。没有未完成任务时只确认退出，不展示空清单。
 5. 交接与成员退出全部成功后更新成员列表及任务关系；失败保留输入和原关系。接手人收到汇总通知，可从现有“我负责的／我参与的”范围继续工作。
 
-![负责的任务交接：筛选待交接任务，逐项指定接手人。](../assets/membership-account-exit/handoff-owned-zh.png)
-
-*FIG-EXIT-001 · 负责的任务交接：筛选待交接任务，逐项指定接手人。*
-
-![参与的任务交接：单独核对参与关系，底部汇总全部交接项。](../assets/membership-account-exit/handoff-participating-zh.png)
-
-*FIG-EXIT-003 · 参与的任务交接：单独核对参与关系，底部汇总全部交接项。*
-
 ### 3.2 任务关系与历史
 
 | 离开者身份 | 交接结果 |

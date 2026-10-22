@@ -10,7 +10,7 @@
 .task-effort-inline { min-width: 0; }
 .task-effort-aggregate { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ad-space-2); min-height: var(--ad-control-height-sm); padding-block: var(--ad-space-1); }
 .task-effort-aggregate > small { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); font-weight: 400; }
-.task-effort-stepper { display: inline-flex; align-items: center; width: 188px; max-width: 100%; height: var(--ad-control-height-sm); border: 1px solid var(--ad-border); border-radius: var(--ad-radius-control); background: var(--ad-surface); overflow: hidden; }
+.task-effort-stepper { display: inline-flex; align-items: center; width: 188px; max-width: 100%; height: var(--ad-control-height-sm); border: 1px solid var(--ad-border); border-radius: var(--ad-radius-input); background: var(--ad-surface); overflow: hidden; }
 .task-effort-stepper:focus-within { border-color: var(--ad-focus); }
 .task-effort-stepper [data-slot="input"] { min-width: 0; flex: 1; width: 0; height: 100%; padding: 0 var(--ad-space-2); border: 0; border-radius: 0; background: transparent; box-shadow: none; font-variant-numeric: tabular-nums; }
 .task-effort-stepper-unit { flex-shrink: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); padding-right: var(--ad-space-2); }

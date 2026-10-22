@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { ChevronLeft, ChevronRight, FileWarning, Maximize, Minus, Pin, PinOff, Plus, RotateCw, Scan, TextSelect } from "lucide-react";
-import { getDocument, GlobalWorkerOptions, TextLayer, type PDFDocumentProxy, type RenderTask } from "pdfjs-dist";
-import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import { TextLayer, type PDFDocumentProxy, type RenderTask } from "pdfjs-dist";
+import { loadTaskPdfDocument } from "@/features/tasks/files/lib/task-pdf-runtime";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import type { TaskFileNode } from "@/shared/model/task-model";
 import type { TaskFileTextSelection } from "@/features/tasks/files/components/TaskFileViewer";
@@ -10,25 +10,6 @@ import { getPdfTextAnchorRects, readPdfTextSelection, type PdfSelectionRegion } 
 import { getPdfPageRegion, normalizePdfRegionDrag, resolvePdfSelectionMode, type PdfAnnotationSelectionMode } from "@/features/tasks/files/lib/pdf-region-selection";
 import "@/features/tasks/styles/task-file-pdf-viewer.css";
 
-GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
-
-// Vite keeps these files local and gives each one its built asset URL. Import
-// only the resource requested by PDF.js, rather than loading every CMap/font.
-const pdfAssetUrls = import.meta.glob<string>([
-  "/node_modules/pdfjs-dist/cmaps/*.bcmap",
-  "/node_modules/pdfjs-dist/standard_fonts/*.{pfb,ttf}",
-  "/node_modules/pdfjs-dist/wasm/*.{wasm,js}",
-], { query: "?url&no-inline", import: "default" });
-const assetFolders: Record<string, string> = { cMapUrl: "cmaps", standardFontDataUrl: "standard_fonts", wasmUrl: "wasm" };
-class LocalPdfBinaryDataFactory {
-  async fetch({ kind, filename }: { kind: string; filename: string }) {
-    const loadUrl = pdfAssetUrls[`/node_modules/pdfjs-dist/${assetFolders[kind]}/${filename}`];
-    if (!loadUrl) throw new Error("PDF resource is unavailable.");
-    const response = await fetch(await loadUrl());
-    if (!response.ok) throw new Error("PDF resource could not be loaded.");
-    return new Uint8Array(await response.arrayBuffer());
-  }
-}
 
 type Props = {
   file: TaskFileNode;
@@ -451,7 +432,7 @@ export function TaskPdfViewer({ file, url, annotationMode = false, annotations =
     setThumbnailsPinned(false);
     window.clearTimeout(thumbnailCloseTimer.current);
     if (!url) { setError("load"); return; }
-    const loadingTask = getDocument({ url, BinaryDataFactory: LocalPdfBinaryDataFactory, useWorkerFetch: false, cMapPacked: true });
+    const loadingTask = loadTaskPdfDocument(url);
     loadingTask.onPassword = () => { passwordRequired = true; if (!cancelled) setError("password"); void loadingTask.destroy().catch(() => {}); };
     void loadingTask.promise.then(async pdf => {
       const first = await pdf.getPage(1);

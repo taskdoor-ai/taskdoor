@@ -25,9 +25,42 @@ export function TaskCriteriaFields({ renderMark, renderAction, values, onChange,
   const prefix = idPrefix ?? generatedId;
   const root = useRef<HTMLDivElement>(null);
   const focusFrame = useRef(0);
+  const commitFrame = useRef(0);
+  const composing = useRef(false);
+  const pointerAction = useRef(false);
+  const pendingCommit = useRef(false);
+  const commitCallback = useRef(onCommit);
+  commitCallback.current = onCommit;
   const displayedValues = values.length || !showInitialEmptyRow ? values : [""];
 
-  useEffect(() => () => { cancelAnimationFrame(focusFrame.current); }, []);
+  const scheduleCommit = () => {
+    cancelAnimationFrame(commitFrame.current);
+    commitFrame.current = requestAnimationFrame(() => {
+      if (!pendingCommit.current || composing.current || pointerAction.current) return;
+      if (root.current?.contains(document.activeElement)) { pendingCommit.current = false; return; }
+      pendingCommit.current = false;
+      commitCallback.current?.();
+    });
+  };
+  useEffect(() => {
+    const releasePointer = () => {
+      if (!pointerAction.current) return;
+      pointerAction.current = false;
+      if (pendingCommit.current) {
+        cancelAnimationFrame(commitFrame.current);
+        // A click may add/remove a row and schedule its focus in this frame.
+        commitFrame.current = requestAnimationFrame(scheduleCommit);
+      }
+    };
+    document.addEventListener("pointerup", releasePointer);
+    document.addEventListener("pointercancel", releasePointer);
+    return () => {
+      cancelAnimationFrame(focusFrame.current);
+      cancelAnimationFrame(commitFrame.current);
+      document.removeEventListener("pointerup", releasePointer);
+      document.removeEventListener("pointercancel", releasePointer);
+    };
+  }, []);
 
   const focusRow = (index: number) => {
     cancelAnimationFrame(focusFrame.current);
@@ -38,7 +71,19 @@ export function TaskCriteriaFields({ renderMark, renderAction, values, onChange,
 
   return <div aria-label={label} className={`task-criteria-fields ${className}`.trim()} onBlur={event => {
     if (!onCommit || (event.relatedTarget && event.currentTarget.contains(event.relatedTarget as Node))) return;
-    onCommit();
+    pendingCommit.current = true;
+    if (!composing.current && !pointerAction.current) scheduleCommit();
+  }} onFocus={() => { pendingCommit.current = false; cancelAnimationFrame(commitFrame.current); }} onCompositionStart={() => { composing.current = true; cancelAnimationFrame(commitFrame.current); }} onCompositionEnd={() => {
+    composing.current = false;
+    if (pendingCommit.current) scheduleCommit();
+  }} onPointerDownCapture={event => {
+    if (event.button === 0 && (event.target as HTMLElement).closest("button")) {
+      pointerAction.current = true;
+      cancelAnimationFrame(commitFrame.current);
+    }
+  }} onClick={() => {
+    pointerAction.current = false;
+    if (pendingCommit.current) scheduleCommit();
   }} ref={root} role="group">
     {displayedValues.map((value, index) => <div className="task-criteria-field-row" key={index}>
       {renderMark ? renderMark(index, value) : <span aria-hidden="true" className="task-criteria-field-mark">{index + 1}</span>}

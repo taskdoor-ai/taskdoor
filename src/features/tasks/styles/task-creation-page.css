@@ -46,7 +46,7 @@
 .creation-answer-options > button > svg { flex: 0 0 auto; color: var(--ad-ink-tertiary); }
 .creation-answer-options > button:hover { border-color: var(--ad-route); color: var(--ad-route); }
 .creation-answer-options > button[aria-pressed="true"] { border-color: color-mix(in srgb, var(--ad-route) 35%, var(--ad-border)); background: var(--ad-route-soft); color: var(--ad-route-ink); }
-.creation-custom-answer { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--ad-space-3); min-height: 64px; padding: var(--ad-space-2); border: 1px solid var(--ad-border); border-radius: var(--ad-radius-control); background: var(--ad-surface); }
+.creation-custom-answer { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--ad-space-3); min-height: 64px; padding: var(--ad-space-2); border: 1px solid var(--ad-border); border-radius: var(--ad-radius-input); background: var(--ad-surface); }
 .creation-custom-answer:focus-within { border-color: var(--ad-focus); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ad-focus) 16%, transparent); }
 .creation-custom-answer > label { padding-left: var(--ad-space-2); color: var(--ad-ink); font-size: var(--ad-text-label); font-weight: 550; white-space: nowrap; }
 .creation-custom-answer > [data-slot="textarea"] { min-height: 44px; max-height: 120px; padding: 11px var(--ad-space-2); border: 0; background: transparent; box-shadow: none; resize: vertical; }

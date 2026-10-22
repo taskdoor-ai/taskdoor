@@ -52,7 +52,7 @@
 .task-pdf-viewer button:disabled { opacity: 0.35; cursor: default; }
 .task-pdf-viewer button:focus-visible, .task-pdf-viewer input:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 1px; }
 .task-pdf-viewer__page-input { display: inline-flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums; }
-.task-pdf-viewer__page-input input { box-sizing: border-box; width: 34px; height: 32px; padding: 2px 3px; border: 0; border-radius: 6px; appearance: textfield; background: transparent; color: #4a5767; font: inherit; font-weight: 550; text-align: center; }
+.task-pdf-viewer__page-input input { box-sizing: border-box; width: 34px; height: 32px; padding: 2px 3px; border: 0; border-radius: var(--ad-radius-input); appearance: textfield; background: transparent; color: #4a5767; font: inherit; font-weight: 550; text-align: center; }
 .task-pdf-viewer__page-input input::-webkit-inner-spin-button, .task-pdf-viewer__page-input input::-webkit-outer-spin-button { margin: 0; -webkit-appearance: none; }
 .task-pdf-viewer__zoom-controls output { min-width: 39px; text-align: center; font-variant-numeric: tabular-nums; }
 .task-pdf-viewer__separator { width: 1px; height: 15px; margin-inline: 5px; background: #e8ebef; }

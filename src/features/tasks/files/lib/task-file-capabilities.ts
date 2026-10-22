@@ -2,7 +2,7 @@ import { getPreviewKind } from "@/features/tasks/files/lib/task-file-tree";
 
 type TaskFileCapabilitySource = { name: string; type?: string; mimeType?: string };
 
-const uploadExtensions = ["pdf", "ppt", "pptx", "png", "jpg", "jpeg", "gif", "webp", "svg", "md", "txt", "log", "html", "htm", "json", "xml"] as const;
+const uploadExtensions = ["pdf", "ppt", "pptx", "png", "jpg", "jpeg", "gif", "webp", "svg", "md", "txt", "log", "html", "htm", "json", "xml", "mp3", "mp4"] as const;
 const uploadMimeTypes = [
   "application/pdf",
   "application/vnd.ms-powerpoint",
@@ -10,6 +10,7 @@ const uploadMimeTypes = [
   "image/png", "image/jpeg", "image/gif", "image/webp", "image/svg+xml",
   "text/plain", "text/html", "application/xhtml+xml",
   "application/json", "application/xml", "text/xml",
+  "audio/mpeg", "audio/mp3", "video/mp4",
 ] as const;
 const extensionSet = new Set<string>(uploadExtensions);
 const mimeSet = new Set<string>(uploadMimeTypes);
@@ -39,4 +40,15 @@ export function canEditTaskFile(file: TaskFileCapabilitySource): boolean {
   if (!isSupportedTaskFileUpload(file)) return false;
   const kind = getPreviewKind(file.name.trim(), file.mimeType ?? file.type);
   return kind === "markdown" || kind === "text" || kind === "html" || kind === "json" || kind === "xml";
+}
+
+/** Uploaded originals are separate files; only online-editable documents expose revisions. */
+export function getTaskFileVersionLabel(file: TaskFileCapabilitySource & { version?: number; attachmentOnly?: boolean }, version = file.version ?? 1): string {
+  return !file.attachmentOnly && canEditTaskFile(file) ? `v${version}` : "";
+}
+
+/** Preserve the existing document annotation formats; media is playback only. */
+export function canAnnotateTaskFile(file: TaskFileCapabilitySource): boolean {
+  const kind = getPreviewKind(file.name.trim(), file.mimeType ?? file.type);
+  return isSupportedTaskFileUpload(file) && kind !== "audio" && kind !== "video";
 }

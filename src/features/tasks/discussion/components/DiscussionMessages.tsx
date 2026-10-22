@@ -11,7 +11,7 @@ import type { TaskFileNode } from "@/shared/model/task-model";
 import type { CollaborationMessage, DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
 import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
-import { usePersonOptions } from "@/shared/ui/PersonDirectory";
+import { DiscussionMarkdown } from "@/features/tasks/discussion/components/DiscussionMarkdown";
 import { AiConnectionButton } from "@/features/ai-connection/components/AiConnectionButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { DiscussionComposer } from "@/features/tasks/discussion/components/DiscussionComposer";
@@ -35,14 +35,6 @@ type Props = {
   allowQuote?: boolean;
   expandReplies?: boolean;
 };
-
-function MessageText({ message, text }: { message: CollaborationMessage; text: string }) {
-  const mentioned = usePersonOptions(message.mentionedPrincipalIds ?? []);
-  const names = new Map(mentioned.flatMap(person => [[`@${person.name}`, person.id], [`@${person.id}`, person.id]]));
-  if (!names.size) return <>{text}</>;
-  const pattern = new RegExp(`(${[...names.keys()].sort((a, b) => b.length - a.length).map(name => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g");
-  return <>{text.split(pattern).map((part, index) => names.has(part) ? <span className="discussion-saved-mention" key={index}>@<PersonName name={part.slice(1)} personId={names.get(part)!} /></span> : part)}</>;
-}
 
 function messageTimestamp(message: CollaborationMessage, locale: string, now: number) {
   const recorded = message.createdAt ?? (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2})?$/.test(message.time) ? `${message.time.replace(" ", "T")}+08:00` : "");
@@ -156,7 +148,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
             {allowQuote && message.quote && message.quote.messageId !== message.replyToActivityId && (quoted && !quoted.deletedAt
               ? <button className="discussion-inline-quote" onClick={() => jumpTo(quoted.id)} type="button"><PersonName name={quoted.author} personId={quoted.author} />：{message.quote.text}</button>
               : <div className="discussion-inline-quote is-unavailable">{quoted?.deletedAt ? d('quoteDeleted') : d('quoteUnavailable')}</div>)}
-            <p className="task-discussion-message"><MessageText message={message} text={reading.text} /></p>
+            <div className="task-discussion-message"><DiscussionMarkdown text={reading.text} mentionedPrincipalIds={message.mentionedPrincipalIds} /></div>
             <DiscussionAttachmentGallery attachmentRefs={refs} files={files} legacyFileName={message.file} onOpenFile={onOpenFile} variant="thread" />
           </>}
           <div className="discussion-message-footer">

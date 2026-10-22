@@ -1,3 +1,4 @@
+import { formatFileSize } from "@/shared/lib/file-size";
 import type { TaskFileNode, TaskNode } from "@/shared/model/task-model";
 import html from "@/ai/mock/data/serumLaunchHtml.json";
 import tables from "@/ai/mock/data/serumLaunchTables.json";
@@ -16,7 +17,7 @@ function asset(id: string, filename: AssetName, name: string, section: string, m
     id: `${taskId}-asset-${id}`, kind: "file", name, parentId: `${taskId}-${section}`,
     blobId: `builtin-task-asset:${assetRoot}${filename}`, builtinPackId: SERUM_LAUNCH_FILE_PACK_ID,
     originalName: filename, format: filename.split(".").pop()!.toUpperCase(), mimeType,
-    sizeBytes, sizeLabel: sizeBytes < 1024 * 1024 ? `${(sizeBytes / 1024).toFixed(1)} KiB` : `${(sizeBytes / (1024 * 1024)).toFixed(1)} MiB`,
+    sizeBytes, sizeLabel: formatFileSize(sizeBytes),
     updatedAt: "2026-09-14T18:00:00+08:00", version: 1,
     ...(previewData ? { previewData } : {}), ...(content === undefined ? {} : { content }),
   };

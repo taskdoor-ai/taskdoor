@@ -1,5 +1,30 @@
 # PRD 来源映射
 
+## PRD-0274：输入保存、讨论附件与文件交互的批准范围（2026-10-23）
+
+用户明确授权提交已合并的10项PM Demo并据此建立正式项目跟进；本轮从已发布`d3033c0a`基线隔离，保留原工作区尚未提交的子任务拆解UI／Skill、新增统一预览及媒体时间点标注、AI交接、页面资源失效恢复与排序增量。原已发布正文中既有的独立拆解和临时标注规则保持，不能将本轮隔离解释为删除既有能力。
+
+| 批准范围 | 当前实现入口与核对范围 |
+| --- | --- |
+| 输入圆角、标题／标准留白 | [输入变量](../../src/shared/styles/tokens.css)、[共享输入](../../src/shared/ui/input.tsx)、[详情样式](../../src/features/tasks/styles/task-detail-split.css)、[标准样式](../../src/features/tasks/styles/task-criteria-fields.css)。全站文字输入6px，标题水平12px且聚焦不跳动、标准水平12px／垂直2px仅属视觉修正。 |
+| 标准组离焦保存及响应 | [标准输入](../../src/features/tasks/components/TaskCriteriaFields.tsx)、[标准编辑](../../src/features/tasks/components/TaskCriteriaEditor.tsx)、[标准保存](../../src/features/tasks/components/TaskCompletionCriteria.tsx)、[文本输入](../../src/features/tasks/components/TaskCreationEditableText.tsx)、[存储复用](../../src/features/tasks/lib/task-ai-adjustment-storage.ts)、[日期格式缓存](../../src/shared/lib/date-time-format.ts)。组词结束后离组提交、快照回执、连续队列与任务隔离；不把Demo本地存储机制视为正式服务端实现。 |
+| 保存Toast | [文本反馈](../../src/features/tasks/lib/useTaskTextSaveFeedback.ts)、[共享Toast](../../src/shared/ui/toast.tsx)、[样式](../../src/shared/styles/toast.css)、[阅读页Toast](../../src/prd/StandaloneToast.tsx)。真实保存成功才显示；普通成功／信息1.5秒无X，错误或说明／操作5秒及可用入口，连续复用重计时。鲜绿色成功勾与紧凑样式为视觉修正。 |
+| 讨论Markdown | [正文](../../src/features/tasks/discussion/components/DiscussionMarkdown.tsx)、[普通及回复输入](../../src/features/tasks/discussion/components/DiscussionComposer.tsx)、[消息](../../src/features/tasks/discussion/components/TaskDiscussionMessage.tsx)。直接输入源文，发布后格式阅读，无输入预览栏；HTML及远程图片、显式提及边界归模块10。 |
+| 附件归档与原位预览 | [协作保存](../../src/features/tasks/lib/task-collaboration.ts)、[讨论](../../src/features/tasks/components/TaskDiscussion.tsx)、[附件卡片](../../src/features/tasks/discussion/components/DiscussionAttachmentContent.tsx)、[共享预览](../../src/features/tasks/files/components/TaskFileExplorer.tsx)。新上传成功发布后才归入根讨论目录，已有文件仅固定引用，失败／草稿不归档；返回讨论位置与焦点。 |
+| 文件树和工具栏 | [文件浏览](../../src/features/tasks/files/components/TaskFileBrowser.tsx)、[目录树](../../src/features/tasks/files/components/TaskFileTree.tsx)、[名称搜索](../../src/features/tasks/files/lib/task-file-tree.ts)、[列表样式](../../src/features/tasks/styles/task-file-browser.css)、[任务搜索](../../src/features/tasks/styles/task-workspace-list.css)。独立同页展开、折叠项全任务搜索、无额外路径行；搜索／新建同排、数量随名称及紧凑密度。 |
+| 移动与遮罩 | [目的地窗口](../../src/features/tasks/files/components/TaskFileMoveDialog.tsx)、[限制校验](../../src/features/tasks/files/lib/task-file-action-options.ts)、[文件表单](../../src/features/tasks/files/components/TaskFileDialogs.tsx)、[共享弹窗](../../src/shared/ui/dialog.tsx)。只选当前任务有效目录，当前位置与所选目标区分、确认才移动；共享10%黑底与4px模糊。 |
+| 上传容量与单位 | [上传](../../src/features/tasks/files/lib/task-file-upload.ts)、[讨论附件限制](../../src/features/tasks/files/lib/discussion-uploads.ts)、[大小格式](../../src/shared/lib/file-size.ts)、[大文本回退](../../src/features/tasks/files/components/TaskFileViewer.tsx)。普通文件1GB标称按1GiB校验，讨论20MiB保持；大小按真实字节1000进位，超大正文保留原件下载。正式项目普通上传在已核对的dev基线本来就是1GiB，不宣称提高正式后端容量。 |
+| 下载、封面与媒体 | [下载](../../src/features/tasks/files/components/TaskFileDownload.tsx)、[下载来源](../../src/features/tasks/files/lib/task-file-download.ts)、[封面](../../src/features/tasks/files/components/TaskFileThumbnail.tsx)、[真实封面生成](../../src/features/tasks/files/lib/render-task-file-cover.ts)、[媒体播放器](../../src/features/tasks/files/components/TaskMediaViewer.tsx)。对应保存版／历史原件下载、真实同版本画面及失败回退；只读手动媒体播放，不含媒体标注。 |
+| Markdown编辑和固定引用 | [Markdown编辑器](../../src/features/tasks/files/components/TaskMarkdownEditor.tsx)、[模式转换](../../src/features/tasks/files/lib/task-markdown-editing.ts)、[编辑能力](../../src/features/tasks/files/lib/task-file-capabilities.ts)、[保存](../../src/features/tasks/files/lib/task-file-editing.ts)。不支持结构保留源码；上传独立身份，文本在线保存才形成版本，旧引用不被新版替代。 |
+
+截图处理从已发布清单逐项进行，保留旧资产与采集历史；因全站输入呈现、附件卡片或文件工具栏变化失效的图改待采集并撤出当前正文。只复用FIG-FILES-102至107六张2026-10-22主工作区完整App图，逐图目视、原字节复制及摘要核对；采集时间保持，不冒充本次隔离版重拍。这些文件Tab画面没有展示暂缓子任务建议或新标注。完成标准026同时包含本轮子任务示例，不纳入本次发布；页面恢复图及所有中间试排、旧Toast图同样不纳入。
+
+本批隔离工作树的结构门、应用TypeScript检查（`tsc -p tsconfig.app.json --noEmit`）及Vite前端生产构建均通过。首批20个相关定向测试文件185项、补充11个文件86项均通过，合计31个文件271项通过、0失败；临时日志为`/tmp/taskdoor-pm-publish-targeted-tests-20261023.log`及`/tmp/taskdoor-pm-publish-extra-tests-20261023.log`，计数与0失败已核对。`npm run build`中的`tsc -b`仍被未改动的既有server测试fixture类型错误阻断，因此本轮不能登记为完整项目构建通过。共享Toast已单独预构建。原工作区检查仅为历史来源，不冒充隔离后的验证。未运行全量测试或双重审查，不据静态图推定真机、原生输入法、实际1GB传输、跨端或正式站接入。正式项目保留当前格式策略及Office支持，不套用Demo既有格式白名单。
+
+隔离生产构建通过`http://127.0.0.1:5195/`在新的Chrome context中核对：标题聚焦前后水平留白12px、高36px保持；实际本地修改保存后出现鲜绿`#389e0d`、无X的紧凑Toast并自动消失。文件初始折叠、行高40px，搜索与新建控件36px且同排；搜索后清除恢复目录展开。新建窗口为10%黑底与4px背景模糊，文件原位预览及Esc关闭可用。390px窄视口的document.scrollWidth为390，未观察到应用pageerror。临时记录`/tmp/taskdoor-pm-publish-ui-20261023/verification.json`中的视口、遮罩及无错误结果已核对；这是真实隔离应用的本地操作核验，不是正式PRD截图，不声明原生IME、真实手机、全格式、真实大文件传输或正式站验收。
+
+PRD治理收口：共享Toast预构建完成后，本轮在隔离工作树运行一次`node scripts/build-agentdoor-prd.mjs`，成功生成25个模块及阅读页／模块索引。已核对生成页包含0274及本批最终规则，没有新增讨论创建任务入口、统一预览标注、媒体时间点标注或版本恢复章节；模块07及模块08独立拆解正文与HEAD一致。索引及截图清单JSON可解析，六张新增资产存在，限定文档／生成页的`git diff --check`通过。源码、截图和生成页同批交付，未手改生成HTML、未发布新PRD版本。
+
 ## 人员选择器字号与对齐视觉同步（2026-10-20，非语义）
 
 本轮仅调整[PersonPicker样式](../../src/features/members/styles/person-picker.css)：姓名与“暂不分配”同为14px、400字重；未分配图标与头像使用同一左列，带邀请说明的两行卡片中图标按整张卡片垂直居中，单行项保持原布局。选人、暂不分配、立即邀请、权限与保存规则均不变，不新增语义变更ID，不改模块last_change／version或语义日志。
