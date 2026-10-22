@@ -1,4 +1,4 @@
-.discussion-composer { min-width: 0; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--ad-surface); color: var(--ad-ink); transition: border-color .15s, box-shadow .15s; }
+.discussion-composer { min-width: 0; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-input); background: var(--ad-surface); color: var(--ad-ink); transition: border-color .15s, box-shadow .15s; }
 .discussion-composer:focus-within, .discussion-composer.is-dragging { border-color: var(--ad-focus); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ad-focus) 12%, transparent); }
 .discussion-composer.is-dragging { background: var(--ad-route-soft); }
 .discussion-composer-editor { position: relative; }
@@ -46,6 +46,7 @@
 /* File Card Collections supplies the paper preview and colored format badge. */
 .discussion-composer-attachment { position: relative; display: flex; flex: 0 1 80px; flex-direction: column; align-items: center; gap: var(--ad-space-1); min-width: 0; max-width: 100%; padding: var(--ad-space-1); border-radius: var(--ad-radius-card); background: var(--ad-surface); }
 .discussion-composer-attachment-preview { display: block; width: 100%; height: 56px; object-fit: contain; }
+.discussion-composer-attachment .task-file-thumbnail.discussion-composer-attachment-preview { display: grid; height: 56px; }
 .discussion-composer-attachment-copy { display: grid; align-self: stretch; gap: var(--ad-space-1); min-width: 0; text-align: center; }
 .discussion-composer-attachment-copy strong, .discussion-composer-attachment-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ad-text-caption); font-weight: 500; }
 .discussion-composer-attachment-copy small { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); overflow-wrap: anywhere; }

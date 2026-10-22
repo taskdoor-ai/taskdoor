@@ -1,9 +1,11 @@
+import { getDateTimeFormatter } from "@/shared/lib/date-time-format";
+
 /** Teams saved before timezone metadata keep the demo's original calendar. */
 export const LEGACY_TEAM_TIME_ZONE = "Asia/Shanghai";
 
 export function isValidTimeZone(value: unknown): value is string {
   if (typeof value !== "string" || !value.trim()) return false;
-  try { new Intl.DateTimeFormat("en-US", { timeZone: value }); return true; }
+  try { getDateTimeFormatter("en-US", { timeZone: value }); return true; }
   catch { return false; }
 }
 

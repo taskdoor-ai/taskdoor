@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import { setImmediate } from "node:timers/promises";
+import { register } from "node:module";
 import test from "node:test";
 import React, { Children, createElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { $createParagraphNode, $createTextNode, $getRoot, createEditor, type EditorState } from "lexical";
-import { DiscussionComposer, isDiscussionSubmitShortcut, type DiscussionComposerProps } from "../src/features/tasks/discussion/components/DiscussionComposer.tsx";
+import type { DiscussionComposerProps } from "../src/features/tasks/discussion/components/DiscussionComposer.tsx";
 import { $createMentionNode, $isMentionNode, MentionNode } from "../src/features/tasks/discussion/components/mention-node.ts";
 import { DISCUSSION_UPLOAD_MAX_BYTES, isDiscussionImage, prepareDiscussionUpload } from "../src/features/tasks/files/lib/discussion-uploads.ts";
 import type { DiscussionDraft } from "../src/features/tasks/lib/task-collaboration.ts";
@@ -14,6 +15,14 @@ import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 import { I18nProvider } from "../src/shared/i18n/I18nProvider.tsx";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
+register(`data:text/javascript,${encodeURIComponent(`
+  export async function load(url, context, nextLoad) {
+    if (url.endsWith(".svg")) return { format: "module", source: "export default " + JSON.stringify(url), shortCircuit: true };
+    if (url.endsWith(".css")) return { format: "module", source: "export default {}", shortCircuit: true };
+    return nextLoad(url, context);
+  }
+`)}`, import.meta.url);
+const { DiscussionComposer, isDiscussionSubmitShortcut } = await import("../src/features/tasks/discussion/components/DiscussionComposer.tsx");
 type Element = ReactElement<Record<string, any>>;
 
 function elements(tree: ReactNode, match: (element: Element) => boolean): Element[] {
@@ -156,7 +165,7 @@ test("纯附件评论可以发布；取消保留草稿且不发布", async () =>
 test("超大文件在读取与存储前失败，图片预览仅识别受支持的格式", async () => {
   let read = false;
   const oversized = { name: "超大.pdf", size: DISCUSSION_UPLOAD_MAX_BYTES + 1, text: () => { read = true; throw new Error("不应读取"); } } as unknown as File;
-  await assert.rejects(prepareDiscussionUpload(oversized), /20 MiB/);
+  await assert.rejects(prepareDiscussionUpload(oversized), /20\.97 MB/);
   assert.equal(read, false);
   for (const name of ["照片.PNG", "照片.jpeg", "截图.webp", "动画.gif"]) assert.equal(isDiscussionImage({ name }), true);
   assert.equal(isDiscussionImage({ name: "可执行图像.svg", mimeType: "image/svg+xml" }), false);

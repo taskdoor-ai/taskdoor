@@ -1,0 +1,104 @@
+/* One viewport and one scrolling surface around the format's own reader. */
+.task-file-preview-window[data-slot="dialog-content"][data-preview-kind] {
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+  border-radius: 0;
+  translate: none;
+  transform: none;
+  box-shadow: none;
+}
+.task-file-preview-window .task-file-editor-toolbar { padding-inline: 20px; }
+.task-file-preview-stage[data-preview-kind] {
+  box-sizing: border-box;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  padding: 28px clamp(20px, 4vw, 64px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--ad-surface);
+}
+.task-file-preview-stage[data-preview-kind] > :is(.task-file-document, .task-markdown-editor) {
+  width: min(100%, 960px);
+  min-height: 0;
+  margin-inline: auto;
+}
+.task-file-preview-stage[data-preview-kind] .task-file-source-document {
+  width: 100%;
+  max-width: none;
+}
+.task-file-preview-stage > .task-markdown-editor:has(.task-markdown-source) { width: 100%; }
+.task-file-preview-stage:is([data-preview-kind="json"], [data-preview-kind="xml"], [data-preview-kind="html"]) > .task-file-document {
+  width: 100%;
+}
+.task-file-preview-stage[data-preview-kind="html"]:has(> .task-file-html-annotations) { padding: 0; }
+.task-file-preview-window .task-file-preview-stage[data-preview-kind]:is([data-preview-kind="image"], [data-preview-kind="video"], [data-preview-kind="pdf"], [data-preview-kind="presentation"]) {
+  display: flex;
+  padding: 0;
+  overflow: hidden;
+}
+.task-file-preview-stage:is([data-preview-kind="image"], [data-preview-kind="video"]) { background: #18181b; }
+.task-file-preview-stage[data-preview-kind="image"] > .task-image-viewer {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  background: #18181b;
+}
+.task-file-preview-stage[data-preview-kind="image"] .task-image-viewer-lightbox {
+  --yarl__container_background_color: #18181b;
+  --yarl__color_button: #f4f4f5;
+  --yarl__color_button_active: #fff;
+  --yarl__color_button_disabled: #a1a1aa;
+}
+.task-file-preview-stage[data-preview-kind="image"] .yarl__toolbar { background: #27272ad9; box-shadow: none; }
+.task-file-preview-stage[data-preview-kind="image"] .yarl__button:hover:not(:disabled) { background: #ffffff20; }
+.task-file-preview-stage[data-preview-kind="video"] > .task-media-viewer-video { flex: 1; height: 100%; min-height: 0; }
+.task-file-preview-stage > .task-pdf-viewer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.task-file-preview-stage .task-pdf-viewer__toolbar,
+.task-file-preview-stage .task-pdf-viewer__selection-notice { flex: none; }
+.task-file-preview-stage .task-pdf-viewer__workspace { flex: 1; min-height: 0; }
+.task-file-preview-stage .task-pdf-viewer__viewport { height: 100%; min-height: 0; }
+.task-file-preview-stage .task-pdf-viewer__thumbnails { height: calc(100% - 24px); }
+.task-file-preview-window .task-file-preview-stage[data-preview-kind="image"]:has(> .task-file-document),
+.task-file-preview-window .task-file-preview-stage[data-preview-kind="image"]:has(> .task-file-image-annotations),
+.task-file-preview-window .task-file-preview-stage:is([data-preview-kind="pdf"], [data-preview-kind="presentation"]):has(> .task-file-document) { display: block; padding: 24px; overflow: auto; background: var(--ad-surface); }
+
+/* Audio has no canvas to enlarge, so its dialog follows the compact player. */
+.task-file-preview-window[data-slot="dialog-content"][data-preview-kind="audio"] {
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  width: min(680px, calc(100vw - 32px));
+  height: auto;
+  max-height: calc(100dvh - 32px);
+  border-radius: 14px;
+  translate: -50% -50%;
+}
+.task-file-preview-window[data-preview-kind="audio"] .task-file-explorer-preview,
+.task-file-preview-window[data-preview-kind="audio"] .task-file-editor-body { flex: 0 1 auto; }
+.task-file-preview-stage[data-preview-kind="audio"] { padding: 0; }
+
+@media (max-width: 640px) {
+  .task-file-preview-window .task-file-editor-toolbar { padding-inline: 10px; }
+  .task-file-preview-stage[data-preview-kind] { padding: 20px 16px; }
+  .task-file-preview-stage:is([data-preview-kind="image"], [data-preview-kind="video"], [data-preview-kind="pdf"], [data-preview-kind="presentation"]) { padding: 0; }
+  .task-file-preview-stage[data-preview-kind="audio"] { padding: 0; }
+  .task-file-preview-stage[data-preview-kind="html"]:has(> .task-file-html-annotations) { padding: 0; }
+  .task-file-preview-window[data-slot="dialog-content"][data-preview-kind="audio"] { width: calc(100vw - 20px); }
+}

@@ -30,10 +30,6 @@ operations: "read_settings"
 - 邀请绑定邮箱、团队及角色，确认加入后建立成员关系；完整流程见[成员、邀请与任务分工](09-member-collaboration.md)。
 - 移除或本人退出时处理未完成任务交接，完整规则见[成员退出与移除](14-membership-account-exit.md)。
 
-![成员：查看团队成员、职责与角色。](../assets/team-members/members-zh.jpg)
-
-*FIG-MEMBERS-001 · 成员：查看团队成员、职责与角色。*
-
 ## 4. 功能验收标准
 
 - 页面按本人身份展示可访问的数据与操作，无权限时不能执行写入。

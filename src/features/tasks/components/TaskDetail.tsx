@@ -6,7 +6,6 @@ import { TaskDetailStickySummary } from "@/features/tasks/components/TaskDetailS
 import { getTaskContentIndicators } from "@/features/tasks/lib/task-content-indicators";
 import { getTaskDetailPathItems } from "@/features/tasks/lib/task-detail-path";
 import { TaskSidebarToggle } from "@/features/tasks/components/TaskSidebarToggle";
-import { TaskFieldSaveFeedback } from "@/features/tasks/components/TaskFieldSaveFeedback";
 import { useTaskTextSaveFeedback } from "@/features/tasks/lib/useTaskTextSaveFeedback";
 import { useGlobalUi } from '@/shared/i18n/global-ui';
 import "@/features/tasks/styles/task-criterion-review.css";
@@ -53,7 +52,6 @@ import { TaskSubtaskList } from "@/features/tasks/components/TaskSubtaskList";
 import { toast } from "@/shared/ui/toast";
 import { Input, Textarea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
-import { DiscussionAttachmentPreview } from "@/features/tasks/discussion/components/DiscussionAttachmentPreview";
 import { TaskFileExplorer } from "@/features/tasks/files/components/TaskFileExplorer";
 import { getDiscussionAttachment, getTaskFiles, deleteCollaborationMessage, mergeCollaborationMessages, postCollaborationMessage, replaceCollaborationFiles, type CollaborationMessage, type CollaborationSnapshot, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import { useTaskCollaboration } from "@/features/tasks/lib/useTaskCollaboration";
@@ -215,6 +213,7 @@ export function TaskDetail({
   const [selectedFileId, setSelectedFileId] = useState(initialAttentionTarget?.kind === "file" ? initialAttentionTarget.targetId : "");
   const [selectedFileVersion, setSelectedFileVersion] = useState<number>();
   const [fileFocusSequence, setFileFocusSequence] = useState(0);
+  const filePreviewTrigger = useRef<HTMLElement | null>(null);
   const [sourceRecord, setSourceRecord] = useState<TaskActivityMock | null>(null);
   const [attentionMessage, setAttentionMessage] = useState("");
   const [situationAttentionId, setSituationAttentionId] = useState<string>();
@@ -443,17 +442,33 @@ export function TaskDetail({
   };
   const deleteDiscussion = (message: CollaborationMessage) => collaboration.commit(snapshot => deleteCollaborationMessage(snapshot, message, ownActor(message)));
 
-  const openFile = (id: string, version?: number) => {
+  const openFile = (id: string, version?: number, fromDiscussion = false, trigger?: HTMLElement) => {
     const candidate = allFiles.find(file => file.id === id);
     const file = candidate && getDiscussionAttachment(allFiles, { fileId: id, name: candidate.name, version: version ?? candidate.version ?? 1 });
     if (!file) { setAttentionMessage(d('fileUnavailable')); return; }
     setAttentionMessage("");
-    if (file.attachmentOnly || file.retiredBuiltin) { setAttachmentPreview({ taskId, file }); return; }
+    setAttachmentPreview(file.attachmentOnly || file.retiredBuiltin ? { taskId, file } : null);
+    filePreviewTrigger.current = fromDiscussion ? trigger ?? (typeof document !== "undefined" && document.activeElement instanceof HTMLElement ? document.activeElement : null) : null;
     setSelectedFileId(id);
     setSelectedFileVersion(version);
     setFileFocusSequence(value => value + 1);
-    setActiveTab("files");
-    window.setTimeout(() => document.getElementById(`task-file-preview-${id}`)?.focus({ preventScroll: true }), 0);
+    if (!fromDiscussion) {
+      setActiveTab("files");
+      window.setTimeout(() => document.getElementById(`task-file-preview-${id}`)?.focus({ preventScroll: true }), 0);
+    }
+  };
+
+  const previewAttachment = (file: TaskFileNode, trigger: HTMLElement) => {
+    if (taskFiles.some(candidate => candidate.id === file.id && !candidate.archived)) {
+      openFile(file.id, file.version, true, trigger);
+      return;
+    }
+    setAttentionMessage("");
+    filePreviewTrigger.current = trigger;
+    setAttachmentPreview({ taskId, file });
+    setSelectedFileId(file.id);
+    setSelectedFileVersion(file.version);
+    setFileFocusSequence(value => value + 1);
   };
 
   const openSituationReference = (reference: TaskSituationReference) => {
@@ -582,7 +597,7 @@ export function TaskDetail({
       })}</nav> : null}</div>
             <div className="task-detail-title-row">
               <TaskCompletionIndicator key={taskId} status={currentStatus} completed={currentStatus === "已完成"} progressRatio={taskAiProgressRatio} evidence={taskAiProgressEvidence} onToggle={onTaskStatusChange ? () => setTaskCompleted(currentStatus !== "已完成") : undefined} />
-              <div className="task-detail-title-content"><h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} aria-describedby={titleSave.status === "error" ? `task-title-save-error-${taskId}` : undefined} className="task-detail-title-input" onFocus={() => { titleSave.clear(); setEditingOriginal("title"); }} onBlur={() => { setEditingOriginal(null); void titleSave.save(currentTitle, task.title, onTaskTitleChange); }} onChange={(event) => { titleSave.clear(); setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " ")); }} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1><TaskFieldSaveFeedback status={titleSave.status} /></div>
+              <div aria-busy={titleSave.status === "saving" || undefined} className="task-detail-title-content"><h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} aria-describedby={titleSave.status === "error" ? `task-title-save-error-${taskId}` : undefined} className="task-detail-title-input" onFocus={() => { titleSave.clear(); setEditingOriginal("title"); }} onBlur={() => { setEditingOriginal(null); void titleSave.save(currentTitle, task.title, onTaskTitleChange); }} onChange={(event) => { titleSave.clear(); setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " ")); }} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>{titleSave.status === "saving" && <span className="sr-only" role="status">{d("fieldSaving")}</span>}</div>
               <div className="task-ai-detail-tools"><AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} /></div>
             </div>
       {titleSave.status === "error" && <p className="task-field-save-error" id={`task-title-save-error-${taskId}`} role="alert">{d("fieldSaveFailed")}</p>}
@@ -626,7 +641,7 @@ export function TaskDetail({
       <section aria-label={d('goalAndExecution')} className="task-detail-document" id="task-detail-document" tabIndex={-1}>
         <div aria-label={d('information')} className="task-detail-brief" id={`task-heading-${taskId}`} tabIndex={-1}>
             <div className="task-detail-description">
-              <div className="task-detail-goal-field"><span className="task-detail-field-label">{d('goal')}</span><div className="task-detail-goal-content"><div className="task-detail-goal-editor"><Textarea aria-label={d('taskGoal')} aria-describedby={goalSave.status === "error" ? `task-goal-save-error-${taskId}` : undefined} className="task-detail-goal-input" onFocus={() => { goalSave.clear(); setEditingOriginal("goal"); }} onBlur={() => { setEditingOriginal(null); void goalSave.save(currentGoal, task.goal, onTaskGoalChange); }} onChange={(event) => { goalSave.clear(); setCurrentGoal(event.target.value); }} placeholder={onTaskGoalChange ? d('addGoal') : d('noGoal')} readOnly={!onTaskGoalChange} rows={1} value={editingOriginal === "goal" || goalSave.status === "error" ? currentGoal : mock.field(taskId, "goal", currentGoal)} /><TaskFieldSaveFeedback status={goalSave.status} /></div>{goalSave.status === "error" && <p className="task-field-save-error" id={`task-goal-save-error-${taskId}`} role="alert">{d("fieldSaveFailed")}</p>}</div></div>
+              <div className="task-detail-goal-field"><span className="task-detail-field-label">{d('goal')}</span><div className="task-detail-goal-content"><div aria-busy={goalSave.status === "saving" || undefined} className="task-detail-goal-editor"><Textarea aria-label={d('taskGoal')} aria-describedby={goalSave.status === "error" ? `task-goal-save-error-${taskId}` : undefined} className="task-detail-goal-input" onFocus={() => { goalSave.clear(); setEditingOriginal("goal"); }} onBlur={() => { setEditingOriginal(null); void goalSave.save(currentGoal, task.goal, onTaskGoalChange); }} onChange={(event) => { goalSave.clear(); setCurrentGoal(event.target.value); }} placeholder={onTaskGoalChange ? d('addGoal') : d('noGoal')} readOnly={!onTaskGoalChange} rows={1} value={editingOriginal === "goal" || goalSave.status === "error" ? currentGoal : mock.field(taskId, "goal", currentGoal)} />{goalSave.status === "saving" && <span className="sr-only" role="status">{d("fieldSaving")}</span>}</div>{goalSave.status === "error" && <p className="task-field-save-error" id={`task-goal-save-error-${taskId}`} role="alert">{d("fieldSaveFailed")}</p>}</div></div>
               <div aria-label={d('criteria')} id={`task-criteria-${taskId}`} key={`criteria-${taskId}`} tabIndex={-1}>
                 <TaskCompletionCriteria completed={currentStatus === "已完成"} onTaskComplete={onTaskStatusChange ? setTaskCompleted : undefined} key={taskId} reviews={task.criterionReviews} onConfirm={onTaskCriterionConfirm} criteria={completionCriteria} onSave={onTaskCriteriaSave} source="recorded" />
               </div>
@@ -661,11 +676,11 @@ export function TaskDetail({
         </div>    </section>}
 
     <section aria-labelledby="task-detail-tab-discussion" className="task-detail-section task-discussion-panel first-section" hidden={activeTab !== "discussion"} id="task-detail-panel-discussion" role="tabpanel" tabIndex={-1}>
-      <TaskDiscussion active={visibleTab === 'discussion'} readable={!collaboration.error} readRequestSequence={discussionReadRequestSequence} onRead={(ids, through) => onDiscussionRead?.(taskId, ids, through)} activities={activities} attentionTarget={discussionAttention} draftInsertion={discussionInsertion} currentUser={currentUserId} currentUserName={currentUser} draftKey={collaboration.scopeKey} files={allFiles} key={taskId} onConnectAi={openDiscussionAi} onOpenFile={openFile} onPost={(draft, replyToId) => { postDiscussion(draft, replyToId); if (!replyToId && discussionInsertion) { discussionInsertion.onPublished(draft); setDiscussionInsertion(undefined); } }} onDelete={deleteDiscussion} people={activityPeople} />
+      <TaskDiscussion active={visibleTab === 'discussion'} readable={!collaboration.error} readRequestSequence={discussionReadRequestSequence} onRead={(ids, through) => onDiscussionRead?.(taskId, ids, through)} activities={activities} attentionTarget={discussionAttention} draftInsertion={discussionInsertion} currentUser={currentUserId} currentUserName={currentUser} draftKey={collaboration.scopeKey} files={allFiles} key={taskId} onConnectAi={openDiscussionAi} onOpenFile={(id, version) => openFile(id, version, true)} onPreviewAttachment={previewAttachment} onPost={(draft, replyToId) => { postDiscussion(draft, replyToId); if (!replyToId && discussionInsertion) { discussionInsertion.onPublished(draft); setDiscussionInsertion(undefined); } }} onDelete={deleteDiscussion} people={activityPeople} />
     </section>
 
       <section aria-labelledby="task-detail-tab-files" className="task-detail-section task-files-panel first-section" hidden={activeTab !== "files"} id="task-detail-panel-files" role="tabpanel">
-      <TaskFileExplorer browserMode onAnnotationExitControllerChange={onAnnotationExitControllerChange} onSaved={onFileSaved} currentUser={currentUser} currentUserId={currentUserId} onStartDiscussion={(draft, onPublished) => { setDiscussionInsertion({ id: crypto.randomUUID(), draft, onPublished }); setActiveTab("discussion"); }} files={taskFiles} focusedFileId={selectedFileId} focusedVersion={selectedFileVersion} focusedSequence={fileFocusSequence} key={taskId} taskId={taskId} taskTitle={currentTitle} taskGoal={task.goal}
+      <TaskFileExplorer browserMode transientPreviewFile={attachmentPreview?.taskId === taskId ? attachmentPreview.file : null} onPreviewClose={() => setAttachmentPreview(null)} onAnnotationExitControllerChange={onAnnotationExitControllerChange} onSaved={onFileSaved} currentUser={currentUser} currentUserId={currentUserId} onStartDiscussion={(draft, onPublished) => { setDiscussionInsertion({ id: crypto.randomUUID(), draft, onPublished }); setActiveTab("discussion"); }} files={taskFiles} focusedFileId={selectedFileId} focusedVersion={selectedFileVersion} focusedSequence={fileFocusSequence} focusedTrigger={activeTab === "discussion" ? filePreviewTrigger.current : null} preserveFocusedDirectory={activeTab === "discussion"} key={taskId} taskId={taskId} taskTitle={currentTitle} taskGoal={task.goal}
         onNodesChange={files => collaboration.commit(snapshot => replaceCollaborationFiles(snapshot, files))}
         />
     </section>
@@ -677,7 +692,6 @@ export function TaskDetail({
     </div>
     </div>
 
-    <DiscussionAttachmentPreview file={attachmentPreview?.taskId === taskId ? attachmentPreview.file : null} onClose={() => setAttachmentPreview(null)} />
     {aiConnectionRequest?.taskId === taskId && <AiConnectionDialog onClose={closeAiConnection} request={aiConnectionRequest.request} returnFocus={aiConnectionTrigger.current} />}
   </section></MockTaskProvider>;
 }

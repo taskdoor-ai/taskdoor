@@ -38,7 +38,7 @@
 .task-detail-split .task-detail-title-row .task-icon.lg svg { width: 24px; height: 24px; }
 .task-detail-split .task-detail-title-row h1 { min-width: 0; flex: 1; margin: 0; }
 .task-detail-split .task-detail-title-input { min-height: 36px; max-height: 104px; font-size: 24px; line-height: 1.4; font-weight: 650; }
-.task-detail-split .task-detail-title-input[data-slot="textarea"], .task-detail-split .task-detail-title-input[data-slot="input"] { display: block; height: 36px; min-height: 36px; max-height: 36px; margin: 0; padding: 0; }
+.task-detail-split .task-detail-title-input[data-slot="textarea"], .task-detail-split .task-detail-title-input[data-slot="input"] { display: block; height: 36px; min-height: 36px; max-height: 36px; margin: 0; padding: 0 12px; }
 .task-detail-title-content, .task-detail-goal-editor { display: flex; align-items: center; min-width: 0; gap: 12px; }
 .task-detail-title-content h1, .task-detail-goal-editor > textarea { flex: 1; min-width: 0; }
 .task-detail-goal-content { min-width: 0; }
@@ -78,7 +78,6 @@
 .task-detail-split .task-detail-completion-content { padding-left: 4px; }
 .task-detail-split .task-detail-completion .task-criteria-field-row { grid-template-columns: 17px minmax(0, 1fr) auto; }
 .task-detail-split .task-detail-completion .task-criteria-field-mark { position: static; }
-.task-detail-split .task-detail-completion .task-criteria-field-input[data-slot="textarea"] { padding-inline: 0; }
 .task-detail-split .task-detail-completion .task-criteria-field-add { padding-inline: 1px; }
 .task-detail-split .task-detail-completion .task-criteria-field-add > svg { position: static; }
 .task-detail-split .task-detail-completion-content > ul { padding-left: 1px; }

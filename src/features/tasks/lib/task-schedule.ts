@@ -1,4 +1,5 @@
 import { formatDisplayDate } from "@/shared/lib/date-time";
+import { getDateTimeFormatter } from "@/shared/lib/date-time-format";
 import { isValidTimeZone, LEGACY_TEAM_TIME_ZONE } from "@/shared/lib/team-time-zone";
 
 const validCalendarDate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value)
@@ -14,7 +15,7 @@ export function taskCalendarDate(value?: string | null, timeZone = LEGACY_TEAM_T
   const time = Date.parse(value);
   if (!Number.isFinite(time)) return null;
   try {
-    const parts = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(time));
+    const parts = getDateTimeFormatter("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(time));
     const part = (type: string) => parts.find(item => item.type === type)?.value;
     return `${part("year")}-${part("month")}-${part("day")}`;
   } catch { return null; }

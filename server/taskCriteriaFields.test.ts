@@ -47,7 +47,7 @@ test("唯一一条已有标准仍然不可删除，但允许继续添加", async
   assert.match(html, /aria-label="Add 任务完成标准"/);
 });
 
-test("保存期间同时禁用输入、新增和删除，未禁用时可以编辑", async () => {
+test("显式禁用时同时禁用输入、新增和删除，未禁用时可以编辑", async () => {
   const Fields = await loadFields();
   const props = { values: ["A", "B"], onChange: () => undefined, label: "任务完成标准" };
   const html = renderToStaticMarkup(createElement(Fields, { ...props, disabled: true }));
@@ -78,7 +78,7 @@ test("新增与删除后聚焦相邻输入，并清理尚未执行的聚焦帧",
   assert.ok(fields.includes('querySelectorAll("textarea")'));
   assert.ok(fields.includes("focusRow(displayedValues.length)"), "添加后聚焦新行");
   assert.ok(fields.includes("focusRow(Math.min(index, next.length - 1))"), "删除后优先聚焦同位置的下一行，末行删除则聚焦上一行");
-  assert.ok(/useEffect\(\(\) => \(\) =>[\s\S]*?cancelAnimationFrame/.test(fields), "卸载时取消待执行的聚焦");
+  assert.ok(/return\s*\(\)\s*=>\s*\{[^}]*cancelAnimationFrame\(focusFrame.current\)/.test(fields), "卸载时取消待执行的聚焦");
 });
 
 test("已保存子任务接入共用字段，保留原保存、取消、只读和冲突保护", () => {

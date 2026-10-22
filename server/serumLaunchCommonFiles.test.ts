@@ -24,6 +24,7 @@ const storageKey = `${TASK_COLLABORATION_STORAGE_PREFIX}${encodeURIComponent(sco
 const expectedNames = ["serum-launch-briefing.pptx", "serum-launch-handover.txt", "serum-launch-snapshot.json", "serum-launch-channels.xml", "serum-launch-workflow.svg", "serum-launch-hero.jpg", "serum-launch-hero.webp"];
 const bytesAt = (relativePath: string) => readFileSync(new URL(`../public${relativePath}`, import.meta.url));
 const bytesOf = (file: TaskFileNode) => bytesAt(file.blobId!.slice(BUILTIN_TASK_ASSET_PREFIX.length));
+const firstTwoPackSeeds = () => createWorkspaceTaskDetail(task).files.filter(file => !file.builtinPackId || [SERUM_LAUNCH_FILE_PACK_ID, SERUM_LAUNCH_COMMON_FILE_PACK_ID].includes(file.builtinPackId));
 function memoryStorage() {
   const records = new Map<string, string>();
   let writes = 0;
@@ -37,7 +38,7 @@ test("同一精华任务只加入七类支持预览的常用原件，其他任�
   assert.equal(new Set(pack.map(file => file.id)).size, 7);
   assert.ok(pack.every(file => file.id.startsWith(`${task.id}-common-`) && file.builtinPackId === SERUM_LAUNCH_COMMON_FILE_PACK_ID
     && file.updatedAt === "2026-10-16T15:00:00+08:00" && file.version === 1 && isBuiltinTaskAsset(file.blobId)));
-  const files = createWorkspaceTaskDetail(task).files;
+  const files = firstTwoPackSeeds();
   for (const file of [...firstPack, ...pack]) assert.ok(files.some(node => node.id === file.id), file.name);
   for (const file of pack) assert.equal(files.find(node => node.id === file.parentId)?.kind, "folder", file.name);
   assert.deepEqual(createCollaborationSnapshot(files).appliedFilePacks, [SERUM_LAUNCH_FILE_PACK_ID, SERUM_LAUNCH_COMMON_FILE_PACK_ID]);
@@ -94,11 +95,11 @@ test("旧包已应用后新包只追加一次，保留用户上传 PDF、改名�
   const deletedOldIds = new Set([firstPack.find(file => file.format === "PDF")!.id, `${task.id}-rule`, `${task.id}-evidence`]);
   const renamed: TaskFileNode = { ...firstPack[0], name: "用户整理的首发总览.html", parentId: null, content: "用户已修改正文", previewData: { kind: "text", text: "用户已修改正文" }, version: 2 };
   const uploadedPdf: TaskFileNode = { id: "user-uploaded-pdf", kind: "file", name: "用户改名的审核资料.pdf", originalName: "上传原始名称.pdf", parentId: null, blobId: "discussion-blob-user-pdf", format: "PDF", mimeType: "application/pdf", version: 3, updatedAt: "2026-10-16T14:00:00+08:00", sizeBytes: 1256 };
-  const oldFiles = [...createWorkspaceTaskDetail(task).files.filter(file => file.builtinPackId !== SERUM_LAUNCH_COMMON_FILE_PACK_ID && !deletedOldIds.has(file.id)).map(file => file.id === renamed.id ? renamed : file), uploadedPdf];
+  const oldFiles = [...firstTwoPackSeeds().filter(file => file.builtinPackId !== SERUM_LAUNCH_COMMON_FILE_PACK_ID && !deletedOldIds.has(file.id)).map(file => file.id === renamed.id ? renamed : file), uploadedPdf];
   const old = { ...createCollaborationSnapshot(oldFiles), revision: 7, messages: [{ id: "message-common-pack", author: "周岚", message: "保留用户讨论", type: "member-post" as const, time: "今天" }] };
   assert.deepEqual(old.appliedFilePacks, [SERUM_LAUNCH_FILE_PACK_ID]);
   storage.records.set(storageKey, JSON.stringify(old));
-  const seed = createWorkspaceTaskDetail(task).files;
+  const seed = firstTwoPackSeeds();
   const migrated = loadCollaboration(storage, scope, seed);
   assert.equal(migrated.revision, 8);
   assert.equal(storage.writes, 1);

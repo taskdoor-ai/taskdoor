@@ -53,7 +53,7 @@ function parseContent(value: unknown): TaskFileContent {
 export function getTaskFileContent(file: TaskFileNode): TaskFileContent | null {
   if (file.kind !== "file") return null;
   const kind = getPreviewKind(file.name, file.mimeType);
-  if (kind === "image" || kind === "presentation" || kind === "unknown") return null;
+  if (kind === "image" || kind === "presentation" || kind === "audio" || kind === "video" || kind === "unknown") return null;
   if (kind === "pdf") return file.previewData?.kind === "pdf" ? parseContent(file.previewData) : null;
   if (kind === "table") return file.previewData?.kind === "table" ? parseContent(file.previewData) : null;
   if (file.blobId && file.content == null && !(file.previewData && "text" in file.previewData)) return null;
@@ -229,14 +229,36 @@ export function applyTaskFileEdit(file: TaskFileNode, record: TaskFileEditRecord
   const before = getTaskFileContent(file);
   if (!before || before.kind !== saved.content.kind) throw new Error("文件编辑记录与当前文件格式不符。");
   const latest = saved.revisions.find(revision => revision.version === saved.version)!;
-  if (saved.content.kind === "text") {
+  return withTaskFileContent(file, saved.content, saved.version, latest.createdAt);
+}
+
+function withTaskFileContent(file: TaskFileNode, content: TaskFileContent, version: number, updatedAt: string): TaskFileNode {
+  if (content.kind === "text") {
     const kind = getPreviewKind(file.name, file.mimeType);
     const previewKind = kind === "markdown" || kind === "document" ? kind : "text";
-    return { ...file, content: saved.content.text, previewData: { kind: previewKind, text: saved.content.text }, version: saved.version, updatedAt: latest.createdAt };
+    return { ...file, content: content.text, previewData: { kind: previewKind, text: content.text }, version, updatedAt };
   }
-  const content = saved.content.kind === "pdf" ? saved.content.pages.join("\n\n")
-    : saved.content.sheets.map(sheet => [sheet.name, sheet.columns.join("\t"), ...sheet.rows.map(row => row.join("\t"))].join("\n")).join("\n\n");
-  return { ...file, content, previewData: saved.content, version: saved.version, updatedAt: latest.createdAt };
+  const text = content.kind === "pdf" ? content.pages.join("\n\n")
+    : content.sheets.map(sheet => [sheet.name, sheet.columns.join("\t"), ...sheet.rows.map(row => row.join("\t"))].join("\n")).join("\n\n");
+  return { ...file, content: text, previewData: content, version, updatedAt };
+}
+
+/** A fixed reference needs a complete saved snapshot; change fragments cannot recreate a version. */
+export function getTaskFileVersion(file: TaskFileNode, version: number, record?: TaskFileEditRecord): TaskFileNode | null {
+  if (file.kind !== "file" || file.archived || !isVersion(version)) return null;
+  if (version === (file.version ?? 1)) return structuredClone(file);
+  if (file.attachmentOnly || !record || record.fileId !== file.id) return null;
+  const saved = parseRecord(record);
+  const after = saved.revisions.find(revision => revision.version === version && revision.afterContent);
+  const before = saved.revisions.find(revision => revision.baseVersion === version && revision.beforeContent);
+  const content = after?.afterContent ?? before?.beforeContent;
+  if (!content || content.kind !== getTaskFileContent(file)?.kind) return null;
+  // A before snapshot has no reliable creation timestamp for its base version.
+  const snapshot = withTaskFileContent(file, parseContent(content), version, after?.createdAt ?? "");
+  // Only the original version owns the original binary. Text downloads use the
+  // selected saved text; other revisions must not download v1 bytes as that version.
+  if (version !== 1 && !["markdown", "text", "json", "xml", "html"].includes(getPreviewKind(file.name, file.mimeType))) delete snapshot.blobId;
+  return snapshot;
 }
 
 function storageKey(taskId: string): string {

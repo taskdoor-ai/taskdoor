@@ -56,10 +56,6 @@ Google 验证成功后的邮箱只读。密码设置完成前不能进入团队�
 
 登录、注册与密码设置页面均可切换 English／简体中文，规则归[语言、翻译与时区](02-internationalization.md)。
 
-![注册页：填写邮箱、密码和验证码，右上角可切换语言。](../assets/account-identity/signup-language-zh.png)
-
-*FIG-AUTH-003 · 注册页：填写邮箱、密码和验证码，右上角可切换语言。*
-
 ### 3.2 登录已有账号
 
 1. 选择 Google 登录，或输入邮箱和 TaskDoor 密码。
@@ -68,10 +64,6 @@ Google 验证成功后的邮箱只读。密码设置完成前不能进入团队�
 
 **尚未设置密码的 Google 用户**：Google 验证成功后先补设 TaskDoor 密码，再继续原团队或邀请流程。已有密码的账号不重复设置，之后可使用 Google 或邮箱＋密码登录同一账号。
 
-
-![登录页：Google 与邮箱密码入口，右上角可切换语言。](../assets/account-identity/login-language-zh.png)
-
-*FIG-AUTH-002 · 登录页：Google 与邮箱密码入口，右上角可切换语言。*
 
 ### 3.3 注册、登录与受邀进入流程
 

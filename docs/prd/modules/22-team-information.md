@@ -37,10 +37,6 @@ operations: "read_settings"
 
 离开团队与任务交接见[成员退出与移除](14-membership-account-exit.md)，团队删除与恢复见[删除与数据保留](13-deletion-recovery-retention.md)。
 
-![团队信息：查看团队标志、名称与离开团队入口。](../assets/team-information/team-information-zh.jpg)
-
-*FIG-TEAMINFO-001 · 团队信息：查看团队标志、名称与离开团队入口。*
-
 ## 4. 功能验收标准
 
 - 页面按本人身份展示可访问的数据与操作，无权限时不能执行写入。

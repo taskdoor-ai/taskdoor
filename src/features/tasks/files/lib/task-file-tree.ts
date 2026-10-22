@@ -1,6 +1,6 @@
 import type { TaskFileNode } from "@/shared/model/task-model.ts";
 
-export type TaskFilePreviewKind = "markdown" | "text" | "json" | "xml" | "html" | "table" | "pdf" | "presentation" | "image" | "document" | "unknown";
+export type TaskFilePreviewKind = "markdown" | "text" | "json" | "xml" | "html" | "table" | "pdf" | "presentation" | "image" | "audio" | "video" | "document" | "unknown";
 export type FolderDeletePolicy = "move-contents" | "archive";
 
 const ext = (name: string) => name.split(".").pop()?.toLowerCase() ?? "";
@@ -19,6 +19,8 @@ export function getPreviewKind(name: string, mimeType = ""): TaskFilePreviewKind
   if (["doc", "docx"].includes(extension)) return "document";
   if (extension === "json") return "json";
   if (extension === "xml") return "xml";
+  if (extension === "mp3") return "audio";
+  if (extension === "mp4") return "video";
   if (["text/html", "application/xhtml+xml"].includes(mime)) return "html";
   if (mime === "text/plain") return "text";
   if (mime === "application/pdf") return "pdf";
@@ -26,6 +28,8 @@ export function getPreviewKind(name: string, mimeType = ""): TaskFilePreviewKind
   if (mime.startsWith("image/")) return "image";
   if (mime === "application/json" || /^application\/[^\s/]+\+json$/.test(mime)) return "json";
   if (["application/xml", "text/xml"].includes(mime) || /^application\/[^\s/]+\+xml$/.test(mime)) return "xml";
+  if (mime === "audio/mpeg" || mime === "audio/mp3") return "audio";
+  if (mime === "video/mp4") return "video";
   return "unknown";
 }
 
@@ -35,12 +39,29 @@ export function getDefaultFileIcon(name: string): string {
   if (kind === "image") return "Image";
   if (kind === "pdf") return "FileText";
   if (kind === "markdown") return "NotebookTabs";
+  if (kind === "audio") return "FileAudio";
+  if (kind === "video") return "FileVideo";
   if (kind === "document" || kind === "text" || kind === "html") return "FileType2";
   return "File";
 }
 
 export function sortTaskFileNodes(nodes: TaskFileNode[]): TaskFileNode[] {
   return [...nodes].sort((a, b) => a.kind === b.kind ? a.name.localeCompare(b.name, "zh-CN") : a.kind === "folder" ? -1 : 1);
+}
+
+/** Search includes the ancestors needed to show where a matching item lives. */
+export function searchTaskFileTree(nodes: TaskFileNode[], query: string, displayName: (name: string) => string = name => name): { nodes: TaskFileNode[]; matches: number } {
+  const visible = nodes.filter(node => !node.archived);
+  const reachable = visible.filter(node => {
+    const path = getNodePath(nodes, node.id);
+    return path[0]?.parentId === null && path.every(part => !part.archived && (part.id === node.id || part.kind === "folder"));
+  });
+  const needle = query.trim().toLocaleLowerCase();
+  if (!needle) return { nodes: reachable, matches: reachable.length };
+  const matches = reachable.filter(node => displayName(node.name).toLocaleLowerCase().includes(needle));
+  const ids = new Set(matches.flatMap(node => getNodePath(reachable, node.id).map(part => part.id)));
+  for (const node of matches) if (node.kind === "folder") for (const id of getDescendantIds(reachable, node.id)) ids.add(id);
+  return { nodes: reachable.filter(node => ids.has(node.id)), matches: matches.length };
 }
 
 function checkedName(nodes: TaskFileNode[], parentId: string | null, name: string, exceptId?: string) {

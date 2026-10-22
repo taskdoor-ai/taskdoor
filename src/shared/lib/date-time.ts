@@ -1,3 +1,5 @@
+import { getDateTimeFormatter } from "@/shared/lib/date-time-format";
+
 export type DisplayDateOptions = { locale?: string; year?: "auto" | "always" | "never"; now?: number; timeZone?: string };
 type DateValue = string | number | Date;
 const calendarPattern = /^\d{4}-\d{2}-\d{2}$/;
@@ -20,11 +22,13 @@ function instant(value: DateValue) {
   return Number.isFinite(date.getTime()) ? date : null;
 }
 function yearAt(date: Date, timeZone?: string) {
-  return new Intl.DateTimeFormat("en-US", { year: "numeric", ...(timeZone ? { timeZone } : {}) }).format(date);
+  return getDateTimeFormatter("en-US", { year: "numeric", ...(timeZone ? { timeZone } : {}) }).format(date);
 }
 function yearOption(date: Date, options: DisplayDateOptions, calendar = false): Intl.DateTimeFormatOptions {
+  if (options.year === "always") return { year: "numeric" };
+  if (options.year === "never") return {};
   const differentYear = yearAt(date, calendar ? "UTC" : options.timeZone) !== yearAt(new Date(options.now ?? Date.now()), options.timeZone);
-  return options.year === "always" || (options.year !== "never" && differentYear) ? { year: "numeric" } : {};
+  return differentYear ? { year: "numeric" } : {};
 }
 
 /** Calendar dates keep their saved day; instants use the viewer's timezone. */
@@ -32,12 +36,12 @@ export function formatDisplayDate(value: DateValue, options: DisplayDateOptions 
   const calendar = typeof value === "string" && calendarPattern.test(value);
   const date = calendar ? calendarDate(value as string) : instant(value);
   if (!date) return null;
-  return new Intl.DateTimeFormat(displayLocale(options), { ...yearOption(date, options, calendar), month: "short", day: "numeric", ...(calendar ? { timeZone: "UTC" } : options.timeZone ? { timeZone: options.timeZone } : {}) }).format(date);
+  return getDateTimeFormatter(displayLocale(options), { ...yearOption(date, options, calendar), month: "short", day: "numeric", ...(calendar ? { timeZone: "UTC" } : options.timeZone ? { timeZone: options.timeZone } : {}) }).format(date);
 }
 export function formatDisplayDateTime(value: DateValue, options: DisplayDateOptions = {}): string | null {
   const date = instant(value);
   if (!date) return null;
-  return new Intl.DateTimeFormat(displayLocale(options), { ...yearOption(date, options), month: "short", day: "numeric", ...clockOptions(options), ...(options.timeZone ? { timeZone: options.timeZone } : {}) }).format(date);
+  return getDateTimeFormatter(displayLocale(options), { ...yearOption(date, options), month: "short", day: "numeric", ...clockOptions(options), ...(options.timeZone ? { timeZone: options.timeZone } : {}) }).format(date);
 }
 export function formatDisplayTime(value: DateValue, options: DisplayDateOptions = {}): string | null {
   const clock = typeof value === "string" ? value.match(/^(\d{1,2}):(\d{2})(?::\d{2})?(?:\s*(AM|PM))?$/i) : null;
@@ -45,13 +49,13 @@ export function formatDisplayTime(value: DateValue, options: DisplayDateOptions 
   const hour = clock ? clock[3] ? Number(clock[1]) % 12 + (clock[3].toUpperCase() === "PM" ? 12 : 0) : Number(clock[1]) : 0;
   const date = clock ? new Date(Date.UTC(2000, 0, 1, hour, Number(clock[2]))) : instant(value);
   if (!date) return null;
-  return new Intl.DateTimeFormat(displayLocale(options), { ...clockOptions(options), ...(clock ? { timeZone: "UTC" } : options.timeZone ? { timeZone: options.timeZone } : {}) }).format(date);
+  return getDateTimeFormatter(displayLocale(options), { ...clockOptions(options), ...(clock ? { timeZone: "UTC" } : options.timeZone ? { timeZone: options.timeZone } : {}) }).format(date);
 }
 export function formatDisplayMonth(value: DateValue, options: DisplayDateOptions = {}): string | null {
   const calendar = typeof value === "string" && calendarPattern.test(value);
   const date = calendar ? calendarDate(value as string) : instant(value);
   if (!date) return null;
-  return new Intl.DateTimeFormat(displayLocale(options), { month: "short", year: "numeric", ...(calendar ? { timeZone: "UTC" } : options.timeZone ? { timeZone: options.timeZone } : {}) }).format(date);
+  return getDateTimeFormatter(displayLocale(options), { month: "short", year: "numeric", ...(calendar ? { timeZone: "UTC" } : options.timeZone ? { timeZone: options.timeZone } : {}) }).format(date);
 }
 
 export function formatRelativeDateTime(value: DateValue, locale: string, now = Date.now()): { label: string; full: string } | null {

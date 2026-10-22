@@ -50,7 +50,9 @@ test("输入格式、空正文、假扩展名与超过20MiB请求在转换前拒
     assert.equal((await fetch(`${server.url}?format=pptx`, { method: "POST", headers, body: "" })).status, 400);
     assert.equal((await fetch(`${server.url}?format=pptx`, { method: "POST", headers, body: "not a presentation" })).status, 422);
     assert.equal((await fetch(`${server.url}?format=ppt`, { method: "POST", headers, body: pptx })).status, 422);
-    assert.equal((await fetch(`${server.url}?format=pptx`, { method: "POST", headers, body: Buffer.alloc(PRESENTATION_PREVIEW_MAX_BYTES + 1) })).status, 413);
+    const oversized = await fetch(`${server.url}?format=pptx`, { method: "POST", headers, body: Buffer.alloc(PRESENTATION_PREVIEW_MAX_BYTES + 1) });
+    assert.equal(oversized.status, 413);
+    assert.match((await oversized.json()).error, /20\.97 MB/);
     const streamed: RequestInit & { duplex: "half" } = { method: "POST", headers, duplex: "half", body: new ReadableStream({ start(controller) {
       controller.enqueue(Buffer.alloc(PRESENTATION_PREVIEW_MAX_BYTES));
       controller.enqueue(Buffer.from([0]));

@@ -11,6 +11,8 @@ import { getWeeklyRetroDetailDemo } from "@/ai/mock/data/weeklyRetroDetailDemo";
 import { withDemoProgressEvidence } from "@/ai/mock/data/taskProgressEvidenceDetails";
 import { getSerumLaunchFileAssets } from "@/ai/mock/data/serumLaunchFileAssets";
 import { getSerumLaunchCommonFileAssets } from "@/ai/mock/data/serumLaunchCommonFileAssets";
+import { getSerumLaunchDiscussionActivities, getSerumLaunchDiscussionFiles } from "@/ai/mock/data/serumLaunchDiscussionSamples";
+import { getSerumLaunchMediaDiscussionActivities, getSerumLaunchMediaDiscussionFiles } from "@/ai/mock/data/serumLaunchMediaDiscussionSamples";
 import { isNotificationReadTestMode, notificationReadTestActivitiesByTask } from "@/ai/mock/data/notificationReadScenario";
 import { supportedTaskFileFixtures } from "@/ai/mock/lib/taskFilePreviewFixtures";
 export { migrateUnsupportedBuiltinTaskFiles } from "@/ai/mock/lib/taskFilePreviewFixtureMigration";
@@ -180,6 +182,8 @@ function createWorkspaceTaskDetailSource(task: TaskNode, includeUnsupported = fa
       ] as TaskActivityMock[]),
       ...progressActivities,
       ...(diagnosisExample?.activities ?? []),
+      ...getSerumLaunchDiscussionActivities(task),
+      ...getSerumLaunchMediaDiscussionActivities(task),
     ],
     ...(burnUp ? { burnUp } : {}),
     ...(diagnosisExample ? { diagnosis: diagnosisExample.diagnosis } : {}),
@@ -188,7 +192,7 @@ function createWorkspaceTaskDetailSource(task: TaskNode, includeUnsupported = fa
     completionCriteria: task.completionCriteria,
     executionTips: task.executionTips,
     due: task.dueAt ?? "待排期",
-    files: [...(poolExample?.files ?? commonFiles(task.id, [ruleFile, evidenceFile, resultFile])), ...getSerumLaunchFileAssets(task, includeUnsupported), ...getSerumLaunchCommonFileAssets(task, includeUnsupported)],
+    files: [...(poolExample?.files ?? commonFiles(task.id, [ruleFile, evidenceFile, resultFile])), ...getSerumLaunchFileAssets(task, includeUnsupported), ...getSerumLaunchCommonFileAssets(task, includeUnsupported), ...(includeUnsupported ? [] : [...getSerumLaunchDiscussionFiles(task), ...getSerumLaunchMediaDiscussionFiles(task)])],
     goal: task.goal ?? `完成“${task.name}”的范围确认、方案执行与结果确认。`,
     iconName: task.iconName,
     iconTone: task.iconTone,

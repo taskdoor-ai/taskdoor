@@ -26,3 +26,20 @@ export function canMoveTaskFileTo(nodes: TaskFileNode[], nodeId: string, parentI
   const node = nodes.find((item) => item.id === nodeId && !item.archived);
   return !!node && node.parentId !== parentId && getTaskFileMoveDestinations(nodes, nodeId).some((destination) => destination.id === parentId);
 }
+
+export function searchTaskFileMoveDestinations(destinations: TaskFileMoveDestination[], query: string, displayName: (name: string) => string = name => name): { destinations: TaskFileMoveDestination[]; matches: number } {
+  const needle = query.trim().toLocaleLowerCase();
+  const folders = destinations.filter(destination => destination.node);
+  if (!needle) return { destinations, matches: folders.length };
+  const matches = folders.filter(destination => displayName(destination.node!.name).toLocaleLowerCase().includes(needle));
+  const byId = new Map(destinations.map(destination => [destination.id, destination]));
+  const kept = new Set<string | null>();
+  for (const match of matches) {
+    let cursor: TaskFileMoveDestination | undefined = match;
+    while (cursor && !kept.has(cursor.id)) {
+      kept.add(cursor.id);
+      cursor = cursor.node ? byId.get(cursor.node.parentId) : undefined;
+    }
+  }
+  return { destinations: destinations.filter(destination => kept.has(destination.id)), matches: matches.length };
+}

@@ -57,10 +57,6 @@ operations: "create_team, read_team, update_team, inspect_invitation_link, accep
 - 名称为去除首尾空白后的 1–60 字符；保存失败保留输入，不切换团队。
 - 重复点击不重复创建；已有团队和资料保持不变。
 
-![填写团队名称并创建。](../assets/team-onboarding/create-team-form-en.png)
-
-*FIG-TEAM-006 · 填写团队名称并创建。*
-
 ### 3.3 接受邀请
 
 #### 没有账号：注册后加入
@@ -70,23 +66,11 @@ operations: "create_team, read_team, update_team, inspect_invitation_link, accep
 3. 核对受邀团队和当前身份，确认加入。
 4. 接受成功后成为团队成员，进入该团队工作区。
 
-![未注册用户打开邀请链接：Google 与邮箱注册入口。](../assets/team-onboarding/join-team-signup-en.png)
-
-*FIG-TEAM-003 · 受邀注册页。*
-
 #### 已有账号：登录后加入
 
 1. 登录原账号；已有有效会话时跳过登录。
 2. 核对并确认加入受邀团队。
 3. 进入该团队，沿用已有个人资料。
-
-![已有账号打开邀请链接：登录后继续加入。](../assets/team-onboarding/join-team-login-en.png)
-
-*FIG-TEAM-002 · 受邀登录页。*
-
-![Google 认证后继续确认加入。](../assets/team-onboarding/google-invite-confirm-en.png)
-
-*FIG-TEAM-004 · 加入确认页。*
 
 **限制与异常**
 

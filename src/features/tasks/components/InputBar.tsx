@@ -1,3 +1,4 @@
+import { formatFileSize } from "@/shared/lib/file-size";
 import { ArrowUp, Paperclip, Square, X } from "lucide-react";
 import {
   memo,
@@ -35,12 +36,6 @@ type InputBarProps = {
   autoFocus?: boolean;
   draftHint?: string;
 };
-
-function formatBytes(bytes: number) {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
-}
 
 export const InputBar = memo(function InputBar({
   ariaLabel = "描述问题",
@@ -111,7 +106,7 @@ export const InputBar = memo(function InputBar({
           {attachments.map((attachment) => (
             <div className="attachment-chip" key={attachment.id}>
               <span className="attachment-name">{attachment.name}</span>
-              <span className="attachment-size">{formatBytes(attachment.size)}</span>
+              <span className="attachment-size">{formatFileSize(attachment.size)}</span>
               <button
                 aria-label={`移除 ${attachment.name}`}
                 className="attachment-remove"

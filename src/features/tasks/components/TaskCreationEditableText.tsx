@@ -16,7 +16,8 @@ type Props = {
 // Main and subtask fields share the same single-line, content-sized editor.
 export function TaskCreationEditableText({ label, value, displayValue, onChange, className = "", placeholder, autoFocus = false, id, disabled = false }: Props) {
   const [focused, setFocused] = useState(false);
-  const shown = focused ? value : displayValue ?? value;
+  const [composing, setComposing] = useState(false);
+  const shown = focused || composing ? value : displayValue ?? value;
   const ref = useRef<HTMLTextAreaElement>(null);
   useLayoutEffect(() => {
     const element = ref.current;
@@ -36,5 +37,5 @@ export function TaskCreationEditableText({ label, value, displayValue, onChange,
     if (parent) observer.observe(parent);
     return () => { observer.disconnect(); cancelAnimationFrame(frame); };
   }, [shown]);
-  return <Textarea onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} aria-label={label} autoFocus={autoFocus} className={`creation-edit ${className}`} disabled={disabled} id={id} onChange={event => onChange(event.target.value)} placeholder={placeholder} ref={ref} rows={1} value={shown} />;
+  return <Textarea onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onCompositionStart={() => setComposing(true)} onCompositionEnd={event => { onChange(event.currentTarget.value); setComposing(false); }} aria-label={label} autoFocus={autoFocus} className={`creation-edit ${className}`} disabled={disabled} id={id} onChange={event => onChange(event.target.value)} placeholder={placeholder} ref={ref} rows={1} value={shown} />;
 }

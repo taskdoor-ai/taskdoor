@@ -1,4 +1,64 @@
 {
+  "discussionMarkdownTable": {
+    "zh": "Markdown 表格",
+    "en": "Markdown table"
+  },
+  "fileAdd": {
+    "zh": "添加",
+    "en": "Add"
+  },
+  "fileNew": {
+    "zh": "新建",
+    "en": "New"
+  },
+  "fileNewMenuHint": {
+    "zh": "新建文件或文件夹",
+    "en": "New file or folder"
+  },
+  "fileNewLocation": {
+    "zh": "新建位置：{0}",
+    "en": "Location: {0}"
+  },
+  "fileMoveHeading": {
+    "zh": "移动 {0} 到…",
+    "en": "Move {0} to…"
+  },
+  "fileMoveTitle": {
+    "zh": "移动文件",
+    "en": "Move file"
+  },
+  "fileMoveSearch": {
+    "zh": "搜索文件夹",
+    "en": "Search folders"
+  },
+  "fileMoveDestinationTree": {
+    "zh": "选择目标文件夹",
+    "en": "Choose a destination folder"
+  },
+  "fileMoveHere": {
+    "zh": "移动到此处",
+    "en": "Move here"
+  },
+  "fileMoving": {
+    "zh": "正在移动…",
+    "en": "Moving…"
+  },
+  "fileMoveNoMatches": {
+    "zh": "没有匹配的文件夹",
+    "en": "No matching folders"
+  },
+  "fileMoveLocationUnavailable": {
+    "zh": "位置已不可用，请重新选择文件夹。",
+    "en": "This location is unavailable. Choose another folder."
+  },
+  "fileMoveFailed": {
+    "zh": "移动失败，请重试。",
+    "en": "Could not move the file. Please retry."
+  },
+  "fileMoveTargetLabel": {
+    "zh": "目标位置",
+    "en": "Destination"
+  },
   "notificationReadLoadFailed": {
     "zh": "通知已读状态读取失败，请重试。",
     "en": "Could not load notification read status. Please retry."
@@ -719,6 +779,10 @@
     "zh": "任务文件",
     "en": "Task files"
   },
+  "addFileOrFolder": {
+    "zh": "添加文件或文件夹",
+    "en": "Add file or folder"
+  },
   "uploadFiles": {
     "zh": "上传文件",
     "en": "Upload files"
@@ -902,6 +966,10 @@
   "downloadFile": {
     "zh": "下载文件",
     "en": "Download file"
+  },
+  "fileOriginalDownloadUnavailable": {
+    "zh": "原文件不可用，暂无法下载。",
+    "en": "The original file is unavailable for download."
   },
   "download": {
     "zh": "下载",
@@ -2715,9 +2783,13 @@
     "zh": "点击选择或拖入文件",
     "en": "Choose files or drag them here"
   },
+  "largeFileDownloadToView": {
+    "zh": "文件较大，请下载后查看。",
+    "en": "This file is large. Download it to view."
+  },
   "fileUploadLimits": {
-    "zh": "每次最多 {0} 个文件，单个不超过 20 MiB",
-    "en": "Up to {0} files at a time, 20 MiB per file"
+    "zh": "每次最多 {0} 个文件，单个不超过 {1}",
+    "en": "Up to {0} files at a time, {1} per file"
   },
   "fileUploadSupportedFormats": {
     "zh": "仅支持可在线预览的文件：{0}",
@@ -2995,6 +3067,10 @@
     "zh": "搜索文件",
     "en": "Search files"
   },
+  "commonSearch": {
+    "zh": "搜索",
+    "en": "Search"
+  },
   "imageViewerResourceUnavailable": {
     "zh": "图片资源不可用。",
     "en": "The image is unavailable."
@@ -3022,5 +3098,109 @@
   "imageViewerFullscreenBlocked": {
     "zh": "浏览器未允许全屏，可以继续在此查看图片。",
     "en": "Your browser did not allow full screen. You can continue viewing the image here."
+  },
+  "markdownTextFormatting": {
+    "zh": "文字格式",
+    "en": "Text formatting"
+  },
+  "markdownParagraphFormatting": {
+    "zh": "段落格式",
+    "en": "Paragraph style"
+  },
+  "markdownHeading1": {
+    "zh": "一级标题",
+    "en": "Heading 1"
+  },
+  "markdownHeading2": {
+    "zh": "二级标题",
+    "en": "Heading 2"
+  },
+  "markdownHeading3": {
+    "zh": "三级标题",
+    "en": "Heading 3"
+  },
+  "markdownQuote": {
+    "zh": "引用",
+    "en": "Quote"
+  },
+  "markdownCodeBlock": {
+    "zh": "代码块",
+    "en": "Code block"
+  },
+  "markdownBold": {
+    "zh": "加粗",
+    "en": "Bold"
+  },
+  "markdownItalic": {
+    "zh": "斜体",
+    "en": "Italic"
+  },
+  "markdownUnorderedList": {
+    "zh": "无序列表",
+    "en": "Bulleted list"
+  },
+  "markdownOrderedList": {
+    "zh": "有序列表",
+    "en": "Numbered list"
+  },
+  "markdownInlineCode": {
+    "zh": "行内代码",
+    "en": "Inline code"
+  },
+  "markdownSelectTextForLink": {
+    "zh": "选中文字后添加链接",
+    "en": "Select text to add a link"
+  },
+  "markdownLinkAddress": {
+    "zh": "链接地址",
+    "en": "Link URL"
+  },
+  "markdownRemoveLink": {
+    "zh": "移除链接",
+    "en": "Remove link"
+  },
+  "markdownEditBody": {
+    "zh": "编辑 Markdown 正文",
+    "en": "Edit Markdown content"
+  },
+  "markdownEditingMode": {
+    "zh": "Markdown 编辑模式",
+    "en": "Markdown editing mode"
+  },
+  "markdownVisualEditing": {
+    "zh": "可视编辑",
+    "en": "Visual editor"
+  },
+  "markdownSource": {
+    "zh": "Markdown 源码",
+    "en": "Markdown source"
+  },
+  "markdownUnsupportedSyntax": {
+    "zh": "此文档含表格或其他暂不支持的 Markdown 语法，已保留源码编辑，避免丢失内容。",
+    "en": "This document contains tables or other unsupported Markdown syntax. Use the source editor to preserve its content."
+  },
+  "markdownVisualUnavailable": {
+    "zh": "可视编辑暂不可用，原文已保留，请继续编辑源码。",
+    "en": "The visual editor is unavailable. Your content is preserved; continue editing the Markdown source."
+  },
+  "markdownEditSource": {
+    "zh": "编辑 Markdown 源码",
+    "en": "Edit Markdown source"
+  },
+  "taskMediaPreview01": {
+    "zh": "音视频读取中断，请重试。",
+    "en": "Media loading was interrupted. Try again."
+  },
+  "taskMediaPreview02": {
+    "zh": "浏览器无法播放此文件的编码，或文件已损坏。可以下载原文件查看。",
+    "en": "This encoding is not supported by your browser, or the file is damaged. You can download the original file."
+  },
+  "taskMediaPreview03": {
+    "zh": "音视频播放失败，请重试或下载原文件。",
+    "en": "Media playback failed. Try again or download the original file."
+  },
+  "taskMediaPreview04": {
+    "zh": "无法进入全屏，可以继续在预览中播放。",
+    "en": "Could not enter fullscreen. You can keep playing in the preview."
   }
 }

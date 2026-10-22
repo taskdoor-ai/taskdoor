@@ -4,6 +4,7 @@ import { DiscussionAttachmentContent } from "@/features/tasks/discussion/compone
 import { getDiscussionAttachment, type AttachmentRef } from "@/features/tasks/lib/task-collaboration";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import type { TaskFileNode } from "@/shared/model/task-model";
+import { getTaskFileVersionLabel } from "@/features/tasks/files/lib/task-file-capabilities";
 
 /** Action-only grid: React Aria owns spatial navigation, focus and activation. */
 export function DiscussionAttachmentGallery({ attachmentRefs = [], legacyFileName, files, onOpenFile, variant = "feed" }: {
@@ -32,7 +33,7 @@ export function DiscussionAttachmentGallery({ attachmentRefs = [], legacyFileNam
 
   return <GridList aria-label={d("attachments")} className={variant === "feed" ? "task-discussion-feed-attachments" : "discussion-attachments"} disabledBehavior="all" disabledKeys={entries.filter(entry => !entry.file).map(entry => entry.id)} layout="grid" selectionMode="none">
     {entries.map(entry => <GridListItem
-      aria-label={[entry.name, entry.version === undefined ? undefined : `v${entry.version}`, entry.file ? undefined : entry.unavailableLabel].filter(Boolean).join(" · ")}
+      aria-label={[entry.name, entry.version === undefined ? undefined : getTaskFileVersionLabel({ name: entry.name, mimeType: entry.file?.mimeType, attachmentOnly: entry.file?.attachmentOnly }, entry.version), entry.file ? undefined : entry.unavailableLabel].filter(Boolean).join(" · ")}
       className={variant === "feed" ? "task-discussion-feed-file" : "task-record-file-link"}
       id={entry.id}
       key={entry.id}

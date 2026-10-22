@@ -1,6 +1,7 @@
 import type { TaskActivityMock, TaskFileNode } from "@/shared/model/task-model.ts";
 import { parseTaskActivityStore } from "@/features/tasks/lib/task-activity.ts";
 import { isBuiltinTaskAsset } from "@/features/tasks/files/lib/discussion-uploads";
+import { createFolder } from "@/features/tasks/files/lib/task-file-tree";
 
 export type AttachmentRef = { fileId: string; version: number; name: string };
 export type MessageQuote = { messageId: string; text: string; author: string };
@@ -190,10 +191,24 @@ function readStored(storage: Pick<CollaborationStorage, "getItem">, scopeKey: st
   catch (cause) { throw new Error("本地协作记录损坏，已保留原数据并停止覆盖。", { cause }); }
 }
 
+function isBuiltinDiscussionFolder(file: TaskFileNode): boolean {
+  return Boolean(file.builtinPackId) && file.kind === "folder" && file.parentId === null && !file.archived && /^(?:讨论|discussions?)$/i.test(file.name.trim());
+}
+
+/** Only incoming built-in roots are aliased; existing user folders stay intact. */
+function reuseBuiltinDiscussionFolders(files: TaskFileNode[], seeds: TaskFileNode[]): Map<string, string> {
+  const aliases = new Map<string, string>();
+  for (const seed of seeds.filter(isBuiltinDiscussionFolder)) aliases.set(seed.id, discussionUploadFolder(files, seed).id);
+  return aliases;
+}
+
 export function createCollaborationSnapshot(seedFiles: TaskFileNode[]): CollaborationSnapshot {
-  const files = parseFiles(seedFiles);
-  const appliedFilePacks = [...new Set(files.flatMap(file => file.builtinPackId ? [file.builtinPackId] : []))];
-  return { revision: 0, files, messages: [], threads: [], notifications: [], ...(appliedFilePacks.length ? { appliedFilePacks } : {}) };
+  const seeds = parseFiles(seedFiles);
+  const files = seeds.filter(file => !isBuiltinDiscussionFolder(file));
+  const folderAliases = reuseBuiltinDiscussionFolders(files, seeds);
+  const normalizedFiles = files.map(file => folderAliases.has(file.parentId ?? "") ? { ...file, parentId: folderAliases.get(file.parentId!)! } : file);
+  const appliedFilePacks = [...new Set(seeds.flatMap(file => file.builtinPackId ? [file.builtinPackId] : []))];
+  return { revision: 0, files: normalizedFiles, messages: [], threads: [], notifications: [], ...(appliedFilePacks.length ? { appliedFilePacks } : {}) };
 }
 export function loadCollaboration(storage: CollaborationStorage, scopeKey: string, seedFiles: TaskFileNode[]): CollaborationSnapshot {
   const stored = readStored(storage, scopeKey);
@@ -213,10 +228,14 @@ export function loadCollaboration(storage: CollaborationStorage, scopeKey: strin
     return { ...file, ...sourceFields(seed) };
   });
   if (!newPacks.length && !refreshedOriginal) return stored;
-  for (const seed of packedSeeds.filter(file => newPacks.includes(file.builtinPackId!))) {
+  const incomingSeeds = packedSeeds.filter(file => newPacks.includes(file.builtinPackId!));
+  const folderAliases = reuseBuiltinDiscussionFolders(files, incomingSeeds);
+  for (const seed of incomingSeeds) {
+    if (folderAliases.has(seed.id)) continue;
     if (files.some(file => file.id === seed.id)) continue;
     // Do not restore a folder that a user removed; new assets can live at the root.
-    const parentId = files.some(file => file.id === seed.parentId && file.kind === "folder" && !file.archived) ? seed.parentId : null;
+    const targetParent = folderAliases.get(seed.parentId ?? "") ?? seed.parentId;
+    const parentId = files.some(file => file.id === targetParent && file.kind === "folder" && !file.archived) ? targetParent : null;
     files.push({ ...seed, parentId });
   }
   return saveCollaboration(storage, scopeKey, stored.revision, {
@@ -265,6 +284,19 @@ function makeNotifications(context: readonly CollaborationMessage[], message: Co
   }
   return [...recipients].map(([recipientId, reason]) => ({ id: `local:${encodeURIComponent(message.id)}:${encodeURIComponent(recipientId)}`, recipientId, messageId: message.id, actor: message.author, reason, createdAt: message.createdAt ?? new Date().toISOString() }));
 }
+function discussionUploadFolder(files: TaskFileNode[], seed?: TaskFileNode): TaskFileNode {
+  const rootFolders = files.filter(file => file.kind === "folder" && file.parentId === null && !file.archived);
+  const existing = rootFolders.find(folder => /^(?:讨论|discussions?)$/i.test(folder.name.trim()))
+    ?? rootFolders.find(folder => /^(?:讨论|discussions?) \(\d+\)$/i.test(folder.name.trim()));
+  if (existing) return existing;
+  let name = "讨论";
+  let suffix = 2;
+  while (files.some(file => file.parentId === null && file.name.toLocaleLowerCase() === name.toLocaleLowerCase())) name = `讨论 (${suffix++})`;
+  const folder = seed && !files.some(file => file.id === seed.id) ? { ...seed, name } : createFolder(files, null, name).folder;
+  files.push(folder);
+  return folder;
+}
+
 /** Existing references keep their source version even if the file has since changed. */
 function attachFiles(snapshot: CollaborationSnapshot, refs: readonly AttachmentRef[], attachments: readonly TaskFileNode[], preservedRefs: readonly AttachmentRef[] = []): { files: TaskFileNode[]; attachmentRefs: AttachmentRef[] } {
   const files = [...snapshot.files];
@@ -276,9 +308,10 @@ function attachFiles(snapshot: CollaborationSnapshot, refs: readonly AttachmentR
     if (existing?.kind === "folder") throw new Error("附件标识与文件夹冲突。");
     if (attachment.attachmentOnly && existing && !existing.attachmentOnly) throw new Error("讨论附件标识与任务文件冲突，请重新生成后重试。");
     if (existing?.attachmentOnly && (existing.version ?? 1) !== (attachment.version ?? 1)) throw new Error("讨论附件源版本不一致，请重新生成后重试。");
-    const saved = existing ?? attachment;
+    let saved = existing ?? attachment;
     if (!existing) {
       if (saved.archived) throw new Error("已归档的文件不能添加为附件。");
+      if (!saved.attachmentOnly && saved.parentId === null) saved = { ...saved, parentId: discussionUploadFolder(files).id };
       files.push(saved);
     }
     if (attachmentRefs.some(ref => ref.fileId === saved.id)) continue;

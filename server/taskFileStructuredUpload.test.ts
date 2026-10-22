@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { after, test } from "node:test";
 import { prepareDiscussionUpload, readDiscussionBlob } from "../src/features/tasks/files/lib/discussion-uploads.ts";
 import { getPreviewKind } from "../src/features/tasks/files/lib/task-file-tree.ts";
+import * as taskUploads from "../src/features/tasks/files/lib/task-file-upload.ts";
 
 // Node has no IndexedDB. This storage-only substitute keeps the real File reading
 // and upload preparation paths under test, including the retained original blob.
@@ -36,6 +37,55 @@ Object.defineProperty(globalThis, "indexedDB", { configurable: true, value: {
 after(() => {
   if (previousIndexedDb) Object.defineProperty(globalThis, "indexedDB", previousIndexedDb);
   else Reflect.deleteProperty(globalThis, "indexedDB");
+});
+
+test("任务文件在真实1GiB边界内可接收，超限先于读取和存储拒绝", async () => {
+  const limit = 1024 ** 3;
+  assert.equal(taskUploads.TASK_FILE_UPLOAD_MAX_BYTES, limit);
+  for (const size of [0, limit - 1, limit]) assert.doesNotThrow(() => taskUploads.validateTaskFileUploadSizes([{ name: "原件.pdf", size }]));
+  const before = records.size;
+  let reads = 0;
+  const oversized = { name: "超大.pdf", size: limit + 1, type: "application/pdf", text: async () => { reads++; return ""; } } as File;
+  assert.throws(() => taskUploads.validateTaskFileUploadSizes([oversized]), /1GB/);
+  await assert.rejects(taskUploads.prepareTaskFileUpload(oversized), /1GB/);
+  assert.equal(reads, 0);
+  assert.equal(records.size, before);
+});
+
+test("真实32MiB任务文件越过旧20MiB限制，保留原Blob；讨论仍拒绝", async () => {
+  const bytes = new Uint8Array(32 * 1024 * 1024);
+  bytes[0] = 37; bytes[bytes.length - 1] = 127;
+  const original = new File([bytes], "大文件.pdf", { type: "application/pdf" });
+  const node = await taskUploads.prepareTaskFileUpload(original);
+  assert.equal(node.sizeBytes, original.size);
+  const retained = await readDiscussionBlob(node.blobId!);
+  assert.equal(retained, original);
+  assert.equal(new Uint8Array(await retained!.slice(0, 1).arrayBuffer())[0], 37);
+  assert.equal(new Uint8Array(await retained!.slice(-1).arrayBuffer())[0], 127);
+  await assert.rejects(prepareDiscussionUpload(original), /20\.97 MB/);
+});
+
+test("大文本任务文件保留原Blob且不预读全文，小文本仍可编辑", async () => {
+  const original = new File([new Uint8Array(32 * 1024 * 1024)], "大文本.txt", { type: "text/plain" });
+  let reads = 0;
+  Object.defineProperty(original, "text", { value: async () => { reads++; throw new Error("不得预读大文本"); } });
+  const node = await taskUploads.prepareTaskFileUpload(original);
+  assert.equal(reads, 0);
+  assert.equal(node.content, undefined);
+  assert.equal(node.previewData, undefined);
+  assert.equal(await readDiscussionBlob(node.blobId!), original);
+  const small = await taskUploads.prepareTaskFileUpload(new File(["原文\n"], "可编辑.txt", { type: "text/plain" }));
+  assert.equal(small.content, "原文\n");
+});
+
+test("上传大小按真实字节显示十进制 KB 和 MB，原件大小不变", async () => {
+  for (const [size, label] of [[4096, "4.1 KB"], [2_000_000, "2.0 MB"]] as const) {
+    const original = new File([new Uint8Array(size)], "原件.pdf", { type: "application/pdf" });
+    const node = await prepareDiscussionUpload(original);
+    assert.equal(node.sizeBytes, size);
+    assert.equal(node.sizeLabel, label);
+    assert.equal((await readDiscussionBlob(node.blobId!))?.size, size);
+  }
 });
 
 test("actual JSON/XML uploads preserve source whitespace and original bytes without preset preview data", async () => {
@@ -109,5 +159,18 @@ test("supported extensionless plain text and HTML uploads retain readable source
     assert.equal(node.content, source);
     assert.deepEqual(node.previewData, { kind: "text", text: source });
     assert.equal(await (await readDiscussionBlob(node.blobId!))?.text(), source);
+  }
+});
+
+test("MP3/MP4 uploads normalize playback MIME while keeping original binary bytes and no text snapshot", async () => {
+  const bytes = new Uint8Array([0, 255, 1, 73, 68, 51, 2, 128]);
+  for (const [name, type, mime, kind] of [["简报.MP3", "text/plain", "audio/mpeg", "audio"], ["总览.mp4", "", "video/mp4", "video"], ["原件", "audio/mp3", "audio/mpeg", "audio"], ["原件", "video/mp4", "video/mp4", "video"]]) {
+    const original = new File([bytes], name, { type });
+    const node = await prepareDiscussionUpload(original);
+    assert.equal(node.mimeType, mime);
+    assert.equal(getPreviewKind(node.name, node.mimeType), kind);
+    assert.equal(node.content, undefined);
+    assert.equal(node.previewData, undefined);
+    assert.deepEqual(new Uint8Array(await (await readDiscussionBlob(node.blobId!))!.arrayBuffer()), bytes);
   }
 });

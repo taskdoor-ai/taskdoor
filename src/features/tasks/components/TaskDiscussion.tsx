@@ -28,6 +28,7 @@ type TaskDiscussionProps = {
   draftInsertion?: DiscussionDraftInsertion;
   onConnectAi?: (target: DiscussionAiTarget, trigger: HTMLElement, shortcut?: AiShortcutAttempt) => void | Promise<AiTransferResult | void>;
   onOpenFile: (fileId: string, version?: number) => void;
+  onPreviewAttachment?: (file: TaskFileNode, trigger: HTMLElement) => void;
   onPost: (draft: DiscussionDraft, replyToActivityId?: string) => void | Promise<void>;
   onEdit?: (message: CollaborationMessage, draft: DiscussionDraft) => void | Promise<void>;
   onDelete?: (message: CollaborationMessage) => void;
@@ -37,7 +38,7 @@ type TaskDiscussionProps = {
 type ComposerMode = { kind: "reply"; id: string } | null;
 type ScrollRequest = { kind: "locate"; id: string } | { kind: "latest" } | { kind: "restore"; id: string; top: number };
 
-export function TaskDiscussion({ active = true, readable = true, readRequestSequence, onRead, activities, attentionTarget, currentUser, currentUserName, files, draftKey = "task-discussion", draftInsertion, onConnectAi, onOpenFile, onPost, onDelete, people }: TaskDiscussionProps) {
+export function TaskDiscussion({ active = true, readable = true, readRequestSequence, onRead, activities, attentionTarget, currentUser, currentUserName, files, draftKey = "task-discussion", draftInsertion, onConnectAi, onOpenFile, onPreviewAttachment, onPost, onDelete, people }: TaskDiscussionProps) {
   const d = useDetailCopy();
   const ui = useGlobalUi();
   const feed = useMemo(() => buildDiscussionFeed(activities), [activities]);
@@ -185,9 +186,9 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
   }, [scrollRequest, feed.messages.length, reportRead]);
   const startReply = (message: CollaborationMessage) => {
     if (submittingRef.current) return;
-    if (mode?.id === message.id) inlineReplyRef.current?.querySelector<HTMLElement>('[contenteditable="true"]')?.focus({ preventScroll: true });
-    returnReplyFocusRef.current = null;
-    setMode({ kind: "reply", id: message.id });
+    const collapse = mode?.id === message.id;
+    returnReplyFocusRef.current = collapse ? message.id : null;
+    setMode(collapse ? null : { kind: "reply", id: message.id });
     setError("");
   };
   const cancelContext = () => {
@@ -218,7 +219,7 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
   const composerKey = replyId ? `${draftKey}:reply:${replyId}` : `${draftKey}:new`;
   const replyComposer = mode && <div className="task-discussion-inline-reply" data-reply-to={mode.id} ref={inlineReplyRef}>
     {!targetAvailable && <p className="task-discussion-feed-error" role="alert">{d('originalUnavailable')}</p>}
-    <DiscussionComposer actionLabel={d('reply')} allowQuote={false} autoFocus={targetAvailable} disabled={!targetAvailable} draftKey={composerKey} files={files} onCancel={cancelContext} onSubmit={submit} people={people} placeholder={d('replyHint')} />
+    <DiscussionComposer actionLabel={d('reply')} allowQuote={false} autoFocus={targetAvailable} disabled={!targetAvailable} draftKey={composerKey} files={files} onCancel={cancelContext} onPreviewAttachment={onPreviewAttachment} onSubmit={submit} people={people} placeholder={d('replyHint')} />
   </div>;
 
   return <div className="task-discussion task-discussion-feed">
@@ -231,7 +232,7 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
     {!mode && <div className="task-discussion-compose" ref={composerRef}>
       <PersonAvatar name={currentUserName ?? currentUser} personId={currentUser} size="sm" />
       <div className="task-discussion-compose-content">
-        <DiscussionComposer actionLabel={d('post')} allowQuote={false} draftInsertion={draftInsertion} draftKey={composerKey} files={files} onSubmit={submit} people={people} placeholder={d('composerHint')} />
+        <DiscussionComposer actionLabel={d('post')} allowQuote={false} draftInsertion={draftInsertion} draftKey={composerKey} files={files} onPreviewAttachment={onPreviewAttachment} onSubmit={submit} people={people} placeholder={d('composerHint')} />
       </div>
     </div>}
   </div>;

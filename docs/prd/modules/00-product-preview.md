@@ -24,20 +24,6 @@ presentation: "gallery"
 ### 团队与账号
 
 
-![受邀登录：核对团队与加入身份，登录后继续加入。](../assets/team-onboarding/join-team-login-en.png)
-
-*FIG-PREVIEW-050 · 受邀登录：核对团队与加入身份，登录后继续加入。*
-
-
-![未注册用户通过邀请加入。](../assets/team-onboarding/join-team-signup-en.png)
-
-*FIG-PREVIEW-051 · 受邀注册：保留团队与身份，已有账号可切换登录。*
-
-![个人信息 Profile：头像、姓名与邮箱。](../assets/workspace-navigation/profile-en.jpg)
-
-*FIG-PREVIEW-020 · 个人信息 Profile：头像、姓名与邮箱。*
-
-
 ### 创建规划
 
 

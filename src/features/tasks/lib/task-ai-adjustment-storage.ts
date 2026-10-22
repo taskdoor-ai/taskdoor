@@ -34,7 +34,12 @@ function parseJournal(raw: string): TaskAiJournal {
   const message = "任务调整恢复记录损坏或版本不受支持，已保留原始记录并停止恢复。";
   try {
     let value: unknown = JSON.parse(raw);
-    if (value && typeof value === "object" && "version" in value && value.version === 2) {
+    if (value && typeof value === "object" && "version" in value && value.version === 3) {
+      const envelope = value as { encoding?: unknown; payload?: unknown; state?: unknown };
+      if (envelope.encoding !== "gzip-base64" || typeof envelope.payload !== "string"
+        || (envelope.state !== "prepared" && envelope.state !== "committed")) throw new Error(message);
+      value = { version: 1, state: envelope.state, writes: JSON.parse(decompressStorageGzip(envelope.payload)) };
+    } else if (value && typeof value === "object" && "version" in value && value.version === 2) {
       const envelope = value as { encoding?: unknown; payload?: unknown; state?: unknown };
       if (!["lzw-utf8", "gzip-base64"].includes(String(envelope.encoding)) || typeof envelope.payload !== "string") throw new Error(message);
       value = JSON.parse(envelope.encoding === "gzip-base64" ? decompressStorageGzip(envelope.payload) : decompressStorageText(envelope.payload));
@@ -134,13 +139,16 @@ export function commitTaskAiStorage(storage: TaskAiStorage, writes: Array<[strin
     throw new Error("上次任务调整已保存，但恢复记录尚未清理，暂时不能开始新的调整。");
   }
 
+  const changedWrites = writes.map(([key, after]) => ({ key, before: readValue(storage, key), after }))
+    .filter(({ before, after }) => before !== after);
+  if (changedWrites.length === 0) return;
+
   const journal: TaskAiJournal = {
     version: 1,
     state: "prepared",
-    writes: writes.map(([key, after]) => ({ key, before: readValue(storage, key), after })),
+    writes: changedWrites,
   };
-  const prepared = serializeJournal(journal);
-  const committed = serializeJournal({ ...journal, state: "committed" });
+  const { prepared, committed } = serializeJournals(journal);
   assertJournal(storage, null);
   try {
     storage.setItem(TASK_AI_JOURNAL_KEY, prepared);
@@ -172,9 +180,15 @@ export function commitTaskAiStorage(storage: TaskAiStorage, writes: Array<[strin
   cleanJournal(storage, committed, true);
 }
 
-function serializeJournal(journal: TaskAiJournal): string {
+function serializeJournals(journal: TaskAiJournal): { prepared: string; committed: string } {
   const raw = JSON.stringify(journal);
-  if (raw.length < 16384) return raw;
-  const compressed = JSON.stringify({ version: 2, state: journal.state, encoding: "gzip-base64", payload: compressStorageGzip(raw) });
-  return compressed.length < raw.length ? compressed : raw;
+  if (raw.length >= 16384) {
+    // The immutable write snapshot is identical at both durable boundaries.
+    // Only the outer phase changes, so a large snapshot needs one compression.
+    const payload = compressStorageGzip(JSON.stringify(journal.writes));
+    const envelope = { version: 3, state: "prepared", encoding: "gzip-base64", payload };
+    const prepared = JSON.stringify(envelope);
+    if (prepared.length < raw.length) return { prepared, committed: JSON.stringify({ ...envelope, state: "committed" }) };
+  }
+  return { prepared: raw, committed: JSON.stringify({ ...journal, state: "committed" }) };
 }

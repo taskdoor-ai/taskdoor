@@ -3,20 +3,20 @@
 .task-file-name-stem { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .task-file-name-extension { flex: 0 0 auto; white-space: nowrap; }
 
-.task-file-glyph { display: inline-grid; flex: 0 0 36px; width: 36px; height: 36px; place-items: center; }
-.task-file-glyph-image { display: block; width: 100%; height: 100%; object-fit: contain; }
-.task-file-glyph[data-compact] { flex-basis: 22px; width: 22px; height: 22px; }
+.task-file-glyph { display: inline-grid; flex: 0 0 24px; width: 24px; height: 24px; place-items: center; }
+.task-file-glyph-icon { display: block; width: 100%; height: 100%; object-fit: contain; }
+.task-file-glyph[data-compact] { flex-basis: 20px; width: 20px; height: 20px; }
 
 .task-file-explorer .task-file-explorer-sidebar-content { background: var(--ad-surface); }
 .task-file-sidebar-topbar { display: flex; min-height: 48px; flex-shrink: 0; align-items: center; gap: 6px; padding: 8px 12px; }
 .task-file-add-trigger { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; color: var(--ad-ink-secondary); }
 .task-file-add-trigger svg { width: 18px; height: 18px; }
-.task-file-sidebar-search { position: relative; flex: 1; min-width: 0; border-radius: 8px; background: color-mix(in srgb, var(--ad-ink) 5%, var(--ad-surface)); }
+.task-file-sidebar-search { position: relative; flex: 1; min-width: 0; border-radius: var(--ad-radius-input); background: color-mix(in srgb, var(--ad-ink) 5%, var(--ad-surface)); }
 .task-file-sidebar-search:hover { background: color-mix(in srgb, var(--ad-ink) 7%, var(--ad-surface)); }
 .task-file-sidebar-search:focus-within { background: var(--ad-surface); box-shadow: inset 0 0 0 1px var(--ad-focus), 0 0 0 2px var(--ad-focus-soft); }
 .task-file-sidebar-search [data-slot="input-shell"] { min-width: 0; width: 100%; }
 .task-file-sidebar-search [data-slot="input-leading-icon"] { left: 9px; width: 14px; height: 14px; }
-.task-file-sidebar-search .task-file-search-input[data-slot="input"] { height: 32px; padding-left: 30px; padding-right: 10px; border: 0; border-radius: 8px; background: transparent; box-shadow: none; font-size: 13px; }
+.task-file-sidebar-search .task-file-search-input[data-slot="input"] { height: 32px; padding-left: 30px; padding-right: 10px; border: 0; border-radius: var(--ad-radius-input); background: transparent; box-shadow: none; font-size: 13px; }
 .task-file-sidebar-search:has(.task-file-search-clear) .task-file-search-input { padding-right: 30px; }
 .task-file-sidebar-search .task-file-search-clear { position: absolute; top: 50%; right: 2px; width: 28px; height: 28px; transform: translateY(-50%); }
 .task-file-explorer .task-file-explorer-tree-scroll { padding-inline: 8px; }

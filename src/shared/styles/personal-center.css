@@ -46,7 +46,7 @@
 .personal-responsibility-workspace { width: 100%; margin-top: var(--ad-space-6); }
 .team-invite-link { display: grid; gap: var(--ad-space-3); margin-top: var(--ad-space-8); padding-bottom: var(--ad-space-8); border-bottom: 1px solid var(--ad-border); }
 .team-invite-link h3 { margin: 0; font-size: var(--ad-text-body); }
-.team-invite-link > div { display: grid; grid-template-columns: minmax(0, 1fr) var(--ad-control-height-md); align-items: center; overflow: hidden; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-control); background: var(--ad-surface-quiet); }
+.team-invite-link > div { display: grid; grid-template-columns: minmax(0, 1fr) var(--ad-control-height-md); align-items: center; overflow: hidden; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-input); background: var(--ad-surface-quiet); }
 .team-invite-link > div [data-slot="input"] { border: 0; background: transparent; color: var(--ad-ink-secondary); }
 .team-invite-link > div [data-slot="button"] { border-radius: 0; }
 .team-invite-link p { display: flex; align-items: center; gap: var(--ad-space-1); margin: 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }

@@ -209,6 +209,7 @@
   /* Shape and layout */
   --ad-radius-tag: 6px;
   --ad-radius-control: 10px;
+  --ad-radius-input: 6px;
   --ad-radius-card: 12px;
   --ad-radius-pill: 999px;
   /* Expressive task-creation surface, composed from the shared brand palette. */

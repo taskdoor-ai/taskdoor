@@ -1,0 +1,34 @@
+.task-markdown-editor { width: 100%; min-width: 0; color: var(--ad-ink); }
+.task-markdown-modes { display: flex; gap: 4px; margin-bottom: 10px; }
+.task-markdown-modes button, .task-markdown-toolbar button, .task-markdown-link-form button { display: inline-flex; min-height: 32px; align-items: center; justify-content: center; padding: 5px 10px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: var(--ad-ink-secondary); font: inherit; font-size: 12px; cursor: pointer; }
+.task-markdown-modes button[aria-pressed="true"], .task-markdown-toolbar button[aria-pressed="true"] { background: var(--ad-route-soft); color: var(--ad-route-ink); }
+.task-markdown-modes button:hover:not(:disabled), .task-markdown-toolbar button:hover:not(:disabled), .task-markdown-link-form button:hover:not(:disabled) { background: var(--ad-surface-quiet); color: var(--ad-ink); }
+.task-markdown-editor button:disabled { opacity: .45; cursor: default; }
+.task-markdown-editor :is(button, select, input, textarea):focus-visible, .task-markdown-content:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.task-markdown-toolbar { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; margin-bottom: 14px; padding: 5px; border: 1px solid var(--ad-border-soft); border-radius: 7px; background: var(--ad-surface); }
+.task-markdown-toolbar button { width: 32px; padding: 5px; }
+.task-markdown-toolbar select { width: 100px; min-height: 32px; padding: 4px 6px; border: 0; border-radius: 4px; background: var(--ad-surface); color: var(--ad-ink-secondary); font: inherit; font-size: 12px; }
+.task-markdown-editing-body { min-height: 320px; }
+.task-markdown-content { min-height: 320px; outline: 0; }
+.task-markdown-content > :first-child { margin-top: 0; }
+.task-markdown-content p { margin: 0 0 12px; }
+.task-markdown-content :is(ul, ol) { margin: 8px 0 16px; padding-inline-start: 26px; }
+.task-markdown-content ul { list-style: disc; }
+.task-markdown-content ol { list-style: decimal; }
+.task-markdown-content li { margin: 3px 0; }
+.task-markdown-content li > :is(ul, ol) { margin-block: 4px; }
+.task-markdown-content blockquote { margin: 12px 0; padding: 5px 14px; border-inline-start: 3px solid var(--ad-border-strong); color: var(--ad-ink-secondary); }
+.task-markdown-content code, .task-markdown-inline-code { border-radius: 3px; background: var(--ad-surface-quiet); padding: 1px 4px; font-family: var(--ad-font-mono, monospace); font-size: .9em; }
+.task-markdown-content .task-markdown-code-block { display: block; margin: 12px 0; padding: 12px; overflow-x: auto; white-space: pre; }
+.task-markdown-content a { color: var(--ad-route-ink); text-decoration: underline; text-underline-offset: 2px; }
+.task-markdown-bold { font-weight: 700; }
+.task-markdown-italic { font-style: italic; }
+.task-markdown-strikethrough { text-decoration: line-through; }
+.task-markdown-notice { margin: 0 0 12px; padding: 8px 10px; border: 1px solid var(--ad-border-soft); border-radius: 5px; background: var(--ad-surface-quiet); color: var(--ad-ink-secondary); font-size: 12px; line-height: 1.6; }
+.task-markdown-source { min-height: 360px; }
+.task-markdown-source textarea { box-sizing: border-box; display: block; width: 100%; min-height: 360px; resize: vertical; margin: 0; padding: 0; border: 0; background: transparent; color: var(--ad-ink); font: inherit; line-height: inherit; white-space: pre; }
+.task-markdown-link-form { display: flex; flex-wrap: wrap; align-items: end; gap: 6px; margin: -4px 0 14px; font-size: 12px; }
+.task-markdown-link-form label { display: grid; flex: 1 1 220px; gap: 4px; color: var(--ad-ink-secondary); }
+.task-markdown-link-form input { min-width: 0; width: 100%; height: 32px; padding: 5px 8px; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-input); background: var(--ad-surface); color: var(--ad-ink); font: inherit; }
+.task-markdown-link-form button { border-color: var(--ad-border-soft); }
+@media (max-width: 640px), (pointer: coarse) { .task-markdown-toolbar button, .task-markdown-toolbar select, .task-markdown-modes button, .task-markdown-link-form button { min-height: 40px; } .task-markdown-toolbar button { width: 40px; } }

@@ -33,10 +33,6 @@ operations: "read_settings"
 
 恢复的确认、权限及结果见[删除与数据保留](13-deletion-recovery-retention.md)。
 
-![恢复团队：确认原成员恢复访问的影响。](../assets/my-teams/restore-team-confirm-zh.jpg)
-
-*FIG-MYTEAMS-001 · 恢复团队：确认原成员恢复访问的影响。*
-
 ## 4. 功能验收标准
 
 - 页面按本人身份展示可访问的数据与操作，无权限时不能执行写入。

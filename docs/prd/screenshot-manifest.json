@@ -42,9 +42,10 @@
       "source": "http://127.0.0.1:5173/login",
       "path": "assets/account-identity/login-language-zh.png",
       "capturedAt": "2026-09-27",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-09-27"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-auth-003",
@@ -55,9 +56,10 @@
       "source": "http://127.0.0.1:5173/signup",
       "path": "assets/account-identity/signup-language-zh.png",
       "capturedAt": "2026-09-27",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-09-27"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-work-003",
@@ -1349,11 +1351,12 @@
       "source": "http://localhost:5181/",
       "path": "assets/workspace-navigation/settings-en.png",
       "capturedAt": "2026-10-09",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "figureId": "FIG-PREVIEW-017",
       "reusedFrom": "fig-work-003",
-      "updatedAt": "2026-10-09"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-preview-018",
@@ -1364,11 +1367,12 @@
       "source": "http://127.0.0.1:5173/login",
       "path": "assets/account-identity/login-empty-en.jpg",
       "capturedAt": "2026-09-23",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "figureId": "FIG-PREVIEW-018",
       "reusedFrom": "fig-auth-002",
-      "updatedAt": "2026-09-23"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-preview-019",
@@ -1379,11 +1383,12 @@
       "source": "http://127.0.0.1:5173/signup",
       "path": "assets/account-identity/signup-current-en.png",
       "capturedAt": "2026-09-23",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "figureId": "FIG-PREVIEW-019",
       "reusedFrom": "fig-auth-003",
-      "updatedAt": "2026-09-23"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-work-004",
@@ -1395,9 +1400,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/workspace-navigation/profile-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-preview-020",
@@ -1409,10 +1415,11 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/workspace-navigation/profile-en.jpg",
       "capturedAt": "2026-09-22",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-work-004",
-      "updatedAt": "2026-09-22"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-work-005",
@@ -1563,10 +1570,11 @@
       "source": "http://localhost:5181/",
       "path": "assets/cli-connection/connect-ai-en.jpg",
       "capturedAt": "2026-10-09",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-cli-002",
-      "updatedAt": "2026-10-09"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-cli-003",
@@ -1593,10 +1601,11 @@
       "source": "http://localhost:5181/",
       "path": "assets/cli-connection/connect-ai-examples-en.jpg",
       "capturedAt": "2026-10-09",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-cli-003",
-      "updatedAt": "2026-10-09"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-cli-004",
@@ -1623,10 +1632,11 @@
       "source": "http://localhost:5181/",
       "path": "assets/cli-connection/connect-ai-bottom-en.jpg",
       "capturedAt": "2026-10-09",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "fig-cli-004",
-      "updatedAt": "2026-10-09"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-create-023",
@@ -2225,10 +2235,10 @@
       "source": "http://127.0.0.1:5173/login?invite=demo-valid",
       "path": "assets/team-onboarding/join-team-login-en.png",
       "capturedAt": "2026-09-23",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-23",
-      "editorialNote": "重新采集：邀请图标与团队名称、加入身份两行文字整体垂直居中。"
+      "updatedAt": "2026-10-23",
+      "editorialNote": "重新采集：邀请图标与团队名称、加入身份两行文字整体垂直居中。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-preview-050",
@@ -2240,11 +2250,11 @@
       "source": "http://127.0.0.1:5173/login?invite=demo-valid",
       "path": "assets/team-onboarding/join-team-login-en.png",
       "capturedAt": "2026-09-23",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "FIG-TEAM-002",
-      "updatedAt": "2026-09-23",
-      "editorialNote": "重新采集：邀请图标与团队名称、加入身份两行文字整体垂直居中。"
+      "updatedAt": "2026-10-23",
+      "editorialNote": "重新采集：邀请图标与团队名称、加入身份两行文字整体垂直居中。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-team-003",
@@ -2256,10 +2266,10 @@
       "source": "http://127.0.0.1:5173/signup?invite=demo-valid",
       "path": "assets/team-onboarding/join-team-signup-en.png",
       "capturedAt": "2026-09-23",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-23",
-      "editorialNote": "重新采集：邀请图标与团队名称、加入身份两行文字整体垂直居中。"
+      "updatedAt": "2026-10-23",
+      "editorialNote": "重新采集：邀请图标与团队名称、加入身份两行文字整体垂直居中。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-preview-051",
@@ -2271,11 +2281,11 @@
       "source": "http://127.0.0.1:5173/signup?invite=demo-valid",
       "path": "assets/team-onboarding/join-team-signup-en.png",
       "capturedAt": "2026-09-23",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "reusedFrom": "FIG-TEAM-003",
-      "updatedAt": "2026-09-23",
-      "editorialNote": "重新采集：邀请图标与团队名称、加入身份两行文字整体垂直居中。"
+      "updatedAt": "2026-10-23",
+      "editorialNote": "重新采集：邀请图标与团队名称、加入身份两行文字整体垂直居中。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-create-027",
@@ -2352,11 +2362,11 @@
       "state": "当前工作区本地 Mock；未连接 Google，未加入团队。",
       "source": "http://127.0.0.1:5173/signup?invite=demo-valid",
       "type": "current-page",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
       "capturedAt": "2026-09-23",
-      "updatedAt": "2026-09-23",
-      "editorialNote": "重新采集：邀请图标与团队名称、加入身份两行文字整体垂直居中。"
+      "updatedAt": "2026-10-23",
+      "editorialNote": "重新采集：邀请图标与团队名称、加入身份两行文字整体垂直居中。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-auth-007",
@@ -2417,9 +2427,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/team-onboarding/create-team-form-en.png",
       "capturedAt": "2026-09-23",
-      "status": "captured",
+      "status": "pending",
       "locale": "en",
-      "updatedAt": "2026-09-23"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-delete-001",
@@ -2444,9 +2455,10 @@
       "source": "http://127.0.0.1:5173/login",
       "path": "assets/internationalization/auth-language-menu-zh.png",
       "capturedAt": "2026-09-27",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-09-27"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-delete-002",
@@ -2457,9 +2469,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/deletion-recovery-retention/recycle-bin-empty-zh.png",
       "capturedAt": "2026-09-27",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-09-27"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-exit-001",
@@ -2470,9 +2483,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/membership-account-exit/handoff-owned-zh.png",
       "capturedAt": "2026-09-27",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-09-27"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-exit-002",
@@ -2497,9 +2511,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/membership-account-exit/handoff-participating-zh.png",
       "capturedAt": "2026-09-27",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-09-27"
+      "updatedAt": "2026-10-23",
+      "editorialNote": " PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-delete-003",
@@ -2509,11 +2524,11 @@
       "source": "http://localhost:5173/",
       "path": "assets/deletion-recovery-retention/delete-parent-branch-zh.png",
       "capturedAt": "2026-09-27",
-      "updatedAt": "2026-09-27",
+      "updatedAt": "2026-10-23",
       "locale": "zh-CN",
-      "status": "captured",
+      "status": "pending",
       "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。新品发布会筹备删除确认，展开 11 个子任务；截图后确认移入回收站。",
-      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-delete-004",
@@ -2523,11 +2538,11 @@
       "source": "http://localhost:5173/",
       "path": "assets/deletion-recovery-retention/delete-subtask-zh.png",
       "capturedAt": "2026-09-27",
-      "updatedAt": "2026-09-27",
+      "updatedAt": "2026-10-23",
       "locale": "zh-CN",
-      "status": "captured",
+      "status": "pending",
       "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。核对库存与开播安排为筹备秋季新品达人专场的子任务；截图后单独移入回收站，父任务仍保留。",
-      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-delete-005",
@@ -2565,11 +2580,11 @@
       "source": "http://localhost:5173/",
       "path": "assets/deletion-recovery-retention/recycle-bin-restore-confirm-zh.png",
       "capturedAt": "2026-09-27",
-      "updatedAt": "2026-09-27",
+      "updatedAt": "2026-10-23",
       "locale": "zh-CN",
-      "status": "captured",
+      "status": "pending",
       "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。恢复确认显示共 14 个任务；仅采集确认弹窗，随后取消，未提交恢复。",
-      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-delete-008",
@@ -2579,11 +2594,11 @@
       "source": "http://localhost:5173/",
       "path": "assets/deletion-recovery-retention/recycle-bin-purge-confirm-zh.png",
       "capturedAt": "2026-09-27",
-      "updatedAt": "2026-09-27",
+      "updatedAt": "2026-10-23",
       "locale": "zh-CN",
-      "status": "captured",
+      "status": "pending",
       "state": "简体中文，1280×720；同一主工作区 Vite 服务的 localhost 独立源，使用内置示例任务，经实际 UI 操作采集。彻底删除确认显示共 14 个任务及不可恢复提示；随后取消，未提交彻底删除。",
-      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。"
+      "editorialNote": "浏览器源与用户原有 127.0.0.1 工作区隔离；不是旧工作树或静态状态示意，不代表生产服务端能力。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-delete-009",
@@ -2610,10 +2625,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/personal-profile/profile-zh.jpg",
       "capturedAt": "2026-10-10",
-      "updatedAt": "2026-10-10",
-      "status": "captured",
+      "updatedAt": "2026-10-23",
+      "status": "pending",
       "locale": "zh-CN",
-      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-resp-001",
@@ -2625,10 +2640,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/my-responsibility/responsibility-zh.jpg",
       "capturedAt": "2026-10-10",
-      "updatedAt": "2026-10-10",
-      "status": "captured",
+      "updatedAt": "2026-10-23",
+      "status": "pending",
       "locale": "zh-CN",
-      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-teaminfo-001",
@@ -2640,10 +2655,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/team-information/team-information-zh.jpg",
       "capturedAt": "2026-10-10",
-      "updatedAt": "2026-10-10",
-      "status": "captured",
+      "updatedAt": "2026-10-23",
+      "status": "pending",
       "locale": "zh-CN",
-      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-members-001",
@@ -2655,10 +2670,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/team-members/members-zh.jpg",
       "capturedAt": "2026-10-10",
-      "updatedAt": "2026-10-10",
-      "status": "captured",
+      "updatedAt": "2026-10-23",
+      "status": "pending",
       "locale": "zh-CN",
-      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-token-001",
@@ -2685,10 +2700,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/access-tokens/create-token-scope-zh.jpg",
       "capturedAt": "2026-10-10",
-      "updatedAt": "2026-10-10",
-      "status": "captured",
+      "updatedAt": "2026-10-23",
+      "status": "pending",
       "locale": "zh-CN",
-      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-token-003",
@@ -2700,10 +2715,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/access-tokens/delete-token-confirm-zh.jpg",
       "capturedAt": "2026-10-10",
-      "updatedAt": "2026-10-10",
-      "status": "captured",
+      "updatedAt": "2026-10-23",
+      "status": "pending",
       "locale": "zh-CN",
-      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-myteams-001",
@@ -2715,10 +2730,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/my-teams/restore-team-confirm-zh.jpg",
       "capturedAt": "2026-10-10",
-      "updatedAt": "2026-10-10",
-      "status": "captured",
+      "updatedAt": "2026-10-23",
+      "status": "pending",
       "locale": "zh-CN",
-      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。"
+      "editorialNote": "界面展示证据，不证明生产接口与目标权限已实现。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-cli-007",
@@ -2832,10 +2847,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/cli-connection/connection-options-zh.png",
       "capturedAt": "2026-10-13",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-10-13",
-      "editorialNote": "主工作区当前 In-app Browser 1280×720 实拍，已目视核验底部帮助中心文字已删除，当前 DOM 中该文字不存在。旧 connection-options-zh.jpg 保留历史。仅证明本地页面显示，不作为生产接口能力或授权成功证据。"
+      "updatedAt": "2026-10-23",
+      "editorialNote": "主工作区当前 In-app Browser 1280×720 实拍，已目视核验底部帮助中心文字已删除，当前 DOM 中该文字不存在。旧 connection-options-zh.jpg 保留历史。仅证明本地页面显示，不作为生产接口能力或授权成功证据。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-collab-006",
@@ -2910,10 +2925,10 @@
       "source": "http://127.0.0.1:5173/",
       "path": "assets/cli-connection/mcp-selection-guide-zh.png",
       "capturedAt": "2026-10-13",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-10-13",
-      "editorialNote": "主工作区当前 In-app Browser 1280×720 实拍，已目视核验帮助中心文字已删除，当前 DOM 中该文字不存在，介绍与用户定稿一致。纯文案删除，不新增变更日志，沿用 PRD-0150。未重测窄屏或英文运行态；旧 mcp-authorization-zh.jpg 保留历史。仅证明本地文案与入口显示，不作为生产接口能力或授权成功证据。"
+      "updatedAt": "2026-10-23",
+      "editorialNote": "主工作区当前 In-app Browser 1280×720 实拍，已目视核验帮助中心文字已删除，当前 DOM 中该文字不存在，介绍与用户定稿一致。纯文案删除，不新增变更日志，沿用 PRD-0150。未重测窄屏或英文运行态；旧 mcp-authorization-zh.jpg 保留历史。仅证明本地文案与入口显示，不作为生产接口能力或授权成功证据。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-detail-021",
@@ -3266,11 +3281,11 @@
       "source": "http://127.0.0.1:5173/file-annotation-session-qa.html",
       "sourceUrl": "http://127.0.0.1:5173/file-annotation-session-qa.html",
       "path": "assets/files-local-commits/annotation-discard-confirm-zh.png",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
       "capturedAt": "2026-10-15",
-      "updatedAt": "2026-10-15",
-      "editorialNote": "PRD-0195：主工作区当前运行服务、隔离合成props页真实截图，主代理目视核验。012为浏览器裁剪截图，其余桌面1440×960／手机390×844。不是实际项目page或生产跨端共享证明；015是同款确认组件，刷新已另用真实beforeunload确认／取消验证。 PRD-0202：本图仅沿用丢弃确认或保存位置选择的局部证据范围，背景不作为本轮工具条动作、拖动或任务讨论交接证据。 PRD-0205：仅沿丢弃确认局部呈现，不证明讨论附件保存范围或AI实际传递。"
+      "updatedAt": "2026-10-23",
+      "editorialNote": "PRD-0195：主工作区当前运行服务、隔离合成props页真实截图，主代理目视核验。012为浏览器裁剪截图，其余桌面1440×960／手机390×844。不是实际项目page或生产跨端共享证明；015是同款确认组件，刷新已另用真实beforeunload确认／取消验证。 PRD-0202：本图仅沿用丢弃确认或保存位置选择的局部证据范围，背景不作为本轮工具条动作、拖动或任务讨论交接证据。 PRD-0205：仅沿丢弃确认局部呈现，不证明讨论附件保存范围或AI实际传递。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-files-016",
@@ -4101,10 +4116,10 @@
       "source": "http://127.0.0.1:5173/?notificationTest=1",
       "path": "assets/task-creation/progressive-clarified-review-mobile-0225-zh.jpg",
       "capturedAt": "2026-10-16",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-10-16",
-      "editorialNote": "PRD-0225：本轮主工作区5173实际运行截图，根代理与文档代理逐图目视核对。源文件虽扩展名为.png，实际为JPEG；此处按真实格式原字节复制为.jpg，不重采样。桌面文件真实像素1280×720，窄屏390×844；与运行测量视口分别记录，不冒称1440×900图片。不证明真实模型、任务提交或后续焦点恢复，旧035及以前状态保持。"
+      "updatedAt": "2026-10-23",
+      "editorialNote": "PRD-0225：本轮主工作区5173实际运行截图，根代理与文档代理逐图目视核对。源文件虽扩展名为.png，实际为JPEG；此处按真实格式原字节复制为.jpg，不重采样。桌面文件真实像素1280×720，窄屏390×844；与运行测量视口分别记录，不冒称1440×900图片。不证明真实模型、任务提交或后续焦点恢复，旧035及以前状态保持。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-create-039",
@@ -4293,13 +4308,13 @@
       "source": "http://127.0.0.1:4183/",
       "sourceUrl": "http://127.0.0.1:4183/",
       "path": "assets/files-local-commits/reader-narrow-fullscreen-zh.jpg",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
       "capturedAt": "2026-10-16",
-      "updatedAt": "2026-10-16",
+      "updatedAt": "2026-10-23",
       "width": 1440,
       "height": 900,
-      "editorialNote": "来自4183同一主工作区最终5.01秒构建完整App，文档代理逐图目视并核实真实JPEG尺寸／MIME，不冒充5173或生产服务。真实全屏面板192px／纸面140px，内部clientWidth=scrollWidth=190px；仅留清单，不重复内嵌正文。 默认收起、hover未pin、点第3页input／current3与Esc关闭焦点归入口来自本轮运行实测；图中为第1页，不冒充跳页结果。沿0226纯CSS视觉收窄，PPT共用CSS但本轮未重跑转换／视觉。"
+      "editorialNote": "来自4183同一主工作区最终5.01秒构建完整App，文档代理逐图目视并核实真实JPEG尺寸／MIME，不冒充5173或生产服务。真实全屏面板192px／纸面140px，内部clientWidth=scrollWidth=190px；仅留清单，不重复内嵌正文。 默认收起、hover未pin、点第3页input／current3与Esc关闭焦点归入口来自本轮运行实测；图中为第1页，不冒充跳页结果。沿0226纯CSS视觉收窄，PPT共用CSS但本轮未重跑转换／视觉。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。"
     },
     {
       "id": "fig-files-078",
@@ -4563,10 +4578,10 @@
       "state": "简体中文；1440×778，搜索“发布会”共5项；置顶“新品发布会筹备”独立，普通区域3项未完成后1项已完成。",
       "type": "current-page",
       "path": "assets/task-list/recent-completed-last-zh.jpg",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-10-20",
-      "editorialNote": "PRD-0238：2026-10-20主工作区5173完整App的Chrome真实截图；根代理采集，文档代理逐图目视并核实JPEG文件头／MIME／1440×778尺寸。原字节资产不重编码；静态图只证明对应页面呈现，运行交互、固定版本、草稿保护和测试结果分别见来源映射／矩阵，不扩大为生产保存、全格式或真机触屏证据。 图中结果不证明最新创建切换或重开流程；相应边界沿本轮定向检查，不据图推断所有排序情形。",
+      "updatedAt": "2026-10-23",
+      "editorialNote": "PRD-0238：2026-10-20主工作区5173完整App的Chrome真实截图；根代理采集，文档代理逐图目视并核实JPEG文件头／MIME／1440×778尺寸。原字节资产不重编码；静态图只证明对应页面呈现，运行交互、固定版本、草稿保护和测试结果分别见来源映射／矩阵，不扩大为生产保存、全格式或真机触屏证据。 图中结果不证明最新创建切换或重开流程；相应边界沿本轮定向检查，不据图推断所有排序情形。 PRD-0274：文字输入统一小圆角，旧运行截图不再作为当前输入呈现证据，待主工作区按实际场景重新采集。",
       "source": "http://127.0.0.1:5173/",
       "sourceUrl": "http://127.0.0.1:5173/",
       "runtime": "current-workspace-dev-server",
@@ -4623,13 +4638,13 @@
       "state": "简体中文；1440×778，当前主5173临时真实Gallery组件页，真实图片与PDF／JSON／XML／MD／HTML／PPTX／TXT／未知类型共9卡，名称及引用版本保持。",
       "type": "current-component",
       "path": "assets/discussion-notifications-activity/attachment-material-icons-zh.jpg",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
-      "updatedAt": "2026-10-20",
+      "updatedAt": "2026-10-23",
       "source": "http://127.0.0.1:5173/artifacts/file-icon-refresh-2026-10-20/index.html",
       "sourceUrl": "http://127.0.0.1:5173/artifacts/file-icon-refresh-2026-10-20/index.html",
       "runtime": "current-workspace-component-fixture",
-      "editorialNote": "2026-10-20非语义文件图标视觉同步：根代理从主5173当前源码临时真实DiscussionAttachmentGallery组件页采集，文档代理逐图目视并用PIL核实JPEG／1440×778，原字节保留。属于current-component，非完整App，fixture为artifacts/file-icon-refresh-2026-10-20；收尾删除临时页面不改变本图实际来源分类。真实图片与8类文件共9卡，8个图标img实际naturalWidth>0且56×56，目视没有旧线框叠字底壳，名称／引用版本保持。类型素材固定Material Icon Theme 5.39.0，完整MIT许可及来源随vendor保存。taskFileCodeAffordances3／3与最终应用类型／结构／Vite通过；不以此图代证全部交互、图片全屏、真机触屏、生产权限或新增预览能力。未新增PRD编号，last_change／version及旧语义日志保持。",
+      "editorialNote": "2026-10-20非语义文件图标视觉同步：根代理从主5173当前源码临时真实DiscussionAttachmentGallery组件页采集，文档代理逐图目视并用PIL核实JPEG／1440×778，原字节保留。属于current-component，非完整App，fixture为artifacts/file-icon-refresh-2026-10-20；收尾删除临时页面不改变本图实际来源分类。真实图片与8类文件共9卡，8个图标img实际naturalWidth>0且56×56，目视没有旧线框叠字底壳，名称／引用版本保持。类型素材固定Material Icon Theme 5.39.0，完整MIT许可及来源随vendor保存。taskFileCodeAffordances3／3与最终应用类型／结构／Vite通过；不以此图代证全部交互、图片全屏、真机触屏、生产权限或新增预览能力。未新增PRD编号，last_change／version及旧语义日志保持。 PRD-0274：附件卡片已改为封面或类型图标及名称，不再显示格式、大小或版本行；旧卡片截图待重新采集。",
       "capturedAt": "2026-10-20",
       "width": 1440,
       "height": 778,
@@ -4643,17 +4658,143 @@
       "state": "简体中文；1440×778，主5173真实App新品发布会筹备任务文件image.png预览，单一文件名标题与标注、更多、关闭同一行，保留图片阅读控件。",
       "type": "current-page",
       "path": "assets/files-local-commits/image-preview-single-heading-zh.jpg",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
       "capturedAt": "2026-10-20",
-      "updatedAt": "2026-10-20",
+      "updatedAt": "2026-10-23",
       "width": 1440,
       "height": 778,
       "mimeType": "image/jpeg",
       "source": "http://127.0.0.1:5173/",
       "sourceUrl": "http://127.0.0.1:5173/",
       "runtime": "current-workspace-dev-server",
-      "editorialNote": "2026-10-20非语义单行标题视觉同步：根代理从主5173完整App新品发布会筹备→文件→image.png采集；文档代理逐图目视并用PIL确认JPEG／1440×778，原字节保留，属于current-page。browserMode工具栏保留唯一可访问DialogTitle、文件操作与关闭，旧外标题取消，非browserMode路径不变。实际单标题与aria-labelledby对应，关闭回原trigger、Enter重开初始聚焦close，菜单版本／下载／移动及标注进退已核对；390px桌面浏览器窄视口无横向溢出且标题操作一行，未写入任务／文件／讨论／标注。静态图不证明全部格式、长标题专门实测、原生全屏成功、保存或生产权限。应用类型／结构／Vite均通过，PRD最终重建待根代理；未新增变更ID或修改版本／语义日志。"
+      "editorialNote": "2026-10-20非语义单行标题视觉同步：根代理从主5173完整App新品发布会筹备→文件→image.png采集；文档代理逐图目视并用PIL确认JPEG／1440×778，原字节保留，属于current-page。browserMode工具栏保留唯一可访问DialogTitle、文件操作与关闭，旧外标题取消，非browserMode路径不变。实际单标题与aria-labelledby对应，关闭回原trigger、Enter重开初始聚焦close，菜单版本／下载／移动及标注进退已核对；390px桌面浏览器窄视口无横向溢出且标题操作一行，未写入任务／文件／讨论／标注。静态图不证明全部格式、长标题专门实测、原生全屏成功、保存或生产权限。应用类型／结构／Vite均通过，PRD最终重建待根代理；未新增变更ID或修改版本／语义日志。 PRD-0274：文件预览共用可见下载及按格式能力显示版本；旧工具栏截图待重新采集。"
+    },
+    {
+      "id": "fig-files-102",
+      "figureId": "FIG-FILES-102",
+      "moduleId": "files-local-commits",
+      "page": "任务文件搜索与新建菜单",
+      "state": "中文界面；秋季精华任务共29个文件，交付成果展开10项，新建菜单打开。目录数量紧随名称，列表连续节距与左侧任务一致，子文件缩进收紧。 搜索占位为“搜索”。",
+      "type": "current-page",
+      "path": "assets/files-local-commits/file-toolbar-search-copy-desktop-2026-10-22-zh.jpg",
+      "status": "captured",
+      "locale": "zh",
+      "capturedAt": "2026-10-22",
+      "updatedAt": "2026-10-23",
+      "width": 1440,
+      "height": 778,
+      "mimeType": "image/jpeg",
+      "source": "http://127.0.0.1:5173/",
+      "sourceUrl": "http://127.0.0.1:5173/",
+      "runtime": "current-workspace-dev-server",
+      "editorialNote": "PRD-0274：复用2026-10-22主工作区127.0.0.1:5173完整App的原视口截图，仅转JPEG，无裁切或内容编辑。采集时间与来源保持，不冒充2026-10-23隔离版本的新采集。文档代理于本批逐图目视，画面只呈现批准的文件列表、目录选择或新建／上传窗口，未呈现暂缓的子任务建议及媒体标注。JPEG 1440×778，SHA-256=d90863af97104500b1226be146645e226fdaf785c32df1b294776959ee490eaa。静态图只说明对应时刻呈现，不证明保存、实际移动、真实1GB传输、真机或正式站能力；隔离代码的最终最小验证另见来源与实现矩阵。",
+      "caption": "目录数量紧随名称，新建菜单提供文件夹与文件两项。"
+    },
+    {
+      "id": "fig-files-103",
+      "figureId": "FIG-FILES-103",
+      "moduleId": "files-local-commits",
+      "page": "窄屏任务文件搜索与新建",
+      "state": "中文界面；秋季精华任务根视图，文件夹均收起，数量紧随名称，菜单关闭。搜索与新建同排。 搜索占位为“搜索”。",
+      "type": "current-page",
+      "path": "assets/files-local-commits/file-toolbar-search-copy-mobile-2026-10-22-zh.jpg",
+      "status": "captured",
+      "locale": "zh",
+      "capturedAt": "2026-10-22",
+      "updatedAt": "2026-10-23",
+      "width": 390,
+      "height": 844,
+      "mimeType": "image/jpeg",
+      "source": "http://127.0.0.1:5173/",
+      "sourceUrl": "http://127.0.0.1:5173/",
+      "runtime": "current-workspace-dev-server",
+      "editorialNote": "PRD-0274：复用2026-10-22主工作区127.0.0.1:5173完整App的原视口截图，仅转JPEG，无裁切或内容编辑。采集时间与来源保持，不冒充2026-10-23隔离版本的新采集。文档代理于本批逐图目视，画面只呈现批准的文件列表、目录选择或新建／上传窗口，未呈现暂缓的子任务建议及媒体标注。JPEG 390×844，SHA-256=f0dfbbbf3d5c87ac8653757693938fc3ccc72344b52b67e7c40d841eb098b83d。静态图只说明对应时刻呈现，不证明保存、实际移动、真实1GB传输、真机或正式站能力；隔离代码的最终最小验证另见来源与实现矩阵。",
+      "caption": "窄屏搜索与新建同排，文件夹在原位展开。"
+    },
+    {
+      "id": "fig-files-104",
+      "figureId": "FIG-FILES-104",
+      "moduleId": "files-local-commits",
+      "page": "移动文件与文件夹",
+      "state": "中文界面；秋季精华任务移动交付成果并选中历史版本，底部保留目标路径。背景文件列表无路径行，弹窗复用设置的10%黑底及4px背景模糊。",
+      "type": "current-page",
+      "path": "assets/files-local-commits/move-folder-picker-unified-search-desktop-2026-10-22-zh.jpg",
+      "status": "captured",
+      "locale": "zh",
+      "capturedAt": "2026-10-22",
+      "updatedAt": "2026-10-23",
+      "width": 1440,
+      "height": 778,
+      "mimeType": "image/jpeg",
+      "source": "http://127.0.0.1:5173/",
+      "sourceUrl": "http://127.0.0.1:5173/",
+      "runtime": "current-workspace-dev-server",
+      "caption": "只在当前任务根目录及文件夹中选择移动位置，搜索与目录开合保留目标。",
+      "editorialNote": "PRD-0274：复用2026-10-22主工作区127.0.0.1:5173完整App的原视口截图，仅转JPEG，无裁切或内容编辑。采集时间与来源保持，不冒充2026-10-23隔离版本的新采集。文档代理于本批逐图目视，画面只呈现批准的文件列表、目录选择或新建／上传窗口，未呈现暂缓的子任务建议及媒体标注。JPEG 1440×778，SHA-256=227e466897f03a7ec74368051d821802a55a75ff1cc7f87646910990f9af8dc4。静态图只说明对应时刻呈现，不证明保存、实际移动、真实1GB传输、真机或正式站能力；隔离代码的最终最小验证另见来源与实现矩阵。"
+    },
+    {
+      "id": "fig-files-105",
+      "figureId": "FIG-FILES-105",
+      "moduleId": "files-local-commits",
+      "page": "移动文件与文件夹",
+      "state": "中文界面；窄屏秋季精华任务移动交付成果并选中历史版本。移动窗口保留目标路径，背景文件列表无路径行，使用10%黑底及4px背景模糊。",
+      "type": "current-page",
+      "path": "assets/files-local-commits/move-folder-picker-unified-search-mobile-2026-10-22-zh.jpg",
+      "status": "captured",
+      "locale": "zh",
+      "capturedAt": "2026-10-22",
+      "updatedAt": "2026-10-23",
+      "width": 390,
+      "height": 844,
+      "mimeType": "image/jpeg",
+      "source": "http://127.0.0.1:5173/",
+      "sourceUrl": "http://127.0.0.1:5173/",
+      "runtime": "current-workspace-dev-server",
+      "caption": "窄屏保留搜索、目录树及底部移动确认，目标路径单行展示。",
+      "editorialNote": "PRD-0274：复用2026-10-22主工作区127.0.0.1:5173完整App的原视口截图，仅转JPEG，无裁切或内容编辑。采集时间与来源保持，不冒充2026-10-23隔离版本的新采集。文档代理于本批逐图目视，画面只呈现批准的文件列表、目录选择或新建／上传窗口，未呈现暂缓的子任务建议及媒体标注。JPEG 390×844，SHA-256=86b9512b62bf9f89c4ed6d5d50e2ded429c50371b4eb13a90beb4b889514c5d6。静态图只说明对应时刻呈现，不证明保存、实际移动、真实1GB传输、真机或正式站能力；隔离代码的最终最小验证另见来源与实现矩阵。"
+    },
+    {
+      "id": "fig-files-106",
+      "figureId": "FIG-FILES-106",
+      "moduleId": "files-local-commits",
+      "page": "新建文件夹",
+      "state": "中文界面；新品发布会筹备任务，新建位置为任务文件／交付成果，空名称且提交禁用。背景列表无路径行，弹窗内容清晰。",
+      "type": "current-page",
+      "path": "assets/files-local-commits/create-folder-unified-search-desktop-2026-10-22-zh.jpg",
+      "status": "captured",
+      "locale": "zh",
+      "capturedAt": "2026-10-22",
+      "updatedAt": "2026-10-23",
+      "width": 1440,
+      "height": 778,
+      "mimeType": "image/jpeg",
+      "source": "http://127.0.0.1:5173/",
+      "sourceUrl": "http://127.0.0.1:5173/",
+      "runtime": "current-workspace-dev-server",
+      "caption": "在新建窗口核对目标位置及名称，再提交新建。",
+      "editorialNote": "PRD-0274：复用2026-10-22主工作区127.0.0.1:5173完整App的原视口截图，仅转JPEG，无裁切或内容编辑。采集时间与来源保持，不冒充2026-10-23隔离版本的新采集。文档代理于本批逐图目视，画面只呈现批准的文件列表、目录选择或新建／上传窗口，未呈现暂缓的子任务建议及媒体标注。JPEG 1440×778，SHA-256=aa9b2fd74e8fc34f71b4719ef12ac9e3090d8926cfe2149aaa7cc2ad6ab2a4e8。静态图只说明对应时刻呈现，不证明保存、实际移动、真实1GB传输、真机或正式站能力；隔离代码的最终最小验证另见来源与实现矩阵。"
+    },
+    {
+      "id": "fig-files-107",
+      "figureId": "FIG-FILES-107",
+      "moduleId": "files-local-commits",
+      "page": "普通任务文件上传",
+      "state": "中文界面；新品发布会筹备任务根位置的真实上传文件窗口，显示单个不超过1GB。未选择或上传文件，背景列表无路径导航。",
+      "type": "current-page",
+      "path": "assets/files-local-commits/upload-1gb-unified-search-desktop-2026-10-22-zh.jpg",
+      "status": "captured",
+      "locale": "zh",
+      "capturedAt": "2026-10-22",
+      "updatedAt": "2026-10-23",
+      "width": 1440,
+      "height": 778,
+      "mimeType": "image/jpeg",
+      "source": "http://127.0.0.1:5173/",
+      "sourceUrl": "http://127.0.0.1:5173/",
+      "runtime": "current-workspace-dev-server",
+      "caption": "上传普通任务文件时，窗口明确单文件上限标称1GB。",
+      "editorialNote": "PRD-0274：复用2026-10-22主工作区127.0.0.1:5173完整App的原视口截图，仅转JPEG，无裁切或内容编辑。采集时间与来源保持，不冒充2026-10-23隔离版本的新采集。文档代理于本批逐图目视，画面只呈现批准的文件列表、目录选择或新建／上传窗口，未呈现暂缓的子任务建议及媒体标注。JPEG 1440×778，SHA-256=c0db23002bd05b6dc4d28b52faddcacf13945a82196771299beb419aad6376e0。静态图只说明对应时刻呈现，不证明保存、实际移动、真实1GB传输、真机或正式站能力；隔离代码的最终最小验证另见来源与实现矩阵。"
     }
   ]
 }

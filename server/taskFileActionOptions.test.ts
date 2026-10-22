@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { canMoveTaskFileTo, getTaskFileMoveDestinations, getTaskFileFolderDestinations } from "../src/features/tasks/files/lib/task-file-action-options.ts";
+import { canMoveTaskFileTo, getTaskFileMoveDestinations, getTaskFileFolderDestinations, searchTaskFileMoveDestinations } from "../src/features/tasks/files/lib/task-file-action-options.ts";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 
 const nodes: TaskFileNode[] = [
@@ -46,4 +46,22 @@ test("保存新文件可选择根目录和完整有效层级，不提供归档�
     { id: null, depth: 0 }, { id: "root-a", depth: 1 }, { id: "root-b", depth: 1 }, { id: "child", depth: 2 }, { id: "deep", depth: 3 },
   ]);
   assert.deepEqual(getTaskFileFolderDestinations([]), [{ id: null, depth: 0 }]);
+});
+
+test("移动搜索覆盖深层文件夹并保留祖先，数量只计名称命中", () => {
+  const destinations = getTaskFileMoveDestinations(nodes, "file");
+  const result = searchTaskFileMoveDestinations(destinations, " 附件 ");
+  assert.deepEqual(result.destinations.map(({ id }) => id), [null, "root-b", "child", "deep"]);
+  assert.equal(result.matches, 1);
+  assert.deepEqual(searchTaskFileMoveDestinations(destinations, "missing"), { destinations: [], matches: 0 });
+  assert.deepEqual(searchTaskFileMoveDestinations(destinations, "").destinations, destinations);
+});
+
+test("移动搜索不能重新引入自身、后代或归档目录，显示名匹配不改变真实目标", () => {
+  const destinations = getTaskFileMoveDestinations(nodes, "child");
+  for (const query of ["资料", "附件", "旧材料", "归档"]) assert.equal(searchTaskFileMoveDestinations(destinations, query).matches, 0);
+  const result = searchTaskFileMoveDestinations(destinations, "BETA", name => name === "B" ? "Beta" : name);
+  assert.deepEqual(result.destinations.map(({ id }) => id), [null, "root-b"]);
+  assert.equal(result.matches, 1);
+  assert.equal(canMoveTaskFileTo(nodes, "child", "root-b"), false);
 });

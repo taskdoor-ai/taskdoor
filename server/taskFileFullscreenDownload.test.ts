@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { TaskFileNode } from "../src/shared/model/task-model.ts";
 import { globalUiText } from "../src/shared/i18n/global-ui.ts";
 import FullscreenButton from "../src/features/tasks/files/components/FullscreenButton.tsx";
-import { canDownload, downloadTaskFile } from "../src/features/tasks/files/components/TaskFileViewer.tsx";
+import { canDownload, downloadTaskFile } from "../src/features/tasks/files/lib/task-file-download.ts";
 
 const read = (path: string) => readFileSync(new URL(`../src/${path}`, import.meta.url), "utf8");
 const explorer = read("features/tasks/files/components/TaskFileExplorer.tsx");
@@ -39,11 +39,11 @@ test("浏览器不允许全屏时不显示全屏按钮", () => {
 });
 
 test("全屏只作用于查看器，入口在文件名右侧、更多操作左侧", () => {
-  assert.match(explorer, /className="task-file-explorer-viewer" onScroll=\{\(\) => setSelection\(null\)\} ref=\{viewerRef\}/);
+  assert.match(explorer, /className="task-file-explorer-viewer[^\"]*"[^>]*onScroll=\{\(\) => setSelection\(null\)\} ref=\{viewerRef\}/);
   const fullscreen = explorer.indexOf("<FullscreenButton");
   assert.ok(fullscreen > explorer.indexOf("task-file-editor-path"), "在文件名之后");
   assert.ok(fullscreen < explorer.indexOf('aria-label={ui("更多文件操作")}'), "在更多操作之前");
-  assert.match(explorer, /\{!isEditing && !loadError && !imageViewerOwnsFullscreen && <FullscreenButton [^>]*target=\{viewerRef\}/, "编辑、读取失败或普通图片已有框架全屏时不重复显示");
+  assert.match(explorer, /\{viewerFile && !isEditing && !loadError && !imageViewerOwnsFullscreen && !usesTaskMediaViewer\(viewerFile\) && <FullscreenButton [^>]*target=\{viewerRef\}/, "已有框架全屏时不重复显示");
   assert.match(button, /requestFullscreen\(\)\.catch\(\(\) => \{\}\)/);
   assert.match(button, /task-file-viewer-unsupported/, "无法预览时不显示");
   assert.match(button, /fullscreenchange/);
@@ -53,16 +53,22 @@ test("全屏时查看器铺满页面底色，图片和 PDF 按屏幕高度适配
   const css = read("features/tasks/styles/task-file-editor.css");
   assert.match(css, /\.task-file-explorer-viewer:fullscreen \{[^}]*background: var\(--ad-canvas\)/);
   const pdfCss = read("features/tasks/styles/task-file-pdf-viewer.css");
-  assert.match(pdfCss, /:fullscreen[^{]*\.task-pdf-viewer__viewport[^{]*\{[^}]*100dvh/);
+  // The fullscreen shell owns viewport height; PDF pages fill the space left
+  // by the toolbar rather than adding another full screen below that toolbar.
+  assert.match(pdfCss, /\.task-file-explorer-viewer:fullscreen:has\(> \.task-pdf-viewer\) \{[^}]*height: 100dvh/);
+  assert.match(pdfCss, /:fullscreen > \.task-pdf-viewer \{[^}]*display: flex;[^}]*height: 100%;[^}]*flex-direction: column/);
+  assert.match(pdfCss, /:fullscreen \.task-pdf-viewer__workspace \{[^}]*flex: 1;[^}]*min-height: 0/);
+  assert.match(pdfCss, /:fullscreen \.task-pdf-viewer__viewport \{[^}]*height: 100%;[^}]*min-height: 0/);
   assert.match(css, /:fullscreen[^{]*\.task-file-viewer-image img[^{]*\{[^}]*100dvh/);
   assert.doesNotMatch(css, /:fullscreen[^{]*task-file-editor-toolbar/);
 });
 
-test("「更多」菜单里的下载在移动到之前，只给有内容可下的文件", () => {
-  const item = explorer.indexOf('<Download size={14} />{ui("下载")}');
-  assert.ok(item > 0, "菜单里有下载");
-  assert.ok(item < explorer.indexOf('{ui("移动到")}'), "在移动到之前");
-  assert.match(explorer, /selected\.kind === "file" && canDownload\(selected\) && <DropdownMenuItem onClick=\{async \(\) => setError\(ui\(await downloadTaskFile\(selected\)\)\)\}>/);
+test("预览工具栏直接提供查看中版本的统一下载，更多菜单不重复", () => {
+  const item = explorer.indexOf('<TaskFileDownload file={viewerFile} onError={setError} />');
+  assert.ok(item > explorer.indexOf("task-file-editor-controls"), "下载在预览工具栏");
+  assert.ok(item < explorer.indexOf('aria-label={ui("更多文件操作")}'), "下载在更多操作之前");
+  assert.match(explorer, /viewerFile && <TaskFileDownload file=\{viewerFile\}/);
+  assert.doesNotMatch(explorer, /<Download size=\{14\} \/>\{ui\("下载"\)\}/);
 });
 
 test("下载 Markdown 保存为同名文件，没有内容的文件不提供下载", async () => {

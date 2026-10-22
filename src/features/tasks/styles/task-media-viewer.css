@@ -1,0 +1,73 @@
+.task-media-viewer { position: relative; width: 100%; min-width: 0; min-height: 0; margin: 0; padding: 0; }
+.task-media-viewer-video { height: 100%; overflow: hidden; background: #18181b; }
+.task-media-player {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  --media-primary-color: #45546c;
+  --media-secondary-color: #fff;
+  --media-background-color: #fff;
+  --media-control-background: transparent;
+  --media-control-hover-background: #f0f3fa;
+  --media-text-color: #45546c;
+  --media-range-track-background: #e3e8f2;
+  --media-range-bar-color: #6073e8;
+  --media-range-thumb-background: #6073e8;
+  --media-control-height: 22px;
+  --media-control-padding: 10px;
+  --media-button-padding: 10px;
+  --media-button-icon-width: 22px;
+  --media-button-icon-height: 22px;
+  --media-font-size: 13px;
+}
+/* Tailwind's light-DOM padding reset wins over a component's shadow :host.
+   Reflect Media Chrome's own button variables at its host boundary. */
+.task-media-player :is(media-play-button, media-mute-button, media-fullscreen-button) { display: inline-flex; align-items: center; justify-content: var(--media-button-justify-content, center); box-sizing: border-box; padding: var(--media-button-padding, var(--media-control-padding, 10px)); }
+.task-media-viewer-video .task-media-player {
+  height: 100%;
+  --media-primary-color: #fafafa;
+  --media-secondary-color: transparent;
+  --media-background-color: #18181b;
+  --media-control-hover-background: #ffffff20;
+  --media-text-color: #fafafa;
+  --media-range-track-background: #ffffff42;
+  --media-range-bar-color: #fafafa;
+  --media-range-thumb-background: #fafafa;
+}
+.task-media-player video { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; background: #18181b; }
+.task-media-player audio { display: none; }
+.task-media-bottom-chrome { display: flex; width: 100%; flex-direction: column; }
+.task-media-viewer-video .task-media-bottom-chrome { padding: 28px 12px 8px; background: linear-gradient(transparent, #000b); }
+.task-media-player .task-media-progress { width: 100%; padding-inline: 4px; }
+.task-media-progress media-time-range { width: 100%; --media-range-track-height: 4px; }
+.task-media-controls { width: 100%; align-items: center; padding: 0; background: transparent; }
+.task-media-controls :is(media-play-button, media-mute-button, media-fullscreen-button) { min-width: 42px; min-height: 42px; }
+.task-media-controls-spacer { flex: 1; }
+.task-media-controls media-volume-range { max-width: 90px; }
+.task-media-center-play { min-width: 68px; min-height: 68px; border-radius: 50%; --media-button-padding: 19px; --media-button-icon-width: 30px; --media-button-icon-height: 30px; --media-control-height: 30px; --media-control-background: #fffffff2; --media-control-hover-background: #fff; --media-primary-color: #18181b; }
+.task-media-center-play:not([mediapaused]) { display: none; }
+.task-media-loading { position: absolute; top: 50%; left: 50%; width: 54px; height: 54px; transform: translate(-50%, -50%); pointer-events: none; --media-loading-indicator-icon-height: 54px; }
+.task-media-viewer-audio { width: min(100%, 640px); height: auto; margin: auto; padding: 24px; }
+.task-media-viewer-audio .task-media-bottom-chrome { background: #fff; }
+.task-media-audio-art { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; min-height: 210px; color: #8b70db; border-radius: 18px; background: linear-gradient(145deg, #f0ebff, #f7f9ff 70%); margin-bottom: 20px; }
+.task-media-audio-art span { font-size: 12px; letter-spacing: 0.1em; font-weight: 600; }
+.task-media-error { margin-top: 14px; color: #9c3847; font-size: 14px; line-height: 1.6; }
+.task-media-error p { margin-bottom: 10px; }
+.task-media-viewer-video .task-media-error { width: min(480px, calc(100% - 32px)); margin: auto; padding: 20px; border-radius: 12px; background: #fff; color: #9c3847; text-align: center; }
+.task-media-fullscreen-error { width: fit-content; max-width: calc(100% - 32px); margin: auto auto 106px; padding: 10px 14px; border-radius: 6px; background: #fff; color: #9c3847; font-size: 13px; line-height: 1.6; }
+.task-media-player:fullscreen { width: 100vw; height: 100dvh; background: #18181b; }
+.task-media-player:fullscreen video { width: 100%; height: 100%; max-height: none; }
+@media (max-width: 480px) {
+  .task-media-controls media-volume-range { max-width: 56px; }
+  .task-media-viewer-video .task-media-bottom-chrome { padding-inline: 6px; }
+  .task-media-viewer-audio { padding: 16px; }
+  .task-media-audio-art { min-height: 160px; }
+}
+@media (pointer: coarse), (hover: none) {
+  .task-media-player { --media-button-padding: 11px; --media-range-padding: 11px; }
+  .task-media-controls :is(media-play-button, media-mute-button, media-fullscreen-button) { min-width: 44px; min-height: 44px; }
+}
