@@ -8,7 +8,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockPersonName } from "@/ai/mock/i18n/mockContent";
 import { PreviewCard } from "@base-ui/react/preview-card";
 import React, { type ComponentPropsWithoutRef, type CSSProperties, forwardRef, type ReactElement, useEffect, useRef, useState } from "react";
-import { ChevronDown, ClipboardCheck, Mail, Phone, UserRound, X } from "lucide-react";
+import { ClipboardCheck, Mail, Phone, UserRound, X } from "lucide-react";
 import type { PersonOption } from "@/shared/model/task-model";
 import { useResolvedPersonProfile } from "@/shared/ui/PersonDirectory";
 import { createPersonProfileCardModel } from "@/shared/ui/person-profile-card-model";
@@ -226,7 +226,7 @@ export function PersonOverflowList({ allPeople, className = "person-avatar-overf
   const listLabel = allPeople ? ui("查看全部{0}（{1}人）", {0: label, 1: listPeople.length}) : ui("更多{0}", {0: label});
 
   return <Popover onOpenChange={setOpen} open={open}>
-    <PopoverTrigger aria-label={allPeople ? listLabel : ui("另有 {0} 位{1}", {0: people.length, 1: label})} className={`${className}${allPeople ? " is-full-list" : ""}`} closeDelay={150} delay={100} onFocus={(event) => { if (!allPeople && event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover={!allPeople} style={style} title={allPeople ? listLabel : undefined} type="button">{people.length > 0 && <span>+{people.length}</span>}{allPeople && <ChevronDown aria-hidden="true" size={14} />}</PopoverTrigger>
+    <PopoverTrigger aria-label={allPeople ? listLabel : ui("另有 {0} 位{1}", {0: people.length, 1: label})} className={`${className}${allPeople ? " is-full-list" : ""}`} closeDelay={150} delay={100} onFocus={(event) => { if (!allPeople && event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover={!allPeople} style={style} title={allPeople ? listLabel : undefined} type="button"><span>{people.length > 0 ? `+${people.length}` : allPeople?.length}</span></PopoverTrigger>
     <PopoverContent aria-label={listLabel} className="person-overflow-popover" collisionPadding={allPeople ? 12 : undefined} data-full-list={allPeople ? "" : undefined} finalFocus={allPeople ? undefined : false} initialFocus={allPeople ? undefined : false}>
       {allPeople && <div className="person-overflow-heading"><strong>{label}</strong><span>{listPeople.length}</span></div>}
       <ul aria-label={allPeople ? listLabel : ui("收起的{0}", {0: label})} className="person-overflow-list" ref={listRef} tabIndex={allPeople ? 0 : undefined}>

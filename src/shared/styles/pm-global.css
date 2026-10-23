@@ -660,9 +660,9 @@ button:disabled {
 .person-avatar-overflow { position: relative; z-index: 1; display: grid; width: var(--person-avatar-size); height: var(--person-avatar-size); flex: 0 0 var(--person-avatar-size); margin-left: calc(var(--ad-space-2) * -1); place-items: center; border: 2px solid var(--ad-surface); border-radius: var(--ad-radius-pill); background: color-mix(in srgb, var(--ad-route) 14%, var(--ad-surface)); color: var(--ad-route-ink); font-size: calc(var(--person-avatar-size) * .31); font-weight: 760; }
 .person-avatar-overflow, .member-selector-overflow { padding: 0; font-family: inherit; cursor: pointer; }
 .person-avatar-overflow:focus-visible, .member-selector-overflow:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
-.person-avatar-overflow.is-full-list { display: inline-flex; width: auto; min-width: var(--person-avatar-size); flex-basis: auto; justify-content: center; gap: 3px; margin-left: 2px; padding: 0 7px; border: 0; font-size: max(12px, calc(var(--person-avatar-size) * .43)); font-weight: 600; line-height: 1; }
-.person-avatar-overflow.is-full-list svg { width: 16px; height: 16px; flex-shrink: 0; transition: transform 160ms var(--ad-ease); }
-.person-avatar-overflow.is-full-list[aria-expanded="true"] svg { transform: rotate(180deg); }
+.person-avatar-overflow.is-full-list { border: 0; background: color-mix(in srgb, var(--ad-route) 7%, var(--ad-surface)); box-shadow: 0 0 0 2px var(--ad-surface); font-size: max(10px, calc(var(--person-avatar-size) * .38)); font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; transition: background 160ms var(--ad-ease); }
+.person-avatar-overflow.is-full-list:hover,
+.person-avatar-overflow.is-full-list[aria-expanded="true"] { background: color-mix(in srgb, var(--ad-route) 14%, var(--ad-surface)); }
 .person-overflow-popover { width: max-content; min-width: 144px; max-width: min(280px, calc(100vw - 32px)); padding: var(--ad-space-2); }
 .person-overflow-popover[data-full-list] { width: var(--ad-person-picker-width); min-width: 0; max-width: calc(100vw - var(--ad-space-6)); }
 .person-overflow-heading { display: flex; align-items: center; gap: var(--ad-space-2); padding: var(--ad-space-1) var(--ad-space-1) var(--ad-space-2); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); }
