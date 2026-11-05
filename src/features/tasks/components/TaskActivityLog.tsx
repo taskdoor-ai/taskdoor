@@ -33,7 +33,7 @@ const taskActionLabels = {
   "owner-change": "负责人变更",
   "owner-proposal": "负责人提议",
   "participant-added": "参与者加入",
-  "participants-change": "参与人变更",
+  "participants-change": "参与者变更",
   "tags-change": "标签变更",
   "appearance-change": "外观变更",
   "task-definition-change": "更新了任务信息",

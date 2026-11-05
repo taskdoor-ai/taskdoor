@@ -51,7 +51,7 @@ function LinearSubtask({ disabled = false, form, members, onChange, onInviteMemb
           const ownerId = selected[0] ?? "";
           updateTask(task.clientId, { ownerId, participantIds: task.participantIds.filter(id => id !== ownerId) });
         }} onInviteMembers={onInviteMembers} selected={task.ownerId ? [task.ownerId] : []} showInvitationStatus={false} /></div>
-        <div><small>参与人</small><MemberSelector disabled={disabled} hideHeader label={`子任务 ${index + 1} 参与人`} members={members.filter(member => member.id !== task.ownerId)} onChange={participantIds => updateTask(task.clientId, { participantIds })} onInviteMembers={onInviteMembers} selected={task.participantIds} showInvitationStatus={false} stacked /></div>
+        <div><small>参与者</small><MemberSelector disabled={disabled} hideHeader label={`子任务 ${index + 1} 参与者`} members={members.filter(member => member.id !== task.ownerId)} onChange={participantIds => updateTask(task.clientId, { participantIds })} onInviteMembers={onInviteMembers} selected={task.participantIds} showInvitationStatus={false} stacked /></div>
         <div><small>截止时间</small><TaskDueDatePicker initialValue={task.endDate} label={`子任务 ${index + 1} 截止时间`} onChange={endDate => updateTask(task.clientId, { startDate: "", endDate })} /></div>
       </div>
       <div className="linear-creation-property-row"><small>标签</small><div className="linear-creation-tags">{task.labels.map(name => <TagBadge key={name} onRemove={disabled ? undefined : () => updateTask(task.clientId, { labels: task.labels.filter(item => item !== name) })} size="sm" tag={findTagByName(tags, name) ?? { id: name, name, color: "gray", icon: "tag" }} />)}<TagPicker onChange={labels => updateTask(task.clientId, { labels })} selected={task.labels} tags={tags} /></div></div>
@@ -80,7 +80,7 @@ function TeamContent({ disabled = false, form, members, onInviteMembers, updateT
         const ownerId = selected[0] ?? "";
         updateTask(main.clientId, { ownerId, participantIds: main.participantIds.filter(id => id !== ownerId) });
       }} onInviteMembers={onInviteMembers} selected={main.ownerId ? [main.ownerId] : []} showInvitationStatus={false} /><p>{recommendationBasis(owner)}</p></div>
-      <div><small>参与人</small><MemberSelector disabled={disabled} hideHeader label="参与人" members={members.filter(member => member.id !== main.ownerId)} onChange={participantIds => updateTask(main.clientId, { participantIds })} onInviteMembers={onInviteMembers} selected={main.participantIds} showInvitationStatus={false} stacked /><p>{main.participantIds.length ? "根据当前子任务分工补充，仍需成员接受。" : "当前没有必须提前加入的参与者，可在子任务中分别确认。"}</p></div>
+      <div><small>参与者</small><MemberSelector disabled={disabled} hideHeader label="参与者" members={members.filter(member => member.id !== main.ownerId)} onChange={participantIds => updateTask(main.clientId, { participantIds })} onInviteMembers={onInviteMembers} selected={main.participantIds} showInvitationStatus={false} stacked /><p>{main.participantIds.length ? "根据当前子任务分工补充，仍需成员接受。" : "当前没有必须提前加入的参与者，可在子任务中分别确认。"}</p></div>
     </div>
     <p className="linear-creation-boundary">以上均为人选建议，尚未向成员发出或确认指派。</p>
   </section>;

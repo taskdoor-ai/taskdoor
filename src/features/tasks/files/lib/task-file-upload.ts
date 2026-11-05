@@ -21,9 +21,10 @@ export function validateTaskFileUploadSizes(files: readonly Pick<File, "name" | 
   }
 }
 
-export async function prepareTaskFileUpload(file: File): Promise<TaskFileNode> {
+export async function prepareTaskFileUpload(file: File, createdById?: string): Promise<TaskFileNode> {
   validateTaskFileUploadSizes([file]);
-  return stageLocalFileUpload(file, { maxBytes: TASK_FILE_UPLOAD_MAX_BYTES, limitLabel: TASK_FILE_UPLOAD_MAX_LABEL, inlineTextMaxBytes });
+  const node = await stageLocalFileUpload(file, { maxBytes: TASK_FILE_UPLOAD_MAX_BYTES, limitLabel: TASK_FILE_UPLOAD_MAX_LABEL, inlineTextMaxBytes });
+  return createdById ? { ...node, createdById } : node;
 }
 
 export function placeTaskFileUploads(files: TaskFileNode[], uploads: TaskFileNode[], parentId: string | null): TaskFileNode[] {

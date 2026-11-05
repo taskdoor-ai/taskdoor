@@ -8,11 +8,12 @@ let labels: typeof import("../src/features/tasks/components/TaskDetailTabLabel.t
 try { labels = await import("../src/features/tasks/components/TaskDetailTabLabel.tsx"); }
 catch (error) { if (!(error instanceof Error && "code" in error && error.code === "ERR_MODULE_NOT_FOUND")) throw error; }
 
-test("已知空讨论显示 0，未知数量不伪装成空内容", () => {
+test("空讨论和未知数量均不显示计数", () => {
   assert.ok(labels, "任务 Tab 需要内容数量展示");
   const empty = renderToStaticMarkup(createElement(labels.TaskDetailTabLabel, { label: "讨论", count: 0 }));
   const unknown = renderToStaticMarkup(createElement(labels.TaskDetailTabLabel, { label: "讨论", count: null }));
-  assert.match(empty, />0<\/span>/);
+  assert.doesNotMatch(empty, /task-detail-tab-count/);
+  assert.equal(labels.describeTaskDetailTab("讨论", 0, "zh-CN"), "讨论");
   assert.doesNotMatch(unknown, /task-detail-tab-count/);
   assert.equal(labels.describeTaskDetailTab("讨论", null, "zh-CN"), "讨论");
 });

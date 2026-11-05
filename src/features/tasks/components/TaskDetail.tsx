@@ -1,3 +1,5 @@
+import { buildDiscussionSubtaskRequest, isDiscussionSubtaskRequestCurrent } from "@/features/tasks/lib/discussion-subtask-draft";
+import "@/features/tasks/styles/task-detail-properties.css";
 import type { FileAnnotationExitController } from "@/features/tasks/files/lib/useTaskFileAnnotations";
 import { normalizeTaskStatus } from "@/shared/model/task-model";
 import { TaskCompletionIndicator } from "@/features/tasks/components/TaskCompletionIndicator";
@@ -5,7 +7,6 @@ import { TaskDetailTabLabel, describeTaskDetailTab } from "@/features/tasks/comp
 import { TaskDetailStickySummary } from "@/features/tasks/components/TaskDetailStickySummary";
 import { getTaskContentIndicators } from "@/features/tasks/lib/task-content-indicators";
 import { getTaskDetailPathItems } from "@/features/tasks/lib/task-detail-path";
-import { TaskSidebarToggle } from "@/features/tasks/components/TaskSidebarToggle";
 import { useTaskTextSaveFeedback } from "@/features/tasks/lib/useTaskTextSaveFeedback";
 import { useGlobalUi } from '@/shared/i18n/global-ui';
 import "@/features/tasks/styles/task-criterion-review.css";
@@ -17,7 +18,7 @@ import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { MockTaskProvider, useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
-import { ArrowLeft, ChevronRight, Plus, X } from "lucide-react";
+import { ArrowLeft, ChevronRight, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { type TaskActivityMock, type TaskDetailContent, type TaskFileNode, type TaskIconName, type TaskIconTone } from "@/shared/model/task-model";
 import { type TagDefinition } from "@/ai/mock/data/tagGroups";
@@ -48,7 +49,9 @@ import { TaskDiscussion } from "@/features/tasks/components/TaskDiscussion";
 import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
 import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
 import { TaskStatusBadge, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
-import { TaskSubtaskList } from "@/features/tasks/components/TaskSubtaskList";
+import { TaskSubtasksPane } from "@/features/tasks/components/TaskSubtasksPane";
+import { DiscussionSubtaskCreateForm } from "@/features/tasks/components/DiscussionSubtaskCreateForm";
+import type { NewSubtaskDraft } from "@/features/tasks/lib/workspace-subtask-editing";
 import { toast } from "@/shared/ui/toast";
 import { Input, Textarea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
@@ -71,9 +74,10 @@ export type TaskAttentionTarget = {
   targetId: string;
 };
 
-type TaskDetailTab = "information" | "ai" | "discussion" | "files" | "activity";
+type TaskDetailTab = "subtasks" | "ai" | "discussion" | "files" | "activity";
 
 type TaskDetailProps = {
+  hidden?: boolean;
   completedMinutesByTaskId?: Readonly<Record<string, number | null>>;
   effortTasks?: TaskEffortDistributionInput[];
   progressComparisonsByTaskId?: Readonly<Record<string, TaskProgressComparisonSeries | undefined>>;
@@ -91,7 +95,8 @@ type TaskDetailProps = {
   onAnnotationExitControllerChange?: (controller: FileAnnotationExitController | null) => void;
   onActivityAppend?: (activity: TaskActivityMock) => void;
   onSubtaskCriteriaSave?: (taskId: string, values: string[], expected: string[]) => void | Promise<void>;
-  onCreateSubtask?: () => void;
+  onCreateSubtask?: (draft: NewSubtaskDraft) => void | Promise<void>;
+  onCreateDiscussionSubtask?: (draft: NewSubtaskDraft) => void | Promise<void>;
   onDeleteSubtask?: (taskId: string, returnFocus?: HTMLElement | null) => void;
   onInitialAttentionTargetHandled?: () => void;
   onInviteMembers?: (returnFocus?: HTMLElement | null) => void;
@@ -102,6 +107,7 @@ type TaskDetailProps = {
   onDiscussionRead?: (taskId: string, activityIds: string[], readThrough: string) => void;
   onPathSelect?: (nodeId: string) => void;
   onBackToList?: () => void;
+  hidePathNavigation?: boolean;
   onTagsChange?: (tags: string[]) => void;
   onTaskGoalChange?: (goal: string) => void | Promise<void>;
   onTaskTitleChange?: (title: string) => void | Promise<void>;
@@ -150,6 +156,7 @@ export function TaskDetail({
   onTaskCriteriaSave,
   onTaskCriterionConfirm,
   onCreateSubtask,
+  onCreateDiscussionSubtask,
   onDeleteSubtask,
   onInitialAttentionTargetHandled,
   onInviteMembers,
@@ -160,6 +167,8 @@ export function TaskDetail({
   onDiscussionRead,
   onPathSelect,
   onBackToList,
+  hidePathNavigation = false,
+  hidden = false,
   onTagsChange,
   onTaskGoalChange,
   onTaskTitleChange,
@@ -179,6 +188,8 @@ export function TaskDetail({
   const { locale } = useI18n();
   const timeZone = useTeamTimeZone();
   const [editingOriginal, setEditingOriginal] = useState<"title" | "goal" | null>(null);
+  const [discussionSubtaskSource, setDiscussionSubtaskSource] = useState<NonNullable<NewSubtaskDraft["sourceDiscussion"]> | null>(null);
+  const discussionSubtaskTrigger = useRef<HTMLElement | null>(null);
   const d = useDetailCopy();
   const completionCriteria = task.completionCriteria ?? [];
   const burnUp = task.burnUp;
@@ -198,8 +209,8 @@ export function TaskDetail({
   const localActivities = collaboration.snapshot.messages.filter(message => !message.deletedAt);
   const initialTab = getTaskDetailTabForTarget(activities, initialAttentionTarget);
   const [activeTab, setDetailTab] = useState<TaskDetailTab>(
-    !initialAttentionTarget || ["details", "criteria", "subtasks"].includes(initialAttentionTarget.kind) || initialTab === "subtasks" ? "information" : initialTab);
-  const setActiveTab = (tab: TaskDetailTab | "subtasks") => setDetailTab(tab === "subtasks" ? "information" : tab);
+    !initialAttentionTarget || ["details", "criteria"].includes(initialAttentionTarget.kind) ? "discussion" : initialTab);
+  const setActiveTab = (tab: TaskDetailTab) => setDetailTab(tab);
   const [currentOwner, setCurrentOwner] = useState([task.owner]);
   const [ownerSaving, setOwnerSaving] = useState(false);
   const [ownerSaveFailed, setOwnerSaveFailed] = useState(false);
@@ -268,16 +279,15 @@ export function TaskDetail({
   const taskAiProgressEvidence = taskAiProjection.display.aiAssessment
     ? taskAiProjection.display.aiAssessment.basis
     : taskAiProjection.display.historySeries?.workload.at(-1)?.note ?? taskAiProjection.assessment.burnUp.latest?.note;
-  // A name, status, or estimate alone does not establish execution progress.
-  const hasAnalysisEvidence = taskAiProjection.display.ratio !== null;
-  const visibleTab = activeTab === "ai" && !hasAnalysisEvidence ? "information" : activeTab;
+  const hasAnalysisContent = taskAiProgressRatio !== null;
+  const visibleTab = activeTab === "ai" && !hasAnalysisContent ? "discussion" : activeTab;
   useEffect(() => {
-    if (hasAnalysisEvidence || activeTab !== "ai") return;
-    setDetailTab("information");
-    if (document.activeElement === document.body || document.activeElement?.id === "task-detail-tab-ai") {
-      document.getElementById("task-detail-tab-information")?.focus({ preventScroll: true });
+    if (activeTab !== "ai" || hasAnalysisContent) return;
+    setDetailTab("discussion");
+    if (document.activeElement?.id === "task-detail-tab-ai") {
+      document.getElementById("task-detail-tab-discussion")?.focus({ preventScroll: true });
     }
-  }, [activeTab, hasAnalysisEvidence]);
+  }, [activeTab, hasAnalysisContent]);
   const situation = getTaskSituationModel({
     progress: workloadProjection.display,
     progressScopeState: workloadProjection.effort.state,
@@ -323,8 +333,8 @@ export function TaskDetail({
   useEffect(() => {
     if (!initialAttentionTarget) return;
     const tab = getTaskDetailTabForTarget(activities, initialAttentionTarget);
-    if (["details", "criteria", "subtasks"].includes(initialAttentionTarget.kind)) {
-      setActiveTab("information");
+    if (["details", "criteria"].includes(initialAttentionTarget.kind)) {
+      setActiveTab("discussion");
     }
     else setActiveTab(tab);
     setAttentionMessage("");
@@ -442,6 +452,32 @@ export function TaskDetail({
   };
   const deleteDiscussion = (message: CollaborationMessage) => collaboration.commit(snapshot => deleteCollaborationMessage(snapshot, message, ownActor(message)));
 
+  const openDiscussionSubtask = (message: CollaborationMessage, trigger: HTMLElement) => {
+    if (!onCreateDiscussionSubtask || collaboration.error || discussionSubtaskSource || message.deletedAt) return;
+    discussionSubtaskTrigger.current = trigger;
+    setDiscussionSubtaskSource({ taskId, messageId: message.id, body: message.message, author: message.author });
+  };
+  const closeDiscussionSubtask = () => {
+    const trigger = discussionSubtaskTrigger.current;
+    const messageId = discussionSubtaskSource?.messageId;
+    setDiscussionSubtaskSource(null);
+    window.requestAnimationFrame(() => {
+      if (trigger?.isConnected) trigger.focus({ preventScroll: true });
+      else (document.getElementById(`task-activity-${messageId}`) ?? document.getElementById("task-detail-panel-discussion"))?.focus({ preventScroll: true });
+    });
+  };
+  const createDiscussionSubtask = async (draft: NewSubtaskDraft) => {
+    if (!onCreateDiscussionSubtask) throw new Error(locale === "en" ? "You no longer have permission to create subtasks here. Your input has been kept." : "你已没有当前任务的子任务创建权限，输入已保留。");
+    await onCreateDiscussionSubtask(draft);
+    toast.success(locale === "en" ? "Subtask created" : "子任务已创建");
+  };
+  const renderDiscussionSubtask = (message: CollaborationMessage) => {
+    if (!discussionSubtaskSource || discussionSubtaskSource.messageId !== message.id) return null;
+    let request;
+    try { request = buildDiscussionSubtaskRequest({ locale, currentDate: taskCalendarDate(new Date().toISOString(), timeZone)!, task: { id: taskId, title: currentTitle, goal: currentGoal, completionCriteria }, sourceMessageId: discussionSubtaskSource.messageId, messages: allMessages, members, labels: tagDefinitions.map(tag => tag.name) }); } catch { /* Keep the source and allow manual editing when context cannot be read. */ }
+    return <DiscussionSubtaskCreateForm messages={allMessages} request={request} currentUserId={currentUserId} id={`task-discussion-subtask-create-${taskId}-${message.id}`} source={discussionSubtaskSource} contextCurrent={(!request || isDiscussionSubtaskRequestCurrent(request, allMessages)) && allMessages.some(item => item.id === discussionSubtaskSource.messageId && !item.deletedAt && ["member-post", "member-reply"].includes(item.type) && item.message === discussionSubtaskSource.body && item.author === discussionSubtaskSource.author)} key={`${taskId}-${message.id}`} members={members} onCancel={closeDiscussionSubtask} onCreate={createDiscussionSubtask} tags={tagDefinitions} />;
+  };
+
   const openFile = (id: string, version?: number, fromDiscussion = false, trigger?: HTMLElement) => {
     const candidate = allFiles.find(file => file.id === id);
     const file = candidate && getDiscussionAttachment(allFiles, { fileId: id, name: candidate.name, version: version ?? candidate.version ?? 1 });
@@ -474,7 +510,7 @@ export function TaskDetail({
   const openSituationReference = (reference: TaskSituationReference) => {
     setAttentionMessage("");
     if (reference.kind === "details") {
-      setActiveTab("information");
+      setActiveTab("discussion");
       window.requestAnimationFrame(() => {
         const details = document.getElementById(`task-heading-${taskId}`);
         details?.scrollIntoView({ block: "nearest" });
@@ -503,7 +539,7 @@ export function TaskDetail({
       return;
     }
     if (reference.kind === "criteria") {
-      setActiveTab("information");
+      setActiveTab("discussion");
       window.requestAnimationFrame(() => {
         const criteria = document.getElementById(`task-criteria-${taskId}`);
         if (!criteria) return;
@@ -558,11 +594,11 @@ export function TaskDetail({
   };
 
   const tabs: Array<{ id: TaskDetailTab; label: string; count?: number | null }> = [
-    { id: "information", label: d("basicInformation") },
     { id: "discussion", label: d('discussion'), count: contentIndicators.discussionCount },
     { id: "files", label: d('files'), count: contentIndicators.fileCount },
+    { id: "subtasks", label: d("subtasks") },
     { id: "activity", label: d('activity') },
-    ...(hasAnalysisEvidence ? [{ id: "ai" as const, label: d('analysisTab') }] : []),
+    ...(hasAnalysisContent ? [{ id: "ai" as const, label: d('analysisTab') }] : []),
   ];
 
   const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, currentTab: TaskDetailTab) => {
@@ -584,30 +620,42 @@ export function TaskDetail({
   };
 
   const taskPathItems = getTaskDetailPathItems(pathItems, taskId, parentTask?.id);
+  const hasRealAncestors = taskPathItems.some(item => item.id !== taskId);
 
-  return <MockTaskProvider taskId={taskId}><section aria-label={d('details')} className="task-detail-view task-detail-split" ref={detailScrollRef} tabIndex={-1}>
-    <TaskDetailStickySummary activeTab={visibleTab} due={plannedEndOn ?? task.due} headerRef={detailHeaderRef} ownerId={displayedOwnerId} ownerName={displayedOwnerName} progressRatio={taskAiProgressRatio} scrollRef={detailScrollRef} status={currentStatus} taskId={taskId} title={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} />
+  return <MockTaskProvider taskId={taskId}><section aria-label={d('details')} className="task-detail-view task-detail-split" hidden={hidden} inert={hidden} ref={detailScrollRef} tabIndex={-1}>
+    <TaskDetailStickySummary status={currentStatus} progressRatio={taskAiProgressRatio} pathItems={taskPathItems.map(item => ({ ...item, label: mock.field(item.id, "title", item.label) }))} onPathSelect={onPathSelect} activeTab={visibleTab} headerRef={detailHeaderRef} scrollRef={detailScrollRef} taskId={taskId} title={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} />
+    <div className="task-detail-property-layout">
     <header className="task-detail-header" ref={detailHeaderRef}>
-      <div className="task-detail-kicker"><TaskSidebarToggle />{onBackToList && <Button aria-label={d('backToList')} className="task-detail-back-to-list" onClick={onBackToList} size="icon-sm" type="button" variant="ghost"><ArrowLeft size={17}/></Button>}{taskPathItems.length > 0 ? <nav aria-label={d('path')} className="task-detail-path">{taskPathItems.map((item, index) => {
+      {!hidePathNavigation && hasRealAncestors && <div className="task-detail-kicker"><nav aria-label={d('path')} className="task-detail-path">{taskPathItems.map((item, index) => {
         const label = mock.field(item.id, "title", item.label);
         return <span key={item.id}>
         {index > 0 && <ChevronRight aria-hidden="true" size={12} />}
         {index < taskPathItems.length - 1 && onPathSelect ? <button onClick={() => onPathSelect(item.id)} title={label} type="button">{label}</button> : <em aria-current={index === taskPathItems.length - 1 ? "page" : undefined} title={label}>{label}</em>}
       </span>;
-      })}</nav> : null}</div>
+      })}</nav></div>}
             <div className="task-detail-title-row">
               <TaskCompletionIndicator key={taskId} status={currentStatus} completed={currentStatus === "已完成"} progressRatio={taskAiProgressRatio} evidence={taskAiProgressEvidence} onToggle={onTaskStatusChange ? () => setTaskCompleted(currentStatus !== "已完成") : undefined} />
               <div aria-busy={titleSave.status === "saving" || undefined} className="task-detail-title-content"><h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} aria-describedby={titleSave.status === "error" ? `task-title-save-error-${taskId}` : undefined} className="task-detail-title-input" onFocus={() => { titleSave.clear(); setEditingOriginal("title"); }} onBlur={() => { setEditingOriginal(null); void titleSave.save(currentTitle, task.title, onTaskTitleChange); }} onChange={(event) => { titleSave.clear(); setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " ")); }} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>{titleSave.status === "saving" && <span className="sr-only" role="status">{d("fieldSaving")}</span>}</div>
-              <div className="task-ai-detail-tools"><AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} /></div>
+              <div className="task-ai-detail-tools">
+                {onBackToList && <Button aria-label={d("backToList")} className="task-detail-back-to-list" onClick={onBackToList} size="icon-sm" type="button" variant="ghost"><ArrowLeft aria-hidden="true" size={17} /></Button>}
+                <AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} />
+              </div>
             </div>
       {titleSave.status === "error" && <p className="task-field-save-error" id={`task-title-save-error-${taskId}`} role="alert">{d("fieldSaveFailed")}</p>}
-      <div aria-label={d('properties')} className="task-detail-primary-properties">
-        <div className="task-detail-property task-detail-status-field"><small>{d('status')}</small><TaskStatusBadge editable={Boolean(onTaskStatusChange)} onChange={changeStatus} size="sm" value={currentStatus} progressRatio={taskAiProgressRatio} /></div>
-        <div aria-busy={ownerSaving || undefined} aria-describedby={ownerSaveFailed ? `task-owner-save-error-${taskId}` : undefined} aria-label={`${d("owner")}: ${displayedOwnerName}`} className="task-detail-property" role="group" title={displayedOwnerName}><small>{d('owner')}</small><MemberSelector avatarSize="sm" allowUnassigned={!displayedOwnerId} disabled={!onOwnerChange || ownerSaving} hideHeader hideSelectedName={Boolean(displayedOwnerId)} label={d('owner')} max={1} memberRecommendations={memberRecommendations} members={members} min={0} onChange={changeOwner} onInviteMembers={onInviteMembers} selected={displayedOwnerId ? [displayedOwnerId] : []} /></div>
-        <div className="task-detail-property task-detail-participants"><small>{d('participants')}</small><MemberSelector avatarSize="sm" displayMax={4} hideHeader hideSelectedName key={taskId} label={d('participants')} memberRecommendations={memberRecommendations} members={participantMembers} disabled={!onParticipantsChange} onChange={changeParticipants} onInviteMembers={onInviteMembers} selected={currentParticipants} showFullList stacked /></div>
-        <TaskDueDatePicker minDate={taskCalendarDate(progressTask?.createdAt, timeZone) ?? ""} initialValue={plannedEndOn ?? toDateInputValue(task.due)} key={`due-${taskId}`} label={d('dueDate')} onChange={(endDate) => onTaskPeriodChange?.(endDate ? { end: endDate, start: "" } : null)} />
-      </div>
-      {ownerSaveFailed && <p className="task-field-save-error" id={`task-owner-save-error-${taskId}`} role="alert">{locale === "en" ? "Could not update the owner. The previous owner is unchanged. Please try again." : "负责人修改失败，仍保留原负责人，请重试。"}</p>}
+
+      <section aria-label={d('goalAndExecution')} className="task-detail-header-definition" id="task-detail-document">
+        <div aria-label={d('information')} className="task-detail-brief" id={`task-heading-${taskId}`} tabIndex={-1}>
+            <div className="task-detail-description">
+              <div className="task-detail-goal-field"><span className="task-detail-field-label">{d('goal')}</span><div className="task-detail-goal-content"><div aria-busy={goalSave.status === "saving" || undefined} className="task-detail-goal-editor"><Textarea aria-label={d('taskGoal')} aria-describedby={goalSave.status === "error" ? `task-goal-save-error-${taskId}` : undefined} className="task-detail-goal-input" onFocus={() => { goalSave.clear(); setEditingOriginal("goal"); }} onBlur={() => { setEditingOriginal(null); void goalSave.save(currentGoal, task.goal, onTaskGoalChange); }} onChange={(event) => { goalSave.clear(); setCurrentGoal(event.target.value); }} placeholder={onTaskGoalChange ? d('addGoal') : d('noGoal')} readOnly={!onTaskGoalChange} rows={1} value={editingOriginal === "goal" || goalSave.status === "error" ? currentGoal : mock.field(taskId, "goal", currentGoal)} />{goalSave.status === "saving" && <span className="sr-only" role="status">{d("fieldSaving")}</span>}</div>{goalSave.status === "error" && <p className="task-field-save-error" id={`task-goal-save-error-${taskId}`} role="alert">{d("fieldSaveFailed")}</p>}</div></div>
+              <div aria-label={d('criteria')} id={`task-criteria-${taskId}`} key={`criteria-${taskId}`} tabIndex={-1}>
+                <TaskCompletionCriteria completed={currentStatus === "已完成"} onTaskComplete={onTaskStatusChange ? setTaskCompleted : undefined} key={taskId} reviews={task.criterionReviews} onConfirm={onTaskCriterionConfirm} criteria={completionCriteria} onSave={onTaskCriteriaSave} source="recorded" />
+              </div>
+            </div>
+        </div>
+
+
+
+      </section>
     </header>
     <div className="task-detail-columns">
     <div aria-label={d('taskCollaboration')} className="task-detail-body" id="task-detail-collaboration">
@@ -637,35 +685,12 @@ export function TaskDetail({
       {sourceRecord.file && <TaskActivityFileLink fileId={taskFiles.find((file) => file.kind === "file" && !file.archived && file.name === sourceRecord.file)?.id} fileName={sourceRecord.file} onOpen={openFile} />}
     </aside>}
 
-    <div aria-labelledby="task-detail-tab-information" className="task-detail-document-pane" hidden={visibleTab !== "information"} id="task-detail-panel-information" role="tabpanel" tabIndex={-1}>
-      <section aria-label={d('goalAndExecution')} className="task-detail-document" id="task-detail-document" tabIndex={-1}>
-        <div aria-label={d('information')} className="task-detail-brief" id={`task-heading-${taskId}`} tabIndex={-1}>
-            <div className="task-detail-description">
-              <div className="task-detail-goal-field"><span className="task-detail-field-label">{d('goal')}</span><div className="task-detail-goal-content"><div aria-busy={goalSave.status === "saving" || undefined} className="task-detail-goal-editor"><Textarea aria-label={d('taskGoal')} aria-describedby={goalSave.status === "error" ? `task-goal-save-error-${taskId}` : undefined} className="task-detail-goal-input" onFocus={() => { goalSave.clear(); setEditingOriginal("goal"); }} onBlur={() => { setEditingOriginal(null); void goalSave.save(currentGoal, task.goal, onTaskGoalChange); }} onChange={(event) => { goalSave.clear(); setCurrentGoal(event.target.value); }} placeholder={onTaskGoalChange ? d('addGoal') : d('noGoal')} readOnly={!onTaskGoalChange} rows={1} value={editingOriginal === "goal" || goalSave.status === "error" ? currentGoal : mock.field(taskId, "goal", currentGoal)} />{goalSave.status === "saving" && <span className="sr-only" role="status">{d("fieldSaving")}</span>}</div>{goalSave.status === "error" && <p className="task-field-save-error" id={`task-goal-save-error-${taskId}`} role="alert">{d("fieldSaveFailed")}</p>}</div></div>
-              <div aria-label={d('criteria')} id={`task-criteria-${taskId}`} key={`criteria-${taskId}`} tabIndex={-1}>
-                <TaskCompletionCriteria completed={currentStatus === "已完成"} onTaskComplete={onTaskStatusChange ? setTaskCompleted : undefined} key={taskId} reviews={task.criterionReviews} onConfirm={onTaskCriterionConfirm} criteria={completionCriteria} onSave={onTaskCriteriaSave} source="recorded" />
-              </div>
-            </div>
-        </div>
 
-      <section aria-labelledby={`task-subtasks-heading-${taskId}`} className="task-detail-section task-subtask-list-section first-section" id={`task-subtasks-${taskId}`} tabIndex={-1}>
-      <div className="task-section-heading task-ai-module-heading task-subtask-heading">
-        <div><h2 id={`task-subtasks-heading-${taskId}`}>{d('subtasks')}</h2></div>
-        <div className="task-subtask-heading-actions">
-          {onCreateSubtask && <Button onClick={onCreateSubtask} size="sm" type="button" variant="outline"><Plus aria-hidden="true" size={14} />{d('add')}</Button>}
-        </div>
-      </div>
-      <TaskSubtaskList progressComparisonsByTaskId={progressComparisonsByTaskId} effortTasks={effortTasks} completedMinutesByTaskId={completedMinutesByTaskId} onOpenTask={onOpenRelatedTask} tasks={childTasks} />
-    </section>
-
-        {(tags.length > 0 || onTagsChange) && <section aria-labelledby={`task-tags-heading-${taskId}`} className="task-detail-section task-detail-tags-section">
-          <div className="task-section-heading"><h2 id={`task-tags-heading-${taskId}`}>{d('tags')}</h2></div>
-          <TaskTagList key={`tags-${taskId}`} onChange={onTagsChange} selected={tags} tags={tagDefinitions} />
-        </section>}
-      </section>
+    <div aria-labelledby="task-detail-tab-subtasks" className="task-detail-subtasks-pane" hidden={visibleTab !== "subtasks"} id="task-detail-panel-subtasks" role="tabpanel" tabIndex={-1}>
+      <TaskSubtasksPane taskId={taskId} key={taskId} currentUserId={currentUserId} members={members} tags={tagDefinitions} onCreate={onCreateSubtask} progressComparisonsByTaskId={progressComparisonsByTaskId} effortTasks={effortTasks} completedMinutesByTaskId={completedMinutesByTaskId} onOpenTask={onOpenRelatedTask} tasks={childTasks} />
     </div>
 
-    {hasAnalysisEvidence && <section aria-labelledby="task-detail-tab-ai" className="task-detail-ai-panel" hidden={visibleTab !== "ai"} id="task-detail-panel-ai" role="tabpanel">
+    {hasAnalysisContent && <section aria-labelledby="task-detail-tab-ai" className="task-detail-ai-panel" hidden={visibleTab !== "ai"} id="task-detail-panel-ai" role="tabpanel">
         <div className="task-detail-ai-analysis" key={`ai-analysis-${taskId}`}>
           <section aria-label={d('progress')} className="task-detail-progress-section">
           <TaskWorkloadSummary compact headingAction={onRepredict ? <div className="task-detail-analysis-action">
@@ -675,13 +700,14 @@ export function TaskDetail({
           <TaskCurrentSituation hasBurnUp={hasBurnUp} key={`situation-${taskId}`} model={situation} onOpenReference={openSituationReference}/>
         </div>    </section>}
 
-    <section aria-labelledby="task-detail-tab-discussion" className="task-detail-section task-discussion-panel first-section" hidden={activeTab !== "discussion"} id="task-detail-panel-discussion" role="tabpanel" tabIndex={-1}>
-      <TaskDiscussion active={visibleTab === 'discussion'} readable={!collaboration.error} readRequestSequence={discussionReadRequestSequence} onRead={(ids, through) => onDiscussionRead?.(taskId, ids, through)} activities={activities} attentionTarget={discussionAttention} draftInsertion={discussionInsertion} currentUser={currentUserId} currentUserName={currentUser} draftKey={collaboration.scopeKey} files={allFiles} key={taskId} onConnectAi={openDiscussionAi} onOpenFile={(id, version) => openFile(id, version, true)} onPreviewAttachment={previewAttachment} onPost={(draft, replyToId) => { postDiscussion(draft, replyToId); if (!replyToId && discussionInsertion) { discussionInsertion.onPublished(draft); setDiscussionInsertion(undefined); } }} onDelete={deleteDiscussion} people={activityPeople} />
+    <section aria-labelledby="task-detail-tab-discussion" className="task-detail-section task-discussion-panel first-section" hidden={visibleTab !== "discussion"} id="task-detail-panel-discussion" role="tabpanel" tabIndex={-1}>
+      <TaskDiscussion active={visibleTab === 'discussion'} readable={!collaboration.error} readRequestSequence={discussionReadRequestSequence} onRead={(ids, through) => onDiscussionRead?.(taskId, ids, through)} activities={activities} attentionTarget={discussionAttention} draftInsertion={discussionInsertion} currentUser={currentUserId} currentUserName={currentUser} draftKey={collaboration.scopeKey} files={allFiles} key={taskId} onConnectAi={openDiscussionAi} onOpenFile={(id, version) => openFile(id, version, true)} onPreviewAttachment={previewAttachment} onPost={(draft, replyToId) => { postDiscussion(draft, replyToId); if (!replyToId && discussionInsertion) { discussionInsertion.onPublished(draft); setDiscussionInsertion(undefined); } }} onDelete={deleteDiscussion} people={activityPeople}
+        onCreateSubtask={onCreateDiscussionSubtask && !collaboration.error ? openDiscussionSubtask : undefined} creatingSubtask={Boolean(discussionSubtaskSource)} retainedSubtaskSources={discussionSubtaskSource ? [discussionSubtaskSource] : []} renderAfterMessage={renderDiscussionSubtask} />
     </section>
 
       <section aria-labelledby="task-detail-tab-files" className="task-detail-section task-files-panel first-section" hidden={activeTab !== "files"} id="task-detail-panel-files" role="tabpanel">
-      <TaskFileExplorer browserMode transientPreviewFile={attachmentPreview?.taskId === taskId ? attachmentPreview.file : null} onPreviewClose={() => setAttachmentPreview(null)} onAnnotationExitControllerChange={onAnnotationExitControllerChange} onSaved={onFileSaved} currentUser={currentUser} currentUserId={currentUserId} onStartDiscussion={(draft, onPublished) => { setDiscussionInsertion({ id: crypto.randomUUID(), draft, onPublished }); setActiveTab("discussion"); }} files={taskFiles} focusedFileId={selectedFileId} focusedVersion={selectedFileVersion} focusedSequence={fileFocusSequence} focusedTrigger={activeTab === "discussion" ? filePreviewTrigger.current : null} preserveFocusedDirectory={activeTab === "discussion"} key={taskId} taskId={taskId} taskTitle={currentTitle} taskGoal={task.goal}
-        onNodesChange={files => collaboration.commit(snapshot => replaceCollaborationFiles(snapshot, files))}
+      <TaskFileExplorer browserMode deletionAccess={{ ownerId: confirmedOwnerId, participantIds: currentParticipants, activeMemberIds: activityPeople }} transientPreviewFile={attachmentPreview?.taskId === taskId ? attachmentPreview.file : null} onPreviewClose={() => setAttachmentPreview(null)} onAnnotationExitControllerChange={onAnnotationExitControllerChange} onSaved={onFileSaved} currentUser={currentUser} currentUserId={currentUserId} onStartDiscussion={(draft, onPublished) => { setDiscussionInsertion({ id: crypto.randomUUID(), draft, onPublished }); setActiveTab("discussion"); }} files={taskFiles} focusedFileId={selectedFileId} focusedVersion={selectedFileVersion} focusedSequence={fileFocusSequence} focusedTrigger={activeTab === "discussion" ? filePreviewTrigger.current : null} preserveFocusedDirectory={activeTab === "discussion"} key={taskId} taskId={taskId} taskTitle={currentTitle} taskGoal={task.goal}
+        onNodesChange={files => collaboration.commit(snapshot => replaceCollaborationFiles(snapshot, files, { actorId: currentUserId, ownerId: confirmedOwnerId, participantIds: currentParticipants, activeMemberIds: activityPeople }))}
         />
     </section>
 
@@ -690,6 +716,21 @@ export function TaskDetail({
     </section>}
 
     </div>
+    </div>
+
+    <aside className="task-detail-property-sidebar" aria-label={d('properties')}>
+      <div aria-label={d('properties')} className="task-detail-primary-properties">
+        <div className="task-detail-property task-detail-status-field"><small>{d('status')}</small><TaskStatusBadge editable={Boolean(onTaskStatusChange)} onChange={changeStatus} size="sm" value={currentStatus} progressRatio={taskAiProgressRatio} /></div>
+        <div aria-busy={ownerSaving || undefined} aria-describedby={ownerSaveFailed ? `task-owner-save-error-${taskId}` : undefined} aria-label={`${d("owner")}: ${displayedOwnerName}`} className="task-detail-property" role="group" title={displayedOwnerName}><small>{d('ownerField')}</small><MemberSelector avatarSize="sm" stacked allowUnassigned={!displayedOwnerId} disabled={!onOwnerChange || ownerSaving} hideHeader hideSelectedName label={d('owner')} max={1} memberRecommendations={memberRecommendations} members={members} min={0} onChange={changeOwner} onInviteMembers={onInviteMembers} selected={displayedOwnerId ? [displayedOwnerId] : []} /></div>
+        <div className="task-detail-property task-detail-participants"><MemberSelector participantSummary showFullList avatarSize="sm" displayMax={Math.max(currentParticipants.length, 1)} hideHeader hideSelectedName key={taskId} label={d('participantsField')} memberRecommendations={memberRecommendations} members={participantMembers} disabled={!onParticipantsChange} onChange={changeParticipants} onInviteMembers={onInviteMembers} selected={currentParticipants} stacked /></div>
+        <TaskDueDatePicker minDate={taskCalendarDate(progressTask?.createdAt, timeZone) ?? ""} initialValue={plannedEndOn ?? toDateInputValue(task.due)} key={`due-${taskId}`} label={d('dueDate')} onChange={(endDate) => onTaskPeriodChange?.(endDate ? { end: endDate, start: "" } : null)} />
+      </div>
+      {ownerSaveFailed && <p className="task-field-save-error" id={`task-owner-save-error-${taskId}`} role="alert">{locale === "en" ? "Could not update the assignee. The previous assignee is unchanged. Please try again." : "负责人修改失败，仍保留原负责人，请重试。"}</p>}
+        {(tags.length > 0 || onTagsChange) && <section aria-labelledby={`task-tags-heading-${taskId}`} className="task-detail-section task-detail-tags-section">
+          <h2 className="task-detail-property-sidebar-heading" id={`task-tags-heading-${taskId}`}>{d('tags')}</h2>
+          <TaskTagList showAll iconOnly key={`tags-${taskId}`} onChange={onTagsChange} selected={tags} tags={tagDefinitions} />
+        </section>}
+    </aside>
     </div>
 
     {aiConnectionRequest?.taskId === taskId && <AiConnectionDialog onClose={closeAiConnection} request={aiConnectionRequest.request} returnFocus={aiConnectionTrigger.current} />}

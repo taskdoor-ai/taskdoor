@@ -1,3 +1,4 @@
+import { canDeleteTaskFileNode, type TaskFileDeletionAccess } from "@/features/tasks/files/lib/task-file-deletion";
 import type { TaskActivityMock, TaskFileNode } from "@/shared/model/task-model.ts";
 import { parseTaskActivityStore } from "@/features/tasks/lib/task-activity.ts";
 import { isBuiltinTaskAsset } from "@/features/tasks/files/lib/discussion-uploads";
@@ -82,7 +83,7 @@ function uniqueRecords<T extends { id: string }>(items: T[], label: string): T[]
 function parseFile(value: unknown): TaskFileNode {
   requireValid(isRecord(value) && isId(value.id) && (value.kind === "file" || value.kind === "folder")
     && isString(value.name) && (value.parentId === null || isId(value.parentId)) && isString(value.updatedAt), "文件信息无效");
-  for (const field of ["content", "format", "iconName", "mimeType", "sizeLabel", "blobId", "originalName", "builtinPackId"]) {
+  for (const field of ["content", "format", "iconName", "mimeType", "sizeLabel", "blobId", "originalName", "builtinPackId", "createdById"]) {
     requireValid(value[field] === undefined || isString(value[field]), "文件内容无效");
   }
   requireValid(value.version === undefined || isVersion(value.version), "文件版本无效");
@@ -284,7 +285,7 @@ function makeNotifications(context: readonly CollaborationMessage[], message: Co
   }
   return [...recipients].map(([recipientId, reason]) => ({ id: `local:${encodeURIComponent(message.id)}:${encodeURIComponent(recipientId)}`, recipientId, messageId: message.id, actor: message.author, reason, createdAt: message.createdAt ?? new Date().toISOString() }));
 }
-function discussionUploadFolder(files: TaskFileNode[], seed?: TaskFileNode): TaskFileNode {
+function discussionUploadFolder(files: TaskFileNode[], seed?: TaskFileNode, createdById?: string): TaskFileNode {
   const rootFolders = files.filter(file => file.kind === "folder" && file.parentId === null && !file.archived);
   const existing = rootFolders.find(folder => /^(?:讨论|discussions?)$/i.test(folder.name.trim()))
     ?? rootFolders.find(folder => /^(?:讨论|discussions?) \(\d+\)$/i.test(folder.name.trim()));
@@ -292,13 +293,13 @@ function discussionUploadFolder(files: TaskFileNode[], seed?: TaskFileNode): Tas
   let name = "讨论";
   let suffix = 2;
   while (files.some(file => file.parentId === null && file.name.toLocaleLowerCase() === name.toLocaleLowerCase())) name = `讨论 (${suffix++})`;
-  const folder = seed && !files.some(file => file.id === seed.id) ? { ...seed, name } : createFolder(files, null, name).folder;
+  const folder = seed && !files.some(file => file.id === seed.id) ? { ...seed, name } : createFolder(files, null, name, createdById).folder;
   files.push(folder);
   return folder;
 }
 
 /** Existing references keep their source version even if the file has since changed. */
-function attachFiles(snapshot: CollaborationSnapshot, refs: readonly AttachmentRef[], attachments: readonly TaskFileNode[], preservedRefs: readonly AttachmentRef[] = []): { files: TaskFileNode[]; attachmentRefs: AttachmentRef[] } {
+function attachFiles(snapshot: CollaborationSnapshot, refs: readonly AttachmentRef[], attachments: readonly TaskFileNode[], actorId: string, preservedRefs: readonly AttachmentRef[] = []): { files: TaskFileNode[]; attachmentRefs: AttachmentRef[] } {
   const files = [...snapshot.files];
   const attachmentRefs = refs.map(ref => ({ ...ref }));
   for (const value of attachments) {
@@ -311,7 +312,10 @@ function attachFiles(snapshot: CollaborationSnapshot, refs: readonly AttachmentR
     let saved = existing ?? attachment;
     if (!existing) {
       if (saved.archived) throw new Error("已归档的文件不能添加为附件。");
-      if (!saved.attachmentOnly && saved.parentId === null) saved = { ...saved, parentId: discussionUploadFolder(files).id };
+      if (!saved.attachmentOnly) {
+        saved = { ...saved, createdById: actorId };
+        if (saved.parentId === null) saved.parentId = discussionUploadFolder(files, undefined, actorId).id;
+      }
       files.push(saved);
     }
     if (attachmentRefs.some(ref => ref.fileId === saved.id)) continue;
@@ -346,7 +350,7 @@ export function postCollaborationMessage(snapshot: CollaborationSnapshot, input:
     if (message.fileThreadId && message.fileThreadId !== parent.fileThreadId) throw new Error("回复不能跨越文件讨论。");
     if (parent.fileThreadId) message.fileThreadId = parent.fileThreadId;
   }
-  const { files, attachmentRefs } = attachFiles(snapshot, message.attachmentRefs ?? [], input.attachments ?? []);
+  const { files, attachmentRefs } = attachFiles(snapshot, message.attachmentRefs ?? [], input.attachments ?? [], message.author);
   if (attachmentRefs.length) message.attachmentRefs = attachmentRefs;
   requireBody(message);
   const threads = [...snapshot.threads];
@@ -386,7 +390,7 @@ export function updateCollaborationMessage(snapshot: CollaborationSnapshot, mess
     ...(Object.hasOwn(patch, "quote") ? { quote: patch.quote } : {}),
     updatedAt: new Date().toISOString(),
   });
-  const merged = attachFiles(snapshot, next.attachmentRefs ?? [], attachments, current.attachmentRefs ?? []);
+  const merged = attachFiles(snapshot, next.attachmentRefs ?? [], attachments, actor, current.attachmentRefs ?? []);
   if (merged.attachmentRefs.length || next.attachmentRefs !== undefined) next.attachmentRefs = merged.attachmentRefs;
   requireBody(next);
   return overrideMessage(snapshot, next, merged.files);
@@ -404,9 +408,27 @@ export function setFileThreadResolved(snapshot: CollaborationSnapshot, threadId:
   const next = resolved ? { ...open, resolvedAt: new Date().toISOString(), resolvedBy: actor } : open;
   return changed(snapshot, { threads: snapshot.threads.map(item => item.id === threadId ? next : item) });
 }
-export function replaceCollaborationFiles(snapshot: CollaborationSnapshot, files: TaskFileNode[]): CollaborationSnapshot {
+export function replaceCollaborationFiles(snapshot: CollaborationSnapshot, files: TaskFileNode[], deletionAccess?: TaskFileDeletionAccess): CollaborationSnapshot {
   const retained = new Map(snapshot.files.filter(file => file.attachmentOnly || file.retiredBuiltin).map(file => [file.id, file]));
-  const next = parseFiles(files).map(file => retained.get(file.id) ?? file);
+  const originals = new Map(snapshot.files.map(file => [file.id, file]));
+  const next = parseFiles(files).map(file => {
+    if (retained.has(file.id)) return retained.get(file.id)!;
+    const original = originals.get(file.id);
+    if (!original) return deletionAccess ? { ...file, createdById: deletionAccess.actorId } : file;
+    if (original.createdById !== undefined) return { ...file, createdById: original.createdById };
+    const { createdById: _ignored, ...legacyFile } = file;
+    return legacyFile;
+  });
+  if (deletionAccess) {
+    const nextById = new Map(next.map(file => [file.id, file]));
+    for (const previous of snapshot.files) {
+      if (previous.archived || retained.has(previous.id)) continue;
+      const replacement = nextById.get(previous.id);
+      if ((!replacement || replacement.archived) && !canDeleteTaskFileNode(snapshot.files, previous.id, deletionAccess)) {
+        throw new Error("没有删除权限，当前任务成员、负责人或原始上传者身份已变化。");
+      }
+    }
+  }
   const nextIds = new Set(next.map(file => file.id));
   return changed(snapshot, { files: [...next, ...[...retained.values()].filter(file => !nextIds.has(file.id))] });
 }

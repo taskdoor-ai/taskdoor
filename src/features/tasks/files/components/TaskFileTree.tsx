@@ -6,7 +6,7 @@ import { ChevronDown, ChevronRight, MoreHorizontal, Pencil, Trash2, MoveRight } 
 import React from "react";
 import { Button as AriaButton, Tree, TreeItem, TreeItemContent } from "react-aria-components";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import { sortTaskFileNodes } from "@/features/tasks/files/lib/task-file-tree";
+import { sortTaskFileNodes, type FolderDeletePolicy } from "@/features/tasks/files/lib/task-file-tree";
 import { getTaskFileNodeIcon } from "@/features/tasks/files/lib/task-file-icons";
 import { TaskFileGlyph } from "@/features/tasks/files/components/TaskFileGlyph";
 import { TaskFileThumbnail } from "@/features/tasks/files/components/TaskFileThumbnail";
@@ -22,11 +22,12 @@ export function TaskFileNodeIcon({ node, expanded = false }: { node: TaskFileNod
   return <Icon aria-hidden="true" size={15} />;
 }
 
-export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex }: {
+export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex, canDelete = false }: {
   node: TaskFileNode;
   onAction: (action: TaskFileAction) => void;
   className?: string;
   tabIndex?: number;
+  canDelete?: boolean;
 }) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
@@ -47,13 +48,13 @@ export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex }: {
       <DropdownMenuGroup>
         <DropdownMenuItem onClick={() => onAction({ type: "rename", nodeId: node.id })}><Pencil aria-hidden="true" size={15} />{d('rename')}</DropdownMenuItem>
         <DropdownMenuItem onClick={() => onAction({ type: "move", nodeId: node.id })}><MoveRight aria-hidden="true" size={15} />{ui("移动到")}</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onAction({ type: "delete", nodeId: node.id })} variant="destructive"><Trash2 aria-hidden="true" size={15} />{ui("删除")}</DropdownMenuItem>
+        {canDelete && <DropdownMenuItem onClick={() => onAction({ type: "delete", nodeId: node.id })} variant="destructive"><Trash2 aria-hidden="true" size={15} />{ui("删除")}</DropdownMenuItem>}
       </DropdownMenuGroup>
     </DropdownMenuContent>
   </DropdownMenu>;
 }
 
-export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, onSelect, selectedId, browser = false, displayName: formatName, allNodes = nodes }: {
+export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, onSelect, selectedId, browser = false, displayName: formatName, allNodes = nodes, canDelete }: {
   expandedIds: Set<string>;
   nodes: TaskFileNode[];
   onAction: (action: TaskFileAction) => void;
@@ -63,6 +64,7 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
   browser?: boolean;
   displayName?: (name: string) => string;
   allNodes?: TaskFileNode[];
+  canDelete?: (nodeId: string, policy?: FolderDeletePolicy) => boolean;
 }) {
   const ui = useGlobalUi();
   const mock = useMockText();
@@ -118,7 +120,7 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
         <TaskFileName className="task-file-explorer-name" name={displayName} />
         {node.kind === "folder" && (browser || children.length > 0) && <small aria-label={ui("{0} 项", { 0: childCount })}>{childCount}</small>}
         {browser && node.kind === "file" && <small>{formatFileSize(node.sizeBytes, { fallback: node.sizeLabel })}</small>}
-        <TaskFileNodeMenu node={node} onAction={onAction} tabIndex={isFocused ? 0 : -1} />
+        <TaskFileNodeMenu canDelete={canDelete?.(node.id)} node={node} onAction={onAction} tabIndex={isFocused ? 0 : -1} />
       </>}</TreeItemContent>
       {children.map(renderNode)}
     </TreeItem>;

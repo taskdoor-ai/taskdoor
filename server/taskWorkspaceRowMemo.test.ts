@@ -38,21 +38,21 @@ test("相同完整任务与进度快照的克隆可复用行，实际字段变�
   assert.equal(item.type.compare(history, { ...history, series: { ...history.series, workload: [{ completedMinutes: 60 }] } }), false);
 });
 
-test("选中、置顶、排序、分钟时钟、人员和事件代理变化不能被缓存吞掉", async () => {
+test("选中、直属子任务完成数、排序、分钟时钟、人员和事件代理变化不能被缓存吞掉", async () => {
   const item = await row();
-  for (const patch of [{ selected: !item.props.selected }, { isPinned: !item.props.isPinned }, { showOwner: !item.props.showOwner }, { sort: "created" }, { now: new Date(item.props.now.getTime() + 60_000) }, { currentUserId: "other" }, { owner: { ...item.props.owner, email: "new@example.com" } }, { actions: { ...item.props.actions, onTaskSelect() {} } }]) assert.equal(item.type.compare(item.props, { ...item.props, ...patch }), false);
+  for (const patch of [{ selected: !item.props.selected }, { subtaskCompletion: { completed: 1, total: 2 } }, { showOwner: !item.props.showOwner }, { sort: "created" }, { now: new Date(item.props.now.getTime() + 60_000) }, { currentUserId: "other" }, { owner: { ...item.props.owner, email: "new@example.com" } }, { actions: { ...item.props.actions, onTaskSelect() {} } }]) assert.equal(item.type.compare(item.props, { ...item.props, ...patch }), false);
 });
 
-test("行仍显示名称、状态、选中描述、人员、置顶与更多操作", async () => {
+test("行仍显示名称、状态、选中描述、人员与更多操作", async () => {
   const item = await row();
   const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(item.type, item.props) }));
   assert.match(html, /aria-label="打开任务：待核对任务"/);
   assert.match(html, /aria-current="page"/);
   assert.match(html, /状态：进行中/);
   assert.match(html, /负责人：当前成员/);
-  assert.match(html, /aria-pressed="false"/);
+  assert.doesNotMatch(html, /task-workspace-row-pin/);
   assert.match(html, /待核对任务的更多操作/);
-  const pinned = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(item.type, { ...item.props, isPinned: true, selected: false, task: { ...item.props.task, name: "更新后任务" } }) }));
-  assert.match(pinned, /aria-label="取消置顶: 更新后任务"/);
-  assert.doesNotMatch(pinned, /aria-current="page"/);
+  const changed = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(item.type, { ...item.props, selected: false, task: { ...item.props.task, name: "更新后任务" } }) }));
+  assert.match(changed, /更新后任务/);
+  assert.doesNotMatch(changed, /aria-current="page"/);
 });

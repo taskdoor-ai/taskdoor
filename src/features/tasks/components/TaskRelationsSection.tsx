@@ -8,6 +8,7 @@ import { TaskStatusBadge, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
 
 export type TaskRelationSummary = {
   childTaskCount?: number;
+  completedChildTaskCount?: number;
   createdAt?: string;
   completedAt?: string;
   progressReopenedAt?: string;

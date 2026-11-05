@@ -1,0 +1,246 @@
+/* Task definition and working tabs share the main column; metadata is secondary. */
+.task-detail-property-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "heading" "properties" "work"; align-items: start; min-width: 0; }
+.task-detail-property-layout > .task-detail-header { grid-area: heading; min-width: 0; padding: 28px var(--task-detail-content-inset) 20px; border: 0; background: var(--ad-surface); }
+.task-detail-property-layout > .task-detail-columns { grid-area: work; min-width: 0; }
+.task-detail-header-definition { margin-top: 24px; }
+.task-detail-header-definition .task-detail-brief { margin: 0; padding: 0; border: 0; }
+.task-detail-split .task-detail-header-definition .task-detail-goal-field { grid-template-columns: 76px minmax(0, 1fr); }
+.task-detail-split .task-detail-header-definition .task-detail-completion { grid-template-columns: 76px minmax(0, 1fr); }
+.task-detail-property-sidebar { --task-property-control-inset: 10px; grid-area: properties; min-width: 0; padding: 0 var(--task-detail-content-inset) 24px; }
+.task-detail-property-sidebar-heading { margin: 0 0 18px; font-size: 12px; color: var(--ad-ink-tertiary); font-weight: 500; }
+.task-detail-property-sidebar .task-detail-primary-properties { margin: 0; gap: 18px 24px; }
+.task-detail-property-sidebar .task-detail-property { min-width: 0; }
+.task-detail-property-sidebar .task-detail-participants { align-items: flex-start; }
+.task-detail-property-sidebar .member-selector-stacked-row { flex-wrap: wrap; row-gap: 8px; }
+.task-detail-property-sidebar .task-detail-tags-section { margin: 22px 0 0; padding: 0; border: 0; }
+.task-detail-property-sidebar .task-detail-tags-section h2 { font-size: 12px; font-weight: 500; color: var(--ad-ink-tertiary); }
+.task-detail-property-sidebar .task-detail-tags-section .task-section-heading { margin-bottom: 10px; }
+.task-detail-property-sidebar .task-detail-due-picker { max-width: 100%; }
+@container task-detail-pane (min-width: 960px) {
+  .task-detail-property-layout { grid-template-columns: minmax(0, 1fr) 260px; grid-template-areas: "heading properties" "work properties"; }
+  .task-detail-property-sidebar { position: sticky; top: 0; align-self: start; padding: 28px 24px 28px 12px; max-height: calc(100dvh - 64px); overflow-y: auto; }
+  .task-detail-property-sidebar .task-detail-primary-properties { flex-direction: column; align-items: stretch; gap: 22px; }
+  .task-detail-property-sidebar .task-detail-property { width: 100%; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .task-detail-property-sidebar .task-detail-participants .member-selector { width: 100%; }
+  .task-detail-split > .task-detail-sticky-slot { width: calc(100% - 260px); }
+  .task-detail-property-sidebar .person-picker-trigger-select { max-width: 100%; }
+}
+@media (max-width: 900px) {
+  .task-detail-property-layout > .task-detail-header { padding-top: 20px; }
+  .task-detail-property-sidebar-heading { display: none; }
+  .task-detail-split .task-detail-header-definition .task-detail-goal-field,
+  .task-detail-split .task-detail-header-definition .task-detail-completion { grid-template-columns: minmax(0, 1fr); }
+}
+
+.task-detail-property-sidebar .task-detail-property-sidebar-heading,
+.task-detail-property-sidebar .task-detail-tags-section .task-section-heading h2 { font-size: 12px; line-height: 20px; font-weight: 500; color: var(--ad-ink-tertiary); }
+.task-detail-property-sidebar .task-detail-tags-section .task-section-heading h2 { margin: 0; }
+
+.task-detail-split .task-detail-property-sidebar .task-detail-property-sidebar-heading { margin: 0 0 18px; font-size: 12px; font-weight: 500; line-height: 20px; color: var(--ad-ink-tertiary); }
+.task-detail-property-sidebar .tag-picker-trigger-icon-only { display: inline-flex; align-items: center; justify-content: center; width: 28px; min-width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--ad-surface-subtle); color: var(--ad-ink-tertiary); }
+.task-detail-property-sidebar .tag-picker-trigger-icon-only > svg { width: 16px; height: 16px; }
+.task-detail-property-sidebar .tag-picker-trigger-icon-only:hover { background: var(--ad-surface-quiet); color: var(--ad-ink); }
+
+.task-detail-property-sidebar .task-tag-list-show-all { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; overflow: visible; }
+.task-detail-property-sidebar .task-tag-list-show-all > .ad-tag-badge { max-width: 100%; }
+
+.task-detail-property-sidebar .task-detail-participants .person-avatar-group { display: inline-flex; max-width: 100%; flex-wrap: wrap; row-gap: 8px; }
+
+/* Keep every participant avatar distinct in the detail properties. */
+.task-detail-property-sidebar .task-detail-participants .person-avatar-group { column-gap: 6px; padding-left: 0; }
+.task-detail-property-sidebar .task-detail-participants .person-avatar-group-item,
+.task-detail-property-sidebar .task-detail-participants .person-avatar-group .person-avatar { margin-left: 0; }
+
+/* Labels stay above one shared wrapping row, including roster and add actions. */
+.task-detail-property-sidebar .task-detail-participants { flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; }
+.task-detail-property-sidebar .task-detail-participants > .member-selector { width: 100%; min-width: 0; }
+.task-detail-property-sidebar .task-detail-participants .member-selector-stacked-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 6px; }
+.task-detail-property-sidebar .task-detail-participants .person-avatar-group { display: contents; }
+.task-detail-property-sidebar .task-detail-participants .person-avatar-overflow { margin-left: 0; }
+.task-detail-property-sidebar .task-detail-participants .member-selector-stacked-row > .person-picker-trigger { flex: 0 0 auto; }
+.task-detail-split .task-detail-property-sidebar .task-detail-primary-properties .task-detail-participants { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; }
+.task-detail-split .task-detail-property-sidebar .task-detail-participants > small { display: block; width: 100%; }
+
+/* Participant label and avatars share a row; narrow space wraps only the avatars. */
+.task-detail-split .task-detail-property-sidebar .task-detail-primary-properties .task-detail-participants { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: start; column-gap: 10px; row-gap: 6px; }
+.task-detail-split .task-detail-property-sidebar .task-detail-participants > small { width: auto; padding-top: 6px; }
+
+/* A person is one lightweight, unbroken avatar/name unit. */
+.task-detail-property-sidebar .member-selector-inline-person { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-width: 0; color: var(--ad-ink-secondary); font-size: 13px; line-height: 20px; }
+.task-detail-property-sidebar .member-selector-inline-person > .person-name-trigger { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.task-detail-property-sidebar .task-detail-participants .member-selector-stacked-row { column-gap: 12px; row-gap: 8px; }
+.task-detail-property-sidebar .member-selector-inline-person .person-avatar { flex-shrink: 0; }
+.task-detail-property-sidebar .member-selector-person.is-single strong { font-size: 13px; font-weight: 400; color: var(--ad-ink-secondary); }
+
+.member-selector-inline-person { position: relative; }
+.member-selector-inline-remove { position: absolute; right: -5px; top: -5px; width: 15px; height: 15px; display: grid; place-items: center; padding: 0; border: 1px solid var(--ad-surface); border-radius: 50%; background: var(--ad-ink-secondary); color: var(--ad-surface); opacity: 0; }
+.member-selector-inline-remove svg { width: 9px; height: 9px; }
+.member-selector-inline-person:hover .member-selector-inline-remove, .member-selector-inline-person:focus-within .member-selector-inline-remove { opacity: 1; }
+
+/* Person tokens reveal their background and inline removal action together. */
+.task-detail-property-sidebar .member-selector-inline-person { min-height: 32px; padding: 3px 6px 3px 3px; gap: 6px; border-radius: 999px; background: transparent; transition: background 120ms ease; }
+.task-detail-property-sidebar .member-selector-inline-person:hover,
+.task-detail-property-sidebar .member-selector-inline-person:focus-within { background: var(--ad-surface-subtle); }
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove { position: static; flex: 0 0 16px; width: 16px; height: 16px; margin-left: 2px; border: 0; background: transparent; color: var(--ad-ink-tertiary); opacity: 0; cursor: pointer; }
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove svg { width: 13px; height: 13px; }
+.task-detail-property-sidebar .member-selector-inline-person:hover .member-selector-inline-remove,
+.task-detail-property-sidebar .member-selector-inline-person:focus-within .member-selector-inline-remove { opacity: 1; }
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove:hover { color: var(--ad-ink); background: var(--ad-surface-quiet); }
+.task-detail-property-sidebar .member-selector-inline-remove:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.task-detail-property-sidebar .task-detail-participants .member-selector-stacked-row { column-gap: 4px; row-gap: 4px; }
+@media (hover: none) { .task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove { opacity: 1; } }
+
+.task-detail-property-sidebar .member-selector .person-name-trigger,
+.task-detail-property-sidebar .member-selector .person-name-trigger:hover { cursor: default; color: inherit; text-decoration: none; }
+
+/* Hidden removal controls must not reserve space between people. */
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove { display: none; margin-left: 0; }
+.task-detail-property-sidebar .member-selector-inline-person:hover .member-selector-inline-remove,
+.task-detail-property-sidebar .member-selector-inline-person:focus-within .member-selector-inline-remove { display: grid; }
+.task-detail-property-sidebar .task-detail-participants .member-selector-stacked-row { column-gap: 4px; row-gap: 4px; }
+.task-detail-property-sidebar .member-selector-inline-person { padding-right: 3px; gap: 4px; }
+@media (hover: none) { .task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove { display: grid; } }
+
+/* Compact tokens keep a stable removal slot, so hover never reflows the row. */
+.task-detail-property-sidebar .member-selector-inline-person { min-height: 28px; padding: 2px; gap: 4px; font-size: 12px; line-height: 18px; }
+.task-detail-property-sidebar .member-selector-inline-person .person-avatar { width: 24px; height: 24px; min-width: 24px; font-size: 10px; }
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove { display: grid; flex: 0 0 12px; width: 12px; height: 12px; margin-left: 0; opacity: 0; }
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove svg { width: 11px; height: 11px; }
+.task-detail-property-sidebar .member-selector-inline-person:hover .member-selector-inline-remove,
+.task-detail-property-sidebar .member-selector-inline-person:focus-within .member-selector-inline-remove { opacity: 1; }
+.task-detail-property-sidebar .task-detail-participants .member-selector-stacked-row { gap: 4px; }
+@media (hover: none) { .task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove { opacity: 1; } }
+
+/* Scale the identity itself down, keeping the removal control readable. */
+.task-detail-property-sidebar .member-selector-inline-person { min-height: 24px; padding: 1px; gap: 3px; font-size: 11px; line-height: 16px; }
+.task-detail-property-sidebar .member-selector-inline-person .person-avatar { width: 20px; height: 20px; min-width: 20px; font-size: 9px; }
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove { flex-basis: 16px; width: 16px; height: 16px; }
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove svg { width: 13px; height: 13px; }
+
+.task-detail-property-sidebar .member-selector-inline-person { padding-right: 6px; }
+
+.task-detail-property-sidebar .member-selector-inline-person { flex: 0 1 auto; max-width: 100%; }
+.task-detail-property-sidebar .member-selector-inline-person > .person-name-trigger { min-width: 0; flex: 1 1 auto; }
+
+.task-detail-property-sidebar .member-selector-inline-name { display: block; min-width: 0; flex: 1 1 auto; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: inherit; cursor: default; text-decoration: none; }
+.task-detail-property-sidebar .member-selector-single { min-width: 0; max-width: 100%; }
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove { flex-shrink: 0; }
+
+.task-detail-property-sidebar .member-selector-inline-person .person-avatar { flex: 0 0 20px; }
+
+/* The shared avatar also has a minimum height; keep every size constraint square. */
+.task-detail-property-sidebar .member-selector-inline-person .person-avatar { width: 20px; height: 20px; min-width: 20px; min-height: 20px; max-width: 20px; max-height: 20px; flex: 0 0 20px; aspect-ratio: 1; }
+.task-detail-property-sidebar .member-selector-inline-person .person-avatar-initials { display: grid; width: 20px; height: 20px; place-items: center; overflow: hidden; border-radius: 50%; }
+.task-detail-property-sidebar .member-selector-inline-person .person-avatar-initials > * { width: 20px !important; height: 20px !important; }
+
+/* Keep a small, stable removal slot without excess trailing whitespace. */
+.task-detail-property-sidebar .member-selector-inline-person { padding-right: 3px; }
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove { flex-basis: 12px; width: 12px; height: 14px; margin-left: 0; }
+.task-detail-property-sidebar .member-selector-inline-person .member-selector-inline-remove svg { width: 11px; height: 11px; }
+
+/* A slightly larger identity remains compact while improving readability. */
+.task-detail-property-sidebar .member-selector-inline-person { min-height: 28px; font-size: 12px; line-height: 18px; }
+.task-detail-property-sidebar .member-selector-inline-person .person-avatar { width: 28px; height: 28px; min-width: 28px; min-height: 28px; max-width: 28px; max-height: 28px; flex: 0 0 28px; font-size: 10px; }
+.task-detail-property-sidebar .member-selector-inline-person .person-avatar-initials,
+.task-detail-property-sidebar .member-selector-inline-person .person-avatar-initials > * { width: 28px !important; height: 28px !important; }
+
+/* Participant identities use the shared profile preview, with room for each avatar. */
+.task-detail-property-sidebar .task-detail-participants .member-selector-stacked-row { gap: 8px; }
+
+/* Align the visible values; hover surfaces extend equally around their contents. */
+.task-detail-property-sidebar .task-detail-primary-properties .task-status-badge.sm { margin-inline-start: 0; padding-inline: var(--task-property-control-inset); }
+.task-detail-property-sidebar .task-detail-primary-properties .task-status-badge.editable:hover { box-shadow: none; }
+.task-detail-property-sidebar .member-selector-single { margin-inline-start: 0; }
+.task-detail-property-sidebar .member-selector-single .member-selector-inline-person { padding-inline: 0; column-gap: 8px; border-radius: 0; background: transparent; }
+.task-detail-property-sidebar .member-selector-single .member-selector-inline-name { font-size: 13px; line-height: 20px; }
+.task-detail-property-sidebar .task-detail-primary-properties .task-due-date-trigger { margin-inline-start: 0; border-radius: var(--ad-radius-tag); }
+.task-detail-property-sidebar .task-detail-primary-properties .task-due-date-field { margin-inline-start: 0; padding-inline: var(--task-property-control-inset); border: 0; border-radius: var(--ad-radius-tag); background: transparent; box-shadow: none; }
+.task-detail-property-sidebar .task-due-date-trigger:hover .task-due-date-field,
+.task-detail-property-sidebar .task-due-date-trigger[aria-expanded="true"] .task-due-date-field { background: var(--ad-surface-subtle); box-shadow: none; }
+.task-detail-property-sidebar .task-due-date-trigger:focus-visible .task-due-date-field { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+
+/* Desktop metadata shares one label column, regardless of label length. */
+@container task-detail-pane (min-width: 960px) {
+  .task-detail-split .task-detail-property-sidebar .task-detail-primary-properties { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 10px; row-gap: 22px; }
+  .task-detail-split .task-detail-property-sidebar .task-detail-primary-properties > :is(.task-detail-property, .task-due-date-picker) { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center; gap: 0 10px; width: 100%; }
+  .task-detail-split .task-detail-property-sidebar .task-detail-primary-properties > .task-detail-participants { align-items: start; }
+  .task-detail-split .task-detail-property-sidebar .task-detail-primary-properties > :is(.task-detail-property, .task-due-date-picker) > :last-child { min-width: 0; max-width: 100%; justify-self: start; }
+  .task-detail-property-sidebar .member-selector-inline-person { padding-inline-start: 0; }
+}
+
+/* The assignee stays a plain identity; only the removal button has a hover surface. */
+.task-detail-property-sidebar .member-selector-single .member-selector-inline-remove { flex-basis: 24px; width: 24px; height: 24px; border-radius: var(--ad-radius-control); }
+.task-detail-property-sidebar .member-selector-single .member-selector-inline-remove svg { width: 14px; height: 14px; }
+
+/* Assigned and unassigned controls occupy the same row height. */
+.task-detail-property-sidebar .member-selector-single { min-height: 32px; }
+.task-detail-property-sidebar .member-selector-single .member-selector-inline-person,
+.task-detail-property-sidebar .member-selector-single .person-picker-trigger-member { display: inline-flex; align-items: center; min-height: 32px; height: 32px; box-sizing: border-box; }
+.task-detail-property-sidebar .member-selector-single .person-picker-trigger-member .person-picker-empty-icon { width: 28px; height: 28px; min-width: 28px; min-height: 28px; }
+
+/* Personnel values share one horizontal label-and-avatar layout. */
+.task-detail-split .task-detail-property-sidebar .task-detail-primary-properties > .task-detail-participants { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; width: 100%; }
+.task-detail-split .task-detail-participants > .member-selector-summary { grid-column: 1 / -1; width: 100%; max-width: none; }
+.member-selector-summary { position: relative; display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; column-gap: 10px; row-gap: 8px; min-height: 32px; }
+.member-selector-summary-heading { display: contents; color: var(--ad-ink-tertiary); font-size: 13px; }
+.member-selector-summary-heading .member-selector-all-members { display: inline-flex; align-items: center; width: auto; min-width: 0; height: 28px; padding: 2px 4px; border: 0; border-radius: 4px; background: transparent; color: var(--ad-ink-tertiary); font: inherit; white-space: nowrap; cursor: pointer; }
+.member-selector-summary-heading .member-selector-all-members:hover { color: var(--ad-ink); background: var(--ad-surface-quiet); }
+.member-selector-summary-heading .member-selector-all-members:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+
+.member-selector-inline-list { display: grid; gap: 4px; list-style: none; margin: 0 0 10px; padding: 0; width: 100%; }
+.member-selector-inline-list > li { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 4px 0; }
+.member-selector-list-identity { display: grid; gap: 0; flex: 1; min-width: 0; font-size: 14px; line-height: 20px; color: var(--ad-ink); }
+.member-selector-list-identity > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ad-ink-tertiary); font-size: 12px; line-height: 16px; }
+.member-selector-list-identity > span:only-child { color: var(--ad-ink); font-size: 14px; }
+.member-selector-list-remove { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 28px; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--ad-ink-tertiary); opacity: 0; cursor: pointer; }
+.member-selector-inline-list > li:hover .member-selector-list-remove, .member-selector-inline-list > li:focus-within .member-selector-list-remove { opacity: 1; }
+.member-selector-list-remove:hover { background: var(--ad-surface-quiet); color: var(--ad-ink); }
+.member-selector-inline-list .member-selector-list-empty { min-height: 32px; font-size: 13px; color: var(--ad-ink-tertiary); }
+@media (hover: none) { .member-selector-list-remove { opacity: 1; } }
+
+.member-selector-summary > .member-selector-stacked-row { grid-column: 2; grid-row: 1; display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; min-height: 32px; }
+.member-selector-summary > :is(.member-selector-inline-list, .member-selector-list-footer) { grid-column: 1 / -1; }
+.member-selector-summary-avatars { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; min-width: 0; }
+.member-selector-summary .member-selector-count-toggle { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 28px; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--ad-surface-quiet); color: var(--ad-ink-secondary); font: inherit; font-size: 12px; cursor: pointer; }
+.member-selector-count-toggle:hover, .member-selector-count-toggle[aria-expanded="true"] { color: var(--ad-route-ink); background: var(--ad-route-soft); }
+.member-selector-count-toggle:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.member-selector-summary .member-selector-inline-list { margin-top: 12px; }
+
+.member-selector-summary-title { grid-column: 1; grid-row: 1; display: flex; align-items: center; gap: 8px; min-height: 32px; color: var(--ad-ink-tertiary); font-weight: 400; white-space: nowrap; }
+.member-selector-summary .member-selector-summary-add { grid-column: 2; justify-self: start; display: inline-flex; align-items: center; justify-content: center; width: 28px; min-width: 28px; height: 28px; min-height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--ad-surface-subtle); color: var(--ad-ink-tertiary); }
+.member-selector-summary:has(> .member-selector-inline-list) > .member-selector-summary-add { grid-row: 1; justify-self: end; }
+.member-selector-summary .member-selector-summary-add:hover { background: var(--ad-surface-quiet); color: var(--ad-ink); }
+.member-selector-summary .member-selector-summary-add:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.member-selector-summary .member-selector-summary-avatars { display: flex; gap: 0; max-width: 100%; padding: 2px 0; }
+.member-selector-summary-avatars > .person-avatar { margin-left: -6px; outline: 2px solid var(--ad-surface); border-radius: 50%; flex-shrink: 0; }
+.member-selector-summary-avatars > .person-avatar:first-child { margin-left: 0; }
+.member-selector-summary-avatars > .person-avatar:hover, .member-selector-summary-avatars > .person-avatar:focus { z-index: 1; }
+
+.member-selector-expand-toggle { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 28px; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--ad-ink-tertiary); cursor: pointer; }
+.member-selector-expand-toggle:hover { background: var(--ad-surface-quiet); color: var(--ad-ink); }
+.member-selector-expand-toggle:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+
+.member-selector-summary-avatars > .member-selector-stack-expand { position: relative; z-index: 1; margin-left: -6px; background: var(--ad-surface-quiet); outline: 2px solid var(--ad-surface); }
+.member-selector-summary-avatars > .member-selector-stack-expand:first-child { margin-left: 0; }
+.member-selector-summary-avatars > .member-selector-stack-expand:hover { background: var(--ad-surface-subtle); }
+.member-selector-summary-avatars > .member-selector-stack-expand:focus-visible { outline: 2px solid var(--ad-focus); }
+
+.member-selector-list-footer { display: flex; justify-content: center; padding: 2px 0 6px; }
+
+.member-selector-summary .member-selector-inline-list { box-sizing: border-box; max-height: min(360px, 45dvh); padding-inline-end: 12px; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scrollbar-width: thin; }
+.member-selector-list-footer { border-top: 1px solid var(--ad-border-soft); background: var(--ad-surface); }
+.member-selector-list-footer .member-selector-collapse-list { width: 100%; flex-basis: auto; gap: 4px; padding: 0 10px; border-radius: 5px; font: inherit; font-size: 12px; }
+
+.member-selector-list-identity > .person-name-trigger { display: block; min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.member-selector-list-identity > span { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.task-detail-split .task-detail-property-sidebar .task-detail-property > small,
+.task-detail-split .task-detail-property-sidebar .task-due-date-label,
+.task-detail-split .task-detail-property-sidebar .member-selector-summary-title,
+.task-detail-split .task-detail-property-sidebar .task-detail-property-sidebar-heading { font-weight: 600; }
+
+.task-detail-property-sidebar .member-selector-single .member-selector-person.is-single { position: relative; display: inline-flex; align-items: center; justify-content: flex-start; min-height: 32px; padding: 0; border: 0; border-radius: 0; background: transparent; }
+@container task-detail-pane (min-width: 960px) {
+  .task-detail-split .task-detail-property-sidebar .task-detail-primary-properties > .task-detail-participants { grid-template-columns: subgrid; }
+  .task-detail-participants > .member-selector-summary { grid-template-columns: subgrid; }
+}

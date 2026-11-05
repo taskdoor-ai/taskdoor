@@ -30,3 +30,16 @@ export const toTaskRelationSummary = (task: TaskNode): TaskRelationSummary => ({
   plannedStartOn: task.plannedStartOn,
   plannedEndOn: task.plannedEndOn,
 });
+
+/** Counts only accessible direct children; completed is an explicit task status. */
+export function getDirectChildTaskCompletion(nodes: readonly WorkspaceNode[]) {
+  const counts = new Map<string, { total: number; completed: number }>();
+  for (const node of nodes) {
+    if (node.kind !== "task" || !node.parentTaskId) continue;
+    const count = counts.get(node.parentTaskId) ?? { total: 0, completed: 0 };
+    count.total += 1;
+    if (node.status === "已完成") count.completed += 1;
+    counts.set(node.parentTaskId, count);
+  }
+  return counts;
+}

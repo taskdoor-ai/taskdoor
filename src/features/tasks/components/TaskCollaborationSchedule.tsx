@@ -53,7 +53,7 @@ export function TaskCollaborationSchedule({ task, members, tasks, disabled = fal
         {!!report.dateNotes.length && <ul className="task-schedule-notes">{report.dateNotes.map(note => <li key={note}>{note}</li>)}</ul>}
         <div className="task-schedule-limitations">{report.limitations.map(line => <p key={line}>{line}</p>)}</div>
         <section className="task-schedule-group" aria-label="负责人排期依据"><h3>负责人</h3>{report.owner ? <PersonEvidence members={members} person={report.owner} /> : <p className="task-schedule-unknown">未选择负责人，排期依据未知。</p>}</section>
-        <section className="task-schedule-group" aria-label="参与人排期依据"><h3>参与人</h3>{report.participants.length ? report.participants.map(person => <PersonEvidence key={person.id} members={members} person={person} />) : <p className="task-schedule-unknown">未选择参与人。</p>}</section>
+        <section className="task-schedule-group" aria-label="参与者排期依据"><h3>参与者</h3>{report.participants.length ? report.participants.map(person => <PersonEvidence key={person.id} members={members} person={person} />) : <p className="task-schedule-unknown">未选择参与者。</p>}</section>
         {!!report.dependencies.length && <section className="task-schedule-group" aria-label="前置交付时间"><h3>前置交付</h3><ul className="task-schedule-dependencies">{report.dependencies.map(dependency => <li data-review={dependency.needsReview || undefined} key={dependency.clientId}><p>{dependency.message}</p><span>{dependency.deadlineLabel}</span></li>)}</ul></section>}
         <p className="task-schedule-footnote">资料仅供核对；实际忙闲未知，排期待成员确认；人员和日期请在原控件中调整。</p>
       </div>

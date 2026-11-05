@@ -1,7 +1,7 @@
 /* Keep the workspace task index visible; the split layout belongs inside its detail pane. */
 .task-detail-back-to-list { display: none; }
 @media (max-width: 900px) {
-  .task-detail-back-to-list { display: inline-flex; }
+  .task-detail-back-to-list { display: inline-flex; width: 44px; height: 44px; }
 }
 .task-workspace[data-detail-open="true"] > .task-workspace-detail { overflow: hidden; }
 .task-workspace[data-detail-open="true"] .task-workspace-detail-content {
@@ -38,7 +38,7 @@
 .task-detail-split .task-detail-title-row .task-icon.lg svg { width: 24px; height: 24px; }
 .task-detail-split .task-detail-title-row h1 { min-width: 0; flex: 1; margin: 0; }
 .task-detail-split .task-detail-title-input { min-height: 36px; max-height: 104px; font-size: 24px; line-height: 1.4; font-weight: 650; }
-.task-detail-split .task-detail-title-input[data-slot="textarea"], .task-detail-split .task-detail-title-input[data-slot="input"] { display: block; height: 36px; min-height: 36px; max-height: 36px; margin: 0; padding: 0 12px; }
+.task-detail-split .task-detail-title-input[data-slot="textarea"], .task-detail-split .task-detail-title-input[data-slot="input"] { display: block; height: 36px; min-height: 36px; max-height: 36px; margin: 0; padding: 0 var(--ad-space-3); }
 .task-detail-title-content, .task-detail-goal-editor { display: flex; align-items: center; min-width: 0; gap: 12px; }
 .task-detail-title-content h1, .task-detail-goal-editor > textarea { flex: 1; min-width: 0; }
 .task-detail-goal-content { min-width: 0; }
@@ -70,7 +70,7 @@
 .task-detail-split .task-detail-goal-field { display: grid; row-gap: 8px; }
 .task-detail-split .task-detail-field-label,
 .task-detail-split .task-detail-completion-label { color: var(--ad-ink); font-size: 13px; font-weight: 600; }
-.task-detail-split .task-detail-goal-input[data-slot="textarea"] { margin: 0; padding: 0 4px; font-size: 14px; line-height: 1.8; min-height: 26px; }
+.task-detail-split .task-detail-goal-input[data-slot="textarea"] { margin: 0; padding: 0 var(--ad-space-3); font-size: 14px; line-height: 1.8; min-height: 26px; }
 .task-detail-split .task-detail-completion { margin: 0; padding: 0; }
 .task-detail-split .task-detail-completion:has(.task-criteria-field-add):not(:has(.task-criteria-field-row)) { align-items: center; }
 .task-detail-split .task-detail-completion:has(.task-criteria-field-add):not(:has(.task-criteria-field-row)) > .task-detail-field-label { padding-top: 0; }
@@ -78,6 +78,25 @@
 .task-detail-split .task-detail-completion-content { padding-left: 4px; }
 .task-detail-split .task-detail-completion .task-criteria-field-row { grid-template-columns: 17px minmax(0, 1fr) auto; }
 .task-detail-split .task-detail-completion .task-criteria-field-mark { position: static; }
+/* Use the goal field's inline-edit treatment for all three heading fields. */
+.task-detail-split :is(.task-detail-title-input, .task-detail-goal-input, .task-criteria-field-input) {
+  border-radius: var(--ad-radius-input);
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.task-detail-split .task-detail-completion .task-criteria-field-input[data-slot="textarea"] { min-height: 26px; padding: 0 var(--ad-space-3); line-height: 1.8; }
+.task-detail-split :is(.task-detail-title-input, .task-detail-goal-input)[data-slot]:hover:not(:disabled):not(:focus-visible),
+.task-detail-split .task-criteria-fields .task-criteria-field-input[data-slot="textarea"]:hover:not(:disabled):not(:focus-visible) {
+  border-color: transparent;
+  background: var(--ad-surface-subtle);
+}
+.task-detail-split :is(.task-detail-title-input, .task-detail-goal-input)[data-slot]:focus-visible,
+.task-detail-split .task-criteria-fields .task-criteria-field-input[data-slot="textarea"]:focus-visible {
+  border-color: var(--ad-focus);
+  background: var(--ad-surface);
+  box-shadow: none;
+  outline: none;
+}
+
 .task-detail-split .task-detail-completion .task-criteria-field-add { padding-inline: 1px; }
 .task-detail-split .task-detail-completion .task-criteria-field-add > svg { position: static; }
 .task-detail-split .task-detail-completion-content > ul { padding-left: 1px; }
@@ -129,7 +148,7 @@
 .task-detail-split .task-discussion-scroll { flex: 1; min-height: 0; overflow: visible; padding: 24px var(--task-detail-content-inset); }
 .task-detail-split .task-discussion-threads { margin: 0; }
 /* Keep its normal-flow space so the last message can clear the pinned composer. */
-.task-detail-split .task-discussion-compose { position: sticky; bottom: 0; z-index: 18; flex-shrink: 0; gap: 10px; padding: 16px var(--task-detail-content-inset); border-top: 1px solid var(--ad-border-soft); background: var(--ad-surface); max-height: calc(var(--task-detail-viewport-height, 100dvh) * .46); overflow: auto; overscroll-behavior: contain; }
+.task-detail-split .task-discussion-compose { position: sticky; bottom: 0; z-index: 18; flex-shrink: 0; gap: 10px; padding: 16px var(--task-detail-content-inset); border-top: 0; background: var(--ad-surface); max-height: calc(var(--task-detail-viewport-height, 100dvh) * .46); overflow: auto; overscroll-behavior: contain; }
 .task-detail-split .task-discussion-compose > .discussion-composer { display: flex; flex-direction: column; max-height: 180px; }
 .task-detail-split .task-discussion-compose > .discussion-composer .discussion-composer-editor { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 .task-detail-split .task-discussion-compose > .discussion-composer .discussion-composer-input { min-height: 56px; max-height: none; padding: 8px 12px; line-height: 20px; overflow: visible; }
@@ -265,6 +284,7 @@
 
 .task-detail-split .task-ai-detail-tools { align-items: center; gap: 8px; }
 
+.task-detail-subtasks-pane { min-width: 0; padding-inline: var(--task-detail-content-inset); }
 .task-detail-ai-panel { overflow: visible; min-height: 0; padding: 24px var(--task-detail-content-inset); }
 .task-detail-ai-panel[hidden] { display: none; }
 .task-due-date-shortcuts { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; gap: 8px; margin-bottom: 12px; }
@@ -317,7 +337,7 @@
 .task-round-icon:not([data-tone="neutral"]) { background: color-mix(in srgb, currentColor 10%, var(--ad-surface)); }
 .task-symbol-options { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--ad-border-soft); }
 .task-symbol-options button { display: grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 6px; color: var(--ad-ink-secondary); background: transparent; cursor: pointer; }
-.task-symbol-options button:hover, .task-symbol-options button[aria-pressed="true"] { background: var(--ad-route-soft); color: var(--ad-route); }
+.task-symbol-options button:hover, .task-symbol-options button[aria-pressed="true"] { background: var(--ad-button-soft-bg); color: var(--ad-button-primary-bg); }
 .task-icon-progress-ring { position: absolute; inset: -4px; width: 36px; height: 36px; fill: none; transform: rotate(-90deg); stroke-width: 1.6; }
 .task-icon-progress-ring circle { stroke: var(--ad-border); stroke-linecap: round; }
 .task-icon-progress-ring circle[data-filled="true"] { stroke: var(--ad-route); }
@@ -352,3 +372,27 @@
 .task-completion-orbit > svg.lucide-triangle-alert > path:first-child { opacity: 1; }
 .task-completion-orbit .criterion-orbit-hover { color: var(--task-completion-ink); }
 .task-completion-orbit:is(:hover, :focus-visible, [data-popup-open]) { background: color-mix(in srgb, var(--task-completion-ink) 8%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--task-completion-ink) 7%, transparent); }
+
+.task-detail-split .task-detail-sticky-summary { grid-template-columns: minmax(0, 1fr); gap: 10px; padding-top: 18px; opacity: 0; transition: opacity 120ms ease-out; }
+.task-detail-split .task-detail-sticky-slot[data-collapsed="true"] > .task-detail-sticky-summary { opacity: 1; }
+.task-detail-split .task-detail-sticky-name-row { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.task-detail-split .task-detail-sticky-title { font-size: 24px; font-weight: 650; line-height: 1.4; }
+.task-detail-split .task-detail-sticky-progress { display: flex; align-items: center; justify-content: center; flex: 0 0 36px; width: 36px; height: 36px; color: var(--ad-task-status-progress); }
+.task-detail-sticky-progress[data-tone="success"] { color: var(--ad-task-status-success); }
+.task-detail-sticky-progress[data-tone="warning"] { color: var(--ad-task-status-warning); }
+.task-detail-sticky-progress[data-tone="neutral"] { color: var(--ad-ink-tertiary); }
+.task-detail-split .task-detail-sticky-path { grid-column: 1 / -1; min-width: 0; margin-bottom: -6px; font-size: 12px; }
+.task-detail-split .task-detail-sticky-path > span { display: inline-flex; align-items: center; gap: 6px; }
+@media (max-width: 900px) { .task-detail-split .task-detail-sticky-title { font-size: 20px; } }
+@media (prefers-reduced-motion: reduce) { .task-detail-split .task-detail-sticky-summary { transition: none; } }
+
+/* Fill the detail pane; content sections own their compact inset. */
+.task-workspace .task-workspace-detail-content > .task-detail-view.task-detail-split {
+  width: calc(100% - 12px); max-width: none; height: 100%; margin: 0 0 0 12px; padding: 0;
+  --task-detail-content-inset: 24px;
+}
+.task-detail-split .task-discussion-compose { padding-top: 12px; padding-bottom: 12px; }
+@media (max-width: 900px) {
+  .task-workspace .task-workspace-detail-content > .task-detail-view.task-detail-split { --task-detail-content-inset: 16px; }
+}
+.task-workspace .task-workspace-detail-content > .task-detail-view.task-detail-split[hidden] { display: none; }

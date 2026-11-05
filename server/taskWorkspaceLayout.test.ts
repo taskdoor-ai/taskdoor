@@ -7,7 +7,7 @@ const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "
 test("任务列表与详情挂载在同一个常驻工作区，切任务不重建列表", () => {
   const workspaceStart = appSource.indexOf("<TaskWorkspace\n");
   const workspaceEnd = appSource.indexOf("</TaskWorkspace>", workspaceStart);
-  assert.ok(workspaceStart > -1 && workspaceEnd > workspaceStart, "应由两栏工作区同时承载列表与详情");
+  assert.ok(workspaceStart > -1 && workspaceEnd > workspaceStart, "应由同一工作区承载列表与详情");
   const workspace = appSource.slice(workspaceStart, workspaceEnd);
   assert.match(workspace, /hidden=\{activeSection !== "home" && activeSection !== "tasks" && activeSection !== "conversation"\}/, "我的工作、详情和新建共用常驻列表，其他页面暂时隐藏工作区");
   assert.match(workspace, /<TaskDetail\b/);
@@ -56,7 +56,8 @@ test("任务工作区移除看板状态和渲染分支，原详情仍常驻", ()
   const source = readFileSync(new URL("../src/features/tasks/components/TaskWorkspace.tsx", import.meta.url), "utf8");
   assert.ok(!/TaskWorkspaceView|taskWorkspaceView|setTaskWorkspaceView|onViewChange/.test(appSource), "App 不应保留看板切换状态");
   assert.ok(!/WorkspaceTaskBoard|showingBoard|onShowBoard|onViewChange|TaskWorkspaceView/.test(source), "工作区不应提供看板分支");
-  assert.match(source, /className="task-workspace-detail" hidden=\{showingWorkbench \|\| showingCreation\}/);
+  assert.match(source, /className="task-workspace-list-page" hidden=\{!showList\}/);
+  assert.match(source, /className="task-workspace-detail" hidden=\{!hasDetail \|\| showingWorkbench \|\| showingCreation\}/);
   const content = source.slice(source.indexOf('className="task-workspace-detail-content"'));
   assert.match(content, /\{children\}/);
   const css = readFileSync(new URL("../src/features/tasks/styles/task-workspace.css", import.meta.url), "utf8");

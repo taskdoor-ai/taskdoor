@@ -37,9 +37,33 @@ test("video samples remain inside duration and distinguish a picture from a blac
   assert.equal(hasVideoFramePicture(new Uint8ClampedArray(64)), false);
   const black = new Uint8ClampedArray(64); for (let index = 3; index < black.length; index += 4) black[index] = 255;
   assert.equal(hasVideoFramePicture(black), false);
-  assert.equal(hasVideoFramePicture(new Uint8ClampedArray(64).fill(240)), true);
+  assert.equal(hasVideoFramePicture(new Uint8ClampedArray(64).fill(240)), false);
   const darkPicture = black.slice(); darkPicture[0] = darkPicture[1] = darkPicture[2] = 40;
   assert.equal(hasVideoFramePicture(darkPicture), true);
+});
+
+test("blank white, cream, solid color and near-solid noise are skipped; text and dark subjects survive", () => {
+  const frame = (rgb: number[], variation = 0) => {
+    const data = new Uint8ClampedArray(4 * 400);
+    for (let i = 0; i < 400; i++) { data.set(rgb.map(v => v + (i % 3 - 1) * variation), i * 4); data[i * 4 + 3] = 255; }
+    return data;
+  };
+  for (const color of [[0, 0, 0], [255, 255, 255], [245, 240, 230], [0, 120, 220]]) {
+    assert.equal(hasVideoFramePicture(frame(color)), false);
+    assert.equal(hasVideoFramePicture(frame(color, 2)), false);
+  }
+  const text = frame([250, 250, 245]);
+  for (let i = 0; i < 20; i++) text.set([35, 35, 35, 255], i * 4);
+  assert.equal(hasVideoFramePicture(text), true);
+  const subject = frame([3, 3, 3]);
+  for (let i = 0; i < 80; i++) subject.set([65, 45, 35, 255], i * 4);
+  assert.equal(hasVideoFramePicture(subject), true);
+  const colors = frame([180, 30, 30]);
+  for (let i = 0; i < 200; i++) colors.set([30, 180, 30, 255], i * 4);
+  assert.equal(hasVideoFramePicture(colors), true);
+  assert.ok(taskVideoCoverTimes(20).some(time => time > 15), "try frames beyond a long blank intro");
+  const oldKey = JSON.stringify([file.blobId, 1, "video", ""]);
+  assert.notEqual(taskFileThumbnailKey(file), oldKey, "old blank covers must not be reused");
 });
 
 test("simultaneous references share one cover job and release only after the final subscriber leaves", async () => {
@@ -106,7 +130,7 @@ test("video cover seeks past black frames without play and releases its media UR
   const originalDocument = Object.getOwnPropertyDescriptor(globalThis, "document");
   const originalCreateUrl = URL.createObjectURL, originalRevokeUrl = URL.revokeObjectURL;
   const seeks: number[] = [], released: string[] = [];
-  let played = 0, paused = 0, source = "", currentTime = 0, loads = 0;
+  let played = 0, paused = 0, source = "", currentTime = 0, loads = 0, contentAt = 10;
   const events = new EventTarget();
   const video = Object.assign(events, {
     duration: 13.2, videoWidth: 1920, videoHeight: 1080, muted: false, preload: "", playsInline: false,
@@ -117,13 +141,14 @@ test("video cover seeks past black frames without play and releases its media UR
   });
   // Object.assign copies accessors as values, so keep the browser-like properties live.
   Object.defineProperties(video, { src: { get: () => source, set: (value: string) => { source = value; } }, currentTime: { get: () => currentTime, set: (value: number) => { currentTime = value; seeks.push(value); queueMicrotask(() => events.dispatchEvent(new Event("seeked"))); } } });
-  const canvas = { width: 0, height: 0, getContext: () => ({ drawImage: () => {}, getImageData: () => ({ data: new Uint8ClampedArray(64).fill(currentTime >= 1 ? 240 : 0) }) }), toBlob: (callback: BlobCallback) => callback(new Blob(["real decoded frame"], { type: "image/jpeg" })) };
+  const canvas = { width: 0, height: 0, getContext: () => ({ drawImage: () => {}, getImageData: () => { const data = new Uint8ClampedArray(64).fill(currentTime < 0.1 ? 0 : 240); if (currentTime >= contentAt) data.set([30, 30, 30, 255]); return { data }; } }), toBlob: (callback: BlobCallback) => callback(new Blob(["real decoded frame"], { type: "image/jpeg" })) };
   Object.defineProperty(globalThis, "document", { configurable: true, value: { createElement: (tag: string) => tag === "video" ? video : canvas } });
   URL.createObjectURL = () => "blob:cover-only"; URL.revokeObjectURL = url => { released.push(url); };
   try {
     const cover = await renderTaskFileCover({ ...file, blobId: undefined }, new AbortController().signal, new Blob(["video bytes"]));
     assert.equal(await cover?.text(), "real decoded frame");
-    assert.deepEqual(seeks, [0.05, 0.35, 1]);
+    assert.ok(seeks.includes(0.35) && seeks.includes(1), "white frames after the black intro are skipped");
+    assert.ok(seeks.at(-1)! >= 10, "later real content supplies the cover");
     assert.equal(played, 0);
     assert.equal(video.muted, true);
     assert.equal(paused, 1);
@@ -131,6 +156,8 @@ test("video cover seeks past black frames without play and releases its media UR
     assert.equal(source, "");
     assert.deepEqual(released, ["blob:cover-only"]);
     assert.equal(canvas.width, 0); assert.equal(canvas.height, 0);
+    contentAt = Infinity;
+    assert.equal(await renderTaskFileCover({ ...file, blobId: undefined }, new AbortController().signal, new Blob(["all blank video bytes"])), null, "all candidate frames blank: retain the video glyph");
   } finally {
     if (originalDocument) Object.defineProperty(globalThis, "document", originalDocument); else Reflect.deleteProperty(globalThis, "document");
     URL.createObjectURL = originalCreateUrl; URL.revokeObjectURL = originalRevokeUrl;

@@ -4,7 +4,7 @@ import { notificationCopy } from '@/ai/mock/prototype/notification-copy';
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { formatDisplayDateTime, formatLegacyDateLabel, formatRelativeDateTime } from "@/shared/lib/date-time";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { PersonName } from "@/shared/ui/PersonAvatar";
 import { Bell, Broom, Check, Filter, Inbox } from "lucide-react";
 import { isNotificationReadTestMode, notificationExamples, notificationReadTestExamples, notificationTypeLabels, type WorkspaceNotification } from "@/ai/mock/data/notificationExamples";
@@ -16,8 +16,9 @@ import { toast } from "@/shared/ui/toast";
 type NotificationReadFilter = "all" | "unread" | "read";
 const readFilterLabels: Record<NotificationReadFilter, string> = { all: "全部", read: "已读", unread: "未读" };
 
-export function GlobalNotifications({ placement = "rail", showDemoNotifications = true, onOpenTask, teamId = "", userId = "", discussionReadReceipt, onDiscussionReadHandled }: {
+export function GlobalNotifications({ besideNavigation = false, placement = "rail", showDemoNotifications = true, onOpenTask, teamId = "", userId = "", discussionReadReceipt, onDiscussionReadHandled }: {
   teamId?: string; userId?: string;
+  besideNavigation?: boolean;
   placement?: "rail" | "topbar";
   showDemoNotifications?: boolean;
   onOpenTask?: (taskId: string, target?: NotificationRegionTarget) => void;
@@ -41,6 +42,26 @@ export function GlobalNotifications({ placement = "rail", showDemoNotifications 
   const [activeFilter, setActiveFilter] = useState<NotificationReadFilter>("all");
   const [filterOpen, setFilterOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [panelBounds, setPanelBounds] = useState<CSSProperties>({});
+  useEffect(() => {
+    if (!sheetOpen || !besideNavigation) return;
+    const main = triggerRef.current?.closest(".task-workspace-shell")?.querySelector(".main-content");
+    if (!main) return;
+    const update = () => {
+      const bounds = main.getBoundingClientRect();
+      setPanelBounds({
+        "--notification-navigation-edge": `${bounds.left + 1}px`,
+        "--notification-panel-top": `${bounds.top + 1}px`,
+        "--notification-panel-height": `${Math.max(0, bounds.height - 2)}px`,
+        "--notification-panel-available-width": `${Math.max(0, bounds.width - 2)}px`,
+      } as CSSProperties);
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(main);
+    window.addEventListener("resize", update);
+    return () => { observer.disconnect(); window.removeEventListener("resize", update); };
+  }, [sheetOpen, besideNavigation]);
   const [, refreshClock] = useState(0);
   useEffect(() => {
     if (!sheetOpen) return;
@@ -152,7 +173,7 @@ export function GlobalNotifications({ placement = "rail", showDemoNotifications 
       <Bell aria-hidden="true" size={18} />
       {counts.unread > 0 && <span aria-hidden="true" className="notification-trigger-count">{counts.unread > 99 ? "99+" : counts.unread}</span>}
     </SheetTrigger>
-    <SheetContent finalFocus={triggerRef} initialFocus={panelRef} ref={panelRef} side={placement === "topbar" ? "right" : "left"} tabIndex={-1}>
+    <SheetContent className={besideNavigation ? "notification-panel-beside-navigation" : undefined} style={besideNavigation ? panelBounds : undefined} finalFocus={triggerRef} initialFocus={panelRef} ref={panelRef} side={besideNavigation || placement === "rail" ? "left" : "right"} tabIndex={-1}>
       <SheetHeader>
         <div><SheetTitle>{d('notifications')}</SheetTitle><SheetDescription>{ui("查看与你有关的协作动态。")}</SheetDescription></div>
         <div className="notification-header-actions">

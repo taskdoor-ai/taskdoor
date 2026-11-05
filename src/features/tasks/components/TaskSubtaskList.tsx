@@ -2,7 +2,7 @@ import { useProgressCopy } from "@/features/tasks/i18n/progress-copy";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
-import { ChevronRight, ListTree } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { getTaskProgressDisplay } from "@/features/tasks/lib/task-progress-display";
 import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { getTaskProgressDemoExample } from "@/ai/mock/data/taskProgressDemo";
@@ -14,6 +14,7 @@ import { TaskProgressOverview } from "@/features/tasks/components/TaskProgressOv
 import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
 import { useResolvedPersonProfile } from "@/shared/ui/PersonDirectory";
 import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
+import type { ReactNode } from "react";
 
 function SubtaskOwner({ owner }: Pick<TaskRelationSummary, "owner">) {
   const d = useDetailCopy();
@@ -26,7 +27,8 @@ function SubtaskOwner({ owner }: Pick<TaskRelationSummary, "owner">) {
   </> : <span>{d('unassigned')}</span>}</span>;
 }
 
-export function TaskSubtaskList({ onOpenTask, tasks, effortTasks = [], completedMinutesByTaskId, progressComparisonsByTaskId }: {
+export function TaskSubtaskList({ emptyAction, onOpenTask, tasks, effortTasks = [], completedMinutesByTaskId, progressComparisonsByTaskId }: {
+  emptyAction?: ReactNode;
   onOpenTask?: (taskId: string) => void;
   tasks: TaskRelationSummary[];
   effortTasks?: TaskEffortDistributionInput[];
@@ -38,7 +40,7 @@ export function TaskSubtaskList({ onOpenTask, tasks, effortTasks = [], completed
   const timeZone = useTeamTimeZone();
   const d = useDetailCopy();
   const mock = useMockText();
-  if (!tasks.length) return <div className="task-subtask-list-empty">{d('noSubtasks')}</div>;
+  if (!tasks.length) return <div className="task-subtask-list-empty">{emptyAction || <p>{d('noSubtasks')}</p>}</div>;
 
   const distribution = getTaskEffortDistribution(effortTasks, "example");
   return <div className="task-subtask-list-items">{tasks.map((task) => {
@@ -48,9 +50,8 @@ export function TaskSubtaskList({ onOpenTask, tasks, effortTasks = [], completed
     const progress = getTaskProgressDisplay({ timeZone, series, task: { ...task, ...effort, status: task.status },
       scopeMinutes: scope?.minutes, completedMinutes: series ? undefined : completedMinutesByTaskId?.[task.id] });
     return <details className="task-subtask-list-item" data-tone={task.iconTone ?? "neutral"} key={task.id}><summary aria-label={ui("子任务详情：{0}", {0: task.title})} className="task-subtask-list-row">
-      <button aria-label={ui("打开子任务：{0}", {0: task.title})} className="task-subtask-title" data-task-id={task.id} disabled={!onOpenTask} onClick={() => onOpenTask?.(task.id)} type="button">
-        <span>{mock.field(task.id, "title", task.title)}</span>
-        {Boolean(task.childTaskCount && task.childTaskCount > 0) && <small aria-label={ui("{0} 个直接子任务", {0: task.childTaskCount ?? 0})} className="task-subtask-title-count"><ListTree aria-hidden="true" size={15} /><span>{ui("子任务(")}{task.childTaskCount})</span></small>}
+      <button aria-label={ui("打开子任务：{0}", {0: task.title})} className="task-subtask-title" data-task-id={task.id} disabled={!onOpenTask} onClick={() => onOpenTask?.(task.id)} title={mock.field(task.id, "title", task.title)} type="button">
+        <span className="task-subtask-title-text">{mock.field(task.id, "title", task.title)}</span>
       </button>
       <SubtaskOwner owner={task.owner} />
       <TaskStatusBadge size="sm" value={task.status} progressRatio={progress.aiAssessment?.ratio ?? progress.ratio}/>

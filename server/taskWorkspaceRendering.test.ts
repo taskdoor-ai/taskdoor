@@ -24,7 +24,7 @@ const props = {
   members: [{ id: "me", name: "当前成员", email: "me@example.com" }],
   nodes: [first, second],
   onCreateTask: () => {}, onFiltersChange: () => {}, onManageTags: () => {}, onQueryChange: () => {}, onTaskSelect: () => {},
-  onShowWorkbench: () => {},
+  onShowWorkbench: () => {}, onDeleteTask: () => {}, onTaskStatusChange: () => {},
   query: "",
   selectedTaskId: null as string | null,
   showingWorkbench: false,
@@ -40,21 +40,25 @@ async function renderWorkspace(patch: Partial<typeof props> = {}) {
   return renderToStaticMarkup(createElement(TaskWorkspace, { ...props, ...patch }));
 }
 
-test("未选任务时左侧列表完整可用，右侧只提示选择，不添加 Dashboard", async () => {
+test("未选任务时主区只显示完整列表，且不会选中首条任务", async () => {
   const html = await renderWorkspace();
-  assert.match(html, /class="task-workspace" data-mobile-pane="list"/);
+  assert.match(html, /data-list-open="true"/);
+  assert.match(html, /class="task-workspace-detail" hidden=""/);
   assert.equal((html.match(/data-task-id=/g) ?? []).length, 2);
-  assert.match(html, /选择任务，查看详情/);
   assert.doesNotMatch(html, /aria-current="page"|Dashboard|注意力地图|暂无分析/);
 });
 
-test("选中后同时输出任务索引与详情，移动端标记显示详情", async () => {
-  const html = await renderWorkspace({ selectedTaskId: "first", children: createElement("h1", {}, "已选任务详情") });
-  assert.match(html, /data-mobile-pane="detail"/);
-  assert.equal((html.match(/data-task-id=/g) ?? []).length, 2);
+test("打开详情后隐藏列表但保留列表和搜索，再返回时列表可用", async () => {
+  const html = await renderWorkspace({ query: "发布", selectedTaskId: "first", children: createElement("h1", {}, "已选任务详情") });
+  assert.match(html, /data-detail-open="true" data-list-open="false"/);
+  assert.match(html, /class="task-workspace-list-page" hidden=""/);
+  assert.equal((html.match(/data-task-id="first"/g) ?? []).length, 1);
   assert.match(html, /aria-current="page"/);
   assert.match(html, /已选任务详情/);
-  assert.doesNotMatch(html, /选择任务，查看详情|当前任务不在/);
+  const returned = await renderWorkspace({ query: "发布" });
+  assert.match(returned, /data-detail-open="false" data-list-open="true"/);
+  assert.match(returned, /value="发布"/);
+  assert.equal((returned.match(/data-task-id="first"/g) ?? []).length, 1);
 });
 
 test("推荐作为列表上方入口打开右侧摘要，不卸载列表或原详情草稿", async () => {
@@ -202,7 +206,7 @@ test("本人创建的未分配任务可从个人索引找回，其他人的未�
   assert.doesNotMatch(html, /data-task-id="other-unassigned"|他人创建的待分配任务/);
 });
 
-test("创建替换右侧面板，列表、原详情和创建草稿保持挂载；标签页才隐藏工作区", async () => {
+test("新建占据主区，列表及原详情草稿保持挂载并隐藏", async () => {
   const state = {
     selectedTaskId: "first",
     children: createElement("textarea", { defaultValue: "未发送的讨论草稿" }),
@@ -210,24 +214,25 @@ test("创建替换右侧面板，列表、原详情和创建草稿保持挂载�
   };
   const creating = await renderWorkspace({ ...state, showingCreation: true });
   assert.equal((creating.match(/data-task-id=/g) ?? []).length, 2);
-  assert.match(creating, /data-mobile-pane="detail"/);
+  assert.match(creating, /data-creation-open="true" data-detail-open="false" data-list-open="false"/);
+  assert.match(creating, /class="task-workspace-list-page" hidden=""/);
   assert.match(creating, /class="task-workspace-detail" hidden=""/);
-  assert.doesNotMatch(creating.match(/<section aria-label="新建任务面板"[^>]*>/)?.[0] ?? "", /hidden/);
-  assert.doesNotMatch(creating.match(/<button\b[^>]*data-task-id="first"[^>]*>/)?.[0] ?? "", /aria-current/);
+  assert.match(creating, /class="task-workspace-creation"><textarea/);
+  assert.doesNotMatch(creating, /aria-current="page"/);
   assert.match(creating, /未发送的讨论草稿/);
   const detail = await renderWorkspace(state);
   assert.match(detail, /class="task-workspace-creation" hidden=""/);
   assert.match(detail, /未发起的任务需求/);
   const html = await renderWorkspace({ ...state, hidden: true });
-  assert.match(html, /class="task-workspace"[^>]*hidden=""/);
+  assert.match(html, /class="task-workspace task-workspace-pages"[^>]*hidden=""/);
   assert.equal((html.match(/data-task-id=/g) ?? []).length, 2);
 });
 
-test("两栏独立滚动，窄屏只显示一个面板且详情按容器宽度重排", () => {
+test("主区在同一列切换，详情属性按容器宽度重排", () => {
   const css = readFileSync(new URL("../src/features/tasks/styles/task-workspace.css", import.meta.url), "utf8");
-  assert.match(css, /grid-template-columns: 320px minmax\(0, 1fr\)/);
-  assert.match(css, /\.task-workspace\[hidden\] \{ display: none; \}/);
-  assert.match(css, /\.task-workspace-detail \{[^}]*overflow: auto;[^}]*container: task-detail-pane \/ inline-size;/s);
-  assert.match(css, /@container task-detail-pane \(max-width: 760px\)/);
-  assert.match(css, /@media \(max-width: 900px\)[\s\S]*data-mobile-pane="detail"[\s\S]*data-mobile-pane="list"[^{]*\{ display: none; \}/);
+  const properties = readFileSync(new URL("../src/features/tasks/styles/task-detail-properties.css", import.meta.url), "utf8");
+  assert.match(css, /\.task-workspace\.task-workspace-pages \{[^}]*grid-template-columns: minmax\(0, 1fr\)/s);
+  assert.match(css, /\.task-workspace-pages > \[hidden\] \{ display: none; \}/);
+  assert.match(css, /\.task-workspace-detail \{[^}]*container: task-detail-pane \/ inline-size;/s);
+  assert.match(properties, /@container task-detail-pane \(min-width: 960px\)[\s\S]*grid-template-columns: minmax\(0, 1fr\) 260px/);
 });

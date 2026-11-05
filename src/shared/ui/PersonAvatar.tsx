@@ -8,7 +8,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockPersonName } from "@/ai/mock/i18n/mockContent";
 import { PreviewCard } from "@base-ui/react/preview-card";
 import React, { type ComponentPropsWithoutRef, type CSSProperties, forwardRef, type ReactElement, useEffect, useRef, useState } from "react";
-import { ChevronDown, ClipboardCheck, Mail, Phone, UserRound, X } from "lucide-react";
+import { ClipboardCheck, Mail, Phone, UserRound, X } from "lucide-react";
 import type { PersonOption } from "@/shared/model/task-model";
 import { useResolvedPersonProfile } from "@/shared/ui/PersonDirectory";
 import { createPersonProfileCardModel } from "@/shared/ui/person-profile-card-model";
@@ -29,12 +29,13 @@ export type PersonAvatarProps = {
   className?: string;
 };
 
-// The package's CommonJS build wraps its default export during server rendering.
+// Preserve the existing library's CommonJS compatibility.
 const Avvvatars = typeof AvvvatarsModule === "function"
   ? AvvvatarsModule
   : (AvvvatarsModule as unknown as { default: typeof AvvvatarsModule }).default;
 
 const sizeMap = { xs: 22, sm: 28, md: 36, lg: 48 };
+const avatarColors = ["#849BD1", "#67B49A", "#DF8793", "#D39A66", "#6CB6C9", "#AD92D3", "#8DB56D", "#CF8DAF", "#79AABD", "#B9AC70"];
 
 /** Keep searchable person labels consistent with the names rendered by the identity UI. */
 export function usePersonLabels() {
@@ -59,14 +60,13 @@ const PersonAvatarVisual = forwardRef<HTMLSpanElement, PersonAvatarVisualProps>(
   const { locale } = useI18n();
   const displayName = mockPersonName(locale, identity, name);
   const [customImageFailed, setCustomImageFailed] = useState(false);
+  useEffect(() => { setCustomImageFailed(false); }, [avatarUrl]);
+  const colorSeed = Array.from(identity || name).reduce((hash, character) => (hash * 31 + character.codePointAt(0)!) >>> 0, 0);
   const style = {
+    "--person-avatar-hue": avatarColors[colorSeed % avatarColors.length],
     "--person-avatar-size": size === "xl" ? "var(--ad-person-profile-avatar-size)" : `${sizeMap[size]}px`,
   } as CSSProperties;
   const resolvedAriaLabel = ariaLabel ?? triggerProps["aria-label"];
-
-  useEffect(() => {
-    setCustomImageFailed(false);
-  }, [avatarUrl]);
 
   return (
     <span
@@ -81,7 +81,7 @@ const PersonAvatarVisual = forwardRef<HTMLSpanElement, PersonAvatarVisualProps>(
       tabIndex={focusable ? 0 : undefined}
       title={title}
     >
-      <span className="person-avatar-fallback">{pendingMembership ? <UserRound aria-hidden="true" size={16} /> : name.slice(0, 1)}</span>
+      <span className="person-avatar-fallback">{pendingMembership ? <UserRound aria-hidden="true" size={16} /> : personInitials(displayName)}</span>
       {!pendingMembership && (avatarUrl && !customImageFailed
         ? <img alt="" onError={() => setCustomImageFailed(true)} src={avatarUrl} />
         : <span aria-hidden="true" className="person-avatar-initials"><Avvvatars value={identity ?? name} displayValue={personInitials(displayName)} style="character" size={size === "xl" ? 80 : sizeMap[size]} /></span>)}
@@ -141,7 +141,7 @@ function PersonProfilePreview({ onOpenChange, open, profile, trigger }: { onOpen
   );
 }
 
-// Avvvatars colors are keyed by member identity; initials follow the displayed name.
+// Default avatar initials follow the displayed name.
 // Base UI PreviewCard keeps the hover content outside scrolling containers.
 export function PersonAvatar({ avatarUrl, className = "", invitationStatus, name, personId, profile, profilePreviewFocusable = true, showProfilePreview = true, size = "md", status }: PersonAvatarProps) {
   const { locale } = useI18n();
@@ -208,7 +208,8 @@ export function PersonName({ className = "", prefix = "", name, personId, profil
   return <><PersonProfilePreview onOpenChange={setPreviewOpen} open={previewOpen} profile={resolvedProfile} trigger={label as ReactElement} />{badge}</>;
 }
 
-export function PersonOverflowList({ allPeople, className = "person-avatar-overflow", invitationStatusById = {}, label = "参与者", onRemove, people, style }: {
+export function PersonOverflowList({ allPeople, className = "person-avatar-overflow", invitationStatusById = {}, label = "参与者", onRemove, people, style, triggerText }: {
+  triggerText?: string;
   allPeople?: PersonOption[];
   className?: string;
   invitationStatusById?: Record<string, PersonInvitationStatus>;
@@ -226,7 +227,7 @@ export function PersonOverflowList({ allPeople, className = "person-avatar-overf
   const listLabel = allPeople ? ui("查看全部{0}（{1}人）", {0: label, 1: listPeople.length}) : ui("更多{0}", {0: label});
 
   return <Popover onOpenChange={setOpen} open={open}>
-    <PopoverTrigger aria-label={allPeople ? listLabel : ui("另有 {0} 位{1}", {0: people.length, 1: label})} className={`${className}${allPeople ? " is-full-list" : ""}`} closeDelay={150} delay={100} onFocus={(event) => { if (!allPeople && event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover={!allPeople} style={style} title={allPeople ? listLabel : undefined} type="button">{people.length > 0 && <span>+{people.length}</span>}{allPeople && <ChevronDown aria-hidden="true" size={14} />}</PopoverTrigger>
+    <PopoverTrigger aria-label={allPeople ? listLabel : ui("另有 {0} 位{1}", {0: people.length, 1: label})} className={`${className}${allPeople ? " is-full-list" : ""}`} closeDelay={150} delay={100} onFocus={(event) => { if (!allPeople && event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover={!allPeople} style={style} title={allPeople ? listLabel : undefined} type="button"><span>{triggerText ?? (people.length > 0 ? `+${people.length}` : allPeople?.length)}</span></PopoverTrigger>
     <PopoverContent aria-label={listLabel} className="person-overflow-popover" collisionPadding={allPeople ? 12 : undefined} data-full-list={allPeople ? "" : undefined} finalFocus={allPeople ? undefined : false} initialFocus={allPeople ? undefined : false}>
       {allPeople && <div className="person-overflow-heading"><strong>{label}</strong><span>{listPeople.length}</span></div>}
       <ul aria-label={allPeople ? listLabel : ui("收起的{0}", {0: label})} className="person-overflow-list" ref={listRef} tabIndex={allPeople ? 0 : undefined}>

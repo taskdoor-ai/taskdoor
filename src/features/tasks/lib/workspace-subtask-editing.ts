@@ -2,24 +2,33 @@ import type { LegacyTaskSnapshot } from "@/ai/mock/data/legacyTaskSnapshots";
 import type { TaskActivityMock, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
 import { appendTaskActivity, createTaskChangeActivity, type TaskActivityStore } from "@/features/tasks/lib/task-activity";
-import { getTaskDefinitionGoal } from "@/features/tasks/lib/task-ai-adjustment-adapters";
-import { validateTaskCriteria } from "@/features/tasks/lib/task-criteria-editing";
 import { TASK_FILE_EDITS_STORAGE_PREFIX } from "@/features/tasks/files/lib/task-file-editing";
 import { createWorkspaceTasksFromDraft } from "@/features/tasks/lib/workspace-task-creation";
 
-export type NewSubtaskDraft = { title: string; completionCriteria: string[] };
+export type NewSubtaskDraft = {
+  title: string;
+  goal?: string;
+  completionCriteria: string[];
+  ownerId?: string;
+  participantIds?: string[];
+  labels?: string[];
+  endDate?: string;
+  sourceDiscussion?: TaskNode["sourceDiscussion"];
+};
+
+export function canCreateWorkspaceSubtask(parent: Pick<TaskNode, "ownerId" | "participantIds"> | undefined, actorId: string, activeTeamMember: boolean): boolean {
+  return Boolean(parent && actorId && activeTeamMember && (parent.ownerId === actorId || parent.participantIds?.includes(actorId)));
+}
 
 export function getNewSubtaskDraftError(draft: NewSubtaskDraft): string | null {
   if (!draft.title.trim()) return "请填写子任务名称。";
-  try { validateTaskCriteria(draft.completionCriteria); }
-  catch (error) { return error instanceof Error ? error.message : "请核对完成标准。"; }
   return null;
 }
 
 /** Prepare one explicit local addition; the caller must persist before publishing it. */
 export function addWorkspaceSubtask(
   nodes: WorkspaceNode[], parentTaskId: string, draft: NewSubtaskDraft,
-  options: { currentUserId: string; author: string; id?: string },
+  options: { currentUserId: string; author: string; id?: string; timeZone?: string; teamId?: string },
 ): { nodes: WorkspaceNode[]; parent: TaskNode; createdTask: TaskNode; activity: TaskActivityMock | null } {
   const invalid = getNewSubtaskDraftError(draft);
   if (invalid) throw new Error(invalid);
@@ -27,20 +36,20 @@ export function addWorkspaceSubtask(
   if (!parent) throw new Error("父任务已不存在，未创建子任务。请返回任务列表核对。");
   const result = createWorkspaceTasksFromDraft(nodes, {
     mainTask: {
-      title: draft.title.trim(), goal: getTaskDefinitionGoal(nodes, parent),
-      completionCriteria: validateTaskCriteria(draft.completionCriteria), executionTips: [],
-      ownerId: "", participantIds: [], labels: [], startDate: "", endDate: "",
-      iconName: "list-todo", iconTone: "blue",
+      title: draft.title.trim(), goal: draft.goal?.trim() ?? "",
+      completionCriteria: draft.completionCriteria.map(value => value.trim()).filter(Boolean), executionTips: [],
+      ownerId: draft.ownerId ?? "", participantIds: [...new Set(draft.participantIds ?? [])].filter(id => id !== draft.ownerId),
+      labels: [...(draft.labels ?? [])], startDate: "", endDate: draft.endDate ?? "",
     },
     subtasks: [],
-  }, { parentTaskId, currentUserId: options.currentUserId, ...(options.id ? { idForIndex: () => options.id! } : {}) });
-  const createdTask: TaskNode = { ...result.createdNodes[0], createdFrom: "task-editor", goal: getTaskDefinitionGoal(nodes, parent) };
+  }, { parentTaskId, currentUserId: options.currentUserId, participantsReviewed: true, timeZone: options.timeZone, teamId: options.teamId, ...(options.id ? { idForIndex: () => options.id! } : {}) });
+  const createdTask: TaskNode = { ...result.createdNodes[0], createdFrom: "task-editor", ...(draft.sourceDiscussion ? { sourceDiscussion: { ...draft.sourceDiscussion } } : {}) };
   const activity = createTaskChangeActivity({
     author: options.author, type: "task-definition-change", message: "新增子任务",
     changes: [{ label: "子任务", before: null, after: createdTask.name }],
   });
   return {
-    nodes: result.nodes.map(node => node.id === createdTask.id ? createdTask : node.id === parent.id ? { ...node, updatedAt: "刚刚" } : node),
+    nodes: result.nodes.map(node => node.id === createdTask.id ? createdTask : node.id === parent.id ? { ...node, updatedAt: createdTask.createdAt ?? new Date().toISOString() } : node),
     parent, createdTask, activity,
   };
 }

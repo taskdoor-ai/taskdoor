@@ -16,7 +16,7 @@
 .person-picker-invite-hint { flex: 0 0 auto; padding: var(--ad-space-2) var(--ad-space-3); border-bottom: 1px solid var(--ad-border-soft); }
 .person-picker-invite-copy { margin: 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.6; overflow-wrap: anywhere; }
 .person-picker-unassigned-card > .person-picker-invite-copy { padding: 0 0 0 36px; line-height: 20px; }
-.person-picker-invite-action { display: inline-flex; min-height: 28px; align-items: center; padding: 0 2px; border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-route-ink); font: inherit; font-weight: 600; white-space: nowrap; vertical-align: baseline; cursor: pointer; }
+.person-picker-invite-action { display: inline-flex; min-height: 28px; align-items: center; padding: 0 2px; border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-button-soft-ink); font: inherit; font-weight: 600; white-space: nowrap; vertical-align: baseline; cursor: pointer; }
 .person-picker-invite-action:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 3px; }
 .person-picker-invite-action:disabled { color: var(--ad-ink-tertiary); cursor: default; }
 .person-picker-invite-action:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -2px; }

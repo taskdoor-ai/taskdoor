@@ -8,12 +8,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { usePersonalTags } from "@/features/me/components/PersonalTags";
 
 type Props = {
+  iconOnly?: boolean;
   tags: TagDefinition[];
   onChange: (names: string[]) => void;
   selected: string[];
+  triggerLabel?: string;
+  disabled?: boolean;
 };
 
-export function TagPicker({ onChange, selected, tags }: Props) {
+export function TagPicker({ onChange, selected, tags, triggerLabel, disabled = false, iconOnly = false }: Props) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const personalTags = usePersonalTags();
@@ -22,12 +25,13 @@ export function TagPicker({ onChange, selected, tags }: Props) {
   const trigger = useRef<HTMLButtonElement>(null);
   const selectedNames = new Set(selected);
   const toggleTag = (name: string) => {
+    if (disabled) return;
     onChange(selectedNames.has(name) ? selected.filter((item) => item !== name) : [...selected, name]);
   };
 
   return <Popover open={open} onOpenChange={setOpen}>
-    <PopoverTrigger aria-label={d('addTags')} className="tag-picker-trigger" ref={trigger} type="button">
-      <Plus aria-hidden="true" /><span>{d('append')}</span>
+    <PopoverTrigger aria-label={d('addTags')} className={`tag-picker-trigger${iconOnly ? " tag-picker-trigger-icon-only" : ""}`} disabled={disabled} ref={trigger} type="button">
+      <Plus aria-hidden="true" />{!iconOnly && <span>{triggerLabel ?? d('append')}</span>}
     </PopoverTrigger>
     <PopoverContent aria-label={ui("选择标签")} className="tag-picker-popover">
       <div aria-label={ui("可选标签")} className="tag-picker-options" role="group">

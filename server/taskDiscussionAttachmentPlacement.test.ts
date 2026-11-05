@@ -38,7 +38,7 @@ test("普通上传继续进入任务文件，同 ID 的已有任务文件不被�
   const next = postCollaborationMessage(createCollaborationSnapshot([source]), { message: message("ordinary-post"), attachments: [{ ...source, content: "不可覆盖", version: 9 }, upload] });
   const folder = next.files.find(file => file.kind === "folder" && file.parentId === null && file.name === "讨论");
   assert.ok(folder, "新上传的普通讨论附件自动归入根目录中的讨论文件夹");
-  assert.deepEqual(getTaskFiles(next.files).filter(file => file.kind === "file"), [source, { ...upload, parentId: folder.id }]);
+  assert.deepEqual(getTaskFiles(next.files).filter(file => file.kind === "file"), [source, { ...upload, parentId: folder.id, createdById: next.messages[0].author }]);
   assert.deepEqual(next.messages[0].attachmentRefs, [{ fileId: source.id, version: 3, name: source.name }, { fileId: upload.id, version: 1, name: upload.name }]);
   assert.deepEqual(getDiscussionAttachment(next.files, { fileId: source.id, name: source.name, version: 2 }), source, "普通任务附件保留现有历史版本回退行为");
 });

@@ -5,7 +5,7 @@ import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { Combobox } from "@base-ui/react/combobox";
 import { AtSign, Check, ChevronDown, Plus, Search, UserPlus, UserRoundX, UsersRound } from "lucide-react";
-import { useEffect, useId, useMemo, useRef, useState, type ComponentProps } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { cn } from "@/shared/lib/utils";
 import { selectTriggerClassName } from "@/shared/ui/select";
 import { sortMembersByRecommendation, type TaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecommendations";
@@ -44,6 +44,7 @@ type PersonPickerCommonProps = {
   };
   showTriggerProfilePreview?: boolean;
   triggerLabel?: string;
+  triggerIcon?: ReactNode;
   triggerVariant?: "action" | "add" | "identity" | "member" | "mention" | "select";
   unassignedDescription?: string;
   unassignedLabel?: string;
@@ -71,7 +72,7 @@ export function PersonPicker(props: PersonPickerProps) {
   const ui = useGlobalUi();
   const { locale } = useI18n();
   const d = useDetailCopy();
-  const { allowUnassigned = false, align = "start", ariaLabel, className, disabled = false, emptyLabel = d('noMatchingMembers'), hideSelectedName = false, invitationStatus, memberRecommendations = {}, members, menuLabel = d('selectMember'), onInviteMembers, scopeOption, searchPlaceholder = d('searchMembers'), selfId, selfOptionLabel = d('assignToMe'), showTriggerProfilePreview = true, triggerLabel = d('change'), triggerVariant = "action", unassignedDescription = props.allowInvitations === false ? d('leaveUnassigned') : d('inviteTeammate'), unassignedLabel = d('unassigned') } = props;
+  const { allowUnassigned = false, align = "start", ariaLabel, className, disabled = false, emptyLabel = d('noMatchingMembers'), hideSelectedName = false, invitationStatus, memberRecommendations = {}, members, menuLabel = d('selectMember'), onInviteMembers, scopeOption, searchPlaceholder = d('searchMembers'), selfId, selfOptionLabel = d('assignToMe'), showTriggerProfilePreview = true, triggerLabel = d('change'), triggerIcon, triggerVariant = "action", unassignedDescription = props.allowInvitations === false ? d('leaveUnassigned') : d('inviteTeammate'), unassignedLabel = d('unassigned') } = props;
   const isSelectTrigger = triggerVariant === "select";
   const isMentionTrigger = triggerVariant === "mention";
   const size = props.size ?? (isSelectTrigger ? "default" : "sm");
@@ -199,7 +200,7 @@ export function PersonPicker(props: PersonPickerProps) {
         disabled={disabled}
         ref={triggerRef}
       >
-        {triggerVariant === "mention" ? <AtSign aria-hidden="true" size={16} /> : (triggerVariant === "select") ? (
+        {triggerIcon ?? (triggerVariant === "mention" ? <AtSign aria-hidden="true" size={16} /> : (triggerVariant === "select") ? (
           <>
             {selectedPerson && selectedPerson.id !== scopeOption?.id && <PersonAvatar name={selectedPerson.name} profile={selectedPerson} profilePreviewFocusable={false} showProfilePreview={showTriggerProfilePreview} size="xs" />}
             <span className={cn("person-picker-filter-label min-w-0 flex-1 truncate text-left", triggerVariant === "select" && !selectedPerson && "text-(--ad-ink-tertiary)")}>{selectedPerson ? selectedPerson.id === scopeOption?.id ? selectedPerson.name : mockPersonName(locale, selectedPerson.id, selectedPerson.name) : d('selectMember')}</span>
@@ -213,7 +214,7 @@ export function PersonPicker(props: PersonPickerProps) {
           </>
         ) : triggerVariant === "member" ? <>{selectedPerson?.id === unassignedPersonId
           ? <span className="person-picker-empty-icon grid size-(--ad-control-height-md) place-items-center rounded-full bg-(--ad-surface-subtle) text-(--ad-ink-tertiary)"><UserRoundX aria-hidden="true" size={16} /></span>
-          : <PersonAvatar invitationStatus={invitationStatus} name={selectedPerson?.name ?? d('notSelected')} profile={selectedPerson} profilePreviewFocusable={false} showProfilePreview={showTriggerProfilePreview} size="md" />}{!hideSelectedName && selectedPerson?.id !== unassignedPersonId && <strong className="max-w-(--ad-person-name-max) truncate text-(length:--ad-text-caption) font-semibold"><PersonName name={selectedPerson ? mockPersonName(locale, selectedPerson.id, selectedPerson.name) : d('selectMember')} profile={selectedPerson} /></strong>}</> : triggerVariant === "add" ? <><span className="person-picker-empty-icon grid size-(--ad-control-height-md) place-items-center rounded-full bg-(--ad-surface-subtle) text-(--ad-ink-tertiary)">{canUnassign && isUnassigned ? <UserRoundX aria-hidden="true" size={16} /> : <Plus aria-hidden="true" size={16} />}</span>{!hideSelectedName && !(canUnassign && isUnassigned) && <strong className="text-(length:--ad-text-caption) font-semibold">{d('append')}</strong>}</> : <span>{triggerLabel}</span>}
+          : <PersonAvatar invitationStatus={invitationStatus} name={selectedPerson?.name ?? d('notSelected')} profile={selectedPerson} profilePreviewFocusable={false} showProfilePreview={showTriggerProfilePreview} size="md" />}{!hideSelectedName && selectedPerson?.id !== unassignedPersonId && <strong className="max-w-(--ad-person-name-max) truncate text-(length:--ad-text-caption) font-semibold"><PersonName name={selectedPerson ? mockPersonName(locale, selectedPerson.id, selectedPerson.name) : d('selectMember')} profile={selectedPerson} /></strong>}</> : triggerVariant === "add" ? <><span className="person-picker-empty-icon grid size-(--ad-control-height-md) place-items-center rounded-full bg-(--ad-surface-subtle) text-(--ad-ink-tertiary)">{canUnassign && isUnassigned ? <UserRoundX aria-hidden="true" size={16} /> : <Plus aria-hidden="true" size={16} />}</span>{!hideSelectedName && !(canUnassign && isUnassigned) && <strong className="text-(length:--ad-text-caption) font-semibold">{d('append')}</strong>}</> : <span>{triggerLabel}</span>)}
         {triggerVariant !== "add" && triggerVariant !== "member" && triggerVariant !== "mention" && <Combobox.Icon className="grid size-(--ad-control-icon-sm) shrink-0 place-items-center text-muted-foreground"><ChevronDown aria-hidden="true" size={16} /></Combobox.Icon>}
       </Combobox.Trigger>
 

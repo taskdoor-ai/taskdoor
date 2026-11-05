@@ -11,6 +11,7 @@ import { toast } from "@/shared/ui/toast";
 type Props = {
   renderMark?: ComponentProps<typeof TaskCriteriaFields>["renderMark"];
   renderAction?: ComponentProps<typeof TaskCriteriaFields>["renderAction"];
+  maxVisibleRows?: number;
   criteria: string[];
   label: string;
   disabled?: boolean;
@@ -21,7 +22,7 @@ type Props = {
   onDirtyChange?: (dirty: boolean) => void;
 };
 
-export function TaskCriteriaEditor({ renderMark, renderAction, criteria, label, disabled = false, mode = "saved", variant = "default", onSave, onAiAdjust, onDirtyChange }: Props) {
+export function TaskCriteriaEditor({ maxVisibleRows, renderMark, renderAction, criteria, label, disabled = false, mode = "saved", variant = "default", onSave, onAiAdjust, onDirtyChange }: Props) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const inline = variant === "heading";
@@ -120,7 +121,7 @@ export function TaskCriteriaEditor({ renderMark, renderAction, criteria, label, 
   saveCallback.current = save;
 
   if (inline && editable) return <div aria-busy={saving || undefined} className="task-criteria-editor" data-editing="true" data-variant="heading" onFocusCapture={clearNotice} onCompositionStartCapture={() => { composing.current = true; }} onCompositionEndCapture={() => { composing.current = false; }} ref={panel}>
-    <TaskCriteriaFields renderMark={renderMark ? (index, value) => renderMark(index, value, editable && !dirty && !saving && !stale) : undefined} renderAction={!dirty && !saving && !stale ? renderAction : undefined} idPrefix={inputId} label={`${label}: ${d("criteria")}`} onChange={next => {
+    <TaskCriteriaFields maxVisibleRows={maxVisibleRows} renderMark={renderMark ? (index, value) => renderMark(index, value, editable && !dirty && !saving && !stale) : undefined} renderAction={!dirty && !saving && !stale ? renderAction : undefined} idPrefix={inputId} label={`${label}: ${d("criteria")}`} onChange={next => {
       valuesRef.current = next; setValues(next); setError(""); clearNotice();
     }} onCommit={() => { void save(); }} showInitialEmptyRow={false} values={values} />
     {stale && <div className="task-criteria-error" role="alert">{d('criteriaStale')}<Button onClick={reload} size="sm" type="button" variant="ghost">{d('reloadCriteria')}</Button></div>}
@@ -137,7 +138,7 @@ export function TaskCriteriaEditor({ renderMark, renderAction, criteria, label, 
       if (event.key === "Escape" && !event.nativeEvent.isComposing && !savingRef.current) { event.preventDefault(); event.stopPropagation(); close(); }
     }}>
       {variant !== "heading" && <div className="task-criteria-editor-heading"><strong>{d('criteria')}</strong><span>{d('criteriaGuidance')}</span></div>}
-      <TaskCriteriaFields renderMark={renderMark ? (index, value) => renderMark(index, value, editable && !dirty && !saving && !stale) : undefined} renderAction={!dirty && !saving && !stale ? renderAction : undefined} disabled={saving} idPrefix={inputId} label={`${label}: ${d("criteria")}`} onChange={next => {
+      <TaskCriteriaFields maxVisibleRows={maxVisibleRows} renderMark={renderMark ? (index, value) => renderMark(index, value, editable && !dirty && !saving && !stale) : undefined} renderAction={!dirty && !saving && !stale ? renderAction : undefined} disabled={saving} idPrefix={inputId} label={`${label}: ${d("criteria")}`} onChange={next => {
         if (savingRef.current) return;
         setValues(next); setError("");
       }} values={values} />

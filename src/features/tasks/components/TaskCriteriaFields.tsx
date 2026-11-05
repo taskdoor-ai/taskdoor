@@ -8,6 +8,7 @@ import { TaskCreationEditableText } from "@/features/tasks/components/TaskCreati
 type Props = {
   renderMark?: (index: number, value: string, canConfirm?: boolean) => ReactNode;
   renderAction?: (index: number, value: string) => ReactNode;
+  maxVisibleRows?: number;
   values: string[];
   onChange: (values: string[]) => void;
   onCommit?: () => void;
@@ -18,7 +19,7 @@ type Props = {
   showInitialEmptyRow?: boolean;
 };
 
-export function TaskCriteriaFields({ renderMark, renderAction, values, onChange, onCommit, label, disabled = false, idPrefix, className = "", showInitialEmptyRow = true }: Props) {
+export function TaskCriteriaFields({ maxVisibleRows, renderMark, renderAction, values, onChange, onCommit, label, disabled = false, idPrefix, className = "", showInitialEmptyRow = true }: Props) {
   const d = useDetailCopy();
   const mock = useMockText();
   const generatedId = useId();
@@ -65,7 +66,8 @@ export function TaskCriteriaFields({ renderMark, renderAction, values, onChange,
   const focusRow = (index: number) => {
     cancelAnimationFrame(focusFrame.current);
     focusFrame.current = requestAnimationFrame(() => {
-      root.current?.querySelectorAll("textarea")[index]?.focus();
+      const inputs = root.current?.querySelectorAll("textarea");
+      inputs?.[Math.min(index, inputs.length - 1)]?.focus();
     });
   };
 
@@ -85,7 +87,7 @@ export function TaskCriteriaFields({ renderMark, renderAction, values, onChange,
     pointerAction.current = false;
     if (pendingCommit.current) scheduleCommit();
   }} ref={root} role="group">
-    {displayedValues.map((value, index) => <div className="task-criteria-field-row" key={index}>
+    {displayedValues.slice(0, maxVisibleRows).map((value, index) => <div className="task-criteria-field-row" key={index}>
       {renderMark ? renderMark(index, value) : <span aria-hidden="true" className="task-criteria-field-mark">{index + 1}</span>}
       <TaskCreationEditableText
         className="task-criteria-field-input"
@@ -108,10 +110,10 @@ export function TaskCriteriaFields({ renderMark, renderAction, values, onChange,
         focusRow(Math.min(index, next.length - 1));
       }} type="button"><X aria-hidden="true" size={13} /></button>}</div>
     </div>)}
-    <button aria-label={`${d("add")} ${label}`} className="task-criteria-field-add" disabled={disabled} onClick={() => {
+    {maxVisibleRows === undefined && <button aria-label={`${d("add")} ${label}`} className="task-criteria-field-add" disabled={disabled} onClick={() => {
       if (disabled) return;
       onChange([...displayedValues, ""]);
       focusRow(displayedValues.length);
-    }} type="button"><Plus aria-hidden="true" size={13} />{d('append')}</button>
+    }} type="button"><Plus aria-hidden="true" size={13} />{d('append')}</button>}
   </div>;
 }

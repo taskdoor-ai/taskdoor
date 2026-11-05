@@ -1,9 +1,10 @@
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
 import { MessageSquare } from "lucide-react";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { TaskFileNode } from "@/shared/model/task-model";
+import React, { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import type { TaskFileNode, TaskNode } from "@/shared/model/task-model";
 import type { CollaborationMessage, DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import { buildDiscussionFeed } from "@/features/tasks/discussion/lib/discussion-feed";
 import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
@@ -32,16 +33,49 @@ type TaskDiscussionProps = {
   onPost: (draft: DiscussionDraft, replyToActivityId?: string) => void | Promise<void>;
   onEdit?: (message: CollaborationMessage, draft: DiscussionDraft) => void | Promise<void>;
   onDelete?: (message: CollaborationMessage) => void;
+  onCreateSubtask?: (message: CollaborationMessage, trigger: HTMLElement) => void;
+  creatingSubtask?: boolean;
+  retainedSubtaskSources?: NonNullable<TaskNode["sourceDiscussion"]>[];
+  renderAfterMessage?: (message: CollaborationMessage) => ReactNode;
   people: string[];
 };
 
 type ComposerMode = { kind: "reply"; id: string } | null;
 type ScrollRequest = { kind: "locate"; id: string } | { kind: "latest" } | { kind: "restore"; id: string; top: number };
 
-export function TaskDiscussion({ active = true, readable = true, readRequestSequence, onRead, activities, attentionTarget, currentUser, currentUserName, files, draftKey = "task-discussion", draftInsertion, onConnectAi, onOpenFile, onPreviewAttachment, onPost, onDelete, people }: TaskDiscussionProps) {
+export function TaskDiscussion({ active = true, readable = true, readRequestSequence, onRead, activities, attentionTarget, currentUser, currentUserName, files, draftKey = "task-discussion", draftInsertion, onConnectAi, onOpenFile, onPreviewAttachment, onPost, onDelete, onCreateSubtask, creatingSubtask = false, retainedSubtaskSources, renderAfterMessage, people }: TaskDiscussionProps) {
   const d = useDetailCopy();
   const ui = useGlobalUi();
-  const feed = useMemo(() => buildDiscussionFeed(activities), [activities]);
+  const { locale } = useI18n();
+  const publishedFeed = useMemo(() => buildDiscussionFeed(activities), [activities]);
+  const retainedMessageSnapshots = useRef(new Map<string, CollaborationMessage>());
+  const { feed, unavailableSubtaskSources } = useMemo(() => {
+    const unavailableSubtaskSources = new Set<string>();
+    const retainedIds = new Set(retainedSubtaskSources?.map(source => source.messageId));
+    for (const id of retainedMessageSnapshots.current.keys()) {
+      if (!retainedIds.has(id)) retainedMessageSnapshots.current.delete(id);
+    }
+    if (!retainedSubtaskSources?.length) return { feed: publishedFeed, unavailableSubtaskSources };
+
+    const messages = [...activities];
+    for (const source of retainedSubtaskSources) {
+      const index = messages.findIndex(message => message.id === source.messageId);
+      const current = index >= 0 ? messages[index] : undefined;
+      const snapshot = retainedMessageSnapshots.current.get(source.messageId) ?? current ?? {
+        id: source.messageId, author: source.author, type: "member-post" as const, message: source.body, time: "",
+      };
+      retainedMessageSnapshots.current.set(source.messageId, snapshot);
+      if (current && !current.deletedAt && ["member-post", "member-reply"].includes(current.type) && current.message === source.body && current.author === source.author) continue;
+      unavailableSubtaskSources.add(source.messageId);
+      const retained: CollaborationMessage = {
+        ...snapshot, id: source.messageId, author: source.author, type: snapshot.type === "member-reply" ? "member-reply" : "member-post",
+        message: "", file: undefined, attachmentRefs: [], deletedAt: undefined,
+      };
+      if (index >= 0) messages[index] = retained;
+      else messages.push(retained);
+    }
+    return { feed: buildDiscussionFeed(messages), unavailableSubtaskSources };
+  }, [activities, publishedFeed, retainedSubtaskSources]);
   const records = useMemo(() => {
     const messages = new Map<string, CollaborationMessage>();
     for (const message of activities) {
@@ -68,7 +102,7 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
   const insertionIdRef = useRef<string | undefined>(undefined);
   const readCallbackRef = useRef(onRead);
   readCallbackRef.current = onRead;
-  const readActivityIds = feed.messages.map(message => message.id);
+  const readActivityIds = publishedFeed.messages.map(message => message.id);
   const readActivitySignature = JSON.stringify(readActivityIds);
   const readActivityIdsRef = useRef(readActivityIds);
   readActivityIdsRef.current = readActivityIds;
@@ -185,11 +219,18 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
     return () => window.cancelAnimationFrame(frame);
   }, [scrollRequest, feed.messages.length, reportRead]);
   const startReply = (message: CollaborationMessage) => {
-    if (submittingRef.current) return;
+    if (submittingRef.current || creatingSubtask) return;
     const collapse = mode?.id === message.id;
     returnReplyFocusRef.current = collapse ? message.id : null;
     setMode(collapse ? null : { kind: "reply", id: message.id });
     setError("");
+  };
+  const startSubtask = (message: CollaborationMessage, trigger: HTMLElement) => {
+    if (!readable || !onCreateSubtask || creatingSubtask || submittingRef.current || unavailableSubtaskSources.has(message.id)) return;
+    returnReplyFocusRef.current = null;
+    setMode(null);
+    setError("");
+    onCreateSubtask(message, trigger);
   };
   const cancelContext = () => {
     if (submittingRef.current) return;
@@ -226,10 +267,37 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
     <div className="task-discussion-scroll" ref={scrollRef}>
       {error && <p className="task-discussion-feed-error" role="alert">{error}</p>}
       {feed.messages.length === 0 ? <div className="task-record-empty"><MessageSquare aria-hidden="true" size={22} /><strong>{d('noDiscussion')}</strong><p>{d('discussionHint')}</p></div>
-        : <ol aria-label={d('taskDiscussion')} className="task-discussion-feed-list">{feed.messages.map(message => <TaskDiscussionMessage currentUser={currentUser} currentUserName={currentUserName} files={files} highlighted={message.id === highlightedActivityId} key={message.id} message={message} now={now} onConnectAi={onConnectAi} onDelete={onDelete ? item => { try { onDelete(item); setError(""); } catch { setError(d('deleteFailed')); } } : undefined} onLocate={locate} onOpenFile={onOpenFile} onReply={startReply} parent={message.replyToActivityId ? records.get(message.replyToActivityId) : undefined} replyDisabled={submitting} replyExpanded={mode?.id === message.id}>{mode?.id === message.id ? replyComposer : undefined}</TaskDiscussionMessage>)}</ol>}
-      {mode && !targetAvailable && replyComposer}
+        : <ol aria-label={d('taskDiscussion')} className="task-discussion-feed-list">{feed.messages.map(message => {
+          const sourceUnavailable = unavailableSubtaskSources.has(message.id);
+          return <TaskDiscussionMessage
+            currentUser={currentUser}
+            currentUserName={currentUserName}
+            files={files}
+            highlighted={message.id === highlightedActivityId}
+            key={message.id}
+            message={message}
+            now={now}
+            onConnectAi={sourceUnavailable ? undefined : onConnectAi}
+            onDelete={!sourceUnavailable && onDelete ? item => {
+              try { onDelete(item); setError(""); } catch { setError(d('deleteFailed')); }
+            } : undefined}
+            onCreateSubtask={!sourceUnavailable && readable && onCreateSubtask ? startSubtask : undefined}
+            subtaskCreateDisabled={creatingSubtask || submitting}
+            onLocate={locate}
+            onOpenFile={onOpenFile}
+            onReply={startReply}
+            parent={message.replyToActivityId ? records.get(message.replyToActivityId) : undefined}
+            replyDisabled={submitting || creatingSubtask || sourceUnavailable}
+            replyExpanded={!creatingSubtask && mode?.id === message.id}
+          >
+            {sourceUnavailable && <p className="task-discussion-feed-error" role="alert">{locale === "en" ? "The source discussion changed or was deleted. Your subtask draft has been kept. Check the latest discussion." : "来源讨论已变更或删除，子任务草稿已保留，请核对最新讨论。"}</p>}
+            {!creatingSubtask && mode?.id === message.id ? replyComposer : undefined}
+            {renderAfterMessage?.(message)}
+          </TaskDiscussionMessage>;
+        })}</ol>}
+      {!creatingSubtask && mode && !targetAvailable && replyComposer}
     </div>
-    {!mode && <div className="task-discussion-compose" ref={composerRef}>
+    {!mode && !creatingSubtask && <div className="task-discussion-compose" ref={composerRef}>
       <PersonAvatar name={currentUserName ?? currentUser} personId={currentUser} size="sm" />
       <div className="task-discussion-compose-content">
         <DiscussionComposer actionLabel={d('post')} allowQuote={false} draftInsertion={draftInsertion} draftKey={composerKey} files={files} onPreviewAttachment={onPreviewAttachment} onSubmit={submit} people={people} placeholder={d('composerHint')} />
