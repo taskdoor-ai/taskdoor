@@ -8,7 +8,7 @@ import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connecti
 import { ChevronDown, Quote, X } from "lucide-react";
 import React, { useEffect, useId, useRef, useState } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import type { CollaborationMessage, DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
+import { ALL_TASK_MEMBERS_MENTION_ID, type CollaborationMessage, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
 import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
 import { DiscussionMarkdown } from "@/features/tasks/discussion/components/DiscussionMarkdown";
@@ -130,6 +130,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
       const quoted = message.quote ? allMessages.find(item => item.id === message.quote!.messageId) : undefined;
       const refs = message.attachmentRefs ?? [];
       const attachments = refs.map(ref => files.find(file => file.id === ref.fileId && !file.archived)).filter((file): file is TaskFileNode => Boolean(file));
+      const draftMentions = [...(message.mentionedPrincipalIds ?? []), ...(message.mentionsAllTaskMembers ? [ALL_TASK_MEMBERS_MENTION_ID] : [])];
       const timestamp = messageTimestamp(message, locale, now);
       const readingKey = JSON.stringify([message.id, message.updatedAt, message.message, locale]);
       const candidate = mock.discussionTranslation(message.message);
@@ -144,11 +145,11 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
           </span>
             {onConnectAi && (!isReply || compact) && <AiConnectionButton compact contextLabel={ui("{0}的讨论", {0: message.author})} onConnect={(trigger, shortcut) => onConnectAi({ kind: message.replyToActivityId || message.type === "member-reply" ? "reply" : "discussion", activityId: message.id, ...(message.fileThreadId ? { fileThreadId: message.fileThreadId } : {}) }, trigger, shortcut)} />}
           </header>
-          {editing === message.id ? <DiscussionComposer actionLabel={d('save')} allowQuote={allowQuote} autoFocus compact draftKey={`${draftKey}:edit:${message.id}`} files={files} initialValue={{ body: message.message, mentions: message.mentionedPrincipalIds ?? [], attachments, quote: allowQuote && !quoted?.deletedAt ? message.quote : undefined }} onCancel={() => setEditing(null)} onSubmit={async draft => { await onEdit?.(message, { ...draft, quote: allowQuote ? draft.quote : undefined }); setEditing(null); }} people={people} /> : <>
+          {editing === message.id ? <DiscussionComposer actionLabel={d('save')} allowQuote={allowQuote} autoFocus compact draftKey={`${draftKey}:edit:${message.id}`} files={files} initialValue={{ body: message.message, mentions: draftMentions, attachments, quote: allowQuote && !quoted?.deletedAt ? message.quote : undefined }} onCancel={() => setEditing(null)} onSubmit={async draft => { await onEdit?.(message, { ...draft, quote: allowQuote ? draft.quote : undefined }); setEditing(null); }} people={people} /> : <>
             {allowQuote && message.quote && message.quote.messageId !== message.replyToActivityId && (quoted && !quoted.deletedAt
               ? <button className="discussion-inline-quote" onClick={() => jumpTo(quoted.id)} type="button"><PersonName name={quoted.author} personId={quoted.author} />：{message.quote.text}</button>
               : <div className="discussion-inline-quote is-unavailable">{quoted?.deletedAt ? d('quoteDeleted') : d('quoteUnavailable')}</div>)}
-            <div className="task-discussion-message"><DiscussionMarkdown text={reading.text} mentionedPrincipalIds={message.mentionedPrincipalIds} /></div>
+            <div className="task-discussion-message"><DiscussionMarkdown text={reading.text} mentionedPrincipalIds={message.mentionedPrincipalIds} mentionsAllTaskMembers={message.mentionsAllTaskMembers} /></div>
             <DiscussionAttachmentGallery attachmentRefs={refs} files={files} legacyFileName={message.file} onOpenFile={onOpenFile} variant="thread" />
           </>}
           <div className="discussion-message-footer">

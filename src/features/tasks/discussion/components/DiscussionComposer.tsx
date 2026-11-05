@@ -1,5 +1,5 @@
 import { useGlobalUi } from "@/shared/i18n/global-ui";
-import { useDetailCopy } from "@/shared/i18n/detail-messages";
+import { detailEn, detailZh, useDetailCopy } from "@/shared/i18n/detail-messages";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer, type InitialConfigType } from "@lexical/react/LexicalComposer";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -12,7 +12,7 @@ import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getNodeBy
 import { FolderOpen, LoaderCircle, Paperclip, RotateCcw, Send, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type DragEvent, type ReactNode } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import { getTaskFiles, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
+import { ALL_TASK_MEMBERS_MENTION_ID, getTaskFiles, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import { DISCUSSION_UPLOAD_MAX_FILES, isDiscussionImage, prepareDiscussionUpload } from "@/features/tasks/files/lib/discussion-uploads";
 import { TASK_FILE_UPLOAD_ACCEPT, validateTaskFileUploads } from "@/features/tasks/files/lib/task-file-capabilities";
 import { usePersonOptions } from "@/shared/ui/PersonDirectory";
@@ -73,8 +73,11 @@ function $readEditorDraft(): Pick<DiscussionDraft, "body" | "mentions"> {
 
 function $initializeDraft(draft: DiscussionDraft, members: PersonOption[]) {
   const paragraph = $createParagraphNode();
-  const mentionedPeople = members.filter(person => draft.mentions.includes(person.id)).sort((a, b) => b.name.length - a.name.length);
-  // Rehydrate only explicit mention IDs supplied by an existing draft, never arbitrary pasted text.
+  const groupMentions = draft.mentions.includes(ALL_TASK_MEMBERS_MENTION_ID)
+    ? [detailZh.mentionAllTaskMembers, detailEn.mentionAllTaskMembers].map(name => ({ id: ALL_TASK_MEMBERS_MENTION_ID, name }))
+    : [];
+  const mentionedPeople = [...groupMentions, ...members.filter(person => draft.mentions.includes(person.id))].sort((a, b) => b.name.length - a.name.length);
+  // Rehydrate only explicit mention IDs supplied by an existing draft.
   for (const [lineIndex, line] of draft.body.split("\n").entries()) {
     if (lineIndex) paragraph.append($createLineBreakNode());
     let remaining = line;
@@ -156,6 +159,7 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const members = usePersonOptions(people);
+  const allTaskMembersOption = { id: ALL_TASK_MEMBERS_MENTION_ID, label: d("mentionAllTaskMembers") };
   const [session, setSession] = useState<ComposerSession>(() => (draftKey && draftSessions.get(draftKey)) || createSession(initialValue));
   const sessionRef = useRef(session);
   const mountedRef = useRef(true);
@@ -239,12 +243,12 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
     });
   };
   const choosePerson = (personId: string) => {
-    const person = members.find(member => member.id === personId);
-    if (!person || unavailable) return;
+    const name = personId === allTaskMembersOption.id ? allTaskMembersOption.label : members.find(member => member.id === personId)?.name;
+    if (!name || unavailable) return;
     editorRef.current?.update(() => {
       const selection = $restoreSelection(selectionRef.current);
       const spacer = $createTextNode(" ");
-      selection.insertNodes([$createMentionNode(person.id, person.name), spacer]);
+      selection.insertNodes([$createMentionNode(personId, name), spacer]);
       selectionRef.current = spacer.selectEnd().clone();
     }, { discrete: true });
   };
@@ -368,7 +372,7 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
     })}</ul>}
     <footer className="discussion-composer-footer">
       <div className="discussion-composer-tools">
-        <PersonPicker ariaLabel={d('mention')} className="discussion-composer-person-trigger" disabled={unavailable} finalFocus={restoreEditorFocus} members={members} menuLabel={d('mention')} onChange={choosePerson} onOpenChange={(open, details) => { if (open) rememberSelection(); returnFocusRef.current = details?.reason !== "outside-press" && details?.reason !== "focus-out"; pickerOpenRef.current = open; setPickerOpen(open); }} open={pickerOpen} popupAnchor={composerRef} triggerVariant="mention" value="" />
+        <PersonPicker ariaLabel={d('mention')} className="discussion-composer-person-trigger" disabled={unavailable} finalFocus={restoreEditorFocus} members={members} menuLabel={d('mention')} onChange={choosePerson} onOpenChange={(open, details) => { if (open) rememberSelection(); returnFocusRef.current = details?.reason !== "outside-press" && details?.reason !== "focus-out"; pickerOpenRef.current = open; setPickerOpen(open); }} open={pickerOpen} popupAnchor={composerRef} scopeOption={allTaskMembersOption} triggerVariant="mention" value="" />
         <DropdownMenu onOpenChange={open => { if (open) attachmentSelectedRef.current = false; }}>
           <DropdownMenuTrigger aria-label={d('addAttachment')} className="discussion-composer-attachment-source" disabled={unavailable} ref={filePickerTriggerRef} title={d('addAttachment')} type="button"><Paperclip aria-hidden="true" size={16} /><span>{d('attachments')}</span></DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="discussion-composer-attachment-menu" finalFocus={() => { if (attachmentSelectedRef.current) { attachmentSelectedRef.current = false; returnFocusRef.current = true; return restoreEditorFocus(); } return filePickerTriggerRef.current; }} side="top">

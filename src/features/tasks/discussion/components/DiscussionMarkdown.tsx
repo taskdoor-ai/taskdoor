@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { ALL_TASK_MEMBERS_MENTION_ID } from "@/features/tasks/lib/task-collaboration";
+import { detailEn, detailZh } from "@/shared/i18n/detail-messages";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { PersonName } from "@/shared/ui/PersonAvatar";
 import { usePersonOptions } from "@/shared/ui/PersonDirectory";
@@ -39,19 +41,22 @@ const components: Components = {
   span: ({ node, children }) => {
     const personId = node?.properties["data-discussion-person"];
     const name = node?.properties["data-discussion-name"];
-    return typeof personId === "string" && typeof name === "string"
-      ? <span className="discussion-saved-mention">@<PersonName name={name} personId={personId} /></span>
-      : <span>{children}</span>;
+    if (typeof personId !== "string" || typeof name !== "string") return <span>{children}</span>;
+    return <span className="discussion-saved-mention">@{personId === ALL_TASK_MEMBERS_MENTION_ID ? name : <PersonName name={name} personId={personId} />}</span>;
   },
 };
 
-export function DiscussionMarkdown({ text, mentionedPrincipalIds = [] }: { text: string; mentionedPrincipalIds?: string[] }) {
+export function DiscussionMarkdown({ text, mentionedPrincipalIds = [], mentionsAllTaskMembers = false }: { text: string; mentionedPrincipalIds?: string[]; mentionsAllTaskMembers?: boolean }) {
   const ui = useGlobalUi();
   const people = usePersonOptions(mentionedPrincipalIds);
   const mentions = useMemo(() => {
     const names = new Map(people.flatMap(person => [[`@${person.name}`, person.id], [`@${person.id}`, person.id]]));
+    if (mentionsAllTaskMembers) {
+      names.set(`@${detailZh.mentionAllTaskMembers}`, ALL_TASK_MEMBERS_MENTION_ID);
+      names.set(`@${detailEn.mentionAllTaskMembers}`, ALL_TASK_MEMBERS_MENTION_ID);
+    }
     const escaped = [...names.keys()].sort((a, b) => b.length - a.length).map(name => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
     return { names, pattern: escaped.length ? new RegExp(`(${escaped.join("|")})`, "g") : null };
-  }, [people]);
+  }, [people, mentionsAllTaskMembers]);
   return <div className="discussion-markdown"><ReactMarkdown components={{ ...components, table: ({ children }) => <div className="discussion-markdown-table" role="region" aria-label={ui("Markdown 表格")} tabIndex={0}><table>{children}</table></div> }} remarkPlugins={[remarkGfm, [discussionProsePlugin, mentions]]}>{text}</ReactMarkdown></div>;
 }

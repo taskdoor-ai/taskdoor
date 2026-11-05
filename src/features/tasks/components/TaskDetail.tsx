@@ -56,7 +56,7 @@ import { toast } from "@/shared/ui/toast";
 import { Input, Textarea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { TaskFileExplorer } from "@/features/tasks/files/components/TaskFileExplorer";
-import { getDiscussionAttachment, getTaskFiles, deleteCollaborationMessage, mergeCollaborationMessages, postCollaborationMessage, replaceCollaborationFiles, type CollaborationMessage, type CollaborationSnapshot, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
+import { ALL_TASK_MEMBERS_MENTION_ID, getDiscussionAttachment, getTaskFiles, deleteCollaborationMessage, mergeCollaborationMessages, postCollaborationMessage, replaceCollaborationFiles, type CollaborationMessage, type CollaborationSnapshot, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import { useTaskCollaboration } from "@/features/tasks/lib/useTaskCollaboration";
 import "@/features/tasks/styles/task-records.css";
 import "@/features/tasks/styles/discussion-messages.css";
@@ -440,7 +440,9 @@ export function TaskDetail({
       id: crypto.randomUUID(), author: currentUserId, createdAt: now.toISOString(), message: draft.body.trim(),
       time: now.toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }),
       type: replyToActivityId ? "member-reply" : "member-post", replyToActivityId,
-      mentionedPrincipalIds: draft.mentions, quote: draft.quote,
+      mentionedPrincipalIds: draft.mentions.filter(id => id !== ALL_TASK_MEMBERS_MENTION_ID),
+      ...(draft.mentions.includes(ALL_TASK_MEMBERS_MENTION_ID) ? { mentionsAllTaskMembers: true } : {}),
+      quote: draft.quote,
     };
     pendingDiscussionRef.current = { signature, message };
     collaboration.commit(snapshot => postCollaborationMessage(snapshot, { message, attachments: draft.attachments, contextMessages: allMessages, visiblePeople: members.filter(member => member.membershipStatus !== "invited") }), onDiscussionSave ? (current, next) => onDiscussionSave(current, next, message) : undefined);

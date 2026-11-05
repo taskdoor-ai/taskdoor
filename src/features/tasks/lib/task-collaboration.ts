@@ -9,6 +9,7 @@ export type MessageQuote = { messageId: string; text: string; author: string };
 export type CollaborationMessage = TaskActivityMock & {
   attachmentRefs?: AttachmentRef[];
   mentionedPrincipalIds?: string[];
+  mentionsAllTaskMembers?: boolean;
   fileThreadId?: string;
   updatedAt?: string;
   deletedAt?: string;
@@ -28,6 +29,7 @@ export type FileDiscussionThread = {
   resolvedAt?: string;
   resolvedBy?: string;
 };
+export const ALL_TASK_MEMBERS_MENTION_ID = "__agentdoor_all_task_members__";
 export type DiscussionDraft = { body: string; mentions: string[]; attachments: TaskFileNode[]; quote?: MessageQuote };
 
 /** Task file views keep their existing archive handling, without discussion-only material. */
@@ -127,6 +129,10 @@ function parseMessage(value: unknown): CollaborationMessage {
   if (value.mentionedPrincipalIds !== undefined) {
     requireValid(isStrings(value.mentionedPrincipalIds) && value.mentionedPrincipalIds.every(isId), "提及成员无效");
     result.mentionedPrincipalIds = [...new Set(value.mentionedPrincipalIds)];
+  }
+  if (value.mentionsAllTaskMembers !== undefined) {
+    requireValid(typeof value.mentionsAllTaskMembers === "boolean", "全体成员提及无效");
+    result.mentionsAllTaskMembers = value.mentionsAllTaskMembers;
   }
   if (value.fileThreadId !== undefined) {
     requireValid(isId(value.fileThreadId), "文件讨论标识无效");
@@ -270,6 +276,9 @@ function requireDiscussion(message: CollaborationMessage): void {
 function requireBody(message: CollaborationMessage): void {
   if (!message.message.trim() && !message.attachmentRefs?.length) throw new Error("请填写消息或添加附件。");
 }
+export function createDiscussionNotification(message: CollaborationMessage, recipientId: string, reason: CollaborationNotification["reason"]): CollaborationNotification {
+  return { id: `local:${encodeURIComponent(message.id)}:${encodeURIComponent(recipientId)}`, recipientId, messageId: message.id, actor: message.author, reason, createdAt: message.createdAt ?? new Date().toISOString() };
+}
 function makeNotifications(context: readonly CollaborationMessage[], message: CollaborationMessage, people: readonly CollaborationPerson[]): CollaborationNotification[] {
   const byId = new Map(people.map(person => [person.id, person]));
   const ownIds = new Set(people.filter(person => person.name === message.author || person.id === message.author).map(person => person.id));
@@ -283,7 +292,7 @@ function makeNotifications(context: readonly CollaborationMessage[], message: Co
   for (const id of message.mentionedPrincipalIds ?? []) {
     if (byId.has(id) && !ownIds.has(id) && !recipients.has(id)) recipients.set(id, "mention");
   }
-  return [...recipients].map(([recipientId, reason]) => ({ id: `local:${encodeURIComponent(message.id)}:${encodeURIComponent(recipientId)}`, recipientId, messageId: message.id, actor: message.author, reason, createdAt: message.createdAt ?? new Date().toISOString() }));
+  return [...recipients].map(([recipientId, reason]) => createDiscussionNotification(message, recipientId, reason));
 }
 function discussionUploadFolder(files: TaskFileNode[], seed?: TaskFileNode, createdById?: string): TaskFileNode {
   const rootFolders = files.filter(file => file.kind === "folder" && file.parentId === null && !file.archived);
