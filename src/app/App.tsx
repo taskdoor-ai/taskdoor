@@ -28,6 +28,7 @@ import type { CreationExitController } from "@/features/tasks/lib/task-creation-
 import type { TaskCreationParentContext } from "@/features/tasks/components/TaskCreationPage";
 import type { PrimarySection } from "@/app/workspace/components/WorkspaceSidebar";
 import { WorkspaceNavigation } from "@/app/workspace/components/WorkspaceNavigation";
+import { readTaskDiscussionNotifications } from "@/app/workspace/lib/discussion-notifications";
 import { PersonDirectoryProvider } from "@/shared/ui/PersonDirectory";
 import { MemberInvitationProvider, type MemberInvitationHandle } from "@/features/members/components/MemberInvitations";
 import "@/features/members/styles/member-invitations.css";
@@ -39,7 +40,7 @@ import { TaskDetail, type TaskAttentionTarget } from "@/features/tasks/component
 import { generateSubtaskFromPrompt } from "@/ai/subtask-creation";
 import { COLLABORATION_CHANGED, projectTaskCollaboration } from "@/features/tasks/lib/useTaskCollaboration";
 import { publishTaskDiscussion } from "@/features/tasks/lib/task-mention-publishing";
-import { loadCollaboration, mergeCollaborationMessages, type CollaborationMessage, type CollaborationSnapshot } from "@/features/tasks/lib/task-collaboration";
+import { loadCollaboration, mergeCollaborationMessages, TASK_COLLABORATION_STORAGE_PREFIX, type CollaborationMessage, type CollaborationSnapshot } from "@/features/tasks/lib/task-collaboration";
 import { getDirectChildTaskCompletion, toTaskRelationSummary } from "@/features/tasks/lib/task-relation-projection";
 import type { TaskDateRange } from "@/features/tasks/components/TaskDateRangePicker";
 import { taskIconOptions, taskIconToneOptions } from "@/features/tasks/components/TaskIcon";
@@ -183,11 +184,19 @@ function App() {
   const [workspaceSession] = useState(readWorkspaceSession);
   const currentUserId = workspaceSession?.userId ?? "周岚";
   const showDemoData = !workspaceSession || workspaceSession.email === mockWorkspaceEmail;
-  const [, refreshCollaboration] = useState(0);
+  const [collaborationRevision, refreshCollaboration] = useState(0);
   useEffect(() => {
     const refresh = () => refreshCollaboration(value => value + 1);
+    const sync = ({ key, storageArea }: StorageEvent) => {
+      if (storageArea === localStorage && (key === null || key.startsWith(TASK_COLLABORATION_STORAGE_PREFIX)
+        || key === workspaceNodesStorageKey || key === "agentdoor-created-tasks" || key === "agentdoor-created-task")) refresh();
+    };
     window.addEventListener(COLLABORATION_CHANGED, refresh);
-    return () => window.removeEventListener(COLLABORATION_CHANGED, refresh);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(COLLABORATION_CHANGED, refresh);
+      window.removeEventListener("storage", sync);
+    };
   }, []);
   const [taskStorageRecoveryError, setTaskStorageRecoveryError] = useState("");
   const [theme, setTheme] = useState<Theme>(() => (loadStoredText("agentdoor-theme") as Theme) || "light");
@@ -307,6 +316,25 @@ function App() {
     return () => { window.removeEventListener("storage", reload); window.removeEventListener(personalCenterChangedEvent, reload); };
   }, []);
   const teamWorkspaceNodes = useMemo(() => getTeamWorkspaceNodes(activeTeamId, workspaceNodes), [activeTeamId, workspaceNodes]);
+  const readableDiscussionNotificationTasks = () => {
+    const team = loadPersonalCenterState().teams.find(item => item.id === activeTeamId);
+    if (!team || !activeMembership(team, currentUserId)) return [];
+    const stored = loadStoredValue<unknown>(workspaceNodesStorageKey, workspaceNodesRef.current);
+    if (!Array.isArray(stored)) return [];
+    const storedTasks = new Map(normalizeWorkspaceNodes(stored).filter((node): node is TaskNode => node.kind === "task" && node.teamId === activeTeamId).map(task => [task.id, task]));
+    const storedLegacyTasks = loadLegacyTaskSnapshots();
+    const canRead = (task: TaskNode, legacyTasks: typeof legacyTaskSnapshots) => {
+      const participants = legacyTasks[task.id]?.participants ?? task.participantIds
+        ?? (taskDetailMocks[task.id as TaskDetailId] ?? getTeamTaskDetailFixture(task))?.participants ?? [];
+      return task.ownerId === currentUserId || participants.includes(currentUserId);
+    };
+    return teamWorkspaceNodes.filter(node => {
+      const storedTask = storedTasks.get(node.id);
+      return node.kind === "task" && storedTask && canRead(node, legacyTaskSnapshots) && canRead(storedTask, storedLegacyTasks);
+    });
+  };
+  const discussionNotifications = useMemo(() => readTaskDiscussionNotifications(localStorage, activeTeamId, currentUserId, readableDiscussionNotificationTasks(), collaborationMembers, locale),
+    [activeTeamId, currentUserId, teamWorkspaceNodes, legacyTaskSnapshots, collaborationMembers, collaborationRevision, locale]);
   const [activeSection, setActiveSection] = useState<PrimarySection>("tasks");
   useEffect(() => () => { subtaskCreationAttempt.current?.abort(); }, [activeTeamId, activeTeamTimeZone, activeSection, currentUserId, selectedTaskId]);
   const [globalAiConnectionOpen, setGlobalAiConnectionOpen] = useState(false);
@@ -1308,11 +1336,14 @@ function App() {
         onConnectAi={() => setGlobalAiConnectionOpen(true)}
         onSignOut={() => requestCreationExit(signOutWorkspace)}
         showDemoNotifications={showDemoData}
+        discussionNotifications={discussionNotifications}
         discussionReadReceipt={discussionReadReceipt}
         onDiscussionReadHandled={finishDiscussionRead}
         onOpenNotificationTask={(taskId, target) => {
           requestCreationExit(() => {
-            if (!workspaceNodesRef.current.some(node => node.kind === "task" && node.id === taskId && (node.teamId ?? "creator-commerce") === activeTeamId)) {
+            const isLocalMention = discussionNotifications.some(item => item.task.id === taskId && item.target.activityId === target?.activityId);
+            if (!workspaceNodesRef.current.some(node => node.kind === "task" && node.id === taskId && (node.teamId ?? "creator-commerce") === activeTeamId)
+              || (isLocalMention && !readableDiscussionNotificationTasks().some(node => node.id === taskId))) {
               toast.error(locale === "en" ? "The notification source is unavailable." : "通知来源不可访问。");
               return;
             }

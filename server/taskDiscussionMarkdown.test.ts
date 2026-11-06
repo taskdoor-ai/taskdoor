@@ -16,13 +16,13 @@ const { TaskDiscussionMessage } = await import("../src/features/tasks/discussion
 const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
 const { PersonDirectoryProvider } = await import("../src/shared/ui/PersonDirectory.tsx");
 
-function renderMessage(body: string, mentions: string[] = [], reply = false) {
+function renderMessage(body: string, mentions: string[] = [], reply = false, mentionsAllTaskMembers = false) {
   return renderToStaticMarkup(createElement(I18nProvider, {
     initialLocale: "zh-CN",
     children: createElement(PersonDirectoryProvider, {
       members: [{ id: "reviewer", name: "测试成员", role: "成员", email: "reviewer@example.com" }],
       children: createElement(TaskDiscussionMessage, {
-        message: { id: "markdown-test", author: "AI 助手", type: "member-post", message: body, mentionedPrincipalIds: mentions, time: "", ...(reply ? { replyToActivityId: "parent" } : {}) },
+        message: { id: "markdown-test", author: "AI 助手", type: "member-post", message: body, mentionedPrincipalIds: mentions, mentionsAllTaskMembers, time: "", ...(reply ? { replyToActivityId: "parent" } : {}) },
         currentUser: "someone-else", files: [], now: Date.now(), onReply() {}, onLocate() {}, onOpenFile() {},
       }),
     }),
@@ -61,6 +61,17 @@ test("只高亮显式 @ 成员，代码和链接中的同名文本保持原样",
   assert.match(html, /<code class="language-txt">@测试成员/);
   assert.match(html, /href="https:\/\/example.com\/review"[^>]*>@测试成员<\/a>/);
   assert.match(html, /@未选择成员/);
+});
+
+test("已发布的全体成员提及按原语言高亮且没有个人资料卡", () => {
+  for (const label of ["全体成员", "All members"]) {
+    const body = `**@${label}** 请确认\n\n\`@${label}\``;
+    const selected = renderMessage(body, [], true, true);
+    assert.ok(selected.includes(`<span class="discussion-saved-mention">@${label}</span>`));
+    assert.equal((selected.match(/class="discussion-saved-mention"/g) ?? []).length, 1);
+    assert.ok(selected.includes(`<code>@${label}</code>`));
+    assert.doesNotMatch(renderMessage(body), /discussion-saved-mention/);
+  }
 });
 
 test("正文不执行 HTML 或危险链接，Markdown 图片不自动加载远程资源", () => {

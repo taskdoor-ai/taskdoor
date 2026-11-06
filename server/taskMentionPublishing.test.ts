@@ -42,6 +42,36 @@ test("负责人、已有参与者和重复 @ 不重加；同一消息重试不�
   assert.equal(repeated.snapshot.notifications.filter(item => item.recipientId === "new").length, 1);
 });
 
+test("@ 全体成员提醒当前有效任务成员，并与同条回复和单人提及去重", () => {
+  const { input, current, publish, storage } = fixture();
+  input.legacySnapshots[task.id] = { id: task.id, participants: ["author", "existing", "left"], title: task.name };
+  const parent = message({ id: "parent", author: "owner", mentionedPrincipalIds: [] });
+  const withParent = { ...current, messages: [parent] };
+  const post: CollaborationMessage = {
+    ...message({ message: "@全体成员 @已有参与者 请确认", mentionedPrincipalIds: ["existing"] }),
+    type: "member-reply", replyToActivityId: parent.id, mentionsAllTaskMembers: true,
+  };
+  const saved = publish(post, withParent);
+  const stored = loadCollaboration(storage, scopeKey, []);
+  assert.equal(stored.messages.at(-1)?.mentionsAllTaskMembers, true);
+  assert.deepEqual(stored.notifications.map(({ recipientId, reason }) => [recipientId, reason]).sort(), [["existing", "mention"], ["owner", "reply"]]);
+  assert.deepEqual(saved.nodes, input.nodes);
+  assert.equal(saved.activities[task.id], undefined);
+  const retry = publishTaskDiscussion({ ...input, current: saved.snapshot, next: saved.snapshot, message: post });
+  assert.deepEqual(retry.snapshot.notifications, stored.notifications);
+});
+
+test("普通发言发布时才按最新有效任务成员展开 @ 全体，纯文字不会触发", () => {
+  const plain = fixture();
+  assert.deepEqual(plain.publish(message({ message: "@全体成员 请确认", mentionedPrincipalIds: [] })).snapshot.notifications, []);
+  const selected = fixture();
+  selected.input.members = members.filter(member => member.id !== "existing");
+  const post: CollaborationMessage = { ...message({ message: "@全体成员 请确认", mentionedPrincipalIds: [] }), mentionsAllTaskMembers: true };
+  const saved = selected.publish(post);
+  assert.deepEqual(saved.snapshot.notifications.map(({ recipientId, reason }) => [recipientId, reason]), [["owner", "mention"]]);
+  assert.deepEqual(saved.snapshot.messages[0].mentionedPrincipalIds, []);
+});
+
 test("保存参与者失败时连同消息和活动回滚，保留输入后可重试", () => {
   const { records, storage, publish } = fixture();
   const before = new Map(records);

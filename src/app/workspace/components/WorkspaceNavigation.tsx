@@ -1,5 +1,5 @@
 import { TaskNavigationTools } from "@/features/tasks/components/TaskNavigationTools";
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ComponentProps, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { CircleDashed, LogOut, Menu, Settings2, Sparkles, X } from "lucide-react";
 import { GlobalNotifications } from "@/features/notifications/components/GlobalNotifications";
 import type { DiscussionReadReceipt, NotificationRegionTarget } from "@/features/notifications/lib/notification-read-state";
@@ -31,6 +31,7 @@ export type WorkspaceNavigationProps = {
   onSignOut?: () => void;
   showDemoNotifications?: boolean;
   onOpenNotificationTask?: (taskId: string, target?: NotificationRegionTarget) => void;
+  discussionNotifications?: ComponentProps<typeof GlobalNotifications>["discussionNotifications"];
   discussionReadReceipt?: DiscussionReadReceipt;
   onDiscussionReadHandled?: (sequence: number) => void;
   teams: SwitchableTeam[];
@@ -68,7 +69,7 @@ function readNavigationWidth() {
   }
 }
 
-export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags, onOpenRecycleBin, activeTeamId, onConnectAi, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionReadReceipt, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, active }: WorkspaceNavigationProps) {
+export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags, onOpenRecycleBin, activeTeamId, onConnectAi, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, discussionReadReceipt, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, active }: WorkspaceNavigationProps) {
   const { t, locale } = useI18n();
   const timeZone = useTeamTimeZone();
   const [calendarDay, setCalendarDay] = useState(() => taskCalendarDate(new Date().toISOString(), timeZone));
@@ -215,7 +216,7 @@ export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags
             <DropdownMenuTrigger aria-label={t("account.open")} className="workspace-account-trigger" id="workspace-account-trigger" title={`${userProfile.name} · ${t("account.menu")}`}><PersonAvatar name={userProfile.name} personId={userId} profilePreviewFocusable={false} showProfilePreview={false} size="sm" /><span className="workspace-account-name">{userProfile.name}</span></DropdownMenuTrigger>
             <DropdownMenuContent align="start" aria-label={t("account.menu")} className="workspace-account-menu" side="top" sideOffset={8}><ThemeToggle onToggle={toggleTheme} theme={theme} /><LanguageSwitcher menu /><DropdownMenuItem onClick={() => { onOpenPersonalCenter("profile"); closeNavigation(); }}><Settings2 aria-hidden="true" /><span>{t("account.settings")}</span></DropdownMenuItem><DropdownMenuItem onClick={onSignOut} variant="destructive"><LogOut aria-hidden="true" /><span>{t("account.signOut")}</span></DropdownMenuItem></DropdownMenuContent>
           </DropdownMenu>
-        <GlobalNotifications besideNavigation teamId={activeTeamId} userId={userId} key={`${activeTeamId}:${userId}`} discussionReadReceipt={discussionReadReceipt} onDiscussionReadHandled={onDiscussionReadHandled} onOpenTask={onOpenNotificationTask} placement="topbar" showDemoNotifications={showDemoNotifications && activeTeamId === "creator-commerce"} />
+        <GlobalNotifications besideNavigation teamId={activeTeamId} userId={userId} key={`${activeTeamId}:${userId}`} discussionNotifications={discussionNotifications} discussionReadReceipt={discussionReadReceipt} onDiscussionReadHandled={onDiscussionReadHandled} onOpenTask={onOpenNotificationTask} placement="topbar" showDemoNotifications={showDemoNotifications && activeTeamId === "creator-commerce"} />
         </div>
       </div>
       <div aria-controls="workspace-navigation" aria-label={resizeLabel} aria-orientation="vertical" aria-valuemax={maxNavigationWidth} aria-valuemin={minNavigationWidth} aria-valuenow={navigationWidth} className="workspace-navigation-resize-handle" onDoubleClick={() => setNavigationWidth(defaultNavigationWidth)} onKeyDown={resizeWithKeyboard} onLostPointerCapture={endResize} onPointerCancel={endResize} onPointerDown={startResize} onPointerMove={moveResize} onPointerUp={endResize} role="separator" tabIndex={mobile ? -1 : 0} />

@@ -116,6 +116,32 @@ test("人员菜单的迟到关闭回调不会覆盖已回到编辑器的光标",
   assert.equal(focuses, 1, "不通过晚到的动画帧重新移动光标");
 });
 
+test("讨论 @ 菜单选择全体成员时只插入一个提及，不立即发布", () => {
+  const { tree } = capture({ onSubmit: () => assert.fail("选择提及不应发布") });
+  const picker = elements(tree, element => element.props.triggerVariant === "mention")[0];
+  assert.equal(picker.props.scopeOption?.label, "全体成员");
+  assert.equal(picker.props.scopeOption.description, undefined);
+  const editor = createEditor({ namespace: "discussion-group-mention", nodes: [MentionNode] });
+  elements(tree, element => typeof element.props.onSelectionChange === "function")[0].props.onEditor(editor);
+  picker.props.onChange(picker.props.scopeOption.id);
+  editor.getEditorState().read(() => {
+    assert.equal($getRoot().getTextContent(), "@全体成员 ");
+    const mentions = $getRoot().getAllTextNodes().filter($isMentionNode);
+    assert.deepEqual(mentions.map(node => node.getPersonId()), [picker.props.scopeOption.id]);
+  });
+});
+
+test("讨论草稿恢复显式的其他语言全体成员提及", () => {
+  const { tree } = capture({ initialValue: { body: "@All members 请确认", mentions: ["__agentdoor_all_task_members__"], attachments: [] } });
+  const config = elements(tree, element => element.type === LexicalComposer)[0].props.initialConfig;
+  const editor = createEditor({ namespace: "discussion-group-restore", nodes: [MentionNode] });
+  editor.update(() => config.editorState(editor), { discrete: true });
+  editor.getEditorState().read(() => {
+    assert.equal($getRoot().getTextContent(), "@All members 请确认");
+    assert.deepEqual($getRoot().getAllTextNodes().filter($isMentionNode).map(node => node.getPersonId()), ["__agentdoor_all_task_members__"]);
+  });
+});
+
 test("发布 Promise 完成前拒绝重复提交，真实成功后清空会话草稿", async () => {
   let resolve!: () => void;
   const completion = new Promise<void>(done => { resolve = done; });

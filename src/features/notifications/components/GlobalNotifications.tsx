@@ -16,12 +16,13 @@ import { toast } from "@/shared/ui/toast";
 type NotificationReadFilter = "all" | "unread" | "read";
 const readFilterLabels: Record<NotificationReadFilter, string> = { all: "全部", read: "已读", unread: "未读" };
 
-export function GlobalNotifications({ besideNavigation = false, placement = "rail", showDemoNotifications = true, onOpenTask, teamId = "", userId = "", discussionReadReceipt, onDiscussionReadHandled }: {
+export function GlobalNotifications({ besideNavigation = false, placement = "rail", showDemoNotifications = true, onOpenTask, teamId = "", userId = "", discussionNotifications, discussionReadReceipt, onDiscussionReadHandled }: {
   teamId?: string; userId?: string;
   besideNavigation?: boolean;
   placement?: "rail" | "topbar";
   showDemoNotifications?: boolean;
   onOpenTask?: (taskId: string, target?: NotificationRegionTarget) => void;
+  discussionNotifications?: readonly WorkspaceNotification[];
   discussionReadReceipt?: DiscussionReadReceipt;
   onDiscussionReadHandled?: (sequence: number) => void;
 }) {
@@ -36,7 +37,10 @@ export function GlobalNotifications({ besideNavigation = false, placement = "rai
   const [readError, setReadError] = useState("");
   const notificationTestMode = showDemoNotifications && typeof window !== "undefined" && isNotificationReadTestMode(window.location.search, Boolean(import.meta.env?.DEV));
   const readKey = notificationReadStateKey(teamId, userId) + (notificationTestMode ? ":r10-demo" : "");
-  const items = useMemo(() => (showDemoNotifications ? notificationTestMode ? notificationReadTestExamples : notificationExamples : []).map(item => readIds.includes(item.id) ? { ...item, read: true } : item), [showDemoNotifications, notificationTestMode, readIds]);
+  const items = useMemo(() => {
+    const source = notificationTestMode ? notificationReadTestExamples : [...(discussionNotifications ?? []), ...(showDemoNotifications ? notificationExamples : [])];
+    return source.map(item => readIds.includes(item.id) ? { ...item, read: true } : item);
+  }, [discussionNotifications, showDemoNotifications, notificationTestMode, readIds]);
   const observedItems = useRef(items);
   observedItems.current = items;
   const [activeFilter, setActiveFilter] = useState<NotificationReadFilter>("all");

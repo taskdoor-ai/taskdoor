@@ -1,7 +1,7 @@
 import type { TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 import { appendTaskActivity, createTaskChangeActivity, parseTaskActivityStore } from "@/features/tasks/lib/task-activity";
 import { commitTaskAiStorage, recoverTaskAiStorage } from "@/features/tasks/lib/task-ai-adjustment-storage";
-import { saveCollaboration, type CollaborationMessage, type CollaborationPerson, type CollaborationSnapshot } from "@/features/tasks/lib/task-collaboration";
+import { createDiscussionNotification, saveCollaboration, type CollaborationMessage, type CollaborationPerson, type CollaborationSnapshot } from "@/features/tasks/lib/task-collaboration";
 
 type ParticipantSnapshot = { id: string; participants: string[] };
 type PublicationInput<T extends ParticipantSnapshot> = {
@@ -40,7 +40,8 @@ export function publishTaskDiscussion<T extends ParticipantSnapshot>(input: Publ
   const participantInvitations: Record<string, Record<string, "accepted" | "pending">> = JSON.parse(storage.getItem("agentdoor-task-participant-invitations") ?? "{}");
   if (!participantInvitations || typeof participantInvitations !== "object" || Array.isArray(participantInvitations)) throw new Error("任务人员记录损坏，请先恢复记录。");
   if (current.messages.some(item => item.id === message.id) && next === current) return { snapshot: current, nodes, activities, seeds: input.seeds, legacySnapshots: input.legacySnapshots, latestLegacySnapshot: input.latestLegacySnapshot, participantInvitations };
-  if (!next.messages.some(item => item.id === message.id && item.author === actorId)) throw new Error("待发布消息不存在，输入已保留。");
+  const posted = next.messages.find(item => item.id === message.id && item.author === actorId);
+  if (!posted) throw new Error("待发布消息不存在，输入已保留。");
   const added = mentioned.filter(id => id !== task.ownerId && !previous.includes(id));
   const participants = [...previous, ...added];
   const nextNodes = added.length ? nodes.map(node => node.id === taskId ? { ...task, participantIds: participants, updatedAt: message.createdAt ?? new Date().toISOString() } : node) : nodes;
@@ -50,7 +51,13 @@ export function publishTaskDiscussion<T extends ParticipantSnapshot>(input: Publ
   const legacySnapshots = added.length && input.legacySnapshots[taskId] ? { ...input.legacySnapshots, [taskId]: { ...input.legacySnapshots[taskId], participants } } : input.legacySnapshots;
   const latestLegacySnapshot = added.length && input.latestLegacySnapshot?.id === taskId ? { ...input.latestLegacySnapshot, participants } : input.latestLegacySnapshot;
   const nextInvitations = added.length ? { ...participantInvitations, [taskId]: Object.fromEntries(participants.map(id => [id, "accepted" as const])) } : participantInvitations;
-  const snapshot = saveCollaboration(storage, input.scopeKey, current.revision, next, (key, serialized) => {
+  let notifications = next.notifications;
+  if (posted.mentionsAllTaskMembers) {
+    const notified = new Set(notifications.filter(item => item.messageId === posted.id).map(item => item.recipientId));
+    const recipients = [task.ownerId, ...previous].filter(id => id && id !== actorId && byId.has(id) && !notified.has(id));
+    notifications = [...notifications, ...recipients.map(id => createDiscussionNotification(posted, id, "mention"))];
+  }
+  const snapshot = saveCollaboration(storage, input.scopeKey, current.revision, { ...next, notifications }, (key, serialized) => {
     const writes: Array<[string, string]> = [[key, serialized]];
     if (added.length) {
       writes.push(
