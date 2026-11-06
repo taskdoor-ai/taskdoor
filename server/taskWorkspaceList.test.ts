@@ -30,6 +30,7 @@ const baseProps = {
   onFiltersChange: () => undefined,
   onManageTags: () => undefined,
   onDeleteTask: () => undefined,
+  onTaskStatusChange: () => undefined,
   onTaskSelect: () => undefined,
   onQueryChange: () => undefined,
   onShowWorkbench: () => undefined,
@@ -111,26 +112,20 @@ test("推荐页不错误高亮某个任务，空筛选保留恢复入口", async
   assert.match(empty, />查看全部任务<\/button>/);
 });
 
-test("置顶任务进入顶部独立分组且不重复，行级图钉可取消或新增置顶", () => {
-  const source = readFileSync(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url), "utf8");
-  assert.match(source, /partitionPinnedTasks\(projection\.visibleTasks, pinnedTaskIds\)/);
-  assert.match(source, /className="task-workspace-pinned"/);
-  assert.match(source, />置顶<\/h2>/);
-  assert.match(source, /pinnedTasks\.map\(renderTaskRow\)/);
-  assert.match(source, /unpinnedTasks\.map\(renderTaskRow\)/);
-  assert.match(source, /aria-pressed=\{isPinned\}/);
-  assert.match(source, /isPinned \? "取消置顶" : "置顶"/);
+test("任务列表取消置顶分区和行级入口，每个任务仍只出现一次", async () => {
+  const html = await renderList();
+  assert.doesNotMatch(html, /task-workspace-pinned|task-workspace-row-pin|取消置顶/);
+  assert.equal((html.match(/data-task-id="first"/g) ?? []).length, 1);
+  assert.equal((html.match(/data-task-id="second"/g) ?? []).length, 1);
 });
 
-test("桌面任务图钉仅在行悬浮时显示，已置顶与键盘聚焦都不常驻", () => {
-  const source = readFileSync(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url), "utf8");
-  const styles = readFileSync(new URL("../src/features/tasks/styles/task-workspace-list.css", import.meta.url), "utf8");
-  assert.match(styles, /\.task-workspace-row-entry:hover\s+\.task-workspace-row-pin[^}]*opacity:\s*1/s);
-  assert.doesNotMatch(styles, /\.task-workspace-row-entry:focus-within\s+\.task-workspace-row-pin[^}]*opacity:\s*1/s);
-  assert.match(styles, /\.task-workspace-row-pin\[data-pinned\][^}]*color:\s*var\(--ad-route-ink\)/s);
-  assert.doesNotMatch(styles, /\.task-workspace-row-pin\[data-pinned\][^}]*(?:opacity|pointer-events):/s);
-  assert.doesNotMatch(styles, /\.task-workspace-row-pin:focus-visible[^}]*(?:opacity|pointer-events):/s);
-  assert.match(source, /className="task-workspace-row-pin"[^\n]*tabIndex=\{-1\}/);
+test("搜索、列表与层级切换、新建同时位于主列表工具栏", async () => {
+  const html = await renderList();
+  const toolbar = html.slice(html.indexOf('class="task-workspace-list-toolbar"'), html.indexOf('class="task-workspace-list-scroll"'));
+  assert.match(toolbar, /role="search"/);
+  assert.match(toolbar, /aria-label="Hierarchy view"/);
+  assert.match(toolbar, /aria-label="List view"/);
+  assert.match(toolbar, />New task<\/button>/);
 });
 
 test("任务范围并入外部快捷筛选栏，搜索框只承载关键词", async () => {

@@ -1,7 +1,7 @@
-/* Keep the library palette while matching all shared avatar sizes. */
+/* Preserve the library palette hues without a black overlay. */
 .person-avatar-initials { position: absolute; inset: 0; z-index: 1; overflow: hidden; border-radius: 50%; }
-.person-avatar-initials > div { width: 100%; height: 100%; }
-.person-avatar-initials p { font-family: inherit; font-size: calc(var(--person-avatar-size) * .37); font-weight: 600; }
+.person-avatar-initials > div { width: 100%; height: 100%; background: var(--person-avatar-hue); }
+.person-avatar-initials p { margin: 0; color: #fff; font-family: inherit; font-size: calc(var(--person-avatar-size) * .37); font-weight: 400; line-height: 1; letter-spacing: 0; }
 
 .task-icon[data-tone="neutral"] { background: var(--ad-surface); }
 
@@ -15,8 +15,9 @@
 .team-switcher-menu[data-slot="dropdown-menu-content"] { overflow: hidden; }
 .team-switcher-list { min-height: 0; overflow-y: auto; }
 .team-switcher-current, .team-switcher-create { flex-shrink: 0; }
-.team-switcher-create[data-slot="dropdown-menu-item"] { display: flex; gap: var(--ad-space-3); min-height: 44px; margin-top: var(--ad-space-3); padding: var(--ad-space-2); border: 0; border-radius: var(--ad-radius-control); color: var(--ad-ink-secondary); background: transparent; }
-.team-switcher-create::before { content: ""; position: absolute; top: calc(-1 * var(--ad-space-2)); left: 0; right: 0; height: 1px; background: var(--ad-border); pointer-events: none; }
+.team-switcher-create[data-slot="dropdown-menu-item"] { display: grid; grid-template-columns: var(--ad-control-height-xs) minmax(0, 1fr); align-items: center; gap: var(--ad-space-2); min-height: var(--ad-control-touch-min); margin-top: var(--ad-space-2); padding: var(--ad-space-2); border: 0; border-radius: var(--ad-radius-control); color: var(--ad-ink-secondary); background: transparent; font-size: var(--ad-text-label); }
+.team-switcher-create > svg { justify-self: center; }
+.team-switcher-create::before { content: ""; position: absolute; top: calc(-1 * var(--ad-space-1)); left: 0; right: 0; height: 1px; background: var(--ad-border); pointer-events: none; }
 .team-switcher-create[data-slot="dropdown-menu-item"]:hover, .team-switcher-create[data-slot="dropdown-menu-item"]:focus, .team-switcher-create[data-highlighted] { background: var(--ad-surface-subtle); color: var(--ad-ink); }
 .create-team-dialog form { display: grid; gap: 12px; }
 .create-team-dialog footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }

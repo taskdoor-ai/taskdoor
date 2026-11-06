@@ -32,7 +32,7 @@ export function TaskMemberMatchBasis({ label = "人员匹配依据", task, membe
           ? recommendations[owner.id].reason
           : `负责人 ${owner.name} 的${owner.dynamicResponsibility || owner.role}职责与任务需求直接匹配。`
         : "当前负责人成员不可用，匹配依据待核对。",
-    participants.length ? `参与人 ${participantNames} 可覆盖${participantCoverage}。` : "",
+    participants.length ? `参与者 ${participantNames} 可覆盖${participantCoverage}。` : "",
     unavailableParticipantCount ? `另有 ${unavailableParticipantCount} 位参与成员不可用，匹配依据待核对。` : "",
     task.ownerId || participants.length ? "以上为职责匹配建议，仍需结合实际排期确认。" : "选择人员后将根据职责范围生成匹配总结。",
   ].filter(Boolean).join("");

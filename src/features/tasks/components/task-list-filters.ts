@@ -14,6 +14,7 @@ export const taskScopeLabels = { all: "全部", owned: "我负责的", participa
 export type TaskListScope = keyof typeof taskScopeLabels;
 
 export type TaskListFilters = {
+  listView?: "flat" | "hierarchy";
   scope?: TaskListScope;
   view?: "owned" | "participating" | "all";
   completion?: "open" | "all" | "done";
@@ -72,8 +73,9 @@ export function normalizeTaskWorkspaceFilters(filters: TaskListFilters): TaskLis
       : filters.completion === "open" ? ["进行中", "已阻塞"]
         : [];
   return { ...filters, scope: getTaskScopeFilter(filters), view: "all", owner: "all", completion: "all", status: "all", statuses,
-    ownerIds: [], participantIds: [], creatorIds: [], ownerIsMe: false, participantIsMe: false,
-    includeUnassigned: false, includeNoParticipants: false, includeUnknownCreator: false };
+    ownerIds: uniqueSelections(filters.ownerIds ?? []), participantIds: uniqueSelections(filters.participantIds ?? []),
+    creatorIds: [], ownerIsMe: false, participantIsMe: false,
+    includeUnassigned: Boolean(filters.includeUnassigned), includeNoParticipants: Boolean(filters.includeNoParticipants), includeUnknownCreator: false };
 }
 
 export function getTaskTagFilters(filters: TaskListFilters): string[] {
@@ -147,10 +149,9 @@ export function taskMatchesListFilters(task: TaskNode, query: string, filters: T
     && (statuses.length === 0 || statuses.includes(normalizeTaskStatus(task.status)))
     && matchesView
     && matchesTags
-    && (scope !== undefined || (
-      matchesPeople([task.ownerId], filters.ownerIds, filters.includeUnassigned, filters.ownerIsMe ? me : undefined)
-      && matchesPeople(task.participantIds ?? [], filters.participantIds, filters.includeNoParticipants, filters.participantIsMe ? me : undefined)
-      && matchesPeople([task.createdBy ?? ""], filters.creatorIds, filters.includeUnknownCreator)))
+    && matchesPeople([task.ownerId], filters.ownerIds, filters.includeUnassigned, scope === undefined && filters.ownerIsMe ? me : undefined)
+    && matchesPeople(task.participantIds ?? [], filters.participantIds, filters.includeNoParticipants, scope === undefined && filters.participantIsMe ? me : undefined)
+    && (scope !== undefined || matchesPeople([task.createdBy ?? ""], filters.creatorIds, filters.includeUnknownCreator))
     && (filters.deadline?.preset !== "overdue" || !isValidTimeZone(timeZone) || !["已完成", "已取消"].includes(task.status))
     && matchesDate(task.plannedEndOn || task.dueAt, filters.deadline, now, timeZone)
     && matchesDate(task.createdAt, filters.created, now, timeZone);

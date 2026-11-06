@@ -17,6 +17,9 @@
   --ad-chart-scope: #858585;
 
   /* Route and actions */
+  --ad-button-primary-bg: var(--ad-route);
+  --ad-button-soft-bg: var(--ad-route-soft);
+  --ad-button-soft-ink: var(--ad-route-ink);
   --ad-route: #4b6edf;
   --ad-route-hover: #4263d0;
   --ad-route-active: #3d5dc4;
@@ -228,7 +231,7 @@
   --ad-personal-center-dialog-height: 760px;
   --ad-personal-center-nav-width: 220px;
   --ad-notification-panel-width: 440px;
-  --ad-team-switcher-width: 288px;
+  --ad-team-switcher-width: 264px;
 
   /* Tag management pattern */
   --ad-tag-dialog-max: 600px;

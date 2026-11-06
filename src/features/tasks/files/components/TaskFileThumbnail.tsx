@@ -11,7 +11,8 @@ import "@/features/tasks/styles/task-file-thumbnail.css";
 /** Decorative preview only; the enclosing file card owns its name and interaction. */
 export function TaskFileThumbnail({ file, className, originalBlob }: { file: TaskFileNode; className?: string; originalBlob?: Blob }) {
   const kind = getPreviewKind(file.name, file.mimeType);
-  const previewSource = file.previewData?.kind === "image" ? file.previewData.src : "";
+  // Legacy video posters were accepted before blank-frame detection. Derive them again from the original.
+  const previewSource = kind !== "video" && file.previewData?.kind === "image" ? file.previewData.src : "";
   const [previewRevision, setPreviewRevision] = useState(0);
   const sourceKey = taskFileThumbnailKey(file, originalBlob);
   const pendingCover = useRef(false);

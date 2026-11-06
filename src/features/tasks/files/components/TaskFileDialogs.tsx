@@ -17,7 +17,7 @@ import { TaskFileMoveDialog } from "@/features/tasks/files/components/TaskFileMo
 export type TaskFileDialogState = { type: "create" | "save"; parentId: string | null } | { type: "rename" | "move" | "delete"; nodeId: string } | null;
 const rootDestinationValue = "__task-files-root__";
 
-export function TaskFileDialogs({ dialog, nodes, onClose, onCreate, onDelete, onMove, onRename, onSaveFile }: {
+export function TaskFileDialogs({ dialog, nodes, onClose, onCreate, onDelete, onMove, onRename, onSaveFile, canDelete }: {
   dialog: TaskFileDialogState;
   nodes: TaskFileNode[];
   onClose: () => void;
@@ -25,6 +25,7 @@ export function TaskFileDialogs({ dialog, nodes, onClose, onCreate, onDelete, on
   onDelete: (nodeId: string, policy?: FolderDeletePolicy) => void;
   onMove: (nodeId: string, parentId: string | null) => void | Promise<void>;
   onRename: (nodeId: string, name: string) => void;
+  canDelete?: (nodeId: string, policy?: FolderDeletePolicy) => boolean;
   onSaveFile?: (parentId: string | null) => void;
 }) {
   const ui = useGlobalUi();
@@ -55,6 +56,7 @@ export function TaskFileDialogs({ dialog, nodes, onClose, onCreate, onDelete, on
     : dialog.type === "save" ? Boolean(onSaveFile) && targetAvailable
     : !node ? false
     : dialog.type === "rename" ? !!name.trim() && name.trim() !== node.name
+    : dialog.type === "delete" ? Boolean(canDelete?.(node.id, node.kind === "folder" ? policy : undefined))
     : true;
   const title = dialog.type === "save" ? t("保存标注文件", "Save annotation file") : dialog.type === "create" ? "新建文件夹" : dialog.type === "rename" ? "重命名" : node?.kind === "folder" ? "删除文件夹" : "删除文件";
   const run = (action: () => void) => {
@@ -128,14 +130,15 @@ export function TaskFileDialogs({ dialog, nodes, onClose, onCreate, onDelete, on
               </FieldLabel>
               <FieldLabel htmlFor="task-file-delete-archive">
                 <Field orientation="horizontal">
-                  <RadioGroupItem id="task-file-delete-archive" value="archive" />
-                  <FieldContent><FieldTitle>{ui("将整个文件夹及内容归档")}</FieldTitle></FieldContent>
+                  <RadioGroupItem disabled={!canDelete?.(node.id, "archive")} id="task-file-delete-archive" value="archive" />
+                  <FieldContent><FieldTitle>{ui("将整个文件夹及内容归档")}</FieldTitle>{!canDelete?.(node.id, "archive") && <FieldDescription>{t("包含他人或来源不明的内容，仅当前任务负责人可执行。", "Contains items from other or unknown uploaders. Only the current task assignee can do this.")}</FieldDescription>}</FieldContent>
                 </Field>
               </FieldLabel>
             </RadioGroup>
           </FieldSet>}
           {dialog.type === "delete" && <FieldDescription>{ui("删除后可通过页面底部提示立即撤销。")}</FieldDescription>}
 
+          {dialog.type === "delete" && node && !canSubmit && <FieldError>{t("删除权限已不可用，请核对当前任务成员、负责人及原始上传者。", "Deletion is no longer allowed. Check current task membership, ownership and the original uploader.")}</FieldError>}
           {dialog.type === "save" && !targetAvailable && <FieldError>{t("保存位置已不可用，请重新选择文件夹。", "This location is unavailable. Choose another folder.")}</FieldError>}
           {(error || (dialog.type !== "create" && dialog.type !== "save" && !node)) && <FieldError id="task-file-action-error">{ui(error || "文件项目不存在")}</FieldError>}
         </FieldGroup>

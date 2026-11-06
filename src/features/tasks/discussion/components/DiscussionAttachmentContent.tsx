@@ -7,8 +7,9 @@ import { getPreviewKind } from "@/features/tasks/files/lib/task-file-tree";
 export function DiscussionAttachmentContent({ file, name, version, unavailableLabel }: { file?: TaskFileNode; name: string; version?: number; unavailableLabel: string }) {
   const matchesVersion = Boolean(file && (version === undefined || (file.version ?? 1) === version));
   const glyphFile: TaskFileNode = matchesVersion && file ? file : { id: "attachment-reference", kind: "file", name, parentId: null, updatedAt: "" };
-  const image = matchesVersion && file && getPreviewKind(file.name, file.mimeType) === "image";
-  return <span className="discussion-attachment-card" data-preview={image ? "image" : "file"}>
+  // The reference keeps its image layout even when its original pixels are unavailable.
+  const image = getPreviewKind(name, matchesVersion ? file?.mimeType : undefined) === "image";
+  return <span className="discussion-attachment-card" data-preview={image ? "image" : "file"} title={name}>
     {matchesVersion && file
       ? <TaskFileThumbnail className="discussion-attachment-thumbnail" file={file} />
       : <span aria-hidden="true" className="discussion-attachment-thumbnail task-file-thumbnail"><TaskFileGlyph node={glyphFile} /></span>}

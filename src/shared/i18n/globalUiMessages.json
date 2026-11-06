@@ -1169,7 +1169,7 @@
   },
   "actionsWillAppearHereOnceTaskOwnersAre": {
     "zh": "正式负责人确定后，相关行动会汇总在这里。",
-    "en": "Actions will appear here once task owners are assigned."
+    "en": "Actions will appear here once task assignees are assigned."
   },
   "completed": {
     "zh": "已完成",
@@ -1497,13 +1497,17 @@
   },
   "owner": {
     "zh": "负责人",
-    "en": "Owner"
+    "en": "Assignee"
   },
   "owner2": {
     "zh": "正式负责人",
-    "en": "Owner"
+    "en": "Assignee"
   },
   "participants": {
+    "zh": "参与者",
+    "en": "Collaborators"
+  },
+  "participantsLegacy": {
     "zh": "参与人",
     "en": "Collaborators"
   },
@@ -1540,6 +1544,10 @@
     "en": "Not provided"
   },
   "noParticipants": {
+    "zh": "未添加参与者",
+    "en": "No collaborators"
+  },
+  "noParticipantsLegacy": {
     "zh": "未添加参与人",
     "en": "No collaborators"
   },
@@ -1909,7 +1917,7 @@
   },
   "updateTheTaskNameOwnerDueDateAnd": {
     "zh": "调整任务名称、负责人、截止时间等基础信息。",
-    "en": "Update the task name, owner, due date and other details."
+    "en": "Update the task name, assignee, due date and other details."
   },
   "uploadDeliverablesOrReferenceMaterialsToATask": {
     "zh": "把交付成果或参考资料上传到指定任务。",

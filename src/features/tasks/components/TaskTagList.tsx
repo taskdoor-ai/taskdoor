@@ -7,12 +7,14 @@ import { TagPicker } from "@/features/me/components/TagPicker";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 type Props = {
+  iconOnly?: boolean;
+  showAll?: boolean;
   onChange?: (names: string[]) => void;
   selected: string[];
   tags: TagDefinition[];
 };
 
-export function TaskTagList({ onChange, selected, tags }: Props) {
+export function TaskTagList({ onChange, selected, tags, iconOnly = false, showAll = false }: Props) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const selectedTags = useMemo(() => selected.map((name) => findTagByName(tags, name) ?? { id: name, name, icon: "tag" as const, color: "gray" as const }), [selected, tags]);
@@ -27,7 +29,7 @@ export function TaskTagList({ onChange, selected, tags }: Props) {
     const container = containerRef.current;
     const measurement = measurementRef.current;
     const picker = pickerRef.current;
-    if (!container || !measurement || !picker) return;
+    if (showAll || !container || !measurement || !picker) return;
 
     const updateVisibleCount = () => {
       const available = container.getBoundingClientRect().width;
@@ -55,13 +57,14 @@ export function TaskTagList({ onChange, selected, tags }: Props) {
     observer.observe(measurement);
     observer.observe(picker);
     return () => observer.disconnect();
-  }, [selectedTags, removable]);
+  }, [selectedTags, removable, showAll]);
 
-  const hiddenTags = selectedTags.slice(visibleCount);
+  const displayedTags = showAll ? selectedTags : selectedTags.slice(0, visibleCount);
+  const hiddenTags = showAll ? [] : selectedTags.slice(visibleCount);
   const renderBadge = (tag: TagDefinition) => <TagBadge key={tag.id} onRemove={onChange ? () => onChange(selected.filter((name) => name !== tag.name)) : undefined} size="sm" tag={tag} />;
 
-  return <div aria-label={d('taskTags')} className="task-detail-title-tags task-tag-list" ref={containerRef}>
-    {selectedTags.slice(0, visibleCount).map(renderBadge)}
+  return <div aria-label={d('taskTags')} className={`task-detail-title-tags task-tag-list${showAll ? " task-tag-list-show-all" : ""}`} ref={containerRef}>
+    {displayedTags.map(renderBadge)}
     {hiddenTags.length > 0 && <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger aria-label={ui(hiddenTags.length === 1 ? "另有 1 个标签" : "另有 {0} 个标签", {0: hiddenTags.length})} className="task-tag-overflow" closeDelay={150} delay={100} onFocus={(event) => { if (event.currentTarget.matches(":focus-visible")) setOpen(true); }} openOnHover type="button">+{hiddenTags.length}</PopoverTrigger>
       <PopoverContent align="end" aria-label={d('moreTags')} className="task-tag-overflow-popover" finalFocus={false} initialFocus={false}>
@@ -70,7 +73,7 @@ export function TaskTagList({ onChange, selected, tags }: Props) {
         </ul>
       </PopoverContent>
     </Popover>}
-    <div className="task-tag-picker" ref={pickerRef}><TagPicker onChange={(names) => onChange?.(names)} selected={selected} tags={tags} /></div>
+    <div className="task-tag-picker" ref={pickerRef}><TagPicker iconOnly={iconOnly} disabled={!onChange} onChange={(names) => onChange?.(names)} selected={selected} tags={tags} /></div>
     <div aria-hidden="true" className="task-tag-measurement-clip" inert><div className="task-tag-measurement" ref={measurementRef}>
       {selectedTags.map(renderBadge)}
       {selectedTags.map((tag, index) => <span className="task-tag-overflow" key={`counter-${tag.id}`}>+{index + 1}</span>)}

@@ -40,6 +40,7 @@ export type TaskNode = BaseNode & {
   createdFrom?: "task-planner" | "task-editor";
   createdBy?: string;
   createdAt?: string;
+  sourceDiscussion?: { taskId: string; messageId: string; body: string; author: string; itemKey?: string };
   completedAt?: string;
   progressReopenedAt?: string;
   dependsOnTaskIds?: string[];
@@ -72,6 +73,8 @@ type TaskStatus = TaskNode["status"];
 export type TaskDetailId = "fragrance-creator-wrapup" | "fragrance-creator-business" | "fragrance-content" | "fragrance-live" | "fragrance-product" | "fragrance-growth" | "fragrance-data" | "fragrance-compliance" | "fragrance-final-decision";
 
 export type TaskFileNode = {
+  /** Original creator/uploader, stable across edits, moves and renames. Unknown on legacy files. */
+  createdById?: string;
   /** Discussion material retained with messages, outside the task file tree. */
   attachmentOnly?: true;
   /** An untouched retired demo source stays readable from its historical references. */

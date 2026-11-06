@@ -1,10 +1,12 @@
 import { useI18n } from "@/shared/i18n/I18nProvider";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { filterDateLabel, filterStatusLabel } from "@/features/tasks/i18n/filter-display";
-import { mockTagName } from "@/ai/mock/i18n/mockContent";
+import { mockPersonName, mockTagName } from "@/ai/mock/i18n/mockContent";
 import { useRemainingCopy } from "@/shared/i18n/remaining-messages";
-import { ArrowLeft, CalendarDays, CalendarPlus, Check, ChevronRight, CircleDashed, Inbox, ListFilter, Search, Tag, X } from "lucide-react";
+import { ArrowLeft, CalendarDays, CalendarPlus, Check, ChevronRight, CircleDashed, Inbox, ListFilter, Search, Tag, UserRound, UserRoundX, UsersRound, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import type { TagDefinition } from "@/shared/model/task-model";
+import type { PersonOption, TagDefinition } from "@/shared/model/task-model";
+import { PersonAvatar } from "@/shared/ui/PersonAvatar";
 import { getTaskScopeFilter, getTaskStatusFilters, getTaskTagFilters, taskDateFilterLabel, taskScopeLabels, type TaskListDateFilter, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
 import { getTagIcon } from "@/shared/ui/TagBadge";
 import { taskStatusDefinition, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
@@ -17,6 +19,8 @@ import { isValidTimeZone } from "@/shared/lib/team-time-zone";
 
 const filterCategories = [
   { id: "statuses", label: "状态", icon: CircleDashed },
+  { id: "ownerIds", label: "负责人", icon: UserRound },
+  { id: "participantIds", label: "参与者", icon: UsersRound },
   { id: "tags", label: "标签", icon: Tag },
   { id: "deadline", label: "截止日期", icon: CalendarDays },
   { id: "created", label: "创建日期", icon: CalendarPlus },
@@ -24,7 +28,10 @@ const filterCategories = [
 type Category = typeof filterCategories[number]["id"];
 
 type Props = {
+  hideStatus?: boolean;
+  iconOnly?: boolean;
   tags: TagDefinition[];
+  members: PersonOption[];
   statuses: string[];
   filters: TaskListFilters;
   touch: boolean;
@@ -42,6 +49,8 @@ export function taskFilterSummaries(filters: TaskListFilters) {
   const scope = getTaskScopeFilter(filters);
   return {
     scope: scope === "all" ? "" : taskScopeLabels[scope],
+    ownerIds: [...(filters.ownerIds ?? []), ...(filters.includeUnassigned ? ["暂不分配"] : [])].join("、"),
+    participantIds: [...(filters.participantIds ?? []), ...(filters.includeNoParticipants ? ["无参与者"] : [])].join("、"),
     statuses: getTaskStatusFilters(filters).join("、"),
     tags: [...getTaskTagFilters(filters).map(getFilterTagLabel), ...(filters.includeUntagged ? ["未打标签"] : [])].join("、"),
     deadline: filters.deadline ? taskDateFilterLabel(filters.deadline) : "",
@@ -60,7 +69,7 @@ function TaskFilterChip({ label, value, children, onRemove }: { label: string; v
 
 function FilterOption({ checked, label, icon, onChange }: { checked: boolean; label: string; icon: ReactNode; onChange: () => void }) {
   return <label className="task-filter-menu-option">
-    <input checked={checked} onChange={onChange} type="checkbox" />
+    <input aria-label={label} checked={checked} onChange={onChange} type="checkbox" />
     {icon}<span>{label}</span><Check aria-hidden="true" className="task-filter-menu-check" data-checked={checked || undefined} size={15} />
   </label>;
 }
@@ -87,9 +96,17 @@ function DateFilterChoices({ field, value, onChange }: { field: "deadline" | "cr
   </>;
 }
 
-export function TaskListFilterPanel({ tags, statuses, filters, touch, onChange, onReset, onManageTags }: Props) {
+export function TaskListFilterPanel({ tags, members, statuses, filters, touch, onChange, onReset, onManageTags, hideStatus = false, iconOnly = false }: Props) {
   const u = useRemainingCopy();
   const { locale } = useI18n();
+  const d = useDetailCopy();
+  const ownerLabel = d('owner');
+  const participantLabel = d('participants');
+  const unassignedLabel = d('unassigned');
+  const noParticipantsLabel = d('noParticipants');
+  const personLabel = (id: string) => mockPersonName(locale, id, members.find(member => member.id === id)?.name ?? (locale === "en" ? "Unavailable member" : "不可用成员"));
+  const selectedOwners = filters.ownerIds ?? [];
+  const selectedParticipants = filters.participantIds ?? [];
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<Category | null>(null);
   const [categoryQuery, setCategoryQuery] = useState("");
@@ -105,16 +122,18 @@ export function TaskListFilterPanel({ tags, statuses, filters, touch, onChange, 
   const statusLabel = (status: string) => filterStatusLabel(locale, status);
   const summaries = {
     ...taskFilterSummaries(filters),
+    ownerIds: [...selectedOwners.map(personLabel), ...(filters.includeUnassigned ? [unassignedLabel] : [])].join(locale === "en" ? ", " : "、"),
+    participantIds: [...selectedParticipants.map(personLabel), ...(filters.includeNoParticipants ? [noParticipantsLabel] : [])].join(locale === "en" ? ", " : "、"),
     statuses: getTaskStatusFilters(filters).map(statusLabel).join(locale === 'en' ? ', ' : '、'),
     tags: [...getTaskTagFilters(filters).map(tagLabel), ...(filters.includeUntagged ? [u('untagged')] : [])].join(locale === 'en' ? ', ' : '、'),
     deadline: filters.deadline ? filterDateLabel(locale, filters.deadline) : '',
     created: filters.created ? filterDateLabel(locale, filters.created) : '',
   };
-  const categories = filterCategories.map(item => ({ ...item, label: u(({ statuses: 'status', tags: 'tags', deadline: 'dueDate', created: 'createdDate' } as const)[item.id]) }));
+  const categories = filterCategories.filter(item => !hideStatus || item.id !== "statuses").map(item => ({ ...item, label: item.id === "ownerIds" ? ownerLabel : item.id === "participantIds" ? participantLabel : u(({ statuses: 'status', tags: 'tags', deadline: 'dueDate', created: 'createdDate' } as const)[item.id]) }));
   const selectedStatuses = getTaskStatusFilters(filters);
   const selectedTags = getTaskTagFilters(filters);
-  const activeCount = selectedStatuses.length + selectedTags.length
-    + [filters.includeUntagged, filters.deadline, filters.created].filter(Boolean).length;
+  const activeCount = (hideStatus ? 0 : selectedStatuses.length) + selectedTags.length + selectedOwners.length + selectedParticipants.length
+    + [filters.includeUntagged, filters.includeUnassigned, filters.includeNoParticipants, filters.deadline, filters.created].filter(Boolean).length;
   const removeCondition = (patch: Partial<TaskListFilters>) => {
     const buttons = Array.from(selectionRef.current?.querySelectorAll<HTMLButtonElement>(".task-filter-chip-remove") ?? []);
     const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
@@ -126,6 +145,7 @@ export function TaskListFilterPanel({ tags, statuses, filters, touch, onChange, 
   const matchesQuery = (label: string) => label.toLowerCase().includes(optionQuery.trim().toLowerCase());
   const visibleTags = tags.filter(tag => matchesQuery(tagLabel(tag.name)) || matchesQuery(tag.name));
   const visibleStatuses = statuses.filter(status => matchesQuery(statusLabel(status)) || matchesQuery(status));
+  const visiblePeople = members.filter(member => matchesQuery(personLabel(member.id)) || matchesQuery(member.name) || matchesQuery(member.email) || matchesQuery(member.role) || matchesQuery(member.dynamicResponsibility ?? ""));
   const toggle = (values: string[], value: string) => values.includes(value) ? values.filter(item => item !== value) : [...values, value];
   useEffect(() => {
     if (category) (detailRef.current?.querySelector<HTMLElement>("input:checked") ?? detailRef.current?.querySelector<HTMLElement>("input") ?? detailRef.current?.querySelector<HTMLElement>(".task-filter-menu-option"))?.focus({ preventScroll: true });
@@ -143,12 +163,14 @@ export function TaskListFilterPanel({ tags, statuses, filters, touch, onChange, 
   const clearCategory = (id: Category) => {
     if (id === "statuses") onChange({ statuses: [], completion: "all" });
     else if (id === "tags") onChange({ tags: [], includeUntagged: false });
+    else if (id === "ownerIds") onChange({ ownerIds: [], includeUnassigned: false });
+    else if (id === "participantIds") onChange({ participantIds: [], includeNoParticipants: false });
     else onChange({ [id]: undefined });
   };
 
-  return <Popover open={open} onOpenChange={changeOpen}>
-    <PopoverTrigger render={<Button aria-label={activeCount ? `${u("filterTasks")} (${activeCount})` : u('filterTasks')} className="task-workspace-list-options" data-filter-active={activeCount > 0 || undefined} size={touch ? "icon-touch" : "icon-sm"} title={activeCount ? `${u("filterTasks")} (${activeCount})` : u('filterTasks')} variant="outline" />}><ListFilter aria-hidden="true" />{activeCount > 0 && <span aria-hidden="true" className="task-filter-count">{activeCount}</span>}</PopoverTrigger>
-    <PopoverContent align="start" aria-label={u('taskFilters')} className="task-filter-menu" collisionPadding={12} data-detail-open={Boolean(category)}>
+  return <Popover modal={false} open={open} onOpenChange={changeOpen}>
+    <PopoverTrigger render={<Button aria-label={activeCount ? `${u("filterTasks")} (${activeCount})` : u('filterTasks')} className={`task-workspace-list-options${iconOnly ? " task-filter-icon-only" : ""}`} data-filter-active={activeCount > 0 || undefined} size={touch ? "touch" : "default"} title={activeCount ? `${u("filterTasks")} (${activeCount})` : u('filterTasks')} variant="outline" />}><ListFilter aria-hidden="true" />{!iconOnly && <span>{locale === "en" ? "Filter" : "筛选"}</span>}{activeCount > 0 && <span aria-hidden="true" className="task-filter-count">{activeCount}</span>}</PopoverTrigger>
+    <PopoverContent align="end" positionMethod="fixed" initialFocus={() => { listRef.current?.parentElement?.querySelector<HTMLInputElement>("input")?.focus({ preventScroll: true }); return false; }} aria-label={u('taskFilters')} className="task-filter-menu" collisionPadding={12} data-detail-open={Boolean(category)}>
       <div className="task-filter-menu-columns">
         <div className="task-filter-menu-main">
           <div className="task-filter-menu-search"><Input aria-label={u('searchFilterTypes')} leadingIcon={<Search />} onChange={event => setCategoryQuery(event.target.value)} placeholder={u('addFilters')} value={categoryQuery} /></div>
@@ -159,7 +181,7 @@ export function TaskListFilterPanel({ tags, statuses, filters, touch, onChange, 
                 event.preventDefault();
                 const buttons = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>("button[data-category]") ?? []);
                 const next = (buttons.indexOf(event.currentTarget) + (event.key === "ArrowDown" ? 1 : -1) + buttons.length) % buttons.length;
-                buttons[next]?.focus();
+                buttons[next]?.focus({ preventScroll: true });
               }
             }} type="button">
               <Icon aria-hidden="true" size={17} /><span className="task-filter-category-label">{label}</span>
@@ -173,6 +195,11 @@ export function TaskListFilterPanel({ tags, statuses, filters, touch, onChange, 
           <div className="task-filter-detail-heading"><button aria-label={u('backToFilters')} className="task-filter-back" onClick={goBack} type="button"><ArrowLeft size={16} /></button><strong>{selectedCategory.label}</strong><button className="task-filter-text-button" disabled={!summaries[selectedCategory.id]} onClick={() => clearCategory(selectedCategory.id)} type="button">{u('clear')}</button></div>
           {category !== "deadline" && category !== "created" && <div className="task-filter-menu-search"><Input aria-label={`${u("searchFilterTypes")}: ${selectedCategory.label}`} leadingIcon={<Search />} onChange={event => setOptionQuery(event.target.value)} placeholder={`${selectedCategory.label}…`} value={optionQuery} /></div>}
           <div className="task-filter-value-list">
+            {(category === "ownerIds" || category === "participantIds") && <>
+              {matchesQuery(category === "ownerIds" ? unassignedLabel : noParticipantsLabel) && <FilterOption checked={Boolean(category === "ownerIds" ? filters.includeUnassigned : filters.includeNoParticipants)} icon={<UserRoundX aria-hidden="true" size={15} />} label={category === "ownerIds" ? unassignedLabel : noParticipantsLabel} onChange={() => onChange(category === "ownerIds" ? { includeUnassigned: !filters.includeUnassigned } : { includeNoParticipants: !filters.includeNoParticipants })} />}
+              {visiblePeople.map(person => <FilterOption key={person.id} checked={(category === "ownerIds" ? selectedOwners : selectedParticipants).includes(person.id)} icon={<PersonAvatar name={personLabel(person.id)} profile={person} showProfilePreview={false} size="xs" />} label={personLabel(person.id)} onChange={() => onChange({ [category]: toggle(category === "ownerIds" ? selectedOwners : selectedParticipants, person.id) })} />)}
+              {!visiblePeople.length && !matchesQuery(category === "ownerIds" ? unassignedLabel : noParticipantsLabel) && <p className="task-filter-menu-empty">{u('noOptions')}</p>}
+            </>}
             {category === "statuses" && visibleStatuses.map(status => {
               const definition = taskStatusDefinition[status as TaskStatus]; const Icon = definition?.icon ?? CircleDashed;
               return <FilterOption checked={selectedStatuses.includes(status)} icon={<span className="task-list-row-status" data-tone={definition?.tone}><Icon aria-hidden="true" size={15} /></span>} key={status} label={statusLabel(status)} onChange={() => onChange({ statuses: toggle(selectedStatuses, status), completion: "all" })} />;
@@ -188,7 +215,11 @@ export function TaskListFilterPanel({ tags, statuses, filters, touch, onChange, 
         </div>}
       </div>
       {activeCount > 0 && <div aria-label={u('activeFilters')} className="task-filter-selection" ref={selectionRef} role="region">
-        {selectedStatuses.length > 0 && <div aria-label={u('selectedStatuses')} className="task-filter-selected-group">{selectedStatuses.map(status => {
+        {([{ field: "ownerIds", label: ownerLabel, values: selectedOwners, emptyField: "includeUnassigned", emptyLabel: unassignedLabel }, { field: "participantIds", label: participantLabel, values: selectedParticipants, emptyField: "includeNoParticipants", emptyLabel: noParticipantsLabel }] as const).map(({ field, label, values, emptyField, emptyLabel }) => (values.length > 0 || filters[emptyField]) && <div aria-label={label} className="task-filter-selected-group" key={field}>
+          {values.map(id => <TaskFilterChip key={id} label={label} value={personLabel(id)} onRemove={() => removeCondition({ [field]: values.filter(value => value !== id) })} />)}
+          {filters[emptyField] && <TaskFilterChip label={label} value={emptyLabel} onRemove={() => removeCondition({ [emptyField]: false })} />}
+        </div>)}
+        {!hideStatus && selectedStatuses.length > 0 && <div aria-label={u('selectedStatuses')} className="task-filter-selected-group">{selectedStatuses.map(status => {
           const definition = taskStatusDefinition[status as TaskStatus];
           const StatusIcon = definition?.icon ?? CircleDashed;
           return <TaskFilterChip key={status} label={u('status')} onRemove={() => removeCondition({ statuses: selectedStatuses.filter(value => value !== status), completion: "all" })} value={statusLabel(status)}><span className="task-list-row-status" data-tone={definition?.tone}><StatusIcon aria-hidden="true" size={14} /></span><span className="task-filter-chip-text">{statusLabel(status)}</span></TaskFilterChip>;

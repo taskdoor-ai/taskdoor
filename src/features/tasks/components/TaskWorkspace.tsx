@@ -1,20 +1,17 @@
-import { SidebarResizeHandle } from "@/features/tasks/components/SidebarResizeHandle";
-import { TaskSidebarToggle } from "@/features/tasks/components/TaskSidebarToggle";
-import { TaskSidebarContext } from "@/features/tasks/lib/task-sidebar-context";
 import { taskResultSelection } from "@/features/tasks/lib/task-result-selection";
-import { partitionPinnedTasks, pinnedTaskStorageKey, readPinnedTaskIds } from "@/features/tasks/lib/task-pins";
-import { useTaskSidebar } from "@/features/tasks/lib/useTaskSidebar";
+import { getTaskDetailPathItems } from "@/features/tasks/lib/task-detail-path";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
-import { PanelLeft } from "lucide-react";
+import { ChevronRight, ListTodo } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { PersonOption, TagDefinition, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
 import { buildTaskListProjection, buildTaskScopeCounts } from "@/features/tasks/lib/task-list-projection";
 import { TaskWorkspaceList } from "@/features/tasks/components/TaskWorkspaceList";
-import { normalizeTaskWorkspaceFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
+import { getTaskStatusFilters, normalizeTaskWorkspaceFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
+import { statusMessageKey } from "@/shared/i18n/task-status";
 import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
 type TaskWorkspaceProps = {
@@ -39,14 +36,18 @@ type TaskWorkspaceProps = {
   query: string;
   selectedTaskId: string | null;
   showingCreation?: boolean;
+  loadingTaskDetail?: boolean;
   showingWorkbench: boolean;
   tagDefinitions: TagDefinition[];
   teamId?: string;
+  teamName?: string;
+  pathItems?: Array<{ id: string; label: string }>;
+  onPathSelect?: (taskId: string) => void;
   workbench: ReactNode;
 };
 
-export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onTaskStatusChange, onOpenRecycleBin, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onClearTaskSelection, onShowWorkbench, query, selectedTaskId, showingCreation = false, showingWorkbench, tagDefinitions, teamId, progressComparisonsByTaskId }: TaskWorkspaceProps) {
-  const { t } = useI18n();
+export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onTaskStatusChange, onFiltersChange, onManageTags, onOpenRecycleBin, onQueryChange, onTaskSelect, onClearTaskSelection, onShowWorkbench, query, selectedTaskId, showingCreation = false, loadingTaskDetail = false, showingWorkbench, tagDefinitions, teamId, teamName, pathItems, onPathSelect, progressComparisonsByTaskId }: TaskWorkspaceProps) {
+  const { t, locale } = useI18n();
   const timeZone = useTeamTimeZone();
   const [calendarDay, setCalendarDay] = useState(() => taskCalendarDate(new Date().toISOString(), timeZone));
   useEffect(() => {
@@ -55,7 +56,6 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
     const timer = window.setInterval(updateDay, 60_000);
     return () => window.clearInterval(timer);
   }, [timeZone]);
-  const sidebar = useTaskSidebar();
   const mock = useMockText();
   const projectionFilters = useMemo(() => normalizeTaskWorkspaceFilters(filters), [filters]);
   const projection = useMemo(() => buildTaskListProjection(
@@ -77,33 +77,56 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
     timeZone,
   ), [nodes, currentUserId, query, projectionFilters, tagDefinitions, mock, timeZone, calendarDay]);
   const detailRef = useRef<HTMLElement>(null);
-  const hasDetail = Boolean(children);
-  const selectedTaskIsVisible = projection.visibleTasks.some((task) => task.id === selectedTaskId);
+  const selectedTask = projection.allTasks.find(task => task.id === selectedTaskId);
+  const hasDetail = loadingTaskDetail || Boolean(children && selectedTask);
+  const resultContextKey = JSON.stringify([teamId, currentUserId, query, projectionFilters]);
+  const previousContext = useRef({ selectedTaskId, key: resultContextKey, visibleIds: projection.visibleTasks.map(task => task.id) });
   useLayoutEffect(() => {
+    const previous = previousContext.current;
+    const visibleIds = projection.visibleTasks.map(task => task.id);
+    const selectionChanged = previous.selectedTaskId !== selectedTaskId;
+    const conditionsChanged = previous.key !== resultContextKey;
+    previousContext.current = { selectedTaskId, key: resultContextKey, visibleIds };
     if (hidden || showingWorkbench || showingCreation) return;
-    // Keep the existing mobile list pane until the user opens a task.
-    if (!hasDetail && !window.matchMedia("(min-width: 901px)").matches) return;
-    // The first result follows the displayed order, including the pinned section.
-    const pinScope = teamId ?? projection.allTasks[0]?.teamId ?? "default";
-    let pinnedTaskIds: string[] = [];
-    try { pinnedTaskIds = readPinnedTaskIds(window.localStorage, pinnedTaskStorageKey(currentUserId, pinScope)); }
-    catch { /* Match the list's fallback when device preferences are unavailable. */ }
-    const { pinned, unpinned } = partitionPinnedTasks(projection.visibleTasks, pinnedTaskIds);
-    const visibleTasks = [...pinned, ...unpinned];
-    const id = taskResultSelection(visibleTasks.map(task => task.id), selectedTaskId);
-    if (id === selectedTaskId) return;
-    if (!id) onClearTaskSelection?.();
-    else { const task = projection.visibleTasks.find(task => task.id === id); if (task) onTaskSelect(task, false); }
-  }, [projection.visibleTasks, projection.allTasks, currentUserId, hasDetail, hidden, onTaskSelect, onClearTaskSelection, showingCreation, showingWorkbench, selectedTaskId, teamId]);
+    // Ancestor/related-task links are explicit navigation. Only changing results
+    // can return an existing selection to the list; never auto-open another task.
+    if (selectedTaskId && (!selectedTask || (!selectionChanged
+      && (conditionsChanged || previous.visibleIds.includes(selectedTaskId))
+      && !taskResultSelection(visibleIds, selectedTaskId)))) onClearTaskSelection?.();
+  }, [projection.visibleTasks, selectedTask, selectedTaskId, resultContextKey, hidden, onClearTaskSelection, showingCreation, showingWorkbench]);
 
   useEffect(() => {
     // Reset detail reading position; the list independently reveals its selected row.
     if (detailRef.current) detailRef.current.scrollTop = 0;
   }, [selectedTaskId]);
 
-  return <TaskSidebarContext.Provider value={sidebar.controls}><section aria-label={t('tasks.workspace')} className="task-workspace" style={sidebar.style} ref={sidebar.workspaceRef} data-sidebar-collapsed={sidebar.collapsed} data-detail-open={hasDetail && !showingWorkbench && !showingCreation} data-mobile-pane={showingWorkbench || showingCreation || hasDetail ? "detail" : "list"} hidden={hidden}>
-    <aside aria-label={t('tasks.list')} aria-hidden={sidebar.desktop && sidebar.collapsed || undefined} inert={sidebar.desktop && sidebar.collapsed} className="task-workspace-master" id={sidebar.sidebarId} ref={sidebar.sidebarRef}>
-      <div className="task-workspace-master-content">
+  const scope = projectionFilters.scope ?? "all";
+  const scopeLabel = t(`list.${scope}`);
+  const statuses = getTaskStatusFilters(projectionFilters);
+  const statusLabel = statuses.map(status => status in statusMessageKey ? t(statusMessageKey[status as keyof typeof statusMessageKey]) : status).join(locale === "en" ? ", " : "、");
+  const listLabel = statusLabel ? `${scopeLabel} · ${statusLabel}` : scopeLabel;
+  const detailPath = selectedTask ? getTaskDetailPathItems(pathItems, selectedTask.id, selectedTask.parentTaskId) : [];
+  const ancestors = detailPath.filter(item => item.id !== selectedTaskId);
+  const showList = !hasDetail && !showingCreation && !showingWorkbench;
+
+  return <section aria-label={t('tasks.workspace')} className="task-workspace task-workspace-pages" data-creation-open={showingCreation} data-detail-open={hasDetail && !showingCreation && !showingWorkbench} data-list-open={showList} hidden={hidden}>
+    {showingWorkbench && !showingCreation && <header className="task-workspace-page-header">
+      {(showingWorkbench || hasDetail && ancestors.length > 0) && <nav aria-label={locale === "en" ? "Breadcrumb" : "面包屑"} className="task-workspace-breadcrumb">
+        {showingCreation || showingWorkbench ? <>
+        <ListTodo aria-hidden="true" size={17} />
+        {teamName && <span className="task-workspace-breadcrumb-team"><span className="task-workspace-team-name" title={teamName}>{teamName}</span><ChevronRight aria-hidden="true" size={13} /></span>}
+        <button onClick={onShowWorkbench} type="button">{listLabel}</button>
+        {showingCreation && <><ChevronRight aria-hidden="true" size={13} /><span aria-current="page">{t('list.new')}</span></>}
+        </> : hasDetail && <ol className="task-workspace-breadcrumb-list">
+          {ancestors.flatMap(item => [
+            <li className="task-workspace-breadcrumb-item" key={item.id}><button onClick={() => onPathSelect?.(item.id)} title={mock.field(item.id, "title", item.label)} type="button">{mock.field(item.id, "title", item.label)}</button></li>,
+            <li aria-hidden="true" className="task-workspace-breadcrumb-separator" key={`${item.id}-separator`} role="presentation"><ChevronRight size={12} /></li>,
+          ])}
+          <li className="task-workspace-breadcrumb-item task-workspace-breadcrumb-current"><span aria-current="page" className="task-workspace-current-task" title={selectedTask?.name}>{selectedTask?.name}</span></li>
+        </ol>}
+      </nav>}
+    </header>}
+    <section aria-label={t('tasks.list')} className="task-workspace-list-page" hidden={!showList}>
       <TaskWorkspaceList
         progressComparisonsByTaskId={progressComparisonsByTaskId}
         currentUserId={currentUserId}
@@ -112,9 +135,9 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
         onCreateTask={onCreateTask}
         onDeleteTask={onDeleteTask}
         onTaskStatusChange={onTaskStatusChange}
-        onOpenRecycleBin={onOpenRecycleBin}
         onFiltersChange={onFiltersChange}
         onManageTags={onManageTags}
+        onOpenRecycleBin={onOpenRecycleBin}
         onQueryChange={onQueryChange}
         onShowWorkbench={onShowWorkbench}
         onTaskSelect={onTaskSelect}
@@ -125,21 +148,12 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
         scopeCounts={scopeCounts}
         teamId={teamId}
       />
-      </div>
-      <SidebarResizeHandle kind="tasks" width={sidebar.width} onChange={sidebar.changeWidth} onResizePreview={sidebar.previewResize} onResizeCommit={sidebar.commitResize} onResizeCancel={sidebar.cancelResize} onResizingChange={sidebar.setResizing} min={260} max={sidebar.maxWidth} />
-    </aside>
-    <section aria-label={t('tasks.detail')} className="task-workspace-detail" hidden={showingWorkbench || showingCreation} ref={detailRef} tabIndex={-1}>
+    </section>
+    <section aria-label={t('tasks.detail')} className="task-workspace-detail" hidden={!hasDetail || showingWorkbench || showingCreation} ref={detailRef} tabIndex={-1}>
       <div className="task-workspace-detail-content">
-        {!hasDetail && <div className="task-workspace-empty-toggle"><TaskSidebarToggle /></div>}
-        {hasDetail && selectedTaskIsVisible ? <>
-          {children}
-        </> : <div className="task-workspace-empty">
-          <PanelLeft aria-hidden="true" size={28} strokeWidth={1.5} />
-          <h2>{projection.allTasks.length ? t('tasks.select') : t('tasks.start')}</h2>
-          <p>{projection.allTasks.length ? t('tasks.selectHint') : t('tasks.startHint')}</p>
-        </div>}
+        {children}
       </div>
     </section>
     <section aria-label={t('tasks.creation')} className="task-workspace-creation" hidden={!showingCreation}>{creation}</section>
-  </section></TaskSidebarContext.Provider>;
+  </section>;
 }

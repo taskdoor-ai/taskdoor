@@ -36,7 +36,8 @@ test("我条件缺少当前用户时不放宽筛选，清除条件会移除我",
   for (const condition of [{ ...filters, ownerIsMe: true }, { ...filters, participantIsMe: true }]) {
     for (const user of ["", " ", "all"]) assert.equal(taskMatchesListFilters(task("match", { participantIds: ["alice"] }), "", condition, user), false);
   }
-  const cleared = { ...filters, ownerIsMe: true, participantIsMe: true, ...clearedTaskListConditions };
+  const selected = { ...filters, ownerIsMe: true, participantIsMe: true };
+  const cleared = { ...selected, ...clearedTaskListConditions };
   assert.equal(taskMatchesListFilters(task("any"), "", cleared, "bob"), true);
 });
 
@@ -101,7 +102,7 @@ test("创建日期按团队日期过滤，缺失创建日期不借用更新时�
 });
 
 
-test("列表规范化清理旧人员条件，保留状态、标签、日期和搜索", () => {
+test("列表规范化保留可见人员条件，保留状态、标签、日期和搜索", () => {
   const selected: TaskListFilters = { ...filters, view: "owned", owner: "alice", completion: "open", ownerIds: ["bob"], participantIsMe: true, statuses: ["已完成"], tags: ["发布"], deadline: { preset: "custom", from: "2026-09-17", to: "2026-09-20" }, sort: "created" };
   const before = structuredClone(selected);
   const normalized = normalizeTaskWorkspaceFilters(selected);
@@ -109,7 +110,7 @@ test("列表规范化清理旧人员条件，保留状态、标签、日期和�
   assert.equal(taskMatchesListFilters(item, "发布", normalized, "alice", now), true);
   assert.equal(taskMatchesListFilters(item, "其他", normalized, "alice", now), false);
   for (const field of ["statuses", "tags", "deadline", "sort"] as const) assert.deepEqual(normalized[field], selected[field]);
-  assert.deepEqual(normalized.ownerIds, []);
+  assert.deepEqual(normalized.ownerIds, ["bob"]);
   assert.equal(normalized.participantIsMe, false);
   assert.equal(normalized.scope, "all");
   assert.deepEqual(selected, before);
@@ -174,7 +175,7 @@ test("新范围与状态标签日期搜索同时匹配，全部仅清除范围�
   assert.equal(cleared.scope, "all");
 });
 
-test("旧人员条件只迁移单一的我，其余清空，显式范围不会被残留字段叠加", () => {
+test("旧我的条件迁移为范围，人员多选独立保留且规范化幂等", () => {
   const cases: Array<[Partial<TaskListFilters>, TaskListFilters["scope"]]> = [
     [{ ownerIsMe: true }, "owned"], [{ participantIsMe: true }, "participating"],
     [{ ownerIsMe: true, participantIsMe: true }, "all"], [{ ownerIsMe: true, ownerIds: ["bob"] }, "all"],
@@ -188,10 +189,32 @@ test("旧人员条件只迁移单一的我，其余清空，显式范围不会�
     const before = structuredClone(source);
     const normalized = normalizeTaskWorkspaceFilters(source);
     assert.equal(normalized.scope, expected);
-    for (const key of ["ownerIds", "participantIds", "creatorIds"] as const) assert.deepEqual(normalized[key], []);
-    for (const key of ["ownerIsMe", "participantIsMe", "includeUnassigned", "includeNoParticipants", "includeUnknownCreator"] as const) assert.equal(normalized[key], false);
+    for (const key of ["ownerIds", "participantIds"] as const) assert.deepEqual(normalized[key], source[key] ?? []);
+    assert.deepEqual(normalized.creatorIds, []);
+    for (const key of ["ownerIsMe", "participantIsMe", "includeUnknownCreator"] as const) assert.equal(normalized[key], false);
+    for (const key of ["includeUnassigned", "includeNoParticipants"] as const) assert.equal(normalized[key], Boolean(source[key]));
     assert.deepEqual(source, before);
     assert.deepEqual(normalizeTaskWorkspaceFilters(normalized), normalized);
   }
-  assert.equal(taskMatchesListFilters(task("match", { ownerId: "bob", participantIds: ["alice"] }), "", { ...filters, scope: "participating", ownerIds: ["missing"], includeNoParticipants: true }, "alice"), true);
+  assert.equal(taskMatchesListFilters(task("match", { ownerId: "bob", participantIds: ["alice"] }), "", { ...filters, scope: "participating", ownerIds: ["missing"], includeNoParticipants: true }, "alice"), false);
+});
+
+test("高级人员筛选在显式范围下生效，同角色多选取并集、跨角色及其他条件取交集", () => {
+  const nodes = [
+    task("发布甲", { ownerId: "alice", participantIds: ["me", "carol"], labels: ["发布"] }),
+    task("发布乙", { ownerId: "bob", participantIds: ["me", "carol"], labels: ["发布"] }),
+    task("发布丙", { ownerId: "dave", participantIds: ["me", "carol"], labels: ["发布"] }),
+    task("发布无目标参与者", { participantIds: ["me"], labels: ["发布"] }),
+    task("发布非本人参与", { participantIds: ["carol"], labels: ["发布"] }),
+    task("发布已完成", { status: "已完成", participantIds: ["me", "carol"], labels: ["发布"] }),
+    task("发布其他标签", { participantIds: ["me", "carol"], labels: ["复盘"] }),
+    task("未分配", { ownerId: "", participantIds: [], proposedOwnerId: "alice" }),
+  ];
+  const selected = normalizeTaskWorkspaceFilters({ ...filters, scope: "participating", ownerIds: ["alice", "bob"], participantIds: ["carol"], statuses: ["进行中"], tags: ["发布"] });
+  const ids = (condition: TaskListFilters, query = "") => buildTaskListProjection(nodes, query, condition, [], "me").visibleTasks.map(item => item.id).sort();
+  assert.deepEqual(ids(selected, "发布"), ["发布乙", "发布甲"]);
+  assert.deepEqual(buildTaskListProjection(nodes, "发布", selected, [], "me").statusCounts, { all: 3, byStatus: { "进行中": 2, "已完成": 1 } });
+  assert.deepEqual(ids({ ...selected, scope: "all" }, "发布"), ["发布乙", "发布甲", "发布非本人参与"]);
+  assert.deepEqual(ids(normalizeTaskWorkspaceFilters({ ...filters, scope: "all", includeUnassigned: true, includeNoParticipants: true })), ["未分配"]);
+  assert.equal(ids({ ...selected, ...clearedTaskListConditions }).length, nodes.length);
 });

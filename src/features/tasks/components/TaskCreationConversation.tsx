@@ -240,7 +240,7 @@ function TaskDraftEditor({ attributesFirst = false, draft, members, onChange, sh
     <label className="task-draft-field task-draft-field-wide"><span>任务名称</span><Input onChange={(event) => update({ title: event.target.value })} value={draft.title} /></label>
     <label className="task-draft-field task-draft-field-wide"><span>任务目标</span><Textarea onChange={(event) => update({ goal: event.target.value })} value={draft.goal} /></label>
     {!attributesFirst && attributes}
-    {showParticipants && <div className="task-draft-field task-draft-field-wide"><span>参与人</span><MemberSelector displayMax={4} hideHeader hideSelectedName label="参与人" members={availableParticipants} onChange={(participantIds) => update({ participantIds })} selected={draft.participantIds} showInvitationStatus={false} stacked /></div>}
+    {showParticipants && <div className="task-draft-field task-draft-field-wide"><span>参与者</span><MemberSelector displayMax={4} hideHeader hideSelectedName label="参与者" members={availableParticipants} onChange={(participantIds) => update({ participantIds })} selected={draft.participantIds} showInvitationStatus={false} stacked /></div>}
   </div>;
 }
 
@@ -312,8 +312,8 @@ function TaskPlanPanel({ draft, memberById, members, onChange, onClose, tags }: 
                 <MemberSelector allowUnassigned hideHeader hideSelectedName label="负责人" max={1} members={members} min={0} onChange={([ownerId = ""]) => updateMainTask({ ownerId, participantIds: draft.mainTask.participantIds.filter((id) => id !== ownerId) })} selected={mainOwner ? [mainOwner.id] : []} showInvitationStatus={false} />
               </div>
               <div className="task-plan-panel-participant-summary">
-                <small>参与人</small>
-                <MemberSelector displayMax={4} hideHeader hideSelectedName label="参与人" members={members.filter((member) => member.id !== draft.mainTask.ownerId)} onChange={(participantIds) => updateMainTask({ participantIds })} selected={draft.mainTask.participantIds} showInvitationStatus={false} stacked />
+                <small>参与者</small>
+                <MemberSelector displayMax={4} hideHeader hideSelectedName label="参与者" members={members.filter((member) => member.id !== draft.mainTask.ownerId)} onChange={(participantIds) => updateMainTask({ participantIds })} selected={draft.mainTask.participantIds} showInvitationStatus={false} stacked />
               </div>
               <div className="task-plan-panel-tags"><small>标签</small><div>{mainTaskTags.slice(0, 1).map((tag) => <TagBadge key={tag.id} onRemove={() => updateMainTask({ labels: draft.mainTask.labels.filter((name) => name !== tag.name) })} size="xs" tag={tag} />)}{mainTaskTags.length > 1 && <em>+{mainTaskTags.length - 1}</em>}<TagPicker onChange={(labels) => updateMainTask({ labels })} selected={draft.mainTask.labels} tags={tags} /></div></div>
               <div className="is-due"><TaskDueDatePicker initialValue={draft.mainTask.endDate} key={`main:${draft.mainTask.endDate}`} label="截止时间" onChange={(endDate) => updateMainTask({ endDate, startDate: "" })} /></div>

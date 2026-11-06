@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { MessageSquareText } from "lucide-react";
+import { MessageSquareText, Plus } from "lucide-react";
 import { contentReading, useMockText } from "@/ai/discussion-reading";
 import { AiConnectionButton } from "@/features/ai-connection/components/AiConnectionButton";
 import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
@@ -28,6 +28,8 @@ type TaskDiscussionMessageProps = {
   onReply: (message: CollaborationMessage) => void;
   onLocate: (id: string) => void;
   onDelete?: (message: CollaborationMessage) => void;
+  onCreateSubtask?: (message: CollaborationMessage, trigger: HTMLElement) => void;
+  subtaskCreateDisabled?: boolean;
   onOpenFile: (id: string, version?: number) => void;
   onConnectAi?: (target: DiscussionAiTarget, trigger: HTMLElement, shortcut?: AiShortcutAttempt) => void | Promise<AiTransferResult | void>;
   now: number;
@@ -39,7 +41,7 @@ function timestampFor(message: CollaborationMessage, locale: string, now: number
   return formatted ? { ...formatted, dateTime: new Date(recorded).toISOString() } : null;
 }
 
-export function TaskDiscussionMessage({ message, parent, currentUser, currentUserName, files, highlighted, children, replyExpanded, replyDisabled, onReply, onLocate, onDelete, onOpenFile, onConnectAi, now }: TaskDiscussionMessageProps) {
+export function TaskDiscussionMessage({ message, parent, currentUser, currentUserName, files, highlighted, children, replyExpanded, replyDisabled, onReply, onLocate, onDelete, onCreateSubtask, subtaskCreateDisabled, onOpenFile, onConnectAi, now }: TaskDiscussionMessageProps) {
   const mock = useMockText();
   const d = useDetailCopy();
   const ui = useGlobalUi();
@@ -83,11 +85,20 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
         </div>
         {onConnectAi && <AiConnectionButton compact contextLabel={ui("{0}的讨论", { 0: message.author })} onConnect={(trigger, shortcut) => onConnectAi({ kind: isReply ? "reply" : "discussion", activityId: message.id, ...(message.fileThreadId ? { fileThreadId: message.fileThreadId } : {}) }, trigger, shortcut)} />}
       </header>
-      {message.message.trim() && <div className="task-discussion-feed-body"><DiscussionMarkdown text={reading.text} mentionedPrincipalIds={message.mentionedPrincipalIds} /></div>}
+      {message.message.trim() && <div className="task-discussion-feed-body"><DiscussionMarkdown text={reading.text} mentionedPrincipalIds={message.mentionedPrincipalIds} mentionsAllTaskMembers={message.mentionsAllTaskMembers} /></div>}
       <DiscussionAttachmentGallery attachmentRefs={message.attachmentRefs} files={files} legacyFileName={message.file} onOpenFile={onOpenFile} />
       <footer className="task-discussion-feed-footer">
         <div className="task-discussion-feed-meta">
           {timestamp && <time aria-label={timestamp.full} className="task-discussion-feed-time" dateTime={timestamp.dateTime} tabIndex={0} title={timestamp.full}>{timestamp.label}</time>}
+          {!message.deletedAt && onCreateSubtask && <button
+            className="task-discussion-create-task"
+            disabled={subtaskCreateDisabled}
+            onClick={event => onCreateSubtask(message, event.currentTarget)}
+            type="button"
+          >
+            <Plus aria-hidden="true" size={13} />
+            {locale === "en" ? "Create Task from discussion" : "从讨论创建任务"}
+          </button>}
           {(reading.state === "translated" || reading.state === "original") && <span className="task-discussion-feed-translation"><span>{reading.state === "translated" ? ui("已翻译") : ui("原文")}</span><span aria-hidden="true"> · </span><button aria-label={reading.state === "translated" ? ui("查看原文") : ui("显示译文")} onClick={toggleOriginal} type="button">{reading.state === "translated" ? ui("查看原文") : ui("显示译文")}</button></span>}
           {reading.state === "unavailable" && <small title={ui("本地演示尚无此内容的译文，原文已保留。")}>{ui("暂无译文")}</small>}
           {message.updatedAt && <small>{d("edited")}</small>}

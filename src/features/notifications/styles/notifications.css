@@ -78,3 +78,7 @@
 .notification-item .notification-person-link { position: relative; pointer-events: auto; color: var(--ad-route); font-weight: 600; text-decoration: none; cursor: pointer; }
 .notification-item .notification-person-link:hover { text-decoration: none; }
 .notification-item .notification-person-link:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; border-radius: 2px; }
+
+@media (min-width: 901px) {
+  .sheet-content.notification-panel-beside-navigation { left: var(--notification-navigation-edge); right: auto; top: var(--notification-panel-top, 9px); height: var(--notification-panel-height, calc(100dvh - 18px)); width: min(var(--ad-notification-panel-width), var(--notification-panel-available-width, calc(100vw - var(--notification-navigation-edge) - 9px))); border-radius: 19px 0 0 19px; box-shadow: none; }
+}

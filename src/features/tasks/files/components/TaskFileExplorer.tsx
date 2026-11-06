@@ -14,7 +14,8 @@ import type { TaskFileNode } from "@/shared/model/task-model";
 import { readTaskDiagnosisFiles, type TaskDiagnosisFileSnapshot } from "@/features/tasks/files/lib/task-diagnosis-context";
 import { applyTaskFileEdit, createTaskFileRevision, getTaskFileContent, getTaskFileLastUpdate, getTaskFileVersion, readTaskFileEdits, saveTaskFileEdit, type TaskFileContent, type TaskFileEditRecord } from "@/features/tasks/files/lib/task-file-editing";
 import { getTaskFileDrafts, syncTaskFileDraftWarning, updateTaskFileDrafts, type TaskFileDraft } from "@/features/tasks/files/lib/task-file-drafts";
-import { createFolder, deleteFile, deleteFolder, getDescendantIds, getNodePath, getPreviewKind, getTaskFilePreviewId, moveNode, renameNode } from "@/features/tasks/files/lib/task-file-tree";
+import { createFolder, getDescendantIds, getNodePath, getPreviewKind, getTaskFilePreviewId, moveNode, renameNode } from "@/features/tasks/files/lib/task-file-tree";
+import { canDeleteTaskFileNode, deleteTaskFileNode, type TaskFileDeletionAccess } from "@/features/tasks/files/lib/task-file-deletion";
 import { Button } from "@/shared/ui/button";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { PopoverTrigger } from "@/shared/ui/popover";
@@ -50,7 +51,7 @@ import { useAnnotationFullscreenContainer } from "@/features/tasks/files/lib/use
 import "@/features/tasks/styles/task-file-annotations.css";
 import "@/features/tasks/styles/task-file-preview-stage.css";
 
-export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVersion, focusedSequence, focusedTrigger, preserveFocusedDirectory = false, transientPreviewFile, onPreviewClose, onFilesChange, onNodesChange, onSaved, onAnnotationExitControllerChange, taskId, taskTitle = taskId, taskGoal, currentUser, currentUserId, onStartDiscussion, browserMode = false }: {
+export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVersion, focusedSequence, focusedTrigger, preserveFocusedDirectory = false, transientPreviewFile, onPreviewClose, onFilesChange, onNodesChange, onSaved, onAnnotationExitControllerChange, taskId, taskTitle = taskId, taskGoal, currentUser, currentUserId, deletionAccess, onStartDiscussion, browserMode = false }: {
   files: TaskFileNode[]; focusedFileId?: string | null; focusedVersion?: number; focusedSequence?: number; taskId: string; currentUser: string;
   focusedTrigger?: HTMLElement | null; preserveFocusedDirectory?: boolean;
   transientPreviewFile?: TaskFileNode | null;
@@ -62,6 +63,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
   onFilesChange?: (snapshot: TaskDiagnosisFileSnapshot) => void;
   onSelectText?: (file: TaskFileNode, selection?: TaskFileTextSelection) => void;
   currentUserId?: string;
+  deletionAccess?: Omit<TaskFileDeletionAccess, "actorId">;
   onStartDiscussion?: (draft: DiscussionDraft, onPublished: (published: DiscussionDraft) => void) => void;
 }) {
   const ui = useGlobalUi();
@@ -125,6 +127,8 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
   const [annotationFocusSequence, setAnnotationFocusSequence] = useState(0);
   const actorId = currentUserId ?? currentUser;
+  const deleteAccess: TaskFileDeletionAccess = { actorId, ownerId: "", participantIds: [], activeMemberIds: [], ...deletionAccess };
+  const canDelete = (nodeId: string, policy?: "move-contents" | "archive") => canDeleteTaskFileNode(filesRef.current, nodeId, deleteAccess, policy);
   const review = useTaskFileAnnotations(taskId, actorId, previewFiles);
   const [annotationMode, setAnnotationMode] = useState(false);
   const toolbarDrag = useAnnotationToolbarDrag(annotationMode);
@@ -310,7 +314,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
     setUploadProgress({ completed: 0, total: incoming.length, location: locationLabel(parentId) });
     try {
       const results = await Promise.allSettled(incoming.map(async file => {
-        const node = await prepareTaskFileUpload(file);
+        const node = await prepareTaskFileUpload(file, actorId);
         setUploadProgress(current => ({ ...current, completed: current.completed + 1 }));
         return node;
       }));
@@ -386,13 +390,19 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
     setExpandedIds(current => new Set([...current, ...visibleFiles.filter(node => node.kind === "folder").map(node => node.id)]));
   }, [query, visibleFiles]);
   const openAction = (action: TaskFileAction) => {
+    if (action.type === "delete" && !canDelete(action.nodeId)) {
+      setError(text("没有删除权限，仅原始创建／上传者或当前任务负责人可删除。", "Only the original creator/uploader or current task assignee can delete this item."));
+      return;
+    }
     setDialog({ type: action.type, nodeId: action.nodeId });
   };
   const deleteNode = (nodeId: string, policy?: "move-contents" | "archive") => {
-    const node = files.find(item => item.id === nodeId)!;
-    const removed = node.kind === "folder" && policy === "archive" ? [nodeId, ...getDescendantIds(files, nodeId)] : [nodeId];
-    const next = node.kind === "folder" ? deleteFolder(files, nodeId, policy ?? "move-contents") : deleteFile(files, nodeId);
-    commitFiles(next); setUndo({ files, message: ui("已{0}“{1}”", {0: policy === "archive" ? d('archive') : d('delete'), 1: node.name}) });
+    const currentFiles = filesRef.current;
+    if (!canDelete(nodeId, policy)) throw new Error(text("删除权限已不可用，请核对当前任务成员、负责人及原始上传者。", "Deletion is no longer allowed. Check current task membership, ownership and the original uploader."));
+    const next = deleteTaskFileNode(currentFiles, nodeId, deleteAccess, policy);
+    const node = currentFiles.find(item => item.id === nodeId)!;
+    const removed = node.kind === "folder" && policy === "archive" ? [nodeId, ...getDescendantIds(currentFiles, nodeId)] : [nodeId];
+    commitFiles(next); setUndo({ files: currentFiles, message: ui("已{0}“{1}”", {0: policy === "archive" ? d('archive') : d('delete'), 1: node.name}) });
     if (selectedId && removed.includes(selectedId)) { setSelectedId(getTaskFilePreviewId(next)); setEditingFileId(null); setShowHistory(false); setSelection(null); setReferenceVersion(undefined); setAnnotationSource(null); setAnnotationMode(false); }
   };
   const restoreDeleted = () => {
@@ -553,7 +563,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
     if (event.key === "Escape") setSelection(null);
   }}>
     {browserMode ? <>
-      <TaskFileBrowser files={files} displayName={mock.text} directoryId={browserDirectoryId} onDirectoryChange={setBrowserDirectoryId} expandedIds={expandedIds} onExpandedChange={setExpandedIds} onOpen={(id, trigger) => { previewTrigger.current = trigger; selectNode(id); }} onAction={openAction} onCreateFolder={() => setDialog({ type: "create", parentId: browserDirectoryId })} onUpload={openUpload} uploading={uploading} error={error || loaded.error} />
+      <TaskFileBrowser canDelete={canDelete} files={files} displayName={mock.text} directoryId={browserDirectoryId} onDirectoryChange={setBrowserDirectoryId} expandedIds={expandedIds} onExpandedChange={setExpandedIds} onOpen={(id, trigger) => { previewTrigger.current = trigger; selectNode(id); }} onAction={openAction} onCreateFolder={() => setDialog({ type: "create", parentId: browserDirectoryId })} onUpload={openUpload} uploading={uploading} error={error || loaded.error} />
       <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={ui("选择上传文件")} hidden multiple onChange={event => void uploadFiles(Array.from(event.target.files ?? []), uploadParentId)} ref={uploadInput} type="file" />
       {uploading && <div className="flex items-center gap-3 p-4" role="status"><Spinner /><span>{ui("正在上传 {0}/{1} 个文件", {0: uploadProgress.completed, 1: uploadProgress.total})}</span><Progress aria-label={ui("上传进度")} max={uploadProgress.total} value={uploadProgress.completed} /></div>}
     </> : <aside aria-label={ui("任务文件")} aria-hidden={sidebar.collapsed || undefined} inert={sidebar.collapsed} className="task-file-explorer-sidebar" id={sidebar.sidebarId} ref={sidebar.sidebarRef}>
@@ -569,7 +579,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
         </DropdownMenu>
         <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={ui("选择上传文件")} hidden multiple onChange={event => void uploadFiles(Array.from(event.target.files ?? []), uploadParentId)} ref={uploadInput} type="file" />
       </div>
-      <div className="task-file-explorer-tree-scroll">{visibleFiles.some(node => !node.archived) ? <TaskFileTree expandedIds={expandedIds} nodes={visibleFiles} onAction={openAction} onExpandedChange={setExpandedIds} onSelect={id => selectNode(id)} selectedId={selectedId} /> : <div className="task-file-explorer-no-results">{query ? ui("没有匹配的文件") : ui("暂无文件")}{query && <button onClick={() => setQuery("")} type="button">{ui("清除搜索")}</button>}</div>}</div>
+      <div className="task-file-explorer-tree-scroll">{visibleFiles.some(node => !node.archived) ? <TaskFileTree canDelete={canDelete} expandedIds={expandedIds} nodes={visibleFiles} onAction={openAction} onExpandedChange={setExpandedIds} onSelect={id => selectNode(id)} selectedId={selectedId} /> : <div className="task-file-explorer-no-results">{query ? ui("没有匹配的文件") : ui("暂无文件")}{query && <button onClick={() => setQuery("")} type="button">{ui("清除搜索")}</button>}</div>}</div>
       </div>
       {sidebar.desktop && <SidebarResizeHandle kind="files" width={sidebar.width} onChange={sidebar.changeWidth} onResizePreview={sidebar.previewResize} onResizeCommit={sidebar.commitResize} onResizeCancel={sidebar.cancelResize} onResizingChange={sidebar.setResizing} min={180} max={sidebar.maxWidth} />}
     </aside>}
@@ -577,7 +587,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
     {dragging && !showUpload && <div className="task-file-drop-overlay"><Upload size={30} /><strong>{uploading ? ui("正在上传文件…") : ui("松开以上传文件")}</strong><span>{locationLabel(directoryId)}</span></div>}
     <Dialog onOpenChange={setShowUpload} open={showUpload}><DialogContent className="sm:max-w-md" overlayForceRender><DialogHeader><DialogTitle>{ui("上传文件")}</DialogTitle><DialogDescription>{ui("上传到：{0}", {0: locationLabel(uploadParentId)})}</DialogDescription></DialogHeader><Empty className="task-file-upload-dropzone border" onDragOver={event => { event.preventDefault(); event.currentTarget.dataset.dragging = "true"; }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) delete event.currentTarget.dataset.dragging; }} onDrop={event => { event.preventDefault(); event.stopPropagation(); delete event.currentTarget.dataset.dragging; void uploadFiles(Array.from(event.dataTransfer.files), uploadParentId); }}><EmptyHeader><EmptyMedia variant="icon"><Upload /></EmptyMedia><EmptyTitle>{ui("拖入文件，或选择上传")}</EmptyTitle><EmptyDescription>{ui("每次最多 {0} 个文件，单个不超过 {1}", {0: DISCUSSION_UPLOAD_MAX_FILES, 1: TASK_FILE_UPLOAD_MAX_LABEL})}<br />{ui("仅支持可在线预览的文件：{0}", {0: TASK_FILE_UPLOAD_EXTENSIONS_LABEL})}</EmptyDescription></EmptyHeader><EmptyContent><Button onClick={() => uploadInput.current?.click()} variant="outline">{ui("选择文件")}</Button></EmptyContent></Empty></DialogContent></Dialog>
     {!browserMode && previewOverlays}
-    <TaskFileDialogs dialog={dialog} nodes={files} onClose={() => setDialog(null)} onCreate={(parentId, name) => { const result = createFolder(files, parentId, name); commitFiles(result.nodes); setExpandedIds(current => new Set([...current, ...getNodePath(result.nodes, result.folder.id).filter(node => node.kind === "folder").map(node => node.id)])); }} onDelete={deleteNode} onMove={(nodeId, parentId) => { const next = moveNode(files, nodeId, parentId); commitFiles(next); if (parentId) setExpandedIds(current => new Set([...current, ...getNodePath(next, parentId).filter(node => node.kind === "folder").map(node => node.id)])); }} onRename={renameFile} />
+    <TaskFileDialogs canDelete={canDelete} dialog={dialog} nodes={files} onClose={() => setDialog(null)} onCreate={(parentId, name) => { const result = createFolder(filesRef.current, parentId, name, actorId); commitFiles(result.nodes); setExpandedIds(current => new Set([...current, ...getNodePath(result.nodes, result.folder.id).filter(node => node.kind === "folder").map(node => node.id)])); }} onDelete={deleteNode} onMove={(nodeId, parentId) => { const next = moveNode(files, nodeId, parentId); commitFiles(next); if (parentId) setExpandedIds(current => new Set([...current, ...getNodePath(next, parentId).filter(node => node.kind === "folder").map(node => node.id)])); }} onRename={renameFile} />
     {browserMode && <DialogContent className="task-file-preview-dialog task-file-preview-window" data-preview-kind={viewerFile ? getPreviewKind(viewerFile.name, viewerFile.mimeType) : "unknown"} showCloseButton={false} initialFocus={closePreviewButton} finalFocus={() => previewTrigger.current?.isConnected ? previewTrigger.current : sidebar.rootRef.current?.querySelector<HTMLButtonElement>(".task-file-browser-location > button:not(:disabled), .task-file-browser-add") ?? false}>
       <DialogDescription className="sr-only">{ui("文件预览和编辑")}</DialogDescription>
       {previewPane}

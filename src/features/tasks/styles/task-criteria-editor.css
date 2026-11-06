@@ -20,6 +20,7 @@
 .task-subtask-list-item > .task-subtask-list-row:hover { background: transparent; }
 .task-subtask-title { display: inline-flex; min-width: 0; width: fit-content; flex-wrap: wrap; align-items: center; gap: var(--ad-space-2); padding: 0; border: 0; background: transparent; color: var(--ad-ink); font-size: var(--ad-text-label); font-weight: 550; cursor: pointer; text-align: left; overflow-wrap: anywhere; }
 .task-subtask-title > span { min-width: 0; }
+.task-subtask-title > .task-subtask-title-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; white-space: normal; }
 .task-subtask-title-count { display: inline-flex; flex: 0 0 auto; box-sizing: border-box; align-items: center; justify-content: center; gap: .25em; height: 1.65em; min-height: 0; padding: 0 .4em; border: 1px solid var(--ad-border); border-radius: .45em; background: transparent; color: var(--ad-ink-secondary); font-size: .85em; font-weight: 400; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .task-subtask-title-count > svg { flex-shrink: 0; width: 1em; height: 1em; }
 .task-subtask-title:hover { color: var(--ad-route); }
@@ -30,3 +31,11 @@
   .task-criteria-editor-panel { padding: var(--ad-space-3); }
   .task-criteria-editor-panel [data-slot="button"] { min-height: var(--ad-control-touch-min); }
 }
+
+ .criterion-height-preview { margin: 0; padding: 0; overflow: hidden; list-style: none; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); }
+.criterion-height-preview > li { display: grid; grid-template-columns: 17px minmax(0, 1fr); gap: var(--ad-space-1); padding: 2px 0; line-height: 1.65; overflow-wrap: anywhere; }
+.criterion-height-preview > li + li { margin-top: var(--ad-space-1); }
+.criterion-height-preview > li > span:first-child { color: var(--ad-ink-tertiary); }
+.task-criteria-expand { display: block; padding: 6px 0; border: 0; background: transparent; color: var(--ad-ink-tertiary); font: inherit; font-size: var(--ad-text-caption); cursor: pointer; }
+.task-criteria-expand:hover { color: var(--ad-route); }
+.task-criteria-expand:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }

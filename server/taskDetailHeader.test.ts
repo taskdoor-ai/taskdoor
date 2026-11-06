@@ -32,9 +32,10 @@ test("子任务从真实祖先开始保留完整任务路径，不伪造缺失�
 test("详情使用真实父任务投影，长路径保留完整可读名称及独立返回入口", () => {
   const detail = read("features/tasks/components/TaskDetail.tsx");
   assert.match(detail, /getTaskDetailPathItems\(pathItems, taskId, parentTask\?\.id\)/);
-  assert.match(detail, /taskPathItems\.length > 0 \? <nav/);
+  assert.match(detail, /hasRealAncestors = taskPathItems\.some\(item => item\.id !== taskId\)/);
+  assert.match(detail, /!hidePathNavigation && hasRealAncestors && .*<nav/);
   assert.match(detail, /title=\{label\}/);
-  assert.match(detail, /<TaskSidebarToggle/);
+  assert.doesNotMatch(detail, /<TaskSidebarToggle/);
   assert.match(detail, /onClick=\{onBackToList\}/);
 });
 

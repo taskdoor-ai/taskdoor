@@ -1,0 +1,6 @@
+.task-subtask-completion-badge { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 5px; padding: 2px 7px; border: 1px solid var(--ad-border-soft); border-radius: 999px; color: var(--ad-ink-secondary); font-size: 12px; font-weight: 400; line-height: 18px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.task-subtask-completion-badge svg { width: 16px; height: 16px; fill: none; stroke-width: 2; }
+.task-subtask-completion-track { stroke: var(--ad-border-soft); }
+.task-subtask-completion-value { stroke: var(--ad-route-ink); stroke-linecap: round; transform: rotate(-90deg); transform-origin: center; }
+.task-list-row-name-with-subtasks { display: flex; flex: 1; min-width: 0; align-items: center; gap: 10px; }
+.task-list-refresh .task-list-row-name-with-subtasks .task-workspace-row-title { flex: 0 1 auto; }
