@@ -51,8 +51,9 @@ import { useAnnotationFullscreenContainer } from "@/features/tasks/files/lib/use
 import "@/features/tasks/styles/task-file-annotations.css";
 import "@/features/tasks/styles/task-file-preview-stage.css";
 
-export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVersion, focusedSequence, focusedTrigger, preserveFocusedDirectory = false, transientPreviewFile, onPreviewClose, onFilesChange, onNodesChange, onSaved, onAnnotationExitControllerChange, taskId, taskTitle = taskId, taskGoal, currentUser, currentUserId, deletionAccess, onStartDiscussion, browserMode = false }: {
+export function TaskFileExplorer({ files: initialFiles, discussionFiles, focusedFileId, focusedVersion, focusedSequence, focusedTrigger, preserveFocusedDirectory = false, transientPreviewFile, onPreviewClose, onFilesChange, onNodesChange, onSaved, onAnnotationExitControllerChange, taskId, taskTitle = taskId, taskGoal, currentUser, currentUserId, deletionAccess, onStartDiscussion, browserMode = false }: {
   files: TaskFileNode[]; focusedFileId?: string | null; focusedVersion?: number; focusedSequence?: number; taskId: string; currentUser: string;
+  discussionFiles?: TaskFileNode[];
   focusedTrigger?: HTMLElement | null; preserveFocusedDirectory?: boolean;
   transientPreviewFile?: TaskFileNode | null;
   onPreviewClose?: () => void;
@@ -76,26 +77,31 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
     try {
       const records = typeof window === "undefined" ? {} : readTaskFileEdits(window.localStorage, taskId);
       const fileErrors: Record<string, string> = {};
-      const files = initialFiles.map(file => {
+      const projected = [...initialFiles, ...(discussionFiles ?? [])].map(file => {
         if (!Object.hasOwn(records, file.id)) return file;
         try { return applyTaskFileEdit(file, records[file.id]); }
         catch (failure) { fileErrors[file.id] = ui("{0} 原记录已保留，当前文件暂时只读。", {0: failure instanceof Error ? failure.message : "本地版本无法读取。"}); return file; }
       });
-      return { records, files, fileErrors, error: "" };
+      return { records, files: projected.slice(0, initialFiles.length), fileErrors, error: "" };
     } catch (error) { return { records: {}, files: initialFiles, fileErrors: {}, error: error instanceof Error ? error.message : "本地文件记录读取失败，请检查浏览器存储后重新打开。" }; }
   });
   const [records, setRecords] = useState<Record<string, TaskFileEditRecord>>(loaded.records);
   const [files, setFiles] = useState(loaded.files);
   const filesRef = useRef(files);
   filesRef.current = files;
+  const discussionSources = useMemo(() => (discussionFiles ?? []).map(file => {
+    const record = records[file.id];
+    if (!record || record.version < (file.version ?? 1) || loaded.fileErrors[file.id]) return file;
+    try { return applyTaskFileEdit(file, record); } catch { return file; }
+  }), [discussionFiles, records, loaded.fileErrors]);
   // Temporary attachments remain review sources for this mounted task, never tree nodes.
   const temporarySources = useRef(new Map<string, TaskFileNode>());
   if (transientPreviewFile && !files.some(file => file.id === transientPreviewFile.id)) temporarySources.current.set(transientPreviewFile.id, transientPreviewFile);
-  const previewFiles = useMemo(() => [...files, ...[...temporarySources.current.values()].filter(source => !files.some(file => file.id === source.id))], [files, transientPreviewFile]);
+  const previewFiles = useMemo(() => [...files, ...discussionSources, ...[...temporarySources.current.values()].filter(source => ![...files, ...discussionSources].some(file => file.id === source.id))], [files, discussionSources, transientPreviewFile]);
   const [drafts, setDrafts] = useState<Record<string, TaskFileDraft>>(() => getTaskFileDrafts(taskId) ?? {});
   const [error, setError] = useState(loaded.error);
   const [referenceVersion, setReferenceVersion] = useState(focusedVersion);
-  const [selectedId, setSelectedId] = useState<string | null>(() => getTaskFilePreviewId(transientPreviewFile ? [...loaded.files, transientPreviewFile] : loaded.files, focusedFileId));
+  const [selectedId, setSelectedId] = useState<string | null>(() => getTaskFilePreviewId(previewFiles, focusedFileId));
   const [expandedIds, setExpandedIds] = useState(() => new Set(browserMode
     ? focusedFileId && !preserveFocusedDirectory ? getNodePath(loaded.files, focusedFileId).filter(node => node.kind === "folder").map(node => node.id) : []
     : initialFiles.filter(node => node.kind === "folder").map(node => node.id)));
@@ -151,7 +157,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
   const basketTriggerId = useId();
   const basketTriggerRef = useRef<HTMLButtonElement | null>(null);
   const selected = previewFiles.find(node => node.id === selectedId && node.kind === "file" && !node.archived) ?? null;
-  const isTransientPreview = Boolean(selected && !files.some(file => file.id === selected.id));
+  const isTransientPreview = Boolean(selected && !files.some(file => file.id === selected.id) && !discussionSources.some(file => file.id === selected.id));
   const referenceFile = useMemo(() => {
     if (!selected || referenceVersion == null || referenceVersion === (selected.version ?? 1)) return selected;
     if (loaded.error || loaded.fileErrors[selected.id]) return null;
@@ -363,12 +369,13 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
       saveTaskFileEdit(window.localStorage, taskId, nextRecord, selected.version ?? 1);
       setRecords(current => ({ ...current, [selected.id]: nextRecord }));
       const nextFiles = files.map(file => file.id === selected.id ? applyTaskFileEdit(file, nextRecord) : file);
+      const savedFile = selected.discussionOnly ? applyTaskFileEdit(selected, nextRecord) : nextFiles.find(file => file.id === selected.id)!;
       setFiles(nextFiles);
       const nextDrafts = { ...drafts }; delete nextDrafts[selected.id]; updateDrafts(nextDrafts);
       setError(""); setSelection(null); setEditingFileId(null);
       onSaved?.();
-      try { onNodesChange?.(nextFiles); } catch (failure) { setError(ui("正文已保存，文件列表同步失败：{0}", {0: failure instanceof Error ? failure.message : "请重新打开文件。"})); return null; }
-      return nextFiles.find(file => file.id === selected.id) ?? null;
+      try { onNodesChange?.(selected.discussionOnly ? [...nextFiles, savedFile] : nextFiles); } catch (failure) { setError(ui("正文已保存，文件列表同步失败：{0}", {0: failure instanceof Error ? failure.message : "请重新打开文件。"})); return null; }
+      return savedFile;
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : "保存失败，草稿已保留，请重试。");
       return null;
@@ -489,7 +496,7 @@ export function TaskFileExplorer({ files: initialFiles, focusedFileId, focusedVe
                 }}><Download size={14} />{annotationExporting ? text("准备材料…", "Preparing materials…") : text("下载修订包", "Download revision package")}</DropdownMenuItem>}
                 {!isTransientPreview && (supportsVersioning || ownAnnotations.length > 0) && <DropdownMenuSeparator />}
               </>}
-              {!isTransientPreview && <DropdownMenuItem onClick={() => setDialog({ type: "move", nodeId: selected.id })}><MoveRight size={14} />{ui("移动到")}</DropdownMenuItem>}
+              {!isTransientPreview && !selected.discussionOnly && <DropdownMenuItem onClick={() => setDialog({ type: "move", nodeId: selected.id })}><MoveRight size={14} />{ui("移动到")}</DropdownMenuItem>}
             </DropdownMenuGroup></DropdownMenuContent></DropdownMenu>}
             {browserMode && <Button aria-label={ui("关闭文件预览")} onClick={requestPreviewClose} ref={closePreviewButton} size="icon-sm" variant="ghost"><X /></Button>}
             </div>

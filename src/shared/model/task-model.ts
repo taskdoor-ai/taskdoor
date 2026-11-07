@@ -75,7 +75,9 @@ export type TaskDetailId = "fragrance-creator-wrapup" | "fragrance-creator-busin
 export type TaskFileNode = {
   /** Original creator/uploader, stable across edits, moves and renames. Unknown on legacy files. */
   createdById?: string;
-  /** Discussion material retained with messages, outside the task file tree. */
+  /** Published uploads retained with discussions, outside the task file tree. */
+  discussionOnly?: true;
+  /** Immutable generated discussion material; it has no editable version history. */
   attachmentOnly?: true;
   /** An untouched retired demo source stays readable from its historical references. */
   retiredBuiltin?: true;

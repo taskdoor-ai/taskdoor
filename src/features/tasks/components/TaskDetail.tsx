@@ -235,6 +235,7 @@ export function TaskDetail({
   const pendingDiscussionRef = useRef<{ signature: string; message: CollaborationMessage } | null>(null);
   const allFiles = collaboration.snapshot.files;
   const taskFiles = useMemo(() => getTaskFiles(allFiles), [allFiles]);
+  const discussionFiles = useMemo(() => allFiles.filter(file => file.discussionOnly), [allFiles]);
   const allMessages = useMemo(() => mergeCollaborationMessages(task.activities, collaboration.snapshot.messages), [task.activities, collaboration.snapshot.messages]);
   const contentIndicators = getTaskContentIndicators({
     messages: allMessages, files: taskFiles,
@@ -372,7 +373,7 @@ export function TaskDetail({
 
   const openDiscussionAi = (target: DiscussionAiTarget, trigger: HTMLElement, shortcut?: AiShortcutAttempt) => {
     const request = buildDiscussionAiRequest({ taskId, currentUser, target, tags,
-      task: { ...task, activities: allMessages, files: taskFiles, title: currentTitle, goal: currentGoal, status: currentStatus, owner: confirmedOwnerId, participants: currentParticipants, due: plannedEndOn ?? task.due },
+      task: { ...task, activities: allMessages, files: allFiles, title: currentTitle, goal: currentGoal, status: currentStatus, owner: confirmedOwnerId, participants: currentParticipants, due: plannedEndOn ?? task.due },
     });
     if (!request) { setAttentionMessage(d('replyUnavailable')); return; }
     if (shortcut) return launchAiContext(request, shortcut.agent, shortcut.signal, undefined, undefined, locale);
@@ -551,7 +552,7 @@ export function TaskDetail({
   };
 
   const previewAttachment = (file: TaskFileNode, trigger: HTMLElement) => {
-    if (taskFiles.some(candidate => candidate.id === file.id && !candidate.archived)) {
+    if (allFiles.some(candidate => candidate.id === file.id && !candidate.archived)) {
       openFile(file.id, file.version, true, trigger);
       return;
     }
@@ -809,7 +810,7 @@ export function TaskDetail({
     </section>
 
       <section aria-labelledby="task-detail-tab-files" className="task-detail-section task-files-panel first-section" hidden={activeTab !== "files"} id="task-detail-panel-files" role="tabpanel">
-      <TaskFileExplorer browserMode deletionAccess={{ ownerId: confirmedOwnerId, participantIds: currentParticipants, activeMemberIds: activityPeople }} transientPreviewFile={attachmentPreview?.taskId === taskId ? attachmentPreview.file : null} onPreviewClose={() => setAttachmentPreview(null)} onAnnotationExitControllerChange={onAnnotationExitControllerChange} onSaved={onFileSaved} currentUser={currentUser} currentUserId={currentUserId} onStartDiscussion={(draft, onPublished) => { setDiscussionInsertion({ id: crypto.randomUUID(), draft, onPublished }); setActiveTab("discussion"); }} files={taskFiles} focusedFileId={selectedFileId} focusedVersion={selectedFileVersion} focusedSequence={fileFocusSequence} focusedTrigger={activeTab === "discussion" ? filePreviewTrigger.current : null} preserveFocusedDirectory={activeTab === "discussion"} key={taskId} taskId={taskId} taskTitle={currentTitle} taskGoal={task.goal}
+      <TaskFileExplorer browserMode deletionAccess={{ ownerId: confirmedOwnerId, participantIds: currentParticipants, activeMemberIds: activityPeople }} discussionFiles={discussionFiles} transientPreviewFile={attachmentPreview?.taskId === taskId ? attachmentPreview.file : null} onPreviewClose={() => setAttachmentPreview(null)} onAnnotationExitControllerChange={onAnnotationExitControllerChange} onSaved={onFileSaved} currentUser={currentUser} currentUserId={currentUserId} onStartDiscussion={(draft, onPublished) => { setDiscussionInsertion({ id: crypto.randomUUID(), draft, onPublished }); setActiveTab("discussion"); }} files={taskFiles} focusedFileId={selectedFileId} focusedVersion={selectedFileVersion} focusedSequence={fileFocusSequence} focusedTrigger={activeTab === "discussion" ? filePreviewTrigger.current : null} preserveFocusedDirectory={activeTab === "discussion"} key={taskId} taskId={taskId} taskTitle={currentTitle} taskGoal={task.goal}
         onNodesChange={files => collaboration.commit(snapshot => replaceCollaborationFiles(snapshot, files, { actorId: currentUserId, ownerId: confirmedOwnerId, participantIds: currentParticipants, activeMemberIds: activityPeople }))}
         />
     </section>

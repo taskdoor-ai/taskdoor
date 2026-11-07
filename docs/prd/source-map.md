@@ -1,5 +1,20 @@
 # PRD 来源映射
 
+## PRD-0369、0370–0372：本批六项批准改动（2026-11-07）
+
+本批从已发布基线隔离，只同步[当前六项最终改法](../../artifacts/product-audit/product-sync-pending-issue-2026-11-07.md)。PRD-0369维护新讨论附件的收纳边界，PRD-0370／0371／0372维护自动翻译默认关闭、逐条翻译及入口呈现；沿用原已分配ID。提及与任务引用样式、消息底部顺序、文件加载主题及分隔线对齐属于纯视觉修正，不增加语义日志。其余基线内容和此前暂缓范围保持，不整批引入其他工作区的新需求。
+
+| 批准范围 | 本批源码与规则 |
+| --- | --- |
+| 提及和任务引用去底色、保留文字色并加粗 | [输入框样式](../../src/features/tasks/styles/discussion-composer.css)、[提及样式](../../src/features/tasks/styles/discussion-messages.css)、[任务引用样式](../../src/features/tasks/styles/discussion-markdown.css)；选择、成员资料、通知、引用打开及键盘焦点保持 |
+| 子任务数量紧跟发布时间 | [实际讨论消息](../../src/features/tasks/discussion/components/TaskDiscussionMessage.tsx)将非零子任务数量留在时间之后，创建入口在其后；收展与创建行为保持 |
+| 新讨论附件仅随消息保存 | [协作保存及文件投影](../../src/features/tasks/lib/task-collaboration.ts)、[协作接线](../../src/features/tasks/lib/useTaskCollaboration.ts)、[文件计数](../../src/features/tasks/lib/task-content-indicators.ts)、[文件模型](../../src/shared/model/task-model.ts)；[任务详情](../../src/features/tasks/components/TaskDetail.tsx)与[附件预览](../../src/features/tasks/files/components/TaskFileExplorer.tsx)保留讨论回读及按格式支持的编辑版本。规则归[讨论附件收纳](modules/10-discussion-notifications-activity.md#讨论附件收纳)、[页签数量](modules/08-task-detail.md#页签数量)及[文件版本](modules/11-files-local-commits.md#32-文件与版本) |
+| 默认关闭与逐条翻译 | [偏好初始化](../../src/shared/i18n/I18nProvider.tsx)、[共用阅读状态](../../src/ai/discussion-reading.ts)、[消息及切换入口](../../src/features/tasks/discussion/components/TaskDiscussionMessage.tsx)、[消息样式](../../src/features/tasks/styles/task-discussion-feed.css)、[界面文案](../../src/shared/i18n/globalUiMessages.json)；词条由[讨论读取](../../src/ai/mock/i18n/MockDataProvider.tsx)及[设备词条](../../src/ai/mock/i18n/discussion-translation-entries.ts)复用，示例译文仅供本地阅读。规则归[讨论翻译](modules/02-internationalization.md#33-自动翻译讨论内容) |
+| 居中加载及文件预览主题 | [统一加载组件](../../src/features/tasks/files/components/TaskFileLoading.tsx)、[加载样式](../../src/features/tasks/styles/task-file-loading.css)、[文件预览](../../src/features/tasks/files/components/TaskFileViewer.tsx)、[HTML读取](../../src/features/tasks/files/components/TaskHtmlAnnotations.tsx)、[预览布局](../../src/features/tasks/styles/task-file-preview-stage.css)、[图片](../../src/features/tasks/styles/task-image-viewer.css)与[视频](../../src/features/tasks/styles/task-media-viewer.css)主题；只调整读取反馈及呈现 |
+| 吸顶、页签和消息分隔线对齐 | [详情样式](../../src/features/tasks/styles/task-detail-split.css)与[消息样式](../../src/features/tasks/styles/task-discussion-feed.css)；保留原吸顶测量、消息排版和页签操作 |
+
+模块仅更新02的翻译段、08的文件计数、10的讨论附件收纳与原位查看、11的普通上传讨论附件版本边界；不带入音视频新增标注、业务连接或草稿恢复规则。相关旧讨论图及语言菜单继续 `pending`，未新增正式截图或版本归档。主工作区已有的单条翻译、原文切换、普通文字悬停色及窄屏核验只证明当时运行；本批隔离版本5个定向文件43项、结构门、应用源码类型检查及Vite打包通过，具体范围以[本轮实现矩阵](current-implementation-matrix.md)为准，不扩大为总`tsc -b`或暂缓能力通过。
+
 ## PRD-0274：输入保存、讨论附件与文件交互的批准范围（2026-10-23）
 
 用户明确授权提交已合并的10项PM Demo并据此建立正式项目跟进；本轮从已发布`d3033c0a`基线隔离，保留原工作区尚未提交的子任务拆解UI／Skill、新增统一预览及媒体时间点标注、AI交接、页面资源失效恢复与排序增量。原已发布正文中既有的独立拆解和临时标注规则保持，不能将本轮隔离解释为删除既有能力。

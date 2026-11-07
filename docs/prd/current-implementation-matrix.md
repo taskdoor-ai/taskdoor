@@ -1,5 +1,34 @@
 # 当前实现矩阵
 
+## 2026-11-07 本批六项隔离发布范围
+
+本批源码与需求对应关系见[来源映射](source-map.md)及[六项草稿快照](../../artifacts/product-audit/product-sync-pending-issue-2026-11-07.md)。本节只核对本批批准范围，不将保留的旧规则或主工作区其他未发布能力记成本批实现。
+
+隔离版本5个定向文件共43项全部通过，覆盖内容阅读与手动翻译、讨论附件保存、预览编辑和计数；结构检查、`npx tsc -p tsconfig.app.json --noEmit`及`npx vite build`通过。本批不包含新增音视频时间点标注、业务连接（businessConnection）、草稿恢复或暂缓的视频封面优化；未运行全量测试或双重审查，不声明总`tsc -b`通过。
+
+## PRD-0369 讨论附件仅随消息保存（2026-11-07）
+
+| 已确认行为 | 本批实现入口 | 边界 |
+| --- | --- | --- |
+| 普通发言与回复的新上传附件不进入文件列表、搜索或数量，不创建收纳目录 | [协作保存及投影](../../src/features/tasks/lib/task-collaboration.ts)、[计数](../../src/features/tasks/lib/task-content-indicators.ts)、[文件模型](../../src/shared/model/task-model.ts)将普通讨论上传与已有任务文件分别处理 | 消息与附件仍持久保存；失败或重试不产生重复，历史已收纳文件及已有引用不迁移 |
+| 讨论原位预览、下载及按格式支持的编辑／版本保持 | [详情接线](../../src/features/tasks/components/TaskDetail.tsx)、[协作接线](../../src/features/tasks/lib/useTaskCollaboration.ts)与[附件预览](../../src/features/tasks/files/components/TaskFileExplorer.tsx)保留有效材料读取 | 普通上传的讨论收纳范围不等于生成标注材料的不可变范围；旧引用仍固定原版本，明确切最新后才操作 |
+
+## PRD-0370 自动翻译默认关闭（2026-11-07）
+
+[偏好初始化](../../src/shared/i18n/I18nProvider.tsx)在无已保存偏好、非法值或读取失败时关闭，显式开启／关闭的原选择继续保存；[语言菜单](../../src/shared/ui/LanguageSwitcher.tsx)沿同一状态。不得重置用户已保存偏好。
+
+## PRD-0371 讨论逐条手动翻译（2026-11-07）
+
+[共用阅读状态](../../src/ai/discussion-reading.ts)、[正文判断](../../src/ai/mock/i18n/contentReading.ts)与[实际讨论消息](../../src/features/tasks/discussion/components/TaskDiscussionMessage.tsx)支持主消息／回复的异语手动入口、单条触发及原文／译文切换，不改变全局偏好；[讨论读取](../../src/ai/mock/i18n/MockDataProvider.tsx)与[词条缓存](../../src/ai/mock/i18n/discussion-translation-entries.ts)共用精确原文和目标语言记录。本批仍只使用本地示例译文，未知文本不生成假译文；真实翻译服务、服务端权限和跨成员／设备共享尚未接入。
+
+## PRD-0372 翻译入口与无译文呈现（2026-11-07）
+
+[消息组件](../../src/features/tasks/discussion/components/TaskDiscussionMessage.tsx)与[样式](../../src/features/tasks/styles/task-discussion-feed.css)让手动翻译在桌面随悬停／焦点显示、触屏直接可达；成功取得译文后常显阅读标记和切换，未取得译文仅保留原文，不显示“暂无译文”等占位。翻译及切换的悬停色使用普通文字色，属于纯样式修正；入口规则和词条持久化保持。
+
+### 本批其余纯视觉调整
+
+提及和任务引用去底色并加粗、子任务数量紧跟时间、文件打开时居中加载及跟随主题、三处分隔线对齐，均沿原交互与数据规则，只调整既有组件的呈现；不增加语义日志。相关旧截图维持待采集，不把旧图或临时核验图当成本批正式截图。隔离验证采用本节已列出的43项定向检查、结构门、应用类型检查和Vite打包，不宣称真实服务或此前暂缓能力已接入。
+
 ## PRD-0274：输入保存、讨论与文件交互的隔离同步（2026-10-23）
 
 | 本批目标 | 当前实现与证据入口 | 验证边界 |

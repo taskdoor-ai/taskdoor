@@ -20,6 +20,6 @@ export function getTaskContentIndicators(input: TaskContentIndicatorInput): Task
   const discussions = uniqueById(input.messages).filter(message => !message.deletedAt
     && validId(message.author) && typeof message.message === "string"
     && (message.type === "member-post" || message.type === "member-reply"));
-  const files = uniqueById(input.files).filter(file => file.kind === "file" && !file.archived && !file.attachmentOnly);
+  const files = uniqueById(input.files).filter(file => file.kind === "file" && !file.archived && !file.attachmentOnly && !file.discussionOnly);
   return { discussionCount: discussions.length, fileCount: files.length };
 }

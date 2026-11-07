@@ -52,7 +52,7 @@ function withBrowser(run: (trigger: HTMLElement) => void) {
   const trigger = new Trigger();
   const values = new Map<string, string>();
   const originals = ["window", "document", "HTMLElement"].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)] as const);
-  Object.defineProperty(globalThis, "window", { configurable: true, value: { localStorage: { getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => values.set(key, value) }, setTimeout: () => 0, matchMedia: () => ({ matches: true }), getSelection: () => ({ removeAllRanges() {} }) } });
+  Object.defineProperty(globalThis, "window", { configurable: true, value: { localStorage: { getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => values.set(key, value) }, setTimeout: () => 0, addEventListener() {}, removeEventListener() {}, matchMedia: () => ({ matches: true }), getSelection: () => ({ removeAllRanges() {} }) } });
   Object.defineProperty(globalThis, "document", { configurable: true, value: { activeElement: trigger, getElementById: () => null } });
   Object.defineProperty(globalThis, "HTMLElement", { configurable: true, value: Trigger });
   try { run(trigger as unknown as HTMLElement); }
@@ -141,6 +141,105 @@ test("普通与回复草稿附件都交回任务预览入口，不改变未发�
 });
 
 const generatedAttachment: TaskFileNode = { id: "generated-annotations", kind: "file", name: "修订意见.html", mimeType: "text/html", attachmentOnly: true, parentId: null, updatedAt: "", version: 1, content: "<html><body>临时修订意见</body></html>" };
+const discussionAttachment: TaskFileNode = { ...file, id: "discussion-only-file", parentId: null, discussionOnly: true };
+
+test("已发布普通讨论附件进入独立可编辑来源集合，不进入任务文件浏览", () => withBrowser(trigger => {
+  let opened = false;
+  const content = { ...task, files: [...task.files, discussionAttachment] };
+  const tree = capture(() => TaskDetail({ task: content, taskId: "ordinary-discussion-preview", members: [], tags: [], tagDefinitions: [], initialAttentionTarget: { kind: "discussion", targetId: "discussion" } }), current => {
+    if (opened) return;
+    opened = true;
+    elements(current, item => item.type === TaskDiscussion)[0].props.onOpenFile(discussionAttachment.id, 1);
+  });
+  const explorer = elements(tree, item => item.type === TaskFileExplorer)[0];
+  assert.deepEqual(explorer.props.discussionFiles, [discussionAttachment]);
+  assert.deepEqual(explorer.props.files, [folder, file]);
+  assert.equal(explorer.props.transientPreviewFile, null);
+  assert.equal(explorer.props.focusedFileId, discussionAttachment.id);
+  assert.equal(explorer.props.focusedTrigger, trigger);
+  assert.equal(elements(tree, item => item.props.id === "task-detail-panel-discussion")[0].props.hidden, false);
+}));
+
+test("普通讨论附件可编辑并保留固定旧版，保存及重开不将来源混入目录", () => withBrowser(trigger => {
+  const taskId = "editable-discussion-source";
+  const mutations: TaskFileNode[][] = [];
+  const props = { browserMode: true, files: [folder, file], discussionFiles: [discussionAttachment], focusedFileId: discussionAttachment.id, focusedVersion: 1, focusedTrigger: trigger, preserveFocusedDirectory: true, taskId, currentUser: "真实用户", onNodesChange: (files: TaskFileNode[]) => { mutations.push(files); } };
+  let step = 0;
+  const tree = capture(() => TaskFileExplorer(props), current => {
+    if (step === 0) {
+      step++;
+      assert.equal(elements(current, item => item.type === TaskFileViewer)[0].props.file.id, discussionAttachment.id);
+      assert.equal(elements(current, item => item.props["aria-label"] === "查看版本记录").length, 1);
+      assert.equal(elements(current, item => item.props["aria-label"] === "文件标注").length, 1);
+      assert.equal(elements(current, item => item.props.children === "移动到").length, 0);
+      elements(current, item => item.props["aria-label"] === "编辑文件")[0].props.onClick();
+    } else if (step === 1) {
+      step++;
+      elements(current, item => item.type === TaskFileViewer)[0].props.onChange({ kind: "text", text: "编辑后的讨论附件" });
+    } else if (step === 2) {
+      step++;
+      elements(current, item => item.props["aria-label"] === "保存文件")[0].props.onClick();
+    }
+  });
+  assert.equal(step, 3);
+  assert.equal(mutations.length, 1);
+  const updated = mutations[0].find(node => node.id === discussionAttachment.id)!;
+  assert.equal(updated.discussionOnly, true);
+  assert.equal(updated.version, 2);
+  assert.equal(updated.content, "编辑后的讨论附件");
+  assert.deepEqual(elements(tree, item => item.type === TaskFileBrowser)[0].props.files, [folder, file]);
+  const historical = elements(tree, item => item.type === TaskFileViewer)[0].props.file;
+  assert.equal(historical.version, 1);
+  assert.equal(historical.content, discussionAttachment.content);
+  assert.equal(elements(tree, item => item.props["aria-label"] === "编辑文件").length, 0);
+  assert.equal(elements(tree, item => item.type === TaskFileDownload)[0].props.file.version, 1);
+
+  const reopened = capture(() => TaskFileExplorer({ ...props, discussionFiles: [updated] }));
+  assert.equal(elements(reopened, item => item.type === TaskFileViewer)[0].props.file.version, 1);
+  assert.equal(elements(reopened, item => item.type === TaskFileViewer)[0].props.file.content, discussionAttachment.content);
+  assert.equal(elements(reopened, item => item.props["aria-label"] === "查看版本记录").length, 1);
+  assert.deepEqual(elements(reopened, item => item.type === TaskFileBrowser)[0].props.files, [folder, file]);
+
+  let switched = false;
+  const latest = capture(() => TaskFileExplorer({ ...props, discussionFiles: [updated] }), current => {
+    if (switched) return;
+    switched = true;
+    elements(current, item => item.props.children === "查看最新版本")[0].props.onClick();
+  });
+  assert.equal(elements(latest, item => item.type === TaskFileViewer)[0].props.file.version, 2);
+  assert.equal(elements(latest, item => item.props["aria-label"] === "编辑文件").length, 1);
+  assert.equal(elements(latest, item => item.props.children === "移动到").length, 0);
+}));
+
+test("普通讨论附件保存失败保留编辑输入与原版本，不产生文件目录变更", () => withBrowser(() => {
+  let step = 0;
+  let mutations = 0;
+  const originalSetItem = window.localStorage.setItem;
+  window.localStorage.setItem = () => { throw new Error("存储空间不足"); };
+  try {
+    const tree = capture(() => TaskFileExplorer({ browserMode: true, files: [folder, file], discussionFiles: [discussionAttachment], focusedFileId: discussionAttachment.id, taskId: "failed-discussion-edit", currentUser: "真实用户", onNodesChange: () => { mutations++; } }), current => {
+      if (step === 0) {
+        step++;
+        elements(current, item => item.props["aria-label"] === "编辑文件")[0].props.onClick();
+      } else if (step === 1) {
+        step++;
+        elements(current, item => item.type === TaskFileViewer)[0].props.onChange({ kind: "text", text: "失败后需要保留的输入" });
+      } else if (step === 2) {
+        step++;
+        elements(current, item => item.props["aria-label"] === "保存文件")[0].props.onClick();
+      }
+    });
+    assert.equal(step, 3);
+    assert.equal(mutations, 0);
+    const viewer = elements(tree, item => item.type === TaskFileViewer)[0];
+    assert.equal(viewer.props.file.version, 1);
+    assert.equal(viewer.props.draft.text, "失败后需要保留的输入");
+    assert.equal(typeof viewer.props.onChange, "function");
+    assert.equal(elements(tree, item => item.props["aria-label"] === "保存文件").length, 1);
+    assert.ok(elements(tree, item => item.props.role === "alert" && item.props.children.includes("未确认保存")).length);
+    assert.deepEqual(elements(tree, item => item.type === TaskFileBrowser)[0].props.files, [folder, file]);
+  } finally { window.localStorage.setItem = originalSetItem; }
+}));
 
 test("已发布生成附件与草稿统一交给真实任务的唯一预览器，已有文件引用仍走正式版本", () => withBrowser(trigger => {
   const content = { ...task, title: "用户自定义标题1111000", files: [...task.files, generatedAttachment] };

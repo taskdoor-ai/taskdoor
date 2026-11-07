@@ -1,6 +1,6 @@
 import { useEffect, useId, useState, type ReactNode } from "react";
 import { ListTree, MessageSquareText, Plus } from "lucide-react";
-import { contentReading, useMockText } from "@/ai/discussion-reading";
+import { useDiscussionReading, useMockText } from "@/ai/discussion-reading";
 import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
 import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
 import type { DiscussionReferenceTask } from "@/features/tasks/discussion/lib/discussion-task-reference";
@@ -54,13 +54,11 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
   const d = useDetailCopy();
   const ui = useGlobalUi();
   const { locale, autoTranslate } = useI18n();
-  const [originalReadingKey, setOriginalReadingKey] = useState<string | null>(null);
   const [referenceOpen, setReferenceOpen] = useState(false);
   const [suggestionsExpanded, setSuggestionsExpanded] = useState(false);
   const [tasksExpanded, setTasksExpanded] = useState(false);
   const followupId = useId();
-  const readingKey = JSON.stringify([message.id, message.updatedAt, message.message, locale]);
-  const reading = contentReading(message.message, mock.discussionTranslation(message.message), locale, autoTranslate, originalReadingKey === readingKey);
+  const reading = useDiscussionReading(message);
   const own = message.author === currentUser || message.author === currentUserName;
   const isReply = Boolean(message.replyToActivityId);
   const originalAvailable = Boolean(parent && !parent.deletedAt);
@@ -68,7 +66,6 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
   const parentAttachments = parent?.attachmentRefs?.map(ref => mock.text(ref.name)).join(", ") || (parent?.file ? mock.text(parent.file) : "");
   const parentSummary = !parent ? d("originalMissing") : parent.deletedAt ? d("originalDeleted") : (parentBody?.trim() || (parentAttachments ? ui("附件：{0}", { 0: parentAttachments }) : ui("（无文字内容）")));
   const timestamp = timestampFor(message, locale, now);
-  const toggleOriginal = () => setOriginalReadingKey(originalReadingKey === readingKey ? null : readingKey);
   const suggestionCount = followups?.suggestionCount ?? 0;
   const linkedCount = followups?.tasks.length ?? 0;
   const hasSuggestions = suggestionCount > 0 || Boolean(followups?.hasOutdated);
@@ -77,14 +74,14 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
 
   const canCreateFromDiscussion = !message.deletedAt && Boolean(onCreateSubtask);
   const followupEntries = (canCreateFromDiscussion || hasSuggestions || linkedCount > 0) && <div className="task-discussion-followup-entries">
+    {linkedCount > 0 && <button aria-controls={`${followupId}-tasks`} aria-expanded={tasksExpanded} aria-label={locale === "en" ? `Subtasks: ${linkedCount}` : `子任务：${linkedCount}`} className="task-discussion-subtasks-trigger" onClick={() => setTasksExpanded(value => !value)} title={locale === "en" ? "Subtasks" : "子任务"} type="button">
+      <ListTree aria-hidden="true" size={14} />
+      <span className="task-discussion-ai-suggestions-count">{linkedCount}</span>
+    </button>}
     {(canCreateFromDiscussion || hasSuggestions) && <button disabled={subtaskCreateDisabled} aria-controls={`${followupId}-suggestions`} aria-expanded={suggestionsExpanded} className="task-discussion-ai-suggestions-trigger" data-has-suggestions={suggestionCount > 0 || undefined} onClick={event => { if (hasSuggestions) setSuggestionsExpanded(value => !value); else onCreateSubtask?.(message, event.currentTarget); }} type="button">
       <Plus aria-hidden="true" size={13} />
       <span>{locale === "en" ? "Create Task from discussion" : "从讨论创建任务"}</span>
       {followups?.hasOutdated && <span className="task-discussion-ai-suggestions-updated">{locale === "en" ? "Updated" : "已更新"}</span>}
-    </button>}
-    {linkedCount > 0 && <button aria-controls={`${followupId}-tasks`} aria-expanded={tasksExpanded} aria-label={locale === "en" ? `Subtasks: ${linkedCount}` : `子任务：${linkedCount}`} className="task-discussion-subtasks-trigger" onClick={() => setTasksExpanded(value => !value)} title={locale === "en" ? "Subtasks" : "子任务"} type="button">
-      <ListTree aria-hidden="true" size={14} />
-      <span className="task-discussion-ai-suggestions-count">{linkedCount}</span>
     </button>}
   </div>;
 
@@ -124,8 +121,10 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
         <div className="task-discussion-feed-meta">
           {timestamp && <time aria-label={timestamp.full} className="task-discussion-feed-time" dateTime={timestamp.dateTime} tabIndex={0} title={timestamp.full}>{timestamp.label}</time>}
           {followupEntries}
-          {(reading.state === "translated" || reading.state === "original") && <span className="task-discussion-feed-translation"><span>{reading.state === "translated" ? ui("已翻译") : ui("原文")}</span><span aria-hidden="true"> · </span><button aria-label={reading.state === "translated" ? ui("查看原文") : ui("显示译文")} onClick={toggleOriginal} type="button">{reading.state === "translated" ? ui("查看原文") : ui("显示译文")}</button></span>}
-          {reading.state === "unavailable" && <small title={ui("本地演示尚无此内容的译文，原文已保留。")}>{ui("暂无译文")}</small>}
+          {(reading.canTranslate || reading.state === "translated" || reading.state === "original") && <span className="task-discussion-feed-translation">
+            {(reading.state === "translated" || reading.state === "original") && <><span>{reading.state === "translated" ? ui("已翻译") : ui("原文")}</span><span aria-hidden="true"> · </span></>}
+            <button aria-busy={reading.translating} className={reading.canTranslate ? "task-discussion-translate-trigger" : undefined} disabled={reading.translating} onClick={reading.canTranslate ? reading.translate : reading.toggleOriginal} type="button">{reading.canTranslate ? (reading.translating ? ui("翻译中…") : ui("翻译")) : reading.state === "translated" ? ui("查看原文") : ui("显示译文")}</button>
+          </span>}
           {message.updatedAt && <small>{d("edited")}</small>}
         </div>
         {!message.deletedAt && <div className="task-discussion-feed-direct-actions">
