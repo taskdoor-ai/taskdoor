@@ -1,6 +1,6 @@
 # 正式项目调整待提交汇总（2026-11-07）
 
-目标仓库 `nocoly/taskdoor`。本地待提交草稿，仅记录正式项目需要调整、且本地已完成的最终改法，并附源码、PM Demo 提交和 PR 及验收要求。新的事项从 1 连续编号；同一事项更新原条目。Demo 内部改动、未完成方案和验证过程不进入提交正文。
+目标仓库 `nocoly/taskdoor`。本批 Demo 已创建 [PR #24](https://github.com/taskdoor-ai/taskdoor/pull/24)，合入 `main` 后提交正式 issue。本地待提交草稿，仅记录正式项目需要调整、且本地已完成的最终改法，并附源码、PM Demo 提交和 PR 及验收要求。新的事项从 1 连续编号；同一事项更新原条目。Demo 内部改动、未完成方案和验证过程不进入提交正文。
 
 ## 1. 讨论中的 @ 提及和任务引用去掉底色并加粗
 
@@ -10,9 +10,9 @@
 
 **验收**　已发布消息与输入框内的个人／全体成员提及及任务引用均保留文字颜色、字重为 600，无底色和额外留白；连续内容自然换行，任务引用仍可准确打开，选择和发布提醒行为保持。
 
-**PM Demo**　当前为本地已完成修改，尚无本批提交／PR，交付时补齐。
+**PM Demo**　[本批实现 `5e840f00`](https://github.com/taskdoor-ai/taskdoor/commit/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41) · [PR #24](https://github.com/taskdoor-ai/taskdoor/pull/24)。
 
-**源码**　[输入框提及与任务引用](../../src/features/tasks/styles/discussion-composer.css#L12)、[已发布提及](../../src/features/tasks/styles/discussion-messages.css#L35)、[已发布任务引用](../../src/features/tasks/styles/discussion-markdown.css#L20)。
+**源码**　[输入框提及与任务引用](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/styles/discussion-composer.css#L12)、[已发布提及](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/styles/discussion-messages.css#L35)、[已发布任务引用](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/styles/discussion-markdown.css#L20)。
 
 ## 2. 讨论消息的子任务数量紧跟发布时间
 
@@ -20,9 +20,9 @@
 
 **验收**　创建按钮在未悬停时隐藏，子任务图标及数量仍紧跟时间；原有子任务展开／收起和从讨论创建任务行为保持。
 
-**PM Demo**　当前为本地已完成修改，尚无本批提交／PR，交付时补齐。
+**PM Demo**　[本批实现 `5e840f00`](https://github.com/taskdoor-ai/taskdoor/commit/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41) · [PR #24](https://github.com/taskdoor-ai/taskdoor/pull/24)。
 
-**源码**　[讨论消息底部操作](../../src/features/tasks/discussion/components/TaskDiscussionMessage.tsx#L79)。
+**源码**　[讨论消息底部操作](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/discussion/components/TaskDiscussionMessage.tsx#L79)。
 
 ## 3. 新讨论附件仅随消息保存，历史已收纳文件保留
 
@@ -32,9 +32,9 @@
 
 **验收**　普通发言、回复及仅附件消息发布并刷新后均可回读，新附件不增加文件、搜索结果或数量，不创建收纳目录；预览、下载、标注、文本编辑和历史版本仍可用，目录整理不丢失讨论附件；已有引用和历史收纳文件保持。
 
-**PM Demo**　当前为本地已完成修改，尚无本批提交／PR，交付时补齐。
+**PM Demo**　[本批实现 `5e840f00`](https://github.com/taskdoor-ai/taskdoor/commit/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41) · [PR #24](https://github.com/taskdoor-ai/taskdoor/pull/24)。
 
-**源码**　[附件保存与文件投影](../../src/features/tasks/lib/task-collaboration.ts)、[文件计数](../../src/features/tasks/lib/task-content-indicators.ts)、[任务详情接线](../../src/features/tasks/components/TaskDetail.tsx)、[附件预览与编辑](../../src/features/tasks/files/components/TaskFileExplorer.tsx)、[文件模型](../../src/shared/model/task-model.ts)。产品规则见 [PRD-0369](../../docs/prd/CHANGELOG.md)。
+**源码**　[附件保存与文件投影](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/lib/task-collaboration.ts)、[文件计数](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/lib/task-content-indicators.ts)、[任务详情接线](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/components/TaskDetail.tsx)、[附件预览与编辑](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/files/components/TaskFileExplorer.tsx)、[文件模型](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/shared/model/task-model.ts)。产品规则见 [PRD-0369](../../docs/prd/CHANGELOG.md)。
 
 ## 4. 讨论翻译默认关闭并支持逐条手动翻译
 
@@ -44,9 +44,9 @@
 
 **验收**　无偏好及读取失败时自动翻译未勾选，已有选择刷新后保持；异语消息的翻译入口在桌面默认隐藏、悬停或键盘进入后显示，触屏可直接操作，同语消息无入口。手动操作只影响选中消息且不改偏好；取得译文后切换入口持续可见并复用词条，未取得译文仅保留原文、无状态占位或切换，重复触发不重复生成。
 
-**PM Demo**　当前为本地已完成修改，尚无本批提交／PR，交付时补齐。
+**PM Demo**　[本批实现 `5e840f00`](https://github.com/taskdoor-ai/taskdoor/commit/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41) · [PR #24](https://github.com/taskdoor-ai/taskdoor/pull/24)。
 
-**源码**　[翻译偏好](../../src/shared/i18n/I18nProvider.tsx)、[语言菜单](../../src/shared/ui/LanguageSwitcher.tsx)、[共用阅读状态](../../src/ai/discussion-reading.ts)、[讨论消息](../../src/features/tasks/discussion/components/TaskDiscussionMessage.tsx)、[消息操作样式](../../src/features/tasks/styles/task-discussion-feed.css)、[中英文文案](../../src/shared/i18n/globalUiMessages.json)。产品规则见 [PRD-0370／0371／0372](../../docs/prd/CHANGELOG.md)。
+**源码**　[翻译偏好](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/shared/i18n/I18nProvider.tsx)、[语言菜单](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/shared/ui/LanguageSwitcher.tsx)、[共用阅读状态](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/ai/discussion-reading.ts)、[讨论消息](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/discussion/components/TaskDiscussionMessage.tsx)、[消息操作样式](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/styles/task-discussion-feed.css)、[中英文文案](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/shared/i18n/globalUiMessages.json)。产品规则见 [PRD-0370／0371／0372](../../docs/prd/CHANGELOG.md)。
 
 ## 5. 文件打开时使用居中加载反馈
 
@@ -55,9 +55,9 @@
 
 **验收**　桌面和窄屏等待期间均居中显示动画及提示，无额外横向滚动；浅色模式加载区及图片、视频预览底色为白色，深色模式使用深色，文字与控件清晰可辨；音频窗口有完整加载区域；读取完成后展示准确文件，失败仍可重试。
 
-**PM Demo**　当前为本地已完成修改，尚无本批提交／PR，交付时补齐。
+**PM Demo**　[本批实现 `5e840f00`](https://github.com/taskdoor-ai/taskdoor/commit/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41) · [PR #24](https://github.com/taskdoor-ai/taskdoor/pull/24)。
 
-**源码**　[统一加载组件](../../src/features/tasks/files/components/TaskFileLoading.tsx)、[加载样式](../../src/features/tasks/styles/task-file-loading.css)、[文件预览](../../src/features/tasks/files/components/TaskFileViewer.tsx)、[HTML 原文件读取](../../src/features/tasks/files/components/TaskHtmlAnnotations.tsx)、[预览区布局](../../src/features/tasks/styles/task-file-preview-stage.css)、[图片主题样式](../../src/features/tasks/styles/task-image-viewer.css)、[视频主题样式](../../src/features/tasks/styles/task-media-viewer.css)。
+**源码**　[统一加载组件](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/files/components/TaskFileLoading.tsx)、[加载样式](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/styles/task-file-loading.css)、[文件预览](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/files/components/TaskFileViewer.tsx)、[HTML 原文件读取](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/files/components/TaskHtmlAnnotations.tsx)、[预览区布局](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/styles/task-file-preview-stage.css)、[图片主题样式](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/styles/task-image-viewer.css)、[视频主题样式](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/styles/task-media-viewer.css)。
 
 ## 6. 详情与讨论的分隔线统一对齐
 
@@ -66,9 +66,9 @@
 
 **验收**　详情上滑进入吸顶状态后，吸顶实线、Tab 实线及讨论消息虚线的左右边缘一致，虚线包含头像列；调整窗口宽度后仍对齐，消息排版、Tab 切换和吸顶位置保持。
 
-**PM Demo**　当前为本地已完成修改，尚无本批提交／PR，交付时补齐。
+**PM Demo**　[本批实现 `5e840f00`](https://github.com/taskdoor-ai/taskdoor/commit/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41) · [PR #24](https://github.com/taskdoor-ai/taskdoor/pull/24)。
 
-**源码**　[吸顶分隔线样式](../../src/features/tasks/styles/task-detail-split.css#L18)、[讨论消息虚线](../../src/features/tasks/styles/task-discussion-feed.css#L5)。
+**源码**　[吸顶分隔线样式](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/styles/task-detail-split.css#L18)、[讨论消息虚线](https://github.com/taskdoor-ai/taskdoor/blob/5e840f00da4eb7f4bcf97b9ca41b8786f1996e41/src/features/tasks/styles/task-discussion-feed.css#L5)。
 
 ---
 
