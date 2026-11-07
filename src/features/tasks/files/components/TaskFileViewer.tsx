@@ -15,6 +15,7 @@ import type { TaskFileAnnotation } from "@/features/tasks/files/lib/task-file-an
 import { FileSourceLineNumbers } from "@/features/tasks/files/components/FileSourceLineNumbers";
 import { TaskMarkdownEditor } from "@/features/tasks/files/components/TaskMarkdownEditor";
 import { TaskFileDownload } from "@/features/tasks/files/components/TaskFileDownload";
+import { TaskFileLoading } from "@/features/tasks/files/components/TaskFileLoading";
 import { isTaskFileTextPreviewDeferred } from "@/features/tasks/files/lib/task-file-upload";
 
 export { TaskFileDownload } from "@/features/tasks/files/components/TaskFileDownload";
@@ -64,12 +65,12 @@ function OriginalFilePreview({ file, annotationMode, annotations, draftAnchor, a
   const ui = useGlobalUi();
   const { url, loading, error, retry } = useFileUrl(file);
   const kind = getPreviewKind(file.name, file.mimeType);
-  if (loading) return <p role="status">{ui("正在读取附件…")}</p>;
+  if (loading) return <TaskFileLoading />;
   if (error) return <div className="task-file-viewer-unsupported"><p role="alert">{ui(error)}</p><button onClick={retry} type="button">{ui("重试")}</button></div>;
   if (url && kind === "image") return usesTaskImageViewer(file, { annotationMode, annotations, draftAnchor }) ? <TaskImageViewer alt={file.name} src={url} /> : <FileImageAnnotations activeThreadId={activeThreadId} alt={file.name} annotationMode={annotationMode} annotations={annotations} imageSrc={file.previewData?.kind === "image" ? file.previewData.src : undefined} onSelection={onSelection} onThreadSelect={onThreadSelect} src={url} version={file.version ?? 1} />;
-  if (url && kind === "pdf") return <Suspense fallback={<p role="status">{ui("正在读取附件…")}</p>}><TaskPdfViewer activeThreadId={activeThreadId} annotationMode={annotationMode} annotations={annotations} draftAnchor={draftAnchor} file={file} focusSequence={annotationFocusSequence} onSelection={onSelection} onThreadSelect={onThreadSelect} url={url} /></Suspense>;
-  if (url && kind === "presentation") return <Suspense fallback={<p role="status">{ui("正在读取附件…")}</p>}><TaskPresentationViewer activeThreadId={activeThreadId} annotationMode={annotationMode} annotations={annotations} draftAnchor={draftAnchor} file={file} focusSequence={annotationFocusSequence} onSelection={onSelection} onThreadSelect={onThreadSelect} url={url} /></Suspense>;
-  if (url && (kind === "audio" || kind === "video")) return <Suspense fallback={<p role="status">{ui("正在读取附件…")}</p>}><TaskMediaViewer active={active} kind={kind} name={file.name} url={url} /></Suspense>;
+  if (url && kind === "pdf") return <Suspense fallback={<TaskFileLoading />}><TaskPdfViewer activeThreadId={activeThreadId} annotationMode={annotationMode} annotations={annotations} draftAnchor={draftAnchor} file={file} focusSequence={annotationFocusSequence} onSelection={onSelection} onThreadSelect={onThreadSelect} url={url} /></Suspense>;
+  if (url && kind === "presentation") return <Suspense fallback={<TaskFileLoading />}><TaskPresentationViewer activeThreadId={activeThreadId} annotationMode={annotationMode} annotations={annotations} draftAnchor={draftAnchor} file={file} focusSequence={annotationFocusSequence} onSelection={onSelection} onThreadSelect={onThreadSelect} url={url} /></Suspense>;
+  if (url && (kind === "audio" || kind === "video")) return <Suspense fallback={<TaskFileLoading />}><TaskMediaViewer active={active} kind={kind} name={file.name} url={url} /></Suspense>;
   return <div className="task-file-viewer-unsupported"><FileQuestion size={32} /><strong>{ui("暂不支持在线预览此格式")}</strong><p>{ui("可以下载原文件查看。")}</p><TaskFileDownload file={file} /></div>;
 }
 

@@ -2,7 +2,7 @@
 .task-discussion-feed { display: flex; flex: 1; min-width: 0; min-height: 0; flex-direction: column; }
 .task-discussion-feed-list { --discussion-avatar-size: 28px; --discussion-avatar-gap: 12px; --discussion-identity-gap: 8px; --discussion-row-gap: 32px; display: grid; gap: var(--discussion-row-gap); margin: 0; padding: 0; list-style: none; }
 .task-discussion-feed-message { position: relative; display: grid; min-width: 0; grid-template-columns: var(--discussion-avatar-size) minmax(0, 1fr); align-items: start; gap: var(--discussion-avatar-gap); }
-.task-discussion-feed-message:not(:last-child)::after { position: absolute; inset-inline: calc(var(--discussion-avatar-size) + var(--discussion-avatar-gap)) 0; bottom: calc(var(--discussion-row-gap) / -2); border-bottom: 1px dashed var(--ad-border); content: ""; pointer-events: none; }
+.task-discussion-feed-message:not(:last-child)::after { position: absolute; inset-inline: 0; bottom: calc(var(--discussion-row-gap) / -2); border-bottom: 1px dashed var(--ad-border); content: ""; pointer-events: none; }
 .task-discussion-feed-message > .task-discussion-record { min-width: 0; margin: 0; padding: 0; border-radius: 6px; scroll-margin-block: 18px; transition: background-color 180ms ease, box-shadow 180ms ease; }
 .task-discussion-feed-message > .task-discussion-record.is-attention { background: var(--ad-route-soft); box-shadow: 0 0 0 8px var(--ad-route-soft); }
 .task-discussion-feed-message .task-discussion-feed-header { display: flex; min-width: 0; min-height: var(--discussion-avatar-size); align-items: center; flex-wrap: nowrap; gap: 12px; }
@@ -53,7 +53,7 @@
 .task-discussion-feed-meta > small { font-size: inherit; }
 .task-discussion-feed-translation { display: inline-flex; min-width: 0; align-items: center; gap: 3px; }
 .task-discussion-feed-translation > button { display: inline-flex; min-height: 28px; align-items: center; gap: 5px; padding: 0; border: 0; background: transparent; color: var(--ad-ink-tertiary); font: inherit; font-size: var(--ad-text-caption); cursor: pointer; }
-.task-discussion-feed-translation > button:hover { color: var(--ad-button-soft-ink); }
+.task-discussion-feed-translation > button:hover { color: var(--ad-ink); }
 .task-discussion-feed-message button:focus-visible, .task-discussion-feed-message time:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; border-radius: 4px; }
 .task-discussion-compose-content { min-width: 0; flex: 1; }
 .task-discussion-compose-content > .discussion-composer { display: flex; max-height: 180px; flex-direction: column; }
@@ -139,4 +139,8 @@
   .task-discussion-feed-message:hover .task-discussion-ai-suggestions-trigger,
   .task-discussion-feed-message:focus-within .task-discussion-ai-suggestions-trigger,
   .task-discussion-ai-suggestions-trigger[aria-expanded="true"] { opacity: 1; pointer-events: auto; }
+  .task-discussion-translate-trigger { opacity: 0; pointer-events: none; }
+  .task-discussion-feed-message:hover .task-discussion-translate-trigger,
+  .task-discussion-feed-message:focus-within .task-discussion-translate-trigger,
+  .task-discussion-translate-trigger[aria-busy="true"] { opacity: 1; pointer-events: auto; }
 }

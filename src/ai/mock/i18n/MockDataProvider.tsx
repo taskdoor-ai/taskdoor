@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { createDiscussionTranslationEntries } from '@/ai/mock/i18n/discussion-translation-entries';
 import { useI18n } from '@/shared/i18n/I18nProvider';
-import { mockRecordText, type MockTaskCopy } from '@/ai/mock/i18n/mockContent';
+import { mockDiscussionText, type MockTaskCopy } from '@/ai/mock/i18n/mockContent';
 const discussionEntries = createDiscussionTranslationEntries();
 const AdditionalMockContext = createContext<Readonly<Record<string, MockTaskCopy>>>({});
 export const CurrentTaskContext = createContext('');
@@ -15,9 +15,13 @@ export function useMockText() {
   const { locale, autoTranslate } = useI18n();
   const additional = useContext(AdditionalMockContext);
   const currentId = useContext(CurrentTaskContext);
-  return useMemo(() => ({
+  return useMemo(() => {
+    const translateDiscussion = (value: string, id = currentId) => discussionEntries.read(id, value, locale, () => mockDiscussionText(locale, id, value, additional));
+    return {
     field: (_id: string, _field: 'title' | 'goal', value: string) => value,
-    discussionTranslation: (value: string, id = currentId) => autoTranslate ? discussionEntries.read(id, value, locale, () => mockRecordText(locale, id, value, additional)) : value,
+    discussionTranslation: (value: string, id = currentId) => autoTranslate ? translateDiscussion(value, id) : value,
+    translateDiscussion,
     text: (value: string, _id = currentId) => value,
-  }), [locale, additional, currentId, autoTranslate]);
+    };
+  }, [locale, additional, currentId, autoTranslate]);
 }

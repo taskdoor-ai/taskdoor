@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import type { TaskFileNode } from "@/shared/model/task-model";
 import type { TaskFileTextSelection } from "@/features/tasks/files/components/TaskFileViewer";
+import { TaskFileLoading } from "@/features/tasks/files/components/TaskFileLoading";
 import type { TaskFileAnnotation } from "@/features/tasks/files/lib/task-file-annotations";
 import { readDiscussionBlob } from "@/features/tasks/files/lib/discussion-uploads";
 import { captureFileAnnotationElement } from "@/features/tasks/files/lib/capture-file-annotation";
@@ -225,7 +226,7 @@ export function TaskHtmlAnnotations({ file, html, annotationMode = false, annota
   }, [activeThreadId, loadedDocument, markers.length]);
 
   if (source.error) return <div className="task-file-html-annotations__error"><p role="alert">{ui(source.error)}</p><button onClick={() => setAttempt(value => value + 1)} type="button">{ui("重试")}</button></div>;
-  if (source.html === null) return <p role="status">{ui("正在读取附件…")}</p>;
+  if (source.html === null) return <TaskFileLoading />;
   return <div className="task-file-html-annotations">
     {!loadedDocument && <p className="task-file-html-annotations__loading" role="status">{ui("正在打开预览…")}</p>}
     <div className="task-file-html-annotations__preview">

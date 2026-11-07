@@ -7,11 +7,11 @@ function readLocale(): Locale {
   catch { return DEFAULT_LOCALE; }
 }
 function readAutoTranslate() {
-  try { return window.localStorage.getItem(AUTO_TRANSLATE_KEY) !== 'false'; } catch { return true; }
+  try { return window.localStorage.getItem(AUTO_TRANSLATE_KEY) === 'true'; } catch { return false; }
 }
 const I18nContext = createContext({
   locale: DEFAULT_LOCALE,
-  autoTranslate: true,
+  autoTranslate: false,
   setAutoTranslate: (_enabled: boolean) => {},
   setLocale: (_locale: Locale) => {},
   t: (key: MessageKey, values?: Record<string, string | number>) => translate(DEFAULT_LOCALE, key, values),

@@ -17,7 +17,7 @@
 .discussion-markdown blockquote { margin: 12px 0; padding: 4px 12px; border-inline-start: 3px solid var(--ad-border-strong); color: var(--ad-ink-tertiary); }
 .discussion-markdown blockquote > :last-child { margin-bottom: 0; }
 .discussion-markdown a { color: var(--ad-route-ink); text-decoration: underline; text-underline-offset: 3px; }
-.discussion-task-reference { display: inline-flex; max-inline-size: 100%; align-items: center; padding: 1px var(--ad-space-1); border: 0; border-radius: var(--ad-radius-tag); background: var(--ad-route-soft); color: var(--ad-route-ink); font: inherit; text-decoration: none; overflow-wrap: anywhere; text-align: start; cursor: pointer; }
+.discussion-task-reference { display: inline-flex; max-inline-size: 100%; align-items: center; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--ad-route-ink); font: inherit; font-weight: 600; text-decoration: none; overflow-wrap: anywhere; text-align: start; cursor: pointer; }
 .discussion-task-reference > span { min-inline-size: 0; }
 .discussion-task-reference-unavailable { color: var(--ad-ink-tertiary); }
 .discussion-markdown code { padding: 2px 4px; border-radius: 4px; background: var(--ad-surface-subtle); font-family: var(--ad-font-mono, monospace); font-size: .9em; }

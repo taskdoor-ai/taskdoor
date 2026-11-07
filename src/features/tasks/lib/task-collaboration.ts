@@ -34,7 +34,7 @@ export type DiscussionDraft = { body: string; mentions: string[]; attachments: T
 
 /** Task file views keep their existing archive handling, without discussion-only material. */
 export function getTaskFiles(files: readonly TaskFileNode[]): TaskFileNode[] {
-  return files.filter(file => !file.attachmentOnly && !file.retiredBuiltin);
+  return files.filter(file => !file.attachmentOnly && !file.discussionOnly && !file.retiredBuiltin);
 }
 
 /** Dedicated message material is immutable; ordinary files retain their legacy version fallback. */
@@ -92,6 +92,7 @@ function parseFile(value: unknown): TaskFileNode {
   requireValid(value.sizeBytes === undefined || isRevision(value.sizeBytes), "附件大小无效");
   requireValid(value.archived === undefined || typeof value.archived === "boolean", "文件归档状态无效");
   requireValid(value.attachmentOnly === undefined || (value.attachmentOnly === true && value.kind === "file"), "讨论附件标识无效");
+  requireValid(value.discussionOnly === undefined || (value.discussionOnly === true && value.kind === "file"), "讨论上传附件标识无效");
   requireValid(value.retiredBuiltin === undefined || (value.retiredBuiltin === true && value.kind === "file"), "退役内置文件标识无效");
   requireValid(value.blob === undefined, "附件应先转换为可保存的数据");
   if (value.previewData !== undefined) {
@@ -202,6 +203,20 @@ function isBuiltinDiscussionFolder(file: TaskFileNode): boolean {
   return Boolean(file.builtinPackId) && file.kind === "folder" && file.parentId === null && !file.archived && /^(?:讨论|discussions?)$/i.test(file.name.trim());
 }
 
+/** Historical built-in file packs retain their original task-file placement. */
+function discussionUploadFolder(files: TaskFileNode[], seed?: TaskFileNode, createdById?: string): TaskFileNode {
+  const rootFolders = files.filter(file => file.kind === "folder" && file.parentId === null && !file.archived);
+  const existing = rootFolders.find(folder => /^(?:讨论|discussions?)$/i.test(folder.name.trim()))
+    ?? rootFolders.find(folder => /^(?:讨论|discussions?) \(\d+\)$/i.test(folder.name.trim()));
+  if (existing) return existing;
+  let name = "讨论";
+  let suffix = 2;
+  while (files.some(file => file.parentId === null && file.name.toLocaleLowerCase() === name.toLocaleLowerCase())) name = `讨论 (${suffix++})`;
+  const folder = seed && !files.some(file => file.id === seed.id) ? { ...seed, name } : createFolder(files, null, name, createdById).folder;
+  files.push(folder);
+  return folder;
+}
+
 /** Only incoming built-in roots are aliased; existing user folders stay intact. */
 function reuseBuiltinDiscussionFolders(files: TaskFileNode[], seeds: TaskFileNode[]): Map<string, string> {
   const aliases = new Map<string, string>();
@@ -294,19 +309,6 @@ function makeNotifications(context: readonly CollaborationMessage[], message: Co
   }
   return [...recipients].map(([recipientId, reason]) => createDiscussionNotification(message, recipientId, reason));
 }
-function discussionUploadFolder(files: TaskFileNode[], seed?: TaskFileNode, createdById?: string): TaskFileNode {
-  const rootFolders = files.filter(file => file.kind === "folder" && file.parentId === null && !file.archived);
-  const existing = rootFolders.find(folder => /^(?:讨论|discussions?)$/i.test(folder.name.trim()))
-    ?? rootFolders.find(folder => /^(?:讨论|discussions?) \(\d+\)$/i.test(folder.name.trim()));
-  if (existing) return existing;
-  let name = "讨论";
-  let suffix = 2;
-  while (files.some(file => file.parentId === null && file.name.toLocaleLowerCase() === name.toLocaleLowerCase())) name = `讨论 (${suffix++})`;
-  const folder = seed && !files.some(file => file.id === seed.id) ? { ...seed, name } : createFolder(files, null, name, createdById).folder;
-  files.push(folder);
-  return folder;
-}
-
 /** Existing references keep their source version even if the file has since changed. */
 function attachFiles(snapshot: CollaborationSnapshot, refs: readonly AttachmentRef[], attachments: readonly TaskFileNode[], actorId: string, preservedRefs: readonly AttachmentRef[] = []): { files: TaskFileNode[]; attachmentRefs: AttachmentRef[] } {
   const files = [...snapshot.files];
@@ -320,11 +322,9 @@ function attachFiles(snapshot: CollaborationSnapshot, refs: readonly AttachmentR
     if (existing?.attachmentOnly && (existing.version ?? 1) !== (attachment.version ?? 1)) throw new Error("讨论附件源版本不一致，请重新生成后重试。");
     let saved = existing ?? attachment;
     if (!existing) {
+      saved = { ...saved, createdById: actorId };
       if (saved.archived) throw new Error("已归档的文件不能添加为附件。");
-      if (!saved.attachmentOnly) {
-        saved = { ...saved, createdById: actorId };
-        if (saved.parentId === null) saved.parentId = discussionUploadFolder(files, undefined, actorId).id;
-      }
+      if (!saved.attachmentOnly) saved = { ...saved, discussionOnly: true, parentId: null };
       files.push(saved);
     }
     if (attachmentRefs.some(ref => ref.fileId === saved.id)) continue;
@@ -418,15 +418,24 @@ export function setFileThreadResolved(snapshot: CollaborationSnapshot, threadId:
   return changed(snapshot, { threads: snapshot.threads.map(item => item.id === threadId ? next : item) });
 }
 export function replaceCollaborationFiles(snapshot: CollaborationSnapshot, files: TaskFileNode[], deletionAccess?: TaskFileDeletionAccess): CollaborationSnapshot {
-  const retained = new Map(snapshot.files.filter(file => file.attachmentOnly || file.retiredBuiltin).map(file => [file.id, file]));
+  const retained = new Map(snapshot.files.filter(file => file.attachmentOnly || file.discussionOnly || file.retiredBuiltin).map(file => [file.id, file]));
   const originals = new Map(snapshot.files.map(file => [file.id, file]));
   const next = parseFiles(files).map(file => {
-    if (retained.has(file.id)) return retained.get(file.id)!;
+    const retainedFile = retained.get(file.id);
+    if (retainedFile) {
+      if (!retainedFile.discussionOnly || retainedFile.attachmentOnly || retainedFile.retiredBuiltin) return retainedFile;
+      if (file.kind !== "file") throw new Error("讨论附件类型不能改变。");
+      if ((file.version ?? 1) < (retainedFile.version ?? 1)) throw new Error("讨论附件版本已更新，请重新读取后保存。");
+      return { ...file, discussionOnly: true as const, parentId: null, createdById: retainedFile.createdById };
+    }
     const original = originals.get(file.id);
-    if (!original) return deletionAccess ? { ...file, createdById: deletionAccess.actorId } : file;
-    if (original.createdById !== undefined) return { ...file, createdById: original.createdById };
-    const { createdById: _ignored, ...legacyFile } = file;
-    return legacyFile;
+    if (original) {
+      const retainedFile = { ...file };
+      if (original.createdById === undefined) delete retainedFile.createdById;
+      else retainedFile.createdById = original.createdById;
+      return retainedFile;
+    }
+    return deletionAccess ? { ...file, createdById: deletionAccess.actorId } : file;
   });
   if (deletionAccess) {
     const nextById = new Map(next.map(file => [file.id, file]));

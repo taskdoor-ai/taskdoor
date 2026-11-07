@@ -13,7 +13,7 @@ test("统一讨论累计数包含历史文件消息，排除系统活动与删�
     message("deleted", { deletedAt: "2026-10-13T01:00:00Z" }), message("system", { type: "status-change" }),
     message("file-reply", { type: "member-reply", fileThreadId: "thread-a" }),
     message(""), message("blank-author", { author: " " }),
-  ], files: [file("f1"), file("discussion-note", { attachmentOnly: true }), file("folder", { kind: "folder" }), file("archived", { archived: true })] });
+  ], files: [file("f1"), file("discussion-note", { attachmentOnly: true }), file("discussion-upload", { discussionOnly: true }), file("folder", { kind: "folder" }), file("archived", { archived: true })] });
   assert.deepEqual(result, { discussionCount: 3, fileCount: 1 });
 });
 

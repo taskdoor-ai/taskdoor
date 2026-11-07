@@ -3286,5 +3286,13 @@
   "fileOpenName": {
     "zh": "打开{0}",
     "en": "Open {0}"
+  },
+  "translateDiscussionMessage": {
+    "zh": "翻译",
+    "en": "Translate"
+  },
+  "translatingDiscussionMessage": {
+    "zh": "翻译中…",
+    "en": "Translating…"
   }
 }

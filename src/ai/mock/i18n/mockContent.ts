@@ -6,6 +6,7 @@ import criteria from '@/ai/mock/i18n/mock/criteria.json';
 import taskCriteria from '@/ai/mock/i18n/mock/taskCriteria.json';
 import coreRecords from '@/ai/mock/i18n/mock/coreRecords.json';
 import fileNames from '@/ai/mock/i18n/mock/fileNames.json';
+import { lookupDiscussionSampleTranslation, lookupDiscussionShortReply } from '@/ai/mock/i18n/discussion-translation-demo';
 import type { Locale } from '@/shared/i18n/core';
 export type MockTaskCopy = { title: { zh: string; en: string }; goal: { zh: string; en: string }; records?: Readonly<Record<string, string | undefined>> };
 export const mockTaskCatalog: Readonly<Record<string, MockTaskCopy>> = tasks;
@@ -69,6 +70,34 @@ export function mockRecordText(locale: Locale, taskId: string, value: string, ad
     if (value.startsWith(prefix) && /^\.[a-z0-9]+$/i.test(value.slice(prefix.length))) return `${task.title.en} - ${en}${value.slice(prefix.length)}`;
   }
   return value;
+}
+/** Discussion-only reverse lookup; generic record display still preserves user content. */
+export function mockDiscussionText(locale: Locale, taskId: string, value: string, additional: Readonly<Record<string, MockTaskCopy>> = {}) {
+  if (locale === 'en') {
+    const translated = mockRecordText(locale, taskId, value, additional);
+    return translated !== value ? translated : lookupDiscussionSampleTranslation(locale, taskId, value) ?? lookupDiscussionShortReply(locale, value) ?? value;
+  }
+  const task = mockTaskCatalog[taskId] ?? additional[taskId];
+  if (!task) return lookupDiscussionSampleTranslation(locale, taskId, value) ?? lookupDiscussionShortReply(locale, value) ?? value;
+  const sources = new Set([
+    ...Object.keys((readingDemo as Record<string, Record<string, string>>)[taskId] ?? {}),
+    ...Object.keys(task.records ?? {}),
+    ...((coreRecords as Record<string, Array<{text: string}>>)[taskId] ?? []).map(record => record.text),
+    ...((progressRecords as Record<string, Array<{zh: string}>>)[taskId] ?? []).map(record => record.zh),
+    ...((taskCriteria as Record<string, string[]>)[taskId] ?? []),
+    ...(additional[taskId] ? createdProgress.map(record => record.zh) : []),
+    task.title.zh, task.goal.zh,
+    `更新“${task.title.zh}”的范围、依据与交付结果。`,
+    `已补充“${task.title.zh}”的最新核对信息，等待 Task Owner 确认下一步。`,
+    `发现“${task.title.zh}”仍有一项结果依据需要补齐，建议在提交结果前核对。`,
+    '收到，我会在本轮完成前核对并回传结论。',
+    '调整了任务的计划截止时间。',
+    '更新了任务范围、结果判断与当前依据。',
+  ]);
+  for (const source of sources) {
+    if (source !== value && mockRecordText('en', taskId, source, additional) === value) return source;
+  }
+  return lookupDiscussionSampleTranslation(locale, taskId, value) ?? lookupDiscussionShortReply(locale, value) ?? value;
 }
 const tagNames: Record<string, [string, string]> = {
   'creator-commerce-business': ['达人商务','Creator partnerships'],
