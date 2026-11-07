@@ -17,6 +17,9 @@
 .discussion-markdown blockquote { margin: 12px 0; padding: 4px 12px; border-inline-start: 3px solid var(--ad-border-strong); color: var(--ad-ink-tertiary); }
 .discussion-markdown blockquote > :last-child { margin-bottom: 0; }
 .discussion-markdown a { color: var(--ad-route-ink); text-decoration: underline; text-underline-offset: 3px; }
+.discussion-task-reference { display: inline-flex; max-inline-size: 100%; align-items: center; padding: 1px var(--ad-space-1); border: 0; border-radius: var(--ad-radius-tag); background: var(--ad-route-soft); color: var(--ad-route-ink); font: inherit; text-decoration: none; overflow-wrap: anywhere; text-align: start; cursor: pointer; }
+.discussion-task-reference > span { min-inline-size: 0; }
+.discussion-task-reference-unavailable { color: var(--ad-ink-tertiary); }
 .discussion-markdown code { padding: 2px 4px; border-radius: 4px; background: var(--ad-surface-subtle); font-family: var(--ad-font-mono, monospace); font-size: .9em; }
 .discussion-markdown pre { max-width: 100%; margin: 12px 0; padding: 12px 14px; overflow-x: auto; border: 1px solid var(--ad-border-soft); border-radius: 6px; background: var(--ad-surface-quiet); white-space: pre; overflow-wrap: normal; }
 .discussion-markdown pre code { padding: 0; border: 0; border-radius: 0; background: transparent; font-size: 12px; line-height: 1.65; }
@@ -28,5 +31,5 @@
 .discussion-markdown .contains-task-list { padding-inline-start: 0; list-style: none; }
 .discussion-markdown .task-list-item { padding-inline-start: 0; }
 .discussion-markdown .task-list-item > input { margin-inline: 0 6px; accent-color: var(--ad-route-ink); }
-.discussion-markdown :is(a, .discussion-markdown-table):focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
+.discussion-markdown :is(a, .discussion-task-reference, .discussion-markdown-table):focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
 .task-discussion-feed-body:has(> .discussion-markdown), .task-discussion-message:has(> .discussion-markdown) { white-space: normal; }

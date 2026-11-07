@@ -8,7 +8,7 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
-import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getNodeByKey, $getRoot, $getSelection, $isRangeSelection, $isTextNode, $setSelection, BEFORE_INPUT_COMMAND, CLEAR_HISTORY_COMMAND, COMMAND_PRIORITY_HIGH, INPUT_COMMAND, KEY_DOWN_COMMAND, PASTE_COMMAND, type EditorState, type LexicalEditor, type RangeSelection, type SerializedEditorState } from "lexical";
+import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getNodeByKey, $getRoot, $getSelection, $isRangeSelection, $isTextNode, $parseSerializedNode, $setSelection, BEFORE_INPUT_COMMAND, CLEAR_HISTORY_COMMAND, COMMAND_PRIORITY_HIGH, INPUT_COMMAND, KEY_DOWN_COMMAND, PASTE_COMMAND, type EditorState, type LexicalEditor, type RangeSelection, type SerializedEditorState } from "lexical";
 import { FolderOpen, LoaderCircle, Paperclip, RotateCcw, Send, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type DragEvent, type ReactNode } from "react";
 import type { TaskFileNode } from "@/shared/model/task-model";
@@ -24,6 +24,9 @@ import { TaskFileThumbnail } from "@/features/tasks/files/components/TaskFileThu
 import { DiscussionFileMenu } from "@/features/tasks/discussion/components/DiscussionFileMenu";
 import { $createMentionNode, $isMentionNode, MentionNode } from "@/features/tasks/discussion/components/mention-node";
 import { mergeDiscussionDraft, type DiscussionDraftInsertion } from "@/features/tasks/discussion/lib/discussion-draft-insertion";
+import type { DiscussionReferenceTask } from "@/features/tasks/discussion/lib/discussion-task-reference";
+import { DiscussionTaskReferenceMenu } from "@/features/tasks/discussion/components/DiscussionTaskReferenceMenu";
+import { $restoreDiscussionTaskReferences, DiscussionTaskReferenceNode, DiscussionTaskReferenceTasks } from "@/features/tasks/discussion/components/DiscussionTaskReferenceNode";
 
 export type DiscussionComposerProps = {
   actionLabel?: string;
@@ -35,6 +38,7 @@ export type DiscussionComposerProps = {
   onSubmit: (draft: DiscussionDraft) => void | Promise<void>;
   onPreviewAttachment?: (file: TaskFileNode, trigger: HTMLElement) => void;
   people: string[];
+  referenceTasks?: DiscussionReferenceTask[];
   files: TaskFileNode[];
   placeholder?: string;
   draftKey?: string;
@@ -155,7 +159,7 @@ export function DiscussionComposer(props: DiscussionComposerProps) {
   return <ComposerSessionView key={props.draftKey ?? "unkeyed-discussion"} {...props} />;
 }
 
-function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onSubmit, onPreviewAttachment, people, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, draftInsertion, disabled = false }: DiscussionComposerProps) {
+function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onSubmit, onPreviewAttachment, people, referenceTasks, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, draftInsertion, disabled = false }: DiscussionComposerProps) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const members = usePersonOptions(people);
@@ -243,8 +247,9 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
     });
   };
   const choosePerson = (personId: string) => {
+    if (unavailable) return;
     const name = personId === allTaskMembersOption.id ? allTaskMembersOption.label : members.find(member => member.id === personId)?.name;
-    if (!name || unavailable) return;
+    if (!name) return;
     editorRef.current?.update(() => {
       const selection = $restoreSelection(selectionRef.current);
       const spacer = $createTextNode(" ");
@@ -266,6 +271,7 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
     let unrenderedMentions: string[] = [];
     editor.update(() => {
       $initializeDraft(merged, members);
+      $restoreDiscussionTaskReferences();
       $getRoot().selectEnd();
       const represented = new Set($readEditorDraft().mentions);
       unrenderedMentions = merged.mentions.filter(id => !represented.has(id));
@@ -342,18 +348,35 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
     }
   };
 
-  const [initialConfig] = useState<InitialConfigType>(() => ({ namespace: "AgentDoorDiscussion", nodes: [MentionNode], theme: { paragraph: "discussion-composer-paragraph", mention: "discussion-composer-mention" }, editable: !disabled, editorState: session.editorState ? JSON.stringify(session.editorState) : () => $initializeDraft(session.draft, members), onError: error => { throw error; } }));
+  const [initialConfig] = useState<InitialConfigType>(() => ({
+    namespace: "AgentDoorDiscussion",
+    nodes: [MentionNode, DiscussionTaskReferenceNode],
+    theme: { paragraph: "discussion-composer-paragraph", mention: "discussion-composer-mention" },
+    editable: !disabled,
+    editorState: () => {
+      if (session.editorState) {
+        const savedRoot = session.editorState.root;
+        $getRoot().updateFromJSON(savedRoot).append(...savedRoot.children.map($parseSerializedNode));
+      } else $initializeDraft(session.draft, members);
+      $restoreDiscussionTaskReferences();
+    },
+    onError: error => { throw error; },
+  }));
   const canSubmit = !unavailable && Boolean(session.draft.body.trim() || session.draft.attachments.length) && session.attachments.every(item => item.status === "ready");
+  const shortcutHintVisible = showShortcutHint && Boolean(session.draft.body.trim());
   const hasFileDrag = (event: DragEvent) => Array.from(event.dataTransfer.types).includes("Files");
 
   return <div aria-busy={submitting || undefined} className={`discussion-composer${compact ? " compact" : ""}${dragging ? " is-dragging" : ""}`} ref={composerRef} onPointerDownCapture={rememberSelection} onCompositionStart={() => { composingRef.current = true; }} onCompositionEnd={() => { composingRef.current = false; }} onDragEnter={event => { if (!hasFileDrag(event) || unavailable) return; event.preventDefault(); dragDepth.current++; setDragging(true); }} onDragOver={event => { if (hasFileDrag(event)) { event.preventDefault(); event.dataTransfer.dropEffect = unavailable ? "none" : "copy"; } }} onDragLeave={event => { if (!hasFileDrag(event)) return; dragDepth.current = Math.max(0, dragDepth.current - 1); if (!dragDepth.current) setDragging(false); }} onDrop={event => { if (!hasFileDrag(event)) return; event.preventDefault(); dragDepth.current = 0; setDragging(false); addUploads(Array.from(event.dataTransfer.files)); }}>
     {allowQuote && session.draft.quote && <div className="discussion-composer-quote"><span><strong>{d('quote')}{session.draft.quote.author}</strong><span>{session.draft.quote.text}</span></span><button aria-label={ui("移除引用")} disabled={unavailable} onClick={() => updateSession(current => ({ ...current, draft: { ...current.draft, quote: undefined } }))} type="button"><X aria-hidden="true" size={14} /></button></div>}
     <LexicalComposer initialConfig={initialConfig}>
       <div className="discussion-composer-editor">
-        <PlainTextPlugin contentEditable={<ContentEditable aria-describedby={showShortcutHint ? hintId : undefined} aria-label={placeholder} aria-multiline="true" className="discussion-composer-input" spellCheck />} ErrorBoundary={LexicalErrorBoundary} placeholder={<div className="discussion-composer-placeholder">{placeholder}</div>} />
+        <DiscussionTaskReferenceTasks value={referenceTasks}>
+          <PlainTextPlugin contentEditable={<ContentEditable aria-describedby={shortcutHintVisible ? hintId : undefined} aria-label={placeholder} aria-multiline="true" className="discussion-composer-input" spellCheck />} ErrorBoundary={LexicalErrorBoundary} placeholder={<div className="discussion-composer-placeholder">{placeholder}</div>} />
+        </DiscussionTaskReferenceTasks>
       </div>
       <HistoryPlugin />
       <OnChangePlugin ignoreSelectionChange onChange={onEditorChange} />
+      {referenceTasks?.length ? <DiscussionTaskReferenceMenu anchor={composerRef} tasks={referenceTasks} /> : null}
       <DraftInsertionPlugin blocked={unavailable} insertion={draftInsertion} onInsert={insertDraft} />
       <EditorBridge disabled={unavailable} onEditor={editor => { editorRef.current = editor; }} onSelectionChange={selection => { if (!pickerOpenRef.current) selectionRef.current = selection; }} onSubmit={() => { void submit(); }} onTypedMention={onTypedMention} onUpload={addUploads} />
       {autoFocus && <AutoFocusPlugin />}
@@ -386,7 +409,7 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <span className="discussion-composer-actions">{showShortcutHint && <span className="discussion-composer-hint" id={hintId}>Enter ↵ · ⌘/Ctrl+Enter {actionLabel}</span>}{onCancel && <button className="discussion-composer-cancel" disabled={unavailable} onClick={onCancel} type="button">{d('cancel')}</button>}<button aria-label={actionLabel} className="discussion-composer-submit" disabled={!canSubmit} onClick={() => { void submit(); }} type="button"><span>{submitting ? d('posting') : actionLabel}</span>{submitting ? <LoaderCircle aria-hidden="true" className="discussion-composer-spinner" size={14} /> : <Send aria-hidden="true" size={14} />}</button></span>
+      <span className="discussion-composer-actions">{shortcutHintVisible && <span className="discussion-composer-hint" id={hintId}>Enter ↵ · ⌘/Ctrl+Enter {actionLabel}</span>}{onCancel && <button className="discussion-composer-cancel" disabled={unavailable} onClick={onCancel} type="button">{d('cancel')}</button>}<button aria-label={actionLabel} className="discussion-composer-submit" disabled={!canSubmit} onClick={() => { void submit(); }} type="button"><span>{submitting ? d('posting') : actionLabel}</span>{submitting ? <LoaderCircle aria-hidden="true" className="discussion-composer-spinner" size={14} /> : <Send aria-hidden="true" size={14} />}</button></span>
     </footer>
     <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={d('uploadSelection')} hidden multiple onChange={event => { addUploads(Array.from(event.currentTarget.files ?? [])); event.currentTarget.value = ""; }} ref={uploadInputRef} type="file" />
     {error && <p className="discussion-composer-error" role="alert">{ui(error)}</p>}

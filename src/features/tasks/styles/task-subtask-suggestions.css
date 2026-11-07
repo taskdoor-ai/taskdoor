@@ -1,0 +1,42 @@
+.task-subtask-suggestions { --task-suggestion-accent: color-mix(in srgb, var(--ad-tag-purple-ink) 65%, var(--ad-ink-secondary)); --task-suggestion-inline-inset: 13px; container: task-suggestion / inline-size; box-sizing: border-box; width: 100%; min-width: 0; margin-top: 8px; padding: 8px calc(var(--task-suggestion-inline-inset) - 1px); border: 1px dashed color-mix(in srgb, var(--ad-ink-tertiary) 35%, var(--ad-border-soft)); border-radius: 6px; background: var(--ad-surface); }
+.task-subtask-suggestions-heading { display: flex; align-items: center; gap: 6px; margin: 0; padding: 2px 0 6px; color: var(--ad-route-ink); font-size: 12px; font-weight: 600; line-height: 20px; }
+.task-subtask-suggestion-motion { min-width: 0; }
+.task-subtask-suggestion { min-width: 0; }
+.task-subtask-suggestion-row { display: grid; grid-template-columns: minmax(0, 1fr) 9rem 8.5rem; align-items: center; gap: 8px; box-sizing: border-box; width: 100%; min-width: 0; min-height: 44px; padding: 6px 0; }
+/* Compensate for the dashed frame inset so the owner follows the saved list's column. */
+.task-subtask-suggestions:not(.task-subtask-suggestions-discussion) .task-subtask-suggestion-row { grid-template-columns: minmax(0, 1fr) 9rem calc(7rem + 24px - var(--task-suggestion-inline-inset)); }
+.task-subtask-suggestion-name { min-width: 0; overflow: hidden; color: var(--ad-ink); font-size: 14px; font-weight: 600; line-height: 1.5; text-overflow: ellipsis; white-space: nowrap; }
+.task-subtask-suggestions-discussion .task-subtask-suggestion-name { font-size: var(--ad-text-caption); font-weight: 500; }
+.task-subtask-suggestion-owner { display: inline-flex; align-items: center; gap: 6px; color: var(--ad-ink); font-size: 11px; line-height: 1.5; white-space: nowrap; }
+.task-subtask-suggestion-actions { display: inline-flex; justify-self: end; align-items: center; gap: 4px; }
+.task-subtask-suggestion-actions > button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 40px; min-height: 30px; padding: 0 6px; border: 0; border-radius: 4px; background: transparent; font: inherit; font-size: 11px; line-height: 20px; white-space: nowrap; cursor: pointer; }
+.task-subtask-suggestion-create { color: var(--task-suggestion-accent); }
+.task-subtask-suggestion-create:hover:not(:disabled) { background: var(--ad-tag-purple-bg); }
+.task-subtask-suggestion-remove { color: var(--ad-ink-tertiary); }
+.task-subtask-suggestion-remove:hover:not(:disabled) { background: var(--ad-surface-subtle); color: var(--ad-ink-secondary); }
+.task-subtask-suggestions button:disabled { cursor: default; opacity: .45; }
+.task-subtask-suggestions button:focus-visible, .task-subtask-suggestions-reload:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.task-subtask-suggestions-notice { margin: 4px 0 8px; color: var(--ad-ink-tertiary); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.task-subtask-suggestions-notice.is-error { color: var(--ad-danger); }
+.task-subtask-suggestions-reload { margin-inline-start: 8px; padding: 2px 0; border: 0; border-radius: 4px; background: transparent; color: var(--ad-route-ink); font: inherit; cursor: pointer; }
+.task-subtask-suggestions-update { margin: 8px 0 4px; color: var(--ad-ink-tertiary); font-size: 11px; line-height: 20px; }
+.task-subtask-suggestions-spinner { animation: task-subtask-suggestions-spin 900ms linear infinite; }
+@keyframes task-subtask-suggestions-spin { to { transform: rotate(360deg); } }
+@container task-detail-pane (max-width: 980px) {
+  .task-subtask-suggestions:not(.task-subtask-suggestions-discussion) .task-subtask-suggestion-row { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 8px; }
+  .task-subtask-suggestions:not(.task-subtask-suggestions-discussion) .task-subtask-suggestion-name { grid-column: 1; grid-row: 1; }
+  .task-subtask-suggestions:not(.task-subtask-suggestions-discussion) .task-subtask-suggestion-owner { grid-column: 1; grid-row: 2; }
+  .task-subtask-suggestions:not(.task-subtask-suggestions-discussion) .task-subtask-suggestion-actions { grid-column: 2; grid-row: 1 / span 2; }
+}
+@container task-suggestion (max-width: 600px) {
+  .task-subtask-suggestions-discussion .task-subtask-suggestion-row { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 8px; }
+  .task-subtask-suggestions-discussion .task-subtask-suggestion-name { grid-column: 1; grid-row: 1; }
+  .task-subtask-suggestions-discussion .task-subtask-suggestion-owner { grid-column: 1; grid-row: 2; }
+  .task-subtask-suggestions-discussion .task-subtask-suggestion-actions { grid-column: 2; grid-row: 1 / span 2; }
+}
+@container task-suggestion (max-width: 740px) {
+  .task-subtask-suggestion-actions { gap: 0; }
+  .task-subtask-suggestion-actions > button { min-height: 44px; min-width: 44px; padding-inline: 4px; }
+}
+@media (pointer: coarse) { .task-subtask-suggestion-actions > button { min-height: 44px; } }
+@media (prefers-reduced-motion: reduce) { .task-subtask-suggestions-spinner { animation: none; } }

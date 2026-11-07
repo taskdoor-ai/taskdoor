@@ -35,7 +35,6 @@ const Avvvatars = typeof AvvvatarsModule === "function"
   : (AvvvatarsModule as unknown as { default: typeof AvvvatarsModule }).default;
 
 const sizeMap = { xs: 22, sm: 28, md: 36, lg: 48 };
-const avatarColors = ["#849BD1", "#67B49A", "#DF8793", "#D39A66", "#6CB6C9", "#AD92D3", "#8DB56D", "#CF8DAF", "#79AABD", "#B9AC70"];
 
 /** Keep searchable person labels consistent with the names rendered by the identity UI. */
 export function usePersonLabels() {
@@ -61,7 +60,9 @@ const PersonAvatarVisual = forwardRef<HTMLSpanElement, PersonAvatarVisualProps>(
   const displayName = mockPersonName(locale, identity, name);
   const [customImageFailed, setCustomImageFailed] = useState(false);
   useEffect(() => { setCustomImageFailed(false); }, [avatarUrl]);
-  const colorSeed = Array.from(identity || name).reduce((hash, character) => (hash * 31 + character.codePointAt(0)!) >>> 0, 0);
+  // Brighter, more vivid variants of the Avvvatars identity hues.
+  const avatarColors = ["#849BD1", "#67B49A", "#DF8793", "#D39A66", "#6CB6C9", "#AD92D3", "#8DB56D", "#CF8DAF", "#79AABD", "#B9AC70"];
+  const colorSeed = Array.from(identity ?? name).reduce((hash, character) => (hash * 31 + character.codePointAt(0)!) >>> 0, 0);
   const style = {
     "--person-avatar-hue": avatarColors[colorSeed % avatarColors.length],
     "--person-avatar-size": size === "xl" ? "var(--ad-person-profile-avatar-size)" : `${sizeMap[size]}px`,
@@ -160,11 +161,11 @@ export function PersonAvatar({ avatarUrl, className = "", invitationStatus, name
     invitationStatus={resolvedProfile?.membershipStatus === "invited" ? "pending" : invitationStatus}
     pendingMembership={resolvedProfile?.membershipStatus === "invited"}
     name={resolvedProfile?.name ?? name}
-    onClick={hasProfilePreview ? (event) => {
+    onClick={hasProfilePreview && profilePreviewFocusable ? (event) => {
       event.stopPropagation();
       setPreviewOpen(true);
     } : undefined}
-    onPointerDown={hasProfilePreview ? (event) => event.stopPropagation() : undefined}
+    onPointerDown={hasProfilePreview && profilePreviewFocusable ? (event) => event.stopPropagation() : undefined}
     size={size}
     status={status}
     title={resolvedProfile ? undefined : name}

@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { Button } from "@/shared/ui/button";
 
@@ -5,10 +6,18 @@ import { Button } from "@/shared/ui/button";
 export function TaskDetailLoading({ onCancel }: { onCancel?: () => void }) {
   const { locale } = useI18n();
   const en = locale === "en";
-  return <div className="task-detail-loading" aria-busy="true">
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  useLayoutEffect(() => { cancelRef.current?.focus({ preventScroll: true }); }, []);
+  return <div className="task-detail-loading" aria-busy="true" onKeyDown={event => {
+    if (event.key === "Escape" && !event.nativeEvent.isComposing && onCancel) {
+      event.preventDefault();
+      event.stopPropagation();
+      onCancel();
+    }
+  }}>
     <span className="sr-only" role="status">{en ? "Loading task details" : "正在加载任务详情"}</span>
     <div className="task-detail-loading-main">
-      <div className="task-detail-loading-heading"><span aria-hidden="true" className="task-loading-circle" /><span aria-hidden="true" className="task-loading-bar task-loading-title" />{onCancel && <Button className="task-detail-loading-cancel" onClick={onCancel} size="sm" type="button" variant="ghost">{en ? "Cancel" : "取消"}</Button>}</div>
+      <div className="task-detail-loading-heading"><span aria-hidden="true" className="task-loading-circle" /><span aria-hidden="true" className="task-loading-bar task-loading-title" />{onCancel && <Button className="task-detail-loading-cancel" onClick={onCancel} ref={cancelRef} size="sm" type="button" variant="ghost">{en ? "Cancel" : "取消"}</Button>}</div>
       <div aria-hidden="true" className="task-detail-loading-definition">
         <span>{en ? "Goal" : "目标"}</span><span className="task-loading-bar" />
         <span>{en ? "Completion criteria" : "完成标准"}</span>

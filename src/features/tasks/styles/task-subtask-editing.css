@@ -28,7 +28,7 @@
 .task-subtask-create-form :is(button.task-subtask-create-chip, .task-subtask-create-owner, .task-subtask-create-tags .tag-picker-trigger):focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 .task-subtask-create-form .task-subtask-create-owner { max-width: 184px; gap: var(--ad-space-2); }
 .task-subtask-create-form .task-subtask-create-owner :is(.person-avatar, .person-picker-empty-icon) { width: var(--ad-control-icon-md); min-width: var(--ad-control-icon-md); height: var(--ad-control-icon-md); min-height: var(--ad-control-icon-md); flex-basis: var(--ad-control-icon-md); }
-.task-subtask-create-form .task-subtask-create-owner :is(.person-avatar-fallback, .person-avatar-initials p) { font-size: var(--ad-text-micro); }
+.task-subtask-create-form .task-subtask-create-owner :is(.person-avatar-fallback, .person-avatar-initials p) { font-size: calc(var(--ad-control-icon-md) * .37); }
 .task-subtask-create-form .task-subtask-create-owner strong { font-size: var(--ad-text-caption); font-weight: 400; }
 .task-subtask-create-form .task-subtask-create-owner > :last-child > svg { width: var(--ad-space-3); height: var(--ad-space-3); }
 .task-subtask-create-form .task-subtask-create-date { min-width: 0; max-width: 100%; }
@@ -74,9 +74,3 @@
 .task-subtask-draft-loading .task-subtask-loading-goal { width: 85%; }
 .task-subtask-create-form[data-generating="true"] .task-subtask-create-fields :is(input, textarea)::placeholder { color: transparent; }
 @media (prefers-reduced-motion: reduce) { .task-subtask-draft-loading .task-loading-bar { animation: none; } }
-
-.task-subtask-inline-create { display: flex; min-width: 0; min-height: 48px; align-items: center; gap: var(--ad-space-2); padding: 8px 0; border-bottom: 1px solid var(--ad-border-soft); }
-.task-subtask-inline-create > svg { flex: 0 0 16px; color: var(--ad-task-status-progress); }
-.task-subtask-inline-create > input { flex: 1; min-width: 0; padding: 8px 0; border: 0; outline: none; background: transparent; color: var(--ad-ink); font: inherit; }
-.task-subtask-inline-create:focus-within { border-bottom-color: var(--ad-focus); }
-.task-subtask-inline-create > input::placeholder { color: var(--ad-ink-tertiary); }

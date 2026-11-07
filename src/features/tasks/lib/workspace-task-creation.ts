@@ -143,15 +143,19 @@ export function createWorkspaceTasksFromDraft(
   return { createdNodes, mainTaskId: main.id, nodes: [...nodes, ...createdNodes] };
 }
 
-/** The manual plus button creates one blank task before opening its editable detail. */
+export type QuickTaskContent = Required<Pick<TaskDraft, "goal" | "completionCriteria">>;
+
+/** Save one manually confirmed task. The legacy blank entry uses the default title. */
 export function commitManualWorkspaceTask(
   storage: Pick<Storage, "getItem" | "setItem" | "removeItem">,
   nodes: WorkspaceNode[],
-  options: { currentUserId: string; teamId: string; idForIndex?: (index: number) => string },
+  options: { currentUserId: string; teamId: string; title?: string; content?: QuickTaskContent; idForIndex?: (index: number) => string },
 ) {
+  const title = options.title?.trim() ?? "未命名任务";
+  if (!title) throw new Error("请填写任务名称。");
   const result = createWorkspaceTasksFromDraft(nodes, {
     mainTask: {
-      title: "未命名任务", goal: "", completionCriteria: [], executionTips: [],
+      title, goal: options.content?.goal ?? "", completionCriteria: options.content?.completionCriteria ?? [], executionTips: [],
       ownerId: "", participantIds: [], labels: [], startDate: "", endDate: "",
     },
     subtasks: [],

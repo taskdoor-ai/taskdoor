@@ -40,36 +40,35 @@ export function MemberSelector({ avatarSize = "md", allowInvitations = true, all
   const d = useDetailCopy();
   const { locale } = useI18n();
   const selectedMembers = members.filter((member) => selected.includes(member.id));
+  if (participantSummary) {
+    selectedMembers.sort((a, b) =>
+      Number(a.membershipStatus === "invited") - Number(b.membershipStatus === "invited")
+      || selected.indexOf(a.id) - selected.indexOf(b.id),
+    );
+  }
   const canExpandParticipants = selectedMembers.length > 1;
   const visibleSelectedMembers = displayMax ? selectedMembers.slice(0, displayMax) : selectedMembers;
   const hiddenSelectedCount = selectedMembers.length - visibleSelectedMembers.length;
   const stackedRowRef = useRef<HTMLDivElement>(null);
-  const summaryRef = useRef<HTMLDivElement>(null);
   const [summaryVisibleCount, setSummaryVisibleCount] = useState(5);
   useLayoutEffect(() => {
     if (!canExpandParticipants) setParticipantsExpanded(false);
-    const element = summaryRef.current;
-    if (!participantSummary || !element) return;
+    const row = stackedRowRef.current;
+    if (!participantSummary || !row) return;
     const measure = () => {
-      const row = stackedRowRef.current;
-      const width = row?.clientWidth ?? 0;
+      const width = row.clientWidth;
       if (!width) return;
       const size = avatarSize === "sm" ? 28 : 36;
       const step = size - 6;
       // Reserve room for the expand control only when there are multiple participants.
-      const toggleWidth = canExpandParticipants ? 28 + 4 : 0;
+      const toggleWidth = canExpandParticipants ? 28 + 8 : 0;
       setSummaryVisibleCount(Math.max(0, Math.floor((width - toggleWidth - size + 6) / step) + 1));
     };
     measure();
     const observer = new ResizeObserver(measure);
-    observer.observe(element);
+    observer.observe(row);
     return () => observer.disconnect();
-  }, [participantSummary, avatarSize, selectedMembers.length, canExpandParticipants, participantsExpanded, disabled]);
-  const toggleSummary = () => {
-    setParticipantsExpanded(value => !value);
-    requestAnimationFrame(() => summaryRef.current?.querySelector<HTMLButtonElement>("[data-summary-toggle]")?.focus({ preventScroll: true }));
-  };
-
+  }, [participantSummary, avatarSize, canExpandParticipants, stacked, max]);
 
   const toggle = (id: string) => {
     if (selected.includes(id)) {
@@ -96,28 +95,42 @@ export function MemberSelector({ avatarSize = "md", allowInvitations = true, all
   }
 
   if (stacked) {
-    return <div ref={summaryRef} className={`member-selector member-selector-stacked${participantSummary ? " member-selector-summary" : ""}`}>
+    return <div className={`member-selector member-selector-stacked${participantSummary ? " member-selector-summary" : ""}`}>
       {!hideHeader && <div className="member-selector-label"><span>{label}</span></div>}
       {participantSummary && <div className="member-selector-summary-heading">
         <div className="member-selector-summary-title"><span>{label} ({selectedMembers.length})</span></div>
       </div>}
 
-
-      {!(participantSummary && participantsExpanded) && <div className="member-selector-stacked-row" ref={stackedRowRef}>
-        {participantSummary && <div className="member-selector-summary-avatars">{selectedMembers.slice(0, summaryVisibleCount).map(member => <PersonAvatar key={member.id} name={member.name} profile={member} size={avatarSize} />)}{canExpandParticipants && <button type="button" data-summary-toggle className="member-selector-expand-toggle member-selector-stack-expand" aria-label={locale === "en" ? `Show all ${selectedMembers.length} collaborators` : `展开全部 ${selectedMembers.length} 位参与者`} aria-expanded={false} onClick={toggleSummary}><ChevronDown aria-hidden="true" size={16} /></button>}</div>}
+      <div className="member-selector-stacked-row" ref={stackedRowRef}>
+        {participantSummary && !participantsExpanded && <div className="member-selector-summary-avatars">
+          {selectedMembers.slice(0, summaryVisibleCount).map(member => <PersonAvatar key={member.id} name={member.name} profile={member} size={avatarSize} />)}
+        </div>}
         {!(participantSummary && participantsExpanded) && !hideSelectedName && selectedMembers.map(member => <span className="member-selector-inline-person" key={member.id}><PersonAvatar invitationStatus={showInvitationStatus ? invitationStatusById[member.id] : undefined} name={member.name} profile={member} size={avatarSize} /><span className="member-selector-inline-name" title={mockPersonName(locale, member.id, member.name)}>{mockPersonName(locale, member.id, member.name)}</span>{!disabled && selected.length > min && <button className="member-selector-inline-remove" aria-label={`${d("remove")} ${label}: ${mockPersonName(locale, member.id, member.name)}`} onClick={() => toggle(member.id)} type="button"><X aria-hidden="true" /></button>}</span>)}
         {!participantSummary && hideSelectedName && selectedMembers.length > 0 && <PersonAvatarGroup invitationStatusById={showInvitationStatus ? invitationStatusById : {}} maxVisible={displayMax ?? 4} onRemove={disabled || selected.length <= min ? undefined : (id) => { if (selectedMembers.length === 1) stackedRowRef.current?.querySelector<HTMLButtonElement>(".person-picker-trigger")?.focus(); toggle(id); }} people={selectedMembers} removeLabel={label} showFullList={showFullList && !participantSummary} size={avatarSize} />}
         {!participantSummary && <PersonPicker allowInvitations={allowInvitations} allowUnassigned={allowUnassigned && min === 0} ariaLabel={`${d("add")} ${label}`} disabled={disabled} hideSelectedName max={max} memberRecommendations={memberRecommendations} members={members} menuLabel={`${d("select")} ${label}`} min={min} multiple onChange={onChange} onInviteMembers={onInviteMembers} triggerVariant="add" value={selected} />}
-      </div>}
+        {participantSummary && canExpandParticipants && <button
+          type="button"
+          className="member-selector-expand-toggle"
+          aria-label={participantsExpanded
+            ? (locale === "en" ? "Collapse collaborators" : "收起参与者列表")
+            : (locale === "en" ? `Show all ${selectedMembers.length} collaborators` : `展开全部 ${selectedMembers.length} 位参与者`)}
+          aria-expanded={participantsExpanded}
+          onClick={() => setParticipantsExpanded(value => !value)}
+        >
+          {participantsExpanded ? <ChevronUp aria-hidden="true" size={16} /> : <ChevronDown aria-hidden="true" size={16} />}
+        </button>}
+      </div>
       {participantSummary && participantsExpanded && <ul className="member-selector-inline-list" aria-label={label}>
         {selectedMembers.map(member => <li key={member.id}>
           <PersonAvatar name={member.name} profile={member} size="sm" />
-          <div className="member-selector-list-identity" title={`${mockPersonName(locale, member.id, member.name)}${member.role ? ` · ${member.role}` : ""}`}><PersonName name={member.name} profile={member} showProfilePreview={false} /><span title={member.role}>{member.role}</span></div>
+          <div className="member-selector-list-identity" title={`${mockPersonName(locale, member.id, member.name)}${member.membershipStatus !== "invited" && member.role ? ` · ${member.role}` : ""}`}>
+            <PersonName name={member.name} profile={member} showProfilePreview={false} />
+            {member.membershipStatus !== "invited" && member.role && <span className="member-selector-list-role" title={member.role}>{member.role}</span>}
+          </div>
           {!disabled && selected.length > min && <button type="button" className="member-selector-list-remove" aria-label={`${d("remove")} ${label}: ${mockPersonName(locale, member.id, member.name)}`} onClick={() => toggle(member.id)}><X aria-hidden="true" size={14} /></button>}
         </li>)}
         {!selectedMembers.length && <li className="member-selector-list-empty">{locale === "en" ? "No collaborators" : "暂无参与者"}</li>}
       </ul>}
-      {participantSummary && participantsExpanded && <div className="member-selector-list-footer"><button type="button" data-summary-toggle className="member-selector-expand-toggle member-selector-collapse-list" aria-label={locale === "en" ? "Collapse collaborators" : "收起参与者列表"} aria-expanded={true} onClick={toggleSummary}><ChevronUp aria-hidden="true" size={16} /><span>{locale === "en" ? "Collapse" : "收起"}</span></button></div>}
       {participantSummary && !disabled && <PersonPicker allowInvitations={allowInvitations} allowUnassigned={allowUnassigned && min === 0} ariaLabel={`${d("add")} ${label}`} className="member-selector-summary-add" triggerIcon={<Plus aria-hidden="true" size={16} />} hideSelectedName max={max} memberRecommendations={memberRecommendations} members={members} menuLabel={`${d("select")} ${label}`} min={min} multiple onChange={onChange} onInviteMembers={onInviteMembers} triggerVariant="add" value={selected} />}
     </div>;
   }

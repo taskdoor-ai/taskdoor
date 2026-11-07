@@ -33,9 +33,9 @@ export function TaskNavigationTools({ projection, members, filters: sourceFilter
   }, [projection, filters]);
   const filterMembers = useMemo(() => {
     const referenced = new Set([...projection.allTasks.flatMap(task => [task.ownerId, ...(task.participantIds ?? [])]), ...(filters.ownerIds ?? []), ...(filters.participantIds ?? [])].filter(Boolean));
-    const people = new Map(members.filter(member => member.membershipStatus !== "invited" || referenced.has(member.id)).map(member => [member.id, member]));
+    const people = new Map(members.map(member => [member.id, member]));
     for (const id of referenced) if (!people.has(id)) people.set(id, { id, name: locale === "en" ? "Unavailable member" : "不可用成员", email: "", role: "" });
-    return [...people.values()];
+    return [...people.values()].sort((a, b) => Number(a.membershipStatus === "invited") - Number(b.membershipStatus === "invited"));
   }, [members, projection.allTasks, filters.ownerIds, filters.participantIds, locale]);
   return (<div className="workspace-navigation-filter-section">
       <div className="workspace-navigation-filter-heading"><span>{locale === "en" ? "Filters" : "筛选"}</span>

@@ -8,7 +8,7 @@ export function LanguageSwitcher({ menu = false }: { menu?: boolean }) {
   const { locale, setLocale, t, autoTranslate, setAutoTranslate } = useI18n();
   if (menu) return <DropdownMenuSub>
     <DropdownMenuSubTrigger className="language-menu-trigger"><Languages aria-hidden="true" /><span>{t('language.label')}</span><small>{locale === 'en' ? 'English' : '简体中文'}</small></DropdownMenuSubTrigger>
-    <DropdownMenuSubContent className="language-menu-content" aria-label={t('language.label')}>
+    <DropdownMenuSubContent align="end" alignOffset={3} className="language-menu-content" aria-label={t('language.label')}>
       <DropdownMenuRadioGroup value={locale} onValueChange={value => setLocale(value === 'zh-CN' ? 'zh-CN' : 'en')}>
         <DropdownMenuRadioItem closeOnClick lang="en" value="en">English</DropdownMenuRadioItem>
         <DropdownMenuRadioItem closeOnClick lang="zh-CN" value="zh-CN">简体中文</DropdownMenuRadioItem>

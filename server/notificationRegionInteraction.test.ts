@@ -4,7 +4,7 @@ import test from "node:test";
 import React, { Children, createElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { readTaskDiscussionNotifications } from "../src/app/workspace/lib/discussion-notifications.ts";
-import { createCollaborationSnapshot, postCollaborationMessage, type CollaborationMessage } from "../src/features/tasks/lib/task-collaboration.ts";
+import { createCollaborationSnapshot, deleteCollaborationMessage, postCollaborationMessage, saveCollaboration, type CollaborationMessage } from "../src/features/tasks/lib/task-collaboration.ts";
 import { publishTaskDiscussion } from "../src/features/tasks/lib/task-mention-publishing.ts";
 import type { TaskNode } from "../src/shared/model/task-model.ts";
 
@@ -55,6 +55,34 @@ test("已发布的全体成员提及进入收件人的站内通知并指向原�
   assert.match(markup, /aria-label="通知 \(1\)"/);
 });
 
+test("站内通知显示已保存的点名提及和直接回复", () => {
+  const records = new Map<string, string>();
+  const storage = { getItem: (key: string) => records.get(key) ?? null, setItem: (key: string, value: string) => { records.set(key, value); } };
+  const createdAt = "2026-10-16T01:00:00Z";
+  const teamId = "team-a";
+  const task: TaskNode = { id: "task-a", kind: "task", name: "任务甲", parentId: "root", teamId, ownerId: "author", participantIds: ["recipient"], status: "进行中", updatedAt: createdAt };
+  const members = [{ id: "author", name: "作者" }, { id: "recipient", name: "收件人" }];
+  const scope = JSON.stringify([teamId, task.id]);
+  let snapshot = createCollaborationSnapshot([]);
+  const publish = (message: CollaborationMessage) => {
+    snapshot = saveCollaboration(storage, scope, snapshot.revision, postCollaborationMessage(snapshot, { message, visiblePeople: members }));
+  };
+  const post: CollaborationMessage = { id: "parent", author: "recipient", type: "member-post", message: "请确认", time: "", createdAt };
+  const reply: CollaborationMessage = { ...post, id: "reply", author: "author", type: "member-reply", replyToActivityId: post.id, message: "已确认" };
+  const mention: CollaborationMessage = { ...post, id: "mention", author: "author", message: "@收件人 请核对", mentionedPrincipalIds: ["recipient"] };
+  publish(post);
+  publish(reply);
+  publish(mention);
+
+  const read = () => readTaskDiscussionNotifications(storage, teamId, "recipient", [task], members, "zh-CN");
+  assert.deepEqual(read().map(({ kind, content, target }) => [kind, content, target]), [
+    ["reply", "@作者在讨论中回复了你。", { area: "discussion", activityId: "reply" }],
+    ["mention", "@作者在讨论中提及了你。", { area: "discussion", activityId: "mention" }],
+  ]);
+  saveCollaboration(storage, scope, snapshot.revision, deleteCollaborationMessage(snapshot, mention, "author"));
+  assert.deepEqual(read().map(item => item.kind), ["reply"], "已删除的消息和摘要不再显示");
+});
+
 test("讨论通知链接只导航到讨论来源，成功呈现前不提前已读", () => {
   let reads = 0;
   const opens: unknown[][] = [];
@@ -63,9 +91,16 @@ test("讨论通知链接只导航到讨论来源，成功呈现前不提前已�
     item: { id: "regional", kind: "mention", task: { id: "task-a", title: "任务甲" }, target, content: "任务甲中有人提及你", createdAt: "2026-10-16T01:00:00Z", time: "", read: false },
     onRead: () => { reads++; }, onOpenTask: (...args) => { opens.push(args); },
   });
-  nodes.find(node => node.props.className === "notification-task-link")!.props.onClick();
+  const link = nodes.find(node => node.props.className === "notification-task-link")!;
+  assert.equal(link.props.tabIndex, 0);
+  link.props.onClick();
+  for (const key of ["Enter", " "]) {
+    let prevented = false;
+    link.props.onKeyDown({ key, preventDefault: () => { prevented = true; } });
+    assert.equal(prevented, true);
+  }
   assert.equal(reads, 0, "失败或无权访问不能被导航点击误记为已读");
-  assert.deepEqual(opens, [["task-a", target]]);
+  assert.deepEqual(opens, [["task-a", target], ["task-a", target], ["task-a", target]]);
   nodes.find(node => node.props.className === "notification-item-read")!.props.onClick();
   assert.equal(reads, 1, "独立手动标已读仍可用");
 });

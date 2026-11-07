@@ -12,12 +12,14 @@ import { useGlobalUi } from '@/shared/i18n/global-ui';
 import "@/features/tasks/styles/task-criterion-review.css";
 import "@/features/tasks/styles/task-ai-adjustment.css";
 import { useI18n } from '@/shared/i18n/I18nProvider';
+import { copyTextToClipboard } from "@/shared/lib/clipboard";
 import { formatDisplayDateTime, formatLegacyDateLabel } from '@/shared/lib/date-time';
 import { mockTagName, mockPersonName } from '@/ai/mock/i18n/mockContent';
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { MockTaskProvider, useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
+import { Tooltip } from "@base-ui/react/tooltip";
 import { ArrowLeft, ChevronRight, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { type TaskActivityMock, type TaskDetailContent, type TaskFileNode, type TaskIconName, type TaskIconTone } from "@/shared/model/task-model";
@@ -46,12 +48,17 @@ import { TaskCompletionCriteria } from "@/features/tasks/components/TaskCompleti
 import { TaskCurrentSituation } from "@/features/tasks/components/TaskCurrentSituation";
 import type { TaskDateRange } from "@/features/tasks/components/TaskDateRangePicker";
 import { TaskDiscussion } from "@/features/tasks/components/TaskDiscussion";
+import type { DiscussionTaskLink } from "@/features/tasks/discussion/components/TaskDiscussionTaskLinks";
+import type { DiscussionReferenceTask } from "@/features/tasks/discussion/lib/discussion-task-reference";
 import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
 import type { TaskRelationSummary } from "@/features/tasks/components/TaskRelationsSection";
 import { TaskStatusBadge, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
 import { TaskSubtasksPane } from "@/features/tasks/components/TaskSubtasksPane";
 import { DiscussionSubtaskCreateForm } from "@/features/tasks/components/DiscussionSubtaskCreateForm";
 import type { NewSubtaskDraft } from "@/features/tasks/lib/workspace-subtask-editing";
+import { TaskSubtaskSuggestions } from "@/features/tasks/components/TaskSubtaskSuggestions";
+import { useSubtaskSuggestionReview } from "@/features/tasks/lib/useSubtaskSuggestionReview";
+import { groupSubtaskSuggestionsByDiscussionRoot, groupTaskDiscussionLinksByRoot, isSubtaskSuggestionContextCurrent, type SubtaskSuggestion, type SubtaskSuggestionReview } from "@/features/tasks/lib/task-subtask-suggestions";
 import { toast } from "@/shared/ui/toast";
 import { Input, Textarea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
@@ -78,6 +85,8 @@ type TaskDetailTab = "subtasks" | "ai" | "discussion" | "files" | "activity";
 
 type TaskDetailProps = {
   hidden?: boolean;
+  /** Includes historical discussion sources excluded from the visible file list. */
+  collaborationSeedFiles?: TaskFileNode[];
   completedMinutesByTaskId?: Readonly<Record<string, number | null>>;
   effortTasks?: TaskEffortDistributionInput[];
   progressComparisonsByTaskId?: Readonly<Record<string, TaskProgressComparisonSeries | undefined>>;
@@ -85,6 +94,11 @@ type TaskDetailProps = {
   onTaskCriterionConfirm?: (index: number, confirmed: boolean, expected: string[]) => void | Promise<void>;
   onTaskCriteriaSave?: (values: string[], expected: string[]) => void | Promise<void>;
   childTasks?: TaskRelationSummary[];
+  subtaskSuggestions?: SubtaskSuggestion[];
+  projectSubtaskSuggestions?: (messages: TaskActivityMock[]) => SubtaskSuggestion[];
+  canConfirmSubtaskSuggestions?: boolean;
+  onConfirmSubtaskSuggestions?: (suggestions: SubtaskSuggestion[], review: SubtaskSuggestionReview, expectedReviewRaw: string | null, entry: "subtasks" | "discussion") => Promise<void>;
+  subtaskDiscussionLinks?: Array<DiscussionTaskLink & { messageId: string }>;
   parentTask?: TaskRelationSummary;
   currentUser?: string;
   currentUserId?: string;
@@ -103,6 +117,8 @@ type TaskDetailProps = {
   onOpenRelatedTask?: (taskId: string) => void;
   onOwnerChange?: (owner: string[]) => void | Promise<void>;
   onParticipantsChange?: (participants: string[]) => void;
+  discussionReferenceTasks?: DiscussionReferenceTask[];
+  onOpenDiscussionReferenceTask?: (taskId: string) => void;
   onDiscussionSave?: (current: CollaborationSnapshot, next: CollaborationSnapshot, message: CollaborationMessage) => CollaborationSnapshot;
   onDiscussionRead?: (taskId: string, activityIds: string[], readThrough: string) => void;
   onPathSelect?: (nodeId: string) => void;
@@ -123,6 +139,7 @@ type TaskDetailProps = {
   tags?: string[];
   task: TaskDetailContent;
   taskId: string;
+  taskNumber?: number;
 };
 
 function toDateInputValue(value: string): string {
@@ -140,11 +157,17 @@ function toDateInputValue(value: string): string {
 }
 
 export function TaskDetail({
+  collaborationSeedFiles,
   completedMinutesByTaskId,
   effortTasks = [],
   progressComparisonsByTaskId = {},
   recordedActivities = [],
   childTasks = [],
+  subtaskSuggestions = [],
+  projectSubtaskSuggestions,
+  canConfirmSubtaskSuggestions = false,
+  onConfirmSubtaskSuggestions,
+  subtaskDiscussionLinks = [],
   currentUser = "周岚",
   currentUserId = currentUser,
   teamId = "demo",
@@ -156,13 +179,15 @@ export function TaskDetail({
   onTaskCriteriaSave,
   onTaskCriterionConfirm,
   onCreateSubtask,
-  onCreateDiscussionSubtask,
+  onCreateDiscussionSubtask = onCreateSubtask,
   onDeleteSubtask,
   onInitialAttentionTargetHandled,
   onInviteMembers,
   onOpenRelatedTask,
   onOwnerChange,
   onParticipantsChange,
+  discussionReferenceTasks,
+  onOpenDiscussionReferenceTask,
   onDiscussionSave,
   onDiscussionRead,
   onPathSelect,
@@ -183,6 +208,7 @@ export function TaskDetail({
   tags = [],
   task,
   taskId,
+  taskNumber,
 }: TaskDetailProps) {
   const ui = useGlobalUi();
   const { locale } = useI18n();
@@ -191,12 +217,21 @@ export function TaskDetail({
   const [discussionSubtaskSource, setDiscussionSubtaskSource] = useState<NonNullable<NewSubtaskDraft["sourceDiscussion"]> | null>(null);
   const discussionSubtaskTrigger = useRef<HTMLElement | null>(null);
   const d = useDetailCopy();
+  const taskNumberCopyLabel = taskNumber === undefined ? undefined : `${d("copyTaskNumber")} ${taskNumber}`;
+  const copyTaskNumber = async (number: number) => {
+    try {
+      await copyTextToClipboard(String(number));
+      toast.success(d("taskNumberCopied"));
+    } catch {
+      toast.error(d("taskNumberCopyFailed"));
+    }
+  };
   const completionCriteria = task.completionCriteria ?? [];
   const burnUp = task.burnUp;
   const progressAssessment = getTaskProgressAssessment(burnUp, effortTasks);
   const hasBurnUp = progressAssessment.hasTrend;
   const mock = useMockText();
-  const collaboration = useTaskCollaboration(teamId, taskId, task.files);
+  const collaboration = useTaskCollaboration(teamId, taskId, collaborationSeedFiles ?? task.files);
   const pendingDiscussionRef = useRef<{ signature: string; message: CollaborationMessage } | null>(null);
   const allFiles = collaboration.snapshot.files;
   const taskFiles = useMemo(() => getTaskFiles(allFiles), [allFiles]);
@@ -206,6 +241,25 @@ export function TaskDetail({
     enabled: !collaboration.error,
   });
   const activities = allMessages;
+  const suggestionsById = new Map(subtaskSuggestions.map(item => [item.id, item]));
+  if (!collaboration.error) {
+    for (const item of projectSubtaskSuggestions?.(activities) ?? []) suggestionsById.set(item.id, item);
+  }
+  const suggestionReview = useSubtaskSuggestionReview(teamId, taskId, [...suggestionsById.values()]);
+  const currentSuggestions = suggestionReview.suggestions.filter(item => isSubtaskSuggestionContextCurrent(item, activities));
+  const outdatedSuggestions = suggestionReview.suggestions.filter(item => !isSubtaskSuggestionContextCurrent(item, activities));
+  const suggestionsByDiscussionRoot = groupSubtaskSuggestionsByDiscussionRoot(currentSuggestions, activities);
+  const outdatedByDiscussionRoot = groupSubtaskSuggestionsByDiscussionRoot(outdatedSuggestions, activities);
+  const discussionFollowups: Record<string, { tasks: DiscussionTaskLink[]; suggestionCount: number; hasOutdated?: boolean }> = {};
+  for (const [messageId, tasks] of groupTaskDiscussionLinksByRoot(subtaskDiscussionLinks, activities)) {
+    discussionFollowups[messageId] = { tasks, suggestionCount: 0 };
+  }
+  for (const [messageId, suggestions] of suggestionsByDiscussionRoot) {
+    (discussionFollowups[messageId] ??= { tasks: [], suggestionCount: 0 }).suggestionCount = suggestions.length;
+  }
+  for (const messageId of outdatedByDiscussionRoot.keys()) {
+    (discussionFollowups[messageId] ??= { tasks: [], suggestionCount: 0 }).hasOutdated = true;
+  }
   const localActivities = collaboration.snapshot.messages.filter(message => !message.deletedAt);
   const initialTab = getTaskDetailTabForTarget(activities, initialAttentionTarget);
   const [activeTab, setDetailTab] = useState<TaskDetailTab>(
@@ -476,7 +530,7 @@ export function TaskDetail({
   const renderDiscussionSubtask = (message: CollaborationMessage) => {
     if (!discussionSubtaskSource || discussionSubtaskSource.messageId !== message.id) return null;
     let request;
-    try { request = buildDiscussionSubtaskRequest({ locale, currentDate: taskCalendarDate(new Date().toISOString(), timeZone)!, task: { id: taskId, title: currentTitle, goal: currentGoal, completionCriteria }, sourceMessageId: discussionSubtaskSource.messageId, messages: allMessages, members, labels: tagDefinitions.map(tag => tag.name) }); } catch { /* Keep the source and allow manual editing when context cannot be read. */ }
+    try { request = buildDiscussionSubtaskRequest({ locale, currentDate: taskCalendarDate(new Date().toISOString(), timeZone)!, task: { id: taskId, title: currentTitle, goal: currentGoal, completionCriteria }, sourceMessageId: discussionSubtaskSource.messageId, messages: allMessages, members, labels: tagDefinitions.map(tag => tag.name), referenceTasks: discussionReferenceTasks }); } catch { /* Keep the source and allow manual editing when context cannot be read. */ }
     return <DiscussionSubtaskCreateForm messages={allMessages} request={request} currentUserId={currentUserId} id={`task-discussion-subtask-create-${taskId}-${message.id}`} source={discussionSubtaskSource} contextCurrent={(!request || isDiscussionSubtaskRequestCurrent(request, allMessages)) && allMessages.some(item => item.id === discussionSubtaskSource.messageId && !item.deletedAt && ["member-post", "member-reply"].includes(item.type) && item.message === discussionSubtaskSource.body && item.author === discussionSubtaskSource.author)} key={`${taskId}-${message.id}`} members={members} onCancel={closeDiscussionSubtask} onCreate={createDiscussionSubtask} tags={tagDefinitions} />;
   };
 
@@ -622,24 +676,71 @@ export function TaskDetail({
   };
 
   const taskPathItems = getTaskDetailPathItems(pathItems, taskId, parentTask?.id);
-  const hasRealAncestors = taskPathItems.some(item => item.id !== taskId);
+
+  const renderSubtaskSuggestions = (messageId?: string) => {
+    const scopedSuggestions = messageId === undefined ? currentSuggestions : suggestionsByDiscussionRoot.get(messageId) ?? [];
+    const hasOutdated = messageId === undefined ? outdatedSuggestions.length > 0 : Boolean(outdatedByDiscussionRoot.get(messageId)?.length);
+    const entry = messageId === undefined ? "subtasks" : "discussion";
+    const canConfirm = entry === "subtasks" ? Boolean(onCreateSubtask) : canConfirmSubtaskSuggestions;
+    return <>
+      {suggestionReview.error && (scopedSuggestions.length > 0 || hasOutdated) && <p className="task-subtask-suggestions-notice is-error" role="alert">{suggestionReview.error}<button className="task-subtask-suggestions-reload" onClick={suggestionReview.reload} type="button">{locale === "en" ? "Reload suggestions" : "重新载入建议"}</button></p>}
+      {hasOutdated && <p className="task-subtask-suggestions-update" role="status">{locale === "en" ? "Discussion changed. Suggestions need to be refreshed." : "讨论已更新，建议待重新整理。"}</p>}
+      <TaskSubtaskSuggestions
+        currentUserId={currentUserId}
+        tags={tagDefinitions}
+        suggestions={scopedSuggestions}
+        members={members}
+        disabled={!canConfirm || !onConfirmSubtaskSuggestions || suggestionReview.blocked || Boolean(collaboration.error)}
+        onDismissSelected={suggestionReview.dismissMany}
+        variant={entry}
+        onConfirm={async (ids: string[], draft?: NewSubtaskDraft) => {
+          if (!onConfirmSubtaskSuggestions) throw new Error(locale === "en" ? "Task creation is unavailable. Please reopen this task." : "当前无法创建任务，请重新打开任务。");
+          const requestedIds = new Set(ids);
+          const requestedSuggestions = scopedSuggestions.filter(item => requestedIds.has(item.id));
+          if (!requestedIds.size || requestedSuggestions.length !== requestedIds.size) {
+            throw new Error(locale === "en" ? "These suggestions have changed. Review the current list and try again." : "建议已有变化，请核对当前列表后重试。");
+          }
+          const finalSuggestions = draft ? requestedSuggestions.map(item => ({ ...item, title: draft.title, completionCriteria: draft.completionCriteria, labels: draft.labels, goal: draft.goal ?? "", ownerId: draft.ownerId ?? "", participantIds: draft.participantIds, endDate: draft.endDate ?? "" })) : requestedSuggestions;
+          await onConfirmSubtaskSuggestions(finalSuggestions, suggestionReview.review, suggestionReview.savedRaw.current, entry);
+          suggestionReview.reload();
+          if (messageId !== undefined) window.requestAnimationFrame(() => document.getElementById(`task-activity-${messageId}`)?.focus({ preventScroll: true }));
+        }}
+      />
+    </>;
+  };
 
   return <MockTaskProvider taskId={taskId}><section aria-label={d('details')} className="task-detail-view task-detail-split" hidden={hidden} inert={hidden} ref={detailScrollRef} tabIndex={-1}>
     <TaskDetailStickySummary status={currentStatus} progressRatio={taskAiProgressRatio} pathItems={taskPathItems.map(item => ({ ...item, label: mock.field(item.id, "title", item.label) }))} onPathSelect={onPathSelect} activeTab={visibleTab} headerRef={detailHeaderRef} scrollRef={detailScrollRef} taskId={taskId} title={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} />
     <div className="task-detail-property-layout">
     <header className="task-detail-header" ref={detailHeaderRef}>
-      {!hidePathNavigation && hasRealAncestors && <div className="task-detail-kicker"><nav aria-label={d('path')} className="task-detail-path">{taskPathItems.map((item, index) => {
+      {!hidePathNavigation && taskPathItems.some(item => item.id !== taskId) && <div className="task-detail-kicker">{taskPathItems.some(item => item.id !== taskId) ? <nav aria-label={d('path')} className="task-detail-path">{taskPathItems.map((item, index) => {
         const label = mock.field(item.id, "title", item.label);
         return <span key={item.id}>
         {index > 0 && <ChevronRight aria-hidden="true" size={12} />}
         {index < taskPathItems.length - 1 && onPathSelect ? <button onClick={() => onPathSelect(item.id)} title={label} type="button">{label}</button> : <em aria-current={index === taskPathItems.length - 1 ? "page" : undefined} title={label}>{label}</em>}
       </span>;
-      })}</nav></div>}
+      })}</nav> : null}</div>}
             <div className="task-detail-title-row">
               <TaskCompletionIndicator key={taskId} status={currentStatus} completed={currentStatus === "已完成"} progressRatio={taskAiProgressRatio} evidence={taskAiProgressEvidence} onToggle={onTaskStatusChange ? () => setTaskCompleted(currentStatus !== "已完成") : undefined} />
               <div aria-busy={titleSave.status === "saving" || undefined} className="task-detail-title-content"><h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} aria-describedby={titleSave.status === "error" ? `task-title-save-error-${taskId}` : undefined} className="task-detail-title-input" onFocus={() => { titleSave.clear(); setEditingOriginal("title"); }} onBlur={() => { setEditingOriginal(null); void titleSave.save(currentTitle, task.title, onTaskTitleChange); }} onChange={(event) => { titleSave.clear(); setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " ")); }} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>{titleSave.status === "saving" && <span className="sr-only" role="status">{d("fieldSaving")}</span>}</div>
               <div className="task-ai-detail-tools">
-                {onBackToList && <Button aria-label={d("backToList")} className="task-detail-back-to-list" onClick={onBackToList} size="icon-sm" type="button" variant="ghost"><ArrowLeft aria-hidden="true" size={17} /></Button>}
+                {taskNumber !== undefined && <Tooltip.Root>
+                  <Tooltip.Trigger
+                    aria-label={taskNumberCopyLabel}
+                    delay={180}
+                    onClick={() => void copyTaskNumber(taskNumber)}
+                    render={<Button className="text-(--ad-ink-tertiary)" size="icon-sm" type="button" variant="ghost" />}
+                  >
+                    ID
+                  </Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Positioner className="z-100" side="bottom" sideOffset={6}>
+                      <Tooltip.Popup className="rounded-(--ad-radius-control) bg-(--ad-ink) px-2 py-1 text-(length:--ad-text-caption) text-(--ad-surface) whitespace-nowrap">
+                        {taskNumberCopyLabel}
+                      </Tooltip.Popup>
+                    </Tooltip.Positioner>
+                  </Tooltip.Portal>
+                </Tooltip.Root>}
                 <AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} />
               </div>
             </div>
@@ -689,7 +790,7 @@ export function TaskDetail({
 
 
     <div aria-labelledby="task-detail-tab-subtasks" className="task-detail-subtasks-pane" hidden={visibleTab !== "subtasks"} id="task-detail-panel-subtasks" role="tabpanel" tabIndex={-1}>
-      <TaskSubtasksPane taskId={taskId} key={taskId} currentUserId={currentUserId} members={members} tags={tagDefinitions} onCreate={onCreateSubtask} progressComparisonsByTaskId={progressComparisonsByTaskId} effortTasks={effortTasks} completedMinutesByTaskId={completedMinutesByTaskId} onOpenTask={onOpenRelatedTask} tasks={childTasks} />
+      <TaskSubtasksPane taskId={taskId} key={taskId} currentUserId={currentUserId} members={members} tags={tagDefinitions} onCreate={onCreateSubtask} progressComparisonsByTaskId={progressComparisonsByTaskId} effortTasks={effortTasks} completedMinutesByTaskId={completedMinutesByTaskId} onOpenTask={onOpenRelatedTask} tasks={childTasks} suggestions={renderSubtaskSuggestions()} />
     </div>
 
     {hasAnalysisContent && <section aria-labelledby="task-detail-tab-ai" className="task-detail-ai-panel" hidden={visibleTab !== "ai"} id="task-detail-panel-ai" role="tabpanel">
@@ -704,7 +805,7 @@ export function TaskDetail({
 
     <section aria-labelledby="task-detail-tab-discussion" className="task-detail-section task-discussion-panel first-section" hidden={visibleTab !== "discussion"} id="task-detail-panel-discussion" role="tabpanel" tabIndex={-1}>
       <TaskDiscussion active={visibleTab === 'discussion'} readable={!collaboration.error} readRequestSequence={discussionReadRequestSequence} onRead={(ids, through) => onDiscussionRead?.(taskId, ids, through)} activities={activities} attentionTarget={discussionAttention} draftInsertion={discussionInsertion} currentUser={currentUserId} currentUserName={currentUser} draftKey={collaboration.scopeKey} files={allFiles} key={taskId} onConnectAi={openDiscussionAi} onOpenFile={(id, version) => openFile(id, version, true)} onPreviewAttachment={previewAttachment} onPost={(draft, replyToId) => { postDiscussion(draft, replyToId); if (!replyToId && discussionInsertion) { discussionInsertion.onPublished(draft); setDiscussionInsertion(undefined); } }} onDelete={deleteDiscussion} people={activityPeople}
-        onCreateSubtask={onCreateDiscussionSubtask && !collaboration.error ? openDiscussionSubtask : undefined} creatingSubtask={Boolean(discussionSubtaskSource)} retainedSubtaskSources={discussionSubtaskSource ? [discussionSubtaskSource] : []} renderAfterMessage={renderDiscussionSubtask} />
+        onCreateSubtask={onCreateDiscussionSubtask && !collaboration.error ? openDiscussionSubtask : undefined} creatingSubtask={Boolean(discussionSubtaskSource)} retainedSubtaskSources={discussionSubtaskSource ? [discussionSubtaskSource] : []} renderAfterMessage={renderDiscussionSubtask} followupsByMessageId={discussionFollowups} onOpenFollowupTask={onOpenRelatedTask} referenceTasks={discussionReferenceTasks} onOpenReferenceTask={onOpenDiscussionReferenceTask} renderSuggestions={messageId => renderSubtaskSuggestions(messageId)} />
     </section>
 
       <section aria-labelledby="task-detail-tab-files" className="task-detail-section task-files-panel first-section" hidden={activeTab !== "files"} id="task-detail-panel-files" role="tabpanel">

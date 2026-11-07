@@ -4,8 +4,9 @@
 .task-filter-menu {
   --task-filter-menu-height: min(480px, var(--available-height, calc(100dvh - 100px)));
   width: 280px;
-  max-width: calc(100vw - 24px);
-  /* Size to the current choices and only cap the popup when it approaches the viewport. */
+  max-width: min(calc(100vw - 24px), var(--available-width, 100vw));
+  container: task-filter-menu / inline-size;
+  /* Fit within the space from the anchored origin instead of moving that origin. */
   height: auto;
   max-height: var(--task-filter-menu-height);
   display: flex;
@@ -15,12 +16,10 @@
   border-radius: 12px;
   background: var(--ad-surface);
   box-shadow: 0 12px 36px #18223018, 0 2px 6px #18223008;
-  transition: width 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .task-filter-menu[data-detail-open="true"] { width: 560px; }
-.task-filter-menu[data-closed] { transition: none; }
 .task-filter-menu-columns { display: flex; flex: 1 1 auto; min-height: 0; }
-/* Keep both panes at their final width while the popup reveals the detail pane. */
+/* Expanding to the right keeps the category search and column at the same origin. */
 .task-filter-menu-main { display: flex; flex-direction: column; flex: 0 0 278px; min-width: 0; min-height: 0; }
 .task-filter-menu-search { flex-shrink: 0; padding: 10px 12px; border-bottom: 1px solid var(--ad-border-soft); }
 .task-filter-menu-search [data-slot="input-shell"] { display: block; position: relative; }
@@ -109,12 +108,16 @@
 /* Fit the selected chips and cap their height so the footer stays reachable. */
 .task-filter-selection { display: flex; align-content: flex-start; align-items: center; flex-wrap: wrap; flex: 0 0 auto; gap: 6px; max-height: min(134px, 28dvh); min-height: 0; padding: 10px 12px; border-top: 1px solid var(--ad-border-soft); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 .task-filter-selection .task-filter-selected-group { display: contents; }
-@media (max-width: 650px) {
-  .task-filter-menu, .task-filter-menu[data-detail-open="true"] { width: 300px; }
+.task-filter-menu[data-touch], .task-filter-menu[data-touch][data-detail-open="true"] { width: 300px; }
+/* When the anchored space cannot fit both panes, navigate within the same popup. */
+@container task-filter-menu (width < 558px) {
   .task-filter-menu-main { flex: 1 1 auto; }
   .task-filter-menu[data-detail-open="true"] .task-filter-menu-main { display: none; }
   .task-filter-menu-detail { width: 100%; flex: 1 1 auto; border-left: 0; }
   .task-filter-back { display: grid; }
+}
+@media (max-width: 650px) {
+  .task-filter-menu, .task-filter-menu[data-detail-open="true"] { width: 300px; }
   .task-filter-menu { --task-filter-menu-height: min(520px, var(--available-height, calc(100dvh - 100px))); }
 }
 @media (max-width: 900px), (pointer: coarse) {

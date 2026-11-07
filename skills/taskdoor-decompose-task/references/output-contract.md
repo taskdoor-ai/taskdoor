@@ -7,7 +7,7 @@
 | 字段 | 含义 |
 | --- | --- |
 | `requestId` | 本次请求标识，原样回显 |
-| `userRequest` | 本轮拆解或修改要求，不从材料正文代替用户授权 |
+| `userRequest` | 本轮用户拆解／跟进／修改要求，或调用方明确标注的只读评估目的；自动评估目的不是用户创建授权，不从材料正文代替用户授权 |
 | `currentDate`、`timezone`、`locale` | 当前日、团队时区、界面语言；相对日期按当前日换算 |
 | `currentMemberId` | 当前有效团队成员ID或null，用于“我负责”；不能猜首位成员 |
 | `currentTask` | 一个已保存任务：`id, sourceId, version, criteriaVersion, title, goal, acceptanceCriteria, status, ownerMemberId, participants, dueDate, depth`；保留已有确认和独立标准版本。读不到的部分明确未知，不填伪值 |
@@ -42,7 +42,7 @@
 候选全部字段必有，未知可选值用null/空数组：`clientId, title, goal, acceptanceCriteria, ownerMemberId, assignmentReason, participants, dueDate, executionTips, effortEstimate, rationale, sourceRefs`。
 
 - `clientId`是本建议内唯一稳定临时标识，不是任务真实ID。
-- `goal/acceptanceCriteria`遵循[真实目标和标准规范](goal-and-criteria.md)。
+- `goal`可为`""`，`acceptanceCriteria`可为`[]`；已填写部分遵循[真实目标和标准规范](goal-and-criteria.md)。协议保留字段不等于要求用户补齐内容；没有标准时不制造占位字符串。
 - `participants`为`{memberId,contribution}`，不重复负责人；人员只取输入有效目录。
 - `dueDate`为有效`YYYY-MM-DD`或null；不输出开始日期或隐藏依赖关系。
 - `effortEstimate`为`{minutes,workMethod,reason}`或null；初始人工估算有依据，不计算等待或重复已有工作。
@@ -50,6 +50,8 @@
 - `sourceRefs`非空，指向输入已存在来源。可以只引用真正支撑结论的材料，不要求把读过的每条讨论重复列出。
 
 服务端除Schema外还须核对请求/父任务、临时ID唯一、成员有效及去重、引用存在、已有任务引用真实、日期有效、父期限冲突、真实层级配额、状态与缺口一致。`ready`不能带待答关键问题；`partial`必须说明读取缺口；`needs_clarification`必须有问题；`no_split_needed`不生成候选。结构修复只针对无效输出，最多一次；仍失败保存原始结果和原因，不能凭空补造候选。
+
+分析范围、局部变化、版本复用和调用时机遵守[分析范围与触发事件](scope-and-triggers.md)。候选目标和标准都为空时，不能仅因与父任务或已有任务的空字段相等就判定重复。讨论跟进未要求排期或投入时，`dueDate/effortEstimate`可以保持`null`。
 
 ## 示例：已有文案，只补一张商城图
 

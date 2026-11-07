@@ -1,18 +1,21 @@
 import { TaskSubtaskCompletionBadge } from "@/features/tasks/components/TaskSubtaskCompletionBadge";
+import { TaskQuickCreateRow } from "@/features/tasks/components/TaskQuickCreateRow";
 import { getDirectChildTaskCompletion } from "@/features/tasks/lib/task-relation-projection";
 import { mockPersonName } from '@/ai/mock/i18n/mockContent';
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { formatTaskCount } from "@/shared/i18n/core";
+import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { statusMessageKey } from "@/shared/i18n/task-status";
-import { Check, ChevronRight, Link2Off, List, ListTree, MoreHorizontal, Plus, Search, Trash2, UserRound, X } from "lucide-react";
+import { Check, ArrowDownUp, ChevronDown, ChevronRight, Link2Off, List, ListTree, MoreHorizontal, Plus, Search, SlidersHorizontal, Trash2, UserRound, X } from "lucide-react";
 import type { CSSProperties } from "react";
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { PersonOption, TagDefinition, TaskNode } from "@/shared/model/task-model";
 
 import type { TaskListProjection } from "@/features/tasks/lib/task-list-projection";
-import { taskUpdatedLabel } from "@/features/tasks/lib/task-list-presentation";
+import { taskDeadlineDisplay, taskUpdatedLabel } from "@/features/tasks/lib/task-list-presentation";
 import { buildTaskListHierarchy } from "@/features/tasks/lib/task-list-hierarchy";
 import { TaskHierarchyList, type TaskHierarchyExpansion, type TaskHierarchyRowState } from "@/features/tasks/components/TaskHierarchyList";
+import { useResponsiveControlSize } from "@/shared/lib/useResponsiveControlSize";
 import { clearedTaskListConditions, getTaskStatusFilters, getTaskTagFilters, normalizeTaskWorkspaceFilters,  type TaskListFilters } from "@/features/tasks/components/task-list-filters";
 import { taskFilterSummaries } from "@/features/tasks/components/TaskListFilterPanel";
 import { TaskStatusIcon, taskStatusDefinition, taskStatusOptions, type TaskStatus } from "@/shared/ui/TaskStatusBadge";
@@ -23,7 +26,7 @@ import { PersonAvatar } from "@/shared/ui/PersonAvatar";
 import { FixedScrollThumb } from "@/shared/ui/FixedScrollThumb";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
 
 export type TaskWorkspaceListProps = {
   progressComparisonsByTaskId?: Readonly<Record<string, TaskProgressComparisonSeries | undefined>>;
@@ -31,20 +34,21 @@ export type TaskWorkspaceListProps = {
   currentUserId: string;
   filters: TaskListFilters;
   members: PersonOption[];
-  onCreateTask: () => void;
   onFiltersChange: (filters: TaskListFilters) => void;
   onManageTags: () => void;
-  onOpenRecycleBin?: () => void;
   onDeleteTask: (task: TaskNode) => void;
   onTaskStatusChange: (taskId: string, status: TaskStatus) => void;
   onTaskSelect: (task: TaskNode) => void;
   onQueryChange: (query: string) => void;
+  onQuickCreateTask?: (prompt: string) => Promise<void>;
+  quickCreateRequest?: number;
   query: string;
   selectedTaskId: string | null;
   scopeCounts: { all: number; owned: number; participating: number };
   teamId?: string;
   onShowWorkbench: () => void;
   showingWorkbench: boolean;
+  listVisible?: boolean;
 };
 
 function TaskRowTitle({ title }: { title: string }) {
@@ -99,6 +103,7 @@ type TaskWorkspaceRowProps = {
 
 const MemoTaskWorkspaceRow = memo(function TaskWorkspaceRow({ task, owner, series, currentUserId, showOwner, selected, sort, now, actions, tree, subtaskCompletion }: TaskWorkspaceRowProps) {
   const { t, locale } = useI18n();
+  const detailCopy = useDetailCopy();
   const timeZone = useTeamTimeZone();
   const statusText = (status: string) => status in statusMessageKey ? t(statusMessageKey[status as keyof typeof statusMessageKey]) : status;
   const ownerName = task.ownerId ? mockPersonName(locale, task.ownerId, owner?.name ?? task.ownerId) : t('list.unassigned');
@@ -108,6 +113,10 @@ const MemoTaskWorkspaceRow = memo(function TaskWorkspaceRow({ task, owner, serie
   const timeField = sort === "created" ? t('list.createdAt') : t('list.updatedAt');
   const timestampValue = sort === "created" ? task.createdAt ?? "" : task.updatedAt;
   const timeLabel = taskUpdatedLabel(timestampValue, now, now, locale).label;
+  const deadline = tree ? null : taskDeadlineDisplay(task, now, locale);
+  const DeadlineElement = deadline?.dateTime ? "time" : "span";
+  const deadlineLabel = deadline ? (locale === "en" ? `Due ${deadline.label}` : deadline.label) : detailCopy("noDueDate");
+  const deadlineDescription = deadline ? (locale === "en" ? `Due date: ${deadline.full}` : `截止时间：${deadline.full}`) : deadlineLabel;
   const RowContainer = tree ? "div" : "li";
   const contextLabel = locale === "en" ? "Hierarchy context; does not match filters" : "仅作层级定位，未匹配筛选";
   return <RowContainer className={`task-workspace-row-entry${tree ? " task-hierarchy-row" : ""}`} data-context={tree?.context || undefined} data-tree-row={tree ? task.id : undefined} data-has-owner={showOwner && !tree?.context || undefined} data-selected={selected || undefined} style={tree ? { "--task-tree-indent": `${Math.min(tree.level, 5) * 12}px` } as CSSProperties : undefined}>
@@ -117,7 +126,10 @@ const MemoTaskWorkspaceRow = memo(function TaskWorkspaceRow({ task, owner, serie
       <button aria-label={tree?.context ? `${task.name} · ${contextLabel}` : t('list.open', { name: task.name })} aria-describedby={`task-row-description-${task.id}`} className="task-list-row-open" data-task-id={task.id} disabled={tree?.context} onClick={() => actions.onTaskSelect(task)} type="button">
         <span className="task-list-row-name-with-subtasks"><TaskRowTitle title={task.name} />{tree && subtaskCompletion && <TaskSubtaskCompletionBadge total={subtaskCompletion.total} completed={subtaskCompletion.completed} />}</span>
         {tree?.pathUnavailable && <span aria-label={locale === "en" ? "Parent path unavailable" : "上级路径不可用"} className="task-tree-unavailable" role="img"><Link2Off aria-hidden="true" size={12} /></span>}
-        <span className="sr-only" id={`task-row-description-${task.id}`}>{t('list.statusLabel', { status: statusText(task.status) })}{showOwner ? ` · ${t('list.ownerLabel', { name: ownerName })}` : ""}{` · ${timeField}: ${timeLabel}`}</span>
+        {!tree && <DeadlineElement aria-hidden="true" className="task-list-row-deadline" dateTime={deadline?.dateTime} title={deadlineDescription}>
+          {deadlineLabel}
+        </DeadlineElement>}
+        <span className="sr-only" id={`task-row-description-${task.id}`}>{t('list.statusLabel', { status: statusText(task.status) })}{showOwner ? ` · ${t('list.ownerLabel', { name: ownerName })}` : ""}{!tree ? ` · ${deadlineDescription}` : ""}{` · ${timeField}: ${timeLabel}`}</span>
       </button>
     </div>
     {showOwner && !tree?.context && <div className="task-list-row-meta">
@@ -134,17 +146,47 @@ const MemoTaskWorkspaceRow = memo(function TaskWorkspaceRow({ task, owner, serie
   </RowContainer>;
 }, (before, after) => before.currentUserId === after.currentUserId && before.showOwner === after.showOwner
   && before.tree === after.tree
-  && before.subtaskCompletion?.total === after.subtaskCompletion?.total
-  && before.subtaskCompletion?.completed === after.subtaskCompletion?.completed
   && before.selected === after.selected && before.sort === after.sort
   && before.now === after.now && before.actions === after.actions
   && JSON.stringify(before.task) === JSON.stringify(after.task)
   && JSON.stringify(before.series) === JSON.stringify(after.series)
   && JSON.stringify(before.owner) === JSON.stringify(after.owner));
 
-export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onCreateTask, onDeleteTask, onTaskStatusChange, onFiltersChange, onTaskSelect, onQueryChange, query, selectedTaskId, showingWorkbench, teamId, progressComparisonsByTaskId }: TaskWorkspaceListProps) {
+export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onDeleteTask, onTaskStatusChange, onFiltersChange, onTaskSelect, onQueryChange, onQuickCreateTask, quickCreateRequest = 0, query, selectedTaskId, showingWorkbench, teamId, progressComparisonsByTaskId, listVisible = true }: TaskWorkspaceListProps) {
   const { t, locale } = useI18n();
   const rowsRef = useRef<HTMLDivElement>(null);
+  const quickCreateId = useId();
+  const quickCreateTrigger = useRef<HTMLButtonElement>(null);
+  const quickCreateInput = useRef<HTMLInputElement>(null);
+  const quickCreateFocusFrame = useRef<number | null>(null);
+  const previousQuickCreateRequest = useRef(quickCreateRequest);
+  const [quickCreateOpen, setQuickCreateOpen] = useState(false);
+  const canQuickCreate = Boolean(onQuickCreateTask);
+  useLayoutEffect(() => setQuickCreateOpen(false), [currentUserId, teamId, listVisible, canQuickCreate]);
+
+  const closeQuickCreate = () => {
+    setQuickCreateOpen(false);
+    quickCreateTrigger.current?.focus({ preventScroll: true });
+  };
+  const openQuickCreate = () => {
+    if (rowsRef.current) rowsRef.current.scrollTop = 0;
+    setQuickCreateOpen(true);
+    if (quickCreateFocusFrame.current !== null) window.cancelAnimationFrame(quickCreateFocusFrame.current);
+    quickCreateFocusFrame.current = window.requestAnimationFrame(() => {
+      quickCreateFocusFrame.current = null;
+      const input = quickCreateInput.current;
+      if (input?.isConnected && !input.closest("[hidden], [inert]")) input.focus({ preventScroll: true });
+    });
+  };
+  useEffect(() => {
+    const changed = previousQuickCreateRequest.current !== quickCreateRequest;
+    previousQuickCreateRequest.current = quickCreateRequest;
+    if (changed && listVisible && canQuickCreate) openQuickCreate();
+  }, [quickCreateRequest, listVisible, canQuickCreate]);
+  useEffect(() => () => {
+    if (quickCreateFocusFrame.current !== null) window.cancelAnimationFrame(quickCreateFocusFrame.current);
+  }, [currentUserId, teamId, listVisible]);
+
   useEffect(() => {
     const element = rowsRef.current;
     if (!element) return;
@@ -162,6 +204,7 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
     };
   }, []);
 
+  const controlSize = useResponsiveControlSize("(max-width: 900px)");
   const filters = useMemo(() => normalizeTaskWorkspaceFilters(sourceFilters), [sourceFilters]);
   const selectedStatuses = getTaskStatusFilters(filters);
   const selectedTags = getTaskTagFilters(filters);
@@ -177,6 +220,9 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
   const normalizedFilters = { ...filters, statuses: selectedStatuses, tags: selectedTags };
   const summaries = taskFilterSummaries(normalizedFilters);
   const hasFilters = Object.values(summaries).some(Boolean);
+  const updatedSortLabel = t('list.updatedSort');
+  const createdSortLabel = t('list.createdSort');
+  const sortLabel = filters.sort === "created" ? createdSortLabel : updatedSortLabel;
   const filterKey = JSON.stringify([filters, currentUserId]);
   useEffect(() => { if (rowsRef.current) rowsRef.current.scrollTop = 0; }, [query, filterKey]);
   const hierarchyScope = teamId ?? projection.allTasks[0]?.teamId ?? "default";
@@ -227,13 +273,15 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
           <button type="button" className="task-list-view-trigger" aria-label={locale === "en" ? "Hierarchy view" : "层级视图"} title={locale === "en" ? "Hierarchy view" : "层级视图"} aria-pressed={hierarchyMode} onClick={() => changeFilters({ listView: "hierarchy" })}><ListTree aria-hidden="true" size={18} /></button>
           <button type="button" className="task-list-view-trigger" aria-label={locale === "en" ? "List view" : "列表视图"} title={locale === "en" ? "List view" : "列表视图"} aria-pressed={!hierarchyMode} onClick={() => changeFilters({ listView: "flat" })}><List aria-hidden="true" size={18} /></button>
         </div>
-
       </div>
-      <Button type="button" size="sm" variant="default" onClick={onCreateTask}><Plus aria-hidden="true" size={16} />{locale === "en" ? "New task" : "新建任务"}</Button>
+      {listVisible && onQuickCreateTask && <Button aria-controls={quickCreateId} aria-expanded={quickCreateOpen} aria-label={t('list.new')} className="task-workspace-new-task" onClick={openQuickCreate} ref={quickCreateTrigger} size={controlSize} title={t('list.new')} type="button">
+        <Plus aria-hidden="true" size={16} /><span>{t('list.new')}</span>
+      </Button>}
     </div>
     </div>
     <span className="sr-only" role="status">{formatTaskCount(locale, projection.visibleTasks.length)}</span>
     <div className="task-workspace-list-scroll" id="task-workspace-results" ref={rowsRef}>
+      {onQuickCreateTask && <TaskQuickCreateRow key={JSON.stringify([teamId, currentUserId])} id={quickCreateId} inputRef={quickCreateInput} onClose={closeQuickCreate} onCreate={onQuickCreateTask} open={quickCreateOpen && listVisible} />}
       {projection.visibleTasks.length > 0 ? hierarchyMode ? <TaskHierarchyList savedExpansion={hierarchyExpansion} setSavedExpansion={setHierarchyExpansion} ancestorsByTaskId={hierarchy.ancestorsByTaskId} filtered={Boolean(query.trim() || scope !== "all" || hasFilters)} label={locale === "en" ? "Task hierarchy" : "任务层级"} queryKey={hierarchyQueryKey} roots={hierarchy.roots} selectedTaskId={selectedTaskId} renderRow={(node, tree) => <MemoTaskWorkspaceRow subtaskCompletion={subtaskCompletion.get(node.task.id)} task={node.task} owner={members.find(member => member.id === node.task.ownerId)} series={progressComparisonsByTaskId?.[node.task.id]} currentUserId={currentUserId} showOwner={showOwner} selected={!showingWorkbench && node.matches && selectedTaskId === node.task.id} sort={filters.sort} now={now} actions={rowActions} tree={tree} />} /> : <ul aria-label={t('tasks.list')} className="task-workspace-rows">{projection.visibleTasks.map(renderTaskRow)}</ul> : <div className="task-workspace-list-empty" role="status"><strong>{!projection.allTasks.length ? t('list.empty') : t('list.noMatch')}</strong><p>{projection.allTasks.length ? t('list.searchHint') : t('list.startHint')}</p>{projection.allTasks.length ? <Button onClick={() => { onQueryChange(""); changeFilters(clearedTaskListConditions); }} size="sm" variant="outline">{t('list.viewAll')}</Button> : null}</div>}
     </div>
     <FixedScrollThumb scrollRef={rowsRef} />

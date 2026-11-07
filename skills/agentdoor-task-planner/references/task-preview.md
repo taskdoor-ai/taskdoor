@@ -20,9 +20,11 @@
 
 输出中的 `ownerMemberId` 与所有层级的 `participants[].memberId` 必须来自本次 `members[].id`。姓名和职责是输入上下文与显示信息，不取代关联 ID；前端通过 ID 查当前成员目录即可显示人员信息。用户确认后创建前，再核对这些 ID 仍属于当前团队的有效成员。
 
-已有任务比对使用 `existingTasks`（至多 200 条）；`decisions` 保留用户已确认的重复或父任务选择，不重复询问。`validationFeedback` 只用于服务端拒绝后的完整修正，不扩大权限或交付范围。
+生成前，调用方在同一工作区先读取用户链接或点名的任务，再按目标检索可见的当前和历史任务，覆盖相关子任务及已完成或归档记录。按相关性传入 `existingTasks`（至多 200 条），优先保留用户明确引用的任务；读取失败或已知检索不完整时，将范围缺口告知用户。`decisions` 保留用户已确认的重复或父任务选择，不重复询问。`validationFeedback` 只用于服务端拒绝后的完整修正，不扩大权限或交付范围。
 
 方案调整时传入 `previousPlan`，其内容是当前前端编辑版本，连同本轮 `userRequest` 描述要调整的部分。前端直接编辑无需每次重新调用模型。未传入旧方案时按新方案生成；不能凭模型记忆当作当前版本。
+
+标签建议遵循[标签分类与外观](task-planning.md#标签分类与外观)。`taskdoor.task-preview.v1` 目前没有 `labels`、`icon`、`color` 或 `tagOperations` 输出字段。只有用户明确要求标签建议时，可在 `summary` 简短列出建议供人工选用。使用支持标签字段的对话草稿协议时，`labels` 填任务使用的标签名称。个人标签库有实际变更才使用 `draft.tagOperations`，其中 `upsert` 接收 `name` 及可选 `icon`、`color`，`rename` 接收 `name`、`newName`，`delete` 接收 `name`。应用在确认保存时处理这些提案。按本次调用的 Schema 输出，已选标签不写入标题、目标或完成标准。
 
 输出先由服务端按前端的读法整理：文本去首尾空白，空的完成标准、执行建议和警告去掉，负责人不重复列为参与人，参与人去重，当前任务按不重叠工作生成初始投入，缺方法或依据的工时视为未知。整理后仍不合规（如空标题、空目标、全空的完成标准、缺协作说明的参与人）时，服务端带 `validationFeedback` 让模型重新输出一次，仍不合规则返回失败；前端不会收到它无法显示的 `ready` 方案。
 
@@ -35,7 +37,7 @@
 | `status` | `ready` 表示可供预览；`needs_clarification` 表示仍有关键缺口，都不代表已确认 |
 | `summary` | 简短说明本次交付范围，不重复全部标准；有拆解意图时说明保存后独立进行 |
 | `tasks` | 当前新任务数组，最多一项；无法确定多个无关请求中的当前对象时补问 |
-| `duplicates` | 疑似与已有任务重复：`{taskId, relationship, reason}`，`taskId` 只能取自输入 `existingTasks`；`relationship` 为 `same_outcome`、`overlap` 或 `possible`；至多 5 个，补问时为空。服务端返回给页面时补上目录中的 `title` |
+| `duplicates` | 疑似与已有任务重复：`{taskId, relationship, reason}`，`taskId` 只能取自输入 `existingTasks`；`relationship` 为 `same_outcome`、`overlap` 或 `possible`；至多 5 个，补问时为空。服务端补上目录中的 `title`，页面在创建前展示原任务入口及复用建议。用户选择 `open_existing` 时打开原任务，选择 `independent` 后才可继续确认新建 |
 | `parentCandidates` | 可以挂接的已有父任务：`{taskId, reason}`，只能取自 `existingTasks` 中 `canCreateChild` 为 `true` 的任务；至多 3 个；用户已选父任务或独立创建、或仍在补问时为空。服务端补上 `title` |
 | `questions` | 需要用户回答的关键业务问题，最多 3 个，每项是一道选择题（见下表）；无问题为空数组 |
 | `warnings` | 资料缺口、建议假设或分配限制；AI 建议日期须说明对应任务、日期及关键假设；无内容为空数组 |

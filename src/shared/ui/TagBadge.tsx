@@ -2,7 +2,8 @@ import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockTagName } from "@/ai/mock/i18n/mockContent";
 import { Building2, CircleDollarSign, Flag, FolderKanban, Layers3, Package, ShieldAlert, ShoppingBag, Sparkles, Tag, Users, Wrench, X, type LucideIcon } from "lucide-react";
-import type { TagColorName, TagDefinition, TagIconName } from "@/ai/mock/data/tagGroups";
+import type { ReactNode } from "react";
+import type { TagColorName, TagDefinition, TagIconName } from "@/shared/model/task-model";
 
 export const tagIconOptions: Array<{ name: TagIconName; label: string; icon: LucideIcon }> = [
   { name: "tag", label: "标签", icon: Tag }, { name: "folder", label: "项目", icon: FolderKanban },
@@ -22,10 +23,23 @@ export function getTagIcon(name: TagIconName) { return tagIconOptions.find((item
 
 // Source-adapted from the icon + label anatomy of:
 // https://21st.dev/@arihantcodes_1f7b8c4d/components/status-badge
-export function TagBadge({ onRemove, size = "md", tag }: { onRemove?: () => void; size?: "xs" | "sm" | "md"; tag: TagDefinition }) {
+type TagBadgeProps = {
+  onRemove?: () => void;
+  renderIcon?: (icon: ReactNode, name: string) => ReactNode;
+  renderName?: (name: string) => ReactNode;
+  size?: "xs" | "sm" | "md";
+  tag: TagDefinition;
+};
+
+export function TagBadge({ onRemove, renderIcon, renderName, size = "md", tag }: TagBadgeProps) {
   const ui = useGlobalUi();
   const { locale } = useI18n();
   const displayName = mockTagName(locale, tag.id, tag.name);
   const Icon = getTagIcon(tag.icon);
-  return <span className="ad-tag-badge" data-color={tag.color} data-size={size}><Icon aria-hidden="true" /><span>{displayName}</span>{onRemove && <button className="ad-tag-badge-remove" aria-label={`${locale === "en" ? "Remove tag" : ui("移除标签")} ${displayName}`} onClick={onRemove} type="button"><X /></button>}</span>;
+  const icon = <Icon aria-hidden="true" />;
+  return <span className="ad-tag-badge" data-color={tag.color} data-size={size}>
+    {renderIcon ? renderIcon(icon, displayName) : icon}
+    {renderName ? renderName(displayName) : <span>{displayName}</span>}
+    {onRemove && <button className="ad-tag-badge-remove" aria-label={`${locale === "en" ? "Remove tag" : ui("移除标签")} ${displayName}`} onClick={onRemove} type="button"><X /></button>}
+  </span>;
 }

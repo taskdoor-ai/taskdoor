@@ -5,12 +5,29 @@ import type { PersonOption } from "@/shared/model/task-model";
 /** Local invitation prototype. Delivery remains explicitly marked as preview. */
 export function normalizeInvitationEmail(value: string): string | null {
   const email = value.trim().toLowerCase();
-  return email.length <= 254 && /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/.test(email) ? email : null;
+  return email.length <= 254 && /^[^\s@,，;<>]+@[^\s@,，;<>]+\.[^\s@,，;<>]+$/.test(email) ? email : null;
+}
+
+export type InvitationRecipient = { email: string; role: TeamAccessRole };
+
+export function normalizeInvitationRecipients(recipients: readonly InvitationRecipient[]):
+  | { recipients: InvitationRecipient[]; error?: never }
+  | { recipients?: never; error: "invalidEmail" | "conflictingRoles" } {
+  const normalized = new Map<string, InvitationRecipient>();
+  for (const { email: address, role } of recipients) {
+    if (!address.trim()) continue;
+    const email = normalizeInvitationEmail(address);
+    if (!email) return { error: "invalidEmail" };
+    const duplicate = normalized.get(email);
+    if (duplicate && duplicate.role !== role) return { error: "conflictingRoles" };
+    normalized.set(email, { email, role });
+  }
+  return { recipients: [...normalized.values()] };
 }
 
 export function getInvitationDraft(query: string) {
   const value = query.trim();
-  return value.includes("@") ? { name: "", email: value } : { name: value, email: "" };
+  return { email: value.includes("@") ? value : "" };
 }
 
 export function getTeamInvitationActor(state: PersonalCenterState, teamId: string, actorMemberId?: string) {
@@ -45,23 +62,27 @@ export function getTeamPeople(team: TeamResponsibilityProfile | undefined, known
   return [...people.values()];
 }
 
-export function createTeamEmailInvitation(state: PersonalCenterState, input: {
-  teamId: string; email: string; name?: string; role?: TeamAccessRole; now?: number; renew?: boolean; members?: PersonOption[]; actorMemberId?: string;
-}) {
+type TeamEmailInvitationOptions = {
+  teamId: string;
+  now?: number;
+  members?: PersonOption[];
+  actorMemberId?: string;
+};
+
+export function createTeamEmailInvitation(state: PersonalCenterState, input: TeamEmailInvitationOptions & { email: string; role?: TeamAccessRole; renew?: boolean }) {
   const email = normalizeInvitationEmail(input.email);
   if (!email) throw new Error("请输入有效的邮箱地址");
-  const name = input.name?.trim();
-  if (name && name.length > 100) throw new Error("名称不能超过 100 个字符");
   const team = state.teams.find(team => team.id === input.teamId);
   const actor = getTeamInvitationActor(state, input.teamId, input.actorMemberId);
   if (!team || !actor) throw new Error("只有已加入团队的成员可以邀请新成员");
   const checkInvitationRole = (role: TeamAccessRole | undefined) => {
-    if (role === "owner" || (role === "admin" && actor.role !== "owner")) throw new Error("只有拥有者可以邀请管理员，拥有者身份须通过转让获得");
+    if (role === "owner") throw new Error("拥有者身份须通过转让获得");
+    if (role === "admin" && actor.role !== "owner" && actor.role !== "admin") throw new Error("只有拥有者和管理员可以邀请管理员");
   };
   checkInvitationRole(input.role);
   const existing = team.memberships.find(member => member.email.toLowerCase() === email);
   const known = input.members?.find(member => member.email.toLowerCase() === email);
-  if (existing && (existing.status === "active" || (existing.emailInvitation && !input.renew))) {
+  if (existing && (existing.status === "active" || !input.renew)) {
     return { state, membership: existing, person: personFromMembership(existing, known) };
   }
   checkInvitationRole(existing?.role);
@@ -70,13 +91,29 @@ export function createTeamEmailInvitation(state: PersonalCenterState, input: {
   if (!alreadyReserved && occupiedTeamSeats(team, now) >= MAX_TEAM_MEMBERS) throw new Error("团队人数已达 50 人上限");
   const id = existing?.id ?? `${team.id}-invite-${crypto.randomUUID()}`;
   const membership: TeamMembership = {
-    ...existing, id, email, name: existing?.name ?? (name || undefined), memberId: existing?.memberId ?? known?.id ?? id,
+    ...existing, id, email, memberId: existing?.memberId ?? known?.id ?? id,
     role: existing?.role ?? input.role ?? "member", status: "invited",
     invitedAt: new Date(now).toLocaleString("zh-CN"),
     emailInvitation: { token: crypto.randomUUID(), inviter: state.profile.name, createdAt: now, expiresAt: now + 7 * 86400000, delivery: "preview" },
   };
   const updatedTeam = { ...team, memberships: existing ? team.memberships.map(member => member.id === id ? membership : member) : [...team.memberships, membership] };
   return { state: { ...state, teams: state.teams.map(item => item.id === team.id ? updatedTeam : item) }, membership, person: personFromMembership(membership, known) };
+}
+
+export function createTeamEmailInvitations(state: PersonalCenterState, { recipients, now = Date.now(), ...options }: TeamEmailInvitationOptions & { recipients: readonly InvitationRecipient[] }) {
+  const normalized = normalizeInvitationRecipients(recipients);
+  if (normalized.error === "conflictingRoles") throw new Error("同一邮箱只能选择一种角色");
+  if (!normalized.recipients?.length) throw new Error("请输入有效的邮箱地址");
+  const people: PersonOption[] = [];
+  let nextState = state;
+  let sentCount = 0;
+  for (const recipient of normalized.recipients) {
+    const result = createTeamEmailInvitation(nextState, { ...options, ...recipient, now });
+    if (result.state !== nextState) sentCount++;
+    nextState = result.state;
+    people.push(result.person);
+  }
+  return { state: nextState, people, sentCount };
 }
 
 export function resolveTeamEmailInvitation(state: PersonalCenterState, token: string, now = Date.now()) {

@@ -7,6 +7,7 @@
     "skills/taskdoor-decompose-task/references/subtask-suggestions.schema.json",
     "skills/taskdoor-decompose-task/references/goal-and-criteria.md",
     "skills/taskdoor-decompose-task/references/task-scheduling.md",
-    "skills/taskdoor-decompose-task/references/context-retrieval.md"
+    "skills/taskdoor-decompose-task/references/context-retrieval.md",
+    "skills/taskdoor-decompose-task/references/scope-and-triggers.md"
   ]
 }

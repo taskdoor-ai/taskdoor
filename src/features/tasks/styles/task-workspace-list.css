@@ -730,7 +730,6 @@
 .task-workspace-list-main .task-search-field:focus-within { background: transparent; }
 .task-workspace-list-main .task-search-field [data-slot="input"] { font-size: 13px; }
 .task-workspace-list-main .task-list-results-toolbar { flex: 0 0 auto; min-height: 36px; margin: 0 0 0 auto; }
-.task-workspace-list-main .task-list-display-actions { gap: 12px; padding-right: 16px; border-right: 1px solid var(--ad-border-soft); }
 .task-workspace-list-main .task-list-display-actions > .task-workspace-list-options { position: relative; width: auto; min-width: 64px; height: 36px; min-height: 36px; gap: 6px; padding: 0 10px; border: 1px solid transparent; border-radius: 7px; background: transparent; font-size: 13px; font-weight: 400; }
 .task-workspace-list-main .task-list-display-actions > .task-workspace-list-options > svg { width: 16px; height: 16px; }
 .task-workspace-list-main .task-workspace-list-options[data-filter-active] { border-color: var(--ad-route-border); background: var(--ad-route-soft); color: var(--ad-route-ink); }
@@ -819,6 +818,12 @@
 .task-list-row-open { display: flex; flex: 1; min-width: 0; align-items: center; align-self: stretch; gap: 8px; border: 0; padding: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .task-list-row-open:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 4px; border-radius: 4px; }
 .task-list-row-open:disabled { cursor: default; }
+.task-list-row-deadline { flex: 0 0 auto; width: 9em; max-width: 50%; overflow: hidden; color: var(--ad-ink-tertiary); font-size: 13px; line-height: 1.5; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 600px) {
+  .task-list-row-open:has(.task-list-row-deadline) { flex-direction: column; align-items: stretch; justify-content: center; gap: 0; }
+  .task-list-row-open:has(.task-list-row-deadline) .task-list-row-name-with-subtasks { flex: 0 0 auto; }
+  .task-list-row-deadline { width: auto; max-width: 100%; font-size: 12px; }
+}
 .task-workspace-list-main .task-workspace-row,
 .task-workspace-list-main .task-hierarchy-row .task-workspace-row { padding-block: 6px; }
 .task-workspace-list-main .task-list-row-open { min-height: 44px; }
@@ -864,7 +869,6 @@
 .task-workspace-list-main .task-workspace-list-scroll[data-scrolling] ~ .task-fixed-scroll-thumb,
 .task-workspace-list-main .task-fixed-scroll-thumb[data-dragging] { opacity: 1; pointer-events: auto; }
 
-/* Creation is an editable task row, with the same spacing as saved tasks. */
 .task-detail-loading { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 20px; padding: 28px 24px; min-height: 100%; }
 .task-detail-loading-main { min-width: 0; }
 .task-detail-loading-heading { display: flex; align-items: center; gap: 16px; margin-bottom: 34px; min-height: 40px; }
@@ -893,14 +897,12 @@
 @media (max-width: 600px) { .task-detail-loading { padding: 24px 16px; } .task-detail-loading-tabs { gap: 16px; } .task-detail-loading-definition { grid-template-columns: 64px minmax(0, 1fr); gap: 24px 12px; } }
 @media (prefers-reduced-motion: reduce) { .task-detail-loading .task-loading-bar, .task-detail-loading-heading > .task-loading-circle { animation: none; } }
 
-
 /* Keep exposed view and sort controls readable on narrow screens. */
 @media (max-width: 900px) {
   .task-workspace-list-main .task-workspace-list-toolbar { flex-wrap: wrap; }
   .task-workspace-list-main .task-workspace-list-search { flex-basis: 100%; }
   .task-workspace-list-main .task-list-results-toolbar { width: 100%; flex-wrap: wrap; }
   .task-workspace-list-main .task-list-display-actions { width: auto; flex-wrap: wrap; }
-  .task-workspace-list-main .task-list-results-toolbar > button { margin-left: auto; }
   .task-workspace-list-main .task-list-view-switch { height: auto; }
 }
 
