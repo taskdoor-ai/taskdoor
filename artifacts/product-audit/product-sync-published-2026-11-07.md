@@ -5,6 +5,8 @@
 - 范围：统一列表单行新建及详情外层入口、通知与任务筛选、任务引用、人员与邀请角色、个人标签、回收站、菜单方向、编号／日期／留白、相关 Skill、讨论草稿预填及建议逐条处理。完整自动建议生成链路仍见[后续待办](task-generation-followup-2026-11-07.md)，不宣称接通。未打包此前暂缓的持久草稿恢复、文件标注及 AI 交接增量，未发布新 PRD 版本。
 - 已将“用户授权提交正式 issue 时，同步提交并交付对应 PM Demo，再补齐本批固定提交／PR／源码链接”写入 `AGENTS.md`。仅本地实现或历史基线链接不算完成交付。
 
+- 用户已授权对应已授权改动的 PM Demo PR 在必要验证后直接合并 `main`，无需再次确认；正式项目的合并和发布仍按其仓库约定。issue 需同时标注实现提交、合并提交与各项源码对应关系。
+
 验证：
 
 - `npm run structure:check`、`npm exec tsc -- -p tsconfig.app.json`、`npm exec vite -- build`、`git diff --check` 通过。
