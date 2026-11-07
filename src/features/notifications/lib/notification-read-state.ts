@@ -17,6 +17,7 @@ export type NotificationReadState = { version: 1; readIds: string[] };
 
 type ReadableNotification = {
   id: string;
+  teamId?: string;
   createdAt: string;
   read: boolean;
   task?: { id: string };
@@ -65,7 +66,7 @@ export function getDiscussionReadIds(
   const displayedActivities = new Set(receipt.activityIds);
   const readIds = new Set<string>();
   for (const item of items) {
-    if (item.read || item.task?.id !== receipt.taskId || item.target?.area !== "discussion") continue;
+    if (item.read || (item.teamId ?? scope.teamId) !== scope.teamId || item.task?.id !== receipt.taskId || item.target?.area !== "discussion") continue;
     const createdAt = readTimestamp(item.createdAt);
     if (createdAt === undefined || createdAt > readThrough) continue;
     const activityId = item.target.activityId;

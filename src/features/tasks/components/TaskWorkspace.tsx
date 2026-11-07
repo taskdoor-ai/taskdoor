@@ -9,12 +9,12 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode }
 import type { PersonOption, TagDefinition, TaskNode, WorkspaceNode } from "@/shared/model/task-model";
 
 import { buildTaskListProjection, buildTaskScopeCounts } from "@/features/tasks/lib/task-list-projection";
-import { TaskWorkspaceList } from "@/features/tasks/components/TaskWorkspaceList";
+import { TaskWorkspaceList, type TaskWorkspaceListProps } from "@/features/tasks/components/TaskWorkspaceList";
 import { getTaskStatusFilters, normalizeTaskWorkspaceFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
 import { statusMessageKey } from "@/shared/i18n/task-status";
 import type { TaskProgressComparisonSeries } from "@/features/tasks/lib/task-progress-comparison";
 
-type TaskWorkspaceProps = {
+type TaskWorkspaceProps = Pick<TaskWorkspaceListProps, "onQuickCreateTask" | "quickCreateRequest"> & {
   progressComparisonsByTaskId?: Readonly<Record<string, TaskProgressComparisonSeries | undefined>>;
   children?: ReactNode;
   creation?: ReactNode;
@@ -23,10 +23,8 @@ type TaskWorkspaceProps = {
   hidden: boolean;
   members: PersonOption[];
   nodes: WorkspaceNode[];
-  onCreateTask: () => void;
   onFiltersChange: (filters: TaskListFilters) => void;
   onManageTags: () => void;
-  onOpenRecycleBin?: () => void;
   onDeleteTask: (task: TaskNode) => void;
   onTaskStatusChange: (taskId: string, status: TaskNode["status"]) => void;
   onQueryChange: (query: string) => void;
@@ -46,7 +44,7 @@ type TaskWorkspaceProps = {
   workbench: ReactNode;
 };
 
-export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onCreateTask, onDeleteTask, onTaskStatusChange, onFiltersChange, onManageTags, onOpenRecycleBin, onQueryChange, onTaskSelect, onClearTaskSelection, onShowWorkbench, query, selectedTaskId, showingCreation = false, loadingTaskDetail = false, showingWorkbench, tagDefinitions, teamId, teamName, pathItems, onPathSelect, progressComparisonsByTaskId }: TaskWorkspaceProps) {
+export function TaskWorkspace({ children, creation, currentUserId, filters, hidden, members, nodes, onDeleteTask, onQuickCreateTask, quickCreateRequest, onTaskStatusChange, onFiltersChange, onManageTags, onQueryChange, onTaskSelect, onClearTaskSelection, onShowWorkbench, query, selectedTaskId, showingCreation = false, loadingTaskDetail = false, showingWorkbench, tagDefinitions, teamId, teamName, pathItems, onPathSelect, progressComparisonsByTaskId }: TaskWorkspaceProps) {
   const { t, locale } = useI18n();
   const timeZone = useTeamTimeZone();
   const [calendarDay, setCalendarDay] = useState(() => taskCalendarDate(new Date().toISOString(), timeZone));
@@ -108,6 +106,7 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
   const detailPath = selectedTask ? getTaskDetailPathItems(pathItems, selectedTask.id, selectedTask.parentTaskId) : [];
   const ancestors = detailPath.filter(item => item.id !== selectedTaskId);
   const showList = !hasDetail && !showingCreation && !showingWorkbench;
+  const keepListDraft = loadingTaskDetail && !selectedTaskId && !showingCreation && !showingWorkbench;
 
   return <section aria-label={t('tasks.workspace')} className="task-workspace task-workspace-pages" data-creation-open={showingCreation} data-detail-open={hasDetail && !showingCreation && !showingWorkbench} data-list-open={showList} hidden={hidden}>
     {showingWorkbench && !showingCreation && <header className="task-workspace-page-header">
@@ -131,13 +130,14 @@ export function TaskWorkspace({ children, creation, currentUserId, filters, hidd
         progressComparisonsByTaskId={progressComparisonsByTaskId}
         currentUserId={currentUserId}
         filters={projectionFilters}
+        listVisible={!hidden && (showList || keepListDraft)}
         members={members}
-        onCreateTask={onCreateTask}
         onDeleteTask={onDeleteTask}
+        onQuickCreateTask={onQuickCreateTask}
+        quickCreateRequest={quickCreateRequest}
         onTaskStatusChange={onTaskStatusChange}
         onFiltersChange={onFiltersChange}
         onManageTags={onManageTags}
-        onOpenRecycleBin={onOpenRecycleBin}
         onQueryChange={onQueryChange}
         onShowWorkbench={onShowWorkbench}
         onTaskSelect={onTaskSelect}

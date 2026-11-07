@@ -1,6 +1,7 @@
+import { AccentColorSetting } from "@/features/me/components/AccentColorSetting";
 import { TaskNavigationTools } from "@/features/tasks/components/TaskNavigationTools";
 import { useCallback, useEffect, useMemo, useRef, useState, type ComponentProps, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
-import { CircleDashed, LogOut, Menu, Settings2, Sparkles, X } from "lucide-react";
+import { CircleDashed, LogOut, Menu, Plus, Settings2, Sparkles, X } from "lucide-react";
 import { GlobalNotifications } from "@/features/notifications/components/GlobalNotifications";
 import type { DiscussionReadReceipt, NotificationRegionTarget } from "@/features/notifications/lib/notification-read-state";
 import { getTaskStatusFilters, normalizeTaskWorkspaceFilters, type TaskListFilters, type TaskListScope } from "@/features/tasks/components/task-list-filters";
@@ -8,6 +9,7 @@ import { buildTaskListProjection } from "@/features/tasks/lib/task-list-projecti
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 import type { PersonalCenterModule } from "@/app/workspace/components/PersonalInfoDialog";
 import { TeamSwitcher, type SwitchableTeam } from "@/app/workspace/components/TeamSwitcher";
+import type { PrimarySection } from "@/app/workspace/components/WorkspaceSidebar";
 import { statusMessageKey } from "@/shared/i18n/task-status";
 import { taskStatusDefinition, taskStatusOptions } from "@/shared/ui/TaskStatusBadge";
 import { useI18n } from "@/shared/i18n/I18nProvider";
@@ -23,15 +25,18 @@ export type WorkspaceNavigationProps = {
   members: PersonOption[];
   onManageTags: () => void;
   onListFiltersChange: (filters: TaskListFilters) => void;
-  onOpenRecycleBin: () => void;
+  onOpenRecycleBin: (onNavigate: () => void) => void;
   activeTeamId: string;
   onConnectAi: () => void;
+  onCreateTask: (onNavigate: () => void) => void;
+  canCreateTask?: boolean;
   onOpenPersonalCenter: (module: PersonalCenterModule) => void;
   onTeamChange: (teamId: string) => void;
   onSignOut?: () => void;
   showDemoNotifications?: boolean;
-  onOpenNotificationTask?: (taskId: string, target?: NotificationRegionTarget) => void;
+  onOpenNotificationTask?: (taskId: string, target: NotificationRegionTarget | undefined, teamId: string, onNavigate: () => void) => void;
   discussionNotifications?: ComponentProps<typeof GlobalNotifications>["discussionNotifications"];
+  getNotificationTaskTitle?: ComponentProps<typeof GlobalNotifications>["getTaskTitle"];
   discussionReadReceipt?: DiscussionReadReceipt;
   onDiscussionReadHandled?: (sequence: number) => void;
   teams: SwitchableTeam[];
@@ -44,7 +49,7 @@ export type WorkspaceNavigationProps = {
   nodes: WorkspaceNode[];
   tagDefinitions: TagDefinition[];
   query: string;
-  active: boolean;
+  activeSection: PrimarySection;
 };
 
 const scopeOptions = [
@@ -69,8 +74,9 @@ function readNavigationWidth() {
   }
 }
 
-export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags, onOpenRecycleBin, activeTeamId, onConnectAi, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, discussionReadReceipt, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, active }: WorkspaceNavigationProps) {
+export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags, onOpenRecycleBin, activeTeamId, onConnectAi, onCreateTask, canCreateTask = true, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, discussionReadReceipt, getNotificationTaskTitle, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, activeSection }: WorkspaceNavigationProps) {
   const { t, locale } = useI18n();
+  const taskFiltersActive = activeSection === "tasks" || activeSection === "home";
   const timeZone = useTeamTimeZone();
   const [calendarDay, setCalendarDay] = useState(() => taskCalendarDate(new Date().toISOString(), timeZone));
   const [mobile, setMobile] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches);
@@ -146,9 +152,9 @@ export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags
     return () => media.removeEventListener("change", update);
   }, []);
 
-  const closeNavigation = () => {
+  const closeNavigation = (restoreFocus = true) => {
     setDrawerOpen(false);
-    if (mobile) window.requestAnimationFrame(() => menuTriggerRef.current?.focus());
+    if (mobile && restoreFocus) window.requestAnimationFrame(() => menuTriggerRef.current?.focus());
   };
 
   useEffect(() => {
@@ -190,22 +196,25 @@ export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags
 
   return <>
     <button aria-controls="workspace-navigation" aria-expanded={drawerOpen} aria-haspopup="dialog" aria-label={navigationLabel} className="workspace-navigation-menu-trigger" onClick={() => setDrawerOpen(true)} ref={menuTriggerRef} type="button"><Menu aria-hidden="true" size={20} /></button>
-    {mobile && drawerOpen && <button aria-label={closeLabel} className="workspace-navigation-backdrop" onClick={closeNavigation} tabIndex={-1} type="button" />}
+    {mobile && drawerOpen && <button aria-label={closeLabel} className="workspace-navigation-backdrop" onClick={() => closeNavigation()} tabIndex={-1} type="button" />}
     <aside aria-label={navigationLabel} aria-hidden={mobile && !drawerOpen || undefined} aria-modal={mobile && drawerOpen || undefined} className="workspace-navigation" data-open={drawerOpen} data-resizing={resizing || undefined} id="workspace-navigation" inert={mobile && !drawerOpen} ref={navigationRef} role={mobile ? "dialog" : undefined} style={{ "--ad-workspace-navigation-width": `${navigationWidth}px` } as CSSProperties}>
       <div className="workspace-navigation-top">
-        <div className="workspace-navigation-team"><TeamSwitcher activeTeamId={activeTeamId} onTeamChange={teamId => { onTeamChange(teamId); closeNavigation(); }} teams={teams} variant="topbar" /><button aria-label={closeLabel} className="workspace-navigation-close" onClick={closeNavigation} ref={closeTriggerRef} type="button"><X aria-hidden="true" size={18} /></button></div>
+        <div className="workspace-navigation-team"><TeamSwitcher activeTeamId={activeTeamId} onTeamChange={teamId => { onTeamChange(teamId); closeNavigation(); }} teams={teams} variant="topbar" /><button aria-label={closeLabel} className="workspace-navigation-close" onClick={() => closeNavigation()} ref={closeTriggerRef} type="button"><X aria-hidden="true" size={18} /></button></div>
+        <button className="workspace-navigation-item workspace-navigation-create" disabled={!canCreateTask} onClick={() => onCreateTask(() => closeNavigation(false))} type="button">
+          <Plus aria-hidden="true" size={17} strokeWidth={1.7} /><span>{t("list.new")}</span>
+        </button>
       </div>
       <nav aria-label={t("list.quickFilters")} className="workspace-navigation-filters">
         <div aria-label={t("list.scopeFilter")} className="workspace-navigation-group" role="group">
-          {scopeOptions.map(({ value, message }) => <button aria-pressed={active && normalizedFilters.scope === value} className="workspace-navigation-item" key={value} onClick={() => chooseScope(value)} type="button"><span>{t(message)}</span></button>)}
+          {scopeOptions.map(({ value, message }) => <button aria-pressed={taskFiltersActive && normalizedFilters.scope === value} className="workspace-navigation-item" key={value} onClick={() => chooseScope(value)} type="button"><span>{t(message)}</span></button>)}
         </div>
 
-        <button aria-haspopup="dialog" className="workspace-navigation-item" onClick={onOpenRecycleBin} type="button"><span>{locale === "en" ? "Recycle bin" : "回收站"}</span></button>
-        <TaskNavigationTools filters={normalizedFilters} members={members} onFiltersChange={onListFiltersChange} onManageTags={onManageTags} projection={projection} touch={mobile}>
+        <button aria-current={activeSection === "recycle-bin" ? "page" : undefined} className="workspace-navigation-item" onClick={() => onOpenRecycleBin(closeNavigation)} type="button"><span>{locale === "en" ? "Recycle bin" : "回收站"}</span></button>
+        <TaskNavigationTools filters={normalizedFilters} members={members} onFiltersChange={onListFiltersChange} onManageTags={() => { closeNavigation(); onManageTags(); }} projection={projection} touch={mobile}>
 
         <div aria-label={t("list.statusFilter")} className="workspace-navigation-group" role="group">
-          <button aria-pressed={active && selectedStatuses.length === 0} className="workspace-navigation-item" onClick={() => chooseFilters({ ...normalizedFilters, status: "all", statuses: [], completion: "all" })} type="button"><CircleDashed aria-hidden="true" size={16} /><span>{t("list.allStatuses")}</span>{projection.statusCounts.all > 0 && <small>{projection.statusCounts.all}</small>}</button>
-          {taskStatusOptions.map(status => { const definition = taskStatusDefinition[status]; const Icon = definition.icon; return <button aria-pressed={active && selectedStatuses.includes(status)} className="workspace-navigation-item" data-tone={definition.tone} key={status} onClick={() => chooseFilters({ ...normalizedFilters, status: "all", statuses: selectedStatuses.includes(status) ? selectedStatuses.filter(value => value !== status) : [...selectedStatuses, status], completion: "all" })} type="button"><Icon aria-hidden="true" size={16} /><span>{t(statusMessageKey[status])}</span>{(projection.statusCounts.byStatus[status] ?? 0) > 0 && <small>{projection.statusCounts.byStatus[status]}</small>}</button>; })}
+          <button aria-pressed={taskFiltersActive && selectedStatuses.length === 0} className="workspace-navigation-item" onClick={() => chooseFilters({ ...normalizedFilters, status: "all", statuses: [], completion: "all" })} type="button"><CircleDashed aria-hidden="true" size={16} /><span>{t("list.allStatuses")}</span>{projection.statusCounts.all > 0 && <small>{projection.statusCounts.all}</small>}</button>
+          {taskStatusOptions.map(status => { const definition = taskStatusDefinition[status]; const Icon = definition.icon; return <button aria-pressed={taskFiltersActive && selectedStatuses.includes(status)} className="workspace-navigation-item" data-tone={definition.tone} key={status} onClick={() => chooseFilters({ ...normalizedFilters, status: "all", statuses: selectedStatuses.includes(status) ? selectedStatuses.filter(value => value !== status) : [...selectedStatuses, status], completion: "all" })} type="button"><Icon aria-hidden="true" size={16} /><span>{t(statusMessageKey[status])}</span>{(projection.statusCounts.byStatus[status] ?? 0) > 0 && <small>{projection.statusCounts.byStatus[status]}</small>}</button>; })}
         </div>
         </TaskNavigationTools>
       </nav>
@@ -214,9 +223,9 @@ export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags
         <div className="workspace-navigation-account-row">
           <DropdownMenu>
             <DropdownMenuTrigger aria-label={t("account.open")} className="workspace-account-trigger" id="workspace-account-trigger" title={`${userProfile.name} · ${t("account.menu")}`}><PersonAvatar name={userProfile.name} personId={userId} profilePreviewFocusable={false} showProfilePreview={false} size="sm" /><span className="workspace-account-name">{userProfile.name}</span></DropdownMenuTrigger>
-            <DropdownMenuContent align="start" aria-label={t("account.menu")} className="workspace-account-menu" side="top" sideOffset={8}><ThemeToggle onToggle={toggleTheme} theme={theme} /><LanguageSwitcher menu /><DropdownMenuItem onClick={() => { onOpenPersonalCenter("profile"); closeNavigation(); }}><Settings2 aria-hidden="true" /><span>{t("account.settings")}</span></DropdownMenuItem><DropdownMenuItem onClick={onSignOut} variant="destructive"><LogOut aria-hidden="true" /><span>{t("account.signOut")}</span></DropdownMenuItem></DropdownMenuContent>
+            <DropdownMenuContent align="start" aria-label={t("account.menu")} className="workspace-account-menu" side="top" sideOffset={8}><ThemeToggle onToggle={toggleTheme} theme={theme} /><AccentColorSetting /><LanguageSwitcher menu /><DropdownMenuItem onClick={() => { onOpenPersonalCenter("profile"); closeNavigation(); }}><Settings2 aria-hidden="true" /><span>{t("account.settings")}</span></DropdownMenuItem><DropdownMenuItem onClick={onSignOut} variant="destructive"><LogOut aria-hidden="true" /><span>{t("account.signOut")}</span></DropdownMenuItem></DropdownMenuContent>
           </DropdownMenu>
-        <GlobalNotifications besideNavigation teamId={activeTeamId} userId={userId} key={`${activeTeamId}:${userId}`} discussionNotifications={discussionNotifications} discussionReadReceipt={discussionReadReceipt} onDiscussionReadHandled={onDiscussionReadHandled} onOpenTask={onOpenNotificationTask} placement="topbar" showDemoNotifications={showDemoNotifications && activeTeamId === "creator-commerce"} />
+          <GlobalNotifications besideNavigation teamId={activeTeamId} teams={teams} userId={userId} key={userId} discussionNotifications={discussionNotifications} discussionReadReceipt={discussionReadReceipt} getTaskTitle={getNotificationTaskTitle} onDiscussionReadHandled={onDiscussionReadHandled} onOpenTask={onOpenNotificationTask ? (taskId, target, teamId) => onOpenNotificationTask(taskId, target, teamId, closeNavigation) : undefined} placement="topbar" showDemoNotifications={showDemoNotifications} />
         </div>
       </div>
       <div aria-controls="workspace-navigation" aria-label={resizeLabel} aria-orientation="vertical" aria-valuemax={maxNavigationWidth} aria-valuemin={minNavigationWidth} aria-valuenow={navigationWidth} className="workspace-navigation-resize-handle" onDoubleClick={() => setNavigationWidth(defaultNavigationWidth)} onKeyDown={resizeWithKeyboard} onLostPointerCapture={endResize} onPointerCancel={endResize} onPointerDown={startResize} onPointerMove={moveResize} onPointerUp={endResize} role="separator" tabIndex={mobile ? -1 : 0} />

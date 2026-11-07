@@ -1,4 +1,4 @@
-import { useRef, useState, type ComponentProps } from "react";
+import { useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { Plus } from "lucide-react";
 import { TaskSubtaskList } from "@/features/tasks/components/TaskSubtaskList";
 import { TaskSubtaskCreateForm } from "@/features/tasks/components/TaskSubtaskCreateForm";
@@ -10,8 +10,9 @@ type FormProps = ComponentProps<typeof TaskSubtaskCreateForm>;
 type Props = Omit<ComponentProps<typeof TaskSubtaskList>, "emptyAction"> & Pick<FormProps, "currentUserId" | "members" | "tags"> & {
   taskId: string;
   onCreate?: FormProps["onCreate"];
+  suggestions?: ReactNode;
 };
-export function TaskSubtasksPane({ taskId, currentUserId, members, tags, onCreate, ...listProps }: Props) {
+export function TaskSubtasksPane({ taskId, currentUserId, members, tags, onCreate, suggestions, ...listProps }: Props) {
   const { locale } = useI18n();
   const d = useDetailCopy();
   const [open, setOpen] = useState(false);
@@ -34,5 +35,6 @@ export function TaskSubtasksPane({ taskId, currentUserId, members, tags, onCreat
       await onCreate(draft);
     }} open={open} tags={tags} />}
     {(!empty || !open) && <TaskSubtaskList {...listProps} emptyAction={empty ? action : undefined} />}
+    {suggestions}
   </section>;
 }

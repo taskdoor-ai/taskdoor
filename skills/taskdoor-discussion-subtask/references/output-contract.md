@@ -1,29 +1,31 @@
-# 输入与输出
+# 字段契约
 
-应用提供只读快照并明确指定 `mode`。历史讨论调用省略 `mode` 时，带 `source` 的既有讨论请求按 `discussion` 处理。
+应用提供只读快照。旧请求带 `source` 且省略 `mode` 时按讨论处理。
 
-## 共同输入
+- `locale` 为说明语言，`currentDate` 为团队日期（`YYYY-MM-DD`）。
+- 父任务是 `{id,title,goal,completionCriteria}`，讨论用 `task`，列表用 `parentTask`。完成标准是文本数组，可为空。
+- `members` 为有效成员 `[{id,name,responsibility}]`，`labels` 为可用标签名称。
 
-- `locale` 为说明语言，`currentDate` 为团队当前日期，格式 `YYYY-MM-DD`。
-- 父任务对象为 `{id,title,goal,completionCriteria}`。讨论模式字段名为 `task`，列表模式为 `parentTask`。`completionCriteria` 是已保存的任务完成标准文本数组，允许为空。
-- `members` 为有效成员数组 `[{id,name,responsibility}]`，`labels` 为可用标签名称数组。
+## 讨论 `discussion`
 
-## 从讨论生成（`discussion`）
+`source` 是选中消息 `{taskId,messageId,author,body}`。`messages` 是同段可读消息 `[{id,author,body,replyToId,attachments}]`，包含选中消息，附件只提供名称。`contextComplete` 表示引用链是否完整可读。
 
-- `source` 为选中消息 `{taskId,messageId,author,body}`，`taskId` 对应 `task.id`。
-- `messages` 为同段可读讨论 `[{id,author,body,replyToId,attachments}]`，包含选中消息。`attachments` 仅含附件名称。`contextComplete` 为布尔值，表示引用链是否可完整读取。
-
-```json
-{"draft":{"title":"动作与对象","goal":"本项用途或空字符串","ownerId":"有效成员 ID 或空字符串","endDate":"YYYY-MM-DD 或空字符串","labels":[]},"message":"必要说明或空字符串"}
-```
-
-## 从子任务列表生成（`prompt`）
-
-- `prompt` 为用户本轮提交的需求，`timeZone` 为团队时区。
-- `completionCriteria` 至少有一条针对本项工作的非空标准。`participantIds` 只用有效成员 ID，去重并排除负责人。创建者默认参与由应用处理。
+可选的 `referencedTasks` 仅包含同串消息实际引用且当前可读的任务 `[{id,title,goal?,completionCriteria?}]`。通过 ID 对应 `#taskdoor-task=id` 链接，使用目录中的真实名称及适用定义，不把数字标签或隐藏链接当成工作内容；目录缺失不推测无权访问任务的信息。
 
 ```json
-{"draft":{"title":"动作与对象","goal":"本项用途或空字符串","completionCriteria":["可核对的本项交付要求"],"ownerId":"有效成员 ID 或空字符串","participantIds":[],"endDate":"YYYY-MM-DD 或空字符串","labels":[]},"message":"必要说明或空字符串"}
+{"draft":{"title":"动作与对象","goal":"已有信息支持的判断或用途","ownerId":"","endDate":"","labels":[]},"message":""}
 ```
 
-两种模式在无法确定一项具体工作时均返回 `{"draft":null,"message":"简述缺口"}`。`message` 使用 `locale`。只输出所选模式的字段，不附带子任务数组、子层级、来源改写、创建回执或工具调用。应用保留真实父任务与讨论来源，校验输出和权限后完成各入口的保存流程。
+讨论模式的成功结果始终包含一个可编辑的非空 `draft`，`message` 固定为空。只有任务引用、数字、寒暄或零散文字时，按选中讨论、真实引用任务、同串正文及当前任务的已有定义整理。可以复用适用的已有目标，不能返回 `draft:null` 或在名称、目标里填写“无法生成／请补充信息／需要更多上下文／子任务名称”等占位说明。已完成、撤回或暂缓事项可整理现有记录，不能伪造重新开始或新的业务事实。
+
+## 子任务列表 `prompt`
+
+`prompt` 是本轮需求，`timeZone` 是团队时区。`participantIds` 用有效成员 ID，去重并排除负责人。
+
+```json
+{"draft":{"title":"动作与对象","goal":"","completionCriteria":["可核对的本项交付要求"],"ownerId":"","participantIds":[],"endDate":"","labels":[]},"message":""}
+```
+
+列表模式无法确定一项待办时可返回 `{"draft":null,"message":"简述缺口"}`。
+
+负责人填成员 ID，日期用 `YYYY-MM-DD`。不确定的负责人、日期和标签保持空值；不编业务数值或外部承诺。只输出所选模式的字段。应用负责真实来源、权限、防重及保存；讨论先由用户审阅确认，列表沿本轮提交授权。网络、权限、取消及来源失效仍由应用按真实错误处理，不以成功草稿掩盖。

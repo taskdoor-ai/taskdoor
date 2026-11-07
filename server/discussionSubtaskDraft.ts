@@ -15,7 +15,12 @@ async function runSubtaskDraftModel(request: ModelRequest, options: ModelOptions
   if (signal.aborted) throw new Error("草稿生成已取消。");
   const response = await call(options, subtaskDraftInstructions(), request, signal);
   if (signal.aborted) throw new Error("草稿生成已取消。");
-  return JSON.parse(response.rawOutput.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, ""));
+  try {
+    return JSON.parse(response.rawOutput.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, ""));
+  } catch (error) {
+    if (request.mode === "discussion") return null;
+    throw error;
+  }
 }
 
 export async function callDiscussionSubtaskDraftModel(request: DiscussionSubtaskRequest, options: ModelOptions, call: ModelCall = callModel, signal: AbortSignal): Promise<DiscussionSubtaskResult> {

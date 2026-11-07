@@ -1,4 +1,5 @@
 import { TaskCriteriaFields } from "@/features/tasks/components/TaskCriteriaFields";
+import { TaskInlineCreateForm } from "@/features/tasks/components/TaskInlineCreateForm";
 import "@/features/tasks/styles/task-criteria-fields.css";
 import { useEffect, useRef, useState, type ComponentProps, type FormEvent } from "react";
 import { TaskStatusIcon } from "@/shared/ui/TaskStatusBadge";
@@ -41,7 +42,6 @@ export function TaskSubtaskCreateForm({ id, inline = false, generating = false, 
   const savingRef = useRef(false);
   const titleRef = useRef<HTMLInputElement>(null);
   const goalRef = useRef<HTMLTextAreaElement>(null);
-  const activeMembers = members.filter(member => member.membershipStatus !== "invited");
 
   useEffect(() => {
     if (!open) return;
@@ -97,16 +97,7 @@ export function TaskSubtaskCreateForm({ id, inline = false, generating = false, 
   };
 
   if (inline) return <div hidden={!open}>
-    <form aria-busy={saving} aria-label={copy("新增子任务", "Add subtask")} className="task-subtask-inline-create" id={id} onSubmit={submit} onKeyDown={event => {
-      if (event.key === "Enter" && (event.nativeEvent.isComposing || event.keyCode === 229)) event.preventDefault();
-      if (event.key === "Escape" && !event.nativeEvent.isComposing) { event.preventDefault(); close(); }
-    }}>
-      <TaskStatusIcon status="进行中" aria-hidden="true" size={16} />
-      <input aria-label={copy("子任务需求", "Subtask request")} aria-required="true" aria-describedby={error ? `${id}-error` : undefined} autoComplete="off" disabled={saving} maxLength={2000} onChange={event => { setTitle(event.target.value); setError(""); }} placeholder={copy("描述你要完成的任务…", "Describe your task…")} ref={titleRef} value={title} />
-      <Button disabled={saving} onClick={close} size="sm" type="button" variant="ghost">{copy("取消", "Cancel")}</Button>
-      <Button disabled={saving || !title.trim()} size="sm" type="submit">{saving ? copy("生成中…", "Generating…") : copy("创建", "Create")}</Button>
-    </form>
-    {error && <p className="task-subtask-create-error" id={`${id}-error`} role="alert">{error}</p>}
+    <TaskInlineCreateForm error={error} id={id} inputLabel={copy("子任务需求", "Subtask request")} inputRef={titleRef} label={copy("新增子任务", "Add subtask")} onCancel={close} onChange={value => { setTitle(value); setError(""); }} onSubmit={submit} saving={saving} value={title} />
   </div>;
 
   return <>
@@ -145,7 +136,7 @@ export function TaskSubtaskCreateForm({ id, inline = false, generating = false, 
       {error && <p className="task-subtask-create-error" id={`${id}-error`} role="alert">{error}</p>}
       <footer className="task-subtask-create-toolbar">
         <fieldset aria-label={copy("子任务属性", "Subtask properties")} className="task-subtask-create-properties" disabled={saving}>
-          <PersonPicker allowInvitations={false} allowUnassigned ariaLabel={copy("子任务负责人", "Subtask assignee")} className="task-subtask-create-chip task-subtask-create-owner" disabled={saving} members={activeMembers} menuLabel={copy("选择子任务负责人", "Select subtask assignee")} onChange={id => { if (!savingRef.current) { setOwnerId(id); setError(""); } }} showTriggerProfilePreview={false} triggerVariant="identity" unassignedLabel={copy("暂不分配", "Unassigned")} value={ownerId} />
+          <PersonPicker allowInvitations={false} allowUnassigned ariaLabel={copy("子任务负责人", "Subtask assignee")} className="task-subtask-create-chip task-subtask-create-owner" disabled={saving} members={members} menuLabel={copy("选择子任务负责人", "Select subtask assignee")} onChange={id => { if (!savingRef.current) { setOwnerId(id); setError(""); } }} showTriggerProfilePreview={false} triggerVariant="identity" unassignedLabel={copy("暂不分配", "Unassigned")} value={ownerId} />
           <div className="task-subtask-create-date"><TaskDueDatePicker emptyLabel={copy("截止日期", "Due date")} initialValue={endDate} label={copy("子任务截止日期", "Subtask due date")} onChange={value => { if (!savingRef.current) { setEndDate(value); setError(""); } }} /></div>
           {showTags && <div className="task-subtask-create-tags"><TagPicker disabled={saving} onChange={values => { if (!savingRef.current) { setLabels(values); setError(""); } }} selected={labels} tags={tags} triggerLabel={copy(labels.length ? `标签 · ${labels.length}` : "标签", labels.length ? `Labels · ${labels.length}` : "Labels")} /></div>}
         </fieldset>

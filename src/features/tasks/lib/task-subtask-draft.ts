@@ -70,3 +70,21 @@ export function parseSubtaskDraftResult(value: unknown, request: SubtaskDraftReq
   if (!draft) throw new Error(message.trim() || (request.locale === "en" ? "Describe the task you need before creating it." : "请补充这项子任务需要完成的具体内容。"));
   return draft;
 }
+
+export async function requestSubtaskDraft(request: object, signal: AbortSignal, fallback: string): Promise<unknown> {
+  signal.throwIfAborted();
+  try {
+    const response = await fetch("/api/subtask-draft", {
+      method: "POST", credentials: "same-origin",
+      headers: { "Content-Type": "application/json", "X-TaskDoor-Subtask-Draft": "1" },
+      body: JSON.stringify(request), signal,
+    });
+    if (!response.ok) throw new Error(fallback);
+    const result: unknown = await response.json();
+    signal.throwIfAborted();
+    return result;
+  } catch {
+    signal.throwIfAborted();
+    throw new Error(fallback);
+  }
+}

@@ -44,6 +44,8 @@ export function sortMembersByRecommendation(members: PersonOption[], recommendat
   return members
     .map((member, index) => ({ index, member }))
     .sort((left, right) => {
+      const membershipOrder = Number(left.member.membershipStatus === "invited") - Number(right.member.membershipStatus === "invited");
+      if (membershipOrder) return membershipOrder;
       const rightRecommendation = recommendations[right.member.id];
       const leftRecommendation = recommendations[left.member.id];
       const rightWeight = rightRecommendation ? recommendationLevelWeight[rightRecommendation.level] : -1;

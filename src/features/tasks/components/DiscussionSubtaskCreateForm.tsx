@@ -1,6 +1,5 @@
 import type { CollaborationMessage } from "@/features/tasks/lib/task-collaboration";
-import { generateDiscussionSubtaskDraft } from "@/ai/subtask-creation";
-import { isDiscussionSubtaskRequestCurrent, type DiscussionSubtaskRequest, type DiscussionSubtaskResult } from "@/features/tasks/lib/discussion-subtask-draft";
+import { generateDiscussionSubtaskDraft, isDiscussionSubtaskRequestCurrent, type DiscussionSubtaskRequest, type DiscussionSubtaskResult } from "@/features/tasks/lib/discussion-subtask-draft";
 import { useEffect, useState, useRef, type ComponentProps } from "react";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { TaskSubtaskCreateForm } from "@/features/tasks/components/TaskSubtaskCreateForm";
@@ -17,7 +16,8 @@ type Props = Omit<FormProps, "open" | "initialDraft" | "generating" | "showTags"
 export function DiscussionSubtaskCreateForm({ source, contextCurrent: sourceCurrent, request: incomingRequest, messages, ...formProps }: Props) {
   const { locale } = useI18n();
   const [request] = useState(() => incomingRequest);
-  const contextCurrent = sourceCurrent && (!request || !messages || isDiscussionSubtaskRequestCurrent(request, messages));
+  const contextCurrent = sourceCurrent && (!request || !messages || isDiscussionSubtaskRequestCurrent(request, messages))
+    && JSON.stringify(request?.referencedTasks ?? []) === JSON.stringify(incomingRequest?.referencedTasks ?? []);
   const [result, setResult] = useState<DiscussionSubtaskResult | null>(null);
   const [error, setError] = useState("");
   const [generating, setGenerating] = useState(Boolean(request && contextCurrent));
@@ -48,7 +48,6 @@ export function DiscussionSubtaskCreateForm({ source, contextCurrent: sourceCurr
   const keepManualInput = () => { edited.current = true; setGenerating(false); };
   return <div onInputCapture={keepManualInput} onPointerDownCapture={keepManualInput} onKeyDownCapture={keepManualInput}>
     {error && <p className="task-subtask-create-error" role="status">{locale === "en" ? "Could not prepare a draft. You can fill in the form below." : "暂时未能生成草稿，可直接填写下方表单。"}</p>}
-    {result?.message && <p role="status">{result.message}</p>}
     {!contextCurrent && <p className="task-subtask-create-error" role="alert">{outdated}</p>}
     <TaskSubtaskCreateForm {...formProps} generating={generating && contextCurrent && !edited.current} showTags={false} key={result?.draft ? "generated" : "blank"} initialDraft={{ ...(result?.draft ?? {}), sourceDiscussion: source }} onCreate={value => {
       if (!latestContextCurrent.current) throw new Error(outdated);

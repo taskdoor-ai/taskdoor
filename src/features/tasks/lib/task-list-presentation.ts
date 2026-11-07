@@ -1,5 +1,5 @@
 import type { TaskNode } from "@/shared/model/task-model";
-import { formatDisplayDate, formatLegacyDateLabel, formatRelativeDateTime } from "@/shared/lib/date-time";
+import { formatDisplayDate, formatDisplayDateTime, formatLegacyDateLabel, formatRelativeDateTime } from "@/shared/lib/date-time";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 import { LEGACY_TEAM_TIME_ZONE } from "@/shared/lib/team-time-zone";
 
@@ -51,6 +51,21 @@ export function taskUpdatedLabel(value: string, now = new Date(), reference = le
     dateTime: dateOnly ? text : new Date(timestamp).toISOString(),
   };
 }
+
+export function taskDeadlineDisplay(task: Pick<TaskNode, "plannedEndOn" | "dueAt">, now: Date, locale: string): { label: string; full: string; dateTime?: string } | null {
+  const plannedDate = task.plannedEndOn?.trim();
+  const value = plannedDate || task.dueAt?.trim();
+  if (!value || ["—", "未设置", "未设置截止时间", "待定", "待排期"].includes(value)) return null;
+
+  const options = { locale, now: now.getTime() };
+  const format = /^\d{4}-\d{2}-\d{2}$/.test(value) ? formatDisplayDate : formatDisplayDateTime;
+  const label = format(value, options);
+  if (label) return { label, full: format(value, { ...options, year: "always" }) ?? label, dateTime: value };
+  if (plannedDate || /^\d{4}-\d{2}-\d{2}/.test(value)) return null;
+
+  return { label: formatLegacyDateLabel(value, locale, options), full: formatLegacyDateLabel(value, locale, { ...options, year: "always" }) };
+}
+
 export function taskDueLabel(task: TaskNode, now = new Date(), timeZone = LEGACY_TEAM_TIME_ZONE, locale = "zh-CN"): { label: string; overdue: boolean } | null {
   if (task.status === "已完成" || task.status === "已取消") return null;
   const value = task.plannedEndOn;

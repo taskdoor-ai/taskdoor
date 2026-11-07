@@ -4,6 +4,7 @@ import test, { beforeEach } from "node:test";
 // Historical fixtures run at their authored creation date.
 beforeEach(t => t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-08-31T02:00:00Z") }));
 import { workspaceRootId, type WorkspaceNode } from "../src/shared/model/task-model.ts";
+import { generateQuickTaskContent } from "../src/ai/task-creation.ts";
 import type { TaskPlanDraft } from "../src/features/tasks/lib/task-assistant-protocol.ts";
 import { createWorkspaceTasksFromDraft, WorkspaceTaskCreationError } from "../src/features/tasks/lib/workspace-task-creation.ts";
 import * as workspaceCreation from "../src/features/tasks/lib/workspace-task-creation.ts";
@@ -59,6 +60,36 @@ test("手动入口保存失败时不留下新任务或改变原记录", () => {
   assert.throws(() => workspaceCreation.commitManualWorkspaceTask(storage, [], { currentUserId: "me", teamId: "team" }), /回滚|保存/);
   assert.equal(data.get("agentdoor-workspace-nodes"), before);
   assert.equal(data.size, 1);
+});
+
+test("单任务持久化可接收手填名称或完整生成字段", () => {
+  const data = new Map<string, string>();
+  const storage = {
+    getItem: (key: string) => data.get(key) ?? null,
+    setItem: (key: string, value: string) => { data.set(key, value); },
+    removeItem: (key: string) => { data.delete(key); },
+  };
+  const options = { currentUserId: "me", teamId: "team" };
+  const manual = workspaceCreation.commitManualWorkspaceTask(storage, [], { ...options, title: "  整理发布清单  " });
+  assert.equal(manual.createdNodes[0].name, "整理发布清单");
+  assert.equal(manual.createdNodes[0].goal, "");
+  assert.deepEqual(manual.createdNodes[0].completionCriteria, []);
+
+  const generated = { goal: "让团队能核对发布条件", completionCriteria: ["清单覆盖每个发布步骤"] };
+  const confirmed = workspaceCreation.commitManualWorkspaceTask(storage, manual.nodes, { ...options, title: "完善发布清单", content: generated });
+  assert.equal(confirmed.createdNodes[0].name, "完善发布清单");
+  assert.equal(confirmed.createdNodes[0].goal, generated.goal);
+  assert.deepEqual(confirmed.createdNodes[0].completionCriteria, generated.completionCriteria);
+  assert.deepEqual(JSON.parse(data.get("agentdoor-workspace-nodes")!), confirmed.nodes);
+});
+
+test("列表快捷创建从需求中提取任务名称和定义", () => {
+  const content = generateQuickTaskContent("请帮我核对发布清单。目标：让值班同事确认上线条件。", {
+    currentDate: "2026-11-06", currentUserId: "me", members: [], tags: [],
+  }, "zh-CN", new AbortController().signal);
+  assert.equal(content.title, "核对发布清单");
+  assert.equal(content.goal, "让值班同事确认上线条件");
+  assert.ok(content.completionCriteria.some(item => item.includes("核对发布清单")));
 });
 
 test("复杂草案创建主任务和全部子任务，旧依赖索引不再写入", () => {
@@ -141,7 +172,7 @@ test("单任务草案会追加一个可持久化的真实任务节点", () => {
     createdAt: result.createdNodes[0].updatedAt,
     ownerId: "周岚",
     participantIds: ["林墨"],
-    status: "待开始",
+    status: "进行中",
     goal: "发布新品目标",
     dueAt: "9 月 3 日",
     plannedStartOn: "2026-09-01",

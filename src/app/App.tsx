@@ -1,18 +1,21 @@
+import { canReadWorkspaceTask } from "@/features/tasks/lib/task-access";
 import { TaskDetailLoading } from "@/features/tasks/components/TaskDetailLoading";
 import { waitForTaskDetailPaint } from "@/features/tasks/lib/task-detail-loading";
+import { applySavedAccentColor } from "@/features/me/components/AccentColorSetting";
 import type { FileAnnotationExitController } from "@/features/tasks/files/lib/useTaskFileAnnotations";
 import { TaskFileAnnotationDiscardDialog } from "@/features/tasks/files/components/TaskFileAnnotationDiscardDialog";
 import { normalizeTaskStatus } from "@/shared/model/task-model";
 import "@/features/tasks/styles/task-ai-adjustment.css";
 import { applyAutomaticWorkspaceTags, manualTaskTags } from "@/ai/task-auto-tags";
-import { TaskRecycleBinDialog } from "@/features/tasks/components/TaskRecycleBinDialog";
+import { generateQuickTaskContent } from "@/ai/task-creation";
+import { TaskRecycleBinPage } from "@/features/tasks/components/TaskRecycleBinPage";
 import { RECYCLE_BIN_KEY, readRecycleBin, recycleTask, changeRecycledTasks, type RecycledTask } from "@/features/tasks/lib/task-recycle-bin";
 import { TeamLifecycleProvider, type TeamLifecycleAction } from "@/features/members/components/TeamLifecycle";
 import { CreateTeamDialog } from "@/features/workspaces/components/CreateTeamDialog";
 import { commitTeamLifecycle, restoreDeletedTeam } from "@/features/members/lib/team-lifecycle-storage";
 import { hasRestorableTeams, MyTeamsPanel } from "@/features/members/components/MyTeamsPanel";
 import { useI18n } from "@/shared/i18n/I18nProvider";
-import { mockWorkspaceEmail } from "@/ai/mock/lib/mockWorkspaceAccount";
+import { mockWorkspaceUserId } from "@/ai/mock/lib/mockWorkspaceAccount";
 import { applyCriterionReviewMocks } from "@/ai/mock/data/taskCriterionReviewMocks";
 import { confirmTaskCriterion } from "@/features/tasks/lib/task-criterion-review";
 import { buildCreatedMockCatalog } from "@/ai/mock/i18n/createdMockCatalog";
@@ -21,7 +24,7 @@ import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { taskCalendarDate, taskScheduleError } from "@/features/tasks/lib/task-schedule";
 import { getTeamTimeZone, isValidTimeZone } from "@/shared/lib/team-time-zone";
 import { TeamTimeZoneContext } from "@/shared/lib/useTeamTimeZone";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { TaskCreationExperience } from "@/features/tasks/components/TaskCreationExperience";
 import { TaskCreationDiscardDialog } from "@/features/tasks/components/TaskCreationDiscardDialog";
 import type { CreationExitController } from "@/features/tasks/lib/task-creation-exit";
@@ -37,6 +40,7 @@ import { TaskWorkspace } from "@/features/tasks/components/TaskWorkspace";
 import { PersonalWorkbench } from "@/ai/mock/prototype/components/PersonalWorkbench";
 import { AiConnectionDialog } from "@/features/ai-connection/components/AiConnectionDialog";
 import { TaskDetail, type TaskAttentionTarget } from "@/features/tasks/components/TaskDetail";
+import type { DiscussionReferenceTask } from "@/features/tasks/discussion/lib/discussion-task-reference";
 import { generateSubtaskFromPrompt } from "@/ai/subtask-creation";
 import { COLLABORATION_CHANGED, projectTaskCollaboration } from "@/features/tasks/lib/useTaskCollaboration";
 import { publishTaskDiscussion } from "@/features/tasks/lib/task-mention-publishing";
@@ -61,7 +65,10 @@ import { allTeamWorkspaceNodes as initialWorkspaceNodes, getTeamMembers, getTeam
 import { legacyTaskSources, loadLatestLegacyTaskSnapshot, loadLegacyTaskSnapshots, persistLegacyTaskSnapshots, type LegacyTaskSnapshot } from "@/ai/mock/data/legacyTaskSnapshots";
 import type { TaskPlanDraft } from "@/features/tasks/lib/task-assistant-protocol";
 import { appendTaskActivity, createTaskChangeActivity, parseTaskActivityStore, type TaskActivityStore } from "@/features/tasks/lib/task-activity";
-import { createWorkspaceTasksFromDraft } from "@/features/tasks/lib/workspace-task-creation";
+import { commitManualWorkspaceTask, createWorkspaceTasksFromDraft, type QuickTaskContent } from "@/features/tasks/lib/workspace-task-creation";
+import { loadWorkspaceTaskNumbers } from "@/features/tasks/lib/workspace-task-numbers";
+import { getMockRefreshedSubtaskSuggestions, getMockSubtaskSuggestionActivities, getMockSubtaskSuggestions } from "@/ai/task-subtask-suggestions";
+import { createWorkspaceSuggestedSubtasks, getSubtaskSuggestionStorageKey, type SubtaskSuggestion, type SubtaskSuggestionReview } from "@/features/tasks/lib/task-subtask-suggestions";
 import { activeMembership } from "@/features/members/lib/team-membership-lifecycle";
 import { addWorkspaceSubtask, canCreateWorkspaceSubtask, getSubtaskDeletionPreview, getTaskDeletionPreview, getTaskDeletionWrites, type NewSubtaskDraft } from "@/features/tasks/lib/workspace-subtask-editing";
 import { clearTaskFileDraftSessions } from "@/features/tasks/files/lib/task-file-drafts";
@@ -136,8 +143,12 @@ const persistStoredText = (key: string, value: string) => {
   }
 };
 
-const focusPrimaryHeadingAfterNavigation = (target: "auto" | "list" | "detail" | "home" | "creation" = "auto") => {
+const focusPrimaryHeadingAfterNavigation = (target: "auto" | "list" | "detail" | "home" | "creation" = "auto", returnFocus?: HTMLElement | null) => {
   window.requestAnimationFrame(() => {
+    if (returnFocus?.getClientRects().length) {
+      returnFocus.focus({ preventScroll: true });
+      return;
+    }
     const selector = target === "list" ? "#task-workspace-list-heading" : target === "detail" ? ".task-workspace-detail h1" : target === "home" ? "#personal-workbench-heading" : target === "creation" ? ".task-workspace-creation h1" : ".main-content h1";
     const heading = [...document.querySelectorAll<HTMLElement>(selector)].find((element) => element.getClientRects().length > 0);
     if (!heading) return;
@@ -178,18 +189,18 @@ const formatPeriodLabel = (startDate: string, endDate: string) => !startDate || 
 const taskDateValue = taskCalendarDate;
 
 function App() {
+  useEffect(() => { applySavedAccentColor(); }, []);
   const ui = useGlobalUi();
   const { locale } = useI18n();
   const [createEmptyTeamOpen, setCreateEmptyTeamOpen] = useState(false);
   const [workspaceSession] = useState(readWorkspaceSession);
-  const currentUserId = workspaceSession?.userId ?? "周岚";
-  const showDemoData = !workspaceSession || workspaceSession.email === mockWorkspaceEmail;
+  const currentUserId = workspaceSession?.userId ?? mockWorkspaceUserId;
+  const showDemoData = currentUserId === mockWorkspaceUserId;
   const [collaborationRevision, refreshCollaboration] = useState(0);
   useEffect(() => {
     const refresh = () => refreshCollaboration(value => value + 1);
-    const sync = ({ key, storageArea }: StorageEvent) => {
-      if (storageArea === localStorage && (key === null || key.startsWith(TASK_COLLABORATION_STORAGE_PREFIX)
-        || key === workspaceNodesStorageKey || key === "agentdoor-created-tasks" || key === "agentdoor-created-task")) refresh();
+    const sync = (event: StorageEvent) => {
+      if (event.storageArea === localStorage && (event.key === null || event.key.startsWith(TASK_COLLABORATION_STORAGE_PREFIX))) refresh();
     };
     window.addEventListener(COLLABORATION_CHANGED, refresh);
     window.addEventListener("storage", sync);
@@ -222,9 +233,10 @@ function App() {
   const [legacyTaskSnapshots, setLegacyTaskSnapshots] = useState<Record<string, LegacyTaskSnapshot>>(() => initialScenarioState.didReset ? {} : loadLegacyTaskSnapshots());
   const [legacyTaskSnapshotsDirty, setLegacyTaskSnapshotsDirty] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-  const [pendingSubtaskDetail, setPendingSubtaskDetail] = useState<{ teamId: string; parentTaskId: string } | null>(null);
-  const subtaskCreationAttempt = useRef<AbortController | null>(null);
+  const [pendingTaskDetail, setPendingTaskDetail] = useState<{ teamId: string; parentTaskId: string | null } | null>(null);
+  const quickCreationAttempt = useRef<AbortController | null>(null);
   const [workspaceNodes, setWorkspaceNodes] = useState<WorkspaceNode[]>(() => applyCriterionReviewMocks(initialScenarioState.workspaceNodes));
+  const [taskNumbers, setTaskNumbers] = useState<ReadonlyMap<string, number>>(() => new Map());
   const workspaceNodesRef = useRef(workspaceNodes);
   const [taskActivityStore, setTaskActivityStore] = useState<TaskActivityStore>(() => parseTaskActivityStore(loadStoredValue<unknown>(taskActivityStorageKey, {})));
   const [taskDetailSeedNodes, setTaskDetailSeedNodes] = useState<TaskNode[]>(() => {
@@ -292,9 +304,10 @@ function App() {
   };
   const [personalCenterState, setPersonalCenterState] = useState<PersonalCenterState>(() => loadPersonalCenterState());
   const [activeTeamId, setActiveTeamId] = useState(() => personalCenterState.teams.find(team => team.id === workspaceSession?.activeTeamId)?.id ?? personalCenterState.teams[0]?.id ?? "");
+  const [quickCreateRequest, setQuickCreateRequest] = useState(0);
   const activeTeamTimeZone = getTeamTimeZone(personalCenterState.teams.find(team => team.id === activeTeamId));
   const validTeamTimeZone = isValidTimeZone(activeTeamTimeZone);
-  const subtaskDetailLoading = pendingSubtaskDetail?.teamId === activeTeamId && pendingSubtaskDetail.parentTaskId === selectedTaskId;
+  const quickTaskDetailLoading = pendingTaskDetail?.teamId === activeTeamId && pendingTaskDetail.parentTaskId === selectedTaskId;
   useEffect(() => {
     if (workspaceSession && activeTeamId) saveWorkspaceSession({ ...workspaceSession, activeTeamId });
   }, [activeTeamId, workspaceSession]);
@@ -315,28 +328,55 @@ function App() {
     window.addEventListener(personalCenterChangedEvent, reload);
     return () => { window.removeEventListener("storage", reload); window.removeEventListener(personalCenterChangedEvent, reload); };
   }, []);
-  const teamWorkspaceNodes = useMemo(() => getTeamWorkspaceNodes(activeTeamId, workspaceNodes), [activeTeamId, workspaceNodes]);
-  const readableDiscussionNotificationTasks = () => {
-    const team = loadPersonalCenterState().teams.find(item => item.id === activeTeamId);
-    if (!team || !activeMembership(team, currentUserId)) return [];
-    const stored = loadStoredValue<unknown>(workspaceNodesStorageKey, workspaceNodesRef.current);
-    if (!Array.isArray(stored)) return [];
-    const storedTasks = new Map(normalizeWorkspaceNodes(stored).filter((node): node is TaskNode => node.kind === "task" && node.teamId === activeTeamId).map(task => [task.id, task]));
-    const storedLegacyTasks = loadLegacyTaskSnapshots();
-    const canRead = (task: TaskNode, legacyTasks: typeof legacyTaskSnapshots) => {
-      const participants = legacyTasks[task.id]?.participants ?? task.participantIds
-        ?? (taskDetailMocks[task.id as TaskDetailId] ?? getTeamTaskDetailFixture(task))?.participants ?? [];
-      return task.ownerId === currentUserId || participants.includes(currentUserId);
-    };
-    return teamWorkspaceNodes.filter(node => {
-      const storedTask = storedTasks.get(node.id);
-      return node.kind === "task" && storedTask && canRead(node, legacyTaskSnapshots) && canRead(storedTask, storedLegacyTasks);
-    });
+  const canReadTask = (task: TaskNode, teams = personalCenterState.teams) => {
+    const team = teams.find(item => item.id === (task.teamId ?? "creator-commerce"));
+    const participants = legacyTaskSnapshots[task.id]?.participants ?? task.participantIds
+      ?? (taskDetailMocks[task.id as TaskDetailId] ?? getTeamTaskDetailFixture(task))?.participants ?? [];
+    return canReadWorkspaceTask({ ownerId: task.ownerId, participantIds: participants }, currentUserId, Boolean(team && activeMembership(team, currentUserId)));
   };
-  const discussionNotifications = useMemo(() => readTaskDiscussionNotifications(localStorage, activeTeamId, currentUserId, readableDiscussionNotificationTasks(), collaborationMembers, locale),
-    [activeTeamId, currentUserId, teamWorkspaceNodes, legacyTaskSnapshots, collaborationMembers, collaborationRevision, locale]);
+  useEffect(() => {
+    const syncTaskAccess = (event: StorageEvent) => {
+      if (event.storageArea !== localStorage) return;
+      if (event.key === workspaceNodesStorageKey && event.newValue) {
+        try {
+          const nodes = normalizeWorkspaceNodes(JSON.parse(event.newValue));
+          workspaceNodesRef.current = nodes;
+          setWorkspaceNodes(nodes);
+        } catch { /* Keep the last valid state when an unrelated page writes invalid data. */ }
+      }
+      if (event.key === "agentdoor-created-tasks" || event.key === "agentdoor-created-task") {
+        setLegacyTaskSnapshots(loadLegacyTaskSnapshots());
+        setLatestLegacyTask(loadLatestLegacyTaskSnapshot());
+        setLegacyTaskSnapshotsDirty(false);
+      }
+    };
+    window.addEventListener("storage", syncTaskAccess);
+    return () => window.removeEventListener("storage", syncTaskAccess);
+  }, []);
+  const teamWorkspaceNodes = useMemo(() => getTeamWorkspaceNodes(activeTeamId, workspaceNodes)
+    .filter(node => node.kind !== "task" || canReadTask(node)),
+    [activeTeamId, workspaceNodes, personalCenterState, currentUserId, legacyTaskSnapshots]);
+  const discussionReferenceTasks = useMemo<DiscussionReferenceTask[]>(() => teamWorkspaceNodes.flatMap(node => {
+    if (node.kind !== "task") return [];
+    const number = taskNumbers.get(node.id);
+    if (number === undefined) return [];
+    const detail = taskDetailMocks[node.id as TaskDetailId];
+    return [{ id: node.id, number, title: node.name, goal: node.goal ?? legacyTaskSnapshots[node.id]?.goal ?? detail?.goal, completionCriteria: node.completionCriteria ?? detail?.completionCriteria }];
+  }), [teamWorkspaceNodes, taskNumbers, legacyTaskSnapshots]);
+  const notificationTasks = useMemo(() => workspaceNodes.filter((node): node is TaskNode => node.kind === "task" && canReadTask(node)),
+    [workspaceNodes, personalCenterState.teams, currentUserId, legacyTaskSnapshots]);
+  const discussionNotifications = useMemo(() => personalCenterState.teams.flatMap(team => readTaskDiscussionNotifications(
+    localStorage, team.id, currentUserId, notificationTasks, getTeamPeople(team, getTeamMembers(team.id)), locale,
+  )), [personalCenterState.teams, currentUserId, notificationTasks, collaborationRevision, locale]);
+  useEffect(() => {
+    if (selectedTaskId && !teamWorkspaceNodes.some(node => node.kind === "task" && node.id === selectedTaskId)) {
+      setSelectedTaskId(null);
+      setTaskAttentionTarget(null);
+    }
+  }, [selectedTaskId, teamWorkspaceNodes]);
   const [activeSection, setActiveSection] = useState<PrimarySection>("tasks");
-  useEffect(() => () => { subtaskCreationAttempt.current?.abort(); }, [activeTeamId, activeTeamTimeZone, activeSection, currentUserId, selectedTaskId]);
+  const tagManagementReturn = useRef<{ section: Exclude<PrimarySection, "settings">; trigger?: HTMLElement | null }>(null);
+  useLayoutEffect(() => () => { quickCreationAttempt.current?.abort(); }, [activeTeamId, activeTeamTimeZone, activeSection, currentUserId, selectedTaskId]);
   const [globalAiConnectionOpen, setGlobalAiConnectionOpen] = useState(false);
   const [conversationRevision, setConversationRevision] = useState(0);
   const [creationSessionOpen, setCreationSessionOpen] = useState(false);
@@ -427,7 +467,8 @@ function App() {
       setPendingAnnotationExit({ run });
       return;
     }
-    if (activeSection === "conversation" && creationSessionOpen) {
+    const leavingCreation = activeSection === "conversation" || (activeSection === "settings" && tagManagementReturn.current?.section === "conversation");
+    if (leavingCreation && creationSessionOpen) {
       if (!creationSessionCompleted.current && creationExitController.current?.hasUnsavedChanges()) {
         creationExitReturnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
         setCreationExitError("");
@@ -454,18 +495,26 @@ function App() {
     run();
   };
 
+  const resetTaskSearch = () => {
+    setTaskQuery("");
+    setTaskFilters(createInitialTaskListFilters(currentUserId));
+  };
+
+  const switchTeamContext = (teamId: string) => {
+    resetCreationSessionForTeamChange();
+    setActiveTeamId(teamId);
+    resetTaskSearch();
+    setWorkbenchAnalysisError("");
+    setWorkbenchAsOf(getTeamWorkspaceScenario(teamId)?.asOf ?? new Date().toISOString());
+  };
+
   const changeActiveTeam = (teamId: string) => {
     if (!personalCenterState.teams.some((team) => team.id === teamId) || teamId === activeTeamId) return;
     requestCreationExit(() => {
-      resetCreationSessionForTeamChange();
-      setActiveTeamId(teamId);
+      switchTeamContext(teamId);
       setSelectedTaskId(null);
       setTaskAttentionTarget(null);
-      setTaskQuery("");
-      setTaskFilters(createInitialTaskListFilters(currentUserId));
       setActiveSection("tasks");
-      setWorkbenchAnalysisError("");
-      setWorkbenchAsOf(getTeamWorkspaceScenario(teamId)?.asOf ?? new Date().toISOString());
     });
   };
 
@@ -478,40 +527,67 @@ function App() {
     });
   };
 
-  const navigateToTask = (taskId: string, focusHeading = true) => {
-    const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId);
-    if (!task) return;
+  const openTagManagement = (trigger?: HTMLElement | null) => {
+    if (activeSection === "settings") return;
+    const open = () => {
+      tagManagementReturn.current = { section: activeSection, trigger };
+      setActiveSection("settings");
+      focusPrimaryHeadingAfterNavigation();
+    };
+    // Tag management is a temporary step within the current creation draft.
+    if (activeSection === "conversation") open();
+    else requestCreationExit(open);
+  };
+
+  const closeTagManagement = () => {
+    const { section, trigger } = tagManagementReturn.current ?? { section: "tasks" };
+    tagManagementReturn.current = null;
+    setActiveSection(section);
+    const heading = section === "conversation" ? "creation" : section === "tasks" ? selectedTaskId ? "detail" : "list" : section === "home" ? "home" : "auto";
+    focusPrimaryHeadingAfterNavigation(heading, trigger);
+  };
+
+  const showTaskDetail = (task: TaskNode, focusHeading: boolean) => {
     setPersonalInfoOpen(false);
     const taskTeamId = task.teamId ?? "creator-commerce";
-    if (taskTeamId !== activeTeamId && personalCenterState.teams.some((team) => team.id === taskTeamId)) {
-      resetCreationSessionForTeamChange();
-      setActiveTeamId(taskTeamId);
-    }
-    setSelectedTaskId(taskId);
+    if (taskTeamId !== activeTeamId) switchTeamContext(taskTeamId);
+    setSelectedTaskId(task.id);
     setActiveSection("tasks");
     if (focusHeading) focusPrimaryHeadingAfterNavigation("detail");
+  };
+  const navigateToTask = (taskId: string, focusHeading = true) => {
+    const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId);
+    if (!task || !canReadTask(task)) {
+      toast.error(locale === "en" ? "You do not have access to this task." : "你没有此任务的访问权限。");
+      return;
+    }
+    showTaskDetail(task, focusHeading);
   };
   const openTask = (taskId: string, focusHeading = true) => {
     if (!workspaceNodesRef.current.some(node => node.kind === "task" && node.id === taskId)) return;
     requestCreationExit(() => navigateToTask(taskId, focusHeading));
   };
+  const openDiscussionReferenceTask = (taskId: string) => {
+    requestCreationExit(() => {
+      const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId);
+      if (!task || (task.teamId ?? "creator-commerce") !== activeTeamId || !canReadTask(task)) {
+        toast.error(locale === "en" ? "This task is no longer available." : "此任务已不可访问。");
+        return;
+      }
+      setTaskAttentionTarget(null);
+      navigateToTask(taskId);
+    });
+  };
 
-  const startNewTaskConversation = () => {
-    if (!validTeamTimeZone) { toast.error(locale === "en" ? "The team timezone is invalid. Task creation is unavailable." : "团队时区无效，暂时无法创建任务。"); return; }
-    if (activeSection === "conversation" && creationSessionOpen && !creationSessionCompleted.current && !creationParentContext) {
-      focusPrimaryHeadingAfterNavigation("creation");
-      return;
-    }
+  const startNewTask = (closeNavigation: () => void) => {
+    if (!personalCenterState.teams.some(team => team.id === activeTeamId && activeMembership(team, currentUserId)) || quickCreationAttempt.current) return;
     requestCreationExit(() => {
       window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
-      if (!creationSessionOpen || creationSessionCompleted.current || creationParentContext) {
-        setConversationRevision((revision) => revision + 1);
-        setCreationSessionOpen(true);
-        creationSessionCompleted.current = false;
-      }
-      setCreationParentContext(null);
-      setActiveSection("conversation");
-      focusPrimaryHeadingAfterNavigation("creation");
+      setSelectedTaskId(null);
+      setTaskAttentionTarget(null);
+      setActiveSection("tasks");
+      setQuickCreateRequest(request => request + 1);
+      closeNavigation();
     });
   };
 
@@ -580,6 +656,16 @@ function App() {
     if (withCriterionMocks !== workspaceNodes) setWorkspaceNodes(withCriterionMocks);
     persistStoredValue(workspaceNodesStorageKey, withCriterionMocks);
   }, [workspaceNodes, taskStorageRecoveryError]);
+  useEffect(() => {
+    if (taskStorageRecoveryError) return;
+    const unnumbered = workspaceNodes.flatMap(node => node.kind === "task" && !taskNumbers.has(node.id) ? [node.id] : []);
+    if (!unnumbered.length) return;
+    let cancelled = false;
+    void loadWorkspaceTaskNumbers(unnumbered).then(numbers => {
+      if (!cancelled) setTaskNumbers(current => new Map([...current, ...numbers]));
+    }, () => { /* Keep existing numbers. The next workspace update can retry allocation. */ });
+    return () => { cancelled = true; };
+  }, [workspaceNodes, taskNumbers, taskStorageRecoveryError]);
   useEffect(() => { if (!taskStorageRecoveryError) persistStoredValue(taskActivityStorageKey, taskActivityStore); }, [taskActivityStore, taskStorageRecoveryError]);
   useEffect(() => { if (!taskStorageRecoveryError) persistStoredValue(taskDetailSeedsStorageKey, taskDetailSeedNodes); }, [taskDetailSeedNodes, taskStorageRecoveryError]);
   useEffect(() => { if (!taskStorageRecoveryError) persistStoredValue(taskOwnerProposalsStorageKey, taskOwnerProposals); }, [taskOwnerProposals, taskStorageRecoveryError]);
@@ -672,7 +758,6 @@ function App() {
     };
   };
 
-  const [recycleOpen, setRecycleOpen] = useState(false);
   const [recycleEntries, setRecycleEntries] = useState<RecycledTask[]>([]);
   // Team tasks in settings show the recycle bin too; read it when settings open.
   const recycleBinForSettings = useMemo(() => {
@@ -699,6 +784,12 @@ function App() {
     try { setRecycleEntries(readRecycleBin(localStorage)); setRecycleError(""); }
     catch (error) { setRecycleError(error instanceof Error ? error.message : "回收站读取失败，请重试。"); }
   };
+  const openRecycleBin = (closeNavigation: () => void) => requestCreationExit(() => {
+    refreshRecycleBin();
+    setActiveSection("recycle-bin");
+    closeNavigation();
+    focusPrimaryHeadingAfterNavigation();
+  });
   useEffect(() => {
     if (taskStorageRecoveryError) return;
     const cleanExpired = () => {
@@ -861,8 +952,9 @@ function App() {
     if (!parent || !team || !(draft.sourceDiscussion ? activeMembership(team, currentUserId) : canCreateWorkspaceSubtask({ ...parent, participantIds: parentParticipantIds }, currentUserId, Boolean(activeMembership(team, currentUserId))))) {
       throw new Error(locale === "en" ? "You no longer have permission to create subtasks here. Your input has been kept." : "你已没有当前任务的子任务创建权限，输入已保留。");
     }
-    if (draft.ownerId && !activeMembership(team, draft.ownerId)) throw new Error(locale === "en" ? "The assignee is no longer an active team member. Select again." : "所选负责人已不是团队有效成员，请重新选择。");
-    if (draft.participantIds?.some(id => !activeMembership(team, id))) throw new Error(locale === "en" ? "A collaborator is no longer an active team member. Select again." : "所选参与者已不是团队有效成员，请重新选择。");
+    const selectableMemberIds = new Set(getTeamPeople(team, collaborationMembers).map(member => member.id));
+    if (draft.ownerId && !selectableMemberIds.has(draft.ownerId)) throw new Error(locale === "en" ? "The assignee is no longer in this team. Select again." : "所选负责人已不在当前团队，请重新选择。");
+    if (draft.participantIds?.some(id => !selectableMemberIds.has(id))) throw new Error(locale === "en" ? "A collaborator is no longer in this team. Select again." : "所选参与者已不在当前团队，请重新选择。");
     if (draft.sourceDiscussion) {
       const source = draft.sourceDiscussion;
       if (source.taskId !== parent.id || !selectedTaskDetail) throw new Error(locale === "en" ? "The source discussion is unavailable for this task. Your input has been kept." : "来源讨论不属于当前任务或已不可用，输入已保留。");
@@ -895,15 +987,15 @@ function App() {
     return result.createdTask.id;
   };
   const createSubtaskFromList = async (draft: NewSubtaskDraft) => {
-    if (!selectedTaskId || !selectedTaskDetail || !canCreateSubtask || subtaskCreationAttempt.current) throw new Error(locale === "en" ? "Subtask creation is unavailable. Your input has been kept." : "当前暂时无法创建子任务，输入已保留。");
+    if (!selectedTaskId || !selectedTaskDetail || !canCreateSubtask || quickCreationAttempt.current) throw new Error(locale === "en" ? "Subtask creation is unavailable. Your input has been kept." : "当前暂时无法创建子任务，输入已保留。");
     if (!validTeamTimeZone) throw new Error(locale === "en" ? "The team timezone is invalid. Your input has been kept." : "团队时区无效，输入已保留，请先核对。");
     const team = loadPersonalCenterState().teams.find(item => item.id === activeTeamId);
     if (!team || !activeMembership(team, currentUserId)) throw new Error(locale === "en" ? "You are no longer a team member. Your input has been kept." : "你已不是当前团队的有效成员，输入已保留。");
     const stored = localStorage.getItem(workspaceNodesStorageKey);
     if (stored && JSON.stringify(JSON.parse(stored)) !== JSON.stringify(workspaceNodesRef.current)) throw new Error(locale === "en" ? "Tasks changed in another page. Your input has been kept. Check and try again." : "任务已在其他页面更新，输入已保留，请核对后重试。");
     const controller = new AbortController();
-    subtaskCreationAttempt.current = controller;
-    setPendingSubtaskDetail({ teamId: activeTeamId, parentTaskId: selectedTaskId });
+    quickCreationAttempt.current = controller;
+    setPendingTaskDetail({ teamId: activeTeamId, parentTaskId: selectedTaskId });
     try {
       await waitForTaskDetailPaint(controller.signal);
       const generated = await generateSubtaskFromPrompt({
@@ -917,9 +1009,9 @@ function App() {
       const createdId = createInlineSubtask({ ...generated, participantIds: [...new Set([...(generated.participantIds ?? []), currentUserId])].filter(id => id !== generated.ownerId) });
       openTask(createdId);
     } finally {
-      if (subtaskCreationAttempt.current === controller) {
-        subtaskCreationAttempt.current = null;
-        setPendingSubtaskDetail(null);
+      if (quickCreationAttempt.current === controller) {
+        quickCreationAttempt.current = null;
+        setPendingTaskDetail(null);
       }
     }
   };
@@ -983,6 +1075,7 @@ function App() {
     activities: [
       ...(taskActivityStore[selectedTaskId] ?? []).filter((activity) => !seedActivityIds.has(activity.id)),
       ...selectedTaskDetailBase.activities,
+      ...(showDemoData ? getMockSubtaskSuggestionActivities(selectedTaskId) : []),
     ],
     due: selectedTaskPeriodOverride === null ? "—" : selectedTaskPeriodOverride ? formatPeriodLabel(selectedTaskPeriodOverride.start, selectedTaskPeriodOverride.end) : selectedTreeTask.dueAt ?? selectedTaskDetailBase.due,
     goal: selectedParentTask ? getTaskDefinitionGoal(teamWorkspaceNodes, selectedTreeTask) : selectedTreeTask.goal ?? selectedTaskDetailBase.goal,
@@ -1004,11 +1097,69 @@ function App() {
         ...(childTaskCount ? { childTaskCount: childTaskCount.total, completedChildTaskCount: childTaskCount.completed } : {}),
       };
     }) : [];
+  const subtaskSuggestionDemoScope = showDemoData && selectedTaskDetail && selectedTaskId ? {
+    taskId: selectedTaskId,
+    childTasks: teamWorkspaceNodes.filter((node): node is TaskNode => node.kind === "task"),
+  } : undefined;
+  const selectedSubtaskSuggestions = subtaskSuggestionDemoScope ? getMockSubtaskSuggestions({
+    ...subtaskSuggestionDemoScope, messages: getMockSubtaskSuggestionActivities(subtaskSuggestionDemoScope.taskId),
+  }) : [];
   const canCreateSubtask = canCreateWorkspaceSubtask(
     selectedTreeTask?.kind === "task" ? { ...selectedTreeTask, participantIds: selectedParticipants } : undefined,
     currentUserId, personalCenterState.teams.some(team => team.id === activeTeamId && activeMembership(team, currentUserId)),
   );
   const canCreateTaskFromDiscussion = Boolean(selectedTreeTask?.kind === "task" && personalCenterState.teams.some(team => team.id === activeTeamId && activeMembership(team, currentUserId)));
+  const confirmSubtaskSuggestions = async (suggestions: SubtaskSuggestion[], review: SubtaskSuggestionReview, expectedReviewRaw: string | null, entry: "subtasks" | "discussion") => {
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    if (!selectedTaskId || !selectedTaskDetail || !validTeamTimeZone) throw new Error("当前任务或团队时区无效，请重新打开任务后核对。");
+    const storedNodes = localStorage.getItem(workspaceNodesStorageKey);
+    if (storedNodes && JSON.stringify(JSON.parse(storedNodes)) !== JSON.stringify(workspaceNodesRef.current)) {
+      const fresh = normalizeWorkspaceNodes(JSON.parse(storedNodes));
+      workspaceNodesRef.current = fresh; setWorkspaceNodes(fresh);
+      throw new Error("任务已在其他页面更新，建议已保留，请核对最新任务后重试。");
+    }
+    const parent = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === selectedTaskId && node.teamId === activeTeamId);
+    const team = loadPersonalCenterState().teams.find(item => item.id === activeTeamId);
+    const activeMember = Boolean(team && activeMembership(team, currentUserId));
+    const canCreate = entry === "discussion" ? activeMember : canCreateWorkspaceSubtask(
+      parent && { ...parent, participantIds: selectedLegacyTask?.participants ?? parent.participantIds ?? selectedParticipants }, currentUserId, activeMember,
+    );
+    if (!parent || !team || !canCreate) {
+      throw new Error("你已没有当前任务的子任务创建权限，建议已保留。");
+    }
+    const selectableMemberIds = new Set(getTeamPeople(team, collaborationMembers).map(member => member.id));
+    if (suggestions.some(item => item.ownerId && !selectableMemberIds.has(item.ownerId))) throw new Error("所选负责人已不在当前团队，请重新选择。");
+    if (suggestions.some(item => item.participantIds?.some(memberId => !selectableMemberIds.has(memberId)))) throw new Error("所选参与者已不在当前团队，请重新选择。");
+    const key = getSubtaskSuggestionStorageKey(activeTeamId, selectedTaskId);
+    if (localStorage.getItem(key) !== expectedReviewRaw) throw new Error("建议已在其他页面更新，请重新载入后核对。");
+    const latestSnapshot = loadCollaboration(localStorage, JSON.stringify([activeTeamId, selectedTaskId]), selectedTaskDetail.files);
+    const sourceMessages = mergeCollaborationMessages(selectedTaskDetail.activities, latestSnapshot.messages);
+    const result = createWorkspaceSuggestedSubtasks(workspaceNodesRef.current, selectedTaskId, suggestions, {
+      currentUserId, teamId: activeTeamId, timeZone: activeTeamTimeZone, author: currentUserName, sourceMessages,
+      activeMemberIds: team.memberships.flatMap(membership => membership.status === "active" && membership.memberId ? [membership.memberId] : []),
+      selectableMemberIds: [...selectableMemberIds],
+    });
+    if (!result.createdTasks.length) return;
+    const activities = parseTaskActivityStore(JSON.parse(localStorage.getItem(taskActivityStorageKey) ?? "{}"));
+    const nextActivities = result.activity ? appendTaskActivity(activities, selectedTaskId, result.activity) : activities;
+    const nextReview = { ...review, ...(review.selectedIds ? { selectedIds: review.selectedIds.filter(id => !suggestions.some(item => item.id === id)) } : {}), dismissedIds: [...new Set([...review.dismissedIds, ...suggestions.map(item => item.id)])], edits: Object.fromEntries(Object.entries(review.edits).filter(([id]) => !suggestions.some(item => item.id === id))) };
+    const nextSeeds = [...taskDetailSeedNodesRef.current, ...result.createdTasks];
+    try {
+      commitTaskAiStorage(localStorage, [
+        [workspaceNodesStorageKey, JSON.stringify(result.nodes)],
+        [taskActivityStorageKey, JSON.stringify(nextActivities)],
+        [taskDetailSeedsStorageKey, JSON.stringify(nextSeeds)],
+        [key, JSON.stringify(nextReview)],
+      ]);
+    } catch (cause) {
+      try { recoverTaskAiStorage(localStorage); }
+      catch (failure) { setTaskStorageRecoveryError(failure instanceof Error ? failure.message : "本地记录需要恢复。"); }
+      throw cause;
+    }
+    workspaceNodesRef.current = result.nodes; taskDetailSeedNodesRef.current = nextSeeds;
+    setWorkspaceNodes(result.nodes); setTaskActivityStore(nextActivities); setTaskDetailSeedNodes(nextSeeds);
+    toast.success(locale === "en" ? `Created ${result.createdTasks.length} subtasks` : `已创建 ${result.createdTasks.length} 个子任务`);
+  };
   const selectedDiagnosisTasks = teamWorkspaceNodes
     .filter((node): node is TaskNode => node.kind === "task")
     .map((node) => {
@@ -1054,6 +1205,66 @@ function App() {
         .filter((node): node is TaskNode => node.kind === "task" && node.parentTaskId === id)
         .map((node) => node.name),
     }));
+
+  const canQuickCreateTask = personalCenterState.teams.some(team => team.id === activeTeamId && activeMembership(team, currentUserId));
+  const requireQuickTaskMembership = () => {
+    const team = loadPersonalCenterState().teams.find(item => item.id === activeTeamId);
+    if (!team || !activeMembership(team, currentUserId)) {
+      throw new Error(locale === "en" ? "You are no longer a team member. Your input has been kept." : "你已不是当前团队的有效成员，输入已保留。");
+    }
+  };
+
+  const saveQuickTask = (title: string, content: QuickTaskContent, storedAtStart: string | null) => {
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    requireQuickTaskMembership();
+    const stored = localStorage.getItem(workspaceNodesStorageKey);
+    const storedNodes = stored ? JSON.parse(stored) : null;
+    if (stored !== storedAtStart || (stored && JSON.stringify(storedNodes) !== JSON.stringify(workspaceNodesRef.current))) {
+      if (stored) {
+        const fresh = normalizeWorkspaceNodes(storedNodes);
+        workspaceNodesRef.current = fresh;
+        setWorkspaceNodes(fresh);
+      }
+      throw new Error(locale === "en" ? "Tasks changed in another page. Check and try again." : "任务已在其他页面更新，输入已保留，请核对后重试。");
+    }
+    try {
+      const result = commitManualWorkspaceTask(localStorage, workspaceNodesRef.current, { currentUserId, teamId: activeTeamId, title, content });
+      workspaceNodesRef.current = result.nodes;
+      setWorkspaceNodes(result.nodes);
+      return result.mainTaskId;
+    } catch (error) {
+      try { recoverTaskAiStorage(localStorage); }
+      catch (failure) { setTaskStorageRecoveryError(failure instanceof Error ? failure.message : "本地记录需要恢复。"); }
+      throw error;
+    }
+  };
+
+  const createQuickTask = async (prompt: string) => {
+    if (quickCreationAttempt.current) throw new Error(locale === "en" ? "Task creation is unavailable. Your input has been kept." : "当前暂时无法创建任务，输入已保留。");
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    requireQuickTaskMembership();
+    const currentDate = taskDateValue(new Date().toISOString(), activeTeamTimeZone);
+    if (!currentDate || !validTeamTimeZone) throw new Error(locale === "en" ? "The team timezone is invalid. Your input has been kept." : "团队时区无效，输入已保留，请先核对。");
+    const storedAtStart = localStorage.getItem(workspaceNodesStorageKey);
+    const controller = new AbortController();
+    quickCreationAttempt.current = controller;
+    setPendingTaskDetail({ teamId: activeTeamId, parentTaskId: null });
+    try {
+      await waitForTaskDetailPaint(controller.signal);
+      const { title, ...content } = generateQuickTaskContent(prompt, {
+        currentDate, currentUserId, timezone: activeTeamTimeZone,
+        existingTasks: taskCreationExistingTasks,
+        members: collaborationMembers,
+        tags: tagDefinitions.map(tag => tag.name),
+      }, locale, controller.signal);
+      const taskId = saveQuickTask(title, content, storedAtStart);
+      setTaskAttentionTarget(null);
+      openTask(taskId);
+    } finally {
+      quickCreationAttempt.current = null;
+      setPendingTaskDetail(null);
+    }
+  };
 
   const getSelectedTask = () => workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === selectedTaskId);
 
@@ -1311,17 +1522,17 @@ function App() {
   return (
     <TeamTimeZoneContext.Provider value={activeTeamTimeZone}><MockDataProvider tasks={additionalMockTasks}><MemberInvitationProvider ref={memberInvitationsRef} state={personalCenterState} onStateChange={setPersonalCenterState} teamId={activeTeamId} members={collaborationMembers}>
     <PersonDirectoryProvider members={collaborationMembers}>
-    <PersonalTagsProvider tags={tagDefinitions} onChange={savePersonalTags}>
+    <PersonalTagsProvider tags={tagDefinitions} onManage={openTagManagement}>
     <TeamLifecycleProvider team={personalCenterState.teams.find(t => t.id === activeTeamId)} nodes={workspaceNodes} members={collaborationMembers} actorId={currentUserId} onCommit={commitMembershipAction}>
     <div className="app-shell task-workspace-shell">
       {!validTeamTimeZone && <p role="alert">{locale === "en" ? "The team timezone is invalid. Date filters are not applied and date changes are unavailable; saved tasks are kept." : "团队时区无效，日期筛选条件暂未应用，也无法修改日期；已有任务和输入已保留。"}</p>}
       <WorkspaceNavigation
         onListFiltersChange={filters => requestCreationExit(() => setTaskFilters(filters))}
         members={collaborationMembers}
-        onManageTags={() => requestCreationExit(() => { setActiveSection("settings"); focusPrimaryHeadingAfterNavigation(); })}
-        onOpenRecycleBin={() => { refreshRecycleBin(); setRecycleOpen(true); }}
+        onManageTags={openTagManagement}
+        onOpenRecycleBin={openRecycleBin}
         activeTeamId={activeTeamId}
-        active={activeSection === "tasks" || activeSection === "home"}
+        activeSection={activeSection}
         filters={taskFilters}
         onFiltersChange={(filters) => requestCreationExit(() => {
           setTaskFilters(filters);
@@ -1334,25 +1545,27 @@ function App() {
         tagDefinitions={tagDefinitions}
         query={taskQuery}
         onConnectAi={() => setGlobalAiConnectionOpen(true)}
+        canCreateTask={canQuickCreateTask && !pendingTaskDetail}
+        onCreateTask={startNewTask}
         onSignOut={() => requestCreationExit(signOutWorkspace)}
         showDemoNotifications={showDemoData}
         discussionNotifications={discussionNotifications}
         discussionReadReceipt={discussionReadReceipt}
+        getNotificationTaskTitle={(taskId, teamId) => notificationTasks.find(task => task.id === taskId && (task.teamId ?? "creator-commerce") === teamId)?.name}
         onDiscussionReadHandled={finishDiscussionRead}
-        onOpenNotificationTask={(taskId, target) => {
+        onOpenNotificationTask={(taskId, target, sourceTeamId, onNavigate) => {
           requestCreationExit(() => {
-            const isLocalMention = discussionNotifications.some(item => item.task.id === taskId && item.target.activityId === target?.activityId);
-            if (!workspaceNodesRef.current.some(node => node.kind === "task" && node.id === taskId && (node.teamId ?? "creator-commerce") === activeTeamId)
-              || (isLocalMention && !readableDiscussionNotificationTasks().some(node => node.id === taskId))) {
+            const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId && (node.teamId ?? "creator-commerce") === sourceTeamId);
+            if (!task || !canReadTask(task, loadPersonalCenterState().teams)) {
               toast.error(locale === "en" ? "The notification source is unavailable." : "通知来源不可访问。");
               return;
             }
-            setTaskQuery("");
-            setTaskFilters(createInitialTaskListFilters(currentUserId));
+            if (sourceTeamId === activeTeamId) resetTaskSearch();
             setTaskAttentionTarget(target?.area === "discussion"
               ? { kind: target.activityId ? "activity" : "discussion", targetId: target.activityId ?? "" }
               : target?.area === "files" && target.fileId ? { kind: "file", targetId: target.fileId } : null);
-            navigateToTask(taskId, false);
+            onNavigate();
+            showTaskDetail(task, !target);
           });
         }}
         onOpenPersonalCenter={(module) => openPersonalCenter(module)}
@@ -1375,19 +1588,19 @@ function App() {
             hidden={activeSection !== "home" && activeSection !== "tasks" && activeSection !== "conversation"}
             members={collaborationMembers}
             nodes={teamWorkspaceNodes}
-            onCreateTask={startNewTaskConversation}
             onDeleteTask={requestDeleteTask}
+            onQuickCreateTask={canQuickCreateTask ? createQuickTask : undefined}
+            quickCreateRequest={quickCreateRequest}
             onTaskStatusChange={changeTaskStatus}
-              onOpenRecycleBin={() => { refreshRecycleBin(); setRecycleOpen(true); }}
             onClearTaskSelection={() => requestCreationExit(() => setSelectedTaskId(null))}
             onFiltersChange={setTaskFilters}
-            onManageTags={() => requestCreationExit(() => { setActiveSection("settings"); focusPrimaryHeadingAfterNavigation(); })}
+            onManageTags={openTagManagement}
             onQueryChange={setTaskQuery}
             onTaskSelect={(task, focusHeading = true) => openTask(task.id, focusHeading)}
             onShowWorkbench={showTaskList}
             query={taskQuery}
             selectedTaskId={selectedTaskId}
-            loadingTaskDetail={subtaskDetailLoading}
+            loadingTaskDetail={quickTaskDetailLoading}
             showingCreation={activeSection === "conversation"}
             showingWorkbench={activeSection === "home"}
             tagDefinitions={tagDefinitions}
@@ -1425,10 +1638,11 @@ function App() {
               tags={tagDefinitions}
             /> : null}
         >
-          {selectedTaskId && selectedTaskDetail ? (<>
-          {subtaskDetailLoading && <TaskDetailLoading onCancel={() => subtaskCreationAttempt.current?.abort()} />}
+          {quickTaskDetailLoading && <TaskDetailLoading onCancel={() => quickCreationAttempt.current?.abort()} />}
+          {selectedTaskId && selectedTaskDetail ? (
           <TaskDetail
-            hidden={subtaskDetailLoading}
+            hidden={quickTaskDetailLoading}
+            collaborationSeedFiles={selectedTaskDetailBase?.files}
             onAnnotationExitControllerChange={registerAnnotationExit}
             key={`${activeTeamId}:${selectedTaskId}`}
             currentUserId={currentUserId}
@@ -1440,6 +1654,16 @@ function App() {
             progressTask={selectedTreeTask?.kind === "task" ? withProgressDates(selectedTreeTask) : undefined}
             recordedActivities={taskActivityStore[selectedTaskId] ?? []}
             childTasks={selectedChildTasks}
+            discussionReferenceTasks={discussionReferenceTasks}
+            subtaskSuggestions={selectedSubtaskSuggestions}
+            projectSubtaskSuggestions={subtaskSuggestionDemoScope ? messages => getMockRefreshedSubtaskSuggestions({ ...subtaskSuggestionDemoScope, messages }) : undefined}
+            subtaskDiscussionLinks={teamWorkspaceNodes.filter((node): node is TaskNode => node.kind === "task" && node.sourceDiscussion?.taskId === selectedTaskId).map(node => ({
+              id: node.id, title: node.name, messageId: node.sourceDiscussion!.messageId,
+              ownerId: node.ownerId, status: node.status, goal: getTaskDefinitionGoal(teamWorkspaceNodes, node),
+              completionCriteria: node.completionCriteria, endDate: withProgressDates(node).plannedEndOn,
+            }))}
+            canConfirmSubtaskSuggestions={canCreateTaskFromDiscussion}
+            onConfirmSubtaskSuggestions={confirmSubtaskSuggestions}
             currentUser={currentUserName}
             initialAttentionTarget={taskAttentionTarget}
             members={collaborationMembers}
@@ -1459,6 +1683,7 @@ function App() {
             onInitialAttentionTargetHandled={() => setTaskAttentionTarget(null)}
             onInviteMembers={(returnFocus) => openMemberInviteDialog(returnFocus)}
             onOpenRelatedTask={openTask}
+            onOpenDiscussionReferenceTask={openDiscussionReferenceTask}
             onOwnerChange={changeOwner}
             onParticipantsChange={changeParticipants}
             onDiscussionSave={saveTaskDiscussion}
@@ -1477,6 +1702,7 @@ function App() {
             }}
             task={selectedTaskDetail}
             taskId={selectedTaskId}
+            taskNumber={taskNumbers.get(selectedTaskId)}
             plannedEndOn={selectedTaskPeriodOverride === undefined ? (selectedTreeTask?.kind === "task" ? selectedTreeTask.plannedEndOn : undefined) ?? selectedLegacyTask?.plannedEndOn : selectedTaskPeriodOverride?.end}
             plannedStartOn={selectedTaskPeriodOverride === undefined ? (selectedTreeTask?.kind === "task" ? selectedTreeTask.plannedStartOn : undefined) ?? selectedLegacyTask?.plannedStartOn : selectedTaskPeriodOverride?.start}
             tagDefinitions={tagDefinitions}
@@ -1490,15 +1716,27 @@ function App() {
             onTaskPeriodChange={changeTaskPeriod}
             onTagsChange={(labels) => changeTaskTags(selectedTaskId, labels)}
           />
-          </>) : null}
+          ) : null}
         </TaskWorkspace>
 
-        {activeSection === "ai" ? (
+        {activeSection === "recycle-bin" ? (
+          <TaskRecycleBinPage
+            key={activeTeamId}
+            entries={recycleEntries}
+            error={recycleError}
+            onRefresh={refreshRecycleBin}
+            team={personalCenterState.teams.find(team => team.id === activeTeamId)}
+            actorId={currentUserId}
+            members={collaborationMembers}
+            nodes={workspaceNodes}
+            onCommit={commitRecycleChange}
+          />
+        ) : activeSection === "ai" ? (
           <AiConnectionPage onBack={showTaskList} />
         ) : activeSection === "settings" ? (
           <TagManagementPage
             tags={tagDefinitions}
-            onBack={showTaskList}
+            onBack={closeTagManagement}
             onChange={savePersonalTags}
           />
         ) : null}
@@ -1527,7 +1765,6 @@ function App() {
           <div className="global-ai-guide-body"><AiConnectionPage embedded /></div>
         </DialogContent>
       </Dialog>
-      <TaskRecycleBinDialog open={recycleOpen} onClose={() => setRecycleOpen(false)} entries={recycleEntries} error={recycleError} onRefresh={refreshRecycleBin} team={personalCenterState.teams.find(t => t.id === activeTeamId)} actorId={currentUserId} members={collaborationMembers} nodes={workspaceNodes} onCommit={commitRecycleChange} />
       <TaskDeleteDialog
         open={Boolean(subtaskDeleteTarget)}
         preview={subtaskDeletion.preview}

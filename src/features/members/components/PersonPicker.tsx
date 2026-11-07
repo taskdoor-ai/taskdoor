@@ -15,7 +15,18 @@ import { useMemberInvitations } from "@/features/members/components/MemberInvita
 import { getInvitationDraft } from "@/features/members/lib/team-invitations";
 export type { PersonOption } from "@/shared/model/task-model";
 
+type PickerAction = { actionId: string; label: string; searchKey: string };
+type PickerItem = PersonOption | PickerAction;
+type PickerGroup = { label: string; items: PickerItem[] };
+
 type PersonPickerCommonProps = {
+  actionGroup?: {
+    items: PickerAction[];
+    label: string;
+    primaryLabel: string;
+    icon: ReactNode;
+    onSelect: (id: string) => void;
+  };
   allowInvitations?: boolean;
   allowUnassigned?: boolean;
   align?: "end" | "start";
@@ -67,6 +78,8 @@ type PersonPickerProps = PersonPickerCommonProps & ({
 // Behavior: Base UI Combobox input-inside-popup pattern.
 // Visual anatomy: adapted from 21st.dev Member Selector and shadcn custom Combobox items.
 const unassignedPersonId = "__agentdoor_unassigned__";
+const itemValue = (item: PickerItem) => "actionId" in item ? `action:${item.actionId}` : item.id;
+const optionClassName = "person-picker-option grid min-h-(--ad-control-touch-min) cursor-default grid-cols-[var(--ad-control-height-md)_minmax(0,1fr)_auto] items-center gap-(--ad-space-3) rounded-(--ad-radius-control) px-(--ad-space-3) py-(--ad-space-2) outline-none transition-colors data-disabled:opacity-40 data-highlighted:bg-(--ad-surface-subtle) data-selected:bg-(--ad-route-soft)";
 
 export function PersonPicker(props: PersonPickerProps) {
   const ui = useGlobalUi();
@@ -101,11 +114,21 @@ export function PersonPicker(props: PersonPickerProps) {
   const selectedIds = multiple ? props.value : [props.value];
   const selectedPeople = useMemo(() => {
     if (!multiple && allowUnassigned && props.value === "") return [unassignedPerson];
-    return availablePeople.filter((member) => selectedIds.includes(member.id));
+    // The combobox appends to its controlled value, so retain the existing selection order.
+    return availablePeople
+      .filter((member) => selectedIds.includes(member.id))
+      .sort((a, b) => selectedIds.indexOf(a.id) - selectedIds.indexOf(b.id));
   }, [allowUnassigned, availablePeople, multiple, props.value, selectedIds, unassignedPerson]);
   const selectedPerson = selectedPeople[0] ?? null;
   const selectedInternalIds = selectedPeople.map((person) => person.id);
   const matchesQuery = (person: PersonOption, keyword: string) => `${person.name} ${mockPersonName(locale, person.id, person.name)} ${person.role} ${settingsMockText(locale, person.id, person.dynamicResponsibility ?? "")} ${person.dynamicResponsibility ?? ""} ${person.email}`.toLocaleLowerCase().includes(keyword.trim().toLocaleLowerCase());
+  const actionGroup = multiple ? undefined : props.actionGroup;
+  const exactAction = actionGroup?.items.find(item => item.searchKey === query.trim());
+  const groups: PickerGroup[] | null = actionGroup ? [
+    { label: actionGroup.primaryLabel, items: availablePeople },
+    { label: actionGroup.label, items: exactAction ? [exactAction, ...actionGroup.items.filter(item => item !== exactAction)] : actionGroup.items },
+  ] : null;
+  if (exactAction) groups?.reverse();
   const allowInvitations = props.allowInvitations !== false;
   const inviteCandidate = Boolean(allowInvitations && invitations && triggerVariant !== "mention"
     && query.trim() && !availablePeople.some(person => matchesQuery(person, query)));
@@ -155,15 +178,40 @@ export function PersonPicker(props: PersonPickerProps) {
     <p className="person-picker-invite-copy" id={inviteDescriptionId}><span>{unassignedDescription}</span>{" "}<button className="person-picker-invite-action" disabled={disabled || Boolean(invitations && !invitations.canInvite)} onClick={() => { if (invitations) openInvitation(false); else { closeAndReset(false); onInviteMembers(triggerRef.current); } }} type="button">{d('inviteNow')}</button></p>
   ) : null;
 
+  const renderItem = (item: PickerItem) => {
+    if ("actionId" in item) return (
+      <Combobox.Item className={optionClassName} key={itemValue(item)} value={item}>
+        <span className="person-picker-option-icon grid size-(--ad-control-height-md) place-items-center text-(--ad-ink-tertiary)">{actionGroup?.icon}</span>
+        <strong className="min-w-0 truncate text-(length:--ad-text-body-sm)" title={item.label}>{item.label}</strong>
+      </Combobox.Item>
+    );
+    const isScope = item.id === scopeOption?.id;
+    const isSelf = item.id === selfId;
+    const selected = selectedInternalIds.includes(item.id);
+    const atMaximum = multiple && Boolean(props.max && selectedIds.length >= props.max);
+    const atMinimum = multiple && Boolean(selected && props.min && selectedIds.length <= props.min);
+    return (
+      <Combobox.Item className={optionClassName} disabled={(atMaximum && !selected) || atMinimum} key={item.id} value={item}>
+        {isScope
+          ? <span className="person-picker-option-icon grid size-(--ad-control-height-md) place-items-center rounded-full bg-(--ad-surface-subtle) text-(--ad-ink-tertiary)"><UsersRound aria-hidden="true" size={16} /></span>
+          : <PersonAvatar name={item.name} profile={item} profilePreviewFocusable={false} showProfilePreview={!isMentionTrigger} size={isMentionTrigger ? "xs" : "sm"} />}
+        <span className="min-w-0"><strong className="block truncate text-(length:--ad-text-body-sm) font-semibold text-(--ad-ink)">{isScope ? item.name : isSelf ? selfOptionLabel : <PersonName name={item.name} profile={item} showProfilePreview={!isMentionTrigger} />}</strong>{isScope && item.role && <small className="person-picker-option-description mt-(--ad-space-1) block text-(length:--ad-text-caption) text-(--ad-ink-tertiary)">{item.role}</small>}</span>
+        <span className="person-picker-option-end">
+          <Combobox.ItemIndicator className="grid size-(--ad-control-icon-sm) place-items-center text-(--ad-route-ink)"><Check aria-hidden="true" size={16} /></Combobox.ItemIndicator>
+        </span>
+      </Combobox.Item>
+    );
+  };
+
   return (
-    <Combobox.Root<PersonOption, boolean>
+    <Combobox.Root<PickerItem, boolean>
       autoHighlight
-      filter={matchesQuery}
+      filter={(item, keyword) => "actionId" in item ? item.label.toLocaleLowerCase().includes(keyword.trim().toLocaleLowerCase()) : matchesQuery(item, keyword)}
       inputValue={query}
-      isItemEqualToValue={(person, selected) => person.id === selected.id}
-      itemToStringLabel={(person) => mockPersonName(locale, person.id, person.name)}
-      itemToStringValue={(person) => person.id}
-      items={availablePeople}
+      isItemEqualToValue={(item, selected) => itemValue(item) === itemValue(selected)}
+      itemToStringLabel={(item) => "actionId" in item ? item.label : mockPersonName(locale, item.id, item.name)}
+      itemToStringValue={itemValue}
+      items={groups ?? availablePeople}
       multiple={multiple}
       onInputValueChange={value => { if (!invitationActive.current) setQuery(value); }}
       onOpenChange={(nextOpen, details) => {
@@ -174,12 +222,13 @@ export function PersonPicker(props: PersonPickerProps) {
       onValueChange={(nextValue) => {
         if (multiple) {
           const nextPeople = Array.isArray(nextValue) ? nextValue : [];
-          props.onChange(nextPeople.map((person) => person.id));
+          props.onChange(nextPeople.flatMap(item => "actionId" in item ? [] : [item.id]));
           return;
         }
         const person = Array.isArray(nextValue) ? nextValue[0] : nextValue;
         if (!person) return;
-        props.onChange(person.id === unassignedPersonId ? "" : person.id);
+        if ("actionId" in person) actionGroup?.onSelect(person.actionId);
+        else props.onChange(person.id === unassignedPersonId ? "" : person.id);
         closeAndReset(false);
       }}
       open={open}
@@ -240,24 +289,12 @@ export function PersonPicker(props: PersonPickerProps) {
               {!inviteCandidate && <span>{emptyLabel}</span>}
             </Combobox.Empty>
             <Combobox.List className="min-h-0 max-h-(--ad-person-picker-list-max) overflow-y-auto p-(--ad-space-2) empty:p-0" ref={listRef}>
-              {(person: PersonOption) => {
-                const isScope = person.id === scopeOption?.id;
-                const isSelf = person.id === selfId;
-                const selected = selectedInternalIds.includes(person.id);
-                const atMaximum = multiple && Boolean(props.max && selectedIds.length >= props.max);
-                const atMinimum = multiple && Boolean(selected && props.min && selectedIds.length <= props.min);
-                return (
-                  <Combobox.Item className="person-picker-option grid min-h-(--ad-control-touch-min) cursor-default grid-cols-[var(--ad-control-height-md)_minmax(0,1fr)_auto] items-center gap-(--ad-space-3) rounded-(--ad-radius-control) px-(--ad-space-3) py-(--ad-space-2) outline-none transition-colors data-disabled:opacity-40 data-highlighted:bg-(--ad-surface-subtle) data-selected:bg-(--ad-route-soft)" disabled={(atMaximum && !selected) || atMinimum} key={person.id} value={person}>
-                    {isScope
-                      ? <span className="person-picker-option-icon grid size-(--ad-control-height-md) place-items-center rounded-full bg-(--ad-surface-subtle) text-(--ad-ink-tertiary)"><UsersRound aria-hidden="true" size={16} /></span>
-                      : <PersonAvatar name={person.name} profile={person} profilePreviewFocusable={false} showProfilePreview={!isMentionTrigger} size={isMentionTrigger ? "xs" : "sm"} />}
-                    <span className="min-w-0"><strong className="block truncate text-(length:--ad-text-body-sm) font-semibold text-(--ad-ink)">{isScope ? person.name : isSelf ? selfOptionLabel : <PersonName name={person.name} profile={person} showProfilePreview={!isMentionTrigger} />}</strong>{isScope && person.role && <small className="person-picker-option-description mt-(--ad-space-1) block text-(length:--ad-text-caption) text-(--ad-ink-tertiary)">{person.role}</small>}</span>
-                    <span className="person-picker-option-end">
-                      <Combobox.ItemIndicator className="grid size-(--ad-control-icon-sm) place-items-center text-(--ad-route-ink)"><Check aria-hidden="true" size={16} /></Combobox.ItemIndicator>
-                    </span>
-                  </Combobox.Item>
-                );
-              }}
+              {groups ? (group: PickerGroup) => (
+                <Combobox.Group items={group.items} key={group.label}>
+                  <Combobox.GroupLabel className="px-(--ad-space-2) py-(--ad-space-1) text-(length:--ad-text-caption) text-(--ad-ink-tertiary)">{group.label}</Combobox.GroupLabel>
+                  <Combobox.Collection>{renderItem}</Combobox.Collection>
+                </Combobox.Group>
+              ) : renderItem}
             </Combobox.List>
             {inviteCandidate && <div className="person-picker-email-invite">
               <strong>{emptyLabel}</strong>

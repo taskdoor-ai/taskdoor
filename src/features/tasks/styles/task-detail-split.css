@@ -1,7 +1,7 @@
 /* Keep the workspace task index visible; the split layout belongs inside its detail pane. */
 .task-detail-back-to-list { display: none; }
 @media (max-width: 900px) {
-  .task-detail-back-to-list { display: inline-flex; width: 44px; height: 44px; }
+  .task-detail-back-to-list { display: inline-flex; }
 }
 .task-workspace[data-detail-open="true"] > .task-workspace-detail { overflow: hidden; }
 .task-workspace[data-detail-open="true"] .task-workspace-detail-content {
@@ -112,7 +112,7 @@
 /* Give the detailed chart more room while keeping its original proportions. */
 .task-detail-split .task-progress-history > .task-burnup-visual { width: 100%; min-width: 0; max-width: none; margin-top: 14px; padding: 0; border: 0; }
 .task-detail-split .task-progress-history .task-burnup-chart { margin-top: var(--ad-space-4); }
-.task-detail-split .task-subtask-list-section { margin: 24px 0 0; padding: 24px 0 0; border-top: 1px solid var(--ad-border-soft); }
+.task-detail-split .task-subtask-list-section { margin: 0; padding: 24px 0 0; border: 0; }
 .task-detail-split .task-subtask-list-section:has(> .task-subtask-list-empty) { border-bottom-color: transparent; }
 .task-detail-split .task-section-heading { margin-bottom: 12px; }
 .task-detail-split .task-subtask-heading h2 { margin: 0; font-size: 14px; font-weight: 600; }
@@ -133,12 +133,12 @@
 .task-detail-ai-analysis > summary { max-width: calc(100% - 110px); }
 .task-detail-analysis-action { display: flex; align-items: center; justify-content: flex-end; gap: 12px; flex-shrink: 0; margin-left: auto; }
 .task-detail-split .task-detail-ai-analysis > .task-situation { margin-top: 24px; padding: 20px 0 0; border-top: 1px solid var(--ad-border-soft); }
-.task-detail-split .task-detail-tags-section { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--ad-border-soft); }
+.task-detail-split .task-detail-tags-section { margin-top: 24px; padding-top: 24px; border: 0; }
 .task-detail-split .task-detail-tags-section .task-section-heading h2 { margin: 0; font-size: 14px; font-weight: 600; }
 .task-detail-split .task-detail-tags-section .task-tag-list { justify-content: flex-start; }
 .task-detail-split .task-detail-body { display: flex; flex-direction: column; min-width: 0; min-height: calc(var(--task-detail-viewport-height, 100dvh) - var(--task-detail-summary-height, 52px)); flex: 1; margin: 0; border: 0; overflow: visible; }
-.task-detail-collaboration-header { position: sticky; top: 0; z-index: 19; display: flex; flex-shrink: 0; align-items: center; min-width: 0; padding: 0 var(--task-detail-content-inset); border-bottom: 1px solid var(--ad-border-soft); background: var(--ad-surface); }
-.task-detail-split .task-detail-tabs { flex: 1; min-width: 0; gap: 24px; margin: 0; padding: 0; min-height: 54px; border-bottom: 0; }
+.task-detail-collaboration-header { position: sticky; top: 0; z-index: 19; display: flex; flex-shrink: 0; align-items: center; min-width: 0; padding: 0 var(--task-detail-content-inset); border-bottom: 0; background: var(--ad-surface); }
+.task-detail-split .task-detail-tabs { flex: 1; min-width: 0; gap: 24px; margin: 0; padding: 0; min-height: 54px; border-bottom: 1px solid var(--ad-border-soft); }
 .task-detail-split .task-detail-tabs button { padding: 16px 0; }
 .task-detail-split .task-detail-body > .task-detail-section { flex: 1; min-height: 0; min-width: 0; margin: 0; border: 0; padding: 24px var(--task-detail-content-inset); overflow: visible; }
 .task-detail-split .task-detail-body > .task-detail-section[hidden] { display: none; }
@@ -225,7 +225,6 @@
 .task-detail-split .task-burnup-heading { margin-bottom: 6px; }
 .task-detail-split .task-progress-overview .task-completion-progress-metrics { margin-top: 6px; }
 .task-detail-split .task-progress-race-track { margin: 12px 5px 6px; }
-.task-detail-split .task-subtask-list-section { margin-top: 18px; padding-top: 18px; }
 .task-detail-split .task-subtask-list-row { min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
 .task-detail-split .task-subtask-list-row .task-status-badge.sm { min-width: 0; min-height: 24px; height: 24px; padding: 0 7px; gap: 4px; border-radius: 6px; font-size: 11px; font-weight: 500; }
 .task-detail-split .task-subtask-list-row .task-status-badge.sm svg { width: 12px; height: 12px; }

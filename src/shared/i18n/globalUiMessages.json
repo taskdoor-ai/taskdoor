@@ -1,4 +1,28 @@
 {
+  "reorderTag": {
+    "zh": "拖动排序：{0}",
+    "en": "Reorder tag: {0}"
+  },
+  "reorderTagsHint": {
+    "zh": "拖动排序，或用方向键移动",
+    "en": "Drag to reorder, or move with the arrow keys"
+  },
+  "tagReorderCanceled": {
+    "zh": "已取消标签排序。",
+    "en": "Tag reordering canceled."
+  },
+  "tagReorderSaved": {
+    "zh": "已将「{0}」移到第 {1} 位。",
+    "en": "Moved “{0}” to position {1}."
+  },
+  "tagReorderFailed": {
+    "zh": "标签顺序未能保存，请重试。",
+    "en": "Could not save tag order. Please try again."
+  },
+  "tagReorderMoving": {
+    "zh": "正在移动「{0}」，按 Escape 取消。",
+    "en": "Moving “{0}”. Press Escape to cancel."
+  },
   "discussionMarkdownTable": {
     "zh": "Markdown 表格",
     "en": "Markdown table"
@@ -231,6 +255,14 @@
     "zh": "通知已读状态",
     "en": "Notification read status"
   },
+  "notificationTeam": {
+    "zh": "所属团队",
+    "en": "Team"
+  },
+  "allNotificationTeams": {
+    "zh": "全部团队",
+    "en": "All teams"
+  },
   "no": {
     "zh": "没有",
     "en": "No "
@@ -386,6 +418,10 @@
   "confirmDeletion": {
     "zh": "确认删除",
     "en": "Confirm deletion"
+  },
+  "removePersonalTagConfirmation": {
+    "zh": "从个人列表移除「{0}」？任务上已有的标签会保留。",
+    "en": "Remove “{0}” from your personal tags? Tags already added to tasks will remain."
   },
   "selectTags": {
     "zh": "选择标签",
@@ -768,8 +804,8 @@
     "en": "Move contents up one level, then delete"
   },
   "archiveTheFolderAndItsContents": {
-    "zh": "将整个文件夹及内容归档",
-    "en": "Archive the folder and its contents"
+    "zh": "将整个文件夹及内容移到回收站",
+    "en": "Move the folder and its contents to the trash"
   },
   "youCanUndoImmediatelyUsingTheNotificationAt": {
     "zh": "删除后可通过页面底部提示立即撤销。",
@@ -1395,6 +1431,10 @@
     "zh": "讨论提及",
     "en": "Discussion mention"
   },
+  "discussionReply": {
+    "zh": "讨论回复",
+    "en": "Discussion reply"
+  },
   "thisContentIsUnavailablePleaseTryAgainLater": {
     "zh": "当前内容暂不可用，请稍后重试。",
     "en": "This content is unavailable. Please try again later."
@@ -1622,6 +1662,14 @@
   "editTag2": {
     "zh": "编辑标签：{0}",
     "en": "Edit tag: {0}"
+  },
+  "editTagAppearance": {
+    "zh": "修改标签图标和底色：{0}",
+    "en": "Change tag icon and color: {0}"
+  },
+  "renameTag": {
+    "zh": "修改标签名称：{0}",
+    "en": "Rename tag: {0}"
   },
   "deleteTag2": {
     "zh": "删除标签：{0}",
@@ -3210,5 +3258,33 @@
   "taskMediaPreview04": {
     "zh": "无法进入全屏，可以继续在预览中播放。",
     "en": "Could not enter fullscreen. You can keep playing in the preview."
+  },
+  "fileView": {
+    "zh": "文件视图",
+    "en": "File view"
+  },
+  "fileViewTree": {
+    "zh": "树形",
+    "en": "Tree"
+  },
+  "fileViewList": {
+    "zh": "列表",
+    "en": "List"
+  },
+  "fileViewGrid": {
+    "zh": "网格",
+    "en": "Grid"
+  },
+  "filePath": {
+    "zh": "文件路径",
+    "en": "File path"
+  },
+  "fileCurrentFolder": {
+    "zh": "当前文件夹",
+    "en": "Current folder"
+  },
+  "fileOpenName": {
+    "zh": "打开{0}",
+    "en": "Open {0}"
   }
 }

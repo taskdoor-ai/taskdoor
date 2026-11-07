@@ -28,8 +28,8 @@ function createHandler(create: (draft: object) => string) {
     localStorage: { getItem: (key: string) => storage.get(key) ?? null },
     loadPersonalCenterState: () => ({ teams: [{ id: "team" }] }), activeMembership: () => true,
     taskDateValue: () => "2026-11-05",
-    subtaskCreationAttempt: attempt,
-    setPendingSubtaskDetail: (value: unknown) => states.push(value),
+    quickCreationAttempt: attempt,
+    setPendingTaskDetail: (value: unknown) => states.push(value),
     waitForTaskDetailPaint: (signal: AbortSignal) => new Promise<void>((resolve, reject) => {
       signal.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")), { once: true });
       void paint.then(resolve);

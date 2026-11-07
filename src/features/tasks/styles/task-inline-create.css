@@ -1,0 +1,20 @@
+.task-inline-create {
+  display: flex;
+  min-width: 0;
+  min-height: 48px;
+  align-items: center;
+  gap: var(--ad-space-2);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--ad-border-soft);
+}
+
+.task-inline-create > svg { flex: 0 0 16px; color: var(--ad-task-status-progress); }
+.task-inline-create > input { flex: 1; min-width: 0; padding: 8px 0; border: 0; outline: none; background: transparent; color: var(--ad-ink); font: inherit; }
+.task-inline-create:focus-within { border-bottom-color: var(--ad-focus); }
+.task-inline-create > input::placeholder { color: var(--ad-ink-tertiary); }
+.task-inline-create-error { margin: 0; color: var(--ad-danger); font-size: var(--ad-text-caption); line-height: 1.7; overflow-wrap: anywhere; }
+
+@media (max-width: 640px), (pointer: coarse) {
+  .task-inline-create > :is(input, button) { min-height: var(--ad-control-touch-min); }
+  .task-inline-create > input { font-size: 16px; }
+}
