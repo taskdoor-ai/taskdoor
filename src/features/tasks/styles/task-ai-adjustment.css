@@ -164,6 +164,9 @@
 .task-ai-module-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--ad-space-3); }
 .task-ai-module-heading > div { display: flex; align-items: baseline; gap: var(--ad-space-2); }
 .task-ai-detail-tools { display: flex; justify-content: flex-end; padding: var(--ad-space-3) var(--ad-space-5) 0; }
+/* Unlayered `button { color: inherit }` outranks Tailwind utilities, so the light tone lives here. */
+.task-number-copy[data-slot="button"] { color: color-mix(in srgb, var(--ad-ink-tertiary) 60%, transparent); }
+.task-number-copy[data-slot="button"]:is(:hover, :focus-visible, [data-popup-open]) { color: var(--ad-ink-secondary); }
 .task-ai-owner-proposal { display: inline-flex; align-items: center; gap: var(--ad-space-1); padding: var(--ad-space-1) var(--ad-space-2); border-radius: var(--ad-radius-tag); background: var(--ad-route-soft); color: var(--ad-route-ink); font-size: var(--ad-text-caption); }
 .task-ai-owner-proposal > button { display: grid; place-items: center; min-width: var(--ad-control-height-sm); min-height: var(--ad-control-height-sm); border: 0; background: transparent; color: inherit; cursor: pointer; }
 .task-ai-owner-proposal > button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
