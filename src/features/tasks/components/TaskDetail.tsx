@@ -731,7 +731,7 @@ export function TaskDetail({
                     aria-label={taskNumberCopyLabel}
                     delay={180}
                     onClick={() => void copyTaskNumber(taskNumberText)}
-                    render={<Button className="task-number-copy w-auto min-w-(--ad-control-height-sm) px-1.5 tabular-nums" size="icon-sm" type="button" variant="ghost" />}
+                    render={<Button className="task-number-copy tabular-nums" size="icon-sm" type="button" variant="ghost" />}
                   >
                     {taskNumberText}
                   </Tooltip.Trigger>
