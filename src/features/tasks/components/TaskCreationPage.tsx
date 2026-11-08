@@ -171,6 +171,8 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
   const planningRun = useRef(0);
   const planningAbort = useRef<AbortController | null>(null);
   const generationCandidate = useRef<CreationPlanningResult | null>(null);
+  /** Streamed parts the person took over by focusing them; they complete at once and stay theirs. */
+  const ownedGenerationParts = useRef(new Set<string>());
   const restorePlanningFocus = useRef(false);
   const requestRef = useRef<HTMLTextAreaElement>(null);
   const pageRef = useRef<HTMLElement>(null);
@@ -371,7 +373,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     const effectiveAnswers = answers ?? (planningRequest === workspace.request.trim() ? workspace.answers : {});
     setBusy(true); setError(""); setPlanningNotice("");
     setAiOpen(true); setAiScope({ kind: "task" });
-    if (!resume) setGenerationSections([]);
+    if (!resume) { setGenerationSections([]); ownedGenerationParts.current = new Set(); }
     try {
       let next = resume && generationCandidate.current ? generationCandidate.current : normalizePlanningForFixedParent(
         planTaskCreation(workspace.request, context, { scenarioId: workspace.scenarioId, answers: effectiveAnswers, locale }),
@@ -395,13 +397,14 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
       const completed = await streamMockCreationContent(next, {
         signal: controller.signal,
         completedSections: resume ? generationSections ?? [] : [],
+        isPartCompleted: key => ownedGenerationParts.current.has(key),
         onStep: index => { if (run === planningRun.current) updateProcess(run, { activeStep: index }); },
         onContent: (section, source) => {
           if (run !== planningRun.current || controller.signal.aborted) return;
           setGenerationSections(current => [...new Set([...(current ?? []), section])]);
           setWorkspace(current => {
             const previous = current.planning?.stage === "review" ? current.planning.form : null;
-            const merged = mergeCreationContentSection(previous, source, section);
+            const merged = mergeCreationContentSection(previous, source, section, ownedGenerationParts.current);
             return { ...current, planning: { stage: "review", form: simplifyCreationReview(merged), summary: next.stage === "review" ? next.summary : "" }, editingBrief: false };
           });
         },
@@ -441,6 +444,20 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
         setBusy(false);
       }
     }
+  };
+  const completeStreamingField = (key: string) => {
+    const candidate = generationCandidate.current;
+    if (!planningAbort.current || candidate?.stage !== "review" || ownedGenerationParts.current.has(key)) return;
+    ownedGenerationParts.current.add(key);
+    const full = candidate.form.mainTask;
+    setWorkspace(current => {
+      if (current.planning?.stage !== "review" || current.planning.form.mainTask.clientId !== full.clientId) return current;
+      const main = current.planning.form.mainTask;
+      const criterion = key.startsWith("criterion:") ? Number(key.slice("criterion:".length)) : -1;
+      const patch = key === "title" ? { title: full.title } : key === "goal" ? { goal: full.goal }
+        : { completionCriteria: main.completionCriteria.map((value, index) => index === criterion ? full.completionCriteria[index] ?? value : value) };
+      return { ...current, planning: { ...current.planning, form: { ...current.planning.form, mainTask: { ...main, ...patch } } } };
+    });
   };
   const selectClarificationAnswer = (question: CreationPlanningQuestion, value: string) => {
     if (busy || planningAbort.current || planning?.stage !== "clarify" || planning.questions[clarificationStep]?.field !== question.field) return;
@@ -596,7 +613,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
         </section>}
         {(displayStage === "review" || displayStage === "planning") && <>
           <TaskCreationPlanSurface pending={busy || generationSections !== null}>
-            {form ? <TaskCreationPlanEditor visibleSections={generationSections ?? undefined} disabled={adjustmentRunning} form={form} members={members} tags={tags} onChange={updateForm} onInviteMembers={onInviteMembers} onSubtaskDirtyChange={onSubtaskDirtyChange} /> : <div aria-label={locale === "en" ? "Task draft is being prepared" : "正在准备任务草案"} className="creation-draft-skeleton"><TaskCreationSkeleton section="all" /></div>}
+            {form ? <TaskCreationPlanEditor onMainFieldFocus={generationSections !== null ? completeStreamingField : undefined} visibleSections={generationSections ?? undefined} disabled={adjustmentRunning} form={form} members={members} tags={tags} onChange={updateForm} onInviteMembers={onInviteMembers} onSubtaskDirtyChange={onSubtaskDirtyChange} /> : <div aria-label={locale === "en" ? "Task draft is being prepared" : "正在准备任务草案"} className="creation-draft-skeleton"><TaskCreationSkeleton section="all" /></div>}
           </TaskCreationPlanSurface>
           {hasUnsavedSubtasks && <p className="creation-error" role="status">{unsavedMessage}</p>}
           {adjustmentNotice && <p className="task-ai-inline-notice" role="status"><Check size={14} />{localize(adjustmentNotice)}</p>}

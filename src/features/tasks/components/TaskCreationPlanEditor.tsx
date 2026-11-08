@@ -16,7 +16,7 @@ import { TaskCreationAnnotationButton } from "@/features/tasks/components/TaskCr
 import { TaskCreationSubtaskEditor } from "@/features/tasks/components/TaskCreationSubtaskEditor";
 import { TaskDetailFields } from "@/features/tasks/components/TaskDetailFields";
 import { TaskCreationSkeleton } from "@/features/tasks/components/TaskCreationSkeleton";
-import type { CreationContentSection } from "@/features/tasks/lib/task-creation-progress";
+import { creationCriterionPartKey, type CreationContentSection } from "@/features/tasks/lib/task-creation-progress";
 import { getCreationDeadlineNote } from "@/features/tasks/lib/task-creation-review";
 import { Button } from "@/shared/ui/button";
 import "@/features/tasks/styles/task-creation-cards.css";
@@ -38,9 +38,19 @@ type Props = {
   onAnnotate?: (target: TaskCreationAnnotationTarget, anchor: HTMLElement) => void;
   onInviteMembers?: (returnFocus?: HTMLElement | null) => void;
   onSubtaskDirtyChange?: (taskId: string, dirty: boolean) => void;
+  /** Main-task text field focused: "title", "goal" or a criterion part key. */
+  onMainFieldFocus?: (key: string) => void;
 };
 
-export function TaskCreationPlanEditor({ form, members, tags, subtaskLoading, showSubtasks = false, disabled = false, visibleSections, onChange, onAiAdjust, annotations = [], onAnnotate, onInviteMembers, onSubtaskDirtyChange }: Props) {
+function mainFieldKey(target: HTMLElement): string | null {
+  if (target.matches(".task-detail-title-input")) return "title";
+  if (target.matches(".task-detail-goal-input")) return "goal";
+  const row = target.matches(".task-criteria-field-input") ? target.closest(".task-criteria-field-row") : null;
+  if (!row?.parentElement) return null;
+  return creationCriterionPartKey(Array.from(row.parentElement.querySelectorAll(":scope > .task-criteria-field-row")).indexOf(row));
+}
+
+export function TaskCreationPlanEditor({ form, members, tags, subtaskLoading, showSubtasks = false, disabled = false, visibleSections, onChange, onAiAdjust, annotations = [], onAnnotate, onInviteMembers, onSubtaskDirtyChange, onMainFieldFocus }: Props) {
   const { c, locale } = useCreationI18n();
   const criteriaReady = !visibleSections || visibleSections.includes("criteria");
   const propertiesReady = !visibleSections || visibleSections.includes("properties");
@@ -86,7 +96,7 @@ export function TaskCreationPlanEditor({ form, members, tags, subtaskLoading, sh
 
   return (
         <fieldset className="creation-editable-plan" disabled={disabled}>
-          <header className="task-detail-hero-card creation-heading" data-creation-annotation-card={form.mainTask.clientId} data-tone={form.mainTask.iconTone ?? "blue"}>
+          <header className="task-detail-hero-card creation-heading" data-creation-annotation-card={form.mainTask.clientId} data-tone={form.mainTask.iconTone ?? "blue"} onFocusCapture={onMainFieldFocus ? event => { const key = mainFieldKey(event.target as HTMLElement); if (key) onMainFieldFocus(key); } : undefined}>
             {onAnnotate ? <div className="task-ai-detail-tools creation-card-annotation-tools" data-annotation-overlay><TaskCreationAnnotationButton count={annotations.filter(annotation => annotation.target.taskId === form.mainTask.clientId).length} disabled={disabled} label={form.mainTask.title} onClick={anchor => onAnnotate(mainAnnotationTarget, anchor)} targetKey={getCreationAnnotationTargetKey(mainAnnotationTarget)} /></div> : onAiAdjust && <div className="task-ai-detail-tools" data-annotation-overlay><TaskAiAdjustButton disabled={disabled} label={c("askAiToAdjustTaskDetails")} onClick={anchor => onAiAdjust({ kind: "task" }, anchor)} /></div>}
             <div className="task-detail-heading-main">
               <div className="task-detail-heading-copy">

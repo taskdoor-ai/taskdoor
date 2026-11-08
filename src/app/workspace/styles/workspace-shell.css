@@ -38,6 +38,8 @@ html:has(.workspace-navigation[data-resizing="true"]),
 html:has(.workspace-navigation[data-resizing="true"]) * { cursor: col-resize !important; user-select: none !important; -webkit-user-select: none !important; }
 
 .workspace-navigation-top { flex: 0 0 auto; padding: 24px 12px; }
+.workspace-navigation-top:has(.workspace-navigation-create) { padding-bottom: 12px; }
+.workspace-navigation-create { margin-top: 12px; }
 .workspace-navigation-team { display: flex; min-width: 0; align-items: center; gap: 6px; }
 .workspace-navigation .team-switcher-trigger-topbar { width: 100%; min-width: 0; max-width: 100%; gap: 9px; padding: 4px; border-radius: var(--ad-radius-control); }
 .workspace-navigation .team-switcher-trigger-copy { min-width: 0; flex: 0 1 auto; text-align: left; }
