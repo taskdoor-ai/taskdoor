@@ -55,7 +55,7 @@ export const onboardingEn = {
   "隐藏密码": "Hide password",
   "显示密码": "Show password",
   "建议包含字母和数字。": "We recommend using letters and numbers.",
-  "和你的团队，一起把工作做好。": "Do great work, together with your team.",
+  "和你的团队，还有你的 Agent，一起完成任务。": "Get tasks done, together with your team and your agents.",
   "返回登录": "Back to login",
   "注册并加入团队": "Sign up and join the team",
   "创建你的账号": "Create your account",

@@ -5,7 +5,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { onboardingTranslator, localizeOnboardingMessage } from "@/features/auth/i18n/onboarding-messages";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { ArrowLeft, Building2, Check, CircleAlert, Eye, EyeOff, LoaderCircle, Mail } from "lucide-react";
-import { BrandMark } from "@/shared/ui/BrandMark";
+import { BrandLogo } from "@/shared/ui/BrandMark";
 import { TeamFlowIllustration } from "@/features/auth/components/TeamFlowIllustration";
 import { WorkspaceLoading } from "@/shared/ui/WorkspaceLoading";
 import { Button } from "@/shared/ui/button";
@@ -37,7 +37,7 @@ function initialState() {
 function Brand() {
   const { locale } = useI18n();
   const t = onboardingTranslator(locale);
-  return <a aria-label={t("TaskDoor 首页")} className="onboarding-brand" href="/"><BrandMark /><span>TaskDoor</span></a>;
+  return <a aria-label={t("TaskDoor 首页")} className="onboarding-brand" href="/"><BrandLogo /></a>;
 }
 function Heading({ title, description }: { title: string; description: ReactNode }) {
   return <header className="onboarding-heading"><h1 tabIndex={-1}>{title}</h1><p>{description}</p></header>;
@@ -193,7 +193,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
           <img className="onboarding-story-art" src="/images/onboarding-team-v1.png" alt="" width={1024} height={1024} fetchPriority="high" draggable={false} />
           <TeamFlowIllustration />
         </div>
-        <h2 id="onboarding-story-title">{t("和你的团队，一起把工作做好。")}</h2>
+        <h2 id="onboarding-story-title">{t("和你的团队，还有你的 Agent，一起完成任务。")}</h2>
       </div>
     </aside>
     <main className="onboarding-main"><div className="onboarding-flow">
