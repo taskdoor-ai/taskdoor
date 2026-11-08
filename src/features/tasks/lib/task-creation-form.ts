@@ -5,6 +5,7 @@ import type { TaskDraft, TaskPlanDraft } from "@/features/tasks/lib/task-assista
 import { effortEstimateSchema } from "@/shared/model/task-effort";
 import { reconcileCreationEffort } from "@/features/tasks/lib/task-creation-effort";
 import { defaultCreationParticipantIds } from "@/features/tasks/lib/task-creation-participants";
+import { defaultGeneratedOwnerId } from "@/features/tasks/lib/generated-task-owner";
 import { creationHierarchyError, getCreationDescendantIds } from "@/features/tasks/lib/task-creation-hierarchy";
 import { isValidTimeZone, LEGACY_TEAM_TIME_ZONE } from "@/shared/lib/team-time-zone";
 
@@ -31,6 +32,12 @@ export function withCreationParticipantDefaults(form: CreationForm, creatorId: s
     ? task
     : { ...task, participantIds: defaultCreationParticipantIds(task, creatorId) };
   return { ...form, mainTask: apply(form.mainTask), subtasks: form.subtasks.map(apply) };
+}
+
+/** Generated plan: empty or out-of-team owners default to the creator, then participants follow. */
+export function withGeneratedOwnerDefaults(form: CreationForm, creatorId: string, teamMemberIds: string[]): CreationForm {
+  const owned = (task: CreationTask): CreationTask => ({ ...task, ownerId: defaultGeneratedOwnerId(task.ownerId, creatorId, teamMemberIds) });
+  return withCreationParticipantDefaults({ ...form, mainTask: owned(form.mainTask), subtasks: form.subtasks.map(owned) }, creatorId, form);
 }
 
 // These are explicit demo scenarios, not output from a live AI service.

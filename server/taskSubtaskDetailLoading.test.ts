@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { transformSync } from "esbuild";
+import { defaultGeneratedOwnerId } from "../src/features/tasks/lib/generated-task-owner.ts";
 
 function createHandler(create: (draft: object) => string) {
   const source = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
@@ -40,6 +41,7 @@ function createHandler(create: (draft: object) => string) {
       return generated;
     },
     createInlineSubtask: create, openTask: (id: string) => opened.push(id),
+    defaultGeneratedOwnerId,
   };
   const run = new Function(...Object.keys(bindings), `${code}; return createSubtaskFromList;`)(...Object.values(bindings)) as (draft: object) => Promise<void>;
   return { run, finishPaint, finishGeneration, failGeneration, requests, storage, states, opened, attempt };
@@ -64,7 +66,7 @@ test("子任务输入作为生成需求，等待期间不保存，完成后保�
   assert.deepEqual(state.requests[0].parentTask, { id: "parent", title: "准备发布", goal: "明确发布条件", completionCriteria: ["材料完成终审"] });
   state.finishGeneration(result);
   await pending;
-  assert.deepEqual(calls, [{ ...result, participantIds: ["member"] }]);
+  assert.deepEqual(calls, [{ ...result, ownerId: "member", participantIds: [] }], "AI 未指定负责人时，由创建人负责");
   assert.deepEqual(state.opened, ["new-child"]);
   assert.equal(state.states.at(-1), null);
   assert.equal(state.attempt.current, null);
