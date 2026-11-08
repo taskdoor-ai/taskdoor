@@ -145,7 +145,7 @@ export async function buildFileAnnotationBundle(context: AnnotationContext, loca
   entries["manifest.json"] = strToU8(JSON.stringify(manifest, null, 2));
   const bytes = zipSync(entries, { level: 6 });
   const taskId = safeName(context.items[0].taskId);
-  return { bytes, fileName: locale === "en" ? `TaskDoor-file-feedback-${taskId}.zip` : `TaskDoor-文件修订-${taskId}.zip`, manifest };
+  return { bytes, fileName: locale === "en" ? `Taskdoor-file-feedback-${taskId}.zip` : `Taskdoor-文件修订-${taskId}.zip`, manifest };
 }
 
 /** Resolve only after the complete ZIP exists and the browser download is initiated. */

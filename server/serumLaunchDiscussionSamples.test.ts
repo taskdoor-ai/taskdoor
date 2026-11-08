@@ -34,7 +34,7 @@ test("只给精华主任务补11种原件和4条明确标注的示例，任务�
   assert.ok(attachments.every(file => file.parentId === folder.id && file.version === 1 && isBuiltinTaskAsset(file.blobId)));
   assert.equal(activities.length, 4);
   assert.deepEqual(activities.slice(0, 3).map(message => message.message.match(/^【([^】]+)】/)?.[1]), ["附件样例·视觉素材", "附件样例·执行资料", "附件样例·交接配置"]);
-  assert.ok(activities.every(message => message.id.startsWith(`${task.id}-discussion-sample-`) && message.author === "TaskDoor 示例"));
+  assert.ok(activities.every(message => message.id.startsWith(`${task.id}-discussion-sample-`) && message.author === "Taskdoor 示例"));
   for (const message of activities) for (const ref of message.attachmentRefs ?? []) assert.ok(attachments.some(file => file.id === ref.fileId && file.version === ref.version && file.name === ref.name));
   const markdown = attachments.find(file => file.format === "MD")!;
   assert.equal(activities[3].replyToActivityId, activities[2].id);

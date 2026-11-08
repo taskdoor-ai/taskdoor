@@ -27,7 +27,7 @@ export const tokenMessages = {
   "tokens.back": { en: "Back to settings", zh: "返回设置" },
   "tokens.cancel": { en: "Cancel", zh: "取消" },
   "tokens.title": { en: "Access tokens", zh: "访问令牌" },
-  "tokens.lead": { en: "Use access tokens to connect MCP or call the API on your behalf. Access is limited by your account permissions and token settings. Only you can view and manage your tokens.", zh: "访问令牌可用于连接 MCP 和调用 API，让工具代表你访问 TaskDoor。访问范围由你的账号权限和令牌设置共同决定，只有你能查看和管理自己的令牌。" },
+  "tokens.lead": { en: "Use access tokens to connect MCP or call the API on your behalf. Access is limited by your account permissions and token settings. Only you can view and manage your tokens.", zh: "访问令牌可用于连接 MCP 和调用 API，让工具代表你访问 Taskdoor。访问范围由你的账号权限和令牌设置共同决定，只有你能查看和管理自己的令牌。" },
   "tokens.create": { en: "Create token", zh: "创建令牌" },
   "tokens.creating": { en: "Creating…", zh: "正在创建…" },
   "tokens.name": { en: "Name", zh: "名称" },

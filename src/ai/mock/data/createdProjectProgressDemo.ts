@@ -121,7 +121,7 @@ export function withCreatedProjectProgressDetail(detail: TaskDetailContent, task
   const id = `${taskId}-sun-protection-progress-v1`;
   if (detail.activities.some(activity => activity.id === id)) return detail;
   return { ...detail, activities: [...detail.activities, {
-    id, author: "TaskDoor AI", type: "ai-insight", time: "2026-09-14 17:30", createdAt: observedAt,
+    id, author: "Taskdoor AI", type: "ai-insight", time: "2026-09-14 17:30", createdAt: observedAt,
     message: series.explanation,
   }] };
 }

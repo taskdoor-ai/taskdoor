@@ -99,7 +99,7 @@ const withScenarioExtraFiles = (prefix: string, files: TaskFileNode[], extraFile
 const makeTask = (overrides: Partial<TaskDetailContent> & Pick<TaskDetailContent, "goal" | "owner" | "title">): TaskDetailContent => ({
   activities: [
     { id: "activity-human", author: overrides.owner, message: "已补充当前进展和需要共同确认的问题。", createdAt: "2026-09-01T09:52:00+08:00", time: "2026-09-01 09:52", type: "member-post" },
-    { id: "activity-ai", author: "TaskDoor AI", message: "已根据最新文件整理任务摘要和风险提示。", createdAt: "2026-09-01T09:46:00+08:00", time: "2026-09-01 09:46", type: "ai-insight" },
+    { id: "activity-ai", author: "Taskdoor AI", message: "已根据最新文件整理任务摘要和风险提示。", createdAt: "2026-09-01T09:46:00+08:00", time: "2026-09-01 09:46", type: "ai-insight" },
     { id: "activity-status", author: overrides.owner, message: "将任务状态更新为进行中。", createdAt: "2026-09-01T09:42:00+08:00", time: "2026-09-01 09:42", type: "status-change" },
     { id: "activity-schedule", author: overrides.owner, message: "补充了任务开始时间，并调整了计划截止时间。", createdAt: "2026-09-01T09:36:00+08:00", time: "2026-09-01 09:36", type: "schedule-change" },
   ],
@@ -175,7 +175,7 @@ function createWorkspaceTaskDetailSource(task: TaskNode, includeUnsupported = fa
       ...(poolExample?.activities ?? [
         // Fixed timestamps belong to these demo fixtures, never inferred from relative labels at render time.
         { id: `${task.id}-activity`, author: participants[0] ?? task.ownerId, message: `已补充“${task.name}”的最新核对信息，等待 Task Owner 确认下一步。`, createdAt: "2026-09-01T10:00:00+08:00", time: "2026-09-01 10:00", file: evidenceFile, type: "member-post" },
-        { id: `${task.id}-activity-ai`, author: "TaskDoor AI", insightType: "证据缺口", message: `发现“${task.name}”仍有一项结果依据需要补齐，建议在提交结果前核对。`, createdAt: "2026-09-01T09:48:00+08:00", time: "2026-09-01 09:48", file: ruleFile, type: "ai-insight" },
+        { id: `${task.id}-activity-ai`, author: "Taskdoor AI", insightType: "证据缺口", message: `发现“${task.name}”仍有一项结果依据需要补齐，建议在提交结果前核对。`, createdAt: "2026-09-01T09:48:00+08:00", time: "2026-09-01 09:48", file: ruleFile, type: "ai-insight" },
         { id: `${task.id}-activity-status`, author: task.ownerId, message: `将任务状态更新为“${task.status}”。`, createdAt: "2026-09-01T09:42:00+08:00", time: "2026-09-01 09:42", type: "status-change" },
         { id: `${task.id}-activity-schedule`, author: task.ownerId, message: "调整了任务的计划截止时间。", createdAt: "2026-09-01T09:36:00+08:00", time: "2026-09-01 09:36", type: "schedule-change" },
         { id: `${task.id}-activity-reply`, author: task.ownerId, message: "收到，我会在本轮完成前核对并回传结论。", createdAt: "2026-09-01T10:06:00+08:00", time: "2026-09-01 10:06", replyToActivityId: `${task.id}-activity`, type: "member-reply" },
@@ -237,7 +237,7 @@ const createScenarioTaskDetail = (id: TaskDetailId, spec: ScenarioDetailSpec): T
     burnUp: getTaskProgressBurnUp(id),
     activities: [
       { id: `${id}-activity`, author: spec.activityAuthor, message: spec.activityMessage, createdAt: "2026-09-01T10:00:00+08:00", time: "2026-09-01 10:00", file: evidenceFile, type: "member-post" },
-      { id: `${id}-activity-ai`, author: "TaskDoor AI", insightType: spec.aiInsightType ?? "验收风险", message: spec.aiMessage, createdAt: "2026-09-01T09:48:00+08:00", time: "2026-09-01 09:48", file: ruleFile, type: "ai-insight" },
+      { id: `${id}-activity-ai`, author: "Taskdoor AI", insightType: spec.aiInsightType ?? "验收风险", message: spec.aiMessage, createdAt: "2026-09-01T09:48:00+08:00", time: "2026-09-01 09:48", file: ruleFile, type: "ai-insight" },
       { id: `${id}-activity-status`, author: task.ownerId, message: `将任务状态更新为“${task.status}”。`, createdAt: "2026-09-01T09:42:00+08:00", time: "2026-09-01 09:42", type: "status-change" },
       { id: `${id}-activity-reply`, author: task.ownerId, message: "收到，我会按当前责任边界完成核对并回传结论。", createdAt: "2026-09-01T10:06:00+08:00", time: "2026-09-01 10:06", replyToActivityId: `${id}-activity`, type: "member-reply" },
       // 原活动与引用 ID 保留；新增的固定演示历史和父级燃起图使用同一事件账本。

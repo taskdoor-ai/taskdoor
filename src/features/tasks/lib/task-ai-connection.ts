@@ -24,7 +24,7 @@ export function buildTaskAiConnectionRequest(input: TaskAiConnectionInput): AiCo
   return {
     taskId,
     title: "连接 AI",
-    description: "带入任务 ID 和基础信息；详情可通过 TaskDoor CLI 按需获取。",
+    description: "带入任务 ID 和基础信息；详情可通过 Taskdoor CLI 按需获取。",
     contextPreview: { items: [
       { id: "task", label: "任务名称", value: task.title || "未命名任务" },
       ...context.map((item, index) => ({ ...item, id: `task-field-${index}` })),

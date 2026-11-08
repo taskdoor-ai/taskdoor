@@ -1035,7 +1035,7 @@ function App() {
   // 示例原文只使用首次快照；当前字段编辑不能重写已有事件、提交或文件名称。
   const selectedTaskSeedNode = taskDetailSeedNodes.find((node) => node.id === selectedTaskId);
   const customTaskDetail: TaskDetailContent | undefined = selectedTaskId && selectedTreeTask?.kind === "task" && !selectedTaskMock ? !selectedLegacyTask ? createWorkspaceTaskDetail(selectedTaskSeedNode ?? selectedTreeTask) : {
-    activities: [{ id: `${selectedTaskId}-created`, author: "TaskDoor AI", message: "此任务来自已停用的旧创建流程；原有文件、成员与父子任务关系已保留。", time: "历史记录", type: "ai-insight" }],
+    activities: [{ id: `${selectedTaskId}-created`, author: "Taskdoor AI", message: "此任务来自已停用的旧创建流程；原有文件、成员与父子任务关系已保留。", time: "历史记录", type: "ai-insight" }],
     commits: [],
     due: selectedLegacyTask.plannedStartOn && selectedLegacyTask.plannedEndOn ? formatPeriodLabel(selectedLegacyTask.plannedStartOn, selectedLegacyTask.plannedEndOn) : selectedTreeTask.dueAt ?? "—",
     files: selectedLegacyTask.contextIds.map((sourceId) => {
@@ -1773,7 +1773,7 @@ function App() {
         <DialogContent className="global-ai-guide-dialog" finalFocus={() => document.getElementById("workspace-ai-trigger") ?? false}>
           <header className="global-ai-guide-header">
             <DialogTitle>{ui("连接 AI")}</DialogTitle>
-            <DialogDescription>{(locale === "en" ? "Connect via CLI or MCP to work with TaskDoor." : "通过 CLI 或 MCP，让 AI 工具与 TaskDoor 协作。")}</DialogDescription>
+            <DialogDescription>{(locale === "en" ? "Connect via CLI or MCP to work with Taskdoor." : "通过 CLI 或 MCP，让 AI 工具与 Taskdoor 协作。")}</DialogDescription>
           </header>
           <div className="global-ai-guide-body"><AiConnectionPage embedded /></div>
         </DialogContent>

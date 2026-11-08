@@ -78,12 +78,12 @@ test("英文交接文案保留材料原文，内部存储标识明确需要先�
   assert.match(result.markdown, /^# File revision feedback/);
   assert.match(result.markdown, /Fixed version: v1/);
   assert.match(result.markdown, /Opinion \(original\)/);
-  assert.match(result.markdown, /Internal TaskDoor storage ID: taskdoor-internal-blob/);
-  assert.match(result.markdown, /download the revision bundle in TaskDoor.*extract/i);
+  assert.match(result.markdown, /Internal Taskdoor storage ID: taskdoor-internal-blob/);
+  assert.match(result.markdown, /download the revision bundle in Taskdoor.*extract/i);
   assert.match(result.markdown, /cannot.*local file path/i);
   assert.match(result.markdown, /中文任务名称|保留中文目标/);
   assert.match(result.markdown, /方案\.md|周岚|缩短这一段|重复段落/);
-  assert.doesNotMatch(result.markdown, /批注标识|文件标识|固定版本|提出者|修改意见（原文）|可通过 TaskDoor 文件下载获取原文件/);
+  assert.doesNotMatch(result.markdown, /批注标识|文件标识|固定版本|提出者|修改意见（原文）|可通过 Taskdoor 文件下载获取原文件/);
 });
 
 test("保存新意见仅接受当前有效版本，已保存正文允许作者更正但选区仍不可覆盖", () => {

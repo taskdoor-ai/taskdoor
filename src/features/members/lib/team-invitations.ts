@@ -148,9 +148,9 @@ export function invitationEmailTemplate(team: Pick<TeamResponsibilityProfile, "n
   if (!membership.emailInvitation) throw new Error("请先生成邮箱邀请");
   const url = new URL("/signup", origin);
   url.searchParams.set("invite", membership.emailInvitation.token);
-  const subject = `${membership.emailInvitation.inviter} 邀请你加入「${team.name}」｜TaskDoor`;
-  const intro = `${membership.emailInvitation.inviter} 邀请你以${membership.role === "admin" ? "管理员" : "成员"}身份加入「${team.name}」，在 TaskDoor 一起协作。`;
-  const instruction = `请使用 ${membership.email} 注册并验证邮箱；已有 TaskDoor 账号可直接登录，然后确认加入团队。`;
+  const subject = `${membership.emailInvitation.inviter} 邀请你加入「${team.name}」｜Taskdoor`;
+  const intro = `${membership.emailInvitation.inviter} 邀请你以${membership.role === "admin" ? "管理员" : "成员"}身份加入「${team.name}」，在 Taskdoor 一起协作。`;
+  const instruction = `请使用 ${membership.email} 注册并验证邮箱；已有 Taskdoor 账号可直接登录，然后确认加入团队。`;
   const footer = "链接自生成起 7 天内有效。过期后请联系邀请人重新邀请。如果你不认识邀请人，可以忽略此邮件。";
   return { to: membership.email, subject, intro, instruction, footer, url: url.toString(), text: `${intro}\n\n${instruction}\n\n接受邀请并加入：${url}\n\n${footer}` };
 }

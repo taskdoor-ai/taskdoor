@@ -383,7 +383,7 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
       <AnimatedAgentChatInput
         actionRef={stopButtonRef}
         allowAttachments={false}
-        ariaLabel={ui("继续告诉 TaskDoor 怎样调整任务方案")}
+        ariaLabel={ui("继续告诉 Taskdoor 怎样调整任务方案")}
         autoFocus={false}
         clearOnSend={false}
         contextContent={hasAnnotations ? <TaskCreationAnnotationBucket annotations={annotations} context={context} disabled={saving || isPreviewing} onEdit={onAnnotationEdit} onRemove={onAnnotationRemove} onContinue={continueAnnotating} reviewing={Boolean(proposal) || isPreviewing} /> : undefined}
@@ -394,7 +394,7 @@ export function TaskAiAdjustmentPopover({ context, scope: requestedScope, compac
         onChange={changeInstruction}
         onSend={() => { void preview(); }}
         onStop={stopPreview}
-        placeholder={hasAnnotations ? locale === "en" ? "Add an optional request, or send the annotations together…" : "还可补充要求，也可以直接发送这些标注…" : ui("继续告诉 TaskDoor 你想怎样调整…")}
+        placeholder={hasAnnotations ? locale === "en" ? "Add an optional request, or send the annotations together…" : "还可补充要求，也可以直接发送这些标注…" : ui("继续告诉 Taskdoor 你想怎样调整…")}
         sendLabel={hasAnnotations ? locale === "en" ? `Send ${annotations.length} annotations` : `发送 ${annotations.length} 条标注` : ui("发送修改要求")}
         status={isPreviewing ? "analyzing" : "ready"}
         value={instruction}

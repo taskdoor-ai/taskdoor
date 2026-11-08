@@ -214,7 +214,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
       id: "creator-commerce",
       name: "达人带货运营团队",
       role: "内容电商负责人",
-      coverage: "覆盖最近 90 天 TaskDoor 内的达人合作、内容、直播、商品、投流、数据与合规任务。",
+      coverage: "覆盖最近 90 天 Taskdoor 内的达人合作、内容、直播、商品、投流、数据与合规任务。",
       missingSources: "未覆盖达人私聊、外部投放平台和线下沟通记录。",
       lastSyncedAt: "今天 09:20",
       ...teamSettingsFixture("creator-commerce"),
@@ -232,7 +232,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
           description: "负责达人带货目标、资源优先级、项目预算、跨角色协调与最终结果确认。",
           sourceLabel: "AI 根据已确认结果更新",
           updatedAt: "今天 09:20",
-          aiActor: "TaskDoor 责任观察 Agent",
+          aiActor: "Taskdoor 责任观察 Agent",
           ruleVersion: "责任观察规则 v1.2",
           changeSetId: "CS-20260827-014",
           proposal: {
@@ -257,7 +257,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
           description: "整合达人商务、内容、直播、商品、投流、数据与合规结果，形成下一步项目决定。",
           sourceLabel: "AI 根据已确认结果更新",
           updatedAt: "昨天 18:40",
-          aiActor: "TaskDoor 责任观察 Agent",
+          aiActor: "Taskdoor 责任观察 Agent",
           ruleVersion: "责任观察规则 v1.2",
           changeSetId: "CS-20260826-031",
           proposal: { baseRevisionId: "RESP-CREATOR-008", operation: "add" },
@@ -291,7 +291,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
           description: "负责整合客户端、服务端、安全与运行保障结论，确定移动端版本的发布范围及最终 Go/No-Go 决定。",
           sourceLabel: "AI 根据本地合成记录更新",
           updatedAt: "今天 10:10",
-          aiActor: "TaskDoor 责任观察 Agent",
+          aiActor: "Taskdoor 责任观察 Agent",
           ruleVersion: "责任观察规则 v1.2",
           changeSetId: "CS-PLATFORM-20260901-003",
           proposal: {
@@ -330,7 +330,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
           description: "负责整合供应商、工艺、质量与产能证据，确定 PVT 试产放行边界及量产 Go/No-Go 决定。",
           sourceLabel: "AI 根据本地合成记录更新",
           updatedAt: "今天 08:40",
-          aiActor: "TaskDoor 责任观察 Agent",
+          aiActor: "Taskdoor 责任观察 Agent",
           ruleVersion: "责任观察规则 v1.2",
           changeSetId: "CS-SUPPLY-20260901-002",
           proposal: {
@@ -369,7 +369,7 @@ export const initialPersonalCenterState: PersonalCenterState = {
           description: "负责协调重大客户事件中的服务恢复、数据修复、客户沟通与商业处理，统一正式事实并推动改进项闭环。",
           sourceLabel: "AI 根据本地合成记录更新",
           updatedAt: "今天 11:05",
-          aiActor: "TaskDoor 责任观察 Agent",
+          aiActor: "Taskdoor 责任观察 Agent",
           ruleVersion: "责任观察规则 v1.2",
           changeSetId: "CS-SERVICE-20260901-005",
           proposal: {
