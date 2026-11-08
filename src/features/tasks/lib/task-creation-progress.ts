@@ -6,8 +6,14 @@ import type { CreationForm } from "@/features/tasks/lib/task-creation-form";
 
 export type CreationContentSection = "identity" | "criteria" | "properties";
 
-/** Merge only the newly delivered section. Later blocks cannot replace edited text. */
-export function mergeCreationContentSection(current: CreationForm | null, source: CreationForm, section: CreationContentSection): CreationForm {
+/** Streamed text parts: "title", "goal" and one key per completion criterion. */
+export const creationCriterionPartKey = (index: number) => `criterion:${index}`;
+
+/**
+ * Merge only the newly delivered section. Later blocks cannot replace edited text, and parts the
+ * person has taken over mid-stream (`owned`) keep their current value.
+ */
+export function mergeCreationContentSection(current: CreationForm | null, source: CreationForm, section: CreationContentSection, owned: ReadonlySet<string> = new Set()): CreationForm {
   const sameTask = current?.mainTask.clientId === source.mainTask.clientId;
   const base: CreationForm = sameTask ? current : {
     ...source,
@@ -15,8 +21,11 @@ export function mergeCreationContentSection(current: CreationForm | null, source
     subtasks: [],
   };
   const task = source.mainTask;
-  const patch = section === "identity" ? { title: task.title, goal: task.goal }
-    : section === "criteria" ? { completionCriteria: [...task.completionCriteria] }
+  const keep = (key: string, next: string, saved: string | undefined) => owned.has(key) && saved !== undefined ? saved : next;
+  const ownedCriteria = [...owned].filter(key => key.startsWith("criterion:")).map(key => Number(key.slice("criterion:".length)) + 1);
+  const criteriaLength = Math.max(task.completionCriteria.length, ...ownedCriteria);
+  const patch = section === "identity" ? { title: keep("title", task.title, base.mainTask.title), goal: keep("goal", task.goal, base.mainTask.goal) }
+    : section === "criteria" ? { completionCriteria: Array.from({ length: criteriaLength }, (_, index) => keep(creationCriterionPartKey(index), task.completionCriteria[index] ?? "", base.mainTask.completionCriteria[index])) }
       : { ownerId: task.ownerId, participantIds: [...task.participantIds], startDate: task.startDate, endDate: task.endDate, executionTips: [...task.executionTips], effortEstimate: task.effortEstimate };
   return { ...base, mainTask: { ...base.mainTask, ...patch } };
 }

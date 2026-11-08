@@ -890,6 +890,8 @@
 .task-detail-loading-properties { padding-left: 20px; display: grid; align-content: start; gap: 28px; }
 .task-detail-loading-properties > div { display: grid; grid-template-columns: 60px minmax(0, 1fr); gap: 18px; align-items: center; min-height: 28px; font-size: 13px; color: var(--ad-ink-tertiary); }
 .task-detail-loading-properties > div:last-child { margin-top: 12px; padding-top: 24px; border-top: 1px solid var(--ad-border-soft); }
+.task-detail-loading-text { min-width: 0; color: var(--ad-ink); font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; white-space: pre-wrap; }
+.task-detail-loading-heading > .task-detail-loading-text-title { flex: 1; font-size: 24px; font-weight: 650; line-height: 1.4; }
 @keyframes task-detail-loading-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
 .task-detail-loading-heading > .task-loading-circle { border-top-color: var(--ad-route); animation: task-detail-loading-spin 1s linear infinite; }
 @keyframes task-detail-loading-spin { to { transform: rotate(360deg); } }

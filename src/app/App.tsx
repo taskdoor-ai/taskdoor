@@ -7,7 +7,7 @@ import { TaskFileAnnotationDiscardDialog } from "@/features/tasks/files/componen
 import { normalizeTaskStatus } from "@/shared/model/task-model";
 import "@/features/tasks/styles/task-ai-adjustment.css";
 import { applyAutomaticWorkspaceTags, manualTaskTags } from "@/ai/task-auto-tags";
-import { generateQuickTaskContent } from "@/ai/task-creation";
+import { generateQuickTaskContent, revealQuickTaskContent, type QuickTaskPreview } from "@/ai/task-creation";
 import { TaskRecycleBinPage } from "@/features/tasks/components/TaskRecycleBinPage";
 import { RECYCLE_BIN_KEY, readRecycleBin, recycleTask, changeRecycledTasks, type RecycledTask } from "@/features/tasks/lib/task-recycle-bin";
 import { TeamLifecycleProvider, type TeamLifecycleAction } from "@/features/members/components/TeamLifecycle";
@@ -307,6 +307,8 @@ function App() {
   const [quickCreateRequest, setQuickCreateRequest] = useState(0);
   const activeTeamTimeZone = getTeamTimeZone(personalCenterState.teams.find(team => team.id === activeTeamId));
   const validTeamTimeZone = isValidTimeZone(activeTeamTimeZone);
+  const [quickTaskPreview, setQuickTaskPreview] = useState<QuickTaskPreview | null>(null);
+  const quickTaskOwnedParts = useRef(new Set<string>());
   const quickTaskDetailLoading = pendingTaskDetail?.teamId === activeTeamId && pendingTaskDetail.parentTaskId === selectedTaskId;
   useEffect(() => {
     if (workspaceSession && activeTeamId) saveWorkspaceSession({ ...workspaceSession, activeTeamId });
@@ -1257,12 +1259,19 @@ function App() {
         members: collaborationMembers,
         tags: tagDefinitions.map(tag => tag.name),
       }, locale, controller.signal);
+      quickTaskOwnedParts.current = new Set();
+      await revealQuickTaskContent({ title, goal: content.goal, completionCriteria: content.completionCriteria }, {
+        signal: controller.signal,
+        isPartCompleted: key => quickTaskOwnedParts.current.has(key),
+        onUpdate: setQuickTaskPreview,
+      });
       const taskId = saveQuickTask(title, content, storedAtStart);
       setTaskAttentionTarget(null);
       openTask(taskId);
     } finally {
       quickCreationAttempt.current = null;
       setPendingTaskDetail(null);
+      setQuickTaskPreview(null);
     }
   };
 
@@ -1638,7 +1647,7 @@ function App() {
               tags={tagDefinitions}
             /> : null}
         >
-          {quickTaskDetailLoading && <TaskDetailLoading onCancel={() => quickCreationAttempt.current?.abort()} />}
+          {quickTaskDetailLoading && <TaskDetailLoading onCancel={() => quickCreationAttempt.current?.abort()} onCompletePart={key => quickTaskOwnedParts.current.add(key)} preview={quickTaskPreview ?? undefined} />}
           {selectedTaskId && selectedTaskDetail ? (
           <TaskDetail
             hidden={quickTaskDetailLoading}

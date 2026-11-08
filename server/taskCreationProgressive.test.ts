@@ -50,7 +50,7 @@ test("内容传输完成前已有目标块，停止后不再交付后续块", as
   const received: string[] = [];
   let finished = false;
   const completed = await streamMockCreationContent({ stage: "review", form: fixture(), summary: "候选" }, {
-    signal: controller.signal, stepMs: 0, onStep: () => {},
+    signal: controller.signal, stepMs: 0, charMs: 0, onStep: () => {},
     onContent: section => {
       received.push(section);
       assert.equal(finished, false);
@@ -64,16 +64,54 @@ test("内容传输完成前已有目标块，停止后不再交付后续块", as
 test("继续生成只交付未到达的块，不覆盖先前已编辑的目标", async () => {
   const received: string[] = [];
   const completed = await streamMockCreationContent({ stage: "review", form: fixture(), summary: "候选" }, {
-    signal: new AbortController().signal, stepMs: 0, completedSections: ["identity"],
+    signal: new AbortController().signal, stepMs: 0, charMs: 0, completedSections: ["identity"],
     onStep: () => {}, onContent: section => received.push(section),
   });
   assert.equal(completed, true);
-  assert.deepEqual(received, ["criteria", "properties"]);
+  assert.deepEqual([...new Set(received)], ["criteria", "properties"]);
+});
+
+test("名称、目标与每条标准按顺序逐字出现，而非整块一起出现", async () => {
+  const source = fixture();
+  const snapshots: { section: string; title: string; goal: string; criteria: string[] }[] = [];
+  const completed = await streamMockCreationContent({ stage: "review", form: source, summary: "候选" }, {
+    signal: new AbortController().signal, stepMs: 0, charMs: 1, onStep: () => {},
+    onContent: (section, form) => snapshots.push({ section, title: form.mainTask.title, goal: form.mainTask.goal, criteria: [...form.mainTask.completionCriteria] }),
+  });
+  assert.equal(completed, true);
+  const identity = snapshots.filter(snapshot => snapshot.section === "identity");
+  assert.ok(identity.length > 2, "名称与目标应分多次逐步出现");
+  assert.ok(source.mainTask.title.startsWith(identity[0].title) && identity[0].title.length < source.mainTask.title.length);
+  assert.equal(identity[0].goal, "", "名称出完前不出现目标");
+  assert.deepEqual({ title: identity.at(-1)!.title, goal: identity.at(-1)!.goal }, { title: source.mainTask.title, goal: source.mainTask.goal });
+  const criteria = snapshots.filter(snapshot => snapshot.section === "criteria");
+  assert.ok(criteria[0].criteria.length === 1 && criteria[0].criteria[0].length < source.mainTask.completionCriteria[0].length, "第一条标准逐字出现，其余标准尚未出现");
+  assert.deepEqual(criteria.at(-1)!.criteria, source.mainTask.completionCriteria);
+});
+
+test("聚焦正在出字的字段后立即补全，且后续传输保留该字段的手工内容", async () => {
+  const source = fixture();
+  const owned = new Set<string>();
+  let form: CreationForm | null = null;
+  await streamMockCreationContent({ stage: "review", form: source, summary: "候选" }, {
+    signal: new AbortController().signal, stepMs: 0, charMs: 1, onStep: () => {},
+    isPartCompleted: key => owned.has(key),
+    onContent: (section, partial) => {
+      form = merge(form, partial, section, owned);
+      if (section === "identity" && !owned.has("title") && form.mainTask.title) {
+        owned.add("title");
+        form = { ...form, mainTask: { ...form.mainTask, title: "手工名称" } };
+      }
+    },
+  });
+  assert.equal(form!.mainTask.title, "手工名称");
+  assert.equal(form!.mainTask.goal, source.mainTask.goal);
+  assert.deepEqual(form!.mainTask.completionCriteria, source.mainTask.completionCriteria);
 });
 
 test("必要补问与关系确认不能被作为可创建的内容块交付", async () => {
   const completed = await streamMockCreationContent({ stage: "clarify", request: "活动", scenarioId: "clarify-requirement", questions: [] }, {
-    signal: new AbortController().signal, stepMs: 0,
+    signal: new AbortController().signal, stepMs: 0, charMs: 0,
     onStep: () => {}, onContent: () => assert.fail("补问不能伪装完成草案"),
   });
   assert.equal(completed, true);

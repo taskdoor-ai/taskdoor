@@ -217,10 +217,11 @@ export function TaskDetail({
   const [discussionSubtaskSource, setDiscussionSubtaskSource] = useState<NonNullable<NewSubtaskDraft["sourceDiscussion"]> | null>(null);
   const discussionSubtaskTrigger = useRef<HTMLElement | null>(null);
   const d = useDetailCopy();
-  const taskNumberCopyLabel = taskNumber === undefined ? undefined : `${d("copyTaskNumber")} ${taskNumber}`;
-  const copyTaskNumber = async (number: number) => {
+  const taskNumberText = taskNumber === undefined ? undefined : `#${taskNumber}`;
+  const taskNumberCopyLabel = taskNumberText === undefined ? undefined : `${d("copyTaskNumber")} ${taskNumberText}`;
+  const copyTaskNumber = async (text: string) => {
     try {
-      await copyTextToClipboard(String(number));
+      await copyTextToClipboard(text);
       toast.success(d("taskNumberCopied"));
     } catch {
       toast.error(d("taskNumberCopyFailed"));
@@ -725,14 +726,14 @@ export function TaskDetail({
               <TaskCompletionIndicator key={taskId} status={currentStatus} completed={currentStatus === "已完成"} progressRatio={taskAiProgressRatio} evidence={taskAiProgressEvidence} onToggle={onTaskStatusChange ? () => setTaskCompleted(currentStatus !== "已完成") : undefined} />
               <div aria-busy={titleSave.status === "saving" || undefined} className="task-detail-title-content"><h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} aria-describedby={titleSave.status === "error" ? `task-title-save-error-${taskId}` : undefined} className="task-detail-title-input" onFocus={() => { titleSave.clear(); setEditingOriginal("title"); }} onBlur={() => { setEditingOriginal(null); void titleSave.save(currentTitle, task.title, onTaskTitleChange); }} onChange={(event) => { titleSave.clear(); setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " ")); }} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>{titleSave.status === "saving" && <span className="sr-only" role="status">{d("fieldSaving")}</span>}</div>
               <div className="task-ai-detail-tools">
-                {taskNumber !== undefined && <Tooltip.Root>
+                {taskNumberText !== undefined && <Tooltip.Root>
                   <Tooltip.Trigger
                     aria-label={taskNumberCopyLabel}
                     delay={180}
-                    onClick={() => void copyTaskNumber(taskNumber)}
-                    render={<Button className="text-(--ad-ink-tertiary)" size="icon-sm" type="button" variant="ghost" />}
+                    onClick={() => void copyTaskNumber(taskNumberText)}
+                    render={<Button className="w-auto min-w-(--ad-control-height-sm) px-1.5 tabular-nums text-(--ad-ink-secondary)" size="icon-sm" type="button" variant="ghost" />}
                   >
-                    ID
+                    {taskNumberText}
                   </Tooltip.Trigger>
                   <Tooltip.Portal>
                     <Tooltip.Positioner className="z-100" side="bottom" sideOffset={6}>
