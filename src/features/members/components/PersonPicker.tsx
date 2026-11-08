@@ -56,6 +56,7 @@ type PersonPickerCommonProps = {
   showTriggerProfilePreview?: boolean;
   triggerLabel?: string;
   triggerIcon?: ReactNode;
+  triggerTitle?: string;
   triggerVariant?: "action" | "add" | "identity" | "member" | "mention" | "select";
   unassignedDescription?: string;
   unassignedLabel?: string;
@@ -85,7 +86,7 @@ export function PersonPicker(props: PersonPickerProps) {
   const ui = useGlobalUi();
   const { locale } = useI18n();
   const d = useDetailCopy();
-  const { allowUnassigned = false, align = "start", ariaLabel, className, disabled = false, emptyLabel = d('noMatchingMembers'), hideSelectedName = false, invitationStatus, memberRecommendations = {}, members, menuLabel = d('selectMember'), onInviteMembers, scopeOption, searchPlaceholder = d('searchMembers'), selfId, selfOptionLabel = d('assignToMe'), showTriggerProfilePreview = true, triggerLabel = d('change'), triggerIcon, triggerVariant = "action", unassignedDescription = props.allowInvitations === false ? d('leaveUnassigned') : d('inviteTeammate'), unassignedLabel = d('unassigned') } = props;
+  const { allowUnassigned = false, align = "start", ariaLabel, className, disabled = false, emptyLabel = d('noMatchingMembers'), hideSelectedName = false, invitationStatus, memberRecommendations = {}, members, menuLabel = d('selectMember'), onInviteMembers, scopeOption, searchPlaceholder = d('searchMembers'), selfId, selfOptionLabel = d('assignToMe'), showTriggerProfilePreview = true, triggerLabel = d('change'), triggerIcon, triggerTitle, triggerVariant = "action", unassignedDescription = props.allowInvitations === false ? d('leaveUnassigned') : d('inviteTeammate'), unassignedLabel = d('unassigned') } = props;
   const isSelectTrigger = triggerVariant === "select";
   const isMentionTrigger = triggerVariant === "mention";
   const size = props.size ?? (isSelectTrigger ? "default" : "sm");
@@ -236,6 +237,7 @@ export function PersonPicker(props: PersonPickerProps) {
     >
       <Combobox.Trigger
         aria-label={ariaLabel}
+        title={triggerTitle}
         data-hide-name={hideSelectedName || undefined}
         data-size={size}
         className={cn(
@@ -288,7 +290,7 @@ export function PersonPicker(props: PersonPickerProps) {
             <Combobox.Empty className="empty:p-0 px-(--ad-space-4) py-(--ad-space-6) text-center text-(length:--ad-text-body-sm) text-(--ad-ink-tertiary)">
               {!inviteCandidate && <span>{emptyLabel}</span>}
             </Combobox.Empty>
-            <Combobox.List className="min-h-0 max-h-(--ad-person-picker-list-max) overflow-y-auto p-(--ad-space-2) empty:p-0" ref={listRef}>
+            <Combobox.List className="min-h-0 overflow-y-auto p-(--ad-space-2) empty:p-0" ref={listRef}>
               {groups ? (group: PickerGroup) => (
                 <Combobox.Group items={group.items} key={group.label}>
                   <Combobox.GroupLabel className="px-(--ad-space-2) py-(--ad-space-1) text-(length:--ad-text-caption) text-(--ad-ink-tertiary)">{group.label}</Combobox.GroupLabel>

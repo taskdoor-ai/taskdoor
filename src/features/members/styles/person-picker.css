@@ -1,7 +1,11 @@
-.person-picker-popup { border-radius: var(--ad-radius-control); }
+/* One option row; ten of them is the list's height (Ryan 11-09). */
+.person-picker-popup { --person-picker-row: 40px; border-radius: var(--ad-radius-control); }
+/* Short of room the popup takes the window's available height and only the list gives way: the
+   search and anything above the list stay in view. */
+.person-picker-popup > :not([role="listbox"]) { flex-shrink: 0; }
 .person-picker-popup .person-picker-search { min-height: 40px; flex-shrink: 0; }
 .person-picker-popup .person-picker-search input { height: 40px; }
-.person-picker-popup [role="listbox"] { padding: var(--ad-space-1); overscroll-behavior: contain; }
+.person-picker-popup [role="listbox"] { max-height: calc(10 * var(--person-picker-row) + 2 * var(--ad-space-1)); padding: var(--ad-space-1); overscroll-behavior: contain; }
 .person-picker-popup .person-picker-option { min-height: 40px; grid-template-columns: 28px minmax(0, 1fr) auto; gap: var(--ad-space-2); padding: var(--ad-space-1) var(--ad-space-2); }
 .person-picker-popup .person-picker-option-icon { width: 28px; height: 28px; }
 .person-picker-popup .person-picker-option strong,
@@ -29,6 +33,7 @@
 .person-picker-popup[data-variant="mention"] .person-picker-option { min-height: 36px; grid-template-columns: 22px minmax(0, 1fr) auto; gap: var(--ad-space-2); padding: var(--ad-space-1) var(--ad-space-2); }
 .person-picker-popup[data-variant="mention"] .person-picker-option strong { font-weight: 400; }
 @media (max-width: 640px), (pointer: coarse) {
+  .person-picker-popup { --person-picker-row: var(--ad-control-touch-min); }
   .person-picker-popup .person-picker-search { min-height: var(--ad-control-touch-min); }
   .person-picker-popup .person-picker-search input { height: var(--ad-control-touch-min); }
   .person-picker-popup .person-picker-option, .person-picker-popup .person-picker-unassigned-choice { min-height: var(--ad-control-touch-min); }

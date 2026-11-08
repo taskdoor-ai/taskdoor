@@ -198,7 +198,7 @@
 .member-selector-inline-list .member-selector-list-empty { min-height: 32px; font-size: 13px; color: var(--ad-ink-tertiary); }
 @media (hover: none) { .member-selector-list-remove { opacity: 1; } }
 
-.task-detail-property-sidebar .member-selector-summary > .member-selector-stacked-row { grid-column: 2; grid-row: 1; flex-wrap: nowrap; gap: 8px; min-height: 32px; }
+.task-detail-property-sidebar .member-selector-summary > .member-selector-stacked-row { grid-column: 2; grid-row: 1; flex-wrap: nowrap; align-items: flex-start; gap: 8px; min-height: 32px; }
 .member-selector-summary > .member-selector-inline-list { grid-column: 1 / -1; }
 .member-selector-summary-avatars { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; min-width: 0; }
 .member-selector-summary .member-selector-count-toggle { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 28px; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--ad-surface-quiet); color: var(--ad-ink-secondary); font: inherit; font-size: 12px; cursor: pointer; }
@@ -207,15 +207,11 @@
 .member-selector-summary .member-selector-inline-list { margin-top: 12px; }
 
 .member-selector-summary-title { grid-column: 1; grid-row: 1; display: flex; align-items: center; gap: 8px; min-height: 32px; color: var(--ad-ink-tertiary); font-weight: 400; white-space: nowrap; }
-.member-selector-summary .member-selector-summary-add { grid-column: 2; justify-self: start; display: inline-flex; align-items: center; justify-content: center; width: 28px; min-width: 28px; height: 28px; min-height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--ad-surface-subtle); color: var(--ad-ink-tertiary); }
-.member-selector-summary > .member-selector-inline-list + .member-selector-summary-add { grid-column: 1; }
+.member-selector-summary .member-selector-summary-add { flex: 0 0 28px; display: inline-flex; align-items: center; justify-content: center; width: 28px; min-width: 28px; height: 28px; min-height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--ad-surface-subtle); color: var(--ad-ink-tertiary); }
 .member-selector-summary .member-selector-summary-add:hover { background: var(--ad-surface-quiet); color: var(--ad-ink); }
 .member-selector-summary .member-selector-summary-add:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
-.member-selector-summary .member-selector-summary-avatars { display: flex; gap: 0; max-width: 100%; padding: 2px 0; }
-.member-selector-summary-avatars > .person-avatar { z-index: 0; margin-left: -6px; border-radius: 50%; box-shadow: 0 0 0 2px var(--ad-surface); flex-shrink: 0; }
-.member-selector-summary-avatars > .person-avatar:first-child { margin-left: 0; }
-.member-selector-summary-avatars > .person-avatar:hover { z-index: 2; }
-.member-selector-summary-avatars > .person-avatar:focus-visible { z-index: 2; outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.member-selector-summary-avatars .person-avatar { border-radius: 50%; box-shadow: 0 0 0 2px var(--ad-surface); flex-shrink: 0; }
+.member-selector-summary-avatars .person-avatar:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 
 .member-selector-expand-toggle { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 28px; width: 28px; height: 28px; margin-inline-start: auto; padding: 0; border: 0; border-radius: 50%; background: var(--ad-surface-quiet); color: var(--ad-ink-tertiary); cursor: pointer; }
 .member-selector-expand-toggle:hover { background: var(--ad-surface-subtle); color: var(--ad-ink); }
@@ -236,3 +232,45 @@
   .task-detail-split .task-detail-property-sidebar .task-detail-primary-properties > .task-detail-participants { grid-template-columns: subgrid; }
   .task-detail-participants > .member-selector-summary { grid-template-columns: subgrid; }
 }
+
+/* Ryan 11-09: the assignee's change button after the identity, shown on hover or keyboard focus; it
+   opens the person picker directly. */
+.task-detail-property-sidebar .member-selector-person.is-single { display: flex; align-items: center; gap: 8px; }
+.member-selector-change { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 24px; width: 24px; min-width: 24px; height: 24px; min-height: 24px; margin-inline-start: -2px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--ad-ink-tertiary); opacity: 0; }
+.member-selector-person.is-single:hover .member-selector-change,
+.member-selector-person.is-single:focus-within .member-selector-change,
+.member-selector-change[data-popup-open] { opacity: 1; }
+.member-selector-change:hover { border: 0; background: var(--ad-surface-quiet); color: var(--ad-ink); }
+@media (hover: none) { .member-selector-change { opacity: 1; } }
+/* Ryan 11-09: no assignee is as tall as an assignee (the 28px avatar), so the rows below stay put. */
+.task-detail-primary-properties .member-selector-single > .person-picker-trigger-member { min-height: 28px; height: 28px; gap: 0; }
+
+/* Ryan 11-09: the value column holds the plus and the arrow at its first row's end, open or
+   closed; the avatars flow around them at a half overlap, and later rows run the whole column. The
+   label is sized for "label (0)" so the count never widens it; from ten the count goes under it. */
+.task-detail-split .task-detail-property-sidebar .task-detail-participants > .member-selector-summary,
+.member-selector-summary { align-items: start; }
+.task-detail-property-sidebar .task-detail-participants .member-selector-summary > .member-selector-stacked-row { display: flow-root; min-width: 0; }
+.member-selector-summary > .member-selector-stacked-row > .member-selector-summary-add { margin-top: 2px; }
+.member-selector-summary-controls { float: inline-end; display: flex; align-items: center; gap: 8px; margin-inline-start: 8px; padding-top: 2px; }
+.member-selector-summary .member-selector-summary-controls > .member-selector-expand-toggle { margin: 0; }
+.member-selector-summary .member-selector-summary-avatars { display: block; padding: 2px 0 0 6px; font-size: 0; line-height: 0; }
+.member-selector-summary-avatars > .member-selector-person { position: relative; z-index: 0; display: inline-block; margin-inline-start: -6px; margin-bottom: 6px; vertical-align: top; }
+.member-selector-summary-avatars > .member-selector-person > span { width: 28px; height: 28px; }
+.member-selector-summary-avatars > .member-selector-person:hover,
+.member-selector-summary-avatars > .member-selector-person:focus-within { z-index: 2; }
+.task-detail-split .task-detail-property-sidebar .member-selector-summary-title,
+.member-selector-summary-title { display: grid; align-content: start; min-height: 0; padding-top: 6px; line-height: 20px; }
+.member-selector-summary-title::after { content: attr(data-sizer); height: 0; overflow: hidden; visibility: hidden; white-space: nowrap; }
+.member-selector-summary-count[data-wrap] { display: block; }
+/* Open, the count follows the label at any count without widening the label column: the text adds
+   no width and runs on into the value row, which holds only the plus and the arrow at its end. */
+.member-selector-summary-title[data-open] > .member-selector-summary-text { width: 0; overflow: visible; white-space: nowrap; }
+/* Ryan 11-09: the remove badge sits at the avatar's top-left, for the assignee and the
+   collaborators alike -- inside the avatar's own left side, which the next avatar never covers and
+   which does not reach over the one before. */
+.task-detail-property-sidebar .member-selector-remove { top: -4px; right: auto; bottom: auto; left: 0; }
+/* Past four collapsed rows, the last place is "+N": an avatar's size, shape and overlap. */
+.member-selector-summary-avatars > .member-selector-more { position: relative; z-index: 0; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; margin-inline-start: -6px; margin-bottom: 6px; padding: 0; border: 0; border-radius: 50%; background: var(--ad-surface-quiet); box-shadow: 0 0 0 2px var(--ad-surface); color: var(--ad-ink-secondary); font-size: 11px; font-weight: 600; line-height: 28px; vertical-align: top; cursor: pointer; }
+.member-selector-summary-avatars > .member-selector-more:hover { z-index: 2; color: var(--ad-ink); background: var(--ad-surface-subtle); }
+.member-selector-summary-avatars > .member-selector-more:focus-visible { z-index: 2; outline: 2px solid var(--ad-focus); outline-offset: 2px; }

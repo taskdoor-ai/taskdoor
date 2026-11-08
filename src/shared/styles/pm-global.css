@@ -6053,6 +6053,8 @@ button:disabled {
   background: var(--ad-ink);
   color: var(--ad-canvas);
   opacity: 0;
+  /* Unseen, it takes no click: only its own avatar wakes it (Ryan 11-09). */
+  pointer-events: none;
   transform: scale(.92);
   transition: opacity var(--ad-duration) var(--ad-ease), transform var(--ad-duration) var(--ad-ease);
 }
@@ -6061,6 +6063,7 @@ button:disabled {
 .member-selector-person:hover .member-selector-remove,
 .member-selector-person:focus-within .member-selector-remove {
   opacity: 1;
+  pointer-events: auto;
   transform: scale(1);
 }
 .member-selector-remove:focus-visible { opacity: 1; outline: 2px solid var(--ad-focus); outline-offset: 2px; }

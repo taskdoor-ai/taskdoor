@@ -7,7 +7,7 @@ import { useRemainingCopy } from "@/shared/i18n/remaining-messages";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockPersonName } from "@/ai/mock/i18n/mockContent";
 import { PreviewCard } from "@base-ui/react/preview-card";
-import React, { type ComponentPropsWithoutRef, type CSSProperties, forwardRef, type ReactElement, useEffect, useRef, useState } from "react";
+import React, { type ComponentPropsWithoutRef, type CSSProperties, forwardRef, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
 import { ClipboardCheck, Mail, Phone, UserRound, X } from "lucide-react";
 import type { PersonOption } from "@/shared/model/task-model";
 import { useResolvedPersonProfile } from "@/shared/ui/PersonDirectory";
@@ -27,6 +27,8 @@ export type PersonAvatarProps = {
   status?: "online" | "busy";
   invitationStatus?: PersonInvitationStatus;
   className?: string;
+  /** Rendered inside the hover trigger (e.g. a remove badge), so moving onto it keeps the profile card open. */
+  adornment?: ReactNode;
 };
 
 // Preserve the existing library's CommonJS compatibility.
@@ -45,7 +47,7 @@ export function usePersonLabels() {
   };
 }
 
-type PersonAvatarVisualProps = Pick<PersonAvatarProps, "avatarUrl" | "className" | "invitationStatus" | "name" | "size" | "status"> & Omit<ComponentPropsWithoutRef<"span">, "children" | "className" | "title"> & {
+type PersonAvatarVisualProps = Pick<PersonAvatarProps, "adornment" | "avatarUrl" | "className" | "invitationStatus" | "name" | "size" | "status"> & Omit<ComponentPropsWithoutRef<"span">, "children" | "className" | "title"> & {
   identity?: string;
   pendingMembership?: boolean;
   ariaLabel?: string;
@@ -54,7 +56,7 @@ type PersonAvatarVisualProps = Pick<PersonAvatarProps, "avatarUrl" | "className"
   title?: string;
 };
 
-const PersonAvatarVisual = forwardRef<HTMLSpanElement, PersonAvatarVisualProps>(function PersonAvatarVisual({ ariaLabel, avatarUrl, className = "", decorative = true, focusable = false, invitationStatus, identity, name, pendingMembership, role: _injectedRole, size = "md", status, tabIndex: _injectedTabIndex, title, ...triggerProps }, forwardedRef) {
+const PersonAvatarVisual = forwardRef<HTMLSpanElement, PersonAvatarVisualProps>(function PersonAvatarVisual({ adornment, ariaLabel, avatarUrl, className = "", decorative = true, focusable = false, invitationStatus, identity, name, pendingMembership, role: _injectedRole, size = "md", status, tabIndex: _injectedTabIndex, title, ...triggerProps }, forwardedRef) {
   const ui = useGlobalUi();
   const { locale } = useI18n();
   const displayName = mockPersonName(locale, identity, name);
@@ -94,6 +96,7 @@ const PersonAvatarVisual = forwardRef<HTMLSpanElement, PersonAvatarVisualProps>(
         >
         </i>
       ) : status ? <i aria-label={status === "online" ? ui("在线") : ui("忙碌")} className={`person-avatar-status ${status}`} /> : null}
+      {adornment}
     </span>
   );
 });
@@ -144,13 +147,14 @@ function PersonProfilePreview({ onOpenChange, open, profile, trigger }: { onOpen
 
 // Default avatar initials follow the displayed name.
 // Base UI PreviewCard keeps the hover content outside scrolling containers.
-export function PersonAvatar({ avatarUrl, className = "", invitationStatus, name, personId, profile, profilePreviewFocusable = true, showProfilePreview = true, size = "md", status }: PersonAvatarProps) {
+export function PersonAvatar({ adornment, avatarUrl, className = "", invitationStatus, name, personId, profile, profilePreviewFocusable = true, showProfilePreview = true, size = "md", status }: PersonAvatarProps) {
   const { locale } = useI18n();
   const u = useRemainingCopy();
   const resolvedProfile = useResolvedPersonProfile({ identity: personId, name, profile });
   const [previewOpen, setPreviewOpen] = useState(false);
   const hasProfilePreview = Boolean(showProfilePreview && resolvedProfile);
   const avatar = <PersonAvatarVisual
+    adornment={adornment}
     ariaLabel={resolvedProfile && profilePreviewFocusable ? u("personProfile", { name: mockPersonName(locale, resolvedProfile.id, resolvedProfile.name) }) : undefined}
     avatarUrl={avatarUrl ?? resolvedProfile?.avatarUrl}
     identity={personId ?? resolvedProfile?.id}
