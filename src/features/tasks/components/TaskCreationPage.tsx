@@ -7,7 +7,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { TagDefinition } from "@/ai/mock/data/tagGroups";
 import type { ExistingTaskCandidate } from "@/ai/mock/lib/taskCreationScenario";
 import type { TaskPlanDraft } from "@/features/tasks/lib/task-assistant-protocol";
-import { toTaskPlanDraft, validateCreationForm, withCreationParticipantDefaults, type CreationForm } from "@/features/tasks/lib/task-creation-form";
+import { toTaskPlanDraft, validateCreationForm, withCreationParticipantDefaults, withGeneratedOwnerDefaults, type CreationForm } from "@/features/tasks/lib/task-creation-form";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { planTaskCreation, resolveCreationRelationship, type CreationPlanningQuestion, type CreationPlanningResult } from "@/ai/mock/lib/taskCreationPlanning";
@@ -380,7 +380,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
         creationParent,
       );
       if (next.stage === "review" || next.stage === "decision") {
-        next = { ...next, form: mainTaskReview(next.form) };
+        next = { ...next, form: withGeneratedOwnerDefaults(mainTaskReview(next.form), currentUserId, members.map(member => member.id)) };
       }
       generationCandidate.current = next;
       const feedback = next.stage === "review" ? [

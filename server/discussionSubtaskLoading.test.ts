@@ -6,6 +6,7 @@ import React, { Children, createElement, isValidElement, type ReactElement, type
 import { renderToStaticMarkup } from "react-dom/server";
 import { transformSync } from "esbuild";
 import { generateDiscussionSubtaskDraft } from "../src/ai/subtask-creation.ts";
+import { defaultGeneratedOwnerId } from "../src/features/tasks/lib/generated-task-owner.ts";
 import {
   buildDiscussionSubtaskRequest, isDiscussionSubtaskRequestCurrent,
 } from "../src/features/tasks/lib/discussion-subtask-draft.ts";
@@ -62,7 +63,7 @@ function mountedDiscussion(props: Record<string, unknown>) {
   const source = readFileSync(new URL("../src/features/tasks/components/DiscussionSubtaskCreateForm.tsx", import.meta.url), "utf8")
     .replace(/^import[^\n]*\n/gm, "").replace("export function DiscussionSubtaskCreateForm", "function DiscussionSubtaskCreateForm");
   const code = transformSync(source, { loader: "tsx", target: "es2022", jsx: "transform", jsxFactory: "React.createElement" }).code;
-  const bindings = { ...hooks, React, useI18n: () => ({ locale: "zh-CN" }), TaskSubtaskCreateForm, generateDiscussionSubtaskDraft, isDiscussionSubtaskRequestCurrent };
+  const bindings = { ...hooks, React, useI18n: () => ({ locale: "zh-CN" }), TaskSubtaskCreateForm, generateDiscussionSubtaskDraft, isDiscussionSubtaskRequestCurrent, defaultGeneratedOwnerId };
   const Component = new Function(...Object.keys(bindings), `${code}; return DiscussionSubtaskCreateForm;`)(...Object.values(bindings));
   let tree: ReactNode;
   const render = (next: Record<string, unknown> = {}) => {

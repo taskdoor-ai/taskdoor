@@ -149,14 +149,14 @@ export type QuickTaskContent = Required<Pick<TaskDraft, "goal" | "completionCrit
 export function commitManualWorkspaceTask(
   storage: Pick<Storage, "getItem" | "setItem" | "removeItem">,
   nodes: WorkspaceNode[],
-  options: { currentUserId: string; teamId: string; title?: string; content?: QuickTaskContent; idForIndex?: (index: number) => string },
+  options: { currentUserId: string; teamId: string; title?: string; content?: QuickTaskContent; ownerId?: string; idForIndex?: (index: number) => string },
 ) {
   const title = options.title?.trim() ?? "未命名任务";
   if (!title) throw new Error("请填写任务名称。");
   const result = createWorkspaceTasksFromDraft(nodes, {
     mainTask: {
       title, goal: options.content?.goal ?? "", completionCriteria: options.content?.completionCriteria ?? [], executionTips: [],
-      ownerId: "", participantIds: [], labels: [], startDate: "", endDate: "",
+      ownerId: options.ownerId ?? "", participantIds: [], labels: [], startDate: "", endDate: "",
     },
     subtasks: [],
   }, options);

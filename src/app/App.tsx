@@ -7,6 +7,7 @@ import { TaskFileAnnotationDiscardDialog } from "@/features/tasks/files/componen
 import { normalizeTaskStatus } from "@/shared/model/task-model";
 import "@/features/tasks/styles/task-ai-adjustment.css";
 import { applyAutomaticWorkspaceTags, manualTaskTags } from "@/ai/task-auto-tags";
+import { defaultGeneratedOwnerId } from "@/features/tasks/lib/generated-task-owner";
 import { generateQuickTaskContent, revealQuickTaskContent, type QuickTaskPreview } from "@/ai/task-creation";
 import { TaskRecycleBinPage } from "@/features/tasks/components/TaskRecycleBinPage";
 import { RECYCLE_BIN_KEY, readRecycleBin, recycleTask, changeRecycledTasks, type RecycledTask } from "@/features/tasks/lib/task-recycle-bin";
@@ -1008,7 +1009,8 @@ function App() {
       }, controller.signal);
       if (controller.signal.aborted) throw new DOMException("Aborted", "AbortError");
       if (localStorage.getItem(workspaceNodesStorageKey) !== stored) throw new Error(locale === "en" ? "Tasks changed while generating. Your input has been kept. Check and try again." : "生成期间任务已更新，输入已保留，请核对后重试。");
-      const createdId = createInlineSubtask({ ...generated, participantIds: [...new Set([...(generated.participantIds ?? []), currentUserId])].filter(id => id !== generated.ownerId) });
+      const ownerId = defaultGeneratedOwnerId(generated.ownerId, currentUserId, collaborationMembers.map(member => member.id));
+      const createdId = createInlineSubtask({ ...generated, ownerId, participantIds: [...new Set([...(generated.participantIds ?? []), currentUserId])].filter(id => id !== ownerId) });
       openTask(createdId);
     } finally {
       if (quickCreationAttempt.current === controller) {
@@ -1230,7 +1232,9 @@ function App() {
       throw new Error(locale === "en" ? "Tasks changed in another page. Check and try again." : "任务已在其他页面更新，输入已保留，请核对后重试。");
     }
     try {
-      const result = commitManualWorkspaceTask(localStorage, workspaceNodesRef.current, { currentUserId, teamId: activeTeamId, title, content });
+      // The one-row create never receives an AI-chosen owner, so the creator owns the new task.
+      const ownerId = defaultGeneratedOwnerId(undefined, currentUserId, collaborationMembers.map(member => member.id));
+      const result = commitManualWorkspaceTask(localStorage, workspaceNodesRef.current, { currentUserId, teamId: activeTeamId, title, content, ownerId });
       workspaceNodesRef.current = result.nodes;
       setWorkspaceNodes(result.nodes);
       return result.mainTaskId;
