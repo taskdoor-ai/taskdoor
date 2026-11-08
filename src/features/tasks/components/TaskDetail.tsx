@@ -74,6 +74,7 @@ import "@/features/tasks/styles/task-situation.css";
 import "@/features/tasks/styles/task-effort.css";
 import "@/features/tasks/styles/task-subtask-editing.css";
 import "@/features/tasks/styles/task-detail-split.css";
+import { TaskLeaveDialog, type TaskLeaveKind } from "@/features/tasks/components/TaskLeaveDialog";
 import "@/features/tasks/styles/task-discussion-feed.css";
 
 export type TaskAttentionTarget = {
@@ -448,8 +449,8 @@ export function TaskDetail({
     return () => window.clearTimeout(timer);
   }, [activities, initialAttentionTarget, onInitialAttentionTargetHandled, taskId]);
 
-  const changeOwner = async (value: string[]) => {
-    if (!onOwnerChange || ownerSaving) return;
+  const changeOwner = async (value: string[]): Promise<boolean> => {
+    if (!onOwnerChange || ownerSaving) return false;
     const sequence = ++ownerSaveSequence.current;
     const scope = ownerSaveScope.current;
     const isCurrent = () => sequence === ownerSaveSequence.current && scope === ownerSaveScope.current;
@@ -457,11 +458,13 @@ export function TaskDetail({
     setOwnerSaving(true);
     try {
       await onOwnerChange(value);
-      if (!isCurrent()) return;
+      if (!isCurrent()) return false;
       setCurrentOwner(value);
       setCurrentParticipants((items) => items.filter((id) => !value.includes(id)));
+      return true;
     } catch {
       if (isCurrent()) setOwnerSaveFailed(true);
+      return false;
     } finally {
       if (isCurrent()) setOwnerSaving(false);
     }
@@ -470,6 +473,39 @@ export function TaskDetail({
   const changeParticipants = (value: string[]) => {
     setCurrentParticipants(value);
     onParticipantsChange?.(value);
+  };
+
+  // A task keeps at least one person, and taking away your own access asks first; nothing changes until confirmed.
+  const [peopleError, setPeopleError] = useState(false);
+  const [leaveRequest, setLeaveRequest] = useState<{ kind: TaskLeaveKind; apply: () => Promise<boolean> } | null>(null);
+  useEffect(() => { setPeopleError(false); setLeaveRequest(null); }, [taskId]);
+  const keepsAPerson = (ownerId: string, participants: string[]) => Boolean(ownerId) || participants.length > 0;
+  const requestOwnerChange = (value: string[]) => {
+    const nextOwner = value[0] ?? "";
+    const nextParticipants = currentParticipants.filter(id => id !== nextOwner);
+    if (!keepsAPerson(nextOwner, nextParticipants)) { setPeopleError(true); return; }
+    setPeopleError(false);
+    if (confirmedOwnerId === currentUserId && nextOwner !== currentUserId && !nextParticipants.includes(currentUserId)) {
+      setLeaveRequest({ kind: "owner", apply: () => changeOwner(value) });
+      return;
+    }
+    void changeOwner(value);
+  };
+  const requestParticipantsChange = (value: string[]) => {
+    if (!keepsAPerson(confirmedOwnerId, value)) { setPeopleError(true); return; }
+    setPeopleError(false);
+    if (confirmedOwnerId !== currentUserId && currentParticipants.includes(currentUserId) && !value.includes(currentUserId)) {
+      setLeaveRequest({ kind: "collaborator", apply: async () => { changeParticipants(value); return true; } });
+      return;
+    }
+    changeParticipants(value);
+  };
+  const confirmLeave = async () => {
+    const request = leaveRequest;
+    setLeaveRequest(null);
+    if (!request || !await request.apply()) return;
+    toast.success(d("leftTask"));
+    onBackToList?.();
   };
 
   const changeStatus = (value: TaskStatus) => {
@@ -826,10 +862,11 @@ export function TaskDetail({
     <aside className="task-detail-property-sidebar" aria-label={d('properties')}>
       <div aria-label={d('properties')} className="task-detail-primary-properties">
         <div className="task-detail-property task-detail-status-field"><small>{d('status')}</small><TaskStatusBadge editable={Boolean(onTaskStatusChange)} onChange={changeStatus} size="sm" value={currentStatus} progressRatio={taskAiProgressRatio} /></div>
-        <div aria-busy={ownerSaving || undefined} aria-describedby={ownerSaveFailed ? `task-owner-save-error-${taskId}` : undefined} aria-label={`${d("owner")}: ${displayedOwnerName}`} className="task-detail-property" role="group" title={displayedOwnerName}><small>{d('ownerField')}</small><MemberSelector avatarSize="sm" stacked allowUnassigned={!displayedOwnerId} disabled={!onOwnerChange || ownerSaving} hideHeader hideSelectedName label={d('owner')} max={1} memberRecommendations={memberRecommendations} members={members} min={0} onChange={changeOwner} onInviteMembers={onInviteMembers} selected={displayedOwnerId ? [displayedOwnerId] : []} /></div>
-        <div className="task-detail-property task-detail-participants"><MemberSelector participantSummary showFullList avatarSize="sm" displayMax={Math.max(currentParticipants.length, 1)} hideHeader hideSelectedName key={taskId} label={d('participantsField')} memberRecommendations={memberRecommendations} members={participantMembers} disabled={!onParticipantsChange} onChange={changeParticipants} onInviteMembers={onInviteMembers} selected={currentParticipants} stacked /></div>
+        <div aria-busy={ownerSaving || undefined} aria-describedby={ownerSaveFailed ? `task-owner-save-error-${taskId}` : undefined} aria-label={`${d("owner")}: ${displayedOwnerName}`} className="task-detail-property" role="group" title={displayedOwnerName}><small>{d('ownerField')}</small><MemberSelector avatarSize="sm" stacked allowUnassigned={!displayedOwnerId} disabled={!onOwnerChange || ownerSaving} hideHeader hideSelectedName label={d('owner')} max={1} memberRecommendations={memberRecommendations} members={members} min={0} onChange={requestOwnerChange} onInviteMembers={onInviteMembers} selected={displayedOwnerId ? [displayedOwnerId] : []} /></div>
+        <div className="task-detail-property task-detail-participants"><MemberSelector participantSummary showFullList avatarSize="sm" displayMax={Math.max(currentParticipants.length, 1)} hideHeader hideSelectedName key={taskId} label={d('participantsField')} memberRecommendations={memberRecommendations} members={participantMembers} disabled={!onParticipantsChange} onChange={requestParticipantsChange} onInviteMembers={onInviteMembers} selected={currentParticipants} stacked /></div>
         <TaskDueDatePicker minDate={taskCalendarDate(progressTask?.createdAt, timeZone) ?? ""} initialValue={plannedEndOn ?? toDateInputValue(task.due)} key={`due-${taskId}`} label={d('dueDate')} onChange={(endDate) => onTaskPeriodChange?.(endDate ? { end: endDate, start: "" } : null)} />
       </div>
+      {peopleError && <p className="task-field-save-error" role="alert">{d("needsAPerson")}</p>}
       {ownerSaveFailed && <p className="task-field-save-error" id={`task-owner-save-error-${taskId}`} role="alert">{locale === "en" ? "Could not update the assignee. The previous assignee is unchanged. Please try again." : "负责人修改失败，仍保留原负责人，请重试。"}</p>}
         {(tags.length > 0 || onTagsChange) && <section aria-labelledby={`task-tags-heading-${taskId}`} className="task-detail-section task-detail-tags-section">
           <h2 className="task-detail-property-sidebar-heading" id={`task-tags-heading-${taskId}`}>{d('tags')}</h2>
@@ -838,6 +875,7 @@ export function TaskDetail({
     </aside>
     </div>
 
+    <TaskLeaveDialog kind={leaveRequest?.kind ?? null} onCancel={() => setLeaveRequest(null)} onConfirm={() => { void confirmLeave(); }} />
     {aiConnectionRequest?.taskId === taskId && <AiConnectionDialog onClose={closeAiConnection} request={aiConnectionRequest.request} returnFocus={aiConnectionTrigger.current} />}
   </section></MockTaskProvider>;
 }
