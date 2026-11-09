@@ -86,16 +86,21 @@ test("只有 ⌘/Ctrl+Enter 提交，Enter 换行且中文输入法不会触发�
   assert.equal(isDiscussionSubmitShortcut({ ...event, metaKey: true }, true), false);
 });
 
-test("共享编辑器无需 window 即可 SSR，统一附件入口并在发布按钮前显示键盘说明", () => {
+test("共享编辑器无需 window 即可 SSR，统一附件入口并在有输入时显示键盘说明", () => {
   assert.equal(typeof window, "undefined");
   const { html } = capture();
   assert.match(html, /contentEditable="true" role="textbox"/);
   assert.match(html, /aria-multiline="true"/);
-  assert.match(html, /Enter ↵ · ⌘\/Ctrl\+Enter 发布/);
+  assert.doesNotMatch(html, /discussion-composer-hint|aria-describedby/);
+  const filled = capture({}, editorState("讨论内容")).html;
+  assert.match(filled, /Enter ↵ · ⌘\/Ctrl\+Enter 发布/);
+  assert.match(filled, /aria-describedby/);
+  assert.doesNotMatch(capture({}, editorState("   ")).html, /discussion-composer-hint|aria-describedby/);
+  assert.doesNotMatch(capture({ showShortcutHint: false }, editorState("讨论内容")).html, /discussion-composer-hint|aria-describedby/);
   assert.doesNotMatch(html, /可拖入文件或粘贴图片|最多 10 个附件，单个不超过 20 MiB/);
   assert.match(html, /aria-label="添加附件"/);
   assert.doesNotMatch(html, /aria-label="本地上传"|aria-label="从文件列表选择"/);
-  assert.ok(html.indexOf("Enter ↵") < html.indexOf('class="discussion-composer-submit"'));
+  assert.ok(filled.indexOf("Enter ↵") < filled.indexOf('class="discussion-composer-submit"'));
 });
 
 test("人员菜单的迟到关闭回调不会覆盖已回到编辑器的光标", () => {

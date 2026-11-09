@@ -1,5 +1,15 @@
 # 当前实现矩阵
 
+## PRD-0379 讨论输入提示按需显示（2026-11-10）
+
+| 已确认行为 | 实现来源与当前证据 | 边界 |
+| --- | --- | --- |
+| 空编辑区聚焦后才显示输入引导，失焦隐藏 | [输入样式](../../src/features/tasks/styles/discussion-composer.css)默认隐藏占位，编辑区 `:focus-within` 显示；编辑器仍按原机制在有正文时移除占位 | 同时适用于普通发言与回复；不改变输入框可读名称或草稿内容 |
+| 非空白正文才显示发布快捷键提示，辅助技术关联同步 | [讨论输入组件](../../src/features/tasks/discussion/components/DiscussionComposer.tsx)复用正文去空白判断控制提示和 `aria-describedby`；已随 Demo [`19f1a135`](https://github.com/taskdoor-ai/taskdoor/commit/19f1a135)交付 | 空白、清空及纯附件不显示提示；附件发布条件、普通 Enter 换行、⌘/Ctrl+Enter 发布和输入法保护保持 |
+| 正式项目跟进两类提示条件 | 对照正式 dev [`44609286`](https://github.com/nocoly/taskdoor/commit/446092866ccfbd7754bd714c08cf745560f020fd)的同名组件与样式，两类提示尚缺相应条件 | 正式代码只读核对，未修改、合并或发布；远程 Issue 与本批 Demo 交付链接由交付记录补齐 |
+
+本轮交付 worktree 的12项讨论输入定向测试、结构检查通过；5190完整App实测普通发言与回复的聚焦、失焦、正文输入、纯空白与清空状态及辅助技术描述关联，键盘聚焦同样可显示占位；未发布测试消息，页面错误日志为空。仅附件发布及输入法防误发由定向测试核对，未扩大为正式服务上线或真实手机验收。现有相关讨论及回复截图保持 `pending`／`superseded`，不新增正式截图或发布版本；创建流程及其他未发布改动不进入本批。
+
 ## 2026-11-07 本批六项隔离发布范围
 
 本批源码与需求对应关系见[来源映射](source-map.md)及[六项草稿快照](../../artifacts/product-audit/product-sync-pending-issue-2026-11-07.md)。本节只核对本批批准范围，不将保留的旧规则或主工作区其他未发布能力记成本批实现。

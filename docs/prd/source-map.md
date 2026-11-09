@@ -1,5 +1,13 @@
 # PRD 来源映射
 
+## PRD-0379 讨论输入提示按需显示（2026-11-10）
+
+用户明确要求以正式项目 Issue 跟进两类提示的显示时机，规则唯一归属[讨论输入提示](modules/10-discussion-notifications-activity.md#讨论输入提示)。[讨论输入组件](../../src/features/tasks/discussion/components/DiscussionComposer.tsx)以 `showShortcutHint && Boolean(session.draft.body.trim())` 同时控制快捷键提示及 `aria-describedby`；[输入样式](../../src/features/tasks/styles/discussion-composer.css)让占位默认隐藏，编辑区 `:focus-within` 时显示。辅助技术的输入名称、发布按钮条件、仅附件发布与输入法防误发沿原实现保留。
+
+正文非空才显示快捷键提示已随 Demo 实现 [`19f1a135`](https://github.com/taskdoor-ai/taskdoor/commit/19f1a135)及 [PR #23](https://github.com/taskdoor-ai/taskdoor/pull/23) 交付；聚焦显示占位此前仅在主工作区未提交代码中，本轮单独同步。正式项目对照固定为最新 dev [`44609286`](https://github.com/nocoly/taskdoor/commit/446092866ccfbd7754bd714c08cf745560f020fd)：[组件](https://github.com/nocoly/taskdoor/blob/446092866ccfbd7754bd714c08cf745560f020fd/apps/web/src/features/tasks/discussion/components/DiscussionComposer.tsx)的提示与关联仅受 `showShortcutHint` 控制，[样式](https://github.com/nocoly/taskdoor/blob/446092866ccfbd7754bd714c08cf745560f020fd/apps/web/src/features/tasks/styles/discussion-composer.css)未限定占位聚焦条件；普通 Enter 换行、⌘/Ctrl+Enter 发布与 Demo 一致。
+
+本轮交付 worktree 的12项讨论输入定向测试及结构检查通过；其5190完整App实际核对普通发言与回复的空框失焦隐藏、鼠标和键盘聚焦显示、输入正文显示快捷键及描述关联、纯空白隐藏快捷键、清空后移除快捷键及描述关联，回复取消后普通草稿为空，页面错误日志为空。未发布测试消息或修改任务数据；仅附件发布及输入法保护由定向测试核对。讨论及回复的相关旧图均已 `pending` 或 `superseded`，无有效当前输入区截图需要撤回；保留原清单与资产，不新增正式图片或版本。本次只交付输入提示时机，其他未发布能力及创建流程暂缓范围保持。
+
 ## PRD-0369、0370–0372：本批六项批准改动（2026-11-07）
 
 本批从已发布基线隔离，只同步[当前六项最终改法](../../artifacts/product-audit/product-sync-pending-issue-2026-11-07.md)。PRD-0369维护新讨论附件的收纳边界，PRD-0370／0371／0372维护自动翻译默认关闭、逐条翻译及入口呈现；沿用原已分配ID。提及与任务引用样式、消息底部顺序、文件加载主题及分隔线对齐属于纯视觉修正，不增加语义日志。其余基线内容和此前暂缓范围保持，不整批引入其他工作区的新需求。
