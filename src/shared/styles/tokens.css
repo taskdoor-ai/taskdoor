@@ -18,8 +18,19 @@
 
   /* Route and actions */
   --ad-button-primary-bg: var(--ad-route);
+  --ad-button-primary-hover-bg: var(--ad-route-hover);
+  --ad-button-primary-active-bg: var(--ad-route-active);
+  --ad-button-primary-ink: var(--ad-action-ink);
+  --ad-button-primary-hover-ink: var(--ad-button-primary-ink);
+  --ad-button-primary-active-ink: var(--ad-button-primary-ink);
   --ad-button-soft-bg: var(--ad-route-soft);
+  --ad-button-soft-hover-bg: var(--ad-route-soft-hover);
   --ad-button-soft-ink: var(--ad-route-ink);
+  --ad-button-primary-border: var(--ad-route-border);
+  --ad-button-focus: var(--ad-focus);
+  --ad-button-focus-soft: var(--ad-focus-soft);
+  --ad-button-disabled-bg: var(--ad-control-disabled-bg);
+  --ad-button-disabled-ink: var(--ad-control-disabled-ink);
   --ad-route: #4b6edf;
   --ad-brand-green: #2f7d4f;
   --ad-route-hover: #4263d0;

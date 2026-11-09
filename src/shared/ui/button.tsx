@@ -5,11 +5,11 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/shared/lib/utils"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-(--ad-radius-control) border border-transparent bg-clip-padding font-sans text-(length:--ad-text-body-sm) font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-pressed:bg-(--ad-control-selected-bg) aria-pressed:!text-(--ad-control-selected-ink) aria-pressed:shadow-(--ad-shadow-control-selected) aria-current-page:bg-(--ad-control-selected-bg) aria-current-page:!text-(--ad-control-selected-ink) aria-current-page:shadow-(--ad-shadow-control-selected) dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-(--ad-radius-control) border border-transparent bg-clip-padding font-sans text-(length:--ad-text-body-sm) font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-[var(--ad-button-focus)] focus-visible:ring-3 focus-visible:ring-[var(--ad-button-focus-soft)] active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-pressed:bg-(--ad-button-soft-bg) aria-pressed:!text-(--ad-button-soft-ink) aria-pressed:shadow-(--ad-shadow-control-selected) aria-current-page:bg-(--ad-button-soft-bg) aria-current-page:!text-(--ad-button-soft-ink) aria-current-page:shadow-(--ad-shadow-control-selected) dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-primary !text-primary-foreground hover:bg-[var(--ad-route-hover)] active:bg-[var(--ad-route-active)] disabled:bg-[var(--ad-control-disabled-bg)] disabled:!text-[color:var(--ad-control-disabled-ink)] disabled:opacity-100",
+        default: "bg-[var(--ad-button-primary-bg)] !text-[color:var(--ad-button-primary-ink)] hover:bg-[var(--ad-button-primary-hover-bg)] hover:!text-[color:var(--ad-button-primary-hover-ink)] active:bg-[var(--ad-button-primary-active-bg)] active:!text-[color:var(--ad-button-primary-active-ink)] disabled:bg-[var(--ad-button-disabled-bg)] disabled:!text-[color:var(--ad-button-disabled-ink)] disabled:opacity-100",
         outline:
           "border-border bg-background text-secondary-foreground hover:border-[var(--ad-control-border-hover)] hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
         secondary:
@@ -17,7 +17,7 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
         ai:
-          "bg-[var(--ad-route-soft)] !text-[color:var(--ad-route-ink)] hover:bg-[var(--ad-route-soft-hover)] hover:!text-[color:var(--ad-route-ink)]",
+          "bg-[var(--ad-button-soft-bg)] !text-[color:var(--ad-button-soft-ink)] hover:bg-[var(--ad-button-soft-hover-bg)] hover:!text-[color:var(--ad-button-soft-ink)]",
         inference:
           "bg-[var(--ad-inference-soft)] !text-[color:var(--ad-inference)] hover:bg-[var(--ad-inference-hover)] hover:!text-[color:var(--ad-inference)]",
         destructive:
