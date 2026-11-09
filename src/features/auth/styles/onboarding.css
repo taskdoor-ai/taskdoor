@@ -254,3 +254,21 @@
 .onboarding-language { position:absolute; top:20px; right:28px; z-index:2; }
 .onboarding-language .language-switcher { color:var(--ad-ink-secondary); }
 @media(max-width:600px) { .onboarding-language {top:12px; right:16px;} .onboarding-auth .onboarding-main {padding-top:72px;} }
+
+/* The lockup follows the theme: standard colors on light, inverse on dark. */
+.brand-logo-dark { display: none !important; }
+[data-theme="dark"] .brand-logo-light { display: none !important; }
+[data-theme="dark"] .brand-logo-dark { display: block !important; }
+
+/* Dark onboarding: the same green-neutral palette, inverted. */
+[data-theme="dark"] .onboarding-auth { --ad-route: #6fca98; --ad-route-hover: #86d5aa; --ad-route-active: #9ddfbb; --ad-route-soft: #1f3a2c; --ad-focus: #6fca98; --primary: #6fca98; --ad-action-ink: #10241a; --ad-ink: #e6ece8; --ad-ink-secondary: #a9b5ad; --ad-ink-tertiary: #8b978f; --ad-border: #2f3a34; --ad-border-soft: #26302b; background: #141a17; }
+[data-theme="dark"] .onboarding-story, [data-theme="dark"] .onboarding-card { background: #1b221e; }
+[data-theme="dark"] .onboarding-card { border-color: #26302b; box-shadow: 0 8px 36px rgb(0 0 0 / 30%); }
+[data-theme="dark"] .onboarding-story h2 { color: #e6ece8; }
+/* The story art is line art on white: invert it and turn the hues back so the colors read the same; lighten blends its black ground into the panel. */
+[data-theme="dark"] .onboarding-story-art { filter: invert(1) hue-rotate(180deg); mix-blend-mode: lighten; }
+[data-theme="dark"] .onboarding-art-scene { isolation: auto; }
+[data-theme="dark"] .onboarding-door-ripple { stroke: #4f8d68; }
+[data-theme="dark"] .onboarding-invitation { border-color: #2a3a30; background: #18241d; }
+[data-theme="dark"] .onboarding-invitation-logo { border-color: #2a3a30; background: #1b221e; }
+[data-theme="dark"] .onboarding-invitation dd { background: #1f3a2c; color: #9ddfbb; }

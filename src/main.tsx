@@ -3,6 +3,7 @@ import { I18nProvider, useI18n } from "@/shared/i18n/I18nProvider";
 import { lazy, startTransition, StrictMode, Suspense, useCallback, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { WorkspaceLoading } from "@/shared/ui/WorkspaceLoading";
+import { useDocumentTheme } from "@/shared/lib/useDocumentTheme";
 import { ToastProvider } from "@/shared/ui/toast";
 import "@/app/styles/global.css";
 import "@/shared/styles/toast.css";
@@ -24,6 +25,7 @@ const isOnboardingPreview = ["/onboarding", "/login", "/signup", "/forgot-passwo
 
 function RootExperience() {
   const { t } = useI18n();
+  useDocumentTheme();
   const [showOnboarding, setShowOnboarding] = useState(isOnboardingPreview || hasExplicitlySignedOut());
   const onWorkspaceReady = useCallback(async () => {
     // Keep the transition visible until the workspace module is ready.
