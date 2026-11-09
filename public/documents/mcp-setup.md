@@ -1,3 +1,3 @@
-# TaskDoor MCP 配置
+# Taskdoor MCP 配置
 
-请使用 [TaskDoor MCP 安装 skill](skills/taskdoor-mcp/SKILL.md)。
+请使用 [Taskdoor MCP 安装 skill](skills/taskdoor-mcp/SKILL.md)。

@@ -58,7 +58,7 @@ export function buildDiscussionAiRequest({ taskId, task, target }: DiscussionAiI
   return {
     taskId,
     title: "连接 AI",
-    description: "带入任务、当前消息和直接被回复原消息；更多信息可通过 TaskDoor CLI 按需获取。",
+    description: "带入任务、当前消息和直接被回复原消息；更多信息可通过 Taskdoor CLI 按需获取。",
     contextPreview: { items: [
       ...context.map((item, index) => ({ ...item, id: `discussion-field-${index}` })),
       { id: "excerpt", label: "讨论内容", value: content },

@@ -51,13 +51,13 @@ export function getSerumLaunchDiscussionActivities(task: Pick<TaskNode, "id">): 
   const files = getSerumLaunchDiscussionFiles(task).filter(file => file.kind === "file");
   const refs = (formats: string[]) => files.filter(file => formats.includes(file.format!)).map(file => ({ fileId: file.id, version: 1, name: file.name }));
   return [
-    { id: `${prefix}-visual`, author: "TaskDoor 示例", type: "member-post", createdAt: "2026-10-21T10:01:00+08:00", time: "2026-10-21 10:01",
+    { id: `${prefix}-visual`, author: "Taskdoor 示例", type: "member-post", createdAt: "2026-10-21T10:01:00+08:00", time: "2026-10-21 10:01",
       message: "【附件样例·视觉素材】这组 JPG、PNG、WebP 和 SVG 仅用于查看本地讨论附件的展示与预览效果，不代表业务审核结论。", attachmentRefs: refs(["JPG", "PNG", "WEBP", "SVG"]) },
-    { id: `${prefix}-execution`, author: "TaskDoor 示例", type: "member-post", createdAt: "2026-10-21T10:02:00+08:00", time: "2026-10-21 10:02",
+    { id: `${prefix}-execution`, author: "Taskdoor 示例", type: "member-post", createdAt: "2026-10-21T10:02:00+08:00", time: "2026-10-21 10:02",
       message: "【附件样例·执行资料】这里复用首发 PDF、PPTX 和 HTML 原件，可从讨论直接打开核对内容；均为本地演示资料。", attachmentRefs: refs(["PDF", "PPTX", "HTML"]) },
-    { id: `${prefix}-handover`, author: "TaskDoor 示例", type: "member-post", createdAt: "2026-10-21T10:03:00+08:00", time: "2026-10-21 10:03",
+    { id: `${prefix}-handover`, author: "Taskdoor 示例", type: "member-post", createdAt: "2026-10-21T10:03:00+08:00", time: "2026-10-21 10:03",
       message: "【附件样例·交接配置】TXT、Markdown、JSON 和 XML 用于对照文字阅读与配置文件预览，不会执行配置或修改业务数据。", attachmentRefs: refs(["TXT", "MD", "JSON", "XML"]) },
-    { id: `${prefix}-reply`, author: "TaskDoor 示例", type: "member-reply", createdAt: "2026-10-21T10:04:00+08:00", time: "2026-10-21 10:04", replyToActivityId: `${prefix}-handover`,
+    { id: `${prefix}-reply`, author: "Taskdoor 示例", type: "member-reply", createdAt: "2026-10-21T10:04:00+08:00", time: "2026-10-21 10:04", replyToActivityId: `${prefix}-handover`,
       message: "【附件样例·引用回复】这条示例回复继续引用同一份协作说明，不新增文件副本，便于查看回复关系与附件复用。", attachmentRefs: refs(["MD"]) },
   ];
 }

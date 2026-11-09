@@ -100,7 +100,7 @@ export const governanceMessages = {
   "audit.filter.anyone": { en: "All people", zh: "全部人员" },
   "audit.filter.anyAction": { en: "Any action", zh: "所有动作" },
   "audit.filter.governanceWrites": { en: "Governance actions", zh: "治理操作" },
-  "audit.system": { en: "TaskDoor", zh: "TaskDoor" },
+  "audit.system": { en: "Taskdoor", zh: "Taskdoor" },
   "audit.badge.governance": { en: "Governance", zh: "治理" },
   "audit.other": { en: "Other action ({code})", zh: "其他操作（{code}）" },
   "audit.empty": { en: "No activity matches.", zh: "没有符合条件的行为日志。" },

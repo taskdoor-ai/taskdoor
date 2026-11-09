@@ -39,8 +39,8 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
   const tokenPageUrl = new URL(window.location.pathname, origin);
   tokenPageUrl.searchParams.set("settings", "tokens");
   const prompt = method === "mcp"
-    ? (locale === "en" ? `Read ${origin}/documents/skills/taskdoor-mcp/SKILL.md and help me configure TaskDoor MCP. Choose browser authorization or an access token according to client support.` : `请阅读 ${origin}/documents/skills/taskdoor-mcp/SKILL.md 安装 skill，按照步骤为我配置 TaskDoor MCP，并按客户端支持情况选择浏览器授权或填入访问令牌。`)
-    : ui("请阅读 {origin}/documents/cli-setup.md 文档，按照步骤为我安装并配置 TaskDoor CLI。", { origin });
+    ? (locale === "en" ? `Read ${origin}/documents/skills/taskdoor-mcp/SKILL.md and help me configure Taskdoor MCP. Choose browser authorization or an access token according to client support.` : `请阅读 ${origin}/documents/skills/taskdoor-mcp/SKILL.md 安装 skill，按照步骤为我配置 Taskdoor MCP，并按客户端支持情况选择浏览器授权或填入访问令牌。`)
+    : ui("请阅读 {origin}/documents/cli-setup.md 文档，按照步骤为我安装并配置 Taskdoor CLI。", { origin });
   const copyPrompt = async () => {
     if (!(await browserTransferActions.copyText(prompt))) return;
     setCopied(true);
@@ -53,13 +53,13 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
     {!embedded && <RippleBackground />}
     {!embedded && onBack && <Button className="connect-v2-back" onClick={onBack} type="button" variant="ghost"><ArrowLeft aria-hidden="true" size={16} />{ui("返回")}</Button>}
     <header className="connect-v2-hero">
-      <div className="connect-v2-logo-pair" aria-label={ui("TaskDoor 连接 {0}", {0: agentName})}>
+      <div className="connect-v2-logo-pair" aria-label={ui("Taskdoor 连接 {0}", {0: agentName})}>
         <span className="connect-v2-agentdoor-logo"><BrandMark /></span>
         <span className="connect-v2-product-logo">
           <img alt={`${agentName} Logo`} data-agent-icon={agent} src={agentIcons[agent]} />
         </span>
       </div>
-      <p>{ui("TaskDoor for local agents")}</p>
+      <p>{ui("Taskdoor for local agents")}</p>
       <Heading>{ui("连接本地 Agent，")}<em>{ui("开启团队协作")}</em></Heading>
       <span>{ui("一条命令连接当前工作目录。需要协作时，再把成果、进展和关键背景同步给团队。")}</span>
     </header>
@@ -72,7 +72,7 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
       <Tabs.Content value={method}>
       <p className="connect-setup-intro">{method === "cli" ? <>
         {say("本地 Agent 推荐使用 CLI，适合脚本编排和批量操作，需要安装并执行命令。", "CLI is recommended for local agents, scripts and batch operations, and requires installation and command execution.")}{" "}
-        {say("如需与其他业务系统集成，或通过自动化平台调用 TaskDoor，可使用 API，能力范围与 CLI 一致。获取接入凭据，请前往", "Use the API to integrate TaskDoor with other business systems or call it from automation platforms. It provides the same capabilities as CLI. For access credentials, go to")}
+        {say("如需与其他业务系统集成，或通过自动化平台调用 Taskdoor，可使用 API，能力范围与 CLI 一致。获取接入凭据，请前往", "Use the API to integrate Taskdoor with other business systems or call it from automation platforms. It provides the same capabilities as CLI. For access credentials, go to")}
         <a className="connect-token-link" href={tokenPageUrl.href} target="_blank" rel="noopener noreferrer">{say("个人访问令牌", "Personal access tokens")} →</a>
       </> : <>
         {say("MCP精选常用工具，能力范围小于 CLI，以减少上下文负担，让 AI 调用更聚焦。适合在 AI 对话中查任务、看进展、更新信息。支持授权登录，也可通过个人访问令牌访问。", "MCP provides a curated set of commonly used tools, with fewer capabilities than CLI to reduce context overhead and keep AI tool calls focused. It is suited to finding tasks, checking progress and updating information in an AI conversation. Sign in through authorization or use a personal access token.")}
@@ -88,11 +88,11 @@ export function AiConnectionPage({ embedded = false, onBack, connectionHistory =
         </Tabs.List>
       </Tabs.Root>
       <div className="connect-v2-console-copy">
-        <div><small>{ui("把这段话发给 {tool}", { tool: agentName })}</small><strong>{method === "mcp" ? (locale === "en" ? `Let ${agentName} configure TaskDoor MCP` : `让 ${agentName} 为你配置 TaskDoor MCP`) : ui("让 {tool} 为你安装并登录 TaskDoor CLI", { tool: agentName })}</strong></div>
+        <div><small>{ui("把这段话发给 {tool}", { tool: agentName })}</small><strong>{method === "mcp" ? (locale === "en" ? `Let ${agentName} configure Taskdoor MCP` : `让 ${agentName} 为你配置 Taskdoor MCP`) : ui("让 {tool} 为你安装并登录 Taskdoor CLI", { tool: agentName })}</strong></div>
         <Button onClick={openInAgent} type="button">{ui("在 {tool} 中打开", { tool: agentName })}</Button>
       </div>
       <CodeBlock>
-        <CodeBlockGroup><span><i /><i /><i /></span><small translate="no">TaskDoor / {method.toUpperCase()}</small></CodeBlockGroup>
+        <CodeBlockGroup><span><i /><i /><i /></span><small translate="no">Taskdoor / {method.toUpperCase()}</small></CodeBlockGroup>
         <div className="connect-v2-code-line">
           <CodeBlockCode className="connect-v2-setup-code" translate="no">{prompt}</CodeBlockCode>
           <button aria-label={copied ? ui("提示词已复制") : ui("复制提示词")} onClick={copyPrompt} type="button">{copied ? <Check size={17} /> : <Clipboard size={17} />}</button>

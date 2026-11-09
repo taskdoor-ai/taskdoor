@@ -20,7 +20,7 @@ export function getSerumLaunchMediaDiscussionFiles(task: Pick<TaskNode, "id">): 
 export function getSerumLaunchMediaDiscussionActivities(task: Pick<TaskNode, "id">): CollaborationMessage[] {
   if (task.id !== taskId) return [];
   return [{
-    id: `${prefix}-post`, author: "TaskDoor 示例", type: "member-post", createdAt: fixedAt, time: "2026-10-21 10:05",
+    id: `${prefix}-post`, author: "Taskdoor 示例", type: "member-post", createdAt: fixedAt, time: "2026-10-21 10:05",
     message: "【附件样例·音视频】MP3 首发简报和 MP4 总览用于体验播放、进度、音量与视频全屏；均为本地演示资料，点击后手动播放。",
     attachmentRefs: getSerumLaunchMediaDiscussionFiles(task).filter(file => file.kind === "file").map(file => ({ fileId: file.id, name: file.name, version: 1 })),
   }];

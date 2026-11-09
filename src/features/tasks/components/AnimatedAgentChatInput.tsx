@@ -29,7 +29,7 @@ type LocalAttachment = { id: string; name: string };
 
 export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
   actionRef,
-  ariaLabel = "给 TaskDoor 发消息",
+  ariaLabel = "给 Taskdoor 发消息",
   autoFocus = true,
   allowAttachments = true,
   clearOnSend = true,
@@ -43,7 +43,7 @@ export const AnimatedAgentChatInput = memo(function AnimatedAgentChatInput({
   onChange,
   onSend,
   onStop,
-  placeholder = "告诉 TaskDoor 你想推进什么…",
+  placeholder = "告诉 Taskdoor 你想推进什么…",
   status = "ready",
   suggestions = [],
   sendLabel = "发送",

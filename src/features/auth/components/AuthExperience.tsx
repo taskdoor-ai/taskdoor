@@ -5,7 +5,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { onboardingTranslator, localizeOnboardingMessage } from "@/features/auth/i18n/onboarding-messages";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { ArrowLeft, Building2, Check, CircleAlert, Eye, EyeOff, LoaderCircle, Mail } from "lucide-react";
-import { BrandMark } from "@/shared/ui/BrandMark";
+import { BrandLogo } from "@/shared/ui/BrandMark";
 import { TeamFlowIllustration } from "@/features/auth/components/TeamFlowIllustration";
 import { WorkspaceLoading } from "@/shared/ui/WorkspaceLoading";
 import { Button } from "@/shared/ui/button";
@@ -37,7 +37,7 @@ function initialState() {
 function Brand() {
   const { locale } = useI18n();
   const t = onboardingTranslator(locale);
-  return <a aria-label={t("TaskDoor 首页")} className="onboarding-brand" href="/"><BrandMark /><span>TaskDoor</span></a>;
+  return <a aria-label={t("Taskdoor 首页")} className="onboarding-brand" href="/"><BrandLogo /></a>;
 }
 function Heading({ title, description }: { title: string; description: ReactNode }) {
   return <header className="onboarding-heading"><h1 tabIndex={-1}>{title}</h1><p>{description}</p></header>;
@@ -93,7 +93,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     return () => { mounted.current = false; };
   }, []);
   useEffect(() => {
-    document.title = `${state.step === "google-password" ? t("设置密码") : state.step === "workspace" ? activeTeam?.name : !authScreen ? t("设置团队") : registration ? t("注册") : forgot ? t("重置密码") : t("登录")} · TaskDoor`;
+    document.title = `${state.step === "google-password" ? t("设置密码") : state.step === "workspace" ? activeTeam?.name : !authScreen ? t("设置团队") : registration ? t("注册") : forgot ? t("重置密码") : t("登录")} · Taskdoor`;
     const params = new URLSearchParams();
     if (state.inviteToken) params.set("invite", state.inviteToken);
     if (debug) params.set("preview", "1");
@@ -193,7 +193,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
           <img className="onboarding-story-art" src="/images/onboarding-team-v1.png" alt="" width={1024} height={1024} fetchPriority="high" draggable={false} />
           <TeamFlowIllustration />
         </div>
-        <h2 id="onboarding-story-title">{t("和你的团队，一起把工作做好。")}</h2>
+        <h2 id="onboarding-story-title">{t("和你的团队，还有你的 Agent，一起完成任务。")}</h2>
       </div>
     </aside>
     <main className="onboarding-main"><div className="onboarding-flow">
@@ -210,7 +210,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
         }} />}
         {!googlePreview && state.step === "email" && <>
           {forgot && <a className="onboarding-back" href={href("login")}><ArrowLeft aria-hidden="true" />{t("返回登录")}</a>}
-          <Heading title={registration ? invitation ? t("注册并加入团队") : t("创建你的账号") : forgot ? t("忘记密码？") : t("欢迎回来")} description={registration ? invitation ? t("完成注册后，即可加入「{team}」", { team: invitation.team.name }) : t("开启与团队一起工作的全新方式") : forgot ? t("输入注册邮箱，验证后即可设置新密码") : t("登录 TaskDoor，继续你的工作")} />
+          <Heading title={registration ? invitation ? t("注册并加入团队") : t("创建你的账号") : forgot ? t("忘记密码？") : t("欢迎回来")} description={registration ? invitation ? t("完成注册后，即可加入「{team}」", { team: invitation.team.name }) : t("开启与团队一起工作的全新方式") : forgot ? t("输入注册邮箱，验证后即可设置新密码") : t("登录 Taskdoor，继续你的工作")} />
           {state.inviteToken && invitation && <TeamInvitationCard invitation={invitation} />}
           {state.notice && <p className="onboarding-success" role="status"><Check aria-hidden="true" />{localizeOnboardingMessage(locale, state.notice)}</p>}
           {!forgot && <div className="onboarding-social">
@@ -249,14 +249,14 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
           </form>
         </>}
         {state.step === "google-password" && <>
-          <Heading title={t("设置密码")} description={<>{t("为你的 TaskDoor 账号设置密码，以后也可以使用邮箱和密码登录。")}<strong className="onboarding-email-address">{state.email}</strong></>} />
+          <Heading title={t("设置密码")} description={<>{t("为你的 Taskdoor 账号设置密码，以后也可以使用邮箱和密码登录。")}<strong className="onboarding-email-address">{state.email}</strong></>} />
           <form className="onboarding-form" noValidate onSubmit={event => { event.preventDefault(); void perform(async () => ({ type: "set-google-password", passwordDigest: await digestPreviewPassword(password, state.email), passwordLength: password.length }), "正在保存…"); }}>
             {passwordField(true)}{errorField !== "password" && errorBlock}{submitButton(t("保存并继续"), password.length < 8)}
           </form>
           <p className="onboarding-auth-switch"><button className="onboarding-link" disabled={Boolean(busy)} onClick={switchAccount}>{t("切换账号")}</button></p>
         </>}
         {state.step === "reset-password" && <>
-          <Heading title={t("设置新密码")} description={t("使用新密码登录你的 TaskDoor 账号。")} />
+          <Heading title={t("设置新密码")} description={t("使用新密码登录你的 Taskdoor 账号。")} />
           <form className="onboarding-form" noValidate onSubmit={event => { event.preventDefault(); void perform(async () => ({ type: "reset-password", passwordDigest: await digestPreviewPassword(password, state.email), passwordLength: password.length }), "正在更新…"); }}>{passwordField(true)}{errorField !== "password" && errorBlock}{submitButton(t("更新密码"))}</form>
           <p className="onboarding-auth-switch"><a className="onboarding-link" href={href("login")}>{t("返回登录")}</a></p>
         </>}

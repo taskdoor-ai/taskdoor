@@ -21,7 +21,7 @@ export function GoogleAuthPreview({ onCancel, onComplete }: {
   return <div className="google-preview">
     <div className="google-preview-brand"><img src={googleIcon} width={26} height={26} alt="Google" /></div>
     <h1 tabIndex={-1}>{error ? text("Unable to continue", "暂时无法继续") : text("Choose an account", "选择账号")}</h1>
-    <p className="google-preview-description">{text("Choose an account to sign in to TaskDoor.", "选择账号登录 TaskDoor。")}</p>
+    <p className="google-preview-description">{text("Choose an account to sign in to Taskdoor.", "选择账号登录 Taskdoor。")}</p>
     {error ? <>
       <p className="onboarding-error" role="alert"><CircleAlert aria-hidden="true" />{error}</p>
       <Button className="onboarding-primary" onClick={() => setError("")}>{text("Choose another account", "选择其他账号")}</Button>

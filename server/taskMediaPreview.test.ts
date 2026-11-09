@@ -101,7 +101,7 @@ test("discussion media refs use the real MP3/MP4 original bytes and exact versio
   const files = getSerumLaunchMediaDiscussionFiles(task).filter(file => file.kind === "file");
   assert.deepEqual(files.map(file => file.format), ["MP3", "MP4"]);
   const activity = getSerumLaunchMediaDiscussionActivities(task)[0];
-  assert.equal(activity.author, "TaskDoor 示例");
+  assert.equal(activity.author, "Taskdoor 示例");
   assert.equal(activity.attachmentRefs?.length, 2);
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (input, init) => {

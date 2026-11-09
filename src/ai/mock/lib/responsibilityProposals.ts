@@ -75,7 +75,7 @@ export function applyAutomaticResponsibilityUpdates(
       const appliedText = currentClaim.description.trim();
       const result = applyResponsibilityProposal(document, currentClaim, appliedText);
       if (result.status !== "applied" && result.status !== "duplicate") return claim;
-      const actor = `${claim.aiActor ?? "TaskDoor"}（自动更新）`;
+      const actor = `${claim.aiActor ?? "Taskdoor"}（自动更新）`;
       if (result.status === "applied") {
         document = {
           content: result.content,

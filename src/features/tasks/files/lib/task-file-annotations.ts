@@ -311,11 +311,11 @@ export function buildFileAnnotationContext(input: { taskId: string; taskTitle: s
   const lines = [copy("# 文件修订意见", "# File revision feedback"), "", field("任务", "Task", input.taskTitle), field("任务标识", "Task ID", input.taskId)];
   if (input.taskGoal?.trim()) lines.push(field("任务目标", "Task goal", input.taskGoal));
   lines.push(copy(`本次选择：${items.length} 条标注意见`, `Selected annotations: ${items.length}`), "", copy(
-    "请依据以下固定版本的源文件快照和意见原文理解修订要求。不同版本的锚点不能合并或迁移；如修改当前新版，请先核对对应内容。TaskDoor 保存文件和协作意见，修改由本地 Agent 执行；连接 Agent 不代表意见已处理。",
-    "Use the fixed-version source snapshots and original opinions below to understand the requested revisions. Anchors from different versions must not be merged or moved; check the matching content before changing the current version. TaskDoor stores files and collaboration opinions; the local Agent performs revisions. Connecting an Agent does not mean an opinion has been addressed."), "");
+    "请依据以下固定版本的源文件快照和意见原文理解修订要求。不同版本的锚点不能合并或迁移；如修改当前新版，请先核对对应内容。Taskdoor 保存文件和协作意见，修改由本地 Agent 执行；连接 Agent 不代表意见已处理。",
+    "Use the fixed-version source snapshots and original opinions below to understand the requested revisions. Anchors from different versions must not be merged or moved; check the matching content before changing the current version. Taskdoor stores files and collaboration opinions; the local Agent performs revisions. Connecting an Agent does not mean an opinion has been addressed."), "");
   if (items.some(item => item.source.blobId || item.source.previewData?.kind === "image")) lines.push(copy(
-    "以下正文快照可以作为修订上下文。图片预览引用和 TaskDoor 内部存储标识不会自动将原文件字节传给本地 Agent。需要图片或其他二进制原材料时，先在 TaskDoor 下载修订包，解压后读取包内的本地文件；不假定存在 CLI 标注接口。",
-    "The text snapshots below can be used as revision context. Image preview references and internal TaskDoor storage IDs do not automatically send original file bytes to a local Agent. For images or other binary source materials, first download the revision bundle in TaskDoor, extract it, and read the included local files. No CLI annotation endpoint is assumed."), "");
+    "以下正文快照可以作为修订上下文。图片预览引用和 Taskdoor 内部存储标识不会自动将原文件字节传给本地 Agent。需要图片或其他二进制原材料时，先在 Taskdoor 下载修订包，解压后读取包内的本地文件；不假定存在 CLI 标注接口。",
+    "The text snapshots below can be used as revision context. Image preview references and internal Taskdoor storage IDs do not automatically send original file bytes to a local Agent. For images or other binary source materials, first download the revision bundle in Taskdoor, extract it, and read the included local files. No CLI annotation endpoint is assumed."), "");
   for (const [index, item] of items.entries()) {
     const current = input.files.find(file => file.id === item.fileId)!;
     lines.push(`## ${index + 1}. ${item.fileName}`, "", `- ${field("标注标识", "Annotation ID", item.id)}`, `- ${field("文件标识", "File ID", item.fileId)}`,
@@ -337,14 +337,14 @@ export function buildFileAnnotationContext(input: { taskId: string; taskTitle: s
     lines.push("", copy("### 修改意见（原文）", "### Opinion (original)"), "", fenced(item.body));
     lines.push("", copy("### 源文件已保存内容快照", "### Saved source-content snapshot"), "", field("文件", "File", `${item.source.name} · v${item.version}`));
     if (item.source.blobId) lines.push(copy(
-      `TaskDoor 内部存储标识：${item.source.blobId}（不是本地文件路径，本地 Agent 不能直接通过此标识读取文件）。先在 TaskDoor 下载修订包，解压后读取包内的本地文件。`,
-      `Internal TaskDoor storage ID: ${item.source.blobId} (a local Agent cannot use this ID as a local file path). First download the revision bundle in TaskDoor, extract it, and read the included local files.`));
+      `Taskdoor 内部存储标识：${item.source.blobId}（不是本地文件路径，本地 Agent 不能直接通过此标识读取文件）。先在 Taskdoor 下载修订包，解压后读取包内的本地文件。`,
+      `Internal Taskdoor storage ID: ${item.source.blobId} (a local Agent cannot use this ID as a local file path). First download the revision bundle in Taskdoor, extract it, and read the included local files.`));
     const content = english && item.source.previewData?.kind === "pdf"
       ? item.source.previewData.pages.map((page, index) => `Page ${index + 1}\n${page}`).join("\n\n")
       : getTaskFileAnnotationSourceText(item.source);
     if (content) lines.push("", fenced(content));
     if (item.source.previewData?.kind === "image") lines.push("", `![${item.source.previewData.alt || item.source.name}](${item.source.previewData.src})`);
-    if (!content && item.source.previewData?.kind !== "image") lines.push("", copy("此文件没有提取出的正文；请先在 TaskDoor 下载修订包，解压后读取包内的本地材料，再执行修订。", "No text was extracted from this file. First download the revision bundle in TaskDoor, extract it, and read the included local materials before performing revisions."));
+    if (!content && item.source.previewData?.kind !== "image") lines.push("", copy("此文件没有提取出的正文；请先在 Taskdoor 下载修订包，解压后读取包内的本地材料，再执行修订。", "No text was extracted from this file. First download the revision bundle in Taskdoor, extract it, and read the included local materials before performing revisions."));
     if (item.anchor.documentText) lines.push("", copy("### 标注时预览文本快照", "### Preview-text snapshot at annotation time"), "", fenced(item.anchor.documentText));
     lines.push("");
   }

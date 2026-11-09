@@ -6,8 +6,7 @@
 .onboarding-page button:focus-visible, .onboarding-page a:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
 .onboarding-topbar { display: flex; min-height: 88px; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 40px; }
 .onboarding-brand { display: inline-flex; flex-shrink: 0; align-items: center; gap: 9px; color: var(--ad-ink); font-size: 21px; font-weight: 650; letter-spacing: -.6px; }
-.onboarding-brand .brand-mark { display: grid; width: 28px; height: 30px; place-items: center; color: var(--ad-route); }
-.onboarding-brand .brand-mark svg { width: 26px; height: 28px; stroke-width: 1.8; }
+.onboarding-brand .brand-logo { display: block; width: auto; height: 28px; }
 .onboarding-auth { --ad-route: #278557; --ad-route-hover: #207148; --ad-route-active: #195e3b; --ad-route-soft: #edf7f0; --ad-focus: #278557; --primary: #278557; --ad-ink: #1b211e; --ad-ink-secondary: #68716b; --ad-ink-tertiary: #858e87; --ad-border: #e3e8e3; --ad-border-soft: #eff2ee; display: grid; grid-template-columns: 1fr 1fr; background: #f7f8f5; }
 .onboarding-story { display: flex; align-items: center; justify-content: center; min-width: 0; padding: 48px 40px; background: #fff; }
 .onboarding-story-inner { width: min(100%, 520px); text-align: center; }
@@ -22,9 +21,7 @@
 .onboarding-story h2 { margin: 0; color: #242b26; font-size: clamp(20px, 1.75vw, 25px); font-weight: 580; line-height: 1.6; letter-spacing: -.6px; }
 .onboarding-main { display: flex; min-width: 0; min-height: 100svh; align-items: center; justify-content: center; padding: 56px 40px; }
 .onboarding-form-brand { display: flex; justify-content: center; margin-bottom: 28px; }
-.onboarding-form-brand .onboarding-brand { gap: 8px; font-size: 26px; font-weight: 650; letter-spacing: -1px; }
-.onboarding-form-brand .brand-mark { width: 30px; height: 32px; }
-.onboarding-form-brand .brand-mark svg { width: 27px; height: 30px; }
+.onboarding-form-brand .brand-logo { height: 32px; }
 .onboarding-flow { width: min(100%, 420px); }
 .onboarding-card { padding: 40px 32px 32px; border: 1px solid rgb(255 255 255 / 90%); border-radius: 24px; background: #fff; box-shadow: 0 8px 36px rgb(31 55 36 / 6%); }
 .onboarding-heading { margin-bottom: 30px; text-align: center; }

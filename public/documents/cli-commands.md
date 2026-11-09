@@ -1,6 +1,6 @@
-# TaskDoor 常用命令 / Command reference
+# Taskdoor 常用命令 / Command reference
 
-工作空间参数只指定操作目标，不改变登录授权。服务地址使用当前 TaskDoor 部署地址。
+工作空间参数只指定操作目标，不改变登录授权。服务地址使用当前 Taskdoor 部署地址。
 
 | 操作 / Action | 命令 / Command |
 | --- | --- |

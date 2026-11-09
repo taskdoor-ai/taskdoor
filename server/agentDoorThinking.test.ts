@@ -24,8 +24,8 @@ const stylesheetSource = readFileSync(new URL("../src/shared/styles/pm-global.cs
 test("loading directly renders the 21st-style AgentWorkflow component", () => {
   assert.match(componentSource, /import \{ AgentWorkflow, type AgentPhase, type ToolDefinition \} from "@\/shared\/ui\/ai-agent-response"/);
   assert.match(componentSource, /const taskCreationWorkflowFor = \(/);
-  assert.match(componentSource, /!isAnalyzing && output && message\.role === "assistant" && index === messages\.length - 1 && <AgentWorkflow completed phases=\{taskCreationWorkflow\} tools=\{taskCreationTools\} workingLabel="TaskDoor 正在工作…" \/>/);
-  assert.match(componentSource, /\{isAnalyzing && <AgentWorkflow phases=\{taskCreationWorkflow\} tools=\{taskCreationTools\} workingLabel="TaskDoor 正在工作…" \/>\}/);
+  assert.match(componentSource, /!isAnalyzing && output && message\.role === "assistant" && index === messages\.length - 1 && <AgentWorkflow completed phases=\{taskCreationWorkflow\} tools=\{taskCreationTools\} workingLabel="Taskdoor 正在工作…" \/>/);
+  assert.match(componentSource, /\{isAnalyzing && <AgentWorkflow phases=\{taskCreationWorkflow\} tools=\{taskCreationTools\} workingLabel="Taskdoor 正在工作…" \/>\}/);
   assert.match(componentSource, /<AgentWorkflow completed[^]*?<AIMessage/);
   assert.doesNotMatch(componentSource, /\(isAnalyzing \|\| output\) && <AgentWorkflow/);
   assert.doesNotMatch(componentSource, /function AgentDoorThinking\(\)/);
