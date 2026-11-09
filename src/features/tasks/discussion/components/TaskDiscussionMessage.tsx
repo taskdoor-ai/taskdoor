@@ -120,12 +120,12 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
       <footer className="task-discussion-feed-footer">
         <div className="task-discussion-feed-meta">
           {timestamp && <time aria-label={timestamp.full} className="task-discussion-feed-time" dateTime={timestamp.dateTime} tabIndex={0} title={timestamp.full}>{timestamp.label}</time>}
-          {followupEntries}
           {(reading.canTranslate || reading.state === "translated" || reading.state === "original") && <span className="task-discussion-feed-translation">
             {(reading.state === "translated" || reading.state === "original") && <><span>{reading.state === "translated" ? ui("已翻译") : ui("原文")}</span><span aria-hidden="true"> · </span></>}
             <button aria-busy={reading.translating} className={reading.canTranslate ? "task-discussion-translate-trigger" : undefined} disabled={reading.translating} onClick={reading.canTranslate ? reading.translate : reading.toggleOriginal} type="button">{reading.canTranslate ? (reading.translating ? ui("翻译中…") : ui("翻译")) : reading.state === "translated" ? ui("查看原文") : ui("显示译文")}</button>
           </span>}
           {message.updatedAt && <small>{d("edited")}</small>}
+          {followupEntries}
         </div>
         {!message.deletedAt && <div className="task-discussion-feed-direct-actions">
 

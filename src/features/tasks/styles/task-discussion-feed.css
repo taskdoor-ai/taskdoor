@@ -93,8 +93,9 @@
 .task-discussion-followups { width: 100%; margin-top: 4px; }
 .task-discussion-followups[hidden], .task-discussion-followup-content[hidden] { display: none; }
 .task-discussion-feed-footer:has(.task-discussion-followup-entries), .task-discussion-feed-meta:has(.task-discussion-followup-entries) { align-items: center; }
-.task-discussion-feed-meta:has(.task-discussion-followup-entries) { column-gap: 8px; }
-.task-discussion-followup-entries { display: flex; flex: 0 0 auto; align-items: center; flex-wrap: wrap; gap: 2px 8px; }
+.task-discussion-feed-meta:has(.task-discussion-followup-entries) { position: relative; min-height: 30px; column-gap: 8px; }
+/* The entries sit at the end of the meta line, after time, translation and "Edited"; their buttons join the line's own wrap. */
+.task-discussion-followup-entries { display: contents; }
 .task-discussion-ai-suggestions-trigger, .task-discussion-subtasks-trigger { display: inline-flex; width: fit-content; min-height: 30px; align-items: center; gap: 6px; padding: 0 2px; border: 0; border-radius: 4px; background: transparent; color: var(--ad-ink-tertiary); font: inherit; font-size: 12px; line-height: 20px; cursor: pointer; }
 .task-discussion-ai-suggestions-trigger:hover, .task-discussion-subtasks-trigger:hover, .task-discussion-followup-entries > button[aria-expanded="true"] { color: var(--ad-button-soft-ink); }
 .task-discussion-followup-entries > button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
@@ -111,7 +112,7 @@
 .task-discussion-followup-content { padding-block: 1px 4px; }
 .task-discussion-followup-content .task-subtask-suggestions, .task-discussion-followup-content .task-discussion-task-links { margin-top: 0; }
 @media (max-width: 640px), (pointer: coarse) {
-  .task-discussion-feed-meta:has(.task-discussion-followup-entries), .task-discussion-followup-entries { column-gap: 6px; }
+  .task-discussion-feed-meta:has(.task-discussion-followup-entries) { min-height: 44px; column-gap: 6px; }
   .task-discussion-followup-entries > button { min-width: 44px; min-height: 44px; }
   .task-discussion-followup-entries .task-discussion-ai-suggestions-chevron { display: none; }
   .task-discussion-followup-entries .task-discussion-ai-suggestions-count { min-width: 0; }
@@ -135,10 +136,9 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .task-discussion-ai-suggestions-trigger { opacity: 0; pointer-events: none; }
-  .task-discussion-feed-message:hover .task-discussion-ai-suggestions-trigger,
-  .task-discussion-feed-message:focus-within .task-discussion-ai-suggestions-trigger,
-  .task-discussion-ai-suggestions-trigger[aria-expanded="true"] { opacity: 1; pointer-events: auto; }
+  /* Hidden, the entry takes no space but stays focusable: a 1px clipped box out of the flow, never display: none.
+     The meta line keeps the shown button's height, so hovering moves nothing. */
+  .task-discussion-feed-message:not(:hover, :focus-within) .task-discussion-ai-suggestions-trigger:not([aria-expanded="true"]) { position: absolute; width: 1px; height: 1px; min-width: 0; min-height: 0; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .task-discussion-translate-trigger { opacity: 0; pointer-events: none; }
   .task-discussion-feed-message:hover .task-discussion-translate-trigger,
   .task-discussion-feed-message:focus-within .task-discussion-translate-trigger,
