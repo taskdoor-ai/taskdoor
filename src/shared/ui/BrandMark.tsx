@@ -7,10 +7,10 @@ export function BrandMark() {
   return <span className="brand-mark" aria-hidden="true"><img alt="" src={markInverseUrl} /></span>;
 }
 
-/** The horizontal Taskdoor logo: standard colors on light, inverse on dark. The caller names it. */
+/** The horizontal lockup: the standard colors on light, the reversed artwork on dark. The caller names it. */
 export function BrandLogo() {
-  return <>
-    <img alt="" aria-hidden="true" className="brand-logo brand-logo-light" src={logoUrl} />
-    <img alt="" aria-hidden="true" className="brand-logo brand-logo-dark" src={logoInverseUrl} />
-  </>;
+  return <span aria-hidden="true" className="brand-lockup">
+    <img alt="" className="brand-lockup-light" src={logoUrl} />
+    <img alt="" className="brand-lockup-dark" src={logoInverseUrl} />
+  </span>;
 }
