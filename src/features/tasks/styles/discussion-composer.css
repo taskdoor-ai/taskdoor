@@ -7,7 +7,8 @@
 .discussion-composer.compact .discussion-composer-input { min-height: 64px; }
 .discussion-composer-input[contenteditable="false"] { color: var(--ad-ink-secondary); }
 .discussion-composer-paragraph { margin: 0; }
-.discussion-composer-placeholder { position: absolute; top: var(--ad-space-3); right: var(--ad-space-4); left: var(--ad-space-4); pointer-events: none; color: var(--ad-ink-tertiary); font-size: var(--ad-text-body-sm); line-height: 1.8; }
+.discussion-composer-placeholder { visibility: hidden; position: absolute; top: var(--ad-space-3); right: var(--ad-space-4); left: var(--ad-space-4); pointer-events: none; color: var(--ad-ink-tertiary); font-size: var(--ad-text-body-sm); line-height: 1.8; }
+.discussion-composer-editor:focus-within .discussion-composer-placeholder { visibility: visible; }
 .discussion-composer-mention { color: var(--ad-route-ink); font-weight: 600; }
 .discussion-composer-task-reference { padding: 0; border-radius: 0; background: transparent; color: var(--ad-route-ink); font-weight: 600; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .discussion-composer-task-reference[data-unavailable] { color: var(--ad-ink-secondary); }
