@@ -13,6 +13,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import "@/features/notifications/styles/notifications.css";
 import { getDiscussionReadIds, mergeNotificationReadIds, notificationReadStateKey, parseNotificationReadState, type DiscussionReadReceipt, type NotificationRegionTarget } from "@/features/notifications/lib/notification-read-state";
 import { toast } from "@/shared/ui/toast";
+import { notificationExcerptText } from "@/features/notifications/lib/notification-excerpt";
 
 const demoTeamId = "creator-commerce";
 type ScopedNotification = WorkspaceNotification & { teamId: string };
@@ -246,6 +247,7 @@ export function NotificationItem({ item, teamName, onRead, onOpenTask, now = Dat
     if (!item.target) onRead();
     onOpenTask(task.id, item.target);
   } : undefined;
+  const excerpt = notificationExcerptText(item.excerpt);
   const typeLabel = item.kind === "handoff" && locale === "en" ? "Task handoff" : ui(notificationTypeLabels[item.kind]);
   const labels = (item.people ?? []).map(person => `@${person.name}`);
   const parts = labels.length ? item.content.split(new RegExp(`(${labels.map(label => label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g")) : [item.content];
@@ -267,7 +269,7 @@ export function NotificationItem({ item, teamName, onRead, onOpenTask, now = Dat
         }} role="link" tabIndex={0} title={task.title}>{taskLabel}</span>
           : <span className="notification-task-reference" onClick={onRead} title={task.title}>{taskLabel}</span>}
       </>}
-      {item.excerpt && <span className="notification-item-excerpt">{item.excerpt}</span>}
+      {excerpt && <span className="notification-item-excerpt"><span className="notification-item-excerpt-lines">{excerpt}</span></span>}
     </span>
     <span className="notification-item-meta">
       <time aria-label={timestamp?.full} dateTime={timestamp ? new Date(item.createdAt).toISOString() : undefined} tabIndex={timestamp ? 0 : undefined} title={timestamp?.full}>{timestamp?.label ?? formatLegacyDateLabel(item.time, locale, { now })}</time>
