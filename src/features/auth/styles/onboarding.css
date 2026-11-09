@@ -6,7 +6,7 @@
 .onboarding-page button:focus-visible, .onboarding-page a:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
 .onboarding-topbar { display: flex; min-height: 88px; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 40px; }
 .onboarding-brand { display: inline-flex; flex-shrink: 0; align-items: center; gap: 9px; color: var(--ad-ink); font-size: 21px; font-weight: 650; letter-spacing: -.6px; }
-.onboarding-brand .brand-logo { display: block; width: auto; height: 28px; }
+.onboarding-brand .brand-lockup { height: 28px; }
 .onboarding-auth { --ad-route: #278557; --ad-route-hover: #207148; --ad-route-active: #195e3b; --ad-route-soft: #edf7f0; --ad-focus: #278557; --primary: #278557; --ad-ink: #1b211e; --ad-ink-secondary: #68716b; --ad-ink-tertiary: #858e87; --ad-border: #e3e8e3; --ad-border-soft: #eff2ee; display: grid; grid-template-columns: 1fr 1fr; background: #f7f8f5; }
 .onboarding-story { display: flex; align-items: center; justify-content: center; min-width: 0; padding: 48px 40px; background: #fff; }
 .onboarding-story-inner { width: min(100%, 520px); text-align: center; }
@@ -21,7 +21,8 @@
 .onboarding-story h2 { margin: 0; color: #242b26; font-size: clamp(20px, 1.75vw, 25px); font-weight: 580; line-height: 1.6; letter-spacing: -.6px; }
 .onboarding-main { display: flex; min-width: 0; min-height: 100svh; align-items: center; justify-content: center; padding: 56px 40px; }
 .onboarding-form-brand { display: flex; justify-content: center; margin-bottom: 28px; }
-.onboarding-form-brand .brand-logo { height: 32px; }
+.onboarding-form-brand .onboarding-brand { min-height: 1.6em; }
+.onboarding-form-brand .brand-lockup { height: 32px; }
 .onboarding-flow { width: min(100%, 420px); }
 .onboarding-card { padding: 40px 32px 32px; border: 1px solid rgb(255 255 255 / 90%); border-radius: 24px; background: #fff; box-shadow: 0 8px 36px rgb(31 55 36 / 6%); }
 .onboarding-heading { margin-bottom: 30px; text-align: center; }
@@ -254,3 +255,25 @@
 .onboarding-language { position:absolute; top:20px; right:28px; z-index:2; }
 .onboarding-language .language-switcher { color:var(--ad-ink-secondary); }
 @media(max-width:600px) { .onboarding-language {top:12px; right:16px;} .onboarding-auth .onboarding-main {padding-top:72px;} }
+
+/* Dark onboarding: production's values (TaskDoor dev 3b47b88ed, apps/web/src/features/auth/styles/onboarding.css). */
+[data-theme="dark"] .onboarding-auth { --ad-route: #6fca97; --ad-route-hover: #86d9aa; --ad-route-active: #55b980; --ad-route-soft: #173426; --ad-focus: #6fca97; --primary: #6fca97; --ad-ink: #edf3ee; --ad-ink-secondary: #b3bdb6; --ad-ink-tertiary: #8d9991; --ad-border: #35423a; --ad-border-soft: #2a352e; background: #171c19; }
+[data-theme="dark"] .onboarding-story { background: #202722; }
+[data-theme="dark"] .onboarding-story h2 { color: #edf3ee; }
+[data-theme="dark"] .onboarding-card { border-color: #35423a; background: #202722; box-shadow: 0 16px 48px rgb(0 0 0 / 24%); }
+[data-theme="dark"] .onboarding-page .onboarding-google { color: var(--ad-ink) !important; }
+[data-theme="dark"] .onboarding-auth-divider { color: var(--ad-ink-tertiary); }
+/* The art is inverted and screened onto the panel; the three avatars are laid back in uninverted, on a soft ground, through a mask. */
+.onboarding-art-scene { --onboarding-avatar-mask: radial-gradient(ellipse 14% 16% at 29% 25%, #000 97%, transparent 100%), radial-gradient(ellipse 11% 14% at 83% 48%, #000 97%, transparent 100%), radial-gradient(ellipse 11% 14% at 31% 75%, #000 97%, transparent 100%); }
+[data-theme="dark"] .onboarding-art-scene { isolation: auto; }
+[data-theme="dark"] .onboarding-story-art { filter: invert(1) hue-rotate(180deg) saturate(1.15) brightness(1.2) contrast(1.02); mix-blend-mode: screen; }
+.onboarding-avatar-backs, .onboarding-story-art--avatars { display: none; }
+[data-theme="dark"] .onboarding-avatar-backs, [data-theme="dark"] .onboarding-story-art--avatars { position: absolute; z-index: 1; inset: 0; display: block; width: 100%; height: 100%; -webkit-mask-image: var(--onboarding-avatar-mask); -webkit-mask-repeat: no-repeat; mask-image: var(--onboarding-avatar-mask); mask-repeat: no-repeat; }
+[data-theme="dark"] .onboarding-avatar-backs { background: #9caca3; }
+[data-theme="dark"] .onboarding-story-art--avatars { z-index: 2; filter: none; mix-blend-mode: multiply; object-fit: contain; }
+
+/* The lockup (production's apps/web/src/shared/styles/brand.css): standard artwork on light, reversed on dark; each placement sets its height. */
+.brand-lockup { display: inline-flex; align-items: center; flex-shrink: 0; }
+.brand-lockup img { display: block; width: auto; height: 100%; }
+.brand-lockup .brand-lockup-dark, [data-theme="dark"] .brand-lockup .brand-lockup-light { display: none; }
+[data-theme="dark"] .brand-lockup .brand-lockup-dark { display: block; }

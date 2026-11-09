@@ -69,9 +69,13 @@ test("账户菜单主题项沿用菜单触摸区域和图标尺寸，移除独�
 });
 
 test("移动主题入口不改变既有状态、页面主题与本地持久化契约", () => {
-  assert.match(appSource, /useState<Theme>\(\(\) => \(loadStoredText\("agentdoor-theme"\) as Theme\) \|\| "light"\)/);
-  assert.match(appSource, /document\.documentElement\.dataset\.theme = theme/);
-  assert.match(appSource, /persistStoredText\("agentdoor-theme", theme\)/);
+  const themeSource = readFileSync(new URL("../src/shared/lib/theme-preference.ts", import.meta.url), "utf8");
+  assert.match(themeSource, /THEME_STORAGE_KEY = "agentdoor-theme"/);
+  assert.match(themeSource, /=== "dark" \? "dark" : "light"/);
+  assert.match(themeSource, /document\.documentElement\.dataset\.theme = theme/);
+  assert.match(appSource, /useState<Theme>\(readThemePreference\)/);
+  assert.match(appSource, /applyTheme\(theme\)/);
+  assert.match(appSource, /persistStoredText\(THEME_STORAGE_KEY, theme\)/);
   assert.match(appSource, /toggleTheme=\{\(\) => setTheme\(\(current\) => current === "light" \? "dark" : "light"\)\}/);
 });
 

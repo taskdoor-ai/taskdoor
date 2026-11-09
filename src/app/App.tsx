@@ -98,6 +98,7 @@ import { Input } from "@/shared/ui/input";
 import type { DiscussionReadReceipt } from "@/features/notifications/lib/notification-read-state";
 
 import { readWorkspaceSession, saveWorkspaceSession, signOutWorkspace } from "@/shared/lib/workspace-session";
+import { applyTheme, readThemePreference, THEME_STORAGE_KEY } from "@/shared/lib/theme-preference";
 
 type Theme = "light" | "dark";
 type ParticipantInvitationStatuses = Record<string, "accepted" | "pending">;
@@ -211,7 +212,7 @@ function App() {
     };
   }, []);
   const [taskStorageRecoveryError, setTaskStorageRecoveryError] = useState("");
-  const [theme, setTheme] = useState<Theme>(() => (loadStoredText("agentdoor-theme") as Theme) || "light");
+  const [theme, setTheme] = useState<Theme>(readThemePreference);
   const [initialScenarioState] = useState(() => {
     const scenario = resolveWorkspaceScenarioReset({
       storedVersion: loadStoredText(workspaceScenarioVersionKey),
@@ -648,8 +649,8 @@ function App() {
   }, [initialScenarioState]);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    persistStoredText("agentdoor-theme", theme);
+    applyTheme(theme);
+    persistStoredText(THEME_STORAGE_KEY, theme);
   }, [theme]);
 
   useEffect(() => {

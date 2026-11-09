@@ -191,6 +191,8 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
       <div className="onboarding-story-inner">
         <div className="onboarding-art-scene" aria-hidden="true">
           <img className="onboarding-story-art" src="/images/onboarding-team-v1.png" alt="" width={1024} height={1024} fetchPriority="high" draggable={false} />
+          <span className="onboarding-avatar-backs" />
+          <img className="onboarding-story-art onboarding-story-art--avatars" src="/images/onboarding-team-v1.png" alt="" width={1024} height={1024} draggable={false} />
           <TeamFlowIllustration />
         </div>
         <h2 id="onboarding-story-title">{t("和你的团队，还有你的 Agent，一起完成任务。")}</h2>
