@@ -1435,6 +1435,10 @@
     "zh": "讨论回复",
     "en": "Discussion reply"
   },
+  "discussionNewMessage": {
+    "zh": "新讨论",
+    "en": "New discussion"
+  },
   "thisContentIsUnavailablePleaseTryAgainLater": {
     "zh": "当前内容暂不可用，请稍后重试。",
     "en": "This content is unavailable. Please try again later."
@@ -3294,5 +3298,25 @@
   "translatingDiscussionMessage": {
     "zh": "翻译中…",
     "en": "Translating…"
+  },
+  "discussionNotifications": {
+    "zh": "讨论通知",
+    "en": "Discussion notifications"
+  },
+  "receiveAllDiscussion": {
+    "zh": "接收全部讨论",
+    "en": "All discussion"
+  },
+  "receiveMentionsAndReplies": {
+    "zh": "只接收 @ 和回复",
+    "en": "Only @ and replies"
+  },
+  "notificationSettingSaveFailed": {
+    "zh": "设置未能保存，请重试。",
+    "en": "Could not save the setting. Please try again."
+  },
+  "mentionsAndRepliesAlwaysNotify": {
+    "zh": "@ 你和回复你的消息始终会通知你。",
+    "en": "You are always notified when someone @mentions or replies to you."
   }
 }

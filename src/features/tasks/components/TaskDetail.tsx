@@ -62,6 +62,8 @@ import { groupSubtaskSuggestionsByDiscussionRoot, groupTaskDiscussionLinksByRoot
 import { toast } from "@/shared/ui/toast";
 import { Input, Textarea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
+import { DiscussionNotificationToggle } from "@/features/tasks/discussion/components/DiscussionNotificationToggle";
+import { discussionFollowers, readDiscussionNotificationPreference } from "@/features/tasks/discussion/lib/discussion-notification-preference";
 import { TaskFileExplorer } from "@/features/tasks/files/components/TaskFileExplorer";
 import { ALL_TASK_MEMBERS_MENTION_ID, getDiscussionAttachment, getTaskFiles, deleteCollaborationMessage, mergeCollaborationMessages, postCollaborationMessage, replaceCollaborationFiles, type CollaborationMessage, type CollaborationSnapshot, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import { useTaskCollaboration } from "@/features/tasks/lib/useTaskCollaboration";
@@ -321,6 +323,8 @@ export function TaskDetail({
   }, [task.status, taskId]);
 
   const confirmedOwnerId = currentOwner[0] ?? "";
+  // Only a participant chooses what the discussion notifies them of; the owner always receives all of it.
+  const receivesDiscussionChoice = Boolean(currentUserId) && currentParticipants.includes(currentUserId!) && !currentOwner.includes(currentUserId!);
   const displayedOwnerId = confirmedOwnerId;
   const displayedOwnerName = mockPersonName(locale, displayedOwnerId, members.find(member => member.id === displayedOwnerId)?.name || displayedOwnerId || d('noOwner'));
   const participantMembers = useMemo(() => members.filter((member) => !currentOwner.includes(member.id)), [currentOwner, members]);
@@ -537,7 +541,7 @@ export function TaskDetail({
       quote: draft.quote,
     };
     pendingDiscussionRef.current = { signature, message };
-    collaboration.commit(snapshot => postCollaborationMessage(snapshot, { message, attachments: draft.attachments, contextMessages: allMessages, visiblePeople: members.filter(member => member.membershipStatus !== "invited") }), onDiscussionSave ? (current, next) => onDiscussionSave(current, next, message) : undefined);
+    collaboration.commit(snapshot => postCollaborationMessage(snapshot, { message, attachments: draft.attachments, contextMessages: allMessages, visiblePeople: members.filter(member => member.membershipStatus !== "invited"), discussionFollowers: discussionFollowers(confirmedOwnerId, currentParticipants, memberId => readDiscussionNotificationPreference(window.localStorage, teamId, taskId, memberId)) }), onDiscussionSave ? (current, next) => onDiscussionSave(current, next, message) : undefined);
     pendingDiscussionRef.current = null;
   };
   const ownActor = (message: CollaborationMessage) => {
@@ -842,7 +846,7 @@ export function TaskDetail({
         </div>    </section>}
 
     <section aria-labelledby="task-detail-tab-discussion" className="task-detail-section task-discussion-panel first-section" hidden={visibleTab !== "discussion"} id="task-detail-panel-discussion" role="tabpanel" tabIndex={-1}>
-      <TaskDiscussion active={visibleTab === 'discussion'} readable={!collaboration.error} readRequestSequence={discussionReadRequestSequence} onRead={(ids, through) => onDiscussionRead?.(taskId, ids, through)} activities={activities} attentionTarget={discussionAttention} draftInsertion={discussionInsertion} currentUser={currentUserId} currentUserName={currentUser} draftKey={collaboration.scopeKey} files={allFiles} key={taskId} onConnectAi={openDiscussionAi} onOpenFile={(id, version) => openFile(id, version, true)} onPreviewAttachment={previewAttachment} onPost={(draft, replyToId) => { postDiscussion(draft, replyToId); if (!replyToId && discussionInsertion) { discussionInsertion.onPublished(draft); setDiscussionInsertion(undefined); } }} onDelete={deleteDiscussion} people={activityPeople}
+      <TaskDiscussion composerTools={receivesDiscussionChoice ? <DiscussionNotificationToggle memberId={currentUserId} taskId={taskId} teamId={teamId} /> : undefined} active={visibleTab === 'discussion'} readable={!collaboration.error} readRequestSequence={discussionReadRequestSequence} onRead={(ids, through) => onDiscussionRead?.(taskId, ids, through)} activities={activities} attentionTarget={discussionAttention} draftInsertion={discussionInsertion} currentUser={currentUserId} currentUserName={currentUser} draftKey={collaboration.scopeKey} files={allFiles} key={taskId} onConnectAi={openDiscussionAi} onOpenFile={(id, version) => openFile(id, version, true)} onPreviewAttachment={previewAttachment} onPost={(draft, replyToId) => { postDiscussion(draft, replyToId); if (!replyToId && discussionInsertion) { discussionInsertion.onPublished(draft); setDiscussionInsertion(undefined); } }} onDelete={deleteDiscussion} people={activityPeople}
         onCreateSubtask={onCreateDiscussionSubtask && !collaboration.error ? openDiscussionSubtask : undefined} creatingSubtask={Boolean(discussionSubtaskSource)} retainedSubtaskSources={discussionSubtaskSource ? [discussionSubtaskSource] : []} renderAfterMessage={renderDiscussionSubtask} followupsByMessageId={discussionFollowups} onOpenFollowupTask={onOpenRelatedTask} referenceTasks={discussionReferenceTasks} onOpenReferenceTask={onOpenDiscussionReferenceTask} renderSuggestions={messageId => renderSubtaskSuggestions(messageId)} />
     </section>
 

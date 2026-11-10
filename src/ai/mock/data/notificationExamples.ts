@@ -6,7 +6,7 @@ export { isNotificationReadTestMode } from "@/ai/mock/data/notificationReadScena
 
 export type WorkspaceNotification = {
   id: string;
-  kind: "invitation" | "member-joined" | "mention" | "reply" | "handoff";
+  kind: "invitation" | "member-joined" | "mention" | "reply" | "discussion" | "handoff";
   content: string;
   excerpt?: string;
   teamId?: string;
@@ -24,6 +24,7 @@ export const notificationTypeLabels: Record<WorkspaceNotification["kind"], strin
   "member-joined": "成员加入",
   mention: "讨论提及",
   reply: "讨论回复",
+  discussion: "新讨论",
 };
 
 // 通知以类型和事件文案呈现，不要求消息来源必须是成员。
