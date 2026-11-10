@@ -183,16 +183,6 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
       <footer className="task-discussion-feed-footer">
         <div className="task-discussion-feed-meta">
           {timestamp && <time aria-label={timestamp.full} className="task-discussion-feed-time" dateTime={timestamp.dateTime} tabIndex={0} title={timestamp.full}>{timestamp.label}</time>}
-          {(reading.canTranslate || reading.state === "translated" || reading.state === "original") && <span className="task-discussion-feed-translation">
-            {(reading.state === "translated" || reading.state === "original") && <><span>{reading.state === "translated" ? ui("已翻译") : ui("原文")}</span><span aria-hidden="true"> · </span></>}
-            <button aria-busy={reading.translating} className={reading.canTranslate ? "task-discussion-translate-trigger" : undefined} disabled={reading.translating} onClick={reading.canTranslate ? reading.translate : reading.toggleOriginal} type="button">{reading.canTranslate ? (reading.translating ? ui("翻译中…") : ui("翻译")) : reading.state === "translated" ? ui("查看原文") : ui("显示译文")}</button>
-          </span>}
-          {message.updatedAt && <small>{d("edited")}</small>}
-          {followupEntries}
-        </div>
-        {!message.deletedAt && <div className="task-discussion-feed-direct-actions">
-
-          {own && onDelete && <button onClick={() => onDelete(message)} type="button">{d("delete")}</button>}
           {onToggleLike && (own && likeCount > 0 ? <Popover open={likersOpen} onOpenChange={(open, details) => {
             if (details.reason === "trigger-press") { details.cancel(); return; }
             setLikersOpen(open);
@@ -202,6 +192,16 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
               <p>{likes.map((like, index) => <span key={like.personId}>{index > 0 && (en ? ", " : "、")}<PersonName name={like.personId === currentUser && currentUserName ? currentUserName : like.personId} personId={like.personId} showProfilePreview={false} /></span>)}</p>
             </PopoverContent>
           </Popover> : likeButton)}
+          {(reading.canTranslate || reading.state === "translated" || reading.state === "original") && <span className="task-discussion-feed-translation">
+            {(reading.state === "translated" || reading.state === "original") && <><span>{reading.state === "translated" ? ui("已翻译") : ui("原文")}</span><span aria-hidden="true"> · </span></>}
+            <button aria-busy={reading.translating} className={reading.canTranslate ? "task-discussion-translate-trigger" : undefined} disabled={reading.translating} onClick={reading.canTranslate ? reading.translate : reading.toggleOriginal} type="button">{reading.canTranslate ? (reading.translating ? ui("翻译中…") : ui("翻译")) : reading.state === "translated" ? ui("查看原文") : ui("显示译文")}</button>
+          </span>}
+          {message.updatedAt && <small>{d("edited")}</small>}
+          {followupEntries}
+        </div>
+        {!message.deletedAt && <div className="task-discussion-feed-direct-actions">
+
+          {own && onDelete && <button className="task-discussion-delete" onClick={() => onDelete(message)} type="button">{d("delete")}</button>}
           <button aria-expanded={Boolean(replyExpanded)} disabled={replyDisabled} onClick={() => onReply(message)} type="button">{replyExpanded ? d("cancelReply") : d("reply")}</button>
         </div>}
       </footer>

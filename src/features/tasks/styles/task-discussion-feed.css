@@ -156,10 +156,11 @@
 .task-discussion-pinned-toggle:hover { color: var(--ad-ink); }
 .task-discussion-pinned-toggle:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; border-radius: 3px; }
 
-/* One like: an icon with no likes, the icon and the count once there are some. */
-.task-discussion-feed-direct-actions .task-discussion-like { display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
-.task-discussion-feed-direct-actions .task-discussion-like[aria-pressed="true"] { color: var(--ad-route-ink); }
-.task-discussion-feed-direct-actions .task-discussion-like[aria-pressed="true"] > svg { fill: currentColor; }
+/* One like, right after the time: an icon with no likes, the icon and the count once there are some. */
+.task-discussion-like { display: inline-flex; min-height: 28px; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; color: var(--ad-ink-tertiary); font: inherit; font-size: var(--ad-text-caption); font-variant-numeric: tabular-nums; cursor: pointer; }
+.task-discussion-like:hover { color: var(--ad-ink); }
+.task-discussion-like[aria-pressed="true"] { color: var(--ad-route-ink); }
+.task-discussion-like[aria-pressed="true"] > svg { fill: currentColor; }
 .task-discussion-likers-popover { max-width: min(280px, calc(100vw - 32px)); padding: 8px 12px; border-radius: 8px; }
 .task-discussion-likers-popover > p { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.6; }
 
@@ -189,3 +190,9 @@
 .task-favorite-toggle[data-slot="button"]:is(:hover, :focus-visible) { color: var(--ad-ink-secondary); }
 .task-favorite-toggle[data-active], .task-file-favorite-toggle[data-active] { color: var(--ad-favorite); }
 .task-favorite-toggle[data-active] svg, .task-file-favorite-toggle[data-active] svg { fill: currentColor; }
+@media (max-width: 640px), (pointer: coarse) { .task-discussion-like { min-height: 44px; } }
+/* Delete shows only on hover, or after a long press without hover; it keeps its place so nothing moves. */
+.task-discussion-feed-message:not(:hover, :focus-within, [data-revealed]) .task-discussion-feed-direct-actions .task-discussion-delete { opacity: 0; pointer-events: none; }
+@media (hover: none), (pointer: coarse) {
+  .task-discussion-feed-message:not([data-revealed]) .task-discussion-feed-direct-actions .task-discussion-delete { opacity: 0; pointer-events: none; }
+}
