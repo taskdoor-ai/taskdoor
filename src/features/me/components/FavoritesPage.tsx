@@ -1,4 +1,4 @@
-import { useState, type KeyboardEvent } from "react";
+import { useState, type KeyboardEvent, type ReactNode } from "react";
 import { FileText, MessageSquareText, SquareCheckBig, Star } from "lucide-react";
 import { useMockText } from "@/ai/task-display";
 import type { FavoriteKind, FavoriteRecord } from "@/features/me/lib/favorites";
@@ -19,8 +19,10 @@ const tabs: Tab[] = ["all", "task", "discussion", "file"];
 const kindIcons = { task: SquareCheckBig, discussion: MessageSquareText, file: FileText };
 
 /** The viewer's favorites across teams, each jumping back to the original. */
-export function FavoritesPage({ items, showTeams, onOpen, onRemove }: {
+export function FavoritesPage({ items, showTeams, onOpen, onRemove, renderFileIcon }: {
   items: readonly FavoriteItem[];
+  /** The file tree's own icon for a file name, so a saved file looks as it does in its task. */
+  renderFileIcon?: (fileName: string) => ReactNode;
   showTeams: boolean;
   onOpen: (item: FavoriteItem) => void;
   onRemove: (item: FavoriteItem) => void;
@@ -66,7 +68,7 @@ export function FavoritesPage({ items, showTeams, onOpen, onRemove }: {
             const saved = formatRelativeDateTime(item.createdAt, locale, now);
             return <li className="favorites-item" data-kind={item.kind} key={item.key}>
               <button className="favorites-item-open" onClick={() => onOpen(item)} type="button">
-                <Icon aria-hidden="true" className="favorites-item-icon" size={16} />
+                <span aria-hidden="true" className="favorites-item-icon">{item.kind === "file" && renderFileIcon ? renderFileIcon(item.label ?? "") : <Icon size={16} />}</span>
                 <span className="favorites-item-text">
                   <span className="favorites-item-title">{title}</span>
                   {context && <span className="favorites-item-context">{context}</span>}

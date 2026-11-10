@@ -19,7 +19,11 @@
 .favorites-item-open { display: grid; min-width: 0; flex: 1; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: start; gap: 12px; padding: 12px 4px; border: 0; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
 .favorites-item-open:hover .favorites-item-title { color: var(--ad-route-ink); }
 .favorites-item-open:focus-visible, .favorites-item-remove:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -2px; border-radius: 6px; }
-.favorites-item-icon { margin-top: 2px; color: var(--ad-ink-tertiary); }
+/* Each type has its own calm color: tasks the route blue, discussions teal, files their file-tree icon. */
+.favorites-item-icon { display: inline-grid; width: 16px; height: 16px; margin-top: 3px; place-items: center; color: var(--ad-ink-tertiary); }
+.favorites-item[data-kind="task"] .favorites-item-icon { color: var(--ad-route-ink); }
+.favorites-item[data-kind="discussion"] .favorites-item-icon { color: var(--ad-tag-teal-ink); }
+.favorites-item-icon > .task-file-glyph { width: 18px; height: 18px; flex-basis: 18px; }
 .favorites-item-text { display: grid; min-width: 0; gap: 2px; }
 .favorites-item-title { display: -webkit-box; overflow: hidden; color: var(--ad-ink); font-size: var(--ad-text-body-sm); line-height: 1.6; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .favorites-item[data-kind="task"] .favorites-item-title { font-weight: 500; }
