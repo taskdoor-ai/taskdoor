@@ -100,7 +100,8 @@ test("讨论右上角复用 AI 快捷入口，主消息与回复传递各自 ID 
     const ai = elements(header.props.children, item => item.type === AiConnectionButton)[0];
     assert.ok(ai, "AI 快捷入口直接位于消息右上角");
     assert.equal(ai.props.compact, true);
-    assert.equal(elements(tree, item => item.props.className === "task-discussion-feed-menu").length, 0, "AI 不再藏在更多菜单里");
+    const menus = elements(tree, item => item.props.className === "task-discussion-feed-menu");
+    assert.equal(menus.flatMap(menu => elements(menu.props.children, item => item.type === AiConnectionButton)).length, 0, "AI 不藏在更多菜单里");
     const trigger = {} as HTMLElement;
     const shortcut = { agent: "chatgpt", signal: new AbortController().signal };
     await ai.props.onConnect(trigger, shortcut);

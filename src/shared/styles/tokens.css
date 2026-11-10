@@ -36,6 +36,7 @@
   --ad-route-hover: #4263d0;
   --ad-route-active: #3d5dc4;
   --ad-route-soft: #eff3ff;
+  --ad-favorite: #c88a12;
   --ad-route-soft-hover: #e4ecff;
   --ad-route-border: #a4b8f4;
   --ad-route-ink: #4763c5;
@@ -286,6 +287,7 @@
   --ad-route-hover: #a4bbff;
   --ad-route-active: #bbcdff;
   --ad-route-soft: #263759;
+  --ad-favorite: #e6b04a;
   --ad-route-soft-hover: #30436a;
   --ad-route-border: #536fa6;
   --ad-route-ink: #b5c8ff;

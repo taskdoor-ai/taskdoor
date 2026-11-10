@@ -144,3 +144,55 @@
   .task-discussion-feed-message:focus-within .task-discussion-translate-trigger,
   .task-discussion-translate-trigger[aria-busy="true"] { opacity: 1; pointer-events: auto; }
 }
+
+/* Pinned messages sit above the timeline, each shown in full with a quiet mark; long ones fold to about five lines. */
+.task-discussion-pinned-list:not(:last-child) { margin-bottom: var(--discussion-row-gap); }
+.task-discussion-pinned-list:not(:last-child) > .task-discussion-feed-message:last-child::after { position: absolute; inset-inline: 0; bottom: calc(var(--discussion-row-gap) / -2); border-bottom: 1px dashed var(--ad-border); content: ""; pointer-events: none; }
+.task-discussion-pinned-mark { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 3px; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.task-discussion-pinned-mark > svg { transform: rotate(35deg); }
+.task-discussion-feed-body.is-folded { max-height: calc(1.65em * 5); overflow: hidden; }
+.task-discussion-feed-body.has-more { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.65em), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 1.65em), transparent); }
+.task-discussion-pinned-toggle { display: inline-flex; min-height: 24px; align-items: center; margin-top: 2px; padding: 0; border: 0; background: transparent; color: var(--ad-ink-tertiary); font: inherit; font-size: var(--ad-text-caption); cursor: pointer; }
+.task-discussion-pinned-toggle:hover { color: var(--ad-ink); }
+.task-discussion-pinned-toggle:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; border-radius: 3px; }
+
+/* One like, right after the time: an icon with no likes, the icon and the count once there are some. */
+.task-discussion-like { display: inline-flex; min-height: 28px; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; color: var(--ad-ink-tertiary); font: inherit; font-size: var(--ad-text-caption); font-variant-numeric: tabular-nums; cursor: pointer; }
+.task-discussion-like:hover { color: var(--ad-ink); }
+.task-discussion-like[aria-pressed="true"] { color: var(--ad-route-ink); }
+.task-discussion-like[aria-pressed="true"] > svg { fill: currentColor; }
+.task-discussion-likers-popover { max-width: min(280px, calc(100vw - 32px)); padding: 8px 12px; border-radius: 8px; }
+.task-discussion-likers-popover > p { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.6; }
+
+@media (hover: hover) and (pointer: fine) {
+  .task-discussion-like[data-count="0"]:not([aria-pressed="true"]) { opacity: 0; pointer-events: none; }
+  .task-discussion-feed-message:hover .task-discussion-like,
+  .task-discussion-feed-message:focus-within .task-discussion-like { opacity: 1; pointer-events: auto; }
+}
+
+/* Pin and favorite: icons at the top right that appear on hover (or a long press without hover). A saved
+   favorite stays visible; a pin shows only on hover, as 「已置顶」 by the name already says so. Pin is offered only to those who may pin. */
+.task-discussion-hover-action { display: inline-grid; width: 28px; height: 28px; flex: 0 0 auto; place-items: center; padding: 0; border: 0; border-radius: 5px; background: transparent; color: var(--ad-ink-tertiary); cursor: pointer; }
+.task-discussion-hover-action:hover { background: var(--ad-surface-subtle); color: var(--ad-ink); }
+.task-discussion-hover-action:is(.task-discussion-pin-toggle, :not([data-active])) { opacity: 0; pointer-events: none; }
+.task-discussion-feed-message:is(:hover, :focus-within, [data-revealed]) .task-discussion-hover-action { opacity: 1; pointer-events: auto; }
+.task-discussion-pin-toggle[data-active] { color: var(--ad-route-ink); }
+.task-discussion-pin-toggle[data-active] > svg { fill: currentColor; }
+.task-discussion-favorite-toggle[data-active] { color: var(--ad-favorite); }
+.task-discussion-favorite-toggle[data-active] > svg { fill: currentColor; }
+@media (hover: none), (pointer: coarse) {
+  .task-discussion-feed-message:not([data-revealed]):is(:hover, :focus-within) .task-discussion-hover-action:is(.task-discussion-pin-toggle, :not([data-active])) { opacity: 0; pointer-events: none; }
+  .task-discussion-hover-action { width: 36px; height: 36px; }
+}
+
+/* The favorite bookmark, the same everywhere: outlined until saved, then filled. */
+.task-favorite-toggle[data-slot="button"] { color: color-mix(in srgb, var(--ad-ink-tertiary) 60%, transparent); }
+.task-favorite-toggle[data-slot="button"]:is(:hover, :focus-visible) { color: var(--ad-ink-secondary); }
+.task-favorite-toggle[data-active], .task-file-favorite-toggle[data-active] { color: var(--ad-favorite); }
+.task-favorite-toggle[data-active] svg, .task-file-favorite-toggle[data-active] svg { fill: currentColor; }
+@media (max-width: 640px), (pointer: coarse) { .task-discussion-like { min-height: 44px; } }
+/* Delete shows only on hover, or after a long press without hover; it keeps its place so nothing moves. */
+.task-discussion-feed-message:not(:hover, :focus-within, [data-revealed]) .task-discussion-feed-direct-actions .task-discussion-delete { opacity: 0; pointer-events: none; }
+@media (hover: none), (pointer: coarse) {
+  .task-discussion-feed-message:not([data-revealed]) .task-discussion-feed-direct-actions .task-discussion-delete { opacity: 0; pointer-events: none; }
+}

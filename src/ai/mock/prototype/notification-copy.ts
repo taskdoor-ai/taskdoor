@@ -10,7 +10,9 @@ export function notificationCopy(locale: Locale, item: WorkspaceNotification): W
   const people = item.people?.map(person => ({ ...person, name: mockPersonName(locale, person.id, person.name) }));
   const task = item.task ? { ...item.task, title: mockTaskField(locale, item.task.id, 'title', item.task.title) } : undefined;
   const person = people?.[0]?.name ?? '';
-  const content = item.kind === 'mention' ? ` @${person} mentioned you in the discussion.`
+  const likers = Number(item.content.match(/等 (\d+) 个人/)?.[1] ?? 1);
+  const content = item.kind === 'like' ? (likers > 1 ? ` @${person} and ${likers - 1} ${likers > 2 ? 'others' : 'other'} liked your comment.` : ` @${person} liked your comment.`)
+    : item.kind === 'mention' ? ` @${person} mentioned you in the discussion.`
     : item.kind === 'member-joined' ? ` @${person} joined the team.`
     : ` @${person} invited you to collaborate on a task.`;
   return { ...item, people, task, content };

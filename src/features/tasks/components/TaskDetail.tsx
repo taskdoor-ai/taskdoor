@@ -20,7 +20,8 @@ import { MockTaskProvider, useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { Tooltip } from "@base-ui/react/tooltip";
-import { ArrowLeft, ChevronRight, X } from "lucide-react";
+import { ArrowLeft, ChevronRight, Bookmark, X } from "lucide-react";
+import { useFavorite } from "@/features/me/lib/favorites";
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { type TaskActivityMock, type TaskDetailContent, type TaskFileNode, type TaskIconName, type TaskIconTone } from "@/shared/model/task-model";
 import { type TagDefinition } from "@/ai/mock/data/tagGroups";
@@ -143,6 +144,8 @@ type TaskDetailProps = {
   task: TaskDetailContent;
   taskId: string;
   taskNumber?: number;
+  /** The task owner, the team Owner and Admins may pin discussion messages. */
+  canPinDiscussion?: boolean;
 };
 
 function toDateInputValue(value: string): string {
@@ -212,6 +215,7 @@ export function TaskDetail({
   task,
   taskId,
   taskNumber,
+  canPinDiscussion = false,
 }: TaskDetailProps) {
   const ui = useGlobalUi();
   const { locale } = useI18n();
@@ -220,6 +224,8 @@ export function TaskDetail({
   const [discussionSubtaskSource, setDiscussionSubtaskSource] = useState<NonNullable<NewSubtaskDraft["sourceDiscussion"]> | null>(null);
   const discussionSubtaskTrigger = useRef<HTMLElement | null>(null);
   const d = useDetailCopy();
+  const taskFavorite = useFavorite("task", taskId);
+  const favoriteLabel = taskFavorite.active ? (locale === "en" ? "Remove from favorites" : "取消收藏") : (locale === "en" ? "Add to favorites" : "收藏");
   const taskNumberText = taskNumber === undefined ? undefined : `#${taskNumber}`;
   const taskNumberCopyLabel = taskNumberText === undefined ? undefined : `${d("copyTaskNumber")} ${taskNumberText}`;
   const copyTaskNumber = async (text: string) => {
@@ -783,6 +789,7 @@ export function TaskDetail({
                     </Tooltip.Positioner>
                   </Tooltip.Portal>
                 </Tooltip.Root>}
+                {taskFavorite.available && <Button aria-label={favoriteLabel} className="task-favorite-toggle" data-active={taskFavorite.active || undefined} onClick={() => { if (taskFavorite.toggle() === null) toast.error(locale === "en" ? "Could not update favorites. Please try again." : "收藏未能更新，请重试。"); }} size="icon-sm" title={favoriteLabel} type="button" variant="ghost"><Bookmark aria-hidden="true" /></Button>}
                 <AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} />
               </div>
             </div>
@@ -846,7 +853,7 @@ export function TaskDetail({
         </div>    </section>}
 
     <section aria-labelledby="task-detail-tab-discussion" className="task-detail-section task-discussion-panel first-section" hidden={visibleTab !== "discussion"} id="task-detail-panel-discussion" role="tabpanel" tabIndex={-1}>
-      <TaskDiscussion composerTools={receivesDiscussionChoice ? <DiscussionNotificationToggle memberId={currentUserId} taskId={taskId} teamId={teamId} /> : undefined} active={visibleTab === 'discussion'} readable={!collaboration.error} readRequestSequence={discussionReadRequestSequence} onRead={(ids, through) => onDiscussionRead?.(taskId, ids, through)} activities={activities} attentionTarget={discussionAttention} draftInsertion={discussionInsertion} currentUser={currentUserId} currentUserName={currentUser} draftKey={collaboration.scopeKey} files={allFiles} key={taskId} onConnectAi={openDiscussionAi} onOpenFile={(id, version) => openFile(id, version, true)} onPreviewAttachment={previewAttachment} onPost={(draft, replyToId) => { postDiscussion(draft, replyToId); if (!replyToId && discussionInsertion) { discussionInsertion.onPublished(draft); setDiscussionInsertion(undefined); } }} onDelete={deleteDiscussion} people={activityPeople}
+      <TaskDiscussion composerTools={receivesDiscussionChoice ? <DiscussionNotificationToggle memberId={currentUserId} taskId={taskId} teamId={teamId} /> : undefined} teamId={teamId ?? ""} taskId={taskId} canPin={canPinDiscussion} active={visibleTab === 'discussion'} readable={!collaboration.error} readRequestSequence={discussionReadRequestSequence} onRead={(ids, through) => onDiscussionRead?.(taskId, ids, through)} activities={activities} attentionTarget={discussionAttention} draftInsertion={discussionInsertion} currentUser={currentUserId} currentUserName={currentUser} draftKey={collaboration.scopeKey} files={allFiles} key={taskId} onConnectAi={openDiscussionAi} onOpenFile={(id, version) => openFile(id, version, true)} onPreviewAttachment={previewAttachment} onPost={(draft, replyToId) => { postDiscussion(draft, replyToId); if (!replyToId && discussionInsertion) { discussionInsertion.onPublished(draft); setDiscussionInsertion(undefined); } }} onDelete={deleteDiscussion} people={activityPeople}
         onCreateSubtask={onCreateDiscussionSubtask && !collaboration.error ? openDiscussionSubtask : undefined} creatingSubtask={Boolean(discussionSubtaskSource)} retainedSubtaskSources={discussionSubtaskSource ? [discussionSubtaskSource] : []} renderAfterMessage={renderDiscussionSubtask} followupsByMessageId={discussionFollowups} onOpenFollowupTask={onOpenRelatedTask} referenceTasks={discussionReferenceTasks} onOpenReferenceTask={onOpenDiscussionReferenceTask} renderSuggestions={messageId => renderSubtaskSuggestions(messageId)} />
     </section>
 

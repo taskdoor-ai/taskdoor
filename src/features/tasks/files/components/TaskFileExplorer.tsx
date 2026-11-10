@@ -7,7 +7,8 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { formatDisplayDateTime, formatLegacyDateLabel } from "@/shared/lib/date-time";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
-import { ArrowLeft, ChevronRight, Download, Eye, EyeOff, FolderOpen, FolderPlus, GripVertical, SquareDashedMousePointer, History, MessageCircle, MoreHorizontal, MoveRight, PanelLeftClose, PanelLeftOpen, Pencil, Plus, Save, Search, Upload, X } from "lucide-react";
+import { ArrowLeft, ChevronRight, Download, Eye, EyeOff, FolderOpen, FolderPlus, GripVertical, SquareDashedMousePointer, History, MessageCircle, MoreHorizontal, MoveRight, PanelLeftClose, PanelLeftOpen, Pencil, Plus, Save, Search, Bookmark, Upload, X } from "lucide-react";
+import { useFileFavorite } from "@/features/tasks/files/lib/useFileFavorite";
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { TaskFileNode } from "@/shared/model/task-model";
@@ -158,6 +159,7 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
   const basketTriggerRef = useRef<HTMLButtonElement | null>(null);
   const selected = previewFiles.find(node => node.id === selectedId && node.kind === "file" && !node.archived) ?? null;
   const isTransientPreview = Boolean(selected && !files.some(file => file.id === selected.id) && !discussionSources.some(file => file.id === selected.id));
+  const selectedFavorite = useFileFavorite(taskId, selected);
   const referenceFile = useMemo(() => {
     if (!selected || referenceVersion == null || referenceVersion === (selected.version ?? 1)) return selected;
     if (loaded.error || loaded.fileErrors[selected.id]) return null;
@@ -477,6 +479,7 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
                 {editable && currentContent && !loadError && <Button aria-label={d('editFile')} className="task-file-action-button" onClick={() => { setAnnotationSource(null); setAnnotationMode(false); setEditingFileId(selected.id); setSelection(null); setError(""); }} size="sm" variant="ghost"><Pencil size={16} />{dirty ? ui("继续编辑") : d('edit')}</Button>}
               </>}
             </>}
+            {!isTransientPreview && selectedFavorite.available && <Button aria-label={selectedFavorite.label} className="task-file-favorite-toggle" data-active={selectedFavorite.active || undefined} onClick={selectedFavorite.toggle} size="icon-sm" title={selectedFavorite.label} variant="ghost"><Bookmark aria-hidden="true" /></Button>}
             {viewerFile && <TaskFileDownload file={viewerFile} onError={setError} />}
             {selected && (!isTransientPreview || ownAnnotations.length > 0) && <DropdownMenu><DropdownMenuTrigger aria-label={ui("更多文件操作")} className="task-file-toolbar-more"><MoreHorizontal size={17} /></DropdownMenuTrigger><DropdownMenuContent align="end" className="task-file-toolbar-menu"><DropdownMenuGroup>
               {selected.kind === "file" && lastUpdate?.updatedAt.trim() && <DropdownMenuLabel aria-label={ui("最近更新")} className="task-file-menu-meta">
@@ -570,7 +573,7 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
     if (event.key === "Escape") setSelection(null);
   }}>
     {browserMode ? <>
-      <TaskFileBrowser canDelete={canDelete} files={files} displayName={mock.text} directoryId={browserDirectoryId} onDirectoryChange={setBrowserDirectoryId} expandedIds={expandedIds} onExpandedChange={setExpandedIds} onOpen={(id, trigger) => { previewTrigger.current = trigger; selectNode(id); }} onAction={openAction} onCreateFolder={() => setDialog({ type: "create", parentId: browserDirectoryId })} onUpload={openUpload} uploading={uploading} error={error || loaded.error} />
+      <TaskFileBrowser taskId={taskId} canDelete={canDelete} files={files} displayName={mock.text} directoryId={browserDirectoryId} onDirectoryChange={setBrowserDirectoryId} expandedIds={expandedIds} onExpandedChange={setExpandedIds} onOpen={(id, trigger) => { previewTrigger.current = trigger; selectNode(id); }} onAction={openAction} onCreateFolder={() => setDialog({ type: "create", parentId: browserDirectoryId })} onUpload={openUpload} uploading={uploading} error={error || loaded.error} />
       <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={ui("选择上传文件")} hidden multiple onChange={event => void uploadFiles(Array.from(event.target.files ?? []), uploadParentId)} ref={uploadInput} type="file" />
       {uploading && <div className="flex items-center gap-3 p-4" role="status"><Spinner /><span>{ui("正在上传 {0}/{1} 个文件", {0: uploadProgress.completed, 1: uploadProgress.total})}</span><Progress aria-label={ui("上传进度")} max={uploadProgress.total} value={uploadProgress.completed} /></div>}
     </> : <aside aria-label={ui("任务文件")} aria-hidden={sidebar.collapsed || undefined} inert={sidebar.collapsed} className="task-file-explorer-sidebar" id={sidebar.sidebarId} ref={sidebar.sidebarRef}>
@@ -586,7 +589,7 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
         </DropdownMenu>
         <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={ui("选择上传文件")} hidden multiple onChange={event => void uploadFiles(Array.from(event.target.files ?? []), uploadParentId)} ref={uploadInput} type="file" />
       </div>
-      <div className="task-file-explorer-tree-scroll">{visibleFiles.some(node => !node.archived) ? <TaskFileTree canDelete={canDelete} expandedIds={expandedIds} nodes={visibleFiles} onAction={openAction} onExpandedChange={setExpandedIds} onSelect={id => selectNode(id)} selectedId={selectedId} /> : <div className="task-file-explorer-no-results">{query ? ui("没有匹配的文件") : ui("暂无文件")}{query && <button onClick={() => setQuery("")} type="button">{ui("清除搜索")}</button>}</div>}</div>
+      <div className="task-file-explorer-tree-scroll">{visibleFiles.some(node => !node.archived) ? <TaskFileTree taskId={taskId} canDelete={canDelete} expandedIds={expandedIds} nodes={visibleFiles} onAction={openAction} onExpandedChange={setExpandedIds} onSelect={id => selectNode(id)} selectedId={selectedId} /> : <div className="task-file-explorer-no-results">{query ? ui("没有匹配的文件") : ui("暂无文件")}{query && <button onClick={() => setQuery("")} type="button">{ui("清除搜索")}</button>}</div>}</div>
       </div>
       {sidebar.desktop && <SidebarResizeHandle kind="files" width={sidebar.width} onChange={sidebar.changeWidth} onResizePreview={sidebar.previewResize} onResizeCommit={sidebar.commitResize} onResizeCancel={sidebar.cancelResize} onResizingChange={sidebar.setResizing} min={180} max={sidebar.maxWidth} />}
     </aside>}

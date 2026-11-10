@@ -2,7 +2,8 @@ import { formatFileSize } from "@/shared/lib/file-size";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
-import { ChevronDown, ChevronRight, MoreHorizontal, Pencil, Trash2, MoveRight } from "lucide-react";
+import { ChevronDown, ChevronRight, MoreHorizontal, Pencil, Bookmark, Trash2, MoveRight } from "lucide-react";
+import { useFileFavorite } from "@/features/tasks/files/lib/useFileFavorite";
 import React from "react";
 import { Button as AriaButton, Tree, TreeItem, TreeItemContent } from "react-aria-components";
 import type { TaskFileNode } from "@/shared/model/task-model";
@@ -22,8 +23,9 @@ export function TaskFileNodeIcon({ node, expanded = false }: { node: TaskFileNod
   return <Icon aria-hidden="true" size={15} />;
 }
 
-export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex, canDelete = false }: {
+export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex, canDelete = false, taskId = "" }: {
   node: TaskFileNode;
+  taskId?: string;
   onAction: (action: TaskFileAction) => void;
   className?: string;
   tabIndex?: number;
@@ -31,6 +33,7 @@ export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex, can
 }) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
+  const favorite = useFileFavorite(taskId, node);
   return <DropdownMenu>
     <DropdownMenuTrigger
       aria-label={ui("{0}的更多操作", {0: node.name})}
@@ -46,6 +49,7 @@ export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex, can
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end" className="task-workspace-row-menu" sideOffset={4} onClick={(event) => event.stopPropagation()}>
       <DropdownMenuGroup>
+        {favorite.available && <DropdownMenuItem onClick={favorite.toggle}><Bookmark aria-hidden="true" size={15} />{favorite.label}</DropdownMenuItem>}
         <DropdownMenuItem onClick={() => onAction({ type: "rename", nodeId: node.id })}><Pencil aria-hidden="true" size={15} />{d('rename')}</DropdownMenuItem>
         <DropdownMenuItem onClick={() => onAction({ type: "move", nodeId: node.id })}><MoveRight aria-hidden="true" size={15} />{ui("移动到")}</DropdownMenuItem>
         {canDelete && <DropdownMenuItem onClick={() => onAction({ type: "delete", nodeId: node.id })} variant="destructive"><Trash2 aria-hidden="true" size={15} />{ui("删除")}</DropdownMenuItem>}
@@ -54,7 +58,8 @@ export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex, can
   </DropdownMenu>;
 }
 
-export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, onSelect, selectedId, browser = false, displayName: formatName, allNodes = nodes, canDelete }: {
+export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, onSelect, selectedId, browser = false, displayName: formatName, allNodes = nodes, canDelete, taskId }: {
+  taskId?: string;
   expandedIds: Set<string>;
   nodes: TaskFileNode[];
   onAction: (action: TaskFileAction) => void;
@@ -120,7 +125,7 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
         <TaskFileName className="task-file-explorer-name" name={displayName} />
         {node.kind === "folder" && (browser || children.length > 0) && <small aria-label={ui("{0} 项", { 0: childCount })}>{childCount}</small>}
         {browser && node.kind === "file" && <small>{formatFileSize(node.sizeBytes, { fallback: node.sizeLabel })}</small>}
-        <TaskFileNodeMenu canDelete={canDelete?.(node.id)} node={node} onAction={onAction} tabIndex={isFocused ? 0 : -1} />
+        <TaskFileNodeMenu canDelete={canDelete?.(node.id)} node={node} taskId={taskId} onAction={onAction} tabIndex={isFocused ? 0 : -1} />
       </>}</TreeItemContent>
       {children.map(renderNode)}
     </TreeItem>;

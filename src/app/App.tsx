@@ -70,7 +70,12 @@ import { commitManualWorkspaceTask, createWorkspaceTasksFromDraft, type QuickTas
 import { loadWorkspaceTaskNumbers } from "@/features/tasks/lib/workspace-task-numbers";
 import { getMockRefreshedSubtaskSuggestions, getMockSubtaskSuggestionActivities, getMockSubtaskSuggestions } from "@/ai/task-subtask-suggestions";
 import { createWorkspaceSuggestedSubtasks, getSubtaskSuggestionStorageKey, type SubtaskSuggestion, type SubtaskSuggestionReview } from "@/features/tasks/lib/task-subtask-suggestions";
-import { activeMembership } from "@/features/members/lib/team-membership-lifecycle";
+import { activeMembership, canEditTeamInformation } from "@/features/members/lib/team-membership-lifecycle";
+import { FavoritesScope, favoriteKey, useFavorites } from "@/features/me/lib/favorites";
+import type { NotificationRegionTarget } from "@/features/notifications/lib/notification-read-state";
+import { readTaskLink, taskLinkHref, withoutTaskLink } from "@/app/workspace/lib/task-link";
+import { FavoritesPage, type FavoriteItem } from "@/features/me/components/FavoritesPage";
+import { TaskFileGlyph } from "@/features/tasks/files/components/TaskFileGlyph";
 import { addWorkspaceSubtask, canCreateWorkspaceSubtask, getSubtaskDeletionPreview, getTaskDeletionPreview, getTaskDeletionWrites, type NewSubtaskDraft } from "@/features/tasks/lib/workspace-subtask-editing";
 import { clearTaskFileDraftSessions } from "@/features/tasks/files/lib/task-file-drafts";
 import { commitWorkspaceScenarioReset, resolveWorkspaceScenarioReset } from "@/ai/mock/lib/workspaceScenarioReset";
@@ -788,6 +793,37 @@ function App() {
     try { setRecycleEntries(readRecycleBin(localStorage)); setRecycleError(""); }
     catch (error) { setRecycleError(error instanceof Error ? error.message : "回收站读取失败，请重试。"); }
   };
+  /** Opens a task in its own team, at a discussion message or a file when given. */
+  const openTaskTarget = (taskId: string, target: NotificationRegionTarget | undefined, sourceTeamId: string, onNavigate: () => void, unavailable: string) => {
+    requestCreationExit(() => {
+      const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId && (node.teamId ?? "creator-commerce") === sourceTeamId);
+      if (!task || !canReadTask(task, loadPersonalCenterState().teams)) {
+        toast.error(unavailable);
+        return;
+      }
+      if (sourceTeamId === activeTeamId) resetTaskSearch();
+      setTaskAttentionTarget(target?.area === "discussion"
+        ? { kind: target.activityId ? "activity" : "discussion", targetId: target.activityId ?? "" }
+        : target?.area === "files" && target.fileId ? { kind: "file", targetId: target.fileId } : null);
+      onNavigate();
+      showTaskDetail(task, !target);
+    });
+  };
+  // A link opened in a new window (from the Favorites page) lands on its task, message or file once.
+  const taskLinkOpened = useRef(false);
+  useEffect(() => {
+    if (taskLinkOpened.current) return;
+    taskLinkOpened.current = true;
+    const link = readTaskLink(window.location.search);
+    if (!link) return;
+    window.history.replaceState(null, "", withoutTaskLink(window.location));
+    openTaskTarget(link.taskId, link.target, link.teamId, () => undefined, locale === "en" ? "This item is no longer available." : "收藏的内容已不可访问。");
+  }, []);
+  const openFavorites = (closeNavigation: () => void) => requestCreationExit(() => {
+    setActiveSection("favorites");
+    closeNavigation();
+    focusPrimaryHeadingAfterNavigation();
+  });
   const openRecycleBin = (closeNavigation: () => void) => requestCreationExit(() => {
     refreshRecycleBin();
     setActiveSection("recycle-bin");
@@ -1113,6 +1149,16 @@ function App() {
     selectedTreeTask?.kind === "task" ? { ...selectedTreeTask, participantIds: selectedParticipants } : undefined,
     currentUserId, personalCenterState.teams.some(team => team.id === activeTeamId && activeMembership(team, currentUserId)),
   );
+  const activeTeamProfile = personalCenterState.teams.find(team => team.id === activeTeamId);
+  // The task owner, the team Owner and Admins may pin discussion messages; participants may not.
+  const canPinDiscussion = Boolean(selectedTreeTask?.kind === "task" && activeTeamProfile && activeMembership(activeTeamProfile, currentUserId)
+    && (selectedTreeTask.ownerId === currentUserId || canEditTeamInformation(activeTeamProfile, currentUserId)));
+  const favoritesScope = useMemo(() => ({ userId: currentUserId, teamId: activeTeamId }), [currentUserId, activeTeamId]);
+  const favorites = useFavorites(currentUserId);
+  const favoriteItems = useMemo<FavoriteItem[]>(() => favorites.records.map(record => {
+    const task = workspaceNodes.find((node): node is TaskNode => node.kind === "task" && node.id === record.taskId && (node.teamId ?? "creator-commerce") === record.teamId);
+    return { ...record, key: favoriteKey(record), taskName: task?.name, taskNumber: task ? taskNumbers.get(task.id) : undefined, teamName: personalCenterState.teams.find(team => team.id === record.teamId)?.name };
+  }), [favorites.records, workspaceNodes, taskNumbers, personalCenterState.teams]);
   const canCreateTaskFromDiscussion = Boolean(selectedTreeTask?.kind === "task" && personalCenterState.teams.some(team => team.id === activeTeamId && activeMembership(team, currentUserId)));
   const confirmSubtaskSuggestions = async (suggestions: SubtaskSuggestion[], review: SubtaskSuggestionReview, expectedReviewRaw: string | null, entry: "subtasks" | "discussion") => {
     if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
@@ -1534,7 +1580,7 @@ function App() {
   if (!personalCenterState.teams.length) return <div className="app-shell"><main className="team-empty-workspace"><h1>{locale === "en" ? "No team yet" : "你还没有加入团队"}</h1><p>{locale === "en" ? "Create a team, or ask a teammate for an invitation link." : "创建一个新团队，或通过同事提供的邀请链接加入。"}</p><Button onClick={() => setCreateEmptyTeamOpen(true)}>{locale === "en" ? "Create team" : "创建团队"}</Button><Button variant="ghost" onClick={signOutWorkspace}>{locale === "en" ? "Sign out" : "退出登录"}</Button>{hasRestorableTeams(currentUserId) && <MyTeamsPanel actorId={currentUserId} onRestore={restoreTeam} state={personalCenterState} />}<CreateTeamDialog open={createEmptyTeamOpen} onOpenChange={setCreateEmptyTeamOpen} /></main></div>;
 
   return (
-    <TeamTimeZoneContext.Provider value={activeTeamTimeZone}><MockDataProvider tasks={additionalMockTasks}><MemberInvitationProvider ref={memberInvitationsRef} state={personalCenterState} onStateChange={setPersonalCenterState} teamId={activeTeamId} members={collaborationMembers}>
+    <FavoritesScope.Provider value={favoritesScope}><TeamTimeZoneContext.Provider value={activeTeamTimeZone}><MockDataProvider tasks={additionalMockTasks}><MemberInvitationProvider ref={memberInvitationsRef} state={personalCenterState} onStateChange={setPersonalCenterState} teamId={activeTeamId} members={collaborationMembers}>
     <PersonDirectoryProvider members={collaborationMembers}>
     <PersonalTagsProvider tags={tagDefinitions} onManage={openTagManagement}>
     <TeamLifecycleProvider team={personalCenterState.teams.find(t => t.id === activeTeamId)} nodes={workspaceNodes} members={collaborationMembers} actorId={currentUserId} onCommit={commitMembershipAction}>
@@ -1567,21 +1613,8 @@ function App() {
         discussionReadReceipt={discussionReadReceipt}
         getNotificationTaskTitle={(taskId, teamId) => notificationTasks.find(task => task.id === taskId && (task.teamId ?? "creator-commerce") === teamId)?.name}
         onDiscussionReadHandled={finishDiscussionRead}
-        onOpenNotificationTask={(taskId, target, sourceTeamId, onNavigate) => {
-          requestCreationExit(() => {
-            const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId && (node.teamId ?? "creator-commerce") === sourceTeamId);
-            if (!task || !canReadTask(task, loadPersonalCenterState().teams)) {
-              toast.error(locale === "en" ? "The notification source is unavailable." : "通知来源不可访问。");
-              return;
-            }
-            if (sourceTeamId === activeTeamId) resetTaskSearch();
-            setTaskAttentionTarget(target?.area === "discussion"
-              ? { kind: target.activityId ? "activity" : "discussion", targetId: target.activityId ?? "" }
-              : target?.area === "files" && target.fileId ? { kind: "file", targetId: target.fileId } : null);
-            onNavigate();
-            showTaskDetail(task, !target);
-          });
-        }}
+        onOpenNotificationTask={(taskId, target, sourceTeamId, onNavigate) => openTaskTarget(taskId, target, sourceTeamId, onNavigate, locale === "en" ? "The notification source is unavailable." : "通知来源不可访问。")}
+        onOpenFavorites={openFavorites}
         onOpenPersonalCenter={(module) => openPersonalCenter(module)}
         onTeamChange={changeActiveTeam}
         teams={personalCenterState.teams}
@@ -1717,6 +1750,7 @@ function App() {
             task={selectedTaskDetail}
             taskId={selectedTaskId}
             taskNumber={taskNumbers.get(selectedTaskId)}
+            canPinDiscussion={canPinDiscussion}
             plannedEndOn={selectedTaskPeriodOverride === undefined ? (selectedTreeTask?.kind === "task" ? selectedTreeTask.plannedEndOn : undefined) ?? selectedLegacyTask?.plannedEndOn : selectedTaskPeriodOverride?.end}
             plannedStartOn={selectedTaskPeriodOverride === undefined ? (selectedTreeTask?.kind === "task" ? selectedTreeTask.plannedStartOn : undefined) ?? selectedLegacyTask?.plannedStartOn : selectedTaskPeriodOverride?.start}
             tagDefinitions={tagDefinitions}
@@ -1733,7 +1767,14 @@ function App() {
           ) : null}
         </TaskWorkspace>
 
-        {activeSection === "recycle-bin" ? (
+        {activeSection === "favorites" ? (
+          <FavoritesPage
+            items={favoriteItems}
+            renderFileIcon={name => <TaskFileGlyph compact node={{ id: name, kind: "file", name, parentId: null, updatedAt: "" }} />}
+            hrefFor={item => taskLinkHref({ teamId: item.teamId, taskId: item.taskId, target: item.kind === "discussion" ? { area: "discussion", activityId: item.targetId } : item.kind === "file" ? { area: "files", fileId: item.targetId } : undefined })}
+            onRemove={item => { if (favorites.toggle(item) === null) toast.error(locale === "en" ? "Could not update favorites. Please try again." : "收藏未能更新，请重试。"); }}
+          />
+        ) : activeSection === "recycle-bin" ? (
           <TaskRecycleBinPage
             key={activeTeamId}
             entries={recycleEntries}
@@ -1809,7 +1850,7 @@ function App() {
     </TeamLifecycleProvider>
     </PersonalTagsProvider>
     </PersonDirectoryProvider>
-    </MemberInvitationProvider></MockDataProvider></TeamTimeZoneContext.Provider>
+    </MemberInvitationProvider></MockDataProvider></TeamTimeZoneContext.Provider></FavoritesScope.Provider>
   );
 }
 

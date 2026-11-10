@@ -1,7 +1,7 @@
 import { AccentColorSetting } from "@/features/me/components/AccentColorSetting";
 import { TaskNavigationTools } from "@/features/tasks/components/TaskNavigationTools";
 import { useCallback, useEffect, useMemo, useRef, useState, type ComponentProps, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
-import { CircleDashed, LogOut, Menu, Plus, Settings2, Sparkles, X } from "lucide-react";
+import { CircleDashed, LogOut, Menu, Plus, Settings2, Sparkles, Bookmark, X } from "lucide-react";
 import { GlobalNotifications } from "@/features/notifications/components/GlobalNotifications";
 import type { DiscussionReadReceipt, NotificationRegionTarget } from "@/features/notifications/lib/notification-read-state";
 import { getTaskStatusFilters, normalizeTaskWorkspaceFilters, type TaskListFilters, type TaskListScope } from "@/features/tasks/components/task-list-filters";
@@ -26,6 +26,7 @@ export type WorkspaceNavigationProps = {
   onManageTags: () => void;
   onListFiltersChange: (filters: TaskListFilters) => void;
   onOpenRecycleBin: (onNavigate: () => void) => void;
+  onOpenFavorites: (onNavigate: () => void) => void;
   activeTeamId: string;
   onConnectAi: () => void;
   onCreateTask: (onNavigate: () => void) => void;
@@ -74,7 +75,7 @@ function readNavigationWidth() {
   }
 }
 
-export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags, onOpenRecycleBin, activeTeamId, onConnectAi, onCreateTask, canCreateTask = true, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, discussionReadReceipt, getNotificationTaskTitle, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, activeSection }: WorkspaceNavigationProps) {
+export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags, onOpenRecycleBin, onOpenFavorites, activeTeamId, onConnectAi, onCreateTask, canCreateTask = true, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, discussionReadReceipt, getNotificationTaskTitle, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, activeSection }: WorkspaceNavigationProps) {
   const { t, locale } = useI18n();
   const taskFiltersActive = activeSection === "tasks" || activeSection === "home";
   const timeZone = useTeamTimeZone();
@@ -223,7 +224,7 @@ export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags
         <div className="workspace-navigation-account-row">
           <DropdownMenu>
             <DropdownMenuTrigger aria-label={t("account.open")} className="workspace-account-trigger" id="workspace-account-trigger" title={`${userProfile.name} · ${t("account.menu")}`}><PersonAvatar name={userProfile.name} personId={userId} profilePreviewFocusable={false} showProfilePreview={false} size="sm" /><span className="workspace-account-name">{userProfile.name}</span></DropdownMenuTrigger>
-            <DropdownMenuContent align="start" aria-label={t("account.menu")} className="workspace-account-menu" side="top" sideOffset={8}><ThemeToggle onToggle={toggleTheme} theme={theme} /><AccentColorSetting /><LanguageSwitcher menu /><DropdownMenuItem onClick={() => { onOpenPersonalCenter("profile"); closeNavigation(); }}><Settings2 aria-hidden="true" /><span>{t("account.settings")}</span></DropdownMenuItem><DropdownMenuItem onClick={onSignOut} variant="destructive"><LogOut aria-hidden="true" /><span>{t("account.signOut")}</span></DropdownMenuItem></DropdownMenuContent>
+            <DropdownMenuContent align="start" aria-label={t("account.menu")} className="workspace-account-menu" side="top" sideOffset={8}><ThemeToggle onToggle={toggleTheme} theme={theme} /><AccentColorSetting /><LanguageSwitcher menu /><DropdownMenuItem onClick={() => onOpenFavorites(closeNavigation)}><Bookmark aria-hidden="true" /><span>{locale === "en" ? "Favorites" : "收藏"}</span></DropdownMenuItem><DropdownMenuItem onClick={() => { onOpenPersonalCenter("profile"); closeNavigation(); }}><Settings2 aria-hidden="true" /><span>{t("account.settings")}</span></DropdownMenuItem><DropdownMenuItem onClick={onSignOut} variant="destructive"><LogOut aria-hidden="true" /><span>{t("account.signOut")}</span></DropdownMenuItem></DropdownMenuContent>
           </DropdownMenu>
           <GlobalNotifications besideNavigation teamId={activeTeamId} teams={teams} userId={userId} key={userId} discussionNotifications={discussionNotifications} discussionReadReceipt={discussionReadReceipt} getTaskTitle={getNotificationTaskTitle} onDiscussionReadHandled={onDiscussionReadHandled} onOpenTask={onOpenNotificationTask ? (taskId, target, teamId) => onOpenNotificationTask(taskId, target, teamId, closeNavigation) : undefined} placement="topbar" showDemoNotifications={showDemoNotifications} />
         </div>

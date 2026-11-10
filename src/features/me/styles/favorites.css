@@ -1,0 +1,71 @@
+/* Favorites: one quiet list across teams, filtered by type. */
+.favorites-page { height: 100%; overflow-y: auto; background: var(--ad-surface); }
+/* The same content width as the task list (.task-workspace-list-main .task-workspace-list-scroll): up to 1152px, centered. */
+.favorites-content { padding: 24px max(16px, calc((100% - 1120px) / 2 - 16px)) 64px; }
+.favorites-heading { display: grid; gap: 4px; margin-bottom: var(--ad-space-4); }
+.favorites-heading h1 { margin: 0; font-size: var(--ad-text-title-2); font-weight: 700; line-height: 1.2; }
+.favorites-heading h1:focus { outline: none; }
+.favorites-heading p { margin: 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+
+.favorites-tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--ad-border-soft); }
+.favorites-tabs > button { position: relative; min-height: 36px; padding: 0; border: 0; background: transparent; color: var(--ad-ink-tertiary); font: inherit; font-size: var(--ad-text-body-sm); cursor: pointer; }
+.favorites-tabs > button:hover { color: var(--ad-ink); }
+.favorites-tabs > button[aria-selected="true"] { color: var(--ad-ink); font-weight: 600; }
+.favorites-tabs > button[aria-selected="true"]::after { position: absolute; inset: auto 0 -1px; height: 2px; border-radius: 2px; background: var(--ad-ink); content: ""; }
+.favorites-tabs > button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; border-radius: 3px; }
+
+.favorites-list { margin: 0; padding: 0; list-style: none; }
+.favorites-item { position: relative; display: flex; min-width: 0; align-items: center; border-bottom: 1px solid var(--ad-border-soft); }
+.favorites-item-open { display: grid; min-width: 0; flex: 1; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: start; gap: 12px; padding: 12px 4px; border: 0; background: transparent; color: inherit; font: inherit; text-decoration: none; text-align: start; cursor: pointer; }
+.favorites-item-open:hover .favorites-item-title { color: var(--ad-route-ink); }
+.favorites-item-open:focus-visible, .favorites-item-remove:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -2px; border-radius: 6px; }
+/* Each type has its own calm color: tasks the route blue, discussions teal, files their file-tree icon. */
+.favorites-item-icon { display: inline-grid; width: 16px; height: 16px; margin-top: 3px; place-items: center; color: var(--ad-ink-tertiary); }
+.favorites-item[data-kind="task"] .favorites-item-icon { color: var(--ad-route-ink); }
+.favorites-item[data-kind="discussion"] .favorites-item-icon { color: var(--ad-tag-teal-ink); }
+.favorites-item-icon > .task-file-glyph { width: 18px; height: 18px; flex-basis: 18px; }
+.favorites-item-text { display: grid; min-width: 0; gap: 2px; }
+.favorites-item-title { display: -webkit-box; overflow: hidden; color: var(--ad-ink); font-size: var(--ad-text-body-sm); line-height: 1.6; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.favorites-item[data-kind="task"] .favorites-item-title { font-weight: 500; }
+.favorites-item-context { overflow: hidden; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.6; text-overflow: ellipsis; white-space: nowrap; }
+/* Time and team at the right, the team marked as in the inbox (people icon and name). */
+.favorites-item-meta { display: grid; min-width: 0; max-width: 180px; justify-items: end; gap: 2px; margin-top: 2px; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.6; }
+.favorites-item-meta time { white-space: nowrap; }
+.favorites-item-team { display: inline-flex; min-width: 0; max-width: 100%; align-items: center; gap: var(--ad-space-1); }
+.favorites-item-team > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.favorites-item-team svg { width: 1em; height: 1em; flex: 0 0 auto; }
+.favorites-item-remove { display: inline-grid; width: 32px; height: 32px; flex: 0 0 auto; place-items: center; border: 0; border-radius: 6px; background: transparent; color: var(--ad-favorite); cursor: pointer; }
+.favorites-item-remove > svg { fill: currentColor; }
+.favorites-item-remove:hover { background: var(--ad-surface-quiet); }
+
+.favorites-empty { display: grid; justify-items: center; gap: 6px; padding: 56px 16px; color: var(--ad-ink-tertiary); text-align: center; }
+.favorites-empty strong { color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); font-weight: 500; }
+.favorites-empty p { max-width: 320px; margin: 0; font-size: var(--ad-text-caption); line-height: 1.6; }
+
+/* Below 900px the navigation becomes a drawer whose menu button sits over the page's top-left corner. */
+@media (max-width: 900px), (pointer: coarse), (hover: none) {
+  .favorites-content { padding: 16px 12px 40px; }
+}
+@media (max-width: 900px) {
+  .favorites-content { padding-top: 64px; }
+}
+@media (max-width: 640px) {
+  .favorites-item-meta { max-width: 112px; }
+  .favorites-item-meta time { display: none; }
+}
+@media (max-width: 640px), (pointer: coarse) {
+  .favorites-tabs > button { min-height: 44px; }
+  .favorites-item-remove { width: 44px; height: 44px; }
+}
+
+/* Search sits on the tabs' row, at the right; on narrow screens it goes above them at full width. */
+.favorites-toolbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--ad-border-soft); }
+.favorites-toolbar > .favorites-tabs { border-bottom: 0; }
+.favorites-search { position: relative; display: flex; width: min(280px, 100%); align-items: center; margin-bottom: 6px; }
+.favorites-search > svg { position: absolute; left: 10px; color: var(--ad-ink-tertiary); pointer-events: none; }
+.favorites-search input { padding-left: 32px; }
+.favorites-empty > [data-slot="button"] { margin-top: 6px; }
+@media (max-width: 640px) {
+  .favorites-toolbar { flex-direction: column-reverse; align-items: stretch; gap: 8px; }
+  .favorites-search { width: 100%; margin-bottom: 0; }
+}

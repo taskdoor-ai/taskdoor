@@ -1439,6 +1439,10 @@
     "zh": "新讨论",
     "en": "New discussion"
   },
+  "discussionLike": {
+    "zh": "讨论赞",
+    "en": "Discussion like"
+  },
   "thisContentIsUnavailablePleaseTryAgainLater": {
     "zh": "当前内容暂不可用，请稍后重试。",
     "en": "This content is unavailable. Please try again later."
