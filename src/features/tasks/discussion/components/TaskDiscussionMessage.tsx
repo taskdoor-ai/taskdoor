@@ -1,5 +1,9 @@
-import { useEffect, useId, useState, type ReactNode } from "react";
-import { ListTree, MessageSquareText, Plus } from "lucide-react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import { ListTree, MessageSquareText, MoreHorizontal, Pin, PinOff, Plus, Reply, Star, ThumbsUp, Trash2 } from "lucide-react";
+import { useFavorite } from "@/features/me/lib/favorites";
+import type { DiscussionLike } from "@/features/tasks/discussion/lib/discussion-likes";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
+import { toast } from "@/shared/ui/toast";
 import { useDiscussionReading, useMockText } from "@/ai/discussion-reading";
 import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
 import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
@@ -41,7 +45,16 @@ type TaskDiscussionMessageProps = {
   renderSuggestions?: () => ReactNode;
   referenceTasks?: DiscussionReferenceTask[];
   onOpenReferenceTask?: (id: string) => void;
+  /** The task, for saving this message to the viewer's favorites. */
+  taskId?: string;
+  pinned?: boolean;
+  /** Present only for those allowed to pin: the task owner, the team Owner and Admins. */
+  onTogglePin?: () => void;
+  likes?: readonly DiscussionLike[];
+  onToggleLike?: () => void;
 };
+
+const LONG_PRESS_MS = 500;
 
 function timestampFor(message: CollaborationMessage, locale: string, now: number) {
   const recorded = message.createdAt ?? (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2})?$/.test(message.time) ? `${message.time.replace(" ", "T")}+08:00` : "");
@@ -49,7 +62,7 @@ function timestampFor(message: CollaborationMessage, locale: string, now: number
   return formatted ? { ...formatted, dateTime: new Date(recorded).toISOString() } : null;
 }
 
-export function TaskDiscussionMessage({ message, parent, currentUser, currentUserName, files, highlighted, children, replyExpanded, replyDisabled, onReply, onLocate, onDelete, onCreateSubtask, subtaskCreateDisabled, onOpenFile, onConnectAi, now, followups, followupPeople = [], onOpenFollowupTask, renderSuggestions, referenceTasks, onOpenReferenceTask }: TaskDiscussionMessageProps) {
+export function TaskDiscussionMessage({ message, parent, currentUser, currentUserName, files, highlighted, children, replyExpanded, replyDisabled, onReply, onLocate, onDelete, onCreateSubtask, subtaskCreateDisabled, onOpenFile, onConnectAi, now, followups, followupPeople = [], onOpenFollowupTask, renderSuggestions, referenceTasks, onOpenReferenceTask, taskId = "", pinned = false, onTogglePin, likes = [], onToggleLike }: TaskDiscussionMessageProps) {
   const mock = useMockText();
   const d = useDetailCopy();
   const ui = useGlobalUi();
@@ -71,6 +84,49 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
   const hasSuggestions = suggestionCount > 0 || Boolean(followups?.hasOutdated);
   useEffect(() => { if (!hasSuggestions) setSuggestionsExpanded(false); }, [hasSuggestions]);
   useEffect(() => { if (!linkedCount) setTasksExpanded(false); }, [linkedCount]);
+  const en = locale === "en";
+  const favorite = useFavorite("discussion", taskId, message.id);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const longPress = useRef<{ timer: number; x: number; y: number } | null>(null);
+  const cancelLongPress = () => { if (longPress.current) window.clearTimeout(longPress.current.timer); longPress.current = null; };
+  useEffect(() => cancelLongPress, []);
+  const menuAvailable = !message.deletedAt;
+  // On a phone the same menu opens on a long press of the message.
+  const startLongPress = (event: ReactPointerEvent<HTMLLIElement>) => {
+    if (!menuAvailable || event.pointerType === "mouse" || !(event.target instanceof Element)) return;
+    if (event.target.closest("button, a, input, textarea, [contenteditable='true'], .task-discussion-inline-reply, .task-discussion-followups, .task-subtask-create-form")) return;
+    cancelLongPress();
+    longPress.current = { x: event.clientX, y: event.clientY, timer: window.setTimeout(() => { longPress.current = null; setMenuOpen(true); }, LONG_PRESS_MS) };
+  };
+  const moveLongPress = (event: ReactPointerEvent<HTMLLIElement>) => {
+    if (longPress.current && Math.hypot(event.clientX - longPress.current.x, event.clientY - longPress.current.y) > 10) cancelLongPress();
+  };
+  const toggleFavorite = () => {
+    const saved = favorite.toggle(message.message.replace(/\s+/g, " ").trim().slice(0, 140) || message.attachmentRefs?.map(ref => ref.name).join(", ") || message.file || undefined);
+    if (saved === null) toast.error(en ? "Could not update favorites. Please try again." : "收藏未能更新，请重试。");
+    else toast.success(saved ? (en ? "Added to favorites" : "已收藏") : (en ? "Removed from favorites" : "已取消收藏"));
+  };
+  const likeCount = likes.length;
+  const liked = likes.some(like => like.personId === currentUser);
+  const [likersOpen, setLikersOpen] = useState(false);
+  const likeLabel = liked ? (en ? `Unlike (${likeCount})` : `取消赞（${likeCount}）`) : likeCount ? (en ? `Like (${likeCount})` : `赞（${likeCount}）`) : (en ? "Like" : "赞");
+  const likeButton = <button aria-label={likeLabel} aria-pressed={liked} className="task-discussion-like" data-count={likeCount} onClick={onToggleLike} title={own && likeCount ? undefined : likeLabel} type="button">
+    <ThumbsUp aria-hidden="true" size={14} />
+    {likeCount > 0 && <span className="task-discussion-like-count">{likeCount}</span>}
+  </button>;
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const [bodyExpanded, setBodyExpanded] = useState(false);
+  const [bodyOverflows, setBodyOverflows] = useState(false);
+  useEffect(() => { if (!pinned) setBodyExpanded(false); }, [pinned]);
+  useLayoutEffect(() => {
+    const body = bodyRef.current;
+    if (!pinned || !body) { setBodyOverflows(false); return; }
+    const measure = () => setBodyOverflows(body.scrollHeight > body.clientHeight + 1 || bodyExpanded);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(body);
+    return () => observer.disconnect();
+  }, [pinned, bodyExpanded, reading.text]);
 
   const canCreateFromDiscussion = !message.deletedAt && Boolean(onCreateSubtask);
   const followupEntries = (canCreateFromDiscussion || hasSuggestions || linkedCount > 0) && <div className="task-discussion-followup-entries">
@@ -85,12 +141,13 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
     </button>}
   </div>;
 
-  return <li className="task-discussion-feed-message">
+  return <li className={`task-discussion-feed-message${pinned ? " is-pinned" : ""}`} onContextMenu={event => { if (menuOpen) event.preventDefault(); }} onPointerCancel={cancelLongPress} onPointerDown={startLongPress} onPointerMove={moveLongPress} onPointerUp={cancelLongPress}>
     <PersonAvatar className="task-discussion-feed-avatar" name={message.author} personId={message.author} size="sm" />
     <div className={`task-discussion-record${highlighted ? " is-attention" : ""}`} data-subtask-suggestion-focus-return id={`task-activity-${message.id}`} tabIndex={-1}>
       <header className="task-discussion-feed-header">
         <div className="task-discussion-feed-identity">
           <strong><PersonName name={message.author} personId={message.author} /></strong>
+          {pinned && <span className="task-discussion-pinned-mark"><Pin aria-hidden="true" size={12} />{en ? "Pinned" : "已置顶"}</span>}
           {isReply && <span className="task-discussion-feed-recipient">
             <span>{d("reply")}</span>
             {parent ? <button disabled={!originalAvailable} onClick={() => originalAvailable && onLocate(parent.id)} title={originalAvailable ? d("locateOriginal") : d("originalUnavailable")} type="button"><PersonName name={parent.author} personId={parent.author} showProfilePreview={false} /></button> : <span>{d("originalMissing")}</span>}
@@ -109,13 +166,26 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
             </Popover>
           </span>}
         </div>
-        {!message.deletedAt && onConnectAi && <div className="task-discussion-feed-header-actions">
+        {menuAvailable && <div className="task-discussion-feed-header-actions">
           {onConnectAi && <span className="task-discussion-hover-ai"><AiConnectionButton compact contextLabel={locale === "en" ? "this discussion" : "这条讨论"} onConnect={(trigger, shortcut) => onConnectAi({ kind: message.replyToActivityId ? "reply" : "discussion", activityId: message.id, ...(message.fileThreadId ? { fileThreadId: message.fileThreadId } : {}) }, trigger, shortcut)} /></span>}
-
-
+          <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+            <DropdownMenuTrigger aria-label={en ? "More actions for this message" : "这条讨论的更多操作"} className="task-discussion-feed-menu-trigger task-discussion-hover-menu"><MoreHorizontal aria-hidden="true" size={16} /></DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="task-discussion-feed-menu" sideOffset={4}>
+              <DropdownMenuGroup>
+                {onTogglePin && <DropdownMenuItem onClick={onTogglePin}>{pinned ? <PinOff aria-hidden="true" /> : <Pin aria-hidden="true" />}{pinned ? (en ? "Unpin" : "取消置顶") : (en ? "Pin" : "置顶")}</DropdownMenuItem>}
+                {favorite.available && <DropdownMenuItem onClick={toggleFavorite}><Star aria-hidden="true" />{favorite.active ? (en ? "Remove from favorites" : "取消收藏") : (en ? "Add to favorites" : "收藏")}</DropdownMenuItem>}
+              </DropdownMenuGroup>
+              {(onTogglePin || favorite.available) && <DropdownMenuSeparator />}
+              <DropdownMenuGroup>
+                <DropdownMenuItem disabled={replyDisabled} onClick={() => onReply(message)}><Reply aria-hidden="true" />{replyExpanded ? d("cancelReply") : d("reply")}</DropdownMenuItem>
+                {own && onDelete && <DropdownMenuItem onClick={() => onDelete(message)} variant="destructive"><Trash2 aria-hidden="true" />{d("delete")}</DropdownMenuItem>}
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>}
       </header>
-      {message.message.trim() && <div className="task-discussion-feed-body"><DiscussionMarkdown text={reading.text} mentionedPrincipalIds={message.mentionedPrincipalIds} mentionsAllTaskMembers={message.mentionsAllTaskMembers} referenceTasks={referenceTasks} onOpenReferenceTask={onOpenReferenceTask} /></div>}
+      {message.message.trim() && <div className={`task-discussion-feed-body${pinned && !bodyExpanded ? " is-folded" : ""}${pinned && !bodyExpanded && bodyOverflows ? " has-more" : ""}`} ref={bodyRef}><DiscussionMarkdown text={reading.text} mentionedPrincipalIds={message.mentionedPrincipalIds} mentionsAllTaskMembers={message.mentionsAllTaskMembers} referenceTasks={referenceTasks} onOpenReferenceTask={onOpenReferenceTask} /></div>}
+      {pinned && bodyOverflows && <button aria-expanded={bodyExpanded} className="task-discussion-pinned-toggle" onClick={() => setBodyExpanded(value => !value)} type="button">{bodyExpanded ? (en ? "Show less" : "收起") : (en ? "Show more" : "展开")}</button>}
       <DiscussionAttachmentGallery attachmentRefs={message.attachmentRefs} files={files} legacyFileName={message.file} onOpenFile={onOpenFile} />
       <footer className="task-discussion-feed-footer">
         <div className="task-discussion-feed-meta">
@@ -130,6 +200,15 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
         {!message.deletedAt && <div className="task-discussion-feed-direct-actions">
 
           {own && onDelete && <button onClick={() => onDelete(message)} type="button">{d("delete")}</button>}
+          {onToggleLike && (own && likeCount > 0 ? <Popover open={likersOpen} onOpenChange={(open, details) => {
+            if (details.reason === "trigger-press") { details.cancel(); return; }
+            setLikersOpen(open);
+          }}>
+            <PopoverTrigger delay={180} closeDelay={120} openOnHover render={likeButton} />
+            <PopoverContent aria-label={en ? "Liked by" : "赞过的人"} align="end" className="task-discussion-likers-popover" collisionPadding={16} finalFocus={false} initialFocus={false} side="top">
+              <p>{likes.map((like, index) => <span key={like.personId}>{index > 0 && (en ? ", " : "、")}<PersonName name={like.personId === currentUser && currentUserName ? currentUserName : like.personId} personId={like.personId} showProfilePreview={false} /></span>)}</p>
+            </PopoverContent>
+          </Popover> : likeButton)}
           <button aria-expanded={Boolean(replyExpanded)} disabled={replyDisabled} onClick={() => onReply(message)} type="button">{replyExpanded ? d("cancelReply") : d("reply")}</button>
         </div>}
       </footer>

@@ -144,3 +144,40 @@
   .task-discussion-feed-message:focus-within .task-discussion-translate-trigger,
   .task-discussion-translate-trigger[aria-busy="true"] { opacity: 1; pointer-events: auto; }
 }
+
+/* Pinned messages sit above the timeline, each shown in full with a quiet mark; long ones fold to about five lines. */
+.task-discussion-pinned-list:not(:last-child) { margin-bottom: var(--discussion-row-gap); }
+.task-discussion-pinned-list:not(:last-child) > .task-discussion-feed-message:last-child::after { position: absolute; inset-inline: 0; bottom: calc(var(--discussion-row-gap) / -2); border-bottom: 1px dashed var(--ad-border); content: ""; pointer-events: none; }
+.task-discussion-pinned-mark { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 3px; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.task-discussion-pinned-mark > svg { transform: rotate(35deg); }
+.task-discussion-feed-body.is-folded { max-height: calc(1.65em * 5); overflow: hidden; }
+.task-discussion-feed-body.has-more { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.65em), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 1.65em), transparent); }
+.task-discussion-pinned-toggle { display: inline-flex; min-height: 24px; align-items: center; margin-top: 2px; padding: 0; border: 0; background: transparent; color: var(--ad-ink-tertiary); font: inherit; font-size: var(--ad-text-caption); cursor: pointer; }
+.task-discussion-pinned-toggle:hover { color: var(--ad-ink); }
+.task-discussion-pinned-toggle:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; border-radius: 3px; }
+
+/* One like: an icon with no likes, the icon and the count once there are some. */
+.task-discussion-feed-direct-actions .task-discussion-like { display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
+.task-discussion-feed-direct-actions .task-discussion-like[aria-pressed="true"] { color: var(--ad-route-ink); }
+.task-discussion-feed-direct-actions .task-discussion-like[aria-pressed="true"] > svg { stroke-width: 2.4; }
+.task-discussion-likers-popover { max-width: min(280px, calc(100vw - 32px)); padding: 8px 12px; border-radius: 8px; }
+.task-discussion-likers-popover > p { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.6; }
+
+@media (hover: hover) and (pointer: fine) {
+  .task-discussion-hover-menu, .task-discussion-like[data-count="0"]:not([aria-pressed="true"]) { opacity: 0; pointer-events: none; }
+  .task-discussion-feed-message:hover .task-discussion-hover-menu,
+  .task-discussion-feed-message:focus-within .task-discussion-hover-menu,
+  .task-discussion-hover-menu[data-popup-open],
+  .task-discussion-feed-message:hover .task-discussion-like,
+  .task-discussion-feed-message:focus-within .task-discussion-like { opacity: 1; pointer-events: auto; }
+}
+/* Without hover the trigger stays out of sight; a long press on the message opens the same menu from here. */
+@media (hover: none), (pointer: coarse) {
+  .task-discussion-feed-menu-trigger.task-discussion-hover-menu { position: absolute; top: 0; right: 0; width: 28px; height: 28px; opacity: 0; pointer-events: none; }
+}
+
+/* The favorite star, the same everywhere: outlined until saved, then filled. */
+.task-favorite-toggle[data-slot="button"] { color: color-mix(in srgb, var(--ad-ink-tertiary) 60%, transparent); }
+.task-favorite-toggle[data-slot="button"]:is(:hover, :focus-visible) { color: var(--ad-ink-secondary); }
+.task-favorite-toggle[data-active], .task-file-favorite-toggle[data-active] { color: var(--ad-favorite); }
+.task-favorite-toggle[data-active] svg, .task-file-favorite-toggle[data-active] svg { fill: currentColor; }

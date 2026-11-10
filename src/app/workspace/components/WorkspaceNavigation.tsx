@@ -26,6 +26,7 @@ export type WorkspaceNavigationProps = {
   onManageTags: () => void;
   onListFiltersChange: (filters: TaskListFilters) => void;
   onOpenRecycleBin: (onNavigate: () => void) => void;
+  onOpenFavorites: (onNavigate: () => void) => void;
   activeTeamId: string;
   onConnectAi: () => void;
   onCreateTask: (onNavigate: () => void) => void;
@@ -74,7 +75,7 @@ function readNavigationWidth() {
   }
 }
 
-export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags, onOpenRecycleBin, activeTeamId, onConnectAi, onCreateTask, canCreateTask = true, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, discussionReadReceipt, getNotificationTaskTitle, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, activeSection }: WorkspaceNavigationProps) {
+export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags, onOpenRecycleBin, onOpenFavorites, activeTeamId, onConnectAi, onCreateTask, canCreateTask = true, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, discussionReadReceipt, getNotificationTaskTitle, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, activeSection }: WorkspaceNavigationProps) {
   const { t, locale } = useI18n();
   const taskFiltersActive = activeSection === "tasks" || activeSection === "home";
   const timeZone = useTeamTimeZone();
@@ -209,6 +210,7 @@ export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags
           {scopeOptions.map(({ value, message }) => <button aria-pressed={taskFiltersActive && normalizedFilters.scope === value} className="workspace-navigation-item" key={value} onClick={() => chooseScope(value)} type="button"><span>{t(message)}</span></button>)}
         </div>
 
+        <button aria-current={activeSection === "favorites" ? "page" : undefined} className="workspace-navigation-item" onClick={() => onOpenFavorites(closeNavigation)} type="button"><span>{locale === "en" ? "Favorites" : "收藏"}</span></button>
         <button aria-current={activeSection === "recycle-bin" ? "page" : undefined} className="workspace-navigation-item" onClick={() => onOpenRecycleBin(closeNavigation)} type="button"><span>{locale === "en" ? "Recycle bin" : "回收站"}</span></button>
         <TaskNavigationTools filters={normalizedFilters} members={members} onFiltersChange={onListFiltersChange} onManageTags={() => { closeNavigation(); onManageTags(); }} projection={projection} touch={mobile}>
 

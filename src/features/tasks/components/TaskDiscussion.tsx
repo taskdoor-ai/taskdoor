@@ -16,6 +16,8 @@ import { usePersonOptions } from "@/shared/ui/PersonDirectory";
 import type { DiscussionDraftInsertion } from "@/features/tasks/discussion/lib/discussion-draft-insertion";
 import { reportVisibleDiscussionRead } from "@/features/tasks/discussion/lib/discussion-read";
 import { toast } from "@/shared/ui/toast";
+import { splitPinnedMessages } from "@/features/tasks/discussion/lib/discussion-pins";
+import { useDiscussionReactions } from "@/features/tasks/discussion/lib/useDiscussionReactions";
 
 type TaskDiscussionProps = {
   active?: boolean;
@@ -45,12 +47,17 @@ type TaskDiscussionProps = {
   referenceTasks?: DiscussionReferenceTask[];
   onOpenReferenceTask?: (taskId: string) => void;
   renderSuggestions?: (messageId: string) => ReactNode;
+  /** Where this discussion's pins and likes are kept. */
+  teamId?: string;
+  taskId?: string;
+  /** The task owner, the team Owner and Admins may pin; participants may not. */
+  canPin?: boolean;
 };
 
 type ComposerMode = { kind: "reply"; id: string } | null;
 type ScrollRequest = { kind: "locate"; id: string } | { kind: "latest" } | { kind: "restore"; id: string; top: number };
 
-export function TaskDiscussion({ active = true, readable = true, readRequestSequence, onRead, activities, attentionTarget, currentUser, currentUserName, files, draftKey = "task-discussion", draftInsertion, onConnectAi, onOpenFile, onPreviewAttachment, onPost, onDelete, onCreateSubtask, creatingSubtask = false, retainedSubtaskSources = [], renderAfterMessage, people, followupsByMessageId, onOpenFollowupTask, referenceTasks, onOpenReferenceTask, renderSuggestions }: TaskDiscussionProps) {
+export function TaskDiscussion({ active = true, readable = true, readRequestSequence, onRead, activities, attentionTarget, currentUser, currentUserName, files, draftKey = "task-discussion", draftInsertion, onConnectAi, onOpenFile, onPreviewAttachment, onPost, onDelete, onCreateSubtask, creatingSubtask = false, retainedSubtaskSources = [], renderAfterMessage, people, followupsByMessageId, onOpenFollowupTask, referenceTasks, onOpenReferenceTask, renderSuggestions, teamId = "", taskId = "", canPin = false }: TaskDiscussionProps) {
   const d = useDetailCopy();
   const ui = useGlobalUi();
   const { locale } = useI18n();
@@ -80,6 +87,13 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
     }
     return { feed: buildDiscussionFeed(messages), unavailableSubtaskSources };
   }, [activities, retainedSubtaskSources]);
+  const reactions = useDiscussionReactions(teamId, taskId, publishedFeed.messages, currentUser);
+  const { pinned: pinnedMessages, timeline: timelineMessages } = useMemo(() => splitPinnedMessages(feed.messages, reactions.pins), [feed.messages, reactions.pins]);
+  const togglePin = (message: CollaborationMessage, pinned: boolean) => {
+    const replaced = !pinned && pinnedMessages.length >= 3;
+    if (!(pinned ? reactions.unpin(message.id) : reactions.pin(message.id))) { toast.error(locale === "en" ? "Could not update the pin. Please try again." : "置顶未能更新，请重试。"); return; }
+    toast.success(pinned ? (locale === "en" ? "Unpinned" : "已取消置顶") : replaced ? (locale === "en" ? "Pinned. The earliest pin was replaced." : "已置顶，最早的置顶已被替换") : (locale === "en" ? "Pinned" : "已置顶"));
+  };
   const records = useMemo(() => {
     const messages = new Map<string, CollaborationMessage>();
     for (const message of activities) {
@@ -267,18 +281,21 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
     <DiscussionComposer actionLabel={d('reply')} allowQuote={false} autoFocus={targetAvailable} disabled={!targetAvailable} draftKey={composerKey} files={files} onCancel={cancelContext} onPreviewAttachment={onPreviewAttachment} onSubmit={submit} people={people} placeholder={d(referenceTasks?.length ? 'taskReplyHint' : 'replyHint')} referenceTasks={referenceTasks} />
   </div>;
 
-  return <div className="task-discussion task-discussion-feed">
-    <div className="task-discussion-scroll" ref={scrollRef}>
-      {error && <p className="task-discussion-feed-error" role="alert">{error}</p>}
-      {feed.messages.length === 0 ? <div className="task-record-empty"><MessageSquare aria-hidden="true" size={22} /><strong>{d('noDiscussion')}</strong><p>{d('discussionHint')}</p></div>
-        : <ol aria-label={d('taskDiscussion')} className="task-discussion-feed-list">{feed.messages.map(message => {
+  const renderMessage = (message: CollaborationMessage, pinned: boolean) => {
           const sourceUnavailable = unavailableSubtaskSources.has(message.id);
-          return <TaskDiscussionMessage followupPeople={followupPeople} followups={followupsByMessageId?.[message.id]} onOpenFollowupTask={onOpenFollowupTask} referenceTasks={referenceTasks} onOpenReferenceTask={onOpenReferenceTask} renderSuggestions={renderSuggestions ? () => renderSuggestions(message.id) : undefined} currentUser={currentUser} currentUserName={currentUserName} files={files} highlighted={message.id === highlightedActivityId} key={message.id} message={message} now={now} onConnectAi={sourceUnavailable ? undefined : onConnectAi} onDelete={!sourceUnavailable && onDelete ? item => { try { onDelete(item); setError(""); } catch { setError(d('deleteFailed')); } } : undefined} onCreateSubtask={!sourceUnavailable && readable && onCreateSubtask ? startSubtask : undefined} subtaskCreateDisabled={creatingSubtask || submitting} onLocate={locate} onOpenFile={onOpenFile} onReply={startReply} parent={message.replyToActivityId ? records.get(message.replyToActivityId) : undefined} replyDisabled={submitting || creatingSubtask || sourceUnavailable} replyExpanded={!creatingSubtask && mode?.id === message.id}>
+          return <TaskDiscussionMessage taskId={taskId} pinned={pinned} onTogglePin={canPin && taskId ? () => togglePin(message, pinned) : undefined} likes={reactions.likes[message.id]} onToggleLike={taskId ? () => { if (!reactions.toggleLike(message.id)) toast.error(locale === "en" ? "Could not save your like. Please try again." : "未能保存赞，请重试。"); } : undefined} followupPeople={followupPeople} followups={followupsByMessageId?.[message.id]} onOpenFollowupTask={onOpenFollowupTask} referenceTasks={referenceTasks} onOpenReferenceTask={onOpenReferenceTask} renderSuggestions={renderSuggestions ? () => renderSuggestions(message.id) : undefined} currentUser={currentUser} currentUserName={currentUserName} files={files} highlighted={message.id === highlightedActivityId} key={message.id} message={message} now={now} onConnectAi={sourceUnavailable ? undefined : onConnectAi} onDelete={!sourceUnavailable && onDelete ? item => { try { onDelete(item); setError(""); } catch { setError(d('deleteFailed')); } } : undefined} onCreateSubtask={!sourceUnavailable && readable && onCreateSubtask ? startSubtask : undefined} subtaskCreateDisabled={creatingSubtask || submitting} onLocate={locate} onOpenFile={onOpenFile} onReply={startReply} parent={message.replyToActivityId ? records.get(message.replyToActivityId) : undefined} replyDisabled={submitting || creatingSubtask || sourceUnavailable} replyExpanded={!creatingSubtask && mode?.id === message.id}>
             {sourceUnavailable && <p className="task-discussion-feed-error" role="alert">{locale === "en" ? "The source discussion changed or was deleted. Your subtask draft has been kept. Check the latest discussion." : "来源讨论已变更或删除，子任务草稿已保留，请核对最新讨论。"}</p>}
             {!creatingSubtask && mode?.id === message.id ? replyComposer : undefined}
             {renderAfterMessage?.(message)}
           </TaskDiscussionMessage>;
-        })}</ol>}
+        };
+
+  return <div className="task-discussion task-discussion-feed">
+    <div className="task-discussion-scroll" ref={scrollRef}>
+      {error && <p className="task-discussion-feed-error" role="alert">{error}</p>}
+      {feed.messages.length === 0 ? <div className="task-record-empty"><MessageSquare aria-hidden="true" size={22} /><strong>{d('noDiscussion')}</strong><p>{d('discussionHint')}</p></div>
+        : <>{pinnedMessages.length > 0 && <ol aria-label={locale === "en" ? "Pinned messages" : "已置顶的讨论"} className="task-discussion-feed-list task-discussion-pinned-list">{pinnedMessages.map(message => renderMessage(message, true))}</ol>}
+          {timelineMessages.length > 0 && <ol aria-label={d('taskDiscussion')} className="task-discussion-feed-list">{timelineMessages.map(message => renderMessage(message, false))}</ol>}</>}
       {!creatingSubtask && mode && !targetAvailable && replyComposer}
     </div>
     {!mode && !creatingSubtask && <div className="task-discussion-compose" ref={composerRef}>

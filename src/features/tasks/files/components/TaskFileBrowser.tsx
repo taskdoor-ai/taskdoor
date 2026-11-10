@@ -11,7 +11,8 @@ import { getNodePath, searchTaskFileTree } from "@/features/tasks/files/lib/task
 import "@/features/tasks/styles/task-file-browser.css";
 
 /** Folders expand in place; readers open separately from the task-wide tree. */
-export function TaskFileBrowser({ files, directoryId, onDirectoryChange, expandedIds, onExpandedChange, onOpen, onAction, onCreateFolder, onUpload, uploading, error, displayName, canDelete }: {
+export function TaskFileBrowser({ files, directoryId, onDirectoryChange, expandedIds, onExpandedChange, onOpen, onAction, onCreateFolder, onUpload, uploading, error, displayName, canDelete, taskId }: {
+  taskId?: string;
   files: TaskFileNode[];
   directoryId: string | null;
   onDirectoryChange: (id: string | null) => void;
@@ -74,6 +75,6 @@ export function TaskFileBrowser({ files, directoryId, onDirectoryChange, expande
       </div>
     </div>
     {error && <p className="task-file-save-error" role="alert">{error}</p>}
-    {result.nodes.length ? <TaskFileTree allNodes={visible} browser canDelete={canDelete} displayName={displayName} expandedIds={treeExpandedIds} nodes={result.nodes} onAction={onAction} onExpandedChange={expand} onSelect={(id, trigger) => { const file = visible.find(node => node.id === id); chooseDirectory(file?.parentId ?? null); if (trigger) onOpen(id, trigger); }} selectedId={directory?.id ?? null} /> : <Empty className="task-file-browser-empty"><EmptyHeader><EmptyMedia variant="icon">{needle ? <Search /> : <FolderPlus />}</EmptyMedia><EmptyTitle>{needle ? ui("没有匹配的文件") : ui("暂无文件")}</EmptyTitle><EmptyDescription>{needle ? ui("试试其他名称，或清除搜索。") : ui("上传文件，或新建文件夹整理任务资料。")}</EmptyDescription></EmptyHeader>{needle && <Button onClick={() => search("")} size="sm" variant="outline">{ui("清除搜索")}</Button>}</Empty>}
+    {result.nodes.length ? <TaskFileTree allNodes={visible} browser canDelete={canDelete} taskId={taskId} displayName={displayName} expandedIds={treeExpandedIds} nodes={result.nodes} onAction={onAction} onExpandedChange={expand} onSelect={(id, trigger) => { const file = visible.find(node => node.id === id); chooseDirectory(file?.parentId ?? null); if (trigger) onOpen(id, trigger); }} selectedId={directory?.id ?? null} /> : <Empty className="task-file-browser-empty"><EmptyHeader><EmptyMedia variant="icon">{needle ? <Search /> : <FolderPlus />}</EmptyMedia><EmptyTitle>{needle ? ui("没有匹配的文件") : ui("暂无文件")}</EmptyTitle><EmptyDescription>{needle ? ui("试试其他名称，或清除搜索。") : ui("上传文件，或新建文件夹整理任务资料。")}</EmptyDescription></EmptyHeader>{needle && <Button onClick={() => search("")} size="sm" variant="outline">{ui("清除搜索")}</Button>}</Empty>}
   </div>;
 }
