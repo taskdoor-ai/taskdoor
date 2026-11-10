@@ -159,7 +159,7 @@
 /* One like: an icon with no likes, the icon and the count once there are some. */
 .task-discussion-feed-direct-actions .task-discussion-like { display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
 .task-discussion-feed-direct-actions .task-discussion-like[aria-pressed="true"] { color: var(--ad-route-ink); }
-.task-discussion-feed-direct-actions .task-discussion-like[aria-pressed="true"] > svg { stroke-width: 2.4; }
+.task-discussion-feed-direct-actions .task-discussion-like[aria-pressed="true"] > svg { fill: currentColor; }
 .task-discussion-likers-popover { max-width: min(280px, calc(100vw - 32px)); padding: 8px 12px; border-radius: 8px; }
 .task-discussion-likers-popover > p { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.6; }
 
