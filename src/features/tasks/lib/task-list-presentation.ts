@@ -68,15 +68,20 @@ export function taskDeadlineDisplay(task: Pick<TaskNode, "plannedEndOn" | "dueAt
 
 export function taskDueLabel(task: TaskNode, now = new Date(), timeZone = LEGACY_TEAM_TIME_ZONE, locale = "zh-CN"): { label: string; overdue: boolean } | null {
   if (task.status === "已完成" || task.status === "已取消") return null;
-  const value = task.plannedEndOn;
-  if (value && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+  const value = task.plannedEndOn?.trim() || task.dueAt?.trim();
+  if (value) {
     const savedDay = taskCalendarDate(value, timeZone);
     const todayDay = taskCalendarDate(now.toISOString(), timeZone);
     if (savedDay && todayDay) {
       const day = Date.parse(`${savedDay}T00:00:00Z`);
       const today = Date.parse(`${todayDay}T00:00:00Z`);
       const diff = (day - today) / 86400000;
-      return { label: diff < 0 ? `逾期 ${-diff} 天` : diff === 0 ? "今天截止" : diff === 1 ? "明天截止" : `${formatDisplayDate(value, { locale, now: now.getTime() }) ?? "—"}截止`, overdue: diff < 0 };
+      const english = locale.startsWith("en");
+      const label = diff < 0 ? english ? `${-diff} ${diff === -1 ? "day" : "days"} overdue` : `逾期 ${-diff} 天`
+        : diff === 0 ? english ? "Due today" : "今天截止"
+          : diff === 1 ? english ? "Due tomorrow" : "明天截止"
+            : english ? `Due ${formatDisplayDate(savedDay, { locale, now: now.getTime() }) ?? "—"}` : `${formatDisplayDate(savedDay, { locale, now: now.getTime() }) ?? "—"}截止`;
+      return { label, overdue: diff < 0 };
     }
   }
   // A legacy month/day label is display-only; do not guess a year to declare it overdue.

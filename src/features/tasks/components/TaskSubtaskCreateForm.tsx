@@ -17,6 +17,7 @@ type Props = {
   inline?: boolean;
   generating?: boolean;
   showTags?: boolean;
+  endDateSuggestion?: string;
   open: boolean;
   currentUserId?: string;
   members: Member[];
@@ -26,7 +27,7 @@ type Props = {
   onCancel: () => void;
 };
 
-export function TaskSubtaskCreateForm({ id, inline = false, generating = false, showTags = true, open, currentUserId = "", members, tags, initialDraft, onCreate, onCancel }: Props) {
+export function TaskSubtaskCreateForm({ id, inline = false, generating = false, showTags = true, endDateSuggestion, open, currentUserId = "", members, tags, initialDraft, onCreate, onCancel }: Props) {
   const { locale } = useI18n();
   const copy = (zh: string, en: string) => locale === "en" ? en : zh;
   const [title, setTitle] = useState(() => initialDraft?.title ?? "");
@@ -36,6 +37,8 @@ export function TaskSubtaskCreateForm({ id, inline = false, generating = false, 
   const [ownerId, setOwnerId] = useState(() => initialDraft?.ownerId ?? "");
   const [labels, setLabels] = useState<string[]>(() => [...initialDraft?.labels ?? []]);
   const [endDate, setEndDate] = useState(() => initialDraft?.endDate ?? "");
+  const [dateEdited, setDateEdited] = useState(false);
+  const showDateSuggestion = Boolean(endDateSuggestion && endDate && !dateEdited);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -134,15 +137,16 @@ export function TaskSubtaskCreateForm({ id, inline = false, generating = false, 
       {initialDraft?.completionCriteria !== undefined && <TaskCriteriaFields disabled={saving} idPrefix={`${id}-criteria`} label={copy("任务完成标准", "Completion criteria")} values={criteria} onChange={setCriteria} />}
       </fieldset>
       {error && <p className="task-subtask-create-error" id={`${id}-error`} role="alert">{error}</p>}
+      {showDateSuggestion && <p className="task-subtask-create-hint" id={`${id}-date-suggestion`}>{copy("AI 预计完成日期，可修改或清除。", "AI estimated completion date. You can change or clear it.")} {endDateSuggestion}</p>}
       <footer className="task-subtask-create-toolbar">
         <fieldset aria-label={copy("子任务属性", "Subtask properties")} className="task-subtask-create-properties" disabled={saving}>
           <PersonPicker allowInvitations={false} allowUnassigned ariaLabel={copy("子任务负责人", "Subtask assignee")} className="task-subtask-create-chip task-subtask-create-owner" disabled={saving} members={members} menuLabel={copy("选择子任务负责人", "Select subtask assignee")} onChange={id => { if (!savingRef.current) { setOwnerId(id); setError(""); } }} showTriggerProfilePreview={false} triggerVariant="identity" unassignedLabel={copy("暂不分配", "Unassigned")} value={ownerId} />
-          <div className="task-subtask-create-date"><TaskDueDatePicker emptyLabel={copy("截止日期", "Due date")} initialValue={endDate} label={copy("子任务截止日期", "Subtask due date")} onChange={value => { if (!savingRef.current) { setEndDate(value); setError(""); } }} /></div>
+          <div className="task-subtask-create-date" aria-describedby={showDateSuggestion ? `${id}-date-suggestion` : undefined}><TaskDueDatePicker emptyLabel={copy("截止日期", "Due date")} initialValue={endDate} label={showDateSuggestion ? copy("预计完成日期（AI 建议）", "Estimated completion date (AI suggestion)") : copy("子任务截止日期", "Subtask due date")} onChange={value => { if (!savingRef.current) { setEndDate(value); setDateEdited(true); setError(""); } }} /></div>
           {showTags && <div className="task-subtask-create-tags"><TagPicker disabled={saving} onChange={values => { if (!savingRef.current) { setLabels(values); setError(""); } }} selected={labels} tags={tags} triggerLabel={copy(labels.length ? `标签 · ${labels.length}` : "标签", labels.length ? `Labels · ${labels.length}` : "Labels")} /></div>}
         </fieldset>
         <div className="task-subtask-create-actions">
           <Button disabled={saving} onClick={close} size="sm" type="button" variant="ghost">{copy("取消", "Cancel")}</Button>
-          <Button className="task-subtask-create-submit" disabled={saving || !title.trim()} size="sm" title={copy("创建子任务（⌘ / Ctrl + Enter）", "Create subtask (⌘ / Ctrl + Enter)")} type="submit" variant="outline">{saving ? copy("创建中…", "Creating…") : copy("创建", "Create")}</Button>
+          <Button className="task-subtask-create-submit" disabled={saving || !title.trim()} size="sm" title={copy("创建子任务（⌘ / Ctrl + Enter）", "Create subtask (⌘ / Ctrl + Enter)")} type="submit" variant="default">{saving ? copy("创建中…", "Creating…") : copy("创建", "Create")}</Button>
         </div>
       </footer>
     </form>

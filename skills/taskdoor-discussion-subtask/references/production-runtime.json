@@ -3,6 +3,7 @@
   "mode": "discussion-draft",
   "files": [
     "skills/taskdoor-discussion-subtask/SKILL.md",
-    "skills/taskdoor-discussion-subtask/references/output-contract.md"
+    "skills/taskdoor-discussion-subtask/references/output-contract.md",
+    "skills/taskdoor-discussion-subtask/references/task-planning.md"
   ]
 }

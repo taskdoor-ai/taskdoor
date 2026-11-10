@@ -5,6 +5,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { toast } from "@/shared/ui/toast";
+import { getAccentTextColor } from "@/features/me/lib/accent-color";
 
 const colors = ["#4b6edf", "#7c3aed", "#c0266b", "#b45309", "#047857", "#087e8b"];
 const isHexColor = (value: string) => /^#[0-9a-f]{6}$/i.test(value);
@@ -17,18 +18,16 @@ export function applySavedAccentColor() {
 }
 function apply(value: string) {
   const style = document.documentElement.style;
-  // Clear overrides from the earlier global accent setting when updating in place.
-  for (const token of ["route", "route-ink", "route-hover", "route-active", "route-soft", "route-soft-hover", "route-border", "focus", "focus-soft", "action-ink"]) {
+  // Personal accent marks primary actions and inline references; ordinary controls stay neutral.
+  for (const token of ["route", "route-ink", "route-hover", "route-active", "route-soft", "route-soft-hover", "route-border", "focus", "focus-soft", "action-ink", "button-soft-ink", "button-soft-bg", "button-soft-hover-bg"]) {
     style.removeProperty(`--ad-${token}`);
   }
   style.setProperty("--ad-button-primary-bg", value);
+  style.setProperty("--ad-accent-ink-light", getAccentTextColor(value, "#f3f3f3"));
+  style.setProperty("--ad-accent-ink-dark", getAccentTextColor(value, "#303030"));
   // Mix with theme surfaces so the same saved accent works in light and dark mode.
-  const dark = 'var(--ad-ink)';
-  style.setProperty("--ad-button-soft-ink", `color-mix(in srgb, ${value} 80%, ${dark})`);
   style.setProperty("--ad-button-primary-hover-bg", `color-mix(in srgb, ${value} 88%, #000)`);
   style.setProperty("--ad-button-primary-active-bg", `color-mix(in srgb, ${value} 76%, #000)`);
-  style.setProperty("--ad-button-soft-bg", `color-mix(in srgb, ${value} 10%, var(--ad-surface))`);
-  style.setProperty("--ad-button-soft-hover-bg", `color-mix(in srgb, ${value} 18%, var(--ad-surface))`);
   style.setProperty("--ad-button-primary-border", `color-mix(in srgb, ${value} 45%, var(--ad-surface))`);
   style.setProperty("--ad-button-focus", value);
   style.setProperty("--ad-button-focus-soft", `color-mix(in srgb, ${value} 16%, var(--ad-surface))`);

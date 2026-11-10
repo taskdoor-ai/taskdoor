@@ -28,7 +28,7 @@
 .task-situation-item { color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.75; overflow-wrap: anywhere; }
 .task-situation-item::marker { color: var(--ad-ink-tertiary); font-variant-numeric: tabular-nums; }
 .task-situation-item > span:first-child { display: block; }
-.task-situation-reference { display: inline-flex; max-width: 100%; align-items: baseline; gap: 2px; margin-top: var(--ad-space-1); padding: 0; border: 0; border-radius: var(--ad-radius-tag); background: transparent; color: var(--ad-route-ink); font: inherit; font-size: var(--ad-text-caption); text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.task-situation-reference { display: inline-flex; max-width: 100%; align-items: baseline; gap: 2px; margin-top: var(--ad-space-1); padding: 0; border: 0; border-radius: var(--ad-radius-tag); background: transparent; color: var(--ad-ink-secondary); font: inherit; font-size: var(--ad-text-caption); text-align: left; cursor: pointer; overflow-wrap: anywhere; }
 .task-situation-reference svg { flex: 0 0 auto; align-self: center; }
 .task-situation-reference:hover { text-decoration: underline; text-underline-offset: 3px; }
 .task-situation-reference:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }

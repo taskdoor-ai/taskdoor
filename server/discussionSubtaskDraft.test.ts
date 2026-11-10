@@ -69,18 +69,49 @@ test("寒暄及不可读引用借当前任务定义填草稿，不泄露原始�
     const result = parseDiscussionSubtaskDraft({ draft: null, message: "请补充信息" }, request);
     assert.ok(result.draft);
     assert.match(result.draft.title, /准备发布/);
-    assert.equal(result.draft.goal, input.task.goal);
+    assert.equal(result.draft.goal, "");
     assert.doesNotMatch(result.draft.title + result.draft.goal, /taskdoor-task|hidden-task|谢谢|123|补充信息/);
     assert.equal(result.draft.ownerId, ""); assert.equal(result.draft.endDate, "");
   }
 });
 
-test("成功草稿缺少目标时填充引用或父任务的已有目标", () => {
+test("成功草稿缺少目标时不机械补上父任务目标", () => {
   const request = buildDiscussionSubtaskRequest(input);
   const result = parseDiscussionSubtaskDraft({ draft: { ...draft, goal: "" }, message: "请补充目标" }, request);
-  assert.equal(result.draft.goal, input.task.goal);
+  assert.equal(result.draft.goal, "");
   assert.equal(result.message, "");
   assert.equal(discussionSubtaskResultSchema.safeParse({ draft: null, message: "" }).success, false);
+});
+
+test("具体讨论的兜底不复制宽泛父目标，保留真实引用同名任务的适用目标", () => {
+  const message = { ...root, message: "暗黑模式带蓝调，破坏了原有色彩。请修正这处配色。" };
+  const request = buildDiscussionSubtaskRequest({ ...input, task: { ...input.task, goal: "持续收集组织成员的问题与改进建议，帮助团队判断优先级。" }, sourceMessageId: message.id, messages: [message] });
+  const result = parseDiscussionSubtaskDraft({ draft: null, message: "" }, request);
+  assert.equal(result.draft.goal, "");
+  assert.match(result.draft.title, /暗黑模式/);
+});
+
+test("预计完成日携带假设及本项完成标准，旧响应仍兼容，失效日期不保留估计说明", () => {
+  const request = buildDiscussionSubtaskRequest(input);
+  const estimated = { ...draft, completionCriteria: ["发布材料可用性及遗留问题已逐项核对。"], endDate: "2026-11-06", endDateSuggestion: "假设现有材料可读，预留核对及回传结论的窗口；未核实人员日程。" };
+  assert.deepEqual(parseDiscussionSubtaskDraft({ draft: estimated, message: "" }, request).draft, estimated);
+  assert.deepEqual(parseDiscussionSubtaskDraft({ draft, message: "" }, request).draft, draft);
+  const expired = parseDiscussionSubtaskDraft({ draft: { ...estimated, endDate: "2026-11-03" }, message: "" }, request).draft;
+  assert.equal(expired.endDate, "");
+  assert.equal(expired.endDateSuggestion, undefined);
+});
+
+test("提出需求或转述本身不支持把消息作者预填为负责人，明确人选与本人承诺仍可用", () => {
+  for (const body of ["请核对外部即将提供的配色规范，回复时间未知。", "持续记录暗黑模式反馈。", "I think the theme needs review."]) {
+    const message = { ...root, author: "reviewer", message: body };
+    const request = buildDiscussionSubtaskRequest({ ...input, sourceMessageId: message.id, messages: [message] });
+    assert.equal(parseDiscussionSubtaskDraft({ draft, message: "" }, request).draft.ownerId, "");
+  }
+  for (const body of ["我会核对配色规范。", "I'll review the theme.", "请陈默核对配色规范。"] ) {
+    const message = { ...root, author: "reviewer", message: body };
+    const request = buildDiscussionSubtaskRequest({ ...input, sourceMessageId: message.id, messages: [message] });
+    assert.equal(parseDiscussionSubtaskDraft({ draft, message: "" }, request).draft.ownerId, "reviewer");
+  }
 });
 
 test("拒绝或占位话术不能搬到名称与目标字段，改用真实已有信息", () => {
@@ -88,12 +119,12 @@ test("拒绝或占位话术不能搬到名称与目标字段，改用真实已�
   for (const title of ["无法生成子任务", "请补充信息", "需要更多上下文", "子任务名称", "Please provide more context"]) {
     const result = parseDiscussionSubtaskDraft({ draft: { ...draft, title, goal: "请补充信息" }, message: "" }, request);
     assert.match(result.draft.title, /发布材料/);
-    assert.equal(result.draft.goal, input.task.goal);
+    assert.equal(result.draft.goal, "");
     assert.equal(result.message, "");
   }
   const result = parseDiscussionSubtaskDraft({ draft: { ...draft, goal: "需要更多上下文" }, message: "" }, request);
   assert.equal(result.draft.title, draft.title);
-  assert.equal(result.draft.goal, input.task.goal);
+  assert.equal(result.draft.goal, "");
 });
 
 test("已完成或撤回事项只整理现有记录，不伪造重新开工承诺", () => {

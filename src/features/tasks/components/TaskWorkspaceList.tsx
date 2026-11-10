@@ -1,18 +1,20 @@
 import { TaskSubtaskCompletionBadge } from "@/features/tasks/components/TaskSubtaskCompletionBadge";
 import { TaskQuickCreateRow } from "@/features/tasks/components/TaskQuickCreateRow";
+import { TaskListTools } from "@/features/tasks/components/TaskListTools";
 import { getDirectChildTaskCompletion } from "@/features/tasks/lib/task-relation-projection";
 import { mockPersonName } from '@/ai/mock/i18n/mockContent';
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { formatTaskCount } from "@/shared/i18n/core";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { statusMessageKey } from "@/shared/i18n/task-status";
-import { Check, ArrowDownUp, ChevronDown, ChevronRight, Link2Off, List, ListTree, MoreHorizontal, Plus, Search, SlidersHorizontal, Trash2, UserRound, X } from "lucide-react";
+import { CalendarDays, Check, ArrowDownUp, ChevronDown, ChevronRight, List, ListTree, MoreHorizontal, Plus, Search, SlidersHorizontal, Trash2, UserRound, X } from "lucide-react";
+import { Tooltip } from "@base-ui/react/tooltip";
 import type { CSSProperties } from "react";
 import { memo, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { PersonOption, TagDefinition, TaskNode } from "@/shared/model/task-model";
 
 import type { TaskListProjection } from "@/features/tasks/lib/task-list-projection";
-import { taskDeadlineDisplay, taskUpdatedLabel } from "@/features/tasks/lib/task-list-presentation";
+import { taskDeadlineDisplay, taskDueLabel, taskUpdatedLabel } from "@/features/tasks/lib/task-list-presentation";
 import { buildTaskListHierarchy } from "@/features/tasks/lib/task-list-hierarchy";
 import { TaskHierarchyList, type TaskHierarchyExpansion, type TaskHierarchyRowState } from "@/features/tasks/components/TaskHierarchyList";
 import { useResponsiveControlSize } from "@/shared/lib/useResponsiveControlSize";
@@ -105,6 +107,8 @@ const MemoTaskWorkspaceRow = memo(function TaskWorkspaceRow({ task, owner, serie
   const { t, locale } = useI18n();
   const detailCopy = useDetailCopy();
   const timeZone = useTeamTimeZone();
+  const [deadlineTipOpen, setDeadlineTipOpen] = useState(false);
+  const deadlineTriggerId = useId();
   const statusText = (status: string) => status in statusMessageKey ? t(statusMessageKey[status as keyof typeof statusMessageKey]) : status;
   const ownerName = task.ownerId ? mockPersonName(locale, task.ownerId, owner?.name ?? task.ownerId) : t('list.unassigned');
   const statusDefinition = taskStatusDefinition[task.status];
@@ -114,23 +118,28 @@ const MemoTaskWorkspaceRow = memo(function TaskWorkspaceRow({ task, owner, serie
   const timestampValue = sort === "created" ? task.createdAt ?? "" : task.updatedAt;
   const timeLabel = taskUpdatedLabel(timestampValue, now, now, locale).label;
   const deadline = taskDeadlineDisplay(task, now, locale);
+  const dueState = taskDueLabel(task, now, timeZone, locale);
+  const overdue = dueState?.overdue ?? false;
   const DeadlineElement = deadline?.dateTime ? "time" : "span";
-  const deadlineLabel = deadline ? (locale === "en" ? `Due ${deadline.label}` : deadline.label) : detailCopy("noDueDate");
-  const deadlineDescription = deadline ? (locale === "en" ? `Due date: ${deadline.full}` : `截止时间：${deadline.full}`) : deadlineLabel;
+  const deadlineLabel = deadline ? `${locale === "en" ? "Due " : ""}${deadline.label}` : detailCopy("noDueDate");
+  const deadlineDescription = deadline ? `${overdue ? `${locale === "en" ? dueState?.label : `已${dueState?.label}`} · ` : ""}${locale === "en" ? `Due date: ${deadline.full}` : `截止时间：${deadline.full}`}` : deadlineLabel;
+  const deadlineIcon = deadline && <Tooltip.Trigger aria-hidden="true" className="task-list-row-deadline-icon" data-overdue={overdue || undefined} delay={180} id={deadlineTriggerId} render={<span />} tabIndex={-1}><CalendarDays aria-hidden="true" size={14} /></Tooltip.Trigger>;
   const RowContainer = tree ? "div" : "li";
   const contextLabel = locale === "en" ? "Hierarchy context; does not match filters" : "仅作层级定位，未匹配筛选";
   return <RowContainer className={`task-workspace-row-entry${tree ? " task-hierarchy-row" : ""}`} data-context={tree?.context || undefined} data-tree-row={tree ? task.id : undefined} data-has-owner={showOwner && !tree?.context || undefined} data-selected={selected || undefined} style={tree ? { "--task-tree-indent": `${Math.min(tree.level, 5) * 12}px` } as CSSProperties : undefined}>
     {tree && (tree.onToggle || tree.directChildCount > 0 ? <button aria-label={!tree.onToggle ? (locale === "en" ? `${task.name}: no matching subtasks` : `${task.name}：没有匹配的子任务`) : `${tree.expanded ? (locale === "en" ? "Collapse" : "收起") : (locale === "en" ? "Expand" : "展开")} ${task.name}`} aria-expanded={tree.expanded ?? false} className="task-tree-toggle" data-tree-toggle disabled={!tree.onToggle} onClick={tree.onToggle} type="button"><ChevronRight aria-hidden="true" size={13} /></button> : <span aria-hidden="true" className="task-tree-toggle-space" />)}
     <div className="task-workspace-row" aria-current={selected ? "page" : undefined}>
       <span aria-label={t('list.statusLabel', { status: statusText(task.status) })} className="task-list-row-status" data-tone={statusDefinition.tone} role="img" title={statusText(task.status)}><TaskStatusIcon status={task.status} progressRatio={progressRatio} size={16} /></span>
-      <button aria-label={tree?.context ? `${task.name} · ${contextLabel}` : t('list.open', { name: task.name })} aria-describedby={`task-row-description-${task.id}`} className="task-list-row-open" data-task-id={task.id} disabled={tree?.context} onClick={() => actions.onTaskSelect(task)} type="button">
+      <Tooltip.Root disabled={!deadline || Boolean(tree?.context)} onOpenChange={setDeadlineTipOpen} open={Boolean(deadline) && deadlineTipOpen} triggerId={deadlineTriggerId}>
+      <button aria-label={tree?.context ? `${task.name} · ${contextLabel}` : t('list.open', { name: task.name })} aria-describedby={`task-row-description-${task.id}`} className="task-list-row-open" data-task-id={task.id} disabled={tree?.context} onBlur={() => setDeadlineTipOpen(false)} onFocus={event => { if (event.currentTarget.matches(":focus-visible")) setDeadlineTipOpen(true); }} onClick={() => { setDeadlineTipOpen(false); actions.onTaskSelect(task); }} type="button">
         <span className="task-list-row-name-with-subtasks"><TaskRowTitle title={task.name} />{tree && subtaskCompletion && <TaskSubtaskCompletionBadge total={subtaskCompletion.total} completed={subtaskCompletion.completed} />}</span>
-        {tree?.pathUnavailable && <span aria-label={locale === "en" ? "Parent path unavailable" : "上级路径不可用"} className="task-tree-unavailable" role="img"><Link2Off aria-hidden="true" size={12} /></span>}
-        <DeadlineElement aria-hidden="true" className="task-list-row-deadline" dateTime={deadline?.dateTime} title={deadlineDescription}>
+        <span className="task-list-row-deadline-slot" data-unscheduled={!deadline || undefined}>{deadlineIcon}<DeadlineElement aria-hidden="true" className="task-list-row-deadline" dateTime={deadline?.dateTime} title={deadlineDescription}>
           {deadlineLabel}
-        </DeadlineElement>
+        </DeadlineElement></span>
         <span className="sr-only" id={`task-row-description-${task.id}`}>{t('list.statusLabel', { status: statusText(task.status) })}{showOwner ? ` · ${t('list.ownerLabel', { name: ownerName })}` : ""}{` · ${deadlineDescription}`}{` · ${timeField}: ${timeLabel}`}</span>
       </button>
+      <Tooltip.Portal><Tooltip.Positioner align="end" className="task-list-deadline-tip-positioner" collisionPadding={12} side="top" sideOffset={6}><Tooltip.Popup className="task-list-deadline-tip" role="tooltip">{deadlineDescription}</Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal>
+      </Tooltip.Root>
     </div>
     {showOwner && !tree?.context && <div className="task-list-row-meta">
       <span aria-label={t('list.ownerLabel', { name: ownerName })} className="task-list-row-owner" data-unassigned={!task.ownerId || undefined} role={task.ownerId ? "group" : "img"} title={task.ownerId ? undefined : t('list.ownerLabel', { name: t('list.unassigned') })}>{task.ownerId ? <PersonAvatar name={ownerName} personId={task.ownerId} profile={owner} size="xs" /> : <UserRound aria-hidden="true" size={16} />}</span>
@@ -152,7 +161,7 @@ const MemoTaskWorkspaceRow = memo(function TaskWorkspaceRow({ task, owner, serie
   && JSON.stringify(before.series) === JSON.stringify(after.series)
   && JSON.stringify(before.owner) === JSON.stringify(after.owner));
 
-export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onDeleteTask, onTaskStatusChange, onFiltersChange, onTaskSelect, onQueryChange, onQuickCreateTask, quickCreateRequest = 0, query, selectedTaskId, showingWorkbench, teamId, progressComparisonsByTaskId, listVisible = true }: TaskWorkspaceListProps) {
+export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFilters, members, onDeleteTask, onTaskStatusChange, onFiltersChange, onManageTags, onTaskSelect, onQueryChange, onQuickCreateTask, quickCreateRequest = 0, query, selectedTaskId, showingWorkbench, teamId, progressComparisonsByTaskId, listVisible = true }: TaskWorkspaceListProps) {
   const { t, locale } = useI18n();
   const rowsRef = useRef<HTMLDivElement>(null);
   const quickCreateId = useId();
@@ -220,9 +229,6 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
   const normalizedFilters = { ...filters, statuses: selectedStatuses, tags: selectedTags };
   const summaries = taskFilterSummaries(normalizedFilters);
   const hasFilters = Object.values(summaries).some(Boolean);
-  const updatedSortLabel = t('list.updatedSort');
-  const createdSortLabel = t('list.createdSort');
-  const sortLabel = filters.sort === "created" ? createdSortLabel : updatedSortLabel;
   const filterKey = JSON.stringify([filters, currentUserId]);
   useEffect(() => { if (rowsRef.current) rowsRef.current.scrollTop = 0; }, [query, filterKey]);
   const hierarchyScope = teamId ?? projection.allTasks[0]?.teamId ?? "default";
@@ -269,6 +275,7 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
     </div>
     <div className="task-list-results-toolbar">
       <div className="task-list-display-actions">
+        <TaskListTools filters={filters} members={members} onFiltersChange={onFiltersChange} onManageTags={onManageTags} projection={projection} touch={controlSize === "touch"} />
         <div className="task-list-view-switch" role="group" aria-label={locale === "en" ? "View" : "视图"}>
           <button type="button" className="task-list-view-trigger" aria-label={locale === "en" ? "Hierarchy view" : "层级视图"} title={locale === "en" ? "Hierarchy view" : "层级视图"} aria-pressed={hierarchyMode} onClick={() => changeFilters({ listView: "hierarchy" })}><ListTree aria-hidden="true" size={18} /></button>
           <button type="button" className="task-list-view-trigger" aria-label={locale === "en" ? "List view" : "列表视图"} title={locale === "en" ? "List view" : "列表视图"} aria-pressed={!hierarchyMode} onClick={() => changeFilters({ listView: "flat" })}><List aria-hidden="true" size={18} /></button>

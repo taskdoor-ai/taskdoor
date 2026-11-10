@@ -78,6 +78,8 @@ import { FavoritesPage, type FavoriteItem } from "@/features/me/components/Favor
 import { TaskFileGlyph } from "@/features/tasks/files/components/TaskFileGlyph";
 import { addWorkspaceSubtask, canCreateWorkspaceSubtask, getSubtaskDeletionPreview, getTaskDeletionPreview, getTaskDeletionWrites, type NewSubtaskDraft } from "@/features/tasks/lib/workspace-subtask-editing";
 import { clearTaskFileDraftSessions } from "@/features/tasks/files/lib/task-file-drafts";
+import { findNotificationFile } from "@/features/tasks/files/lib/notification-file-source";
+import { resolveDiscussionNotificationAttachment } from "@/features/tasks/lib/discussion-notification-source";
 import { commitWorkspaceScenarioReset, resolveWorkspaceScenarioReset } from "@/ai/mock/lib/workspaceScenarioReset";
 import { migrateProgressDemoFixtures } from "@/ai/mock/lib/taskProgressDemoMigration";
 import { migrateTaskStatusDemoFixtures } from "@/ai/mock/lib/taskStatusDemoMigration";
@@ -801,9 +803,35 @@ function App() {
         toast.error(unavailable);
         return;
       }
+      if (target?.attachment) {
+        try {
+          if (target.area !== "discussion" || !target.activityId) throw new Error("Discussion source missing");
+          const detail = (task.id === selectedTaskId ? selectedTaskDetailBase : undefined)
+            ?? taskDetailMocks[task.id as TaskDetailId] ?? getTeamTaskDetailFixture(task);
+          const snapshot = loadCollaboration(localStorage, JSON.stringify([sourceTeamId, task.id]), detail?.files ?? []);
+          const messages = mergeCollaborationMessages(detail?.activities ?? [], snapshot.messages);
+          if (!resolveDiscussionNotificationAttachment(messages, snapshot.files, {
+            messageId: target.activityId, ...target.attachment,
+          })) throw new Error("Discussion attachment unavailable");
+        } catch {
+          toast.error(locale === "en" ? "The attachment in this discussion is unavailable." : "这条讨论中的附件已不可用。");
+          return;
+        }
+      }
+      if (target?.area === "files" && target.fileId) {
+        try {
+          const seeds = (task.id === selectedTaskId ? selectedTaskDetailBase?.files : undefined)
+            ?? taskDetailMocks[task.id as TaskDetailId]?.files ?? getTeamTaskDetailFixture(task)?.files ?? [];
+          const files = loadCollaboration(localStorage, JSON.stringify([sourceTeamId, task.id]), seeds).files;
+          if (!findNotificationFile(files, target.fileId)) throw new Error("File unavailable");
+        } catch {
+          toast.error(locale === "en" ? "The file in this notification is unavailable." : "这条通知对应的文件已不可用。");
+          return;
+        }
+      }
       if (sourceTeamId === activeTeamId) resetTaskSearch();
       setTaskAttentionTarget(target?.area === "discussion"
-        ? { kind: target.activityId ? "activity" : "discussion", targetId: target.activityId ?? "" }
+        ? { kind: target.activityId ? "activity" : "discussion", targetId: target.activityId ?? "", ...(target.attachment ? { attachment: target.attachment } : {}) }
         : target?.area === "files" && target.fileId ? { kind: "file", targetId: target.fileId } : null);
       onNavigate();
       showTaskDetail(task, !target);
@@ -1587,9 +1615,6 @@ function App() {
     <div className="app-shell task-workspace-shell">
       {!validTeamTimeZone && <p role="alert">{locale === "en" ? "The team timezone is invalid. Date filters are not applied and date changes are unavailable; saved tasks are kept." : "团队时区无效，日期筛选条件暂未应用，也无法修改日期；已有任务和输入已保留。"}</p>}
       <WorkspaceNavigation
-        onListFiltersChange={filters => requestCreationExit(() => setTaskFilters(filters))}
-        members={collaborationMembers}
-        onManageTags={openTagManagement}
         onOpenRecycleBin={openRecycleBin}
         activeTeamId={activeTeamId}
         activeSection={activeSection}

@@ -90,9 +90,9 @@
   border-color: transparent;
   background: var(--ad-surface-subtle);
 }
-.task-detail-split :is(.task-detail-title-input, .task-detail-goal-input)[data-slot]:focus-visible,
-.task-detail-split .task-criteria-fields .task-criteria-field-input[data-slot="textarea"]:focus-visible {
-  border-color: var(--ad-focus);
+.task-detail-split :is(.task-detail-title-input, .task-detail-goal-input)[data-slot]:not([aria-invalid="true"]):not([data-invalid]):focus-visible,
+.task-detail-split .task-criteria-fields .task-criteria-field-input[data-slot="textarea"]:not([aria-invalid="true"]):not([data-invalid]):focus-visible {
+  border-color: var(--ad-input-focus);
   background: var(--ad-surface);
   box-shadow: none;
   outline: none;
@@ -264,7 +264,7 @@
 .task-detail-split .task-detail-tabs { overflow-x: auto; scrollbar-width: none; gap: 24px; }
 .task-detail-split .task-detail-tabs button { flex-shrink: 0; white-space: nowrap; }
 .task-detail-tab-label { display: inline-flex; align-items: center; gap: 6px; }
-.task-detail-tab-count { color: var(--ad-ink-tertiary); font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums; }
+.task-detail-tab-count { color: var(--ad-tab-muted); font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums; }
 
 @container task-fields (max-width: 560px) {
   .task-detail-split .task-detail-goal-field, .task-detail-split .task-detail-completion { grid-template-columns: minmax(0, 1fr); gap: var(--ad-space-1); }
@@ -337,7 +337,7 @@
 .task-round-icon:not([data-tone="neutral"]) { background: color-mix(in srgb, currentColor 10%, var(--ad-surface)); }
 .task-symbol-options { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--ad-border-soft); }
 .task-symbol-options button { display: grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 6px; color: var(--ad-ink-secondary); background: transparent; cursor: pointer; }
-.task-symbol-options button:hover, .task-symbol-options button[aria-pressed="true"] { background: var(--ad-button-soft-bg); color: var(--ad-button-primary-bg); }
+.task-symbol-options button:hover, .task-symbol-options button[aria-pressed="true"] { background: var(--ad-control-selected-bg); color: var(--ad-ink); }
 .task-icon-progress-ring { position: absolute; inset: -4px; width: 36px; height: 36px; fill: none; transform: rotate(-90deg); stroke-width: 1.6; }
 .task-icon-progress-ring circle { stroke: var(--ad-border); stroke-linecap: round; }
 .task-icon-progress-ring circle[data-filled="true"] { stroke: var(--ad-route); }

@@ -40,7 +40,7 @@ test("使用选中讨论及同段上下文调用模型，返回单个可审阅�
   let payload: unknown; let prompt = "";
   const result = await callDiscussionSubtaskDraftModel(request, options, async (_options, instructions, input) => { payload = input; prompt = instructions; return { rawOutput: JSON.stringify(expected), usage: { inputTokens: null, outputTokens: null, totalTokens: null } }; }, new AbortController().signal);
   assert.deepEqual(payload, { mode: "discussion", ...request }); assert.deepEqual(result, expected);
-  assert.match(prompt, /一个/); assert.match(prompt, /不执行/); assert.match(prompt, /收到/);
+  assert.match(prompt, /一个/); assert.match(prompt, /不执行/); assert.match(prompt, /成功结果始终提供一个可编辑/); assert.match(prompt, /referencedTasks/);
 });
 test("未配置或已取消时不调用模型，不返回伪造草稿", async () => {
   let calls = 0;
@@ -109,4 +109,14 @@ test("两个入口使用相同 Skill 并将来源模式与父定义传入模型"
   const clarification = await post({ ...prompt, prompt: "处理一下" });
   assert.equal(clarification.status, 200);
   assert.deepEqual(await clarification.json(), { draft: null, message: "请补充要核对的记录。" });
+});
+
+test("讨论模型返回空草稿或不可解析内容时依据上下文返回可编辑结果", async () => {
+  for (const rawOutput of [JSON.stringify({ draft: null, message: "无法生成" }), "not-json"]) {
+    const result = await callDiscussionSubtaskDraftModel(request, options, async () => ({ rawOutput, usage: { inputTokens: null, outputTokens: null, totalTokens: null } }), new AbortController().signal);
+    assert.ok(result.draft);
+    assert.match(result.draft.title, /发布材料/);
+    assert.equal(result.draft.goal, "");
+    assert.equal(result.message, "");
+  }
 });

@@ -8,7 +8,7 @@
 .task-detail-sticky-title { display: flex; min-width: 0; min-height: var(--ad-control-touch-min); align-items: center; gap: var(--ad-space-2); padding: 0; border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink); text-align: left; cursor: pointer; }
 .task-detail-sticky-title strong { min-width: 0; overflow: hidden; font-size: var(--ad-text-body); font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
 .task-detail-sticky-title > svg { flex: 0 0 auto; color: var(--ad-ink-tertiary); }
-.task-detail-sticky-title:hover strong { color: var(--ad-route-ink); }
+.task-detail-sticky-title:hover strong { color: var(--ad-ink); text-decoration: underline; text-underline-offset: 3px; }
 .task-detail-sticky-title:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
 .task-detail-sticky-meta { display: flex; min-width: 0; align-items: center; gap: var(--ad-space-4); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); }
 .task-detail-sticky-owner, .task-detail-sticky-due { display: inline-flex; min-width: 0; align-items: center; gap: var(--ad-space-2); white-space: nowrap; }
@@ -39,7 +39,7 @@
 .task-detail-field-label { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ad-space-1); color: var(--ad-ink); font-size: var(--ad-text-caption); line-height: 1.7; }
 .task-detail-goal-input[data-slot="textarea"] { min-height: 24px; height: auto; margin: 0 0 0 calc(var(--ad-space-2) * -1); padding: 0 var(--ad-space-2); resize: none; border-color: transparent; background: transparent; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.7; field-sizing: content; }
 .task-detail-title-input:hover, .task-detail-goal-input:hover { background: var(--ad-surface-subtle); }
-.task-detail-title-input:focus-visible, .task-detail-goal-input:focus-visible { border-color: var(--ad-focus); background: var(--ad-surface); }
+.task-detail-title-input:not([aria-invalid="true"]):not([data-invalid]):focus-visible, .task-detail-goal-input:not([aria-invalid="true"]):not([data-invalid]):focus-visible { border-color: var(--ad-input-focus); background: var(--ad-surface); }
 .task-detail-completion-content { min-width: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.7; overflow-wrap: anywhere; }
 .task-detail-completion ul { display: grid; gap: var(--ad-space-1); margin: 0; padding-left: var(--ad-space-4); list-style: disc outside; }
 .task-detail-completion li::marker { color: var(--ad-ink-tertiary); }

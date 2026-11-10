@@ -13,7 +13,7 @@
 .task-file-add-trigger svg { width: 18px; height: 18px; }
 .task-file-sidebar-search { position: relative; flex: 1; min-width: 0; border-radius: var(--ad-radius-input); background: color-mix(in srgb, var(--ad-ink) 5%, var(--ad-surface)); }
 .task-file-sidebar-search:hover { background: color-mix(in srgb, var(--ad-ink) 7%, var(--ad-surface)); }
-.task-file-sidebar-search:focus-within { background: var(--ad-surface); box-shadow: inset 0 0 0 1px var(--ad-focus), 0 0 0 2px var(--ad-focus-soft); }
+.task-file-sidebar-search:focus-within { background: var(--ad-surface); box-shadow: inset 0 0 0 1px var(--ad-input-focus); }
 .task-file-sidebar-search [data-slot="input-shell"] { min-width: 0; width: 100%; }
 .task-file-sidebar-search [data-slot="input-leading-icon"] { left: 9px; width: 14px; height: 14px; }
 .task-file-sidebar-search .task-file-search-input[data-slot="input"] { height: 32px; padding-left: 30px; padding-right: 10px; border: 0; border-radius: var(--ad-radius-input); background: transparent; box-shadow: none; font-size: 13px; }

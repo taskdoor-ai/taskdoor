@@ -13,9 +13,9 @@
 | nextActions[].diagnosisType | `execution_blockage`、`decision_conflict`，或无诊断关联时 null |
 | progress.state | `current`、`unknown`、`stale`；当前部分可计算仍可为 current，缺口单独说明 |
 | progress.ewdResultRef / inputVersions | 输入中已有 EWD 结果的引用及其版本；本次直接计算没有已存引用时为 null，reason 说明来源 |
-| progress.estimate | 可选；null 或完整复用 [EWD 输出契约](../../agentdoor-ewd-progress/references/output-contract.md) 的 `result.estimate` 对象，仅在本次补估或必要重估时返回；不是已保存估算或 MCP 写入参数 |
+| progress.estimate | null 或完整复用 [EWD 输出契约](../../agentdoor-ewd-progress/references/output-contract.md) 的 `result.estimate` 对象，本次补估或必要重估时返回完整对象，复用有效估算时为 null；不是已保存估算或 MCP 写入参数 |
 | progress.totalEwdMinutes / completedEwdMinutes / completionPercent | 直接取当前有效 EWD 的数值；不可计算为 null，不自行补值 |
-| progress.knownCompletedEwdMinutes / unconfirmedEwdMinutes | 可选的部分完成量与待确认量，来自同一个 EWD 结果 |
+| progress.knownCompletedEwdMinutes / unconfirmedEwdMinutes | 已知完成量与待确认量，来自同一个 EWD 结果；本次分析显式返回，无法确定时为 null，不把未知计为零 |
 | progress.trend / reason | 有真实历史时取 EWD trend 对象，否则 null；说明计算来源、缺口或过期原因 |
 | progress.displayPercent | 0、25、50、75、100 或 null；仅 current 且有有效原始 completionPercent 时按 MCP 分档规则生成，原始数值与燃起图不变 |
 | criteriaVersion | 本次读取的 criteria.version；未提供独立标准版本时为 null，不猜版本 |
@@ -37,8 +37,10 @@
 
 ## 估算与进度的衔接
 
-- 当前估算与内部明细有效时直接复用，`progress.estimate` 省略或为 null。缺估算或明细，或目标、标准、实际工作条件使其失效时，先用 EWD `estimate` 模式生成当前范围的估算，再按同一明细核对完成量；缺关键信息仍返回部分估算与未知项，不把缺估算一律视为永久不可计算。
-- 本次返回的 `progress.estimate` 保留 EWD 的明细、三点估算、计算规则版本、依据与未知项，不另造一套总量算法。新内部明细使用 EWD 候选 ID，不代表创建了子任务；分析数值使用同一份估算及内容证据，不能只凭总分钟推导完成量。
+- 范围与交付边界已明确时，可以用平台规则及可解释的合理假设形成三点估算；没有既存估算或精确实际耗时本身不构成待估理由。估算假设单独列明，不冒充实际执行数据；关键边界无法识别时才保留待估。
+- 当前估算与内部明细有效时直接复用，`progress.estimate=null`。缺估算或明细，或目标、标准、实际工作条件使其失效时，先用 EWD `estimate` 模式生成当前范围的估算，再按同一明细核对完成量；缺关键信息仍返回部分估算与未知项，不把缺估算一律视为永久不可计算。
+- 本次补估或重估必须同时返回完整的 `progress.estimate`，保留 EWD 的明细、三点估算、计算规则版本、依据与未知项，不另造一套总量算法；不能只在 reason 中声称补估或只给出新总量。新内部明细使用 EWD 候选 ID，不代表创建了子任务；分析数值使用同一份估算及内容证据，不能只凭总分钟推导完成量。
+- 部分量的小计与整体可计算性分别表达：当前范围明细有效时，`knownCompletedEwdMinutes` 累加已核实数字完成量，没有已核实项则为 0；含未知项时 `completedEwdMinutes` 与 `completionPercent` 仍为 null，未知项的工作量汇入 `unconfirmedEwdMinutes`。小计 0 不是将未知完成度判为 0。
 - 本次估算没有已存 EWD 引用时，`ewdResultRef=null`，`reason` 说明本次补估或重估及当前数量来源。完整回显本次 `inputVersions`，不能自己生成保存回执或冒充已持久化的估算版本。
 - 应用在保存前核对权限与输入版本，分配当前估算版本并保存为 AI 估算；AI 结果不产生人工确认，也不覆盖人工已确认估算。EWD 的 `estimate.basis` 表示计算依据，不能被当作人工确认状态。创建基线仅来自创建时记录，本次提案不修改它或既有历史。
 - 当前输入、输出与本次示例不带已取消的前置依赖字段或关系边，不保留空兼容字段。所需材料、确认和交接顺序保留为业务正文。
@@ -76,6 +78,9 @@
 - `criteriaVersion` 与 result.criteriaVersion 一致；`state` 为 current / unknown / stale。
 - `percent` 为 0 / 25 / 50 / 75 / 100 或 null，分档规则见 [MCP 分析](mcp-analysis.md)；unknown/stale 为 null。
 - `completedContent / remainingContent / pendingChecks` 为字符串数组；`reason` 为具体判断依据；`evidenceRefs` 仅引用当前读过且有权使用的来源。无证据时不能输出数字。
+- 按[目标与结果的判断尺度](../SKILL.md#目标与结果的判断尺度)，以本次承诺、阶段贡献及必要质量解释已达成内容；remainingContent只列影响约定结果的剩余工作，pendingChecks只列会改变结论的关键未知，可选改进不作为扣分项。复合标准按已实现部分及其贡献分档，新增要求不抹去当前仍适用的已有成果。证据充分支持实质达成时percent=100；必要结果尚无法判断时保留unknown/null，不以任意折扣表达信心。
+- 先确认已实现的本条结果、剩余结果与关键未知，再决定percent。0表示本条尚未形成任何结果，不能与非空completedContent同时返回；活动或无关成果不放入本条已达成内容。
+- 每条按当前完整原文评估；同一已实现成果可分别支撑多条相关标准，不因已在另一条或 EWD 中计算过就从本条的 completedContent 删除。EWD 对人工投入去重，标准评估对各自完整结果核对，不能用新增明细的完成量替代整条复合标准的达成程度。
 - 人工确认是读取到的独立事实，不纳入 AI 写回，也不因模型百分比变化自动撤销。整体和逐条结果绑定相同输入快照，但各自可以未知。
 
 旧 v0.1 离线结果缺少新增字段时仍可阅读；新分析必须返回上述字段，不重写历史结果。

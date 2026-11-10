@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "mode": "analysis",
+  "files": [
+    "skills/shared/evidence-and-updates.md",
+    "skills/shared/assistant-path-rules.md",
+    "skills/shared/current-prd-contract.md",
+    "skills/shared/production-mcp-contract.md",
+    "skills/agentdoor-task-status-analyzer/references/output-contract.md",
+    "skills/agentdoor-task-status-analyzer/references/mcp-analysis.md",
+    "skills/agentdoor-task-status-analyzer/references/evidence-scenarios.md",
+    "skills/agentdoor-task-status-analyzer/examples/decision-pairs.md",
+    "skills/agentdoor-task-status-analyzer/references/problem-analysis.md",
+    "skills/agentdoor-task-status-analyzer/examples/problem-analysis.md",
+    "skills/agentdoor-task-status-analyzer/references/production-progress-contract.md",
+    "skills/agentdoor-ewd-progress/SKILL.md",
+    "skills/agentdoor-ewd-progress/references/output-contract.md",
+    "skills/agentdoor-ewd-progress/examples/decision-pairs.md",
+    "skills/agentdoor-task-status-analyzer/SKILL.md"
+  ]
+}

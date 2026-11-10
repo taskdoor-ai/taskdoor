@@ -80,7 +80,7 @@ type PersonPickerProps = PersonPickerCommonProps & ({
 // Visual anatomy: adapted from 21st.dev Member Selector and shadcn custom Combobox items.
 const unassignedPersonId = "__agentdoor_unassigned__";
 const itemValue = (item: PickerItem) => "actionId" in item ? `action:${item.actionId}` : item.id;
-const optionClassName = "person-picker-option grid min-h-(--ad-control-touch-min) cursor-default grid-cols-[var(--ad-control-height-md)_minmax(0,1fr)_auto] items-center gap-(--ad-space-3) rounded-(--ad-radius-control) px-(--ad-space-3) py-(--ad-space-2) outline-none transition-colors data-disabled:opacity-40 data-highlighted:bg-(--ad-surface-subtle) data-selected:bg-(--ad-route-soft)";
+const optionClassName = "person-picker-option grid min-h-(--ad-control-touch-min) cursor-default grid-cols-[var(--ad-control-height-md)_minmax(0,1fr)_auto] items-center gap-(--ad-space-3) rounded-(--ad-radius-control) px-(--ad-space-3) py-(--ad-space-2) outline-none transition-colors data-disabled:opacity-40 data-highlighted:bg-(--ad-surface-subtle) data-selected:bg-(--ad-control-selected-bg)";
 
 export function PersonPicker(props: PersonPickerProps) {
   const ui = useGlobalUi();
@@ -198,7 +198,7 @@ export function PersonPicker(props: PersonPickerProps) {
           : <PersonAvatar name={item.name} profile={item} profilePreviewFocusable={false} showProfilePreview={!isMentionTrigger} size={isMentionTrigger ? "xs" : "sm"} />}
         <span className="min-w-0"><strong className="block truncate text-(length:--ad-text-body-sm) font-semibold text-(--ad-ink)">{isScope ? item.name : isSelf ? selfOptionLabel : <PersonName name={item.name} profile={item} showProfilePreview={!isMentionTrigger} />}</strong>{isScope && item.role && <small className="person-picker-option-description mt-(--ad-space-1) block text-(length:--ad-text-caption) text-(--ad-ink-tertiary)">{item.role}</small>}</span>
         <span className="person-picker-option-end">
-          <Combobox.ItemIndicator className="grid size-(--ad-control-icon-sm) place-items-center text-(--ad-route-ink)"><Check aria-hidden="true" size={16} /></Combobox.ItemIndicator>
+          <Combobox.ItemIndicator className="grid size-(--ad-control-icon-sm) place-items-center text-(--ad-ink)"><Check aria-hidden="true" size={16} /></Combobox.ItemIndicator>
         </span>
       </Combobox.Item>
     );
@@ -242,7 +242,7 @@ export function PersonPicker(props: PersonPickerProps) {
         data-size={size}
         className={cn(
           "person-picker-trigger",
-          isSelectTrigger ? cn(selectTriggerClassName, "workspace-filter-control person-picker-trigger-select text-(--ad-ink)") : "inline-flex items-center justify-center gap-(--ad-space-2) rounded-(--ad-radius-control) border border-transparent bg-transparent font-sans text-(length:--ad-text-caption) font-semibold text-(--ad-route-ink) outline-none transition-[background-color,border-color,box-shadow] hover:border-(--ad-border) hover:bg-(--ad-surface) focus-visible:ring-2 focus-visible:ring-(--ad-focus) focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          isSelectTrigger ? cn(selectTriggerClassName, "workspace-filter-control person-picker-trigger-select text-(--ad-ink)") : "inline-flex items-center justify-center gap-(--ad-space-2) rounded-(--ad-radius-control) border border-transparent bg-transparent font-sans text-(length:--ad-text-caption) font-semibold text-(--ad-ink-secondary) outline-none transition-[background-color,border-color,box-shadow] hover:border-(--ad-border) hover:bg-(--ad-surface) focus-visible:ring-2 focus-visible:ring-(--ad-focus) focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
           !isSelectTrigger && (size === "touch" ? "min-h-(--ad-control-touch-min)" : "min-h-(--ad-control-height-sm)"),
           (triggerVariant === "add" || triggerVariant === "member") && "person-picker-trigger-avatar",
           triggerVariant === "action" ? "px-(--ad-space-2)" : triggerVariant === "add" ? "person-picker-trigger-add flex-col gap-(--ad-space-1) px-0 text-(--ad-ink-secondary)" : triggerVariant === "member" ? "person-picker-trigger-member flex-col gap-(--ad-space-1) px-0 text-(--ad-ink-secondary)" : !isSelectTrigger && "person-picker-trigger-identity justify-start px-0 text-left text-(--ad-ink)",
@@ -274,7 +274,7 @@ export function PersonPicker(props: PersonPickerProps) {
           <Combobox.Popup finalFocus={suppressReturnFocus ? false : props.finalFocus} aria-label={menuLabel} data-variant={isMentionTrigger ? "mention" : undefined} className="person-picker-popup flex max-h-[var(--available-height)] w-(--ad-person-picker-width) max-w-[calc(100vw-var(--ad-space-6))] flex-col overflow-hidden rounded-(--ad-radius-card) bg-(--ad-surface) text-(--ad-ink) shadow-(--ad-shadow-float) ring-1 ring-(--ad-border) outline-none duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95">
             <div className="person-picker-search flex min-h-(--ad-control-touch-min) items-center gap-(--ad-space-2) border-b border-(--ad-border-soft) px-(--ad-space-3) text-(--ad-ink-tertiary) transition-colors focus-within:bg-(--ad-surface-subtle)">
               <Search aria-hidden="true" className="shrink-0" size={16} />
-              <Combobox.Input ref={searchRef} autoFocus aria-label={searchPlaceholder} className="h-(--ad-control-touch-min) min-w-0 flex-1 border-0 bg-transparent text-(length:--ad-text-body-sm) text-(--ad-ink) outline-none shadow-none placeholder:text-(--ad-ink-tertiary) focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none" data-slot="input" placeholder={searchPlaceholder} />
+              <Combobox.Input ref={searchRef} type="search" name="taskdoor-member-search" autoComplete="off" autoFocus aria-label={searchPlaceholder} className="h-(--ad-control-touch-min) min-w-0 flex-1 border-0 bg-transparent text-(length:--ad-text-body-sm) text-(--ad-ink) outline-none shadow-none placeholder:text-(--ad-ink-tertiary) focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none" data-slot="input" placeholder={searchPlaceholder} />
             </div>
             {canUnassign && <div className="person-picker-unassigned">
               <div className="person-picker-unassigned-card" data-selected={isUnassigned || undefined}>

@@ -65,14 +65,14 @@ export function getTaskScopeFilter(filters: TaskListFilters): TaskListScope {
   return filters.ownerIsMe ? "owned" : "participating";
 }
 
-/** 普通任务列表只保留可见筛选；旧范围不再限制结果。 */
+/** 普通任务列表状态单选；旧组合保留首个状态，旧范围不再限制结果。 */
 export function normalizeTaskWorkspaceFilters(filters: TaskListFilters): TaskListFilters {
   const statuses = filters.statuses !== undefined || filters.status !== "all"
     ? getTaskStatusFilters(filters)
     : filters.completion === "done" ? ["已完成"]
       : filters.completion === "open" ? ["进行中", "已阻塞"]
         : [];
-  return { ...filters, scope: getTaskScopeFilter(filters), view: "all", owner: "all", completion: "all", status: "all", statuses,
+  return { ...filters, scope: getTaskScopeFilter(filters), view: "all", owner: "all", completion: "all", status: "all", statuses: statuses.slice(0, 1),
     ownerIds: uniqueSelections(filters.ownerIds ?? []), participantIds: uniqueSelections(filters.participantIds ?? []),
     creatorIds: [], ownerIsMe: false, participantIsMe: false,
     includeUnassigned: Boolean(filters.includeUnassigned), includeNoParticipants: Boolean(filters.includeNoParticipants), includeUnknownCreator: false };

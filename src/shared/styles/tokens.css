@@ -4,17 +4,26 @@
   /* Foundation */
   --ad-canvas: #ffffff;
   --ad-surface: #ffffff;
-  --ad-surface-subtle: #f3f6fc;
-  --ad-surface-quiet: #fafbfe;
-  --ad-sidebar: #f7f9fd;
-  --ad-task-list-surface: #f9f9fa;
-  --ad-ink: #2e3a50;
-  --ad-ink-secondary: #53627a;
-  --ad-ink-tertiary: #617089;
-  --ad-border: #e0e6f0;
-  --ad-border-soft: #edf1f7;
-  --ad-border-strong: #c2cde0;
+  --ad-surface-subtle: #f3f3f3;
+  --ad-surface-quiet: #fafafa;
+  --ad-discussion-composer-surface: var(--ad-surface);
+  --ad-sidebar: #f7f7f7;
+  --ad-workspace-canvas: #f3f6fc;
+  --ad-task-list-surface: #f9f9f9;
+  --ad-ink: #2b2b2b;
+  --ad-ink-secondary: #5d5d5d;
+  --ad-ink-tertiary: #6b6b6b;
+  --ad-border: #e5e5e5;
+  --ad-border-soft: #ededed;
+  --ad-border-strong: #c9c9c9;
   --ad-chart-scope: #858585;
+  --ad-tab-active: #0d0d0d;
+  --ad-tab-muted: #5d5d5d;
+  --ad-tab-selected-bg: #f2f2f2;
+  --ad-view-active: #191c1f;
+  --ad-view-muted: #84888b;
+  --ad-view-hover-bg: #fafafa;
+  --ad-view-selected-bg: #f3f3f3;
 
   /* Route and actions */
   --ad-button-primary-bg: var(--ad-route);
@@ -42,11 +51,150 @@
   --ad-route-ink: #4763c5;
   --ad-action-ink: #ffffff;
   --ad-accent: var(--ad-route);
-  --ad-focus: #5579e5;
-  --ad-focus-soft: #e4ebff;
+  --ad-accent-ink: var(--ad-accent-ink-light, var(--ad-route-ink));
+  --ad-focus: var(--ad-ink-secondary);
+  --ad-focus-soft: color-mix(in srgb, var(--ad-ink) 12%, transparent);
+  --ad-input-focus: #c9c9c9;
+  --ad-input-focus-soft: transparent;
+  --ad-input-keyboard-focus: #737373;
   --ad-danger: #c13e61;
   --ad-danger-soft: #fff0f4;
+  --ad-task-overdue: #dc2626;
   --ad-notification-badge: #d92d3e;
+
+
+  /* Button colors: shared action semantics and fixed contrast colors for specialized controls. */
+  --ad-button-primary-bg: var(--ad-route);
+  --ad-button-primary-hover-bg: var(--ad-route-hover);
+  --ad-button-primary-active-bg: var(--ad-route-active);
+  --ad-button-primary-ink: var(--ad-action-ink);
+  --ad-button-primary-hover-ink: var(--ad-button-primary-ink);
+  --ad-button-primary-active-ink: var(--ad-button-primary-ink);
+  --ad-button-soft-bg: var(--ad-surface-subtle);
+  --ad-button-soft-hover-bg: var(--ad-surface-subtle);
+  --ad-button-soft-ink: var(--ad-ink);
+  --ad-button-primary-border: var(--ad-route-border);
+  --ad-button-neutral-bg: var(--ad-surface);
+  --ad-button-neutral-hover-bg: var(--ad-surface-subtle);
+  --ad-button-neutral-ink: var(--ad-ink-secondary);
+  --ad-button-neutral-border: var(--ad-border);
+  --ad-button-danger-bg: var(--ad-danger-soft);
+  --ad-button-danger-ink: var(--ad-danger);
+  --ad-button-focus: var(--ad-focus);
+  --ad-button-focus-soft: var(--ad-focus-soft);
+  --ad-button-disabled-bg: var(--ad-control-disabled-bg);
+  --ad-button-disabled-ink: var(--ad-control-disabled-ink);
+  --ad-button-version-recovery-button-focus-visible-outline-1: #586ee0;
+  --ad-button-immersive-workbench-button-focus-visible-immersive-workbench-a-focus-visible-outline-1: #7e8bd6;
+  --ad-button-brand-home-a-focus-visible-brand-home-button-focus-visible-outline-1: #91a8f0;
+  --ad-button-task-pdf-viewer-toolbar-button-hover-not-disabled-task-pdf-viewer-toolbar-button-aria-pres-background-1: #f0f3f8;
+  --ad-button-task-pdf-viewer-toolbar-button-hover-not-disabled-task-pdf-viewer-toolbar-button-aria-pres-color-1: #3e5471;
+  --ad-button-task-pdf-viewer-selection-controls-button-aria-pressed-true-background-1: #edf2ff;
+  --ad-button-task-pdf-viewer-selection-controls-button-aria-pressed-true-color-1: #4565ad;
+  --ad-button-task-pdf-viewer-thumbnails-header-button-hover-task-pdf-viewer-thumbnails-header-button-ar-background-1: #edf2fc;
+  --ad-button-task-pdf-viewer-thumbnails-header-button-hover-task-pdf-viewer-thumbnails-header-button-ar-color-1: #4968b4;
+  --ad-button-task-pdf-viewer-document-status-button-task-pdf-viewer-page-status-button-background-1: white;
+  --ad-button-task-pdf-viewer-document-status-button-task-pdf-viewer-page-status-button-color-1: #3d5c92;
+  --ad-button-task-pdf-viewer-document-status-button-task-pdf-viewer-page-status-button-box-shadow-1: #dfe3e9;
+  --ad-button-task-file-preview-stage-data-preview-kind-image-yarl-button-hover-not-disabled-background-1: #ffffff20;
+  --ad-button-first-task-onboarding-first-task-onboarding-examples-button-border-1: #e5eae2;
+  --ad-button-first-task-onboarding-first-task-onboarding-examples-button-background-1: #fbfcf8;
+  --ad-button-first-task-onboarding-first-task-onboarding-examples-button-color-1: #60745f;
+  --ad-button-first-task-onboarding-first-task-onboarding-examples-button-hover-not-disabled-border-color-1: #bed3c2;
+  --ad-button-first-task-onboarding-first-task-onboarding-examples-button-hover-not-disabled-background-1: #f1f7ee;
+  --ad-button-first-task-onboarding-first-task-onboarding-examples-button-hover-not-disabled-color-1: #315d3e;
+  --ad-button-first-task-onboarding-first-task-onboarding-examples-button-svg-last-child-color-1: #a3afa5;
+  --ad-button-first-task-onboarding-button-focus-visible-outline-1: #278557;
+  --ad-button-first-task-onboarding-first-task-onboarding-confirm-data-slot-alert-dialog-description-color-1: #69746c;
+  --ad-button-first-task-onboarding-data-layout-workspace-first-task-onboarding-examples-button-hover-no-border-color-1: #a4b8f4;
+  --ad-button-first-task-onboarding-data-layout-workspace-first-task-onboarding-examples-button-hover-no-color-1: #4763c5;
+  --ad-button-first-task-onboarding-data-layout-workspace-first-task-onboarding-examples-button-svg-last-color-1: #91a0b7;
+  --ad-button-first-task-onboarding-data-layout-setup-first-task-onboarding-handoff-actions-data-slot-bu-color-1: #fff;
+  --ad-button-first-task-onboarding-data-layout-setup-first-task-onboarding-created-data-slot-button-color-1: #fff;
+  --ad-button-first-task-onboarding-data-layout-immersive-first-task-onboarding-examples-button-border-color-1: #e4e7f0;
+  --ad-button-first-task-onboarding-data-layout-immersive-first-task-onboarding-examples-button-background-1: #fafbfd;
+  --ad-button-first-task-onboarding-data-layout-immersive-first-task-onboarding-examples-button-color-1: #7b8298;
+  --ad-button-first-task-onboarding-data-layout-immersive-first-task-onboarding-examples-button-hover-no-border-color-1: #bbc2d9;
+  --ad-button-first-task-onboarding-data-layout-immersive-first-task-onboarding-examples-button-hover-no-background-1: #f3f5fc;
+  --ad-button-first-task-onboarding-data-layout-immersive-first-task-onboarding-examples-button-hover-no-color-1: #606d9e;
+  --ad-button-first-task-onboarding-data-layout-immersive-first-task-onboarding-handoff-actions-data-slo-color-1: #fff;
+  --ad-button-first-task-onboarding-data-layout-immersive-first-task-onboarding-handoff-check-data-slot--color-1: #7f8fac;
+  --ad-button-first-task-onboarding-data-layout-immersive-first-task-onboarding-created-data-slot-button-color-1: #fff;
+  --ad-button-first-task-onboarding-inline-handoff-data-slot-button-color-1: #626d94;
+  --ad-button-task-file-annotation-toolbar-button-hover-background-1: #ffffff18;
+  --ad-button-task-file-annotation-toolbar-button-focus-visible-outline-1: #99bcff;
+  --ad-button-task-media-annotation-controls-button-background-1: #fff;
+  --ad-button-task-media-annotation-controls-button-color-1: #45546c;
+  --ad-button-ao-action-heading-strong-ao-authorize-note-strong-color-1: #39483c;
+  --ad-button-ao-action-heading-p-ao-authorize-note-p-color-1: #778573;
+  --ad-button-agent-onboarding-page-ao-open-button-box-shadow-1: #17603e10;
+  --ad-button-agent-onboarding-page-ao-copy-button-border-color-1: #e3e9df;
+  --ad-button-agent-onboarding-page-ao-copy-button-color-1: #6a7f6b;
+  --ad-button-agent-onboarding-page-ao-copy-button-background-1: #fff;
+  --ad-button-ao-text-button-color-1: #879184;
+  --ad-button-agent-onboarding-page-ao-continue-button-disabled-background-1: #e8eee4;
+  --ad-button-agent-onboarding-page-ao-continue-button-disabled-color-1: #a4b29e;
+  --ad-button-ao-method-details-button-border-1: #dce6d8;
+  --ad-button-ao-method-details-button-background-1: white;
+  --ad-button-ao-method-details-button-color-1: #7a8f76;
+  --ad-button-ao-method-details-button-aria-pressed-true-border-color-1: #a5c2a5;
+  --ad-button-ao-method-details-button-aria-pressed-true-background-1: #f0f6ed;
+  --ad-button-ao-method-details-button-aria-pressed-true-color-1: #46784b;
+  --ad-button-ao-action-heading-p-ao-authorize-note-p-color-2: #778373;
+  --ad-button-setup-feedback-stays-within-the-existing-connection-surface-ao-connection-panel-data-layou-border-color-1: #b9d3c0;
+  --ad-button-setup-feedback-stays-within-the-existing-connection-surface-ao-connection-panel-data-layou-background-1: #f0f7f1;
+  --ad-button-google-preview-button-focus-visible-outline-1: #4285f4;
+  --ad-button-accent-color-setting-button-color-1: white;
+  --ad-button-token-expiry-calendar-grid-button-aria-pressed-true-color-1: white;
+  --ad-button-connect-v2-tabs-button-data-state-active-box-shadow-1: rgb(23 25 28 / 9%);
+  --ad-button-connect-v2-code-line-button-border-1: #343943;
+  --ad-button-connect-v2-code-line-button-background-1: #20242b;
+  --ad-button-connect-v2-code-line-button-color-1: #aeb4bd;
+  --ad-button-connect-v2-code-line-button-hover-background-1: #292e37;
+  --ad-button-connect-v2-code-line-button-hover-color-1: #fff;
+  --ad-button-agent-connect-tabs-button-active-box-shadow-1: rgb(23 25 28 / 8%);
+  --ad-button-ai-cli-screen-button-color-1: #9298a1;
+  --ad-button-ai-cli-screen-button-hover-background-1: #2a2e35;
+  --ad-button-ai-cli-screen-button-hover-color-1: white;
+  --ad-button-ai-cli-terminal-footer-button-background-1: #f1f3f5;
+  --ad-button-ai-cli-terminal-footer-button-color-1: #17191d;
+  --ad-button-ai-cli-terminal-footer-button-disconnect-background-1: #2a2e35;
+  --ad-button-ai-cli-terminal-footer-button-disconnect-color-1: #d9dde2;
+  --ad-button-cli-command-block-button-border-1: #393d44;
+  --ad-button-cli-command-block-button-background-1: #202329;
+  --ad-button-cli-command-block-button-color-1: #e6e8eb;
+  --ad-button-send-button-active-color-1: white;
+  --ad-button-context-table-td-first-child-button-color-1: white;
+  --ad-button-task-date-range-popover-footer-button-last-child-color-1: white;
+  --ad-button-commit-composer-footer-button-color-1: white;
+  --ad-button-file-diff-toggle-button-active-box-shadow-1: rgb(0 0 0 / 8%);
+  --ad-button-next-action-list-button-done-action-check-color-1: white;
+  --ad-button-stage-handoff-dialog-nav-button-active-span-color-1: white;
+  --ad-button-decision-action-i-color-1: white;
+  --ad-button-handoff-source-list-button-i-color-1: white;
+  --ad-button-task-inline-edit-editing-button-color-1: white;
+  --ad-button-ai-agent-options-button-selected-i-color-1: white;
+  --ad-button-workbench-primary-button-hover-background-1: #292c31;
+  --ad-button-workbench-view-switch-button-is-active-box-shadow-1: rgba(22, 27, 34, .08);
+  --ad-button-workbench-settings-button-hover-border-color-1: #aeb8c6;
+  --ad-button-workbench-ai-action-border-1: rgba(255,255,255,.82);
+  --ad-button-workbench-ai-action-background-1: #fff;
+  --ad-button-workbench-ai-action-box-shadow-1: rgba(0,0,0,.22);
+  --ad-button-workbench-ai-action-color-1: #111318;
+  --ad-button-workbench-ai-action-hover-box-shadow-1: rgba(0,0,0,.3);
+  --ad-button-workbench-view-switch-button-is-active-background-1: #111318;
+  --ad-button-workbench-view-switch-button-is-active-color-1: #fff;
+  --ad-button-workbench-view-switch-button-is-active-box-shadow-2: rgba(17,19,24,.16);
+  --ad-button-workbench-kanban-column-header-button-hover-background-1: #fff;
+  --ad-button-workbench-setting-options-button-background-1: #fafafa;
+  --ad-button-workbench-setting-options-button-is-selected-border-color-1: #397ed8;
+  --ad-button-workbench-setting-options-button-is-selected-background-1: #eef5ff;
+  --ad-button-workbench-settings-modal-footer-button-background-1: #fff;
+  --ad-button-workbench-settings-modal-footer-button-primary-border-color-1: #111318;
+  --ad-button-workbench-settings-modal-footer-button-primary-background-1: #111318;
+  --ad-button-workbench-settings-modal-footer-button-primary-color-1: #fff;
+  --ad-button-avatar-edit-overlay-button-hover-background-1: rgb(255 255 255 / 20%);
+  --ad-button-avatar-edit-overlay-button-focus-visible-outline-1: white;
 
   /* Task status semantics — shared by badges, boards and canvas cards */
   --ad-task-status-neutral: #777777;
@@ -119,19 +267,20 @@
   --ad-tag-rose-border: #f5dce8;
 
   /* Selection controls */
-  --ad-control-selected-bg: var(--ad-route-soft);
-  --ad-control-selected-ink: var(--ad-route-ink);
-  --ad-navigation-selected-bg: var(--ad-route-soft);
-  --ad-navigation-selected-ink: var(--ad-route-ink);
-  --ad-control-border-hover: #b6c7f2;
-  --ad-control-disabled-bg: #f0f3f9;
-  --ad-control-disabled-ink: #97a3b7;
+  --ad-control-selected-bg: var(--ad-surface-subtle);
+  --ad-control-selected-ink: var(--ad-ink);
+  --ad-navigation-hover-bg: #efefef;
+  --ad-navigation-selected-bg: #e6e6e6;
+  --ad-navigation-selected-ink: var(--ad-ink);
+  --ad-control-border-hover: var(--ad-border-strong);
+  --ad-control-disabled-bg: #f1f1f1;
+  --ad-control-disabled-ink: #8a8a8a;
   --ad-checkbox-size: 18px;
   --ad-checkbox-radius: 6px;
-  --ad-checkbox-border: #8795ac;
-  --ad-checkbox-fill: var(--ad-route-soft);
-  --ad-checkbox-fill-hover: var(--ad-route-soft-hover);
-  --ad-checkbox-check: var(--ad-route-ink);
+  --ad-checkbox-border: #8a8a8a;
+  --ad-checkbox-fill: var(--ad-surface-subtle);
+  --ad-checkbox-fill-hover: var(--ad-surface-subtle);
+  --ad-checkbox-check: var(--ad-ink);
   --ad-checkbox-mark-width: 6px;
   --ad-checkbox-mark-height: 10px;
   --ad-switch-width: 34px;
@@ -139,13 +288,13 @@
   --ad-switch-thumb-size: 14px;
   --ad-switch-inset: 2px;
   --ad-switch-travel: 14px;
-  --ad-switch-track: #e9eef8;
+  --ad-switch-track: #ececec;
   --ad-switch-border: var(--ad-checkbox-border);
-  --ad-switch-track-on: var(--ad-route-soft);
-  --ad-switch-border-on: var(--ad-route-border);
+  --ad-switch-track-on: var(--ad-surface-subtle);
+  --ad-switch-border-on: var(--ad-border-strong);
   --ad-switch-thumb: #ffffff;
-  --ad-switch-thumb-on: var(--ad-route);
-  --ad-switch-shadow: 0 1px 3px rgb(55 79 130 / 18%);
+  --ad-switch-thumb-on: var(--ad-ink-secondary);
+  --ad-switch-shadow: 0 1px 3px rgb(0 0 0 / 12%);
 
   /* Prompt box */
   --ad-prompt-surface: var(--ad-surface);
@@ -156,7 +305,7 @@
   --ad-prompt-muted: var(--ad-ink-tertiary);
   --ad-prompt-action: var(--ad-route);
   --ad-prompt-action-ink: var(--ad-action-ink);
-  --ad-prompt-shadow: 0 7px 20px rgb(55 79 130 / 6%);
+  --ad-prompt-shadow: 0 7px 20px rgb(0 0 0 / 5%);
 
   /* Evidence semantics */
   --ad-fact: #207b63;
@@ -260,29 +409,38 @@
   --ad-duration-fast: 120ms;
   --ad-duration: 160ms;
   --ad-duration-route: 240ms;
-  --ad-shadow-float: 0 8px 24px rgb(55 79 130 / 8%);
-  --ad-shadow-soft: 0 2px 8px rgb(55 79 130 / 5%);
-  --ad-shadow-card: 0 8px 24px rgb(55 79 130 / 5%);
-  --ad-shadow-dialog: 0 24px 72px rgb(55 79 130 / 12%);
-  --ad-shadow-control-selected: 0 1px 3px rgb(55 79 130 / 5%);
-  --ad-shadow-card-hover: 0 12px 30px rgb(55 79 130 / 7%);
+  --ad-shadow-float: 0 8px 24px rgb(0 0 0 / 8%);
+  --ad-shadow-soft: 0 2px 8px rgb(0 0 0 / 5%);
+  --ad-shadow-card: 0 8px 24px rgb(0 0 0 / 5%);
+  --ad-shadow-dialog: 0 24px 72px rgb(0 0 0 / 12%);
+  --ad-shadow-control-selected: 0 1px 3px rgb(0 0 0 / 5%);
+  --ad-shadow-card-hover: 0 12px 30px rgb(0 0 0 / 7%);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --ad-canvas: #151b27;
-  --ad-surface: #1c2433;
-  --ad-surface-subtle: #263145;
-  --ad-surface-quiet: #202a3a;
-  --ad-sidebar: #192130;
+  --ad-canvas: #171717;
+  --ad-surface: #212121;
+  --ad-surface-subtle: #303030;
+  --ad-surface-quiet: #262626;
+  --ad-discussion-composer-surface: #363636;
+  --ad-sidebar: #1a1a1a;
+  --ad-workspace-canvas: var(--ad-sidebar);
   --ad-task-list-surface: var(--ad-sidebar);
-  --ad-ink: #eaf0fa;
-  --ad-ink-secondary: #b2bfd4;
-  --ad-ink-tertiary: #94a3bb;
-  --ad-border: #334157;
-  --ad-border-soft: #293549;
-  --ad-border-strong: #4c5d77;
+  --ad-ink: #e5e5e5;
+  --ad-ink-secondary: #b5b5b5;
+  --ad-ink-tertiary: #a0a0a0;
+  --ad-border: #3a3a3a;
+  --ad-border-soft: #2e2e2e;
+  --ad-border-strong: #525252;
   --ad-chart-scope: #a3a3a3;
+  --ad-tab-active: #e5e5e5;
+  --ad-tab-muted: #a3a3a3;
+  --ad-tab-selected-bg: #343434;
+  --ad-view-active: #e5e7e9;
+  --ad-view-muted: #a3a6a8;
+  --ad-view-hover-bg: #2d2f31;
+  --ad-view-selected-bg: #3a3c3e;
   --ad-route: #90acff;
   --ad-route-hover: #a4bbff;
   --ad-route-active: #bbcdff;
@@ -291,17 +449,24 @@
   --ad-route-soft-hover: #30436a;
   --ad-route-border: #536fa6;
   --ad-route-ink: #b5c8ff;
-  --ad-action-ink: #17233c;
-  --ad-focus: #a4bbff;
-  --ad-focus-soft: #304266;
+  --ad-accent-ink: var(--ad-accent-ink-dark, var(--ad-route-ink));
+  --ad-action-ink: #171717;
+  --ad-focus: var(--ad-ink-secondary);
+  --ad-focus-soft: color-mix(in srgb, var(--ad-ink) 12%, transparent);
+  --ad-input-focus: #525252;
+  --ad-input-focus-soft: transparent;
+  --ad-input-keyboard-focus: #a0a0a0;
+  --ad-navigation-hover-bg: #282828;
+  --ad-navigation-selected-bg: #343434;
   --ad-danger: #f49ab0;
   --ad-danger-soft: #3b2533;
-  --ad-control-border-hover: #637ba8;
-  --ad-control-disabled-bg: #273145;
-  --ad-control-disabled-ink: #7c8ca7;
-  --ad-checkbox-border: #70819c;
-  --ad-switch-track: #2c384e;
-  --ad-switch-thumb: #a8b8d2;
+  --ad-task-overdue: #f87171;
+  --ad-control-border-hover: var(--ad-border-strong);
+  --ad-control-disabled-bg: #2b2b2b;
+  --ad-control-disabled-ink: #858585;
+  --ad-checkbox-border: #737373;
+  --ad-switch-track: #3a3a3a;
+  --ad-switch-thumb: #a3a3a3;
   --ad-switch-shadow: 0 1px 3px rgb(0 0 0 / 16%);
   --ad-notification-badge: #ee4d5a;
   --ad-task-status-neutral: #d2d5d8;
@@ -403,11 +568,15 @@ body {
   outline-offset: 2px;
 }
 
-[data-slot="input"]:focus-visible,
-[data-slot="textarea"]:focus-visible {
-  border-color: var(--ad-focus);
+[data-slot="input"]:focus-visible:not([aria-invalid="true"]):not([data-invalid]),
+[data-slot="textarea"]:focus-visible:not([aria-invalid="true"]):not([data-invalid]) {
+  border-color: var(--ad-input-focus);
   outline: none;
   outline-offset: 0;
+}
+
+:is([data-slot="input"], [data-slot="textarea"])[data-keyboard-focus]:focus-visible:not([aria-invalid="true"]):not([data-invalid]) {
+  box-shadow: inset 0 -2px 0 var(--ad-input-keyboard-focus);
 }
 
 /* Shared control typography contract. Keep page surfaces on one computed scale. */
@@ -484,13 +653,13 @@ input[type="checkbox"]:not([role="switch"]):not(.sr-only)::after {
 }
 
 input[type="checkbox"]:not([role="switch"]):is(:checked, :indeterminate) {
-  border-color: var(--ad-route-border);
+  border-color: var(--ad-checkbox-border);
   background: var(--ad-checkbox-fill);
 }
 
 input[type="checkbox"]:not([role="switch"]):checked::after { transform: rotate(45deg); }
 input[type="checkbox"]:not([role="switch"]):indeterminate::after { height: 0; margin: 0; border-width: 0 0 2px; transform: none; }
-input[type="checkbox"]:not([role="switch"]):hover:not(:disabled) { border-color: var(--ad-route); background: var(--ad-checkbox-fill-hover); }
+input[type="checkbox"]:not([role="switch"]):hover:not(:disabled) { border-color: var(--ad-ink-secondary); background: var(--ad-checkbox-fill-hover); }
 input[type="checkbox"]:not([role="switch"]):disabled { cursor: not-allowed; opacity: .5; }
 
 [data-slot="switch-track"] { position: relative; width: var(--ad-switch-width); height: var(--ad-switch-height); flex: 0 0 auto; border: 1px solid var(--ad-switch-border); border-radius: var(--ad-radius-pill); background: var(--ad-switch-track); transition: background-color var(--ad-duration), border-color var(--ad-duration); }
@@ -509,4 +678,49 @@ input:disabled + [data-slot="switch-track"] { opacity: .5; }
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+}
+
+/* Recompute aliases for nested theme previews as well as the document theme. */
+[data-theme] {
+  --ad-button-primary-bg: var(--ad-route);
+  --ad-button-primary-hover-bg: var(--ad-route-hover);
+  --ad-button-primary-active-bg: var(--ad-route-active);
+  --ad-button-primary-ink: var(--ad-action-ink);
+  --ad-button-primary-hover-ink: var(--ad-button-primary-ink);
+  --ad-button-primary-active-ink: var(--ad-button-primary-ink);
+  --ad-button-soft-bg: var(--ad-surface-subtle);
+  --ad-button-soft-hover-bg: var(--ad-surface-subtle);
+  --ad-button-soft-ink: var(--ad-ink);
+  --ad-button-primary-border: var(--ad-route-border);
+  --ad-button-neutral-bg: var(--ad-surface);
+  --ad-button-neutral-hover-bg: var(--ad-surface-subtle);
+  --ad-button-neutral-ink: var(--ad-ink-secondary);
+  --ad-button-neutral-border: var(--ad-border);
+  --ad-button-danger-bg: var(--ad-danger-soft);
+  --ad-button-danger-ink: var(--ad-danger);
+  --ad-button-focus: var(--ad-focus);
+  --ad-button-focus-soft: var(--ad-focus-soft);
+  --ad-button-disabled-bg: var(--ad-control-disabled-bg);
+  --ad-button-disabled-ink: var(--ad-control-disabled-ink);
+}
+
+/* Preserve the settings navigation background without changing shared surfaces. */
+[data-theme="light"] .personal-center-module-nav {
+  --ad-surface-quiet: #fafbfe;
+}
+
+/* Preserve the original light sidebar palette independently of dark-mode tuning. */
+[data-theme="light"] .workspace-navigation {
+  --ad-surface-subtle: #f3f6fc;
+  --ad-surface-quiet: #fafbfe;
+  --ad-sidebar: #f7f9fd;
+  --ad-ink: #2e3a50;
+  --ad-ink-secondary: #53627a;
+  --ad-ink-tertiary: #617089;
+  --ad-border: #e0e6f0;
+  --ad-border-soft: #edf1f7;
+  --ad-border-strong: #c2cde0;
+  --ad-navigation-hover-bg: color-mix(in srgb, var(--ad-ink) 3%, transparent);
+  --ad-navigation-selected-bg: color-mix(in srgb, var(--ad-ink) 4.5%, transparent);
+  --ad-navigation-selected-ink: var(--ad-ink);
 }

@@ -155,7 +155,7 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
           {pinned && <span className="task-discussion-pinned-mark"><Pin aria-hidden="true" size={12} />{en ? "Pinned" : "已置顶"}</span>}
           {isReply && <span className="task-discussion-feed-recipient">
             <span>{d("reply")}</span>
-            {parent ? <button disabled={!originalAvailable} onClick={() => originalAvailable && onLocate(parent.id)} title={originalAvailable ? d("locateOriginal") : d("originalUnavailable")} type="button"><PersonName name={parent.author} personId={parent.author} showProfilePreview={false} /></button> : <span>{d("originalMissing")}</span>}
+            {parent ? <button disabled={!originalAvailable} onClick={() => originalAvailable && onLocate(parent.id)} title={originalAvailable ? d("locateOriginal") : d("originalUnavailable")} type="button"><PersonName name={parent.author} personId={parent.author} /></button> : <span>{d("originalMissing")}</span>}
             <Popover open={referenceOpen} onOpenChange={(open, details) => {
               if (details.reason === "trigger-press" && originalAvailable) { details.cancel(); return; }
               setReferenceOpen(open);

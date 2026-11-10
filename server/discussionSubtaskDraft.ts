@@ -6,7 +6,7 @@ import { discussionSubtaskRequestSchema, parseDiscussionSubtaskDraft, type Discu
 import { subtaskDraftRequestSchema, validateSubtaskDraftResult, type SubtaskDraftRequest } from "../src/features/tasks/lib/task-subtask-draft.ts";
 import { callModel, type ModelCall, type ModelOptions } from "./test-lab/model.ts";
 
-const subtaskDraftInstructions = () => readFileSync(new URL("../skills/taskdoor-discussion-subtask/SKILL.md", import.meta.url), "utf8") + "\n" + readFileSync(new URL("../skills/taskdoor-discussion-subtask/references/output-contract.md", import.meta.url), "utf8");
+const subtaskDraftInstructions = () => ["SKILL.md", "references/output-contract.md", "references/task-planning.md"].map(path => readFileSync(new URL(`../skills/taskdoor-discussion-subtask/${path}`, import.meta.url), "utf8")).join("\n");
 const draftRequestSchema = z.union([discussionSubtaskRequestSchema, subtaskDraftRequestSchema]);
 type ModelRequest = ({ mode: "discussion" } & DiscussionSubtaskRequest) | ({ mode: "prompt" } & SubtaskDraftRequest);
 

@@ -1,5 +1,4 @@
 import { AccentColorSetting } from "@/features/me/components/AccentColorSetting";
-import { TaskNavigationTools } from "@/features/tasks/components/TaskNavigationTools";
 import { useCallback, useEffect, useMemo, useRef, useState, type ComponentProps, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { CircleDashed, LogOut, Menu, Plus, Settings2, Sparkles, Bookmark, X } from "lucide-react";
 import { GlobalNotifications } from "@/features/notifications/components/GlobalNotifications";
@@ -14,7 +13,7 @@ import { statusMessageKey } from "@/shared/i18n/task-status";
 import { taskStatusDefinition, taskStatusOptions } from "@/shared/ui/TaskStatusBadge";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
-import type { PersonOption, TagDefinition, WorkspaceNode } from "@/shared/model/task-model";
+import type { TagDefinition, WorkspaceNode } from "@/shared/model/task-model";
 import { LanguageSwitcher } from "@/shared/ui/LanguageSwitcher";
 import { PersonAvatar } from "@/shared/ui/PersonAvatar";
 import { ThemeToggle } from "@/shared/ui/ThemeToggle";
@@ -22,9 +21,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import "@/app/workspace/styles/workspace-shell.css";
 
 export type WorkspaceNavigationProps = {
-  members: PersonOption[];
-  onManageTags: () => void;
-  onListFiltersChange: (filters: TaskListFilters) => void;
   onOpenRecycleBin: (onNavigate: () => void) => void;
   onOpenFavorites: (onNavigate: () => void) => void;
   activeTeamId: string;
@@ -75,7 +71,7 @@ function readNavigationWidth() {
   }
 }
 
-export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags, onOpenRecycleBin, onOpenFavorites, activeTeamId, onConnectAi, onCreateTask, canCreateTask = true, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, discussionReadReceipt, getNotificationTaskTitle, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, activeSection }: WorkspaceNavigationProps) {
+export function WorkspaceNavigation({ onOpenRecycleBin, onOpenFavorites, activeTeamId, onConnectAi, onCreateTask, canCreateTask = true, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, discussionReadReceipt, getNotificationTaskTitle, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, activeSection }: WorkspaceNavigationProps) {
   const { t, locale } = useI18n();
   const taskFiltersActive = activeSection === "tasks" || activeSection === "home";
   const timeZone = useTeamTimeZone();
@@ -211,13 +207,11 @@ export function WorkspaceNavigation({ onListFiltersChange, members, onManageTags
         </div>
 
         <button aria-current={activeSection === "recycle-bin" ? "page" : undefined} className="workspace-navigation-item" onClick={() => onOpenRecycleBin(closeNavigation)} type="button"><span>{locale === "en" ? "Recycle bin" : "回收站"}</span></button>
-        <TaskNavigationTools filters={normalizedFilters} members={members} onFiltersChange={onListFiltersChange} onManageTags={() => { closeNavigation(); onManageTags(); }} projection={projection} touch={mobile}>
-
-        <div aria-label={t("list.statusFilter")} className="workspace-navigation-group" role="group">
+        <div aria-label={t("list.statusFilter")} className="workspace-navigation-group workspace-navigation-statuses" role="group">
+          <p className="workspace-navigation-group-label">{locale === "en" ? "Status" : "状态"}</p>
           <button aria-pressed={taskFiltersActive && selectedStatuses.length === 0} className="workspace-navigation-item" onClick={() => chooseFilters({ ...normalizedFilters, status: "all", statuses: [], completion: "all" })} type="button"><CircleDashed aria-hidden="true" size={16} /><span>{t("list.allStatuses")}</span>{projection.statusCounts.all > 0 && <small>{projection.statusCounts.all}</small>}</button>
-          {taskStatusOptions.map(status => { const definition = taskStatusDefinition[status]; const Icon = definition.icon; return <button aria-pressed={taskFiltersActive && selectedStatuses.includes(status)} className="workspace-navigation-item" data-tone={definition.tone} key={status} onClick={() => chooseFilters({ ...normalizedFilters, status: "all", statuses: selectedStatuses.includes(status) ? selectedStatuses.filter(value => value !== status) : [...selectedStatuses, status], completion: "all" })} type="button"><Icon aria-hidden="true" size={16} /><span>{t(statusMessageKey[status])}</span>{(projection.statusCounts.byStatus[status] ?? 0) > 0 && <small>{projection.statusCounts.byStatus[status]}</small>}</button>; })}
+          {taskStatusOptions.map(status => { const definition = taskStatusDefinition[status]; const Icon = definition.icon; return <button aria-pressed={taskFiltersActive && selectedStatuses.includes(status)} className="workspace-navigation-item" data-tone={definition.tone} key={status} onClick={() => chooseFilters({ ...normalizedFilters, status: "all", statuses: [status], completion: "all" })} type="button"><Icon aria-hidden="true" size={16} /><span>{t(statusMessageKey[status])}</span>{(projection.statusCounts.byStatus[status] ?? 0) > 0 && <small>{projection.statusCounts.byStatus[status]}</small>}</button>; })}
         </div>
-        </TaskNavigationTools>
       </nav>
       <div className="workspace-navigation-bottom">
         <button aria-haspopup="dialog" className="workspace-navigation-item workspace-navigation-ai" id="workspace-ai-trigger" onClick={() => onConnectAi()} title={t("ai.guide")} type="button"><Sparkles aria-hidden="true" size={17} strokeWidth={1.7} /><span>{t("ai.connect")}</span></button>

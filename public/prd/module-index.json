@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-11-10T16:40:02.138Z",
+  "generatedAt": "2026-11-10T17:14:15.958Z",
   "modules": [
     {
       "moduleId": "product-preview",
@@ -275,7 +275,7 @@
       "moduleId": "team-members",
       "title": "成员",
       "group": "设置",
-      "summary": "查看与管理当前团队成员。",
+      "summary": "搜索、查看与管理当前团队成员。",
       "source": "docs/prd/modules/23-team-members.md",
       "url": "./index.html#team-members",
       "sections": [

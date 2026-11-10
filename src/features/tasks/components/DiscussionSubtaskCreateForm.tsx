@@ -50,7 +50,7 @@ export function DiscussionSubtaskCreateForm({ source, contextCurrent: sourceCurr
   return <div onInputCapture={keepManualInput} onPointerDownCapture={keepManualInput} onKeyDownCapture={keepManualInput}>
     {error && <p className="task-subtask-create-error" role="status">{locale === "en" ? "Could not prepare a draft. You can fill in the form below." : "暂时未能生成草稿，可直接填写下方表单。"}</p>}
     {!contextCurrent && <p className="task-subtask-create-error" role="alert">{outdated}</p>}
-    <TaskSubtaskCreateForm {...formProps} generating={generating && contextCurrent && !edited.current} showTags={false} key={result?.draft ? "generated" : "blank"} initialDraft={{ ...(result?.draft ? { ...result.draft, ownerId: defaultGeneratedOwnerId(result.draft.ownerId, formProps.currentUserId ?? "", formProps.members.map(member => member.id)) } : {}), sourceDiscussion: source }} onCreate={value => {
+    <TaskSubtaskCreateForm {...formProps} generating={generating && contextCurrent && !edited.current} showTags={false} endDateSuggestion={result?.draft.endDateSuggestion} key={result?.draft ? "generated" : "blank"} initialDraft={{ ...(result?.draft ? { ...result.draft, ownerId: defaultGeneratedOwnerId(result.draft.ownerId, formProps.currentUserId ?? "", formProps.members.map(member => member.id)) } : {}), sourceDiscussion: source }} onCreate={value => {
       if (!latestContextCurrent.current) throw new Error(outdated);
       return formProps.onCreate(value);
     }} open />

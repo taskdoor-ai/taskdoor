@@ -64,7 +64,7 @@ export function TaskFileBrowser({ files, directoryId, onDirectoryChange, expande
       </div>
       <div className="task-file-browser-actions">
         <DropdownMenu>
-          <DropdownMenuTrigger aria-label={ui("新建")} className="task-file-browser-add" render={<Button variant="outline" />} title={ui("新建文件或文件夹")}><Plus aria-hidden="true" data-icon="inline-start" />{ui("新建")}</DropdownMenuTrigger>
+          <DropdownMenuTrigger aria-label={ui("新建")} className="task-file-browser-add" render={<Button variant="default" />} title={ui("新建文件或文件夹")}><Plus aria-hidden="true" data-icon="inline-start" />{ui("新建")}</DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-44">
             <DropdownMenuGroup>
               <DropdownMenuItem className="gap-2" onClick={onCreateFolder}><FolderPlus aria-hidden="true" size={16} />{ui("文件夹")}</DropdownMenuItem>

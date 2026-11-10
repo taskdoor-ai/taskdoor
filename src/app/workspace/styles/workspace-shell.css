@@ -53,9 +53,9 @@ html:has(.workspace-navigation[data-resizing="true"]) * { cursor: col-resize !im
 .workspace-navigation-item > svg { flex: 0 0 auto; color: var(--ad-ink-tertiary); }
 .workspace-navigation-item > span { min-width: 0; flex: 1; }
 .workspace-navigation-item > small { flex: 0 0 auto; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); font-weight: 400; font-variant-numeric: tabular-nums; }
-.workspace-navigation-item:hover { background: color-mix(in srgb, var(--ad-ink) 3%, transparent); color: var(--ad-ink); }
-.workspace-navigation-item[aria-pressed="true"] { background: color-mix(in srgb, var(--ad-ink) 4.5%, transparent); color: var(--ad-ink); font-weight: 500; }
-.workspace-navigation-item[aria-pressed="true"] > svg { color: var(--ad-ink-secondary); }
+.workspace-navigation-item:hover { background: var(--ad-navigation-hover-bg); color: var(--ad-ink); }
+.workspace-navigation-item:is([aria-pressed="true"], [aria-current="page"]) { background: var(--ad-navigation-selected-bg); color: var(--ad-navigation-selected-ink); font-weight: 500; }
+.workspace-navigation-item:is([aria-pressed="true"], [aria-current="page"]) > svg { color: var(--ad-ink-secondary); }
 .workspace-navigation-item:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 .workspace-navigation-item[data-tone="progress"] > svg { color: var(--ad-task-status-progress); }
 .workspace-navigation-item[data-tone="warning"] > svg { color: var(--ad-task-status-warning); }
@@ -172,15 +172,15 @@ html:has(.workspace-navigation[data-resizing="true"]) * { cursor: col-resize !im
 .workspace-new-task-trigger:active { background: var(--ad-surface-subtle); }
 
 .workspace-ai-trigger {
-  border-color: color-mix(in srgb, var(--ad-route-ink) 28%, var(--ad-border));
-  background: linear-gradient(110deg, var(--ad-surface) 40%, var(--ad-route-soft));
+  border-color: var(--ad-border);
+  background: var(--ad-surface);
   color: var(--ad-ink-secondary);
   box-shadow: 0 1px 3px color-mix(in srgb, var(--ad-ink) 5%, transparent);
 }
 
 .workspace-ai-trigger > svg { width: 14px; height: 14px; color: var(--ad-ink); }
-.workspace-ai-trigger:hover { border-color: var(--ad-route-border); background: var(--ad-route-soft); color: var(--ad-ink); }
-.workspace-ai-trigger:active { background: var(--ad-route-soft-hover); }
+.workspace-ai-trigger:hover { border-color: var(--ad-border-strong); background: var(--ad-surface-subtle); color: var(--ad-ink); }
+.workspace-ai-trigger:active { background: var(--ad-surface-subtle); }
 .workspace-topbar-ai-compact-label { display: none; }
 
 .workspace-account-trigger {
@@ -326,7 +326,7 @@ html:has(.workspace-navigation[data-resizing="true"]) * { cursor: col-resize !im
 
 /* Desktop workspace sits on one quiet canvas, with an inset main panel. */
 @media (min-width: 901px) {
-  .task-workspace-shell { background: var(--ad-surface-subtle); }
+  .task-workspace-shell { background: var(--ad-workspace-canvas); }
   .task-workspace-shell > .workspace-navigation { border-right: 0; background: transparent; }
   .task-workspace-shell > .main-content {
     height: calc(100dvh - 16px);
@@ -363,25 +363,3 @@ html:has(.workspace-navigation[data-resizing="true"]) * { cursor: col-resize !im
 .workspace-navigation-account-row .workspace-account-trigger { width: auto; flex: 1 1 0; }
 .workspace-navigation-account-row .notification-trigger-topbar { flex: 0 0 40px; width: 40px; height: 40px; border-radius: 999px; }
 @media (max-width: 900px), (pointer: coarse) { .workspace-navigation-account-row .notification-trigger-topbar { flex-basis: 44px; width: 44px; height: 44px; } }
-
-
-/* List controls share the navigation column with task scopes. */
-.workspace-navigation .task-list-display-actions { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
-.workspace-navigation .task-list-display-actions > button { width: 100%; justify-content: flex-start; gap: 12px; min-height: 40px; padding: 0 12px; border: 0; background: transparent; box-shadow: none; color: inherit; font: inherit; }
-.workspace-navigation .task-list-display-actions > button:hover { background: var(--ad-surface-subtle); }
-.workspace-navigation .task-list-display-actions > button > svg { width: 16px; height: 16px; flex-shrink: 0; }
-@media (max-width: 900px) { .workspace-navigation .task-list-display-actions > button { min-height: 44px; } }
-
-.workspace-navigation-filter-section { margin-top: 24px; }
-.workspace-navigation-filter-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 40px; padding-left: 11px; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
-.workspace-navigation-filter-heading > .task-workspace-list-options { position: relative; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 36px; min-width: 36px; height: 36px; min-height: 36px; padding: 0; border: 0; background: transparent; box-shadow: none; color: var(--ad-ink-secondary); }
-.workspace-navigation-filter-heading > .task-workspace-list-options:hover { background: var(--ad-surface-subtle); }
-.workspace-navigation-filter-heading > .task-workspace-list-options > svg { width: 16px; height: 16px; }
-.workspace-navigation-filter-heading .task-filter-count { position: absolute; top: 0; right: 0; font-size: 10px; }
-@media (max-width: 900px), (pointer: coarse) { .workspace-navigation-filter-heading > .task-workspace-list-options { width: 44px; min-width: 44px; height: 44px; min-height: 44px; } }
-
-.workspace-navigation-filter-heading > span { flex: 1; }
-.workspace-navigation-sort-trigger { display: flex; align-items: center; justify-content: center; flex: 0 0 36px; width: 36px; height: 36px; padding: 0; border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-secondary); cursor: pointer; }
-.workspace-navigation-sort-trigger:hover { background: var(--ad-surface-subtle); }
-.workspace-navigation-sort-trigger:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
-@media (max-width: 900px), (pointer: coarse) { .workspace-navigation-sort-trigger { flex-basis: 44px; width: 44px; height: 44px; } }

@@ -65,10 +65,13 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState("");
   const [googlePreview, setGooglePreview] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [privacyError, setPrivacyError] = useState(false);
   const [localError, setLocalError] = useState("");
   const [clock, setClock] = useState(Date.now());
   const [storageNotice, setStorageNotice] = useState("");
   const surface = useRef<HTMLDivElement>(null);
+  const privacyCheckbox = useRef<HTMLInputElement>(null);
   const pending = useRef(false);
   const enteringWorkspace = useRef(false);
   const mounted = useRef(true);
@@ -140,6 +143,15 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     if (!pending.current) setState(previous => simplifyOnboardingEntry(transitionOnboarding(previous, action, loadPersonalCenterDirectory())));
   };
   const clearError = () => { setLocalError(""); if (state.error) change({ type: "clear-error" }); };
+  const ensurePrivacyAgreement = () => {
+    if (privacyAccepted) return true;
+    setPrivacyError(true);
+    requestAnimationFrame(() => {
+      privacyCheckbox.current?.focus({ preventScroll: true });
+      privacyCheckbox.current?.closest(".onboarding-consent")?.scrollIntoView({ block: "nearest" });
+    });
+    return false;
+  };
   const perform = async (action: OnboardingAction | (() => Promise<OnboardingAction>), label: string) => {
     if (pending.current) return;
     pending.current = true;
@@ -162,6 +174,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   const submitAuth = (event: FormEvent) => {
     event.preventDefault();
     if (forgot) { void perform({ type: "forgot-password", email, now: Date.now() }, "继续中…"); return; }
+    if (registration && !ensurePrivacyAgreement()) return;
     if (!password) { setLocalError("请输入密码。"); surface.current?.querySelector<HTMLElement>("#account-password")?.focus(); return; }
     void perform(async () => {
       const passwordDigest = await digestPreviewPassword(password, email);
@@ -173,6 +186,16 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   const invalid = (field: string) => ({ "aria-invalid": errorField === field || undefined, "aria-describedby": errorField === field ? "onboarding-error" : undefined });
   const error = localizeOnboardingMessage(locale, state.error || localError);
   const errorBlock = error ? <p className="onboarding-error" id="onboarding-error" role="alert"><CircleAlert aria-hidden="true" /><span>{error}</span></p> : null;
+  const privacyConsent = <div className="onboarding-consent">
+    <div className="onboarding-consent-row">
+      <input ref={privacyCheckbox} id="registration-privacy" type="checkbox" checked={privacyAccepted} disabled={Boolean(busy)} aria-labelledby="registration-privacy-label" aria-invalid={privacyError || undefined} aria-describedby={privacyError ? "registration-privacy-error" : undefined} onChange={event => {
+        setPrivacyAccepted(event.target.checked);
+        if (event.target.checked) setPrivacyError(false);
+      }} />
+      <span id="registration-privacy-label"><label htmlFor="registration-privacy">{t("我已阅读并同意")}</label>{" "}<a className="onboarding-link" href="https://sand.taskdoor.com/privacy.html" target="_blank" rel="noopener noreferrer">{t("隐私政策")}</a></span>
+    </div>
+    {privacyError && <p className="onboarding-consent-error" id="registration-privacy-error" role="alert">{t("请先勾选同意《隐私政策》后继续。")}</p>}
+  </div>;
   const submitButton = (label: string, incomplete = false) => <Button className="onboarding-primary" type="submit" disabled={Boolean(busy) || incomplete}>{busy ? <><LoaderCircle aria-hidden="true" className="onboarding-spinner" />{localizeOnboardingMessage(locale, busy)}</> : label}</Button>;
   const back = (action: OnboardingAction, label = t("返回")) => <button className="onboarding-back" disabled={Boolean(busy)} onClick={() => change(action)}><ArrowLeft aria-hidden="true" />{label}</button>;
   const account = <div className="onboarding-account"><span><Mail aria-hidden="true" /><span>{state.email}</span></span><button onClick={switchAccount}>{t("退出登录")}</button></div>;
@@ -204,7 +227,8 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
         {googlePreview && <GoogleAuthPreview onCancel={() => {
           setGooglePreview(false);
           requestAnimationFrame(() => surface.current?.querySelector<HTMLElement>(".onboarding-google")?.focus());
-        }} onComplete={identity => {
+        }} consent={registration || privacyError ? privacyConsent : null} onComplete={identity => {
+          if (!state.accounts[identity.email.trim().toLowerCase()] && !ensurePrivacyAgreement()) return "";
           const next = simplifyOnboardingEntry(transitionOnboarding(state, { type: "google-preview-complete", ...identity }, loadPersonalCenterDirectory()));
           if (next.error) return localizeOnboardingMessage(locale, next.error);
           setEmail(next.email); setName(next.name); setState(next); setGooglePreview(false);
@@ -230,12 +254,14 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
               <div className="onboarding-registration-code">
                 <Input id="registration-code" name="code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder={t("邮箱验证码")} value={code} disabled={Boolean(busy)} {...invalid("code")} onChange={event => { setCode(event.target.value.replace(/\D/g, "").slice(0, 6)); clearError(); }} />
                 <Button type="button" variant="outline" disabled={Boolean(busy) || countdown > 0 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())} onClick={() => {
+                  if (!ensurePrivacyAgreement()) return;
                   setCode("111111");
                   void perform({ type: "request-registration-code", email, code: "111111", now: Date.now() }, "正在发送…");
                 }}>{countdown > 0 ? t("{seconds} 秒后重新获取", { seconds: countdown }) : state.registrationCode ? t("重新获取") : t("发送验证码")}</Button>
               </div>
               {errorField === "code" && errorBlock}
             </div>}
+            {registration && privacyConsent}
             {!["name", "email", "password", "code"].includes(errorField) && errorBlock}{submitButton(registration ? t("验证并创建账号") : forgot ? t("继续") : t("登录"), registration && (!email.trim() || password.length < 8 || code.length !== 6))}
           </form>
           {!registration && !forgot && <p className="onboarding-forgot-link"><a href={href("forgot")}>{t("忘记密码？")}</a></p>}
@@ -266,7 +292,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
           <Heading title={inviteProblem || (alreadyMember ? t("你已在这个团队中") : t("加入「{team}」", { team: invitation?.team.name ?? "" }))} description={inviteProblem ? (invitation?.email && invitation.email !== state.email ? t("这份邀请发给了 {email}。", { email: invitation.email }) : t("请联系团队管理员，获取新的邀请链接。")) : t("确认团队信息，加入后即可开始协作。")} />
           {invitation && <TeamInvitationCard invitation={invitation} />}
           {!inviteProblem && profileField}
-          {(inviteProblem || errorField !== "name") && errorBlock}{inviteProblem ? <div className="onboarding-invite-recovery">{invitation?.email && invitation.email !== state.email && <Button className="onboarding-primary" onClick={switchAccount}>{t("切换账号")}</Button>}</div> : <Button className="onboarding-primary" disabled={Boolean(busy)} onClick={() => void perform({ type: "accept-invite", profileName: name }, "正在加入…")}>{localizeOnboardingMessage(locale, busy) || (alreadyMember ? t("进入团队") : t("立即加入"))}</Button>}{account}
+          {(inviteProblem || errorField !== "name") && errorBlock}{inviteProblem ? <div className="onboarding-invite-recovery">{invitation?.email && invitation.email !== state.email && <Button className="onboarding-primary" onClick={switchAccount} variant="outline">{t("切换账号")}</Button>}</div> : <Button className="onboarding-primary" disabled={Boolean(busy)} onClick={() => void perform({ type: "accept-invite", profileName: name }, "正在加入…")}>{localizeOnboardingMessage(locale, busy) || (alreadyMember ? t("进入团队") : t("立即加入"))}</Button>}{account}
         </>}
       </section>
       {storageNotice && <p className="onboarding-storage-notice" role="status">{localizeOnboardingMessage(locale, storageNotice)}</p>}

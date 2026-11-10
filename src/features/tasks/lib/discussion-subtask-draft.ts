@@ -22,7 +22,7 @@ export const discussionSubtaskRequestSchema = z.object({
 }, "来源讨论不匹配");
 export type DiscussionSubtaskRequest = z.infer<typeof discussionSubtaskRequestSchema>;
 export const discussionSubtaskResultSchema = z.object({
-  draft: z.object({ title: z.string().trim().min(1).max(160), goal: z.string().trim().max(2000), ownerId: z.string().max(200), endDate: z.string().max(20), labels: z.array(z.string().max(100)).max(20) }).strict(),
+  draft: z.object({ title: z.string().trim().min(1).max(160), goal: z.string().trim().max(2000), completionCriteria: z.array(z.string().trim().min(1).max(2000)).max(30).optional(), ownerId: z.string().max(200), endDate: z.string().max(20), endDateSuggestion: z.string().trim().max(500).optional(), labels: z.array(z.string().max(100)).max(20) }).strict(),
   message: z.string().max(500).default(""),
 }).strict();
 export type DiscussionSubtaskResult = z.infer<typeof discussionSubtaskResultSchema>;
@@ -110,9 +110,11 @@ function readableText(text: string, request: DiscussionSubtaskRequest): string {
 }
 
 function existingGoal(request: DiscussionSubtaskRequest, title: string): string {
-  const facts = [...(request.referencedTasks ?? []), request.task];
-  const candidates = [...facts.map(task => task.goal ?? ""), ...facts.flatMap(task => task.completionCriteria ?? [])];
-  return candidates.map(text => readableText(text, request)).find(text => text && !placeholderText.test(text) && normalizedText(text) !== normalizedText(title))?.slice(0, 2000) ?? "";
+  // Only reuse a definition when the draft identifies that same work. A parent
+  // purpose or completion criterion does not establish a local subtask goal.
+  const task = [...(request.referencedTasks ?? []), request.task].find(task => normalizedText(task.title) === normalizedText(title));
+  const goal = readableText(task?.goal ?? "", request);
+  return goal && !placeholderText.test(goal) && normalizedText(goal) !== normalizedText(title) ? goal.slice(0, 2000) : "";
 }
 
 function contextDraft(request: DiscussionSubtaskRequest): DiscussionSubtaskDraft {
@@ -141,7 +143,17 @@ export function parseDiscussionSubtaskDraft(value: unknown, request: DiscussionS
     || draft.goal && normalizedText(draft.title) === normalizedText(draft.goal)) return { draft: contextDraft(request), message: "" };
   const date = /^\d{4}-\d{2}-\d{2}$/.test(draft.endDate) ? new Date(`${draft.endDate}T00:00:00Z`) : null;
   const validDate = date && Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === draft.endDate && draft.endDate >= request.currentDate;
-  return { message: "", draft: { ...draft, goal: draft.goal && !placeholderText.test(draft.goal) ? draft.goal : existingGoal(request, draft.title), ownerId: request.members.some(m => m.id === draft.ownerId) ? draft.ownerId : "", endDate: validDate ? draft.endDate : "", labels: [...new Set(draft.labels)].filter(label => request.labels.includes(label)) } };
+  const owner = request.members.find(member => member.id === draft.ownerId);
+  // Reject an unsupported identity; naming someone is only evidence of identity,
+  // while the Skill still decides whether this item actually assigns that work.
+  const ownerIdentified = owner && request.messages.some(message => {
+    const body = message.body;
+    return owner.name.trim() && body.toLocaleLowerCase().includes(owner.name.trim().toLocaleLowerCase())
+      || body.includes(`@${owner.id}`)
+      || (message.author === owner.id || message.author === owner.name) && /我(?:来|会|将|负责|承担)|由我|交给我|\bI(?:['’]ll|\s+will|\s+am\s+(?:going\s+to|responsible\s+for))\b/i.test(body);
+  });
+  const { endDateSuggestion, ...fields } = draft;
+  return { message: "", draft: { ...fields, goal: draft.goal && !placeholderText.test(draft.goal) ? draft.goal : existingGoal(request, draft.title), ownerId: ownerIdentified ? draft.ownerId : "", endDate: validDate ? draft.endDate : "", ...(validDate && endDateSuggestion ? { endDateSuggestion } : {}), ...(draft.completionCriteria ? { completionCriteria: [...new Set(draft.completionCriteria)] } : {}), labels: [...new Set(draft.labels)].filter(label => request.labels.includes(label)) } };
 }
 
 export async function generateDiscussionSubtaskDraft(request: DiscussionSubtaskRequest, signal: AbortSignal): Promise<DiscussionSubtaskResult> {

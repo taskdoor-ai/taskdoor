@@ -8,12 +8,15 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { PersonName } from "@/shared/ui/PersonAvatar";
 import { Bell, Broom, Inbox, Users } from "lucide-react";
 import { NotificationFilter, notificationReadFilterLabels as readFilterLabels, type NotificationReadFilter } from "@/features/notifications/components/NotificationFilter";
-import { isNotificationReadTestMode, notificationExamples, notificationReadTestExamples, notificationTypeLabels, type WorkspaceNotification } from "@/ai/mock/data/notificationExamples";
+import { NotificationSettingsPopover } from "@/features/notifications/components/NotificationSettingsPanel";
+import { isNotificationReadTestMode, readNotificationExamples, notificationReadTestExamples, notificationTypeLabels, type WorkspaceNotification } from "@/ai/mock/data/notificationExamples";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/shared/ui/sheet";
 import "@/features/notifications/styles/notifications.css";
 import { getDiscussionReadIds, mergeNotificationReadIds, notificationReadStateKey, parseNotificationReadState, type DiscussionReadReceipt, type NotificationRegionTarget } from "@/features/notifications/lib/notification-read-state";
 import { toast } from "@/shared/ui/toast";
 import { notificationExcerptText } from "@/features/notifications/lib/notification-excerpt";
+import { DEFAULT_NOTIFICATION_PREFERENCES, NOTIFICATION_PREFERENCES_CHANGED_EVENT, notificationPreferencesKey, readNotificationPreferences } from "@/features/notifications/lib/notification-preferences";
+import { notificationsInScope } from "@/features/notifications/lib/notification-scope";
 
 const demoTeamId = "creator-commerce";
 type ScopedNotification = WorkspaceNotification & { teamId: string };
@@ -37,6 +40,26 @@ export function GlobalNotifications({ besideNavigation = false, placement = "rai
   const panelRef = useRef<HTMLDivElement>(null);
   const [readIdsByTeam, setReadIdsByTeam] = useState(new Map<string, string[]>());
   const [readError, setReadError] = useState("");
+  const loadPreferences = () => {
+    if (!userId || typeof window === "undefined") return { userId, preferences: DEFAULT_NOTIFICATION_PREFERENCES, failed: false };
+    try { return { userId, preferences: readNotificationPreferences(localStorage, userId), failed: false }; }
+    catch { return { userId, preferences: DEFAULT_NOTIFICATION_PREFERENCES, failed: true }; }
+  };
+  const [preferenceSnapshot, setPreferenceSnapshot] = useState(loadPreferences);
+  const onlyRelated = preferenceSnapshot.userId === userId ? preferenceSnapshot.preferences.onlyRelated : true;
+  useEffect(() => {
+    const reload = () => setPreferenceSnapshot(loadPreferences());
+    reload();
+    const sync = (event: StorageEvent) => {
+      if (userId && (event.key === null || event.key === notificationPreferencesKey(userId))) reload();
+    };
+    const syncLocal = (event: Event) => {
+      if ((event as CustomEvent<{ userId: string }>).detail?.userId === userId) reload();
+    };
+    window.addEventListener("storage", sync);
+    window.addEventListener(NOTIFICATION_PREFERENCES_CHANGED_EVENT, syncLocal);
+    return () => { window.removeEventListener("storage", sync); window.removeEventListener(NOTIFICATION_PREFERENCES_CHANGED_EVENT, syncLocal); };
+  }, [userId]);
   const showDemo = showDemoNotifications && (teams ? teams.some(team => team.id === demoTeamId) : !teamId || teamId === demoTeamId);
   const notificationTestMode = showDemo && typeof window !== "undefined" && isNotificationReadTestMode(window.location.search, Boolean(import.meta.env?.DEV));
   const fallbackTeamId = teams ? "" : teamId;
@@ -45,7 +68,7 @@ export function GlobalNotifications({ besideNavigation = false, placement = "rai
     return new Map(teamIds.map(id => [id, notificationReadStateKey(id, userId) + (notificationTestMode ? ":r10-demo" : "")]));
   }, [teams, fallbackTeamId, userId, notificationTestMode]);
   const items = useMemo<ScopedNotification[]>(() => {
-    const demoItems = notificationTestMode ? notificationReadTestExamples : showDemo ? notificationExamples : [];
+    const demoItems = notificationTestMode ? notificationReadTestExamples : showDemo ? readNotificationExamples() : [];
     const discussionItems = notificationTestMode ? [] : discussionNotifications ?? [];
     return [...discussionItems, ...demoItems].flatMap(item => {
       const sourceTeamId = item.teamId ?? teamId;
@@ -58,6 +81,11 @@ export function GlobalNotifications({ besideNavigation = false, placement = "rai
   const [activeFilter, setActiveFilter] = useState<NotificationReadFilter>("all");
   const [selectedTeamId, setSelectedTeamId] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const changeSheetOpen = (open: boolean) => {
+    setSheetOpen(open);
+    if (!open) setSettingsOpen(false);
+  };
   const [panelBounds, setPanelBounds] = useState<CSSProperties>({});
   useEffect(() => {
     if (!sheetOpen || !besideNavigation) return;
@@ -149,7 +177,7 @@ export function GlobalNotifications({ besideNavigation = false, placement = "rai
     const task = taskId ? { id: taskId, title: getTaskTitle?.(taskId, n.teamId) ?? (locale === "en" ? "Open task" : "查看任务") } : undefined;
     return { id: n.id, teamId: n.teamId, kind: "handoff", content, task, createdAt: n.at, time: formatDisplayDateTime(n.at, { locale }) ?? "—", read: n.read };
   });
-  const allItems = [...(notificationTestMode ? [] : handoffItems), ...items].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+  const allItems = notificationsInScope([...(notificationTestMode ? [] : handoffItems), ...items], onlyRelated).sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
   const persistHandoffRead = (item?: ScopedNotification) => {
     if (notificationTestMode) return;
     try {
@@ -175,7 +203,7 @@ export function GlobalNotifications({ besideNavigation = false, placement = "rai
     persistHandoffRead();
     let failed = false;
     for (const sourceTeamId of readKeys.keys()) {
-      const ids = items.filter(item => item.teamId === sourceTeamId && !item.read).map(item => item.id);
+      const ids = allItems.filter(item => item.kind !== "handoff" && item.teamId === sourceTeamId && !item.read).map(item => item.id);
       if (!persistRead(sourceTeamId, ids)) failed = true;
     }
     if (failed) setReadError(ui("已读状态保存失败，请重试。"));
@@ -200,29 +228,38 @@ export function GlobalNotifications({ besideNavigation = false, placement = "rai
       setReadError(ui("已读状态保存失败，请重试。"));
     }
   };
-  return <Sheet onOpenChange={setSheetOpen} open={sheetOpen}>
+  return <Sheet onOpenChange={(open, details) => {
+    if (!open && settingsOpen && details.reason === "escape-key") {
+      details.cancel();
+      setSettingsOpen(false);
+      return;
+    }
+    changeSheetOpen(open);
+  }} open={sheetOpen}>
     <SheetTrigger ref={triggerRef} render={<button aria-label={`${d("notifications")} (${totalUnread})`} className={placement === "sidebar" ? "notification-trigger notification-trigger-sidebar" : placement === "topbar" ? "notification-trigger notification-trigger-topbar" : "rail-item notification-trigger"} data-tooltip={placement === "rail" ? d('notifications') : undefined} title={placement === "topbar" ? d('notifications') : undefined} type="button" />}>
       <Bell aria-hidden="true" size={placement === "sidebar" ? 17 : 18} strokeWidth={placement === "sidebar" ? 1.7 : 2} />
       {placement === "sidebar" && <span className="notification-trigger-label">{d('notifications')}</span>}
       {totalUnread > 0 && <span aria-hidden="true" className={placement === "sidebar" ? "notification-trigger-count-inline" : "notification-trigger-count"}>{totalUnread > 99 ? "99+" : totalUnread}</span>}
     </SheetTrigger>
     <SheetContent className={besideNavigation ? "notification-panel-beside-navigation" : undefined} style={besideNavigation ? panelBounds : undefined} finalFocus={triggerRef} initialFocus={panelRef} ref={panelRef} side={besideNavigation || placement === "rail" ? "left" : "right"} tabIndex={-1}>
-      <SheetHeader>
+      <SheetHeader className="notification-panel-header">
         <div><SheetTitle>{d('notifications')}</SheetTitle><SheetDescription>{ui("查看与你有关的协作动态。")}</SheetDescription></div>
         <div className="notification-header-actions">
           <button aria-label={ui("全部标为已读")} className="notification-mark-read" disabled={totalUnread === 0} onClick={markAllRead} title={ui("全部标为已读")} type="button"><Broom aria-hidden="true" /></button>
           <NotificationFilter activeFilter={activeFilter} counts={counts} filterLabel={filterLabel} onReadFilterChange={setActiveFilter} onTeamChange={setSelectedTeamId} portalContainer={panelRef} selectedTeamId={selectedTeam?.id ?? ""} teams={teams?.map(team => ({ id: team.id, name: notificationTeamName(locale, team.id, team.name) }))} />
+          <NotificationSettingsPopover onOpenChange={setSettingsOpen} open={settingsOpen} portalContainer={panelRef} userId={userId} />
         </div>
       </SheetHeader>
 
       <div className="notification-list-view">
+        {preferenceSnapshot.userId === userId && preferenceSnapshot.failed && <p role="alert">{locale === "en" ? "Could not load notification settings. Only related messages are shown. Retry using the notification settings button above." : "通知设置读取失败，暂时仅显示与你相关的消息。请从右上角通知设置重试。"}</p>}
         {notificationTestMode && <div className="notification-test-tools"><span>{locale === "en" ? "Test data: 3 mentions here, 1 in another task" : "测试数据：同区 3 条提及，其他任务 1 条"}</span><button onClick={resetTestUnread} type="button">{locale === "en" ? "Reset test unread" : "重置测试未读"}</button></div>}
         {readError && <p role="alert">{readError}</p>}
         {handoffError && <p role="alert">{handoffError}</p>}
         {visibleItems.length > 0 ? <div className="notification-list">
           {visibleItems.map(item => {
             const team = teams?.find(team => team.id === item.teamId);
-            return <NotificationItem item={item} key={JSON.stringify([item.teamId, item.id])} now={now} onOpenTask={onOpenTask ? (taskId, target) => { onOpenTask(taskId, target, item.teamId); setSheetOpen(false); } : undefined} onRead={() => markRead(item)} teamName={team ? notificationTeamName(locale, team.id, team.name) : undefined} />;
+            return <NotificationItem item={item} key={JSON.stringify([item.teamId, item.id])} now={now} onOpenTask={onOpenTask ? (taskId, target) => { onOpenTask(taskId, target, item.teamId); changeSheetOpen(false); } : undefined} onRead={() => markRead(item)} teamName={team ? notificationTeamName(locale, team.id, team.name) : undefined} />;
           })}
         </div> : <div className="notification-empty"><Inbox aria-hidden="true" /><h2>{ui("没有通知：{filter}", { filter: filterLabel })}</h2><p>{activeFilter === "unread" && !selectedTeam ? ui("你已经读完了当前所有通知。") : ui("符合当前筛选条件的通知会出现在这里。")}</p></div>}
       </div>
@@ -242,34 +279,80 @@ export function NotificationItem({ item, teamName, onRead, onOpenTask, now = Dat
   item = notificationCopy(locale, item);
   const timestamp = formatRelativeDateTime(item.createdAt, locale, now);
   const task = item.task;
+  const excerpt = notificationExcerptText(item.excerpt);
+  const attachments = item.kind === "mention" || item.kind === "reply" ? item.attachments ?? [] : [];
+  const discussionTarget = item.target?.area === "discussion"
+    ? { area: "discussion" as const, ...(item.target.activityId ? { activityId: item.target.activityId } : {}) }
+    : item.target;
+  const fileEvent = item.kind === "file-added" || item.kind === "file-version-added" || item.kind === "file-deleted";
+  const file = fileEvent ? item.file : undefined;
+  const fileName = file?.name.trim() || (locale === "en" ? "File name unavailable" : "文件名不可用");
+  const contentLabel = fileEvent
+    ? [item.content, fileName].join(" ") + (item.contentAfterFile ?? "")
+    : [item.content, task?.title].filter(Boolean).join(" ") + (task ? item.contentAfterTask ?? "" : "");
   const taskLabel = task && <span>{task.title}</span>;
   const openTask = task && onOpenTask ? () => {
-    if (!item.target) onRead();
-    onOpenTask(task.id, item.target);
+    if (!fileEvent && !item.target) onRead();
+    onOpenTask(task.id, fileEvent ? undefined : discussionTarget);
   } : undefined;
-  const excerpt = notificationExcerptText(item.excerpt);
-  const typeLabel = item.kind === "handoff" && locale === "en" ? "Task handoff" : ui(notificationTypeLabels[item.kind]);
+  const openFile = fileEvent && file?.name.trim() && task && onOpenTask
+    && file.id.trim()
+    && item.kind !== "file-deleted" && file.state !== "deleted" && file.state !== "unavailable"
+    && item.target?.area === "files" && item.target.fileId === file.id
+    ? () => onOpenTask(task.id, item.target) : undefined;
+  const fileTypeLabel = item.kind === "file-added" ? "File added" : item.kind === "file-version-added" ? "File updated" : item.kind === "file-deleted" ? "File deleted" : undefined;
+  const typeLabel = locale === "en" ? fileTypeLabel ?? (item.kind === "handoff" ? "Task handoff" : ui(notificationTypeLabels[item.kind])) : ui(notificationTypeLabels[item.kind]);
   const labels = (item.people ?? []).map(person => `@${person.name}`);
   const parts = labels.length ? item.content.split(new RegExp(`(${labels.map(label => label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g")) : [item.content];
+  const taskReference = task && (openTask ? <span className="notification-task-link" onClick={openTask} onKeyDown={event => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    if (!event.repeat) openTask();
+  }} role="link" tabIndex={0} title={task.title}>{taskLabel}</span>
+    : <span className="notification-task-reference" onClick={onRead} title={task.title}>{taskLabel}</span>);
   return <div className={`notification-item ${item.read ? "read" : "unread"}`}>
-    <button aria-label={ui("标为已读：【{0}】{1}", {0: typeLabel, 1: [item.content, teamName, task?.title].filter(Boolean).join(" · ")})} className="notification-item-read" onClick={onRead} type="button" />
+    <button aria-label={ui("标为已读：【{0}】{1}", {0: typeLabel, 1: [contentLabel, ...attachments.map(attachment => attachment.name), fileEvent ? task?.title : undefined, teamName].filter(Boolean).join(" · ")})} className="notification-item-read" onClick={onRead} type="button" />
     <span className="notification-item-copy">
       {!item.read && <span aria-label={ui("未读")} className="notification-unread-dot" />}
       <span className="notification-item-text"><strong>【{typeLabel}】</strong>{parts.map((part, index) => {
         const person = item.people?.find(value => part === `@${value.name}`);
         if (person) return <PersonName className="notification-person-link" key={index} name={person.name} personId={person.id} prefix="@" profilePreviewFocusable />;
         return part;
-      })}</span>
-      {task && <>
-        {" "}
-        {openTask ? <span className="notification-task-link" onClick={openTask} onKeyDown={event => {
+      })}{fileEvent && <>
+        {" "}{openFile ? <span className="notification-file-link" onClick={openFile} onKeyDown={event => {
           if (event.key !== "Enter" && event.key !== " ") return;
           event.preventDefault();
-          if (!event.repeat) openTask();
-        }} role="link" tabIndex={0} title={task.title}>{taskLabel}</span>
-          : <span className="notification-task-reference" onClick={onRead} title={task.title}>{taskLabel}</span>}
-      </>}
+          if (!event.repeat) openFile();
+        }} role="link" tabIndex={0} title={fileName}>{fileName}</span>
+          : <span aria-disabled="true" className="notification-file-reference" title={fileName}>{fileName}</span>}
+        {item.contentAfterFile}
+        {file?.state === "deleted" && item.kind !== "file-deleted" && <span className="notification-file-unavailable">{locale === "en" ? " (deleted)" : "（已删除）"}</span>}
+        {file?.state === "unavailable" && <span className="notification-file-unavailable">{locale === "en" ? " (unavailable)" : "（不可用）"}</span>}
+      </>}</span>
+      {task && (fileEvent ? <span className="notification-item-task-context"><span>{locale === "en" ? "Task: " : "任务："}</span>{taskReference}</span>
+        : <>{" "}{taskReference}{item.contentAfterTask}</>)}
+      {(excerpt || attachments.length > 0) && <span className={`notification-item-discussion-content${attachments.length ? "" : " notification-item-discussion-content-text-only"}`}>
       {excerpt && <span className="notification-item-excerpt"><span className="notification-item-excerpt-lines">{excerpt}</span></span>}
+      {excerpt && attachments.length > 0 && " "}
+      {attachments.length > 0 && <span aria-label={locale === "en" ? "Discussion attachments" : "讨论附件"} className="notification-item-attachments" role="list">
+        {attachments.map((attachment, index) => {
+          const name = attachment.name.trim() || (locale === "en" ? "Attachment name unavailable" : "附件名称不可用");
+          const openAttachment = task && onOpenTask && item.target?.area === "discussion" && item.target.activityId?.trim()
+            && attachment.fileId.trim() && Number.isSafeInteger(attachment.version) && attachment.version > 0 && attachment.name.trim() && !attachment.unavailable
+            ? () => onOpenTask(task.id, { area: "discussion", activityId: item.target!.activityId,
+              attachment: { fileId: attachment.fileId, version: attachment.version } }) : undefined;
+          return <span className="notification-attachment-item" key={`${attachment.fileId}:${attachment.version}:${index}`} role="listitem">
+            {index > 0 && <span aria-hidden="true">{locale === "en" ? ", " : "、"}</span>}
+            {openAttachment ? <span className="notification-attachment-link" onClick={openAttachment} onKeyDown={event => {
+              if (event.key !== "Enter" && event.key !== " ") return;
+              event.preventDefault();
+              if (!event.repeat) openAttachment();
+            }} role="link" tabIndex={0} title={name}>{name}</span>
+              : <span aria-disabled="true" className="notification-attachment-reference" title={name}>{name}</span>}
+          </span>;
+        })}
+      </span>}
+      </span>}
     </span>
     <span className="notification-item-meta">
       <time aria-label={timestamp?.full} dateTime={timestamp ? new Date(item.createdAt).toISOString() : undefined} tabIndex={timestamp ? 0 : undefined} title={timestamp?.full}>{timestamp?.label ?? formatLegacyDateLabel(item.time, locale, { now })}</time>

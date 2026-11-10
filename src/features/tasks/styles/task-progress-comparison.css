@@ -173,7 +173,7 @@
 .task-progress-chart-forecast-date { stroke:var(--ad-tag-purple-ink); stroke-width:1.5; stroke-dasharray:5 4; vector-effect:non-scaling-stroke; }
 .task-progress-chart-completed-date { stroke:var(--ad-route); stroke-width:1.5; vector-effect:non-scaling-stroke; }
 
-.task-progress-refresh { display:inline-flex; align-items:center; gap:5px; margin-left:auto; padding:3px 0 3px 8px; border:0; background:none; color:var(--ad-tag-purple-ink); font-size:var(--ad-text-caption); cursor:pointer; }
-.task-progress-refresh:hover { text-decoration:underline; }
+.task-progress-refresh { display:inline-flex; align-items:center; gap:5px; margin-left:auto; padding:3px 0 3px 8px; border:0; background:none; color:var(--ad-ink-secondary); font-size:var(--ad-text-caption); cursor:pointer; }
+.task-progress-refresh:hover { color:var(--ad-ink); text-decoration:underline; }
 .task-progress-refresh:focus-visible { outline:2px solid var(--ad-focus); outline-offset:3px; border-radius:4px; }
 .task-progress-refresh:disabled { cursor:wait; opacity:.6; }

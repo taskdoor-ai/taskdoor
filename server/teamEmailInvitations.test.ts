@@ -9,6 +9,54 @@ const teamId = initialPersonalCenterState.teams[0].id;
 const now = Date.UTC(2026, 8, 13);
 const invite = (state = initial(), email = "new@example.com", extra = {}) => createTeamEmailInvitation(state, { teamId, email, now, ...extra });
 
+test("已停用记录重新邀请时复用人员，刷新链接且不直接恢复成员资格", () => {
+  const first = invite();
+  first.membership.status = "disabled";
+  first.membership.name = "曾受邀成员";
+  const renewed = invite(first.state, first.membership.email, { renew: true, now: now + 1000 });
+  assert.equal(renewed.membership.id, first.membership.id);
+  assert.equal(renewed.person.id, first.person.id);
+  assert.equal(renewed.membership.status, "invited");
+  assert.equal(renewed.membership.name, "曾受邀成员");
+  assert.equal(renewed.state.teams[0].memberships.length, first.state.teams[0].memberships.length);
+  assert.notEqual(renewed.membership.emailInvitation?.token, first.membership.emailInvitation?.token);
+  assert.equal(resolveTeamEmailInvitation(renewed.state, first.membership.emailInvitation!.token, now + 1000), null);
+  assert.equal(isPersonalCenterState(JSON.parse(JSON.stringify(first.state))), true);
+});
+
+test("停用记录不出现在任务选人中，旧邀请不能激活；重新邀请后才可接受", () => {
+  const first = invite();
+  first.membership.status = "disabled";
+  const token = first.membership.emailInvitation!.token;
+  const identity = { email: first.membership.email, name: "新同事", verified: true };
+  assert.equal(getTeamPeople(first.state.teams[0], [first.person]).some(person => person.id === first.person.id), false);
+  assert.equal(resolveTeamEmailInvitation(first.state, token, now), null);
+  assert.throws(() => acceptTeamEmailInvitation(first.state, token, identity, now), /失效/);
+  const renewed = invite(first.state, identity.email, { renew: true });
+  const accepted = acceptTeamEmailInvitation(renewed.state, renewed.membership.emailInvitation!.token, identity, now + 1000);
+  assert.equal(accepted.teams[0].memberships.find(member => member.id === first.membership.id)?.status, "active");
+});
+
+test("表单再次填写已停用邮箱也发送新邀请，角色与名额仍按原规则校验", () => {
+  const first = invite();
+  first.membership.status = "disabled";
+  const renewed = createTeamEmailInvitations(first.state, { teamId, now, recipients: [{ email: first.membership.email, role: "member" }] });
+  assert.equal(renewed.sentCount, 1);
+  assert.equal(renewed.people[0].membershipStatus, "invited");
+  const full = structuredClone(first.state);
+  const team = full.teams[0];
+  const actor = team.memberships.find(member => member.email === full.profile.email)!;
+  team.memberships = [team.memberships.find(member => member.id === first.membership.id)!, ...Array.from({ length: 50 }, (_, index) => index === 0 ? actor : {
+    ...actor, id: `full-${index}`, memberId: `full-user-${index}`, email: `full-${index}@example.com`,
+  })];
+  const snapshot = structuredClone(full);
+  assert.throws(() => invite(full, first.membership.email, { renew: true }), /50/);
+  assert.deepEqual(full, snapshot);
+  first.membership.role = "admin";
+  first.state.teams[0].memberships.find(member => member.email === first.state.profile.email)!.role = "member";
+  assert.throws(() => invite(first.state, first.membership.email, { renew: true }), /只有拥有者和管理员/);
+});
+
 test("搜索时只预填邮箱，保留原输入供逐行校验", () => {
   assert.deepEqual(getInvitationDraft("  新同事  "), { email: "" });
   assert.deepEqual(getInvitationDraft("  NEW@Example.com，next@example.com "), { email: "NEW@Example.com，next@example.com" });

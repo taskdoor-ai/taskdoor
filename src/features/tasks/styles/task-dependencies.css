@@ -7,8 +7,8 @@
 .task-dependencies-chip > button > span { overflow-wrap: anywhere; }
 .task-dependencies-chip > button > svg { flex-shrink: 0; }
 .task-dependencies-edit { min-height: var(--ad-space-6); padding: 0 var(--ad-space-1); border-radius: var(--ad-radius-control); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); font-weight: 400; line-height: 1.5; }
-.task-dependencies-edit:hover:not(:disabled) { color: var(--ad-route); }
-.task-dependencies-chip > button:hover:not(:disabled) { color: var(--ad-route); }
+.task-dependencies-edit:hover:not(:disabled) { color: var(--ad-ink-secondary); }
+.task-dependencies-chip > button:hover:not(:disabled) { color: var(--ad-ink); }
 .task-dependencies-chip > button:disabled { cursor: default; }
 .task-dependencies-chip > button:focus-visible, .task-dependencies-edit:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; border-radius: var(--ad-radius-control); }
 .task-dependencies-chip > .task-dependencies-remove { position: absolute; top: -6px; right: -6px; z-index: 1; justify-content: center; width: 20px; height: 20px; border: 1px solid var(--ad-border); border-radius: 50%; background: var(--ad-surface); color: var(--ad-ink-tertiary); opacity: 0; pointer-events: none; }
@@ -22,7 +22,7 @@
 .task-dependencies-options label { display: flex; align-items: start; gap: var(--ad-space-2); padding: var(--ad-space-2); border-radius: var(--ad-radius-control); color: var(--ad-ink); font-size: var(--ad-text-body-sm); cursor: pointer; overflow-wrap: anywhere; }
 .task-dependencies-options label:hover { background: var(--ad-surface-subtle); }
 .task-dependencies-options label:has(input:disabled) { color: var(--ad-ink-tertiary); cursor: default; }
-.task-dependencies-options input { margin-top: 4px; accent-color: var(--ad-route); }
+.task-dependencies-options input { margin-top: 4px; accent-color: var(--ad-control-selected-ink); }
 .task-dependencies-options small { display: block; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
 .task-dependencies-popover footer { display: flex; justify-content: flex-end; gap: var(--ad-space-2); margin-top: var(--ad-space-3); }
 .task-dependencies-popover footer > button:first-child { margin-right: auto; }

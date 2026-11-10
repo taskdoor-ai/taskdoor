@@ -2,6 +2,7 @@ export type NotificationRegionTarget = {
   area: "discussion" | "files" | "activity" | "information";
   activityId?: string;
   fileId?: string;
+  attachment?: { fileId: string; version: number };
 };
 
 export type DiscussionReadReceipt = {

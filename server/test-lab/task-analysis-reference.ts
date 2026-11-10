@@ -4,6 +4,11 @@ import type {LabAssertion,LabCase,LabState,LabTeam,Json} from '../../src/test-la
 import {applyEvents} from './context.ts';
 import {selectCaseContext} from '../../src/test-lab/case-input-context.ts';
 
+/** Curated rubrics are already explicit; generic templates must not retrofit them. */
+export function hasAuthoredTaskAnalysisRubric(c:LabCase){
+ return c.origin==='strict-analysis-evidence-v1'||c.origin==='task-analysis-outcome-v1';
+}
+
 export function taskAnalysisReferenceFingerprint(c:LabCase,source:LabTeam){
  return createHash('sha256').update(stableJson({source,steps:c.steps.filter(s=>s.skillId==='agentdoor-task-status-analyzer'),assertions:c.assertions,revision:5})).digest('hex').slice(0,12);
 }
@@ -21,6 +26,7 @@ export function criterionPercentExpectation(assertions:LabAssertion[],stepId:str
 export function updateTaskAnalysisReferences(state:LabState){
  let changed=false;
  for(const c of state.cases){
+  if(hasAuthoredTaskAnalysisRubric(c))continue;
   const steps=c.steps.filter(s=>s.skillId==='agentdoor-task-status-analyzer');
   if(!steps.length)continue;
   const source=c.dataSnapshot??state.teams.find(t=>t.id===c.teamId);if(!source)continue;

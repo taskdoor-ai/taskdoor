@@ -231,6 +231,7 @@ export function AccessTokensPanel({
         </div>
         <Button
           type="button"
+          variant="default"
           onClick={() => {
             resetDraft()
             setDialogOpen(true)
@@ -254,7 +255,7 @@ export function AccessTokensPanel({
           <p>{t('tokens.emptyHint')}</p>
           <Button
             type="button"
-            variant="outline"
+            variant="default"
             onClick={() => {
               resetDraft()
               setDialogOpen(true)
@@ -349,6 +350,7 @@ export function AccessTokensPanel({
                 </Button>
                 <Button
                   type="button"
+                  variant="outline"
                   ref={copyButton}
                   onClick={() =>
                     void navigator.clipboard

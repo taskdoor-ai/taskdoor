@@ -5,11 +5,11 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/shared/lib/utils"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-(--ad-radius-control) border border-transparent bg-clip-padding font-sans text-(length:--ad-text-body-sm) font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-[var(--ad-button-focus)] focus-visible:ring-3 focus-visible:ring-[var(--ad-button-focus-soft)] active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-pressed:bg-(--ad-button-soft-bg) aria-pressed:!text-(--ad-button-soft-ink) aria-pressed:shadow-(--ad-shadow-control-selected) aria-current-page:bg-(--ad-button-soft-bg) aria-current-page:!text-(--ad-button-soft-ink) aria-current-page:shadow-(--ad-shadow-control-selected) dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-(--ad-radius-control) border border-transparent bg-clip-padding font-sans text-(length:--ad-text-body-sm) font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-[var(--ad-focus)] focus-visible:ring-3 focus-visible:ring-[var(--ad-focus-soft)] active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-pressed:bg-(--ad-control-selected-bg) aria-pressed:!text-(--ad-control-selected-ink) aria-pressed:shadow-(--ad-shadow-control-selected) aria-current-page:bg-(--ad-control-selected-bg) aria-current-page:!text-(--ad-control-selected-ink) aria-current-page:shadow-(--ad-shadow-control-selected) dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-[var(--ad-button-primary-bg)] !text-[color:var(--ad-button-primary-ink)] hover:bg-[var(--ad-button-primary-hover-bg)] hover:!text-[color:var(--ad-button-primary-hover-ink)] active:bg-[var(--ad-button-primary-active-bg)] active:!text-[color:var(--ad-button-primary-active-ink)] disabled:bg-[var(--ad-button-disabled-bg)] disabled:!text-[color:var(--ad-button-disabled-ink)] disabled:opacity-100",
+        default: "bg-[var(--ad-button-primary-bg)] !text-[color:var(--ad-button-primary-ink)] hover:bg-[var(--ad-button-primary-hover-bg)] hover:!text-[color:var(--ad-button-primary-hover-ink)] active:bg-[var(--ad-button-primary-active-bg)] active:!text-[color:var(--ad-button-primary-active-ink)] focus-visible:border-[var(--ad-button-focus)] focus-visible:ring-[var(--ad-button-focus-soft)] disabled:bg-[var(--ad-button-disabled-bg)] disabled:!text-[color:var(--ad-button-disabled-ink)] disabled:opacity-100",
         outline:
           "border-border bg-background text-secondary-foreground hover:border-[var(--ad-control-border-hover)] hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
         secondary:
@@ -17,12 +17,12 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
         ai:
-          "bg-[var(--ad-button-soft-bg)] !text-[color:var(--ad-button-soft-ink)] hover:bg-[var(--ad-button-soft-hover-bg)] hover:!text-[color:var(--ad-button-soft-ink)]",
+          "bg-secondary !text-secondary-foreground hover:bg-muted hover:!text-foreground",
         inference:
           "bg-[var(--ad-inference-soft)] !text-[color:var(--ad-inference)] hover:bg-[var(--ad-inference-hover)] hover:!text-[color:var(--ad-inference)]",
         destructive:
           "bg-destructive/10 !text-destructive hover:bg-destructive/20 hover:!text-destructive focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-secondary-foreground underline-offset-4 hover:text-foreground hover:underline",
       },
       size: {
         default:

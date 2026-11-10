@@ -11,6 +11,7 @@ import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
 import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getNodeByKey, $getRoot, $getSelection, $isRangeSelection, $isTextNode, $parseSerializedNode, $setSelection, BEFORE_INPUT_COMMAND, CLEAR_HISTORY_COMMAND, COMMAND_PRIORITY_HIGH, INPUT_COMMAND, KEY_DOWN_COMMAND, PASTE_COMMAND, type EditorState, type LexicalEditor, type RangeSelection, type SerializedEditorState } from "lexical";
 import { FolderOpen, LoaderCircle, Paperclip, RotateCcw, Send, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type DragEvent, type ReactNode } from "react";
+import { useFocusVisible } from "react-aria/useFocusVisible";
 import type { TaskFileNode } from "@/shared/model/task-model";
 import { ALL_TASK_MEMBERS_MENTION_ID, getTaskFiles, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import { DISCUSSION_UPLOAD_MAX_FILES, isDiscussionImage, prepareDiscussionUpload } from "@/features/tasks/files/lib/discussion-uploads";
@@ -162,6 +163,7 @@ export function DiscussionComposer(props: DiscussionComposerProps) {
 }
 
 function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onSubmit, onPreviewAttachment, people, referenceTasks, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, draftInsertion, disabled = false, toolsAddon }: DiscussionComposerProps) {
+  const { isFocusVisible: keyboardFocus } = useFocusVisible({ isTextInput: true });
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const members = usePersonOptions(people);
@@ -368,7 +370,7 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
   const shortcutHintVisible = showShortcutHint && Boolean(session.draft.body.trim());
   const hasFileDrag = (event: DragEvent) => Array.from(event.dataTransfer.types).includes("Files");
 
-  return <div aria-busy={submitting || undefined} className={`discussion-composer${compact ? " compact" : ""}${dragging ? " is-dragging" : ""}`} ref={composerRef} onPointerDownCapture={rememberSelection} onCompositionStart={() => { composingRef.current = true; }} onCompositionEnd={() => { composingRef.current = false; }} onDragEnter={event => { if (!hasFileDrag(event) || unavailable) return; event.preventDefault(); dragDepth.current++; setDragging(true); }} onDragOver={event => { if (hasFileDrag(event)) { event.preventDefault(); event.dataTransfer.dropEffect = unavailable ? "none" : "copy"; } }} onDragLeave={event => { if (!hasFileDrag(event)) return; dragDepth.current = Math.max(0, dragDepth.current - 1); if (!dragDepth.current) setDragging(false); }} onDrop={event => { if (!hasFileDrag(event)) return; event.preventDefault(); dragDepth.current = 0; setDragging(false); addUploads(Array.from(event.dataTransfer.files)); }}>
+  return <div aria-busy={submitting || undefined} data-keyboard-focus={keyboardFocus || undefined} className={`discussion-composer${compact ? " compact" : ""}${dragging ? " is-dragging" : ""}`} ref={composerRef} onPointerDownCapture={rememberSelection} onCompositionStart={() => { composingRef.current = true; }} onCompositionEnd={() => { composingRef.current = false; }} onDragEnter={event => { if (!hasFileDrag(event) || unavailable) return; event.preventDefault(); dragDepth.current++; setDragging(true); }} onDragOver={event => { if (hasFileDrag(event)) { event.preventDefault(); event.dataTransfer.dropEffect = unavailable ? "none" : "copy"; } }} onDragLeave={event => { if (!hasFileDrag(event)) return; dragDepth.current = Math.max(0, dragDepth.current - 1); if (!dragDepth.current) setDragging(false); }} onDrop={event => { if (!hasFileDrag(event)) return; event.preventDefault(); dragDepth.current = 0; setDragging(false); addUploads(Array.from(event.dataTransfer.files)); }}>
     {allowQuote && session.draft.quote && <div className="discussion-composer-quote"><span><strong>{d('quote')}{session.draft.quote.author}</strong><span>{session.draft.quote.text}</span></span><button aria-label={ui("移除引用")} disabled={unavailable} onClick={() => updateSession(current => ({ ...current, draft: { ...current.draft, quote: undefined } }))} type="button"><X aria-hidden="true" size={14} /></button></div>}
     <LexicalComposer initialConfig={initialConfig}>
       <div className="discussion-composer-editor">
