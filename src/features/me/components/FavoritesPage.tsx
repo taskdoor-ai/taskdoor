@@ -1,5 +1,7 @@
 import { useState, type KeyboardEvent, type ReactNode } from "react";
-import { FileText, MessageSquareText, SquareCheckBig, Bookmark } from "lucide-react";
+import { Bookmark, FileText, MessageSquareText, Search, SearchX, SquareCheckBig } from "lucide-react";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
 import { useMockText } from "@/ai/task-display";
 import type { FavoriteKind, FavoriteRecord } from "@/features/me/lib/favorites";
 import { useI18n } from "@/shared/i18n/I18nProvider";
@@ -31,8 +33,8 @@ export function FavoritesPage({ items, showTeams, onOpen, onRemove, renderFileIc
   const en = locale === "en";
   const mock = useMockText();
   const [tab, setTab] = useState<Tab>("all");
+  const [query, setQuery] = useState("");
   const tabLabel = (value: Tab) => ({ all: en ? "All" : "全部", task: en ? "Tasks" : "任务", discussion: en ? "Discussions" : "讨论", file: en ? "Files" : "文件" })[value];
-  const visible = items.filter(item => tab === "all" || item.kind === tab);
   const now = Date.now();
   const moveTab = (event: KeyboardEvent<HTMLButtonElement>) => {
     const step = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
@@ -47,6 +49,11 @@ export function FavoritesPage({ items, showTeams, onOpen, onRemove, renderFileIc
     const number = item.taskNumber === undefined ? "" : ` #${item.taskNumber}`;
     return en ? `Task${number}: ${taskTitle(item)}` : `任务${number}：${taskTitle(item)}`;
   };
+  const itemTitle = (item: FavoriteItem) => item.kind === "task" ? taskTitle(item) : item.kind === "file" ? mock.text(item.label ?? "") : (item.label || (en ? "(No text)" : "（无文字内容）"));
+  const needle = query.trim().toLowerCase();
+  // Search covers what a row shows: its title, its task's name and number, and its team.
+  const matches = (item: FavoriteItem) => !needle || [itemTitle(item), taskTitle(item), item.taskNumber === undefined ? "" : `#${item.taskNumber}`, item.teamName ?? ""].some(text => text.toLowerCase().includes(needle));
+  const visible = items.filter(item => (tab === "all" || item.kind === tab) && matches(item));
   const emptyTitle = tab === "all" ? (en ? "No favorites yet" : "还没有收藏")
     : en ? `No favorite ${tabLabel(tab).toLowerCase()}` : `还没有收藏的${tabLabel(tab)}`;
 
@@ -56,14 +63,20 @@ export function FavoritesPage({ items, showTeams, onOpen, onRemove, renderFileIc
         <h1 id="favorites-heading" tabIndex={-1}>{en ? "Favorites" : "收藏"}</h1>
         <p>{en ? "Only you can see your favorites." : "收藏仅自己可见。"}</p>
       </header>
-      <div aria-label={en ? "Favorite types" : "收藏类型"} className="favorites-tabs" role="tablist">
-        {tabs.map(value => <button aria-controls="favorites-panel" aria-selected={tab === value} id={`favorites-tab-${value}`} key={value} onClick={() => setTab(value)} onKeyDown={moveTab} role="tab" tabIndex={tab === value ? 0 : -1} type="button">{tabLabel(value)}</button>)}
+      <div className="favorites-toolbar">
+        <div aria-label={en ? "Favorite types" : "收藏类型"} className="favorites-tabs" role="tablist">
+          {tabs.map(value => <button aria-controls="favorites-panel" aria-selected={tab === value} id={`favorites-tab-${value}`} key={value} onClick={() => setTab(value)} onKeyDown={moveTab} role="tab" tabIndex={tab === value ? 0 : -1} type="button">{tabLabel(value)}</button>)}
+        </div>
+        {items.length > 0 && <div className="favorites-search">
+          <Search aria-hidden="true" size={16} />
+          <Input aria-label={en ? "Search favorites" : "搜索收藏"} onChange={event => setQuery(event.target.value)} onKeyDown={event => { if (event.key === "Escape" && query) { event.preventDefault(); setQuery(""); } }} placeholder={en ? "Search favorites" : "搜索收藏"} type="search" value={query} />
+        </div>}
       </div>
       <section aria-labelledby={`favorites-tab-${tab}`} id="favorites-panel" role="tabpanel">
         {visible.length ? <ul className="favorites-list">
           {visible.map(item => {
             const Icon = kindIcons[item.kind];
-            const title = item.kind === "task" ? taskTitle(item) : item.kind === "file" ? mock.text(item.label ?? "") : (item.label || (en ? "(No text)" : "（无文字内容）"));
+            const title = itemTitle(item);
             const context = [item.kind === "task" ? (item.taskNumber === undefined ? "" : `#${item.taskNumber}`) : taskLine(item), showTeams ? item.teamName : ""].filter(Boolean).join(" · ");
             const saved = formatRelativeDateTime(item.createdAt, locale, now);
             return <li className="favorites-item" data-kind={item.kind} key={item.key}>
@@ -78,7 +91,12 @@ export function FavoritesPage({ items, showTeams, onOpen, onRemove, renderFileIc
               <button aria-label={en ? `Remove from favorites: ${title}` : `取消收藏：${title}`} className="favorites-item-remove" onClick={() => onRemove(item)} title={en ? "Remove from favorites" : "取消收藏"} type="button"><Bookmark aria-hidden="true" size={15} /></button>
             </li>;
           })}
-        </ul> : <div className="favorites-empty">
+        </ul> : needle && items.some(item => tab === "all" || item.kind === tab) ? <div className="favorites-empty">
+          <SearchX aria-hidden="true" size={20} />
+          <strong>{en ? "No matching favorites" : "没有匹配的收藏"}</strong>
+          <p>{en ? "Try another word, or clear the search." : "换个关键词试试，或清除搜索。"}</p>
+          <Button onClick={() => setQuery("")} size="sm" type="button" variant="outline">{en ? "Clear search" : "清除搜索"}</Button>
+        </div> : <div className="favorites-empty">
           <Bookmark aria-hidden="true" size={20} />
           <strong>{emptyTitle}</strong>
           <p>{en ? "Choose “Add to favorites” on a task, a discussion message or a file to keep it here." : "在任务、讨论或文件上选择「收藏」，它会出现在这里。"}</p>
