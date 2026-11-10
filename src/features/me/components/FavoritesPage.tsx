@@ -21,11 +21,12 @@ const tabs: Tab[] = ["all", "task", "discussion", "file"];
 const kindIcons = { task: SquareCheckBig, discussion: MessageSquareText, file: FileText };
 
 /** The viewer's favorites across teams, each jumping back to the original. */
-export function FavoritesPage({ items, onOpen, onRemove, renderFileIcon }: {
+export function FavoritesPage({ items, hrefFor, onRemove, renderFileIcon }: {
   items: readonly FavoriteItem[];
   /** The file tree's own icon for a file name, so a saved file looks as it does in its task. */
   renderFileIcon?: (fileName: string) => ReactNode;
-  onOpen: (item: FavoriteItem) => void;
+  /** Where the original lives; rows open it in a new window. */
+  hrefFor: (item: FavoriteItem) => string;
   onRemove: (item: FavoriteItem) => void;
 }) {
   const { locale } = useI18n();
@@ -80,7 +81,7 @@ export function FavoritesPage({ items, onOpen, onRemove, renderFileIcon }: {
             const teamName = item.teamName ? mockTeamName(locale, item.teamId, item.teamName) : "";
             const saved = formatRelativeDateTime(item.createdAt, locale, now);
             return <li className="favorites-item" data-kind={item.kind} key={item.key}>
-              <button className="favorites-item-open" onClick={() => onOpen(item)} type="button">
+              <a className="favorites-item-open" href={hrefFor(item)} rel="noopener" target="_blank">
                 <span aria-hidden="true" className="favorites-item-icon">{item.kind === "file" && renderFileIcon ? renderFileIcon(item.label ?? "") : <Icon size={16} />}</span>
                 <span className="favorites-item-text">
                   <span className="favorites-item-title">{title}</span>
@@ -91,7 +92,7 @@ export function FavoritesPage({ items, onOpen, onRemove, renderFileIcon }: {
                   {/* The team, marked as the inbox marks it: favorites come from every team. */}
                   {teamName && <span className="favorites-item-team" title={teamName}><Users aria-hidden="true" /><span>{teamName}</span></span>}
                 </span>
-              </button>
+              </a>
               <button aria-label={en ? `Remove from favorites: ${title}` : `取消收藏：${title}`} className="favorites-item-remove" onClick={() => onRemove(item)} title={en ? "Remove from favorites" : "取消收藏"} type="button"><Bookmark aria-hidden="true" size={15} /></button>
             </li>;
           })}

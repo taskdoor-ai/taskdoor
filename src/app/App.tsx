@@ -73,6 +73,7 @@ import { createWorkspaceSuggestedSubtasks, getSubtaskSuggestionStorageKey, type 
 import { activeMembership, canEditTeamInformation } from "@/features/members/lib/team-membership-lifecycle";
 import { FavoritesScope, favoriteKey, useFavorites } from "@/features/me/lib/favorites";
 import type { NotificationRegionTarget } from "@/features/notifications/lib/notification-read-state";
+import { readTaskLink, taskLinkHref, withoutTaskLink } from "@/app/workspace/lib/task-link";
 import { FavoritesPage, type FavoriteItem } from "@/features/me/components/FavoritesPage";
 import { TaskFileGlyph } from "@/features/tasks/files/components/TaskFileGlyph";
 import { addWorkspaceSubtask, canCreateWorkspaceSubtask, getSubtaskDeletionPreview, getTaskDeletionPreview, getTaskDeletionWrites, type NewSubtaskDraft } from "@/features/tasks/lib/workspace-subtask-editing";
@@ -808,6 +809,16 @@ function App() {
       showTaskDetail(task, !target);
     });
   };
+  // A link opened in a new window (from the Favorites page) lands on its task, message or file once.
+  const taskLinkOpened = useRef(false);
+  useEffect(() => {
+    if (taskLinkOpened.current) return;
+    taskLinkOpened.current = true;
+    const link = readTaskLink(window.location.search);
+    if (!link) return;
+    window.history.replaceState(null, "", withoutTaskLink(window.location));
+    openTaskTarget(link.taskId, link.target, link.teamId, () => undefined, locale === "en" ? "This item is no longer available." : "收藏的内容已不可访问。");
+  }, []);
   const openFavorites = (closeNavigation: () => void) => requestCreationExit(() => {
     setActiveSection("favorites");
     closeNavigation();
@@ -1760,7 +1771,7 @@ function App() {
           <FavoritesPage
             items={favoriteItems}
             renderFileIcon={name => <TaskFileGlyph compact node={{ id: name, kind: "file", name, parentId: null, updatedAt: "" }} />}
-            onOpen={item => openTaskTarget(item.taskId, item.kind === "discussion" ? { area: "discussion", activityId: item.targetId } : item.kind === "file" ? { area: "files", fileId: item.targetId } : undefined, item.teamId, () => undefined, locale === "en" ? "This item is no longer available." : "收藏的内容已不可访问。")}
+            hrefFor={item => taskLinkHref({ teamId: item.teamId, taskId: item.taskId, target: item.kind === "discussion" ? { area: "discussion", activityId: item.targetId } : item.kind === "file" ? { area: "files", fileId: item.targetId } : undefined })}
             onRemove={item => { if (favorites.toggle(item) === null) toast.error(locale === "en" ? "Could not update favorites. Please try again." : "收藏未能更新，请重试。"); }}
           />
         ) : activeSection === "recycle-bin" ? (

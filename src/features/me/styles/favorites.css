@@ -16,7 +16,7 @@
 
 .favorites-list { margin: 0; padding: 0; list-style: none; }
 .favorites-item { position: relative; display: flex; min-width: 0; align-items: center; border-bottom: 1px solid var(--ad-border-soft); }
-.favorites-item-open { display: grid; min-width: 0; flex: 1; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: start; gap: 12px; padding: 12px 4px; border: 0; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.favorites-item-open { display: grid; min-width: 0; flex: 1; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: start; gap: 12px; padding: 12px 4px; border: 0; background: transparent; color: inherit; font: inherit; text-decoration: none; text-align: start; cursor: pointer; }
 .favorites-item-open:hover .favorites-item-title { color: var(--ad-route-ink); }
 .favorites-item-open:focus-visible, .favorites-item-remove:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -2px; border-radius: 6px; }
 /* Each type has its own calm color: tasks the route blue, discussions teal, files their file-tree icon. */
