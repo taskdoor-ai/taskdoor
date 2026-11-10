@@ -1,6 +1,7 @@
 /* Favorites: one quiet list across teams, filtered by type. */
 .favorites-page { height: 100%; overflow-y: auto; background: var(--ad-surface); }
-.favorites-content { width: min(calc(100% - var(--ad-space-16)), 720px); margin: 0 auto; padding: var(--ad-space-8) 0 var(--ad-space-12); }
+/* The same content width as the task list (.task-workspace-list-main .task-workspace-list-scroll): up to 1152px, centered. */
+.favorites-content { padding: 24px max(16px, calc((100% - 1120px) / 2 - 16px)) 64px; }
 .favorites-heading { display: grid; gap: 4px; margin-bottom: var(--ad-space-4); }
 .favorites-heading h1 { margin: 0; font-size: var(--ad-text-title-2); font-weight: 700; line-height: 1.2; }
 .favorites-heading h1:focus { outline: none; }
@@ -33,8 +34,11 @@
 .favorites-empty p { max-width: 320px; margin: 0; font-size: var(--ad-text-caption); line-height: 1.6; }
 
 /* Below 900px the navigation becomes a drawer whose menu button sits over the page's top-left corner. */
+@media (max-width: 900px), (pointer: coarse), (hover: none) {
+  .favorites-content { padding: 16px 12px 40px; }
+}
 @media (max-width: 900px) {
-  .favorites-content { width: calc(100% - 32px); padding-top: 64px; }
+  .favorites-content { padding-top: 64px; }
 }
 @media (max-width: 640px) {
   .favorites-item-time { display: none; }
