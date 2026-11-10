@@ -23,7 +23,9 @@ export function readTaskDiscussionNotifications(
       const message = messages.get(notification.messageId);
       if (!message) return [];
       const author = names.get(message.author);
-      const action = notification.reason === "reply"
+      const action = notification.reason === "discussion"
+        ? { en: " posted in the discussion.", "zh-CN": "在讨论中发了新消息。" }
+        : notification.reason === "reply"
         ? { en: " replied to you in the discussion.", "zh-CN": "在讨论中回复了你。" }
         : message.mentionsAllTaskMembers
           ? { en: " mentioned all members in the discussion.", "zh-CN": "在讨论中提及了全体成员。" }

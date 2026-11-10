@@ -45,12 +45,14 @@ type TaskDiscussionProps = {
   referenceTasks?: DiscussionReferenceTask[];
   onOpenReferenceTask?: (taskId: string) => void;
   renderSuggestions?: (messageId: string) => ReactNode;
+  /** Shown at the end of the main composer's tool row, such as a participant's notification choice. */
+  composerTools?: ReactNode;
 };
 
 type ComposerMode = { kind: "reply"; id: string } | null;
 type ScrollRequest = { kind: "locate"; id: string } | { kind: "latest" } | { kind: "restore"; id: string; top: number };
 
-export function TaskDiscussion({ active = true, readable = true, readRequestSequence, onRead, activities, attentionTarget, currentUser, currentUserName, files, draftKey = "task-discussion", draftInsertion, onConnectAi, onOpenFile, onPreviewAttachment, onPost, onDelete, onCreateSubtask, creatingSubtask = false, retainedSubtaskSources = [], renderAfterMessage, people, followupsByMessageId, onOpenFollowupTask, referenceTasks, onOpenReferenceTask, renderSuggestions }: TaskDiscussionProps) {
+export function TaskDiscussion({ active = true, readable = true, readRequestSequence, onRead, activities, attentionTarget, currentUser, currentUserName, files, draftKey = "task-discussion", draftInsertion, onConnectAi, onOpenFile, onPreviewAttachment, onPost, onDelete, onCreateSubtask, creatingSubtask = false, retainedSubtaskSources = [], renderAfterMessage, people, followupsByMessageId, onOpenFollowupTask, referenceTasks, onOpenReferenceTask, renderSuggestions, composerTools }: TaskDiscussionProps) {
   const d = useDetailCopy();
   const ui = useGlobalUi();
   const { locale } = useI18n();
@@ -283,7 +285,7 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
     </div>
     {!mode && !creatingSubtask && <div className="task-discussion-compose" ref={composerRef}>
       <div className="task-discussion-compose-content">
-        <DiscussionComposer actionLabel={d('post')} allowQuote={false} draftInsertion={draftInsertion} draftKey={composerKey} files={files} onPreviewAttachment={onPreviewAttachment} onSubmit={submit} people={people} placeholder={d(referenceTasks?.length ? 'taskCommentHint' : 'composerHint')} referenceTasks={referenceTasks} />
+        <DiscussionComposer toolsAddon={composerTools} actionLabel={d('post')} allowQuote={false} draftInsertion={draftInsertion} draftKey={composerKey} files={files} onPreviewAttachment={onPreviewAttachment} onSubmit={submit} people={people} placeholder={d(referenceTasks?.length ? 'taskCommentHint' : 'composerHint')} referenceTasks={referenceTasks} />
       </div>
     </div>}
   </div>;
