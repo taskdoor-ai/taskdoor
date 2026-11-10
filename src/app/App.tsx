@@ -1759,7 +1759,6 @@ function App() {
         {activeSection === "favorites" ? (
           <FavoritesPage
             items={favoriteItems}
-            showTeams={new Set(favoriteItems.map(item => item.teamId)).size > 1}
             renderFileIcon={name => <TaskFileGlyph compact node={{ id: name, kind: "file", name, parentId: null, updatedAt: "" }} />}
             onOpen={item => openTaskTarget(item.taskId, item.kind === "discussion" ? { area: "discussion", activityId: item.targetId } : item.kind === "file" ? { area: "files", fileId: item.targetId } : undefined, item.teamId, () => undefined, locale === "en" ? "This item is no longer available." : "收藏的内容已不可访问。")}
             onRemove={item => { if (favorites.toggle(item) === null) toast.error(locale === "en" ? "Could not update favorites. Please try again." : "收藏未能更新，请重试。"); }}

@@ -1,8 +1,8 @@
 import { useState, type KeyboardEvent, type ReactNode } from "react";
-import { Bookmark, FileText, MessageSquareText, Search, SearchX, SquareCheckBig } from "lucide-react";
+import { Bookmark, FileText, MessageSquareText, Search, SearchX, SquareCheckBig, Users } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { useMockText } from "@/ai/task-display";
+import { mockTeamName, useMockText } from "@/ai/task-display";
 import type { FavoriteKind, FavoriteRecord } from "@/features/me/lib/favorites";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { formatRelativeDateTime } from "@/shared/lib/date-time";
@@ -21,11 +21,10 @@ const tabs: Tab[] = ["all", "task", "discussion", "file"];
 const kindIcons = { task: SquareCheckBig, discussion: MessageSquareText, file: FileText };
 
 /** The viewer's favorites across teams, each jumping back to the original. */
-export function FavoritesPage({ items, showTeams, onOpen, onRemove, renderFileIcon }: {
+export function FavoritesPage({ items, onOpen, onRemove, renderFileIcon }: {
   items: readonly FavoriteItem[];
   /** The file tree's own icon for a file name, so a saved file looks as it does in its task. */
   renderFileIcon?: (fileName: string) => ReactNode;
-  showTeams: boolean;
   onOpen: (item: FavoriteItem) => void;
   onRemove: (item: FavoriteItem) => void;
 }) {
@@ -52,7 +51,7 @@ export function FavoritesPage({ items, showTeams, onOpen, onRemove, renderFileIc
   const itemTitle = (item: FavoriteItem) => item.kind === "task" ? taskTitle(item) : item.kind === "file" ? mock.text(item.label ?? "") : (item.label || (en ? "(No text)" : "（无文字内容）"));
   const needle = query.trim().toLowerCase();
   // Search covers what a row shows: its title, its task's name and number, and its team.
-  const matches = (item: FavoriteItem) => !needle || [itemTitle(item), taskTitle(item), item.taskNumber === undefined ? "" : `#${item.taskNumber}`, item.teamName ?? ""].some(text => text.toLowerCase().includes(needle));
+  const matches = (item: FavoriteItem) => !needle || [itemTitle(item), taskTitle(item), item.taskNumber === undefined ? "" : `#${item.taskNumber}`, item.teamName ?? "", item.teamName ? mockTeamName(locale, item.teamId, item.teamName) : ""].some(text => text.toLowerCase().includes(needle));
   const visible = items.filter(item => (tab === "all" || item.kind === tab) && matches(item));
   const emptyTitle = tab === "all" ? (en ? "No favorites yet" : "还没有收藏")
     : en ? `No favorite ${tabLabel(tab).toLowerCase()}` : `还没有收藏的${tabLabel(tab)}`;
@@ -77,7 +76,8 @@ export function FavoritesPage({ items, showTeams, onOpen, onRemove, renderFileIc
           {visible.map(item => {
             const Icon = kindIcons[item.kind];
             const title = itemTitle(item);
-            const context = [item.kind === "task" ? (item.taskNumber === undefined ? "" : `#${item.taskNumber}`) : taskLine(item), showTeams ? item.teamName : ""].filter(Boolean).join(" · ");
+            const context = item.kind === "task" ? (item.taskNumber === undefined ? "" : `#${item.taskNumber}`) : taskLine(item);
+            const teamName = item.teamName ? mockTeamName(locale, item.teamId, item.teamName) : "";
             const saved = formatRelativeDateTime(item.createdAt, locale, now);
             return <li className="favorites-item" data-kind={item.kind} key={item.key}>
               <button className="favorites-item-open" onClick={() => onOpen(item)} type="button">
@@ -86,7 +86,11 @@ export function FavoritesPage({ items, showTeams, onOpen, onRemove, renderFileIc
                   <span className="favorites-item-title">{title}</span>
                   {context && <span className="favorites-item-context">{context}</span>}
                 </span>
-                {saved && <time className="favorites-item-time" dateTime={new Date(item.createdAt).toISOString()} title={saved.full}>{saved.label}</time>}
+                <span className="favorites-item-meta">
+                  {saved && <time dateTime={new Date(item.createdAt).toISOString()} title={saved.full}>{saved.label}</time>}
+                  {/* The team, marked as the inbox marks it: favorites come from every team. */}
+                  {teamName && <span className="favorites-item-team" title={teamName}><Users aria-hidden="true" /><span>{teamName}</span></span>}
+                </span>
               </button>
               <button aria-label={en ? `Remove from favorites: ${title}` : `取消收藏：${title}`} className="favorites-item-remove" onClick={() => onRemove(item)} title={en ? "Remove from favorites" : "取消收藏"} type="button"><Bookmark aria-hidden="true" size={15} /></button>
             </li>;
