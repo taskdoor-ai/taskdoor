@@ -164,16 +164,24 @@
 .task-discussion-likers-popover > p { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.6; }
 
 @media (hover: hover) and (pointer: fine) {
-  .task-discussion-hover-menu, .task-discussion-like[data-count="0"]:not([aria-pressed="true"]) { opacity: 0; pointer-events: none; }
-  .task-discussion-feed-message:hover .task-discussion-hover-menu,
-  .task-discussion-feed-message:focus-within .task-discussion-hover-menu,
-  .task-discussion-hover-menu[data-popup-open],
+  .task-discussion-like[data-count="0"]:not([aria-pressed="true"]) { opacity: 0; pointer-events: none; }
   .task-discussion-feed-message:hover .task-discussion-like,
   .task-discussion-feed-message:focus-within .task-discussion-like { opacity: 1; pointer-events: auto; }
 }
-/* Without hover the trigger stays out of sight; a long press on the message opens the same menu from here. */
+
+/* Pin and favorite: icons at the top right that appear on hover (or a long press without hover)
+   and stay once on, where clicking again takes them off. Pin is offered only to those who may pin. */
+.task-discussion-hover-action { display: inline-grid; width: 28px; height: 28px; flex: 0 0 auto; place-items: center; padding: 0; border: 0; border-radius: 5px; background: transparent; color: var(--ad-ink-tertiary); cursor: pointer; }
+.task-discussion-hover-action:hover { background: var(--ad-surface-subtle); color: var(--ad-ink); }
+.task-discussion-hover-action:not([data-active]) { opacity: 0; pointer-events: none; }
+.task-discussion-feed-message:is(:hover, :focus-within, [data-revealed]) .task-discussion-hover-action { opacity: 1; pointer-events: auto; }
+.task-discussion-pin-toggle[data-active] { color: var(--ad-route-ink); }
+.task-discussion-pin-toggle[data-active] > svg { fill: currentColor; }
+.task-discussion-favorite-toggle[data-active] { color: var(--ad-favorite); }
+.task-discussion-favorite-toggle[data-active] > svg { fill: currentColor; }
 @media (hover: none), (pointer: coarse) {
-  .task-discussion-feed-menu-trigger.task-discussion-hover-menu { position: absolute; top: 0; right: 0; width: 28px; height: 28px; opacity: 0; pointer-events: none; }
+  .task-discussion-feed-message:not([data-revealed]):is(:hover, :focus-within) .task-discussion-hover-action:not([data-active]) { opacity: 0; pointer-events: none; }
+  .task-discussion-hover-action { width: 36px; height: 36px; }
 }
 
 /* The favorite star, the same everywhere: outlined until saved, then filled. */
