@@ -78,3 +78,8 @@
 
 .discussion-composer-attachment-name { display: block; min-width: 0; width: 100%; padding: 0; border: 0; border-radius: 2px; background: transparent; color: inherit; text-align: center; }
 .discussion-composer-attachment-name:hover { color: var(--ad-route); text-decoration: underline; }
+
+/* A participant's discussion notifications: a quiet bell after @ and attachments; it rings once they follow everything. */
+.discussion-composer-tools > button.discussion-notification-toggle[data-all] { color: var(--ad-route-ink); }
+.discussion-notification-menu { min-width: 200px; max-width: min(280px, calc(100vw - 24px)); }
+.discussion-notification-note { margin: 4px 0 0; padding: 6px 8px 4px; border-top: 1px solid var(--ad-border-soft); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.6; }

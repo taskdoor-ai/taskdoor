@@ -10,7 +10,7 @@ export { isNotificationReadTestMode } from "@/ai/mock/data/notificationReadScena
 
 export type WorkspaceNotification = {
   id: string;
-  kind: "invitation" | "member-joined" | "mention" | "reply" | "like" | "handoff";
+  kind: "invitation" | "member-joined" | "mention" | "reply" | "discussion" | "like" | "handoff";
   content: string;
   excerpt?: string;
   teamId?: string;
@@ -28,6 +28,7 @@ export const notificationTypeLabels: Record<WorkspaceNotification["kind"], strin
   "member-joined": "成员加入",
   mention: "讨论提及",
   reply: "讨论回复",
+  discussion: "新讨论",
   like: "讨论赞",
 };
 

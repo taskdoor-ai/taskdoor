@@ -53,7 +53,8 @@ export type CollaborationNotification = {
   recipientId: string;
   messageId: string;
   actor: string;
-  reason: "reply" | "mention";
+  /** "discussion": a new message for the owner, or a participant who chose to receive the whole discussion. */
+  reason: "reply" | "mention" | "discussion";
   createdAt: string;
 };
 export type CollaborationSnapshot = {
@@ -171,7 +172,7 @@ function parseThread(value: unknown): FileDiscussionThread {
 }
 function parseNotification(value: unknown): CollaborationNotification {
   requireValid(isRecord(value) && isId(value.id) && isId(value.recipientId) && isId(value.messageId) && isId(value.actor)
-    && (value.reason === "reply" || value.reason === "mention") && isTime(value.createdAt), "本地通知无效");
+    && (value.reason === "reply" || value.reason === "mention" || value.reason === "discussion") && isTime(value.createdAt), "本地通知无效");
   return { id: value.id, recipientId: value.recipientId, messageId: value.messageId, actor: value.actor, reason: value.reason, createdAt: value.createdAt };
 }
 function parseSnapshot(value: unknown): CollaborationSnapshot {
@@ -294,10 +295,10 @@ function requireBody(message: CollaborationMessage): void {
 export function createDiscussionNotification(message: CollaborationMessage, recipientId: string, reason: CollaborationNotification["reason"]): CollaborationNotification {
   return { id: `local:${encodeURIComponent(message.id)}:${encodeURIComponent(recipientId)}`, recipientId, messageId: message.id, actor: message.author, reason, createdAt: message.createdAt ?? new Date().toISOString() };
 }
-function makeNotifications(context: readonly CollaborationMessage[], message: CollaborationMessage, people: readonly CollaborationPerson[]): CollaborationNotification[] {
+function makeNotifications(context: readonly CollaborationMessage[], message: CollaborationMessage, people: readonly CollaborationPerson[], followers: readonly string[] = []): CollaborationNotification[] {
   const byId = new Map(people.map(person => [person.id, person]));
   const ownIds = new Set(people.filter(person => person.name === message.author || person.id === message.author).map(person => person.id));
-  const recipients = new Map<string, "reply" | "mention">();
+  const recipients = new Map<string, CollaborationNotification["reason"]>();
   const target = message.replyToActivityId ? context.find(item => item.id === message.replyToActivityId) : undefined;
   const replyAuthor = target?.author ?? (message.quote?.messageId === message.replyToActivityId ? message.quote?.author : undefined);
   if (replyAuthor && replyAuthor !== message.author) {
@@ -306,6 +307,10 @@ function makeNotifications(context: readonly CollaborationMessage[], message: Co
   }
   for (const id of message.mentionedPrincipalIds ?? []) {
     if (byId.has(id) && !ownIds.has(id) && !recipients.has(id)) recipients.set(id, "mention");
+  }
+  // A reply or an @ stays as it is; everyone else following the whole discussion hears of the new message.
+  for (const id of followers) {
+    if (byId.has(id) && !ownIds.has(id) && !recipients.has(id)) recipients.set(id, "discussion");
   }
   return [...recipients].map(([recipientId, reason]) => createDiscussionNotification(message, recipientId, reason));
 }
@@ -346,6 +351,8 @@ export function postCollaborationMessage(snapshot: CollaborationSnapshot, input:
   thread?: FileDiscussionThread;
   visiblePeople?: readonly CollaborationPerson[];
   contextMessages?: readonly CollaborationMessage[];
+  /** Who receives every new message: the owner, and participants who chose the whole discussion. */
+  discussionFollowers?: readonly string[];
 }): CollaborationSnapshot {
   if (snapshot.messages.some(item => item.id === input.message.id)) return snapshot;
   const message = parseMessage(input.message);
@@ -376,7 +383,7 @@ export function postCollaborationMessage(snapshot: CollaborationSnapshot, input:
     }
   }
   if (message.fileThreadId && !threads.some(item => item.id === message.fileThreadId)) throw new Error("文件讨论不存在。");
-  return changed(snapshot, { files, messages: [...snapshot.messages, message], threads, notifications: [...snapshot.notifications, ...makeNotifications(context, message, input.visiblePeople ?? [])] });
+  return changed(snapshot, { files, messages: [...snapshot.messages, message], threads, notifications: [...snapshot.notifications, ...makeNotifications(context, message, input.visiblePeople ?? [], input.discussionFollowers)] });
 }
 function authoredMessage(snapshot: CollaborationSnapshot, message: CollaborationMessage, actor: string): CollaborationMessage {
   const current = parseMessage(snapshot.messages.find(item => item.id === message.id) ?? message);

@@ -29,6 +29,8 @@ import { DiscussionTaskReferenceMenu } from "@/features/tasks/discussion/compone
 import { $restoreDiscussionTaskReferences, DiscussionTaskReferenceNode, DiscussionTaskReferenceTasks } from "@/features/tasks/discussion/components/DiscussionTaskReferenceNode";
 
 export type DiscussionComposerProps = {
+  /** Extra controls at the end of the tool row, after @ and attachments. */
+  toolsAddon?: ReactNode;
   actionLabel?: string;
   autoFocus?: boolean;
   compact?: boolean;
@@ -159,7 +161,7 @@ export function DiscussionComposer(props: DiscussionComposerProps) {
   return <ComposerSessionView key={props.draftKey ?? "unkeyed-discussion"} {...props} />;
 }
 
-function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onSubmit, onPreviewAttachment, people, referenceTasks, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, draftInsertion, disabled = false }: DiscussionComposerProps) {
+function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compact = false, allowQuote = true, showShortcutHint = true, onCancel, onSubmit, onPreviewAttachment, people, referenceTasks, files, placeholder = "写下评论，使用 @ 提及协作者…", draftKey, initialValue, draftInsertion, disabled = false, toolsAddon }: DiscussionComposerProps) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
   const members = usePersonOptions(people);
@@ -408,6 +410,7 @@ function ComposerSessionView({ actionLabel = "发布", autoFocus = false, compac
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+        {toolsAddon}
       </div>
       <span className="discussion-composer-actions">{shortcutHintVisible && <span className="discussion-composer-hint" id={hintId}>Enter ↵ · ⌘/Ctrl+Enter {actionLabel}</span>}{onCancel && <button className="discussion-composer-cancel" disabled={unavailable} onClick={onCancel} type="button">{d('cancel')}</button>}<button aria-label={actionLabel} className="discussion-composer-submit" disabled={!canSubmit} onClick={() => { void submit(); }} type="button"><span>{submitting ? d('posting') : actionLabel}</span>{submitting ? <LoaderCircle aria-hidden="true" className="discussion-composer-spinner" size={14} /> : <Send aria-hidden="true" size={14} />}</button></span>
     </footer>
