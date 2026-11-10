@@ -2,7 +2,7 @@ import { formatFileSize } from "@/shared/lib/file-size";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
-import { ChevronDown, ChevronRight, MoreHorizontal, Pencil, Star, Trash2, MoveRight } from "lucide-react";
+import { ChevronDown, ChevronRight, MoreHorizontal, Pencil, Bookmark, Trash2, MoveRight } from "lucide-react";
 import { useFileFavorite } from "@/features/tasks/files/lib/useFileFavorite";
 import React from "react";
 import { Button as AriaButton, Tree, TreeItem, TreeItemContent } from "react-aria-components";
@@ -49,7 +49,7 @@ export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex, can
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end" className="task-workspace-row-menu" sideOffset={4} onClick={(event) => event.stopPropagation()}>
       <DropdownMenuGroup>
-        {favorite.available && <DropdownMenuItem onClick={favorite.toggle}><Star aria-hidden="true" size={15} />{favorite.label}</DropdownMenuItem>}
+        {favorite.available && <DropdownMenuItem onClick={favorite.toggle}><Bookmark aria-hidden="true" size={15} />{favorite.label}</DropdownMenuItem>}
         <DropdownMenuItem onClick={() => onAction({ type: "rename", nodeId: node.id })}><Pencil aria-hidden="true" size={15} />{d('rename')}</DropdownMenuItem>
         <DropdownMenuItem onClick={() => onAction({ type: "move", nodeId: node.id })}><MoveRight aria-hidden="true" size={15} />{ui("移动到")}</DropdownMenuItem>
         {canDelete && <DropdownMenuItem onClick={() => onAction({ type: "delete", nodeId: node.id })} variant="destructive"><Trash2 aria-hidden="true" size={15} />{ui("删除")}</DropdownMenuItem>}

@@ -7,7 +7,7 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { formatDisplayDateTime, formatLegacyDateLabel } from "@/shared/lib/date-time";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
-import { ArrowLeft, ChevronRight, Download, Eye, EyeOff, FolderOpen, FolderPlus, GripVertical, SquareDashedMousePointer, History, MessageCircle, MoreHorizontal, MoveRight, PanelLeftClose, PanelLeftOpen, Pencil, Plus, Save, Search, Star, Upload, X } from "lucide-react";
+import { ArrowLeft, ChevronRight, Download, Eye, EyeOff, FolderOpen, FolderPlus, GripVertical, SquareDashedMousePointer, History, MessageCircle, MoreHorizontal, MoveRight, PanelLeftClose, PanelLeftOpen, Pencil, Plus, Save, Search, Bookmark, Upload, X } from "lucide-react";
 import { useFileFavorite } from "@/features/tasks/files/lib/useFileFavorite";
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -479,7 +479,7 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
                 {editable && currentContent && !loadError && <Button aria-label={d('editFile')} className="task-file-action-button" onClick={() => { setAnnotationSource(null); setAnnotationMode(false); setEditingFileId(selected.id); setSelection(null); setError(""); }} size="sm" variant="ghost"><Pencil size={16} />{dirty ? ui("继续编辑") : d('edit')}</Button>}
               </>}
             </>}
-            {!isTransientPreview && selectedFavorite.available && <Button aria-label={selectedFavorite.label} className="task-file-favorite-toggle" data-active={selectedFavorite.active || undefined} onClick={selectedFavorite.toggle} size="icon-sm" title={selectedFavorite.label} variant="ghost"><Star aria-hidden="true" /></Button>}
+            {!isTransientPreview && selectedFavorite.available && <Button aria-label={selectedFavorite.label} className="task-file-favorite-toggle" data-active={selectedFavorite.active || undefined} onClick={selectedFavorite.toggle} size="icon-sm" title={selectedFavorite.label} variant="ghost"><Bookmark aria-hidden="true" /></Button>}
             {viewerFile && <TaskFileDownload file={viewerFile} onError={setError} />}
             {selected && (!isTransientPreview || ownAnnotations.length > 0) && <DropdownMenu><DropdownMenuTrigger aria-label={ui("更多文件操作")} className="task-file-toolbar-more"><MoreHorizontal size={17} /></DropdownMenuTrigger><DropdownMenuContent align="end" className="task-file-toolbar-menu"><DropdownMenuGroup>
               {selected.kind === "file" && lastUpdate?.updatedAt.trim() && <DropdownMenuLabel aria-label={ui("最近更新")} className="task-file-menu-meta">

@@ -1,5 +1,5 @@
 import { useState, type KeyboardEvent, type ReactNode } from "react";
-import { FileText, MessageSquareText, SquareCheckBig, Star } from "lucide-react";
+import { FileText, MessageSquareText, SquareCheckBig, Bookmark } from "lucide-react";
 import { useMockText } from "@/ai/task-display";
 import type { FavoriteKind, FavoriteRecord } from "@/features/me/lib/favorites";
 import { useI18n } from "@/shared/i18n/I18nProvider";
@@ -75,11 +75,11 @@ export function FavoritesPage({ items, showTeams, onOpen, onRemove, renderFileIc
                 </span>
                 {saved && <time className="favorites-item-time" dateTime={new Date(item.createdAt).toISOString()} title={saved.full}>{saved.label}</time>}
               </button>
-              <button aria-label={en ? `Remove from favorites: ${title}` : `取消收藏：${title}`} className="favorites-item-remove" onClick={() => onRemove(item)} title={en ? "Remove from favorites" : "取消收藏"} type="button"><Star aria-hidden="true" size={15} /></button>
+              <button aria-label={en ? `Remove from favorites: ${title}` : `取消收藏：${title}`} className="favorites-item-remove" onClick={() => onRemove(item)} title={en ? "Remove from favorites" : "取消收藏"} type="button"><Bookmark aria-hidden="true" size={15} /></button>
             </li>;
           })}
         </ul> : <div className="favorites-empty">
-          <Star aria-hidden="true" size={20} />
+          <Bookmark aria-hidden="true" size={20} />
           <strong>{emptyTitle}</strong>
           <p>{en ? "Choose “Add to favorites” on a task, a discussion message or a file to keep it here." : "在任务、讨论或文件上选择「收藏」，它会出现在这里。"}</p>
         </div>}

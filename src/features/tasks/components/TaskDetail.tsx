@@ -20,7 +20,7 @@ import { MockTaskProvider, useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { Tooltip } from "@base-ui/react/tooltip";
-import { ArrowLeft, ChevronRight, Star, X } from "lucide-react";
+import { ArrowLeft, ChevronRight, Bookmark, X } from "lucide-react";
 import { useFavorite } from "@/features/me/lib/favorites";
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { type TaskActivityMock, type TaskDetailContent, type TaskFileNode, type TaskIconName, type TaskIconTone } from "@/shared/model/task-model";
@@ -789,7 +789,7 @@ export function TaskDetail({
                     </Tooltip.Positioner>
                   </Tooltip.Portal>
                 </Tooltip.Root>}
-                {taskFavorite.available && <Button aria-label={favoriteLabel} className="task-favorite-toggle" data-active={taskFavorite.active || undefined} onClick={() => { if (taskFavorite.toggle() === null) toast.error(locale === "en" ? "Could not update favorites. Please try again." : "收藏未能更新，请重试。"); }} size="icon-sm" title={favoriteLabel} type="button" variant="ghost"><Star aria-hidden="true" /></Button>}
+                {taskFavorite.available && <Button aria-label={favoriteLabel} className="task-favorite-toggle" data-active={taskFavorite.active || undefined} onClick={() => { if (taskFavorite.toggle() === null) toast.error(locale === "en" ? "Could not update favorites. Please try again." : "收藏未能更新，请重试。"); }} size="icon-sm" title={favoriteLabel} type="button" variant="ghost"><Bookmark aria-hidden="true" /></Button>}
                 <AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} />
               </div>
             </div>

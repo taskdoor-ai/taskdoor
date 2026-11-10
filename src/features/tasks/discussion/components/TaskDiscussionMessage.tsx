@@ -1,5 +1,5 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
-import { ListTree, MessageSquareText, Pin, Plus, Star, ThumbsUp } from "lucide-react";
+import { ListTree, MessageSquareText, Pin, Plus, Bookmark, ThumbsUp } from "lucide-react";
 import { useFavorite } from "@/features/me/lib/favorites";
 import type { DiscussionLike } from "@/features/tasks/discussion/lib/discussion-likes";
 import { toast } from "@/shared/ui/toast";
@@ -174,7 +174,7 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
         {menuAvailable && <div className="task-discussion-feed-header-actions">
           {onConnectAi && <span className="task-discussion-hover-ai"><AiConnectionButton compact contextLabel={locale === "en" ? "this discussion" : "这条讨论"} onConnect={(trigger, shortcut) => onConnectAi({ kind: message.replyToActivityId ? "reply" : "discussion", activityId: message.id, ...(message.fileThreadId ? { fileThreadId: message.fileThreadId } : {}) }, trigger, shortcut)} /></span>}
           {onTogglePin && <button aria-label={pinned ? (en ? "Unpin" : "取消置顶") : (en ? "Pin" : "置顶")} aria-pressed={pinned} className="task-discussion-hover-action task-discussion-pin-toggle" data-active={pinned || undefined} onClick={onTogglePin} title={pinned ? (en ? "Unpin" : "取消置顶") : (en ? "Pin" : "置顶")} type="button"><Pin aria-hidden="true" size={15} /></button>}
-          {favorite.available && <button aria-label={favorite.active ? (en ? "Remove from favorites" : "取消收藏") : (en ? "Add to favorites" : "收藏")} aria-pressed={favorite.active} className="task-discussion-hover-action task-discussion-favorite-toggle" data-active={favorite.active || undefined} onClick={toggleFavorite} title={favorite.active ? (en ? "Remove from favorites" : "取消收藏") : (en ? "Add to favorites" : "收藏")} type="button"><Star aria-hidden="true" size={15} /></button>}
+          {favorite.available && <button aria-label={favorite.active ? (en ? "Remove from favorites" : "取消收藏") : (en ? "Add to favorites" : "收藏")} aria-pressed={favorite.active} className="task-discussion-hover-action task-discussion-favorite-toggle" data-active={favorite.active || undefined} onClick={toggleFavorite} title={favorite.active ? (en ? "Remove from favorites" : "取消收藏") : (en ? "Add to favorites" : "收藏")} type="button"><Bookmark aria-hidden="true" size={15} /></button>}
         </div>}
       </header>
       {message.message.trim() && <div className={`task-discussion-feed-body${pinned && !bodyExpanded ? " is-folded" : ""}${pinned && !bodyExpanded && bodyOverflows ? " has-more" : ""}`} ref={bodyRef}><DiscussionMarkdown text={reading.text} mentionedPrincipalIds={message.mentionedPrincipalIds} mentionsAllTaskMembers={message.mentionsAllTaskMembers} referenceTasks={referenceTasks} onOpenReferenceTask={onOpenReferenceTask} /></div>}

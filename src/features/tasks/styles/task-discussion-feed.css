@@ -185,7 +185,7 @@
   .task-discussion-hover-action { width: 36px; height: 36px; }
 }
 
-/* The favorite star, the same everywhere: outlined until saved, then filled. */
+/* The favorite bookmark, the same everywhere: outlined until saved, then filled. */
 .task-favorite-toggle[data-slot="button"] { color: color-mix(in srgb, var(--ad-ink-tertiary) 60%, transparent); }
 .task-favorite-toggle[data-slot="button"]:is(:hover, :focus-visible) { color: var(--ad-ink-secondary); }
 .task-favorite-toggle[data-active], .task-file-favorite-toggle[data-active] { color: var(--ad-favorite); }
