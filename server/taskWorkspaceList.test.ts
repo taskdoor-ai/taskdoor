@@ -4,6 +4,7 @@ import { register } from "node:module";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { I18nProvider } from "../src/shared/i18n/I18nProvider.tsx";
 import type { TaskNode } from "../src/shared/model/task-model.ts";
 import type { TaskListProjection } from "../src/features/tasks/lib/task-list-projection.ts";
 import { clearedTaskListConditions, type TaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
@@ -41,11 +42,34 @@ const baseProps = {
   scopeCounts: { all: 4, owned: 2, participating: 1 },
 };
 
-async function renderList(patch: Partial<typeof baseProps> = {}) {
+async function renderList(patch: Partial<typeof baseProps> = {}, initialLocale: "zh-CN" | "en" = "zh-CN") {
   assert.ok(existsSync(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url)), "应提供两栏工作区的紧凑任务列表");
   const { TaskWorkspaceList } = await import(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url).href);
-  return renderToStaticMarkup(createElement(TaskWorkspaceList, { ...baseProps, ...patch }));
+  const list = createElement(TaskWorkspaceList, { ...baseProps, ...patch });
+  return renderToStaticMarkup(createElement(I18nProvider, { initialLocale, children: list }));
 }
+
+test("层级与平铺在负责人前展示一致的截止日期或无日期提示", async () => {
+  const items = [
+    task("scheduled", { plannedEndOn: "2099-09-10", dueAt: "9 月 1 日", status: "已完成" }),
+    task("legacy", { dueAt: "9 月 12 日", status: "已取消" }),
+    task("unscheduled"),
+  ];
+  const props = { projection: { ...projection, allTasks: items, visibleTasks: items } };
+  for (const listView of ["flat", "hierarchy"] as const) {
+    const patch = { ...props, filters: { ...baseProps.filters, listView } };
+    const html = await renderList(patch, "zh-CN");
+    assert.match(html, /<time[^>]*dateTime="2099-09-10"[^>]*>2099年9月10日<\/time>/);
+    assert.match(html, /class="task-list-row-deadline"[^>]*>9月12日<\/span>/);
+    assert.match(html, /class="task-list-row-deadline"[^>]*>不设截止时间<\/span>/);
+    assert.match(html, /id="task-row-description-unscheduled"[^>]*>[^<]*不设截止时间/);
+    assert.match(html, /class="task-list-row-deadline"[\s\S]*?class="task-list-row-meta"/);
+    assert.doesNotMatch(html, />9月1日</);
+    const english = await renderList(patch, "en");
+    assert.match(english, />Due Sep 10, 2099<\/time>/);
+    assert.match(english, /class="task-list-row-deadline"[^>]*>No due date<\/span>/);
+  }
+});
 
 test("明确筛选本人负责时省略重复负责人，其余条件显示负责人", async () => {
   const html = await renderList({ filters: { ...baseProps.filters, ownerIsMe: true } });

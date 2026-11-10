@@ -1,5 +1,19 @@
 # PRD 来源映射
 
+## PRD-0399 层级视图展示截止日期（2026-11-11）
+
+用户明确授权单独提交层级视图的截止日期展示：与平铺列表共用负责人前的日期文字区域，无日期显示“不设截止时间”，窄屏沿标题下方的日期布局。规则归[任务列表](modules/06-task-list.md#31-查找任务)，[交互基线](../task-design-kit/11-task-workspace-detail-interaction-baseline.md#31-列表行)引用同一规则。日期格式继续沿[全局日期规则](modules/02-internationalization.md#34-日期与时区)，不改变任务值或人员关系。
+
+本次从Demo已发布基线[`23563009`](https://github.com/taskdoor-ai/taskdoor/commit/23563009)隔离交付，仅调整[任务行](../../src/features/tasks/components/TaskWorkspaceList.tsx)的层级日期计算与文字渲染条件，让两种视图共用`task-list-row-deadline`及同义无障碍说明；[日期逻辑](../../src/features/tasks/lib/task-list-presentation.ts)和[日期样式](../../src/features/tasks/styles/task-workspace-list.css)沿已发布实现。直属子任务完成数、展开／收起、负责人及原任务打开行为保持。
+
+交付边界备注：主工作区未发布的PRD-0391等日历图标、逾期配色与Tooltip规则不属于本次交付，不整份复制主工作区模块或生成页；创建任务过程提示、引导、对话式交互及AI建议子任务区域仍排除。这里只记录排除范围，不将这些本地实现写成已交付能力。
+
+隔离工作树的日期定向用例先失败后通过，覆盖两视图、中英文、已完成、已取消、历史日期及无日期说明；应用类型检查与结构门通过，无新增例外。当前5191完整App在IAB实测1280×720层级视图，展开父任务后父／子日期起点均为x998、负责人x1119，日期文字可见并保留原完整日期提示；390×844日期沿既有样式位于标题下一行，页面宽度仍为390，无横向溢出，恢复后未修改任务数据。Chrome连接曾超时，实际页面证据来自IAB；开发服务因工作树外字体访问限制使用回退字体，不认领完整字体或视觉验收。`/tmp/hierarchy-deadline-delivery-desktop-2026-11-11.png`仅作临时审计图，不登记为正式PRD截图。
+
+正式最新dev已完整读取README与AGENTS，固定来源为[`41416d2d`](https://github.com/nocoly/taskdoor/commit/41416d2d2d375d4b60829d5fc415d6ca236d2df1)：[任务行](https://github.com/nocoly/taskdoor/blob/41416d2d2d375d4b60829d5fc415d6ca236d2df1/apps/web/src/features/tasks/components/TaskWorkspaceList.tsx#L230)的日期计算、渲染及朗读排除层级；[日期区域样式](https://github.com/nocoly/taskdoor/blob/41416d2d2d375d4b60829d5fc415d6ca236d2df1/apps/web/src/features/tasks/styles/task-workspace-list.css#L2580)可复用。正式仅有标题的定位祖先仍须保持未知字段保护，未知日期不能解释为已明确无日期。
+
+PRD构建成功生成25个模块，生成页含PRD-0399与本项日期规则、模块索引同步；本批差异格式检查通过。7项旧任务列表截图保持`pending`并补注日期区域的失效原因，未新增正式截图或发布版本。不沿用主工作区含未发布图标规则的页面验证作为本次交付证据；未运行全量测试或双重审查。
+
 ## PRD-0379 讨论输入提示按需显示（2026-11-10）
 
 用户明确要求以正式项目 Issue 跟进两类提示的显示时机，规则唯一归属[讨论输入提示](modules/10-discussion-notifications-activity.md#讨论输入提示)。[讨论输入组件](../../src/features/tasks/discussion/components/DiscussionComposer.tsx)以 `showShortcutHint && Boolean(session.draft.body.trim())` 同时控制快捷键提示及 `aria-describedby`；[输入样式](../../src/features/tasks/styles/discussion-composer.css)让占位默认隐藏，编辑区 `:focus-within` 时显示。辅助技术的输入名称、发布按钮条件、仅附件发布与输入法防误发沿原实现保留。

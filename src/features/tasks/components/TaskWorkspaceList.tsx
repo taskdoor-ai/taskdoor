@@ -113,7 +113,7 @@ const MemoTaskWorkspaceRow = memo(function TaskWorkspaceRow({ task, owner, serie
   const timeField = sort === "created" ? t('list.createdAt') : t('list.updatedAt');
   const timestampValue = sort === "created" ? task.createdAt ?? "" : task.updatedAt;
   const timeLabel = taskUpdatedLabel(timestampValue, now, now, locale).label;
-  const deadline = tree ? null : taskDeadlineDisplay(task, now, locale);
+  const deadline = taskDeadlineDisplay(task, now, locale);
   const DeadlineElement = deadline?.dateTime ? "time" : "span";
   const deadlineLabel = deadline ? (locale === "en" ? `Due ${deadline.label}` : deadline.label) : detailCopy("noDueDate");
   const deadlineDescription = deadline ? (locale === "en" ? `Due date: ${deadline.full}` : `截止时间：${deadline.full}`) : deadlineLabel;
@@ -126,10 +126,10 @@ const MemoTaskWorkspaceRow = memo(function TaskWorkspaceRow({ task, owner, serie
       <button aria-label={tree?.context ? `${task.name} · ${contextLabel}` : t('list.open', { name: task.name })} aria-describedby={`task-row-description-${task.id}`} className="task-list-row-open" data-task-id={task.id} disabled={tree?.context} onClick={() => actions.onTaskSelect(task)} type="button">
         <span className="task-list-row-name-with-subtasks"><TaskRowTitle title={task.name} />{tree && subtaskCompletion && <TaskSubtaskCompletionBadge total={subtaskCompletion.total} completed={subtaskCompletion.completed} />}</span>
         {tree?.pathUnavailable && <span aria-label={locale === "en" ? "Parent path unavailable" : "上级路径不可用"} className="task-tree-unavailable" role="img"><Link2Off aria-hidden="true" size={12} /></span>}
-        {!tree && <DeadlineElement aria-hidden="true" className="task-list-row-deadline" dateTime={deadline?.dateTime} title={deadlineDescription}>
+        <DeadlineElement aria-hidden="true" className="task-list-row-deadline" dateTime={deadline?.dateTime} title={deadlineDescription}>
           {deadlineLabel}
-        </DeadlineElement>}
-        <span className="sr-only" id={`task-row-description-${task.id}`}>{t('list.statusLabel', { status: statusText(task.status) })}{showOwner ? ` · ${t('list.ownerLabel', { name: ownerName })}` : ""}{!tree ? ` · ${deadlineDescription}` : ""}{` · ${timeField}: ${timeLabel}`}</span>
+        </DeadlineElement>
+        <span className="sr-only" id={`task-row-description-${task.id}`}>{t('list.statusLabel', { status: statusText(task.status) })}{showOwner ? ` · ${t('list.ownerLabel', { name: ownerName })}` : ""}{` · ${deadlineDescription}`}{` · ${timeField}: ${timeLabel}`}</span>
       </button>
     </div>
     {showOwner && !tree?.context && <div className="task-list-row-meta">
