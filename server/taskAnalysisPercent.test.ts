@@ -19,3 +19,16 @@ test('分析校验拒绝分档错误、标准过期和无依据的百分比',()=
   const invalid=output();invalid.result.criterionAssessments[0].percent=60;
   assert.ok(validateOutput('agentdoor-task-status-analyzer',invalid,input).length);
 });
+
+test('当前标准已有达成内容不能同时评零，部分成果与完全未形成结果分别表达',()=>{
+  const current=output() as any;
+  current.ruleVersion='TASK-ANALYSIS-2026-11-10-v15';
+  Object.assign(current.result.progress,{totalEwdMinutes:100,completedEwdMinutes:71.2,comparison:null});
+  const assessment=current.result.criterionAssessments[0];
+  assessment.percent=0;
+  assert.ok(validateOutput('agentdoor-task-status-analyzer',current,input).some(error=>error.includes('已达成内容与零进度矛盾')));
+  assessment.percent=25;
+  assert.deepEqual(validateOutput('agentdoor-task-status-analyzer',current,input),[]);
+  assessment.percent=0;assessment.completedContent=[];
+  assert.deepEqual(validateOutput('agentdoor-task-status-analyzer',current,input),[]);
+});

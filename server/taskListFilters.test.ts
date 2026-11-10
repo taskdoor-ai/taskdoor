@@ -116,6 +116,14 @@ test("列表规范化保留可见人员条件，保留状态、标签、日期�
   assert.deepEqual(selected, before);
   assert.deepEqual(normalizeTaskWorkspaceFilters({ ...filters, completion: "done" }).statuses, ["已完成"]);
   assert.deepEqual(normalizeTaskWorkspaceFilters({ ...filters, completion: "open", statuses: [] }).statuses, []);
+  assert.deepEqual(normalizeTaskWorkspaceFilters({ ...filters, completion: "open" }).statuses, ["进行中"]);
+  const legacySelection = { ...selected, statuses: ["进行中", "已完成"] };
+  const singleStatus = normalizeTaskWorkspaceFilters(legacySelection);
+  assert.deepEqual(singleStatus.statuses, ["进行中"]);
+  assert.equal(taskMatchesListFilters(item, "发布", singleStatus, "alice", now), false);
+  assert.equal(taskMatchesListFilters({ ...item, status: "进行中" }, "发布", singleStatus, "alice", now), true);
+  assert.deepEqual(normalizeTaskWorkspaceFilters(singleStatus), singleStatus);
+  assert.deepEqual(legacySelection.statuses, ["进行中", "已完成"]);
 });
 
 test("初始化及切团队恢复全部，清除条件保留排序与独立搜索", () => {

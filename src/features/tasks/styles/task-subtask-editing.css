@@ -2,7 +2,7 @@
 .task-subtask-heading { flex-wrap: wrap; }
 .task-subtask-heading > .task-subtask-heading-actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--ad-space-2); margin-left: auto; }
 .task-subtask-create-trigger[data-slot="button"] { min-height: var(--ad-control-height-sm); padding-inline: var(--ad-space-2); border: 0; background: transparent; box-shadow: none; color: var(--ad-ink-secondary); font-size: var(--ad-text-label); font-weight: 500; }
-.task-subtask-create-trigger[data-slot="button"]:hover { background: transparent; color: var(--ad-button-primary-bg); }
+.task-subtask-create-trigger[data-slot="button"]:is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"]) { background: transparent; color: var(--ad-accent-ink); }
 .task-subtask-list-section .task-subtask-list-empty { row-gap: var(--ad-space-2); padding-block: var(--ad-space-6); }
 .task-subtask-list-section .task-subtask-list-empty > p { margin: 0; font-size: var(--ad-text-caption); line-height: 20px; }
 .discussion-subtask-draft-status { display: grid; min-width: 0; gap: var(--ad-space-2); padding-block: var(--ad-space-3); color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); line-height: 1.6; }
@@ -40,7 +40,7 @@
 .task-subtask-create-form .task-subtask-create-tags { display: inline-flex; min-width: 0; max-width: 100%; flex-wrap: wrap; align-items: center; gap: var(--ad-space-1); }
 .task-subtask-create-form .task-subtask-create-tags .tag-picker-trigger > span { display: inline; }
 .task-subtask-create-hint, .task-subtask-create-notice { margin: 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.7; overflow-wrap: anywhere; }
-.task-subtask-create-notice { margin-bottom: var(--ad-space-3); color: var(--ad-route-ink); }
+.task-subtask-create-notice { margin-bottom: var(--ad-space-3); color: var(--ad-ink-secondary); }
 .task-subtask-create-error { margin: 0; color: var(--ad-danger); font-size: var(--ad-text-caption); line-height: 1.7; overflow-wrap: anywhere; }
 .task-subtask-create-form .task-subtask-create-actions { display: flex; flex: 0 0 auto; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: var(--ad-space-2); margin-left: auto; }
 .task-subtask-create-form .task-subtask-create-actions [data-slot="button"] { min-height: var(--ad-control-height-sm); border-radius: var(--ad-radius-pill); font-size: var(--ad-text-label); }

@@ -221,58 +221,163 @@ A change cannot be considered complete when any of the following is true:
 
 ## 3. Color system
 
-### 2026-09-10 色系与控件更新
+> 2026-11-11 当前颜色、输入聚焦及视图选择规范。本文其他历史段落中的固定蓝色主动作、蓝色选中或输入光晕描述，以本节当前角色分工为准；不由颜色规范增加业务功能。
 
-用户要求按钮、Checkbox 和开关更年轻、减少深色重量。本次统一为冷白表面、蓝灰文字与边框、明亮蓝色主动作；主按钮的 hover / active 保持同一蓝色，不再压到深海军蓝。普通控件圆角统一为 10px，阴影降低不透明度。主按钮仍保留实色与白字，禁用态使用专用浅底灰字。
 
-Checkbox 使用浅蓝选中底与蓝色勾选标记；Switch 使用浅色轨道，开启时由蓝色圆点和位置同时表达状态。两者的尺寸、边界、标记、底色和焦点均通过 `src/shared/styles/tokens.css` 中的 `--ad-checkbox-*`、`--ad-switch-*` 与 `--ad-focus-*` 控制，页面仅控制布局。
+先判断颜色表达什么：业务状态、结果与危险使用**系统语义色**，当前主要动作与限定引用使用**个人强调色**，普通界面与位置选择使用**主题中性色**；AI连接按下表区分固定主题与个人色快捷入口，原内容保留本色。系统语义色随明暗主题适配，颜色含义不随个人偏好改变。
 
-shadcn / Tailwind 的 `--primary`、`--background`、`--muted`、`--border` 等映射到同一套 `--ad-*`，深色主题由应用现有 `data-theme` 驱动，退出独立灰黑默认色板。关键正文、按钮、提示正文含 hover 状态的文字对比度至少 4.5:1，选中标记与焦点至少 3:1；减弱动效偏好继续生效。
-
-### Foundation
-
-| Token | Value | Use |
+| 用色归属 | 场景 | 规则 |
 | --- | --- | --- |
-| `--ad-canvas` | `#FFFFFF` | Default light-theme page canvas. |
-| `--ad-surface` | `#FFFFFF` | Cards, drawers, menus, and prepared briefs. |
-| `--ad-surface-subtle` | `#F3F6FC` | Quiet grouped surfaces. |
-| `--ad-sidebar` | `#F7F9FD` | Quiet navigation surface in the light theme. |
-| `--ad-ink` | `#2E3A50` | Primary text. |
-| `--ad-ink-secondary` | `#53627A` | Supporting content. |
-| `--ad-ink-tertiary` | `#617089` | Metadata and placeholders; not for critical information. |
-| `--ad-border` | `#E0E6F0` | Hairline separation. |
+| 个人强调色 | 当前主要动作 | 页面或内容区的主要新增、邀请及实际创建、保存、发布；包括文件区“新建”、访问令牌页头部及空态“新建令牌”、团队成员“邀请成员”、标签“新建标签”。悬停、按下、文字与焦点一起保持可读。 |
+| 个人强调色 | 最终提交 | 子任务需求表单、讨论创建草稿的最终“创建”，以及输入框内真正发送回复的按钮，使用共享主按钮。取消、忽略、返回中性。 |
+| 常态中性，交互时个人强调色 | 展开创建的文字入口 | “添加子任务”“从讨论创建任务”仅在hover／focus-visible时使用可读个人强调文字色，常态不成为实色按钮。此例外不扩展到普通回复、复制等操作。 |
+| 个人强调文字色 | 正文可操作引用 | 输入中及已发布的成员@、任务引用，以及通知正文内可点击的附件引用，使用可读个人强调文字色`--ad-accent-ink`；不可用引用仍中性。通知附件名称接正文置于同一摘录块，不扩展到原讨论附件卡片、文件图标或封面。 |
+| 主题中性色 | 普通操作与讨论行“回复”入口 | 常态次级灰，悬停／键盘聚焦时加深，焦点可见。回复入口、复制、编辑、翻译、折叠、取消和返回保持辅助层级；按实际作用选择共享组件变体，不能因默认Button样式变成主操作。 |
+| 主题中性色 | 导航与位置选择 | Tab、视图、筛选、分页和普通菜单用文字深浅、轻底色及细线表达位置和选择，不跟随个人强调色；危险菜单项按危险语义处理。 |
+| 系统危险色 | 讨论行轻量“删除”入口 | 常态次级灰，悬停／键盘聚焦时使用系统危险色并保留可见焦点。已有删除确认中的最终删除按钮及菜单危险项沿共享危险变体，不使用个人强调色；本规则不新增确认步骤或改变删除与恢复行为。 |
+| 系统语义色 | 任务状态、风险与结果 | 进行中、已阻塞、已完成、已取消，以及逾期、错误、成功反馈和通知徽标，沿各自语义色。状态与进度仍由真实数据决定，不能用个人颜色代替。 |
+| 系统／业务配色 | 标签与图表 | 沿标签定义、业务分类与数据系列的既有配色，保留文字或图形说明；不因更换个人强调色统一重染。 |
+| 主题中性色 | 页面、侧栏与输入 | 主区表面与正文采用中性灰，图标可用对应控件的微冷灰；浅色侧栏及画布保护原蓝灰，深色单独去蓝调。普通输入焦点中性，错误态保留系统危险色。 |
+| 主题中性色 | 侧栏“连接AI”导航 | 沿当前主题同组导航文字与轻量反馈，无专属渐变或常驻边框。 |
+| 个人强调色轻渐变 | 任务与讨论的AI快捷入口 | 任务标题旁、普通讨论／回复及文件讨论的连接AI按钮使用同一轻渐变，保持辅助层级与明暗可读，工具Logo保留原图。 |
+| 固定AI主题 | 其它实际AI连接操作 | 全局AI连接、“在工具中打开”及文件标注等实际连接入口保留固定轻渐变；其中的Tab、工具选择、复制沿普通控件规则。 |
+| 内容本色 | 头像、Logo、文件与附件 | 保留头像、品牌、类型图标、封面及原内容本色。讨论附件名称常态次级文字，图片悬浮名称用主要文字，hover／focus保持中性。 |
 
-### Actions and routing
+同一操作区突出当前主要动作。控件按所执行的动作分配颜色：讨论行的“回复”用于展开输入，输入区的“回复／发布”才实际提交。用户把个人色选为红、绿或蓝，也不改变危险、成功和进行中各自的含义；文字与图形继续共同表达语义。
 
-| Token | Value | Use |
-| --- | --- | --- |
-| `--ad-route` | `#4B6EDF` | The single primary action and Routing Thread. |
-| `--ad-route-hover` | `#4263D0` | Primary hover. |
-| `--ad-route-active` | `#3D5DC4` | Primary pressed state. |
-| `--ad-route-soft` | `#EFF3FF` | Selected controls and quiet AI actions. |
-| `--ad-route-ink` | `#4763C5` | Text and checkmarks on route-soft. |
-| `--ad-focus` | `#5579E5` | Keyboard focus. |
+### 系统语义色基准
 
-### Semantic evidence
+以下为当前共享Token的明暗配色；“语义色／轻底”分别用于相应图形、标记与背景，承载文字时仍须满足下文的对比度要求。任务当前可选状态只有四种，历史兼容Token不代表新增产品状态。
 
-These colors support labels and left-edge markers; they do not fill large decorative cards.
-
-| Meaning | Strong | Soft | Required label |
+| 语义 | 浅色：语义色／轻底 | 深色：语义色／轻底 | Token |
 | --- | --- | --- | --- |
-| Fact / 已验证事实 | `#207B63` | `#EAF9F2` | “事实” |
-| Inference / 推断 | `#93620D` | `#FFF8E6` | “推断” |
-| Conflict / 冲突 | `#C13E61` | `#FFF0F4` | “冲突” |
-| Unknown / 未知 | `#53627A` | `#F3F6FC` | “未知” |
-| Accepted / 已接受 | `#207B63` | `#EAF9F2` | Check icon + “已接受” |
-| Blocked / 阻塞 | `#C13E61` | `#FFF0F4` | Stop icon + reason |
+| 进行中 | `#008af5`／`#e0f2fe` | `#9bc4fa`／`#172d47` | `--ad-task-status-progress`／`-soft` |
+| 已阻塞 | `#eaa65d`／`#fff7ed` | `#efb17e`／`#3b281b` | `--ad-task-status-warning`／`-soft` |
+| 已完成 | `#57bc6c`／`#ecfdf3` | `#8bd0b4`／`#19352b` | `--ad-task-status-success`／`-soft` |
+| 已取消 | `#777777`／`#f4f4f5` | `#d2d5d8`／`#303235` | `--ad-task-status-neutral`／`-soft` |
+| 危险／错误 | `#c13e61`／`#fff0f4` | `#f49ab0`／`#3b2533` | `--ad-danger`／`-soft` |
+| 逾期专用 | `#dc2626` | `#f87171` | `--ad-task-overdue` |
+| 通知徽标 | `#d92d3e` | `#ee4d5a` | `--ad-notification-badge` |
 
-### Color discipline
+逾期不改变任务状态；提醒沿所属组件的系统危险／逾期语义，不使用个人强调色。共享Toast的成功图标当前固定为`#389e0d`，错误图标使用`--ad-danger`，信息图标使用固定`--ad-route-ink`；这些反馈也不随个人色变化。
 
-- Only one filled chromatic button appears in a decision area.
-- Status is always expressed by label, icon, and color together.
-- Task card backgrounds may use a subtle gradient from the existing task tone into the surface color; task icons and their backgrounds stay solid. Avoid glass effects, saturated dashboard charts, and decorative multicolor card mosaics.
-- Yellow means an inference or attention item, never general decoration.
-- Red means conflict, rejection, destructive action, or true blocking state.
+### 个人强调色与固定AI配色
+
+| 个人色选项 | 色值 |
+| --- | --- |
+| 蓝 | `#4b6edf` |
+| 紫 | `#7c3aed` |
+| 粉 | `#c0266b` |
+| 琥珀 | `#b45309` |
+| 绿 | `#047857` |
+| 青 | `#087e8b` |
+| 自定义 | 六位HEX颜色 |
+
+未保存个人选择时，主按钮沿主题默认色：浅色`#4b6edf`、深色`#90acff`。保存后，两种主题的主按钮底色均取所选颜色；hover为个人色88%与黑色混合，active为76%，边框为个人色45%与当前表面混合，按钮文字分别按对比度取黑或白。禁用态使用共享中性禁用样式，不继续显示可操作的强调反馈。
+
+个人强调文字色由`getAccentTextColor`生成浅／深`--ad-accent-ink-light`／`--ad-accent-ink-dark`，组件消费`--ad-accent-ink`；分别以浅`#f3f3f3`、深`#303030`为背景达到4.5:1目标，不直接把主按钮底色当正文文字色。此范围不扩展到route、AI、Tab、侧栏或输入框边线；主按钮常态实色及原创建、引用与权限行为保持。
+
+固定AI主题的文字为浅`#4763c5`／深`#b5c8ff`（`--ad-route-ink`），轻底为浅`#eff3ff`／深`#263759`（`--ad-route-soft`），按压底为浅`#e4ecff`／深`#30436a`（`--ad-route-soft-hover`）。背景为110°渐变，从内容表面40%过渡到固定轻底。个人色仅覆盖指定主按钮、文字引用与快捷入口变量；`--ad-route`和它的`--ad-accent`别名继续属于固定主题，不能视为全局个人强调色。
+
+侧栏“连接AI”只承担导航，沿用当前主题同组导航色，不单独强调。任务标题旁、普通讨论／回复及文件讨论的连接AI快捷按钮共用个人色轻渐变：从表面色40%起至个人主操作色10%与表面混色，边框为主操作色18%与普通边框混色，辅助图标／箭头为主操作色40%与主要文字60%混色；hover／active轻底分别为12%／16%，键盘焦点仍中性，工具Logo保留原图。全局连接弹窗、“在工具中打开”、文件标注等其余实际连接操作继续沿固定轻渐变；连接区域内的Tab、工具选择与复制仍按普通控件规则，具体覆盖与页面表现按实现证据核验。
+
+### 强调如何分配
+
+参考GPT整页截图时，关注内容、当前位置和关键动作之间的注意力分配，不能只取一个颜色再涂到全部控件。颜色角色保持一致，明暗主题的具体色值可以不同；浅色侧栏及底色按用户确认的原样保护，只对深色侧栏去蓝调。以下是TaskDoor落实这一方向的规则；截图未展示的hover等状态，不据此声称已经实测GPT对应行为。
+
+- 主区普通工具文字和图标默认使用次级中性色，不常驻实色底或外框；确需边界的输入、控件组沿其既有规则，不能把每个入口都画成按钮块。
+- hover只提供轻量反馈，让人知道可以操作；它应弱于selected，不能让划过的项目看起来已经成为当前位置。键盘焦点继续独立、可辨认。
+- selected表示当前位置或显示方式：文字Tab用文字层级与细线，图标视图用局部灰底与图标对比。两类控件可以使用不同Token和深浅，逐个按作用核对，不机械共用同一色值。
+- 关键创建、保存、邀请和发布，以及文件区主要“新建”入口使用用户强调色；任务标题AI入口按上方限定使用轻渐变，普通加号、其它菜单打开、复制和准备草稿保持辅助层级。
+- 说明和数量弱于任务名称及正文；计数帮助理解内容，不独立争夺注意力。
+- 任务状态、头像与品牌色各有真实角色，不能把它们当成普通选择色，也不因统一灰阶抹掉其含义。
+- AI轻渐变用于连接操作的识别；任务标题快捷入口可随个人色，其余沿固定AI主题，不扩展到侧栏导航、每个AI相关标题、内容块、菜单或切换控件。
+- 普通加载指示、讨论来源定位与钥匙等装饰保持中性；实际成功、错误与业务状态继续使用对应语义，不因视觉统一抹掉结果差异。
+
+### 任务主区的基础灰阶
+
+任务主区保留已确认的基础灰阶、Tab、视图与输入规则；浅色侧栏和外层底色不套用这张灰阶表，按下一节原色保护，深色侧栏单独去蓝调。参考ChatGPT的是表面、选中与未选中的层次关系，而非把所有区域机械改成黑白灰。已观察到的ChatGPT“聊天／工作”切换，选中为`#0d0d0d`、未选中为`#5d5d5d`；下表是TaskDoor主区的当前规则，不是GPT官方完整色表，覆盖与运行证据按实际核验记录。
+
+| 语义 | 浅色主题 | 深色主题 | 实现入口 |
+| --- | --- | --- | --- |
+| 主区默认画布 | `#ffffff` | `#171717` | `--ad-canvas` |
+| 内容表面 | `#ffffff` | `#212121` | `--ad-surface` |
+| 浅分组底 | `#f3f3f3` | `#303030` | `--ad-surface-subtle` |
+| 安静背景 | `#fafafa` | `#262626` | `--ad-surface-quiet` |
+| 任务列表底 | `#f9f9f9` | `#1a1a1a` | `--ad-task-list-surface` |
+| 主要文字 | `#2b2b2b` | `#e5e5e5` | `--ad-ink` |
+| 次级文字 | `#5d5d5d` | `#b5b5b5` | `--ad-ink-secondary` |
+| 辅助文字 | `#6b6b6b` | `#a0a0a0` | `--ad-ink-tertiary` |
+| 普通边框 | `#e5e5e5` | `#3a3a3a` | `--ad-border` |
+| 轻分隔线 | `#ededed` | `#2e2e2e` | `--ad-border-soft` |
+| 强边界 | `#c9c9c9` | `#525252` | `--ad-border-strong` |
+
+深灰用于需要优先读取的文字与当前选项，次级文字和图标适度退后；白底、浅灰底与轻边框负责分组。不要用大片近黑底、全员加粗或处处高对比来强化普通控件。业务系统色、用户主操作强调色、AI固定轻渐变及头像／Logo／原内容继续保持各自角色。
+
+### 工作区侧栏与外层画布
+
+浅色侧栏与底色恢复并保护原有配色；仅浅色`.workspace-navigation`局部使用原蓝灰表面、文字、图标及边框，外层画布保持原`#f3f6fc`。深色不恢复旧蓝灰覆盖，侧栏与外层画布继续共享中性`#1a1a1a`。导航浅色悬停／选中沿原比例，深色保持既有灰阶；焦点保持中性，不恢复旧蓝色focus。任务主区、Tab、图标视图、讨论与开放式列表搜索均不因此改变。
+
+| 语义 | 浅色主题 | 深色主题 | 实现入口 |
+| --- | --- | --- | --- |
+| 工作区外层画布 | `#f3f6fc` | `#1a1a1a` | `--ad-workspace-canvas` |
+| 侧栏背景 | `#f7f9fd` | `#1a1a1a` | 当前主题`--ad-sidebar` |
+| 侧栏分组底／安静背景 | `#f3f6fc`／`#fafbfe` | `#303030`／`#262626` | 浅色局部／深色共享表面Token |
+| 侧栏主／次／辅助文字及图标 | `#2e3a50`／`#53627a`／`#617089` | `#e5e5e5`／`#b5b5b5`／`#a0a0a0` | 当前主题文字Token |
+| 侧栏普通／轻／强边框 | `#e0e6f0`／`#edf1f7`／`#c2cde0` | `#3a3a3a`／`#2e2e2e`／`#525252` | 当前主题边框Token |
+| 普通导航悬停底 | 原侧栏主要文字色3%与透明混合 | `#282828` | `--ad-navigation-hover-bg` |
+| 普通导航选中底 | 原侧栏主要文字色4.5%与透明混合 | `#343434` | `--ad-navigation-selected-bg` |
+| 普通导航选中文字 | 沿原主要文字`#2e3a50` | 沿主要文字`#e5e5e5` | `--ad-navigation-selected-ink` |
+
+设置弹窗的浅色左侧导航背景单独保留原`#fafbfe`，通过`.personal-center-module-nav`局部映射`--ad-surface-quiet`实现；不随主区安静背景的灰阶调整改变，深色继续沿现行`#262626`。
+
+通知列表沿主区中性表面，摘要块使用`--ad-surface-subtle`，浅色`#f3f3f3`、深色`#303030`；通知入口悬停及展开使用共享中性按钮／选中变量，避免继承浅色工作区侧栏的蓝灰底。通知未读标记仍保留原业务语义色。
+
+侧栏“连接AI”仍是普通导航入口，沿同组文字和状态反馈，不恢复专属渐变、常驻边框或独立强调；进入后的实际AI连接操作继续使用固定轻渐变。
+
+### 输入聚焦
+
+讨论输入通过专用`--ad-discussion-composer-surface`按主题区分：浅色映射`--ad-surface`（`#ffffff`），与外层内容表面一致，仅以1px普通淡边线`--ad-border`（`#e5e5e5`）界定；深色为`#363636`，与外层内容表面`#212121`形成可辨层次，1px透明边框只维持布局。该变量仅用于讨论输入，不改写全局安静背景。鼠标点击聚焦沿用各自背景和边框，不额外加深或增加光晕。列表顶部搜索沿原有开放式、无外框样式，不因聚焦变成矩形输入框；普通独立搜索与表单保留1px淡边线，聚焦后只轻量加深。两者都不借用主操作强调色、AI主题或按钮专属焦点色，不绘制四周光晕；列表搜索的键盘位置仍由底部2px线标记。
+
+仅通过Tab等键盘导航进入输入时，用底部2px中性实线标明位置；复用已有`useFocusVisible({ isTextInput: true })`区分键盘与鼠标，不能把正文打字误当成重新强调焦点。普通规则排除`aria-invalid="true"`与`data-invalid`，共享输入、登录等场景的错误边框保持；此次仅调整外观，不改变编辑、发布或草稿回调。
+
+| 语义 | 浅色主题 | 深色主题 | 实现入口 |
+| --- | --- | --- | --- |
+| 独立搜索／表单正常淡边线 | `#e5e5e5` | `#3a3a3a` | `--ad-border`，不用于列表顶部开放式搜索外框 |
+| 独立搜索／表单轻量聚焦边线 | `#c9c9c9` | `#525252` | `--ad-input-focus` |
+| 键盘进入输入的底部2px线 | `#737373` | `#a0a0a0` | `--ad-input-keyboard-focus` |
+| 讨论输入表面 | `#ffffff`（与外层一致） | `#363636`（外层`#212121`） | `--ad-discussion-composer-surface`，浅色映射`--ad-surface` |
+| 讨论输入边框（含鼠标聚焦） | `#e5e5e5` | `transparent` | 浅色`--ad-border`，深色靠表面对比区分 |
+| 旧浅聚焦变量兼容值 | `transparent` | `transparent` | `--ad-input-focus-soft`，不再绘制普通输入光晕 |
+
+### Tab 与视图切换
+
+文字Tab和图标视图都通过深浅及局部标记表达当前位置，分别使用对应Token。浅色Tab的`#0d0d0d`／`#5d5d5d`参考实测ChatGPT“聊天／工作”的文字切换；图标视图则参考用户所给视图控件截图的视觉层次，两者不能机械共用文字色。这些是TaskDoor的实施值，不是GPT官方Token表。
+
+文字Tab保持现有文字与细线关系；已有文字分段选择的底色单独维护，避免图标视图的调整连带改变它。
+
+| 语义 | 浅色主题 | 深色主题 | 实现入口 |
+| --- | --- | --- | --- |
+| Tab选中文字 | `#0d0d0d` | `#e5e5e5` | `--ad-tab-active` |
+| Tab未选中文字 | `#5d5d5d` | `#a3a3a3` | `--ad-tab-muted` |
+| 文字分段选中底 | `#f2f2f2` | `#343434` | `--ad-tab-selected-bg` |
+
+任务列表与文件的图标视图使用同款分段切换：整组以1px普通中性边框、内容表面底和10px圆角包住，内部保留3px内边距与2px间距；选中项使用局部浅灰底与7px圆角，普通图标较弱，hover底色比selected更轻，均无阴影。桌面整组高36px、按钮30×28px；窄屏或触控时整组高52px、按钮44×44px。该样式替代整组透明的表达，沿用原视图数量、顺序及切换行为，不扩展到其它文字Tab或普通正文。
+
+| 语义 | 浅色主题 | 深色主题 | 实现入口 |
+| --- | --- | --- | --- |
+| 选中图标 | `#191c1f` | `#e5e7e9` | `--ad-view-active` |
+| 未选中图标 | `#84888b` | `#a3a6a8` | `--ad-view-muted` |
+| 图标视图选中底 | `#f3f3f3` | `#3a3c3e` | `--ad-view-selected-bg` |
+| 图标视图hover底 | `#fafafa` | `#2d2f31` | `--ad-view-hover-bg` |
+
+- 横向内容Tab默认以中等字重（500）、选中文字和同色2px细下划线表达当前位置；未选项不靠大幅缩小字号退后。已有分段、卡片或列表型选择使用中性灰层级和轻底色，不为统一颜色另改其布局。
+- 图标视图的背景与图标按该控件共同核对，选中背景、hover、按压状态与键盘焦点分别表达；文字Tab不消费图标视图Token。
+- 更换用户强调色不改变这组灰阶。深色主题通过同名语义 Token 适配，不在组件内另起颜色表。
+- 视图组在自身范围内消费／映射选中 Token，不为修正两个控件而改写全站通用选中语义，连带影响状态、标签或颜色选择。
+- 正文和控件文字保持至少4.5:1对比度；必要选中标记及焦点保持至少3:1。浅灰适合底色、分隔与辅助层级，不能让正文、标签或焦点变得难辨认。
+
+颜色值统一维护于[颜色 Token](../src/shared/styles/tokens.css)。任务主区消费现行中性灰Token，图标按对应控件使用微冷灰；浅色侧栏与底色保护原色，深色侧栏去蓝调，输入聚焦沿独立中性变量。明确的业务色与内容本色按角色保留，不在各页面另起色板。
 
 ## 4. Typography
 
@@ -410,7 +515,7 @@ When this question is shown, its user-facing label is **“规划后续处理”
 
 ### Buttons
 
-1. **Primary:** route blue fill; one per decision area. Labels name the result: “确认直接执行”, not “提交”.
+1. **Primary:** current personal action color from the shared Button tokens; one per decision area. Follow the current color contract in section 3. Labels name the result: “确认直接执行”, not “提交”.
 2. **Secondary:** white surface, hairline border, dark text.
 3. **Quiet:** transparent; appears inside cards and rows.
 4. **Destructive:** red text or red fill only after an explicit confirmation step.

@@ -1,5 +1,5 @@
 .task-schedule-trigger { display: inline-flex; align-items: center; gap: var(--ad-space-1); width: fit-content; min-height: var(--ad-control-height-sm); padding-inline: var(--ad-space-2); color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); font-weight: 400; }
-.task-schedule-trigger:hover:not(:disabled), .task-schedule-trigger[aria-expanded="true"] { background: var(--ad-route-soft); color: var(--ad-route-ink); }
+.task-schedule-trigger:hover:not(:disabled), .task-schedule-trigger[aria-expanded="true"] { background: var(--ad-surface-subtle); color: var(--ad-ink-secondary); }
 .task-schedule-trigger:focus-visible, .task-schedule-close:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 .task-schedule-popover[data-slot="popover-content"] { display: flex; flex-direction: column; width: min(420px, calc(100vw - 24px)); max-height: min(680px, calc(100dvh - 48px)); padding: 0; overflow: hidden; border: 1px solid var(--ad-border-soft); border-radius: var(--ad-radius-card); background: var(--ad-surface); color: var(--ad-ink); box-shadow: var(--ad-shadow-float); }
 .task-schedule-heading { display: flex; align-items: flex-start; gap: var(--ad-space-3); padding: var(--ad-space-4); border-bottom: 1px solid var(--ad-border-soft); }

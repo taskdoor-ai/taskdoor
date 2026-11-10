@@ -4,7 +4,7 @@ title: "工作区与导航"
 group: "账号与团队"
 version: "1.0"
 status: "review"
-last_change: "PRD-0136"
+last_change: "PRD-0397"
 summary: "通过顶栏切换团队、新建任务、查看通知、连接 AI 和设置。"
 lifecycle_stage: "进入工作区"
 pages: "工作区, 我的工作, 通知中心, 个人中心, 个人信息设置, 我的责任, 我的团队, 访问令牌, 团队设置, 团队任务, 行为日志"
@@ -34,9 +34,12 @@ operations: "enter_workspace, switch_team, navigate, open_notification, open_pro
 
 桌面可收起任务列表以专注当前详情；收起态通过侧栏图标重新展开，完整入口、任务上下文与窄屏切换规则见[任务列表](06-task-list.md) 3.4。收起任务列表后，顶栏的团队与全局操作入口保持可用。
 
+高级筛选与独立排序位于任务列表上方工具栏，左侧保留任务范围与状态分类；位置与操作规则归[任务列表](06-task-list.md#31-查找任务)。
+
 ### 3.2 个人与团队设置
 
 - **个人设置**：个人信息、我的责任、我的团队与访问令牌；访问令牌见[Agent 与 CLI 连接](05-cli-connection.md) 3.3；我的团队的列表与已删除团队恢复见[删除与数据保留](13-deletion-recovery-retention.md) 3.4；只读邮箱及维护规则见[账号与个人资料](02-account-identity.md) 3.6。
+- **通知设置**：在通知面板右上角齿轮内调整仅接收与本人相关的消息，站内与邮件共用同一账号偏好；个人设置不重复提供通知入口，完整规则归[通知接收范围](10-discussion-notifications-activity.md#通知接收范围)。
 - **团队设置**：团队信息、成员管理、团队时区及拥有者专属的所有权转让与删除入口；拥有者和管理员另有团队任务与行为日志，见[团队管理](03-team-onboarding.md) 3.6；日期规则见[语言、翻译与时区](02-internationalization.md)。
 
 ![顶部全局入口、任务索引、内容区域及团队设置权限的工作区信息架构目标示意](../assets/workspace-navigation/workspace-map.svg)
@@ -47,6 +50,8 @@ operations: "enter_workspace, switch_team, navigate, open_notification, open_pro
 团队切换菜单底部固定显示“创建团队”，团队列表独立滚动。创建流程和数量限制见[团队管理](03-team-onboarding.md)。
 
 ## 4. 功能验收标准
+
+- 通知面板齿轮可展开接收范围设置，关闭回到入口；个人设置无重复通知入口。列表工具栏的筛选与排序在桌面、窄屏均可达，保留原条件与入口权限。
 
 - **团队切换**：不混入上一团队内容；菜单不显示管理员／成员身份，当前团队仍有明确选中状态。
 - **空工作区**：提供明确的新建入口。

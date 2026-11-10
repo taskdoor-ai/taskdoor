@@ -50,7 +50,7 @@ const waitForPreviewPaint = (signal: AbortSignal): Promise<boolean> => new Promi
 
 export function TaskAiAdjustButton({ label = "AI 帮你改", onClick, disabled = false, count = 0 }: { label?: string; onClick: (anchor: HTMLElement) => void; disabled?: boolean; count?: number }) {
   const d = useDetailCopy();
-  return <Button aria-haspopup="dialog" aria-label={label === "AI 帮你改" ? d("adjustWithAi") : label} className="task-ai-adjust-trigger" disabled={disabled} onClick={event => onClick(event.currentTarget)} size="sm" type="button" variant="ai"><Sparkles aria-hidden="true" size={14} />{d('adjustWithAi')}{count > 0 && <span className="creation-annotation-count">{count}</span>}</Button>;
+  return <Button aria-haspopup="dialog" aria-label={label === "AI 帮你改" ? d("adjustWithAi") : label} className="task-ai-adjust-trigger" disabled={disabled} onClick={event => onClick(event.currentTarget)} size="sm" type="button" variant="ghost"><Sparkles aria-hidden="true" size={14} />{d('adjustWithAi')}{count > 0 && <span className="creation-annotation-count">{count}</span>}</Button>;
 }
 
 // Keep this session in the page, so temporarily unmounting a popover preserves its drafts.

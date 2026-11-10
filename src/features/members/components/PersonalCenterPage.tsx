@@ -8,9 +8,9 @@ import { settingsMockText } from "@/ai/mock/i18n/settingsMock";
 import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { currentWorkspaceUserId } from "@/shared/lib/workspace-session";
 import { formatLegacyDateLabel } from "@/shared/lib/date-time";
-import { ArrowRight, ChevronDown, Copy, EyeOff, FileCheck2, Mail, Pencil, Plus, RefreshCw, Sparkles, UserPlus } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { getTeamInviteLink, savePersonalCenterState, type PersonalCenterState, type ResponsibilityClaim, type ResponsibilityDocument, type TeamAccessRole } from "@/ai/mock/data/memberProfiles";
+import { ArrowRight, ChevronDown, Copy, EyeOff, FileCheck2, Mail, Pencil, Plus, RefreshCw, Search, Sparkles, UserPlus, X } from "lucide-react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { getTeamInviteLink, savePersonalCenterState, type PersonalCenterState, type ResponsibilityClaim, type ResponsibilityDocument, type TeamAccessRole, type TeamMembership } from "@/ai/mock/data/memberProfiles";
 import type { Member } from "@/features/members/components/MemberSelector";
 import { PersonAvatar, PersonName } from "@/shared/ui/PersonAvatar";
 import { Button } from "@/shared/ui/button";
@@ -87,6 +87,20 @@ export function TeamMembersPanel({ activeTeamId, members, onStateChange, state }
   const invitations = useMemberInvitations();
   const selectedTeam = state.teams.find((team) => team.id === activeTeamId) ?? state.teams[0];
   const [editingMembershipId, setEditingMembershipId] = useState<string | null>(null);
+  const [memberStatus, setMemberStatus] = useState<"active" | "disabled">("active");
+  const [memberQuery, setMemberQuery] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
+  const statusId = useId();
+  const normalizedQuery = memberQuery.trim().toLocaleLowerCase();
+  const visibleRows = selectedTeam.memberships.flatMap(membership => {
+    if ((membership.status === "disabled") !== (memberStatus === "disabled")) return [];
+    const member = members.find(item => item.id === membership.memberId || item.email.toLocaleLowerCase() === membership.email.toLocaleLowerCase());
+    const responsibility = resolveTeamMemberResponsibility(membership, member);
+    const responsibilityText = m.text(membership.responsibility === undefined ? settingsMockText(locale, membership.memberId ?? "", responsibility) : responsibility);
+    const name = membership.status === "active" && member ? mockPersonName(locale, member.id, member.name) : membership.name ?? membership.email;
+    const matches = !normalizedQuery || [name, membership.email, responsibilityText].some(value => value.toLocaleLowerCase().includes(normalizedQuery));
+    return matches ? [{ membership, member, responsibility, responsibilityText }] : [];
+  });
   const [responsibilityDraft, setResponsibilityDraft] = useState("");
   const currentMembership = selectedTeam.memberships.find((membership) => membership.memberId === currentWorkspaceUserId() || membership.email === state.profile.email);
   const canManage = currentMembership?.status === "active" && ["owner", "admin"].includes(currentMembership.role);
@@ -95,10 +109,25 @@ export function TeamMembersPanel({ activeTeamId, members, onStateChange, state }
   useEffect(() => {
     setEditingMembershipId(null);
     setResponsibilityDraft("");
+    setMemberStatus("active");
+    setMemberQuery("");
   }, [selectedTeam.id]);
 
+  const reinviteMember = (membership: TeamMembership) => {
+    if (!invitations?.canInvite || membership.role === "owner" || (membership.role === "admin" && !invitations.canInviteAdmins)) return;
+    try {
+      invitations.invite(membership.email, membership.role, true);
+      if (membership.status === "disabled") {
+        setMemberStatus("active");
+        window.setTimeout(() => document.getElementById(`${statusId}-active`)?.focus({ preventScroll: true }), 0);
+      }
+    } catch (caught) {
+      toast.error(caught instanceof Error ? caught.message : m('couldNotResendTheInvitation'));
+    }
+  };
+
   const focusResponsibilityEdit = (membershipId: string) => {
-    window.setTimeout(() => document.getElementById(`edit-member-responsibility-${membershipId}`)?.focus({ preventScroll: true }), 0);
+    window.setTimeout(() => (document.getElementById(`edit-member-responsibility-${membershipId}`) ?? searchRef.current)?.focus({ preventScroll: true }), 0);
   };
 
   const beginResponsibilityEdit = (membershipId: string, responsibility: string) => {
@@ -160,17 +189,34 @@ export function TeamMembersPanel({ activeTeamId, members, onStateChange, state }
     <section className="team-invite-link"><h3>{m('invitationLink')}</h3><div><Input aria-label={m('invitationLink')} readOnly value={inviteLink} /><Button aria-label={m('copyInvitationLink')} onClick={copyInviteLink} size="icon" type="button" variant="ghost"><Copy aria-hidden="true" /></Button></div><p>{m('multiplePeopleCanUseThisLinkYou')}<button disabled={!canManage} onClick={regenerateInviteLink} type="button"><RefreshCw aria-hidden="true" />{m('regenerateLink')}</button>.</p></section>
     <div className="team-members-summary">
       <strong>{m("members")} ({selectedTeam.memberships.length})</strong>
-      <Button disabled={!invitations?.canInvite} onClick={event => invitations?.openInvite({ returnFocus: event.currentTarget })} type="button" variant="outline"><UserPlus aria-hidden="true" />{m('inviteMembers')}</Button>
+      <Button disabled={!invitations?.canInvite} onClick={event => invitations?.openInvite({ returnFocus: event.currentTarget })} type="button" variant="default"><UserPlus aria-hidden="true" />{m('inviteMembers')}</Button>
     </div>
-    <div className="team-member-table"><div aria-hidden="true" className="team-member-list-head"><span>{m('user')}</span><span>{m('responsibility')}</span><span>{m('role')}</span></div><ul aria-label={m('teamMembers')} className="team-member-list">{selectedTeam.memberships.map((membership) => {
-      const member = members.find((item) => item.id === membership.memberId || item.email.toLocaleLowerCase() === membership.email.toLocaleLowerCase());
+    <div className="team-member-list-toolbar">
+    <div aria-label={m('memberStatus')} className="team-member-status-tabs" role="tablist" onKeyDown={event => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const next = event.key === "Home" ? "active" : event.key === "End" ? "disabled" : memberStatus === "active" ? "disabled" : "active";
+      setMemberStatus(next);
+      document.getElementById(`${statusId}-${next}`)?.focus();
+    }}>
+      {(["active", "disabled"] as const).map(status => <button aria-controls={`${statusId}-panel`} aria-selected={memberStatus === status} id={`${statusId}-${status}`} key={status} onClick={() => setMemberStatus(status)} role="tab" tabIndex={memberStatus === status ? 0 : -1} type="button">{m(status === "active" ? 'activeMembers' : 'disabledMembers')}</button>)}
+    </div>
+    <div className="team-member-search">
+      <Search aria-hidden="true" size={16} />
+      <Input aria-label={m('searchTeamMembers')} autoComplete="off" name="taskdoor-team-member-search" onChange={event => setMemberQuery(event.target.value)} onKeyDown={event => { if (event.key === "Escape" && memberQuery) { event.preventDefault(); event.stopPropagation(); setMemberQuery(""); } }} placeholder={m('searchTeamMembersPlaceholder')} ref={searchRef} type="search" value={memberQuery} />
+      {memberQuery && <Button aria-label={m('clearMemberSearch')} onClick={() => { setMemberQuery(""); searchRef.current?.focus(); }} size="icon-sm" type="button" variant="ghost"><X aria-hidden="true" size={16} /></Button>}
+    </div>
+    </div>
+    <p className="sr-only" role="status">{normalizedQuery ? m('memberSearchResultCount', { count: visibleRows.length }) : ""}</p>
+    <div aria-labelledby={`${statusId}-${memberStatus}`} id={`${statusId}-panel`} role="tabpanel" tabIndex={0}>
+    <div className="team-member-table"><div aria-hidden="true" className="team-member-list-head"><span>{m('user')}</span><span>{m('responsibility')}</span><span>{m('role')}</span></div><ul aria-label={m('teamMembers')} className="team-member-list">{visibleRows.map(({ membership, member, responsibility, responsibilityText }) => {
       const isCurrentUser = membership.memberId === currentWorkspaceUserId() || membership.email === state.profile.email;
-      const responsibility = resolveTeamMemberResponsibility(membership, member);
       const memberLabel = member?.name ?? membership.email;
       const isEditingResponsibility = editingMembershipId === membership.id;
       const pendingEmailOnly = membership.status === "invited" && !membership.name;
-      return <li key={membership.id}><div>{membership.status === "active" ? <PersonAvatar name={member?.name ?? membership.email} personId={member?.id ?? membership.memberId} profile={member} size="md" /> : <span className="team-invited-avatar"><Mail aria-hidden="true" /></span>}<span><strong>{membership.status === "active" && member ? <PersonName name={member.name} profile={member} /> : pendingEmailOnly ? membership.email : membership.name || m('noNameSet')}{isCurrentUser && <em>{m('you')}</em>}{membership.status === "invited" && <em className="invited">{m('invited')}</em>}</strong>{!pendingEmailOnly && <small>{membership.email}</small>}</span></div><div className="team-member-responsibility">{isEditingResponsibility ? <div className="team-member-responsibility-editor"><Input aria-label={m("memberResponsibility", { name: memberLabel })} autoFocus onChange={(event) => setResponsibilityDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveMemberResponsibility(membership.id); if (event.key === "Escape") cancelResponsibilityEdit(membership.id); }} value={responsibilityDraft} /><div><Button onClick={() => cancelResponsibilityEdit(membership.id)} size="sm" type="button" variant="ghost">{m('cancel')}</Button><Button onClick={() => saveMemberResponsibility(membership.id)} size="sm" type="button">{m('save')}</Button></div></div> : <><p className="team-member-responsibility-text" title={m.text(membership.responsibility === undefined ? settingsMockText(locale, membership.memberId ?? "", responsibility) : responsibility)}>{m.text(membership.responsibility === undefined ? settingsMockText(locale, membership.memberId ?? "", responsibility) : responsibility)}</p>{membership.status === "invited" && invitations?.canInvite && (membership.role === "member" || invitations.canInviteAdmins) && <div className="member-invited-actions"><Button size="sm" variant="ghost" onClick={() => { try { invitations.invite(membership.email, membership.role, true); } catch (caught) { toast.error(caught instanceof Error ? caught.message : m('couldNotResendTheInvitation')); } }}>{m('resendInvitation')}</Button></div>}{canManage && membership.status === "active" ? <Button aria-label={m("editMemberResponsibility", { name: member?.name ?? membership.email })} className="team-member-responsibility-edit" id={`edit-member-responsibility-${membership.id}`} onClick={() => beginResponsibilityEdit(membership.id, responsibility)} size="icon-sm" title={m('editResponsibilities')} type="button" variant="ghost"><Pencil aria-hidden="true" /></Button> : null}</>}</div><div className="team-member-role-actions"><span className={`team-member-role-badge ${membership.role}`}>{locale === "en" ? ({ owner: "Owner", admin: "Administrator", member: "Member" })[membership.role] : accessRoleLabel[membership.role]}</span><TeamMemberActions membership={membership} /></div></li>;
-    })}</ul></div>
+      return <li key={membership.id}><div>{membership.status === "active" ? <PersonAvatar name={member?.name ?? membership.email} personId={member?.id ?? membership.memberId} profile={member} size="md" /> : <span className="team-invited-avatar"><Mail aria-hidden="true" /></span>}<span><strong>{membership.status === "active" && member ? <PersonName name={member.name} profile={member} /> : pendingEmailOnly ? membership.email : membership.name || m('noNameSet')}{isCurrentUser && <em>{m('you')}</em>}{membership.status === "invited" && <em className="invited">{m('invited')}</em>}</strong>{!pendingEmailOnly && <small>{membership.email}</small>}</span></div><div className="team-member-responsibility">{isEditingResponsibility ? <div className="team-member-responsibility-editor"><Input aria-label={m("memberResponsibility", { name: memberLabel })} autoFocus onChange={(event) => setResponsibilityDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") saveMemberResponsibility(membership.id); if (event.key === "Escape") cancelResponsibilityEdit(membership.id); }} value={responsibilityDraft} /><div><Button onClick={() => cancelResponsibilityEdit(membership.id)} size="sm" type="button" variant="ghost">{m('cancel')}</Button><Button onClick={() => saveMemberResponsibility(membership.id)} size="sm" type="button">{m('save')}</Button></div></div> : <><p className="team-member-responsibility-text" title={responsibilityText}>{responsibilityText}</p>{membership.status !== "active" && invitations?.canInvite && (membership.role === "member" || (membership.role === "admin" && invitations.canInviteAdmins)) && <div className="member-invited-actions"><Button size="sm" type="button" variant="ghost" onClick={() => reinviteMember(membership)}>{m('resendInvitation')}</Button></div>}{canManage && membership.status === "active" ? <Button aria-label={m("editMemberResponsibility", { name: member?.name ?? membership.email })} className="team-member-responsibility-edit" id={`edit-member-responsibility-${membership.id}`} onClick={() => beginResponsibilityEdit(membership.id, responsibility)} size="icon-sm" title={m('editResponsibilities')} type="button" variant="ghost"><Pencil aria-hidden="true" /></Button> : null}</>}</div><div className="team-member-role-actions"><span className={`team-member-role-badge ${membership.role}`}>{locale === "en" ? ({ owner: "Owner", admin: "Administrator", member: "Member" })[membership.role] : accessRoleLabel[membership.role]}</span><TeamMemberActions membership={membership} /></div></li>;
+    })}</ul>{!visibleRows.length && <p className="team-member-empty" role="status">{m(normalizedQuery ? 'noMatchingTeamMembers' : memberStatus === "disabled" ? 'noDisabledMembers' : 'noActiveMembers')}</p>}</div>
+    </div>
   </section>;
 }
 
@@ -383,7 +429,7 @@ function ResponsibilityStatementList({ autoUpdate, claims, dirty, document, draf
             <input aria-describedby="responsibility-auto-update-description" checked={autoUpdate} className="sr-only" id="responsibility-auto-update" onChange={(event) => onAutoUpdateChange(event.target.checked)} role="switch" type="checkbox" />
             <span aria-hidden="true" data-slot="switch-track" />
           </label>
-          {currentClaims.length ? <Button aria-controls="responsibility-ai-suggestions" aria-expanded={suggestionsOpen} aria-label={suggestionsOpen ? m('hideAiSuggestions') : m('viewAiSuggestions')} className="responsibility-update-trigger" id="responsibility-ai-suggestions-trigger" onClick={() => setSuggestionsOpen((open) => !open)} size="sm" type="button" variant="inference"><Sparkles aria-hidden="true" data-icon="inline-start" /><span>{m('aiSuggestions')}</span></Button> : null}
+          {currentClaims.length ? <Button aria-controls="responsibility-ai-suggestions" aria-expanded={suggestionsOpen} aria-label={suggestionsOpen ? m('hideAiSuggestions') : m('viewAiSuggestions')} className="responsibility-update-trigger" id="responsibility-ai-suggestions-trigger" onClick={() => setSuggestionsOpen((open) => !open)} size="sm" type="button" variant="outline"><Sparkles aria-hidden="true" data-icon="inline-start" /><span>{m('aiSuggestions')}</span></Button> : null}
         </div>
       </div>
       <p className="sr-only" id="responsibility-auto-update-description">{m('whenEnabledAiResponsibilitySuggestionsForThe')}</p>

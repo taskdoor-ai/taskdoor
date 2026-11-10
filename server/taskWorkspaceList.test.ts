@@ -4,6 +4,7 @@ import { register } from "node:module";
 import test from "node:test";
 import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { I18nProvider } from "../src/shared/i18n/I18nProvider.tsx";
 import type { TaskNode } from "../src/shared/model/task-model.ts";
 import type { TaskListProjection } from "../src/features/tasks/lib/task-list-projection.ts";
 import { clearedTaskListConditions, type TaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
@@ -41,11 +42,73 @@ const baseProps = {
   scopeCounts: { all: 4, owned: 2, participating: 1 },
 };
 
-async function renderList(patch: Partial<typeof baseProps> = {}) {
+async function renderList(patch: Partial<typeof baseProps> = {}, initialLocale: "zh-CN" | "en" = "zh-CN") {
   assert.ok(existsSync(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url)), "应提供两栏工作区的紧凑任务列表");
   const { TaskWorkspaceList } = await import(new URL("../src/features/tasks/components/TaskWorkspaceList.tsx", import.meta.url).href);
-  return renderToStaticMarkup(createElement(TaskWorkspaceList, { ...baseProps, ...patch }));
+  const list = createElement(TaskWorkspaceList, { ...baseProps, ...patch });
+  return renderToStaticMarkup(createElement(I18nProvider, { initialLocale, children: list }));
 }
+
+test("截止日期均有日历图标且仅逾期用系统红色，无日期文案对齐图标", async () => {
+  const items = [
+    task("overdue", { plannedEndOn: "2000-11-09" }),
+    task("blocked", { plannedEndOn: "2000-11-09", status: "已阻塞" }),
+    task("legacy-date", { dueAt: "2000-11-09" }),
+    task("completed", { plannedEndOn: "2000-11-09", status: "已完成" }),
+    task("cancelled", { plannedEndOn: "2000-11-09", status: "已取消" }),
+    task("future", { plannedEndOn: "2099-11-09" }),
+    task("legacy-label", { dueAt: "11 月 9 日" }),
+    task("no-date"),
+  ];
+  const props = { projection: { ...projection, allTasks: items, visibleTasks: items } };
+  const openButton = (html: string, id: string) => html.match(new RegExp(`<button[^>]*data-task-id="${id}"[^>]*>[\\s\\S]*?<\\/button>`))?.[0] ?? "";
+  for (const listView of ["flat", "hierarchy"] as const) {
+    const html = await renderList({ ...props, filters: { ...baseProps.filters, listView } }, "zh-CN");
+    for (const id of ["overdue", "blocked", "legacy-date"]) {
+      const button = openButton(html, id);
+      assert.match(button, /<span(?=[^>]*class="task-list-row-deadline-icon")(?=[^>]*data-overdue="true")[^>]*>/);
+      assert.match(button, /<svg[^>]*width="14"[^>]*height="14"/);
+      const visibleText = button.replace(/<span class="sr-only"[^>]*>[\s\S]*?<\/span>/g, "").replace(/<[^>]+>/g, "");
+      assert.doesNotMatch(visibleText, /逾期/);
+      assert.doesNotMatch(button, /<button[^>]*>[\s\S]*?<button/, "图标不增加嵌套按钮");
+      assert.match(html, new RegExp(`id="task-row-description-${id}"[^>]*>[^<]*逾期[^<]*2000年11月9日`));
+    }
+    for (const id of ["completed", "cancelled", "future", "legacy-label", "no-date"]) {
+      assert.doesNotMatch(openButton(html, id), /逾期|data-overdue/);
+    }
+    for (const id of ["completed", "cancelled", "future", "legacy-label"]) {
+      assert.match(openButton(html, id), /class="task-list-row-deadline-icon"/);
+    }
+    assert.doesNotMatch(openButton(html, "no-date"), /class="task-list-row-deadline-icon"/);
+    assert.match(openButton(html, "overdue"), /<time[^>]*class="task-list-row-deadline"[^>]*>2000年11月9日<\/time>/);
+    const english = await renderList({ ...props, filters: { ...baseProps.filters, listView } }, "en");
+    assert.match(openButton(english, "overdue"), /days overdue/);
+    assert.doesNotMatch(openButton(english, "overdue"), /逾期/);
+    assert.match(openButton(english, "overdue"), /<time[^>]*class="task-list-row-deadline"[^>]*>Due Nov 9, 2000<\/time>/);
+    assert.match(openButton(html, "no-date"), /class="task-list-row-deadline-slot" data-unscheduled="true"/);
+  }
+});
+test("层级与平铺在负责人前展示一致的截止日期或无日期提示", async () => {
+  const items = [
+    task("scheduled", { plannedEndOn: "2099-09-10", dueAt: "9 月 1 日", status: "已完成" }),
+    task("legacy", { dueAt: "9 月 12 日", status: "已取消" }),
+    task("unscheduled"),
+  ];
+  const props = { projection: { ...projection, allTasks: items, visibleTasks: items } };
+  for (const listView of ["flat", "hierarchy"] as const) {
+    const patch = { ...props, filters: { ...baseProps.filters, listView } };
+    const html = await renderList(patch, "zh-CN");
+    assert.match(html, /<time[^>]*dateTime="2099-09-10"[^>]*>2099年9月10日<\/time>/);
+    assert.match(html, /class="task-list-row-deadline"[^>]*>9月12日<\/span>/);
+    assert.match(html, /class="task-list-row-deadline"[^>]*>不设截止时间<\/span>/);
+    assert.match(html, /id="task-row-description-unscheduled"[^>]*>[^<]*不设截止时间/);
+    assert.match(html, /class="task-list-row-deadline"[\s\S]*?class="task-list-row-meta"/);
+    assert.doesNotMatch(html, />9月1日</);
+    const english = await renderList(patch, "en");
+    assert.match(english, />Due Sep 10, 2099<\/time>/);
+    assert.match(english, /class="task-list-row-deadline"[^>]*>No due date<\/span>/);
+  }
+});
 
 test("明确筛选本人负责时省略重复负责人，其余条件显示负责人", async () => {
   const html = await renderList({ filters: { ...baseProps.filters, ownerIsMe: true } });

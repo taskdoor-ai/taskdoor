@@ -2,7 +2,7 @@
 .person-picker-email-invite { display: flex; flex-direction: column; align-items: center; gap: var(--ad-space-3); padding: var(--ad-space-6) var(--ad-space-5); text-align: center; }
 .person-picker-email-invite > strong { color: var(--ad-ink-secondary); font-size: var(--ad-text-body-sm); font-weight: 500; }
 .person-picker-email-invite > p { max-width: 100%; margin: 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); line-height: 1.7; overflow-wrap: anywhere; }
-.person-picker-email-invite button { display: inline-flex; align-items: center; justify-content: center; gap: var(--ad-space-2); max-width: 100%; min-height: var(--ad-control-touch-min); margin-top: var(--ad-space-1); padding: var(--ad-space-2) var(--ad-space-4); border: 0; border-radius: var(--ad-radius-control); background: var(--ad-button-soft-bg); color: var(--ad-button-soft-ink); font: inherit; font-size: var(--ad-text-body-sm); text-align: center; cursor: pointer; }
+.person-picker-email-invite button { display: inline-flex; align-items: center; justify-content: center; gap: var(--ad-space-2); max-width: 100%; min-height: var(--ad-control-touch-min); margin-top: var(--ad-space-1); padding: var(--ad-space-2) var(--ad-space-4); border: 0; border-radius: var(--ad-radius-control); background: var(--ad-surface-subtle); color: var(--ad-ink); font: inherit; font-size: var(--ad-text-body-sm); text-align: center; cursor: pointer; }
 .person-picker-email-invite button svg { flex-shrink: 0; }
 .person-picker-email-invite button span { min-width: 0; overflow-wrap: anywhere; }
 .person-picker-email-invite button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
@@ -23,3 +23,16 @@
 .member-invitation-form > [role="alert"] { color: var(--ad-tag-red-ink); }
 .member-invitation-form footer { display: flex; justify-content: flex-end; gap: var(--ad-space-2); margin-top: var(--ad-space-2); }
 .member-invited-actions { display: flex; flex-wrap: wrap; gap: var(--ad-space-2); }
+.team-member-list-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--ad-space-3); margin-bottom: var(--ad-space-3); }
+.team-member-status-tabs { display: flex; gap: var(--ad-space-2); }
+.team-member-status-tabs button { min-height: var(--ad-control-touch-min); padding: var(--ad-space-2) var(--ad-space-3); border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-tab-muted); font: inherit; font-size: var(--ad-text-body-sm); font-weight: 500; cursor: pointer; }
+.team-member-status-tabs button:hover, .team-member-status-tabs button[aria-selected="true"] { background: var(--ad-tab-selected-bg); color: var(--ad-tab-active); }
+.team-member-status-tabs button:focus-visible, .team-members-panel [role="tabpanel"]:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.team-member-empty { margin: 0; padding: var(--ad-space-6); color: var(--ad-ink-tertiary); font-size: var(--ad-text-body-sm); text-align: center; }
+@media (max-width: 760px), (pointer: coarse) { .member-invited-actions [data-slot="button"] { min-height: var(--ad-control-touch-min); } }
+.team-member-search { position: relative; flex: 0 1 320px; min-width: 0; max-width: 100%; }
+.team-member-search > svg { position: absolute; left: var(--ad-space-3); top: 50%; transform: translateY(-50%); color: var(--ad-ink-tertiary); pointer-events: none; }
+.team-member-search input { padding-left: var(--ad-space-8); padding-right: var(--ad-control-touch-min); }
+.team-member-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.team-member-search > button { position: absolute; right: var(--ad-space-1); top: 50%; transform: translateY(-50%); color: var(--ad-ink-tertiary); }
+@media (max-width: 760px) { .team-member-search { flex-basis: 100%; } .team-member-search input, .team-member-search > button { min-height: var(--ad-control-touch-min); } .team-member-search > button { min-width: var(--ad-control-touch-min); right: 0; } }

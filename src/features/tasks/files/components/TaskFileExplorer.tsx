@@ -99,20 +99,38 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
   const temporarySources = useRef(new Map<string, TaskFileNode>());
   if (transientPreviewFile && !files.some(file => file.id === transientPreviewFile.id)) temporarySources.current.set(transientPreviewFile.id, transientPreviewFile);
   const previewFiles = useMemo(() => [...files, ...discussionSources, ...[...temporarySources.current.values()].filter(source => ![...files, ...discussionSources].some(file => file.id === source.id))], [files, discussionSources, transientPreviewFile]);
+  const focusedFile = useMemo(() => {
+    const node = previewFiles.find(file => file.id === focusedFileId && file.kind === "file" && !file.archived);
+    if (!node || loaded.error || loaded.fileErrors[node.id]) return null;
+    // The host may explicitly provide a retained discussion source outside the task tree.
+    if (temporarySources.current.has(node.id)) return node;
+    if (node.retiredBuiltin) return null;
+    const visited = new Set<string>([node.id]);
+    let parentId = node.parentId;
+    while (parentId) {
+      if (visited.has(parentId)) return null;
+      visited.add(parentId);
+      const parent = previewFiles.find(file => file.id === parentId);
+      if (!parent || parent.kind !== "folder" || parent.archived || parent.retiredBuiltin) return null;
+      parentId = parent.parentId;
+    }
+    return node;
+  }, [focusedFileId, previewFiles, loaded.error, loaded.fileErrors]);
+  const focusedFileAvailable = Boolean(focusedFile);
   const [drafts, setDrafts] = useState<Record<string, TaskFileDraft>>(() => getTaskFileDrafts(taskId) ?? {});
-  const [error, setError] = useState(loaded.error);
+  const [error, setError] = useState(loaded.error || (focusedFileId && !focusedFileAvailable ? d('fileUnavailable') : ""));
   const [referenceVersion, setReferenceVersion] = useState(focusedVersion);
-  const [selectedId, setSelectedId] = useState<string | null>(() => getTaskFilePreviewId(previewFiles, focusedFileId));
+  const [selectedId, setSelectedId] = useState<string | null>(() => focusedFileId ? focusedFile?.id ?? null : getTaskFilePreviewId(previewFiles));
   const [expandedIds, setExpandedIds] = useState(() => new Set(browserMode
-    ? focusedFileId && !preserveFocusedDirectory ? getNodePath(loaded.files, focusedFileId).filter(node => node.kind === "folder").map(node => node.id) : []
+    ? focusedFile && !preserveFocusedDirectory ? getNodePath(loaded.files, focusedFile.id).filter(node => node.kind === "folder").map(node => node.id) : []
     : initialFiles.filter(node => node.kind === "folder").map(node => node.id)));
   const [dialog, setDialog] = useState<TaskFileDialogState>(null);
   const [query, setQuery] = useState("");
-  const [mobilePreview, setMobilePreview] = useState(Boolean(focusedFileId));
+  const [mobilePreview, setMobilePreview] = useState(focusedFileAvailable);
   const [undo, setUndo] = useState<{ files: TaskFileNode[]; message: string } | null>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [browserDirectoryId, setBrowserDirectoryId] = useState<string | null>(() => preserveFocusedDirectory ? null : loaded.files.find(node => node.id === focusedFileId && node.kind === "file")?.parentId ?? null);
-  const [previewOpen, setPreviewOpen] = useState(Boolean(focusedFileId));
+  const [previewOpen, setPreviewOpen] = useState(focusedFileAvailable);
   const [confirmPreviewClose, setConfirmPreviewClose] = useState(false);
   const previewTrigger = useRef<HTMLElement | null>(focusedTrigger ?? null);
   const focusedContext = useRef({ trigger: focusedTrigger ?? null, preserveDirectory: preserveFocusedDirectory });
@@ -272,7 +290,14 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
     }));
   }, [initialFiles]);
   useEffect(() => {
-    if (!focusedFileId || !previewFiles.some(node => node.id === focusedFileId && node.kind === "file" && !node.archived)) return;
+    if (!focusedFileId) return;
+    if (!focusedFileAvailable) {
+      setPreviewOpen(false); setMobilePreview(false); setSelectedId(null); setEditingFileId(null);
+      setReferenceVersion(undefined); setAnnotationSource(null); setSelection(null);
+      setError(loaded.error || d('fileUnavailable'));
+      return;
+    }
+    setError(loaded.error);
     setReferenceVersion(focusedVersion);
     previewTrigger.current = focusedContext.current.trigger;
     setPreviewOpen(true);
@@ -280,8 +305,11 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
     setSelectedId(focusedFileId); setEditingFileId(null); setShowHistory(false); setMobilePreview(true); setSelection(null); setAnnotationSource(null); setAnnotationMode(false);
     const path = getNodePath(previewFiles, focusedFileId);
     setExpandedIds(current => new Set([...current, ...path.filter(node => node.kind === "folder").map(node => node.id)]));
-  }, [focusedFileId, focusedVersion, focusedSequence]);
-  useEffect(() => { setSelectedId(current => getTaskFilePreviewId(previewFiles, current)); }, [previewFiles]);
+  }, [focusedFileId, focusedVersion, focusedSequence, focusedFileAvailable]);
+  useEffect(() => {
+    if (focusedFileId && !focusedFileAvailable) return;
+    setSelectedId(current => current === focusedFileId && focusedFileAvailable ? current : getTaskFilePreviewId(previewFiles, current));
+  }, [previewFiles, focusedFileId, focusedFileAvailable]);
   useEffect(() => { syncTaskFileDraftWarning(); }, []);
   useEffect(() => {
     const detailScrollRoot = previewRef.current?.closest(".task-detail-split");

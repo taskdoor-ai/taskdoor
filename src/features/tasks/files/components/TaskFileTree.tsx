@@ -123,7 +123,7 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
         >{isExpanded ? <ChevronDown aria-hidden="true" size={13} /> : <ChevronRight aria-hidden="true" size={13} />}</AriaButton> : <span aria-hidden="true" className="task-file-explorer-chevron" />}
         {browser ? node.kind === "file" && <span className="task-file-browser-thumbnail"><TaskFileThumbnail file={node} /></span> : <TaskFileGlyph compact expanded={isExpanded} node={node} />}
         <TaskFileName className="task-file-explorer-name" name={displayName} />
-        {node.kind === "folder" && (browser || children.length > 0) && <small aria-label={ui("{0} 项", { 0: childCount })}>{childCount}</small>}
+        {node.kind === "folder" && childCount > 0 && (browser || children.length > 0) && <small aria-label={ui("{0} 项", { 0: childCount })}>{childCount}</small>}
         {browser && node.kind === "file" && <small>{formatFileSize(node.sizeBytes, { fallback: node.sizeLabel })}</small>}
         <TaskFileNodeMenu canDelete={canDelete?.(node.id)} node={node} taskId={taskId} onAction={onAction} tabIndex={isFocused ? 0 : -1} />
       </>}</TreeItemContent>

@@ -26,7 +26,7 @@ type ProgressComparisonProposal = {
 
 - workload 只保留真实历史记录，不用当前估算回填过去；未知完成量不能补零。若正式比较组件所需完整 workload 不可得，comparison=null，继续返回已有 progress/trend 部分。
 - 本次 evaluatedAt、文件或讨论的 createdAt/updatedAt 不是已保存工作量观察、创建基线或正式起点。当前分析判断已有成果时，仍可计算当前进度；不能把本轮完成量追加为输入中不存在的历史节点，也不能取文件日期填 timing.startOn。
-- creation 仅来自创建时保留的 AI 初始估算与日期；不要求隐藏估时先人工确认，创建确认也不等于估算人工确认。创建时有总量不代表完成量为零；后续补估或重估不回填 creation。
+- creation 仅来自创建时保留的 AI 初始估算与日期；两者已读时必须保留该对象，任一未知时为 null，不能因本轮重估、改期或已在 timing 中使用起点而省略；不要求隐藏估时先人工确认，创建确认也不等于估算人工确认。创建时有总量不代表完成量为零；后续补估或重估不回填 creation。
 - aiAssessment 是独立 AI 观察，绑定当前范围版本、观察时间和依据；不覆盖用户确认或历史。
 - expected 是已保存的计划工作量曲线，不是测试用例的预期答案。没有计划曲线则 points=[]；不能从截止日期插值制造计划。
 - timing.startOn 读取正式项目接受的起点记录，未知则 comparison=null；dueOn 读取任务截止日期。forecastOn 由交付节奏、剩余投入、正文所需材料与有据执行条件或恢复安排推导，缺依据为 null；不读取前置关系字段或边，不能把截止日期作为预测完成日。

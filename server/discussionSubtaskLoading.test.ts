@@ -89,7 +89,7 @@ const source = request.source;
 const result = { draft: { title: "核对发布材料", goal: "让发布负责人掌握材料可用性。", ownerId: "", endDate: "", labels: [] }, message: "" };
 const props = { id: "discussion-create", source, request, messages, contextCurrent: true, members: [], tags: [], onCreate: () => undefined, onCancel: () => undefined };
 
-function deferredFetch(t: TestContext) {
+function deferredFetch(t: TestContext, response: unknown = result) {
   const original = globalThis.fetch;
   let resolve!: (response: Response) => void;
   let reject!: (error: Error) => void;
@@ -101,7 +101,7 @@ function deferredFetch(t: TestContext) {
     return new Promise<Response>((done, fail) => { resolve = done; reject = fail; });
   };
   t.after(() => { globalThis.fetch = original; });
-  return { finish: () => resolve(new Response(JSON.stringify(result), { status: 200 })), fail: () => reject(new Error("unavailable")), signal: () => signal, calls: () => calls };
+  return { finish: () => resolve(new Response(JSON.stringify(response), { status: 200 })), fail: () => reject(new Error("unavailable")), signal: () => signal, calls: () => calls };
 }
 const flush = () => new Promise<void>(resolve => setImmediate(resolve));
 
@@ -132,6 +132,40 @@ test("后台预填完成后骨架与内容一起切换，不再出现空白等�
   assert.match(view.html(), /value="核对发布材料"/);
   assert.match(view.html(), /让发布负责人掌握材料可用性/);
   assert.deepEqual(view.form().props.initialDraft.sourceDiscussion, source);
+  view.unmount();
+});
+
+test("仅任务引用和数字也预填已有信息，不显示模型的拒绝说明", async t => {
+  const referenceMessages = [{ ...messages[0], message: "[9](<#taskdoor-task=venue>) 1" }];
+  const referenceRequest = buildDiscussionSubtaskRequest({
+    locale: "zh-CN", currentDate: "2026-11-05", task: request.task, sourceMessageId: "message", messages: referenceMessages, members: [], labels: [],
+    referenceTasks: [{ id: "venue", title: "签署场地与设备服务确认", goal: "明确场地及设备服务的约定范围。", completionCriteria: [] }],
+  });
+  const pending = deferredFetch(t, { draft: null, message: "消息仅包含任务引用和数字，缺乏具体待办事项，无法生成子任务。" });
+  const view = mountedDiscussion({ ...props, source: referenceRequest.source, request: referenceRequest, messages: referenceMessages });
+  view.commit();
+  pending.finish();
+  await flush();
+  view.render();
+  assert.match(view.form().props.initialDraft.title, /场地.*设备/);
+  assert.ok(view.form().props.initialDraft.goal);
+  assert.doesNotMatch(view.html(), /缺乏具体待办|无法生成子任务|请补充信息/);
+  assert.deepEqual(view.form().props.initialDraft.sourceDiscussion, referenceRequest.source);
+  view.unmount();
+});
+
+test("引用任务信息变化后保留旧输入并拒绝按过期上下文保存", t => {
+  const references = [{ id: "venue", title: "确认场地服务", goal: "明确场地服务范围。" }];
+  const referenceMessages = [{ ...messages[0], message: "[9](<#taskdoor-task=venue>) 1" }];
+  const referenceRequest = buildDiscussionSubtaskRequest({ locale: "zh-CN", currentDate: "2026-11-05", task: request.task, sourceMessageId: "message", messages: referenceMessages, members: [], labels: [], referenceTasks: references });
+  const pending = deferredFetch(t);
+  const view = mountedDiscussion({ ...props, source: referenceRequest.source, request: referenceRequest, messages: referenceMessages });
+  view.commit();
+  view.render({ request: { ...referenceRequest, referencedTasks: [{ ...references[0], title: "确认新场地服务" }] } });
+  view.commit();
+  view.render();
+  assert.equal(pending.signal().aborted, true);
+  assert.throws(() => view.form().props.onCreate({ title: "保留用户输入" }), /来源讨论已更新/);
   view.unmount();
 });
 

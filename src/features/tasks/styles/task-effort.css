@@ -17,7 +17,7 @@
 .task-effort-stepper-buttons { display: flex; flex-direction: column; align-self: stretch; width: 24px; flex-shrink: 0; border-left: 1px solid var(--ad-border); }
 .task-effort-stepper-buttons > button { display: grid; place-items: center; flex: 1; min-height: 0; border: 0; background: transparent; color: var(--ad-ink-secondary); cursor: pointer; }
 .task-effort-stepper-buttons > button + button { border-top: 1px solid var(--ad-border); }
-.task-effort-stepper-buttons > button:hover:not(:disabled) { background: var(--ad-route-soft); color: var(--ad-route); }
+.task-effort-stepper-buttons > button:hover:not(:disabled) { background: var(--ad-surface-subtle); color: var(--ad-ink); }
 .task-effort-stepper-buttons > button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -2px; }
 .task-effort-stepper-buttons > button:disabled { opacity: .4; cursor: default; }
 .task-effort-stepper-hint { display: block; margin-top: var(--ad-space-1); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
@@ -59,7 +59,7 @@
 .task-effort-distribution-heading:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
 .task-effort-distribution-title, .task-effort-distribution-heading-end { display: flex; min-width: 0; flex-wrap: wrap; align-items: center; gap: var(--ad-space-1) var(--ad-space-3); }
 .task-effort-distribution-title > span, .task-effort-distribution-heading-end > span[title] { color: var(--ad-ink-tertiary); font-variant-numeric: tabular-nums; }
-.task-effort-distribution-toggle { display: inline-flex; flex: 0 0 auto; align-items: center; gap: var(--ad-space-1); color: var(--ad-route); }
+.task-effort-distribution-toggle { display: inline-flex; flex: 0 0 auto; align-items: center; gap: var(--ad-space-1); color: var(--ad-ink-secondary); }
 .task-effort-distribution-toggle > svg { flex-shrink: 0; }
 .task-effort-distribution-heading[aria-expanded="true"] .task-effort-distribution-toggle > svg { transform: rotate(180deg); }
 .task-effort-distribution ol { display: grid; gap: var(--ad-space-3); margin: var(--ad-space-2) 0 0; padding: 0; list-style: none; }
@@ -68,7 +68,7 @@
 .task-effort-distribution-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: var(--ad-space-2); font-size: var(--ad-text-caption); line-height: 1.6; }
 .task-effort-distribution-name { min-width: 0; color: var(--ad-ink-secondary); overflow-wrap: anywhere; }
 .task-effort-distribution-name:is(button) { padding: 0; border: 0; background: transparent; font: inherit; text-align: left; cursor: pointer; }
-.task-effort-distribution-name:is(button):hover { color: var(--ad-route); text-decoration: underline; text-underline-offset: 3px; }
+.task-effort-distribution-name:is(button):hover { color: var(--ad-ink); text-decoration: underline; text-underline-offset: 3px; }
 .task-effort-distribution-name:is(button):focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; border-radius: var(--ad-radius-control); }
 .task-effort-distribution-metrics { display: inline-flex; align-items: baseline; gap: var(--ad-space-1); color: var(--ad-ink-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .task-effort-distribution-amount, .task-effort-distribution-share { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }

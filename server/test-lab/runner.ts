@@ -1,3 +1,4 @@
+import { discussionSubtaskRequestSchema, parseDiscussionSubtaskDraft } from "../../src/features/tasks/lib/discussion-subtask-draft.ts";
 import {caseGroupingProblem} from '../../src/test-lab/case-groups.ts';
 import {memberResponseSchema} from './member-response-schema.ts';
 import {analysisResponseSchema} from './analysis-response-schema.ts';
@@ -48,7 +49,16 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
         const skill=snapshots.get(id)![index];const started=Date.now();
         const result:LabStepResult={stepId:step.id,skillId:step.skillId,input:null,output:null,rawOutput:'',error:null,assertions:[],structure:'unknown',structureErrors:[],durationMs:0,usage:{inputTokens:null,outputTokens:null,totalTokens:null},skillVersionId:skill.versionId,skillVersionLabel:skill.versionLabel,skillHash:skill.hash,promptHash:'',skillSnapshot:skill.snapshot,before:structuredClone(sandbox),after:structuredClone(sandbox)};
         try{
-          if(skill.outputMode==='subtasks'){
+          if(step.skillId==='taskdoor-discussion-subtask'){
+            if(run.selection?.executionMode==='mcp') throw Error('讨论草稿仅支持只读评测');
+            const input=discussionSubtaskRequestSchema.parse(run.caseSnapshot.legacyInput);
+            result.input=input;result.promptHash=hash(skill.instructions+'\n'+JSON.stringify(input));
+            const response=await modelCall({...options,model:run.model},skill.instructions,input,controller.signal);
+            if(controller.signal.aborted)throw Error('运行已取消');
+            result.rawOutput=response.rawOutput;result.usage=response.usage;
+            result.output=parseDiscussionSubtaskDraft(JSON.parse(response.rawOutput),input);result.structure='passed';
+            result.assertions=evaluateAssertions(result.output,run.caseSnapshot.assertions.filter(a=>a.stepId===step.id));
+          }else if(skill.outputMode==='subtasks'){
             if(run.selection?.executionMode!=='subtasks')throw Error('子任务 Skill 只能运行只读一层建议评测');
             const input=buildSubtaskInput(run.teamSnapshot,run.caseSnapshot,step,`${id}:${step.id}`,step.usePreviousOutput?get(id).steps.at(-1)?.output:undefined);
             result.input=input;result.promptHash=hash(skill.instructions+'\n'+JSON.stringify(input));
@@ -86,7 +96,7 @@ export function createRunner(store:LabStore,options:ModelOptions,modelCall:Model
           }else{
           sandbox=applyEvents(sandbox,step);result.after=structuredClone(sandbox);
           const input=buildModelInput(sandbox,run.caseSnapshot,step,id,get(id).steps);result.input=input;result.promptHash=hash(skill.instructions+'\n'+JSON.stringify(input));
-          const outputSchema=step.skillId==='agentdoor-task-status-analyzer'&&/TASK-ANALYSIS-(2026-10-11-v7|2026-10-14-v(?:8|9|10))/.test(skill.snapshot)&&supportsPreviewSchema(run.model)?analysisResponseSchema(input):step.skillId==='agentdoor-member-matcher'&&skill.snapshot.includes('MEMBER-MATCH-2026-10-11-v2')&&supportsPreviewSchema(run.model)?memberResponseSchema({candidateMemberIds:"candidateMemberIds" in input?input.candidateMemberIds:undefined}):undefined;
+          const outputSchema=step.skillId==='agentdoor-task-status-analyzer'&&/TASK-ANALYSIS-(2026-10-11-v7|2026-10-14-v(?:8|9|10)|2026-11-10-v(?:11|12|13|14|15))/.test(skill.snapshot)&&supportsPreviewSchema(run.model)?analysisResponseSchema(input):step.skillId==='agentdoor-member-matcher'&&skill.snapshot.includes('MEMBER-MATCH-2026-10-11-v2')&&supportsPreviewSchema(run.model)?memberResponseSchema({candidateMemberIds:"candidateMemberIds" in input?input.candidateMemberIds:undefined}):undefined;
           result.modelSettings={maxOutputTokens:options.maxOutputTokens,responseFormat:outputSchema?'json_schema':'json_object',...(outputSchema?{outputSchemaHash:hash(JSON.stringify(outputSchema))}:{})};
           const response=await modelCall({...options,model:run.model,outputSchema},skill.instructions,input,controller.signal);result.rawOutput=response.rawOutput;result.usage=response.usage;
           if(controller.signal.aborted)throw new Error('运行已取消');

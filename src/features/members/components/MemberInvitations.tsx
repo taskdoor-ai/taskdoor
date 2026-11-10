@@ -123,7 +123,7 @@ function MemberInvitationForm({ request, state, teamId, onClose }: { request: In
   const roleHelpId = `${formId}-role-help`;
   const { recipients, error: recipientError } = normalizeInvitationRecipients(rows);
   const selectedTeam = state.teams.find(team => team.id === teamId);
-  const existingEmails = new Set(selectedTeam?.memberships.map(member => member.email.toLowerCase()));
+  const existingEmails = new Set(selectedTeam?.memberships.filter(member => member.status !== "disabled").map(member => member.email.toLowerCase()));
   const recipientCount = recipients?.length ?? 0;
   const newCount = recipients?.filter(({ email }) => !existingEmails.has(email)).length ?? 0;
   const allExisting = recipientCount > 0 && newCount === 0;

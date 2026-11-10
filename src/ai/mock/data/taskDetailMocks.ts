@@ -14,6 +14,7 @@ import { getSerumLaunchCommonFileAssets } from "@/ai/mock/data/serumLaunchCommon
 import { getSerumLaunchDiscussionActivities, getSerumLaunchDiscussionFiles } from "@/ai/mock/data/serumLaunchDiscussionSamples";
 import { getSerumLaunchMediaDiscussionActivities, getSerumLaunchMediaDiscussionFiles } from "@/ai/mock/data/serumLaunchMediaDiscussionSamples";
 import { isNotificationReadTestMode, notificationReadTestActivitiesByTask } from "@/ai/mock/data/notificationReadScenario";
+import { withNotificationDiscussionExamples } from "@/ai/mock/data/notificationDiscussionExamples";
 import { supportedTaskFileFixtures } from "@/ai/mock/lib/taskFilePreviewFixtures";
 export { migrateUnsupportedBuiltinTaskFiles } from "@/ai/mock/lib/taskFilePreviewFixtureMigration";
 
@@ -312,6 +313,7 @@ const legacyTaskDetailMocks: Record<TaskDetailId, TaskDetailContent> = {
       { content: "保留首次彩排录像位置、时间码与对应问题编号。", name: "首次彩排录像索引.md", section: "evidence", updatedAt: "今天" },
     ],
     fileNames: ["香氛礼盒直播执行方案.pdf", "直播彩排问题记录.docx", "直播场控与异常清单.md"],
+    participants: ["林洁", "梁川", "周岚"],
     summary: "直播彩排等待内容终审；高远可继续核对场控清单与异常预案，尚不能确认彩排完成。",
   }),
   "fragrance-product": createScenarioTaskDetail("fragrance-product", {
@@ -367,7 +369,10 @@ const legacyTaskDetailMocks: Record<TaskDetailId, TaskDetailContent> = {
   }),
 };
 
-export const taskDetailMocks = Object.fromEntries(Object.entries(legacyTaskDetailMocks).map(([id, detail]) => [id, { ...detail, files: supportedTaskFileFixtures(detail.files) }])) as Record<TaskDetailId, TaskDetailContent>;
+export const taskDetailMocks = Object.fromEntries(Object.entries(legacyTaskDetailMocks).map(([id, detail]) => {
+  const source = { ...detail, files: supportedTaskFileFixtures(detail.files) };
+  return [id, id === "fragrance-live" ? withNotificationDiscussionExamples(source) : source];
+})) as Record<TaskDetailId, TaskDetailContent>;
 
 /** Exact pre-retirement nodes are used for matching only, never re-injected. */
 export function getLegacyTaskFileFixtures(task: TaskNode): TaskFileNode[] {

@@ -13,14 +13,15 @@
 .discussion-message-authors > strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .discussion-message-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-top: var(--ad-space-2); }
 .discussion-message-meta > time, .discussion-message-meta > small { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
-.discussion-ai { margin-left: auto; border: 0; padding: 5px; border-radius: 6px; color: var(--ad-route-ink); background: var(--ad-route-soft); cursor: pointer; }
-.discussion-reply-target, .discussion-expand, .discussion-collapse { background: none; border: none; color: var(--ad-route-ink); padding: 5px 0; font: inherit; font-size: 12px; cursor: pointer; }
+.discussion-ai { margin-left: auto; border: 0; padding: 5px; border-radius: 6px; color: var(--ad-ink-secondary); background: var(--ad-surface-subtle); cursor: pointer; }
+.discussion-reply-target, .discussion-expand, .discussion-collapse { background: none; border: none; color: var(--ad-ink-secondary); padding: 5px 0; font: inherit; font-size: 12px; cursor: pointer; }
 .discussion-inline-quote { display: block; width: 100%; margin: 8px 0 0; padding: 8px 10px; border: 0; border-left: 2px solid var(--ad-border-strong); background: var(--ad-surface-quiet); color: var(--ad-ink-secondary); font: inherit; font-size: 12px; text-align: left; overflow-wrap: anywhere; white-space: pre-wrap; cursor: pointer; }
 span.discussion-reply-target { cursor: default; }
 .discussion-inline-quote.is-unavailable { color: var(--ad-ink-tertiary); cursor: default; }
 .discussion-attachments { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .discussion-attachments:focus-visible, .discussion-attachments .task-record-file-link[data-focus-visible] { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
 .discussion-attachments .task-record-file-link { display: block; flex: 0 1 148px; width: 148px; max-width: calc((100% - 8px) / 2); height: 96px; min-height: 0; gap: 0; margin: 0; padding: 0; overflow: hidden; border-radius: 8px; }
+.discussion-attachments .task-record-file-link > [role="gridcell"] { min-width: 0; height: 100%; }
 .discussion-attachments .task-record-file-link[data-disabled], .discussion-attachments .task-record-file-link[data-disabled]:hover { height: 110px; border-color: var(--ad-border-soft); color: var(--ad-ink-tertiary); cursor: default; }
 .discussion-attachments .discussion-attachment-card { position: relative; display: grid; width: 100%; height: 100%; min-width: 0; grid-template-rows: 56px minmax(0, 1fr); overflow: hidden; }
 .discussion-attachments .discussion-attachment-thumbnail { width: 100%; height: 100%; min-height: 0; border-radius: 0; }
@@ -32,7 +33,7 @@ span.discussion-reply-target { cursor: default; }
 .discussion-attachments .discussion-attachment-card[data-preview="image"] .discussion-attachment-info { position: absolute; inset: auto 0 0; border-top: 1px solid var(--ad-border-soft); background: var(--ad-surface); opacity: 0; transition: opacity 140ms ease; }
 .discussion-attachments .discussion-attachment-card[data-preview="image"] .discussion-attachment-name { color: var(--ad-ink); }
 .discussion-attachments .task-record-file-link:hover .discussion-attachment-card[data-preview="image"] .discussion-attachment-info, .discussion-attachments .task-record-file-link[data-focused] .discussion-attachment-card[data-preview="image"] .discussion-attachment-info, .discussion-attachments .task-record-file-link:focus .discussion-attachment-card[data-preview="image"] .discussion-attachment-info, .discussion-attachments .discussion-attachment-card[data-preview="image"]:not(:has(.task-file-thumbnail-image)) .discussion-attachment-info { opacity: 1; }
-.discussion-saved-mention { color: var(--ad-route-ink); font-weight: 600; }
+.discussion-saved-mention { color: var(--ad-accent-ink); font-weight: 600; }
 .discussion-expand { margin: 10px 0 0 44px; }
 .discussion-message-error { color: var(--ad-danger-ink, #a33035); font-size: 12px; }
 @media (max-width: 640px) { .discussion-message.is-reply { margin-left: 12px; } .task-discussion-actions { flex-wrap: wrap; } }
@@ -49,12 +50,12 @@ span.discussion-reply-target { cursor: default; }
 .discussion-reference-icon:hover, .discussion-reference-icon[data-popup-open] { background: var(--ad-surface-subtle); color: var(--ad-ink-secondary); }
 .discussion-reference-popover { width: 300px; max-width: calc(100vw - 32px); padding: 12px; font-size: var(--ad-text-caption); color: var(--ad-ink-secondary); }
 .discussion-reference-popover > p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; line-height: 1.7; overflow-wrap: anywhere; }
-.discussion-reference-popover > button { margin-top: 8px; padding: 0; border: 0; background: transparent; color: var(--ad-route-ink); font: inherit; cursor: pointer; }
+.discussion-reference-popover > button { margin-top: 8px; padding: 0; border: 0; background: transparent; color: var(--ad-control-selected-ink); font: inherit; cursor: pointer; }
 .discussion-replies-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 10px 0 12px 44px; font-size: var(--ad-text-caption); }
 .discussion-replies-controls > .discussion-expand { margin: 0; }
 .discussion-replies-controls > span { color: var(--ad-ink-tertiary); }
 .discussion-messages.is-compact .discussion-replies-controls { margin-left: 0; }
-.discussion-reference-icon:focus-visible, .discussion-replies-controls > button:focus-visible, .discussion-reference-popover > button:focus-visible, .discussion-composer-context > button:focus-visible { outline: 2px solid var(--ad-route-ink); outline-offset: 2px; }
+.discussion-reference-icon:focus-visible, .discussion-replies-controls > button:focus-visible, .discussion-reference-popover > button:focus-visible, .discussion-composer-context > button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .discussion-reference-popover { animation: none; transition: none; } }
 @media (prefers-reduced-motion: reduce) { .discussion-attachments .discussion-attachment-info { transition: none; } }
 @media (pointer: coarse), (hover: none) { .discussion-attachments .discussion-attachment-card[data-preview="image"] .discussion-attachment-info { opacity: 1; } }

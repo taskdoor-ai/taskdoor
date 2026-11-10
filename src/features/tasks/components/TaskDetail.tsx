@@ -68,6 +68,7 @@ import { discussionFollowers, readDiscussionNotificationPreference } from "@/fea
 import { TaskFileExplorer } from "@/features/tasks/files/components/TaskFileExplorer";
 import { ALL_TASK_MEMBERS_MENTION_ID, getDiscussionAttachment, getTaskFiles, deleteCollaborationMessage, mergeCollaborationMessages, postCollaborationMessage, replaceCollaborationFiles, type CollaborationMessage, type CollaborationSnapshot, type DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import { useTaskCollaboration } from "@/features/tasks/lib/useTaskCollaboration";
+import { resolveDiscussionNotificationAttachment } from "@/features/tasks/lib/discussion-notification-source";
 import "@/features/tasks/styles/task-records.css";
 import "@/features/tasks/styles/discussion-messages.css";
 import "@/features/tasks/styles/discussion-composer.css";
@@ -83,6 +84,7 @@ import "@/features/tasks/styles/task-discussion-feed.css";
 export type TaskAttentionTarget = {
   kind: "activity" | "commit" | "file" | "insight" | "criteria" | "subtasks" | "details" | "discussion";
   targetId: string;
+  attachment?: { fileId: string; version: number };
 };
 
 type TaskDetailTab = "subtasks" | "ai" | "discussion" | "files" | "activity";
@@ -435,6 +437,29 @@ export function TaskDetail({
       }, 0);
       return () => window.clearTimeout(timer);
     }
+    if (initialAttentionTarget.kind === "activity" && initialAttentionTarget.attachment) {
+      const source = !collaboration.error && resolveDiscussionNotificationAttachment(activities, allFiles, {
+        messageId: initialAttentionTarget.targetId, ...initialAttentionTarget.attachment,
+      });
+      const unavailable = () => {
+        setAttentionMessage(locale === "en" ? "The original discussion or referenced attachment is unavailable." : "原讨论或引用附件已不可用。");
+        onInitialAttentionTargetHandled?.();
+      };
+      if (!source) { unavailable(); return; }
+      setActiveTab("discussion");
+      setSourceRecord(null);
+      setDiscussionAttention(previous => ({ id: source.message.id, sequence: (previous?.sequence ?? 0) + 1 }));
+      const timer = window.setTimeout(() => {
+        const record = detailScrollRef.current?.querySelector<HTMLElement>(`[id="${CSS.escape(`task-activity-${source.message.id}`)}"]`);
+        if (!record?.getClientRects().length || record.closest('[hidden], [aria-hidden="true"]')) { unavailable(); return; }
+        const trigger = record.querySelector<HTMLElement>(`[data-key="${CSS.escape(`${source.ref.fileId}:${source.ref.version}`)}"]`) ?? record;
+        trigger.scrollIntoView({ block: "nearest" });
+        trigger.focus({ preventScroll: true });
+        openFile(source.file.id, source.ref.version, true, trigger);
+        onInitialAttentionTargetHandled?.();
+      }, 0);
+      return () => window.clearTimeout(timer);
+    }
     const record = activities.find((item) => item.id === initialAttentionTarget.targetId);
     if (record && isDiscussionActivity(record)) setDiscussionAttention(previous => ({ id: record.id, sequence: (previous?.sequence ?? 0) + 1 }));
     const isInsight = initialAttentionTarget.kind === "insight" || record?.type === "ai-insight";
@@ -446,7 +471,11 @@ export function TaskDetail({
       setSourceRecord(null);
     }
     if (initialAttentionTarget.kind === "file") {
+      setAttachmentPreview(null);
+      filePreviewTrigger.current = null;
       setSelectedFileId(initialAttentionTarget.targetId);
+      setSelectedFileVersion(undefined);
+      setFileFocusSequence(value => value + 1);
     }
     const timer = window.setTimeout(() => {
       const targetId = isInsight ? "task-source-record" : initialAttentionTarget.kind === "file" ? `task-file-preview-${initialAttentionTarget.targetId}` : `task-${initialAttentionTarget.kind}-${initialAttentionTarget.targetId}`;
@@ -457,7 +486,7 @@ export function TaskDetail({
       onInitialAttentionTargetHandled?.();
     }, 0);
     return () => window.clearTimeout(timer);
-  }, [activities, initialAttentionTarget, onInitialAttentionTargetHandled, taskId]);
+  }, [activities, allFiles, collaboration.error, initialAttentionTarget, onInitialAttentionTargetHandled, taskId]);
 
   const changeOwner = async (value: string[]): Promise<boolean> => {
     if (!onOwnerChange || ownerSaving) return false;

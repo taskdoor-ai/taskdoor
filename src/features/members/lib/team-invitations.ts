@@ -46,7 +46,7 @@ function personFromMembership(membership: TeamMembership, known?: PersonOption):
     ...known, id: membership.memberId ?? membership.id, email: membership.email,
     name: membership.name ?? (membership.status === "invited" ? membership.email : known?.name ?? membership.email),
     role: known?.role ?? (membership.role === "admin" ? "管理员" : "成员"),
-    membershipStatus: membership.status,
+    membershipStatus: membership.status === "active" ? "active" : "invited",
   };
 }
 
@@ -54,6 +54,7 @@ export function getTeamPeople(team: TeamResponsibilityProfile | undefined, known
   if (!team) return known;
   const people = new Map<string, PersonOption>();
   for (const membership of team.memberships) {
+    if (membership.status === "disabled") continue;
     const existing = known.find(person => person.id === membership.memberId || person.email.toLowerCase() === membership.email.toLowerCase());
     const person = personFromMembership(membership, existing);
     if (existing && existing.id !== person.id) people.delete(existing.id);
@@ -82,7 +83,7 @@ export function createTeamEmailInvitation(state: PersonalCenterState, input: Tea
   checkInvitationRole(input.role);
   const existing = team.memberships.find(member => member.email.toLowerCase() === email);
   const known = input.members?.find(member => member.email.toLowerCase() === email);
-  if (existing && (existing.status === "active" || !input.renew)) {
+  if (existing && (existing.status === "active" || (existing.status === "invited" && !input.renew))) {
     return { state, membership: existing, person: personFromMembership(existing, known) };
   }
   checkInvitationRole(existing?.role);
@@ -120,7 +121,7 @@ export function resolveTeamEmailInvitation(state: PersonalCenterState, token: st
   if (!token) return null;
   for (const team of state.teams) {
     const membership = team.memberships.find(member => member.emailInvitation?.token === token);
-    if (membership?.emailInvitation) return {
+    if (membership?.emailInvitation && membership.status !== "disabled") return {
       team: { id: team.id, name: team.name, role: membership.role === "owner" ? "admin" as const : membership.role },
       inviter: membership.emailInvitation.inviter, email: membership.email, membership,
       status: membership.status === "invited" && now >= membership.emailInvitation.expiresAt ? "expired" as const : "valid" as const,

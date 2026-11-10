@@ -144,3 +144,27 @@ test("新增操作沿用语义 Token 并保留窄屏 44px 操作目标", () => {
   assert.match(css, /focus-visible/);
   assert.match(css, /prefers-reduced-motion/);
 });
+
+test("讨论日期估计可见，人工修改或清空后去掉估计说明且不保存为任务字段", async () => {
+  const { TaskDueDatePicker } = await import("../src/features/tasks/components/TaskDueDatePicker.tsx");
+  const { I18nProvider } = await import("../src/shared/i18n/I18nProvider.tsx");
+  const initialDraft = { title: "修正暗黑模式偏色", goal: "恢复既有黑灰色调。", completionCriteria: ["讨论指出区域不再出现蓝色偏调。"], endDate: "2026-11-12" };
+  const endDateSuggestion = "假设主题配置可用，预留局部调整和核对窗口。";
+  const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: "zh-CN", children: createElement(Form, { ...props, inline: false, initialDraft, endDateSuggestion }) }));
+  assert.match(html, /AI 预计完成日期，可修改或清除/);
+  assert.match(html, /假设主题配置可用/);
+  for (const nextDate of ["", "2026-11-14"]) {
+    let edited = false;
+    const calls: unknown[] = [];
+    const tree = capture(() => Form({ ...props, inline: false, initialDraft, endDateSuggestion, onCreate: value => { calls.push(value); } }), node => {
+      if (edited) return;
+      edited = true;
+      elements(node, element => element.type === TaskDueDatePicker)[0].props.onChange(nextDate);
+    });
+    assert.equal(elements(tree, element => element.props.id === "new-subtask-date-suggestion").length, 0);
+    await submit(tree);
+    assert.equal((calls[0] as { endDate: string }).endDate, nextDate);
+    assert.deepEqual((calls[0] as { completionCriteria: string[] }).completionCriteria, initialDraft.completionCriteria);
+    assert.equal("endDateSuggestion" in (calls[0] as object), false);
+  }
+});

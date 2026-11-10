@@ -1,3 +1,4 @@
+import { applySavedAccentColor } from "@/features/me/components/AccentColorSetting";
 import { hasExplicitlySignedOut } from "@/shared/lib/workspace-session";
 import { I18nProvider, useI18n } from "@/shared/i18n/I18nProvider";
 import { lazy, startTransition, StrictMode, Suspense, useCallback, useState } from "react";
@@ -17,6 +18,8 @@ import "@/features/tasks/styles/task-workspace-list.css";
 import "@/features/tasks/styles/task-filter-panel.css";
 import "@/features/tasks/styles/task-workspace.css";
 import "@/features/tasks/styles/task-file-editor.css";
+
+applySavedAccentColor();
 
 const OnboardingExperience = lazy(() => import("@/features/auth/components/AuthExperience"));
 const loadWorkspace = () => import("@/app/App");

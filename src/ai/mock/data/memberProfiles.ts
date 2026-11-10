@@ -69,7 +69,7 @@ export type TeamMembership = {
   memberId?: string;
   responsibility?: string;
   role: TeamAccessRole;
-  status: "active" | "invited";
+  status: "active" | "invited" | "disabled";
 };
 
 export type TeamResponsibilityProfile = {
@@ -463,7 +463,7 @@ const isMembership = (value: unknown): value is TeamMembership => {
   const membership = value as Partial<TeamMembership>;
   return isText(membership.id) && isText(membership.email)
     && ["owner", "admin", "member"].includes(membership.role ?? "")
-    && ["active", "invited"].includes(membership.status ?? "")
+    && ["active", "invited", "disabled"].includes(membership.status ?? "")
     && (membership.memberId === undefined || isText(membership.memberId))
     && (membership.invitedAt === undefined || isText(membership.invitedAt))
     && (membership.joinedAt === undefined || isText(membership.joinedAt))

@@ -25,10 +25,13 @@ export function getNotificationReadTestExamples(titles: Record<string, string>):
     return {
       id: activity.id.replace("r10-demo-", "r10-demo-notification-"),
       kind: "mention",
+      teamId: "creator-commerce",
       people: [{ id: activity.author, name: activity.author }],
       task: { id: taskId, title },
       target: { area: "discussion", activityId: activity.id },
-      content: ` [通知测试] @${activity.author} 在任务 ${title} 的讨论中提到了你：${activity.message.replace("[通知测试] ", "")}`,
+      content: ` [通知测试] @${activity.author} 在`,
+      contentAfterTask: " 的讨论中提及了你。",
+      excerpt: activity.message.replace("[通知测试] ", ""),
       createdAt: activity.createdAt!,
       time: activity.time,
       read: false,
@@ -36,8 +39,8 @@ export function getNotificationReadTestExamples(titles: Record<string, string>):
   }));
   const examples: WorkspaceNotification[] = [
     ...mentions,
-    { id: "r10-demo-member-joined", kind: "member-joined", people: [{ id: "林洁", name: "林洁" }], content: " [通知测试] @林洁 加入了 达人带货运营团队 。", createdAt: "2026-10-16T01:59:00Z", time: "2026-10-16 09:59", read: false },
-    { id: "r10-demo-invitation", kind: "invitation", people: [{ id: "陈默", name: "陈默" }], task: { id: "fragrance-creator-business", title: titles["fragrance-creator-business"] ?? "fragrance-creator-business" }, content: ` [通知测试] @陈默 邀请你参与任务 ${titles["fragrance-creator-business"] ?? "fragrance-creator-business"} 。`, createdAt: "2026-10-16T01:58:00Z", time: "2026-10-16 09:58", read: false },
+    { id: "r10-demo-member-joined", kind: "member-joined", teamId: "creator-commerce", people: [{ id: "林洁", name: "林洁" }], content: " [通知测试] @林洁 加入了团队。", createdAt: "2026-10-16T01:59:00Z", time: "2026-10-16 09:59", read: false },
+    { id: "r10-demo-invitation", kind: "invitation", teamId: "creator-commerce", people: [{ id: "陈默", name: "陈默" }], task: { id: "fragrance-creator-business", title: titles["fragrance-creator-business"] ?? "fragrance-creator-business" }, content: " [通知测试] @陈默 邀请你参与任务", contentAfterTask: "。", createdAt: "2026-10-16T01:58:00Z", time: "2026-10-16 09:58", read: false },
   ];
   return examples.sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt));
 }
