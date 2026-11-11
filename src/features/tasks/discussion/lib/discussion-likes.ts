@@ -38,6 +38,42 @@ export function toggleDiscussionLike(likes: DiscussionLikes, messageId: string, 
 
 export type LikeNotification = { id: string; messageId: string; likerIds: string[]; createdAt: string };
 
+export const LIKE_NOTIFICATION_DELAY_MS = 3000;
+export type LikeNotificationPreview = {
+  notifications: LikeNotification[];
+  /** The local like timestamp last delivered for each message/person pair. */
+  delivered: Record<string, string>;
+  nextAt: number | null;
+};
+
+/** Local Demo projection: always inspect current likes, never replay queued toggle actions. */
+export function advanceLikeNotifications(
+  previous: LikeNotificationPreview, likes: DiscussionLikes, now: number,
+  isRead: (notificationId: string) => boolean,
+): LikeNotificationPreview {
+  const current = new Map(Object.entries(likes).flatMap(([messageId, entries]) => entries.map(like =>
+    [JSON.stringify([messageId, like.personId]), { messageId, likerId: like.personId, at: like.at }] as const)));
+  const delivered = { ...previous.delivered };
+  let notifications = previous.notifications;
+  for (const [key, at] of Object.entries(delivered)) {
+    if (current.get(key)?.at === at) continue;
+    const [messageId, likerId] = JSON.parse(key) as [string, string];
+    notifications = applyLikeToNotifications(notifications, { messageId, likerId, at, liked: false }, isRead);
+    delete delivered[key];
+  }
+  let nextAt: number | null = null;
+  const events = [...current.entries()].sort((left, right) => Date.parse(left[1].at) - Date.parse(right[1].at));
+  for (const [key, event] of events) {
+    if (delivered[key] === event.at) continue;
+    const dueAt = Date.parse(event.at) + LIKE_NOTIFICATION_DELAY_MS;
+    if (!Number.isFinite(dueAt)) continue;
+    if (dueAt > now) { nextAt = Math.min(nextAt ?? dueAt, dueAt); continue; }
+    notifications = applyLikeToNotifications(notifications, { ...event, at: new Date(dueAt).toISOString(), liked: true }, isRead);
+    delivered[key] = event.at;
+  }
+  return { notifications, delivered, nextAt };
+}
+
 /**
  * The author's like notification for one comment. While it is unread, further likes merge into it
  * and move it to the latest like's time; once it has been read, the next like starts a new one.

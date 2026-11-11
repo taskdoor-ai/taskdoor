@@ -33,6 +33,7 @@ export type WorkspaceNavigationProps = {
   showDemoNotifications?: boolean;
   onOpenNotificationTask?: (taskId: string, target: NotificationRegionTarget | undefined, teamId: string, onNavigate: () => void) => void;
   discussionNotifications?: ComponentProps<typeof GlobalNotifications>["discussionNotifications"];
+  likeNotifications?: ComponentProps<typeof GlobalNotifications>["likeNotifications"];
   getNotificationTaskTitle?: ComponentProps<typeof GlobalNotifications>["getTaskTitle"];
   discussionReadReceipt?: DiscussionReadReceipt;
   onDiscussionReadHandled?: (sequence: number) => void;
@@ -71,7 +72,7 @@ function readNavigationWidth() {
   }
 }
 
-export function WorkspaceNavigation({ onOpenRecycleBin, onOpenFavorites, activeTeamId, onConnectAi, onCreateTask, canCreateTask = true, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, discussionReadReceipt, getNotificationTaskTitle, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, activeSection }: WorkspaceNavigationProps) {
+export function WorkspaceNavigation({ onOpenRecycleBin, onOpenFavorites, activeTeamId, onConnectAi, onCreateTask, canCreateTask = true, onOpenPersonalCenter, onTeamChange, onSignOut, onOpenNotificationTask, discussionNotifications, likeNotifications, discussionReadReceipt, getNotificationTaskTitle, onDiscussionReadHandled, showDemoNotifications = true, teams, theme, toggleTheme, userId, userProfile, filters, onFiltersChange, nodes, tagDefinitions, query, activeSection }: WorkspaceNavigationProps) {
   const { t, locale } = useI18n();
   const taskFiltersActive = activeSection === "tasks" || activeSection === "home";
   const timeZone = useTeamTimeZone();
@@ -220,7 +221,7 @@ export function WorkspaceNavigation({ onOpenRecycleBin, onOpenFavorites, activeT
             <DropdownMenuTrigger aria-label={t("account.open")} className="workspace-account-trigger" id="workspace-account-trigger" title={`${userProfile.name} · ${t("account.menu")}`}><PersonAvatar name={userProfile.name} personId={userId} profilePreviewFocusable={false} showProfilePreview={false} size="sm" /><span className="workspace-account-name">{userProfile.name}</span></DropdownMenuTrigger>
             <DropdownMenuContent align="start" aria-label={t("account.menu")} className="workspace-account-menu" side="top" sideOffset={8}><ThemeToggle onToggle={toggleTheme} theme={theme} /><AccentColorSetting /><LanguageSwitcher menu /><DropdownMenuItem onClick={() => onOpenFavorites(closeNavigation)}><Bookmark aria-hidden="true" /><span>{locale === "en" ? "Favorites" : "收藏"}</span></DropdownMenuItem><DropdownMenuItem onClick={() => { onOpenPersonalCenter("profile"); closeNavigation(); }}><Settings2 aria-hidden="true" /><span>{t("account.settings")}</span></DropdownMenuItem><DropdownMenuItem onClick={onSignOut} variant="destructive"><LogOut aria-hidden="true" /><span>{t("account.signOut")}</span></DropdownMenuItem></DropdownMenuContent>
           </DropdownMenu>
-          <GlobalNotifications besideNavigation teamId={activeTeamId} teams={teams} userId={userId} key={userId} discussionNotifications={discussionNotifications} discussionReadReceipt={discussionReadReceipt} getTaskTitle={getNotificationTaskTitle} onDiscussionReadHandled={onDiscussionReadHandled} onOpenTask={onOpenNotificationTask ? (taskId, target, teamId) => onOpenNotificationTask(taskId, target, teamId, closeNavigation) : undefined} placement="topbar" showDemoNotifications={showDemoNotifications} />
+          <GlobalNotifications besideNavigation teamId={activeTeamId} teams={teams} userId={userId} key={userId} discussionNotifications={discussionNotifications} likeNotifications={likeNotifications} discussionReadReceipt={discussionReadReceipt} getTaskTitle={getNotificationTaskTitle} onDiscussionReadHandled={onDiscussionReadHandled} onOpenTask={onOpenNotificationTask ? (taskId, target, teamId) => onOpenNotificationTask(taskId, target, teamId, closeNavigation) : undefined} placement="topbar" showDemoNotifications={showDemoNotifications} />
         </div>
       </div>
       <div aria-controls="workspace-navigation" aria-label={resizeLabel} aria-orientation="vertical" aria-valuemax={maxNavigationWidth} aria-valuemin={minNavigationWidth} aria-valuenow={navigationWidth} className="workspace-navigation-resize-handle" onDoubleClick={() => setNavigationWidth(defaultNavigationWidth)} onKeyDown={resizeWithKeyboard} onLostPointerCapture={endResize} onPointerCancel={endResize} onPointerDown={startResize} onPointerMove={moveResize} onPointerUp={endResize} role="separator" tabIndex={mobile ? -1 : 0} />
