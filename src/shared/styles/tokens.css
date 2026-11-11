@@ -481,6 +481,14 @@
   --ad-task-status-success-soft: #19352b;
   --ad-task-status-failed: #eca09a;
   --ad-task-status-failed-soft: #3a211f;
+  --ad-task-status-icon-progress: #72d7ff;
+  --ad-task-status-icon-warning: #ffd079;
+  --ad-task-status-icon-success: #72efa4;
+  --ad-task-status-icon-neutral: #efefef;
+  --ad-task-status-ring-stroke-width: 3.75;
+  --ad-task-status-warning-stroke-width: 2.8;
+  --ad-task-progress-ring-dasharray: 18 82;
+  --ad-task-progress-track-opacity: 0.5;
   --ad-tag-gray-bg: #303235;
   --ad-tag-gray-ink: #d2d5d8;
   --ad-tag-gray-border: #45484c;

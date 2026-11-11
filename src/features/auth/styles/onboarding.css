@@ -45,6 +45,13 @@
 .onboarding-password > button:hover { color: var(--ad-ink-secondary); }
 .onboarding-password > button svg { width: 17px; height: 17px; stroke-width: 1.7; }
 .onboarding-page .onboarding-primary { display: flex; width: 100%; min-height: 48px; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; border-radius: 24px; font-size: 14px; font-weight: 550; }
+.onboarding-login-submit {
+  border-color: var(--ad-border);
+  background: transparent;
+  color: var(--ad-ink);
+}
+.onboarding-login-submit:hover:not(:disabled) { border-color: var(--ad-control-border-hover); }
+.onboarding-login-submit:active:not(:disabled) { border-color: var(--ad-ink-secondary); }
 .onboarding-primary svg { width: 16px; height: 16px; }
 .onboarding-auth-switch { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 26px 0 0; color: var(--ad-ink-secondary); font-size: 13px; line-height: 24px; }
 .onboarding-auth-switch .onboarding-link { color: var(--ad-ink); font-weight: 600; }

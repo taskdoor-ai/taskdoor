@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, GripVertical, Plus, Trash2, X } from "lucide-react";
+import { Check, GripVertical, Plus, Trash2, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { TagAppearancePicker } from "@/features/me/components/TagAppearancePicker";
 import { useTagReorder } from "@/features/me/lib/useTagReorder";
@@ -10,7 +10,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 type Props = {
   tags: TagDefinition[];
-  onBack: () => void;
   onChange: (tags: TagDefinition[]) => void;
   canManage?: boolean;
   canCreate?: boolean;
@@ -18,6 +17,8 @@ type Props = {
   canDeleteTag?: (tag: TagDefinition) => boolean;
   onDeleteTag?: (id: string) => void;
   getTagUsageCount?: (tag: TagDefinition) => number;
+  loadError?: string;
+  onRetry?: () => void;
 };
 
 type EditorState = Omit<TagDefinition, "id"> & { id?: string };
@@ -25,12 +26,11 @@ type TagAction = { type: "create" | "rename" | "appearance"; draft: EditorState 
 
 const tagNameKey = (name: string) => name.trim().normalize("NFKC").toLowerCase();
 
-export function TagManagementPage({ onBack, onChange, tags, canManage = true, canCreate = canManage, canManageTag = () => canManage, canDeleteTag, onDeleteTag, getTagUsageCount }: Props) {
+export function TagManagementPage({ onChange, tags, canManage = true, canCreate = canManage, canManageTag = () => canManage, canDeleteTag, onDeleteTag, getTagUsageCount, loadError, onRetry }: Props) {
   const ui = useGlobalUi();
   const [pendingAction, setAction] = useState<TagAction | null>(null);
   const [error, setError] = useState("");
   const [appearanceOpen, setCreateAppearanceOpen] = useState(false);
-  const backButton = useRef<HTMLButtonElement>(null);
   const createButton = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const returnFocus = useRef<HTMLButtonElement | null>(null);
@@ -45,7 +45,7 @@ export function TagManagementPage({ onBack, onChange, tags, canManage = true, ca
   const editor = action && action.type !== "delete" ? action.draft : null;
   const tagNameDuplicate = Boolean(editor && tags.some(tag => tagNameKey(tag.name) === tagNameKey(editor.name) && tag.id !== editor.id));
   const nameError = tagNameDuplicate ? "该标签名称已存在" : error;
-  const { drag, getHandleProps, message } = useTagReorder({ tags, onChange, disabled: !canManage || Boolean(action), listRef, onError: setError });
+  const { cancel: cancelReorder, drag, getHandleProps, message } = useTagReorder({ tags, onChange, disabled: !canManage || Boolean(action), listRef, onError: setError });
 
   const startAction = (next: TagAction, trigger: HTMLButtonElement | null = null) => {
     if (!canUseAction(next)) return;
@@ -95,7 +95,7 @@ export function TagManagementPage({ onBack, onChange, tags, canManage = true, ca
       const row = returnFocus.current?.closest("li");
       const nextRow = row?.nextElementSibling ?? row?.previousElementSibling;
       onDeleteTag(id);
-      closeAction(nextRow?.querySelector<HTMLButtonElement>(".tag-list-name, .tag-list-delete:not(:disabled)") ?? createButton.current ?? backButton.current);
+      closeAction(nextRow?.querySelector<HTMLButtonElement>(".tag-list-name, .tag-list-delete:not(:disabled)") ?? createButton.current);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "标签未能删除，请重试。");
     }
@@ -135,16 +135,17 @@ export function TagManagementPage({ onBack, onChange, tags, canManage = true, ca
     {nameError && <p className="tag-editor-field-error tag-list-name-error" id="tag-create-error" role="alert">{ui(nameError)}</p>}
   </li>;
 
-  return <article className="tag-management-page" onKeyDown={event => {
-    if (action && action.type !== "appearance" && !createAppearanceOpen && event.key === "Escape" && !event.nativeEvent.isComposing) {
-      event.preventDefault();
-      closeAction();
-    }
+  return <div onKeyDown={event => {
+    if (event.key !== "Escape" || event.nativeEvent.isComposing) return;
+    if (!drag && (!action || action.type === "appearance" || createAppearanceOpen)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (drag) cancelReorder();
+    else closeAction();
   }}>
     <div className="tag-management-content">
-      <Button className="tag-management-back" onClick={onBack} ref={backButton} size="sm" type="button" variant="ghost"><ArrowLeft data-icon="inline-start" />{ui("返回")}</Button>
       <header className="tag-management-heading">
-        <div className="tag-management-title"><h1>{ui("团队标签")}</h1><span>{tags.length}{ui("个标签")}</span></div>
+        <div className="tag-management-title"><h2 id="team-tags-title">{ui("团队标签")}</h2>{!loadError && <span>{tags.length}{ui("个标签")}</span>}</div>
         {canCreate && <Button aria-expanded={action?.type === "create"} onClick={event => {
           if (action?.type === "create") return;
           startAction({ type: "create", draft: { name: "", icon: "tag", color: "blue" } }, event.currentTarget);
@@ -154,7 +155,10 @@ export function TagManagementPage({ onBack, onChange, tags, canManage = true, ca
       {canManage && <span className="sr-only" id="tag-sort-instructions">{ui("拖动排序，或用方向键移动")}</span>}
       <span aria-live="polite" className="sr-only" role="status">{message}</span>
       {!action && error && <p className="tag-editor-field-error" role="alert">{ui(error)}</p>}
-      {tags.length || createRow ? <ul aria-label={ui("团队标签列表")} className="tag-list" ref={listRef}>
+      {loadError ? <div className="tag-management-load-error">
+        <p className="tag-editor-field-error" role="alert">{ui(loadError)}</p>
+        {onRetry && <Button onClick={onRetry} size="sm" type="button" variant="outline">{ui("重试")}</Button>}
+      </div> : tags.length || createRow ? <ul aria-label={ui("团队标签列表")} className="tag-list" ref={listRef}>
         {createRow}
         {tags.map(tag => {
           const manageable = canManageTag(tag);
@@ -231,12 +235,12 @@ export function TagManagementPage({ onBack, onChange, tags, canManage = true, ca
               {error && <p className="tag-editor-field-error" role="alert">{ui(error)}</p>}
               <div className="tag-inline-actions">
                 <Button autoFocus onClick={() => closeAction()} size="sm" type="button" variant="ghost">{ui("取消")}</Button>
-                <Button onClick={() => deleteTag(tag.id)} size="sm" type="button" variant="destructive">{ui("确认删除")}</Button>
+                <Button className="tag-delete-confirm" onClick={() => deleteTag(tag.id)} size="sm" type="button" variant="destructive">{ui("确认删除")}</Button>
               </div>
             </div>}
           </li>;
         })}
       </ul> : !editor && <p className="tag-management-empty">{ui("还没有标签")}</p>}
     </div>
-  </article>;
+  </div>;
 }

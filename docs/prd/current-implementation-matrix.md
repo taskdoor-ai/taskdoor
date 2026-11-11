@@ -1,10 +1,20 @@
 # 当前实现矩阵
 
+## PRD-0405 团队标签管理入口与回焦（2026-11-11）
+
+PM Demo 从[列表筛选](../../src/features/tasks/components/TaskListFilterPanel.tsx)或[任务详情](../../src/features/me/components/TagPicker.tsx)进入同一[设置模块](../../src/app/workspace/components/PersonalInfoDialog.tsx)。[入口与关闭逻辑](../../src/app/App.tsx)记录发起控件并在关闭后恢复焦点。管理页逐行排列，删除操作使用主题危险色。[管理样式](../../src/features/me/styles/tag-management.css)
+
+正式入口基于 [#94 确认范围](https://github.com/nocoly/taskdoor/issues/94#issuecomment-6797283544)。列表筛选直达、关闭回焦和管理样式等待同步。
+
 ## PRD-0404 点击框外收起空白创建输入（2026-11-11）
 
 PM Demo 的[单行创建表单](../../src/features/tasks/components/TaskInlineCreateForm.tsx)在空白且可操作时响应框外点击。[任务列表](../../src/features/tasks/components/TaskWorkspaceList.tsx)和[子任务页签](../../src/features/tasks/components/TaskSubtasksPane.tsx)直接收起各自的输入行，点击目标照常响应并按自身规则获焦。已有需求时保留输入。显式取消和 Escape 沿原入口规则回焦。
 
 正式 `dev` 基线 `7d15aecf84065120452826c37a9d67f8cf984de6` 的两处单行创建入口沿显式取消与 Escape 收起，空白点外收起待同步。[正式单行表单](https://github.com/nocoly/taskdoor/blob/7d15aecf84065120452826c37a9d67f8cf984de6/apps/web/src/features/tasks/components/TaskInlineCreateForm.tsx#L26-L77)
+
+## PRD-0401 已登录修改密码（2026-11-11）
+
+PM Demo 的[个人信息](../../src/app/workspace/components/PersonalInfoDialog.tsx)提供[改密表单](../../src/features/auth/components/WorkspacePasswordChange.tsx)。Demo 复用本地密码恢复校验，保存同一账号密码后结束当前模拟登录。真实邮件发送、服务端验证码与账号全部网页登录会话结束由正式密码恢复服务处理。[工作区认证状态](../../src/features/auth/lib/onboarding-workspace.ts) · [正式实现来源](source-map.md#prd-0401-已登录修改密码2026-11-11)
 
 ## 2026-11-11 批次：22项批准改动的隔离同步
 

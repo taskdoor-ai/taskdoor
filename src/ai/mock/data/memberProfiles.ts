@@ -104,27 +104,17 @@ export type PersonalCenterState = {
 export const personalCenterStorageKey = "agentdoor-personal-center-v6";
 export const personalCenterChangedEvent = "agentdoor-personal-center-changed";
 export const getTeamInviteLink = ({ inviteToken }: Pick<TeamResponsibilityProfile, "id" | "inviteToken">) => `${typeof window === "undefined" ? "http://127.0.0.1:5173" : window.location.origin}/signup?invite=${encodeURIComponent(inviteToken)}`;
-export const isValidProfileEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
-
 export function applyPersonalProfileDraft(
   state: PersonalCenterState,
-  draft: PersonalCenterState["profile"],
-  currentUserId: string,
+  draft: Pick<PersonalCenterState["profile"], "name" | "avatarDataUrl">,
 ): PersonalCenterState {
-  const email = draft.email.trim().toLocaleLowerCase();
   return {
     ...state,
     profile: {
-      ...draft,
-      email,
+      ...state.profile,
+      avatarDataUrl: draft.avatarDataUrl,
       name: draft.name.trim(),
     },
-    teams: state.teams.map((team) => ({
-      ...team,
-      memberships: team.memberships.map((membership) => membership.memberId === currentUserId
-        ? { ...membership, email }
-        : membership),
-    })),
   };
 }
 

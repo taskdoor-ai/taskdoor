@@ -1,37 +1,32 @@
-.tag-management-page {
-  height: 100%;
-  overflow-y: auto;
-}
-
 .tag-management-content {
-  width: min(calc(100% - var(--ad-space-16)), 720px);
-  margin: 0 auto;
-  padding: var(--ad-space-8) 0 var(--ad-space-12);
+  --tag-delete-ink: #b91c1c;
+  min-width: 0;
 }
 
-.tag-management-back { margin-left: calc(-1 * var(--ad-space-2)); color: var(--ad-ink-secondary); }
+[data-theme="dark"] .tag-management-content {
+  --tag-delete-ink: #ff8178;
+}
 
 .tag-management-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--ad-space-3);
-  margin: var(--ad-space-3) 0 var(--ad-space-4);
+  margin-bottom: var(--ad-space-4);
 }
 
 .tag-management-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--ad-space-1) var(--ad-space-3); min-width: 0; }
-.tag-management-title h1 { margin: 0; font-size: var(--ad-text-title-2); font-weight: 700; line-height: 1.2; }
+.tag-management-title h2 { margin: 0; color: var(--ad-ink); font-size: var(--ad-text-title-2); font-weight: 700; letter-spacing: -.02em; line-height: 1.4; }
 .tag-management-title > span, .tag-management-empty { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.tag-management-heading > button { flex-shrink: 0; }
+.tag-management-load-error { display: grid; justify-items: start; gap: var(--ad-space-2); }
 
 .tag-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-  align-items: start;
-  column-gap: var(--ad-space-8);
   margin: 0;
   padding: 0;
   list-style: none;
 }
+
 .tag-list > li { position: relative; min-width: 0; border-bottom: 1px solid var(--ad-border-soft); }
 .tag-list > li[data-drop-position]::after {
   position: absolute;
@@ -45,6 +40,7 @@
 }
 .tag-list > li[data-drop-position="before"]::after { top: -1px; }
 .tag-list > li[data-drop-position="after"]::after { bottom: -1px; }
+
 .tag-list > li[data-dragging] { z-index: 3; }
 .tag-list > li[data-dragging] > .tag-list-row {
   border-radius: var(--ad-radius-control);
@@ -127,7 +123,7 @@
 .tag-list-name-input:not([aria-invalid="true"]):not([data-invalid]):focus { outline: 1px solid var(--ad-input-focus); outline-offset: -1px; }
 .tag-list-name-error { margin: 0 var(--ad-space-2) var(--ad-space-2); }
 .tag-list-delete { flex: 0 0 auto; color: var(--ad-ink-tertiary); }
-.tag-list-delete:hover:not(:disabled), .tag-list-delete:focus-visible, .tag-list-delete[aria-expanded="true"] { color: var(--ad-danger); }
+.tag-list-delete:not(:disabled):is(:hover, :focus-visible, [aria-expanded="true"]) { color: var(--tag-delete-ink); }
 
 .tag-appearance-popover {
   width: min(280px, calc(100vw - var(--ad-space-8)));
@@ -153,12 +149,11 @@
 
 .tag-inline-delete p { margin: 0; font-size: var(--ad-text-body-sm); overflow-wrap: anywhere; }
 .tag-inline-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--ad-space-2); }
-
-@media (max-width: 900px) {
-  .tag-management-content { width: calc(100% - var(--ad-space-8)); padding-top: 64px; }
-}
+.tag-delete-confirm { --destructive: var(--tag-delete-ink); background-color: color-mix(in srgb, var(--tag-delete-ink) 6%, transparent); }
+.tag-delete-confirm:hover { background-color: color-mix(in srgb, var(--tag-delete-ink) 10%, transparent); }
 
 @media (pointer: coarse) {
+  .tag-management-heading > button { min-height: var(--ad-control-touch-min); }
   .tag-list-icon, .tag-list-name, .tag-list-name-input, .tag-list-delete { min-height: var(--ad-control-touch-min); }
   .tag-list-icon { flex-basis: var(--ad-control-touch-min); }
   .tag-list-delete { min-width: var(--ad-control-touch-min); }

@@ -24,7 +24,7 @@ type TaskWorkspaceProps = Pick<TaskWorkspaceListProps, "onQuickCreateTask" | "qu
   members: PersonOption[];
   nodes: WorkspaceNode[];
   onFiltersChange: (filters: TaskListFilters) => void;
-  onManageTags: () => void;
+  onManageTags: (returnFocus?: HTMLElement | null) => void;
   onDeleteTask: (task: TaskNode) => void;
   onTaskStatusChange: (taskId: string, status: TaskNode["status"]) => void;
   onQueryChange: (query: string) => void;

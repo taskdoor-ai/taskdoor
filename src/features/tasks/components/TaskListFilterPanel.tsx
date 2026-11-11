@@ -37,7 +37,7 @@ type Props = {
   touch: boolean;
   onChange: (patch: Partial<TaskListFilters>) => void;
   onReset: () => void;
-  onManageTags: () => void;
+  onManageTags: (returnFocus?: HTMLElement | null) => void;
 };
 
 // 标签名称由用户决定，不能与表示空值的“未打标签”条件混淆。
@@ -111,6 +111,7 @@ export function TaskListFilterPanel({ tags, members, statuses, filters, touch, o
   const [category, setCategory] = useState<Category | null>(null);
   const [categoryQuery, setCategoryQuery] = useState("");
   const [optionQuery, setOptionQuery] = useState("");
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const selectionRef = useRef<HTMLDivElement>(null);
@@ -169,7 +170,7 @@ export function TaskListFilterPanel({ tags, members, statuses, filters, touch, o
   };
 
   return <Popover modal={false} open={open} onOpenChange={changeOpen}>
-    <PopoverTrigger render={<Button aria-label={activeCount ? `${u("filterTasks")} (${activeCount})` : u('filterTasks')} className={`task-workspace-list-options${iconOnly ? " task-filter-icon-only" : ""}`} data-filter-active={activeCount > 0 || undefined} size={touch ? "touch" : "default"} title={activeCount ? `${u("filterTasks")} (${activeCount})` : u('filterTasks')} variant="outline" />}><ListFilter aria-hidden="true" />{!iconOnly && <span>{locale === "en" ? "Filter" : "筛选"}</span>}{activeCount > 0 && <span aria-hidden="true" className="task-filter-count">{activeCount}</span>}</PopoverTrigger>
+    <PopoverTrigger ref={triggerRef} render={<Button aria-label={activeCount ? `${u("filterTasks")} (${activeCount})` : u('filterTasks')} className={`task-workspace-list-options${iconOnly ? " task-filter-icon-only" : ""}`} data-filter-active={activeCount > 0 || undefined} size={touch ? "touch" : "default"} title={activeCount ? `${u("filterTasks")} (${activeCount})` : u('filterTasks')} variant="outline" />}><ListFilter aria-hidden="true" />{!iconOnly && <span>{locale === "en" ? "Filter" : "筛选"}</span>}{activeCount > 0 && <span aria-hidden="true" className="task-filter-count">{activeCount}</span>}</PopoverTrigger>
     <PopoverContent align={touch ? "end" : "start"} side="bottom" collisionAvoidance={{ side: "none", align: touch ? "shift" : "none", fallbackAxisSide: "none" }} positionMethod="fixed" initialFocus={() => { listRef.current?.parentElement?.querySelector<HTMLInputElement>("input")?.focus({ preventScroll: true }); return false; }} aria-label={u('taskFilters')} className="task-filter-menu" collisionPadding={12} data-detail-open={Boolean(category)} data-touch={touch || undefined}>
       <div className="task-filter-menu-columns">
         <div className="task-filter-menu-main">
@@ -211,7 +212,7 @@ export function TaskListFilterPanel({ tags, members, statuses, filters, touch, o
             {((category === "statuses" && !visibleStatuses.length) || (category === "tags" && !visibleTags.length && !matchesQuery(u('untagged')))) && <p className="task-filter-menu-empty">{u('noOptions')}</p>}
             {(category === "deadline" || category === "created") && <DateFilterChoices field={category} key={`${category}:${JSON.stringify(filters[category])}`} onChange={value => onChange({ [category]: value })} value={filters[category]} />}
           </div>
-          {(category === "deadline" || category === "created" || category === "tags") && <div className="task-filter-detail-footer">{(category === "deadline" || category === "created") && <span>{u('matchAll')}</span>}{category === "tags" && <button className="task-filter-text-button" onClick={() => { changeOpen(false); onManageTags(); }} type="button">{u('manageTags')}</button>}</div>}
+          {(category === "deadline" || category === "created" || category === "tags") && <div className="task-filter-detail-footer">{(category === "deadline" || category === "created") && <span>{u('matchAll')}</span>}{category === "tags" && <button className="task-filter-text-button" onClick={() => { changeOpen(false); onManageTags(triggerRef.current); }} type="button">{u('manageTags')}</button>}</div>}
         </div>}
       </div>
       {activeCount > 0 && <div aria-label={u('activeFilters')} className="task-filter-selection" ref={selectionRef} role="region">

@@ -6,11 +6,12 @@ import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { formatDisplayDateTime, formatLegacyDateLabel, formatRelativeDateTime } from "@/shared/lib/date-time";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { PersonName } from "@/shared/ui/PersonAvatar";
-import { Bell, Broom, Inbox, Users } from "lucide-react";
+import { Bell, Broom, Inbox, Users, X } from "lucide-react";
 import { NotificationFilter, notificationReadFilterLabels as readFilterLabels, type NotificationReadFilter } from "@/features/notifications/components/NotificationFilter";
 import { NotificationSettingsPopover } from "@/features/notifications/components/NotificationSettingsPanel";
 import { isNotificationReadTestMode, readNotificationExamples, notificationReadTestExamples, notificationTypeLabels, type WorkspaceNotification } from "@/ai/mock/data/notificationExamples";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/shared/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/shared/ui/sheet";
+import { Button } from "@/shared/ui/button";
 import "@/features/notifications/styles/notifications.css";
 import { getDiscussionReadIds, mergeNotificationReadIds, notificationReadStateKey, parseNotificationReadState, type DiscussionReadReceipt, type NotificationRegionTarget } from "@/features/notifications/lib/notification-read-state";
 import { toast } from "@/shared/ui/toast";
@@ -243,11 +244,14 @@ export function GlobalNotifications({ besideNavigation = false, placement = "rai
     </SheetTrigger>
     <SheetContent className={besideNavigation ? "notification-panel-beside-navigation" : undefined} style={besideNavigation ? panelBounds : undefined} finalFocus={triggerRef} initialFocus={panelRef} ref={panelRef} side={besideNavigation || placement === "rail" ? "left" : "right"} tabIndex={-1}>
       <SheetHeader className="notification-panel-header">
-        <div><SheetTitle>{d('notifications')}</SheetTitle><SheetDescription>{ui("查看与你有关的协作动态。")}</SheetDescription></div>
+        <SheetTitle>{d('notifications')}</SheetTitle>
         <div className="notification-header-actions">
           <button aria-label={ui("全部标为已读")} className="notification-mark-read" disabled={totalUnread === 0} onClick={markAllRead} title={ui("全部标为已读")} type="button"><Broom aria-hidden="true" /></button>
           <NotificationFilter activeFilter={activeFilter} counts={counts} filterLabel={filterLabel} onReadFilterChange={setActiveFilter} onTeamChange={setSelectedTeamId} portalContainer={panelRef} selectedTeamId={selectedTeam?.id ?? ""} teams={teams?.map(team => ({ id: team.id, name: notificationTeamName(locale, team.id, team.name) }))} />
           <NotificationSettingsPopover onOpenChange={setSettingsOpen} open={settingsOpen} portalContainer={panelRef} userId={userId} />
+          <SheetClose render={<Button aria-label={ui("关闭通知")} className="sheet-close" size="icon" type="button" variant="ghost" />}>
+            <X aria-hidden="true" />
+          </SheetClose>
         </div>
       </SheetHeader>
 

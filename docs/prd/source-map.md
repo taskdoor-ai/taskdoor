@@ -1,10 +1,20 @@
 # PRD 来源映射
 
+## PRD-0405 团队标签管理入口与回焦（2026-11-11）
+
+团队标签的共享、维护权限和删除规则沿 [正式 Issue #94](https://github.com/nocoly/taskdoor/issues/94)。全员可见的设置入口、任务详情直达及固定添加入口见 [#94 确认评论](https://github.com/nocoly/taskdoor/issues/94#issuecomment-6797283544)。本批补齐列表筛选直达、关闭回焦和管理列表样式。[管理入口与回焦](../../src/app/App.tsx) · [标签管理样式](../../src/features/me/styles/tag-management.css)
+
 ## PRD-0404 点击框外收起空白创建输入（2026-11-11）
 
 用户明确要求主任务及手动子任务的空白单行创建输入在点击框外时自动收起。两处共用空白判定，已有需求时保留原文。点击目标照常响应，显式取消与 Escape 沿原有回焦规则处理。[列表单行输入](modules/07-task-creation.md#列表单行输入) · [快捷创建子任务](modules/08-task-detail.md#快捷创建子任务)
 
 两处共用[单行创建表单](../../src/features/tasks/components/TaskInlineCreateForm.tsx)，由[任务列表](../../src/features/tasks/components/TaskWorkspaceList.tsx)和[子任务页签](../../src/features/tasks/components/TaskSubtasksPane.tsx)各自管理收起状态。对应实现与正式项目现状见[实现矩阵](current-implementation-matrix.md#prd-0404-点击框外收起空白创建输入2026-11-11)。
+
+## PRD-0401 已登录修改密码（2026-11-11）
+
+个人信息提供已登录改密入口。Demo 登录邮箱与改密邮箱来自同一账号，资料保存更新姓名与头像。[改密表单](../../src/features/auth/components/WorkspacePasswordChange.tsx) · [工作区认证状态](../../src/features/auth/lib/onboarding-workspace.ts)
+
+正式 `dev` 已有只读账号邮箱及密码恢复服务。正式改密沿恢复成功后结束账号的 Keycloak 和 Gateway Web 会话的规则。[正式资料页](https://github.com/nocoly/taskdoor/blob/eed82594843c71e6a1321cada318b9fc1296e438/apps/web/src/features/me/components/AccountProfilePanel.tsx#L100) · [恢复接口](https://github.com/nocoly/taskdoor/blob/eed82594843c71e6a1321cada318b9fc1296e438/apps/web/src/features/auth/api.ts#L100) · [会话处理](https://github.com/nocoly/taskdoor/blob/eed82594843c71e6a1321cada318b9fc1296e438/services/gateway-service/src/main/java/com/taskdoor/gateway/session/PasswordResets.java#L130)
 
 ## 2026-11-11 批次：22项批准改动的隔离同步
 

@@ -403,7 +403,6 @@ function App() {
     }
   }, [selectedTaskId, teamWorkspaceNodes]);
   const [activeSection, setActiveSection] = useState<PrimarySection>("tasks");
-  const tagManagementReturn = useRef<{ section: Exclude<PrimarySection, "settings">; trigger?: HTMLElement | null }>(null);
   useLayoutEffect(() => () => { quickCreationAttempt.current?.abort(); }, [activeTeamId, activeTeamTimeZone, activeSection, currentUserId, selectedTaskId]);
   const [globalAiConnectionOpen, setGlobalAiConnectionOpen] = useState(false);
   const [conversationRevision, setConversationRevision] = useState(0);
@@ -481,7 +480,7 @@ function App() {
     const returnFocus = personalCenterReturnFocus.current;
     personalCenterReturnFocus.current = null;
     window.requestAnimationFrame(() => {
-      if (returnFocus?.isConnected) returnFocus.focus();
+      if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
       else document.querySelector<HTMLElement>("#workspace-account-trigger")?.focus();
     });
   };
@@ -510,7 +509,7 @@ function App() {
       setPendingAnnotationExit({ run });
       return;
     }
-    const leavingCreation = activeSection === "conversation" || (activeSection === "settings" && tagManagementReturn.current?.section === "conversation");
+    const leavingCreation = activeSection === "conversation";
     if (leavingCreation && creationSessionOpen) {
       if (!creationSessionCompleted.current && creationExitController.current?.hasUnsavedChanges()) {
         creationExitReturnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -571,23 +570,7 @@ function App() {
   };
 
   const openTagManagement = (trigger?: HTMLElement | null) => {
-    if (activeSection === "settings") return;
-    const open = () => {
-      tagManagementReturn.current = { section: activeSection, trigger };
-      setActiveSection("settings");
-      focusPrimaryHeadingAfterNavigation();
-    };
-    // Tag management is a temporary step within the current creation draft.
-    if (activeSection === "conversation") open();
-    else requestCreationExit(open);
-  };
-
-  const closeTagManagement = () => {
-    const { section, trigger } = tagManagementReturn.current ?? { section: "tasks" };
-    tagManagementReturn.current = null;
-    setActiveSection(section);
-    const heading = section === "conversation" ? "creation" : section === "tasks" ? selectedTaskId ? "detail" : "list" : section === "home" ? "home" : "auto";
-    focusPrimaryHeadingAfterNavigation(heading, trigger);
+    if (activeTeamRole) openPersonalCenter("teamTags", trigger);
   };
 
   const showTaskDetail = (task: TaskNode, focusHeading: boolean) => {
@@ -879,12 +862,14 @@ function App() {
   // Team tasks in settings show the recycle bin too; read it when settings open.
   const recycleBinForSettings = useMemo(() => {
     if (!personalInfoOpen) return [];
-    try { return readRecycleBin(localStorage); } catch { return []; }
+    try { return readRecycleBin(localStorage); } catch { return null; }
   }, [personalInfoOpen, recycleEntries]);
   const [recycleError, setRecycleError] = useState("");
-  const teamTagUsage = useMemo(() => activeSection === "settings" ? countTeamTaskTagUsage(workspaceNodes, recycleEntries, activeTeamId) : undefined, [activeSection, activeTeamId, recycleEntries, workspaceNodes]);
+  const teamTagUsage = useMemo(() => personalInfoOpen && personalCenterModule === "teamTags" && recycleBinForSettings
+    ? countTeamTaskTagUsage(workspaceNodes, recycleBinForSettings, activeTeamId) : undefined,
+  [personalInfoOpen, personalCenterModule, activeTeamId, recycleBinForSettings, workspaceNodes]);
   const getTeamTagUsageCount = (tag: TagDefinition) => teamTagUsage?.get(teamTagNameKey(tag.name)) ?? 0;
-  const canDeleteTag = (tag: TagDefinition) => !teamTagLoadError && !recycleError && !taskStorageRecoveryError
+  const canDeleteTag = (tag: TagDefinition) => !teamTagLoadError && recycleBinForSettings !== null && !recycleError && !taskStorageRecoveryError
     && canDeleteTeamTag(activeTagActor, tag, getTeamTagUsageCount(tag) > 0);
   const currentDeletionState = () => {
     const stored = localStorage.getItem(workspaceNodesStorageKey);
@@ -1797,7 +1782,36 @@ function App() {
         userProfile={personalCenterState.profile}
       />
 
-      <PersonalCenterModal key={activeTeamId} activeModule={personalCenterModule} activeTeamId={activeTeamId} members={collaborationMembers} onActiveTeamChange={changeActiveTeam} onModuleChange={setPersonalCenterModule} onOpenChange={changePersonalInfoOpen} nodes={workspaceNodes} onOpenEvidence={openTask} onRestoreTeam={restoreTeam} onStateChange={setPersonalCenterState} open={personalInfoOpen} recycleBin={recycleBinForSettings} state={personalCenterState} />
+      <PersonalCenterModal
+        key={activeTeamId}
+        activeModule={personalCenterModule}
+        activeTeamId={activeTeamId}
+        members={collaborationMembers}
+        nodes={workspaceNodes}
+        onActiveTeamChange={changeActiveTeam}
+        onModuleChange={setPersonalCenterModule}
+        onOpenChange={changePersonalInfoOpen}
+        onOpenEvidence={openTask}
+        onRestoreTeam={restoreTeam}
+        onStateChange={setPersonalCenterState}
+        open={personalInfoOpen}
+        recycleBin={recycleBinForSettings ?? []}
+        state={personalCenterState}
+        teamTagsPanel={activeTeamRole && (
+          <TagManagementPage
+            tags={tagDefinitions}
+            onChange={saveTeamTags}
+            canCreate={!teamTagLoadError}
+            canManage={canManageTeamTags && !teamTagLoadError}
+            canManageTag={canEditTeamTag}
+            canDeleteTag={canDeleteTag}
+            getTagUsageCount={getTeamTagUsageCount}
+            onDeleteTag={deleteTagFromTeam}
+            loadError={teamTagLoadError}
+            onRetry={refreshTeamTags}
+          />
+        )}
+      />
 
       <main className="main-content">
         {teamTagLoadError && <p role="alert">{teamTagLoadError}</p>}
@@ -1963,19 +1977,6 @@ function App() {
           />
         ) : activeSection === "ai" ? (
           <AiConnectionPage onBack={showTaskList} />
-        ) : activeSection === "settings" ? (
-          <TagManagementPage
-            key={activeTeamId}
-            tags={tagDefinitions}
-            onBack={closeTagManagement}
-            onChange={saveTeamTags}
-            canCreate={Boolean(activeTeamRole && !teamTagLoadError)}
-            canManage={canManageTeamTags && !teamTagLoadError}
-            canManageTag={canEditTeamTag}
-            canDeleteTag={canDeleteTag}
-            getTagUsageCount={getTeamTagUsageCount}
-            onDeleteTag={deleteTagFromTeam}
-          />
         ) : null}
 
       </main>

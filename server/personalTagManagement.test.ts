@@ -34,7 +34,7 @@ function capture(interact: (tree: ReactNode, step: number) => void, onChange = (
   let tree: ReactNode;
   let step = 0;
   function Capture() {
-    tree = TagManagementPage({ tags, onBack() {}, onChange, ...options });
+    tree = TagManagementPage({ tags, onChange, ...options });
     interact(tree, step++);
     return tree;
   }
@@ -73,16 +73,24 @@ test("新建确认后置于最前，保留既有标签身份和样式", () => {
 test("重复名称不能新建，Escape取消草稿且不写入列表", () => {
   const saved: TagDefinition[][] = [];
   let duplicateRejected = false;
+  let escapeHandled = false;
   const { html } = capture((tree, step) => {
     if (step === 0) open(tree);
     if (step === 1) nameInput(tree).props.onChange({ target: { value: " 商务 " } });
     if (step === 2) {
       duplicateRejected = nameInput(tree).props["aria-invalid"] === true;
       createForm(tree).props.onSubmit({ preventDefault() {} });
-      elements(tree, item => item.type === "article")[0].props.onKeyDown({ key: "Escape", nativeEvent: {}, preventDefault() {} });
+      assert.ok(isValidElement<Record<string, any>>(tree));
+      tree.props.onKeyDown({
+        key: "Escape",
+        nativeEvent: {},
+        preventDefault() {},
+        stopPropagation() { escapeHandled = true; },
+      });
     }
   }, next => saved.push(next));
   assert.equal(duplicateRejected, true);
+  assert.equal(escapeHandled, true);
   assert.doesNotMatch(html, /aria-label="新建标签"/);
   assert.deepEqual(saved, []);
 });
@@ -104,7 +112,6 @@ test("只读标签和无删除权限的可编辑标签都显示禁用的删除�
     initialLocale: "zh-CN",
     children: createElement(TagManagementPage, {
       tags: [...tags, usedTag],
-      onBack() {},
       onChange() {},
       canManage: false,
       canCreate: true,

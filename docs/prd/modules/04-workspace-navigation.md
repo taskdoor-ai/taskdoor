@@ -4,10 +4,10 @@ title: "工作区与导航"
 group: "账号与团队"
 version: "1.0"
 status: "review"
-last_change: "PRD-0397"
+last_change: "PRD-0405"
 summary: "通过顶栏切换团队、新建任务、查看通知、连接 AI 和设置。"
 lifecycle_stage: "进入工作区"
-pages: "工作区, 我的工作, 通知中心, 个人中心, 个人信息设置, 我的责任, 我的团队, 访问令牌, 团队设置, 团队任务, 行为日志"
+pages: "工作区, 我的工作, 通知中心, 个人中心, 个人信息设置, 我的责任, 我的团队, 访问令牌, 团队设置, 团队标签, 团队任务, 行为日志"
 objects: "workspace_session, team, notification, responsibility_document, responsibility_proposal"
 operations: "enter_workspace, switch_team, navigate, open_notification, open_profile, read_responsibility, edit_responsibility, add_responsibility, update_responsibility, delete_responsibility, ignore_responsibility_proposal"
 ---
@@ -42,6 +42,8 @@ operations: "enter_workspace, switch_team, navigate, open_notification, open_pro
 - **通知设置**：在通知面板右上角齿轮内调整仅接收与本人相关的消息，站内与邮件共用同一账号偏好；个人设置不重复提供通知入口，完整规则归[通知接收范围](10-discussion-notifications-activity.md#通知接收范围)。
 - **团队设置**：团队信息、成员管理、团队时区及拥有者专属的所有权转让与删除入口；拥有者和管理员另有团队任务与行为日志，见[团队管理](03-team-onboarding.md) 3.6；日期规则见[语言、翻译与时区](02-internationalization.md)。
 
+有效成员可以从「设置 → 团队管理 → 团队标签」查看当前团队的标签。任务详情和列表标签筛选中的「管理标签」均直达同一模块。关闭设置回到发起控件，保留当前任务或列表筛选。标签维护权限见[团队标签规则](../task-design-kit/13-team-task-tags.md#标签归属与权限)。
+
 ![顶部全局入口、任务索引、内容区域及团队设置权限的工作区信息架构目标示意](../assets/workspace-navigation/workspace-map.svg)
 
 *FIG-WORK-001 · 工作区导航设计。*
@@ -53,6 +55,7 @@ operations: "enter_workspace, switch_team, navigate, open_notification, open_pro
 
 - 通知面板齿轮可展开接收范围设置，关闭回到入口；个人设置无重复通知入口。列表工具栏的筛选与排序在桌面、窄屏均可达，保留原条件与入口权限。
 
+- **团队标签**：列表标签筛选和任务详情可直达团队标签，关闭后焦点回到发起控件，当前任务或筛选保持。
 - **团队切换**：不混入上一团队内容；菜单不显示管理员／成员身份，当前团队仍有明确选中状态。
 - **空工作区**：提供明确的新建入口。
 - **新建任务**：从列表或详情的顶栏入口打开当前团队创建对话；窄屏图标按钮仍可通过触控及键盘操作，进入对话前不产生任务。
