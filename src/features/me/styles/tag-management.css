@@ -127,7 +127,7 @@
 .tag-list-name-input:not([aria-invalid="true"]):not([data-invalid]):focus { outline: 1px solid var(--ad-input-focus); outline-offset: -1px; }
 .tag-list-name-error { margin: 0 var(--ad-space-2) var(--ad-space-2); }
 .tag-list-delete { flex: 0 0 auto; color: var(--ad-ink-tertiary); }
-.tag-list-delete:hover, .tag-list-delete[aria-expanded="true"] { color: var(--ad-danger); }
+.tag-list-delete:hover:not(:disabled), .tag-list-delete:focus-visible, .tag-list-delete[aria-expanded="true"] { color: var(--ad-danger); }
 
 .tag-appearance-popover {
   width: min(280px, calc(100vw - var(--ad-space-8)));

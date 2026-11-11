@@ -132,7 +132,6 @@ type TaskDetailProps = {
   hidePathNavigation?: boolean;
   onTagsChange?: (tags: string[]) => void;
   onCreateTag?: (name: string, appearance?: TagAppearance) => void;
-  archivedTags?: TagDefinition[];
   tagSuggestions?: TaskTagSuggestions;
   onTaskGoalChange?: (goal: string) => void | Promise<void>;
   onTaskTitleChange?: (title: string) => void | Promise<void>;
@@ -207,7 +206,6 @@ export function TaskDetail({
   hidden = false,
   onTagsChange,
   onCreateTag,
-  archivedTags,
   tagSuggestions,
   onTaskGoalChange,
   onTaskTitleChange,
@@ -916,7 +914,7 @@ export function TaskDetail({
       {ownerSaveFailed && <p className="task-field-save-error" id={`task-owner-save-error-${taskId}`} role="alert">{locale === "en" ? "Could not update the assignee. The previous assignee is unchanged. Please try again." : "负责人修改失败，仍保留原负责人，请重试。"}</p>}
         {(tags.length > 0 || onTagsChange) && <section aria-labelledby={`task-tags-heading-${taskId}`} className="task-detail-section task-detail-tags-section">
           <h2 className="task-detail-property-sidebar-heading" id={`task-tags-heading-${taskId}`}>{d('tags')}</h2>
-          <TaskTagList showAll iconOnly key={`tags-${taskId}`} archivedTags={archivedTags} onChange={onTagsChange} onCreateAndSelect={onCreateTag} selected={tags} suggestions={tagSuggestions} tags={tagDefinitions} />
+          <TaskTagList showAll iconOnly key={`tags-${taskId}`} onChange={onTagsChange} onCreateAndSelect={onCreateTag} selected={tags} suggestions={tagSuggestions} tags={tagDefinitions} />
         </section>}
     </aside>
     </div>
