@@ -91,10 +91,10 @@ export function buildTaskListProjection(
   const allTasks = [...tasksById.values()];
   const now = new Date();
   const queryFor = (task: TaskNode) => displayName?.(task).toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()) ? "" : query;
-  const scopeFilters = { ...filters, tag: "all", tags: [], includeUntagged: false };
-  const scopedTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), scopeFilters, currentUserId, now, timeZone));
+  const scopeFilters = { ...filters, tag: "all", tags: [], tagIds: [], includeUntagged: false };
+  const scopedTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), scopeFilters, currentUserId, now, timeZone, tagDefinitions));
   const visibleTasks = scopedTasks
-    .filter((task) => taskMatchesListFilters(task, queryFor(task), filters, currentUserId, now, timeZone))
+    .filter((task) => taskMatchesListFilters(task, queryFor(task), filters, currentUserId, now, timeZone, tagDefinitions))
     .sort((a, b) => {
       if (filters.sort !== "created") {
         const completionOrder = Number(a.status === "已完成") - Number(b.status === "已完成");
@@ -105,7 +105,7 @@ export function buildTaskListProjection(
   const presentStatuses = new Set(allTasks.map((task) => task.status));
   // Status counts describe the available choices, before applying this dimension.
   const statusFilters: TaskListFilters = { ...filters, status: "all", statuses: [], completion: "all" };
-  const statusTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), statusFilters, currentUserId, now, timeZone));
+  const statusTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), statusFilters, currentUserId, now, timeZone, tagDefinitions));
   const byStatus: TaskListProjection["statusCounts"]["byStatus"] = {};
   for (const task of statusTasks) {
     const status = normalizeTaskStatus(task.status);

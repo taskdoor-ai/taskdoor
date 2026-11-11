@@ -1,5 +1,5 @@
 import { normalizeTaskStatus, type WorkspaceTaskStatus } from "@/shared/model/task-model";
-import type { TaskNode } from "@/shared/model/task-model";
+import type { TagDefinition, TaskNode } from "@/shared/model/task-model";
 import { taskCalendarDate } from "@/features/tasks/lib/task-schedule";
 import { isValidTimeZone, LEGACY_TEAM_TIME_ZONE } from "@/shared/lib/team-time-zone";
 import { formatDisplayDate } from "@/shared/lib/date-time";
@@ -24,6 +24,8 @@ export type TaskListFilters = {
   tag: string;
   statuses?: string[];
   tags?: string[];
+  /** Local Demo catalog identities; separate from legacy names and production IDs. */
+  tagIds?: string[];
   includeUntagged?: boolean;
   ownerIds?: string[];
   participantIds?: string[];
@@ -39,7 +41,7 @@ export type TaskListFilters = {
 
 /** 清除条件并恢复全部任务，保留排序。 */
 export const clearedTaskListConditions = {
-  scope: "all", view: "all", owner: "all", completion: "all", status: "all", tag: "all", statuses: [], tags: [], includeUntagged: false,
+  scope: "all", view: "all", owner: "all", completion: "all", status: "all", tag: "all", statuses: [], tags: [], tagIds: [], includeUntagged: false,
   ownerIds: [], participantIds: [], creatorIds: [], includeUnassigned: false,
   ownerIsMe: false, participantIsMe: false,
   includeNoParticipants: false, includeUnknownCreator: false, deadline: undefined, created: undefined,
@@ -78,7 +80,10 @@ export function normalizeTaskWorkspaceFilters(filters: TaskListFilters): TaskLis
     includeUnassigned: Boolean(filters.includeUnassigned), includeNoParticipants: Boolean(filters.includeNoParticipants), includeUnknownCreator: false };
 }
 
-export function getTaskTagFilters(filters: TaskListFilters): string[] {
+export function getTaskTagFilters(filters: TaskListFilters, definitions?: readonly TagDefinition[]): string[] {
+  if (filters.tagIds !== undefined && definitions) {
+    return uniqueSelections(filters.tagIds.flatMap(id => definitions.find(tag => tag.id === id)?.name ?? []));
+  }
   return uniqueSelections(filters.tags ?? (filters.tag === "all" ? [] : [filters.tag]));
 }
 
@@ -125,11 +130,11 @@ function matchesDate(value: string | undefined, filter: TaskListDateFilter | und
   }
 }
 
-export function taskMatchesListFilters(task: TaskNode, query: string, filters: TaskListFilters, currentUserId = filters.owner, now = new Date(), timeZone = LEGACY_TEAM_TIME_ZONE) {
+export function taskMatchesListFilters(task: TaskNode, query: string, filters: TaskListFilters, currentUserId = filters.owner, now = new Date(), timeZone = LEGACY_TEAM_TIME_ZONE, definitions: readonly TagDefinition[] = []) {
   const statuses = getTaskStatusFilters(filters);
-  const tags = getTaskTagFilters(filters);
+  const tags = getTaskTagFilters(filters, definitions);
   const labels = task.labels?.filter((label) => label.trim().length > 0) ?? [];
-  const matchesTags = (tags.length === 0 && !filters.includeUntagged)
+  const matchesTags = ((filters.tagIds?.length ?? tags.length) === 0 && !filters.includeUntagged)
     || labels.some((label) => tags.includes(label))
     || (Boolean(filters.includeUntagged) && labels.length === 0);
   const hasCurrentUser = Boolean(currentUserId.trim()) && currentUserId !== "all";

@@ -126,13 +126,15 @@ export function TaskListFilterPanel({ tags, members, statuses, filters, touch, o
     ownerIds: [...selectedOwners.map(personLabel), ...(filters.includeUnassigned ? [unassignedLabel] : [])].join(locale === "en" ? ", " : "、"),
     participantIds: [...selectedParticipants.map(personLabel), ...(filters.includeNoParticipants ? [noParticipantsLabel] : [])].join(locale === "en" ? ", " : "、"),
     statuses: getTaskStatusFilters(filters).map(statusLabel).join(locale === 'en' ? ', ' : '、'),
-    tags: [...getTaskTagFilters(filters).map(tagLabel), ...(filters.includeUntagged ? [u('untagged')] : [])].join(locale === 'en' ? ', ' : '、'),
+    tags: [...getTaskTagFilters(filters, tags).map(tagLabel), ...(filters.includeUntagged ? [u('untagged')] : [])].join(locale === 'en' ? ', ' : '、'),
     deadline: filters.deadline ? filterDateLabel(locale, filters.deadline) : '',
     created: filters.created ? filterDateLabel(locale, filters.created) : '',
   };
   const categories = filterCategories.filter(item => !hideStatus || item.id !== "statuses").map(item => ({ ...item, label: item.id === "ownerIds" ? ownerLabel : item.id === "participantIds" ? participantLabel : u(({ statuses: 'status', tags: 'tags', deadline: 'dueDate', created: 'createdDate' } as const)[item.id]) }));
   const selectedStatuses = getTaskStatusFilters(filters);
-  const selectedTags = getTaskTagFilters(filters);
+  const selectedTags = getTaskTagFilters(filters, tags);
+  const selectedTagIds = filters.tagIds ?? tags.filter(tag => selectedTags.includes(tag.name)).map(tag => tag.id);
+  const selectTagIds = (ids: string[]) => ({ tagIds: ids, tags: tags.filter(tag => ids.includes(tag.id)).map(tag => tag.name) });
   const activeCount = (hideStatus ? 0 : selectedStatuses.length) + selectedTags.length + selectedOwners.length + selectedParticipants.length
     + [filters.includeUntagged, filters.includeUnassigned, filters.includeNoParticipants, filters.deadline, filters.created].filter(Boolean).length;
   const removeCondition = (patch: Partial<TaskListFilters>) => {
@@ -163,7 +165,7 @@ export function TaskListFilterPanel({ tags, members, statuses, filters, touch, o
   };
   const clearCategory = (id: Category) => {
     if (id === "statuses") onChange({ statuses: [], completion: "all" });
-    else if (id === "tags") onChange({ tags: [], includeUntagged: false });
+    else if (id === "tags") onChange({ tags: [], tagIds: [], includeUntagged: false });
     else if (id === "ownerIds") onChange({ ownerIds: [], includeUnassigned: false });
     else if (id === "participantIds") onChange({ participantIds: [], includeNoParticipants: false });
     else onChange({ [id]: undefined });
@@ -207,7 +209,7 @@ export function TaskListFilterPanel({ tags, members, statuses, filters, touch, o
             })}
             {category === "tags" && <>{visibleTags.map(tag => {
               const Icon = getTagIcon(tag.icon);
-              return <FilterOption checked={selectedTags.includes(tag.name)} icon={<Icon aria-hidden="true" size={15} style={{ color: `var(--ad-tag-${tag.color}-ink)` }} />} key={tag.id} label={tagLabel(tag.name)} onChange={() => onChange({ tags: toggle(selectedTags, tag.name) })} />;
+              return <FilterOption checked={selectedTagIds.includes(tag.id)} icon={<Icon aria-hidden="true" size={15} style={{ color: `var(--ad-tag-${tag.color}-ink)` }} />} key={tag.id} label={tagLabel(tag.name)} onChange={() => onChange(selectTagIds(toggle(selectedTagIds, tag.id)))} />;
             })}{matchesQuery(u('untagged')) && <FilterOption checked={Boolean(filters.includeUntagged)} icon={<Inbox aria-hidden="true" size={15} />} label={u('untagged')} onChange={() => onChange({ includeUntagged: !filters.includeUntagged })} />}</>}
             {((category === "statuses" && !visibleStatuses.length) || (category === "tags" && !visibleTags.length && !matchesQuery(u('untagged')))) && <p className="task-filter-menu-empty">{u('noOptions')}</p>}
             {(category === "deadline" || category === "created") && <DateFilterChoices field={category} key={`${category}:${JSON.stringify(filters[category])}`} onChange={value => onChange({ [category]: value })} value={filters[category]} />}
@@ -228,7 +230,7 @@ export function TaskListFilterPanel({ tags, members, statuses, filters, touch, o
         {(selectedTags.length > 0 || filters.includeUntagged) && <div className="task-filter-selected-group" aria-label={u('selectedTags')}>{selectedTags.map(name => {
           const tag = tags.find(tag => tag.name === name);
           const TagIcon = getTagIcon(tag?.icon ?? "tag");
-          return <TaskFilterChip key={name} label={u('tags')} onRemove={() => removeCondition({ tags: selectedTags.filter(value => value !== name) })} value={tagLabel(name)}><TagIcon aria-hidden="true" size={14} style={{ color: `var(--ad-tag-${tag?.color ?? "gray"}-ink)` }} /><span className="task-filter-chip-text">{tagLabel(name)}</span></TaskFilterChip>;
+          return <TaskFilterChip key={name} label={u('tags')} onRemove={() => removeCondition(selectTagIds(selectedTagIds.filter(id => tags.find(tag => tag.id === id)?.name !== name)))} value={tagLabel(name)}><TagIcon aria-hidden="true" size={14} style={{ color: `var(--ad-tag-${tag?.color ?? "gray"}-ink)` }} /><span className="task-filter-chip-text">{tagLabel(name)}</span></TaskFilterChip>;
         })}{filters.includeUntagged && <TaskFilterChip label={u('tags')} onRemove={() => removeCondition({ includeUntagged: false })} value={u('untagged')}><Inbox aria-hidden="true" size={14} /><span className="task-filter-chip-text">{u('untagged')}</span></TaskFilterChip>}</div>}
         {([{ field: "deadline", label: u('dueDate') }, { field: "created", label: u('createdDate') }] as const).map(({ field, label }) => summaries[field] && <TaskFilterChip key={field} label={label} onRemove={() => removeCondition({ [field]: undefined })} value={summaries[field]} />)}
         <button aria-label={u('clearAllFilters')} className="task-filter-text-button task-filter-reset-all" onClick={() => {

@@ -26,7 +26,7 @@ export function TaskListTools({ projection, members, filters: sourceFilters, onF
   const tags = useMemo(() => {
     const byName = new Map<string, TagDefinition>();
     for (const { tag } of projection.tagFacets) if (!byName.has(tag.name)) byName.set(tag.name, tag);
-    for (const name of [...projection.allTasks.flatMap((task) => task.labels ?? []), ...getTaskTagFilters(filters)]) {
+    for (const name of [...projection.allTasks.flatMap((task) => task.labels ?? []), ...getTaskTagFilters(filters, projection.tagFacets.map(item => item.tag))]) {
       if (name.trim() && !byName.has(name)) byName.set(name, { id: `unregistered:${name}`, name, icon: "tag", color: "gray" });
     }
     return [...byName.values()];
