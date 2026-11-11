@@ -33,7 +33,7 @@ export function TaskSubtasksPane({ taskId, currentUserId, members, tags, onCreat
     {(onCreate || open) && <TaskSubtaskCreateForm inline currentUserId={currentUserId} id={formId} members={members} onCancel={cancel} onCreate={async draft => {
       if (!onCreate) throw new Error(locale === "en" ? "You no longer have permission to create subtasks here. Your input has been kept." : "你已没有当前任务的子任务创建权限，输入已保留。");
       await onCreate(draft);
-    }} open={open} tags={tags} />}
+    }} onDismiss={() => setOpen(false)} open={open} tags={tags} />}
     {(!empty || !open) && <TaskSubtaskList {...listProps} emptyAction={empty ? action : undefined} />}
     {suggestions}
   </section>;

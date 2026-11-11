@@ -7,10 +7,11 @@ type TaskQuickCreateRowProps = {
   inputRef: RefObject<HTMLInputElement | null>;
   open: boolean;
   onClose: () => void;
+  onDismiss: () => void;
   onCreate: (prompt: string) => Promise<void>;
 };
 
-export function TaskQuickCreateRow({ id, inputRef, open, onClose, onCreate }: TaskQuickCreateRowProps) {
+export function TaskQuickCreateRow({ id, inputRef, open, onClose, onDismiss, onCreate }: TaskQuickCreateRowProps) {
   const { locale } = useI18n();
   const en = locale === "en";
   const [prompt, setPrompt] = useState("");
@@ -48,6 +49,6 @@ export function TaskQuickCreateRow({ id, inputRef, open, onClose, onCreate }: Ta
   };
 
   return <div hidden={!open}>
-    <TaskInlineCreateForm error={error} id={id} inputLabel={en ? "Task request" : "任务需求"} inputRef={inputRef} label={en ? "Quick create task" : "快捷创建任务"} onCancel={onClose} onChange={value => { setPrompt(value); setError(""); }} onSubmit={submit} saving={saving} value={prompt} />
+    <TaskInlineCreateForm error={error} id={id} inputLabel={en ? "Task request" : "任务需求"} inputRef={inputRef} label={en ? "Quick create task" : "快捷创建任务"} onCancel={onClose} onChange={value => { setPrompt(value); setError(""); }} onDismiss={open ? onDismiss : undefined} onSubmit={submit} saving={saving} value={prompt} />
   </div>;
 }
