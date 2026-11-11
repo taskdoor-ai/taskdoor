@@ -6,7 +6,8 @@ import type { FileAnnotationExitController } from "@/features/tasks/files/lib/us
 import { TaskFileAnnotationDiscardDialog } from "@/features/tasks/files/components/TaskFileAnnotationDiscardDialog";
 import { normalizeTaskStatus } from "@/shared/model/task-model";
 import "@/features/tasks/styles/task-ai-adjustment.css";
-import { applyAutomaticWorkspaceTags, manualTaskTags } from "@/ai/task-auto-tags";
+import { manualTaskTags } from "@/ai/task-auto-tags";
+import { suggestTeamTaskTags } from "@/ai/task-tag-suggestions";
 import { defaultGeneratedOwnerId } from "@/features/tasks/lib/generated-task-owner";
 import { generateQuickTaskContent, revealQuickTaskContent, type QuickTaskPreview } from "@/ai/task-creation";
 import { TaskRecycleBinPage } from "@/features/tasks/components/TaskRecycleBinPage";
@@ -52,11 +53,11 @@ import { taskIconOptions, taskIconToneOptions } from "@/features/tasks/component
 import { AiConnectionPage } from "@/features/ai-connection/components/AiConnectionPage";
 import { TagManagementPage } from "@/features/me/components/TagManagementPage";
 import { PersonalTagsProvider } from "@/features/me/components/PersonalTags";
-import { getPersonalTagStorageKey, loadPersonalTags, preparePersonalTaskTags } from "@/features/tasks/lib/personal-tags";
+import { addTeamTag, canManageTeamTag, getTeamTagStorageKey, readTeamTagCatalog, teamTagNameKey, updateTeamTagCatalog, type TeamTagCatalog } from "@/features/tasks/lib/team-task-tags";
 import { PersonalCenterModal, type PersonalCenterModule } from "@/app/workspace/components/PersonalInfoDialog";
 import { createInitialTaskListFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
 import { createWorkspaceTaskDetail, getLegacyTaskFileFixtures, migrateUnsupportedBuiltinTaskFiles, taskDetailMocks } from "@/ai/mock/data/taskDetailMocks";
-import { type TaskActivityChange, type TaskActivityMock, type TaskActivityType, type TaskDetailId, type TaskDetailContent, workspaceRootId, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
+import { type TagAppearance, type TaskActivityChange, type TaskActivityMock, type TaskActivityType, type TaskDetailId, type TaskDetailContent, workspaceRootId, type TaskIconName, type TaskIconTone, type TaskNode, type WorkspaceNode } from "@/shared/model/task-model";
 import { getTeamTaskDiagnosisSnapshot, getTeamTaskDetailFixture } from "@/ai/mock/data/teamTaskDetailFixtures";
 import { getTaskAcceptedEffortMinutes } from "@/ai/mock/data/taskProgressExamples";
 import { initialTags, type TagDefinition } from "@/ai/mock/data/tagGroups";
@@ -296,23 +297,37 @@ function App() {
     catch { throw new Error("预测结果未能保存，请重试。"); }
     setProgressPredictions(next);
   };
-  const [personalTagLoadError, setPersonalTagLoadError] = useState("");
-  const [tagDefinitions, setTagDefinitions] = useState<TagDefinition[]>(() => {
-    try { return loadPersonalTags(localStorage, currentUserId, showDemoData ? initialScenarioState.tags : []); }
-    catch { return showDemoData ? initialScenarioState.tags : []; }
-  });
-  useEffect(() => {
-    try { loadPersonalTags(localStorage, currentUserId, showDemoData ? initialScenarioState.tags : []); }
-    catch { setPersonalTagLoadError("个人标签无法读取，暂时显示初始列表。请刷新后重试，原记录已保留。"); }
-  }, [initialScenarioState]);
-  const savePersonalTags = (tags: TagDefinition[]) => {
-    if (personalTagLoadError) throw new Error(personalTagLoadError);
-    try { localStorage.setItem(getPersonalTagStorageKey(currentUserId), JSON.stringify(tags)); }
-    catch { throw new Error("个人标签未能保存，请检查浏览器存储空间后重试。"); }
-    setTagDefinitions(tags);
-  };
   const [personalCenterState, setPersonalCenterState] = useState<PersonalCenterState>(() => loadPersonalCenterState());
   const [activeTeamId, setActiveTeamId] = useState(() => personalCenterState.teams.find(team => team.id === workspaceSession?.activeTeamId)?.id ?? personalCenterState.teams[0]?.id ?? "");
+  const activeTeam = personalCenterState.teams.find(team => team.id === activeTeamId);
+  const activeTeamMembership = activeTeam && activeMembership(activeTeam, currentUserId);
+  const activeTeamRole = activeTeamMembership?.role;
+  const canManageTeamTags = activeTeamRole === "owner" || activeTeamRole === "admin";
+  const teamTagStorageKey = getTeamTagStorageKey(activeTeamId);
+  const teamTagSeed = useMemo(() => {
+    const demoTasks = getTeamWorkspaceScenario(activeTeamId)?.nodes ?? [];
+    const names = new Set(demoTasks.flatMap(node => node.kind === "task" ? node.labels ?? [] : []));
+    return initialTags.filter(tag => names.has(tag.name));
+  }, [activeTeamId]);
+  const [teamTagRevision, setTeamTagRevision] = useState(0);
+  const refreshTeamTags = () => setTeamTagRevision(value => value + 1);
+  const { catalog: teamTagCatalog, raw: teamTagRaw, error: teamTagLoadError } = useMemo(() => {
+    try {
+      const raw = activeTeamRole ? localStorage.getItem(teamTagStorageKey) : null;
+      return { catalog: readTeamTagCatalog(raw, activeTeamRole ? teamTagSeed : []), raw, error: "" };
+    } catch {
+      return { catalog: { tags: [], archivedNames: [] }, raw: null, error: locale === "en" ? "Team tags could not be loaded." : "团队标签读取失败，请刷新后重试。" };
+    }
+  }, [activeTeamRole, locale, teamTagRevision, teamTagSeed, teamTagStorageKey]);
+  const tagDefinitions = teamTagCatalog.tags;
+  const canEditTeamTag = (tag: TagDefinition) => !teamTagLoadError && canManageTeamTag(activeTeamRole ? { memberId: currentUserId, role: activeTeamRole } : undefined, tag);
+  useEffect(() => {
+    const syncTeamTags = (event: StorageEvent) => {
+      if (event.storageArea === localStorage && (event.key === teamTagStorageKey || event.key === null)) refreshTeamTags();
+    };
+    window.addEventListener("storage", syncTeamTags);
+    return () => window.removeEventListener("storage", syncTeamTags);
+  }, [teamTagStorageKey]);
   const [quickCreateRequest, setQuickCreateRequest] = useState(0);
   const activeTeamTimeZone = getTeamTimeZone(personalCenterState.teams.find(team => team.id === activeTeamId));
   const validTeamTimeZone = isValidTimeZone(activeTeamTimeZone);
@@ -662,7 +677,7 @@ function App() {
 
   useEffect(() => {
     if (taskStorageRecoveryError) return;
-    const withCriterionMocks = applyAutomaticWorkspaceTags(applyCriterionReviewMocks(workspaceNodes));
+    const withCriterionMocks = applyCriterionReviewMocks(workspaceNodes);
     workspaceNodesRef.current = withCriterionMocks;
     if (withCriterionMocks !== workspaceNodes) setWorkspaceNodes(withCriterionMocks);
     persistStoredValue(workspaceNodesStorageKey, withCriterionMocks);
@@ -742,25 +757,83 @@ function App() {
     appendActivityForTask(taskId, activity);
   };
 
-  const createTaskPlanFromConversation = (draft: TaskPlanDraft, parentTaskId?: string) => {
-    if (!validTeamTimeZone) throw new Error(locale === "en" ? "The team timezone is invalid. Your input has been kept." : "团队时区无效，无法创建任务。输入已保留。");
-    if (personalTagLoadError || taskStorageRecoveryError) throw new Error(personalTagLoadError || taskStorageRecoveryError);
-    const prepared = preparePersonalTaskTags(tagDefinitions, draft);
-    const result = createWorkspaceTasksFromDraft(workspaceNodesRef.current, prepared.draft, { parentTaskId, currentUserId, teamId: activeTeamId, timeZone: activeTeamTimeZone, participantsReviewed: true });
-    // Save new tasks and the caller's personal catalog as one recoverable write.
-    try {
-      commitTaskAiStorage(localStorage, [
-        [workspaceNodesStorageKey, JSON.stringify(result.nodes)],
-        [getPersonalTagStorageKey(currentUserId), JSON.stringify(prepared.tags)],
-      ]);
-    } catch {
+  const latestTeamMembership = () => {
+    const team = loadPersonalCenterState().teams.find(item => item.id === activeTeamId);
+    const membership = team && activeMembership(team, currentUserId);
+    if (!membership) throw new Error(locale === "en" ? "You can no longer edit this team's tags." : "当前已无权维护此团队的标签。");
+    return { memberId: currentUserId, role: membership.role };
+  };
+
+  const readLatestTeamTagCatalog = () => readTeamTagCatalog(localStorage.getItem(teamTagStorageKey), teamTagSeed);
+
+  const assertCurrentTeamTags = (names: string[]) => {
+    if (names.length === 0) return;
+    const activeNames = new Set(readLatestTeamTagCatalog().tags.map(tag => tag.name));
+    if (names.some(name => !activeNames.has(name))) {
+      refreshTeamTags();
+      throw new Error(locale === "en" ? "Team tags have changed. Select them again and retry." : "团队标签已变化，请重新选择后再试。");
+    }
+  };
+
+  const verifyTaskTagWrite = () => {
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    const stored = localStorage.getItem(workspaceNodesStorageKey);
+    if (stored && JSON.stringify(JSON.parse(stored)) !== JSON.stringify(workspaceNodesRef.current)) {
+      const fresh = normalizeWorkspaceNodes(JSON.parse(stored));
+      workspaceNodesRef.current = fresh;
+      setWorkspaceNodes(fresh);
+      throw new Error(locale === "en" ? "Tasks have changed. Check the latest information and retry." : "任务已变化，请核对最新信息后重试。");
+    }
+  };
+
+  const persistTagChanges = (catalog?: TeamTagCatalog, nodes?: WorkspaceNode[]) => {
+    const writes: Array<[string, string]> = [];
+    if (catalog) writes.push([teamTagStorageKey, JSON.stringify(catalog)]);
+    if (nodes) writes.push([workspaceNodesStorageKey, JSON.stringify(nodes)]);
+    try { commitTaskAiStorage(localStorage, writes); }
+    catch (error) {
       try { recoverTaskAiStorage(localStorage); }
       catch (caught) { setTaskStorageRecoveryError(caught instanceof Error ? caught.message : "本地记录需要恢复。"); }
-      throw new Error("当前浏览器无法保存任务和个人标签。请检查存储空间或隐私设置，草稿已保留。");
+      throw error;
     }
-    setTagDefinitions(prepared.tags);
-    workspaceNodesRef.current = result.nodes;
-    setWorkspaceNodes(result.nodes);
+    if (catalog) refreshTeamTags();
+    if (nodes) {
+      workspaceNodesRef.current = nodes;
+      setWorkspaceNodes(nodes);
+    }
+  };
+
+  const saveTeamTags = (tags: TagDefinition[]) => {
+    const actor = latestTeamMembership();
+    const raw = localStorage.getItem(teamTagStorageKey);
+    if (raw !== teamTagRaw) {
+      refreshTeamTags();
+      throw new Error(locale === "en" ? "Team tags have changed. Review the list and retry." : "团队标签已变化，请核对列表后重试。");
+    }
+    const current = readTeamTagCatalog(raw, teamTagSeed);
+    const { catalog, renames } = updateTeamTagCatalog(current, tags, actor);
+    if (renames.size === 0) {
+      persistTagChanges(catalog);
+      return;
+    }
+    verifyTaskTagWrite();
+    const nodes = workspaceNodesRef.current.map(node => {
+      if (node.kind !== "task" || (node.teamId ?? "creator-commerce") !== activeTeamId || !node.labels?.some(name => renames.has(name))) return node;
+      return { ...node, labels: [...new Set(node.labels.map(name => renames.get(name) ?? name))] };
+    });
+    persistTagChanges(catalog, nodes);
+  };
+
+  const createTaskPlanFromConversation = (draft: TaskPlanDraft, parentTaskId?: string) => {
+    if (!validTeamTimeZone) throw new Error(locale === "en" ? "The team timezone is invalid. Your input has been kept." : "团队时区无效，无法创建任务。输入已保留。");
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    assertCurrentTeamTags([draft.mainTask, ...draft.subtasks].flatMap(task => task.labels));
+    const result = createWorkspaceTasksFromDraft(workspaceNodesRef.current, draft, { parentTaskId, currentUserId, teamId: activeTeamId, timeZone: activeTeamTimeZone, participantsReviewed: true });
+    try {
+      persistTagChanges(undefined, result.nodes);
+    } catch {
+      throw new Error(locale === "en" ? "The task could not be saved. Your draft has been kept." : "任务未能保存，草稿已保留，请重试。");
+    }
     creationSessionCompleted.current = true;
     return {
       createdCount: result.createdNodes.length,
@@ -1006,7 +1079,8 @@ function App() {
     : undefined;
   const selectedTaskPath = selectedTreeTask?.kind === "task" ? getTaskPathItems(teamWorkspaceNodes, selectedTreeTask) : [];
   const createInlineSubtask = (draft: NewSubtaskDraft) => {
-    if (taskStorageRecoveryError || personalTagLoadError) throw new Error(taskStorageRecoveryError || personalTagLoadError);
+    if (taskStorageRecoveryError) throw new Error(taskStorageRecoveryError);
+    if (draft.labels?.length) assertCurrentTeamTags(draft.labels);
     if (!validTeamTimeZone || !selectedTaskId) throw new Error(locale === "en" ? "The task or team timezone is invalid. Your input has been kept." : "当前任务或团队时区无效，输入已保留，请重新打开后核对。");
     const storedNodes = localStorage.getItem(workspaceNodesStorageKey);
     if (storedNodes && JSON.stringify(JSON.parse(storedNodes)) !== JSON.stringify(workspaceNodesRef.current)) {
@@ -1378,11 +1452,34 @@ function App() {
     ]);
   };
 
-  const changeTaskTags = (taskId: string, labels: string[]) => {
+  const changeTaskTags = (taskId: string, selection: string[] | string, appearance?: TagAppearance) => {
+    const actor = latestTeamMembership();
+    verifyTaskTagWrite();
     const task = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === taskId);
-    if (!task) return;
+    if (!task || (task.teamId ?? "creator-commerce") !== activeTeamId || !canReadTask(task, loadPersonalCenterState().teams)) {
+      throw new Error(locale === "en" ? "This task is no longer editable." : "当前任务已不可编辑。");
+    }
+    const previous = task.labels ?? [];
+    let catalog: TeamTagCatalog | undefined;
+    let labels: string[];
+    if (typeof selection === "string") {
+      const current = readLatestTeamTagCatalog();
+      const result = addTeamTag(current, selection, actor, appearance);
+      if (result.catalog !== current) catalog = result.catalog;
+      labels = [...new Set([...previous, result.tag.name])];
+    } else {
+      assertCurrentTeamTags(selection.filter(name => !previous.includes(name)));
+      labels = selection;
+    }
     const tagsValue = (values: string[]) => [...new Set(values)].sort().join("、") || null;
-    changeTaskFields(taskId, manualTaskTags(task, labels), "tags-change", "修改任务标签", [{ label: "标签", before: tagsValue(task.labels ?? []), after: tagsValue(labels) }]);
+    const activity = createTaskChangeActivity({ author: currentUserName, type: "tags-change", message: "修改任务标签", changes: [{ label: "标签", before: tagsValue(previous), after: tagsValue(labels) }] });
+    if (!activity && !catalog) return;
+    const nodes = workspaceNodesRef.current.map(node => node === task ? { ...task, ...manualTaskTags(task, labels), updatedAt: new Date().toISOString() } : node);
+    persistTagChanges(catalog, nodes);
+    if (activity) {
+      preserveTaskDetailSeed(task);
+      setTaskActivityStore(current => appendTaskActivity(current, taskId, activity));
+    }
   };
 
   // A freshly invited person may be persisted before this render's members update.
@@ -1605,12 +1702,25 @@ function App() {
     }
   };
 
+  const canEditTaskTags = Boolean(activeTeamRole && selectedTreeTask && selectedTaskDetail && !taskStorageRecoveryError);
+  const taskTagSuggestions = useMemo(() => {
+    if (!canEditTaskTags || teamTagLoadError || !selectedTaskDetail || selectedTreeTask?.kind !== "task") return;
+    const suggestions = suggestTeamTaskTags(selectedTaskDetail, tagDefinitions, locale);
+    const excluded = new Set([...(selectedTreeTask.labels ?? []), ...(selectedTreeTask.automaticTags?.removed ?? []), ...teamTagCatalog.archivedNames].map(teamTagNameKey));
+    const proposed = suggestions.proposed && !excluded.has(teamTagNameKey(suggestions.proposed)) ? suggestions.proposed : undefined;
+    return {
+      existing: suggestions.existing.filter(name => !excluded.has(teamTagNameKey(name))),
+      proposed,
+      appearance: proposed ? suggestions.appearance : undefined,
+    };
+  }, [canEditTaskTags, locale, selectedTaskDetail, selectedTreeTask, tagDefinitions, teamTagCatalog.archivedNames, teamTagLoadError]);
+
   if (!personalCenterState.teams.length) return <div className="app-shell"><main className="team-empty-workspace"><h1>{locale === "en" ? "No team yet" : "你还没有加入团队"}</h1><p>{locale === "en" ? "Create a team, or ask a teammate for an invitation link." : "创建一个新团队，或通过同事提供的邀请链接加入。"}</p><Button onClick={() => setCreateEmptyTeamOpen(true)}>{locale === "en" ? "Create team" : "创建团队"}</Button><Button variant="ghost" onClick={signOutWorkspace}>{locale === "en" ? "Sign out" : "退出登录"}</Button>{hasRestorableTeams(currentUserId) && <MyTeamsPanel actorId={currentUserId} onRestore={restoreTeam} state={personalCenterState} />}<CreateTeamDialog open={createEmptyTeamOpen} onOpenChange={setCreateEmptyTeamOpen} /></main></div>;
 
   return (
     <FavoritesScope.Provider value={favoritesScope}><TeamTimeZoneContext.Provider value={activeTeamTimeZone}><MockDataProvider tasks={additionalMockTasks}><MemberInvitationProvider ref={memberInvitationsRef} state={personalCenterState} onStateChange={setPersonalCenterState} teamId={activeTeamId} members={collaborationMembers}>
     <PersonDirectoryProvider members={collaborationMembers}>
-    <PersonalTagsProvider tags={tagDefinitions} onManage={openTagManagement}>
+    <PersonalTagsProvider tags={tagDefinitions} onManage={openTagManagement} canManage={tagDefinitions.some(canEditTeamTag) || (canManageTeamTags && !teamTagLoadError)} canCreate={Boolean(activeTeamRole && !teamTagLoadError)}>
     <TeamLifecycleProvider team={personalCenterState.teams.find(t => t.id === activeTeamId)} nodes={workspaceNodes} members={collaborationMembers} actorId={currentUserId} onCommit={commitMembershipAction}>
     <div className="app-shell task-workspace-shell">
       {!validTeamTimeZone && <p role="alert">{locale === "en" ? "The team timezone is invalid. Date filters are not applied and date changes are unavailable; saved tasks are kept." : "团队时区无效，日期筛选条件暂未应用，也无法修改日期；已有任务和输入已保留。"}</p>}
@@ -1652,7 +1762,7 @@ function App() {
       <PersonalCenterModal key={activeTeamId} activeModule={personalCenterModule} activeTeamId={activeTeamId} members={collaborationMembers} onActiveTeamChange={changeActiveTeam} onModuleChange={setPersonalCenterModule} onOpenChange={changePersonalInfoOpen} nodes={workspaceNodes} onOpenEvidence={openTask} onRestoreTeam={restoreTeam} onStateChange={setPersonalCenterState} open={personalInfoOpen} recycleBin={recycleBinForSettings} state={personalCenterState} />
 
       <main className="main-content">
-        {personalTagLoadError && <p role="alert">{personalTagLoadError}</p>}
+        {teamTagLoadError && <p role="alert">{teamTagLoadError}</p>}
         <TaskWorkspace
             progressComparisonsByTaskId={statusProgressComparisons}
             currentUserId={currentUserId}
@@ -1787,7 +1897,10 @@ function App() {
             onTaskGoalChange={changeTaskGoal}
             onTaskTitleChange={changeTaskTitle}
             onTaskPeriodChange={changeTaskPeriod}
-            onTagsChange={(labels) => changeTaskTags(selectedTaskId, labels)}
+            onTagsChange={canEditTaskTags ? (labels) => changeTaskTags(selectedTaskId, labels) : undefined}
+            onCreateTag={canEditTaskTags && !teamTagLoadError ? (name, appearance) => changeTaskTags(selectedTaskId, name, appearance) : undefined}
+            archivedTags={teamTagCatalog.archivedTags}
+            tagSuggestions={taskTagSuggestions}
           />
           ) : null}
         </TaskWorkspace>
@@ -1815,9 +1928,13 @@ function App() {
           <AiConnectionPage onBack={showTaskList} />
         ) : activeSection === "settings" ? (
           <TagManagementPage
+            key={activeTeamId}
             tags={tagDefinitions}
             onBack={closeTagManagement}
-            onChange={savePersonalTags}
+            onChange={saveTeamTags}
+            canCreate={Boolean(activeTeamRole && !teamTagLoadError)}
+            canManage={canManageTeamTags && !teamTagLoadError}
+            canManageTag={canEditTeamTag}
           />
         ) : null}
 

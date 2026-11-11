@@ -2,6 +2,7 @@ import { useGlobalUi } from "@/shared/i18n/global-ui";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { findTagByName, type TagDefinition } from "@/ai/mock/data/tagGroups";
+import type { TagAppearance, TaskTagSuggestions } from "@/shared/model/task-model";
 import { TagBadge } from "@/shared/ui/TagBadge";
 import { TagPicker } from "@/features/me/components/TagPicker";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
@@ -10,19 +11,23 @@ type Props = {
   iconOnly?: boolean;
   showAll?: boolean;
   onChange?: (names: string[]) => void;
+  onCreateAndSelect?: (name: string, appearance?: TagAppearance) => void;
   selected: string[];
+  suggestions?: TaskTagSuggestions;
   tags: TagDefinition[];
+  archivedTags?: TagDefinition[];
 };
 
-export function TaskTagList({ onChange, selected, tags, iconOnly = false, showAll = false }: Props) {
+export function TaskTagList({ onChange, onCreateAndSelect, selected, suggestions, tags, archivedTags, iconOnly = false, showAll = false }: Props) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
-  const selectedTags = useMemo(() => selected.map((name) => findTagByName(tags, name) ?? { id: name, name, icon: "tag" as const, color: "gray" as const }), [selected, tags]);
+  const selectedTags = useMemo(() => selected.map((name) => findTagByName(tags, name) ?? archivedTags?.find(tag => tag.name === name) ?? { id: name, name, icon: "tag" as const, color: "gray" as const }), [archivedTags, selected, tags]);
   const containerRef = useRef<HTMLDivElement>(null);
   const measurementRef = useRef<HTMLDivElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(selectedTags.length);
   const [open, setOpen] = useState(false);
+  const [removeError, setRemoveError] = useState("");
   const removable = Boolean(onChange);
 
   useLayoutEffect(() => {
@@ -61,7 +66,15 @@ export function TaskTagList({ onChange, selected, tags, iconOnly = false, showAl
 
   const displayedTags = showAll ? selectedTags : selectedTags.slice(0, visibleCount);
   const hiddenTags = showAll ? [] : selectedTags.slice(visibleCount);
-  const renderBadge = (tag: TagDefinition) => <TagBadge key={tag.id} onRemove={onChange ? () => onChange(selected.filter((name) => name !== tag.name)) : undefined} size="sm" tag={tag} />;
+  const change = (names: string[]) => {
+    onChange?.(names);
+    setRemoveError("");
+  };
+  const remove = (tag: TagDefinition) => {
+    try { change(selected.filter(name => name !== tag.name)); }
+    catch (error) { setRemoveError(error instanceof Error ? error.message : ui("标签未能保存，请重试。")); }
+  };
+  const renderBadge = (tag: TagDefinition) => <TagBadge key={tag.id} onRemove={onChange ? () => remove(tag) : undefined} size="sm" tag={tag} />;
 
   return <div aria-label={d('taskTags')} className={`task-detail-title-tags task-tag-list${showAll ? " task-tag-list-show-all" : ""}`} ref={containerRef}>
     {displayedTags.map(renderBadge)}
@@ -73,7 +86,8 @@ export function TaskTagList({ onChange, selected, tags, iconOnly = false, showAl
         </ul>
       </PopoverContent>
     </Popover>}
-    <div className="task-tag-picker" ref={pickerRef}><TagPicker iconOnly={iconOnly} disabled={!onChange} onChange={(names) => onChange?.(names)} selected={selected} tags={tags} /></div>
+    <div className="task-tag-picker" ref={pickerRef}><TagPicker iconOnly={iconOnly} disabled={!onChange} onChange={change} onCreateAndSelect={onCreateAndSelect} selected={selected} suggestions={suggestions} tags={tags} /></div>
+    {removeError && <p className="task-tag-save-error" role="alert">{removeError}</p>}
     <div aria-hidden="true" className="task-tag-measurement-clip" inert><div className="task-tag-measurement" ref={measurementRef}>
       {selectedTags.map(renderBadge)}
       {selectedTags.map((tag, index) => <span className="task-tag-overflow" key={`counter-${tag.id}`}>+{index + 1}</span>)}

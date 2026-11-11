@@ -186,6 +186,16 @@ export type PersonOption = {
   statusMessage?: string;
 };
 
-export type TagIconName = "tag" | "folder" | "flag" | "layers" | "package" | "shopping" | "users" | "building" | "coins" | "shield" | "wrench" | "sparkles";
+export const tagIconNames = [
+  "tag", "folder", "flag", "layers", "package", "shopping",
+  "users", "building", "coins", "shield", "wrench", "sparkles",
+  "file-text", "clipboard-check", "calendar-days", "megaphone", "pen-tool", "image",
+  "video", "book-open", "message-circle", "headphones", "handshake", "truck",
+  "boxes", "chart-no-axes-column", "database", "code-xml", "git-pull-request", "bug",
+  "flask-conical", "rocket", "globe", "key-round", "target", "search",
+] as const;
+export type TagIconName = typeof tagIconNames[number];
 export type TagColorName = "gray" | "blue" | "cyan" | "teal" | "green" | "amber" | "orange" | "red" | "purple" | "pink";
 export type TagDefinition = { id: string; name: string; icon: TagIconName; color: TagColorName };
+export type TagAppearance = Pick<TagDefinition, "icon" | "color">;
+export type TaskTagSuggestions = { existing: readonly string[]; proposed?: string; appearance?: TagAppearance };

@@ -178,6 +178,8 @@
 }
 .creation-editable-plan .creation-heading-properties > .task-detail-property,
 .creation-editable-plan .creation-heading-properties > .task-due-date-picker { gap: 10px; }
+.creation-editable-plan .creation-heading-properties > .creation-task-tag-field { grid-column: 1 / -1; min-width: 0; }
+.creation-task-tag-field > .task-detail-title-tags { min-width: 0; max-width: 100%; }
 .creation-editable-plan .creation-heading-properties > .task-detail-property > small,
 .creation-editable-plan .creation-heading-properties > .task-due-date-picker > small { line-height: 20px; margin: 0; padding: 0; }
 .creation-editable-plan .creation-heading-properties .member-selector,

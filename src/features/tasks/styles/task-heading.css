@@ -63,6 +63,7 @@
 .task-detail-title-tags.task-tag-list { position: relative; flex: 1 1 0; min-width: 96px; max-width: 100%; flex-wrap: nowrap; justify-content: flex-end; }
 .task-tag-list > .ad-tag-badge, .task-tag-picker { flex: 0 0 auto; }
 .task-tag-picker { display: flex; white-space: nowrap; }
+.task-tag-save-error { flex-basis: 100%; color: var(--ad-danger); font-size: 12px; }
 .task-tag-overflow { display: inline-flex; flex: 0 0 auto; min-width: var(--ad-control-height-sm); height: var(--ad-control-height-sm); align-items: center; justify-content: center; padding: 0 var(--ad-space-2); border: 0; border-radius: 999px; background: var(--ad-route-soft); color: var(--ad-route-ink); font: inherit; font-size: var(--ad-text-caption); font-weight: 600; white-space: nowrap; cursor: pointer; }
 .task-tag-overflow:hover, .task-tag-overflow[aria-expanded="true"] { background: var(--ad-surface-subtle); }
 .task-tag-overflow:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }

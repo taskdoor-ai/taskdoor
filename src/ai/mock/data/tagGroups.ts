@@ -1,4 +1,4 @@
-import type { TagColorName, TagDefinition, TagIconName } from "@/shared/model/task-model";
+import { tagIconNames, type TagColorName, type TagDefinition, type TagIconName } from "@/shared/model/task-model";
 import { multiTeamTags } from "@/ai/mock/data/teamWorkspaceScenarios.ts";
 export type { TagColorName, TagDefinition, TagIconName } from "@/shared/model/task-model";
 
@@ -6,7 +6,7 @@ const tag = (id: string, name: string, icon: TagIconName, color: TagColorName): 
 
 export const initialTags: TagDefinition[] = multiTeamTags.map((item) => ({ ...item }));
 
-const tagIconNames = new Set<TagIconName>(["tag", "folder", "flag", "layers", "package", "shopping", "users", "building", "coins", "shield", "wrench", "sparkles"]);
+const supportedTagIcons = new Set<string>(tagIconNames);
 const tagColorNames = new Set<TagColorName>(["gray", "blue", "cyan", "teal", "green", "amber", "orange", "red", "purple", "pink"]);
 const fallbackColors: TagColorName[] = ["blue", "purple", "teal", "amber", "pink", "green"];
 
@@ -22,7 +22,7 @@ const normalizeTag = (value: unknown, index: number): TagDefinition | null => {
   return {
     id: typeof value.id === "string" && value.id.trim() ? value.id : createTagId(),
     name: value.name.trim(),
-    icon: typeof value.icon === "string" && tagIconNames.has(value.icon as TagIconName) ? value.icon as TagIconName : "tag",
+    icon: typeof value.icon === "string" && supportedTagIcons.has(value.icon) ? value.icon as TagIconName : "tag",
     color: typeof value.color === "string" && tagColorNames.has(value.color as TagColorName) ? value.color as TagColorName : fallbackColors[index % fallbackColors.length],
   };
 };
