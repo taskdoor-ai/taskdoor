@@ -8,7 +8,7 @@ export function getCreationDeadlineNote(task: Pick<CreationTask, "endDate" | "ex
 }
 
 /** Fields omitted from review must not be silently submitted as user-confirmed facts. */
-export function simplifyCreationReview(form: CreationForm): CreationForm {
+export function simplifyCreationReview(form: CreationForm, selectedMainTaskLabels: readonly string[] = []): CreationForm {
   const simplify = (task: CreationTask): CreationTask => {
     const deadlineNote = getCreationDeadlineNote(task);
     const next = { ...task, dependsOnClientIds: [], executionTips: deadlineNote ? [deadlineNote] : [], labels: [], effortEstimate: undefined as CreationTask["effortEstimate"] };
@@ -18,7 +18,7 @@ export function simplifyCreationReview(form: CreationForm): CreationForm {
     }
     return next;
   };
-  return { ...form, tagOperations: undefined, mainTask: { ...simplify(form.mainTask), dependsOnClientIds: [] }, subtasks: form.subtasks.map(simplify) };
+  return { ...form, tagOperations: undefined, mainTask: { ...simplify(form.mainTask), labels: [...selectedMainTaskLabels], dependsOnClientIds: [] }, subtasks: form.subtasks.map(simplify) };
 }
 
 export function mainTaskReview(form: CreationForm): CreationForm {

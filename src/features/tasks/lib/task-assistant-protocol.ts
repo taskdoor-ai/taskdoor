@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { taskIconNameValues, taskIconToneValues } from "@/shared/model/task-model";
+import { tagIconNames, taskIconNameValues, taskIconToneValues } from "@/shared/model/task-model";
 import { effortEstimateSchema } from "@/shared/model/task-effort";
 
 const dateValueSchema = z.union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)]);
@@ -28,7 +28,7 @@ export const taskPlanDraftSchema = z.object({
     action: z.enum(["upsert", "rename", "delete"]),
     name: z.string().trim().min(1).max(24),
     newName: z.string().trim().min(1).max(24).optional(),
-    icon: z.enum(["tag", "folder", "flag", "layers", "package", "shopping", "users", "building", "coins", "shield", "wrench", "sparkles"]).optional(),
+    icon: z.enum(tagIconNames).optional(),
     color: z.enum(["gray", "blue", "cyan", "teal", "green", "amber", "orange", "red", "purple", "pink"]).optional(),
   })).max(50).optional(),
   dependencies: z.array(z.object({

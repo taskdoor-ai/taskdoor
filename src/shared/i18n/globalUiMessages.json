@@ -355,6 +355,66 @@
     "zh": "我的标签",
     "en": "My tags"
   },
+  "teamTags": {
+    "zh": "团队标签",
+    "en": "Team tags"
+  },
+  "teamTagList": {
+    "zh": "团队标签列表",
+    "en": "Team tag list"
+  },
+  "manageTeamTags": {
+    "zh": "管理团队标签",
+    "en": "Manage team tags"
+  },
+  "searchTags": {
+    "zh": "搜索标签",
+    "en": "Search tags"
+  },
+  "searchOrCreateTags": {
+    "zh": "搜索或新建标签",
+    "en": "Search or create tags"
+  },
+  "tagAiSuggestion": {
+    "zh": "AI 建议",
+    "en": "AI suggestion"
+  },
+  "tagAiSuggestions": {
+    "zh": "AI 建议标签",
+    "en": "AI tag suggestions"
+  },
+  "createAndApplyTag": {
+    "zh": "新建并添加「{0}」",
+    "en": "Create and add “{0}”"
+  },
+  "noMatchingTags": {
+    "zh": "没有匹配的标签",
+    "en": "No matching tags"
+  },
+  "enterNameToCreateTeamTag": {
+    "zh": "输入名称即可新建团队标签",
+    "en": "Enter a name to create a team tag"
+  },
+  "tagNameLength": {
+    "zh": "标签名称须为 1–24 个字符。",
+    "en": "Tag names must be 1–24 characters."
+  },
+  "archiveTagAction": {
+    "zh": "归档标签：{0}",
+    "en": "Archive tag: {0}"
+  },
+  "archiveTagConfirmation": {
+    "zh": "归档「{0}」？任务上已有的标签会保留。",
+    "en": "Archive “{0}”? Tasks with this tag will keep it."
+  },
+  "confirmTagArchive": {
+    "zh": "确认归档",
+    "en": "Confirm archive"
+  },
+  "tagArchiveFailed": {
+    "zh": "标签未能归档，请重试。",
+    "en": "Could not archive the tag. Try again."
+  },
   "tags": {
     "zh": "个标签",
     "en": " tags"

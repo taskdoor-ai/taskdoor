@@ -4,6 +4,8 @@ import { readFileSync } from 'node:fs';
 import { loadSkill, labSkills } from './test-lab/skills.ts';
 import { validateOutput } from './test-lab/validation.ts';
 import { splitSkillDocuments } from '../src/test-lab/markdown-files.ts';
+import { tagIconNames } from '../src/shared/model/task-model.ts';
+import { tagColorOptions, tagIconOptions } from '../src/shared/ui/TagBadge.tsx';
 
 test('生产创建入口使用独立生产资料，分析入口保留共用规则与输出契约', () => {
   for (const skill of labSkills) {
@@ -31,6 +33,18 @@ test('创建不加载进度分析依赖，状态分析保留依赖，旧版本�
   assert.equal(restored.snapshot, old);
   assert.ok(restored.instructions.includes(old));
   assert.ok(!restored.instructions.includes('EWD-2026-09-08-v10'));
+});
+
+test('创建任务运行包加载团队标签规则和与应用一致的外观库', () => {
+  const planner = loadSkill('agentdoor-task-planner');
+  const files = new Map(splitSkillDocuments(planner.productionInstructions).map(file => [file.path, file.content]));
+  const reference = 'skills/agentdoor-task-planner/references/';
+  assert.ok(files.has(`${reference}team-task-tags.md`));
+  const palette = JSON.parse(files.get(`${reference}tag-appearance.json`) ?? 'null');
+  assert.deepEqual(tagIconOptions.map(option => option.name), [...tagIconNames]);
+  assert.deepEqual(Object.keys(palette.icons).sort(), [...tagIconNames].sort());
+  assert.deepEqual(Object.keys(palette.colors).sort(), tagColorOptions.map(option => option.name).sort());
+  assert.equal(planner.previewSchema?.properties.schemaVersion.const, 'taskdoor.task-preview.v1');
 });
 
 for (const skill of labSkills.filter(s => s.id !== 'agentdoor-task-planner')) {

@@ -359,7 +359,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
   };
   const updateForm = (next: CreationForm) => {
     if (adjustmentRunning || planning?.stage !== "review") return;
-    setWorkspace(current => ({ ...current, planning: { stage: "review", form: simplifyCreationReview(withCreationParticipantDefaults(next, currentUserId, planning.form)), summary: planning.summary } }));
+    setWorkspace(current => ({ ...current, planning: { stage: "review", form: simplifyCreationReview(withCreationParticipantDefaults(next, currentUserId, planning.form), next.mainTask.labels), summary: planning.summary } }));
     setAdjustmentNotice(""); setError("");
   };
   const generatePlan = async (answers?: CreationWorkspaceDraft["answers"], resume = false) => {
@@ -405,7 +405,8 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
           setWorkspace(current => {
             const previous = current.planning?.stage === "review" ? current.planning.form : null;
             const merged = mergeCreationContentSection(previous, source, section, ownedGenerationParts.current);
-            return { ...current, planning: { stage: "review", form: simplifyCreationReview(merged), summary: next.stage === "review" ? next.summary : "" }, editingBrief: false };
+            const selectedLabels = previous?.mainTask.clientId === merged.mainTask.clientId ? previous.mainTask.labels : undefined;
+            return { ...current, planning: { stage: "review", form: simplifyCreationReview(merged, selectedLabels), summary: next.stage === "review" ? next.summary : "" }, editingBrief: false };
           });
         },
       });
@@ -506,7 +507,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
       throw new Error(c("theParentTaskNoLongerExistsConfirm"));
     }
     const next = withCreationParticipantDefaults(applyDraftTaskAiAdjustment(planning.form, aiContext, proposal), currentUserId, planning.form);
-    setWorkspace(current => ({ ...current, planning: { stage: "review", form: simplifyCreationReview(next), summary: planning.summary } }));
+    setWorkspace(current => ({ ...current, planning: { stage: "review", form: simplifyCreationReview(next, planning.form.mainTask.labels), summary: planning.summary } }));
     setAdjustmentNotice(c("changesAppliedToTheDraftTasksWill")); setError("");
   };
   const submit = () => {
@@ -525,7 +526,7 @@ export function TaskCreationPage({ active = true, creationParent: initialParent,
     }
     creating.current = true;
     try {
-      const plan = toTaskPlanDraft(simplifyCreationReview(form));
+      const plan = toTaskPlanDraft(simplifyCreationReview(form, form.mainTask.labels));
       const created = creationParent
         ? onCreateSubtask(creationParent.parentTaskId, plan)
         : form.decision === "attach" && form.candidate

@@ -2,6 +2,7 @@ import { useCreationI18n } from "@/shared/i18n/creation-messages";
 import { ListTree, ListTodo } from "lucide-react";
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import type { TagDefinition } from "@/ai/mock/data/tagGroups";
+import { suggestTeamTaskTags } from "@/ai/task-tag-suggestions";
 import { syncCreationSubtaskEdit } from "@/features/tasks/lib/task-creation-subtask-editing";
 import type { TaskIconTone } from "@/shared/model/task-model";
 import { removeCreationSubtask, type CreationForm, type CreationTask } from "@/features/tasks/lib/task-creation-form";
@@ -10,6 +11,7 @@ import { createTaskMemberRecommendations } from "@/ai/mock/lib/taskMemberRecomme
 import type { TaskAiAdjustmentScope } from "@/features/tasks/lib/task-ai-adjustment-types";
 import { getCreationAnnotationTargetKey, type TaskCreationAnnotation, type TaskCreationAnnotationTarget } from "@/features/tasks/lib/task-creation-annotations";
 import { MemberSelector, type Member } from "@/features/members/components/MemberSelector";
+import { TagPicker } from "@/features/me/components/TagPicker";
 import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
 import { TaskAiAdjustButton } from "@/features/tasks/components/TaskAiAdjustmentPopover";
 import { TaskCreationAnnotationButton } from "@/features/tasks/components/TaskCreationAnnotationButton";
@@ -19,6 +21,7 @@ import { TaskCreationSkeleton } from "@/features/tasks/components/TaskCreationSk
 import { creationCriterionPartKey, type CreationContentSection } from "@/features/tasks/lib/task-creation-progress";
 import { getCreationDeadlineNote } from "@/features/tasks/lib/task-creation-review";
 import { Button } from "@/shared/ui/button";
+import { TagBadge } from "@/shared/ui/TagBadge";
 import "@/features/tasks/styles/task-creation-cards.css";
 import "@/features/tasks/styles/task-creation-annotations.css";
 
@@ -55,6 +58,8 @@ export function TaskCreationPlanEditor({ form, members, tags, subtaskLoading, sh
   const criteriaReady = !visibleSections || visibleSections.includes("criteria");
   const propertiesReady = !visibleSections || visibleSections.includes("properties");
   const deadlineNote = getCreationDeadlineNote(form.mainTask);
+  const tagSuggestions = useMemo(() => ({ existing: suggestTeamTaskTags(form.mainTask, tags, locale).existing }), [form.mainTask, tags, locale]);
+  const selectedTags = form.mainTask.labels.map(name => tags.find(tag => tag.name === name) ?? { id: name, name, icon: "tag" as const, color: "gray" as const });
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
   const nested = form.subtasks.some(task => task.parentClientId);
   const depth = getCreationHierarchyDepth(form);
@@ -66,6 +71,7 @@ export function TaskCreationPlanEditor({ form, members, tags, subtaskLoading, sh
   latestForm.current = form;
   const update = (next: CreationForm) => { if (!disabled) { latestForm.current = next; onChange(next); } };
   const updateMain = (task: CreationTask) => update({ ...form, mainTask: task });
+  const updateTags = (labels: string[]) => updateMain({ ...form.mainTask, labels });
   const mainAnnotationTarget: TaskCreationAnnotationTarget = { taskId: form.mainTask.clientId, field: "task" };
   const renderTask = (task: CreationTask): ReactNode => {
     const index = form.subtasks.findIndex(item => item.clientId === task.clientId);
@@ -114,8 +120,13 @@ export function TaskCreationPlanEditor({ form, members, tags, subtaskLoading, sh
               <div className="task-detail-property"><small>{c("participants")}</small><MemberSelector avatarSize="sm" disabled={disabled} displayMax={4} hideHeader hideSelectedName label={c("participants")} memberRecommendations={memberRecommendations} members={members.filter(m => m.id !== form.mainTask.ownerId)} onChange={participantIds => updateMain({ ...form.mainTask, participantIds })} onInviteMembers={onInviteMembers} selected={form.mainTask.participantIds} showInvitationStatus={false} stacked /></div>
               <span aria-hidden="true" className="task-detail-property-separator" />
               <TaskDueDatePicker initialValue={form.mainTask.endDate} label={c("dueDate")} onChange={endDate => updateMain({ ...form.mainTask, endDate, startDate: "" })} />
-              <span aria-hidden="true" className="task-detail-property-separator" />
-
+              <div className="task-detail-property creation-task-tag-field">
+                <small>{locale === "en" ? "Tags (optional)" : "标签（选填）"}</small>
+                <div className="task-detail-title-tags task-tag-list task-tag-list-show-all">
+                  {selectedTags.map(tag => <TagBadge key={tag.id} size="sm" tag={tag} onRemove={disabled ? undefined : () => updateTags(form.mainTask.labels.filter(name => name !== tag.name))} />)}
+                  <TagPicker allowCreate={false} disabled={disabled} onChange={updateTags} selected={form.mainTask.labels} suggestions={tagSuggestions} tags={tags} />
+                </div>
+              </div>
             </div> : <TaskCreationSkeleton section="properties" />}
             {propertiesReady && deadlineNote && <details className="creation-deadline-note creation-reveal-content"><summary>{locale === "en" ? "AI suggested deadline" : "AI 建议截止"}<span>{locale === "en" ? "View basis" : "查看依据"}</span></summary><p>{deadlineNote}</p></details>}
           </header>
