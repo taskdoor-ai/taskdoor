@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { getSubtaskSuggestionStorageKey, readSubtaskSuggestionReview, type SubtaskSuggestion, type SubtaskSuggestionReview } from "@/features/tasks/lib/task-subtask-suggestions";
+import { coalesceSubtaskSuggestions, getSubtaskSuggestionStorageKey, readSubtaskSuggestionReview, type SubtaskSuggestion, type SubtaskSuggestionReview } from "@/features/tasks/lib/task-subtask-suggestions";
 
 /** Drafts are separate from tasks; saving a review never assigns anyone or changes progress. */
 export function useSubtaskSuggestionReview(teamId: string, taskId: string, suggestions: SubtaskSuggestion[]) {
+  const legacyDismissed = new Map(suggestions.map(item => [item.id, coalesceSubtaskSuggestions([item])[0].id]));
+  suggestions = coalesceSubtaskSuggestions(suggestions);
   const key = getSubtaskSuggestionStorageKey(teamId, taskId);
   const read = () => ({ review: readSubtaskSuggestionReview(localStorage, teamId, taskId), raw: localStorage.getItem(key) });
   const [initial] = useState(() => {
@@ -23,8 +25,10 @@ export function useSubtaskSuggestionReview(teamId: string, taskId: string, sugge
   };
   useEffect(() => {
     const sync = (event: StorageEvent) => { if (event.key === key) reload(); };
+    const syncLocal = (event: Event) => { if ((event as CustomEvent<string>).detail === key) reload(); };
     window.addEventListener("storage", sync);
-    return () => window.removeEventListener("storage", sync);
+    window.addEventListener("taskdoor-subtask-review-changed", syncLocal);
+    return () => { window.removeEventListener("storage", sync); window.removeEventListener("taskdoor-subtask-review-changed", syncLocal); };
   }, [key]);
   const save = (next: SubtaskSuggestionReview, preserveUnsavedInput = true) => {
     if (blocked.current) return false;
@@ -37,6 +41,7 @@ export function useSubtaskSuggestionReview(teamId: string, taskId: string, sugge
       localStorage.setItem(key, raw);
       savedRaw.current = raw;
       latest.current = next; setReview(next); setError("");
+      window.dispatchEvent(new CustomEvent("taskdoor-subtask-review-changed", { detail: key }));
       return true;
     } catch (cause) {
       // Keep the visible edit even when storage is temporarily full; confirmation can save it atomically.
@@ -54,16 +59,22 @@ export function useSubtaskSuggestionReview(teamId: string, taskId: string, sugge
     const previous = latest.current;
     const dismissedIds = [...new Set(ids)].filter(id => suggestions.some(item => item.id === id) && !previous.dismissedIds.includes(id));
     if (!dismissedIds.length) return false;
-    return save({ ...previous, dismissedIds: [...previous.dismissedIds, ...dismissedIds] }, false);
+    const outcomes = { ...previous.outcomes };
+    for (const id of dismissedIds) {
+      const suggestion = previous.edits[id] ?? suggestions.find(item => item.id === id)!;
+      outcomes[id] = { status: "ignored", at: new Date().toISOString(), suggestion };
+    }
+    return save({ ...previous, dismissedIds: [...previous.dismissedIds, ...dismissedIds], outcomes }, false);
   };
-  const visible = suggestions.filter(item => !review.dismissedIds.includes(item.id)).map(item => {
+  const dismissed = new Set(review.dismissedIds.flatMap(id => [id, legacyDismissed.get(id) ?? id]));
+  const visible = suggestions.filter(item => !dismissed.has(item.id) && !review.outcomes?.[item.id]).map(item => {
     const edit = review.edits[item.id];
-    const current = edit && edit.contextKey === item.contextKey && edit.discussionContextKey === item.discussionContextKey ? edit : item;
+    const current = edit ?? item;
     return { ...current, participantIds: current.participantIds ?? [] };
   });
-  const staleIds = suggestions.filter(item => !review.dismissedIds.includes(item.id) && review.edits[item.id] && review.edits[item.id].contextKey !== item.contextKey).map(item => item.id);
+  const staleIds = suggestions.filter(item => !review.dismissedIds.includes(item.id) && review.edits[item.id] && (review.edits[item.id].contextKey !== item.contextKey || review.edits[item.id].discussionContextKey !== item.discussionContextKey)).map(item => item.id);
   const useLatest = () => { save({ ...latest.current, edits: Object.fromEntries(Object.entries(latest.current.edits).filter(([id]) => !staleIds.includes(id))) }); };
   const selectedIds = review.selectedIds === undefined ? visible.map(item => item.id) : review.selectedIds.filter(id => visible.some(item => item.id === id));
   const select = (ids: string[]) => { save({ ...latest.current, selectedIds: [...new Set(ids)].filter(id => visible.some(item => item.id === id)) }); };
-  return { suggestions: visible, selectedIds, select, review, error, stale: staleIds.length > 0, useLatest, blocked: blocked.current, savedRaw, reload, change, dismissMany };
+  return { suggestions: visible, outcomes: Object.values(review.outcomes ?? {}), selectedIds, select, review, error, stale: staleIds.length > 0, useLatest, blocked: blocked.current, savedRaw, reload, change, dismissMany };
 }

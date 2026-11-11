@@ -1297,7 +1297,7 @@ function App() {
     const parent = workspaceNodesRef.current.find((node): node is TaskNode => node.kind === "task" && node.id === selectedTaskId && node.teamId === activeTeamId);
     const team = loadPersonalCenterState().teams.find(item => item.id === activeTeamId);
     const activeMember = Boolean(team && activeMembership(team, currentUserId));
-    const canCreate = entry === "discussion" ? activeMember : canCreateWorkspaceSubtask(
+    const canCreate = canCreateWorkspaceSubtask(
       parent && { ...parent, participantIds: selectedLegacyTask?.participants ?? parent.participantIds ?? selectedParticipants }, currentUserId, activeMember,
     );
     if (!parent || !team || !canCreate) {
@@ -1318,7 +1318,12 @@ function App() {
     if (!result.createdTasks.length) return;
     const activities = parseTaskActivityStore(JSON.parse(localStorage.getItem(taskActivityStorageKey) ?? "{}"));
     const nextActivities = result.activity ? appendTaskActivity(activities, selectedTaskId, result.activity) : activities;
-    const nextReview = { ...review, ...(review.selectedIds ? { selectedIds: review.selectedIds.filter(id => !suggestions.some(item => item.id === id)) } : {}), dismissedIds: [...new Set([...review.dismissedIds, ...suggestions.map(item => item.id)])], edits: Object.fromEntries(Object.entries(review.edits).filter(([id]) => !suggestions.some(item => item.id === id))) };
+    const outcomes = { ...review.outcomes };
+    result.createdTasks.forEach((task, index) => {
+      const suggestion = suggestions[index];
+      outcomes[suggestion.id] = { status: "added", taskId: task.id, at: new Date().toISOString(), suggestion };
+    });
+    const nextReview = { ...review, outcomes, ...(review.selectedIds ? { selectedIds: review.selectedIds.filter(id => !suggestions.some(item => item.id === id)) } : {}), dismissedIds: [...new Set([...review.dismissedIds, ...suggestions.map(item => item.id)])], edits: Object.fromEntries(Object.entries(review.edits).filter(([id]) => !suggestions.some(item => item.id === id))) };
     const nextSeeds = [...taskDetailSeedNodesRef.current, ...result.createdTasks];
     try {
       commitTaskAiStorage(localStorage, [

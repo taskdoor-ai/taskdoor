@@ -17,12 +17,28 @@ export type SubtaskSuggestion = {
   contextKey: string;
   /** The whole discussion snapshot used when this suggestion was prepared; absent on legacy drafts. */
   discussionContextKey?: string;
+  /** Prototype coverage gap; never inferred from an unread source or a progress action. */
+  contextGap?: string;
 };
+export type SubtaskSuggestionOutcome = { status: "added" | "ignored"; at: string; taskId?: string; suggestion: SubtaskSuggestion };
 export type SubtaskSuggestionReview = {
   selectedIds?: string[];
   dismissedIds: string[];
   edits: Record<string, SubtaskSuggestion>;
+  outcomes?: Record<string, SubtaskSuggestionOutcome>;
 };
+
+/** Local fixture item keys stand in for service-owned identities in this prototype only. */
+export function subtaskSuggestionIdentity(item: SubtaskSuggestion): string {
+  return JSON.stringify([item.source.taskId, item.source.itemKey]);
+}
+
+export function coalesceSubtaskSuggestions(items: readonly SubtaskSuggestion[]): SubtaskSuggestion[] {
+  return [...new Map(items.map(item => {
+    const id = subtaskSuggestionIdentity(item);
+    return [id, { ...item, id }] as const;
+  })).values()];
+}
 
 const identifier = z.string().refine(value => Boolean(value.trim()));
 const suggestionSchema = z.strictObject({
@@ -37,11 +53,13 @@ const suggestionSchema = z.strictObject({
   source: z.strictObject({ taskId: identifier, messageId: identifier, body: identifier, author: identifier, itemKey: identifier }),
   contextKey: identifier,
   discussionContextKey: identifier.optional(),
+  contextGap: identifier.optional(),
 });
 const reviewSchema = z.strictObject({
   selectedIds: z.array(identifier).refine(values => new Set(values).size === values.length).optional(),
   dismissedIds: z.array(identifier).refine(values => new Set(values).size === values.length),
   edits: z.record(z.string(), suggestionSchema),
+  outcomes: z.record(z.string(), z.strictObject({ status: z.enum(["added", "ignored"]), at: identifier, taskId: identifier.optional(), suggestion: suggestionSchema })).optional(),
 }).refine(value => Object.entries(value.edits).every(([id, suggestion]) => id === suggestion.id));
 
 /** A source edit or deletion invalidates its previous suggestions even when the title was edited separately. */
@@ -163,7 +181,8 @@ export function readSubtaskSuggestionReview(
     const raw = storage.getItem(getSubtaskSuggestionStorageKey(teamId, parentTaskId));
     if (raw === null) return { dismissedIds: [], edits: {} };
     const parsed = reviewSchema.safeParse(JSON.parse(raw));
-    if (!parsed.success || Object.values(parsed.data.edits).some(item => item.source.taskId !== parentTaskId)) {
+    if (!parsed.success || Object.values(parsed.data.edits).some(item => item.source.taskId !== parentTaskId)
+      || Object.values(parsed.data.outcomes ?? {}).some(item => item.suggestion.source.taskId !== parentTaskId || item.status === "added" && !item.taskId)) {
       throw new Error("invalid suggestion review");
     }
     return parsed.data;
@@ -173,7 +192,7 @@ export function readSubtaskSuggestionReview(
 }
 
 function sourceItemIdentity(source: { taskId: string; messageId: string; itemKey?: string }): string {
-  return JSON.stringify([source.taskId, source.messageId, source.itemKey ?? null]);
+  return JSON.stringify(source.itemKey ? [source.taskId, source.itemKey] : [source.taskId, source.messageId, null]);
 }
 
 function validateParentChain(tasks: TaskNode[], parentTaskId: string, teamId: string, maxDepth: number): TaskNode {
@@ -231,6 +250,7 @@ export function createWorkspaceSuggestedSubtasks(
     const parsed = suggestionSchema.safeParse(suggestion);
     if (!parsed.success) throw new Error("子任务建议内容无效，原输入已保留，请重新核对。");
     const item = parsed.data;
+    if (item.contextGap) throw new Error("建议依据尚不完整，请先核对相关资料后再添加。");
     if (!item.title.trim()) throw new Error("请填写子任务名称。");
     const ownerId = item.ownerId.trim();
     const participantIds = (item.participantIds ?? []).map(id => id.trim());

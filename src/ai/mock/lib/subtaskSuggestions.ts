@@ -109,6 +109,8 @@ type SampleFields = Omit<Sample, "message">;
 
 function makeMockSuggestion(sample: SampleFields, id: string, message: TaskActivityMock, discussionContextKey: string): SubtaskSuggestion {
   return { id, title: sample.title, goal: sample.goal, completionCriteria: [...sample.completionCriteria], ownerId: sample.ownerId, endDate: "",
+    ...(typeof window !== "undefined" && new URLSearchParams(window.location.search).get("subtask-preview") === "partial" && sample.itemKey === "key-visual-final-review"
+      ? { contextGap: "授权清单暂未读取，尚不能确认图片和字体是否已有核对记录。请补齐资料后重新整理。" } : {}),
     source: { taskId: sample.taskId, messageId: message.id, body: message.message, author: message.author, itemKey: sample.itemKey },
     contextKey: getSubtaskSuggestionContextKey(message), discussionContextKey };
 }
@@ -145,6 +147,9 @@ const rehearsalSample: SampleFields = {
 
 /** Only these local demo inputs have a prepared new result. Unknown versions remain pending. */
 export function getMockRefreshedSubtaskSuggestions({ taskId: parentTaskId, messages, childTasks }: MockSuggestionInput): SubtaskSuggestion[] {
+  if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("subtask-preview") === "failed") {
+    throw new Error("暂时无法整理建议，原建议和输入已保留，请稍后重试。");
+  }
   if (parentTaskId === keyVisualTaskId) {
     const baseline = keyVisualSamples[0];
     const baselineContext = getSubtaskSuggestionContextKey(baseline.message);

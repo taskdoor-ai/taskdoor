@@ -40,3 +40,20 @@
 }
 @media (pointer: coarse) { .task-subtask-suggestion-actions > button { min-height: 44px; } }
 @media (prefers-reduced-motion: reduce) { .task-subtask-suggestions-spinner { animation: none; } }
+
+.task-subtask-suggestions-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+button.task-subtask-suggestion-name { border: 0; padding: 0; background: transparent; text-align: start; cursor: pointer; }
+button.task-subtask-suggestion-name:hover { color: var(--ad-route-ink); }
+.task-subtask-suggestion-details { display: grid; gap: 12px; padding: 8px 0 16px; }
+.task-subtask-suggestion-details label { display: grid; gap: 6px; color: var(--ad-ink-secondary); font-size: 12px; }
+.task-subtask-suggestion-details input, .task-subtask-suggestion-details textarea, .task-subtask-suggestion-details select { width: 100%; min-width: 0; padding: 8px 10px; border: 1px solid var(--ad-border-soft); border-radius: 6px; background: var(--ad-surface); color: var(--ad-ink); font: inherit; font-size: 13px; box-sizing: border-box; }
+.task-subtask-suggestion-details textarea { min-height: 66px; resize: vertical; }
+.task-subtask-suggestion-details :is(input, textarea, select):focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.task-subtask-suggestion-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.task-subtask-suggestion-details blockquote { margin: 0; padding: 8px 12px; border-inline-start: 2px solid var(--ad-border-soft); background: var(--ad-surface-subtle); color: var(--ad-ink-secondary); font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.task-subtask-suggestion-details > button { justify-self: start; margin: 0; }
+.task-subtask-suggestion-outcomes { border-top: 1px solid var(--ad-border-soft); margin-top: 8px; padding-top: 12px; font-size: 12px; color: var(--ad-ink-secondary); }
+.task-subtask-suggestion-outcomes summary { cursor: pointer; padding: 4px 0; }
+.task-subtask-suggestion-outcome { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; padding: 8px 0; overflow-wrap: anywhere; }
+.task-subtask-suggestion-outcome em { color: var(--ad-ink-tertiary); font-style: normal; }
+@container task-suggestion (max-width: 450px) { .task-subtask-suggestion-fields { grid-template-columns: 1fr; } .task-subtask-suggestions-toolbar { align-items: start; } }

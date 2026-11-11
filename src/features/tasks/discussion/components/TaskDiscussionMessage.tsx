@@ -38,7 +38,7 @@ type TaskDiscussionMessageProps = {
   onOpenFile: (id: string, version?: number) => void;
   onConnectAi?: (target: DiscussionAiTarget, trigger: HTMLElement, shortcut?: AiShortcutAttempt) => void | Promise<AiTransferResult | void>;
   now: number;
-  followups?: { tasks: DiscussionTaskLink[]; suggestionCount: number; hasOutdated?: boolean };
+  followups?: { tasks: DiscussionTaskLink[]; suggestionCount: number; handledCount?: number; hasOutdated?: boolean };
   followupPeople?: PersonOption[];
   onOpenFollowupTask?: (taskId: string) => void;
   renderSuggestions?: () => ReactNode;
@@ -80,7 +80,7 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
   const timestamp = timestampFor(message, locale, now);
   const suggestionCount = followups?.suggestionCount ?? 0;
   const linkedCount = followups?.tasks.length ?? 0;
-  const hasSuggestions = suggestionCount > 0 || Boolean(followups?.hasOutdated);
+  const hasSuggestions = suggestionCount > 0 || Boolean(followups?.hasOutdated) || Boolean(followups?.handledCount);
   useEffect(() => { if (!hasSuggestions) setSuggestionsExpanded(false); }, [hasSuggestions]);
   useEffect(() => { if (!linkedCount) setTasksExpanded(false); }, [linkedCount]);
   const en = locale === "en";
@@ -141,7 +141,7 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
     </button>}
     {(canCreateFromDiscussion || hasSuggestions) && <button disabled={subtaskCreateDisabled} aria-controls={`${followupId}-suggestions`} aria-expanded={suggestionsExpanded} className="task-discussion-ai-suggestions-trigger" data-has-suggestions={suggestionCount > 0 || undefined} onClick={event => { if (hasSuggestions) setSuggestionsExpanded(value => !value); else onCreateSubtask?.(message, event.currentTarget); }} type="button">
       <Plus aria-hidden="true" size={13} />
-      <span>{locale === "en" ? "Create Task from discussion" : "从讨论创建任务"}</span>
+      <span>{hasSuggestions ? (locale === "en" ? "AI subtask suggestions" : "AI 子任务建议") : (locale === "en" ? "Create Task from discussion" : "从讨论创建任务")}</span>
       {followups?.hasOutdated && <span className="task-discussion-ai-suggestions-updated">{locale === "en" ? "Updated" : "已更新"}</span>}
     </button>}
   </div>;

@@ -258,16 +258,16 @@ export function TaskDetail({
     enabled: !collaboration.error,
   });
   const activities = allMessages;
-  const suggestionsById = new Map(subtaskSuggestions.map(item => [item.id, item]));
-  if (!collaboration.error) {
-    for (const item of projectSubtaskSuggestions?.(activities) ?? []) suggestionsById.set(item.id, item);
-  }
+  const [refreshedSuggestions, setRefreshedSuggestions] = useState<SubtaskSuggestion[]>([]);
+  const [suggestionsRefreshing, setSuggestionsRefreshing] = useState(false);
+  const [suggestionsRefreshError, setSuggestionsRefreshError] = useState("");
+  const suggestionsById = new Map([...subtaskSuggestions, ...refreshedSuggestions].map(item => [item.id, item]));
   const suggestionReview = useSubtaskSuggestionReview(teamId, taskId, [...suggestionsById.values()]);
   const currentSuggestions = suggestionReview.suggestions.filter(item => isSubtaskSuggestionContextCurrent(item, activities));
   const outdatedSuggestions = suggestionReview.suggestions.filter(item => !isSubtaskSuggestionContextCurrent(item, activities));
   const suggestionsByDiscussionRoot = groupSubtaskSuggestionsByDiscussionRoot(currentSuggestions, activities);
   const outdatedByDiscussionRoot = groupSubtaskSuggestionsByDiscussionRoot(outdatedSuggestions, activities);
-  const discussionFollowups: Record<string, { tasks: DiscussionTaskLink[]; suggestionCount: number; hasOutdated?: boolean }> = {};
+  const discussionFollowups: Record<string, { tasks: DiscussionTaskLink[]; suggestionCount: number; handledCount?: number; hasOutdated?: boolean }> = {};
   for (const [messageId, tasks] of groupTaskDiscussionLinksByRoot(subtaskDiscussionLinks, activities)) {
     discussionFollowups[messageId] = { tasks, suggestionCount: 0 };
   }
@@ -276,6 +276,9 @@ export function TaskDetail({
   }
   for (const messageId of outdatedByDiscussionRoot.keys()) {
     (discussionFollowups[messageId] ??= { tasks: [], suggestionCount: 0 }).hasOutdated = true;
+  }
+  for (const [messageId, handled] of groupSubtaskSuggestionsByDiscussionRoot(suggestionReview.outcomes.map(item => item.suggestion), activities)) {
+    (discussionFollowups[messageId] ??= { tasks: [], suggestionCount: 0 }).handledCount = handled.length;
   }
   const localActivities = collaboration.snapshot.messages.filter(message => !message.deletedAt);
   const initialTab = getTaskDetailTabForTarget(activities, initialAttentionTarget);
@@ -759,17 +762,42 @@ export function TaskDetail({
   const taskPathItems = getTaskDetailPathItems(pathItems, taskId, parentTask?.id);
 
   const renderSubtaskSuggestions = (messageId?: string) => {
-    const scopedSuggestions = messageId === undefined ? currentSuggestions : suggestionsByDiscussionRoot.get(messageId) ?? [];
+    const scopedSuggestions = messageId === undefined ? suggestionReview.suggestions : [...(suggestionsByDiscussionRoot.get(messageId) ?? []), ...(outdatedByDiscussionRoot.get(messageId) ?? [])];
     const hasOutdated = messageId === undefined ? outdatedSuggestions.length > 0 : Boolean(outdatedByDiscussionRoot.get(messageId)?.length);
     const entry = messageId === undefined ? "subtasks" : "discussion";
-    const canConfirm = entry === "subtasks" ? Boolean(onCreateSubtask) : canConfirmSubtaskSuggestions;
+    const canConfirm = Boolean(onCreateSubtask) && canConfirmSubtaskSuggestions;
+    const outcomes = messageId === undefined ? suggestionReview.outcomes : suggestionReview.outcomes.filter(item => {
+      const root = groupSubtaskSuggestionsByDiscussionRoot([item.suggestion], activities);
+      return root.has(messageId);
+    });
+    const refresh = async () => {
+      if (suggestionsRefreshing || !projectSubtaskSuggestions) return;
+      setSuggestionsRefreshing(true); setSuggestionsRefreshError("");
+      try {
+        await new Promise(resolve => setTimeout(resolve, 450));
+        const next = projectSubtaskSuggestions(activities);
+        if (!next.length && outdatedSuggestions.length) throw new Error(locale === "en" ? "Could not review the changed sources. Your suggestions and input are kept." : "相关资料尚未核对完成，已保留建议和输入。请核对来源后重试。");
+        setRefreshedSuggestions(next);
+      } catch (cause) { setSuggestionsRefreshError(cause instanceof Error ? cause.message : "整理失败，请重试。"); }
+      finally { setSuggestionsRefreshing(false); }
+    };
+    if (messageId !== undefined && !scopedSuggestions.length && !outcomes.length) return null;
     return <>
-      {suggestionReview.error && (scopedSuggestions.length > 0 || hasOutdated) && <p className="task-subtask-suggestions-notice is-error" role="alert">{suggestionReview.error}<button className="task-subtask-suggestions-reload" onClick={suggestionReview.reload} type="button">{locale === "en" ? "Reload suggestions" : "重新载入建议"}</button></p>}
+      {suggestionsRefreshError && <p className="task-subtask-suggestions-notice is-error" role="alert">{suggestionsRefreshError}</p>}
+      {suggestionReview.stale && <button className="task-subtask-suggestions-reload" onClick={suggestionReview.useLatest} type="button">{locale === "en" ? "Use the latest suggestions" : "采用最新建议"}</button>}
+      {suggestionReview.error && (scopedSuggestions.length > 0 || hasOutdated || outcomes.length > 0) && <p className="task-subtask-suggestions-notice is-error" role="alert">{suggestionReview.error}<button className="task-subtask-suggestions-reload" onClick={suggestionReview.reload} type="button">{locale === "en" ? "Reload suggestions" : "重新载入建议"}</button></p>}
       {hasOutdated && <p className="task-subtask-suggestions-update" role="status">{locale === "en" ? "Discussion changed. Suggestions need to be refreshed." : "讨论已更新，建议待重新整理。"}</p>}
       <TaskSubtaskSuggestions
         currentUserId={currentUserId}
         tags={tagDefinitions}
         suggestions={scopedSuggestions}
+        outdatedIds={outdatedSuggestions.map(item => item.id)}
+        outcomes={outcomes}
+        refreshing={suggestionsRefreshing}
+        onRefresh={projectSubtaskSuggestions ? () => { void refresh(); } : undefined}
+        onChange={suggestionReview.change}
+        onOpenTask={onOpenRelatedTask}
+        onOpenSource={sourceId => { setActiveTab("discussion"); window.requestAnimationFrame(() => { const source = document.getElementById(`task-activity-${sourceId}`); source?.scrollIntoView({ block: "center", behavior: "smooth" }); source?.focus({ preventScroll: true }); }); }}
         members={members}
         disabled={!canConfirm || !onConfirmSubtaskSuggestions || suggestionReview.blocked || Boolean(collaboration.error)}
         onDismissSelected={suggestionReview.dismissMany}
