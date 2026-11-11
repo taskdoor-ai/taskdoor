@@ -22,7 +22,7 @@ import { notificationsInScope } from "@/features/notifications/lib/notification-
 const demoTeamId = "creator-commerce";
 type ScopedNotification = WorkspaceNotification & { teamId: string };
 
-export function GlobalNotifications({ besideNavigation = false, placement = "rail", showDemoNotifications = true, onOpenTask, teamId = "", teams, getTaskTitle, userId = "", discussionNotifications, discussionReadReceipt, onDiscussionReadHandled }: {
+export function GlobalNotifications({ besideNavigation = false, placement = "rail", showDemoNotifications = true, onOpenTask, teamId = "", teams, getTaskTitle, userId = "", discussionNotifications, likeNotifications, discussionReadReceipt, onDiscussionReadHandled }: {
   teamId?: string; userId?: string;
   teams?: readonly { id: string; name: string }[];
   getTaskTitle?: (taskId: string, teamId: string) => string | undefined;
@@ -31,6 +31,7 @@ export function GlobalNotifications({ besideNavigation = false, placement = "rai
   showDemoNotifications?: boolean;
   onOpenTask?: (taskId: string, target: NotificationRegionTarget | undefined, teamId: string) => void;
   discussionNotifications?: readonly WorkspaceNotification[];
+  likeNotifications?: readonly WorkspaceNotification[];
   discussionReadReceipt?: DiscussionReadReceipt;
   onDiscussionReadHandled?: (sequence: number) => void;
 }) {
@@ -71,12 +72,14 @@ export function GlobalNotifications({ besideNavigation = false, placement = "rai
   const items = useMemo<ScopedNotification[]>(() => {
     const demoItems = notificationTestMode ? notificationReadTestExamples : showDemo ? readNotificationExamples() : [];
     const discussionItems = notificationTestMode ? [] : discussionNotifications ?? [];
-    return [...discussionItems, ...demoItems].flatMap(item => {
+    const likes = notificationTestMode ? [] : likeNotifications ?? [];
+    const examples = likeNotifications === undefined ? demoItems : demoItems.filter(item => item.kind !== "like");
+    return [...discussionItems, ...likes, ...examples].flatMap(item => {
       const sourceTeamId = item.teamId ?? teamId;
       if (teams && !readKeys.has(sourceTeamId)) return [];
       return [{ ...item, teamId: sourceTeamId, read: item.read || (readIdsByTeam.get(sourceTeamId)?.includes(item.id) ?? false) }];
     });
-  }, [discussionNotifications, showDemo, notificationTestMode, readIdsByTeam, readKeys, teamId, teams]);
+  }, [discussionNotifications, likeNotifications, showDemo, notificationTestMode, readIdsByTeam, readKeys, teamId, teams]);
   const observedItems = useRef(items);
   observedItems.current = items;
   const [activeFilter, setActiveFilter] = useState<NotificationReadFilter>("all");

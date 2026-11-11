@@ -34,6 +34,7 @@ import type { TaskCreationParentContext } from "@/features/tasks/components/Task
 import type { PrimarySection } from "@/app/workspace/components/WorkspaceSidebar";
 import { WorkspaceNavigation } from "@/app/workspace/components/WorkspaceNavigation";
 import { readTaskDiscussionNotifications } from "@/app/workspace/lib/discussion-notifications";
+import { useDiscussionLikeNotifications } from "@/app/workspace/lib/useDiscussionLikeNotifications";
 import { PersonDirectoryProvider } from "@/shared/ui/PersonDirectory";
 import { MemberInvitationProvider, type MemberInvitationHandle } from "@/features/members/components/MemberInvitations";
 import "@/features/members/styles/member-invitations.css";
@@ -393,6 +394,7 @@ function App() {
   }), [teamWorkspaceNodes, taskNumbers, legacyTaskSnapshots]);
   const notificationTasks = useMemo(() => workspaceNodes.filter((node): node is TaskNode => node.kind === "task" && canReadTask(node)),
     [workspaceNodes, personalCenterState.teams, currentUserId, legacyTaskSnapshots]);
+  const likeNotifications = useDiscussionLikeNotifications(notificationTasks, currentUserId, showDemoData, locale);
   const discussionNotifications = useMemo(() => personalCenterState.teams.flatMap(team => readTaskDiscussionNotifications(
     localStorage, team.id, currentUserId, notificationTasks, getTeamPeople(team, getTeamMembers(team.id)), locale,
   )), [personalCenterState.teams, currentUserId, notificationTasks, collaborationRevision, locale]);
@@ -1768,6 +1770,7 @@ function App() {
         onSignOut={() => requestCreationExit(signOutWorkspace)}
         showDemoNotifications={showDemoData}
         discussionNotifications={discussionNotifications}
+        likeNotifications={likeNotifications}
         discussionReadReceipt={discussionReadReceipt}
         getNotificationTaskTitle={(taskId, teamId) => notificationTasks.find(task => task.id === taskId && (task.teamId ?? "creator-commerce") === teamId)?.name}
         onDiscussionReadHandled={finishDiscussionRead}
