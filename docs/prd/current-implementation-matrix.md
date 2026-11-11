@@ -1,5 +1,11 @@
 # 当前实现矩阵
 
+## PRD-0404 点击框外收起空白创建输入（2026-11-11）
+
+PM Demo 的[单行创建表单](../../src/features/tasks/components/TaskInlineCreateForm.tsx)在空白且可操作时响应框外点击。[任务列表](../../src/features/tasks/components/TaskWorkspaceList.tsx)和[子任务页签](../../src/features/tasks/components/TaskSubtasksPane.tsx)直接收起各自的输入行，点击目标照常响应并按自身规则获焦。已有需求时保留输入。显式取消和 Escape 沿原入口规则回焦。
+
+正式 `dev` 基线 `7d15aecf84065120452826c37a9d67f8cf984de6` 的两处单行创建入口沿显式取消与 Escape 收起，空白点外收起待同步。[正式单行表单](https://github.com/nocoly/taskdoor/blob/7d15aecf84065120452826c37a9d67f8cf984de6/apps/web/src/features/tasks/components/TaskInlineCreateForm.tsx#L26-L77)
+
 ## 2026-11-11 批次：22项批准改动的隔离同步
 
 本批以已发布Demo `23563009` 和层级日期准备提交 `50a8b960` 为基础，仅移植用户确认的22项最终改法。未复制主工作区整份应用或PRD；既有收藏、讨论点赞／置顶、讨论通知偏好与其他已发布能力继续保留。创建任务提示、引导及对话式交互（PRD-0373／0374／0377），以及子任务页签AI建议列表的本地调整均排除；模块07、既有独立拆解及自动建议正文保持基线。

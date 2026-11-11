@@ -25,9 +25,10 @@ type Props = {
   initialDraft?: Partial<Pick<NewSubtaskDraft, "title" | "goal" | "completionCriteria" | "participantIds" | "ownerId" | "labels" | "endDate" | "sourceDiscussion">>;
   onCreate: (draft: NewSubtaskDraft) => void | Promise<void>;
   onCancel: () => void;
+  onDismiss?: () => void;
 };
 
-export function TaskSubtaskCreateForm({ id, inline = false, generating = false, showTags = true, endDateSuggestion, open, currentUserId = "", members, tags, initialDraft, onCreate, onCancel }: Props) {
+export function TaskSubtaskCreateForm({ id, inline = false, generating = false, showTags = true, endDateSuggestion, open, currentUserId = "", members, tags, initialDraft, onCreate, onCancel, onDismiss }: Props) {
   const { locale } = useI18n();
   const copy = (zh: string, en: string) => locale === "en" ? en : zh;
   const [title, setTitle] = useState(() => initialDraft?.title ?? "");
@@ -100,7 +101,7 @@ export function TaskSubtaskCreateForm({ id, inline = false, generating = false, 
   };
 
   if (inline) return <div hidden={!open}>
-    <TaskInlineCreateForm error={error} id={id} inputLabel={copy("子任务需求", "Subtask request")} inputRef={titleRef} label={copy("新增子任务", "Add subtask")} onCancel={close} onChange={value => { setTitle(value); setError(""); }} onSubmit={submit} saving={saving} value={title} />
+    <TaskInlineCreateForm error={error} id={id} inputLabel={copy("子任务需求", "Subtask request")} inputRef={titleRef} label={copy("新增子任务", "Add subtask")} onCancel={close} onChange={value => { setTitle(value); setError(""); }} onDismiss={open ? onDismiss : undefined} onSubmit={submit} saving={saving} value={title} />
   </div>;
 
   return <>

@@ -1,5 +1,11 @@
 # PRD 来源映射
 
+## PRD-0404 点击框外收起空白创建输入（2026-11-11）
+
+用户明确要求主任务及手动子任务的空白单行创建输入在点击框外时自动收起。两处共用空白判定，已有需求时保留原文。点击目标照常响应，显式取消与 Escape 沿原有回焦规则处理。[列表单行输入](modules/07-task-creation.md#列表单行输入) · [快捷创建子任务](modules/08-task-detail.md#快捷创建子任务)
+
+两处共用[单行创建表单](../../src/features/tasks/components/TaskInlineCreateForm.tsx)，由[任务列表](../../src/features/tasks/components/TaskWorkspaceList.tsx)和[子任务页签](../../src/features/tasks/components/TaskSubtasksPane.tsx)各自管理收起状态。对应实现与正式项目现状见[实现矩阵](current-implementation-matrix.md#prd-0404-点击框外收起空白创建输入2026-11-11)。
+
 ## 2026-11-11 批次：22项批准改动的隔离同步
 
 本批以已发布Demo `23563009` 和层级日期准备提交 `50a8b960` 为基础，仅移植用户确认的22项最终改法。未复制主工作区整份应用或PRD；既有收藏、讨论点赞／置顶、讨论通知偏好与其他已发布能力继续保留。创建任务提示、引导及对话式交互（PRD-0373／0374／0377），以及子任务页签AI建议列表的本地调整均排除；模块07、既有独立拆解及自动建议正文保持基线。
