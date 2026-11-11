@@ -442,7 +442,9 @@ function App() {
     setTaskFilters(filters => ({
       ...filters,
       tag: filters.tag !== "all" && deletedNames.has(teamTagNameKey(filters.tag)) ? "all" : filters.tag,
-      tags: filters.tags?.filter(name => !deletedNames.has(teamTagNameKey(name))),
+      tagIds: filters.tagIds?.filter(id => currentIds.has(id)),
+      tags: filters.tagIds !== undefined ? tagDefinitions.filter(tag => filters.tagIds!.includes(tag.id)).map(tag => tag.name)
+        : filters.tags?.filter(name => !deletedNames.has(teamTagNameKey(name))),
     }));
   }, [activeTeamId, tagDefinitions, teamTagLoadError]);
   const [taskPeriodOverrides, setTaskPeriodOverrides] = useState<Record<string, { end: string; start: string } | null>>({});
