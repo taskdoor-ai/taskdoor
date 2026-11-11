@@ -25,7 +25,8 @@
 .task-discussion-feed-recipient { display: inline-flex; min-width: 0; align-items: center; gap: var(--discussion-identity-gap); color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
 .task-discussion-feed-recipient > button { max-width: 100%; padding: 0; border: 0; background: transparent; color: var(--ad-ink-secondary); font: inherit; cursor: pointer; }
 .task-discussion-feed-identity .task-discussion-feed-recipient > button { color: var(--ad-ink); font-size: var(--ad-text-body-sm); font-weight: 600; }
-.task-discussion-feed-recipient > button:not(:disabled):hover { color: var(--ad-ink); text-decoration: underline; text-underline-offset: 3px; }
+.task-discussion-feed-recipient > button:not(.task-discussion-feed-reference, :disabled):is(:hover, :focus-visible) { color: var(--ad-accent-ink); }
+.task-discussion-feed-recipient > button .person-name-trigger { cursor: inherit; }
 .task-discussion-feed-recipient > button:disabled { color: var(--ad-ink-tertiary); cursor: default; }
 .task-discussion-feed-recipient > button.task-discussion-feed-reference { display: inline-grid; width: 22px; height: 22px; flex: 0 0 auto; align-self: center; place-items: center; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--ad-ink-tertiary); cursor: pointer; }
 .task-discussion-feed-recipient > button.task-discussion-feed-reference:hover, .task-discussion-feed-recipient > button.task-discussion-feed-reference[data-popup-open] { background: var(--ad-surface-subtle); color: var(--ad-ink); }
