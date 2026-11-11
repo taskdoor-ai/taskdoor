@@ -2,6 +2,12 @@ import type { Locale } from "@/shared/i18n/core";
 
 /** UI copy and legacy transition messages. Stored business values remain untouched. */
 export const onboardingEn = {
+  "确认创建账号": "Confirm account creation",
+  "Google 验证已完成。请确认同意隐私政策，再创建你的 Taskdoor 账号。": "Google verification is complete. Agree to the Privacy Policy to create your Taskdoor account.",
+  "Google 邮箱": "Google email",
+  "继续创建账号": "Continue and create account",
+  "不同意，返回登录": "Decline and return to sign in",
+  "已确认同意。": "Consent confirmed.",
   "无法识别设备时区，团队已采用 UTC。": "Your device timezone is unavailable. The team is using UTC.",
   "设置密码": "Set your password",
   "为你的 Taskdoor 账号设置密码，以后也可以使用邮箱和密码登录。": "Set a Taskdoor password so you can also sign in with your email and password.",

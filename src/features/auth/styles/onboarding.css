@@ -71,6 +71,10 @@
 .onboarding-consent-row label { cursor: pointer; }
 .onboarding-consent-row .onboarding-link { color: var(--ad-route); white-space: nowrap; }
 .onboarding-consent-error { margin: 0 0 0 calc(var(--ad-checkbox-size) + 10px); color: var(--ad-danger); font-size: 12px; line-height: 20px; }
+.google-first-consent-email { display: flex; align-items: center; gap: 12px; padding: 0 14px; border: 1px solid var(--ad-border); border-radius: 6px; background: var(--ad-surface-quiet); }
+.onboarding-page .google-first-consent-email input { border: 0; box-shadow: none; background: transparent; padding-inline: 0; }
+.google-first-consent-decline { min-height: 44px; border: 0; background: transparent; font: inherit; cursor: pointer; }
+.google-first-consent-status { margin: 16px 0 0; color: var(--ad-route); text-align: center; font-size: 13px; }
 .onboarding-success { display: flex; align-items: center; gap: 8px; margin: 0 0 20px; padding: 10px 12px; border-radius: 7px; background: var(--ad-fact-soft); color: var(--ad-fact); font-size: 13px; line-height: 1.7; }
 .onboarding-success svg { width: 16px; height: 16px; flex-shrink: 0; }
 .onboarding-page .onboarding-back { display: inline-flex; min-height: 32px; align-items: center; gap: 6px; margin: -8px 0 20px -4px; padding: 0 4px; border: 0; background: transparent; color: var(--ad-ink-secondary); font-size: 12px; cursor: pointer; }

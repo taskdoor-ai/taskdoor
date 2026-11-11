@@ -22,6 +22,8 @@ import "@/features/tasks/styles/task-file-editor.css";
 applySavedAccentColor();
 
 const OnboardingExperience = lazy(() => import("@/features/auth/components/AuthExperience"));
+const GoogleFirstConsentPreview = lazy(() => import("@/features/auth/components/GoogleFirstConsentPreview"));
+const isGoogleFirstConsentPreview = window.location.pathname === "/login" && new URLSearchParams(window.location.search).get("preview") === "1" && new URLSearchParams(window.location.search).get("google-consent") === "1";
 const loadWorkspace = () => import("@/app/App");
 const App = lazy(loadWorkspace);
 const isOnboardingPreview = ["/onboarding", "/login", "/signup", "/forgot-password"].includes(window.location.pathname.replace(/\/$/, "")) || /^\/t\/[^/]+\/join\/[^/]+\/?$/.test(window.location.pathname);
@@ -39,7 +41,7 @@ function RootExperience() {
     startTransition(() => setShowOnboarding(false));
   }, [t]);
   return <Suspense fallback={<WorkspaceLoading openingApp={showOnboarding} />}>
-    {showOnboarding ? <OnboardingExperience onWorkspaceReady={onWorkspaceReady} /> : <App />}
+    {isGoogleFirstConsentPreview ? <GoogleFirstConsentPreview /> : showOnboarding ? <OnboardingExperience onWorkspaceReady={onWorkspaceReady} /> : <App />}
   </Suspense>;
 }
 
