@@ -30,11 +30,11 @@ function nameInput(tree: ReactNode) {
   const badge = elements(form, item => item.type === TagBadge)[0];
   return elements(badge.props.renderName(""), item => item.type === "input")[0];
 }
-function capture(interact: (tree: ReactNode, step: number) => void, onChange = (_tags: TagDefinition[]) => {}) {
+function capture(interact: (tree: ReactNode, step: number) => void, onChange = (_tags: TagDefinition[]) => {}, options: Partial<Parameters<typeof TagManagementPage>[0]> = {}) {
   let tree: ReactNode;
   let step = 0;
   function Capture() {
-    tree = TagManagementPage({ tags, onBack() {}, onChange });
+    tree = TagManagementPage({ tags, onBack() {}, onChange, ...options });
     interact(tree, step++);
     return tree;
   }
@@ -98,22 +98,62 @@ test("新建保存失败保留名称和错误，原列表保持不变", () => {
   assert.equal(tags.length, 2);
 });
 
-test("普通成员只修改或归档自己创建的标签，团队目录排序由管理员维护", () => {
+test("只读标签和无删除权限的可编辑标签都显示禁用的删除按钮", () => {
+  const usedTag: TagDefinition = { id: "c", name: "计划", icon: "flag", color: "green" };
   const html = renderToStaticMarkup(createElement(I18nProvider, {
     initialLocale: "zh-CN",
     children: createElement(TagManagementPage, {
-      tags,
+      tags: [...tags, usedTag],
       onBack() {},
       onChange() {},
       canManage: false,
       canCreate: true,
-      canManageTag: tag => tag.id === "a",
+      canManageTag: tag => tag.id !== "b",
+      canDeleteTag: tag => tag.id === "a",
+      onDeleteTag() {},
     }),
   }));
   assert.match(html, /新建标签/);
   assert.match(html, /修改标签名称：商务/);
   assert.match(html, /修改标签图标和底色：商务/);
-  assert.match(html, /归档标签：商务/);
+  assert.match(html, /修改标签名称：计划/);
+  const ownDelete = html.match(/<button[^>]*aria-label="删除标签：商务"[^>]*>.*?<\/button>/)?.[0];
+  const otherDelete = html.match(/<button[^>]*aria-label="删除标签：内容"[^>]*>.*?<\/button>/)?.[0];
+  const usedDelete = html.match(/<button[^>]*aria-label="删除标签：计划"[^>]*>.*?<\/button>/)?.[0];
+  assert.ok(ownDelete);
+  assert.ok(otherDelete);
+  assert.ok(usedDelete);
+  for (const button of [ownDelete, otherDelete, usedDelete]) {
+    assert.match(button, /<svg[^>]*lucide-trash-2[^>]*>/);
+    assert.doesNotMatch(button, />删除<\/button>/);
+  }
+  assert.doesNotMatch(ownDelete, /\sdisabled(?:="[^"]*")?(?=\s|>)/);
+  assert.match(otherDelete, /\sdisabled(?:="[^"]*")?(?=\s|>)/);
+  assert.match(usedDelete, /\sdisabled(?:="[^"]*")?(?=\s|>)/);
   assert.match(html, />内容<\/span>/);
-  assert.doesNotMatch(html, /修改标签(?:名称|图标和底色)：内容|归档标签：内容|拖动排序：[商务内容]+/);
+  assert.doesNotMatch(html, /修改标签(?:名称|图标和底色)：内容|拖动排序：[商务内容]+/);
+});
+
+test("删除确认展示关联任务数，确认后只请求删除该标签", () => {
+  const deleted: string[] = [];
+  const saved: TagDefinition[][] = [];
+  capture((tree, step) => {
+    if (step === 0) {
+      const button = elements(tree, item => item.props["aria-label"] === "删除标签：商务")[0];
+      button.props.onClick({ currentTarget: { ...trigger, closest: () => null } });
+      assert.deepEqual(deleted, []);
+    }
+    if (step === 1) {
+      const confirmation = elements(tree, item => item.type === "p" && typeof item.props.children === "string" && item.props.children.includes("3 条任务"))[0];
+      assert.ok(confirmation);
+      const button = elements(tree, item => item.props.children === "确认删除")[0];
+      button.props.onClick();
+    }
+  }, next => saved.push(next), {
+    canDeleteTag: tag => tag.id === "a",
+    onDeleteTag: id => deleted.push(id),
+    getTagUsageCount: () => 3,
+  });
+  assert.deepEqual(deleted, ["a"]);
+  assert.deepEqual(saved, []);
 });

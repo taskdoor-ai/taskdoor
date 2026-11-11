@@ -399,21 +399,13 @@
     "zh": "标签名称须为 1–24 个字符。",
     "en": "Tag names must be 1–24 characters."
   },
-  "archiveTagAction": {
-    "zh": "归档标签：{0}",
-    "en": "Archive tag: {0}"
+  "deleteTeamTagConfirmation": {
+    "zh": "删除标签「{0}」？",
+    "en": "Delete the tag “{0}”?"
   },
-  "archiveTagConfirmation": {
-    "zh": "归档「{0}」？任务上已有的标签会保留。",
-    "en": "Archive “{0}”? Tasks with this tag will keep it."
-  },
-  "confirmTagArchive": {
-    "zh": "确认归档",
-    "en": "Confirm archive"
-  },
-  "tagArchiveFailed": {
-    "zh": "标签未能归档，请重试。",
-    "en": "Could not archive the tag. Try again."
+  "deleteTeamTagUsedConfirmation": {
+    "zh": "删除「{0}」？此标签将从 {1} 条任务中移除。",
+    "en": "Delete “{0}”? The tag will be removed from all affected tasks ({1})."
   },
   "tags": {
     "zh": "个标签",

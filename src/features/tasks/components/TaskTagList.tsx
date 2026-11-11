@@ -15,13 +15,12 @@ type Props = {
   selected: string[];
   suggestions?: TaskTagSuggestions;
   tags: TagDefinition[];
-  archivedTags?: TagDefinition[];
 };
 
-export function TaskTagList({ onChange, onCreateAndSelect, selected, suggestions, tags, archivedTags, iconOnly = false, showAll = false }: Props) {
+export function TaskTagList({ onChange, onCreateAndSelect, selected, suggestions, tags, iconOnly = false, showAll = false }: Props) {
   const ui = useGlobalUi();
   const d = useDetailCopy();
-  const selectedTags = useMemo(() => selected.map((name) => findTagByName(tags, name) ?? archivedTags?.find(tag => tag.name === name) ?? { id: name, name, icon: "tag" as const, color: "gray" as const }), [archivedTags, selected, tags]);
+  const selectedTags = useMemo(() => selected.map((name) => findTagByName(tags, name) ?? { id: name, name, icon: "tag" as const, color: "gray" as const }), [selected, tags]);
   const containerRef = useRef<HTMLDivElement>(null);
   const measurementRef = useRef<HTMLDivElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);

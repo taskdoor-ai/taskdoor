@@ -1,4 +1,4 @@
-import { Archive, ArrowLeft, Check, GripVertical, Plus, X } from "lucide-react";
+import { ArrowLeft, Check, GripVertical, Plus, Trash2, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { TagAppearancePicker } from "@/features/me/components/TagAppearancePicker";
 import { useTagReorder } from "@/features/me/lib/useTagReorder";
@@ -15,29 +15,34 @@ type Props = {
   canManage?: boolean;
   canCreate?: boolean;
   canManageTag?: (tag: TagDefinition) => boolean;
+  canDeleteTag?: (tag: TagDefinition) => boolean;
+  onDeleteTag?: (id: string) => void;
+  getTagUsageCount?: (tag: TagDefinition) => number;
 };
 
 type EditorState = Omit<TagDefinition, "id"> & { id?: string };
-type TagAction = { type: "create" | "rename" | "appearance"; draft: EditorState } | { type: "archive"; id: string };
+type TagAction = { type: "create" | "rename" | "appearance"; draft: EditorState } | { type: "delete"; id: string };
 
 const tagNameKey = (name: string) => name.trim().normalize("NFKC").toLowerCase();
 
-export function TagManagementPage({ onBack, onChange, tags, canManage = true, canCreate = canManage, canManageTag = () => canManage }: Props) {
+export function TagManagementPage({ onBack, onChange, tags, canManage = true, canCreate = canManage, canManageTag = () => canManage, canDeleteTag, onDeleteTag, getTagUsageCount }: Props) {
   const ui = useGlobalUi();
   const [pendingAction, setAction] = useState<TagAction | null>(null);
   const [error, setError] = useState("");
   const [appearanceOpen, setCreateAppearanceOpen] = useState(false);
+  const backButton = useRef<HTMLButtonElement>(null);
   const createButton = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const returnFocus = useRef<HTMLButtonElement | null>(null);
+  const canDelete = (tag: TagDefinition) => Boolean(onDeleteTag && canDeleteTag?.(tag));
   const canUseAction = (candidate: TagAction) => {
     if (candidate.type === "create") return canCreate;
-    const id = candidate.type === "archive" ? candidate.id : candidate.draft.id;
-    return tags.some(tag => tag.id === id && canManageTag(tag));
+    if (candidate.type === "delete") return tags.some(tag => tag.id === candidate.id && canDelete(tag));
+    return tags.some(tag => tag.id === candidate.draft.id && canManageTag(tag));
   };
   const action = pendingAction && canUseAction(pendingAction) ? pendingAction : null;
   const createAppearanceOpen = action?.type === "create" && appearanceOpen;
-  const editor = action && action.type !== "archive" ? action.draft : null;
+  const editor = action && action.type !== "delete" ? action.draft : null;
   const tagNameDuplicate = Boolean(editor && tags.some(tag => tagNameKey(tag.name) === tagNameKey(editor.name) && tag.id !== editor.id));
   const nameError = tagNameDuplicate ? "该标签名称已存在" : error;
   const { drag, getHandleProps, message } = useTagReorder({ tags, onChange, disabled: !canManage || Boolean(action), listRef, onError: setError });
@@ -58,7 +63,7 @@ export function TagManagementPage({ onBack, onChange, tags, canManage = true, ca
   };
 
   const updateDraft = (patch: Partial<EditorState>) => {
-    if (!action || action.type === "archive") return;
+    if (!action || action.type === "delete") return;
     setError("");
     setAction({ ...action, draft: { ...action.draft, ...patch } });
   };
@@ -84,15 +89,15 @@ export function TagManagementPage({ onBack, onChange, tags, canManage = true, ca
     }
   };
 
-  const archiveTag = (id: string) => {
-    if (!canUseAction({ type: "archive", id })) return;
+  const deleteTag = (id: string) => {
+    if (!onDeleteTag || !canUseAction({ type: "delete", id })) return;
     try {
       const row = returnFocus.current?.closest("li");
       const nextRow = row?.nextElementSibling ?? row?.previousElementSibling;
-      onChange(tags.filter(tag => tag.id !== id));
-      closeAction(nextRow?.querySelector<HTMLButtonElement>(".tag-list-name") ?? createButton.current);
+      onDeleteTag(id);
+      closeAction(nextRow?.querySelector<HTMLButtonElement>(".tag-list-name, .tag-list-delete:not(:disabled)") ?? createButton.current ?? backButton.current);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "标签未能归档，请重试。");
+      setError(caught instanceof Error ? caught.message : "标签未能删除，请重试。");
     }
   };
 
@@ -137,7 +142,7 @@ export function TagManagementPage({ onBack, onChange, tags, canManage = true, ca
     }
   }}>
     <div className="tag-management-content">
-      <Button className="tag-management-back" onClick={onBack} size="sm" type="button" variant="ghost"><ArrowLeft data-icon="inline-start" />{ui("返回")}</Button>
+      <Button className="tag-management-back" onClick={onBack} ref={backButton} size="sm" type="button" variant="ghost"><ArrowLeft data-icon="inline-start" />{ui("返回")}</Button>
       <header className="tag-management-heading">
         <div className="tag-management-title"><h1>{ui("团队标签")}</h1><span>{tags.length}{ui("个标签")}</span></div>
         {canCreate && <Button aria-expanded={action?.type === "create"} onClick={event => {
@@ -152,15 +157,18 @@ export function TagManagementPage({ onBack, onChange, tags, canManage = true, ca
       {tags.length || createRow ? <ul aria-label={ui("团队标签列表")} className="tag-list" ref={listRef}>
         {createRow}
         {tags.map(tag => {
-          if (!canManageTag(tag)) return <li key={tag.id}><div className="tag-list-row"><TagBadge renderIcon={icon => <span className="tag-list-icon-display">{icon}</span>} size="sm" tag={tag} /></div></li>;
+          const manageable = canManageTag(tag);
+          const deletable = canDelete(tag);
+          const deleteLabel = ui("删除标签：{0}", {0: tag.name});
           const renaming = action?.type === "rename" && action.draft.id === tag.id;
           const appearance = action?.type === "appearance" && action.draft.id === tag.id ? action.draft : null;
-          const archiving = action?.type === "archive" && action.id === tag.id;
+          const deleting = action?.type === "delete" && action.id === tag.id;
+          const usageCount = deleting ? getTagUsageCount?.(tag) : undefined;
           const dragging = drag?.id === tag.id;
           return <li data-tag-id={tag.id} data-dragging={dragging || undefined} data-drop-position={drag?.targetId === tag.id ? drag.placement : undefined} key={tag.id}>
             <div className="tag-list-row" style={dragging ? { transform: `translate(${drag.x}px, ${drag.y}px)` } : undefined}>
               {canManage && <button {...getHandleProps(tag)} aria-describedby="tag-sort-instructions" aria-label={ui("拖动排序：{0}", {0: tag.name})} className="tag-list-drag-handle" disabled={Boolean(action) || tags.length < 2} title={ui("拖动排序，或用方向键移动")} type="button"><GripVertical aria-hidden="true" /></button>}
-              <Popover open={Boolean(appearance)} onOpenChange={open => {
+              {manageable ? <Popover open={Boolean(appearance)} onOpenChange={open => {
                 if (open) startAction({ type: "appearance", draft: tag });
                 else setAction(current => current?.type === "appearance" && current.draft.id === tag.id ? null : current);
               }}>
@@ -212,18 +220,18 @@ export function TagManagementPage({ onBack, onChange, tags, canManage = true, ca
                     </div>
                   </form>}
                 </PopoverContent>
-              </Popover>
-              <Button aria-expanded={archiving} aria-label={ui("归档标签：{0}", {0: tag.name})} className="tag-list-delete" onClick={event => {
-                if (!archiving) startAction({ type: "archive", id: tag.id }, event.currentTarget);
-              }} size="icon-sm" title={ui("归档标签：{0}", {0: tag.name})} type="button" variant="ghost"><Archive aria-hidden="true" /></Button>
+              </Popover> : <TagBadge renderIcon={icon => <span className="tag-list-icon-display">{icon}</span>} size="sm" tag={tag} />}
+              <Button aria-expanded={deletable ? deleting : undefined} aria-label={deleteLabel} className="tag-list-delete" disabled={!deletable} onClick={event => {
+                if (!deleting) startAction({ type: "delete", id: tag.id }, event.currentTarget);
+              }} size="icon-sm" title={deleteLabel} type="button" variant="ghost"><Trash2 aria-hidden="true" /></Button>
             </div>
             {renaming && nameError && <p className="tag-editor-field-error tag-list-name-error" id="tag-rename-error" role="alert">{ui(nameError)}</p>}
-            {archiving && <div className="tag-inline-delete">
-              <p>{ui("归档「{0}」？任务上已有的标签会保留。", {0: tag.name})}</p>
+            {deleting && <div className="tag-inline-delete">
+              <p>{usageCount ? ui("删除「{0}」？此标签将从 {1} 条任务中移除。", {0: tag.name, 1: usageCount}) : ui("删除标签「{0}」？", {0: tag.name})}</p>
               {error && <p className="tag-editor-field-error" role="alert">{ui(error)}</p>}
               <div className="tag-inline-actions">
                 <Button autoFocus onClick={() => closeAction()} size="sm" type="button" variant="ghost">{ui("取消")}</Button>
-                <Button onClick={() => archiveTag(tag.id)} size="sm" type="button" variant="destructive">{ui("确认归档")}</Button>
+                <Button onClick={() => deleteTag(tag.id)} size="sm" type="button" variant="destructive">{ui("确认删除")}</Button>
               </div>
             </div>}
           </li>;

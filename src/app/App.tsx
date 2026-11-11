@@ -53,7 +53,8 @@ import { taskIconOptions, taskIconToneOptions } from "@/features/tasks/component
 import { AiConnectionPage } from "@/features/ai-connection/components/AiConnectionPage";
 import { TagManagementPage } from "@/features/me/components/TagManagementPage";
 import { PersonalTagsProvider } from "@/features/me/components/PersonalTags";
-import { addTeamTag, canManageTeamTag, getTeamTagStorageKey, readTeamTagCatalog, teamTagNameKey, updateTeamTagCatalog, type TeamTagCatalog } from "@/features/tasks/lib/team-task-tags";
+import { addTeamTag, canDeleteTeamTag, canManageTeamTag, deleteTeamTag, getTeamTagStorageKey, readTeamTagCatalog, teamTagNameKey, updateTeamTagCatalog, type TeamTagCatalog } from "@/features/tasks/lib/team-task-tags";
+import { changeTeamTaskTagUsage, countTeamTaskTagUsage } from "@/features/tasks/lib/team-task-tag-usage";
 import { PersonalCenterModal, type PersonalCenterModule } from "@/app/workspace/components/PersonalInfoDialog";
 import { createInitialTaskListFilters, type TaskListFilters } from "@/features/tasks/components/task-list-filters";
 import { createWorkspaceTaskDetail, getLegacyTaskFileFixtures, migrateUnsupportedBuiltinTaskFiles, taskDetailMocks } from "@/ai/mock/data/taskDetailMocks";
@@ -316,11 +317,12 @@ function App() {
       const raw = activeTeamRole ? localStorage.getItem(teamTagStorageKey) : null;
       return { catalog: readTeamTagCatalog(raw, activeTeamRole ? teamTagSeed : []), raw, error: "" };
     } catch {
-      return { catalog: { tags: [], archivedNames: [] }, raw: null, error: locale === "en" ? "Team tags could not be loaded." : "团队标签读取失败，请刷新后重试。" };
+      return { catalog: { tags: [] }, raw: null, error: locale === "en" ? "Team tags could not be loaded." : "团队标签读取失败，请刷新后重试。" };
     }
   }, [activeTeamRole, locale, teamTagRevision, teamTagSeed, teamTagStorageKey]);
   const tagDefinitions = teamTagCatalog.tags;
-  const canEditTeamTag = (tag: TagDefinition) => !teamTagLoadError && canManageTeamTag(activeTeamRole ? { memberId: currentUserId, role: activeTeamRole } : undefined, tag);
+  const activeTagActor = activeTeamRole ? { memberId: currentUserId, role: activeTeamRole } : undefined;
+  const canEditTeamTag = (tag: TagDefinition) => !teamTagLoadError && canManageTeamTag(activeTagActor, tag);
   useEffect(() => {
     const syncTeamTags = (event: StorageEvent) => {
       if (event.storageArea === localStorage && (event.key === teamTagStorageKey || event.key === null)) refreshTeamTags();
@@ -427,6 +429,21 @@ function App() {
   const workbenchAiConnectionTrigger = useRef<HTMLElement | null>(null);
   const [taskQuery, setTaskQuery] = useState("");
   const [taskFilters, setTaskFilters] = useState<TaskListFilters>(() => createInitialTaskListFilters(currentUserId));
+  const previousTeamTags = useRef({ teamId: activeTeamId, tags: tagDefinitions });
+  useEffect(() => {
+    if (teamTagLoadError) return;
+    const previous = previousTeamTags.current;
+    previousTeamTags.current = { teamId: activeTeamId, tags: tagDefinitions };
+    if (previous.teamId !== activeTeamId) return;
+    const currentIds = new Set(tagDefinitions.map(tag => tag.id));
+    const deletedNames = new Set(previous.tags.filter(tag => !currentIds.has(tag.id)).map(tag => teamTagNameKey(tag.name)));
+    if (deletedNames.size === 0) return;
+    setTaskFilters(filters => ({
+      ...filters,
+      tag: filters.tag !== "all" && deletedNames.has(teamTagNameKey(filters.tag)) ? "all" : filters.tag,
+      tags: filters.tags?.filter(name => !deletedNames.has(teamTagNameKey(name))),
+    }));
+  }, [activeTeamId, tagDefinitions, teamTagLoadError]);
   const [taskPeriodOverrides, setTaskPeriodOverrides] = useState<Record<string, { end: string; start: string } | null>>({});
   const [taskOwnerProposals, setTaskOwnerProposals] = useState<Record<string, string>>({});
   const [taskParticipantInvitationOverrides, setTaskParticipantInvitationOverrides] = useState<Record<string, ParticipantInvitationStatuses>>({});
@@ -786,10 +803,11 @@ function App() {
     }
   };
 
-  const persistTagChanges = (catalog?: TeamTagCatalog, nodes?: WorkspaceNode[]) => {
+  const persistTagChanges = (catalog?: TeamTagCatalog, nodes?: WorkspaceNode[], recycled?: RecycledTask[]) => {
     const writes: Array<[string, string]> = [];
     if (catalog) writes.push([teamTagStorageKey, JSON.stringify(catalog)]);
     if (nodes) writes.push([workspaceNodesStorageKey, JSON.stringify(nodes)]);
+    if (recycled) writes.push([RECYCLE_BIN_KEY, JSON.stringify(recycled)]);
     try { commitTaskAiStorage(localStorage, writes); }
     catch (error) {
       try { recoverTaskAiStorage(localStorage); }
@@ -801,27 +819,42 @@ function App() {
       workspaceNodesRef.current = nodes;
       setWorkspaceNodes(nodes);
     }
+    if (recycled) setRecycleEntries(recycled);
   };
 
-  const saveTeamTags = (tags: TagDefinition[]) => {
-    const actor = latestTeamMembership();
+  const readTeamTagsForManagement = () => {
     const raw = localStorage.getItem(teamTagStorageKey);
     if (raw !== teamTagRaw) {
       refreshTeamTags();
       throw new Error(locale === "en" ? "Team tags have changed. Review the list and retry." : "团队标签已变化，请核对列表后重试。");
     }
-    const current = readTeamTagCatalog(raw, teamTagSeed);
-    const { catalog, renames } = updateTeamTagCatalog(current, tags, actor);
+    return readTeamTagCatalog(raw, teamTagSeed);
+  };
+
+  const saveTeamTags = (tags: TagDefinition[]) => {
+    const actor = latestTeamMembership();
+    const { catalog, renames } = updateTeamTagCatalog(readTeamTagsForManagement(), tags, actor);
     if (renames.size === 0) {
       persistTagChanges(catalog);
       return;
     }
     verifyTaskTagWrite();
-    const nodes = workspaceNodesRef.current.map(node => {
-      if (node.kind !== "task" || (node.teamId ?? "creator-commerce") !== activeTeamId || !node.labels?.some(name => renames.has(name))) return node;
-      return { ...node, labels: [...new Set(node.labels.map(name => renames.get(name) ?? name))] };
-    });
-    persistTagChanges(catalog, nodes);
+    const changes = changeTeamTaskTagUsage(workspaceNodesRef.current, readRecycleBin(localStorage), activeTeamId, renames);
+    persistTagChanges(catalog, changes.nodes, changes.recycleEntries);
+  };
+
+  const deleteTagFromTeam = (id: string) => {
+    const actor = latestTeamMembership();
+    const current = readTeamTagsForManagement();
+    const tag = current.tags.find(item => item.id === id);
+    if (!tag) throw new Error(locale === "en" ? "This team tag is no longer available." : "该团队标签已不存在。");
+    verifyTaskTagWrite();
+    const nodes = workspaceNodesRef.current;
+    const recycled = readRecycleBin(localStorage);
+    const used = countTeamTaskTagUsage(nodes, recycled, activeTeamId).has(teamTagNameKey(tag.name));
+    const { catalog } = deleteTeamTag(current, id, actor, used);
+    const changes = changeTeamTaskTagUsage(nodes, recycled, activeTeamId, new Map([[tag.name, null]]));
+    persistTagChanges(catalog, changes.nodes, changes.recycleEntries);
   };
 
   const createTaskPlanFromConversation = (draft: TaskPlanDraft, parentTaskId?: string) => {
@@ -849,6 +882,10 @@ function App() {
     try { return readRecycleBin(localStorage); } catch { return []; }
   }, [personalInfoOpen, recycleEntries]);
   const [recycleError, setRecycleError] = useState("");
+  const teamTagUsage = useMemo(() => activeSection === "settings" ? countTeamTaskTagUsage(workspaceNodes, recycleEntries, activeTeamId) : undefined, [activeSection, activeTeamId, recycleEntries, workspaceNodes]);
+  const getTeamTagUsageCount = (tag: TagDefinition) => teamTagUsage?.get(teamTagNameKey(tag.name)) ?? 0;
+  const canDeleteTag = (tag: TagDefinition) => !teamTagLoadError && !recycleError && !taskStorageRecoveryError
+    && canDeleteTeamTag(activeTagActor, tag, getTeamTagUsageCount(tag) > 0);
   const currentDeletionState = () => {
     const stored = localStorage.getItem(workspaceNodesStorageKey);
     if (stored && JSON.stringify(JSON.parse(stored)) !== JSON.stringify(workspaceNodesRef.current)) {
@@ -939,6 +976,7 @@ function App() {
         const retained = entries.filter(e => e.expiresAt > Date.now());
         if (retained.length !== entries.length) commitTaskAiStorage(localStorage, [[RECYCLE_BIN_KEY, JSON.stringify(retained)]]);
         setRecycleEntries(retained);
+        setRecycleError("");
       } catch (error) { setRecycleError(error instanceof Error ? error.message : "回收站读取失败。"); }
     };
     cleanExpired();
@@ -1706,14 +1744,14 @@ function App() {
   const taskTagSuggestions = useMemo(() => {
     if (!canEditTaskTags || teamTagLoadError || !selectedTaskDetail || selectedTreeTask?.kind !== "task") return;
     const suggestions = suggestTeamTaskTags(selectedTaskDetail, tagDefinitions, locale);
-    const excluded = new Set([...(selectedTreeTask.labels ?? []), ...(selectedTreeTask.automaticTags?.removed ?? []), ...teamTagCatalog.archivedNames].map(teamTagNameKey));
+    const excluded = new Set([...(selectedTreeTask.labels ?? []), ...(selectedTreeTask.automaticTags?.removed ?? [])].map(teamTagNameKey));
     const proposed = suggestions.proposed && !excluded.has(teamTagNameKey(suggestions.proposed)) ? suggestions.proposed : undefined;
     return {
       existing: suggestions.existing.filter(name => !excluded.has(teamTagNameKey(name))),
       proposed,
       appearance: proposed ? suggestions.appearance : undefined,
     };
-  }, [canEditTaskTags, locale, selectedTaskDetail, selectedTreeTask, tagDefinitions, teamTagCatalog.archivedNames, teamTagLoadError]);
+  }, [canEditTaskTags, locale, selectedTaskDetail, selectedTreeTask, tagDefinitions, teamTagLoadError]);
 
   if (!personalCenterState.teams.length) return <div className="app-shell"><main className="team-empty-workspace"><h1>{locale === "en" ? "No team yet" : "你还没有加入团队"}</h1><p>{locale === "en" ? "Create a team, or ask a teammate for an invitation link." : "创建一个新团队，或通过同事提供的邀请链接加入。"}</p><Button onClick={() => setCreateEmptyTeamOpen(true)}>{locale === "en" ? "Create team" : "创建团队"}</Button><Button variant="ghost" onClick={signOutWorkspace}>{locale === "en" ? "Sign out" : "退出登录"}</Button>{hasRestorableTeams(currentUserId) && <MyTeamsPanel actorId={currentUserId} onRestore={restoreTeam} state={personalCenterState} />}<CreateTeamDialog open={createEmptyTeamOpen} onOpenChange={setCreateEmptyTeamOpen} /></main></div>;
 
@@ -1899,7 +1937,6 @@ function App() {
             onTaskPeriodChange={changeTaskPeriod}
             onTagsChange={canEditTaskTags ? (labels) => changeTaskTags(selectedTaskId, labels) : undefined}
             onCreateTag={canEditTaskTags && !teamTagLoadError ? (name, appearance) => changeTaskTags(selectedTaskId, name, appearance) : undefined}
-            archivedTags={teamTagCatalog.archivedTags}
             tagSuggestions={taskTagSuggestions}
           />
           ) : null}
@@ -1935,6 +1972,9 @@ function App() {
             canCreate={Boolean(activeTeamRole && !teamTagLoadError)}
             canManage={canManageTeamTags && !teamTagLoadError}
             canManageTag={canEditTeamTag}
+            canDeleteTag={canDeleteTag}
+            getTagUsageCount={getTeamTagUsageCount}
+            onDeleteTag={deleteTagFromTeam}
           />
         ) : null}
 
