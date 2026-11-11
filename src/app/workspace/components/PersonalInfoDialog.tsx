@@ -2,9 +2,9 @@ import { useI18n } from "@/shared/i18n/I18nProvider";
 import { mockPersonName, mockTeamName } from "@/ai/mock/i18n/mockContent";
 import { useModuleCopy } from "@/shared/i18n/module-messages";
 import { currentWorkspaceUserId } from "@/shared/lib/workspace-session";
-import { Building2, ClipboardList, X, KeyRound, Layers, ListChecks, ScrollText, UserRound, UsersRound } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { applyPersonalProfileDraft, isValidProfileEmail, savePersonalCenterState, type PersonalCenterState } from "@/ai/mock/data/memberProfiles";
+import { Building2, ClipboardList, X, KeyRound, Layers, ListChecks, ScrollText, Tag, UserRound, UsersRound } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { applyPersonalProfileDraft, savePersonalCenterState, type PersonalCenterState } from "@/ai/mock/data/memberProfiles";
 import { PersonalResponsibilityPanel, TeamInformationPanel, TeamMembersPanel } from "@/features/members/components/PersonalCenterPage";
 import { MyTeamsPanel } from "@/features/members/components/MyTeamsPanel";
 import { AccessTokensPanel } from "@/features/credentials/components/AccessTokensPanel";
@@ -22,13 +22,14 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Dialog as Modal, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
 import { AvatarEditActions } from "@/shared/ui/AvatarEditActions";
 import { Input } from "@/shared/ui/input";
+import { WorkspacePasswordChange } from "@/features/auth/components/WorkspacePasswordChange";
 import { createPersonalAvatarDataUrl } from "@/features/me/lib/personal-avatar";
 import { applyAutomaticResponsibilityUpdates } from "@/ai/mock/lib/responsibilityProposals";
 
-export type PersonalCenterModule = "profile" | "myTeams" | "tokens" | "team" | "members" | "governance" | "audit" | "responsibility";
+export type PersonalCenterModule = "profile" | "myTeams" | "tokens" | "team" | "members" | "teamTags" | "governance" | "audit" | "responsibility";
 type PendingResponsibilityAction = { run: () => void };
 
-export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes, onActiveTeamChange, onModuleChange, onOpenChange, onOpenEvidence, onRestoreTeam, onStateChange, open, recycleBin, state }: { nodes: WorkspaceNode[]; recycleBin: RecycledTask[]; onRestoreTeam: (teamId: string) => void; activeModule: PersonalCenterModule; activeTeamId: string; members: Member[]; onActiveTeamChange: (teamId: string) => void; onModuleChange: (module: PersonalCenterModule) => void; onOpenChange: (open: boolean) => void; onOpenEvidence: (taskId: string) => void; onStateChange: (state: PersonalCenterState) => void; open: boolean; state: PersonalCenterState }) {
+export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes, onActiveTeamChange, onModuleChange, onOpenChange, onOpenEvidence, onRestoreTeam, onStateChange, open, recycleBin, state, teamTagsPanel }: { nodes: WorkspaceNode[]; recycleBin: RecycledTask[]; onRestoreTeam: (teamId: string) => void; activeModule: PersonalCenterModule; activeTeamId: string; members: Member[]; onActiveTeamChange: (teamId: string) => void; onModuleChange: (module: PersonalCenterModule) => void; onOpenChange: (open: boolean) => void; onOpenEvidence: (taskId: string) => void; onStateChange: (state: PersonalCenterState) => void; open: boolean; state: PersonalCenterState; teamTagsPanel?: ReactNode }) {
   const m = useModuleCopy();
   const { locale } = useI18n();
   const [draft, setDraft] = useState(state.profile);
@@ -39,8 +40,9 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
   const [autoUpdateAttempt, setAutoUpdateAttempt] = useState(0);
   const [pendingResponsibilityAction, setPendingResponsibilityAction] = useState<PendingResponsibilityAction | null>(null);
   const responsibilityModuleRef = useRef<HTMLButtonElement>(null);
+  const teamTagsModuleRef = useRef<HTMLButtonElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
-  const profileValid = Boolean(draft.name.trim()) && isValidProfileEmail(draft.email);
+  const profileValid = Boolean(draft.name.trim());
   const activeTeam = state.teams.find((team) => team.id === activeTeamId);
   // Team tasks and the audit log are for the team's Owner and administrators only.
   const governs = Boolean(activeTeam && ["owner", "admin"].includes(activeMembership(activeTeam, currentWorkspaceUserId())?.role ?? ""));
@@ -78,7 +80,7 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
 
   const save = () => {
     if (!profileValid || avatarBusy) return;
-    const next = applyPersonalProfileDraft(state, draft, currentWorkspaceUserId());
+    const next = applyPersonalProfileDraft(state, draft);
     if (!savePersonalCenterState(next)) {
       setSaveError(m('couldNotSaveYourProfileYourInformation'));
       return;
@@ -141,7 +143,7 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
   };
 
   return <Modal onOpenChange={changeOpen} open={open}>
-    <DialogContent className="personal-center-dialog" showCloseButton={false}>
+    <DialogContent className="personal-center-dialog" initialFocus={activeModule === "teamTags" ? teamTagsModuleRef : undefined} showCloseButton={false}>
       <Button aria-label={m('close')} className="personal-center-close" onClick={() => changeOpen(false)} size="icon-sm" type="button" variant="ghost"><X aria-hidden="true" /></Button>
       <DialogHeader className="personal-center-dialog-header"><DialogTitle>{m('settings')}</DialogTitle><DialogDescription className="sr-only">{m('viewYourProfileAndCurrentTeamInformation')}</DialogDescription></DialogHeader>
       <div className="personal-center-dialog-body">
@@ -156,9 +158,10 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
               <button aria-current={activeModule === "tokens" ? "page" : undefined} className="personal-center-nav-action" onClick={() => changeModule("tokens")} type="button"><KeyRound aria-hidden="true" /><span>{m('accessTokens')}</span></button>
             </div>
             <div className="personal-center-nav-group">
-              <span>{m('teamSettings')}</span>
+              <span>{m('teamManagement')}</span>
               <button aria-current={activeModule === "team" ? "page" : undefined} className="personal-center-nav-action" onClick={() => changeModule("team")} type="button"><Building2 aria-hidden="true" /><span>{m('teamInformation')}</span></button>
               <button aria-current={activeModule === "members" ? "page" : undefined} className="personal-center-nav-action" onClick={() => changeModule("members")} type="button"><UsersRound aria-hidden="true" /><span>{m('members')}</span></button>
+              {teamTagsPanel && <button aria-current={activeModule === "teamTags" ? "page" : undefined} className="personal-center-nav-action" onClick={() => changeModule("teamTags")} ref={teamTagsModuleRef} type="button"><Tag aria-hidden="true" /><span>{m('teamTags')}</span></button>}
               {governs && <>
                 <button aria-current={activeModule === "governance" ? "page" : undefined} className="personal-center-nav-action" onClick={() => changeModule("governance")} type="button"><ClipboardList aria-hidden="true" /><span>{m('teamTasks')}</span></button>
                 <button aria-current={activeModule === "audit" ? "page" : undefined} className="personal-center-nav-action" onClick={() => changeModule("audit")} type="button"><ScrollText aria-hidden="true" /><span>{m('auditLog')}</span></button>
@@ -166,7 +169,7 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
             </div>
           </nav>
         </aside>
-        <section aria-labelledby={activeModule === "profile" ? "personal-center-panel-title" : activeModule === "myTeams" ? "my-teams-title" : activeModule === "tokens" ? "access-tokens-title" : activeModule === "governance" ? "governance-tasks-title" : activeModule === "audit" ? "audit-log-title" : activeModule === "team" ? "team-information-title" : activeModule === "members" ? "team-members-title" : "personal-responsibility-title"} className="personal-center-module-content">
+        <section aria-labelledby={activeModule === "profile" ? "personal-center-panel-title" : activeModule === "myTeams" ? "my-teams-title" : activeModule === "tokens" ? "access-tokens-title" : activeModule === "governance" ? "governance-tasks-title" : activeModule === "audit" ? "audit-log-title" : activeModule === "team" ? "team-information-title" : activeModule === "members" ? "team-members-title" : activeModule === "teamTags" ? "team-tags-title" : "personal-responsibility-title"} className="personal-center-module-content" key={activeModule}>
           {activeModule === "profile" ? <div className="personal-profile-panel">
             <header><h2 id="personal-center-panel-title">{m('profile')}</h2><p>{m('yourTeamsUseThisProfileToIdentify')}</p></header>
             <div className="personal-edit-fields">
@@ -180,7 +183,7 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
                 </div>
               </section>
               <label><span>{m('name')}</span><Input autoFocus onChange={(event) => { setDraft({ ...draft, name: event.target.value });  }} value={mockPersonName(locale, currentWorkspaceUserId(), draft.name)} /></label>
-              <label><span>{m('email')}</span><Input aria-label={m('email')} type="email" value={draft.email} onChange={(event) => { setDraft({ ...draft, email: event.target.value }); setSaveError("");  }} /></label>
+              {open && <WorkspacePasswordChange />}
               {saveError && <p aria-live="polite" className="personal-edit-error" role="alert">{m.text(saveError)}</p>}
             </div>
             <div className="personal-profile-actions"><span aria-live="polite">{avatarBusy ? m('processingAvatar') : ""}</span><Button disabled={!profileValid || avatarBusy} onClick={save} type="button">{m('saveProfile')}</Button></div>
@@ -188,6 +191,7 @@ export function PersonalCenterModal({ activeModule, activeTeamId, members, nodes
             : activeModule === "governance" || activeModule === "audit" ? (activeTeam && governance ? activeModule === "governance"
               ? <GovernanceTasksPanel asOf={governance.asOf} key={activeTeam.id} members={teamPeople} rows={governance.rows} />
               : <AuditLogPanel events={demoAuditEvents(activeTeam, nodes, locale)} key={activeTeam.id} members={teamPeople} onOpenTask={onOpenEvidence} /> : null)
+            : activeModule === "teamTags" ? teamTagsPanel
             : activeModule === "team" ? <TeamInformationPanel activeTeamId={activeTeamId} onActiveTeamChange={onActiveTeamChange} onStateChange={onStateChange} state={state} /> : activeModule === "members" ? <TeamMembersPanel activeTeamId={activeTeamId} members={members} onActiveTeamChange={onActiveTeamChange} onStateChange={onStateChange} state={state} /> : <PersonalResponsibilityPanel activeTeamId={activeTeamId} onActiveTeamChange={onActiveTeamChange} onDirtyChange={setResponsibilityDirty} onOpenEvidence={onOpenEvidence} onRequestContextChange={requestResponsibilityAction} onStateChange={onStateChange} state={state} />}
           {autoUpdateError && <div><p className="personal-edit-error" role="alert">{m.text(autoUpdateError)}</p><Button onClick={() => setAutoUpdateAttempt((attempt) => attempt + 1)} size="sm" type="button" variant="link">{m('retryAutomaticUpdate')}</Button></div>}
         </section>

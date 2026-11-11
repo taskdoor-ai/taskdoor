@@ -2,7 +2,7 @@
 .personal-center-dialog-header { padding: var(--ad-space-6) var(--ad-space-8); border-bottom: 1px solid var(--ad-border); }
 .personal-center-dialog-header [data-slot="dialog-title"] { font-size: var(--ad-text-title-2); }
 .personal-center-dialog-body { display: grid; min-height: 0; grid-template-columns: var(--ad-personal-center-nav-width) minmax(0, 1fr); }
-.personal-center-module-nav { min-width: 0; padding: var(--ad-space-6) var(--ad-space-4); border-right: 1px solid var(--ad-border); background: var(--ad-surface-quiet); }
+.personal-center-module-nav { min-width: 0; overflow-y: auto; padding: var(--ad-space-6) var(--ad-space-4); border-right: 1px solid var(--ad-border); background: var(--ad-surface-quiet); }
 .personal-center-module-identity { display: flex; min-width: 0; align-items: center; gap: var(--ad-space-3); padding: 0 var(--ad-space-2) var(--ad-space-6); }
 .personal-center-module-identity strong { min-width: 0; overflow: hidden; font-size: var(--ad-text-body-sm); text-overflow: ellipsis; white-space: nowrap; }
 .personal-center-module-nav nav { display: grid; gap: var(--ad-space-8); }
@@ -23,6 +23,7 @@
 .personal-avatar-choice { position: relative; overflow: hidden; display: block; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
 .personal-avatar-choice[aria-busy="true"] { cursor: wait; opacity: .72; }
 .personal-avatar-edit { position: absolute; z-index: 2; right: 0; bottom: 0; border-color: var(--ad-border-strong); border-radius: var(--ad-radius-pill); background: var(--ad-surface); box-shadow: var(--ad-shadow-float); }
+.personal-profile-password-action:not(:disabled):not([aria-disabled="true"]) { color: var(--ad-accent-ink); }
 .personal-profile-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--ad-space-4); margin-top: var(--ad-space-8); padding-top: var(--ad-space-5); }
 .personal-profile-actions > span { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
 .personal-responsibility-panel { min-width: 0; }
@@ -163,6 +164,10 @@
 
 @media (max-width: 1120px) {
   .team-member-list-head, .team-member-list li { grid-template-columns: minmax(160px, .9fr) minmax(0, 1.15fr) minmax(120px, .38fr); gap: var(--ad-space-4); }
+}
+
+@media (max-width: 640px), (pointer: coarse) {
+  .personal-profile-password-action { min-width: var(--ad-control-touch-min); min-height: var(--ad-control-touch-min); }
 }
 
 @media (max-width: 760px) {

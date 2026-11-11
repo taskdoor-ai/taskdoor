@@ -1,11 +1,8 @@
-import { useGlobalUi } from "@/shared/i18n/global-ui";
 "use client"
 
 import * as React from "react"
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
-import { X } from "lucide-react"
 
-import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/lib/utils"
 
 function Sheet(props: DialogPrimitive.Root.Props) {
@@ -25,14 +22,10 @@ type SheetContentProps = DialogPrimitive.Popup.Props & {
 }
 
 function SheetContent({ children, className, side = "left", ...props }: SheetContentProps) {
-  const ui = useGlobalUi();
   return <DialogPrimitive.Portal>
     <DialogPrimitive.Backdrop className="sheet-backdrop" data-side={side} data-slot="sheet-backdrop" />
     <DialogPrimitive.Popup className={cn("sheet-content", className)} data-side={side} data-slot="sheet-content" {...props}>
       {children}
-      <DialogPrimitive.Close render={<Button aria-label={ui("关闭通知")} className="sheet-close" size="icon-sm" type="button" variant="ghost" />}>
-        <X aria-hidden="true" />
-      </DialogPrimitive.Close>
     </DialogPrimitive.Popup>
   </DialogPrimitive.Portal>
 }
@@ -45,8 +38,4 @@ function SheetTitle({ className, ...props }: DialogPrimitive.Title.Props) {
   return <DialogPrimitive.Title className={cn("sheet-title", className)} data-slot="sheet-title" {...props} />
 }
 
-function SheetDescription({ className, ...props }: DialogPrimitive.Description.Props) {
-  return <DialogPrimitive.Description className={cn("sheet-description", className)} data-slot="sheet-description" {...props} />
-}
-
-export { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger }
+export { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger }

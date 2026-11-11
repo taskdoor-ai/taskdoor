@@ -4,11 +4,12 @@ import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { PersonAvatar } from "../src/shared/ui/PersonAvatar";
-import { initialPersonalCenterState, isPersonalCenterState } from "../src/ai/mock/data/memberProfiles";
+import { applyPersonalProfileDraft, initialPersonalCenterState, isPersonalCenterState } from "../src/ai/mock/data/memberProfiles";
 import { validatePersonalAvatarFile } from "../src/features/me/lib/personal-avatar";
 
 const appSource = readFileSync(new URL("../src/app/App.tsx", import.meta.url), "utf8");
 const dialogSource = readFileSync(new URL("../src/app/workspace/components/PersonalInfoDialog.tsx", import.meta.url), "utf8");
+const passwordChangeSource = readFileSync(new URL("../src/features/auth/components/WorkspacePasswordChange.tsx", import.meta.url), "utf8");
 const stylesheetSource = readFileSync(new URL("../src/shared/styles/personal-center.css", import.meta.url), "utf8");
 
 test("personal center state accepts an optional local avatar data URL", () => {
@@ -51,7 +52,7 @@ test("app merges the saved avatar into the current user profile", () => {
   );
 });
 
-test("personal information is a compact avatar, name, and editable email layout", () => {
+test("personal information places read-only account details below the name and above save", () => {
   const panelStart = dialogSource.indexOf('<div className="personal-profile-panel">');
   const panelSource = dialogSource.slice(
     panelStart,
@@ -62,38 +63,29 @@ test("personal information is a compact avatar, name, and editable email layout"
   assert.match(panelSource, /accept="image\/jpeg,image\/png,image\/webp"/);
   assert.match(panelSource, /type="file"/);
   assert.match(panelSource, /className="personal-avatar-choice"/);
-  assert.match(panelSource, /aria-label="选择头像图片"/);
-  assert.match(panelSource, /personal-avatar-choice[^>]*onClick=\{\(\) => avatarInputRef\.current\?\.click\(\)\}/);
-  assert.match(panelSource, /aria-label="修改头像"/);
-  assert.match(panelSource, /size="icon-xs"/);
+  assert.match(panelSource, /<AvatarEditActions\b/);
   assert.match(panelSource, /avatarUrl=\{draft\.avatarDataUrl\}/);
-  assert.match(panelSource, /<span>姓名<\/span>[\s\S]*?<Input\b/);
-  assert.match(panelSource, /<span>邮箱<\/span>[\s\S]*?<Input[^>]*aria-label="邮箱"[^>]*type="email"[^>]*value=\{draft\.email\}/);
-  assert.match(dialogSource, /applyPersonalProfileDraft\(state, draft, currentWorkspaceUserId\(\)\)/);
+  assert.match(panelSource, /<span>\{m\('name'\)\}<\/span><Input\b[\s\S]*?<WorkspacePasswordChange\b[\s\S]*?personal-profile-actions/);
+  assert.doesNotMatch(panelSource, /draft\.email/);
+  const accountFields = passwordChangeSource.slice(0, passwordChangeSource.indexOf("<DialogContent"));
+  assert.match(accountFields, /<Input\b[^>]*\breadOnly\b[^>]*value=\{accountEmail \?\? ""\}[^>]*\/>\s*<\/label>\s*<DialogTrigger\b[^>]*variant="link"/);
   assert.doesNotMatch(panelSource, />工作身份<|>时区<|>关于我</);
   assert.doesNotMatch(panelSource, /personal-profile-email|draft\.title|draft\.timezone|draft\.bio/);
 });
 
-test("email validation and save keep the current member email consistent across teams", async () => {
-  const profiles = await import("../src/ai/mock/data/memberProfiles");
-  assert.equal(typeof profiles.isValidProfileEmail, "function");
-  assert.equal(typeof profiles.applyPersonalProfileDraft, "function");
-  const { applyPersonalProfileDraft, isValidProfileEmail } = profiles;
-
-  assert.equal(isValidProfileEmail("new-address@agentdoor.local"), true);
-  assert.equal(isValidProfileEmail("not-an-email"), false);
-
-  const next = applyPersonalProfileDraft(initialPersonalCenterState, {
+test("profile save updates name and avatar while protecting account and membership emails", () => {
+  const draft = {
     ...initialPersonalCenterState.profile,
-    email: " New-Address@AgentDoor.Local ",
+    email: "another-address@example.com",
+    avatarDataUrl: "data:image/png;base64,YXZhdGFy",
     name: " 周岚 ",
-  }, "周岚");
+  };
+  const next = applyPersonalProfileDraft(initialPersonalCenterState, draft);
 
-  assert.equal(next.profile.email, "new-address@agentdoor.local");
+  assert.equal(next.profile.email, initialPersonalCenterState.profile.email);
   assert.equal(next.profile.name, "周岚");
-  assert.ok(next.teams.every((team) => team.memberships
-    .filter((membership) => membership.memberId === "周岚")
-    .every((membership) => membership.email === "new-address@agentdoor.local")));
+  assert.equal(next.profile.avatarDataUrl, draft.avatarDataUrl);
+  assert.deepEqual(next.teams, initialPersonalCenterState.teams);
 });
 
 test("personal avatar layout has a large circular preview and an overlay edit control", () => {

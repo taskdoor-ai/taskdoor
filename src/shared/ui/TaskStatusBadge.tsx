@@ -22,22 +22,31 @@ type StatusDefinition = {
 // Legacy values remain readable; new choices use the four product states.
 export const taskStatusOptions: TaskStatus[] = ["进行中", "已阻塞", "已完成", "已取消"];
 // Status filters have no task assessment; show every segment at full strength.
-const ProgressIcon = (props: LucideProps) => <TaskProgressIcon {...props} ratio={1} />;
-const CompletedIcon = (props: LucideProps) => <TaskProgressIcon {...props} completed />;
-const CancelledIcon = (props: LucideProps) => <TaskProgressIcon {...props} cancelled />;
+const ProgressIcon = (props: LucideProps) => <TaskStatusIcon {...props} status="进行中" progressRatio={1} />;
+const BlockedIcon = (props: LucideProps) => <TaskStatusIcon {...props} status="已阻塞" />;
+const CompletedIcon = (props: LucideProps) => <TaskStatusIcon {...props} status="已完成" />;
+const CancelledIcon = (props: LucideProps) => <TaskStatusIcon {...props} status="已取消" />;
 
 export const taskStatusDefinition: Record<TaskStatus, StatusDefinition> = {
   "待开始": { description: "协作者正在推进任务", icon: ProgressIcon, tone: "progress" },
   "进行中": { description: "协作者正在推进任务", icon: ProgressIcon, tone: "progress" },
   "待审核": { description: "成果已提交，等待确认", icon: ScanSearch, tone: "review" },
-  "已阻塞": { description: "存在阻塞，需要先处理", icon: TriangleAlert, tone: "warning" },
+  "已阻塞": { description: "存在阻塞，需要先处理", icon: BlockedIcon, tone: "warning" },
   "已完成": { description: "任务目标已达成，结果已确认", icon: CompletedIcon, tone: "success" },
   "已取消": { description: "任务已停止推进", icon: CancelledIcon, tone: "neutral" },
 };
 
 export function TaskStatusIcon({ status, progressRatio, ...props }: LucideProps & { status: TaskStatus; progressRatio?: number | null }) {
-  if (status === "已阻塞") return <TriangleAlert aria-hidden="true" {...props} />;
-  return <TaskProgressIcon {...props} ratio={progressRatio} completed={status === "已完成"} cancelled={status === "已取消"} />;
+  const stroke = `var(--ad-task-status-icon-${taskStatusDefinition[status].tone}, currentColor)`;
+  if (status === "已阻塞") return <TriangleAlert aria-hidden="true" stroke={stroke} strokeWidth="var(--ad-task-status-warning-stroke-width, 2)" {...props} />;
+  return <TaskProgressIcon
+    stroke={stroke}
+    strokeWidth="var(--ad-task-status-ring-stroke-width, 3)"
+    {...props}
+    ratio={progressRatio}
+    completed={status === "已完成"}
+    cancelled={status === "已取消"}
+  />;
 }
 
 type TaskStatusBadgeProps = {

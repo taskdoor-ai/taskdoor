@@ -196,7 +196,17 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     </div>
     {privacyError && <p className="onboarding-consent-error" id="registration-privacy-error" role="alert">{t("请先勾选同意《隐私政策》后继续。")}</p>}
   </div>;
-  const submitButton = (label: string, incomplete = false) => <Button className="onboarding-primary" type="submit" disabled={Boolean(busy) || incomplete}>{busy ? <><LoaderCircle aria-hidden="true" className="onboarding-spinner" />{localizeOnboardingMessage(locale, busy)}</> : label}</Button>;
+  const emailLogin = state.authMode === "login" && state.step === "email";
+  const submitButton = (label: string, incomplete = false) => (
+    <Button
+      className={emailLogin ? "onboarding-primary onboarding-login-submit" : "onboarding-primary"}
+      variant={emailLogin ? "outline" : "default"}
+      type="submit"
+      disabled={Boolean(busy) || incomplete}
+    >
+      {busy ? <><LoaderCircle aria-hidden="true" className="onboarding-spinner" />{localizeOnboardingMessage(locale, busy)}</> : label}
+    </Button>
+  );
   const back = (action: OnboardingAction, label = t("返回")) => <button className="onboarding-back" disabled={Boolean(busy)} onClick={() => change(action)}><ArrowLeft aria-hidden="true" />{label}</button>;
   const account = <div className="onboarding-account"><span><Mail aria-hidden="true" /><span>{state.email}</span></span><button onClick={switchAccount}>{t("退出登录")}</button></div>;
   const profileField = !state.name ? <div className="onboarding-field"><label className="onboarding-input-label" htmlFor="account-name">{t("姓名")}</label><Input id="account-name" name="name" autoComplete="name" placeholder={t("你的称呼")} maxLength={40} value={name} disabled={Boolean(busy)} {...invalid("name")} onChange={event => { setName(event.target.value); clearError(); }} />{errorField === "name" && errorBlock}</div> : null;

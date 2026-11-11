@@ -6,7 +6,7 @@ import { TeamSwitcher, type SwitchableTeam } from "@/app/workspace/components/Te
 import type { PersonalCenterModule } from "@/app/workspace/components/PersonalInfoDialog";
 import { GlobalNotifications } from "@/features/notifications/components/GlobalNotifications";
 
-export type PrimarySection = "conversation" | "home" | "tasks" | "recycle-bin" | "favorites" | "ai" | "settings";
+export type PrimarySection = "conversation" | "home" | "tasks" | "recycle-bin" | "favorites" | "ai";
 
 type WorkspaceSidebarProps = {
   activeSection: PrimarySection;

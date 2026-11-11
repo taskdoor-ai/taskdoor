@@ -15,6 +15,15 @@ export function TaskProgressIcon({ size = 28, ratio, completed = false, cancelle
     {completed || cancelled ? <>
       <circle cx="14" cy="14" r="11.5" />
       {completed ? <path d="m8.5 14 3.5 3.5 7.5-7.5" strokeWidth={2.5} /> : <path d="m10 10 8 8m0-8-8 8" strokeWidth={2.5} />}
-    </> : <g transform="rotate(-90 14 14)">{[0, 1, 2, 3].map(segment => <circle key={segment} cx="14" cy="14" r="11.5" pathLength="100" strokeDasharray="20 80" strokeDashoffset={-segment * 25} opacity={segment < segments ? 1 : .2} />)}</g>}
+    </> : <g transform="rotate(-90 14 14)">{[0, 1, 2, 3].map(segment => <circle
+      key={segment}
+      cx="14"
+      cy="14"
+      r="11.5"
+      pathLength="100"
+      strokeDasharray="var(--ad-task-progress-ring-dasharray, 20 80)"
+      strokeDashoffset={-segment * 25}
+      style={segment < segments ? undefined : { opacity: "var(--ad-task-progress-track-opacity, 0.2)" }}
+    />)}</g>}
   </svg>;
 }

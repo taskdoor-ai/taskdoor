@@ -10,7 +10,7 @@ import { taskStatusOptions } from "@/shared/ui/TaskStatusBadge";
 
 export function TaskListTools({ projection, members, filters: sourceFilters, onFiltersChange, onManageTags, touch }: {
   projection: TaskListProjection; members: PersonOption[]; filters: TaskListFilters;
-  onFiltersChange: (filters: TaskListFilters) => void; onManageTags: () => void; touch: boolean;
+  onFiltersChange: (filters: TaskListFilters) => void; onManageTags: (returnFocus?: HTMLElement | null) => void; touch: boolean;
 }) {
   const { t, locale } = useI18n();
   const updatedSortLabel = t("list.updatedSort");

@@ -37,7 +37,7 @@ export type TaskWorkspaceListProps = {
   filters: TaskListFilters;
   members: PersonOption[];
   onFiltersChange: (filters: TaskListFilters) => void;
-  onManageTags: () => void;
+  onManageTags: (returnFocus?: HTMLElement | null) => void;
   onDeleteTask: (task: TaskNode) => void;
   onTaskStatusChange: (taskId: string, status: TaskStatus) => void;
   onTaskSelect: (task: TaskNode) => void;

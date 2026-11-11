@@ -2,8 +2,47 @@ import { readTeamLifecycleHistory, type TeamLifecycleRecord } from "@/features/m
 import { countCreatedTeams, MAX_CREATED_TEAMS, MAX_TEAM_MEMBERS, occupiedTeamSeats } from "@/features/members/lib/team-limits";
 import { mockWorkspaceEmail, mockWorkspaceUserId } from "@/ai/mock/lib/mockWorkspaceAccount";
 import { loadPersonalCenterDirectory, savePersonalCenterDirectory, type PersonalCenterState, type TeamMembership, type TeamResponsibilityProfile } from "@/ai/mock/data/memberProfiles";
-import type { OnboardingState } from "@/features/auth/lib/onboarding-preview";
-import { onboardingStorageKey, saveWorkspaceSession, type WorkspaceSession } from "@/shared/lib/workspace-session";
+import { createOnboardingPreview, restoreOnboardingPreview, transitionOnboarding, type OnboardingState } from "@/features/auth/lib/onboarding-preview";
+import { hasExplicitlySignedOut, onboardingStorageKey, readWorkspaceSession, saveWorkspaceSession, workspaceSessionKey, workspaceSignedOutKey, type WorkspaceSession } from "@/shared/lib/workspace-session";
+
+export function readWorkspaceAccountEmail(): string | null {
+  const session = readWorkspaceSession();
+  if (session) return session.email.trim().toLowerCase();
+  return hasExplicitlySignedOut() ? null : mockWorkspaceEmail;
+}
+
+export function readWorkspacePasswordChange(): OnboardingState | null {
+  try {
+    const email = readWorkspaceAccountEmail();
+    if (!email) return null;
+    const saved = restoreOnboardingPreview(sessionStorage.getItem(onboardingStorageKey)) ?? createOnboardingPreview();
+    if (!Object.hasOwn(saved.accounts, email)) return null;
+    return { ...transitionOnboarding(saved, { type: "auth-mode", mode: "forgot" }), email };
+  } catch {
+    return null;
+  }
+}
+
+export function saveWorkspacePasswordChange(recovery: OnboardingState, passwordDigest: string, passwordLength: number): OnboardingState {
+  const current = readWorkspacePasswordChange();
+  if (recovery.step !== "reset-password" || recovery.authMode !== "forgot" || !current || current.email !== recovery.email
+    || current.accounts[current.email].passwordDigest !== recovery.accounts[recovery.email]?.passwordDigest) {
+    throw new Error("账号或验证状态已变化，请重新打开修改密码。");
+  }
+  const next = transitionOnboarding({ ...recovery, accounts: current.accounts }, { type: "reset-password", passwordDigest, passwordLength });
+  if (next.error) return next;
+
+  const wasSignedOut = sessionStorage.getItem(workspaceSignedOutKey) === "1";
+  sessionStorage.setItem(workspaceSignedOutKey, "1");
+  try {
+    sessionStorage.setItem(onboardingStorageKey, JSON.stringify(next));
+  } catch {
+    if (!wasSignedOut) sessionStorage.removeItem(workspaceSignedOutKey);
+    throw new Error("密码未能保存，请重试。");
+  }
+  sessionStorage.removeItem(workspaceSessionKey);
+  return next;
+}
 
 export function prepareOnboardingWorkspace(state: OnboardingState, directory: PersonalCenterState) {
   if (!state.verified || state.step !== "workspace" || !state.teams.some(team => team.id === state.activeTeamId)) throw new Error("请先创建或确认加入团队。");

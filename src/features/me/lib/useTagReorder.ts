@@ -23,6 +23,7 @@ export function useTagReorder(options: Options) {
   const pending = useRef<PendingDrag | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const [message, setMessage] = useState("");
+  const getScrollPanel = () => latest.current.listRef.current?.closest<HTMLElement>(".personal-center-module-content");
 
   const cancel = () => {
     if (pending.current?.active) setMessage(ui("已取消标签排序。"));
@@ -35,7 +36,7 @@ export function useTagReorder(options: Options) {
     const hit = document.elementFromPoint(current.clientX, current.clientY)?.closest<HTMLElement>("[data-tag-id]");
     const target = hit && list?.contains(hit) ? hit : null;
     const rect = target?.getBoundingClientRect();
-    const scrollTop = list?.closest<HTMLElement>(".tag-management-page")?.scrollTop ?? 0;
+    const scrollTop = getScrollPanel()?.scrollTop ?? 0;
     return {
       id: current.id,
       targetId: target?.dataset.tagId ?? null,
@@ -64,16 +65,10 @@ export function useTagReorder(options: Options) {
 
   useEffect(() => {
     if (!drag) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      event.preventDefault();
-      cancel();
-    };
-    window.addEventListener("keydown", onKeyDown);
     let frame = 0;
     const scroll = () => {
       const current = pending.current;
-      const viewport = latest.current.listRef.current?.closest<HTMLElement>(".tag-management-page");
+      const viewport = getScrollPanel();
       if (!current?.active) return;
       if (viewport) {
         const rect = viewport.getBoundingClientRect();
@@ -87,7 +82,7 @@ export function useTagReorder(options: Options) {
       frame = requestAnimationFrame(scroll);
     };
     frame = requestAnimationFrame(scroll);
-    return () => { window.removeEventListener("keydown", onKeyDown); cancelAnimationFrame(frame); };
+    return () => cancelAnimationFrame(frame);
   }, [Boolean(drag)]);
 
   const getHandleProps = (tag: TagDefinition): ButtonHTMLAttributes<HTMLButtonElement> => ({
@@ -100,7 +95,7 @@ export function useTagReorder(options: Options) {
       pending.current = {
         id: tag.id, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, clientX: event.clientX, clientY: event.clientY,
         tags: latest.current.tags, active: false,
-        startScrollTop: latest.current.listRef.current?.closest<HTMLElement>(".tag-management-page")?.scrollTop ?? 0,
+        startScrollTop: getScrollPanel()?.scrollTop ?? 0,
       };
     },
     onPointerMove(event) {
@@ -136,16 +131,9 @@ export function useTagReorder(options: Options) {
       if (!(event.key in directions)) return;
       event.preventDefault();
       if (pending.current) { cancel(); return; }
-      let offset = directions[event.key];
-      if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-        const items = [...(latest.current.listRef.current?.querySelectorAll<HTMLElement>("[data-tag-id]") ?? [])];
-        const top = items[0]?.getBoundingClientRect().top;
-        const columns = items.filter(item => Math.abs(item.getBoundingClientRect().top - (top ?? 0)) < 2).length;
-        offset *= Math.max(1, columns);
-      }
-      commit(moveTagByOffset(latest.current.tags, tag.id, offset), tag);
+      commit(moveTagByOffset(latest.current.tags, tag.id, directions[event.key]), tag);
     },
   });
 
-  return { drag, getHandleProps, message };
+  return { cancel, drag, getHandleProps, message };
 }

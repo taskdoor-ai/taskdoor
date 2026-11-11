@@ -85,12 +85,12 @@ export function TagPicker({ onChange, selected, tags, triggerLabel, onCreateAndS
     }
   };
 
-  const triggerClass = hasSuggestion ? " tag-picker-trigger-suggestion" : iconOnly ? " tag-picker-trigger-icon-only" : "";
+  const triggerClass = `tag-picker-trigger${iconOnly ? " tag-picker-trigger-icon-only" : ""}${hasSuggestion ? " tag-picker-trigger-suggestion" : ""}`;
   return <Popover open={open} onOpenChange={changeOpen}>
-    <PopoverTrigger aria-label={hasSuggestion ? ui("AI 建议标签") : triggerLabel ?? d("addTags")} className={`tag-picker-trigger${triggerClass}`} disabled={disabled} ref={trigger} type="button">
-      {hasSuggestion ? <><Sparkles aria-hidden="true" /><span>{ui("AI 建议")}</span></> : <><Plus aria-hidden="true" />{!iconOnly && <span>{triggerLabel ?? d("append")}</span>}</>}
+    <PopoverTrigger aria-description={iconOnly && hasSuggestion ? ui("AI 建议标签") : undefined} aria-label={!iconOnly && hasSuggestion ? ui("AI 建议标签") : triggerLabel ?? d("addTags")} className={triggerClass} disabled={disabled} ref={trigger} type="button">
+      {iconOnly ? <Plus aria-hidden="true" /> : hasSuggestion ? <><Sparkles aria-hidden="true" /><span>{ui("AI 建议")}</span></> : <><Plus aria-hidden="true" /><span>{triggerLabel ?? d("append")}</span></>}
     </PopoverTrigger>
-    <PopoverContent aria-label={ui("选择标签")} className="tag-picker-popover" collisionPadding={12}>
+    <PopoverContent align={iconOnly ? "end" : "start"} aria-label={ui("选择标签")} className="tag-picker-popover" collisionPadding={12}>
       <div className="tag-picker-search">
         <Input aria-label={ui("搜索标签")} placeholder={ui(canCreate ? "搜索或新建标签" : "搜索标签")} leadingIcon={<Search />} value={search} onChange={event => {
           setSearch(event.target.value);

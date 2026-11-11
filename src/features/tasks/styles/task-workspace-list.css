@@ -862,7 +862,7 @@
 }
 
 /* Keep the open search toolbar compact. */
-.task-workspace-list-main .task-workspace-list-toolbar { min-height: 60px; padding-block: 10px; }
+.task-workspace-list-main .task-workspace-list-toolbar { min-height: 60px; padding-block: 0; }
 .task-workspace-list-main .task-workspace-list-scroll { padding-top: 12px; }
 @media (max-width: 900px) { .task-workspace-list-main .task-workspace-list-toolbar { min-height: 60px; padding-block: 8px; } }
 
