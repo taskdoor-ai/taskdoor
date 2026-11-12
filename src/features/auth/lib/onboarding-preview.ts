@@ -40,6 +40,7 @@ export type OnboardingAction =
 
 export const previewInviteLink = "https://agentdoor.local/t/ark/join/demo-valid";
 export const previewDemoEmail = "zhoulan@example.com";
+export const passwordUpdatedNotice = "密码已更新，请重新登录。";
 const previewVersion = 1;
 const existingTeam: PreviewTeam = { id: "ark", name: "方舟产品团队", role: "member" };
 const demoPasswordDigest = "37d97c1274f4b23c362c0d2d1c1f33a4e175e981d0bed32f3117773b978aaac2";
@@ -193,7 +194,7 @@ export function transitionOnboarding(state: OnboardingState, action: OnboardingA
   if (action.type === "reset-password") {
     if (state.step !== "reset-password" || state.authMode !== "forgot" || !state.accounts[state.email]) return state;
     if (action.passwordLength < 8 || !validDigest(action.passwordDigest)) return fail("密码至少需要 8 位。", "password");
-    return { ...state, step: "email", authMode: "login", verified: false, accounts: { ...state.accounts, [state.email]: { ...state.accounts[state.email], passwordDigest: action.passwordDigest } }, ...clean, notice: "密码已更新，请重新登录。" };
+    return { ...state, step: "email", authMode: "login", verified: false, accounts: { ...state.accounts, [state.email]: { ...state.accounts[state.email], passwordDigest: action.passwordDigest } }, ...clean, notice: passwordUpdatedNotice };
   }
   if (!state.verified) return state;
   if (action.type === "create-team" || action.type === "accept-invite") {

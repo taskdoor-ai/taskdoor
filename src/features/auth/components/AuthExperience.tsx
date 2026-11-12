@@ -11,7 +11,8 @@ import { WorkspaceLoading } from "@/shared/ui/WorkspaceLoading";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { VerificationCodeInput } from "@/shared/ui/verification-code-input";
-import { simplifyOnboardingEntry, createOnboardingPreview, digestPreviewPassword, getPreviewCodeResendDelay, getPreviewInvitation,  restoreOnboardingPreview, transitionOnboarding, type AuthMode, type OnboardingAction, type OnboardingState } from "@/features/auth/lib/onboarding-preview";
+import { toast } from "@/shared/ui/toast";
+import { simplifyOnboardingEntry, createOnboardingPreview, digestPreviewPassword, getPreviewCodeResendDelay, getPreviewInvitation, passwordUpdatedNotice, restoreOnboardingPreview, transitionOnboarding, type AuthMode, type OnboardingAction, type OnboardingState } from "@/features/auth/lib/onboarding-preview";
 import { loadPersonalCenterDirectory, savePersonalCenterDirectory } from "@/ai/mock/data/memberProfiles";
 import { acceptTeamEmailInvitation, resolveTeamEmailInvitation } from "@/features/members/lib/team-invitations";
 import "@/features/auth/styles/onboarding.css";
@@ -75,6 +76,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   const pending = useRef(false);
   const enteringWorkspace = useRef(false);
   const mounted = useRef(true);
+  const announcedPasswordUpdate = useRef<OnboardingState | null>(null);
   const debug = new URLSearchParams(window.location.search).get("preview") === "1";
   const countdown = getPreviewCodeResendDelay(state, clock);
   const invitation = getPreviewInvitation(state.inviteToken, loadPersonalCenterDirectory());
@@ -84,6 +86,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   const registration = state.authMode === "register";
   const forgot = state.authMode === "forgot";
   const authScreen = ["email", "code", "google-password", "reset-password"].includes(state.step);
+  const passwordUpdated = state.step === "email" && state.authMode === "login" && state.notice === passwordUpdatedNotice;
   const href = (mode: AuthMode) => {
     const params = new URLSearchParams();
     if (state.inviteToken) params.set("invite", state.inviteToken);
@@ -101,9 +104,21 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     if (state.inviteToken) params.set("invite", state.inviteToken);
     if (debug) params.set("preview", "1");
     window.history.replaceState(null, "", `${authScreen ? authPaths[state.authMode] : "/onboarding"}${params.size ? `?${params}` : ""}`);
-    try { sessionStorage.setItem(storageKey, JSON.stringify(state)); setStorageNotice(""); }
-    catch { setStorageNotice("浏览器未能保存本次进度，刷新后需要重新开始。"); }
-  }, [state, activeTeam?.name, authScreen, registration, forgot, debug, locale]);
+    try {
+      sessionStorage.setItem(storageKey, JSON.stringify(passwordUpdated ? { ...state, notice: "" } : state));
+      setStorageNotice("");
+    } catch {
+      setStorageNotice("浏览器未能保存本次进度，刷新后需要重新开始。");
+      return;
+    }
+    if (passwordUpdated && announcedPasswordUpdate.current !== state) {
+      announcedPasswordUpdate.current = state;
+      // Let the shared ToastProvider subscribe before announcing a redirect's result.
+      queueMicrotask(() => {
+        if (mounted.current) toast.success(localizeOnboardingMessage(locale, passwordUpdatedNotice));
+      });
+    }
+  }, [state, activeTeam?.name, authScreen, registration, forgot, debug, locale, passwordUpdated]);
   useEffect(() => {
     setLocalError("");
     setGooglePreview(false);
@@ -196,11 +211,9 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     </div>
     {privacyError && <p className="onboarding-consent-error" id="registration-privacy-error" role="alert">{t("请先勾选同意《隐私政策》后继续。")}</p>}
   </div>;
-  const emailLogin = state.authMode === "login" && state.step === "email";
   const submitButton = (label: string, incomplete = false) => (
     <Button
-      className={emailLogin ? "onboarding-primary onboarding-login-submit" : "onboarding-primary"}
-      variant={emailLogin ? "outline" : "default"}
+      className="onboarding-primary"
       type="submit"
       disabled={Boolean(busy) || incomplete}
     >
@@ -218,7 +231,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
 
   if (state.step === "workspace") return <WorkspaceLoading teamName={activeTeam?.name} error={localizeOnboardingMessage(locale, localError)} notice={localizeOnboardingMessage(locale, state.notice)} onRetry={() => void enterWorkspace()} />;
 
-  return <div className="onboarding-page onboarding-auth" ref={surface}>
+  return <div className="onboarding-page onboarding-auth onboarding-auth--standard" ref={surface}>
     <div className="onboarding-language"><LanguageSwitcher /></div>
     <aside className="onboarding-story" aria-labelledby="onboarding-story-title">
       <div className="onboarding-story-inner">
@@ -248,7 +261,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
           {forgot && <a className="onboarding-back" href={href("login")}><ArrowLeft aria-hidden="true" />{t("返回登录")}</a>}
           <Heading title={registration ? invitation ? t("注册并加入团队") : t("创建你的账号") : forgot ? t("忘记密码？") : t("欢迎回来")} description={registration ? invitation ? t("完成注册后，即可加入「{team}」", { team: invitation.team.name }) : t("开启与团队一起工作的全新方式") : forgot ? t("输入注册邮箱，验证后即可设置新密码") : t("登录 Taskdoor，继续你的工作")} />
           {state.inviteToken && invitation && <TeamInvitationCard invitation={invitation} />}
-          {state.notice && <p className="onboarding-success" role="status"><Check aria-hidden="true" />{localizeOnboardingMessage(locale, state.notice)}</p>}
+          {state.notice && !passwordUpdated && <p className="onboarding-success" role="status"><Check aria-hidden="true" />{localizeOnboardingMessage(locale, state.notice)}</p>}
           {!forgot && <div className="onboarding-social">
             <Button type="button" variant="outline" className="onboarding-google" disabled={Boolean(busy)} onClick={() => { setGooglePreview(true); requestAnimationFrame(() => surface.current?.querySelector<HTMLElement>(".google-preview h1")?.focus()); }}>
               <img src={googleIcon} alt="" aria-hidden="true" width={20} height={20} />{t("使用 Google 继续")}
@@ -282,7 +295,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
           <Heading title={forgot ? t("验证你的身份") : t("验证邮箱")} description={<>{t("请输入以下邮箱对应的 6 位验证码：")}<strong className="onboarding-email-address">{state.email}</strong></>} />
           <form className="onboarding-form" noValidate onSubmit={event => { event.preventDefault(); void perform({ type: "verify-code", code, now: Date.now() }, "正在验证…"); }}>
             <div className="onboarding-field"><label htmlFor="account-code">{t("验证码")}</label><VerificationCodeInput id="account-code" value={code} onValueChange={value => { setCode(value); clearError(); }} disabled={Boolean(busy)} invalid={Boolean(state.error)} describedBy={state.error ? "onboarding-error" : undefined} /></div>
-            <div className="onboarding-code-help"><span>{t("输入任意 6 位数字即可")}</span><button type="button" disabled={countdown > 0 || Boolean(busy)} onClick={() => { setCode(""); change({ type: "send-code", now: Date.now() }); }}>{countdown > 0 ? t("{seconds} 秒后重新获取", { seconds: countdown }) : t("重新获取")}</button></div>
+            <div className="onboarding-code-help"><button type="button" disabled={countdown > 0 || Boolean(busy)} onClick={() => { setCode(""); change({ type: "send-code", now: Date.now() }); }}>{countdown > 0 ? t("{seconds} 秒后重新获取", { seconds: countdown }) : t("重新获取")}</button></div>
             {errorBlock}{submitButton(forgot ? t("验证并继续") : t("验证邮箱"), code.length !== 6)}
           </form>
         </>}

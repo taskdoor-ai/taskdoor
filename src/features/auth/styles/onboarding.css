@@ -8,6 +8,17 @@
 .onboarding-brand { display: inline-flex; flex-shrink: 0; align-items: center; gap: 9px; color: var(--ad-ink); font-size: 21px; font-weight: 650; letter-spacing: -.6px; }
 .onboarding-brand .brand-lockup { height: 28px; }
 .onboarding-auth { --ad-route: #278557; --ad-route-hover: #207148; --ad-route-active: #195e3b; --ad-route-soft: #edf7f0; --ad-focus: var(--ad-ink-secondary); --primary: #278557; --ad-ink: #1b211e; --ad-ink-secondary: #68716b; --ad-ink-tertiary: #858e87; --ad-border: #e3e8e3; --ad-border-soft: #eff2ee; display: grid; grid-template-columns: 1fr 1fr; background: #f7f8f5; }
+.onboarding-auth--standard {
+  --ad-action-ink: #fff;
+  --ad-button-primary-bg: var(--ad-route);
+  --ad-button-primary-hover-bg: var(--ad-route-hover);
+  --ad-button-primary-active-bg: var(--ad-route-active);
+  --ad-button-primary-ink: var(--ad-action-ink);
+  --ad-button-primary-hover-ink: var(--ad-action-ink);
+  --ad-button-primary-active-ink: var(--ad-action-ink);
+  --ad-button-focus: var(--ad-focus);
+  --ad-button-focus-soft: var(--ad-focus-soft);
+}
 .onboarding-story { display: flex; align-items: center; justify-content: center; min-width: 0; padding: 48px 40px; background: #fff; }
 .onboarding-story-inner { width: min(100%, 520px); text-align: center; }
 .onboarding-art-scene { position: relative; isolation: isolate; width: min(100%, 460px); margin: -24px auto 12px; pointer-events: none; }
@@ -35,23 +46,27 @@
 .onboarding-page .onboarding-link { color: var(--ad-ink-secondary); font-weight: 500; }
 .onboarding-page .onboarding-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .onboarding-form [data-slot="input"] { width: 100%; height: 48px; padding-inline: 18px; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-input); background: var(--ad-surface); color: var(--ad-ink); font-size: 16px; box-shadow: none; }
+.onboarding-form [data-slot="input"][readonly] { background: var(--ad-surface-subtle); color: var(--ad-ink-secondary); }
 .onboarding-form [data-slot="input"]::placeholder { color: var(--ad-ink-tertiary); }
-.onboarding-form [data-slot="input"]:hover:not(:disabled):not(:focus) { border-color: var(--ad-border-strong); }
+.onboarding-form [data-slot="input"]:hover:not([readonly]):not(:disabled):not(:focus) { border-color: var(--ad-border-strong); }
 .onboarding-form [data-slot="input"]:focus-visible { border-color: var(--ad-input-focus); outline: none; }
-.onboarding-form [data-slot="input"][aria-invalid="true"] { border-color: var(--ad-danger); }
+.onboarding-auth--standard .onboarding-form [data-slot="input"]:focus:not([aria-invalid="true"]):not([data-invalid]) {
+  border-color: var(--ad-focus);
+  box-shadow: var(--onboarding-autofill-cover, none);
+}
+.onboarding-auth--standard .onboarding-form [data-slot="input"]:is(:autofill, :-webkit-autofill) {
+  --onboarding-autofill-cover: inset 0 0 0 1000px var(--ad-surface);
+  box-shadow: var(--onboarding-autofill-cover);
+  -webkit-text-fill-color: var(--ad-ink);
+  caret-color: var(--ad-ink);
+}
+.onboarding-form [data-slot="input"]:is([aria-invalid="true"], [data-invalid]) { border-color: var(--ad-danger); }
 .onboarding-password { position: relative; }
 .onboarding-password [data-slot="input"] { padding-right: 46px; }
 .onboarding-password > button { position: absolute; top: 2px; right: 5px; display: grid; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--ad-ink-tertiary); cursor: pointer; }
 .onboarding-password > button:hover { color: var(--ad-ink-secondary); }
 .onboarding-password > button svg { width: 17px; height: 17px; stroke-width: 1.7; }
 .onboarding-page .onboarding-primary { display: flex; width: 100%; min-height: 48px; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; border-radius: 24px; font-size: 14px; font-weight: 550; }
-.onboarding-login-submit {
-  border-color: var(--ad-border);
-  background: transparent;
-  color: var(--ad-ink);
-}
-.onboarding-login-submit:hover:not(:disabled) { border-color: var(--ad-control-border-hover); }
-.onboarding-login-submit:active:not(:disabled) { border-color: var(--ad-ink-secondary); }
 .onboarding-primary svg { width: 16px; height: 16px; }
 .onboarding-auth-switch { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 26px 0 0; color: var(--ad-ink-secondary); font-size: 13px; line-height: 24px; }
 .onboarding-auth-switch .onboarding-link { color: var(--ad-ink); font-weight: 600; }
@@ -90,7 +105,7 @@
 .onboarding-code-digit:focus { border-color: var(--ad-input-focus); }
 .onboarding-code-field[data-has-error="true"] .onboarding-code-digit { border-color: var(--ad-danger); }
 .onboarding-code-digit:disabled { background: var(--ad-surface-quiet); }
-.onboarding-code-help { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: -10px; color: var(--ad-ink-secondary); font-size: 12px; font-variant-numeric: tabular-nums; }
+.onboarding-code-help { display: flex; justify-content: flex-end; margin-top: -10px; font-size: 12px; font-variant-numeric: tabular-nums; }
 .onboarding-code-help button, .onboarding-debug button { min-height: 32px; padding: 0; border: 0; background: transparent; color: var(--ad-ink-secondary); cursor: pointer; }
 .onboarding-code-help button:disabled { color: var(--ad-ink-tertiary); cursor: default; }
 .onboarding-debug { margin: 20px 0 0; color: var(--ad-ink-tertiary); font-size: 12px; text-align: center; }
@@ -226,7 +241,7 @@
   .onboarding-options small { font-size: 11px; }
   .onboarding-option-icon { width: 28px; }
   .onboarding-code-field { gap: 5px; }
-  .onboarding-code-help { gap: 6px; font-size: 11px; }
+  .onboarding-code-help { font-size: 11px; }
   .onboarding-story h2 { font-size: 18px; }
 }
 @media (prefers-reduced-motion: reduce) { .onboarding-spinner { animation: none; } .onboarding-page * { transition: none !important; } }
@@ -282,6 +297,22 @@
 [data-theme="dark"] .onboarding-card { border-color: #35423a; background: #202722; box-shadow: 0 16px 48px rgb(0 0 0 / 24%); }
 [data-theme="dark"] .onboarding-page .onboarding-google { color: var(--ad-ink) !important; }
 [data-theme="dark"] .onboarding-auth-divider { color: var(--ad-ink-tertiary); }
+[data-theme="dark"] .onboarding-auth--standard {
+  --ad-route-soft: var(--ad-surface-subtle);
+  --ad-action-ink: #171717;
+  --ad-ink: inherit;
+  --ad-ink-secondary: inherit;
+  --ad-ink-tertiary: inherit;
+  --ad-border: inherit;
+  --ad-border-soft: inherit;
+  background: var(--ad-canvas);
+}
+[data-theme="dark"] .onboarding-auth--standard .onboarding-story { background: var(--ad-sidebar); }
+[data-theme="dark"] .onboarding-auth--standard .onboarding-story h2 { color: var(--ad-ink); }
+[data-theme="dark"] .onboarding-auth--standard .onboarding-card { border-color: var(--ad-border); background: var(--ad-surface); }
+[data-theme="dark"] .onboarding-auth--standard .onboarding-invitation { border-color: var(--ad-border); background: var(--ad-surface-subtle); }
+[data-theme="dark"] .onboarding-auth--standard .onboarding-invitation-logo { border-color: var(--ad-border); background: var(--ad-surface); }
+[data-theme="dark"] .onboarding-auth--standard .onboarding-invitation dd { background: var(--ad-surface); color: var(--ad-ink-secondary); }
 /* The art is inverted and screened onto the panel; the three avatars are laid back in uninverted, on a soft ground, through a mask. */
 .onboarding-art-scene { --onboarding-avatar-mask: radial-gradient(ellipse 14% 16% at 29% 25%, #000 97%, transparent 100%), radial-gradient(ellipse 11% 14% at 83% 48%, #000 97%, transparent 100%), radial-gradient(ellipse 11% 14% at 31% 75%, #000 97%, transparent 100%); }
 [data-theme="dark"] .onboarding-art-scene { isolation: auto; }
@@ -290,6 +321,7 @@
 [data-theme="dark"] .onboarding-avatar-backs, [data-theme="dark"] .onboarding-story-art--avatars { position: absolute; z-index: 1; inset: 0; display: block; width: 100%; height: 100%; -webkit-mask-image: var(--onboarding-avatar-mask); -webkit-mask-repeat: no-repeat; mask-image: var(--onboarding-avatar-mask); mask-repeat: no-repeat; }
 [data-theme="dark"] .onboarding-avatar-backs { background: #9caca3; }
 [data-theme="dark"] .onboarding-story-art--avatars { z-index: 2; filter: none; mix-blend-mode: multiply; object-fit: contain; }
+[data-theme="dark"] .onboarding-auth--standard .onboarding-avatar-backs { background: #aaa; }
 
 /* The lockup (production's apps/web/src/shared/styles/brand.css): standard artwork on light, reversed on dark; each placement sets its height. */
 .brand-lockup { display: inline-flex; align-items: center; flex-shrink: 0; }
