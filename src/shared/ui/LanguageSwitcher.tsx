@@ -3,7 +3,8 @@ import { Languages, Globe2, ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/shared/ui/dropdown-menu";
 import { useI18n } from '@/shared/i18n/I18nProvider';
 import '@/shared/styles/language-switcher.css';
-export function LanguageSwitcher({ menu = false }: { menu?: boolean }) {
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
+export function LanguageSwitcher({ menu = false, authAppearance }: { menu?: boolean; authAppearance?: "sand-auth" }) {
   const ui = useGlobalUi();
   const { locale, setLocale, t, autoTranslate, setAutoTranslate } = useI18n();
   if (menu) return <DropdownMenuSub>
@@ -17,6 +18,16 @@ export function LanguageSwitcher({ menu = false }: { menu?: boolean }) {
       <DropdownMenuCheckboxItem className="language-auto-translate" checked={autoTranslate} onCheckedChange={setAutoTranslate}>{ui('自动翻译讨论内容')}</DropdownMenuCheckboxItem>
     </DropdownMenuSubContent>
   </DropdownMenuSub>;
+  if (authAppearance === "sand-auth") return <div className="language-switcher">
+    <span>{t('language.label')}</span>
+    <Select value={locale} onValueChange={value => setLocale(value === 'zh-CN' ? 'zh-CN' : 'en')}>
+      <SelectTrigger aria-label={t('language.label')} size="sm"><SelectValue>{locale === 'en' ? 'English' : '简体中文'}</SelectValue></SelectTrigger>
+      <SelectContent alignItemWithTrigger={false} align="end" alignOffset={8} className="onboarding-sand-language">
+        <SelectItem lang="en" value="en">English</SelectItem>
+        <SelectItem lang="zh-CN" value="zh-CN">简体中文</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>;
   return <DropdownMenu>
     <DropdownMenuTrigger className="language-switcher" aria-label={`${t('language.label')}: ${locale === 'en' ? 'English' : '简体中文'}`}>
       <Globe2 aria-hidden="true" size={16} /><span>{locale === 'en' ? 'English' : '简体中文'}</span><ChevronDown aria-hidden="true" size={13} />

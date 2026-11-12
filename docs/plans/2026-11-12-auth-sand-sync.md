@@ -1,0 +1,12 @@
+# A21 authentication appearance sync
+
+**Goal:** Restore the approved released authentication appearance on PM login, signup, password recovery and setup, using formal source `23bfe988822161d6c09cca3e1c9b710454794ebd` (implementation `81d9af75528a0db5f6d4dab7b18d9cf6905e907c`, visual authority sand-v0.1.53 `fce89c89e1896eefb30023a22dcd853017c8fa4f`). Later explicit user instructions override only their stated scope.
+
+**Architecture:** Reuse the actual PM forms and providers. Extract their common `OnboardingShell`, opt the four consumers into `sand-auth`, and scope the fixed source's CSS to that appearance. The language select carries its appearance into its portal. The CSS closure includes `onboarding.css` and `RegistrationFlow`’s separate `registration-consent.css`; unchanged motion keyframes are reused from the existing Demo stylesheet. Setup uses the existing local onboarding model, without a production API, session, receipt or KC adapter. Preserve the Demo's existing automatic personal-workspace entry and invitation defaults; `/setup` is a separate local setup route for a verified Demo account.
+
+1. Confirm the existing real login lacks the appearance/footer, then capture fixed formal source using its actual router/providers/CSS in an isolated `/tmp` snapshot with intercepted synthetic responses. Never operate 3106, sand or a formal worktree.
+2. Update `AuthExperience.tsx`, add `OnboardingShell.tsx` and `SetupExperience.tsx`, opt in from `main.tsx`, and add appearance-only language select rendering to `LanguageSwitcher.tsx`. Keep all existing default consumers unchanged.
+3. Add scoped `auth-sand.css` from the fixed source's relevant CSS rules. Preserve registration's unchecked consent. Use existing public policy URLs rather than copying policy documents or claiming their production versions.
+4. Verify the directly affected onboarding tests, structure, application type check and Vite build. Capture same viewport/language/theme/accent/data/state pairs from the real formal and PM callers; inspect differences, including controls/errors/disabled/focus and footer interaction. No full-suite or duplicate review by default.
+
+This sync does not implement #96 §1 readonly recovery email, two-line recovery code explanation or success Toast, and makes no claim about formal deployment or Ryan's pending 3106 acceptance. The PM already has a local reset-result Toast; that alone is not evidence of #96 completion.

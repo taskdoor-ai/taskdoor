@@ -1,0 +1,1520 @@
+/* A21 fixed source: 23bfe988 / implementation 81d9af75.
+ * Visual authority: sand-v0.1.53 fce89c89. Keep the complete source cascade,
+ * scoped to opted-in public-auth callers; no defaults or global tokens are changed. */
+/* Moxt-inspired split auth layout; shared controls retain their existing behavior. */
+.onboarding-page:where([data-auth-appearance='sand-auth']) {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--ad-surface-quiet);
+  color: var(--ad-ink);
+  font-family: var(--ad-font-sans);
+  font-size: 14px;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) * {
+  box-sizing: border-box;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) a {
+  text-decoration: none;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) button,
+.onboarding-page:where([data-auth-appearance='sand-auth']) a {
+  -webkit-tap-highlight-color: transparent;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) button:focus-visible,
+.onboarding-page:where([data-auth-appearance='sand-auth']) a:focus-visible {
+  outline: 2px solid var(--ad-focus);
+  outline-offset: 3px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-topbar {
+  display: flex;
+  min-height: 88px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 40px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-brand {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 9px;
+  color: var(--ad-ink);
+  font-size: 21px;
+  font-weight: 650;
+  letter-spacing: -0.6px;
+}
+.onboarding-auth:where([data-auth-appearance='sand-auth']) {
+  --ad-route: #278557;
+  --ad-route-hover: #207148;
+  --ad-route-active: #195e3b;
+  --ad-route-soft: #edf7f0;
+  --ad-focus: var(--ad-ink-secondary);
+  --primary: #278557;
+  /* Keep the account's restored primary colour on this page's own brand surface. */
+  --ad-button-primary-bg: var(--ad-personal-primary-bg, var(--ad-route));
+  --ad-button-primary-hover-bg: var(--ad-personal-primary-hover-bg, var(--ad-route-hover));
+  --ad-button-primary-active-bg: var(--ad-personal-primary-active-bg, var(--ad-route-active));
+  --ad-button-soft-bg: var(--ad-route-soft);
+  /* Without a saved accent, retain the brand's default primary and foreground. */
+  --ad-action-ink: #ffffff;
+  --ad-button-primary-ink: var(--ad-personal-primary-ink, var(--ad-action-ink));
+  --ad-button-primary-hover-ink: var(--ad-personal-primary-hover-ink, var(--ad-action-ink));
+  --ad-button-primary-active-ink: var(--ad-personal-primary-active-ink, var(--ad-action-ink));
+  --ad-ink: #1b211e;
+  --ad-ink-secondary: #68716b;
+  --ad-ink-tertiary: #858e87;
+  --ad-border: #e3e8e3;
+  --ad-border-soft: #eff2ee;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #f7f8f5;
+}
+[data-theme='dark'] .onboarding-auth:where([data-auth-appearance='sand-auth']) {
+  --ad-route: #6fca97;
+  --ad-route-hover: #86d9aa;
+  --ad-route-active: #55b980;
+  --ad-route-soft: #173426;
+  --ad-action-ink: #102218;
+  --ad-focus: var(--ad-ink-secondary);
+  --primary: #6fca97;
+  --ad-ink: #edf3ee;
+  --ad-ink-secondary: #b3bdb6;
+  --ad-ink-tertiary: #8d9991;
+  --ad-border: #35423a;
+  --ad-border-soft: #2a352e;
+  /* The card's inputs and Google button sit on the PM theme's own dark surface, not the app's navy
+     one; hovering mixes the border as the PM theme does (Commander 11-11). Light keeps the app's. */
+  --ad-surface: #202722;
+  --ad-border-strong: color-mix(in srgb, var(--ad-ink-tertiary) 55%, var(--ad-border));
+  /* The rest of what the card's controls are drawn with, from the same palette: secondary and
+     outline buttons, disabled ones, focus rings, the checkbox. A token resolved at the root keeps
+     the root's navy, so the button and shadcn names that read these are named again here. */
+  --ad-canvas: #171c19;
+  --ad-surface-subtle: #2a352e;
+  --ad-surface-quiet: #171c19;
+  --ad-route-soft-hover: color-mix(in srgb, var(--ad-route) 14%, var(--ad-route-soft));
+  --ad-route-border: var(--ad-route);
+  --ad-route-ink: var(--ad-route-hover);
+  --ad-focus-soft: color-mix(in srgb, var(--ad-focus) 18%, transparent);
+  --ad-control-border-hover: var(--ad-border-strong);
+  --ad-control-disabled-bg: #2a352e;
+  --ad-control-disabled-ink: var(--ad-ink-tertiary);
+  --ad-checkbox-border: color-mix(in srgb, var(--ad-ink-tertiary) 70%, var(--ad-border));
+  --ad-button-soft-bg: var(--ad-route-soft);
+  --ad-button-soft-hover-bg: var(--ad-route-soft-hover);
+  --ad-button-soft-ink: var(--ad-route-ink);
+  --ad-button-primary-border: var(--ad-route-border);
+  --ad-button-focus: var(--ad-focus);
+  --ad-button-focus-soft: var(--ad-focus-soft);
+  --ad-button-disabled-bg: var(--ad-control-disabled-bg);
+  --ad-button-disabled-ink: var(--ad-control-disabled-ink);
+  --background: var(--ad-canvas);
+  --card: var(--ad-surface);
+  --popover: var(--ad-surface);
+  --secondary: var(--ad-surface-subtle);
+  --muted: var(--ad-surface-subtle);
+  --accent: var(--ad-route-soft);
+  --border: var(--ad-border);
+  --input: var(--ad-border);
+  --ring: var(--ad-focus);
+  background: #171c19;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 48px 40px;
+  background: #fff;
+}
+[data-theme='dark'] :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story {
+  background: #202722;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story-inner {
+  width: min(100%, 520px);
+  text-align: center;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-art-scene {
+  --onboarding-avatar-mask:
+    radial-gradient(ellipse 14% 16% at 29% 25%, #000 97%, transparent 100%),
+    radial-gradient(ellipse 11% 14% at 83% 48%, #000 97%, transparent 100%),
+    radial-gradient(ellipse 11% 14% at 31% 75%, #000 97%, transparent 100%);
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 460px);
+  margin: -24px auto 12px;
+  pointer-events: none;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  margin: 0;
+  object-fit: contain;
+}
+[data-theme='dark'] :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-art-scene {
+  isolation: auto;
+}
+[data-theme='dark'] :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story-art {
+  filter: invert(1) hue-rotate(180deg) saturate(1.15) brightness(1.2) contrast(1.02);
+  mix-blend-mode: screen;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-avatar-backs,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story-art--avatars {
+  display: none;
+}
+[data-theme='dark'] :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-avatar-backs,
+[data-theme='dark'] :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story-art--avatars {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: var(--onboarding-avatar-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-image: var(--onboarding-avatar-mask);
+  mask-repeat: no-repeat;
+}
+[data-theme='dark'] :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-avatar-backs {
+  background: #9caca3;
+}
+[data-theme='dark'] :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story-art--avatars {
+  z-index: 2;
+  filter: none;
+  mix-blend-mode: multiply;
+  object-fit: contain;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-door-flow {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-flow-particle {
+  offset-path: var(--flow-path);
+  offset-distance: 0%;
+  offset-rotate: 0deg;
+  opacity: 0;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-flow-bead {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-flow-aura {
+  opacity: 0.11;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-door-arrival,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-door-ripple {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-door-ripple {
+  fill: none;
+  stroke: #88bd9c;
+  stroke-width: 1.5;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story h2 {
+  margin: 0;
+  color: #242b26;
+  font-size: clamp(20px, 1.75vw, 25px);
+  font-weight: 580;
+  line-height: 1.6;
+  letter-spacing: -0.6px;
+}
+[data-theme='dark'] :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story h2 {
+  color: #edf3ee;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-main {
+  display: flex;
+  min-width: 0;
+  min-height: 100svh;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 40px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form-brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-theme-control {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: auto;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--background) 88%, transparent);
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-theme-control button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-theme-control button[aria-pressed='true'] {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-theme-control svg {
+  width: 15px;
+  height: 15px;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-consent {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-consent input {
+  margin-top: 3px;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-consent a {
+  margin-inline-start: 2px;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 20px 0 0;
+  color: var(--ad-ink-secondary);
+  font-size: 12px;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-legal-links,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-preferences {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-legal-links {
+  margin-inline-start: 10px;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-preferences {
+  margin-inline-start: auto;
+  gap: 0;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-preferences .language-switcher > span {
+  display: none;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-preferences .language-switcher [data-slot='select-trigger'] {
+  min-height: 36px;
+  color: var(--ad-ink-secondary);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+  max-width: 100px;
+  font-size: 12px;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-theme-toggle {
+  display: inline-flex;
+  width: 36px;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  color: var(--ad-ink-secondary);
+  background: transparent;
+  cursor: pointer;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-theme-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-theme-toggle:hover {
+  color: var(--ad-ink);
+  background: var(--ad-surface-quiet);
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-preferences [data-slot='select-trigger']:focus-visible,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-theme-toggle:focus-visible {
+  outline: 2px solid var(--ad-focus);
+  outline-offset: 2px;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-legal-links a:hover {
+  color: var(--ad-ink);
+  text-decoration: underline;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form-brand .onboarding-brand {
+  gap: 8px;
+  font-size: 26px;
+  font-weight: 650;
+  letter-spacing: -1px;
+}
+/* The lockup at the old mark's height (32 px); the link keeps the line the name's 26 px text gave it,
+   so nothing under it moves. */
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form-brand .onboarding-brand {
+  min-height: 1.6em;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form-brand .brand-lockup {
+  height: 32px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-flow {
+  width: min(100%, 420px);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-card {
+  padding: 40px 32px 32px;
+  border: 1px solid rgb(255 255 255 / 90%);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 8px 36px rgb(31 55 36 / 6%);
+}
+[data-theme='dark'] :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-card {
+  border-color: #35423a;
+  background: #202722;
+  box-shadow: 0 16px 48px rgb(0 0 0 / 24%);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-heading {
+  margin-bottom: 30px;
+  text-align: center;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-heading h1 {
+  margin: 0 0 9px;
+  color: var(--ad-ink);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+  line-height: 1.4;
+  outline: none;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-heading p {
+  margin: 0;
+  color: var(--ad-ink-secondary);
+  font-size: 14px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-field > label {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 550;
+  color: var(--ad-ink);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-input-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-link {
+  color: var(--ad-route);
+  font-weight: 500;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form [data-slot='input'] {
+  width: 100%;
+  height: 48px;
+  padding-inline: 18px;
+  border: 1px solid var(--ad-border);
+  border-radius: var(--ad-radius-input);
+  background: var(--ad-surface);
+  color: var(--ad-ink);
+  font-size: 16px;
+  box-shadow: none;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form [data-slot='input']::placeholder {
+  color: var(--ad-ink-tertiary);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form [data-slot='input']:hover:not(:disabled):not(:focus) {
+  border-color: var(--ad-border-strong);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form [data-slot='input']:focus-visible {
+  border-color: var(--ad-focus);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ad-focus) 10%, transparent);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form [data-slot='input'][aria-invalid='true'] {
+  border-color: var(--ad-danger);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-password {
+  position: relative;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-password [data-slot='input'] {
+  padding-right: 46px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-password > button {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ad-ink-tertiary);
+  cursor: pointer;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-password > button:hover {
+  color: var(--ad-ink-secondary);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-password > button svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 1.7;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-primary {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 550;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-login-submit {
+  background: transparent;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-primary-link {
+  background: var(--ad-button-primary-bg);
+  color: var(--ad-button-primary-ink);
+  text-decoration: none;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-primary-link:hover {
+  background: var(--ad-button-primary-hover-bg);
+  color: var(--ad-button-primary-hover-ink);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-terminal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: center;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-primary svg {
+  width: 16px;
+  height: 16px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-auth-switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 0;
+  color: var(--ad-ink-secondary);
+  font-size: 13px;
+  line-height: 24px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-auth-switch .onboarding-link {
+  color: var(--ad-ink);
+  font-weight: 600;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-forgot-link {
+  margin: 16px 0 -8px;
+  text-align: center;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-forgot-link > a {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  color: var(--ad-ink-secondary);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-forgot-link > a:hover {
+  color: var(--ad-ink);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-field > .onboarding-error {
+  margin: 0;
+  padding-inline: 17px;
+  font-size: 14px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-field-hint {
+  margin: 0;
+  color: var(--ad-ink-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-join-hint {
+  margin-top: 20px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: -5px 0 -5px;
+  color: var(--ad-danger);
+  font-size: 13px;
+  line-height: 1.65;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-error > svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 20px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  background: var(--ad-fact-soft);
+  color: var(--ad-fact);
+  font-size: 13px;
+  line-height: 1.7;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-success svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-back {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 6px;
+  margin: -8px 0 20px -4px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--ad-ink-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-card > .onboarding-back {
+  margin-bottom: 16px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-back:hover {
+  color: var(--ad-ink);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-back svg {
+  width: 14px;
+  height: 14px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-email-address {
+  display: block;
+  margin-top: 3px;
+  color: var(--ad-ink);
+  font-weight: 500;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-field {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-digit {
+  width: 100%;
+  min-width: 0;
+  height: 52px;
+  padding: 0;
+  border: 1px solid var(--ad-border);
+  border-radius: var(--ad-radius-input);
+  outline: none;
+  background: var(--ad-surface);
+  color: var(--ad-ink);
+  caret-color: var(--ad-route);
+  font-family: var(--ad-font-mono);
+  font-size: 22px;
+  text-align: center;
+  transition:
+    border-color 120ms,
+    box-shadow 120ms;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-digit::placeholder {
+  color: var(--ad-border-strong);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-digit:focus::placeholder {
+  color: transparent;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-digit[data-filled] {
+  border-color: var(--ad-border-strong);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-digit:focus {
+  border-color: var(--ad-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ad-focus) 10%, transparent);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-field[data-has-error='true'] .onboarding-code-digit {
+  border-color: var(--ad-danger);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-digit:disabled {
+  background: var(--ad-surface-quiet);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: -10px;
+  color: var(--ad-ink-secondary);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-registration-boundary {
+  padding: 10px 12px;
+  border: 1px solid var(--ad-border-soft);
+  border-radius: 10px;
+  background: var(--ad-route-soft);
+  color: var(--ad-ink-secondary);
+  text-align: center;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-help button,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-debug button {
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ad-route);
+  cursor: pointer;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-help button:disabled {
+  color: var(--ad-ink-tertiary);
+  cursor: default;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-debug {
+  margin: 20px 0 0;
+  color: var(--ad-ink-tertiary);
+  font-size: 12px;
+  text-align: center;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invite-context {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -8px 0 24px;
+  padding: 11px 12px;
+  border: 1px solid var(--ad-border-soft);
+  border-radius: 7px;
+  background: var(--ad-surface-quiet);
+  color: var(--ad-ink-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invite-context > svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invite-context strong {
+  color: var(--ad-ink);
+  font-weight: 500;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-options > button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 13px;
+  padding: 18px 16px;
+  border: 1px solid var(--ad-border);
+  border-radius: 14px;
+  background: var(--ad-surface);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 150ms,
+    background 150ms;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-options > button:hover {
+  border-color: var(--ad-route);
+  background: var(--ad-surface-quiet);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-option-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--ad-surface-quiet);
+  color: var(--ad-ink-secondary);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-option-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.6;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-options strong,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-options small {
+  display: block;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-options strong {
+  margin-bottom: 4px;
+  color: var(--ad-ink);
+  font-size: 14px;
+  font-weight: 550;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-options small {
+  color: var(--ad-ink-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-options > button > svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--ad-ink-tertiary);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ad-border-soft);
+  font-size: 12px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-account > span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+  color: var(--ad-ink-secondary);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-account > span > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-account svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-account button {
+  flex-shrink: 0;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ad-ink-secondary);
+  cursor: pointer;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-account button:hover {
+  color: var(--ad-route);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invite-recovery {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invitation {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 24px;
+  padding: 18px;
+  border: 1px solid #e0ece3;
+  border-radius: 16px;
+  background: #f5f9f5;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invitation-logo {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border: 1px solid #e2ece4;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ad-route);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invitation-logo svg {
+  width: 23px;
+  height: 23px;
+  stroke-width: 1.65;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invitation-copy {
+  min-width: 0;
+  flex: 1;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invitation-copy > strong {
+  display: block;
+  color: var(--ad-ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invitation dl {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invitation dt {
+  color: var(--ad-ink-secondary);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invitation dd {
+  margin: 0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #e5f0e8;
+  color: #326b47;
+  font-weight: 500;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-invite-recovery {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-existing-teams {
+  margin-bottom: 20px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-existing-teams > button {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  background: transparent;
+  color: var(--ad-ink);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-existing-teams svg {
+  width: 16px;
+  height: 16px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-storage-notice {
+  margin: 16px 0 0;
+  color: var(--ad-ink-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-spinner {
+  animation: onboarding-spin 0.8s linear infinite;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace {
+  background: var(--ad-surface);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace .onboarding-topbar {
+  min-height: 72px;
+  border-bottom: 1px solid var(--ad-border-soft);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-brand {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 20px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-topbar-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--ad-border);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-team-trigger {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--ad-ink);
+  font-size: 14px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-team-trigger svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-team-trigger > span {
+  min-width: 0;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-main {
+  width: min(960px, 100%);
+  flex: 1;
+  margin: 0 auto;
+  padding: 64px 24px 32px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-main > header > p {
+  margin: 0 0 8px;
+  color: var(--ad-ink-secondary);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-main h1 {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 600;
+  outline: none;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-main > header > span {
+  color: var(--ad-ink-secondary);
+  font-size: 14px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-empty {
+  margin-top: 32px;
+  padding: 64px 24px;
+  border: 1px solid var(--ad-border-soft);
+  border-radius: 12px;
+  text-align: center;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-success-icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ad-fact-soft);
+  color: var(--ad-fact);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-empty h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 550;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-empty p {
+  margin: 0;
+  color: var(--ad-ink-secondary);
+  font-size: 14px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-empty .onboarding-completion-note {
+  margin: 20px 0 8px;
+  font-size: 12px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-empty > a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-empty > a svg {
+  width: 14px;
+  height: 14px;
+}
+@media (min-width: 821px) and (prefers-reduced-motion: no-preference) {
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-flow-particle {
+    animation: onboarding-particle-in 6.4s cubic-bezier(0.42, 0, 0.64, 1) var(--flow-delay) infinite;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-flow-bead {
+    animation: onboarding-bead-settle 6.4s ease-in-out var(--flow-delay) infinite;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-door-arrival {
+    animation: onboarding-door-receive 6.4s ease-out var(--flow-delay) infinite;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-door-ripple {
+    animation: onboarding-door-ripple 6.4s ease-out var(--flow-delay) infinite;
+  }
+}
+@media (min-width: 821px) and (max-height: 740px) {
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story {
+    padding-block: 32px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-art-scene {
+    width: min(100%, 390px);
+    margin-top: -16px;
+    margin-bottom: 4px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-main {
+    padding-block: 36px;
+  }
+}
+@media (max-width: 1000px) and (min-width: 821px) {
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story {
+    padding-inline: 24px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-main {
+    padding-inline: 24px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-card {
+    padding-inline: 28px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story h2 {
+    font-size: 20px;
+  }
+}
+@media (max-width: 820px) {
+  .onboarding-auth:where([data-auth-appearance='sand-auth']) {
+    display: block;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story {
+    display: none;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-main {
+    padding: 48px 24px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-flow {
+    width: min(100%, 420px);
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form-brand {
+    margin-bottom: 28px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-card {
+    padding: 36px 28px 30px;
+    border-radius: 22px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form [data-slot='input'] {
+    font-size: 16px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-auth-switch a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-account button,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-help button,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-debug button {
+    min-height: 44px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-forgot-link > a {
+    min-height: 44px;
+  }
+  .onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-back {
+    min-height: 44px;
+    margin-top: -12px;
+    margin-bottom: 12px;
+  }
+}
+@media (max-width: 600px) {
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-footer {
+    flex-wrap: wrap;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-preferences .language-switcher [data-slot='select-trigger'],
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-theme-toggle {
+    min-height: 44px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-theme-toggle {
+    width: 44px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-topbar {
+    min-height: 76px;
+    padding: 22px 24px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-main {
+    padding: 40px 20px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-heading h1 {
+    font-size: 26px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-heading p {
+    font-size: 13px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-card {
+    padding-inline: 24px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace .onboarding-brand > span:last-child,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace .onboarding-topbar-divider {
+    display: none;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace .onboarding-topbar {
+    gap: 8px;
+    padding-inline: 16px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-brand {
+    gap: 8px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-team-trigger {
+    max-width: 160px;
+    text-align: left;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace .onboarding-topbar > button {
+    padding-inline: 6px;
+    font-size: 12px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-main {
+    padding-top: 32px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-workspace-empty {
+    padding: 40px 16px;
+  }
+}
+@media (max-width: 360px) {
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-main {
+    padding-inline: 16px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-card {
+    padding-inline: 20px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-options > button {
+    gap: 10px;
+    padding-inline: 12px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-options small {
+    font-size: 11px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-option-icon {
+    width: 28px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-field {
+    gap: 5px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-code-help {
+    gap: 6px;
+    font-size: 11px;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-story h2 {
+    font-size: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-spinner {
+    animation: none;
+  }
+  .onboarding-page:where([data-auth-appearance='sand-auth']) * {
+    transition: none !important;
+  }
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-form-brand {
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-social {
+  margin-bottom: 20px;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-google {
+  width: 100%;
+  min-height: 48px;
+  gap: 12px;
+  border: 1px solid var(--ad-border);
+  border-radius: 24px;
+  background: var(--ad-surface);
+  color: var(--ad-ink);
+  font-size: 14px;
+  font-weight: 550;
+  box-shadow: none;
+}
+[data-theme='dark'] .onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-google {
+  color: var(--ad-ink) !important;
+}
+.onboarding-page:where([data-auth-appearance='sand-auth']) .onboarding-google:hover:not(:disabled) {
+  background: var(--ad-route-soft);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-google img {
+  flex-shrink: 0;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-social .onboarding-field-hint {
+  margin-top: 10px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 22px;
+  color: var(--ad-ink-secondary);
+  font-size: 12px;
+}
+[data-theme='dark'] :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-auth-divider {
+  color: var(--ad-ink-tertiary);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-auth-divider::before,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ad-border);
+}
+
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-registration-code {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-registration-code > input {
+  flex: 1;
+  min-width: 0;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-registration-code > button {
+  flex-shrink: 0;
+  min-height: 44px;
+  border-radius: 999px;
+}
+@media (max-width: 420px) {
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-registration-code {
+    flex-wrap: wrap;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-registration-code > input {
+    flex-basis: 100%;
+  }
+  :where(.onboarding-auth[data-auth-appearance='sand-auth']) .onboarding-registration-code > button {
+    width: 100%;
+  }
+}
+
+/* Local Google flow preview; no external authentication page is embedded. */
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview {
+  display: grid;
+  gap: 20px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-brand span {
+  color: var(--muted-foreground, #687286);
+  font-size: 12px;
+  border: 1px solid var(--border, #e3e6ed);
+  border-radius: 20px;
+  padding: 4px 10px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview p {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 14px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-description {
+  color: var(--muted-foreground, #687286);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-accounts {
+  display: grid;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-accounts > button,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+  text-align: left;
+  border-bottom: 1px solid var(--border, #e3e6ed);
+  background: transparent;
+  color: inherit;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-accounts > button {
+  cursor: pointer;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-accounts > button:hover {
+  background: var(--muted, #f5f6f9);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-accounts > button > span:nth-child(2) {
+  flex: 1;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview strong,
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview small {
+  display: block;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview small {
+  color: var(--muted-foreground, #687286);
+  margin-top: 3px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #e8f0fe;
+  color: #2458a6;
+  font-size: 17px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-permission {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-cancel {
+  justify-self: start;
+  margin: 0;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview-retry {
+  justify-self: center;
+  font-size: 12px;
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .google-preview button:focus-visible {
+  outline: 2px solid #4285f4;
+  outline-offset: 4px;
+}
+
+.onboarding-auth:where([data-auth-appearance='sand-auth']) {
+  --ad-button-focus: var(--ad-personal-focus, var(--ad-focus));
+  --ad-input-focus: var(--ad-border-strong);
+  --ad-input-keyboard-focus: var(--ad-ink-secondary);
+}
+
+/* A21: sand-v0.1.53 (fce89c89), opt-in public auth only. The shared CLI/invite shell is unchanged. */
+.onboarding-auth[data-auth-appearance='sand-auth'] {
+  --ad-focus: #278557;
+  --ad-button-primary-bg: var(--ad-route);
+  --ad-button-primary-hover-bg: var(--ad-route-hover);
+  --ad-button-primary-active-bg: var(--ad-route-active);
+  --ad-button-primary-ink: var(--ad-action-ink);
+  --ad-button-primary-hover-ink: var(--ad-action-ink);
+  --ad-button-primary-active-ink: var(--ad-action-ink);
+  --ad-button-focus: #5579e5;
+  --ad-button-focus-soft: #e4ebff;
+  --ad-input-focus: var(--ad-focus);
+  --ad-input-keyboard-focus: var(--ad-focus);
+  --ad-surface: #ffffff;
+  --ad-surface-subtle: #f3f6fc;
+  --ad-surface-quiet: #fafbfe;
+  --ad-border-strong: #c2cde0;
+  --ad-control-border-hover: #aebdd7;
+  --ad-control-disabled-bg: #f0f3f9;
+  --ad-control-disabled-ink: #97a3b7;
+  --ad-button-disabled-bg: var(--ad-control-disabled-bg);
+  --ad-button-disabled-ink: var(--ad-control-disabled-ink);
+  --ad-checkbox-border: #8795ac;
+  --ad-checkbox-fill: #eff3ff;
+  --ad-checkbox-fill-hover: #e4ecff;
+  --ad-checkbox-check: #4763c5;
+  --ad-auth-checkbox-selected-border: #a4b8f4;
+  /* These shadcn aliases were resolved at the released document root, not the green card. */
+  --background: #ffffff;
+  --foreground: #2e3a50;
+  --secondary-foreground: #53627a;
+  --muted: #f3f6fc;
+  --muted-foreground: #617089;
+  --border: #e0e6f0;
+  --ring: #5579e5;
+}
+[data-theme='dark'] .onboarding-auth[data-auth-appearance='sand-auth'] {
+  --ad-action-ink: #17233c;
+  --ad-focus: #6fca97;
+  --ad-button-focus: #a4bbff;
+  --ad-button-focus-soft: #304266;
+  --ad-canvas: #151b27;
+  --ad-surface: #1c2433;
+  --ad-surface-subtle: #263145;
+  --ad-surface-quiet: #202a3a;
+  --ad-border-strong: #4c5d77;
+  --ad-control-border-hover: #637ba8;
+  --ad-control-disabled-bg: #273145;
+  --ad-control-disabled-ink: #7c8ca7;
+  --ad-checkbox-border: #70819c;
+  --ad-checkbox-fill: #263759;
+  --ad-checkbox-fill-hover: #30436a;
+  --ad-checkbox-check: #b5c8ff;
+  --ad-auth-checkbox-selected-border: #536fa6;
+  --background: #151b27;
+  --foreground: #eaf0fa;
+  --secondary-foreground: #b2bfd4;
+  --muted: #263145;
+  --muted-foreground: #94a3bb;
+  --border: #334157;
+  --ring: #a4bbff;
+}
+
+.onboarding-auth[data-auth-appearance='sand-auth']
+  .onboarding-form
+  input[data-slot='input']:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ad-focus) 10%, transparent);
+}
+.onboarding-auth[data-auth-appearance='sand-auth']
+  .onboarding-consent
+  input[type='checkbox']:is(:checked, :indeterminate) {
+  border-color: var(--ad-auth-checkbox-selected-border);
+}
+.onboarding-auth[data-auth-appearance='sand-auth']
+  .onboarding-consent
+  input[type='checkbox']:hover:not(:disabled) {
+  border-color: var(--ad-route);
+}
+/* The language choices are portalled; carry only the opted-in consumer's released aliases. */
+.onboarding-sand-language {
+  --foreground: #2e3a50;
+  --popover: #ffffff;
+  --popover-foreground: #2e3a50;
+  --muted-foreground: #617089;
+  --accent: #eff3ff;
+  --accent-foreground: #4763c5;
+  --border: #e0e6f0;
+  --ring: #5579e5;
+}
+[data-theme='dark'] .onboarding-sand-language {
+  --foreground: #eaf0fa;
+  --popover: #1c2433;
+  --popover-foreground: #eaf0fa;
+  --muted-foreground: #94a3bb;
+  --accent: #263759;
+  --accent-foreground: #b5c8ff;
+  --border: #334157;
+  --ring: #a4bbff;
+}
+
+/* Adapt the Demo's existing wrappers without changing default consumers. */
+.onboarding-auth[data-auth-appearance='sand-auth'] .registration-consent-field > .onboarding-consent { flex-direction: row; }
+.onboarding-auth[data-auth-appearance='sand-auth'] .onboarding-preferences .language-switcher { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; min-height: 0; padding: 0; border: 0; border-radius: 0; cursor: initial; }
+
+/* The old top-right language control reserved mobile space; A21's footer needs none. */
+@media (max-width: 600px) {
+  .onboarding-auth[data-auth-appearance='sand-auth'] .onboarding-main { padding-top: 40px; }
+}
+
+/* RegistrationFlow's separate CSS dependency, from the same fixed source. */
+.onboarding-auth[data-auth-appearance='sand-auth'] .registration-consent-field .onboarding-consent input[type='checkbox'][aria-invalid='true'] {
+  border-color: var(--ad-danger);
+}
+:where(.onboarding-auth[data-auth-appearance='sand-auth']) .registration-consent-field > .onboarding-error {
+  margin: 8px 0 0;
+}
+
+/* The default Demo language trigger is a dropdown button; A21 wraps a Select instead. */
+.onboarding-auth[data-auth-appearance='sand-auth'] .onboarding-preferences .language-switcher:is(:hover, [data-popup-open]) {
+  background: transparent;
+}
