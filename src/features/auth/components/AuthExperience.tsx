@@ -1,12 +1,10 @@
-import { LanguageSwitcher } from "@/shared/ui/LanguageSwitcher";
+import { OnboardingShell } from "@/features/auth/components/OnboardingShell";
 import { GoogleAuthPreview } from "@/features/auth/components/GoogleAuthPreview";
 import googleIcon from "@lobehub/icons-static-svg/icons/google-color.svg";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { onboardingTranslator, localizeOnboardingMessage } from "@/features/auth/i18n/onboarding-messages";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { ArrowLeft, Building2, Check, CircleAlert, Eye, EyeOff, LoaderCircle, Mail } from "lucide-react";
-import { BrandLogo } from "@/shared/ui/BrandMark";
-import { TeamFlowIllustration } from "@/features/auth/components/TeamFlowIllustration";
 import { WorkspaceLoading } from "@/shared/ui/WorkspaceLoading";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -34,11 +32,6 @@ function initialState() {
   const invitation = getPreviewInvitation(state.inviteToken, loadPersonalCenterDirectory());
   if (!state.email && invitation?.email) state = { ...state, email: invitation.email };
   return simplifyOnboardingEntry(state);
-}
-function Brand() {
-  const { locale } = useI18n();
-  const t = onboardingTranslator(locale);
-  return <a aria-label={t("Taskdoor 首页")} className="onboarding-brand" href="/"><BrandLogo /></a>;
 }
 function Heading({ title, description }: { title: string; description: ReactNode }) {
   return <header className="onboarding-heading"><h1 tabIndex={-1}>{title}</h1><p>{description}</p></header>;
@@ -84,6 +77,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   const alreadyMember = Boolean(invitation && state.teams.some(team => team.id === invitation.team.id));
   const inviteProblem = !invitation ? t("这份邀请无法使用") : invitation.status === "expired" ? t("这份邀请已过期") : invitation.status === "revoked" ? t("这份邀请已撤销") : invitation.email && invitation.email !== state.email ? t("请使用受邀邮箱加入") : "";
   const registration = state.authMode === "register";
+  const releasedAppearance = !state.inviteToken && !googlePreview;
   const forgot = state.authMode === "forgot";
   const authScreen = ["email", "code", "google-password", "reset-password"].includes(state.step);
   const passwordUpdated = state.step === "email" && state.authMode === "login" && state.notice === passwordUpdatedNotice;
@@ -133,8 +127,8 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     return () => cancelAnimationFrame(frame);
   }, [state.step, state.authMode]);
   useEffect(() => {
-    if (state.error) surface.current?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
-  }, [state.error]);
+    if (state.error && !releasedAppearance) surface.current?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
+  }, [state.error, releasedAppearance]);
   useEffect(() => {
     if (state.step !== "code" && !state.registrationCode) return;
     setClock(Date.now());
@@ -163,7 +157,8 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
     setPrivacyError(true);
     requestAnimationFrame(() => {
       privacyCheckbox.current?.focus({ preventScroll: true });
-      privacyCheckbox.current?.closest(".onboarding-consent")?.scrollIntoView({ block: "nearest" });
+      const bounds = privacyCheckbox.current?.getBoundingClientRect();
+      if (bounds && (bounds.top < 0 || bounds.bottom > window.innerHeight)) privacyCheckbox.current?.scrollIntoView({ block: "center" });
     });
     return false;
   };
@@ -201,14 +196,16 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
   const invalid = (field: string) => ({ "aria-invalid": errorField === field || undefined, "aria-describedby": errorField === field ? "onboarding-error" : undefined });
   const error = localizeOnboardingMessage(locale, state.error || localError);
   const errorBlock = error ? <p className="onboarding-error" id="onboarding-error" role="alert"><CircleAlert aria-hidden="true" /><span>{error}</span></p> : null;
-  const privacyConsent = <div className="onboarding-consent">
-    <div className="onboarding-consent-row">
-      <input ref={privacyCheckbox} id="registration-privacy" type="checkbox" checked={privacyAccepted} disabled={Boolean(busy)} aria-labelledby="registration-privacy-label" aria-invalid={privacyError || undefined} aria-describedby={privacyError ? "registration-privacy-error" : undefined} onChange={event => {
-        setPrivacyAccepted(event.target.checked);
-        if (event.target.checked) setPrivacyError(false);
-      }} />
-      <span id="registration-privacy-label"><label htmlFor="registration-privacy">{t("我已阅读并同意")}</label>{" "}<a className="onboarding-link" href="https://sand.taskdoor.com/privacy.html" target="_blank" rel="noopener noreferrer">{t("隐私政策")}</a></span>
-    </div>
+  const privacyInput = <input ref={privacyCheckbox} id="registration-privacy" type="checkbox" checked={privacyAccepted} disabled={Boolean(busy)} aria-labelledby="registration-privacy-label" aria-invalid={privacyError || undefined} aria-describedby={privacyError ? "registration-privacy-error" : undefined} onChange={event => {
+    setPrivacyAccepted(event.target.checked);
+    if (event.target.checked) setPrivacyError(false);
+  }} />;
+  const privacyLink = <a className="onboarding-link" href="https://sand.taskdoor.com/privacy.html" target="_blank" rel="noopener noreferrer">{t("隐私政策")}</a>;
+  const privacyConsent = releasedAppearance ? <div className="registration-consent-field">
+    <label className="onboarding-consent">{privacyInput}<span id="registration-privacy-label">{t("我已阅读并同意")}{locale === "en" ? " " : ""}{privacyLink}</span></label>
+    {privacyError && <p className="onboarding-error" id="registration-privacy-error" role="alert"><CircleAlert aria-hidden="true" />{t("请先勾选同意《隐私政策》后继续。")}</p>}
+  </div> : <div className="onboarding-consent">
+    <div className="onboarding-consent-row">{privacyInput}<span id="registration-privacy-label"><label htmlFor="registration-privacy">{t("我已阅读并同意")}</label>{" "}{privacyLink}</span></div>
     {privacyError && <p className="onboarding-consent-error" id="registration-privacy-error" role="alert">{t("请先勾选同意《隐私政策》后继续。")}</p>}
   </div>;
   const submitButton = (label: string, incomplete = false) => (
@@ -217,7 +214,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
       type="submit"
       disabled={Boolean(busy) || incomplete}
     >
-      {busy ? <><LoaderCircle aria-hidden="true" className="onboarding-spinner" />{localizeOnboardingMessage(locale, busy)}</> : label}
+      {busy ? <><LoaderCircle aria-hidden="true" className="onboarding-spinner" />{releasedAppearance && busy === "正在登录…" && locale === "en" ? "Signing in…" : localizeOnboardingMessage(locale, busy)}</> : label}
     </Button>
   );
   const back = (action: OnboardingAction, label = t("返回")) => <button className="onboarding-back" disabled={Boolean(busy)} onClick={() => change(action)}><ArrowLeft aria-hidden="true" />{label}</button>;
@@ -231,22 +228,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
 
   if (state.step === "workspace") return <WorkspaceLoading teamName={activeTeam?.name} error={localizeOnboardingMessage(locale, localError)} notice={localizeOnboardingMessage(locale, state.notice)} onRetry={() => void enterWorkspace()} />;
 
-  return <div className="onboarding-page onboarding-auth onboarding-auth--standard" ref={surface}>
-    <div className="onboarding-language"><LanguageSwitcher /></div>
-    <aside className="onboarding-story" aria-labelledby="onboarding-story-title">
-      <div className="onboarding-story-inner">
-        <div className="onboarding-art-scene" aria-hidden="true">
-          <img className="onboarding-story-art" src="/images/onboarding-team-v1.png" alt="" width={1024} height={1024} fetchPriority="high" draggable={false} />
-          <span className="onboarding-avatar-backs" />
-          <img className="onboarding-story-art onboarding-story-art--avatars" src="/images/onboarding-team-v1.png" alt="" width={1024} height={1024} draggable={false} />
-          <TeamFlowIllustration />
-        </div>
-        <h2 id="onboarding-story-title">{t("和你的团队，还有你的 Agent，一起完成任务。")}</h2>
-      </div>
-    </aside>
-    <main className="onboarding-main"><div className="onboarding-flow">
-      <div className="onboarding-form-brand"><Brand /></div>
-      <section className="onboarding-card" data-step={state.step} aria-busy={Boolean(busy)}>
+  return <OnboardingShell appearance={releasedAppearance ? "sand-auth" : undefined} busy={Boolean(busy)} step={state.step} surfaceRef={surface} notice={storageNotice && <p className="onboarding-storage-notice" role="status">{localizeOnboardingMessage(locale, storageNotice)}</p>}>
         {googlePreview && <GoogleAuthPreview onCancel={() => {
           setGooglePreview(false);
           requestAnimationFrame(() => surface.current?.querySelector<HTMLElement>(".onboarding-google")?.focus());
@@ -317,8 +299,5 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
           {!inviteProblem && profileField}
           {(inviteProblem || errorField !== "name") && errorBlock}{inviteProblem ? <div className="onboarding-invite-recovery">{invitation?.email && invitation.email !== state.email && <Button className="onboarding-primary" onClick={switchAccount} variant="outline">{t("切换账号")}</Button>}</div> : <Button className="onboarding-primary" disabled={Boolean(busy)} onClick={() => void perform({ type: "accept-invite", profileName: name }, "正在加入…")}>{localizeOnboardingMessage(locale, busy) || (alreadyMember ? t("进入团队") : t("立即加入"))}</Button>}{account}
         </>}
-      </section>
-      {storageNotice && <p className="onboarding-storage-notice" role="status">{localizeOnboardingMessage(locale, storageNotice)}</p>}
-    </div></main>
-  </div>;
+  </OnboardingShell>;
 }

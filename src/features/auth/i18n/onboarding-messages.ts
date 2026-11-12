@@ -158,7 +158,16 @@ export const onboardingEn = {
   "{seconds} 秒后重新获取": "Resend in {seconds}s",
   "{name}，欢迎加入。先创建团队，和伙伴一起开始工作。": "Welcome, {name}. Create a team to start working together.",
   "加入「{team}」": "Join {team}",
-  "这份邀请发给了 {email}。": "This invitation was sent to {email}."
+  "这份邀请发给了 {email}。": "This invitation was sent to {email}.",
+  "填写团队名称": "Enter team name",
+  "法律信息": "Legal information",
+  "服务条款": "Terms of Service",
+  "告诉团队你是谁": "Tell your team who you are",
+  "欢迎使用 Taskdoor": "Welcome to Taskdoor",
+  "填写名字后，回到邀请继续加入。": "Add your name, then go back to the invitation to join.",
+  "正在完成设置…": "Finishing setup…",
+  "创建团队并开始": "Create team and start",
+  "设置未能完成，请重试。": "Setup could not be completed. Try again.",
 } as const;
 export type OnboardingMessageKey = keyof typeof onboardingEn;
 export const onboardingZh: Record<OnboardingMessageKey, string> = Object.fromEntries(Object.keys(onboardingEn).map(key => [key, key])) as Record<OnboardingMessageKey, string>;
