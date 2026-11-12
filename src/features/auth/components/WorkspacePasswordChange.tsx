@@ -134,7 +134,7 @@ function PasswordChangeForm({ initial }: { initial: OnboardingState }) {
             if (state.error) setState(transitionOnboarding(state, { type: "clear-error" }));
           }} />
         </div>
-        <div className="onboarding-code-help"><span>{t("输入任意 6 位数字即可")}</span><button disabled={countdown > 0} type="button" onClick={() => {
+        <div className="onboarding-code-help"><button disabled={countdown > 0} type="button" onClick={() => {
           const now = Date.now();
           setClock(now);
           setCode("");

@@ -88,7 +88,6 @@ export const onboardingEn = {
   "请输入以下邮箱对应的 6 位验证码：": "Enter the 6-digit verification code for:",
   "正在验证…": "Verifying…",
   "验证码": "Verification code",
-  "输入任意 6 位数字即可": "Enter any 6 digits in this preview",
   "重新获取": "Resend code",
   "验证并继续": "Verify and continue",
   "设置新密码": "Set a new password",
