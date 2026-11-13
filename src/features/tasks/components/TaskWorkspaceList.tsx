@@ -171,6 +171,8 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
   const previousQuickCreateRequest = useRef(quickCreateRequest);
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const canQuickCreate = Boolean(onQuickCreateTask);
+  const showQuickCreate = quickCreateOpen && listVisible;
+  const emptyWorkspace = projection.allTasks.length === 0;
   useLayoutEffect(() => setQuickCreateOpen(false), [currentUserId, teamId, listVisible, canQuickCreate]);
 
   const closeQuickCreate = () => {
@@ -281,15 +283,22 @@ export function TaskWorkspaceList({ projection, currentUserId, filters: sourceFi
           <button type="button" className="task-list-view-trigger" aria-label={locale === "en" ? "List view" : "列表视图"} title={locale === "en" ? "List view" : "列表视图"} aria-pressed={!hierarchyMode} onClick={() => changeFilters({ listView: "flat" })}><List aria-hidden="true" size={18} /></button>
         </div>
       </div>
-      {listVisible && onQuickCreateTask && <Button aria-controls={quickCreateId} aria-expanded={quickCreateOpen} aria-label={t('list.new')} className="task-workspace-new-task" onClick={openQuickCreate} ref={quickCreateTrigger} size={controlSize} title={t('list.new')} type="button">
+      {listVisible && canQuickCreate && <Button aria-controls={quickCreateId} aria-expanded={showQuickCreate} aria-label={t('list.new')} className="task-workspace-new-task" onClick={openQuickCreate} ref={quickCreateTrigger} size={controlSize} title={t('list.new')} type="button">
         <Plus aria-hidden="true" size={16} /><span>{t('list.new')}</span>
       </Button>}
     </div>
     </div>
     <span className="sr-only" role="status">{formatTaskCount(locale, projection.visibleTasks.length)}</span>
     <div className="task-workspace-list-scroll" id="task-workspace-results" ref={rowsRef}>
-      {onQuickCreateTask && <TaskQuickCreateRow key={JSON.stringify([teamId, currentUserId])} id={quickCreateId} inputRef={quickCreateInput} onClose={closeQuickCreate} onCreate={onQuickCreateTask} onDismiss={() => setQuickCreateOpen(false)} open={quickCreateOpen && listVisible} />}
-      {projection.visibleTasks.length > 0 ? hierarchyMode ? <TaskHierarchyList savedExpansion={hierarchyExpansion} setSavedExpansion={setHierarchyExpansion} ancestorsByTaskId={hierarchy.ancestorsByTaskId} filtered={Boolean(query.trim() || scope !== "all" || hasFilters)} label={locale === "en" ? "Task hierarchy" : "任务层级"} queryKey={hierarchyQueryKey} roots={hierarchy.roots} selectedTaskId={selectedTaskId} renderRow={(node, tree) => <MemoTaskWorkspaceRow subtaskCompletion={subtaskCompletion.get(node.task.id)} task={node.task} owner={members.find(member => member.id === node.task.ownerId)} series={progressComparisonsByTaskId?.[node.task.id]} currentUserId={currentUserId} showOwner={showOwner} selected={!showingWorkbench && node.matches && selectedTaskId === node.task.id} sort={filters.sort} now={now} actions={rowActions} tree={tree} />} /> : <ul aria-label={t('tasks.list')} className="task-workspace-rows">{projection.visibleTasks.map(renderTaskRow)}</ul> : <div className="task-workspace-list-empty" role="status"><strong>{!projection.allTasks.length ? t('list.empty') : t('list.noMatch')}</strong><p>{projection.allTasks.length ? t('list.searchHint') : t('list.startHint')}</p>{projection.allTasks.length ? <Button onClick={() => { onQueryChange(""); changeFilters(clearedTaskListConditions); }} size="sm" variant="outline">{t('list.viewAll')}</Button> : null}</div>}
+      {onQuickCreateTask && <TaskQuickCreateRow key={JSON.stringify([teamId, currentUserId])} id={quickCreateId} inputRef={quickCreateInput} onClose={closeQuickCreate} onCreate={onQuickCreateTask} onDismiss={() => setQuickCreateOpen(false)} open={showQuickCreate} />}
+      {projection.visibleTasks.length > 0 ? hierarchyMode ? <TaskHierarchyList savedExpansion={hierarchyExpansion} setSavedExpansion={setHierarchyExpansion} ancestorsByTaskId={hierarchy.ancestorsByTaskId} filtered={Boolean(query.trim() || scope !== "all" || hasFilters)} label={locale === "en" ? "Task hierarchy" : "任务层级"} queryKey={hierarchyQueryKey} roots={hierarchy.roots} selectedTaskId={selectedTaskId} renderRow={(node, tree) => <MemoTaskWorkspaceRow subtaskCompletion={subtaskCompletion.get(node.task.id)} task={node.task} owner={members.find(member => member.id === node.task.ownerId)} series={progressComparisonsByTaskId?.[node.task.id]} currentUserId={currentUserId} showOwner={showOwner} selected={!showingWorkbench && node.matches && selectedTaskId === node.task.id} sort={filters.sort} now={now} actions={rowActions} tree={tree} />} /> : <ul aria-label={t('tasks.list')} className="task-workspace-rows">{projection.visibleTasks.map(renderTaskRow)}</ul> :
+        !(emptyWorkspace && showQuickCreate) && <div className="task-workspace-list-empty" role="status">
+          <strong>{emptyWorkspace ? t('list.empty') : t('list.noMatch')}</strong>
+          <p>{emptyWorkspace ? t('list.startHint') : t('list.searchHint')}</p>
+          {emptyWorkspace ? listVisible && canQuickCreate && <Button aria-controls={quickCreateId} aria-expanded={false} aria-label={t('list.new')} onClick={openQuickCreate} size={controlSize} type="button" variant="outline">
+            <Plus aria-hidden="true" size={16} />{t('list.new')}
+          </Button> : <Button onClick={() => { onQueryChange(""); changeFilters(clearedTaskListConditions); }} size="sm" variant="outline">{t('list.viewAll')}</Button>}
+        </div>}
     </div>
     <FixedScrollThumb scrollRef={rowsRef} />
   </section>;
