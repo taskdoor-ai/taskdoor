@@ -6,6 +6,7 @@ import React, { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { I18nProvider } from "../src/shared/i18n/I18nProvider.tsx";
 import type { TaskNode } from "../src/shared/model/task-model.ts";
+import type { TaskWorkspaceListProps } from "../src/features/tasks/components/TaskWorkspaceList.tsx";
 import type { TaskListProjection } from "../src/features/tasks/lib/task-list-projection.ts";
 import { clearedTaskListConditions, type TaskListFilters } from "../src/features/tasks/components/task-list-filters.ts";
 
@@ -34,6 +35,7 @@ const baseProps = {
   onTaskStatusChange: () => undefined,
   onTaskSelect: () => undefined,
   onQueryChange: () => undefined,
+  onQuickCreateTask: undefined as TaskWorkspaceListProps["onQuickCreateTask"],
   onShowWorkbench: () => undefined,
   showingWorkbench: false,
   query: "",
@@ -48,6 +50,25 @@ async function renderList(patch: Partial<typeof baseProps> = {}, initialLocale: 
   const list = createElement(TaskWorkspaceList, { ...baseProps, ...patch });
   return renderToStaticMarkup(createElement(I18nProvider, { initialLocale, children: list }));
 }
+
+test("空工作区的新建按钮与工具栏共用列表输入行，筛选无结果时保留清除条件", async () => {
+  const emptyProjection = { ...projection, visibleTasks: [] };
+  const empty = { projection: { ...emptyProjection, allTasks: [] } };
+  const create = { onQuickCreateTask: async () => undefined };
+  const html = await renderList({ ...empty, ...create });
+  const emptyState = html.slice(html.indexOf('class="task-workspace-list-empty"'));
+  const toolbarTarget = html.match(/<button[^>]*aria-controls="([^"]+)"[^>]*class="[^"]*task-workspace-new-task/)?.[1];
+  const emptyTarget = emptyState.match(/<button[^>]*aria-controls="([^"]+)"/)?.[1];
+  assert.ok(toolbarTarget, "工具栏应指向列表输入行");
+  assert.equal(emptyTarget, toolbarTarget, "空状态按钮应指向同一个列表输入行");
+  assert.equal((html.match(/class="task-inline-create"/g) ?? []).length, 1);
+
+  const readOnly = await renderList(empty);
+  assert.doesNotMatch(readOnly, /aria-label="新建任务"|class="task-inline-create"/);
+  const filtered = await renderList({ ...create, projection: emptyProjection, query: "没有匹配" });
+  assert.match(filtered, /class="task-workspace-list-empty"[\s\S]*?查看全部任务/);
+  assert.equal((filtered.match(/aria-label="新建任务"/g) ?? []).length, 1);
+});
 
 test("截止日期均有日历图标且仅逾期用系统红色，无日期文案对齐图标", async () => {
   const items = [
