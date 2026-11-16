@@ -100,7 +100,7 @@ export function TaskSubtaskCreateForm({ id, inline = false, generating = false, 
     }
   };
 
-  if (inline) return <div hidden={!open}>
+  if (inline) return <div className="task-subtask-inline-create" hidden={!open}>
     <TaskInlineCreateForm error={error} id={id} inputLabel={copy("子任务需求", "Subtask request")} inputRef={titleRef} label={copy("新增子任务", "Add subtask")} onCancel={close} onChange={value => { setTitle(value); setError(""); }} onDismiss={open ? onDismiss : undefined} onSubmit={submit} saving={saving} value={title} />
   </div>;
 
