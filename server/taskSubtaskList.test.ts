@@ -12,6 +12,7 @@ import type { TaskNode } from "../src/shared/model/task-model.ts";
 import { getWorkspaceEffortLeaves } from "../src/features/tasks/lib/task-effort-editing.ts";
 import { toTaskRelationSummary } from "../src/features/tasks/lib/task-relation-projection.ts";
 import { PersonDirectoryProvider } from "../src/shared/ui/PersonDirectory.tsx";
+import { I18nProvider } from "../src/shared/i18n/I18nProvider.tsx";
 
 (globalThis as typeof globalThis & { React: typeof React }).React = React;
 
@@ -30,6 +31,24 @@ function elements(tree: ReactNode, match: (element: Element) => boolean): Elemen
   });
   return found;
 }
+
+test("已创建子任务复用任务行，按状态、标题、截止日期、负责人排列", () => {
+  const html = renderToStaticMarkup(createElement(I18nProvider, {
+    initialLocale: "zh-CN",
+    children: createElement(TaskSubtaskList, {
+      onOpenTask: () => undefined,
+      tasks: [{ ...tasks[0], plannedEndOn: "2000-11-09" }, { ...tasks[1], owner: "" }],
+    }),
+  }));
+  const rows = [...html.matchAll(/<summary[^>]*>[\s\S]*?<\/summary>/g)].map(([row]) => row);
+  assert.equal(rows.length, 2);
+  const [scheduled, unscheduled] = rows;
+  assert.match(scheduled, /task-list-row-status[^]*?task-workspace-row-title-text[^]*?脚本终审[^]*?task-list-row-deadline-icon[^]*?dateTime="2000-11-09"[^]*?task-list-row-owner-name[^]*?陈默/);
+  assert.match(scheduled, /<span(?=[^>]*class="task-list-row-deadline-icon")(?=[^>]*data-overdue="true")[^>]*>/);
+  assert.match(unscheduled, /task-list-row-deadline[^>]*>不设截止时间<[^]*?task-list-row-owner[^>]*data-unassigned="true"/);
+  assert.doesNotMatch(unscheduled, /task-list-row-deadline-icon/);
+  assert.doesNotMatch(scheduled, /task-status-badge|task-subtask-completion-badge/);
+});
 
 test("子任务列表显示状态、截止与真实进度来源，不展示前置依赖提醒", () => {
   const html = renderToStaticMarkup(createElement(TaskSubtaskList, { onOpenTask: () => undefined, tasks }));

@@ -174,10 +174,6 @@
 .task-ai-inline-notice > button { margin-left: auto; color: var(--ad-ink-tertiary); }
 .task-ai-prerequisites { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--ad-space-2); margin: var(--ad-space-3) 0 0; color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
 .task-ai-prerequisites > button { display: inline-flex; align-items: center; gap: var(--ad-space-1); max-width: 100%; padding: var(--ad-space-1) var(--ad-space-2); border-radius: var(--ad-radius-tag); background: var(--ad-surface-subtle); color: var(--ad-ink-secondary); cursor: pointer; text-align: left; overflow-wrap: anywhere; }
-.task-subtask-list-item { position: relative; display: flex; align-items: stretch; min-width: 0; }
-.task-subtask-list-item > .task-subtask-list-row { flex: 1; width: 100%; min-width: 0; }
-.task-subtask-list-item:not(:last-child) > .task-subtask-list-row { border-bottom: 1px solid var(--ad-border-soft); }
-.task-subtask-list-item:has(.task-subtask-ai-menu-trigger) > .task-subtask-list-row { padding-right: var(--ad-space-12); }
 .task-subtask-ai-menu-trigger { position: absolute; top: var(--ad-space-3); right: var(--ad-space-2); display: grid; place-items: center; width: var(--ad-control-height-sm); height: var(--ad-control-height-sm); border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-tertiary); cursor: pointer; }
 .task-subtask-ai-menu-trigger:hover, .task-subtask-ai-menu-trigger[aria-expanded="true"] { color: var(--ad-ink-secondary); background: var(--ad-surface-subtle); }
 .task-subtask-ai-menu-trigger:focus-visible, .task-ai-prerequisites > button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }

@@ -66,7 +66,7 @@ export function taskDeadlineDisplay(task: Pick<TaskNode, "plannedEndOn" | "dueAt
   return { label: formatLegacyDateLabel(value, locale, options), full: formatLegacyDateLabel(value, locale, { ...options, year: "always" }) };
 }
 
-export function taskDueLabel(task: TaskNode, now = new Date(), timeZone = LEGACY_TEAM_TIME_ZONE, locale = "zh-CN"): { label: string; overdue: boolean } | null {
+export function taskDueLabel(task: Pick<TaskNode, "status" | "plannedEndOn" | "dueAt">, now = new Date(), timeZone = LEGACY_TEAM_TIME_ZONE, locale = "zh-CN"): { label: string; overdue: boolean } | null {
   if (task.status === "已完成" || task.status === "已取消") return null;
   const value = task.plannedEndOn?.trim() || task.dueAt?.trim();
   if (value) {
