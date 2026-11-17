@@ -69,6 +69,26 @@ test("file sort uses natural display names without mutating source order", () =>
   assert.deepEqual(items.map(item => item.id), ["ten", "two", "folder"]);
 });
 
+
+test("size sort puts larger files first, unknown sizes last, folders first", () => {
+  const folder = { ...nodes[1], name: "Folder" };
+  const items = [
+    { ...nodes[2], id: "small", name: "small.txt", sizeBytes: 10 },
+    { ...nodes[2], id: "unknown", name: "unknown.txt" },
+    { ...nodes[2], id: "large", name: "large.txt", sizeBytes: 100 },
+    folder,
+  ];
+  assert.deepEqual(sortTaskFileNodes(items, "size").map(item => item.id), ["child", "large", "small", "unknown"]);
+});
+
+test("size sort falls back to localized display names on ties", () => {
+  const items = [
+    { ...nodes[2], id: "b", name: "b.txt", sizeBytes: 5 },
+    { ...nodes[2], id: "a", name: "a.txt", sizeBytes: 5 },
+  ];
+  assert.deepEqual(sortTaskFileNodes(items, "size").map(item => item.id), ["a", "b"]);
+});
+
 test("time sorts separate creation and update, normalize offsets and put unknown values last", () => {
   const items = [
     { ...nodes[2], id: "old-created", name: "B.txt", createdAt: "2026-10-01T00:00:00Z", updatedAt: "2026-11-17T12:00:00Z" },

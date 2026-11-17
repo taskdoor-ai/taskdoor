@@ -3,10 +3,12 @@
 .task-file-browser-actions {
   gap: 8px;
 }
-.task-file-sort-trigger {
-  width: var(--task-search-control-height);
-  height: var(--task-search-control-height);
-  color: var(--ad-ink-secondary);
+/* The sort trigger sits inside the switch: a hairline keeps it apart from the view choices. */
+.task-file-view-switch-divider {
+  width: 1px;
+  height: 16px;
+  margin: 0 1px;
+  background: var(--ad-border);
 }
 @media (max-width: 640px) {
   .task-file-browser-toolbar { grid-template-columns: minmax(0, 1fr); }
@@ -175,6 +177,14 @@
   padding: 4px 0 4px 8px;
   border-radius: 6px;
 }
+/* The uploader's avatar after the date; the column appears only where the uploader is known. */
+.task-file-folder-list .task-file-folder-open.has-author {
+  grid-template-columns: 36px minmax(0, 1fr) var(--task-file-size-column) var(--task-file-updated-column) 24px;
+}
+.task-file-folder-author {
+  display: grid;
+  place-items: center;
+}
 .task-file-folder-size,
 .task-file-folder-updated {
   overflow: hidden;
@@ -316,6 +326,9 @@
   .task-file-folder-list .task-file-folder-open {
     grid-template-columns: 36px minmax(0, 1fr) var(--task-file-size-column);
     padding-inline-start: 4px;
+  }
+  .task-file-folder-list .task-file-folder-open.has-author {
+    grid-template-columns: 36px minmax(0, 1fr) var(--task-file-size-column) 24px;
   }
   .task-file-folder-updated {
     display: none;

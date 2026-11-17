@@ -205,10 +205,27 @@ function createWorkspaceTaskDetailSource(task: TaskNode, includeUnsupported = fa
   }));
 }
 
+/** Mark commit-referenced files with their uploader so the list view can show an avatar. */
+function withCommitUploaders(detail: TaskDetailContent): TaskDetailContent {
+  const uploaders = new Map<string, string>();
+  for (const commit of detail.commits ?? [])
+    for (const name of commit.files ?? [])
+      if (!uploaders.has(name)) uploaders.set(name, commit.author);
+  if (!uploaders.size) return detail;
+  return {
+    ...detail,
+    files: detail.files.map(file =>
+      file.kind === "file" && !file.createdById && uploaders.has(file.name)
+        ? { ...file, createdById: uploaders.get(file.name) }
+        : file),
+  };
+}
+
 export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailContent {
   const detail = createWorkspaceTaskDetailSource(task);
-  return { ...detail, files: supportedTaskFileFixtures(detail.files).map(completeBuiltinFileMetadata) };
+  return withCommitUploaders({ ...detail, files: supportedTaskFileFixtures(detail.files).map(completeBuiltinFileMetadata) });
 }
+
 
 type ScenarioDetailSpec = {
   activityAuthor: string;
@@ -370,7 +387,7 @@ const legacyTaskDetailMocks: Record<TaskDetailId, TaskDetailContent> = {
 };
 
 export const taskDetailMocks = Object.fromEntries(Object.entries(legacyTaskDetailMocks).map(([id, detail]) => {
-  const source = { ...detail, files: supportedTaskFileFixtures(detail.files).map(completeBuiltinFileMetadata) };
+  const source = withCommitUploaders({ ...detail, files: supportedTaskFileFixtures(detail.files).map(completeBuiltinFileMetadata) });
   return [id, id === "fragrance-live" ? withNotificationDiscussionExamples(source) : source];
 })) as Record<TaskDetailId, TaskDetailContent>;
 
