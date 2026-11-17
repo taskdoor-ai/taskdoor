@@ -1,6 +1,6 @@
-export type NotificationPreferences = { onlyRelated: boolean };
+export type NotificationPreferences = { onlyRelated: boolean; email: boolean; browser: boolean };
 
-export const DEFAULT_NOTIFICATION_PREFERENCES: Readonly<NotificationPreferences> = { onlyRelated: true };
+export const DEFAULT_NOTIFICATION_PREFERENCES: Readonly<NotificationPreferences> = { onlyRelated: true, email: false, browser: false };
 export const NOTIFICATION_PREFERENCES_CHANGED_EVENT = "taskdoor-notification-preferences-changed";
 
 export function notificationPreferencesKey(userId: string): string {
@@ -18,7 +18,14 @@ export function readNotificationPreferences(
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Invalid notification preferences");
   const saved = value as Record<string, unknown>;
   if (saved.version !== 1 || typeof saved.onlyRelated !== "boolean") throw new Error("Invalid notification preferences");
-  return { onlyRelated: saved.onlyRelated };
+  for (const key of ["email", "browser"] as const) {
+    if (saved[key] !== undefined && typeof saved[key] !== "boolean") throw new Error("Invalid notification preferences");
+  }
+  return {
+    onlyRelated: saved.onlyRelated,
+    email: saved.email === true,
+    browser: saved.browser === true,
+  };
 }
 
 /** Persists first; only a successful save announces this account's change in the current window. */
@@ -27,8 +34,10 @@ export function saveNotificationPreferences(
   userId: string,
   preferences: NotificationPreferences,
 ): void {
-  if (typeof preferences.onlyRelated !== "boolean") throw new Error("Invalid notification preferences");
-  storage.setItem(notificationPreferencesKey(userId), JSON.stringify({ version: 1, onlyRelated: preferences.onlyRelated }));
+  for (const key of ["onlyRelated", "email", "browser"] as const) {
+    if (typeof preferences[key] !== "boolean") throw new Error("Invalid notification preferences");
+  }
+  storage.setItem(notificationPreferencesKey(userId), JSON.stringify({ version: 1, ...preferences }));
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(NOTIFICATION_PREFERENCES_CHANGED_EVENT, { detail: { userId } }));
   }

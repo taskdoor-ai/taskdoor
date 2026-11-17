@@ -66,16 +66,16 @@ function captureNotifications(props: Parameters<typeof GlobalNotifications>[0] =
 test("通知偏好默认仅相关，按账号隔离并能保存后重新读取", () => {
   const storage = memoryStorage();
   const initial = readNotificationPreferences(storage, "alice");
-  assert.deepEqual(initial, { onlyRelated: true });
+  assert.deepEqual(initial, { onlyRelated: true, email: false, browser: false });
   initial.onlyRelated = false;
-  assert.deepEqual(readNotificationPreferences(storage, "bob"), { onlyRelated: true }, "读取结果不能改写默认值");
-  saveNotificationPreferences(storage, "alice", { onlyRelated: false });
-  assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: false });
-  assert.deepEqual(readNotificationPreferences(storage, "bob"), { onlyRelated: true });
-  saveNotificationPreferences(storage, "bob", { onlyRelated: true });
-  saveNotificationPreferences(storage, "alice", { onlyRelated: true });
-  assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: true });
-  assert.deepEqual(readNotificationPreferences(storage, "bob"), { onlyRelated: true });
+  assert.deepEqual(readNotificationPreferences(storage, "bob"), { onlyRelated: true, email: false, browser: false }, "读取结果不能改写默认值");
+  saveNotificationPreferences(storage, "alice", { onlyRelated: false, email: true, browser: false });
+  assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: false, email: true, browser: false });
+  assert.deepEqual(readNotificationPreferences(storage, "bob"), { onlyRelated: true, email: false, browser: false });
+  saveNotificationPreferences(storage, "bob", { onlyRelated: true, email: false, browser: true });
+  saveNotificationPreferences(storage, "alice", { onlyRelated: true, email: true, browser: false });
+  assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: true, email: true, browser: false });
+  assert.deepEqual(readNotificationPreferences(storage, "bob"), { onlyRelated: true, email: false, browser: true });
   assert.notEqual(notificationPreferencesKey("member:a/b"), notificationPreferencesKey("member:a:b"));
 });
 
@@ -83,10 +83,12 @@ test("空账号、损坏配置和存储读取失败均显式失败，不伪装�
   const storage = memoryStorage();
   for (const userId of ["", "   "]) {
     assert.throws(() => readNotificationPreferences(storage, userId));
-    assert.throws(() => saveNotificationPreferences(storage, userId, { onlyRelated: false }));
+    assert.throws(() => saveNotificationPreferences(storage, userId, { onlyRelated: false, email: false, browser: false }));
   }
   assert.equal(storage.data.size, 0);
-  for (const raw of ["invalid-json", "null", "[]", "{}", '{"version":2,"onlyRelated":false}', '{"version":1,"onlyRelated":"false"}']) {
+  storage.setItem(notificationPreferencesKey("alice"), '{"version":1,"onlyRelated":false}');
+  assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: false, email: false, browser: false }, "早期版本没有邮件和浏览器字段时按关闭读取");
+  for (const raw of ["invalid-json", "null", "[]", "{}", '{"version":2,"onlyRelated":false}', '{"version":1,"onlyRelated":"false"}', '{"version":1,"onlyRelated":false,"email":"yes"}']) {
     storage.setItem(notificationPreferencesKey("alice"), raw);
     assert.throws(() => readNotificationPreferences(storage, "alice"), raw);
   }
@@ -99,13 +101,13 @@ test("保存失败不广播成功，成功保存后仅通知对应账号", () =>
     const changes: unknown[] = [];
     browser.addEventListener(NOTIFICATION_PREFERENCES_CHANGED_EVENT, event => changes.push((event as CustomEvent).detail));
     const refused = { setItem() { throw new Error("quota exceeded"); } };
-    assert.throws(() => saveNotificationPreferences(refused, "alice", { onlyRelated: false }), /quota exceeded/);
+    assert.throws(() => saveNotificationPreferences(refused, "alice", { onlyRelated: false, email: false, browser: false }), /quota exceeded/);
     assert.deepEqual(changes, []);
-    assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: true });
-    saveNotificationPreferences(storage, "alice", { onlyRelated: false });
+    assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: true, email: false, browser: false });
+    saveNotificationPreferences(storage, "alice", { onlyRelated: false, email: false, browser: false });
     assert.deepEqual(changes, [{ userId: "alice" }]);
-    assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: false });
-    assert.deepEqual(readNotificationPreferences(storage, "bob"), { onlyRelated: true });
+    assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: false, email: false, browser: false });
+    assert.deepEqual(readNotificationPreferences(storage, "bob"), { onlyRelated: true, email: false, browser: false });
   });
 });
 
@@ -184,7 +186,7 @@ test("徽标、列表与全部已读始终排除文件，带文件引用的@和�
     assert.deepEqual(parseNotificationReadState(storage.getItem(readKey)).readIds.sort(), ["direct-mention", "necessary-relation"]);
     assert.deepEqual(items, before, "全部已读通过状态存储处理，不能修改通知历史对象");
 
-    saveNotificationPreferences(storage, "alice", { onlyRelated: false });
+    saveNotificationPreferences(storage, "alice", { onlyRelated: false, email: false, browser: false });
     const all = captureNotifications(props);
     assert.deepEqual(all.nodes.filter(node => node.type === NotificationItem).map(node => node.props.item.id), [
       "direct-mention", "direct-reply", "other-team-activity", "necessary-relation",

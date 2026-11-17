@@ -66,12 +66,18 @@ test("紧凑设置保存失败保持原值，重新切换成功后恢复且按�
     }]);
     assert.equal(switchIn(nodes).props.checked, false);
     assert.equal(nodes.some(node => node.props.role === "alert"), false);
-    assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: false });
-    assert.deepEqual(readNotificationPreferences(storage, "bob"), { onlyRelated: true });
+    assert.deepEqual(readNotificationPreferences(storage, "alice"), { onlyRelated: false, email: false, browser: false });
+    assert.deepEqual(readNotificationPreferences(storage, "bob"), { onlyRelated: true, email: false, browser: false });
     assert.ok(nodes.some(node => node.props.className === "notification-settings-panel"));
     assert.ok(nodes.some(node => node.props.className === "notification-settings-title" && node.props.children === "通知设置"));
-    assert.ok(nodes.some(node => typeof node.props.children === "string" && node.props.children.includes("其他动态可在活动记录中查看")));
-    assert.equal(nodes.some(node => typeof node.props.children === "string" && node.props.children.includes("仅控制站内通知")), false);
+    assert.equal(nodes.filter(node => node.props.role === "switch").length, 3);
+    for (const label of ["只接收与我相关的通知", "同时发送邮件通知", "浏览器通知"]) {
+      assert.ok(nodes.some(node => node.props.children === label), `缺少设置项 ${label}`);
+    }
+    for (const detail of ["站内及邮件只收直接相关通知，其他动态见活动。", "仅 @你和回复的邮件；站内、登录和邀请不受影响。", "页面保持打开时，接收浏览器提醒。"]) {
+      assert.ok(nodes.some(node => node.props.className === "notification-settings-description" && node.props.children === detail), `缺少说明 ${detail}`);
+    }
+    assert.equal(nodes.some(node => typeof node.props.children === "string" && node.props.children.includes("其他动态可在活动记录中查看")), false);
   });
 });
 
@@ -88,8 +94,10 @@ test("紧凑设置读取失败不展示伪开关，重试能恢复已存配置�
     assert.equal(switchIn(nodes).props.checked, false);
     assert.equal(nodes.some(node => node.props.role === "alert"), false);
     assert.ok(nodes.some(node => node.props.className === "notification-settings-title" && node.props.children === "Notification settings"));
-    assert.ok(nodes.some(node => typeof node.props.children === "string" && node.props.children.includes("View other updates in the activity log")));
-    assert.equal(nodes.some(node => typeof node.props.children === "string" && node.props.children.includes("Email rules stay the same")), false);
+    assert.equal(nodes.filter(node => node.props.role === "switch").length, 3);
+    assert.ok(nodes.some(node => node.props.children === "Browser notifications"));
+    assert.ok(nodes.some(node => typeof node.props.children === "string" && node.props.children.includes("other updates stay in Activity")));
+    assert.equal(nodes.some(node => typeof node.props.children === "string" && node.props.children.includes("View other updates in the activity log")), false);
   });
 });
 

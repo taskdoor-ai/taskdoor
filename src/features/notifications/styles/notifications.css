@@ -38,14 +38,17 @@
 .notification-filter-trigger:focus-visible, .notification-mark-read:focus-visible, .notification-settings-trigger:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
 .notification-filter-trigger svg, .notification-mark-read svg, .notification-settings-trigger svg { width: 18px; height: 18px; }
 .notification-filter-positioner { z-index: 2; }
-.notification-settings-popover { width: min(344px, calc(100vw - 24px), var(--available-width)); max-height: var(--available-height); padding: 0; overflow-y: auto; overscroll-behavior: contain; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--ad-surface); box-shadow: var(--ad-shadow-dialog); }
-.notification-settings-panel { min-width: 0; padding: var(--ad-space-4); overflow-wrap: anywhere; }
-.notification-settings-title { margin: 0 0 var(--ad-space-2); color: var(--ad-ink); font-size: var(--ad-text-body-sm); font-weight: 600; }
-.notification-settings-fields { display: grid; min-width: 0; gap: var(--ad-space-3); }
-.notification-settings-switch { display: flex; min-width: 0; min-height: var(--ad-control-touch-min); align-items: center; justify-content: space-between; gap: var(--ad-space-3); color: var(--ad-ink); font-size: var(--ad-text-body-sm); font-weight: 500; line-height: 1.5; cursor: pointer; }
-.notification-settings-switch > span:first-child { min-width: 0; }
-.notification-settings-fields p { margin: 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.6; }
-.notification-settings-fields .notification-settings-error { color: var(--ad-danger); }
+.notification-settings-popover { width: min(320px, calc(100vw - 24px), var(--available-width)); max-height: var(--available-height); padding: 0; overflow-y: auto; overscroll-behavior: contain; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--ad-surface); box-shadow: var(--ad-shadow-dialog); }
+.notification-settings-panel { min-width: 0; padding: 16px; overflow-wrap: anywhere; font-size: var(--ad-text-body-sm); }
+.notification-settings-title { margin: 0 0 12px; color: var(--ad-ink); font-size: var(--ad-text-body-sm); font-weight: 500; }
+.notification-settings-panel p { margin: 8px 0 0; color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.5; }
+.notification-settings-email, .notification-settings-browser { margin-top: 16px; }
+.notification-settings-option { display: flex; min-width: 0; min-height: var(--ad-control-touch-min); align-items: center; gap: 12px; cursor: pointer; }
+.notification-settings-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 4px; font-weight: 400; }
+.notification-settings-description { color: var(--ad-ink-secondary); font-size: var(--ad-text-caption); line-height: 1.5; }
+.notification-settings-option input[aria-disabled="true"] + [data-slot="switch-track"] { opacity: .5; }
+.notification-settings-panel .notification-settings-error { color: var(--ad-danger); }
+.notification-settings-retry { min-height: var(--ad-control-touch-min); margin-top: 8px; padding: 4px 12px; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-control); background: var(--ad-surface-quiet); color: var(--ad-ink); font: inherit; cursor: pointer; }
 .notification-filter-panel { display: grid; grid-template-columns: minmax(124px, .75fr) minmax(0, 1.25fr); width: min(360px, calc(100vw - 24px), var(--available-width)); height: min(320px, var(--available-height)); padding: 0; overflow: hidden; border: 1px solid var(--ad-border); border-radius: var(--ad-radius-card); background: var(--ad-surface); box-shadow: var(--ad-shadow-dialog); }
 .notification-filter-categories { min-width: 0; overflow-y: auto; padding: var(--ad-space-2); border-right: 1px solid var(--ad-border-soft); }
 .notification-filter-category { display: flex; width: 100%; min-height: var(--ad-control-touch-min); align-items: center; gap: var(--ad-space-2); padding: var(--ad-space-2); border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-secondary); font: inherit; font-size: var(--ad-text-body-sm); text-align: left; cursor: pointer; }
