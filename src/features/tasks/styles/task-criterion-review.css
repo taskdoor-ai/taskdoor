@@ -42,7 +42,7 @@
 @media (hover:none),(max-width:760px) {
   .criterion-review-list .task-criteria-field-row { grid-template-columns:44px minmax(0,1fr) auto !important; }
   .criterion-review-list .criterion-row-actions { grid-column:auto; }
-  .criterion-orbit { width:44px; height:44px; }
+  .criterion-orbit { width:44px; height:44px; flex-basis:44px; }
   .criterion-orbit > svg { inset:8px; }
   .criterion-evidence-actions .criterion-confirm { min-height:44px; }
   .criterion-orbit-tip { display:none; }

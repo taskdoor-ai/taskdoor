@@ -386,3 +386,27 @@
   .task-workspace .task-workspace-detail-content > .task-detail-view.task-detail-split { --task-detail-content-inset: 16px; }
 }
 .task-workspace .task-workspace-detail-content > .task-detail-view.task-detail-split[hidden] { display: none; }
+
+/* The deadline label and its date use one text line box inside the centred control. */
+.task-detail-primary-properties .task-due-date-picker > .task-due-date-label,
+.task-detail-primary-properties .task-due-date-field > .task-date-segments { line-height: 16px; }
+.task-detail-primary-properties .task-due-date-field > .task-date-segments { align-items: center; }
+
+/* Keep the touch target while anchoring every criterion to its first text line. */
+.task-detail-split .task-detail-completion { --criterion-hit-size: 28px; }
+@media (max-width: 760px), (hover: none) {
+  .task-detail-split .task-detail-completion { --criterion-hit-size: 44px; }
+}
+.task-detail-split .task-detail-completion .task-criteria-field-input[data-slot="textarea"] {
+  min-height: var(--criterion-hit-size);
+  font-size: 14px;
+  padding-block: calc((var(--criterion-hit-size) - 1lh) / 2 - 1px);
+}
+.task-detail-split .task-detail-completion .criterion-readonly-list > li > span:last-child {
+  align-self: start;
+  font-size: 14px;
+  line-height: 1.8;
+  padding-block: calc((var(--criterion-hit-size) - 1lh) / 2);
+}
+.task-detail-split .task-detail-completion .criterion-height-preview,
+.task-detail-split .task-detail-completion .criterion-height-preview > li { font-size: 14px; line-height: 1.8; }
