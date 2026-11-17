@@ -52,7 +52,7 @@ import { useAnnotationFullscreenContainer } from "@/features/tasks/files/lib/use
 import "@/features/tasks/styles/task-file-annotations.css";
 import "@/features/tasks/styles/task-file-preview-stage.css";
 
-export function TaskFileExplorer({ files: initialFiles, discussionFiles, focusedFileId, focusedVersion, focusedSequence, focusedTrigger, preserveFocusedDirectory = false, transientPreviewFile, onPreviewClose, onFilesChange, onNodesChange, onSaved, onAnnotationExitControllerChange, taskId, taskTitle = taskId, taskGoal, currentUser, currentUserId, deletionAccess, onStartDiscussion, browserMode = false }: {
+export function TaskFileExplorer({ files: initialFiles, discussionFiles, focusedFileId, focusedVersion, focusedSequence, focusedTrigger, preserveFocusedDirectory = false, transientPreviewFile, onPreviewClose, onFilesChange, onNodesChange, onSaved, onAnnotationExitControllerChange, taskId, teamId = "demo", taskTitle = taskId, taskGoal, currentUser, currentUserId, deletionAccess, onStartDiscussion, browserMode = false }: {
   files: TaskFileNode[]; focusedFileId?: string | null; focusedVersion?: number; focusedSequence?: number; taskId: string; currentUser: string;
   discussionFiles?: TaskFileNode[];
   focusedTrigger?: HTMLElement | null; preserveFocusedDirectory?: boolean;
@@ -65,6 +65,7 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
   onFilesChange?: (snapshot: TaskDiagnosisFileSnapshot) => void;
   onSelectText?: (file: TaskFileNode, selection?: TaskFileTextSelection) => void;
   currentUserId?: string;
+  teamId?: string;
   deletionAccess?: Omit<TaskFileDeletionAccess, "actorId">;
   onStartDiscussion?: (draft: DiscussionDraft, onPublished: (published: DiscussionDraft) => void) => void;
 }) {
@@ -601,7 +602,7 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
     if (event.key === "Escape") setSelection(null);
   }}>
     {browserMode ? <>
-      <TaskFileBrowser taskId={taskId} canDelete={canDelete} files={files} displayName={mock.text} directoryId={browserDirectoryId} onDirectoryChange={setBrowserDirectoryId} expandedIds={expandedIds} onExpandedChange={setExpandedIds} onOpen={(id, trigger) => { previewTrigger.current = trigger; selectNode(id); }} onAction={openAction} onCreateFolder={() => setDialog({ type: "create", parentId: browserDirectoryId })} onUpload={openUpload} uploading={uploading} error={error || loaded.error} />
+      <TaskFileBrowser taskId={taskId} preferenceScope={JSON.stringify([teamId, actorId])} canDelete={canDelete} files={files} displayName={mock.text} directoryId={browserDirectoryId} onDirectoryChange={setBrowserDirectoryId} expandedIds={expandedIds} onExpandedChange={setExpandedIds} onOpen={(id, trigger) => { previewTrigger.current = trigger; selectNode(id); }} onAction={openAction} onCreateFolder={() => setDialog({ type: "create", parentId: browserDirectoryId })} onUpload={openUpload} uploading={uploading} error={error || loaded.error} />
       <input accept={TASK_FILE_UPLOAD_ACCEPT} aria-label={ui("选择上传文件")} hidden multiple onChange={event => void uploadFiles(Array.from(event.target.files ?? []), uploadParentId)} ref={uploadInput} type="file" />
       {uploading && <div className="flex items-center gap-3 p-4" role="status"><Spinner /><span>{ui("正在上传 {0}/{1} 个文件", {0: uploadProgress.completed, 1: uploadProgress.total})}</span><Progress aria-label={ui("上传进度")} max={uploadProgress.total} value={uploadProgress.completed} /></div>}
     </> : <aside aria-label={ui("任务文件")} aria-hidden={sidebar.collapsed || undefined} inert={sidebar.collapsed} className="task-file-explorer-sidebar" id={sidebar.sidebarId} ref={sidebar.sidebarRef}>

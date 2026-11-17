@@ -1,4 +1,5 @@
 import type { TaskFileNode } from "@/shared/model/task-model.ts";
+import { taskFileTimestamp } from "@/features/tasks/files/lib/task-file-time";
 
 export type TaskFilePreviewKind = "markdown" | "text" | "json" | "xml" | "html" | "table" | "pdf" | "presentation" | "image" | "audio" | "video" | "document" | "unknown";
 export type FolderDeletePolicy = "move-contents" | "archive";
@@ -45,8 +46,21 @@ export function getDefaultFileIcon(name: string): string {
   return "File";
 }
 
-export function sortTaskFileNodes(nodes: TaskFileNode[]): TaskFileNode[] {
-  return [...nodes].sort((a, b) => a.kind === b.kind ? a.name.localeCompare(b.name, "zh-CN") : a.kind === "folder" ? -1 : 1);
+export type TaskFileSort = "name" | "updated" | "created";
+
+export function sortTaskFileNodes(nodes: TaskFileNode[], sort: TaskFileSort = "name", locale = "zh-CN", displayName: (name: string) => string = name => name): TaskFileNode[] {
+  const collator = new Intl.Collator(locale, { numeric: true, sensitivity: "base" });
+  return [...nodes].sort((a, b) => {
+    if (a.kind !== b.kind) return a.kind === "folder" ? -1 : 1;
+    if (sort !== "name") {
+      const field = sort === "created" ? "createdAt" : "updatedAt";
+      const left = taskFileTimestamp(a[field]), right = taskFileTimestamp(b[field]);
+      if (left === null && right !== null) return 1;
+      if (right === null && left !== null) return -1;
+      if (left !== null && right !== null && left !== right) return right - left;
+    }
+    return collator.compare(displayName(a.name), displayName(b.name));
+  });
 }
 
 /** Search includes the ancestors needed to show where a matching item lives. */
@@ -73,7 +87,8 @@ function checkedName(nodes: TaskFileNode[], parentId: string | null, name: strin
 
 export function createFolder(nodes: TaskFileNode[], parentId: string | null, name: string, createdById?: string) {
   if (parentId && !nodes.some((node) => node.id === parentId && node.kind === "folder")) throw new Error("目标文件夹不存在");
-  const folder: TaskFileNode = { id: `folder-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, kind: "folder", name: checkedName(nodes, parentId, name), parentId, updatedAt: "刚刚" };
+  const createdAt = new Date().toISOString();
+  const folder: TaskFileNode = { id: `folder-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, kind: "folder", name: checkedName(nodes, parentId, name), parentId, createdAt, updatedAt: createdAt };
   if (createdById) folder.createdById = createdById;
   return { folder, nodes: [...nodes, folder] };
 }
@@ -82,7 +97,9 @@ export function renameNode(nodes: TaskFileNode[], nodeId: string, name: string):
   const node = nodes.find((item) => item.id === nodeId);
   if (!node) throw new Error("文件项目不存在");
   const nextName = checkedName(nodes, node.parentId, name, nodeId);
-  return nodes.map((item) => item.id === nodeId ? { ...item, name: nextName, updatedAt: "刚刚" } : item);
+  if (nextName === node.name) return nodes;
+  const updatedAt = new Date().toISOString();
+  return nodes.map((item) => item.id === nodeId ? { ...item, name: nextName, updatedAt } : item);
 }
 
 export function getDescendantIds(nodes: TaskFileNode[], nodeId: string): string[] {
@@ -96,7 +113,9 @@ export function moveNode(nodes: TaskFileNode[], nodeId: string, parentId: string
   if (parentId && !nodes.some((item) => item.id === parentId && item.kind === "folder")) throw new Error("目标文件夹不存在");
   if (nodeId === parentId || getDescendantIds(nodes, nodeId).includes(parentId ?? "")) throw new Error("文件夹不能移动到自身或后代");
   checkedName(nodes, parentId, node.name, nodeId);
-  return nodes.map((item) => item.id === nodeId ? { ...item, parentId, updatedAt: "刚刚" } : item);
+  if (node.parentId === parentId) return nodes;
+  const updatedAt = new Date().toISOString();
+  return nodes.map((item) => item.id === nodeId ? { ...item, parentId, updatedAt } : item);
 }
 
 export function deleteFolder(nodes: TaskFileNode[], folderId: string, policy: FolderDeletePolicy): TaskFileNode[] {

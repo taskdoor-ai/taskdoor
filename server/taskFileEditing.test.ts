@@ -16,6 +16,18 @@ const revisionDiff = await import("../src/features/tasks/files/lib/task-file-rev
 function comparisonApi() { assert.ok(revisionDiff, "文件版本比较模块尚未实现"); return revisionDiff; }
 
 const now = "2026-08-31T05:30:00.000Z";
+
+test("reloading a saved version preserves newer rename timestamps and the original creation time", () => {
+  const original: TaskFileNode = { id: "sort-file", kind: "file", name: "notes.txt", parentId: null, content: "before", version: 1, createdAt: "2026-08-01T00:00:00Z", updatedAt: "2026-08-01T00:00:00Z" };
+  const record = api().createTaskFileRevision(original, { kind: "text", text: "after" }, "me", now)!;
+  const saved = api().applyTaskFileEdit(original, record);
+  const renamed = { ...saved, name: "renamed.txt", updatedAt: "2026-09-01T00:00:00Z" };
+  const loaded = api().applyTaskFileEdit(renamed, record);
+  assert.equal(loaded.updatedAt, renamed.updatedAt);
+  assert.equal(loaded.createdAt, original.createdAt);
+  assert.equal(api().getTaskFileLastUpdate(loaded, record.revisions).updatedAt, renamed.updatedAt);
+  assert.equal(api().getTaskFileLastUpdate(loaded, record.revisions).author, null, "rename must not attribute itself to the content editor");
+});
 const textFile: TaskFileNode = { id: "notes", kind: "file", name: "说明.md", parentId: null, updatedAt: "昨天", version: 4, content: "第一行\n第二行\n第三行" };
 class MemoryStorage {
   values = new Map<string, string>();

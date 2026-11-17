@@ -1,5 +1,13 @@
 # PRD 来源映射
 
+## PRD-0416 层级与列表的文件信息（2026-11-18）
+
+用户确认层级及列表在文件名称右侧对齐显示大小和最近更新时间，窄屏保留大小、隐藏时间。呈现入口为[层级视图](../../src/features/tasks/files/components/TaskFileTree.tsx)、[列表视图](../../src/features/tasks/files/components/TaskFileFolderView.tsx)、[文件区样式](../../src/features/tasks/styles/task-file-browser.css)及[列表样式](../../src/features/tasks/styles/task-file-views.css)。完整规则归[文件浏览](modules/11-files-local-commits.md#31-文件浏览整理与上传)。
+
+## PRD-0415 文件排序（2026-11-17）
+
+来源为 Phil Ren 在任务 `300a2c1f-c75b-4e4f-b1a1-80aa2cf548c7` 的讨论 `c6755926-a977-40b0-8c77-1e00d98d00bf`。用户确认本地实现及后续发布范围，同步图标排序入口、三种视图、两列信息及展开箭头样式。[文件区工具栏](../../src/features/tasks/files/components/TaskFileBrowser.tsx)与[共享排序](../../src/features/tasks/files/lib/task-file-tree.ts)提供统一规则。[时间校验](../../src/features/tasks/files/lib/task-file-time.ts)、[上传](../../src/features/tasks/files/lib/discussion-uploads.ts)与[编辑投影](../../src/features/tasks/files/lib/task-file-editing.ts)提供时间依据。[目录箭头样式](../../src/features/tasks/styles/task-file-list.css)保留开合的视觉反馈。
+
 ## PRD-0405 团队标签管理入口与回焦（2026-11-11）
 
 团队标签的共享、维护权限和删除规则沿 [正式 Issue #94](https://github.com/nocoly/taskdoor/issues/94)。全员可见的设置入口、任务详情直达及固定添加入口见 [#94 确认评论](https://github.com/nocoly/taskdoor/issues/94#issuecomment-6797283544)。本批补齐列表筛选直达、关闭回焦和管理列表样式。[管理入口与回焦](../../src/app/App.tsx) · [标签管理样式](../../src/features/me/styles/tag-management.css)

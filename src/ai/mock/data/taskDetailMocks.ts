@@ -15,7 +15,7 @@ import { getSerumLaunchDiscussionActivities, getSerumLaunchDiscussionFiles } fro
 import { getSerumLaunchMediaDiscussionActivities, getSerumLaunchMediaDiscussionFiles } from "@/ai/mock/data/serumLaunchMediaDiscussionSamples";
 import { isNotificationReadTestMode, notificationReadTestActivitiesByTask } from "@/ai/mock/data/notificationReadScenario";
 import { withNotificationDiscussionExamples } from "@/ai/mock/data/notificationDiscussionExamples";
-import { supportedTaskFileFixtures } from "@/ai/mock/lib/taskFilePreviewFixtures";
+import { completeBuiltinFileMetadata, supportedTaskFileFixtures } from "@/ai/mock/lib/taskFilePreviewFixtures";
 export { migrateUnsupportedBuiltinTaskFiles } from "@/ai/mock/lib/taskFilePreviewFixtureMigration";
 
 const inferFileFormat = (name: string) => name.split(".").pop()?.toUpperCase() ?? "FILE";
@@ -207,7 +207,7 @@ function createWorkspaceTaskDetailSource(task: TaskNode, includeUnsupported = fa
 
 export function createWorkspaceTaskDetail(task: TaskNode): TaskDetailContent {
   const detail = createWorkspaceTaskDetailSource(task);
-  return { ...detail, files: supportedTaskFileFixtures(detail.files) };
+  return { ...detail, files: supportedTaskFileFixtures(detail.files).map(completeBuiltinFileMetadata) };
 }
 
 type ScenarioDetailSpec = {
@@ -370,7 +370,7 @@ const legacyTaskDetailMocks: Record<TaskDetailId, TaskDetailContent> = {
 };
 
 export const taskDetailMocks = Object.fromEntries(Object.entries(legacyTaskDetailMocks).map(([id, detail]) => {
-  const source = { ...detail, files: supportedTaskFileFixtures(detail.files) };
+  const source = { ...detail, files: supportedTaskFileFixtures(detail.files).map(completeBuiltinFileMetadata) };
   return [id, id === "fragrance-live" ? withNotificationDiscussionExamples(source) : source];
 })) as Record<TaskDetailId, TaskDetailContent>;
 

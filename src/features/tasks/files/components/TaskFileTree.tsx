@@ -1,5 +1,8 @@
 import { formatFileSize } from "@/shared/lib/file-size";
+import { formatDisplayDateTime } from "@/shared/lib/date-time";
+import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
+import { useI18n } from "@/shared/i18n/I18nProvider";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useMockText } from "@/ai/mock/i18n/MockDataProvider";
 import { ChevronDown, ChevronRight, MoreHorizontal, Pencil, Bookmark, Trash2, MoveRight } from "lucide-react";
@@ -7,7 +10,7 @@ import { useFileFavorite } from "@/features/tasks/files/lib/useFileFavorite";
 import React from "react";
 import { Button as AriaButton, Tree, TreeItem, TreeItemContent } from "react-aria-components";
 import type { TaskFileNode } from "@/shared/model/task-model";
-import { sortTaskFileNodes, type FolderDeletePolicy } from "@/features/tasks/files/lib/task-file-tree";
+import { sortTaskFileNodes, type FolderDeletePolicy, type TaskFileSort } from "@/features/tasks/files/lib/task-file-tree";
 import { getTaskFileNodeIcon } from "@/features/tasks/files/lib/task-file-icons";
 import { TaskFileGlyph } from "@/features/tasks/files/components/TaskFileGlyph";
 import { TaskFileThumbnail } from "@/features/tasks/files/components/TaskFileThumbnail";
@@ -24,8 +27,8 @@ export function TaskFileNodeIcon({ node, expanded = false }: { node: TaskFileNod
 }
 
 export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex, canDelete = false, taskId = "" }: {
-  node: TaskFileNode;
   taskId?: string;
+  node: TaskFileNode;
   onAction: (action: TaskFileAction) => void;
   className?: string;
   tabIndex?: number;
@@ -58,7 +61,7 @@ export function TaskFileNodeMenu({ node, onAction, className = "", tabIndex, can
   </DropdownMenu>;
 }
 
-export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, onSelect, selectedId, browser = false, displayName: formatName, allNodes = nodes, canDelete, taskId }: {
+export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, onSelect, selectedId, browser = false, displayName: formatName, allNodes = nodes, canDelete, taskId, sort = "name" }: {
   taskId?: string;
   expandedIds: Set<string>;
   nodes: TaskFileNode[];
@@ -70,13 +73,16 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
   displayName?: (name: string) => string;
   allNodes?: TaskFileNode[];
   canDelete?: (nodeId: string, policy?: FolderDeletePolicy) => boolean;
+  sort?: TaskFileSort;
 }) {
   const ui = useGlobalUi();
+  const { locale } = useI18n();
+  const timeZone = useTeamTimeZone();
   const mock = useMockText();
   const itemRefs = React.useRef(new Map<string, HTMLDivElement>());
   const visible = nodes.filter((node) => !node.archived);
   const childrenByParent = new Map<string | null, TaskFileNode[]>();
-  for (const node of sortTaskFileNodes(visible)) {
+  for (const node of sortTaskFileNodes(visible, sort, locale, formatName ?? mock.text)) {
     const siblings = childrenByParent.get(node.parentId) ?? [];
     siblings.push(node);
     childrenByParent.set(node.parentId, siblings);
@@ -92,6 +98,10 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
     const children = childrenByParent.get(node.id) ?? [];
     const displayName = (formatName ?? mock.text)(node.name);
     const childCount = allNodes.filter(child => child.parentId === node.id && !child.archived).length;
+    const name = <TaskFileName className="task-file-explorer-name" name={displayName} />;
+    const count = node.kind === "folder" && childCount > 0 && (browser || children.length > 0) && (
+      <small aria-label={ui("{0} 项", { 0: childCount })}>{childCount}</small>
+    );
     return <TreeItem
       className={({ isSelected }) => cn("task-file-explorer-row", (isSelected || browser && node.id === selectedId) && "active")}
       data-node-id={node.id}
@@ -122,9 +132,13 @@ export function TaskFileTree({ expandedIds, nodes, onAction, onExpandedChange, o
           slot="chevron"
         >{isExpanded ? <ChevronDown aria-hidden="true" size={13} /> : <ChevronRight aria-hidden="true" size={13} />}</AriaButton> : <span aria-hidden="true" className="task-file-explorer-chevron" />}
         {browser ? node.kind === "file" && <span className="task-file-browser-thumbnail"><TaskFileThumbnail file={node} /></span> : <TaskFileGlyph compact expanded={isExpanded} node={node} />}
-        <TaskFileName className="task-file-explorer-name" name={displayName} />
-        {node.kind === "folder" && childCount > 0 && (browser || children.length > 0) && <small aria-label={ui("{0} 项", { 0: childCount })}>{childCount}</small>}
-        {browser && node.kind === "file" && <small>{formatFileSize(node.sizeBytes, { fallback: node.sizeLabel })}</small>}
+        {browser ? <>
+          <span className="task-file-browser-row-label">{name}{count}</span>
+          <small className="task-file-folder-size">
+            {node.kind === "file" && formatFileSize(node.sizeBytes, { fallback: node.sizeLabel })}
+          </small>
+          <small className="task-file-folder-updated">{formatDisplayDateTime(node.updatedAt, { locale, timeZone })}</small>
+        </> : <>{name}{count}</>}
         <TaskFileNodeMenu canDelete={canDelete?.(node.id)} node={node} taskId={taskId} onAction={onAction} tabIndex={isFocused ? 0 : -1} />
       </>}</TreeItemContent>
       {children.map(renderNode)}

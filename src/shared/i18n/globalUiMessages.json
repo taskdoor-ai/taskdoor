@@ -3370,5 +3370,9 @@
   "mentionsAndRepliesAlwaysNotify": {
     "zh": "@ 你和回复你的消息始终会通知你。",
     "en": "You are always notified when someone @mentions or replies to you."
-  }
+  },
+  "taskFileSort": { "zh": "文件排序", "en": "Sort files" },
+  "taskFileSortCurrent": { "zh": "文件排序：{0}", "en": "Sort files: {0}" },
+  "taskFileSortUpdated": { "zh": "最新更新", "en": "Last updated" },
+  "taskFileSortCreated": { "zh": "最新创建", "en": "Newest created" }
 }

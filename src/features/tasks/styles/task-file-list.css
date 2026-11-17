@@ -29,6 +29,7 @@
 .task-file-explorer-tree .task-file-explorer-row[data-selected] .task-file-explorer-name { font-weight: 500; }
 .task-file-explorer-tree .task-file-explorer-row[data-focus-visible] { outline: 2px solid var(--ad-focus); outline-offset: -2px; }
 .task-file-explorer-tree .task-file-explorer-chevron { width: 16px; height: 26px; cursor: pointer; color: var(--ad-ink-tertiary); outline: none; }
+.task-file-browser-items button.task-file-explorer-chevron:is(:hover, [data-pressed]) { background: transparent; color: var(--ad-ink); }
 .task-file-explorer-tree .task-file-explorer-more { width: 24px; height: 28px; min-height: 28px; background: transparent; }
 .task-file-explorer-tree .task-file-explorer-row small { color: var(--ad-ink-tertiary); font-size: 11px; font-variant-numeric: tabular-nums; }
 .task-file-explorer-tree .task-file-explorer-row[data-hovered] .task-file-explorer-more { opacity: 1; pointer-events: auto; }

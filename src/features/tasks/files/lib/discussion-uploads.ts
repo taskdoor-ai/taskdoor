@@ -100,6 +100,7 @@ export async function stageLocalFileUpload(file: File, { maxBytes, limitLabel, i
   const name = file.name.trim() || "未命名附件";
   const extension = name.split(".").pop()?.toLowerCase() ?? "";
   const blobId = `discussion-blob-${globalThis.crypto.randomUUID()}`;
+  const createdAt = new Date().toISOString();
   const node: TaskFileNode = {
     id: `discussion-file-${globalThis.crypto.randomUUID()}`,
     kind: "file",
@@ -110,7 +111,8 @@ export async function stageLocalFileUpload(file: File, { maxBytes, limitLabel, i
     mimeType: mimeTypeFor(file, extension),
     sizeBytes: file.size,
     sizeLabel: formatFileSize(file.size),
-    updatedAt: "刚刚",
+    createdAt,
+    updatedAt: createdAt,
     version: 1,
     blobId,
   };

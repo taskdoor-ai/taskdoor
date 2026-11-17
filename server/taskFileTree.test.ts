@@ -56,6 +56,46 @@ test("keeps folders before files and sorts names", () => {
   assert.deepEqual(sortTaskFileNodes([{ ...nodes[2], name: "B.md" }, { ...nodes[1], name: "A" }]).map((node) => node.name), ["A", "B.md"]);
 });
 
+test("file sort uses natural display names without mutating source order", () => {
+  const items = [
+    { ...nodes[2], id: "ten", name: "file10.txt" },
+    { ...nodes[2], id: "two", name: "file2.txt" },
+    { ...nodes[1], id: "folder", name: "Z" },
+  ];
+  assert.deepEqual(sortTaskFileNodes(items).map(item => item.id), ["folder", "two", "ten"]);
+  assert.deepEqual(sortTaskFileNodes(items, "name", "en", name => name === "file10.txt" ? "a.txt" : name).map(item => item.id), ["folder", "ten", "two"]);
+  const sameName = [{ ...items[0], id: "z" }, { ...items[0], id: "a" }];
+  assert.deepEqual(sortTaskFileNodes(sameName).map(item => item.id), ["z", "a"]);
+  assert.deepEqual(items.map(item => item.id), ["ten", "two", "folder"]);
+});
+
+test("time sorts separate creation and update, normalize offsets and put unknown values last", () => {
+  const items = [
+    { ...nodes[2], id: "old-created", name: "B.txt", createdAt: "2026-10-01T00:00:00Z", updatedAt: "2026-11-17T12:00:00Z" },
+    { ...nodes[2], id: "new-created", name: "A.txt", createdAt: "2026-11-17T10:00:00Z", updatedAt: "2026-11-17T19:00:00+08:00" },
+    { ...nodes[2], id: "unknown", name: "0.txt", updatedAt: "刚刚" },
+    { ...nodes[2], id: "invalid", name: "1.txt", updatedAt: "2026-02-30T00:00:00Z" },
+    { ...nodes[1], id: "folder", updatedAt: "" },
+  ];
+  assert.deepEqual(sortTaskFileNodes(items, "updated").map(item => item.id), ["folder", "old-created", "new-created", "unknown", "invalid"]);
+  assert.deepEqual(sortTaskFileNodes(items, "created").map(item => item.id), ["folder", "new-created", "old-created", "unknown", "invalid"]);
+  assert.deepEqual(sortTaskFileNodes([items[0], { ...items[1], updatedAt: items[0].updatedAt }], "updated").map(item => item.id), ["new-created", "old-created"]);
+  const sameFileDetails = [items[0], { ...items[0], id: items[1].id }];
+  assert.deepEqual(sortTaskFileNodes(sameFileDetails, "updated").map(item => item.id), ["old-created", "new-created"]);
+  assert.deepEqual(sortTaskFileNodes(sameFileDetails, "created").map(item => item.id), ["old-created", "new-created"]);
+});
+
+test("new folders record creation time and renaming preserves it", () => {
+  const start = Date.now();
+  const { folder, nodes: created } = createFolder([], null, "资料", "me");
+  assert.ok(Date.parse(folder.createdAt!) >= start);
+  assert.equal(folder.createdAt, folder.updatedAt);
+  const renamed = renameNode(created, folder.id, "新资料")[0];
+  assert.equal(renamed.createdAt, folder.createdAt);
+  assert.ok(Date.parse(renamed.updatedAt) >= Date.parse(folder.updatedAt));
+  assert.deepEqual(renameNode(created, folder.id, folder.name), created, "no-op rename must not bump time");
+});
+
 test("creates and renames folders without sibling duplicates", () => {
   const created = createFolder(nodes, "root", "执行");
   assert.equal(created.nodes.at(-1)?.parentId, "root");

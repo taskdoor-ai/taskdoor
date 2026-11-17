@@ -74,8 +74,11 @@ test("大文本任务文件保留原Blob且不预读全文，小文本仍可编�
   assert.equal(node.content, undefined);
   assert.equal(node.previewData, undefined);
   assert.equal(await readDiscussionBlob(node.blobId!), original);
-  const small = await taskUploads.prepareTaskFileUpload(new File(["原文\n"], "可编辑.txt", { type: "text/plain" }));
+  const uploadedAfter = Date.now();
+  const small = await taskUploads.prepareTaskFileUpload(new File(["原文\n"], "可编辑.txt", { type: "text/plain", lastModified: 0 }));
   assert.equal(small.content, "原文\n");
+  assert.ok(Date.parse(small.createdAt!) >= uploadedAfter);
+  assert.equal(small.createdAt, small.updatedAt);
 });
 
 test("上传大小按真实字节显示十进制 KB 和 MB，原件大小不变", async () => {
