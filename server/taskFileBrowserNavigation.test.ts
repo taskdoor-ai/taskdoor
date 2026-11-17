@@ -51,14 +51,14 @@ const deepFile: TaskFileNode = { id: "deep-file", kind: "file", name: "资料3.t
 const files = [folder, nested, empty, rootFile, deepFile];
 const fileTree = (tree: ReactNode) => elements(tree, item => item.type === TaskFileTree)[0];
 
-test("排序使用紧凑图标入口，仍可读取当前排序并查看三个选项", () => {
+test("排序使用紧凑图标入口，仍可读取当前排序并查看四个选项", () => {
   const tree = capture();
-  const trigger = elements(tree, item => item.type === DropdownMenuTrigger && item.props.className === "task-file-sort-trigger")[0];
+  const trigger = elements(tree, item => item.type === DropdownMenuTrigger && item.props.className === "task-file-view-sort")[0];
   assert.equal(trigger.props["aria-label"], "文件排序：名称");
   assert.equal(Children.count(trigger.props.children), 1);
   const group = elements(tree, item => item.type === DropdownMenuRadioGroup)[0];
   assert.equal(group.props.value, "name");
-  assert.deepEqual(elements(group.props.children, item => item.props.value !== undefined).map(item => item.props.children), ["名称", "最新更新", "最新创建"]);
+  assert.deepEqual(elements(group.props.children, item => item.props.value !== undefined).map(item => item.props.children), ["名称", "最新更新", "最新创建", "文件大小"]);
 });
 
 test("排序切换保持目录与搜索，跨视图保持同一选择，存储失败仍生效", () => {

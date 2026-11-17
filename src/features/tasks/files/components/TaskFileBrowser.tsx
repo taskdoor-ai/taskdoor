@@ -1,4 +1,4 @@
-import { ArrowDownUp, FolderPlus, LayoutGrid, List, ListTree, Plus, Search, Upload, X } from 'lucide-react'
+import { ArrowDownWideNarrow, FolderPlus, LayoutGrid, List, ListTree, Plus, Search, Upload, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { TaskFileNode } from '@/shared/model/task-model'
 import { useGlobalUi } from '@/shared/i18n/global-ui'
@@ -36,6 +36,7 @@ const sorts: Array<{ value: TaskFileSort; label: string }> = [
   { value: 'name', label: '名称' },
   { value: 'updated', label: '最新更新' },
   { value: 'created', label: '最新创建' },
+  { value: 'size', label: '文件大小' },
 ]
 function readSort(key: string): TaskFileSort {
   try {
@@ -216,23 +217,24 @@ export function TaskFileBrowser({
           )}
         </div>
         <div className="task-file-browser-actions">
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              aria-label={ui('文件排序：{0}', { 0: sortLabel })}
-              className="task-file-sort-trigger"
-              render={<Button size="icon" variant="ghost" />}
-              title={ui('文件排序：{0}', { 0: sortLabel })}
-            >
-              <ArrowDownUp aria-hidden="true" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-max">
-              <DropdownMenuRadioGroup value={sort} onValueChange={chooseSort}>
-                <DropdownMenuLabel>{ui('文件排序')}</DropdownMenuLabel>
-                {sorts.map(option => <DropdownMenuRadioItem key={option.value} value={option.value}>{ui(option.label)}</DropdownMenuRadioItem>)}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
           <div aria-label={ui('文件视图')} className="task-file-view-switch" role="group">
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                aria-label={ui('文件排序：{0}', { 0: sortLabel })}
+                className="task-file-view-sort"
+                render={<Button size="icon-sm" variant="ghost" />}
+                title={ui('文件排序：{0}', { 0: sortLabel })}
+              >
+                <ArrowDownWideNarrow aria-hidden="true" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-max">
+                <DropdownMenuRadioGroup value={sort} onValueChange={chooseSort}>
+                  <DropdownMenuLabel>{ui('文件排序')}</DropdownMenuLabel>
+                  {sorts.map(option => <DropdownMenuRadioItem key={option.value} value={option.value}>{ui(option.label)}</DropdownMenuRadioItem>)}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <span aria-hidden="true" className="task-file-view-switch-divider" />
             {views.map(({ view: item, label, icon: Icon }) => (
               <Button
                 aria-label={ui(label)}

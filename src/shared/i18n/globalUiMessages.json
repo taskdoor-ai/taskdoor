@@ -3375,6 +3375,7 @@
   "taskFileSortCurrent": { "zh": "文件排序：{0}", "en": "Sort files: {0}" },
   "taskFileSortUpdated": { "zh": "最新更新", "en": "Last updated" },
   "taskFileSortCreated": { "zh": "最新创建", "en": "Newest created" },
+<<<<<<< HEAD
   "notificationSettings": { "zh": "通知设置", "en": "Notification settings" },
   "notificationOnlyRelated": { "zh": "只接收与我相关的通知", "en": "Only notifications related to me" },
   "notificationSettingsExplanation": { "zh": "站内及邮件只收直接相关通知，其他动态见活动。", "en": "Only direct notifications in-app and by email; other updates stay in Activity." },
@@ -3391,5 +3392,6 @@
   "browserNotificationDenied": { "zh": "浏览器已阻止通知。请在浏览器设置中允许 Taskdoor 发送通知，再重新开启。", "en": "Your browser has blocked notifications. Allow Taskdoor notifications in browser settings, then enable them again." },
   "browserNotificationPermission": { "zh": "尚未获得通知权限，浏览器通知未开启。可再次点击开启。", "en": "Notification permission was not granted. Browser notifications are off; you can try enabling them again." },
   "browserNotificationStorage": { "zh": "无法保存浏览器通知设置，请检查浏览器的存储权限后重试。", "en": "Unable to save browser notification settings. Check your browser storage permissions and try again." },
-  "browserNotificationUnavailable": { "zh": "浏览器通知暂时无法开启，请稍后重试。", "en": "Unable to enable browser notifications right now. Please try again later." }
+  "browserNotificationUnavailable": { "zh": "浏览器通知暂时无法开启，请稍后重试。", "en": "Unable to enable browser notifications right now. Please try again later." },
+  "taskFileSortSize": { "zh": "文件大小", "en": "File size" }
 }

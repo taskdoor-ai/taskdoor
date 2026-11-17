@@ -46,13 +46,16 @@ export function getDefaultFileIcon(name: string): string {
   return "File";
 }
 
-export type TaskFileSort = "name" | "updated" | "created";
+export type TaskFileSort = "name" | "updated" | "created" | "size";
 
 export function sortTaskFileNodes(nodes: TaskFileNode[], sort: TaskFileSort = "name", locale = "zh-CN", displayName: (name: string) => string = name => name): TaskFileNode[] {
   const collator = new Intl.Collator(locale, { numeric: true, sensitivity: "base" });
   return [...nodes].sort((a, b) => {
     if (a.kind !== b.kind) return a.kind === "folder" ? -1 : 1;
-    if (sort !== "name") {
+    if (sort === "size") {
+      const left = a.sizeBytes ?? -1, right = b.sizeBytes ?? -1;
+      if (left !== right) return right - left;
+    } else if (sort !== "name") {
       const field = sort === "created" ? "createdAt" : "updatedAt";
       const left = taskFileTimestamp(a[field]), right = taskFileTimestamp(b[field]);
       if (left === null && right !== null) return 1;

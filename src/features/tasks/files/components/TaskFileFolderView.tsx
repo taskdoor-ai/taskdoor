@@ -13,6 +13,7 @@ import {
 } from '@/features/tasks/files/lib/task-file-tree'
 import { TaskFileThumbnail } from '@/features/tasks/files/components/TaskFileThumbnail'
 import { TaskFileName } from '@/features/tasks/files/components/TaskFileName'
+import { PersonAvatar } from '@/shared/ui/PersonAvatar'
 import {
   TaskFileNodeMenu,
   type TaskFileAction,
@@ -139,7 +140,10 @@ export function TaskFileFolderView({
           >
             <button
               aria-label={ui('打开{0}', { 0: name })}
-              className="task-file-folder-open"
+              className={cn(
+                'task-file-folder-open',
+                layout === 'list' && node.createdById && 'has-author',
+              )}
               data-preview={
                 node.kind === 'file' && getPreviewKind(node.name, node.mimeType) === 'image'
                   ? 'image'
@@ -164,6 +168,16 @@ export function TaskFileFolderView({
                 <>
                   <small className="task-file-folder-size">{detail}</small>
                   <small className="task-file-folder-updated">{updatedAt}</small>
+                  {node.createdById && (
+                    <span className="task-file-folder-author">
+                      <PersonAvatar
+                        name={node.createdById}
+                        personId={node.createdById}
+                        profilePreviewFocusable={false}
+                        size="xs"
+                      />
+                    </span>
+                  )}
                 </>
               )}
             </button>
