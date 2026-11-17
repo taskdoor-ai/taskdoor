@@ -73,6 +73,8 @@ type TaskStatus = TaskNode["status"];
 export type TaskDetailId = "fragrance-creator-wrapup" | "fragrance-creator-business" | "fragrance-content" | "fragrance-live" | "fragrance-product" | "fragrance-growth" | "fragrance-data" | "fragrance-compliance" | "fragrance-final-decision";
 
 export type TaskFileNode = {
+  /** Creation/upload into task files. Unknown for legacy nodes; never inferred from updatedAt. */
+  createdAt?: string;
   /** Original creator/uploader, stable across edits, moves and renames. Unknown on legacy files. */
   createdById?: string;
   /** Published uploads retained with discussions, outside the task file tree. */

@@ -1,0 +1,338 @@
+/* The Files tab's view switch, path, list and grid (pm-sync-60 P6-016). Rows follow the tree's
+   rows; grid cards are the discussion attachment cards (task-discussion-feed.css). */
+.task-file-browser-actions {
+  gap: 8px;
+}
+.task-file-sort-trigger {
+  width: var(--task-search-control-height);
+  height: var(--task-search-control-height);
+  color: var(--ad-ink-secondary);
+}
+@media (max-width: 640px) {
+  .task-file-browser-toolbar { grid-template-columns: minmax(0, 1fr); }
+  .task-file-browser-actions { flex-wrap: wrap; }
+}
+.task-file-view-switch {
+  --ad-control-selected-bg: var(--ad-view-selected-bg);
+  --ad-control-selected-ink: var(--ad-view-active);
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid var(--ad-border);
+  border-radius: 10px;
+  background: var(--ad-surface);
+}
+.task-file-view-switch [data-slot='button'] {
+  width: 30px;
+  min-width: 30px;
+  height: 28px;
+  min-height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ad-view-muted);
+  box-shadow: none;
+}
+.task-file-view-switch [data-slot='button']:hover:not(:disabled):not([aria-pressed='true']) {
+  background: var(--ad-view-hover-bg);
+  color: var(--ad-view-active);
+}
+.task-file-view-switch [data-slot='button'][aria-pressed='true'] {
+  background: var(--ad-view-selected-bg);
+  color: var(--ad-view-active);
+  box-shadow: none;
+}
+.task-file-view-switch svg {
+  width: 15px;
+  height: 15px;
+}
+@media (max-width: 900px), (pointer: coarse), (hover: none) {
+  .task-file-view-switch {
+    height: 52px;
+  }
+  .task-file-view-switch [data-slot='button'] {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+}
+.task-file-breadcrumb {
+  min-width: 0;
+  padding: 0 0 8px 2px;
+}
+.task-file-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  gap: 2px;
+  list-style: none;
+}
+.task-file-breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  gap: 2px;
+  color: var(--ad-ink-tertiary);
+}
+.task-file-breadcrumb-step {
+  max-width: 220px;
+  padding: 2px 6px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ad-ink-secondary);
+  font-size: 13px;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.task-file-breadcrumb-step:hover {
+  background: var(--ad-surface-subtle);
+  color: var(--ad-ink);
+}
+.task-file-breadcrumb-step[aria-current='page'] {
+  color: var(--ad-ink);
+  font-weight: 500;
+}
+.task-file-breadcrumb-step:focus-visible,
+.task-file-folder-open:focus-visible {
+  outline: 2px solid var(--ad-focus);
+  outline-offset: -2px;
+}
+.task-file-folder-view {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.task-file-folder-item {
+  position: relative;
+  min-width: 0;
+}
+.task-file-folder-open {
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ad-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.task-file-folder-cover {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--ad-ink-tertiary);
+}
+.task-file-folder-label {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+.task-file-folder-name {
+  font-size: 14px;
+}
+.task-file-folder-item[data-node-kind='folder'] .task-file-folder-name {
+  font-weight: 500;
+}
+.task-file-folder-label small {
+  overflow: hidden;
+  color: var(--ad-ink-tertiary);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* List: cover, name, size, update time, and more actions. */
+.task-file-folder-list {
+  display: grid;
+}
+.task-file-folder-list .task-file-folder-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--task-file-action-column);
+  align-items: center;
+  gap: var(--task-file-row-gap);
+  padding-inline-end: 4px;
+  border-radius: 6px;
+}
+.task-file-folder-list .task-file-folder-item:hover {
+  background: var(--ad-surface-subtle);
+}
+.task-file-folder-list .task-file-folder-open {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) var(--task-file-size-column) var(--task-file-updated-column);
+  align-items: center;
+  min-height: 40px;
+  gap: var(--task-file-row-gap);
+  padding: 4px 0 4px 8px;
+  border-radius: 6px;
+}
+.task-file-folder-size,
+.task-file-folder-updated {
+  overflow: hidden;
+  color: var(--ad-ink-tertiary);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.task-file-folder-size {
+  text-align: end;
+}
+.task-file-folder-updated {
+  text-align: start;
+}
+.task-file-folder-list .task-file-folder-cover {
+  width: 36px;
+  height: 28px;
+  border-radius: 4px;
+}
+.task-file-folder-list .task-file-glyph {
+  flex-basis: 20px;
+  width: 20px;
+  height: 20px;
+}
+.task-file-folder-list .task-file-thumbnail:not([data-cover-ready]) {
+  background: transparent;
+}
+.task-file-folder-list .task-file-folder-more,
+.task-file-folder-grid .task-file-folder-more {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  place-items: center;
+  opacity: 1;
+  pointer-events: auto;
+  background: transparent;
+}
+.task-file-folder-list .task-file-folder-more {
+  width: var(--task-file-action-column);
+}
+
+/* Grid: the discussion attachment card -- 148 x 96, cover over name; an image fills it. */
+.task-file-folder-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.task-file-folder-grid .task-file-folder-item {
+  flex: 0 1 148px;
+  width: 148px;
+  max-width: calc((100% - 8px) / 2);
+  height: 96px;
+  overflow: hidden;
+  border: 1px solid var(--ad-border-soft);
+  border-radius: 8px;
+  background: var(--ad-surface);
+}
+.task-file-folder-grid .task-file-folder-item:hover {
+  border-color: var(--ad-border);
+}
+.task-file-folder-grid .task-file-folder-open {
+  display: grid;
+  grid-template-rows: 56px minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  color: var(--ad-ink-secondary);
+}
+.task-file-folder-grid .task-file-folder-cover {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  background: var(--ad-surface-subtle);
+}
+.task-file-folder-grid .task-file-folder-cover .task-file-thumbnail {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+.task-file-folder-grid .task-file-folder-label {
+  align-content: center;
+  padding: 3px 8px;
+  gap: 0;
+}
+.task-file-folder-grid .task-file-folder-name {
+  overflow: hidden;
+  color: var(--ad-ink-secondary);
+  font-size: 12px;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.task-file-folder-grid .task-file-folder-label small {
+  font-size: 11px;
+  line-height: 14px;
+}
+.task-file-folder-grid .task-file-folder-open[data-preview='image'] {
+  display: block;
+}
+.task-file-folder-grid .task-file-folder-open[data-preview='image'] .task-file-thumbnail-image {
+  object-fit: cover;
+}
+.task-file-folder-grid .task-file-folder-open[data-preview='image'] .task-file-folder-label {
+  position: absolute;
+  inset: auto 0 0;
+  border-top: 1px solid var(--ad-border-soft);
+  background: var(--ad-surface);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease;
+}
+.task-file-folder-grid
+  .task-file-folder-item:is(:hover, :focus-within)
+  .task-file-folder-open[data-preview='image']
+  .task-file-folder-label {
+  opacity: 1;
+}
+.task-file-folder-grid .task-file-folder-more {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  min-height: 28px;
+  border-radius: 6px;
+  background: var(--ad-surface);
+  opacity: 0;
+  pointer-events: none;
+}
+.task-file-folder-grid .task-file-folder-item:is(:hover, :focus-within) .task-file-folder-more,
+.task-file-folder-grid .task-file-folder-more[data-popup-open] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 640px) {
+  .task-file-folder-list .task-file-folder-open {
+    grid-template-columns: 36px minmax(0, 1fr) var(--task-file-size-column);
+    padding-inline-start: 4px;
+  }
+  .task-file-folder-updated {
+    display: none;
+  }
+}
+@media (pointer: coarse), (hover: none) {
+  .task-file-folder-list .task-file-folder-open {
+    min-height: 48px;
+  }
+  .task-file-folder-list .task-file-folder-more {
+    height: 44px;
+  }
+  .task-file-folder-grid .task-file-folder-more {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.task-file-folder-list .task-file-thumbnail-play { right: 1px; bottom: 1px; width: 10px; height: 10px; }
+.task-file-folder-list .task-file-thumbnail-play svg { width: 6px; height: 6px; }

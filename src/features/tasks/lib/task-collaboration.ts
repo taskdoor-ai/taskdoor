@@ -86,7 +86,7 @@ function uniqueRecords<T extends { id: string }>(items: T[], label: string): T[]
 function parseFile(value: unknown): TaskFileNode {
   requireValid(isRecord(value) && isId(value.id) && (value.kind === "file" || value.kind === "folder")
     && isString(value.name) && (value.parentId === null || isId(value.parentId)) && isString(value.updatedAt), "文件信息无效");
-  for (const field of ["content", "format", "iconName", "mimeType", "sizeLabel", "blobId", "originalName", "builtinPackId", "createdById"]) {
+  for (const field of ["content", "format", "iconName", "mimeType", "sizeLabel", "blobId", "originalName", "builtinPackId", "createdById", "createdAt"]) {
     requireValid(value[field] === undefined || isString(value[field]), "文件内容无效");
   }
   requireValid(value.version === undefined || isVersion(value.version), "文件版本无效");

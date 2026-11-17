@@ -4,6 +4,7 @@ import * as fixtures from "../src/ai/mock/data/taskDetailMocks.ts";
 import { getTeamTaskDetailFixture } from "../src/ai/mock/data/teamTaskDetailFixtures.ts";
 import { allTeamWorkspaceNodes } from "../src/ai/mock/data/teamWorkspaceScenarios.ts";
 import { isSupportedTaskFileUpload } from "../src/features/tasks/files/lib/task-file-capabilities.ts";
+import { taskFileTimestamp } from "../src/features/tasks/files/lib/task-file-time.ts";
 import { getSerumLaunchFileAssets } from "../src/ai/mock/data/serumLaunchFileAssets.ts";
 import { getSerumLaunchCommonFileAssets } from "../src/ai/mock/data/serumLaunchCommonFileAssets.ts";
 import { getSerumLaunchDiscussionFiles, SERUM_LAUNCH_DISCUSSION_PACK_ID } from "../src/ai/mock/data/serumLaunchDiscussionSamples.ts";
@@ -36,6 +37,41 @@ test("四个团队的内置任务模板最终出口都不再提供不支持的�
     const unsupported = getTaskFiles(detail.files).filter(file => file.kind === "file" && !isSupportedTaskFileUpload(file));
     assert.deepEqual(unsupported.map(file => file.name), [], task.id);
   }
+});
+
+test("四个团队的可见内置文件都有大小和可排序的更新时间", () => {
+  for (const task of allTeamWorkspaceNodes.filter((node): node is TaskNode => node.kind === "task")) {
+    const detail = fixtures.taskDetailMocks[task.id as keyof typeof fixtures.taskDetailMocks] ?? getTeamTaskDetailFixture(task) ?? fixtures.createWorkspaceTaskDetail(task);
+    for (const file of getTaskFiles(detail.files).filter(file => file.kind === "file")) {
+      assert.ok(isSupportedTaskFileUpload(file), file.id);
+      assert.ok(file.sizeBytes !== undefined || file.sizeLabel?.trim(), `${file.id} 缺大小`);
+      assert.notEqual(taskFileTimestamp(file.updatedAt), null, `${file.id} 缺更新时间`);
+    }
+  }
+});
+
+test("旧快照只补齐未改动的本地演示文件", () => {
+  const task = allTeamWorkspaceNodes.find((node): node is TaskNode => node.kind === "task" && node.id === "ccx-double11-channel-budget")!;
+  const key = `${TASK_COLLABORATION_STORAGE_PREFIX}${encodeURIComponent(JSON.stringify([task.teamId, task.id]))}`;
+  const legacyFiles = fixtures.getLegacyTaskFileFixtures(task);
+  const original = legacyFiles.find(file => file.id === `${task.id}-history-file`)!;
+  const moved = { ...legacyFiles.find(file => file.id === `${task.id}-result`)!, parentId: null };
+  const dragged = { ...original, id: "local-user-upload", blobId: "local-blob" };
+  const deleted = legacyFiles.find(file => file.id === `${task.id}-rule`)!;
+  const files = legacyFiles.filter(file => file.id !== deleted.id).map(file => file.id === moved.id ? moved : file);
+  const storage = memoryStorage();
+  storage.data.set(key, JSON.stringify(createCollaborationSnapshot([...files, dragged])));
+  const scopes = [{ taskId: task.id, teamId: task.teamId!, legacyFiles }];
+  fixtures.migrateUnsupportedBuiltinTaskFiles(storage, scopes);
+  const saved = loadCollaboration(storage, JSON.stringify([task.teamId, task.id]), []);
+  const history = saved.files.find(file => file.id === original.id)!;
+  assert.notEqual(taskFileTimestamp(history.updatedAt), null);
+  assert.equal(history.sizeBytes, new TextEncoder().encode(original.content!).byteLength);
+  assert.deepEqual(saved.files.find(file => file.id === moved.id), moved);
+  assert.deepEqual(saved.files.find(file => file.id === dragged.id), dragged);
+  assert.ok(!saved.files.some(file => file.id === deleted.id));
+  fixtures.migrateUnsupportedBuiltinTaskFiles(storage, scopes);
+  assert.deepEqual(loadCollaboration(storage, JSON.stringify([task.teamId, task.id]), []), saved);
 });
 
 test("未修改的旧主任务持久退役六个不支持示例，追加讨论样例且原音视频节点不丢", () => {

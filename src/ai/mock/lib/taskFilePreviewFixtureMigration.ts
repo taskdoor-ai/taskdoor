@@ -3,11 +3,12 @@ import { isSupportedTaskFileUpload } from "@/features/tasks/files/lib/task-file-
 import { getTaskFileDrafts } from "@/features/tasks/files/lib/task-file-drafts";
 import { readTaskFileEdits } from "@/features/tasks/files/lib/task-file-editing";
 import { loadCollaboration, saveCollaboration, TASK_COLLABORATION_STORAGE_PREFIX } from "@/features/tasks/lib/task-collaboration";
+import { completeBuiltinFileMetadata } from "@/ai/mock/lib/taskFilePreviewFixtures";
 
 type FixtureScope = { taskId: string; teamId: string; legacyFiles: TaskFileNode[] };
 type Storage = Pick<globalThis.Storage, "getItem" | "setItem">;
 
-/** Preserve source nodes and old discussion references; retire only exact seeds. */
+/** Reconcile old built-in seeds without overwriting users' changes or discussion references. */
 export function migrateUnsupportedBuiltinTaskFiles(storage: Storage, scopes: FixtureScope[]) {
   const report = { retiredFileIds: [] as string[], retainedFileIds: [] as string[], skippedTaskIds: [] as string[] };
   for (const { taskId, teamId, legacyFiles } of scopes) {
@@ -19,17 +20,25 @@ export function migrateUnsupportedBuiltinTaskFiles(storage: Storage, scopes: Fix
       const legacy = new Map(legacyFiles.map(file => [file.id, file]));
       const retired: string[] = [];
       const retained: string[] = [];
+      let updatedMetadata = false;
       const files = saved.files.map(file => {
-        if (file.kind !== "file" || file.attachmentOnly || file.retiredBuiltin || isSupportedTaskFileUpload(file)) return file;
+        if (file.kind !== "file" || file.attachmentOnly || file.retiredBuiltin) return file;
         const seed = legacy.get(file.id);
         if (!seed) return file;
         // Matching the complete source protects renames, moves, versions,
         // ownership changes and content edits, including old unversioned edits.
-        if (protectedIds.has(file.id) || JSON.stringify(file) !== JSON.stringify(seed)) { retained.push(file.id); return file; }
+        const unchanged = !protectedIds.has(file.id) && JSON.stringify(file) === JSON.stringify(seed);
+        if (isSupportedTaskFileUpload(file)) {
+          if (!unchanged || file.archived || file.discussionOnly) return file;
+          const completed = completeBuiltinFileMetadata(file);
+          updatedMetadata ||= completed !== file;
+          return completed;
+        }
+        if (!unchanged) { retained.push(file.id); return file; }
         retired.push(file.id);
         return { ...file, retiredBuiltin: true as const };
       });
-      if (retired.length) saveCollaboration(storage, scope, saved.revision, { ...saved, revision: saved.revision + 1, files });
+      if (retired.length || updatedMetadata) saveCollaboration(storage, scope, saved.revision, { ...saved, revision: saved.revision + 1, files });
       report.retiredFileIds.push(...retired);
       report.retainedFileIds.push(...retained);
     } catch {

@@ -1,5 +1,13 @@
 # 当前实现矩阵
 
+## PRD-0416 层级与列表的文件信息（2026-11-18）
+
+本次 PM Demo 在[层级视图](../../src/features/tasks/files/components/TaskFileTree.tsx)及[列表视图](../../src/features/tasks/files/components/TaskFileFolderView.tsx)呈现大小和最近更新时间。[层级布局](../../src/features/tasks/styles/task-file-browser.css)与[列表布局](../../src/features/tasks/styles/task-file-views.css)定齐大小、时间和更多操作，窄屏隐藏时间。文件夹对齐自身更新时间，显示直接子项数。既有层级及列表截图继续待采集。
+
+## PRD-0415 文件排序（2026-11-17）
+
+本次 PM Demo 的[文件区入口](../../src/features/tasks/files/components/TaskFileBrowser.tsx)和[共享排序](../../src/features/tasks/files/lib/task-file-tree.ts)接入三种视图及搜索，排序偏好限当前团队和操作者。目录新建与文件上传记录真实创建时间。旧时间缺失保持未知，版本投影保留较新的整理时间。证据见[文件浏览定向测试](../../server/taskFileBrowserNavigation.test.ts)、[文件树定向测试](../../server/taskFileTree.test.ts)、[文件编辑定向测试](../../server/taskFileEditing.test.ts)和[上传定向测试](../../server/taskFileStructuredUpload.test.ts)。本次旧图待主工作区当前运行时重新采集。
+
 ## PRD-0405 团队标签管理入口与回焦（2026-11-11）
 
 PM Demo 从[列表筛选](../../src/features/tasks/components/TaskListFilterPanel.tsx)或[任务详情](../../src/features/me/components/TagPicker.tsx)进入同一[设置模块](../../src/app/workspace/components/PersonalInfoDialog.tsx)。[入口与关闭逻辑](../../src/app/App.tsx)记录发起控件并在关闭后恢复焦点。管理页逐行排列，删除操作使用主题危险色。[管理样式](../../src/features/me/styles/tag-management.css)

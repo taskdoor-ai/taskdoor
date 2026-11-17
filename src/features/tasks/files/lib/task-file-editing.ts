@@ -1,3 +1,4 @@
+import { taskFileTimestamp } from "@/features/tasks/files/lib/task-file-time";
 import type { TaskFileNode } from "@/shared/model/task-model.ts";
 import { getPreviewKind } from "@/features/tasks/files/lib/task-file-tree.ts";
 
@@ -60,22 +61,11 @@ export function getTaskFileContent(file: TaskFileNode): TaskFileContent | null {
   return { kind: "text", text: file.previewData && "text" in file.previewData ? file.previewData.text : file.content ?? "" };
 }
 
-function isExactIsoDateTime(value: string): boolean {
-  const date = value.match(/^(\d{4})-(\d{2})-(\d{2})T(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)?$/);
-  if (!date || !validTime(value)) return false;
-  const year = Number(date[1]);
-  const month = Number(date[2]);
-  const day = Number(date[3]);
-  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
-  const monthDays = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  return month >= 1 && month <= 12 && day >= 1 && day <= monthDays[month - 1];
-}
-
-/** The matching saved version is authoritative; legacy labels stay literal. */
+/** Content and metadata edits share the latest exact time; legacy labels stay literal. */
 export function getTaskFileLastUpdate(file: TaskFileNode, revisions: TaskFileRevision[]): { author: string | null; updatedAt: string; isExact: boolean } {
   const revision = revisions.find(item => item.version === (file.version ?? 1));
-  if (revision) return { author: revision.author, updatedAt: revision.createdAt, isExact: true };
-  return { author: null, updatedAt: file.updatedAt, isExact: isExactIsoDateTime(file.updatedAt) };
+  if (revision && (taskFileTimestamp(file.updatedAt) ?? -Infinity) <= Date.parse(revision.createdAt)) return { author: revision.author, updatedAt: revision.createdAt, isExact: true };
+  return { author: null, updatedAt: file.updatedAt, isExact: taskFileTimestamp(file.updatedAt) !== null };
 }
 
 function lineChanges(before: string, after: string, prefix = ""): FileChange[] {
@@ -229,7 +219,8 @@ export function applyTaskFileEdit(file: TaskFileNode, record: TaskFileEditRecord
   const before = getTaskFileContent(file);
   if (!before || before.kind !== saved.content.kind) throw new Error("文件编辑记录与当前文件格式不符。");
   const latest = saved.revisions.find(revision => revision.version === saved.version)!;
-  return withTaskFileContent(file, saved.content, saved.version, latest.createdAt);
+  const updatedAt = (taskFileTimestamp(file.updatedAt) ?? -Infinity) > Date.parse(latest.createdAt) ? file.updatedAt : latest.createdAt;
+  return withTaskFileContent(file, saved.content, saved.version, updatedAt);
 }
 
 function withTaskFileContent(file: TaskFileNode, content: TaskFileContent, version: number, updatedAt: string): TaskFileNode {
