@@ -16,7 +16,7 @@
 .task-detail-completion .task-criteria-fields { gap: var(--ad-space-1); }
 .task-detail-completion .task-criteria-field-add { min-height: var(--ad-space-6); margin-top: 0; }
 @media (max-width: 760px), (pointer: coarse) {
-  .task-criteria-fields .task-criteria-field-input[data-slot="textarea"] { min-height: var(--ad-control-touch-min); font-size: max(16px, var(--ad-text-body-sm)); }
+  .task-criteria-fields .task-criteria-field-input[data-slot="textarea"] { min-height: var(--ad-control-touch-min); }
   .task-criteria-field-remove { width: var(--ad-control-touch-min); min-height: var(--ad-control-touch-min); margin-top: 0; }
   .task-criteria-field-add, .task-detail-completion .task-criteria-field-add { min-height: var(--ad-control-touch-min); }
 }
