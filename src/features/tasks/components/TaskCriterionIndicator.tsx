@@ -1,9 +1,10 @@
-import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Tooltip } from '@base-ui/react/tooltip';
 import { Check, Loader2, Undo2 } from 'lucide-react';
 import { useGlobalUi } from '@/shared/i18n/global-ui';
 import { toast } from '@/shared/ui/toast';
 import { TaskProgressIcon } from '@/shared/ui/TaskProgressIcon';
+import { TaskStatusIcon } from '@/shared/ui/TaskStatusBadge';
 import { useProgressCopy } from '@/features/tasks/i18n/progress-copy';
 import { criterionStage } from '@/features/tasks/lib/task-criterion-review';
 import type { CriterionReview } from '@/shared/model/criterion-review';
@@ -43,8 +44,15 @@ export function TaskCriterionIndicator({ index, review, onConfirm }: { index: nu
   };
   return <>
     <Tooltip.Root><span className="criterion-orbit-wrap">
-      <Tooltip.Trigger delay={180} type="button" className="criterion-orbit" data-confirmed={Boolean(confirmation)} data-pending={pending} data-celebrating={celebrating} disabled={!onConfirm || pending} aria-label={`${index + 1}. ${onConfirm ? actionLabel : confirmation ? ui('已人工确认') : aiLabel}`} aria-pressed={Boolean(confirmation)} aria-describedby={tipId} onClick={() => void toggleConfirmation()}>
-        {confirmation ? <TaskProgressIcon completed className="criterion-confirmed-icon" /> : <svg viewBox="0 0 28 28" aria-hidden="true">{[0,1,2,3].map(segment => <circle key={segment} cx="14" cy="14" r="11.5" pathLength="100" strokeDasharray="20 80" strokeDashoffset={-segment * 25} className="criterion-orbit-segment" data-filled={segment < (stage ?? 0)} style={{'--segment-delay':`${segment * 35}ms`} as CSSProperties} />)}</svg>}
+      <Tooltip.Trigger delay={180} type="button" className="criterion-orbit" data-confirmed={Boolean(confirmation)} data-pending={pending} data-celebrating={celebrating} aria-disabled={!onConfirm || pending} aria-label={`${index + 1}. ${onConfirm ? actionLabel : confirmation ? ui('已人工确认') : aiLabel}`} aria-pressed={Boolean(confirmation)} aria-describedby={tipId} onClick={onConfirm && !pending ? () => void toggleConfirmation() : undefined}>
+        {confirmation ? <TaskProgressIcon completed className="criterion-confirmed-icon" /> : (
+          <TaskStatusIcon
+            className="criterion-status-icon"
+            status="进行中"
+            progressRatio={stage === null ? null : stage / 4}
+            size={28}
+          />
+        )}
         {(!confirmation || pending) && <span className="criterion-orbit-center">{pending ? <Loader2 size={13} className="criterion-saving" /> : index + 1}</span>}
         {!pending && onConfirm && <span className="criterion-orbit-hover" aria-hidden="true">{confirmation ? <Undo2 size={13} /> : <Check size={13} strokeWidth={2.4} />}</span>}
       </Tooltip.Trigger>

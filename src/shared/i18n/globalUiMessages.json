@@ -2633,7 +2633,7 @@
   },
   "connectCopyPrompt": {
     "zh": "复制提示词",
-    "en": "Copy the prompt"
+    "en": "Copy as prompt"
   },
   "cliWorkspaces": {
     "zh": "工作空间",
