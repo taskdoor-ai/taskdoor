@@ -86,6 +86,12 @@
 .connect-v2 .connect-method-tabs button[data-state="active"] { background: transparent; color: var(--ad-tab-active); font-weight: 500; box-shadow: none; }
 .connect-v2 .connect-method-tabs button[data-state="active"]::after { position: absolute; right: 8px; bottom: 0; left: 8px; height: 2px; border-radius: 2px; background: currentColor; content: ""; }
 .connect-v2 .connect-method-tabs button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -4px; }
+.connect-v2 .connect-v2-tool-tabs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.connect-v2 .connect-v2-setup-code { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 640px) {
+  .connect-v2 .connect-v2-tool-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .connect-v2 .connect-v2-tool-tabs button:last-child { grid-column: 1 / -1; }
+}
 .connect-v2 .connect-method-shell > [role="tabpanel"] { min-width: 0; }
 .connect-v2 .connect-method-shell > [role="tabpanel"] > .connect-v2-console { margin: 0; border: 0; border-radius: 0; box-shadow: none; }
 .connect-v2 .connect-method-shell .connect-v2-scenes { padding: 0 24px 24px; }

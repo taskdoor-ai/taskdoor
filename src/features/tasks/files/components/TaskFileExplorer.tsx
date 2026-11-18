@@ -563,7 +563,7 @@ export function TaskFileExplorer({ files: initialFiles, discussionFiles, focused
           const material = await prepareAnnotationMaterial(shortcut?.signal);
           const file = material?.attachments[0];
           if (!file?.content) return { status: shortcut?.signal.aborted ? "cancelled" as const : "file-failed" as const, message: text("标注文件尚未准备好，意见仍保留，请重试。", "The annotation file is not ready. Your annotations are retained; try again.") };
-          const request: AiConnectionRequest = { taskId, title: text("连接 AI", "Connect AI"), description: text("将本次标注整理为文件，带到本地客户端。", "Bring these annotations to your local client as a file."), context: [{ label: "任务名称", value: taskTitle }], workObject: { kind: "文件标注", title: file.name }, handoffFile: { name: file.name, mimeType: "text/html", content: file.content }, contextPreview: { items: [{ id: "revision-feedback", label: text("标注文件", "Annotation file"), value: file.name }] } };
+          const request: AiConnectionRequest = { taskId, businessConnection: { sourceType: "FILE_ANNOTATION", accountId: currentUserId ?? currentUser, teamId }, title: text("连接 AI", "Connect AI"), description: text("将本次标注整理为文件，带到本地客户端。", "Bring these annotations to your local client as a file."), context: [{ label: "任务名称", value: taskTitle }], workObject: { kind: "文件标注", title: file.name }, handoffFile: { name: file.name, mimeType: "text/html", content: file.content }, contextPreview: { items: [{ id: "revision-feedback", label: text("标注文件", "Annotation file"), value: file.name }] } };
           setBasketOpen(false);
           if (shortcut) {
             const result = await launchAiContext(request, shortcut.agent, shortcut.signal, undefined, undefined, locale);

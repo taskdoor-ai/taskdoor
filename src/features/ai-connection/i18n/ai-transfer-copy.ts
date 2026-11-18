@@ -4,11 +4,14 @@ export function aiTransferMessage(locale: Locale, result: AiTransferResult, tool
   if (locale !== 'en') return result.message;
   if (result.handoffFile) {
     const ready = `Local file prepared: ${result.handoffFile.path}.`;
-    if (result.status === 'copy-failed') return `${ready} Copying the file-path prompt failed; the tool was not opened. Allow clipboard access and retry.`;
-    if (result.status === 'open-failed') return `${ready} The file-path prompt was copied, but ${tool} could not be opened. Open the client manually and paste the prompt or attach the HTML file.`;
-    if (result.status === 'open-attempted') return `${ready} The file-path prompt was copied and an attempt was made to open ${tool}. File reading cannot be confirmed. ${tool === 'WorkBuddy' ? 'Paste the prompt in WorkBuddy or attach the HTML file manually.' : 'Paste the prompt if needed, or attach the HTML file manually if the client cannot access the path.'}`;
+    const prompt = result.connection ? 'connection lookup prompt' : 'file-path prompt';
+    if (result.status === 'copy-failed') return `${ready} Copying the ${prompt} failed; the tool was not opened. Allow clipboard access and retry.`;
+    if (result.status === 'open-failed') return `${ready} The ${prompt} was copied, but ${tool} could not be opened. Open the client manually and paste the prompt or attach the HTML file.`;
+    if (result.status === 'open-attempted') return `${ready} The ${prompt} was copied and an attempt was made to open ${tool}. File reading cannot be confirmed. ${tool === 'WorkBuddy' ? 'Paste the prompt in WorkBuddy or attach the HTML file manually.' : 'Paste the prompt if needed, or attach the HTML file manually if the client cannot access the path.'}`;
   }
   switch (result.status) {
+    case 'connection-failed': return 'The local connection record could not be saved. Nothing was copied or opened; your input is retained. Retry after checking the local server.';
+    case 'copied': return 'Prompt copied. Paste it into your AI tool.';
     case 'preview': return `Preview: open this context in ${tool}. Nothing was copied or launched.`;
     case 'cancelled': return 'Cancelled. No attempt was made to open the tool.';
     case 'file-failed': return 'The local file could not be prepared. Nothing was copied or opened; your annotations are retained. Check that the local server is running and retry.';

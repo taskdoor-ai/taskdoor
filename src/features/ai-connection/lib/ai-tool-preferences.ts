@@ -14,8 +14,8 @@ export function parseAiToolPreferences(raw: string | null): AiToolPreferences {
   } catch { return empty(); }
 }
 
-export function defaultAiTool(preferences: AiToolPreferences): AiTool | null {
-  return preferences.used.length ? preferences.order[0] : null;
+export function defaultAiTool(preferences: AiToolPreferences): AiTool {
+  return preferences.order[0] ?? aiToolIds[0];
 }
 
 type StorageAccess = {

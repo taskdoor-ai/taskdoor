@@ -5,6 +5,7 @@
 @import "@/shared/styles/tokens.css";
 @import "@/features/tasks/styles/task-burnup-node.css";
 @import "@/features/ai-connection/styles/local-agent-connection.css";
+@import "@/features/ai-connection/styles/business-connection.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
