@@ -73,7 +73,7 @@ export interface ToolWheelProps {
   style?: React.CSSProperties;
 }
 
-const TASKDOOR_MARK = "M2.5 0a2.5 2.5 0 0 0-2.5 2.5v41a2.5 2.5 0 0 0 3.273 2.378l13.203-4.291a1.2 1.2 0 0 0 .829-1.141V6.554a1.2 1.2 0 0 0-.829-1.141L3.273 1.122A2.5 2.5 0 0 0 2.5 0Z";
+const TASKDOOR_MARK = "M8 45.5V4.5A2.5 2.5 0 0 1 11.273 2.122L24.476 6.412A1.2 1.2 0 0 1 25.305 7.554V42.446A1.2 1.2 0 0 1 24.476 43.588L11.273 47.878A2.5 2.5 0 0 1 8 45.5Z";
 
 const DEFAULT_ITEMS: ToolWheelItem[] = [
   { label: "文档", path: "M6 2.5h8.2l5.3 5.3V20a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 20V4A1.5 1.5 0 0 1 6 2.5Zm7.4 1.9v4.5h4.5ZM8 12.2V14h8v-1.8Zm0 3.9v1.8h5.6v-1.8Z" },
@@ -142,7 +142,7 @@ export function ToolWheel({
   title = "Every tool. One shared workspace.",
   subtitle = "Plug the apps your team already works in into one shared view. Less switching. More time on the work itself.",
   markPath = TASKDOOR_MARK,
-  markViewBox = "0 0 28 46",
+  markViewBox = "8 2 28 46",
   background = "#fcfcfc",
   surface = "#ffffff",
   surfaceLighting = false,
@@ -456,15 +456,16 @@ export function ToolWheel({
         ctx.translate(X(CX) - (mw * sc) / 2, Y(HUB_CY) - hgt / 2);
         ctx.scale(sc, sc);
         ctx.translate(-mx, -my);
-        if (markViewBox === "0 0 28 46") {
-          ctx.fillStyle = C.accent;
-          ctx.globalAlpha = 0.22;
+        // Match the original brand artwork in the header in both themes.
+        if (markViewBox === "8 2 28 46") {
+          ctx.fillStyle = "#BFDCC9";
           ctx.beginPath();
-          ctx.roundRect(0, 0, 28, 46, 2.5);
+          ctx.roundRect(mx, my, mw, mh, 2.5);
           ctx.fill();
-          ctx.globalAlpha = 1;
+          ctx.fillStyle = "#2F7D4F";
+        } else {
+          ctx.fillStyle = C.accent;
         }
-        ctx.fillStyle = C.accent;
         ctx.fill(mark);
         ctx.restore();
       }
