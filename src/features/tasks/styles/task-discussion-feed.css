@@ -1,5 +1,25 @@
 /* Task discussion shares one chronological stream and one composer. */
 .task-discussion-feed { display: flex; flex: 1; min-width: 0; min-height: 0; flex-direction: column; }
+.discussion-filter { grid-template-columns: minmax(0, 360px) max-content; justify-content: start; column-gap: 10px; margin-bottom: 4px; }
+.discussion-filter-selection { display: flex; min-width: 0; max-width: 100%; height: var(--task-search-control-height); align-items: center; border: 1px solid transparent; border-radius: var(--ad-radius-control); }
+.discussion-filter-selection[data-active] { border-color: var(--ad-border); background: transparent; }
+.discussion-filter-trigger { min-width: var(--task-search-control-height); max-width: 100%; height: calc(var(--task-search-control-height) - 2px); gap: 6px; padding: 0 8px 0 2px; border-color: transparent; background: transparent; color: var(--ad-ink-secondary); }
+.discussion-filter-trigger[data-active] { color: var(--ad-ink); }
+.discussion-filter-trigger:is(:hover, [data-popup-open], [aria-expanded="true"]) { border-color: transparent; background: transparent; }
+.discussion-filter-trigger-icon { display: inline-grid; width: 30px; height: calc(var(--task-search-control-height) - 6px); flex: 0 0 30px; place-items: center; border-radius: 6px; }
+.discussion-filter-trigger:is(:hover, [data-active], [data-popup-open], [aria-expanded="true"]) .discussion-filter-trigger-icon { background: var(--ad-surface-subtle); }
+.discussion-filter-selection-label { min-width: 0; white-space: normal; text-align: start; font-size: var(--ad-text-caption); font-weight: 400; }
+.discussion-filter-selection > .discussion-filter-clear { flex: 0 0 28px; width: 28px; height: calc(var(--task-search-control-height) - 2px); min-height: 0; margin-inline-end: 2px; color: var(--ad-ink-tertiary); }
+.discussion-filter-clear:hover { background: transparent; color: var(--ad-ink); }
+.discussion-filter button:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
+.discussion-filter button:disabled { opacity: .5; cursor: default; }
+.discussion-filter-menu { width: max-content; max-width: calc(100vw - 24px); }
+.discussion-filter-empty, .discussion-filter-reply-context { padding-block: 16px; color: var(--ad-ink-tertiary); font-size: var(--ad-text-body-sm); line-height: 1.7; }
+@media (max-width: 640px), (pointer: coarse) {
+  .discussion-filter { display: flex; flex-wrap: wrap; gap: 8px; }
+  .discussion-filter-search-row { flex: 1 1 120px; min-width: min(120px, 100%); width: min(100%, 360px); }
+  .discussion-filter-selection > .discussion-filter-clear { flex-basis: 40px; width: 40px; height: 42px; }
+}
 .task-discussion-feed-list { --discussion-avatar-size: 28px; --discussion-avatar-gap: 12px; --discussion-identity-gap: 8px; --discussion-row-gap: 32px; display: grid; gap: var(--discussion-row-gap); margin: 0; padding: 0; list-style: none; }
 .task-discussion-feed-message { position: relative; display: grid; min-width: 0; grid-template-columns: var(--discussion-avatar-size) minmax(0, 1fr); align-items: start; gap: var(--discussion-avatar-gap); }
 .task-discussion-feed-message:not(:last-child)::after { position: absolute; inset-inline: 0; bottom: calc(var(--discussion-row-gap) / -2); border-bottom: 1px dashed var(--ad-border); content: ""; pointer-events: none; }

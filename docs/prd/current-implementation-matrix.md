@@ -1,5 +1,11 @@
 # 当前实现矩阵
 
+## PRD-0421 本批讨论与筛选交付（2026-11-20）
+
+时间切换、讨论搜索与范围／附件筛选、讨论和文件圆角搜索、任务列表筛选浅底已从最新PM Demo main独立提取。保留既有置顶、点赞、收藏和文件浏览能力。菜单无清除全部；搜索框和筛选入口分别清除，各自保留另一类条件。41项定向测试、应用类型检查、结构门及Vite前端打包通过；浅深色、1470×900与390×844、时间独立切换、条件保持、清除与Escape回焦已通过实际浏览器验证。
+
+主工作区5173的现行图登记为FIG-COLLAB-017至021、FIG-LIST-009／010。交付分支5188的实际截图与精确验证范围另见[交付依据](../../artifacts/product-audit/discussion-search-2026-11-20/README.md)。正式项目来源dev为`ee8b46f0c6705ab92695826432f0a548b674be13`，上述三项尚缺；本次不修改正式项目代码或服务。
+
 ## PRD-0416 层级与列表的文件信息（2026-11-18）
 
 本次 PM Demo 在[层级视图](../../src/features/tasks/files/components/TaskFileTree.tsx)及[列表视图](../../src/features/tasks/files/components/TaskFileFolderView.tsx)呈现大小和最近更新时间。[层级布局](../../src/features/tasks/styles/task-file-browser.css)与[列表布局](../../src/features/tasks/styles/task-file-views.css)定齐大小、时间和更多操作，窄屏隐藏时间。文件夹对齐自身更新时间，显示直接子项数。既有层级及列表截图继续待采集。

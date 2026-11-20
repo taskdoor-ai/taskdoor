@@ -144,7 +144,7 @@
 .task-detail-split .task-detail-body > .task-discussion-panel { display: flex; padding: 0; overflow: visible; }
 .task-detail-split .task-discussion { display: flex; flex: 1; flex-direction: column; min-height: 0; min-width: 0; }
 .task-detail-split .task-detail-body > .task-discussion-panel { flex: 0 0 auto; min-height: max(320px, calc(var(--task-detail-viewport-height, 100dvh) - var(--task-detail-summary-height, 52px) - var(--task-detail-tabs-height))); }
-.task-detail-split .task-discussion-scroll { flex: 1; min-height: 0; overflow: visible; padding: 24px var(--task-detail-content-inset); }
+.task-detail-split .task-discussion-scroll { flex: 1; min-height: 0; overflow: visible; padding: 12px var(--task-detail-content-inset) 24px; }
 .task-detail-split .task-discussion-threads { margin: 0; }
 /* Keep its normal-flow space so the last message can clear the pinned composer. */
 .task-detail-split .task-discussion-compose { position: sticky; bottom: 0; z-index: 18; flex-shrink: 0; gap: 10px; padding: 16px var(--task-detail-content-inset); border-top: 0; background: var(--ad-surface); max-height: calc(var(--task-detail-viewport-height, 100dvh) * .46); overflow: auto; overscroll-behavior: contain; }

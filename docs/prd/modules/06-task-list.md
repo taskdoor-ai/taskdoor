@@ -43,6 +43,10 @@ operations: "list, switch_scope, search, filter, sort, pin, unpin, load_more, op
 
 状态分类显示全部候选任务数与各状态任务数，帮助用户在切换前判断结果范围。统计保留当前任务范围、搜索及其他筛选条件，忽略当前状态条件；选择状态后仍可查看其他状态的数量。已选项继续显示勾选，空结果明确显示 0。
 
+![FIG-LIST-009 筛选条件生效后的任务列表](../assets/task-list/filter-selected-quiet-light-zh.png)
+
+*FIG-LIST-009 · 筛选条件生效后的任务列表。*
+
 **列表与详情同步**
 
 - 用户主动打开搜索或筛选结果中的任务时，右侧展示该任务；当前选择不受是否为第一条影响。

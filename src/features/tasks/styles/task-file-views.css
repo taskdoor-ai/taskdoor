@@ -11,7 +11,7 @@
   background: var(--ad-border);
 }
 @media (max-width: 640px) {
-  .task-file-browser-toolbar { grid-template-columns: minmax(0, 1fr); }
+  .task-file-directory-browser .task-file-browser-toolbar { grid-template-columns: minmax(0, 1fr); }
   .task-file-browser-actions { flex-wrap: wrap; }
 }
 .task-file-view-switch {

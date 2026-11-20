@@ -1,5 +1,29 @@
 # PRD 来源映射
 
+## PRD-0421 简化讨论筛选菜单（2026-11-20）
+
+用户明确要求移除讨论筛选菜单的“清除全部”。[筛选组件](../../src/features/tasks/discussion/components/DiscussionFilter.tsx)移除该菜单项及其上方分隔线，[讨论接线](../../src/features/tasks/components/TaskDiscussion.tsx)不再向菜单传入统一清除回调。搜索框和筛选入口仍分别清除各自条件，通知／原文定位等内部恢复完整结果的逻辑保留。任务列表筛选不在本次修改范围。
+
+## PRD-0420 筛选入口与圆角搜索（2026-11-20）
+
+用户指定选中后直接以图标、条件及清除叉作为筛选入口，放在搜索框右侧；外部产品仅为参考，菜单仍沿系统现有列表，讨论与文件搜索均试用圆角浅底。[筛选组件](../../src/features/tasks/discussion/components/DiscussionFilter.tsx)使用共享菜单，并以[任务列表筛选](../../src/features/tasks/components/TaskListFilterPanel.tsx)分类行作为样式依据；两者共用[菜单尺寸变量](../../src/features/tasks/styles/task-filter-shared.css)，统一字号、行高和留白；[共享工具栏](../../src/features/tasks/styles/task-pane-toolbar.css)统一两处搜索框，[讨论样式](../../src/features/tasks/styles/task-discussion-feed.css)组织相邻入口与清除操作，选中、悬停和展开时仅图标区使用浅底，条件文字与清除叉保持透明。此次视觉修正不新增语义变更编号，功能仍使用既有查询条件。
+
+## PRD-0419 讨论列表查找工具（2026-11-20）
+
+2026-11-20 用户继续要求讨论和文件两块工具栏一致，以所附文件页截图为视觉依据。两者现共用[工具栏样式](../../src/features/tasks/styles/task-pane-toolbar.css)，文件区原有搜索、排序、视图和新建功能保持；本次为尺寸、排版和呈现统一，未新增语义变更编号。
+
+用户明确要求使用所附图2的页签下方区域，撤回页签最右侧入口，并参考 Linear 等产品。已读取 [Linear Filters](https://linear.app/docs/filters)、[Linear Search](https://linear.app/docs/search)及[Notion 数据库视图工具](https://www.notion.com/help/views-filters-and-sorts)，并查看 Linear 官方筛选界面图片；取其紧凑工具和可移除条件表达，具体位置及业务范围按用户本轮要求。
+
+[讨论组件](../../src/features/tasks/components/TaskDiscussion.tsx)直接在列表前渲染工具，移除页签Portal接线。[筛选组件](../../src/features/tasks/discussion/components/DiscussionFilter.tsx)复用共享输入及范围菜单，已选条件沿同一查询状态逐项清除。[讨论样式](../../src/features/tasks/styles/task-discussion-feed.css)限制搜索宽度并统一行高和中性层级。
+
+## PRD-0418 讨论查找工具按需展开（2026-11-20）
+
+用户指出上一版独立长搜索条及分散筛选破坏讨论区的视觉层级。入口依据本轮明确修正要求与现行设计规范的辅助工具、按需呈现及共同行起点规则。[任务详情](../../src/features/tasks/components/TaskDetail.tsx)提供页签同行工具位置，[讨论组件](../../src/features/tasks/components/TaskDiscussion.tsx)保持查询状态，[工具组件](../../src/features/tasks/discussion/components/DiscussionFilter.tsx)复用共享 Popover 和菜单展开。只调整查找入口与操作呈现，PRD-0417 的查询、草稿、定位和时间规则继续适用。
+
+## PRD-0417 讨论搜索筛选与时间切换（2026-11-20）
+
+用户于2026-11-20要求点击相对时间查看具体时间、再次点击还原，并参考所附范围菜单增加讨论搜索筛选。正式 `dev` 已核对至 [`ee8b46f0`](https://github.com/nocoly/taskdoor/commit/ee8b46f0c6705ab92695826432f0a548b674be13)：[消息时间](https://github.com/nocoly/taskdoor/blob/ee8b46f0c6705ab92695826432f0a548b674be13/apps/web/src/features/tasks/discussion/components/TaskDiscussionMessage.tsx#L518)只有相对文字和完整时间提示，[讨论列表](https://github.com/nocoly/taskdoor/blob/ee8b46f0c6705ab92695826432f0a548b674be13/apps/web/src/features/tasks/components/TaskDiscussion.tsx)尚无本轮搜索与范围入口。本地实现见[时间组件](../../src/features/tasks/discussion/components/DiscussionTimestamp.tsx)、[筛选入口](../../src/features/tasks/discussion/components/DiscussionFilter.tsx)、[筛选规则](../../src/features/tasks/discussion/lib/discussion-filter.ts)及[讨论接线](../../src/features/tasks/components/TaskDiscussion.tsx)。
+
 ## PRD-0416 层级与列表的文件信息（2026-11-18）
 
 用户确认层级及列表在文件名称右侧对齐显示大小和最近更新时间，窄屏保留大小、隐藏时间。呈现入口为[层级视图](../../src/features/tasks/files/components/TaskFileTree.tsx)、[列表视图](../../src/features/tasks/files/components/TaskFileFolderView.tsx)、[文件区样式](../../src/features/tasks/styles/task-file-browser.css)及[列表样式](../../src/features/tasks/styles/task-file-views.css)。完整规则归[文件浏览](modules/11-files-local-commits.md#31-文件浏览整理与上传)。

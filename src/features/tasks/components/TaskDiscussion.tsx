@@ -7,12 +7,15 @@ import React, { useCallback, useEffect, useMemo, useRef, useState, type ReactNod
 import type { TaskFileNode, TaskNode } from "@/shared/model/task-model";
 import type { CollaborationMessage, DiscussionDraft } from "@/features/tasks/lib/task-collaboration";
 import { buildDiscussionFeed } from "@/features/tasks/discussion/lib/discussion-feed";
+import { filterDiscussionMessages, type DiscussionScope } from "@/features/tasks/discussion/lib/discussion-filter";
+import { DiscussionFilter } from "@/features/tasks/discussion/components/DiscussionFilter";
+import { useMockText } from "@/ai/discussion-reading";
 import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
 import { DiscussionComposer } from "@/features/tasks/discussion/components/DiscussionComposer";
 import { TaskDiscussionMessage } from "@/features/tasks/discussion/components/TaskDiscussionMessage";
 import type { DiscussionTaskLink } from "@/features/tasks/discussion/components/TaskDiscussionTaskLinks";
 import type { DiscussionReferenceTask } from "@/features/tasks/discussion/lib/discussion-task-reference";
-import { usePersonOptions } from "@/shared/ui/PersonDirectory";
+import { usePersonLookup, usePersonOptions } from "@/shared/ui/PersonDirectory";
 import type { DiscussionDraftInsertion } from "@/features/tasks/discussion/lib/discussion-draft-insertion";
 import { reportVisibleDiscussionRead } from "@/features/tasks/discussion/lib/discussion-read";
 import { toast } from "@/shared/ui/toast";
@@ -62,7 +65,13 @@ type ScrollRequest = { kind: "locate"; id: string } | { kind: "latest" } | { kin
 export function TaskDiscussion({ active = true, readable = true, readRequestSequence, onRead, activities, attentionTarget, currentUser, currentUserName, files, draftKey = "task-discussion", draftInsertion, onConnectAi, onOpenFile, onPreviewAttachment, onPost, onDelete, onCreateSubtask, creatingSubtask = false, retainedSubtaskSources = [], renderAfterMessage, people, followupsByMessageId, onOpenFollowupTask, referenceTasks, onOpenReferenceTask, renderSuggestions, teamId = "", taskId = "", canPin = false, composerTools }: TaskDiscussionProps) {
   const d = useDetailCopy();
   const ui = useGlobalUi();
-  const { locale } = useI18n();
+  const { locale, autoTranslate } = useI18n();
+  const mock = useMockText();
+  const [query, setQuery] = useState("");
+  const [scope, setScope] = useState<DiscussionScope>("all");
+  const [attachmentsOnly, setAttachmentsOnly] = useState(false);
+  const clearFilters = () => { setQuery(""); setScope("all"); setAttachmentsOnly(false); };
+  const findPerson = usePersonLookup();
   const followupPeople = usePersonOptions(people);
   const publishedFeed = useMemo(() => buildDiscussionFeed(activities), [activities]);
   const retainedMessageSnapshots = useRef(new Map<string, CollaborationMessage>());
@@ -90,7 +99,6 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
     return { feed: buildDiscussionFeed(messages), unavailableSubtaskSources };
   }, [activities, retainedSubtaskSources]);
   const reactions = useDiscussionReactions(teamId, taskId, publishedFeed.messages, currentUser);
-  const { pinned: pinnedMessages, timeline: timelineMessages } = useMemo(() => splitPinnedMessages(feed.messages, reactions.pins), [feed.messages, reactions.pins]);
   const togglePin = (message: CollaborationMessage, pinned: boolean) => {
     const replaced = !pinned && pinnedMessages.length >= 3;
     if (!(pinned ? reactions.unpin(message.id) : reactions.pin(message.id))) { toast.error(locale === "en" ? "Could not update the pin. Please try again." : "置顶未能更新，请重试。"); return; }
@@ -103,6 +111,13 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
     }
     return messages;
   }, [activities]);
+  const matchingMessages = filterDiscussionMessages(feed.messages, {
+    query, scope, attachmentsOnly, currentUser, currentUserName, records,
+    searchText: message => [autoTranslate ? mock.discussionTranslation(message.message) : "", findPerson(message.author)?.name, mock.text(message.author), message.file ? mock.text(message.file) : "", ...(message.attachmentRefs?.map(ref => mock.text(ref.name)) ?? [])].filter(Boolean).join(" "),
+  });
+  // An open subtask draft keeps its original host even if its source changes.
+  const visibleMessages = creatingSubtask ? feed.messages.filter(message => matchingMessages.includes(message) || retainedSubtaskSources.some(source => source.messageId === message.id)) : matchingMessages;
+  const { pinned: pinnedMessages, timeline: timelineMessages } = useMemo(() => splitPinnedMessages(visibleMessages, reactions.pins), [visibleMessages, reactions.pins]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
   const inlineReplyRef = useRef<HTMLDivElement>(null);
@@ -122,7 +137,8 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
   const insertionIdRef = useRef<string | undefined>(undefined);
   const readCallbackRef = useRef(onRead);
   readCallbackRef.current = onRead;
-  const readActivityIds = publishedFeed.messages.map(message => message.id);
+  const publishedIds = new Set(publishedFeed.messages.map(message => message.id));
+  const readActivityIds = visibleMessages.filter(message => publishedIds.has(message.id)).map(message => message.id);
   const readActivitySignature = JSON.stringify(readActivityIds);
   const readActivityIdsRef = useRef(readActivityIds);
   readActivityIdsRef.current = readActivityIds;
@@ -154,12 +170,14 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
   const locate = (id: string) => {
     if (!feed.messages.some(message => message.id === id)) { setError(d('originalError')); return; }
     setError("");
+    if (!visibleMessages.some(message => message.id === id)) clearFilters();
     setScrollRequest({ kind: "locate", id });
     setHighlightedActivityId(null);
   };
   useEffect(() => {
     if (!attentionTarget) return;
     if (!feed.messages.some(message => message.id === attentionTarget.id)) { setError(d('originalError')); return; }
+    if (!visibleMessages.some(message => message.id === attentionTarget.id)) clearFilters();
     setScrollRequest({ kind: "locate", id: attentionTarget.id });
     setHighlightedActivityId(attentionTarget.id);
     setHighlightSequence(sequence => sequence + 1);
@@ -271,7 +289,7 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
       if (replyId) {
         if (anchorTop !== undefined) setScrollRequest({ kind: "restore", id: replyId, top: anchorTop });
         toast.success(ui("回复已发送"));
-      } else setScrollRequest({ kind: "latest" });
+      } else { clearFilters(); setScrollRequest({ kind: "latest" }); }
     } finally {
       submittingRef.current = false;
       setSubmitting(false);
@@ -292,13 +310,15 @@ export function TaskDiscussion({ active = true, readable = true, readRequestSequ
           </TaskDiscussionMessage>;
         };
 
+  const tools = active ? <DiscussionFilter query={query} scope={scope} attachmentsOnly={attachmentsOnly} disabled={submitting || creatingSubtask} onQueryChange={setQuery} onScopeChange={setScope} onAttachmentsChange={setAttachmentsOnly} /> : null;
   return <div className="task-discussion task-discussion-feed">
     <div className="task-discussion-scroll" ref={scrollRef}>
+      {tools}
       {error && <p className="task-discussion-feed-error" role="alert">{error}</p>}
       {feed.messages.length === 0 ? <div className="task-record-empty"><MessageSquare aria-hidden="true" size={22} /><strong>{d('noDiscussion')}</strong><p>{d('discussionHint')}</p></div>
-        : <>{pinnedMessages.length > 0 && <ol aria-label={locale === "en" ? "Pinned messages" : "已置顶的讨论"} className="task-discussion-feed-list task-discussion-pinned-list">{pinnedMessages.map(message => renderMessage(message, true))}</ol>}
+        : visibleMessages.length === 0 ? <p className="discussion-filter-empty">{locale === "en" ? "No discussions match. Try another search or filter." : "没有匹配的讨论，试试调整搜索或筛选条件。"}</p> : <>{pinnedMessages.length > 0 && <ol aria-label={locale === "en" ? "Pinned messages" : "已置顶的讨论"} className="task-discussion-feed-list task-discussion-pinned-list">{pinnedMessages.map(message => renderMessage(message, true))}</ol>}
           {timelineMessages.length > 0 && <ol aria-label={d('taskDiscussion')} className="task-discussion-feed-list">{timelineMessages.map(message => renderMessage(message, false))}</ol>}</>}
-      {!creatingSubtask && mode && !targetAvailable && replyComposer}
+      {!creatingSubtask && mode && (!targetAvailable || !visibleMessages.some(message => message.id === mode.id)) && replyComposer}
     </div>
     {!mode && !creatingSubtask && <div className="task-discussion-compose" ref={composerRef}>
       <div className="task-discussion-compose-content">

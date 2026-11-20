@@ -8,18 +8,8 @@
   min-width: 0;
   padding: 12px 24px 32px;
 }
-.task-file-browser-toolbar { --task-search-control-height: var(--ad-control-height-md); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 16px; row-gap: 10px; padding-block: 4px 12px; }
 .task-file-browser-actions { display: flex; align-items: center; justify-content: flex-end; min-width: 0; }
 .task-file-browser-add { height: var(--task-search-control-height); min-height: var(--task-search-control-height); font-family: var(--ad-font-sans); font-size: var(--ad-text-label); font-weight: 500; line-height: 1; }
-.task-file-browser-search-row { display: flex; align-items: center; width: min(100%, 360px); min-width: 0; gap: 8px; }
-.task-file-browser-search { flex: 1 1 0; min-width: 0; }
-.task-file-browser-search-row .task-file-browser-search:hover, .task-file-browser-search-row .task-file-browser-search:focus-within { background: var(--ad-surface); box-shadow: none; }
-.task-file-browser-search-row .task-file-browser-search [data-slot="input-shell"] { display: contents; }
-.task-file-browser-search-row .task-file-browser-search [data-slot="input-leading-icon"] { position: static; width: 14px; height: 14px; transform: none; }
-.task-file-browser-search-row .task-file-browser-search .task-file-search-clear { position: static; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: var(--ad-radius-control); background: transparent; color: var(--ad-ink-tertiary); transform: none; }
-.task-file-browser-search-row .task-file-browser-search .task-file-search-clear:hover { background: var(--ad-surface-subtle); color: var(--ad-ink); }
-.task-file-browser-search-row .task-file-browser-search .task-file-search-clear:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 2px; }
-.task-file-browser-search-row .task-file-browser-search .task-file-search-clear svg { width: 14px; height: 14px; }
 .task-file-browser-count { flex: 0 0 auto; color: var(--ad-ink-tertiary); font-size: 12px; }
 .task-file-browser-open:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: -2px; }
 .task-file-browser-items { display: grid; gap: 0; overflow-x: auto; list-style: none; margin: 0; padding: 0; }
@@ -61,8 +51,6 @@
     --task-file-row-gap: 8px;
     padding: 8px 12px 24px;
   }
-  .task-file-browser-toolbar { column-gap: 8px; row-gap: 8px; }
-  .task-file-browser-search-row { width: 100%; }
   .task-file-browser-items .task-file-explorer-row { min-width: calc(180px + (var(--tree-item-level, 1) - 1) * 12px); grid-template-columns: 18px 36px minmax(0, 1fr) var(--task-file-size-column) var(--task-file-action-column); padding-left: calc(4px + (var(--tree-item-level, 1) - 1) * 12px); }
   .task-file-browser-items .task-file-explorer-row::before { left: 12px; width: calc((var(--tree-item-level, 1) - 1) * 12px); background-size: 12px 100%; background-image: linear-gradient(to right, var(--ad-border-soft) 0, var(--ad-border-soft) 1px, transparent 1px); }
   .task-file-browser-items .task-file-browser-thumbnail { width: 36px; height: 28px; }
@@ -71,13 +59,6 @@
 }
 @media (pointer: coarse), (hover: none) {
   .task-file-directory-browser { --task-file-action-column: 44px; }
-  .task-file-browser-toolbar { --task-search-control-height: var(--ad-control-touch-min); }
-  .task-file-browser-search-row .task-file-browser-search .task-file-search-clear { width: 40px; height: calc(var(--ad-control-touch-min) - 2px); }
   .task-file-browser-items .task-file-explorer-row { min-height: 48px; padding-block: 2px; }
   .task-file-browser-items .task-file-explorer-chevron, .task-file-browser-items .task-file-explorer-more { height: 44px; min-height: 44px; }
-}
-
-@media (max-width: 900px) {
-  .task-file-browser-toolbar { --task-search-control-height: var(--ad-control-touch-min); }
-  .task-file-browser-search-row .task-file-browser-search .task-file-search-clear { width: 40px; height: calc(var(--ad-control-touch-min) - 2px); }
 }
