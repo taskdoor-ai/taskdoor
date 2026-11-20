@@ -228,7 +228,7 @@ export default function OnboardingExperience({ onWorkspaceReady }: { onWorkspace
 
   if (state.step === "workspace") return <WorkspaceLoading teamName={activeTeam?.name} error={localizeOnboardingMessage(locale, localError)} notice={localizeOnboardingMessage(locale, state.notice)} onRetry={() => void enterWorkspace()} />;
 
-  return <OnboardingShell appearance={releasedAppearance ? "sand-auth" : undefined} busy={Boolean(busy)} step={state.step} surfaceRef={surface} notice={storageNotice && <p className="onboarding-storage-notice" role="status">{localizeOnboardingMessage(locale, storageNotice)}</p>}>
+  return <OnboardingShell taskWheel={releasedAppearance && !forgot && authScreen} appearance={releasedAppearance ? "sand-auth" : undefined} busy={Boolean(busy)} step={state.step} surfaceRef={surface} notice={storageNotice && <p className="onboarding-storage-notice" role="status">{localizeOnboardingMessage(locale, storageNotice)}</p>}>
         {googlePreview && <GoogleAuthPreview onCancel={() => {
           setGooglePreview(false);
           requestAnimationFrame(() => surface.current?.querySelector<HTMLElement>(".onboarding-google")?.focus());

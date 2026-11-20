@@ -3375,7 +3375,6 @@
   "taskFileSortCurrent": { "zh": "文件排序：{0}", "en": "Sort files: {0}" },
   "taskFileSortUpdated": { "zh": "最新更新", "en": "Last updated" },
   "taskFileSortCreated": { "zh": "最新创建", "en": "Newest created" },
-<<<<<<< HEAD
   "notificationSettings": { "zh": "通知设置", "en": "Notification settings" },
   "notificationOnlyRelated": { "zh": "只接收与我相关的通知", "en": "Only notifications related to me" },
   "notificationSettingsExplanation": { "zh": "站内及邮件只收直接相关通知，其他动态见活动。", "en": "Only direct notifications in-app and by email; other updates stay in Activity." },

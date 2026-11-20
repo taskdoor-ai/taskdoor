@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode, type Ref } from "react";
+import { lazy, Suspense, useEffect, useState, type ReactNode, type Ref } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { applyTheme, readThemePreference, THEME_STORAGE_KEY } from "@/shared/lib/theme-preference";
@@ -8,10 +8,14 @@ import { TeamFlowIllustration } from "@/features/auth/components/TeamFlowIllustr
 import { onboardingTranslator } from "@/features/auth/i18n/onboarding-messages";
 import "@/features/auth/styles/onboarding.css";
 import "@/features/auth/styles/auth-sand.css";
+import "@/features/auth/styles/taskdoor-wheel.css";
+
+const TaskDoorWheel = lazy(() => import("@/features/auth/components/TaskDoorWheel"));
 
 /** A21's released shell, with only Demo preferences and local form state behind it. */
-export function OnboardingShell({ appearance, busy = false, step, children, notice, surfaceRef }: {
+export function OnboardingShell({ appearance, taskWheel = false, busy = false, step, children, notice, surfaceRef }: {
   appearance?: "sand-auth";
+  taskWheel?: boolean;
   busy?: boolean;
   step: string;
   children: ReactNode;
@@ -35,17 +39,19 @@ export function OnboardingShell({ appearance, busy = false, step, children, noti
     applyTheme(next);
     try { localStorage.setItem(THEME_STORAGE_KEY, next); } catch { /* Keep the current tab usable. */ }
   };
-  return <div className={`onboarding-page onboarding-auth${appearance ? "" : " onboarding-auth--standard"}`} data-auth-appearance={appearance} ref={surfaceRef}>
+  return <div className={`onboarding-page onboarding-auth${appearance ? "" : " onboarding-auth--standard"}${taskWheel ? " onboarding-auth--wheel" : ""}`} data-auth-appearance={appearance} ref={surfaceRef}>
     {!appearance && <div className="onboarding-language"><LanguageSwitcher /></div>}
     <aside className="onboarding-story" aria-labelledby="onboarding-story-title">
       <div className="onboarding-story-inner">
-        <div className="onboarding-art-scene" aria-hidden="true">
+        <div className="onboarding-art-scene" aria-hidden={taskWheel ? undefined : true}>
+          {taskWheel ? <Suspense fallback={<div className="taskdoor-wheel" />}><TaskDoorWheel /></Suspense> : <>
           <img className="onboarding-story-art" src="/images/onboarding-team-v1.png" alt="" width={1024} height={1024} fetchPriority="high" draggable={false} />
           <span className="onboarding-avatar-backs" />
           <img className="onboarding-story-art onboarding-story-art--avatars" src="/images/onboarding-team-v1.png" alt="" width={1024} height={1024} draggable={false} />
           <TeamFlowIllustration />
+          </>}
         </div>
-        <h2 id="onboarding-story-title">{t("和你的团队，还有你的 Agent，一起完成任务。")}</h2>
+        <h2 id="onboarding-story-title">{taskWheel ? (locale === "en" ? "Work with the agent you know. Share task goals, progress and context with your team." : "用你熟悉的 Agent 工作，与团队共享任务目标、进展与上下文。") : t("和你的团队，还有你的 Agent，一起完成任务。")}</h2>
       </div>
     </aside>
     <main className="onboarding-main"><div className="onboarding-flow">
