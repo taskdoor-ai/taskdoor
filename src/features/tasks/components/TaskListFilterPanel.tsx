@@ -13,6 +13,7 @@ import { taskStatusDefinition, type TaskStatus } from "@/shared/ui/TaskStatusBad
 import { Button } from "@/shared/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Input } from "@/shared/ui/input";
+import "@/features/tasks/styles/task-filter-shared.css";
 import { TaskDueDatePicker } from "@/features/tasks/components/TaskDueDatePicker";
 import { useTeamTimeZone } from "@/shared/lib/useTeamTimeZone";
 import { isValidTimeZone } from "@/shared/lib/team-time-zone";

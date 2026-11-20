@@ -1,4 +1,5 @@
 import { relativeTaskTime } from "@/features/tasks/lib/relative-time";
+import { DiscussionTimestamp } from "@/features/tasks/discussion/components/DiscussionTimestamp";
 import { useI18n } from '@/shared/i18n/I18nProvider';
 import { contentReading } from '@/ai/mock/i18n/contentReading';
 import { useGlobalUi } from "@/shared/i18n/global-ui";
@@ -154,7 +155,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
           </>}
           <div className="discussion-message-footer">
             {(timestamp || message.updatedAt || reading.state !== "same" || (!isReply && !compact && replyControls)) && <div className="discussion-message-meta">
-              {timestamp && <time tabIndex={0} title={timestamp.full} aria-label={timestamp.full} dateTime={timestamp.dateTime}>{timestamp.label}</time>}
+              {timestamp && <DiscussionTimestamp key={message.id} message={message} now={now} />}
               {editing !== message.id && (reading.state === 'translated' || reading.state === 'original') && <span className="content-translation-control"><span>{reading.state === 'translated' ? ui('已翻译') : ui('原文')}</span><span aria-hidden="true"> · </span><button type="button" aria-label={reading.state === 'translated' ? ui('查看原文') : ui('显示译文')} onClick={toggleOriginal}>{reading.state === 'translated' ? ui('查看原文') : ui('显示译文')}</button></span>}
               {editing !== message.id && reading.state === 'unavailable' && <small className="content-translation-unavailable" title={ui('本地演示尚无此内容的译文，原文已保留。')}>{ui('暂无译文')}</small>}
               {message.updatedAt && <small>{d('edited')}</small>}

@@ -61,6 +61,53 @@ const composer = (tree: ReactNode) => elements(tree, item => item.type === Discu
 const rowIds = (tree: ReactNode) => rows(tree).map(item => item.props.message.id);
 const draft: DiscussionDraft = { body: "我补充确认", mentions: [], attachments: [] };
 
+test("讨论筛选入口直接显示条件，清除入口条件保留搜索关键词", async () => {
+  const { DiscussionFilter } = await import("../src/features/tasks/discussion/components/DiscussionFilter.tsx");
+  const changes: unknown[][] = [];
+  const { tree, html } = capture(() => DiscussionFilter({ query: "预算", scope: "mine", attachmentsOnly: true,
+    onQueryChange: query => changes.push(["query", query]), onScopeChange: scope => changes.push(["scope", scope]),
+    onAttachmentsChange: value => changes.push(["attachments", value]),
+  }));
+  const clear = elements(tree, item => item.props.className === "discussion-filter-clear")[0];
+  assert.ok(clear, "已选筛选在入口直接提供清除叉");
+  assert.match(html, /我发布的/);
+  assert.match(html, /包含附件/);
+  assert.doesNotMatch(html, /discussion-filter-conditions|discussion-filter-count/);
+  clear.props.onClick();
+  assert.deepEqual(changes, [["scope", "all"], ["attachments", false]], "清除筛选不能清除搜索词");
+});
+
+test("讨论范围与关键词叠加，筛选外原文可恢复定位且回复草稿保留", () => {
+  let step = 0;
+  const { tree } = capture(() => TaskDiscussion(props), node => {
+    const tools = elements(node, item => item.props.onScopeChange && item.props.onQueryChange)[0];
+    assert.ok(tools, "讨论提供搜索与范围筛选");
+    if (step === 0) { step++; row(node, nested.id).props.onReply(nested); tools.props.onScopeChange("replies-to-me"); }
+    else if (step === 1) { step++; assert.deepEqual(rowIds(node), [nested.id]); tools.props.onQueryChange("不存在的词"); }
+    else if (step === 2) { step++; assert.deepEqual(rowIds(node), []); assert.equal(composer(node).props.draftKey, `feed-test:reply:${nested.id}`); tools.props.onQueryChange(""); }
+    else if (step === 3) { step++; row(node, nested.id).props.onLocate(reply.id); }
+  });
+  assert.deepEqual(rowIds(tree), [otherReply.id, nested.id, reply.id, otherRoot.id, root.id]);
+  assert.equal(composer(tree).props.draftKey, `feed-test:reply:${nested.id}`);
+});
+
+test("讨论时间支持两次激活切换完整时间与相对时间，未知时间不补造", async () => {
+  const { DiscussionTimestamp } = await import("../src/features/tasks/discussion/components/DiscussionTimestamp.tsx");
+  const now = Date.parse("2026-11-20T09:00:00Z");
+  const fresh = { ...root, createdAt: "2026-11-20T08:59:00Z" };
+  for (const clicks of [0, 1, 2]) {
+    let step = 0;
+    const { html } = capture(() => DiscussionTimestamp({ message: fresh, now }), tree => {
+      if (step++ < clicks) elements(tree, item => item.type === "button")[0].props.onClick();
+    });
+    assert.match(html, clicks === 1 ? /aria-pressed="true"/ : /aria-pressed="false"/);
+    const label = html.match(/<time[^>]*>(.*?)<\/time>/)?.[1];
+    const expected = relativeTaskTime(fresh.createdAt, "zh-CN", now)!;
+    assert.equal(label, clicks === 1 ? expected.full : expected.label);
+  }
+  assert.equal(capture(() => DiscussionTimestamp({ message: { ...root, createdAt: undefined, time: "昨天" }, now })).html, "");
+});
+
 test("讨论绝对时间跟随语言，跨年及完整提示保留年份", () => {
   const now = new Date(2026, 9, 13, 20).getTime();
   for (const locale of ["zh-CN", "en"]) {
@@ -119,7 +166,7 @@ test("本人删除入口直接在回复左侧，他人消息和无删除权限�
         onReply: () => undefined, onLocate: () => undefined, onOpenFile: () => undefined,
         onDelete: canDelete ? item => { deleted.push(item); } : undefined,
       }));
-      const actions = elements(tree, item => item.props.className === "task-discussion-feed-actions")[0];
+      const actions = elements(tree, item => item.props.className === "task-discussion-feed-direct-actions")[0];
       const buttons = elements(actions.props.children, item => item.type === "button");
       const expectedDelete = canDelete && author !== "陈默";
       assert.deepEqual(buttons.map(button => button.props.children), expectedDelete ? ["删除", "回复"] : ["回复"]);
@@ -328,8 +375,8 @@ test("本人主消息和回复不提供编辑或空更多菜单，回复继续�
   for (const locale of ["zh-CN", "en"] as const) {
     const html = renderToStaticMarkup(createElement(I18nProvider, { initialLocale: locale, children: createElement(TaskDiscussion, renderProps) }));
     assert.doesNotMatch(html, /task-discussion-feed-more|task-discussion-feed-menu|更多讨论操作|More message actions/);
-    assert.equal((html.match(/class="task-discussion-feed-delete"/g) ?? []).length, 2);
-    assert.equal((html.match(/class="task-discussion-feed-reply"/g) ?? []).length, 2);
+    assert.equal((html.match(/class="task-discussion-delete"/g) ?? []).length, 2);
+    assert.equal((html.match(new RegExp(`<button[^>]*>${locale === "en" ? "Reply" : "回复"}</button>`, "g")) ?? []).length, 2);
   }
   const { tree } = capture(() => TaskDiscussion(renderProps), tree => {
     for (const item of rows(tree)) assert.equal(item.props.onEditStart, undefined);

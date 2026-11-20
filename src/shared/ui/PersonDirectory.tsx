@@ -14,6 +14,11 @@ export function usePersonProfile(identity: string | undefined) {
   return findPersonProfile(useContext(PersonDirectoryContext), identity);
 }
 
+export function usePersonLookup() {
+  const directory = useContext(PersonDirectoryContext);
+  return (identity: string, exactId = false) => exactId ? directory.byId.get(identity) : findPersonProfile(directory, identity);
+}
+
 export function useResolvedPersonProfile(input: { identity?: string; name: string; profile?: PersonOption | null }) {
   return resolvePersonProfile(useContext(PersonDirectoryContext), input);
 }

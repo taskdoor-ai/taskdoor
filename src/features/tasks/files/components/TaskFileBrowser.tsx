@@ -28,6 +28,7 @@ import {
   TaskFileFolderView,
   type TaskFileView,
 } from '@/features/tasks/files/components/TaskFileFolderView'
+import '@/features/tasks/styles/task-pane-toolbar.css'
 import '@/features/tasks/styles/task-file-browser.css'
 import '@/features/tasks/styles/task-file-views.css'
 

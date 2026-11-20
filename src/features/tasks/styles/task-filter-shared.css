@@ -1,0 +1,36 @@
+/* Shared visual dimensions for task-list categories and discussion scope choices. */
+.task-filter-menu, .discussion-filter-menu {
+  --task-filter-category-height: 40px;
+  --task-filter-category-font-size: 13px;
+  --task-filter-row-padding-block: 8px;
+  --task-filter-row-padding-inline: 10px;
+  --task-filter-row-radius: 6px;
+  --task-filter-list-padding: 6px;
+}
+.discussion-filter-menu[data-slot="dropdown-menu-content"] {
+  gap: 0;
+  padding: var(--task-filter-list-padding);
+  border: 1px solid var(--ad-border-soft);
+  border-radius: 12px;
+  background: var(--ad-surface);
+  color: var(--ad-ink-secondary);
+  box-shadow: 0 12px 36px #18223018, 0 2px 6px #18223008;
+}
+.discussion-filter-menu [data-slot="dropdown-menu-radio-group"] { display: grid; gap: 0; }
+.discussion-filter-menu [role^="menuitem"] {
+  min-height: var(--task-filter-category-height);
+  gap: 10px;
+  padding: var(--task-filter-row-padding-block) 32px var(--task-filter-row-padding-block) var(--task-filter-row-padding-inline);
+  border-radius: var(--task-filter-row-radius);
+  color: var(--ad-ink-secondary);
+  font-size: var(--task-filter-category-font-size);
+  font-weight: 400;
+  line-height: 20px;
+  cursor: pointer;
+}
+.discussion-filter-menu [role^="menuitem"]:is([data-highlighted], [aria-checked="true"]) { background: var(--ad-surface-subtle); color: var(--ad-ink); }
+.discussion-filter-menu [data-slot$="-item-indicator"] { inset-inline-end: 10px; color: var(--ad-ink-secondary); }
+.discussion-filter-menu [data-slot="dropdown-menu-separator"] { flex-shrink: 0; margin: 4px 0; background: var(--ad-border-soft); }
+@media (max-width: 900px), (pointer: coarse) {
+  .discussion-filter-menu [role^="menuitem"] { min-height: var(--ad-control-touch-min); }
+}

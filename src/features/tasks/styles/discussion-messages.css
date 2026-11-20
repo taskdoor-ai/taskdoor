@@ -13,6 +13,10 @@
 .discussion-message-authors > strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .discussion-message-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-top: var(--ad-space-2); }
 .discussion-message-meta > time, .discussion-message-meta > small { color: var(--ad-ink-tertiary); font-size: var(--ad-text-caption); }
+.discussion-timestamp { display: inline-flex; max-width: 100%; flex: 0 1 auto; align-items: center; min-height: 28px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--ad-ink-tertiary); font: inherit; font-size: var(--ad-text-caption); line-height: 1.65; text-align: start; cursor: pointer; }
+.discussion-timestamp:hover { color: var(--ad-ink); }
+.discussion-timestamp:focus-visible { outline: 2px solid var(--ad-focus); outline-offset: 3px; }
+@media (max-width: 640px), (pointer: coarse) { .discussion-timestamp { min-width: 44px; min-height: 44px; } }
 .discussion-ai { margin-left: auto; border: 0; padding: 5px; border-radius: 6px; color: var(--ad-ink-secondary); background: var(--ad-surface-subtle); cursor: pointer; }
 .discussion-reply-target, .discussion-expand, .discussion-collapse { background: none; border: none; color: var(--ad-ink-secondary); padding: 5px 0; font: inherit; font-size: 12px; cursor: pointer; }
 .discussion-inline-quote { display: block; width: 100%; margin: 8px 0 0; padding: 8px 10px; border: 0; border-left: 2px solid var(--ad-border-strong); background: var(--ad-surface-quiet); color: var(--ad-ink-secondary); font: inherit; font-size: 12px; text-align: left; overflow-wrap: anywhere; white-space: pre-wrap; cursor: pointer; }

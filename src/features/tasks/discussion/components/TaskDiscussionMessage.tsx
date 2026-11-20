@@ -7,7 +7,7 @@ import { useDiscussionReading, useMockText } from "@/ai/discussion-reading";
 import type { AiShortcutAttempt, AiTransferResult } from "@/features/ai-connection/components/AiConnectionDialog";
 import type { DiscussionAiTarget } from "@/features/tasks/discussion/lib/task-discussion-ai";
 import type { DiscussionReferenceTask } from "@/features/tasks/discussion/lib/discussion-task-reference";
-import { relativeTaskTime } from "@/features/tasks/lib/relative-time";
+import { DiscussionTimestamp } from "@/features/tasks/discussion/components/DiscussionTimestamp";
 import type { CollaborationMessage } from "@/features/tasks/lib/task-collaboration";
 import { useDetailCopy } from "@/shared/i18n/detail-messages";
 import { useGlobalUi } from "@/shared/i18n/global-ui";
@@ -55,12 +55,6 @@ type TaskDiscussionMessageProps = {
 
 const LONG_PRESS_MS = 500;
 
-function timestampFor(message: CollaborationMessage, locale: string, now: number) {
-  const recorded = message.createdAt ?? (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2})?$/.test(message.time) ? `${message.time.replace(" ", "T")}+08:00` : "");
-  const formatted = relativeTaskTime(recorded, locale, now);
-  return formatted ? { ...formatted, dateTime: new Date(recorded).toISOString() } : null;
-}
-
 export function TaskDiscussionMessage({ message, parent, currentUser, currentUserName, files, highlighted, children, replyExpanded, replyDisabled, onReply, onLocate, onDelete, onCreateSubtask, subtaskCreateDisabled, onOpenFile, onConnectAi, now, followups, followupPeople = [], onOpenFollowupTask, renderSuggestions, referenceTasks, onOpenReferenceTask, taskId = "", pinned = false, onTogglePin, likes = [], onToggleLike }: TaskDiscussionMessageProps) {
   const mock = useMockText();
   const d = useDetailCopy();
@@ -77,7 +71,6 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
   const parentBody = parent && (parent.updatedAt || !autoTranslate ? parent.message : mock.discussionTranslation(parent.message));
   const parentAttachments = parent?.attachmentRefs?.map(ref => mock.text(ref.name)).join(", ") || (parent?.file ? mock.text(parent.file) : "");
   const parentSummary = !parent ? d("originalMissing") : parent.deletedAt ? d("originalDeleted") : (parentBody?.trim() || (parentAttachments ? ui("附件：{0}", { 0: parentAttachments }) : ui("（无文字内容）")));
-  const timestamp = timestampFor(message, locale, now);
   const suggestionCount = followups?.suggestionCount ?? 0;
   const linkedCount = followups?.tasks.length ?? 0;
   const hasSuggestions = suggestionCount > 0 || Boolean(followups?.hasOutdated);
@@ -182,7 +175,7 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
       <DiscussionAttachmentGallery attachmentRefs={message.attachmentRefs} files={files} legacyFileName={message.file} onOpenFile={onOpenFile} />
       <footer className="task-discussion-feed-footer">
         <div className="task-discussion-feed-meta">
-          {timestamp && <time aria-label={timestamp.full} className="task-discussion-feed-time" dateTime={timestamp.dateTime} tabIndex={0} title={timestamp.full}>{timestamp.label}</time>}
+          <DiscussionTimestamp key={message.id} message={message} now={now} />
           {onToggleLike && (own && likeCount > 0 ? <Popover open={likersOpen} onOpenChange={(open, details) => {
             if (details.reason === "trigger-press") { details.cancel(); return; }
             setLikersOpen(open);
