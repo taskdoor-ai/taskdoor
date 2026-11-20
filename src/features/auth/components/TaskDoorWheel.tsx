@@ -47,6 +47,8 @@ export interface ToolWheelProps {
   background?: string;
   /** Fill of the tool discs and the hub. */
   surface?: string;
+  /** Subtle surface lighting and deeper shadows for the dark palette. */
+  surfaceLighting?: boolean;
   /** Ink for icons, the headline and the eyebrow. */
   color?: string;
   /** Colour of the subtitle and the eyebrow brackets. */
@@ -143,6 +145,7 @@ export function ToolWheel({
   markViewBox = "0 0 28 46",
   background = "#fcfcfc",
   surface = "#ffffff",
+  surfaceLighting = false,
   color = "#0a0a0a",
   mutedColor = "#4a4a4a",
   accent = "#e61207",
@@ -302,8 +305,8 @@ export function ToolWheel({
     return out;
   };
 
-  const colors = useRef({ background, surface, color, accent, signal, lineColor, monoFont, frame });
-  colors.current = { background, surface, color, accent, signal, lineColor, monoFont, frame };
+  const colors = useRef({ background, surface, surfaceLighting, color, accent, signal, lineColor, monoFont, frame });
+  colors.current = { background, surface, surfaceLighting, color, accent, signal, lineColor, monoFont, frame };
 
   // Render loop.
   useEffect(() => {
@@ -386,19 +389,38 @@ export function ToolWheel({
       halo(HUB_CY);
       halo(FOCUS_CY);
 
-      const disc = (x: number, y: number, r: number, s: number) => {
+      const disc = (x: number, y: number, r: number, s: number, hub = false) => {
+        const lift = 1 + Math.max(0, s - 1) * 0.25;
         ctx.save();
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         ctx.fillStyle = C.surface;
-        ctx.shadowColor = "rgba(0, 0, 0, 0.03)";
-        ctx.shadowBlur = 6 * k * dpr;
-        ctx.shadowOffsetY = 3.5 * k * dpr;
+        ctx.shadowColor = C.surfaceLighting ? "rgba(0, 0, 0, 0.34)" : "rgba(0, 0, 0, 0.03)";
+        ctx.shadowBlur = (C.surfaceLighting ? 12 * lift : 6) * k * dpr;
+        ctx.shadowOffsetY = (C.surfaceLighting ? 6 * lift : 3.5) * k * dpr;
         ctx.fill();
-        ctx.shadowColor = "rgba(0, 0, 0, 0.12)";
-        ctx.shadowBlur = 2.4 * k * dpr;
-        ctx.shadowOffsetY = 1.1 * k * dpr;
+        ctx.shadowColor = C.surfaceLighting ? "rgba(0, 0, 0, 0.42)" : "rgba(0, 0, 0, 0.12)";
+        ctx.shadowBlur = (C.surfaceLighting ? 3 : 2.4) * k * dpr;
+        ctx.shadowOffsetY = (C.surfaceLighting ? 2 : 1.1) * k * dpr;
         ctx.fill();
+        if (C.surfaceLighting) {
+          ctx.shadowColor = "transparent";
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetY = 0;
+          const face = ctx.createLinearGradient(x - r * 0.5, y - r, x + r * 0.5, y + r);
+          face.addColorStop(0, hub ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0.055)");
+          face.addColorStop(0.5, "rgba(255, 255, 255, 0.008)");
+          face.addColorStop(1, "rgba(0, 0, 0, 0.08)");
+          ctx.fillStyle = face;
+          ctx.fill();
+          const edge = ctx.createLinearGradient(x - r * 0.5, y - r, x + r * 0.5, y + r);
+          edge.addColorStop(0, hub ? "rgba(255, 255, 255, 0.20)" : "rgba(255, 255, 255, 0.14)");
+          edge.addColorStop(0.5, "rgba(255, 255, 255, 0.045)");
+          edge.addColorStop(1, "rgba(0, 0, 0, 0.24)");
+          ctx.strokeStyle = edge;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
         ctx.restore();
       };
 
@@ -425,7 +447,7 @@ export function ToolWheel({
       }
 
       // Hub.
-      disc(X(CX), Y(HUB_CY), HUB_R * k, BIG);
+      disc(X(CX), Y(HUB_CY), HUB_R * k, BIG, true);
       if (mark && markBox.length === 4) {
         const [mx, my, mw, mh] = markBox;
         const hgt = 58 * k;
@@ -692,8 +714,10 @@ export default function TaskDoorWheel() {
   const [editing, setEditing] = useState(false);
   const [dark, setDark] = useState(() => document.documentElement.dataset.theme === "dark");
   useEffect(() => {
-    const observer = new MutationObserver(() => setDark(document.documentElement.dataset.theme === "dark"));
+    const syncTheme = () => setDark(document.documentElement.dataset.theme === "dark");
+    const observer = new MutationObserver(syncTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    syncTheme();
     const syncEditing = () => {
       const target = document.activeElement;
       setEditing(target instanceof HTMLElement && Boolean(target.closest(".onboarding-main")) && target.matches('input, textarea, select, [contenteditable="true"]'));
@@ -724,7 +748,8 @@ export default function TaskDoorWheel() {
       title=""
       subtitle={zh ? "用你熟悉的 Agent 工作，\n与团队共享任务目标、进展与上下文。" : "Work with the agent you know.\nShare task goals, progress and context with your team."}
       background={dark ? "#1a1a1a" : "#fcfcfc"}
-      surface={dark ? "#242424" : "#ffffff"}
+      surface={dark ? "#292929" : "#ffffff"}
+      surfaceLighting={dark}
       color={dark ? "#ececec" : "#1a1f1c"}
       mutedColor={dark ? "#ababab" : "#68716b"}
       accent={dark ? "#6fca97" : "#2f7d4f"}
