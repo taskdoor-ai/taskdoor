@@ -259,16 +259,22 @@ html:has(.workspace-navigation[data-resizing="true"]) * { cursor: col-resize !im
 }
 
 .workspace-account-menu [data-slot="dropdown-menu-item"][data-variant="destructive"] {
-  color: var(--ad-danger);
+  color: var(--ad-ink);
+  background: transparent;
 }
 
+.workspace-account-menu [data-slot="dropdown-menu-item"][data-variant="destructive"]:hover,
 .workspace-account-menu [data-slot="dropdown-menu-item"][data-variant="destructive"]:focus,
 .workspace-account-menu [data-slot="dropdown-menu-item"][data-variant="destructive"][data-highlighted] {
-  color: var(--ad-danger);
-  background: color-mix(in srgb, var(--ad-danger) 10%, transparent);
+  color: var(--ad-system-red);
+  background: var(--ad-surface-subtle);
 }
 
 .workspace-account-menu [data-slot="dropdown-menu-item"][data-variant="destructive"] svg {
+  color: var(--ad-ink-secondary);
+}
+
+.workspace-account-menu [data-slot="dropdown-menu-item"][data-variant="destructive"]:is(:hover, :focus, [data-highlighted]) :is(svg, span) {
   color: currentColor;
 }
 

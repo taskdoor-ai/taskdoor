@@ -1,4 +1,4 @@
-import type { TaskActivityChange, TaskActivityMock, TaskActivityType, TaskCommitMock } from "@/shared/model/task-model.ts";
+import type { TaskActivityChange, TaskActivityMock, TaskActivityType, TaskCommitMock, TaskMessageVia } from "@/shared/model/task-model.ts";
 
 export type TaskActivityStore = Record<string, TaskActivityMock[]>;
 export type TaskDiscussionThread = { activity: TaskActivityMock; replies: TaskActivityMock[]; context?: TaskActivityMock };
@@ -226,6 +226,18 @@ function parseActivity(value: unknown): TaskActivityMock | null {
   if (value.createdAt !== undefined && (typeof value.createdAt !== "string" || !Number.isFinite(Date.parse(value.createdAt)))) return null;
   if (value.insightType !== undefined && (typeof value.insightType !== "string" || !insightTypes.has(value.insightType))) return null;
 
+  let via: TaskMessageVia | undefined;
+  if (value.via !== undefined) {
+    if (!isRecord(value.via) || !["CLI", "MCP", "OPEN_API"].includes(value.via.client as string)) return null;
+    const agent = value.via.agent;
+    if (agent !== undefined && (!isRecord(agent) || typeof agent.name !== "string" || !agent.name.trim()
+      || (agent.version !== null && typeof agent.version !== "string"))) return null;
+    via = {
+      client: value.via.client as TaskMessageVia["client"],
+      ...(agent ? { agent: { name: agent.name as string, version: agent.version as string | null } } : {}),
+    };
+  }
+
   let changes: TaskActivityChange[] | undefined;
   if (value.changes !== undefined) {
     if (!Array.isArray(value.changes)) return null;
@@ -248,6 +260,7 @@ function parseActivity(value: unknown): TaskActivityMock | null {
     ...(value.replyToActivityId !== undefined ? { replyToActivityId: value.replyToActivityId as string } : {}),
     ...(value.createdAt !== undefined ? { createdAt: value.createdAt as string } : {}),
     ...(value.insightType !== undefined ? { insightType: value.insightType as TaskActivityMock["insightType"] } : {}),
+    ...(via ? { via } : {}),
     ...(changes ? { changes } : {}),
   };
 }

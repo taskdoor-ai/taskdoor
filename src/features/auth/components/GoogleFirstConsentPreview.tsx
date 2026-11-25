@@ -8,6 +8,7 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { TeamFlowIllustration } from "@/features/auth/components/TeamFlowIllustration";
 import "@/features/auth/styles/onboarding.css";
+import "@/features/auth/styles/auth-theme.css";
 
 /** UI reference after Google verification. Production eligibility and creation belong to KC. */
 export function GoogleFirstConsent({ email, onContinue, onDecline }: {

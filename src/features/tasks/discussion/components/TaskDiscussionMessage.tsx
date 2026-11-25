@@ -1,3 +1,4 @@
+import { AgentBadge } from "@/features/tasks/discussion/components/AgentBadge";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { ListTree, MessageSquareText, Pin, Plus, Bookmark, ThumbsUp } from "lucide-react";
 import { useFavorite } from "@/features/me/lib/favorites";
@@ -145,6 +146,7 @@ export function TaskDiscussionMessage({ message, parent, currentUser, currentUse
       <header className="task-discussion-feed-header">
         <div className="task-discussion-feed-identity">
           <strong><PersonName name={message.author} personId={message.author} /></strong>
+          {message.via && <AgentBadge via={message.via} />}
           {pinned && <span className="task-discussion-pinned-mark"><Pin aria-hidden="true" size={12} />{en ? "Pinned" : "已置顶"}</span>}
           {isReply && <span className="task-discussion-feed-recipient">
             <span>{d("reply")}</span>

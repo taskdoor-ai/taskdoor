@@ -3392,5 +3392,9 @@
   "browserNotificationPermission": { "zh": "尚未获得通知权限，浏览器通知未开启。可再次点击开启。", "en": "Notification permission was not granted. Browser notifications are off; you can try enabling them again." },
   "browserNotificationStorage": { "zh": "无法保存浏览器通知设置，请检查浏览器的存储权限后重试。", "en": "Unable to save browser notification settings. Check your browser storage permissions and try again." },
   "browserNotificationUnavailable": { "zh": "浏览器通知暂时无法开启，请稍后重试。", "en": "Unable to enable browser notifications right now. Please try again later." },
-  "taskFileSortSize": { "zh": "文件大小", "en": "File size" }
+  "taskFileSortSize": { "zh": "文件大小", "en": "File size" },
+  "aiTaskNumber": {"zh": "任务编号", "en": "Task number"},
+  "discussionViaCli": {"zh": "通过 CLI", "en": "via CLI"},
+  "discussionViaMcp": {"zh": "通过 MCP", "en": "via MCP"},
+  "discussionViaApi": {"zh": "通过 API", "en": "via API"}
 }

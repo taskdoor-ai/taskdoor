@@ -1,0 +1,84 @@
+{
+  "auth": [
+    {
+      "theme": "light",
+      "page": {
+        "bg": "rgb(250, 250, 250)",
+        "color": "rgb(43, 43, 43)",
+        "border": "rgb(229, 229, 229)"
+      },
+      "card": {
+        "bg": "rgb(255, 255, 255)",
+        "color": "rgb(43, 43, 43)",
+        "border": "rgb(229, 229, 229)"
+      },
+      "input": {
+        "bg": "rgb(255, 255, 255)",
+        "color": "rgb(43, 43, 43)",
+        "border": "rgb(201, 201, 201)"
+      },
+      "google": {
+        "bg": "rgb(243, 243, 243)",
+        "color": "rgb(43, 43, 43)",
+        "border": "rgb(229, 229, 229)"
+      },
+      "primary": {
+        "bg": "rgb(39, 133, 87)",
+        "color": "rgb(255, 255, 255)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "width": 1440
+    },
+    {
+      "theme": "dark",
+      "page": {
+        "bg": "rgb(23, 23, 23)",
+        "color": "rgb(229, 229, 229)",
+        "border": "rgb(58, 58, 58)"
+      },
+      "card": {
+        "bg": "rgb(33, 33, 33)",
+        "color": "rgb(229, 229, 229)",
+        "border": "rgb(58, 58, 58)"
+      },
+      "input": {
+        "bg": "rgb(33, 33, 33)",
+        "color": "rgb(229, 229, 229)",
+        "border": "rgb(82, 82, 82)"
+      },
+      "google": {
+        "bg": "rgb(48, 48, 48)",
+        "color": "rgb(229, 229, 229)",
+        "border": "rgb(58, 58, 58)"
+      },
+      "primary": {
+        "bg": "rgb(111, 202, 151)",
+        "color": "rgb(23, 23, 23)",
+        "border": "rgba(0, 0, 0, 0)"
+      },
+      "width": 1440
+    }
+  ],
+  "errors": [],
+  "authNarrow": true,
+  "sticky": {
+    "number": "#9",
+    "collapsed": true,
+    "sharedFavorite": true
+  },
+  "stickyNarrow": {
+    "width": 378,
+    "scrollWidth": 378,
+    "clientWidth": 378
+  },
+  "logoutNormal": {
+    "color": "rgb(229, 229, 229)",
+    "bg": "rgba(0, 0, 0, 0)"
+  },
+  "logoutHover": {
+    "color": "rgb(248, 113, 113)",
+    "bg": "rgb(48, 48, 48)"
+  },
+  "darkGpt": true,
+  "lightGpt": true
+}

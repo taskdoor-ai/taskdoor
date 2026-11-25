@@ -410,3 +410,13 @@
 }
 .task-detail-split .task-detail-completion .criterion-height-preview,
 .task-detail-split .task-detail-completion .criterion-height-preview > li { font-size: 14px; line-height: 1.8; }
+
+/* Keep the task locator and actions available beside the collapsed name. */
+.task-detail-split .task-detail-sticky-title { flex: 1 1 auto; }
+.task-detail-split .task-detail-sticky-name-row > .task-ai-detail-tools { flex: 0 0 auto; padding: 0; }
+@media (max-width: 480px) {
+  .task-detail-split .task-detail-sticky-name-row { flex-wrap: wrap; gap: 6px 10px; }
+  .task-detail-split .task-detail-sticky-title { flex-basis: calc(100% - 46px); }
+  .task-detail-split .task-detail-sticky-name-row > .task-ai-detail-tools { margin-left: auto; }
+}
+.task-detail-split .task-number-copy { width: auto; min-width: 28px; padding-inline: 6px; color: var(--ad-ink-tertiary); font-variant-numeric: tabular-nums; }

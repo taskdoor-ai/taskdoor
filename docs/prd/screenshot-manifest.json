@@ -4886,11 +4886,11 @@
       "type": "current-page",
       "source": "http://127.0.0.1:5173/",
       "path": "assets/task-list/filter-selected-quiet-light-zh.png",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
       "updatedAt": "2026-11-20",
       "capturedAt": "2026-11-20",
-      "editorialNote": "纯视觉修正：按钮选中背景与数量徽标统一使用安静表面Token，浅色#fafafa、深色#262626。实测悬停不加深，数量仍为1；未修改任务。"
+      "editorialNote": "2026-11-25：状态优先排序已交付；本图保留为筛选外观历史，不能证明新的任务顺序，待主工作区重新采集。 纯视觉修正：按钮选中背景与数量徽标统一使用安静表面Token，浅色#fafafa、深色#262626。实测悬停不加深，数量仍为1；未修改任务。"
     },
     {
       "id": "fig-list-010",
@@ -4901,11 +4901,11 @@
       "type": "current-page",
       "source": "http://127.0.0.1:5173/",
       "path": "assets/task-list/filter-selected-quiet-dark-zh.png",
-      "status": "captured",
+      "status": "pending",
       "locale": "zh-CN",
       "updatedAt": "2026-11-20",
       "capturedAt": "2026-11-20",
-      "editorialNote": "纯视觉修正：按钮选中背景与数量徽标统一使用安静表面Token，浅色#fafafa、深色#262626。实测悬停不加深，数量仍为1；未修改任务。"
+      "editorialNote": "2026-11-25：状态优先排序已交付；本图保留为筛选外观历史，不能证明新的任务顺序，待主工作区重新采集。 纯视觉修正：按钮选中背景与数量徽标统一使用安静表面Token，浅色#fafafa、深色#262626。实测悬停不加深，数量仍为1；未修改任务。"
     }
   ]
 }
