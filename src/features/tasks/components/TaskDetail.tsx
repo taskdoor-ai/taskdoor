@@ -377,8 +377,9 @@ export function TaskDetail({
   };
 
   const openTaskAiConnection = (trigger: HTMLElement, shortcut?: AiShortcutAttempt) => {
+    if (taskNumber === undefined) { toast.info(locale === "en" ? "Task number is loading. Try again shortly." : "任务编号加载中，请稍后重试。"); return; }
     const request = buildTaskAiConnectionRequest({
-      taskId, currentUser, due: plannedEndOn ?? task.due, tags, parentTask,
+      taskId, taskNumber, currentUser, due: plannedEndOn ?? task.due, tags, parentTask,
       task: { ...task, title: currentTitle, goal: currentGoal, owner: confirmedOwnerId, participants: currentParticipants, status: currentStatus, activities },
     });
     if (request.contextPreview) request.contextPreview.items = request.contextPreview.items.map(item => item.label === "标签"
@@ -391,7 +392,8 @@ export function TaskDetail({
   };
 
   const openDiscussionAi = (target: DiscussionAiTarget, trigger: HTMLElement, shortcut?: AiShortcutAttempt) => {
-    const request = buildDiscussionAiRequest({ taskId, currentUser, target, tags,
+    if (taskNumber === undefined) { toast.info(locale === "en" ? "Task number is loading. Try again shortly." : "任务编号加载中，请稍后重试。"); return; }
+    const request = buildDiscussionAiRequest({ taskId, taskNumber, currentUser, target, tags,
       task: { ...task, activities: allMessages, files: allFiles, title: currentTitle, goal: currentGoal, status: currentStatus, owner: confirmedOwnerId, participants: currentParticipants, due: plannedEndOn ?? task.due },
     });
     if (!request) { setAttentionMessage(d('replyUnavailable')); return; }
@@ -792,21 +794,8 @@ export function TaskDetail({
     </>;
   };
 
-  return <MockTaskProvider taskId={taskId}><section aria-label={d('details')} className="task-detail-view task-detail-split" hidden={hidden} inert={hidden} ref={detailScrollRef} tabIndex={-1}>
-    <TaskDetailStickySummary status={currentStatus} progressRatio={taskAiProgressRatio} pathItems={taskPathItems.map(item => ({ ...item, label: mock.field(item.id, "title", item.label) }))} onPathSelect={onPathSelect} activeTab={visibleTab} headerRef={detailHeaderRef} scrollRef={detailScrollRef} taskId={taskId} title={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} />
-    <div className="task-detail-property-layout">
-    <header className="task-detail-header" ref={detailHeaderRef}>
-      {!hidePathNavigation && taskPathItems.some(item => item.id !== taskId) && <div className="task-detail-kicker">{taskPathItems.some(item => item.id !== taskId) ? <nav aria-label={d('path')} className="task-detail-path">{taskPathItems.map((item, index) => {
-        const label = mock.field(item.id, "title", item.label);
-        return <span key={item.id}>
-        {index > 0 && <ChevronRight aria-hidden="true" size={12} />}
-        {index < taskPathItems.length - 1 && onPathSelect ? <button onClick={() => onPathSelect(item.id)} title={label} type="button">{label}</button> : <em aria-current={index === taskPathItems.length - 1 ? "page" : undefined} title={label}>{label}</em>}
-      </span>;
-      })}</nav> : null}</div>}
-            <div className="task-detail-title-row">
-              <TaskCompletionIndicator key={taskId} status={currentStatus} completed={currentStatus === "已完成"} progressRatio={taskAiProgressRatio} evidence={taskAiProgressEvidence} onToggle={onTaskStatusChange ? () => setTaskCompleted(currentStatus !== "已完成") : undefined} />
-              <div aria-busy={titleSave.status === "saving" || undefined} className="task-detail-title-content"><h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} aria-describedby={titleSave.status === "error" ? `task-title-save-error-${taskId}` : undefined} className="task-detail-title-input" onFocus={() => { titleSave.clear(); setEditingOriginal("title"); }} onBlur={() => { setEditingOriginal(null); void titleSave.save(currentTitle, task.title, onTaskTitleChange); }} onChange={(event) => { titleSave.clear(); setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " ")); }} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>{titleSave.status === "saving" && <span className="sr-only" role="status">{d("fieldSaving")}</span>}</div>
-              <div className="task-ai-detail-tools">
+  const renderTaskTools = () => (
+    <div className="task-ai-detail-tools">
                 {taskNumberText !== undefined && <Tooltip.Root>
                   <Tooltip.Trigger
                     aria-label={taskNumberCopyLabel}
@@ -827,6 +816,23 @@ export function TaskDetail({
                 {taskFavorite.available && <Button aria-label={favoriteLabel} className="task-favorite-toggle" data-active={taskFavorite.active || undefined} onClick={() => { if (taskFavorite.toggle() === null) toast.error(locale === "en" ? "Could not update favorites. Please try again." : "收藏未能更新，请重试。"); }} size="icon-sm" title={favoriteLabel} type="button" variant="ghost"><Bookmark aria-hidden="true" /></Button>}
                 <AiConnectionButton contextLabel={d('current')} key={taskId} onConnect={openTaskAiConnection} />
               </div>
+  );
+
+  return <MockTaskProvider taskId={taskId}><section aria-label={d('details')} className="task-detail-view task-detail-split" hidden={hidden} inert={hidden} ref={detailScrollRef} tabIndex={-1}>
+    <TaskDetailStickySummary actions={renderTaskTools()} status={currentStatus} progressRatio={taskAiProgressRatio} pathItems={taskPathItems.map(item => ({ ...item, label: mock.field(item.id, "title", item.label) }))} onPathSelect={onPathSelect} activeTab={visibleTab} headerRef={detailHeaderRef} scrollRef={detailScrollRef} taskId={taskId} title={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} />
+    <div className="task-detail-property-layout">
+    <header className="task-detail-header" ref={detailHeaderRef}>
+      {!hidePathNavigation && taskPathItems.some(item => item.id !== taskId) && <div className="task-detail-kicker">{taskPathItems.some(item => item.id !== taskId) ? <nav aria-label={d('path')} className="task-detail-path">{taskPathItems.map((item, index) => {
+        const label = mock.field(item.id, "title", item.label);
+        return <span key={item.id}>
+        {index > 0 && <ChevronRight aria-hidden="true" size={12} />}
+        {index < taskPathItems.length - 1 && onPathSelect ? <button onClick={() => onPathSelect(item.id)} title={label} type="button">{label}</button> : <em aria-current={index === taskPathItems.length - 1 ? "page" : undefined} title={label}>{label}</em>}
+      </span>;
+      })}</nav> : null}</div>}
+            <div className="task-detail-title-row">
+              <TaskCompletionIndicator key={taskId} status={currentStatus} completed={currentStatus === "已完成"} progressRatio={taskAiProgressRatio} evidence={taskAiProgressEvidence} onToggle={onTaskStatusChange ? () => setTaskCompleted(currentStatus !== "已完成") : undefined} />
+              <div aria-busy={titleSave.status === "saving" || undefined} className="task-detail-title-content"><h1><Input title={editingOriginal === "title" ? currentTitle : mock.field(taskId, "title", currentTitle)} readOnly={!onTaskTitleChange} aria-label={d('name')} aria-describedby={titleSave.status === "error" ? `task-title-save-error-${taskId}` : undefined} className="task-detail-title-input" onFocus={() => { titleSave.clear(); setEditingOriginal("title"); }} onBlur={() => { setEditingOriginal(null); void titleSave.save(currentTitle, task.title, onTaskTitleChange); }} onChange={(event) => { titleSave.clear(); setCurrentTitle(event.target.value.replace(/[\r\n]+/g, " ")); }} onKeyDown={(event) => { if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.blur(); } }} value={editingOriginal === "title" || titleSave.status === "error" ? currentTitle : mock.field(taskId, "title", currentTitle)} /></h1>{titleSave.status === "saving" && <span className="sr-only" role="status">{d("fieldSaving")}</span>}</div>
+              {renderTaskTools()}
             </div>
       {titleSave.status === "error" && <p className="task-field-save-error" id={`task-title-save-error-${taskId}`} role="alert">{d("fieldSaveFailed")}</p>}
 

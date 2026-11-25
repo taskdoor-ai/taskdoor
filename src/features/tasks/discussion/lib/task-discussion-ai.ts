@@ -7,6 +7,7 @@ export type DiscussionAiTarget = { kind: "discussion" | "reply"; activityId: str
 
 type DiscussionAiInput = {
   taskId: string;
+  taskNumber?: number;
   task: Omit<TaskDetailContent, "activities"> & { activities: CollaborationMessage[] };
   tags?: string[];
   target: DiscussionAiTarget;
@@ -25,7 +26,7 @@ function savedAttachments(activity: CollaborationMessage, files: TaskFileNode[])
 }
 
 /** Export a saved message and its direct reply target from the visible snapshot only. */
-export function buildDiscussionAiRequest({ taskId, task, target }: DiscussionAiInput): AiConnectionRequest | null {
+export function buildDiscussionAiRequest({ taskId, taskNumber, task, target }: DiscussionAiInput): AiConnectionRequest | null {
   if (target.kind !== "discussion" && target.kind !== "reply") return null;
   const activity = task.activities.find(item => item.id === target.activityId);
   if (!activity || activity.deletedAt || activity.fileThreadId !== target.fileThreadId || !isDiscussionActivity(activity)) return null;
@@ -37,7 +38,7 @@ export function buildDiscussionAiRequest({ taskId, task, target }: DiscussionAiI
   const publishedAt = savedTimestamp(activity);
   const parentPublishedAt = parentAvailable && parent ? savedTimestamp(parent) : undefined;
   const context = [
-    { label: "任务 ID", value: taskId },
+    { label: "任务编号", value: taskNumber === undefined ? "" : String(taskNumber) },
     { label: "任务名称", value: task.title },
     { label: "任务目标", value: task.goal },
     { label: "讨论 ID", value: activity.id },
@@ -57,8 +58,9 @@ export function buildDiscussionAiRequest({ taskId, task, target }: DiscussionAiI
   const parentAttachments = parentAvailable && parent ? savedAttachments(parent, task.files) : [];
   return {
     taskId,
+    taskNumber,
     title: "连接 AI",
-    description: "带入任务、当前消息和直接被回复原消息；更多信息可通过 Taskdoor CLI 按需获取。",
+    description: "带入任务、当前消息和直接被回复原消息；更多信息可通过 TaskDoor CLI 按需获取。",
     contextPreview: { items: [
       ...context.map((item, index) => ({ ...item, id: `discussion-field-${index}` })),
       { id: "excerpt", label: "讨论内容", value: content },

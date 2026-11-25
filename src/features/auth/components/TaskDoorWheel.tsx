@@ -751,11 +751,11 @@ export default function TaskDoorWheel() {
       background={dark ? "#1a1a1a" : "#fcfcfc"}
       surface={dark ? "#292929" : "#ffffff"}
       surfaceLighting={dark}
-      color={dark ? "#ececec" : "#1a1f1c"}
-      mutedColor={dark ? "#ababab" : "#68716b"}
-      accent={dark ? "#6fca97" : "#2f7d4f"}
-      signal={dark ? "#8ed1aa" : "#4d9568"}
-      lineColor={dark ? "#333333" : "#e8ebe7"}
+      color={dark ? "#ececec" : "#1a1a1a"}
+      mutedColor={dark ? "#ababab" : "#686868"}
+      accent={dark ? "#bdbdbd" : "#737373"}
+      signal={dark ? "#bdbdbd" : "#737373"}
+      lineColor={dark ? "#333333" : "#e8e8e8"}
       frame={false}
       font={'var(--ad-font-sans, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif)'}
       style={{ minHeight: 0 }}

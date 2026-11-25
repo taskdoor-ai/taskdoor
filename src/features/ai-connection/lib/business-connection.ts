@@ -92,6 +92,7 @@ export function businessReadingRules(sourceType: BusinessConnectionScope["source
 
 type BusinessContextPromptInput = BusinessConnectionScope & {
   taskId: string;
+  taskNumber?: number;
   selectedTool: string;
   snapshot: string;
   origin?: string;
@@ -105,12 +106,12 @@ export function buildBusinessContextPrompt(input: BusinessContextPromptInput, lo
     ? { TASK: "Task", DISCUSSION: "Discussion or reply", FILE_ANNOTATION: "File annotations" }[input.sourceType]
     : { TASK: "任务", DISCUSSION: "讨论或回复", FILE_ANNOTATION: "文件标注" }[input.sourceType];
   const location = english ? [
-    `Entry: ${entry}`, `Task ID: ${input.taskId}`,
+    `Entry: ${entry}`, ...(input.taskNumber === undefined ? [] : [`Task number: ${input.taskNumber}`]),
     ...(input.origin ? [`Service: ${input.origin}`] : []), ...(input.pageUrl ? [`Current page: ${input.pageUrl}`] : []),
     `Local demo scope: ${input.teamId}`, `Selected tool: ${input.selectedTool}`,
     "Local scope labels and the page address are not authenticated production identity or a production task link.",
   ] : [
-    `入口：${entry}`, `任务 ID：${input.taskId}`,
+    `入口：${entry}`, ...(input.taskNumber === undefined ? [] : [`任务编号：${input.taskNumber}`]),
     ...(input.origin ? [`服务地址：${input.origin}`] : []), ...(input.pageUrl ? [`当前页面：${input.pageUrl}`] : []),
     `本地演示范围：${input.teamId}`, `所选工具：${input.selectedTool}`,
     "本地范围标签和页面地址不代表正式账号身份或正式任务链接。",

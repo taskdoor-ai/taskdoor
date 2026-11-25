@@ -129,6 +129,12 @@ export type TaskActivityChange = {
   after: string | null;
 };
 
+/** Client-reported message origin; it does not verify the Agent's identity. */
+export type TaskMessageVia = {
+  client: "CLI" | "MCP" | "OPEN_API";
+  agent?: { name: string; version: string | null };
+};
+
 export type TaskActivityMock = {
   author: string;
   changes?: TaskActivityChange[];
@@ -140,6 +146,7 @@ export type TaskActivityMock = {
   replyToActivityId?: string;
   time: string;
   type: TaskActivityType;
+  via?: TaskMessageVia;
 };
 
 export type TaskCommitMock = {

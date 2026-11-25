@@ -58,6 +58,7 @@
   --ad-input-focus-soft: transparent;
   --ad-input-keyboard-focus: #737373;
   --ad-danger: #c13e61;
+  --ad-system-red: #dc2626;
   --ad-danger-soft: #fff0f4;
   --ad-task-overdue: #dc2626;
   --ad-notification-badge: #d92d3e;
@@ -459,6 +460,7 @@
   --ad-navigation-hover-bg: #282828;
   --ad-navigation-selected-bg: #343434;
   --ad-danger: #f49ab0;
+  --ad-system-red: #f87171;
   --ad-danger-soft: #3b2533;
   --ad-task-overdue: #f87171;
   --ad-control-border-hover: var(--ad-border-strong);

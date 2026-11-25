@@ -9,6 +9,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Input } from "@/shared/ui/input";
 import { VerificationCodeInput } from "@/shared/ui/verification-code-input";
 import "@/features/auth/styles/onboarding.css";
+import "@/features/auth/styles/auth-theme.css";
 
 export function WorkspacePasswordChange() {
   const { locale } = useI18n();

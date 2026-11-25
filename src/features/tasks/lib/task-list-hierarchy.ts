@@ -1,5 +1,6 @@
 import type { TaskNode } from "@/shared/model/task-model";
 import { taskUpdatedTime } from "@/features/tasks/lib/task-list-presentation";
+import { taskListStatusRank } from "@/features/tasks/lib/task-list-sort";
 
 export type TaskHierarchyNode = {
   task: TaskNode;
@@ -12,7 +13,7 @@ export type TaskHierarchyNode = {
 };
 
 type TaskHierarchyOptions = { sort?: "recent" | "created"; pinnedTaskIds?: readonly string[] };
-type BranchOrder = { updatedAt: number | null; createdAt: number | null; allCompleted: boolean };
+type BranchOrder = { updatedAt: number | null; createdAt: number | null; statusRank: number };
 
 const compareIds = (left: string, right: string): number => left < right ? -1 : left > right ? 1 : 0;
 
@@ -113,17 +114,18 @@ export function buildTaskListHierarchy(
   for (let index = traversal.length - 1; index >= 0; index -= 1) {
     const node = traversal[index];
     let updatedAt = node.matches ? taskUpdatedTime(node.task.updatedAt) : null;
-    let allCompleted = !node.matches || node.task.status === "已完成";
+    // Context ancestors do not hide active matches in a completed/cancelled branch.
+    let statusRank = node.matches ? taskListStatusRank(node.task.status) : Infinity;
     for (const child of node.children) {
       const childOrder = orderById.get(child.task.id)!;
       if (childOrder.updatedAt !== null && (updatedAt === null || childOrder.updatedAt > updatedAt)) updatedAt = childOrder.updatedAt;
-      allCompleted &&= childOrder.allCompleted;
+      statusRank = Math.min(statusRank, childOrder.statusRank);
       node.pinnedBranch ||= child.pinnedBranch;
     }
     orderById.set(node.task.id, {
       updatedAt,
       createdAt: taskUpdatedTime(node.task.createdAt ?? ""),
-      allCompleted,
+      statusRank,
     });
   }
 
@@ -131,7 +133,7 @@ export function buildTaskListHierarchy(
     const leftOrder = orderById.get(left.task.id)!;
     const rightOrder = orderById.get(right.task.id)!;
     return Number(right.pinnedBranch) - Number(left.pinnedBranch)
-      || (options.sort === "created" ? 0 : Number(leftOrder.allCompleted) - Number(rightOrder.allCompleted))
+      || leftOrder.statusRank - rightOrder.statusRank
       || (options.sort === "created" ? 0 : compareKnownTime(leftOrder.updatedAt, rightOrder.updatedAt))
       || compareKnownTime(leftOrder.createdAt, rightOrder.createdAt)
       || compareIds(left.task.id, right.task.id);

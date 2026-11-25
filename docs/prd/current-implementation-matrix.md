@@ -1,5 +1,23 @@
 # 当前实现矩阵
 
+## PRD-0427 状态优先排序（2026-11-24）
+
+任务平铺和层级使用[共享状态顺序](../../src/features/tasks/lib/task-list-sort.ts)，保留当前 main 的标签筛选、置顶分区和真实父子关系。对应[平铺投影](../../src/features/tasks/lib/task-list-projection.ts)、[层级投影](../../src/features/tasks/lib/task-list-hierarchy.ts)与[排序回归](../../server/taskListStatusOrder.test.ts)。
+
+## PRD-0428 任务操作吸顶与编号交接（2026-11-24）
+
+[任务详情](../../src/features/tasks/components/TaskDetail.tsx)复用已发布的编号复制、本人收藏和连接 AI 操作到[吸顶摘要](../../src/features/tasks/components/TaskDetailStickySummary.tsx)，保留 main 的收藏存储。任务与讨论请求传递数字编号，内部注册仍使用任务身份。正式来源为 dev `dce40976dbd92ffa020b6c349291b4eec2a62a7c`，正式已有编号及收藏，仅交付吸顶与编号交接增量。
+
+## PRD-0431 任务与讨论沿用文案模板（2026-11-24）
+
+[实际复制与打开](../../src/features/ai-connection/components/AiConnectionDialog.tsx)沿原任务及讨论模板传递正文；[读取定位](../../src/features/ai-connection/lib/business-connection.ts)使用编号，保留连接身份与文件标注交接行为。中英文外发、原文保留与内部注册边界由[交接验证](../../server/connectAiPrompt.test.ts)、[快照验证](../../server/aiContextCompact.test.ts)及[保存读取验证](../../server/aiConnectionDialog.test.ts)核对。
+
+## 2026-11-25 本批视觉修正
+
+退出登录中性色与系统红分别由[账户菜单](../../src/app/workspace/styles/workspace-shell.css)和[颜色变量](../../src/shared/styles/tokens.css)提供；[认证中性主题](../../src/features/auth/styles/auth-theme.css)保留已发布的默认轮盘、品牌图标和认证流程；[发言来源图标](../../src/features/tasks/discussion/components/AgentBadge.tsx)复用既有暗色单色规则。Demo补齐正式已有的来源显示、保存读取与明确标记的样例，仅作为图标呈现依赖，不重复列入正式需求。
+
+本次从 PM Demo main `a74d83fe` 单独提取五项，不带文件评论、燃起图回放、创建任务引导或 AI 建议子任务列表。验证结果和实际运行范围见[本批交付记录](../../artifacts/product-audit/product-sync-published-2026-11-25-five-items.md)。正式服务未修改或部署，尚未完成用户本人验收。旧截图不作为本批当前证据。
+
 ## PRD-0421 本批讨论与筛选交付（2026-11-20）
 
 时间切换、讨论搜索与范围／附件筛选、讨论和文件圆角搜索、任务列表筛选浅底已从最新PM Demo main独立提取。保留既有置顶、点赞、收藏和文件浏览能力。菜单无清除全部；搜索框和筛选入口分别清除，各自保留另一类条件。41项定向测试、应用类型检查、结构门及Vite前端打包通过；浅深色、1470×900与390×844、时间独立切换、条件保持、清除与Escape回焦已通过实际浏览器验证。

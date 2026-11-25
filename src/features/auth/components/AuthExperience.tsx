@@ -14,6 +14,7 @@ import { simplifyOnboardingEntry, createOnboardingPreview, digestPreviewPassword
 import { loadPersonalCenterDirectory, savePersonalCenterDirectory } from "@/ai/mock/data/memberProfiles";
 import { acceptTeamEmailInvitation, resolveTeamEmailInvitation } from "@/features/members/lib/team-invitations";
 import "@/features/auth/styles/onboarding.css";
+import "@/features/auth/styles/auth-theme.css";
 
 import { enterOnboardingWorkspace } from "@/features/auth/lib/onboarding-workspace";
 import { onboardingStorageKey as storageKey } from "@/shared/lib/workspace-session";

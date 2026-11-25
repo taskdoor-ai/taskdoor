@@ -33,7 +33,7 @@ test("创建时间与最近更新时间独立倒序，未知时间置后且不�
   assert.deepEqual(buildTaskListProjection(nodes, "", filters, []).visibleTasks.map(t => t.id), ["new", "old", "unknown"]);
   assert.deepEqual(buildTaskListProjection(nodes, "", { ...filters, sort: "created" }, []).visibleTasks.map(t => t.id), ["old", "new", "unknown"]);
 });
-test("最近更新将较新的已完成任务置底，两组各按原更新时间排列，取消任务不额外后置", () => {
+test("最近更新先按进行中、已阻塞、已完成、已取消归组，组内时间倒序", () => {
   const nodes = [
     node("done-new", { name: "完成创建页三栏改版", status: "已完成", updatedAt: "2026-10-20T12:00:00Z" }),
     node("active-old", { name: "讨论附件显示缩略图", updatedAt: "2026-10-18T10:00:00Z" }),
@@ -44,16 +44,16 @@ test("最近更新将较新的已完成任务置底，两组各按原更新时�
   ];
   const before = JSON.stringify(nodes);
   const result = buildTaskListProjection(nodes, "", createInitialTaskListFilters("me"), []);
-  assert.deepEqual(result.visibleTasks.map(task => task.id), ["cancelled", "blocked", "active-old", "active-unknown", "done-new", "done-old"]);
+  assert.deepEqual(result.visibleTasks.map(task => task.id), ["active-old", "active-unknown", "blocked", "done-new", "done-old", "cancelled"]);
   assert.equal(JSON.stringify(nodes), before);
 });
-test("创建时间排序保持纯时间顺序，任务重开后回到最近更新的未完成组并保留当前选择", () => {
+test("创建时间在同状态内倒序，任务重开后重新归组并保留当前选择", () => {
   const nodes = [
     node("done", { name: "确认附件缩略图交付", status: "已完成", updatedAt: "2026-10-20T12:00:00Z", createdAt: "2026-10-20T09:00:00Z" }),
     node("active", { name: "调整文件区方案", updatedAt: "2026-10-19T12:00:00Z", createdAt: "2026-10-19T09:00:00Z" }),
   ];
   const filters = createInitialTaskListFilters("me");
-  assert.deepEqual(buildTaskListProjection(nodes, "", { ...filters, sort: "created" }, []).visibleTasks.map(task => task.id), ["done", "active"]);
+  assert.deepEqual(buildTaskListProjection(nodes, "", { ...filters, sort: "created" }, []).visibleTasks.map(task => task.id), ["active", "done"]);
   const before = buildTaskListProjection(nodes, "", filters, []).visibleTasks.map(task => task.id);
   assert.deepEqual(before, ["active", "done"]);
   assert.equal(taskResultSelection(before, "done"), "done");

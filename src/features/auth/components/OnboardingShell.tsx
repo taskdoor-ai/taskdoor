@@ -9,6 +9,7 @@ import { onboardingTranslator } from "@/features/auth/i18n/onboarding-messages";
 import "@/features/auth/styles/onboarding.css";
 import "@/features/auth/styles/auth-sand.css";
 import "@/features/auth/styles/taskdoor-wheel.css";
+import "@/features/auth/styles/auth-theme.css";
 
 const TaskDoorWheel = lazy(() => import("@/features/auth/components/TaskDoorWheel"));
 

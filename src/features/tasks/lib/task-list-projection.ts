@@ -4,6 +4,8 @@ import { normalizeTaskStatus, type TagDefinition, type TaskNode, type WorkspaceN
 import { compareTaskUpdates } from "@/features/tasks/lib/task-list-presentation.ts";
 import { taskBoardStatusOrder } from "@/features/tasks/lib/task-board.ts";
 
+import { taskListStatusRank } from "@/features/tasks/lib/task-list-sort";
+
 export type TaskListProjection = {
   allTasks: TaskNode[];
   visibleTasks: TaskNode[];
@@ -95,13 +97,8 @@ export function buildTaskListProjection(
   const scopedTasks = allTasks.filter((task) => taskMatchesListFilters(task, queryFor(task), scopeFilters, currentUserId, now, timeZone, tagDefinitions));
   const visibleTasks = scopedTasks
     .filter((task) => taskMatchesListFilters(task, queryFor(task), filters, currentUserId, now, timeZone, tagDefinitions))
-    .sort((a, b) => {
-      if (filters.sort !== "created") {
-        const completionOrder = Number(a.status === "已完成") - Number(b.status === "已完成");
-        if (completionOrder) return completionOrder;
-      }
-      return compareTaskUpdates(a, b, filters.sort === "created");
-    });
+    .sort((a, b) => taskListStatusRank(a.status) - taskListStatusRank(b.status)
+      || compareTaskUpdates(a, b, filters.sort === "created"));
   const presentStatuses = new Set(allTasks.map((task) => task.status));
   // Status counts describe the available choices, before applying this dimension.
   const statusFilters: TaskListFilters = { ...filters, status: "all", statuses: [], completion: "all" };

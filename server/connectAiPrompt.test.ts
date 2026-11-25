@@ -30,3 +30,35 @@ test("Connect AI copies the setup prompt, then opens the chosen client with it",
   assert.equal(blocked.status, "open-failed");
   assert.match(blocked.message, /WorkBuddy/);
 });
+
+
+test("任务编号作为 AI 上下文门牌号，注册仍使用内部任务身份", async () => {
+  const { buildContextPrompt, copyAndOpenAiContext } = await import("../src/features/ai-connection/components/AiConnectionDialog.tsx");
+  const { buildBusinessContextPrompt } = await import("../src/features/ai-connection/lib/business-connection.ts");
+  const request = {
+    taskId: "internal-task-uuid", taskNumber: 51, title: "连接 AI", description: "",
+    context: [{ label: "任务编号", value: "51" }],
+    workObject: { kind: "任务", title: "核对发布" },
+    businessConnection: { sourceType: "TASK" as const, accountId: "user", teamId: "team" },
+  };
+  for (const locale of ["zh-CN", "en"] as const) {
+    const snapshot = buildContextPrompt(request, locale);
+    assert.match(snapshot, locale === "en" ? /Task number: 51/ : /任务编号：51/);
+    assert.doesNotMatch(snapshot, /internal-task-uuid|任务 ID|Task ID/);
+    const prompt = buildBusinessContextPrompt({ ...request.businessConnection, taskId: request.taskId, taskNumber: 51, snapshot, selectedTool: "copy" }, locale);
+    assert.doesNotMatch(prompt, /internal-task-uuid|任务 ID|Task ID/);
+  }
+  let registrations = 0;
+  const result = await copyAndOpenAiContext(request, null, {
+    copyText: async () => true, openUrl: () => assert.fail("仅复制不打开"),
+    registerConnection: async input => {
+      registrations++;
+      assert.equal(input.taskId, "internal-task-uuid");
+      assert.match(input.payload.prompt, /任务编号：51/);
+      assert.doesNotMatch(input.payload.prompt, /internal-task-uuid/);
+      return { connectionId: "aic_test", createdAt: new Date().toISOString(), url: "http://localhost/context", statusUrl: "http://localhost/status" };
+    },
+  });
+  assert.equal(result.status, "copied");
+  assert.equal(registrations, 1);
+});

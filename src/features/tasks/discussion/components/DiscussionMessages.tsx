@@ -1,3 +1,4 @@
+import { AgentBadge } from "@/features/tasks/discussion/components/AgentBadge";
 import { relativeTaskTime } from "@/features/tasks/lib/relative-time";
 import { DiscussionTimestamp } from "@/features/tasks/discussion/components/DiscussionTimestamp";
 import { useI18n } from '@/shared/i18n/I18nProvider';
@@ -141,6 +142,7 @@ export function DiscussionMessages({ messages, allMessages = messages, files, pe
         <PersonAvatar name={message.author} personId={message.author} size={isReply ? "xs" : "sm"} />
         <div className={`task-discussion-record${highlightedId === message.id ? " is-attention" : ""}`} id={`task-activity-${message.id}`} tabIndex={-1}>
           <header><span className="discussion-message-authors"><strong><PersonName name={message.author} personId={message.author} /></strong>
+          {message.via && <AgentBadge via={message.via} />}
             {compact && message.replyToActivityId && <span className="discussion-message-recipient"><span>{d('reply')}</span>{parent && !parent.deletedAt ? <strong><PersonName name={parent.author} personId={parent.author} /></strong> : <span>{parent?.deletedAt ? d('originalDeleted') : d('originalMissing')}</span>}</span>}
             {message.replyToActivityId && <ReplyReference message={parent} onLocate={jumpTo} />}
           </span>
