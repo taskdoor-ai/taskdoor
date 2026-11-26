@@ -1,3 +1,4 @@
 /* Message origin follows the formal app: a compact mark after the author. */
 .discussion-agent-badge { align-self: center; display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 16px; height: 16px; color: var(--ad-ink-tertiary); cursor: default; }
 .discussion-agent-badge img, .discussion-agent-badge svg { display: block; width: 16px; height: 16px; }
+[data-theme="dark"] .discussion-agent-badge img[data-agent-tone="mono"] { filter: invert(1); }
